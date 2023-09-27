@@ -1,0 +1,113 @@
+import React, { useMemo, useState } from 'react'
+
+import { TraderData } from 'entities/trader'
+import Modal from 'theme/Modal'
+
+import ScoreChart from './ScoreChart'
+import TradersChart from './TradersChart'
+
+const getMax = (data: any[], key: string) => {
+  let max = data[0][key]
+  data.forEach((d) => {
+    if (max < d[key]) {
+      max = d[key]
+    }
+  })
+  return max
+}
+
+const getMin = (data: any[], key: string) => {
+  let min = data[0][key]
+  data.forEach((d) => {
+    if (min > d[key]) {
+      min = d[key]
+    }
+  })
+  return min
+}
+
+type ModifiedTraderData = TraderData & {
+  closedPositions: number
+  profitFactor: number
+}
+
+export const VisualizeModal = ({ data: raw, onDismiss }: { data: TraderData[]; onDismiss: () => void }) => {
+  const data: ModifiedTraderData[] = raw.map((e) => ({
+    ...e,
+    avgDuration: e.avgDuration / 3600,
+    closedPositions: e.totalWin + e.totalLose,
+    profitFactor: Math.min(10, (e.totalGain + e.totalLoss) / (e.totalLoss ? -e.totalLoss : 0)),
+  }))
+  const [selectedIndex, setSelectedIndex] = useState()
+  const LIMIT_AVG_ROI = getMax(data, 'avgRoi')
+  const LIMIT_MAX_ROI = getMax(data, 'maxRoi')
+  const LIMIT_AVG_DURATION = getMax(data, 'avgDuration')
+  const LIMIT_ORDERS = getMax(data, 'closedPositions')
+  const LIMIT_PROFIT_FACTOR = getMax(data, 'profitFactor')
+  const LIMIT_MAX_DRAWDOWN_ROI = getMin(data, 'maxDrawDownRoi')
+
+  const scores = useMemo(() => {
+    if (selectedIndex == null) return null
+    const stats = data[selectedIndex]
+    return {
+      avgRoi: { score: (stats.avgRoi * 100) / LIMIT_AVG_ROI, value: stats.avgRoi, limit: LIMIT_AVG_ROI },
+      maxRoi: { score: (stats.maxRoi * 100) / LIMIT_MAX_ROI, value: stats.maxRoi, limit: LIMIT_MAX_ROI },
+      avgDuration: {
+        score: ((LIMIT_AVG_DURATION - stats.avgDuration) * 100) / LIMIT_AVG_DURATION,
+        value: stats.avgDuration,
+        limit: LIMIT_AVG_DURATION,
+      },
+      frequency: {
+        score: ((stats.totalWin + stats.totalLose) * 100) / LIMIT_ORDERS,
+        value: stats.closedPositions,
+        limit: LIMIT_ORDERS,
+      },
+      profitFactor: {
+        score: (stats.profitFactor * 100) / LIMIT_PROFIT_FACTOR,
+        value: stats.profitFactor,
+        limit: LIMIT_PROFIT_FACTOR,
+      },
+      maxDrawdownRoi: {
+        score: ((LIMIT_MAX_DRAWDOWN_ROI - stats.maxDrawDownRoi) * 100) / LIMIT_MAX_DRAWDOWN_ROI,
+        value: stats.maxDrawDownRoi,
+        limit: LIMIT_MAX_DRAWDOWN_ROI,
+      },
+    }
+  }, [selectedIndex, data])
+  return (
+    <Modal
+      isOpen
+      maxWidth="100vw"
+      width="100vw"
+      maxHeight="100vh"
+      minHeight="100vh"
+      hasClose
+      title="Traders Visualize"
+      onDismiss={onDismiss}
+    >
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32 }}>
+        <TradersChart
+          x="maxDrawDownRoi"
+          xLabel="Max DrawDown ROI (%)"
+          y="avgRoi"
+          yLabel="ROI (%)"
+          selectedIndex={selectedIndex}
+          data={data}
+          onSelect={setSelectedIndex}
+          onDeselect={() => setSelectedIndex(undefined)}
+        />
+        <TradersChart
+          x="avgDuration"
+          xLabel="Avg Duration (h)"
+          y="closedPositions"
+          yLabel="Closed Positions"
+          selectedIndex={selectedIndex}
+          data={data}
+          onSelect={setSelectedIndex}
+          onDeselect={() => setSelectedIndex(undefined)}
+        />
+      </div>
+      {scores ? <ScoreChart data={scores} /> : <div style={{ width: 450, height: 450 }}></div>}
+    </Modal>
+  )
+}

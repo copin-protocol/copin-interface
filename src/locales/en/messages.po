@@ -1,0 +1,1044 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2023-07-31 13:51+0700\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/@helpers/ErrorFallback.tsx
+msgid ". Try to reload the page to fix this issue"
+msgstr ". Try to reload the page to fix this issue"
+
+#: src/components/@ui/TimeFilter/constants.tsx
+#: src/components/@ui/TimeFilter/constants.tsx
+msgid "14 days"
+msgstr "14 days"
+
+#: src/components/@ui/TimeFilter/constants.tsx
+#: src/components/@ui/TimeFilter/constants.tsx
+msgid "30 days"
+msgstr "30 days"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/pages/MyProfile/TabCopies.tsx
+msgid "30D PnL"
+msgstr "30D PnL"
+
+#: src/components/@ui/TimeFilter/constants.tsx
+#: src/components/@ui/TimeFilter/constants.tsx
+msgid "60 days"
+msgstr "60 days"
+
+#: src/components/@ui/TimeFilter/constants.tsx
+#: src/components/@ui/TimeFilter/constants.tsx
+msgid "7 days"
+msgstr "7 days"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/pages/MyProfile/TabCopies.tsx
+msgid "7D PnL"
+msgstr "7D PnL"
+
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+msgid "A message with a verification code has been sent to your email. Enter the code to continue."
+msgstr "A message with a verification code has been sent to your email. Enter the code to continue."
+
+#: src/components/Tables/HistoryTable.tsx
+#~ msgid "ALL"
+#~ msgstr "ALL"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Account"
+msgstr "Account"
+
+#: src/components/ConfirmReferralModal/index.tsx
+msgid "Add referral successful!"
+msgstr "Add referral successful!"
+
+#: src/utils/helpers/handleError.ts
+#: src/utils/helpers/handleError.ts
+#: src/utils/helpers/handleError.ts
+msgid "An error occurs. Please try again"
+msgstr "An error occurs. Please try again"
+
+#: src/pages/Stats/index.tsx
+msgid "Analytics"
+msgstr "Analytics"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Are you sure to logout?"
+msgstr "Are you sure to logout?"
+
+#: src/components/LoginAction/ModalResetPassword.tsx
+#~ msgid "At least 8 characters (uppercase, lowercase, and number)"
+#~ msgstr "At least 8 characters (uppercase, lowercase, and number)"
+
+#: src/hooks/web3/useAuth.tsx
+msgid "Authorization Error"
+msgstr "Authorization Error"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/pages/TraderDetails/TraderStats.tsx
+msgid "Avg Duration"
+msgstr "Avg Duration"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/pages/TraderDetails/TraderStats.tsx
+msgid "Avg Leverage"
+msgstr "Avg Leverage"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Avg Volume"
+msgstr "Avg Volume"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Back"
+msgstr "Back"
+
+#: src/pages/@helpers/ErrorFallback.tsx
+msgid "Back To Home"
+msgstr "Back To Home"
+
+#: src/components/@ui/NotFound/index.tsx
+msgid "Back to home"
+msgstr "Back to home"
+
+#: src/pages/TraderDetails/TraderStats.tsx
+msgid "Balance"
+msgstr "Balance"
+
+#: src/utils/config/translations.tsx
+msgid "BingX"
+msgstr "BingX"
+
+#: src/components/LoginAction/ModalLogin.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+msgid "By continuing, you agree to our"
+msgstr "By continuing, you agree to our"
+
+#: src/utils/config/translations.tsx
+#~ msgid "CLOSED"
+#~ msgstr "CLOSED"
+
+#: src/hooks/web3/useAuth.tsx
+msgid "Can't switch to {0}"
+msgstr "Can't switch to {0}"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Canceled"
+msgstr "Canceled"
+
+#: src/hooks/web3/useAuth.tsx
+msgid "Chain Error"
+msgstr "Chain Error"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Change Password"
+msgstr "Change Password"
+
+#: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/MyProfile/ChangePasswordAction.tsx
+#: src/pages/MyProfileOld/ChangePasswordAction.tsx
+msgid "Change password successful!"
+msgstr "Change password successful!"
+
+#: src/theme/Modal/SocialMediaSharingModal.tsx
+#~ msgid "Chia sẻ"
+#~ msgstr "Chia sẻ"
+
+#: src/pages/MyProfile/TabCopies.tsx
+#: src/pages/MyProfileOld/MyCopiesTable.tsx
+msgid "Clone"
+msgstr "Clone"
+
+#: src/components/CopyTradeForm/CopyTradeCloneForm.tsx
+msgid "Clone copy trade has been succeeded"
+msgstr "Clone copy trade has been succeeded"
+
+#: src/components/CopyTradePositionDetails/ListCopyOrderTable.tsx
+#: src/components/PositionDetails/ListOrderTable.tsx
+#: src/utils/config/translations.tsx
+msgid "Close"
+msgstr "Close"
+
+#: src/theme/Tag/index.tsx
+#: src/utils/config/translations.tsx
+msgid "Closed"
+msgstr "Closed"
+
+#: src/pages/MyProfile/renderProps.tsx
+#~ msgid "Collapse"
+#~ msgstr "Collapse"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Communicating with wallet. Sign message with your wallet"
+msgstr "Communicating with wallet. Sign message with your wallet"
+
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+#: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/MyProfile/ChangePasswordAction.tsx
+#: src/pages/MyProfileOld/ChangePasswordAction.tsx
+msgid "Confirm"
+msgstr "Confirm"
+
+#: src/components/ConfirmReferralModal/index.tsx
+#: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/MyProfile/ChangePasswordAction.tsx
+#: src/pages/MyProfileOld/ChangePasswordAction.tsx
+msgid "Confirming..."
+msgstr "Confirming..."
+
+#: src/pages/@layouts/Navbar/Menu.tsx
+msgid "Connect Wallet"
+msgstr "Connect Wallet"
+
+#: src/pages/Stats/ChartComponent.tsx
+#: src/pages/Stats/ChartComponent.tsx
+msgid "Considers settled (closed) positions"
+msgstr "Considers settled (closed) positions"
+
+#: src/pages/Stats/index.tsx
+msgid "Copiers Net PnL"
+msgstr "Copiers Net PnL"
+
+#: src/pages/Stats/index.tsx
+msgid "Copiers Profit vs Loss"
+msgstr "Copiers Profit vs Loss"
+
+#: src/pages/MyProfile/renderProps.tsx
+#~ msgid "Copy Order"
+#~ msgstr "Copy Order"
+
+#: src/pages/Stats/index.tsx
+msgid "Copy Statistic"
+msgstr "Copy Statistic"
+
+#: src/theme/Tag/index.tsx
+msgid "Copying"
+msgstr "Copying"
+
+#: src/components/LoginAction/ModalLogin.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+msgid "Create an account"
+msgstr "Create an account"
+
+#: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/MyProfile/ChangePasswordAction.tsx
+#: src/pages/MyProfileOld/ChangePasswordAction.tsx
+msgid "Current Password"
+msgstr "Current Password"
+
+#: src/components/@ui/TimeFilter/constants.tsx
+msgid "Custom"
+msgstr "Custom"
+
+#: src/components/CopyTradePositionDetails/ListCopyOrderTable.tsx
+#: src/components/PositionDetails/ListOrderTable.tsx
+#: src/utils/config/translations.tsx
+msgid "Decrease"
+msgstr "Decrease"
+
+#: src/components/Tables/CopyTradeSettingTable.tsx
+#~ msgid "Detail"
+#~ msgstr "Detail"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Disconnect"
+msgstr "Disconnect"
+
+#: src/pages/@layouts/Footer/index.tsx
+msgid "Docs"
+msgstr "Docs"
+
+#: src/pages/@layouts/Footer/event.tsx
+#~ msgid "Document"
+#~ msgstr "Document"
+
+#: src/components/LoginAction/ModalLogin.tsx
+msgid "Don’t have a Copin account?"
+msgstr "Don’t have a Copin account?"
+
+#: src/pages/MyProfile/TabCopies.tsx
+#: src/pages/MyProfileOld/MyCopiesTable.tsx
+msgid "Edit"
+msgstr "Edit"
+
+#: src/components/LoginAction/ModalLogin.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+msgid "Email"
+msgstr "Email"
+
+#: src/components/InputReferral/index.tsx
+msgid "Enter referral code"
+msgstr "Enter referral code"
+
+#: src/components/CopyTradeForm/CopyTradeCloneForm.tsx
+#: src/hooks/features/useBacktestRequest.tsx
+#: src/hooks/features/useBacktestRequest.tsx
+#: src/hooks/features/useBacktestRequest.tsx
+#: src/hooks/features/useBacktestRequest.tsx
+#: src/hooks/features/useUpdateCopyTrade.tsx
+#: src/hooks/web3/useAuth.tsx
+#: src/hooks/web3/useContractMutation.tsx
+#: src/hooks/web3/useTokenApproval.tsx
+#: src/pages/MyProfile/SettingConfigsModal.tsx
+#: src/pages/MyProfile/SettingConfigsModal.tsx
+#: src/pages/TraderDetails/CopyTraderDrawer.tsx
+msgid "Error"
+msgstr "Error"
+
+#: src/pages/Stats/ChartComponent.tsx
+#: src/pages/Stats/ChartComponent.tsx
+msgid "Fees are not factored into PnL"
+msgstr "Fees are not factored into PnL"
+
+#: src/components/LoginAction/ModalLogin.tsx
+msgid "Forgot password?"
+msgstr "Forgot password?"
+
+#: src/pages/@layouts/Navbar/SearchBox.tsx
+#: src/utils/config/translations.tsx
+msgid "GMX"
+msgstr "GMX"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Hey"
+msgstr "Hey"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "History"
+msgstr "History"
+
+#: src/components/ConfirmReferralModal/index.tsx
+msgid "If you skip it this time, you will not be able to re-enter the referral code."
+msgstr "If you skip it this time, you will not be able to re-enter the referral code."
+
+#: src/components/CopyTradePositionDetails/ListCopyOrderTable.tsx
+#: src/components/PositionDetails/ListOrderTable.tsx
+#: src/utils/config/translations.tsx
+msgid "Increase"
+msgstr "Increase"
+
+#: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/MyProfile/ChangePasswordAction.tsx
+#: src/pages/MyProfileOld/ChangePasswordAction.tsx
+msgid "Input current password"
+msgstr "Input current password"
+
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+msgid "Input email"
+msgstr "Input email"
+
+#: src/components/LoginAction/ModalLogin.tsx
+msgid "Input email address"
+msgstr "Input email address"
+
+#: src/components/LoginAction/ModalResetPassword.tsx
+#: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/MyProfile/ChangePasswordAction.tsx
+#: src/pages/MyProfileOld/ChangePasswordAction.tsx
+msgid "Input new password"
+msgstr "Input new password"
+
+#: src/components/LoginAction/ModalLogin.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+msgid "Input password"
+msgstr "Input password"
+
+#: src/utils/helpers/handleError.ts
+msgid "Insufficient funds for gas fee and value"
+msgstr "Insufficient funds for gas fee and value"
+
+#: src/pages/@layouts/Navbar/SearchBox.tsx
+msgid "Kwenta"
+msgstr "Kwenta"
+
+#: src/components/@ui/Table/renderProps.tsx
+#: src/components/@ui/Table/renderProps.tsx
+#: src/pages/MyProfile/renderProps.tsx
+#: src/pages/MyProfileOld/renderProps.tsx
+msgid "L"
+msgstr "L"
+
+#: src/utils/config/translations.tsx
+#~ msgid "LIQUIDATED"
+#~ msgstr "LIQUIDATED"
+
+#: src/pages/@layouts/Footer/index.tsx
+msgid "Landing Page"
+msgstr "Landing Page"
+
+#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+msgid "Last 30 Days"
+msgstr "Last 30 Days"
+
+#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+#~ msgid "Last 30d"
+#~ msgstr "Last 30d"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Last Trade"
+msgstr "Last Trade"
+
+#: src/pages/TraderDetails/TraderStats.tsx
+msgid "Last Trade (All)"
+msgstr "Last Trade (All)"
+
+#: src/theme/Tag/index.tsx
+#: src/utils/config/translations.tsx
+msgid "Liquidated"
+msgstr "Liquidated"
+
+#: src/components/CopyTradePositionDetails/ListCopyOrderTable.tsx
+#: src/components/PositionDetails/ListOrderTable.tsx
+#: src/utils/config/translations.tsx
+msgid "Liquidation"
+msgstr "Liquidation"
+
+#: src/pages/@layouts/Navbar/Menu.tsx
+msgid "List Collection"
+msgstr "List Collection"
+
+#: src/pages/MyProfile/renderProps.tsx
+#~ msgid "Loading..."
+#~ msgstr "Loading..."
+
+#: src/components/LoginAction/ModalLogin.tsx
+#: src/components/LoginAction/index.tsx
+msgid "Login"
+msgstr "Login"
+
+#: src/components/LoginAction/ModalLogin.tsx
+msgid "Login to Copin"
+msgstr "Login to Copin"
+
+#: src/components/LoginAction/ConnectButton.tsx
+msgid "Login with MetaMask"
+msgstr "Login with MetaMask"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Logout"
+msgstr "Logout"
+
+#: src/theme/Tag/index.tsx
+msgid "Long"
+msgstr "Long"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Looks like you canceled signing of authentication message with your provider"
+msgstr "Looks like you canceled signing of authentication message with your provider"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Looks like you have changed primary address in your wallet. You should sign new authentication message"
+msgstr "Looks like you have changed primary address in your wallet. You should sign new authentication message"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Looks like your session has expired. You should sign new authentication message"
+msgstr "Looks like your session has expired. You should sign new authentication message"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Loses"
+msgstr "Loses"
+
+#: src/pages/TraderDetails/CopyTraderDrawer.tsx
+msgid "Make copy trade has been succeeded"
+msgstr "Make copy trade has been succeeded"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#~ msgid "Max DrawDown PnL"
+#~ msgstr "Max DrawDown PnL"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/pages/TraderDetails/TraderStats.tsx
+msgid "Max Drawdown"
+msgstr "Max Drawdown"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Max Drawdown PnL"
+msgstr "Max Drawdown PnL"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Max Duration"
+msgstr "Max Duration"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/pages/TraderDetails/TraderStats.tsx
+msgid "Max Leverage"
+msgstr "Max Leverage"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Max ROI"
+msgstr "Max ROI"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Min Duration"
+msgstr "Min Duration"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/pages/TraderDetails/TraderStats.tsx
+msgid "Min Leverage"
+msgstr "Min Leverage"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Min ROI"
+msgstr "Min ROI"
+
+#: src/components/@ui/NotFound/index.tsx
+msgid "Need help?"
+msgstr "Need help?"
+
+#: src/components/LoginAction/ModalResetPassword.tsx
+#: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/MyProfile/ChangePasswordAction.tsx
+#: src/pages/MyProfileOld/ChangePasswordAction.tsx
+msgid "New Password"
+msgstr "New Password"
+
+#: src/components/@ui/NoDataFound/index.tsx
+#: src/theme/Select/index.tsx
+msgid "No Data Found"
+msgstr "No Data Found"
+
+#: src/hooks/web3/useAuth.tsx
+msgid "No provider was found"
+msgstr "No provider was found"
+
+#: src/components/ConfirmReferralModal/index.tsx
+#~ msgid "No, thank"
+#~ msgstr "No, thank"
+
+#: src/components/ConfirmReferralModal/index.tsx
+msgid "No, thanks"
+msgstr "No, thanks"
+
+#: src/components/ConfirmReferralModal/index.tsx
+msgid "Notice"
+msgstr "Notice"
+
+#: src/utils/config/translations.tsx
+#~ msgid "OPEN"
+#~ msgstr "OPEN"
+
+#: src/components/LoginAction/ModalLogin.tsx
+msgid "OR LOGIN WITH"
+msgstr "OR LOGIN WITH"
+
+#: src/components/CopyTradePositionDetails/ListCopyOrderTable.tsx
+#: src/components/PositionDetails/ListOrderTable.tsx
+#: src/theme/Tag/index.tsx
+#: src/utils/config/translations.tsx
+#: src/utils/config/translations.tsx
+msgid "Open"
+msgstr "Open"
+
+#: src/pages/Stats/index.tsx
+msgid "Order"
+msgstr "Order"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Order/Pos Ratio"
+msgstr "Order/Pos Ratio"
+
+#: src/pages/Stats/index.tsx
+msgid "Overview"
+msgstr "Overview"
+
+#: src/pages/TraderDetails/TraderStats.tsx
+msgid "PNL Ratio"
+msgstr "PNL Ratio"
+
+#: src/components/LoginAction/ModalLogin.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+msgid "Password"
+msgstr "Password"
+
+#: src/components/LoginAction/ModalResetPassword.tsx
+#~ msgid "Password must contain at least 8 characters (uppercase, lowercase and number)"
+#~ msgstr "Password must contain at least 8 characters (uppercase, lowercase and number)"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Platform"
+msgstr "Platform"
+
+#: src/hooks/web3/useAuth.tsx
+msgid "Please authorize to access your account"
+msgstr "Please authorize to access your account"
+
+#: src/components/LoginAction/ModalLogin.tsx
+msgid "Please check the verification code from your email!"
+msgstr "Please check the verification code from your email!"
+
+#: src/hooks/web3/useAuth.tsx
+#: src/hooks/web3/useAuth.tsx
+msgid "Please switch network on your wallet to {0}"
+msgstr "Please switch network on your wallet to {0}"
+
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+msgid "Please use a valid email address."
+msgstr "Please use a valid email address."
+
+#: src/utils/config/translations.tsx
+msgid "Please wait a few minutes before you try again"
+msgstr "Please wait a few minutes before you try again"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "PnL"
+msgstr "PnL"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "PnL Ratio"
+msgstr "PnL Ratio"
+
+#: src/pages/MyProfile/renderProps.tsx
+#~ msgid "Position Details"
+#~ msgstr "Position Details"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Profile"
+msgstr "Profile"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Profile (Old)"
+msgstr "Profile (Old)"
+
+#: src/pages/Stats/index.tsx
+msgid "Profit & Loss"
+msgstr "Profit & Loss"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/pages/TraderDetails/TraderStats.tsx
+msgid "Profit Factor"
+msgstr "Profit Factor"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Profit Rate"
+msgstr "Profit Rate"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+#~ msgid "Profit factor"
+#~ msgstr "Profit factor"
+
+#: src/hooks/web3/useAuth.tsx
+msgid "Provider Error"
+msgstr "Provider Error"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "ROI"
+msgstr "ROI"
+
+#: src/pages/MyProfile/Referral/ReferralList.tsx
+#~ msgid "Referee List"
+#~ msgstr "Referee List"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Referral"
+msgstr "Referral"
+
+#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+msgid "Referral Code"
+msgstr "Referral Code"
+
+#: src/components/LoginAction/ModalRegister.tsx
+msgid "Referral Code (optional)"
+msgstr "Referral Code (optional)"
+
+#: src/components/LoginAction/ModalRegister.tsx
+#~ msgid "Referral ID (optional)"
+#~ msgstr "Referral ID (optional)"
+
+#: src/pages/MyProfile/Referral/ReferralList.tsx
+msgid "Referral List"
+msgstr "Referral List"
+
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#~ msgid "Referral code has {REFERRAL_CODE_LENGTH} number."
+#~ msgstr "Referral code has {REFERRAL_CODE_LENGTH} number."
+
+#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+msgid "Referrals"
+msgstr "Referrals"
+
+#: src/components/LoginAction/ModalRegister.tsx
+msgid "Register"
+msgstr "Register"
+
+#: src/components/LoginAction/ModalRegister.tsx
+msgid "Register successful!"
+msgstr "Register successful!"
+
+#: src/pages/@helpers/ErrorFallback.tsx
+msgid "Reload"
+msgstr "Reload"
+
+#: src/pages/MyProfile/TabCopies.tsx
+#: src/pages/MyProfileOld/MyCopiesTable.tsx
+msgid "Remove"
+msgstr "Remove"
+
+#: src/components/LoginAction/ModalResetPassword.tsx
+msgid "Request"
+msgstr "Request"
+
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+msgid "Resend"
+msgstr "Resend"
+
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+msgid "Resend after {resendCountdown}s"
+msgstr "Resend after {resendCountdown}s"
+
+#: src/components/LoginAction/ModalResetPassword.tsx
+msgid "Reset password"
+msgstr "Reset password"
+
+#: src/components/LoginAction/ModalResetPassword.tsx
+msgid "Reset password successful!"
+msgstr "Reset password successful!"
+
+#: src/pages/TraderDetails/TraderStats.tsx
+msgid "Run Time (All)"
+msgstr "Run Time (All)"
+
+#: src/theme/Tag/index.tsx
+#: src/utils/config/translations.tsx
+msgid "Running"
+msgstr "Running"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Runtime (All)"
+msgstr "Runtime (All)"
+
+#: src/components/@ui/Table/renderProps.tsx
+#: src/components/@ui/Table/renderProps.tsx
+#: src/pages/MyProfile/renderProps.tsx
+#: src/pages/MyProfileOld/renderProps.tsx
+msgid "S"
+msgstr "S"
+
+#: src/pages/@layouts/Navbar/SearchBox.tsx
+#~ msgid "Search Address"
+#~ msgstr "Search Address"
+
+#: src/pages/TraderDetails/CopyTraderDrawer.tsx
+msgid "Select the copy you want to clone:"
+msgstr "Select the copy you want to clone:"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Session Expired"
+msgstr "Session Expired"
+
+#: src/pages/MyProfile/SettingConfigsModal.tsx
+msgid "Setting configs has been succeeded"
+msgstr "Setting configs has been succeeded"
+
+#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+msgid "Share DApp"
+msgstr "Share DApp"
+
+#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+msgid "Share Landing Page"
+msgstr "Share Landing Page"
+
+#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+#~ msgid "Share landing page"
+#~ msgstr "Share landing page"
+
+#: src/theme/Tag/index.tsx
+msgid "Short"
+msgstr "Short"
+
+#: src/components/@ui/InfiniteLoadmoreButton/index.tsx
+msgid "Show more"
+msgstr "Show more"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Sign message"
+msgstr "Sign message"
+
+#: src/components/ConfirmReferralModal/index.tsx
+msgid "Skipping..."
+msgstr "Skipping..."
+
+#: src/pages/@helpers/ErrorFallback.tsx
+msgid "Something went wrong"
+msgstr "Something went wrong"
+
+#: src/pages/MyProfile/renderProps.tsx
+#~ msgid "Source Order"
+#~ msgstr "Source Order"
+
+#: src/pages/@layouts/Navbar/index.tsx
+msgid "Stats"
+msgstr "Stats"
+
+#: src/theme/Tag/index.tsx
+#: src/utils/config/translations.tsx
+msgid "Stopped"
+msgstr "Stopped"
+
+#: src/components/ConfirmReferralModal/index.tsx
+#: src/components/CopyTradeForm/CopyTradeCloneForm.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+#: src/hooks/features/useUpdateCopyTrade.tsx
+#: src/hooks/web3/useContractMutation.tsx
+#: src/hooks/web3/useTokenApproval.tsx
+#: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/MyProfile/ChangePasswordAction.tsx
+#: src/pages/MyProfile/SettingConfigsModal.tsx
+#: src/pages/MyProfile/SettingConfigsModal.tsx
+#: src/pages/MyProfileOld/ChangePasswordAction.tsx
+#: src/pages/TraderDetails/CopyTraderDrawer.tsx
+msgid "Success"
+msgstr "Success"
+
+#: src/components/LoginAction/ModalLogin.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+msgid "Term of Use"
+msgstr "Term of Use"
+
+#: src/pages/@layouts/Footer/index.tsx
+msgid "Terms & Policy"
+msgstr "Terms & Policy"
+
+#: src/components/@ui/NotFound/index.tsx
+msgid "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
+msgstr "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
+
+#: src/components/InputReferral/index.tsx
+#: src/components/InputReferral/index.tsx
+msgid "The referral code has {REFERRAL_CODE_LENGTH} characters."
+msgstr "The referral code has {REFERRAL_CODE_LENGTH} characters."
+
+#: src/components/ConfirmReferralModal/index.tsx
+#: src/components/ConfirmReferralModal/index.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#~ msgid "The referral code has {REFERRAL_CODE_LENGTH} numbers."
+#~ msgstr "The referral code has {REFERRAL_CODE_LENGTH} numbers."
+
+#: src/utils/config/translations.tsx
+#: src/utils/config/translations.tsx
+msgid "The server is not responding, please try again later!"
+msgstr "The server is not responding, please try again later!"
+
+#: src/components/@ui/NotFound/index.tsx
+msgid "This Page Could Not Be Found"
+msgstr "This Page Could Not Be Found"
+
+#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+msgid "Today"
+msgstr "Today"
+
+#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+msgid "Total"
+msgstr "Total"
+
+#: src/pages/Stats/index.tsx
+msgid "Total Copier"
+msgstr "Total Copier"
+
+#: src/pages/Stats/Overview.tsx
+msgid "Total Copiers"
+msgstr "Total Copiers"
+
+#: src/pages/Stats/index.tsx
+msgid "Total Copy Trade"
+msgstr "Total Copy Trade"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Total Gain"
+msgstr "Total Gain"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Total Loss"
+msgstr "Total Loss"
+
+#: src/pages/Stats/Overview.tsx
+msgid "Total Net Profit"
+msgstr "Total Net Profit"
+
+#: src/pages/Stats/Overview.tsx
+msgid "Total Orders"
+msgstr "Total Orders"
+
+#: src/pages/MyProfile/TabCopies.tsx
+msgid "Total PnL"
+msgstr "Total PnL"
+
+#: src/pages/TraderDetails/TraderStats.tsx
+msgid "Total Trade"
+msgstr "Total Trade"
+
+#: src/pages/Stats/index.tsx
+msgid "Total Unique Trader"
+msgstr "Total Unique Trader"
+
+#: src/pages/Stats/Overview.tsx
+msgid "Total Volume"
+msgstr "Total Volume"
+
+#: src/pages/@layouts/Navbar/SearchBox.tsx
+#~ msgid "Traders"
+#~ msgstr "Traders"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Trades"
+msgstr "Trades"
+
+#: src/hooks/web3/useContractMutation.tsx
+msgid "Transaction has been executed successfully"
+msgstr "Transaction has been executed successfully"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Try Again"
+msgstr "Try Again"
+
+#: src/theme/Uploader/index.tsx
+msgid "Tải ảnh không thành công do sai định dạnh ảnh!"
+msgstr "Tải ảnh không thành công do sai định dạnh ảnh!"
+
+#: src/pages/Stats/ChartComponent.tsx
+msgid "Unique traders are copied in the system"
+msgstr "Unique traders are copied in the system"
+
+#: src/hooks/web3/useAuth.tsx
+msgid "Unsupported Chain"
+msgstr "Unsupported Chain"
+
+#: src/components/LoginAction/ModalLogin.tsx
+msgid "Unverified User"
+msgstr "Unverified User"
+
+#: src/pages/MyProfile/SettingConfigsModal.tsx
+msgid "Update configs has been succeeded"
+msgstr "Update configs has been succeeded"
+
+#: src/components/ConfirmReferralModal/index.tsx
+msgid "Use this code"
+msgstr "Use this code"
+
+#: src/components/ConfirmReferralModal/index.tsx
+#~ msgid "Use this referral"
+#~ msgstr "Use this referral"
+
+#: src/components/ConfirmReferralModal/index.tsx
+#~ msgid "Use this referral code"
+#~ msgstr "Use this referral code"
+
+#: src/components/LoginAction/ModalRegister.tsx
+msgid "Verify account"
+msgstr "Verify account"
+
+#: src/pages/MyProfile/renderProps.tsx
+#~ msgid "View"
+#~ msgstr "View"
+
+#: src/pages/MyProfile/renderProps.tsx
+#~ msgid "View Order Detail"
+#~ msgstr "View Order Detail"
+
+#: src/pages/Stats/index.tsx
+#: src/pages/Stats/index.tsx
+msgid "Volume"
+msgstr "Volume"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "W/L Ratio"
+msgstr "W/L Ratio"
+
+#: src/components/LoginAction/ModalLogin.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+msgid "Waiting..."
+msgstr "Waiting..."
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Win rate"
+msgstr "Win rate"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Wins"
+msgstr "Wins"
+
+#: src/components/ConfirmReferralModal/index.tsx
+msgid "Would you like to use a referral code?"
+msgstr "Would you like to use a referral code?"
+
+#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+msgid "Yesterday"
+msgstr "Yesterday"
+
+#: src/utils/config/translations.tsx
+msgid "You are not authorized to perform this action"
+msgstr "You are not authorized to perform this action"
+
+#: src/pages/MyProfile/Referral/ReferralList.tsx
+msgid "You do not have any referral"
+msgstr "You do not have any referral"
+
+#: src/hooks/features/useUpdateCopyTrade.tsx
+msgid "Your update has been succeeded"
+msgstr "Your update has been succeeded"
+
+#: src/components/LoginAction/ModalLogin.tsx
+#: src/components/LoginAction/ModalLogin.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalRegister.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+#: src/components/LoginAction/ModalResetPassword.tsx
+#: src/hooks/features/useReferralActions.tsx
+#: src/hooks/features/useReferralActions.tsx
+#: src/hooks/features/useReferralActions.tsx
+#: src/hooks/features/useReferralActions.tsx
+#: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/MyProfile/ChangePasswordAction.tsx
+#: src/pages/MyProfile/ChangePasswordAction.tsx
+#: src/pages/MyProfileOld/ChangePasswordAction.tsx
+#: src/pages/MyProfileOld/ChangePasswordAction.tsx
+msgid "{0}"
+msgstr "{0}"
+
+#: src/theme/Tab/TabIcon.tsx
+msgid "{text}"
+msgstr "{text}"
+
+#: src/components/@ui/CustomPageTitle/event.tsx
+#~ msgid "{title}"
+#~ msgstr "{title}"
+
+#: src/pages/@layouts/Footer/index.tsx
+msgid "© 2023 Copin. All rights reserved."
+msgstr "© 2023 Copin. All rights reserved."

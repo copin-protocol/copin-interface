@@ -1,0 +1,158 @@
+import { CaretRight, XCircle } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
+import React, { useState } from 'react'
+// eslint-disable-next-line no-restricted-imports
+import { useHistory } from 'react-router-dom'
+
+import Container from 'components/@ui/Container'
+import { SignedText } from 'components/@ui/DecoratedText/SignedText'
+import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
+import { renderOpeningPnL } from 'components/@ui/Table/renderProps'
+import PositionDetails from 'components/PositionDetails'
+import { PositionData } from 'entities/trader'
+import useIsMobile from 'hooks/helpers/useIsMobile'
+import useSearchParams from 'hooks/router/useSearchParams'
+import useUsdPricesStore from 'hooks/store/useUsdPrices'
+import { Button } from 'theme/Buttons'
+import IconButton from 'theme/Buttons/IconButton'
+import SkullIcon from 'theme/Icons/SkullIcon'
+import Drawer from 'theme/Modal/Drawer'
+import { Box, Flex, Type } from 'theme/base'
+import { PositionStatusEnum } from 'utils/config/enums'
+import { URL_PARAM_KEYS } from 'utils/config/keys'
+import { formatNumber } from 'utils/helpers/format'
+import { generateClosedPositionRoute, generateOpeningPositionRoute } from 'utils/helpers/generateRoute'
+
+export default function PositionLegend({ isOpening, data }: { isOpening: boolean; data: PositionData }) {
+  const { prices } = useUsdPricesStore()
+  const isMobile = useIsMobile()
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const history = useHistory()
+  const { searchParams } = useSearchParams()
+  const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
+    ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
+    : undefined
+
+  const handleSelectItem = (data: PositionData) => {
+    setOpenDrawer(true)
+    if (isOpening) {
+      window.history.replaceState(null, '', generateOpeningPositionRoute(data))
+    } else {
+      window.history.replaceState(
+        null,
+        '',
+        generateClosedPositionRoute({ id: data.id, protocol: data.protocol, nextHours: nextHoursParam })
+      )
+    }
+  }
+
+  const handleDismiss = () => {
+    window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
+    setOpenDrawer(false)
+  }
+
+  const { lg } = useResponsive()
+
+  return (
+    <Button
+      width="100%"
+      variant="info"
+      type="button"
+      sx={{
+        mx: 0,
+        px: 12,
+        py: 2,
+        '&:hover:not(:disabled),&:active:not(:disabled)': {
+          bg: 'neutral7',
+        },
+      }}
+      onClick={() => handleSelectItem(data)}
+    >
+      <Flex
+        width="100%"
+        justifyContent="space-between"
+        color="neutral3"
+        alignItems="center"
+        sx={{ overflowX: 'auto', py: 1 }}
+      >
+        <Flex minWidth="30px" flexDirection="column" alignItems="flex-start" sx={{ gap: 2 }}>
+          <Type.Small>Time</Type.Small>
+          <Type.Small color="neutral3">
+            <RelativeShortTimeText date={isOpening ? data.blockTime : data.closeBlockTime} />
+          </Type.Small>
+        </Flex>
+        {/* <Flex minWidth="100px" flexDirection="column" alignItems="flex-start" sx={{ gap: 2 }}>
+          <Type.Caption>Entry</Type.Caption>
+          <Type.Caption color="neutral1">{renderEntry(data)}</Type.Caption>
+        </Flex> */}
+        <Flex minWidth="90px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
+          <Type.Small>Size</Type.Small>
+          <Type.Small color="neutral1">${formatNumber(data.size, 0)}</Type.Small>
+        </Flex>
+        <Flex minWidth="60px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
+          <Type.Small>Leverage</Type.Small>
+          <Type.Small color="neutral1">{formatNumber(data.leverage, 1, 1)}x</Type.Small>
+        </Flex>
+        <Flex minWidth="70px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
+          <Type.Small>Pnl $</Type.Small>
+          {isOpening ? (
+            prices ? (
+              renderOpeningPnL(data, prices)
+            ) : (
+              '--'
+            )
+          ) : (
+            <Flex alignItems="center" sx={{ gap: '1px' }}>
+              {(data.isLiquidate || data.roi <= -100) && <SkullIcon />}
+              <Type.Small>
+                <SignedText
+                  value={data.realisedPnl}
+                  maxDigit={0}
+                  sx={{ textAlign: 'right', width: '100%' }}
+                  fontInherit={true}
+                />
+              </Type.Small>
+            </Flex>
+          )}
+        </Flex>
+        <Flex minWidth="70px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
+          <Type.Small>Fee</Type.Small>
+          <Type.Small color="neutral1">
+            <SignedText value={-data.fee} maxDigit={0} fontInherit={true} />
+          </Type.Small>
+        </Flex>
+        <Flex minWidth="20px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
+          <Box sx={{ position: 'relative', top: '2px' }}>
+            <CaretRight />
+          </Box>
+        </Flex>
+      </Flex>
+      {openDrawer && (
+        <Drawer
+          isOpen={openDrawer}
+          onDismiss={handleDismiss}
+          mode="right"
+          size={isMobile ? '100%' : '60%'}
+          background="neutral6"
+        >
+          <Container sx={{ position: 'relative' }}>
+            <IconButton
+              icon={<XCircle size={24} />}
+              variant="ghost"
+              sx={{ position: 'absolute', right: 1, top: 3 }}
+              onClick={handleDismiss}
+            />
+            <PositionDetails
+              protocol={data.protocol}
+              id={data.status === PositionStatusEnum.OPEN ? undefined : data.id}
+              account={data.account}
+              indexToken={data.indexToken}
+              dataKey={data.key}
+              isShow={openDrawer}
+            />
+          </Container>
+        </Drawer>
+      )}
+    </Button>
+  )
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>Copin Analyzer</title>
+    <meta name="description" content="The leading tool to analyze and copy on-chain traders" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="https://app.copin.io" />
+    <meta name="twitter:creator" content="@Copin_io" />
+    <meta name="twitter:title" content="__TITLE__" />
+    <meta name="twitter:description" content="__DESCRIPTION__" />
+    <meta name="twitter:image" content="__THUMBNAIL__" />
+    <meta name="twitter:image:alt" content="Copin" />
+
+    <meta property="og:title" content="__TITLE__" />
+    <meta property="og:description" content="__DESCRIPTION__" />
+    <meta property="og:image" content="__THUMBNAIL__" />
+    <meta property="og:image:alt" content="Copin" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="__URL__" />
+
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;700&display=swap" rel="stylesheet" />
+    <script>
+      /**
+       * this is a hack for error: global is not defined
+       */
+      var global = global || window
+    </script>
+    <script type="module">
+      import { Buffer } from 'buffer'
+
+      window.Buffer = Buffer
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-SJ25F1YFSM"></script> -->
+    <!--    <script>-->
+    <!--      // window.dataLayer = window.dataLayer || []-->
+    <!--      // function gtag() {-->
+    <!--      //   dataLayer.push(arguments)-->
+    <!--      // }-->
+    <!--      // gtag('js', new Date())-->
+
+    <!--      // gtag('config', 'G-SJ25F1YFSM')-->
+    <!--      // Load the script after the user scrolls, moves the mouse, or touches the screen-->
+    <!--      document.addEventListener('scroll', initGTMOnEvent)-->
+    <!--      document.addEventListener('mousemove', initGTMOnEvent)-->
+    <!--      document.addEventListener('touchstart', initGTMOnEvent)-->
+
+    <!--      // Or, load the script after 2 seconds-->
+    <!--      document.addEventListener('DOMContentLoaded', () => {-->
+    <!--        setTimeout(initGTM, 1000)-->
+    <!--      })-->
+
+    <!--      // Initializes Google Tag Manager in response to an event-->
+    <!--      function initGTMOnEvent(event) {-->
+    <!--        initGTM()-->
+    <!--        event.currentTarget.removeEventListener(event.type, initGTMOnEvent)-->
+    <!--      }-->
+
+    <!--      // Initializes Google Tag Manager-->
+    <!--      function initGTM() {-->
+    <!--        if (window.gtmDidInit) {-->
+    <!--          // Don't load again-->
+    <!--          return false-->
+    <!--        }-->
+
+    <!--        window.gtmDidInit = true-->
+
+    <!--        // Create the script-->
+    <!--        const script = document.createElement('script')-->
+    <!--        script.type = 'text/javascript'-->
+    <!--        script.onload = () => {-->
+    <!--          window.dataLayer = window.dataLayer || []-->
+    <!--          function gtag() {-->
+    <!--            dataLayer.push(arguments)-->
+    <!--          }-->
+    <!--          gtag('js', new Date())-->
+    <!--          gtag('config', 'G-SJ25F1YFSM')-->
+    <!--        }-->
+    <!--        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-SJ25F1YFSM'-->
+
+    <!--        // We are still deferring the script-->
+    <!--        script.defer = true-->
+    <!-- 
+        // Append the script to the body of the document
+        document.getElementsByTagName('body')[0].appendChild(script)
+      } -->
+    <!-- </script> -->
+    <script type="text/javascript">
+      ;(function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            ;(c[a].q = c[a].q || []).push(arguments)
+          }
+        t = l.createElement(r)
+        t.async = 1
+        t.src = 'https://www.clarity.ms/tag/' + i
+        y = l.getElementsByTagName(r)[0]
+        y.parentNode.insertBefore(t, y)
+      })(window, document, 'clarity', 'script', 'iewkyubo0a')
+    </script>
+  </head>
+  <body style="overflow: hidden">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <!-- <script type="text/javascript" defer src="//app.sgwidget.com/js/sg-widget-v2.js"></script> -->
+    <!--
+  This HTML file is a template.
+  If you open it directly in the browser, you will see an empty page.
+
+  You can add webfonts, meta tags, or analytics to this file.
+  The build step will place the bundled scripts into the <body> tag.
+
+  To begin the development, run `npm start` or `yarn start`.
+  To create a production bundle, use `npm run build` or `yarn build`.
+-->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+  </body>
+</html>

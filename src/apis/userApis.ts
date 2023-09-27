@@ -1,0 +1,60 @@
+import { CopyOrderData, CopyPositionData } from 'entities/copyTrade.d'
+import { PositionData } from 'entities/trader.d'
+import { ReferralData, ReferralStat, UserData } from 'entities/user.d'
+import { DEFAULT_LIMIT } from 'utils/config/constants'
+
+import { ApiListResponse } from './api'
+import requester from './index'
+import { GetApiParams, GetMyPositionsParams } from './types'
+
+const POSITION_SERVICE = 'copy-positions'
+const USER_SERVICE = 'users'
+
+export async function getMyProfileApi() {
+  return requester.get(`me`).then((res: any) => res.data as UserData)
+}
+
+export async function changePasswordApi({ oldPassword, password }: { oldPassword: string; password: string }) {
+  return requester.put(`update-password`, { oldPassword, password }).then((res: any) => res.data as UserData)
+}
+
+export async function getMyCopyPositionsApi(params: GetMyPositionsParams) {
+  const newParams: Record<string, any> = { ...params }
+  !!params.status?.length && (newParams.status = params.status?.join(','))
+  !!params.copyTrades?.length && (newParams.copyTrades = params.copyTrades?.join(','))
+  if (!!params.sortBy) newParams.sort_by = params.sortBy
+  if (!!params.sortType) newParams.sort_type = params.sortType
+  return requester
+    .get(`${POSITION_SERVICE}/page`, { params: newParams })
+    .then((res: any) => res.data as ApiListResponse<CopyPositionData>)
+}
+
+export async function getMyCopyPositionDetailApi({ copyId }: { copyId: string }) {
+  return requester.get(`${POSITION_SERVICE}/${copyId}`).then((res: any) => res.data as CopyPositionData)
+}
+
+export async function getMyCopySourcePositionDetailApi({ copyId }: { copyId: string }) {
+  return requester.get(`${POSITION_SERVICE}/${copyId}/position`).then((res: any) => res.data as PositionData)
+}
+
+export async function getMyCopyOrdersApi({ copyId }: { copyId: string }) {
+  return requester.get(`${POSITION_SERVICE}/${copyId}/orders`).then((res: any) => res.data as CopyOrderData[])
+}
+
+export async function getReferralListApi({ limit = DEFAULT_LIMIT, offset = 0 }: GetApiParams) {
+  return requester
+    .get(`${USER_SERVICE}/referral/page`, { params: { limit, offset } })
+    .then((res: any) => res.data as ApiListResponse<ReferralData>)
+}
+
+export async function getReferralStatsApi() {
+  return requester.get(`${USER_SERVICE}/referral/stats`).then((res: any) => res.data as ReferralStat)
+}
+
+export async function addReferralCodeApi(referralCode: string) {
+  return requester.post(`${USER_SERVICE}/add-referral`, { referralCode }).then((res: any) => res.data as UserData)
+}
+
+export async function skipReferralApi() {
+  return requester.post(`${USER_SERVICE}/skip-referral`).then((res: any) => res.data as UserData)
+}

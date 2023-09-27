@@ -1,0 +1,55 @@
+image: node:16.18.0
+
+options:
+  docker: true
+
+definitions:
+  services:
+    docker:
+      memory: 2048
+
+pipelines:
+  branches:
+    production:
+      - step:
+        name: Sync GitHub Mirror
+        image: alpine/git:latest
+        clone:
+          enabled: false
+        script:
+          - git clone -b main --single-branch --bare $BITBUCKET_GIT_SSH_ORIGIN
+          - cd copin-interface.git
+          - git push --mirror git@github.com:Copin-Analyzer/copin-interface.git
+      - step:
+          runs-on:
+            - self.hosted
+            - linux
+          name: Deploy Gmx Copy Trade Web
+          image: google/cloud-sdk:latest
+          script:
+            - export IMAGE_NAME=gcr.io/$GCR_PROJECT/gmxcopytrade-web:v0.0.1.$BITBUCKET_COMMIT
+            - export DOCKER_BUILDKIT=0
+            - cp dockers/Dockerfile_prod Dockerfile
+            - echo "${GOOGLE_KEY}" > ./gcloud-api-key.json
+            - gcloud auth activate-service-account --project=$GCR_PROJECT --key-file gcloud-api-key.json
+            - gcloud auth configure-docker
+            - docker build -t $IMAGE_NAME .
+            - docker push $IMAGE_NAME
+            - curl --location --request POST $PROD_WEBHOOK?tag=v0.0.1.$BITBUCKET_COMMIT
+    develop:
+      - step:
+          runs-on:
+            - self.hosted
+            - linux
+          name: Deploy Gmx Copy Trade Web
+          image: google/cloud-sdk:latest
+          script:
+            - export IMAGE_NAME=gcr.io/$GCR_PROJECT/gmxcopytrade-web:v0.0.1.$BITBUCKET_COMMIT
+            - export DOCKER_BUILDKIT=0
+            - cp dockers/Dockerfile_dev Dockerfile
+            - echo "${GOOGLE_KEY}" > ./gcloud-api-key.json
+            - gcloud auth activate-service-account --project=$GCR_PROJECT --key-file gcloud-api-key.json
+            - gcloud auth configure-docker
+            - docker build -t $IMAGE_NAME .
+            - docker push $IMAGE_NAME
+            - curl --location --request POST $DEV_WEBHOOK?tag=v0.0.1.$BITBUCKET_COMMIT
