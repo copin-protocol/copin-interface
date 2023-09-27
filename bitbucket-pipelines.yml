@@ -10,7 +10,7 @@ definitions:
 
 pipelines:
   branches:
-    production:
+    main:
       - step:
         name: Sync GitHub Mirror
         image: alpine/git:latest
