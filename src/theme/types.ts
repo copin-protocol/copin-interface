@@ -37,7 +37,6 @@ export type Colors = {
   orange2: Color
   orange3: Color
 
-  gradient1: Color
   modalBG: Color
 }
 
