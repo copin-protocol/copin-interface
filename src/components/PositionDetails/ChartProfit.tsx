@@ -528,8 +528,6 @@ export default function ChartProfit({
     }
 
     chart.subscribeCrosshairMove((param) => {
-      console.log('subscribeCrosshairMove', param)
-      console.log('container', container)
       const data = param.seriesData.get(series) as LineData
       const dataFuture = param.seriesData.get(futureSeries) as LineData
       setCrossMovePnL(dataFuture?.value ?? data?.value)
