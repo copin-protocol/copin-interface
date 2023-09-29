@@ -1,5 +1,6 @@
 import { SystemStyleObject } from '@styled-system/css'
-import React, { ReactElement, ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { GridProps } from 'styled-system'
 
@@ -69,71 +70,31 @@ const Tabs = ({
   tabPanelSx,
   onChange,
 }: TabsProps) => {
-  const activeRef = useRef<HTMLButtonElement>(null)
-  const headerRef = useRef<HTMLDivElement>(null)
-  const [activeTab, setActiveTab] = useState(defaultActiveKey)
-  const [defaultActiveTab, setDefaultActiveTab] = useState(defaultActiveKey)
-
-  useEffect(() => {
-    if (defaultActiveKey !== defaultActiveTab) {
-      setDefaultActiveTab(defaultActiveKey)
-      setActiveTab(defaultActiveKey)
-    }
-  }, [defaultActiveKey, defaultActiveTab])
-
-  useEffect(() => {
-    if (activeRef.current) {
-      headerRef.current?.scrollTo({ left: activeRef.current.getBoundingClientRect().x, behavior: 'smooth' })
-    }
-  }, [activeTab])
-
   const elements = children as ReactElement[]
   if (elements.length) {
     const tabs = elements
       .filter((c: ReactElement) => c.props.active !== false)
       .map((c: ReactElement) => ({
-        key: c.key?.toString(),
+        key: c.key?.toString() ?? '',
         name: c.props.tab,
       }))
     return (
       <Box sx={{ width: '100%', ...sx }}>
-        <HeaderOverlay hasOverlay={fullWidth}>
-          <Header
-            ref={headerRef}
-            mb={3}
-            sx={{
-              display: fullWidth ? 'flex' : ['flex', 'flex', 'block'],
-              gap: 28,
-              ...headerSx,
-            }}
-          >
-            {tabs.map((tab) => (
-              <TabItem
-                ref={activeTab === tab.key ? activeRef : null}
-                type="button"
-                size="lg"
-                onClick={() => {
-                  setActiveTab(tab.key)
-                  onChange && onChange(tab?.key?.toString() || '')
-                }}
-                active={activeTab === tab.key}
-                inactiveHasLine={inactiveHasLine}
-                key={tab.key}
-                sx={{
-                  flex: '1 1 auto',
-                  ...tabItemSx,
-                  ...(activeTab === tab.key ? tabItemActiveSx : {}),
-                }}
-              >
-                {tab.name}
-              </TabItem>
-            ))}
-            {/* {!block && <Box flex="0 0 50px" height="100%"></Box>} */}
-          </Header>
-        </HeaderOverlay>
+        <TabHeader
+          configs={tabs}
+          isActiveFn={(config) => config.key === defaultActiveKey}
+          fullWidth={fullWidth}
+          sx={headerSx}
+          itemSx={tabItemSx}
+          itemActiveSx={tabItemActiveSx}
+          onClickItem={(key) => {
+            onChange && onChange(key)
+          }}
+          inactiveHasLine={inactiveHasLine}
+        />
 
         {elements.map((c: ReactElement) =>
-          React.cloneElement(c, { active: activeTab === c.key?.toString(), sx: tabPanelSx })
+          React.cloneElement(c, { active: defaultActiveKey === c.key?.toString(), sx: tabPanelSx })
         )}
       </Box>
     )
@@ -152,3 +113,72 @@ const Tabs = ({
 }
 
 export default Tabs
+
+export type TabConfig = {
+  name: ReactNode
+  key: string
+  route?: string
+}
+type TabHeadersProps = {
+  configs: TabConfig[]
+  isActiveFn: (config: TabConfig) => boolean
+  fullWidth?: boolean
+  sx?: any
+  itemSx?: any
+  itemActiveSx?: any
+  onClickItem?: (key: string) => void
+  inactiveHasLine?: boolean
+}
+export function TabHeader({
+  configs,
+  isActiveFn,
+  fullWidth = true,
+  sx,
+  itemSx,
+  itemActiveSx,
+  onClickItem,
+  inactiveHasLine,
+}: TabHeadersProps) {
+  return (
+    <Box sx={{ width: '100%' }}>
+      <HeaderOverlay hasOverlay={fullWidth}>
+        <Header
+          mb={3}
+          sx={{
+            display: fullWidth ? 'flex' : ['flex', 'flex', 'block'],
+            gap: 28,
+            ...sx,
+          }}
+        >
+          {configs.map((tab) => {
+            const isActive = isActiveFn(tab)
+            return (
+              <TabItem
+                key={tab.key}
+                as={tab.route ? Link : undefined}
+                to={tab.route ?? ''}
+                type="button"
+                size="lg"
+                onClick={onClickItem ? () => onClickItem(tab.key) : undefined}
+                active={isActive}
+                inactiveHasLine={inactiveHasLine}
+                sx={{
+                  flex: '1 1 auto',
+                  ...(tab.route
+                    ? {
+                        '&:active,&:focus,&:hover': { color: 'primary1' },
+                      }
+                    : {}),
+                  ...itemSx,
+                  ...(isActive ? itemActiveSx : {}),
+                }}
+              >
+                {tab.name}
+              </TabItem>
+            )
+          })}
+        </Header>
+      </HeaderOverlay>
+    </Box>
+  )
+}

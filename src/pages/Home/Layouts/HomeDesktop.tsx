@@ -1,9 +1,11 @@
+import { Trans } from '@lingui/macro'
 import { Bookmarks, Star } from '@phosphor-icons/react'
+import { Route, Switch, useLocation } from 'react-router-dom'
 
-import useTabHandler from 'hooks/router/useTabHandler'
 import useMyProfile from 'hooks/store/useMyProfile'
-import Tabs, { TabPane } from 'theme/Tab'
+import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
+import ROUTES from 'utils/config/routes'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -11,23 +13,49 @@ import Favorites from '../Favorites'
 import SwitchProtocols from '../SwitchProtocols'
 import { FilterTradersProvider } from '../useTradersContext'
 import TradersAnalytics from './TradersAnalytics'
+import { TabKeyEnum } from './layoutConfigs'
 
-export enum TabKeyEnum {
-  Explorer = 'explorer',
-  Favorite = 'favorite',
-}
+const tabConfigs: TabConfig[] = [
+  {
+    name: (
+      <Flex alignItems="center" sx={{ gap: 2 }}>
+        <Bookmarks />
+        <Box as="span">
+          <Trans>TRADER EXPLORER</Trans>
+        </Box>
+      </Flex>
+    ),
+    key: TabKeyEnum.Explorer,
+    route: ROUTES.HOME_EXPLORER.path,
+  },
+  {
+    name: (
+      <Flex alignItems="center" sx={{ gap: 2 }}>
+        <Star />
+        <Box as="span">
+          <Trans>FAVORITES</Trans>
+        </Box>
+      </Flex>
+    ),
+    key: TabKeyEnum.Favorite,
+    route: ROUTES.HOME_FAVORITE.path,
+  },
+]
 
 export default function HomeDesktop() {
   const { myProfile } = useMyProfile()
-  const { tab, handleTab } = useTabHandler(TabKeyEnum.Explorer)
+  const { pathname } = useLocation()
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
       <Flex alignItems="center" justifyContent="space-between">
-        <Tabs
-          defaultActiveKey={tab}
-          onChange={(tab) => {
-            handleTab(tab)
-            if (tab === TabKeyEnum.Favorite) {
+        <TabHeader
+          configs={tabConfigs}
+          isActiveFn={(config) => config.route === pathname}
+          fullWidth
+          sx={{ borderBottom: 'small', borderColor: 'neutral4', px: 16, width: '100%', mb: 0 }}
+          itemSx={{ flex: '0 0 auto', pb: 10, fontSize: 16 }}
+          onClickItem={(key) => {
+            if (key === TabKeyEnum.Favorite) {
               logEvent({
                 category: EventCategory.FAVORITES,
                 action: EVENT_ACTIONS[EventCategory.FAVORITES].OPEN_FAVORITES,
@@ -35,42 +63,20 @@ export default function HomeDesktop() {
               })
             }
           }}
-          fullWidth
-          headerSx={{ borderBottom: 'small', borderColor: 'neutral4', px: 16, width: '100%', mb: 0 }}
-          tabItemSx={{ flex: '0 0 auto', pb: 10, fontSize: 16 }}
-        >
-          <TabPane
-            tab={
-              <Flex alignItems="center" sx={{ gap: 2 }}>
-                <Bookmarks weight={tab === TabKeyEnum.Explorer ? 'fill' : 'regular'} />
-                <Box as="span">TRADER EXPLORER</Box>
-              </Flex>
-            }
-            key={TabKeyEnum.Explorer}
-          >
-            <div></div>
-          </TabPane>
-          <TabPane
-            tab={
-              <Flex alignItems="center" sx={{ gap: 2 }}>
-                <Star weight={tab === TabKeyEnum.Favorite ? 'fill' : 'regular'} />
-                <Box as="span">FAVORITES</Box>
-              </Flex>
-            }
-            key={TabKeyEnum.Favorite}
-          >
-            <div></div>
-          </TabPane>
-        </Tabs>
+        />
         <SwitchProtocols />
       </Flex>
       <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
-        {tab === TabKeyEnum.Explorer && (
-          <FilterTradersProvider tab={tab}>
-            <TradersAnalytics />
-          </FilterTradersProvider>
-        )}
-        {tab === TabKeyEnum.Favorite && <Favorites tab={tab} />}
+        <Switch>
+          <Route exact path={ROUTES.HOME_EXPLORER.path}>
+            <FilterTradersProvider tab={TabKeyEnum.Explorer}>
+              <TradersAnalytics />
+            </FilterTradersProvider>
+          </Route>
+          <Route exact path={ROUTES.HOME_FAVORITE.path}>
+            <Favorites tab={TabKeyEnum.Favorite} />
+          </Route>
+        </Switch>
       </Box>
     </Flex>
   )

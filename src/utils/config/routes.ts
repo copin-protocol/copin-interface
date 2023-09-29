@@ -2,6 +2,16 @@ const ROUTES = {
   HOME: {
     path: '/',
   },
+  HOME_EXPLORER: {
+    path: '/',
+  },
+  HOME_FAVORITE: {
+    path: '/favorite',
+  },
+  HOME_TOP_OPENINGS: {
+    path: '/:protocol/m/top-openings',
+    path_suffix: 'm/top-openings',
+  },
   SEARCH: {
     path: '/search',
   },
@@ -16,14 +26,17 @@ const ROUTES = {
   MY_PROFILE: {
     path: '/me',
   },
+  MY_MANAGEMENT: {
+    path: '/me/management',
+  },
+  MY_HISTORY: {
+    path: '/me/history',
+  },
+  MY_REFERRAL: {
+    path: '/me/referral',
+  },
   MY_PROFILE_OLD: {
     path: '/me-old',
-  },
-  HISTORY: {
-    path: '/history',
-  },
-  BACKTEST: {
-    path: '/backtest',
   },
   STATS: {
     path: '/stats',
@@ -39,9 +52,6 @@ const ROUTES = {
   SHARED_BACKTEST_MULTIPLE: {
     path: '/:protocol/shared-backtest/multiple/:id',
     path_prefix: '/shared-backtest/multiple',
-  },
-  REFERRAL: {
-    path: '/my-referral',
   },
 }
 
