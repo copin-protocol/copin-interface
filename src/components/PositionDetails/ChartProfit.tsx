@@ -565,10 +565,16 @@ export default function ChartProfit({
       }
     }
 
+    const handleResetFocus = () => {
+      setCrossMovePnL(undefined)
+    }
+
+    container?.addEventListener('mouseout', handleResetFocus)
     window.addEventListener('resize', handleResize)
 
     return () => {
       window.removeEventListener('resize', handleResize)
+      container?.removeEventListener('mouseout', handleResetFocus)
 
       chart.remove()
     }
