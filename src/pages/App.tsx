@@ -1,10 +1,8 @@
 import { Suspense, lazy, useEffect } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import ReactGA from 'react-ga4'
-// main css file
 import { Route, Switch } from 'react-router-dom'
 
-// theme css file
 import NotFound from 'components/@ui/NotFound'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
@@ -44,8 +42,6 @@ function App() {
           <ScrollToTop />
           <QSReader />
           <Switch>
-            <Route exact path={ROUTES.HOME.path} component={Home}></Route>
-
             <ProtocolRoute exact path={ROUTES.TRADER_DETAILS.path} component={TraderDetails}></ProtocolRoute>
             <ProtocolRedirectRoute exact path={`${ROUTES.TRADER_DETAILS.path_prefix}/:address`} />
 
@@ -55,12 +51,14 @@ function App() {
             <ProtocolRoute exact path={ROUTES.TOP_OPENINGS.path} component={TopOpenings}></ProtocolRoute>
             <ProtocolRedirectRoute exact path={ROUTES.TOP_OPENINGS.path_prefix} />
 
-            <AuthedRoute exact path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>
             <AuthedRoute exact path={ROUTES.MY_PROFILE_OLD.path} component={MyProfileOld}></AuthedRoute>
             <Route exact path={ROUTES.STATS.path} component={Stats}></Route>
-            <Route exact path={ROUTES.TOP_OPENINGS.path} component={TopOpenings}></Route>
             <Route exact path={ROUTES.SHARED_BACKTEST_SINGLE.path} component={SharedBacktestSingle}></Route>
             <Route exact path={ROUTES.SHARED_BACKTEST_MULTIPLE.path} component={SharedBacktestMultiple}></Route>
+
+            <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>
+            <Route path={ROUTES.HOME.path} component={Home}></Route>
+
             <Route path="*" component={NotFound}></Route>
           </Switch>
         </Suspense>

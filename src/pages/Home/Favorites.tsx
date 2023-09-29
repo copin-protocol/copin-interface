@@ -5,11 +5,12 @@ import { useAuthContext } from 'hooks/web3/useAuth'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 
+import { TabKeyEnum } from './Layouts/layoutConfigs'
 import ListTradersSection from './ListTradersSection'
 import TimeFilterSection from './TimeFilterSection'
 import useTradersContext, { FilterTradersProvider } from './useTradersContext'
 
-const Favorites = ({ tab }: { tab: string }) => {
+const Favorites = ({ tab }: { tab: TabKeyEnum }) => {
   const { traderFavorites, notes, isLoading } = useTraderFavorites()
   const { isAuthenticated } = useAuthContext()
   if (!isAuthenticated) return <NoLoginFavorite />

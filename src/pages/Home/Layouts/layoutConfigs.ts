@@ -1,3 +1,9 @@
+export enum TabKeyEnum {
+  Explorer = 'explorer',
+  Favorite = 'favorite',
+  TopOpenings = 'top_openings',
+}
+
 export enum ColumnState {
   DEFAULT = 'DEFAULT',
   MINIMIZED_LEFT = 'MINIMIZED_LEFT',

@@ -23,7 +23,7 @@ import { TimeRange } from 'utils/types'
 
 import { getFiltersFromFormValues } from './ConditionFilter/helpers'
 import { ConditionFormValues } from './ConditionFilter/types'
-import { TabKeyEnum } from './Layouts/HomeDesktop'
+import { TabKeyEnum } from './Layouts/layoutConfigs'
 import { getInitFilters, getInitSort, getInitValue } from './helpers/getInitValues'
 import { stringifyParams } from './helpers/handleParams'
 import useRangeFilterData from './hooks/useRangeFilterData'
@@ -31,7 +31,7 @@ import useTimeFilterData from './hooks/useTimeFilterData'
 
 export interface TradersContextData {
   protocol: ProtocolEnum
-  tab: string
+  tab: TabKeyEnum
   accounts?: string[]
   isRangeSelection: boolean
   from: Date | undefined
@@ -50,8 +50,6 @@ export interface TradersContextData {
   changeFilters: (filters: ConditionFormValues) => void
   currentSort: TraderListSortProps<TraderData> | undefined
   changeCurrentSort: (sort: TraderListSortProps<TraderData> | undefined) => void
-  // requestData: RequestBodyApiData
-  // setRequestData: (data: RequestBodyApiData) => void
   isLoading: boolean
   loadingRangeProgress: CheckAvailableResultData
   data: ApiListResponse<TraderData> | undefined
@@ -79,7 +77,7 @@ export function FilterTradersProvider({
   children,
 }: {
   accounts?: string[]
-  tab: string
+  tab: TabKeyEnum
   children: ReactNode
 }) {
   const { myProfile } = useMyProfile()
@@ -300,8 +298,6 @@ export function FilterTradersProvider({
     changeFilters,
     currentSort,
     changeCurrentSort,
-    // requestData,
-    // setRequestData: handleSetRequestData,
     loadingRangeProgress,
     isLoading,
     data,

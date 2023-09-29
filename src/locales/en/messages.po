@@ -202,8 +202,8 @@ msgid "Confirming..."
 msgstr "Confirming..."
 
 #: src/pages/@layouts/Navbar/Menu.tsx
-msgid "Connect Wallet"
-msgstr "Connect Wallet"
+#~ msgid "Connect Wallet"
+#~ msgstr "Connect Wallet"
 
 #: src/pages/Stats/ChartComponent.tsx
 #: src/pages/Stats/ChartComponent.tsx
@@ -301,6 +301,14 @@ msgstr "Enter referral code"
 msgid "Error"
 msgstr "Error"
 
+#: src/pages/Home/Layouts/HomeDesktop.tsx
+msgid "FAVORITES"
+msgstr "FAVORITES"
+
+#: src/pages/Home/Layouts/HomeMobile.tsx
+msgid "Favorites"
+msgstr "Favorites"
+
 #: src/pages/Stats/ChartComponent.tsx
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Fees are not factored into PnL"
@@ -314,6 +322,10 @@ msgstr "Forgot password?"
 #: src/utils/config/translations.tsx
 msgid "GMX"
 msgstr "GMX"
+
+#: src/pages/MyProfile/Layouts/Layout.tsx
+msgid "HISTORY"
+msgstr "HISTORY"
 
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Hey"
@@ -412,8 +424,8 @@ msgid "Liquidation"
 msgstr "Liquidation"
 
 #: src/pages/@layouts/Navbar/Menu.tsx
-msgid "List Collection"
-msgstr "List Collection"
+#~ msgid "List Collection"
+#~ msgstr "List Collection"
 
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "Loading..."
@@ -455,6 +467,10 @@ msgstr "Looks like your session has expired. You should sign new authentication 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Loses"
 msgstr "Loses"
+
+#: src/pages/MyProfile/Layouts/Layout.tsx
+msgid "MANAGEMENT"
+msgstr "MANAGEMENT"
 
 #: src/pages/TraderDetails/CopyTraderDrawer.tsx
 msgid "Make copy trade has been succeeded"
@@ -613,6 +629,10 @@ msgstr "PnL Ratio"
 #~ msgid "Position Details"
 #~ msgstr "Position Details"
 
+#: src/pages/Home/Layouts/HomeMobile.tsx
+msgid "Positions"
+msgstr "Positions"
+
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Profile"
 msgstr "Profile"
@@ -641,6 +661,10 @@ msgstr "Profit Rate"
 #: src/hooks/web3/useAuth.tsx
 msgid "Provider Error"
 msgstr "Provider Error"
+
+#: src/pages/MyProfile/Layouts/Layout.tsx
+msgid "REFERRAL"
+msgstr "REFERRAL"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "ROI"
@@ -815,6 +839,10 @@ msgstr "Stopped"
 msgid "Success"
 msgstr "Success"
 
+#: src/pages/Home/Layouts/HomeDesktop.tsx
+msgid "TRADER EXPLORER"
+msgstr "TRADER EXPLORER"
+
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx
 msgid "Term of Use"
@@ -852,6 +880,14 @@ msgstr "This Page Could Not Be Found"
 #: src/pages/MyProfile/Referral/ReferralOverview.tsx
 msgid "Today"
 msgstr "Today"
+
+#: src/pages/Home/Layouts/HomeMobile.tsx
+msgid "Top Opening Positions"
+msgstr "Top Opening Positions"
+
+#: src/pages/Home/Layouts/HomeMobile.tsx
+msgid "Top Opening Positions on {0}"
+msgstr "Top Opening Positions on {0}"
 
 #: src/pages/MyProfile/Referral/ReferralOverview.tsx
 msgid "Total"
@@ -901,9 +937,9 @@ msgstr "Total Unique Trader"
 msgid "Total Volume"
 msgstr "Total Volume"
 
-#: src/pages/@layouts/Navbar/SearchBox.tsx
-#~ msgid "Traders"
-#~ msgstr "Traders"
+#: src/pages/Home/Layouts/HomeMobile.tsx
+msgid "Traders"
+msgstr "Traders"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Trades"
@@ -918,8 +954,8 @@ msgid "Try Again"
 msgstr "Try Again"
 
 #: src/theme/Uploader/index.tsx
-msgid "Tải ảnh không thành công do sai định dạnh ảnh!"
-msgstr "Tải ảnh không thành công do sai định dạnh ảnh!"
+#~ msgid "Tải ảnh không thành công do sai định dạnh ảnh!"
+#~ msgstr "Tải ảnh không thành công do sai định dạnh ảnh!"
 
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Unique traders are copied in the system"

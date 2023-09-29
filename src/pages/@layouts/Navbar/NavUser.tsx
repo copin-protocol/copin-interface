@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Clock, Key, SignOut, UserCircle, UserCircleMinus, Users } from '@phosphor-icons/react'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
@@ -10,7 +10,7 @@ import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import Modal from 'theme/Modal'
 import { Box, Flex, Type } from 'theme/base'
 import { NAVBAR_HEIGHT } from 'utils/config/constants'
-import routes from 'utils/config/routes'
+import ROUTES from 'utils/config/routes'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten } from 'utils/helpers/format'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
@@ -20,13 +20,9 @@ import { isAddress } from 'utils/web3/contracts'
 import ChangePasswordModal from './ChangePasswordModal'
 import PremiumTag from './PremiumTag'
 
-// import Onboarding from './Onboarding'
-// const NFT_USER_NOT_EXIST = 'CAN_NOT_FIND_DATA'
-
 const NavUser = () => {
   const [isShowModalLogout, setIsShowModalLogout] = useState(false)
   const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false)
-  // const onboarding = useMemo(() => (error && error.includes(NFT_USER_NOT_EXIST) ? true : false), [error])
   const { logout, profile } = useAuthContext()
   const _address = useMemo(() => isAddress(profile?.username), [profile?.username])
   const hasCopyPermission = useCopyTradePermission()
@@ -41,7 +37,6 @@ const NavUser = () => {
 
   return (
     <Flex alignItems="center" sx={{ height: NAVBAR_HEIGHT - 1 }}>
-      {/*{_address && <NavbarNetworkPicker />}*/}
       <Flex flexDirection="column" alignItems="flex-start">
         <Dropdown
           menuSx={{
@@ -51,7 +46,7 @@ const NavUser = () => {
             <>
               {hasCopyPermission && (
                 <div>
-                  <Link to={`${routes.MY_PROFILE.path}`}>
+                  <Link to={ROUTES.MY_MANAGEMENT.path}>
                     <DropdownItem onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE)}>
                       <Flex alignItems="center" sx={{ gap: 2 }}>
                         <UserCircle size={20} />
@@ -61,7 +56,7 @@ const NavUser = () => {
                       </Flex>
                     </DropdownItem>
                   </Link>
-                  <Link to={`${routes.MY_PROFILE_OLD.path}`}>
+                  <Link to={ROUTES.MY_PROFILE_OLD.path}>
                     <DropdownItem onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE_OLD)}>
                       <Flex alignItems="center" sx={{ gap: 2 }}>
                         <UserCircleMinus size={20} />
@@ -71,7 +66,7 @@ const NavUser = () => {
                       </Flex>
                     </DropdownItem>
                   </Link>
-                  <Link to={`${routes.MY_PROFILE.path}?tab=history`}>
+                  <Link to={ROUTES.MY_HISTORY.path}>
                     <DropdownItem onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].HISTORY)}>
                       <Flex alignItems="center" sx={{ gap: 2 }}>
                         <Clock size={20} />
@@ -81,7 +76,7 @@ const NavUser = () => {
                       </Flex>
                     </DropdownItem>
                   </Link>
-                  <Link to={`${routes.MY_PROFILE.path}?tab=referral`}>
+                  <Link to={ROUTES.MY_REFERRAL.path}>
                     <DropdownItem onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].MY_REFERRAL)}>
                       <Flex alignItems="center" sx={{ gap: 2 }}>
                         <Users size={20} />
@@ -121,11 +116,7 @@ const NavUser = () => {
           }}
           buttonSx={{
             border: 'none',
-            // height: NAVBAR_HEIGHT - 1,
             p: 0,
-            // '&:hover,&:focus,&:active': {
-            //   bg: 'neutral7',
-            // },
           }}
           placement="bottomRight"
         >
