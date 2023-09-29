@@ -31,7 +31,7 @@ export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSou
     const isCurrentSort = !!currentSort && currentSort?.sortBy === columnSortBy
     if (!columnSortBy) return
     const theFirstSort = columnSortType ?? SortTypeEnum.DESC
-    const theSecondSort = columnSortType === SortTypeEnum.DESC ? SortTypeEnum.ASC : SortTypeEnum.DESC
+    const theSecondSort = theFirstSort === SortTypeEnum.DESC ? SortTypeEnum.ASC : SortTypeEnum.DESC
     if (!isCurrentSort) {
       changeCurrentSort({
         sortBy: columnSortBy,
