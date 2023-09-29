@@ -11,12 +11,10 @@ import DeleteCopyTradeModal from 'components/CopyTradeForm/DeleteCopyTradeModal'
 import { CopyTradeData } from 'entities/copyTrade.d'
 import useUpdateCopyTrade from 'hooks/features/useUpdateCopyTrade'
 import { Button } from 'theme/Buttons'
-// import usePageChange from 'hooks/helpers/usePageChange'
 import IconButton from 'theme/Buttons/IconButton'
 import Checkbox from 'theme/Checkbox'
 import Dropdown from 'theme/Dropdown'
 import SwitchInput from 'theme/SwitchInput'
-// import Pagination from 'theme/Pagination'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
@@ -34,26 +32,29 @@ import NoDataOrSelect from './NoDataOrSelect'
 import { renderTrader } from './renderProps'
 
 export default function MyCopies({
+  traders,
   selectedTraders,
   data,
+  allCopyTrades,
   isLoading,
   onRefresh,
   handleToggleStatus,
   checkIsStatusChecked,
   handleSelectAllTraders,
-  isLoadingOutsource,
-  handleSelectTrader,
+  isLoadingTraders,
+  handleToggleTrader,
 }: {
+  traders: string[]
   selectedTraders: string[]
   data: CopyTradeData[] | undefined
+  allCopyTrades: CopyTradeData[] | undefined
   isLoading: boolean
-  onDeleteTag: (address: string) => void
   onRefresh: () => void
   handleToggleStatus: ({ status }: { status: CopyTradeStatusEnum }) => void
   checkIsStatusChecked: (status: CopyTradeStatusEnum) => boolean
-  handleSelectAllTraders?: () => void
-  isLoadingOutsource?: boolean
-  handleSelectTrader: (trader: string) => void
+  handleSelectAllTraders: (isSelectedAll: boolean) => void
+  isLoadingTraders: boolean
+  handleToggleTrader: (address: string) => void
 }) {
   const hasSelectedTraders = !!selectedTraders.length
   const [openConfirmStopModal, setOpenConfirmStopModal] = useState(false)
@@ -429,105 +430,103 @@ export default function MyCopies({
     return result
   }, [isMutating])
 
-  if (!hasSelectedTraders)
-    return (
-      <NoDataOrSelect
-        type="noSelectTraders"
-        actionButton={
-          handleSelectAllTraders ? (
-            <Button variant="primary" mt={3} onClick={handleSelectAllTraders} isLoading={isLoadingOutsource}>
-              Select All Traders
-            </Button>
-          ) : null
-        }
-      />
-    )
-
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-      <Flex p={2} pr={3} sx={{ gap: 3, borderBottom: 'small', borderColor: 'neutral5' }}>
-        <Flex flex={1} sx={{ gap: 12, alignItems: 'center' }}>
-          {!!sortedData && sortedData?.length > 0 && (
-            <>
+      {!isLoadingTraders && !!traders.length && (
+        <>
+          <Flex p={2} pr={3} sx={{ gap: 3, borderBottom: 'small', borderColor: 'neutral5' }}>
+            <Flex flex={1} sx={{ gap: 12, alignItems: 'center' }}>
               <SelectedTraders
                 selectedTraders={selectedTraders}
-                traders={sortedData?.map((item) => item.account)}
-                protocol={sortedData[0].protocol}
-                handleToggleTrader={(key) => {
-                  console.log(key)
-                }}
+                traders={traders}
+                allCopyTrades={allCopyTrades}
+                handleToggleTrader={handleToggleTrader}
+                handleSelectAllTraders={handleSelectAllTraders}
               />
-              <Flex sx={{ gap: 2 }}>
-                <Type.Caption color="neutral1">
-                  <Trans>Available Margin</Trans>:
-                </Type.Caption>
-                <Type.CaptionBold color="neutral1">
-                  ${formatNumber(sortedData[0].bingXAvailableMargin)}
-                </Type.CaptionBold>
-              </Flex>
-            </>
-          )}
-          <Flex ml="auto" alignItems="center" sx={{ gap: 3 }}>
-            <Checkbox
-              checked={checkIsStatusChecked(CopyTradeStatusEnum.RUNNING)}
-              onChange={() => handleToggleStatus({ status: CopyTradeStatusEnum.RUNNING })}
-            >
-              <Type.Caption lineHeight="16px">{COPY_TRADE_STATUS_TRANS[CopyTradeStatusEnum.RUNNING]}</Type.Caption>
-            </Checkbox>
-            <Checkbox
-              checked={checkIsStatusChecked(CopyTradeStatusEnum.STOPPED)}
-              onChange={() => handleToggleStatus({ status: CopyTradeStatusEnum.STOPPED })}
-            >
-              <Type.Caption lineHeight="16px">{COPY_TRADE_STATUS_TRANS[CopyTradeStatusEnum.STOPPED]}</Type.Caption>
-            </Checkbox>
+              {!!sortedData && sortedData?.length > 0 && (
+                <>
+                  <Flex sx={{ gap: 2 }}>
+                    <Type.Caption color="neutral1">
+                      <Trans>Available Margin</Trans>:
+                    </Type.Caption>
+                    <Type.CaptionBold color="neutral1">
+                      ${formatNumber(sortedData[0].bingXAvailableMargin)}
+                    </Type.CaptionBold>
+                  </Flex>
+                  <Flex ml="auto" alignItems="center" sx={{ gap: 3 }}>
+                    <Checkbox
+                      checked={checkIsStatusChecked(CopyTradeStatusEnum.RUNNING)}
+                      onChange={() => handleToggleStatus({ status: CopyTradeStatusEnum.RUNNING })}
+                    >
+                      <Type.Caption lineHeight="16px">
+                        {COPY_TRADE_STATUS_TRANS[CopyTradeStatusEnum.RUNNING]}
+                      </Type.Caption>
+                    </Checkbox>
+                    <Checkbox
+                      checked={checkIsStatusChecked(CopyTradeStatusEnum.STOPPED)}
+                      onChange={() => handleToggleStatus({ status: CopyTradeStatusEnum.STOPPED })}
+                    >
+                      <Type.Caption lineHeight="16px">
+                        {COPY_TRADE_STATUS_TRANS[CopyTradeStatusEnum.STOPPED]}
+                      </Type.Caption>
+                    </Checkbox>
+                  </Flex>
+                </>
+              )}
+            </Flex>
           </Flex>
-          {/* {selectedTraders.map((traderAccount) => {
-            return (
-              <SelectedTag
-                key={traderAccount}
-                title={addressShorten(traderAccount)}
-                handleDelete={() => onDeleteTag(traderAccount)}
+          <Box flex="1 0 0" overflow="hidden">
+            {hasSelectedTraders && (
+              <>
+                <Table
+                  restrictHeight
+                  data={sortedData}
+                  columns={columns}
+                  isLoading={isLoading}
+                  currentSort={currentSort}
+                  changeCurrentSort={changeCurrentSort}
+                  tableHeadSx={{
+                    '& th': {
+                      border: 'none',
+                    },
+                  }}
+                  tableBodySx={{
+                    borderSpacing: '0px 4px',
+                    '& td': {
+                      bg: 'neutral6',
+                    },
+                    '& tr:hover td': {
+                      bg: 'neutral5',
+                    },
+                  }}
+                />
+                <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
+                  <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
+                    Reverse Copy
+                  </Type.Caption>
+                </Tooltip>
+              </>
+            )}
+            {!hasSelectedTraders && (
+              <NoDataOrSelect
+                type="noSelectTraders"
+                actionButton={
+                  <Button
+                    variant="primary"
+                    mt={3}
+                    onClick={() => handleSelectAllTraders(false)}
+                    isLoading={isLoadingTraders}
+                  >
+                    Select All Traders
+                  </Button>
+                }
               />
-            )
-          })} */}
-        </Flex>
-      </Flex>
-      <Box flex="1 0 0" overflow="hidden">
-        <Table
-          restrictHeight
-          data={sortedData}
-          columns={columns}
-          isLoading={isLoading}
-          currentSort={currentSort}
-          changeCurrentSort={changeCurrentSort}
-          tableHeadSx={{
-            '& th': {
-              border: 'none',
-            },
-          }}
-          tableBodySx={{
-            borderSpacing: '0px 4px',
-            '& td': {
-              bg: 'neutral6',
-            },
-            '& tr:hover td': {
-              bg: 'neutral5',
-            },
-          }}
-          // footer={
-          //   <Pagination
-          //     totalPage={data?.meta?.totalPages ?? 0}
-          //     currentPage={currentPage}
-          //     onPageChange={changeCurrentPage}
-          //   />
-          //}
-        />
-        <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
-          <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
-            Reverse Copy
-          </Type.Caption>
-        </Tooltip>
-      </Box>
+            )}
+          </Box>
+        </>
+      )}
+
+      {!isLoadingTraders && !traders.length && <NoDataOrSelect type="noSelectTraders" />}
 
       {openDrawer && (
         <CopyTradeEditDrawer
@@ -543,7 +542,7 @@ export default function MyCopies({
           onDismiss={handleCloseCloneDrawer}
           copyTradeData={copyTradeData.current}
           onSuccess={(traderAddress) => {
-            traderAddress && handleSelectTrader(traderAddress)
+            traderAddress && handleToggleTrader(traderAddress)
             onRefresh()
           }}
         />

@@ -2,7 +2,6 @@ import { useEffect, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getCopyTradeSettingsListApi, getMyCopyTradersApi } from 'apis/copyTradeApis'
-import { CopyTradeData } from 'entities/copyTrade'
 import { UserData } from 'entities/user'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum } from 'utils/config/enums'
@@ -13,8 +12,6 @@ import useSelectMultiple from './useSelectMultiple'
 
 export interface MainSectionState {
   selectedTraders: string[]
-  selectedCopies: string[]
-  selectedCopyMapping: Record<string, CopyTradeData>
 }
 export default function MainSection({
   myProfile,
@@ -26,18 +23,8 @@ export default function MainSection({
   uniqueKey: string | null
 }) {
   const [sessionNum, setNewSession] = useReducer((prev) => prev + 1, 1)
-  const prevUniqueKey = useRef(uniqueKey)
-  useEffect(() => {
-    if (prevUniqueKey.current === uniqueKey) return
-    prevUniqueKey.current = uniqueKey
-    setNewSession()
-  }, [uniqueKey])
-  const refData = useRef({
-    storageData: sessionStorage.getItem(STORAGE_KEYS.MY_COPY_DATA),
-    hadLoadTraders: false,
-    hadLoadCopyTrades: false,
-    hadSelectedTrader: false,
-  })
+
+  const storageData = sessionStorage.getItem(STORAGE_KEYS.MY_COPY_DATA)
   const [state, dispatch] = useReducer(
     (
       state: MainSectionState,
@@ -46,6 +33,7 @@ export default function MainSection({
         | { type: 'addTraders'; payload: string[] }
         | { type: 'removeTraders'; payload: string[] }
         | { type: 'reCheckTraders'; payload: string[] }
+        | { type: 'toggleTrader'; payload: string }
     ) => {
       const newState = { ...state }
       switch (action.type) {
@@ -61,6 +49,14 @@ export default function MainSection({
         case 'reCheckTraders':
           newState.selectedTraders = newState.selectedTraders.filter((address) => action.payload.includes(address))
           break
+        case 'toggleTrader':
+          const isSelected = state.selectedTraders.includes(action.payload)
+          if (isSelected) {
+            newState.selectedTraders = newState.selectedTraders.filter((address) => action.payload !== address)
+          } else {
+            newState.selectedTraders = Array.from(new Set([...newState.selectedTraders, action.payload]))
+          }
+          break
         default:
           break
       }
@@ -68,16 +64,14 @@ export default function MainSection({
     },
     {},
     () => {
-      if (!!refData.current.storageData) {
+      if (!!storageData) {
         try {
-          const storageData = JSON.parse(refData.current.storageData) as MainSectionState
-          return storageData
+          const _storageData = JSON.parse(storageData) as MainSectionState
+          return _storageData
         } catch {}
       }
       return {
         selectedTraders: [],
-        selectedCopies: [],
-        selectedCopyMapping: {},
       }
     }
   )
@@ -86,10 +80,10 @@ export default function MainSection({
   const hasCopyPermission = useCopyTradePermission()
   const prevResTraderList = useRef<string[]>([])
   const { data: tradersData, isLoading: isLoadingTraders } = useQuery(
-    [QUERY_KEYS.GET_MY_COPY_TRADERS, exchange, uniqueKey, sessionNum],
+    [QUERY_KEYS.GET_MY_COPY_TRADERS, exchange, uniqueKey, sessionNum, forceLoadCopies],
     () => getMyCopyTradersApi({ exchange, uniqueKey }),
     {
-      enabled: !!exchange && hasCopyPermission && (forceLoadCopies || sessionNum !== 1),
+      enabled: !!exchange && hasCopyPermission,
       onSuccess: (data) => {
         const resAddresses = data.map((traderData) => traderData.account)
         if (
@@ -99,30 +93,16 @@ export default function MainSection({
           return
         }
         prevResTraderList.current = resAddresses
-        if ((!refData.current.storageData && !refData.current.hadLoadTraders) || forceLoadCopies) {
-          refData.current.hadLoadTraders = true
+        if (!storageData || forceLoadCopies) {
           dispatch({ type: 'setTraders', payload: resAddresses })
+          setForceLoadCopies(false)
           return
         }
         dispatch({ type: 'reCheckTraders', payload: resAddresses })
       },
     }
   )
-
-  useEffect(() => {
-    sessionStorage.setItem(STORAGE_KEYS.MY_COPY_DATA, JSON.stringify(state))
-  }, [state])
-
-  const handleSelectAllTraders = (isSelectedAll: boolean) => {
-    if (!tradersData) return
-    if (isSelectedAll) {
-      dispatch({ type: 'setTraders', payload: [] })
-      refData.current.hadSelectedTrader = true
-    } else {
-      dispatch({ type: 'setTraders', payload: tradersData.map((data) => data.account) })
-      refData.current.hadSelectedTrader = true
-    }
-  }
+  const listTraderAddresses = tradersData?.map((trader) => trader.account) ?? []
 
   const {
     selected: copyStatus,
@@ -140,13 +120,10 @@ export default function MainSection({
   const prevResCopyTradeList = useRef<string[]>([])
   const { data: copyTrades, isLoading: isLoadingCopyTrades } = useQuery(
     [QUERY_KEYS.GET_COPY_TRADE_SETTINGS, queryParams, sessionNum, copyStatus],
+
     () => getCopyTradeSettingsListApi(queryParams),
     {
-      enabled:
-        !!myProfile.id &&
-        hasCopyPermission &&
-        !!state.selectedTraders.length &&
-        (forceLoadCopies || refData.current.hadSelectedTrader),
+      enabled: !!myProfile.id && hasCopyPermission && !!state.selectedTraders.length,
       retry: 0,
       keepPreviousData: true,
       onSuccess: (data) => {
@@ -161,9 +138,40 @@ export default function MainSection({
       },
     }
   )
-  const onDeleteTagTrader = (id: string) => {
-    dispatch({ type: 'removeTraders', payload: [id] })
+
+  const getAllCopiesParams = {
+    apiKey: uniqueKey ?? undefined,
+    accounts: listTraderAddresses,
+    status: undefined,
   }
+  const { data: allCopyTrades } = useQuery(
+    [QUERY_KEYS.GET_COPY_TRADE_SETTINGS, queryParams],
+
+    () => getCopyTradeSettingsListApi(getAllCopiesParams),
+    {
+      enabled: !!myProfile.id && hasCopyPermission && !!listTraderAddresses.length,
+      retry: 0,
+      keepPreviousData: true,
+    }
+  )
+
+  const handleSelectAllTraders = (isSelectedAll: boolean) => {
+    if (!tradersData) return
+    if (isSelectedAll) {
+      dispatch({ type: 'setTraders', payload: [] })
+    } else {
+      dispatch({ type: 'setTraders', payload: listTraderAddresses })
+    }
+    setForceLoadCopies(true)
+  }
+  const handleToggleTrader = (address: string) => {
+    dispatch({ type: 'toggleTrader', payload: address })
+  }
+
+  useEffect(() => {
+    const dataStorage = JSON.stringify(state)
+    sessionStorage.setItem(STORAGE_KEYS.MY_COPY_DATA, dataStorage)
+  }, [state])
 
   return (
     <>
@@ -171,18 +179,14 @@ export default function MainSection({
         selectedTraders={state.selectedTraders}
         data={copyTrades}
         isLoading={isLoadingCopyTrades}
-        onDeleteTag={onDeleteTagTrader}
         onRefresh={setNewSession}
         handleToggleStatus={handleToggleStatus}
         checkIsStatusChecked={checkIsStatusChecked}
-        handleSelectAllTraders={() => {
-          handleSelectAllTraders(false)
-          setForceLoadCopies(true)
-        }}
-        isLoadingOutsource={isLoadingTraders}
-        handleSelectTrader={(traderAddress) => {
-          traderAddress && dispatch({ type: 'addTraders', payload: [traderAddress] })
-        }}
+        handleSelectAllTraders={handleSelectAllTraders}
+        isLoadingTraders={isLoadingTraders}
+        handleToggleTrader={handleToggleTrader}
+        traders={listTraderAddresses}
+        allCopyTrades={allCopyTrades}
       />
     </>
   )
