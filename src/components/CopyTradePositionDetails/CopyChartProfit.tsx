@@ -448,10 +448,16 @@ export default function CopyChartProfit({
       }
     }
 
+    const handleResetFocus = () => {
+      setCrossMovePnL(undefined)
+    }
+
     window.addEventListener('resize', handleResize)
+    container?.addEventListener('mouseout', handleResetFocus)
 
     return () => {
       window.removeEventListener('resize', handleResize)
+      container?.removeEventListener('mouseout', handleResetFocus)
 
       chart.remove()
     }

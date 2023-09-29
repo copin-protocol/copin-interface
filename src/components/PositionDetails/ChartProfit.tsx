@@ -528,6 +528,8 @@ export default function ChartProfit({
     }
 
     chart.subscribeCrosshairMove((param) => {
+      console.log('subscribeCrosshairMove', param)
+      console.log('container', container)
       const data = param.seriesData.get(series) as LineData
       const dataFuture = param.seriesData.get(futureSeries) as LineData
       setCrossMovePnL(dataFuture?.value ?? data?.value)
@@ -565,10 +567,16 @@ export default function ChartProfit({
       }
     }
 
+    const handleResetFocus = () => {
+      setCrossMovePnL(undefined)
+    }
+
+    container?.addEventListener('mouseout', handleResetFocus)
     window.addEventListener('resize', handleResize)
 
     return () => {
       window.removeEventListener('resize', handleResize)
+      container?.removeEventListener('mouseout', handleResetFocus)
 
       chart.remove()
     }
