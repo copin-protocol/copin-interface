@@ -5,13 +5,13 @@ import CenterItemContainer from 'components/@ui/Container/CenterItemContainer'
 import { useClickLoginButton } from 'components/LoginAction'
 import { Button } from 'theme/Buttons'
 import { Type } from 'theme/base'
-import { linearGradient1 } from 'theme/colors'
+import { linearGradient3 } from 'theme/colors'
 
 export default function NoLoginFavorite() {
   const { md } = useResponsive()
   const handleClickLogin = useClickLoginButton()
   return (
-    <CenterItemContainer sx={{ color: 'neutral3', backgroundImage: linearGradient1 }}>
+    <CenterItemContainer sx={{ color: 'neutral3', backgroundImage: linearGradient3 }}>
       <PlugsConnected size={md ? 90 : 48} />
       <Type.CaptionBold color="neutral1" display="block" mt={40} fontWeight={600}>
         Please{' '}

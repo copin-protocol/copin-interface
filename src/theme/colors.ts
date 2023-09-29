@@ -3,7 +3,7 @@ import { Colors } from './types'
 const white = '#FFFFFF'
 const black = '#000000'
 
-export const linearGradient1 = 'linear-gradient(180deg, #4EAEFD 0%, #008CFF 100%)'
+export const linearGradient3 = 'linear-gradient(180.26deg, #272C43 0.23%, rgba(11, 13, 23, 0) 85.39%)'
 
 function colors(darkMode: boolean): Colors {
   return {
@@ -38,8 +38,6 @@ function colors(darkMode: boolean): Colors {
     orange2: '#FCEFD1',
     orange3: '#CB8D14',
 
-    // gradients
-    gradient1: linearGradient1,
     modalBG: darkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.3)',
   }
 }
