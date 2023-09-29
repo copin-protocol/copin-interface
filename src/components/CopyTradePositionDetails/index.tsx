@@ -239,7 +239,6 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
               <CopyChartProfit
                 position={data}
                 copyOrders={copyTradeOrders}
-                hasLiquidate={false}
                 isOpening={isOpening ?? false}
                 openBlockTime={openBlockTimeUnix}
                 closeBlockTime={closeBlockTimeUnix}

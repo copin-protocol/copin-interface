@@ -12,7 +12,6 @@ import {
 } from 'lightweight-charts'
 import { useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
-import { useHistory } from 'react-router-dom'
 
 import { getChartDataV2 } from 'apis/positionApis'
 import { PositionData } from 'entities/trader.d'
@@ -53,8 +52,7 @@ export default function ChartProfit({
 }) {
   const { prices } = useUsdPricesStore()
   const { nextHours } = useWhatIfStore()
-  const history = useHistory()
-  const { searchParams, setSearchParams } = useSearchParams()
+  const { searchParams } = useSearchParams()
   const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
     ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
     : undefined
@@ -81,7 +79,7 @@ export default function ChartProfit({
     }
   )
   const orders = position.orders.sort((x, y) => (x.blockTime < y.blockTime ? -1 : x.blockTime > y.blockTime ? 1 : 0))
-  const openOrder = orders.find((e) => e.isOpen)
+  const openOrder = orders.find((e) => e.isOpen || e.type === OrderTypeEnum.OPEN)
   const increaseList = orders.filter((e) => e.type === OrderTypeEnum.INCREASE || e.type === OrderTypeEnum.OPEN)
   const decreaseList = orders.filter(
     (e) =>
@@ -132,6 +130,7 @@ export default function ChartProfit({
             e.timestamp <= tempData[tempData.length - 1].timestamp
         )
       : tempData.filter((e) => e.timestamp >= dayjs(openOrder?.blockTime).utc().valueOf())
+
     return (
       chartData
         .map((e, index) => {
@@ -164,20 +163,7 @@ export default function ChartProfit({
         })
         .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
     )
-  }, [
-    data,
-    isOpening,
-    openOrder,
-    orders,
-    position.averagePrice,
-    position.closeBlockTime,
-    position.indexToken,
-    position.isLong,
-    position.realisedPnl,
-    prices,
-    timezone,
-    to,
-  ])
+  }, [data, isOpening, openOrder, orders, prices, timezone, to])
 
   const chartFutureData: LineData[] = useMemo(() => {
     if (!data || isOpening || !nextHours || nextHours < 1) return []
@@ -253,17 +239,7 @@ export default function ChartProfit({
         })
         .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
     )
-  }, [
-    data,
-    isOpening,
-    openOrder,
-    position.averagePrice,
-    position.closeBlockTime,
-    position.indexToken,
-    prices,
-    timezone,
-    to,
-  ])
+  }, [data, isOpening, openOrder, prices, timezone, to])
 
   useEffect(() => {
     if (isOpening) return
@@ -275,17 +251,7 @@ export default function ChartProfit({
         generateClosedPositionRoute({ protocol: position.protocol, id: position.id, nextHours })
       )
     }
-  }, [
-    history.location.pathname,
-    history.location.search,
-    isShow,
-    isOpening,
-    nextHours,
-    nextHoursParam,
-    position.id,
-    setSearchParams,
-    position.protocol,
-  ])
+  }, [])
 
   useEffect(() => {
     if (isLoading || !data) return
@@ -578,22 +544,7 @@ export default function ChartProfit({
 
       chart.remove()
     }
-  }, [
-    chartData,
-    chartFutureData,
-    data,
-    decreaseList,
-    increaseList,
-    isLoading,
-    isOpening,
-    nextHours,
-    position,
-    priceData,
-    prices,
-    setCrossMovePnL,
-    timezone,
-    tokenSymbol,
-  ])
+  }, [chartData, chartFutureData, data, priceData, prices])
 
   return (
     <Box mt={24} sx={{ position: 'relative' }} minHeight={CHART_HEIGHT}>
