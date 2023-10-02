@@ -1,8 +1,9 @@
+import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
 import React, { ReactNode, useCallback, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 // import { ApiListResponse } from 'apis/api'
 import { GetMyPositionsParams } from 'apis/types'
@@ -12,6 +13,7 @@ import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import SectionTitle from 'components/@ui/SectionTitle'
 import Table from 'components/@ui/Table'
 import { ColumnData, TableSortProps } from 'components/@ui/Table/types'
+import ToastBody from 'components/@ui/ToastBody'
 import CopyTradePositionDetails from 'components/CopyTradePositionDetails'
 import PositionDetails from 'components/PositionDetails'
 import { CopyPositionData } from 'entities/copyTrade.d'
@@ -34,6 +36,7 @@ import { formatNumber } from 'utils/helpers/format'
 import { generateClosedPositionRoute, generateMyOpeningPositionRoute } from 'utils/helpers/generateRoute'
 import { pageToOffset } from 'utils/helpers/transform'
 
+import ClosePositionModal from './ClosePositionModal'
 import { renderEntry, renderPnL, renderSource, renderTrader } from './renderProps'
 
 type ExternalSource = {
@@ -74,9 +77,7 @@ export default function MyCopyPositionTable({
   defaultSortBy?: keyof CopyPositionData
 }) {
   const isMobile = useIsMobile()
-  const { lg, xl } = useResponsive()
   const { prices } = useUsdPrices()
-  // const { currentPage, changeCurrentPage } = usePageChange({ pageName: `my-copy-${label}` })
 
   const { currentPage, currentLimit, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
     pageName: pageParamKey,
@@ -102,7 +103,11 @@ export default function MyCopyPositionTable({
     sortType: currentSort?.sortType,
     ...queryParams,
   }
-  const { data, isFetching: isLoading } = useQuery(
+  const {
+    data,
+    isFetching: isLoading,
+    refetch,
+  } = useQuery(
     [QUERY_KEYS.GET_MY_COPY_POSITIONS, _queryParams, userId, currentPage],
     () => getMyCopyPositionsApi(_queryParams),
     {
@@ -127,6 +132,7 @@ export default function MyCopyPositionTable({
 
   const [openSourceDrawer, setOpenSourceDrawer] = useState(false)
   const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
+  const [openCloseModal, setOpenCloseModal] = useState(false)
   const [currentCopyPosition, setCurrentCopyPosition] = useState<CopyPositionData | undefined>()
   const [positionId, setPositionId] = useState<string | undefined>()
   const [submitting, setSubmitting] = useState(false)
@@ -139,33 +145,42 @@ export default function MyCopyPositionTable({
   const handleSelectSourceItem = useCallback(
     async (data: CopyPositionData, event?: any) => {
       event?.stopPropagation()
-      if (data.status === PositionStatusEnum.OPEN) {
-        setPositionId(undefined)
-        setCurrentCopyPosition(data)
-        setOpenSourceDrawer(true)
-        window.history.replaceState(
-          null,
-          '',
-          // TODO: 2
-          generateMyOpeningPositionRoute(data)
-        )
-      } else {
-        setCurrentCopyPosition(data)
+      setCurrentCopyPosition(data)
+      try {
         setSubmitting(true)
         const positionDetail = await getMyCopySourcePositionDetailApi({ copyId: data?.id ?? '' })
         setSubmitting(false)
-        setPositionId(positionDetail.id)
-        setOpenSourceDrawer(true)
-        window.history.replaceState(
-          null,
-          '',
-          // TODO: 2
-          generateClosedPositionRoute({
-            protocol: positionDetail.protocol,
-            id: positionDetail.id,
-            nextHours: nextHoursParam,
-          })
-        )
+        if (data.status === PositionStatusEnum.OPEN) {
+          setPositionId(undefined)
+          setOpenSourceDrawer(true)
+          window.history.replaceState(null, '', generateMyOpeningPositionRoute(data))
+        } else {
+          setPositionId(positionDetail.id)
+          setOpenSourceDrawer(true)
+          window.history.replaceState(
+            null,
+            '',
+            generateClosedPositionRoute({
+              protocol: positionDetail.protocol,
+              id: positionDetail.id,
+              nextHours: nextHoursParam,
+            })
+          )
+        }
+      } catch (error: any) {
+        if (error?.message?.includes(`Can't find data`)) {
+          if (data.status === PositionStatusEnum.OPEN) {
+            setOpenCloseModal(true)
+          } else {
+            toast.error(
+              <ToastBody
+                title={<Trans>Warning</Trans>}
+                message={<Trans>No link to the trader’s original position was found.</Trans>}
+              />
+            )
+          }
+        }
+        setSubmitting(false)
       }
     },
     [nextHoursParam]
@@ -315,6 +330,13 @@ export default function MyCopyPositionTable({
             <CopyTradePositionDetails id={currentCopyPosition?.id} />
           </Container>
         </Drawer>
+      )}
+      {openCloseModal && currentCopyPosition?.id && (
+        <ClosePositionModal
+          copyId={currentCopyPosition?.id}
+          onDismiss={() => setOpenCloseModal(false)}
+          onSuccess={refetch}
+        />
       )}
     </Flex>
   )

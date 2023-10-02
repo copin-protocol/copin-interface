@@ -28,7 +28,7 @@ msgid "30 days"
 msgstr "30 days"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-#: src/pages/MyProfile/TabCopies.tsx
+#: src/pages/MyProfile/MyCopies.tsx
 msgid "30D PnL"
 msgstr "30D PnL"
 
@@ -43,7 +43,7 @@ msgid "7 days"
 msgstr "7 days"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-#: src/pages/MyProfile/TabCopies.tsx
+#: src/pages/MyProfile/MyCopies.tsx
 msgid "7D PnL"
 msgstr "7D PnL"
 
@@ -86,6 +86,10 @@ msgstr "Are you sure to logout?"
 #: src/hooks/web3/useAuth.tsx
 msgid "Authorization Error"
 msgstr "Authorization Error"
+
+#: src/pages/MyProfile/MyCopies.tsx
+msgid "Available Margin"
+msgstr "Available Margin"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/pages/TraderDetails/TraderStats.tsx
@@ -157,7 +161,7 @@ msgstr "Change password successful!"
 #~ msgid "Chia sẻ"
 #~ msgstr "Chia sẻ"
 
-#: src/pages/MyProfile/TabCopies.tsx
+#: src/pages/MyProfile/MyCopies.tsx
 #: src/pages/MyProfileOld/MyCopiesTable.tsx
 msgid "Clone"
 msgstr "Clone"
@@ -271,7 +275,7 @@ msgstr "Docs"
 msgid "Don’t have a Copin account?"
 msgstr "Don’t have a Copin account?"
 
-#: src/pages/MyProfile/TabCopies.tsx
+#: src/pages/MyProfile/MyCopies.tsx
 #: src/pages/MyProfileOld/MyCopiesTable.tsx
 msgid "Edit"
 msgstr "Edit"
@@ -295,6 +299,7 @@ msgstr "Enter referral code"
 #: src/hooks/web3/useAuth.tsx
 #: src/hooks/web3/useContractMutation.tsx
 #: src/hooks/web3/useTokenApproval.tsx
+#: src/pages/MyProfile/ClosePositionModal.tsx
 #: src/pages/MyProfile/SettingConfigsModal.tsx
 #: src/pages/MyProfile/SettingConfigsModal.tsx
 #: src/pages/TraderDetails/CopyTraderDrawer.tsx
@@ -533,6 +538,10 @@ msgstr "New Password"
 msgid "No Data Found"
 msgstr "No Data Found"
 
+#: src/pages/MyProfile/MyCopyPositionTable.tsx
+msgid "No link to the trader’s original position was found."
+msgstr "No link to the trader’s original position was found."
+
 #: src/hooks/web3/useAuth.tsx
 msgid "No provider was found"
 msgstr "No provider was found"
@@ -715,7 +724,7 @@ msgstr "Register successful!"
 msgid "Reload"
 msgstr "Reload"
 
-#: src/pages/MyProfile/TabCopies.tsx
+#: src/pages/MyProfile/MyCopies.tsx
 #: src/pages/MyProfileOld/MyCopiesTable.tsx
 msgid "Remove"
 msgstr "Remove"
@@ -765,6 +774,10 @@ msgstr "S"
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 #~ msgid "Search Address"
 #~ msgstr "Search Address"
+
+#: src/pages/MyProfile/MyCopies/SelectedTraders.tsx
+msgid "Select all"
+msgstr "Select all"
 
 #: src/pages/TraderDetails/CopyTraderDrawer.tsx
 msgid "Select the copy you want to clone:"
@@ -832,6 +845,7 @@ msgstr "Stopped"
 #: src/hooks/web3/useTokenApproval.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/MyProfile/ChangePasswordAction.tsx
+#: src/pages/MyProfile/ClosePositionModal.tsx
 #: src/pages/MyProfile/SettingConfigsModal.tsx
 #: src/pages/MyProfile/SettingConfigsModal.tsx
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
@@ -877,6 +891,14 @@ msgstr "The server is not responding, please try again later!"
 msgid "This Page Could Not Be Found"
 msgstr "This Page Could Not Be Found"
 
+#: src/pages/MyProfile/ClosePositionModal.tsx
+msgid "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
+msgstr "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
+
+#: src/pages/MyProfile/ClosePositionModal.tsx
+msgid "This copy position has been closed successfully"
+msgstr "This copy position has been closed successfully"
+
 #: src/pages/MyProfile/Referral/ReferralOverview.tsx
 msgid "Today"
 msgstr "Today"
@@ -921,7 +943,7 @@ msgstr "Total Net Profit"
 msgid "Total Orders"
 msgstr "Total Orders"
 
-#: src/pages/MyProfile/TabCopies.tsx
+#: src/pages/MyProfile/MyCopies.tsx
 msgid "Total PnL"
 msgstr "Total PnL"
 
@@ -956,6 +978,10 @@ msgstr "Try Again"
 #: src/theme/Uploader/index.tsx
 #~ msgid "Tải ảnh không thành công do sai định dạnh ảnh!"
 #~ msgstr "Tải ảnh không thành công do sai định dạnh ảnh!"
+
+#: src/pages/MyProfile/ClosePositionModal.tsx
+msgid "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
+msgstr "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
 
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Unique traders are copied in the system"
@@ -1012,6 +1038,10 @@ msgstr "W/L Ratio"
 msgid "Waiting..."
 msgstr "Waiting..."
 
+#: src/pages/MyProfile/MyCopyPositionTable.tsx
+msgid "Warning"
+msgstr "Warning"
+
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Win rate"
 msgstr "Win rate"
@@ -1066,6 +1096,10 @@ msgstr "Your update has been succeeded"
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "{0}"
 msgstr "{0}"
+
+#: src/pages/MyProfile/MyCopies/SelectedTraders.tsx
+msgid "{0} traders"
+msgstr "{0} traders"
 
 #: src/theme/Tab/TabIcon.tsx
 msgid "{text}"
