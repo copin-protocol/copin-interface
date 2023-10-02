@@ -11,8 +11,6 @@ import { Box, Flex, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 
-import SettingConfigs from './SettingConfigs'
-
 const ListItem = ({
   title,
   titleComponent,
@@ -158,7 +156,6 @@ const BalanceMenu = ({
         >
           <Type.CaptionBold>{currentOption.title}</Type.CaptionBold>
         </Dropdown>
-        {!sm && data && data.balances && data.balances.length > 0 && <SettingConfigs activeKey={activeKey} />}
       </Flex>
       <Flex
         width={{ _: '100%', sm: 'auto' }}
@@ -176,7 +173,6 @@ const BalanceMenu = ({
           }
         />
         <ListItem title={'Copies'} valueComponent={<Type.CaptionBold>{overview?.copies ?? '-'}</Type.CaptionBold>} />
-        {sm && data && data.balances && data.balances.length > 0 && <SettingConfigs activeKey={activeKey} />}
       </Flex>
     </Flex>
   )

@@ -11,13 +11,14 @@ import {
   updateCopyTradeConfigApi,
 } from 'apis/copyTradeConfigApis'
 import ToastBody from 'components/@ui/ToastBody'
-import { maxPositionsContent } from 'components/TooltipContents'
 import { Button } from 'theme/Buttons'
+import InputField from 'theme/InputField'
 import NumberInputField from 'theme/InputField/NumberInputField'
 import Modal from 'theme/Modal'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { addressShorten } from 'utils/helpers/format'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
 import { SettingKey } from './SettingConfigs'
@@ -26,9 +27,11 @@ import { CopyTradeConfigFormValues, configSchema, defaultFormValues, fieldName }
 export default function SettingConfigsModal({
   currentSettingKey,
   onDismiss,
+  onSuccess,
 }: {
   currentSettingKey: SettingKey
   onDismiss: () => void
+  onSuccess?: () => void
 }) {
   const {
     control,
@@ -45,8 +48,8 @@ export default function SettingConfigsModal({
   const maxPositions = watch('maxPositions')
   const initRef = useRef<boolean>(false)
 
-  const { data, isLoading, refetch } = useQuery(
-    [QUERY_KEYS.GET_COPY_TRADE_CONFIGS_BY_KEY, currentSettingKey],
+  const { data, isLoading } = useQuery(
+    [QUERY_KEYS.GET_COPY_TRADE_CONFIGS_BY_KEY, currentSettingKey?.apiKey],
     () => getConfigDetailsByKeyApi({ exchange: currentSettingKey.exchange, apiKey: currentSettingKey.apiKey }),
     {
       retry: 0,
@@ -55,7 +58,7 @@ export default function SettingConfigsModal({
 
   const handleSuccess = () => {
     onDismiss()
-    refetch()
+    onSuccess && onSuccess()
   }
 
   const { mutate: requestConfigs, isLoading: submittingRequest } = useMutation(requestCopyTradeConfigsApi, {
@@ -111,12 +114,22 @@ export default function SettingConfigsModal({
   }
 
   return (
-    <Modal title={'API Key Settings'} isOpen onDismiss={onDismiss} hasClose={false}>
+    <Modal title={'Maximum Opening Positions'} isOpen onDismiss={onDismiss} hasClose={false}>
       <form>
-        <Box px={3} pb={3}>
+        <Box px={24} pb={24}>
+          <Type.Caption color="neutral2" mb={3}>
+            <Trans>The maximum number of positions that can be opened at the same time per API Key</Trans>
+          </Type.Caption>
+          <InputField
+            sx={{ mb: 3 }}
+            label="API Key"
+            defaultValue={addressShorten(currentSettingKey?.apiKey)}
+            block
+            disabled
+          />
           <SwitchInputField
             wrapperSx={{ mb: 12 }}
-            switchLabel="Max Opening Positions"
+            switchLabel={enableMaxPositions ? <Trans>Limited</Trans> : <Trans>Unlimited</Trans>}
             {...register(fieldName.enableMaxPositions, {
               onChange: (e) => {
                 const checked = e.target.checked
@@ -128,21 +141,18 @@ export default function SettingConfigsModal({
               },
             })}
             error={errors.enableMaxPositions?.message}
-            tooltipContent={
-              <Box width="calc(100vw - 32px)" maxWidth={450}>
-                {maxPositionsContent}
-              </Box>
-            }
           />
-          <NumberInputField
-            block
-            name={fieldName.maxPositions}
-            control={control}
-            error={errors.maxPositions?.message}
-            disabled={!enableMaxPositions}
-            inputHidden={!enableMaxPositions}
-            suffix={<InputSuffix>Positions</InputSuffix>}
-          />
+          {enableMaxPositions && (
+            <NumberInputField
+              block
+              name={fieldName.maxPositions}
+              control={control}
+              error={errors.maxPositions?.message}
+              disabled={!enableMaxPositions}
+              inputHidden={!enableMaxPositions}
+              suffix={<InputSuffix>Positions</InputSuffix>}
+            />
+          )}
           <Flex mt={24} sx={{ gap: 3 }}>
             <Button variant="outline" onClick={onDismiss} sx={{ flex: 1 }}>
               Cancel

@@ -59,6 +59,7 @@ function SelectedTraders({
           <Fragment key={protocol}>
             <Flex sx={{ gap: 1, alignItems: 'center' }}>
               <SwitchInput
+                defaultActive={isSelectedAll}
                 isActive={isSelectedAll}
                 onChange={(value) => {
                   if (value) {

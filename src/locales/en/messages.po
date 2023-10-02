@@ -417,6 +417,10 @@ msgstr "Last Trade"
 msgid "Last Trade (All)"
 msgstr "Last Trade (All)"
 
+#: src/pages/MyProfile/SettingConfigsModal.tsx
+msgid "Limited"
+msgstr "Limited"
+
 #: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
 msgid "Liquidated"
@@ -503,6 +507,10 @@ msgstr "Max Duration"
 #: src/pages/TraderDetails/TraderStats.tsx
 msgid "Max Leverage"
 msgstr "Max Leverage"
+
+#: src/pages/MyProfile/SettingConfigs.tsx
+msgid "Max Positions"
+msgstr "Max Positions"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Max ROI"
@@ -866,6 +874,10 @@ msgstr "Term of Use"
 msgid "Terms & Policy"
 msgstr "Terms & Policy"
 
+#: src/pages/MyProfile/SettingConfigsModal.tsx
+msgid "The maximum number of positions that can be opened at the same time per API Key"
+msgstr "The maximum number of positions that can be opened at the same time per API Key"
+
 #: src/components/@ui/NotFound/index.tsx
 msgid "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
 msgstr "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
@@ -986,6 +998,10 @@ msgstr "Unable to find a link to the trader’s original position. You can conti
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Unique traders are copied in the system"
 msgstr "Unique traders are copied in the system"
+
+#: src/pages/MyProfile/SettingConfigsModal.tsx
+msgid "Unlimited"
+msgstr "Unlimited"
 
 #: src/hooks/web3/useAuth.tsx
 msgid "Unsupported Chain"

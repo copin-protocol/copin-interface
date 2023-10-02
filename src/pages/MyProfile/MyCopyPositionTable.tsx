@@ -37,6 +37,7 @@ import { generateClosedPositionRoute, generateMyOpeningPositionRoute } from 'uti
 import { pageToOffset } from 'utils/helpers/transform'
 
 import ClosePositionModal from './ClosePositionModal'
+import SettingConfigs from './SettingConfigs'
 import { renderEntry, renderPnL, renderSource, renderTrader } from './renderProps'
 
 type ExternalSource = {
@@ -150,6 +151,7 @@ export default function MyCopyPositionTable({
         setSubmitting(true)
         const positionDetail = await getMyCopySourcePositionDetailApi({ copyId: data?.id ?? '' })
         setSubmitting(false)
+        if (!positionDetail) return
         if (data.status === PositionStatusEnum.OPEN) {
           setPositionId(undefined)
           setOpenSourceDrawer(true)
@@ -207,7 +209,12 @@ export default function MyCopyPositionTable({
     <Flex width="100%" height="100%" flexDirection="column" bg={bgColor}>
       {!hideTitle && title ? (
         <Box px={3} pt={16}>
-          <SectionTitle icon={<>{titleIcon}</>} title={title} iconColor="primary1" />
+          <SectionTitle
+            icon={<>{titleIcon}</>}
+            title={title}
+            iconColor="primary1"
+            suffix={<SettingConfigs activeKey={queryParams.identifyKey ?? null} />}
+          />
         </Box>
       ) : null}
       {!data?.data.length && !isLoading && (
