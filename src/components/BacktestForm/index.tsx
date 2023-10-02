@@ -16,10 +16,10 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { getTokenTradeList } from 'utils/config/trades'
+import { TOKEN_ADDRESSES, getTokenTradeList } from 'utils/config/trades'
 
 import BacktestGuideTour, { tourConfigs } from './BacktestGuideTour'
-import { defaultBackTestFormValues, defaultMaxVolMultiplier, fieldName } from './constants'
+import { defaultMaxVolMultiplier, fieldName, getDefaultBackTestFormValues } from './constants'
 import { BackTestFormValues } from './types'
 import { backTestFormSchema } from './yupSchema'
 
@@ -51,16 +51,20 @@ export default function BacktestForm({
   })
 
   useEffect(() => {
-    const _defaultValues = defaultValues ?? defaultBackTestFormValues
+    const _defaultValues = defaultValues ?? getDefaultBackTestFormValues(protocol)
     for (const key in _defaultValues) {
       const _key = key as keyof BackTestFormValues
       setValue(_key, _defaultValues[_key])
     }
     if (_defaultValues.tokenAddresses.length) return
-    if (!tokensTraded || tokensTraded.length === 0) return
-    setValue('tokenAddresses', tokensTraded)
+    if (!tokensTraded || tokensTraded.length === 0) {
+      setValue('tokenAddresses', Object.values(TOKEN_ADDRESSES[protocol]))
+    } else {
+      setValue('tokenAddresses', tokensTraded)
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultValues, tokensTraded])
+  }, [defaultValues, tokensTraded, protocol])
 
   const tokenAddresses = watch('tokenAddresses')
   const leverage = watch('leverage')

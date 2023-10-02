@@ -22,11 +22,13 @@ export const fieldName: { [key in keyof BackTestFormValues]: keyof BackTestFormV
 
 // pairs can be from server response
 // export const pairs: TokenTrade[] = Object.keys(TOKEN_TRADE_SUPPORT).map((key) => TOKEN_TRADE_SUPPORT[key])
-export const defaultBackTestFormValues: BackTestFormValues = {
+export const getDefaultBackTestFormValues: (protcol: ProtocolEnum) => BackTestFormValues = (
+  protocol: ProtocolEnum
+) => ({
   balance: 1000,
   orderVolume: 100,
   leverage: 5,
-  tokenAddresses: getTokenTradeList(ProtocolEnum.GMX).map((token) => token.address),
+  tokenAddresses: getTokenTradeList(protocol).map((token) => token.address),
   startTime: dayjs().subtract(30, 'days').utc().toDate(),
   endTime: dayjs().utc().toDate(),
   volumeProtection: true,
@@ -34,6 +36,6 @@ export const defaultBackTestFormValues: BackTestFormValues = {
   enableStopLoss: false,
   stopLossAmount: 10,
   reverseCopy: false,
-}
+})
 
 export const defaultMaxVolMultiplier = 5
