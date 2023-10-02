@@ -60,6 +60,7 @@ export const EVENT_ACTIONS = {
     JOIN_DISCORD: 'join_discord',
     JOIN_TELEGRAM: 'join_telegram',
     JOIN_TWITTER: 'join_twitter',
+    JOIN_GITHUB: 'join_github',
     MY_REFERRAL: 'my_referral',
   },
   [EventCategory.SEARCH]: {

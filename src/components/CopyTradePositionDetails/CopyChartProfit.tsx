@@ -31,7 +31,6 @@ export default function CopyChartProfit({
   position,
   copyOrders,
   isOpening,
-  hasLiquidate,
   openBlockTime,
   closeBlockTime,
   setCrossMovePnL,
@@ -39,7 +38,6 @@ export default function CopyChartProfit({
   position: CopyPositionData
   copyOrders: CopyOrderData[]
   isOpening: boolean
-  hasLiquidate: boolean
   openBlockTime: number
   closeBlockTime: number
   setCrossMovePnL: (value: number | undefined) => void
@@ -145,22 +143,7 @@ export default function CopyChartProfit({
         })
         .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
     )
-  }, [
-    data,
-    isOpening,
-    openOrder,
-    orders,
-    position.closePrice,
-    position.entryPrice,
-    position.indexToken,
-    position.isLong,
-    position.lastOrderAt,
-    position.pnl,
-    position.sizeDelta,
-    prices,
-    timezone,
-    to,
-  ])
+  }, [data, openOrder, orders, prices, timezone, to])
 
   const priceData: CandlestickData[] = useMemo(() => {
     if (!data) return []
@@ -448,28 +431,20 @@ export default function CopyChartProfit({
       }
     }
 
+    const handleResetFocus = () => {
+      setCrossMovePnL(undefined)
+    }
+
     window.addEventListener('resize', handleResize)
+    container?.addEventListener('mouseout', handleResetFocus)
 
     return () => {
       window.removeEventListener('resize', handleResize)
+      container?.removeEventListener('mouseout', handleResetFocus)
 
       chart.remove()
     }
-  }, [
-    chartData,
-    data,
-    decreaseList,
-    hasLiquidate,
-    increaseList,
-    isLoading,
-    isOpening,
-    position,
-    priceData,
-    prices,
-    setCrossMovePnL,
-    timezone,
-    tokenSymbol,
-  ])
+  }, [chartData, data, priceData, prices])
 
   return (
     <Box mt={[1, 24]} sx={{ position: 'relative' }} minHeight={[150, 220]}>
