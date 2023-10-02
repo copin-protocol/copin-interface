@@ -150,7 +150,7 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
               <Type.Caption color="neutral3">Copy Address:</Type.Caption>
               <Type.CaptionBold>
                 {/* TODO: 2 */}
-                {renderTrader(data.copyAccount, data.protocol, { fontWeight: '600' })}
+                {renderTrader(data.copyAccount, data.protocol, { textSx: { fontWeight: '600' } })}
               </Type.CaptionBold>
             </StatsItemWrapper>
             <StatsItemWrapper>
