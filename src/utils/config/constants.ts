@@ -8,7 +8,7 @@ export const LINKS = {
   webapp: 'https://app.copin.io',
   arbitrumExplorer: 'https://arbiscan.io',
   gmxHouse: 'https://www.gmx.house/arbitrum',
-  github: 'https://github.com/Copin-Analyzer',
+  github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/Copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
   telegram: 'https://t.me/Copin_io',
