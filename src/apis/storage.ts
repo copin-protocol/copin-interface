@@ -1,4 +1,5 @@
 import { ImageData } from 'entities/image'
+import { PositionData } from 'entities/trader'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 
 import requester from './index'
@@ -23,4 +24,39 @@ export async function shareTraderApi({
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     .then((res: any) => res.data as ImageData)
+}
+
+export async function sharePositionApi({
+  isOpening,
+  position,
+  imageBlob,
+}: {
+  isOpening: boolean
+  position: PositionData
+  imageBlob: Blob
+}) {
+  const formData = new FormData()
+  if (isOpening) {
+    formData.append(
+      'image',
+      imageBlob,
+      `protocol_${position.protocol}_key_${position.key}_blockNumber_${position.blockNumber}.png`
+    )
+    return requester
+      .post(
+        `${SERVICE}/share-position/opening/${position.protocol}/${position.key}/${position.blockNumber}`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        }
+      )
+      .then((res: any) => res.data as ImageData)
+  } else {
+    formData.append('image', imageBlob, `protocol_${position.protocol}_id_${position.id}.png`)
+    return requester
+      .post(`${SERVICE}/share-position/closed/${position.protocol}/${position.id}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((res: any) => res.data as ImageData)
+  }
 }

@@ -75,4 +75,5 @@ export const TOOLTIP_KEYS = {
 
 export const ELEMENT_IDS = {
   TRADER_CHART_PNL: 'trader-chart-pnl-container',
+  POSITION_CHART_PNL: 'position-chart-pnl-container',
 }

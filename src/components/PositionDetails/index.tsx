@@ -30,6 +30,7 @@ import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 
 import ChartProfit from './ChartProfit'
 import ListOrderTable from './ListOrderTable'
+import SharePosition from './SharePosition'
 import WhatIf from './WhatIf'
 
 export default function PositionDetails({
@@ -133,6 +134,7 @@ export default function PositionDetails({
                 sx={{ color: 'neutral3', p: 0 }}
               ></CopyButton>
               <ExplorerLogo protocol={data.protocol} explorerUrl={`${explorerUrl}/address/${data.account}`} />
+              <SharePosition isOpening={isOpening} stats={data} />
               {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
             </Flex>
             {!isDrawer && <ProtocolLogo size={24} protocol={data.protocol} textSx={{ fontSize: '14px' }} />}

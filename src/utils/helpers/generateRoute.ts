@@ -10,8 +10,9 @@ export const generateOpeningPositionRoute = (data: {
   account: string
   indexToken: string
   key: string
+  blockNumber: number
 }) =>
-  `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}?account=${data.account}&indexToken=${data.indexToken}&key=${data.key}`
+  `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}?account=${data.account}&indexToken=${data.indexToken}&key=${data.key}&blockNumber=${data.blockNumber}`
 
 export const generateMyOpeningPositionRoute = (data: {
   protocol: ProtocolEnum
