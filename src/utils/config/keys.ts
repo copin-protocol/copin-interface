@@ -62,6 +62,7 @@ export const URL_PARAM_KEYS = {
   MY_PROFILE_ALL_HISTORY_LIMIT: 'my_all_history_limit',
   MY_COPY_MAIN_SECTION_TAB: 'section_tab',
   MY_COPIES_STATUS: 'copies_status',
+  MY_COPIES_PROTOCOL: 'copies_protocol',
   MY_POSITIONS_STATUS: 'positions_status',
   MY_POSITIONS_ENTRY_STATUS: 'entry_status',
 }

@@ -7,7 +7,7 @@ import Divider from 'components/@ui/Divider'
 import { CopyTradeData } from 'entities/copyTrade'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
-import SwitchInput from 'theme/SwitchInput'
+import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 
@@ -45,7 +45,7 @@ function SelectedTraders({
   return (
     <Dropdown
       menuSx={{
-        width: 350,
+        width: [350, 400],
         height: 350,
         overflow: 'auto',
         p: 2,
@@ -59,9 +59,9 @@ function SelectedTraders({
           <Fragment key={protocol}>
             <Flex sx={{ gap: 1, alignItems: 'center' }}>
               <SwitchInput
-                defaultActive={isSelectedAll}
-                isActive={isSelectedAll}
-                onChange={(value) => {
+                checked={isSelectedAll}
+                onChange={(event) => {
+                  const value = event.target.checked
                   if (value) {
                     handleSelectAllTraders(false)
                   } else {
@@ -77,6 +77,8 @@ function SelectedTraders({
             <Grid
               sx={{
                 gridTemplateColumns: '1fr 1fr',
+                columnGap: 3,
+                rowGap: 2,
               }}
             >
               {traderAddresses.map((item) => {
@@ -87,7 +89,10 @@ function SelectedTraders({
                   <Box py={2} key={key.toString()}>
                     <ControlledCheckbox
                       checked={isChecked}
-                      label={renderTrader(item, protocol as ProtocolEnum)}
+                      label={renderTrader(item, protocol as ProtocolEnum, {
+                        sx: { gap: [1, 2] },
+                        textSx: { minWidth: '71px' },
+                      })}
                       // labelSx={{ fontSize: 14, lineHeight: '20px' }}
                       size={16}
                       onChange={() => handleToggleTrader(key)}

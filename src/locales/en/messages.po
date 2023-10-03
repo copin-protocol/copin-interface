@@ -28,7 +28,7 @@ msgid "30 days"
 msgstr "30 days"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-#: src/pages/MyProfile/MyCopies.tsx
+#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 msgid "30D PnL"
 msgstr "30D PnL"
 
@@ -43,7 +43,7 @@ msgid "7 days"
 msgstr "7 days"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-#: src/pages/MyProfile/MyCopies.tsx
+#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 msgid "7D PnL"
 msgstr "7D PnL"
 
@@ -87,7 +87,7 @@ msgstr "Are you sure to logout?"
 msgid "Authorization Error"
 msgstr "Authorization Error"
 
-#: src/pages/MyProfile/MyCopies.tsx
+#: src/pages/MyProfile/MyCopies/index.tsx
 msgid "Available Margin"
 msgstr "Available Margin"
 
@@ -161,7 +161,7 @@ msgstr "Change password successful!"
 #~ msgid "Chia sẻ"
 #~ msgstr "Chia sẻ"
 
-#: src/pages/MyProfile/MyCopies.tsx
+#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 #: src/pages/MyProfileOld/MyCopiesTable.tsx
 msgid "Clone"
 msgstr "Clone"
@@ -275,7 +275,7 @@ msgstr "Docs"
 msgid "Don’t have a Copin account?"
 msgstr "Don’t have a Copin account?"
 
-#: src/pages/MyProfile/MyCopies.tsx
+#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 #: src/pages/MyProfileOld/MyCopiesTable.tsx
 msgid "Edit"
 msgstr "Edit"
@@ -732,7 +732,7 @@ msgstr "Register successful!"
 msgid "Reload"
 msgstr "Reload"
 
-#: src/pages/MyProfile/MyCopies.tsx
+#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 #: src/pages/MyProfileOld/MyCopiesTable.tsx
 msgid "Remove"
 msgstr "Remove"
@@ -831,6 +831,10 @@ msgstr "Skipping..."
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
+#: src/pages/MyProfile/MyCopies/index.tsx
+msgid "Source"
+msgstr "Source"
+
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "Source Order"
 #~ msgstr "Source Order"
@@ -838,6 +842,10 @@ msgstr "Something went wrong"
 #: src/pages/@layouts/Navbar/index.tsx
 msgid "Stats"
 msgstr "Stats"
+
+#: src/pages/MyProfile/MyCopies/index.tsx
+msgid "Status"
+msgstr "Status"
 
 #: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
@@ -955,7 +963,7 @@ msgstr "Total Net Profit"
 msgid "Total Orders"
 msgstr "Total Orders"
 
-#: src/pages/MyProfile/MyCopies.tsx
+#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 msgid "Total PnL"
 msgstr "Total PnL"
 

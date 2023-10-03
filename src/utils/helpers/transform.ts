@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 
 import { ApiListResponse, ApiMeta } from 'apis/api'
 import { SUPPORTED_LOCALES } from 'utils/config/constants'
-import { TimeFilterByEnum, TimeframeEnum } from 'utils/config/enums'
+import { ProtocolEnum, TimeFilterByEnum, TimeframeEnum } from 'utils/config/enums'
 
 // dayjs.extend(duration)
 
@@ -147,4 +147,8 @@ export const getDurationFromTimeFilter = (timeFilter?: TimeFilterByEnum) => {
     default:
       return 7
   }
+}
+
+export function parseProtocolImage(protocol: ProtocolEnum) {
+  return `/images/protocols/${protocol}.png`
 }

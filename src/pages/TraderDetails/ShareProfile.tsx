@@ -16,6 +16,7 @@ import { ELEMENT_IDS } from 'utils/config/keys'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateAvatar } from 'utils/helpers/generateAvatar'
 import { generateParamsUrl, generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { parseProtocolImage } from 'utils/helpers/transform'
 
 export default function ShareProfile({
   address,
@@ -35,7 +36,7 @@ export default function ShareProfile({
 
   const colors = themeColors(true)
   const protocolImg = new Image(32, 32)
-  protocolImg.src = `/images/protocols/${protocol ?? 'KWENTA'}.png`
+  protocolImg.src = parseProtocolImage(protocol ?? 'KWENTA')
   const logoImg = new Image(182, 42)
   logoImg.src = logoWithText
 

@@ -21,6 +21,7 @@ import { SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { parseProtocolImage } from 'utils/helpers/transform'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
@@ -209,7 +210,7 @@ const SearchBox = ({
               {(searchUserData?.meta?.total ?? 0) > 0 && allowSearchProtocol(ProtocolEnum.GMX) && (
                 <Box>
                   <Flex mb={1} alignItems="center" sx={{ gap: 2 }}>
-                    <Image src={`/images/protocols/${ProtocolEnum.GMX}.png`} width={20} height={20} />
+                    <Image src={parseProtocolImage(ProtocolEnum.GMX)} width={20} height={20} />
                     <Type.CaptionBold color="neutral3">
                       <Trans>GMX</Trans>
                     </Type.CaptionBold>
@@ -227,7 +228,7 @@ const SearchBox = ({
               {(searchUserDataKwenta?.meta?.total ?? 0) > 0 && allowSearchProtocol(ProtocolEnum.KWENTA) && (
                 <Box mt={2}>
                   <Flex mb={1} alignItems="center" sx={{ gap: 2 }}>
-                    <Image src={`/images/protocols/${ProtocolEnum.KWENTA}.png`} width={20} height={20} />
+                    <Image src={parseProtocolImage(ProtocolEnum.KWENTA)} width={20} height={20} />
                     <Type.CaptionBold color="neutral3">
                       <Trans>Kwenta</Trans>
                     </Type.CaptionBold>

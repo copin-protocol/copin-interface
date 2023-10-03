@@ -19,14 +19,14 @@ export default function useSelectMultiple<T>({
     if (selected.includes(status)) return true
     return false
   }
-  const handleToggleSelect = ({ status }: { status: T }) => {
+  const handleToggleSelect = (option: T) => {
     setSelected((prev) => {
-      if (prev.length === 1 && prev.includes(status)) return prev
+      if (prev.length === 1 && prev.includes(option)) return prev
       let newState: T[] = []
-      if (prev.includes(status)) {
-        newState = prev.filter((prevStatus) => prevStatus !== status)
+      if (prev.includes(option)) {
+        newState = prev.filter((prevStatus) => prevStatus !== option)
       } else {
-        newState = [...prev, status]
+        newState = [...prev, option]
       }
       setSearchParams({ [paramKey]: newState.join('_') })
       return newState

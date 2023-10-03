@@ -9,13 +9,14 @@ import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 // import ProgressBar from 'theme/ProgressBar'
-import { Box, Flex, TextProps, Type } from 'theme/base'
+import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { parseProtocolImage } from 'utils/helpers/transform'
 
 export function renderEntry(data: CopyPositionData) {
   return (
@@ -53,6 +54,8 @@ export function renderTrader(
         <Type.Caption color="inherit" sx={{ color: 'neutral1', ':hover': { textDecoration: 'underline' }, ...textSx }}>
           {addressShorten(address, 3, 5)}
         </Type.Caption>
+        <Type.Caption color="neutral4">|</Type.Caption>
+        <Image src={parseProtocolImage(protocol)} width={20} height={20} />
       </Flex>
     </Link>
   )

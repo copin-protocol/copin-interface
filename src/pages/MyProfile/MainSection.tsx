@@ -1,10 +1,10 @@
-import { useEffect, useReducer, useRef, useState } from 'react'
+import { useEffect, useReducer, useRef } from 'react'
 import { useQuery } from 'react-query'
 
 import { getCopyTradeSettingsListApi, getMyCopyTradersApi } from 'apis/copyTradeApis'
 import { UserData } from 'entities/user'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
-import { CopyTradePlatformEnum, CopyTradeStatusEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS, STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 
 import MyCopies from './MyCopies'
@@ -76,11 +76,12 @@ export default function MainSection({
     }
   )
 
-  const [forceLoadCopies, setForceLoadCopies] = useState(false)
   const hasCopyPermission = useCopyTradePermission()
   const prevResTraderList = useRef<string[]>([])
+  const prevUniqueKey = useRef(uniqueKey)
+  console.log(prevUniqueKey.current, uniqueKey)
   const { data: tradersData, isLoading: isLoadingTraders } = useQuery(
-    [QUERY_KEYS.GET_MY_COPY_TRADERS, exchange, uniqueKey, sessionNum, forceLoadCopies],
+    [QUERY_KEYS.GET_MY_COPY_TRADERS, exchange, uniqueKey, sessionNum],
     () => getMyCopyTradersApi({ exchange, uniqueKey }),
     {
       enabled: !!exchange && hasCopyPermission,
@@ -93,9 +94,9 @@ export default function MainSection({
           return
         }
         prevResTraderList.current = resAddresses
-        if (!storageData || forceLoadCopies) {
+        if (!storageData || prevUniqueKey.current !== uniqueKey) {
+          prevUniqueKey.current = uniqueKey
           dispatch({ type: 'setTraders', payload: resAddresses })
-          setForceLoadCopies(false)
           return
         }
         dispatch({ type: 'reCheckTraders', payload: resAddresses })
@@ -112,13 +113,22 @@ export default function MainSection({
     paramKey: URL_PARAM_KEYS.MY_COPIES_STATUS,
     defaultSelected: [CopyTradeStatusEnum.RUNNING, CopyTradeStatusEnum.STOPPED],
   })
+  const {
+    selected: selectedProtocol,
+    checkIsSelected: checkIsProtocolChecked,
+    handleToggleSelect: handleToggleProtocol,
+  } = useSelectMultiple({
+    paramKey: URL_PARAM_KEYS.MY_COPIES_PROTOCOL,
+    defaultSelected: [ProtocolEnum.GMX, ProtocolEnum.KWENTA],
+  })
   const queryParams = {
     apiKey: uniqueKey ?? undefined,
     accounts: state.selectedTraders,
     status: copyStatus.length === 1 ? copyStatus[0] : undefined,
+    protocol: selectedProtocol.length === 1 ? selectedProtocol[0] : undefined,
   }
   const prevResCopyTradeList = useRef<string[]>([])
-  const { data: copyTrades, isLoading: isLoadingCopyTrades } = useQuery(
+  const { data: copyTrades, isFetching: isLoadingCopyTrades } = useQuery(
     [QUERY_KEYS.GET_COPY_TRADE_SETTINGS, queryParams, sessionNum, copyStatus],
 
     () => getCopyTradeSettingsListApi(queryParams),
@@ -162,10 +172,12 @@ export default function MainSection({
     } else {
       dispatch({ type: 'setTraders', payload: listTraderAddresses })
     }
-    setForceLoadCopies(true)
   }
   const handleToggleTrader = (address: string) => {
     dispatch({ type: 'toggleTrader', payload: address })
+  }
+  const handleAddTrader = (address: string) => {
+    dispatch({ type: 'addTraders', payload: [address] })
   }
 
   useEffect(() => {
@@ -182,11 +194,14 @@ export default function MainSection({
         onRefresh={setNewSession}
         handleToggleStatus={handleToggleStatus}
         checkIsStatusChecked={checkIsStatusChecked}
+        handleToggleProtocol={handleToggleProtocol}
+        checkIsProtocolChecked={checkIsProtocolChecked}
         handleSelectAllTraders={handleSelectAllTraders}
         isLoadingTraders={isLoadingTraders}
         handleToggleTrader={handleToggleTrader}
         traders={listTraderAddresses}
         allCopyTrades={allCopyTrades}
+        handleAddTrader={handleAddTrader}
       />
     </>
   )
