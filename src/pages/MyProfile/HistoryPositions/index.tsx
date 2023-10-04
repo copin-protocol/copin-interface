@@ -83,14 +83,13 @@ export default function HistoryPositions() {
           allTraders={selectionState.allTraders}
           selectedTraders={selectionState.selectedTraders}
           dispatch={dispatch}
-          storageData={storageData}
           onChangeTraders={onChangeTraders}
         />
       </Flex>
       <Box flex="1 0 0" overflow="hidden">
         {!isLoading && !!selectionState.allTraders.length && !hasSelectedTraders && (
           <NoDataOrSelect
-            type="noSelectTraders"
+            type="noSelectTradersInHistory"
             actionButton={
               !!selectionState.allTraders.length ? (
                 <Button variant="primary" mt={3} onClick={() => dispatch({ type: 'setAllTraders' })}>

@@ -315,6 +315,14 @@ msgstr "Favorites"
 msgid "Fees are not factored into PnL"
 msgstr "Fees are not factored into PnL"
 
+#: src/pages/MyProfile/NoDataOrSelect.tsx
+msgid "Find the trader you want in the list of traders above, all of the trader's history positions will be listed here."
+msgstr "Find the trader you want in the list of traders above, all of the trader's history positions will be listed here."
+
+#: src/pages/MyProfile/NoDataOrSelect.tsx
+msgid "Find the trader you want in the list of traders, all of the trader's copy settings will be listed here."
+msgstr "Find the trader you want in the list of traders, all of the trader's copy settings will be listed here."
+
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "Forgot password?"
 msgstr "Forgot password?"
@@ -410,6 +418,10 @@ msgstr "Last Trade"
 #: src/pages/TraderDetails/TraderStats.tsx
 msgid "Last Trade (All)"
 msgstr "Last Trade (All)"
+
+#: src/pages/MyProfile/NoDataOrSelect.tsx
+msgid "Let copy a trader and make profit!"
+msgstr "Let copy a trader and make profit!"
 
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 msgid "Limited"
@@ -615,6 +627,14 @@ msgstr "Please authorize to access your account"
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "Please check the verification code from your email!"
 msgstr "Please check the verification code from your email!"
+
+#: src/pages/MyProfile/NoDataOrSelect.tsx
+msgid "Please pick trader to view copies detail"
+msgstr "Please pick trader to view copies detail"
+
+#: src/pages/MyProfile/NoDataOrSelect.tsx
+msgid "Please pick trader to view your history"
+msgstr "Please pick trader to view your history"
 
 #: src/hooks/web3/useAuth.tsx
 #: src/hooks/web3/useAuth.tsx
@@ -919,6 +939,10 @@ msgstr "This action will unlink the BingX position; please ensure the BingX posi
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
 msgid "This copy position has been closed successfully"
 msgstr "This copy position has been closed successfully"
+
+#: src/pages/MyProfile/NoDataOrSelect.tsx
+msgid "This trader list is empty"
+msgstr "This trader list is empty"
 
 #: src/pages/MyProfile/Referral/ReferralOverview.tsx
 msgid "Today"

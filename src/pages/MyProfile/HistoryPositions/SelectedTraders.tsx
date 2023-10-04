@@ -1,3 +1,4 @@
+import isEqual from 'lodash/isEqual'
 import { useEffect, useMemo, useRef } from 'react'
 import { useQueries } from 'react-query'
 
@@ -12,13 +13,11 @@ export default function SelectedTraders({
   allTraders,
   selectedTraders,
   dispatch,
-  storageData,
   onChangeTraders,
 }: {
   allTraders: string[]
   selectedTraders: string[]
   dispatch: DispatchSelectTraders
-  storageData: string | null
   onChangeTraders: () => void
 }) {
   const copiedTraders = useQueries(QUERY_CONFIGS)
@@ -73,10 +72,10 @@ export default function SelectedTraders({
     [copiedTraders]
   )
 
-  const updateOne = useRef(false)
+  const prevAllTraders = useRef(allTraders)
   useEffect(() => {
-    if (!listTraderAddresses.length || updateOne.current || !!storageData) return
-    updateOne.current = true
+    if (isEqual(prevAllTraders.current, listTraderAddresses) || !listTraderAddresses.length) return
+    prevAllTraders.current = listTraderAddresses
     dispatch({
       type: 'setState',
       payload: {
@@ -88,7 +87,7 @@ export default function SelectedTraders({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listTraderAddresses])
 
-  if (!tradersByProtocol) return <></>
+  if (!allTraders.length) return <></>
 
   return (
     <SelectTradersDropdown

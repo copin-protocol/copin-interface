@@ -32,7 +32,7 @@ export default function SelectTradersDropdown({
   menuSx?: SystemStyleObject & GridProps
   placement?: 'bottom' | 'top' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
 }) {
-  if (!tradersByProtocol) return <></>
+  if (!allTraders.length) return <></>
   const isSelectedAll = !!allTraders.length && allTraders.every((address) => selectedTraders.includes(address))
 
   return (

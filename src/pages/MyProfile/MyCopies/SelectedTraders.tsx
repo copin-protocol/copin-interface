@@ -1,5 +1,4 @@
 import { CopyTradeData } from 'entities/copyTrade'
-import { ProtocolEnum } from 'utils/config/enums'
 
 import SelectTradersDropdown, { TradersByProtocolData } from '../SelectTradersDropdown'
 
@@ -16,7 +15,10 @@ function SelectedTraders({
   handleToggleTrader: (key: string) => void
   handleSelectAllTraders: (isSelectedAll: boolean) => void
 }) {
+  const checkerMapping: Record<string, boolean> = {}
   const tradersByProtocol = allCopyTrades?.reduce((result, copyTrade) => {
+    if (checkerMapping[copyTrade.account] || !allTraders.includes(copyTrade.account)) return result
+    checkerMapping[copyTrade.account] = true
     result[copyTrade.protocol] = [
       ...(result[copyTrade.protocol] ?? []),
       { address: copyTrade.account, status: 'copying' },
@@ -24,15 +26,7 @@ function SelectedTraders({
     return result
   }, {} as TradersByProtocolData)
 
-  if (!!tradersByProtocol) {
-    Object.entries(tradersByProtocol).forEach(([protocol]) => {
-      tradersByProtocol[protocol as ProtocolEnum] = tradersByProtocol[protocol as ProtocolEnum].filter((data) =>
-        allTraders.includes(data.address)
-      )
-    })
-  }
-
-  if (!tradersByProtocol) return <></>
+  if (!tradersByProtocol || !allTraders.length) return <></>
   return (
     <SelectTradersDropdown
       allTraders={allTraders}
