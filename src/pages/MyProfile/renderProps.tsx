@@ -12,6 +12,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
@@ -51,11 +52,16 @@ export function renderTrader(
     <Link to={generateTraderDetailsRoute(protocol, address)}>
       <Flex sx={{ gap: 2, ...sx }} alignItems="center">
         <AddressAvatar address={address} size={24} />
-        <Type.Caption color="inherit" sx={{ color: 'neutral1', ':hover': { textDecoration: 'underline' }, ...textSx }}>
+        <Type.Caption
+          className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
+          color="inherit"
+          data-trader-address={address}
+          sx={{ color: 'neutral1', ':hover': { textDecoration: 'underline' }, ...textSx }}
+        >
           {addressShorten(address, 3, 5)}
         </Type.Caption>
         <Type.Caption color="neutral4">|</Type.Caption>
-        <Image src={parseProtocolImage(protocol)} width={20} height={20} />
+        <Image src={parseProtocolImage(protocol)} width={16} height={16} />
       </Flex>
     </Link>
   )

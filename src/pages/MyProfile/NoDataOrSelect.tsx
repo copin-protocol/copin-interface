@@ -7,7 +7,7 @@ type ComponentTypes = 'noTraders' | 'noSelectTraders' | 'noSelectCopies'
 const configs: { [key in ComponentTypes]: { title: string; content: string; image: string } } = {
   noTraders: {
     title: 'This trader list is empty',
-    content: 'Once you starts copy a new trader, you’ll see the trader listed here',
+    content: 'Let copy a trader and make profit!',
     image: noTraders,
   },
   noSelectTraders: {

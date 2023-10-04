@@ -10,7 +10,7 @@ const SectionTitle = ({
   suffix,
 }: {
   icon: ReactNode
-  title: string
+  title: ReactNode
   iconColor?: string
   sx?: any
   suffix?: ReactNode

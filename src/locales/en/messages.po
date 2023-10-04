@@ -152,7 +152,6 @@ msgid "Change Password"
 msgstr "Change Password"
 
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfile/ChangePasswordAction.tsx
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Change password successful!"
 msgstr "Change password successful!"
@@ -193,14 +192,12 @@ msgstr "Communicating with wallet. Sign message with your wallet"
 #: src/components/LoginAction/ModalResetPassword.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
-#: src/pages/MyProfile/ChangePasswordAction.tsx
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Confirm"
 msgstr "Confirm"
 
 #: src/components/ConfirmReferralModal/index.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfile/ChangePasswordAction.tsx
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Confirming..."
 msgstr "Confirming..."
@@ -240,7 +237,6 @@ msgid "Create an account"
 msgstr "Create an account"
 
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfile/ChangePasswordAction.tsx
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Current Password"
 msgstr "Current Password"
@@ -299,9 +295,9 @@ msgstr "Enter referral code"
 #: src/hooks/web3/useAuth.tsx
 #: src/hooks/web3/useContractMutation.tsx
 #: src/hooks/web3/useTokenApproval.tsx
-#: src/pages/MyProfile/ClosePositionModal.tsx
-#: src/pages/MyProfile/SettingConfigsModal.tsx
-#: src/pages/MyProfile/SettingConfigsModal.tsx
+#: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
+#: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
+#: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
 #: src/pages/TraderDetails/CopyTraderDrawer.tsx
 msgid "Error"
 msgstr "Error"
@@ -351,7 +347,6 @@ msgid "Increase"
 msgstr "Increase"
 
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfile/ChangePasswordAction.tsx
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Input current password"
 msgstr "Input current password"
@@ -367,7 +362,6 @@ msgstr "Input email address"
 
 #: src/components/LoginAction/ModalResetPassword.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfile/ChangePasswordAction.tsx
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Input new password"
 msgstr "Input new password"
@@ -417,7 +411,7 @@ msgstr "Last Trade"
 msgid "Last Trade (All)"
 msgstr "Last Trade (All)"
 
-#: src/pages/MyProfile/SettingConfigsModal.tsx
+#: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 msgid "Limited"
 msgstr "Limited"
 
@@ -508,7 +502,7 @@ msgstr "Max Duration"
 msgid "Max Leverage"
 msgstr "Max Leverage"
 
-#: src/pages/MyProfile/SettingConfigs.tsx
+#: src/pages/MyProfile/OpeningPositions/SettingConfigs.tsx
 msgid "Max Positions"
 msgstr "Max Positions"
 
@@ -536,7 +530,6 @@ msgstr "Need help?"
 
 #: src/components/LoginAction/ModalResetPassword.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfile/ChangePasswordAction.tsx
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "New Password"
 msgstr "New Password"
@@ -546,7 +539,7 @@ msgstr "New Password"
 msgid "No Data Found"
 msgstr "No Data Found"
 
-#: src/pages/MyProfile/MyCopyPositionTable.tsx
+#: src/pages/MyProfile/PositionTable/index.tsx
 msgid "No link to the trader’s original position was found."
 msgstr "No link to the trader’s original position was found."
 
@@ -581,6 +574,10 @@ msgstr "OR LOGIN WITH"
 #: src/utils/config/translations.tsx
 msgid "Open"
 msgstr "Open"
+
+#: src/pages/MyProfile/OpeningPositions/index.tsx
+msgid "Opening Positions"
+msgstr "Opening Positions"
 
 #: src/pages/Stats/index.tsx
 msgid "Order"
@@ -783,7 +780,12 @@ msgstr "S"
 #~ msgid "Search Address"
 #~ msgstr "Search Address"
 
-#: src/pages/MyProfile/MyCopies/SelectedTraders.tsx
+#: src/pages/MyProfile/HistoryPositions/index.tsx
+#: src/pages/MyProfile/MyCopies/index.tsx
+msgid "Select All Traders"
+msgstr "Select All Traders"
+
+#: src/pages/MyProfile/SelectTradersDropdown.tsx
 msgid "Select all"
 msgstr "Select all"
 
@@ -795,7 +797,7 @@ msgstr "Select the copy you want to clone:"
 msgid "Session Expired"
 msgstr "Session Expired"
 
-#: src/pages/MyProfile/SettingConfigsModal.tsx
+#: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 msgid "Setting configs has been succeeded"
 msgstr "Setting configs has been succeeded"
 
@@ -860,10 +862,9 @@ msgstr "Stopped"
 #: src/hooks/web3/useContractMutation.tsx
 #: src/hooks/web3/useTokenApproval.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfile/ChangePasswordAction.tsx
-#: src/pages/MyProfile/ClosePositionModal.tsx
-#: src/pages/MyProfile/SettingConfigsModal.tsx
-#: src/pages/MyProfile/SettingConfigsModal.tsx
+#: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
+#: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
+#: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
 #: src/pages/TraderDetails/CopyTraderDrawer.tsx
 msgid "Success"
@@ -882,7 +883,7 @@ msgstr "Term of Use"
 msgid "Terms & Policy"
 msgstr "Terms & Policy"
 
-#: src/pages/MyProfile/SettingConfigsModal.tsx
+#: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 msgid "The maximum number of positions that can be opened at the same time per API Key"
 msgstr "The maximum number of positions that can be opened at the same time per API Key"
 
@@ -911,11 +912,11 @@ msgstr "The server is not responding, please try again later!"
 msgid "This Page Could Not Be Found"
 msgstr "This Page Could Not Be Found"
 
-#: src/pages/MyProfile/ClosePositionModal.tsx
+#: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
 msgid "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
 msgstr "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
 
-#: src/pages/MyProfile/ClosePositionModal.tsx
+#: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
 msgid "This copy position has been closed successfully"
 msgstr "This copy position has been closed successfully"
 
@@ -999,7 +1000,7 @@ msgstr "Try Again"
 #~ msgid "Tải ảnh không thành công do sai định dạnh ảnh!"
 #~ msgstr "Tải ảnh không thành công do sai định dạnh ảnh!"
 
-#: src/pages/MyProfile/ClosePositionModal.tsx
+#: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
 msgid "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
 msgstr "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
 
@@ -1007,7 +1008,7 @@ msgstr "Unable to find a link to the trader’s original position. You can conti
 msgid "Unique traders are copied in the system"
 msgstr "Unique traders are copied in the system"
 
-#: src/pages/MyProfile/SettingConfigsModal.tsx
+#: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 msgid "Unlimited"
 msgstr "Unlimited"
 
@@ -1019,7 +1020,7 @@ msgstr "Unsupported Chain"
 msgid "Unverified User"
 msgstr "Unverified User"
 
-#: src/pages/MyProfile/SettingConfigsModal.tsx
+#: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 msgid "Update configs has been succeeded"
 msgstr "Update configs has been succeeded"
 
@@ -1062,7 +1063,7 @@ msgstr "W/L Ratio"
 msgid "Waiting..."
 msgstr "Waiting..."
 
-#: src/pages/MyProfile/MyCopyPositionTable.tsx
+#: src/pages/MyProfile/PositionTable/index.tsx
 msgid "Warning"
 msgstr "Warning"
 
@@ -1114,14 +1115,12 @@ msgstr "Your update has been succeeded"
 #: src/hooks/features/useReferralActions.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfile/ChangePasswordAction.tsx
-#: src/pages/MyProfile/ChangePasswordAction.tsx
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
 #: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "{0}"
 msgstr "{0}"
 
-#: src/pages/MyProfile/MyCopies/SelectedTraders.tsx
+#: src/pages/MyProfile/SelectTradersDropdown.tsx
 msgid "{0} traders"
 msgstr "{0} traders"
 

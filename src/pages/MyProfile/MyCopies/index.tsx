@@ -19,8 +19,8 @@ import { COPY_TRADE_STATUS_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
+import NoDataOrSelect from '../NoDataOrSelect'
 import ConfirmStopModal from './ConfirmStopModal'
-import NoDataOrSelect from './NoDataOrSelect'
 import SelectedTraders from './SelectedTraders'
 import useCopyTradeColumns from './useCopyTradeColumns'
 
@@ -153,7 +153,7 @@ export default function MyCopies({
           <Flex sx={{ alignItems: 'center' }}>
             <SelectedTraders
               selectedTraders={selectedTraders}
-              traders={traders}
+              allTraders={traders}
               allCopyTrades={allCopyTrades}
               handleToggleTrader={handleToggleTrader}
               handleSelectAllTraders={handleSelectAllTraders}
@@ -240,7 +240,7 @@ export default function MyCopies({
             </Tooltip>
           </>
         )}
-        {!hasSelectedTraders && (
+        {!isLoading && !!traders.length && !hasSelectedTraders && (
           <NoDataOrSelect
             type="noSelectTraders"
             actionButton={
@@ -249,14 +249,15 @@ export default function MyCopies({
                 mt={3}
                 onClick={() => handleSelectAllTraders(false)}
                 isLoading={isLoadingTraders}
+                disabled={isLoadingTraders}
               >
-                Select All Traders
+                <Trans>Select All Traders</Trans>
               </Button>
             }
           />
         )}
       </Box>
-      {!isLoadingTraders && !traders.length && <NoDataOrSelect type="noSelectTraders" />}
+      {!isLoadingTraders && !traders.length && <NoDataOrSelect type="noTraders" />}
 
       {openDrawer && (
         <CopyTradeEditDrawer

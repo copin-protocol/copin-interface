@@ -97,7 +97,12 @@ const NavUser = () => {
                 </Flex>
               </DropdownItem>
               <div>
-                <DropdownItem onClick={() => setIsShowModalLogout(true)}>
+                <DropdownItem
+                  onClick={() => {
+                    sessionStorage.clear()
+                    setIsShowModalLogout(true)
+                  }}
+                >
                   <Flex alignItems="center" color="red2" sx={{ gap: 2 }}>
                     <SignOut size={20} />
                     <Box>

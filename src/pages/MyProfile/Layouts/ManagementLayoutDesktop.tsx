@@ -15,8 +15,8 @@ export default function ManagementLayoutDesktop({ balanceMenu, mainSection, posi
       sx={{
         overflow: 'hidden',
         height: '100%',
-        gridTemplate: `"MAIN RIGHT" 100% / 1fr minmax(${mainExpanded ? '0px' : '500px'}, ${
-          mainExpanded ? '0px' : '500px'
+        gridTemplate: `"MAIN RIGHT" 100% / 1fr minmax(${mainExpanded ? '0px' : '540px'}, ${
+          mainExpanded ? '0px' : '540px'
         })`,
       }}
     >
