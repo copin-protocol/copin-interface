@@ -40,7 +40,7 @@ export async function sharePositionApi({
     formData.append(
       'image',
       imageBlob,
-      `protocol_${position.protocol}_key_${position.key}_blockNumber_${position.blockNumber}.png`
+      `share_opening_${position.protocol}_${position.key}_${position.blockNumber}.png`
     )
     return requester
       .post(
@@ -52,7 +52,7 @@ export async function sharePositionApi({
       )
       .then((res: any) => res.data as ImageData)
   } else {
-    formData.append('image', imageBlob, `protocol_${position.protocol}_id_${position.id}.png`)
+    formData.append('image', imageBlob, `share_closed_${position.protocol}_${position.id}.png`)
     return requester
       .post(`${SERVICE}/share-position/closed/${position.protocol}/${position.id}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
