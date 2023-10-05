@@ -28,23 +28,23 @@ import {
 export default function CopyTraderForm({
   protocol,
   onSubmit,
-  onCancel,
   submitButtonText = 'Copy Trade',
   isSubmitting,
   defaultFormValues,
   isEdit = false,
   isClone = false,
   disabledEdit = false,
+  tokensTraded,
 }: {
   protocol: ProtocolEnum
   onSubmit: (data: CopyTradeFormValues) => void
-  onCancel?: () => void
   isSubmitting: boolean
   submitButtonText?: string
   defaultFormValues?: CopyTradeFormValues
   isEdit?: boolean
   isClone?: boolean
   disabledEdit?: boolean
+  tokensTraded?: string[]
 }) {
   const {
     control,
@@ -78,8 +78,11 @@ export default function CopyTraderForm({
       const _key = key as keyof CopyTradeFormValues
       setValue(_key, defaultValues[_key])
     }
+    if (!defaultFormValues && tokensTraded?.length) {
+      setValue('tokenAddresses', tokensTraded)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultFormValues])
+  }, [defaultFormValues, tokensTraded])
 
   const handleSelectAll = () => {
     if (isSelectedAll) {

@@ -128,7 +128,7 @@ export default function MyCopies({
   const changeCurrentSort = (sort: TableSortProps<CopyTradeData> | undefined) => {
     setCurrentSort(sort)
   }
-  let sortedData: CopyTradeData[] | undefined = undefined
+  let sortedData: CopyTradeData[] | undefined = Array.isArray(data) ? [] : undefined
   if (data?.length) {
     sortedData = [...data]
     if (sortedData && sortedData.length > 0 && !!currentSort) {

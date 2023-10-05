@@ -56,11 +56,12 @@ export default function BacktestForm({
       const _key = key as keyof BackTestFormValues
       setValue(_key, _defaultValues[_key])
     }
-    if (_defaultValues.tokenAddresses.length) return
-    if (!tokensTraded || tokensTraded.length === 0) {
-      setValue('tokenAddresses', Object.values(TOKEN_ADDRESSES[protocol]))
-    } else {
+    if (!defaultValues?.tokenAddresses.length && !!tokensTraded?.length) {
       setValue('tokenAddresses', tokensTraded)
+      return
+    }
+    if (!_defaultValues.tokenAddresses.length) {
+      setValue('tokenAddresses', Object.values(TOKEN_ADDRESSES[protocol]))
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

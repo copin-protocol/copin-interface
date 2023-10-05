@@ -34,16 +34,11 @@ export default function CopyTradeEditForm({
     if (formData.account) data.account = formData.account
     updateCopyTrade({ data, copyTradeId: copyTradeData?.id ?? '' })
   }
-  const onCancel = () => {
-    updateCopyTrade({ data: { status: CopyTradeStatusEnum.STOPPED }, copyTradeId: copyTradeData?.id ?? '' })
-  }
-
   return (
     <CopyTraderForm
       key={copyTradeData?.account}
       protocol={copyTradeData?.protocol ?? ProtocolEnum.GMX}
       onSubmit={onSubmit}
-      onCancel={onCancel}
       isSubmitting={isMutating}
       defaultFormValues={defaultFormValues}
       isEdit={true}
