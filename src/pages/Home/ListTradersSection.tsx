@@ -12,7 +12,6 @@ import { mobileTableSettings, tableSettings } from 'components/Tables/TraderList
 import { TraderData } from 'entities/trader.d'
 import useBacktestWarningModal from 'hooks/store/useBacktestWarningModal'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
-// import useBacktestRequest from 'hooks/helpers/useBacktestRequest'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { PaginationWithLimit, PaginationWithSelect } from 'theme/Pagination'
 import ProgressBar from 'theme/ProgressBar'
@@ -25,11 +24,9 @@ import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { TradersContextData } from './useTradersContext'
 
 function ListTradersSection({
-  buttonsHasTitle = false,
   contextValues,
   notes,
 }: {
-  buttonsHasTitle?: boolean
   contextValues: TradersContextData
   notes?: { [key: string]: string }
 }) {
@@ -61,14 +58,10 @@ function ListTradersSection({
   const listAddress = listTraderData.map((trader) => trader.account)
   const { homeInstance: currentHomeInstance } = getCommonData({ homeId: currentHomeInstanceId })
   const listAddressSelected = currentHomeInstance?.tradersByIds ?? []
-  const isSelectedAll = useMemo(
-    () => {
-      if (!currentHomeInstance || !listAddress.length || isLoading) return false
-      return listAddress.every((address) => listAddressSelected.includes(address))
-    },
-    // () => !!data && getAddresses(data).every((item) => getAddresses(listTrader).includes(item)),
-    [currentHomeInstance, listAddress, listAddressSelected]
-  )
+  const isSelectedAll = useMemo(() => {
+    if (!currentHomeInstance || !listAddress.length || isLoading) return false
+    return listAddress.every((address) => listAddressSelected.includes(address))
+  }, [currentHomeInstance, listAddress, listAddressSelected])
   const handleSelectAll = (isSelectedAll: boolean) => {
     if (!listTraderData.length) return
     if (!isSelectedAll) {
@@ -124,10 +117,12 @@ function ListTradersSection({
     }
     addTraderToHomeInstance(data)
   }
+  const isRangeProgressing =
+    isRangeSelection && isLoading && loadingRangeProgress?.status !== CheckAvailableStatus.FINISH
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
       <>
-        {isRangeSelection && isLoading && loadingRangeProgress?.status !== CheckAvailableStatus.FINISH ? (
+        {isRangeProgressing ? (
           <Flex sx={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', p: 3 }}>
             <Box mt={4} mb={3} variant="card" sx={{ mx: 'auto', maxWidth: 600, width: '100%' }}>
               <Type.Body textAlign="center" display="block" mb={24}>
@@ -143,7 +138,7 @@ function ListTradersSection({
           </Flex>
         ) : null}
       </>
-      {isRangeSelection && isLoading && loadingRangeProgress?.status !== CheckAvailableStatus.FINISH ? null : (
+      {isRangeProgressing ? null : (
         <>
           <Box
             flex="1"
@@ -193,7 +188,7 @@ function TablePagination({
   changeCurrentLimit: (page: number) => void
   data: ApiListResponse<TraderData> | undefined
 }) {
-  const { md, xl } = useResponsive()
+  const { md } = useResponsive()
   const ref = useRef(null)
   const size = useSize(ref)
   return (

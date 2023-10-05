@@ -18,7 +18,6 @@ const Home = lazy(() => import('./Home'))
 const TraderDetails = lazy(() => import('./TraderDetails'))
 const PositionDetails = lazy(() => import('./PositionDetails'))
 const MyProfile = lazy(() => import('./MyProfile'))
-const MyProfileOld = lazy(() => import('./MyProfileOld'))
 const Stats = lazy(() => import('./Stats'))
 const TopOpenings = lazy(() => import('./TopOpenings'))
 const SharedBacktestSingle = lazy(() => import('./SharedBacktestSingle'))
@@ -51,7 +50,6 @@ function App() {
             <ProtocolRoute exact path={ROUTES.TOP_OPENINGS.path} component={TopOpenings}></ProtocolRoute>
             <ProtocolRedirectRoute exact path={ROUTES.TOP_OPENINGS.path_prefix} />
 
-            <AuthedRoute exact path={ROUTES.MY_PROFILE_OLD.path} component={MyProfileOld}></AuthedRoute>
             <Route exact path={ROUTES.STATS.path} component={Stats}></Route>
             <Route exact path={ROUTES.SHARED_BACKTEST_SINGLE.path} component={SharedBacktestSingle}></Route>
             <Route exact path={ROUTES.SHARED_BACKTEST_MULTIPLE.path} component={SharedBacktestMultiple}></Route>

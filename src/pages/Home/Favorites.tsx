@@ -3,7 +3,7 @@ import NoLoginFavorite from 'components/@ui/NoLogin/NoLoginFavorite'
 import useTraderFavorites from 'hooks/store/useTraderFavorites'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import Loading from 'theme/Loading'
-import { Box } from 'theme/base'
+import { Box, Flex } from 'theme/base'
 
 import { TabKeyEnum } from './Layouts/layoutConfigs'
 import ListTradersSection from './ListTradersSection'
@@ -38,11 +38,11 @@ export default Favorites
 function ListTraders({ notes }: { notes: { [key: string]: string } }) {
   const contextValues = useTradersContext()
   return (
-    <>
-      <Box sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}>
+    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
+      <Box flex="1 1 0" sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}>
         <TimeFilterSection contextValues={contextValues} />
       </Box>
-      <ListTradersSection buttonsHasTitle={true} contextValues={contextValues} notes={notes} />
-    </>
+      <ListTradersSection contextValues={contextValues} notes={notes} />
+    </Flex>
   )
 }
