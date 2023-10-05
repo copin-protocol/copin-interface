@@ -350,14 +350,20 @@ export const getDefaultTokenTrade = (protocol: ProtocolEnum) =>
 export const getTokenTradeList = (protocol: ProtocolEnum) =>
   Object.keys(TOKEN_TRADE_SUPPORT[protocol]).map((key) => TOKEN_TRADE_SUPPORT[protocol][key])
 
-export const getTokenOptions = (protocol: ProtocolEnum): TokenOptionProps[] => [
-  ALL_OPTION,
-  ...Object.keys(TOKEN_TRADE_SUPPORT[protocol]).map((key) => ({
+const getDefaultTokenOptions = (protocol: ProtocolEnum) =>
+  Object.keys(TOKEN_TRADE_SUPPORT[protocol]).map((key) => ({
     id: key,
     text: TOKEN_TRADE_SUPPORT[protocol][key].symbol,
     filter_by: key,
-  })),
-]
+  }))
+export const getTokenOptions = ({
+  protocol,
+  ignoredAll,
+}: {
+  protocol: ProtocolEnum
+  ignoredAll?: boolean
+}): TokenOptionProps[] =>
+  ignoredAll ? getDefaultTokenOptions(protocol) : [ALL_OPTION, ...getDefaultTokenOptions(protocol)]
 
 export const TIMEFRAME_NAMES = {
   // Minutes

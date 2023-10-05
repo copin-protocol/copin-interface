@@ -1,6 +1,7 @@
 import { cloneElement, useCallback, useEffect, useReducer } from 'react'
 
 import DirectionButton from 'components/@ui/DirectionButton'
+import { ChartPositionsProps } from 'components/Charts/ChartPositions/types'
 import { HistoryTableProps, fullHistoryColumns, historyColumns } from 'components/Tables/HistoryTable'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Box, Flex, Grid } from 'theme/base'
@@ -12,9 +13,12 @@ import { LayoutProps } from './types'
 const DesktopLayout = ({ children, resetSort }: LayoutProps) => {
   const { myProfile } = useMyProfile()
   const [positionFullExpanded, toggleFullExpand] = useReducer((state) => !state, false)
+  const [chartFullExpanded, toggleChartFullExpand] = useReducer((state) => !state, false)
+
   useEffect(() => {
     if (!positionFullExpanded) resetSort && resetSort()
   }, [positionFullExpanded])
+
   const [positionTopExpanded, toggleTopExpand] = useReducer((state) => !state, false)
 
   const logEventLayout = useCallback(
@@ -29,11 +33,26 @@ const DesktopLayout = ({ children, resetSort }: LayoutProps) => {
   )
 
   const handleFullExpand = () => {
+    if (chartFullExpanded) {
+      toggleChartFullExpand()
+    }
     toggleFullExpand()
     logEventLayout(
       positionFullExpanded
         ? EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_POSITION_FULL
         : EVENT_ACTIONS[EventCategory.LAYOUT].EXPAND_POSITION_FULL
+    )
+  }
+
+  const handleChartFullExpand = () => {
+    if (positionFullExpanded) {
+      toggleFullExpand()
+    }
+    toggleChartFullExpand()
+    logEventLayout(
+      chartFullExpanded
+        ? EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_CHART_POSITION_FULL
+        : EVENT_ACTIONS[EventCategory.LAYOUT].EXPAND_CHART_POSITION_FULL
     )
   }
 
@@ -44,7 +63,9 @@ const DesktopLayout = ({ children, resetSort }: LayoutProps) => {
         height: '100%',
         gridTemplate: `
     "ACCOUNT ACCOUNT ACCOUNT" minmax(60px, 60px)
-    "CHARTS STATS POSITIONS" minmax(0px, 1fr) / ${positionFullExpanded ? '400px 0px 1fr' : '400px 1fr 510px'}
+    "CHARTS STATS POSITIONS" minmax(0px, 1fr) / ${
+      positionFullExpanded ? '400px 0px 1fr' : chartFullExpanded ? '1fr 0px 510px' : '400px 1fr 510px'
+    }
     `,
       }}
     >
@@ -77,21 +98,53 @@ const DesktopLayout = ({ children, resetSort }: LayoutProps) => {
         {children[1]}
       </Box>
 
-      <Box id="CHARTS" sx={{ gridArea: 'CHARTS / CHARTS', borderRight: 'small', borderColor: 'neutral4' }}>
+      <Box
+        id="CHARTS"
+        sx={{
+          gridArea: 'CHARTS / CHARTS',
+          borderRight: chartFullExpanded ? 'none' : 'small',
+          borderColor: 'neutral4',
+          overflow: 'hidden',
+          display: 'grid',
+          gridTemplate: `
+    "RADAR" ${chartFullExpanded ? '0px' : 'minmax(1fr, 260px)'}
+    "CANDLESTICK" minmax(1fr, 1fr)
+    `,
+        }}
+      >
         <Flex flexDirection="column" height="100%">
-          <Box height={260}>{children[2]}</Box>
+          <Box
+            height={chartFullExpanded ? 0 : 260}
+            sx={{
+              gridArea: 'RADAR',
+              overflow: 'hidden',
+            }}
+          >
+            {children[2]}
+          </Box>
           <Box
             sx={{
-              borderTop: 'small',
+              gridArea: 'CANDLESTICK',
+              borderTop: chartFullExpanded ? 'none' : 'small',
               borderColor: 'neutral4',
               // height: 'max(calc(100% - 120px - 260px),200px)',
               // '@media screen and (max-height: 800px)': {
-              height: 'max(calc(100% - 260px),200px)',
+              height: chartFullExpanded ? '100%' : 'max(calc(100% - 260px),200px)',
               // },
             }}
           >
-            {children[3]}
+            {/*{children[3]}*/}
+            {chartFullExpanded
+              ? cloneElement<ChartPositionsProps>(children[3], {
+                  isExpanded: true,
+                  toggleExpand: handleChartFullExpand,
+                })
+              : cloneElement<ChartPositionsProps>(children[3], {
+                  isExpanded: false,
+                  toggleExpand: handleChartFullExpand,
+                })}
           </Box>
+
           {/* <Box
             px={12}
             pt={12}

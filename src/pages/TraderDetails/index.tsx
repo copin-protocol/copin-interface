@@ -94,10 +94,13 @@ export default function TraderDetails() {
 
   const _address = isAddress(address)
   const [, setForceReload] = useState(1)
-  const tokenOptions = useMemo(() => getTokenOptions(protocol), [protocol])
+  const tokenOptions = useMemo(() => getTokenOptions({ protocol }), [protocol])
   const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
     optionName: 'currency',
     options: tokenOptions,
+    callback: () => {
+      changeCurrentPage(1)
+    },
   })
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
     [QUERY_KEYS.GET_TRADER_DETAIL, _address, protocol],
@@ -300,20 +303,20 @@ export default function TraderDetails() {
         <>{!!traderData && !!traderData[0] && <TraderRanking data={traderData[0]} />}</>
 
         {/* child 4 */}
-        <>
-          {!!_address && protocol && (
-            <ChartPositions
-              sx={{
-                height: '100%',
-              }}
-              protocol={protocol}
-              timeframeOption={TIME_FILTER_OPTIONS[3]}
-              currencyOption={currencyOption}
-              openingPositions={openingPositions ?? []}
-              closedPositions={closedPositions?.data ?? []}
-            />
-          )}
-        </>
+        <ChartPositions
+          sx={{
+            height: '100%',
+          }}
+          protocol={protocol ?? ProtocolEnum.GMX}
+          timeframeOption={TIME_FILTER_OPTIONS[1]}
+          currencyOption={currencyOption}
+          changeCurrency={changeCurrency}
+          openingPositions={openingPositions ?? []}
+          closedPositions={closedPositions?.data ?? []}
+          fetchNextPage={handleFetchClosedPositions}
+          hasNextPage={hasNextClosedPositions}
+          isLoadingClosed={isLoadingClosed}
+        />
 
         {/* child 5 */}
         <div>{/* {!!_address && <ActivityHeatmap account={_address} />} */}</div>

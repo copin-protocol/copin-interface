@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { shareTraderApi } from 'apis/storage'
+import logoWithText from 'assets/images/logo.png'
 import ToastBody from 'components/@ui/ToastBody'
 import { ImageData } from 'entities/image'
 import { TraderData } from 'entities/trader'
@@ -13,6 +14,7 @@ import { default as themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { generateTraderCanvas } from 'utils/helpers/generateImage'
 import { generateParamsUrl, generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { parseProtocolImage } from 'utils/helpers/transform'
 
 export default function ShareProfile({
   address,
@@ -31,6 +33,10 @@ export default function ShareProfile({
   const [image, setImage] = useState<ImageData | null>(null)
 
   const colors = themeColors(true)
+  const protocolImg = new Image(32, 32)
+  protocolImg.src = parseProtocolImage(protocol ?? 'KWENTA')
+  const logoImg = new Image(182, 42)
+  logoImg.src = logoWithText
 
   const handleShare = async () => {
     if (!stats) {
@@ -41,7 +47,7 @@ export default function ShareProfile({
       setIsGeneratingLink(true)
 
       // get Chart pnl
-      const canvas = generateTraderCanvas({ address, protocol, stats, colors })
+      const canvas = generateTraderCanvas({ address, protocol, stats, colors, logoImg, protocolImg })
       if (canvas) {
         canvas.toBlob((blob) => {
           async function share() {

@@ -1,4 +1,3 @@
-import logoWithText from 'assets/images/logo.png'
 import { PositionData, TraderData } from 'entities/trader'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Colors } from 'theme/types'
@@ -9,18 +8,21 @@ import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcLiquidatePrice, calcOpeningPnL, calcOpeningROI } from './calculate'
 import formatTokenPrices, { addressShorten, formatNumber } from './format'
 import { generateAvatar } from './generateAvatar'
-import { parseProtocolImage } from './transform'
 
 export const generateTraderCanvas = ({
   address,
   protocol,
   stats,
   colors,
+  logoImg,
+  protocolImg,
 }: {
   address: string
   protocol: ProtocolEnum
   stats: TraderData | undefined
   colors: Colors
+  logoImg: HTMLImageElement
+  protocolImg: HTMLImageElement
 }) => {
   const canvasWidth = 1220
   const canvasHeight = 640
@@ -30,11 +32,6 @@ export const generateTraderCanvas = ({
   const chartComponentContainers = chartPnlContainer?.getElementsByTagName('tr')
   const lineCanvases = chartComponentContainers?.[0]?.getElementsByTagName('canvas')
   const xAxises = chartComponentContainers?.[1]?.getElementsByTagName('canvas')
-
-  const protocolImg = new Image(32, 32)
-  protocolImg.src = parseProtocolImage(protocol ?? 'KWENTA')
-  const logoImg = new Image(182, 42)
-  logoImg.src = logoWithText
 
   // const canvas = document.getElementById('canvas-share') as HTMLCanvasElement
   const canvas = document.createElement('canvas')
@@ -79,7 +76,7 @@ export const generateTraderCanvas = ({
   generateAvatarAddress({ address, colors, canvas: leftCtx })
 
   // draw protocol
-  generateProtocol({ protocol, colors, canvas: leftCtx, width: leftWidth })
+  generateProtocol({ protocol, protocolImg, colors, canvas: leftCtx, width: leftWidth })
 
   // draw chart pnl
   const chartAreaOffsetY = 120
@@ -145,6 +142,7 @@ export const generateTraderCanvas = ({
   // combine
   ctx.drawImage(rightCanvas, leftWidth, 0)
   ctx.drawImage(leftCanvas, 0, 0)
+
   return canvas
 }
 
@@ -153,11 +151,15 @@ export const generatePositionCanvas = ({
   stats,
   prices,
   colors,
+  logoImg,
+  protocolImg,
 }: {
   isOpening: boolean
   stats: PositionData
   prices: UsdPrices
   colors: Colors
+  logoImg: HTMLImageElement
+  protocolImg: HTMLImageElement
 }) => {
   const protocol = stats.protocol
   const address = stats.account
@@ -169,11 +171,6 @@ export const generatePositionCanvas = ({
   const chartComponentContainers = chartPnlContainer?.getElementsByTagName('tr')
   const lineCanvases = chartComponentContainers?.[0]?.getElementsByTagName('canvas')
   const xAxises = chartComponentContainers?.[1]?.getElementsByTagName('canvas')
-
-  const protocolImg = new Image(32, 32)
-  protocolImg.src = `/images/protocols/${protocol ?? 'KWENTA'}.png`
-  const logoImg = new Image(182, 42)
-  logoImg.src = logoWithText
 
   // const canvas = document.getElementById('canvas-share') as HTMLCanvasElement
   const canvas = document.createElement('canvas')
@@ -235,7 +232,7 @@ export const generatePositionCanvas = ({
   generateAvatarAddress({ address, colors, canvas: leftCtx })
 
   // draw protocol
-  generateProtocol({ protocol, colors, canvas: leftCtx, width: leftWidth })
+  generateProtocol({ protocol, protocolImg, colors, canvas: leftCtx, width: leftWidth })
 
   // draw chart pnl
   const chartAreaOffsetY = 120
@@ -389,19 +386,17 @@ export const generateAvatarAddress = ({
 
 export const generateProtocol = ({
   protocol,
+  protocolImg,
   canvas,
   colors,
   width,
 }: {
   protocol: ProtocolEnum
+  protocolImg: HTMLImageElement
   canvas: CanvasRenderingContext2D
   colors: Colors
   width: number
 }) => {
-  const protocolImg = new Image(32, 32)
-  protocolImg.src = `/images/protocols/${protocol ?? 'KWENTA'}.png`
-  const logoImg = new Image(182, 42)
-  logoImg.src = logoWithText
   const avatarCenterY = 60
   let protocolTextWidth = 72
   let protocolText = 'GMX'
@@ -469,7 +464,7 @@ export const generateChartLine = ({
       const widthHeightRatio = _canvas.width / _canvas.height
       const desWidth = width - 32
       const desHeight = desWidth / widthHeightRatio
-      canvas.font = '700 24px Anuphan'
+      canvas.font = '400 16px Anuphan'
       canvas.drawImage(_canvas, 0, 0, _canvas.width, _canvas.height, 16, chartAxisOffsetY, desWidth, desHeight)
     }
   }

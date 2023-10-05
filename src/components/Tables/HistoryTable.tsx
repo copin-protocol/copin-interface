@@ -20,6 +20,7 @@ import SectionTitle from 'components/@ui/SectionTitle'
 import Table from 'components/@ui/Table'
 import { renderEntry } from 'components/@ui/Table/renderProps'
 import { ColumnData, TableSortProps } from 'components/@ui/Table/types'
+import CurrencyOption from 'components/CurrencyOption'
 import PositionDetails from 'components/PositionDetails'
 import { PositionData } from 'entities/trader'
 import useInfiniteLoadMore from 'hooks/features/useInfiniteLoadMore'
@@ -30,7 +31,6 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import ActivityHeatmap from 'pages/TraderDetails/ActivityHeatmap'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
-import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import Drawer from 'theme/Modal/Drawer'
 import Tooltip from 'theme/Tooltip'
@@ -516,40 +516,3 @@ export const fullHistoryColumns: ColumnData<PositionData>[] = [
   // orderDecreaseCountColumn,
   actionColumn,
 ]
-
-function CurrencyOption({
-  options,
-  currentOption,
-  handleChangeOption,
-}: {
-  options: TokenOptionProps[]
-  currentOption: TokenOptionProps
-  handleChangeOption: (option: TokenOptionProps) => void
-}) {
-  return (
-    <Dropdown
-      menuSx={{ py: 2, bg: 'neutral7', width: '80px', minWidth: 'auto', maxHeight: '236px', overflowY: 'auto' }}
-      menu={
-        <>
-          {options.map((option, index: number) => (
-            <div key={index}>
-              <CheckableDropdownItem
-                onClick={() => handleChangeOption(option)}
-                selected={currentOption.id === option.id}
-                text={option.text}
-              />
-            </div>
-          ))}
-        </>
-      }
-      buttonSx={{
-        px: 2,
-        width: '80px',
-      }}
-      iconSize={16}
-      placement="bottomRight"
-    >
-      {currentOption.text}
-    </Dropdown>
-  )
-}

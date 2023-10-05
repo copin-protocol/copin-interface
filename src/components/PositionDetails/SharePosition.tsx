@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { sharePositionApi } from 'apis/storage'
+import logoWithText from 'assets/images/logo.png'
 import ToastBody from 'components/@ui/ToastBody'
 import { ImageData } from 'entities/image'
 import { PositionData } from 'entities/trader'
@@ -12,6 +13,7 @@ import useUsdPricesStore from 'hooks/store/useUsdPrices'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
 import { IconBox } from 'theme/base'
 import { default as themeColors } from 'theme/colors'
+import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { generatePositionCanvas } from 'utils/helpers/generateImage'
 import {
@@ -19,6 +21,7 @@ import {
   generateOpeningPositionRoute,
   generateParamsUrl,
 } from 'utils/helpers/generateRoute'
+import { parseProtocolImage } from 'utils/helpers/transform'
 
 export default function SharePosition({ isOpening, stats }: { isOpening: boolean; stats: PositionData }) {
   const { prices } = useUsdPricesStore()
@@ -34,6 +37,10 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
   const [image, setImage] = useState<ImageData | null>(null)
 
   const colors = themeColors(true)
+  const protocolImg = new Image(32, 32)
+  protocolImg.src = parseProtocolImage(stats?.protocol ?? ProtocolEnum.GMX)
+  const logoImg = new Image(182, 42)
+  logoImg.src = logoWithText
 
   const handleShare = async () => {
     if (!stats) {
@@ -49,6 +56,8 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
         stats,
         prices,
         colors,
+        protocolImg,
+        logoImg,
       })
       if (canvas) {
         canvas.toBlob((blob) => {
