@@ -20,7 +20,7 @@ import { Button } from 'theme/Buttons'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { ALL_OPTION, getDefaultTokenOptions } from 'utils/config/trades'
+import { getDefaultTokenOptions } from 'utils/config/trades'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 
@@ -56,16 +56,19 @@ export default function SingleBacktestResult({
       } as PositionData)
   )
   const tokenOptions = useMemo(
-    () => getDefaultTokenOptions(protocol).filter((e) => positions.find((i) => i.indexToken === e.id), [protocol]),
-    [protocol, positions]
+    () =>
+      settings?.tokenAddresses && settings.tokenAddresses.length > 0
+        ? getDefaultTokenOptions(protocol).filter((e) => settings?.tokenAddresses?.find((i) => i === e.id), [protocol])
+        : getDefaultTokenOptions(protocol),
+    [settings?.tokenAddresses, protocol]
   )
 
   const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
     optionName: 'currency',
     options: tokenOptions,
-    defaultOption: ALL_OPTION.id,
     optionNameToBeDelete: ['currency'],
   })
+
   const dataSimulations = useMemo(
     () =>
       data.simulatorPositions
