@@ -18,6 +18,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getChartDataV2 } from 'apis/positionApis'
+import logoWithText from 'assets/images/logo.png'
+import NoDataFound from 'components/@ui/NoDataFound'
 import CurrencyOption from 'components/CurrencyOption'
 import { PositionData } from 'entities/trader.d'
 import useIsMobile from 'hooks/helpers/useIsMobile'
@@ -53,6 +55,7 @@ export default function ChartPositions({
   protocol,
   openingPositions,
   closedPositions,
+  currencyOptions,
   currencyOption,
   changeCurrency,
   timeframeOption,
@@ -72,7 +75,10 @@ export default function ChartPositions({
 
   const isMobile = useIsMobile()
 
-  const tokenOptions = useMemo(() => getTokenOptions({ protocol, ignoredAll: true }), [protocol])
+  const tokenOptions = useMemo(
+    () => currencyOptions ?? getTokenOptions({ protocol, ignoredAll: true }),
+    [currencyOptions, protocol]
+  )
 
   const [markerId, setMarkerId] = useState<string | undefined>()
   const [visibleRange, setVisibleRange] = useState<TimeScaleRange | undefined>()
@@ -168,21 +174,26 @@ export default function ChartPositions({
   const currentPosition = listPositions.find((e) => markerId?.includes(e.id))
 
   useEffect(() => {
-    if (timeframeOption || currencyOption) {
+    if (currentTimeframe || currencyOption) {
       setVisibleRange(undefined)
       setVisibleLogicalRange(undefined)
     }
-  }, [currencyOption, timeframeOption])
+  }, [currencyOption, currentTimeframe])
 
   useEffect(() => {
     if (mostRecentTrade && !visibleRange) {
-      const duration = mostRecentTrade && fromRange.isAfter(mostRecentTrade) ? 2 : 1
+      const duration =
+        currentTimeframe === TimeframeEnum.D1
+          ? 30
+          : mostRecentTrade && dayjs(from).utc().isAfter(mostRecentTrade)
+          ? 2
+          : 1
       setVisibleRange({
         from: mostRecentTrade.subtract(duration, 'days').valueOf() / 1000,
         to: mostRecentTrade.add(duration, 'days').valueOf() / 1000,
       })
     }
-  }, [fromRange, mostRecentTrade, visibleRange])
+  }, [mostRecentTrade, visibleRange, from, currentTimeframe])
 
   useEffect(() => {
     if (isLoadingClosed || hasAllTokens) return
@@ -213,6 +224,8 @@ export default function ChartPositions({
         borderVisible: true,
         borderColor: '#1f1a30',
         rightOffset: 3,
+        fixLeftEdge: true,
+        fixRightEdge: false,
         shiftVisibleRangeOnNewBar: true,
       },
       grid: {
@@ -496,6 +509,24 @@ export default function ChartPositions({
       chart.subscribeClick(handleClickEvent)
     }
 
+    if (container) {
+      const watermark = document.getElementById('watermark') ?? document.createElement('div')
+      watermark.setAttribute('id', 'watermark')
+      // place below the chart
+      watermark.style.zIndex = '-1'
+      watermark.style.position = 'absolute'
+      // set size and position to match container
+      watermark.style.inset = '0px'
+      watermark.style.bottom = '52px'
+      watermark.style.right = '48px'
+      watermark.style.backgroundImage = `url("${logoWithText}")`
+      watermark.style.backgroundSize = '91px 21px'
+      watermark.style.backgroundRepeat = 'no-repeat'
+      watermark.style.backgroundPosition = 'bottom right'
+      watermark.style.opacity = '0.4'
+      container.appendChild(watermark)
+    }
+
     const handleResize = () => {
       if (container) {
         chart.applyOptions({
@@ -547,7 +578,11 @@ export default function ChartPositions({
       {/*<div id={tooltipId} />*/}
       <Flex width="calc(100% - 24px)" alignItems="center" sx={{ position: 'absolute', top: 0, left: 12, zIndex: 100 }}>
         {currentPosition && (
-          <PositionLegend data={currentPosition} isOpening={currentPosition.status !== PositionStatusEnum.CLOSE} />
+          <PositionLegend
+            isExpanded={isExpanded}
+            data={currentPosition}
+            isOpening={currentPosition.status !== PositionStatusEnum.CLOSE}
+          />
         )}
       </Flex>
       <Flex alignItems="center" justifyContent="space-between" mr={12} mt={2} sx={{ gap: 2 }}>
@@ -568,7 +603,7 @@ export default function ChartPositions({
           </Button>
         )}
         <Flex flex={1} alignItems="center" justifyContent="flex-end" sx={{ gap: 2 }}>
-          <TimeframeSelection currentOption={currentTimeframe} changeOption={changeTimeframe} />
+          <TimeframeSelection isExpanded={isExpanded} currentOption={currentTimeframe} changeOption={changeTimeframe} />
           <CurrencyOption
             options={tokenOptions}
             currentOption={
@@ -620,6 +655,7 @@ export default function ChartPositions({
           <Loading />
         </Box>
       )}
+      {!isLoading && chartData && chartData.length === 0 && <NoDataFound />}
       <div id={chartId} style={{ height: 'calc(100% - 40px)' }} />
     </Box>
   )

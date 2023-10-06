@@ -350,7 +350,7 @@ export const getDefaultTokenTrade = (protocol: ProtocolEnum) =>
 export const getTokenTradeList = (protocol: ProtocolEnum) =>
   Object.keys(TOKEN_TRADE_SUPPORT[protocol]).map((key) => TOKEN_TRADE_SUPPORT[protocol][key])
 
-const getDefaultTokenOptions = (protocol: ProtocolEnum) =>
+export const getDefaultTokenOptions = (protocol: ProtocolEnum) =>
   Object.keys(TOKEN_TRADE_SUPPORT[protocol]).map((key) => ({
     id: key,
     text: TOKEN_TRADE_SUPPORT[protocol][key].symbol,
@@ -372,7 +372,7 @@ export const TIMEFRAME_NAMES = {
   30: 'M30',
   60: 'H1',
   240: 'H4',
-  1440: 'D1',
+  '1D': 'D1',
 }
 
 export const GMX_CLOSE_POSITION_TOPIC = '0x73af1d417d82c240fdb6d319b34ad884487c6bf2845d98980cc52ad9171cb455'

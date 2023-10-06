@@ -6,3 +6,5 @@ export const TIMEFRAME_OPTIONS: TimeframeEnum[] = [
   TimeframeEnum.H1,
   TimeframeEnum.H4,
 ]
+
+export const TIMEFRAME_OPTIONS_EXPANDED: TimeframeEnum[] = [...TIMEFRAME_OPTIONS, TimeframeEnum.D1]

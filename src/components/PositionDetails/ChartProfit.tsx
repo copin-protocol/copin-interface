@@ -1,3 +1,4 @@
+import { useResponsive } from 'ahooks'
 import dayjs from 'dayjs'
 import {
   CandlestickData,
@@ -31,7 +32,6 @@ import { generateClosedPositionRoute } from 'utils/helpers/generateRoute'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
 const COLORS = colors(true)
-const CHART_HEIGHT = 250
 
 export default function ChartProfit({
   position,
@@ -50,6 +50,8 @@ export default function ChartProfit({
   setCrossMovePnL: (value: number | undefined) => void
   isShow?: boolean
 }) {
+  const { sm } = useResponsive()
+  const CHART_HEIGHT = sm ? 250 : 150
   const { prices } = useUsdPricesStore()
   const { nextHours } = useWhatIfStore()
   const { searchParams } = useSearchParams()

@@ -15,6 +15,7 @@ export interface ChartPositionsProps {
   protocol: ProtocolEnum
   openingPositions?: PositionData[]
   closedPositions: PositionData[]
+  currencyOptions?: TokenOptionProps[]
   currencyOption: TokenOptionProps
   changeCurrency?: (option: TokenOptionProps) => void
   timeframeOption: TimeFilterProps

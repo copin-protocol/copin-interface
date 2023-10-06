@@ -95,7 +95,7 @@ export enum TimeframeEnum { // Minutes
   M15 = 15,
   H1 = 60,
   H4 = 240,
-  D1 = 1440,
+  D1 = '1D',
 }
 
 export enum CheckAvailableStatus {

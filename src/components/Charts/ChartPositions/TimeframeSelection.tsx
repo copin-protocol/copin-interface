@@ -3,18 +3,20 @@ import { Flex } from 'theme/base'
 import { TimeframeEnum } from 'utils/config/enums'
 import { TIMEFRAME_NAMES } from 'utils/config/trades'
 
-import { TIMEFRAME_OPTIONS } from './constants'
+import { TIMEFRAME_OPTIONS, TIMEFRAME_OPTIONS_EXPANDED } from './constants'
 
 export default function TimeframeSelection({
   currentOption,
   changeOption,
+  isExpanded,
 }: {
   currentOption: TimeframeEnum | null
   changeOption: (data: TimeframeEnum) => void
+  isExpanded?: boolean
 }) {
   return (
     <Flex alignItems="center" sx={{ gap: ['2px', '2px', '2px', 2] }}>
-      {TIMEFRAME_OPTIONS.map((option, index: number) => (
+      {(isExpanded ? TIMEFRAME_OPTIONS_EXPANDED : TIMEFRAME_OPTIONS).map((option, index: number) => (
         <Button
           type="button"
           variant="ghost"

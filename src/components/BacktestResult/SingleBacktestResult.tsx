@@ -15,11 +15,12 @@ import ChartPositions from 'components/Charts/ChartPositions'
 import { TimeRangeProps } from 'components/Charts/ChartPositions/types'
 import { BackTestResultData, RequestBackTestData, SimulatorPosition } from 'entities/backTest.d'
 import { PositionData } from 'entities/trader'
+import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { Button } from 'theme/Buttons'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { ALL_OPTION } from 'utils/config/trades'
+import { ALL_OPTION, getDefaultTokenOptions } from 'utils/config/trades'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 
@@ -44,7 +45,6 @@ export default function SingleBacktestResult({
 }) {
   const data = results[0]
   const { account = '', simulatorPositions } = data
-
   const positions = (simulatorPositions ?? []).map(
     (positionData) =>
       ({
@@ -55,6 +55,17 @@ export default function SingleBacktestResult({
         fee: 0,
       } as PositionData)
   )
+  const tokenOptions = useMemo(
+    () => getDefaultTokenOptions(protocol).filter((e) => positions.find((i) => i.indexToken === e.id), [protocol]),
+    [protocol, positions]
+  )
+
+  const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
+    optionName: 'currency',
+    options: tokenOptions,
+    defaultOption: ALL_OPTION.id,
+    optionNameToBeDelete: ['currency'],
+  })
   const dataSimulations = useMemo(
     () =>
       data.simulatorPositions
@@ -254,7 +265,9 @@ export default function SingleBacktestResult({
             <ChartPositions
               protocol={protocol}
               closedPositions={positions.reverse()}
-              currencyOption={ALL_OPTION}
+              currencyOptions={tokenOptions}
+              currencyOption={currencyOption}
+              changeCurrency={changeCurrency}
               timeframeOption={TIME_FILTER_OPTIONS[0]}
               timeRange={timeRange}
               componentIds={{ legend: 'legend_chart_id', tooltip: 'tooltip_chart_id', chart: 'position_chart_id' }}
