@@ -34,40 +34,42 @@ const CopyButton = ({
   const ref = useRef<HTMLButtonElement>(null)
 
   async function copyTextToClipboard(text: string) {
-    let textarea
-    let result
+    navigator.clipboard.writeText(text).then(undefined, () => {
+      let textarea
+      let result
 
-    try {
-      textarea = document.createElement('textarea')
-      textarea.setAttribute('readonly', 'true')
-      textarea.setAttribute('contenteditable', 'true')
-      textarea.style.position = 'fixed' // prevent scroll from jumping to the bottom when focus is set.
-      textarea.value = text
+      try {
+        textarea = document.createElement('textarea')
+        textarea.setAttribute('readonly', 'true')
+        textarea.setAttribute('contenteditable', 'true')
+        textarea.style.position = 'fixed' // prevent scroll from jumping to the bottom when focus is set.
+        textarea.value = text
 
-      document.body.appendChild(textarea)
+        document.body.appendChild(textarea)
 
-      textarea.focus()
-      textarea.select()
+        textarea.focus()
+        textarea.select()
 
-      const range = document.createRange()
-      range.selectNodeContents(textarea)
+        const range = document.createRange()
+        range.selectNodeContents(textarea)
 
-      const sel = window.getSelection()
-      if (sel) {
-        sel.removeAllRanges()
-        sel.addRange(range)
+        const sel = window.getSelection()
+        if (sel) {
+          sel.removeAllRanges()
+          sel.addRange(range)
+        }
+
+        textarea.setSelectionRange(0, textarea.value.length)
+        result = document.execCommand('copy')
+      } catch (err) {
+        result = null
+      } finally {
+        if (textarea) document.body.removeChild(textarea)
       }
-
-      textarea.setSelectionRange(0, textarea.value.length)
-      result = document.execCommand('copy')
-    } catch (err) {
-      result = null
-    } finally {
-      if (textarea) document.body.removeChild(textarea)
-    }
-    if (!result) {
-      throw Error(`Can't copy`)
-    }
+      if (!result) {
+        throw Error(`Can't copy`)
+      }
+    })
   }
 
   const copyIcon = useMemo(
