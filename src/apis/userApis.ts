@@ -1,5 +1,4 @@
-import { CopyOrderData, CopyPositionData } from 'entities/copyTrade.d'
-import { PositionData } from 'entities/trader.d'
+import { CopyPositionData } from 'entities/copyTrade.d'
 import { ReferralData, ReferralStat, UserData } from 'entities/user.d'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 
@@ -32,18 +31,6 @@ export async function getMyCopyPositionsApi(params: GetMyPositionsParams, body?:
   return requester
     .post(`${POSITION_SERVICE}/page`, body, { params: newParams })
     .then((res: any) => res.data as ApiListResponse<CopyPositionData>)
-}
-
-export async function getMyCopyPositionDetailApi({ copyId }: { copyId: string }) {
-  return requester.get(`${POSITION_SERVICE}/${copyId}`).then((res: any) => res.data as CopyPositionData)
-}
-
-export async function getMyCopySourcePositionDetailApi({ copyId }: { copyId: string }) {
-  return requester.get(`${POSITION_SERVICE}/${copyId}/position`).then((res: any) => res.data as PositionData)
-}
-
-export async function getMyCopyOrdersApi({ copyId }: { copyId: string }) {
-  return requester.get(`${POSITION_SERVICE}/${copyId}/orders`).then((res: any) => res.data as CopyOrderData[])
 }
 
 export async function getReferralListApi({ limit = DEFAULT_LIMIT, offset = 0 }: GetApiParams) {

@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { getMyCopySourcePositionDetailApi } from 'apis/userApis'
+import { getMyCopySourcePositionDetailApi } from 'apis/copyPositionApis'
 import Container from 'components/@ui/Container'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Table from 'components/@ui/Table'
@@ -60,12 +60,22 @@ export default function PositionTable({
     async (data: CopyPositionData, event?: any) => {
       event?.stopPropagation()
       setCurrentCopyPosition(data)
+      const isOpen = data.status === PositionStatusEnum.OPEN
       try {
         setSubmitting(true)
-        const positionDetail = await getMyCopySourcePositionDetailApi({ copyId: data?.id ?? '' })
+        const positionDetail = await getMyCopySourcePositionDetailApi({
+          copyId: data?.id ?? '',
+          isOpen,
+        })
         setSubmitting(false)
-        if (!positionDetail) return
-        if (data.status === PositionStatusEnum.OPEN) {
+        if (
+          !positionDetail ||
+          (positionDetail.status && positionDetail.status !== PositionStatusEnum.OPEN && isOpen) ||
+          (((!positionDetail.status && !positionDetail.id) || positionDetail.status === PositionStatusEnum.OPEN) &&
+            !isOpen)
+        )
+          throw Error(`Can't find data`)
+        if (isOpen) {
           setPositionId(undefined)
           setOpenSourceDrawer(true)
           window.history.replaceState(null, '', generateMyOpeningPositionRoute(data))
@@ -84,7 +94,7 @@ export default function PositionTable({
         }
       } catch (error: any) {
         if (error?.message?.includes(`Can't find data`)) {
-          if (data.status === PositionStatusEnum.OPEN) {
+          if (isOpen) {
             setOpenCloseModal(true)
           } else {
             toast.error(
