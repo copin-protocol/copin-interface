@@ -18,7 +18,6 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getChartDataV2 } from 'apis/positionApis'
-import logoWithText from 'assets/images/logo.png'
 import NoDataFound from 'components/@ui/NoDataFound'
 import CurrencyOption from 'components/CurrencyOption'
 import { PositionData } from 'entities/trader.d'
@@ -507,24 +506,6 @@ export default function ChartPositions({
       })
 
       chart.subscribeClick(handleClickEvent)
-    }
-
-    if (container) {
-      const watermark = document.getElementById('watermark') ?? document.createElement('div')
-      watermark.setAttribute('id', 'watermark')
-      // place below the chart
-      watermark.style.zIndex = '-1'
-      watermark.style.position = 'absolute'
-      // set size and position to match container
-      watermark.style.inset = '0px'
-      watermark.style.bottom = '52px'
-      watermark.style.right = '48px'
-      watermark.style.backgroundImage = `url("${logoWithText}")`
-      watermark.style.backgroundSize = '91px 21px'
-      watermark.style.backgroundRepeat = 'no-repeat'
-      watermark.style.backgroundPosition = 'bottom right'
-      watermark.style.opacity = '0.4'
-      container.appendChild(watermark)
     }
 
     const handleResize = () => {
