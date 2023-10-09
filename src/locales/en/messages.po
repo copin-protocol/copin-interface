@@ -152,7 +152,6 @@ msgid "Change Password"
 msgstr "Change Password"
 
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Change password successful!"
 msgstr "Change password successful!"
 
@@ -161,7 +160,6 @@ msgstr "Change password successful!"
 #~ msgstr "Chia sẻ"
 
 #: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
-#: src/pages/MyProfileOld/MyCopiesTable.tsx
 msgid "Clone"
 msgstr "Clone"
 
@@ -192,13 +190,11 @@ msgstr "Communicating with wallet. Sign message with your wallet"
 #: src/components/LoginAction/ModalResetPassword.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
-#: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Confirm"
 msgstr "Confirm"
 
 #: src/components/ConfirmReferralModal/index.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Confirming..."
 msgstr "Confirming..."
 
@@ -237,7 +233,6 @@ msgid "Create an account"
 msgstr "Create an account"
 
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Current Password"
 msgstr "Current Password"
 
@@ -272,7 +267,6 @@ msgid "Don’t have a Copin account?"
 msgstr "Don’t have a Copin account?"
 
 #: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
-#: src/pages/MyProfileOld/MyCopiesTable.tsx
 msgid "Edit"
 msgstr "Edit"
 
@@ -355,7 +349,6 @@ msgid "Increase"
 msgstr "Increase"
 
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Input current password"
 msgstr "Input current password"
 
@@ -370,7 +363,6 @@ msgstr "Input email address"
 
 #: src/components/LoginAction/ModalResetPassword.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "Input new password"
 msgstr "Input new password"
 
@@ -390,7 +382,6 @@ msgstr "Kwenta"
 #: src/components/@ui/Table/renderProps.tsx
 #: src/components/@ui/Table/renderProps.tsx
 #: src/pages/MyProfile/renderProps.tsx
-#: src/pages/MyProfileOld/renderProps.tsx
 msgid "L"
 msgstr "L"
 
@@ -441,6 +432,10 @@ msgstr "Liquidation"
 #: src/pages/@layouts/Navbar/Menu.tsx
 #~ msgid "List Collection"
 #~ msgstr "List Collection"
+
+#: src/components/Charts/ChartPositions/index.tsx
+msgid "Load more positions"
+msgstr "Load more positions"
 
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "Loading..."
@@ -542,7 +537,6 @@ msgstr "Need help?"
 
 #: src/components/LoginAction/ModalResetPassword.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "New Password"
 msgstr "New Password"
 
@@ -558,6 +552,10 @@ msgstr "No link to the trader’s original position was found."
 #: src/hooks/web3/useAuth.tsx
 msgid "No provider was found"
 msgstr "No provider was found"
+
+#: src/components/BacktestResult/SingleBacktestResult.tsx
+msgid "No trade history from {0} to {1}"
+msgstr "No trade history from {0} to {1}"
 
 #: src/components/ConfirmReferralModal/index.tsx
 #~ msgid "No, thank"
@@ -672,8 +670,8 @@ msgid "Profile"
 msgstr "Profile"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
-msgid "Profile (Old)"
-msgstr "Profile (Old)"
+#~ msgid "Profile (Old)"
+#~ msgstr "Profile (Old)"
 
 #: src/pages/Stats/index.tsx
 msgid "Profit & Loss"
@@ -750,7 +748,6 @@ msgid "Reload"
 msgstr "Reload"
 
 #: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
-#: src/pages/MyProfileOld/MyCopiesTable.tsx
 msgid "Remove"
 msgstr "Remove"
 
@@ -792,7 +789,6 @@ msgstr "Runtime (All)"
 #: src/components/@ui/Table/renderProps.tsx
 #: src/components/@ui/Table/renderProps.tsx
 #: src/pages/MyProfile/renderProps.tsx
-#: src/pages/MyProfileOld/renderProps.tsx
 msgid "S"
 msgstr "S"
 
@@ -885,7 +881,6 @@ msgstr "Stopped"
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
-#: src/pages/MyProfileOld/ChangePasswordAction.tsx
 #: src/pages/TraderDetails/CopyTraderDrawer.tsx
 msgid "Success"
 msgstr "Success"
@@ -1139,8 +1134,6 @@ msgstr "Your update has been succeeded"
 #: src/hooks/features/useReferralActions.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
-#: src/pages/MyProfileOld/ChangePasswordAction.tsx
-#: src/pages/MyProfileOld/ChangePasswordAction.tsx
 msgid "{0}"
 msgstr "{0}"
 
