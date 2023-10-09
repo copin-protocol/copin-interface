@@ -68,20 +68,20 @@ const SocialMediaSharingModal = ({ title, link, isOpen, onDismiss, isGeneratingL
                 variant="white"
                 size={32}
                 icon={<FacebookLogo size={20} weight="fill" />}
-                onClick={() => window.open(`${FACEBOOK_SHARE_URL}?u=${link}&quote=`, '_blank')}
+                onClick={() => window.open(`${FACEBOOK_SHARE_URL}?u=${encodeURIComponent(link)}&quote=`, '_blank')}
               />
               <IconButton
                 mx={32}
                 size={32}
                 variant="white"
                 icon={<TwitterLogo size={20} weight="fill" />}
-                onClick={() => window.open(`${TWITTER_SHARE_URL}?url=${link}&text=`, '_blank')}
+                onClick={() => window.open(`${TWITTER_SHARE_URL}?url=${encodeURIComponent(link)}&text=`, '_blank')}
               />
               <IconButton
                 size={32}
                 variant="white"
                 icon={<TelegramLogo size={20} weight="fill" />}
-                onClick={() => window.open(`${TELEGRAM_SHARE_URL}?url=${link}&text=`, '_blank')}
+                onClick={() => window.open(`${TELEGRAM_SHARE_URL}?url=${encodeURIComponent(link)}&text=`, '_blank')}
               />
             </Flex>
             <CopyButton

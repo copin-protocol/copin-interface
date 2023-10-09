@@ -5,7 +5,7 @@ import { DEFAULT_LIMIT } from 'utils/config/constants'
 
 import { ApiListResponse } from './api'
 import requester from './index'
-import { GetApiParams, GetMyPositionsParams } from './types'
+import { GetApiParams, GetMyPositionRequestBody, GetMyPositionsParams } from './types'
 
 const POSITION_SERVICE = 'copy-positions'
 const USER_SERVICE = 'users'
@@ -18,14 +18,19 @@ export async function changePasswordApi({ oldPassword, password }: { oldPassword
   return requester.put(`update-password`, { oldPassword, password }).then((res: any) => res.data as UserData)
 }
 
-export async function getMyCopyPositionsApi(params: GetMyPositionsParams) {
+export async function getMyCopyPositionsApi(params: GetMyPositionsParams, body?: GetMyPositionRequestBody) {
   const newParams: Record<string, any> = { ...params }
   !!params.status?.length && (newParams.status = params.status?.join(','))
-  !!params.copyTrades?.length && (newParams.copyTrades = params.copyTrades?.join(','))
-  if (!!params.sortBy) newParams.sort_by = params.sortBy
-  if (!!params.sortType) newParams.sort_type = params.sortType
+  if (!!params.sortBy) {
+    newParams.sort_by = params.sortBy
+    delete newParams.sortBy
+  }
+  if (!!params.sortType) {
+    newParams.sort_type = params.sortType
+    delete newParams.sortType
+  }
   return requester
-    .get(`${POSITION_SERVICE}/page`, { params: newParams })
+    .post(`${POSITION_SERVICE}/page`, body, { params: newParams })
     .then((res: any) => res.data as ApiListResponse<CopyPositionData>)
 }
 

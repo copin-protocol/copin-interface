@@ -26,6 +26,7 @@ const AddressAvatar = ({ address, size = 48 }: { address: string; size?: number 
         borderRadius: size / 2,
         overflow: 'hidden',
         background: gradient,
+        flexShrink: 0,
       }}
       alignItems="center"
       justifyContent="center"

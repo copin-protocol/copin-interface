@@ -9,12 +9,15 @@ import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 // import ProgressBar from 'theme/ProgressBar'
-import { Box, Flex, TextProps, Type } from 'theme/base'
+import { Box, Flex, Image, TextProps, Type } from 'theme/base'
+import { SxProps } from 'theme/types'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { parseProtocolImage } from 'utils/helpers/transform'
 
 export function renderEntry(data: CopyPositionData) {
   return (
@@ -40,14 +43,25 @@ export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {
   )
 }
 
-export function renderTrader(address: string, protocol: ProtocolEnum, textSx?: TextProps) {
+export function renderTrader(
+  address: string,
+  protocol: ProtocolEnum,
+  { sx = {}, textSx = {} }: { textSx?: TextProps } & SxProps = {}
+) {
   return (
     <Link to={generateTraderDetailsRoute(protocol, address)}>
-      <Flex sx={{ gap: 2 }} alignItems="center">
+      <Flex sx={{ gap: 2, ...sx }} alignItems="center">
         <AddressAvatar address={address} size={24} />
-        <Type.Caption color="neutral1" sx={{ ':hover': { textDecoration: 'underline' }, ...textSx }}>
+        <Type.Caption
+          className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
+          color="inherit"
+          data-trader-address={address}
+          sx={{ color: 'neutral1', ':hover': { textDecoration: 'underline' }, ...textSx }}
+        >
           {addressShorten(address, 3, 5)}
         </Type.Caption>
+        <Type.Caption color="neutral4">|</Type.Caption>
+        <Image src={parseProtocolImage(protocol)} width={16} height={16} />
       </Flex>
     </Link>
   )

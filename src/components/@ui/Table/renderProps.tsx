@@ -32,7 +32,7 @@ export function renderEntry(data: PositionData | undefined, textSx?: TextProps) 
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol}</Type.Caption>
+      <Type.Caption {...textSx}>{TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>{PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2 })}</Type.Caption>
     </Flex>
@@ -107,12 +107,17 @@ export function renderSizeOpening(data: PositionData | undefined, prices: UsdPri
   )
 }
 
-export function renderOpeningPnL(data: PositionData | undefined, prices: UsdPrices, ignoreFee?: boolean) {
+export function renderOpeningPnL(
+  data: PositionData | undefined,
+  prices: UsdPrices,
+  ignoreFee?: boolean,
+  sx?: TextProps
+) {
   if (!data) return <></>
   const marketPrice = prices[data.indexToken]
   const pnl = calcOpeningPnL(data, marketPrice)
   const realisedPnl = ignoreFee ? pnl : pnl - data.fee
-  return SignedText({ value: realisedPnl, maxDigit: 0, sx: { textAlign: 'right', width: '100%' } })
+  return SignedText({ value: realisedPnl, maxDigit: 0, sx: { textAlign: 'right', width: '100%', ...sx } })
 }
 
 export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {

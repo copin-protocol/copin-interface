@@ -1,13 +1,12 @@
 import { Dispatch, useEffect } from 'react'
-import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
-import { getTokenTradesByTraderApi } from 'apis/positionApis'
+import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import useSearchParams from 'hooks/router/useSearchParams'
 import Drawer from 'theme/Modal/Drawer'
 import { Box, Flex } from 'theme/base'
 import { CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
-import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { URL_PARAM_KEYS } from 'utils/config/keys'
 
 import { stringifyRequestData } from '../helper'
 import BacktestInstance from './BacktestInstance'
@@ -15,13 +14,13 @@ import TabHeader from './TabHeader'
 import { ActionType, State } from './config'
 
 export default function SingleBackTestModal({
-  accounts,
+  account,
   isOpen,
   onDismiss,
   state,
   dispatch,
 }: {
-  accounts: string[]
+  account: string
   isOpen: boolean
   onDismiss: () => void
   dispatch: Dispatch<ActionType>
@@ -31,11 +30,7 @@ export default function SingleBackTestModal({
   const { protocol } = useParams<{ protocol: ProtocolEnum }>()
   const currentInstanceData = state.instancesMapping[state.currentInstanceId ?? '']
 
-  const { data: tokensTraded } = useQuery(
-    [QUERY_KEYS.GET_TOKEN_TRADES_BY_TRADER, accounts, protocol],
-    () => getTokenTradesByTraderApi({ protocol, account: accounts[0] }),
-    { enabled: protocol && accounts && accounts.length > 0, retry: 0 }
-  )
+  const { data: tokensTraded } = useGetTokensTraded({ account, protocol })
 
   useEffect(() => {
     if (!currentInstanceData) return
@@ -52,6 +47,7 @@ export default function SingleBackTestModal({
     } else {
       setSearchParams({ [URL_PARAM_KEYS.BACKTEST_DATA]: null })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentInstanceData.status, state.currentInstanceId])
 
   if (!currentInstanceData) return <></>
@@ -76,7 +72,7 @@ export default function SingleBackTestModal({
         <Box flex="1 0 0" overflow="hidden">
           <BacktestInstance
             protocol={protocol}
-            accounts={accounts}
+            accounts={[account]}
             tokensTraded={tokensTraded}
             instanceData={currentInstanceData}
             onSimulate={(settings) => {

@@ -35,9 +35,6 @@ const ROUTES = {
   MY_REFERRAL: {
     path: '/me/referral',
   },
-  MY_PROFILE_OLD: {
-    path: '/me-old',
-  },
   STATS: {
     path: '/stats',
   },

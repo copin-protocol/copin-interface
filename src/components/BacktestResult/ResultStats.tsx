@@ -36,7 +36,7 @@ export default function ResultStats({
         value={<SignedText value={balanceAfterSimulate} maxDigit={2} prefix="$" fontInherit />}
       />
       <Item label={'Profit'} value={<SignedText value={profit} maxDigit={2} prefix="$" fontInherit />} />
-      <Item label={'avg ROI (%)'} value={<SignedText value={roi} maxDigit={2} suffix="%" fontInherit />} />
+      <Item label={'Avg ROI (%)'} value={<SignedText value={roi} maxDigit={2} suffix="%" fontInherit />} />
       <Item label={'Total Trade'} component={<Type.BodyBold display="block">{totalTrade}</Type.BodyBold>} />
       <Item label={'Win Rate (%)'} value={<SignedText value={winRate} maxDigit={2} fontInherit suffix="%" />} />
       <Item

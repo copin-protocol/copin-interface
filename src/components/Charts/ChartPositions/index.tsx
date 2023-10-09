@@ -1,45 +1,45 @@
-import { SystemStyleObject } from '@styled-system/css'
+import { Trans } from '@lingui/macro'
+import { ArrowsIn, ArrowsOutSimple } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 import {
   CandlestickData,
   ColorType,
   CrosshairMode,
   LineStyle,
+  MouseEventParams,
   PriceScaleMode,
   SeriesMarker,
   Time,
+  TimeRange,
   UTCTimestamp,
   createChart,
 } from 'lightweight-charts'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import { GridProps } from 'styled-system'
 
 import { getChartDataV2 } from 'apis/positionApis'
-import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import NoDataFound from 'components/@ui/NoDataFound'
+import CurrencyOption from 'components/CurrencyOption'
 import { PositionData } from 'entities/trader.d'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import useMyProfile from 'hooks/store/useMyProfile'
-import { Box, Flex, Type } from 'theme/base'
+import { Button } from 'theme/Buttons'
+import Loading from 'theme/Loading'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import colors from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
-import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { PositionStatusEnum, TimeframeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import {
-  ALL_TOKENS_ID,
-  TIMEFRAME_NAMES,
-  TOKEN_TRADE_SUPPORT,
-  TokenOptionProps,
-  getDefaultTokenTrade,
-} from 'utils/config/trades'
+import { ALL_TOKENS_ID, TOKEN_TRADE_SUPPORT, getDefaultTokenTrade, getTokenOptions } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
 import { getDurationFromTimeFilter } from 'utils/helpers/transform'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import PositionLegend from './PositionLegend'
+import TimeframeSelection from './TimeframeSelection'
 import { getTimeframe } from './helpers'
-import { TimeRangeProps } from './types'
+import { ChartPositionsProps } from './types'
 
 interface TimeScaleRange {
   from: number
@@ -54,21 +54,19 @@ export default function ChartPositions({
   protocol,
   openingPositions,
   closedPositions,
+  currencyOptions,
   currencyOption,
+  changeCurrency,
   timeframeOption,
   timeRange,
   componentIds,
   sx,
-}: {
-  protocol: ProtocolEnum
-  openingPositions?: PositionData[]
-  closedPositions: PositionData[]
-  currencyOption: TokenOptionProps
-  timeframeOption: TimeFilterProps
-  timeRange?: TimeRangeProps
-  componentIds?: { legend?: string; tooltip?: string; chart?: string }
-  sx?: SystemStyleObject & GridProps
-}) {
+  isExpanded,
+  toggleExpand,
+  hasNextPage,
+  fetchNextPage,
+  isLoadingClosed,
+}: ChartPositionsProps) {
   const { myProfile } = useMyProfile()
   const chartId = componentIds?.chart ? componentIds.chart : 'chart-positions'
   const legendId = componentIds?.legend ? componentIds.legend : 'legend-positions'
@@ -76,24 +74,32 @@ export default function ChartPositions({
 
   const isMobile = useIsMobile()
 
+  const tokenOptions = useMemo(
+    () => currencyOptions ?? getTokenOptions({ protocol, ignoredAll: true }),
+    [currencyOptions, protocol]
+  )
+
   const [markerId, setMarkerId] = useState<string | undefined>()
   const [visibleRange, setVisibleRange] = useState<TimeScaleRange | undefined>()
   const [visibleLogicalRange, setVisibleLogicalRange] = useState<TimeScaleRange | undefined>()
+  const hasAllTokens = currencyOption.id === ALL_TOKENS_ID
+  const filterPositions = (positions?: PositionData[]) =>
+    (positions &&
+      positions.length > 0 &&
+      positions.filter((e) =>
+        hasAllTokens ? e.indexToken === positions[0].indexToken : e.indexToken === currencyOption.id
+      )) ||
+    []
+
+  const filteredOpeningPositions = filterPositions(openingPositions)
+  const filteredClosedPositions = filterPositions(closedPositions)
   const mostRecentPos = useMemo(() => {
-    const filterPositions = (positions?: PositionData[]) =>
-      positions?.filter((e) =>
-        currencyOption.id === ALL_TOKENS_ID ? !!e.indexToken : e.indexToken === currencyOption.id
-      ) || []
-
-    const filteredOpeningPositions = filterPositions(openingPositions)
-    const filteredClosedPositions = filterPositions(closedPositions)
-
     return filteredOpeningPositions.length > 0
       ? filteredOpeningPositions[0]
       : filteredClosedPositions.length > 0
       ? filteredClosedPositions[0]
       : undefined
-  }, [closedPositions, currencyOption.id, openingPositions])
+  }, [filteredClosedPositions, filteredOpeningPositions])
   const mostRecentTrade = useMemo(
     () =>
       mostRecentPos
@@ -102,9 +108,15 @@ export default function ChartPositions({
     [mostRecentPos]
   )
 
+  const oldestPosition =
+    filteredClosedPositions && filteredClosedPositions.length > 0
+      ? filteredClosedPositions[filteredClosedPositions.length - 1]
+      : undefined
+  const oldestPosTime = oldestPosition ? dayjs(oldestPosition.openBlockTime).utc() : undefined
+
   const tokenTrade =
     TOKEN_TRADE_SUPPORT[protocol][
-      currencyOption.id === ALL_TOKENS_ID
+      hasAllTokens
         ? mostRecentPos
           ? mostRecentPos.indexToken
           : getDefaultTokenTrade(protocol).address
@@ -117,19 +129,21 @@ export default function ChartPositions({
     () => (timeRange ? dayjs(timeRange.from).utc() : dayjs(to).utc().subtract(timeframeDuration, 'day')),
     [timeRange, timeframeDuration, to]
   )
-  const from = useMemo(
-    () =>
+  const from = useMemo(() => {
+    const minFrom =
       mostRecentTrade && fromRange.isAfter(mostRecentTrade)
-        ? mostRecentTrade.subtract(timeframeDuration, 'day').valueOf()
-        : fromRange.valueOf(),
-    [fromRange, mostRecentTrade, timeframeDuration]
-  )
+        ? mostRecentTrade.subtract(timeframeDuration, 'day')
+        : fromRange
+    return oldestPosTime && oldestPosTime.isBefore(minFrom) ? oldestPosTime.valueOf() : minFrom.valueOf()
+  }, [fromRange, mostRecentTrade, oldestPosTime, timeframeDuration])
   const timeframe = useMemo(() => getTimeframe(from, to), [from, to])
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
 
+  const [currentTimeframe, setCurrentTimeframe] = useState(timeframe)
+
   const { data, isLoading } = useQuery(
-    [QUERY_KEYS.GET_CHART_DATA, tokenTrade.symbol, from, to, timeframe],
-    () => getChartDataV2({ symbol: tokenTrade.symbol, timeframe, from, to }),
+    [QUERY_KEYS.GET_CHART_DATA, tokenTrade.symbol, from, to, currentTimeframe],
+    () => getChartDataV2({ symbol: tokenTrade.symbol, timeframe: currentTimeframe, from, to }),
     {
       retry: 0,
     }
@@ -159,21 +173,33 @@ export default function ChartPositions({
   const currentPosition = listPositions.find((e) => markerId?.includes(e.id))
 
   useEffect(() => {
-    if (timeframeOption || currencyOption) {
+    if (currentTimeframe || currencyOption) {
       setVisibleRange(undefined)
       setVisibleLogicalRange(undefined)
     }
-  }, [currencyOption, timeframeOption])
+  }, [currencyOption, currentTimeframe])
 
   useEffect(() => {
     if (mostRecentTrade && !visibleRange) {
-      const duration = mostRecentTrade && fromRange.isAfter(mostRecentTrade) ? 2 : 1
+      const duration =
+        currentTimeframe === TimeframeEnum.D1
+          ? 30
+          : mostRecentTrade && dayjs(from).utc().isAfter(mostRecentTrade)
+          ? 2
+          : 1
       setVisibleRange({
         from: mostRecentTrade.subtract(duration, 'days').valueOf() / 1000,
         to: mostRecentTrade.add(duration, 'days').valueOf() / 1000,
       })
     }
-  }, [fromRange, mostRecentTrade, visibleRange])
+  }, [mostRecentTrade, visibleRange, from, currentTimeframe])
+
+  useEffect(() => {
+    if (isLoadingClosed || hasAllTokens) return
+    if (hasNextPage && oldestPosTime && oldestPosTime.valueOf() > from) {
+      fetchNextPage && fetchNextPage()
+    }
+  }, [fetchNextPage, from, hasAllTokens, hasNextPage, isLoadingClosed, oldestPosTime])
 
   useEffect(() => {
     if (isLoading || !data || !chartData || data.length === 0 || chartData.length === 0) return
@@ -197,6 +223,8 @@ export default function ChartPositions({
         borderVisible: true,
         borderColor: '#1f1a30',
         rightOffset: 3,
+        fixLeftEdge: true,
+        fixRightEdge: false,
         shiftVisibleRangeOnNewBar: true,
       },
       grid: {
@@ -243,6 +271,14 @@ export default function ChartPositions({
     })
 
     const timeScale = chart.timeScale()
+    function onVisibleTimeRangeChanged(value: TimeRange | null) {
+      if (isLoadingClosed || hasAllTokens) return
+      if (chartData && chartData.length > 0 && hasNextPage && value && Number(value.from) === chartData[0].time) {
+        setVisibleRange({ from: Number(value.from), to: Number(value.to) })
+        fetchNextPage && fetchNextPage()
+      }
+    }
+    timeScale.subscribeVisibleTimeRangeChange(onVisibleTimeRangeChanged)
 
     const series = chart.addCandlestickSeries({
       upColor: COLORS.neutral3,
@@ -315,6 +351,24 @@ export default function ChartPositions({
       title: 'Avg. Price',
       lineStyle: LineStyle.Dashed,
     })
+
+    const handleClickEvent = (param: MouseEventParams) => {
+      const hoverMakerId = param.hoveredObjectId as string | undefined
+      setMarkerId(hoverMakerId)
+
+      const timeRange = timeScale.getVisibleRange()
+      setVisibleRange({ from: Number(timeRange?.from), to: Number(timeRange?.to) })
+      const logicalRange = timeScale.getVisibleLogicalRange()
+      setVisibleLogicalRange({ from: Number(logicalRange?.from), to: Number(logicalRange?.to) })
+
+      if (hoverMakerId) {
+        logEvent({
+          label: getUserForTracking(myProfile?.username),
+          category: EventCategory.CHART,
+          action: EVENT_ACTIONS[EventCategory.CHART].VIEW_ORDER_MARKER,
+        })
+      }
+    }
 
     if (container) {
       const legend = document.getElementById(legendId) ?? document.createElement('div')
@@ -451,23 +505,7 @@ export default function ChartPositions({
         }
       })
 
-      chart.subscribeClick((param) => {
-        const hoverMakerId = param.hoveredObjectId as string | undefined
-        setMarkerId(hoverMakerId)
-
-        const timeRange = timeScale.getVisibleRange()
-        setVisibleRange({ from: Number(timeRange?.from), to: Number(timeRange?.to) })
-        const logicalRange = timeScale.getVisibleLogicalRange()
-        setVisibleLogicalRange({ from: Number(logicalRange?.from), to: Number(logicalRange?.to) })
-
-        if (hoverMakerId) {
-          logEvent({
-            label: getUserForTracking(myProfile?.username),
-            category: EventCategory.CHART,
-            action: EVENT_ACTIONS[EventCategory.CHART].VIEW_ORDER_MARKER,
-          })
-        }
-      })
+      chart.subscribeClick(handleClickEvent)
     }
 
     const handleResize = () => {
@@ -483,6 +521,8 @@ export default function ChartPositions({
 
     return () => {
       window.removeEventListener('resize', handleResize)
+      timeScale.unsubscribeVisibleTimeRangeChange(onVisibleTimeRangeChanged)
+      chart.unsubscribeClick(handleClickEvent)
 
       chart.remove()
     }
@@ -507,20 +547,96 @@ export default function ChartPositions({
     visibleRange,
   ])
 
+  const changeTimeframe = (data: TimeframeEnum) => {
+    setCurrentTimeframe(data)
+    setVisibleLogicalRange(undefined)
+    setVisibleRange(undefined)
+  }
+
   return (
     <Box height="100%" sx={{ position: 'relative', pl: 12, ...(sx ?? {}) }}>
       {/*<div id={legendId} />*/}
       {/*<div id={tooltipId} />*/}
       <Flex width="calc(100% - 24px)" alignItems="center" sx={{ position: 'absolute', top: 0, left: 12, zIndex: 100 }}>
         {currentPosition && (
-          <PositionLegend data={currentPosition} isOpening={currentPosition.status !== PositionStatusEnum.CLOSE} />
+          <PositionLegend
+            isExpanded={isExpanded}
+            data={currentPosition}
+            isOpening={currentPosition.status !== PositionStatusEnum.CLOSE}
+          />
         )}
       </Flex>
-      <Flex alignItems="center" mx={12} my={2} sx={{ gap: 2 }}>
-        <Type.Caption width="100%" textAlign="right" color="neutral3">
-          {TIMEFRAME_NAMES[timeframe]} • {tokenTrade.symbol}/USD
-        </Type.Caption>
+      <Flex alignItems="center" justifyContent="space-between" mr={12} mt={2} sx={{ gap: 2 }}>
+        {isExpanded && hasNextPage && hasAllTokens && (
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              if (hasNextPage) {
+                fetchNextPage && fetchNextPage()
+              }
+            }}
+            sx={{ p: 0 }}
+          >
+            <Type.Caption>
+              <Trans>Load more positions</Trans>
+            </Type.Caption>
+          </Button>
+        )}
+        <Flex flex={1} alignItems="center" justifyContent="flex-end" sx={{ gap: 2 }}>
+          <TimeframeSelection isExpanded={isExpanded} currentOption={currentTimeframe} changeOption={changeTimeframe} />
+          <CurrencyOption
+            options={tokenOptions}
+            currentOption={
+              currencyOption.id === ALL_TOKENS_ID
+                ? tokenOptions.find((e) => e.id === mostRecentPos?.indexToken) ?? currencyOption
+                : currencyOption
+            }
+            handleChangeOption={(option) => {
+              changeCurrency && changeCurrency(option)
+            }}
+          />
+          {toggleExpand && (
+            <IconBox
+              icon={isExpanded ? <ArrowsIn size={20} /> : <ArrowsOutSimple size={20} />}
+              role="button"
+              sx={{
+                width: 32,
+                height: 32,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 'sm',
+                border: 'small',
+                borderColor: 'neutral4',
+                color: 'neutral2',
+                '&:hover': { color: 'neutral1' },
+              }}
+              onClick={toggleExpand}
+            />
+          )}
+        </Flex>
       </Flex>
+      {(isLoading || isLoadingClosed) && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backdropFilter: 'blur(2px)',
+            bg: 'modalBG',
+          }}
+        >
+          <Loading />
+        </Box>
+      )}
+      {!isLoading && chartData && chartData.length === 0 && <NoDataFound />}
       <div id={chartId} style={{ height: 'calc(100% - 40px)' }} />
     </Box>
   )

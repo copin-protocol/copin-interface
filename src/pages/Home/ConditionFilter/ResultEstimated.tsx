@@ -12,17 +12,24 @@ export default function ResultEstimated({
   loading,
   effectDays,
 }: {
-  data?: TraderCounter[]
+  data: TraderCounter[] | undefined
   loading: boolean
   effectDays: number
 }) {
-  return (
-    <Box sx={{ px: 3, borderBottom: 'small', borderBottomColor: 'neutral5' }}>
-      <Flex justifyContent="start" alignItems="center" mb={4}>
-        <Box width={24} ml={2}>
-          {loading && <Loading sx={{ width: '16px !important', height: '16px !important', m: '0 !important' }} />}
-        </Box>
-      </Flex>
+  return !!loading || !!data?.length ? (
+    <Flex
+      sx={{
+        px: 3,
+        height: 80,
+        alignItems: 'center',
+        borderBottom: 'small',
+        borderBottomColor: 'neutral5',
+        position: 'relative',
+      }}
+    >
+      <Box sx={{ position: 'absolute', top: '50%', left: 32, transform: 'translateY(-50%)', zIndex: 10 }}>
+        {loading && <Loading size={16} />}
+      </Box>
       <Box
         sx={{
           position: 'relative',
@@ -32,9 +39,6 @@ export default function ResultEstimated({
           bg: 'neutral5',
           width: '100%',
         }}
-        p={0}
-        mb={4}
-        mt={12}
       >
         {data &&
           data.map((value, index) => {
@@ -76,8 +80,8 @@ export default function ResultEstimated({
           {data && <Type.Caption color="neutral3">{nFormatter(data[0]?.total ?? 0, 1)}</Type.Caption>}
         </Absolute>
       </Box>
-    </Box>
-  )
+    </Flex>
+  ) : null
 }
 
 const Absolute = styled(Box)<{

@@ -54,7 +54,6 @@ export const EVENT_ACTIONS = {
   },
   [EventCategory.ROUTES]: {
     MY_PROFILE: 'my_profile',
-    MY_PROFILE_OLD: 'my_profile_old',
     HISTORY: 'history',
     TOP_OPENING_POSITIONS_ALL: 'top_opening_positions_all',
     JOIN_DISCORD: 'join_discord',
@@ -86,5 +85,7 @@ export const EVENT_ACTIONS = {
     HIDE_POSITION_FULL: 'hide_trader_position_full',
     EXPAND_POSITION_TOP: 'expand_trader_position_top',
     HIDE_POSITION_TOP: 'hide_trader_position_top',
+    EXPAND_CHART_POSITION_FULL: 'expand_chart_position_full',
+    HIDE_CHART_POSITION_FULL: 'hide_chart_position_full',
   },
 }

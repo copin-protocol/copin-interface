@@ -85,19 +85,22 @@ export default function TraderDetails() {
     if (!requestData) return
     if (Object.keys(requestData).length < MIN_BACKTEST_VALUE) return
     requestBacktest({ protocol, data: { ...requestData, isReturnPositions: true } })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const { saveTraderCopying } = useTraderCopying()
   const { isAuthenticated } = useAuthContext()
-  const hasCopyPermission = useCopyTradePermission()
   const handleClickLogin = useClickLoginButton()
 
   const _address = isAddress(address)
   const [, setForceReload] = useState(1)
-  const tokenOptions = useMemo(() => getTokenOptions(protocol), [protocol])
+  const tokenOptions = useMemo(() => getTokenOptions({ protocol }), [protocol])
   const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
     optionName: 'currency',
     options: tokenOptions,
+    callback: () => {
+      changeCurrentPage(1)
+    },
   })
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
     [QUERY_KEYS.GET_TRADER_DETAIL, _address, protocol],
@@ -175,10 +178,6 @@ export default function TraderDetails() {
   }
   const handleDismissBackTestModal = () => {
     dispatch({ type: 'toggleFocusBacktest' })
-    // setIsOpenBackTestModal(false)
-    // if (isForceOpenModal) {
-    //   setSearchParams({ [URL_PARAM_KEYS.OPEN_BACKTEST_MODAL]: null })
-    // }
   }
 
   const generalInfo = useMemo(() => {
@@ -203,6 +202,8 @@ export default function TraderDetails() {
   const hadBacktest = !!requestData || (!!currentBacktestInstance && !!currentBacktestInstance.result)
 
   const [timeOption, setTimeOption] = useState(TIME_FILTER_OPTIONS[3])
+
+  const hasCopyPermission = useCopyTradePermission(protocol === ProtocolEnum.KWENTA)
 
   if (!isLoadingTraderData && !traderData) return <NotFound title="Trader not found" message="" />
 
@@ -238,7 +239,7 @@ export default function TraderDetails() {
               protocol={protocol}
               account={_address}
               onForceReload={onForceReload}
-              hasCopyPermission={protocol === ProtocolEnum.GMX}
+              hasCopyPermission={hasCopyPermission}
             />
           </Flex>
         </Flex>
@@ -302,20 +303,20 @@ export default function TraderDetails() {
         <>{!!traderData && !!traderData[0] && <TraderRanking data={traderData[0]} />}</>
 
         {/* child 4 */}
-        <>
-          {!!_address && protocol && (
-            <ChartPositions
-              sx={{
-                height: '100%',
-              }}
-              protocol={protocol}
-              timeframeOption={TIME_FILTER_OPTIONS[3]}
-              currencyOption={currencyOption}
-              openingPositions={openingPositions ?? []}
-              closedPositions={closedPositions?.data ?? []}
-            />
-          )}
-        </>
+        <ChartPositions
+          sx={{
+            height: '100%',
+          }}
+          protocol={protocol ?? ProtocolEnum.GMX}
+          timeframeOption={TIME_FILTER_OPTIONS[1]}
+          currencyOption={currencyOption}
+          changeCurrency={changeCurrency}
+          openingPositions={openingPositions ?? []}
+          closedPositions={closedPositions?.data ?? []}
+          fetchNextPage={handleFetchClosedPositions}
+          hasNextPage={hasNextClosedPositions}
+          isLoadingClosed={isLoadingClosed}
+        />
 
         {/* child 5 */}
         <div>{/* {!!_address && <ActivityHeatmap account={_address} />} */}</div>
@@ -338,7 +339,7 @@ export default function TraderDetails() {
         />
       </Layout>
       <SingleBacktestModal
-        accounts={[_address]}
+        account={_address}
         isOpen={backtestState.isFocusBacktest}
         onDismiss={handleDismissBackTestModal}
         state={backtestState}

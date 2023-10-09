@@ -3,8 +3,9 @@ import styled from 'styled-components/macro'
 import { v4 as uuid } from 'uuid'
 
 import Label from 'theme/InputField/Label'
+import Loading from 'theme/Loading'
 import Tooltip from 'theme/Tooltip'
-import { Flex, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { Colors } from 'theme/types'
 
 interface StyledSwitchProps {
@@ -12,13 +13,18 @@ interface StyledSwitchProps {
   disabled?: boolean
 }
 
+const WIDTH = 28
+const HEIGHT = 16
+const GAP = 2
+const LOADING_SIZE = HEIGHT - GAP
+
 const SwitchWrapper = styled.div<StyledSwitchProps>`
   line-height: 0;
   .switch {
     position: relative;
     display: inline-block;
-    width: 40px;
-    height: 20px;
+    width: ${WIDTH}px;
+    height: ${HEIGHT}px;
   }
 
   .switch input {
@@ -42,10 +48,10 @@ const SwitchWrapper = styled.div<StyledSwitchProps>`
   .slider:before {
     position: absolute;
     content: '';
-    height: 16px;
-    width: 16px;
+    top: ${GAP}px;
+    width: ${HEIGHT - 2 * GAP}px;
+    height: ${HEIGHT - 2 * GAP}px;
     left: 2px;
-    bottom: 2px;
     background: ${(props) => props.theme.colors.neutral1};
     -webkit-transition: 0.3s;
     transition: 0.3s;
@@ -56,14 +62,14 @@ const SwitchWrapper = styled.div<StyledSwitchProps>`
   }
 
   input:checked + .slider:before {
-    -webkit-transform: translateX(20px);
-    -ms-transform: translateX209px);
-    transform: translateX(20px);
+    -webkit-transform: translateX(${WIDTH - HEIGHT}px);
+    -ms-transform: translateX(${WIDTH - HEIGHT}px);
+    transform: translateX(${WIDTH - HEIGHT}px);
   }
 
   /* Rounded sliders */
   .slider.round {
-    border-radius: 20px;
+    border-radius: ${HEIGHT / 2}px;
   }
 
   .slider.round:before {
@@ -71,7 +77,7 @@ const SwitchWrapper = styled.div<StyledSwitchProps>`
   }
 `
 export const SwitchInput = forwardRef(function SwitchInput(
-  props: InputHTMLAttributes<HTMLInputElement>,
+  props: InputHTMLAttributes<HTMLInputElement> & { isLoading?: boolean },
   ref?: ForwardedRef<HTMLInputElement>
 ) {
   return (
@@ -79,6 +85,19 @@ export const SwitchInput = forwardRef(function SwitchInput(
       <label className="switch">
         <input ref={ref} type="checkbox" {...props} />
         <span className="slider round"></span>
+        {props.isLoading && (
+          <Box
+            sx={{
+              width: LOADING_SIZE,
+              height: LOADING_SIZE,
+              position: 'absolute',
+              top: `-${LOADING_SIZE / 2 + GAP}px`,
+              ...(props.checked ? { right: `-${GAP}px` } : { left: `${GAP}px` }),
+            }}
+          >
+            <Loading size={14} />
+          </Box>
+        )}
       </label>
     </SwitchWrapper>
   )

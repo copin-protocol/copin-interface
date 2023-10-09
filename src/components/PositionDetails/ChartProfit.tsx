@@ -1,3 +1,4 @@
+import { useResponsive } from 'ahooks'
 import dayjs from 'dayjs'
 import {
   CandlestickData,
@@ -23,7 +24,7 @@ import { Box } from 'theme/base'
 import colors from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
-import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcLiquidatePrice, calcOpeningPnL, calcPnL } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
@@ -31,7 +32,6 @@ import { generateClosedPositionRoute } from 'utils/helpers/generateRoute'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
 const COLORS = colors(true)
-const CHART_HEIGHT = 250
 
 export default function ChartProfit({
   position,
@@ -50,6 +50,8 @@ export default function ChartProfit({
   setCrossMovePnL: (value: number | undefined) => void
   isShow?: boolean
 }) {
+  const { sm } = useResponsive()
+  const CHART_HEIGHT = sm ? 250 : 150
   const { prices } = useUsdPricesStore()
   const { nextHours } = useWhatIfStore()
   const { searchParams } = useSearchParams()
@@ -163,7 +165,7 @@ export default function ChartProfit({
         })
         .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
     )
-  }, [data, isOpening, openOrder, orders, prices, timezone, to])
+  }, [data, openOrder, orders, prices, to])
 
   const chartFutureData: LineData[] = useMemo(() => {
     if (!data || isOpening || !nextHours || nextHours < 1) return []
@@ -256,8 +258,8 @@ export default function ChartProfit({
   useEffect(() => {
     if (isLoading || !data) return
 
-    const container = document.getElementById('chart-container')
-    const chart = createChart(container ? container : 'chart-container', {
+    const container = document.getElementById(ELEMENT_IDS.POSITION_CHART_PNL)
+    const chart = createChart(container ? container : ELEMENT_IDS.POSITION_CHART_PNL, {
       height: CHART_HEIGHT,
       rightPriceScale: {
         autoScale: true,
@@ -549,7 +551,7 @@ export default function ChartProfit({
   return (
     <Box mt={24} sx={{ position: 'relative' }} minHeight={CHART_HEIGHT}>
       <div id="legend-profit" />
-      {isLoading ? <Loading /> : <div id="chart-container" />}
+      {isLoading ? <Loading /> : <div id={ELEMENT_IDS.POSITION_CHART_PNL} />}
     </Box>
   )
 }

@@ -23,23 +23,28 @@ export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSou
   isSelectedAll?: boolean
   handleSelectedAll?: TableSelectHandler<T>['handleSelectAll']
 }) {
-  const handleChangeSort = (columnSortBy: TableSortProps<T>['sortBy'] | undefined) => {
+  const handleChangeSort = (
+    columnSortBy: TableSortProps<T>['sortBy'] | undefined,
+    columnSortType?: TableSortProps<T>['sortType'] | undefined
+  ) => {
     if (!changeCurrentSort) return
     const isCurrentSort = !!currentSort && currentSort?.sortBy === columnSortBy
     if (!columnSortBy) return
+    const theFirstSort = columnSortType ?? SortTypeEnum.DESC
+    const theSecondSort = theFirstSort === SortTypeEnum.DESC ? SortTypeEnum.ASC : SortTypeEnum.DESC
     if (!isCurrentSort) {
       changeCurrentSort({
         sortBy: columnSortBy,
-        sortType: SortTypeEnum.DESC,
+        sortType: theFirstSort,
       })
     }
-    if (isCurrentSort && currentSort.sortType === SortTypeEnum.DESC) {
+    if (isCurrentSort && currentSort.sortType === theFirstSort) {
       changeCurrentSort({
         sortBy: columnSortBy,
-        sortType: SortTypeEnum.ASC,
+        sortType: theSecondSort,
       })
     }
-    if (isCurrentSort && currentSort.sortType === SortTypeEnum.ASC) {
+    if (isCurrentSort && currentSort.sortType === theSecondSort) {
       changeCurrentSort(undefined)
     }
   }
@@ -72,7 +77,7 @@ export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSou
               <Box
                 role={column?.sortBy && changeCurrentSort ? 'button' : 'none'}
                 onClick={() => {
-                  handleChangeSort(column?.sortBy)
+                  handleChangeSort(column?.sortBy, column?.sortType)
                 }}
                 sx={{
                   color: column?.sortBy && isCurrentSort ? 'neutral1' : 'inherit',

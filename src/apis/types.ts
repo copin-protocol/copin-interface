@@ -48,10 +48,13 @@ export type GetCopyTradeSettingsParams = GetApiParams & {
 
 export type GetMyPositionsParams = GetApiParams & {
   status?: string[]
-  copyTrades?: string[]
   isLong?: boolean
   identifyKey?: string
   protocol?: ProtocolEnum
   sortBy?: string
   sortType?: string
+}
+export type GetMyPositionRequestBody = {
+  copyTradeIds?: string[]
+  traders?: string[]
 }

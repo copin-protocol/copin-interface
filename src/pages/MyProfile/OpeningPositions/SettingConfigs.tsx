@@ -1,13 +1,19 @@
-import { Nut } from '@phosphor-icons/react'
+import { Trans } from '@lingui/macro'
+import { PencilSimpleLine } from '@phosphor-icons/react'
 import React, { useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getCopyTradeBalancesApi } from 'apis/copyTradeApis'
+import { getConfigDetailsByKeyApi } from 'apis/copyTradeConfigApis'
+import { maxPositionsContent } from 'components/TooltipContents'
 import { CopyTradeBalanceData } from 'entities/copyTrade'
-import { Button } from 'theme/Buttons'
+import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import Tooltip from 'theme/Tooltip'
+import { Box, Flex, Type } from 'theme/base'
 import { CopyTradeConfigTypeEnum, CopyTradePlatformEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
+import { formatNumber } from 'utils/helpers/format'
 
 import SettingConfigsModal from './SettingConfigsModal'
 
@@ -23,6 +29,14 @@ const SettingConfigs = ({ activeKey }: { activeKey: string | null }) => {
   const [openSettingModal, setOpenSettingModal] = useState(false)
   const [currentSettingKey, setCurrentSettingKey] = useState<SettingKey | undefined>()
   const { data } = useQuery('copytrade-balances', () => getCopyTradeBalancesApi())
+  const { data: config, refetch } = useQuery(
+    [QUERY_KEYS.GET_COPY_TRADE_CONFIGS_BY_KEY, activeKey],
+    () => getConfigDetailsByKeyApi({ exchange: CopyTradePlatformEnum.BINGX, apiKey: activeKey ?? '' }),
+    {
+      retry: 0,
+      enabled: !!activeKey,
+    }
+  )
 
   const handleClick = (data: SettingKey) => {
     setOpenSettingModal(true)
@@ -31,11 +45,12 @@ const SettingConfigs = ({ activeKey }: { activeKey: string | null }) => {
 
   if (!data) return <></>
   return (
-    <Flex alignItems="center" pl={3} sx={{ borderLeft: 'small', borderColor: 'neutral4' }}>
-      <Box width={{ _: '100%', sm: 'auto' }}>
+    <Flex alignItems="center">
+      <Box width={{ _: '100%', sm: 'auto' }} data-tooltip-id={'tt-max-positions'}>
         {activeKey === null ? (
           <Dropdown
-            hasArrow={false}
+            hasArrow={true}
+            iconColor="primary1"
             buttonVariant="ghost"
             buttonSx={{ height: '100%', border: 'none', px: 0, py: 0 }}
             sx={{ height: '100%' }}
@@ -61,23 +76,33 @@ const SettingConfigs = ({ activeKey }: { activeKey: string | null }) => {
               </>
             }
           >
-            <Item />
+            <Type.Caption color="primary1">
+              <Trans>Max Positions</Trans>
+            </Type.Caption>
           </Dropdown>
         ) : (
-          <Button
-            type="button"
-            variant="ghost"
-            sx={{ display: 'flex', alignItems: 'center', height: '100%', border: 'none', px: 0, py: 0 }}
-            onClick={() =>
-              handleClick({
-                exchange: CopyTradePlatformEnum.BINGX,
-                type: CopyTradeConfigTypeEnum.API_KEY,
-                apiKey: activeKey,
-              })
-            }
-          >
-            <Item />
-          </Button>
+          <Flex alignItems="center" sx={{ gap: 1 }}>
+            <Flex alignItems="center" sx={{ gap: 1 }}>
+              <Type.Caption>Max Positions:</Type.Caption>
+              <Type.CaptionBold>
+                {config?.maxPositions && config.maxPositions > 0 ? formatNumber(config.maxPositions) : 'N/A'}
+              </Type.CaptionBold>
+            </Flex>
+            <ButtonWithIcon
+              icon={<PencilSimpleLine size={16} />}
+              size={16}
+              type="button"
+              variant="ghostPrimary"
+              sx={{ display: 'flex', alignItems: 'center', height: '100%', border: 'none', px: 0, py: 0 }}
+              onClick={() =>
+                handleClick({
+                  exchange: CopyTradePlatformEnum.BINGX,
+                  type: CopyTradeConfigTypeEnum.API_KEY,
+                  apiKey: activeKey,
+                })
+              }
+            />
+          </Flex>
         )}
         {openSettingModal && currentSettingKey && (
           <SettingConfigsModal
@@ -86,20 +111,15 @@ const SettingConfigs = ({ activeKey }: { activeKey: string | null }) => {
               setOpenSettingModal(false)
               setCurrentSettingKey(undefined)
             }}
+            onSuccess={refetch}
           />
         )}
       </Box>
+      <Tooltip id={'tt-max-positions'} place="top" type="dark" effect="solid">
+        <Box maxWidth={300}>{maxPositionsContent}</Box>
+      </Tooltip>
     </Flex>
   )
 }
 
 export default SettingConfigs
-
-const Item = () => {
-  return (
-    <Flex alignItems="center" sx={{ gap: 2 }}>
-      <IconBox color="neutral3" icon={<Nut size={20} />} />
-      <Type.Caption color="neutral2">Settings</Type.Caption>
-    </Flex>
-  )
-}

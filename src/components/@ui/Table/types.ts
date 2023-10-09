@@ -19,6 +19,7 @@ export type ColumnData<T = Record<string, any>, K = unknown> = {
   render?: (data: T, index?: number, externalSource?: K) => ReactNode
   numDigit?: number
   sortBy?: keyof T
+  sortType?: SortTypeEnum
 }
 type ExtractDataType<Type> = Type extends ColumnData<infer T> ? T : never
 type ExtractExternalSourceType<Type> = Type extends ColumnData<any, infer K> ? K : never

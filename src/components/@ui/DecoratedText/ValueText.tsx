@@ -141,7 +141,7 @@ export const PriceTokenText = ({
     value,
   })
   const tooltipId = `tt_${value}`
-  return zeroPart.length > 3 ? (
+  return zeroPart.length > 3 && Number(decimalPart) > 0 ? (
     <>
       <Box as="span" sx={sx} data-tip="React-tooltip" data-tooltip-id={tooltipId}>
         {prefix ? (

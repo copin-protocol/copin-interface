@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Clock, Key, SignOut, UserCircle, UserCircleMinus, Users } from '@phosphor-icons/react'
+import { Clock, Key, SignOut, UserCircle, Users } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -56,16 +56,6 @@ const NavUser = () => {
                       </Flex>
                     </DropdownItem>
                   </Link>
-                  <Link to={ROUTES.MY_PROFILE_OLD.path}>
-                    <DropdownItem onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE_OLD)}>
-                      <Flex alignItems="center" sx={{ gap: 2 }}>
-                        <UserCircleMinus size={20} />
-                        <Box color="neutral1">
-                          <Trans>Profile (Old)</Trans>
-                        </Box>
-                      </Flex>
-                    </DropdownItem>
-                  </Link>
                   <Link to={ROUTES.MY_HISTORY.path}>
                     <DropdownItem onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].HISTORY)}>
                       <Flex alignItems="center" sx={{ gap: 2 }}>
@@ -97,7 +87,12 @@ const NavUser = () => {
                 </Flex>
               </DropdownItem>
               <div>
-                <DropdownItem onClick={() => setIsShowModalLogout(true)}>
+                <DropdownItem
+                  onClick={() => {
+                    sessionStorage.clear()
+                    setIsShowModalLogout(true)
+                  }}
+                >
                   <Flex alignItems="center" color="red2" sx={{ gap: 2 }}>
                     <SignOut size={20} />
                     <Box>

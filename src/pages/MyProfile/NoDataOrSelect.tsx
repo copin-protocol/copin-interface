@@ -1,24 +1,35 @@
-import noSelectCopies from 'assets/images/select-copies.svg'
+import { Trans } from '@lingui/macro'
+import { ReactNode } from 'react'
+
 import noSelectTraders from 'assets/images/select-traders.svg'
 import noTraders from 'assets/images/traders-empty.svg'
 import { Flex, Image, Type } from 'theme/base'
 
-type ComponentTypes = 'noTraders' | 'noSelectTraders' | 'noSelectCopies'
-const configs: { [key in ComponentTypes]: { title: string; content: string; image: string } } = {
+type ComponentTypes = 'noTraders' | 'noSelectTraders' | 'noSelectTradersInHistory'
+const configs: { [key in ComponentTypes]: { title: ReactNode; content: ReactNode; image: string } } = {
   noTraders: {
-    title: 'This trader list is empty',
-    content: 'Once you starts copy a new trader, you’ll see the trader listed here',
+    title: <Trans>This trader list is empty</Trans>,
+    content: <Trans>Let copy a trader and make profit!</Trans>,
     image: noTraders,
   },
   noSelectTraders: {
-    title: 'Please pick trader to view copies detail',
-    content: "Find the trader you want in the list of traders, all of the trader's copy settings will be listed here.",
+    title: <Trans>Please pick trader to view copies detail</Trans>,
+    content: (
+      <Trans>
+        Find the trader you want in the list of traders, all of the trader&apos;s copy settings will be listed here.
+      </Trans>
+    ),
     image: noSelectTraders,
   },
-  noSelectCopies: {
-    title: 'Please pick copies setting to view positions',
-    content: 'To view positions, you can choose from a variety of copy settings',
-    image: noSelectCopies,
+  noSelectTradersInHistory: {
+    title: <Trans>Please pick trader to view your history</Trans>,
+    content: (
+      <Trans>
+        Find the trader you want in the list of traders above, all of the trader&apos;s history positions will be listed
+        here.
+      </Trans>
+    ),
+    image: noSelectTraders,
   },
 }
 

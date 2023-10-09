@@ -7,7 +7,7 @@ import {
   RequestCopyTradeData,
   UpdateCopyTradeData,
 } from 'entities/copyTrade.d'
-import { MyCopyTraderData } from 'entities/trader'
+import { MyAllCopyTradersData, MyCopyTraderData } from 'entities/trader'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 
 import { ApiListResponse } from './api'
@@ -95,12 +95,17 @@ export async function getTradersCopyingApi(protocol?: ProtocolEnum): Promise<str
     .then((res: any) => res.data?.traders as string[])
 }
 
+// exclude deleted traders
 export async function getMyCopyTradersApi(params: {
   exchange: CopyTradePlatformEnum
   uniqueKey: string | null
   protocol?: ProtocolEnum
 }) {
   return requester.get(`${SERVICE}/traders/list`, { params }).then((res: any) => res.data as MyCopyTraderData[])
+}
+
+export async function getAllMyCopyTradersApi(params?: { protocol?: ProtocolEnum }) {
+  return requester.get(`${SERVICE}/traders/group`, { params }).then((res: any) => res.data as MyAllCopyTradersData)
 }
 
 export async function getMyCopyTradeOverviewApi(params: {

@@ -7,16 +7,21 @@ const SectionTitle = ({
   title,
   iconColor = 'neutral3',
   sx,
+  suffix,
 }: {
   icon: ReactNode
-  title: string
+  title: ReactNode
   iconColor?: string
   sx?: any
+  suffix?: ReactNode
 }) => {
   return (
-    <Flex alignItems="center" sx={{ gap: 2, pb: 12, ...(sx ?? {}) }}>
-      <IconBox color={iconColor} icon={icon} />
-      <Type.BodyBold>{title}</Type.BodyBold>
+    <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2, pb: 12 }}>
+      <Flex alignItems="center" sx={{ gap: 2, ...(sx ?? {}) }}>
+        <IconBox color={iconColor} icon={icon} />
+        <Type.BodyBold>{title}</Type.BodyBold>
+      </Flex>
+      {suffix}
     </Flex>
   )
 }

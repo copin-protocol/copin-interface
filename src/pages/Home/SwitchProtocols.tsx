@@ -13,6 +13,7 @@ import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_OPTIONS, ProtocolOptionProps } from 'utils/config/protocols'
 import ROUTES from 'utils/config/routes'
 import { generateTopOpeningOrdersRoute } from 'utils/helpers/generateRoute'
+import { parseProtocolImage } from 'utils/helpers/transform'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { getChainMetadata } from 'utils/web3/chains'
@@ -72,7 +73,7 @@ const SwitchProtocols = ({
         {PROTOCOL_OPTIONS.map((protocol) => (
           <DropdownItem key={protocol.id} size="sm" onClick={() => handleSwitchProtocol(protocol)}>
             <Flex py={1} alignItems="center" sx={{ gap: 2 }}>
-              <Image src={`/images/protocols/${protocol.id}.png`} width={28} height={28} />
+              <Image src={parseProtocolImage(protocol.id)} width={28} height={28} />
               <Flex flexDirection="column">
                 <Type.Caption lineHeight="16px" color={currentOption.id === protocol.id ? 'primary1' : 'neutral1'}>
                   {protocol.text}
@@ -121,11 +122,7 @@ const SwitchProtocols = ({
           gap: 2,
         }}
       >
-        <Image
-          src={`/images/protocols/${currentOption.id}.png`}
-          width={isMobile ? 18 : 28}
-          height={isMobile ? 18 : 28}
-        />
+        <Image src={parseProtocolImage(currentOption.id)} width={isMobile ? 18 : 28} height={isMobile ? 18 : 28} />
         <Box width={'60px'}>
           <Type.Caption display="block" lineHeight="16px" color="neutral1" sx={{ ...textSx }}>
             {currentOption.text}

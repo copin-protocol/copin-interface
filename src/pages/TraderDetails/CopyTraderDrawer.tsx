@@ -11,6 +11,7 @@ import CopyTradeCloneForm from 'components/CopyTradeForm/CopyTradeCloneForm'
 import { CopyTradeFormValues } from 'components/CopyTradeForm/configs'
 import { getRequestDataFromForm } from 'components/CopyTradeForm/helpers'
 import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade.d'
+import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
@@ -42,6 +43,7 @@ export default function CopyTraderDrawer({
   isOpen: boolean
   onClose: () => void
 }) {
+  const { data: tokensTraded } = useGetTokensTraded({ account, protocol })
   const { myProfile } = useMyProfileStore()
   const [tab, handleTab] = useState<string>(TabKeyEnum.New)
   const [copyTradeData, setCopyTradeData] = useState<CopyTradeData | null>()
@@ -83,7 +85,9 @@ export default function CopyTraderDrawer({
       data.exchange = CopyTradePlatformEnum.BINGX
       data.bingXApiKey = formData.bingXApiKey
       data.bingXSecretKey = formData.bingXSecretKey
-      // data.proxyUrl = formData.proxyUrl
+    }
+    if (protocol === ProtocolEnum.KWENTA) {
+      data.serviceKey = 'TEST_KWENTA'
     }
     requestCopyTrade({ data })
 
@@ -147,7 +151,12 @@ export default function CopyTraderDrawer({
       ) : (
         <Box sx={{ position: 'relative', maxWidth: 1000, mx: 'auto' }}>
           {!copies?.data.length || tab === TabKeyEnum.New ? (
-            <CopyTraderForm protocol={protocol} onSubmit={onSubmit} isSubmitting={isLoading} />
+            <CopyTraderForm
+              protocol={protocol}
+              onSubmit={onSubmit}
+              isSubmitting={isLoading}
+              tokensTraded={tokensTraded}
+            />
           ) : (
             <>
               {copyTradeData ? (

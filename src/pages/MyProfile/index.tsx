@@ -1,21 +1,18 @@
-import { Pulse } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { Box, Flex } from 'theme/base'
-import { CopyTradePlatformEnum, PositionStatusEnum } from 'utils/config/enums'
-import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { STORAGE_KEYS } from 'utils/config/keys'
 
 import BalanceMenu from './BalanceMenu'
-// import ChangePasswordAction from './ChangePasswordAction'
+import HistoryPositions from './HistoryPositions'
 import Layout from './Layouts/Layout'
 import MainSection from './MainSection'
-import MyCopyPositionTable, { historyColumns } from './MyCopyPositionTable'
+import OpeningPosition from './OpeningPositions'
 import Referral from './Referral'
 import Stats from './Stats'
-
-// import MyFavoriteTable from './MyFavoriteTable'
 
 export default function MyProfile() {
   const [activeKey, setActiveKey] = useState<string | null>(() => {
@@ -38,22 +35,6 @@ export default function MyProfile() {
           overflow: 'hidden',
         }}
       >
-        {/* <Flex
-        sx={{
-          pl: 3,
-          width: '100%',
-          height: 60,
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: 3,
-          borderBottom: 'small',
-          borderBottomColor: 'neutral4',
-        }}
-      >
-        <Type.H5>My Profile</Type.H5>
-        <ChangePasswordAction />
-      </Flex> */}
         <Box flex="1 0 0 " sx={{ overflow: 'hidden' }}>
           <Layout
             balanceMenu={<BalanceMenu activeKey={activeKey} onChangeKey={setActiveKey} />}
@@ -64,61 +45,9 @@ export default function MyProfile() {
                 )}
               </>
             }
-            positionsTable={
-              <>
-                {!!myProfile?.id && (
-                  <MyCopyPositionTable
-                    userId={myProfile.id}
-                    queryParams={{ identifyKey: activeKey ?? undefined, status: [PositionStatusEnum.OPEN] }}
-                    bgColor="neutral5"
-                    title="Opening Positions"
-                    titleIcon={<Pulse size={24} />}
-                    pageParamKey={URL_PARAM_KEYS.MY_PROFILE_OPENINGS_PAGE}
-                  />
-                )}
-              </>
-            }
+            positionsTable={<>{!!myProfile?.id && <OpeningPosition activeKey={activeKey} />}</>}
             stats={<Stats exchange={CopyTradePlatformEnum.BINGX} uniqueKey={activeKey} />}
-            historyTable={
-              <>
-                {!!myProfile?.id && (
-                  <MyCopyPositionTable
-                    queryParams={{}}
-                    userId={myProfile.id}
-                    bgColor="neutral7"
-                    title="History"
-                    hideTitle
-                    pageParamKey={URL_PARAM_KEYS.MY_PROFILE_ALL_HISTORY_PAGE}
-                    limitParamKey={URL_PARAM_KEYS.MY_PROFILE_ALL_HISTORY_LIMIT}
-                    isInfiniteLoad={false}
-                    tableSettings={historyColumns}
-                    tableWrapperSx={{ pt: 3 }}
-                    tableHeadSx={{
-                      '& th:first-child': {
-                        pl: 3,
-                      },
-                      '& th': {
-                        pr: '16px !important',
-                        border: 'none',
-                      },
-                    }}
-                    tableBodySx={{
-                      borderSpacing: ' 0px 4px',
-                      'td:first-child': {
-                        pl: 3,
-                      },
-                      '& td': {
-                        pr: 3,
-                        bg: 'neutral6',
-                      },
-                      '& tbody tr:hover td': {
-                        bg: 'neutral5',
-                      },
-                    }}
-                  />
-                )}
-              </>
-            }
+            historyTable={<>{!!myProfile?.id && <HistoryPositions />}</>}
             referral={<Referral />}
           ></Layout>
         </Box>

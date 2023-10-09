@@ -163,3 +163,8 @@ export interface MyCopyTraderData {
   pnl7D: number
   pnl30D: number
 }
+
+export interface MyAllCopyTradersData {
+  copyingTraders: string[]
+  deletedTraders: string[]
+}

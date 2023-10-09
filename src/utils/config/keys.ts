@@ -11,6 +11,7 @@ export const QUERY_KEYS = {
   GET_COPY_TRADE_SETTING_DETAIL: 'GET_COPY_TRADE_SETTING_DETAIL',
   GET_MY_COPY_POSITIONS: 'GET_MY_COPY_POSITIONS',
   GET_MY_COPY_TRADERS: 'GET_MY_COPY_TRADERS',
+  GET_ALL_MY_COPY_TRADERS: 'GET_ALL_MY_COPY_TRADERS',
   GET_MY_COPY_POSITION_DETAIL: 'GET_MY_COPY_POSITION_DETAIL',
   GET_MY_COPY_ORDERS: 'GET_MY_COPY_ORDERS',
   GET_MY_PNL_DATA: 'GET_MY_PNL_DATA',
@@ -46,6 +47,7 @@ export const STORAGE_KEYS = {
   HOME_DESKTOP_LAYOUT: 'home-desktop-layout',
   MY_COPY_DATA: 'my-copy-data',
   MY_COPY_ACTIVE_KEY: 'my-copy-active-key',
+  MY_HISTORY_TRADERS: 'my-history-traders',
   BACKTEST_GUIDE: 'backtest-guide',
 }
 
@@ -62,6 +64,7 @@ export const URL_PARAM_KEYS = {
   MY_PROFILE_ALL_HISTORY_LIMIT: 'my_all_history_limit',
   MY_COPY_MAIN_SECTION_TAB: 'section_tab',
   MY_COPIES_STATUS: 'copies_status',
+  MY_COPIES_PROTOCOL: 'copies_protocol',
   MY_POSITIONS_STATUS: 'positions_status',
   MY_POSITIONS_ENTRY_STATUS: 'entry_status',
 }
@@ -74,4 +77,9 @@ export const TOOLTIP_KEYS = {
 
 export const ELEMENT_IDS = {
   TRADER_CHART_PNL: 'trader-chart-pnl-container',
+  POSITION_CHART_PNL: 'position-chart-pnl-container',
+}
+
+export const ELEMENT_CLASSNAMES = {
+  TRADER_ADDRESS: 'trader_address',
 }
