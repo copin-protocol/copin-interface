@@ -150,7 +150,12 @@ const SearchBox = ({
         onSelect(data)
         logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_CUSTOM_ADD)
       } else {
-        history.push(generateTraderDetailsRoute(data?.protocol ?? protocol, data?.account ?? debounceSearchText))
+        history.push(
+          generateTraderDetailsRoute(
+            data?.protocol ?? protocol ?? ProtocolEnum.GMX,
+            data?.account ?? debounceSearchText
+          )
+        )
         logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_CLICK)
       }
       setVisibleSearchResult(false)

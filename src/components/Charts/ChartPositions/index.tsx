@@ -28,7 +28,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import colors from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
-import { PositionStatusEnum, TimeframeEnum } from 'utils/config/enums'
+import { PositionStatusEnum, ProtocolEnum, TimeframeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { ALL_TOKENS_ID, TOKEN_TRADE_SUPPORT, getDefaultTokenTrade, getTokenOptions } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
@@ -52,6 +52,7 @@ const COLORS = colors(true)
 
 export default function ChartPositions({
   protocol,
+  targetPosition,
   openingPositions,
   closedPositions,
   currencyOptions,
@@ -173,14 +174,29 @@ export default function ChartPositions({
   const currentPosition = listPositions.find((e) => markerId?.includes(e.id))
 
   useEffect(() => {
-    if (currentTimeframe || currencyOption) {
+    if (targetPosition) {
+      const targetMarkerId = `${targetPosition.id}-CLOSE`
+      setMarkerId(targetMarkerId)
+
+      const openTime = dayjs(targetPosition.openBlockTime).utc()
+      const closedTime = dayjs(targetPosition.closeBlockTime).utc()
+      const diffDay = closedTime.diff(openTime, 'day')
+      setVisibleRange({
+        from: openTime.subtract(diffDay < 5 ? 5 : 1, 'day').unix(),
+        to: closedTime.add(diffDay < 5 ? 5 : 1, 'day').unix(),
+      })
+    }
+  }, [targetPosition])
+
+  useEffect(() => {
+    if ((currentTimeframe || currencyOption) && !targetPosition) {
       setVisibleRange(undefined)
       setVisibleLogicalRange(undefined)
     }
-  }, [currencyOption, currentTimeframe])
+  }, [currencyOption, currentTimeframe, targetPosition])
 
   useEffect(() => {
-    if (mostRecentTrade && !visibleRange) {
+    if (mostRecentTrade && !visibleRange && !targetPosition) {
       const duration =
         currentTimeframe === TimeframeEnum.D1
           ? 30
@@ -292,18 +308,17 @@ export default function ChartPositions({
     series.applyOptions({})
 
     const increasePosMarkers = listPositions.map((position): SeriesMarker<Time> => {
+      const isGMX = position.protocol === ProtocolEnum.GMX
+      const isOpen = isGMX ? !position.id : position.status === PositionStatusEnum.OPEN
+      const isSelected =
+        markerId && markerId.includes(isOpen ? (isGMX ? position.blockTime : position.openBlockTime) : position.id)
       return {
-        id: `${position.id}-OPEN-${position.blockTime}`,
+        id: `${position.id}-OPEN-${isGMX ? position.blockTime : position.openBlockTime}`,
         position: 'aboveBar',
-        color:
-          markerId && !markerId.includes(position.id ?? position.blockTime)
-            ? COLORS.neutral3
-            : position.isLong
-            ? COLORS.green1
-            : COLORS.red2,
-        size: markerId && markerId.includes(position.id ?? position.blockTime) ? 1.85 : 1.35,
+        color: !isSelected ? COLORS.neutral3 : position.isLong ? COLORS.green1 : COLORS.red2,
+        size: isSelected ? 1.85 : 1.35,
         shape: position.isLong ? 'arrowUp' : 'arrowDown',
-        time: (dayjs(position.blockTime ?? position.openBlockTime)
+        time: (dayjs(isGMX ? position.blockTime : position.openBlockTime)
           .utc()
           .unix() - timezone) as Time,
       }
