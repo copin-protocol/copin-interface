@@ -24,6 +24,12 @@ export default function MyProfile() {
   }, [activeKey])
   const { myProfile } = useMyProfileStore()
 
+  useEffect(() => {
+    return () => {
+      sessionStorage.clear()
+    }
+  }, [])
+
   return (
     <>
       <CustomPageTitle title="My Profile" />

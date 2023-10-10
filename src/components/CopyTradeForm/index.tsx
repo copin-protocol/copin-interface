@@ -1,12 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { ReactNode, useEffect, useMemo } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { ReactNode, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 
 import Divider from 'components/@ui/Divider'
 import { volumeMultiplierContent, volumeProtectionContent } from 'components/TooltipContents'
+import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import { Button } from 'theme/Buttons'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import InputField, { InputPasswordField } from 'theme/InputField'
+import Label from 'theme/InputField/Label'
 import NumberInputField from 'theme/InputField/NumberInputField'
 import Select from 'theme/Select'
 import SliderInput from 'theme/SliderInput'
@@ -22,30 +24,33 @@ import {
   defaultCopyTradeFormValues,
   exchangeOptions,
   fieldName,
+  protocolOptions,
   updateCopyTradeFormSchema,
 } from './configs'
 
-export default function CopyTraderForm({
-  protocol,
-  onSubmit,
-  submitButtonText = 'Copy Trade',
-  isSubmitting,
-  defaultFormValues,
-  isEdit = false,
-  isClone = false,
-  disabledEdit = false,
-  tokensTraded,
-}: {
-  protocol: ProtocolEnum
+type CommonProps = {
   onSubmit: (data: CopyTradeFormValues) => void
   isSubmitting: boolean
-  submitButtonText?: string
-  defaultFormValues?: CopyTradeFormValues
-  isEdit?: boolean
-  isClone?: boolean
-  disabledEdit?: boolean
-  tokensTraded?: string[]
-}) {
+  defaultFormValues: CopyTradeFormValues
+  submitButtonText?: ReactNode
+}
+
+type CopyTraderEditFormProps = {
+  isEdit: boolean
+}
+type CopyTraderCloneFormProps = {
+  isClone: boolean
+}
+export function CopyTraderForm(props: CopyTraderEditFormProps & CommonProps): JSX.Element
+export function CopyTraderForm(props: CopyTraderCloneFormProps & CommonProps): JSX.Element
+export default function CopyTraderForm({
+  onSubmit,
+  isSubmitting,
+  defaultFormValues,
+  submitButtonText = 'Copy Trade',
+  isEdit,
+  isClone,
+}: Partial<CopyTraderEditFormProps> & Partial<CopyTraderCloneFormProps> & CommonProps) {
   const {
     control,
     watch,
@@ -54,8 +59,11 @@ export default function CopyTraderForm({
     handleSubmit,
     clearErrors,
     trigger,
+    setFocus,
+    reset,
     formState: { errors },
   } = useForm<CopyTradeFormValues>({
+    mode: 'onChange',
     resolver: yupResolver(
       isClone ? cloneCopyTradeFormSchema : isEdit ? updateCopyTradeFormSchema : copyTradeFormSchema
     ),
@@ -67,28 +75,46 @@ export default function CopyTraderForm({
   const volumeProtection = watch('volumeProtection')
   const enableMaxVolMultiplier = watch('enableMaxVolMultiplier')
   const tokenAddresses = watch('tokenAddresses')
+  const protocol = watch('protocol')
 
-  const pairs = useMemo(() => getTokenTradeList(protocol), [protocol])
-  const addressPairs = pairs.map((e) => e.address)
-  const isSelectedAll = addressPairs.length === tokenAddresses?.length
+  const pairs = protocol && getTokenTradeList(protocol)
+  const addressPairs = pairs?.map((e) => e.address)
+  const isSelectedAll = !!addressPairs && addressPairs?.length === tokenAddresses?.length
+
+  const account = watch('account')
+  const duplicateToAddress = watch('duplicateToAddress')
+  useGetTokensTraded(
+    {
+      account: isClone ? duplicateToAddress ?? '' : account ?? '',
+      protocol: protocol ?? ProtocolEnum.GMX,
+    },
+    {
+      enabled: !isEdit && (isClone ? !!duplicateToAddress : !!account),
+      onSuccess: (data) => {
+        !!data?.length && setValue('tokenAddresses', data)
+      },
+    }
+  )
 
   useEffect(() => {
-    const defaultValues = defaultFormValues ?? defaultCopyTradeFormValues
-    for (const key in defaultValues) {
-      const _key = key as keyof CopyTradeFormValues
-      setValue(_key, defaultValues[_key])
-    }
-    if (!defaultFormValues && tokensTraded?.length) {
-      setValue('tokenAddresses', tokensTraded)
-    }
+    reset(defaultFormValues)
+    setTimeout(() => {
+      if (isEdit) {
+        return setFocus(fieldName.volume)
+      }
+      if (isClone && !defaultFormValues.duplicateToAddress) {
+        return setFocus(fieldName.duplicateToAddress!)
+      }
+      setFocus(fieldName.title)
+    }, 200)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultFormValues, tokensTraded])
+  }, [])
 
   const handleSelectAll = () => {
     if (isSelectedAll) {
       setValue('tokenAddresses', [])
     } else {
-      setValue('tokenAddresses', addressPairs)
+      !!addressPairs && setValue('tokenAddresses', addressPairs)
       clearErrors('tokenAddresses')
     }
   }
@@ -102,24 +128,38 @@ export default function CopyTraderForm({
               {isEdit && (
                 <Box flex="1">
                   <InputField
-                    disabled={isEdit || isClone}
+                    disabled
                     block
-                    {...register('account')}
+                    {...register(fieldName.account!)}
                     error={errors.account?.message}
                     label="Account"
                   />
                 </Box>
               )}
               {isClone && (
-                <Box flex="1">
-                  <InputField
-                    block
-                    {...register(fieldName.duplicateToAddress)}
-                    disabled={!!defaultFormValues?.duplicateToAddress}
-                    error={errors.duplicateToAddress?.message}
-                    label="Clone To Address"
-                  />
-                </Box>
+                <>
+                  <Box flex="1">
+                    <InputField
+                      block
+                      {...register(fieldName.duplicateToAddress!)}
+                      disabled={!!defaultFormValues.duplicateToAddress}
+                      error={errors.duplicateToAddress?.message}
+                      label="Clone To Address"
+                      sx={{ flexGrow: 1 }}
+                    />
+                  </Box>
+                  <Box sx={{ flex: '0 0 max-content' }}>
+                    <Label label="Protocol" />
+                    <Select
+                      options={protocolOptions}
+                      defaultMenuIsOpen={false}
+                      value={protocolOptions.find((option) => option.value === protocol)}
+                      onChange={(newValue: any) => setValue('protocol', newValue.value)}
+                      isSearchable={false}
+                      isDisabled={!!defaultFormValues.duplicateToAddress}
+                    />
+                  </Box>
+                </>
               )}
             </Flex>{' '}
             <Divider my={20} />
@@ -136,7 +176,6 @@ export default function CopyTraderForm({
               label="Max Margin Per Order"
               block
               name={fieldName.volume}
-              disabled={disabledEdit}
               control={control}
               suffix={<Type.Caption color="neutral2">USD</Type.Caption>}
               error={errors.volume?.message}
@@ -152,11 +191,10 @@ export default function CopyTraderForm({
                 onChange={handleSelectAll}
                 switchLabel="Trading Pairs"
                 labelColor={errors.tokenAddresses?.message ? 'red1' : 'neutral2'}
-                disabled={disabledEdit}
               />
             </Flex>
             <Flex sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}>
-              {pairs.map((pair) => {
+              {pairs?.map((pair) => {
                 return (
                   <ControlledCheckbox
                     key={pair.address}
@@ -164,7 +202,6 @@ export default function CopyTraderForm({
                     label={`${pair.name}/USD`}
                     // labelSx={{ fontSize: 14, lineHeight: '20px' }}
                     size={16}
-                    disabled={disabledEdit}
                     {...register(fieldName.tokenAddresses)}
                     wrapperSx={{ width: 95, flexShrink: 0 }}
                   />
@@ -194,7 +231,6 @@ export default function CopyTraderForm({
                 stepValue={1}
                 marksStep={5}
                 marksUnit={'x'}
-                disabled={disabledEdit}
               />
             </Box>
             {errors.leverage?.message ? (
@@ -337,25 +373,13 @@ export default function CopyTraderForm({
                   <Type.Caption color="neutral3" mb={2} fontWeight={600}>
                     Platform
                   </Type.Caption>
-                  <Controller
-                    name={fieldName.exchange}
-                    control={control}
-                    render={({ field: { onChange, value } }) => {
-                      return (
-                        <Select
-                          options={exchangeOptions}
-                          defaultValue={
-                            defaultFormValues ??
-                            exchangeOptions.find((option) => option.value === CopyTradePlatformEnum.BINGX)
-                          }
-                          defaultMenuIsOpen={false}
-                          value={exchangeOptions.find((option) => option.value === value)}
-                          onChange={(newValue: any) => onChange(newValue.value)}
-                          isSearchable={false}
-                          isDisabled={isEdit || disabledEdit}
-                        />
-                      )
-                    }}
+                  <Select
+                    options={exchangeOptions}
+                    defaultMenuIsOpen={false}
+                    value={exchangeOptions.find((option) => option.value === platform)}
+                    onChange={(newValue: any) => setValue(fieldName.exchange, newValue.value)}
+                    isSearchable={false}
+                    isDisabled={isEdit}
                   />
                 </Box>
                 {platform === CopyTradePlatformEnum.BINGX && (
@@ -365,7 +389,7 @@ export default function CopyTraderForm({
                       block
                       {...register(fieldName.bingXApiKey)}
                       error={errors.bingXApiKey?.message}
-                      disabled={isEdit || disabledEdit}
+                      disabled={isEdit}
                       allowShowPassword
                     />
                     <Flex mt={12} alignItems="center" sx={{ gap: 2 }}>
@@ -384,7 +408,7 @@ export default function CopyTraderForm({
                     block
                     {...register(fieldName.privateKey)}
                     error={errors.privateKey?.message}
-                    disabled={isEdit || disabledEdit}
+                    disabled={isEdit}
                   />
                 </Box>
               )}
@@ -395,14 +419,8 @@ export default function CopyTraderForm({
                     block
                     {...register(fieldName.bingXSecretKey)}
                     error={errors.bingXSecretKey?.message}
-                    disabled={isEdit || disabledEdit}
+                    disabled={isEdit}
                   />
-                  {/* <InputField
-                  block
-                  {...register(fieldName.proxyUrl)}
-                  error={errors.proxyUrl?.message}
-                  label="Proxy url: (Ex: http://[username]:[password]@[ip]:[port])"
-                /> */}
                 </Box>
               )}
             </Flex>
@@ -414,7 +432,7 @@ export default function CopyTraderForm({
             variant="primary"
             onClick={() => handleSubmit(onSubmit)()}
             isLoading={isSubmitting}
-            disabled={isSubmitting || disabledEdit}
+            disabled={isSubmitting}
           >
             {submitButtonText}
           </Button>

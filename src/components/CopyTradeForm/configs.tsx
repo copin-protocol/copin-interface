@@ -1,6 +1,8 @@
 import * as yup from 'yup'
 
-import { CopyTradePlatformEnum, CopyTradeTypeEnum } from 'utils/config/enums'
+import { Flex, Image, Type } from 'theme/base'
+import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { parseProtocolImage } from 'utils/helpers/transform'
 
 const commonSchema = {
   title: yup.string().required().label('Title'),
@@ -63,6 +65,7 @@ export interface CopyTradeFormValues {
   leverage: number
   tokenAddresses: string[]
   type?: CopyTradeTypeEnum
+  protocol?: ProtocolEnum
   enableStopLoss: boolean
   stopLossAmount: number
   volumeProtection: boolean
@@ -74,12 +77,13 @@ export interface CopyTradeFormValues {
   serviceKey: string
   title: string
   reverseCopy: boolean
-  duplicateToAddress: string
+  duplicateToAddress?: string
   enableMaxVolMultiplier: boolean
   maxVolMultiplier: number
   skipLowLeverage: boolean
 }
 export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFormValues } = {
+  protocol: 'protocol',
   account: 'account',
   volume: 'volume',
   leverage: 'leverage',
@@ -102,6 +106,7 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
 }
 
 export const defaultCopyTradeFormValues: CopyTradeFormValues = {
+  protocol: ProtocolEnum.GMX,
   volume: 0,
   leverage: 2,
   tokenAddresses: [],
@@ -137,3 +142,14 @@ export const exchangeOptions: ExchangeOptions[] = [
     label: 'BingX',
   },
 ]
+
+export const protocolOptions = Object.values(ProtocolEnum).map((value) => {
+  return {
+    value,
+    label: (
+      <Flex sx={{ alignItems: 'center', gap: 1, width: 90 }}>
+        <Type.Body>{value}</Type.Body> <Image src={parseProtocolImage(value)} sx={{ width: 16, height: 16 }} />
+      </Flex>
+    ),
+  }
+})

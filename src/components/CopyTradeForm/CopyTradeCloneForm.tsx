@@ -18,11 +18,13 @@ import { getFormValuesFromResponseData, getRequestDataFromForm } from './helpers
 
 const CopyTradeCloneForm = ({
   duplicateToAddress,
+  protocol,
   copyTradeData,
   onDismiss,
   onSuccess,
 }: {
   duplicateToAddress?: string
+  protocol?: ProtocolEnum
   copyTradeData: CopyTradeData | undefined
   onDismiss: () => void
   onSuccess: (trader: string) => void
@@ -44,8 +46,11 @@ const CopyTradeCloneForm = ({
   const defaultFormValues = useMemo(() => {
     const result = getFormValuesFromResponseData(copyTradeData)
     if (duplicateToAddress) result.duplicateToAddress = duplicateToAddress
+    if (protocol) result.protocol = protocol
+    result.title = ''
+    result.tokenAddresses = []
     return result
-  }, [copyTradeData, duplicateToAddress])
+  }, [copyTradeData, duplicateToAddress, protocol])
 
   const onSubmit = (formData: CopyTradeFormValues) => {
     const data: UpdateCopyTradeData = {
@@ -62,16 +67,15 @@ const CopyTradeCloneForm = ({
       action: EVENT_ACTIONS[EventCategory.COPY_TRADE].CLONE_COPY_TRADE,
     })
   }
+
   return (
     <CopyTraderForm
       key={copyTradeData?.account}
-      protocol={copyTradeData?.protocol ?? ProtocolEnum.GMX}
       onSubmit={onSubmit}
       isSubmitting={isLoading}
-      defaultFormValues={defaultFormValues}
-      isEdit={true}
-      isClone={true}
       submitButtonText={'Clone Copy Trade'}
+      defaultFormValues={defaultFormValues}
+      isClone={true}
     />
   )
 }

@@ -3,11 +3,12 @@ import { useMemo } from 'react'
 import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyTradeData } from 'entities/copyTrade.d'
+import { renderTrader } from 'pages/MyProfile/renderProps'
 import { Box, Type } from 'theme/base'
 import colors from 'theme/colors'
 import { CopyTradeStatusEnum } from 'utils/config/enums'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { addressShorten, formatNumber } from 'utils/helpers/format'
+import { formatNumber } from 'utils/helpers/format'
 
 export default function CopyTradeDataTable({
   isLoading,
@@ -36,7 +37,16 @@ export default function CopyTradeDataTable({
         dataIndex: 'account',
         key: 'account',
         style: { minWidth: '100px' },
-        render: (item) => <Type.Caption color="neutral1">{addressShorten(item.account)}</Type.Caption>,
+        render: (item) =>
+          renderTrader(item.account, item.protocol, {
+            isLink: false,
+            textSx: {
+              color: item.status === CopyTradeStatusEnum.RUNNING ? 'neutral1' : 'neutral3',
+            },
+            sx: {
+              filter: item.status === CopyTradeStatusEnum.RUNNING ? 'none' : 'grayscale(1)',
+            },
+          }),
       },
 
       {

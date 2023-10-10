@@ -13,6 +13,7 @@ import { Box, Flex } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { pageToOffset } from 'utils/helpers/transform'
 
 import NoDataOrSelect from '../NoDataOrSelect'
 import PositionTable, { historyColumns } from '../PositionTable'
@@ -41,12 +42,12 @@ export default function HistoryPositions() {
 
   const _queryParams: GetMyPositionsParams = useMemo(
     () => ({
-      limit: currentPage * DEFAULT_LIMIT,
-      offset: 0,
+      limit: currentLimit,
+      offset: pageToOffset(currentPage, currentLimit),
       sortBy: currentSort?.sortBy,
       sortType: currentSort?.sortType,
     }),
-    [currentPage, currentSort?.sortBy, currentSort?.sortType]
+    [currentLimit, currentPage, currentSort?.sortBy, currentSort?.sortType]
   )
   const _queryBody: GetMyPositionRequestBody = useMemo(
     () => ({ traders: selectionState.selectedTraders }),

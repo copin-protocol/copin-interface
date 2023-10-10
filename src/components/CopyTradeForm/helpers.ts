@@ -21,6 +21,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     maxVolMultiplier,
     skipLowLeverage,
     bingXApiKey,
+    protocol,
   } = copyTradeData
   if (account) result.account = account
   if (title) result.title = title
@@ -32,6 +33,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     result.volumeProtection = true
     result.lookBackOrders = lookBackOrders
   }
+  if (protocol) result.protocol = protocol
   if (enableStopLoss) {
     result.enableStopLoss = true
     result.stopLossAmount = stopLossAmount
