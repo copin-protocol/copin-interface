@@ -181,12 +181,13 @@ export default function ChartPositions({
       const openTime = dayjs(targetPosition.openBlockTime).utc()
       const closedTime = dayjs(targetPosition.closeBlockTime).utc()
       const diffDay = closedTime.diff(openTime, 'day')
+      const duration = diffDay < 5 && currentTimeframe !== TimeframeEnum.M5 ? 5 : 1
       setVisibleRange({
-        from: openTime.subtract(diffDay < 5 ? 5 : 1, 'day').unix(),
-        to: closedTime.add(diffDay < 5 ? 5 : 1, 'day').unix(),
+        from: openTime.subtract(duration, 'day').unix(),
+        to: closedTime.add(duration, 'day').unix(),
       })
     }
-  }, [targetPosition])
+  }, [targetPosition, currentTimeframe])
 
   useEffect(() => {
     if ((currentTimeframe || currencyOption) && !targetPosition) {
@@ -315,7 +316,7 @@ export default function ChartPositions({
       return {
         id: `${position.id}-OPEN-${isGMX ? position.blockTime : position.openBlockTime}`,
         position: 'aboveBar',
-        color: !isSelected ? COLORS.neutral3 : position.isLong ? COLORS.green1 : COLORS.red2,
+        color: markerId && !isSelected ? COLORS.neutral3 : position.isLong ? COLORS.green1 : COLORS.red2,
         size: isSelected ? 1.85 : 1.35,
         shape: position.isLong ? 'arrowUp' : 'arrowDown',
         time: (dayjs(isGMX ? position.blockTime : position.openBlockTime)
