@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 
 import Divider from 'components/@ui/Divider'
 import { volumeMultiplierContent, volumeProtectionContent } from 'components/TooltipContents'
+import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import { Button } from 'theme/Buttons'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
@@ -122,6 +123,8 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     }
   }
 
+  const permissionToSelectProtocol = useCopyTradePermission(true)
+
   return (
     <>
       <Box sx={{ p: 3 }}>
@@ -151,17 +154,19 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                       sx={{ flexGrow: 1 }}
                     />
                   </Box>
-                  <Box sx={{ flex: '0 0 max-content' }}>
-                    <Label label="Protocol" />
-                    <Select
-                      options={protocolOptions}
-                      defaultMenuIsOpen={false}
-                      value={protocolOptions.find((option) => option.value === protocol)}
-                      onChange={(newValue: any) => setValue('protocol', newValue.value)}
-                      isSearchable={false}
-                      isDisabled={!!defaultFormValues.duplicateToAddress}
-                    />
-                  </Box>
+                  {permissionToSelectProtocol && (
+                    <Box sx={{ flex: '0 0 max-content' }}>
+                      <Label label="Protocol" />
+                      <Select
+                        options={protocolOptions}
+                        defaultMenuIsOpen={false}
+                        value={protocolOptions.find((option) => option.value === protocol)}
+                        onChange={(newValue: any) => setValue('protocol', newValue.value)}
+                        isSearchable={false}
+                        isDisabled={!!defaultFormValues.duplicateToAddress}
+                      />
+                    </Box>
+                  )}
                 </>
               )}
             </Flex>{' '}
