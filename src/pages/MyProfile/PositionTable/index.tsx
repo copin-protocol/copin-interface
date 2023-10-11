@@ -171,7 +171,7 @@ export default function PositionTable({
             />
             <PositionDetails
               protocol={sourcePosition.protocol}
-              id={sourcePosition?.id}
+              id={sourcePosition.status === PositionStatusEnum.OPEN ? undefined : sourcePosition?.id}
               account={sourcePosition?.account}
               indexToken={sourcePosition?.indexToken}
               dataKey={sourcePosition?.key}
