@@ -196,7 +196,7 @@ export function renderSource(item: CopyPositionData, index?: number, externalSou
           },
         }}
       >
-        {addressShorten(item.sourceOrderTxHashes[0], 3, 2)}
+        {addressShorten(item.sourceOrderTxHashes?.[0] ?? item.copyAccount, 3, 2)}
       </Type.Caption>
     </Button>
   )

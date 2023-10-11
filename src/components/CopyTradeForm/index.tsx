@@ -41,16 +41,19 @@ type CopyTraderEditFormProps = {
 type CopyTraderCloneFormProps = {
   isClone: boolean
 }
-export function CopyTraderForm(props: CopyTraderEditFormProps & CommonProps): JSX.Element
-export function CopyTraderForm(props: CopyTraderCloneFormProps & CommonProps): JSX.Element
-export default function CopyTraderForm({
+type CopyTradeFormComponent = {
+  (props: CommonProps): JSX.Element
+  (props: CopyTraderEditFormProps & CommonProps): JSX.Element
+  (props: CopyTraderCloneFormProps & CommonProps): JSX.Element
+}
+const CopyTraderForm: CopyTradeFormComponent = ({
   onSubmit,
   isSubmitting,
   defaultFormValues,
   submitButtonText = 'Copy Trade',
   isEdit,
   isClone,
-}: Partial<CopyTraderEditFormProps> & Partial<CopyTraderCloneFormProps> & CommonProps) {
+}: Partial<CopyTraderEditFormProps> & Partial<CopyTraderCloneFormProps> & CommonProps) => {
   const {
     control,
     watch,
@@ -451,3 +454,5 @@ function RowWrapper3({ children }: { children: ReactNode }) {
 function InputSuffix({ children }: { children: ReactNode }) {
   return <Type.Caption color="neutral2">{children}</Type.Caption>
 }
+
+export default CopyTraderForm

@@ -21,8 +21,6 @@ export default function CopyTradeCloneDrawer({
       mode="bottom"
       background="neutral5"
       hasClose
-      // zIndex={105}
-      // direction="bottom"
       isOpen={isOpen}
       onDismiss={onDismiss}
       headSx={{

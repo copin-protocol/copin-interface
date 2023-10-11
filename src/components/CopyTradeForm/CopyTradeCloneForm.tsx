@@ -16,19 +16,27 @@ import CopyTraderForm from '.'
 import { CopyTradeFormValues } from './configs'
 import { getFormValuesFromResponseData, getRequestDataFromForm } from './helpers'
 
-const CopyTradeCloneForm = ({
+type CloneTraderProps = {
+  copyTradeData: CopyTradeData | undefined
+  onDismiss: () => void
+  onSuccess: (trader: string) => void
+}
+type DedicatedTraderProps = {
+  duplicateToAddress: string
+  protocol: ProtocolEnum
+}
+type CopyTradeCloneFormComponent = {
+  (props: CloneTraderProps): JSX.Element
+  (props: DedicatedTraderProps & CloneTraderProps): JSX.Element
+}
+
+const CopyTradeCloneForm: CopyTradeCloneFormComponent = ({
   duplicateToAddress,
   protocol,
   copyTradeData,
   onDismiss,
   onSuccess,
-}: {
-  duplicateToAddress?: string
-  protocol?: ProtocolEnum
-  copyTradeData: CopyTradeData | undefined
-  onDismiss: () => void
-  onSuccess: (trader: string) => void
-}) => {
+}: CloneTraderProps & Partial<DedicatedTraderProps>) => {
   const { myProfile } = useMyProfileStore()
   const { mutate: duplicateCopyTrade, isLoading } = useMutation(duplicateCopyTradeApi, {
     onSuccess: (data) => {
@@ -58,7 +66,6 @@ const CopyTradeCloneForm = ({
       status: CopyTradeStatusEnum.RUNNING,
     }
     if (formData.duplicateToAddress) data.account = formData.duplicateToAddress
-    if (copyTradeData?.protocol) data.protocol = copyTradeData.protocol
     duplicateCopyTrade({ data, copyTradeId: copyTradeData?.id ?? '' })
 
     logEvent({

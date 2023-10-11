@@ -68,5 +68,6 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
     lookBackOrders: formData.volumeProtection ? formData.lookBackOrders : undefined,
     maxVolMultiplier: formData.enableMaxVolMultiplier ? formData.maxVolMultiplier : 0,
     skipLowLeverage: formData.skipLowLeverage,
+    protocol: formData.protocol,
   }
 }
