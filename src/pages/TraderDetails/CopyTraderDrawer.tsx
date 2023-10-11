@@ -74,7 +74,7 @@ export default function CopyTraderDrawer({
       account,
       protocol,
       type: CopyTradeTypeEnum.FULL_ORDER,
-      serviceKey: formData.serviceKey,
+      // serviceKey: formData.serviceKey,
     }
     if (formData.exchange === CopyTradePlatformEnum.GMX) {
       data.exchange = CopyTradePlatformEnum.GMX
@@ -84,9 +84,6 @@ export default function CopyTraderDrawer({
       data.exchange = CopyTradePlatformEnum.BINGX
       data.bingXApiKey = formData.bingXApiKey
       data.bingXSecretKey = formData.bingXSecretKey
-    }
-    if (protocol === ProtocolEnum.KWENTA) {
-      data.serviceKey = 'TEST_KWENTA'
     }
     requestCopyTrade({ data })
 

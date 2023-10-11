@@ -9,6 +9,7 @@ import {
 } from 'entities/copyTrade.d'
 import { MyAllCopyTradersData, MyCopyTraderData } from 'entities/trader'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { SERVICE_KEYS } from 'utils/config/keys'
 
 import { ApiListResponse } from './api'
 import requester from './index'
@@ -17,7 +18,8 @@ import { GetCopyTradeSettingsParams } from './types'
 const SERVICE = 'copy-trades'
 
 export async function requestCopyTradeApi({ data }: { data: RequestCopyTradeData }) {
-  return requester.post(`${SERVICE}`, data).then((res: any) => res.data as CopyTradeData)
+  const serviceKey = SERVICE_KEYS[data.protocol ?? ProtocolEnum.GMX]
+  return requester.post(`${SERVICE}`, { ...data, serviceKey }).then((res: any) => res.data as CopyTradeData)
 }
 
 export async function updateCopyTradeApi({ data, copyTradeId }: { data: UpdateCopyTradeData; copyTradeId: string }) {
@@ -25,7 +27,10 @@ export async function updateCopyTradeApi({ data, copyTradeId }: { data: UpdateCo
 }
 
 export async function duplicateCopyTradeApi({ data, copyTradeId }: { data: UpdateCopyTradeData; copyTradeId: string }) {
-  return requester.post(`${SERVICE}/duplicate/${copyTradeId}`, data).then((res: any) => res.data as CopyTradeData)
+  const serviceKey = SERVICE_KEYS[data.protocol ?? ProtocolEnum.GMX]
+  return requester
+    .post(`${SERVICE}/duplicate/${copyTradeId}`, { ...data, serviceKey })
+    .then((res: any) => res.data as CopyTradeData)
 }
 export async function preDeleteCopyTradeApi({
   copyTradeId,

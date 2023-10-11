@@ -1,3 +1,5 @@
+import { ProtocolEnum } from './enums'
+
 export const QUERY_KEYS = {
   GET_SYSTEM_STATS: 'GET_SYSTEM_STATS',
   GET_SYSTEM_STATS_OVERVIEW: 'GET_SYSTEM_STATS_OVERVIEW',
@@ -82,4 +84,9 @@ export const ELEMENT_IDS = {
 
 export const ELEMENT_CLASSNAMES = {
   TRADER_ADDRESS: 'trader_address',
+}
+
+export const SERVICE_KEYS = {
+  [ProtocolEnum.GMX]: 'INTERNAL_TEST',
+  [ProtocolEnum.KWENTA]: 'TEST_KWENTA',
 }
