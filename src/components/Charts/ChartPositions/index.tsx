@@ -319,7 +319,7 @@ export default function ChartPositions({
         color: markerId && !isSelected ? COLORS.neutral3 : position.isLong ? COLORS.green1 : COLORS.red2,
         size: isSelected ? 1.85 : 1.35,
         shape: position.isLong ? 'arrowUp' : 'arrowDown',
-        time: (dayjs(isGMX ? position.blockTime : position.openBlockTime)
+        time: (dayjs(isGMX && isOpen ? position.blockTime : position.openBlockTime)
           .utc()
           .unix() - timezone) as Time,
       }
