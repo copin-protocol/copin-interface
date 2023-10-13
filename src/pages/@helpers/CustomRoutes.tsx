@@ -1,6 +1,7 @@
 import { Redirect, Route, RouteComponentProps } from 'react-router-dom'
 
 import { useAuthContext } from 'hooks/web3/useAuth'
+import ProtocolRouteWrapper from 'pages/@layouts/ProtocolRouteWrapper'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -43,7 +44,9 @@ export const ProtocolRoute = ({ component: Component, componentProps, ...rest }:
       {...rest}
       render={({ location, ...props }: any) => {
         return PROTOCOLS.includes(location.pathname.split('/')[1]) ? (
-          <Component location={location} {...componentProps} {...props} />
+          <ProtocolRouteWrapper>
+            <Component location={location} {...componentProps} {...props} />
+          </ProtocolRouteWrapper>
         ) : (
           <Redirect
             to={{

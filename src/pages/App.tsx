@@ -51,8 +51,16 @@ function App() {
             <ProtocolRedirectRoute exact path={ROUTES.TOP_OPENINGS.path_prefix} />
 
             <Route exact path={ROUTES.STATS.path} component={Stats}></Route>
-            <Route exact path={ROUTES.SHARED_BACKTEST_SINGLE.path} component={SharedBacktestSingle}></Route>
-            <Route exact path={ROUTES.SHARED_BACKTEST_MULTIPLE.path} component={SharedBacktestMultiple}></Route>
+            <ProtocolRoute
+              exact
+              path={ROUTES.SHARED_BACKTEST_SINGLE.path}
+              component={SharedBacktestSingle}
+            ></ProtocolRoute>
+            <ProtocolRoute
+              exact
+              path={ROUTES.SHARED_BACKTEST_MULTIPLE.path}
+              component={SharedBacktestMultiple}
+            ></ProtocolRoute>
 
             <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>
             <Route path={ROUTES.HOME.path} component={Home}></Route>
