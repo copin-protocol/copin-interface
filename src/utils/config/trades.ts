@@ -28,15 +28,15 @@ export interface TokenTrade {
 
 export type TokenOptionProps = {
   id: string
-  text: string
-  filter_by: string
+  label: string
+  value: string
 }
 
 export const ALL_TOKENS_ID = 'ALL'
 export const ALL_OPTION: TokenOptionProps = {
   id: ALL_TOKENS_ID,
-  text: 'ALL',
-  filter_by: ALL_TOKENS_ID,
+  label: 'ALL',
+  value: ALL_TOKENS_ID,
 }
 
 type TokenSupport = { [key: string]: { [key: string]: TokenTrade } }
@@ -353,8 +353,8 @@ export const getTokenTradeList = (protocol: ProtocolEnum) =>
 export const getDefaultTokenOptions = (protocol: ProtocolEnum) =>
   Object.keys(TOKEN_TRADE_SUPPORT[protocol]).map((key) => ({
     id: key,
-    text: TOKEN_TRADE_SUPPORT[protocol][key].symbol,
-    filter_by: key,
+    label: TOKEN_TRADE_SUPPORT[protocol][key].symbol,
+    value: key,
   }))
 export const getTokenOptions = ({
   protocol,

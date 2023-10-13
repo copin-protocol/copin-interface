@@ -6,12 +6,12 @@ import ReactSelect, { Props } from 'react-select'
 import styled from 'styled-components/macro'
 import { variant } from 'styled-system'
 
-import { VariantProps } from 'theme/types'
+import { SxProps, VariantProps } from 'theme/types'
 import { FONT_FAMILY } from 'utils/config/constants'
 
 import { styleVariants } from './theme'
 
-export type SelectProps = { error?: any } & VariantProps
+export type SelectProps = { error?: any; sx?: any } & VariantProps & SxProps
 
 const StyledSelect = styled(ReactSelect)<SelectProps>(
   ({ error }) =>
