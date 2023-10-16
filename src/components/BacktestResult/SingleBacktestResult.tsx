@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import { ReactElement, useMemo } from 'react'
+import { ReactElement, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
@@ -22,7 +22,7 @@ import { Button } from 'theme/Buttons'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { getDefaultTokenOptions } from 'utils/config/trades'
+import { ALL_OPTION, getDefaultTokenOptions } from 'utils/config/trades'
 import { addressShorten, formatLocalDate, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 
@@ -45,6 +45,7 @@ export default function SingleBacktestResult({
   renderActionButton?: () => ReactElement
   disabledShare?: boolean
 }) {
+  const [targetPosition, setTargetPosition] = useState<PositionData | undefined>()
   const data = results[0]
   const { account = '', simulatorPositions } = data
   const positions = (simulatorPositions ?? []).map(
@@ -111,6 +112,13 @@ export default function SingleBacktestResult({
     from: settings?.fromTime,
     to: settings?.toTime,
   } as TimeRangeProps
+
+  const handleTargetPosition = (data?: PositionData) => {
+    setTargetPosition(data)
+    if (data) {
+      changeCurrency(tokenOptions.find((e) => e.id === data.indexToken) ?? ALL_OPTION)
+    }
+  }
 
   return (
     <Box
@@ -266,6 +274,7 @@ export default function SingleBacktestResult({
                     },
                   },
                 }}
+                onClickRow={(data) => handleTargetPosition(data.position)}
               />
             </Box>
           </Box>
@@ -295,6 +304,7 @@ export default function SingleBacktestResult({
           <Box height="100%" bg="neutral7">
             <ChartPositions
               protocol={protocol}
+              targetPosition={targetPosition}
               closedPositions={positions.reverse()}
               currencyOptions={tokenOptions}
               currencyOption={currencyOption}

@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import CopyTraderForm from 'components/CopyTradeForm'
 import { CopyTradeData, UpdateCopyTradeData } from 'entities/copyTrade.d'
 import useUpdateCopyTrade from 'hooks/features/useUpdateCopyTrade'
-import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { CopyTradeStatusEnum } from 'utils/config/enums'
 
 import { CopyTradeFormValues } from './configs'
 import { getFormValuesFromResponseData, getRequestDataFromForm } from './helpers'
@@ -37,12 +37,11 @@ export default function CopyTradeEditForm({
   return (
     <CopyTraderForm
       key={copyTradeData?.account}
-      protocol={copyTradeData?.protocol ?? ProtocolEnum.GMX}
       onSubmit={onSubmit}
       isSubmitting={isMutating}
+      submitButtonText={'Update Copy Trade'}
       defaultFormValues={defaultFormValues}
       isEdit={true}
-      submitButtonText={'Update Copy Trade'}
     />
   )
 }

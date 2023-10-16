@@ -13,10 +13,6 @@ export type GetApiParams = {
   limit?: number
   offset?: number
 }
-export type PaginationParmas = {
-  limit?: number
-  offset?: number
-}
 
 export interface RangeFilter {
   fieldName: string
@@ -30,8 +26,12 @@ export interface QueryFilter {
   value?: string | TimeFilterByEnum
 }
 
+type PaginationParams = {
+  limit?: number
+  offset?: number
+}
 export type RequestBodyApiData = {
-  pagination?: PaginationParmas
+  pagination?: PaginationParams
   queries?: QueryFilter[]
   ranges?: RangeFilter[]
   sortBy?: string

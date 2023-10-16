@@ -540,6 +540,10 @@ msgstr "Need help?"
 msgid "New Password"
 msgstr "New Password"
 
+#: src/components/CurrencyOption/index.tsx
+msgid "No Data"
+msgstr "No Data"
+
 #: src/components/@ui/NoDataFound/index.tsx
 #: src/theme/Select/index.tsx
 msgid "No Data Found"

@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { getMyCopySourcePositionDetailApi } from 'apis/userApis'
+import { getMyCopySourcePositionDetailApi } from 'apis/copyPositionApis'
 import Container from 'components/@ui/Container'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Table from 'components/@ui/Table'
@@ -13,6 +13,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import CopyTradePositionDetails from 'components/CopyTradePositionDetails'
 import PositionDetails from 'components/PositionDetails'
 import { CopyPositionData } from 'entities/copyTrade.d'
+import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useUsdPrices, { UsdPrices } from 'hooks/store/useUsdPrices'
@@ -25,7 +26,7 @@ import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
-import { generateClosedPositionRoute, generateMyOpeningPositionRoute } from 'utils/helpers/generateRoute'
+import { generateClosedPositionRoute, generateOpeningPositionRoute } from 'utils/helpers/generateRoute'
 
 import { renderEntry, renderPnL, renderSource, renderTrader } from '../renderProps'
 import ClosePositionModal from './ClosePositionModal'
@@ -48,7 +49,7 @@ export default function PositionTable({
   const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
   const [openCloseModal, setOpenCloseModal] = useState(false)
   const [currentCopyPosition, setCurrentCopyPosition] = useState<CopyPositionData | undefined>()
-  const [positionId, setPositionId] = useState<string | undefined>()
+  const [sourcePosition, setSourcePosition] = useState<PositionData | undefined>()
   const [submitting, setSubmitting] = useState(false)
   const history = useHistory()
   const { searchParams } = useSearchParams()
@@ -60,17 +61,26 @@ export default function PositionTable({
     async (data: CopyPositionData, event?: any) => {
       event?.stopPropagation()
       setCurrentCopyPosition(data)
+      const isOpen = data.status === PositionStatusEnum.OPEN
       try {
         setSubmitting(true)
-        const positionDetail = await getMyCopySourcePositionDetailApi({ copyId: data?.id ?? '' })
+        const positionDetail = await getMyCopySourcePositionDetailApi({
+          copyId: data?.id ?? '',
+          isOpen,
+        })
         setSubmitting(false)
-        if (!positionDetail) return
-        if (data.status === PositionStatusEnum.OPEN) {
-          setPositionId(undefined)
+        if (
+          !positionDetail ||
+          (positionDetail.status && positionDetail.status !== PositionStatusEnum.OPEN && isOpen) ||
+          (((!positionDetail.status && !positionDetail.id) || positionDetail.status === PositionStatusEnum.OPEN) &&
+            !isOpen)
+        )
+          throw Error(`Can't find data`)
+        setSourcePosition(positionDetail)
+        if (isOpen) {
           setOpenSourceDrawer(true)
-          window.history.replaceState(null, '', generateMyOpeningPositionRoute(data))
+          window.history.replaceState(null, '', generateOpeningPositionRoute(positionDetail))
         } else {
-          setPositionId(positionDetail.id)
           setOpenSourceDrawer(true)
           window.history.replaceState(
             null,
@@ -84,7 +94,7 @@ export default function PositionTable({
         }
       } catch (error: any) {
         if (error?.message?.includes(`Can't find data`)) {
-          if (data.status === PositionStatusEnum.OPEN) {
+          if (isOpen) {
             setOpenCloseModal(true)
           } else {
             toast.error(
@@ -104,7 +114,7 @@ export default function PositionTable({
   const handleDismiss = () => {
     window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
     setOpenSourceDrawer(false)
-    setPositionId(undefined)
+    setSourcePosition(undefined)
     setCurrentCopyPosition(undefined)
   }
 
@@ -144,7 +154,7 @@ export default function PositionTable({
           onClickRow={handleSelectCopyItem}
         />
       </Box>
-      {openSourceDrawer && currentCopyPosition && (
+      {openSourceDrawer && sourcePosition && (
         <Drawer
           isOpen={openSourceDrawer}
           onDismiss={handleDismiss}
@@ -160,11 +170,11 @@ export default function PositionTable({
               onClick={handleDismiss}
             />
             <PositionDetails
-              protocol={currentCopyPosition?.protocol}
-              id={positionId}
-              account={currentCopyPosition?.copyAccount}
-              indexToken={currentCopyPosition?.indexToken}
-              dataKey={currentCopyPosition?.key}
+              protocol={sourcePosition.protocol}
+              id={sourcePosition.status === PositionStatusEnum.OPEN ? undefined : sourcePosition?.id}
+              account={sourcePosition?.account}
+              indexToken={sourcePosition?.indexToken}
+              dataKey={sourcePosition?.key}
               isShow={openSourceDrawer}
             />
           </Container>
@@ -406,7 +416,6 @@ export const historyColumns: typeof openingColumns = [
           : !isNaN(Number(item.totalSizeDelta))
           ? formatNumber(Number(item.totalSizeDelta), 4, 4)
           : '--'}{' '}
-        {/* TODO: 2 */}
         {TOKEN_TRADE_SUPPORT[item.protocol][item.indexToken].symbol}
       </Type.Caption>
     ),

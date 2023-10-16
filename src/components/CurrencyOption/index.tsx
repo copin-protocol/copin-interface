@@ -1,6 +1,9 @@
+// eslint-disable-next-line no-restricted-imports
+import { t } from '@lingui/macro'
 import React from 'react'
 
-import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
+import Select from 'theme/Select'
+import { Box } from 'theme/base'
 import { TokenOptionProps } from 'utils/config/trades'
 
 export default function CurrencyOption({
@@ -13,30 +16,18 @@ export default function CurrencyOption({
   handleChangeOption: (option: TokenOptionProps) => void
 }) {
   return (
-    <Dropdown
-      menuSx={{ py: 2, bg: 'neutral7', width: '80px', minWidth: 'auto', maxHeight: '236px', overflowY: 'auto' }}
-      menu={
-        <>
-          {options.map((option, index: number) => (
-            <div key={index}>
-              <CheckableDropdownItem
-                onClick={() => handleChangeOption(option)}
-                selected={currentOption.id === option.id}
-                text={option.text}
-              />
-            </div>
-          ))}
-        </>
-      }
-      buttonSx={{
-        px: 2,
-        py: 1,
-        width: '80px',
-      }}
-      iconSize={16}
-      placement="bottomRight"
-    >
-      {currentOption.text}
-    </Dropdown>
+    <Box sx={{ width: 85, overflowY: 'auto' }}>
+      <Select
+        isSearchable={true}
+        menuPlacement="auto"
+        maxMenuHeight={236}
+        menuPosition="fixed"
+        variant="outlinedSecondary"
+        options={options}
+        value={currentOption}
+        noOptionsMessage={() => t`No Data`}
+        onChange={(newValue) => handleChangeOption(newValue as TokenOptionProps)}
+      />
+    </Box>
   )
 }

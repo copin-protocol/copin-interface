@@ -8,10 +8,10 @@ import { getCopyTradeSettingsApi, requestCopyTradeApi } from 'apis/copyTradeApis
 import ToastBody from 'components/@ui/ToastBody'
 import CopyTraderForm from 'components/CopyTradeForm'
 import CopyTradeCloneForm from 'components/CopyTradeForm/CopyTradeCloneForm'
+import { defaultCopyTradeFormValues } from 'components/CopyTradeForm/configs'
 import { CopyTradeFormValues } from 'components/CopyTradeForm/configs'
 import { getRequestDataFromForm } from 'components/CopyTradeForm/helpers'
 import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade.d'
-import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
@@ -43,7 +43,6 @@ export default function CopyTraderDrawer({
   isOpen: boolean
   onClose: () => void
 }) {
-  const { data: tokensTraded } = useGetTokensTraded({ account, protocol })
   const { myProfile } = useMyProfileStore()
   const [tab, handleTab] = useState<string>(TabKeyEnum.New)
   const [copyTradeData, setCopyTradeData] = useState<CopyTradeData | null>()
@@ -75,7 +74,7 @@ export default function CopyTraderDrawer({
       account,
       protocol,
       type: CopyTradeTypeEnum.FULL_ORDER,
-      serviceKey: formData.serviceKey,
+      // serviceKey: formData.serviceKey,
     }
     if (formData.exchange === CopyTradePlatformEnum.GMX) {
       data.exchange = CopyTradePlatformEnum.GMX
@@ -86,9 +85,6 @@ export default function CopyTraderDrawer({
       data.bingXApiKey = formData.bingXApiKey
       data.bingXSecretKey = formData.bingXSecretKey
     }
-    if (protocol === ProtocolEnum.KWENTA) {
-      data.serviceKey = 'TEST_KWENTA'
-    }
     requestCopyTrade({ data })
 
     logEvent({
@@ -97,6 +93,7 @@ export default function CopyTraderDrawer({
       action: EVENT_ACTIONS[EventCategory.COPY_TRADE].REQUEST_COPY_TRADE,
     })
   }
+
   return (
     <Drawer
       title={
@@ -152,10 +149,9 @@ export default function CopyTraderDrawer({
         <Box sx={{ position: 'relative', maxWidth: 1000, mx: 'auto' }}>
           {!copies?.data.length || tab === TabKeyEnum.New ? (
             <CopyTraderForm
-              protocol={protocol}
               onSubmit={onSubmit}
               isSubmitting={isLoading}
-              tokensTraded={tokensTraded}
+              defaultFormValues={{ ...defaultCopyTradeFormValues, protocol, account }}
             />
           ) : (
             <>
@@ -165,7 +161,9 @@ export default function CopyTraderDrawer({
                     <Type.BodyBold>Back</Type.BodyBold>
                   </ButtonWithIcon>
                   <CopyTradeCloneForm
+                    key={copyTradeData.id}
                     duplicateToAddress={account}
+                    protocol={protocol}
                     copyTradeData={copyTradeData}
                     onDismiss={onClose}
                     onSuccess={() => setCopyTradeData(null)}

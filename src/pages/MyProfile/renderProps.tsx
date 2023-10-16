@@ -46,24 +46,27 @@ export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {
 export function renderTrader(
   address: string,
   protocol: ProtocolEnum,
-  { sx = {}, textSx = {} }: { textSx?: TextProps } & SxProps = {}
+  { sx = {}, textSx = {}, isLink = true }: { textSx?: TextProps; isLink?: boolean } & SxProps = {}
 ) {
   return (
-    <Link to={generateTraderDetailsRoute(protocol, address)}>
-      <Flex sx={{ gap: 2, ...sx }} alignItems="center">
-        <AddressAvatar address={address} size={24} />
-        <Type.Caption
-          className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
-          color="inherit"
-          data-trader-address={address}
-          sx={{ color: 'neutral1', ':hover': { textDecoration: 'underline' }, ...textSx }}
-        >
-          {addressShorten(address, 3, 5)}
-        </Type.Caption>
-        <Type.Caption color="neutral4">|</Type.Caption>
-        <Image src={parseProtocolImage(protocol)} width={16} height={16} />
-      </Flex>
-    </Link>
+    <Flex
+      as={isLink ? Link : undefined}
+      to={isLink ? generateTraderDetailsRoute(protocol, address) : ''}
+      sx={{ gap: 2, ...sx }}
+      alignItems="center"
+    >
+      <AddressAvatar address={address} size={24} />
+      <Type.Caption
+        className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
+        color="inherit"
+        data-trader-address={address}
+        sx={{ color: 'neutral1', ':hover': { textDecoration: isLink ? 'underline' : undefined }, ...textSx }}
+      >
+        {addressShorten(address, 3, 5)}
+      </Type.Caption>
+      <Type.Caption color="neutral4">|</Type.Caption>
+      <Image src={parseProtocolImage(protocol)} width={16} height={16} />
+    </Flex>
   )
 }
 
@@ -193,7 +196,7 @@ export function renderSource(item: CopyPositionData, index?: number, externalSou
           },
         }}
       >
-        {addressShorten(item.sourceOrderTxHashes[0], 3, 2)}
+        {addressShorten(item.sourceOrderTxHashes?.[0] ?? item.copyAccount, 3, 2)}
       </Type.Caption>
     </Button>
   )

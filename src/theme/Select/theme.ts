@@ -18,4 +18,26 @@ export const styleVariants = {
       },
     },
   },
+  outlinedSecondary: {
+    '& .select__control': {
+      minHeight: 'fit-content',
+      bg: 'neutral7',
+      borderColor: 'neutral4',
+      '& .select__value-container': {
+        px: 2,
+        py: '5px',
+        '& .select__single-value': {
+          fontWeight: '600',
+        },
+      },
+      '& .select__indicators': {
+        pr: 2,
+        color: 'neutral2',
+        cursor: 'pointer',
+        '& .select__indicator-separator': {
+          bg: 'neutral6',
+        },
+      },
+    },
+  },
 }

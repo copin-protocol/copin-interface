@@ -13,6 +13,7 @@ export type TimeRangeProps = {
 
 export interface ChartPositionsProps {
   protocol: ProtocolEnum
+  targetPosition?: PositionData
   openingPositions?: PositionData[]
   closedPositions: PositionData[]
   currencyOptions?: TokenOptionProps[]
