@@ -1,17 +1,16 @@
-import { TraderDataKey } from 'entities/trader'
+import { ConditionFormValues, RowValues } from 'components/ConditionFilterForm/types'
+import { TraderData, TraderDataKey } from 'entities/trader'
 import { ConditionType } from 'utils/types'
 
-import { ConditionFormValues, RowValues } from '../ConditionFilter/types'
-
 export function parseParams(string: string | undefined) {
-  const result: ConditionFormValues = []
+  const result: ConditionFormValues<TraderData> = []
   if (!string) return result
   const keys: TraderDataKey[] = []
   const rows = string.split('__')
   const fields = rows.map((row) => row.split('_'))
   for (let i = 0; i < fields.length; i++) {
     const field = fields[i]
-    const rowData = {} as RowValues
+    const rowData = {} as RowValues<TraderData>
     rowData.key = field[0] as TraderDataKey
     if (keys.includes(rowData.key)) continue
     rowData.conditionType = field[1] as ConditionType
@@ -27,7 +26,7 @@ export function parseParams(string: string | undefined) {
   return result
 }
 
-export function stringifyParams(option: ConditionFormValues) {
+export function stringifyParams(option: ConditionFormValues<TraderData>) {
   let params = ''
   Object.values(option).forEach((values, index) => {
     if (!!values) {

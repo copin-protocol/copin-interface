@@ -1,0 +1,37 @@
+import { Dispatch, ReactNode, SetStateAction } from 'react'
+
+import { ConditionType, FilterCondition } from 'utils/types'
+
+export interface RowValues<T> {
+  key: keyof T
+  gte?: number | null
+  lte?: number | null
+  conditionType: ConditionType
+}
+
+export type ConditionFormValues<T> = RowValues<T>[]
+
+export interface FilterValues {
+  fieldName: string
+  gte?: number
+  lte?: number
+}
+export interface FieldOption<T> {
+  value: keyof T
+  label: ReactNode
+  default?: FilterCondition
+  unit?: string
+}
+
+export interface ConditionOption {
+  value: ConditionType
+  label: string
+}
+
+export type ConditionFilterFormProps<T> = {
+  formValues: ConditionFormValues<T>
+  fieldOptions: FieldOption<T>[]
+  setFormValues: Dispatch<SetStateAction<ConditionFormValues<T>>>
+  onValuesChange?: (values: ConditionFormValues<T>) => void
+  type?: 'ranking' | 'default'
+}

@@ -1,27 +1,26 @@
 import { useResponsive, useSize } from 'ahooks'
-import { memo, useEffect, useMemo, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import styled from 'styled-components/macro'
 
 import { ApiListResponse } from 'apis/api'
-import { WarningType } from 'components/BacktestModal/WarningModal'
 import PickTradersButton from 'components/BacktestPickTradersButton'
 import { useClickLoginButton } from 'components/LoginAction'
 import TraderListTable from 'components/Tables/TraderListTable'
 import CustomizeColumn from 'components/Tables/TraderListTable/CustomizeColumn'
 import { mobileTableSettings, tableSettings } from 'components/Tables/TraderListTable/dataConfig'
 import { TraderData } from 'entities/trader.d'
-import useBacktestWarningModal from 'hooks/store/useBacktestWarningModal'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { PaginationWithLimit, PaginationWithSelect } from 'theme/Pagination'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
 import { MEDIA_WIDTHS } from 'theme/theme'
-import { CheckAvailableStatus } from 'utils/config/enums'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
-import { TradersContextData } from './useTradersContext'
+import { TradersContextData } from '../useTradersContext'
+import useBacktestTradersActions from './useBacktestTradersActions'
+import useQueryTraders from './useQueryTraders'
 
 function ListTradersSection({
   contextValues,
@@ -33,92 +32,36 @@ function ListTradersSection({
   const { sm } = useResponsive()
   const settings = sm ? tableSettings : mobileTableSettings
   const {
+    protocol,
+    tab,
     accounts,
     isRangeSelection,
-    data,
-    isLoading,
-    loadingRangeProgress,
+    timeRange,
+    timeOption,
     currentSort,
     changeCurrentSort,
     currentPage,
     changeCurrentPage,
     currentLimit,
     changeCurrentLimit,
+    filterTab,
   } = contextValues
 
-  const {
-    getCommonData,
-    currentHomeInstanceId,
-    addTraderToHomeInstance,
-    removeTraderFromHomeInstance,
-    updateHomeInstance,
-  } = useSelectBacktestTraders()
-  const { openModal, dismissModal } = useBacktestWarningModal()
-  const listTraderData = data?.data ?? []
-  const listAddress = listTraderData.map((trader) => trader.account)
-  const { homeInstance: currentHomeInstance } = getCommonData({ homeId: currentHomeInstanceId })
-  const listAddressSelected = currentHomeInstance?.tradersByIds ?? []
-  const isSelectedAll = useMemo(() => {
-    if (!currentHomeInstance || !listAddress.length || isLoading) return false
-    return listAddress.every((address) => listAddressSelected.includes(address))
-  }, [currentHomeInstance, listAddress, listAddressSelected])
-  const handleSelectAll = (isSelectedAll: boolean) => {
-    if (!listTraderData.length) return
-    if (!isSelectedAll) {
-      addTraderToHomeInstance(listTraderData)
-    } else {
-      if (
-        listAddressSelected.length === listAddress.length &&
-        listAddressSelected.every((address) => listAddress.includes(address)) &&
-        !!currentHomeInstance?.isTested
-      ) {
-        openModal({
-          type: WarningType.CLEAR_GROUP,
-          confirmFunction: () => {
-            removeTraderFromHomeInstance(listTraderData)
-            dismissModal()
-          },
-        })
-        return
-      }
-      removeTraderFromHomeInstance(listTraderData)
-    }
-  }
+  const { data, isLoading, isRangeProgressing, loadingRangeProgress } = useQueryTraders({
+    protocol,
+    tab,
+    timeRange,
+    timeOption,
+    isRangeSelection,
+    accounts,
+    filterTab,
+  })
 
-  const checkIsSelected = (data: TraderData) => {
-    const isSelected = !!currentHomeInstance?.tradersByIds?.includes(data.account)
-    return isSelected
-  }
-  const handleSelect = ({ isSelected, data }: { isSelected: boolean; data: TraderData }) => {
-    if (isSelected) {
-      if (currentHomeInstance?.isTested && !currentHomeInstance?.isShowedWarningDeleteTrader) {
-        openModal({
-          type: WarningType.REMOVE_TRADER,
-          confirmFunction: () => {
-            updateHomeInstance({ homeId: currentHomeInstance.id ?? '', data: { isShowedWarningDeleteTrader: true } })
-            removeTraderFromHomeInstance(data)
-            dismissModal()
-          },
-        })
-        return
-      }
-      if (currentHomeInstance?.tradersByIds.length === 1 && currentHomeInstance?.isTested) {
-        openModal({
-          type: WarningType.REMOVE_LAST_TRADER,
-          confirmFunction: () => {
-            removeTraderFromHomeInstance(data)
-            dismissModal()
-          },
-        })
-        return
-      }
-      removeTraderFromHomeInstance(data)
-      return
-    }
-    addTraderToHomeInstance(data)
-  }
-  const isRangeProgressing =
-    isRangeSelection && isLoading && loadingRangeProgress?.status !== CheckAvailableStatus.FINISH
+  const { isSelectedAll, handleSelectAll, checkIsSelected, handleSelect } = useBacktestTradersActions({
+    tradersData: data,
+    isLoading,
+  })
+
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
       <>

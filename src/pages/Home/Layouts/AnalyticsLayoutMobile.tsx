@@ -83,7 +83,7 @@ export default function AnalyticsLayoutMobile({
           </Box>
           {cloneElement<ConditionFilterProps>(conditionFilter, {
             onCancel: expandFilters,
-            onClickTitle: expandFilters,
+            onClickTitle: () => !filtersExpanded && expandFilters(),
           })}
         </Box>
       </Box>

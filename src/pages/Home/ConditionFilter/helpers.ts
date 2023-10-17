@@ -1,38 +1,9 @@
 import dayjs from 'dayjs'
 
-import { tableSettings } from 'components/Tables/TraderListTable/dataConfig'
-import { TraderDataKey } from 'entities/trader'
+import { FilterValues, RowValues } from 'components/ConditionFilterForm/types'
+import { TraderData } from 'entities/trader'
 
-import { ConditionFormValues, FilterValues, RowValues } from './types'
-
-export function getDefaultFormValues(): ConditionFormValues {
-  return ['profit', 'winRate'].map((key: string) => ({
-    key: key as TraderDataKey,
-    ...(tableSettings.find((item) => item.id === key)?.filter ?? {
-      conditionType: 'gte',
-    }),
-  }))
-}
-
-export function getFiltersFromFormValues(data: ConditionFormValues) {
-  return Object.values(data).reduce<FilterValues[]>((result, values) => {
-    if (typeof values?.gte !== 'number' && typeof values?.lte !== 'number') return result
-    const currFilter = {} as FilterValues
-    if (values?.key) currFilter['fieldName'] = values.key
-    if (typeof values?.gte === 'number' && (values.conditionType === 'between' || values?.conditionType === 'gte'))
-      currFilter['gte'] = values.gte
-    if (typeof values?.lte === 'number' && (values.conditionType === 'between' || values?.conditionType === 'lte'))
-      currFilter['lte'] = values.lte
-    result.push(currFilter)
-    return result
-  }, [])
-}
-
-export function getFormValuesFromFilters(data: FilterValues[]) {
-  return data.map((e) => normalizedData(e)) as ConditionFormValues
-}
-
-function normalizedData(data: FilterValues) {
+export function suggestionFactory(data: FilterValues) {
   const range = { ...data }
   switch (range.fieldName) {
     case 'avgDuration':
@@ -63,5 +34,5 @@ function normalizedData(data: FilterValues) {
     gte: range.gte,
     lte: range.lte,
     conditionType: range.gte && range.lte ? 'between' : range.gte ? 'gte' : 'lte',
-  } as RowValues
+  } as RowValues<TraderData>
 }

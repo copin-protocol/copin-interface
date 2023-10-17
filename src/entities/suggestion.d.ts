@@ -1,4 +1,4 @@
-import { FilterValues } from 'pages/Home/ConditionFilter/types'
+import { FilterValues } from 'components/ConditionFilterForm/types'
 
 export interface FilterSuggestionData {
   id: string

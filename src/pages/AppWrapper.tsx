@@ -1,29 +1,25 @@
-import React, { ReactNode } from 'react'
-// import { useQuery } from 'react-query'
+import { ReactNode } from 'react'
 import { ToastContainer } from 'react-toastify'
 
 import FavoriteNoteTooltip from 'components/FavoriteButton/FavoriteNoteTooltip'
+import useModifyStorage from 'hooks/features/useModifyStorage'
 import useGlobalLoading from 'hooks/store/useGlobalLoading'
 import { useInitTraderCopying } from 'hooks/store/useTraderCopying'
 import { useInitTraderFavorites } from 'hooks/store/useTraderFavorites'
 import { usePollingUsdPrice } from 'hooks/store/useUsdPrices'
-// import useSystemConfig from 'hooks/store/useSystemConfig'
 import useEagerConnect from 'hooks/web3/useEagerConnect'
 import Footer from 'pages/@layouts/Footer'
-// import { getSystemConfigsApi } from 'apis/systemApis'
 import Navbar from 'pages/@layouts/Navbar'
-// import { useIsDarkMode } from 'hooks/store/state/useDarkMode'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { FOOTER_HEIGHT, NAVBAR_HEIGHT } from 'utils/config/constants'
-
-// import { QUERY_KEYS } from 'utils/queries'
 
 const AppWrapper = ({ children }: { children: ReactNode }) => {
   useInitTraderFavorites()
   useInitTraderCopying()
   useEagerConnect()
   usePollingUsdPrice()
+  useModifyStorage()
   const loading = useGlobalLoading((state) => state.loading)
 
   return (
