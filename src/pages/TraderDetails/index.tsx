@@ -88,20 +88,15 @@ export default function TraderDetails() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const { saveTraderCopying } = useTraderCopying()
-  const { isAuthenticated } = useAuthContext()
-  const handleClickLogin = useClickLoginButton()
-
-  const _address = isAddress(address)
-  const [, setForceReload] = useState(1)
   const tokenOptions = useMemo(() => getTokenOptions({ protocol }), [protocol])
   const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
-    optionName: 'currency',
+    optionName: URL_PARAM_KEYS.CURRENCY,
     options: tokenOptions,
     callback: () => {
       changeCurrentPage(1)
     },
   })
+  const _address = isAddress(address)
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
     [QUERY_KEYS.GET_TRADER_DETAIL, _address, protocol],
     () =>
@@ -115,7 +110,12 @@ export default function TraderDetails() {
       retry: 0,
     }
   )
-  const currentTrader = traderData ? traderData.filter((item) => !!item)[0] : undefined
+  const { currentOption: timeOption, changeCurrentOption: setTimeOption } = useOptionChange({
+    optionName: URL_PARAM_KEYS.EXPLORER_TIME_FILTER,
+    options: TIME_FILTER_OPTIONS,
+  })
+  const currentTraderData =
+    traderData?.find((item) => (item?.type as string) === (timeOption.id as unknown as string)) ?? traderData?.[0] // TODO: remove timeTilter enum
 
   const { data: openingPositions, isLoading: isLoadingOpening } = useQuery(
     [QUERY_KEYS.GET_POSITIONS_OPEN, _address, protocol],
@@ -162,13 +162,17 @@ export default function TraderDetails() {
   }
   const hasNextClosedPositions = closedPositions && closedPositions.meta.limit < closedPositions.meta.total
 
+  const [, setForceReload] = useState(1)
+  const { saveTraderCopying } = useTraderCopying()
   const onForceReload = () => {
     setForceReload((prev) => prev + 1)
-    if (currentTrader) {
-      saveTraderCopying(currentTrader.account)
+    if (currentTraderData) {
+      saveTraderCopying(currentTraderData.account)
     }
   }
 
+  const { isAuthenticated } = useAuthContext()
+  const handleClickLogin = useClickLoginButton()
   const handleOpenBackTestModal = () => {
     if (!isAuthenticated) {
       handleClickLogin()
@@ -181,12 +185,12 @@ export default function TraderDetails() {
   }
 
   const generalInfo = useMemo(() => {
-    if (!currentTrader) return null
+    if (!currentTraderData) return null
     return {
-      lastTrade: formatRelativeDate(currentTrader.lastTradeAt),
-      runtimeDays: currentTrader.runTimeDays,
+      lastTrade: formatRelativeDate(currentTraderData.lastTradeAt),
+      runtimeDays: currentTraderData.runTimeDays,
     }
-  }, [currentTrader])
+  }, [currentTraderData])
 
   const { lg, xl } = useResponsive()
 
@@ -200,8 +204,6 @@ export default function TraderDetails() {
   const currentBacktestId = backtestState.currentInstanceId
   const currentBacktestInstance = currentBacktestId && backtestState.instancesMapping[currentBacktestId]
   const hadBacktest = !!requestData || (!!currentBacktestInstance && !!currentBacktestInstance.result)
-
-  const [timeOption, setTimeOption] = useState(TIME_FILTER_OPTIONS[3])
 
   const hasCopyPermission = useCopyTradePermission(protocol === ProtocolEnum.KWENTA)
 
@@ -222,7 +224,12 @@ export default function TraderDetails() {
             gap: 3,
           }}
         >
-          <TraderInfo address={_address} traderData={currentTrader} timeOption={timeOption} traderStats={traderData} />
+          <TraderInfo
+            address={_address}
+            traderData={currentTraderData}
+            timeOption={timeOption}
+            traderStats={traderData}
+          />
           <Flex
             sx={{
               alignItems: 'center',
@@ -269,7 +276,7 @@ export default function TraderDetails() {
                   Balance:
                 </LabelWithTooltip>
                 <Type.Caption color="neutral1">
-                  <BalanceText protocol={protocol} account={currentTrader?.account} />
+                  <BalanceText protocol={protocol} account={currentTraderData?.account} />
                 </Type.Caption>
               </Box>
               <Box textAlign="center" flex={['1', 'none']}>
@@ -300,7 +307,15 @@ export default function TraderDetails() {
         </Box>
 
         {/* child3 */}
-        <>{!!traderData && !!traderData[0] && <TraderRanking data={traderData[0]} />}</>
+        <>
+          {!!currentTraderData && (
+            <TraderRanking
+              data={currentTraderData}
+              timeOption={timeOption}
+              onChangeTime={(option) => setTimeOption(option)}
+            />
+          )}
+        </>
 
         {/* child 4 */}
         <ChartPositions

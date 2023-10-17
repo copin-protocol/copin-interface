@@ -74,8 +74,10 @@ export function FilterTradersProvider({
     })
   }
 
-  const timeFilterKey = tab === TabKeyEnum.Explorer ? 'time' : 'time-favorite'
-  const rangeFilterKey = tab === TabKeyEnum.Explorer ? 'range' : 'range-favorite'
+  const timeFilterKey =
+    tab === TabKeyEnum.Explorer ? URL_PARAM_KEYS.EXPLORER_TIME_FILTER : URL_PARAM_KEYS.FAVORITE_TIME_FILTER
+  const rangeFilterKey =
+    tab === TabKeyEnum.Explorer ? URL_PARAM_KEYS.EXPLORER_TIME_RANGE_FILTER : URL_PARAM_KEYS.FAVORITE_TIME_RANGE_FILTER
 
   // START TIME FILTER
   const isInternal = useInternalRole()
@@ -145,8 +147,8 @@ export function FilterTradersProvider({
   // END TIME FILTER
 
   const { currentPage, currentLimit, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
-    pageName: 'page',
-    limitName: 'limit',
+    pageName: URL_PARAM_KEYS.EXPLORER_PAGE,
+    limitName: URL_PARAM_KEYS.EXPLORER_LIMIT,
     defaultLimit: DEFAULT_LIMIT,
   })
 

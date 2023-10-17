@@ -1,10 +1,16 @@
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 
 export const generateTopOpeningOrdersRoute = (protocol: ProtocolEnum) => `${protocol}${ROUTES.TOP_OPENINGS.path_prefix}`
-export const generateTraderDetailsRoute = (protocol: ProtocolEnum, address: string) =>
-  `/${protocol}${ROUTES.TRADER_DETAILS.path_prefix}/${address}`
+export const generateTraderDetailsRoute = (
+  protocol: ProtocolEnum,
+  address: string,
+  others?: { type?: TimeFrameEnum }
+) =>
+  `/${protocol}${ROUTES.TRADER_DETAILS.path_prefix}/${address}${
+    others?.type ? `?${URL_PARAM_KEYS.EXPLORER_TIME_FILTER}=${others.type}` : ''
+  }`
 export const generateOpeningPositionRoute = (data: {
   protocol: ProtocolEnum
   account: string

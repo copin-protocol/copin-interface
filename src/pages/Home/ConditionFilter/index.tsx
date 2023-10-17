@@ -72,7 +72,7 @@ export default function ConditionFilter({
         </Box>
       ) : null}
       <Box flex="1 0 0">
-        {filterTab === FilterTabEnum.DEFAULT ? (
+        <Box display={filterTab === FilterTabEnum.DEFAULT ? 'block' : 'none'} width="100%" height="100%">
           <DefaultFilterForm
             key={Object.keys(filters).join('')}
             defaultFormValues={filters}
@@ -81,7 +81,8 @@ export default function ConditionFilter({
             prevTab={prevTab.current}
             lastFilterTab={tab}
           />
-        ) : (
+        </Box>
+        <Box display={filterTab === FilterTabEnum.RANKING ? 'block' : 'none'} width="100%" height="100%">
           <RankingFilterForm
             key={Object.keys(rankingFilters).join('')}
             defaultFormValues={rankingFilters}
@@ -90,7 +91,7 @@ export default function ConditionFilter({
             prevTab={prevTab.current}
             lastFilterTab={tab}
           />
-        )}
+        </Box>
       </Box>
     </Flex>
   )

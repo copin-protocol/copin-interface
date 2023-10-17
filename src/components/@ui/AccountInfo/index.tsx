@@ -6,7 +6,7 @@ import useTraderCopying from 'hooks/store/useTraderCopying'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { addressShorten } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 
@@ -16,12 +16,14 @@ export function AccountInfo({
   isOpenPosition,
   address,
   protocol,
+  type,
   note,
   size = 40,
 }: {
   isOpenPosition: boolean
   address: string
   protocol: ProtocolEnum
+  type?: TimeFrameEnum
   note?: string
   size?: number
 }) {
@@ -32,7 +34,7 @@ export function AccountInfo({
   return (
     <Flex
       as={Link}
-      to={generateTraderDetailsRoute(protocol, address)}
+      to={generateTraderDetailsRoute(protocol, address, { type })}
       // target="_blank"
       alignItems="center"
       sx={{

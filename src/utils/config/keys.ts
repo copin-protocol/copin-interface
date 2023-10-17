@@ -57,6 +57,13 @@ export const STORAGE_KEYS = {
 }
 
 export const URL_PARAM_KEYS = {
+  EXPLORER_TIME_FILTER: 'time',
+  EXPLORER_TIME_RANGE_FILTER: 'range',
+  FAVORITE_TIME_RANGE_FILTER: 'time-favorite',
+  FAVORITE_TIME_FILTER: 'range-favorite',
+  EXPLORER_PAGE: 'page',
+  EXPLORER_LIMIT: 'limit',
+  CURRENCY: 'currency',
   WHAT_IF_NEXT_HOURS: 'next_hours',
   BACKTEST_DATA: 'backtest_data',
   OPEN_BACKTEST_MODAL: 'open_backtest_modal',

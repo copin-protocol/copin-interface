@@ -51,11 +51,10 @@ export default function RankingFilterForm({
 
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
-      {!!tradersCount && (
-        <Box sx={sm ? {} : { position: 'sticky', top: 0, bg: 'neutral7', zIndex: 2 }}>
-          <ResultEstimated data={tradersCount} loading={isFetching} effectDays={effectDays} />
-        </Box>
-      )}
+      <Box sx={sm ? {} : { position: 'sticky', top: 0, bg: 'neutral7', zIndex: 2 }}>
+        <ResultEstimated data={tradersCount} loading={isFetching} effectDays={effectDays} />
+      </Box>
+
       <Box flex="1 0 0" sx={{ overflow: 'auto', '.select__menu': { minWidth: 'max-content' } }}>
         <FilterForm
           fieldOptions={rankingFieldOptions}

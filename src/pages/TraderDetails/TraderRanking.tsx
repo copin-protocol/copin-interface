@@ -1,11 +1,19 @@
-import React from 'react'
-
+import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import { TraderData } from 'entities/trader'
-import { Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 
 import ScoreChart from './ScoreChart'
 
-const TraderRanking = ({ data }: { data: TraderData }) => {
+const TraderRanking = ({
+  data,
+  timeOption,
+  onChangeTime,
+}: {
+  data: TraderData
+  timeOption: TimeFilterProps
+  onChangeTime: (option: TimeFilterProps) => void
+}) => {
   if (!data.ranking) return <div></div>
   const avgScore =
     (data.ranking.avgRoi +
@@ -66,7 +74,10 @@ const TraderRanking = ({ data }: { data: TraderData }) => {
         color="neutral1"
         textAlign="center"
       >
-        Better than {avgScore.toFixed(0)}% traders in 60 days
+        <Flex sx={{ alignItems: 'center', justifyContent: 'center', width: '100%', gap: '0.5ch' }}>
+          <Box as="span">Better than {avgScore.toFixed(0)}% traders in</Box>
+          <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
+        </Flex>
       </Type.CaptionBold>
     </div>
   )

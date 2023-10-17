@@ -15,10 +15,11 @@ function SelectedTraders({
   handleToggleTrader: (key: string) => void
   handleSelectAllTraders: (isSelectedAll: boolean) => void
 }) {
-  const checkerMapping: Record<string, boolean> = {}
+  const checkerMapping: Record<string, { [protocol: string]: boolean }> = {}
   const tradersByProtocol = allCopyTrades?.reduce((result, copyTrade) => {
-    if (checkerMapping[copyTrade.account] || !allTraders.includes(copyTrade.account)) return result
-    checkerMapping[copyTrade.account] = true
+    if (checkerMapping[copyTrade.account]?.[copyTrade.protocol] || !allTraders.includes(copyTrade.account))
+      return result
+    checkerMapping[copyTrade.account] = { [copyTrade.protocol]: true }
     result[copyTrade.protocol] = [
       ...(result[copyTrade.protocol] ?? []),
       { address: copyTrade.account, status: 'copying' },
