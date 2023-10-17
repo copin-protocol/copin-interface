@@ -185,11 +185,14 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={item.avgVolume ? `$${formatNumber(item.avgVolume, 0, 0)}` : undefined} />,
   },
   {
-    style: { minWidth: '80px' },
-    text: <Trans>ROI</Trans>,
+    style: { minWidth: '90px' },
+    text: <Trans>Avg ROI</Trans>,
     label: (
-      <LabelWithTooltip id="tt_roi_label" tooltip="The percentage gain or loss relative to the initial investment">
-        ROI
+      <LabelWithTooltip
+        id="tt_roi_label"
+        tooltip="The average percentage gain or loss is calculated based on the average ROI of closed positions"
+      >
+        Avg ROI
       </LabelWithTooltip>
     ),
     unit: '%',
@@ -206,7 +209,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     style: { minWidth: '90px' },
     text: <Trans>Min ROI</Trans>,
     label: (
-      <LabelWithTooltip id="tt_min_roi_label" tooltip="The minimum return on investment percentage achieved">
+      <LabelWithTooltip id="tt_min_roi_label" tooltip="The minimum percentage of gain or loss in closed positions">
         Min ROI
       </LabelWithTooltip>
     ),
@@ -224,7 +227,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     style: { minWidth: '90px' },
     text: <Trans>Max ROI</Trans>,
     label: (
-      <LabelWithTooltip id="tt_max_roi_label" tooltip="The maximum return on investment percentage achieved">
+      <LabelWithTooltip id="tt_max_roi_label" tooltip="The maximum percentage of gain or loss in closed positions">
         Max ROI
       </LabelWithTooltip>
     ),
@@ -405,7 +408,12 @@ export const tableSettings: TableSettingsProps<TraderData> = [
   {
     style: { minWidth: ['125px', '145px'] },
     text: <Trans>Avg Leverage</Trans>,
-    label: <Trans>Avg Leverage</Trans>,
+    label: (
+      <LabelWithTooltip id="tt_avg_leverage_label" tooltip="The average trading leverage per trade">
+        <Trans>Avg Leverage</Trans>
+      </LabelWithTooltip>
+    ),
+
     unit: 'x',
     sortBy: 'avgLeverage',
     visible: true,

@@ -295,7 +295,7 @@ export const multipleBacktestResultColumns: ColumnData<TableResultData, RequestB
     },
   },
   {
-    title: 'ROI',
+    title: 'AVG ROI',
     dataIndex: 'roi',
     key: 'roi',
     sortBy: 'roi',

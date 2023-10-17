@@ -17,7 +17,7 @@ const TraderRanking = ({ data }: { data: TraderData }) => {
     6
   const ranking = [
     {
-      subject: 'ROI',
+      subject: 'Avg ROI',
       value: data.ranking.avgRoi,
       fullMark: 100,
     },
