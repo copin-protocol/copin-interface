@@ -1,23 +1,14 @@
+import { NETWORK } from 'utils/config/constants'
 import { Chain, NativeCurrency } from 'utils/web3/types'
 
-export const ARBITRUM_MAINNET = 42161
-export const AVALANCHE_MAINNET = 43114
-export const OPTIMISM_MAINNET = 10
-export const ZKSYNC_ERA_MAINNET = 324
 export const ETHEREUM_MAINNET = 1
-export const BSC_MAINNET = 56
-export const POLYGON_MAINNET = 137
-export const DEFAULT_CHAIN_ID = OPTIMISM_MAINNET
+export const OPTIMISM_MAINNET = 10
+export const OPTIMISM_GOERLI = 420
+export const ARBITRUM_MAINNET = 42161
+export const ZKSYNC_ERA_MAINNET = 324
+export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_GOERLI : OPTIMISM_MAINNET
 
-export const SUPPORTED_CHAIN_IDS: number[] = [
-  ARBITRUM_MAINNET,
-  AVALANCHE_MAINNET,
-  OPTIMISM_MAINNET,
-  ETHEREUM_MAINNET,
-  BSC_MAINNET,
-  POLYGON_MAINNET,
-  // ZKSYNC_ERA_MAINNET,
-]
+export const SUPPORTED_CHAIN_IDS: number[] = [ETHEREUM_MAINNET, ARBITRUM_MAINNET, OPTIMISM_MAINNET, OPTIMISM_GOERLI]
 
 const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
   ETH: {
@@ -35,88 +26,61 @@ const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
     symbol: 'OP',
     decimals: 18,
   },
-  BNB: {
-    name: 'BNB',
-    symbol: 'BNB',
-    decimals: 18,
-  },
-  MATIC: {
-    name: 'MATIC',
-    symbol: 'MATIC',
-    decimals: 18,
-  },
-  AVAX: {
-    name: 'AVAX',
-    symbol: 'AVAX',
-    decimals: 18,
-  },
+}
+
+const SECONDARY_TOKENS: {
+  [key: number]: {
+    address: string
+    icon?: string
+  }[]
+} = {
+  [OPTIMISM_GOERLI]: [
+    {
+      address: '0xeBaEAAD9236615542844adC5c149F86C36aD1136',
+    },
+  ],
 }
 
 const CHAINS: { [key: number]: Chain } = {
-  [ARBITRUM_MAINNET]: {
-    chainId: `0x${ARBITRUM_MAINNET.toString(16)}`,
-    chainName: 'Arbitrum',
-    nativeCurrency: NATIVE_CURRENCIES.ARB,
-    rpcUrls: ['https://arbitrum-one.publicnode.com'],
-    blockExplorerUrls: ['https://arbiscan.io'],
-  },
-  [AVALANCHE_MAINNET]: {
-    chainId: `0x${AVALANCHE_MAINNET.toString(16)}`,
-    chainName: 'Avalanche C-Chain',
-    nativeCurrency: NATIVE_CURRENCIES.AVAX,
-    rpcUrls: ['https://rpc.ankr.com/avalanche'],
-    blockExplorerUrls: ['https://snowtrace.io'],
+  [ETHEREUM_MAINNET]: {
+    id: `0x${ETHEREUM_MAINNET.toString(16)}`,
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    label: 'Ethereum',
+    icon: 'ETH',
+    rpcUrl: 'https://eth-mainnet.g.alchemy.com/v2/72fn_owjChR9dmCH-kREoY8pVeXW_GEM',
+    blockExplorerUrl: 'https://etherscan.io',
+    secondaryTokens: SECONDARY_TOKENS[ETHEREUM_MAINNET],
   },
   [OPTIMISM_MAINNET]: {
-    chainId: `0x${OPTIMISM_MAINNET.toString(16)}`,
-    chainName: 'Optimism',
-    nativeCurrency: NATIVE_CURRENCIES.OP,
-    rpcUrls: ['https://optimism.publicnode.com'],
-    blockExplorerUrls: ['https://optimistic.etherscan.io'],
+    id: `0x${OPTIMISM_MAINNET.toString(16)}`,
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    label: 'Optimism',
+    icon: 'OP',
+    rpcUrl: 'https://optimism.publicnode.com',
+    blockExplorerUrl: 'https://optimistic.etherscan.io',
+    secondaryTokens: SECONDARY_TOKENS[OPTIMISM_MAINNET],
   },
-  [ETHEREUM_MAINNET]: {
-    chainId: `0x${ETHEREUM_MAINNET.toString(16)}`,
-    chainName: 'Ethereum Mainnet',
-    nativeCurrency: NATIVE_CURRENCIES.ETH,
-    rpcUrls: ['https://eth-mainnet.g.alchemy.com/v2/72fn_owjChR9dmCH-kREoY8pVeXW_GEM/'],
-    blockExplorerUrls: ['https://etherscan.io'],
+  [ARBITRUM_MAINNET]: {
+    id: `0x${ARBITRUM_MAINNET.toString(16)}`,
+    label: 'Arbitrum',
+    icon: 'ARB',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://arbitrum-one.publicnode.com',
+    blockExplorerUrl: 'https://arbiscan.io',
+    secondaryTokens: SECONDARY_TOKENS[ARBITRUM_MAINNET],
   },
-  [POLYGON_MAINNET]: {
-    chainId: `0x${POLYGON_MAINNET.toString(16)}`,
-    chainName: 'Polygon Mainnet',
-    nativeCurrency: NATIVE_CURRENCIES.MATIC,
-    rpcUrls: ['https://polygon-rpc.com'],
-    blockExplorerUrls: ['https://polygonscan.com'],
+  [OPTIMISM_GOERLI]: {
+    id: `0x${OPTIMISM_GOERLI.toString(16)}`,
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    label: 'Optimism Goerli',
+    icon: 'OP',
+    rpcUrl: 'https://optimism-goerli.publicnode.com',
+    blockExplorerUrl: 'https://goerli-optimism.etherscan.io',
+    secondaryTokens: SECONDARY_TOKENS[OPTIMISM_GOERLI],
   },
-  [BSC_MAINNET]: {
-    chainId: `0x${BSC_MAINNET.toString(16)}`,
-    chainName: 'Binance Smart Chain Mainnet',
-    nativeCurrency: NATIVE_CURRENCIES.BNB,
-    rpcUrls: [
-      'https://bsc-dataseed.binance.org',
-      'https://bsc-dataseed1.defibit.io',
-      'https://bsc-dataseed1.ninicoin.io',
-      'https://bsc-dataseed2.defibit.io',
-      'https://bsc-dataseed3.defibit.io',
-      'https://bsc-dataseed4.defibit.io',
-      'https://bsc-dataseed2.ninicoin.io',
-      'https://bsc-dataseed3.ninicoin.io',
-      'https://bsc-dataseed4.ninicoin.io',
-      'https://bsc-dataseed1.binance.org',
-      'https://bsc-dataseed2.binance.org',
-      'https://bsc-dataseed3.binance.org',
-      'https://bsc-dataseed4.binance.org',
-    ],
-    blockExplorerUrls: ['https://bscscan.com'],
-  },
-  // [ZKSYNC_ERA_MAINNET]: {
-  //   chainId: `0x${ZKSYNC_ERA_MAINNET.toString(16)}`,
-  //   chainName: 'zkSync Era Mainnet',
-  //   nativeCurrency: NATIVE_CURRENCIES.ETH,
-  //   rpcUrls: ['https://mainnet.era.zksync.io'],
-  //   blockExplorerUrls: ['https://explorer.zksync.io'],
-  // },
 }
+
+const chains = SUPPORTED_CHAIN_IDS.map((id) => CHAINS[id])
 
 const getChainMetadata = (chainId: number, rpcUrls?: string[]) => {
   const chain = CHAINS[chainId]
@@ -125,4 +89,4 @@ const getChainMetadata = (chainId: number, rpcUrls?: string[]) => {
   return chain
 }
 
-export { NATIVE_CURRENCIES, CHAINS, getChainMetadata }
+export { NATIVE_CURRENCIES, CHAINS, chains, getChainMetadata }

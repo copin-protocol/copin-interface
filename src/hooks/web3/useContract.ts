@@ -3,19 +3,20 @@ import { Contract } from '@ethersproject/contracts'
 import { Web3Provider } from '@ethersproject/providers'
 import { useMemo } from 'react'
 
-import useActiveWeb3React from 'hooks/web3/useActiveWeb3React'
+import useWeb3 from 'hooks/web3/useWeb3'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { WalletProviderError } from 'utils/helpers/handleError'
+import { DEFAULT_CHAIN_ID } from 'utils/web3/chains'
 import { CONTRACT_ABIS, getContract, getProviderOrSigner } from 'utils/web3/contracts'
 import { getSimpleRpcProvider } from 'utils/web3/getRpcUrl'
 import { ContractInfo } from 'utils/web3/types'
 
 export function useSimpleContract<T extends Contract = Contract>({
   contract,
-  chainId,
+  chainId = DEFAULT_CHAIN_ID,
 }: {
   contract: ContractInfo
-  chainId: number
+  chainId?: number
 }): T {
   return useMemo(() => {
     return getContract(contract, getSimpleRpcProvider(chainId))
@@ -28,27 +29,45 @@ export function useContract<T extends Contract = Contract>({
   contract,
   withSignerIfPossible = true,
   account,
-  library,
+  provider,
 }: {
   contract: ContractInfo
   withSignerIfPossible?: boolean
   account?: string
-  library?: Web3Provider
+  provider?: Web3Provider
 }): T {
-  const { library: activeLibrary, account: activeAccount, simpleRpcProvider } = useActiveWeb3React()
+  const { walletProvider, walletAccount, publicProvider } = useWeb3()
+
+  const selectedProvider = provider ?? walletProvider
 
   return useMemo(() => {
-    const providerOrSigner = withSignerIfPossible
-      ? getProviderOrSigner(library ?? (activeLibrary as Web3Provider), account ?? activeAccount)
-      : simpleRpcProvider
+    const providerOrSigner =
+      withSignerIfPossible && selectedProvider
+        ? getProviderOrSigner(selectedProvider, account ?? walletAccount?.address)
+        : publicProvider
     if (!providerOrSigner) throw new WalletProviderError('Unable to get provider')
+    console.log('providerOrSigner', providerOrSigner)
     return getContract(contract, providerOrSigner)
-  }, [contract, withSignerIfPossible, library, activeLibrary, account, activeAccount, simpleRpcProvider]) as T
+  }, [account, contract, publicProvider, selectedProvider, walletAccount, withSignerIfPossible]) as T
 }
 
 export function useERC20Contract(erc20Address: string, withSignerIfPossible?: boolean) {
   return useContract({
     contract: { address: erc20Address, abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.ERC20] },
+    withSignerIfPossible,
+  })
+}
+
+export function useSmartAccountContract(address: string, withSignerIfPossible?: boolean) {
+  return useContract({
+    contract: { address, abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_ACCOUNT] },
+    withSignerIfPossible,
+  })
+}
+
+export function useSmartAccountFactoryContract(address: string, withSignerIfPossible?: boolean) {
+  return useContract({
+    contract: { address, abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_ACCOUNT_FACTORY] },
     withSignerIfPossible,
   })
 }

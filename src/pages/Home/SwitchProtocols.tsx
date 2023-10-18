@@ -79,7 +79,7 @@ const SwitchProtocols = ({
                   {protocol.text}
                 </Type.Caption>
                 <Type.Caption lineHeight="16px" color={currentOption.id === protocol.id ? 'primary1' : 'neutral3'}>
-                  {getChainMetadata(protocol.chainId).chainName}
+                  {getChainMetadata(protocol.chainId).label}
                 </Type.Caption>
               </Flex>
             </Flex>
@@ -128,7 +128,7 @@ const SwitchProtocols = ({
             {currentOption.text}
           </Type.Caption>
           <Type.Caption display="block" lineHeight="16px" color="neutral3">
-            {getChainMetadata(currentOption.chainId).chainName}
+            {getChainMetadata(currentOption.chainId).label}
           </Type.Caption>
         </Box>
       </Flex>

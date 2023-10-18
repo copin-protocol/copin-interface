@@ -54,7 +54,10 @@ const ModalLogin = ({
     onSettled: () => setSubmitting(false),
     onSuccess: async (data: VerifyLoginResponse) => {
       if (data.isActivated) {
-        storeAuth(data.access_token, data.username)
+        storeAuth({
+          jwt: data.access_token,
+          account: data.username,
+        })
         // toast.success(<ToastBody title={<Trans>Success</Trans>} message={<Trans>Login successful!</Trans>} />)
         if (eagerAuth) {
           await eagerAuth()
@@ -194,7 +197,7 @@ const ModalLogin = ({
           </Flex>
         </Flex>
 
-        <ConnectButton size="lg" my={3} />
+        <ConnectButton size="lg" my={3} onConnect={() => onDismiss()} />
 
         <Flex justifyContent="center" alignItems="center" sx={{ gap: 12 }}>
           <Type.Body color="neutral3">

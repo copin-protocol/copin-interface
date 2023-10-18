@@ -239,6 +239,11 @@ const ThemedGlobalStyle = createGlobalStyle`
     --toastify-color-warning:  ${({ theme }) => theme.colors.orange1};
     --toastify-color-error:  ${({ theme }) => theme.colors.red1};
     --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+    --onboard-primary-500:  ${({ theme }) => theme.colors.primary1};
+  }
+
+  .wallet-button-container-inner {
+    padding: 12px!important;
   }
 
     .custom_react_tooltip_css {
@@ -350,6 +355,9 @@ input[type=number] {
     height: -webkit-fill-available;
   }
 }
+
+
+
 //tour
 [x-placement|="top"] {
   .__floater__arrow {

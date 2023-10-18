@@ -41,10 +41,14 @@ export const CONTRACT_QUERY_KEYS = {
   BRIDGED_USDC: 'BRIDGED_USDC',
   WBTC: 'WBTC',
   ERC20: 'ERC20',
-}
+  SMART_ACCOUNT: 'SMART_ACCOUNT',
+  SMART_ACCOUNT_FACTORY: 'SMART_ACCOUNT_FACTORY',
+  MULTICALL: 'MULTICALL',
+} as const
 
 export const STORAGE_KEYS = {
   JWT: 'copin-jwt',
+  WALLET: 'copin-wallet',
   ACCOUNT: 'copin-account',
   UNVERIFIED_ACCOUNT: 'unverified-account',
   CONDITIONAL_FILTERS: 'conditional-filter', // TODO NEXT: keep to last deploy

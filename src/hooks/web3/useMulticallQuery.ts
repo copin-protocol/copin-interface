@@ -5,9 +5,9 @@ import { useCallback } from 'react'
 import { UseQueryOptions, useQuery } from 'react-query'
 
 import { getMulticallContract } from 'utils/web3/contracts'
-import { getSimpleRpcProvider } from 'utils/web3/getRpcUrl'
 
-import useActiveWeb3React from './useActiveWeb3React'
+import useChain from './useChain'
+import useWeb3 from './useWeb3'
 
 export interface Call {
   address: string // Address of the contract
@@ -20,16 +20,13 @@ export interface MulticallOptions extends CallOverrides {
 }
 
 export const useMulticall = async <T = any>(chainId?: number) => {
-  const { chainId: activeChainId, library, account, simpleRpcProvider } = useActiveWeb3React()
+  const { walletAccount, walletProvider, publicProvider } = useWeb3({ chainId })
+  const { chain } = useChain()
   return useCallback(
     async (abi: any[], calls: Call[]): Promise<T> => {
       const multi = getMulticallContract(
-        chainId && chainId !== activeChainId ? chainId : activeChainId,
-        chainId && chainId !== activeChainId
-          ? getSimpleRpcProvider(chainId)
-          : account
-          ? library.getSigner(account)
-          : simpleRpcProvider
+        Number(chain.id),
+        walletProvider ? walletProvider.getSigner(walletAccount?.address) : publicProvider
       )
       const itf = new Interface(abi)
 
@@ -43,7 +40,7 @@ export const useMulticall = async <T = any>(chainId?: number) => {
 
       return res as any
     },
-    [account, chainId, library, simpleRpcProvider, activeChainId]
+    [chain, publicProvider, walletAccount, walletProvider]
   )
 }
 
@@ -54,17 +51,14 @@ export const useMulticall = async <T = any>(chainId?: number) => {
  * 2. The return includes a boolean whether the call was successful e.g. [wasSuccessful, callResult]
  */
 export const useMulticallv2 = async <T = any>(chainId?: number) => {
-  const { chainId: activeChainId, library, account, simpleRpcProvider } = useActiveWeb3React()
+  const { walletAccount, walletProvider, publicProvider } = useWeb3({ chainId })
+  const { chain } = useChain()
   return useCallback(
     async (abi: any[], calls: Call[], options?: MulticallOptions): Promise<T> => {
       const { requireSuccess = true, ...overrides } = options || {}
       const multi = getMulticallContract(
-        chainId && chainId !== activeChainId ? activeChainId : activeChainId,
-        chainId && chainId !== activeChainId
-          ? getSimpleRpcProvider(chainId)
-          : account
-          ? library.getSigner(account)
-          : simpleRpcProvider
+        Number(chain.id),
+        walletProvider ? walletProvider.getSigner(walletAccount?.address) : publicProvider
       )
       const itf = new Interface(abi)
 
@@ -81,7 +75,7 @@ export const useMulticallv2 = async <T = any>(chainId?: number) => {
 
       return res as any
     },
-    [account, chainId, library, simpleRpcProvider, activeChainId]
+    [chain, publicProvider, walletAccount, walletProvider]
   )
 }
 

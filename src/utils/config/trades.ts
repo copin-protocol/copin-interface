@@ -9,12 +9,12 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
   [ProtocolEnum.GMX]: {
     chainId: ARBITRUM_MAINNET,
     provider: rpcProvider(ARBITRUM_MAINNET),
-    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrls[0],
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.KWENTA]: {
     chainId: OPTIMISM_MAINNET,
     provider: rpcProvider(OPTIMISM_MAINNET),
-    explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrls[0],
+    explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
   },
 }
 

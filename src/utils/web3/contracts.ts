@@ -9,9 +9,12 @@ import { Provider, Web3Provider } from '@ethersproject/providers'
 
 import ERC20_ABI from 'abis/ERC20.json'
 import MULTICALL_ABI from 'abis/Multicall.json'
+import SMART_ACCOUNT_ABI from 'abis/SmartAccount.json'
+import SMART_ACCOUNT_FACTORY_ABI from 'abis/SmartAccountFactory.json'
+import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { ContractInfo } from 'utils/web3/types'
 
-import { ARBITRUM_MAINNET, OPTIMISM_MAINNET } from './chains'
+import { ARBITRUM_MAINNET, OPTIMISM_GOERLI, OPTIMISM_MAINNET } from './chains'
 
 export interface ContractKey {
   key: string
@@ -21,9 +24,11 @@ export interface ContractKey {
 export const CONTRACT_ABIS: {
   [key: string]: any
 } = {
-  MULTICALL: MULTICALL_ABI,
+  [CONTRACT_QUERY_KEYS.MULTICALL]: MULTICALL_ABI,
   // BUSD: ERC20_ABI,
-  ERC20: ERC20_ABI,
+  [CONTRACT_QUERY_KEYS.ERC20]: ERC20_ABI,
+  [CONTRACT_QUERY_KEYS.SMART_ACCOUNT]: SMART_ACCOUNT_ABI,
+  [CONTRACT_QUERY_KEYS.SMART_ACCOUNT_FACTORY]: SMART_ACCOUNT_FACTORY_ABI,
 }
 
 export const CONTRACT_ADDRESSES: {
@@ -32,10 +37,14 @@ export const CONTRACT_ADDRESSES: {
   }
 } = {
   [ARBITRUM_MAINNET]: {
-    MULTICALL: '0xcA11bde05977b3631167028862bE2a173976CA11',
+    [CONTRACT_QUERY_KEYS.MULTICALL]: '0xcA11bde05977b3631167028862bE2a173976CA11',
   },
   [OPTIMISM_MAINNET]: {
-    MULTICALL: '0xcA11bde05977b3631167028862bE2a173976CA11',
+    [CONTRACT_QUERY_KEYS.MULTICALL]: '0xcA11bde05977b3631167028862bE2a173976CA11',
+  },
+  [OPTIMISM_GOERLI]: {
+    [CONTRACT_QUERY_KEYS.MULTICALL]: '0xcA11bde05977b3631167028862bE2a173976CA11',
+    [CONTRACT_QUERY_KEYS.SMART_ACCOUNT_FACTORY]: '0x353A5fCBc3D58dc06cB2EE27162d615Ae93B4531',
   },
 }
 
@@ -48,13 +57,13 @@ export function isAddress(value: any): string {
 }
 
 // account is not optional
-export function getSigner(library: Web3Provider, account: string): Signer {
-  return library.getSigner(account).connectUnchecked()
+export function getSigner(provider: Web3Provider, account: string): Signer {
+  return provider.getSigner(account).connectUnchecked()
 }
 
 // account is optional
-export function getProviderOrSigner(library: Web3Provider, account?: string | null): Provider | Signer {
-  return account ? getSigner(library, account) : library
+export function getProviderOrSigner(provider: Web3Provider, account?: string | null): Provider | Signer {
+  return account ? getSigner(provider, account) : provider
 }
 
 // account is optional

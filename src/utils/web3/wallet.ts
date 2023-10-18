@@ -1,34 +1,6 @@
-import { ExternalProvider, Web3Provider } from '@ethersproject/providers'
-
-import { DEFAULT_CHAIN_ID, SUPPORTED_CHAIN_IDS, getChainMetadata } from 'utils/web3/chains'
+import { Web3Provider } from '@ethersproject/providers'
 
 import { SignTypeData } from './types'
-
-export const setupNetwork = async (chainId: number, library?: ExternalProvider, rpcUrls?: string[]) => {
-  let finalChainId = chainId
-  if (!SUPPORTED_CHAIN_IDS.includes(chainId)) {
-    finalChainId = DEFAULT_CHAIN_ID
-  }
-  const chain = getChainMetadata(finalChainId, rpcUrls)
-  if (!library?.request) throw Error('Failed to request')
-  try {
-    await library.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: chain.chainId }],
-    })
-    return true
-  } catch (switchError) {
-    // 4902 error code indicates the chain is missing on the wallet
-    if ((switchError as any).code !== 4001) {
-      await library.request({
-        method: 'wallet_addEthereumChain',
-        params: [chain],
-      })
-      return true
-    }
-  }
-  return false
-}
 
 function isUnwrappedRpcResult(response: unknown): response is {
   error?: string

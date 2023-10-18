@@ -4,6 +4,7 @@ import { ReactNode, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Divider from 'components/@ui/Divider'
+import MockSmartWallet from 'components/MockSmartWallet'
 import { volumeMultiplierContent, volumeProtectionContent } from 'components/TooltipContents'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
@@ -125,6 +126,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
   return (
     <>
+      <MockSmartWallet />
       <Box sx={{ p: 3 }}>
         {(isEdit || isClone) && (
           <>
