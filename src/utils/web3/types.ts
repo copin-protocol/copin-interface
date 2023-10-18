@@ -39,6 +39,11 @@ export type Account = {
     name?: string
   }
   balance: Record<TokenSymbol, string>
+  secondaryTokens: {
+    name: string
+    balance: string
+    icon?: string
+  }[]
 }
 
 export interface Balances {

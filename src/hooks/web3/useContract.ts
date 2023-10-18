@@ -46,7 +46,6 @@ export function useContract<T extends Contract = Contract>({
         ? getProviderOrSigner(selectedProvider, account ?? walletAccount?.address)
         : publicProvider
     if (!providerOrSigner) throw new WalletProviderError('Unable to get provider')
-    console.log('providerOrSigner', providerOrSigner)
     return getContract(contract, providerOrSigner)
   }, [account, contract, publicProvider, selectedProvider, walletAccount, withSignerIfPossible]) as T
 }

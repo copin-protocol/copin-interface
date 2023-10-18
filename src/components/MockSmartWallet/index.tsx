@@ -1,55 +1,51 @@
 import React, { useState } from 'react'
 
+import { useAuthContext } from 'hooks/web3/useAuth'
 import { useSmartAccountFactoryContract } from 'hooks/web3/useContract'
-import useContractMutation from 'hooks/web3/useContractMutation'
-import useRequiredChain from 'hooks/web3/useRequiredChain'
+import useContractQuery from 'hooks/web3/useContractQuery'
 import { Button } from 'theme/Buttons'
+import Loading from 'theme/Loading'
+import { Flex } from 'theme/base'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { OPTIMISM_GOERLI } from 'utils/web3/chains'
 import { CONTRACT_ADDRESSES } from 'utils/web3/contracts'
 
-enum StepEnum {
-  Idle,
-  VerifyChain,
-  NewAccount,
-}
+import CreateSmartWallet from './CreateSmartWallet'
+import DepositFundModal from './DepositFundModal'
 
 const MockSmartWallet = () => {
-  const [step, setStep] = useState(StepEnum.Idle)
+  const [depositing, setDepositing] = useState(false)
+  const { account } = useAuthContext()
   const factory = useSmartAccountFactoryContract(
     CONTRACT_ADDRESSES[OPTIMISM_GOERLI][CONTRACT_QUERY_KEYS.SMART_ACCOUNT_FACTORY],
     true
   )
 
-  console.log(factory)
-
-  const factoryMutation = useContractMutation(factory)
-
-  const isValid = useRequiredChain({
-    enabled: step === StepEnum.VerifyChain,
-    onDismiss: () => setStep(StepEnum.Idle),
+  const { data, isLoading, refetch } = useContractQuery<string[]>(factory, 'getAccountsOwnedBy', [account?.address], {
+    enabled: !!account?.address,
   })
 
-  const createAccount = async () => {
-    if (step === StepEnum.Idle) {
-      setStep(StepEnum.VerifyChain)
-    }
-    if (!isValid) {
-      return
-    }
-    const receipt = await factoryMutation.mutate({
-      method: 'newAccount',
-      params: ['0xaa346103FD9a4Cd8936a96B0DF9bE603470E34cD'],
-    })
-    console.log(receipt)
-  }
-
   return (
-    <>
-      <Button variant="primary" onClick={createAccount}>
-        Create Smart Wallet
-      </Button>
-    </>
+    <div>
+      {isLoading && <Loading />}
+      {!!data && data[0] && (
+        <Flex sx={{ gap: 2 }} alignItems="center">
+          {data[0]}{' '}
+          <Button variant="primary" onClick={() => setDepositing(true)}>
+            Deposit Fund
+          </Button>
+        </Flex>
+      )}
+      {!!data && !data[0] && <CreateSmartWallet factory={factory} onCreated={() => refetch()} />}
+      {depositing && !!account && !!data && !!data[0] && (
+        <DepositFundModal
+          account={account}
+          smartAccount={data[0]}
+          isOpen={depositing}
+          onDismiss={() => setDepositing(false)}
+        />
+      )}
+    </div>
   )
 }
 
