@@ -20,10 +20,17 @@ export default function ConditionFilterForm<T>({
 }: ConditionFilterFormProps<T>) {
   const remainingFieldKeys = fieldOptions.filter((option) => !formValues.map((item) => item.key).includes(option.value))
 
-  const onChangeRowValues = (values: RowValues<T>, index: number) => {
+  const onChangeRowValues = (values: RowValues<T>) => {
     setFormValues((prev) => {
-      const newValues = [...prev]
-      newValues[index] = values
+      let index = null
+      for (let i = 0; i < prev.length; i++) {
+        if (prev[i].key === values.key) {
+          index = i
+          break
+        }
+      }
+      if (index == null) return prev
+      const newValues = [...prev.slice(0, index), values, ...prev.slice(index + 1)]
       onValuesChange && onValuesChange(newValues)
       return newValues
     })
@@ -44,10 +51,9 @@ export default function ConditionFilterForm<T>({
       return newValues
     })
   }
-  const handleClearRow = (index: number) => {
+  const handleClearRow = (key: keyof T) => {
     setFormValues((prev) => {
-      const newValues = [...prev]
-      newValues.splice(index, 1)
+      const newValues = prev.filter((values) => values.key !== key)
       onValuesChange && onValuesChange(newValues)
       return newValues
     })
@@ -83,16 +89,16 @@ export default function ConditionFilterForm<T>({
         <Box sx={{ flex: '0 0 24px !important' }}></Box>
       </RowWrapper>
       <Box>
-        {formValues.map((values, index) => {
+        {formValues.map((values) => {
           if (!values) return <></>
           return (
             <Row
               fieldOptions={fieldOptions}
-              key={index}
+              key={values.key.toString()}
               data={values}
               excludingKeys={formValues.map((item) => item.key)}
-              onChange={(values) => onChangeRowValues(values, index)}
-              onRemove={() => handleClearRow(index)}
+              onChange={(values) => onChangeRowValues(values)}
+              onRemove={() => handleClearRow(values.key)}
             />
           )
         })}
