@@ -114,6 +114,7 @@ export default function TraderDetails() {
   const { currentOption: timeOption, changeCurrentOption: setTimeOption } = useOptionChange({
     optionName: URL_PARAM_KEYS.EXPLORER_TIME_FILTER,
     options: TIME_FILTER_OPTIONS,
+    defaultOption: TIME_FILTER_OPTIONS[3].id as unknown as string,
   })
   const currentTraderData =
     traderData?.find((item) => (item?.type as string) === (timeOption.id as unknown as string)) ?? traderData?.[0] // TODO: remove timeTilter enum
