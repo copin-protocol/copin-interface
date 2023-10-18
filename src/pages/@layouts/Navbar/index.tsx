@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { MagnifyingGlass, XCircle } from '@phosphor-icons/react'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 // import Cart from 'components/Cart'
@@ -10,11 +10,10 @@ import { useAuthContext } from 'hooks/web3/useAuth'
 import NavbarUser from 'pages/@layouts/Navbar/NavUser'
 import IconButton from 'theme/Buttons/IconButton'
 import { Box, Flex, LinkUnderline } from 'theme/base'
-import { NAVBAR_HEIGHT } from 'utils/config/constants'
+import { LINKS, NAVBAR_HEIGHT } from 'utils/config/constants'
 import routes from 'utils/config/routes'
 import ROUTES from 'utils/config/routes'
 
-import JoinTelegram from './JoinTelegram'
 import SearchBox from './SearchBox'
 import { LogoWrapper, Main, Wrapper } from './styled'
 
@@ -68,35 +67,22 @@ const Navbar = ({ height }: { height: number }): ReactElement => {
           </Box>
 
           <Box alignItems="center" display={{ _: isSearchOpening ? 'none' : 'flex', md: 'flex' }}>
-            <JoinTelegram />
-            <Box
+            <Flex
+              alignItems="center"
+              px={[2, 2, 3, 4]}
               sx={{
-                borderLeft: 'small',
+                textAlign: 'center',
                 borderRight: 'small',
                 borderColor: 'neutral4',
+                gap: [4, 4, 4, 40],
                 height: '100%',
-                width: 100,
-                textAlign: 'center',
                 lineHeight: `${NAVBAR_HEIGHT - 1}px`,
               }}
             >
-              <LinkUnderline
-                sx={{
-                  fontSize: 13,
-                  fontWeight: 'bold',
-                  '&:hover': {
-                    color: 'neutral2',
-                  },
-                }}
-                color="neutral1"
-                hoverHasLine
-                href={ROUTES.STATS.path}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Trans>Stats</Trans>
-              </LinkUnderline>
-            </Box>
+              <LinkItem text={<Trans>Twitter (X)</Trans>} url={LINKS.twitter} />
+              <LinkItem text={<Trans>Telegram</Trans>} url={LINKS.telegram} />
+              <LinkItem text={<Trans>Stats</Trans>} url={ROUTES.STATS.path} />
+            </Flex>
             <Box flex="0 0 fit-content" sx={{ alignItems: 'center' }}>
               {profile ? <NavbarUser /> : <LoginAction />}
             </Box>
@@ -110,3 +96,26 @@ const Navbar = ({ height }: { height: number }): ReactElement => {
 
 Navbar.displayName = 'Header'
 export default Navbar
+
+function LinkItem({ url, text }: { url: string; text: ReactNode }) {
+  return (
+    <LinkUnderline
+      sx={{
+        fontSize: 13,
+        fontWeight: 'bold',
+        '&:hover': {
+          color: 'neutral2',
+        },
+        display: ['none', 'flex', 'flex', 'flex'],
+        alignItems: 'center',
+      }}
+      color="neutral1"
+      hoverHasLine
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+    >
+      {text}
+    </LinkUnderline>
+  )
+}

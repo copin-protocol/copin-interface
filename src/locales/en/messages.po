@@ -186,6 +186,10 @@ msgstr "Closed"
 msgid "Communicating with wallet. Sign message with your wallet"
 msgstr "Communicating with wallet. Sign message with your wallet"
 
+#: src/components/ConditionFilterForm/index.tsx
+msgid "Condition"
+msgstr "Condition"
+
 #: src/components/LoginAction/ModalRegister.tsx
 #: src/components/LoginAction/ModalResetPassword.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
@@ -245,6 +249,10 @@ msgstr "Custom"
 #: src/utils/config/translations.tsx
 msgid "Decrease"
 msgstr "Decrease"
+
+#: src/pages/Home/ConditionFilter/index.tsx
+msgid "Default Filter"
+msgstr "Default Filter"
 
 #: src/components/Tables/CopyTradeSettingTable.tsx
 #~ msgid "Detail"
@@ -308,6 +316,10 @@ msgstr "Favorites"
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Fees are not factored into PnL"
 msgstr "Fees are not factored into PnL"
+
+#: src/components/ConditionFilterForm/index.tsx
+msgid "Field"
+msgstr "Field"
 
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Find the trader you want in the list of traders above, all of the trader's history positions will be listed here."
@@ -478,6 +490,38 @@ msgstr "Looks like your session has expired. You should sign new authentication 
 msgid "Loses"
 msgstr "Loses"
 
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Low Avg Duration"
+msgstr "Low Avg Duration"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Low Max Drawdown"
+msgstr "Low Max Drawdown"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Low Max Drawdown PnL"
+msgstr "Low Max Drawdown PnL"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Low Max Duration"
+msgstr "Low Max Duration"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Low Min Duration"
+msgstr "Low Min Duration"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Low Order/Pos Ratio"
+msgstr "Low Order/Pos Ratio"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Low Total Lose"
+msgstr "Low Total Lose"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Low Total Loss"
+msgstr "Low Total Loss"
+
 #: src/pages/MyProfile/Layouts/Layout.tsx
 msgid "MANAGEMENT"
 msgstr "MANAGEMENT"
@@ -618,6 +662,10 @@ msgstr "Password"
 #~ msgid "Password must contain at least 8 characters (uppercase, lowercase and number)"
 #~ msgstr "Password must contain at least 8 characters (uppercase, lowercase and number)"
 
+#: src/components/ConditionFilterForm/index.tsx
+msgid "Percentile"
+msgstr "Percentile"
+
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Platform"
 msgstr "Platform"
@@ -705,6 +753,10 @@ msgstr "REFERRAL"
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "ROI"
 msgstr "ROI"
+
+#: src/pages/Home/ConditionFilter/index.tsx
+msgid "Ranking Filter"
+msgstr "Ranking Filter"
 
 #: src/pages/MyProfile/Referral/ReferralList.tsx
 #~ msgid "Referee List"
@@ -947,6 +999,22 @@ msgstr "This trader list is empty"
 msgid "Today"
 msgstr "Today"
 
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top Avg ROI"
+msgstr "Top Avg ROI"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top Avg Volume"
+msgstr "Top Avg Volume"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top Max Roi"
+msgstr "Top Max Roi"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top Min Roi"
+msgstr "Top Min Roi"
+
 #: src/pages/Home/Layouts/HomeMobile.tsx
 msgid "Top Opening Positions"
 msgstr "Top Opening Positions"
@@ -954,6 +1022,43 @@ msgstr "Top Opening Positions"
 #: src/pages/Home/Layouts/HomeMobile.tsx
 msgid "Top Opening Positions on {0}"
 msgstr "Top Opening Positions on {0}"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top PNL"
+msgstr "Top PNL"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top PnL Ratio"
+msgstr "Top PnL Ratio"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top Profit Factor"
+msgstr "Top Profit Factor"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top Profit Rate"
+msgstr "Top Profit Rate"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top Runtime (All)"
+msgstr "Top Runtime (All)"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top Total Gain"
+msgstr "Top Total Gain"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top Total Trade"
+msgstr "Top Total Trade"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top Total Win"
+msgstr "Top Total Win"
+
+#: src/pages/Home/ConditionFilter/configs.tsx
+msgid "Top Win Rate"
+msgstr "Top Win Rate"
 
 #: src/pages/MyProfile/Referral/ReferralOverview.tsx
 msgid "Total"
@@ -1058,6 +1163,10 @@ msgstr "Use this code"
 #: src/components/ConfirmReferralModal/index.tsx
 #~ msgid "Use this referral code"
 #~ msgstr "Use this referral code"
+
+#: src/components/ConditionFilterForm/index.tsx
+msgid "Value"
+msgstr "Value"
 
 #: src/components/LoginAction/ModalRegister.tsx
 msgid "Verify account"

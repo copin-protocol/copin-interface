@@ -6,8 +6,8 @@ import { useQuery } from 'react-query'
 import { getChartDataV2 } from 'apis/positionApis'
 import { getTraderPnlStatsApi } from 'apis/statisticApi'
 import { AmountText } from 'components/@ui/DecoratedText/ValueText'
-import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
-import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
+import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import colors from 'theme/colors'
@@ -230,32 +230,7 @@ export default function ChartTraderPnL({
           <Flex width="100%" alignItems="center" justifyContent="center" flexDirection="column">
             <Flex alignItems="center" sx={{ gap: 2 }} mb={1}>
               <Type.Caption color="neutral3">Net PNL in the past</Type.Caption>
-              <Dropdown
-                buttonSx={{
-                  border: 'none',
-                  py: 0,
-                  px: 0,
-                }}
-                menuSx={{
-                  width: '80px',
-                  minWidth: 'auto',
-                }}
-                placement="bottom"
-                menu={
-                  <>
-                    {TIME_FILTER_OPTIONS.map((option) => (
-                      <CheckableDropdownItem
-                        key={option.id}
-                        selected={option.id === timeOption.id}
-                        text={option.text}
-                        onClick={() => onChangeTime(option)}
-                      />
-                    ))}
-                  </>
-                }
-              >
-                {timeOption.text}
-              </Dropdown>
+              <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
             </Flex>
             <Type.H3 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
               <AmountText amount={latestPnL} maxDigit={0} suffix="$" />

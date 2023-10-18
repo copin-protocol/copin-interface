@@ -1,12 +1,10 @@
 import dayjs from 'dayjs'
-import isEqual from 'lodash/isEqual'
-import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
 
-import { ApiListResponse } from 'apis/api'
-import { RequestBodyApiData } from 'apis/types'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
+import { ConditionFormValues } from 'components/ConditionFilterForm/types'
 import { TraderListSortProps } from 'components/Tables/TraderListTable/dataConfig'
-import { CheckAvailableResultData, TraderData } from 'entities/trader.d'
+import { TraderData } from 'entities/trader.d'
 import useInternalRole from 'hooks/features/useInternalRole'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
@@ -15,19 +13,15 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
-import { URL_PARAM_KEYS } from 'utils/config/keys'
-import { pageToOffset } from 'utils/helpers/transform'
+import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { TimeRange } from 'utils/types'
 
-import { getFiltersFromFormValues } from './ConditionFilter/helpers'
-import { ConditionFormValues } from './ConditionFilter/types'
+import { FilterTabEnum } from './ConditionFilter/configs'
 import { TabKeyEnum } from './Layouts/layoutConfigs'
-import { getInitFilters, getInitSort, getInitValue } from './helpers/getInitValues'
+import { getInitFilterTab, getInitFilters, getInitSort } from './helpers/getInitValues'
 import { stringifyParams } from './helpers/handleParams'
-import useRangeFilterData from './hooks/useRangeFilterData'
-import useTimeFilterData from './hooks/useTimeFilterData'
 
 export interface TradersContextData {
   protocol: ProtocolEnum
@@ -46,30 +40,16 @@ export interface TradersContextData {
   changeCurrentLimit: (limit: number) => void
   currentSuggestion: string | undefined
   setCurrentSuggestion: (data?: string) => void
-  filters: ConditionFormValues
-  changeFilters: (filters: ConditionFormValues) => void
+  filters: ConditionFormValues<TraderData>
+  changeFilters: (filters: ConditionFormValues<TraderData>) => void
+  rankingFilters: ConditionFormValues<TraderData>
+  changeRankingFilters: (filters: ConditionFormValues<TraderData>) => void
   currentSort: TraderListSortProps<TraderData> | undefined
   changeCurrentSort: (sort: TraderListSortProps<TraderData> | undefined) => void
-  isLoading: boolean
-  loadingRangeProgress: CheckAvailableResultData
-  data: ApiListResponse<TraderData> | undefined
+  filterTab: FilterTabEnum
 }
 
 const TradersContext = createContext<TradersContextData>({} as TradersContextData)
-
-const transformRequestWithAccounts = (request: RequestBodyApiData, accounts: string[]) => {
-  request.ranges = [
-    {
-      fieldName: 'account',
-      in: accounts,
-    },
-  ]
-  request.pagination = {
-    limit: accounts.length,
-    offset: 0,
-  }
-  return request
-}
 
 export function FilterTradersProvider({
   accounts,
@@ -85,33 +65,6 @@ export function FilterTradersProvider({
   const { searchParams, setSearchParams } = useSearchParams()
 
   const [currentSuggestion, setCurrentSuggestion] = useState<string | undefined>()
-  const [requestData, setRequestData] = useState<RequestBodyApiData>(() => {
-    const page = getInitValue(searchParams, 'page', 1)
-    const limit = getInitValue(searchParams, 'limit', DEFAULT_LIMIT)
-    const { sortBy, sortType } = getInitSort(searchParams)
-    const request = {
-      sortBy,
-      sortType,
-      ranges: getFiltersFromFormValues(getInitFilters(searchParams, accounts)),
-      pagination: {
-        limit,
-        offset: pageToOffset(page ?? 0, limit ?? 0),
-      },
-    }
-    if (accounts) transformRequestWithAccounts(request, accounts)
-    return request
-  })
-  const handleSetRequestData = useCallback(
-    (data: RequestBodyApiData) => {
-      if (!data) return
-      if (accounts) transformRequestWithAccounts(data, accounts)
-      const newRequestData = { ...requestData, ...data }
-      if (!isEqual(requestData, newRequestData)) {
-        setRequestData(newRequestData)
-      }
-    },
-    [requestData, accounts]
-  )
 
   const logEventFilter = (action: string) => {
     logEvent({
@@ -121,8 +74,10 @@ export function FilterTradersProvider({
     })
   }
 
-  const timeFilterKey = tab === TabKeyEnum.Explorer ? 'time' : 'time-favorite'
-  const rangeFilterKey = tab === TabKeyEnum.Explorer ? 'range' : 'range-favorite'
+  const timeFilterKey =
+    tab === TabKeyEnum.Explorer ? URL_PARAM_KEYS.EXPLORER_TIME_FILTER : URL_PARAM_KEYS.FAVORITE_TIME_FILTER
+  const rangeFilterKey =
+    tab === TabKeyEnum.Explorer ? URL_PARAM_KEYS.EXPLORER_TIME_RANGE_FILTER : URL_PARAM_KEYS.FAVORITE_TIME_RANGE_FILTER
 
   // START TIME FILTER
   const isInternal = useInternalRole()
@@ -151,10 +106,6 @@ export function FilterTradersProvider({
     if (isNaN(from) || isNaN(to)) return {}
     return { from: dayjs(from).toDate(), to: dayjs(to).toDate() } as TimeRange
   })
-
-  useEffect(() => {
-    handleSetRequestData({})
-  }, [accounts, handleSetRequestData])
 
   const handleSetTimeRange = (range: TimeRange) => {
     if (!range || Object.keys(range).length < 2) {
@@ -196,33 +147,53 @@ export function FilterTradersProvider({
   // END TIME FILTER
 
   const { currentPage, currentLimit, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
-    pageName: 'page',
-    limitName: 'limit',
+    pageName: URL_PARAM_KEYS.EXPLORER_PAGE,
+    limitName: URL_PARAM_KEYS.EXPLORER_LIMIT,
     defaultLimit: DEFAULT_LIMIT,
-    callback: (args) => {
-      handleSetRequestData({
-        pagination: {
-          limit: args?.limit,
-          offset: pageToOffset(args?.page ?? 0, args?.limit ?? 0),
-        },
-      })
-      // onDataLoaded && onDataLoaded()
-    },
   })
 
-  const [filters, setFilters] = useState<ConditionFormValues>(() => getInitFilters(searchParams, accounts))
+  const [filters, setFilters] = useState<ConditionFormValues<TraderData>>(() =>
+    getInitFilters({
+      searchParams,
+      accounts,
+      filterTab: FilterTabEnum.DEFAULT,
+    })
+  )
+  const [rankingFilters, setRankingFilters] = useState<ConditionFormValues<TraderData>>(() =>
+    getInitFilters({
+      searchParams,
+      accounts,
+      filterTab: FilterTabEnum.RANKING,
+    })
+  )
+  const changeFilters = (options: ConditionFormValues<TraderData>) => {
+    const stringParams = stringifyParams(options)
+    setSearchParams({
+      [URL_PARAM_KEYS.RANKING_FILTERS]: null,
+      [URL_PARAM_KEYS.DEFAULT_FILTERS]: stringParams,
+      [URL_PARAM_KEYS.FILTER_TAB]: FilterTabEnum.DEFAULT,
+    })
+    localStorage.setItem(STORAGE_KEYS.FILTER_TAB, FilterTabEnum.DEFAULT)
+    localStorage.setItem(STORAGE_KEYS.DEFAULT_FILTERS, JSON.stringify(options))
+    changeCurrentPage(1, false)
+    setFilters(options)
+  }
+  const changeRankingFilters = (options: ConditionFormValues<TraderData>) => {
+    const stringParams = stringifyParams(options)
+    setSearchParams({
+      [URL_PARAM_KEYS.DEFAULT_FILTERS]: null,
+      [URL_PARAM_KEYS.RANKING_FILTERS]: stringParams,
+      [URL_PARAM_KEYS.FILTER_TAB]: FilterTabEnum.RANKING,
+    })
+    localStorage.setItem(STORAGE_KEYS.FILTER_TAB, FilterTabEnum.RANKING)
+    localStorage.setItem(STORAGE_KEYS.RANKING_FILTERS, JSON.stringify(options))
+    changeCurrentPage(1, false)
+    setRankingFilters(options)
+  }
+
   const [currentSort, setCurrentSort] = useState<TraderListSortProps<TraderData> | undefined>(() =>
     getInitSort(searchParams)
   )
-
-  const changeFilters = (options: ConditionFormValues) => {
-    const stringParams = stringifyParams(options)
-    setSearchParams({ [URL_PARAM_KEYS.CONDITIONAL_FILTERS]: stringParams })
-    changeCurrentPage(1, false)
-    setFilters(options)
-    handleSetRequestData({ ranges: getFiltersFromFormValues(options) })
-  }
-
   const changeCurrentSort = (sort: TraderListSortProps<TraderData> | undefined) => {
     const params: Record<string, string> = {}
     if (sort?.sortBy) params.sort_by = sort.sortBy
@@ -230,52 +201,8 @@ export function FilterTradersProvider({
     changeCurrentPage(1, false)
     setSearchParams(params)
     setCurrentSort(sort)
-    handleSetRequestData({ sortBy: sort?.sortBy, sortType: sort?.sortType })
   }
-
-  const { rangeTraders, loadingRangeTraders, loadingRangeProgress } = useRangeFilterData({
-    protocol,
-    tab,
-    requestData,
-    timeRange,
-    isRangeSelection,
-  })
-
-  const { timeTraders, loadingTimeTraders } = useTimeFilterData({
-    protocol,
-    tab,
-    requestData,
-    timeOption,
-    isRangeSelection,
-  })
-
-  let data = isRangeSelection ? rangeTraders : timeTraders
-  if (accounts && data) {
-    const accountsWithInfo: string[] = []
-    data.data.forEach((trader) => {
-      accountsWithInfo.push(trader.account)
-    })
-    data = {
-      data: [
-        ...data.data,
-        ...accounts
-          .filter((account) => !accountsWithInfo.includes(account))
-          .map(
-            (account) =>
-              ({
-                account,
-              } as TraderData)
-          ),
-      ],
-      meta: {
-        limit: accounts.length,
-        offset: 0,
-        total: accounts.length,
-        totalPages: 1,
-      },
-    }
-  }
-  const isLoading = isRangeSelection ? loadingRangeTraders : loadingTimeTraders
+  const filterTab = getInitFilterTab({ searchParams })
 
   const contextValue: TradersContextData = {
     protocol,
@@ -296,11 +223,11 @@ export function FilterTradersProvider({
     changeCurrentLimit,
     filters,
     changeFilters,
+    rankingFilters,
+    changeRankingFilters,
     currentSort,
     changeCurrentSort,
-    loadingRangeProgress,
-    isLoading,
-    data,
+    filterTab,
   }
 
   return <TradersContext.Provider value={contextValue}>{children}</TradersContext.Provider>

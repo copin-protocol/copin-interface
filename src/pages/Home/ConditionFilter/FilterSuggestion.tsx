@@ -1,7 +1,10 @@
 import { useQuery } from 'react-query'
 
 import { getFilterSuggestionsApi } from 'apis/suggestionApis'
+import { getFormValuesFromFilters } from 'components/ConditionFilterForm/helpers'
+import { ConditionFormValues } from 'components/ConditionFilterForm/types'
 import { FilterSuggestionData } from 'entities/suggestion.d'
+import { TraderData } from 'entities/trader'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { Button } from 'theme/Buttons'
@@ -11,10 +14,13 @@ import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import useTradersContext from '../useTradersContext'
-import { getFormValuesFromFilters } from './helpers'
-import { ConditionFormValues } from './types'
+import { suggestionFactory } from './helpers'
 
-export default function FilterSuggestion({ changeFilters }: { changeFilters: (options: ConditionFormValues) => void }) {
+export default function FilterSuggestion({
+  changeFilters,
+}: {
+  changeFilters: (options: ConditionFormValues<TraderData>) => void
+}) {
   const { myProfile } = useMyProfile()
   const { protocol } = useProtocolStore()
   const { currentSuggestion, setCurrentSuggestion } = useTradersContext()
@@ -29,7 +35,7 @@ export default function FilterSuggestion({ changeFilters }: { changeFilters: (op
 
   const handleSelect = (data: FilterSuggestionData) => {
     setCurrentSuggestion(data.id)
-    const formValues = getFormValuesFromFilters(data.ranges)
+    const formValues = getFormValuesFromFilters(data.ranges, suggestionFactory)
     changeFilters(formValues)
 
     logEvent(

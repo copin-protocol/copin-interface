@@ -185,7 +185,7 @@ const SearchBox = ({
   }, [history.location.pathname])
 
   return (
-    <SearchWrapper ref={searchWrapperRef} width={width ?? ['100%', '100%', 280, 380]}>
+    <SearchWrapper ref={searchWrapperRef} width={width ?? ['100%', '100%', 220, 300]}>
       <InputSearch
         ref={inputSearchRef}
         placeholder={placeholder}

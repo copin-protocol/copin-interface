@@ -583,7 +583,6 @@ export interface TraderListPagination {
 }
 
 export function AccountCell({ data, additionalComponent }: { data: TraderData; additionalComponent?: ReactElement }) {
-  // const lastTradeDuration = dayjs().diff(data.lastTradeAt, 'd')
   const { sm } = useResponsive()
   return (
     <Flex alignItems="center" justifyContent="start" sx={{ gap: [1, 2], position: 'relative' }}>
@@ -591,6 +590,7 @@ export function AccountCell({ data, additionalComponent }: { data: TraderData; a
         isOpenPosition={data.isOpenPosition}
         address={data.account}
         protocol={data.protocol}
+        type={data.type}
         note={data.note}
         size={sm ? 40 : 28}
       />

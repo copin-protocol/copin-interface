@@ -1,23 +1,11 @@
-import { TraderDataKey } from 'entities/trader'
-import { ConditionType } from 'utils/types'
+import { TradersContextData } from '../useTradersContext'
 
-export interface RowValues {
-  key: TraderDataKey
-  gte?: number | null
-  lte?: number | null
-  conditionType: ConditionType
-}
-
-export type ConditionFormValues = RowValues[]
-
-export interface FilterValues {
-  fieldName: string
-  gte?: number
-  lte?: number
-}
 export interface ConditionFilterProps {
-  filters: ConditionFormValues
+  filters: TradersContextData['filters']
+  changeFilters: TradersContextData['changeFilters']
+  rankingFilters: TradersContextData['rankingFilters']
+  changeRankingFilters: TradersContextData['changeRankingFilters']
+  tab: TradersContextData['filterTab']
   onCancel?: () => void
   onClickTitle?: () => void
-  changeFilters: (options: ConditionFormValues) => void
 }

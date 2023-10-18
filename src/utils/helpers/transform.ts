@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 
 import { ApiListResponse, ApiMeta } from 'apis/api'
-import { SUPPORTED_LOCALES } from 'utils/config/constants'
+import { LINKS, SUPPORTED_LOCALES } from 'utils/config/constants'
 import { ProtocolEnum, TimeFilterByEnum, TimeframeEnum } from 'utils/config/enums'
 
 // dayjs.extend(duration)
@@ -146,6 +146,17 @@ export const getDurationFromTimeFilter = (timeFilter?: TimeFilterByEnum) => {
       return 60
     default:
       return 7
+  }
+}
+
+export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
+  switch (protocol) {
+    case ProtocolEnum.GMX:
+      return LINKS.tradeGMX
+    case ProtocolEnum.KWENTA:
+      return LINKS.tradeKwenta
+    default:
+      return LINKS.tradeGMX
   }
 }
 
