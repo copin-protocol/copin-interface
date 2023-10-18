@@ -13,6 +13,7 @@ import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import NotFound from 'components/@ui/NotFound'
 import { TableSortProps } from 'components/@ui/Table/types'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
+import TradeProtocolAction from 'components/@ui/TradeProtocol'
 import SingleBacktestModal from 'components/BacktestModal/SingleBacktestModal'
 import { initBacktestState, initialState, reducer } from 'components/BacktestModal/SingleBacktestModal/config'
 import { MIN_BACKTEST_VALUE, parseRequestData } from 'components/BacktestModal/helper'
@@ -205,7 +206,7 @@ export default function TraderDetails() {
   const currentBacktestInstance = currentBacktestId && backtestState.instancesMapping[currentBacktestId]
   const hadBacktest = !!requestData || (!!currentBacktestInstance && !!currentBacktestInstance.result)
 
-  const hasCopyPermission = useCopyTradePermission(protocol === ProtocolEnum.KWENTA)
+  const hasCopyPermission = useCopyTradePermission()
 
   if (!isLoadingTraderData && !traderData) return <NotFound title="Trader not found" message="" />
 
@@ -241,6 +242,7 @@ export default function TraderDetails() {
               bg: ['neutral7', 'neutral7', 'neutral7', undefined],
             }}
           >
+            <TradeProtocolAction protocol={protocol} />
             <BackTestAction onClick={handleOpenBackTestModal} hadBacktest={hadBacktest} />
             <CopyTraderAction
               protocol={protocol}

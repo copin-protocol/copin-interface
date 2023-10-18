@@ -123,7 +123,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     }
   }
 
-  const permissionToSelectProtocol = useCopyTradePermission(true)
+  const permissionToSelectProtocol = useCopyTradePermission()
 
   return (
     <>
