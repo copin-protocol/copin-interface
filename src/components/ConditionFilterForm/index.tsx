@@ -20,16 +20,8 @@ export default function ConditionFilterForm<T>({
 }: ConditionFilterFormProps<T>) {
   const remainingFieldKeys = fieldOptions.filter((option) => !formValues.map((item) => item.key).includes(option.value))
 
-  const onChangeRowValues = (values: RowValues<T>) => {
+  const onChangeRowValues = (index: number, values: RowValues<T>) => {
     setFormValues((prev) => {
-      let index = null
-      for (let i = 0; i < prev.length; i++) {
-        if (prev[i].key === values.key) {
-          index = i
-          break
-        }
-      }
-      if (index == null) return prev
       const newValues = [...prev.slice(0, index), values, ...prev.slice(index + 1)]
       onValuesChange && onValuesChange(newValues)
       return newValues
@@ -89,15 +81,15 @@ export default function ConditionFilterForm<T>({
         <Box sx={{ flex: '0 0 24px !important' }}></Box>
       </RowWrapper>
       <Box>
-        {formValues.map((values) => {
+        {formValues.map((values, index) => {
           if (!values) return <></>
           return (
             <Row
               fieldOptions={fieldOptions}
-              key={values.key.toString()}
+              key={values.key.toString() + index}
               data={values}
               excludingKeys={formValues.map((item) => item.key)}
-              onChange={(values) => onChangeRowValues(values)}
+              onChange={(values) => onChangeRowValues(index, values)}
               onRemove={() => handleClearRow(values.key)}
             />
           )
