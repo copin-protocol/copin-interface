@@ -8,7 +8,7 @@ import { FilterTabEnum, defaultFieldOptionLabels, rankingFieldOptionLabels } fro
 
 const FilterTag = ({ filters, filterTab }: { filters: ConditionFormValues<TraderData>; filterTab: FilterTabEnum }) => {
   const { md, xl } = useResponsive()
-  const maxTag = xl ? 6 : md ? 4 : 2
+  const maxTag = xl ? 6 : md ? 4 : 1
   const fieldOptionLabels = filterTab === FilterTabEnum.RANKING ? rankingFieldOptionLabels : defaultFieldOptionLabels
   return (
     <Flex sx={{ gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
