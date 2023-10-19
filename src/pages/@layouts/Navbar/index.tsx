@@ -69,7 +69,7 @@ const Navbar = ({ height }: { height: number }): ReactElement => {
           <Box alignItems="center" display={{ _: isSearchOpening ? 'none' : 'flex', md: 'flex' }}>
             <Flex
               alignItems="center"
-              px={[2, 2, 3, 4]}
+              px={[3, 3, 3, 4]}
               sx={{
                 textAlign: 'center',
                 borderRight: 'small',
@@ -81,7 +81,7 @@ const Navbar = ({ height }: { height: number }): ReactElement => {
             >
               <LinkItem text={<Trans>Twitter (X)</Trans>} url={LINKS.twitter} />
               <LinkItem text={<Trans>Telegram</Trans>} url={LINKS.telegram} />
-              <LinkItem text={<Trans>Stats</Trans>} url={ROUTES.STATS.path} />
+              <LinkItem text={<Trans>Stats</Trans>} url={ROUTES.STATS.path} sx={{ display: 'flex' }} />
             </Flex>
             <Box flex="0 0 fit-content" sx={{ alignItems: 'center' }}>
               {profile ? <NavbarUser /> : <LoginAction />}
@@ -97,7 +97,7 @@ const Navbar = ({ height }: { height: number }): ReactElement => {
 Navbar.displayName = 'Header'
 export default Navbar
 
-function LinkItem({ url, text }: { url: string; text: ReactNode }) {
+function LinkItem({ url, text, sx }: { url: string; text: ReactNode; sx?: any }) {
   return (
     <LinkUnderline
       sx={{
@@ -106,8 +106,9 @@ function LinkItem({ url, text }: { url: string; text: ReactNode }) {
         '&:hover': {
           color: 'neutral2',
         },
-        display: ['none', 'flex', 'flex', 'flex'],
+        display: ['none', 'none', 'flex', 'flex'],
         alignItems: 'center',
+        ...(sx ?? {}),
       }}
       color="neutral1"
       hoverHasLine
