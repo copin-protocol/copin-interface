@@ -17,6 +17,7 @@ import AppWrapper from './AppWrapper'
 const Home = lazy(() => import('./Home'))
 const TraderDetails = lazy(() => import('./TraderDetails'))
 const PositionDetails = lazy(() => import('./PositionDetails'))
+const SharedPositionDetails = lazy(() => import('./SharedPositionDetails'))
 const MyProfile = lazy(() => import('./MyProfile'))
 const Stats = lazy(() => import('./Stats'))
 const TopOpenings = lazy(() => import('./TopOpenings'))
@@ -43,6 +44,12 @@ function App() {
           <Switch>
             <ProtocolRoute exact path={ROUTES.TRADER_DETAILS.path} component={TraderDetails}></ProtocolRoute>
             <ProtocolRedirectRoute exact path={`${ROUTES.TRADER_DETAILS.path_prefix}/:address`} />
+
+            <ProtocolRoute
+              exact
+              path={ROUTES.SHARED_POSITION_DETAILS.path}
+              component={SharedPositionDetails}
+            ></ProtocolRoute>
 
             <ProtocolRoute exact path={ROUTES.POSITION_DETAILS.path} component={PositionDetails}></ProtocolRoute>
             <ProtocolRedirectRoute exact path={ROUTES.POSITION_DETAILS.path_prefix} />

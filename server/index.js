@@ -4,6 +4,7 @@ import { resolve } from 'path'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { getSharedPositionDetails } from './sharedPositionDetail.controller.js'
 import { getPositionDetails } from './positionDetail.controller.js'
 import { getBacktestMultiple } from './sharedBacktestMultiple.controller.js'
 import { getBacktestSingle } from './sharedBacktestSingle.controller.js'
@@ -27,6 +28,7 @@ app.use(express.static(resolve(__dirname, '..', 'build'), { maxAge: '30d' }))
 app.get('/:protocol/shared-backtest/single/:id', getBacktestSingle)
 app.get('/:protocol/shared-backtest/multiple/:id', getBacktestMultiple)
 app.get('/:protocol/trader/:address', getTraderDetail)
+app.get('/:protocol/position/share/:sharedId', getSharedPositionDetails)
 app.get('/:protocol/position', getPositionDetails)
 app.get('*', (req, res) => {
   renderHTML(req, res)
