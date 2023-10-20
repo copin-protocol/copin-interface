@@ -1,4 +1,5 @@
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/abstract-provider'
+import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { Trans } from '@lingui/macro'
 import React, { ReactText, useRef } from 'react'
@@ -24,9 +25,20 @@ const useContractMutation = (contract: Contract, options?: { successMsg?: string
   const { successMsg, ...opts } = options ?? {}
   const loadingRef = useRef<ReactText>()
   return useMutation({
-    mutationFn: async ({ method, params, gasLimit }: { method: string; params: any[]; gasLimit?: number }) => {
+    mutationFn: async ({
+      method,
+      params,
+      gasLimit,
+      value,
+    }: {
+      method: string
+      params: any[]
+      gasLimit?: number
+      value?: BigNumber
+    }) => {
       const tx: TransactionResponse = await contract[method](...params, {
         gasLimit,
+        value,
       })
       const result = await tx.wait()
       if (result.status === 0)
