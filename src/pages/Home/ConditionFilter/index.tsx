@@ -43,8 +43,14 @@ export default function ConditionFilter({
       >
         <Box
           alignItems="center"
-          sx={{ gap: 2 }}
-          color={!filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.DEFAULT ? 'neutral1' : 'neutral3'}
+          sx={{
+            gap: 2,
+            color: [
+              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.DEFAULT ? 'neutral1' : 'neutral3',
+              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.DEFAULT ? 'neutral1' : 'neutral3',
+              filterTab === FilterTabEnum.DEFAULT ? 'neutral1' : 'neutral3',
+            ],
+          }}
           onClick={() => setFilterTab(FilterTabEnum.DEFAULT)}
           role="button"
           display={{ _: tab !== FilterTabEnum.DEFAULT && !filtersExpanded ? 'none' : 'flex', md: 'flex' }}
@@ -56,8 +62,14 @@ export default function ConditionFilter({
         </Box>
         <Box
           alignItems="center"
-          sx={{ gap: 2 }}
-          color={!filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.RANKING ? 'neutral1' : 'neutral3'}
+          sx={{
+            gap: 2,
+            color: [
+              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.RANKING ? 'neutral1' : 'neutral3',
+              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.RANKING ? 'neutral1' : 'neutral3',
+              filterTab === FilterTabEnum.RANKING ? 'neutral1' : 'neutral3',
+            ],
+          }}
           onClick={() => setFilterTab(FilterTabEnum.RANKING)}
           role="button"
           display={{ _: tab !== FilterTabEnum.RANKING && !filtersExpanded ? 'none' : 'flex', md: 'flex' }}

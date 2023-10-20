@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useQuery } from 'react-query'
 
 import { getFilterSuggestionsApi } from 'apis/suggestionApis'
@@ -49,9 +50,11 @@ export default function FilterSuggestion({
   }
 
   return data ? (
-    <Flex alignItems="center" mt={1} sx={{ gap: 2 }}>
-      <Type.Caption color="neutral3">Suggestion:</Type.Caption>
-      <Flex alignItems="center" sx={{ gap: 1 }}>
+    <Flex mt={1} sx={{ gap: 2 }}>
+      <Type.Caption color="neutral3" sx={{ flexShrink: 0, py: 1 }}>
+        <Trans>Suggestion:</Trans>
+      </Type.Caption>
+      <Flex alignItems="center" sx={{ gap: 1, flexWrap: 'wrap' }}>
         {data.map((item) => {
           return (
             <Button
