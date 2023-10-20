@@ -35,6 +35,7 @@ const Footer = ({ height }: { height: number }) => {
             color: 'neutral1',
           },
         },
+        zIndex: 10,
       }}
     >
       <Flex
