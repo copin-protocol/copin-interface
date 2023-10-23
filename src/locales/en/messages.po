@@ -56,7 +56,7 @@ msgstr "7D PnL"
 msgid "A message with a verification code has been sent to your email. Enter the code to continue."
 msgstr "A message with a verification code has been sent to your email. Enter the code to continue."
 
-#: src/pages/WalletManagement/CreateAction/index.tsx
+#: src/components/CreateWalletAction/index.tsx
 msgid "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
 msgstr "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
 
@@ -155,7 +155,7 @@ msgstr "BingX API Key"
 msgid "BingX Secret Key"
 msgstr "BingX Secret Key"
 
-#: src/pages/WalletManagement/CreateAction/index.tsx
+#: src/components/CreateWalletAction/index.tsx
 msgid "BingX Wallet"
 msgstr "BingX Wallet"
 
@@ -219,7 +219,7 @@ msgstr "Closed"
 #~ msgid "Collapse"
 #~ msgstr "Collapse"
 
-#: src/pages/WalletManagement/CreateAction/index.tsx
+#: src/components/CreateWalletAction/index.tsx
 msgid "Coming Soon"
 msgstr "Coming Soon"
 
@@ -280,7 +280,7 @@ msgstr "Copy Volume"
 msgid "Copying"
 msgstr "Copying"
 
-#: src/pages/WalletManagement/CreateAction/index.tsx
+#: src/components/CreateWalletAction/index.tsx
 msgid "Create"
 msgstr "Create"
 
@@ -539,7 +539,7 @@ msgstr "Let copy a trader and make profit!"
 msgid "Limited"
 msgstr "Limited"
 
-#: src/pages/WalletManagement/CreateAction/index.tsx
+#: src/components/CreateWalletAction/index.tsx
 msgid "Link with your BingX account through API key. All your assets and your positions management by BingX. Lowest fee, CEX trading"
 msgstr "Link with your BingX account through API key. All your assets and your positions management by BingX. Lowest fee, CEX trading"
 
@@ -792,6 +792,10 @@ msgstr "Please authorize to access your account"
 msgid "Please check the verification code from your email!"
 msgstr "Please check the verification code from your email!"
 
+#: src/pages/MyProfile/index.tsx
+msgid "Please create a wallet to start copy"
+msgstr "Please create a wallet to start copy"
+
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Please pick trader to view copies detail"
 msgstr "Please pick trader to view copies detail"
@@ -1016,7 +1020,7 @@ msgstr "Sign message"
 msgid "Skipping..."
 msgstr "Skipping..."
 
-#: src/pages/WalletManagement/CreateAction/index.tsx
+#: src/components/CreateWalletAction/index.tsx
 msgid "Smart Wallet"
 msgstr "Smart Wallet"
 
@@ -1405,6 +1409,10 @@ msgstr "You are not authorized to perform this action"
 #: src/pages/MyProfile/Referral/ReferralList.tsx
 msgid "You do not have any referral"
 msgstr "You do not have any referral"
+
+#: src/pages/MyProfile/index.tsx
+msgid "You don't have any wallet"
+msgstr "You don't have any wallet"
 
 #: src/components/CopyTradeForm/Wallets.tsx
 msgid "You don’t have any wallet yet"

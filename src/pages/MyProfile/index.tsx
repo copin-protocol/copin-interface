@@ -1,10 +1,12 @@
+import { Trans } from '@lingui/macro'
 import { useEffect, useState } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import CreateWalletAction from 'components/CreateWalletAction'
 import { CopyWalletData } from 'entities/copyWallet'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import Loading from 'theme/Loading'
-import { Box, Flex } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { STORAGE_KEYS } from 'utils/config/keys'
 
@@ -48,7 +50,34 @@ export default function MyProfile() {
 
   if (loadingCopyWallets) return <Loading />
 
-  if (!loadingCopyWallets && !copyWallets) return <Box>No wallet</Box>
+  if (!loadingCopyWallets && !copyWallets?.length)
+    return (
+      <Flex mt={[3, 100]} sx={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 3 }}>
+        <Type.LargeBold mb={1}>
+          <Trans>You don&apos;t have any wallet</Trans>
+        </Type.LargeBold>
+        <Type.Caption mb={24} color="neutral2">
+          <Trans>Please create a wallet to start copy</Trans>
+        </Type.Caption>
+        <Flex
+          sx={{
+            flexDirection: ['column', 'row'],
+            maxWidth: 600,
+            gap: 3,
+            '& > *': {
+              flex: 1,
+              flexDirection: 'column',
+              border: 'small',
+              borderColor: 'neutral4',
+              borderRadius: 'xs',
+              '& > *:nth-child(2)': { flex: 1 },
+            },
+          }}
+        >
+          <CreateWalletAction />
+        </Flex>
+      </Flex>
+    )
 
   return (
     <>

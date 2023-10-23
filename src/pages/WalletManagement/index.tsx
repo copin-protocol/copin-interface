@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import React from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import CreateWalletAction from 'components/CreateWalletAction'
 import { Box, Flex, Type } from 'theme/base'
 
 import AssetDistribution from './AssetDistribution'
-import CreateAction from './CreateAction'
 import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
@@ -54,7 +53,9 @@ export default function WalletManagement() {
 
         {/* child 2 */}
         <Box display={['block', 'block', 'flex']} flexDirection="column" height="100%">
-          <CreateAction />
+          <Flex flexDirection="column">
+            <CreateWalletAction />
+          </Flex>
           <YouMightNeed />
         </Box>
 

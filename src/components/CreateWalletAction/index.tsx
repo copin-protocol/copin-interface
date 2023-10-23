@@ -7,7 +7,7 @@ import { Flex, Image, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
-export default function CreateAction() {
+export default function CreateWalletAction() {
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [currentExchange, setCurrentExchange] = useState<CopyTradePlatformEnum | undefined>()
 
@@ -16,7 +16,7 @@ export default function CreateAction() {
     setOpenCreateModal(true)
   }
   return (
-    <Flex flexDirection="column">
+    <>
       <WalletItem
         exchange={CopyTradePlatformEnum.BINGX}
         label={<Trans>BingX Wallet</Trans>}
@@ -36,7 +36,7 @@ export default function CreateAction() {
       {openCreateModal && currentExchange === CopyTradePlatformEnum.BINGX && (
         <CreateBingXWalletModal onDismiss={() => setOpenCreateModal(false)} />
       )}
-    </Flex>
+    </>
   )
 }
 
