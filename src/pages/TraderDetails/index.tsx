@@ -66,7 +66,6 @@ export default function TraderDetails() {
     })
   )
 
-  // init if have param
   const { mutate: requestBacktest } = useMutation(requestTestMultiOrderApi, {
     onSuccess: (data, variables) => {
       const currentInstanceId = backtestState.currentInstanceId

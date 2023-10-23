@@ -77,18 +77,13 @@ export default function BacktestForm({
   const pairs = useMemo(() => getTokenTradeList(protocol), [protocol])
   const addressPairs = pairs.map((e) => e.address)
   const isSelectedAll = addressPairs.length === tokenAddresses?.length
-  const [enableVolumeMultiplier, setEnableVolumeMultiplier] = useState(!!watch('maxVolMultiplier'))
+  const enableVolumeMultiplier = !!watch('maxVolMultiplier')
 
   const { sm } = useResponsive()
   const [showGuide, setShowGuide] = useState(false)
   useEffect(() => {
     sm ? setTimeout(() => setShowGuide(true), 300) : setShowGuide(false)
   }, [sm])
-
-  // useEffect(() => {
-  //   if (!tokensTraded || tokenAddresses) return
-  //   setValue('tokenAddresses', tokensTraded)
-  // }, [setValue, tokenAddresses, tokensTraded])
 
   const handleSelectAll = () => {
     if (isSelectedAll) {
@@ -255,7 +250,6 @@ export default function BacktestForm({
               } else {
                 setValue(fieldName.maxVolMultiplier!, undefined)
               }
-              setEnableVolumeMultiplier(e.target.checked)
             }}
             tooltipContent={
               <Box width="calc(100vw - 32px)" maxWidth={450}>
