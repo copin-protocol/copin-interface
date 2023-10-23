@@ -191,14 +191,17 @@ export const InputSearch = forwardRef(
         disabled={props.disabled}
         block={block}
         sx={{
-          // border: 'none',
           '& button.search-btn--clear': {
             visibility: 'hidden',
             transition: 'none',
           },
-          '&:focus-within:not([disabled]) button.search-btn--clear': {
-            visibility: 'visible',
-          },
+          ...(props.value
+            ? {
+                '& button.search-btn--clear': {
+                  visibility: 'visible',
+                },
+              }
+            : {}),
           ...sx,
         }}
         onClick={({ target }: { target: HTMLDivElement }) => {
