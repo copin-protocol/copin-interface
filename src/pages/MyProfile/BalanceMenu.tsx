@@ -1,15 +1,15 @@
 import { Eye, EyeClosed } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
 import React, { ReactNode, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
-import { getCopyTradeBalancesApi, getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
+import { getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
-import { CopyTradeBalanceData } from 'entities/copyTrade'
+import { CopyWalletData } from 'entities/copyWallet'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
+import { parseWalletName } from 'utils/helpers/transform'
 
 const ListItem = ({
   title,
@@ -97,29 +97,32 @@ const ListItem = ({
   )
 }
 
-const ALL_ACCOUNTS_STR = 'All Accounts'
-
-const getName = (balance: CopyTradeBalanceData) => `BingX ${balance.uniqueKey.slice(0, 5)}`
-
 const BalanceMenu = ({
-  activeKey,
+  copyWallets,
+  activeWallet,
   onChangeKey,
 }: {
-  activeKey: string | null
-  onChangeKey: (key: string | null) => void
+  copyWallets: CopyWalletData[] | undefined
+  activeWallet: CopyWalletData | null
+  onChangeKey: (key: CopyWalletData | null) => void
 }) => {
-  const { sm } = useResponsive()
-  const { data } = useQuery('copytrade-balances', () => getCopyTradeBalancesApi())
   const currentOption = useMemo(() => {
-    if (activeKey == null) return { title: ALL_ACCOUNTS_STR, value: data?.totalBalance }
-    const foundItem = data?.balances.find((e) => e.uniqueKey === activeKey)
-    return { title: foundItem ? getName(foundItem) : '', value: foundItem?.balance }
-  }, [activeKey, data])
-  const { data: overview } = useQuery(['copytrade-balances/overview', activeKey], () =>
-    getMyCopyTradeOverviewApi({ exchange: CopyTradePlatformEnum.BINGX, uniqueKey: activeKey })
+    const foundItem = copyWallets?.find((e) => e.id === activeWallet?.id)
+    return { title: foundItem ? parseWalletName(foundItem) : '', value: foundItem?.balance }
+  }, [activeWallet, copyWallets])
+  const { data: overview } = useQuery(
+    ['copytrade-balances/overview', activeWallet],
+    () =>
+      getMyCopyTradeOverviewApi({
+        exchange: activeWallet?.exchange ?? CopyTradePlatformEnum.BINGX,
+        copyWalletId: activeWallet?.id,
+      }),
+    {
+      enabled: !!activeWallet,
+    }
   )
 
-  if (!data) return <></>
+  if (!copyWallets) return <></>
   return (
     <Flex
       flexDirection={{ _: 'column', sm: 'row' }}
@@ -143,11 +146,10 @@ const BalanceMenu = ({
           menuSx={{ width: ['100%', 200] }}
           menu={
             <>
-              <DropdownItem onClick={() => onChangeKey(null)}>All Accounts</DropdownItem>
-              {data.balances.map((balanceData) => {
+              {copyWallets.map((wallet) => {
                 return (
-                  <DropdownItem key={balanceData.uniqueKey} onClick={() => onChangeKey(balanceData.uniqueKey)}>
-                    {getName(balanceData)}
+                  <DropdownItem key={wallet.id} onClick={() => onChangeKey(wallet)}>
+                    {parseWalletName(wallet)}
                   </DropdownItem>
                 )
               })}

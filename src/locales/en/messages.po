@@ -17,6 +17,10 @@ msgstr ""
 msgid ". Try to reload the page to fix this issue"
 msgstr ". Try to reload the page to fix this issue"
 
+#: src/components/CopyTradeForm/index.tsx
+msgid "1. Choose Platform"
+msgstr "1. Choose Platform"
+
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
 msgid "14 days"
@@ -52,6 +56,10 @@ msgstr "7D PnL"
 msgid "A message with a verification code has been sent to your email. Enter the code to continue."
 msgstr "A message with a verification code has been sent to your email. Enter the code to continue."
 
+#: src/pages/WalletManagement/CreateAction/index.tsx
+msgid "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
+msgstr "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
+
 #: src/components/Tables/HistoryTable.tsx
 #~ msgid "ALL"
 #~ msgstr "ALL"
@@ -60,6 +68,10 @@ msgstr "A message with a verification code has been sent to your email. Enter th
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Account"
 msgstr "Account"
+
+#: src/components/WalletDetailsCard/WalletInfo.tsx
+msgid "Active Copy"
+msgstr "Active Copy"
 
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "Add referral successful!"
@@ -78,6 +90,10 @@ msgstr "Analytics"
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Are you sure to logout?"
 msgstr "Are you sure to logout?"
+
+#: src/pages/WalletManagement/AssetDistribution/index.tsx
+msgid "Asset Distribution"
+msgstr "Asset Distribution"
 
 #: src/components/LoginAction/ModalResetPassword.tsx
 #~ msgid "At least 8 characters (uppercase, lowercase, and number)"
@@ -103,6 +119,10 @@ msgid "Avg Leverage"
 msgstr "Avg Leverage"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Avg ROI"
+msgstr "Avg ROI"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Avg Volume"
 msgstr "Avg Volume"
 
@@ -118,6 +138,7 @@ msgstr "Back To Home"
 msgid "Back to home"
 msgstr "Back to home"
 
+#: src/components/WalletDetailsCard/WalletInfo.tsx
 #: src/pages/TraderDetails/TraderStats.tsx
 msgid "Balance"
 msgstr "Balance"
@@ -125,6 +146,18 @@ msgstr "Balance"
 #: src/utils/config/translations.tsx
 msgid "BingX"
 msgstr "BingX"
+
+#: src/components/Modal/CreateBingXWalletModal.tsx
+msgid "BingX API Key"
+msgstr "BingX API Key"
+
+#: src/components/Modal/CreateBingXWalletModal.tsx
+msgid "BingX Secret Key"
+msgstr "BingX Secret Key"
+
+#: src/pages/WalletManagement/CreateAction/index.tsx
+msgid "BingX Wallet"
+msgstr "BingX Wallet"
 
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx
@@ -163,6 +196,10 @@ msgstr "Change password successful!"
 msgid "Clone"
 msgstr "Clone"
 
+#: src/pages/TraderDetails/CopyTraderModal.tsx
+msgid "Clone Settings"
+msgstr "Clone Settings"
+
 #: src/components/CopyTradeForm/CopyTradeCloneForm.tsx
 msgid "Clone copy trade has been succeeded"
 msgstr "Clone copy trade has been succeeded"
@@ -181,6 +218,10 @@ msgstr "Closed"
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "Collapse"
 #~ msgstr "Collapse"
+
+#: src/pages/WalletManagement/CreateAction/index.tsx
+msgid "Coming Soon"
+msgstr "Coming Soon"
 
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Communicating with wallet. Sign message with your wallet"
@@ -227,14 +268,50 @@ msgstr "Copiers Profit vs Loss"
 msgid "Copy Statistic"
 msgstr "Copy Statistic"
 
+#: src/pages/TraderDetails/CopyTraderModal.tsx
+msgid "Copy Trader Setting"
+msgstr "Copy Trader Setting"
+
+#: src/components/WalletDetailsCard/WalletInfo.tsx
+msgid "Copy Volume"
+msgstr "Copy Volume"
+
 #: src/theme/Tag/index.tsx
 msgid "Copying"
 msgstr "Copying"
+
+#: src/pages/WalletManagement/CreateAction/index.tsx
+msgid "Create"
+msgstr "Create"
+
+#: src/components/Modal/CreateBingXWalletModal.tsx
+msgid "Create BingX Wallet"
+msgstr "Create BingX Wallet"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "Create BingX wallet"
+msgstr "Create BingX wallet"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "Create Smart Wallet"
+msgstr "Create Smart Wallet"
 
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx
 msgid "Create an account"
 msgstr "Create an account"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "Create smart wallet"
+msgstr "Create smart wallet"
+
+#: src/components/Modal/CreateBingXWalletModal.tsx
+msgid "Create wallet successful!"
+msgstr "Create wallet successful!"
+
+#: src/components/Modal/CreateBingXWalletModal.tsx
+msgid "Creating..."
+msgstr "Creating..."
 
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 msgid "Current Password"
@@ -254,6 +331,18 @@ msgstr "Decrease"
 msgid "Default Filter"
 msgstr "Default Filter"
 
+#: src/components/WalletDetailsCard/DeleteWalletAction.tsx
+msgid "Delete Wallet"
+msgstr "Delete Wallet"
+
+#: src/components/WalletDetailsCard/DeleteWalletAction.tsx
+msgid "Delete wallet successful!"
+msgstr "Delete wallet successful!"
+
+#: src/components/WalletDetailsCard/index.tsx
+msgid "Deposit"
+msgstr "Deposit"
+
 #: src/components/Tables/CopyTradeSettingTable.tsx
 #~ msgid "Detail"
 #~ msgstr "Detail"
@@ -269,6 +358,10 @@ msgstr "Docs"
 #: src/pages/@layouts/Footer/event.tsx
 #~ msgid "Document"
 #~ msgstr "Document"
+
+#: src/components/@ui/BingXHelp/index.tsx
+msgid "Don’t have a BingX account?"
+msgstr "Don’t have a BingX account?"
 
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "Don’t have a Copin account?"
@@ -300,7 +393,7 @@ msgstr "Enter referral code"
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
-#: src/pages/TraderDetails/CopyTraderDrawer.tsx
+#: src/pages/TraderDetails/CopyTraderModal.tsx
 msgid "Error"
 msgstr "Error"
 
@@ -346,9 +439,21 @@ msgstr "HISTORY"
 msgid "Hey"
 msgstr "Hey"
 
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "Hi! Copier"
+msgstr "Hi! Copier"
+
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "History"
 msgstr "History"
+
+#: src/components/@ui/BingXHelp/index.tsx
+msgid "How to get BingX API Key?"
+msgstr "How to get BingX API Key?"
+
+#: src/components/@ui/BingXHelp/index.tsx
+msgid "How to get BingX Secret API Key?"
+msgstr "How to get BingX Secret API Key?"
 
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "If you skip it this time, you will not be able to re-enter the referral code."
@@ -382,6 +487,10 @@ msgstr "Input new password"
 #: src/components/LoginAction/ModalRegister.tsx
 msgid "Input password"
 msgstr "Input password"
+
+#: src/components/Modal/CreateBingXWalletModal.tsx
+msgid "Input wallet name"
+msgstr "Input wallet name"
 
 #: src/utils/helpers/handleError.ts
 msgid "Insufficient funds for gas fee and value"
@@ -429,6 +538,10 @@ msgstr "Let copy a trader and make profit!"
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 msgid "Limited"
 msgstr "Limited"
+
+#: src/pages/WalletManagement/CreateAction/index.tsx
+msgid "Link with your BingX account through API key. All your assets and your positions management by BingX. Lowest fee, CEX trading"
+msgstr "Link with your BingX account through API key. All your assets and your positions management by BingX. Lowest fee, CEX trading"
 
 #: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
@@ -526,7 +639,7 @@ msgstr "Low Total Loss"
 msgid "MANAGEMENT"
 msgstr "MANAGEMENT"
 
-#: src/pages/TraderDetails/CopyTraderDrawer.tsx
+#: src/pages/TraderDetails/CopyTraderModal.tsx
 msgid "Make copy trade has been succeeded"
 msgstr "Make copy trade has been succeeded"
 
@@ -667,6 +780,7 @@ msgid "Percentile"
 msgstr "Percentile"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/components/WalletDetailsCard/WalletInfo.tsx
 msgid "Platform"
 msgstr "Platform"
 
@@ -751,8 +865,8 @@ msgid "REFERRAL"
 msgstr "REFERRAL"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-msgid "ROI"
-msgstr "ROI"
+#~ msgid "ROI"
+#~ msgstr "ROI"
 
 #: src/pages/Home/ConditionFilter/index.tsx
 msgid "Ranking Filter"
@@ -791,6 +905,7 @@ msgstr "Referral List"
 msgid "Referrals"
 msgstr "Referrals"
 
+#: src/components/@ui/BingXHelp/index.tsx
 #: src/components/LoginAction/ModalRegister.tsx
 msgid "Register"
 msgstr "Register"
@@ -861,7 +976,7 @@ msgstr "Select All Traders"
 msgid "Select all"
 msgstr "Select all"
 
-#: src/pages/TraderDetails/CopyTraderDrawer.tsx
+#: src/pages/TraderDetails/CopyTraderModal.tsx
 msgid "Select the copy you want to clone:"
 msgstr "Select the copy you want to clone:"
 
@@ -901,6 +1016,14 @@ msgstr "Sign message"
 msgid "Skipping..."
 msgstr "Skipping..."
 
+#: src/pages/WalletManagement/CreateAction/index.tsx
+msgid "Smart Wallet"
+msgstr "Smart Wallet"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "Smart wallets are a unique Copin offering that allows copiers to copytrade at Synthetix platform."
+msgstr "Smart wallets are a unique Copin offering that allows copiers to copytrade at Synthetix platform."
+
 #: src/pages/@helpers/ErrorFallback.tsx
 msgid "Something went wrong"
 msgstr "Something went wrong"
@@ -930,6 +1053,8 @@ msgstr "Stopped"
 #: src/components/CopyTradeForm/CopyTradeCloneForm.tsx
 #: src/components/LoginAction/ModalRegister.tsx
 #: src/components/LoginAction/ModalResetPassword.tsx
+#: src/components/Modal/CreateBingXWalletModal.tsx
+#: src/components/WalletDetailsCard/DeleteWalletAction.tsx
 #: src/hooks/features/useUpdateCopyTrade.tsx
 #: src/hooks/web3/useContractMutation.tsx
 #: src/hooks/web3/useTokenApproval.tsx
@@ -937,13 +1062,21 @@ msgstr "Stopped"
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
-#: src/pages/TraderDetails/CopyTraderDrawer.tsx
+#: src/pages/TraderDetails/CopyTraderModal.tsx
 msgid "Success"
 msgstr "Success"
+
+#: src/utils/config/translations.tsx
+msgid "Synthetix"
+msgstr "Synthetix"
 
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 msgid "TRADER EXPLORER"
 msgstr "TRADER EXPLORER"
+
+#: src/pages/@layouts/Navbar/index.tsx
+msgid "Telegram"
+msgstr "Telegram"
 
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx
@@ -955,12 +1088,20 @@ msgid "Terms & Policy"
 msgstr "Terms & Policy"
 
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
-msgid "The maximum number of positions that can be opened at the same time per API Key"
-msgstr "The maximum number of positions that can be opened at the same time per API Key"
+#~ msgid "The maximum number of positions that can be opened at the same time per API Key"
+#~ msgstr "The maximum number of positions that can be opened at the same time per API Key"
+
+#: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
+msgid "The maximum number of positions that can be opened at the same time per wallet"
+msgstr "The maximum number of positions that can be opened at the same time per wallet"
 
 #: src/components/@ui/NotFound/index.tsx
 msgid "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
 msgstr "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "The process of creating a wallet is quick and only costs a small amount in gas fees."
+msgstr "The process of creating a wallet is quick and only costs a small amount in gas fees."
 
 #: src/components/InputReferral/index.tsx
 #: src/components/InputReferral/index.tsx
@@ -994,6 +1135,10 @@ msgstr "This copy position has been closed successfully"
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "This trader list is empty"
 msgstr "This trader list is empty"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "To start, you need to create a smart wallet."
+msgstr "To start, you need to create a smart wallet."
 
 #: src/pages/MyProfile/Referral/ReferralOverview.tsx
 msgid "Today"
@@ -1108,6 +1253,10 @@ msgstr "Total Unique Trader"
 msgid "Total Volume"
 msgstr "Total Volume"
 
+#: src/components/@ui/TradeProtocol/index.tsx
+msgid "Trade On"
+msgstr "Trade On"
+
 #: src/pages/Home/Layouts/HomeMobile.tsx
 msgid "Traders"
 msgstr "Traders"
@@ -1123,6 +1272,10 @@ msgstr "Transaction has been executed successfully"
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Try Again"
 msgstr "Try Again"
+
+#: src/pages/@layouts/Navbar/index.tsx
+msgid "Twitter (X)"
+msgstr "Twitter (X)"
 
 #: src/theme/Uploader/index.tsx
 #~ msgid "Tải ảnh không thành công do sai định dạnh ảnh!"
@@ -1180,6 +1333,10 @@ msgstr "Verify account"
 #~ msgid "View Order Detail"
 #~ msgstr "View Order Detail"
 
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "View more"
+msgstr "View more"
+
 #: src/pages/Stats/index.tsx
 #: src/pages/Stats/index.tsx
 msgid "Volume"
@@ -1195,9 +1352,27 @@ msgstr "W/L Ratio"
 msgid "Waiting..."
 msgstr "Waiting..."
 
+#: src/components/CopyTradeForm/Wallets.tsx
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "Wallet"
+msgstr "Wallet"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/WalletManagement/index.tsx
+msgid "Wallet Management"
+msgstr "Wallet Management"
+
+#: src/components/Modal/CreateBingXWalletModal.tsx
+msgid "Wallet Name"
+msgstr "Wallet Name"
+
 #: src/pages/MyProfile/PositionTable/index.tsx
 msgid "Warning"
 msgstr "Warning"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "What is smart wallet?"
+msgstr "What is smart wallet?"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Win rate"
@@ -1207,6 +1382,10 @@ msgstr "Win rate"
 msgid "Wins"
 msgstr "Wins"
 
+#: src/components/WalletDetailsCard/index.tsx
+msgid "Withdraw"
+msgstr "Withdraw"
+
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "Would you like to use a referral code?"
 msgstr "Would you like to use a referral code?"
@@ -1215,6 +1394,10 @@ msgstr "Would you like to use a referral code?"
 msgid "Yesterday"
 msgstr "Yesterday"
 
+#: src/pages/WalletManagement/YouMightNeed/index.tsx
+msgid "You Might Need"
+msgstr "You Might Need"
+
 #: src/utils/config/translations.tsx
 msgid "You are not authorized to perform this action"
 msgstr "You are not authorized to perform this action"
@@ -1222,6 +1405,26 @@ msgstr "You are not authorized to perform this action"
 #: src/pages/MyProfile/Referral/ReferralList.tsx
 msgid "You do not have any referral"
 msgstr "You do not have any referral"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "You don’t have any wallet yet"
+msgstr "You don’t have any wallet yet"
+
+#: src/pages/WalletManagement/WalletList/index.tsx
+msgid "You don’t have any wallet. Please create a wallet"
+msgstr "You don’t have any wallet. Please create a wallet"
+
+#: src/components/Modal/CreateBingXWalletModal.tsx
+msgid "Your BingX API Key"
+msgstr "Your BingX API Key"
+
+#: src/components/Modal/CreateBingXWalletModal.tsx
+msgid "Your BingX Secret Key"
+msgstr "Your BingX Secret Key"
+
+#: src/pages/WalletManagement/WalletList/index.tsx
+msgid "Your Wallet List"
+msgstr "Your Wallet List"
 
 #: src/hooks/features/useUpdateCopyTrade.tsx
 msgid "Your update has been succeeded"
@@ -1241,12 +1444,18 @@ msgstr "Your update has been succeeded"
 #: src/components/LoginAction/ModalResetPassword.tsx
 #: src/components/LoginAction/ModalResetPassword.tsx
 #: src/components/LoginAction/ModalResetPassword.tsx
+#: src/components/Modal/CreateBingXWalletModal.tsx
+#: src/components/Modal/CreateBingXWalletModal.tsx
+#: src/components/WalletDetailsCard/DeleteWalletAction.tsx
+#: src/components/WalletDetailsCard/DeleteWalletAction.tsx
 #: src/hooks/features/useReferralActions.tsx
 #: src/hooks/features/useReferralActions.tsx
 #: src/hooks/features/useReferralActions.tsx
 #: src/hooks/features/useReferralActions.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/WalletManagement/WalletList/index.tsx
+#: src/pages/WalletManagement/WalletList/index.tsx
 msgid "{0}"
 msgstr "{0}"
 

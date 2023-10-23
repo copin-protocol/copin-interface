@@ -46,10 +46,13 @@ export enum CopyTradeTypeEnum {
 export enum CopyTradePlatformEnum {
   GMX = 'GMX',
   BINGX = 'BINGX',
+  SYNTHETIX = 'SYNTHETIX',
 }
 
 export enum CopyTradeConfigTypeEnum {
   API_KEY = 'API_KEY',
+  COPY_WALLET = 'COPY_WALLET',
+  GLOBAL = 'GLOBAL',
 }
 
 export enum PositionStatusEnum {

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import React, { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getMyCopyOrdersApi, getMyCopyPositionDetailApi } from 'apis/copyPositionApis'
@@ -13,10 +13,9 @@ import { renderTrader } from 'pages/MyProfile/renderProps'
 import Loading from 'theme/Loading'
 import Tag from 'theme/Tag'
 import { Box, Flex, Type } from 'theme/base'
-import { CopyTradePlatformEnum, PositionStatusEnum } from 'utils/config/enums'
+import { PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
-import { PLATFORM_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -111,7 +110,8 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
       {!isLoading && !loadingInfo && !data && <NoDataFound />}
       {data && (
         <Flex pb={3} sx={{ width: '100%', height: '100%', position: 'relative', flexDirection: 'column' }}>
-          {copyTradeDetails && (
+          {/* TODO: position details */}
+          {/* {copyTradeDetails && (
             <Flex flexDirection="column" px={3} py={3} sx={{ gap: 1 }}>
               <Type.BodyBold>
                 {PLATFORM_TRANS[CopyTradePlatformEnum.BINGX]} {copyTradeDetails.bingXApiKey?.slice(0, 5)}{' '}
@@ -131,7 +131,7 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
                 </Flex>
               </Flex>
             </Flex>
-          )}
+          )} */}
           <Flex
             alignItems="center"
             sx={{

@@ -30,3 +30,10 @@ export function overflowEllipsis() {
   }
   return styles
 }
+
+export function getColorFromText(stringInput: string) {
+  const stringUniqueHash = [...stringInput].reduce((acc, char) => {
+    return char.charCodeAt(0) + ((acc << 16) - acc)
+  }, 0)
+  return `hsl(${stringUniqueHash % 360}, 100%, 68%)`
+}

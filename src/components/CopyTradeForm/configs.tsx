@@ -1,8 +1,9 @@
+import { ReactNode } from 'react'
 import * as yup from 'yup'
 
 import { Flex, Image, Type } from 'theme/base'
 import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
-import { parseProtocolImage } from 'utils/helpers/transform'
+import { parseExchangeImage, parseProtocolImage } from 'utils/helpers/transform'
 
 const commonSchema = {
   title: yup.string().required().label('Title'),
@@ -31,21 +32,22 @@ export const copyTradeFormSchema = yup.object({
   ...commonSchema,
   serviceKey: yup.string().required().label('Service Key'),
   exchange: yup.mixed().oneOf([CopyTradePlatformEnum.GMX, CopyTradePlatformEnum.BINGX]).label('Exchange'),
-  privateKey: yup.string().when('exchange', {
-    is: CopyTradePlatformEnum.GMX,
-    then: (schema) => schema.required().label('Private Key'),
-    otherwise: (schema) => schema.nullable(),
-  }),
-  bingXApiKey: yup.string().when('exchange', {
-    is: CopyTradePlatformEnum.BINGX,
-    then: (schema) => schema.required().label('BingX Api Key'),
-    otherwise: (schema) => schema.nullable(),
-  }),
-  bingXSecretKey: yup.string().when('exchange', {
-    is: CopyTradePlatformEnum.BINGX,
-    then: (schema) => schema.required().label('BingX Secret Key'),
-    otherwise: (schema) => schema.nullable(),
-  }),
+  // privateKey: yup.string().when('exchange', {
+  //   is: CopyTradePlatformEnum.GMX,
+  //   then: (schema) => schema.required().label('Private Key'),
+  //   otherwise: (schema) => schema.nullable(),
+  // }),
+  // bingXApiKey: yup.string().when('exchange', {
+  //   is: CopyTradePlatformEnum.BINGX,
+  //   then: (schema) => schema.required().label('BingX Api Key'),
+  //   otherwise: (schema) => schema.nullable(),
+  // }),
+  // bingXSecretKey: yup.string().when('exchange', {
+  //   is: CopyTradePlatformEnum.BINGX,
+  //   then: (schema) => schema.required().label('BingX Secret Key'),
+  //   otherwise: (schema) => schema.nullable(),
+  // }),
+  copyWalletId: yup.string().required().label('Wallet'),
 })
 
 export const updateCopyTradeFormSchema = yup.object({
@@ -71,9 +73,7 @@ export interface CopyTradeFormValues {
   volumeProtection: boolean
   lookBackOrders: number
   exchange: CopyTradePlatformEnum
-  privateKey: string
-  bingXApiKey: string
-  bingXSecretKey: string
+  copyWalletId: string
   serviceKey: string
   title: string
   reverseCopy: boolean
@@ -81,6 +81,9 @@ export interface CopyTradeFormValues {
   enableMaxVolMultiplier: boolean
   maxVolMultiplier: number
   skipLowLeverage: boolean
+  // privateKey: string
+  // bingXApiKey: string
+  // bingXSecretKey: string
 }
 export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFormValues } = {
   protocol: 'protocol',
@@ -93,9 +96,7 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   volumeProtection: 'volumeProtection',
   lookBackOrders: 'lookBackOrders',
   exchange: 'exchange',
-  privateKey: 'privateKey',
-  bingXApiKey: 'bingXApiKey',
-  bingXSecretKey: 'bingXSecretKey',
+  copyWalletId: 'copyWalletId',
   serviceKey: 'serviceKey',
   title: 'title',
   reverseCopy: 'reverseCopy',
@@ -103,6 +104,9 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   enableMaxVolMultiplier: 'enableMaxVolMultiplier',
   maxVolMultiplier: 'maxVolMultiplier',
   skipLowLeverage: 'skipLowLeverage',
+  // privateKey: 'privateKey',
+  // bingXApiKey: 'bingXApiKey',
+  // bingXSecretKey: 'bingXSecretKey',
 }
 
 export const defaultCopyTradeFormValues: CopyTradeFormValues = {
@@ -116,9 +120,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   volumeProtection: true,
   lookBackOrders: 10,
   exchange: CopyTradePlatformEnum.BINGX,
-  privateKey: '',
-  bingXApiKey: '',
-  bingXSecretKey: '',
+  copyWalletId: '',
   serviceKey: 'INTERNAL_TEST',
   title: '',
   reverseCopy: false,
@@ -126,22 +128,43 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   enableMaxVolMultiplier: false,
   maxVolMultiplier: 5,
   skipLowLeverage: false,
+  // privateKey: '',
+  // bingXApiKey: '',
+  // bingXSecretKey: '',
 }
 
 interface ExchangeOptions {
   value: CopyTradePlatformEnum
-  label: string
+  label: ReactNode
+  isDisabled?: boolean
 }
 export const exchangeOptions: ExchangeOptions[] = [
-  // {
-  //   value: CopyTradePlatformEnum.GMX,
-  //   label: 'GMX',
-  // },
-  {
-    value: CopyTradePlatformEnum.BINGX,
-    label: 'BingX',
-  },
+  getExchangeOption(CopyTradePlatformEnum.BINGX),
+  getExchangeOption(CopyTradePlatformEnum.SYNTHETIX, false),
 ]
+function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {
+  let label = ''
+  switch (exchange) {
+    case CopyTradePlatformEnum.BINGX:
+      label = 'BingX'
+      break
+    case CopyTradePlatformEnum.SYNTHETIX:
+      label = 'Synthetix'
+      break
+    default:
+      break
+  }
+  return {
+    value: exchange,
+    label: (
+      <Flex sx={{ alignItems: 'center', gap: 2 }}>
+        <Image src={parseExchangeImage(exchange)} width={24} height={24} />
+        <Type.Caption>{label}</Type.Caption>
+      </Flex>
+    ),
+    isDisabled: enabled != null && !enabled,
+  }
+}
 
 export const protocolOptions = Object.values(ProtocolEnum).map((value) => {
   return {

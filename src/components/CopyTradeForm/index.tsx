@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import { Trans } from '@lingui/macro'
 import { ReactNode, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -7,17 +8,17 @@ import { volumeMultiplierContent, volumeProtectionContent } from 'components/Too
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import { Button } from 'theme/Buttons'
-import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
-import InputField, { InputPasswordField } from 'theme/InputField'
+import InputField from 'theme/InputField'
 import Label from 'theme/InputField/Label'
 import NumberInputField from 'theme/InputField/NumberInputField'
 import Select from 'theme/Select'
 import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
-import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum } from 'utils/config/enums'
 import { getTokenTradeList } from 'utils/config/trades'
 
+import Wallets from './Wallets'
 import {
   CopyTradeFormValues,
   cloneCopyTradeFormSchema,
@@ -83,7 +84,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
   const pairs = protocol && getTokenTradeList(protocol)
   const addressPairs = pairs?.map((e) => e.address)
-  const isSelectedAll = !!addressPairs && addressPairs?.length === tokenAddresses?.length
+  const pairOptions = pairs?.map((e) => {
+    return { value: e.address, label: e.name }
+  })
+  pairOptions?.unshift({ value: 'all', label: 'All Tokens' })
 
   const account = watch('account')
   const duplicateToAddress = watch('duplicateToAddress')
@@ -100,6 +104,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     }
   )
 
+  const currentWalletId = watch('copyWalletId')
+  const onChangeWallet = (walletId: string) => setValue(fieldName.copyWalletId, walletId)
+
   useEffect(() => {
     reset(defaultFormValues)
     setTimeout(() => {
@@ -114,16 +121,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleSelectAll = () => {
-    if (isSelectedAll) {
-      setValue('tokenAddresses', [])
-    } else {
-      !!addressPairs && setValue('tokenAddresses', addressPairs)
-      clearErrors('tokenAddresses')
-    }
-  }
-
-  const permissionToSelectProtocol = useCopyTradePermission()
+  const permissionToSelectProtocol = useCopyTradePermission(true)
 
   return (
     <>
@@ -174,7 +172,35 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           </>
         )}
 
-        <Type.BodyBold mb={3}>1. Copy Information</Type.BodyBold>
+        <Type.BodyBold mb={3}>
+          <Trans>1. Choose Platform</Trans>
+        </Type.BodyBold>
+        <Flex mb={[3, 20]} sx={{ gap: [3, 4], flexDirection: ['column', 'row'], alignItems: ['start', 'end'] }}>
+          <Box flex="1" width="100%">
+            <Type.Caption color="neutral3" mb={2} fontWeight={600}>
+              Platform
+            </Type.Caption>
+            <Select
+              options={exchangeOptions}
+              defaultMenuIsOpen={false}
+              value={exchangeOptions.find((option) => option.value === platform)}
+              onChange={(newValue: any) => setValue(fieldName.exchange, newValue.value)}
+              isSearchable={false}
+              isDisabled={isEdit || isClone}
+            />
+          </Box>
+          <Box flex="1" width="100%" sx={{ alignItems: 'center', gap: 2 }}>
+            <Wallets
+              disabledSelect={!!isEdit || !!isClone}
+              platform={platform}
+              currentWalletId={currentWalletId}
+              onChangeWallet={onChangeWallet}
+            />
+            {errors.copyWalletId?.message && <Type.Small color="red2">{errors.copyWalletId.message}</Type.Small>}
+          </Box>
+        </Flex>
+
+        <Type.BodyBold mb={3}>2. Copy Information</Type.BodyBold>
         <Flex sx={{ gap: [3, 4] }} mb={[3, 20]} flexDirection={['column', 'row']}>
           <Box flex="1" width="100%">
             <InputField block {...register(fieldName.title)} error={errors.title?.message} label="Title" />
@@ -190,39 +216,37 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             />
           </Box>
         </Flex>
-
-        <Flex sx={{ gap: [3, 3, 4] }} mb={3} flexDirection={['column', 'column', 'row']}>
-          <Box flex={['auto', 'auto', 1]}>
-            <Flex alignItems="center" mb={12} sx={{ gap: 3 }}>
-              <SwitchInputField
-                checked={isSelectedAll}
-                onChange={handleSelectAll}
-                switchLabel="Trading Pairs"
-                labelColor={errors.tokenAddresses?.message ? 'red1' : 'neutral2'}
-              />
-            </Flex>
-            <Flex sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}>
-              {pairs?.map((pair) => {
-                return (
-                  <ControlledCheckbox
-                    key={pair.address}
-                    value={pair.address}
-                    label={`${pair.name}/USD`}
-                    // labelSx={{ fontSize: 14, lineHeight: '20px' }}
-                    size={16}
-                    {...register(fieldName.tokenAddresses)}
-                    wrapperSx={{ width: 95, flexShrink: 0 }}
-                  />
+        <Box mb={3}>
+          <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
+          <Flex sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}>
+            <Select
+              closeMenuOnSelect={false}
+              options={pairOptions}
+              value={pairOptions?.filter?.((option) => tokenAddresses.includes(option.value))}
+              onChange={(newValue: any, actionMeta: any) => {
+                clearErrors(fieldName.tokenAddresses)
+                if (actionMeta?.option?.value === 'all') {
+                  setValue(fieldName.tokenAddresses, addressPairs)
+                  return
+                }
+                setValue(
+                  fieldName.tokenAddresses,
+                  newValue?.map((data: any) => data.value)
                 )
-              })}
-            </Flex>
-            {!!errors?.tokenAddresses?.message && (
-              <Type.Caption color="red1" mt={1} display="block">
-                {errors?.tokenAddresses?.message}
-              </Type.Caption>
-            )}
-          </Box>
-          <Box flex={['auto', 'auto', 1]} height={80}>
+              }}
+              isSearchable
+              isMulti
+            />
+          </Flex>
+          {!!errors?.tokenAddresses?.message && (
+            <Type.Caption color="red1" mt={1} display="block">
+              {errors?.tokenAddresses?.message}
+            </Type.Caption>
+          )}
+        </Box>
+
+        <Flex sx={{ gap: [3, 3, 3] }} mb={3} flexDirection={['column', 'column', 'row']}>
+          <Box flex="1" height={80}>
             <Type.Caption color="neutral3" mb={16} fontWeight={600}>
               Leverage slider:{' '}
               <Box as="span" color="primary1">
@@ -247,20 +271,21 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               </Type.Caption>
             ) : null}
           </Box>
+          <Box ml={3} sx={{ height: 76, width: '1px', bg: 'neutral4', display: ['none', 'none', 'block'] }} />
+          <Box flex="1">
+            <SwitchInputField
+              switchLabel="Reverse Copy"
+              labelColor="orange1"
+              {...register(fieldName.reverseCopy)}
+              error={errors.reverseCopy?.message}
+            />
+            <Type.Caption mt={2} color="neutral2">
+              Copin will execute the order that is the inverse of the trader&apos;s order.
+            </Type.Caption>
+          </Box>
         </Flex>
-        <Box flex="1">
-          <SwitchInputField
-            switchLabel="Reverse Copy"
-            labelColor="orange1"
-            {...register(fieldName.reverseCopy)}
-            error={errors.reverseCopy?.message}
-          />
-          <Type.Caption mt={2} color="neutral2">
-            Copin will execute the order that is the inverse of the trader&apos;s order.
-          </Type.Caption>
-        </Box>
         <Divider my={20} />
-        <Type.BodyBold mb={3}>2. Risk Management</Type.BodyBold>
+        <Type.BodyBold mb={3}>3. Risk Management</Type.BodyBold>
         <RowWrapper3>
           <Box>
             <SwitchInputField
@@ -360,7 +385,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             />
           </Box>
         </RowWrapper3>
-        <Box mt={20}>
+        <Box mt={3}>
           <SwitchInputField
             switchLabel="Skip Low Leverage"
             // labelColor="orange1"
@@ -371,69 +396,6 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             Copin will not execute the order that has leverage lower than the leverage you are setting.
           </Type.Caption>
         </Box>
-        {!isClone && (
-          <>
-            <Divider my={20} />
-            <Type.BodyBold mb={3}>3. Copy Platform</Type.BodyBold>
-            <Flex sx={{ gap: [3, 3, 4] }} mb={[3, 4]} flexDirection={['column', 'column', 'row']} alignItems="start">
-              <Flex flex="1" sx={{ gap: [3, 4] }} flexDirection={['column', 'row']} width="100%" alignItems="start">
-                <Box flex="1" width="100%">
-                  <Type.Caption color="neutral3" mb={2} fontWeight={600}>
-                    Platform
-                  </Type.Caption>
-                  <Select
-                    options={exchangeOptions}
-                    defaultMenuIsOpen={false}
-                    value={exchangeOptions.find((option) => option.value === platform)}
-                    onChange={(newValue: any) => setValue(fieldName.exchange, newValue.value)}
-                    isSearchable={false}
-                    isDisabled={isEdit}
-                  />
-                </Box>
-                {platform === CopyTradePlatformEnum.BINGX && (
-                  <Box flex="2" width="100%">
-                    <InputPasswordField
-                      label="Your BingX API Key"
-                      block
-                      {...register(fieldName.bingXApiKey)}
-                      error={errors.bingXApiKey?.message}
-                      disabled={isEdit}
-                      allowShowPassword
-                    />
-                    <Flex mt={12} alignItems="center" sx={{ gap: 2 }}>
-                      <Type.Caption>Don&#39;t have a BingX account?</Type.Caption>
-                      <Box as="a" lineHeight="20px" href="https://bingx.com/en-us/invite/DY5QNN/" target="_blank">
-                        <Type.Caption>Register Here</Type.Caption>
-                      </Box>
-                    </Flex>
-                  </Box>
-                )}
-              </Flex>
-              {platform === CopyTradePlatformEnum.GMX && (
-                <Box flex="1" width="100%">
-                  <InputPasswordField
-                    label="Your Private Key"
-                    block
-                    {...register(fieldName.privateKey)}
-                    error={errors.privateKey?.message}
-                    disabled={isEdit}
-                  />
-                </Box>
-              )}
-              {platform === CopyTradePlatformEnum.BINGX && (
-                <Box flex="1" width="100%">
-                  <InputPasswordField
-                    label="Your BingX Secret Key"
-                    block
-                    {...register(fieldName.bingXSecretKey)}
-                    error={errors.bingXSecretKey?.message}
-                    disabled={isEdit}
-                  />
-                </Box>
-              )}
-            </Flex>
-          </>
-        )}
         <Box sx={{ gap: 4 }} mt={4}>
           <Button
             block

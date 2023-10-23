@@ -39,10 +39,10 @@ export async function getConfigDetailsByIdApi({ id }: { id: string }) {
 
 export async function getConfigDetailsByKeyApi({
   exchange,
-  apiKey,
+  copyWalletId,
 }: {
   exchange: CopyTradePlatformEnum
-  apiKey: string
+  copyWalletId: string
 }) {
-  return requester.get(`${SERVICE}/${exchange}/${apiKey}`).then((res: any) => res.data as CopyTradeConfigData)
+  return requester.get(`${SERVICE}/${exchange}/${copyWalletId}`).then((res: any) => res.data as CopyTradeConfigData)
 }

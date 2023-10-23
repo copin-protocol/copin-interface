@@ -19,6 +19,7 @@ const TraderDetails = lazy(() => import('./TraderDetails'))
 const PositionDetails = lazy(() => import('./PositionDetails'))
 const SharedPositionDetails = lazy(() => import('./SharedPositionDetails'))
 const MyProfile = lazy(() => import('./MyProfile'))
+const WalletManagement = lazy(() => import('./WalletManagement'))
 const Stats = lazy(() => import('./Stats'))
 const TopOpenings = lazy(() => import('./TopOpenings'))
 const SharedBacktestSingle = lazy(() => import('./SharedBacktestSingle'))
@@ -70,6 +71,7 @@ function App() {
             ></ProtocolRoute>
 
             <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>
+            <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagement}></AuthedRoute>
             <Route path={ROUTES.HOME.path} component={Home}></Route>
 
             <Route path="*" component={NotFound}></Route>

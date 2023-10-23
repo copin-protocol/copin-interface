@@ -54,6 +54,7 @@ export const EVENT_ACTIONS = {
   },
   [EventCategory.ROUTES]: {
     MY_PROFILE: 'my_profile',
+    WALLET_MANAGEMENT: 'wallet_management',
     HISTORY: 'history',
     TOP_OPENING_POSITIONS_ALL: 'top_opening_positions_all',
     JOIN_DISCORD: 'join_discord',

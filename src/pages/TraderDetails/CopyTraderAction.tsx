@@ -9,7 +9,7 @@ import { ProtocolEnum } from 'utils/config/enums'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
-import CopyTraderDrawer from './CopyTraderDrawer'
+import CopyTraderModal from './CopyTraderModal'
 import ModalContactUs from './ModalContactUs'
 
 const CopyTraderAction = ({
@@ -54,7 +54,7 @@ const CopyTraderAction = ({
         Copy Trader
       </Button>
       {isOpenModal && (
-        <CopyTraderDrawer protocol={protocol} account={account} isOpen={isOpenModal} onClose={handleCloseModal} />
+        <CopyTraderModal protocol={protocol} account={account} isOpen={isOpenModal} onClose={handleCloseModal} />
       )}
       {isOpenContactModal && <ModalContactUs onDismiss={() => setIsOpenContactModal(false)} />}
       {!hasCopyPermission && (

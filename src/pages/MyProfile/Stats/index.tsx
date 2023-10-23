@@ -25,7 +25,7 @@ const ViewEnumLabel = {
   [ViewEnum.DailyRoi]: 'Daily ROI',
 }
 
-const Stats = ({ exchange, uniqueKey }: { exchange: CopyTradePlatformEnum; uniqueKey?: string | null }) => {
+const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; copyWalletId: string | undefined }) => {
   const { currentOption, changeCurrentOption } = useOptionChange({ optionName: 'filter', options: TIME_FILTER_OPTIONS })
   const [view, setView] = useState<ViewEnum>(ViewEnum.DailyRoi)
   const to = useMemo(() => dayjs().utc().valueOf(), [])
@@ -40,13 +40,13 @@ const Stats = ({ exchange, uniqueKey }: { exchange: CopyTradePlatformEnum; uniqu
   )
   const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])
   const { data, isLoading } = useQuery(
-    [QUERY_KEYS.GET_MY_PNL_DATA, exchange, from, to, timeframe, uniqueKey],
+    [QUERY_KEYS.GET_MY_PNL_DATA, exchange, from, to, timeframe, copyWalletId],
     () =>
       getCopyTradePnLApi({
         from,
         to,
         exchange,
-        uniqueKey,
+        copyWalletId,
       }),
     {
       retry: 0,

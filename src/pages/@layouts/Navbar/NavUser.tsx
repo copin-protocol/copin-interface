@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Clock, Key, SignOut, UserCircle, Users } from '@phosphor-icons/react'
+import { Clock, Key, SignOut, UserCircle, Users, Wallet } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -52,6 +52,16 @@ const NavUser = () => {
                         <UserCircle size={20} />
                         <Box color="neutral1">
                           <Trans>Profile</Trans>
+                        </Box>
+                      </Flex>
+                    </DropdownItem>
+                  </Link>
+                  <Link to={ROUTES.WALLET_MANAGEMENT.path}>
+                    <DropdownItem onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].WALLET_MANAGEMENT)}>
+                      <Flex alignItems="center" sx={{ gap: 2 }}>
+                        <Wallet size={20} />
+                        <Box color="neutral1">
+                          <Trans>Wallet Management</Trans>
                         </Box>
                       </Flex>
                     </DropdownItem>

@@ -39,6 +39,9 @@ const ROUTES = {
   MY_REFERRAL: {
     path: '/me/referral',
   },
+  WALLET_MANAGEMENT: {
+    path: '/wallet-management',
+  },
   STATS: {
     path: '/stats',
   },

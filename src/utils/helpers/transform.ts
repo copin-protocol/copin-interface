@@ -1,8 +1,12 @@
 import dayjs from 'dayjs'
 
 import { ApiListResponse, ApiMeta } from 'apis/api'
+import { CopyWalletData } from 'entities/copyWallet'
 import { LINKS, SUPPORTED_LOCALES } from 'utils/config/constants'
-import { ProtocolEnum, TimeFilterByEnum, TimeframeEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, ProtocolEnum, TimeFilterByEnum, TimeframeEnum } from 'utils/config/enums'
+import { COPY_WALLET_TRANS } from 'utils/config/translations'
+
+import { addressShorten } from './format'
 
 // dayjs.extend(duration)
 
@@ -162,4 +166,16 @@ export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
 
 export function parseProtocolImage(protocol: ProtocolEnum) {
   return `/images/protocols/${protocol}.png`
+}
+
+export function parseExchangeImage(exchange: CopyTradePlatformEnum) {
+  return `/images/exchanges/${exchange}.png`
+}
+
+export function parseWalletName(wallet: CopyWalletData) {
+  return wallet.name
+    ? wallet.name
+    : `${COPY_WALLET_TRANS[wallet.exchange]}: ${
+        wallet?.smartWalletAddress ? addressShorten(wallet?.smartWalletAddress) : wallet.bingX?.apiKey?.slice(0, 5)
+      }`
 }
