@@ -71,6 +71,7 @@ export default function SettingsAndResult({ data }: { data: TestInstanceData }) 
     updateInstance({ id: data.id, homeId: data.homeId, stage: prevStage })
   }
   const [currentSort, setCurrentSort] = useState<TableSortProps<TableResultData>>()
+
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
       {stage !== 'setting' && stage !== 'selecting' && (
@@ -110,9 +111,6 @@ export default function SettingsAndResult({ data }: { data: TestInstanceData }) 
         <Box px={3} sx={{ flex: '1 0 0', overflow: 'auto' }}>
           <Box sx={{ py: 4 }}>
             <Box sx={{ maxWidth: 1000, mx: 'auto' }}>
-              {/*<TableLabel mb={3} sx={{ fontSize: ['18px', '20px'], lineHeight: ['18px', '20px'] }}>*/}
-              {/*  Backtest strategy*/}
-              {/*</TableLabel>*/}
               <BacktestForm
                 protocol={protocol}
                 onSubmit={handleSubmit}

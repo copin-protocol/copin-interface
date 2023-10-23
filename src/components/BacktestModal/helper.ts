@@ -14,7 +14,7 @@ export function stringifyRequestData(
     data.toTime
   }__${data.testingType}__${data.lookBackOrders ? data.lookBackOrders : '0'}__${
     data.stopLossAmount ? data.stopLossAmount : '0'
-  }__${data.reverseCopy ? '1' : '0'}${
+  }__${data.maxVolMultiplier}__${data.reverseCopy ? '1' : '0'}${
     data.tokenAddresses?.length
       ? `__${data.tokenAddresses.map((address) => tokenStringifyMapping[address]).join('_')}`
       : ''
@@ -37,8 +37,9 @@ export function parseRequestData(params: string | undefined, protocol: ProtocolE
   const testingType = listData[6] as CopyTradeTypeEnum
   const lookBackOrders = Number(listData[7])
   const stopLossAmount = Number(listData[8])
-  const reverseCopy = listData[9]
-  const tokenAddresses = listData[10] ? listData[10].split('_').map((index: string) => tokenParseMapping[index]) : []
+  const maxVolMultiplier = Number(listData[9])
+  const reverseCopy = listData[10]
+  const tokenAddresses = listData[11] ? listData[11].split('_').map((index: string) => tokenParseMapping[index]) : []
 
   const parseData = [account, balance, orderVolume, leverage, fromTime, toTime]
 
@@ -61,7 +62,10 @@ export function parseRequestData(params: string | undefined, protocol: ProtocolE
   }
   if (!isNaN(stopLossAmount) && stopLossAmount > 0) {
     result.enableStopLoss = true
-    result.lookBackOrders = lookBackOrders
+    result.stopLossAmount = stopLossAmount
+  }
+  if (!isNaN(maxVolMultiplier)) {
+    result.maxVolMultiplier = maxVolMultiplier
   }
   if (reverseCopy === '1') result.reverseCopy = true
   return result
