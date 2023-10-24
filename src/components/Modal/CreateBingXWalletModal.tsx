@@ -17,7 +17,7 @@ import Modal from 'theme/Modal'
 import { Box } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 
-import { ApiWalletFormValues, apiWalletFormSchema } from './schema'
+import { ApiWalletFormValues, apiWalletFormSchema, defaultFormValues } from './schema'
 
 export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () => void }) {
   const {
@@ -27,6 +27,7 @@ export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () =>
   } = useForm<ApiWalletFormValues>({
     mode: 'onChange',
     shouldFocusError: true,
+    defaultValues: defaultFormValues,
     resolver: yupResolver(apiWalletFormSchema),
   })
 
@@ -50,7 +51,7 @@ export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () =>
     if (submitting) return
     createWallet.mutate({
       exchange: CopyTradePlatformEnum.BINGX,
-      name: data.name,
+      name: !!data.name ? data.name : undefined,
       bingX: {
         apiKey: data.apiKey,
         secretKey: data.secretKey,
