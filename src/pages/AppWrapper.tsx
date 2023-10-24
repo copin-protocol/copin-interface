@@ -7,6 +7,7 @@ import useGlobalDialog from 'hooks/store/useGlobalDialog'
 import { useInitTraderCopying } from 'hooks/store/useTraderCopying'
 import { useInitTraderFavorites } from 'hooks/store/useTraderFavorites'
 import { usePollingUsdPrice } from 'hooks/store/useUsdPrices'
+import useChainRestrict from 'hooks/web3/useChainRestrict'
 import useEagerConnect from 'hooks/web3/useEagerConnect'
 import Footer from 'pages/@layouts/Footer'
 import Navbar from 'pages/@layouts/Navbar'
@@ -15,6 +16,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { FOOTER_HEIGHT, NAVBAR_HEIGHT } from 'utils/config/constants'
 
 const AppWrapper = ({ children }: { children: ReactNode }) => {
+  useChainRestrict()
   useInitTraderFavorites()
   useInitTraderCopying()
   useEagerConnect()
@@ -56,7 +58,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
           >
             {dialog.hasLoading && <Loading />}
             <Type.BodyBold display="block">{dialog.title}</Type.BodyBold>
-            {!!dialog.description && <Type.Caption color="neutral4">{dialog.description}</Type.Caption>}
+            {!!dialog.description && <Type.Caption color="neutral3">{dialog.description}</Type.Caption>}
             <Box>{dialog.body}</Box>
           </Box>
         </Flex>

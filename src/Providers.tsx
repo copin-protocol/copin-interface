@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 import ThemeProvider from 'theme'
 
+import { CopyWalletProvider } from 'hooks/features/useCopyWalletContext'
 import ThemedGlobalStyle from 'theme/styles'
 
 import DappProvider from './DappProvider'
@@ -25,7 +26,9 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
         <QueryClientProvider client={queryClient}>
           {/* <Updaters /> */}
           <BrowserRouter>
-            <DappProvider>{children}</DappProvider>
+            <DappProvider>
+              <CopyWalletProvider>{children}</CopyWalletProvider>
+            </DappProvider>
           </BrowserRouter>
         </QueryClientProvider>
       </LanguageProvider>

@@ -100,8 +100,8 @@ msgstr "Asset Distribution"
 #~ msgstr "At least 8 characters (uppercase, lowercase, and number)"
 
 #: src/hooks/web3/useAuth.tsx
-msgid "Authorization Error"
-msgstr "Authorization Error"
+#~ msgid "Authorization Error"
+#~ msgstr "Authorization Error"
 
 #: src/pages/MyProfile/MyCopies/index.tsx
 msgid "Available Margin"
@@ -173,16 +173,16 @@ msgid "Can't copy"
 msgstr "Can't copy"
 
 #: src/hooks/web3/useAuth.tsx
-msgid "Can't switch to {0}"
-msgstr "Can't switch to {0}"
+#~ msgid "Can't switch to {0}"
+#~ msgstr "Can't switch to {0}"
 
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Canceled"
 msgstr "Canceled"
 
 #: src/hooks/web3/useAuth.tsx
-msgid "Chain Error"
-msgstr "Chain Error"
+#~ msgid "Chain Error"
+#~ msgstr "Chain Error"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Change Password"
@@ -224,8 +224,8 @@ msgstr "Closed"
 #~ msgstr "Collapse"
 
 #: src/components/CreateWalletAction/index.tsx
-msgid "Coming Soon"
-msgstr "Coming Soon"
+#~ msgid "Coming Soon"
+#~ msgstr "Coming Soon"
 
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Communicating with wallet. Sign message with your wallet"
@@ -247,9 +247,9 @@ msgstr "Confirm"
 msgid "Confirming..."
 msgstr "Confirming..."
 
-#: src/pages/@layouts/Navbar/Menu.tsx
-#~ msgid "Connect Wallet"
-#~ msgstr "Connect Wallet"
+#: src/components/LoginAction/ConnectButton.tsx
+msgid "Connect Wallet"
+msgstr "Connect Wallet"
 
 #: src/pages/Stats/ChartComponent.tsx
 #: src/pages/Stats/ChartComponent.tsx
@@ -296,7 +296,7 @@ msgstr "Create BingX Wallet"
 msgid "Create BingX wallet"
 msgstr "Create BingX wallet"
 
-#: src/components/CopyTradeForm/Wallets.tsx
+#: src/components/CreateSmartWalletModal/index.tsx
 msgid "Create Smart Wallet"
 msgstr "Create Smart Wallet"
 
@@ -391,9 +391,7 @@ msgstr "Enter referral code"
 #: src/hooks/features/useBacktestRequest.tsx
 #: src/hooks/features/useBacktestRequest.tsx
 #: src/hooks/features/useUpdateCopyTrade.tsx
-#: src/hooks/web3/useAuth.tsx
 #: src/hooks/web3/useContractMutation.tsx
-#: src/hooks/web3/useTokenApproval.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
@@ -443,7 +441,7 @@ msgstr "HISTORY"
 msgid "Hey"
 msgstr "Hey"
 
-#: src/components/CopyTradeForm/Wallets.tsx
+#: src/components/CreateSmartWalletModal/index.tsx
 msgid "Hi! Copier"
 msgstr "Hi! Copier"
 
@@ -580,8 +578,8 @@ msgid "Login to Copin"
 msgstr "Login to Copin"
 
 #: src/components/LoginAction/ConnectButton.tsx
-msgid "Login with MetaMask"
-msgstr "Login with MetaMask"
+#~ msgid "Login with MetaMask"
+#~ msgstr "Login with MetaMask"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Logout"
@@ -715,8 +713,8 @@ msgid "No link to the trader’s original position was found."
 msgstr "No link to the trader’s original position was found."
 
 #: src/hooks/web3/useAuth.tsx
-msgid "No provider was found"
-msgstr "No provider was found"
+#~ msgid "No provider was found"
+#~ msgstr "No provider was found"
 
 #: src/components/BacktestResult/SingleBacktestResult.tsx
 msgid "No trade history from {0} to {1}"
@@ -789,8 +787,8 @@ msgid "Platform"
 msgstr "Platform"
 
 #: src/hooks/web3/useAuth.tsx
-msgid "Please authorize to access your account"
-msgstr "Please authorize to access your account"
+#~ msgid "Please authorize to access your account"
+#~ msgstr "Please authorize to access your account"
 
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "Please check the verification code from your email!"
@@ -810,8 +808,12 @@ msgstr "Please pick trader to view your history"
 
 #: src/hooks/web3/useAuth.tsx
 #: src/hooks/web3/useAuth.tsx
-msgid "Please switch network on your wallet to {0}"
-msgstr "Please switch network on your wallet to {0}"
+#~ msgid "Please switch network on your wallet to {0}"
+#~ msgstr "Please switch network on your wallet to {0}"
+
+#: src/hooks/web3/useChainRestrict.tsx
+msgid "Please switch your wallet to {0}"
+msgstr "Please switch your wallet to {0}"
 
 #: src/components/LoginAction/ModalRegister.tsx
 #: src/components/LoginAction/ModalResetPassword.tsx
@@ -865,8 +867,8 @@ msgstr "Profit Rate"
 #~ msgstr "Profit factor"
 
 #: src/hooks/web3/useAuth.tsx
-msgid "Provider Error"
-msgstr "Provider Error"
+#~ msgid "Provider Error"
+#~ msgstr "Provider Error"
 
 #: src/pages/MyProfile/Layouts/Layout.tsx
 msgid "REFERRAL"
@@ -1028,7 +1030,7 @@ msgstr "Skipping..."
 msgid "Smart Wallet"
 msgstr "Smart Wallet"
 
-#: src/components/CopyTradeForm/Wallets.tsx
+#: src/components/CreateSmartWalletModal/index.tsx
 msgid "Smart wallets are a unique Copin offering that allows copiers to copytrade at Synthetix platform."
 msgstr "Smart wallets are a unique Copin offering that allows copiers to copytrade at Synthetix platform."
 
@@ -1065,7 +1067,6 @@ msgstr "Stopped"
 #: src/components/WalletDetailsCard/DeleteWalletAction.tsx
 #: src/hooks/features/useUpdateCopyTrade.tsx
 #: src/hooks/web3/useContractMutation.tsx
-#: src/hooks/web3/useTokenApproval.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
@@ -1111,7 +1112,7 @@ msgstr "The maximum number of positions that can be opened at the same time per 
 msgid "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
 msgstr "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
 
-#: src/components/CopyTradeForm/Wallets.tsx
+#: src/components/CreateSmartWalletModal/index.tsx
 msgid "The process of creating a wallet is quick and only costs a small amount in gas fees."
 msgstr "The process of creating a wallet is quick and only costs a small amount in gas fees."
 
@@ -1148,7 +1149,7 @@ msgstr "This copy position has been closed successfully"
 msgid "This trader list is empty"
 msgstr "This trader list is empty"
 
-#: src/components/CopyTradeForm/Wallets.tsx
+#: src/components/CreateSmartWalletModal/index.tsx
 msgid "To start, you need to create a smart wallet."
 msgstr "To start, you need to create a smart wallet."
 
@@ -1306,8 +1307,12 @@ msgid "Unlimited"
 msgstr "Unlimited"
 
 #: src/hooks/web3/useAuth.tsx
-msgid "Unsupported Chain"
-msgstr "Unsupported Chain"
+#~ msgid "Unsupported Chain"
+#~ msgstr "Unsupported Chain"
+
+#: src/hooks/web3/useChainRestrict.tsx
+msgid "Unsupported Network"
+msgstr "Unsupported Network"
 
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "Unverified User"
@@ -1345,7 +1350,7 @@ msgstr "Verify account"
 #~ msgid "View Order Detail"
 #~ msgstr "View Order Detail"
 
-#: src/components/CopyTradeForm/Wallets.tsx
+#: src/components/CreateSmartWalletModal/index.tsx
 msgid "View more"
 msgstr "View more"
 
@@ -1382,7 +1387,7 @@ msgstr "Wallet Name"
 msgid "Warning"
 msgstr "Warning"
 
-#: src/components/CopyTradeForm/Wallets.tsx
+#: src/components/CreateSmartWalletModal/index.tsx
 msgid "What is smart wallet?"
 msgstr "What is smart wallet?"
 

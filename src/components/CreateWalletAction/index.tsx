@@ -1,15 +1,20 @@
 import { Trans } from '@lingui/macro'
 import React, { ReactNode, useState } from 'react'
 
+import CreateSmartWalletModal from 'components/CreateSmartWalletModal'
 import CreateBingXWalletModal from 'components/Modal/CreateBingXWalletModal'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { Button } from 'theme/Buttons'
 import { Flex, Image, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
 export default function CreateWalletAction() {
+  const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [currentExchange, setCurrentExchange] = useState<CopyTradePlatformEnum | undefined>()
+
+  const hasSynthetixWallet = !!copyWallets?.find((wallet) => wallet.exchange === CopyTradePlatformEnum.SYNTHETIX)
 
   const handleOpenCreateModal = (exchange: CopyTradePlatformEnum) => {
     setCurrentExchange(exchange)
@@ -32,9 +37,28 @@ export default function CreateWalletAction() {
         exchange={CopyTradePlatformEnum.SYNTHETIX}
         label={<Trans>Smart Wallet</Trans>}
         description={<Trans>A non-custody wallet. Your own all your assets, fully decentralized copy trading</Trans>}
+        handleClick={
+          // () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
+          !hasSynthetixWallet && !loadingCopyWallets
+            ? () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
+            : undefined
+        }
       />
       {openCreateModal && currentExchange === CopyTradePlatformEnum.BINGX && (
-        <CreateBingXWalletModal onDismiss={() => setOpenCreateModal(false)} />
+        <CreateBingXWalletModal
+          onDismiss={() => {
+            setOpenCreateModal(false)
+            reloadCopyWallets()
+          }}
+        />
+      )}
+      {openCreateModal && currentExchange === CopyTradePlatformEnum.SYNTHETIX && (
+        <CreateSmartWalletModal
+          onDismiss={() => {
+            setOpenCreateModal(false)
+            reloadCopyWallets()
+          }}
+        />
       )}
     </>
   )
@@ -63,7 +87,7 @@ function WalletItem({ exchange, label, description, handleClick }: WalletItemPro
         onClick={() => handleClick && handleClick(exchange)}
         disabled={!handleClick}
       >
-        {handleClick ? <Trans>Create</Trans> : <Trans>Coming Soon</Trans>}
+        <Trans>Create</Trans>
       </Button>
     </Flex>
   )

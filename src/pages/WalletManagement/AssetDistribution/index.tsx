@@ -5,12 +5,11 @@ import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from 'recharts'
 
 import SectionTitle from 'components/@ui/SectionTitle'
 import { CopyWalletData } from 'entities/copyWallet'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { Flex } from 'theme/base'
 import { getColorFromText } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
-
-import useCopyWalletContext from '../useCopyWalletContext'
 
 export default function AssetDistribution() {
   const { copyWallets } = useCopyWalletContext()

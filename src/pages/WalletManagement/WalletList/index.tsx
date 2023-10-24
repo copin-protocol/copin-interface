@@ -9,10 +9,9 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import SectionTitle from 'components/@ui/SectionTitle'
 import ToastBody from 'components/@ui/ToastBody'
 import WalletDetailsCard from 'components/WalletDetailsCard'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
-
-import useCopyWalletContext from '../useCopyWalletContext'
 
 export default function WalletList() {
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()

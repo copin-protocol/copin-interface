@@ -9,6 +9,7 @@ const useChain = () => {
     () => getChainMetadata(connectedChain?.id ? parseInt(connectedChain?.id, 16) : DEFAULT_CHAIN_ID),
     [connectedChain]
   )
+
   return { chain: currentChain, setChain, settingChain }
 }
 

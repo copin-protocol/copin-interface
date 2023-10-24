@@ -23,8 +23,8 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
     data: copyWallets,
     isLoading: loadingCopyWallets,
     refetch: reloadCopyWallets,
-  } = useQuery([QUERY_KEYS.GET_COPY_WALLETS_LIST], () => getAllCopyWalletsApi(), {
-    enabled: !!myProfile,
+  } = useQuery([QUERY_KEYS.GET_COPY_WALLETS_LIST, myProfile?.id], () => getAllCopyWalletsApi(), {
+    enabled: !!myProfile?.id,
     retry: 0,
   })
 

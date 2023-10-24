@@ -12,7 +12,6 @@ import { DEFAULT_CHAIN_ID, OPTIMISM_GOERLI } from 'utils/web3/chains'
 import { CONTRACT_ABIS, CONTRACT_ADDRESSES } from 'utils/web3/contracts'
 import { rpcProvider } from 'utils/web3/providers'
 
-import CreateSmartWallet from './CreateSmartWallet'
 import FundModal from './FundModal'
 
 const SmartWallet = () => {
@@ -52,7 +51,7 @@ const SmartWallet = () => {
           </Button>
         </Flex>
       )}
-      {!!data && !data[0] && <CreateSmartWallet chainId={chainId} factory={factory} onCreated={() => refetch()} />}
+      {/* {!!data && !data[0] && <CreateSmartWallet chainId={chainId} factory={factory} onCreated={() => refetch()} />} */}
       {depositing && !!walletAccount && !!data && !!data[0] && (
         <FundModal
           account={walletAccount}
