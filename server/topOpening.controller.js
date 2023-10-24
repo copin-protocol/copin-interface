@@ -11,7 +11,7 @@ const getTopOpenings = async (req, res) => {
       req,
       res,
       params: {
-        title: `Top Opening Positions on ${protocol}`,
+        title: `Top Opening Positions on ${protocol} | Copin Analyzer`,
         thumbnail,
         url: `${configs.baseUrl}/${protocol}/top-openings`,
       },

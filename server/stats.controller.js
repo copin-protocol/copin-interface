@@ -9,7 +9,7 @@ const getStats = async (req, res) => {
       req,
       res,
       params: {
-        title: `Copin Stats`,
+        title: `Copin Stats | Copin Analyzer`,
         thumbnail,
         url: `${configs.baseUrl}/stats`,
       },

@@ -14,7 +14,7 @@ const indexPath = resolve(__dirname, '..', 'build', 'index.html')
 
 const renderHTML = ({ req, res, params = {} }) => {
   const {
-    title = 'Trader Explorer',
+    title = 'Trader Explorer | Copin Analyzer',
     description = 'Explore, analyze, and evaluate on-chain traders from all of the perpetual DEXs (GMX, Kwenta, DYDX, etc.)',
     thumbnail = `${configs.baseUrl}/images/cover/cover.png`,
     url = `${configs.baseUrl}`,
