@@ -6,7 +6,7 @@ const getTraderDetail = async (req, res) => {
   const { time = 'D60' } = req.query
   const { protocol, address } = req.params
 
-  let thumbnail = `${configs.baseUrl}/cover.png`
+  let thumbnail = `${configs.baseUrl}/images/cover/cover.png`
   try {
     const newThumbnail = `${configs.imageApiUrl}/address_${address}_protocol_${protocol}_time_${time}`
     const image = await axios.get(`${newThumbnail}`)
@@ -15,8 +15,7 @@ const getTraderDetail = async (req, res) => {
 
   try {
     renderHTML({req, res, params: {
-      title: `Trader ${addressShorten(address)} on ${protocol} - Copin Analyzer`,
-      description: `Copy this trader on Copin`,
+      title: `Trader ${addressShorten(address)} on ${protocol} - Copy this trader on Copin`,
       thumbnail,
       url: `${configs.baseUrl}/${protocol}/trader/${address}?time=${time}`,
     }})

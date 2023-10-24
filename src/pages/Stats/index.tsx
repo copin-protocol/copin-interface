@@ -78,7 +78,7 @@ export default function Stats() {
 
   return (
     <>
-      <CustomPageTitle title="Stats" />
+      <CustomPageTitle title="Copin Stats" />
       <Container p={3}>
         <Flex my={24} sx={{ alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 3 }}>
           <Type.H5 color="neutral8" sx={{ px: 2, py: 1, bg: 'neutral1' }}>
