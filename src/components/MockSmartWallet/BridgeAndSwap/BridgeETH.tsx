@@ -1,7 +1,10 @@
+import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
 
+import EthIcon from 'assets/icons/ic_eth.svg'
+import OpIcon from 'assets/icons/ic_op.svg'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
-import { Box, Type } from 'theme/base'
+import { Box, Flex, Image, Type } from 'theme/base'
 
 const ABI = [
   {
@@ -24,9 +27,13 @@ const ABI = [
 const BridgeETH = () => {
   return (
     <Box variant="card" mt={3}>
-      <Type.BodyBold mb={2}>
-        <Type.BodyBold>Bridge Goerli ETH to OP Goerli ETH</Type.BodyBold>
-      </Type.BodyBold>
+      <Flex sx={{ gap: 2 }} alignItems="center" mb={3}>
+        <Image src={EthIcon} size={24} />
+        <Image src={OpIcon} size={24} sx={{ position: 'relative', left: -3 }} />
+        <Type.BodyBold sx={{ position: 'relative', left: -3 }}>
+          <Trans>Bridge ETH to OP (Goerli)</Trans>
+        </Type.BodyBold>
+      </Flex>
       <a
         href="https://goerli.hop.exchange/#/send?sourceNetwork=ethereum&destNetwork=optimism&token=ETH"
         target="_blank"

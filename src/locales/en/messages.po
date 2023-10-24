@@ -159,6 +159,14 @@ msgstr "BingX Secret Key"
 msgid "BingX Wallet"
 msgstr "BingX Wallet"
 
+#: src/components/MockSmartWallet/BridgeAndSwap/BridgeETH.tsx
+msgid "Bridge ETH to OP (Goerli)"
+msgstr "Bridge ETH to OP (Goerli)"
+
+#: src/components/MockSmartWallet/BridgeAndSwap/BridgesUSD.tsx
+msgid "Bridge sUSD to OP (Goerli)"
+msgstr "Bridge sUSD to OP (Goerli)"
+
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx
 msgid "By continuing, you agree to our"
@@ -1078,6 +1086,9 @@ msgstr "Success"
 #: src/pages/Home/ConditionFilter/FilterSuggestion.tsx
 msgid "Suggestion:"
 msgstr "Suggestion:"
+#: src/components/MockSmartWallet/BridgeAndSwap/SwapETHsUSD.tsx
+msgid "Swap ETH to sUSD (Goerli)"
+msgstr "Swap ETH to sUSD (Goerli)"
 
 #: src/utils/config/translations.tsx
 msgid "Synthetix"
