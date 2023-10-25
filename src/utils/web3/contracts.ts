@@ -11,6 +11,7 @@ import ERC20_ABI from 'abis/ERC20.json'
 import MULTICALL_ABI from 'abis/Multicall.json'
 import SMART_ACCOUNT_ABI from 'abis/SmartAccount.json'
 import SMART_ACCOUNT_FACTORY_ABI from 'abis/SmartAccountFactory.json'
+import SYNTHETIX_MARKET_ABI from 'abis/SynthetixMarket.json'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { ContractInfo } from 'utils/web3/types'
 
@@ -29,6 +30,7 @@ export const CONTRACT_ABIS: {
   [CONTRACT_QUERY_KEYS.ERC20]: ERC20_ABI,
   [CONTRACT_QUERY_KEYS.SMART_ACCOUNT]: SMART_ACCOUNT_ABI,
   [CONTRACT_QUERY_KEYS.SMART_ACCOUNT_FACTORY]: SMART_ACCOUNT_FACTORY_ABI,
+  [CONTRACT_QUERY_KEYS.SYNTHETIX_MARKET]: SYNTHETIX_MARKET_ABI,
 }
 
 export const CONTRACT_ADDRESSES: {

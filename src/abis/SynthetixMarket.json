@@ -1,0 +1,26 @@
+[
+  {
+    "constant": true,
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+    "name": "remainingMargin",
+    "outputs": [
+      { "internalType": "uint256", "name": "marginRemaining", "type": "uint256" },
+      { "internalType": "bool", "name": "invalid", "type": "bool" }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+    "name": "accessibleMargin",
+    "outputs": [
+      { "internalType": "uint256", "name": "marginAccessible", "type": "uint256" },
+      { "internalType": "bool", "name": "invalid", "type": "bool" }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

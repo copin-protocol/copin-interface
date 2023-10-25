@@ -5,6 +5,7 @@ import { getAllCopyWalletsApi } from 'apis/copyWalletApis'
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserData } from 'entities/user'
 import useMyProfile from 'hooks/store/useMyProfile'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 export interface CopyWalletContextData {
@@ -34,6 +35,8 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
     copyWallets,
     reloadCopyWallets,
   }
+
+  const smartWallet = copyWallets?.find((w) => w.exchange === CopyTradePlatformEnum.SYNTHETIX)?.smartWalletAddress
 
   return <CopyWalletContext.Provider value={contextValue}>{children}</CopyWalletContext.Provider>
 }
