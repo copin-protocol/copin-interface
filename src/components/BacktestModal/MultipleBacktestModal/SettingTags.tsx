@@ -31,6 +31,10 @@ export default function SettingTags({
           value={settings.enableStopLoss ? `ON(${settings.stopLossAmount})` : 'OFF'}
         />
         <SettingItem
+          titleKey={'maxVolMultiplier'}
+          value={settings.maxVolMultiplier ? `ON(${settings.maxVolMultiplier})` : 'OFF'}
+        />
+        <SettingItem
           title={'TIME:'}
           value={`${formatLocalDate(settings?.fromTime, DATE_FORMAT)} - ${formatLocalDate(
             settings?.toTime,
@@ -95,6 +99,9 @@ function getTitle({ key }: { key: keyof NonNullable<TestInstanceData['settings']
       break
     case 'enableStopLoss':
       title = 'STOPLOSS:'
+      break
+    case 'maxVolMultiplier':
+      title = 'MAX VOL MULTIPLIER:'
       break
     default:
       break

@@ -37,7 +37,7 @@ export default function TimeFilterSection({ triggerResize, contextValues }: Time
         <Flex
           justifyContent="start"
           alignItems="center"
-          sx={{ gap: [0, 1, 1, 2] }}
+          sx={{ gap: [1, 1, 1, 2] }}
           mb={[2, 2, 2, 0]}
           mt={isInternal ? 0 : ['6px', '6px', '6px', 0]}
         >
@@ -50,7 +50,7 @@ export default function TimeFilterSection({ triggerResize, contextValues }: Time
               to={to}
               changeTimeRange={changeTimeRange}
               anchor={sm ? 'left' : 'right'}
-              anchorPos={sm ? 0 : -32}
+              anchorPos={sm ? 0 : -125}
             />
           )}
         </Flex>

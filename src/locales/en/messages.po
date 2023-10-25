@@ -103,6 +103,10 @@ msgid "Avg Leverage"
 msgstr "Avg Leverage"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Avg ROI"
+msgstr "Avg ROI"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Avg Volume"
 msgstr "Avg Volume"
 
@@ -134,6 +138,10 @@ msgstr "By continuing, you agree to our"
 #: src/utils/config/translations.tsx
 #~ msgid "CLOSED"
 #~ msgstr "CLOSED"
+
+#: src/theme/Buttons/CopyButton.tsx
+msgid "Can't copy"
+msgstr "Can't copy"
 
 #: src/hooks/web3/useAuth.tsx
 msgid "Can't switch to {0}"
@@ -751,8 +759,8 @@ msgid "REFERRAL"
 msgstr "REFERRAL"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-msgid "ROI"
-msgstr "ROI"
+#~ msgid "ROI"
+#~ msgstr "ROI"
 
 #: src/pages/Home/ConditionFilter/index.tsx
 msgid "Ranking Filter"
@@ -941,9 +949,17 @@ msgstr "Stopped"
 msgid "Success"
 msgstr "Success"
 
+#: src/pages/Home/ConditionFilter/FilterSuggestion.tsx
+msgid "Suggestion:"
+msgstr "Suggestion:"
+
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 msgid "TRADER EXPLORER"
 msgstr "TRADER EXPLORER"
+
+#: src/pages/@layouts/Navbar/index.tsx
+msgid "Telegram"
+msgstr "Telegram"
 
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx
@@ -1108,6 +1124,10 @@ msgstr "Total Unique Trader"
 msgid "Total Volume"
 msgstr "Total Volume"
 
+#: src/components/@ui/TradeProtocol/index.tsx
+msgid "Trade On"
+msgstr "Trade On"
+
 #: src/pages/Home/Layouts/HomeMobile.tsx
 msgid "Traders"
 msgstr "Traders"
@@ -1123,6 +1143,10 @@ msgstr "Transaction has been executed successfully"
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Try Again"
 msgstr "Try Again"
+
+#: src/pages/@layouts/Navbar/index.tsx
+msgid "Twitter (X)"
+msgstr "Twitter (X)"
 
 #: src/theme/Uploader/index.tsx
 #~ msgid "Tải ảnh không thành công do sai định dạnh ảnh!"

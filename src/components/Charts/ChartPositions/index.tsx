@@ -14,7 +14,7 @@ import {
   UTCTimestamp,
   createChart,
 } from 'lightweight-charts'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getChartDataV2 } from 'apis/positionApis'
@@ -67,6 +67,7 @@ export default function ChartPositions({
   hasNextPage,
   fetchNextPage,
   isLoadingClosed,
+  currencySelectProps,
 }: ChartPositionsProps) {
   const { myProfile } = useMyProfile()
   const chartId = componentIds?.chart ? componentIds.chart : 'chart-positions'
@@ -611,6 +612,7 @@ export default function ChartPositions({
             handleChangeOption={(option) => {
               changeCurrency && changeCurrency(option)
             }}
+            selectProps={currencySelectProps}
           />
           {toggleExpand && (
             <IconBox

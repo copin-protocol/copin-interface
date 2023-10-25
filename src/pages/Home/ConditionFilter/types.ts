@@ -7,5 +7,6 @@ export interface ConditionFilterProps {
   changeRankingFilters: TradersContextData['changeRankingFilters']
   tab: TradersContextData['filterTab']
   onCancel?: () => void
+  filtersExpanded?: boolean
   onClickTitle?: () => void
 }

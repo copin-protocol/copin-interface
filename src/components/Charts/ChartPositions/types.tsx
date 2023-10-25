@@ -1,4 +1,5 @@
 import { SystemStyleObject } from '@styled-system/css'
+import { Props } from 'react-select'
 import { GridProps } from 'styled-system'
 
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
@@ -28,4 +29,5 @@ export interface ChartPositionsProps {
   fetchNextPage?: () => void
   hasNextPage?: boolean
   isLoadingClosed?: boolean
+  currencySelectProps?: Omit<Props, 'theme'>
 }

@@ -18,6 +18,7 @@ export default function ConditionFilter({
   tab,
   onCancel,
   onClickTitle,
+  filtersExpanded,
 }: ConditionFilterProps) {
   const [filterTab, setFilterTab] = useState(tab) // reduce render
   const prevTab = useRef(filterTab)
@@ -40,30 +41,44 @@ export default function ConditionFilter({
         }}
         onClick={onClickTitle}
       >
-        <Flex
+        <Box
           alignItems="center"
-          sx={{ gap: 2 }}
-          color={filterTab === FilterTabEnum.DEFAULT ? 'neutral1' : 'neutral3'}
+          sx={{
+            gap: 2,
+            color: [
+              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.DEFAULT ? 'neutral1' : 'neutral3',
+              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.DEFAULT ? 'neutral1' : 'neutral3',
+              filterTab === FilterTabEnum.DEFAULT ? 'neutral1' : 'neutral3',
+            ],
+          }}
           onClick={() => setFilterTab(FilterTabEnum.DEFAULT)}
           role="button"
+          display={{ _: tab !== FilterTabEnum.DEFAULT && !filtersExpanded ? 'none' : 'flex', md: 'flex' }}
         >
           <Funnel size={20} />
           <Type.BodyBold fontSize={[14, 14, 16]}>
             <Trans>Default Filter</Trans>
           </Type.BodyBold>
-        </Flex>
-        <Flex
+        </Box>
+        <Box
           alignItems="center"
-          sx={{ gap: 2 }}
-          color={filterTab === FilterTabEnum.RANKING ? 'neutral1' : 'neutral3'}
+          sx={{
+            gap: 2,
+            color: [
+              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.RANKING ? 'neutral1' : 'neutral3',
+              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.RANKING ? 'neutral1' : 'neutral3',
+              filterTab === FilterTabEnum.RANKING ? 'neutral1' : 'neutral3',
+            ],
+          }}
           onClick={() => setFilterTab(FilterTabEnum.RANKING)}
           role="button"
+          display={{ _: tab !== FilterTabEnum.RANKING && !filtersExpanded ? 'none' : 'flex', md: 'flex' }}
         >
           <ChartBar size={20} />
           <Type.BodyBold fontSize={[14, 14, 16]}>
             <Trans>Ranking Filter</Trans>
           </Type.BodyBold>
-        </Flex>
+        </Box>
       </Flex>
 
       {filterTab === FilterTabEnum.DEFAULT ? (
