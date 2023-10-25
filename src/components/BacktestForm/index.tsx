@@ -77,7 +77,7 @@ export default function BacktestForm({
   const pairs = useMemo(() => getTokenTradeList(protocol), [protocol])
   const addressPairs = pairs.map((e) => e.address)
   const isSelectedAll = addressPairs.length === tokenAddresses?.length
-  const enableVolumeMultiplier = !!watch('maxVolMultiplier')
+  const [enableVolumeMultiplier, setEnableVolumeMultiplier] = useState(!!watch('maxVolMultiplier'))
 
   const { sm } = useResponsive()
   const [showGuide, setShowGuide] = useState(false)
@@ -250,6 +250,7 @@ export default function BacktestForm({
               } else {
                 setValue(fieldName.maxVolMultiplier!, undefined)
               }
+              setEnableVolumeMultiplier(e.target.checked)
             }}
             tooltipContent={
               <Box width="calc(100vw - 32px)" maxWidth={450}>
