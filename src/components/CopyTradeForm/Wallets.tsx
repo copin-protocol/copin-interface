@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Wallet } from '@phosphor-icons/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import CreateSmartWalletModal from 'components/CreateSmartWalletModal'
 import CreateBingXWalletModal from 'components/Modal/CreateBingXWalletModal'
@@ -24,24 +24,23 @@ export default function Wallets({
   disabledSelect: boolean
 }) {
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
+  const copyWalletsByExchange = copyWallets?.filter((e) => e.exchange === platform)
+  const exchangeRef = useRef<CopyTradePlatformEnum | undefined>()
 
   useEffect(() => {
-    if (currentWalletId || !copyWallets) return
-    onChangeWallet(copyWallets[0]?.id)
-  }, [currentWalletId, copyWallets])
+    if (exchangeRef.current === platform || !copyWalletsByExchange) return
+    onChangeWallet(copyWalletsByExchange[0]?.id)
+    exchangeRef.current = platform
+  }, [currentWalletId, copyWalletsByExchange, platform])
 
   if (loadingCopyWallets) return <Loading />
 
-  const walletOptions = copyWallets
-    ?.filter((data) => {
-      return data.exchange === platform
-    })
-    .map((walletData) => {
-      return {
-        label: parseWalletName(walletData),
-        value: walletData.id,
-      }
-    })
+  const walletOptions = copyWalletsByExchange?.map((walletData) => {
+    return {
+      label: parseWalletName(walletData),
+      value: walletData.id,
+    }
+  })
 
   if (!walletOptions?.length) return <NoWallet platform={platform} onCreateWalletSuccess={reloadCopyWallets} />
 

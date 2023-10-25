@@ -17,6 +17,8 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
+import { SERVICE_KEYS } from 'utils/config/keys'
+import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
 import { getTokenTradeList } from 'utils/config/trades'
 
 import Wallets from './Wallets'
@@ -161,7 +163,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                         options={protocolOptions}
                         defaultMenuIsOpen={false}
                         value={protocolOptions.find((option) => option.value === protocol)}
-                        onChange={(newValue: any) => setValue('protocol', newValue.value)}
+                        onChange={(newValue: any) => {
+                          setValue('protocol', newValue.value)
+                          setValue('serviceKey', SERVICE_KEYS[newValue.value as ProtocolEnum])
+                        }}
                         isSearchable={false}
                         isDisabled={!!defaultFormValues.duplicateToAddress}
                       />
@@ -213,7 +218,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               block
               name={fieldName.volume}
               control={control}
-              suffix={<Type.Caption color="neutral2">USD</Type.Caption>}
+              suffix={<Type.Caption color="neutral2">{CURRENCY_PLATFORMS[platform]}</Type.Caption>}
               error={errors.volume?.message}
             />
           </Box>

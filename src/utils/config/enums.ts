@@ -124,3 +124,9 @@ export enum SmartAccountCommand {
   DELEGATE_DEPOSIT_MARGIN = 7,
   DELEGATE_RELEASE_FEE = 8,
 }
+
+export enum CurrencyEnum {
+  USD = 'USD',
+  SUSD = 'sUSD',
+  USDC = 'USDC',
+}

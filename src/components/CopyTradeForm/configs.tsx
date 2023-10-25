@@ -3,6 +3,7 @@ import * as yup from 'yup'
 
 import { Flex, Image, Type } from 'theme/base'
 import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { SERVICE_KEYS } from 'utils/config/keys'
 import { parseExchangeImage, parseProtocolImage } from 'utils/helpers/transform'
 
 const commonSchema = {
@@ -31,7 +32,10 @@ const commonSchema = {
 export const copyTradeFormSchema = yup.object({
   ...commonSchema,
   serviceKey: yup.string().required().label('Service Key'),
-  exchange: yup.mixed().oneOf([CopyTradePlatformEnum.GMX, CopyTradePlatformEnum.BINGX]).label('Exchange'),
+  exchange: yup
+    .mixed()
+    .oneOf([CopyTradePlatformEnum.GMX, CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.SYNTHETIX])
+    .label('Exchange'),
   // privateKey: yup.string().when('exchange', {
   //   is: CopyTradePlatformEnum.GMX,
   //   then: (schema) => schema.required().label('Private Key'),
@@ -121,7 +125,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   lookBackOrders: 10,
   exchange: CopyTradePlatformEnum.BINGX,
   copyWalletId: '',
-  serviceKey: 'INTERNAL_TEST',
+  serviceKey: SERVICE_KEYS[ProtocolEnum.GMX],
   title: '',
   reverseCopy: false,
   duplicateToAddress: '',
