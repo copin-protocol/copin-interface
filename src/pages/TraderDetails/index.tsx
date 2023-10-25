@@ -30,7 +30,7 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Box, Flex, Type } from 'theme/base'
-import { DEFAULT_LIMIT, FOOTER_HEIGHT } from 'utils/config/constants'
+import { DEFAULT_LIMIT, NAVBAR_HEIGHT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { ALL_TOKENS_ID, getTokenOptions } from 'utils/config/trades'
@@ -234,10 +234,12 @@ export default function TraderDetails() {
           <Flex
             sx={{
               alignItems: 'center',
+              borderBottom: ['small', 'small', 'small', 'none'],
+              borderColor: ['neutral4', 'neutral4', 'neutral4', 'transparent'],
               width: ['100%', '100%', '100%', 'auto'],
               height: ['40px', '40px', '40px', '100%'],
               position: ['fixed', 'fixed', 'fixed', 'static'],
-              bottom: FOOTER_HEIGHT + 56,
+              top: NAVBAR_HEIGHT + 71,
               zIndex: 10,
               bg: ['neutral7', 'neutral7', 'neutral7', undefined],
             }}
@@ -264,6 +266,7 @@ export default function TraderDetails() {
                 justifyContent: 'center',
                 height: ['auto', 50],
                 gap: 24,
+                mt: [40, 40, 40, 0],
               }}
             >
               <Box textAlign="center" color="neutral3" flex={['1', 'none']}>

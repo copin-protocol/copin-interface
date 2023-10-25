@@ -23,6 +23,10 @@ const ROUTES = {
     path: '/:protocol/position',
     path_prefix: '/position',
   },
+  SHARED_POSITION_DETAILS: {
+    path: '/:protocol/position/share/:sharedId',
+    path_prefix: '/position/share',
+  },
   MY_PROFILE: {
     path: '/me',
   },

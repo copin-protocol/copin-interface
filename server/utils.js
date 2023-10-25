@@ -12,11 +12,11 @@ const __dirname = path.dirname(__filename)
 
 const indexPath = resolve(__dirname, '..', 'build', 'index.html')
 
-const renderHTML = ({req, res, params = {}}) => {
+const renderHTML = ({ req, res, params = {} }) => {
   const {
-    title = 'Copin Analyzer',
-    description = 'The leading tool to analyze and copy on-chain traders',
-    thumbnail = `${configs.baseUrl}/cover.png`,
+    title = 'Trader Explorer | Copin Analyzer',
+    description = 'Explore, analyze, and evaluate on-chain traders from all of the perpetual DEXs (GMX, Kwenta, DYDX, etc.)',
+    thumbnail = `${configs.baseUrl}/images/cover/cover.png`,
     url = `${configs.baseUrl}`,
   } = params
   readFile(indexPath, 'utf8', (err, htmlData) => {
@@ -66,9 +66,4 @@ function addressShorten(address, num, numsPrefix) {
   return `${prefix}...${suffix}`
 }
 
-export {
-  renderHTML,
-  normalizeText,
-  shortenText,
-  addressShorten,
-}
+export { renderHTML, normalizeText, shortenText, addressShorten }

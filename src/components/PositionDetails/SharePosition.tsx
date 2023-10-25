@@ -2,10 +2,11 @@ import { ShareFat } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { sharePositionApi } from 'apis/storage'
+import { sharePositionApi } from 'apis/shareApis'
 import logoWithText from 'assets/images/logo.png'
 import ToastBody from 'components/@ui/ToastBody'
 import { ImageData } from 'entities/image'
+import { SharePositionData } from 'entities/share'
 import { PositionData } from 'entities/trader'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
@@ -20,23 +21,16 @@ import {
   generateClosedPositionRoute,
   generateOpeningPositionRoute,
   generateParamsUrl,
+  generateSharedPositionRoute,
 } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
 export default function SharePosition({ isOpening, stats }: { isOpening: boolean; stats: PositionData }) {
   const { prices } = useUsdPricesStore()
-  const { myProfile } = useMyProfile()
-  const referralCode = myProfile?.referralCode ?? null
-  const { searchParams } = useSearchParams()
-  const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
-    ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
-    : undefined
-
   const [isSocialMediaSharingOpen, setIsSocialMediaSharingOpen] = useState(false)
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
-  const [image, setImage] = useState<ImageData | null>(null)
+  const [shareData, setShareData] = useState<SharePositionData>()
 
-  const colors = themeColors(true)
   const protocolImg = new Image(32, 32)
   protocolImg.src = parseProtocolImage(stats?.protocol ?? ProtocolEnum.GMX)
   const logoImg = new Image(182, 42)
@@ -50,7 +44,7 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
       setIsSocialMediaSharingOpen(true)
       setIsGeneratingLink(true)
 
-      // get Chart pnl
+      const colors = themeColors(true)
       const canvas = generatePositionCanvas({
         isOpening,
         stats,
@@ -74,7 +68,7 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
               setIsSocialMediaSharingOpen(false)
               return
             }
-            setImage(res)
+            setShareData(res)
             setIsGeneratingLink(false)
           }
           share()
@@ -86,12 +80,13 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
     }
   }
 
+  const { myProfile } = useMyProfile()
+  const referralCode = myProfile?.referralCode ?? null
   const shareLink = generateParamsUrl({
-    url: `${import.meta.env.VITE_URL}${
-      isOpening
-        ? generateOpeningPositionRoute(stats)
-        : generateClosedPositionRoute({ protocol: stats.protocol, id: stats.id, nextHours: nextHoursParam })
-    }`,
+    url: `${import.meta.env.VITE_URL}${generateSharedPositionRoute({
+      protocol: stats?.protocol,
+      sharedId: shareData?.shareId ?? '',
+    })}`,
     key: 'ref',
     value: referralCode,
   })
@@ -111,7 +106,7 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
           link={shareLink}
           onDismiss={() => setIsSocialMediaSharingOpen(false)}
           isGeneratingLink={isGeneratingLink}
-          image={image}
+          image={shareData?.file}
         />
       )}
     </>

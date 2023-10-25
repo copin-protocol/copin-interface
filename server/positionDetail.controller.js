@@ -8,7 +8,7 @@ const getPositionDetails = async (req, res) => {
   const { protocol } = req.params
   const isOpening = !id && !!account && !!indexToken && !!key
 
-  let thumbnail = `${configs.baseUrl}/cover.png`
+  let thumbnail = `${configs.baseUrl}/images/cover/cover.png`
   try {
     const newThumbnail = isOpening
       ? `${configs.imageApiUrl}/share_opening_${protocol}_${key}_${blockNumber}`
@@ -22,8 +22,7 @@ const getPositionDetails = async (req, res) => {
       req,
       res,
       params: {
-        title: `Trader ${addressShorten(account)} on ${protocol} - Copin Analyzer`,
-        description: `View this position details on Copin`,
+        title: `Trader ${addressShorten(account)} on ${protocol} - View this position details on Copin`,
         thumbnail,
         url: `${configs.baseUrl}/${protocol}/position?${
           isOpening

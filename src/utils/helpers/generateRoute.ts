@@ -11,6 +11,9 @@ export const generateTraderDetailsRoute = (
   `/${protocol}${ROUTES.TRADER_DETAILS.path_prefix}/${address}${
     others?.type ? `?${URL_PARAM_KEYS.EXPLORER_TIME_FILTER}=${others.type}` : ''
   }`
+export const generateSharedPositionRoute = (data: { protocol: ProtocolEnum; sharedId: string }) => {
+  return `/${data.protocol}${ROUTES.SHARED_POSITION_DETAILS.path_prefix}/${data.sharedId}`
+}
 export const generateOpeningPositionRoute = (data: {
   protocol: ProtocolEnum
   account: string

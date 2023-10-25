@@ -3,15 +3,16 @@ import { Link } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import TopOpenPositions from 'components/TopOpeningPositions'
+import { useProtocolStore } from 'hooks/store/useProtocols'
 import SwitchProtocols from 'pages/Home/SwitchProtocols'
 import IconButton from 'theme/Buttons/IconButton'
 import { Box, Flex, Type } from 'theme/base'
 
 const TopOpenings = () => {
-  // const { protocol } = useProtocolStore()
+  const { protocol } = useProtocolStore()
   return (
     <>
-      <CustomPageTitle title="Top Opening Positions" />
+      <CustomPageTitle title={`Top Opening Positions on ${protocol}`} />
       <Flex
         sx={{
           width: '100%',
