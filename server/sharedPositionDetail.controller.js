@@ -24,7 +24,7 @@ const getSharedPositionDetails = async (req, res) => {
       params: {
         title: `Trader ${addressShorten(account)} on ${protocol} | Copin Analyzer`,
         thumbnail,
-        url: `${configs.baseUrl}/${protocol}/position/${sharedId}`,
+        url: `${configs.baseUrl}/${protocol}/position/share/${sharedId}`,
       },
     })
   } catch {
