@@ -21,6 +21,7 @@ const useWalletMargin = ({
   availableOnly?: boolean
 }) => {
   const { publicProvider } = useWeb3()
+
   const smartAccountContract = useMemo(() => {
     if (!address) return
     return new Contract(address, CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_ACCOUNT], publicProvider)
@@ -61,7 +62,7 @@ const useWalletMargin = ({
         if (!data) return []
         const margins = data.map((e, i) => ({
           market: accessibleCalls[i].address,
-          value: e[0],
+          value: e[0] as BigNumber,
         }))
         return margins
       },
@@ -80,7 +81,7 @@ const useWalletMargin = ({
         if (!data) return []
         const margins = data.map((e, i) => ({
           market: remainingCalls[i].address,
-          value: e[0],
+          value: e[0] as BigNumber,
         }))
         return margins
       },
@@ -115,6 +116,7 @@ const useWalletMargin = ({
     return new Num(total)
   }, [availableMargin, remainingMargins])
   return {
+    inWallet: availableMargin ? new Num(availableMargin) : null,
     available,
     total,
     loading: loadingAvailableMargin && loadingAccessibleMargins && loadingRemainingMargins,

@@ -1,10 +1,9 @@
 import { defaultAbiCoder } from '@ethersproject/abi'
-import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther, parseEther } from '@ethersproject/units'
+import { parseEther } from '@ethersproject/units'
 
+import useWalletMargin from 'hooks/features/useWalletMargin'
 import { useContract } from 'hooks/web3/useContract'
 import useContractMutation from 'hooks/web3/useContractMutation'
-import useContractQuery from 'hooks/web3/useContractQuery'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import useERC20Approval from 'hooks/web3/useTokenApproval'
 import { Button } from 'theme/Buttons'
@@ -34,10 +33,13 @@ const Deposit = ({ account, smartAccount, chainId }: { account: Account; smartAc
     },
     withSignerIfPossible: true,
   })
-  const { data: availableMargin } = useContractQuery<BigNumber>(smartAccountContract, 'availableMargin', [])
+  const { available } = useWalletMargin({
+    address: account.address,
+  })
   const smartAccountMutation = useContractMutation(smartAccountContract)
   const enoughAllowance = isTokenAllowanceEnough(TEST_AMOUNT)
   const sUSDBalance = getTokenBalanceFromAccount(account, 'sUSD')
+
   const deposit = () => {
     const input = defaultAbiCoder.encode(['int256'], [parseEther(TEST_AMOUNT.toString())])
     smartAccountMutation.mutate({
@@ -49,7 +51,7 @@ const Deposit = ({ account, smartAccount, chainId }: { account: Account; smartAc
     <div>
       {isValid ? (
         <>
-          <Box mb={3}>Available Fund: {availableMargin ? formatEther(availableMargin) : '--'} sUSD</Box>
+          <Box mb={3}>Available Fund: {available ? available.str : '--'} sUSD</Box>
           <Type.Caption>Deposit {TEST_AMOUNT} sUSD</Type.Caption>
           {!enoughAllowance && (
             <Button

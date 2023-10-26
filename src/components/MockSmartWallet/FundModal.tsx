@@ -8,9 +8,11 @@ import { Account } from 'utils/web3/types'
 
 import BridgeAndSwap from './BridgeAndSwap'
 import Deposit from './Deposit'
+import Withdraw from './Withdraw'
 
 enum FundTab {
   Deposit = 'Deposit',
+  Withdraw = 'Withdraw',
   BridgeSwap = 'BridgeSwap',
 }
 
@@ -40,6 +42,9 @@ const FundModal = ({
           <TabPane key={FundTab.Deposit} tab="Deposit">
             <></>
           </TabPane>
+          <TabPane key={FundTab.Withdraw} tab="Withdraw">
+            <></>
+          </TabPane>
           <TabPane key={FundTab.BridgeSwap} tab="Bridge & Swap">
             <></>
           </TabPane>
@@ -48,6 +53,7 @@ const FundModal = ({
     >
       <Box p={3}>
         {tab === FundTab.Deposit && <Deposit smartAccount={smartAccount} account={account} chainId={chainId} />}
+        {tab === FundTab.Withdraw && <Withdraw smartAccount={smartAccount} />}
         {tab === FundTab.BridgeSwap && <BridgeAndSwap defaultChainProvider={defaultChainProvider} />}
       </Box>
     </Modal>
