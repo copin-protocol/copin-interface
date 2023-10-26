@@ -96,7 +96,7 @@ const useWalletMargin = ({
           return prev.add(cur.value)
         }
         return prev
-      }, available)
+      }, BigNumber.from(0))
     )
     return new Num(available)
   }, [availableMargin, accessibleMargins])
@@ -110,7 +110,7 @@ const useWalletMargin = ({
           return prev.add(cur.value)
         }
         return prev
-      }, total)
+      }, BigNumber.from(0))
     )
     return new Num(total)
   }, [availableMargin, remainingMargins])

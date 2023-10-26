@@ -12,7 +12,7 @@ import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
 
 export default function AssetDistribution() {
-  const { copyWallets } = useCopyWalletContext()
+  const { copyWallets, smartWallet } = useCopyWalletContext()
   const pieChartData = calculatePercentage(copyWallets)
 
   return (
@@ -48,12 +48,12 @@ export default function AssetDistribution() {
 
 function calculatePercentage(wallets?: CopyWalletData[]) {
   if (!wallets || wallets.length === 0) return []
-  const totalBalance = wallets.reduce((acc, wallet) => acc + wallet.balance, 0)
+  const totalBalance = wallets.reduce((acc, wallet) => acc + (wallet?.balance ?? 0), 0)
   return wallets.map((wallet) => {
     return {
       id: wallet.id,
       name: parseWalletName(wallet),
-      percentage: (wallet.balance / totalBalance) * 100,
+      percentage: ((wallet?.balance ?? 0) / totalBalance) * 100,
       color: getColorFromText(wallet.id),
     } as ChartData
   })

@@ -9,11 +9,22 @@ const ExplorerLogo = ({
   explorerUrl,
   size = 20,
   ...props
-}: { protocol: ProtocolEnum; explorerUrl: string; size?: number } & BoxProps) => {
+}: { protocol: string; explorerUrl: string; size?: number } & BoxProps) => {
+  let icon
+  switch (protocol) {
+    case ProtocolEnum.GMX:
+      icon = 'ARBITRUM'
+      break
+    case ProtocolEnum.KWENTA:
+      icon = 'OPTIMISM'
+      break
+    default:
+      icon = 'OPTIMISM'
+  }
   return (
     <Box sx={{ width: size, height: size, filter: 'grayscale(100%)', ':hover': { filter: 'none' } }} {...props}>
       <a href={explorerUrl} target="_blank" rel="noreferrer">
-        <img width="100%" src={`/images/protocols/ic-${protocol}-explorer.png`} alt={protocol} />
+        <img width="100%" src={`/images/protocols/ic-${icon}-explorer.png`} alt={protocol} />
       </a>
     </Box>
   )

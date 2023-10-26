@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext } from 'react'
+import { ReactNode, createContext, useContext, useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import { getAllCopyWalletsApi } from 'apis/copyWalletApis'
@@ -8,10 +8,14 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
+import useWalletMargin from './useWalletMargin'
+
 export interface CopyWalletContextData {
   myProfile: UserData | null
   loadingCopyWallets: boolean
   copyWallets: CopyWalletData[] | undefined
+  smartWallet: CopyWalletData | undefined
+  bingXWallets: CopyWalletData[] | undefined
   reloadCopyWallets: () => void
 }
 
@@ -29,14 +33,36 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
     retry: 0,
   })
 
+  const bingXWallets = copyWallets?.filter((w) => w.exchange === CopyTradePlatformEnum.BINGX)
+  const smartWallet = copyWallets?.find((w) => w.exchange === CopyTradePlatformEnum.SYNTHETIX)
+  const { total, available } = useWalletMargin({ address: smartWallet?.smartWalletAddress })
+  const normalizedCopyWallets = useMemo(
+    () =>
+      copyWallets?.map((wallet) => {
+        switch (wallet.exchange) {
+          case CopyTradePlatformEnum.BINGX:
+            return wallet
+          case CopyTradePlatformEnum.SYNTHETIX:
+            return {
+              ...wallet,
+              balance: total?.num ?? 0,
+              availableBalance: available?.num ?? 0,
+            }
+          default:
+            return wallet
+        }
+      }),
+    [available?.num, copyWallets, total?.num]
+  )
+
   const contextValue: CopyWalletContextData = {
     myProfile,
     loadingCopyWallets,
-    copyWallets,
+    copyWallets: normalizedCopyWallets,
+    smartWallet,
+    bingXWallets,
     reloadCopyWallets,
   }
-
-  const smartWallet = copyWallets?.find((w) => w.exchange === CopyTradePlatformEnum.SYNTHETIX)?.smartWalletAddress
 
   return <CopyWalletContext.Provider value={contextValue}>{children}</CopyWalletContext.Provider>
 }
