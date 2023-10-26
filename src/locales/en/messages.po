@@ -1086,6 +1086,7 @@ msgstr "Success"
 #: src/pages/Home/ConditionFilter/FilterSuggestion.tsx
 msgid "Suggestion:"
 msgstr "Suggestion:"
+
 #: src/components/MockSmartWallet/BridgeAndSwap/SwapETHsUSD.tsx
 msgid "Swap ETH to sUSD (Goerli)"
 msgstr "Swap ETH to sUSD (Goerli)"
