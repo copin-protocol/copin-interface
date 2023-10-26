@@ -85,11 +85,6 @@ export default function BacktestForm({
     sm ? setTimeout(() => setShowGuide(true), 300) : setShowGuide(false)
   }, [sm])
 
-  // useEffect(() => {
-  //   if (!tokensTraded || tokenAddresses) return
-  //   setValue('tokenAddresses', tokensTraded)
-  // }, [setValue, tokenAddresses, tokensTraded])
-
   const handleSelectAll = () => {
     if (isSelectedAll) {
       setValue('tokenAddresses', [])

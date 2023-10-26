@@ -4,10 +4,12 @@ import { resolve } from 'path'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { getSharedPositionDetails } from './sharedPositionDetail.controller.js'
 import { getPositionDetails } from './positionDetail.controller.js'
 import { getBacktestMultiple } from './sharedBacktestMultiple.controller.js'
 import { getBacktestSingle } from './sharedBacktestSingle.controller.js'
+import { getSharedPositionDetails } from './sharedPositionDetail.controller.js'
+import { getStats } from './stats.controller.js'
+import { getTopOpenings } from './topOpening.controller.js'
 import { getTraderDetail } from './traderDetail.controller.js'
 import { renderHTML } from './utils.js'
 
@@ -30,6 +32,8 @@ app.get('/:protocol/shared-backtest/multiple/:id', getBacktestMultiple)
 app.get('/:protocol/trader/:address', getTraderDetail)
 app.get('/:protocol/position/share/:sharedId', getSharedPositionDetails)
 app.get('/:protocol/position', getPositionDetails)
+app.get('/:protocol/top-openings', getTopOpenings)
+app.get('/stats', getStats)
 app.get('*', (req, res) => {
   renderHTML(req, res)
 })

@@ -168,6 +168,10 @@ msgstr "By continuing, you agree to our"
 #~ msgid "CLOSED"
 #~ msgstr "CLOSED"
 
+#: src/theme/Buttons/CopyButton.tsx
+msgid "Can't copy"
+msgstr "Can't copy"
+
 #: src/hooks/web3/useAuth.tsx
 msgid "Can't switch to {0}"
 msgstr "Can't switch to {0}"
@@ -1069,6 +1073,10 @@ msgstr "Stopped"
 #: src/pages/TraderDetails/CopyTraderModal.tsx
 msgid "Success"
 msgstr "Success"
+
+#: src/pages/Home/ConditionFilter/FilterSuggestion.tsx
+msgid "Suggestion:"
+msgstr "Suggestion:"
 
 #: src/utils/config/translations.tsx
 msgid "Synthetix"

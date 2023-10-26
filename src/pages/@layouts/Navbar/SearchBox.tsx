@@ -120,7 +120,7 @@ const SearchBox = ({
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value)
-    if (!isLoading && e.target.value.trim().length >= MIN_QUICK_SEARCH_LENGTH) {
+    if (e.target.value.trim().length >= MIN_QUICK_SEARCH_LENGTH) {
       setIsLoading(true)
       setVisibleSearchResult(true)
     } else {

@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { CheckCircle, Copy } from '@phosphor-icons/react'
 import { SystemStyleObject } from '@styled-system/css'
 import { useMemo, useRef, useState } from 'react'
@@ -92,8 +93,12 @@ const CopyButton = ({
           setIsCopied(false)
         }, 1500)
       })
-      .catch((err: any) => {
-        toast.error(<Type.Caption color="red1">{err}</Type.Caption>)
+      .catch(() => {
+        toast.error(
+          <Type.Caption color="red1">
+            <Trans>Can&apos;t copy</Trans>
+          </Type.Caption>
+        )
       })
   }
 

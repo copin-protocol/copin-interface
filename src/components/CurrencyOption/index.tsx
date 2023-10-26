@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import React from 'react'
+import { Props } from 'react-select'
 
+import useIsMobile from 'hooks/helpers/useIsMobile'
 import Select from 'theme/Select'
 import { Box } from 'theme/base'
 import { TokenOptionProps } from 'utils/config/trades'
@@ -10,18 +11,22 @@ export default function CurrencyOption({
   options,
   currentOption,
   handleChangeOption,
+  selectProps,
 }: {
   options: TokenOptionProps[]
   currentOption: TokenOptionProps
   handleChangeOption: (option: TokenOptionProps) => void
+  selectProps?: Omit<Props, 'theme'>
 }) {
+  const isMobile = useIsMobile()
   return (
-    <Box sx={{ width: 85, overflowY: 'auto' }}>
+    <Box sx={{ width: 85, position: 'relative', zIndex: 9 }}>
       <Select
-        isSearchable={true}
+        isSearchable={isMobile ? false : true}
         menuPlacement="auto"
         maxMenuHeight={236}
         menuPosition="fixed"
+        {...(selectProps ?? {})}
         variant="outlinedSecondary"
         options={options}
         value={currentOption}
