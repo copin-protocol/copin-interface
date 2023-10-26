@@ -5,6 +5,7 @@ import { getAllCopyWalletsApi } from 'apis/copyWalletApis'
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserData } from 'entities/user'
 import useMyProfile from 'hooks/store/useMyProfile'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 import useWalletMargin from './useWalletMargin'
