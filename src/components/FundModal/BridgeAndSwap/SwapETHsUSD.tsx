@@ -109,6 +109,9 @@ const SwapETHsUSD = ({
           block
           sx={{
             pr: 2,
+            '&[disabled]': {
+              color: 'neutral1',
+            },
           }}
           suffix="sUSD"
         />

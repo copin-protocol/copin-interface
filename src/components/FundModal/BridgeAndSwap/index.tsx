@@ -1,5 +1,4 @@
 import { Contract } from '@ethersproject/contracts'
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { formatEther } from '@ethersproject/units'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
@@ -15,11 +14,11 @@ import BridgeETH from './BridgeETH'
 import BridgesUSD from './BridgesUSD'
 import SwapETHsUSD from './SwapETHsUSD'
 
-const BridgeAndSwap = ({ defaultChainProvider }: { defaultChainProvider: JsonRpcProvider }) => {
+const BridgeAndSwap = () => {
   const { isValid, alert } = useRequiredChain({
     chainId: GOERLI,
   })
-  const { walletProvider, walletAccount } = useWeb3()
+  const { walletProvider, walletAccount, publicProvider } = useWeb3()
   const signer = useMemo(
     () => walletProvider?.getSigner(walletAccount?.address).connectUnchecked(),
     [walletAccount, walletProvider]
@@ -32,8 +31,8 @@ const BridgeAndSwap = ({ defaultChainProvider }: { defaultChainProvider: JsonRpc
   )
 
   const sUSDContract = useMemo(
-    () => new Contract('0xeBaEAAD9236615542844adC5c149F86C36aD1136', ERC20_ABI, defaultChainProvider),
-    [defaultChainProvider]
+    () => new Contract('0xeBaEAAD9236615542844adC5c149F86C36aD1136', ERC20_ABI, publicProvider),
+    [publicProvider]
   )
 
   const { data: ethBalanceGoerli, refetch: refetchEthBalanceGoerli } = useQuery(
@@ -46,16 +45,16 @@ const BridgeAndSwap = ({ defaultChainProvider }: { defaultChainProvider: JsonRpc
       },
     }
   )
-  const { data: ethBalance, refetch: refetchEthBalance } = useQuery(
-    ['eth_balance'],
-    () => defaultChainProvider.getBalance(walletAccount?.address || ''),
-    {
-      enabled: !!walletAccount?.address,
-      select(data) {
-        return Number(formatEther(data))
-      },
-    }
-  )
+  // const { data: ethBalance, refetch: refetchEthBalance } = useQuery(
+  //   ['eth_balance'],
+  //   () => publicProvider.getBalance(walletAccount?.address || ''),
+  //   {
+  //     enabled: !!walletAccount?.address,
+  //     select(data) {
+  //       return Number(formatEther(data))
+  //     },
+  //   }
+  // )
 
   const { data: sUSDBalanceGoerli, refetch: refetchsUSDBalanceGoerli } = useContractQuery<number>(
     sUSDGoerliContract,
@@ -69,17 +68,12 @@ const BridgeAndSwap = ({ defaultChainProvider }: { defaultChainProvider: JsonRpc
     }
   )
 
-  const { data: sUSDBalance, refetch: refetchsUSDBalance } = useContractQuery<number>(
-    sUSDContract,
-    'balanceOf',
-    [walletAccount?.address],
-    {
-      enabled: !!walletAccount?.address,
-      select(data) {
-        return Number(formatEther(data))
-      },
-    }
-  )
+  const { data: sUSDBalance } = useContractQuery<number>(sUSDContract, 'balanceOf', [walletAccount?.address], {
+    enabled: !!walletAccount?.address,
+    select(data) {
+      return Number(formatEther(data))
+    },
+  })
 
   return (
     <div>

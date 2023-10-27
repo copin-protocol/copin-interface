@@ -4,7 +4,6 @@ import { ReactNode, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Divider from 'components/@ui/Divider'
-import MockSmartWallet from 'components/MockSmartWallet'
 import { volumeMultiplierContent, volumeProtectionContent } from 'components/TooltipContents'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
@@ -21,6 +20,7 @@ import { SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
 import { getTokenTradeList } from 'utils/config/trades'
 
+import FundChecking from './FundChecking'
 import Wallets from './Wallets'
 import {
   CopyTradeFormValues,
@@ -77,6 +77,8 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     ),
   })
 
+  const volume = watch('volume')
+  const copyWalletId = watch('copyWalletId')
   const leverage = watch('leverage')
   const platform = watch('exchange')
   const enableStopLoss = watch('enableStopLoss')
@@ -128,7 +130,6 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
   return (
     <>
-      <MockSmartWallet />
       <Box sx={{ p: 3 }}>
         {(isEdit || isClone) && (
           <>
@@ -221,6 +222,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               suffix={<Type.Caption color="neutral2">{CURRENCY_PLATFORMS[platform]}</Type.Caption>}
               error={errors.volume?.message}
             />
+            <FundChecking walletId={copyWalletId} amount={volume} />
           </Box>
         </Flex>
         <Box mb={3}>

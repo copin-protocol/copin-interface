@@ -86,7 +86,7 @@ export const styleVariants = {
     borderColor: 'neutral3',
     '&:hover:not(:disabled),&:active:not(:disabled)': {
       borderColor: 'neutral2',
-      color: 'neutral2',
+      color: 'neutral1',
     },
   },
   [variants.OUTLINE_INACTIVE]: {
@@ -96,7 +96,7 @@ export const styleVariants = {
     borderColor: 'neutral4',
     '&:hover:not(:disabled),&:active:not(:disabled)': {
       borderColor: 'neutral3',
-      color: 'neutral3',
+      color: 'neutral2',
     },
   },
   [variants.GHOST]: {

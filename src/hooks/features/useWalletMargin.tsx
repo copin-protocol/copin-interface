@@ -11,22 +11,38 @@ import { SYNTHETIX_MARKETS } from 'utils/config/trades'
 import { DEFAULT_CHAIN_ID } from 'utils/web3/chains'
 import { CONTRACT_ABIS } from 'utils/web3/contracts'
 
+export interface SmartWalletMargin {
+  inWallet: Num | null
+  total: Num | null
+  available: Num | null
+  loading: boolean
+  accessibleMargins?: {
+    market: string
+    value: BigNumber
+  }[]
+  reloadAvailableMargin: () => void
+}
+
 const useWalletMargin = ({
   address,
   enabled = true,
-  availableOnly = true,
+  totalIncluded = false,
 }: {
   address?: string
   enabled?: boolean
-  availableOnly?: boolean
-}) => {
+  totalIncluded?: boolean
+}): SmartWalletMargin => {
   const { publicProvider } = useWeb3()
 
   const smartAccountContract = useMemo(() => {
     if (!address) return
     return new Contract(address, CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_ACCOUNT], publicProvider)
   }, [address, publicProvider])
-  const { data: availableMargin, isLoading: loadingAvailableMargin } = useQuery(
+  const {
+    data: availableMargin,
+    isLoading: loadingAvailableMargin,
+    refetch: reloadAvailableMargin,
+  } = useQuery(
     [QUERY_KEYS.GET_AVAILABLE_MARGIN, smartAccountContract?.address],
     () => {
       if (!smartAccountContract) return
@@ -36,19 +52,23 @@ const useWalletMargin = ({
       enabled: enabled && !!smartAccountContract,
     }
   )
-  const accessibleCalls: { address: string; name: string; params: any[] }[] = SYNTHETIX_MARKETS[DEFAULT_CHAIN_ID].map(
-    (market) => ({
-      address: market,
-      name: 'accessibleMargin',
-      params: [smartAccountContract?.address],
-    })
+  const accessibleCalls: { address: string; name: string; params: any[] }[] = useMemo(
+    () =>
+      SYNTHETIX_MARKETS[DEFAULT_CHAIN_ID].map((market) => ({
+        address: market,
+        name: 'accessibleMargin',
+        params: [smartAccountContract?.address],
+      })),
+    [smartAccountContract?.address]
   )
-  const remainingCalls: { address: string; name: string; params: any[] }[] = SYNTHETIX_MARKETS[DEFAULT_CHAIN_ID].map(
-    (market) => ({
-      address: market,
-      name: 'remainingMargin',
-      params: [smartAccountContract?.address],
-    })
+  const remainingCalls: { address: string; name: string; params: any[] }[] = useMemo(
+    () =>
+      SYNTHETIX_MARKETS[DEFAULT_CHAIN_ID].map((market) => ({
+        address: market,
+        name: 'remainingMargin',
+        params: [smartAccountContract?.address],
+      })),
+    [smartAccountContract?.address]
   )
   const { data: accessibleMargins, isLoading: loadingAccessibleMargins } = useCustomMulticallQuery(
     CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SYNTHETIX_MARKET],
@@ -76,7 +96,7 @@ const useWalletMargin = ({
     publicProvider,
     undefined,
     {
-      enabled: enabled && !!smartAccountContract && !availableOnly,
+      enabled: enabled && !!smartAccountContract && totalIncluded,
       select: (data: any[]) => {
         if (!data) return []
         const margins = data.map((e, i) => ({
@@ -121,6 +141,7 @@ const useWalletMargin = ({
     total,
     loading: loadingAvailableMargin && loadingAccessibleMargins && loadingRemainingMargins,
     accessibleMargins,
+    reloadAvailableMargin,
   }
 }
 

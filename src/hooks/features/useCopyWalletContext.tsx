@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useMemo } from 'react'
+import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getAllCopyWalletsApi } from 'apis/copyWalletApis'
@@ -8,21 +8,24 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
-import useWalletMargin from './useWalletMargin'
+import useWalletMargin, { SmartWalletMargin } from './useWalletMargin'
 
 export interface CopyWalletContextData {
   myProfile: UserData | null
   loadingCopyWallets: boolean
   copyWallets: CopyWalletData[] | undefined
   smartWallet: CopyWalletData | undefined
+  smartWalletMargin: SmartWalletMargin
   bingXWallets: CopyWalletData[] | undefined
   reloadCopyWallets: () => void
+  loadTotalSmartWallet: () => void
 }
 
 const CopyWalletContext = createContext<CopyWalletContextData>({} as CopyWalletContextData)
 
 export function CopyWalletProvider({ children }: { children: ReactNode }) {
   const { myProfile } = useMyProfile()
+  const [loadedTotalSmartWallet, setLoadedTotalSmartWallet] = useState(false)
 
   const {
     data: copyWallets,
@@ -35,7 +38,10 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
 
   const bingXWallets = copyWallets?.filter((w) => w.exchange === CopyTradePlatformEnum.BINGX)
   const smartWallet = copyWallets?.find((w) => w.exchange === CopyTradePlatformEnum.SYNTHETIX)
-  const { total, available } = useWalletMargin({ address: smartWallet?.smartWalletAddress })
+  const smartWalletMargin = useWalletMargin({
+    address: smartWallet?.smartWalletAddress,
+    totalIncluded: loadedTotalSmartWallet,
+  })
   const normalizedCopyWallets = useMemo(
     () =>
       copyWallets?.map((wallet) => {
@@ -45,14 +51,14 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
           case CopyTradePlatformEnum.SYNTHETIX:
             return {
               ...wallet,
-              balance: total?.num ?? 0,
-              availableBalance: available?.num ?? 0,
+              balance: smartWalletMargin.total?.num ?? 0,
+              availableBalance: smartWalletMargin.available?.num ?? 0,
             }
           default:
             return wallet
         }
       }),
-    [available?.num, copyWallets, total?.num]
+    [smartWalletMargin.available, copyWallets, smartWalletMargin.total]
   )
 
   const contextValue: CopyWalletContextData = {
@@ -62,6 +68,8 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
     smartWallet,
     bingXWallets,
     reloadCopyWallets,
+    smartWalletMargin,
+    loadTotalSmartWallet: () => setLoadedTotalSmartWallet(true),
   }
 
   return <CopyWalletContext.Provider value={contextValue}>{children}</CopyWalletContext.Provider>

@@ -1,13 +1,14 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
 import { PencilSimpleLine } from '@phosphor-icons/react'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { EditText } from 'react-edit-text'
 // eslint-disable-next-line no-restricted-imports
 import 'react-edit-text/dist/index.css'
 
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import TitleWithIcon from 'components/@ui/TilleWithIcon'
+import FundModal, { FundTab } from 'components/FundModal'
 import { CopyWalletData } from 'entities/copyWallet'
 import useChain from 'hooks/web3/useChain'
 import useWeb3 from 'hooks/web3/useWeb3'
@@ -21,15 +22,13 @@ import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { getColorFromText } from 'utils/helpers/css'
 import { addressShorten } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
-import { DEFAULT_CHAIN_ID } from 'utils/web3/chains'
-import { rpcProvider } from 'utils/web3/providers'
 
-import FundModal from '../MockSmartWallet/FundModal'
 import DeleteWalletAction from './DeleteWalletAction'
 import WalletInfo from './WalletInfo'
 
 interface WalletDetailsProps {
   data: CopyWalletData
+  reload: () => void
   hasBorderTop?: boolean
   handleUpdate: ({
     copyWalletId,
@@ -43,16 +42,15 @@ interface WalletDetailsProps {
     callback: (value: string) => void
   }) => void
 }
-export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate }: WalletDetailsProps) {
+export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, reload }: WalletDetailsProps) {
   const walletKey = data?.smartWalletAddress ?? data?.bingX?.apiKey ?? ''
   const isAPIKey = data.exchange === CopyTradePlatformEnum.BINGX
   const [isEdit, setIsEdit] = useState(false)
   const [walletName, setWalletName] = useState(parseWalletName(data))
-  const [openDepositModal, setOenDepositModal] = useState(false)
+  const [fundingModal, setFundingModal] = useState<FundTab | null>(null)
 
   const { walletAccount } = useWeb3()
   const { chain } = useChain()
-  const defaultChainProvider = useMemo(() => rpcProvider(DEFAULT_CHAIN_ID), [])
 
   return (
     <Flex
@@ -142,24 +140,28 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate }: 
           </Flex>
         ) : (
           <Flex alignItems="center" sx={{ gap: 20 }}>
-            <Button type="button" variant="ghostPrimary" sx={{ p: 0 }} onClick={() => setOenDepositModal(true)}>
+            <Button type="button" variant="ghostPrimary" sx={{ p: 0 }} onClick={() => setFundingModal(FundTab.Deposit)}>
               <Trans>Deposit</Trans>
             </Button>
-            <Button type="button" variant="ghostPrimary" sx={{ p: 0 }}>
+            <Button
+              type="button"
+              variant="ghostPrimary"
+              sx={{ p: 0 }}
+              onClick={() => setFundingModal(FundTab.Withdraw)}
+            >
               <Trans>Withdraw</Trans>
             </Button>
           </Flex>
         )}
       </Flex>
       <WalletInfo data={data} sx={{ width: '100%' }} />
-      {openDepositModal && data.smartWalletAddress && walletAccount && (
+      {!!fundingModal && data.smartWalletAddress && walletAccount && (
         <FundModal
-          account={walletAccount}
+          initialTab={fundingModal}
           smartAccount={data.smartWalletAddress}
-          chainId={Number(chain.id)}
-          defaultChainProvider={defaultChainProvider}
-          isOpen={openDepositModal}
-          onDismiss={() => setOenDepositModal(false)}
+          onDismiss={() => {
+            setFundingModal(null)
+          }}
         />
       )}
     </Flex>

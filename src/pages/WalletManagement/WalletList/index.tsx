@@ -67,7 +67,15 @@ export default function WalletList() {
         {copyWallets &&
           copyWallets.length > 0 &&
           copyWallets.map((wallet, index) => {
-            return <WalletDetailsCard key={index} data={wallet} hasBorderTop={false} handleUpdate={handleUpdate} />
+            return (
+              <WalletDetailsCard
+                key={index}
+                data={wallet}
+                hasBorderTop={false}
+                handleUpdate={handleUpdate}
+                reload={reloadCopyWallets}
+              />
+            )
           })}
       </Flex>
     </Flex>

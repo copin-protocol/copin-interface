@@ -3,10 +3,7 @@ import { useResponsive } from 'ahooks'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import CreateWalletAction from 'components/CreateWalletAction'
-import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import useWalletMargin from 'hooks/features/useWalletMargin'
 import { Box, Flex, Type } from 'theme/base'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
 
 import AssetDistribution from './AssetDistribution'
 import DesktopLayout from './Layouts/DesktopLayout'
@@ -24,21 +21,6 @@ export default function WalletManagement() {
   } else if (lg) {
     Layout = TabletLayout
   }
-
-  const { copyWallets } = useCopyWalletContext()
-
-  const smartWallet = copyWallets?.find((w) => w.exchange === CopyTradePlatformEnum.SYNTHETIX)?.smartWalletAddress
-
-  const { available, total, loading } = useWalletMargin({
-    address: smartWallet,
-    enabled: !!smartWallet,
-    availableOnly: false,
-  })
-
-  console.log('available', available)
-  console.log('total', total)
-  console.log('loading', loading)
-
   return (
     <>
       <CustomPageTitle title={`Wallet Management`} />

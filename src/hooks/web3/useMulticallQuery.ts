@@ -111,24 +111,30 @@ export const useCustomMulticall = <T = any>({
 
 export const useCustomMulticallQuery = <TQueryFnData = unknown, TError = unknown, TData = TQueryFnData>(
   abi: any[],
-  calls: any[],
+  calls: { address: string; name: string; params: any[] }[],
   chainId: number,
   provider: JsonRpcProvider,
   account?: string,
   options?: UseQueryOptions<TQueryFnData, TError, TData, any[]>
 ) => {
   const multicall = useCustomMulticall({ chainId, account, provider })
-  return useQuery([...calls, `chainId:${chainId}`, account], async () => (await multicall)(abi, calls), { ...options })
+  const keys = calls.map((call) => `${call.address}.${call.name}(${call.params.join(',')})`)
+  return useQuery(['multicall', ...keys, `chainId:${chainId}`, account], async () => (await multicall)(abi, calls), {
+    ...options,
+  })
 }
 
 const useMulticallQuery = <TQueryFnData = unknown, TError = unknown, TData = TQueryFnData>(
   abi: any[],
-  calls: any[],
+  calls: { address: string; name: string; params: any[] }[],
   chainId?: number,
   options?: UseQueryOptions<TQueryFnData, TError, TData, any[]>
 ) => {
   const multicall = useMulticall(chainId)
-  return useQuery([...calls, `chainId:${chainId}`], async () => (await multicall)(abi, calls), { ...options })
+  const keys = calls.map((call) => `${call.address}.${call.name}(${call.params.join(',')})`)
+  return useQuery(['multicall', ...keys, `chainId:${chainId}`], async () => (await multicall)(abi, calls), {
+    ...options,
+  })
 }
 
 export default useMulticallQuery

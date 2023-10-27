@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CoinVertical } from '@phosphor-icons/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from 'recharts'
 
 import SectionTitle from 'components/@ui/SectionTitle'
@@ -12,8 +12,12 @@ import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
 
 export default function AssetDistribution() {
-  const { copyWallets, smartWallet } = useCopyWalletContext()
+  const { copyWallets, loadTotalSmartWallet } = useCopyWalletContext()
   const pieChartData = calculatePercentage(copyWallets)
+
+  useEffect(() => {
+    loadTotalSmartWallet()
+  }, [])
 
   return (
     <Flex flexDirection="column" height="100%">
