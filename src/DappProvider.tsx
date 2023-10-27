@@ -1,26 +1,62 @@
-import injectedModule from '@web3-onboard/injected-wallets'
+import injectedModule, { ProviderLabel } from '@web3-onboard/injected-wallets'
+// import ledgerModule from '@web3-onboard/ledger'
 import { Web3OnboardProvider, init } from '@web3-onboard/react'
+import walletConnectModule from '@web3-onboard/walletconnect'
 import React from 'react'
 
 import { AuthProvider } from 'hooks/web3/useAuth'
 import themeFn from 'theme/theme'
-import { FONT_FAMILY } from 'utils/config/constants'
-import { chains } from 'utils/web3/chains'
+import { APP_URL, FONT_FAMILY } from 'utils/config/constants'
+import { DEFAULT_CHAIN_ID, SUPPORTED_CHAIN_IDS, chains } from 'utils/web3/chains'
 
 const theme = themeFn(true)
 
-const wallets = [injectedModule()]
+// const ledger = ledgerModule({
+//   projectId: '4ed591829f849797c6391880fa61d5e4',
+//   requiredChains: SUPPORTED_CHAIN_IDS,
+//   walletConnectVersion: 2,
+// })
+
+const walletConnect = walletConnectModule({
+  projectId: '4ed591829f849797c6391880fa61d5e4',
+  requiredChains: [DEFAULT_CHAIN_ID],
+  optionalChains: SUPPORTED_CHAIN_IDS,
+  dappUrl: APP_URL,
+})
+
+const injected = injectedModule({
+  filter: {
+    [ProviderLabel.Detected]: false,
+    [ProviderLabel.RoninWallet]: false,
+  },
+  displayUnavailable: [
+    ProviderLabel.MetaMask,
+    ProviderLabel.Brave,
+    ProviderLabel.Coinbase,
+    ProviderLabel.Trust,
+    ProviderLabel.Coin98Wallet,
+  ],
+  sort(wallets) {
+    const metaMask = wallets.find(({ label }) => label === ProviderLabel.MetaMask)
+    return (
+      [metaMask, ...wallets.filter(({ label }) => label !== ProviderLabel.MetaMask)]
+        // remove undefined values
+        .filter((wallet) => wallet) as any
+    )
+  },
+})
+
 const web3Onboard = init({
   theme: {
     '--w3o-background-color': theme.colors.neutral6,
     '--w3o-foreground-color': theme.colors.neutral5,
     '--w3o-text-color': theme.colors.neutral1,
-    '--w3o-border-color': theme.colors.neutral4,
+    '--w3o-border-color': 'transparent',
     '--w3o-action-color': theme.colors.primary1,
     '--w3o-border-radius': theme.borderRadius.xs,
     '--w3o-font-family': FONT_FAMILY,
   },
-  wallets,
+  wallets: [walletConnect, injected],
   chains,
   appMetadata: {
     name: 'Copin',
