@@ -39,6 +39,9 @@ const ROUTES = {
   MY_REFERRAL: {
     path: '/me/referral',
   },
+  WALLET_MANAGEMENT: {
+    path: '/wallet-management',
+  },
   STATS: {
     path: '/stats',
   },
@@ -53,6 +56,10 @@ const ROUTES = {
   SHARED_BACKTEST_MULTIPLE: {
     path: '/:protocol/shared-backtest/multiple/:id',
     path_prefix: '/shared-backtest/multiple',
+  },
+  USER_ACTIVITY: {
+    path: '/me/activity',
+    path_prefix: '/me/activity',
   },
 }
 

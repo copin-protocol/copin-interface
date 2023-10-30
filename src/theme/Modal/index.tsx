@@ -199,10 +199,16 @@ export default function Modal({
                     ></Box>
                   )}
                   {(Boolean(title) || hasClose) && (
-                    <Flex alignItems="start" justifyContent={hasClose ? 'flex-end' : 'flex-start'} py={3} px={24}>
+                    <Flex
+                      width="100%"
+                      alignItems="start"
+                      justifyContent={hasClose ? 'flex-end' : 'flex-start'}
+                      py={3}
+                      px={24}
+                    >
                       {Boolean(title) && (
                         <Flex flex="1 1 auto">
-                          <Type.H5>{title}</Type.H5>
+                          <Type.H5 width="100%">{title}</Type.H5>
                         </Flex>
                       )}
                       {hasClose && (

@@ -31,6 +31,8 @@ export const QUERY_KEYS = {
   GET_COPY_TRADE_CONFIGS_BY_KEY: 'GET_COPY_TRADE_CONFIGS_BY_KEY',
   GET_REFERRAL_LIST: 'GET_REFERRAL_LIST',
   GET_REFERRAL_STATS: 'GET_REFERRAL_STATS',
+  GET_COPY_WALLETS_LIST: 'GET_COPY_WALLETS_LIST',
+  GET_USER_ACTIVITY_LOGS: 'GET_USER_ACTIVITY_LOGS',
 }
 
 export const CONTRACT_QUERY_KEYS = {
@@ -52,7 +54,7 @@ export const STORAGE_KEYS = {
   SHOW_CHART: 'show-chart',
   HOME_DESKTOP_LAYOUT: 'home-desktop-layout',
   MY_COPY_DATA: 'my-copy-data',
-  MY_COPY_ACTIVE_KEY: 'my-copy-active-key',
+  MY_COPY_WALLET: 'my-copy-wallet',
   MY_HISTORY_TRADERS: 'my-history-traders',
   BACKTEST_GUIDE: 'backtest-guide',
 }
@@ -82,6 +84,7 @@ export const URL_PARAM_KEYS = {
   MY_COPIES_PROTOCOL: 'copies_protocol',
   MY_POSITIONS_STATUS: 'positions_status',
   MY_POSITIONS_ENTRY_STATUS: 'entry_status',
+  USER_ACTIVITY_PAGE: 'activity_page',
 }
 
 export const TOOLTIP_KEYS = {

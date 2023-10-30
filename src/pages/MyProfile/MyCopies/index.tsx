@@ -7,6 +7,7 @@ import CopyTradeCloneDrawer from 'components/CopyTradeCloneDrawer'
 import CopyTradeEditDrawer from 'components/CopyTradeEditDrawer'
 import DeleteCopyTradeModal from 'components/CopyTradeForm/DeleteCopyTradeModal'
 import { CopyTradeData } from 'entities/copyTrade.d'
+import { CopyWalletData } from 'entities/copyWallet'
 import useUpdateCopyTrade from 'hooks/features/useUpdateCopyTrade'
 import { Button } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
@@ -39,6 +40,7 @@ export default function MyCopies({
   isLoadingTraders,
   handleToggleTrader,
   handleAddTrader,
+  copyWallet,
 }: {
   traders: string[]
   selectedTraders: string[]
@@ -54,6 +56,7 @@ export default function MyCopies({
   isLoadingTraders: boolean
   handleToggleTrader: (address: string) => void
   handleAddTrader: (address: string) => void
+  copyWallet: CopyWalletData | null
 }) {
   const [openConfirmStopModal, setOpenConfirmStopModal] = useState(false)
   const { updateCopyTrade, isMutating } = useUpdateCopyTrade({
@@ -162,9 +165,7 @@ export default function MyCopies({
               <Type.Caption color="neutral1">
                 <Trans>Available Margin</Trans>:
               </Type.Caption>
-              <Type.CaptionBold color="neutral1">
-                ${formatNumber(sortedData?.[0]?.bingXAvailableMargin)}
-              </Type.CaptionBold>
+              <Type.CaptionBold color="neutral1">${formatNumber(copyWallet?.balance)}</Type.CaptionBold>
             </Flex>
           </Flex>
           <Flex alignItems="center" sx={{ gap: 3, flexWrap: 'wrap' }}>
