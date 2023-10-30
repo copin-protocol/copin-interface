@@ -32,6 +32,7 @@ export const QUERY_KEYS = {
   GET_REFERRAL_LIST: 'GET_REFERRAL_LIST',
   GET_REFERRAL_STATS: 'GET_REFERRAL_STATS',
   GET_COPY_WALLETS_LIST: 'GET_COPY_WALLETS_LIST',
+  GET_USER_ACTIVITY_LOGS: 'GET_USER_ACTIVITY_LOGS',
 }
 
 export const CONTRACT_QUERY_KEYS = {
@@ -83,6 +84,7 @@ export const URL_PARAM_KEYS = {
   MY_COPIES_PROTOCOL: 'copies_protocol',
   MY_POSITIONS_STATUS: 'positions_status',
   MY_POSITIONS_ENTRY_STATUS: 'entry_status',
+  USER_ACTIVITY_PAGE: 'activity_page',
 }
 
 export const TOOLTIP_KEYS = {

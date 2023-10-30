@@ -57,6 +57,10 @@ const ROUTES = {
     path: '/:protocol/shared-backtest/multiple/:id',
     path_prefix: '/shared-backtest/multiple',
   },
+  USER_ACTIVITY: {
+    path: '/me/activity',
+    path_prefix: '/me/activity',
+  },
 }
 
 export default ROUTES

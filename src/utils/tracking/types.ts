@@ -62,6 +62,7 @@ export const EVENT_ACTIONS = {
     JOIN_TWITTER: 'join_twitter',
     JOIN_GITHUB: 'join_github',
     MY_REFERRAL: 'my_referral',
+    USER_ACTIVITY: 'user_activity',
   },
   [EventCategory.SEARCH]: {
     SEARCH_CLICK: 'search_click',
