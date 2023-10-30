@@ -79,13 +79,19 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, re
                     minHeight: '25px',
                   }}
                   onChange={(e) => {
-                    const value = e.target.value
+                    const value = e.target.value.trim()
                     if (value && value.length > WALLET_NAME_MAX_LENGTH) return
                     setWalletName(e.target.value)
                   }}
                   onSave={({ value, previousValue }) => {
-                    if (!!value) {
-                      handleUpdate({ copyWalletId: data.id, name: value, previousValue, callback: setWalletName })
+                    const trimValue = value.trim()
+                    if (!!trimValue) {
+                      handleUpdate({
+                        copyWalletId: data.id,
+                        name: value.trim(),
+                        previousValue,
+                        callback: setWalletName,
+                      })
                     } else {
                       setWalletName(previousValue)
                     }

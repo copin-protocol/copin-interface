@@ -73,6 +73,11 @@ msgstr "Account"
 msgid "Active Copy"
 msgstr "Active Copy"
 
+#: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/UserActivity/index.tsx
+msgid "Activity"
+msgstr "Activity"
+
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "Add referral successful!"
 msgstr "Add referral successful!"
@@ -160,12 +165,12 @@ msgid "BingX Wallet"
 msgstr "BingX Wallet"
 
 #: src/components/MockSmartWallet/BridgeAndSwap/BridgeETH.tsx
-msgid "Bridge ETH to OP (Goerli)"
-msgstr "Bridge ETH to OP (Goerli)"
+#~ msgid "Bridge ETH to OP (Goerli)"
+#~ msgstr "Bridge ETH to OP (Goerli)"
 
 #: src/components/MockSmartWallet/BridgeAndSwap/BridgesUSD.tsx
-msgid "Bridge sUSD to OP (Goerli)"
-msgstr "Bridge sUSD to OP (Goerli)"
+#~ msgid "Bridge sUSD to OP (Goerli)"
+#~ msgstr "Bridge sUSD to OP (Goerli)"
 
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx
@@ -232,8 +237,8 @@ msgstr "Closed"
 #~ msgstr "Collapse"
 
 #: src/components/CreateWalletAction/index.tsx
-#~ msgid "Coming Soon"
-#~ msgstr "Coming Soon"
+msgid "Coming Soon"
+msgstr "Coming Soon"
 
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Communicating with wallet. Sign message with your wallet"
@@ -271,6 +276,10 @@ msgstr "Copiers Net PnL"
 #: src/pages/Stats/index.tsx
 msgid "Copiers Profit vs Loss"
 msgstr "Copiers Profit vs Loss"
+
+#: src/pages/UserActivity/configs.tsx
+msgid "Copy"
+msgstr "Copy"
 
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "Copy Order"
@@ -352,12 +361,16 @@ msgid "Delete wallet successful!"
 msgstr "Delete wallet successful!"
 
 #: src/components/WalletDetailsCard/index.tsx
-msgid "Deposit"
-msgstr "Deposit"
+#~ msgid "Deposit"
+#~ msgstr "Deposit"
 
 #: src/components/Tables/CopyTradeSettingTable.tsx
 #~ msgid "Detail"
 #~ msgstr "Detail"
+
+#: src/pages/UserActivity/configs.tsx
+msgid "Details"
+msgstr "Details"
 
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Disconnect"
@@ -407,9 +420,17 @@ msgstr "Enter referral code"
 msgid "Error"
 msgstr "Error"
 
+#: src/pages/UserActivity/configs.tsx
+msgid "Error while place order"
+msgstr "Error while place order"
+
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 msgid "FAVORITES"
 msgstr "FAVORITES"
+
+#: src/pages/UserActivity/configs.tsx
+msgid "Failed"
+msgstr "Failed"
 
 #: src/pages/Home/Layouts/HomeMobile.tsx
 msgid "Favorites"
@@ -462,8 +483,12 @@ msgid "How to get BingX API Key?"
 msgstr "How to get BingX API Key?"
 
 #: src/components/@ui/BingXHelp/index.tsx
-msgid "How to get BingX Secret API Key?"
-msgstr "How to get BingX Secret API Key?"
+#~ msgid "How to get BingX Secret API Key?"
+#~ msgstr "How to get BingX Secret API Key?"
+
+#: src/components/@ui/BingXHelp/index.tsx
+msgid "How to get BingX Secret Key?"
+msgstr "How to get BingX Secret Key?"
 
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "If you skip it this time, you will not be able to re-enter the referral code."
@@ -513,6 +538,8 @@ msgstr "Kwenta"
 #: src/components/@ui/Table/renderProps.tsx
 #: src/components/@ui/Table/renderProps.tsx
 #: src/pages/MyProfile/renderProps.tsx
+#: src/pages/UserActivity/configs.tsx
+#: src/pages/UserActivity/configs.tsx
 msgid "L"
 msgstr "L"
 
@@ -978,6 +1005,8 @@ msgstr "Runtime (All)"
 #: src/components/@ui/Table/renderProps.tsx
 #: src/components/@ui/Table/renderProps.tsx
 #: src/pages/MyProfile/renderProps.tsx
+#: src/pages/UserActivity/configs.tsx
+#: src/pages/UserActivity/configs.tsx
 msgid "S"
 msgstr "S"
 
@@ -1050,15 +1079,28 @@ msgstr "Something went wrong"
 msgid "Source"
 msgstr "Source"
 
+#: src/pages/UserActivity/configs.tsx
+msgid "Source Action"
+msgstr "Source Action"
+
+#: src/pages/UserActivity/configs.tsx
+msgid "Source Details"
+msgstr "Source Details"
+
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "Source Order"
 #~ msgstr "Source Order"
+
+#: src/pages/UserActivity/configs.tsx
+msgid "Source Trader"
+msgstr "Source Trader"
 
 #: src/pages/@layouts/Navbar/index.tsx
 msgid "Stats"
 msgstr "Stats"
 
 #: src/pages/MyProfile/MyCopies/index.tsx
+#: src/pages/UserActivity/configs.tsx
 msgid "Status"
 msgstr "Status"
 
@@ -1080,6 +1122,7 @@ msgstr "Stopped"
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
 #: src/pages/TraderDetails/CopyTraderModal.tsx
+#: src/pages/UserActivity/configs.tsx
 msgid "Success"
 msgstr "Success"
 
@@ -1088,8 +1131,8 @@ msgid "Suggestion:"
 msgstr "Suggestion:"
 
 #: src/components/MockSmartWallet/BridgeAndSwap/SwapETHsUSD.tsx
-msgid "Swap ETH to sUSD (Goerli)"
-msgstr "Swap ETH to sUSD (Goerli)"
+#~ msgid "Swap ETH to sUSD (Goerli)"
+#~ msgstr "Swap ETH to sUSD (Goerli)"
 
 #: src/utils/config/translations.tsx
 msgid "Synthetix"
@@ -1098,6 +1141,14 @@ msgstr "Synthetix"
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 msgid "TRADER EXPLORER"
 msgstr "TRADER EXPLORER"
+
+#: src/pages/UserActivity/configs.tsx
+msgid "Target Action"
+msgstr "Target Action"
+
+#: src/pages/UserActivity/configs.tsx
+msgid "Target Wallet"
+msgstr "Target Wallet"
 
 #: src/pages/@layouts/Navbar/index.tsx
 msgid "Telegram"
@@ -1160,6 +1211,10 @@ msgstr "This copy position has been closed successfully"
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "This trader list is empty"
 msgstr "This trader list is empty"
+
+#: src/pages/UserActivity/configs.tsx
+msgid "Time"
+msgstr "Time"
 
 #: src/components/CreateSmartWalletModal/index.tsx
 msgid "To start, you need to create a smart wallet."
@@ -1302,6 +1357,11 @@ msgstr "Try Again"
 msgid "Twitter (X)"
 msgstr "Twitter (X)"
 
+#: src/pages/UserActivity/configs.tsx
+#: src/pages/UserActivity/configs.tsx
+msgid "TxHash"
+msgstr "TxHash"
+
 #: src/theme/Uploader/index.tsx
 #~ msgid "Tải ảnh không thành công do sai định dạnh ảnh!"
 #~ msgstr "Tải ảnh không thành công do sai định dạnh ảnh!"
@@ -1412,8 +1472,8 @@ msgid "Wins"
 msgstr "Wins"
 
 #: src/components/WalletDetailsCard/index.tsx
-msgid "Withdraw"
-msgstr "Withdraw"
+#~ msgid "Withdraw"
+#~ msgstr "Withdraw"
 
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "Would you like to use a referral code?"
@@ -1459,9 +1519,17 @@ msgstr "Your BingX Secret Key"
 msgid "Your Wallet List"
 msgstr "Your Wallet List"
 
+#: src/components/CopyTradeForm/FundChecking.tsx
+msgid "Your copy may failed due to insufficient available margin"
+msgstr "Your copy may failed due to insufficient available margin"
+
 #: src/hooks/features/useUpdateCopyTrade.tsx
 msgid "Your update has been succeeded"
 msgstr "Your update has been succeeded"
+
+#: src/pages/UserActivity/configs.tsx
+msgid "slippage"
+msgstr "slippage"
 
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalLogin.tsx
@@ -1496,7 +1564,7 @@ msgstr "{0}"
 msgid "{0} traders"
 msgstr "{0} traders"
 
-#: src/theme/Tab/TabIcon.tsx
+#: src/theme/Tab/IconTabItem.tsx
 msgid "{text}"
 msgstr "{text}"
 

@@ -51,7 +51,7 @@ export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () =>
     if (submitting) return
     createWallet.mutate({
       exchange: CopyTradePlatformEnum.BINGX,
-      name: !!data.name ? data.name : undefined,
+      name: !!data.name ? data.name?.trim() : undefined,
       bingX: {
         apiKey: data.apiKey,
         secretKey: data.secretKey,
@@ -74,6 +74,9 @@ export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () =>
             error={errors?.apiKey?.message}
             {...register('apiKey', {
               required: { value: true, message: 'This field is required' },
+              onChange: (e) => {
+                e.target.value = e.target.value.trim().replace(/\s/g, '')
+              },
             })}
             allowShowPassword
           />
@@ -86,6 +89,9 @@ export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () =>
             error={errors?.secretKey?.message}
             {...register('secretKey', {
               required: { value: true, message: 'This field is required' },
+              onChange: (e) => {
+                e.target.value = e.target.value.trim().replace(/\s/g, '')
+              },
             })}
           />
 

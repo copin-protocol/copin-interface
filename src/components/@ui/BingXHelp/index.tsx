@@ -45,7 +45,7 @@ const BingXHelp = ({ ...props }: BoxProps) => {
 
       <Flex alignItems="center" sx={{ gap: 2 }}>
         <Type.Caption>
-          <Trans>How to get BingX Secret API Key?</Trans>
+          <Trans>How to get BingX Secret Key?</Trans>
         </Type.Caption>
         <ButtonWithIcon
           type="button"
