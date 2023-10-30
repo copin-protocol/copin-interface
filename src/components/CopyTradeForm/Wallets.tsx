@@ -1,20 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { ArrowSquareOut, HandWaving, Wallet } from '@phosphor-icons/react'
-import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { Wallet } from '@phosphor-icons/react'
+import { useEffect, useRef, useState } from 'react'
 
-import { getAllCopyWalletsApi } from 'apis/copyWalletApis'
-import Divider from 'components/@ui/Divider'
+import CreateSmartWalletModal from 'components/CreateSmartWalletModal'
 import CreateBingXWalletModal from 'components/Modal/CreateBingXWalletModal'
-import useMyProfile from 'hooks/store/useMyProfile'
-import { Button } from 'theme/Buttons'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import Label from 'theme/InputField/Label'
 import Loading from 'theme/Loading'
-import Modal from 'theme/Modal'
 import Select from 'theme/Select'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
 import { parseWalletName } from 'utils/helpers/transform'
 
 export default function Wallets({
@@ -28,34 +23,26 @@ export default function Wallets({
   onChangeWallet: (walletId: string) => void
   disabledSelect: boolean
 }) {
-  const { myProfile } = useMyProfile()
+  const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
+  const copyWalletsByExchange = copyWallets?.filter((e) => e.exchange === platform)
+  const exchangeRef = useRef<CopyTradePlatformEnum | undefined>()
 
-  const {
-    data: copyWallets,
-    isLoading: loadingCopyWallets,
-    refetch: refetchWallets,
-  } = useQuery([QUERY_KEYS.GET_COPY_WALLETS_LIST], () => getAllCopyWalletsApi(), {
-    enabled: !!myProfile,
-    retry: 0,
-    onSuccess(data) {
-      if (currentWalletId) return
-      onChangeWallet(data[0]?.id)
-    },
-  })
+  useEffect(() => {
+    if (exchangeRef.current === platform || !copyWalletsByExchange) return
+    onChangeWallet(copyWalletsByExchange[0]?.id)
+    exchangeRef.current = platform
+  }, [currentWalletId, copyWalletsByExchange, platform])
+
   if (loadingCopyWallets) return <Loading />
 
-  const walletOptions = copyWallets
-    ?.filter((data) => {
-      return data.exchange === platform
-    })
-    .map((walletData) => {
-      return {
-        label: parseWalletName(walletData),
-        value: walletData.id,
-      }
-    })
+  const walletOptions = copyWalletsByExchange?.map((walletData) => {
+    return {
+      label: parseWalletName(walletData),
+      value: walletData.id,
+    }
+  })
 
-  if (!walletOptions?.length) return <NoWallet platform={platform} onCreateWalletSuccess={refetchWallets} />
+  if (!walletOptions?.length) return <NoWallet platform={platform} onCreateWalletSuccess={reloadCopyWallets} />
 
   const currentOption = walletOptions.find((option) => option.value === currentWalletId) ?? walletOptions[0]
   return !!currentWalletId ? (
@@ -97,7 +84,14 @@ function NoWallet({
       break
     case CopyTradePlatformEnum.SYNTHETIX:
       text = <Trans>Create smart wallet</Trans>
-      modalContent = <CreateSmartWalletModal />
+      modalContent = (
+        <CreateSmartWalletModal
+          onDismiss={() => {
+            onCreateWalletSuccess()
+            onDismissModal()
+          }}
+        />
+      )
       break
 
     default:
@@ -144,46 +138,5 @@ function NoWallet({
       </Flex>
       {openModal && modalContent}
     </Box>
-  )
-}
-
-function CreateSmartWalletModal() {
-  return (
-    <Modal isOpen>
-      <Box sx={{ p: 3 }}>
-        <Flex mb={2} sx={{ alignItems: 'center', gap: 2 }}>
-          <IconBox color="primary1" icon={<HandWaving size={32} />} />
-          <Type.Caption color="primary2">
-            <Trans>Hi! Copier</Trans>
-          </Type.Caption>
-        </Flex>
-        <Type.BodyBold mb={2}>
-          <Trans>To start, you need to create a smart wallet.</Trans>
-        </Type.BodyBold>
-        <Type.Caption color="neutral2">
-          <Trans>The process of creating a wallet is quick and only costs a small amount in gas fees.</Trans>
-        </Type.Caption>
-        <Divider my={20} />
-        <Flex mb={2} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-          <Type.CaptionBold>
-            <Trans>What is smart wallet?</Trans>
-          </Type.CaptionBold>
-          <Flex as="a" href={'#'} target="_blank" sx={{ alignItems: 'center', gap: 2 }}>
-            <Type.Caption>
-              <Trans>View more</Trans>
-            </Type.Caption>
-            <IconBox icon={<ArrowSquareOut size={20} />} />
-          </Flex>
-        </Flex>
-        <Type.Caption mb={20} color="neutral3">
-          <Trans>
-            Smart wallets are a unique Copin offering that allows copiers to copytrade at Synthetix platform.
-          </Trans>
-        </Type.Caption>
-        <Button variant="primary" block>
-          <Trans>Create Smart Wallet</Trans>
-        </Button>
-      </Box>
-    </Modal>
   )
 }

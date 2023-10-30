@@ -3,10 +3,11 @@ import { ToastContainer } from 'react-toastify'
 
 import FavoriteNoteTooltip from 'components/FavoriteButton/FavoriteNoteTooltip'
 import useModifyStorage from 'hooks/features/useModifyStorage'
-import useGlobalLoading from 'hooks/store/useGlobalLoading'
+import useGlobalDialog from 'hooks/store/useGlobalDialog'
 import { useInitTraderCopying } from 'hooks/store/useTraderCopying'
 import { useInitTraderFavorites } from 'hooks/store/useTraderFavorites'
 import { usePollingUsdPrice } from 'hooks/store/useUsdPrices'
+import useChainRestrict from 'hooks/web3/useChainRestrict'
 import useEagerConnect from 'hooks/web3/useEagerConnect'
 import Footer from 'pages/@layouts/Footer'
 import Navbar from 'pages/@layouts/Navbar'
@@ -15,12 +16,13 @@ import { Box, Flex, Type } from 'theme/base'
 import { FOOTER_HEIGHT, NAVBAR_HEIGHT } from 'utils/config/constants'
 
 const AppWrapper = ({ children }: { children: ReactNode }) => {
+  useChainRestrict()
   useInitTraderFavorites()
   useInitTraderCopying()
   useEagerConnect()
   usePollingUsdPrice()
   useModifyStorage()
-  const loading = useGlobalLoading((state) => state.loading)
+  const dialog = useGlobalDialog((state) => state.dialog)
 
   return (
     <>
@@ -33,7 +35,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
         </Box>
         <Footer height={FOOTER_HEIGHT} />
       </Flex>
-      {loading && (
+      {dialog && (
         <Flex
           justifyContent="center"
           alignItems="center"
@@ -54,10 +56,10 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
             textAlign="center"
             sx={{ border: 'normal', borderColor: 'neutral6' }}
           >
-            <Loading />
-            <Type.BodyBold display="block">{loading.title}</Type.BodyBold>
-            {!!loading.description && <Type.Caption color="neutral4">{loading.description}</Type.Caption>}
-            <Box>{loading.body}</Box>
+            {dialog.hasLoading && <Loading />}
+            <Type.BodyBold display="block">{dialog.title}</Type.BodyBold>
+            {!!dialog.description && <Type.Caption color="neutral3">{dialog.description}</Type.Caption>}
+            <Box>{dialog.body}</Box>
           </Box>
         </Flex>
       )}

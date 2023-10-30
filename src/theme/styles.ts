@@ -239,6 +239,17 @@ const ThemedGlobalStyle = createGlobalStyle`
     --toastify-color-warning:  ${({ theme }) => theme.colors.orange1};
     --toastify-color-error:  ${({ theme }) => theme.colors.red1};
     --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+    --onboard-primary-500:  ${({ theme }) => theme.colors.primary1};
+    --onboard-wallet-button-background: ${({ theme }) => theme.colors.neutral5};
+    --onboard-wallet-button-background-hover: ${({ theme }) => theme.colors.neutral4};
+    --onboard-warning-700: ${({ theme }) => theme.colors.orange3};
+    --onboard-warning-400: ${({ theme }) => theme.colors.orange1};
+    --onboard-warning-100: transparent;
+    --onboard-wallet-button-border-radius:  6px;
+  }
+
+  .wallet-button-container-inner {
+    padding: 12px!important;
   }
 
     .custom_react_tooltip_css {
@@ -350,6 +361,9 @@ input[type=number] {
     height: -webkit-fill-available;
   }
 }
+
+
+
 //tour
 [x-placement|="top"] {
   .__floater__arrow {

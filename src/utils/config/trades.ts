@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 
 import { ProtocolEnum } from 'utils/config/enums'
-import { ARBITRUM_MAINNET, CHAINS, OPTIMISM_MAINNET } from 'utils/web3/chains'
+import { ARBITRUM_MAINNET, CHAINS, OPTIMISM_GOERLI, OPTIMISM_MAINNET } from 'utils/web3/chains'
 import { rpcProvider } from 'utils/web3/providers'
 
 type ProtocolProvider = { [key: string]: { chainId: number; provider: JsonRpcProvider; explorerUrl: string } }
@@ -9,12 +9,12 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
   [ProtocolEnum.GMX]: {
     chainId: ARBITRUM_MAINNET,
     provider: rpcProvider(ARBITRUM_MAINNET),
-    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrls[0],
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.KWENTA]: {
     chainId: OPTIMISM_MAINNET,
     provider: rpcProvider(OPTIMISM_MAINNET),
-    explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrls[0],
+    explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
   },
 }
 
@@ -342,6 +342,11 @@ export const TOKEN_ADDRESSES = {
     BTC: '0x59b007E9ea8F89b069c43F8f45834d30853e3699',
     ETH: '0x2B3bb4c683BFc5239B029131EEf3B1d214478d93',
   },
+}
+
+export const SYNTHETIX_MARKETS = {
+  [OPTIMISM_MAINNET]: Object.keys(TOKEN_TRADE_SUPPORT[ProtocolEnum.KWENTA]),
+  [OPTIMISM_GOERLI]: ['0x111babcdd66b1b60a20152a2d3d06d36f8b5703c'],
 }
 
 export const getDefaultTokenTrade = (protocol: ProtocolEnum) =>

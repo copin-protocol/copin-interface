@@ -5,14 +5,16 @@ import requester from './index'
 export const setJwt = (jwt: string) => {
   requester.defaults.headers.common['Authorization'] = jwt
 }
-export const storeAuth = (jwt: string, account: string) => {
+export const storeAuth = ({ jwt, wallet, account }: { jwt: string; wallet?: string; account: string }) => {
   setJwt(jwt)
   localStorage.setItem(STORAGE_KEYS.JWT, jwt)
+  if (wallet) localStorage.setItem(STORAGE_KEYS.WALLET, wallet)
   localStorage.setItem(STORAGE_KEYS.ACCOUNT, account)
 }
 export const clearAuth = () => {
   requester.defaults.headers.common['Authorization'] = ''
   localStorage.removeItem(STORAGE_KEYS.JWT)
+  localStorage.removeItem(STORAGE_KEYS.WALLET)
   localStorage.removeItem(STORAGE_KEYS.ACCOUNT)
 }
 export const getStoredJwt = (): string | null => {
@@ -20,10 +22,10 @@ export const getStoredJwt = (): string | null => {
   if (!storedJwt) return null
   return storedJwt
 }
-export const getStoredAccount = (): string | null => {
+export const getStoredWallet = (): { account: string | null; wallet: string | null } => {
+  const wallet = localStorage.getItem(STORAGE_KEYS.WALLET)
   const account = localStorage.getItem(STORAGE_KEYS.ACCOUNT)
-  if (!account) return null
-  return account
+  return { wallet, account }
 }
 
 export const getUnverifiedAccount = (): string | undefined => {

@@ -30,7 +30,7 @@ export const PLATFORM_TRANS: ObjectTrans = {
 
 export const COPY_WALLET_TRANS: ObjectTrans = {
   [CopyTradePlatformEnum.BINGX]: 'BingX',
-  [CopyTradePlatformEnum.SYNTHETIX]: 'SM',
+  [CopyTradePlatformEnum.SYNTHETIX]: 'Smart Wallet',
 }
 
 export const COPY_TRADE_STATUS_TRANS: ObjectTrans = {

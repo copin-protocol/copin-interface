@@ -16,8 +16,11 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
+import { SERVICE_KEYS } from 'utils/config/keys'
+import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
 import { getTokenTradeList } from 'utils/config/trades'
 
+import FundChecking from './FundChecking'
 import Wallets from './Wallets'
 import {
   CopyTradeFormValues,
@@ -74,6 +77,8 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     ),
   })
 
+  const volume = watch('volume')
+  const copyWalletId = watch('copyWalletId')
   const leverage = watch('leverage')
   const platform = watch('exchange')
   const enableStopLoss = watch('enableStopLoss')
@@ -159,7 +164,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                         options={protocolOptions}
                         defaultMenuIsOpen={false}
                         value={protocolOptions.find((option) => option.value === protocol)}
-                        onChange={(newValue: any) => setValue('protocol', newValue.value)}
+                        onChange={(newValue: any) => {
+                          setValue('protocol', newValue.value)
+                          setValue('serviceKey', SERVICE_KEYS[newValue.value as ProtocolEnum])
+                        }}
                         isSearchable={false}
                         isDisabled={!!defaultFormValues.duplicateToAddress}
                       />
@@ -211,9 +219,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               block
               name={fieldName.volume}
               control={control}
-              suffix={<Type.Caption color="neutral2">USD</Type.Caption>}
+              suffix={<Type.Caption color="neutral2">{CURRENCY_PLATFORMS[platform]}</Type.Caption>}
               error={errors.volume?.message}
             />
+            <FundChecking walletId={copyWalletId} amount={volume} />
           </Box>
         </Flex>
         <Box mb={3}>

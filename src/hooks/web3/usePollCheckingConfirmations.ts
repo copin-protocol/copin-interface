@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 
 import { pollEvery } from 'utils/helpers/pollEvery'
 
-import useActiveWeb3React from './useActiveWeb3React'
+import useWeb3 from './useWeb3'
 
 type ConfirmationInfo = {
   txHash: string
@@ -21,16 +21,16 @@ class TransactionError extends Error {
 }
 
 const usePollCheckingConfirmations = () => {
-  const { library } = useActiveWeb3React()
+  const { walletProvider } = useWeb3()
   const pollCheckingConfirmations = useCallback(
     (txHash: string, confirmationsNeeded = 1, notifyFn?: (info: ConfirmationInfo) => void) => {
-      if (!library) return
+      if (!walletProvider) return
       return new Promise((resolve: (receipt: TransactionReceipt) => void, reject) => {
         let _confirmationInfo: ConfirmationInfo
         const pollChecking = pollEvery(
           (txHash: string) => ({
             request: async () => {
-              const result = await library.getTransactionReceipt(txHash)
+              const result = await walletProvider.getTransactionReceipt(txHash)
               return result
             },
             onResult: (result: any) => {
@@ -61,7 +61,7 @@ const usePollCheckingConfirmations = () => {
         const _stopPollingConfirmations = pollChecking(txHash)
       })
     },
-    [library]
+    [walletProvider]
   )
 
   return pollCheckingConfirmations

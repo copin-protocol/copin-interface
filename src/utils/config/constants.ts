@@ -3,6 +3,9 @@ import { isMobile } from 'hooks/helpers/useIsMobile'
 export const SUPPORTED_LOCALES = ['en']
 export const DEFAULT_LOCALE = 'en'
 
+export const NETWORK = import.meta.env.VITE_NETWORK_ENV
+export const APP_URL = import.meta.env.VITE_URL
+
 export const LINKS = {
   website: 'https://copin.io',
   webapp: 'https://app.copin.io',

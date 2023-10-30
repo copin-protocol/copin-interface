@@ -9,6 +9,7 @@ import LoginAction from 'components/LoginAction'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import NavbarUser from 'pages/@layouts/Navbar/NavUser'
 import IconButton from 'theme/Buttons/IconButton'
+import Loading from 'theme/Loading'
 import { Box, Flex, LinkUnderline } from 'theme/base'
 import { LINKS, NAVBAR_HEIGHT } from 'utils/config/constants'
 import routes from 'utils/config/routes'
@@ -18,7 +19,7 @@ import SearchBox from './SearchBox'
 import { LogoWrapper, Main, Wrapper } from './styled'
 
 const Navbar = ({ height }: { height: number }): ReactElement => {
-  const { profile } = useAuthContext()
+  const { isAuthenticated } = useAuthContext()
   const [isSearchOpening, setSearchOpening] = useState<boolean>(false)
   // const { md: isMobile } = useResponsive()
 
@@ -84,7 +85,13 @@ const Navbar = ({ height }: { height: number }): ReactElement => {
               <LinkItem text={<Trans>Stats</Trans>} url={ROUTES.STATS.path} sx={{ display: 'flex' }} />
             </Flex>
             <Box flex="0 0 fit-content" sx={{ alignItems: 'center' }}>
-              {profile ? <NavbarUser /> : <LoginAction />}
+              {isAuthenticated === true && <NavbarUser />}
+              {isAuthenticated === false && <LoginAction />}
+              {isAuthenticated == null && (
+                <Box py={12} px={24}>
+                  <Loading size={16} />
+                </Box>
+              )}
             </Box>
           </Box>
         </Main>
