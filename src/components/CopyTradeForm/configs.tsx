@@ -148,7 +148,7 @@ interface ExchangeOptions {
 }
 export const exchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BINGX),
-  getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
+  // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
 ]
 function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {
   let label = ''

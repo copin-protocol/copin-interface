@@ -1,5 +1,4 @@
 // eslint-disable-next-line no-restricted-imports
-import { Trans } from '@lingui/macro'
 import { PencilSimpleLine } from '@phosphor-icons/react'
 import React, { useState } from 'react'
 import { EditText } from 'react-edit-text'
@@ -8,11 +7,9 @@ import 'react-edit-text/dist/index.css'
 
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import TitleWithIcon from 'components/@ui/TilleWithIcon'
-import FundModal, { FundTab } from 'components/FundModal'
+// import FundModal, { FundTab } from 'components/FundModal'
 import { CopyWalletData } from 'entities/copyWallet'
 import useChain from 'hooks/web3/useChain'
-import useWeb3 from 'hooks/web3/useWeb3'
-import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
@@ -44,12 +41,12 @@ interface WalletDetailsProps {
 }
 export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, reload }: WalletDetailsProps) {
   const walletKey = data?.smartWalletAddress ?? data?.bingX?.apiKey ?? ''
-  const isAPIKey = data.exchange === CopyTradePlatformEnum.BINGX
+  // const isAPIKey = data.exchange === CopyTradePlatformEnum.BINGX
   const [isEdit, setIsEdit] = useState(false)
   const [walletName, setWalletName] = useState(parseWalletName(data))
-  const [fundingModal, setFundingModal] = useState<FundTab | null>(null)
+  // const [fundingModal, setFundingModal] = useState<FundTab | null>(null)
 
-  const { walletAccount } = useWeb3()
+  // const { walletAccount } = useWeb3()
   const { chain } = useChain()
 
   return (
@@ -130,15 +127,15 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, re
             </div>
           </Tooltip>
         </Flex>
-        {isAPIKey ? (
-          <Flex alignItems="center" sx={{ gap: 2 }}>
-            <Flex alignItems="center" sx={{ gap: 1 }}>
-              <Type.CaptionBold>API Key:</Type.CaptionBold>
-              <Type.Caption color="neutral3">{addressShorten(data?.bingX?.apiKey ?? '')}</Type.Caption>
-            </Flex>
-            <DeleteWalletAction data={data} />
+        {/* {isAPIKey ? ( */}
+        <Flex alignItems="center" sx={{ gap: 2 }}>
+          <Flex alignItems="center" sx={{ gap: 1 }}>
+            <Type.CaptionBold>API Key:</Type.CaptionBold>
+            <Type.Caption color="neutral3">{addressShorten(data?.bingX?.apiKey ?? '')}</Type.Caption>
           </Flex>
-        ) : (
+          <DeleteWalletAction data={data} />
+        </Flex>
+        {/* ) : (
           <Flex alignItems="center" sx={{ gap: 20 }}>
             <Button type="button" variant="ghostPrimary" sx={{ p: 0 }} onClick={() => setFundingModal(FundTab.Deposit)}>
               <Trans>Deposit</Trans>
@@ -152,10 +149,10 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, re
               <Trans>Withdraw</Trans>
             </Button>
           </Flex>
-        )}
+        )} */}
       </Flex>
       <WalletInfo data={data} sx={{ width: '100%' }} />
-      {!!fundingModal && data.smartWalletAddress && walletAccount && (
+      {/* {!!fundingModal && data.smartWalletAddress && walletAccount && (
         <FundModal
           initialTab={fundingModal}
           smartAccount={data.smartWalletAddress}
@@ -163,7 +160,7 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, re
             setFundingModal(null)
           }}
         />
-      )}
+      )} */}
     </Flex>
   )
 }

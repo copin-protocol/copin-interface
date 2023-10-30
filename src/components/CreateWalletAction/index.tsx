@@ -37,12 +37,12 @@ export default function CreateWalletAction() {
         exchange={CopyTradePlatformEnum.SYNTHETIX}
         label={<Trans>Smart Wallet</Trans>}
         description={<Trans>A non-custody wallet. Your own all your assets, fully decentralized copy trading</Trans>}
-        handleClick={
-          // () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
-          !hasSynthetixWallet && !loadingCopyWallets
-            ? () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
-            : undefined
-        }
+        // handleClick={
+        //   // () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
+        //   !hasSynthetixWallet && !loadingCopyWallets
+        //     ? () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
+        //     : undefined
+        // }
       />
       {openCreateModal && currentExchange === CopyTradePlatformEnum.BINGX && (
         <CreateBingXWalletModal
@@ -87,7 +87,7 @@ function WalletItem({ exchange, label, description, handleClick }: WalletItemPro
         onClick={() => handleClick && handleClick(exchange)}
         disabled={!handleClick}
       >
-        <Trans>Create</Trans>
+        {exchange === CopyTradePlatformEnum.SYNTHETIX ? <Trans>Coming Soon</Trans> : <Trans>Create</Trans>}
       </Button>
     </Flex>
   )

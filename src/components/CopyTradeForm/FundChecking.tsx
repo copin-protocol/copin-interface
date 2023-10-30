@@ -1,18 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { useState } from 'react'
 
-import FundModal, { FundTab } from 'components/FundModal'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import { Button } from 'theme/Buttons'
 import { Box, Type } from 'theme/base'
 
 const FundChecking = ({ amount, walletId }: { walletId: string; amount: number }) => {
   const {
     copyWallets,
-    smartWalletMargin: { reloadAvailableMargin },
+    // smartWalletMargin: { reloadAvailableMargin },
   } = useCopyWalletContext()
   const wallet = copyWallets?.find((w) => w.id === walletId)
-  const [openingModal, setOpeningModal] = useState(false)
+  // const [openingModal, setOpeningModal] = useState(false)
   if (!wallet) return <></>
   if (!amount || wallet.availableBalance > amount) return <></>
   return (
@@ -20,7 +17,7 @@ const FundChecking = ({ amount, walletId }: { walletId: string; amount: number }
       <Type.Caption color="orange2">
         <Trans>Your copy may failed due to insufficient available margin</Trans>
       </Type.Caption>
-      {!!wallet.smartWalletAddress && (
+      {/* {!!wallet.smartWalletAddress && (
         <>
           <Button variant="ghostPrimary" sx={{ px: 0, py: 1 }} onClick={() => setOpeningModal(true)}>
             Deposit Fund
@@ -36,7 +33,7 @@ const FundChecking = ({ amount, walletId }: { walletId: string; amount: number }
             />
           )}
         </>
-      )}
+      )} */}
     </Box>
   )
 }
