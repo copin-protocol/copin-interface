@@ -110,7 +110,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   )
 
   const currentWalletId = watch('copyWalletId')
-  const onChangeWallet = (walletId: string) => setValue(fieldName.copyWalletId, walletId)
+  const onChangeWallet = (walletId: string) => setValue(fieldName.copyWalletId, walletId, { shouldValidate: true })
 
   useEffect(() => {
     reset(defaultFormValues)
@@ -127,6 +127,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   }, [])
 
   const permissionToSelectProtocol = useCopyTradePermission(true)
+  const isSelectedAlltokens = tokenAddresses?.length === addressPairs?.length
 
   return (
     <>
@@ -183,7 +184,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
         <Type.BodyBold mb={3}>
           <Trans>1. Choose Platform</Trans>
         </Type.BodyBold>
-        <Flex mb={[3, 20]} sx={{ gap: [3, 4], flexDirection: ['column', 'row'], alignItems: ['start', 'end'] }}>
+        <Flex sx={{ gap: [3, 4], flexDirection: ['column', 'row'], alignItems: ['start', 'end'] }}>
           <Box flex="1" width="100%">
             <Type.Caption color="neutral3" mb={2} fontWeight={600}>
               Platform
@@ -204,11 +205,20 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               currentWalletId={currentWalletId}
               onChangeWallet={onChangeWallet}
             />
-            {errors.copyWalletId?.message && <Type.Small color="red2">{errors.copyWalletId.message}</Type.Small>}
           </Box>
         </Flex>
+        {errors.copyWalletId?.message && (
+          <Flex mt={2} sx={{ flexDirection: ['column', 'row'] }}>
+            <Box flex="1" />
+            <Type.Caption color="red1" sx={{ flex: '1', pl: [0, 4] }}>
+              {errors.copyWalletId.message}
+            </Type.Caption>
+          </Flex>
+        )}
 
-        <Type.BodyBold mb={3}>2. Copy Information</Type.BodyBold>
+        <Type.BodyBold mb={3} mt={[3, 20]}>
+          2. Copy Information
+        </Type.BodyBold>
         <Flex sx={{ gap: [3, 4] }} mb={[3, 20]} flexDirection={['column', 'row']}>
           <Box flex="1" width="100%">
             <InputField block {...register(fieldName.title)} error={errors.title?.message} label="Title" />
@@ -229,6 +239,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
           <Flex sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}>
             <Select
+              menuIsOpen={isSelectedAlltokens ? false : undefined}
               closeMenuOnSelect={false}
               options={pairOptions}
               value={pairOptions?.filter?.((option) => tokenAddresses.includes(option.value))}

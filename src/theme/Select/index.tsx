@@ -18,6 +18,9 @@ export type SelectProps = { error?: any; sx?: any } & VariantProps & SxProps
 const StyledSelect = styled(ReactSelect)<SelectProps>(
   ({ error }) =>
     css({
+      input: {
+        fontSize: '16px !important',
+      },
       border: 'none',
       width: '100%',
       '& .select__control': {

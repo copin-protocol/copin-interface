@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Wallet } from '@phosphor-icons/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import CreateSmartWalletModal from 'components/CreateSmartWalletModal'
 import CreateBingXWalletModal from 'components/Modal/CreateBingXWalletModal'
@@ -24,14 +24,14 @@ export default function Wallets({
   disabledSelect: boolean
 }) {
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
-  const copyWalletsByExchange = copyWallets?.filter((e) => e.exchange === platform)
-  const exchangeRef = useRef<CopyTradePlatformEnum | undefined>()
+  const copyWalletsByExchange = useMemo(
+    () => copyWallets?.filter((e) => e.exchange === platform),
+    [copyWallets, platform]
+  )
 
   useEffect(() => {
-    if (exchangeRef.current === platform || !copyWalletsByExchange) return
-    onChangeWallet(copyWalletsByExchange[0]?.id)
-    exchangeRef.current = platform
-  }, [currentWalletId, copyWalletsByExchange, platform])
+    onChangeWallet(copyWalletsByExchange?.[0]?.id ?? '')
+  }, [copyWalletsByExchange])
 
   if (loadingCopyWallets) return <Loading />
 

@@ -18,7 +18,7 @@ const commonSchema = {
   enableStopLoss: yup.boolean(),
   stopLossAmount: yup.number().when('enableStopLoss', {
     is: true,
-    then: (schema) => schema.required().min(1).label('Stop Loss Amount'),
+    then: (schema) => schema.required().min(0.1).label('Stop Loss Amount'),
   }),
   volumeProtection: yup.boolean(),
   lookBackOrders: yup.number().when('volumeProtection', {
