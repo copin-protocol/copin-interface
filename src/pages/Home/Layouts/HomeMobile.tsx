@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { Bookmarks, Pulse, Star } from '@phosphor-icons/react'
+import { Bookmarks, Pulse, Star, Trophy } from '@phosphor-icons/react'
 import { Route, Switch, useLocation } from 'react-router-dom'
 
 import TopOpenPositions from 'components/TopOpeningPositions'
+import { LeaderboardProvider } from 'hooks/features/useLeaderboardProvider'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolStore } from 'hooks/store/useProtocols'
+import Leaderboard from 'pages/Leaderboard'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -21,38 +23,30 @@ import { TabKeyEnum } from './layoutConfigs'
 function getTabConfigs(protocol: ProtocolEnum): TabConfig[] {
   return [
     {
-      name: (
-        <Flex alignItems="center" justifyContent="center" sx={{ gap: 2 }}>
-          <Bookmarks />
-          <Box as="span">
-            <Trans>Traders</Trans>
-          </Box>
-        </Flex>
-      ),
+      name: <Trans>Trader Explorer</Trans>,
+      inactiveIcon: <Bookmarks size={24} />,
+      activeIcon: <Bookmarks size={24} weight="fill" />,
       key: TabKeyEnum.Explorer,
       route: ROUTES.HOME_EXPLORER.path,
     },
     {
-      name: (
-        <Flex alignItems="center" justifyContent="center" sx={{ gap: 2 }}>
-          <Star />
-          <Box as="span">
-            <Trans>Favorites</Trans>
-          </Box>
-        </Flex>
-      ),
+      name: <Trans>Leaderboard</Trans>,
+      inactiveIcon: <Trophy size={24} />,
+      activeIcon: <Trophy size={24} weight="fill" />,
+      key: TabKeyEnum.Leaderboard,
+      route: ROUTES.HOME_LEADERBOARD.path,
+    },
+    {
+      name: <Trans>Favorites</Trans>,
+      inactiveIcon: <Star size={24} />,
+      activeIcon: <Star size={24} weight="fill" />,
       key: TabKeyEnum.Favorite,
       route: ROUTES.HOME_FAVORITE.path,
     },
     {
-      name: (
-        <Flex alignItems="center" justifyContent="center" sx={{ gap: 2 }}>
-          <Pulse />
-          <Box as="span">
-            <Trans>Positions</Trans>
-          </Box>
-        </Flex>
-      ),
+      name: <Trans>Positions</Trans>,
+      inactiveIcon: <Pulse size={24} />,
+      activeIcon: <Pulse size={24} weight="fill" />,
       key: TabKeyEnum.TopOpenings,
       route: `/${protocol}/${ROUTES.HOME_TOP_OPENINGS.path_suffix}`,
     },
@@ -74,6 +68,11 @@ export default function HomeMobile() {
               <FilterTradersProvider tab={TabKeyEnum.Explorer}>
                 <TradersAnalytics />
               </FilterTradersProvider>
+            </Route>
+            <Route exact path={ROUTES.HOME_LEADERBOARD.path}>
+              <LeaderboardProvider>
+                <Leaderboard />
+              </LeaderboardProvider>
             </Route>
             <Route exact path={ROUTES.HOME_FAVORITE.path}>
               <Favorites tab={TabKeyEnum.Favorite} />

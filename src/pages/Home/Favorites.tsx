@@ -1,3 +1,4 @@
+import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoFavoriteFound from 'components/@ui/NoDataFound/NoFavoriteFound'
 import NoLoginFavorite from 'components/@ui/NoLogin/NoLoginFavorite'
 import useTraderFavorites from 'hooks/store/useTraderFavorites'
@@ -22,6 +23,7 @@ const Favorites = ({ tab }: { tab: TabKeyEnum }) => {
     )
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
+      <CustomPageTitle title="Trader Favorites" />
       {traderFavorites.length ? (
         <FilterTradersProvider tab={tab} accounts={traderFavorites}>
           <ListTraders notes={notes} />

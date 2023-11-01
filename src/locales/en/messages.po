@@ -543,6 +543,10 @@ msgstr "Kwenta"
 msgid "L"
 msgstr "L"
 
+#: src/pages/Home/Layouts/HomeDesktop.tsx
+msgid "LEADERBOARD"
+msgstr "LEADERBOARD"
+
 #: src/utils/config/translations.tsx
 #~ msgid "LIQUIDATED"
 #~ msgstr "LIQUIDATED"
@@ -567,6 +571,10 @@ msgstr "Last Trade"
 #: src/pages/TraderDetails/TraderStats.tsx
 msgid "Last Trade (All)"
 msgstr "Last Trade (All)"
+
+#: src/pages/Home/Layouts/HomeMobile.tsx
+msgid "Leaderboard"
+msgstr "Leaderboard"
 
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Let copy a trader and make profit!"
@@ -724,6 +732,10 @@ msgstr "Min Leverage"
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Min ROI"
 msgstr "Min ROI"
+
+#: src/utils/config/options.tsx
+msgid "Monthly"
+msgstr "Monthly"
 
 #: src/components/@ui/NotFound/index.tsx
 msgid "Need help?"
@@ -1338,8 +1350,12 @@ msgid "Trade On"
 msgstr "Trade On"
 
 #: src/pages/Home/Layouts/HomeMobile.tsx
-msgid "Traders"
-msgstr "Traders"
+msgid "Trader Explorer"
+msgstr "Trader Explorer"
+
+#: src/pages/Home/Layouts/HomeMobile.tsx
+#~ msgid "Traders"
+#~ msgstr "Traders"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Trades"
@@ -1458,6 +1474,10 @@ msgstr "Wallet Name"
 #: src/pages/MyProfile/PositionTable/index.tsx
 msgid "Warning"
 msgstr "Warning"
+
+#: src/utils/config/options.tsx
+msgid "Weekly"
+msgstr "Weekly"
 
 #: src/components/CreateSmartWalletModal/index.tsx
 msgid "What is smart wallet?"

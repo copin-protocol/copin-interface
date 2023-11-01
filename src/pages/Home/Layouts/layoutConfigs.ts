@@ -1,5 +1,6 @@
 export enum TabKeyEnum {
   Explorer = 'explorer',
+  Leaderboard = 'leaderboard',
   Favorite = 'favorite',
   TopOpenings = 'top_openings',
 }

@@ -407,6 +407,18 @@ input[type=number] {
     }
   }
 }
+
+  @keyframes rotate {
+    to {
+      --angle: 360deg;
+    }
+  }
+
+  @property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+  }
 `
 
 export default ThemedGlobalStyle

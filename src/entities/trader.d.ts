@@ -1,5 +1,6 @@
 import {
   CopyTradePlatformEnum,
+  LeaderboardTypeEnum,
   OrderTypeEnum,
   PositionStatusEnum,
   ProtocolEnum,
@@ -167,4 +168,26 @@ export interface MyCopyTraderData {
 export interface MyAllCopyTradersData {
   copyingTraders: string[]
   deletedTraders: string[]
+}
+
+export interface TopTraderData {
+  id: string
+  account: string
+  protocol: ProtocolEnum
+  statisticType: LeaderboardTypeEnum
+  ranking: number
+  lastRanking: number
+  statisticAt: string
+  totalNetPnl: number
+  totalPnl: number
+  totalVolume: number
+  totalFee: number
+  totalLose: number
+  totalWin: number
+  totalTrade: number
+  totalLiquidation: number
+  totalLiquidationAmount: number
+  rankingAt: string
+  createdAt: string
+  updatedAt: string
 }

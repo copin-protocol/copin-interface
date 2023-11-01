@@ -5,6 +5,9 @@ const ROUTES = {
   HOME_EXPLORER: {
     path: '/',
   },
+  HOME_LEADERBOARD: {
+    path: '/leaderboard',
+  },
   HOME_FAVORITE: {
     path: '/favorite',
   },

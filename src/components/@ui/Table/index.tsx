@@ -37,6 +37,9 @@ export default function Table<T, K>({
   tableBodySx,
   tableBodyWrapperSx,
   dataMeta,
+  topIndex,
+  title,
+  subTitle,
 }: TableProps<T, K>) {
   const visibleKeys = visibleColumns?.map((key) => `[data-table-key="${key.toString()}"]`).join(',')
 
@@ -97,7 +100,7 @@ export default function Table<T, K>({
               sx={{ overflow: restrictHeight ? 'auto' : 'unset', ...(tableBodyWrapperSx ?? {}) }}
               ref={isInfiniteLoad ? scrollRef : bodyRef}
             >
-              <TableContainer sx={tableBodySx}>
+              <TableContainer sx={tableBodySx} hasHoverBg={!topIndex}>
                 <TableBody
                   data={data}
                   columns={columns}
@@ -107,6 +110,9 @@ export default function Table<T, K>({
                   externalSource={externalSource}
                   handleSelect={handleSelect}
                   checkIsSelected={checkIsSelected}
+                  topIndex={topIndex}
+                  title={title}
+                  subTitle={subTitle}
                 />
               </TableContainer>
 
@@ -195,7 +201,15 @@ export default function Table<T, K>({
   )
 }
 
-export function TableContainer({ sx = {}, children }: { children: ReactNode; sx?: any }) {
+export function TableContainer({
+  sx = {},
+  children,
+  hasHoverBg = true,
+}: {
+  children: ReactNode
+  sx?: any
+  hasHoverBg?: boolean
+}) {
   return (
     <Box
       as="table"
@@ -205,7 +219,7 @@ export function TableContainer({ sx = {}, children }: { children: ReactNode; sx?
         borderCollapse: 'separate',
         '& tbody tr': {
           '&:hover': {
-            background: '#292d40!important',
+            background: hasHoverBg ? '#292d40!important' : undefined,
           },
         },
         '& th:first-child, td:first-child': {
@@ -227,4 +241,26 @@ export const TableWrapper = styled(Box)`
   overflow: auto;
   display: flex;
   flex-direction: column;
+`
+
+export const RowWrapper = styled('tr')<{ hasBorder?: boolean }>`
+  background-color: ${({ theme, hasBorder }) => (hasBorder ? theme.colors.neutral5 : undefined)};
+  display: inline-table;
+  justify-content: center;
+  align-items: center;
+  // margin-top: ${({ hasBorder }) => (hasBorder ? '16px' : undefined)};
+  // margin-left: ${({ hasBorder }) => (hasBorder ? '8px' : undefined)};
+  margin-top: ${({ hasBorder }) => (hasBorder ? '16px' : undefined)};
+  margin-left: 16px;
+  margin-right: 16px;
+  max-width: calc(100% - 32px);
+  //max-width: ${({ hasBorder }) => (hasBorder ? 'calc(100% - 16px)' : undefined)};
+  //max-width: calc(100% - 32px);
+  border: ${({ hasBorder }) => (hasBorder ? '1px solid #0000' : 'none')};
+  border-radius: ${({ hasBorder }) => (hasBorder ? '4px' : undefined)};
+  background: ${({ hasBorder }) =>
+    hasBorder
+      ? 'linear-gradient(#1f2232, #1f2232) padding-box, linear-gradient(var(--angle), #abeca2, #2fb3fe80, #6a8eea4d, #a185f426, #a185f426) border-box'
+      : undefined};
+  animation: ${({ hasBorder }) => (hasBorder ? '10s rotate linear infinite' : undefined)};
 `

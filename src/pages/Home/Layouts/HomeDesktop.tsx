@@ -1,8 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { Bookmarks, Star } from '@phosphor-icons/react'
+import { Bookmarks, Star, Trophy } from '@phosphor-icons/react'
 import { Route, Switch, useLocation } from 'react-router-dom'
 
+import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import { LeaderboardProvider } from 'hooks/features/useLeaderboardProvider'
 import useMyProfile from 'hooks/store/useMyProfile'
+import Leaderboard from 'pages/Leaderboard'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 import ROUTES from 'utils/config/routes'
@@ -17,26 +20,23 @@ import { TabKeyEnum } from './layoutConfigs'
 
 const tabConfigs: TabConfig[] = [
   {
-    name: (
-      <Flex alignItems="center" sx={{ gap: 2 }}>
-        <Bookmarks />
-        <Box as="span">
-          <Trans>TRADER EXPLORER</Trans>
-        </Box>
-      </Flex>
-    ),
+    name: <Trans>TRADER EXPLORER</Trans>,
+    inactiveIcon: <Bookmarks size={24} />,
+    activeIcon: <Bookmarks size={24} weight="fill" />,
     key: TabKeyEnum.Explorer,
     route: ROUTES.HOME_EXPLORER.path,
   },
   {
-    name: (
-      <Flex alignItems="center" sx={{ gap: 2 }}>
-        <Star />
-        <Box as="span">
-          <Trans>FAVORITES</Trans>
-        </Box>
-      </Flex>
-    ),
+    name: <Trans>LEADERBOARD</Trans>,
+    inactiveIcon: <Trophy size={24} />,
+    activeIcon: <Trophy size={24} weight="fill" />,
+    key: TabKeyEnum.Leaderboard,
+    route: ROUTES.HOME_LEADERBOARD.path,
+  },
+  {
+    name: <Trans>FAVORITES</Trans>,
+    inactiveIcon: <Star size={24} />,
+    activeIcon: <Star size={24} weight="fill" />,
     key: TabKeyEnum.Favorite,
     route: ROUTES.HOME_FAVORITE.path,
   },
@@ -73,7 +73,13 @@ export default function HomeDesktop() {
               <TradersAnalytics />
             </FilterTradersProvider>
           </Route>
+          <Route exact path={ROUTES.HOME_LEADERBOARD.path}>
+            <LeaderboardProvider>
+              <Leaderboard />
+            </LeaderboardProvider>
+          </Route>
           <Route exact path={ROUTES.HOME_FAVORITE.path}>
+            <CustomPageTitle />
             <Favorites tab={TabKeyEnum.Favorite} />
           </Route>
         </Switch>

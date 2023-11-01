@@ -130,3 +130,8 @@ export enum CurrencyEnum {
   SUSD = 'sUSD',
   USDC = 'USDC',
 }
+
+export enum LeaderboardTypeEnum {
+  WEEKLY = 'WEEK',
+  MONTHLY = 'MONTH',
+}
