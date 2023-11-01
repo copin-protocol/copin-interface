@@ -32,4 +32,9 @@ export const styleVariants = {
     bg: 'neutral5',
     border: 'none',
   },
+  [variants.CARD_WARNING]: {
+    color: 'orange1',
+    bg: 'rgba(255, 194, 75, 0.25)',
+    border: 'none',
+  },
 }

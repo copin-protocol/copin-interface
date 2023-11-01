@@ -317,7 +317,6 @@ msgstr "Create BingX wallet"
 msgid "Create Smart Wallet"
 msgstr "Create Smart Wallet"
 
-#: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx
 msgid "Create an account"
 msgstr "Create an account"
@@ -389,8 +388,8 @@ msgid "Don’t have a BingX account?"
 msgstr "Don’t have a BingX account?"
 
 #: src/components/LoginAction/ModalLogin.tsx
-msgid "Don’t have a Copin account?"
-msgstr "Don’t have a Copin account?"
+#~ msgid "Don’t have a Copin account?"
+#~ msgstr "Don’t have a Copin account?"
 
 #: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 msgid "Edit"
@@ -928,6 +927,10 @@ msgstr "REFERRAL"
 #: src/pages/Home/ConditionFilter/index.tsx
 msgid "Ranking Filter"
 msgstr "Ranking Filter"
+
+#: src/components/LoginAction/ModalLogin.tsx
+msgid "Read more"
+msgstr "Read more"
 
 #: src/pages/MyProfile/Referral/ReferralList.tsx
 #~ msgid "Referee List"
@@ -1474,6 +1477,14 @@ msgstr "Wallet Name"
 #: src/pages/MyProfile/PositionTable/index.tsx
 msgid "Warning"
 msgstr "Warning"
+
+#: src/components/LoginAction/ModalLogin.tsx
+msgid "We only support login by email within the next 30 days (Deadline: November 30, 2023)"
+msgstr "We only support login by email within the next 30 days (Deadline: November 30, 2023)"
+
+#: src/components/LoginAction/ModalLogin.tsx
+#~ msgid "We only support login by email within the next 30 days (deadline: November 30, 2023)"
+#~ msgstr "We only support login by email within the next 30 days (deadline: November 30, 2023)"
 
 #: src/utils/config/options.tsx
 msgid "Weekly"

@@ -19,6 +19,7 @@ import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 
+import Alert from '../../theme/Alert'
 import ConnectButton from './ConnectButton'
 import { LoginForm } from './types'
 
@@ -103,6 +104,32 @@ const ModalLogin = ({
       hasClose
     >
       <Box variant="card" pb={[3, 4]} px={[3, 4]} sx={{ backgroundColor: 'neutral6' }}>
+        <ConnectButton size="lg" my={3} onConnect={() => onDismiss()} />
+
+        <Flex width="100%" mt={3} alignItems="center" sx={{ gap: 3 }}>
+          <Flex flex={1}>
+            <Divider color="neutral3" width="100%" height={1} />
+          </Flex>
+          <Type.CaptionBold width="max-content">
+            <Trans>OR LOGIN WITH</Trans>
+          </Type.CaptionBold>
+          <Flex flex={1}>
+            <Divider color="neutral3" width="100%" height={1} />
+          </Flex>
+        </Flex>
+
+        <Alert
+          my={3}
+          variant="cardWarning"
+          description={
+            <Type.Caption textAlign="left">
+              <Trans>We only support login by email within the next 30 days (Deadline: November 30, 2023)</Trans>
+              <a href={LINKS.twitter} style={{ paddingLeft: '4px' }}>
+                <Trans>Read more</Trans>
+              </a>
+            </Type.Caption>
+          }
+        />
         <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
           <InputField
             label={<Trans>Email</Trans>}
@@ -184,31 +211,6 @@ const ModalLogin = ({
             </Button>
           </Flex>
         </form>
-
-        <Flex width="100%" mt={3} alignItems="center" sx={{ gap: 3 }}>
-          <Flex flex={1}>
-            <Divider color="neutral3" width="100%" height={1} />
-          </Flex>
-          <Type.CaptionBold width="max-content">
-            <Trans>OR LOGIN WITH</Trans>
-          </Type.CaptionBold>
-          <Flex flex={1}>
-            <Divider color="neutral3" width="100%" height={1} />
-          </Flex>
-        </Flex>
-
-        <ConnectButton size="lg" my={3} onConnect={() => onDismiss()} />
-
-        <Flex justifyContent="center" alignItems="center" sx={{ gap: 12 }}>
-          <Type.Body color="neutral3">
-            <Trans>Don’t have a Copin account?</Trans>
-          </Type.Body>
-          <Button type="button" variant="ghostPrimary" onClick={switchRegisterModal} sx={{ mx: 0, px: 0, py: 1 }}>
-            <Type.Body>
-              <Trans>Create an account</Trans>
-            </Type.Body>
-          </Button>
-        </Flex>
       </Box>
     </Modal>
   )
