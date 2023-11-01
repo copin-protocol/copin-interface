@@ -9,6 +9,7 @@ import Container from 'components/@ui/Container'
 import Divider from 'components/@ui/Divider'
 import Table from 'components/@ui/Table'
 import CopyTradePositionDetails from 'components/CopyTradePositionDetails'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import IconButton from 'theme/Buttons/IconButton'
@@ -23,6 +24,7 @@ import ListActivityMobile from './ListActivityMobile'
 import { CopySelection, ExternalSource, userActivityColumns } from './configs'
 
 export default function UserActivity() {
+  const { copyWallets } = useCopyWalletContext()
   const { currentPage, changeCurrentPage, currentLimit, changeCurrentLimit } = usePageChangeWithLimit({
     pageName: 'page',
     limitName: 'limit',
@@ -43,6 +45,7 @@ export default function UserActivity() {
   }
   const externalSource: ExternalSource = {
     handleSelectCopyItem,
+    copyWallets,
   }
   const isMobile = useIsMobile()
   const { lg } = useResponsive()
