@@ -24,6 +24,7 @@ export const LINKS = {
   referralProgram: 'https://docs.copin.io/features/referral-program',
   registerBingX: 'https://bingx.com/en-us/invite/DY5QNN',
   getBingXAPIKey: 'https://tutorial.copin.io/how-to-connecting-your-bingx-account/3.-generate-an-api-key',
+  notice: 'https://copin.substack.com/p/copin-profile-login-updates-road',
 }
 
 export const NAVBAR_HEIGHT = 60

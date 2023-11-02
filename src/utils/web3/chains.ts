@@ -14,9 +14,9 @@ export const SUPPORTED_CHAIN_IDS: number[] = [
   ETHEREUM_MAINNET,
   ARBITRUM_MAINNET,
   OPTIMISM_MAINNET,
-  GOERLI,
-  OPTIMISM_GOERLI,
-  ARBITRUM_GOERLI,
+  // GOERLI,
+  // OPTIMISM_GOERLI,
+  // ARBITRUM_GOERLI,
 ]
 
 const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
