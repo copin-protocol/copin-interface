@@ -13,6 +13,8 @@ RUN chown -R root:root $HOME/app
 
 USER root
 
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
 RUN yarn && yarn cache clean
 RUN yarn run build:prod
 RUN yarn install --production --ignore-scripts --prefer-offline
