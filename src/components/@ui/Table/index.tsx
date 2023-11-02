@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useRef } from 'react'
+import { animated, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 
 import NoDataFound from 'components/@ui/NoDataFound'
@@ -242,6 +243,33 @@ export const TableWrapper = styled(Box)`
   display: flex;
   flex-direction: column;
 `
+export const AnimatedRowWrapper = ({ style, ...props }: any) => {
+  const styles = useSpring({
+    from: {
+      background: `linear-gradient(#1F2232, #1F2232) padding-box, linear-gradient(90deg, rgba(171, 236, 162, 1), rgba(47, 179, 254, 0.5), rgba(106, 142, 234, 0.3), rgba(161, 133, 244, 0.1)) border-box`,
+    },
+    to: {
+      background: `linear-gradient(#1F2232, #1F2232) padding-box, linear-gradient(-90deg, rgba(47, 179, 254, 0.1), rgba(106, 142, 234, 0.5), rgba(161, 133, 244, 0.3), rgba(171, 236, 162, 0.1)) border-box`,
+    },
+    config: {
+      duration: 5000,
+    },
+    loop: {
+      reverse: true,
+    },
+  })
+  const Animated = animated(RowWrapper)
+  return (
+    <Animated
+      {...props}
+      style={{
+        ...style,
+        ...styles,
+      }}
+      hasBorder={true}
+    />
+  )
+}
 
 export const RowWrapper = styled('tr')<{ hasBorder?: boolean }>`
   background-color: ${({ theme, hasBorder }) => (hasBorder ? theme.colors.neutral5 : undefined)};
@@ -256,11 +284,11 @@ export const RowWrapper = styled('tr')<{ hasBorder?: boolean }>`
   max-width: calc(100% - 32px);
   //max-width: ${({ hasBorder }) => (hasBorder ? 'calc(100% - 16px)' : undefined)};
   //max-width: calc(100% - 32px);
-  border: ${({ hasBorder }) => (hasBorder ? '1px solid #0000' : 'none')};
-  border-radius: ${({ hasBorder }) => (hasBorder ? '4px' : undefined)};
-  background: ${({ hasBorder }) =>
-    hasBorder
-      ? 'linear-gradient(#1f2232, #1f2232) padding-box, linear-gradient(var(--angle), #abeca2, #2fb3fe80, #6a8eea4d, #a185f426, #a185f426) border-box'
-      : undefined};
-  animation: ${({ hasBorder }) => (hasBorder ? '10s rotate linear infinite' : undefined)};
+
+  ${({ hasBorder }) =>
+    hasBorder &&
+    `
+    border: 1px solid #0000;
+    border-radius: 4px;
+    `};
 `

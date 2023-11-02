@@ -7,7 +7,7 @@ import Checkbox from 'theme/Checkbox'
 import { Box, Type } from 'theme/base'
 import { formatNumber } from 'utils/helpers/format'
 
-import { RowWrapper } from './index'
+import { AnimatedRowWrapper, RowWrapper } from './index'
 import { ColumnData, ColumnDataParameter, ColumnExternalSourceParameter } from './types'
 
 export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
@@ -88,15 +88,15 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
 }) {
   if (!data) return <></>
   const isSelected = !!checkIsSelected && checkIsSelected(data)
+  const Wrapper = (topIndex && index !== undefined ? index < topIndex : false) ? AnimatedRowWrapper : RowWrapper
   return (
-    <RowWrapper
+    <Wrapper
       onClick={onClickRow ? () => onClickRow(data) : undefined}
       style={{
         cursor: !!onClickRow ? 'pointer' : 'default',
         background: bg,
         width: '100%',
       }}
-      hasBorder={topIndex && index !== undefined ? index < topIndex : undefined}
     >
       {handleSelect && (
         <td style={{ width: '48px' }}>
@@ -146,6 +146,6 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
           </Box>
         )
       })}
-    </RowWrapper>
+    </Wrapper>
   )
 }
