@@ -10,14 +10,14 @@ import { requestCopyWalletApi } from 'apis/copyWalletApis'
 import BingXHelp from 'components/@ui/BingXHelp'
 import Divider from 'components/@ui/Divider'
 import ToastBody from 'components/@ui/ToastBody'
-import useCopyWalletContext from 'pages/WalletManagement/useCopyWalletContext'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { Button } from 'theme/Buttons'
 import InputField, { InputPasswordField } from 'theme/InputField'
 import Modal from 'theme/Modal'
 import { Box } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 
-import { ApiWalletFormValues, apiWalletFormSchema } from './schema'
+import { ApiWalletFormValues, apiWalletFormSchema, defaultFormValues } from './schema'
 
 export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () => void }) {
   const {
@@ -27,6 +27,7 @@ export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () =>
   } = useForm<ApiWalletFormValues>({
     mode: 'onChange',
     shouldFocusError: true,
+    defaultValues: defaultFormValues,
     resolver: yupResolver(apiWalletFormSchema),
   })
 
@@ -50,7 +51,7 @@ export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () =>
     if (submitting) return
     createWallet.mutate({
       exchange: CopyTradePlatformEnum.BINGX,
-      name: data.name,
+      name: !!data.name ? data.name?.trim() : undefined,
       bingX: {
         apiKey: data.apiKey,
         secretKey: data.secretKey,
@@ -73,6 +74,9 @@ export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () =>
             error={errors?.apiKey?.message}
             {...register('apiKey', {
               required: { value: true, message: 'This field is required' },
+              onChange: (e) => {
+                e.target.value = e.target.value.trim().replace(/\s/g, '')
+              },
             })}
             allowShowPassword
           />
@@ -85,6 +89,9 @@ export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () =>
             error={errors?.secretKey?.message}
             {...register('secretKey', {
               required: { value: true, message: 'This field is required' },
+              onChange: (e) => {
+                e.target.value = e.target.value.trim().replace(/\s/g, '')
+              },
             })}
           />
 

@@ -1,24 +1,27 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { useCallback, useRef } from 'react'
 
-import useActiveWeb3React from 'hooks/web3/useActiveWeb3React'
 import { TransactionError } from 'utils/helpers/handleError'
 import { pollEvery } from 'utils/helpers/pollEvery'
 import { ConfirmationInfo } from 'utils/web3/types'
 
+import useChain from './useChain'
+import useWeb3 from './useWeb3'
+
 const useTransactionListener = () => {
-  const { library, chainInfo } = useActiveWeb3React()
+  const { walletProvider } = useWeb3()
+  const { chain } = useChain()
   const _stopPollingConfirmations = useRef<() => void>()
 
   const subscribe = useCallback(
     (txHash: string, confirmationsNeeded = 1, notifyFn?: (info: ConfirmationInfo) => void) => {
-      if (!library) return
+      if (!walletProvider || !chain) return
       return new Promise((resolve: (receipt: TransactionReceipt) => void, reject: (error: Error) => void) => {
         let _confirmationInfo: ConfirmationInfo
         const pollChecking = pollEvery(
           (txHash: string) => ({
             request: async () => {
-              const result = await library.getTransactionReceipt(txHash)
+              const result = await walletProvider.getTransactionReceipt(txHash)
               return result
             },
             onResult: (result?: TransactionReceipt) => {
@@ -32,7 +35,7 @@ const useTransactionListener = () => {
                 if (!_confirmationInfo || _confirmationInfo.confirmations !== result?.confirmations) {
                   _confirmationInfo = {
                     txHash,
-                    txLink: `${chainInfo.blockExplorerUrls[0]}/tx/${txHash}`,
+                    txLink: `${chain.blockExplorerUrl}/tx/${txHash}`,
                     status: result.status,
                     confirmations: result.confirmations,
                   }
@@ -51,7 +54,7 @@ const useTransactionListener = () => {
         _stopPollingConfirmations.current = pollChecking(txHash)
       })
     },
-    [chainInfo.blockExplorerUrls, library]
+    [chain, walletProvider]
   )
   const unsubscribe = useCallback(() => {
     if (_stopPollingConfirmations.current) _stopPollingConfirmations.current()

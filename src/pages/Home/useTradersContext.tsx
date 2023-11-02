@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
+import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ConditionFormValues } from 'components/ConditionFilterForm/types'
@@ -61,10 +61,17 @@ export function FilterTradersProvider({
   children: ReactNode
 }) {
   const { myProfile } = useMyProfile()
-  const { protocol } = useProtocolStore()
   const { searchParams, setSearchParams } = useSearchParams()
+  const protocolParam = searchParams?.protocol as ProtocolEnum
+  const { protocol: protocolStore } = useProtocolStore()
+  const protocol = protocolParam ?? protocolStore
 
   const [currentSuggestion, setCurrentSuggestion] = useState<string | undefined>()
+
+  useEffect(() => {
+    if (protocolParam) return
+    setTimeout(() => setSearchParams({ protocol }), 100)
+  }, [protocol, protocolParam, setSearchParams])
 
   const logEventFilter = (action: string) => {
     logEvent({

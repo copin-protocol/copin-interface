@@ -5,6 +5,7 @@ import { ApiMeta } from 'apis/api'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import { VerticalDivider } from 'components/@ui/Table/renderProps'
 import { ColumnData } from 'components/@ui/Table/types'
+import { CopyWalletData } from 'entities/copyWallet'
 import { UserActivityData } from 'entities/user'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
@@ -12,7 +13,7 @@ import { PROTOCOL_PROVIDER, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { ORDER_TYPE_TRANS } from 'utils/config/translations'
 import { addressShorten, formatLocalDate, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
-import { parseExchangeImage, parseProtocolImage } from 'utils/helpers/transform'
+import { parseExchangeImage, parseProtocolImage, parseWalletName } from 'utils/helpers/transform'
 
 export interface UserActivityTableProps {
   data: UserActivityData[] | undefined
@@ -27,6 +28,7 @@ export type CopySelection = {
 
 export type ExternalSource = {
   handleSelectCopyItem: (data: CopySelection) => void
+  copyWallets: CopyWalletData[] | undefined
 }
 
 type ActivityColumnData = ColumnData<UserActivityData, ExternalSource>
@@ -74,29 +76,45 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
       <Type.Caption>
         {item.sourcePrice ? PriceTokenText({ value: item.sourcePrice, maxDigit: 2, minDigit: 2 }) : '--'}
       </Type.Caption>
-      <Type.Caption color="neutral3">-</Type.Caption>
-      <Type.Caption>
-        <Box as="a" href={`${PROTOCOL_PROVIDER[item.protocol].explorerUrl}/tx/${item.sourceTxHash}`} target="_blank">
-          <Trans>TxHash</Trans>
-        </Box>
-      </Type.Caption>
+      {item.sourceTxHash && (
+        <>
+          <Type.Caption color="neutral3">-</Type.Caption>
+          <Type.Caption>
+            <Box
+              as="a"
+              href={`${PROTOCOL_PROVIDER[item.protocol].explorerUrl}/tx/${item.sourceTxHash}`}
+              target="_blank"
+            >
+              <Trans>TxHash</Trans>
+            </Box>
+          </Type.Caption>
+        </>
+      )}
     </Flex>
   ),
-  targetWallet: (item) =>
-    item.isSuccess ? (
+  targetWallet: (item, _, externalSource) => {
+    let walletName = '--'
+    if (item.copyWalletName) {
+      walletName = item.copyWalletName
+    } else if (item.copyWalletId) {
+      const walletFromContext = externalSource?.copyWallets?.find((wallet) => wallet.id === item.copyWalletId)
+      if (walletFromContext) {
+        walletName = parseWalletName(walletFromContext)
+      }
+    }
+    return (
       <Flex sx={{ alignItems: 'center', gap: 2 }}>
         <Type.Caption
           color="neutral1"
           sx={{ maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
         >
-          {item.copyWalletName}
+          {walletName}
         </Type.Caption>
         <VerticalDivider />
         <Image src={parseExchangeImage(item.exchange)} width={20} height={20} />
       </Flex>
-    ) : (
-      <Type.Caption>--</Type.Caption>
-    ),
+    )
+  },
   targetAction: (item, _, externalSource) =>
     item.isSuccess ? (
       <Flex
@@ -130,12 +148,20 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
         >
           <Trans>Details</Trans>
         </Type.Caption>
-        <VerticalDivider />
-        <Type.Caption>
-          <Box as="a" href={`${PROTOCOL_PROVIDER[item.protocol].explorerUrl}/tx/${item.sourceTxHash}`} target="_blank">
-            <Trans>TxHash</Trans>
-          </Box>
-        </Type.Caption>
+        {item.targetTxHash && (
+          <>
+            <VerticalDivider />
+            <Type.Caption>
+              <Box
+                as="a"
+                href={`${PROTOCOL_PROVIDER[item.protocol].explorerUrl}/tx/${item.sourceTxHash}`}
+                target="_blank"
+              >
+                <Trans>TxHash</Trans>
+              </Box>
+            </Type.Caption>
+          </>
+        )}
       </Flex>
     ) : (
       <Type.Caption color="neutral3">{item.errorMsg || <Trans>Error while place order</Trans>}</Type.Caption>

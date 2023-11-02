@@ -4,11 +4,10 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 import ThemeProvider from 'theme'
 
+import { CopyWalletProvider } from 'hooks/features/useCopyWalletContext'
 import ThemedGlobalStyle from 'theme/styles'
-import { DEFAULT_CHAIN_ID } from 'utils/web3/chains'
 
 import DappProvider from './DappProvider'
-import { CopyWalletProvider } from './pages/WalletManagement/useCopyWalletContext'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,7 +26,7 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
         <QueryClientProvider client={queryClient}>
           {/* <Updaters /> */}
           <BrowserRouter>
-            <DappProvider chainId={DEFAULT_CHAIN_ID}>
+            <DappProvider>
               <CopyWalletProvider>{children}</CopyWalletProvider>
             </DappProvider>
           </BrowserRouter>

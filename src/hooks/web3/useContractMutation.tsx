@@ -1,4 +1,5 @@
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/abstract-provider'
+import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { Trans } from '@lingui/macro'
 import React, { ReactText, useRef } from 'react'
@@ -24,8 +25,21 @@ const useContractMutation = (contract: Contract, options?: { successMsg?: string
   const { successMsg, ...opts } = options ?? {}
   const loadingRef = useRef<ReactText>()
   return useMutation({
-    mutationFn: async ({ method, params }: { method: string; params: any[] }) => {
-      const tx: TransactionResponse = await contract[method](...params)
+    mutationFn: async ({
+      method,
+      params,
+      gasLimit,
+      value,
+    }: {
+      method: string
+      params: any[]
+      gasLimit?: number
+      value?: BigNumber
+    }) => {
+      const tx: TransactionResponse = await contract[method](...params, {
+        gasLimit,
+        value,
+      })
       const result = await tx.wait()
       if (result.status === 0)
         throw new TransactionError('Error encountered during contract execution', result.transactionHash)
@@ -44,7 +58,7 @@ const useContractMutation = (contract: Contract, options?: { successMsg?: string
           message={
             <Box>
               <Box>
-                <Type.Caption color="neutral4" sx={{ wordBreak: 'break-word' }}>
+                <Type.Caption color="neutral3" sx={{ wordBreak: 'break-word' }}>
                   {successMsg ?? <Trans>Transaction has been executed successfully</Trans>}
                 </Type.Caption>
               </Box>
@@ -65,7 +79,7 @@ const useContractMutation = (contract: Contract, options?: { successMsg?: string
             hash ? (
               <Box>
                 <Box>
-                  <Type.Caption color="neutral4" sx={{ wordBreak: 'break-word' }}>
+                  <Type.Caption color="neutral3" sx={{ wordBreak: 'break-word' }}>
                     {message}
                   </Type.Caption>
                 </Box>

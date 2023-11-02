@@ -16,8 +16,11 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
+import { SERVICE_KEYS } from 'utils/config/keys'
+import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
 import { getTokenTradeList } from 'utils/config/trades'
 
+import FundChecking from './FundChecking'
 import Wallets from './Wallets'
 import {
   CopyTradeFormValues,
@@ -74,6 +77,8 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     ),
   })
 
+  const volume = watch('volume')
+  const copyWalletId = watch('copyWalletId')
   const leverage = watch('leverage')
   const platform = watch('exchange')
   const enableStopLoss = watch('enableStopLoss')
@@ -105,7 +110,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   )
 
   const currentWalletId = watch('copyWalletId')
-  const onChangeWallet = (walletId: string) => setValue(fieldName.copyWalletId, walletId)
+  const onChangeWallet = (walletId: string) => setValue(fieldName.copyWalletId, walletId, { shouldValidate: true })
 
   useEffect(() => {
     reset(defaultFormValues)
@@ -122,6 +127,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   }, [])
 
   const permissionToSelectProtocol = useCopyTradePermission(true)
+  const isSelectedAlltokens = tokenAddresses?.length === addressPairs?.length
 
   return (
     <>
@@ -159,7 +165,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                         options={protocolOptions}
                         defaultMenuIsOpen={false}
                         value={protocolOptions.find((option) => option.value === protocol)}
-                        onChange={(newValue: any) => setValue('protocol', newValue.value)}
+                        onChange={(newValue: any) => {
+                          setValue('protocol', newValue.value)
+                          setValue('serviceKey', SERVICE_KEYS[newValue.value as ProtocolEnum])
+                        }}
                         isSearchable={false}
                         isDisabled={!!defaultFormValues.duplicateToAddress}
                       />
@@ -175,7 +184,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
         <Type.BodyBold mb={3}>
           <Trans>1. Choose Platform</Trans>
         </Type.BodyBold>
-        <Flex mb={[3, 20]} sx={{ gap: [3, 4], flexDirection: ['column', 'row'], alignItems: ['start', 'end'] }}>
+        <Flex sx={{ gap: [3, 4], flexDirection: ['column', 'row'], alignItems: ['start', 'end'] }}>
           <Box flex="1" width="100%">
             <Type.Caption color="neutral3" mb={2} fontWeight={600}>
               Platform
@@ -196,11 +205,20 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               currentWalletId={currentWalletId}
               onChangeWallet={onChangeWallet}
             />
-            {errors.copyWalletId?.message && <Type.Small color="red2">{errors.copyWalletId.message}</Type.Small>}
           </Box>
         </Flex>
+        {errors.copyWalletId?.message && (
+          <Flex mt={2} sx={{ flexDirection: ['column', 'row'] }}>
+            <Box flex="1" />
+            <Type.Caption color="red1" sx={{ flex: '1', pl: [0, 4] }}>
+              {errors.copyWalletId.message}
+            </Type.Caption>
+          </Flex>
+        )}
 
-        <Type.BodyBold mb={3}>2. Copy Information</Type.BodyBold>
+        <Type.BodyBold mb={3} mt={[3, 20]}>
+          2. Copy Information
+        </Type.BodyBold>
         <Flex sx={{ gap: [3, 4] }} mb={[3, 20]} flexDirection={['column', 'row']}>
           <Box flex="1" width="100%">
             <InputField block {...register(fieldName.title)} error={errors.title?.message} label="Title" />
@@ -211,15 +229,17 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               block
               name={fieldName.volume}
               control={control}
-              suffix={<Type.Caption color="neutral2">USD</Type.Caption>}
+              suffix={<Type.Caption color="neutral2">{CURRENCY_PLATFORMS[platform]}</Type.Caption>}
               error={errors.volume?.message}
             />
+            <FundChecking walletId={copyWalletId} amount={volume} />
           </Box>
         </Flex>
         <Box mb={3}>
           <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
           <Flex sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}>
             <Select
+              menuIsOpen={isSelectedAlltokens ? false : undefined}
               closeMenuOnSelect={false}
               options={pairOptions}
               value={pairOptions?.filter?.((option) => tokenAddresses.includes(option.value))}

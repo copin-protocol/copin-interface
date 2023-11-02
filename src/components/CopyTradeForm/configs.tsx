@@ -3,17 +3,22 @@ import * as yup from 'yup'
 
 import { Flex, Image, Type } from 'theme/base'
 import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { SERVICE_KEYS } from 'utils/config/keys'
 import { parseExchangeImage, parseProtocolImage } from 'utils/helpers/transform'
 
 const commonSchema = {
   title: yup.string().required().label('Title'),
-  volume: yup.number().required().min(0).label('Amount'),
+  volume: yup.number().when('exchange', {
+    is: CopyTradePlatformEnum.SYNTHETIX,
+    then: (schema) => schema.required().min(50).label('Margin'),
+    otherwise: (schema) => schema.required().min(1).label('Margin'),
+  }),
   leverage: yup.number().required().min(2).label('Leverage'),
   tokenAddresses: yup.array(yup.string()).required().min(1).label('Trading Pairs'),
   enableStopLoss: yup.boolean(),
   stopLossAmount: yup.number().when('enableStopLoss', {
     is: true,
-    then: (schema) => schema.required().min(1).label('Stop Loss Amount'),
+    then: (schema) => schema.required().min(0.1).label('Stop Loss Amount'),
   }),
   volumeProtection: yup.boolean(),
   lookBackOrders: yup.number().when('volumeProtection', {
@@ -31,7 +36,10 @@ const commonSchema = {
 export const copyTradeFormSchema = yup.object({
   ...commonSchema,
   serviceKey: yup.string().required().label('Service Key'),
-  exchange: yup.mixed().oneOf([CopyTradePlatformEnum.GMX, CopyTradePlatformEnum.BINGX]).label('Exchange'),
+  exchange: yup
+    .mixed()
+    .oneOf([CopyTradePlatformEnum.GMX, CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.SYNTHETIX])
+    .label('Exchange'),
   // privateKey: yup.string().when('exchange', {
   //   is: CopyTradePlatformEnum.GMX,
   //   then: (schema) => schema.required().label('Private Key'),
@@ -121,7 +129,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   lookBackOrders: 10,
   exchange: CopyTradePlatformEnum.BINGX,
   copyWalletId: '',
-  serviceKey: 'INTERNAL_TEST',
+  serviceKey: SERVICE_KEYS[ProtocolEnum.GMX],
   title: '',
   reverseCopy: false,
   duplicateToAddress: '',
@@ -140,7 +148,7 @@ interface ExchangeOptions {
 }
 export const exchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BINGX),
-  getExchangeOption(CopyTradePlatformEnum.SYNTHETIX, false),
+  // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
 ]
 function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {
   let label = ''

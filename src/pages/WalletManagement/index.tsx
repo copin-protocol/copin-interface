@@ -21,7 +21,6 @@ export default function WalletManagement() {
   } else if (lg) {
     Layout = TabletLayout
   }
-
   return (
     <>
       <CustomPageTitle title={`Wallet Management`} />

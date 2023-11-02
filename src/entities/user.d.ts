@@ -62,4 +62,5 @@ export interface UserActivityData {
   bingXOrderIds?: string[]
   sourcePrice: number
   copyOrderId?: string
+  targetTxHash?: string
 }

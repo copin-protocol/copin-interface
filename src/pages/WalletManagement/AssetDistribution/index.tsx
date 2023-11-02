@@ -1,20 +1,23 @@
 import { Trans } from '@lingui/macro'
 import { CoinVertical } from '@phosphor-icons/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from 'recharts'
 
 import SectionTitle from 'components/@ui/SectionTitle'
 import { CopyWalletData } from 'entities/copyWallet'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { Flex } from 'theme/base'
 import { getColorFromText } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
 
-import useCopyWalletContext from '../useCopyWalletContext'
-
 export default function AssetDistribution() {
-  const { copyWallets } = useCopyWalletContext()
+  const { copyWallets, loadTotalSmartWallet } = useCopyWalletContext()
   const pieChartData = calculatePercentage(copyWallets)
+
+  useEffect(() => {
+    loadTotalSmartWallet()
+  }, [])
 
   return (
     <Flex flexDirection="column" height="100%">
@@ -49,12 +52,12 @@ export default function AssetDistribution() {
 
 function calculatePercentage(wallets?: CopyWalletData[]) {
   if (!wallets || wallets.length === 0) return []
-  const totalBalance = wallets.reduce((acc, wallet) => acc + wallet.balance, 0)
+  const totalBalance = wallets.reduce((acc, wallet) => acc + (wallet?.balance ?? 0), 0)
   return wallets.map((wallet) => {
     return {
       id: wallet.id,
       name: parseWalletName(wallet),
-      percentage: (wallet.balance / totalBalance) * 100,
+      percentage: ((wallet?.balance ?? 0) / totalBalance) * 100,
       color: getColorFromText(wallet.id),
     } as ChartData
   })

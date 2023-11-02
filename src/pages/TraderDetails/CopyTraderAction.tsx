@@ -53,7 +53,7 @@ const CopyTraderAction = ({
       >
         Copy Trader
       </Button>
-      {isOpenModal && (
+      {isOpenModal && !!myProfile && (
         <CopyTraderModal protocol={protocol} account={account} isOpen={isOpenModal} onClose={handleCloseModal} />
       )}
       {isOpenContactModal && <ModalContactUs onDismiss={() => setIsOpenContactModal(false)} />}

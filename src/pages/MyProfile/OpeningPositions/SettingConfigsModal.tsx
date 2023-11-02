@@ -21,6 +21,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { CopyTradeConfigTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getErrorMessage } from 'utils/helpers/handleError'
+import { parseWalletName } from 'utils/helpers/transform'
 
 import { CopyTradeConfigFormValues, configSchema, defaultFormValues, fieldName } from './schema'
 
@@ -51,8 +52,7 @@ export default function SettingConfigsModal({
   const { data, isLoading } = useQuery(
     [QUERY_KEYS.GET_COPY_TRADE_CONFIGS_BY_KEY, selectedWallet.id],
     // eslint-disable-next-line prettier/prettier
-    () =>
-      getConfigDetailsByKeyApi({ exchange: selectedWallet.exchange, copyWalletId: selectedWallet.id }),
+    () => getConfigDetailsByKeyApi({ exchange: selectedWallet.exchange, copyWalletId: selectedWallet.id }),
     {
       retry: 0,
     }
@@ -121,7 +121,13 @@ export default function SettingConfigsModal({
           <Type.Caption color="neutral2" mb={3}>
             <Trans>The maximum number of positions that can be opened at the same time per wallet</Trans>
           </Type.Caption>
-          <InputField sx={{ mb: 3 }} label="Wallet Name" defaultValue={selectedWallet.name} block disabled />
+          <InputField
+            sx={{ mb: 3 }}
+            label="Wallet Name"
+            defaultValue={parseWalletName(selectedWallet)}
+            block
+            disabled
+          />
           <SwitchInputField
             wrapperSx={{ mb: 12 }}
             switchLabel={enableMaxPositions ? <Trans>Limited</Trans> : <Trans>Unlimited</Trans>}
