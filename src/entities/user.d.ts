@@ -1,4 +1,4 @@
-import { UserRoleEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, OrderTypeEnum, ProtocolEnum, UserRoleEnum } from 'utils/config/enums'
 
 export interface UserCopyData {
   address: string
@@ -36,4 +36,31 @@ export interface ReferralStat {
   todayReferral?: number
   yesterdayReferral?: number
   d30Referral?: number
+}
+
+export interface UserActivityData {
+  createdAt: string
+  protocol: ProtocolEnum
+  sourceAccount: string
+  userId?: string
+  copyTradeId?: string
+  copyTradeTitle?: string
+  exchange: CopyTradePlatformEnum
+  indexToken: string
+  pair: string
+  price?: number
+  volume?: number
+  leverage?: number
+  isLong: boolean
+  type?: OrderTypeEnum
+  isSuccess?: boolean
+  errorMsg?: string
+  sourceOrderId?: string
+  sourceTxHash?: string
+  copyWalletId?: string
+  copyWalletName?: string
+  bingXOrderIds?: string[]
+  sourcePrice: number
+  copyOrderId?: string
+  targetTxHash?: string
 }

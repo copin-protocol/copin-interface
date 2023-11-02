@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Trans } from '@lingui/macro'
-import React, { ReactNode, useEffect, useRef } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery } from 'react-query'
 import { toast } from 'react-toastify'
@@ -11,25 +11,26 @@ import {
   updateCopyTradeConfigApi,
 } from 'apis/copyTradeConfigApis'
 import ToastBody from 'components/@ui/ToastBody'
+import { CopyWalletData } from 'entities/copyWallet'
 import { Button } from 'theme/Buttons'
 import InputField from 'theme/InputField'
 import NumberInputField from 'theme/InputField/NumberInputField'
 import Modal from 'theme/Modal'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
+import { CopyTradeConfigTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { addressShorten } from 'utils/helpers/format'
 import { getErrorMessage } from 'utils/helpers/handleError'
+import { parseWalletName } from 'utils/helpers/transform'
 
-import { SettingKey } from './SettingConfigs'
 import { CopyTradeConfigFormValues, configSchema, defaultFormValues, fieldName } from './schema'
 
 export default function SettingConfigsModal({
-  currentSettingKey,
+  selectedWallet,
   onDismiss,
   onSuccess,
 }: {
-  currentSettingKey: SettingKey
+  selectedWallet: CopyWalletData
   onDismiss: () => void
   onSuccess?: () => void
 }) {
@@ -49,8 +50,9 @@ export default function SettingConfigsModal({
   const initRef = useRef<boolean>(false)
 
   const { data, isLoading } = useQuery(
-    [QUERY_KEYS.GET_COPY_TRADE_CONFIGS_BY_KEY, currentSettingKey?.apiKey],
-    () => getConfigDetailsByKeyApi({ exchange: currentSettingKey.exchange, apiKey: currentSettingKey.apiKey }),
+    [QUERY_KEYS.GET_COPY_TRADE_CONFIGS_BY_KEY, selectedWallet.id],
+    // eslint-disable-next-line prettier/prettier
+    () => getConfigDetailsByKeyApi({ exchange: selectedWallet.exchange, copyWalletId: selectedWallet.id }),
     {
       retry: 0,
     }
@@ -98,16 +100,15 @@ export default function SettingConfigsModal({
     if (data) {
       updateConfigs({
         configId: data.id,
-        data: {
-          maxPositions: currentMaxPositions,
-          ...currentSettingKey,
-        },
+        data: { maxPositions: currentMaxPositions },
       })
     } else {
       requestConfigs({
         data: {
           maxPositions: currentMaxPositions,
-          ...currentSettingKey,
+          identifyKey: selectedWallet.id,
+          exchange: selectedWallet.exchange,
+          type: CopyTradeConfigTypeEnum.COPY_WALLET,
         },
       })
     }
@@ -118,12 +119,12 @@ export default function SettingConfigsModal({
       <form>
         <Box px={24} pb={24}>
           <Type.Caption color="neutral2" mb={3}>
-            <Trans>The maximum number of positions that can be opened at the same time per API Key</Trans>
+            <Trans>The maximum number of positions that can be opened at the same time per wallet</Trans>
           </Type.Caption>
           <InputField
             sx={{ mb: 3 }}
-            label="API Key"
-            defaultValue={addressShorten(currentSettingKey?.apiKey)}
+            label="Wallet Name"
+            defaultValue={parseWalletName(selectedWallet)}
             block
             disabled
           />

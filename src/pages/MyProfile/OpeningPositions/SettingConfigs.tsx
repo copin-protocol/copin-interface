@@ -1,53 +1,58 @@
 import { Trans } from '@lingui/macro'
 import { PencilSimpleLine } from '@phosphor-icons/react'
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 
-import { getCopyTradeBalancesApi } from 'apis/copyTradeApis'
 import { getConfigDetailsByKeyApi } from 'apis/copyTradeConfigApis'
 import { maxPositionsContent } from 'components/TooltipContents'
-import { CopyTradeBalanceData } from 'entities/copyTrade'
+import { CopyWalletData } from 'entities/copyWallet'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
-import { CopyTradeConfigTypeEnum, CopyTradePlatformEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
 
 import SettingConfigsModal from './SettingConfigsModal'
 
-const getName = (balance: CopyTradeBalanceData) => `BingX ${balance.uniqueKey.slice(0, 5)}`
-
-export interface SettingKey {
-  exchange: CopyTradePlatformEnum
-  type: CopyTradeConfigTypeEnum
-  apiKey: string
-}
-
-const SettingConfigs = ({ activeKey }: { activeKey: string | null }) => {
+const SettingConfigs = ({
+  activeWallet,
+  copyWallets,
+}: {
+  activeWallet: CopyWalletData | null
+  copyWallets: CopyWalletData[] | undefined
+}) => {
   const [openSettingModal, setOpenSettingModal] = useState(false)
-  const [currentSettingKey, setCurrentSettingKey] = useState<SettingKey | undefined>()
-  const { data } = useQuery('copytrade-balances', () => getCopyTradeBalancesApi())
+  const [selectedWallet, setSelectedWallet] = useState<CopyWalletData | null>()
+
+  useEffect(() => {
+    setSelectedWallet(activeWallet)
+  }, [activeWallet])
+
   const { data: config, refetch } = useQuery(
-    [QUERY_KEYS.GET_COPY_TRADE_CONFIGS_BY_KEY, activeKey],
-    () => getConfigDetailsByKeyApi({ exchange: CopyTradePlatformEnum.BINGX, apiKey: activeKey ?? '' }),
+    [QUERY_KEYS.GET_COPY_TRADE_CONFIGS_BY_KEY, activeWallet?.id],
+    () =>
+      getConfigDetailsByKeyApi({
+        exchange: activeWallet?.exchange ?? CopyTradePlatformEnum.BINGX,
+        copyWalletId: activeWallet?.id ?? '',
+      }),
     {
       retry: 0,
-      enabled: !!activeKey,
+      enabled: !!activeWallet,
     }
   )
 
-  const handleClick = (data: SettingKey) => {
+  const handleClick = (data?: CopyWalletData) => {
     setOpenSettingModal(true)
-    setCurrentSettingKey(data)
+    data && setSelectedWallet(data)
   }
 
-  if (!data) return <></>
+  if (!copyWallets?.length) return <></>
   return (
     <Flex alignItems="center">
       <Box width={{ _: '100%', sm: 'auto' }} data-tooltip-id={'tt-max-positions'}>
-        {activeKey === null ? (
+        {activeWallet === null ? (
           <Dropdown
             hasArrow={true}
             iconColor="primary1"
@@ -57,19 +62,10 @@ const SettingConfigs = ({ activeKey }: { activeKey: string | null }) => {
             menuSx={{ width: ['100%', 100] }}
             menu={
               <>
-                {data.balances.map((balanceData) => {
+                {copyWallets.map((data) => {
                   return (
-                    <DropdownItem
-                      key={balanceData.uniqueKey}
-                      onClick={() =>
-                        handleClick({
-                          exchange: CopyTradePlatformEnum.BINGX,
-                          type: CopyTradeConfigTypeEnum.API_KEY,
-                          apiKey: balanceData.uniqueKey,
-                        })
-                      }
-                    >
-                      {getName(balanceData)}
+                    <DropdownItem key={data.id} onClick={() => handleClick(data)}>
+                      {data.name}
                     </DropdownItem>
                   )
                 })}
@@ -94,22 +90,15 @@ const SettingConfigs = ({ activeKey }: { activeKey: string | null }) => {
               type="button"
               variant="ghostPrimary"
               sx={{ display: 'flex', alignItems: 'center', height: '100%', border: 'none', px: 0, py: 0 }}
-              onClick={() =>
-                handleClick({
-                  exchange: CopyTradePlatformEnum.BINGX,
-                  type: CopyTradeConfigTypeEnum.API_KEY,
-                  apiKey: activeKey,
-                })
-              }
+              onClick={() => handleClick()}
             />
           </Flex>
         )}
-        {openSettingModal && currentSettingKey && (
+        {openSettingModal && !!selectedWallet && (
           <SettingConfigsModal
-            currentSettingKey={currentSettingKey}
+            selectedWallet={selectedWallet}
             onDismiss={() => {
               setOpenSettingModal(false)
-              setCurrentSettingKey(undefined)
             }}
             onSuccess={refetch}
           />

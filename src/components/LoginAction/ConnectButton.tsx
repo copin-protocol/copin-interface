@@ -1,25 +1,18 @@
 import { Trans } from '@lingui/macro'
-import React, { useState } from 'react'
+import React from 'react'
 
 import useIsSafari from 'hooks/helpers/useIsSafari'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button, ButtonProps } from 'theme/Buttons'
-import { Flex, Image } from 'theme/base'
-import { SUPPORTED_WALLETS } from 'utils/web3/providers'
+import { Flex } from 'theme/base'
 
-import ModalWarningSafari from './ModalWarningSafari'
-
-const ConnectButton = ({ ...props }: ButtonProps) => {
+const ConnectButton = ({ onConnect, ...props }: ButtonProps & { onConnect: () => void }) => {
   const isSafari = useIsSafari()
   const { connect, loading } = useAuthContext()
-  const [openModal, setOpenModal] = useState(false)
 
   const handleSubmit = () => {
-    if (isSafari) {
-      setOpenModal(true)
-    } else {
-      connect(SUPPORTED_WALLETS['METAMASK'].connectorName)
-    }
+    connect({})
+    onConnect()
   }
 
   return (
@@ -35,10 +28,9 @@ const ConnectButton = ({ ...props }: ButtonProps) => {
       {...props}
     >
       <Flex alignItems="center" sx={{ gap: 2 }} justifyContent="center">
-        <Image src={SUPPORTED_WALLETS['METAMASK'].iconURL} width={20} />
-        <Trans>Login with MetaMask</Trans>
+        <Trans>Connect Wallet</Trans>
       </Flex>
-      {openModal && <ModalWarningSafari onDismiss={() => setOpenModal(false)} />}
+      {/* {openModal && <ModalWarningSafari onDismiss={() => setOpenModal(false)} />} */}
     </Button>
   )
 }

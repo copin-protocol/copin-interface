@@ -1,6 +1,4 @@
 import { CopyTradeData } from 'entities/copyTrade'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
-import { addressShorten } from 'utils/helpers/format'
 
 import { CopyTradeFormValues } from './configs'
 
@@ -20,8 +18,9 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     stopLossAmount,
     maxVolMultiplier,
     skipLowLeverage,
-    bingXApiKey,
     protocol,
+    exchange,
+    copyWalletId,
   } = copyTradeData
   if (account) result.account = account
   if (title) result.title = title
@@ -45,13 +44,8 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     result.enableMaxVolMultiplier = false
   }
   result.skipLowLeverage = !!skipLowLeverage
-
-  if (bingXApiKey) {
-    result.exchange = CopyTradePlatformEnum.BINGX
-    result.bingXApiKey = addressShorten(bingXApiKey)
-  } else {
-    result.exchange = CopyTradePlatformEnum.GMX
-  }
+  result.exchange = exchange
+  result.copyWalletId = copyWalletId
   return result
 }
 
@@ -69,5 +63,7 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
     maxVolMultiplier: formData.enableMaxVolMultiplier ? formData.maxVolMultiplier : 0,
     skipLowLeverage: formData.skipLowLeverage,
     protocol: formData.protocol,
+    exchange: formData.exchange,
+    copyWalletId: formData.copyWalletId,
   }
 }

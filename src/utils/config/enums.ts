@@ -46,10 +46,13 @@ export enum CopyTradeTypeEnum {
 export enum CopyTradePlatformEnum {
   GMX = 'GMX',
   BINGX = 'BINGX',
+  SYNTHETIX = 'SYNTHETIX',
 }
 
 export enum CopyTradeConfigTypeEnum {
   API_KEY = 'API_KEY',
+  COPY_WALLET = 'COPY_WALLET',
+  GLOBAL = 'GLOBAL',
 }
 
 export enum PositionStatusEnum {
@@ -108,4 +111,27 @@ export enum CheckAvailableStatus {
 export enum KeyNameEnum {
   ESCAPE = 'Escape',
   ENTER = 'Enter',
+}
+
+export enum SmartAccountCommand {
+  ACCOUNT_MODIFY_MARGIN = 0,
+  ACCOUNT_WITHDRAW_ETH = 1,
+  PERP_CANCEL_ORDER = 2,
+  PERP_WITHDRAW_ALL_MARGIN = 3,
+  PERP_MODIFY_MARGIN = 4,
+  PERP_SUBMIT_CREATE_ORDER = 5,
+  PERP_SUBMIT_CLOSE_ORDER = 6,
+  DELEGATE_DEPOSIT_MARGIN = 7,
+  DELEGATE_RELEASE_FEE = 8,
+}
+
+export enum CurrencyEnum {
+  USD = 'USD',
+  SUSD = 'sUSD',
+  USDC = 'USDC',
+}
+
+export enum LeaderboardTypeEnum {
+  WEEKLY = 'WEEK',
+  MONTHLY = 'MONTH',
 }

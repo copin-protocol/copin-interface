@@ -7,7 +7,7 @@ const useContractQuery = <TQueryFnData = unknown, TError = unknown, TData = TQue
   params: any[],
   options?: UseQueryOptions<TQueryFnData, TError, TData, any[]>
 ) => {
-  return useQuery([contract.key, method, ...params], async () => contract[method](params), {
+  return useQuery([contract.address, method, ...params], async () => contract[method](...params), {
     ...options,
   })
 }

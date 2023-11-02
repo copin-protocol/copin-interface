@@ -1,4 +1,5 @@
 import { SystemStyleObject } from '@styled-system/css'
+import { ReactNode } from 'react'
 import { GridProps } from 'styled-system'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -6,6 +7,7 @@ import Checkbox from 'theme/Checkbox'
 import { Box, Type } from 'theme/base'
 import { formatNumber } from 'utils/helpers/format'
 
+import { AnimatedRowWrapper, RowWrapper } from './index'
 import { ColumnData, ColumnDataParameter, ColumnExternalSourceParameter } from './types'
 
 export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
@@ -17,6 +19,9 @@ export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSou
   externalSource,
   checkIsSelected,
   handleSelect,
+  topIndex,
+  title,
+  subTitle,
 }: {
   data: T[] | undefined
   columns: ColumnData<T, K>[] | undefined
@@ -26,24 +31,32 @@ export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSou
   externalSource: K | undefined
   checkIsSelected?: (data: T) => boolean
   handleSelect?: (args: { isSelected: boolean; data: T }) => void
+  topIndex?: number
+  title?: ReactNode
+  subTitle?: ReactNode
 }) {
   return (
     <tbody>
       {data?.map((data: any, index: number) => {
         const bg = renderRowBackground ? renderRowBackground(data, index) : undefined
         return (
-          <Row
-            key={index}
-            data={data}
-            index={index}
-            columnsData={columns}
-            onClickRow={onClickRow}
-            sx={sx}
-            bg={bg}
-            externalSource={externalSource}
-            checkIsSelected={checkIsSelected}
-            handleSelect={handleSelect}
-          />
+          <>
+            {topIndex && index === 0 && title}
+            {topIndex && index === topIndex && subTitle}
+            <Row
+              key={index}
+              data={data}
+              index={index}
+              columnsData={columns}
+              onClickRow={onClickRow}
+              sx={sx}
+              bg={bg}
+              externalSource={externalSource}
+              checkIsSelected={checkIsSelected}
+              handleSelect={handleSelect}
+              topIndex={topIndex}
+            />
+          </>
         )
       })}
     </tbody>
@@ -60,6 +73,7 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
   externalSource,
   checkIsSelected,
   handleSelect,
+  topIndex,
 }: {
   data: T | undefined
   index: number | undefined
@@ -70,13 +84,19 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
   externalSource: K | undefined
   checkIsSelected?: (data: T) => boolean
   handleSelect?: (args: { isSelected: boolean; data: T }) => void
+  topIndex?: number
 }) {
   if (!data) return <></>
   const isSelected = !!checkIsSelected && checkIsSelected(data)
+  const Wrapper = (topIndex && index !== undefined ? index < topIndex : false) ? AnimatedRowWrapper : RowWrapper
   return (
-    <tr
+    <Wrapper
       onClick={onClickRow ? () => onClickRow(data) : undefined}
-      style={{ cursor: !!onClickRow ? 'pointer' : 'default', background: bg, width: '100%' }}
+      style={{
+        cursor: !!onClickRow ? 'pointer' : 'default',
+        background: bg,
+        width: '100%',
+      }}
     >
       {handleSelect && (
         <td style={{ width: '48px' }}>
@@ -90,7 +110,15 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
       {columnsData?.map((columnData) => {
         const key = columnData?.key ? columnData.key : uuidv4()
         return (
-          <Box as="td" key={key.toString()} data-table-key={columnData.key} sx={{ ...sx, ...columnData.style }}>
+          <Box
+            as="td"
+            key={key.toString()}
+            data-table-key={columnData.key}
+            sx={{
+              ...sx,
+              ...columnData.style,
+            }}
+          >
             {columnData.render ? (
               columnData.render(data, index, externalSource)
             ) : (
@@ -118,6 +146,6 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
           </Box>
         )
       })}
-    </tr>
+    </Wrapper>
   )
 }

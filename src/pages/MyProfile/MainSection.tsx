@@ -2,6 +2,7 @@ import { useEffect, useMemo, useReducer, useRef } from 'react'
 import { useQuery } from 'react-query'
 
 import { getCopyTradeSettingsListApi, getMyCopyTradersApi } from 'apis/copyTradeApis'
+import { CopyWalletData } from 'entities/copyWallet'
 import { UserData } from 'entities/user'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
@@ -16,11 +17,11 @@ export interface MainSectionState {
 export default function MainSection({
   myProfile,
   exchange,
-  uniqueKey,
+  copyWallet,
 }: {
   myProfile: UserData
   exchange: CopyTradePlatformEnum
-  uniqueKey: string | null
+  copyWallet: CopyWalletData | null
 }) {
   const storageData = sessionStorage.getItem(STORAGE_KEYS.MY_COPY_DATA)
   const [state, dispatch] = useSelectTraders(storageData)
@@ -28,10 +29,11 @@ export default function MainSection({
   const [sessionNum, setNewSession] = useReducer((prev) => prev + 1, 1)
   const hasCopyPermission = useCopyTradePermission()
   const prevResTraderList = useRef<string[]>([])
-  const prevUniqueKey = useRef(uniqueKey)
+  const copyWalletId = copyWallet?.id
+  const prevWalletId = useRef(copyWallet?.id)
   const { data: tradersData, isLoading: isLoadingTraders } = useQuery(
-    [QUERY_KEYS.GET_MY_COPY_TRADERS, exchange, uniqueKey, sessionNum],
-    () => getMyCopyTradersApi({ exchange, uniqueKey }),
+    [QUERY_KEYS.GET_MY_COPY_TRADERS, exchange, copyWalletId, sessionNum],
+    () => getMyCopyTradersApi({ exchange, copyWalletId }),
     {
       enabled: !!exchange && hasCopyPermission,
       onSuccess: (data) => {
@@ -43,8 +45,8 @@ export default function MainSection({
           return
         }
         prevResTraderList.current = resAddresses
-        if (!storageData || prevUniqueKey.current !== uniqueKey) {
-          prevUniqueKey.current = uniqueKey
+        if (!storageData || prevWalletId.current !== copyWalletId) {
+          prevWalletId.current = copyWalletId
           dispatch({ type: 'setTraders', payload: resAddresses })
           return
         }
@@ -57,11 +59,11 @@ export default function MainSection({
 
   const getAllCopiesParams = useMemo(
     () => ({
-      apiKey: uniqueKey ?? undefined,
+      copyWalletId,
       accounts: listTraderAddresses,
       status: undefined,
     }),
-    [listTraderAddresses, uniqueKey]
+    [listTraderAddresses, copyWalletId]
   )
   const { data: allCopyTrades } = useQuery(
     [QUERY_KEYS.GET_COPY_TRADE_SETTINGS, getAllCopiesParams],
@@ -92,12 +94,12 @@ export default function MainSection({
   })
   const queryParams = useMemo(
     () => ({
-      apiKey: uniqueKey ?? undefined,
+      copyWalletId,
       accounts: state.selectedTraders,
       status: copyStatus.length === 1 ? copyStatus[0] : undefined,
       protocol: selectedProtocol.length === 1 ? selectedProtocol[0] : undefined,
     }),
-    [copyStatus, selectedProtocol, state.selectedTraders, uniqueKey]
+    [copyStatus, selectedProtocol, state.selectedTraders, copyWalletId]
   )
   const prevResCopyTradeList = useRef<string[]>([])
   const { data: copyTrades, isFetching: isLoadingCopyTrades } = useQuery(
@@ -158,6 +160,7 @@ export default function MainSection({
         traders={listTraderAddresses}
         allCopyTrades={allCopyTrades}
         handleAddTrader={handleAddTrader}
+        copyWallet={copyWallet}
       />
     </>
   )

@@ -53,5 +53,8 @@ export interface TableProps<T, K> {
   tableHeadSx?: any
   tableBodySx?: any
   tableBodyWrapperSx?: any
+  topIndex?: number
+  title?: ReactNode
+  subTitle?: ReactNode
 }
 export type InfiniteTableProps<T, K> = Omit<TableProps<T, K>, 'data'> & { data: T[] | undefined }

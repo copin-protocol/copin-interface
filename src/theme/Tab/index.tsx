@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { GridProps } from 'styled-system'
 
-import { Box } from 'theme/base'
+import { Box, Flex } from 'theme/base'
 import { SxProps } from 'theme/types'
 
 import TabItem from './TabItem'
@@ -116,6 +116,8 @@ export default Tabs
 
 export type TabConfig = {
   name: ReactNode
+  activeIcon?: ReactNode
+  inactiveIcon?: ReactNode
   key: string
   route?: string
 }
@@ -173,7 +175,14 @@ export function TabHeader({
                   ...(isActive ? itemActiveSx : {}),
                 }}
               >
-                {tab.name}
+                {tab.activeIcon && tab.inactiveIcon ? (
+                  <Flex alignItems="center" sx={{ gap: 2 }}>
+                    {isActive ? tab.activeIcon : tab.inactiveIcon}
+                    <Box as="span">{tab.name}</Box>
+                  </Flex>
+                ) : (
+                  tab.name
+                )}
               </TabItem>
             )
           })}

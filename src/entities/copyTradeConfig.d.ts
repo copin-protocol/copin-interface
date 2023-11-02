@@ -4,7 +4,7 @@ export interface RequestCopyTradeConfigData {
   maxPositions?: number
   type?: CopyTradeConfigTypeEnum
   exchange?: CopyTradePlatformEnum
-  apiKey?: string
+  identifyKey?: string
 }
 
 export interface CopyTradeConfigData {
@@ -12,7 +12,7 @@ export interface CopyTradeConfigData {
   userId: string
   type: CopyTradeConfigTypeEnum
   exchange: CopyTradePlatformEnum
-  apiKey: string
+  copyWalletId: string
   maxPositions: number
   createdAt: string
 }

@@ -8,7 +8,6 @@ import {
 
 export interface RequestCopyTradeData {
   account?: string
-  privateKey?: string
   tokenAddresses?: string[]
   leverage?: number
   volume?: number
@@ -17,8 +16,6 @@ export interface RequestCopyTradeData {
   protocol?: ProtocolEnum
   type?: CopyTradeTypeEnum
   exchange?: CopyTradePlatformEnum
-  bingXApiKey?: string
-  bingXSecretKey?: string
   proxyUrl?: string
   serviceKey?: string
   title?: string
@@ -27,6 +24,9 @@ export interface RequestCopyTradeData {
   volumeProtection?: boolean
   lookBackOrders?: number
   skipLowLeverage?: boolean
+  // privateKey?: string
+  // bingXApiKey?: string
+  // bingXSecretKey?: string
 }
 
 export interface CopyTradeData {
@@ -35,8 +35,6 @@ export interface CopyTradeData {
   userId: string
   account: string
   traderName: string
-  displayPrivateKey: string
-  bingXApiKey?: string
   tokenAddresses: string[]
   leverage: number
   volume: number
@@ -53,11 +51,15 @@ export interface CopyTradeData {
   proxyUrl: string
   serviceKey?: string
   title?: string
-  bingXBalance?: number
-  bingXAvailableMargin?: number
   reverseCopy: boolean
   maxVolMultiplier?: number
   skipLowLeverage?: boolean
+  exchange: CopyTradePlatformEnum
+  copyWalletId: string
+  // bingXBalance?: number
+  // bingXAvailableMargin?: number
+  // displayPrivateKey: string
+  // bingXApiKey?: string
 }
 
 export interface PreDeleteCopyTradeData {

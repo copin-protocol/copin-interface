@@ -56,7 +56,7 @@ export async function getCopyTradeSettingsApi(params: GetCopyTradeSettingsParams
 }
 export async function getCopyTradeSettingsListApi(params: {
   accounts: string[]
-  apiKey: string | undefined
+  copyWalletId: string | undefined
   status: CopyTradeStatusEnum | undefined
   protocol?: ProtocolEnum
 }) {
@@ -67,6 +67,7 @@ export async function getCopyTradeDetailsApi({ id }: { id: string }) {
   return requester.get(`${SERVICE}/${id}`).then((res: any) => res.data as CopyTradeData)
 }
 
+//TODO: delete
 export async function getCopyTradeBalancesApi(): Promise<CopyTradeBalanceDataResponse> {
   return requester
     .get(`${SERVICE}/statistic/balances/BINGX`)
@@ -77,15 +78,15 @@ export const getCopyTradePnLApi = ({
   exchange,
   from,
   to,
-  uniqueKey,
+  copyWalletId,
 }: {
   exchange: string
   from: number
   to: number
-  uniqueKey?: string | null
+  copyWalletId: string | undefined
 }) =>
   requester
-    .get(`${SERVICE}/statistic/balance-snapshots`, { params: { exchange, uniqueKey, from, to } })
+    .get(`${SERVICE}/statistic/balance-snapshots`, { params: { exchange, copyWalletId, from, to } })
     .then((res) => res.data?.data as CopyTradePnL[])
 
 export async function getTradersCopyingApi(protocol?: ProtocolEnum): Promise<string[]> {
@@ -103,7 +104,7 @@ export async function getTradersCopyingApi(protocol?: ProtocolEnum): Promise<str
 // exclude deleted traders
 export async function getMyCopyTradersApi(params: {
   exchange: CopyTradePlatformEnum
-  uniqueKey: string | null
+  copyWalletId?: string
   protocol?: ProtocolEnum
 }) {
   return requester.get(`${SERVICE}/traders/list`, { params }).then((res: any) => res.data as MyCopyTraderData[])
@@ -115,7 +116,7 @@ export async function getAllMyCopyTradersApi(params?: { protocol?: ProtocolEnum 
 
 export async function getMyCopyTradeOverviewApi(params: {
   exchange: CopyTradePlatformEnum
-  uniqueKey: string | null
+  copyWalletId: string | undefined
   protocol?: ProtocolEnum
 }) {
   return requester.get(`${SERVICE}/overview`, { params }).then((res: any) => res.data as MyCopyTradeOverview)

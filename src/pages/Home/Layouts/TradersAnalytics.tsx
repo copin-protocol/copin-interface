@@ -1,5 +1,7 @@
 import { useResponsive } from 'ahooks'
 
+import CustomPageTitle from 'components/@ui/CustomPageTitle'
+
 import ConditionFilter from '../ConditionFilter'
 import FilterTag from '../ConditionFilter/FilterTag'
 import { FilterTabEnum } from '../ConditionFilter/configs'
@@ -19,20 +21,23 @@ export default function TradersAnalytics() {
   const Layout = lg ? AnalyticsLayoutDesktop : AnalyticsLayoutMobile
 
   return (
-    <Layout
-      timeFilterSection={<TimeFilterSection contextValues={contextValues} />}
-      filterTag={<FilterTag filters={_filters} filterTab={filterTab} />}
-      listTradersSection={<ListTradersSection contextValues={contextValues} />}
-      topOpeningsSection={<TopOpeningsSection protocol={contextValues.protocol} />}
-      conditionFilter={
-        <ConditionFilter
-          filters={filters}
-          changeFilters={changeFilters}
-          rankingFilters={rankingFilters}
-          changeRankingFilters={changeRankingFilters}
-          tab={filterTab}
-        />
-      }
-    />
+    <>
+      <CustomPageTitle />
+      <Layout
+        timeFilterSection={<TimeFilterSection contextValues={contextValues} />}
+        filterTag={<FilterTag filters={_filters} filterTab={filterTab} />}
+        listTradersSection={<ListTradersSection contextValues={contextValues} />}
+        topOpeningsSection={<TopOpeningsSection protocol={contextValues.protocol} />}
+        conditionFilter={
+          <ConditionFilter
+            filters={filters}
+            changeFilters={changeFilters}
+            rankingFilters={rankingFilters}
+            changeRankingFilters={changeRankingFilters}
+            tab={filterTab}
+          />
+        }
+      />
+    </>
   )
 }

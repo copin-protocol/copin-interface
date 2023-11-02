@@ -1,4 +1,10 @@
-import { CopyTradeStatusEnum, ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
+import {
+  CopyTradeStatusEnum,
+  LeaderboardTypeEnum,
+  ProtocolEnum,
+  SortTypeEnum,
+  TimeFilterByEnum,
+} from 'utils/config/enums'
 
 export class ResponseError extends Error {
   messages: string[]
@@ -57,4 +63,12 @@ export type GetMyPositionsParams = GetApiParams & {
 export type GetMyPositionRequestBody = {
   copyTradeIds?: string[]
   traders?: string[]
+}
+
+export type GetLeaderboardParams = GetApiParams & {
+  keyword?: string
+  protocol?: ProtocolEnum
+  statisticType?: LeaderboardTypeEnum
+  sortBy?: string
+  sortType?: SortTypeEnum
 }

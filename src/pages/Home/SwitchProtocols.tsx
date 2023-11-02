@@ -1,6 +1,6 @@
 import { SystemStyleObject } from '@styled-system/css'
 import React, { useCallback } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
@@ -32,7 +32,9 @@ const SwitchProtocols = ({
   const history = useHistory()
   const { myProfile } = useMyProfile()
   const { resetStore } = useSelectBacktestTraders()
-  const { protocol, setProtocol } = useProtocolStore()
+  const { protocol: protocolParam } = useParams<{ protocol: ProtocolEnum }>()
+  const { protocol: protocolStore, setProtocol } = useProtocolStore()
+  const protocol = protocolParam ?? protocolStore
   const { setCurrentSuggestion } = useTradersContext()
   const { currentOption, changeCurrentOption } = useOptionChange({
     optionName: 'protocol',
@@ -79,7 +81,7 @@ const SwitchProtocols = ({
                   {protocol.text}
                 </Type.Caption>
                 <Type.Caption lineHeight="16px" color={currentOption.id === protocol.id ? 'primary1' : 'neutral3'}>
-                  {getChainMetadata(protocol.chainId).chainName}
+                  {getChainMetadata(protocol.chainId).label}
                 </Type.Caption>
               </Flex>
             </Flex>
@@ -128,7 +130,7 @@ const SwitchProtocols = ({
             {currentOption.text}
           </Type.Caption>
           <Type.Caption display="block" lineHeight="16px" color="neutral3">
-            {getChainMetadata(currentOption.chainId).chainName}
+            {getChainMetadata(currentOption.chainId).label}
           </Type.Caption>
         </Box>
       </Flex>

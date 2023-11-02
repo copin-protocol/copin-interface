@@ -54,6 +54,7 @@ export const EVENT_ACTIONS = {
   },
   [EventCategory.ROUTES]: {
     MY_PROFILE: 'my_profile',
+    WALLET_MANAGEMENT: 'wallet_management',
     HISTORY: 'history',
     TOP_OPENING_POSITIONS_ALL: 'top_opening_positions_all',
     JOIN_DISCORD: 'join_discord',
@@ -61,6 +62,7 @@ export const EVENT_ACTIONS = {
     JOIN_TWITTER: 'join_twitter',
     JOIN_GITHUB: 'join_github',
     MY_REFERRAL: 'my_referral',
+    USER_ACTIVITY: 'user_activity',
   },
   [EventCategory.SEARCH]: {
     SEARCH_CLICK: 'search_click',

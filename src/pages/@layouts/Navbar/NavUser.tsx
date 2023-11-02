@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Clock, Key, SignOut, UserCircle, Users } from '@phosphor-icons/react'
+import { Archive, Clock, Key, SignOut, UserCircle, Users, Wallet } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -46,36 +46,16 @@ const NavUser = () => {
             <>
               {hasCopyPermission && (
                 <div>
-                  <Link to={ROUTES.MY_MANAGEMENT.path}>
-                    <DropdownItem onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE)}>
-                      <Flex alignItems="center" sx={{ gap: 2 }}>
-                        <UserCircle size={20} />
-                        <Box color="neutral1">
-                          <Trans>Profile</Trans>
-                        </Box>
-                      </Flex>
-                    </DropdownItem>
-                  </Link>
-                  <Link to={ROUTES.MY_HISTORY.path}>
-                    <DropdownItem onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].HISTORY)}>
-                      <Flex alignItems="center" sx={{ gap: 2 }}>
-                        <Clock size={20} />
-                        <Box color="neutral1">
-                          <Trans>History</Trans>
-                        </Box>
-                      </Flex>
-                    </DropdownItem>
-                  </Link>
-                  <Link to={ROUTES.MY_REFERRAL.path}>
-                    <DropdownItem onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].MY_REFERRAL)}>
-                      <Flex alignItems="center" sx={{ gap: 2 }}>
-                        <Users size={20} />
-                        <Box color="neutral1">
-                          <Trans>Referral</Trans>
-                        </Box>
-                      </Flex>
-                    </DropdownItem>
-                  </Link>
+                  {userActions.map((configs, index) => (
+                    <Link key={index} to={configs.link}>
+                      <DropdownItem onClick={() => logEventRoutes(configs.event)}>
+                        <Flex alignItems="center" sx={{ gap: 2 }}>
+                          {configs.icon}
+                          <Box color="neutral1">{configs.label}</Box>
+                        </Flex>
+                      </DropdownItem>
+                    </Link>
+                  ))}
                 </div>
               )}
               <DropdownItem onClick={() => setIsShowModalChangePassword(true)}>
@@ -149,3 +129,36 @@ const NavUser = () => {
 }
 
 export default NavUser
+
+const userActions = [
+  {
+    link: ROUTES.MY_MANAGEMENT.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE,
+    icon: <UserCircle size={20} />,
+    label: <Trans>Profile</Trans>,
+  },
+  {
+    link: ROUTES.WALLET_MANAGEMENT.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].WALLET_MANAGEMENT,
+    icon: <Wallet size={20} />,
+    label: <Trans>Wallet Management</Trans>,
+  },
+  {
+    link: ROUTES.USER_ACTIVITY.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].USER_ACTIVITY,
+    icon: <Archive size={20} />,
+    label: <Trans>Activity</Trans>,
+  },
+  {
+    link: ROUTES.MY_HISTORY.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].HISTORY,
+    icon: <Clock size={20} />,
+    label: <Trans>History</Trans>,
+  },
+  {
+    link: ROUTES.MY_REFERRAL.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].MY_REFERRAL,
+    icon: <Users size={20} />,
+    label: <Trans>Referral</Trans>,
+  },
+]

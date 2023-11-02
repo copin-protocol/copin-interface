@@ -5,6 +5,7 @@ import { useQuery } from 'react-query'
 import { GetMyPositionsParams } from 'apis/types'
 import { getMyCopyPositionsApi } from 'apis/userApis'
 import SectionTitle from 'components/@ui/SectionTitle'
+import { CopyWalletData } from 'entities/copyWallet'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
@@ -13,7 +14,13 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import PositionTable, { openingColumns } from '../PositionTable'
 import SettingConfigs from './SettingConfigs'
 
-export default function OpeningPositions({ activeKey }: { activeKey: string | null }) {
+export default function OpeningPositions({
+  activeWallet,
+  copyWallets,
+}: {
+  activeWallet: CopyWalletData | null
+  copyWallets: CopyWalletData[] | undefined
+}) {
   const _queryParams: GetMyPositionsParams = {
     limit: DEFAULT_LIMIT,
     offset: 0,
@@ -38,7 +45,7 @@ export default function OpeningPositions({ activeKey }: { activeKey: string | nu
           icon={<Pulse size={24} />}
           title={title}
           iconColor="primary1"
-          suffix={<SettingConfigs activeKey={activeKey ?? null} />}
+          suffix={<SettingConfigs activeWallet={activeWallet ?? null} copyWallets={copyWallets} />}
         />
       </Box>
       {!data?.data.length && !isLoading && (

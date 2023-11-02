@@ -3,6 +3,9 @@ import { isMobile } from 'hooks/helpers/useIsMobile'
 export const SUPPORTED_LOCALES = ['en']
 export const DEFAULT_LOCALE = 'en'
 
+export const NETWORK = import.meta.env.VITE_NETWORK_ENV
+export const APP_URL = import.meta.env.VITE_URL
+
 export const LINKS = {
   website: 'https://copin.io',
   webapp: 'https://app.copin.io',
@@ -19,6 +22,8 @@ export const LINKS = {
   termOfUse: 'https://docs.copin.io/another/terms-of-service',
   upgradePremium: 'https://docs.copin.io/upgrade-to-premium',
   referralProgram: 'https://docs.copin.io/features/referral-program',
+  registerBingX: 'https://bingx.com/en-us/invite/DY5QNN',
+  getBingXAPIKey: 'https://tutorial.copin.io/how-to-connecting-your-bingx-account/3.-generate-an-api-key',
 }
 
 export const NAVBAR_HEIGHT = 60
@@ -50,3 +55,5 @@ export const MAX_IMAGE_SIZE = 10 * 1024 * 1024 //mb
 export const DEFAULT_COVER_IMAGE_URL = '/images/cover.png'
 
 export const REFERRAL_CODE_LENGTH = 6
+
+export const WALLET_NAME_MAX_LENGTH = 32
