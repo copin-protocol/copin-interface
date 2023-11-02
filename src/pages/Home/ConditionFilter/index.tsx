@@ -76,7 +76,7 @@ export default function ConditionFilter({
         >
           <ChartBar size={20} />
           <Type.BodyBold fontSize={[14, 14, 16]}>
-            <Trans>Ranking Filter</Trans>
+            <Trans>Percentile Filter</Trans>
           </Type.BodyBold>
         </Box>
       </Flex>

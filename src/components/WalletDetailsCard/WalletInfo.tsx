@@ -29,14 +29,16 @@ export default function WalletInfo({ data, sx }: WalletInfoProps & BoxProps) {
         value={
           <Flex alignItems="center" sx={{ gap: 2 }}>
             {formatNumber(data.activeCopy)}
-            <Link to={ROUTES.MY_MANAGEMENT.path}>
-              <ButtonWithIcon
-                type="button"
-                variant="ghostPrimary"
-                icon={<ArrowSquareRight size={20} />}
-                sx={{ p: 0 }}
-              />
-            </Link>
+            {data.activeCopy && data.activeCopy > 0 && (
+              <Link to={ROUTES.MY_MANAGEMENT.path}>
+                <ButtonWithIcon
+                  type="button"
+                  variant="ghostPrimary"
+                  icon={<ArrowSquareRight size={20} />}
+                  sx={{ p: 0 }}
+                />
+              </Link>
+            )}
           </Flex>
         }
       />

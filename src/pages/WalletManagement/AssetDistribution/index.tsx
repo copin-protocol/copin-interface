@@ -29,7 +29,7 @@ export default function AssetDistribution() {
         title={<Trans>Asset Distribution</Trans>}
         sx={{ px: 3, pt: 3, pb: 1 }}
       />
-      <ResponsiveContainer minHeight={320}>
+      <ResponsiveContainer minHeight={400}>
         <PieChart>
           <Pie
             data={pieChartData}

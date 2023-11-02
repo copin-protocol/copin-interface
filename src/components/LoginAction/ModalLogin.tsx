@@ -124,7 +124,7 @@ const ModalLogin = ({
           description={
             <Type.Caption textAlign="left">
               <Trans>We only support login by email within the next 30 days (Deadline: November 30, 2023)</Trans>
-              <a href={LINKS.notice} style={{ paddingLeft: '4px' }}>
+              <a href={LINKS.notice} target="_blank" style={{ paddingLeft: '4px' }} rel="noreferrer">
                 <Trans>Read more</Trans>
               </a>
             </Type.Caption>

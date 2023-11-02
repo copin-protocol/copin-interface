@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Bookmarks, Star, Trophy } from '@phosphor-icons/react'
+import { Bookmarks, Star } from '@phosphor-icons/react'
 import { Route, Switch, useLocation } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
@@ -26,13 +26,13 @@ const tabConfigs: TabConfig[] = [
     key: TabKeyEnum.Explorer,
     route: ROUTES.HOME_EXPLORER.path,
   },
-  {
-    name: <Trans>LEADERBOARD</Trans>,
-    inactiveIcon: <Trophy size={24} />,
-    activeIcon: <Trophy size={24} weight="fill" />,
-    key: TabKeyEnum.Leaderboard,
-    route: ROUTES.HOME_LEADERBOARD.path,
-  },
+  // {
+  //   name: <Trans>LEADERBOARD</Trans>,
+  //   inactiveIcon: <Trophy size={24} />,
+  //   activeIcon: <Trophy size={24} weight="fill" />,
+  //   key: TabKeyEnum.Leaderboard,
+  //   route: ROUTES.HOME_LEADERBOARD.path,
+  // },
   {
     name: <Trans>FAVORITES</Trans>,
     inactiveIcon: <Star size={24} />,

@@ -7,6 +7,7 @@ import useLeaderboardProvider from 'hooks/features/useLeaderboardProvider'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import { Box, Flex, Type } from 'theme/base'
+import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { formatLocalDate } from 'utils/helpers/format'
 
 import { LeaderboardColumns } from './ColumnsData'
@@ -96,7 +97,7 @@ const TopLeaderboard = () => {
         >
           <Flex alignItems="center" sx={{ gap: 2 }}>
             <Type.Caption color="neutral2">Last Updated:</Type.Caption>
-            <Type.Caption>{formatLocalDate(lastTimeUpdated)}</Type.Caption>
+            <Type.Caption>{formatLocalDate(lastTimeUpdated, DAYJS_FULL_DATE_FORMAT)}</Type.Caption>
           </Flex>
           <PaginationWithLimit
             currentPage={currentPage}
