@@ -18,7 +18,7 @@ interface WalletInfoProps {
 }
 export default function WalletInfo({ data, sx }: WalletInfoProps & BoxProps) {
   return (
-    <Flex alignItems="center" sx={{ gap: 2, ...sx }}>
+    <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2, ...sx }}>
       <InfoItem label={<Trans>Balance</Trans>} value={data.balance ? `$${formatNumber(data.balance)}` : '-'} />
       <InfoItem
         label={<Trans>Copy Volume</Trans>}

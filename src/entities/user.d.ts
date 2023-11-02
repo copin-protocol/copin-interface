@@ -44,6 +44,7 @@ export interface UserActivityData {
   sourceAccount: string
   userId?: string
   copyTradeId?: string
+  copyPositionId: string
   copyTradeTitle?: string
   exchange: CopyTradePlatformEnum
   indexToken: string

@@ -55,7 +55,7 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, re
       flexDirection="column"
       sx={{ borderTop: hasBorderTop ? 'small' : 'none', borderBottom: 'small', borderColor: 'neutral4', gap: 20 }}
     >
-      <Flex alignItems="center" justifyContent="space-between">
+      <Flex alignItems="center" justifyContent="space-between" flexWrap="wrap" sx={{ gap: 2 }}>
         <Flex alignItems="center" sx={{ gap: 2 }}>
           <Box data-tip="React-tooltip" data-tooltip-id={`tt-copy-wallet-${data.id}`}>
             <TitleWithIcon

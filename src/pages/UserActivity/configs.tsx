@@ -141,13 +141,15 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
           )
         </Type.Caption>
         <Type.Caption color="neutral3">-</Type.Caption>
-        <Type.Caption
-          onClick={() => externalSource?.handleSelectCopyItem({ id: item.copyTradeId })}
-          color="primary1"
-          sx={{ cursor: 'pointer', '&:hover': { color: 'primary2' } }}
-        >
-          <Trans>Details</Trans>
-        </Type.Caption>
+        {item.copyPositionId && (
+          <Type.Caption
+            onClick={() => externalSource?.handleSelectCopyItem({ id: item.copyPositionId })}
+            color="primary1"
+            sx={{ cursor: 'pointer', '&:hover': { color: 'primary2' } }}
+          >
+            <Trans>Details</Trans>
+          </Type.Caption>
+        )}
         {item.targetTxHash && (
           <>
             <VerticalDivider />

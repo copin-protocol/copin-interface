@@ -1,6 +1,7 @@
 import { SystemStyleObject } from '@styled-system/css'
 import { FlattenSimpleInterpolation, css } from 'styled-components/macro'
 import { GridProps, TLengthStyledSystem, Theme } from 'styled-system'
+import { v5 as uuidV5 } from 'uuid'
 
 export const transition = (
   target: string | undefined = 'all',
@@ -32,7 +33,8 @@ export function overflowEllipsis() {
 }
 
 export function getColorFromText(stringInput: string) {
-  const stringUniqueHash = [...stringInput].reduce((acc, char) => {
+  const id = uuidV5(stringInput, uuidV5.URL).replaceAll('-', '')
+  const stringUniqueHash = [...id].reduce((acc, char) => {
     return char.charCodeAt(0) + ((acc << 16) - acc)
   }, 0)
   return `hsl(${stringUniqueHash % 360}, 100%, 68%)`
