@@ -9,10 +9,11 @@ import { CopyPositionData } from 'entities/copyTrade.d'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import { Button } from 'theme/Buttons'
 import { PaginationWithLimit } from 'theme/Pagination'
-import { Box, Flex } from 'theme/base'
+import Tooltip from 'theme/Tooltip'
+import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
-import { QUERY_KEYS, STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS, STORAGE_KEYS, TOOLTIP_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import NoDataOrSelect from '../NoDataOrSelect'
@@ -146,6 +147,11 @@ export default function HistoryPositions() {
           sx={{ py: 2 }}
         />
       )}
+      <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
+        <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
+          Reverse Copy
+        </Type.Caption>
+      </Tooltip>
     </Flex>
   )
 }

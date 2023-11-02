@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { ApiMeta } from 'apis/api'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import ReverseTag from 'components/@ui/ReverseTag'
 import { VerticalDivider } from 'components/@ui/Table/renderProps'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyWalletData } from 'entities/copyWallet'
@@ -29,14 +30,21 @@ export type CopySelection = {
 export type ExternalSource = {
   handleSelectCopyItem: (data: CopySelection) => void
   copyWallets: CopyWalletData[] | undefined
+  isMobile?: boolean
 }
 
 type ActivityColumnData = ColumnData<UserActivityData, ExternalSource>
 
 export const renderProps: Record<string, ActivityColumnData['render']> = {
-  time: (item) => (
-    <Type.Caption color="neutral3">{formatLocalDate(item.createdAt, DAYJS_FULL_DATE_FORMAT)}</Type.Caption>
-  ),
+  time: (item, index, externalSource) => {
+    const isMobile = externalSource?.isMobile
+    return (
+      <Box sx={{ position: 'relative' }}>
+        {item.isReverse && <ReverseTag sx={{ top: isMobile ? '-45px' : '-12px', left: '-16px' }} />}
+        <Type.Caption color="neutral3">{formatLocalDate(item.createdAt, DAYJS_FULL_DATE_FORMAT)}</Type.Caption>
+      </Box>
+    )
+  },
   copy: (item) => (
     <Type.CaptionBold
       color="neutral1"
@@ -124,8 +132,8 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
           color: 'neutral1',
         }}
       >
-        <Type.Caption width={8} color={item.isLong ? 'green1' : 'red2'}>
-          {item.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
+        <Type.Caption width={8} color={item.isLong && item.isReverse ? 'red2' : 'green1'}>
+          {item.isLong && item.isReverse ? <Trans>S</Trans> : <Trans>L</Trans>}
         </Type.Caption>
         <VerticalDivider />
         <Type.Caption>{TOKEN_TRADE_SUPPORT[item.protocol][item.indexToken]?.symbol}</Type.Caption>

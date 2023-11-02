@@ -848,6 +848,10 @@ msgstr "Please check the verification code from your email!"
 msgid "Please create a wallet to start copy"
 msgstr "Please create a wallet to start copy"
 
+#: src/components/WalletDetailsCard/ConfirmDeleteModal.tsx
+msgid "Please delete all copy trades before deleting the copy wallet."
+msgstr "Please delete all copy trades before deleting the copy wallet."
+
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Please pick trader to view copies detail"
 msgstr "Please pick trader to view copies detail"

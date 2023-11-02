@@ -11,6 +11,7 @@ import {
 import { MutableRefObject, SetStateAction, useMemo } from 'react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
+import ReverseTag from 'components/@ui/ReverseTag'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyTradeData } from 'entities/copyTrade'
 import IconButton from 'theme/Buttons/IconButton'
@@ -25,7 +26,6 @@ import { formatNumber } from 'utils/helpers/format'
 
 import { renderTrader } from '../renderProps'
 import ActionItem from './ActionItem'
-import ReverseTag from './ReverseTag'
 
 export default function useCopyTradeColumns({
   onSelect,

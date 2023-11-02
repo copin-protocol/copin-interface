@@ -55,6 +55,7 @@ export interface UserActivityData {
   isLong: boolean
   type?: OrderTypeEnum
   isSuccess?: boolean
+  isReverse?: boolean
   errorMsg?: string
   sourceOrderId?: string
   sourceTxHash?: string

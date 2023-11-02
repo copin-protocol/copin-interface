@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { getMyCopySourcePositionDetailApi } from 'apis/copyPositionApis'
 import Container from 'components/@ui/Container'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
+import ReverseTag from 'components/@ui/ReverseTag'
 import Table from 'components/@ui/Table'
 import { ColumnData, TableProps } from 'components/@ui/Table/types'
 import ToastBody from 'components/@ui/ToastBody'
@@ -354,9 +355,12 @@ export const historyColumns: typeof openingColumns = [
     sortBy: 'createdAt',
     style: { minWidth: '120px' },
     render: (item) => (
-      <Type.Caption color="neutral3">
-        <LocalTimeText date={item.createdAt} />
-      </Type.Caption>
+      <Box sx={{ position: 'relative' }}>
+        {item.reverseCopy && <ReverseTag sx={{ top: '-12px', left: '-16px' }} />}
+        <Type.Caption color="neutral3">
+          <LocalTimeText date={item.createdAt} />
+        </Type.Caption>
+      </Box>
     ),
   },
   {
