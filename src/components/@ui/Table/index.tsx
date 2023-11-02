@@ -1,5 +1,4 @@
 import { ReactNode, useEffect, useRef } from 'react'
-import { animated, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 
 import NoDataFound from 'components/@ui/NoDataFound'
@@ -236,59 +235,10 @@ export function TableContainer({
   )
 }
 
-export const TableWrapper = styled(Box)`
+const TableWrapper = styled(Box)`
   color: ${({ theme }) => theme.colors.neutral3};
   height: 100%;
   overflow: auto;
   display: flex;
   flex-direction: column;
-`
-export const AnimatedRowWrapper = ({ style, ...props }: any) => {
-  const styles = useSpring({
-    from: {
-      background: `linear-gradient(#1F2232, #1F2232) padding-box, linear-gradient(90deg, rgba(171, 236, 162, 1), rgba(47, 179, 254, 0.5), rgba(106, 142, 234, 0.3), rgba(161, 133, 244, 0.1)) border-box`,
-    },
-    to: {
-      background: `linear-gradient(#1F2232, #1F2232) padding-box, linear-gradient(-90deg, rgba(47, 179, 254, 0.1), rgba(106, 142, 234, 0.5), rgba(161, 133, 244, 0.3), rgba(171, 236, 162, 0.1)) border-box`,
-    },
-    config: {
-      duration: 5000,
-    },
-    loop: {
-      reverse: true,
-    },
-  })
-  const Animated = animated(RowWrapper)
-  return (
-    <Animated
-      {...props}
-      style={{
-        ...style,
-        ...styles,
-      }}
-      hasBorder={true}
-    />
-  )
-}
-
-export const RowWrapper = styled('tr')<{ hasBorder?: boolean }>`
-  background-color: ${({ theme, hasBorder }) => (hasBorder ? theme.colors.neutral5 : undefined)};
-  display: inline-table;
-  justify-content: center;
-  align-items: center;
-  // margin-top: ${({ hasBorder }) => (hasBorder ? '16px' : undefined)};
-  // margin-left: ${({ hasBorder }) => (hasBorder ? '8px' : undefined)};
-  margin-top: ${({ hasBorder }) => (hasBorder ? '16px' : undefined)};
-  margin-left: 16px;
-  margin-right: 16px;
-  max-width: calc(100% - 32px);
-  //max-width: ${({ hasBorder }) => (hasBorder ? 'calc(100% - 16px)' : undefined)};
-  //max-width: calc(100% - 32px);
-
-  ${({ hasBorder }) =>
-    hasBorder &&
-    `
-    border: 1px solid #0000;
-    border-radius: 4px;
-    `};
 `

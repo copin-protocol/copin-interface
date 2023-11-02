@@ -401,14 +401,14 @@ export const historyColumns: typeof openingColumns = [
     title: 'Entry',
     dataIndex: 'entryPrice',
     key: 'entryPrice',
-    style: { minWidth: '150px' },
+    style: { minWidth: '150px', width: 150 },
     render: (item) => renderEntry(item),
   },
   {
     title: 'Value',
     dataIndex: 'sizeDelta',
     key: 'sizeDelta',
-    style: { minWidth: '100px', textAlign: 'right' },
+    style: { minWidth: '200px', width: 200, textAlign: 'right' },
     render: (item) => (
       <Type.Caption color="neutral1">
         {item.status === PositionStatusEnum.OPEN
@@ -424,7 +424,7 @@ export const historyColumns: typeof openingColumns = [
     title: 'Size ($)',
     dataIndex: 'totalSizeDelta',
     key: 'totalSizeDelta',
-    style: { minWidth: '100px', textAlign: 'right' },
+    style: { minWidth: '130px', width: 130, textAlign: 'right' },
     render: (item) => (
       <Type.Caption color="neutral1">
         {item.status === PositionStatusEnum.OPEN
@@ -446,7 +446,7 @@ export const historyColumns: typeof openingColumns = [
     title: 'Pnl ($)',
     dataIndex: 'pnl',
     key: 'pnl',
-    style: { minWidth: '100px', textAlign: 'right' },
+    style: { minWidth: '130px', width: 130, textAlign: 'right' },
     render: (item, index, externalSource) => renderPnL(item, externalSource?.prices),
   },
   {
