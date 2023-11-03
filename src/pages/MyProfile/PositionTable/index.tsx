@@ -238,7 +238,7 @@ export const openingColumns: ColumnData<CopyPositionData, ExternalSource>[] = [
     render: (item) => renderEntry(item),
   },
   {
-    title: 'Pnl ($)',
+    title: 'PnL',
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '80px', textAlign: 'right' },
@@ -326,7 +326,7 @@ export const historyTabColumns: typeof openingColumns = [
     render: renderSource,
   },
   {
-    title: 'Pnl ($)',
+    title: 'PnL',
     dataIndex: 'pnl',
     key: 'pnl',
     sortBy: 'pnl',
@@ -425,12 +425,13 @@ export const historyColumns: typeof openingColumns = [
     ),
   },
   {
-    title: 'Size ($)',
+    title: 'Size',
     dataIndex: 'totalSizeDelta',
     key: 'totalSizeDelta',
     style: { minWidth: '130px', width: 130, textAlign: 'right' },
     render: (item) => (
       <Type.Caption color="neutral1">
+        $
         {item.status === PositionStatusEnum.OPEN
           ? formatNumber(Number(item.sizeDelta) * item.entryPrice, 0)
           : !isNaN(Number(item.totalSizeDelta))
@@ -447,7 +448,7 @@ export const historyColumns: typeof openingColumns = [
     render: (item) => <Type.Caption color="neutral1">{formatNumber(item.leverage, 1, 1)}x</Type.Caption>,
   },
   {
-    title: 'Pnl ($)',
+    title: 'PnL',
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '130px', width: 130, textAlign: 'right' },

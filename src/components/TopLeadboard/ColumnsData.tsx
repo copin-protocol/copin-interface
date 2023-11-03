@@ -124,7 +124,7 @@ export const LeaderboardColumns: ColumnData<TopTraderData, ExternalSource>[] = [
   //   ),
   // },
   {
-    title: 'Total PnL',
+    title: 'PnL',
     dataIndex: 'totalPnl',
     key: 'totalPnl',
     style: { minWidth: ['120px', '160px'], textAlign: 'right' },

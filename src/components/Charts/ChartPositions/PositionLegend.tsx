@@ -95,16 +95,15 @@ export default function PositionLegend({
             <Type.Small color="neutral1">{renderEntry(data, { fontSize: '12px', lineHeight: '16px' })}</Type.Small>
           </Flex>
         )}
-        <Flex minWidth="90px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
+        <Flex minWidth="110px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
           <Type.Small>Size</Type.Small>
-          <Type.Small color="neutral1">${formatNumber(data.size, 0)}</Type.Small>
+          <Type.Small color="neutral1">
+            ${formatNumber(data.size, 0)} | {formatNumber(data.leverage, 1, 1)}x
+          </Type.Small>
         </Flex>
-        <Flex minWidth="60px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
-          <Type.Small>Leverage</Type.Small>
-          <Type.Small color="neutral1">{formatNumber(data.leverage, 1, 1)}x</Type.Small>
-        </Flex>
+
         <Flex minWidth="70px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
-          <Type.Small>Pnl $</Type.Small>
+          <Type.Small>PnL</Type.Small>
           {isOpening ? (
             prices ? (
               renderOpeningPnL(data, prices, true, { fontSize: '12px', lineHeight: '16px' })
@@ -114,18 +113,16 @@ export default function PositionLegend({
           ) : (
             <Flex alignItems="center" sx={{ gap: '1px' }}>
               {(data.isLiquidate || data.roi <= -100) && <SkullIcon />}
-              <Type.Small>
-                <SignedText
-                  value={data.realisedPnl}
-                  maxDigit={0}
-                  sx={{ textAlign: 'right', width: '100%', fontSize: '12px', lineHeight: '16px' }}
-                  fontInherit={true}
-                />
-              </Type.Small>
+              <SignedText
+                value={data.realisedPnl}
+                maxDigit={0}
+                sx={{ textAlign: 'right', width: '100%', fontSize: '12px', lineHeight: '16px' }}
+              />
             </Flex>
           )}
         </Flex>
-        <Flex minWidth="70px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
+
+        <Flex minWidth="60px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
           <Type.Small>Fee</Type.Small>
           <Type.Small color="neutral1">
             <SignedText
@@ -138,10 +135,10 @@ export default function PositionLegend({
         </Flex>
         {isExpanded && (
           <Flex minWidth="70px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
-            <Type.Small>Net Pnl $</Type.Small>
+            <Type.Small>Closed PnL</Type.Small>
             {isOpening ? (
               prices ? (
-                renderOpeningPnL(data, prices)
+                renderOpeningPnL(data, prices, false, { fontSize: '12px', lineHeight: '16px' })
               ) : (
                 '--'
               )
@@ -152,7 +149,7 @@ export default function PositionLegend({
                   <SignedText
                     value={data.realisedPnl - data.fee}
                     maxDigit={0}
-                    sx={{ textAlign: 'right', width: '100%' }}
+                    sx={{ textAlign: 'right', width: '100%', fontSize: '12px', lineHeight: '16px' }}
                     fontInherit={true}
                   />
                 </Type.Small>
@@ -160,6 +157,7 @@ export default function PositionLegend({
             )}
           </Flex>
         )}
+
         <Flex minWidth="20px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
           <Box sx={{ position: 'relative', top: '2px' }}>
             <CaretRight />

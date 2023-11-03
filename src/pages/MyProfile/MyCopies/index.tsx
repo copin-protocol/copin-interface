@@ -165,7 +165,7 @@ export default function MyCopies({
               <Type.Caption color="neutral1">
                 <Trans>Available Margin</Trans>:
               </Type.Caption>
-              <Type.CaptionBold color="neutral1">${formatNumber(copyWallet?.balance)}</Type.CaptionBold>
+              <Type.CaptionBold color="neutral1">${formatNumber(copyWallet?.availableBalance)}</Type.CaptionBold>
             </Flex>
           </Flex>
           <Flex alignItems="center" sx={{ gap: 3, flexWrap: 'wrap' }}>

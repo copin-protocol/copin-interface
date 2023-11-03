@@ -116,7 +116,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     style: { minWidth: ['100px', '120px'] },
     text: <Trans>PnL</Trans>,
     label: (
-      <LabelWithTooltip id="tt_pnl_label" tooltip="The overall profit or loss generated from the trades">
+      <LabelWithTooltip id="tt_pnl_label" tooltip="The overall profit or loss without fees generated from the trades">
         PnL
       </LabelWithTooltip>
     ),
@@ -134,7 +134,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     style: { minWidth: ['100px', '111px'] },
     text: <Trans>Total Gain</Trans>,
     label: (
-      <LabelWithTooltip id="tt_total_gain_label" tooltip="The cumulative profit made from all trades">
+      <LabelWithTooltip id="tt_total_gain_label" tooltip="The cumulative gain without fees made from all trades">
         Total Gain
       </LabelWithTooltip>
     ),
@@ -152,7 +152,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     style: { minWidth: ['100px', '111px'] },
     text: <Trans>Total Loss</Trans>,
     label: (
-      <LabelWithTooltip id="tt_total_loss_label" tooltip="The cumulative loss incurred from all trades">
+      <LabelWithTooltip id="tt_total_loss_label" tooltip="The cumulative loss without fees incurred from all trades">
         Total Loss
       </LabelWithTooltip>
     ),
@@ -190,7 +190,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     label: (
       <LabelWithTooltip
         id="tt_roi_label"
-        tooltip="The average percentage gain or loss is calculated based on the average ROI of closed positions"
+        tooltip="The average percentage gain or loss without fees is calculated based on the average ROI of closed positions"
       >
         Avg ROI
       </LabelWithTooltip>
@@ -209,7 +209,10 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     style: { minWidth: '90px' },
     text: <Trans>Min ROI</Trans>,
     label: (
-      <LabelWithTooltip id="tt_min_roi_label" tooltip="The minimum percentage of gain or loss in closed positions">
+      <LabelWithTooltip
+        id="tt_min_roi_label"
+        tooltip="The minimum percentage of gain or loss without fees in closed positions"
+      >
         Min ROI
       </LabelWithTooltip>
     ),
@@ -227,7 +230,10 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     style: { minWidth: '90px' },
     text: <Trans>Max ROI</Trans>,
     label: (
-      <LabelWithTooltip id="tt_max_roi_label" tooltip="The maximum percentage of gain or loss in closed positions">
+      <LabelWithTooltip
+        id="tt_max_roi_label"
+        tooltip="The maximum percentage of gain or loss without fees in closed positions"
+      >
         Max ROI
       </LabelWithTooltip>
     ),
@@ -316,7 +322,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     label: (
       <LabelWithTooltip
         id="tt_profit_rate_label"
-        tooltip="The percentage of profit made relative to the total investment"
+        tooltip="The percentage of profit without fees made relative to the total investment"
       >
         Profit Rate
       </LabelWithTooltip>
@@ -374,7 +380,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     label: (
       <LabelWithTooltip
         id="tt_pnl_ratio_label"
-        tooltip="The ratio of profit and loss in relation to the total investment"
+        tooltip="The ratio of profit and loss without fees in relation to the total investment"
       >
         PnL Ratio
       </LabelWithTooltip>
@@ -392,7 +398,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     style: { minWidth: ['110px', '136px'] },
     text: <Trans>Profit Factor</Trans>,
     label: (
-      <LabelWithTooltip id="tt_profit_factor_label" tooltip="The ratio of total profit to total loss">
+      <LabelWithTooltip id="tt_profit_factor_label" tooltip="The ratio of total profit to total loss without fees">
         Profit Factor
       </LabelWithTooltip>
     ),

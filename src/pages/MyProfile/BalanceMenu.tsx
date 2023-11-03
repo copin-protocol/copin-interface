@@ -167,7 +167,7 @@ const BalanceMenu = ({
         <ListItem title={'Balance'} value={overview?.balance} prefix="$" withHideAction />
         <ListItem title={'Total Volume'} value={overview?.totalVolume} prefix="$" />
         <ListItem
-          title={'Total Net PnL'}
+          title={'Total PnL'}
           valueComponent={
             <Type.CaptionBold>
               <SignedText value={overview?.pnl ?? undefined} maxDigit={2} minDigit={2} fontInherit prefix="$" />

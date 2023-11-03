@@ -38,8 +38,8 @@ export const TopOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
   },
   {
     title: 'Entry',
-    dataIndex: 'entryFundingRate',
-    key: 'entryFundingRate',
+    dataIndex: 'indexToken',
+    key: 'indexToken',
     style: { minWidth: '180px' },
     render: (item) => renderEntry(item),
   },
@@ -53,7 +53,7 @@ export const TopOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
       externalSource?.prices ? renderSizeOpening(item, externalSource?.prices) : '--',
   },
   {
-    title: 'PnL $',
+    title: 'PnL',
     dataIndex: 'realisedPnl',
     key: 'realisedPnl',
     sortBy: 'pnl',
@@ -62,7 +62,7 @@ export const TopOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
       externalSource?.prices ? renderOpeningPnL(item, externalSource?.prices, true) : '--',
   },
   {
-    title: 'Fee $',
+    title: 'Fee',
     dataIndex: 'fee',
     key: 'fee',
     // sortBy: 'fee',
@@ -74,7 +74,7 @@ export const TopOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
     ),
   },
   {
-    title: 'Net Pnl $',
+    title: 'Est. Closed PnL',
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: ['120px', '150px'], textAlign: 'right' },
