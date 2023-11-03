@@ -123,8 +123,12 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
       </Flex>
     )
   },
-  targetAction: (item, _, externalSource) =>
-    item.isSuccess ? (
+  targetAction: (item, _, externalSource) => {
+    const parseErrMsg =
+      item.errorMsg && item.errorMsg.startsWith('"') && item.errorMsg.endsWith('"')
+        ? JSON.parse(item.errorMsg)
+        : item.errorMsg
+    return item.isSuccess ? (
       <Flex
         sx={{
           gap: 1,
@@ -174,8 +178,11 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
         )}
       </Flex>
     ) : (
-      <Type.Caption color="neutral3">{item.errorMsg || <Trans>Error while place order</Trans>}</Type.Caption>
-    ),
+      <Type.Caption color="neutral3" sx={{ whiteSpace: 'pre-line' }}>
+        {parseErrMsg ?? <Trans>Error while place order</Trans>}
+      </Type.Caption>
+    )
+  },
   status: (item) => (
     <Type.Caption
       color={item.isSuccess ? 'green2' : 'red2'}

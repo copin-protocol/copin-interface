@@ -75,6 +75,11 @@ export default function UserActivity() {
           ) : (
             <ListActivityMobile data={data?.data} isLoading={isFetching} externalSource={externalSource} />
           )}
+          <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
+            <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
+              Reverse Copy
+            </Type.Caption>
+          </Tooltip>
         </Box>
         <PaginationWithLimit
           currentPage={currentPage}
@@ -83,11 +88,6 @@ export default function UserActivity() {
           onLimitChange={changeCurrentLimit}
           apiMeta={data?.meta}
         />
-        <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
-          <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
-            Reverse Copy
-          </Type.Caption>
-        </Tooltip>
       </Flex>
       {openCopyDrawer && currentCopyPosition && (
         <Drawer
