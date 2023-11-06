@@ -57,8 +57,8 @@ msgid "A message with a verification code has been sent to your email. Enter the
 msgstr "A message with a verification code has been sent to your email. Enter the code to continue."
 
 #: src/components/CreateWalletAction/index.tsx
-msgid "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
-msgstr "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
+#~ msgid "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
+#~ msgstr "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
 
 #: src/components/Tables/HistoryTable.tsx
 #~ msgid "ALL"
@@ -81,6 +81,10 @@ msgstr "Activity"
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "Add referral successful!"
 msgstr "Add referral successful!"
+
+#: src/components/CreateWalletAction/index.tsx
+msgid "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
+msgstr "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
 
 #: src/utils/helpers/handleError.ts
 #: src/utils/helpers/handleError.ts
@@ -543,8 +547,8 @@ msgid "L"
 msgstr "L"
 
 #: src/pages/Home/Layouts/HomeDesktop.tsx
-#~ msgid "LEADERBOARD"
-#~ msgstr "LEADERBOARD"
+msgid "LEADERBOARD"
+msgstr "LEADERBOARD"
 
 #: src/utils/config/translations.tsx
 #~ msgid "LIQUIDATED"
@@ -572,8 +576,8 @@ msgid "Last Trade (All)"
 msgstr "Last Trade (All)"
 
 #: src/pages/Home/Layouts/HomeMobile.tsx
-#~ msgid "Leaderboard"
-#~ msgstr "Leaderboard"
+msgid "Leaderboard"
+msgstr "Leaderboard"
 
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Let copy a trader and make profit!"

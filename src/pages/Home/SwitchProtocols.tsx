@@ -24,10 +24,12 @@ const SwitchProtocols = ({
   isMobile = false,
   buttonSx,
   textSx,
+  sx,
 }: {
   isMobile?: boolean
   buttonSx?: SystemStyleObject & GridProps
   textSx?: SystemStyleObject & GridProps
+  sx?: SystemStyleObject & GridProps
 }) => {
   const history = useHistory()
   const { myProfile } = useMyProfile()
@@ -114,7 +116,7 @@ const SwitchProtocols = ({
       }}
       menuSx={{ width: isMobile ? 125 : 150 }}
       hasArrow={true}
-      sx={{ height: isMobile ? '48px' : undefined, minWidth: 'fit-content' }}
+      sx={{ height: isMobile ? '48px' : undefined, minWidth: 'fit-content', ...sx }}
     >
       <Flex
         width="fit-content"

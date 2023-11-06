@@ -36,7 +36,9 @@ export default function CreateWalletAction() {
       <WalletItem
         exchange={CopyTradePlatformEnum.SYNTHETIX}
         label={<Trans>Smart Wallet</Trans>}
-        description={<Trans>A non-custody wallet. Your own all your assets, fully decentralized copy trading</Trans>}
+        description={
+          <Trans>An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading</Trans>
+        }
         // handleClick={
         //   // () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
         //   !hasSynthetixWallet && !loadingCopyWallets
