@@ -60,6 +60,10 @@ msgstr "A message with a verification code has been sent to your email. Enter th
 #~ msgid "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
 #~ msgstr "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
 
+#: src/pages/MyProfile/Layouts/Layout.tsx
+msgid "ACTIVITY"
+msgstr "ACTIVITY"
+
 #: src/components/Tables/HistoryTable.tsx
 #~ msgid "ALL"
 #~ msgstr "ALL"
@@ -75,8 +79,12 @@ msgstr "Active Copy"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/UserActivity/index.tsx
-msgid "Activity"
-msgstr "Activity"
+#~ msgid "Activity"
+#~ msgstr "Activity"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Activity Logs"
+msgstr "Activity Logs"
 
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "Add referral successful!"
@@ -281,13 +289,22 @@ msgstr "Copiers Net PnL"
 msgid "Copiers Profit vs Loss"
 msgstr "Copiers Profit vs Loss"
 
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Copy"
 msgstr "Copy"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Copy Management"
+msgstr "Copy Management"
 
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "Copy Order"
 #~ msgstr "Copy Order"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Copy Positions"
+msgstr "Copy Positions"
 
 #: src/pages/Stats/index.tsx
 msgid "Copy Statistic"
@@ -371,7 +388,7 @@ msgstr "Delete wallet successful!"
 #~ msgid "Detail"
 #~ msgstr "Detail"
 
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Details"
 msgstr "Details"
 
@@ -423,7 +440,7 @@ msgstr "Enter referral code"
 msgid "Error"
 msgstr "Error"
 
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Error while place order"
 msgstr "Error while place order"
 
@@ -431,7 +448,7 @@ msgstr "Error while place order"
 msgid "FAVORITES"
 msgstr "FAVORITES"
 
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Failed"
 msgstr "Failed"
 
@@ -478,8 +495,8 @@ msgid "Hi! Copier"
 msgstr "Hi! Copier"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
-msgid "History"
-msgstr "History"
+#~ msgid "History"
+#~ msgstr "History"
 
 #: src/components/@ui/BingXHelp/index.tsx
 msgid "How to get BingX API Key?"
@@ -540,9 +557,9 @@ msgstr "Kwenta"
 
 #: src/components/@ui/Table/renderProps.tsx
 #: src/components/@ui/Table/renderProps.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 #: src/pages/MyProfile/renderProps.tsx
-#: src/pages/UserActivity/configs.tsx
-#: src/pages/UserActivity/configs.tsx
 msgid "L"
 msgstr "L"
 
@@ -558,7 +575,7 @@ msgstr "LEADERBOARD"
 msgid "Landing Page"
 msgstr "Landing Page"
 
-#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+#: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Last 30 Days"
 msgstr "Last 30 Days"
 
@@ -900,8 +917,8 @@ msgid "Positions"
 msgstr "Positions"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
-msgid "Profile"
-msgstr "Profile"
+#~ msgid "Profile"
+#~ msgstr "Profile"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #~ msgid "Profile (Old)"
@@ -928,7 +945,7 @@ msgstr "Profit Rate"
 #~ msgid "Provider Error"
 #~ msgstr "Provider Error"
 
-#: src/pages/MyProfile/Layouts/Layout.tsx
+#: src/pages/Settings/Layouts/Layout.tsx
 msgid "REFERRAL"
 msgstr "REFERRAL"
 
@@ -952,7 +969,7 @@ msgstr "Read more"
 msgid "Referral"
 msgstr "Referral"
 
-#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+#: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Referral Code"
 msgstr "Referral Code"
 
@@ -964,7 +981,7 @@ msgstr "Referral Code (optional)"
 #~ msgid "Referral ID (optional)"
 #~ msgstr "Referral ID (optional)"
 
-#: src/pages/MyProfile/Referral/ReferralList.tsx
+#: src/pages/Settings/Referral/ReferralList.tsx
 msgid "Referral List"
 msgstr "Referral List"
 
@@ -973,7 +990,7 @@ msgstr "Referral List"
 #~ msgid "Referral code has {REFERRAL_CODE_LENGTH} number."
 #~ msgstr "Referral code has {REFERRAL_CODE_LENGTH} number."
 
-#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+#: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Referrals"
 msgstr "Referrals"
 
@@ -1031,9 +1048,9 @@ msgstr "Runtime (All)"
 
 #: src/components/@ui/Table/renderProps.tsx
 #: src/components/@ui/Table/renderProps.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 #: src/pages/MyProfile/renderProps.tsx
-#: src/pages/UserActivity/configs.tsx
-#: src/pages/UserActivity/configs.tsx
 msgid "S"
 msgstr "S"
 
@@ -1062,11 +1079,15 @@ msgstr "Session Expired"
 msgid "Setting configs has been succeeded"
 msgstr "Setting configs has been succeeded"
 
-#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Settings"
+msgstr "Settings"
+
+#: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Share DApp"
 msgstr "Share DApp"
 
-#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+#: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Share Landing Page"
 msgstr "Share Landing Page"
 
@@ -1106,11 +1127,11 @@ msgstr "Something went wrong"
 msgid "Source"
 msgstr "Source"
 
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Source Action"
 msgstr "Source Action"
 
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Source Details"
 msgstr "Source Details"
 
@@ -1118,7 +1139,7 @@ msgstr "Source Details"
 #~ msgid "Source Order"
 #~ msgstr "Source Order"
 
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Source Trader"
 msgstr "Source Trader"
 
@@ -1127,7 +1148,7 @@ msgid "Stats"
 msgstr "Stats"
 
 #: src/pages/MyProfile/MyCopies/index.tsx
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Status"
 msgstr "Status"
 
@@ -1148,8 +1169,8 @@ msgstr "Stopped"
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 #: src/pages/TraderDetails/CopyTraderModal.tsx
-#: src/pages/UserActivity/configs.tsx
 msgid "Success"
 msgstr "Success"
 
@@ -1169,11 +1190,11 @@ msgstr "Synthetix"
 msgid "TRADER EXPLORER"
 msgstr "TRADER EXPLORER"
 
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Target Action"
 msgstr "Target Action"
 
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Target Wallet"
 msgstr "Target Wallet"
 
@@ -1239,7 +1260,7 @@ msgstr "This copy position has been closed successfully"
 msgid "This trader list is empty"
 msgstr "This trader list is empty"
 
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Time"
 msgstr "Time"
 
@@ -1247,7 +1268,7 @@ msgstr "Time"
 msgid "To start, you need to create a smart wallet."
 msgstr "To start, you need to create a smart wallet."
 
-#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+#: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Today"
 msgstr "Today"
 
@@ -1312,7 +1333,7 @@ msgstr "Top Total Win"
 msgid "Top Win Rate"
 msgstr "Top Win Rate"
 
-#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+#: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Total"
 msgstr "Total"
 
@@ -1388,8 +1409,8 @@ msgstr "Try Again"
 msgid "Twitter (X)"
 msgstr "Twitter (X)"
 
-#: src/pages/UserActivity/configs.tsx
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "TxHash"
 msgstr "TxHash"
 
@@ -1474,6 +1495,7 @@ msgstr "Waiting..."
 
 #: src/components/CopyTradeForm/Wallets.tsx
 #: src/components/CopyTradeForm/Wallets.tsx
+#: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Wallet"
 msgstr "Wallet"
 
@@ -1522,7 +1544,7 @@ msgstr "Wins"
 msgid "Would you like to use a referral code?"
 msgstr "Would you like to use a referral code?"
 
-#: src/pages/MyProfile/Referral/ReferralOverview.tsx
+#: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Yesterday"
 msgstr "Yesterday"
 
@@ -1534,7 +1556,7 @@ msgstr "You Might Need"
 msgid "You are not authorized to perform this action"
 msgstr "You are not authorized to perform this action"
 
-#: src/pages/MyProfile/Referral/ReferralList.tsx
+#: src/pages/Settings/Referral/ReferralList.tsx
 msgid "You do not have any referral"
 msgstr "You do not have any referral"
 
@@ -1570,7 +1592,7 @@ msgstr "Your copy may failed due to insufficient available margin"
 msgid "Your update has been succeeded"
 msgstr "Your update has been succeeded"
 
-#: src/pages/UserActivity/configs.tsx
+#: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "slippage"
 msgstr "slippage"
 

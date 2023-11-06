@@ -37,7 +37,7 @@ export default function WhatIf({
           bg: 'neutral5',
         }}
         hasArrow={true}
-        dismissable={false}
+        dismissible={false}
         menu={
           <Box px={2} py={2} mb={24}>
             <Flex mb={2} alignItems="center" justifyContent="space-between">

@@ -28,8 +28,8 @@ const CustomizeColumn = ({ hasTitle, menuSx = {} }: { hasTitle?: boolean; menuSx
         ...menuSx,
       }}
       hasArrow={false}
-      dismissable={false}
-      menuDismissable
+      dismissible={false}
+      menuDismissible
       menu={
         <>
           {tableSettings.map((item, index) => {

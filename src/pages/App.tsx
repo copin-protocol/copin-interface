@@ -24,7 +24,7 @@ const Stats = lazy(() => import('./Stats'))
 const TopOpenings = lazy(() => import('./TopOpenings'))
 const SharedBacktestSingle = lazy(() => import('./SharedBacktestSingle'))
 const SharedBacktestMultiple = lazy(() => import('./SharedBacktestMultiple'))
-const UserActivity = lazy(() => import('./UserActivity'))
+const Settings = lazy(() => import('./Settings'))
 
 function App() {
   useEffect(() => {
@@ -44,7 +44,6 @@ function App() {
           <ScrollToTop />
           <QSReader />
           <Switch>
-            <AuthedRoute path={ROUTES.USER_ACTIVITY.path} component={UserActivity}></AuthedRoute>
             <ProtocolRoute exact path={ROUTES.TRADER_DETAILS.path} component={TraderDetails}></ProtocolRoute>
             <ProtocolRedirectRoute exact path={`${ROUTES.TRADER_DETAILS.path_prefix}/:address`} />
 
@@ -73,6 +72,7 @@ function App() {
             ></ProtocolRoute>
 
             <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>
+            <AuthedRoute path={ROUTES.SETTINGS.path} component={Settings}></AuthedRoute>
             <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagement}></AuthedRoute>
             <Route path={ROUTES.HOME.path} component={Home}></Route>
 

@@ -44,8 +44,8 @@ export default function SelectTradersDropdown({
         p: 2,
         ...menuSx,
       }}
-      dismissable={false}
-      menuDismissable
+      dismissible={false}
+      menuDismissible
       menu={
         <>
           <Flex sx={{ gap: 1, alignItems: 'center' }}>

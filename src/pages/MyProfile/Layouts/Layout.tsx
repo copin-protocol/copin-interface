@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ClockCounterClockwise, SubtractSquare, Users } from '@phosphor-icons/react'
+import { ClockCounterClockwise, Notebook, SubtractSquare } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
@@ -14,7 +14,7 @@ import { LayoutComponents } from './types'
 enum TabKeyEnum {
   MANAGEMENT = 'management',
   HISTORY = 'history',
-  REFERRAL = 'referral',
+  ACTIVITIES = 'activities',
 }
 
 const tabConfigs: TabConfig[] = [
@@ -45,14 +45,14 @@ const tabConfigs: TabConfig[] = [
   {
     name: (
       <Flex sx={{ alignItems: 'center', gap: 2 }}>
-        <Users size={24} />
+        <Notebook size={24} />
         <Box as="span">
-          <Trans>REFERRAL</Trans>
+          <Trans>ACTIVITY</Trans>
         </Box>
       </Flex>
     ),
-    key: TabKeyEnum.REFERRAL,
-    route: ROUTES.MY_REFERRAL.path,
+    key: TabKeyEnum.ACTIVITIES,
+    route: ROUTES.USER_ACTIVITY.path,
   },
 ]
 
@@ -84,8 +84,8 @@ export default function Layout(components: LayoutComponents) {
           <Route exact path={ROUTES.MY_HISTORY.path}>
             {components.historyTable}
           </Route>
-          <Route exact path={ROUTES.MY_REFERRAL.path}>
-            {components.referral}
+          <Route exact path={ROUTES.USER_ACTIVITY.path}>
+            {components.activities}
           </Route>
           <Redirect to={ROUTES.MY_MANAGEMENT.path} />
         </Switch>

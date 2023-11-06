@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { Archive, Clock, Key, SignOut, UserCircle, Users, Wallet } from '@phosphor-icons/react'
-import { useMemo, useState } from 'react'
+import { Clock, Key, Notebook, SignOut, UserCircle, Users, Wallet } from '@phosphor-icons/react'
+import { ReactNode, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import Divider from 'components/@ui/Divider'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
@@ -27,12 +28,15 @@ const NavUser = () => {
   const _address = useMemo(() => isAddress(profile?.username), [profile?.username])
   const hasCopyPermission = useCopyTradePermission()
 
-  const logEventRoutes = (action: string) => {
-    logEvent({
-      label: getUserForTracking(profile?.username),
-      category: EventCategory.ROUTES,
-      action,
-    })
+  const [showMenu, setShowMenu] = useState(false)
+  const onClickNavItem = (action?: string) => {
+    setShowMenu(false)
+    action &&
+      logEvent({
+        label: getUserForTracking(profile?.username),
+        category: EventCategory.ROUTES,
+        action,
+      })
   }
 
   return (
@@ -42,23 +46,53 @@ const NavUser = () => {
           menuSx={{
             width: 200,
           }}
+          dismissible={false}
+          menuDismissible
+          visible={showMenu}
+          setVisible={setShowMenu}
           menu={
             <>
+              <Box mt={2} />
               {hasCopyPermission && (
-                <div>
-                  {userActions.map((configs, index) => (
-                    <Link key={index} to={configs.link}>
-                      <DropdownItem onClick={() => logEventRoutes(configs.event)}>
-                        <Flex alignItems="center" sx={{ gap: 2 }}>
-                          {configs.icon}
-                          <Box color="neutral1">{configs.label}</Box>
-                        </Flex>
-                      </DropdownItem>
-                    </Link>
+                <>
+                  <SectionDivider label={<Trans>Copy</Trans>} />
+                  {userCopy.map((configs, index) => (
+                    <NavItem
+                      key={index}
+                      link={configs.link}
+                      onClick={() => onClickNavItem(configs.event)}
+                      icon={configs.icon}
+                      label={configs.label}
+                    />
                   ))}
-                </div>
+                </>
               )}
-              <DropdownItem onClick={() => setIsShowModalChangePassword(true)}>
+              <Box mb={3} />
+              <SectionDivider label={<Trans>Wallet</Trans>} />
+              <NavItem
+                link={ROUTES.WALLET_MANAGEMENT.path}
+                onClick={() => onClickNavItem(EVENT_ACTIONS[EventCategory.ROUTES].WALLET_MANAGEMENT)}
+                icon={<Wallet size={20} />}
+                label={<Trans>Wallet Management</Trans>}
+              />
+              <Box mb={3} />
+              <SectionDivider label={<Trans>Settings</Trans>} />
+              {userSettings.map((configs, index) => (
+                <NavItem
+                  key={index}
+                  link={configs.link}
+                  onClick={() => onClickNavItem(configs.event)}
+                  icon={configs.icon}
+                  label={configs.label}
+                />
+              ))}
+              <Divider my={2} />
+              <DropdownItem
+                onClick={() => {
+                  onClickNavItem()
+                  setIsShowModalChangePassword(true)
+                }}
+              >
                 <Flex alignItems="center" sx={{ gap: 2 }}>
                   <Key size={20} />
                   <Box>
@@ -70,6 +104,7 @@ const NavUser = () => {
                 <DropdownItem
                   onClick={() => {
                     sessionStorage.clear()
+                    onClickNavItem()
                     setIsShowModalLogout(true)
                   }}
                 >
@@ -130,33 +165,62 @@ const NavUser = () => {
 
 export default NavUser
 
-const userActions = [
+type NavItemConfigs = {
+  link: string
+  onClick: () => void
+  icon: JSX.Element
+  label: JSX.Element
+}
+
+function NavItem(configs: NavItemConfigs) {
+  return (
+    <Link to={configs.link} style={{ display: 'block' }}>
+      <DropdownItem onClick={configs.onClick}>
+        <Flex alignItems="center" sx={{ gap: 2 }}>
+          {configs.icon}
+          <Box color="neutral1">{configs.label}</Box>
+        </Flex>
+      </DropdownItem>
+    </Link>
+  )
+}
+
+function SectionDivider({ label }: { label: ReactNode }) {
+  return (
+    <Flex sx={{ px: 2, mb: 2, width: '100%', alignItems: 'center', gap: 2 }}>
+      <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
+        {label}
+      </Type.Caption>
+      <Box sx={{ flex: 1 }}>
+        <Divider />
+      </Box>
+    </Flex>
+  )
+}
+
+const userCopy = [
   {
     link: ROUTES.MY_MANAGEMENT.path,
     event: EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE,
     icon: <UserCircle size={20} />,
-    label: <Trans>Profile</Trans>,
-  },
-  {
-    link: ROUTES.WALLET_MANAGEMENT.path,
-    event: EVENT_ACTIONS[EventCategory.ROUTES].WALLET_MANAGEMENT,
-    icon: <Wallet size={20} />,
-    label: <Trans>Wallet Management</Trans>,
-  },
-  {
-    link: ROUTES.USER_ACTIVITY.path,
-    event: EVENT_ACTIONS[EventCategory.ROUTES].USER_ACTIVITY,
-    icon: <Archive size={20} />,
-    label: <Trans>Activity</Trans>,
+    label: <Trans>Copy Management</Trans>,
   },
   {
     link: ROUTES.MY_HISTORY.path,
     event: EVENT_ACTIONS[EventCategory.ROUTES].HISTORY,
     icon: <Clock size={20} />,
-    label: <Trans>History</Trans>,
+    label: <Trans>Copy Positions</Trans>,
   },
   {
-    link: ROUTES.MY_REFERRAL.path,
+    link: ROUTES.USER_ACTIVITY.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].USER_ACTIVITY,
+    icon: <Notebook size={20} />,
+    label: <Trans>Activity Logs</Trans>,
+  },
+]
+const userSettings = [
+  {
+    link: ROUTES.REFERRAL.path,
     event: EVENT_ACTIONS[EventCategory.ROUTES].MY_REFERRAL,
     icon: <Users size={20} />,
     label: <Trans>Referral</Trans>,

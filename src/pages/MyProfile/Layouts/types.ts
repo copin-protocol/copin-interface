@@ -4,5 +4,5 @@ export interface LayoutComponents {
   positionsTable: JSX.Element
   stats: JSX.Element
   historyTable: JSX.Element
-  referral: JSX.Element
+  activities: JSX.Element
 }
