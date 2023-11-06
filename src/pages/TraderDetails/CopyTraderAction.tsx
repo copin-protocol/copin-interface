@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 
+import { useClickLoginButton } from 'components/LoginAction'
 import useMyProfile from 'hooks/store/useMyProfile'
+import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
-import Tooltip from 'theme/Tooltip'
-import { Flex, Type } from 'theme/base'
-import { LINKS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
@@ -26,10 +25,14 @@ const CopyTraderAction = ({
   const { myProfile } = useMyProfile()
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenContactModal, setIsOpenContactModal] = useState(false)
+
+  const { isAuthenticated } = useAuthContext()
+  const handleClickLogin = useClickLoginButton()
   const handleCloseModal = () => {
     setIsOpenModal(false)
     onForceReload()
   }
+
   return (
     <>
       <Button
@@ -40,6 +43,11 @@ const CopyTraderAction = ({
         }}
         variant="primary"
         onClick={() => {
+          if (!isAuthenticated) {
+            handleClickLogin()
+            return
+          }
+
           hasCopyPermission ? setIsOpenModal(true) : setIsOpenContactModal(true)
 
           logEvent({
@@ -49,7 +57,6 @@ const CopyTraderAction = ({
           })
         }}
         data-tooltip-id={`tt-kwenta_copytrade`}
-        disabled={!hasCopyPermission}
       >
         Copy Trader
       </Button>
@@ -57,19 +64,19 @@ const CopyTraderAction = ({
         <CopyTraderModal protocol={protocol} account={account} isOpen={isOpenModal} onClose={handleCloseModal} />
       )}
       {isOpenContactModal && <ModalContactUs onDismiss={() => setIsOpenContactModal(false)} />}
-      {!hasCopyPermission && (
-        <Tooltip id="tt-kwenta_copytrade" place="top" type="dark" effect="solid" clickable>
-          <Flex flexDirection="column" maxWidth={350}>
-            <Type.CaptionBold>Kwenta copy-trading is coming soon</Type.CaptionBold>
-            <Type.Caption color="neutral2">
-              Any ideas or support, reach us{' '}
-              <a href={LINKS.telegram} target="_blank" rel="noreferrer">
-                here
-              </a>
-            </Type.Caption>
-          </Flex>
-        </Tooltip>
-      )}
+      {/*{!hasCopyPermission && (*/}
+      {/*  <Tooltip id="tt-kwenta_copytrade" place="top" type="dark" effect="solid" clickable>*/}
+      {/*    <Flex flexDirection="column" maxWidth={350}>*/}
+      {/*      <Type.CaptionBold>Kwenta copy-trading is coming soon</Type.CaptionBold>*/}
+      {/*      <Type.Caption color="neutral2">*/}
+      {/*        Any ideas or support, reach us{' '}*/}
+      {/*        <a href={LINKS.telegram} target="_blank" rel="noreferrer">*/}
+      {/*          here*/}
+      {/*        </a>*/}
+      {/*      </Type.Caption>*/}
+      {/*    </Flex>*/}
+      {/*  </Tooltip>*/}
+      {/*)}*/}
     </>
   )
 }

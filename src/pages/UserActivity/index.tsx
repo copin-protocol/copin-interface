@@ -15,9 +15,10 @@ import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import IconButton from 'theme/Buttons/IconButton'
 import Drawer from 'theme/Modal/Drawer'
 import { PaginationWithLimit } from 'theme/Pagination'
+import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import ListActivityMobile from './ListActivityMobile'
@@ -43,12 +44,16 @@ export default function UserActivity() {
     setOpenCopyDrawer(false)
     setCurrentCopyPosition(undefined)
   }
+
+  const isMobile = useIsMobile()
+  const { lg } = useResponsive()
+
   const externalSource: ExternalSource = {
     handleSelectCopyItem,
     copyWallets,
+    isMobile: !lg,
   }
-  const isMobile = useIsMobile()
-  const { lg } = useResponsive()
+
   return (
     <>
       <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
@@ -70,6 +75,11 @@ export default function UserActivity() {
           ) : (
             <ListActivityMobile data={data?.data} isLoading={isFetching} externalSource={externalSource} />
           )}
+          <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
+            <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
+              Reverse Copy
+            </Type.Caption>
+          </Tooltip>
         </Box>
         <PaginationWithLimit
           currentPage={currentPage}

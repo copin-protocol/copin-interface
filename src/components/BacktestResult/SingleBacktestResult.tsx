@@ -367,7 +367,7 @@ const columns: ColumnData<SimulatorPosition>[] = [
     },
   },
   {
-    title: 'Pnl $',
+    title: 'PnL',
     dataIndex: undefined,
     key: undefined,
     style: { minWidth: '70px', textAlign: 'right' },

@@ -93,7 +93,7 @@ export default function PositionDetails({
           ? crossMovePnL
             ? crossMovePnL
             : calcOpeningPnL(data, prices[data.indexToken])
-          : data.realisedPnl - data.fee
+          : data.realisedPnl
         : 0,
     [crossMovePnL, data, isOpening, prices]
   )
@@ -206,6 +206,7 @@ export default function PositionDetails({
               )}
               {!isOpening && data.id && <WhatIf protocol={protocol} positionId={data.id} />}
             </Flex>
+
             <Flex mt={3} mb={3} width="100%" alignItems="center" justifyContent="center">
               <Type.H5 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
                 <AmountText amount={latestPnL} maxDigit={0} suffix="$" />

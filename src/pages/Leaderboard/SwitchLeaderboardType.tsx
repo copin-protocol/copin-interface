@@ -5,7 +5,7 @@ import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Type } from 'theme/base'
 import { LEADERBOARD_OPTIONS } from 'utils/config/options'
 
-const SwitchLeaderboardType = () => {
+const SwitchLeaderboardType = ({ sx }: { sx?: any }) => {
   const { currentOption, changeCurrentOption } = useLeaderboardContext()
 
   const renderOptions = () => {
@@ -30,7 +30,7 @@ const SwitchLeaderboardType = () => {
       }}
       menuSx={{ width: '80px' }}
       hasArrow={true}
-      sx={{ minWidth: 'fit-content', pr: [0, 0, 3, 3] }}
+      sx={{ minWidth: 'fit-content', ...sx }}
     >
       <Type.CaptionBold color="neutral2">{currentOption.text}</Type.CaptionBold>
     </Dropdown>

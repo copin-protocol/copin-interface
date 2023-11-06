@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { ApiMeta } from 'apis/api'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import ReverseTag from 'components/@ui/ReverseTag'
 import { VerticalDivider } from 'components/@ui/Table/renderProps'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyWalletData } from 'entities/copyWallet'
@@ -29,14 +30,21 @@ export type CopySelection = {
 export type ExternalSource = {
   handleSelectCopyItem: (data: CopySelection) => void
   copyWallets: CopyWalletData[] | undefined
+  isMobile?: boolean
 }
 
 type ActivityColumnData = ColumnData<UserActivityData, ExternalSource>
 
 export const renderProps: Record<string, ActivityColumnData['render']> = {
-  time: (item) => (
-    <Type.Caption color="neutral3">{formatLocalDate(item.createdAt, DAYJS_FULL_DATE_FORMAT)}</Type.Caption>
-  ),
+  time: (item, index, externalSource) => {
+    const isMobile = externalSource?.isMobile
+    return (
+      <Box sx={{ position: 'relative' }}>
+        {item.isReverse && <ReverseTag sx={{ top: isMobile ? '-45px' : '-12px', left: '-16px' }} />}
+        <Type.Caption color="neutral3">{formatLocalDate(item.createdAt, DAYJS_FULL_DATE_FORMAT)}</Type.Caption>
+      </Box>
+    )
+  },
   copy: (item) => (
     <Type.CaptionBold
       color="neutral1"
@@ -115,8 +123,12 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
       </Flex>
     )
   },
-  targetAction: (item, _, externalSource) =>
-    item.isSuccess ? (
+  targetAction: (item, _, externalSource) => {
+    const parseErrMsg =
+      item.errorMsg && item.errorMsg.startsWith('"') && item.errorMsg.endsWith('"')
+        ? JSON.parse(item.errorMsg)
+        : item.errorMsg
+    return item.isSuccess ? (
       <Flex
         sx={{
           gap: 1,
@@ -124,8 +136,8 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
           color: 'neutral1',
         }}
       >
-        <Type.Caption width={8} color={item.isLong ? 'green1' : 'red2'}>
-          {item.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
+        <Type.Caption width={8} color={item.isLong && item.isReverse ? 'red2' : 'green1'}>
+          {item.isLong && item.isReverse ? <Trans>S</Trans> : <Trans>L</Trans>}
         </Type.Caption>
         <VerticalDivider />
         <Type.Caption>{TOKEN_TRADE_SUPPORT[item.protocol][item.indexToken]?.symbol}</Type.Caption>
@@ -141,13 +153,15 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
           )
         </Type.Caption>
         <Type.Caption color="neutral3">-</Type.Caption>
-        <Type.Caption
-          onClick={() => externalSource?.handleSelectCopyItem({ id: item.copyTradeId })}
-          color="primary1"
-          sx={{ cursor: 'pointer', '&:hover': { color: 'primary2' } }}
-        >
-          <Trans>Details</Trans>
-        </Type.Caption>
+        {item.copyPositionId && (
+          <Type.Caption
+            onClick={() => externalSource?.handleSelectCopyItem({ id: item.copyPositionId })}
+            color="primary1"
+            sx={{ cursor: 'pointer', '&:hover': { color: 'primary2' } }}
+          >
+            <Trans>Details</Trans>
+          </Type.Caption>
+        )}
         {item.targetTxHash && (
           <>
             <VerticalDivider />
@@ -164,8 +178,11 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
         )}
       </Flex>
     ) : (
-      <Type.Caption color="neutral3">{item.errorMsg || <Trans>Error while place order</Trans>}</Type.Caption>
-    ),
+      <Type.Caption color="neutral3" sx={{ whiteSpace: 'pre-line' }}>
+        {parseErrMsg ?? <Trans>Error while place order</Trans>}
+      </Type.Caption>
+    )
+  },
   status: (item) => (
     <Type.Caption
       color={item.isSuccess ? 'green2' : 'red2'}

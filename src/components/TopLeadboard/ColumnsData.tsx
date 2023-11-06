@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Minus } from '@phosphor-icons/react'
+import { CaretDown, CaretUp, Minus } from '@phosphor-icons/react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -96,7 +96,7 @@ export const LeaderboardColumns: ColumnData<TopTraderData, ExternalSource>[] = [
     style: { minWidth: ['120px', '160px'], textAlign: 'right' },
     render: (item) => (
       <Type.Caption width="100%" color="neutral1" textAlign="right">
-        {formatNumber(item.totalVolume, 0)}
+        ${formatNumber(item.totalVolume, 0)}
       </Type.Caption>
     ),
   },
@@ -108,7 +108,7 @@ export const LeaderboardColumns: ColumnData<TopTraderData, ExternalSource>[] = [
     style: { minWidth: ['120px', '160px'], textAlign: 'right' },
     render: (item) => (
       <Type.Caption width="100%" color="neutral1" textAlign="right">
-        {formatNumber(-item.totalFee, 0)}
+        ${formatNumber(item.totalFee, 0)}
       </Type.Caption>
     ),
   },
@@ -124,13 +124,13 @@ export const LeaderboardColumns: ColumnData<TopTraderData, ExternalSource>[] = [
   //   ),
   // },
   {
-    title: 'Total PnL',
+    title: 'PnL',
     dataIndex: 'totalPnl',
     key: 'totalPnl',
     style: { minWidth: ['120px', '160px'], textAlign: 'right' },
     render: (item) => (
       <Type.CaptionBold width="100%" color="neutral1" textAlign="right">
-        <SignedText value={item.totalPnl} maxDigit={0} fontInherit />
+        <SignedText prefix="$" value={item.totalPnl} maxDigit={0} fontInherit />
       </Type.CaptionBold>
     ),
   },
@@ -196,14 +196,22 @@ function AccountInfo({ info, size = 40 }: { info: TopTraderData; size?: number }
           >
             {addressShorten(info.account, 3, 5)}
           </Type.CaptionBold>
-          <Flex alignItems="center" sx={{ gap: 1 }}>
+          <Flex alignItems="center">
             <IconBox
-              icon={deltaRanking === 0 ? <Minus /> : deltaRanking > 0 ? <ArrowUp /> : <ArrowDown />}
+              icon={
+                deltaRanking === 0 ? (
+                  <Minus />
+                ) : deltaRanking > 0 ? (
+                  <CaretUp weight="fill" />
+                ) : (
+                  <CaretDown weight="fill" />
+                )
+              }
               color={deltaRanking === 0 ? 'neutral1' : deltaRanking > 0 ? 'green1' : 'red2'}
             />
             <Type.Small color={deltaRanking === 0 ? 'neutral1' : deltaRanking > 0 ? 'green1' : 'red2'}>
               {deltaRanking !== 0 && formatNumber(Math.abs(deltaRanking))}
-              {deltaRanking === 1000 && '+'}
+              {!info.lastRanking && '+'}
             </Type.Small>
           </Flex>
           <Tooltip

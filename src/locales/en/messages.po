@@ -57,8 +57,8 @@ msgid "A message with a verification code has been sent to your email. Enter the
 msgstr "A message with a verification code has been sent to your email. Enter the code to continue."
 
 #: src/components/CreateWalletAction/index.tsx
-msgid "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
-msgstr "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
+#~ msgid "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
+#~ msgstr "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
 
 #: src/components/Tables/HistoryTable.tsx
 #~ msgid "ALL"
@@ -81,6 +81,10 @@ msgstr "Activity"
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "Add referral successful!"
 msgstr "Add referral successful!"
+
+#: src/components/CreateWalletAction/index.tsx
+msgid "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
+msgstr "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
 
 #: src/utils/helpers/handleError.ts
 #: src/utils/helpers/handleError.ts
@@ -827,6 +831,10 @@ msgstr "Password"
 msgid "Percentile"
 msgstr "Percentile"
 
+#: src/pages/Home/ConditionFilter/index.tsx
+msgid "Percentile Filter"
+msgstr "Percentile Filter"
+
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/components/WalletDetailsCard/WalletInfo.tsx
 msgid "Platform"
@@ -843,6 +851,10 @@ msgstr "Please check the verification code from your email!"
 #: src/pages/MyProfile/index.tsx
 msgid "Please create a wallet to start copy"
 msgstr "Please create a wallet to start copy"
+
+#: src/components/WalletDetailsCard/ConfirmDeleteModal.tsx
+msgid "Please delete all copy trades before deleting the copy wallet."
+msgstr "Please delete all copy trades before deleting the copy wallet."
 
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Please pick trader to view copies detail"
@@ -925,8 +937,8 @@ msgstr "REFERRAL"
 #~ msgstr "ROI"
 
 #: src/pages/Home/ConditionFilter/index.tsx
-msgid "Ranking Filter"
-msgstr "Ranking Filter"
+#~ msgid "Ranking Filter"
+#~ msgstr "Ranking Filter"
 
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "Read more"

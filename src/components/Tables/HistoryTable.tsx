@@ -422,7 +422,7 @@ const leverageColumn: ColumnData<PositionData> = {
   ),
 }
 const pnlColumnFull: ColumnData<PositionData> = {
-  title: 'Pnl $',
+  title: 'PnL',
   dataIndex: 'realisedPnl',
   key: 'realisedPnl',
   sortBy: 'realisedPnl',
@@ -442,7 +442,7 @@ const pnlColumnFull: ColumnData<PositionData> = {
   },
 }
 const pnlColumn: ColumnData<PositionData> = {
-  title: 'Net Pnl $',
+  title: 'PnL',
   dataIndex: 'realisedPnl',
   key: 'realisedPnl',
   style: { minWidth: '100px', textAlign: 'right' },
@@ -451,7 +451,7 @@ const pnlColumn: ColumnData<PositionData> = {
       <Flex alignItems="center" sx={{ gap: '1px' }}>
         {(item.isLiquidate || item.roi <= -100) && <IconBox sx={{ pl: '2px' }} icon={<SkullIcon />} />}
         {SignedText({
-          value: item.realisedPnl - item.fee,
+          value: item.realisedPnl,
           maxDigit: 1,
           minDigit: 1,
           sx: { textAlign: 'right', width: '100%' },
@@ -461,7 +461,7 @@ const pnlColumn: ColumnData<PositionData> = {
   },
 }
 const pnlWFeeColumn: ColumnData<PositionData> = {
-  title: 'Net Pnl $',
+  title: 'Closed PnL',
   dataIndex: undefined,
   key: undefined,
   style: { minWidth: '100px', textAlign: 'right' },

@@ -2,11 +2,13 @@
 import { Trans } from '@lingui/macro'
 import { ArrowSquareRight } from '@phosphor-icons/react'
 import React, { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 
 import { CopyWalletData } from 'entities/copyWallet'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { Flex, Type } from 'theme/base'
 import { BoxProps } from 'theme/types'
+import ROUTES from 'utils/config/routes'
 import { PLATFORM_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -16,7 +18,7 @@ interface WalletInfoProps {
 }
 export default function WalletInfo({ data, sx }: WalletInfoProps & BoxProps) {
   return (
-    <Flex alignItems="center" sx={{ gap: 2, ...sx }}>
+    <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2, ...sx }}>
       <InfoItem label={<Trans>Balance</Trans>} value={data.balance ? `$${formatNumber(data.balance)}` : '-'} />
       <InfoItem
         label={<Trans>Copy Volume</Trans>}
@@ -28,12 +30,14 @@ export default function WalletInfo({ data, sx }: WalletInfoProps & BoxProps) {
           <Flex alignItems="center" sx={{ gap: 2 }}>
             {formatNumber(data.activeCopy)}
             {data.activeCopy && data.activeCopy > 0 && (
-              <ButtonWithIcon
-                type="button"
-                variant="ghostPrimary"
-                icon={<ArrowSquareRight size={20} />}
-                sx={{ p: 0 }}
-              />
+              <Link to={ROUTES.MY_MANAGEMENT.path}>
+                <ButtonWithIcon
+                  type="button"
+                  variant="ghostPrimary"
+                  icon={<ArrowSquareRight size={20} />}
+                  sx={{ p: 0 }}
+                />
+              </Link>
             )}
           </Flex>
         }

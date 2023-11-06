@@ -1,16 +1,19 @@
 import { Trans } from '@lingui/macro'
 import { CoinVertical } from '@phosphor-icons/react'
 import React, { useEffect } from 'react'
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from 'recharts'
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 import SectionTitle from 'components/@ui/SectionTitle'
 import { CopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { Flex } from 'theme/base'
+import colors from 'theme/colors'
+import { FONT_FAMILY } from 'utils/config/constants'
 import { getColorFromText } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
 
+const COLORS = colors(true)
 export default function AssetDistribution() {
   const { copyWallets, loadTotalSmartWallet } = useCopyWalletContext()
   const pieChartData = calculatePercentage(copyWallets)
@@ -26,7 +29,7 @@ export default function AssetDistribution() {
         title={<Trans>Asset Distribution</Trans>}
         sx={{ px: 3, pt: 3, pb: 1 }}
       />
-      <ResponsiveContainer minHeight={436}>
+      <ResponsiveContainer minHeight={400}>
         <PieChart>
           <Pie
             data={pieChartData}
@@ -36,13 +39,20 @@ export default function AssetDistribution() {
             cy="40%"
             innerRadius={70}
             outerRadius={90}
-            label={(value) => `${formatNumber(value.percentage, 0)}%`}
+            label={(value) => `${formatNumber(value.percentage, 1)}%`}
           >
             {pieChartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} stroke="black" style={{ outline: 'none' }} />
             ))}
           </Pie>
-          {/* <Tooltip formatter={(value) => `${formatNumber(value.toString(), 0)}%`} /> */}
+          <Tooltip
+            contentStyle={{
+              backgroundColor: COLORS.neutral1,
+              borderColor: 'transparent',
+              fontFamily: FONT_FAMILY,
+            }}
+            formatter={tooltipFormatter}
+          />
           <Legend layout="vertical" />
         </PieChart>
       </ResponsiveContainer>
@@ -57,7 +67,8 @@ function calculatePercentage(wallets?: CopyWalletData[]) {
     return {
       id: wallet.id,
       name: parseWalletName(wallet),
-      percentage: ((wallet?.balance ?? 0) / totalBalance) * 100,
+      balance: wallet?.balance ?? 0,
+      percentage: totalBalance ? ((wallet?.balance ?? 0) / totalBalance) * 100 : 0,
       color: getColorFromText(wallet.id),
     } as ChartData
   })
@@ -68,4 +79,8 @@ interface ChartData {
   name: string
   percentage: number
   color: string
+}
+
+function tooltipFormatter(value: any, index: any, item: any) {
+  return `$${formatNumber(item?.payload?.payload?.balance)} (${formatNumber(value, 1)}%)`
 }

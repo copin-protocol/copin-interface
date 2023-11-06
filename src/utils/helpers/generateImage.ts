@@ -483,16 +483,12 @@ export const generateFooter = ({
   width: number
   footerContentMiddleOffset: number
 }) => {
-  canvas.drawImage(logoImg, 24, footerContentMiddleOffset - 42 / 2, 182, 42)
-  canvas.font = '20px Anuphan'
-  canvas.textAlign = 'right'
-  canvas.textBaseline = 'middle'
-  canvas.fillStyle = colors.neutral3
-  canvas.fillText(
-    'The leading tool to analyze and copy the best on-chain traders.',
-    width - 24,
-    footerContentMiddleOffset
-  )
+  canvas.drawImage(logoImg, width - 180 - 24, footerContentMiddleOffset - 42 / 2, 182, 42)
+  // canvas.font = '700 24px Anuphan'
+  // canvas.textAlign = 'center'
+  // canvas.textBaseline = 'middle'
+  // canvas.fillStyle = colors.neutral3
+  // canvas.fillText(`Join Us: ${LINKS.telegram}`, width / 2, footerContentMiddleOffset)
 }
 
 export const generateTokenPrice = ({

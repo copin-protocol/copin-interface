@@ -73,7 +73,7 @@ export default function ChartTraderPnL({
 
     stats?.forEach((e) => {
       chartPnLData.push({
-        value: e.pnl - e.fee,
+        value: e.pnl,
         time: dayjs(e.date).utc().unix() - timezone,
       } as LineData)
     })
@@ -229,7 +229,7 @@ export default function ChartTraderPnL({
         <Box sx={{ px: 12, pt: 12, pb: 1 }}>
           <Flex width="100%" alignItems="center" justifyContent="center" flexDirection="column">
             <Flex alignItems="center" sx={{ gap: 2 }} mb={1}>
-              <Type.Caption color="neutral3">Net PNL in the past</Type.Caption>
+              <Type.Caption color="neutral3">PnL in the past</Type.Caption>
               <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
             </Flex>
             <Type.H3 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>

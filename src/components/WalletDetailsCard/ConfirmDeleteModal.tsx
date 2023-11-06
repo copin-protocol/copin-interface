@@ -1,4 +1,8 @@
+import { Trans } from '@lingui/macro'
+import React from 'react'
+
 import { CopyWalletData } from 'entities/copyWallet'
+import Alert from 'theme/Alert'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, Type } from 'theme/base'
@@ -24,9 +28,16 @@ export default function ConfirmDeleteModal({
         <Type.Body mb={12} textAlign="center" width="100%">
           Are you sure you want to delete this wallet?
         </Type.Body>
-        <Type.Caption mb={24} textAlign="center" width="100%" color="neutral2">
-          This wallet will remove from your wallet list
-        </Type.Caption>
+        <Alert
+          mt={2}
+          mb={24}
+          variant="cardWarning"
+          description={
+            <Type.Caption textAlign="left">
+              <Trans>Please delete all copy trades before deleting the copy wallet.</Trans>
+            </Type.Caption>
+          }
+        />
         <Flex sx={{ gap: 3 }}>
           <Button variant="outline" onClick={onDismiss} sx={{ flex: 1 }} disabled={isConfirming}>
             Cancel

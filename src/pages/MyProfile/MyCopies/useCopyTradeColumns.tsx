@@ -1,8 +1,17 @@
 import { Trans } from '@lingui/macro'
-import { CopySimple, DotsThreeOutlineVertical, PencilSimpleLine, Plugs, Radical, Trash } from '@phosphor-icons/react'
+import {
+  CellSignalX,
+  CopySimple,
+  DotsThreeOutlineVertical,
+  PencilSimpleLine,
+  Plugs,
+  Radical,
+  Trash,
+} from '@phosphor-icons/react'
 import { MutableRefObject, SetStateAction, useMemo } from 'react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
+import ReverseTag from 'components/@ui/ReverseTag'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyTradeData } from 'entities/copyTrade'
 import IconButton from 'theme/Buttons/IconButton'
@@ -17,7 +26,6 @@ import { formatNumber } from 'utils/helpers/format'
 
 import { renderTrader } from '../renderProps'
 import ActionItem from './ActionItem'
-import ReverseTag from './ReverseTag'
 
 export default function useCopyTradeColumns({
   onSelect,
@@ -160,7 +168,7 @@ export default function useCopyTradeColumns({
         title: 'Risk Control',
         dataIndex: undefined,
         key: undefined,
-        style: { minWidth: '80px', textAlign: 'left', pl: 3 },
+        style: { minWidth: '90px', textAlign: 'left', pl: 3 },
         render: (item) => (
           <Flex
             sx={{
@@ -213,6 +221,31 @@ export default function useCopyTradeColumns({
                       Max Volume Multiplier:{' '}
                       <Box as="span" color="red1">
                         {`${formatNumber(item.maxVolMultiplier, 0, 0)}`} times
+                      </Box>
+                    </Type.Caption>
+                  </Tooltip>
+                )}
+              </>
+            )}
+            {item.skipLowLeverage && (
+              <>
+                <IconBox
+                  icon={<CellSignalX mirrored size={16} />}
+                  color="orange1"
+                  sx={{ bg: 'neutral4', p: '2px', borderRadius: 'sm' }}
+                  data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_LEVERAGE}_${item.id}`}
+                />
+                {isRunningFn(item.status) && (
+                  <Tooltip
+                    id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_LEVERAGE}_${item.id}`}
+                    place="top"
+                    type="dark"
+                    effect="solid"
+                  >
+                    <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
+                      Skip Low Leverage:{' '}
+                      <Box as="span" color="green1">
+                        On
                       </Box>
                     </Type.Caption>
                   </Tooltip>

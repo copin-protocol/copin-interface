@@ -13,13 +13,13 @@ import Divider from 'components/@ui/Divider'
 import ToastBody from 'components/@ui/ToastBody'
 import { VerifyLoginResponse } from 'entities/auth.d'
 import { useAuthContext } from 'hooks/web3/useAuth'
+import Alert from 'theme/Alert'
 import { Button } from 'theme/Buttons'
 import InputField, { InputPasswordField } from 'theme/InputField'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 
-import Alert from '../../theme/Alert'
 import ConnectButton from './ConnectButton'
 import { LoginForm } from './types'
 
@@ -124,7 +124,7 @@ const ModalLogin = ({
           description={
             <Type.Caption textAlign="left">
               <Trans>We only support login by email within the next 30 days (Deadline: November 30, 2023)</Trans>
-              <a href={LINKS.twitter} style={{ paddingLeft: '4px' }}>
+              <a href={LINKS.notice} target="_blank" style={{ paddingLeft: '4px' }} rel="noreferrer">
                 <Trans>Read more</Trans>
               </a>
             </Type.Caption>

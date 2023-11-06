@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { getMyCopySourcePositionDetailApi } from 'apis/copyPositionApis'
 import Container from 'components/@ui/Container'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
+import ReverseTag from 'components/@ui/ReverseTag'
 import Table from 'components/@ui/Table'
 import { ColumnData, TableProps } from 'components/@ui/Table/types'
 import ToastBody from 'components/@ui/ToastBody'
@@ -237,7 +238,7 @@ export const openingColumns: ColumnData<CopyPositionData, ExternalSource>[] = [
     render: (item) => renderEntry(item),
   },
   {
-    title: 'Pnl ($)',
+    title: 'PnL',
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '80px', textAlign: 'right' },
@@ -325,7 +326,7 @@ export const historyTabColumns: typeof openingColumns = [
     render: renderSource,
   },
   {
-    title: 'Pnl ($)',
+    title: 'PnL',
     dataIndex: 'pnl',
     key: 'pnl',
     sortBy: 'pnl',
@@ -354,9 +355,12 @@ export const historyColumns: typeof openingColumns = [
     sortBy: 'createdAt',
     style: { minWidth: '120px' },
     render: (item) => (
-      <Type.Caption color="neutral3">
-        <LocalTimeText date={item.createdAt} />
-      </Type.Caption>
+      <Box sx={{ position: 'relative' }}>
+        {item.reverseCopy && <ReverseTag sx={{ top: '-12px', left: '-16px' }} />}
+        <Type.Caption color="neutral3">
+          <LocalTimeText date={item.createdAt} />
+        </Type.Caption>
+      </Box>
     ),
   },
   {
@@ -401,14 +405,14 @@ export const historyColumns: typeof openingColumns = [
     title: 'Entry',
     dataIndex: 'entryPrice',
     key: 'entryPrice',
-    style: { minWidth: '150px' },
+    style: { minWidth: '150px', width: 150 },
     render: (item) => renderEntry(item),
   },
   {
     title: 'Value',
     dataIndex: 'sizeDelta',
     key: 'sizeDelta',
-    style: { minWidth: '100px', textAlign: 'right' },
+    style: { minWidth: '200px', width: 200, textAlign: 'right' },
     render: (item) => (
       <Type.Caption color="neutral1">
         {item.status === PositionStatusEnum.OPEN
@@ -421,12 +425,13 @@ export const historyColumns: typeof openingColumns = [
     ),
   },
   {
-    title: 'Size ($)',
+    title: 'Size',
     dataIndex: 'totalSizeDelta',
     key: 'totalSizeDelta',
-    style: { minWidth: '100px', textAlign: 'right' },
+    style: { minWidth: '130px', width: 130, textAlign: 'right' },
     render: (item) => (
       <Type.Caption color="neutral1">
+        $
         {item.status === PositionStatusEnum.OPEN
           ? formatNumber(Number(item.sizeDelta) * item.entryPrice, 0)
           : !isNaN(Number(item.totalSizeDelta))
@@ -443,10 +448,10 @@ export const historyColumns: typeof openingColumns = [
     render: (item) => <Type.Caption color="neutral1">{formatNumber(item.leverage, 1, 1)}x</Type.Caption>,
   },
   {
-    title: 'Pnl ($)',
+    title: 'PnL',
     dataIndex: 'pnl',
     key: 'pnl',
-    style: { minWidth: '100px', textAlign: 'right' },
+    style: { minWidth: '130px', width: 130, textAlign: 'right' },
     render: (item, index, externalSource) => renderPnL(item, externalSource?.prices),
   },
   {

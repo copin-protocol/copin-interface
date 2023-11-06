@@ -11,7 +11,7 @@ const commonSchema = {
   volume: yup.number().when('exchange', {
     is: CopyTradePlatformEnum.SYNTHETIX,
     then: (schema) => schema.required().min(50).label('Margin'),
-    otherwise: (schema) => schema.required().min(1).label('Margin'),
+    otherwise: (schema) => schema.required().min(0).label('Margin'),
   }),
   leverage: yup.number().required().min(2).label('Leverage'),
   tokenAddresses: yup.array(yup.string()).required().min(1).label('Trading Pairs'),

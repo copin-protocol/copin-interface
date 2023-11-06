@@ -153,8 +153,8 @@ export const columns: ColumnData<PositionData, ExternalSource>[] = [
   },
   {
     title: 'Entry',
-    dataIndex: 'entryFundingRate',
-    key: 'entryFundingRate',
+    dataIndex: 'indexToken',
+    key: 'indexToken',
     style: { width: '140px' },
     render: (item) => renderEntry(item),
   },
@@ -167,12 +167,12 @@ export const columns: ColumnData<PositionData, ExternalSource>[] = [
       externalSource?.prices ? renderSizeOpening(item, externalSource?.prices) : '--',
   },
   {
-    title: 'Net Pnl $',
-    dataIndex: 'realisedPnl',
-    key: 'realisedPnl',
+    title: 'PnL',
+    dataIndex: 'pnl',
+    key: 'pnl',
     style: { width: '75px', textAlign: 'right' },
     render: (item, index, externalSource) =>
-      externalSource?.prices ? renderOpeningPnL(item, externalSource?.prices) : '--',
+      externalSource?.prices ? renderOpeningPnL(item, externalSource?.prices, true) : '--',
   },
   {
     title: '',

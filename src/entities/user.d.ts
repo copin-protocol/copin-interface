@@ -44,6 +44,7 @@ export interface UserActivityData {
   sourceAccount: string
   userId?: string
   copyTradeId?: string
+  copyPositionId: string
   copyTradeTitle?: string
   exchange: CopyTradePlatformEnum
   indexToken: string
@@ -54,6 +55,7 @@ export interface UserActivityData {
   isLong: boolean
   type?: OrderTypeEnum
   isSuccess?: boolean
+  isReverse?: boolean
   errorMsg?: string
   sourceOrderId?: string
   sourceTxHash?: string
