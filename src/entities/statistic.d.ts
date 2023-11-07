@@ -36,5 +36,6 @@ export interface ExchangeStatsData {
 export interface TraderPnlStatisticData {
   pnl: number
   fee: number
+  percentage?: number
   date: string
 }
