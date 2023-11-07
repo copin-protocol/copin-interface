@@ -30,6 +30,7 @@ export default function Wallets({
   )
 
   useEffect(() => {
+    if (currentWalletId) return
     onChangeWallet(copyWalletsByExchange?.[0]?.id ?? '')
   }, [copyWalletsByExchange])
 

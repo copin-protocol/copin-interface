@@ -16,7 +16,6 @@ import useReferralActions from 'hooks/features/useReferralActions'
 import useParsedQueryString from 'hooks/router/useParsedQueryString'
 import useMyProfile from 'hooks/store/useMyProfile'
 import useUserReferral from 'hooks/store/useReferral'
-import ROUTES from 'utils/config/routes'
 import { Account } from 'utils/web3/types'
 import { signVerifyCode } from 'utils/web3/wallet'
 
@@ -58,11 +57,11 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   const { addReferral } = useReferralActions({ onSuccess })
 
   const disconnect = useCallback(() => {
-    if (!wallet) return
     clearAuth()
     setWaitingState(null)
     setMyProfile(null)
     setIsAuthenticated(false)
+    if (!wallet) return
     deactivate({
       label: wallet.label,
     })
@@ -168,8 +167,8 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       setMyProfile(user)
       setIsAuthenticated(true)
     } catch (error: any) {
-      if (storedWallet && error.message.includes('Unauthorized')) {
-        setWaitingState(WaitingState.TokenExpired)
+      if (error.message.includes('Unauthorized')) {
+        if (storedWallet) setWaitingState(WaitingState.TokenExpired)
       } else {
         toast.error(<ToastBody title={error.name} message={error.message} />)
       }
@@ -183,9 +182,9 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     logoutApi()
       .then(() => {
         disconnect()
-        setTimeout(() => {
-          window.location.replace(ROUTES.HOME.path)
-        })
+        // setTimeout(() => {
+        //   window.location.replace(ROUTES.HOME.path)
+        // })
       })
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {})

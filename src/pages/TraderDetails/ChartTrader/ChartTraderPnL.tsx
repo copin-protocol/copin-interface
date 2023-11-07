@@ -1,106 +1,44 @@
 import dayjs from 'dayjs'
 import { ColorType, CrosshairMode, LineData, LineStyle, PriceScaleMode, createChart } from 'lightweight-charts'
 import { useEffect, useMemo, useState } from 'react'
-import { useQuery } from 'react-query'
 
-import { getChartDataV2 } from 'apis/positionApis'
-import { getTraderPnlStatsApi } from 'apis/statisticApi'
 import { AmountText } from 'components/@ui/DecoratedText/ValueText'
-import { TimeFilterProps } from 'components/@ui/TimeFilter'
-import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
-import Loading from 'theme/Loading'
+import { TraderPnlStatisticData } from 'entities/statistic'
 import { Box, Flex, Type } from 'theme/base'
 import colors from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
-import { ELEMENT_IDS, QUERY_KEYS } from 'utils/config/keys'
+import { ELEMENT_IDS } from 'utils/config/keys'
 import 'utils/helpers/calculate'
-import { getDurationFromTimeFilter, getTimeframeFromTimeRange } from 'utils/helpers/transform'
+
+import { generateChartPnL } from './generateChartData'
 
 export default function ChartTraderPnL({
-  protocol,
-  account,
-  timeOption,
-  onChangeTime,
+  isLoading,
+  data,
+  from,
+  to,
 }: {
-  protocol: ProtocolEnum
-  account: string
-  timeOption: TimeFilterProps
-  onChangeTime: (option: TimeFilterProps) => void
+  isLoading?: boolean
+  data?: TraderPnlStatisticData[]
+  from: number
+  to: number
 }) {
   const _color = colors(true)
   const [crossMovePnL, setCrossMovePnL] = useState<number | undefined>()
-  const to = useMemo(() => dayjs().utc().valueOf(), [])
-  const timeframeDuration = getDurationFromTimeFilter(timeOption.id)
-  const from = useMemo(() => dayjs(to).utc().subtract(timeframeDuration, 'day').valueOf(), [timeframeDuration, to])
-  const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])
-  const { data, isLoading } = useQuery(
-    [QUERY_KEYS.GET_CHART_DATA, from, to, timeframe],
-    () =>
-      getChartDataV2({
-        from,
-        to,
-        timeframe,
-        symbol: 'BTC',
-      }),
-    {
-      retry: 0,
-    }
-  )
-  const { data: stats, isLoading: loadingStats } = useQuery(
-    [QUERY_KEYS.GET_TRADER_PNL_STATISTIC, account, from, to],
-    () =>
-      getTraderPnlStatsApi({
-        from,
-        to,
-        account,
-        protocol,
-      }),
-    {
-      retry: 0,
-    }
-  )
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
+  const generateData = useMemo(() => (data ? generateChartPnL(from, to, data) : []), [data, from, to])
 
   const chartData: LineData[] = useMemo(() => {
     if (!data) return []
-    const chartPnLData = data.map((e) => {
-      return {
-        value: 0,
-        time: dayjs(e.timestamp).utc().unix() - timezone,
-      } as LineData
-    })
-
-    stats?.forEach((e) => {
+    const chartPnLData: LineData[] = []
+    generateData?.forEach((e) => {
       chartPnLData.push({
         value: e.pnl,
         time: dayjs(e.date).utc().unix() - timezone,
       } as LineData)
     })
-    chartPnLData.sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0))
-    const uniquePnlData: LineData[] = []
-    chartPnLData.forEach((item) => {
-      const index = uniquePnlData.findIndex((e) => e.time === item.time)
-      if (index >= 0) {
-        const exist = uniquePnlData[index]
-        uniquePnlData.splice(index, 1)
-        uniquePnlData.push({ time: item.time, value: item.value + exist.value })
-      } else {
-        uniquePnlData.push(item)
-      }
-    })
-    function convertToCumulativeArray(data: LineData[]): LineData[] {
-      let cumulativeValue = 0
-      return data.reduce((cumulativeData: LineData[], dataPoint) => {
-        cumulativeValue += dataPoint.value
-        cumulativeData.push({ time: dataPoint.time, value: cumulativeValue })
-
-        return cumulativeData
-      }, [])
-    }
-
-    return convertToCumulativeArray(uniquePnlData)
-  }, [data, stats, timezone])
+    return chartPnLData.sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0))
+  }, [data, generateData, timezone])
 
   const latestPnL = useMemo(
     () =>
@@ -113,7 +51,7 @@ export default function ChartTraderPnL({
   )
 
   useEffect(() => {
-    if (isLoading || !data || !stats || !chartData) return
+    if (isLoading || !data || !chartData) return
 
     const container = document.getElementById(ELEMENT_IDS.TRADER_CHART_PNL)
     const chart = createChart(container ? container : ELEMENT_IDS.TRADER_CHART_PNL, {
@@ -216,38 +154,16 @@ export default function ChartTraderPnL({
 
       chart.remove()
     }
-  }, [chartData, data, isLoading, stats, timezone])
+  }, [chartData, data, isLoading, timezone])
 
   return (
-    <Box
-      sx={{
-        height: 210,
-      }}
-    >
-      {(isLoading || loadingStats) && <Loading />}
-      {stats && chartData && !isLoading && (
-        <Box sx={{ px: 12, pt: 12, pb: 1 }}>
+    <Box>
+      {data && chartData && !isLoading && (
+        <Box>
           <Flex width="100%" alignItems="center" justifyContent="center" flexDirection="column">
-            <Flex alignItems="center" sx={{ gap: 2 }} mb={1}>
-              <Type.Caption color="neutral3">PnL in the past</Type.Caption>
-              <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
-            </Flex>
             <Type.H3 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
               <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
             </Type.H3>
-
-            {/* <Flex mt={1} alignItems="center" sx={{ gap: [3, 4] }}>
-              <Flex alignItems="center" sx={{ gap: 12 }}>
-                <Type.Body color="neutral2">Runtime:</Type.Body>
-                <Type.BodyBold>{traderData?.runTimeDays ? `${traderData.runTimeDays} days` : '--'}</Type.BodyBold>
-              </Flex>
-              <Flex alignItems="center" sx={{ gap: 12 }}>
-                <Type.Body color="neutral2">Last trade:</Type.Body>
-                <Type.BodyBold>
-                  {traderData?.lastTradeAt ? formatRelativeDate(traderData.lastTradeAt) : '--'}
-                </Type.BodyBold>
-              </Flex>
-            </Flex> */}
           </Flex>
           <Box mt={1} sx={{ position: 'relative' }} minHeight={120}>
             <div id={ELEMENT_IDS.TRADER_CHART_PNL} />

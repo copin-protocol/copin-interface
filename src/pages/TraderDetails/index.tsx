@@ -38,7 +38,7 @@ import { addressShorten, formatRelativeDate } from 'utils/helpers/format'
 import { isAddress } from 'utils/web3/contracts'
 
 import BackTestAction from './BackTestAction'
-import ChartTraderPnL from './ChartTraderPnL'
+import ChartTrader from './ChartTrader'
 import CopyTraderAction from './CopyTraderAction'
 import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
@@ -299,12 +299,7 @@ export default function TraderDetails() {
             </Flex>
           )}
           {protocol && _address && (
-            <ChartTraderPnL
-              protocol={protocol}
-              account={_address}
-              timeOption={timeOption}
-              onChangeTime={(option) => setTimeOption(option)}
-            />
+            <ChartTrader protocol={protocol} account={_address} timeOption={timeOption} onChangeTime={setTimeOption} />
           )}
           <Box flex="1" overflow="auto" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative' }}>
             {!!traderData && <TraderStats data={traderData} />}
