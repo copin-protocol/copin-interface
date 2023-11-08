@@ -8,7 +8,7 @@ const getTraderDetail = async (req, res) => {
 
   let thumbnail = `${configs.baseUrl}/images/cover/cover.png`
   try {
-    const newThumbnail = `${configs.imageApiUrl}/address_${address}_protocol_${protocol}_time_${time}`
+    const newThumbnail = `${configs.imageApiUrl}/address_${address}_protocol_${protocol}_time_${time}?${new Date().getTime()}`
     const image = await axios.get(`${newThumbnail}`)
     if (image.data) thumbnail = newThumbnail
   } catch {}

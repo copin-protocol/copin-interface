@@ -208,7 +208,7 @@ export const generatePositionCanvas = ({
   rightCtx.fillStyle = colors.neutral1
   rightCtx.font = `700 ${valueStatsFontSize}px Anuphan`
   rightCtx.fillText('$' + formatNumber(stats?.collateral, 0, 0), rightWidth / 2, valueStartY)
-  const latestPnL = isOpening ? calcOpeningPnL(stats, prices[stats.indexToken]) : stats.realisedPnl - stats.fee
+  const latestPnL = isOpening ? calcOpeningPnL(stats, prices[stats.indexToken]) : stats.realisedPnl
   const latestROI = isOpening ? calcOpeningROI(stats, latestPnL) : stats.roi
   rightCtx.fillStyle = !stats
     ? colors.neutral1
