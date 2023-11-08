@@ -179,15 +179,25 @@ function TablePagination({
             <MultipleBacktestButton />
             <Flex
               sx={{
-                px: 3,
+                px: 12,
                 '& *': { fontSize: '13px' },
                 alignItems: 'center',
-                gap: 2,
+                gap: [12, 2],
                 borderTop: ['small', 'none'],
                 borderTopColor: ['neutral4', 'none'],
               }}
             >
-              <PaginationWithSelect currentPage={currentPage} onPageChange={changeCurrentPage} apiMeta={data?.meta} />
+              <Box flex="1">
+                <PaginationWithLimit
+                  currentLimit={currentLimit}
+                  onLimitChange={changeCurrentLimit}
+                  currentPage={currentPage}
+                  onPageChange={changeCurrentPage}
+                  apiMeta={data?.meta}
+                  disabledInput
+                  sx={{ flexDirection: 'row', px: 0 }}
+                />
+              </Box>
               <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
               <CustomizeColumn hasTitle={false} />
             </Flex>

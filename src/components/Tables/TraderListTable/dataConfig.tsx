@@ -67,7 +67,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     ),
   },
   {
-    style: { minWidth: ['100px', '130px'] },
+    style: { minWidth: ['120px', '130px'] },
     text: <Trans>Runtime (All)</Trans>,
     label: (
       <LabelWithTooltip id="tt_runtime_label" tooltip="The duration or time period of the trading activity">
@@ -317,7 +317,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={item.winRate ? `${formatNumber(item.winRate, 1, 1)}%` : undefined} />,
   },
   {
-    style: { minWidth: ['100px', '120px'] },
+    style: { minWidth: ['110px', '120px'] },
     text: <Trans>Profit Rate</Trans>,
     label: (
       <LabelWithTooltip
@@ -355,7 +355,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={item.winLoseRatio ? formatNumber(item.winLoseRatio, 1, 1) : undefined} />,
   },
   {
-    style: { minWidth: ['130px', '160px'] },
+    style: { minWidth: ['140px', '160px'] },
     text: <Trans>Order/Pos Ratio</Trans>,
     label: (
       <LabelWithTooltip
@@ -395,7 +395,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={item.profitLossRatio ? formatNumber(item.profitLossRatio, 1, 1) : undefined} />,
   },
   {
-    style: { minWidth: ['110px', '136px'] },
+    style: { minWidth: ['120px', '136px'] },
     text: <Trans>Profit Factor</Trans>,
     label: (
       <LabelWithTooltip id="tt_profit_factor_label" tooltip="The ratio of total profit to total loss without fees">
@@ -459,7 +459,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={item.minLeverage ? formatNumber(item.minLeverage, 1, 1) + 'x' : undefined} />,
   },
   {
-    style: { minWidth: ['110px', '132px'] },
+    style: { minWidth: ['120px', '132px'] },
     text: <Trans>Avg Duration</Trans>,
     label: (
       <LabelWithTooltip id="tt_avg_duration_label" tooltip="The average duration of trades in hours">
@@ -477,7 +477,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={formatDuration(item.avgDuration * 1000)} />,
   },
   {
-    style: { minWidth: ['110px', '132px'] },
+    style: { minWidth: ['120px', '132px'] },
     text: <Trans>Min Duration</Trans>,
     label: (
       <LabelWithTooltip id="tt_min_duration_label" tooltip="The minimum duration of a trade in hours">
@@ -495,7 +495,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={formatDuration(item.minDuration * 1000)} />,
   },
   {
-    style: { minWidth: ['110px', '135px'] },
+    style: { minWidth: ['120px', '135px'] },
     text: <Trans>Max Duration</Trans>,
     label: (
       <LabelWithTooltip id="tt_max_duration_label" tooltip="The maximum duration of a trade in hours">
@@ -513,7 +513,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={formatDuration(item.maxDuration * 1000)} />,
   },
   {
-    style: { minWidth: ['120px', '150px'] },
+    style: { minWidth: ['130px', '150px'] },
     text: <Trans>Max Drawdown</Trans>,
     label: (
       <LabelWithTooltip
@@ -534,7 +534,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <SignedText value={item.maxDrawDownRoi} maxDigit={1} minDigit={1} neg suffix="%" />,
   },
   {
-    style: { minWidth: ['145px', '175px'] },
+    style: { minWidth: ['160px', '175px'] },
     text: <Trans>Max Drawdown PnL</Trans>,
     label: (
       <LabelWithTooltip

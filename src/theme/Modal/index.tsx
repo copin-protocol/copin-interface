@@ -192,7 +192,7 @@ export default function Modal({
                       width={80}
                       height={5}
                       sx={{ borderRadius: '100px' }}
-                      bg="neutral1"
+                      bg="neutral3"
                       mx="auto"
                       mb={3}
                       mt={1}

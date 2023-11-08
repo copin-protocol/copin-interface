@@ -2,7 +2,9 @@ import { Trans } from '@lingui/macro'
 import { ChartBar, Funnel } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
 
-import { Box, Flex, Type } from 'theme/base'
+import { Button } from 'theme/Buttons'
+import Modal from 'theme/Modal'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 
 import DefaultFilterForm from './DefaultFilterForm'
 import FilterSuggestion from './FilterSuggestion'
@@ -109,5 +111,41 @@ export default function ConditionFilter({
         </Box>
       </Box>
     </Flex>
+  )
+}
+
+export function ConditionFilterButton(props: ConditionFilterProps) {
+  const [openModal, setOpenModal] = useState(false)
+  return (
+    <>
+      <Button
+        variant="ghost"
+        sx={{ p: 0, display: 'flex', alignItems: 'center', gap: 1, fontWeight: 'normal' }}
+        onClick={() => setOpenModal(true)}
+      >
+        <IconBox icon={<Funnel size={16} />} color="neutral3" />
+        <Box as="span">
+          <Trans>Filters</Trans>
+        </Box>
+        <Box
+          sx={{
+            width: 16,
+            height: 16,
+            textAlign: 'center',
+            bg: 'primary1',
+            color: 'neutral8',
+            borderRadius: '50%',
+            fontSize: '11px',
+          }}
+        >
+          {props.filters.length}
+        </Box>
+      </Button>
+      {openModal && (
+        <Modal isOpen minHeight="90vh" mode="bottom" maxHeight="100svh" onDismiss={() => setOpenModal(false)}>
+          <ConditionFilter {...props} filtersExpanded onCancel={() => setOpenModal(false)} />
+        </Modal>
+      )}
+    </>
   )
 }

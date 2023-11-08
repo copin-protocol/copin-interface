@@ -158,6 +158,7 @@ export function PaginationWithLimit({
   defaultLimit,
   apiMeta,
   menuPosition,
+  disabledInput = false,
   ...props
 }: {
   currentPage: number
@@ -167,6 +168,7 @@ export function PaginationWithLimit({
   onLimitChange: (limit: number) => void
   apiMeta?: ApiMeta
   menuPosition?: 'top' | 'bottom'
+  disabledInput?: boolean
 } & BoxProps) {
   const { total = 0, totalPages = 0 } = apiMeta ?? {}
   const inputRef = useRef<HTMLInputElement>(null)
@@ -229,7 +231,12 @@ export function PaginationWithLimit({
         <Type.Caption>of {total} records</Type.Caption>
       </Flex>
       <Box display={['none', 'none', 'block']} sx={{ flexShrink: 0, width: '1px', height: 32, bg: 'neutral6' }} />
-      <PaginationWithSelect currentPage={currentPage} apiMeta={apiMeta} onPageChange={onPageChange} />
+      <PaginationWithSelect
+        currentPage={currentPage}
+        apiMeta={apiMeta}
+        onPageChange={onPageChange}
+        disabledInput={disabledInput}
+      />
     </Flex>
   )
 }
@@ -239,11 +246,13 @@ export function PaginationWithSelect({
   onPageChange,
   apiMeta,
   sx = {},
+  disabledInput = false,
 }: {
   currentPage: number
   onPageChange: (page: number) => void
   apiMeta?: ApiMeta
   sx?: any
+  disabledInput?: boolean
 }) {
   const { totalPages = 0 } = apiMeta ?? {}
   const inputRef = useRef<HTMLInputElement>(null)
@@ -256,40 +265,44 @@ export function PaginationWithSelect({
 
   return (
     <Flex sx={{ gap: [1, 1, 2, 2, 2], alignItems: 'center', ...sx }}>
-      <Type.Caption>Go to page</Type.Caption>
-      <Input
-        ref={inputRef}
-        type="number"
-        sx={{
-          lineHeight: '16px',
-          width: '40px',
-          height: '32px',
-          py: 0,
-          px: [1, 1, 2, 2, 2],
-          bg: 'neutral6',
-          borderColor: 'transparent',
-        }}
-        // value={currentPage}
-        disabled={!totalPages || totalPages === 1}
-        defaultValue={currentPage}
-        onBlur={(e) => {
-          e.target.value = currentPage.toString()
-        }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            let newPage = 1
-            const input = e.target as HTMLInputElement
-            const value = Number(input.value)
-            if (isNaN(value)) return
-            if (value % 1 !== 0) return
-            newPage = value
-            if (value < 1) newPage = 1
-            if (value > totalPages) newPage = totalPages
-            onPageChange(newPage)
-            setTimeout(() => input.blur(), 0)
-          }
-        }}
-      />
+      {!disabledInput && (
+        <>
+          <Type.Caption>Go to page</Type.Caption>
+          <Input
+            ref={inputRef}
+            type="number"
+            sx={{
+              lineHeight: '16px',
+              width: '40px',
+              height: '32px',
+              py: 0,
+              px: [1, 1, 2, 2, 2],
+              bg: 'neutral6',
+              borderColor: 'transparent',
+            }}
+            // value={currentPage}
+            disabled={!totalPages || totalPages === 1}
+            defaultValue={currentPage}
+            onBlur={(e) => {
+              e.target.value = currentPage.toString()
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                let newPage = 1
+                const input = e.target as HTMLInputElement
+                const value = Number(input.value)
+                if (isNaN(value)) return
+                if (value % 1 !== 0) return
+                newPage = value
+                if (value < 1) newPage = 1
+                if (value > totalPages) newPage = totalPages
+                onPageChange(newPage)
+                setTimeout(() => input.blur(), 0)
+              }
+            }}
+          />
+        </>
+      )}
       <Flex
         sx={{
           height: '32px',
