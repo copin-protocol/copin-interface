@@ -29,12 +29,12 @@ const ChartTrader = ({
   onChangeTime: (option: TimeFilterProps) => void
 }) => {
   const [isBarChart, setIsBarChart] = useState(false)
-  const to = useMemo(() => dayjs().utc().valueOf(), [])
+  const to = useMemo(() => dayjs().utc().startOf('day').valueOf(), [])
   const timeframeDuration = getDurationFromTimeFilter(timeOption.id)
   const from = useMemo(() => dayjs(to).utc().subtract(timeframeDuration, 'day').valueOf(), [timeframeDuration, to])
 
   const { data: stats, isLoading: loadingStats } = useQuery(
-    [QUERY_KEYS.GET_TRADER_PNL_STATISTIC, account, from, to],
+    [QUERY_KEYS.GET_TRADER_PNL_STATISTIC, protocol, account, from, to],
     () =>
       getTraderPnlStatsApi({
         from,

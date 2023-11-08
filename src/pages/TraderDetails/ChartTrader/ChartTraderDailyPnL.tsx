@@ -7,7 +7,7 @@ import { TraderPnlStatisticData } from 'entities/statistic'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import colors from 'theme/colors'
-import { FONT_FAMILY } from 'utils/config/constants'
+import { DAYJS_FULL_DATE_FORMAT, FONT_FAMILY } from 'utils/config/constants'
 import { compactNumber, formatLocalDate, formatNumber } from 'utils/helpers/format'
 
 import { TraderPnlChartData, TraderPnlStatsData } from '../types'
@@ -106,7 +106,7 @@ function CustomTooltip({ item }: { item: any }) {
   const color = pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'
   return (
     <Flex p={2} bg="neutral5" flexDirection="column" sx={{ gap: 1 }}>
-      <Type.Small mb={1}>{formatLocalDate(item?.[0]?.payload?.date)}</Type.Small>
+      <Type.Small mb={1}>{formatLocalDate(item?.[0]?.payload?.date, DAYJS_FULL_DATE_FORMAT)}</Type.Small>
       <Type.Small>
         PnL:{' '}
         <Type.Small color={color}>
@@ -129,7 +129,7 @@ function getChartData({ data }: { data: TraderPnlStatisticData[] | undefined }) 
       .map((stats) => {
         return {
           label: formatLocalDate(stats.date, 'MM/DD'),
-          date: formatLocalDate(stats.date),
+          date: stats.date,
           pnl: stats.pnl,
           fee: stats.fee,
           roi: stats.percentage,
