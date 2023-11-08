@@ -12,7 +12,7 @@ import { CopyWalletData } from 'entities/copyWallet'
 import useChain from 'hooks/web3/useChain'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Type } from 'theme/base'
+import { Flex, Type } from 'theme/base'
 import Colors from 'theme/colors'
 import { WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
@@ -57,58 +57,71 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, re
     >
       <Flex alignItems="center" justifyContent="space-between" flexWrap="wrap" sx={{ gap: 2 }}>
         <Flex alignItems="center" sx={{ gap: 2 }}>
-          <Box data-tip="React-tooltip" data-tooltip-id={`tt-copy-wallet-${data.id}`}>
-            <TitleWithIcon
-              color={getColorFromText(data.id)}
-              title={
-                <EditText
-                  value={walletName}
-                  showEditButton
-                  editButtonContent={<PencilSimpleLine size={20} />}
-                  editButtonProps={{ style: { backgroundColor: 'transparent', color: Colors(true).primary1 } }}
-                  placeholder={'Enter wallet name'}
-                  style={{
-                    margin: 0,
-                    padding: '0px',
-                    fontSize: '13px',
-                    lineHeight: '25px',
-                    backgroundColor: 'transparent',
-                    borderColor: Colors(true).neutral4,
-                    borderWidth: '1px',
-                    borderStyle: isEdit ? 'solid' : undefined,
-                    minHeight: '25px',
-                  }}
-                  onChange={(e) => {
-                    const value = e.target.value.trim()
-                    if (value && value.length > WALLET_NAME_MAX_LENGTH) return
-                    setWalletName(e.target.value)
-                  }}
-                  onSave={({ value, previousValue }) => {
-                    const trimValue = value.trim()
-                    if (!!trimValue) {
-                      handleUpdate({
-                        copyWalletId: data.id,
-                        name: value.trim(),
-                        previousValue,
-                        callback: setWalletName,
-                      })
-                    } else {
-                      setWalletName(previousValue)
-                    }
-                    setIsEdit(false)
-                  }}
-                  onBlur={() => setIsEdit(false)}
-                  onEditMode={() => setIsEdit(true)}
-                />
-              }
-            />
-          </Box>
+          <TitleWithIcon
+            color={getColorFromText(data.id)}
+            title={
+              <EditText
+                value={walletName}
+                showEditButton
+                editButtonContent={<PencilSimpleLine size={20} />}
+                editButtonProps={{ style: { backgroundColor: 'transparent', color: Colors(true).primary1 } }}
+                placeholder={'Enter wallet name'}
+                style={{
+                  margin: 0,
+                  padding: '0px',
+                  fontSize: '13px',
+                  lineHeight: '25px',
+                  backgroundColor: 'transparent',
+                  borderColor: Colors(true).neutral4,
+                  borderWidth: '1px',
+                  borderStyle: isEdit ? 'solid' : undefined,
+                  minHeight: '25px',
+                }}
+                onChange={(e) => {
+                  const value = e.target.value.trim()
+                  if (value && value.length > WALLET_NAME_MAX_LENGTH) return
+                  setWalletName(e.target.value)
+                }}
+                onSave={({ value, previousValue }) => {
+                  const trimValue = value.trim()
+                  if (!!trimValue) {
+                    handleUpdate({
+                      copyWalletId: data.id,
+                      name: value.trim(),
+                      previousValue,
+                      callback: setWalletName,
+                    })
+                  } else {
+                    setWalletName(previousValue)
+                  }
+                  setIsEdit(false)
+                }}
+                onBlur={() => setIsEdit(false)}
+                onEditMode={() => setIsEdit(true)}
+              />
+            }
+          />
           {data.exchange === CopyTradePlatformEnum.SYNTHETIX && (
             <ExplorerLogo
               protocol={data.exchange}
               explorerUrl={`${chain.blockExplorerUrl}/address/${data.smartWalletAddress}`}
             />
           )}
+        </Flex>
+        {/* {isAPIKey ? ( */}
+        <Flex alignItems="center" sx={{ gap: 2 }}>
+          <Flex
+            alignItems="center"
+            sx={{ gap: 1 }}
+            data-tip="React-tooltip"
+            data-tooltip-id={`tt-copy-wallet-${data.id}`}
+            data-tooltip-delay-hide={0}
+            data-tooltip-delay-show={360}
+          >
+            <Type.CaptionBold>API Key:</Type.CaptionBold>
+            <Type.Caption color="neutral3">{addressShorten(data?.bingX?.apiKey ?? '')}</Type.Caption>
+          </Flex>
+          <DeleteWalletAction data={data} />
           <Tooltip id={`tt-copy-wallet-${data.id}`} place="top" type="dark" effect="solid" clickable>
             <div
               onClick={(e) => {
@@ -132,14 +145,6 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, re
               </CopyButton>
             </div>
           </Tooltip>
-        </Flex>
-        {/* {isAPIKey ? ( */}
-        <Flex alignItems="center" sx={{ gap: 2 }}>
-          <Flex alignItems="center" sx={{ gap: 1 }}>
-            <Type.CaptionBold>API Key:</Type.CaptionBold>
-            <Type.Caption color="neutral3">{addressShorten(data?.bingX?.apiKey ?? '')}</Type.Caption>
-          </Flex>
-          <DeleteWalletAction data={data} />
         </Flex>
         {/* ) : (
           <Flex alignItems="center" sx={{ gap: 20 }}>

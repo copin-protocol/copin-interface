@@ -2,6 +2,7 @@ import { CaretRight } from '@phosphor-icons/react'
 import React from 'react'
 
 import { AccountInfo } from 'components/@ui/AccountInfo'
+import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { DualTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { renderEntry, renderOpeningPnL, renderSizeOpening } from 'components/@ui/Table/renderProps'
 import { ColumnData } from 'components/@ui/Table/types'
@@ -9,8 +10,6 @@ import FavoriteButton from 'components/FavoriteButton'
 import { PositionData } from 'entities/trader'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
-
-import { SignedText } from '../@ui/DecoratedText/SignedText'
 
 export type ExternalSource = {
   prices: UsdPrices
@@ -62,14 +61,26 @@ export const TopOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
       externalSource?.prices ? renderOpeningPnL(item, externalSource?.prices, true) : '--',
   },
   {
-    title: 'Fee',
+    title: 'Paid Fees',
     dataIndex: 'fee',
     key: 'fee',
     // sortBy: 'fee',
     style: { minWidth: ['120px', '150px'], textAlign: 'right' },
     render: (item) => (
       <Type.Caption width="100%" color="neutral1" textAlign="right">
-        <SignedText value={-item.fee} maxDigit={0} />
+        <SignedText value={-(item.paidFee ?? item.fee)} maxDigit={0} />
+      </Type.Caption>
+    ),
+  },
+  {
+    title: 'Funding',
+    dataIndex: 'totalFundingRateFee',
+    key: 'totalFundingRateFee',
+    // sortBy: 'fee',
+    style: { minWidth: ['120px', '150px'], textAlign: 'right' },
+    render: (item) => (
+      <Type.Caption width="100%" color="neutral1" textAlign="right">
+        <SignedText value={item.totalFundingRateFee} maxDigit={0} />
       </Type.Caption>
     ),
   },

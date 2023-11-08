@@ -4,6 +4,7 @@ import TimeFilter from 'components/@ui/TimeFilter'
 import RangeFilter from 'components/@ui/TimeFilter/RangeFilter'
 import useInternalRole from 'hooks/features/useInternalRole'
 import { Box, Flex } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 
 import TimeRangePriceChart from './TimeRangePriceChart'
 import { TradersContextData } from './useTradersContext'
@@ -14,7 +15,7 @@ export interface TimeFilterSectionProps {
 }
 
 export default function TimeFilterSection({ triggerResize, contextValues }: TimeFilterSectionProps) {
-  const { isRangeSelection, from, to, changeTimeRange, timeOption, changeTimeOption } = contextValues
+  const { protocol, isRangeSelection, from, to, changeTimeRange, timeOption, changeTimeOption } = contextValues
   const { sm } = useResponsive()
 
   const isInternal = useInternalRole()
@@ -42,8 +43,8 @@ export default function TimeFilterSection({ triggerResize, contextValues }: Time
           mt={isInternal ? 0 : ['6px', '6px', '6px', 0]}
         >
           <TimeFilter currentFilter={isRangeSelection ? null : timeOption} handleFilterChange={changeTimeOption} />
-          {isInternal && <Box height={16} flex="0 0 1px" bg="neutral4"></Box>}
-          {!!from && isInternal && (
+          {isInternal && protocol === ProtocolEnum.GMX && <Box height={16} flex="0 0 1px" bg="neutral4"></Box>}
+          {!!from && isInternal && protocol === ProtocolEnum.GMX && (
             <RangeFilter
               isRangeSelection={isRangeSelection}
               from={from}
@@ -55,7 +56,7 @@ export default function TimeFilterSection({ triggerResize, contextValues }: Time
           )}
         </Flex>
       </Box>
-      {sm && isInternal ? (
+      {sm && isInternal && protocol === ProtocolEnum.GMX ? (
         <Box flex="1 1 0" sx={{ overflow: 'hidden' }}>
           {!!from && (
             <TimeRangePriceChart from={from} to={to} onChange={changeTimeRange} triggerResize={triggerResize} />

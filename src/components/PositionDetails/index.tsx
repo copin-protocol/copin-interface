@@ -167,7 +167,7 @@ export default function PositionDetails({
             </Flex>
             {hasFundingFee && (
               <Flex alignItems="center" sx={{ gap: 2, flexWrap: 'wrap' }}>
-                <Type.Caption color="neutral3">Funding Rate Fees:</Type.Caption>
+                <Type.Caption color="neutral3">Funding:</Type.Caption>
                 <Type.Caption>
                   <SignedText value={data.totalFundingRateFee} maxDigit={0} prefix="$" />{' '}
                 </Type.Caption>
