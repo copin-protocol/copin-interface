@@ -28,7 +28,7 @@ export default function AnalyticsLayoutMobile({
           {timeFilterSection}
           {conditionFilter}
         </Flex>
-        <SwitchProtocols isMobile buttonSx={{ borderBottom: 'none', borderRight: 'none' }} />
+        <SwitchProtocols buttonSx={{ borderBottom: 'none', borderRight: 'none' }} />
       </Flex>
       <Box sx={{ flex: '1 0 0' }}>{listTradersSection}</Box>
     </Flex>

@@ -47,7 +47,7 @@ export default function AnalyticsLayoutTablet({
         <Box sx={{ gridArea: GridAreas.CHART }}>
           <Flex alignItems="center">
             {cloneElement<TimeFilterSectionProps>(timeFilterSection, { triggerResize: LIST.state.toString() })}
-            <SwitchProtocols isMobile />
+            <SwitchProtocols />
           </Flex>
         </Box>
         <Box

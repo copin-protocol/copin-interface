@@ -1,8 +1,9 @@
 import { SystemStyleObject } from '@styled-system/css'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
+import useIsMobile from 'hooks/helpers/useIsMobile'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolStore } from 'hooks/store/useProtocols'
@@ -21,16 +22,15 @@ import { getChainMetadata } from 'utils/web3/chains'
 import useTradersContext from './useTradersContext'
 
 const SwitchProtocols = ({
-  isMobile = false,
   buttonSx,
   textSx,
   sx,
 }: {
-  isMobile?: boolean
   buttonSx?: SystemStyleObject & GridProps
   textSx?: SystemStyleObject & GridProps
   sx?: SystemStyleObject & GridProps
 }) => {
+  const isMobile = useIsMobile()
   const history = useHistory()
   const { myProfile } = useMyProfile()
   const { resetStore } = useSelectBacktestTraders()
@@ -100,8 +100,8 @@ const SwitchProtocols = ({
       buttonSx={{
         px: isMobile ? 2 : 3,
         mx: 0,
-        pt: isMobile ? '5px' : '8px',
-        pb: isMobile ? '10px' : '8px',
+        pt: isMobile ? '12px' : '8px',
+        pb: isMobile ? '12px' : '8px',
         borderTop: 'none',
         borderRadius: 0,
         borderColor: 'neutral4',
@@ -116,7 +116,7 @@ const SwitchProtocols = ({
       }}
       menuSx={{ width: isMobile ? 125 : 150 }}
       hasArrow={true}
-      sx={{ height: isMobile ? '48px' : undefined, minWidth: 'fit-content', ...sx }}
+      sx={{ minWidth: 'fit-content', ...sx }}
     >
       <Flex
         width="fit-content"
@@ -127,13 +127,15 @@ const SwitchProtocols = ({
         }}
       >
         <Image src={parseProtocolImage(currentOption.id)} width={isMobile ? 18 : 28} height={isMobile ? 18 : 28} />
-        <Box width={'60px'}>
+        <Box width={isMobile ? 50 : 60}>
           <Type.Caption display="block" lineHeight="16px" color="neutral1" sx={{ ...textSx }}>
             {currentOption.text}
           </Type.Caption>
-          <Type.Caption display="block" lineHeight="16px" color="neutral3">
-            {getChainMetadata(currentOption.chainId).label}
-          </Type.Caption>
+          {!isMobile && (
+            <Type.Caption display="block" lineHeight="16px" color="neutral3">
+              {getChainMetadata(currentOption.chainId).label}
+            </Type.Caption>
+          )}
         </Box>
       </Flex>
     </Dropdown>

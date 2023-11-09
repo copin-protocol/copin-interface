@@ -43,9 +43,9 @@ export default function TradersAnalytics() {
       ) : (
         <AnalyticsLayoutMobile
           filterTag={null}
+          topOpeningsSection={null}
           timeFilterSection={<TimeFilterDropdown contextValues={contextValues} />}
           listTradersSection={<ListTradersSection contextValues={contextValues} />}
-          topOpeningsSection={<TopOpeningsSection protocol={contextValues.protocol} />}
           conditionFilter={
             <ConditionFilterButton
               filters={filters}

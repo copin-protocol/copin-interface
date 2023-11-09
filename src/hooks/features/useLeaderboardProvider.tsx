@@ -16,7 +16,7 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import { LEADERBOARD_OPTIONS, LeaderboardOptionProps } from 'utils/config/options'
 import { pageToOffset } from 'utils/helpers/transform'
 
-interface ContextValues {
+export interface LeaderboardContextValues {
   data: ApiListResponse<TopTraderData> | undefined
   isLoading: boolean
   keyword?: string
@@ -39,7 +39,7 @@ interface ContextValues {
   lastTimeUpdated?: string
 }
 
-export const LeaderboardContext = createContext({} as ContextValues)
+export const LeaderboardContext = createContext({} as LeaderboardContextValues)
 
 export function LeaderboardProvider({ children }: { children: ReactNode }) {
   const { searchParams, setSearchParams } = useSearchParams()
@@ -156,7 +156,7 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const contextValue: ContextValues = {
+  const contextValue: LeaderboardContextValues = {
     data,
     isLoading,
     keyword,
