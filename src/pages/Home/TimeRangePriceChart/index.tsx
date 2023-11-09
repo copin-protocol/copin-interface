@@ -17,11 +17,13 @@ const TimeRangePriceChart = ({
   to,
   onChange,
   triggerResize,
+  disabled,
 }: {
   from: Date
   to?: Date
   onChange: (params: { from: Date; to: Date }) => void
   triggerResize?: any
+  disabled?: boolean
 }) => {
   const [rect, setRect] = useState<{ width: number; height: number }>({ width: window.innerWidth - 8, height: 240 })
   useEffect(() => {
@@ -68,6 +70,7 @@ const TimeRangePriceChart = ({
           from={from}
           to={to || chartData[chartData.length - 1].time}
           onChange={onChange}
+          disabled={disabled}
         />
       )}
     </div>

@@ -56,10 +56,16 @@ export default function TimeFilterSection({ triggerResize, contextValues }: Time
           )}
         </Flex>
       </Box>
-      {sm && isInternal && protocol === ProtocolEnum.GMX ? (
+      {sm && isInternal ? (
         <Box flex="1 1 0" sx={{ overflow: 'hidden' }}>
           {!!from && (
-            <TimeRangePriceChart from={from} to={to} onChange={changeTimeRange} triggerResize={triggerResize} />
+            <TimeRangePriceChart
+              from={from}
+              to={to}
+              onChange={changeTimeRange}
+              triggerResize={triggerResize}
+              disabled={protocol !== ProtocolEnum.GMX}
+            />
           )}
         </Box>
       ) : null}

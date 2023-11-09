@@ -10,6 +10,7 @@ const TimeFilterChart = ({
   from,
   to,
   onChange,
+  disabled,
 }: {
   data: DrawChartData[]
   width: number
@@ -17,6 +18,7 @@ const TimeFilterChart = ({
   from: Date
   to: Date
   onChange: (params: { from: Date; to: Date }) => void
+  disabled?: boolean
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const selectRef = useRef<(from: Date, to: Date) => void>()
@@ -24,6 +26,7 @@ const TimeFilterChart = ({
   useEffect(() => {
     // if (statistics === undefined) return;
     const { plot, select } = RangeFilterFinancial(data, {
+      disabled,
       width,
       height,
       label: 'BTC/USD',
