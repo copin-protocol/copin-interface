@@ -62,19 +62,7 @@ export default function Layout(components: LayoutComponents) {
   const ManagementLayout = lg ? ManagementLayoutDesktop : ManagementLayoutMobile
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-      <TabHeader
-        configs={tabConfigs}
-        isActiveFn={(config) => config.route === pathname}
-        fullWidth
-        sx={{ borderBottom: 'small', borderColor: 'neutral4', px: 16, width: '100%', mb: 0 }}
-        itemSx={{
-          flex: [1, 1, '0 0 auto'],
-          pb: 10,
-          fontSize: 16,
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      />
+      {lg && <MainTab pathname={pathname} />}
 
       <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
         <Switch>
@@ -90,6 +78,26 @@ export default function Layout(components: LayoutComponents) {
           <Redirect to={ROUTES.MY_MANAGEMENT.path} />
         </Switch>
       </Box>
+
+      {!lg && <MainTab pathname={pathname} />}
     </Flex>
+  )
+}
+
+function MainTab({ pathname }: { pathname: string }) {
+  return (
+    <TabHeader
+      configs={tabConfigs}
+      isActiveFn={(config) => config.route === pathname}
+      fullWidth
+      sx={{ borderBottom: 'small', borderColor: 'neutral4', px: 16, width: '100%', mb: 0 }}
+      itemSx={{
+        flex: [1, 1, '0 0 auto'],
+        pb: 10,
+        fontSize: 16,
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    />
   )
 }

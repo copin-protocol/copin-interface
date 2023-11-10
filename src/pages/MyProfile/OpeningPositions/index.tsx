@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Pulse } from '@phosphor-icons/react'
 import { useQuery } from 'react-query'
 
-import { GetMyPositionsParams } from 'apis/types'
+import { GetMyPositionRequestBody, GetMyPositionsParams } from 'apis/types'
 import { getMyCopyPositionsApi } from 'apis/userApis'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { CopyWalletData } from 'entities/copyWallet'
@@ -26,15 +26,23 @@ export default function OpeningPositions({
     offset: 0,
     identifyKey: undefined,
     status: [PositionStatusEnum.OPEN],
+    copyWalletId: activeWallet?.id,
+  }
+  const _queryBody: GetMyPositionRequestBody = {
+    copyWalletId: activeWallet?.id,
   }
   const {
     data,
     isFetching: isLoading,
     refetch,
-  } = useQuery([QUERY_KEYS.GET_MY_COPY_POSITIONS, _queryParams], () => getMyCopyPositionsApi(_queryParams), {
-    retry: 0,
-    keepPreviousData: true,
-  })
+  } = useQuery(
+    [QUERY_KEYS.GET_MY_COPY_POSITIONS, _queryParams, _queryBody],
+    () => getMyCopyPositionsApi(_queryParams, _queryBody),
+    {
+      retry: 0,
+      keepPreviousData: true,
+    }
+  )
 
   const title = <Trans>Opening Positions</Trans>
 

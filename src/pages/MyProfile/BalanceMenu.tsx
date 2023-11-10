@@ -1,5 +1,5 @@
 import { Eye, EyeClosed } from '@phosphor-icons/react'
-import React, { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
@@ -8,6 +8,7 @@ import { CopyWalletData } from 'entities/copyWallet'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { hideScrollbar } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
 
@@ -32,7 +33,6 @@ const ListItem = ({
 
   return (
     <Flex
-      flexDirection={{ _: 'column', xl: 'row' }}
       sx={{
         gap: [1, 1, 1, 1, 2],
         alignItems: 'center',
@@ -41,13 +41,13 @@ const ListItem = ({
         flexShrink: 0,
       }}
     >
-      <Flex sx={{ gap: '1ch' }}>
+      <Flex sx={{ gap: '1ch', alignItems: 'center' }}>
         {titleComponent ? titleComponent : <Type.Caption color="neutral2">{title}</Type.Caption>}
         {withHideAction ? (
           <Box
             role="button"
             onClick={() => setShow((prev) => !prev)}
-            sx={{ color: 'neutral3', '&:hover': { color: 'neutral2', lineHeight: 0 } }}
+            sx={{ color: 'neutral3', lineHeight: 0, '&:hover': { color: 'neutral2' } }}
             display={{ _: 'block', xl: 'none' }}
           >
             {show ? <EyeClosed onClick={() => setShow(true)} /> : <Eye />}
@@ -68,7 +68,7 @@ const ListItem = ({
             )}
           </>
         ) : (
-          <Type.CaptionBold>******</Type.CaptionBold>
+          <Type.CaptionBold sx={{ lineHeight: '1em' }}>******</Type.CaptionBold>
         )
       ) : (
         <>
@@ -125,44 +125,43 @@ const BalanceMenu = ({
   if (!copyWallets) return <></>
   return (
     <Flex
-      flexDirection={{ _: 'column', sm: 'row' }}
-      alignItems={{ _: 'start', sm: 'center' }}
-      justifyContent={{ _: 'space-between' }}
-      sx={{ flexWrap: 'wrap', gap: 12 }}
+      sx={{
+        flexWrap: ['nowrap', 'nowrap', 'wrap'],
+        gap: 24,
+        alignItems: ['start', 'start', 'center'],
+        justifyContent: ['start', 'start', 'space-between'],
+      }}
       pr={2}
-      py={12}
+      py={[2, 12]}
     >
-      <Flex
-        display={{ _: 'flex', sm: 'block' }}
-        alignItems="center"
-        width={{ _: '100%', sm: 'auto' }}
-        px={3}
-        sx={{ gap: 3 }}
+      <Dropdown
+        buttonVariant="ghost"
+        buttonSx={{ height: '100%', border: 'none', p: 0 }}
+        sx={{ height: '100%', pl: 3, flexShrink: 0 }}
+        menuSx={{ width: ['100%', 200] }}
+        menu={
+          <>
+            {copyWallets.map((wallet) => {
+              return (
+                <DropdownItem key={wallet.id} onClick={() => onChangeKey(wallet)}>
+                  {parseWalletName(wallet)}
+                </DropdownItem>
+              )
+            })}
+          </>
+        }
       >
-        <Dropdown
-          buttonVariant="ghost"
-          buttonSx={{ height: '100%', border: 'none', p: 0 }}
-          sx={{ height: '100%' }}
-          menuSx={{ width: ['100%', 200] }}
-          menu={
-            <>
-              {copyWallets.map((wallet) => {
-                return (
-                  <DropdownItem key={wallet.id} onClick={() => onChangeKey(wallet)}>
-                    {parseWalletName(wallet)}
-                  </DropdownItem>
-                )
-              })}
-            </>
-          }
-        >
-          <Type.CaptionBold>{currentOption.title}</Type.CaptionBold>
-        </Dropdown>
-      </Flex>
+        <Type.CaptionBold>{currentOption.title}</Type.CaptionBold>
+      </Dropdown>
       <Flex
         width={{ _: '100%', sm: 'auto' }}
-        justifyContent={{ _: 'space-between' }}
-        sx={{ px: 3, gap: [24, 24, 24, 24, 40], alignItems: 'center' }}
+        sx={{
+          px: [0, 0, 0, 0, 3],
+          gap: [3, 24, 24, 24, 40],
+          alignItems: 'center',
+          overflow: 'auto',
+          ...hideScrollbar(),
+        }}
       >
         <ListItem title={'Balance'} value={overview?.balance} prefix="$" withHideAction />
         <ListItem title={'Total Volume'} value={overview?.totalVolume} prefix="$" />

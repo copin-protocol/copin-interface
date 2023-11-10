@@ -1,5 +1,5 @@
 import { Box, TextProps, Type } from 'theme/base'
-import { formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatNumber } from 'utils/helpers/format'
 
 export function SignedText({
   value,
@@ -11,6 +11,7 @@ export function SignedText({
   suffix = '',
   prefix = '',
   fontInherit = false,
+  isCompactNumber = false,
 }: {
   value: number | undefined
   maxDigit?: number
@@ -21,6 +22,7 @@ export function SignedText({
   suffix?: string
   prefix?: string
   fontInherit?: boolean
+  isCompactNumber?: boolean
 }) {
   let color = 'inherit'
   if (!!value) {
@@ -32,20 +34,26 @@ export function SignedText({
       color = value > 0 ? 'green1' : 'inherit'
     }
   }
+  const formatedValue = !!value
+    ? isCompactNumber
+      ? compactNumber(Math.abs(value), minDigit)
+      : formatNumber(Math.abs(value), maxDigit, minDigit)
+    : '--'
+
   return (
     <>
       {fontInherit ? (
         <Box as="span" {...sx} color={color}>
           {value && value < 0 ? '-' : ''}
           {!!value && prefix}
-          {!!value ? formatNumber(Math.abs(value), maxDigit, minDigit) : '--'}
+          {formatedValue}
           {!!value && suffix}
         </Box>
       ) : (
         <Type.Caption color={color} {...sx}>
           {value && value < 0 ? '-' : ''}
           {!!value && prefix}
-          {!!value ? formatNumber(Math.abs(value), maxDigit, minDigit) : '--'}
+          {formatedValue}
           {!!value && suffix}
         </Type.Caption>
       )}

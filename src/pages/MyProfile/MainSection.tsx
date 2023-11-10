@@ -161,6 +161,8 @@ export default function MainSection({
         allCopyTrades={allCopyTrades}
         handleAddTrader={handleAddTrader}
         copyWallet={copyWallet}
+        copyStatus={copyStatus}
+        selectedProtocol={selectedProtocol}
       />
     </>
   )
