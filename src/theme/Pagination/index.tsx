@@ -1,4 +1,5 @@
 import { CaretCircleLeft, CaretCircleRight, CaretLeft, CaretRight, DotsThree } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { useEffect, useRef } from 'react'
 import styled from 'styled-components/macro'
 
@@ -158,7 +159,6 @@ export function PaginationWithLimit({
   defaultLimit,
   apiMeta,
   menuPosition,
-  disabledInput = false,
   ...props
 }: {
   currentPage: number
@@ -168,8 +168,8 @@ export function PaginationWithLimit({
   onLimitChange: (limit: number) => void
   apiMeta?: ApiMeta
   menuPosition?: 'top' | 'bottom'
-  disabledInput?: boolean
 } & BoxProps) {
+  const { md } = useResponsive()
   const { total = 0, totalPages = 0 } = apiMeta ?? {}
   const inputRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
@@ -189,9 +189,7 @@ export function PaginationWithLimit({
 
   return (
     <Flex
-      flexDirection={['column', 'column', 'row']}
-      alignItems={['flex-start', 'flex-start', 'center']}
-      sx={{ columnGap: [1, 1, 2], rowGap: 2, justifyContent: 'space-between', px: 2, ...sx }}
+      sx={{ columnGap: [1, 1, 2], rowGap: 2, alignItems: 'center', justifyContent: 'space-between', px: 2, ...sx }}
       {...rest}
     >
       <Flex sx={{ gap: [1, 1, 2], alignItems: 'center' }}>
@@ -235,7 +233,7 @@ export function PaginationWithLimit({
         currentPage={currentPage}
         apiMeta={apiMeta}
         onPageChange={onPageChange}
-        disabledInput={disabledInput}
+        disabledInput={!md}
       />
     </Flex>
   )

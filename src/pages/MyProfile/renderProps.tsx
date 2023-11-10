@@ -1,27 +1,34 @@
 import { Trans } from '@lingui/macro'
-import { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
+import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
-// import ProgressBar from 'theme/ProgressBar'
+import Tag from 'theme/Tag'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
+import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
+export const renderCopyTitle = (data: CopyPositionData) => (
+  <Type.Caption color="neutral1" sx={{ maxWidth: '110px', ...overflowEllipsis(), display: 'block' }}>
+    {data.copyTradeTitle}
+  </Type.Caption>
+)
+
 export function renderEntry(data: CopyPositionData) {
   return (
-    <Flex width="100%" sx={{ gap: 2, alignItems: 'center', color: 'neutral1' }}>
+    <Flex sx={{ gap: 2, alignItems: 'center', color: 'neutral1' }}>
       <Type.Caption width={8} color={data.isLong ? 'green1' : 'red2'}>
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
@@ -67,6 +74,90 @@ export function renderTrader(
       <Type.Caption color="neutral4">|</Type.Caption>
       <Image src={parseProtocolImage(protocol)} width={16} height={16} />
     </Flex>
+  )
+}
+
+export const renderOpenTime = (data: CopyPositionData) => (
+  <Type.Caption color="neutral3">
+    <LocalTimeText date={data.createdAt} />
+  </Type.Caption>
+)
+
+export const renderCloseTime = (data: CopyPositionData) => (
+  <Type.Caption color="neutral3">
+    {data.status === PositionStatusEnum.CLOSE ? <LocalTimeText date={data.lastOrderAt} /> : '--'}
+  </Type.Caption>
+)
+
+export const renderValue = (data: CopyPositionData) => (
+  <Type.Caption color="neutral1">
+    {data.status === PositionStatusEnum.OPEN
+      ? formatNumber(Number(data.sizeDelta), 4, 4)
+      : !isNaN(Number(data.totalSizeDelta))
+      ? formatNumber(Number(data.totalSizeDelta), 4, 4)
+      : '--'}{' '}
+    {TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken].symbol}
+  </Type.Caption>
+)
+export const renderSize = (data: CopyPositionData) => (
+  <Type.Caption color="neutral1">
+    $
+    {data.status === PositionStatusEnum.OPEN
+      ? formatNumber(Number(data.sizeDelta) * data.entryPrice, 0)
+      : !isNaN(Number(data.totalSizeDelta))
+      ? formatNumber(Number(data.totalSizeDelta) * data.entryPrice, 0)
+      : '--'}
+  </Type.Caption>
+)
+
+export const renderLeverage = (data: CopyPositionData) => (
+  <Type.Caption color="neutral1">{formatNumber(data.leverage, 1, 1)}x</Type.Caption>
+)
+
+export const renderSizeMobile = (data: CopyPositionData) => (
+  <Flex sx={{ gap: 1, alignItems: 'center' }}>
+    {renderValue(data)}
+    <VerticalDivider />
+    {renderSize(data)}
+    <VerticalDivider />
+    {renderLeverage(data)}
+  </Flex>
+)
+export const renderStatus = (data: CopyPositionData) => (
+  <Flex width="100%" alignItems="center" justifyContent="right">
+    <Tag width={70} status={data.status} />
+  </Flex>
+)
+
+const VerticalDivider = styled(Box)`
+  width: 1px;
+  height: 12px;
+  background-color: ${({ theme }) => theme.colors.neutral3};
+`
+
+export function renderSource(item: CopyPositionData, index?: number, externalSource?: any, isHistory?: boolean) {
+  return externalSource?.submitting && externalSource?.currentId === item.id ? (
+    <Loading size={12} margin="0 4px!important" />
+  ) : (
+    <Button
+      variant="ghost"
+      type="button"
+      sx={{ p: 0, mx: 0 }}
+      onClick={(event: any) =>
+        externalSource && externalSource.onViewSource ? externalSource.onViewSource(item, event) : undefined
+      }
+    >
+      <Type.Caption
+        sx={{
+          display: 'block',
+          '&:hover': {
+            textDecoration: 'underline',
+          },
+        }}
+      >
+        {addressShorten(item.sourceOrderTxHashes?.[0] ?? item.copyAccount, isHistory ? 4 : 3, isHistory ? 4 : 2)}
+      </Type.Caption>
+    </Button>
   )
 }
 
@@ -168,36 +259,3 @@ export function renderTrader(
 //     </Flex>
 //   )
 // }
-
-const VerticalDivider = styled(Box)`
-  width: 1px;
-  height: 12px;
-  background-color: ${({ theme }) => theme.colors.neutral3};
-`
-
-export function renderSource(item: CopyPositionData, index?: number, externalSource?: any): ReactNode
-export function renderSource(item: CopyPositionData, index?: number, externalSource?: any) {
-  return externalSource?.submitting && externalSource?.currentId === item.id ? (
-    <Loading size={12} margin="0 4px!important" />
-  ) : (
-    <Button
-      variant="ghost"
-      type="button"
-      sx={{ p: 0, mx: 0 }}
-      onClick={(event: any) =>
-        externalSource && externalSource.onViewSource ? externalSource.onViewSource(item, event) : undefined
-      }
-    >
-      <Type.Caption
-        sx={{
-          display: 'block',
-          '&:hover': {
-            textDecoration: 'underline',
-          },
-        }}
-      >
-        {addressShorten(item.sourceOrderTxHashes?.[0] ?? item.copyAccount, 3, 2)}
-      </Type.Caption>
-    </Button>
-  )
-}

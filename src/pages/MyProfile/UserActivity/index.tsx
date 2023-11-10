@@ -86,6 +86,7 @@ export default function UserActivity() {
           onPageChange={changeCurrentPage}
           onLimitChange={changeCurrentLimit}
           apiMeta={data?.meta}
+          sx={{ py: 2 }}
         />
       </Flex>
       {openCopyDrawer && currentCopyPosition && (

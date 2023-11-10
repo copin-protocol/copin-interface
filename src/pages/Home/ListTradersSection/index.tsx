@@ -11,7 +11,7 @@ import { mobileTableSettings, tableSettings } from 'components/Tables/TraderList
 import { TraderData } from 'entities/trader.d'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
 import { useAuthContext } from 'hooks/web3/useAuth'
-import { PaginationWithLimit, PaginationWithSelect } from 'theme/Pagination'
+import { PaginationWithLimit } from 'theme/Pagination'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
 import { MEDIA_WIDTHS } from 'theme/theme'
@@ -194,7 +194,6 @@ function TablePagination({
                   currentPage={currentPage}
                   onPageChange={changeCurrentPage}
                   apiMeta={data?.meta}
-                  disabledInput
                   sx={{ flexDirection: 'row', px: 0 }}
                 />
               </Box>

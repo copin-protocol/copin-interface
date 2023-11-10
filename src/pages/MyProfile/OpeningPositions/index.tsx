@@ -11,7 +11,8 @@ import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
-import PositionTable, { openingColumns } from '../PositionTable'
+import PositionTable from '../PositionTable'
+import { openingColumns } from '../PositionTable/ListPositions'
 import SettingConfigs from './SettingConfigs'
 
 export default function OpeningPositions({
