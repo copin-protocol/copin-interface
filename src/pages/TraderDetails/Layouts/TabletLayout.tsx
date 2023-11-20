@@ -52,20 +52,15 @@ const TabletLayout = ({ children }: LayoutProps) => {
       </Flex>
       <Flex width="100%" height="300px">
         <Flex
-          width="350px"
+          width="400px"
           alignItems="center"
           sx={{
             borderRight: 'small',
             borderColor: 'neutral4',
+            flexShrink: 0,
           }}
         >
-          <div
-            style={{
-              width: '350px',
-            }}
-          >
-            {children[2]}
-          </div>
+          {children[2]}
         </Flex>
         <Box width="calc(100% - 350px)" p={12}>
           {children[3]}

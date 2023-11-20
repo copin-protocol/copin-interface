@@ -103,7 +103,7 @@ export default function CopyTraderDrawer({
             </Box>
           )}
 
-          {!!copies?.data.length && (
+          {!!copies?.data?.length && (
             <Flex sx={{ display: 'flex', alignItems: 'center', gap: 3, pr: 3 }}>
               {isCloneTab && (
                 <IconBox

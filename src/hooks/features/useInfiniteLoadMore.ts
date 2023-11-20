@@ -2,6 +2,8 @@
 import debounce from 'lodash/debounce'
 import { useCallback, useEffect, useRef } from 'react'
 
+import { ELEMENT_IDS } from 'utils/config/keys'
+
 const DEBOUNCE_SCROLL_TIME = 100
 
 export default function useInfiniteLoadMore({
@@ -19,7 +21,7 @@ export default function useInfiniteLoadMore({
   const scrollMobileRef = useRef<HTMLDivElement>()
   const scrollRef = isDesktop ? scrollDesktopRef : scrollMobileRef
   useEffect(() => {
-    const scrollElement = document.getElementById('app_main__wrapper') as HTMLDivElement
+    const scrollElement = document.getElementById(ELEMENT_IDS.APP_MAIN_WRAPPER) as HTMLDivElement
     if (!scrollElement) return
     scrollMobileRef.current = scrollElement
   }, [])

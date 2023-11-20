@@ -148,6 +148,7 @@ export interface FavoritedTrader {
   account: string
   note: string
   createdAt: string
+  protocol?: ProtocolEnum
 }
 
 export interface PositionStatisticCounter {

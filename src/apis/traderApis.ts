@@ -40,7 +40,7 @@ const normalizePayload = (body: RequestBodyApiData) => {
 }
 
 export async function getTradersApi({ protocol, body }: { protocol: ProtocolEnum; body: RequestBodyApiData }) {
-  const params: Record<string, any> = { pagination: body.pagination }
+  const params: Record<string, any> = { pagination: body.pagination, returnRanking: body.returnRanking }
   if (!!body.queries && body.queries.length > 0) params.queries = body.queries
   if (!!body.ranges && body.ranges.length > 0) params.ranges = body.ranges
   if (!!body.sortBy) {

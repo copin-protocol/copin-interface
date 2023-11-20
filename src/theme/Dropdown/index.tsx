@@ -176,7 +176,6 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
           disabled={disabled}
           key={dismissible ? undefined : showing.toString()}
           onClick={() => {
-            console.log('1')
             if (!dismissible && !showing) show(true)
           }}
           width={width}

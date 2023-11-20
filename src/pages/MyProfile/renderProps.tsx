@@ -52,17 +52,22 @@ export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {
 
 export function renderTrader(
   address: string,
-  protocol: ProtocolEnum,
-  { sx = {}, textSx = {}, isLink = true }: { textSx?: TextProps; isLink?: boolean } & SxProps = {}
+  protocol?: ProtocolEnum,
+  {
+    sx = {},
+    textSx = {},
+    isLink = true,
+    size = 24,
+  }: { textSx?: TextProps; isLink?: boolean; size?: number } & SxProps = {}
 ) {
   return (
     <Flex
-      as={isLink ? Link : undefined}
-      to={isLink ? generateTraderDetailsRoute(protocol, address) : ''}
+      as={isLink && protocol ? Link : undefined}
+      to={isLink && protocol ? generateTraderDetailsRoute(protocol, address) : ''}
       sx={{ gap: 2, ...sx }}
       alignItems="center"
     >
-      <AddressAvatar address={address} size={24} />
+      <AddressAvatar address={address} size={size} />
       <Type.Caption
         className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
         color="inherit"
@@ -71,8 +76,12 @@ export function renderTrader(
       >
         {addressShorten(address, 3, 5)}
       </Type.Caption>
-      <Type.Caption color="neutral4">|</Type.Caption>
-      <Image src={parseProtocolImage(protocol)} width={16} height={16} />
+      {protocol && (
+        <>
+          <Type.Caption color="neutral4">|</Type.Caption>
+          <Image src={parseProtocolImage(protocol)} width={16} height={16} />
+        </>
+      )}
     </Flex>
   )
 }

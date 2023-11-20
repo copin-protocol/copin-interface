@@ -1,8 +1,10 @@
-import { Trans } from '@lingui/macro'
+// eslint-disable-next-line no-restricted-imports
+import { Trans, t } from '@lingui/macro'
 import { ClockCounterClockwise, Notebook, SubtractSquare } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
+import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 import ROUTES from 'utils/config/routes'
@@ -47,7 +49,7 @@ const tabConfigs: TabConfig[] = [
       <Flex sx={{ alignItems: 'center', gap: 2 }}>
         <Notebook size={24} />
         <Box as="span">
-          <Trans>ACTIVITY</Trans>
+          <Trans>ACTIVITIES</Trans>
         </Box>
       </Flex>
     ),
@@ -56,31 +58,40 @@ const tabConfigs: TabConfig[] = [
   },
 ]
 
+const pageTitleMapping = {
+  [ROUTES.MY_MANAGEMENT.path]: t`Copy Management`,
+  [ROUTES.MY_HISTORY.path]: t`History`,
+  [ROUTES.USER_ACTIVITY.path]: t`Activities`,
+}
+
 export default function Layout(components: LayoutComponents) {
   const { pathname } = useLocation()
   const { lg } = useResponsive()
   const ManagementLayout = lg ? ManagementLayoutDesktop : ManagementLayoutMobile
   return (
-    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-      {lg && <MainTab pathname={pathname} />}
+    <>
+      <CustomPageTitle title={pageTitleMapping[pathname]} />
+      <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
+        {lg && <MainTab pathname={pathname} />}
 
-      <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
-        <Switch>
-          <Route exact path={ROUTES.MY_MANAGEMENT.path}>
-            <ManagementLayout {...components} />
-          </Route>
-          <Route exact path={ROUTES.MY_HISTORY.path}>
-            {components.historyTable}
-          </Route>
-          <Route exact path={ROUTES.USER_ACTIVITY.path}>
-            {components.activities}
-          </Route>
-          <Redirect to={ROUTES.MY_MANAGEMENT.path} />
-        </Switch>
-      </Box>
+        <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
+          <Switch>
+            <Route exact path={ROUTES.MY_MANAGEMENT.path}>
+              <ManagementLayout {...components} />
+            </Route>
+            <Route exact path={ROUTES.MY_HISTORY.path}>
+              {components.historyTable}
+            </Route>
+            <Route exact path={ROUTES.USER_ACTIVITY.path}>
+              {components.activities}
+            </Route>
+            <Redirect to={ROUTES.MY_MANAGEMENT.path} />
+          </Switch>
+        </Box>
 
-      {!lg && <MainTab pathname={pathname} />}
-    </Flex>
+        {!lg && <MainTab pathname={pathname} />}
+      </Flex>
+    </>
   )
 }
 

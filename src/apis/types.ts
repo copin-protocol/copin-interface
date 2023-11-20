@@ -43,6 +43,7 @@ export type RequestBodyApiData = {
   sortBy?: string
   sortType?: SortTypeEnum
   keyword?: string
+  returnRanking?: boolean
 }
 
 export type GetCopyTradeSettingsParams = GetApiParams & {

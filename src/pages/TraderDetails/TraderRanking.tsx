@@ -1,9 +1,15 @@
+import { useResponsive } from 'ahooks'
+
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import { TraderData } from 'entities/trader'
+import { useRankingCustomizeStore } from 'hooks/store/useRankingCustomize'
 import { Box, Flex, Type } from 'theme/base'
+import { rankingFieldOptions } from 'utils/config/options'
 
-import ScoreChart from './ScoreChart'
+import CustomizeRankingColumns from './CustomizeRankingColumns'
+import ExpandTraderRankingButton from './ExpandTraderRankingButton'
+import ScoreChart, { ScoreChartData } from './ScoreChart'
 
 const TraderRanking = ({
   data,
@@ -14,62 +20,44 @@ const TraderRanking = ({
   timeOption: TimeFilterProps
   onChangeTime: (option: TimeFilterProps) => void
 }) => {
+  const { sm } = useResponsive()
+  const { customizedRanking } = useRankingCustomizeStore()
   if (!data.ranking) return <div></div>
   const avgScore =
-    (data.ranking.avgRoi +
-      data.ranking.profitRate +
-      data.ranking.winRate +
-      data.ranking.maxDrawDownRoi +
-      data.ranking.totalTrade +
-      data.ranking.avgDuration) /
-    6
-  const ranking = [
-    {
-      subject: 'Avg ROI',
-      value: data.ranking.avgRoi,
-      fullMark: 100,
-    },
+    customizedRanking.reduce((result, key) => {
+      const score = data.ranking[key]
+      if (score == null) return result
+      result += score
+      return result
+    }, 0) / customizedRanking.length
+  const ranking: ScoreChartData[] = rankingFieldOptions
+    .filter((option) => customizedRanking.includes(option.value))
+    .map((option) => {
+      return {
+        subject: option.label as string,
+        value: data.ranking[option.value],
+        fullMark: 100,
+      }
+    })
+    .filter((option) => !!option.value)
 
-    {
-      subject: 'Profit Rate',
-      value: data.ranking.profitRate,
-      fullMark: 100,
-    },
-    {
-      subject: 'Win Rate',
-      value: data.ranking.winRate,
-      fullMark: 100,
-    },
-
-    {
-      subject: 'Risk Control',
-      value: data.ranking.maxDrawDownRoi,
-      fullMark: 100,
-    },
-    {
-      subject: 'Frequency',
-      value: data.ranking.totalTrade,
-      fullMark: 100,
-    },
-    {
-      subject: 'Quickly Settled',
-      value: data.ranking.avgDuration,
-      fullMark: 100,
-    },
-  ]
   return (
-    <div
-      style={{
+    <Flex
+      sx={{
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
         position: 'relative',
-        paddingTop: 24,
+        paddingTop: [64, 64, 64, 24],
       }}
     >
-      <ScoreChart data={ranking} width={350} height={236} />
+      <ScoreChart data={ranking} width={400} height={sm ? 200 : 175} />
       <Type.CaptionBold
         sx={{
           position: 'absolute',
           width: '100%',
-          top: 8,
+          top: [48, 48, 48, 8],
         }}
         color="neutral1"
         textAlign="center"
@@ -79,7 +67,16 @@ const TraderRanking = ({
           <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
         </Flex>
       </Type.CaptionBold>
-    </div>
+      <Flex sx={{ position: 'absolute', top: [50, 50, 50, 10], right: 10, alignItems: 'center', gap: 2 }}>
+        <CustomizeRankingColumns />
+        <ExpandTraderRankingButton
+          traderData={data}
+          traderScore={avgScore}
+          timeOption={timeOption}
+          onChangeTime={onChangeTime}
+        />
+      </Flex>
+    </Flex>
   )
 }
 

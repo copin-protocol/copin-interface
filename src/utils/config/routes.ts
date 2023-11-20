@@ -52,6 +52,9 @@ const ROUTES = {
   REFERRAL: {
     path: '/settings/referral',
   },
+  USER_SUBSCRIPTION: {
+    path: '/settings/subscription',
+  },
   STATS: {
     path: '/stats',
   },
@@ -66,6 +69,9 @@ const ROUTES = {
   SHARED_BACKTEST_MULTIPLE: {
     path: '/:protocol/shared-backtest/multiple/:id',
     path_prefix: '/shared-backtest/multiple',
+  },
+  SUBSCRIPTION: {
+    path: '/subscription',
   },
 }
 

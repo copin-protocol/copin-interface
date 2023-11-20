@@ -25,6 +25,7 @@ const TopOpenings = lazy(() => import('./TopOpenings'))
 const SharedBacktestSingle = lazy(() => import('./SharedBacktestSingle'))
 const SharedBacktestMultiple = lazy(() => import('./SharedBacktestMultiple'))
 const Settings = lazy(() => import('./Settings'))
+const Subscription = lazy(() => import('./Subscription'))
 
 function App() {
   useEffect(() => {
@@ -44,6 +45,7 @@ function App() {
           <ScrollToTop />
           <QSReader />
           <Switch>
+            <Route exact path={ROUTES.SUBSCRIPTION.path} component={Subscription} />
             <ProtocolRoute exact path={ROUTES.TRADER_DETAILS.path} component={TraderDetails}></ProtocolRoute>
             <ProtocolRedirectRoute exact path={`${ROUTES.TRADER_DETAILS.path_prefix}/:address`} />
 

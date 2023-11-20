@@ -6,8 +6,9 @@ import { TraderListSortProps } from 'components/Tables/TraderListTable/dataConfi
 import { TraderData } from 'entities/trader'
 import { SortTypeEnum } from 'utils/config/enums'
 import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { rankingFieldOptions } from 'utils/config/options'
 
-import { FilterTabEnum, defaultFieldOptions, rankingFieldOptions } from '../ConditionFilter/configs'
+import { FilterTabEnum, defaultFieldOptions } from '../ConditionFilter/configs'
 import { parseParams } from './handleParams'
 
 export const getInitValue = (searchParams: ParsedQs, key: string, defaultValue?: number) => {

@@ -3,12 +3,13 @@ import { useResponsive } from 'ahooks'
 import { ConditionFormValues } from 'components/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import { Box, Flex } from 'theme/base'
+import { rankingFieldOptions } from 'utils/config/options'
 import { getDurationFromTimeFilter } from 'utils/helpers/transform'
 
 import useTradersContext from '../useTradersContext'
 import FilterForm, { FilterFormProps } from './FilterForm'
 import ResultEstimated from './ResultEstimated'
-import { FilterTabEnum, rankingFieldOptions } from './configs'
+import { FilterTabEnum } from './configs'
 import useTradersCount from './useTraderCount'
 
 export default function RankingFilterForm({

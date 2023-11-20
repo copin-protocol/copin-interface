@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Clock, Key, Notebook, SignOut, UserCircle, Users, Wallet } from '@phosphor-icons/react'
+import { Clock, Crown, CrownSimple, Key, Notebook, SignOut, UserCircle, Users, Wallet } from '@phosphor-icons/react'
 import { ReactNode, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -24,7 +24,7 @@ import PremiumTag from './PremiumTag'
 const NavUser = () => {
   const [isShowModalLogout, setIsShowModalLogout] = useState(false)
   const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false)
-  const { logout, profile } = useAuthContext()
+  const { logout, profile, account } = useAuthContext()
   const _address = useMemo(() => isAddress(profile?.username), [profile?.username])
   const hasCopyPermission = useCopyTradePermission()
 
@@ -53,6 +53,18 @@ const NavUser = () => {
           menu={
             <>
               <Box mt={2} />
+              {otherRoutes.map((configs, index) =>
+                configs.isWeb3Required && !account ? null : (
+                  <NavItem
+                    key={index}
+                    link={configs.link}
+                    onClick={() => onClickNavItem(configs.event)}
+                    icon={configs.icon}
+                    label={configs.label}
+                  />
+                )
+              )}
+              <Box mt={2} />
               {hasCopyPermission && (
                 <>
                   <SectionDivider label={<Trans>Copy</Trans>} />
@@ -77,15 +89,17 @@ const NavUser = () => {
               />
               <Box mb={3} />
               <SectionDivider label={<Trans>Settings</Trans>} />
-              {userSettings.map((configs, index) => (
-                <NavItem
-                  key={index}
-                  link={configs.link}
-                  onClick={() => onClickNavItem(configs.event)}
-                  icon={configs.icon}
-                  label={configs.label}
-                />
-              ))}
+              {userSettings.map((configs, index) =>
+                configs.isWeb3Required && !account ? null : (
+                  <NavItem
+                    key={index}
+                    link={configs.link}
+                    onClick={() => onClickNavItem(configs.event)}
+                    icon={configs.icon}
+                    label={configs.label}
+                  />
+                )
+              )}
               <Divider my={2} />
               <DropdownItem
                 onClick={() => {
@@ -220,9 +234,25 @@ const userCopy = [
 ]
 const userSettings = [
   {
+    link: ROUTES.USER_SUBSCRIPTION.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].USER_SUBSCRIPTION,
+    icon: <Crown size={20} />,
+    label: <Trans>My Subscription</Trans>,
+    isWeb3Required: true,
+  },
+  {
     link: ROUTES.REFERRAL.path,
     event: EVENT_ACTIONS[EventCategory.ROUTES].MY_REFERRAL,
     icon: <Users size={20} />,
     label: <Trans>Referral</Trans>,
+  },
+]
+const otherRoutes = [
+  {
+    link: ROUTES.SUBSCRIPTION.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].SUBSCRIPTION,
+    icon: <CrownSimple size={20} />,
+    label: <Trans>Subscription Plans</Trans>,
+    isWeb3Required: true,
   },
 ]

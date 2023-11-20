@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
@@ -9,13 +8,11 @@ import { UsdPrices } from 'hooks/store/useUsdPrices'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, TextProps, Type } from 'theme/base'
-import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { PositionStatusEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcCopyOpeningPnL, calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
-import { addressShorten, formatNumber } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { formatNumber } from 'utils/helpers/format'
 
-import AddressAvatar from '../AddressAvatar'
 import { PriceTokenText } from '../DecoratedText/ValueText'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps) {
@@ -130,19 +127,6 @@ export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {
       <Type.Caption color={pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'}>{formatNumber(pnl, 2, 2)}</Type.Caption>
       {/* <ProgressBar percent={0} sx={{ width: '100%' }} /> */}
     </Flex>
-  )
-}
-
-export function renderTrader(address: string, protocol: ProtocolEnum) {
-  return (
-    <Link to={generateTraderDetailsRoute(protocol, address)}>
-      <Flex sx={{ gap: 2 }} alignItems="center">
-        <AddressAvatar address={address} size={24} />
-        <Type.Caption color="neutral1" sx={{ ':hover': { textDecoration: 'underline' } }}>
-          {addressShorten(address, 3, 5)}
-        </Type.Caption>
-      </Flex>
-    </Link>
   )
 }
 

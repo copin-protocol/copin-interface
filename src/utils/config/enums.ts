@@ -135,3 +135,11 @@ export enum LeaderboardTypeEnum {
   WEEKLY = 'WEEK',
   MONTHLY = 'MONTH',
 }
+
+export enum SubscriptionPlanEnum {
+  BASIC = 0,
+  PREMIUM = 1,
+}
+export enum MaxCopyTradeQuotaEnum {
+  BASIC = 3,
+}

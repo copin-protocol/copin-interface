@@ -23,6 +23,7 @@ import HistoryTable, { historyColumns } from 'components/Tables/HistoryTable'
 import OpeningPositionTable from 'components/Tables/OpeningPositionTable'
 import { PositionData } from 'entities/trader.d'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -163,9 +164,11 @@ export default function TraderDetails() {
   }
   const hasNextClosedPositions = closedPositions && closedPositions.meta.limit < closedPositions.meta.total
 
+  const refetchQueries = useRefetchQueries()
   const [, setForceReload] = useState(1)
   const { saveTraderCopying } = useTraderCopying()
   const onForceReload = () => {
+    refetchQueries([QUERY_KEYS.USE_GET_ALL_COPY_TRADES])
     setForceReload((prev) => prev + 1)
     if (currentTraderData) {
       saveTraderCopying(currentTraderData.account)

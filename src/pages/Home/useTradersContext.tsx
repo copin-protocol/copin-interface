@@ -11,6 +11,7 @@ import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolStore } from 'hooks/store/useProtocols'
+import { RANKING_FIELD_NAMES } from 'hooks/store/useRankingCustomize'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
@@ -171,7 +172,7 @@ export function FilterTradersProvider({
       searchParams,
       accounts,
       filterTab: FilterTabEnum.RANKING,
-    })
+    }).filter((option) => !!RANKING_FIELD_NAMES.includes(option.key))
   )
   const changeFilters = (options: ConditionFormValues<TraderData>) => {
     const stringParams = stringifyParams(options)

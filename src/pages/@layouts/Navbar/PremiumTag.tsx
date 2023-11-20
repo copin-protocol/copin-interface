@@ -5,10 +5,11 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 
 const PremiumTag = () => {
   const { myProfile } = useMyProfile()
-  const isPremium = myProfile && myProfile.copyTradeQuota > 3
+  const isPremium = myProfile && myProfile.plan === SubscriptionPlanEnum.PREMIUM
 
   return myProfile ? (
     <Box>

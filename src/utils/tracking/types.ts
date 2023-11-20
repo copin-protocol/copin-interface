@@ -63,6 +63,8 @@ export const EVENT_ACTIONS = {
     JOIN_GITHUB: 'join_github',
     MY_REFERRAL: 'my_referral',
     USER_ACTIVITY: 'user_activity',
+    SUBSCRIPTION: 'SUBSCRIPTION',
+    USER_SUBSCRIPTION: 'USER_SUBSCRIPTION',
   },
   [EventCategory.SEARCH]: {
     SEARCH_CLICK: 'search_click',

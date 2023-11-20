@@ -35,6 +35,8 @@ export const QUERY_KEYS = {
   GET_USER_ACTIVITY_LOGS: 'GET_USER_ACTIVITY_LOGS',
   GET_AVAILABLE_MARGIN: 'GET_AVAILABLE_MARGIN',
   GET_TRADERS_LEADERBOARD: 'GET_TRADERS_LEADERBOARD',
+  GET_USER_SUBSCRIPTION: 'GET_USER_SUBSCRIPTION',
+  USE_GET_ALL_COPY_TRADES: 'USE_GET_ALL_COPY_TRADES',
 }
 
 export const CONTRACT_QUERY_KEYS = {
@@ -49,6 +51,7 @@ export const CONTRACT_QUERY_KEYS = {
   MULTICALL: 'MULTICALL',
   DELEGATE: 'DELEGATE',
   SYNTHETIX_MARKET: 'SYNTHETIX_MARKET',
+  NFT_SUBSCRIPTION: 'NFT_SUBSCRIPTION',
 } as const
 
 export const STORAGE_KEYS = {
@@ -66,6 +69,7 @@ export const STORAGE_KEYS = {
   MY_COPY_WALLET: 'my-copy-wallet',
   MY_HISTORY_TRADERS: 'my-history-traders',
   BACKTEST_GUIDE: 'backtest-guide',
+  TRADER_RANKING_FIELDS: 'trader-ranking-fields',
 }
 
 export const URL_PARAM_KEYS = {
@@ -106,6 +110,7 @@ export const TOOLTIP_KEYS = {
 export const ELEMENT_IDS = {
   TRADER_CHART_PNL: 'trader-chart-pnl-container',
   POSITION_CHART_PNL: 'position-chart-pnl-container',
+  APP_MAIN_WRAPPER: 'app_main__wrapper',
 }
 
 export const ELEMENT_CLASSNAMES = {

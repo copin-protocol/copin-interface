@@ -5,6 +5,7 @@ import { getCopyTradeSettingsListApi, getMyCopyTradersApi } from 'apis/copyTrade
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserData } from 'entities/user'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS, STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 
@@ -25,6 +26,7 @@ export default function MainSection({
 }) {
   const storageData = sessionStorage.getItem(STORAGE_KEYS.MY_COPY_DATA)
   const [state, dispatch] = useSelectTraders(storageData)
+  const refetchQueries = useRefetchQueries()
 
   const [sessionNum, setNewSession] = useReducer((prev) => prev + 1, 1)
   const hasCopyPermission = useCopyTradePermission()
@@ -138,6 +140,11 @@ export default function MainSection({
     dispatch({ type: 'addTraders', payload: [address] })
   }
 
+  const handleRefresh = () => {
+    refetchQueries([QUERY_KEYS.USE_GET_ALL_COPY_TRADES])
+    setNewSession()
+  }
+
   useEffect(() => {
     const dataStorage = JSON.stringify(state)
     sessionStorage.setItem(STORAGE_KEYS.MY_COPY_DATA, dataStorage)
@@ -149,7 +156,7 @@ export default function MainSection({
         selectedTraders={state.selectedTraders}
         data={copyTrades}
         isLoading={isLoadingCopyTrades}
-        onRefresh={setNewSession}
+        onRefresh={handleRefresh}
         handleToggleStatus={handleToggleStatus}
         checkIsStatusChecked={checkIsStatusChecked}
         handleToggleProtocol={handleToggleProtocol}

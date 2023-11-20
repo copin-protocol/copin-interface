@@ -11,11 +11,12 @@ import ERC20_ABI from 'abis/ERC20.json'
 import MULTICALL_ABI from 'abis/Multicall.json'
 import SMART_ACCOUNT_ABI from 'abis/SmartAccount.json'
 import SMART_ACCOUNT_FACTORY_ABI from 'abis/SmartAccountFactory.json'
+import SUBSCRIPTION_ABI from 'abis/Subscription.json'
 import SYNTHETIX_MARKET_ABI from 'abis/SynthetixMarket.json'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { ContractInfo } from 'utils/web3/types'
 
-import { ARBITRUM_MAINNET, OPTIMISM_GOERLI, OPTIMISM_MAINNET } from './chains'
+import { ARBITRUM_MAINNET, GOERLI, OPTIMISM_GOERLI, OPTIMISM_MAINNET } from './chains'
 
 export interface ContractKey {
   key: string
@@ -31,6 +32,7 @@ export const CONTRACT_ABIS: {
   [CONTRACT_QUERY_KEYS.SMART_ACCOUNT]: SMART_ACCOUNT_ABI,
   [CONTRACT_QUERY_KEYS.SMART_ACCOUNT_FACTORY]: SMART_ACCOUNT_FACTORY_ABI,
   [CONTRACT_QUERY_KEYS.SYNTHETIX_MARKET]: SYNTHETIX_MARKET_ABI,
+  [CONTRACT_QUERY_KEYS.NFT_SUBSCRIPTION]: SUBSCRIPTION_ABI,
 }
 
 export const CONTRACT_ADDRESSES: {
@@ -50,6 +52,9 @@ export const CONTRACT_ADDRESSES: {
     [CONTRACT_QUERY_KEYS.SMART_ACCOUNT_FACTORY]: '',
     [CONTRACT_QUERY_KEYS.SUSD]: '',
     [CONTRACT_QUERY_KEYS.DELEGATE]: '',
+  },
+  [GOERLI]: {
+    [CONTRACT_QUERY_KEYS.NFT_SUBSCRIPTION]: '0xd6e992c9a794a599da83812b9d27b14876c25f73',
   },
 }
 

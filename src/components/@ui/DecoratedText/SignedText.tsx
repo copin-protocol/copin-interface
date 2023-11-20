@@ -36,14 +36,13 @@ export function SignedText({
   }
   const formatedValue = !!value
     ? isCompactNumber
-      ? compactNumber(Math.abs(value), minDigit)
+      ? compactNumber(Math.abs(value), maxDigit)
       : formatNumber(Math.abs(value), maxDigit, minDigit)
     : '--'
-
   return (
     <>
       {fontInherit ? (
-        <Box as="span" {...sx} color={color}>
+        <Box as="span" color={color} {...sx}>
           {value && value < 0 ? '-' : ''}
           {!!value && prefix}
           {formatedValue}
