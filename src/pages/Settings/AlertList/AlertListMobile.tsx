@@ -51,16 +51,21 @@ export function MobileItem({
           label={<Trans>Wallet Address</Trans>}
           value={<AccountWithProtocol protocol={data.protocol} address={data.address} size={32} />}
         />
-        <Property label={<Trans>Add time</Trans>} value={formatLocalRelativeDate(data.createdAt)} />
-        <IconButton
-          type="button"
-          variant="ghostDanger"
-          icon={<AlertOffIcon />}
-          size={24}
-          sx={{ p: 0 }}
-          isLoading={submitting}
-          disabled={submitting}
-          onClick={() => onSelect(data)}
+        <Property
+          label={
+            <IconButton
+              type="button"
+              variant="ghostDanger"
+              icon={<AlertOffIcon />}
+              size={24}
+              sx={{ p: 0 }}
+              isLoading={submitting}
+              disabled={submitting}
+              onClick={() => onSelect(data)}
+            />
+          }
+          value={formatLocalRelativeDate(data.createdAt)}
+          sx={{ alignItems: 'flex-end', display: 'flex', flexDirection: 'column' }}
         />
       </Flex>
     </Box>
@@ -73,7 +78,7 @@ function Property({ label, value, sx }: { label: ReactNode; value: ReactNode; sx
       <Type.Caption color="neutral3" mb={2} display="block">
         {label}
       </Type.Caption>
-      {value}
+      <Type.Caption>{value}</Type.Caption>
     </Box>
   )
 }

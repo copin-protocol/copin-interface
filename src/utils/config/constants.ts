@@ -65,5 +65,5 @@ export const WALLET_NAME_MAX_LENGTH = 32
 export const SUBSCRIPTION_COLLECTION_URL =
   NETWORK === 'devnet' ? '' : 'https://testnets.opensea.io/collection/copin-subscription-3'
 
-export const MAX_TRADER_ALERT_BASIC = 3
+export const MAX_TRADER_ALERT_BASIC = 10
 export const MAX_TRADER_ALERT_PREMIUM = 50

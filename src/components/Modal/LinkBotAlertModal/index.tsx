@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import { AccountWithProtocol } from 'components/@ui/AccountWithProtocol'
 import { Button } from 'theme/Buttons'
@@ -35,13 +36,11 @@ export default function LinkBotAlertModal({
           <Button variant="outline" onClick={onDismiss} sx={{ flex: 1 }}>
             <Trans>Cancel</Trans>
           </Button>
-          <Button
-            variant="primary"
-            onClick={() => window.open(generateTelegramBotAlertUrl(state), '_blank')}
-            sx={{ flex: 1 }}
-          >
-            <Trans>Open Telegram Bot</Trans>
-          </Button>
+          <Link to={generateTelegramBotAlertUrl(state)}>
+            <Button type="button" variant="primary" sx={{ flex: 1 }}>
+              <Trans>Open Telegram Bot</Trans>
+            </Button>
+          </Link>
         </Flex>
       </Flex>
     </Modal>

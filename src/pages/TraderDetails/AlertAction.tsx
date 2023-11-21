@@ -13,7 +13,6 @@ import {
 import ToastBody from 'components/@ui/ToastBody'
 import { useClickLoginButton } from 'components/LoginAction'
 import LinkBotAlertModal from 'components/Modal/LinkBotAlertModal'
-import SubscribeAlertModal from 'components/Modal/SubscribeAlertModal'
 import UnsubscribeAlertModal from 'components/Modal/UnsubscribeAlertModal'
 import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -26,7 +25,6 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
 const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: string }) => {
-  const [isOpenSubscribeModal, setIsOpenSubscribeModal] = useState(false)
   const [isOpenUnsubscribeModal, setIsOpenUnsubscribeModal] = useState(false)
   const [isOpenLinkBotModal, setIsOpenLinkBotModal] = useState(false)
   const [currentState, setCurrentState] = useState<string | undefined>()
@@ -82,7 +80,6 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
           message={<Trans>This trader alert has been subscribed successfully</Trans>}
         />
       )
-      setIsOpenSubscribeModal(false)
       reload()
     },
     onError: (error: any) => {
@@ -111,10 +108,6 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
     },
   })
 
-  const handleConfirmCreateAlert = () => {
-    createTraderAlert({ address: account, protocol })
-  }
-
   const handleConfirmDeleteAlert = () => {
     if (currentAlert) {
       deleteTraderAlert(currentAlert.id)
@@ -138,7 +131,7 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
         handleAlertQuotaExceed()
         return
       }
-      setIsOpenSubscribeModal(true)
+      createTraderAlert({ address: account, protocol })
     }
   }
 
@@ -156,24 +149,10 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
         variant={currentAlert ? 'ghostDanger' : 'ghost'}
         icon={currentAlert ? <AlertOffIcon /> : <AlertIcon />}
         disabled={isLoading || submittingCreate || submittingDelete || generatingLinkBot}
-        isLoading={submittingCreate || submittingDelete}
         onClick={onSubmit}
       >
-        {submittingCreate || submittingDelete ? (
-          <Trans>Waiting...</Trans>
-        ) : currentAlert ? (
-          <Trans>Remove</Trans>
-        ) : (
-          <Trans>Alert</Trans>
-        )}
+        {currentAlert ? <Trans>Remove</Trans> : <Trans>Alert</Trans>}
       </ButtonWithIcon>
-      {isOpenSubscribeModal && (
-        <SubscribeAlertModal
-          isConfirming={submittingCreate}
-          onConfirm={handleConfirmCreateAlert}
-          onDismiss={() => setIsOpenSubscribeModal(false)}
-        />
-      )}
       {isOpenUnsubscribeModal && currentAlert && (
         <UnsubscribeAlertModal
           data={currentAlert}

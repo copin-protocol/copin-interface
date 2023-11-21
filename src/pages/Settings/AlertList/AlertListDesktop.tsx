@@ -4,7 +4,7 @@ import React from 'react'
 import { AccountWithProtocol } from 'components/@ui/AccountWithProtocol'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TraderAlertData } from 'entities/alert'
-import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
+import IconButton from 'theme/Buttons/IconButton'
 import AlertOffIcon from 'theme/Icons/AlerOffIcon'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
@@ -24,7 +24,7 @@ const AlertListDesktop = ({
   return (
     <Box
       width="100%"
-      minHeight={536}
+      minHeight={578}
       sx={{
         position: 'relative',
         overflow: 'auto',
@@ -43,21 +43,22 @@ const AlertListDesktop = ({
         {data &&
           data.length > 0 &&
           data.map((item, index) => (
-            <Flex key={index} justifyContent={'space-between'} alignItems={'center'} mb={2}>
+            <Flex key={index} justifyContent={'space-between'} alignItems={'center'} mb={2} sx={{ gap: [3, 40] }}>
               <AccountWithProtocol protocol={item.protocol} address={item.address} />
-              <Type.Caption color="neutral3">
-                <Trans>Added</Trans> {formatLocalRelativeDate(item.createdAt ?? '')}
-              </Type.Caption>
-              <ButtonWithIcon
+              <Flex flex={1}>
+                <Type.Caption color="neutral3">
+                  <Trans>Added</Trans> {formatLocalRelativeDate(item.createdAt ?? '')}
+                </Type.Caption>
+              </Flex>
+              <IconButton
                 variant="ghost"
                 icon={<AlertOffIcon color="red2" />}
                 sx={{ p: 0 }}
+                size={32}
                 isLoading={submitting}
                 disabled={isLoading || submitting}
                 onClick={() => onSelect(item)}
-              >
-                <Trans>Remove</Trans>
-              </ButtonWithIcon>
+              />
             </Flex>
           ))}
       </Box>
