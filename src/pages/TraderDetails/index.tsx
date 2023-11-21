@@ -1,3 +1,4 @@
+import { CirclesThreePlus } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import React, { useEffect, useMemo, useReducer, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
@@ -30,6 +31,8 @@ import useSearchParams from 'hooks/router/useSearchParams'
 // import useSearchParams from 'hooks/router/useSearchParams'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import { useAuthContext } from 'hooks/web3/useAuth'
+import IconButton from 'theme/Buttons/IconButton'
+import Dropdown from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT, NAVBAR_HEIGHT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
@@ -38,6 +41,7 @@ import { ALL_TOKENS_ID, getTokenOptions } from 'utils/config/trades'
 import { addressShorten, formatRelativeDate } from 'utils/helpers/format'
 import { isAddress } from 'utils/web3/contracts'
 
+import AlertAction from './AlertAction'
 import BackTestAction from './BackTestAction'
 import ChartTrader from './ChartTrader'
 import CopyTraderAction from './CopyTraderAction'
@@ -234,20 +238,22 @@ export default function TraderDetails() {
             timeOption={timeOption}
             traderStats={traderData}
           />
-          <Flex
+          <Box
             sx={{
               alignItems: 'center',
               borderBottom: ['small', 'small', 'small', 'none'],
               borderColor: ['neutral4', 'neutral4', 'neutral4', 'transparent'],
-              width: ['100%', '100%', '100%', 'auto'],
+              width: [0, '100%', '100%', 'auto'],
               height: ['40px', '40px', '40px', '100%'],
-              position: ['fixed', 'fixed', 'fixed', 'static'],
-              top: NAVBAR_HEIGHT + 71,
+              display: ['none', 'flex', 'flex', 'flex'],
+              position: [undefined, 'fixed', 'fixed', 'static'],
+              top: [undefined, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71],
               zIndex: 10,
               bg: ['neutral7', 'neutral7', 'neutral7', undefined],
             }}
           >
             <TradeProtocolAction protocol={protocol} />
+            <AlertAction protocol={protocol} account={_address} />
             <BackTestAction onClick={handleOpenBackTestModal} hadBacktest={hadBacktest} />
             <CopyTraderAction
               protocol={protocol}
@@ -255,7 +261,62 @@ export default function TraderDetails() {
               onForceReload={onForceReload}
               hasCopyPermission={hasCopyPermission}
             />
-          </Flex>
+          </Box>
+          <Box
+            sx={{
+              display: ['flex', 'none', 'none', 'none'],
+              position: ['fixed', undefined, undefined, undefined],
+              top: NAVBAR_HEIGHT + 24,
+              right: 3,
+              zIndex: 10,
+            }}
+          >
+            <Dropdown
+              hasArrow={false}
+              menuSx={{
+                bg: 'neutral7',
+                width: 'max-content',
+              }}
+              menu={
+                <>
+                  <Box height="40px">
+                    <TradeProtocolAction protocol={protocol} />
+                  </Box>
+                  <Box height="40px">
+                    <AlertAction protocol={protocol} account={_address} />
+                  </Box>
+                  <Box height="40px">
+                    <BackTestAction onClick={handleOpenBackTestModal} hadBacktest={hadBacktest} />
+                  </Box>
+                  <Box height="40px">
+                    <CopyTraderAction
+                      protocol={protocol}
+                      account={_address}
+                      onForceReload={onForceReload}
+                      hasCopyPermission={hasCopyPermission}
+                    />
+                  </Box>
+                </>
+              }
+              sx={{}}
+              buttonSx={{
+                border: 'none',
+                height: '100%',
+                p: 0,
+              }}
+              placement={'topRight'}
+            >
+              <IconButton
+                size={24}
+                type="button"
+                icon={<CirclesThreePlus size={24} weight="fill" />}
+                variant="ghost"
+                sx={{
+                  color: 'neutral1',
+                }}
+              />
+            </Dropdown>
+          </Box>
         </Flex>
         {/* child 2 */}
 
@@ -269,7 +330,7 @@ export default function TraderDetails() {
                 justifyContent: 'center',
                 height: ['auto', 50],
                 gap: 24,
-                mt: [40, 40, 40, 0],
+                mt: [0, 40, 40, 0],
               }}
             >
               <Box textAlign="center" color="neutral3" flex={['1', 'none']}>

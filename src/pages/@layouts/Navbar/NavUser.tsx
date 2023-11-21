@@ -8,6 +8,7 @@ import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
+import AlertIcon from 'theme/Icons/AlertIcon'
 import Modal from 'theme/Modal'
 import { Box, Flex, Type } from 'theme/base'
 import { NAVBAR_HEIGHT } from 'utils/config/constants'
@@ -239,6 +240,12 @@ const userSettings = [
     icon: <Crown size={20} />,
     label: <Trans>My Subscription</Trans>,
     isWeb3Required: true,
+  },
+  {
+    link: ROUTES.ALERT_LIST.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].ALERT_LIST,
+    icon: <AlertIcon size={20} />,
+    label: <Trans>Alert List</Trans>,
   },
   {
     link: ROUTES.REFERRAL.path,

@@ -13,7 +13,14 @@ const PremiumTag = () => {
 
   return myProfile ? (
     <Box>
-      <Flex px={3} alignItems="center" sx={{ gap: 1 }} data-tip="React-tooltip" data-tooltip-id={`tt-premium`}>
+      <Flex
+        px={3}
+        alignItems="center"
+        sx={{ gap: 1 }}
+        data-tip="React-tooltip"
+        data-tooltip-id={`tt-premium`}
+        data-tooltip-delay-show={360}
+      >
         <IconBox
           icon={isPremium ? <CrownSimple weight="fill" /> : <PushPin weight="fill" />}
           color={isPremium ? 'orange1' : 'neutral2'}

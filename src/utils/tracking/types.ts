@@ -62,6 +62,7 @@ export const EVENT_ACTIONS = {
     JOIN_TWITTER: 'join_twitter',
     JOIN_GITHUB: 'join_github',
     MY_REFERRAL: 'my_referral',
+    ALERT_LIST: 'alert_list',
     USER_ACTIVITY: 'user_activity',
     SUBSCRIPTION: 'SUBSCRIPTION',
     USER_SUBSCRIPTION: 'USER_SUBSCRIPTION',

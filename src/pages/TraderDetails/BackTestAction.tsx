@@ -36,7 +36,7 @@ const BackTestAction = ({ onClick, hadBacktest }: { onClick: () => void; hadBack
         p: hadBacktest ? 0 : undefined,
         borderRadius: 0,
         height: '100%',
-        borderLeft: 'small',
+        borderLeft: ['none', 'small', 'small', 'small'],
         borderTop: ['small', 'small', 'small', 'none'],
         borderColor: ['neutral4', 'neutral4', 'neutral4', 'neutral4'],
       }}

@@ -1,3 +1,4 @@
+import { LINKS, TELEGRAM_BOT_ALERT } from 'utils/config/constants'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
@@ -50,4 +51,8 @@ export const generateParamsUrl = ({
   if (!value) return url
 
   return url.indexOf('?') > -1 ? `${url}&${key}=${value}` : `${url}?${key}=${value}`
+}
+
+export const generateTelegramBotAlertUrl = (state?: string) => {
+  return `${LINKS.baseTelegram}/${TELEGRAM_BOT_ALERT}?${state ? `state=${state}` : ''}`
 }

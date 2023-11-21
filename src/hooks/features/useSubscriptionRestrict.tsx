@@ -31,10 +31,16 @@ export default function useSubscriptionRestrict() {
   const handleIsBasicUser = () => {
     setRestrictState(RestrictState.PREMIUM_FEATURE)
   }
+
+  const handleAlertQuotaExceed = useCallback(() => {
+    setRestrictState(RestrictState.EXCEED_QUOTA)
+  }, [setRestrictState])
+
   return {
     isQuotaExceed,
     handleQuotaExceed,
     isPremiumUser,
     handleIsBasicUser,
+    handleAlertQuotaExceed,
   }
 }

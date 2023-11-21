@@ -55,6 +55,12 @@ const ROUTES = {
   USER_SUBSCRIPTION: {
     path: '/settings/subscription',
   },
+  ALERT_LIST: {
+    path: '/settings/alert-list',
+  },
+  LINK_BOT_ALERT: {
+    path: '/link/telegram',
+  },
   STATS: {
     path: '/stats',
   },

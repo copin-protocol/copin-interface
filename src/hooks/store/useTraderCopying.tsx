@@ -50,12 +50,12 @@ const useTraderCopying = (account?: string) => {
   const { isLoading, traderCopying, setTraderCopying } = useTraderCopyingStore()
   const isCopying = useMemo(() => (account ? traderCopying.includes(account) : false), [account, traderCopying])
 
-  const saveTraderCopying = async (address: string) => {
+  const saveTraderCopying = (address: string) => {
     if (!traderCopying.includes(address)) {
       setTraderCopying([address, ...traderCopying])
     }
   }
-  const removeTraderCopying = async (address: string) => {
+  const removeTraderCopying = (address: string) => {
     if (traderCopying.includes(address)) {
       setTraderCopying(traderCopying.filter((account) => account !== address))
     }

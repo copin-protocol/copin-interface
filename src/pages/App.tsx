@@ -26,6 +26,7 @@ const SharedBacktestSingle = lazy(() => import('./SharedBacktestSingle'))
 const SharedBacktestMultiple = lazy(() => import('./SharedBacktestMultiple'))
 const Settings = lazy(() => import('./Settings'))
 const Subscription = lazy(() => import('./Subscription'))
+const LinkBotTelegram = lazy(() => import('./LinkBotTelegram'))
 
 function App() {
   useEffect(() => {
@@ -76,6 +77,7 @@ function App() {
             <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>
             <AuthedRoute path={ROUTES.SETTINGS.path} component={Settings}></AuthedRoute>
             <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagement}></AuthedRoute>
+            <AuthedRoute path={ROUTES.LINK_BOT_ALERT.path} component={LinkBotTelegram}></AuthedRoute>
             <Route path={ROUTES.HOME.path} component={Home}></Route>
 
             <Route path="*" component={NotFound}></Route>

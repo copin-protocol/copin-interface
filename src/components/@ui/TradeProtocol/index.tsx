@@ -17,7 +17,7 @@ export default function TradeProtocolAction({ protocol = ProtocolEnum.GMX }: { p
         borderRadius: 0,
         height: '100%',
         borderLeft: ['none', 'none', 'none', 'small'],
-        borderTop: ['small', 'small', 'small', 'none'],
+        borderTop: ['none', 'small', 'small', 'none'],
         borderColor: ['neutral4', 'neutral4', 'neutral4', 'neutral4'],
       }}
     >

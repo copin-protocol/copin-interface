@@ -4,6 +4,7 @@ import { Crown, Users } from '@phosphor-icons/react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import AlertIcon from 'theme/Icons/AlertIcon'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 import ROUTES from 'utils/config/routes'
@@ -13,30 +14,28 @@ import { LayoutComponents } from './types'
 enum TabKeyEnum {
   REFERRAL = 'referral',
   USER_SUBSCRIPTION = 'subscription',
+  BOT_ALERT = 'bot_alert',
 }
 
 const tabConfigs: TabConfig[] = [
   {
-    name: (
-      <Flex sx={{ alignItems: 'center', gap: 2 }}>
-        <Crown size={24} />
-        <Box as="span">
-          <Trans>MY SUBSCRIPTION</Trans>
-        </Box>
-      </Flex>
-    ),
+    name: <Trans>MY SUBSCRIPTION</Trans>,
+    activeIcon: <Crown size={24} weight="fill" />,
+    inactiveIcon: <Crown size={24} />,
     key: TabKeyEnum.USER_SUBSCRIPTION,
     route: ROUTES.USER_SUBSCRIPTION.path,
   },
   {
-    name: (
-      <Flex sx={{ alignItems: 'center', gap: 2 }}>
-        <Users size={24} />
-        <Box as="span">
-          <Trans>REFERRAL</Trans>
-        </Box>
-      </Flex>
-    ),
+    name: <Trans>ALERT LIST</Trans>,
+    activeIcon: <AlertIcon size={24} variant="Bold" />,
+    inactiveIcon: <AlertIcon size={24} />,
+    key: TabKeyEnum.BOT_ALERT,
+    route: ROUTES.ALERT_LIST.path,
+  },
+  {
+    name: <Trans>REFERRAL</Trans>,
+    activeIcon: <Users size={24} weight="fill" />,
+    inactiveIcon: <Users size={24} />,
     key: TabKeyEnum.REFERRAL,
     route: ROUTES.REFERRAL.path,
   },
@@ -45,6 +44,7 @@ const tabConfigs: TabConfig[] = [
 const pageTitleMapping = {
   [ROUTES.USER_SUBSCRIPTION.path]: t`My Subscription`,
   [ROUTES.REFERRAL.path]: t`Referral`,
+  [ROUTES.ALERT_LIST.path]: t`Alert List`,
 }
 
 export default function Layout(components: LayoutComponents) {
@@ -64,11 +64,15 @@ export default function Layout(components: LayoutComponents) {
             fontSize: 16,
             display: 'flex',
             justifyContent: 'center',
+            minWidth: 'fit-content',
           }}
         />
 
         <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
           <Switch>
+            <Route exact path={ROUTES.ALERT_LIST.path}>
+              {components.botAlert}
+            </Route>
             <Route exact path={ROUTES.REFERRAL.path}>
               {components.referral}
             </Route>
