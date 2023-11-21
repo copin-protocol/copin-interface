@@ -2,7 +2,7 @@
 import { Trans } from '@lingui/macro'
 import { CaretRight, Copy, Star, XCircle } from '@phosphor-icons/react'
 import isEqual from 'lodash/isEqual'
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import { ReactNode, useRef, useState } from 'react'
 
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { useClickLoginButton } from 'components/LoginAction'
@@ -10,6 +10,7 @@ import { TraderData } from 'entities/trader'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 
 import { PickFromCopyTradesModal, PickFromFavoritesModal } from './PickTraderModals'
 import SearchTraders from './SearchTraders'
@@ -20,6 +21,7 @@ export type HandleSelectTrader = (data: TraderData) => void
 export interface FindAndSelectTraderProps {
   onSelect: HandleSelectTrader
   account: string | undefined
+  protocol: ProtocolEnum
   timeOption: TimeFilterProps
   selectedTrader: TraderData | null
   onClear: () => void
@@ -81,9 +83,9 @@ function SelectedTrader({
         role="button"
         icon={<XCircle size={20} />}
         onClick={onClearTrader}
-        sx={{ position: 'absolute', top: 16, right: 16, color: 'neutral3', '&:hover': { color: 'neutral1' } }}
+        sx={{ position: 'absolute', top: 16, right: 16, color: 'neutral2', '&:hover': { color: 'neutral1' } }}
       />
-      <Stats traderData={selectedTrader} indicatorColor="orange1" />
+      <Stats traderData={selectedTrader} indicatorColor="orange1" isLinkAddress />
     </Box>
   )
 }

@@ -109,7 +109,9 @@ const SearchBox = ({
                   ))}
                 </Box>
               )}
-              {searchUserData?.meta?.total === 0 && searchUserDataKwenta?.meta?.total === 0 ? <NoDataFound /> : null}
+              {searchUserData?.meta?.total === 0 && searchUserDataKwenta?.meta?.total === 0 ? (
+                <NoDataFound message={<Trans>No Trader Found In The Past 60 Days</Trans>} />
+              ) : null}
             </Box>
           )}
         </SearchResult>

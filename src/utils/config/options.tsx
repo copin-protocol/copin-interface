@@ -48,8 +48,8 @@ const rankingFieldsBase: RankingFieldOption<TraderData>[] = [
   },
   {
     value: 'maxRoi',
-    label: t`High Max Roi`,
-    statLabel: t`Max Roi`,
+    label: t`High Max ROI`,
+    statLabel: t`Max ROI`,
     tooltipContent: t`The percentile ranking of traders with the highest maximum return on investment`,
     statFormat: (value) =>
       !value ? '--' : <SignedText value={value} minDigit={1} maxDigit={1} fontInherit suffix="%" />,

@@ -157,6 +157,7 @@ export default function TraderRankingExpanded({
                     width: 245,
                     height: '100%',
                     overflow: 'hidden',
+                    backgroundImage: 'linear-gradient(180deg, rgba(78, 174, 253, 0.5) 0%, rgba(78, 174, 253, 0) 100%)',
                   }}
                 >
                   <Stats traderData={traderData} indicatorColor="primary1" />
@@ -184,11 +185,24 @@ export default function TraderRankingExpanded({
                   </Box>
                 </Flex>
 
-                <Box sx={{ width: 245, height: '100%', overflow: 'auto', bg: 'neutral5' }}>
+                <Box
+                  sx={{
+                    width: 245,
+                    height: '100%',
+                    overflow: 'auto',
+                    ...(selectedTrader
+                      ? {
+                          backgroundImage:
+                            'linear-gradient(180deg, rgba(255, 194, 75, 0.5) 0%, rgba(255, 194, 75, 0) 100%)',
+                        }
+                      : { bg: 'neutral5' }),
+                  }}
+                >
                   <FindAndSelectTrader
                     selectedTrader={selectedTrader}
                     onSelect={handleSelectTrader}
                     account={traderData.account}
+                    protocol={traderData.protocol}
                     timeOption={timeOption}
                     onClear={() => setSelectedTrader(null)}
                   />
@@ -213,15 +227,30 @@ export default function TraderRankingExpanded({
                       borderRightColor: 'neutral4',
                       height: '100%',
                       overflow: 'hidden',
+                      backgroundImage:
+                        'linear-gradient(180deg, rgba(78, 174, 253, 0.5) 0%, rgba(78, 174, 253, 0) 100%)',
                     }}
                   >
                     <Stats traderData={traderData} indicatorColor="primary1" />
                   </Box>
-                  <Box sx={{ flex: 1, height: '100%', overflow: 'auto', bg: 'neutral5' }}>
+                  <Box
+                    sx={{
+                      flex: 1,
+                      height: '100%',
+                      overflow: 'auto',
+                      ...(selectedTrader
+                        ? {
+                            backgroundImage:
+                              'linear-gradient(180deg, rgba(255, 194, 75, 0.5) 0%, rgba(255, 194, 75, 0) 100%)',
+                          }
+                        : { bg: 'neutral5' }),
+                    }}
+                  >
                     <FindAndSelectTrader
                       selectedTrader={selectedTrader}
                       onSelect={handleSelectTrader}
                       account={traderData.account}
+                      protocol={traderData.protocol}
                       timeOption={timeOption}
                       onClear={() => setSelectedTrader(null)}
                     />

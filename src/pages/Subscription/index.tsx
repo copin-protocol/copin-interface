@@ -4,7 +4,6 @@ import { ArrowRight } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { Link } from 'react-router-dom'
 
-import grid from 'assets/images/subscription-grid.png'
 import NFTSubscriptionCard from 'components/NFTSubscriptionCard'
 import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
 import useUserSubscription from 'hooks/features/useUserSubscription'
@@ -13,7 +12,7 @@ import ROUTES from 'utils/config/routes'
 
 import Plans, { MobilePlans } from './Plans'
 import TermsAndConditions from './TermsAndConditions'
-import { GradientText } from './styled'
+import { GradientText, SubscriptionColors, SubscriptionGrid } from './styled'
 
 export default function Subscription() {
   const { sm } = useResponsive()
@@ -44,17 +43,16 @@ export default function Subscription() {
   return (
     <Box
       sx={{
-        backgroundImage: `url(${grid})`,
-        backgroundPosition: '50%',
-        backgroundSize: '1600px auto',
-        backgroundRepeat: 'no-repeat',
         width: '100%',
         overflow: 'hidden',
+        position: 'relative',
       }}
-      my={[4, 4, 4, 4, 100]}
+      py={[4, 4, 4, 4, 100]}
       px={3}
     >
-      <Box sx={{ width: '100%', maxWidth: 1248, mx: 'auto' }}>
+      <SubscriptionColors />
+      <SubscriptionGrid />
+      <Box sx={{ width: '100%', maxWidth: 1248, mx: 'auto', position: 'relative' }}>
         <Type.H1 mb={3} textAlign="center">
           <GradientText>
             <Trans>Subscription</Trans>

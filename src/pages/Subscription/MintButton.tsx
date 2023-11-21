@@ -4,6 +4,7 @@ import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Warning } from '@phosphor-icons/react'
 import { ReactNode, useState } from 'react'
+import styled from 'styled-components/macro'
 
 import Divider from 'components/@ui/Divider'
 import ETHPriceInUSD from 'components/ETHPriceInUSD'
@@ -45,16 +46,16 @@ export default function MintButton({
 
   return (
     <>
-      <Button
+      <StyledButton
         variant={buttonType === 'primary' ? 'primary' : undefined}
         sx={{
           width: ['100%', 246],
           height: 48,
           position: 'relative',
-          overflow: 'hidden',
+          // overflow: 'hidden',
           ...(buttonType === 'gradient'
             ? {
-                borderRadius: 0,
+                borderRadius: '4px',
                 '&:hover': {
                   '.light': {
                     width: 240,
@@ -66,66 +67,11 @@ export default function MintButton({
         }}
         onClick={handleOpenModal}
       >
-        {buttonType === 'gradient' && (
-          <>
-            <Box
-              className="light"
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                width: 210,
-                height: 40,
-                transform: 'translateX(-50%) translateY(-50%)',
-                borderRadius: '40px',
-                background: 'radial-gradient(75.94% 115.68% at 73.2% 6.65%, #FFF 0%, #3EA2F4 27.6%, #423EF4 100%)',
-                backdropFilter: 'blur(16px)',
-                transition: '0.3s',
-              }}
-            />
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                borderRadius: '2px',
-                border: '0.5px solid #DCBFF280',
-                background: 'linear-gradient(180deg, rgba(62, 162, 244, 0.05) 0%, rgba(66, 62, 244, 0.05) 100%)',
-                boxShadow: '1px 1px 0px 0px #3D7AF0',
-                backdropFilter: 'blur(20px)',
-              }}
-            />
-            {/* <Box
-              as="svg"
-              sx={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                top: 0,
-                left: 0,
-                fill: 'none',
-                stroke: '#fff',
-                strokeWidth: '2px',
-                strokeDasharray: '1, 10',
-                strokeDashoffset: 2,
-                '&:hover': {
-                  strokeDashoffset: 10,
-                },
-                transition: '1s',
-                // right: 0,
-                // bottom: 0,
-              }}
-            >
-              <rect x="0" y="0" width="100%" height="100%" rx="8" ry="8" pathLength="10"></rect>
-            </Box> */}
-          </>
-        )}
+        {buttonType === 'gradient' && <Decorators />}
         <Type.BodyBold color={buttonType === 'gradient' ? 'neutral1' : 'neutral8'} sx={{ position: 'relative' }}>
           {buttonText}
         </Type.BodyBold>
-      </Button>
+      </StyledButton>
       <MintModal isOpen={openModal} onDismiss={handleDismiss} planPrice={planPrice} />
     </>
   )
@@ -228,3 +174,112 @@ function MintModal({
     </Modal>
   )
 }
+
+function Decorators() {
+  return (
+    <>
+      <Box
+        className="light"
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: 210,
+          height: 40,
+          transform: 'translateX(-50%) translateY(-50%)',
+          borderRadius: '40px',
+          background: 'radial-gradient(75.94% 115.68% at 73.2% 6.65%, #FFF 0%, #3EA2F4 27.6%, #423EF4 100%)',
+          backdropFilter: 'blur(16px)',
+          transition: '0.3s',
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          borderRadius: '2px',
+          border: '0.5px solid #DCBFF280',
+          background: 'linear-gradient(180deg, rgba(62, 162, 244, 0.05) 0%, rgba(66, 62, 244, 0.05) 100%)',
+          boxShadow: '1px 1px 0px 0px #3D7AF0',
+          backdropFilter: 'blur(20px)',
+        }}
+      />
+      <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', transform: 'rotate(180deg)' }}>
+        <Box as="svg" className="dash_1">
+          <rect x="0" y="0" width="100%" height="100%" rx="4px" ry="4px" pathLength="10"></rect>
+        </Box>
+        <Box as="svg" className="dash_1 dash_2">
+          <rect x="0" y="0" width="100%" height="100%" rx="4px" ry="4px" pathLength="10"></rect>
+        </Box>
+        <Box as="svg" className="dash_1 dash_2 dash_3">
+          <rect x="0" y="0" width="100%" height="100%" rx="4px" ry="4px" pathLength="10"></rect>
+        </Box>
+        <Box as="svg" className="dash_1 dash_2 dash_4">
+          <rect x="0" y="0" width="100%" height="100%" rx="4px" ry="4px" pathLength="10"></rect>
+        </Box>
+      </Box>
+      <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+        <Box as="svg" className="dash_1">
+          <rect x="0" y="0" width="100%" height="100%" rx="4px" ry="4px" pathLength="10"></rect>
+        </Box>
+        <Box as="svg" className="dash_1 dash_2">
+          <rect x="0" y="0" width="100%" height="100%" rx="4px" ry="4px" pathLength="10"></rect>
+        </Box>
+        <Box as="svg" className="dash_1 dash_2 dash_3">
+          <rect x="0" y="0" width="100%" height="100%" rx="4px" ry="4px" pathLength="10"></rect>
+        </Box>
+        <Box as="svg" className="dash_1 dash_2 dash_4">
+          <rect x="0" y="0" width="100%" height="100%" rx="4px" ry="4px" pathLength="10"></rect>
+        </Box>
+      </Box>
+    </>
+  )
+}
+
+const StyledButton = styled(Button)`
+  &:hover {
+    .dash_1 {
+      animation: light_ani 1s ease-in-out;
+    }
+  }
+  .dash_1 {
+    display: block;
+    position: absolute;
+    inset: 0px;
+    overflow: visible;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    fill: none;
+    stroke: rgb(248, 252, 255);
+    stroke-width: 2px;
+    stroke-dasharray: 2, 10;
+    stroke-dashoffset: 14;
+    opacity: 0;
+  }
+  .dash_2 {
+    stroke-width: 6px;
+    filter: blur(20px);
+    stroke: rgb(201, 233, 255);
+  }
+  .dash_3 {
+    filter: blur(6px);
+  }
+  .dash_4 {
+    filter: blur(56px);
+  }
+  @keyframes light_ani {
+    30%,
+    55% {
+      opacity: 1;
+    }
+    100% {
+      stroke-dashoffset: 4;
+      opacity: 0;
+    }
+  }
+`

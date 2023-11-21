@@ -16,7 +16,7 @@ export default function PercentileRankingDetails({
   const ranking = data.ranking
   const comparedRanking = comparedTrader?.ranking
   return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr', gap: 24 }}>
+    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr', gap: [3, 3, 3, 3, 24] }}>
       {comparedRanking ? (
         <>
           <Flex sx={{ width: '100%', flexDirection: 'column', gap: 24 }}>
@@ -92,34 +92,41 @@ function RankingComparedItem({
   comparedValue: number | undefined
 }) {
   const canCompare = typeof value === 'number' && typeof comparedValue === 'number'
-  const diff = canCompare ? Number(value) - Number(comparedValue) : null
+  let _value = 0,
+    _comparedValue = 0,
+    diff = 0
+  if (canCompare) {
+    _value = Math.round(value)
+    _comparedValue = Math.round(comparedValue)
+    diff = _value - _comparedValue
+  }
   return (
     <Flex sx={{ alignItems: 'center', gap: 2 }}>
-      <Type.Caption sx={{ width: [120, 120, 120, 140], flexShrink: 0 }}>{label}</Type.Caption>
+      <Type.Caption sx={{ width: [120, 120, 120, 120, 140], flexShrink: 0 }}>{label}</Type.Caption>
       <Flex sx={{ flex: 1, alignItems: 'center', gap: 20 }}>
         {!canCompare && <Type.CaptionBold sx={{ textAlign: 'right', width: 50, flexShrink: 0 }}>--</Type.CaptionBold>}
-        {canCompare && diff != null && (
+        {canCompare && (
           <>
-            <Type.CaptionBold color="primary1" sx={{ textAlign: 'right', width: [30, 30, 30, 50], flexShrink: 0 }}>
-              {formatNumber(value, 0, 0)}
+            <Type.CaptionBold color="primary1" sx={{ textAlign: 'right', width: 30, flexShrink: 0 }}>
+              {_value}
             </Type.CaptionBold>
-            <Flex sx={{ flex: 1, height: 13, bg: 'neutral4', position: 'relative' }}>
-              <Flex sx={{ flex: 1, justifyContent: 'end' }}>
+            <Flex sx={{ flex: 1, height: 13, bg: 'neutral4', alignItems: 'center' }}>
+              <Flex sx={{ flex: 1, justifyContent: 'end', height: '100%' }}>
                 <Box
                   width={diff > 0 ? `${Math.abs(diff)}%` : 0}
                   sx={{ flexShrink: 0, height: '100%', bg: 'primary1' }}
                 />
               </Flex>
               <Box sx={{ bg: 'neutral7', width: '1px', height: '11px', flexShrink: 0 }} />
-              <Flex sx={{ flex: 1, justifyContent: 'start' }}>
+              <Flex sx={{ flex: 1, justifyContent: 'start', height: '100%' }}>
                 <Box
                   width={diff < 0 ? `${Math.abs(diff)}%` : 0}
                   sx={{ flexShrink: 0, height: '100%', bg: 'orange1' }}
                 />
               </Flex>
             </Flex>
-            <Type.CaptionBold color="orange1" sx={{ width: [30, 30, 30, 50], flexShrink: 0 }}>
-              {formatNumber(comparedValue, 0, 0)}
+            <Type.CaptionBold color="orange1" sx={{ width: 30, flexShrink: 0 }}>
+              {_comparedValue}
             </Type.CaptionBold>
           </>
         )}

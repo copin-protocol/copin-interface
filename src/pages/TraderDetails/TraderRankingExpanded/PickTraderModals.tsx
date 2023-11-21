@@ -6,21 +6,25 @@ import styled from 'styled-components/macro'
 
 import { getFavoritesApi } from 'apis/favoriteApis'
 import NoDataFound from 'components/@ui/NoDataFound'
+import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { CopyTradeData } from 'entities/copyTrade'
 import { FavoritedTrader } from 'entities/trader'
 import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
 import { renderTrader } from 'pages/MyProfile/renderProps'
+import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import Drawer from 'theme/Modal/Drawer'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 
 import { FindAndSelectTraderProps } from './FindAndSelectTrader'
+import { filterFoundData } from './helpers'
 import useSelectTrader from './useSelectTrader'
 
 export function PickFromFavoritesModal({
   onSelect,
   account,
+  protocol,
   onDismiss,
   timeOption,
 }: FindAndSelectTraderProps & { onDismiss: () => void }) {
@@ -30,6 +34,7 @@ export function PickFromFavoritesModal({
     {
       retry: 0,
       enabled: !!account,
+      select: (data) => filterFoundData(data, { account, protocol }),
     }
   )
   const { data: tradersKWENTA, isLoading: isLoadingTradersKWENTA } = useQuery(
@@ -38,11 +43,16 @@ export function PickFromFavoritesModal({
     {
       retry: 0,
       enabled: !!account,
+      select: (data) => filterFoundData(data, { account, protocol }),
     }
   )
 
   const [selectedTrader, setSelectedTrader] = useState<FavoritedTrader>()
-  const { isLoading: isSelecting } = useSelectTrader({
+  const {
+    isLoading: isSelecting,
+    error,
+    setError,
+  } = useSelectTrader({
     account: selectedTrader?.account,
     protocol: selectedTrader?.protocol,
     onSuccess: (data) => {
@@ -65,18 +75,23 @@ export function PickFromFavoritesModal({
       title={<Trans>Favorite List</Trans>}
       onDismiss={onDismiss}
     >
-      <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
-        {!traders.length && <NoDataFound />}
-        {traders.map((data) => {
-          if (data.account === account) return <></>
-          return (
-            <ModalItemWrapper key={data.id} role="button" onClick={() => setSelectedTrader(data)}>
-              {renderTrader(data.account, data.protocol ?? ProtocolEnum.GMX, { isLink: false, size: 32 })}
-              <ModalItemTag className="favorite_note">{data.note}</ModalItemTag>
-            </ModalItemWrapper>
-          )
-        })}
-        {isSelecting && <SelectTraderLoading />}
+      <Box sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
+          {!traders.length && <NoDataFound />}
+          {traders.map((data) => {
+            return (
+              <ModalItemWrapper key={data.id} role="button" onClick={() => setSelectedTrader(data)}>
+                {renderTrader(data.account, data.protocol ?? ProtocolEnum.GMX, {
+                  isLink: false,
+                  size: 32,
+                  textSx: { width: 80 },
+                })}
+                {data.note && <ModalItemTag className="favorite_note">{data.note}</ModalItemTag>}
+              </ModalItemWrapper>
+            )
+          })}
+        </Box>
+        <SelectTraderState isLoading={isSelecting} error={error} timeOption={timeOption} setError={setError} />
       </Box>
     </Drawer>
   )
@@ -85,11 +100,16 @@ export function PickFromFavoritesModal({
 export function PickFromCopyTradesModal({
   onSelect,
   account,
+  protocol,
   onDismiss,
   timeOption,
 }: FindAndSelectTraderProps & { onDismiss: () => void }) {
   const [selectedCopyTrade, setSelectedCopyTrade] = useState<CopyTradeData>()
-  const { isLoading: isSelecting } = useSelectTrader({
+  const {
+    isLoading: isSelecting,
+    error,
+    setError,
+  } = useSelectTrader({
     account: selectedCopyTrade?.account,
     protocol: selectedCopyTrade?.protocol,
     onSuccess: (data) => {
@@ -100,6 +120,7 @@ export function PickFromCopyTradesModal({
   })
 
   const { allCopyTrades } = useAllCopyTrades()
+  const _allCopyTrades = filterFoundData(allCopyTrades, { account, protocol })
 
   return (
     <Drawer
@@ -111,23 +132,35 @@ export function PickFromCopyTradesModal({
       title={<Trans>Copytrade List</Trans>}
       onDismiss={onDismiss}
     >
-      <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
-        {!allCopyTrades?.length && <NoDataFound />}
-        {allCopyTrades?.map((data) => {
-          if (data.account === account) return <></>
-          return (
-            <ModalItemWrapper key={data.id} role="button" onClick={() => setSelectedCopyTrade(data)}>
-              {renderTrader(data.account, data.protocol, { isLink: false, size: 32 })}
-              <ModalItemTag className="favorite_note">{data.title}</ModalItemTag>
-            </ModalItemWrapper>
-          )
-        })}
-        {isSelecting && <SelectTraderLoading />}
+      <Box sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
+          {!_allCopyTrades?.length && <NoDataFound />}
+          {_allCopyTrades?.map((data) => {
+            return (
+              <ModalItemWrapper key={data.id} role="button" onClick={() => setSelectedCopyTrade(data)}>
+                {renderTrader(data.account, data.protocol, { isLink: false, size: 32, textSx: { width: 80 } })}
+                {data.title && <ModalItemTag className="favorite_note">{data.title}</ModalItemTag>}
+              </ModalItemWrapper>
+            )
+          })}
+        </Box>
+        <SelectTraderState isLoading={isSelecting} error={error} timeOption={timeOption} setError={setError} />
       </Box>
     </Drawer>
   )
 }
-function SelectTraderLoading() {
+function SelectTraderState({
+  isLoading,
+  error,
+  timeOption,
+  setError,
+}: {
+  isLoading: boolean
+  error: boolean
+  timeOption: TimeFilterProps
+  setError: (error: boolean) => void
+}) {
+  if (!isLoading && !error) return <></>
   return (
     <Flex
       sx={{
@@ -141,7 +174,17 @@ function SelectTraderLoading() {
         alignItems: 'center',
       }}
     >
-      <Loading />
+      {error && (
+        <Flex sx={{ width: '100%', p: 3, alignItems: 'center', flexDirection: 'column' }}>
+          <Type.Caption mb={3} textAlign="center" maxWidth={230}>
+            <Trans>No trader data was found to compare in the past {timeOption.text}</Trans>
+          </Type.Caption>
+          <Button variant="outlinePrimary" onClick={() => setError(false)}>
+            <Trans>Select Other Trader</Trans>
+          </Button>
+        </Flex>
+      )}
+      {isLoading && <Loading />}
     </Flex>
   )
 }

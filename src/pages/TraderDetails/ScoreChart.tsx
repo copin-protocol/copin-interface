@@ -1,3 +1,4 @@
+import { ReactNode, useCallback } from 'react'
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 import { renderTrader } from 'pages/MyProfile/renderProps'
@@ -20,6 +21,7 @@ const ScoreChart = ({
   account,
   comparedAccount,
   outerRadius,
+  tooltipPosition,
 }: {
   data: ScoreChartData[]
   wrapperWidth?: number | string
@@ -29,30 +31,48 @@ const ScoreChart = ({
   account?: string
   comparedAccount?: string
   outerRadius?: number
+  tooltipPosition?: { x: number; y: number }
 }) => {
   const hasComparedData = data.every((values: any) => !!values.comparedValue)
+  const TooltipDescription = useCallback(
+    ({ label, value }: { label: ReactNode; value: ReactNode }) => {
+      if (hiddenAxisTitle)
+        return (
+          <Box as="span">
+            {label} is better than {value} traders
+          </Box>
+        )
+      return <Box as="span">Better than {value} traders</Box>
+    },
+    [hiddenAxisTitle]
+  )
 
   const renderTooltip = ({ active, payload }: any) => {
-    if (!active || !payload.length) return <div></div>
-    const value = payload[0].value || 0
-    const comparedValue = payload[0]?.payload?.comparedValue || 0
+    if (!active || !payload?.length) return <div></div>
+    const value = payload?.[0]?.value || 0
+    const comparedValue = payload?.[0]?.payload?.comparedValue || 0
+    const label = payload?.[0]?.payload?.subject || ''
     if (hasComparedData && account && comparedAccount) {
       return (
         <Flex sx={{ gap: 3, width: 320 }}>
           <Type.Caption sx={{ flex: 1, display: 'flex', flexWrap: 'wrap' }}>
             <Box as="span" sx={{ mr: 2, display: 'inline', borderLeft: '4px solid', borderLeftColor: 'primary1' }} />
             <Box display="inline">{renderTrader(account)}</Box>
-            <Box as="span">Better than {value.toFixed(0)}% traders</Box>
+            <TooltipDescription label={label} value={`${value.toFixed(0)}%`} />
           </Type.Caption>
           <Type.Caption sx={{ flex: 1, display: 'flex', flexWrap: 'wrap' }}>
             <Box as="span" sx={{ mr: 2, display: 'inline', borderLeft: '4px solid', borderLeftColor: 'orange1' }} />
             <Box display="inline">{renderTrader(comparedAccount)}</Box>
-            <Box as="span">Better than {comparedValue.toFixed(0)}% traders</Box>
+            <TooltipDescription label={label} value={`${comparedValue.toFixed(0)}%`} />
           </Type.Caption>
         </Flex>
       )
     }
-    return <Type.Caption>Better than {value.toFixed(0)}% traders</Type.Caption>
+    return (
+      <Type.Caption>
+        <TooltipDescription label={label} value={`${value.toFixed(0)}%`} />
+      </Type.Caption>
+    )
   }
   return (
     <ResponsiveContainer width={wrapperWidth} height={height}>
@@ -93,6 +113,7 @@ const ScoreChart = ({
             padding: '2px 6px',
             border: `1px solid ${colors(true).neutral4}`,
           }}
+          position={tooltipPosition}
         />
       </RadarChart>
     </ResponsiveContainer>

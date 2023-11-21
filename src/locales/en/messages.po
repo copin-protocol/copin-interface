@@ -1046,6 +1046,11 @@ msgstr "No Data"
 msgid "No Data Found"
 msgstr "No Data Found"
 
+#: src/pages/@layouts/Navbar/SearchBox.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/SearchTraders.tsx
+msgid "No Trader Found In The Past 60 Days"
+msgstr "No Trader Found In The Past 60 Days"
+
 #: src/pages/MyProfile/PositionTable/PositionsContainer.tsx
 msgid "No link to the trader’s original position was found."
 msgstr "No link to the trader’s original position was found."
@@ -1057,6 +1062,10 @@ msgstr "No link to the trader’s original position was found."
 #: src/components/BacktestResult/SingleBacktestResult.tsx
 msgid "No trade history from {0} to {1}"
 msgstr "No trade history from {0} to {1}"
+
+#: src/pages/TraderDetails/TraderRankingExpanded/PickTraderModals.tsx
+msgid "No trader data was found to compare in the past {0}"
+msgstr "No trader data was found to compare in the past {0}"
 
 #: src/components/ConfirmReferralModal/index.tsx
 #~ msgid "No, thank"
@@ -1407,6 +1416,10 @@ msgstr "Select All Traders"
 #: src/components/@ui/TimeFilter/RangeFilter.tsx
 msgid "Select Date"
 msgstr "Select Date"
+
+#: src/pages/TraderDetails/TraderRankingExpanded/PickTraderModals.tsx
+msgid "Select Other Trader"
+msgstr "Select Other Trader"
 
 #: src/pages/MyProfile/SelectTradersDropdown.tsx
 msgid "Select all"

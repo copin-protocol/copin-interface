@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 
 import NoDataFound from 'components/@ui/NoDataFound'
 import useSearchTraders from 'hooks/helpers/useSearchTraders'
@@ -9,6 +9,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
 
 import { FindAndSelectTraderProps } from './FindAndSelectTrader'
+import { filterFoundData } from './helpers'
 
 export default function SearchTraders(props: FindAndSelectTraderProps) {
   const {
@@ -18,13 +19,15 @@ export default function SearchTraders(props: FindAndSelectTraderProps) {
     handleSearchFocus,
     handleSearchChange,
     handleClearSearch,
-    handleClickViewAll,
     visibleSearchResult,
     isLoading,
     searchUserData,
     searchUserDataKwenta,
   } = useSearchTraders({ onSelect: props.onSelect, returnRanking: true, allowAllProtocol: true })
-  const traders = [...(searchUserData?.data ?? []), ...(searchUserDataKwenta?.data ?? [])]
+  const traders = [
+    ...filterFoundData(searchUserData?.data, { account: props.account, protocol: props.protocol }),
+    ...filterFoundData(searchUserDataKwenta?.data, { account: props.account, protocol: props.protocol }),
+  ]
   return (
     <Box ref={searchWrapperRef} sx={{ position: 'relative' }}>
       <InputSearch
@@ -42,7 +45,6 @@ export default function SearchTraders(props: FindAndSelectTraderProps) {
         onFocus={handleSearchFocus}
         onChange={handleSearchChange}
         onClear={handleClearSearch}
-        onKeyDown={(e) => e.key === 'Enter' && handleClickViewAll()}
       />
       {visibleSearchResult && (
         <Flex
@@ -56,7 +58,6 @@ export default function SearchTraders(props: FindAndSelectTraderProps) {
             height: 200,
             bg: 'neutral5',
             flexDirection: 'column',
-            gap: 12,
             overflow: 'auto',
           }}
         >
@@ -66,12 +67,19 @@ export default function SearchTraders(props: FindAndSelectTraderProps) {
             </Box>
           ) : (
             <>
-              {!traders.length && <NoDataFound />}
+              {!traders.length && <NoDataFound message={<Trans>No Trader Found In The Past 60 Days</Trans>} />}
               {traders.map((traderData) => {
-                if (traderData.account === props.account) return <></>
                 return (
-                  <Box role="button" key={traderData.id} onClick={() => props.onSelect(traderData)}>
-                    {renderTrader(traderData.account, traderData.protocol, { isLink: false })}
+                  <Box
+                    role="button"
+                    key={traderData.id}
+                    onClick={() => props.onSelect(traderData)}
+                    sx={{ py: '6px', px: 1, borderRadius: 'sm', '&:hover': { bg: 'neutral6' } }}
+                  >
+                    {renderTrader(traderData.account, traderData.protocol, {
+                      isLink: false,
+                      textSx: { width: 80 },
+                    })}
                   </Box>
                 )
               })}

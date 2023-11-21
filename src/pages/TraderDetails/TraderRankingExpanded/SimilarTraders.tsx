@@ -20,6 +20,7 @@ import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 import ScoreChart, { ScoreChartData } from '../ScoreChart'
+import { filterFoundData } from './helpers'
 
 const RANKING_TOLERANCE = 10
 export default function SimilarTraders({
@@ -38,36 +39,45 @@ export default function SimilarTraders({
   onClickCompareButton: (data: TraderData) => void
 }) {
   const { isPremiumUser } = useSubscriptionRestrict()
-  const similarTradersFilter: FilterValues[] = rankingFieldOptions.reduce((result, option) => {
-    const rankingValue = traderData.ranking[option.value]
-    const minRanking = rankingValue - RANKING_TOLERANCE
-    const maxRanking = rankingValue + RANKING_TOLERANCE
-    if (!rankingValue) return result
-    const filters = {
-      fieldName: `ranking.${option.value}`,
-      gte: minRanking < 0 ? 0 : minRanking,
-      lte: maxRanking > 100 ? 100 : maxRanking,
-    }
-    return [...result, filters]
-  }, [] as FilterValues[])
+  const similarTradersFilter: FilterValues[] = rankingFieldOptions.reduce(
+    (result, option) => {
+      const rankingValue = traderData.ranking[option.value]
+      const minRanking = rankingValue - RANKING_TOLERANCE
+      const maxRanking = rankingValue + RANKING_TOLERANCE
+      if (!rankingValue) return result
+      const filters = {
+        fieldName: `ranking.${option.value}`,
+        gte: minRanking < 0 ? 0 : minRanking,
+        lte: maxRanking > 100 ? 100 : maxRanking,
+      }
+      return [...result, filters]
+    },
+    [{ fieldName: 'lastTradeAtTs', lte: 14 }] as FilterValues[]
+  )
+
+  const queryBody = {
+    queries: [{ fieldName: 'type', value: timeOption.id }],
+    ranges: similarTradersFilter,
+    sortBy: 'profit',
+    pagination: { limit: 10, offset: 0 },
+    returnRanking: true,
+  }
+
   const { data: similarTradersGMX, isFetching: isFetchingOnGMX } = useQuery(
     [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, similarTradersFilter, ProtocolEnum.GMX],
     () =>
       getTradersApi({
         protocol: ProtocolEnum.GMX,
-        body: {
-          queries: [{ fieldName: 'type', value: timeOption.id }],
-          ranges: similarTradersFilter,
-          sortBy: 'profit',
-          pagination: { limit: 10, offset: 0 },
-          returnRanking: true,
-        },
+        body: queryBody,
       }),
     {
       keepPreviousData: true,
       retry: 0,
       enabled: !!timeOption,
-      select: (result) => ({ ...result, data: result.data.filter((_data) => _data.account !== traderData.account) }),
+      select: (result) => ({
+        ...result,
+        data: filterFoundData(result.data, { account: traderData.account, protocol: traderData.protocol }),
+      }),
     }
   )
   const { data: similarTradersKwenta, isFetching: isFetchingOnKwenta } = useQuery(
@@ -75,19 +85,16 @@ export default function SimilarTraders({
     () =>
       getTradersApi({
         protocol: ProtocolEnum.KWENTA,
-        body: {
-          queries: [{ fieldName: 'type', value: timeOption.id }],
-          ranges: similarTradersFilter,
-          sortBy: 'profit',
-          pagination: { limit: 10, offset: 0 },
-          returnRanking: true,
-        },
+        body: queryBody,
       }),
     {
       keepPreviousData: true,
       retry: 0,
       enabled: !!timeOption,
-      select: (result) => ({ ...result, data: result.data.filter((_data) => _data.account !== traderData.account) }),
+      select: (result) => ({
+        ...result,
+        data: filterFoundData(result.data, { account: traderData.account, protocol: traderData.protocol }),
+      }),
     }
   )
 
@@ -169,11 +176,12 @@ export default function SimilarTraders({
                 <Flex mt={24} sx={{ gap: 24, alignItems: 'center' }}>
                   <ScoreChart
                     data={formatChartData(traderData.ranking)}
-                    outerRadius={60}
+                    outerRadius={55}
                     wrapperWidth={120}
                     width={120}
                     height={120}
                     hiddenAxisTitle
+                    tooltipPosition={{ x: 120, y: 0 }}
                   />
                   <TraderDetailsWrapper>
                     {rankingFieldOptions.map((option, index) => {

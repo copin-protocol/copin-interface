@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { v4 as uuid } from 'uuid'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
@@ -9,6 +10,7 @@ import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import Tag from 'theme/Tag'
+import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
@@ -58,8 +60,17 @@ export function renderTrader(
     textSx = {},
     isLink = true,
     size = 24,
-  }: { textSx?: TextProps; isLink?: boolean; size?: number } & SxProps = {}
+    dividerColor = 'neutral4',
+    hasAddressTooltip = false,
+  }: {
+    textSx?: TextProps
+    isLink?: boolean
+    size?: number
+    dividerColor?: string
+    hasAddressTooltip?: boolean
+  } & SxProps = {}
 ) {
+  const tooltipId = uuid()
   return (
     <Flex
       as={isLink && protocol ? Link : undefined}
@@ -73,15 +84,17 @@ export function renderTrader(
         color="inherit"
         data-trader-address={address}
         sx={{ color: 'neutral1', ':hover': { textDecoration: isLink ? 'underline' : undefined }, ...textSx }}
+        {...(hasAddressTooltip ? { 'data-tooltip-id': tooltipId, 'data-tooltip-delay-show': 360 } : {})}
       >
         {addressShorten(address, 3, 5)}
       </Type.Caption>
       {protocol && (
         <>
-          <Type.Caption color="neutral4">|</Type.Caption>
+          <Type.Caption color={dividerColor}>|</Type.Caption>
           <Image src={parseProtocolImage(protocol)} width={16} height={16} />
         </>
       )}
+      {hasAddressTooltip && <Tooltip id={tooltipId}>{address}</Tooltip>}
     </Flex>
   )
 }
