@@ -28,7 +28,7 @@ export default function LinkBotAlertModal({
             <Trans>To get notifications from traders, you must use Copin Telegram Bot</Trans>
           </Type.Body>
         </Flex>
-        <Type.Caption mb={24} color="neutral2" textAlign="center" width="100%">
+        <Type.Caption mb={24} color="orange1" textAlign="center" width="100%">
           <Trans>Note: Each Telegram account is only allowed to link to a Copin account</Trans>
         </Type.Caption>
         <Flex width="100%" sx={{ gap: 3 }}>

@@ -54,5 +54,5 @@ export const generateParamsUrl = ({
 }
 
 export const generateTelegramBotAlertUrl = (state?: string) => {
-  return `${LINKS.baseTelegram}/${TELEGRAM_BOT_ALERT}?${state ? `state=${state}` : ''}`
+  return `${LINKS.baseTelegram}/${TELEGRAM_BOT_ALERT}?${state ? `start=${state}` : ''}`
 }

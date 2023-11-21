@@ -16,6 +16,7 @@ import TelegramIcon from 'theme/Icons/TelegramIcon'
 import { Flex, Type } from 'theme/base'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
+import { generateTelegramBotAlertUrl } from 'utils/helpers/generateRoute'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
 const LinkBotTelegram = () => {
@@ -48,6 +49,8 @@ const LinkBotTelegram = () => {
     }
     if (currentState) {
       linkBotAlert(currentState)
+    } else {
+      window.open(generateTelegramBotAlertUrl(), '_blank')
     }
   }
 
@@ -63,7 +66,7 @@ const LinkBotTelegram = () => {
         <Type.Body textAlign="center">
           <Trans>To get notifications from traders, you must use Copin Telegram Bot</Trans>
         </Type.Body>
-        <Type.Caption color="neutral2" textAlign="center" width="100%">
+        <Type.Caption color="orange1" textAlign="center" width="100%">
           <Trans>Note: Each Telegram account is only allowed to link to a Copin account</Trans>
         </Type.Caption>
       </Flex>
@@ -77,7 +80,7 @@ const LinkBotTelegram = () => {
         disabled={submitting}
         onClick={handleConfirmLinkAlert}
       >
-        <Trans>Link Account</Trans>
+        {currentState ? <Trans>Link Account</Trans> : <Trans>Open Telegram Bot</Trans>}
       </ButtonWithIcon>
     </Flex>
   )

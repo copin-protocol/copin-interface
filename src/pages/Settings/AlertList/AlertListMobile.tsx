@@ -23,7 +23,11 @@ export default function AlertListMobile({
   if (isLoading) return <Loading />
   if (!data) return <></>
   return (
-    <Flex pb={40} sx={{ width: '100%', height: '100%', overflow: 'auto', flexDirection: 'column', gap: 3 }}>
+    <Flex
+      pb={40}
+      minHeight="calc(100vh - 230px)"
+      sx={{ width: '100%', height: '100%', overflow: 'auto', flexDirection: 'column', gap: 3 }}
+    >
       {data.map((value, index) => (
         <MobileItem key={index} data={value} onSelect={onSelect} submitting={submitting} />
       ))}

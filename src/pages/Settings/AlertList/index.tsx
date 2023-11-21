@@ -20,6 +20,7 @@ import { MAX_TRADER_ALERT_BASIC, MAX_TRADER_ALERT_PREMIUM } from 'utils/config/c
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { formatNumber } from 'utils/helpers/format'
+import { generateTelegramBotAlertUrl } from 'utils/helpers/generateRoute'
 import { getErrorMessage } from 'utils/helpers/handleError'
 import { pageToOffset } from 'utils/helpers/transform'
 
@@ -125,8 +126,18 @@ const AlertList = () => {
               borderColor: 'neutral4',
             }}
           />
+          <Box bg="neutral5" px={3} py={2} sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
+            <Type.Caption color={'neutral3'}>
+              Using{' '}
+              <a href={generateTelegramBotAlertUrl()} target="_blank" rel="noreferrer">
+                Copin Telegram Bot
+              </a>{' '}
+              to get notifications from traders.
+            </Type.Caption>
+          </Box>
         </Box>
       </Flex>
+
       {openModal && currentAlert && (
         <UnsubscribeAlertModal
           data={currentAlert}
