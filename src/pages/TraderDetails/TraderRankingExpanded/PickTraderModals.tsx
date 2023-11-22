@@ -120,7 +120,13 @@ export function PickFromCopyTradesModal({
   })
 
   const { allCopyTrades } = useAllCopyTrades()
-  const _allCopyTrades = filterFoundData(allCopyTrades, { account, protocol })
+  const checkerMapping: Record<string, { [protocol: string]: boolean }> = {}
+  const _allCopyTrades = filterFoundData(allCopyTrades, { account, protocol }).filter((data) => {
+    if (!data.account || !data.protocol) return false
+    if (checkerMapping[data.account]?.[data.protocol]) return false
+    checkerMapping[data.account] = { [data.protocol]: true }
+    return true
+  })
 
   return (
     <Drawer

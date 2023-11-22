@@ -65,6 +65,7 @@ export default function MintButton({
             : {}),
           ...(buttonSx ?? {}),
         }}
+        disabled={!planPrice}
         onClick={handleOpenModal}
       >
         {buttonType === 'gradient' && <Decorators />}
@@ -165,7 +166,7 @@ function MintModal({
             </Box>
           )}
           {!planPrice && (
-            <Type.Body>
+            <Type.Body sx={{ display: 'block', p: 3, textAlign: 'center' }}>
               <Trans>Cannot interact with contract at this moment</Trans>
             </Type.Body>
           )}
