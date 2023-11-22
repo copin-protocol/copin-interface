@@ -1,7 +1,7 @@
 import { cloneElement, useCallback, useReducer } from 'react'
 
 import DirectionButton from 'components/@ui/DirectionButton'
-import useInternalRole from 'hooks/features/useInternalRole'
+import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Box } from 'theme/base'
 import { STORAGE_KEYS } from 'utils/config/keys'
@@ -20,7 +20,7 @@ export default function AnalyticsLayoutDesktop({
   conditionFilter,
 }: AnalyticsLayoutComponents) {
   const { myProfile } = useMyProfile()
-  const isInternal = useInternalRole()
+  const { isPremiumUser } = useSubscriptionRestrict()
   const [state, dispatch] = useReducer(reducer, initialState, initState)
   const { MAIN, COL_RIGHT, OPENINGS, FILTERS, CHART, LIST } = state
   const mainExpanded = MAIN.state === ColumnState.EXPANDED_RIGHT
@@ -61,7 +61,7 @@ export default function AnalyticsLayoutDesktop({
           height: '100%',
           borderRight: 'small',
           borderRightColor: 'neutral4',
-          gridTemplate: isInternal
+          gridTemplate: isPremiumUser
             ? `
       "${GridAreas.CHART}" minmax(${CHART.minHeight}px, ${
                 CHART.maxHeight ? CHART.maxHeight + 'px' : CHART.ratioHeight + 'fr'
@@ -109,7 +109,7 @@ export default function AnalyticsLayoutDesktop({
           ) : null}
         </Box>
         <Box sx={{ gridArea: GridAreas.LIST, position: 'relative', borderTop: 'small', borderColor: 'neutral4' }}>
-          {isInternal && (
+          {isPremiumUser && (
             <DirectionButton
               onClick={() => {
                 dispatch(ButtonName.LIST)

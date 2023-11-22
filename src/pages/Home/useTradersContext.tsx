@@ -5,7 +5,7 @@ import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ConditionFormValues } from 'components/ConditionFilterForm/types'
 import { TraderListSortProps } from 'components/Tables/TraderListTable/dataConfig'
 import { TraderData } from 'entities/trader.d'
-import useInternalRole from 'hooks/features/useInternalRole'
+import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -88,9 +88,9 @@ export function FilterTradersProvider({
     tab === TabKeyEnum.Explorer ? URL_PARAM_KEYS.EXPLORER_TIME_RANGE_FILTER : URL_PARAM_KEYS.FAVORITE_TIME_RANGE_FILTER
 
   // START TIME FILTER
-  const isInternal = useInternalRole()
+  const { isPremiumUser } = useSubscriptionRestrict()
   const [isRangeSelection, setRangeSelection] = useState(() => {
-    if (!isInternal) return false
+    if (!isPremiumUser) return false
     if (searchParams[rangeFilterKey]) return true
     return false
   })
