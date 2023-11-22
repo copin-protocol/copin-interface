@@ -13,7 +13,7 @@ import useChain from 'hooks/web3/useChain'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
-import Colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { getColorFromText } from 'utils/helpers/css'
@@ -65,7 +65,7 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, re
                   value={walletName}
                   showEditButton
                   editButtonContent={<PencilSimpleLine size={20} />}
-                  editButtonProps={{ style: { backgroundColor: 'transparent', color: Colors(true).primary1 } }}
+                  editButtonProps={{ style: { backgroundColor: 'transparent', color: themeColors.primary1 } }}
                   placeholder={'Enter wallet name'}
                   style={{
                     margin: 0,
@@ -73,7 +73,7 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, re
                     fontSize: '13px',
                     lineHeight: '25px',
                     backgroundColor: 'transparent',
-                    borderColor: Colors(true).neutral4,
+                    borderColor: themeColors.neutral4,
                     borderWidth: '1px',
                     borderStyle: isEdit ? 'solid' : undefined,
                     minHeight: '25px',

@@ -21,7 +21,7 @@ import useUsdPricesStore from 'hooks/store/useUsdPrices'
 import { useWhatIfStore } from 'hooks/store/useWhatIf'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
-import colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
@@ -30,8 +30,6 @@ import { calcLiquidatePrice, calcOpeningPnL, calcPnL } from 'utils/helpers/calcu
 import { formatNumber } from 'utils/helpers/format'
 import { generateClosedPositionRoute } from 'utils/helpers/generateRoute'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
-
-const COLORS = colors(true)
 
 export default function ChartProfit({
   position,
@@ -287,7 +285,7 @@ export default function ChartProfit({
         borderVisible: false,
       },
       layout: {
-        textColor: COLORS.neutral3,
+        textColor: themeColors.neutral3,
         background: { type: ColorType.Solid, color: 'transparent' },
         fontFamily: FONT_FAMILY,
         fontSize: 13,
@@ -340,12 +338,12 @@ export default function ChartProfit({
 
     const priceSeries = chart.addCandlestickSeries({
       priceScaleId: 'right',
-      upColor: COLORS.neutral4,
+      upColor: themeColors.neutral4,
       downColor: 'transparent',
-      borderDownColor: COLORS.neutral4,
-      borderUpColor: COLORS.neutral4,
-      wickDownColor: COLORS.neutral4,
-      wickUpColor: COLORS.neutral4,
+      borderDownColor: themeColors.neutral4,
+      borderUpColor: themeColors.neutral4,
+      wickDownColor: themeColors.neutral4,
+      wickUpColor: themeColors.neutral4,
       priceLineVisible: false,
       lastValueVisible: false,
     })
@@ -359,8 +357,8 @@ export default function ChartProfit({
 
     const series = chart.addBaselineSeries({
       priceScaleId: 'left',
-      topLineColor: COLORS.green1,
-      bottomLineColor: COLORS.red2,
+      topLineColor: themeColors.green1,
+      bottomLineColor: themeColors.red2,
       baseValue: {
         type: 'price',
         price: 0,
@@ -377,8 +375,8 @@ export default function ChartProfit({
 
     const futureSeries = chart.addBaselineSeries({
       priceScaleId: 'left',
-      topLineColor: COLORS.neutral3,
-      bottomLineColor: COLORS.neutral3,
+      topLineColor: themeColors.neutral3,
+      bottomLineColor: themeColors.neutral3,
       baseValue: {
         type: 'price',
         price: 0,
@@ -424,7 +422,7 @@ export default function ChartProfit({
       if (posDelta) {
         series.createPriceLine({
           price: posDelta,
-          color: COLORS.red2,
+          color: themeColors.red2,
           lineVisible: true,
           lineWidth: 1,
           axisLabelVisible: true,
@@ -438,7 +436,7 @@ export default function ChartProfit({
       if (high && low && low.value !== high.value) {
         const increaseMarkers = increaseList.slice(1).map((order): SeriesMarker<Time> => {
           return {
-            color: COLORS.neutral2,
+            color: themeColors.neutral2,
             position: 'aboveBar',
             shape: 'arrowUp',
             time: (dayjs(order.blockTime).utc().unix() - timezone) as Time,
@@ -448,7 +446,7 @@ export default function ChartProfit({
         const decreaseMarkers = (isOpening ? decreaseList : decreaseList.slice(0, -1)).map(
           (order): SeriesMarker<Time> => {
             return {
-              color: COLORS.neutral2,
+              color: themeColors.neutral2,
               position: 'belowBar',
               shape: 'arrowDown',
               time: (dayjs(order.blockTime).utc().unix() - timezone) as Time,
@@ -460,7 +458,7 @@ export default function ChartProfit({
         const makers = [...increaseMarkers, ...decreaseMarkers]
         if (!isOpening && nextHours) {
           const closeMarkers: SeriesMarker<Time> = {
-            color: hasLiquidate ? COLORS.red2 : COLORS.neutral1,
+            color: hasLiquidate ? themeColors.red2 : themeColors.neutral1,
             position: 'belowBar',
             shape: 'square',
             time: (dayjs(position.closeBlockTime).utc().unix() - timezone) as Time,
@@ -490,7 +488,7 @@ export default function ChartProfit({
       legend.style.fontSize = '10px'
       legend.style.fontFamily = FONT_FAMILY
       legend.style.lineHeight = '12px'
-      legend.style.color = COLORS.neutral3
+      legend.style.color = themeColors.neutral3
       legend.style.display = 'none'
       container.appendChild(legend)
     }

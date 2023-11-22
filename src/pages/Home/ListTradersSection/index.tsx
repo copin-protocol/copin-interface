@@ -69,7 +69,7 @@ function ListTradersSection({
           <Flex sx={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', p: 3 }}>
             <Box mt={4} mb={3} variant="card" sx={{ mx: 'auto', maxWidth: 600, width: '100%' }}>
               <Type.Body textAlign="center" display="block" mb={24}>
-                Data is being processed. Please wait a minute
+                Data is being processed. Please wait a few minutes
               </Type.Body>
               <ProgressBar
                 percent={((loadingRangeProgress?.processed ?? 0) / (loadingRangeProgress?.total ?? 0)) * 100}

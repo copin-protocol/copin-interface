@@ -19,7 +19,7 @@ import { CopyOrderData, CopyPositionData } from 'entities/copyTrade.d'
 import useUsdPricesStore from 'hooks/store/useUsdPrices'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
-import colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
@@ -44,7 +44,6 @@ export default function CopyChartProfit({
 }) {
   const { prices } = useUsdPricesStore()
   const { sm } = useResponsive()
-  const _colors = colors(true)
   const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken].symbol
   const from = openBlockTime * 1000
   const to = useMemo(() => (isOpening ? dayjs().utc().valueOf() : closeBlockTime * 1000), [closeBlockTime, isOpening])
@@ -238,7 +237,7 @@ export default function CopyChartProfit({
         borderVisible: false,
       },
       layout: {
-        textColor: _colors.neutral3,
+        textColor: themeColors.neutral3,
         background: { type: ColorType.Solid, color: 'transparent' },
         fontFamily: FONT_FAMILY,
         fontSize: 13,
@@ -273,12 +272,12 @@ export default function CopyChartProfit({
 
     const priceSeries = chart.addCandlestickSeries({
       priceScaleId: 'right',
-      upColor: _colors.neutral4,
+      upColor: themeColors.neutral4,
       downColor: 'transparent',
-      borderDownColor: _colors.neutral4,
-      borderUpColor: _colors.neutral4,
-      wickDownColor: _colors.neutral4,
-      wickUpColor: _colors.neutral4,
+      borderDownColor: themeColors.neutral4,
+      borderUpColor: themeColors.neutral4,
+      wickDownColor: themeColors.neutral4,
+      wickUpColor: themeColors.neutral4,
       priceLineVisible: false,
       lastValueVisible: false,
     })
@@ -292,8 +291,8 @@ export default function CopyChartProfit({
 
     const series = chart.addBaselineSeries({
       priceScaleId: 'left',
-      topLineColor: _colors.green1,
-      bottomLineColor: _colors.red2,
+      topLineColor: themeColors.green1,
+      bottomLineColor: themeColors.red2,
       baseValue: {
         type: 'price',
         price: 0,
@@ -333,7 +332,7 @@ export default function CopyChartProfit({
       if (posDelta) {
         series.createPriceLine({
           price: posDelta,
-          color: _colors.red2,
+          color: themeColors.red2,
           lineVisible: true,
           lineWidth: 1,
           axisLabelVisible: true,
@@ -347,7 +346,7 @@ export default function CopyChartProfit({
       if (high && low && low.value !== high.value) {
         const increaseMarkers = increaseList.slice(1).map((order): SeriesMarker<Time> => {
           return {
-            color: _colors.neutral2,
+            color: themeColors.neutral2,
             position: 'aboveBar',
             shape: 'arrowUp',
             time: (dayjs(order.createdAt).utc().unix() - timezone) as Time,
@@ -357,7 +356,7 @@ export default function CopyChartProfit({
         const decreaseMarkers = (isOpening ? decreaseList : decreaseList.slice(0, -1)).map(
           (order): SeriesMarker<Time> => {
             return {
-              color: _colors.neutral2,
+              color: themeColors.neutral2,
               position: 'belowBar',
               shape: 'arrowDown',
               time: (dayjs(order.createdAt).utc().unix() - timezone) as Time,
@@ -389,7 +388,7 @@ export default function CopyChartProfit({
       legend.style.fontSize = '10px'
       legend.style.fontFamily = FONT_FAMILY
       legend.style.lineHeight = '12px'
-      legend.style.color = _colors.neutral3
+      legend.style.color = themeColors.neutral3
       legend.style.display = 'none'
       container.appendChild(legend)
     }

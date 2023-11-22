@@ -8,9 +8,9 @@ import {
   LineStyle,
   MouseEventParams,
   PriceScaleMode,
+  Range,
   SeriesMarker,
   Time,
-  TimeRange,
   UTCTimestamp,
   createChart,
 } from 'lightweight-charts'
@@ -26,7 +26,7 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum, TimeframeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -47,8 +47,6 @@ interface TimeScaleRange {
 }
 
 const THE_REST_HEIGHT = 200
-
-const COLORS = colors(true)
 
 export default function ChartPositions({
   protocol,
@@ -229,7 +227,7 @@ export default function ChartPositions({
         entireTextOnly: true,
         borderVisible: false,
         mode: PriceScaleMode.Logarithmic,
-        textColor: COLORS.neutral3,
+        textColor: themeColors.neutral3,
         scaleMargins: {
           top: 0.1,
           bottom: 0.1,
@@ -266,7 +264,7 @@ export default function ChartPositions({
         },
       },
       layout: {
-        textColor: COLORS.neutral3,
+        textColor: themeColors.neutral3,
         background: { type: ColorType.Solid, color: 'transparent' },
         fontFamily: FONT_FAMILY,
         fontSize: 13,
@@ -274,14 +272,14 @@ export default function ChartPositions({
       crosshair: {
         mode: CrosshairMode.Normal,
         horzLine: {
-          labelBackgroundColor: COLORS.neutral1,
-          color: COLORS.neutral3,
+          labelBackgroundColor: themeColors.neutral1,
+          color: themeColors.neutral3,
           width: 1,
           style: LineStyle.Dotted,
         },
         vertLine: {
-          color: COLORS.neutral3,
-          labelBackgroundColor: COLORS.neutral1,
+          color: themeColors.neutral3,
+          labelBackgroundColor: themeColors.neutral1,
           width: 1,
           style: LineStyle.Dotted,
         },
@@ -289,7 +287,7 @@ export default function ChartPositions({
     })
 
     const timeScale = chart.timeScale()
-    function onVisibleTimeRangeChanged(value: TimeRange | null) {
+    function onVisibleTimeRangeChanged(value: Range<any> | null) {
       if (isLoadingClosed || hasAllTokens) return
       if (chartData && chartData.length > 0 && hasNextPage && value && Number(value.from) === chartData[0].time) {
         setVisibleRange({ from: Number(value.from), to: Number(value.to) })
@@ -299,12 +297,12 @@ export default function ChartPositions({
     timeScale.subscribeVisibleTimeRangeChange(onVisibleTimeRangeChanged)
 
     const series = chart.addCandlestickSeries({
-      upColor: COLORS.neutral3,
+      upColor: themeColors.neutral3,
       downColor: 'transparent',
-      borderDownColor: COLORS.neutral3,
-      borderUpColor: COLORS.neutral3,
-      wickDownColor: COLORS.neutral3,
-      wickUpColor: COLORS.neutral3,
+      borderDownColor: themeColors.neutral3,
+      borderUpColor: themeColors.neutral3,
+      wickDownColor: themeColors.neutral3,
+      wickUpColor: themeColors.neutral3,
     })
     series.setData(chartData)
     series.applyOptions({})
@@ -317,7 +315,7 @@ export default function ChartPositions({
       return {
         id: `${position.id}-OPEN-${isGMX ? position.blockTime : position.openBlockTime}`,
         position: 'aboveBar',
-        color: markerId && !isSelected ? COLORS.neutral3 : position.isLong ? COLORS.green1 : COLORS.red2,
+        color: markerId && !isSelected ? themeColors.neutral3 : position.isLong ? themeColors.green1 : themeColors.red2,
         size: isSelected ? 1.85 : 1.35,
         shape: position.isLong ? 'arrowUp' : 'arrowDown',
         time: (dayjs(isGMX && isOpen ? position.blockTime : position.openBlockTime)
@@ -332,10 +330,10 @@ export default function ChartPositions({
         position: 'belowBar',
         color:
           markerId && !markerId.includes(position.id)
-            ? COLORS.neutral3
+            ? themeColors.neutral3
             : position.isLiquidate || position.roi <= -100
-            ? COLORS.red2
-            : COLORS.neutral1,
+            ? themeColors.red2
+            : themeColors.neutral1,
         size: markerId && markerId.includes(position.id) ? 1.75 : 1.5,
         shape: 'square',
         text: '$' + formatNumber(position.realisedPnl),
@@ -398,7 +396,7 @@ export default function ChartPositions({
         legend.style.fontSize = '13px'
         legend.style.fontFamily = FONT_FAMILY
         legend.style.lineHeight = '13px'
-        legend.style.color = COLORS.neutral3
+        legend.style.color = themeColors.neutral3
         legend.style.display = 'none'
         container.appendChild(legend)
       }
@@ -412,8 +410,8 @@ export default function ChartPositions({
       //   toolTip.style.padding = '8px'
       //   toolTip.style.boxSizing = 'border-box'
       //   toolTip.style.zIndex = '1001'
-      //   toolTip.style.background = COLORS.neutral5
-      //   toolTip.style.color = COLORS.neutral1
+      //   toolTip.style.background = themeColors.neutral5
+      //   toolTip.style.color = themeColors.neutral1
       //   toolTip.style.fontSize = '12px'
       //   toolTip.style.left = '16px'
       //   toolTip.style.top = '20px'
@@ -445,7 +443,7 @@ export default function ChartPositions({
             legend.style.display = 'none'
           }
         } else {
-          // style="color: ${COLORS.neutral1}"
+          // style="color: ${themeColors.neutral1}"
           if (legend) {
             const candleData = param.seriesData.get(series) as CandlestickData
             if (candleData && candleData.time) {
@@ -464,7 +462,7 @@ export default function ChartPositions({
             if (currentPosition) {
               avgPriceLine.applyOptions({
                 price: currentPosition.averagePrice,
-                color: currentPosition.isLong ? COLORS.green2 : COLORS.red1,
+                color: currentPosition.isLong ? themeColors.green2 : themeColors.red1,
                 lineVisible: true,
                 axisLabelVisible: true,
                 title: (currentPosition.isLong ? 'Long' : 'Short') + ' - Avg. Price',
@@ -475,35 +473,35 @@ export default function ChartPositions({
               //         toolTip.innerHTML = `<div>OPEN | ${formatLocalDate(
               //           currentPosition.openBlockTime ?? currentPosition.blockTime,
               //           DAYJS_FULL_DATE_FORMAT
-              //         )}</div><div style="color: ${COLORS.neutral1}">
+              //         )}</div><div style="color: ${themeColors.neutral1}">
               // 	Avg. Price: ${formatNumber(currentPosition.averagePrice)} | <span style="color: ${
-              //           currentPosition.isLong ? COLORS.green1 : COLORS.red2
+              //           currentPosition.isLong ? themeColors.green1 : themeColors.red2
               //         }">${currentPosition.isLong ? 'Long' : 'Short'}</span>
-              // 	</div><div style="color: ${COLORS.neutral1}">
+              // 	</div><div style="color: ${themeColors.neutral1}">
               // 	Size: ${formatNumber(currentPosition.size, 0)} | ${formatNumber(currentPosition.leverage, 1)}x
               // 	</div>`
               //       } else if (markerId.includes('CLOSE')) {
               //         toolTip.style.display = 'block'
               //         toolTip.innerHTML = `<div><span style="color: ${
-              //           currentPosition.roi <= -100 ? COLORS.red2 : COLORS.neutral1
+              //           currentPosition.roi <= -100 ? themeColors.red2 : themeColors.neutral1
               //         }">${currentPosition.roi <= -100 ? 'LIQUIDATED' : 'CLOSED'}</span> | ${formatLocalDate(
               //           currentPosition.closeBlockTime,
               //           DAYJS_FULL_DATE_FORMAT
-              //         )}</div><div style="color: ${COLORS.neutral1}">
+              //         )}</div><div style="color: ${themeColors.neutral1}">
               // 	Avg. Price: ${formatNumber(currentPosition.averagePrice)} | <span style="color: ${
-              //           currentPosition.isLong ? COLORS.green1 : COLORS.red2
+              //           currentPosition.isLong ? themeColors.green1 : themeColors.red2
               //         }">${currentPosition.isLong ? 'Long' : 'Short'}</span>
-              // 	</div><div style="color: ${COLORS.neutral1}">
+              // 	</div><div style="color: ${themeColors.neutral1}">
               // 	Size: ${formatNumber(currentPosition.size, 0)} | ${formatNumber(currentPosition.leverage, 1)}x
               // 	</div><div>Realised PnL: <span style="font-weight: 800;color: ${
               //   currentPosition.realisedPnl === 0
-              //     ? COLORS.neutral1
+              //     ? themeColors.neutral1
               //     : currentPosition.realisedPnl > 0
-              //     ? COLORS.green1
-              //     : COLORS.red2
+              //     ? themeColors.green1
+              //     : themeColors.red2
               // }">
               // 	$${formatNumber(currentPosition.realisedPnl, 0)} (${formatNumber(currentPosition.roi, 0)}%)
-              // 	</span></div><div style="color: ${COLORS.neutral1}">
+              // 	</span></div><div style="color: ${themeColors.neutral1}">
               // 	Paid Fees: $${formatNumber(currentPosition.fee, 0)}
               // 	</div>`
               //       } else {

@@ -3,7 +3,7 @@ import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer, Tool
 
 import { renderTrader } from 'pages/MyProfile/renderProps'
 import { Box, Flex, Type } from 'theme/base'
-import colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 
 export interface ScoreChartData {
   subject: string
@@ -77,10 +77,10 @@ const ScoreChart = ({
   return (
     <ResponsiveContainer width={wrapperWidth} height={height}>
       <RadarChart outerRadius={outerRadius} width={width} height={height} data={data}>
-        <PolarGrid stroke={colors(true).neutral4} />
+        <PolarGrid stroke={themeColors.neutral4} />
         <PolarAngleAxis
           domain={[0, 100]}
-          color={colors(true).neutral3}
+          color={themeColors.neutral3}
           dataKey="subject"
           fontSize={13}
           dy={4}
@@ -91,8 +91,8 @@ const ScoreChart = ({
           isAnimationActive={false}
           name="Trader"
           dataKey="value"
-          stroke={colors(true).primary1}
-          fill={colors(true).primary1}
+          stroke={themeColors.primary1}
+          fill={themeColors.primary1}
           fillOpacity={0.5}
         />
         {hasComparedData && (
@@ -100,8 +100,8 @@ const ScoreChart = ({
             isAnimationActive={false}
             name="Compared Trader"
             dataKey="comparedValue"
-            stroke={colors(true).orange2}
-            fill={colors(true).orange2}
+            stroke={themeColors.orange2}
+            fill={themeColors.orange2}
             fillOpacity={0.5}
           />
         )}
@@ -109,9 +109,9 @@ const ScoreChart = ({
           cursor={false}
           content={renderTooltip}
           wrapperStyle={{
-            background: colors(true).neutral7,
+            background: themeColors.neutral7,
             padding: '2px 6px',
-            border: `1px solid ${colors(true).neutral4}`,
+            border: `1px solid ${themeColors.neutral4}`,
           }}
           position={tooltipPosition}
         />

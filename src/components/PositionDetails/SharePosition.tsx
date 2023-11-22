@@ -5,24 +5,16 @@ import { toast } from 'react-toastify'
 import { sharePositionApi } from 'apis/shareApis'
 import logoWithText from 'assets/images/logo.png'
 import ToastBody from 'components/@ui/ToastBody'
-import { ImageData } from 'entities/image'
 import { SharePositionData } from 'entities/share'
 import { PositionData } from 'entities/trader'
-import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
 import useUsdPricesStore from 'hooks/store/useUsdPrices'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
 import { IconBox } from 'theme/base'
-import { default as themeColors } from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
-import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { generatePositionCanvas } from 'utils/helpers/generateImage'
-import {
-  generateClosedPositionRoute,
-  generateOpeningPositionRoute,
-  generateParamsUrl,
-  generateSharedPositionRoute,
-} from 'utils/helpers/generateRoute'
+import { generateParamsUrl, generateSharedPositionRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
 export default function SharePosition({ isOpening, stats }: { isOpening: boolean; stats: PositionData }) {
@@ -44,12 +36,11 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
       setIsSocialMediaSharingOpen(true)
       setIsGeneratingLink(true)
 
-      const colors = themeColors(true)
       const canvas = generatePositionCanvas({
         isOpening,
         stats,
         prices,
-        colors,
+        colors: themeColors,
         protocolImg,
         logoImg,
       })

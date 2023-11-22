@@ -1,12 +1,12 @@
 import maxBy from 'lodash/maxBy'
 import minBy from 'lodash/minBy'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { Bar, CartesianGrid, Cell, ComposedChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 import { TraderPnlStatisticData } from 'entities/statistic'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { DAYJS_FULL_DATE_FORMAT, FONT_FAMILY } from 'utils/config/constants'
 import { compactNumber, formatLocalDate, formatNumber } from 'utils/helpers/format'
 
@@ -24,7 +24,6 @@ export default function ChartTraderDailyPnL({
   from: number
   to: number
 }) {
-  const _color = colors(true)
   const generateData = useMemo(() => (data ? generateChartDailyPnL(from, to, data) : []), [data, from, to])
   const chartData = useMemo(() => (data ? getChartData({ data: generateData }) : []), [data, generateData])
 
@@ -65,27 +64,27 @@ export default function ChartTraderDailyPnL({
         >
           <ResponsiveContainer minHeight={170}>
             <ComposedChart data={chartData} margin={{ top: 0, left: 4, right: 4, bottom: 0 }}>
-              <CartesianGrid stroke={_color.neutral4} strokeDasharray="3 3" opacity={0.5} />
-              <XAxis dataKey="label" stroke={_color.neutral4} />
+              <CartesianGrid stroke={themeColors.neutral4} strokeDasharray="3 3" opacity={0.5} />
+              <XAxis dataKey="label" stroke={themeColors.neutral4} />
               <YAxis
                 domain={[-stats.maxAbsPnl * 1.2, stats.maxAbsPnl * 1.2]}
-                stroke={_color.neutral4}
+                stroke={themeColors.neutral4}
                 tickFormatter={(value) => `$${compactNumber(value, 1)}`}
                 ticks={[-stats.maxAbsPnl * 1.2, 0, stats.maxAbsPnl * 1.2]}
               />
-              <Bar type="monotone" name="PnL" unit="$" dataKey="pnl" fill={_color.neutral1}>
+              <Bar type="monotone" name="PnL" unit="$" dataKey="pnl" fill={themeColors.neutral1}>
                 {chartData.map((item, i) => {
                   return (
                     <Cell
                       key={`cell-${i}`}
-                      fill={item.pnl > 0 ? _color.green1 : item.pnl < 0 ? _color.red2 : _color.neutral1}
+                      fill={item.pnl > 0 ? themeColors.green1 : item.pnl < 0 ? themeColors.red2 : themeColors.neutral1}
                     />
                   )
                 })}
               </Bar>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: _color.neutral5,
+                  backgroundColor: themeColors.neutral5,
                   borderColor: 'transparent',
                   fontSize: '13px',
                   fontFamily: FONT_FAMILY,

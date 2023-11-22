@@ -5,7 +5,7 @@ import Divider from 'components/@ui/Divider'
 import { volumeMultiplierContent, volumeProtectionContent } from 'components/TooltipContents'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
-import { default as themeColors } from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { STORAGE_KEYS } from 'utils/config/keys'
 
 export default function BacktestGuideTour() {
@@ -75,8 +75,6 @@ export default function BacktestGuideTour() {
     }
   }
 
-  const colors = themeColors(true)
-
   if (isInstructed) return <></>
   return (
     <ReactJoyride
@@ -93,14 +91,14 @@ export default function BacktestGuideTour() {
       styles={{
         options: {
           zIndex: 10000,
-          arrowColor: colors.neutral4,
+          arrowColor: themeColors.neutral4,
         },
         beaconInner: {
-          backgroundColor: colors.primary1,
+          backgroundColor: themeColors.primary1,
         },
         beaconOuter: {
-          borderColor: colors.primary2,
-          backgroundColor: `${colors.primary2}20`,
+          borderColor: themeColors.primary2,
+          backgroundColor: `${themeColors.primary2}20`,
         },
         overlay: {
           backgroundColor: '#101423BF',

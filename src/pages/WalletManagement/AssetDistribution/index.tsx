@@ -7,13 +7,12 @@ import SectionTitle from 'components/@ui/SectionTitle'
 import { CopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { Flex } from 'theme/base'
-import colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { getColorFromText } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
 
-const COLORS = colors(true)
 export default function AssetDistribution() {
   const { copyWallets, loadTotalSmartWallet } = useCopyWalletContext()
   const pieChartData = calculatePercentage(copyWallets)
@@ -47,7 +46,7 @@ export default function AssetDistribution() {
           </Pie>
           <Tooltip
             contentStyle={{
-              backgroundColor: COLORS.neutral1,
+              backgroundColor: themeColors.neutral1,
               borderColor: 'transparent',
               fontFamily: FONT_FAMILY,
             }}
