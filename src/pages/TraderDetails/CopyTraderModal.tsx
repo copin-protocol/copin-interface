@@ -12,6 +12,7 @@ import { defaultCopyTradeFormValues } from 'components/CopyTradeForm/configs'
 import { CopyTradeFormValues } from 'components/CopyTradeForm/configs'
 import { getRequestDataFromForm } from 'components/CopyTradeForm/helpers'
 import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade.d'
+import useBotAlertContext from 'hooks/features/useBotAlertProvider'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -40,6 +41,7 @@ export default function CopyTraderDrawer({
   onClose: () => void
 }) {
   const { myProfile } = useMyProfileStore()
+  const { botAlert, handleGenerateLinkBot } = useBotAlertContext()
   const [tab, handleTab] = useState<string>(TabKeyEnum.New)
   const [copyTradeData, setCopyTradeData] = useState<CopyTradeData | null>()
   const { data: copies, isLoading: loadingCopies } = useQuery(
@@ -57,6 +59,9 @@ export default function CopyTraderDrawer({
         <ToastBody title={<Trans>Success</Trans>} message={<Trans>Make copy trade has been succeeded</Trans>} />
       )
       onClose()
+      if (!botAlert?.chatId) {
+        handleGenerateLinkBot()
+      }
     },
     onError: (err) => {
       toast.error(<ToastBody title={<Trans>Error</Trans>} message={getErrorMessage(err)} />)

@@ -1,32 +1,28 @@
 import { Trans } from '@lingui/macro'
+import { ArrowSquareOut } from '@phosphor-icons/react'
 import React from 'react'
-import { Link } from 'react-router-dom'
 
-import { AccountWithProtocol } from 'components/@ui/AccountWithProtocol'
 import { Button } from 'theme/Buttons'
+import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
+import IconButton from 'theme/Buttons/IconButton'
+import TelegramIcon from 'theme/Icons/TelegramIcon'
 import Modal from 'theme/Modal'
 import { Flex, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
 import { generateTelegramBotAlertUrl } from 'utils/helpers/generateRoute'
 
-export default function LinkBotAlertModal({
-  state,
-  address,
-  protocol,
-  onDismiss,
-}: {
-  state: string
-  address: string
-  protocol: ProtocolEnum
-  onDismiss: () => void
-}) {
+export default function LinkBotAlertModal({ state, onDismiss }: { state: string; onDismiss: () => void }) {
   return (
     <Modal isOpen onDismiss={onDismiss} hasClose={false} maxWidth="480px">
       <Flex width="100%" p={24} flexDirection="column" alignItems="center">
-        <AccountWithProtocol address={address} protocol={protocol} size={32} sx={{ gap: 2 }} />
-        <Flex my={12} alignItems="center" sx={{ gap: 1 }}>
+        <IconButton
+          variant="outline"
+          icon={<TelegramIcon size={56} variant="Bold" />}
+          size={56}
+          sx={{ '&:hover': { cursor: 'initial' } }}
+        />
+        <Flex my={24} alignItems="center" sx={{ gap: 1 }}>
           <Type.Body textAlign="center">
-            <Trans>To get notifications from traders, you must use Copin Telegram Bot</Trans>
+            <Trans>Would you like to use a Copin’s Telegram Bot to receive your trader’s alert?</Trans>
           </Type.Body>
         </Flex>
         <Type.Caption mb={24} color="orange1" textAlign="center" width="100%">
@@ -34,13 +30,18 @@ export default function LinkBotAlertModal({
         </Type.Caption>
         <Flex width="100%" sx={{ gap: 3 }}>
           <Button variant="outline" onClick={onDismiss} sx={{ flex: 1 }}>
-            <Trans>Cancel</Trans>
+            <Trans>No, thanks</Trans>
           </Button>
-          <Link to={generateTelegramBotAlertUrl(state)}>
-            <Button type="button" variant="primary" sx={{ flex: 1 }}>
-              <Trans>Open Telegram Bot</Trans>
-            </Button>
-          </Link>
+          <ButtonWithIcon
+            type="button"
+            variant="primary"
+            icon={<ArrowSquareOut />}
+            direction="right"
+            sx={{ flex: 1 }}
+            onClick={() => window.location.replace(generateTelegramBotAlertUrl(state))}
+          >
+            <Trans>Open Telegram Bot</Trans>
+          </ButtonWithIcon>
         </Flex>
       </Flex>
     </Modal>

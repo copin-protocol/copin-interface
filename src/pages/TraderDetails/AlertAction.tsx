@@ -3,40 +3,25 @@ import React, { useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
-import {
-  createTraderAlertApi,
-  deleteTraderAlertApi,
-  generateLinkBotAlertApi,
-  getBotAlertApi,
-  getTraderAlertListApi,
-} from 'apis/alertApis'
+import { createTraderAlertApi, deleteTraderAlertApi, getTraderAlertListApi } from 'apis/alertApis'
 import ToastBody from 'components/@ui/ToastBody'
 import { useClickLoginButton } from 'components/LoginAction'
-import LinkBotAlertModal from 'components/Modal/LinkBotAlertModal'
 import UnsubscribeAlertModal from 'components/Modal/UnsubscribeAlertModal'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import useBotAlertContext from 'hooks/features/useBotAlertProvider'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import AlertOffIcon from 'theme/Icons/AlerOffIcon'
 import AlertIcon from 'theme/Icons/AlertIcon'
-import { MAX_TRADER_ALERT_BASIC } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
 const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: string }) => {
+  const { botAlert, handleGenerateLinkBot, isGeneratingLink } = useBotAlertContext()
   const [isOpenUnsubscribeModal, setIsOpenUnsubscribeModal] = useState(false)
-  const [isOpenLinkBotModal, setIsOpenLinkBotModal] = useState(false)
-  const [currentState, setCurrentState] = useState<string | undefined>()
 
   const { isAuthenticated, profile } = useAuthContext()
-  const { isPremiumUser, handleAlertQuotaExceed } = useSubscriptionRestrict()
   const handleClickLogin = useClickLoginButton()
-
-  const { data: botAlert } = useQuery([QUERY_KEYS.GET_BOT_ALERT, profile?.id], () => getBotAlertApi(), {
-    enabled: !!profile?.id,
-    retry: 0,
-  })
 
   const { data, isLoading, refetch } = useQuery(
     [QUERY_KEYS.GET_TRADER_ALERTS, profile?.id, account, protocol],
@@ -46,31 +31,12 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
       retry: 0,
     }
   )
-  const { data: listTraders, refetch: reloadAll } = useQuery(
-    [QUERY_KEYS.CHECK_ALL_TRADER_ALERTS, profile?.id],
-    () => getTraderAlertListApi({}),
-    {
-      enabled: !!profile?.id && !!botAlert?.chatId,
-      retry: 0,
-    }
-  )
+
   const currentAlert = data?.data?.[0]
-  const totalTraderAlerts = listTraders?.meta?.total ?? 0
 
   const reload = () => {
     refetch()
-    reloadAll()
   }
-
-  const { mutate: generateLinkBot, isLoading: generatingLinkBot } = useMutation(generateLinkBotAlertApi, {
-    onSuccess: (state?: string) => {
-      setIsOpenLinkBotModal(true)
-      setCurrentState(state)
-    },
-    onError: (error: any) => {
-      toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)
-    },
-  })
 
   const { mutate: createTraderAlert, isLoading: submittingCreate } = useMutation(createTraderAlertApi, {
     onSuccess: () => {
@@ -84,8 +50,7 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
     },
     onError: (error: any) => {
       if (error?.message?.includes(`Can't find data`)) {
-        generateLinkBot()
-        setIsOpenLinkBotModal(true)
+        handleGenerateLinkBot()
       } else {
         toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)
       }
@@ -120,17 +85,12 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
       return
     }
     if (!botAlert?.chatId) {
-      generateLinkBot()
-      setIsOpenLinkBotModal(true)
+      handleGenerateLinkBot()
       return
     }
     if (currentAlert) {
       setIsOpenUnsubscribeModal(true)
     } else {
-      if (!isPremiumUser && totalTraderAlerts >= MAX_TRADER_ALERT_BASIC) {
-        handleAlertQuotaExceed()
-        return
-      }
       createTraderAlert({ address: account, protocol })
     }
   }
@@ -148,7 +108,7 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
         }}
         variant={currentAlert ? 'ghostDanger' : 'ghost'}
         icon={currentAlert ? <AlertOffIcon /> : <AlertIcon />}
-        disabled={isLoading || submittingCreate || submittingDelete || generatingLinkBot}
+        disabled={isLoading || submittingCreate || submittingDelete || isGeneratingLink}
         onClick={onSubmit}
       >
         {currentAlert ? <Trans>Remove</Trans> : <Trans>Alert</Trans>}
@@ -159,14 +119,6 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
           isConfirming={submittingDelete}
           onConfirm={handleConfirmDeleteAlert}
           onDismiss={() => setIsOpenUnsubscribeModal(false)}
-        />
-      )}
-      {isOpenLinkBotModal && currentState && (
-        <LinkBotAlertModal
-          state={currentState}
-          address={account}
-          protocol={protocol}
-          onDismiss={() => setIsOpenLinkBotModal(false)}
         />
       )}
     </>

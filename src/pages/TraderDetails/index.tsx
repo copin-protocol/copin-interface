@@ -23,6 +23,7 @@ import { useClickLoginButton } from 'components/LoginAction'
 import HistoryTable, { historyColumns } from 'components/Tables/HistoryTable'
 import OpeningPositionTable from 'components/Tables/OpeningPositionTable'
 import { PositionData } from 'entities/trader.d'
+import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
@@ -222,102 +223,104 @@ export default function TraderDetails() {
       <CustomPageTitle title={`Trader ${addressShorten(_address)} on ${protocol}`} />
       <Layout resetSort={resetSort}>
         {/* child 1 */}
-        <Flex
-          sx={{
-            width: '100%',
-            height: '100%',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 3,
-          }}
-        >
-          <TraderInfo
-            address={_address}
-            traderData={currentTraderData}
-            timeOption={timeOption}
-            traderStats={traderData}
-          />
-          <Box
+        <BotAlertProvider>
+          <Flex
             sx={{
+              width: '100%',
+              height: '100%',
+              justifyContent: 'space-between',
               alignItems: 'center',
-              borderBottom: ['small', 'small', 'small', 'none'],
-              borderColor: ['neutral4', 'neutral4', 'neutral4', 'transparent'],
-              width: [0, '100%', '100%', 'auto'],
-              height: ['40px', '40px', '40px', '100%'],
-              display: ['none', 'flex', 'flex', 'flex'],
-              position: [undefined, 'fixed', 'fixed', 'static'],
-              top: [undefined, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71],
-              zIndex: 10,
-              bg: ['neutral7', 'neutral7', 'neutral7', undefined],
+              flexWrap: 'wrap',
+              gap: 3,
             }}
           >
-            <TradeProtocolAction protocol={protocol} />
-            <AlertAction protocol={protocol} account={_address} />
-            <BackTestAction onClick={handleOpenBackTestModal} hadBacktest={hadBacktest} />
-            <CopyTraderAction
-              protocol={protocol}
-              account={_address}
-              onForceReload={onForceReload}
-              hasCopyPermission={hasCopyPermission}
+            <TraderInfo
+              address={_address}
+              traderData={currentTraderData}
+              timeOption={timeOption}
+              traderStats={traderData}
             />
-          </Box>
-          <Box
-            sx={{
-              display: ['flex', 'none', 'none', 'none'],
-              position: ['fixed', undefined, undefined, undefined],
-              top: NAVBAR_HEIGHT + 24,
-              right: 3,
-              zIndex: 10,
-            }}
-          >
-            <Dropdown
-              hasArrow={false}
-              menuSx={{
-                bg: 'neutral7',
-                width: 'max-content',
+            <Box
+              sx={{
+                alignItems: 'center',
+                borderBottom: ['small', 'small', 'small', 'none'],
+                borderColor: ['neutral4', 'neutral4', 'neutral4', 'transparent'],
+                width: [0, '100%', '100%', 'auto'],
+                height: ['40px', '40px', '40px', '100%'],
+                display: ['none', 'flex', 'flex', 'flex'],
+                position: [undefined, 'fixed', 'fixed', 'static'],
+                top: [undefined, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71],
+                zIndex: 10,
+                bg: ['neutral7', 'neutral7', 'neutral7', undefined],
               }}
-              menu={
-                <>
-                  <Box height="40px">
-                    <TradeProtocolAction protocol={protocol} />
-                  </Box>
-                  <Box height="40px">
-                    <AlertAction protocol={protocol} account={_address} />
-                  </Box>
-                  <Box height="40px">
-                    <BackTestAction onClick={handleOpenBackTestModal} hadBacktest={hadBacktest} />
-                  </Box>
-                  <Box height="40px">
-                    <CopyTraderAction
-                      protocol={protocol}
-                      account={_address}
-                      onForceReload={onForceReload}
-                      hasCopyPermission={hasCopyPermission}
-                    />
-                  </Box>
-                </>
-              }
-              sx={{}}
-              buttonSx={{
-                border: 'none',
-                height: '100%',
-                p: 0,
-              }}
-              placement={'topRight'}
             >
-              <IconButton
-                size={24}
-                type="button"
-                icon={<CirclesThreePlus size={24} weight="fill" />}
-                variant="ghost"
-                sx={{
-                  color: 'neutral1',
-                }}
+              <TradeProtocolAction protocol={protocol} />
+              <AlertAction protocol={protocol} account={_address} />
+              <BackTestAction onClick={handleOpenBackTestModal} hadBacktest={hadBacktest} />
+              <CopyTraderAction
+                protocol={protocol}
+                account={_address}
+                onForceReload={onForceReload}
+                hasCopyPermission={hasCopyPermission}
               />
-            </Dropdown>
-          </Box>
-        </Flex>
+            </Box>
+            <Box
+              sx={{
+                display: ['flex', 'none', 'none', 'none'],
+                position: ['fixed', undefined, undefined, undefined],
+                top: NAVBAR_HEIGHT + 24,
+                right: 3,
+                zIndex: 10,
+              }}
+            >
+              <Dropdown
+                hasArrow={false}
+                menuSx={{
+                  bg: 'neutral7',
+                  width: 'max-content',
+                }}
+                menu={
+                  <>
+                    <Box height="40px">
+                      <TradeProtocolAction protocol={protocol} />
+                    </Box>
+                    <Box height="40px">
+                      <AlertAction protocol={protocol} account={_address} />
+                    </Box>
+                    <Box height="40px">
+                      <BackTestAction onClick={handleOpenBackTestModal} hadBacktest={hadBacktest} />
+                    </Box>
+                    <Box height="40px">
+                      <CopyTraderAction
+                        protocol={protocol}
+                        account={_address}
+                        onForceReload={onForceReload}
+                        hasCopyPermission={hasCopyPermission}
+                      />
+                    </Box>
+                  </>
+                }
+                sx={{}}
+                buttonSx={{
+                  border: 'none',
+                  height: '100%',
+                  p: 0,
+                }}
+                placement={'topRight'}
+              >
+                <IconButton
+                  size={24}
+                  type="button"
+                  icon={<CirclesThreePlus size={24} weight="fill" />}
+                  variant="ghost"
+                  sx={{
+                    color: 'neutral1',
+                  }}
+                />
+              </Dropdown>
+            </Box>
+          </Flex>
+        </BotAlertProvider>
         {/* child 2 */}
 
         <Box display={['block', 'block', 'flex']} flexDirection="column" height="100%">
