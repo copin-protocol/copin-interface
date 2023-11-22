@@ -25,8 +25,8 @@ export default function AlertListMobile({
   return (
     <Flex
       pb={40}
-      minHeight="calc(100vh - 230px)"
-      sx={{ width: '100%', height: '100%', overflow: 'auto', flexDirection: 'column', gap: 3 }}
+      height="calc(100vh - 250px)"
+      sx={{ width: '100%', position: 'relative', overflow: 'auto', flexDirection: 'column', gap: 3 }}
     >
       {data.map((value, index) => (
         <MobileItem key={index} data={value} onSelect={onSelect} submitting={submitting} />

@@ -16,16 +16,20 @@ export function AccountWithProtocol({
   protocol,
   size = 40,
   sx,
+  textSx,
 }: {
   address: string
   protocol: ProtocolEnum
   size?: number
   sx?: SystemStyleObject & GridProps
+  textSx?: SystemStyleObject & GridProps
 }) {
   return (
     <Flex as={Link} to={generateTraderDetailsRoute(protocol, address)} sx={{ alignItems: 'center', gap: 3, ...sx }}>
       <AddressAvatar address={address} size={size} />
-      <Type.Caption color="neutral1">{addressShorten(address)}</Type.Caption>
+      <Type.Caption color="neutral1" width="74px" sx={{ ...textSx }}>
+        {addressShorten(address)}
+      </Type.Caption>
       <VerticalDivider />
       <Image src={parseProtocolImage(protocol)} width={20} height={20} />
     </Flex>

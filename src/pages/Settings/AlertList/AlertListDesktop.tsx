@@ -43,7 +43,7 @@ const AlertListDesktop = ({
         {data &&
           data.length > 0 &&
           data.map((item, index) => (
-            <Flex key={index} justifyContent={'space-between'} alignItems={'center'} mb={2} sx={{ gap: [3, 40] }}>
+            <Flex key={index} justifyContent={'space-between'} alignItems={'center'} mb={2} sx={{ gap: [3, 4] }}>
               <AccountWithProtocol protocol={item.protocol} address={item.address} />
               <Flex flex={1}>
                 <Type.Caption color="neutral3">
