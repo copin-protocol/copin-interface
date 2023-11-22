@@ -32,7 +32,7 @@ const LabelWithTooltip = ({
       </Type.Caption>
       <Tooltip id={id} place="top" type="dark" effect="solid">
         <Type.Caption
-          maxWidth={300}
+          maxWidth={350}
           textAlign="center"
           style={{
             textTransform: 'none',

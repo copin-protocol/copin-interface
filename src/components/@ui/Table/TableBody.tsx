@@ -1,5 +1,5 @@
 import { SystemStyleObject } from '@styled-system/css'
-import { ReactNode } from 'react'
+// import { ReactNode } from 'react'
 import { animated, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { GridProps } from 'styled-system'
@@ -20,9 +20,9 @@ export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSou
   externalSource,
   checkIsSelected,
   handleSelect,
-  topIndex,
-  title,
-  subTitle,
+  // title,
+  // subTitle,
+  checkIsTop,
 }: {
   data: T[] | undefined
   columns: ColumnData<T, K>[] | undefined
@@ -32,9 +32,9 @@ export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSou
   externalSource: K | undefined
   checkIsSelected?: (data: T) => boolean
   handleSelect?: (args: { isSelected: boolean; data: T }) => void
-  topIndex?: number
-  title?: ReactNode
-  subTitle?: ReactNode
+  // title?: ReactNode
+  // subTitle?: ReactNode
+  checkIsTop?: (data: T) => boolean
 }) {
   return (
     <tbody>
@@ -42,8 +42,8 @@ export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSou
         const bg = renderRowBackground ? renderRowBackground(data, index) : undefined
         return (
           <>
-            {topIndex && index === 0 && title}
-            {topIndex && index === topIndex && subTitle}
+            {/* {topIndex && index === 0 && title}
+            {topIndex && index === topIndex && subTitle} */}
             <Row
               key={index}
               data={data}
@@ -55,7 +55,7 @@ export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSou
               externalSource={externalSource}
               checkIsSelected={checkIsSelected}
               handleSelect={handleSelect}
-              topIndex={topIndex}
+              checkIsTop={checkIsTop}
             />
           </>
         )
@@ -74,7 +74,7 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
   externalSource,
   checkIsSelected,
   handleSelect,
-  topIndex,
+  checkIsTop,
 }: {
   data: T | undefined
   index: number | undefined
@@ -85,16 +85,11 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
   externalSource: K | undefined
   checkIsSelected?: (data: T) => boolean
   handleSelect?: (args: { isSelected: boolean; data: T }) => void
-  topIndex?: number
+  checkIsTop?: (data: T) => boolean
 }) {
   if (!data) return <></>
   const isSelected = !!checkIsSelected && checkIsSelected(data)
-  const Wrapper =
-    topIndex == null
-      ? NormalRowWrapper
-      : (index !== undefined ? index < topIndex : false)
-      ? AnimatedRowWrapper
-      : RowWrapper
+  const Wrapper = checkIsTop == null ? NormalRowWrapper : checkIsTop(data) ? AnimatedRowWrapper : RowWrapper
   return (
     <Wrapper
       onClick={onClickRow ? () => onClickRow(data) : undefined}

@@ -94,7 +94,8 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: LeaderboardCo
                 minWidth: ['152px !important', '152px !important', '182px !important', '182px !important'],
               },
             }}
-            topIndex={3}
+            checkIsTop={(data) => data.ranking <= 3}
+            // topIndex={3}
           />
         </Box>
         <Flex
