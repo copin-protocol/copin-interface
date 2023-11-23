@@ -90,7 +90,6 @@ function ListTradersSection({
             <TraderListTable
               data={data?.data.map((item) => ({ ...item, note: notes ? notes[item.account] : undefined }))}
               isLoading={isLoading}
-              currentLimit={currentLimit}
               currentSort={currentSort}
               changeCurrentSort={changeCurrentSort}
               isSelectedAll={isSelectedAll}

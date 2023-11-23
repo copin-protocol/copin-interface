@@ -5,6 +5,7 @@ import { useResponsive } from 'ahooks'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import Divider from 'components/@ui/Divider'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 import ROUTES from 'utils/config/routes'
@@ -21,38 +22,23 @@ enum TabKeyEnum {
 
 const tabConfigs: TabConfig[] = [
   {
-    name: (
-      <Flex sx={{ alignItems: 'center', gap: 2 }}>
-        <SubtractSquare size={24} />
-        <Box as="span">
-          <Trans>MANAGEMENT</Trans>
-        </Box>
-      </Flex>
-    ),
+    name: <Trans>MANAGEMENT</Trans>,
+    activeIcon: <SubtractSquare size={24} weight="fill" />,
+    inactiveIcon: <SubtractSquare size={24} />,
     key: TabKeyEnum.MANAGEMENT,
     route: ROUTES.MY_MANAGEMENT.path,
   },
   {
-    name: (
-      <Flex sx={{ alignItems: 'center', gap: 2 }}>
-        <ClockCounterClockwise size={24} />
-        <Box as="span">
-          <Trans>HISTORY</Trans>
-        </Box>
-      </Flex>
-    ),
+    name: <Trans>HISTORY</Trans>,
+    inactiveIcon: <ClockCounterClockwise size={24} />,
+    activeIcon: <ClockCounterClockwise size={24} weight="fill" />,
     key: TabKeyEnum.HISTORY,
     route: ROUTES.MY_HISTORY.path,
   },
   {
-    name: (
-      <Flex sx={{ alignItems: 'center', gap: 2 }}>
-        <Notebook size={24} />
-        <Box as="span">
-          <Trans>ACTIVITIES</Trans>
-        </Box>
-      </Flex>
-    ),
+    name: <Trans>ACTIVITIES</Trans>,
+    inactiveIcon: <Notebook size={24} />,
+    activeIcon: <Notebook size={24} weight="fill" />,
     key: TabKeyEnum.ACTIVITIES,
     route: ROUTES.USER_ACTIVITY.path,
   },
@@ -89,7 +75,12 @@ export default function Layout(components: LayoutComponents) {
           </Switch>
         </Box>
 
-        {!lg && <MainTab pathname={pathname} />}
+        {!lg && (
+          <>
+            <Divider />
+            <MainTab pathname={pathname} />
+          </>
+        )}
       </Flex>
     </>
   )

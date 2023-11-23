@@ -17,7 +17,7 @@ const TabItem = styled(Button)(({ active, sx, inactiveHasLine }: TabItemProps) =
     border: 'none',
     px: '0',
     py: '12px',
-    fontSize: '18px',
+    fontSize: ['16px', '18px'],
     lineHeight: '24px',
     width: 'fit-content',
     fontWeight: '400',

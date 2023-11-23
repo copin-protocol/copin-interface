@@ -1,41 +1,14 @@
 import { Trans } from '@lingui/macro'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 
 import { AccountWithProtocol } from 'components/@ui/AccountWithProtocol'
 import { TraderAlertData } from 'entities/alert'
 import IconButton from 'theme/Buttons/IconButton'
 import AlertOffIcon from 'theme/Icons/AlerOffIcon'
-import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { formatLocalRelativeDate } from 'utils/helpers/format'
 
-export default function AlertListMobile({
-  data,
-  isLoading,
-  submitting,
-  onSelect,
-}: {
-  data?: TraderAlertData[]
-  isLoading?: boolean
-  submitting?: boolean
-  onSelect: (data?: TraderAlertData) => void
-}) {
-  if (isLoading) return <Loading />
-  if (!data) return <></>
-  return (
-    <Flex
-      pb={40}
-      height="calc(100vh - 250px)"
-      sx={{ width: '100%', position: 'relative', overflow: 'auto', flexDirection: 'column', gap: 3 }}
-    >
-      {data.map((value, index) => (
-        <MobileItem key={index} data={value} onSelect={onSelect} submitting={submitting} />
-      ))}
-    </Flex>
-  )
-}
-
-export function MobileItem({
+export default function MobileItem({
   submitting,
   data,
   onSelect,

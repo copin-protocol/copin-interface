@@ -178,7 +178,15 @@ export function TabHeader({
                 {tab.activeIcon && tab.inactiveIcon ? (
                   <Flex alignItems="center" sx={{ gap: 2 }}>
                     {isActive ? tab.activeIcon : tab.inactiveIcon}
-                    <Box as="span">{tab.name}</Box>
+                    <Box
+                      as="span"
+                      sx={{
+                        textTransform: ['lowercase', 'none'],
+                        '&:first-letter': { textTransform: 'uppercase' },
+                      }}
+                    >
+                      {tab.name}
+                    </Box>
                   </Flex>
                 ) : (
                   tab.name

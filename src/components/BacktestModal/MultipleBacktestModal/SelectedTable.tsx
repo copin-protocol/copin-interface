@@ -113,7 +113,6 @@ export default function HomeSelectedTable({ scrollRef }: { scrollRef: RefObject<
         <TraderListTable
           data={paginationData.data}
           isLoading={false}
-          currentLimit={currentLimit}
           currentSort={currentSort}
           changeCurrentSort={(sort) => setCurrentSort(sort)}
           isSelectedAll={isSelectedAll}

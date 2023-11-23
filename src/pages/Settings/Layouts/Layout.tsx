@@ -1,9 +1,11 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans, t } from '@lingui/macro'
 import { Crown, Users } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import Divider from 'components/@ui/Divider'
 import AlertIcon from 'theme/Icons/AlertIcon'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
@@ -49,24 +51,12 @@ const pageTitleMapping = {
 
 export default function Layout(components: LayoutComponents) {
   const { pathname } = useLocation()
+  const { sm } = useResponsive()
   return (
     <>
       <CustomPageTitle title={pageTitleMapping[pathname]} />
       <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-        <TabHeader
-          configs={tabConfigs}
-          isActiveFn={(config) => config.route === pathname}
-          fullWidth
-          sx={{ borderBottom: 'small', borderColor: 'neutral4', px: 16, width: '100%', mb: 0 }}
-          itemSx={{
-            flex: [1, 1, '0 0 auto'],
-            pb: 10,
-            fontSize: 16,
-            display: 'flex',
-            justifyContent: 'center',
-            minWidth: 'fit-content',
-          }}
-        />
+        {sm && <MainTab pathname={pathname} />}
 
         <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
           <Switch>
@@ -82,7 +72,33 @@ export default function Layout(components: LayoutComponents) {
             <Redirect to={ROUTES.USER_SUBSCRIPTION.path} />
           </Switch>
         </Box>
+
+        {!sm && (
+          <>
+            <Divider />
+            <MainTab pathname={pathname} />
+          </>
+        )}
       </Flex>
     </>
+  )
+}
+
+function MainTab({ pathname }: { pathname: string }) {
+  return (
+    <TabHeader
+      configs={tabConfigs}
+      isActiveFn={(config) => config.route === pathname}
+      fullWidth
+      sx={{ borderBottom: 'small', borderColor: 'neutral4', px: 16, width: '100%', mb: 0 }}
+      itemSx={{
+        flex: [1, 1, '0 0 auto'],
+        pb: 10,
+        fontSize: 16,
+        display: 'flex',
+        justifyContent: 'center',
+        minWidth: 'fit-content',
+      }}
+    />
   )
 }

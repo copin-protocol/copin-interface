@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { deleteTraderAlertApi, getTraderAlertListApi } from 'apis/alertApis'
+import NoDataFound from 'components/@ui/NoDataFound'
 import ToastBody from 'components/@ui/ToastBody'
 import UnsubscribeAlertModal from 'components/Modal/UnsubscribeAlertModal'
 import { TraderAlertData } from 'entities/alert'
@@ -14,6 +15,7 @@ import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useMyProfile from 'hooks/store/useMyProfile'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
+import Loading from 'theme/Loading'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex, Type } from 'theme/base'
 import { MAX_TRADER_ALERT_BASIC, MAX_TRADER_ALERT_PREMIUM } from 'utils/config/constants'
@@ -24,11 +26,11 @@ import { generateTelegramBotAlertUrl } from 'utils/helpers/generateRoute'
 import { getErrorMessage } from 'utils/helpers/handleError'
 import { pageToOffset } from 'utils/helpers/transform'
 
-import AlertListDesktop from './AlertListDesktop'
-import AlertListMobile from './AlertListMobile'
+import DesktopItem from './DesktopItem'
+import MobileItem from './MobileItem'
 
 const LIMIT = 10
-const AlertList = () => {
+export default function AlertList() {
   const { myProfile } = useMyProfile()
   const { isPremiumUser } = useSubscriptionRestrict()
   const { md } = useResponsive()
@@ -78,66 +80,81 @@ const AlertList = () => {
   }
 
   return (
-    <Flex
-      flexDirection="column"
-      alignItems="center"
-      justifyContent={['flex-start', 'center']}
-      sx={{ height: '100%', overflow: 'auto', position: md ? 'relative' : undefined }}
-    >
+    <>
       <Flex
-        flexDirection="column"
-        alignItems="center"
-        minHeight="max-content"
-        sx={{ border: 'small', borderColor: 'neutral4', position: md ? 'relative' : undefined }}
-        width={['100%', 465]}
+        sx={{
+          py: [0, 0, 3],
+          alignItems: 'center',
+          height: '100%',
+          width: '100%',
+          maxWidth: ['auto', 'auto', 465],
+          mx: 'auto',
+        }}
       >
-        <Box width="100%" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
-          <Flex p={3} alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
-            <Type.BodyBold>
-              <Trans>Alert List</Trans> ({formatNumber(data?.meta?.total)}/
-              {isPremiumUser ? MAX_TRADER_ALERT_PREMIUM : MAX_TRADER_ALERT_BASIC})
-            </Type.BodyBold>
-            {!isPremiumUser && (
-              <Link to={ROUTES.USER_SUBSCRIPTION.path}>
-                <ButtonWithIcon icon={<Crown size={20} />} variant="ghostPrimary" sx={{ p: 0 }}>
-                  <Trans>Upgrade Account</Trans>
-                </ButtonWithIcon>
-              </Link>
+        <Flex
+          sx={{
+            flexDirection: 'column',
+            height: '100%',
+            width: '100%',
+            overflow: ['hidden', 'hidden', 'auto'],
+            border: ['none', 'none', 'small'],
+            borderColor: ['none', 'none', 'neutral4'],
+          }}
+        >
+          <Box width="100%" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
+            <Flex p={3} alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+              <Type.BodyBold>
+                <Trans>Alert List</Trans> ({formatNumber(data?.meta?.total)}/
+                {isPremiumUser ? MAX_TRADER_ALERT_PREMIUM : MAX_TRADER_ALERT_BASIC})
+              </Type.BodyBold>
+              {!isPremiumUser && (
+                <Link to={ROUTES.USER_SUBSCRIPTION.path}>
+                  <ButtonWithIcon icon={<Crown size={20} />} variant="ghostPrimary" sx={{ p: 0 }}>
+                    <Trans>Upgrade Account</Trans>
+                  </ButtonWithIcon>
+                </Link>
+              )}
+            </Flex>
+          </Box>
+          <Flex sx={{ flex: '1 0 0', width: '100%', flexDirection: 'column', gap: 2, overflow: 'auto', p: [0, 0, 3] }}>
+            {isLoading && <Loading />}
+            {!isLoading && !data?.data?.length && (
+              <NoDataFound message={<Trans>You do not have any trader&apos;s alert</Trans>} />
+            )}
+            {data?.data?.map((item) =>
+              md ? (
+                <DesktopItem key={item.id} data={item} onSelect={onSelect} submitting={isLoading || submitting} />
+              ) : (
+                <MobileItem key={item.id} data={item} onSelect={onSelect} submitting={isLoading || submitting} />
+              )
             )}
           </Flex>
-        </Box>
-        {md ? (
-          <AlertListDesktop data={data?.data} isLoading={isLoading} submitting={submitting} onSelect={onSelect} />
-        ) : (
-          <AlertListMobile data={data?.data} isLoading={isLoading} submitting={submitting} onSelect={onSelect} />
-        )}
-
-        <Box width="100%" sx={{ position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: 'neutral7' }}>
-          <PaginationWithSelect
-            currentPage={currentPage}
-            onPageChange={changeCurrentPage}
-            apiMeta={data?.meta}
-            sx={{
-              width: '100%',
-              justifyContent: 'end',
-              py: 1,
-              px: 2,
-              borderTop: 'small',
-              borderColor: 'neutral4',
-            }}
-          />
-          <Box bg="neutral5" px={3} py={2} sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
-            <Type.Caption color={'neutral3'}>
-              Using{' '}
-              <a href={generateTelegramBotAlertUrl()} target="_blank" rel="noreferrer">
-                Copin Telegram Bot
-              </a>{' '}
-              to get notifications from traders.
-            </Type.Caption>
+          <Box sx={{ backgroundColor: 'neutral7' }}>
+            <PaginationWithSelect
+              currentPage={currentPage}
+              onPageChange={changeCurrentPage}
+              apiMeta={data?.meta}
+              sx={{
+                width: '100%',
+                justifyContent: 'end',
+                py: 1,
+                px: 2,
+                borderTop: 'small',
+                borderColor: 'neutral4',
+              }}
+            />
+            <Box bg="neutral5" px={3} py={2} sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
+              <Type.Caption color={'neutral3'}>
+                Using{' '}
+                <a href={generateTelegramBotAlertUrl()} target="_blank" rel="noreferrer">
+                  Copin Telegram Bot
+                </a>{' '}
+                to get notifications from traders.
+              </Type.Caption>
+            </Box>
           </Box>
-        </Box>
+        </Flex>
       </Flex>
-
       {openModal && currentAlert && (
         <UnsubscribeAlertModal
           data={currentAlert}
@@ -146,8 +163,6 @@ const AlertList = () => {
           isConfirming={false}
         />
       )}
-    </Flex>
+    </>
   )
 }
-
-export default AlertList

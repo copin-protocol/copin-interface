@@ -20,13 +20,6 @@ const TopLeaderboard = () => {
   const { sm } = useResponsive()
   const contextValues = useLeaderboardProvider()
 
-  if (contextValues.isLoading)
-    return (
-      <Box textAlign="center" p={3} width="100%">
-        <Loading />
-      </Box>
-    )
-
   if (!!contextValues.data && !contextValues.data.meta.total) return <NoDataFound />
 
   return sm ? (
@@ -126,13 +119,21 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: LeaderboardCo
 }
 
 function TopLeaderboardMobile({ contextValues }: { contextValues: LeaderboardContextValues }) {
-  const { data, currentPage, changeCurrentPage, lastTimeUpdated } = contextValues
+  const { data, isLoading, currentPage, changeCurrentPage, lastTimeUpdated } = contextValues
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-      <Flex sx={{ flex: '1 0 0', flexDirection: 'column', gap: 2, overflow: 'hidden auto' }}>
+      <Flex
+        sx={{
+          flex: '1 0 0',
+          flexDirection: 'column',
+          gap: 2,
+          overflow: isLoading ? 'hidden' : 'hidden auto',
+          position: 'relative',
+        }}
+      >
         {data?.data.map((traderData) => {
           return (
-            <Box key={traderData.id} sx={{ position: 'relative', px: 3, py: 2 }}>
+            <Box key={traderData.id} sx={{ position: 'relative', px: 3, py: 2, zIndex: 1 }}>
               {traderData.ranking < 4 ? <StyledBorder /> : <NormalBorder />}
               <Box sx={{ position: 'relative', zIndex: 1 }}>
                 <Accordion
@@ -171,6 +172,23 @@ function TopLeaderboardMobile({ contextValues }: { contextValues: LeaderboardCon
             </Box>
           )
         })}
+        {isLoading && (
+          <Flex
+            sx={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              right: 0,
+              left: 0,
+              bg: 'modalBG',
+              backdropFilter: 'blur(5px)',
+              alignItems: 'center',
+              zIndex: 2,
+            }}
+          >
+            <Loading />
+          </Flex>
+        )}
       </Flex>
       <Flex sx={{ alignItems: 'center', borderTop: 'small', borderTopColor: 'neutral4' }}>
         <Type.Caption color="neutral2" sx={{ flexShrink: 0, px: 12, flex: 1 }}>
