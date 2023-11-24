@@ -33,7 +33,6 @@ export default function useTradersCount({
     []
   )
   useEffect(() => {
-    console.log(isEqual(ranges, _ranges))
     if (isEqual(ranges, _ranges)) return
     handleCallAPi(ranges)
   }, [ranges])
@@ -49,7 +48,6 @@ export default function useTradersCount({
       ),
     { keepPreviousData: true, retry: 0 }
   )
-  console.log(data)
   return { data, isLoading: isFetching }
 }
 

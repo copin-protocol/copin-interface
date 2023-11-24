@@ -25,7 +25,7 @@ const TabButton = ({
 }) => (
   <Flex role="button" onClick={onClick} width="fit-content" sx={{ gap: 2 }} justifyContent="center" alignItems="center">
     <IconBox color={isActive ? 'primary1' : 'neutral3'} icon={<TabIcon size={24} />}></IconBox>
-    <Type.BodyBold color={isActive ? 'neutral1' : 'neutral3'}>{title}</Type.BodyBold>
+    <Type.BodyBold color={isActive ? 'primary1' : 'neutral3'}>{title}</Type.BodyBold>
   </Flex>
 )
 

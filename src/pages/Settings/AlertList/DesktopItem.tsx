@@ -17,7 +17,7 @@ export default function DesktopItem({
   onSelect: (data?: TraderAlertData) => void
 }) {
   return (
-    <Flex justifyContent={'space-between'} alignItems={'center'} mb={2} sx={{ gap: [3, 4] }}>
+    <Flex justifyContent={'space-between'} alignItems={'center'} sx={{ gap: [3, 4] }}>
       <AccountWithProtocol protocol={data.protocol} address={data.address} />
       <Flex flex={1}>
         <Type.Caption color="neutral3">

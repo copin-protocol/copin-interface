@@ -87,7 +87,7 @@ export default function AlertList() {
           alignItems: 'center',
           height: '100%',
           width: '100%',
-          maxWidth: ['auto', 'auto', 465],
+          maxWidth: ['auto', 'auto', 470],
           mx: 'auto',
         }}
       >
@@ -95,6 +95,7 @@ export default function AlertList() {
           sx={{
             flexDirection: 'column',
             height: '100%',
+            maxHeight: 720,
             width: '100%',
             overflow: ['hidden', 'hidden', 'auto'],
             border: ['none', 'none', 'small'],
@@ -116,7 +117,16 @@ export default function AlertList() {
               )}
             </Flex>
           </Box>
-          <Flex sx={{ flex: '1 0 0', width: '100%', flexDirection: 'column', gap: 2, overflow: 'auto', p: [0, 0, 3] }}>
+          <Flex
+            sx={{
+              flex: '1 0 0',
+              width: '100%',
+              flexDirection: 'column',
+              gap: [2, 2, 3],
+              overflow: 'auto',
+              p: [0, 0, 3],
+            }}
+          >
             {isLoading && <Loading />}
             {!isLoading && !data?.data?.length && (
               <NoDataFound message={<Trans>You do not have any trader&apos;s alert</Trans>} />

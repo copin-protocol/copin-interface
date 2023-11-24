@@ -85,20 +85,5 @@ export default function Layout(components: LayoutComponents) {
 }
 
 function MainTab({ pathname }: { pathname: string }) {
-  return (
-    <TabHeader
-      configs={tabConfigs}
-      isActiveFn={(config) => config.route === pathname}
-      fullWidth
-      sx={{ borderBottom: 'small', borderColor: 'neutral4', px: 16, width: '100%', mb: 0 }}
-      itemSx={{
-        flex: [1, 1, '0 0 auto'],
-        pb: 10,
-        fontSize: 16,
-        display: 'flex',
-        justifyContent: 'center',
-        minWidth: 'fit-content',
-      }}
-    />
-  )
+  return <TabHeader configs={tabConfigs} isActiveFn={(config) => config.route === pathname} fullWidth />
 }

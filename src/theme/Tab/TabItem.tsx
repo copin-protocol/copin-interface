@@ -18,17 +18,21 @@ const TabItem = styled(Button)(({ active, sx, inactiveHasLine }: TabItemProps) =
     px: '0',
     py: '12px',
     fontSize: ['16px', '18px'],
+    fontWeight: ['bold', 'bold', 'normal'],
     lineHeight: '24px',
     width: 'fit-content',
-    fontWeight: '400',
     background: 'transparent',
     color: active ? 'primary1' : 'neutral3',
     '&:hover,&:focus,&:active': {
       color: active ? 'primary1' : 'neutral1',
     },
     borderRadius: 0,
-    borderBottom: 'normal',
-    borderColor: active ? 'primary1' : inactiveHasLine ? 'neutral6' : 'transparent',
+    borderBottom: ['none', 'normal'],
+    borderColor: active
+      ? ['none', 'primary1']
+      : inactiveHasLine
+      ? ['none', 'neutral6']
+      : ['transparent', 'transparent'],
     ...sx,
   })
 )

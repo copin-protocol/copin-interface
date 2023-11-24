@@ -145,8 +145,11 @@ export function TabHeader({
     <Box sx={{ width: '100%' }}>
       <HeaderOverlay hasOverlay={fullWidth}>
         <Header
-          mb={3}
           sx={{
+            px: 3,
+            borderBottom: ['none', 'none', 'small'],
+            borderBottomColor: ['none', 'none', 'neutral4'],
+            width: '100%',
             display: fullWidth ? 'flex' : ['flex', 'flex', 'block'],
             gap: 28,
             ...sx,
@@ -165,7 +168,7 @@ export function TabHeader({
                 active={isActive}
                 inactiveHasLine={inactiveHasLine}
                 sx={{
-                  flex: '1 1 auto',
+                  flex: ['1 0 auto', '1 0 auto', '0 0 auto'],
                   ...(tab.route
                     ? {
                         '&:active,&:focus,&:hover': { color: 'primary1' },
