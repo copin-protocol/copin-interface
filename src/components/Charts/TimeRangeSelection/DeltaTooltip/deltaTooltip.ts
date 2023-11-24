@@ -221,7 +221,8 @@ export class DeltaTooltipPrimitive implements ISeriesPrimitive<Time> {
         const [date, time] = formattedDateAndTime(data.time ? convertTime(data.time) : undefined)
         const state: DeltaSingleTooltipData = {
           x: point.x,
-          lineContent: [date, this._touchChartEvents?.disabled ? `Alt + Mouse to select range` : priceString],
+          // lineContent: [date, this._touchChartEvents?.disabled ? `Alt + Mouse to select range` : priceString],
+          lineContent: [date, priceString],
         }
         if (this._options.showTime) {
           state.lineContent.push(time)

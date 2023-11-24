@@ -3,7 +3,6 @@ import dayjs from 'dayjs'
 import { useState } from 'react'
 
 import TimeFilter, { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
-import RangeFilter from 'components/@ui/TimeFilter/RangeFilter'
 import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex } from 'theme/base'
@@ -18,10 +17,11 @@ export interface TimeFilterSectionProps {
 }
 
 export default function TimeFilterSection({ triggerResize, contextValues }: TimeFilterSectionProps) {
-  const { isRangeSelection, from, to, changeTimeRange, timeOption, changeTimeOption } = contextValues
-  const { sm } = useResponsive()
-
+  // TODO date range
+  // const { isRangeSelection, from, to, changeTimeRange, timeOption, changeTimeOption } = contextValues
   const { isPremiumUser } = useSubscriptionRestrict()
+  const { from, to, changeTimeRange, timeOption, changeTimeOption } = contextValues
+  const { sm } = useResponsive()
 
   return (
     <Flex sx={{ position: 'relative', width: '100%', height: '100%', flexDirection: 'column' }}>
@@ -45,9 +45,10 @@ export default function TimeFilterSection({ triggerResize, contextValues }: Time
           mb={[2, 2, 2, 0]}
           mt={isPremiumUser ? 0 : ['6px', '6px', '6px', 0]}
         >
-          <TimeFilter currentFilter={isRangeSelection ? null : timeOption} handleFilterChange={changeTimeOption} />
-          {isPremiumUser && <Box height={16} flex="0 0 1px" bg="neutral4"></Box>}
-          {!!from && isPremiumUser && (
+          <TimeFilter currentFilter={timeOption} handleFilterChange={changeTimeOption} />
+          {/* TODO date range  <TimeFilter currentFilter={isRangeSelection ? null : timeOption} handleFilterChange={changeTimeOption} />
+           {isPremiumUser && <Box height={16} flex="0 0 1px" bg="neutral4"></Box>}
+           {!!from && isPremiumUser && (
             <RangeFilter
               isRangeSelection={isRangeSelection}
               from={from}
@@ -56,7 +57,7 @@ export default function TimeFilterSection({ triggerResize, contextValues }: Time
               anchor={sm ? 'left' : 'right'}
               anchorPos={sm ? 0 : -125}
             />
-          )}
+          )} */}
         </Flex>
       </Box>
       {sm && isPremiumUser ? (
@@ -71,10 +72,11 @@ export default function TimeFilterSection({ triggerResize, contextValues }: Time
 }
 
 export function TimeFilterDropdown({ contextValues }: TimeFilterSectionProps) {
-  const { isRangeSelection, from, to, changeTimeRange, timeOption, changeTimeOption } = contextValues
-
-  const { isPremiumUser } = useSubscriptionRestrict()
-  const currentOption = isRangeSelection ? null : timeOption
+  const { from, to, timeOption: currentOption, changeTimeOption } = contextValues
+  // TODO date range
+  // const { isRangeSelection, from, to, changeTimeRange, timeOption, changeTimeOption } = contextValues
+  // const { isPremiumUser } = useSubscriptionRestrict()
+  // const currentOption = isRangeSelection ? null : timeOption
 
   const [visible, setVisible] = useState(false)
   return (
@@ -117,7 +119,7 @@ export function TimeFilterDropdown({ contextValues }: TimeFilterSectionProps) {
             </DropdownItem>
           ))}
 
-          {!!from && isPremiumUser && (
+          {/* TODO date range {!!from && isPremiumUser && (
             <DropdownItem>
               <RangeFilter
                 isRangeSelection={isRangeSelection}
@@ -134,7 +136,7 @@ export function TimeFilterDropdown({ contextValues }: TimeFilterSectionProps) {
                 onSelectingChange={() => setVisible(false)}
               />
             </DropdownItem>
-          )}
+          )} */}
         </>
       }
     >

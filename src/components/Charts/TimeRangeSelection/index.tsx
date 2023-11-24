@@ -138,33 +138,33 @@ const TimeRangeSelection = ({
     changeBrush(from, to)
   }, [from, to, changeBrush, selection])
 
-  useEffect(() => {
-    const handleKeyDownEvent = (event: any) => {
-      if (event.key === 'Meta' || event.key === 'Control' || event.key === 'Alt') {
-        setZoomDisabled(true)
-      }
-    }
-    const handleKeyUpEvent = (event: any) => {
-      if (event.key === 'Meta' || event.key === 'Control' || event.key === 'Alt') {
-        setZoomDisabled(false)
-      }
-    }
-    window.addEventListener('keydown', handleKeyDownEvent)
-    window.addEventListener('keyup', handleKeyUpEvent)
+  // useEffect(() => {
+  //   const handleKeyDownEvent = (event: any) => {
+  //     if (event.key === 'Meta' || event.key === 'Control' || event.key === 'Alt') {
+  //       setZoomDisabled(true)
+  //     }
+  //   }
+  //   const handleKeyUpEvent = (event: any) => {
+  //     if (event.key === 'Meta' || event.key === 'Control' || event.key === 'Alt') {
+  //       setZoomDisabled(false)
+  //     }
+  //   }
+  //   window.addEventListener('keydown', handleKeyDownEvent)
+  //   window.addEventListener('keyup', handleKeyUpEvent)
 
-    return () => {
-      window.removeEventListener('keydown', handleKeyDownEvent)
-    }
-  }, [])
+  //   return () => {
+  //     window.removeEventListener('keydown', handleKeyDownEvent)
+  //   }
+  // }, [])
 
-  useEffect(() => {
-    if (!chartRef.current || !tooltipRef.current) return
-    tooltipRef.current.enable(zoomDisabled)
-    chartRef.current.applyOptions({
-      handleScroll: !zoomDisabled,
-      handleScale: !zoomDisabled,
-    })
-  }, [zoomDisabled])
+  // useEffect(() => {
+  //   if (!chartRef.current || !tooltipRef.current) return
+  //   tooltipRef.current.enable(zoomDisabled)
+  //   chartRef.current.applyOptions({
+  //     handleScroll: !zoomDisabled,
+  //     handleScale: !zoomDisabled,
+  //   })
+  // }, [zoomDisabled])
 
   useEffect(() => {
     const container = document.getElementById(ID)
