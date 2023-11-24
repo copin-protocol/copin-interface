@@ -1,22 +1,29 @@
 import styled from 'styled-components/macro'
 
-import { TraderCounter } from 'entities/trader'
+import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import { FilterValues } from 'components/ConditionFilterForm/types'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 import { formatNumber, nFormatter } from 'utils/helpers/format'
+import { getDurationFromTimeFilter } from 'utils/helpers/transform'
+
+import useTradersCount from './useTraderCount'
 
 const COLORS: string[] = ['#B6EBFB', '#6EB9F7', '#1183E1', '#0A53A9', '#083791']
 
 export default function ResultEstimated({
-  data,
-  loading,
-  effectDays,
+  ranges,
+  timeOption,
+  protocol,
 }: {
-  data: TraderCounter[] | undefined
-  loading: boolean
-  effectDays: number
+  ranges: FilterValues[]
+  timeOption: TimeFilterProps
+  protocol: ProtocolEnum
 }) {
-  return !!loading || !!data?.length ? (
+  const effectDays = getDurationFromTimeFilter(timeOption.id)
+  const { data, isLoading } = useTradersCount({ ranges, timeOption, protocol })
+  return !!isLoading || !!data?.length ? (
     <Flex
       sx={{
         px: 3,
@@ -28,7 +35,7 @@ export default function ResultEstimated({
       }}
     >
       <Box sx={{ position: 'absolute', top: '50%', left: 32, transform: 'translateY(-50%)', zIndex: 10 }}>
-        {loading && <Loading size={16} />}
+        {isLoading && <Loading size={16} />}
       </Box>
       <Box
         sx={{
@@ -43,7 +50,7 @@ export default function ResultEstimated({
         {data &&
           data.map((value, index) => {
             const { counter, total } = value
-            const percent = (counter * 100) / total
+            const percent = total > 0 ? (counter * 100) / total : 0
             const isLast = index === data.length - 1
             return (
               <Box key={index}>

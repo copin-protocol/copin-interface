@@ -102,19 +102,21 @@ const NavUser = () => {
                 )
               )}
               <Divider my={2} />
-              <DropdownItem
-                onClick={() => {
-                  onClickNavItem()
-                  setIsShowModalChangePassword(true)
-                }}
-              >
-                <Flex alignItems="center" sx={{ gap: 2 }}>
-                  <Key size={20} />
-                  <Box>
-                    <Trans>Change Password</Trans>
-                  </Box>
-                </Flex>
-              </DropdownItem>
+              {!account && (
+                <DropdownItem
+                  onClick={() => {
+                    onClickNavItem()
+                    setIsShowModalChangePassword(true)
+                  }}
+                >
+                  <Flex alignItems="center" sx={{ gap: 2 }}>
+                    <Key size={20} />
+                    <Box>
+                      <Trans>Change Password</Trans>
+                    </Box>
+                  </Flex>
+                </DropdownItem>
+              )}
               <div>
                 <DropdownItem
                   onClick={() => {

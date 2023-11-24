@@ -6,6 +6,7 @@ import { PositionSortPros } from 'pages/TraderDetails'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 
 import { ApiListResponse } from './api'
+import { apiWrapper } from './helpers'
 import requester from './index'
 import { GetApiParams, QueryFilter, RangeFilter, RequestBodyApiData } from './types'
 
@@ -54,7 +55,7 @@ export async function getTradersApi({ protocol, body }: { protocol: ProtocolEnum
   }
   // return traderListData
   return requester
-    .post(`${protocol}/${SERVICE}/statistic/filter`, normalizePayload(params))
+    .post(apiWrapper(`${protocol}/${SERVICE}/statistic/filter`), normalizePayload(params))
     .then((res: any) => res.data as ApiListResponse<TraderData>)
 }
 
@@ -75,7 +76,7 @@ export async function getTraderApi({
     queryFilters.push({ fieldName: 'type', value: type })
   }
   return requester
-    .post(`${protocol}/${SERVICE}/statistic/filter`, { queries: queryFilters, returnRanking })
+    .post(apiWrapper(`${protocol}/${SERVICE}/statistic/filter`), { queries: queryFilters, returnRanking })
     .then((res: any) => (res.data.data && res.data.data.length > 0 ? (res.data.data[0] as TraderData) : undefined))
 }
 
@@ -118,7 +119,7 @@ export async function getTradersCounter(
   if (!!body.ranges && body.ranges.length > 0) params.ranges = body.ranges
 
   return requester
-    .post(`${protocol}/${SERVICE}/statistic/counter/level?type=${timeframe}`, params)
+    .post(apiWrapper(`${protocol}/${SERVICE}/statistic/counter/level?type=${timeframe}`), params)
     .then((res: any) => res.data as TraderCounter[])
 }
 

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ChartBar, Funnel } from '@phosphor-icons/react'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
@@ -23,10 +23,7 @@ export default function ConditionFilter({
   filtersExpanded,
 }: ConditionFilterProps) {
   const [filterTab, setFilterTab] = useState(tab) // reduce render
-  const prevTab = useRef(filterTab)
-  useEffect(() => {
-    prevTab.current = filterTab
-  }, [filterTab])
+
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>
       <Flex
@@ -95,7 +92,7 @@ export default function ConditionFilter({
             defaultFormValues={filters}
             handleChangeOption={changeFilters}
             handleClose={onCancel}
-            prevTab={prevTab.current}
+            currentTab={filterTab}
             lastFilterTab={tab}
           />
         </Box>
@@ -105,7 +102,7 @@ export default function ConditionFilter({
             defaultFormValues={rankingFilters}
             handleChangeOption={changeRankingFilters}
             handleClose={onCancel}
-            prevTab={prevTab.current}
+            currentTab={filterTab}
             lastFilterTab={tab}
           />
         </Box>
