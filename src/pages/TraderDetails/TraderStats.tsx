@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ArrowLineUp } from '@phosphor-icons/react'
-import { ReactNode } from 'react'
+import { ReactNode, memo } from 'react'
 import styled from 'styled-components/macro'
 
 import CustomizeColumn from 'components/@ui/Table/CustomizeColumn'
@@ -54,7 +54,8 @@ const statsObj = stats.reduce((prev, cur) => {
   return prev
 }, {} as { [key: string]: StatProps })
 
-export default function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
+export default memo(AccountStats)
+function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
   const { customizeStats, toggleVisibleStat, moveStatToTop } = useStatsCustomizeStore()
   return (
     <Box display="flex" flexWrap="wrap" minWidth={610} pb={[3, 4, 4, 4, 3]}>

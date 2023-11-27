@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { useClickLoginButton } from 'components/LoginAction'
+import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
@@ -15,12 +16,10 @@ const CopyTraderAction = ({
   protocol,
   account,
   onForceReload,
-  hasCopyPermission = false,
 }: {
   protocol: ProtocolEnum
   account: string
   onForceReload: () => void
-  hasCopyPermission?: boolean
 }) => {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenContactModal, setIsOpenContactModal] = useState(false)
@@ -32,6 +31,8 @@ const CopyTraderAction = ({
     setIsOpenModal(false)
     onForceReload()
   }
+
+  const hasCopyPermission = useCopyTradePermission()
 
   return (
     <>

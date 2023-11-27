@@ -1,8 +1,7 @@
 import { CaretRight, Pulse, XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useMemo, useState } from 'react'
-// eslint-disable-next-line no-restricted-imports
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import emptyBg from 'assets/images/opening_empty_bg.png'
 import Container from 'components/@ui/Container'
@@ -30,10 +29,17 @@ const emptyCss = {
   backgroundRepeat: 'no-repeat',
 }
 
-export default function OpeningPositionTable({ data, isLoading }: { data?: PositionData[]; isLoading: boolean }) {
+export default function OpeningPositionTable({
+  data,
+  isLoading,
+  protocol,
+}: {
+  data: PositionData[] | undefined
+  isLoading: boolean
+  protocol: ProtocolEnum
+}) {
   const { prices } = useUsdPricesStore()
   const isMobile = useIsMobile()
-  const { protocol } = useParams<{ protocol: ProtocolEnum }>()
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()

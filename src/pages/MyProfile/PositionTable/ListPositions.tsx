@@ -71,13 +71,13 @@ export function ListForm({
             sx={{ px: 3, py: 2, bg: 'neutral6', position: 'relative' }}
             onClick={() => externalSource?.handleSelectCopyItem?.(positionData)}
           >
-            {positionData.reverseCopy && (
+            {positionData.isReverse && (
               <Box sx={{ position: 'absolute', top: 16, left: 8 }}>
                 <ReverseTag />
               </Box>
             )}
             <Flex>
-              <Box flex="1" sx={{ '& *': { fontWeight: 'bold' }, ...(positionData.reverseCopy ? { pl: 2 } : {}) }}>
+              <Box flex="1" sx={{ '& *': { fontWeight: 'bold' }, ...(positionData.isReverse ? { pl: 2 } : {}) }}>
                 {renderCopyTitle(positionData)}
               </Box>
               <Box sx={{ flexShrink: 0 }}>{renderStatus(positionData)}</Box>
@@ -177,7 +177,7 @@ export const historyColumns: typeof openingColumns = [
     style: { minWidth: '120px' },
     render: (item) => (
       <Box sx={{ position: 'relative' }}>
-        {item.reverseCopy && <ReverseTag sx={{ top: '-12px', left: '-16px' }} />}
+        {item.isReverse && <ReverseTag sx={{ top: '-12px', left: '-16px' }} />}
         {renderOpenTime(item)}
       </Box>
     ),

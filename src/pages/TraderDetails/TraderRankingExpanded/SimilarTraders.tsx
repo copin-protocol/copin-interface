@@ -1,6 +1,5 @@
-// eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
 
@@ -22,7 +21,10 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import ScoreChart, { ScoreChartData } from '../ScoreChart'
 import { filterFoundData } from './helpers'
 
-const RANKING_TOLERANCE = 10
+const MINIMUM_TOLERANCE = 10
+const TOLERANCE_STEP = 5
+const MINIMUM_RESULT = 5
+const MAXIMUM_RETRY_TIME = 3
 export default function SimilarTraders({
   traderData,
   selectedTrader,
@@ -39,14 +41,30 @@ export default function SimilarTraders({
   onClickCompareButton: (data: TraderData) => void
 }) {
   const { isPremiumUser } = useSubscriptionRestrict()
-  const similarTradersFilter: FilterValues[] = rankingFieldOptions.reduce(
+  const [retryTime, setRetryTime] = useState(0)
+  const fieldNames = useMemo(() => rankingFieldOptions.map((option) => option.value), [rankingFieldOptions])
+  const alterFieldNames = useMemo(() => {
+    let minRanking = traderData[fieldNames[0]] ?? 0
+    let name = fieldNames[0]
+    fieldNames.forEach((value) => {
+      const ranking = traderData[value] ?? 0
+      if (ranking < minRanking) {
+        name = value
+        minRanking = ranking
+      }
+    })
+    return fieldNames.filter((value) => value !== name)
+  }, [fieldNames, traderData])
+  const _fieldNames = retryTime === 1 ? alterFieldNames : fieldNames
+  const tolerance = retryTime > 1 ? MINIMUM_TOLERANCE + (retryTime - 1) * TOLERANCE_STEP : MINIMUM_TOLERANCE
+  const similarTradersFilter: FilterValues[] = _fieldNames.reduce(
     (result, option) => {
-      const rankingValue = traderData.ranking[option.value]
-      const minRanking = rankingValue - RANKING_TOLERANCE
-      const maxRanking = rankingValue + RANKING_TOLERANCE
+      const rankingValue = traderData.ranking[option]
+      const minRanking = rankingValue - tolerance
+      const maxRanking = rankingValue + tolerance
       if (!rankingValue) return result
       const filters = {
-        fieldName: `ranking.${option.value}`,
+        fieldName: `ranking.${option}`,
         gte: minRanking < 0 ? 0 : minRanking,
         lte: maxRanking > 100 ? 100 : maxRanking,
       }
@@ -62,39 +80,42 @@ export default function SimilarTraders({
     pagination: { limit: 10, offset: 0 },
     returnRanking: true,
   }
-
-  const { data: similarTradersGMX, isFetching: isFetchingOnGMX } = useQuery(
-    [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, similarTradersFilter, ProtocolEnum.GMX],
+  const [isFetching, setIsFetching] = useState(true)
+  const { data: similarTraders } = useQuery(
+    [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, similarTradersFilter, ProtocolEnum.GMX, retryTime],
     () =>
-      getTradersApi({
-        protocol: ProtocolEnum.GMX,
-        body: queryBody,
-      }),
+      Promise.all([
+        getTradersApi({
+          protocol: ProtocolEnum.GMX,
+          body: queryBody,
+        }),
+        getTradersApi({
+          protocol: ProtocolEnum.KWENTA,
+          body: queryBody,
+        }),
+      ]),
     {
       keepPreviousData: true,
       retry: 0,
-      enabled: !!timeOption,
-      select: (result) => ({
-        ...result,
-        data: filterFoundData(result.data, { account: traderData.account, protocol: traderData.protocol }),
-      }),
-    }
-  )
-  const { data: similarTradersKwenta, isFetching: isFetchingOnKwenta } = useQuery(
-    [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, similarTradersFilter, ProtocolEnum.KWENTA],
-    () =>
-      getTradersApi({
-        protocol: ProtocolEnum.KWENTA,
-        body: queryBody,
-      }),
-    {
-      keepPreviousData: true,
-      retry: 0,
-      enabled: !!timeOption,
-      select: (result) => ({
-        ...result,
-        data: filterFoundData(result.data, { account: traderData.account, protocol: traderData.protocol }),
-      }),
+      enabled: !!timeOption && retryTime <= MAXIMUM_RETRY_TIME,
+      select: (result) => {
+        return result.reduce((result, data) => {
+          return [
+            ...result,
+            ...filterFoundData(data.data, { account: traderData.account, protocol: traderData.protocol }),
+          ]
+        }, [] as TraderData[])
+      },
+      onSettled: (data, error) => {
+        if (retryTime <= MAXIMUM_RETRY_TIME) {
+          const tradersCount = data?.length ?? 0
+          if (tradersCount < MINIMUM_RESULT || error) {
+            setRetryTime((prev) => prev + 1)
+            return
+          }
+        }
+        setIsFetching(false)
+      },
     }
   )
 
@@ -129,17 +150,16 @@ export default function SimilarTraders({
     )
   }
 
-  const similarTraders =
-    similarTradersGMX && similarTradersKwenta ? [...similarTradersGMX.data, ...similarTradersKwenta.data] : []
-  const isFetching = isFetchingOnGMX || isFetchingOnKwenta
+  if (isFetching)
+    return (
+      <Box pt={4}>
+        <Loading />
+      </Box>
+    )
+
   return (
     <Box sx={{ width: '100%', minHeight: '100%', bg: 'neutral6' }}>
-      {isFetching && (
-        <Box pt={4}>
-          <Loading />
-        </Box>
-      )}
-      {!isFetching && !similarTraders.length && <NoDataFound />}
+      {!isFetching && !similarTraders?.length && <NoDataFound />}
       {!isFetching && (
         <Box
           sx={{
@@ -153,7 +173,7 @@ export default function SimilarTraders({
             },
           }}
         >
-          {similarTraders.map((traderData) => {
+          {similarTraders?.map((traderData) => {
             return (
               <Box
                 key={traderData.id}
