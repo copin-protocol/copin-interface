@@ -102,6 +102,8 @@ export const URL_PARAM_KEYS = {
   MY_POSITIONS_ENTRY_STATUS: 'entry_status',
   USER_ACTIVITY_PAGE: 'activity_page',
   BOT_TELEGRAM_STATE: 'state',
+  LEADERBOARD_TYPE: 'leaderboard_type',
+  LEADERBOARD_DATE: 'leaderboard_date',
 }
 
 export const TOOLTIP_KEYS = {

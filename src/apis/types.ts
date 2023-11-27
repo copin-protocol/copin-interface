@@ -69,6 +69,7 @@ export type GetMyPositionRequestBody = {
 }
 
 export type GetLeaderboardParams = GetApiParams & {
+  queryDate?: number
   keyword?: string
   protocol?: ProtocolEnum
   statisticType?: LeaderboardTypeEnum
