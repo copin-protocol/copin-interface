@@ -1,5 +1,5 @@
 import { useResponsive } from 'ahooks'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
@@ -17,6 +17,7 @@ import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useTraderCopying from 'hooks/store/useTraderCopying'
+import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
@@ -42,6 +43,8 @@ export interface PositionSortPros {
 export default function TraderDetails() {
   const { address, protocol } = useParams<{ address: string; protocol: ProtocolEnum }>()
   const _address = isAddress(address)
+  const { isLastViewed, addTraderLastViewed } = useTraderLastViewed(protocol, _address)
+
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
     [QUERY_KEYS.GET_TRADER_DETAIL, _address, protocol],
     () =>
@@ -108,6 +111,12 @@ export default function TraderDetails() {
       saveTraderCopying(currentTraderData.account)
     }
   }
+
+  useEffect(() => {
+    if (_address && protocol && !isLastViewed) {
+      addTraderLastViewed(protocol, _address)
+    }
+  }, [])
 
   const { lg, xl } = useResponsive()
 

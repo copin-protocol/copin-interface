@@ -7,10 +7,10 @@ import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { deleteTraderAlertApi, getTraderAlertListApi } from 'apis/alertApis'
-import NoDataFound from 'components/@ui/NoDataFound'
 import ToastBody from 'components/@ui/ToastBody'
 import UnsubscribeAlertModal from 'components/Modal/UnsubscribeAlertModal'
 import { TraderAlertData } from 'entities/alert'
+import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
 import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useMyProfile from 'hooks/store/useMyProfile'
@@ -28,6 +28,7 @@ import { pageToOffset } from 'utils/helpers/transform'
 
 import DesktopItem from './DesktopItem'
 import MobileItem from './MobileItem'
+import TraderLastViewed from './TraderLastViewed'
 
 const LIMIT = 10
 export default function AlertList() {
@@ -129,7 +130,9 @@ export default function AlertList() {
           >
             {isLoading && <Loading />}
             {!isLoading && !data?.data?.length && (
-              <NoDataFound message={<Trans>You do not have any trader&apos;s alert</Trans>} />
+              <BotAlertProvider>
+                <TraderLastViewed reload={reload} />
+              </BotAlertProvider>
             )}
             {data?.data?.map((item) =>
               md ? (
