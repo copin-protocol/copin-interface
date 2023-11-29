@@ -8,17 +8,17 @@ import ToastBody from 'components/@ui/ToastBody'
 import { SharePositionData } from 'entities/share'
 import { PositionData } from 'entities/trader'
 import useMyProfile from 'hooks/store/useMyProfile'
-import useUsdPricesStore from 'hooks/store/useUsdPrices'
+import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
 import { IconBox } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { generatePositionCanvas } from 'utils/helpers/generateImage'
-import { generateParamsUrl, generateSharedPositionRoute } from 'utils/helpers/generateRoute'
+import { generateParamsUrl, generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
 export default function SharePosition({ isOpening, stats }: { isOpening: boolean; stats: PositionData }) {
-  const { prices } = useUsdPricesStore()
+  const { prices } = useRealtimeUsdPricesStore()
   const [isSocialMediaSharingOpen, setIsSocialMediaSharingOpen] = useState(false)
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
   const [shareData, setShareData] = useState<SharePositionData>()
@@ -49,7 +49,6 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
           async function share() {
             if (!stats || !blob) return
             const res = await sharePositionApi({
-              isOpening,
               position: stats,
               imageBlob: blob,
             })
@@ -74,9 +73,9 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
   const { myProfile } = useMyProfile()
   const referralCode = myProfile?.referralCode ?? null
   const shareLink = generateParamsUrl({
-    url: `${import.meta.env.VITE_URL}${generateSharedPositionRoute({
+    url: `${import.meta.env.VITE_URL}${generatePositionDetailsRoute({
       protocol: stats?.protocol,
-      sharedId: shareData?.shareId ?? '',
+      id: stats?.id,
     })}`,
     key: 'ref',
     value: referralCode,

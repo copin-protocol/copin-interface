@@ -1,6 +1,7 @@
 export enum ProtocolEnum {
   GMX = 'GMX',
   KWENTA = 'KWENTA',
+  POLYNOMIAL = 'POLYNOMIAL',
 }
 
 export enum UserRoleEnum {
@@ -14,6 +15,7 @@ export enum TimeFrameEnum {
   TWO_WEEK = 'D15',
   A_MONTH = 'D30',
   TWO_MONTH = 'D60',
+  ALL_TIME = 'FULL',
 }
 
 export enum TimeFilterByEnum {
@@ -21,13 +23,7 @@ export enum TimeFilterByEnum {
   S14_DAY = TimeFrameEnum.TWO_WEEK,
   S30_DAY = TimeFrameEnum.A_MONTH,
   S60_DAY = TimeFrameEnum.TWO_MONTH,
-}
-
-export enum TopCollectionSortByEnum {
-  S1_DAY = 'collectionVolumeStat.s1day',
-  S7_DAY = 'collectionVolumeStat.s7day',
-  S30_DAY = 'collectionVolumeStat.s30day',
-  ALL = 'collectionVolumeStat.sAllDay',
+  ALL_TIME = TimeFrameEnum.ALL_TIME,
 }
 
 export enum TraderStatusEnum {
@@ -72,6 +68,7 @@ export enum OrderTypeEnum {
   DECREASE = 'DECREASE',
   INCREASE = 'INCREASE',
   LIQUIDATE = 'LIQUIDATE',
+  MARGIN_TRANSFERRED = 'MARGIN_TRANSFERRED',
 }
 
 export enum SortTypeEnum {

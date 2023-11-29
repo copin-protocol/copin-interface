@@ -100,7 +100,7 @@ const TimeRangeSelection = ({
       const fromIndex = getDateIndexForward(from)
       const toIndex = getDateIndexBackward(to ?? new Date())
 
-      if (!brushRef.current || !fromIndex || !toIndex) return
+      if (!brushRef.current || fromIndex == null || toIndex == null) return
 
       brushRef.current.applyOptions({
         brushRanges: [

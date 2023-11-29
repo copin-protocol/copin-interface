@@ -103,6 +103,9 @@ export const generateTraderCanvas = ({
     case TimeFrameEnum.TWO_MONTH:
       time = '60'
       break
+    case TimeFrameEnum.ALL_TIME:
+      time = 'all'
+      break
     default:
       break
   }
@@ -112,12 +115,12 @@ export const generateTraderCanvas = ({
   leftCtx.textAlign = 'center'
   leftCtx.fillStyle = !stats
     ? colors.neutral1
-    : stats.profit > 0
+    : stats.pnl > 0
     ? colors.green1
-    : stats.profit < 0
+    : stats.pnl < 0
     ? colors.red2
     : colors.neutral1
-  leftCtx.fillText('$' + formatNumber(stats?.profit, 0, 0), leftWidth / 2, chartAreaOffsetY + 36 + 32 + 16)
+  leftCtx.fillText('$' + formatNumber(stats?.pnl, 0, 0), leftWidth / 2, chartAreaOffsetY + 36 + 32 + 16)
 
   // chart line
   const chartAxisOffsetY = chartAreaOffsetY + chartAreaHeight - chartFooterHeight
@@ -208,7 +211,7 @@ export const generatePositionCanvas = ({
   rightCtx.fillStyle = colors.neutral1
   rightCtx.font = `700 ${valueStatsFontSize}px Anuphan`
   rightCtx.fillText('$' + formatNumber(stats?.collateral, 0, 0), rightWidth / 2, valueStartY)
-  const latestPnL = isOpening ? calcOpeningPnL(stats, prices[stats.indexToken]) : stats.realisedPnl - stats.fee
+  const latestPnL = isOpening ? calcOpeningPnL(stats, prices[stats.indexToken]) : stats.pnl
   const latestROI = isOpening ? calcOpeningROI(stats, latestPnL) : stats.roi
   rightCtx.fillStyle = !stats
     ? colors.neutral1
@@ -223,10 +226,10 @@ export const generatePositionCanvas = ({
     valueStartY + statsGap - 24
   )
   rightCtx.font = `700 ${titleStatsFontSize}px Anuphan`
-  rightCtx.fillText(formatNumber(latestROI, 1) + '%', rightWidth / 2, valueStartY + statsGap + 32)
+  rightCtx.fillText(formatNumber(latestROI, 2) + '%', rightWidth / 2, valueStartY + statsGap + 32)
   rightCtx.fillStyle = colors.red2
   rightCtx.font = `700 ${valueStatsFontSize}px Anuphan`
-  rightCtx.fillText('-$' + formatNumber(stats?.paidFee ?? stats?.fee, 1), rightWidth / 2, valueStartY + statsGap * 2)
+  rightCtx.fillText('-$' + formatNumber(stats?.fee, 1), rightWidth / 2, valueStartY + statsGap * 2)
 
   // draw avatar & address
   generateAvatarAddress({ address, colors, canvas: leftCtx })
@@ -302,7 +305,7 @@ export const generatePositionCanvas = ({
   leftCtx.textAlign = 'left'
   leftCtx.fillStyle = colors.neutral1
   if (isOpening) {
-    const liquidationPrice = calcLiquidatePrice(stats, prices)
+    const liquidationPrice = calcLiquidatePrice(stats)
     generateTokenPrice({
       value: liquidationPrice ?? 0,
       canvas: leftCtx,
@@ -408,6 +411,10 @@ export const generateProtocol = ({
     case ProtocolEnum.KWENTA:
       protocolTextWidth = 117
       protocolText = 'Kwenta'
+      break
+    case ProtocolEnum.POLYNOMIAL:
+      protocolTextWidth = 137
+      protocolText = 'Polynomial'
       break
     default:
       break

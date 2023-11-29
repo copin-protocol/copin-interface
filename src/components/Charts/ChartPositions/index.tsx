@@ -28,7 +28,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
-import { PositionStatusEnum, ProtocolEnum, TimeframeEnum } from 'utils/config/enums'
+import { PositionStatusEnum, TimeframeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { ALL_TOKENS_ID, TOKEN_TRADE_SUPPORT, getDefaultTokenTrade, getTokenOptions } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
@@ -101,10 +101,7 @@ export default function ChartPositions({
       : undefined
   }, [filteredClosedPositions, filteredOpeningPositions])
   const mostRecentTrade = useMemo(
-    () =>
-      mostRecentPos
-        ? dayjs(mostRecentPos.closeBlockTime ? mostRecentPos.closeBlockTime : mostRecentPos.blockTime).utc()
-        : undefined,
+    () => (mostRecentPos ? dayjs(mostRecentPos.closeBlockTime ?? mostRecentPos.openBlockTime).utc() : undefined),
     [mostRecentPos]
   )
 
@@ -164,7 +161,7 @@ export default function ChartPositions({
     [data, timezone]
   )
   const openingPos = (openingPositions ?? []).filter(
-    (e) => e.indexToken === tokenTrade.address && dayjs(e.blockTime).utc().valueOf() >= from
+    (e) => e.indexToken === tokenTrade.address && dayjs(e.openBlockTime).utc().valueOf() >= from
   )
   const closedPos = closedPositions.filter(
     (e) => e.indexToken === tokenTrade.address && dayjs(e.closeBlockTime).utc().valueOf() >= from
@@ -174,8 +171,7 @@ export default function ChartPositions({
 
   useEffect(() => {
     if (targetPosition) {
-      const targetMarkerId = `${targetPosition.id}-CLOSE`
-      setMarkerId(targetMarkerId)
+      setMarkerId(targetPosition.id)
 
       const openTime = dayjs(targetPosition.openBlockTime).utc()
       const closedTime = dayjs(targetPosition.closeBlockTime).utc()
@@ -308,35 +304,31 @@ export default function ChartPositions({
     series.applyOptions({})
 
     const increasePosMarkers = listPositions.map((position): SeriesMarker<Time> => {
-      const isGMX = position.protocol === ProtocolEnum.GMX
-      const isOpen = isGMX ? !position.id : position.status === PositionStatusEnum.OPEN
-      const isSelected =
-        markerId && markerId.includes(isOpen ? (isGMX ? position.blockTime : position.openBlockTime) : position.id)
+      const isSelected = markerId && markerId.includes(position.id)
       return {
-        id: `${position.id}-OPEN-${isGMX ? position.blockTime : position.openBlockTime}`,
+        id: `${position.id}-OPEN`,
         position: 'aboveBar',
         color: markerId && !isSelected ? themeColors.neutral3 : position.isLong ? themeColors.green1 : themeColors.red2,
         size: isSelected ? 1.85 : 1.35,
         shape: position.isLong ? 'arrowUp' : 'arrowDown',
-        time: (dayjs(isGMX && isOpen ? position.blockTime : position.openBlockTime)
-          .utc()
-          .unix() - timezone) as Time,
+        time: (dayjs(position.openBlockTime).utc().unix() - timezone) as Time,
       }
     })
 
     const closePosMarkers = closedPos.map((position): SeriesMarker<Time> => {
+      const isSelected = markerId && markerId.includes(position.id)
       return {
         id: `${position.id}-CLOSE`,
         position: 'belowBar',
         color:
-          markerId && !markerId.includes(position.id)
+          markerId && !isSelected
             ? themeColors.neutral3
             : position.isLiquidate || position.roi <= -100
             ? themeColors.red2
             : themeColors.neutral1,
-        size: markerId && markerId.includes(position.id) ? 1.75 : 1.5,
+        size: isSelected ? 1.75 : 1.5,
         shape: 'square',
-        text: '$' + formatNumber(position.realisedPnl),
+        text: '$' + formatNumber(position.pnl),
         time: (dayjs(position.closeBlockTime).utc().unix() - timezone) as Time,
       }
     })
@@ -421,13 +413,10 @@ export default function ChartPositions({
       // }
 
       chart.subscribeCrosshairMove((param) => {
-        const hoverMakerId = param.hoveredObjectId as string | undefined
-        if (markerId && hoverMakerId) {
-          const currentPositionId = markerId.split('-')[0]
-          if (hoverMakerId.includes(currentPositionId)) {
-            setMarkerId(hoverMakerId)
-          }
-        }
+        // const hoverMakerId = param.hoveredObjectId as string | undefined
+        // if (hoverMakerId) {
+        //   setMarkerId(hoverMakerId)
+        // }
         if (
           param.point === undefined ||
           !param.time ||
@@ -577,7 +566,7 @@ export default function ChartPositions({
           <PositionLegend
             isExpanded={isExpanded}
             data={currentPosition}
-            isOpening={currentPosition.status !== PositionStatusEnum.CLOSE}
+            isOpening={currentPosition.status === PositionStatusEnum.OPEN}
           />
         )}
       </Flex>

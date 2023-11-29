@@ -50,7 +50,7 @@ export default function DefaultFilterForm({
   }
   const onReset: FilterFormProps['onReset'] = (formValueFactory) => {
     if (formValueFactory) {
-      const formValues = formValueFactory(['profit', 'winRate'])
+      const formValues = formValueFactory(['pnl', 'winRate'])
       handleChangeOption(formValues)
     }
     handleClose && handleClose()

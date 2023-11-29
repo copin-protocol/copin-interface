@@ -127,4 +127,5 @@ export const ELEMENT_CLASSNAMES = {
 export const SERVICE_KEYS = {
   [ProtocolEnum.GMX]: 'INTERNAL_TEST',
   [ProtocolEnum.KWENTA]: 'TEST_KWENTA',
+  [ProtocolEnum.POLYNOMIAL]: 'TEST_KWENTA',
 }

@@ -8,7 +8,7 @@ import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { AmountText, PercentText } from 'components/@ui/DecoratedText/ValueText'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { renderCopyEntry } from 'components/@ui/Table/renderProps'
-import useUsdPricesStore from 'hooks/store/useUsdPrices'
+import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { renderTrader } from 'pages/MyProfile/renderProps'
 import Loading from 'theme/Loading'
 import Tag from 'theme/Tag'
@@ -23,7 +23,7 @@ import CopyChartProfit from './CopyChartProfit'
 import ListCopyOrderTable from './ListCopyOrderTable'
 
 export default function CopyTradePositionDetails({ id }: { id: string }) {
-  const { prices } = useUsdPricesStore()
+  const { prices } = useRealtimeUsdPricesStore()
   const { data, isLoading } = useQuery(
     [QUERY_KEYS.GET_MY_COPY_POSITION_DETAIL, id],
     () => getMyCopyPositionDetailApi({ copyId: id }),
@@ -75,11 +75,11 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
         : 0,
     [copyTradeOrders, data]
   )
-  const realisedPnl = useMemo(
+  const pnl = useMemo(
     () => (data ? (isOpening ? calcCopyOpeningPnL(data, prices[data.indexToken]) : data.pnl) : 0),
     [data, isOpening, prices]
   )
-  const roi = data ? (realisedPnl / collateral) * 100 : 0
+  const roi = data ? (pnl / collateral) * 100 : 0
 
   const openBlockTimeUnix = useMemo(() => (data ? dayjs(data.createdAt).utc().unix() : 0), [data])
   const closeBlockTimeUnix = useMemo(() => (data ? dayjs(data.lastOrderAt).utc().unix() : 0), [data])
@@ -87,16 +87,8 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
   const [crossMovePnL, setCrossMovePnL] = useState<number | undefined>()
   const latestPnL = useMemo(
     () =>
-      crossMovePnL === 0
-        ? 0
-        : data
-        ? isOpening || crossMovePnL
-          ? crossMovePnL
-            ? crossMovePnL
-            : realisedPnl
-          : data.pnl
-        : 0,
-    [crossMovePnL, data, isOpening, realisedPnl]
+      crossMovePnL === 0 ? 0 : data ? (isOpening || crossMovePnL ? (crossMovePnL ? crossMovePnL : pnl) : data.pnl) : 0,
+    [crossMovePnL, data, isOpening, pnl]
   )
 
   const latestROI = useMemo(

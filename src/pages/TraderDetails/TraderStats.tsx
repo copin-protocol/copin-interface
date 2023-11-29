@@ -6,6 +6,7 @@ import styled from 'styled-components/macro'
 import CustomizeColumn from 'components/@ui/Table/CustomizeColumn'
 import { ExternalSource, tableSettings } from 'components/Tables/TraderListTable/dataConfig'
 import { TraderData } from 'entities/trader.d'
+import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
 import { IGNORE_FIELDS, useStatsCustomizeStore } from 'hooks/store/useStatsCustomize'
 import IconButton from 'theme/Buttons/IconButton'
 import Tooltip from 'theme/Tooltip'
@@ -56,6 +57,7 @@ const statsObj = stats.reduce((prev, cur) => {
 
 export default memo(AccountStats)
 function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
+  const { isPremiumUser } = useSubscriptionRestrict()
   const { customizeStats, toggleVisibleStat, moveStatToTop } = useStatsCustomizeStore()
   return (
     <Box display="flex" flexWrap="wrap" minWidth={610} pb={[3, 4, 4, 4, 3]}>
@@ -69,7 +71,7 @@ function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
           position: 'sticky',
           top: 0,
           bg: 'neutral7',
-          zIndex: 3,
+          zIndex: 4,
         }}
       >
         <Flex width="100%" alignItems="center" color="neutral3">
@@ -117,6 +119,19 @@ function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
             </Box>
           </Flex>
 
+          {isPremiumUser && (
+            <Type.Caption
+              textAlign="right"
+              sx={{
+                flex: 1,
+                py: 2,
+                borderBottom: 'small',
+                borderColor: 'neutral4',
+              }}
+            >
+              ALL TIME
+            </Type.Caption>
+          )}
           <Type.Caption
             textAlign="right"
             sx={{
@@ -210,6 +225,7 @@ function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
                   left: 0,
                   flex: 1,
                   py: 2,
+                  zIndex: 3,
                 }}
                 className="column-freeze"
                 alignItems="center"
@@ -289,8 +305,8 @@ export function generateStats(
     },
     {
       label: <Trans>Max Drawdown</Trans>,
-      value: data.maxDrawDownPnl,
-      valueSuffix: ` (${formatNumber(data.maxDrawDownRoi, 1)}%)`,
+      value: data.maxDrawdownPnl,
+      valueSuffix: ` (${formatNumber(data.maxDrawdown, 1)}%)`,
       valuePrefix: '$',
       digit: 0,
       hasStyle: true,

@@ -260,18 +260,18 @@ const ThemedGlobalStyle = createGlobalStyle`
     padding-left: 8px;
     padding-right: 8px;
     opacity: 1;
-    z-index: 3;
+    z-index: 4;
     box-shadow: 0px 0px 6px 6px ${({ theme }) => theme.colors.neutral3}03;
   }
   .custom_react_tooltip_arrow_place_top_css {
     border-bottom: 1px solid ${({ theme }) => theme.colors.neutral4};
     border-right: 1px solid ${({ theme }) => theme.colors.neutral4};
-    z-index: 3;
+    z-index: 4;
   }
   .custom_react_tooltip_arrow_place_bottom_css {
     border-top: 1px solid ${({ theme }) => theme.colors.neutral4};
       border-left: 1px solid ${({ theme }) => theme.colors.neutral4};
-    z-index: 3;
+    z-index: 4;
   }
   
   // for react image lightbox

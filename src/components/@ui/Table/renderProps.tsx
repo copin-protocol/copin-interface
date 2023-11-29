@@ -1,22 +1,27 @@
 import { Trans } from '@lingui/macro'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { CopyPositionData } from 'entities/copyTrade'
 import { PositionData } from 'entities/trader'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, TextProps, Type } from 'theme/base'
-import { PositionStatusEnum } from 'utils/config/enums'
+import { ProtocolEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
-import { calcCopyOpeningPnL, calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
-import { formatNumber } from 'utils/helpers/format'
+import { calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
+import { addressShorten, formatNumber } from 'utils/helpers/format'
+import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 
+import AddressAvatar from '../AddressAvatar'
 import { PriceTokenText } from '../DecoratedText/ValueText'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps) {
   if (!data || !data.protocol) return <></>
+
   return (
     <Flex
       sx={{
@@ -31,7 +36,9 @@ export function renderEntry(data: PositionData | undefined, textSx?: TextProps) 
       <VerticalDivider />
       <Type.Caption {...textSx}>{TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol}</Type.Caption>
       <VerticalDivider />
-      <Type.Caption {...textSx}>{PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2 })}</Type.Caption>
+      <Type.Caption {...textSx}>
+        {data.averagePrice ? PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2 }) : '--'}
+      </Type.Caption>
     </Flex>
   )
 }
@@ -69,11 +76,27 @@ export function renderSize(data: PositionData | undefined) {
   )
 }
 
-export function renderSizeOpening(data: PositionData | undefined, prices: UsdPrices, textSx?: TextProps) {
-  if (!data) return <></>
-  const gmxPrice = prices[data.indexToken] ?? 0
-  const liquidatePrice = calcLiquidatePrice(data, prices)
-  const riskPercent = calcRiskPercent(data.isLong, data.averagePrice, gmxPrice, liquidatePrice ?? 0)
+export function renderSizeOpeningWithPrices(data: PositionData | undefined, prices: UsdPrices, textSx?: TextProps) {
+  return <SizeOpeningComponent data={data} prices={prices} textSx={textSx} />
+}
+export function renderSizeOpening(data: PositionData | undefined, textSx?: TextProps) {
+  return <SizeOpening data={data} textSx={textSx} />
+}
+type SizeOpeningComponentProps = {
+  data: PositionData | undefined
+  prices: UsdPrices | undefined
+  textSx?: any
+}
+function SizeOpening(props: Omit<SizeOpeningComponentProps, 'prices'>) {
+  const prices = useGetUsdPrices()
+  if (!prices) return <>--</>
+  return <SizeOpeningComponent {...props} prices={prices} />
+}
+function SizeOpeningComponent({ data, prices, textSx }: SizeOpeningComponentProps) {
+  if (!data || !prices) return <></>
+  const marketPrice = prices[data.indexToken] ?? 0
+  const liquidatePrice = calcLiquidatePrice(data)
+  const riskPercent = calcRiskPercent(data.isLong, data.averagePrice, marketPrice, liquidatePrice ?? 0)
 
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
@@ -104,29 +127,82 @@ export function renderSizeOpening(data: PositionData | undefined, prices: UsdPri
   )
 }
 
-export function renderOpeningPnL(
+type OpeningPnLComponentProps = {
+  data: PositionData | undefined
+  prices: UsdPrices | undefined
+  ignoreFee?: boolean
+  sx?: any
+}
+export function renderOpeningPnL(data: PositionData | undefined, ignoreFee?: boolean, sx?: TextProps) {
+  return <OpeningPnL data={data} ignoreFee={ignoreFee} sx={sx} />
+}
+export function renderOpeningPnLWithPrices(
   data: PositionData | undefined,
-  prices: UsdPrices,
+  prices: UsdPrices | undefined,
   ignoreFee?: boolean,
   sx?: TextProps
 ) {
-  if (!data) return <></>
+  return <OpeningPnLComponent data={data} prices={prices} ignoreFee={ignoreFee} sx={sx} />
+}
+function OpeningPnL(props: Omit<OpeningPnLComponentProps, 'prices'>) {
+  const prices = useGetUsdPrices()
+  if (!prices) return <>--</>
+  return <OpeningPnLComponent {...props} prices={prices} />
+}
+function OpeningPnLComponent({ data, prices, ignoreFee, sx }: OpeningPnLComponentProps) {
+  if (!data || !prices) return <></>
   const marketPrice = prices[data.indexToken]
-  const pnl = calcOpeningPnL(data, marketPrice)
-  const realisedPnl = ignoreFee ? pnl : pnl - data.fee
-  return SignedText({ value: realisedPnl, maxDigit: 0, sx: { textAlign: 'right', width: '100%', ...sx } })
+  const openingPnl = calcOpeningPnL(data, marketPrice)
+  const pnl = ignoreFee ? openingPnl : openingPnl - data.fee
+  return SignedText({ value: pnl, maxDigit: 0, sx: { textAlign: 'right', width: '100%', ...sx } })
 }
 
-export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {
-  const pnl =
-    data.status === PositionStatusEnum.OPEN
-      ? calcCopyOpeningPnL(data, prices ? prices[data.indexToken] : undefined)
-      : data.pnl
+type OpeningRoiComponentProps = {
+  data: PositionData | undefined
+  prices: UsdPrices | undefined
+  ignoreFee?: boolean
+  sx?: any
+}
+export function renderOpeningRoiWithPrices(
+  data: PositionData | undefined,
+  prices: UsdPrices | undefined,
+  ignoreFee?: boolean,
+  sx?: TextProps
+) {
+  return <OpeningRoiComponent data={data} prices={prices} ignoreFee={ignoreFee} sx={sx} />
+}
+export function renderOpeningRoi(data: PositionData | undefined, ignoreFee?: boolean, sx?: TextProps) {
+  return <OpeningRoi data={data} ignoreFee={ignoreFee} sx={sx} />
+}
+function OpeningRoi(props: Omit<OpeningRoiComponentProps, 'prices'>) {
+  const prices = useGetUsdPrices()
+  if (!prices) return <>--</>
+  return <OpeningRoiComponent {...props} prices={prices} />
+}
+function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponentProps) {
+  if (!data || !prices) return <></>
+  const marketPrice = prices[data.indexToken]
+  const openingPnl = calcOpeningPnL(data, marketPrice)
+  const pnl = ignoreFee ? openingPnl : openingPnl - data.fee
+  return SignedText({
+    value: (pnl * 100) / data.collateral,
+    minDigit: 2,
+    maxDigit: 2,
+    suffix: '%',
+    sx: { textAlign: 'right', width: '100%', ...sx },
+  })
+}
+
+export function renderTrader(address: string, protocol: ProtocolEnum) {
   return (
-    <Flex width="100%" sx={{ flexDirection: 'column', color: 'neutral1' }}>
-      <Type.Caption color={pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'}>{formatNumber(pnl, 2, 2)}</Type.Caption>
-      {/* <ProgressBar percent={0} sx={{ width: '100%' }} /> */}
-    </Flex>
+    <Link to={generateTraderDetailsRoute(protocol, address)}>
+      <Flex sx={{ gap: 2 }} alignItems="center">
+        <AddressAvatar address={address} size={24} />
+        <Type.Caption color="neutral1" sx={{ ':hover': { textDecoration: 'underline' } }}>
+          {addressShorten(address, 3, 5)}
+        </Type.Caption>
+      </Flex>
+    </Link>
   )
 }
 
@@ -135,3 +211,17 @@ export const VerticalDivider = styled(Box)`
   height: 12px;
   background-color: ${({ theme }) => theme.colors.neutral3};
 `
+
+// export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {
+// const pnl =
+//   data.status === PositionStatusEnum.OPEN
+//     ? calcCopyOpeningPnL(data, prices ? prices[data.indexToken] : undefined)
+//     : data.pnl
+// return (
+//   <Flex width="100%" sx={{ flexDirection: 'column', color: 'neutral1' }}>
+//     {/* <Type.Caption color={pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'}>{formatNumber(pnl, 2, 2)}</Type.Caption> */}
+//     <Type.Caption color={pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'}>{formatNumber(pnl, 2, 2)}</Type.Caption>
+//     {/* <ProgressBar percent={0} sx={{ width: '100%' }} /> */}
+//   </Flex>
+// )
+// }

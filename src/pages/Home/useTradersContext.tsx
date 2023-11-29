@@ -88,7 +88,7 @@ export function FilterTradersProvider({
     tab === TabKeyEnum.Explorer ? URL_PARAM_KEYS.EXPLORER_TIME_RANGE_FILTER : URL_PARAM_KEYS.FAVORITE_TIME_RANGE_FILTER
 
   // START TIME FILTER
-  const { isPremiumUser } = useSubscriptionRestrict()
+  const { isPremiumUser, handleIsBasicUser } = useSubscriptionRestrict()
   const [isRangeSelection, setRangeSelection] = useState(() => {
     if (!isPremiumUser) return false
     if (searchParams[rangeFilterKey]) return true
@@ -98,7 +98,7 @@ export function FilterTradersProvider({
   const { currentOption: timeOption, changeCurrentOption: setTimeOption } = useOptionChange({
     optionName: timeFilterKey,
     options: TIME_FILTER_OPTIONS,
-    defaultOption: TimeFilterByEnum.S30_DAY.toString(),
+    defaultOption: isPremiumUser ? TimeFilterByEnum.ALL_TIME.toString() : TimeFilterByEnum.S30_DAY.toString(),
     optionNameToBeDelete: [rangeFilterKey],
     callback: () => {
       changeCurrentPage(1)
@@ -131,6 +131,10 @@ export function FilterTradersProvider({
   }
 
   const handleSetTimeOption = (timeOption: TimeFilterProps) => {
+    if (!isPremiumUser && timeOption.id === TimeFilterByEnum.ALL_TIME) {
+      handleIsBasicUser()
+      return
+    }
     setTimeOption(timeOption)
     setRangeSelection(false)
 
@@ -143,6 +147,8 @@ export function FilterTradersProvider({
         return logEventFilter(EVENT_ACTIONS[EventCategory.FILTER].D30)
       case TimeFilterByEnum.S60_DAY:
         return logEventFilter(EVENT_ACTIONS[EventCategory.FILTER].D60)
+      case TimeFilterByEnum.ALL_TIME:
+        return logEventFilter(EVENT_ACTIONS[EventCategory.FILTER].ALL_TIME)
     }
   }
 

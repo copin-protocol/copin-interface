@@ -43,7 +43,6 @@ export default function useQueryTopOpenings({
       }),
     {
       retry: 0,
-      keepPreviousData: true,
       refetchInterval: intervalRequest,
     }
   )

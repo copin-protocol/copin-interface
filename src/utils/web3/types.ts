@@ -73,3 +73,24 @@ export interface SignTypeData {
   types: Record<string, Array<TypedDataField>>
   value: Record<string, any>
 }
+
+export interface PythLatestPrice {
+  id: string
+  price: PythPrice
+  ema_price: PythEmaPrice
+}
+
+export interface PythPrice {
+  priceFeedId: string
+  priceStr: string
+  price: number
+  expo: number
+  publishTime: number
+}
+
+export interface PythEmaPrice {
+  conf: string
+  expo: number
+  price: string
+  publish_time: number
+}

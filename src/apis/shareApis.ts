@@ -20,38 +20,14 @@ export async function getSharedPositionSettingApi(id: string) {
 export async function getSharedBacktestResultApi(id: string, protocol: ProtocolEnum) {
   return requester.get(`/${protocol}/back-testing/share/${id}`).then((res: any) => res.data as BackTestResultData[])
 }
-export async function sharePositionApi({
-  isOpening,
-  position,
-  imageBlob,
-}: {
-  isOpening: boolean
-  position: PositionData
-  imageBlob: Blob
-}) {
+export async function sharePositionApi({ position, imageBlob }: { position: PositionData; imageBlob: Blob }) {
   const formData = new FormData()
   let endPoint = ''
   let params: Record<string, any> = {}
-  if (isOpening) {
-    endPoint = `/share/position/opening/${position.protocol}`
-    formData.append(
-      'image',
-      imageBlob,
-      `share_opening_${position.protocol}_${position.key}_${position.blockNumber}.png`
-    )
-    params = {
-      key: position.key,
-      blockNumber: position.blockNumber,
-      indexToken: position.indexToken,
-      account: position.account,
-    }
-  } else {
-    endPoint = `/share/position/closed/${position.protocol}`
-    formData.append('image', imageBlob, `share_closed_${position.protocol}_${position.id}.png`)
-    params = {
-      account: position.account,
-      positionId: position.id,
-    }
+  endPoint = `/share/position/closed/${position.protocol}`
+  formData.append('image', imageBlob, `share_${position.protocol}_${position.id}.png`)
+  params = {
+    positionId: position.id,
   }
 
   return requester

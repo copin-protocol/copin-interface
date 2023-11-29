@@ -11,7 +11,7 @@ import { BoxProps } from 'theme/types'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
-import { generateClosedPositionRoute } from 'utils/helpers/generateRoute'
+import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 export default function WhatIf({
   protocol,
@@ -81,7 +81,7 @@ export default function WhatIf({
             null,
             '',
             // TODO: 2
-            generateClosedPositionRoute({ protocol, id: positionId })
+            generatePositionDetailsRoute({ protocol, id: positionId })
           )
         }}
         onSubmit={() => {
@@ -90,7 +90,7 @@ export default function WhatIf({
             null,
             '',
             // TODO: 2
-            generateClosedPositionRoute({ protocol, id: positionId, nextHours: amount })
+            generatePositionDetailsRoute({ protocol, id: positionId, nextHours: amount })
           )
           // setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: amount ? amount.toString() : null })
         }}

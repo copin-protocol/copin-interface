@@ -25,7 +25,7 @@ export default function HomeSelectedTable({ scrollRef }: { scrollRef: RefObject<
   const [currentPage, setCurrentPage] = useState(1)
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT)
   const [currentSort, setCurrentSort] = useState<TraderListSortProps<TraderData> | undefined>({
-    sortBy: 'profit',
+    sortBy: 'pnl',
     sortType: SortTypeEnum.ASC,
   })
   const { getCommonData, isFocusBacktest, currentHomeInstanceId, addRootBacktestInstance } = useSelectBacktestTraders()

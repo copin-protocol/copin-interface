@@ -13,16 +13,8 @@ export const generateTraderDetailsRoute = (
     others?.type ? `?${URL_PARAM_KEYS.EXPLORER_TIME_FILTER}=${others.type}` : ''
   }`
 export const generateSharedPositionRoute = (data: { protocol: ProtocolEnum; sharedId: string }) => {
-  return `/${data.protocol}${ROUTES.SHARED_POSITION_DETAILS.path_prefix}/${data.sharedId}`
+  return `/${data.protocol}${ROUTES.SHARED_POSITION_DETAILS.path_prefix}/share/${data.sharedId}`
 }
-export const generateOpeningPositionRoute = (data: {
-  protocol: ProtocolEnum
-  account: string
-  indexToken: string
-  key: string
-  blockNumber: number
-}) =>
-  `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}?account=${data.account}&indexToken=${data.indexToken}&key=${data.key}&blockNumber=${data.blockNumber}`
 
 export const generateMyOpeningPositionRoute = (data: {
   protocol: ProtocolEnum
@@ -32,11 +24,11 @@ export const generateMyOpeningPositionRoute = (data: {
 }) =>
   `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}?account=${data.copyAccount}&indexToken=${data.indexToken}&key=${data.key}`
 
-export const generateClosedPositionRoute = (
+export const generatePositionDetailsRoute = (
   data: Partial<{ protocol: ProtocolEnum; id: string; nextHours?: number | undefined }>
 ) =>
-  `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}?id=${data.id}${
-    data.nextHours ? `&${URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS}=${data.nextHours}` : ''
+  `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}/${data.id}${
+    data.nextHours ? `?${URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS}=${data.nextHours}` : ''
   }`
 
 export const generateParamsUrl = ({

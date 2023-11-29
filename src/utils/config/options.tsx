@@ -31,7 +31,7 @@ export const LEADERBOARD_OPTIONS: LeaderboardOptionProps[] = [
 
 const rankingFieldsBase: RankingFieldOption<TraderData>[] = [
   {
-    value: 'profit',
+    value: 'pnl',
     label: t`High PnL`,
     statLabel: t`PnL`,
     tooltipContent: t`The percentile ranking of traders earning the most money`,
@@ -90,7 +90,7 @@ const rankingFieldsBase: RankingFieldOption<TraderData>[] = [
     statFormat: (value) => (!value ? '--' : formatNumber(value, 1, 1)),
   },
   {
-    value: 'maxDrawDownRoi',
+    value: 'maxDrawdown',
     label: t`Low Max Drawdown`,
     statLabel: t`Max Drawdown`,
     shortStatLabel: t`MDD`,

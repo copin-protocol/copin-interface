@@ -24,24 +24,25 @@ function TraderRanking({
 }) {
   const { sm } = useResponsive()
   const { customizedRanking } = useRankingCustomizeStore()
-  if (!data?.ranking) return <div></div>
-  const avgScore =
-    customizedRanking.reduce((result, key) => {
-      const score = data.ranking[key]
-      if (score == null) return result
-      result += score
-      return result
-    }, 0) / customizedRanking.length
+
+  const avgScore = !data
+    ? 0
+    : customizedRanking.reduce((result, key) => {
+        const score = data.ranking[key]
+        if (score == null) return result
+        result += score
+        return result
+      }, 0) / customizedRanking.length
   const ranking: ScoreChartData[] = rankingFieldOptions
     .filter((option) => customizedRanking.includes(option.value))
     .map((option) => {
       return {
         subject: option.label as string,
-        value: data.ranking[option.value],
+        value: data?.ranking[option.value] ?? 0,
         fullMark: 100,
       }
     })
-    .filter((option) => !!option.value)
+  // .filter((option) => !!option.value)
 
   return (
     <Flex
@@ -71,12 +72,14 @@ function TraderRanking({
       </Type.CaptionBold>
       <Flex sx={{ position: 'absolute', top: [50, 50, 50, 10], right: 10, alignItems: 'center', gap: 2 }}>
         <CustomizeRankingColumns />
-        <ExpandTraderRankingButton
-          traderData={data}
-          traderScore={avgScore}
-          timeOption={timeOption}
-          onChangeTime={onChangeTime}
-        />
+        {data && (
+          <ExpandTraderRankingButton
+            traderData={data}
+            traderScore={avgScore}
+            timeOption={timeOption}
+            onChangeTime={onChangeTime}
+          />
+        )}
       </Flex>
     </Flex>
   )

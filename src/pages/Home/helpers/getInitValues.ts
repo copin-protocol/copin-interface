@@ -42,7 +42,7 @@ export const getInitFilters = ({
       return filtersFromStorage
     } catch (error) {}
   }
-  const defaultFilters = accounts ? [] : getDefaultFormValues(['profit', 'winRate'], fieldOptions)
+  const defaultFilters = accounts ? [] : getDefaultFormValues(['pnl', 'winRate'], fieldOptions)
   return defaultFilters
 }
 
@@ -52,7 +52,7 @@ export const getInitFilterTab = ({ searchParams }: { searchParams: ParsedQs }) =
 }
 
 export const getInitSort = (searchParams: ParsedQs) => {
-  const initSortBy = searchParams?.sort_by ?? 'profit'
+  const initSortBy = searchParams?.sort_by ?? 'pnl'
   const initSortType = searchParams?.sort_type ?? SortTypeEnum.DESC
   return { sortBy: initSortBy as TraderListSortProps<TraderData>['sortBy'], sortType: initSortType as SortTypeEnum }
 }

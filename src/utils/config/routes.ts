@@ -23,7 +23,7 @@ const ROUTES = {
     path_prefix: '/trader',
   },
   POSITION_DETAILS: {
-    path: '/:protocol/position',
+    path: '/:protocol/position/:id',
     path_prefix: '/position',
   },
   SHARED_POSITION_DETAILS: {

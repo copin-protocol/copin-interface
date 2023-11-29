@@ -15,73 +15,92 @@ export interface TraderData {
   name: string
   note?: string
   account: string
+  smartAccount: string
   protocol: ProtocolEnum
   type: TimeFrameEnum
-  avgDuration: number
-  maxDrawDownPnl: number
-  maxDrawDownRoi: number
+  maxDrawdown: number
+  maxDrawdownPnl: number
   maxDuration: number
   minDuration: number
-  profitLossRatio: number
-  statisticAt: string
+  avgDuration: number
+  totalDuration: number
   totalGain: number
   totalLose: number
   totalLoss: number
   totalWin: number
   totalTrade: number
+  totalLiquidation: number
+  totalLiquidationAmount: number
+  totalFee: number
   avgVolume: number
+  totalVolume: number
   winLoseRatio: number
-  winRate: number
   gainLossRatio: number
   orderPositionRatio: number
-  profit: number
+  profitLossRatio: number
+  winRate: number
+  longRate: number
   profitRate: number
+  pnl: number
   avgRoi: number
   maxRoi: number
-  minRoi: number
+  maxPnl: number
+  totalLeverage: number
+  avgLeverage: number
+  maxLeverage: number
+  minLeverage: number
   runTimeDays: number
   isOpenPosition: boolean
   lastTradeAt: string
   lastTradeAtTs: number
+  statisticAt: string
   createdAt: string
   updatedAt: string
   ranking: { [key: string]: number }
-  avgLeverage: number
-  maxLeverage: number
-  minLeverage: number
+}
+
+export interface ResponseTraderData extends TraderData {
+  realisedTotalGain: number
+  realisedTotalLoss: number
+  realisedPnl: number
+  realisedAvgRoi: number
+  realisedMaxRoi: number
+  realisedMaxPnl: number
+  realisedMaxDrawdown: number
+  realisedMaxDrawdownPnl: number
+  realisedProfitRate: number
+  realisedGainLossRatio: number
+  realisedProfitLossRatio: number
 }
 
 export type TraderDataKey = keyof TraderData
 
 export interface PositionData {
   id: string
-  positionId: string
+  synthetixPositionId: string
   account: string
+  smartAccount: string
   name: string
   protocol: ProtocolEnum
   indexToken: string
   key: string
-  entryFundingRate: string
+  reverseIndex: number
   logId: number
-  blockNumber: number
   blockTime: string
   collateral: number
+  lastCollateral: number
   size: number
+  lastSizeNumber: number
   averagePrice: number
   lastPriceNumber: number
-  marginNumber: number
-  maxMarginNumber: number
   maxSizeNumber: number
   fee: number
-  paidFee: number
   feeNumber: number
-  fundingRateNumber: number
-  totalFundingRateFee: number
+  lastFunding: number
+  funding: number
   totalVolume: number
   pnl: number
-  realisedPnl: number
   roi: number
-  isLong: boolean
   leverage: number
   orderCount: number
   orderIncreaseCount: number
@@ -91,13 +110,18 @@ export interface PositionData {
   closeBlockNumber: number
   closeBlockTime: string
   durationInSecond: number
+  isLong: boolean
   isWin: boolean
-  isClose: boolean
   isLiquidate: boolean
   status: PositionStatusEnum
   orderIds: string[]
   orders: OrderData[]
   createdAt: string
+}
+
+export interface ResponsePositionData extends PositionData {
+  realisedPnl: number
+  realisedRoi: number
 }
 
 export interface PositionStatistics {
@@ -109,16 +133,21 @@ export interface PositionStatistics {
 
 export interface OrderData {
   id: string
+  synthetixPositionId: string
+  account: string
+  smartAccount: string
   txHash: string
   indexToken: string
-  sizeDelta: number
-  size: number
-  collateralDelta: number
-  collateral: number
-  price: number
-  averagePrice: number
-  fee: number
-  realisedPnl: number
+  collateralToken: string
+  sizeDeltaNumber: number
+  sizeNumber: number
+  collateralDeltaNumber: number
+  collateralNumber: number
+  priceNumber: number
+  averagePriceNumber: number
+  feeNumber: number
+  fundingNumber: number
+  fundingRateNumber: number
   isLong: boolean
   isOpen: boolean
   isClose: boolean
@@ -191,4 +220,11 @@ export interface TopTraderData {
   rankingAt: string
   createdAt: string
   updatedAt: string
+}
+
+export type TickPosition = {
+  size: number
+  time: number
+  collateral: number
+  price: number
 }

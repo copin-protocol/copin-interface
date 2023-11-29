@@ -55,6 +55,7 @@
     "@hookform/resolvers": "2.9.11",
     "@lingui/react": "3.17.1",
     "@phosphor-icons/react": "2.0.10",
+    "@pythnetwork/pyth-evm-js": "1.29.2",
     "@reach/dialog": "0.18.0",
     "@sentry/react": "7.68.0",
     "@styled-system/css": "5.1.5",

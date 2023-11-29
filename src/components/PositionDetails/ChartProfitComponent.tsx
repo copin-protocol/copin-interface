@@ -15,41 +15,55 @@ import { useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import { getChartDataV2 } from 'apis/positionApis'
-import { CopyOrderData, CopyPositionData } from 'entities/copyTrade.d'
+import { PositionData, TickPosition } from 'entities/trader.d'
+import useSearchParams from 'hooks/router/useSearchParams'
 import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
+import { useWhatIfStore } from 'hooks/store/useWhatIf'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
-import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcPnL } from 'utils/helpers/calculate'
+import { calcLiquidatePrice, calcOpeningPnL, calcPnL } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
+import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
-export default function CopyChartProfit({
+export default function ChartProfitComponent({
   position,
-  copyOrders,
+  tickPositions,
   isOpening,
+  hasLiquidate,
   openBlockTime,
   closeBlockTime,
-  setCrossMovePnL,
+  setCrossMove,
+  isShow,
 }: {
-  position: CopyPositionData
-  copyOrders: CopyOrderData[]
+  position: PositionData
+  tickPositions: TickPosition[]
   isOpening: boolean
+  hasLiquidate: boolean
   openBlockTime: number
   closeBlockTime: number
-  setCrossMovePnL: (value: number | undefined) => void
+  setCrossMove: (value?: { pnl?: number; time?: number }) => void
+  isShow?: boolean
 }) {
-  const { prices } = useRealtimeUsdPricesStore()
   const { sm } = useResponsive()
+  const CHART_HEIGHT = sm ? 250 : 150
+  const { prices } = useRealtimeUsdPricesStore()
+  const { nextHours } = useWhatIfStore()
+  const { searchParams } = useSearchParams()
+  const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
+    ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
+    : undefined
   const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken].symbol
-  const from = openBlockTime * 1000
+  const from = useMemo(() => openBlockTime * 1000, [openBlockTime])
   const to = useMemo(() => (isOpening ? dayjs().utc().valueOf() : closeBlockTime * 1000), [closeBlockTime, isOpening])
   const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])
   const { data, isLoading } = useQuery(
-    [QUERY_KEYS.GET_CHART_DATA, tokenSymbol, from, to, timeframe],
+    [QUERY_KEYS.GET_CHART_DATA, tokenSymbol, from, to, timeframe, nextHours, nextHoursParam],
     () =>
       getChartDataV2({
         symbol: tokenSymbol,
@@ -58,6 +72,7 @@ export default function CopyChartProfit({
         to: dayjs(to)
           .utc()
           .add(isOpening ? 0 : timeframe, 'minutes')
+          .add(nextHoursParam ? nextHoursParam : nextHours ? nextHours : 0, 'hours')
           .valueOf(),
       }),
     {
@@ -65,10 +80,17 @@ export default function CopyChartProfit({
       retry: 0,
     }
   )
-  const orders = copyOrders.sort((x, y) => (x.createdAt < y.createdAt ? -1 : x.createdAt > y.createdAt ? 1 : 0))
-  const openOrder = orders && orders.length > 0 ? orders[0] : undefined
-  const increaseList = orders.filter((e) => e.isIncrease)
-  const decreaseList = orders.filter((e) => !e.isIncrease)
+
+  const orders = position.orders.sort((x, y) => (x.blockTime < y.blockTime ? -1 : x.blockTime > y.blockTime ? 1 : 0))
+  const openOrder = orders.find((e) => e.isOpen || e.type === OrderTypeEnum.OPEN) ?? position.orders?.[0]
+  const increaseList = orders.filter((e) => e.type === OrderTypeEnum.INCREASE || e.type === OrderTypeEnum.OPEN)
+  const decreaseList = orders.filter(
+    (e) =>
+      e.type === OrderTypeEnum.DECREASE ||
+      (position.protocol !== ProtocolEnum.GMX && e.type === OrderTypeEnum.CLOSE) ||
+      e.type === OrderTypeEnum.LIQUIDATE
+  )
+  const mofifiedMarginList = orders.filter((e) => e.type === OrderTypeEnum.MARGIN_TRANSFERRED)
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
   const chartData: LineData[] = useMemo(() => {
     if (!data) return []
@@ -76,11 +98,11 @@ export default function CopyChartProfit({
 
     if (openOrder) {
       tempData.push({
-        open: openOrder.price,
-        close: openOrder.price,
-        low: openOrder.price,
-        high: openOrder.price,
-        timestamp: dayjs(openOrder.createdAt).utc().valueOf(),
+        open: openOrder.priceNumber,
+        close: openOrder.priceNumber,
+        low: openOrder.priceNumber,
+        high: openOrder.priceNumber,
+        timestamp: dayjs(openOrder.blockTime).utc().valueOf(),
       })
     }
 
@@ -97,43 +119,34 @@ export default function CopyChartProfit({
       }
     } else {
       tempData.push({
-        open: position.closePrice ?? position.entryPrice,
-        close: position.closePrice ?? position.entryPrice,
-        low: position.closePrice ?? position.entryPrice,
-        high: position.closePrice ?? position.entryPrice,
-        timestamp: dayjs(position.lastOrderAt).utc().valueOf(),
+        open: position.averagePrice,
+        close: position.averagePrice,
+        low: position.averagePrice,
+        high: position.averagePrice,
+        timestamp: dayjs(position.closeBlockTime).utc().valueOf(),
       })
     }
 
     const chartData = !isOpening
       ? tempData.filter(
           (e) =>
-            e.timestamp >= dayjs(openOrder?.createdAt).utc().valueOf() &&
+            e.timestamp >= dayjs(openOrder?.blockTime).utc().valueOf() &&
             e.timestamp <= tempData[tempData.length - 1].timestamp
         )
-      : tempData.filter((e) => e.timestamp >= dayjs(openOrder?.createdAt).utc().valueOf())
+      : tempData.filter((e) => e.timestamp >= dayjs(openOrder?.blockTime).utc().valueOf())
+
     return (
       chartData
         .map((e, index) => {
           const marketPrice = e.close
           const tickTime = dayjs(e.timestamp).utc()
+          const posIndex = tickPositions.findIndex((p: TickPosition) => p.time > e.timestamp)
+          const pos = tickPositions[posIndex - 1]
+          const avgPrice = pos?.price ?? position.averagePrice
           const realSize =
-            index === chartData.length - 1
-              ? Number(position.sizeDelta) * position.entryPrice
-              : orders.reduce((sum, item) => {
-                  const orderTime = dayjs(item.createdAt).utc()
-                  return tickTime.isAfter(orderTime) || tickTime.isSame(orderTime)
-                    ? sum + (item.isIncrease ? 1 : -1) * item.size * item.price
-                    : sum
-                }, 0)
-          const filterOrders = orders.filter((e) => dayjs(e.createdAt).isBefore(tickTime))
-          const averagePrice =
-            index !== chartData.length - 1 && filterOrders && filterOrders.length > 0
-              ? filterOrders.reduce(function (sum, value) {
-                  return sum + value.price
-                }, 0) / filterOrders.length
-              : position.entryPrice
-          const pnl = calcPnL(position.isLong, averagePrice, marketPrice, realSize)
+            pos?.size ??
+            (!!position.lastSizeNumber ? Math.abs(position.lastSizeNumber) * position.averagePrice : position.size)
+          const pnl = calcPnL(position.isLong, avgPrice, marketPrice, realSize)
 
           return {
             value: !isOpening && index === chartData.length - 1 ? position.pnl : pnl,
@@ -142,7 +155,33 @@ export default function CopyChartProfit({
         })
         .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
     )
-  }, [data, openOrder, orders, prices, timezone, to])
+  }, [data, openOrder, orders, prices, to])
+
+  const chartFutureData: LineData[] = useMemo(() => {
+    if (!data || isOpening || !nextHours || nextHours < 1) return []
+    const chartData = data.filter((e) => e.timestamp > to)
+    chartData.push({
+      open: position.averagePrice,
+      close: position.averagePrice,
+      low: position.averagePrice,
+      high: position.averagePrice,
+      timestamp: dayjs(position.closeBlockTime).utc().valueOf(),
+    })
+
+    return (
+      chartData
+        .sort((x, y) => (x.timestamp < y.timestamp ? -1 : x.timestamp > y.timestamp ? 1 : 0))
+        .map((e, index) => {
+          const marketPrice = e.close
+          const pnl = calcOpeningPnL(position, marketPrice)
+          return {
+            value: index === 0 ? position.pnl : pnl,
+            time: dayjs(e.timestamp).utc().unix() - timezone,
+          } as LineData
+        })
+        .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
+    )
+  }, [data, isOpening, nextHours, position, timezone, to])
 
   const priceData: CandlestickData[] = useMemo(() => {
     if (!data) return []
@@ -150,11 +189,11 @@ export default function CopyChartProfit({
     // const lastData = isOpening ? data[data.length - 1] : tempData.pop()
     if (openOrder) {
       tempData.push({
-        open: openOrder.price,
-        close: openOrder.price,
-        low: openOrder.price,
-        high: openOrder.price,
-        timestamp: dayjs(openOrder.createdAt).utc().valueOf(),
+        open: openOrder.priceNumber,
+        close: openOrder.priceNumber,
+        low: openOrder.priceNumber,
+        high: openOrder.priceNumber,
+        timestamp: dayjs(openOrder.blockTime).utc().valueOf(),
       })
     }
     if (isOpening) {
@@ -170,17 +209,17 @@ export default function CopyChartProfit({
       }
     } else {
       tempData.push({
-        open: position.closePrice ?? position.entryPrice,
-        close: position.closePrice ?? position.entryPrice,
-        low: position.closePrice ?? position.entryPrice,
-        high: position.closePrice ?? position.entryPrice,
-        timestamp: dayjs(position.createdAt).utc().valueOf(),
+        open: position.averagePrice,
+        close: position.averagePrice,
+        low: position.averagePrice,
+        high: position.averagePrice,
+        timestamp: dayjs(position.closeBlockTime).utc().valueOf(),
       })
     }
 
     return (
       tempData
-        .filter((e) => e.timestamp >= dayjs(openOrder?.createdAt).utc().valueOf())
+        .filter((e) => e.timestamp >= dayjs(openOrder?.blockTime).utc().valueOf())
         .map((e) => {
           return {
             open: e.open,
@@ -192,25 +231,26 @@ export default function CopyChartProfit({
         })
         .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
     )
-  }, [
-    data,
-    isOpening,
-    openOrder,
-    position.closePrice,
-    position.createdAt,
-    position.entryPrice,
-    position.indexToken,
-    prices,
-    timezone,
-    to,
-  ])
+  }, [data, isOpening, openOrder, prices, timezone, to])
+
+  useEffect(() => {
+    if (isOpening) return
+    if (nextHours && isShow) {
+      // setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: nextHours.toString() })
+      window.history.replaceState(
+        null,
+        '',
+        generatePositionDetailsRoute({ protocol: position.protocol, id: position.id, nextHours })
+      )
+    }
+  }, [])
 
   useEffect(() => {
     if (isLoading || !data) return
 
-    const container = document.getElementById('chart-container')
-    const chart = createChart(container ? container : 'chart-container', {
-      height: sm ? 220 : 150,
+    const container = document.getElementById(ELEMENT_IDS.POSITION_CHART_PNL)
+    const chart = createChart(container ? container : ELEMENT_IDS.POSITION_CHART_PNL, {
+      height: CHART_HEIGHT,
       rightPriceScale: {
         autoScale: true,
         visible: false,
@@ -270,6 +310,24 @@ export default function CopyChartProfit({
     chart.timeScale().fitContent()
     chart.timeScale().applyOptions({})
 
+    const volumeSeries = chart.addHistogramSeries({
+      priceFormat: {
+        type: 'volume',
+      },
+      priceScaleId: '', // set as an overlay by setting a blank priceScaleId
+      priceLineVisible: false,
+      base: 0.1,
+    })
+    volumeSeries.priceScale().applyOptions({
+      scaleMargins: {
+        top: 0, // highest point of the series will be 70% away from the top
+        bottom: 0,
+      },
+    })
+    if (chartFutureData && chartFutureData.length > 0) {
+      volumeSeries.setData([{ time: chartFutureData[0].time, color: 'rgba(119, 126, 144, 0.7)', value: 10000 }])
+    }
+
     const priceSeries = chart.addCandlestickSeries({
       priceScaleId: 'right',
       upColor: themeColors.neutral4,
@@ -307,6 +365,30 @@ export default function CopyChartProfit({
     })
     series.setData(chartData)
 
+    const futureSeries = chart.addBaselineSeries({
+      priceScaleId: 'left',
+      topLineColor: themeColors.neutral3,
+      bottomLineColor: themeColors.neutral3,
+      baseValue: {
+        type: 'price',
+        price: 0,
+      },
+      lineStyle: LineStyle.Dashed,
+      lineWidth: 2,
+      baseLineColor: 'red',
+      baseLineVisible: true,
+      lastValueVisible: false,
+      priceLineVisible: false,
+      // disabling built-in price lines
+    })
+    futureSeries.setData(chartFutureData)
+    futureSeries.priceScale().applyOptions({
+      scaleMargins: {
+        top: 0.1,
+        bottom: 0.03,
+      },
+    })
+
     const high =
       chartData[
         chartData.reduce(
@@ -327,8 +409,8 @@ export default function CopyChartProfit({
       })
     }
     if (low && low.value < 0) {
-      const liquidationPrice = calcCopyLiquidatePrice(position, prices)
-      const posDelta = calcCopyOpeningPnL(position, liquidationPrice)
+      const liquidationPrice = calcLiquidatePrice(position)
+      const posDelta = calcOpeningPnL(position, liquidationPrice)
       if (posDelta) {
         series.createPriceLine({
           price: posDelta,
@@ -349,8 +431,8 @@ export default function CopyChartProfit({
             color: themeColors.neutral2,
             position: 'aboveBar',
             shape: 'arrowUp',
-            time: (dayjs(order.createdAt).utc().unix() - timezone) as Time,
-            text: '$' + formatNumber(order.collateral, 2, 2),
+            time: (dayjs(order.blockTime).utc().unix() - timezone) as Time,
+            text: '$' + formatNumber(order.collateralDeltaNumber, 0),
           }
         })
         const decreaseMarkers = (isOpening ? decreaseList : decreaseList.slice(0, -1)).map(
@@ -359,13 +441,32 @@ export default function CopyChartProfit({
               color: themeColors.neutral2,
               position: 'belowBar',
               shape: 'arrowDown',
-              time: (dayjs(order.createdAt).utc().unix() - timezone) as Time,
-              text: '$' + formatNumber(order.collateral, 2, 2),
+              time: (dayjs(order.blockTime).utc().unix() - timezone) as Time,
+              text: '$' + formatNumber(order.collateralDeltaNumber, 0),
             }
           }
         )
+        const modifiedMarkers = mofifiedMarginList.map((order): SeriesMarker<Time> => {
+          return {
+            color: themeColors.orange1,
+            position: order.collateralDeltaNumber > 0 ? 'aboveBar' : 'belowBar',
+            shape: 'circle',
+            time: (dayjs(order.blockTime).utc().unix() - timezone) as Time,
+            text: '$' + formatNumber(order.collateralDeltaNumber, 0),
+          }
+        })
 
-        const makers = [...increaseMarkers, ...decreaseMarkers]
+        const makers = [...increaseMarkers, ...decreaseMarkers, ...modifiedMarkers]
+        if (!isOpening && nextHours) {
+          const closeMarkers: SeriesMarker<Time> = {
+            color: hasLiquidate ? themeColors.red2 : themeColors.neutral1,
+            position: 'belowBar',
+            shape: 'square',
+            time: (dayjs(position.closeBlockTime).utc().unix() - timezone) as Time,
+            text: hasLiquidate ? 'LIQUIDATED' : 'CLOSED',
+          }
+          makers.push(closeMarkers)
+        }
         series.setMarkers(makers.sort((a, b) => Number(a.time) - Number(b.time)))
         series.priceScale().applyOptions({
           scaleMargins: {
@@ -383,7 +484,7 @@ export default function CopyChartProfit({
     if (container && legend) {
       legend.style.position = 'absolute'
       legend.style.left = '0px'
-      legend.style.top = sm ? '-24px' : '-8px'
+      legend.style.top = '-24px'
       legend.style.zIndex = '1'
       legend.style.fontSize = '10px'
       legend.style.fontFamily = FONT_FAMILY
@@ -395,7 +496,12 @@ export default function CopyChartProfit({
 
     chart.subscribeCrosshairMove((param) => {
       const data = param.seriesData.get(series) as LineData
-      setCrossMovePnL(data?.value)
+      const dataFuture = param.seriesData.get(futureSeries) as LineData
+      const time = (dataFuture?.time ?? data?.time) as number
+      setCrossMove({
+        pnl: dataFuture?.value ?? data?.value,
+        time: time ? time + timezone : undefined,
+      })
 
       if (container && legend) {
         if (
@@ -431,11 +537,11 @@ export default function CopyChartProfit({
     }
 
     const handleResetFocus = () => {
-      setCrossMovePnL(undefined)
+      setCrossMove(undefined)
     }
 
-    window.addEventListener('resize', handleResize)
     container?.addEventListener('mouseout', handleResetFocus)
+    window.addEventListener('resize', handleResize)
 
     return () => {
       window.removeEventListener('resize', handleResize)
@@ -443,12 +549,12 @@ export default function CopyChartProfit({
 
       chart.remove()
     }
-  }, [chartData, data, priceData, prices])
+  }, [chartData, chartFutureData, data, priceData, prices])
 
   return (
-    <Box mt={[1, 24]} sx={{ position: 'relative' }} minHeight={[150, 220]}>
+    <Box mt={24} sx={{ position: 'relative' }} minHeight={CHART_HEIGHT}>
       <div id="legend-profit" />
-      {isLoading ? <Loading /> : <div id="chart-container" />}
+      {isLoading ? <Loading /> : <div id={ELEMENT_IDS.POSITION_CHART_PNL} />}
     </Box>
   )
 }

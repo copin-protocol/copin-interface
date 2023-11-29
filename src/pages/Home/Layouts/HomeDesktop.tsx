@@ -62,7 +62,9 @@ export default function HomeDesktop() {
             }
           }}
         />
-        <SwitchProtocols buttonSx={{ height: '100%' }} />
+        <FilterTradersProvider tab={TabKeyEnum.Explorer}>
+          <SwitchProtocols buttonSx={{ height: '100%' }} />
+        </FilterTradersProvider>
       </Flex>
       <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
         <Switch>

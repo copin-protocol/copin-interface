@@ -11,6 +11,7 @@ export interface UsdPrices {
 interface BalancesState {
   prices: UsdPrices
   setPrices: (prices: UsdPrices) => void
+  setPrice: ({ address, price }: { address: string; price: number }) => void
 }
 
 const useUsdPricesStore = create<BalancesState>()(
@@ -19,6 +20,30 @@ const useUsdPricesStore = create<BalancesState>()(
     setPrices: (prices) =>
       set((state) => {
         state.prices = prices
+      }),
+    setPrice: ({ address, price }: { address: string; price: number }) =>
+      set((state) => {
+        state.prices[address] = price
+      }),
+  }))
+)
+export const useRealtimeUsdPricesStore = create<
+  BalancesState & { isReady: boolean; setIsReady: (isReady: boolean) => void }
+>()(
+  immer((set) => ({
+    prices: {},
+    isReady: false,
+    setIsReady: (isReady) =>
+      set((state) => {
+        state.isReady = isReady
+      }),
+    setPrices: (prices) =>
+      set((state) => {
+        state.prices = prices
+      }),
+    setPrice: ({ address, price }: { address: string; price: number }) =>
+      set((state) => {
+        state.prices[address] = price
       }),
   }))
 )

@@ -40,6 +40,7 @@ export const EVENT_ACTIONS = {
     D15: 'filter_14_days',
     D30: 'filter_30_days',
     D60: 'filter_60_days',
+    ALL_TIME: 'filter_all_time',
   },
   [EventCategory.FAVORITES]: {
     ADD_FAVORITE_WITH_NOTE: 'add_favorite_with_note',
@@ -51,6 +52,7 @@ export const EVENT_ACTIONS = {
   [EventCategory.MULTI_CHAIN]: {
     SWITCH_GMX: 'switch_gmx',
     SWITCH_KWENTA: 'switch_kwenta',
+    SWITCH_POLYNOMIAL: 'switch_polynomial',
   },
   [EventCategory.ROUTES]: {
     MY_PROFILE: 'my_profile',

@@ -7,7 +7,7 @@ import { QueryFilter, RangeFilter } from 'apis/types'
 import { TableSortProps } from 'components/@ui/Table/types'
 import { PositionData } from 'entities/trader'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
+import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { ALL_TOKENS_ID, TokenOptionProps } from 'utils/config/trades'
 
@@ -28,6 +28,7 @@ export default function useQueryPositions({
 }) {
   const rangeFilters: RangeFilter[] = []
   const queryFilters: QueryFilter[] = []
+  queryFilters.push({ fieldName: 'status', value: PositionStatusEnum.CLOSE })
   if (!!address) {
     queryFilters.push({ fieldName: 'account', value: address })
   }

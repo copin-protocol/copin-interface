@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ArrowFatDown, ArrowFatUp, Square } from '@phosphor-icons/react'
+import { ArrowFatDown, ArrowFatUp, Circle, Square } from '@phosphor-icons/react'
 import { ReactNode, useMemo } from 'react'
 
 import { DeltaText } from 'components/@ui/DecoratedText/DeltaText'
@@ -44,6 +44,10 @@ const ORDER_TYPES: ObjectTypes = {
   [OrderTypeEnum.LIQUIDATE]: {
     text: <Trans>Liquidation</Trans>,
     icon: <IconBox color={'red2'} icon={<Square weight={'fill'} />} />,
+  },
+  [OrderTypeEnum.MARGIN_TRANSFERRED]: {
+    text: <Trans>Modified Margin</Trans>,
+    icon: <IconBox color={'orange1'} icon={<Circle weight={'fill'} />} />,
   },
 }
 
@@ -110,39 +114,56 @@ export default function ListOrderTable({
         ),
       },
       {
-        title: 'Collateral Delta',
-        dataIndex: 'collateralDelta',
-        key: 'collateralDelta',
-        style: { minWidth: '120px', textAlign: 'right' },
+        title: 'Leverage',
+        dataIndex: 'leverage',
+        key: 'leverage',
+        style: { minWidth: '70px', textAlign: 'right' },
         render: (item) => (
-          <DeltaText
-            color="neutral1"
-            type={item.type}
-            delta={item.type === OrderTypeEnum.LIQUIDATE ? item.collateral : item.collateralDelta}
-          />
+          <Type.Caption color="neutral1" textAlign="right">
+            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED ? '-' : `${formatNumber(item.leverage, 1, 1)}x`}
+          </Type.Caption>
         ),
+      },
+      {
+        title: 'Collateral Delta',
+        dataIndex: 'collateralDeltaNumber',
+        key: 'collateralDeltaNumber',
+        style: { minWidth: '105px', textAlign: 'right' },
+        render: (item) => <DeltaText color="neutral1" type={item.type} delta={item.collateralDeltaNumber} />,
       },
       {
         title: 'Size Delta',
-        dataIndex: 'sizeDelta',
-        key: 'sizeDelta',
-        style: { minWidth: '120px', textAlign: 'right' },
-        render: (item) => (
-          <DeltaText
-            color="neutral1"
-            type={item.type}
-            delta={item.type === OrderTypeEnum.LIQUIDATE ? item.size : item.sizeDelta}
-          />
-        ),
+        dataIndex: 'sizeDeltaNumber',
+        key: 'sizeDeltaNumber',
+        style: { minWidth: '100px', textAlign: 'right' },
+        render: (item) =>
+          item.type === OrderTypeEnum.MARGIN_TRANSFERRED ? (
+            <Type.Caption color="neutral1">-</Type.Caption>
+          ) : (
+            <DeltaText color="neutral1" type={item.type} delta={Math.abs(item.sizeDeltaNumber)} />
+          ),
       },
       {
         title: 'Market Price',
-        dataIndex: 'price',
-        key: 'price',
-        style: { minWidth: '120px', textAlign: 'right', pr: 3 },
+        dataIndex: 'priceNumber',
+        key: 'priceNumber',
+        style: { minWidth: '100px', textAlign: 'right' },
         render: (item) => (
           <Type.Caption color="neutral1" width="100%" textAlign="right">
-            {formatNumber(item.type === OrderTypeEnum.LIQUIDATE ? item.averagePrice : item.price)}
+            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED
+              ? '-'
+              : formatNumber(item.type === OrderTypeEnum.LIQUIDATE ? item.averagePriceNumber : item.priceNumber, 2, 2)}
+          </Type.Caption>
+        ),
+      },
+      {
+        title: 'Paid Fee',
+        dataIndex: 'feeNumber',
+        key: 'feeNumber',
+        style: { minWidth: '85px', textAlign: 'right', pr: 3 },
+        render: (item) => (
+          <Type.Caption color="neutral1" width="100%" textAlign="right">
+            {formatNumber(item.feeNumber, 0)}
           </Type.Caption>
         ),
       },

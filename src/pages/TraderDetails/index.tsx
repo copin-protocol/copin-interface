@@ -7,19 +7,20 @@ import { getTraderApi } from 'apis/traderApis'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NotFound from 'components/@ui/NotFound'
 import { TableSortProps } from 'components/@ui/Table/types'
-import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
+import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import ChartPositions from 'components/Charts/ChartPositions'
 import HistoryTable, { historyColumns } from 'components/Tables/HistoryTable'
 import OpeningPositionTable from 'components/Tables/OpeningPositionTable'
 import { PositionData } from 'entities/trader.d'
 import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
+import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import { Box, Flex } from 'theme/base'
-import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { getTokenOptions } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
@@ -41,17 +42,23 @@ export interface PositionSortPros {
   sortType: SortTypeEnum
 }
 export default function TraderDetails() {
+  const { isPremiumUser, handleIsBasicUser } = useSubscriptionRestrict()
+  const timeFilterOptions = useMemo(
+    () => (isPremiumUser ? TIME_FILTER_OPTIONS : TIME_FILTER_OPTIONS.filter((e) => e.id !== TimeFilterByEnum.ALL_TIME)),
+    [isPremiumUser]
+  )
+
   const { address, protocol } = useParams<{ address: string; protocol: ProtocolEnum }>()
   const _address = isAddress(address)
   const { isLastViewed, addTraderLastViewed } = useTraderLastViewed(protocol, _address)
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
-    [QUERY_KEYS.GET_TRADER_DETAIL, _address, protocol],
+    [QUERY_KEYS.GET_TRADER_DETAIL, _address, protocol, isPremiumUser],
     () =>
       Promise.all(
-        TIME_FILTER_OPTIONS.map((option) =>
-          getTraderApi({ protocol, account: _address, type: option.id, returnRanking: true })
-        ).reverse()
+        timeFilterOptions
+          .map((option) => getTraderApi({ protocol, account: _address, type: option.id, returnRanking: true }))
+          .reverse()
       ),
     {
       enabled: !!_address,
@@ -67,16 +74,24 @@ export default function TraderDetails() {
       changeCurrentPage(1)
     },
   })
-  const { currentOption: timeOption, changeCurrentOption: setTimeOption } = useOptionChange({
+  const { currentOption: timeOption, changeCurrentOption } = useOptionChange({
     optionName: URL_PARAM_KEYS.EXPLORER_TIME_FILTER,
-    options: TIME_FILTER_OPTIONS,
-    defaultOption: TIME_FILTER_OPTIONS[3].id as unknown as string,
+    options: timeFilterOptions,
+    defaultOption: timeFilterOptions[timeFilterOptions.length - 1].id as unknown as string,
   })
   const { currentPage, changeCurrentPage } = usePageChange({ pageName: URL_PARAM_KEYS.TRADER_HISTORY_PAGE })
   const [currentSort, setCurrentSort] = useState<TableSortProps<PositionData> | undefined>({
     sortBy: 'closeBlockTime',
     sortType: SortTypeEnum.DESC,
   })
+
+  const setTimeOption = (option: TimeFilterProps) => {
+    if (!isPremiumUser) {
+      handleIsBasicUser()
+      return
+    }
+    changeCurrentOption(option)
+  }
   const resetSort = () =>
     setCurrentSort({
       sortBy: 'closeBlockTime',
@@ -96,9 +111,7 @@ export default function TraderDetails() {
   } = useQueryPositions({ address: _address, protocol, currencyOption, currentSort, currentPage, changeCurrentPage })
 
   const currentTraderData = useMemo(() => {
-    return (
-      traderData?.find((item) => (item?.type as string) === (timeOption.id as unknown as string)) ?? traderData?.[0]
-    ) // TODO: remove timeTilter enum
+    return traderData?.find((item) => (item?.type as string) === (timeOption.id as unknown as string)) // TODO: remove timeTilter enum
   }, [timeOption.id, traderData])
 
   const refetchQueries = useRefetchQueries()

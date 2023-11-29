@@ -17,6 +17,8 @@ import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
 
+import useSubscriptionRestrict from '../features/useSubscriptionRestrict'
+
 const MIN_QUICK_SEARCH_LENGTH = 3
 export default function useSearchTraders(args?: {
   returnRanking?: boolean
@@ -26,6 +28,7 @@ export default function useSearchTraders(args?: {
   const { onSelect, returnRanking = false, allowAllProtocol = false } = args ?? {}
   const { protocol } = useProtocolStore()
   const { myProfile } = useMyProfileStore()
+  const { isPremiumUser } = useSubscriptionRestrict()
   const history = useHistory()
   const searchWrapperRef = useRef<HTMLDivElement>(null)
   const inputSearchRef = useRef<HTMLInputElement>(null)
@@ -43,7 +46,10 @@ export default function useSearchTraders(args?: {
     //   //
     // }
     // queryFilters.push({ fieldName: 'account', value: keyword })
-    queryFilters.push({ fieldName: 'type', value: TimeFilterByEnum.S60_DAY })
+    queryFilters.push({
+      fieldName: 'type',
+      value: isPremiumUser ? TimeFilterByEnum.ALL_TIME : TimeFilterByEnum.S60_DAY,
+    })
   }
 
   const logEventSearch = useCallback(
@@ -67,7 +73,7 @@ export default function useSearchTraders(args?: {
   }
 
   const { data: searchUserData, isFetching: searchingUser } = useQuery(
-    [QUERY_KEYS.GET_TOP_TRADERS, debounceSearchText, queryFilters, ProtocolEnum.GMX, returnRanking],
+    [QUERY_KEYS.GET_TOP_TRADERS, debounceSearchText, queryFilters, ProtocolEnum.GMX, returnRanking, isPremiumUser],
     () =>
       getTradersApi({
         protocol: ProtocolEnum.GMX,
@@ -81,7 +87,7 @@ export default function useSearchTraders(args?: {
   )
 
   const { data: searchUserDataKwenta, isFetching: searchingUserKwenta } = useQuery(
-    [QUERY_KEYS.GET_TOP_TRADERS, debounceSearchText, queryFilters, ProtocolEnum.KWENTA, returnRanking],
+    [QUERY_KEYS.GET_TOP_TRADERS, debounceSearchText, queryFilters, ProtocolEnum.KWENTA, returnRanking, isPremiumUser],
     () =>
       getTradersApi({
         protocol: ProtocolEnum.KWENTA,

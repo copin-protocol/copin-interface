@@ -12,11 +12,11 @@ interface StatsCustomizeState {
 export const RANKING_FIELD_NAMES: (keyof TraderData)[] = [
   'avgVolume',
   'avgRoi',
-  'maxDrawDownRoi',
+  'maxDrawdown',
   'totalTrade',
   'winRate',
   'avgDuration',
-  'profit',
+  'pnl',
   'maxRoi',
   'profitRate',
   'winLoseRatio',
@@ -36,10 +36,10 @@ export const useRankingCustomizeStore = create<StatsCustomizeState>()(
     })),
     {
       name: STORAGE_KEYS.TRADER_RANKING_FIELDS,
-      version: 1,
+      version: 2,
       getStorage: () => localStorage,
       migrate: (persistedState, version) => {
-        if (version < 1) {
+        if (version < 2) {
           ;(persistedState as StatsCustomizeState).customizedRanking = DEFAULT_LIST
           // if the stored value is in version lower, we set state to default
         }

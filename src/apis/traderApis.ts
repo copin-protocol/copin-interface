@@ -1,13 +1,15 @@
 // import requester from 'apis/index'
 // import { TraderData } from 'entities/trader'
 // import { ApiListResponse } from './api'
-import { CheckAvailableResultData, PositionData, TraderCounter, TraderData } from 'entities/trader.d'
+import { CheckAvailableResultData, ResponsePositionData, ResponseTraderData, TraderCounter } from 'entities/trader.d'
 import { PositionSortPros } from 'pages/TraderDetails'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { capitalizeFirstLetter } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
 import { apiWrapper } from './helpers'
 import requester from './index'
+import { normalizePositionResponse, normalizeTraderData, normalizeTraderResponse } from './normalize'
 import { GetApiParams, QueryFilter, RangeFilter, RequestBodyApiData } from './types'
 
 const SERVICE = 'position'
@@ -18,23 +20,46 @@ const normalizePayload = (body: RequestBodyApiData) => {
     ...range,
   }))
   ranges.forEach((range) => {
-    if (range.fieldName === 'avgDuration' || range.fieldName === 'minDuration' || range.fieldName === 'maxDuration') {
-      if (range.gte) {
-        range.gte = range.gte * 3600
-      }
-      if (range.lte) {
-        range.lte = range.lte * 3600
-      }
-    } else if (range.fieldName === 'lastTradeAtTs') {
-      let gte, lte
-      if (range.gte) {
-        lte = Date.now() - range.gte * 24 * 3600 * 1000
-      }
-      if (range.lte) {
-        gte = Date.now() - range.lte * 24 * 3600 * 1000
-      }
-      range.gte = gte
-      range.lte = lte
+    switch (range.fieldName) {
+      case 'avgDuration':
+      case 'minDuration':
+      case 'maxDuration':
+        if (range.gte) {
+          range.gte = range.gte * 3600
+        }
+        if (range.lte) {
+          range.lte = range.lte * 3600
+        }
+        break
+      case 'lastTradeAtTs':
+        let gte, lte
+        if (range.gte) {
+          lte = Date.now() - range.gte * 24 * 3600 * 1000
+        }
+        if (range.lte) {
+          gte = Date.now() - range.lte * 24 * 3600 * 1000
+        }
+        range.gte = gte
+        range.lte = lte
+        break
+      case 'pnl':
+      case 'maxPnl':
+      case 'avgRoi':
+      case 'maxRoi':
+      case 'totalGain':
+      case 'totalLoss':
+      case 'maxDrawdown':
+      case 'maxDrawdownPnl':
+      case 'profitRate':
+      case 'gainLossRatio':
+      case 'profitLossRatio':
+        range.fieldName = 'realised' + capitalizeFirstLetter(range.fieldName)
+        break
+      case 'longRate':
+        if (range.gte && range.gte > 100) {
+          range.gte = 100
+        }
+        break
     }
   })
   return { ...body, ranges }
@@ -56,7 +81,7 @@ export async function getTradersApi({ protocol, body }: { protocol: ProtocolEnum
   // return traderListData
   return requester
     .post(apiWrapper(`${protocol}/${SERVICE}/statistic/filter`), normalizePayload(params))
-    .then((res: any) => res.data as ApiListResponse<TraderData>)
+    .then((res: any) => normalizeTraderResponse(res.data as ApiListResponse<ResponseTraderData>))
 }
 
 export async function getTraderApi({
@@ -77,7 +102,11 @@ export async function getTraderApi({
   }
   return requester
     .post(apiWrapper(`${protocol}/${SERVICE}/statistic/filter`), { queries: queryFilters, returnRanking })
-    .then((res: any) => (res.data.data && res.data.data.length > 0 ? (res.data.data[0] as TraderData) : undefined))
+    .then((res: any) =>
+      res.data.data && res.data.data.length > 0
+        ? normalizeTraderData(res.data.data[0] as ResponseTraderData)
+        : undefined
+    )
 }
 
 export async function getTraderHistoryApi({
@@ -106,7 +135,7 @@ export async function getTraderHistoryApi({
   }
   return requester
     .post(`${protocol}/${SERVICE}/filter`, params)
-    .then((res: any) => res.data as ApiListResponse<PositionData>)
+    .then((res: any) => normalizePositionResponse(res.data as ApiListResponse<ResponsePositionData>))
 }
 
 export async function getTradersCounter(
@@ -147,5 +176,5 @@ export async function getTradersByTimeRangeApi({
 }) {
   return requester
     .post(`${protocol}/${SERVICE}/custom/filter`, normalizePayload(body), { params })
-    .then((res: any) => res.data as ApiListResponse<TraderData>)
+    .then((res: any) => normalizeTraderResponse(res.data as ApiListResponse<ResponseTraderData>))
 }

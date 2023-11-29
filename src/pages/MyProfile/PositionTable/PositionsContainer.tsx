@@ -13,12 +13,12 @@ import { CopyPositionData } from 'entities/copyTrade.d'
 import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import useSearchParams from 'hooks/router/useSearchParams'
-import useUsdPrices, { UsdPrices } from 'hooks/store/useUsdPrices'
+import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import IconButton from 'theme/Buttons/IconButton'
 import Drawer from 'theme/Modal/Drawer'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
-import { generateClosedPositionRoute, generateOpeningPositionRoute } from 'utils/helpers/generateRoute'
+import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 import ClosePositionModal from './ClosePositionModal'
 
@@ -37,7 +37,7 @@ export default function PositionsContainer({
   children: any
 }) {
   const isMobile = useIsMobile()
-  const { prices } = useUsdPrices()
+  const { prices } = useRealtimeUsdPricesStore()
   const [openSourceDrawer, setOpenSourceDrawer] = useState(false)
   const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
   const [openCloseModal, setOpenCloseModal] = useState(false)
@@ -54,31 +54,26 @@ export default function PositionsContainer({
     async (data: CopyPositionData, event?: any) => {
       event?.stopPropagation()
       setCurrentCopyPosition(data)
-      const isOpen = data.status === PositionStatusEnum.OPEN
+      const isCopyOpen = data.status === PositionStatusEnum.OPEN
       try {
         setSubmitting(true)
         const positionDetail = await getMyCopySourcePositionDetailApi({
           copyId: data?.id ?? '',
-          isOpen,
+          isOpen: isCopyOpen,
         })
+        const isOpen = positionDetail.status === PositionStatusEnum.OPEN
         setSubmitting(false)
-        if (
-          !positionDetail ||
-          (positionDetail.status && positionDetail.status !== PositionStatusEnum.OPEN && isOpen) ||
-          (((!positionDetail.status && !positionDetail.id) || positionDetail.status === PositionStatusEnum.OPEN) &&
-            !isOpen)
-        )
-          throw Error(`Can't find data`)
+        if (!positionDetail || (!isOpen && isCopyOpen) || (isOpen && !isCopyOpen)) throw Error(`Can't find data`)
         setSourcePosition(positionDetail)
-        if (isOpen) {
+        if (isCopyOpen) {
           setOpenSourceDrawer(true)
-          window.history.replaceState(null, '', generateOpeningPositionRoute(positionDetail))
+          window.history.replaceState(null, '', generatePositionDetailsRoute(positionDetail))
         } else {
           setOpenSourceDrawer(true)
           window.history.replaceState(
             null,
             '',
-            generateClosedPositionRoute({
+            generatePositionDetailsRoute({
               protocol: positionDetail.protocol,
               id: positionDetail.id,
               nextHours: nextHoursParam,
@@ -87,7 +82,7 @@ export default function PositionsContainer({
         }
       } catch (error: any) {
         if (error?.message?.includes(`Can't find data`)) {
-          if (isOpen) {
+          if (isCopyOpen) {
             setOpenCloseModal(true)
           } else {
             toast.error(
@@ -147,14 +142,7 @@ export default function PositionsContainer({
               sx={{ position: 'absolute', right: 1, top: 3 }}
               onClick={handleDismiss}
             />
-            <PositionDetails
-              protocol={sourcePosition.protocol}
-              id={sourcePosition.status === PositionStatusEnum.OPEN ? undefined : sourcePosition?.id}
-              account={sourcePosition?.account}
-              indexToken={sourcePosition?.indexToken}
-              dataKey={sourcePosition?.key}
-              isShow={openSourceDrawer}
-            />
+            <PositionDetails protocol={sourcePosition.protocol} id={sourcePosition?.id} isShow={openSourceDrawer} />
           </Container>
         </Drawer>
       )}

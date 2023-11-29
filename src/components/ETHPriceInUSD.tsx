@@ -2,13 +2,13 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 
 import { useProtocolStore } from 'hooks/store/useProtocols'
-import useUsdPricesStore from 'hooks/store/useUsdPrices'
+import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { Box } from 'theme/base'
 import { TOKEN_ADDRESSES } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
 
 export default function ETHPriceInUSD({ value }: { value: BigNumber | number | undefined }) {
-  const { prices } = useUsdPricesStore()
+  const { prices } = useRealtimeUsdPricesStore()
   const { protocol } = useProtocolStore()
   const ethIndex = TOKEN_ADDRESSES[protocol].ETH
   const ethPrice = prices[ethIndex]
