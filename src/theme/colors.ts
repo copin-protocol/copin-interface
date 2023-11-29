@@ -42,6 +42,8 @@ function colors(darkMode: boolean): Colors {
   }
 }
 
+export const themeColors = colors(true)
+
 export default colors
 
 export type ColorsIndexType = keyof Omit<ReturnType<typeof colors>, 'darkMode'>

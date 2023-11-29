@@ -129,7 +129,9 @@ export function getTimeframeFromTimeRange(from: number, to: number) {
   const diffDay = dayjs(to).utc().diff(dayjs(from).utc(), 'day')
   const diffHour = dayjs(to).utc().diff(dayjs(from).utc(), 'hour')
 
-  return diffDay > 4
+  return diffDay > 120
+    ? 60 * 24
+    : diffDay > 4
     ? TimeframeEnum.H4
     : diffDay > 0
     ? TimeframeEnum.H1
@@ -148,6 +150,8 @@ export const getDurationFromTimeFilter = (timeFilter?: TimeFilterByEnum) => {
       return 30
     case TimeFilterByEnum.S60_DAY:
       return 60
+    case TimeFilterByEnum.ALL_TIME:
+      return 365
     default:
       return 7
   }
@@ -178,4 +182,8 @@ export function parseWalletName(wallet: CopyWalletData) {
     : `${COPY_WALLET_TRANS[wallet.exchange]}: ${
         wallet?.smartWalletAddress ? addressShorten(wallet?.smartWalletAddress) : wallet.bingX?.apiKey?.slice(0, 5)
       }`
+}
+
+export function capitalizeFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }

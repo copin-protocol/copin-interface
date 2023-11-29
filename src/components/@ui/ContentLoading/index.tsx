@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import ContentLoader from 'react-content-loader'
 
 import { Flex } from 'theme/base'
-import colors, { ColorsIndexType } from 'theme/colors'
+import { ColorsIndexType, themeColors } from 'theme/colors'
 import { BoxProps } from 'theme/types'
 
 type TextContent = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'large' | 'normal' | 'caption' | 'small'
@@ -80,8 +80,8 @@ const ContentLoading = ({
         width={svgWidth}
         height={contentHeight}
         viewBox={`0 0 ${svgWidth} ${contentHeight}`}
-        backgroundColor={foreColor ? colors(true)[foreColor] : colors(true).neutral6}
-        foregroundColor={backColor ? colors(true)[backColor] : colors(true).neutral5}
+        backgroundColor={foreColor ? themeColors[foreColor] : themeColors.neutral6}
+        foregroundColor={backColor ? themeColors[backColor] : themeColors.neutral5}
         opacity={opacity}
       >
         <rect x="0" y="0" rx="4" ry="4" width="100%" height="100%" />

@@ -38,7 +38,7 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { TokenOptionProps } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
-import { generateClosedPositionRoute } from 'utils/helpers/generateRoute'
+import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -47,7 +47,7 @@ function getHighestPnl(array: any): number {
   let sum = 0
   const ar = array.slice().reverse()
   for (let i = 0; i < ar.length; i++) {
-    sum += ar[i].realisedPnl - ar[i].fee
+    sum += ar[i].pnl
     if (Math.abs(sum) > high) high = Math.abs(sum)
   }
 
@@ -107,7 +107,7 @@ export default function HistoryTable({
     window.history.replaceState(
       null,
       '',
-      generateClosedPositionRoute({ protocol: data.protocol, id: data.id, nextHours: nextHoursParam })
+      generatePositionDetailsRoute({ protocol: data.protocol, id: data.id, nextHours: nextHoursParam })
     )
   }
 
@@ -255,7 +255,7 @@ export default function HistoryTable({
           renderRowBackground={(dataRow: any, index: number) => {
             if (!data || !showChart) return '#0B0E18'
 
-            const sumProfit = data.slice(index, data.length).reduce((sum, item) => sum + item.realisedPnl - item.fee, 0)
+            const sumProfit = data.slice(index, data.length).reduce((sum, item) => sum + item.pnl, 0)
 
             const percent = (Math.abs(sumProfit) * 100) / highValue
             return `linear-gradient(to right, #0B0E18 ${100 - percent}%, ${
@@ -414,7 +414,7 @@ const leverageColumn: ColumnData<PositionData> = {
   dataIndex: 'leverage',
   key: 'leverage',
   sortBy: 'leverage',
-  style: { minWidth: '70px', textAlign: 'right' },
+  style: { minWidth: '65px', textAlign: 'right' },
   render: (item) => (
     <Flex justifyContent="end" alignItems="center">
       <Type.Caption color="neutral1">{formatNumber(item.leverage, 1, 1)}x</Type.Caption>
@@ -423,19 +423,19 @@ const leverageColumn: ColumnData<PositionData> = {
 }
 const pnlColumnFull: ColumnData<PositionData> = {
   title: 'PnL',
-  dataIndex: 'realisedPnl',
-  key: 'realisedPnl',
-  sortBy: 'realisedPnl',
-  style: { minWidth: '80px', textAlign: 'right' },
+  dataIndex: 'pnl',
+  key: 'pnl',
+  sortBy: 'pnl',
+  style: { minWidth: '100px', textAlign: 'right' },
   render: (item) => {
     return (
-      <Flex alignItems="center" sx={{ gap: '1px' }}>
-        {(item.isLiquidate || item.roi <= -100) && <IconBox sx={{ pl: '2px' }} icon={<SkullIcon />} />}
+      <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
+        {(item.isLiquidate || item.roi <= -100) && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
         {SignedText({
-          value: item.realisedPnl,
+          value: item.pnl,
           maxDigit: 1,
           minDigit: 1,
-          sx: { width: '100%' },
+          sx: { textAlign: 'right' },
         })}
       </Flex>
     )
@@ -443,42 +443,42 @@ const pnlColumnFull: ColumnData<PositionData> = {
 }
 const pnlColumn: ColumnData<PositionData> = {
   title: 'PnL',
-  dataIndex: 'realisedPnl',
-  key: 'realisedPnl',
+  dataIndex: 'pnl',
+  key: 'pnl',
   style: { minWidth: '100px', textAlign: 'right' },
   render: (item) => {
     return (
-      <Flex alignItems="center" sx={{ gap: '1px' }}>
-        {(item.isLiquidate || item.roi <= -100) && <IconBox sx={{ pl: '2px' }} icon={<SkullIcon />} />}
+      <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
+        {(item.isLiquidate || item.roi <= -100) && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
         {SignedText({
-          value: item.realisedPnl,
+          value: item.pnl,
           maxDigit: 1,
           minDigit: 1,
-          sx: { textAlign: 'right', width: '100%' },
+          sx: { textAlign: 'right' },
         })}
       </Flex>
     )
   },
 }
-const pnlWFeeColumn: ColumnData<PositionData> = {
-  title: 'Closed PnL',
-  dataIndex: undefined,
-  key: undefined,
-  style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => {
-    return (
-      <Flex alignItems="center" sx={{ gap: '1px' }}>
-        {(item.isLiquidate || item.roi <= -100) && <IconBox sx={{ pl: '2px' }} icon={<SkullIcon />} />}
-        {SignedText({
-          value: item.realisedPnl - item.fee,
-          maxDigit: 1,
-          minDigit: 1,
-          sx: { textAlign: 'right', width: '100%' },
-        })}
-      </Flex>
-    )
-  },
-}
+// const pnlWFeeColumn: ColumnData<PositionData> = {
+//   title: 'Closed PnL',
+//   dataIndex: undefined,
+//   key: undefined,
+//   style: { minWidth: '100px', textAlign: 'right' },
+//   render: (item) => {
+//     return (
+//       <Flex alignItems="center" sx={{ gap: '1px' }}>
+//         {(item.isLiquidate || item.roi <= -100) && <IconBox sx={{ pl: '2px' }} icon={<SkullIcon />} />}
+//         {SignedText({
+//           value: item.realisedPnl - item.fee,
+//           maxDigit: 1,
+//           minDigit: 1,
+//           sx: { textAlign: 'right', width: '100%' },
+//         })}
+//       </Flex>
+//     )
+//   },
+// }
 const actionColumn: ColumnData<PositionData> = {
   title: ' ',
   dataIndex: 'id',
@@ -508,10 +508,10 @@ export const fullHistoryColumns: ColumnData<PositionData>[] = [
   collateralColumn,
   avgDurationColumn,
   orderCountColumn,
+  feeColumn,
   roiColumn,
   pnlColumnFull,
-  feeColumn,
-  pnlWFeeColumn,
+  // pnlWFeeColumn,
   // orderIncreaseCountColumn,
   // orderDecreaseCountColumn,
   actionColumn,

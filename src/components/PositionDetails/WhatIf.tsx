@@ -11,7 +11,7 @@ import { BoxProps } from 'theme/types'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
-import { generateClosedPositionRoute } from 'utils/helpers/generateRoute'
+import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 export default function WhatIf({
   positionId,
@@ -37,7 +37,7 @@ export default function WhatIf({
           bg: 'neutral5',
         }}
         hasArrow={true}
-        dismissable={false}
+        dismissible={false}
         menu={
           <Box px={2} py={2} mb={24}>
             <Flex mb={2} alignItems="center" justifyContent="space-between">
@@ -77,14 +77,14 @@ export default function WhatIf({
         onReset={() => {
           setValue('amount', 0)
           setNextHours(0)
-          window.history.replaceState(null, '', generateClosedPositionRoute({ protocol, id: positionId }))
+          window.history.replaceState(null, '', generatePositionDetailsRoute({ protocol, id: positionId }))
         }}
         onSubmit={() => {
           setNextHours(amount)
           window.history.replaceState(
             null,
             '',
-            generateClosedPositionRoute({ protocol, id: positionId, nextHours: amount })
+            generatePositionDetailsRoute({ protocol, id: positionId, nextHours: amount })
           )
           // setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: amount ? amount.toString() : null })
         }}

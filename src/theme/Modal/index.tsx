@@ -111,6 +111,7 @@ export interface ModalProps {
   title?: React.ReactNode
   background?: keyof Colors | string
   dangerouslyBypassFocusLock?: boolean
+  modalContentStyle?: any
 }
 
 export default function Modal({
@@ -128,6 +129,7 @@ export default function Modal({
   background,
   footer,
   children,
+  modalContentStyle,
   dangerouslyBypassFocusLock = false,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
@@ -183,6 +185,7 @@ export default function Modal({
                 mobile={isMobile}
                 width={width}
                 background={background}
+                style={modalContentStyle}
               >
                 {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
                 {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
@@ -192,7 +195,7 @@ export default function Modal({
                       width={80}
                       height={5}
                       sx={{ borderRadius: '100px' }}
-                      bg="neutral1"
+                      bg="neutral3"
                       mx="auto"
                       mb={3}
                       mt={1}

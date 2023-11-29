@@ -50,7 +50,7 @@ export const VisualizeModal = ({ data: raw, onDismiss }: { data: TraderData[]; o
     if (selectedIndex == null) return null
     const stats = data[selectedIndex]
     return {
-      avgRoi: { score: (stats.avgRoi * 100) / LIMIT_AVG_ROI, value: stats.avgRoi, limit: LIMIT_AVG_ROI },
+      avgRoi: { score: (stats.roi * 100) / LIMIT_AVG_ROI, value: stats.roi, limit: LIMIT_AVG_ROI },
       maxRoi: { score: (stats.maxRoi * 100) / LIMIT_MAX_ROI, value: stats.maxRoi, limit: LIMIT_MAX_ROI },
       avgDuration: {
         score: ((LIMIT_AVG_DURATION - stats.avgDuration) * 100) / LIMIT_AVG_DURATION,

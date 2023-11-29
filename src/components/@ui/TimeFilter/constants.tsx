@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { CrownSimple } from '@phosphor-icons/react'
 
+import { Flex, IconBox } from 'theme/base'
 import { TimeFilterByEnum } from 'utils/config/enums'
 
 import { TimeFilterProps, TimeWithRangeFilterProps } from './type'
@@ -28,6 +30,17 @@ export const TIME_FILTER_OPTIONS: TimeFilterProps[] = [
     text: <Trans>60 days</Trans>,
     sort_by: TimeFilterByEnum.S60_DAY,
     value: 60,
+  },
+  {
+    id: TimeFilterByEnum.ALL_TIME,
+    text: (
+      <Flex alignItems="center" sx={{ gap: 1 }}>
+        <Trans>All</Trans>
+        <IconBox icon={<CrownSimple size={16} weight="fill" />} color="orange1" />
+      </Flex>
+    ),
+    sort_by: TimeFilterByEnum.ALL_TIME,
+    value: 365,
   },
 ]
 

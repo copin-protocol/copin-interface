@@ -7,7 +7,7 @@ import { CopyTradeChartData, CopyTradeStatsData } from 'entities/chart.d'
 import { CopyTradePnL } from 'entities/copyTrade.d'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
-import colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
 
@@ -24,7 +24,6 @@ export default function ChartDailyROI({
   from: number
   to: number
 }) {
-  const _color = colors(true)
   const generateData = useMemo(() => (data ? generateChartDailyROI(from, to, data) : []), [data, from, to])
   const chartData = useMemo(() => (data ? getChartData({ data: generateData }) : []), [data, generateData])
 
@@ -60,24 +59,24 @@ export default function ChartDailyROI({
         >
           <ResponsiveContainer minHeight={200}>
             <ComposedChart data={chartData} margin={{ top: 0, left: 4, right: 16, bottom: 0 }}>
-              <CartesianGrid stroke={_color.neutral4} strokeDasharray="3 3" opacity={0.5} />
-              <XAxis dataKey="date" stroke={_color.neutral4} />
+              <CartesianGrid stroke={themeColors.neutral4} strokeDasharray="3 3" opacity={0.5} />
+              <XAxis dataKey="date" stroke={themeColors.neutral4} />
               <YAxis
                 domain={[-stats.maxAbsRoi * 1.2, stats.maxAbsRoi * 1.2]}
-                stroke={_color.neutral4}
+                stroke={themeColors.neutral4}
                 tickFormatter={(value) => `${formatNumber(value, 2, 2)}%`}
                 ticks={[-stats.maxAbsRoi * 1.2, 0, stats.maxAbsRoi * 1.2]}
               />
-              <Bar type="monotone" name="ROI" unit="%" dataKey="roi" fill={_color.neutral1}>
+              <Bar type="monotone" name="ROI" unit="%" dataKey="roi" fill={themeColors.neutral1}>
                 {chartData.map((item, i) => {
-                  return <Cell key={`cell-${i}`} fill={item.roi > 0 ? _color.green1 : _color.red2} />
+                  return <Cell key={`cell-${i}`} fill={item.roi > 0 ? themeColors.green1 : themeColors.red2} />
                 })}
               </Bar>
               {/*<Legend />*/}
-              {/*<ReferenceLine y={0} stroke={_color.neutral5} />*/}
+              {/*<ReferenceLine y={0} stroke={themeColors.neutral5} />*/}
               <Tooltip
                 contentStyle={{
-                  backgroundColor: _color.neutral5,
+                  backgroundColor: themeColors.neutral5,
                   borderColor: 'transparent',
                   fontSize: '14px',
                   fontFamily: FONT_FAMILY,

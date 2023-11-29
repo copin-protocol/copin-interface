@@ -19,7 +19,7 @@ import { StatisticChartData, StatsData } from 'entities/chart'
 import { CopyStatisticData } from 'entities/statistic'
 import { isMobile } from 'hooks/helpers/useIsMobile'
 import { Box, Li, Type } from 'theme/base'
-import colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { Colors } from 'theme/types'
 import { CHART_DATE_FORMAT, CHART_MIN_HEIGHT, MIN_TICK_GAP, YAXIS_WIDTH } from 'utils/config/constants'
 import { compactNumber, formatLocalDate, formatNumber } from 'utils/helpers/format'
@@ -33,12 +33,10 @@ export function NetProfitChartComponent({
   stats: StatsData
   syncId?: string
 }) {
-  const _colors = colors(true)
-
   return (
     <ChartComponentWrapper
       data={data}
-      colors={_colors}
+      colors={themeColors}
       syncId={syncId}
       legend={
         <>
@@ -60,20 +58,20 @@ export function NetProfitChartComponent({
         width={YAXIS_WIDTH}
         orientation="right"
         yAxisId="right"
-        stroke={_colors.neutral4}
+        stroke={themeColors.neutral4}
         ticks={[-stats.maxAbsCumulativePnl * 1.05, 0, stats.maxAbsCumulativePnl * 1.05]}
         tickFormatter={(value) => `$${compactNumber(value, 1)}`}
       />
       <YAxis
         domain={[-stats.maxAbsPnl * 1.05, stats.maxAbsPnl * 1.05]}
         width={YAXIS_WIDTH}
-        stroke={_colors.neutral4}
+        stroke={themeColors.neutral4}
         ticks={[-stats.maxAbsPnl * 1.05, 0, stats.maxAbsPnl * 1.05]}
         tickFormatter={(value) => `$${compactNumber(value, 1)}`}
       />
-      <Bar type="monotone" name="Net PnL" unit="$" dataKey="pnl" fill={_colors.neutral1}>
+      <Bar type="monotone" name="Net PnL" unit="$" dataKey="pnl" fill={themeColors.neutral1}>
         {data.map((item, i) => {
-          return <Cell key={`cell-${i}`} fill={item.pnl > 0 ? _colors.green1 : _colors.red2} />
+          return <Cell key={`cell-${i}`} fill={item.pnl > 0 ? themeColors.green1 : themeColors.red2} />
         })}
       </Bar>
       <Line
@@ -83,7 +81,7 @@ export function NetProfitChartComponent({
         dataKey="pnlCumulative"
         yAxisId="right"
         dot={false}
-        stroke={_colors.orange1}
+        stroke={themeColors.orange1}
         strokeWidth={3}
       />
     </ChartComponentWrapper>
@@ -101,12 +99,10 @@ export function ProfitLossChartComponent({
   syncId?: string
   isPercentView?: boolean
 }) {
-  const _colors = colors(true)
-
   return (
     <ChartComponentWrapper
       data={data}
-      colors={_colors}
+      colors={themeColors}
       syncId={syncId}
       stackOffset="sign"
       legend={
@@ -128,14 +124,14 @@ export function ProfitLossChartComponent({
         <YAxis
           dataKey="profitPercent"
           width={YAXIS_WIDTH}
-          stroke={_colors.neutral4}
+          stroke={themeColors.neutral4}
           tickFormatter={(value) => `${formatNumber(value, 1, 1)}%`}
         />
       ) : (
         <YAxis
           domain={[-stats.maxProfitLoss * 1.05, stats.maxProfitLoss * 1.05]}
           width={YAXIS_WIDTH}
-          stroke={_colors.neutral4}
+          stroke={themeColors.neutral4}
           ticks={[-stats.maxProfitLoss * 1.05, 0, stats.maxProfitLoss * 1.05]}
           tickFormatter={(value) => `$${compactNumber(value, 1)}`}
         />
@@ -143,7 +139,7 @@ export function ProfitLossChartComponent({
       <YAxis
         domain={[-stats.maxProfitLoss * 1.05, stats.maxProfitLoss * 1.05]}
         width={YAXIS_WIDTH}
-        stroke={_colors.neutral4}
+        stroke={themeColors.neutral4}
         ticks={[-stats.maxProfitLoss * 1.05, 0, stats.maxProfitLoss * 1.05]}
         tickFormatter={(value) => `$${compactNumber(value, 1)}`}
       />
@@ -152,7 +148,7 @@ export function ProfitLossChartComponent({
         width={YAXIS_WIDTH}
         orientation="right"
         yAxisId="right"
-        stroke={_colors.neutral4}
+        stroke={themeColors.neutral4}
         ticks={[-stats.maxCumulativeProfitLoss * 1.1, 0, stats.maxCumulativeProfitLoss * 1.1]}
         tickFormatter={(value) => `$${compactNumber(value, 1)}`}
       />
@@ -162,8 +158,8 @@ export function ProfitLossChartComponent({
             yAxisId="right"
             type="monotone"
             strokeWidth={0}
-            stroke={_colors.red2}
-            fill={_colors.red2}
+            stroke={themeColors.red2}
+            fill={themeColors.red2}
             fillOpacity="0.4"
             dataKey="lossCumulative"
             name="Cumulative Loss"
@@ -174,8 +170,8 @@ export function ProfitLossChartComponent({
             yAxisId="right"
             type="monotone"
             strokeWidth={0}
-            stroke={_colors.green1}
-            fill={_colors.green1}
+            stroke={themeColors.green1}
+            fill={themeColors.green1}
             fillOpacity="0.4"
             dataKey="profitCumulative"
             name="Cumulative Profit"
@@ -190,7 +186,7 @@ export function ProfitLossChartComponent({
             unit={'%'}
             type="monotone"
             stackId="b"
-            fill={_colors.red2}
+            fill={themeColors.red2}
             dataKey="lossPercent"
             name="Loss"
             isAnimationActive={false}
@@ -199,7 +195,7 @@ export function ProfitLossChartComponent({
             unit={'%'}
             type="monotone"
             stackId="b"
-            fill={_colors.green1}
+            fill={themeColors.green1}
             dataKey="profitPercent"
             name="Profit"
             isAnimationActive={false}
@@ -211,7 +207,7 @@ export function ProfitLossChartComponent({
             stackId="pnl"
             unit={'$'}
             type="monotone"
-            fill={_colors.green1}
+            fill={themeColors.green1}
             dataKey="totalProfit"
             name="Profit"
             isAnimationActive={false}
@@ -220,7 +216,7 @@ export function ProfitLossChartComponent({
             stackId="pnl"
             unit={'$'}
             type="monotone"
-            fill={_colors.red2}
+            fill={themeColors.red2}
             dataKey="totalLoss"
             name="Loss"
             isAnimationActive={false}
@@ -232,31 +228,33 @@ export function ProfitLossChartComponent({
 }
 
 export function CopierChartComponent({ data, syncId }: { data: StatisticChartData[]; syncId?: string }) {
-  const _colors = colors(true)
-
   return (
-    <ChartComponentWrapper data={data} colors={_colors} syncId={syncId}>
+    <ChartComponentWrapper data={data} colors={themeColors} syncId={syncId}>
       <YAxis
         width={YAXIS_WIDTH}
         orientation="right"
         yAxisId="right"
-        stroke={_colors.neutral4}
+        stroke={themeColors.neutral4}
         tickFormatter={(value) => `${compactNumber(value, 0)}`}
       />
-      <YAxis width={YAXIS_WIDTH} stroke={_colors.neutral4} tickFormatter={(value) => `${compactNumber(value, 0)}`} />
+      <YAxis
+        width={YAXIS_WIDTH}
+        stroke={themeColors.neutral4}
+        tickFormatter={(value) => `${compactNumber(value, 0)}`}
+      />
       <Bar
         // stackId="copier"
         type="monotone"
         name="Total Copier Active"
         dataKey="totalActiveCopier"
-        fill={_colors.primary1}
+        fill={themeColors.primary1}
       />
       <Bar
         // stackId="copier"
         type="monotone"
         name="Total Copier Inactive"
         dataKey="totalInactiveCopier"
-        fill={_colors.primary2}
+        fill={themeColors.primary2}
       />
       <Line
         type="monotone"
@@ -264,7 +262,7 @@ export function CopierChartComponent({ data, syncId }: { data: StatisticChartDat
         dataKey="totalCopier"
         yAxisId="right"
         dot={false}
-        stroke={_colors.orange1}
+        stroke={themeColors.orange1}
         strokeWidth={3}
       />
     </ChartComponentWrapper>
@@ -272,31 +270,33 @@ export function CopierChartComponent({ data, syncId }: { data: StatisticChartDat
 }
 
 export function CopyTradeChartComponent({ data, syncId }: { data: StatisticChartData[]; syncId?: string }) {
-  const _colors = colors(true)
-
   return (
-    <ChartComponentWrapper colors={_colors} data={data} syncId={syncId}>
+    <ChartComponentWrapper colors={themeColors} data={data} syncId={syncId}>
       <YAxis
         width={YAXIS_WIDTH}
         orientation="right"
         yAxisId="right"
-        stroke={_colors.neutral4}
+        stroke={themeColors.neutral4}
         tickFormatter={(value) => `${compactNumber(value, 0)}`}
       />
-      <YAxis width={YAXIS_WIDTH} stroke={_colors.neutral4} tickFormatter={(value) => `${compactNumber(value, 0)}`} />
+      <YAxis
+        width={YAXIS_WIDTH}
+        stroke={themeColors.neutral4}
+        tickFormatter={(value) => `${compactNumber(value, 0)}`}
+      />
       <Bar
         // stackId="copyTrade"
         type="monotone"
         name="Total Copy Trade Active"
         dataKey="totalActiveCopyTrade"
-        fill={_colors.primary1}
+        fill={themeColors.primary1}
       />
       <Bar
         // stackId="copyTrade"
         type="monotone"
         name="Total Copy Trade Inactive"
         dataKey="totalInactiveCopyTrade"
-        fill={_colors.primary2}
+        fill={themeColors.primary2}
       />
       <Line
         type="monotone"
@@ -304,7 +304,7 @@ export function CopyTradeChartComponent({ data, syncId }: { data: StatisticChart
         dataKey="totalCopyTrade"
         yAxisId="right"
         dot={false}
-        stroke={_colors.orange1}
+        stroke={themeColors.orange1}
         strokeWidth={3}
       />
     </ChartComponentWrapper>
@@ -312,26 +312,28 @@ export function CopyTradeChartComponent({ data, syncId }: { data: StatisticChart
 }
 
 export function OrderChartComponent({ data, syncId }: { data: StatisticChartData[]; syncId?: string }) {
-  const _colors = colors(true)
-
   return (
-    <ChartComponentWrapper colors={_colors} data={data} syncId={syncId}>
+    <ChartComponentWrapper colors={themeColors} data={data} syncId={syncId}>
       <YAxis
         width={YAXIS_WIDTH}
         orientation="right"
         yAxisId="right"
-        stroke={_colors.neutral4}
+        stroke={themeColors.neutral4}
         tickFormatter={(value) => `${compactNumber(value, 0)}`}
       />
-      <YAxis width={YAXIS_WIDTH} stroke={_colors.neutral4} tickFormatter={(value) => `${compactNumber(value, 0)}`} />
-      <Bar type="monotone" name="Total Order" dataKey="totalOrder" fill={_colors.primary1} />
+      <YAxis
+        width={YAXIS_WIDTH}
+        stroke={themeColors.neutral4}
+        tickFormatter={(value) => `${compactNumber(value, 0)}`}
+      />
+      <Bar type="monotone" name="Total Order" dataKey="totalOrder" fill={themeColors.primary1} />
       <Line
         type="monotone"
         name="Cumulative Order"
         dataKey="orderCumulative"
         yAxisId="right"
         dot={false}
-        stroke={_colors.orange1}
+        stroke={themeColors.orange1}
         strokeWidth={3}
       />
     </ChartComponentWrapper>
@@ -339,19 +341,21 @@ export function OrderChartComponent({ data, syncId }: { data: StatisticChartData
 }
 
 export function VolumeChartComponent({ data, syncId }: { data: StatisticChartData[]; syncId?: string }) {
-  const _colors = colors(true)
-
   return (
-    <ChartComponentWrapper colors={_colors} data={data} syncId={syncId}>
+    <ChartComponentWrapper colors={themeColors} data={data} syncId={syncId}>
       <YAxis
         width={YAXIS_WIDTH}
         orientation="right"
         yAxisId="right"
-        stroke={_colors.neutral4}
+        stroke={themeColors.neutral4}
         tickFormatter={(value) => `$${compactNumber(value, 1)}`}
       />
-      <YAxis width={YAXIS_WIDTH} stroke={_colors.neutral4} tickFormatter={(value) => `$${compactNumber(value, 1)}`} />
-      <Bar type="monotone" name="Total Volume" unit="$" dataKey="totalVolume" fill={_colors.primary1} />
+      <YAxis
+        width={YAXIS_WIDTH}
+        stroke={themeColors.neutral4}
+        tickFormatter={(value) => `$${compactNumber(value, 1)}`}
+      />
+      <Bar type="monotone" name="Total Volume" unit="$" dataKey="totalVolume" fill={themeColors.primary1} />
       <Line
         type="monotone"
         name="Cumulative Volume"
@@ -359,7 +363,7 @@ export function VolumeChartComponent({ data, syncId }: { data: StatisticChartDat
         dataKey="volumeCumulative"
         yAxisId="right"
         dot={false}
-        stroke={_colors.orange1}
+        stroke={themeColors.orange1}
         strokeWidth={3}
       />
     </ChartComponentWrapper>
@@ -367,11 +371,9 @@ export function VolumeChartComponent({ data, syncId }: { data: StatisticChartDat
 }
 
 export function TraderChartComponent({ data, syncId }: { data: StatisticChartData[]; syncId?: string }) {
-  const _colors = colors(true)
-
   return (
     <ChartComponentWrapper
-      colors={_colors}
+      colors={themeColors}
       data={data}
       syncId={syncId}
       legend={
@@ -387,7 +389,7 @@ export function TraderChartComponent({ data, syncId }: { data: StatisticChartDat
       <YAxis
         width={YAXIS_WIDTH}
         orientation="right"
-        stroke={_colors.neutral4}
+        stroke={themeColors.neutral4}
         tickFormatter={(value) => `${compactNumber(value, 0)}`}
       />
       <Bar
@@ -395,7 +397,7 @@ export function TraderChartComponent({ data, syncId }: { data: StatisticChartDat
         type="monotone"
         name="Total Unique Trader"
         dataKey="totalDistinctTrader"
-        fill={_colors.primary1}
+        fill={themeColors.primary1}
       />
     </ChartComponentWrapper>
   )

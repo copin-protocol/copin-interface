@@ -1,5 +1,6 @@
 import debounce from 'lodash/debounce'
-import { useMemo, useState } from 'react'
+import isEqual from 'lodash/isEqual'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTradersCounter } from 'apis/traderApis'
@@ -13,37 +14,48 @@ import { TradersContextData } from '../useTradersContext'
 import { FilterTabEnum } from './configs'
 
 export default function useTradersCount({
-  defaultFormValues,
   timeOption,
   protocol,
   filterTab,
+  ranges,
 }: {
-  defaultFormValues: ConditionFormValues<TraderData>
+  ranges: FilterValues[]
   timeOption: TradersContextData['timeOption']
   protocol: TradersContextData['protocol']
   filterTab?: TradersContextData['filterTab']
 }) {
-  const [ranges, setRanges] = useState<FilterValues[]>(getFiltersFromFormValues(defaultFormValues))
+  const [_ranges, setRanges] = useState<FilterValues[]>(ranges)
   const handleCallAPi = useMemo(
     () =>
-      debounce(function (values: ConditionFormValues<TraderData>) {
-        const filterFromForm = getFiltersFromFormValues(values)
-        setRanges(filterFromForm)
+      debounce(function (ranges: FilterValues[]) {
+        setRanges(ranges)
       }, 1000),
     []
   )
-
-  const { data: tradersCount, isFetching } = useQuery(
-    [QUERY_KEYS.GET_TRADER_FILTER_COUNTER, ranges, timeOption, protocol],
+  useEffect(() => {
+    if (isEqual(ranges, _ranges)) return
+    handleCallAPi(ranges)
+  }, [ranges])
+  const { data, isFetching } = useQuery(
+    [QUERY_KEYS.GET_TRADER_FILTER_COUNTER, _ranges, timeOption, protocol],
     () =>
       getTradersCounter(
         protocol,
         {
-          ranges: filterTab === FilterTabEnum.RANKING ? formatRankingRanges(ranges) : ranges,
+          ranges: filterTab === FilterTabEnum.RANKING ? formatRankingRanges(_ranges) : _ranges,
         },
         timeOption.id
       ),
     { keepPreviousData: true, retry: 0 }
   )
-  return { handleCallAPi, tradersCount, isFetching }
+  return { data, isLoading: isFetching }
+}
+
+export function useTraderCountState({ defaultFormValues }: { defaultFormValues: ConditionFormValues<TraderData> }) {
+  const [ranges, setRanges] = useState<FilterValues[]>(getFiltersFromFormValues(defaultFormValues))
+  const handleChangeRanges = useCallback((formValues: ConditionFormValues<TraderData>) => {
+    const _ranges = getFiltersFromFormValues(formValues)
+    setRanges(_ranges)
+  }, [])
+  return { ranges, handleChangeRanges }
 }

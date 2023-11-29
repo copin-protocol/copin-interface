@@ -1,4 +1,10 @@
-import { CopyTradePlatformEnum, OrderTypeEnum, ProtocolEnum, UserRoleEnum } from 'utils/config/enums'
+import {
+  CopyTradePlatformEnum,
+  OrderTypeEnum,
+  ProtocolEnum,
+  SubscriptionPlanEnum,
+  UserRoleEnum,
+} from 'utils/config/enums'
 
 export interface UserCopyData {
   address: string
@@ -24,6 +30,7 @@ export interface UserData {
   isSkippedReferral?: boolean
   createdAt: string
   updatedAt: string
+  plan?: SubscriptionPlanEnum
 }
 
 export interface ReferralData {
@@ -65,4 +72,14 @@ export interface UserActivityData {
   sourcePrice: number
   copyOrderId?: string
   targetTxHash?: string
+}
+
+export interface UserSubscriptionData {
+  tokenId: number
+  tierId: SubscriptionPlanEnum
+  startedTime: string
+  expiredTime: string
+  id: string
+  owner: string // address
+  createdAt: string
 }

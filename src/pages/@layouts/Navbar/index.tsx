@@ -31,7 +31,7 @@ const Navbar = ({ height }: { height: number }): ReactElement => {
   }, [location.pathname])
 
   return (
-    <Box as="header" sx={{ zIndex: [101, 101, 101, 4] }}>
+    <Box as="header" sx={{ zIndex: [101, 101, 101, 11] }}>
       <Wrapper height={height}>
         {/* <Container> */}
         <Main>

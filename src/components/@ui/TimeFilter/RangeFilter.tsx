@@ -1,6 +1,7 @@
+import { Trans } from '@lingui/macro'
 import { Calendar } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
-import React, { useEffect, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { DateRange, Range, RangeKeyDict } from 'react-date-range'
 import OutsideClickHandler from 'react-outside-click-handler'
 
@@ -26,6 +27,8 @@ const RangeFilter = ({
   forceDisplaySelectedDate = false,
   iconColor,
   iconHoverColor,
+  onSelectingChange,
+  buttonType = 'icon',
 }: {
   isRangeSelection: boolean
   from: Date | undefined
@@ -37,6 +40,8 @@ const RangeFilter = ({
   forceDisplaySelectedDate?: boolean
   iconColor?: string
   iconHoverColor?: string
+  onSelectingChange?: () => void
+  buttonType?: 'text' | 'icon'
 }) => {
   const lastRangeRef = useRef<number[]>()
   const [selecting, setSelecting] = useState(false)
@@ -61,27 +66,70 @@ const RangeFilter = ({
     })
   }, [from, to])
   const hasDisabledApply = (state.endDate?.getTime() ?? 0) - (state.startDate?.getTime() ?? 0) < 24 * 3600 * 1000
-  return (
-    <OutsideClickHandler onOutsideClick={() => setSelecting(false)}>
-      <Box style={{ position: 'relative' }}>
-        <ButtonWithIcon
-          icon={<Calendar size={20} />}
-          variant="ghost"
-          onClick={() => setSelecting(true)}
-          sx={{
-            px: [0, 1, 1, 1],
-            color: isRangeSelection ? 'neutral1' : 'neutral3',
-            '&:hover:not([disabled])': {
-              color: isRangeSelection ? 'neutral2' : 'neutral1',
-              '& svg': {
-                color: isRangeSelection ? (iconHoverColor ? iconHoverColor : 'neutral2') : 'neutral3',
+  const onClickOutSide = () => setSelecting(false)
+  const onClickCalendarIcon = () => setSelecting(true)
+  const onChangeTime = (item: RangeKeyDict) => {
+    const startTime = item[RANGE_KEY].startDate?.getTime()
+    const endTime = item[RANGE_KEY].endDate?.getTime()
+    // if (startTime === endTime && endTime && state.endDate && endTime < state.endDate.getTime()) {
+    //   item[RANGE_KEY].endDate = state.endDate
+    // }
+    if (startTime && startTime < new Date(START_DATE).getTime()) {
+      item[RANGE_KEY].startDate = new Date(START_DATE)
+    }
+    if (endTime && endTime > Date.now()) {
+      const now = new Date()
+      now.setUTCHours(0, 0, 0, 0)
+      item[RANGE_KEY].endDate = now
+    }
+    setState(item[RANGE_KEY])
+  }
+  const onReset = () => {
+    setState({ startDate: from ?? today, endDate: to ?? today, key: 'selection' })
+  }
+  const onApply = () => {
+    changeTimeRange({ from: state.startDate, to: state.endDate })
+    setSelecting(false)
+    onSelectingChange?.()
+  }
+  const StyledButton = useCallback(
+    ({ children }: { children: ReactNode }) => {
+      if (buttonType === 'icon') {
+        return (
+          <ButtonWithIcon
+            icon={<Calendar size={20} />}
+            variant="ghost"
+            onClick={onClickCalendarIcon}
+            sx={{
+              px: [0, 1, 1, 1],
+              color: isRangeSelection ? 'neutral1' : 'neutral3',
+              '&:hover:not([disabled])': {
+                color: isRangeSelection ? 'neutral2' : 'neutral1',
+                '& svg': {
+                  color: isRangeSelection ? (iconHoverColor ? iconHoverColor : 'neutral2') : 'neutral3',
+                },
               },
-            },
-            '& svg': {
-              color: isRangeSelection ? (iconColor ? iconColor : 'neutral1') : 'neutral3',
-            },
-          }}
-        >
+              '& svg': {
+                color: isRangeSelection ? (iconColor ? iconColor : 'neutral1') : 'neutral3',
+              },
+            }}
+          >
+            {children}
+          </ButtonWithIcon>
+        )
+      }
+      return (
+        <Button variant="ghost" onClick={onClickCalendarIcon} sx={{ p: 0, fontWeight: 'normal' }}>
+          <Trans>Select Date</Trans>
+        </Button>
+      )
+    },
+    [buttonType, iconColor, iconHoverColor, isRangeSelection]
+  )
+  return (
+    <OutsideClickHandler onOutsideClick={onClickOutSide}>
+      <Box style={{ position: 'relative' }}>
+        <StyledButton>
           {isRangeSelection && (
             <Type.Caption
               flex="1 1 100%"
@@ -91,13 +139,12 @@ const RangeFilter = ({
                   color: 'neutral2',
                 },
               }}
-              // sx={{ borderBottom: 'small', pb: '2px', borderColor: 'primary1' }}
               display={forceDisplaySelectedDate ? 'block' : ['none', 'block']}
             >
               {dayjs(from).format(DATE_FORMAT)} - {dayjs(to).format(DATE_FORMAT)}
             </Type.Caption>
           )}
-        </ButtonWithIcon>
+        </StyledButton>
         <Box
           sx={{
             position: 'absolute',
@@ -123,56 +170,14 @@ const RangeFilter = ({
               minDate={new Date(START_DATE)}
               maxDate={new Date()}
               editableDateInputs={true}
-              onChange={(item: RangeKeyDict) => {
-                const startTime = item[RANGE_KEY].startDate?.getTime()
-                const endTime = item[RANGE_KEY].endDate?.getTime()
-                // if (startTime === endTime && endTime && state.endDate && endTime < state.endDate.getTime()) {
-                //   item[RANGE_KEY].endDate = state.endDate
-                // }
-                if (startTime && startTime < new Date(START_DATE).getTime()) {
-                  item[RANGE_KEY].startDate = new Date(START_DATE)
-                }
-                if (endTime && endTime > Date.now()) {
-                  const now = new Date()
-                  now.setUTCHours(0, 0, 0, 0)
-                  item[RANGE_KEY].endDate = now
-                }
-                setState(item[RANGE_KEY])
-              }}
+              onChange={onChangeTime}
               ranges={[state]}
             />
           </DateRangeWrapper>
-          <Button
-            size="sm"
-            variant="outline"
-            mt={2}
-            ml="auto"
-            mr={1}
-            onClick={() =>
-              setState({
-                startDate: from ?? today,
-                endDate: to ?? today,
-                key: 'selection',
-              })
-            }
-          >
+          <Button size="sm" variant="outline" mt={2} ml="auto" mr={1} onClick={onReset}>
             Reset
           </Button>
-          <Button
-            size="sm"
-            variant="primary"
-            mt={2}
-            mr="auto"
-            ml={1}
-            disabled={hasDisabledApply}
-            onClick={() => {
-              changeTimeRange({
-                from: state.startDate,
-                to: state.endDate,
-              })
-              setSelecting(false)
-            }}
-          >
+          <Button size="sm" variant="primary" mt={2} mr="auto" ml={1} disabled={hasDisabledApply} onClick={onApply}>
             Apply
           </Button>
         </Box>

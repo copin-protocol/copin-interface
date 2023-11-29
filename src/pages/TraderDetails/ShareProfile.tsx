@@ -10,7 +10,7 @@ import { TraderData } from 'entities/trader'
 import useMyProfile from 'hooks/store/useMyProfile'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
 import { IconBox } from 'theme/base'
-import { default as themeColors } from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { generateTraderCanvas } from 'utils/helpers/generateImage'
 import { generateParamsUrl, generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
@@ -32,7 +32,6 @@ export default function ShareProfile({
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
   const [image, setImage] = useState<ImageData | null>(null)
 
-  const colors = themeColors(true)
   const protocolImg = new Image(32, 32)
   protocolImg.src = parseProtocolImage(protocol ?? 'KWENTA')
   const logoImg = new Image(182, 42)
@@ -47,7 +46,7 @@ export default function ShareProfile({
       setIsGeneratingLink(true)
 
       // get Chart pnl
-      const canvas = generateTraderCanvas({ address, protocol, stats, colors, logoImg, protocolImg })
+      const canvas = generateTraderCanvas({ address, protocol, stats, colors: themeColors, logoImg, protocolImg })
       if (canvas) {
         canvas.toBlob((blob) => {
           async function share() {

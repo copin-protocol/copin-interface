@@ -12,6 +12,8 @@ function signOrderDelta(type: OrderTypeEnum, delta: number) {
     case OrderTypeEnum.CLOSE:
     case OrderTypeEnum.LIQUIDATE:
       return '-'
+    case OrderTypeEnum.MARGIN_TRANSFERRED:
+      return delta > 0 ? '+' : ''
     default:
       return ''
   }

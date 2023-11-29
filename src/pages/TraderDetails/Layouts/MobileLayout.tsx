@@ -63,7 +63,7 @@ const MobileLayout = ({ children }: LayoutProps) => {
       {tab === TabEnum.CHARTS && (
         <>
           <Box
-            height="260px"
+            height="300px"
             sx={{
               borderBottom: 'small',
               borderColor: 'neutral4',
@@ -71,7 +71,7 @@ const MobileLayout = ({ children }: LayoutProps) => {
           >
             {children[2]}
           </Box>
-          <Box height="max(calc(100vh - 540px), 330px)">{children[3]}</Box>
+          <Box height="max(calc(100vh - 580px), 330px)">{children[3]}</Box>
           {/* <Box
             p={12}
             sx={{

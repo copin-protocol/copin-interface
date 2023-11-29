@@ -1,0 +1,73 @@
+import { Trans } from '@lingui/macro'
+import { ReactNode } from 'react'
+
+import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
+import { TraderData } from 'entities/trader'
+import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
+import { renderTrader } from 'pages/MyProfile/renderProps'
+import { Box, Flex, Type } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
+import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
+
+export default function Stats({
+  traderData,
+  indicatorColor,
+  isLinkAddress = false,
+}: {
+  traderData: TraderData
+  indicatorColor: string
+  isLinkAddress?: boolean
+}) {
+  const { account, protocol, runTimeDays, lastTradeAt } = traderData
+  return (
+    <Box sx={{ p: 3, width: '100%', height: '100%', overflow: 'auto' }}>
+      <Flex sx={{ alignItems: 'center', gap: 2 }}>
+        <Box sx={{ width: '4px', height: 24, bg: indicatorColor }} />
+        {renderTrader(account, protocol, { isLink: isLinkAddress, dividerColor: 'neutral2', hasAddressTooltip: true })}
+      </Flex>
+      <Flex mt={3} sx={{ width: '100%', flexDirection: 'column', gap: 12 }}>
+        <StatsRow label={<Trans>Balance</Trans>} value={<BalanceText protocol={protocol} account={account} />} />
+        <StatsRow label={<Trans>Last Trade</Trans>} value={lastTradeAt ? formatLocalRelativeDate(lastTradeAt) : '--'} />
+        <StatsRow
+          label={<Trans>Runtime</Trans>}
+          value={
+            <Box as="span">
+              {runTimeDays ? (
+                <>
+                  {formatNumber(runTimeDays, 0, 0)} {runTimeDays > 1 ? <Trans>days</Trans> : <Trans>day</Trans>}
+                </>
+              ) : (
+                '--'
+              )}
+            </Box>
+          }
+        />
+        <TokenTrades account={account} protocol={protocol} />
+      </Flex>
+    </Box>
+  )
+}
+
+function TokenTrades({
+  account = '',
+  protocol = ProtocolEnum.GMX,
+}: {
+  account: string | undefined
+  protocol: ProtocolEnum | undefined
+}) {
+  const { data } = useGetTokensTraded({ account, protocol })
+  const tokens = data?.length ? data.map((address) => TOKEN_TRADE_SUPPORT[protocol][address].name).join(', ') : '--'
+  return <StatsRow label={<Trans>Markets</Trans>} value={tokens} />
+}
+
+function StatsRow({ label, value }: { label: ReactNode; value: ReactNode }) {
+  return (
+    <Flex sx={{ width: '100%', justifyContent: 'space-between', columnGap: 3, rowGap: 0, flexWrap: 'wrap' }}>
+      <Type.Caption color="neutral2" sx={{ flexShrink: 0 }}>
+        {label}
+      </Type.Caption>
+      <Type.CaptionBold>{value}</Type.CaptionBold>
+    </Flex>
+  )
+}

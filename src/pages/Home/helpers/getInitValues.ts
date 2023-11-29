@@ -6,8 +6,9 @@ import { TraderListSortProps } from 'components/Tables/TraderListTable/dataConfi
 import { TraderData } from 'entities/trader'
 import { SortTypeEnum } from 'utils/config/enums'
 import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { rankingFieldOptions } from 'utils/config/options'
 
-import { FilterTabEnum, defaultFieldOptions, rankingFieldOptions } from '../ConditionFilter/configs'
+import { FilterTabEnum, defaultFieldOptions } from '../ConditionFilter/configs'
 import { parseParams } from './handleParams'
 
 export const getInitValue = (searchParams: ParsedQs, key: string, defaultValue?: number) => {
@@ -41,7 +42,7 @@ export const getInitFilters = ({
       return filtersFromStorage
     } catch (error) {}
   }
-  const defaultFilters = accounts ? [] : getDefaultFormValues(['profit', 'winRate'], fieldOptions)
+  const defaultFilters = accounts ? [] : getDefaultFormValues(['pnl', 'winRate'], fieldOptions)
   return defaultFilters
 }
 
@@ -51,7 +52,7 @@ export const getInitFilterTab = ({ searchParams }: { searchParams: ParsedQs }) =
 }
 
 export const getInitSort = (searchParams: ParsedQs) => {
-  const initSortBy = searchParams?.sort_by ?? 'profit'
+  const initSortBy = searchParams?.sort_by ?? 'pnl'
   const initSortType = searchParams?.sort_type ?? SortTypeEnum.DESC
   return { sortBy: initSortBy as TraderListSortProps<TraderData>['sortBy'], sortType: initSortType as SortTypeEnum }
 }

@@ -2,7 +2,7 @@
 import { CaretDown, CaretUp } from '@phosphor-icons/react'
 import css, { SystemStyleObject } from '@styled-system/css'
 import RcDropdown from 'rc-dropdown'
-import React, { ReactNode, useState } from 'react'
+import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react'
 import OutsideClickHandler from 'react-outside-click-handler'
 import styled from 'styled-components/macro'
 import { GridProps, LayoutProps } from 'styled-system'
@@ -14,6 +14,8 @@ import { BoxProps, Colors } from 'theme/types'
 type Direction = 'left' | 'right'
 
 type DropdownProps = {
+  visible?: boolean
+  setVisible?: Dispatch<SetStateAction<boolean>>
   children: ReactNode
   menu: ReactNode
   upIcon?: ReactNode
@@ -22,7 +24,7 @@ type DropdownProps = {
   disabled?: boolean
   hasArrow?: boolean
   hoveringMode?: boolean
-  dismissable?: boolean
+  dismissible?: boolean
   button?: any
   sx?: SystemStyleObject & GridProps
   buttonSx?: SystemStyleObject & GridProps
@@ -34,7 +36,7 @@ type DropdownProps = {
   iconColor?: keyof Colors
   menuPosition?: 'top' | 'bottom'
   iconSize?: number
-  menuDismissable?: boolean
+  menuDismissible?: boolean
 }
 const ToggleButton = styled(Button)(({ sx }: { sx: SystemStyleObject & GridProps }) =>
   css({
@@ -77,12 +79,14 @@ const Menu = styled(Box)<BoxProps>(({ sx }: BoxProps) =>
 )
 
 const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
+  visible,
+  setVisible,
   children,
   menu,
   disabled,
   hoveringMode = false,
   hasArrow = true,
-  dismissable = true,
+  dismissible = true,
   handleScroll,
   placement,
   width,
@@ -97,9 +101,11 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
   menuPosition = 'bottom',
   onSubmit,
   onReset,
-  menuDismissable = false,
-}: DropdownProps & LayoutProps) => {
-  const [showing, show] = useState(false)
+  menuDismissible = false,
+}) => {
+  const [_showing, _show] = useState(false)
+  const showing = visible ?? _showing
+  const show = setVisible ?? _show
 
   return (
     <Box sx={sx}>
@@ -107,9 +113,10 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
         placement={placement}
         onOverlayClick={(e: any) => {
           e.stopPropagation()
-          if (dismissable) show(false)
+          if (!dismissible) return
+          show(false)
         }}
-        onVisibleChange={show}
+        onVisibleChange={!dismissible ? undefined : show}
         trigger={hoveringMode ? ['hover', 'click'] : ['click']}
         visible={showing}
         overlay={
@@ -129,7 +136,7 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
                   : {}
               }
             >
-              {menuDismissable ? (
+              {menuDismissible ? (
                 <OutsideClickHandler onOutsideClick={() => show(false)}>{menu}</OutsideClickHandler>
               ) : (
                 menu
@@ -167,7 +174,10 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
           variant={buttonVariant}
           type="button"
           disabled={disabled}
-          // onClick={(e: any) => !hoveringMode && toggleDropdown(e)}
+          key={dismissible ? undefined : showing.toString()}
+          onClick={() => {
+            if (!dismissible && !showing) show(true)
+          }}
           width={width}
           sx={{
             borderRadius: 'sm',

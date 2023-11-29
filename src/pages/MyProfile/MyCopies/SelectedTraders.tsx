@@ -1,4 +1,5 @@
 import { CopyTradeData } from 'entities/copyTrade'
+import { CopyTradeStatusEnum } from 'utils/config/enums'
 
 import SelectTradersDropdown, { TradersByProtocolData } from '../SelectTradersDropdown'
 
@@ -22,7 +23,7 @@ function SelectedTraders({
     checkerMapping[copyTrade.account] = { [copyTrade.protocol]: true }
     result[copyTrade.protocol] = [
       ...(result[copyTrade.protocol] ?? []),
-      { address: copyTrade.account, status: 'copying' },
+      { address: copyTrade.account, status: copyTrade.status === CopyTradeStatusEnum.RUNNING ? 'copying' : 'deleted' },
     ]
     return result
   }, {} as TradersByProtocolData)

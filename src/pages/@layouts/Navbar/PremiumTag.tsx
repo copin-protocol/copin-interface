@@ -5,14 +5,22 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 
 const PremiumTag = () => {
   const { myProfile } = useMyProfile()
-  const isPremium = myProfile && myProfile.copyTradeQuota > 3
+  const isPremium = myProfile && myProfile.plan === SubscriptionPlanEnum.PREMIUM
 
   return myProfile ? (
     <Box>
-      <Flex px={3} alignItems="center" sx={{ gap: 1 }} data-tip="React-tooltip" data-tooltip-id={`tt-premium`}>
+      <Flex
+        px={3}
+        alignItems="center"
+        sx={{ gap: 1 }}
+        data-tip="React-tooltip"
+        data-tooltip-id={`tt-premium`}
+        data-tooltip-delay-show={360}
+      >
         <IconBox
           icon={isPremium ? <CrownSimple weight="fill" /> : <PushPin weight="fill" />}
           color={isPremium ? 'orange1' : 'neutral2'}

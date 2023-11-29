@@ -22,6 +22,14 @@ export interface FieldOption<T> {
   default?: FilterCondition
   unit?: string
 }
+export interface RankingFieldOption<T> extends FieldOption<T> {
+  statLabel?: string
+  shortStatLabel?: string
+  tooltipContent?: string
+  statUnit?: string
+  format?: (value: any) => ReactNode
+  statFormat?: (value: any) => ReactNode
+}
 
 export interface ConditionOption {
   value: ConditionType
