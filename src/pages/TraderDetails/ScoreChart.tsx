@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { ReactNode, useCallback } from 'react'
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer, Tooltip } from 'recharts'
 
@@ -39,10 +40,16 @@ const ScoreChart = ({
       if (hiddenAxisTitle)
         return (
           <Box as="span">
-            {label} is better than {value} traders
+            <Trans>
+              {label} is better than {value} traders
+            </Trans>
           </Box>
         )
-      return <Box as="span">Better than {value} traders</Box>
+      return (
+        <Box as="span">
+          <Trans>Better than {value} traders</Trans>
+        </Box>
+      )
     },
     [hiddenAxisTitle]
   )

@@ -78,6 +78,7 @@ export default function TraderRankingExpanded({
       return [...result, rankingData]
     }, [] as ScoreChartData[])
   }
+  const activeRankingField = _rankingFieldOptions.map((option) => option.value)
 
   if (!layoutConfigs.position) return <></>
 
@@ -284,7 +285,11 @@ export default function TraderRankingExpanded({
             <Box sx={{ p: 3 }}>
               <SectionTitle icon={<ChartBar size={24} />} title={<Trans>Percentile Ranking Comparison</Trans>} />
               <Box mb={1} />
-              <PercentileRankingDetails data={traderData} comparedTrader={selectedTrader} />
+              <PercentileRankingDetails
+                data={traderData}
+                comparedTrader={selectedTrader}
+                activeFields={activeRankingField}
+              />
             </Box>
           </Box>
 

@@ -88,6 +88,10 @@ msgstr "ACTIVITIES"
 #~ msgid "ACTIVITY"
 #~ msgstr "ACTIVITY"
 
+#: src/pages/Settings/Layouts/Layout.tsx
+msgid "ALERT LIST"
+msgstr "ALERT LIST"
+
 #: src/components/Tables/HistoryTable.tsx
 #~ msgid "ALL"
 #~ msgstr "ALL"
@@ -96,6 +100,10 @@ msgstr "ACTIVITIES"
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Account"
 msgstr "Account"
+
+#: src/pages/MyProfile/SelectTradersDropdown.tsx
+msgid "Active"
+msgstr "Active"
 
 #: src/components/WalletDetailsCard/WalletInfo.tsx
 msgid "Active Copy"
@@ -114,9 +122,17 @@ msgstr "Activities"
 msgid "Activity Logs"
 msgstr "Activity Logs"
 
+#: src/pages/Settings/AlertList/TraderLastViewed.tsx
+msgid "Add Alert"
+msgstr "Add Alert"
+
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "Add referral successful!"
 msgstr "Add referral successful!"
+
+#: src/pages/Settings/AlertList/DesktopItem.tsx
+msgid "Added"
+msgstr "Added"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "After extending, please wait 5 minutes for system updates your subscription plan. We appreciate your patience!"
@@ -125,6 +141,16 @@ msgstr "After extending, please wait 5 minutes for system updates your subscript
 #: src/pages/Subscription/MintButton.tsx
 msgid "After minting, please wait about 3 minutes for system updates to access all features. We appreciate your patience!"
 msgstr "After minting, please wait about 3 minutes for system updates to access all features. We appreciate your patience!"
+
+#: src/pages/TraderDetails/AlertAction.tsx
+msgid "Alert"
+msgstr "Alert"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/Settings/AlertList/index.tsx
+#: src/pages/Settings/Layouts/Layout.tsx
+msgid "Alert List"
+msgstr "Alert List"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "Alert traders signal"
@@ -151,6 +177,10 @@ msgstr "Apply"
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Are you sure to logout?"
 msgstr "Are you sure to logout?"
+
+#: src/components/Modal/UnsubscribeAlertModal/index.tsx
+msgid "Are you sure you want to delete this trader from alert list?"
+msgstr "Are you sure you want to delete this trader from alert list?"
 
 #: src/pages/WalletManagement/AssetDistribution/index.tsx
 msgid "Asset Distribution"
@@ -216,6 +246,10 @@ msgstr "Basic Plan (FREE)"
 #: src/pages/Subscription/Plans.tsx
 msgid "Basic plan"
 msgstr "Basic plan"
+
+#: src/pages/TraderDetails/ScoreChart.tsx
+msgid "Better than {value} traders"
+msgstr "Better than {value} traders"
 
 #: src/utils/config/translations.tsx
 msgid "BingX"
@@ -353,6 +387,10 @@ msgstr "Confirm"
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 msgid "Confirming..."
 msgstr "Confirming..."
+
+#: src/pages/Subscription/MintButton.tsx
+msgid "Congratulations!"
+msgstr "Congratulations!"
 
 #: src/components/LoginAction/ConnectButton.tsx
 msgid "Connect Wallet"
@@ -508,6 +546,10 @@ msgstr "Details"
 msgid "Disconnect"
 msgstr "Disconnect"
 
+#: src/pages/Settings/AlertList/NoAlertList.tsx
+msgid "Discover more than 100,000+ traders on Copin"
+msgstr "Discover more than 100,000+ traders on Copin"
+
 #: src/pages/@layouts/Footer/index.tsx
 msgid "Docs"
 msgstr "Docs"
@@ -560,9 +602,21 @@ msgstr "Error"
 msgid "Error while place order"
 msgstr "Error while place order"
 
+#: src/pages/Settings/AlertList/NoAlertList.tsx
+msgid "Explorer Traders"
+msgstr "Explorer Traders"
+
+#: src/pages/Settings/AlertList/TraderLastViewed.tsx
+msgid "Explorer new traders"
+msgstr "Explorer new traders"
+
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "Extend"
 msgstr "Extend"
+
+#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+msgid "Extend Again"
+msgstr "Extend Again"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "Extend Now"
@@ -575,6 +629,10 @@ msgstr "Extend Your Subscription"
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "Extend plan"
 msgstr "Extend plan"
+
+#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+msgid "Extending"
+msgstr "Extending"
 
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 msgid "FAVORITES"
@@ -655,8 +713,12 @@ msgid "High Avg Volume"
 msgstr "High Avg Volume"
 
 #: src/utils/config/options.tsx
-msgid "High Max Roi"
-msgstr "High Max Roi"
+msgid "High Max ROI"
+msgstr "High Max ROI"
+
+#: src/utils/config/options.tsx
+#~ msgid "High Max Roi"
+#~ msgstr "High Max Roi"
 
 #: src/pages/TraderDetails/CustomizeRankingColumns.tsx
 #~ msgid "High PNL"
@@ -681,6 +743,10 @@ msgstr "High Win Rate"
 #: src/pages/MyProfile/Layouts/Layout.tsx
 msgid "History"
 msgstr "History"
+
+#: src/pages/@layouts/Footer/index.tsx
+msgid "Home"
+msgstr "Home"
 
 #: src/components/@ui/BingXHelp/index.tsx
 msgid "How to get BingX API Key?"
@@ -760,8 +826,8 @@ msgstr "LEADERBOARD"
 #~ msgstr "LIQUIDATED"
 
 #: src/pages/@layouts/Footer/index.tsx
-msgid "Landing Page"
-msgstr "Landing Page"
+#~ msgid "Landing Page"
+#~ msgstr "Landing Page"
 
 #: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Last 30 Days"
@@ -789,6 +855,10 @@ msgstr "Last Trade (All)"
 msgid "Last Updated:"
 msgstr "Last Updated:"
 
+#: src/pages/Settings/AlertList/TraderLastViewed.tsx
+msgid "Last Viewed"
+msgstr "Last Viewed"
+
 #: src/pages/Home/Layouts/HomeMobile.tsx
 msgid "Leaderboard"
 msgstr "Leaderboard"
@@ -804,6 +874,10 @@ msgstr "Leverage"
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 msgid "Limited"
 msgstr "Limited"
+
+#: src/pages/LinkBotTelegram/index.tsx
+msgid "Link Account"
+msgstr "Link Account"
 
 #: src/components/CreateWalletAction/index.tsx
 msgid "Link with your BingX account through API key. All your assets and your positions management by BingX. Lowest fee, CEX trading"
@@ -963,12 +1037,13 @@ msgid "Max Positions"
 msgstr "Max Positions"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
+#: src/utils/config/options.tsx
 msgid "Max ROI"
 msgstr "Max ROI"
 
 #: src/utils/config/options.tsx
-msgid "Max Roi"
-msgstr "Max Roi"
+#~ msgid "Max Roi"
+#~ msgstr "Max Roi"
 
 #: src/components/SubscriptionRestrictModal.tsx
 msgid "Maybe Later"
@@ -989,6 +1064,10 @@ msgid "Min ROI"
 msgstr "Min ROI"
 
 #: src/pages/Subscription/MintButton.tsx
+msgid "Mint Again"
+msgstr "Mint Again"
+
+#: src/pages/Subscription/MintButton.tsx
 msgid "Mint NFT"
 msgstr "Mint NFT"
 
@@ -1004,6 +1083,10 @@ msgstr "Mint Now"
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
 msgid "Mint to upgrade"
 msgstr "Mint to upgrade"
+
+#: src/pages/Subscription/MintButton.tsx
+msgid "Minting NFT"
+msgstr "Minting NFT"
 
 #: src/utils/config/options.tsx
 msgid "Monthly"
@@ -1032,6 +1115,7 @@ msgstr "Need help?"
 msgid "New Password"
 msgstr "New Password"
 
+#: src/components/Modal/UnsubscribeAlertModal/index.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 msgid "No"
@@ -1072,8 +1156,18 @@ msgstr "No trader data was found to compare in the past {0}"
 #~ msgstr "No, thank"
 
 #: src/components/ConfirmReferralModal/index.tsx
+#: src/components/Modal/LinkBotAlertModal/index.tsx
 msgid "No, thanks"
 msgstr "No, thanks"
+
+#: src/pages/Settings/UserSubscription/HasSubscription.tsx
+msgid "Note:"
+msgstr "Note:"
+
+#: src/components/Modal/LinkBotAlertModal/index.tsx
+#: src/pages/LinkBotTelegram/index.tsx
+msgid "Note: Each Telegram account is only allowed to link to a Copin account"
+msgstr "Note: Each Telegram account is only allowed to link to a Copin account"
 
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "Notice"
@@ -1098,6 +1192,11 @@ msgstr "Only"
 #: src/utils/config/translations.tsx
 msgid "Open"
 msgstr "Open"
+
+#: src/components/Modal/LinkBotAlertModal/index.tsx
+#: src/pages/LinkBotTelegram/index.tsx
+msgid "Open Telegram Bot"
+msgstr "Open Telegram Bot"
 
 #: src/pages/MyProfile/PositionTable/ListPositions.tsx
 msgid "Open:"
@@ -1240,6 +1339,10 @@ msgstr "Premium Plan"
 msgid "Premium plan"
 msgstr "Premium plan"
 
+#: src/pages/@layouts/Footer/index.tsx
+msgid "Pricing"
+msgstr "Pricing"
+
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #~ msgid "Profile"
 #~ msgstr "Profile"
@@ -1338,6 +1441,7 @@ msgid "Reload"
 msgstr "Reload"
 
 #: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
+#: src/pages/TraderDetails/AlertAction.tsx
 msgid "Remove"
 msgstr "Remove"
 
@@ -1453,6 +1557,10 @@ msgstr "Share DApp"
 msgid "Share Landing Page"
 msgstr "Share Landing Page"
 
+#: src/pages/Subscription/MintButton.tsx
+msgid "Share On:"
+msgstr "Share On:"
+
 #: src/pages/MyProfile/Referral/ReferralOverview.tsx
 #~ msgid "Share landing page"
 #~ msgstr "Share landing page"
@@ -1549,10 +1657,15 @@ msgstr "Subscription Plans"
 #: src/hooks/features/useUpdateCopyTrade.tsx
 #: src/hooks/web3/useContractMutation.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/LinkBotTelegram/index.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
 #: src/pages/MyProfile/UserActivity/configs.tsx
+#: src/pages/Settings/AlertList/TraderLastViewed.tsx
+#: src/pages/Settings/AlertList/index.tsx
+#: src/pages/TraderDetails/AlertAction.tsx
+#: src/pages/TraderDetails/AlertAction.tsx
 #: src/pages/TraderDetails/CopyTraderModal.tsx
 msgid "Success"
 msgstr "Success"
@@ -1695,9 +1808,23 @@ msgstr "This Page Could Not Be Found"
 msgid "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
 msgstr "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
 
+#: src/pages/LinkBotTelegram/index.tsx
+msgid "This bot alert has been subscribed successfully"
+msgstr "This bot alert has been subscribed successfully"
+
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
 msgid "This copy position has been closed successfully"
 msgstr "This copy position has been closed successfully"
+
+#: src/pages/Settings/AlertList/index.tsx
+#: src/pages/TraderDetails/AlertAction.tsx
+msgid "This trader alert has been removed successfully"
+msgstr "This trader alert has been removed successfully"
+
+#: src/pages/Settings/AlertList/TraderLastViewed.tsx
+#: src/pages/TraderDetails/AlertAction.tsx
+msgid "This trader alert has been subscribed successfully"
+msgstr "This trader alert has been subscribed successfully"
 
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "This trader list is empty"
@@ -1706,6 +1833,10 @@ msgstr "This trader list is empty"
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Time"
 msgstr "Time"
+
+#: src/pages/LinkBotTelegram/index.tsx
+msgid "To get notifications from traders, you must use Copin Telegram Bot"
+msgstr "To get notifications from traders, you must use Copin Telegram Bot"
 
 #: src/components/CreateSmartWalletModal/index.tsx
 msgid "To start, you need to create a smart wallet."
@@ -1930,6 +2061,8 @@ msgid "Update configs has been succeeded"
 msgstr "Update configs has been succeeded"
 
 #: src/components/SubscriptionRestrictModal.tsx
+#: src/pages/Settings/AlertList/index.tsx
+#: src/pages/Subscription/MintButton.tsx
 msgid "Upgrade Account"
 msgstr "Upgrade Account"
 
@@ -1998,6 +2131,10 @@ msgstr "Waiting..."
 msgid "Wallet"
 msgstr "Wallet"
 
+#: src/pages/Settings/AlertList/MobileItem.tsx
+msgid "Wallet Address"
+msgstr "Wallet Address"
+
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/WalletManagement/index.tsx
 msgid "Wallet Management"
@@ -2032,6 +2169,10 @@ msgstr "Weekly"
 msgid "What is smart wallet?"
 msgstr "What is smart wallet?"
 
+#: src/pages/Subscription/MintButton.tsx
+msgid "While you wait,"
+msgstr "While you wait,"
+
 #: src/utils/config/options.tsx
 msgid "Win Rate"
 msgstr "Win Rate"
@@ -2052,10 +2193,15 @@ msgstr "Wins"
 msgid "Would you like to upgrade your account?"
 msgstr "Would you like to upgrade your account?"
 
+#: src/components/Modal/LinkBotAlertModal/index.tsx
+msgid "Would you like to use a Copin’s Telegram Bot to receive your trader’s alert?"
+msgstr "Would you like to use a Copin’s Telegram Bot to receive your trader’s alert?"
+
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "Would you like to use a referral code?"
 msgstr "Would you like to use a referral code?"
 
+#: src/components/Modal/UnsubscribeAlertModal/index.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 msgid "Yes"
@@ -2109,6 +2255,14 @@ msgstr "You will extend your plan for an additional"
 msgid "You will receive <0>30 days</0> Premium NFT Plan"
 msgstr "You will receive <0>30 days</0> Premium NFT Plan"
 
+#: src/components/Modal/UnsubscribeAlertModal/index.tsx
+msgid "You won’t be notified each time this trader engages in new activity."
+msgstr "You won’t be notified each time this trader engages in new activity."
+
+#: src/pages/Settings/UserSubscription/HasSubscription.tsx
+msgid "You'll still have access to Premium after your NFT expires in 30 minutes. Keep an eye on the renewal time."
+msgstr "You'll still have access to Premium after your NFT expires in 30 minutes. Keep an eye on the renewal time."
+
 #: src/components/Modal/CreateBingXWalletModal.tsx
 msgid "Your BingX API Key"
 msgstr "Your BingX API Key"
@@ -2137,6 +2291,14 @@ msgstr "Your NFT expires in {0} days"
 msgid "Your NFT expires in {0}h {1}m {2}s"
 msgstr "Your NFT expires in {0}h {1}m {2}s"
 
+#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+msgid "Your NFT has been extended successfully"
+msgstr "Your NFT has been extended successfully"
+
+#: src/pages/Subscription/MintButton.tsx
+msgid "Your NFT has been successfully minted"
+msgstr "Your NFT has been successfully minted"
+
 #: src/components/NFTSubscriptionCard.tsx
 msgid "Your NFT is expired"
 msgstr "Your NFT is expired"
@@ -2160,6 +2322,10 @@ msgstr "Your premium status lasts for 30 days, after which the NFT expires and c
 #: src/hooks/features/useUpdateCopyTrade.tsx
 msgid "Your update has been succeeded"
 msgstr "Your update has been succeeded"
+
+#: src/pages/Subscription/MintButton.tsx
+msgid "continue exploring Copin"
+msgstr "continue exploring Copin"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/Stats.tsx
 msgid "day"
@@ -2213,6 +2379,10 @@ msgstr "{0}"
 #: src/pages/MyProfile/SelectTradersDropdown.tsx
 msgid "{0} traders"
 msgstr "{0} traders"
+
+#: src/pages/TraderDetails/ScoreChart.tsx
+msgid "{label} is better than {value} traders"
+msgstr "{label} is better than {value} traders"
 
 #: src/theme/Tab/IconTabItem.tsx
 msgid "{text}"
