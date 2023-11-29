@@ -86,7 +86,7 @@ export const getCopyTradePnLApi = ({
   copyWalletId: string | undefined
 }) =>
   requester
-    .get(`${SERVICE}/statistic/balance-snapshots`, { params: { exchange, copyWalletId, from, to } })
+    .get(`${SERVICE}/statistic/balance-snapshots`, { params: { exchange, from, to, uniqueKey: copyWalletId } })
     .then((res) => res.data?.data as CopyTradePnL[])
 
 export async function getTradersCopyingApi(protocol?: ProtocolEnum): Promise<string[]> {

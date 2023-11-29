@@ -66,6 +66,7 @@ export type GetMyPositionRequestBody = {
   copyTradeIds?: string[]
   traders?: string[]
   copyWalletId?: string
+  copyWalletIds?: string[]
 }
 
 export type GetLeaderboardParams = GetApiParams & {
