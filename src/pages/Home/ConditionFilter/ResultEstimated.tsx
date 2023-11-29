@@ -23,7 +23,10 @@ export default function ResultEstimated({
 }) {
   const effectDays = getDurationFromTimeFilter(timeOption.id)
   const { data, isLoading } = useTradersCount({ ranges, timeOption, protocol })
-  return !!isLoading || !!data?.length ? (
+  const lastData = data?.at?.(-1)
+  const percent = lastData && lastData?.total > 0 ? ((lastData?.counter ?? 0) * 100) / lastData.total : 0
+  const count = lastData?.counter ?? 0
+  return (
     <Flex
       sx={{
         px: 3,
@@ -51,44 +54,42 @@ export default function ResultEstimated({
           data.map((value, index) => {
             const { counter, total } = value
             const percent = total > 0 ? (counter * 100) / total : 0
-            const isLast = index === data.length - 1
             return (
               <Box key={index}>
                 <Progress width={percent + 2} p={0} bg={COLORS[index]} />
-                <Absolute
-                  top={'-32px'}
-                  left={percent < 50 ? `${percent}%` : undefined}
-                  right={percent >= 50 ? `${100 - percent}%` : undefined}
-                  sx={{ display: isLast ? 'block' : 'none' }}
-                >
-                  <Flex alignItems="center" sx={{ gap: 1 }}>
-                    <Type.Caption width="max-content" color={isLast ? 'neutral1' : 'neutral3'}>
-                      {percent.toFixed(1)}%
-                    </Type.Caption>
-                    <Type.Caption minWidth="max-content" color="neutral3" py={2}>
-                      traders fit conditions in {formatNumber(effectDays, 0)} days
-                    </Type.Caption>
-                  </Flex>
-                </Absolute>
-
-                <Absolute
-                  bottom={'-25px'}
-                  left={percent < 50 ? `${percent}%` : undefined}
-                  right={percent >= 50 ? `${100 - percent}%` : undefined}
-                  sx={{ display: isLast ? 'block' : 'none' }}
-                >
-                  <Type.Caption color={isLast ? 'neutral1' : 'neutral3'}>{nFormatter(counter, 1)}</Type.Caption>
-                </Absolute>
               </Box>
             )
           })}
+
+        <Absolute
+          top={'-32px'}
+          left={percent < 50 ? `${percent}%` : undefined}
+          right={percent >= 50 ? `${100 - percent}%` : undefined}
+        >
+          <Flex alignItems="center" sx={{ gap: 1 }}>
+            <Type.Caption width="max-content" color={'neutral1'}>
+              {data ? `${percent.toFixed(1)}%` : '--'}
+            </Type.Caption>
+            <Type.Caption minWidth="max-content" color="neutral3" py={2}>
+              traders fit conditions in {formatNumber(effectDays, 0)} days
+            </Type.Caption>
+          </Flex>
+        </Absolute>
+
+        <Absolute
+          bottom={'-25px'}
+          left={percent < 50 ? `${percent}%` : undefined}
+          right={percent >= 50 ? `${100 - percent}%` : undefined}
+        >
+          <Type.Caption color={'neutral1'}>{data ? nFormatter(count, 1) : '--'}</Type.Caption>
+        </Absolute>
 
         <Absolute bottom={'-25px'} right={'-2px'}>
           {data && <Type.Caption color="neutral3">{nFormatter(data[0]?.total ?? 0, 1)}</Type.Caption>}
         </Absolute>
       </Box>
     </Flex>
-  ) : null
+  )
 }
 
 const Absolute = styled(Box)<{

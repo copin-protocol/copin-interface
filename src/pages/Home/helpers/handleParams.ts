@@ -30,6 +30,8 @@ export function stringifyParams(option: ConditionFormValues<TraderData>) {
   let params = ''
   Object.values(option).forEach((values, index) => {
     if (!!values) {
+      const gte = values.gte ?? 0
+      const lte = values.lte ?? 0
       if (index !== 0) {
         params += '__'
       }
@@ -38,13 +40,21 @@ export function stringifyParams(option: ConditionFormValues<TraderData>) {
         params += '_'
         params += values.conditionType
       }
-      if (typeof values.gte === 'number') {
+      if (values.conditionType === 'between') {
         params += '_'
-        params += values.gte.toString()
+        params += gte.toString()
+        params += '_'
+        params += lte.toString()
+        return
       }
-      if (typeof values.lte === 'number') {
+      if (values.conditionType === 'gte') {
         params += '_'
-        params += values.lte.toString()
+        params += gte.toString()
+        return
+      }
+      if (values.conditionType === 'lte') {
+        params += '_'
+        params += lte.toString()
       }
     }
   })
