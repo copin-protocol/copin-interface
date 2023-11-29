@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { ArrowSquareOut, CheckCircle, FacebookLogo, TelegramLogo, Warning, XCircle } from '@phosphor-icons/react'
+import { ArrowSquareOut, CheckCircle, FacebookLogo, TelegramLogo, XCircle } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 import { ReactNode, useRef, useState } from 'react'
 import ConfettiExplosion from 'react-confetti-explosion'
@@ -15,6 +14,7 @@ import defaultNft from 'assets/images/default-nft.webp'
 import Divider from 'components/@ui/Divider'
 import ETHPriceInUSD from 'components/ETHPriceInUSD'
 import { useClickLoginButton } from 'components/LoginAction'
+import Num from 'entities/Num'
 import useSubscriptionContract from 'hooks/features/useSubscriptionContract'
 import useUserSubscription from 'hooks/features/useUserSubscription'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
@@ -23,7 +23,6 @@ import { useAuthContext } from 'hooks/web3/useAuth'
 import useChain from 'hooks/web3/useChain'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
-import Alert from 'theme/Alert'
 import { Button } from 'theme/Buttons'
 import TwitterIcon from 'theme/Icons/TwitterIcon'
 import Loading from 'theme/Loading'
@@ -34,7 +33,7 @@ import { APP_URL } from 'utils/config/constants'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getContractErrorMessage } from 'utils/helpers/handleError'
-import { GOERLI } from 'utils/web3/chains'
+import { SUBSCRIPTION_CHAIN_ID } from 'utils/web3/chains'
 
 import CopinIcon from './CopinIcon'
 
@@ -108,7 +107,7 @@ function MintModal({
   onDismiss: () => void
   planPrice: BigNumber | undefined
 }) {
-  const { isValid, alert } = useRequiredChain({ chainId: GOERLI })
+  const { isValid, alert } = useRequiredChain({ chainId: SUBSCRIPTION_CHAIN_ID })
   const subscriptionContract = useSubscriptionContract()
   const [state, setState] = useState<MintState>('preparing')
   const subscriptionMutation = useContractMutation(subscriptionContract, {
@@ -178,7 +177,8 @@ function MintModal({
 }
 
 function PrepairingState({ planPrice }: { planPrice: BigNumber | undefined }) {
-  if (!planPrice) return <></>
+  const price = planPrice ? new Num(planPrice) : undefined
+  if (!price) return <></>
 
   return (
     <Box>
@@ -193,18 +193,10 @@ function PrepairingState({ planPrice }: { planPrice: BigNumber | undefined }) {
             Premium NFT Plan
           </Trans>
         </Type.Caption>
-        <Type.H5>
-          <Box as="span" color="orange1">
-            <ETHPriceInUSD value={planPrice} />$
-          </Box>
-          <Box as="span" color="neutral1" sx={{ fontSize: '13px', fontWeight: 400 }}>
-            {' '}
-            (~{formatEther(planPrice)}ETH)
-          </Box>
-        </Type.H5>
+        <ModalPriceFormat price={price} />
       </Flex>
       <Divider my={20} />
-      <Alert
+      {/* <Alert
         variant="cardWarning"
         message={
           <Flex sx={{ gap: 2, alignItems: 'center' }}>
@@ -220,8 +212,26 @@ function PrepairingState({ planPrice }: { planPrice: BigNumber | undefined }) {
             patience!
           </Trans>
         }
-      />
+      /> */}
     </Box>
+  )
+}
+export function ModalPriceFormat({ price }: { price: Num }) {
+  return (
+    <Type.H5>
+      <Box as="span" color="orange1">
+        {price.str}
+      </Box>
+      <Box as="span" sx={{ fontSize: '20px', ml: '0.3ch' }} color="orange1">
+        ETH
+      </Box>
+      <Box as="span" color="neutral1" sx={{ fontSize: '13px', fontWeight: 400 }}>
+        {' '}
+        (~
+        <ETHPriceInUSD value={price.bn} />
+        $)
+      </Box>
+    </Type.H5>
   )
 }
 
@@ -231,13 +241,13 @@ export function ProcessingState({
   isSyncing,
   onSyncSuccess,
   txHash,
-  processingText = <Trans>Minting NFT</Trans>,
+  processingText = [<Trans key={1}>Minted NFT</Trans>, <Trans key={2}>Minting NFT</Trans>],
 }: {
   isProcessing: boolean
   isSyncing: boolean
   onSyncSuccess: () => void
   txHash: string | undefined
-  processingText?: ReactNode
+  processingText?: ReactNode[]
 }) {
   const { chain } = useChain()
   const refetchTime = useRef(0)
@@ -285,56 +295,87 @@ export function ProcessingState({
   })
   return (
     <Box p={24}>
-      <Flex mb={3} sx={{ alignItems: 'center', gap: 18 }}>
-        {isProcessing ? (
-          <Loading size={20} background="neutral3" indicatorColor="orange1" sx={{ margin: '2px !important' }} />
-        ) : isSyncing ? (
-          <IconBox icon={<CheckCircle size={24} />} color="green1" />
-        ) : (
-          <Box
-            sx={{ m: '2px', width: 20, height: 20, borderRadius: '50%', border: '2px solid', borderColor: 'neutral3' }}
-          />
-        )}
-        <Type.Body
-          color={isProcessing ? 'orange1' : isSyncing ? 'green1' : 'neutral3'}
-          sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
-        >
-          <span>{processingText}</span>
-          {txHash && isSyncing && (
-            <a
-              href={`${chain.blockExplorerUrl}/tx/${txHash}`}
-              rel="noreferrer"
-              target="_blank"
-              style={{ color: 'inherit', display: 'flex', alignItems: 'center' }}
-            >
-              <ArrowSquareOut size={20} />
-            </a>
+      <Box sx={{ position: 'relative' }}>
+        <Box
+          sx={{
+            width: '1px',
+            height: '12px',
+            bg: 'neutral3',
+            position: 'absolute',
+            left: 12,
+            top: 26,
+          }}
+        />
+        <Flex mb={3} sx={{ alignItems: 'center', gap: 12 }}>
+          {isProcessing ? (
+            <Loading size={20} background="neutral3" indicatorColor="orange1" sx={{ margin: '2px !important' }} />
+          ) : isSyncing ? (
+            <IconBox icon={<CheckCircle size={24} />} color="green1" />
+          ) : (
+            <Box
+              sx={{
+                m: '2px',
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                border: '2px solid',
+                borderColor: 'neutral3',
+              }}
+            />
           )}
-        </Type.Body>
-      </Flex>
-      <Flex mb={4} sx={{ alignItems: 'center', gap: 18 }}>
-        {isSyncing ? (
-          <Loading size={20} background="neutral3" indicatorColor="orange1" sx={{ margin: '2px !important' }} />
-        ) : (
-          <Box
-            sx={{ m: '2px', width: 20, height: 20, borderRadius: '50%', border: '2px solid', borderColor: 'neutral3' }}
-          />
-        )}
-        <Type.Body color={isSyncing ? 'orange1' : 'neutral3'}>
-          <Trans>Upgrade Account</Trans>
-        </Type.Body>
-      </Flex>
-      <Type.Body sx={{ display: 'flex', gap: '0.5ch', alignItems: 'center', flexWrap: 'wrap' }}>
-        <span>
-          <Trans>While you wait,</Trans>
-        </span>
-        <Link to="/" target="_blank" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <span>
-            <Trans>continue exploring Copin</Trans>
-          </span>
-          <IconBox icon={<ArrowSquareOut size={20} />} color="inherit" />
-        </Link>
-      </Type.Body>
+          <Type.Body
+            color={isProcessing ? 'orange1' : isSyncing ? 'green1' : 'neutral3'}
+            sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+          >
+            <span>{isProcessing ? processingText[1] : processingText[0]}</span>
+            {txHash && isSyncing && (
+              <a
+                href={`${chain.blockExplorerUrl}/tx/${txHash}`}
+                rel="noreferrer"
+                target="_blank"
+                style={{ color: 'inherit', display: 'flex', alignItems: 'center' }}
+              >
+                <ArrowSquareOut size={20} />
+              </a>
+            )}
+          </Type.Body>
+        </Flex>
+        <Flex mb={4} sx={{ alignItems: 'center', gap: 12 }}>
+          {isSyncing ? (
+            <Loading size={20} background="neutral3" indicatorColor="orange1" sx={{ margin: '2px !important' }} />
+          ) : (
+            <Box
+              sx={{
+                m: '2px',
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                border: '2px solid',
+                borderColor: 'neutral3',
+              }}
+            />
+          )}
+          <Type.Body color={isSyncing ? 'orange1' : 'neutral3'}>
+            {isSyncing ? <Trans>Syncing Onchain Data</Trans> : <Trans>Sync Onchain Data</Trans>}
+          </Type.Body>
+        </Flex>
+      </Box>
+      {isSyncing && (
+        <>
+          <Divider mb={3} />
+          <Type.Caption sx={{ display: 'flex', gap: '0.5ch', alignItems: 'center', flexWrap: 'wrap' }}>
+            <span>
+              <Trans>Sync progress may take approximately 5 minutes. Continue using Copin while syncing?</Trans>{' '}
+              <Link to="/" target="_blank" style={{ display: 'inline-flex', gap: 1, alignItems: 'center' }}>
+                <span>
+                  <Trans>Open Homepage</Trans>
+                </span>
+                <IconBox icon={<ArrowSquareOut size={16} />} color="inherit" />
+              </Link>
+            </span>
+          </Type.Caption>
+        </>
+      )}
     </Box>
   )
 }

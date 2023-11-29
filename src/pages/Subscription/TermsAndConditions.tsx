@@ -49,8 +49,8 @@ export default function TermsAndConditions({ text: Text = Type.Body }: { text?: 
 const termConfigs = [
   <Trans>To unlock premium features, mint a Copin NFT.</Trans>,
   <Trans>
-    Your premium status lasts for 30 days, after which the NFT expires and cannot be traded or used for premium access.
-    To continue, mint a new NFT.
+    Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To
+    continue, mint a new NFT.
   </Trans>,
   <Trans>A 10% loyalty fee applies when trading the NFT.</Trans>,
 ]

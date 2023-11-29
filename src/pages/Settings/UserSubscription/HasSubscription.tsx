@@ -2,18 +2,23 @@ import { Trans } from '@lingui/macro'
 import { CheckCircle, Note } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 
+import NoDataFound from 'components/@ui/NoDataFound'
 import NFTSubscriptionCard from 'components/NFTSubscriptionCard'
-import { UserSubscriptionData } from 'entities/user'
+import useUserSubscription from 'hooks/features/useUserSubscription'
 import { planConfigs } from 'pages/Subscription/Plans'
 import Alert from 'theme/Alert'
 import { CrowIconGold } from 'theme/Icons/CrowIcon'
+import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { SUBSCRIPTION_COLLECTION_URL } from 'utils/config/constants'
 
 import ExtendPlan from './ExtendPlan'
 import OpenseaIcon from './OpenseaIcon'
 
-export default function HasSubscription({ data }: { data: UserSubscriptionData }) {
+export default function HasSubscription() {
+  const { data, isFetching } = useUserSubscription()
+  if (isFetching) return <Loading />
+  if (!data) return <NoDataFound />
   const nftExpired = dayjs.utc(data.expiredTime).valueOf() < dayjs.utc().valueOf()
   return (
     <>

@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { CheckCircle } from '@phosphor-icons/react'
 
-import ETHPriceInUSD from 'components/ETHPriceInUSD'
+import Num from 'entities/Num'
 import { CrowIconGold } from 'theme/Icons/CrowIcon'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 
@@ -11,6 +11,7 @@ import MintButton from './MintButton'
 import { PlanRowWrapper } from './styled'
 
 export default function Plans({ planPrice }: { planPrice: BigNumber | undefined }) {
+  const price = planPrice ? new Num(planPrice) : undefined
   return (
     <Box
       sx={{
@@ -45,10 +46,10 @@ export default function Plans({ planPrice }: { planPrice: BigNumber | undefined 
             </Flex>
             <Type.H2>
               <Box as="span" color="orange1">
-                <ETHPriceInUSD value={planPrice} />
+                {price ? `${price.str}` : '--'}
               </Box>
-              <Box as="span" sx={{ fontSize: '24px' }} color="orange1">
-                $
+              <Box as="span" sx={{ fontSize: '24px', ml: '0.3ch' }} color="orange1">
+                ETH
               </Box>
               <Box as="span" sx={{ fontSize: '16px' }} color="neutral1" fontWeight={400}>
                 {' '}
@@ -86,6 +87,7 @@ export default function Plans({ planPrice }: { planPrice: BigNumber | undefined 
 }
 
 export function MobilePlans({ planPrice }: { planPrice: BigNumber | undefined }) {
+  const price = planPrice ? new Num(planPrice) : undefined
   return (
     <>
       <Flex
@@ -119,7 +121,7 @@ export function MobilePlans({ planPrice }: { planPrice: BigNumber | undefined })
         }}
       >
         <Type.LargeBold textAlign="center" color="orange1">
-          <Trans>Premium Plan</Trans> (<ETHPriceInUSD value={planPrice} />$ /30days)
+          <Trans>Premium Plan</Trans> ({price?.str ?? '--'}ETH /30days)
         </Type.LargeBold>
         {planConfigs.features.map((value, index) => (
           <Flex key={index} sx={{ alignItems: 'center', gap: 3 }}>

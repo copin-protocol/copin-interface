@@ -125,10 +125,10 @@ function RankingComparedItem({
     <>
       <Flex sx={{ alignItems: 'center', gap: 2 }}>
         <Type.Caption
+          color={isActive ? 'neutral1' : 'neutral2'}
           sx={{
             width: [120, 120, 120, 120, 140],
             flexShrink: 0,
-            color: isActive ? 'neutral1' : 'neutral2',
             fontWeight: isActive ? 'bold' : 'normal',
           }}
         >

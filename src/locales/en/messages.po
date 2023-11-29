@@ -135,12 +135,12 @@ msgid "Added"
 msgstr "Added"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
-msgid "After extending, please wait 5 minutes for system updates your subscription plan. We appreciate your patience!"
-msgstr "After extending, please wait 5 minutes for system updates your subscription plan. We appreciate your patience!"
+#~ msgid "After extending, please wait 5 minutes for system updates your subscription plan. We appreciate your patience!"
+#~ msgstr "After extending, please wait 5 minutes for system updates your subscription plan. We appreciate your patience!"
 
 #: src/pages/Subscription/MintButton.tsx
-msgid "After minting, please wait about 3 minutes for system updates to access all features. We appreciate your patience!"
-msgstr "After minting, please wait about 3 minutes for system updates to access all features. We appreciate your patience!"
+#~ msgid "After minting, please wait about 3 minutes for system updates to access all features. We appreciate your patience!"
+#~ msgstr "After minting, please wait about 3 minutes for system updates to access all features. We appreciate your patience!"
 
 #: src/pages/TraderDetails/AlertAction.tsx
 msgid "Alert"
@@ -302,8 +302,8 @@ msgstr "Cannot interact with contract at this moment"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 #: src/pages/Subscription/MintButton.tsx
-msgid "Caution !!!"
-msgstr "Caution !!!"
+#~ msgid "Caution !!!"
+#~ msgstr "Caution !!!"
 
 #: src/hooks/web3/useAuth.tsx
 #~ msgid "Chain Error"
@@ -629,6 +629,10 @@ msgstr "Extend Your Subscription"
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "Extend plan"
 msgstr "Extend plan"
+
+#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+msgid "Extended"
+msgstr "Extended"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "Extending"
@@ -1085,6 +1089,10 @@ msgid "Mint to upgrade"
 msgstr "Mint to upgrade"
 
 #: src/pages/Subscription/MintButton.tsx
+msgid "Minted NFT"
+msgstr "Minted NFT"
+
+#: src/pages/Subscription/MintButton.tsx
 msgid "Minting NFT"
 msgstr "Minting NFT"
 
@@ -1192,6 +1200,10 @@ msgstr "Only"
 #: src/utils/config/translations.tsx
 msgid "Open"
 msgstr "Open"
+
+#: src/pages/Subscription/MintButton.tsx
+msgid "Open Homepage"
+msgstr "Open Homepage"
 
 #: src/components/Modal/LinkBotAlertModal/index.tsx
 #: src/pages/LinkBotTelegram/index.tsx
@@ -1678,6 +1690,18 @@ msgstr "Suggestion:"
 #~ msgid "Swap ETH to sUSD (Goerli)"
 #~ msgstr "Swap ETH to sUSD (Goerli)"
 
+#: src/pages/Subscription/MintButton.tsx
+msgid "Sync Onchain Data"
+msgstr "Sync Onchain Data"
+
+#: src/pages/Subscription/MintButton.tsx
+msgid "Sync progress may take approximately 5 minutes. Continue using Copin while syncing?"
+msgstr "Sync progress may take approximately 5 minutes. Continue using Copin while syncing?"
+
+#: src/pages/Subscription/MintButton.tsx
+msgid "Syncing Onchain Data"
+msgstr "Syncing Onchain Data"
+
 #: src/utils/config/translations.tsx
 msgid "Synthetix"
 msgstr "Synthetix"
@@ -2062,7 +2086,6 @@ msgstr "Update configs has been succeeded"
 
 #: src/components/SubscriptionRestrictModal.tsx
 #: src/pages/Settings/AlertList/index.tsx
-#: src/pages/Subscription/MintButton.tsx
 msgid "Upgrade Account"
 msgstr "Upgrade Account"
 
@@ -2170,8 +2193,8 @@ msgid "What is smart wallet?"
 msgstr "What is smart wallet?"
 
 #: src/pages/Subscription/MintButton.tsx
-msgid "While you wait,"
-msgstr "While you wait,"
+#~ msgid "While you wait,"
+#~ msgstr "While you wait,"
 
 #: src/utils/config/options.tsx
 msgid "Win Rate"
@@ -2316,16 +2339,20 @@ msgstr "Your copy may failed due to insufficient available margin"
 #~ msgstr "Your premium status lasts for 30 days, after which the NFT expires and cannot be traded or used for premium access. To continue, mint a new NFT"
 
 #: src/pages/Subscription/TermsAndConditions.tsx
-msgid "Your premium status lasts for 30 days, after which the NFT expires and cannot be traded or used for premium access. To continue, mint a new NFT."
-msgstr "Your premium status lasts for 30 days, after which the NFT expires and cannot be traded or used for premium access. To continue, mint a new NFT."
+#~ msgid "Your premium status lasts for 30 days, after which the NFT expires and cannot be traded or used for premium access. To continue, mint a new NFT."
+#~ msgstr "Your premium status lasts for 30 days, after which the NFT expires and cannot be traded or used for premium access. To continue, mint a new NFT."
+
+#: src/pages/Subscription/TermsAndConditions.tsx
+msgid "Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To continue, mint a new NFT."
+msgstr "Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To continue, mint a new NFT."
 
 #: src/hooks/features/useUpdateCopyTrade.tsx
 msgid "Your update has been succeeded"
 msgstr "Your update has been succeeded"
 
 #: src/pages/Subscription/MintButton.tsx
-msgid "continue exploring Copin"
-msgstr "continue exploring Copin"
+#~ msgid "continue exploring Copin"
+#~ msgstr "continue exploring Copin"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/Stats.tsx
 msgid "day"

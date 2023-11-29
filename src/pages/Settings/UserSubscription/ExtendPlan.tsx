@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { Warning } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -11,15 +10,14 @@ import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import CopinIcon from 'pages/Subscription/CopinIcon'
-import { ProcessingState, SuccessState } from 'pages/Subscription/MintButton'
-import Alert from 'theme/Alert'
+import { ModalPriceFormat, ProcessingState, SuccessState } from 'pages/Subscription/MintButton'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import Radio from 'theme/Radio'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { formatNumber } from 'utils/helpers/format'
 import { getContractErrorMessage } from 'utils/helpers/handleError'
-import { GOERLI } from 'utils/web3/chains'
+import { SUBSCRIPTION_CHAIN_ID } from 'utils/web3/chains'
 
 type Config = {
   monthCount: number
@@ -101,13 +99,16 @@ export default function ExtendPlan({ tokenId }: { tokenId: number }) {
                       }}
                     >
                       <Box as="span" sx={{ flexShrink: 0 }}>
-                        <ETHPriceInUSD value={data.price.bn} />$
+                        {data.price.str}
+                        <Box as="span" sx={{ flexShrink: 0, fontSize: '20px', lineHeight: '28px', ml: '0.3ch' }}>
+                          ETH
+                        </Box>
                       </Box>
                       <Box
                         as="span"
                         sx={{ fontSize: '13px', lineHeight: '24px', fontWeight: 'normal', color: 'neutral1' }}
                       >
-                        ({data.price.str}ETH
+                        (<ETHPriceInUSD value={data.price.bn} />$
                         {data.discountRatio !== 1 && (
                           <>
                             {' - '}
@@ -152,7 +153,7 @@ function ExtendModal({
   data: Config | undefined
   tokenId: number | undefined
 }) {
-  const { isValid, alert } = useRequiredChain({ chainId: GOERLI })
+  const { isValid, alert } = useRequiredChain({ chainId: SUBSCRIPTION_CHAIN_ID })
   const subscriptionContract = useSubscriptionContract()
   const [state, setState] = useState<ExtendState>('preparing')
   const subscriptionMutation = useContractMutation(subscriptionContract, {
@@ -207,7 +208,7 @@ function ExtendModal({
               isSyncing={state === 'syncing'}
               onSyncSuccess={handleSyncSuccess}
               txHash={subscriptionMutation.data?.transactionHash}
-              processingText={<Trans>Extending</Trans>}
+              processingText={[<Trans key="extended">Extended</Trans>, <Trans key="extending">Extending</Trans>]}
             />
           )}
           {isSuccess && (
@@ -233,18 +234,10 @@ function PrepairingState({ config }: { config: Config }) {
             {config.monthCount * 30} days
           </Box>
         </Type.Caption>
-        <Type.H5>
-          <Box as="span" color="orange1">
-            <ETHPriceInUSD value={config.price.bn} />$
-          </Box>
-          <Box as="span" color="neutral1" sx={{ fontSize: '13px', fontWeight: 400 }}>
-            {' '}
-            (~{config.price.str}ETH)
-          </Box>
-        </Type.H5>
+        <ModalPriceFormat price={config.price} />
       </Flex>
       <Divider my={20} />
-      <Alert
+      {/* <Alert
         variant="cardWarning"
         message={
           <Flex sx={{ gap: 2, alignItems: 'center' }}>
@@ -260,7 +253,7 @@ function PrepairingState({ config }: { config: Config }) {
             patience!
           </Trans>
         }
-      />
+      /> */}
     </Box>
   )
 }

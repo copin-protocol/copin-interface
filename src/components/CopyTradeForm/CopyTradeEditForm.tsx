@@ -29,7 +29,7 @@ export default function CopyTradeEditForm({
   const defaultFormValues = useMemo(() => getFormValuesFromResponseData(copyTradeData), [copyTradeData])
 
   const onSubmit = (formData: CopyTradeFormValues) => {
-    if (isQuotaExceed) {
+    if (isQuotaExceed && copyTradeData?.status === CopyTradeStatusEnum.STOPPED) {
       handleQuotaExceed()
       return
     }

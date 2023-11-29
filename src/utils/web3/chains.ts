@@ -9,6 +9,7 @@ export const ARBITRUM_MAINNET = 42161
 export const ARBITRUM_GOERLI = 421613
 export const ZKSYNC_ERA_MAINNET = 324
 export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_GOERLI : OPTIMISM_MAINNET
+export const SUBSCRIPTION_CHAIN_ID = NETWORK === 'devnet' ? GOERLI : OPTIMISM_MAINNET
 
 export const SUPPORTED_CHAIN_IDS: number[] =
   NETWORK === 'devnet'
