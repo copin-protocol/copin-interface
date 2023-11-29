@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { Trans } from '@lingui/macro'
-import dayjs from 'dayjs'
+import Dayjs from 'dayjs'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 
@@ -28,7 +28,7 @@ export default function NFTSubscriptionCard({ data, action }: { data?: UserSubsc
 }
 
 function ExpireCountdown({ expiredTime }: { expiredTime: string }) {
-  const timer = useCountdown(dayjs.utc(expiredTime).valueOf())
+  const timer = useCountdown(Dayjs.utc(expiredTime).valueOf())
   return (
     <Type.Body mt={1} mb={2} color="orange1" textAlign="center" display="block">
       {!!timer?.hasEnded && <Trans>Your NFT is expired</Trans>}

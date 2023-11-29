@@ -3,10 +3,13 @@ import ContentLoader from 'react-content-loader'
 import styled from 'styled-components/macro'
 
 import { Box } from 'theme/base'
+import { Colors } from 'theme/types'
 
-const Loading = styled(Box)<{ size?: number }>`
-  border: 2px solid ${({ theme }) => theme.colors.neutral6};
-  border-top: 2px solid ${({ theme }) => theme.colors.primary1};
+const Loading = styled(Box)<{ size?: number; background?: keyof Colors; indicatorColor?: keyof Colors }>`
+  border: 2px solid
+    ${({ theme, background }) => (background ? (theme.colors[background] as any) : theme.colors.neutral6)};
+  border-top: 2px solid
+    ${({ theme, indicatorColor }) => (indicatorColor ? (theme.colors[indicatorColor] as any) : theme.colors.primary1)};
   border-radius: 50%;
   width: ${({ size }) => size ?? 24}px;
   height: ${({ size }) => size ?? 24}px;

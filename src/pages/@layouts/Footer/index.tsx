@@ -129,7 +129,7 @@ const Footer = ({ height }: { height: number }) => {
               sx={{ lineHeight: 0 }}
               onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].JOIN_TWITTER)}
             >
-              <TwitterIcon variant="Bold" size={20} />
+              <TwitterIcon size={20} />
             </Box>
             <Box
               as="a"

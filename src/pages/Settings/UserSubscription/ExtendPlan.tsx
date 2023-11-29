@@ -11,12 +11,14 @@ import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import CopinIcon from 'pages/Subscription/CopinIcon'
+import { ProcessingState, SuccessState } from 'pages/Subscription/MintButton'
 import Alert from 'theme/Alert'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import Radio from 'theme/Radio'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { formatNumber } from 'utils/helpers/format'
+import { getContractErrorMessage } from 'utils/helpers/handleError'
 import { GOERLI } from 'utils/web3/chains'
 
 type Config = {
@@ -62,42 +64,62 @@ export default function ExtendPlan({ tokenId }: { tokenId: number }) {
         {!!extendConfigs.length &&
           extendConfigs.map((data, index) => {
             return (
-              <Flex key={data.monthCount} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <Radio
-                  size={20}
-                  value={data.monthCount}
-                  defaultChecked={index === 0}
-                  {...register('monthCount')}
-                  label={
-                    <Flex ml={3} sx={{ alignItems: 'center' }}>
-                      <Type.Caption
-                        sx={{
-                          px: 2,
-                          py: '2px',
-                          backgroundImage:
-                            'linear-gradient(92deg, rgba(151, 207, 253, 0.20) 57.35%, rgba(78, 174, 253, 0.20) 96.57%)',
-                          borderRadius: '2px',
-                        }}
-                      >
-                        {data.monthCount} {data.monthCount > 1 ? <Trans>months</Trans> : <Trans>month</Trans>}
-                      </Type.Caption>
-                      <Type.H5 ml={2} color="orange1">
+              <Radio
+                key={data.monthCount}
+                size={20}
+                value={data.monthCount}
+                defaultChecked={index === 0}
+                {...register('monthCount')}
+                wrapperSx={{ alignItems: ['start', 'center'], '& > *:first-child': { mt: [2, 0] } }}
+                label={
+                  <Flex ml={3} sx={{ alignItems: ['start', 'center'] }}>
+                    <Type.Caption
+                      sx={{
+                        px: 2,
+                        py: '2px',
+                        width: 80,
+                        mt: [1, 0],
+                        backgroundImage:
+                          'linear-gradient(92deg, rgba(151, 207, 253, 0.20) 57.35%, rgba(78, 174, 253, 0.20) 96.57%)',
+                        borderRadius: '2px',
+                        flexShrink: 0,
+                        textAlign: 'center',
+                      }}
+                    >
+                      {data.monthCount} {data.monthCount > 1 ? <Trans>months</Trans> : <Trans>month</Trans>}
+                    </Type.Caption>
+                    <Type.H5
+                      ml={3}
+                      color="orange1"
+                      sx={{
+                        display: 'flex',
+                        flexDirection: ['column', 'row'],
+                        alignItems: ['start', 'end'],
+                        flexWrap: 'wrap',
+                        columnGap: 2,
+                        rowGap: 0,
+                      }}
+                    >
+                      <Box as="span" sx={{ flexShrink: 0 }}>
                         <ETHPriceInUSD value={data.price.bn} />$
-                        <Box as="span" ml={2} sx={{ fontSize: '13px', fontWeight: 'normal', color: 'neutral1' }}>
-                          ({data.price.str}ETH
-                          {data.discountRatio !== 1 && (
-                            <>
-                              {' - '}
-                              <Trans>Save {formatNumber((1 - data.discountRatio) * 100, 0, 0)}%</Trans>
-                            </>
-                          )}
-                          )
-                        </Box>
-                      </Type.H5>
-                    </Flex>
-                  }
-                />
-              </Flex>
+                      </Box>
+                      <Box
+                        as="span"
+                        sx={{ fontSize: '13px', lineHeight: '24px', fontWeight: 'normal', color: 'neutral1' }}
+                      >
+                        ({data.price.str}ETH
+                        {data.discountRatio !== 1 && (
+                          <>
+                            {' - '}
+                            <Trans>Save {formatNumber((1 - data.discountRatio) * 100, 0, 0)}%</Trans>
+                          </>
+                        )}
+                        )
+                      </Box>
+                    </Type.H5>
+                  </Flex>
+                }
+              />
             )
           })}
       </Flex>
@@ -118,6 +140,7 @@ export default function ExtendPlan({ tokenId }: { tokenId: number }) {
   )
 }
 
+type ExtendState = 'preparing' | 'extending' | 'syncing' | 'success'
 function ExtendModal({
   isOpen,
   onDismiss,
@@ -131,75 +154,113 @@ function ExtendModal({
 }) {
   const { isValid, alert } = useRequiredChain({ chainId: GOERLI })
   const subscriptionContract = useSubscriptionContract()
-  const subscriptionMutation = useContractMutation(subscriptionContract)
-  const [submitting, setSubmitting] = useState(false)
+  const [state, setState] = useState<ExtendState>('preparing')
+  const subscriptionMutation = useContractMutation(subscriptionContract, {
+    onMutate: () => {
+      setState('extending')
+    },
+    onSuccess: () => {
+      setState('syncing')
+    },
+    onError: () => setState('preparing'),
+  } as any)
 
   const handleExtend = () => {
-    setSubmitting(true)
-    subscriptionMutation.mutate(
-      { method: 'extend', params: [tokenId, data?.monthCount], value: data?.price.bn },
-      {
-        onSuccess: async () => {
-          onDismiss()
-          setSubmitting(false)
-        },
-        onError: () => setSubmitting(false),
-      }
-    )
+    subscriptionMutation.mutate({ method: 'extend', params: [tokenId, data?.monthCount], value: data?.price.bn })
   }
+  const handleSyncSuccess = () => {
+    setState('success')
+  }
+  const isSuccess = state === 'success'
   if (!data) return <></>
   return (
     <Modal
       isOpen={isOpen}
-      title={<Trans>Extend Your Subscription</Trans>}
-      hasClose
+      title={isSuccess ? '' : <Trans>Extend Your Subscription</Trans>}
+      hasClose={state === 'preparing'}
       onDismiss={onDismiss}
-      background="neutral5"
+      modalContentStyle={isSuccess ? { border: 'none', boxShadow: 'none' } : undefined}
+      background={isSuccess ? 'transparent' : 'neutral5'}
+      dismissable={false}
     >
       {!isValid && <Box p={3}>{alert}</Box>}
       {isValid && (
-        <Box p={3}>
-          <Flex sx={{ flexDirection: 'column', alignItems: 'center' }}>
-            <CopinIcon />
-            <Type.Caption my={2} color="neutral1">
-              <Trans>You will extend your plan for an additional</Trans>{' '}
-              <Box as="span" color="primary1">
-                {data.monthCount * 30} days
-              </Box>
-            </Type.Caption>
-            <Type.H5>
-              <Box as="span" color="orange1">
-                <ETHPriceInUSD value={data.price.bn} />$
-              </Box>
-              <Box as="span" color="neutral1" sx={{ fontSize: '13px', fontWeight: 400 }}>
-                {' '}
-                (~{data.price.str}ETH)
-              </Box>
-            </Type.H5>
-          </Flex>
-          <Divider my={20} />
-          <Alert
-            variant="cardWarning"
-            message={
-              <Flex sx={{ gap: 2, alignItems: 'center' }}>
-                <IconBox icon={<Warning size={16} />} />
-                <Box as="span">
-                  <Trans>Caution !!!</Trans>
-                </Box>
-              </Flex>
-            }
-            description={
-              <Trans>
-                After extending, please wait 5 minutes for system updates your subscription plan. We appreciate your
-                patience!
-              </Trans>
-            }
-          />
-          <Button mt={3} variant="primary" block onClick={handleExtend} isLoading={submitting} disabled={submitting}>
-            <Trans>Extend Now</Trans>
-          </Button>
+        <Box>
+          {state === 'preparing' && (
+            <Box p={3}>
+              <PrepairingState config={data} />
+              <Box mb={3} />
+              {subscriptionMutation.error && (
+                <Type.Caption my={2} color="red1">
+                  {getContractErrorMessage(subscriptionMutation.error)}
+                </Type.Caption>
+              )}
+              <Button variant="primary" block onClick={handleExtend}>
+                {subscriptionMutation.error ? <Trans>Extend Again</Trans> : <Trans>Extend Now</Trans>}
+              </Button>
+            </Box>
+          )}
+
+          {state !== 'preparing' && !isSuccess && (
+            <ProcessingState
+              isProcessing={state === 'extending'}
+              isSyncing={state === 'syncing'}
+              onSyncSuccess={handleSyncSuccess}
+              txHash={subscriptionMutation.data?.transactionHash}
+              processingText={<Trans>Extending</Trans>}
+            />
+          )}
+          {isSuccess && (
+            <SuccessState
+              handleClose={onDismiss}
+              successText={<Trans>Your NFT has been extended successfully</Trans>}
+            />
+          )}
         </Box>
       )}
     </Modal>
+  )
+}
+
+function PrepairingState({ config }: { config: Config }) {
+  return (
+    <Box>
+      <Flex sx={{ flexDirection: 'column', alignItems: 'center' }}>
+        <CopinIcon />
+        <Type.Caption my={2} color="neutral1">
+          <Trans>You will extend your plan for an additional</Trans>{' '}
+          <Box as="span" color="primary1">
+            {config.monthCount * 30} days
+          </Box>
+        </Type.Caption>
+        <Type.H5>
+          <Box as="span" color="orange1">
+            <ETHPriceInUSD value={config.price.bn} />$
+          </Box>
+          <Box as="span" color="neutral1" sx={{ fontSize: '13px', fontWeight: 400 }}>
+            {' '}
+            (~{config.price.str}ETH)
+          </Box>
+        </Type.H5>
+      </Flex>
+      <Divider my={20} />
+      <Alert
+        variant="cardWarning"
+        message={
+          <Flex sx={{ gap: 2, alignItems: 'center' }}>
+            <IconBox icon={<Warning size={16} />} />
+            <Box as="span">
+              <Trans>Caution !!!</Trans>
+            </Box>
+          </Flex>
+        }
+        description={
+          <Trans>
+            After extending, please wait 5 minutes for system updates your subscription plan. We appreciate your
+            patience!
+          </Trans>
+        }
+      />
+    </Box>
   )
 }

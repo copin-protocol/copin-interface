@@ -20,9 +20,9 @@ interface Props {
   title?: ReactNode
 }
 
-const FACEBOOK_SHARE_URL = 'https://www.facebook.com/sharer/sharer.php'
-const TWITTER_SHARE_URL = 'https://twitter.com/share'
-const TELEGRAM_SHARE_URL = 'https://telegram.me/share/'
+export const FACEBOOK_SHARE_URL = 'https://www.facebook.com/sharer/sharer.php'
+export const TWITTER_SHARE_URL = 'https://twitter.com/intent/tweet'
+export const TELEGRAM_SHARE_URL = 'https://telegram.me/share/'
 
 const SocialMediaSharingModal = ({ title, link, isOpen, onDismiss, isGeneratingLink, image }: Props) => {
   const [loading, setLoading] = useState(true)

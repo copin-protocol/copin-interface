@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { CheckCircle } from '@phosphor-icons/react'
+import { CheckCircle, Note } from '@phosphor-icons/react'
+import dayjs from 'dayjs'
 
 import NFTSubscriptionCard from 'components/NFTSubscriptionCard'
 import { UserSubscriptionData } from 'entities/user'
 import { planConfigs } from 'pages/Subscription/Plans'
+import Alert from 'theme/Alert'
 import { CrowIconGold } from 'theme/Icons/CrowIcon'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { SUBSCRIPTION_COLLECTION_URL } from 'utils/config/constants'
@@ -12,6 +14,7 @@ import ExtendPlan from './ExtendPlan'
 import OpenseaIcon from './OpenseaIcon'
 
 export default function HasSubscription({ data }: { data: UserSubscriptionData }) {
+  const nftExpired = dayjs.utc(data.expiredTime).valueOf() < dayjs.utc().valueOf()
   return (
     <>
       <Flex
@@ -39,7 +42,28 @@ export default function HasSubscription({ data }: { data: UserSubscriptionData }
             <PremiumPlanDetails />
           </Box>
           <Box sx={{ p: 3 }}>
-            <ExtendPlan tokenId={data.tokenId} />
+            {nftExpired ? (
+              <Alert
+                variant="warning"
+                message={
+                  <Flex sx={{ gap: 2, alignItems: 'center' }}>
+                    <IconBox icon={<Note size={16} />} />
+                    <Box as="span">
+                      <Trans>Note:</Trans>
+                    </Box>
+                  </Flex>
+                }
+                description={
+                  <Trans>
+                    You&apos;ll still have access to Premium after your NFT expires in 30 minutes. Keep an eye on the
+                    renewal time.
+                  </Trans>
+                }
+                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'start', textAlign: 'left' }}
+              />
+            ) : (
+              <ExtendPlan tokenId={data.tokenId} />
+            )}
           </Box>
         </Box>
       </Flex>
@@ -60,7 +84,7 @@ export function PremiumPlanDetails() {
         <Flex sx={{ alignItems: 'center', gap: 2 }}>
           <OpenseaIcon />
           <Type.Caption>
-            <Box as="a" href={SUBSCRIPTION_COLLECTION_URL}>
+            <Box as="a" href={SUBSCRIPTION_COLLECTION_URL} target="_blank">
               <Trans>NFT Collection</Trans>
             </Box>
           </Type.Caption>
