@@ -136,7 +136,7 @@ export const LeaderboardColumns: ColumnData<TopTraderData, ExternalSource>[] = [
   },
 ]
 
-function RankingInfo({ ranking }: { ranking: number }) {
+export function RankingInfo({ ranking }: { ranking: number }) {
   switch (ranking) {
     case 1:
       return <Image src={IconRanking1} width={34} height={48} />
@@ -149,7 +149,7 @@ function RankingInfo({ ranking }: { ranking: number }) {
   }
 }
 
-function AccountInfo({ info, size = 40 }: { info: TopTraderData; size?: number }) {
+export function AccountInfo({ info, size = 40 }: { info: TopTraderData; size?: number }) {
   const { protocol: defaultProtocol } = useProtocolStore()
   const { isCopying } = useTraderCopying(info.account)
   const protocol = info.protocol ?? defaultProtocol

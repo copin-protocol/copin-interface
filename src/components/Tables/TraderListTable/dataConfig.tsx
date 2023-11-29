@@ -7,10 +7,11 @@ import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import FavoriteButton from 'components/FavoriteButton'
 import { MyCopyTraderData, TraderData } from 'entities/trader.d'
+import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
 import { SortTypeEnum } from 'utils/config/enums'
 import { PLATFORM_TRANS } from 'utils/config/translations'
-import { formatDuration, formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatDuration, formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
 import { FilterCondition } from 'utils/types'
 
 export type TableSettings<T, K = unknown> = {
@@ -67,7 +68,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     ),
   },
   {
-    style: { minWidth: ['100px', '130px'] },
+    style: { minWidth: ['120px', '130px'] },
     text: <Trans>Runtime (All)</Trans>,
     label: (
       <LabelWithTooltip id="tt_runtime_label" tooltip="The duration or time period of the trading activity">
@@ -121,14 +122,14 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       </LabelWithTooltip>
     ),
     unit: '$',
-    sortBy: 'profit',
+    sortBy: 'pnl',
     visible: true,
     filter: {
       conditionType: 'gte',
       gte: 100,
     },
-    id: 'profit',
-    render: (item) => <SignedText value={item.profit} maxDigit={0} prefix="$" />,
+    id: 'pnl',
+    render: (item) => <SignedText value={item.pnl} maxDigit={0} prefix="$" />,
   },
   {
     style: { minWidth: ['100px', '111px'] },
@@ -167,6 +168,42 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <SignedText value={item.totalLoss} maxDigit={0} neg prefix="$" />,
   },
   {
+    style: { minWidth: ['135px', '140px'] },
+    text: <Trans>Total Paid Fees</Trans>,
+    label: (
+      <LabelWithTooltip id="tt_total_fees_label" tooltip="The cumulative paid fees incurred from all trades">
+        Total Paid Fees
+      </LabelWithTooltip>
+    ),
+    unit: '$',
+    sortBy: 'totalFee',
+    visible: false,
+    filter: {
+      conditionType: 'gte',
+      gte: 100,
+    },
+    id: 'totalFee',
+    render: (item) => <SignedText value={item.totalFee} maxDigit={0} neg prefix="$" />,
+  },
+  {
+    style: { minWidth: ['120px', '130px'] },
+    text: <Trans>Total Volume</Trans>,
+    label: (
+      <LabelWithTooltip id="tt_total_volume_label" tooltip="The cumulative trading volume from all trades">
+        Total Volume
+      </LabelWithTooltip>
+    ),
+    unit: '$',
+    sortBy: 'totalVolume',
+    visible: true,
+    filter: {
+      conditionType: 'gte',
+      gte: 100000,
+    },
+    id: 'totalVolume',
+    render: (item) => <Text text={item.totalVolume ? `$${formatNumber(item.totalVolume, 0, 0)}` : undefined} />,
+  },
+  {
     style: { minWidth: ['110px', '120px'] },
     text: <Trans>Avg Volume</Trans>,
     label: (
@@ -203,28 +240,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       gte: 20,
     },
     id: 'avgRoi',
-    render: (item) => <SignedText value={item.avgRoi} maxDigit={1} minDigit={1} suffix="%" />,
-  },
-  {
-    style: { minWidth: '90px' },
-    text: <Trans>Min ROI</Trans>,
-    label: (
-      <LabelWithTooltip
-        id="tt_min_roi_label"
-        tooltip="The minimum percentage of gain or loss without fees in closed positions"
-      >
-        Min ROI
-      </LabelWithTooltip>
-    ),
-    unit: '%',
-    sortBy: 'minRoi',
-    visible: false,
-    filter: {
-      conditionType: 'gte',
-      gte: -30,
-    },
-    id: 'minRoi',
-    render: (item) => <SignedText value={item.minRoi} maxDigit={1} minDigit={1} suffix="%" />,
+    render: (item) => <SignedText value={item.avgRoi} maxDigit={2} minDigit={2} suffix="%" />,
   },
   {
     style: { minWidth: '90px' },
@@ -245,7 +261,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       gte: 50,
     },
     id: 'maxRoi',
-    render: (item) => <SignedText value={item.maxRoi} maxDigit={1} minDigit={1} pos suffix="%" />,
+    render: (item) => <SignedText value={item.maxRoi} maxDigit={2} minDigit={2} suffix="%" />,
   },
   {
     style: { minWidth: '85px' },
@@ -299,6 +315,23 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={item.totalLose} />,
   },
   {
+    style: { minWidth: '125px' },
+    text: <Trans>Liquidations</Trans>,
+    label: (
+      <LabelWithTooltip id="tt_liquidations_label" tooltip="The total number of liquidated trades">
+        Liquidations
+      </LabelWithTooltip>
+    ),
+    sortBy: 'totalLiquidation',
+    visible: false,
+    filter: {
+      conditionType: 'lte',
+      lte: 0,
+    },
+    id: 'totalLiquidation',
+    render: (item) => <Text text={item.totalLiquidation} />,
+  },
+  {
     style: { minWidth: '100px' },
     text: <Trans>Win rate</Trans>,
     label: (
@@ -314,10 +347,10 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       gte: 51,
     },
     id: 'winRate',
-    render: (item) => <Text text={item.winRate ? `${formatNumber(item.winRate, 1, 1)}%` : undefined} />,
+    render: (item) => <Text text={item.winRate ? `${formatNumber(item.winRate, 2, 2)}%` : undefined} />,
   },
   {
-    style: { minWidth: ['100px', '120px'] },
+    style: { minWidth: ['110px', '120px'] },
     text: <Trans>Profit Rate</Trans>,
     label: (
       <LabelWithTooltip
@@ -335,27 +368,39 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       gte: 100,
     },
     id: 'profitRate',
-    render: (item) => <Text text={item.profitRate ? `${formatNumber(item.profitRate, 1, 1)}%` : undefined} />,
+    render: (item) => <Text text={item.profitRate ? `${formatNumber(item.profitRate, 2, 2)}%` : undefined} />,
   },
   {
     style: { minWidth: ['100px', '110px'] },
-    text: <Trans>W/L Ratio</Trans>,
+    text: <Trans>L/S Rate</Trans>,
     label: (
-      <LabelWithTooltip id="tt_wl_ratio_label" tooltip="The ratio of winning trades to losing trades">
-        W/L Ratio
+      <LabelWithTooltip id="tt_ls_ratio_label" tooltip="The percentage of Long/Short trades out of the total trades">
+        L/S Rate
       </LabelWithTooltip>
     ),
-    sortBy: 'winLoseRatio',
-    visible: false,
+    unit: '%',
+    sortBy: 'longRate',
+    visible: true,
     filter: {
       conditionType: 'gte',
-      gte: 3,
+      gte: 50,
     },
-    id: 'winLoseRatio',
-    render: (item) => <Text text={item.winLoseRatio ? formatNumber(item.winLoseRatio, 1, 1) : undefined} />,
+    id: 'longRate',
+    render: (item) =>
+      item.longRate == null ? (
+        '--'
+      ) : (
+        <Flex flexDirection="column" width="100%" alignItems="flex-end">
+          <ProgressBar percent={item.longRate} color="green2" bg="red2" sx={{ width: '90%' }} />
+          <Flex alignItems="center" justifyContent="space-between" sx={{ width: '90%' }}>
+            <Type.Small color="green2">{compactNumber(item.longRate, 0)}%</Type.Small>
+            <Type.Small color="red2">{compactNumber(100 - item.longRate, 0)}%</Type.Small>
+          </Flex>
+        </Flex>
+      ),
   },
   {
-    style: { minWidth: ['130px', '160px'] },
+    style: { minWidth: ['140px', '160px'] },
     text: <Trans>Order/Pos Ratio</Trans>,
     label: (
       <LabelWithTooltip
@@ -395,7 +440,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={item.profitLossRatio ? formatNumber(item.profitLossRatio, 1, 1) : undefined} />,
   },
   {
-    style: { minWidth: ['110px', '136px'] },
+    style: { minWidth: ['120px', '136px'] },
     text: <Trans>Profit Factor</Trans>,
     label: (
       <LabelWithTooltip id="tt_profit_factor_label" tooltip="The ratio of total profit to total loss without fees">
@@ -459,7 +504,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={item.minLeverage ? formatNumber(item.minLeverage, 1, 1) + 'x' : undefined} />,
   },
   {
-    style: { minWidth: ['110px', '132px'] },
+    style: { minWidth: ['120px', '132px'] },
     text: <Trans>Avg Duration</Trans>,
     label: (
       <LabelWithTooltip id="tt_avg_duration_label" tooltip="The average duration of trades in hours">
@@ -477,7 +522,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={formatDuration(item.avgDuration * 1000)} />,
   },
   {
-    style: { minWidth: ['110px', '132px'] },
+    style: { minWidth: ['120px', '132px'] },
     text: <Trans>Min Duration</Trans>,
     label: (
       <LabelWithTooltip id="tt_min_duration_label" tooltip="The minimum duration of a trade in hours">
@@ -495,7 +540,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={formatDuration(item.minDuration * 1000)} />,
   },
   {
-    style: { minWidth: ['110px', '135px'] },
+    style: { minWidth: ['120px', '135px'] },
     text: <Trans>Max Duration</Trans>,
     label: (
       <LabelWithTooltip id="tt_max_duration_label" tooltip="The maximum duration of a trade in hours">
@@ -513,7 +558,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     render: (item) => <Text text={formatDuration(item.maxDuration * 1000)} />,
   },
   {
-    style: { minWidth: ['120px', '150px'] },
+    style: { minWidth: ['130px', '150px'] },
     text: <Trans>Max Drawdown</Trans>,
     label: (
       <LabelWithTooltip
@@ -524,17 +569,17 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       </LabelWithTooltip>
     ),
     unit: '%',
-    sortBy: 'maxDrawDownRoi',
+    sortBy: 'maxDrawdown',
     visible: true,
     filter: {
       conditionType: 'gte',
       gte: -30,
     },
-    id: 'maxDrawDownRoi',
-    render: (item) => <SignedText value={item.maxDrawDownRoi} maxDigit={1} minDigit={1} neg suffix="%" />,
+    id: 'maxDrawdown',
+    render: (item) => <SignedText value={item.maxDrawdown} maxDigit={2} minDigit={2} neg suffix="%" />,
   },
   {
-    style: { minWidth: ['145px', '175px'] },
+    style: { minWidth: ['160px', '175px'] },
     text: <Trans>Max Drawdown PnL</Trans>,
     label: (
       <LabelWithTooltip
@@ -545,14 +590,14 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       </LabelWithTooltip>
     ),
     unit: '$',
-    sortBy: 'maxDrawDownPnl',
+    sortBy: 'maxDrawdownPnl',
     visible: false,
     filter: {
       conditionType: 'gte',
       gte: -100,
     },
-    id: 'maxDrawDownPnl',
-    render: (item) => <SignedText value={item.maxDrawDownPnl} maxDigit={0} neg prefix="$" />,
+    id: 'maxDrawdownPnl',
+    render: (item) => <SignedText value={item.maxDrawdownPnl} maxDigit={0} neg prefix="$" />,
   },
 ]
 export const mobileTableSettings: TableSettingsProps<TraderData> = [

@@ -23,7 +23,7 @@ const ROUTES = {
     path_prefix: '/trader',
   },
   POSITION_DETAILS: {
-    path: '/:protocol/position',
+    path: '/:protocol/position/:id',
     path_prefix: '/position',
   },
   SHARED_POSITION_DETAILS: {
@@ -39,11 +39,27 @@ const ROUTES = {
   MY_HISTORY: {
     path: '/me/history',
   },
-  MY_REFERRAL: {
-    path: '/me/referral',
+  USER_ACTIVITY: {
+    path: '/me/activity',
+    path_prefix: '/me/activity',
   },
   WALLET_MANAGEMENT: {
     path: '/wallet-management',
+  },
+  SETTINGS: {
+    path: '/settings',
+  },
+  REFERRAL: {
+    path: '/settings/referral',
+  },
+  USER_SUBSCRIPTION: {
+    path: '/settings/subscription',
+  },
+  ALERT_LIST: {
+    path: '/settings/alert-list',
+  },
+  LINK_BOT_ALERT: {
+    path: '/link/telegram',
   },
   STATS: {
     path: '/stats',
@@ -60,9 +76,8 @@ const ROUTES = {
     path: '/:protocol/shared-backtest/multiple/:id',
     path_prefix: '/shared-backtest/multiple',
   },
-  USER_ACTIVITY: {
-    path: '/me/activity',
-    path_prefix: '/me/activity',
+  SUBSCRIPTION: {
+    path: '/subscription',
   },
 }
 

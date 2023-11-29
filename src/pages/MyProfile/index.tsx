@@ -16,8 +16,8 @@ import HistoryPositions from './HistoryPositions'
 import Layout from './Layouts/Layout'
 import MainSection from './MainSection'
 import OpeningPosition from './OpeningPositions'
-import Referral from './Referral'
 import Stats from './Stats'
+import UserActivity from './UserActivity'
 
 export default function MyProfile() {
   const { copyWallets, loadingCopyWallets } = useCopyWalletContext()
@@ -113,7 +113,7 @@ export default function MyProfile() {
               <Stats exchange={activeWallet?.exchange ?? CopyTradePlatformEnum.BINGX} copyWalletId={activeWallet?.id} />
             }
             historyTable={<>{!!myProfile?.id && <HistoryPositions />}</>}
-            referral={<Referral />}
+            activities={<UserActivity />}
           ></Layout>
         </Box>
       </Flex>

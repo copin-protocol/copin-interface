@@ -86,7 +86,8 @@ export interface CopyPositionData {
   sourceOrderTxHashes: string[]
   orderTxHashes: string[]
   isLong: boolean
-  reverseCopy: boolean
+  // reverseCopy: boolean
+  isReverse?: boolean
   entryPrice: number
   closePrice: number
   stopLossPrice: number

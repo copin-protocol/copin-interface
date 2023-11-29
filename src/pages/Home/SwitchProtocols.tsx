@@ -1,5 +1,6 @@
 import { SystemStyleObject } from '@styled-system/css'
-import React, { useCallback } from 'react'
+import { useResponsive } from 'ahooks'
+import { useCallback } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
@@ -14,30 +15,28 @@ import { PROTOCOL_OPTIONS, ProtocolOptionProps } from 'utils/config/protocols'
 import ROUTES from 'utils/config/routes'
 import { generateTopOpeningOrdersRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
-import { getUserForTracking, logEvent } from 'utils/tracking/event'
-import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
+import { logEventSwitchProtocol } from 'utils/tracking/event'
 import { getChainMetadata } from 'utils/web3/chains'
 
 import useTradersContext from './useTradersContext'
 
 const SwitchProtocols = ({
-  isMobile = false,
   buttonSx,
   textSx,
   sx,
 }: {
-  isMobile?: boolean
   buttonSx?: SystemStyleObject & GridProps
   textSx?: SystemStyleObject & GridProps
   sx?: SystemStyleObject & GridProps
 }) => {
+  const { md } = useResponsive()
   const history = useHistory()
   const { myProfile } = useMyProfile()
   const { resetStore } = useSelectBacktestTraders()
   const { protocol: protocolParam } = useParams<{ protocol: ProtocolEnum }>()
   const { protocol: protocolStore, setProtocol } = useProtocolStore()
   const protocol = protocolParam ?? protocolStore
-  const { setCurrentSuggestion } = useTradersContext()
+  const { setCurrentSuggestion, changeCurrentPage } = useTradersContext()
   const { currentOption, changeCurrentOption } = useOptionChange({
     optionName: 'protocol',
     options: PROTOCOL_OPTIONS,
@@ -50,6 +49,9 @@ const SwitchProtocols = ({
       changeCurrentOption(protocol)
       setProtocol(protocol.id)
       resetStore()
+      if (changeCurrentPage) {
+        changeCurrentPage(1)
+      }
       if (setCurrentSuggestion) {
         setCurrentSuggestion(undefined)
       }
@@ -59,16 +61,17 @@ const SwitchProtocols = ({
       }
 
       //log
-      logEvent({
-        category: EventCategory.MULTI_CHAIN,
-        action:
-          protocol.id === ProtocolEnum.GMX
-            ? EVENT_ACTIONS[EventCategory.MULTI_CHAIN].SWITCH_GMX
-            : EVENT_ACTIONS[EventCategory.MULTI_CHAIN].SWITCH_KWENTA,
-        label: getUserForTracking(myProfile?.username),
-      })
+      logEventSwitchProtocol({ protocol: protocol?.id, username: myProfile?.username })
     },
-    [changeCurrentOption, history, myProfile?.username, resetStore, setCurrentSuggestion, setProtocol]
+    [
+      changeCurrentOption,
+      changeCurrentPage,
+      history,
+      myProfile?.username,
+      resetStore,
+      setCurrentSuggestion,
+      setProtocol,
+    ]
   )
 
   const renderProtocols = () => {
@@ -98,10 +101,10 @@ const SwitchProtocols = ({
       menu={renderProtocols()}
       buttonVariant="ghost"
       buttonSx={{
-        px: isMobile ? 2 : 3,
+        px: 2,
         mx: 0,
-        pt: isMobile ? '5px' : '8px',
-        pb: isMobile ? '10px' : '8px',
+        pt: '8px',
+        pb: '8px',
         borderTop: 'none',
         borderRadius: 0,
         borderColor: 'neutral4',
@@ -114,9 +117,9 @@ const SwitchProtocols = ({
         },
         ...buttonSx,
       }}
-      menuSx={{ width: isMobile ? 125 : 150 }}
+      menuSx={{ width: 160 }}
       hasArrow={true}
-      sx={{ height: isMobile ? '48px' : undefined, minWidth: 'fit-content', ...sx }}
+      sx={{ minWidth: 'fit-content', ...sx }}
     >
       <Flex
         width="fit-content"
@@ -126,14 +129,16 @@ const SwitchProtocols = ({
           gap: 2,
         }}
       >
-        <Image src={parseProtocolImage(currentOption.id)} width={isMobile ? 18 : 28} height={isMobile ? 18 : 28} />
-        <Box width={'60px'}>
+        <Image src={parseProtocolImage(currentOption.id)} width={28} height={28} />
+        <Box width={85}>
           <Type.Caption display="block" lineHeight="16px" color="neutral1" sx={{ ...textSx }}>
             {currentOption.text}
           </Type.Caption>
-          <Type.Caption display="block" lineHeight="16px" color="neutral3">
-            {getChainMetadata(currentOption.chainId).label}
-          </Type.Caption>
+          {md && (
+            <Type.Caption display="block" lineHeight="16px" color="neutral3">
+              {getChainMetadata(currentOption.chainId).label}
+            </Type.Caption>
+          )}
         </Box>
       </Flex>
     </Dropdown>

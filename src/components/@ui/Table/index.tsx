@@ -37,10 +37,11 @@ export default function Table<T, K>({
   tableBodySx,
   tableBodyWrapperSx,
   dataMeta,
-  topIndex,
-  title,
-  subTitle,
-}: TableProps<T, K>) {
+  // topIndex,
+  checkIsTop,
+}: // title,
+// subTitle,
+TableProps<T, K>) {
   const visibleKeys = visibleColumns?.map((key) => `[data-table-key="${key.toString()}"]`).join(',')
 
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -100,7 +101,7 @@ export default function Table<T, K>({
               sx={{ overflow: restrictHeight ? 'auto' : 'unset', ...(tableBodyWrapperSx ?? {}) }}
               ref={isInfiniteLoad ? scrollRef : bodyRef}
             >
-              <TableContainer sx={tableBodySx} hasHoverBg={!topIndex}>
+              <TableContainer sx={tableBodySx} hasHoverBg={!checkIsTop}>
                 <TableBody
                   data={data}
                   columns={columns}
@@ -110,9 +111,9 @@ export default function Table<T, K>({
                   externalSource={externalSource}
                   handleSelect={handleSelect}
                   checkIsSelected={checkIsSelected}
-                  topIndex={topIndex}
-                  title={title}
-                  subTitle={subTitle}
+                  checkIsTop={checkIsTop}
+                  // title={title}
+                  // subTitle={subTitle}
                 />
               </TableContainer>
 

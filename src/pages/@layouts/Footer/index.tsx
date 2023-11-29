@@ -7,6 +7,7 @@ import TelegramIcon from 'theme/Icons/TelegramIcon'
 import TwitterIcon from 'theme/Icons/TwitterIcon'
 import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
+import ROUTES from 'utils/config/routes'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -65,7 +66,18 @@ const Footer = ({ height }: { height: number }) => {
                 fontSize: '13px',
               }}
             >
-              <Trans>Landing Page</Trans>
+              <Trans>Home</Trans>
+            </a>
+            <a
+              href={ROUTES.SUBSCRIPTION.path}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                lineHeight: '16px',
+                fontSize: '13px',
+              }}
+            >
+              <Trans>Pricing</Trans>
             </a>
             <a
               href={LINKS.docs}
@@ -117,7 +129,7 @@ const Footer = ({ height }: { height: number }) => {
               sx={{ lineHeight: 0 }}
               onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].JOIN_TWITTER)}
             >
-              <TwitterIcon variant="Bold" size={20} />
+              <TwitterIcon size={20} />
             </Box>
             <Box
               as="a"

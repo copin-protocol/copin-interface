@@ -13,6 +13,7 @@ import { getTopOpenings } from './topOpening.controller.js'
 import { getTraderDetail } from './traderDetail.controller.js'
 import { renderHTML } from './utils.js'
 import {getLeaderboard} from "./leaderboard.controller.js";
+import {getSubscription} from "./subscription.controller.js";
 
 const __filename = fileURLToPath(import.meta.url)
 
@@ -34,6 +35,7 @@ app.get('/:protocol/trader/:address', getTraderDetail)
 app.get('/:protocol/position/share/:sharedId', getSharedPositionDetails)
 app.get('/:protocol/position', getPositionDetails)
 app.get('/:protocol/top-openings', getTopOpenings)
+app.get('/subscription', getSubscription)
 app.get('/stats', getStats)
 app.get('/leaderboard', getLeaderboard)
 app.get('*', (req, res) => {

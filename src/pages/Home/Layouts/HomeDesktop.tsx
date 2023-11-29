@@ -47,13 +47,11 @@ export default function HomeDesktop() {
   const { pathname } = useLocation()
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-      <Flex alignItems="center" justifyContent="space-between">
+      <Flex justifyContent="space-between">
         <TabHeader
           configs={tabConfigs}
           isActiveFn={(config) => config.route === pathname}
           fullWidth
-          sx={{ borderBottom: 'small', borderColor: 'neutral4', px: 16, width: '100%', mb: 0 }}
-          itemSx={{ flex: '0 0 auto', pb: 10, fontSize: 16 }}
           onClickItem={(key) => {
             if (key === TabKeyEnum.Favorite) {
               logEvent({
@@ -64,7 +62,9 @@ export default function HomeDesktop() {
             }
           }}
         />
-        <SwitchProtocols />
+        <FilterTradersProvider tab={TabKeyEnum.Explorer}>
+          <SwitchProtocols buttonSx={{ height: '100%' }} />
+        </FilterTradersProvider>
       </Flex>
       <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
         <Switch>

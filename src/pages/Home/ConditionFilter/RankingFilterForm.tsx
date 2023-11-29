@@ -3,37 +3,32 @@ import { useResponsive } from 'ahooks'
 import { ConditionFormValues } from 'components/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import { Box, Flex } from 'theme/base'
-import { getDurationFromTimeFilter } from 'utils/helpers/transform'
+import { rankingFieldOptions } from 'utils/config/options'
 
 import useTradersContext from '../useTradersContext'
 import FilterForm, { FilterFormProps } from './FilterForm'
 import ResultEstimated from './ResultEstimated'
-import { FilterTabEnum, rankingFieldOptions } from './configs'
-import useTradersCount from './useTraderCount'
+import { FilterTabEnum } from './configs'
+import { useTraderCountState } from './useTraderCount'
 
 export default function RankingFilterForm({
   defaultFormValues,
   handleClose,
   handleChangeOption,
-  prevTab,
+  currentTab,
   lastFilterTab,
 }: {
   handleClose?: () => void
   handleChangeOption: (option: ConditionFormValues<TraderData>) => void
   defaultFormValues: ConditionFormValues<TraderData>
-  prevTab: FilterTabEnum
+  currentTab: FilterTabEnum
   lastFilterTab: FilterTabEnum
 }) {
   const { timeOption, protocol } = useTradersContext()
-  const effectDays = getDurationFromTimeFilter(timeOption.id)
-  const { handleCallAPi, tradersCount, isFetching } = useTradersCount({
-    defaultFormValues,
-    timeOption,
-    protocol,
-    filterTab: FilterTabEnum.RANKING,
-  })
+  const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues })
+
   const onChangeFormValues: FilterFormProps['onValuesChange'] = (values) => {
-    handleCallAPi(values)
+    handleChangeRanges(values)
   }
   const onApply: FilterFormProps['onApply'] = (formValues) => {
     handleChangeOption(formValues)
@@ -41,7 +36,7 @@ export default function RankingFilterForm({
   }
   const onReset: FilterFormProps['onReset'] = (formValueFactory) => {
     if (formValueFactory) {
-      const formValues = formValueFactory(['profit', 'winRate'])
+      const formValues = formValueFactory(['pnl', 'winRate'])
       handleChangeOption(formValues)
     }
     handleClose && handleClose()
@@ -52,7 +47,7 @@ export default function RankingFilterForm({
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
       <Box sx={sm ? {} : { position: 'sticky', top: 0, bg: 'neutral7', zIndex: 2 }}>
-        <ResultEstimated data={tradersCount} loading={isFetching} effectDays={effectDays} />
+        <ResultEstimated ranges={ranges} protocol={protocol} timeOption={timeOption} />
       </Box>
 
       <Box flex="1 0 0" sx={{ overflow: 'auto', '.select__menu': { minWidth: 'max-content' } }}>
@@ -62,7 +57,7 @@ export default function RankingFilterForm({
           onApply={onApply}
           onReset={onReset}
           onValuesChange={onChangeFormValues}
-          enabledApply={prevTab !== FilterTabEnum.RANKING && lastFilterTab !== FilterTabEnum.RANKING}
+          enabledApply={currentTab === FilterTabEnum.RANKING && lastFilterTab !== FilterTabEnum.RANKING}
           formType="ranking"
         />
       </Box>

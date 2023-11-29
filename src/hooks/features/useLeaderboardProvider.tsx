@@ -12,11 +12,11 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { LeaderboardTypeEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { LEADERBOARD_OPTIONS, LeaderboardOptionProps } from 'utils/config/options'
 import { pageToOffset } from 'utils/helpers/transform'
 
-interface ContextValues {
+export interface LeaderboardContextValues {
   data: ApiListResponse<TopTraderData> | undefined
   isLoading: boolean
   keyword?: string
@@ -39,15 +39,15 @@ interface ContextValues {
   lastTimeUpdated?: string
 }
 
-export const LeaderboardContext = createContext({} as ContextValues)
+export const LeaderboardContext = createContext({} as LeaderboardContextValues)
 
 export function LeaderboardProvider({ children }: { children: ReactNode }) {
   const { searchParams, setSearchParams } = useSearchParams()
-  const dateParams = searchParams?.leaderboard as string
+  const dateParams = searchParams?.[URL_PARAM_KEYS.LEADERBOARD_DATE] as string
   const protocolParam = searchParams?.protocol as ProtocolEnum
   const { protocol: protocolStore } = useProtocolStore()
   const protocol = protocolParam ?? protocolStore
-  const [currentDate, setCurrentDate] = useState(dateParams ? dayjs(Number(dateParams)) : dayjs().utc())
+  const [queryDate, setQueryDate] = useState(dateParams ? dayjs(Number(dateParams)) : dayjs().utc())
   const [keyword, setKeyword] = useState<string | undefined>()
 
   const [currentSort, setCurrentSort] = useState<TableSortProps<TopTraderData> | undefined>(() => {
@@ -63,19 +63,29 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
   })
 
   const { currentOption, changeCurrentOption } = useOptionChange({
-    optionName: 'leaderboard-type',
+    optionName: URL_PARAM_KEYS.LEADERBOARD_TYPE,
     options: LEADERBOARD_OPTIONS,
     callback: () => {
-      setCurrentDate(dayjs().utc())
+      setQueryDate(dayjs().utc())
     },
   })
 
   const { data, isFetching: isLoading } = useQuery(
-    [QUERY_KEYS.GET_TRADERS_LEADERBOARD, currentLimit, currentPage, currentSort, protocol, keyword, currentOption.id],
+    [
+      QUERY_KEYS.GET_TRADERS_LEADERBOARD,
+      queryDate,
+      currentLimit,
+      currentPage,
+      currentSort,
+      protocol,
+      keyword,
+      currentOption.id,
+    ],
     () =>
       getLeaderboardApi({
         protocol,
         keyword,
+        queryDate: queryDate.valueOf(),
         statisticType: currentOption.id,
         limit: currentLimit,
         offset: pageToOffset(currentPage, currentLimit),
@@ -101,34 +111,34 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
     setTimeout(() => setSearchParams({ sort_by: data?.sortBy ?? null, sort_type: data?.sortType ?? null }), 100)
   }
 
-  const changeSearchParams = (currentDate: Dayjs) => {
-    setTimeout(() => setSearchParams({ leaderboard: currentDate.valueOf().toString() }), 100)
+  const changeSearchParams = (queryDate: Dayjs) => {
+    setTimeout(() => setSearchParams({ [URL_PARAM_KEYS.LEADERBOARD_DATE]: queryDate.valueOf().toString() }), 100)
   }
 
   const { formatNext, formatPrev, formatCurrent } = useMemo(
-    () => getSeasonFormat({ type: currentOption.id, currentDate }),
-    [currentDate, currentOption.id]
+    () => getSeasonFormat({ type: currentOption.id, queryDate }),
+    [queryDate, currentOption.id]
   )
 
   const ignoreNext = useMemo(
-    () => ignoreNextSeason({ type: currentOption.id, currentDate }),
-    [currentDate, currentOption.id]
+    () => ignoreNextSeason({ type: currentOption.id, queryDate }),
+    [queryDate, currentOption.id]
   )
 
   const onNext = () => {
     const now = dayjs().utc()
     switch (currentOption.id) {
       case LeaderboardTypeEnum.WEEKLY:
-        if (currentDate.week() >= now.week()) return
-        setCurrentDate((prevDate) => {
+        if (queryDate.week() >= now.week() && queryDate.year() == now.year()) return
+        setQueryDate((prevDate) => {
           const newDate = prevDate.add(1, 'week')
           changeSearchParams(newDate)
           return newDate
         })
         break
       case LeaderboardTypeEnum.MONTHLY:
-        if (currentDate.month() >= now.month()) return
-        setCurrentDate((prevDate) => {
+        if (queryDate.month() >= now.month() && queryDate.year() == now.year()) return
+        setQueryDate((prevDate) => {
           const newDate = prevDate.add(1, 'month')
           changeSearchParams(newDate)
           return newDate
@@ -140,14 +150,14 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
   const onPrevious = () => {
     switch (currentOption.id) {
       case LeaderboardTypeEnum.WEEKLY:
-        setCurrentDate((prevDate) => {
+        setQueryDate((prevDate) => {
           const newDate = prevDate.subtract(1, 'week')
           changeSearchParams(newDate)
           return newDate
         })
         break
       case LeaderboardTypeEnum.MONTHLY:
-        setCurrentDate((prevDate) => {
+        setQueryDate((prevDate) => {
           const newDate = prevDate.subtract(1, 'month')
           changeSearchParams(newDate)
           return newDate
@@ -156,7 +166,7 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const contextValue: ContextValues = {
+  const contextValue: LeaderboardContextValues = {
     data,
     isLoading,
     keyword,
@@ -171,7 +181,7 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
     changeCurrentOption,
     onNext,
     onPrevious,
-    currentDate,
+    currentDate: queryDate,
     formatCurrent,
     formatNext,
     formatPrev,
@@ -185,11 +195,11 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
 const useLeaderboardContext = () => useContext(LeaderboardContext)
 export default useLeaderboardContext
 
-function getSeasonFormat({ type, currentDate }: { type: LeaderboardTypeEnum; currentDate: Dayjs }) {
+function getSeasonFormat({ type, queryDate }: { type: LeaderboardTypeEnum; queryDate: Dayjs }) {
   let formatCurrent
   let formatPrev
   let formatNext
-  const date = currentDate.local()
+  const date = queryDate.local()
   switch (type) {
     case LeaderboardTypeEnum.WEEKLY:
       formatCurrent = `Week ${date.week()}/${date.format('YYYY')}`
@@ -197,7 +207,7 @@ function getSeasonFormat({ type, currentDate }: { type: LeaderboardTypeEnum; cur
       formatNext = `Week ${date.add(1, 'week').week()}/${date.format('YYYY')}`
       break
     case LeaderboardTypeEnum.MONTHLY:
-      formatCurrent = date.format('MMMM YYYY')
+      formatCurrent = date.format('MMMM')
       formatPrev = date.subtract(1, 'month').format('MMMM YYYY')
       formatNext = date.add(1, 'month').format('MMMM YYYY')
       break
@@ -206,13 +216,13 @@ function getSeasonFormat({ type, currentDate }: { type: LeaderboardTypeEnum; cur
   return { formatCurrent, formatPrev, formatNext }
 }
 
-function ignoreNextSeason({ type, currentDate }: { type: LeaderboardTypeEnum; currentDate: Dayjs }) {
+function ignoreNextSeason({ type, queryDate }: { type: LeaderboardTypeEnum; queryDate: Dayjs }) {
   const now = dayjs().utc()
   switch (type) {
     case LeaderboardTypeEnum.WEEKLY:
-      return currentDate.week() >= now.week()
+      return queryDate.week() >= now.week() && queryDate.year() >= now.year()
     case LeaderboardTypeEnum.MONTHLY:
-      return currentDate.month() >= now.month()
+      return queryDate.month() >= now.month() && queryDate.year() >= now.year()
   }
   return false
 }

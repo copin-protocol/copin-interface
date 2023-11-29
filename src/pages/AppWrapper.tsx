@@ -2,8 +2,10 @@ import { ReactNode } from 'react'
 import { ToastContainer } from 'react-toastify'
 
 import FavoriteNoteTooltip from 'components/FavoriteButton/FavoriteNoteTooltip'
+import SubscriptionRestrictModal from 'components/SubscriptionRestrictModal'
 import useModifyStorage from 'hooks/features/useModifyStorage'
 import useGlobalDialog from 'hooks/store/useGlobalDialog'
+import useSubscriptionRestrictStore from 'hooks/store/useSubscriptionRestrictStore'
 import { useInitTraderCopying } from 'hooks/store/useTraderCopying'
 import { useInitTraderFavorites } from 'hooks/store/useTraderFavorites'
 import { usePollingUsdPrice } from 'hooks/store/useUsdPrices'
@@ -14,6 +16,7 @@ import Navbar from 'pages/@layouts/Navbar'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { FOOTER_HEIGHT, NAVBAR_HEIGHT } from 'utils/config/constants'
+import { ELEMENT_IDS } from 'utils/config/keys'
 
 const AppWrapper = ({ children }: { children: ReactNode }) => {
   useChainRestrict()
@@ -23,18 +26,20 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
   usePollingUsdPrice()
   useModifyStorage()
   const dialog = useGlobalDialog((state) => state.dialog)
+  const restrictState = useSubscriptionRestrictStore((state) => state.state)
 
   return (
     <>
       <Flex flexDirection="column" width="100vw" height="100vh" margin="0px auto" maxHeight="100%">
         <Navbar height={NAVBAR_HEIGHT} />
-        <Box id="app_main__wrapper" width="100%" flex="1" sx={{ position: 'relative', overflowY: 'auto' }}>
+        <Box id={ELEMENT_IDS.APP_MAIN_WRAPPER} width="100%" flex="1" sx={{ position: 'relative', overflowY: 'auto' }}>
           {children}
           <FavoriteNoteTooltip />
           <ToastContainer theme="dark" limit={3} autoClose={5000} />
         </Box>
         <Footer height={FOOTER_HEIGHT} />
       </Flex>
+      {restrictState && <SubscriptionRestrictModal />}
       {dialog && (
         <Flex
           justifyContent="center"

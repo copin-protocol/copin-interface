@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useResponsive } from 'ahooks'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
@@ -17,7 +18,8 @@ import { QUERY_KEYS, STORAGE_KEYS, TOOLTIP_KEYS, URL_PARAM_KEYS } from 'utils/co
 import { pageToOffset } from 'utils/helpers/transform'
 
 import NoDataOrSelect from '../NoDataOrSelect'
-import PositionTable, { historyColumns } from '../PositionTable'
+import PositionTable, { ListPositionMobile } from '../PositionTable'
+import { historyColumns } from '../PositionTable/ListPositions'
 import SelectedTraders from './SelectedTraders'
 import useSelectTraders from './useSelectTraders'
 
@@ -78,6 +80,8 @@ export default function HistoryPositions() {
 
   const hasSelectedTraders = !!selectionState.selectedTraders.length
 
+  const { sm } = useResponsive()
+
   return (
     <Flex width="100%" height="100%" flexDirection="column" bg="neutral7">
       <Flex sx={{ alignItems: 'center', height: 50, borderBottom: 'small', borderBottomColor: 'neutral4' }}>
@@ -102,40 +106,43 @@ export default function HistoryPositions() {
           />
         )}
         {!isLoading && !selectionState.allTraders.length && <NoDataOrSelect type="noTraders" />}
-        {hasSelectedTraders && (
-          <PositionTable
-            data={data?.data}
-            columns={historyColumns}
-            isLoading={isLoading}
-            currentSort={currentSort}
-            changeCurrentSort={changeCurrentSort}
-            onClosePositionSuccess={refetch}
-            wrapperSx={{ pt: 3 }}
-            tableHeadSx={{
-              '& th:first-child': {
-                pl: 3,
-              },
-              '& th': {
-                pr: '16px !important',
-                border: 'none',
-              },
-            }}
-            tableBodySx={{
-              borderSpacing: ' 0px 4px',
-              'td:first-child': {
-                pl: 3,
-              },
-              '& td': {
-                pr: 3,
-                bg: 'neutral6',
-              },
-              '& tbody tr:hover td': {
-                bg: 'neutral5',
-              },
-              ...generateDeletedTraderStyle(selectionState.deletedTraders),
-            }}
-          />
-        )}
+        {hasSelectedTraders &&
+          (sm ? (
+            <PositionTable
+              data={data?.data}
+              columns={historyColumns}
+              isLoading={isLoading}
+              currentSort={currentSort}
+              changeCurrentSort={changeCurrentSort}
+              onClosePositionSuccess={refetch}
+              wrapperSx={{ pt: 3 }}
+              tableHeadSx={{
+                '& th:first-child': {
+                  pl: 3,
+                },
+                '& th': {
+                  pr: '16px !important',
+                  border: 'none',
+                },
+              }}
+              tableBodySx={{
+                borderSpacing: ' 0px 4px',
+                'td:first-child': {
+                  pl: 3,
+                },
+                '& td': {
+                  pr: 3,
+                  bg: 'neutral6',
+                },
+                '& tbody tr:hover td': {
+                  bg: 'neutral5',
+                },
+                ...generateDeletedTraderStyle(selectionState.deletedTraders),
+              }}
+            />
+          ) : (
+            <ListPositionMobile data={data?.data} isLoading={isLoading} onClosePositionSuccess={refetch} />
+          ))}
       </Box>
       {hasSelectedTraders && (
         <PaginationWithLimit

@@ -8,11 +8,9 @@ import { getPositionsCounterApi } from 'apis/positionApis'
 import Loading from 'theme/Loading'
 import Tooltip from 'theme/Tooltip'
 import { Box } from 'theme/base'
-import colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { formatLocalDate } from 'utils/helpers/format'
-
-const COLORS = colors(true)
 
 const ActivityHeatmap = ({ protocol, account }: { protocol: ProtocolEnum; account: string }) => {
   const ref = useRef<HTMLDivElement>(null)
@@ -83,22 +81,22 @@ const ActivityHeatmap = ({ protocol, account }: { protocol: ProtocolEnum; accoun
             }}
             theme={{
               light: [
-                COLORS.neutral6,
-                `${COLORS.primary1}40`,
-                `${COLORS.primary1}80`,
-                `${COLORS.primary1}AA`,
-                COLORS.primary1,
+                themeColors.neutral6,
+                `${themeColors.primary1}40`,
+                `${themeColors.primary1}80`,
+                `${themeColors.primary1}AA`,
+                themeColors.primary1,
               ],
               dark: [
-                COLORS.neutral6,
-                `${COLORS.primary1}40`,
-                `${COLORS.primary1}80`,
-                `${COLORS.primary1}AA`,
-                COLORS.primary1,
+                themeColors.neutral6,
+                `${themeColors.primary1}40`,
+                `${themeColors.primary1}80`,
+                `${themeColors.primary1}AA`,
+                themeColors.primary1,
               ],
             }}
             style={{
-              color: COLORS.neutral3,
+              color: themeColors.neutral3,
             }}
             renderBlock={(block, activity) =>
               React.cloneElement(block, {

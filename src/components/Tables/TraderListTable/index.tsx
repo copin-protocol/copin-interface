@@ -14,7 +14,6 @@ import { TableSettingsProps, TraderListSortProps } from './dataConfig'
 export default function TraderListTable<T>({
   data,
   isLoading,
-  currentLimit,
   currentSort,
   changeCurrentSort,
   hideCustomColumns = false,
@@ -28,7 +27,6 @@ export default function TraderListTable<T>({
 }: {
   data: T[] | undefined
   isLoading: boolean
-  currentLimit?: number
   currentSort?: TraderListSortProps<T>
   changeCurrentSort?: (sort: TraderListSortProps<T> | undefined) => void
   hideCustomColumns?: boolean
@@ -98,7 +96,6 @@ export default function TraderListTable<T>({
               <TableBody
                 data={data}
                 isLoading={isLoading}
-                currentLimit={currentLimit}
                 tableSettings={tableSettings}
                 visibleColumns={hasCustomize ? userTraderList : tableSettings.map((setting) => setting.id as string)}
                 checkIsSelected={checkIsSelected}

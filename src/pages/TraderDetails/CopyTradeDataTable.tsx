@@ -5,7 +5,7 @@ import { ColumnData } from 'components/@ui/Table/types'
 import { CopyTradeData } from 'entities/copyTrade.d'
 import { renderTrader } from 'pages/MyProfile/renderProps'
 import { Box, Type } from 'theme/base'
-import colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { CopyTradeStatusEnum } from 'utils/config/enums'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
@@ -113,7 +113,7 @@ export default function CopyTradeDataTable({
         data={data}
         columns={columns}
         isLoading={isLoading}
-        renderRowBackground={() => colors(true).neutral6}
+        renderRowBackground={() => themeColors.neutral6}
         onClickRow={(data) => onPick(data)}
       />
     </Box>

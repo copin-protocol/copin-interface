@@ -54,7 +54,7 @@ export async function getCopyTradeSettingsApi(params: GetCopyTradeSettingsParams
     .get(`${SERVICE}`, { params: newParams })
     .then((res: any) => res.data as ApiListResponse<CopyTradeData>)
 }
-export async function getCopyTradeSettingsListApi(params: {
+export async function getCopyTradeSettingsListApi(params?: {
   accounts: string[]
   copyWalletId: string | undefined
   status: CopyTradeStatusEnum | undefined

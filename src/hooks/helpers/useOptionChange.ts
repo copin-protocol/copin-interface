@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import useSearchParams from 'hooks/router/useSearchParams'
 
@@ -40,16 +40,19 @@ export function useOptionChange<TOption extends { id: any }>({
     getInitOption({ initOption: (searchParams[optionName] as string) ?? defaultOption, options })
   )
 
-  const changeCurrentOption = (option: TOption) => {
-    callback && callback()
-    setCurrentOption(option)
-    const deleteParams: { [key: string]: null } = {}
-    if (optionNameToBeDelete && option.id) {
-      optionNameToBeDelete.forEach((name) => {
-        deleteParams[name] = null
-      })
-    }
-    setSearchParams({ [optionName]: option.id, ...deleteParams })
-  }
+  const changeCurrentOption = useCallback(
+    (option: TOption) => {
+      callback && callback()
+      setCurrentOption(option)
+      const deleteParams: { [key: string]: null } = {}
+      if (optionNameToBeDelete && option.id) {
+        optionNameToBeDelete.forEach((name) => {
+          deleteParams[name] = null
+        })
+      }
+      setSearchParams({ [optionName]: option.id, ...deleteParams })
+    },
+    [callback, optionName, optionNameToBeDelete, setSearchParams]
+  )
   return { currentOption, setCurrentOption, changeCurrentOption }
 }

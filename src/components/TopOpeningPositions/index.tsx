@@ -1,6 +1,6 @@
 import { XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory, useParams } from 'react-router-dom'
 
@@ -14,19 +14,18 @@ import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
-import useUsdPricesStore from 'hooks/store/useUsdPrices'
 import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
 import Drawer from 'theme/Modal/Drawer'
 import { PaginationWithLimit } from 'theme/Pagination'
 import { Box, Flex } from 'theme/base'
-import { DEFAULT_LIMIT } from 'utils/config/constants'
+import { DEFAULT_LIMIT, RELOAD_TOP_OPENING_POSITIONS } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { generateOpeningPositionRoute } from 'utils/helpers/generateRoute'
+import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { pageToOffset } from 'utils/helpers/transform'
 
-import { ExternalSource, TopOpeningColumns } from './ColumnsData'
+import { topOpeningColumns } from './ColumnsData'
 
 const TopOpenPositions = () => {
   const { sm } = useResponsive()
@@ -56,9 +55,9 @@ const TopOpenPositions = () => {
     {
       retry: 0,
       keepPreviousData: true,
+      refetchInterval: RELOAD_TOP_OPENING_POSITIONS,
     }
   )
-  const { prices } = useUsdPricesStore()
   const isMobile = useIsMobile()
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -73,7 +72,7 @@ const TopOpenPositions = () => {
   const handleSelectItem = (data: PositionData) => {
     setCurrentPosition(data)
     setOpenDrawer(true)
-    window.history.replaceState(null, '', generateOpeningPositionRoute(data))
+    window.history.replaceState(null, '', generatePositionDetailsRoute(data))
   }
 
   const handleDismiss = () => {
@@ -81,9 +80,6 @@ const TopOpenPositions = () => {
     setOpenDrawer(false)
   }
 
-  const externalSource: ExternalSource = {
-    prices,
-  }
   if (isLoading)
     return (
       <Box textAlign="center" p={3} width="100%">
@@ -110,8 +106,7 @@ const TopOpenPositions = () => {
           <Table
             restrictHeight
             data={data?.data}
-            columns={TopOpeningColumns}
-            externalSource={externalSource}
+            columns={topOpeningColumns}
             isLoading={isLoading}
             currentSort={currentSort}
             changeCurrentSort={changeCurrentSort}
@@ -145,13 +140,7 @@ const TopOpenPositions = () => {
             onClick={handleDismiss}
           />
           {!!currentPosition && (
-            <PositionDetails
-              protocol={currentPosition.protocol}
-              account={currentPosition.account}
-              indexToken={currentPosition.indexToken}
-              dataKey={currentPosition.key}
-              isShow={openDrawer}
-            />
+            <PositionDetails protocol={currentPosition.protocol} id={currentPosition.id} isShow={openDrawer} />
           )}
         </Container>
       </Drawer>

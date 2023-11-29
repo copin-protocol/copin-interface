@@ -6,7 +6,7 @@ import { AmountText } from 'components/@ui/DecoratedText/ValueText'
 import { CopyTradePnL } from 'entities/copyTrade.d'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import colors from 'theme/colors'
+import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 
 import { generateChartPnL } from './generateChartData'
@@ -22,7 +22,6 @@ export default function ChartCopierPnL({
   from: number
   to: number
 }) {
-  const _color = colors(true)
   const [crossMovePnL, setCrossMovePnL] = useState<number | undefined>()
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
   const generateData = useMemo(() => (data ? generateChartPnL(from, to, data) : []), [data, from, to])
@@ -79,7 +78,7 @@ export default function ChartCopierPnL({
         borderVisible: false,
       },
       layout: {
-        textColor: _color.neutral3,
+        textColor: themeColors.neutral3,
         background: { type: ColorType.Solid, color: 'transparent' },
         fontFamily: FONT_FAMILY,
         fontSize: 13,
@@ -95,15 +94,15 @@ export default function ChartCopierPnL({
         mode: CrosshairMode.Magnet,
         horzLine: {
           // visible: false,
-          labelBackgroundColor: _color.neutral4,
+          labelBackgroundColor: themeColors.neutral4,
           // labelVisible: false,
-          color: _color.neutral3,
+          color: themeColors.neutral3,
           width: 1,
           style: LineStyle.Dotted,
         },
         vertLine: {
-          color: _color.neutral3,
-          labelBackgroundColor: _color.neutral4,
+          color: themeColors.neutral3,
+          labelBackgroundColor: themeColors.neutral4,
           width: 1,
           style: LineStyle.Dotted,
         },
@@ -114,8 +113,8 @@ export default function ChartCopierPnL({
 
     const series = chart.addBaselineSeries({
       priceScaleId: 'right',
-      topLineColor: _color.green1,
-      bottomLineColor: _color.red2,
+      topLineColor: themeColors.green1,
+      bottomLineColor: themeColors.red2,
       baseValue: {
         type: 'price',
         price: 0,

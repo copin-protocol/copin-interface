@@ -1,21 +1,18 @@
 import { XCircle } from '@phosphor-icons/react'
 import { useState } from 'react'
-// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom'
 
 import { ApiListResponse } from 'apis/api'
 import Container from 'components/@ui/Container'
 import Table from 'components/@ui/Table'
 import PositionDetails from 'components/PositionDetails'
-import { columns } from 'components/Tables/OpeningPositionTable'
+import { ExternalSource, columns } from 'components/Tables/OpeningPositionTable'
 import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
-import useUsdPricesStore from 'hooks/store/useUsdPrices'
+import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import IconButton from 'theme/Buttons/IconButton'
 import Drawer from 'theme/Modal/Drawer'
-import { generateOpeningPositionRoute } from 'utils/helpers/generateRoute'
-
-import { ExternalSource } from './ColumnsData'
+import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 export default function TopOpeningsWindow({
   isLoading,
@@ -24,7 +21,7 @@ export default function TopOpeningsWindow({
   isLoading: boolean
   topOpeningData?: ApiListResponse<PositionData>
 }) {
-  const { prices } = useUsdPricesStore()
+  const { prices } = useRealtimeUsdPricesStore()
   const isMobile = useIsMobile()
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -33,7 +30,7 @@ export default function TopOpeningsWindow({
   const handleSelectItem = (data: PositionData) => {
     setCurrentPosition(data)
     setOpenDrawer(true)
-    window.history.replaceState(null, '', generateOpeningPositionRoute(data))
+    window.history.replaceState(null, '', generatePositionDetailsRoute(data))
   }
 
   const handleDismiss = () => {
@@ -75,13 +72,7 @@ export default function TopOpeningsWindow({
             onClick={handleDismiss}
           />
           {!!currentPosition && (
-            <PositionDetails
-              protocol={currentPosition.protocol}
-              account={currentPosition.account}
-              indexToken={currentPosition.indexToken}
-              dataKey={currentPosition.key}
-              isShow={openDrawer}
-            />
+            <PositionDetails protocol={currentPosition.protocol} id={currentPosition.id} isShow={openDrawer} />
           )}
         </Container>
       </Drawer>

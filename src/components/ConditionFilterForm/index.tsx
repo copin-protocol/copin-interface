@@ -143,8 +143,8 @@ function Row<T>({
   })
   const fieldName = fieldNameOption.value
   const conditionType = conditionOption.value
-  const gte = watch('gte')
-  const lte = watch('lte')
+  const gte = watch('gte') ?? 0
+  const lte = watch('lte') ?? 0
 
   useEffect(() => {
     const changedData: RowValues<T> = {
@@ -215,6 +215,7 @@ function Row<T>({
           <Flex sx={{ alignItems: 'center', gap: 2, '& > *': { flex: 1 }, height: '100%' }}>
             {conditionOption.value === 'gte' || conditionOption.value === 'between' ? (
               <Input
+                key="gte"
                 type="number"
                 placeholder=""
                 value={gte ?? ''}
@@ -235,6 +236,7 @@ function Row<T>({
               <>
                 {conditionOption.value === 'between' && <VerticalDivider sx={{ height: 'calc(100% - 16px)' }} />}
                 <Input
+                  key="lte"
                   type="number"
                   placeholder=""
                   value={lte ?? ''}

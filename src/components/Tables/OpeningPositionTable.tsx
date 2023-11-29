@@ -1,27 +1,25 @@
 import { CaretRight, Pulse, XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useMemo, useState } from 'react'
-// eslint-disable-next-line no-restricted-imports
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import emptyBg from 'assets/images/opening_empty_bg.png'
 import Container from 'components/@ui/Container'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import SectionTitle from 'components/@ui/SectionTitle'
-import { renderEntry, renderOpeningPnL, renderSizeOpening } from 'components/@ui/Table/renderProps'
+import Table from 'components/@ui/Table'
+import { renderEntry, renderOpeningPnLWithPrices, renderSizeOpening } from 'components/@ui/Table/renderProps'
+import { ColumnData } from 'components/@ui/Table/types'
 import PositionDetails from 'components/PositionDetails'
 import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
-import useUsdPricesStore, { UsdPrices } from 'hooks/store/useUsdPrices'
+import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
 import Drawer from 'theme/Modal/Drawer'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { generateOpeningPositionRoute } from 'utils/helpers/generateRoute'
-
-import Table from '../@ui/Table'
-import { ColumnData } from '../@ui/Table/types'
+import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 const emptyCss = {
   backgroundImage: `url(${emptyBg})`,
@@ -30,10 +28,17 @@ const emptyCss = {
   backgroundRepeat: 'no-repeat',
 }
 
-export default function OpeningPositionTable({ data, isLoading }: { data?: PositionData[]; isLoading: boolean }) {
-  const { prices } = useUsdPricesStore()
+export default function OpeningPositionTable({
+  data,
+  isLoading,
+  protocol,
+}: {
+  data: PositionData[] | undefined
+  isLoading: boolean
+  protocol: ProtocolEnum
+}) {
+  const { prices } = useRealtimeUsdPricesStore()
   const isMobile = useIsMobile()
-  const { protocol } = useParams<{ protocol: ProtocolEnum }>()
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
@@ -41,7 +46,7 @@ export default function OpeningPositionTable({ data, isLoading }: { data?: Posit
     if (!data) return undefined
     let openingPositions = data
     openingPositions = openingPositions.sort((x, y) =>
-      x.blockNumber < y.blockNumber ? 1 : x.blockNumber > y.blockNumber ? -1 : 0
+      x.openBlockTime < y.openBlockTime ? 1 : x.openBlockTime > y.openBlockTime ? -1 : 0
     )
 
     return {
@@ -53,7 +58,7 @@ export default function OpeningPositionTable({ data, isLoading }: { data?: Posit
   const handleSelectItem = (data: PositionData) => {
     setCurrentPosition(data)
     setOpenDrawer(true)
-    window.history.replaceState(null, '', generateOpeningPositionRoute(data))
+    window.history.replaceState(null, '', generatePositionDetailsRoute(data))
   }
 
   const handleDismiss = () => {
@@ -121,15 +126,7 @@ export default function OpeningPositionTable({ data, isLoading }: { data?: Posit
             sx={{ position: 'absolute', right: 1, top: 3 }}
             onClick={handleDismiss}
           />
-          {!!currentPosition && (
-            <PositionDetails
-              protocol={protocol}
-              account={currentPosition.account}
-              indexToken={currentPosition.indexToken}
-              dataKey={currentPosition.key}
-              isShow={openDrawer}
-            />
-          )}
+          {!!currentPosition && <PositionDetails protocol={protocol} id={currentPosition.id} isShow={openDrawer} />}
         </Container>
       </Drawer>
     </Box>
@@ -142,12 +139,12 @@ export type ExternalSource = {
 export const columns: ColumnData<PositionData, ExternalSource>[] = [
   {
     title: 'Time',
-    dataIndex: 'blockTime',
-    key: 'blockTime',
+    dataIndex: 'openBlockTime',
+    key: 'openBlockTime',
     style: { width: '45px' },
     render: (item) => (
       <Type.Caption color="neutral3">
-        <RelativeShortTimeText date={item.blockTime} />
+        <RelativeShortTimeText date={item.openBlockTime} />
       </Type.Caption>
     ),
   },
@@ -172,7 +169,7 @@ export const columns: ColumnData<PositionData, ExternalSource>[] = [
     key: 'pnl',
     style: { width: '75px', textAlign: 'right' },
     render: (item, index, externalSource) =>
-      externalSource?.prices ? renderOpeningPnL(item, externalSource?.prices, true) : '--',
+      externalSource?.prices ? renderOpeningPnLWithPrices(item, externalSource?.prices, true) : '--',
   },
   {
     title: '',

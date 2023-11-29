@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 

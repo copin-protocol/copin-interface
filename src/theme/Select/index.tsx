@@ -70,7 +70,7 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
         color: 'neutral3',
       },
       '& .select__menu-portal': {
-        zIndex: 10,
+        zIndex: 102,
       },
       '& .select__menu': {
         fontSize: 13,

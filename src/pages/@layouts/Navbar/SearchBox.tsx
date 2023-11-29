@@ -1,34 +1,18 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useQuery } from 'react-query'
-import { useHistory } from 'react-router-dom'
 
-import { getTradersApi } from 'apis/traderApis'
-import { QueryFilter } from 'apis/types'
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TraderData } from 'entities/trader'
-import useDebounce from 'hooks/helpers/useDebounce'
-import useOnClickOutside from 'hooks/helpers/useOnClickOutside'
-import useMyProfile from 'hooks/store/useMyProfile'
-import { useProtocolStore } from 'hooks/store/useProtocols'
+import useSearchTraders from 'hooks/helpers/useSearchTraders'
 import { Button } from 'theme/Buttons'
 import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
-import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { ProtocolEnum } from 'utils/config/enums'
 import { parseProtocolImage } from 'utils/helpers/transform'
-import { getUserForTracking, logEvent } from 'utils/tracking/event'
-import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
-import { isAddress } from 'utils/web3/contracts'
 
 import { SearchResult, SearchWrapper } from './styled'
-
-const MIN_QUICK_SEARCH_LENGTH = 3
 
 const SearchBox = ({
   bg,
@@ -36,153 +20,30 @@ const SearchBox = ({
   actionTitle = 'View',
   placeholder = 'Search Address',
   onSelect,
+  returnRanking = false,
 }: {
   actionTitle?: string
   placeholder?: string
   bg?: string
   width?: string | number
   onSelect?: (data: TraderData) => void
+  returnRanking?: boolean
 }) => {
-  const { protocol } = useProtocolStore()
-  const { myProfile } = useMyProfile()
-  const history = useHistory()
-  const searchWrapperRef = useRef<HTMLDivElement>(null)
-  const inputSearchRef = useRef<HTMLInputElement>(null)
-  const [visibleSearchResult, setVisibleSearchResult] = useState<boolean>(false)
-  const [searchText, setSearchText] = useState<string>('')
-  const trimmedSearchText = searchText.trim()
-  const debounceSearchText = useDebounce<string>(trimmedSearchText, SEARCH_DEBOUNCE_TIME)
-  const [isLoading, setIsLoading] = useState(false)
-  const queryFilters: QueryFilter[] = []
-  if (!!debounceSearchText) {
-    // let keyword = debounceSearchText
-    // try {
-    //   keyword = getAddress(debounceSearchText.toLowerCase())
-    // } catch (e: any) {
-    //   //
-    // }
-    // queryFilters.push({ fieldName: 'account', value: keyword })
-    queryFilters.push({ fieldName: 'type', value: TimeFilterByEnum.S60_DAY })
-  }
-
-  const logEventSearch = useCallback(
-    (action: string) => {
-      logEvent({
-        label: getUserForTracking(myProfile?.username),
-        category: EventCategory.SEARCH,
-        action,
-      })
-    },
-    [myProfile?.username]
-  )
-
-  useOnClickOutside(searchWrapperRef, () => {
-    setVisibleSearchResult(false)
-  })
-
-  const allowSearchProtocol = (data: ProtocolEnum) => {
-    return onSelect ? protocol === data : true
-  }
-
-  const { data: searchUserData, isFetching: searchingUser } = useQuery(
-    [QUERY_KEYS.GET_TOP_TRADERS, debounceSearchText, queryFilters, ProtocolEnum.GMX],
-    () =>
-      getTradersApi({
-        protocol: ProtocolEnum.GMX,
-        body: { pagination: { limit: 5 }, queries: queryFilters, keyword: debounceSearchText },
-      }),
-    {
-      enabled:
-        Boolean(debounceSearchText.length >= MIN_QUICK_SEARCH_LENGTH && debounceSearchText === trimmedSearchText) &&
-        allowSearchProtocol(ProtocolEnum.GMX),
-    }
-  )
-
-  const { data: searchUserDataKwenta, isFetching: searchingUserKwenta } = useQuery(
-    [QUERY_KEYS.GET_TOP_TRADERS, debounceSearchText, queryFilters, ProtocolEnum.KWENTA],
-    () =>
-      getTradersApi({
-        protocol: ProtocolEnum.KWENTA,
-        body: { pagination: { limit: 5 }, queries: queryFilters, keyword: debounceSearchText },
-      }),
-    {
-      enabled:
-        Boolean(debounceSearchText.length >= MIN_QUICK_SEARCH_LENGTH && debounceSearchText === trimmedSearchText) &&
-        allowSearchProtocol(ProtocolEnum.KWENTA),
-    }
-  )
-
-  useEffect(() => {
-    if (!searchingUser && !searchingUserKwenta) {
-      setIsLoading(false)
-    }
-  }, [searchingUser, searchingUserKwenta])
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value)
-    if (e.target.value.trim().length >= MIN_QUICK_SEARCH_LENGTH) {
-      setIsLoading(true)
-      setVisibleSearchResult(true)
-    } else {
-      setIsLoading(false)
-      setVisibleSearchResult(false)
-    }
-  }
-
-  // disable loading when spacing
-  useEffect(() => {
-    if (debounceSearchText === trimmedSearchText) {
-      setIsLoading(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText])
-
-  const handleSearchFocus = () => {
-    if (trimmedSearchText.length) {
-      setVisibleSearchResult(true)
-    }
-    setVisibleSearchResult(false)
-  }
-
-  const handleClick = useCallback(
-    (data?: TraderData) => {
-      if (onSelect && data) {
-        onSelect(data)
-        logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_CUSTOM_ADD)
-      } else {
-        history.push(
-          generateTraderDetailsRoute(
-            data?.protocol ?? protocol ?? ProtocolEnum.GMX,
-            data?.account ?? debounceSearchText
-          )
-        )
-        logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_CLICK)
-      }
-      setVisibleSearchResult(false)
-    },
-    [debounceSearchText, history, logEventSearch, onSelect, protocol]
-  )
-
-  const handleClickViewAll = () => {
-    if (trimmedSearchText.length === 0) return
-    if (!isAddress(debounceSearchText)) return
-    if (searchUserDataKwenta && searchUserDataKwenta.data && searchUserDataKwenta.meta?.total > 0) {
-      handleClick(searchUserDataKwenta.data[0])
-    } else {
-      handleClick()
-    }
-    logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_ENTER)
-  }
-
-  const handleClearSearch = () => {
-    setSearchText('')
-    setVisibleSearchResult(false)
-  }
-
-  useEffect(() => {
-    if (!inputSearchRef.current) return
-    inputSearchRef.current.blur()
-  }, [history.location.pathname])
+  const {
+    searchWrapperRef,
+    inputSearchRef,
+    searchText,
+    handleSearchFocus,
+    handleSearchChange,
+    handleClearSearch,
+    handleClickViewAll,
+    visibleSearchResult,
+    isLoading,
+    searchUserData,
+    handleClick,
+    searchUserDataKwenta,
+    allowSearchProtocol,
+  } = useSearchTraders({ onSelect, returnRanking })
 
   return (
     <SearchWrapper ref={searchWrapperRef} width={width ?? ['100%', '100%', 220, 300]}>
@@ -248,7 +109,9 @@ const SearchBox = ({
                   ))}
                 </Box>
               )}
-              {searchUserData?.meta?.total === 0 && searchUserDataKwenta?.meta?.total === 0 ? <NoDataFound /> : null}
+              {searchUserData?.meta?.total === 0 && searchUserDataKwenta?.meta?.total === 0 ? (
+                <NoDataFound message={<Trans>No Trader Found In The Past 60 Days</Trans>} />
+              ) : null}
             </Box>
           )}
         </SearchResult>

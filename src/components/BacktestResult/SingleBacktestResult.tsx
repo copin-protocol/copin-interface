@@ -58,7 +58,7 @@ export default function SingleBacktestResult({
             ? settings.leverage * settings.orderVolume * positionData.volMultiplier
             : undefined,
         roi: positionData?.liquidate ? -100 : positionData.roi,
-        realisedPnl: positionData.profit,
+        pnl: positionData.profit,
         isLong: !!settings?.reverseCopy ? !positionData.position?.isLong : positionData.position?.isLong,
         fee: 0,
       } as PositionData)

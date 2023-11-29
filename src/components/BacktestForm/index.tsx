@@ -9,9 +9,10 @@ import RangeFilter from 'components/@ui/TimeFilter/RangeFilter'
 import { volumeMultiplierContent, volumeProtectionContent } from 'components/TooltipContents'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
-import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import NumberInput from 'theme/Input/NumberInput'
+import Label from 'theme/InputField/Label'
 import NumberInputField from 'theme/InputField/NumberInputField'
+import Select from 'theme/Select'
 import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
@@ -77,22 +78,18 @@ export default function BacktestForm({
   const pairs = useMemo(() => getTokenTradeList(protocol), [protocol])
   const addressPairs = pairs.map((e) => e.address)
   const isSelectedAll = addressPairs.length === tokenAddresses?.length
+  const pairOptions = pairs?.map((e) => {
+    return { value: e.address, label: e.name }
+  })
+  pairOptions?.unshift({ value: 'all', label: 'All Tokens' })
   const [enableVolumeMultiplier, setEnableVolumeMultiplier] = useState(!!watch('maxVolMultiplier'))
 
   const { sm } = useResponsive()
   const [showGuide, setShowGuide] = useState(false)
+
   useEffect(() => {
     sm ? setTimeout(() => setShowGuide(true), 300) : setShowGuide(false)
   }, [sm])
-
-  const handleSelectAll = () => {
-    if (isSelectedAll) {
-      setValue('tokenAddresses', [])
-    } else {
-      setValue('tokenAddresses', addressPairs)
-      clearErrors('tokenAddresses')
-    }
-  }
 
   return (
     <Box px={3}>
@@ -123,65 +120,66 @@ export default function BacktestForm({
           />
         </Box>
       </RowWrapper2>
-      <Box mb={20} />
-      <RowWrapper2>
-        <Box id={tourConfigs.tradingPairs.id}>
-          <Box mb={12}>
-            <SwitchInputField
-              checked={isSelectedAll}
-              onChange={handleSelectAll}
-              switchLabel="Trading Pairs"
-              labelColor={errors.tokenAddresses?.message ? 'red1' : 'neutral2'}
+      <Box mb={3} />
+      <Box id={tourConfigs.tradingPairs.id}>
+        <Box mb={3}>
+          <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
+          <Flex sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}>
+            <Select
+              menuIsOpen={isSelectedAll ? false : undefined}
+              closeMenuOnSelect={false}
+              options={pairOptions}
+              value={pairOptions?.filter?.((option) => tokenAddresses?.includes(option.value))}
+              onChange={(newValue: any, actionMeta: any) => {
+                clearErrors(fieldName.tokenAddresses)
+                if (actionMeta?.option?.value === 'all') {
+                  setValue(fieldName.tokenAddresses, addressPairs)
+                  return
+                }
+                setValue(
+                  fieldName.tokenAddresses,
+                  newValue?.map((data: any) => data.value)
+                )
+              }}
+              isSearchable
+              isMulti
+            />
+          </Flex>
+          {!!errors?.tokenAddresses?.message && (
+            <Type.Caption color="red1" mt={1} display="block">
+              {errors?.tokenAddresses?.message}
+            </Type.Caption>
+          )}
+        </Box>
+      </Box>
+      <Flex sx={{ gap: [3, 3, 3] }} mb={3} flexDirection={['column', 'column', 'row']}>
+        <Box flex="1" height={80} id={tourConfigs.leverage.id}>
+          <Type.Caption mb={12} color="neutral3" fontWeight={600}>
+            Leverage Slider:{' '}
+            <Box as="span" color="primary1">
+              {leverage}x
+            </Box>
+          </Type.Caption>
+          <Box pr={1} pb={24}>
+            <SliderInput
+              name={fieldName.leverage}
+              control={control}
+              error=""
+              minValue={1}
+              maxValue={50}
+              stepValue={1}
+              marksStep={5}
+              marksUnit={'x'}
             />
           </Box>
-          <Flex sx={{ alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
-            {pairs.map((pair) => {
-              return (
-                <ControlledCheckbox
-                  key={pair.address}
-                  value={pair.address}
-                  label={`${pair.name}/USD`}
-                  // labelSx={{ fontSize: 14, lineHeight: '20px' }}
-                  size={16}
-                  {...register(fieldName.tokenAddresses)}
-                  wrapperSx={{ width: 95, flexShrink: 0 }}
-                />
-              )
-            })}
-          </Flex>
-          {errors.tokenAddresses && <Type.Caption color="red1">{errors.tokenAddresses.message}</Type.Caption>}
-        </Box>
-        <Box>
-          <Box id={tourConfigs.leverage.id}>
-            <Type.Caption mb={12} color="neutral3" fontWeight={600}>
-              Leverage Slider:{' '}
-              <Box as="span" color="primary1">
-                {leverage}x
-              </Box>
+          {errors.leverage?.message ? (
+            <Type.Caption color="red1" display="block">
+              Leverage must be greater or equal to 2
             </Type.Caption>
-            <Box pr={1} pb={24}>
-              <SliderInput
-                name={fieldName.leverage}
-                control={control}
-                error=""
-                minValue={1}
-                maxValue={50}
-                stepValue={1}
-                marksStep={5}
-                marksUnit={'x'}
-              />
-            </Box>
-            {errors.leverage?.message ? (
-              <Type.Caption color="red1" display="block">
-                Leverage must be greater or equal to 2
-              </Type.Caption>
-            ) : null}
-          </Box>
+          ) : null}
         </Box>
-      </RowWrapper2>
-      <Box mb={20} />
-      <RowWrapper2>
-        <Box>
+        <Box ml={3} sx={{ height: 76, width: '1px', bg: 'neutral4', display: ['none', 'none', 'block'] }} />
+        <Box flex="1">
           <SwitchInputField
             switchLabel="Reverse Copy"
             labelColor="orange1"
@@ -192,7 +190,8 @@ export default function BacktestForm({
             Copin will execute the order that is the inverse of the trader&apos;s order.
           </Type.Caption>
         </Box>
-      </RowWrapper2>
+      </Flex>
+      <Box mb={20} />
 
       <Divider my={20} />
 

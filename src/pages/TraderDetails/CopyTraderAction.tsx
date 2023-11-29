@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { useClickLoginButton } from 'components/LoginAction'
-import useMyProfile from 'hooks/store/useMyProfile'
+import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
+import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -15,23 +16,23 @@ const CopyTraderAction = ({
   protocol,
   account,
   onForceReload,
-  hasCopyPermission = false,
 }: {
   protocol: ProtocolEnum
   account: string
   onForceReload: () => void
-  hasCopyPermission?: boolean
 }) => {
-  const { myProfile } = useMyProfile()
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenContactModal, setIsOpenContactModal] = useState(false)
 
-  const { isAuthenticated } = useAuthContext()
+  const { isAuthenticated, profile } = useAuthContext()
+  const { isQuotaExceed, handleQuotaExceed } = useSubscriptionRestrict()
   const handleClickLogin = useClickLoginButton()
   const handleCloseModal = () => {
     setIsOpenModal(false)
     onForceReload()
   }
+
+  const hasCopyPermission = useCopyTradePermission()
 
   return (
     <>
@@ -47,11 +48,15 @@ const CopyTraderAction = ({
             handleClickLogin()
             return
           }
+          if (isQuotaExceed) {
+            handleQuotaExceed()
+            return
+          }
 
           hasCopyPermission ? setIsOpenModal(true) : setIsOpenContactModal(true)
 
           logEvent({
-            label: getUserForTracking(myProfile?.username),
+            label: getUserForTracking(profile?.username),
             category: EventCategory.COPY_TRADE,
             action: EVENT_ACTIONS[EventCategory.COPY_TRADE].OPEN_COPY_TRADE,
           })
@@ -60,7 +65,7 @@ const CopyTraderAction = ({
       >
         Copy Trader
       </Button>
-      {isOpenModal && !!myProfile && (
+      {isOpenModal && !!profile && (
         <CopyTraderModal protocol={protocol} account={account} isOpen={isOpenModal} onClose={handleCloseModal} />
       )}
       {isOpenContactModal && <ModalContactUs onDismiss={() => setIsOpenContactModal(false)} />}

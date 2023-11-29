@@ -4,7 +4,7 @@ import React from 'react'
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { DualTimeText } from 'components/@ui/DecoratedText/TimeText'
-import { renderEntry, renderOpeningPnL, renderSizeOpening } from 'components/@ui/Table/renderProps'
+import { renderEntry, renderOpeningPnL, renderOpeningRoi, renderSizeOpening } from 'components/@ui/Table/renderProps'
 import { ColumnData } from 'components/@ui/Table/types'
 import FavoriteButton from 'components/FavoriteButton'
 import { PositionData } from 'entities/trader'
@@ -14,14 +14,14 @@ import { Box, Flex, Type } from 'theme/base'
 export type ExternalSource = {
   prices: UsdPrices
 }
-export const TopOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
+export const topOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
   {
     title: 'Open Time',
-    dataIndex: 'blockTime',
-    key: 'blockTime',
-    sortBy: 'blockTime',
+    dataIndex: 'openBlockTime',
+    key: 'openBlockTime',
+    sortBy: 'openBlockTime',
     style: { minWidth: '140px' },
-    render: (item) => <DualTimeText color="neutral1" date={item.blockTime} />,
+    render: (item) => <DualTimeText color="neutral1" date={item.openBlockTime} />,
   },
   {
     title: 'Account',
@@ -48,17 +48,15 @@ export const TopOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
     key: 'size',
     sortBy: 'size',
     style: { minWidth: '200px' },
-    render: (item, index, externalSource) =>
-      externalSource?.prices ? renderSizeOpening(item, externalSource?.prices) : '--',
+    render: (item) => renderSizeOpening(item),
   },
   {
     title: 'PnL',
-    dataIndex: 'realisedPnl',
-    key: 'realisedPnl',
+    dataIndex: 'pnl',
+    key: 'pnl',
     sortBy: 'pnl',
     style: { minWidth: ['120px', '150px'], textAlign: 'right' },
-    render: (item, index, externalSource) =>
-      externalSource?.prices ? renderOpeningPnL(item, externalSource?.prices, true) : '--',
+    render: (item) => renderOpeningPnL(item, true),
   },
   {
     title: 'Paid Fees',
@@ -68,29 +66,28 @@ export const TopOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
     style: { minWidth: ['120px', '150px'], textAlign: 'right' },
     render: (item) => (
       <Type.Caption width="100%" color="neutral1" textAlign="right">
-        <SignedText value={-(item.paidFee ?? item.fee)} maxDigit={0} />
+        <SignedText value={-item.fee} maxDigit={0} />
       </Type.Caption>
     ),
   },
   {
     title: 'Funding',
-    dataIndex: 'totalFundingRateFee',
-    key: 'totalFundingRateFee',
+    dataIndex: 'funding',
+    key: 'funding',
     // sortBy: 'fee',
     style: { minWidth: ['120px', '150px'], textAlign: 'right' },
     render: (item) => (
       <Type.Caption width="100%" color="neutral1" textAlign="right">
-        <SignedText value={item.totalFundingRateFee} maxDigit={0} />
+        <SignedText value={item.funding} maxDigit={0} />
       </Type.Caption>
     ),
   },
   {
-    title: 'Est. Closed PnL',
-    dataIndex: 'pnl',
-    key: 'pnl',
+    title: 'ROI',
+    dataIndex: 'roi',
+    key: 'roi',
     style: { minWidth: ['120px', '150px'], textAlign: 'right' },
-    render: (item, index, externalSource) =>
-      externalSource?.prices ? renderOpeningPnL(item, externalSource?.prices) : '--',
+    render: (item) => renderOpeningRoi(item),
   },
   {
     title: '',

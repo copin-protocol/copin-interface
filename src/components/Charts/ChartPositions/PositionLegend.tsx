@@ -1,27 +1,24 @@
 import { CaretRight, XCircle } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
-import React, { useState } from 'react'
-// eslint-disable-next-line no-restricted-imports
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Container from 'components/@ui/Container'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
-import { renderEntry, renderOpeningPnL } from 'components/@ui/Table/renderProps'
+import { renderEntry, renderOpeningPnLWithPrices, renderOpeningRoiWithPrices } from 'components/@ui/Table/renderProps'
 import PositionDetails from 'components/PositionDetails'
 import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import useSearchParams from 'hooks/router/useSearchParams'
-import useUsdPricesStore from 'hooks/store/useUsdPrices'
+import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import Drawer from 'theme/Modal/Drawer'
 import { Box, Flex, Type } from 'theme/base'
-import { PositionStatusEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
-import { generateClosedPositionRoute, generateOpeningPositionRoute } from 'utils/helpers/generateRoute'
+import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 export default function PositionLegend({
   isExpanded,
@@ -32,7 +29,7 @@ export default function PositionLegend({
   isOpening: boolean
   data: PositionData
 }) {
-  const { prices } = useUsdPricesStore()
+  const { prices } = useRealtimeUsdPricesStore()
   const isMobile = useIsMobile()
   const [openDrawer, setOpenDrawer] = useState(false)
   const history = useHistory()
@@ -43,23 +40,17 @@ export default function PositionLegend({
 
   const handleSelectItem = (data: PositionData) => {
     setOpenDrawer(true)
-    if (isOpening) {
-      window.history.replaceState(null, '', generateOpeningPositionRoute(data))
-    } else {
-      window.history.replaceState(
-        null,
-        '',
-        generateClosedPositionRoute({ id: data.id, protocol: data.protocol, nextHours: nextHoursParam })
-      )
-    }
+    window.history.replaceState(
+      null,
+      '',
+      generatePositionDetailsRoute({ id: data.id, protocol: data.protocol, nextHours: nextHoursParam })
+    )
   }
 
   const handleDismiss = () => {
     window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
     setOpenDrawer(false)
   }
-
-  const { lg } = useResponsive()
 
   return (
     <Button
@@ -86,7 +77,7 @@ export default function PositionLegend({
         <Flex minWidth="30px" flexDirection="column" alignItems="flex-start" sx={{ gap: 2 }}>
           <Type.Small>Time</Type.Small>
           <Type.Small color="neutral3">
-            <RelativeShortTimeText date={isOpening ? data.blockTime : data.closeBlockTime} />
+            <RelativeShortTimeText date={isOpening ? data.openBlockTime : data.closeBlockTime} />
           </Type.Small>
         </Flex>
         {isExpanded && (
@@ -106,7 +97,7 @@ export default function PositionLegend({
           <Type.Small>PnL</Type.Small>
           {isOpening ? (
             prices ? (
-              renderOpeningPnL(data, prices, true, { fontSize: '12px', lineHeight: '16px' })
+              renderOpeningPnLWithPrices(data, prices, true, { fontSize: '12px', lineHeight: '16px' })
             ) : (
               '--'
             )
@@ -114,13 +105,35 @@ export default function PositionLegend({
             <Flex alignItems="center" sx={{ gap: '1px' }}>
               {(data.isLiquidate || data.roi <= -100) && <SkullIcon />}
               <SignedText
-                value={data.realisedPnl}
+                value={data.pnl}
                 maxDigit={0}
                 sx={{ textAlign: 'right', width: '100%', fontSize: '12px', lineHeight: '16px' }}
               />
             </Flex>
           )}
         </Flex>
+        {isExpanded && (
+          <Flex minWidth="70px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
+            <Type.Small>ROI</Type.Small>
+            {isOpening ? (
+              renderOpeningRoiWithPrices(data, prices, false, { fontSize: '12px', lineHeight: '16px' })
+            ) : (
+              <Flex alignItems="center" sx={{ gap: '1px' }}>
+                {(data.isLiquidate || data.roi <= -100) && <SkullIcon />}
+                <Type.Small>
+                  <SignedText
+                    value={data.roi}
+                    maxDigit={2}
+                    minDigit={2}
+                    suffix="%"
+                    sx={{ textAlign: 'right', width: '100%', fontSize: '12px', lineHeight: '16px' }}
+                    fontInherit={true}
+                  />
+                </Type.Small>
+              </Flex>
+            )}
+          </Flex>
+        )}
 
         <Flex minWidth="60px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
           <Type.Small>Fee</Type.Small>
@@ -133,30 +146,6 @@ export default function PositionLegend({
             />
           </Type.Small>
         </Flex>
-        {isExpanded && (
-          <Flex minWidth="70px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
-            <Type.Small>Closed PnL</Type.Small>
-            {isOpening ? (
-              prices ? (
-                renderOpeningPnL(data, prices, false, { fontSize: '12px', lineHeight: '16px' })
-              ) : (
-                '--'
-              )
-            ) : (
-              <Flex alignItems="center" sx={{ gap: '1px' }}>
-                {(data.isLiquidate || data.roi <= -100) && <SkullIcon />}
-                <Type.Small>
-                  <SignedText
-                    value={data.realisedPnl - data.fee}
-                    maxDigit={0}
-                    sx={{ textAlign: 'right', width: '100%', fontSize: '12px', lineHeight: '16px' }}
-                    fontInherit={true}
-                  />
-                </Type.Small>
-              </Flex>
-            )}
-          </Flex>
-        )}
 
         <Flex minWidth="20px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
           <Box sx={{ position: 'relative', top: '2px' }}>
@@ -179,14 +168,7 @@ export default function PositionLegend({
               sx={{ position: 'absolute', right: 1, top: 3 }}
               onClick={handleDismiss}
             />
-            <PositionDetails
-              protocol={data.protocol}
-              id={data.status === PositionStatusEnum.OPEN ? undefined : data.id}
-              account={data.account}
-              indexToken={data.indexToken}
-              dataKey={data.key}
-              isShow={openDrawer}
-            />
+            <PositionDetails protocol={data.protocol} id={data.id} isShow={openDrawer} />
           </Container>
         </Drawer>
       )}

@@ -101,8 +101,6 @@ export default function HomeMobile() {
           configs={tabConfigs}
           isActiveFn={(config) => config.route === pathname}
           fullWidth
-          sx={{ borderBottom: 'small', borderColor: 'neutral4', px: 16, width: '100%', mb: 0 }}
-          itemSx={{ flex: '1 0 auto', borderBottom: 'none', fontSize: 16, fontWeight: 500 }}
           onClickItem={(key) => {
             if (key === TabKeyEnum.Favorite) {
               logEvent({

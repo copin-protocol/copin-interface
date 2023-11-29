@@ -6,6 +6,8 @@ export const DEFAULT_LOCALE = 'en'
 export const NETWORK = import.meta.env.VITE_NETWORK_ENV
 export const APP_URL = import.meta.env.VITE_URL
 
+export const TELEGRAM_BOT_ALERT = import.meta.env.VITE_TELEGRAM_BOT_ALERT
+
 export const LINKS = {
   website: 'https://copin.io',
   webapp: 'https://app.copin.io',
@@ -17,6 +19,7 @@ export const LINKS = {
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
   telegram: 'https://t.me/Copin_io',
+  baseTelegram: 'https://t.me',
   docs: 'https://docs.copin.io/',
   policy: 'https://docs.copin.io/another/privacy-policy',
   termOfUse: 'https://docs.copin.io/another/terms-of-service',
@@ -51,6 +54,8 @@ export const MIN_TICK_GAP = 30
 
 export const DELAY_SYNC = 3 * 1000 //milliseconds
 
+export const RELOAD_TOP_OPENING_POSITIONS = 5 * 60 * 1000 //milliseconds
+
 export const MAX_IMAGE_SIZE = 10 * 1024 * 1024 //mb
 
 export const DEFAULT_COVER_IMAGE_URL = '/images/cover.png'
@@ -58,3 +63,11 @@ export const DEFAULT_COVER_IMAGE_URL = '/images/cover.png'
 export const REFERRAL_CODE_LENGTH = 6
 
 export const WALLET_NAME_MAX_LENGTH = 32
+
+export const SUBSCRIPTION_COLLECTION_URL =
+  NETWORK === 'devnet'
+    ? 'https://testnets.opensea.io/collection/copin-subscription-3'
+    : 'https://opensea.io/collection/copin-subscription'
+
+export const MAX_TRADER_ALERT_BASIC = 10
+export const MAX_TRADER_ALERT_PREMIUM = 50

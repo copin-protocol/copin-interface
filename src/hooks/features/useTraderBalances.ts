@@ -80,8 +80,8 @@ const useTraderBalances = ({ account, protocol }: { account?: string; protocol: 
         tokenBalances.push({
           address: tokens[i].address,
           decimals,
-          amountBN: results[i][0],
-          amount: Number(formatUnits(results[i][0], decimals)),
+          amountBN: results[i]?.[0],
+          amount: Number(formatUnits(results[i]?.[0], decimals)),
           price: prices[tokens[i].address] ?? 1,
         })
       }

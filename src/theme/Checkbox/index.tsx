@@ -15,6 +15,7 @@ export interface CheckboxProps {
   labelSx?: any
   hasError?: boolean
   size?: number
+  layout?: 'square' | 'circle'
 }
 
 export const CheckboxWrapper = styled(Box)<{ disabled?: boolean; hasError: boolean; size: number }>`
@@ -75,6 +76,65 @@ export const CheckboxWrapper = styled(Box)<{ disabled?: boolean; hasError: boole
           border-color: ${theme.colors.primary2};
           color: ${theme.colors.neutral8};
         }
+      }
+    }
+  `}
+`
+export const CheckboxCircleWrapper = styled(Box)<{ disabled?: boolean; hasError: boolean; size: number }>`
+  ${({ theme, hasError, size }) => `
+    flex-shrink: 0;
+    display: flex;
+    width: fit-content;
+    position: relative;
+    color: ${theme.colors.neutral1};
+    input {
+      flex-shrink: 0;
+      position: absolute;
+      top: calc(50% - ${size / 2}px);
+      left: 0;
+      width: ${size}px;
+      height: ${size}px;
+      margin: 0;
+      opacity: 0.0001;
+      z-index: 2;
+      cursor: pointer;
+      &:checked + .checkbox {
+        border-color: ${theme.colors.primary1};
+        &:before {
+          display: block;
+          content: '';
+          position: absolute;
+          top: calc(50% - ${(size - 6) / 2}px);
+          left: 3px;
+          width: ${size - 6}px;
+          height: ${size - 6}px;
+          background-color: ${theme.colors.primary1};
+          border-radius: 50%;
+        }
+      }
+    }
+    .checkbox {
+      width: ${size}px;
+      height: ${size}px;
+      border: 1px solid;
+      border-color: ${theme.colors.neutral2};
+      border-radius: 50%;
+      color: transparent;
+    }
+    &:hover .checkbox {
+      border: 1px solid ${hasError ? theme.colors.red1 : theme.colors.neutral2};
+    }
+
+    &[disabled] {
+      cursor: not-allowed;
+      .checkbox {
+        border-color: ${theme.colors.neutral3} !important;
+        &:before {
+          background-color: ${theme.colors.neutral3} !important;
+        }
+      }
+      input {
+        cursor: not-allowed;
       }
     }
   `}

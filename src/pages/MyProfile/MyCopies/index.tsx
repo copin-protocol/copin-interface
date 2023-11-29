@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { useResponsive } from 'ahooks'
 import { useCallback, useRef, useState } from 'react'
 
-import Table from 'components/@ui/Table'
 import { TableSortProps } from 'components/@ui/Table/types'
 import CopyTradeCloneDrawer from 'components/CopyTradeCloneDrawer'
 import CopyTradeEditDrawer from 'components/CopyTradeEditDrawer'
@@ -10,38 +10,16 @@ import { CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
 import useUpdateCopyTrade from 'hooks/features/useUpdateCopyTrade'
 import { Button } from 'theme/Buttons'
-import Checkbox from 'theme/Checkbox'
-import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Image, Type } from 'theme/base'
+import { Box, Flex } from 'theme/base'
 import { CopyTradeStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
-import { TOOLTIP_KEYS } from 'utils/config/keys'
-import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
-import { COPY_TRADE_STATUS_TRANS } from 'utils/config/translations'
-import { formatNumber } from 'utils/helpers/format'
-import { parseProtocolImage } from 'utils/helpers/transform'
 
 import NoDataOrSelect from '../NoDataOrSelect'
 import ConfirmStopModal from './ConfirmStopModal'
-import SelectedTraders from './SelectedTraders'
+import FilterSection from './FilterSection'
+import { CopyTable, ListCopy } from './ListCopyTrade'
 import useCopyTradeColumns from './useCopyTradeColumns'
 
-export default function MyCopies({
-  traders,
-  selectedTraders,
-  data,
-  allCopyTrades,
-  isLoading,
-  onRefresh,
-  handleToggleStatus,
-  handleToggleProtocol,
-  checkIsStatusChecked,
-  checkIsProtocolChecked,
-  handleSelectAllTraders,
-  isLoadingTraders,
-  handleToggleTrader,
-  handleAddTrader,
-  copyWallet,
-}: {
+export interface MyCopiesProps {
   traders: string[]
   selectedTraders: string[]
   data: CopyTradeData[] | undefined
@@ -57,7 +35,21 @@ export default function MyCopies({
   handleToggleTrader: (address: string) => void
   handleAddTrader: (address: string) => void
   copyWallet: CopyWalletData | null
-}) {
+  copyStatus: CopyTradeStatusEnum[]
+  selectedProtocol: ProtocolEnum[]
+}
+
+export default function MyCopies(props: MyCopiesProps) {
+  const {
+    traders,
+    selectedTraders,
+    data,
+    isLoading,
+    onRefresh,
+    handleSelectAllTraders,
+    isLoadingTraders,
+    handleAddTrader,
+  } = props
   const [openConfirmStopModal, setOpenConfirmStopModal] = useState(false)
   const { updateCopyTrade, isMutating } = useUpdateCopyTrade({
     onSuccess: () => {
@@ -102,7 +94,7 @@ export default function MyCopies({
     [updateCopyTrade]
   )
 
-  const columns = useCopyTradeColumns({
+  const { columns, renderProps } = useCopyTradeColumns({
     onSelect,
     setOpenDrawer,
     setOpenCloneDrawer,
@@ -148,99 +140,24 @@ export default function MyCopies({
   }
 
   const hasSelectedTraders = !!selectedTraders.length
+  const { sm } = useResponsive()
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-      <Flex p={2} pr={3} sx={{ gap: 3, borderBottom: 'small', borderColor: 'neutral5' }}>
-        <Flex flex={1} sx={{ gap: 12, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-          <Flex sx={{ alignItems: 'center' }}>
-            <SelectedTraders
-              selectedTraders={selectedTraders}
-              allTraders={traders}
-              allCopyTrades={allCopyTrades}
-              handleToggleTrader={handleToggleTrader}
-              handleSelectAllTraders={handleSelectAllTraders}
-            />
-            <Flex sx={{ gap: 2 }}>
-              <Type.Caption color="neutral1">
-                <Trans>Available Margin</Trans>:
-              </Type.Caption>
-              <Type.CaptionBold color="neutral1">${formatNumber(copyWallet?.availableBalance)}</Type.CaptionBold>
-            </Flex>
-          </Flex>
-          <Flex alignItems="center" sx={{ gap: 3, flexWrap: 'wrap' }}>
-            <Box sx={{ width: '1px', height: '20px', bg: 'neutral4' }} display={{ _: 'none', sm: 'block' }} />
-            <Flex alignItems="center" sx={{ gap: 3 }}>
-              <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                <Trans>Source</Trans>
-              </Type.Caption>
-              {protocolFilters.map((protocol) => {
-                return (
-                  <Checkbox
-                    key={protocol}
-                    checked={checkIsProtocolChecked(protocol)}
-                    onChange={() => handleToggleProtocol(protocol)}
-                  >
-                    <Flex sx={{ alignItems: 'center', gap: 2 }}>
-                      <Image src={parseProtocolImage(protocol)} width={20} height={20} />
-                      <Type.Caption lineHeight="16px">{PROTOCOL_OPTIONS_MAPPING[protocol].text}</Type.Caption>
-                    </Flex>
-                  </Checkbox>
-                )
-              })}
-            </Flex>
-            <Box sx={{ width: '1px', height: '20px', bg: 'neutral4' }} display={{ _: 'none', sm: 'block' }} />
-            <Flex alignItems="center" sx={{ gap: 3 }}>
-              <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                <Trans>Status</Trans>
-              </Type.Caption>
-              {statusFilters.map((status) => {
-                return (
-                  <Checkbox
-                    key={status}
-                    checked={checkIsStatusChecked(status)}
-                    onChange={() => handleToggleStatus(status)}
-                  >
-                    <Type.Caption lineHeight="16px">{COPY_TRADE_STATUS_TRANS[status]}</Type.Caption>
-                  </Checkbox>
-                )
-              })}
-            </Flex>
-          </Flex>
-        </Flex>
-      </Flex>
+      <FilterSection {...props} />
       <Box flex="1 0 0" overflow="hidden">
-        {hasSelectedTraders && (
-          <>
-            <Table
-              restrictHeight
-              data={sortedData}
+        {hasSelectedTraders &&
+          (sm ? (
+            <CopyTable
+              sortedData={sortedData}
               columns={columns}
               isLoading={isLoading}
               currentSort={currentSort}
               changeCurrentSort={changeCurrentSort}
-              tableHeadSx={{
-                '& th': {
-                  border: 'none',
-                },
-              }}
-              tableBodySx={{
-                borderSpacing: '0px 4px',
-                '& td': {
-                  bg: 'neutral6',
-                },
-                '& tr:hover td': {
-                  bg: 'neutral5',
-                },
-              }}
             />
-            <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
-              <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
-                Reverse Copy
-              </Type.Caption>
-            </Tooltip>
-          </>
-        )}
+          ) : (
+            <ListCopy sortedData={sortedData} isLoading={isLoading} renderProps={renderProps} />
+          ))}
         {!isLoading && !!traders.length && !hasSelectedTraders && (
           <NoDataOrSelect
             type="noSelectTraders"
@@ -298,7 +215,3 @@ export default function MyCopies({
     </Flex>
   )
 }
-
-const protocolFilters = [ProtocolEnum.GMX, ProtocolEnum.KWENTA]
-
-const statusFilters = [CopyTradeStatusEnum.RUNNING, CopyTradeStatusEnum.STOPPED]

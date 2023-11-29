@@ -28,8 +28,8 @@ function CustomizeColumn<T, K>({
         ...menuSx,
       }}
       hasArrow={false}
-      dismissable={false}
-      menuDismissable
+      dismissible={false}
+      menuDismissible
       menu={
         <>
           {defaultColumns.map((item, index) => {

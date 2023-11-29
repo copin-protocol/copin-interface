@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useState } from 'react'
@@ -6,7 +5,6 @@ import { useQuery } from 'react-query'
 
 import { getUserActivityLogsApi } from 'apis/activityLogApis'
 import Container from 'components/@ui/Container'
-import Divider from 'components/@ui/Divider'
 import Table from 'components/@ui/Table'
 import CopyTradePositionDetails from 'components/CopyTradePositionDetails'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
@@ -57,10 +55,11 @@ export default function UserActivity() {
   return (
     <>
       <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
-        <Type.H5 p={3}>
+        {/* <Type.H5 p={3}>
           <Trans>Activity</Trans>
         </Type.H5>
-        <Divider mb={3} />
+        <Divider mb={3} /> */}
+        <Box mt={2} />
         <Box flex="1 0 0" sx={{ overflow: 'hidden' }}>
           {lg ? (
             <Table
@@ -87,6 +86,7 @@ export default function UserActivity() {
           onPageChange={changeCurrentPage}
           onLimitChange={changeCurrentLimit}
           apiMeta={data?.meta}
+          sx={{ py: 2 }}
         />
       </Flex>
       {openCopyDrawer && currentCopyPosition && (

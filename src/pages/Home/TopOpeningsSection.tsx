@@ -5,6 +5,7 @@ import { default as OpeningsTable } from 'components/TopOpeningPositions/TopOpen
 import useQueryTopOpenings from 'hooks/router/useQueryTopOpenings'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { RELOAD_TOP_OPENING_POSITIONS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { generateTopOpeningOrdersRoute } from 'utils/helpers/generateRoute'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
@@ -16,7 +17,7 @@ export default function TopOpeningsSection({ protocol }: { protocol: ProtocolEnu
   const { data, isLoading } = useQueryTopOpenings({
     protocol,
     defaultLimit: LIMIT,
-    intervalRequest: 30000,
+    intervalRequest: RELOAD_TOP_OPENING_POSITIONS,
     queryKey: 'topOpeningWindow',
   })
   return (

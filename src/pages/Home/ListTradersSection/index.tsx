@@ -11,7 +11,7 @@ import { mobileTableSettings, tableSettings } from 'components/Tables/TraderList
 import { TraderData } from 'entities/trader.d'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
 import { useAuthContext } from 'hooks/web3/useAuth'
-import { PaginationWithLimit, PaginationWithSelect } from 'theme/Pagination'
+import { PaginationWithLimit } from 'theme/Pagination'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
 import { MEDIA_WIDTHS } from 'theme/theme'
@@ -69,7 +69,7 @@ function ListTradersSection({
           <Flex sx={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', p: 3 }}>
             <Box mt={4} mb={3} variant="card" sx={{ mx: 'auto', maxWidth: 600, width: '100%' }}>
               <Type.Body textAlign="center" display="block" mb={24}>
-                Data is being processed. Please wait a minute
+                Data is being processed. Please wait a few minutes
               </Type.Body>
               <ProgressBar
                 percent={((loadingRangeProgress?.processed ?? 0) / (loadingRangeProgress?.total ?? 0)) * 100}
@@ -90,7 +90,6 @@ function ListTradersSection({
             <TraderListTable
               data={data?.data.map((item) => ({ ...item, note: notes ? notes[item.account] : undefined }))}
               isLoading={isLoading}
-              currentLimit={currentLimit}
               currentSort={currentSort}
               changeCurrentSort={changeCurrentSort}
               isSelectedAll={isSelectedAll}
@@ -179,15 +178,24 @@ function TablePagination({
             <MultipleBacktestButton />
             <Flex
               sx={{
-                px: 3,
+                px: 12,
                 '& *': { fontSize: '13px' },
                 alignItems: 'center',
-                gap: 2,
+                gap: [12, 2],
                 borderTop: ['small', 'none'],
                 borderTopColor: ['neutral4', 'none'],
               }}
             >
-              <PaginationWithSelect currentPage={currentPage} onPageChange={changeCurrentPage} apiMeta={data?.meta} />
+              <Box flex="1">
+                <PaginationWithLimit
+                  currentLimit={currentLimit}
+                  onLimitChange={changeCurrentLimit}
+                  currentPage={currentPage}
+                  onPageChange={changeCurrentPage}
+                  apiMeta={data?.meta}
+                  sx={{ flexDirection: 'row', px: 0 }}
+                />
+              </Box>
               <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
               <CustomizeColumn hasTitle={false} />
             </Flex>
