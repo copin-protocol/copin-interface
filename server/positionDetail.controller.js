@@ -9,7 +9,7 @@ const getPositionDetails = async (req, res) => {
 
   let thumbnail = `${configs.baseUrl}/images/cover/cover.png`
   try {
-    const newThumbnail = `${configs.imageApiUrl}/share_${protocol}_${id}`
+    const newThumbnail = `${configs.imageApiUrl}/share_closed_${protocol}_${id}`
     const image = await axios.get(`${newThumbnail}`)
     if (image.data) thumbnail = newThumbnail + `?${new Date().getTime()}`
   } catch {}
@@ -21,7 +21,7 @@ const getPositionDetails = async (req, res) => {
       params: {
         title: `Trade on ${protocol} - View this position details on Copin`,
         thumbnail,
-        url: `${configs.baseUrl}/${protocol}/position/${id}${next_hours ? `?next_hours=${next_hours}` : ''}`
+        url: `${configs.baseUrl}/${protocol}/position/${id}${next_hours ? `?next_hours=${next_hours}` : ''}`,
       },
     })
   } catch {
