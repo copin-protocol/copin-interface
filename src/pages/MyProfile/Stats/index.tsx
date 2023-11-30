@@ -4,11 +4,12 @@ import { useQuery } from 'react-query'
 
 import { getCopyTradePnLApi } from 'apis/copyTradeApis'
 import Divider from 'components/@ui/Divider'
-import TimeFilter, { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
+import TimeFilter, { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
+import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
 import { Box, Flex } from 'theme/base'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getDurationFromTimeFilter, getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
@@ -26,6 +27,7 @@ const ViewEnumLabel = {
 }
 
 const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; copyWalletId: string | undefined }) => {
+  const { isPremiumUser, handleIsBasicUser } = useSubscriptionRestrict()
   const { currentOption, changeCurrentOption } = useOptionChange({ optionName: 'filter', options: TIME_FILTER_OPTIONS })
   const [view, setView] = useState<ViewEnum>(ViewEnum.DailyRoi)
   const to = useMemo(() => dayjs().utc().valueOf(), [])
@@ -52,6 +54,14 @@ const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; co
       retry: 0,
     }
   )
+
+  const handleFilterChange = (timeOption: TimeFilterProps) => {
+    if (!isPremiumUser && timeOption.id === TimeFilterByEnum.ALL_TIME) {
+      handleIsBasicUser()
+      return
+    }
+    changeCurrentOption(timeOption)
+  }
 
   return (
     <>
@@ -83,7 +93,7 @@ const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; co
         >
           {ViewEnumLabel[view]}
         </Dropdown>
-        <TimeFilter currentFilter={currentOption} handleFilterChange={changeCurrentOption} />
+        <TimeFilter currentFilter={currentOption} handleFilterChange={handleFilterChange} />
       </Flex>
       <Divider isDashed />
       <Box

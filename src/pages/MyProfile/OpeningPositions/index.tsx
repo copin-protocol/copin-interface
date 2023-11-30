@@ -6,6 +6,7 @@ import { GetMyPositionRequestBody, GetMyPositionsParams } from 'apis/types'
 import { getMyCopyPositionsApi } from 'apis/userApis'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { CopyWalletData } from 'entities/copyWallet'
+import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
@@ -13,6 +14,7 @@ import { QUERY_KEYS } from 'utils/config/keys'
 
 import PositionTable from '../PositionTable'
 import { openingColumns } from '../PositionTable/ListPositions'
+import { ExternalSource } from '../PositionTable/PositionsContainer'
 import SettingConfigs from './SettingConfigs'
 
 export default function OpeningPositions({
@@ -22,6 +24,7 @@ export default function OpeningPositions({
   activeWallet: CopyWalletData | null
   copyWallets: CopyWalletData[] | undefined
 }) {
+  const { prices } = useRealtimeUsdPricesStore()
   const _queryParams: GetMyPositionsParams = {
     limit: DEFAULT_LIMIT,
     offset: 0,
@@ -46,6 +49,10 @@ export default function OpeningPositions({
   )
 
   const title = <Trans>Opening Positions</Trans>
+
+  const externalSource: ExternalSource = {
+    prices,
+  }
 
   return (
     <Flex width="100%" height="100%" flexDirection="column" bg="neutral5">
@@ -72,6 +79,7 @@ export default function OpeningPositions({
             columns={openingColumns}
             isLoading={isLoading}
             onClosePositionSuccess={refetch}
+            externalSource={externalSource}
           />
         </Box>
       )}

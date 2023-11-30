@@ -505,42 +505,44 @@ const TOKEN_TRADE_SYNTHETIX = {
   },
 }
 
-export const TOKEN_TRADE_SUPPORT: TokenSupport = {
-  [ProtocolEnum.GMX]: {
-    '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f': {
-      address: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
-      name: 'BTC',
-      symbol: 'BTC',
-      decimals: 8,
-      priceFeedId: '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43',
-      // icon: IconBTC,
-    },
-    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1': {
-      address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-      name: 'ETH',
-      symbol: 'ETH',
-      decimals: 18,
-      priceFeedId: '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
-      // icon: IconETH,
-    },
-
-    '0xf97f4df75117a78c1A5a0DBb814Af92458539FB4': {
-      address: '0xf97f4df75117a78c1A5a0DBb814Af92458539FB4',
-      name: 'LINK',
-      symbol: 'LINK',
-      decimals: 18,
-      priceFeedId: '0x8ac0c70fff57e9aefdf5edf44b51d62c2d433653cbb2cf5cc06bb115af04d221',
-      // icon: IconLINK,
-    },
-    '0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0': {
-      address: '0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0',
-      name: 'UNI',
-      symbol: 'UNI',
-      decimals: 18,
-      priceFeedId: '0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501',
-      // icon: IconUNI,
-    },
+const TOKEN_TRADE_GMX = {
+  '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f': {
+    address: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
+    name: 'BTC',
+    symbol: 'BTC',
+    decimals: 8,
+    priceFeedId: '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43',
+    // icon: IconBTC,
   },
+  '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1': {
+    address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    name: 'ETH',
+    symbol: 'ETH',
+    decimals: 18,
+    priceFeedId: '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
+    // icon: IconETH,
+  },
+
+  '0xf97f4df75117a78c1A5a0DBb814Af92458539FB4': {
+    address: '0xf97f4df75117a78c1A5a0DBb814Af92458539FB4',
+    name: 'LINK',
+    symbol: 'LINK',
+    decimals: 18,
+    priceFeedId: '0x8ac0c70fff57e9aefdf5edf44b51d62c2d433653cbb2cf5cc06bb115af04d221',
+    // icon: IconLINK,
+  },
+  '0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0': {
+    address: '0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0',
+    name: 'UNI',
+    symbol: 'UNI',
+    decimals: 18,
+    priceFeedId: '0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501',
+    // icon: IconUNI,
+  },
+}
+
+export const TOKEN_TRADE_SUPPORT: TokenSupport = {
+  [ProtocolEnum.GMX]: TOKEN_TRADE_GMX,
   [ProtocolEnum.KWENTA]: TOKEN_TRADE_SYNTHETIX,
   [ProtocolEnum.POLYNOMIAL]: TOKEN_TRADE_SYNTHETIX,
 }

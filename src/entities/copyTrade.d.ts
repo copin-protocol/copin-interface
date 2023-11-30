@@ -92,6 +92,7 @@ export interface CopyPositionData {
   closePrice: number
   stopLossPrice: number
   stopLossAmount: number
+  latestStopLossId?: string
   pnl: number
   status: PositionStatusEnum
   lastOrderAt: string
@@ -125,6 +126,7 @@ export interface CopyTradeBalanceDataResponse {
 export interface CopyTradePnL {
   date: string
   amount: number
+  roi: number
 }
 
 export interface MyCopyTradeOverview {

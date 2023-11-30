@@ -21,14 +21,16 @@ export function generateChartPnL(fromDate: number, toDate: number, cumulativeDat
   let currentDate = dayjs(fromDate).utc().startOf('hour')
 
   while (currentDate.isSame(toDate) || currentDate.isBefore(toDate)) {
-    let value = 0
+    let amount = 0
+    let roi = 0
     cumulativeDates.forEach((cumulativeDate) => {
       if (currentDate.isAfter(cumulativeDate.date)) {
-        value = cumulativeDate.amount
+        amount = cumulativeDate.amount
+        roi = cumulativeDate.roi
       }
     })
 
-    dateArray.push({ date: currentDate.toISOString(), amount: value })
+    dateArray.push({ date: currentDate.toISOString(), amount, roi })
     currentDate = addTimeframe(currentDate.valueOf(), fromDate, toDate)
   }
 
@@ -42,14 +44,16 @@ export function generateChartDailyROI(fromDate: number, toDate: number, cumulati
   let currentDate = dayjs(fromDate).utc().startOf('day')
 
   while (currentDate.isSame(toDate) || currentDate.isBefore(toDate)) {
-    let value = 0
+    let amount = 0
+    let roi = 0
     cumulativeDates.forEach((cumulativeDate) => {
       if (currentDate.isSame(cumulativeDate.date)) {
-        value = cumulativeDate.amount
+        amount = cumulativeDate.amount
+        roi = cumulativeDate.roi
       }
     })
 
-    dateArray.push({ date: currentDate.toISOString(), amount: value })
+    dateArray.push({ date: currentDate.toISOString(), amount, roi })
     currentDate = currentDate.add(1, 'day')
   }
 
@@ -60,7 +64,8 @@ export function generateChartDailyROI(fromDate: number, toDate: number, cumulati
   for (let i = 0; i < data.length - 1; i++) {
     result.push({
       date: data[i + 1].date,
-      amount: data[i].amount ? ((data[i + 1].amount - data[i].amount) / data[i].amount) * 100 : 0,
+      roi: data[i].amount ? ((data[i + 1].amount - data[i].amount) / data[i].amount) * 100 : 0,
+      amount: data[i].amount ? data[i + 1].amount - data[i].amount : 0,
     })
   }
 
