@@ -7,6 +7,7 @@ export const normalizeTraderData = (t: ResponseTraderData) => {
   t.totalLoss = t.realisedTotalLoss
   t.avgRoi = t.realisedAvgRoi
   t.maxRoi = t.realisedMaxRoi
+  t.pnl = t.realisedPnl
   t.maxPnl = t.realisedMaxPnl
   t.maxDrawdown = t.realisedMaxDrawdown
   t.maxDrawdownPnl = t.realisedMaxDrawdownPnl
