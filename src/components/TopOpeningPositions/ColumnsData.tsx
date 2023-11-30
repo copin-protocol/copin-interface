@@ -59,7 +59,7 @@ export const topOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
     render: (item) => renderOpeningPnL(item, true),
   },
   {
-    title: 'Fee',
+    title: 'Paid Fees',
     dataIndex: 'fee',
     key: 'fee',
     // sortBy: 'fee',
@@ -67,6 +67,18 @@ export const topOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
     render: (item) => (
       <Type.Caption width="100%" color="neutral1" textAlign="right">
         <SignedText value={-item.fee} maxDigit={0} />
+      </Type.Caption>
+    ),
+  },
+  {
+    title: 'Funding',
+    dataIndex: 'funding',
+    key: 'funding',
+    // sortBy: 'fee',
+    style: { minWidth: ['120px', '150px'], textAlign: 'right' },
+    render: (item) => (
+      <Type.Caption width="100%" color="neutral1" textAlign="right">
+        <SignedText value={item.funding} maxDigit={0} />
       </Type.Caption>
     ),
   },

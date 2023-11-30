@@ -29,7 +29,14 @@ function RangeFilterFinancial(
     height,
     label,
     onChange,
-  }: { width: number; height: number; label: string; onChange: (params: { from: Date; to: Date }) => void }
+    disabled,
+  }: {
+    width: number
+    height: number
+    label: string
+    disabled?: boolean
+    onChange: (params: { from: Date; to: Date }) => void
+  }
 ) {
   const PRIMARY = '#4EAEFD'
   const RED = '#FA5547'
@@ -364,7 +371,7 @@ function RangeFilterFinancial(
 
     brushBg.lower()
 
-    if (isShowBtn && duration >= MIN_DURATION) {
+    if (!disabled && isShowBtn && duration >= MIN_DURATION) {
       const applyBtn = svg
         .append('g')
         .attr('class', 'setbtn')

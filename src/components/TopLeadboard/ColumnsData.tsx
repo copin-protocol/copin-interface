@@ -78,13 +78,13 @@ export const LeaderboardColumns: ColumnData<TopTraderData, ExternalSource>[] = [
   },
   {
     title: 'Total Liquidations',
-    dataIndex: 'totalLose',
-    key: 'totalLose',
+    dataIndex: 'totalLiquidation',
+    key: 'totalLiquidation',
     // sortBy: 'fee',
     style: { minWidth: ['120px', '120px'], textAlign: 'right' },
     render: (item) => (
       <Type.Caption width="100%" color="neutral1" textAlign="right">
-        {formatNumber(item.totalLose)}
+        {formatNumber(item.totalLiquidation)}
       </Type.Caption>
     ),
   },

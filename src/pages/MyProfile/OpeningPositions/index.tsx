@@ -30,7 +30,7 @@ export default function OpeningPositions({
     copyWalletId: activeWallet?.id,
   }
   const _queryBody: GetMyPositionRequestBody = {
-    copyWalletId: activeWallet?.id,
+    copyWalletIds: activeWallet?.id ? [activeWallet.id] : copyWallets?.map((e) => e.id),
   }
   const {
     data,

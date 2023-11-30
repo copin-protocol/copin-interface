@@ -86,7 +86,7 @@ export default function TraderDetails() {
   })
 
   const setTimeOption = (option: TimeFilterProps) => {
-    if (!isPremiumUser) {
+    if (option.id === TimeFilterByEnum.ALL_TIME && !isPremiumUser) {
       handleIsBasicUser()
       return
     }

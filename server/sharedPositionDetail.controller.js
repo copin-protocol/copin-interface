@@ -16,7 +16,7 @@ const getSharedPositionDetails = async (req, res) => {
       ? `${configs.imageApiUrl}/share_opening_${protocol}_${key}_${blockNumber}`
       : `${configs.imageApiUrl}/share_closed_${protocol}_${positionId}`
     const image = await axios.get(`${newThumbnail}`)
-    if (image.data) thumbnail = newThumbnail
+    if (image.data) thumbnail = newThumbnail + `?${new Date().getTime()}`
 
     renderHTML({
       req,
