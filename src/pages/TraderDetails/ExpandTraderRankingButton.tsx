@@ -1,26 +1,30 @@
-import { ArrowsOutSimple } from '@phosphor-icons/react'
+import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { ComponentProps, Suspense, lazy, useState } from 'react'
 
-import SquareIconButton from 'components/@ui/SquareIconButton'
+import { TraderData } from 'entities/trader'
+import { Button } from 'theme/Buttons'
 
 const TraderRankingExpanded = lazy(() => import('./TraderRankingExpanded'))
+type TraderRankingExpandedProps = ComponentProps<typeof TraderRankingExpanded>
 
 export default function ExpandTraderRankingButton(
-  props: Omit<ComponentProps<typeof TraderRankingExpanded>, 'handleExpand'>
+  props: Omit<TraderRankingExpandedProps, 'handleExpand' | 'traderData'> & {
+    traderData: TraderData | undefined
+  }
 ) {
   const [expanded, setExpanded] = useState(false)
   const { md } = useResponsive()
   if (!md) return <></>
   return (
     <>
-      <SquareIconButton
-        sx={{ width: 24, height: 24 }}
-        icon={<ArrowsOutSimple size={18} />}
-        onClick={() => setExpanded(true)}
-      />
+      <Button variant="ghostWarning" onClick={() => setExpanded(true)} sx={{ p: 0 }} disabled={!props.traderData}>
+        <Trans>Compare / Find similar traders</Trans>
+      </Button>
       <Suspense fallback={<></>}>
-        {expanded && <TraderRankingExpanded {...props} handleExpand={setExpanded} />}
+        {expanded && !!props.traderData && (
+          <TraderRankingExpanded {...(props as TraderRankingExpandedProps)} handleExpand={() => setExpanded(false)} />
+        )}
       </Suspense>
     </>
   )

@@ -49,37 +49,41 @@ function TraderRanking({
       sx={{
         width: '100%',
         height: '100%',
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
         position: 'relative',
-        paddingTop: [64, 64, 64, 24],
+        paddingTop: [24, 56, 56, 10],
       }}
     >
-      <ScoreChart data={ranking} width={400} height={sm ? 200 : 175} />
-      <Type.CaptionBold
-        sx={{
-          position: 'absolute',
-          width: '100%',
-          top: [48, 48, 48, 8],
-        }}
-        color="neutral1"
-        textAlign="center"
-      >
+      <Type.CaptionBold sx={{ width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">
         <Flex sx={{ alignItems: 'center', justifyContent: 'center', width: '100%', gap: '0.5ch' }}>
           <Box as="span">Better than {avgScore.toFixed(0)}% traders in</Box>
           <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
         </Flex>
       </Type.CaptionBold>
-      <Flex sx={{ position: 'absolute', top: [50, 50, 50, 10], right: 10, alignItems: 'center', gap: 2 }}>
+      <Flex sx={{ flex: 1, alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+        <ScoreChart data={ranking} width={400} height={175} />
+      </Flex>
+      <Box sx={{ display: ['none', 'none', 'block'], width: 'calc(100% - 32px)', height: '1px', bg: 'neutral4' }} />
+      <Box
+        sx={{
+          display: ['none', 'none', 'flex'],
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: 40,
+          flexShrink: 0,
+          width: '100%',
+        }}
+      >
+        <ExpandTraderRankingButton
+          traderData={data}
+          traderScore={avgScore}
+          timeOption={timeOption}
+          onChangeTime={onChangeTime}
+        />
+      </Box>
+      <Flex sx={{ position: 'absolute', top: [16, 50, 50, 10], right: 10, alignItems: 'center', gap: 2 }}>
         <CustomizeRankingColumns />
-        {data && (
-          <ExpandTraderRankingButton
-            traderData={data}
-            traderScore={avgScore}
-            timeOption={timeOption}
-            onChangeTime={onChangeTime}
-          />
-        )}
       </Flex>
     </Flex>
   )

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ChartBar, Funnel } from '@phosphor-icons/react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
@@ -23,6 +23,24 @@ export default function ConditionFilter({
   filtersExpanded,
 }: ConditionFilterProps) {
   const [filterTab, setFilterTab] = useState(tab) // reduce render
+  const filterKey = useMemo(
+    () =>
+      filters
+        .map((values) => {
+          return Object.values(values).join('_')
+        })
+        .join('_'),
+    [filters]
+  )
+  const rankingKey = useMemo(
+    () =>
+      rankingFilters
+        .map((values) => {
+          return Object.values(values).join('_')
+        })
+        .join('_'),
+    [rankingFilters]
+  )
 
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>
@@ -88,7 +106,7 @@ export default function ConditionFilter({
       <Box flex="1 0 0">
         <Box display={filterTab === FilterTabEnum.DEFAULT ? 'block' : 'none'} width="100%" height="100%">
           <DefaultFilterForm
-            key={Object.keys(filters).join('')}
+            key={filterKey}
             defaultFormValues={filters}
             handleChangeOption={changeFilters}
             handleClose={onCancel}
@@ -98,7 +116,7 @@ export default function ConditionFilter({
         </Box>
         <Box display={filterTab === FilterTabEnum.RANKING ? 'block' : 'none'} width="100%" height="100%">
           <RankingFilterForm
-            key={Object.keys(rankingFilters).join('')}
+            key={rankingKey}
             defaultFormValues={rankingFilters}
             handleChangeOption={changeRankingFilters}
             handleClose={onCancel}

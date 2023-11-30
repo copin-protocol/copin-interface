@@ -63,7 +63,7 @@ const MobileLayout = ({ children }: LayoutProps) => {
       {tab === TabEnum.CHARTS && (
         <>
           <Box
-            height="300px"
+            height={350}
             sx={{
               borderBottom: 'small',
               borderColor: 'neutral4',

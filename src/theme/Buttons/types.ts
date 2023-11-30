@@ -28,6 +28,7 @@ export const variants = {
   GHOST_DANGER: 'ghostDanger',
   GHOST_ACTIVE: 'ghostActive',
   GHOST_INACTIVE: 'ghostInactive',
+  GHOST_WARNING: 'ghostWarning',
   WHITE: 'white',
 } as const
 
