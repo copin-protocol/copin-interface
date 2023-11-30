@@ -1,6 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 
-import { ProtocolEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 import { ARBITRUM_MAINNET, CHAINS, OPTIMISM_GOERLI, OPTIMISM_MAINNET } from 'utils/web3/chains'
 import { rpcProvider } from 'utils/web3/providers'
 
@@ -46,6 +46,7 @@ export const ALL_OPTION: TokenOptionProps = {
 }
 
 type TokenSupport = { [key: string]: { [key: string]: TokenTrade } }
+type TokenIgnore = { [key in CopyTradePlatformEnum]: string[] }
 
 const TOKEN_TRADE_SYNTHETIX = {
   '0xd5fAaa459e5B3c118fD85Fc0fD67f56310b1618D': {
@@ -546,6 +547,11 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.KWENTA]: TOKEN_TRADE_SYNTHETIX,
   [ProtocolEnum.POLYNOMIAL]: TOKEN_TRADE_SYNTHETIX,
 }
+export const TOKEN_TRADE_IGNORE: TokenIgnore = {
+  [CopyTradePlatformEnum.GMX]: [],
+  [CopyTradePlatformEnum.BINGX]: ['YFI', 'PERP', 'RPL'],
+  [CopyTradePlatformEnum.SYNTHETIX]: [],
+}
 
 export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
   [ProtocolEnum.GMX]: {
@@ -596,8 +602,7 @@ export const SYNTHETIX_MARKETS = {
 export const getDefaultTokenTrade = (protocol: ProtocolEnum) =>
   TOKEN_TRADE_SUPPORT[protocol][Object.keys(TOKEN_TRADE_SUPPORT[protocol])[0]]
 
-export const getTokenTradeList = (protocol: ProtocolEnum) =>
-  Object.keys(TOKEN_TRADE_SUPPORT[protocol]).map((key) => TOKEN_TRADE_SUPPORT[protocol][key])
+export const getTokenTradeList = (protocol: ProtocolEnum) => Object.values(TOKEN_TRADE_SUPPORT[protocol])
 
 export const getDefaultTokenOptions = (protocol: ProtocolEnum) =>
   Object.keys(TOKEN_TRADE_SUPPORT[protocol]).map((key) => ({

@@ -18,7 +18,7 @@ import { Box, Flex, Grid, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
-import { getTokenTradeList } from 'utils/config/trades'
+import { TOKEN_TRADE_IGNORE, getTokenTradeList } from 'utils/config/trades'
 
 import FundChecking from './FundChecking'
 import Wallets from './Wallets'
@@ -87,7 +87,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const tokenAddresses = watch('tokenAddresses')
   const protocol = watch('protocol')
 
-  const pairs = protocol && getTokenTradeList(protocol)
+  const pairs =
+    protocol &&
+    getTokenTradeList(protocol).filter((tokenTrade) => !TOKEN_TRADE_IGNORE[platform]?.includes(tokenTrade.name))
   const addressPairs = pairs?.map((e) => e.address)
   const pairOptions = pairs?.map((e) => {
     return { value: e.address, label: e.name }
