@@ -413,7 +413,7 @@ export const generateProtocol = ({
       protocolText = 'Kwenta'
       break
     case ProtocolEnum.POLYNOMIAL:
-      protocolTextWidth = 150
+      protocolTextWidth = 168
       protocolText = 'Polynomial'
       break
     default:
