@@ -417,7 +417,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           </Type.Caption>
         </Box>
         <Box sx={{ gap: 4 }} mt={4}>
-          {/* <Button
+          <Button
             block
             variant="primary"
             onClick={() => handleSubmit(onSubmit)()}
@@ -425,10 +425,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             disabled={isSubmitting}
           >
             {submitButtonText}
-          </Button> */}
-          <Button block variant="primary" disabled>
-            Maintaining
           </Button>
+          {/*<Button block variant="primary" disabled>*/}
+          {/*  Maintaining*/}
+          {/*</Button>*/}
         </Box>
       </Box>
     </>
