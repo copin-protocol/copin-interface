@@ -208,7 +208,7 @@ export interface TopTraderData {
   ranking: number
   lastRanking: number
   statisticAt: string
-  totalNetPnl: number
+  totalRealisedPnl: number
   totalPnl: number
   totalVolume: number
   totalFee: number

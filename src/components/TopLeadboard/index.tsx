@@ -151,7 +151,7 @@ function TopLeaderboardMobile({ contextValues }: { contextValues: LeaderboardCon
                         <RowItem label={<Trans>Total Wins</Trans>} value={formatNumber(traderData.totalWin)} />
                         <RowItem
                           label={<Trans>PNL</Trans>}
-                          value={<SignedText prefix="$" value={traderData.totalPnl} maxDigit={0} fontInherit />}
+                          value={<SignedText prefix="$" value={traderData.totalRealisedPnl} maxDigit={0} fontInherit />}
                         />
                       </RowWrapper>
                     </Box>

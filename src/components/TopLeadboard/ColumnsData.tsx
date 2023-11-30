@@ -113,24 +113,24 @@ export const LeaderboardColumns: ColumnData<TopTraderData, ExternalSource>[] = [
     ),
   },
   // {
-  //   title: 'Total Net PnL',
-  //   dataIndex: 'totalNetPnl',
-  //   key: 'totalNetPnl',
+  //   title: 'Total PnL',
+  //   dataIndex: 'totalPnl',
+  //   key: 'totalPnl',
   //   style: { minWidth: ['120px', '150px'], textAlign: 'right' },
   //   render: (item) => (
   //     <Type.Caption width="100%" color="neutral1" textAlign="right">
-  //       <SignedText value={item.totalNetPnl} maxDigit={0} />
+  //       <SignedText value={item.totalPnl} maxDigit={0} />
   //     </Type.Caption>
   //   ),
   // },
   {
     title: 'PnL',
-    dataIndex: 'totalPnl',
-    key: 'totalPnl',
+    dataIndex: 'totalRealisedPnl',
+    key: 'totalRealisedPnl',
     style: { minWidth: ['120px', '160px'], textAlign: 'right' },
     render: (item) => (
       <Type.CaptionBold width="100%" color="neutral1" textAlign="right">
-        <SignedText prefix="$" value={item.totalPnl} maxDigit={0} fontInherit />
+        <SignedText prefix="$" value={item.totalRealisedPnl} maxDigit={0} fontInherit />
       </Type.CaptionBold>
     ),
   },
