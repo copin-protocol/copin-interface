@@ -1,4 +1,5 @@
 import { PositionData, ResponsePositionData, ResponseTraderData, TraderData } from 'entities/trader'
+import { decodeRealisedData } from 'utils/helpers/handleRealised'
 
 import { ApiListResponse } from './api'
 
@@ -14,6 +15,9 @@ export const normalizeTraderData = (t: ResponseTraderData) => {
   t.profitRate = t.realisedProfitRate
   t.gainLossRatio = t.realisedGainLossRatio
   t.profitLossRatio = t.realisedProfitLossRatio
+  if (t.ranking) {
+    t.ranking = decodeRealisedData(t.ranking)
+  }
   return t as TraderData
 }
 
