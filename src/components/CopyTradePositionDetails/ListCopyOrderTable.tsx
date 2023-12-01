@@ -11,7 +11,6 @@ import { CopyOrderData } from 'entities/copyTrade.d'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { OrderTypeEnum } from 'utils/config/enums'
 import { TokenTrade } from 'utils/config/trades'
-import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 
 type ExternalSource = {
   totalOrders: number
