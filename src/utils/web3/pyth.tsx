@@ -2,7 +2,6 @@ import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
 import { createContext, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
-import { useProtocolStore } from 'hooks/store/useProtocols'
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
@@ -16,12 +15,16 @@ const INCLUDE_PATH = [
   ROUTES.TOP_OPENINGS.path_prefix,
   ROUTES.POSITION_DETAILS.path_prefix,
   ROUTES.TRADER_DETAILS.path_prefix,
+  ROUTES.MY_MANAGEMENT.path,
+  ROUTES.MY_HISTORY.path,
 ]
 
 export default function PythConnection() {
   const { setPrices, setIsReady } = useRealtimeUsdPricesStore()
-  const { protocol } = useProtocolStore()
-  const tokenSupports = Object.values(TOKEN_TRADE_SUPPORT[protocol ?? ProtocolEnum.KWENTA])
+  const tokenSupports = [
+    ...Object.values(TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX]),
+    ...Object.values(TOKEN_TRADE_SUPPORT[ProtocolEnum.KWENTA]),
+  ]
   const pythIds = tokenSupports.map((x) => x.priceFeedId)
   const { pathname } = useLocation()
 
@@ -37,7 +40,9 @@ export default function PythConnection() {
         initialCache?.forEach((price) => {
           const data = getPriceData({ tokenSupports, price })
           if (!data) return
-          pricesData = { ...pricesData, [data.tokenAddress]: data.value }
+          for (let i = 0; i < data.tokenAddresses.length; i++) {
+            pricesData = { ...pricesData, [data.tokenAddresses[i]]: data.value }
+          }
         })
         setPrices(pricesData)
 
@@ -46,7 +51,9 @@ export default function PythConnection() {
         await pyth.subscribePriceFeedUpdates(pythIds, (price) => {
           const data = getPriceData({ tokenSupports, price })
           if (!data) return
-          pricesData = { ...pricesData, [data.tokenAddress]: data.value }
+          for (let i = 0; i < data.tokenAddresses.length; i++) {
+            pricesData = { ...pricesData, [data.tokenAddresses[i]]: data.value }
+          }
           const publishTime = price?.getPriceNoOlderThan?.(60)?.publishTime ?? 0
           if (publishTime >= lastUpdate + INTERVAL_TIME) {
             lastUpdate = publishTime
@@ -61,7 +68,7 @@ export default function PythConnection() {
       // pyth.unsubscribePriceFeedUpdates(pythIds)
       pyth.closeWebSocket()
     }
-  }, [pathname, protocol])
+  }, [pathname])
 
   return null
 }
@@ -70,9 +77,9 @@ function getPriceData({ tokenSupports, price }: { tokenSupports: TokenTrade[]; p
   if (!price) return null
   const id = `0x${price.id}`
   const priceData = price.getPriceNoOlderThan(60)
-  const tokenAddress = tokenSupports.find((e) => e.priceFeedId === id)?.address
-  if (!priceData || !tokenAddress) {
+  const tokenAddresses = tokenSupports.filter((e) => e.priceFeedId === id)?.map((e) => e.address)
+  if (!priceData || !tokenAddresses || tokenAddresses.length === 0) {
     return null
   }
-  return { tokenAddress, value: Number(priceData.price) * Math.pow(10, priceData.expo) }
+  return { tokenAddresses, value: Number(priceData.price) * Math.pow(10, priceData.expo) }
 }

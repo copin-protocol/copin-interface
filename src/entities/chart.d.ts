@@ -56,6 +56,7 @@ export type StatsData = {
 }
 
 export type CopyTradeChartData = {
+  label: string
   date: string
   pnl: number
   roi: number

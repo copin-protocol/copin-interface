@@ -60,6 +60,9 @@ export function formatNumber(num?: number | string, maxDigit = 2, minDigit?: num
     maxDigit = 2
     minDigit = 2
   }
+  if (Math.abs(num) < 0.01 && maxDigit === 2) {
+    maxDigit = 6
+  }
   // if (num > 1000000000) return t`${(num / 1000000000).toFixed(0)} tỷ`
   return `${num.toLocaleString('en-US', { minimumFractionDigits: minDigit, maximumFractionDigits: maxDigit })}`
 }

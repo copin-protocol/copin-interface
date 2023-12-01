@@ -23,11 +23,11 @@ import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import ClosePositionModal from './ClosePositionModal'
 
 export type ExternalSource = {
-  prices: UsdPrices
-  submitting: boolean
-  currentId: string
-  onViewSource: (data: CopyPositionData, event?: any) => void
-  handleSelectCopyItem: (data: CopyPositionData) => void
+  prices?: UsdPrices
+  submitting?: boolean
+  currentId?: string
+  onViewSource?: (data: CopyPositionData, event?: any) => void
+  handleSelectCopyItem?: (data: CopyPositionData) => void
 }
 export default function PositionsContainer({
   onClosePositionSuccess,

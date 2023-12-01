@@ -151,13 +151,15 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
                 <LocalTimeText date={data.createdAt} />
               </Type.CaptionBold>
             </StatsItemWrapper>
-            {!isOpening && (
+            {!isOpening ? (
               <StatsItemWrapper>
                 <Type.Caption color="neutral3">Closed Time:</Type.Caption>
                 <Type.CaptionBold>
                   <LocalTimeText date={data.lastOrderAt} />
                 </Type.CaptionBold>
               </StatsItemWrapper>
+            ) : (
+              <div></div>
             )}
           </Flex>
           <Flex
@@ -207,6 +209,12 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
                 {/*/>*/}
               </Type.CaptionBold>
             </StatsItemWrapperB>
+            {!!data?.stopLossAmount && (
+              <StatsItemWrapperB>
+                <Type.Caption color="neutral3">Stop Loss:</Type.Caption>
+                <Type.CaptionBold>${formatNumber(data?.stopLossAmount, 2)}</Type.CaptionBold>
+              </StatsItemWrapperB>
+            )}
             {!isOpening && (
               <StatsItemWrapperB>
                 <Type.Caption color="neutral3">Closed Price:</Type.Caption>

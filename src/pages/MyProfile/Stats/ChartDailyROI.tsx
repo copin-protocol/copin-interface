@@ -6,9 +6,9 @@ import { Bar, CartesianGrid, Cell, ComposedChart, ResponsiveContainer, Tooltip, 
 import { CopyTradeChartData, CopyTradeStatsData } from 'entities/chart.d'
 import { CopyTradePnL } from 'entities/copyTrade.d'
 import Loading from 'theme/Loading'
-import { Box } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { FONT_FAMILY } from 'utils/config/constants'
+import { DAYJS_FULL_DATE_FORMAT, FONT_FAMILY } from 'utils/config/constants'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
 
 import { generateChartDailyROI } from './generateChartData'
@@ -60,7 +60,7 @@ export default function ChartDailyROI({
           <ResponsiveContainer minHeight={200}>
             <ComposedChart data={chartData} margin={{ top: 0, left: 4, right: 16, bottom: 0 }}>
               <CartesianGrid stroke={themeColors.neutral4} strokeDasharray="3 3" opacity={0.5} />
-              <XAxis dataKey="date" stroke={themeColors.neutral4} />
+              <XAxis dataKey="label" stroke={themeColors.neutral4} />
               <YAxis
                 domain={[-stats.maxAbsRoi * 1.2, stats.maxAbsRoi * 1.2]}
                 stroke={themeColors.neutral4}
@@ -78,10 +78,10 @@ export default function ChartDailyROI({
                 contentStyle={{
                   backgroundColor: themeColors.neutral5,
                   borderColor: 'transparent',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   fontFamily: FONT_FAMILY,
                 }}
-                formatter={tooltipFormatter}
+                content={(payload) => <CustomTooltip item={payload.payload} />}
               />
             </ComposedChart>
           </ResponsiveContainer>
@@ -91,9 +91,24 @@ export default function ChartDailyROI({
   )
 }
 
-function tooltipFormatter(value: any) {
-  const _value = value as number
-  return formatNumber(_value, 2, 2)
+function CustomTooltip({ item }: { item: any }) {
+  const pnl = item?.[0]?.payload?.pnl ?? 0
+  const roi = item?.[0]?.payload?.roi ?? 0
+  const color = pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'
+  return (
+    <Flex p={2} bg="neutral5" flexDirection="column" sx={{ gap: 1 }}>
+      <Type.Small mb={1}>{formatLocalDate(item?.[0]?.payload?.date, DAYJS_FULL_DATE_FORMAT)}</Type.Small>
+      <Type.Small>
+        ROI: <Type.Small color={color}>{formatNumber(roi, 2, 2)}%</Type.Small>
+      </Type.Small>
+      <Type.Small>
+        PnL:{' '}
+        <Type.Small color={color}>
+          {pnl < 0 && '-'}${formatNumber(Math.abs(pnl), 2, 2)}
+        </Type.Small>
+      </Type.Small>
+    </Flex>
+  )
 }
 
 function getChartData({ data }: { data: CopyTradePnL[] | undefined }) {
@@ -103,9 +118,12 @@ function getChartData({ data }: { data: CopyTradePnL[] | undefined }) {
     chartData = data
       .sort((x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : 0))
       .map((stats) => {
-        const roi = stats.amount
+        const pnl = stats.amount
+        const roi = stats.roi
         return {
-          date: formatLocalDate(stats.date, 'MM/DD'),
+          label: formatLocalDate(stats.date, 'MM/DD'),
+          date: stats.date,
+          pnl,
           roi,
         } as CopyTradeChartData
       })

@@ -336,10 +336,24 @@ export default function CopyChartProfit({
           lineVisible: true,
           lineWidth: 1,
           axisLabelVisible: true,
-          title: `Liquidation ${posDelta < 0 ? '-' : ''}$${formatNumber(Math.abs(posDelta), 0)}`,
+          title: `Liquidation ${posDelta < 0 ? '-' : ''}$${formatNumber(Math.abs(posDelta), 2)}`,
           lineStyle: LineStyle.SparseDotted,
         })
       }
+    }
+    if (position.latestStopLossId && position.stopLossAmount) {
+      const value = low.value > 0 ? 0 : -position.stopLossAmount < low.value ? low.value : -position.stopLossAmount
+      series.createPriceLine({
+        price: value,
+        color: themeColors.orange1,
+        lineVisible: true,
+        lineWidth: 1,
+        axisLabelVisible: true,
+        title: `Stop Loss: -$${formatNumber(position.stopLossAmount, 2)}${
+          position.stopLossPrice ? ' - Est. Price: ' + formatNumber(position.stopLossPrice) : ''
+        }`,
+        lineStyle: LineStyle.SparseDotted,
+      })
     }
 
     if (chartData.length > 0) {

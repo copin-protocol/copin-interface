@@ -187,3 +187,7 @@ export function parseWalletName(wallet: CopyWalletData) {
 export function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
+
+export function lowerFirstLetter(str: string) {
+  return str.charAt(0).toLowerCase() + str.slice(1)
+}

@@ -133,6 +133,15 @@ export const styleVariants = {
       color: 'primary2',
     },
   },
+  [variants.GHOST_WARNING]: {
+    color: 'orange1',
+    bg: 'transparent',
+    border: 'none',
+    p: 0,
+    '&:hover:not(:disabled),&:active:not(:disabled)': {
+      color: 'orange2',
+    },
+  },
   [variants.GHOST_SUCCESS]: {
     color: 'green1',
     bg: 'transparent',

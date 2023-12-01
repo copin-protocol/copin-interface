@@ -4,6 +4,7 @@ import { ReactNode, useMemo } from 'react'
 
 import { DeltaText } from 'components/@ui/DecoratedText/DeltaText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
+import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
@@ -152,7 +153,11 @@ export default function ListOrderTable({
           <Type.Caption color="neutral1" width="100%" textAlign="right">
             {item.type === OrderTypeEnum.MARGIN_TRANSFERRED
               ? '-'
-              : formatNumber(item.type === OrderTypeEnum.LIQUIDATE ? item.averagePriceNumber : item.priceNumber, 2, 2)}
+              : PriceTokenText({
+                  value: item.type === OrderTypeEnum.LIQUIDATE ? item.averagePriceNumber : item.priceNumber,
+                  maxDigit: 2,
+                  minDigit: 2,
+                })}
           </Type.Caption>
         ),
       },

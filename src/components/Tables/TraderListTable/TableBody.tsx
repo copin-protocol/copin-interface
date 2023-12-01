@@ -53,7 +53,7 @@ export default function TableBody<T>({
               <Box
                 as="td"
                 className="column-freeze"
-                sx={{ pl: [12, 3], pr: [0, 2], position: 'sticky', left: 0, width: [36, 48] }}
+                sx={{ pl: [12, 3], pr: [0, 2], position: 'sticky', left: 0, width: [36, 48], zIndex: 4 }}
               >
                 <Checkbox
                   checked={isSelected}

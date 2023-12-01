@@ -36,7 +36,6 @@ export function renderEntry(data: CopyPositionData) {
       </Type.Caption>
       <VerticalDivider />
       <Type.Caption>{TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken].symbol}</Type.Caption>
-
       <VerticalDivider />
       <Type.Caption>{formatNumber(data.entryPrice, 2)}</Type.Caption>
     </Flex>
@@ -47,6 +46,7 @@ export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {
     data.status === PositionStatusEnum.OPEN
       ? calcCopyOpeningPnL(data, prices ? prices[data.indexToken] : undefined)
       : data.pnl
+
   return (
     <Type.Caption color={pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'}>{formatNumber(pnl, 2, 2)}</Type.Caption>
   )

@@ -5,6 +5,7 @@ import { CheckCircle } from '@phosphor-icons/react'
 
 import Num from 'entities/Num'
 import { CrowIconGold } from 'theme/Icons/CrowIcon'
+import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 
 import MintButton from './MintButton'
@@ -46,7 +47,17 @@ export default function Plans({ planPrice }: { planPrice: BigNumber | undefined 
             </Flex>
             <Type.H2>
               <Box as="span" color="orange1">
-                {price ? `${price.str}` : '--'}
+                {price ? (
+                  `${price.str}`
+                ) : (
+                  <Loading
+                    size={24}
+                    background="neutral3"
+                    indicatorColor="orange1"
+                    display="inline-block"
+                    margin="0 0 -4px 0 !important"
+                  />
+                )}
               </Box>
               <Box as="span" sx={{ fontSize: '24px', ml: '0.3ch' }} color="orange1">
                 ETH

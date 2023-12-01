@@ -4,13 +4,13 @@ import { ReactNode, useMemo } from 'react'
 
 import { DeltaText } from 'components/@ui/DecoratedText/DeltaText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
+import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyOrderData } from 'entities/copyTrade.d'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { OrderTypeEnum } from 'utils/config/enums'
 import { TokenTrade } from 'utils/config/trades'
-import { formatNumber } from 'utils/helpers/format'
 
 type ExternalSource = {
   totalOrders: number
@@ -158,7 +158,11 @@ export default function ListCopyOrderTable({
         render: (item) =>
           item.price ? (
             <Type.Caption color="neutral1" width="100%" textAlign="right">
-              {formatNumber(item.price, 2, 2)}
+              {PriceTokenText({
+                value: item.price,
+                maxDigit: 2,
+                minDigit: 2,
+              })}
             </Type.Caption>
           ) : (
             '--'

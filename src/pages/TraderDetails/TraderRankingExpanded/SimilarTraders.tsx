@@ -17,6 +17,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { encodeRealised } from 'utils/helpers/handleRealised'
 
 import ScoreChart, { ScoreChartData } from '../ScoreChart'
 import { filterFoundData } from './helpers'
@@ -64,7 +65,13 @@ export default function SimilarTraders({
       const maxRanking = rankingValue + tolerance
       if (!rankingValue) return result
       const filters = {
-        fieldName: `ranking.${option}`,
+        fieldName: `ranking.${encodeRealised(option, [
+          'avgRoi',
+          'maxDrawdown',
+          'maxRoi',
+          'profitLossRatio',
+          'profitRate',
+        ])}`,
         gte: minRanking < 0 ? 0 : minRanking,
         lte: maxRanking > 100 ? 100 : maxRanking,
       }
