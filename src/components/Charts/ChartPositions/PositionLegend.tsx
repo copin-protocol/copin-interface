@@ -103,7 +103,7 @@ export default function PositionLegend({
             )
           ) : (
             <Flex alignItems="center" sx={{ gap: '1px' }}>
-              {(data.isLiquidate || data.roi <= -100) && <SkullIcon />}
+              {data.isLiquidate && <SkullIcon />}
               <SignedText
                 value={data.pnl}
                 maxDigit={0}
@@ -119,7 +119,7 @@ export default function PositionLegend({
               renderOpeningRoiWithPrices(data, prices, false, { fontSize: '12px', lineHeight: '16px' })
             ) : (
               <Flex alignItems="center" sx={{ gap: '1px' }}>
-                {(data.isLiquidate || data.roi <= -100) && <SkullIcon />}
+                {data.isLiquidate && <SkullIcon />}
                 <Type.Small>
                   <SignedText
                     value={data.roi}

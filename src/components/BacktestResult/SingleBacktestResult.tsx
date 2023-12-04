@@ -374,7 +374,7 @@ const columns: ColumnData<SimulatorPosition>[] = [
     render: (item) => {
       return (
         <Flex alignItems="center" sx={{ gap: '1px' }}>
-          {(item?.position?.roi ?? 0) <= -100 && <SkullIcon />}
+          {item?.position?.isLiquidate && <SkullIcon />}
           {SignedText({
             value: item.profit,
             maxDigit: 1,

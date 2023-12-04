@@ -128,6 +128,8 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
       item.errorMsg && item.errorMsg.startsWith('"') && item.errorMsg.endsWith('"')
         ? JSON.parse(item.errorMsg)
         : item.errorMsg
+
+    const isLong = (item.isLong ? 1 : -1) * (item.isReverse ? -1 : 1) === 1
     return item.isSuccess ? (
       <Flex
         sx={{
@@ -136,8 +138,8 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
           color: 'neutral1',
         }}
       >
-        <Type.Caption width={8} color={item.isLong && item.isReverse ? 'red2' : 'green1'}>
-          {item.isLong && item.isReverse ? <Trans>S</Trans> : <Trans>L</Trans>}
+        <Type.Caption width={8} color={isLong ? 'green1' : 'red2'}>
+          {isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
         </Type.Caption>
         <VerticalDivider />
         <Type.Caption>{TOKEN_TRADE_SUPPORT[item.protocol][item.indexToken]?.symbol}</Type.Caption>

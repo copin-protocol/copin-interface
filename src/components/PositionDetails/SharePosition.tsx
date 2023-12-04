@@ -1,5 +1,5 @@
 import { ShareFat } from '@phosphor-icons/react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { sharePositionApi } from 'apis/shareApis'
@@ -23,10 +23,13 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
   const [shareData, setShareData] = useState<SharePositionData>()
 
-  const protocolImg = new Image(32, 32)
-  protocolImg.src = parseProtocolImage(stats?.protocol ?? ProtocolEnum.GMX)
-  const logoImg = new Image(182, 42)
-  logoImg.src = logoWithText
+  const { protocolImg, logoImg } = useMemo(() => {
+    const protocolImg = new Image(32, 32)
+    protocolImg.src = parseProtocolImage(stats?.protocol ?? ProtocolEnum.GMX)
+    const logoImg = new Image(182, 42)
+    logoImg.src = logoWithText
+    return { protocolImg, logoImg }
+  }, [stats?.protocol])
 
   const handleShare = async () => {
     if (!stats) {

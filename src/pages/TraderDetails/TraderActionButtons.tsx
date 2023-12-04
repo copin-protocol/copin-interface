@@ -66,7 +66,7 @@ export default function TraderActionButtons({
             display: 'flex',
             position: 'fixed',
             top: NAVBAR_HEIGHT + 24,
-            right: 3,
+            right: 12,
             zIndex: 10,
           }}
         >

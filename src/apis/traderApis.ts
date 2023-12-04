@@ -15,7 +15,27 @@ import { GetApiParams, QueryFilter, RangeFilter, RequestBodyApiData } from './ty
 const SERVICE = 'position'
 
 const normalizePayload = (body: RequestBodyApiData) => {
-  if (!body.ranges) return body
+  let sortBy = body.sortBy
+  if (!!sortBy) {
+    switch (sortBy) {
+      case 'pnl':
+      // case 'maxPnl':
+      case 'avgRoi':
+      case 'maxRoi':
+      case 'totalGain':
+      case 'totalLoss':
+      case 'maxDrawdown':
+      case 'maxDrawdownPnl':
+      case 'profitRate':
+      case 'gainLossRatio':
+      case 'profitLossRatio':
+        sortBy = 'realised' + capitalizeFirstLetter(sortBy)
+        break
+      default:
+        break
+    }
+  }
+  if (!body.ranges) return { ...body, sortBy }
   const ranges = body.ranges.map((range) => ({
     ...range,
   }))
@@ -62,7 +82,7 @@ const normalizePayload = (body: RequestBodyApiData) => {
         break
     }
   })
-  return { ...body, ranges }
+  return { ...body, ranges, sortBy }
 }
 
 export async function getTradersApi({ protocol, body }: { protocol: ProtocolEnum; body: RequestBodyApiData }) {
@@ -78,7 +98,6 @@ export async function getTradersApi({ protocol, body }: { protocol: ProtocolEnum
   if (!!body?.keyword) {
     params.keyword = body.keyword
   }
-  // return traderListData
   return requester
     .post(apiWrapper(`${protocol}/${SERVICE}/statistic/filter`), normalizePayload(params))
     .then((res: any) => normalizeTraderResponse(res.data as ApiListResponse<ResponseTraderData>))
