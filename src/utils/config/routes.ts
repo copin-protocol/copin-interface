@@ -79,6 +79,9 @@ const ROUTES = {
   SUBSCRIPTION: {
     path: '/subscription',
   },
+  COMPARING_TRADERS: {
+    path: '/compare',
+  },
 }
 
 export default ROUTES

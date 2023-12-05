@@ -17,7 +17,7 @@ import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
 
-import useSubscriptionRestrict from '../features/useSubscriptionRestrict'
+import { useIsPremium } from '../features/useSubscriptionRestrict'
 
 const MIN_QUICK_SEARCH_LENGTH = 3
 export default function useSearchTraders(args?: {
@@ -28,7 +28,7 @@ export default function useSearchTraders(args?: {
   const { onSelect, returnRanking = false, allowAllProtocol = false } = args ?? {}
   const { protocol } = useProtocolStore()
   const { myProfile } = useMyProfileStore()
-  const { isPremiumUser } = useSubscriptionRestrict()
+  const isPremiumUser = useIsPremium()
   const history = useHistory()
   const searchWrapperRef = useRef<HTMLDivElement>(null)
   const inputSearchRef = useRef<HTMLInputElement>(null)

@@ -302,6 +302,7 @@ msgstr "Can't copy"
 
 #: src/components/AuthWaitingWallet/index.tsx
 #: src/pages/@layouts/Navbar/index.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -330,6 +331,10 @@ msgstr "Cannot unlock your wallet"
 msgid "Change Password"
 msgstr "Change Password"
 
+#: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
+msgid "Change Trader"
+msgstr "Change Trader"
+
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 msgid "Change password successful!"
 msgstr "Change password successful!"
@@ -342,6 +347,7 @@ msgstr "Charts"
 #~ msgid "Chia sẻ"
 #~ msgstr "Chia sẻ"
 
+#: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 msgid "Choose A Trader To Compare"
 msgstr "Choose A Trader To Compare"
@@ -385,9 +391,14 @@ msgstr "Coming Soon"
 msgid "Communicating with wallet. Sign message with your wallet"
 msgstr "Communicating with wallet. Sign message with your wallet"
 
+#: src/components/BacktestPickTradersButton/index.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/SimilarTraders.tsx
 msgid "Compare"
 msgstr "Compare"
+
+#: src/components/BacktestPickTradersButton/index.tsx
+#~ msgid "Compare ({0})"
+#~ msgstr "Compare ({0})"
 
 #: src/pages/TraderDetails/ExpandTraderRankingButton.tsx
 msgid "Compare / Find similar traders"
@@ -1307,6 +1318,7 @@ msgstr "Percentile"
 msgid "Percentile Filter"
 msgstr "Percentile Filter"
 
+#: src/pages/ComparingTraders/ComparisonComponent.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "Percentile Ranking Comparison"
 msgstr "Percentile Ranking Comparison"
@@ -2079,9 +2091,21 @@ msgstr "Trader"
 msgid "Trader Explorer"
 msgstr "Trader Explorer"
 
+#: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
+msgid "Trader don't have statistic in {0}"
+msgstr "Trader don't have statistic in {0}"
+
 #: src/pages/Home/Layouts/HomeMobile.tsx
 #~ msgid "Traders"
 #~ msgstr "Traders"
+
+#: src/pages/ComparingTraders/index.tsx
+msgid "Traders Comparison in"
+msgstr "Traders Comparison in"
+
+#: src/pages/ComparingTraders/ViewComparison.tsx
+msgid "Traders Comparison in {0}"
+msgstr "Traders Comparison in {0}"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/utils/config/options.tsx

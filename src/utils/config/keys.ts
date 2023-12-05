@@ -105,6 +105,8 @@ export const URL_PARAM_KEYS = {
   BOT_TELEGRAM_STATE: 'state',
   LEADERBOARD_TYPE: 'leaderboard_type',
   LEADERBOARD_DATE: 'leaderboard_date',
+  COMPARE_PROTOCOLS: 'protocols',
+  COMPARE_TRADERS: 'traders',
 }
 
 export const TOOLTIP_KEYS = {

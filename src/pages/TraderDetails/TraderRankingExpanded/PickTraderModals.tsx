@@ -23,27 +23,24 @@ import useSelectTrader from './useSelectTrader'
 
 export function PickFromFavoritesModal({
   onSelect,
-  account,
-  protocol,
+  ignoreSelectTraders,
   onDismiss,
   timeOption,
 }: FindAndSelectTraderProps & { onDismiss: () => void }) {
   const { data: tradersGMX, isLoading: isLoadingTradersGMX } = useQuery(
-    ['favorites', account, ProtocolEnum.GMX],
+    ['favorites', ignoreSelectTraders, ProtocolEnum.GMX],
     () => getFavoritesApi(ProtocolEnum.GMX),
     {
       retry: 0,
-      enabled: !!account,
-      select: (data) => filterFoundData(data, { account, protocol }),
+      select: (data) => filterFoundData(data, ignoreSelectTraders),
     }
   )
   const { data: tradersKWENTA, isLoading: isLoadingTradersKWENTA } = useQuery(
-    ['favorites', account, ProtocolEnum.KWENTA],
+    ['favorites', ignoreSelectTraders, ProtocolEnum.KWENTA],
     () => getFavoritesApi(ProtocolEnum.KWENTA),
     {
       retry: 0,
-      enabled: !!account,
-      select: (data) => filterFoundData(data, { account, protocol }),
+      select: (data) => filterFoundData(data, ignoreSelectTraders),
     }
   )
 
@@ -99,8 +96,7 @@ export function PickFromFavoritesModal({
 
 export function PickFromCopyTradesModal({
   onSelect,
-  account,
-  protocol,
+  ignoreSelectTraders,
   onDismiss,
   timeOption,
 }: FindAndSelectTraderProps & { onDismiss: () => void }) {
@@ -121,7 +117,7 @@ export function PickFromCopyTradesModal({
 
   const { allCopyTrades } = useAllCopyTrades()
   const checkerMapping: Record<string, { [protocol: string]: boolean }> = {}
-  const _allCopyTrades = filterFoundData(allCopyTrades, { account, protocol }).filter((data) => {
+  const _allCopyTrades = filterFoundData(allCopyTrades, ignoreSelectTraders).filter((data) => {
     if (!data.account || !data.protocol) return false
     if (checkerMapping[data.account]?.[data.protocol]) return false
     checkerMapping[data.account] = { [data.protocol]: true }

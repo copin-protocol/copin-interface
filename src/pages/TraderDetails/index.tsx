@@ -13,7 +13,7 @@ import HistoryTable, { historyColumns } from 'components/Tables/HistoryTable'
 import OpeningPositionTable from 'components/Tables/OpeningPositionTable'
 import { PositionData } from 'entities/trader.d'
 import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import usePageChange from 'hooks/helpers/usePageChange'
@@ -42,7 +42,7 @@ export interface PositionSortPros {
   sortType: SortTypeEnum
 }
 export default function TraderDetails() {
-  const { isPremiumUser, handleIsBasicUser } = useSubscriptionRestrict()
+  const { isPremiumUser, checkIsPremium } = useIsPremiumAndAction()
   const timeFilterOptions = useMemo(
     () => (isPremiumUser ? TIME_FILTER_OPTIONS : TIME_FILTER_OPTIONS.filter((e) => e.id !== TimeFilterByEnum.ALL_TIME)),
     [isPremiumUser]
@@ -86,10 +86,7 @@ export default function TraderDetails() {
   })
 
   const setTimeOption = (option: TimeFilterProps) => {
-    if (option.id === TimeFilterByEnum.ALL_TIME && !isPremiumUser) {
-      handleIsBasicUser()
-      return
-    }
+    if (option.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) return
     changeCurrentOption(option)
   }
   const resetSort = () =>

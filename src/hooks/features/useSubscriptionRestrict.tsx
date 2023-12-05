@@ -1,46 +1,66 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 
+import { useClickLoginButton } from 'components/LoginAction'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 import useSubscriptionRestrictStore, { RestrictState } from 'hooks/store/useSubscriptionRestrictStore'
-import { useAuthContext } from 'hooks/web3/useAuth'
 import { CopyTradeStatusEnum, MaxCopyTradeQuotaEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 
 import useAllCopyTrades from './useAllCopyTrades'
 
-// Todo: add to my profile
-export default function useSubscriptionRestrict() {
+export function useCheckCopyTradeAction() {
   const setRestrictState = useSubscriptionRestrictStore((state) => state.setRestrictState)
-  const { account, profile } = useAuthContext()
+  const { myProfile } = useMyProfileStore()
+  const isLoggedIn = !!myProfile
+  const handleClickLogin = useClickLoginButton()
+
   const { allCopyTrades } = useAllCopyTrades()
-  const isQuotaExceed = useMemo(() => {
-    return (
-      !!profile &&
-      !!account &&
-      profile.plan === SubscriptionPlanEnum.BASIC &&
-      (allCopyTrades?.filter?.((data) => data.status === CopyTradeStatusEnum.RUNNING)?.length ?? 0) >=
-        MaxCopyTradeQuotaEnum.BASIC
-    )
-  }, [account, allCopyTrades, profile])
-  const handleQuotaExceed = useCallback(() => {
-    if (!isQuotaExceed) return
-    setRestrictState(RestrictState.EXCEED_QUOTA)
-  }, [isQuotaExceed, setRestrictState])
+  const isQuotaExceed =
+    isLoggedIn &&
+    myProfile.plan === SubscriptionPlanEnum.BASIC &&
+    (allCopyTrades?.filter?.((data) => data.status === CopyTradeStatusEnum.RUNNING)?.length ?? 0) >=
+      MaxCopyTradeQuotaEnum.BASIC
 
-  const isPremiumUser = useMemo(() => {
-    return profile?.plan === SubscriptionPlanEnum.PREMIUM
-  }, [profile?.plan])
-  const handleIsBasicUser = () => {
-    setRestrictState(RestrictState.PREMIUM_FEATURE)
-  }
-
-  const handleAlertQuotaExceed = useCallback(() => {
-    setRestrictState(RestrictState.EXCEED_QUOTA)
-  }, [setRestrictState])
+  const checkIsEligible = useCallback(() => {
+    if (!isLoggedIn) {
+      handleClickLogin()
+      return false
+    }
+    if (isQuotaExceed) {
+      setRestrictState(RestrictState.EXCEED_QUOTA)
+      return false
+    }
+    return true
+  }, [isLoggedIn, isQuotaExceed])
 
   return {
-    isQuotaExceed,
-    handleQuotaExceed,
+    // isEligible: !isQuotaExceed,
+    checkIsEligible,
+  }
+}
+
+export function useIsPremium() {
+  const myProfile = useMyProfileStore((state) => state.myProfile)
+  const isPremiumUser = myProfile ? myProfile.plan === SubscriptionPlanEnum.PREMIUM : null
+  return isPremiumUser
+}
+
+export function useIsPremiumAndAction() {
+  const isPremiumUser = useIsPremium()
+  const handleClickLogin = useClickLoginButton()
+  const setRestrictState = useSubscriptionRestrictStore((state) => state.setRestrictState)
+  const checkIsPremium = useCallback(() => {
+    if (isPremiumUser == null) {
+      handleClickLogin()
+      return false
+    }
+    if (!isPremiumUser) {
+      setRestrictState(RestrictState.PREMIUM_FEATURE)
+      return false
+    }
+    return true
+  }, [isPremiumUser])
+  return {
     isPremiumUser,
-    handleIsBasicUser,
-    handleAlertQuotaExceed,
+    checkIsPremium,
   }
 }

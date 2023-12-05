@@ -210,8 +210,7 @@ export default function TraderRankingExpanded({
                     <FindAndSelectTrader
                       selectedTrader={selectedTrader}
                       onSelect={handleSelectTrader}
-                      account={traderData.account}
-                      protocol={traderData.protocol}
+                      ignoreSelectTraders={[traderData]}
                       timeOption={timeOption}
                       onClear={() => setSelectedTrader(null)}
                     />
@@ -258,8 +257,7 @@ export default function TraderRankingExpanded({
                       <FindAndSelectTrader
                         selectedTrader={selectedTrader}
                         onSelect={handleSelectTrader}
-                        account={traderData.account}
-                        protocol={traderData.protocol}
+                        ignoreSelectTraders={[traderData]}
                         timeOption={timeOption}
                         onClear={() => setSelectedTrader(null)}
                       />

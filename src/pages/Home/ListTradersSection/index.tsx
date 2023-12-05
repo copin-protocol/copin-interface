@@ -250,7 +250,7 @@ function MultipleBacktestButton() {
 
   return (
     <Box sx={{ height: 40, width: ['100%', 228], flexShrink: 0 }}>
-      <PickTradersButton listAddress={listAddress} handleClick={handleClickBacktestButton} />
+      <PickTradersButton enableCompare listAddress={listAddress} handleClick={handleClickBacktestButton} />
     </Box>
   )
 }

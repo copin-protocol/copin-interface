@@ -6,7 +6,7 @@ import styled from 'styled-components/macro'
 import CustomizeColumn from 'components/@ui/Table/CustomizeColumn'
 import { ExternalSource, tableSettings } from 'components/Tables/TraderListTable/dataConfig'
 import { TraderData } from 'entities/trader.d'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import { IGNORE_FIELDS, useStatsCustomizeStore } from 'hooks/store/useStatsCustomize'
 import IconButton from 'theme/Buttons/IconButton'
 import Tooltip from 'theme/Tooltip'
@@ -57,7 +57,7 @@ const statsObj = stats.reduce((prev, cur) => {
 
 export default memo(AccountStats)
 function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
-  const { isPremiumUser } = useSubscriptionRestrict()
+  const isPremiumUser = useIsPremium()
   const { customizeStats, toggleVisibleStat, moveStatToTop } = useStatsCustomizeStore()
   return (
     <Box display="flex" flexWrap="wrap" minWidth={610} pb={[3, 4, 4, 4, 3]}>

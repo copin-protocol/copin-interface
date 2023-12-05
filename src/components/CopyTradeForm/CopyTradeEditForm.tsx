@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import CopyTraderForm from 'components/CopyTradeForm'
 import { CopyTradeData, UpdateCopyTradeData } from 'entities/copyTrade.d'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
 import useUpdateCopyTrade from 'hooks/features/useUpdateCopyTrade'
 import { CopyTradeStatusEnum } from 'utils/config/enums'
 
@@ -18,7 +18,7 @@ export default function CopyTradeEditForm({
   onSuccess: () => void
   copyTradeData: CopyTradeData | undefined
 }) {
-  const { isQuotaExceed, handleQuotaExceed } = useSubscriptionRestrict()
+  const { checkIsEligible } = useCheckCopyTradeAction()
   const { updateCopyTrade, isMutating } = useUpdateCopyTrade({
     onSuccess: () => {
       onSuccess()
@@ -29,8 +29,7 @@ export default function CopyTradeEditForm({
   const defaultFormValues = useMemo(() => getFormValuesFromResponseData(copyTradeData), [copyTradeData])
 
   const onSubmit = (formData: CopyTradeFormValues) => {
-    if (isQuotaExceed && copyTradeData?.status === CopyTradeStatusEnum.STOPPED) {
-      handleQuotaExceed()
+    if (copyTradeData?.status === CopyTradeStatusEnum.STOPPED && !checkIsEligible()) {
       return
     }
     const data: UpdateCopyTradeData = {

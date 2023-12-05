@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { ArrowRight } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { ComponentProps, Suspense, lazy, useState } from 'react'
 
@@ -18,8 +19,15 @@ export default function ExpandTraderRankingButton(
   if (!md) return <></>
   return (
     <>
-      <Button variant="ghostWarning" onClick={() => setExpanded(true)} sx={{ p: 0 }}>
-        <Trans>Compare / Find similar traders</Trans>
+      <Button
+        variant="ghostPrimary"
+        onClick={() => setExpanded(true)}
+        sx={{ p: 0, display: 'flex', alignItems: 'center', gap: 1 }}
+      >
+        <span>
+          <Trans>Compare / Find similar traders</Trans>
+        </span>
+        <ArrowRight size={16} weight="bold" />
       </Button>
       <Suspense fallback={<></>}>
         {expanded && (

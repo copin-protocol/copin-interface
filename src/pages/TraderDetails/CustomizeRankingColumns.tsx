@@ -3,10 +3,8 @@ import { CrownSimple, Gear } from '@phosphor-icons/react'
 import { useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
-import { useClickLoginButton } from 'components/LoginAction'
 import { TraderData } from 'entities/trader'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
-import useMyProfileStore from 'hooks/store/useMyProfile'
+import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { RANKING_FIELDS_COUNT, useRankingCustomizeStore } from 'hooks/store/useRankingCustomize'
 import { Button } from 'theme/Buttons'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
@@ -16,12 +14,10 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 import { rankingFieldOptions } from 'utils/config/options'
 
 export default function CustomizeRankingColumn() {
-  const { myProfile } = useMyProfileStore()
-  const handleClickLogin = useClickLoginButton()
   const [menuVisible, setMenuVisible] = useState(false)
   const { customizedRanking, setVisibleRanking } = useRankingCustomizeStore()
   const [rankingFields, setRankingFields] = useState(customizedRanking)
-  const { isPremiumUser, handleIsBasicUser } = useSubscriptionRestrict()
+  const { checkIsPremium } = useIsPremiumAndAction()
   const toggleVisibleRanking = (key: keyof TraderData) => {
     setRankingFields((prev) => {
       if (prev.includes(key)) {
@@ -35,15 +31,7 @@ export default function CustomizeRankingColumn() {
   }
   const handleApply = () => {
     setMenuVisible(false)
-    if (!myProfile) {
-      handleClickLogin()
-      return
-    }
-    if (!isPremiumUser) {
-      handleIsBasicUser()
-      return
-    }
-    setMenuVisible(false)
+    if (!checkIsPremium()) return
     setVisibleRanking(rankingFields)
   }
   return (

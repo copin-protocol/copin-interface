@@ -1,11 +1,11 @@
 import dayjs from 'dayjs'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getCopyTradePnLApi } from 'apis/copyTradeApis'
 import Divider from 'components/@ui/Divider'
 import TimeFilter, { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
 import { Box, Flex } from 'theme/base'
@@ -27,7 +27,7 @@ const ViewEnumLabel = {
 }
 
 const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; copyWalletId: string | undefined }) => {
-  const { isPremiumUser, handleIsBasicUser } = useSubscriptionRestrict()
+  const { checkIsPremium } = useIsPremiumAndAction()
   const { currentOption, changeCurrentOption } = useOptionChange({ optionName: 'filter', options: TIME_FILTER_OPTIONS })
   const [view, setView] = useState<ViewEnum>(ViewEnum.DailyRoi)
   const to = useMemo(() => dayjs().utc().valueOf(), [])
@@ -56,8 +56,7 @@ const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; co
   )
 
   const handleFilterChange = (timeOption: TimeFilterProps) => {
-    if (!isPremiumUser && timeOption.id === TimeFilterByEnum.ALL_TIME) {
-      handleIsBasicUser()
+    if (timeOption.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) {
       return
     }
     changeCurrentOption(timeOption)

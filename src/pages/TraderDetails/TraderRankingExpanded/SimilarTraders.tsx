@@ -10,7 +10,7 @@ import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { FilterValues, RankingFieldOption } from 'components/ConditionFilterForm/types'
 import { RestrictPremiumFeature } from 'components/SubscriptionRestrictModal'
 import { TraderData } from 'entities/trader'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import { renderTrader } from 'pages/MyProfile/renderProps'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
@@ -41,7 +41,7 @@ export default function SimilarTraders({
   formatChartData: (rankingData: TraderData['ranking']) => ScoreChartData[]
   onClickCompareButton: (data: TraderData) => void
 }) {
-  const { isPremiumUser } = useSubscriptionRestrict()
+  const isPremiumUser = useIsPremium()
   const [retryTime, setRetryTime] = useState(0)
   const fieldNames = useMemo(() => rankingFieldOptions.map((option) => option.value), [rankingFieldOptions])
   const alterFieldNames = useMemo(() => {
@@ -107,10 +107,7 @@ export default function SimilarTraders({
       enabled: !!timeOption && retryTime <= MAXIMUM_RETRY_TIME,
       select: (result) => {
         return result.reduce((result, data) => {
-          return [
-            ...result,
-            ...filterFoundData(data.data, { account: traderData.account, protocol: traderData.protocol }),
-          ]
+          return [...result, ...filterFoundData(data.data, [traderData])]
         }, [] as TraderData[])
       },
       onSettled: (data, error) => {
