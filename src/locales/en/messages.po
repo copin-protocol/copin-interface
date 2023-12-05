@@ -156,6 +156,10 @@ msgstr "Alert List"
 msgid "Alert traders signal"
 msgstr "Alert traders signal"
 
+#: src/components/@ui/TimeFilter/constants.tsx
+msgid "All"
+msgstr "All"
+
 #: src/components/CreateWalletAction/index.tsx
 msgid "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
 msgstr "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
@@ -292,6 +296,10 @@ msgstr "Can't copy"
 #~ msgid "Can't switch to {0}"
 #~ msgstr "Can't switch to {0}"
 
+#: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
+msgid "Cancel"
+msgstr "Cancel"
+
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Canceled"
 msgstr "Canceled"
@@ -313,6 +321,10 @@ msgstr "Cannot interact with contract at this moment"
 msgid "Change Password"
 msgstr "Change Password"
 
+#: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
+msgid "Change Trader"
+msgstr "Change Trader"
+
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 msgid "Change password successful!"
 msgstr "Change password successful!"
@@ -325,6 +337,7 @@ msgstr "Charts"
 #~ msgid "Chia sẻ"
 #~ msgstr "Chia sẻ"
 
+#: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 msgid "Choose A Trader To Compare"
 msgstr "Choose A Trader To Compare"
@@ -368,9 +381,18 @@ msgstr "Coming Soon"
 msgid "Communicating with wallet. Sign message with your wallet"
 msgstr "Communicating with wallet. Sign message with your wallet"
 
+#: src/components/BacktestPickTradersButton/index.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/SimilarTraders.tsx
 msgid "Compare"
 msgstr "Compare"
+
+#: src/components/BacktestPickTradersButton/index.tsx
+#~ msgid "Compare ({0})"
+#~ msgstr "Compare ({0})"
+
+#: src/pages/TraderDetails/ExpandTraderRankingButton.tsx
+msgid "Compare / Find similar traders"
+msgstr "Compare / Find similar traders"
 
 #: src/components/ConditionFilterForm/index.tsx
 msgid "Condition"
@@ -821,6 +843,10 @@ msgstr "Kwenta"
 msgid "L"
 msgstr "L"
 
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "L/S Rate"
+msgstr "L/S Rate"
+
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 msgid "LEADERBOARD"
 msgstr "LEADERBOARD"
@@ -897,6 +923,10 @@ msgstr "Liquidated"
 #: src/utils/config/translations.tsx
 msgid "Liquidation"
 msgstr "Liquidation"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Liquidations"
+msgstr "Liquidations"
 
 #: src/pages/@layouts/Navbar/Menu.tsx
 #~ msgid "List Collection"
@@ -1064,8 +1094,8 @@ msgid "Min Leverage"
 msgstr "Min Leverage"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-msgid "Min ROI"
-msgstr "Min ROI"
+#~ msgid "Min ROI"
+#~ msgstr "Min ROI"
 
 #: src/pages/Subscription/MintButton.tsx
 msgid "Mint Again"
@@ -1095,6 +1125,10 @@ msgstr "Minted NFT"
 #: src/pages/Subscription/MintButton.tsx
 msgid "Minting NFT"
 msgstr "Minting NFT"
+
+#: src/components/PositionDetails/ListOrderTable.tsx
+msgid "Modified Margin"
+msgstr "Modified Margin"
 
 #: src/utils/config/options.tsx
 msgid "Monthly"
@@ -1262,6 +1296,7 @@ msgstr "Percentile"
 msgid "Percentile Filter"
 msgstr "Percentile Filter"
 
+#: src/pages/ComparingTraders/ComparisonComponent.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "Percentile Ranking Comparison"
 msgstr "Percentile Ranking Comparison"
@@ -1974,6 +2009,7 @@ msgstr "Total Net Profit"
 msgid "Total Orders"
 msgstr "Total Orders"
 
+#: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/components/TopLeadboard/index.tsx
 msgid "Total Paid Fees"
 msgstr "Total Paid Fees"
@@ -1998,6 +2034,7 @@ msgstr "Total Trades"
 msgid "Total Unique Trader"
 msgstr "Total Unique Trader"
 
+#: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/components/TopLeadboard/index.tsx
 #: src/pages/Stats/Overview.tsx
 msgid "Total Volume"
@@ -2023,6 +2060,14 @@ msgstr "Trader Explorer"
 #: src/pages/Home/Layouts/HomeMobile.tsx
 #~ msgid "Traders"
 #~ msgstr "Traders"
+
+#: src/pages/ComparingTraders/index.tsx
+msgid "Traders Comparison in"
+msgstr "Traders Comparison in"
+
+#: src/pages/ComparingTraders/ViewComparison.tsx
+msgid "Traders Comparison in {0}"
+msgstr "Traders Comparison in {0}"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/utils/config/options.tsx
@@ -2139,8 +2184,8 @@ msgid "Volume"
 msgstr "Volume"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-msgid "W/L Ratio"
-msgstr "W/L Ratio"
+#~ msgid "W/L Ratio"
+#~ msgstr "W/L Ratio"
 
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx

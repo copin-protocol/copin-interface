@@ -11,7 +11,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import UnsubscribeAlertModal from 'components/Modal/UnsubscribeAlertModal'
 import { TraderAlertData } from 'entities/alert'
 import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useMyProfile from 'hooks/store/useMyProfile'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -33,7 +33,7 @@ import TraderLastViewed from './TraderLastViewed'
 const LIMIT = 10
 export default function AlertList() {
   const { myProfile } = useMyProfile()
-  const { isPremiumUser } = useSubscriptionRestrict()
+  const isPremiumUser = useIsPremium()
   const { md } = useResponsive()
 
   const { currentPage, changeCurrentPage } = usePageChange({ pageName: 'alert-list' })

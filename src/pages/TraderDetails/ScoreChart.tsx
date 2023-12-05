@@ -34,7 +34,7 @@ const ScoreChart = ({
   outerRadius?: number
   tooltipPosition?: { x: number; y: number }
 }) => {
-  const hasComparedData = data.every((values: any) => !!values.comparedValue)
+  const hasComparedData = data.every((values: any) => values.comparedValue != null)
   const TooltipDescription = useCallback(
     ({ label, value }: { label: ReactNode; value: ReactNode }) => {
       if (hiddenAxisTitle)

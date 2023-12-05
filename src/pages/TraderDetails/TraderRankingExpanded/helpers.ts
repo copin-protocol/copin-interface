@@ -7,9 +7,15 @@ type FoundTraderData = {
 
 export function filterFoundData<T extends FoundTraderData>(
   tradersData: T[] | undefined,
-  sourceTrader: FoundTraderData
+  ignoreTraders: FoundTraderData[]
 ) {
-  return !!tradersData?.length && !!sourceTrader.account && !!sourceTrader.protocol
-    ? tradersData.filter((data) => data.account !== sourceTrader.account || data.protocol !== sourceTrader.protocol)
+  return !!tradersData?.length
+    ? tradersData.filter((data) => {
+        let accepted = true
+        for (const ignoreTrader of ignoreTraders) {
+          if (ignoreTrader.account === data.account && ignoreTrader.protocol === data.protocol) accepted = false
+        }
+        return accepted
+      })
     : []
 }

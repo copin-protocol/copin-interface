@@ -95,7 +95,7 @@ export default function PercentileRankingDetails({
   )
 }
 
-function RankingComparedItem({
+export function RankingComparedItem({
   label,
   value,
   comparedValue,

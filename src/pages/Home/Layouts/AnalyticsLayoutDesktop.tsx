@@ -1,7 +1,7 @@
 import { cloneElement, useCallback, useReducer } from 'react'
 
 import DirectionButton from 'components/@ui/DirectionButton'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Box } from 'theme/base'
 import { STORAGE_KEYS } from 'utils/config/keys'
@@ -20,7 +20,7 @@ export default function AnalyticsLayoutDesktop({
   conditionFilter,
 }: AnalyticsLayoutComponents) {
   const { myProfile } = useMyProfile()
-  const { isPremiumUser } = useSubscriptionRestrict()
+  const isPremiumUser = useIsPremium()
   const [state, dispatch] = useReducer(reducer, initialState, initState)
   const { MAIN, COL_RIGHT, OPENINGS, FILTERS, CHART, LIST } = state
   const mainExpanded = MAIN.state === ColumnState.EXPANDED_RIGHT

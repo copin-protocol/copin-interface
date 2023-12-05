@@ -27,6 +27,7 @@ const SharedBacktestMultiple = lazy(() => import('./SharedBacktestMultiple'))
 const Settings = lazy(() => import('./Settings'))
 const Subscription = lazy(() => import('./Subscription'))
 const LinkBotTelegram = lazy(() => import('./LinkBotTelegram'))
+const ComparingTraders = lazy(() => import('./ComparingTraders'))
 
 function App() {
   useEffect(() => {
@@ -46,6 +47,7 @@ function App() {
           <ScrollToTop />
           <QSReader />
           <Switch>
+            <Route exact path={ROUTES.COMPARING_TRADERS.path} component={ComparingTraders} />
             <Route exact path={ROUTES.SUBSCRIPTION.path} component={Subscription} />
             <ProtocolRoute exact path={ROUTES.TRADER_DETAILS.path} component={TraderDetails}></ProtocolRoute>
             <ProtocolRedirectRoute exact path={`${ROUTES.TRADER_DETAILS.path_prefix}/:address`} />

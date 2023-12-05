@@ -11,7 +11,10 @@ import { Box, Flex } from 'theme/base'
 import { FindAndSelectTraderProps } from './FindAndSelectTrader'
 import { filterFoundData } from './helpers'
 
-export default function SearchTraders(props: FindAndSelectTraderProps) {
+export default function SearchTraders({
+  resultHeight = 200,
+  ...props
+}: FindAndSelectTraderProps & { resultHeight?: number }) {
   const {
     searchWrapperRef,
     inputSearchRef,
@@ -25,8 +28,8 @@ export default function SearchTraders(props: FindAndSelectTraderProps) {
     searchUserDataKwenta,
   } = useSearchTraders({ onSelect: props.onSelect, returnRanking: true, allowAllProtocol: true })
   const traders = [
-    ...filterFoundData(searchUserData?.data, { account: props.account, protocol: props.protocol }),
-    ...filterFoundData(searchUserDataKwenta?.data, { account: props.account, protocol: props.protocol }),
+    ...filterFoundData(searchUserData?.data, props.ignoreSelectTraders),
+    ...filterFoundData(searchUserDataKwenta?.data, props.ignoreSelectTraders),
   ]
   return (
     <Box ref={searchWrapperRef} sx={{ position: 'relative' }}>
@@ -55,7 +58,7 @@ export default function SearchTraders(props: FindAndSelectTraderProps) {
             left: 0,
             right: 0,
             transform: 'translateY(100%)',
-            height: 200,
+            height: resultHeight,
             bg: 'neutral5',
             flexDirection: 'column',
             overflow: 'auto',

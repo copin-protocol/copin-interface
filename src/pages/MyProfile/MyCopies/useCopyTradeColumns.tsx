@@ -14,7 +14,7 @@ import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyTradeData } from 'entities/copyTrade'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
 import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
@@ -47,14 +47,13 @@ export default function useCopyTradeColumns({
   toggleStatus: ({ id, currentStatus }: { id: string; currentStatus: CopyTradeStatusEnum }) => void
   copyTradeData: MutableRefObject<CopyTradeData | undefined>
 }) {
-  const { isQuotaExceed, handleQuotaExceed } = useSubscriptionRestrict()
+  const { checkIsEligible } = useCheckCopyTradeAction()
   const toggleStatusCopyTrade = useCallback(
     (item: CopyTradeData) => {
       if (isMutating) return
       onSelect(item)
       if (item.status === CopyTradeStatusEnum.STOPPED) {
-        if (isQuotaExceed) {
-          handleQuotaExceed()
+        if (!checkIsEligible()) {
           return
         }
         toggleStatus({ id: item.id, currentStatus: item.status })
@@ -65,7 +64,7 @@ export default function useCopyTradeColumns({
         return
       }
     },
-    [handleQuotaExceed, isMutating, isQuotaExceed, onSelect, setOpenConfirmStopModal, toggleStatus]
+    [checkIsEligible, isMutating, onSelect, setOpenConfirmStopModal, toggleStatus]
   )
   const isRunningFn = useCallback((status: CopyTradeStatusEnum) => status === CopyTradeStatusEnum.RUNNING, [])
   const renderToggleRunning = useCallback(
@@ -272,18 +271,20 @@ export default function useCopyTradeColumns({
 
   const handleOpenDrawer = useCallback(
     (data?: CopyTradeData) => {
+      if (data?.status === CopyTradeStatusEnum.STOPPED && !checkIsEligible()) return
       onSelect(data)
       setOpenDrawer(true)
     },
-    [onSelect, setOpenDrawer]
+    [checkIsEligible, onSelect, setOpenDrawer]
   )
 
   const handleOpenCloneDrawer = useCallback(
     (data?: CopyTradeData) => {
+      if (!checkIsEligible()) return
       onSelect(data)
       setOpenCloneDrawer(true)
     },
-    [onSelect, setOpenCloneDrawer]
+    [checkIsEligible, onSelect, setOpenCloneDrawer]
   )
 
   const handleOpenDeleteModal = useCallback(

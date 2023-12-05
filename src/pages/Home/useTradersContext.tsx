@@ -5,7 +5,7 @@ import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ConditionFormValues } from 'components/ConditionFilterForm/types'
 import { TraderListSortProps } from 'components/Tables/TraderListTable/dataConfig'
 import { TraderData } from 'entities/trader.d'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -88,7 +88,7 @@ export function FilterTradersProvider({
     tab === TabKeyEnum.Explorer ? URL_PARAM_KEYS.EXPLORER_TIME_RANGE_FILTER : URL_PARAM_KEYS.FAVORITE_TIME_RANGE_FILTER
 
   // START TIME FILTER
-  const { isPremiumUser, handleIsBasicUser } = useSubscriptionRestrict()
+  const { isPremiumUser, checkIsPremium } = useIsPremiumAndAction()
   const [isRangeSelection, setRangeSelection] = useState(() => {
     if (!isPremiumUser) return false
     if (searchParams[rangeFilterKey]) return true
@@ -131,8 +131,7 @@ export function FilterTradersProvider({
   }
 
   const handleSetTimeOption = (timeOption: TimeFilterProps) => {
-    if (!isPremiumUser && timeOption.id === TimeFilterByEnum.ALL_TIME) {
-      handleIsBasicUser()
+    if (timeOption.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) {
       return
     }
     setTimeOption(timeOption)

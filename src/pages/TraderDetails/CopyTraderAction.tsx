@@ -1,8 +1,7 @@
 import { useState } from 'react'
 
-import { useClickLoginButton } from 'components/LoginAction'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -24,9 +23,8 @@ const CopyTraderAction = ({
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenContactModal, setIsOpenContactModal] = useState(false)
 
-  const { isAuthenticated, profile } = useAuthContext()
-  const { isQuotaExceed, handleQuotaExceed } = useSubscriptionRestrict()
-  const handleClickLogin = useClickLoginButton()
+  const { profile } = useAuthContext()
+  const { checkIsEligible } = useCheckCopyTradeAction()
   const handleCloseModal = () => {
     setIsOpenModal(false)
     onForceReload()
@@ -44,14 +42,7 @@ const CopyTraderAction = ({
         }}
         variant="primary"
         onClick={() => {
-          if (!isAuthenticated) {
-            handleClickLogin()
-            return
-          }
-          if (isQuotaExceed) {
-            handleQuotaExceed()
-            return
-          }
+          if (!checkIsEligible()) return
 
           hasCopyPermission ? setIsOpenModal(true) : setIsOpenContactModal(true)
 
