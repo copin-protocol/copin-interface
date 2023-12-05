@@ -5,8 +5,8 @@ import { parsedQueryString } from './useParsedQueryString'
 
 export default function useSearchParams() {
   const { search } = useLocation()
-  const searchParams = useMemo(() => parsedQueryString(search), [search])
   const history = useHistory()
+  const searchParams = useMemo(() => parsedQueryString(search), [search])
 
   const setSearchParams = useCallback(
     (params: { [key: string]: string | null }) => {

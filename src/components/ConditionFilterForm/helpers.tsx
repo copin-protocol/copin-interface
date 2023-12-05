@@ -51,3 +51,9 @@ export function getFieldOptionLabels<T>(fieldOptions: FieldOption<T>[]) {
   }, {} as { [key in keyof T]: ReactNode })
   return fieldOptionLabels
 }
+
+export function parseNumber(str: string | undefined) {
+  const num = parseFloat(str ?? '')
+  if (isNaN(num)) return 0
+  return num
+}

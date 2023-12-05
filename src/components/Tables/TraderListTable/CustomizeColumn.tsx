@@ -1,5 +1,4 @@
 import { Gear } from '@phosphor-icons/react'
-import React from 'react'
 
 import { useHomeCustomizeStore } from 'hooks/store/useHomeCustomize'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'

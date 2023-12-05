@@ -56,13 +56,14 @@ export default function FilterSuggestion({
       </Type.Caption>
       <Flex alignItems="center" sx={{ gap: 1, flexWrap: 'wrap' }}>
         {data.map((item) => {
+          const isActive = currentSuggestion === item.id
           return (
             <Button
-              variant={currentSuggestion === item.id ? 'ghostActive' : 'ghostInactive'}
+              variant={isActive ? 'ghostActive' : 'ghostInactive'}
               type="button"
               key={item.id}
               onClick={() => handleSelect(item)}
-              sx={{ px: 2, py: 1, mx: 0 }}
+              sx={{ px: 2, py: 1, mx: 0, bg: isActive ? 'neutral5' : 'transparent' }}
             >
               <Type.Caption>{item.title}</Type.Caption>
             </Button>

@@ -48,6 +48,18 @@ export const getFreezeLeftPos = (index: number, visibleColumns: string[]) => {
   return left
 }
 
+export const emptyColumn = {
+  style: {
+    minWidth: '10px',
+    display: 'table-cell !important',
+  },
+  text: '',
+  label: <div />,
+  visible: true,
+  id: 'emptyColumn',
+  render: () => <div />,
+} as unknown as TableSettings<TraderData, any>
+
 export const tableSettings: TableSettingsProps<TraderData> = [
   {
     style: {

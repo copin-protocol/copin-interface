@@ -95,14 +95,14 @@ export function FilterTradersProvider({
     return false
   })
 
-  const { currentOption: timeOption, changeCurrentOption: setTimeOption } = useOptionChange({
+  const { currentOption: timeOption, setCurrentOption: setTimeOption } = useOptionChange({
     optionName: timeFilterKey,
     options: TIME_FILTER_OPTIONS,
     defaultOption: isPremiumUser ? TimeFilterByEnum.ALL_TIME.toString() : TimeFilterByEnum.S30_DAY.toString(),
-    optionNameToBeDelete: [rangeFilterKey],
-    callback: () => {
-      changeCurrentPage(1)
-    },
+    // optionNameToBeDelete: [rangeFilterKey],
+    // callback: () => {
+    //   changeCurrentPage(1)
+    // },
   })
   const [timeRange, setTimeRange] = useState<TimeRange>(() => {
     if (!isRangeSelection) return {}
@@ -122,9 +122,9 @@ export function FilterTradersProvider({
       return
     }
     const rangeSearch = `${dayjs(range.from).utc().valueOf()}_${dayjs(range.to).utc().valueOf()}`
-    setSearchParams({ [rangeFilterKey]: rangeSearch, [timeFilterKey]: null })
+    setSearchParams({ [rangeFilterKey]: rangeSearch, [timeFilterKey]: null, [URL_PARAM_KEYS.EXPLORER_PAGE]: '1' })
+    setCurrentPage(1)
     setTimeRange(range)
-    changeCurrentPage(1, false)
     setRangeSelection(true)
 
     logEventFilter(EVENT_ACTIONS[EventCategory.FILTER].CUSTOM_RANGE)
@@ -135,6 +135,9 @@ export function FilterTradersProvider({
       handleIsBasicUser()
       return
     }
+
+    setSearchParams({ [rangeFilterKey]: null, [URL_PARAM_KEYS.EXPLORER_PAGE]: '1' })
+    setCurrentPage(1)
     setTimeOption(timeOption)
     setRangeSelection(false)
 
@@ -160,7 +163,7 @@ export function FilterTradersProvider({
 
   // END TIME FILTER
 
-  const { currentPage, currentLimit, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
+  const { currentPage, currentLimit, setCurrentPage, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
     pageName: URL_PARAM_KEYS.EXPLORER_PAGE,
     limitName: URL_PARAM_KEYS.EXPLORER_LIMIT,
     defaultLimit: DEFAULT_LIMIT,
@@ -186,10 +189,11 @@ export function FilterTradersProvider({
       [URL_PARAM_KEYS.RANKING_FILTERS]: null,
       [URL_PARAM_KEYS.DEFAULT_FILTERS]: stringParams,
       [URL_PARAM_KEYS.FILTER_TAB]: FilterTabEnum.DEFAULT,
+      [URL_PARAM_KEYS.EXPLORER_PAGE]: '1',
     })
     localStorage.setItem(STORAGE_KEYS.FILTER_TAB, FilterTabEnum.DEFAULT)
     localStorage.setItem(STORAGE_KEYS.DEFAULT_FILTERS, JSON.stringify(options))
-    changeCurrentPage(1, false)
+    setCurrentPage(1)
     setFilters(options)
   }
   const changeRankingFilters = (options: ConditionFormValues<TraderData>) => {
@@ -198,10 +202,11 @@ export function FilterTradersProvider({
       [URL_PARAM_KEYS.DEFAULT_FILTERS]: null,
       [URL_PARAM_KEYS.RANKING_FILTERS]: stringParams,
       [URL_PARAM_KEYS.FILTER_TAB]: FilterTabEnum.RANKING,
+      [URL_PARAM_KEYS.EXPLORER_PAGE]: '1',
     })
     localStorage.setItem(STORAGE_KEYS.FILTER_TAB, FilterTabEnum.RANKING)
     localStorage.setItem(STORAGE_KEYS.RANKING_FILTERS, JSON.stringify(options))
-    changeCurrentPage(1, false)
+    setCurrentPage(1)
     setRankingFilters(options)
   }
 
@@ -209,11 +214,12 @@ export function FilterTradersProvider({
     getInitSort(searchParams)
   )
   const changeCurrentSort = (sort: TraderListSortProps<TraderData> | undefined) => {
-    const params: Record<string, string> = {}
-    if (sort?.sortBy) params.sort_by = sort.sortBy
-    if (sort?.sortType) params.sort_type = sort.sortType
-    changeCurrentPage(1, false)
+    const params: Record<string, string | null> = {}
+    params.sort_by = sort?.sortBy ?? null
+    params.sort_type = sort?.sortType ?? null
+    params[URL_PARAM_KEYS.EXPLORER_PAGE] = '1'
     setSearchParams(params)
+    setCurrentPage(1)
     setCurrentSort(sort)
   }
   const filterTab = getInitFilterTab({ searchParams })

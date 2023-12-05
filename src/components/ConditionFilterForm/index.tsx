@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Plus, Trash } from '@phosphor-icons/react'
 import { ReactNode, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
 
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
@@ -9,6 +8,7 @@ import Input from 'theme/Input'
 import Select from 'theme/Select'
 import { Box, Flex, Type } from 'theme/base'
 
+import { parseNumber } from './helpers'
 import { ConditionFilterFormProps, ConditionOption, FieldOption, RowValues } from './types'
 
 export default function ConditionFilterForm<T>({
@@ -137,23 +137,13 @@ function Row<T>({
     if (!!option) return option
     return fieldOptions[0]
   })
-  const { watch, setValue } = useForm<RowValues<T>>({
-    //@ts-ignore
-    defaultValues: data,
-  })
   const fieldName = fieldNameOption.value
   const conditionType = conditionOption.value
-  const gte = watch('gte') ?? 0
-  const lte = watch('lte') ?? 0
+  const [gte, setGte] = useState<string | undefined>(data?.gte?.toString())
+  const [lte, setLte] = useState<string | undefined>(data?.lte?.toString())
 
   useEffect(() => {
-    const changedData: RowValues<T> = {
-      key: fieldName,
-      conditionType,
-    }
-    if (gte != null) changedData.gte = gte
-    if (lte != null) changedData.lte = lte
-    onChange(changedData)
+    onChange({ key: fieldName, conditionType, gte: parseNumber(gte), lte: parseNumber(lte) })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conditionType, fieldName, gte, lte])
 
@@ -190,8 +180,8 @@ function Row<T>({
               const value = newValue as FieldOption<T>
               setFieldNameOption(value)
               if (value.default) {
-                setValue('gte', value.default.gte)
-                setValue('lte', value.default.lte)
+                setGte(value.default?.gte?.toString())
+                setLte(value.default?.lte?.toString())
                 setConditionOption(getConditionOption(value.default.conditionType))
               }
             }}
@@ -207,7 +197,11 @@ function Row<T>({
             variant="ghost"
             options={conditionOptions}
             value={conditionOption}
-            onChange={(newValue) => setConditionOption(newValue as ConditionOption)}
+            onChange={(newValue) => {
+              setGte(gte || '0')
+              setLte(lte || '0')
+              setConditionOption(newValue as ConditionOption)
+            }}
           />
         </Box>
         {/* <VerticalDivider /> */}
@@ -218,11 +212,10 @@ function Row<T>({
                 key="gte"
                 type="number"
                 placeholder=""
-                value={gte ?? ''}
+                value={gte}
                 onChange={(e) => {
                   const value = e.target.value
-                  const number: number | null = value ? Number(value) : null
-                  setValue('gte', number)
+                  setGte(value)
                 }}
                 sx={{
                   px: 2,
@@ -239,11 +232,10 @@ function Row<T>({
                   key="lte"
                   type="number"
                   placeholder=""
-                  value={lte ?? ''}
+                  value={lte}
                   onChange={(e) => {
                     const value = e.target.value
-                    const number: number | null = value ? Number(value) : null
-                    setValue('lte', number)
+                    setLte(value)
                   }}
                   sx={{
                     px: 2,

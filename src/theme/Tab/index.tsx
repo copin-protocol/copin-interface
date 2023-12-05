@@ -1,6 +1,6 @@
 import { SystemStyleObject } from '@styled-system/css'
-import React, { ReactElement, ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import React, { ReactElement, ReactNode, useEffect, useRef } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { GridProps } from 'styled-system'
 
@@ -158,47 +158,77 @@ export function TabHeader({
           {configs.map((tab) => {
             const isActive = isActiveFn(tab)
             return (
-              <TabItem
+              <TabRouteItem
                 key={tab.key}
-                as={tab.route ? Link : undefined}
-                to={tab.route ?? ''}
-                type="button"
-                size="lg"
-                onClick={onClickItem ? () => onClickItem(tab.key) : undefined}
-                active={isActive}
-                inactiveHasLine={inactiveHasLine}
-                sx={{
-                  flex: ['1 0 auto', '1 0 auto', '0 0 auto'],
-                  ...(tab.route
-                    ? {
-                        '&:active,&:focus,&:hover': { color: 'primary1' },
-                      }
-                    : {}),
-                  ...itemSx,
-                  ...(isActive ? itemActiveSx : {}),
+                isActive={isActive}
+                tabConfig={tab}
+                itemOption={{
+                  itemSx,
+                  itemActiveSx,
+                  onClickItem,
+                  inactiveHasLine,
                 }}
-              >
-                {tab.activeIcon && tab.inactiveIcon ? (
-                  <Flex alignItems="center" sx={{ gap: 2 }}>
-                    {isActive ? tab.activeIcon : tab.inactiveIcon}
-                    <Box
-                      as="span"
-                      sx={{
-                        textTransform: ['lowercase', 'none'],
-                        '&:first-letter': { textTransform: 'uppercase' },
-                      }}
-                    >
-                      {tab.name}
-                    </Box>
-                  </Flex>
-                ) : (
-                  tab.name
-                )}
-              </TabItem>
+              />
             )
           })}
         </Header>
       </HeaderOverlay>
     </Box>
+  )
+}
+
+function TabRouteItem({
+  tabConfig,
+  itemOption,
+  isActive,
+}: {
+  tabConfig: TabConfig
+  itemOption: Pick<TabHeadersProps, 'itemSx' | 'itemActiveSx' | 'onClickItem' | 'inactiveHasLine'>
+  isActive: boolean
+}) {
+  const { search, pathname } = useLocation()
+  const _search = useRef('')
+  useEffect(() => {
+    if (pathname === tabConfig.route) {
+      _search.current = search
+    }
+  }, [pathname, search, tabConfig.route])
+  return (
+    <TabItem
+      as={tabConfig.route ? Link : undefined}
+      to={tabConfig.route ? tabConfig.route + _search.current : ''}
+      type="button"
+      size="lg"
+      onClick={itemOption.onClickItem ? () => itemOption?.onClickItem?.(tabConfig.key) : undefined}
+      active={isActive}
+      inactiveHasLine={itemOption.inactiveHasLine}
+      sx={{
+        flex: ['1 0 auto', '1 0 auto', '0 0 auto'],
+        ...(tabConfig.route
+          ? {
+              '&:active,&:focus,&:hover': { color: 'primary1' },
+            }
+          : {}),
+        ...itemOption.itemSx,
+        ...(isActive ? itemOption.itemActiveSx : {}),
+      }}
+    >
+      {tabConfig.activeIcon && tabConfig.inactiveIcon ? (
+        <Flex alignItems="center" sx={{ gap: 2 }}>
+          {isActive ? tabConfig.activeIcon : tabConfig.inactiveIcon}
+          <Box
+            as="span"
+            sx={{
+              textTransform: ['lowercase', 'none'],
+              '&:first-letter': { textTransform: 'uppercase' },
+            }}
+          >
+            {tabConfig.name}
+          </Box>
+        </Flex>
+      ) : (
+        tabConfig.name
+      )}
+    </TabItem>
   )
 }

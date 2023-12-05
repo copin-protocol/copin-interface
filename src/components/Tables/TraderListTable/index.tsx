@@ -9,7 +9,7 @@ import { Colors } from 'theme/types'
 
 import TableBody from './TableBody'
 import TableHead from './TableHead'
-import { TableSettingsProps, TraderListSortProps } from './dataConfig'
+import { TableSettingsProps, TraderListSortProps, emptyColumn } from './dataConfig'
 
 export default function TraderListTable<T>({
   data,
@@ -56,6 +56,9 @@ export default function TraderListTable<T>({
     if (!isLoading) return
     bodyRef.current?.scrollTo(0, 0)
   }, [isLoading])
+
+  const _tableSettings =
+    userTraderList.length > 1 ? tableSettings : ([...tableSettings, emptyColumn] as TableSettingsProps<T>)
   const { sm } = useResponsive()
   return (
     <>
@@ -81,11 +84,11 @@ export default function TraderListTable<T>({
             <TableContainer>
               <TableHead
                 hasData={!!data?.length}
-                tableSettings={tableSettings}
+                tableSettings={_tableSettings}
                 currentSort={currentSort}
                 changeCurrentSort={changeCurrentSort}
                 hideCustomColumns={hideCustomColumns}
-                visibleColumns={hasCustomize ? userTraderList : tableSettings.map((setting) => setting.id as string)}
+                visibleColumns={hasCustomize ? userTraderList : _tableSettings.map((setting) => setting.id as string)}
                 isSelectedAll={isSelectedAll}
                 handleSelectedAll={handleSelectAll}
               />
@@ -96,8 +99,8 @@ export default function TraderListTable<T>({
               <TableBody
                 data={data}
                 isLoading={isLoading}
-                tableSettings={tableSettings}
-                visibleColumns={hasCustomize ? userTraderList : tableSettings.map((setting) => setting.id as string)}
+                tableSettings={_tableSettings}
+                visibleColumns={hasCustomize ? userTraderList : _tableSettings.map((setting) => setting.id as string)}
                 checkIsSelected={checkIsSelected}
                 handleSelect={handleSelect}
               />

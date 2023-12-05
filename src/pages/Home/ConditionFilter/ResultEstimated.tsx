@@ -26,20 +26,28 @@ export default function ResultEstimated({
   const lastData = data?.at?.(-1)
   const percent = lastData && lastData?.total > 0 ? ((lastData?.counter ?? 0) * 100) / lastData.total : 0
   const count = lastData?.counter ?? 0
+  const total = lastData?.total ?? 0
   return (
     <Flex
       sx={{
         px: 3,
         height: 80,
-        alignItems: 'center',
         borderBottom: 'small',
         borderBottomColor: 'neutral5',
         position: 'relative',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        gap: 1,
       }}
     >
-      <Box sx={{ position: 'absolute', top: '50%', left: 32, transform: 'translateY(-50%)', zIndex: 10 }}>
-        {isLoading && <Loading size={16} />}
-      </Box>
+      <Flex alignItems="center" sx={{ gap: 1 }}>
+        <Type.Caption width="max-content" color={'neutral1'}>
+          {data ? `${percent.toFixed(1)}%` : '--'}
+        </Type.Caption>
+        <Type.Caption minWidth="max-content" color="neutral3">
+          traders fit conditions in {formatNumber(effectDays, 0)} days
+        </Type.Caption>
+      </Flex>
       <Box
         sx={{
           position: 'relative',
@@ -60,50 +68,18 @@ export default function ResultEstimated({
               </Box>
             )
           })}
-
-        <Absolute
-          top={'-32px'}
-          left={percent < 50 ? `${percent}%` : undefined}
-          right={percent >= 50 ? `${100 - percent}%` : undefined}
-        >
-          <Flex alignItems="center" sx={{ gap: 1 }}>
-            <Type.Caption width="max-content" color={'neutral1'}>
-              {data ? `${percent.toFixed(1)}%` : '--'}
-            </Type.Caption>
-            <Type.Caption minWidth="max-content" color="neutral3" py={2}>
-              traders fit conditions in {formatNumber(effectDays, 0)} days
-            </Type.Caption>
-          </Flex>
-        </Absolute>
-
-        <Absolute
-          bottom={'-25px'}
-          left={percent < 50 ? `${percent}%` : undefined}
-          right={percent >= 50 ? `${100 - percent}%` : undefined}
-        >
-          <Type.Caption color={'neutral1'}>{data ? nFormatter(count, 1) : '--'}</Type.Caption>
-        </Absolute>
-
-        <Absolute bottom={'-25px'} right={'-2px'}>
-          {data && <Type.Caption color="neutral3">{nFormatter(data[0]?.total ?? 0, 1)}</Type.Caption>}
-        </Absolute>
+        <Box sx={{ position: 'absolute', top: '50%', left: 32, transform: 'translateY(-50%)', zIndex: 10 }}>
+          {isLoading && <Loading size={16} />}
+        </Box>
       </Box>
+
+      <Flex sx={{ width: '100%', alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+        <Type.Caption color="neutral1">{data ? nFormatter(count, 1) : '--'}</Type.Caption>
+        <Type.Caption color="neutral3">{data ? nFormatter(total, 1) : '--'}</Type.Caption>
+      </Flex>
     </Flex>
   )
 }
-
-const Absolute = styled(Box)<{
-  top?: string
-  bottom?: string
-  left?: string
-  right?: string
-}>`
-  position: absolute;
-  top: ${({ top }) => (top ? top : 'auto')};
-  bottom: ${({ bottom }) => (bottom ? bottom : 'auto')};
-  left: ${({ left }) => (left ? left : 'auto')};
-  right: ${({ right }) => (right ? right : 'auto')};
-`
 
 const Progress = styled(Box)<{ width: number; bg: string }>`
   position: absolute;
