@@ -1,13 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Funnel } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 
-import Divider from 'components/@ui/Divider'
-import { Button } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
 import Dropdown from 'theme/Dropdown'
-import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
@@ -155,6 +152,6 @@ function AvailableMargin({ value }: { value: number | undefined }) {
   )
 }
 
-const protocolFilters = [ProtocolEnum.GMX, ProtocolEnum.KWENTA]
+const protocolFilters = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
 
 const statusFilters = [CopyTradeStatusEnum.RUNNING, CopyTradeStatusEnum.STOPPED]

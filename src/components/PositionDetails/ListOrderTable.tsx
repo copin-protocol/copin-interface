@@ -156,7 +156,7 @@ export default function ListOrderTable({
             {item.type === OrderTypeEnum.MARGIN_TRANSFERRED
               ? '--'
               : PriceTokenText({
-                  value: item.type === OrderTypeEnum.LIQUIDATE ? item.averagePriceNumber : item.priceNumber,
+                  value: item.priceNumber,
                   maxDigit: 2,
                   minDigit: 2,
                 })}

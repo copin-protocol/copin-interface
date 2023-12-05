@@ -92,7 +92,7 @@ export default function MainSection({
     handleToggleSelect: handleToggleProtocol,
   } = useSelectMultiple({
     paramKey: URL_PARAM_KEYS.MY_COPIES_PROTOCOL,
-    defaultSelected: [ProtocolEnum.GMX, ProtocolEnum.KWENTA],
+    defaultSelected: [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL],
   })
   const queryParams = useMemo(
     () => ({
