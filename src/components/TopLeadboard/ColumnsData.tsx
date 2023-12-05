@@ -11,7 +11,6 @@ import { ColumnData } from 'components/@ui/Table/types'
 import { TopTraderData } from 'entities/trader'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderCopying from 'hooks/store/useTraderCopying'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
 import { Flex, IconBox, Image, Type } from 'theme/base'
@@ -19,7 +18,7 @@ import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 
 export type ExternalSource = {
-  prices: UsdPrices
+  isCurrentLeaderboard?: boolean
 }
 export const LeaderboardColumns: ColumnData<TopTraderData, ExternalSource>[] = [
   {
@@ -34,9 +33,9 @@ export const LeaderboardColumns: ColumnData<TopTraderData, ExternalSource>[] = [
     dataIndex: 'account',
     key: 'account',
     style: { minWidth: '200px' },
-    render: (item) => (
+    render: (item, _, externalSource) => (
       <Flex alignItems="center" justifyContent="start" sx={{ color: 'neutral1', gap: 2, position: 'relative' }}>
-        <AccountInfo info={item} />
+        <AccountInfo info={item} isCurrentLeaderboard={externalSource?.isCurrentLeaderboard} />
       </Flex>
     ),
   },
@@ -149,11 +148,19 @@ export function RankingInfo({ ranking }: { ranking: number }) {
   }
 }
 
-export function AccountInfo({ info, size = 40 }: { info: TopTraderData; size?: number }) {
+export function AccountInfo({
+  info,
+  size = 40,
+  isCurrentLeaderboard,
+}: {
+  info: TopTraderData
+  size?: number
+  isCurrentLeaderboard?: boolean
+}) {
   const { protocol: defaultProtocol } = useProtocolStore()
   const { isCopying } = useTraderCopying(info.account)
   const protocol = info.protocol ?? defaultProtocol
-  const deltaRanking = (info?.lastRanking ?? 1001) - info.ranking
+  const deltaRanking = isCurrentLeaderboard ? (info?.lastRanking ?? 1001) - info.ranking : 0
 
   return (
     <Flex
@@ -211,7 +218,7 @@ export function AccountInfo({ info, size = 40 }: { info: TopTraderData; size?: n
             />
             <Type.Small color={deltaRanking === 0 ? 'neutral1' : deltaRanking > 0 ? 'green1' : 'red2'}>
               {deltaRanking !== 0 && formatNumber(Math.abs(deltaRanking))}
-              {!info.lastRanking && '+'}
+              {isCurrentLeaderboard && !info.lastRanking && '+'}
             </Type.Small>
           </Flex>
           <Tooltip

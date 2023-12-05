@@ -1,7 +1,6 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import dayjs from 'dayjs'
-import 'dayjs/locale/en'
 import { en } from 'make-plural/plurals'
 import { ReactNode, useEffect } from 'react'
 

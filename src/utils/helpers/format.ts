@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import isoWeek from 'dayjs/plugin/isoWeek'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
@@ -11,6 +12,7 @@ import { isAddress } from 'utils/web3/contracts'
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
+dayjs.extend(isoWeek)
 dayjs.extend(duration)
 
 export function formatDuration(duration: number | undefined) {

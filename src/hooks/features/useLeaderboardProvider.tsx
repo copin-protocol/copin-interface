@@ -36,6 +36,7 @@ export interface LeaderboardContextValues {
   formatNext: string
   formatPrev: string
   ignoreNext: boolean
+  isCurrentLeaderboard: boolean
   lastTimeUpdated?: string
 }
 
@@ -47,7 +48,8 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
   const protocolParam = searchParams?.protocol as ProtocolEnum
   const { protocol: protocolStore } = useProtocolStore()
   const protocol = protocolParam ?? protocolStore
-  const [queryDate, setQueryDate] = useState(dateParams ? dayjs(Number(dateParams)) : dayjs().utc())
+  const initDate = dateParams ? dayjs(Number(dateParams)) : dayjs().utc()
+  const [queryDate, setQueryDate] = useState(parseQueryDate(initDate))
   const [keyword, setKeyword] = useState<string | undefined>()
 
   const [currentSort, setCurrentSort] = useState<TableSortProps<TopTraderData> | undefined>(() => {
@@ -125,11 +127,21 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
     [queryDate, currentOption.id]
   )
 
+  const isCurrentLeaderboard = useMemo(() => {
+    const now = dayjs().utc()
+    switch (currentOption.id) {
+      case LeaderboardTypeEnum.WEEKLY:
+        return queryDate.isoWeek() === now.isoWeek() && queryDate.year() === now.year()
+      case LeaderboardTypeEnum.MONTHLY:
+        return queryDate.month() === now.month() && queryDate.year() === now.year()
+    }
+  }, [currentOption.id, queryDate])
+
   const onNext = () => {
     const now = dayjs().utc()
     switch (currentOption.id) {
       case LeaderboardTypeEnum.WEEKLY:
-        if (queryDate.week() >= now.week() && queryDate.year() == now.year()) return
+        if (queryDate.isoWeek() >= now.isoWeek() && queryDate.year() == now.year()) return
         setQueryDate((prevDate) => {
           const newDate = prevDate.add(1, 'week')
           changeSearchParams(newDate)
@@ -186,6 +198,7 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
     formatNext,
     formatPrev,
     ignoreNext,
+    isCurrentLeaderboard,
     lastTimeUpdated,
   }
 
@@ -200,11 +213,12 @@ function getSeasonFormat({ type, queryDate }: { type: LeaderboardTypeEnum; query
   let formatPrev
   let formatNext
   const date = queryDate.local()
+
   switch (type) {
     case LeaderboardTypeEnum.WEEKLY:
-      formatCurrent = `Week ${date.week()}/${date.format('YYYY')}`
-      formatPrev = `Week ${date.subtract(1, 'week').week()}/${date.format('YYYY')}`
-      formatNext = `Week ${date.add(1, 'week').week()}/${date.format('YYYY')}`
+      formatCurrent = `Week ${date.isoWeek()}/${date.format('YYYY')}`
+      formatPrev = `Week ${date.subtract(1, 'week').isoWeek()}/${date.format('YYYY')}`
+      formatNext = `Week ${date.add(1, 'week').isoWeek()}/${date.format('YYYY')}`
       break
     case LeaderboardTypeEnum.MONTHLY:
       formatCurrent = date.format('MMMM')
@@ -220,9 +234,22 @@ function ignoreNextSeason({ type, queryDate }: { type: LeaderboardTypeEnum; quer
   const now = dayjs().utc()
   switch (type) {
     case LeaderboardTypeEnum.WEEKLY:
-      return queryDate.week() >= now.week() && queryDate.year() >= now.year()
+      return queryDate.isoWeek() >= now.isoWeek() && queryDate.year() >= now.year()
     case LeaderboardTypeEnum.MONTHLY:
       return queryDate.month() >= now.month() && queryDate.year() >= now.year()
   }
   return false
+}
+
+function parseQueryDate(date: Dayjs) {
+  if (isFirstDayOfWeek(date) || isFirstDayOfMonth(date)) return date.subtract(1, 'day')
+  return date
+}
+
+const isFirstDayOfWeek = (date: Dayjs): boolean => {
+  return date.isoWeekday() === 1
+}
+
+const isFirstDayOfMonth = (date: Dayjs): boolean => {
+  return date.date() === 1
 }

@@ -9,7 +9,7 @@ import { QUERY_KEYS } from 'utils/config/keys'
 type TradersByProtocolValuesData = { address: string; status: 'deleted' | 'copying' }
 export type TradersByProtocolData = Record<ProtocolEnum, TradersByProtocolValuesData[]>
 
-const PROTOCOL_ORDERS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA]
+const PROTOCOL_ORDERS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
 const queryConfigsFactory = (myProfileId: string | undefined) =>
   PROTOCOL_ORDERS.map((protocol) => {
     return {

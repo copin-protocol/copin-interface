@@ -100,7 +100,7 @@ export default function SelectedTraders({
   )
 }
 
-const PROTOCOL_ORDERS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA]
+const PROTOCOL_ORDERS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
 const QUERY_CONFIGS = PROTOCOL_ORDERS.map((protocol) => {
   return {
     queryKey: [QUERY_KEYS.GET_ALL_MY_COPY_TRADERS, protocol],
