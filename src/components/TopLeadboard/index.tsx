@@ -14,7 +14,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
 
-import { AccountInfo, LeaderboardColumns, RankingInfo } from './ColumnsData'
+import { AccountInfo, ExternalSource, LeaderboardColumns, RankingInfo } from './ColumnsData'
 
 const TopLeaderboard = () => {
   const { sm } = useResponsive()
@@ -42,7 +42,13 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: LeaderboardCo
     changeCurrentLimit,
     changeCurrentSort,
     lastTimeUpdated,
+    isCurrentLeaderboard,
   } = contextValues
+
+  const externalSource: ExternalSource = {
+    isCurrentLeaderboard,
+  }
+
   return (
     <>
       <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
@@ -88,6 +94,7 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: LeaderboardCo
               },
             }}
             checkIsTop={(data) => data.ranking <= 3}
+            externalSource={externalSource}
             // topIndex={3}
           />
         </Box>
@@ -119,7 +126,7 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: LeaderboardCo
 }
 
 function TopLeaderboardMobile({ contextValues }: { contextValues: LeaderboardContextValues }) {
-  const { data, isLoading, currentPage, changeCurrentPage, lastTimeUpdated } = contextValues
+  const { data, isLoading, currentPage, changeCurrentPage, lastTimeUpdated, isCurrentLeaderboard } = contextValues
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
       <Flex
@@ -142,7 +149,7 @@ function TopLeaderboardMobile({ contextValues }: { contextValues: LeaderboardCon
                     <Box pb={2}>
                       <Flex sx={{ gap: 2 }}>
                         <Box pb={2} color="neutral1" flex="1">
-                          <AccountInfo info={traderData} size={32} />
+                          <AccountInfo info={traderData} size={32} isCurrentLeaderboard={isCurrentLeaderboard} />
                         </Box>
                         <RankingInfo ranking={traderData.ranking} />
                       </Flex>

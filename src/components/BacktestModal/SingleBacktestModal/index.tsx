@@ -64,6 +64,9 @@ export default function SingleBackTestModal({
             dispatch({ type: 'addNewInstance' })
           }}
           onDeleteItem={(id) => {
+            if (state.instanceIds.length === 1) {
+              setSearchParams({ [URL_PARAM_KEYS.BACKTEST_DATA]: null })
+            }
             dispatch({ type: 'removeInstance', payload: id })
           }}
           onMinimize={onDismiss}

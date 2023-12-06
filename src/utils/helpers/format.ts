@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import isoWeek from 'dayjs/plugin/isoWeek'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
@@ -11,6 +12,7 @@ import { isAddress } from 'utils/web3/contracts'
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
+dayjs.extend(isoWeek)
 dayjs.extend(duration)
 
 export function formatDuration(duration: number | undefined) {
@@ -54,7 +56,7 @@ export const getUnitDate = (
 ) => dayjs.utc(date).get(unit)
 
 export function formatNumber(num?: number | string, maxDigit = 2, minDigit?: number) {
-  if (num == null) return '-'
+  if (num == null) return '--'
   if (typeof num === 'string') num = Number(num)
   if (Math.abs(num) < 1 && maxDigit === 0) {
     maxDigit = 2
@@ -186,8 +188,8 @@ export function nFormatter(num: number, digits = 2) {
   return item ? (num / item.value).toFixed(digits).replace(rx, '$1') + item.symbol : '0'
 }
 
-export default function formatTokenPrices({ value }: { value: number }) {
-  const formattedNumber = value.toFixed(18)
+export default function formatTokenPrices({ value }: { value: number | undefined }) {
+  const formattedNumber = (value ?? 0).toFixed(18)
   const parts = formattedNumber.split('.')
   const integerPart = parts[0] || '0'
   let decimalPart = parts[1] || '0'

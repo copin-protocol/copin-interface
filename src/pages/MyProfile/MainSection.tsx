@@ -92,14 +92,14 @@ export default function MainSection({
     handleToggleSelect: handleToggleProtocol,
   } = useSelectMultiple({
     paramKey: URL_PARAM_KEYS.MY_COPIES_PROTOCOL,
-    defaultSelected: [ProtocolEnum.GMX, ProtocolEnum.KWENTA],
+    defaultSelected: [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL],
   })
   const queryParams = useMemo(
     () => ({
       copyWalletId,
       accounts: state.selectedTraders,
       status: copyStatus.length === 1 ? copyStatus[0] : undefined,
-      protocol: selectedProtocol.length === 1 ? selectedProtocol[0] : undefined,
+      protocols: selectedProtocol,
     }),
     [copyStatus, selectedProtocol, state.selectedTraders, copyWalletId]
   )

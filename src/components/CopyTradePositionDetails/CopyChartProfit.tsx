@@ -342,7 +342,8 @@ export default function CopyChartProfit({
       }
     }
     if (position.latestStopLossId && position.stopLossAmount) {
-      const value = low.value > 0 ? 0 : -position.stopLossAmount < low.value ? low.value : -position.stopLossAmount
+      const value =
+        !low || low.value > 0 ? 0 : -position.stopLossAmount < low.value ? low.value : -position.stopLossAmount
       series.createPriceLine({
         price: value,
         color: themeColors.orange1,

@@ -1,6 +1,6 @@
 import { CirclesThreePlus } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { useEffect, useReducer } from 'react'
+import { useEffect, useReducer, useRef } from 'react'
 import { useMutation } from 'react-query'
 
 import { requestTestMultiOrderApi } from 'apis/backTestApis'
@@ -11,6 +11,7 @@ import { MIN_BACKTEST_VALUE, parseRequestData } from 'components/BacktestModal/h
 import { useClickLoginButton } from 'components/LoginAction'
 import { PositionData } from 'entities/trader.d'
 import useSearchParams from 'hooks/router/useSearchParams'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 // import useSearchParams from 'hooks/router/useSearchParams'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import IconButton from 'theme/Buttons/IconButton'
@@ -66,7 +67,7 @@ export default function TraderActionButtons({
             display: 'flex',
             position: 'fixed',
             top: NAVBAR_HEIGHT + 24,
-            right: 3,
+            right: 12,
             zIndex: 10,
           }}
         >
@@ -117,6 +118,7 @@ export default function TraderActionButtons({
 }
 function BacktestButton({ account, protocol }: { account: string; protocol: ProtocolEnum }) {
   const { searchParams, setSearchParams } = useSearchParams()
+  const myProfile = useMyProfileStore((state) => state.myProfile)
   const isForceOpenModal = searchParams[URL_PARAM_KEYS.OPEN_BACKTEST_MODAL] === '1' ? true : false
   const requestDataStr = searchParams?.[URL_PARAM_KEYS.BACKTEST_DATA] as string
   const requestData = !!requestDataStr ? parseRequestData(requestDataStr, protocol) : undefined
@@ -135,11 +137,15 @@ function BacktestButton({ account, protocol }: { account: string; protocol: Prot
       }
     },
   })
+
+  const requestedBacktest = useRef(false)
   useEffect(() => {
-    if (!requestData) return
+    if (!myProfile || !requestData || requestedBacktest.current) return
     if (Object.keys(requestData).length < MIN_BACKTEST_VALUE) return
     requestBacktest({ protocol, data: { ...requestData, isReturnPositions: true } })
-  }, [])
+    requestedBacktest.current = true
+  }, [myProfile])
+
   const [backtestState, dispatch] = useReducer(reducer, initialState, () =>
     initBacktestState({
       isFocusBacktest: isForceOpenModal,

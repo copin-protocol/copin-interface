@@ -121,7 +121,9 @@ export default function ListOrderTable({
         style: { minWidth: '70px', textAlign: 'right' },
         render: (item) => (
           <Type.Caption color="neutral1" textAlign="right">
-            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED ? '-' : `${formatNumber(item.leverage, 1, 1)}x`}
+            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED || item.leverage == null
+              ? '--'
+              : `${formatNumber(item.leverage, 1, 1)}x`}
           </Type.Caption>
         ),
       },
@@ -139,7 +141,7 @@ export default function ListOrderTable({
         style: { minWidth: '100px', textAlign: 'right' },
         render: (item) =>
           item.type === OrderTypeEnum.MARGIN_TRANSFERRED ? (
-            <Type.Caption color="neutral1">-</Type.Caption>
+            <Type.Caption color="neutral1">--</Type.Caption>
           ) : (
             <DeltaText color="neutral1" type={item.type} delta={Math.abs(item.sizeDeltaNumber)} />
           ),
@@ -152,9 +154,9 @@ export default function ListOrderTable({
         render: (item) => (
           <Type.Caption color="neutral1" width="100%" textAlign="right">
             {item.type === OrderTypeEnum.MARGIN_TRANSFERRED
-              ? '-'
+              ? '--'
               : PriceTokenText({
-                  value: item.type === OrderTypeEnum.LIQUIDATE ? item.averagePriceNumber : item.priceNumber,
+                  value: item.priceNumber,
                   maxDigit: 2,
                   minDigit: 2,
                 })}

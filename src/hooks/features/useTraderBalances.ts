@@ -66,6 +66,7 @@ const useTraderBalances = ({ account, protocol }: { account?: string; protocol: 
     {
       enabled: !!protocolProvider?.chainId && !!account && tokens.length > 0,
       keepPreviousData: true,
+      retry: 0,
     }
   )
 

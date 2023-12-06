@@ -9,7 +9,7 @@ import CopyButton from 'theme/Buttons/CopyButton'
 import Tag from 'theme/Tag'
 import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
-import { ProtocolEnum, TimeFrameEnum, TraderStatusEnum } from 'utils/config/enums'
+import { TimeFrameEnum, TraderStatusEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
 
@@ -36,9 +36,9 @@ const TraderInfo = ({
       <Flex sx={{ gap: 2, alignItems: 'center' }}>
         <AddressAvatar address={address} size={42} />
         <Box>
-          <Flex alignItems="center" sx={{ gap: 2 }}>
+          <Flex alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
             <Box textAlign="left" alignItems="center">
-              <Type.LargeBold lineHeight="20px" textAlign="left">
+              <Type.LargeBold lineHeight="20px" textAlign="left" fontSize={['16px', '18px']}>
                 {addressShorten(address, 3, 5)}
               </Type.LargeBold>
               {traderData && <ProtocolLogo protocol={traderData.protocol} />}
@@ -48,8 +48,8 @@ const TraderInfo = ({
               <ExplorerLogo protocol={traderData.protocol} explorerUrl={`${explorerUrl}/address/${address}`} />
             )}
             <FavoriteButton address={address} size={20} />
-            {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
             {traderData && <ShareProfile address={address} protocol={traderData.protocol} stats={shareStats} />}
+            {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
           </Flex>
         </Box>
       </Flex>

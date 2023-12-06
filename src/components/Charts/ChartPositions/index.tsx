@@ -323,7 +323,7 @@ export default function ChartPositions({
         color:
           markerId && !isSelected
             ? themeColors.neutral3
-            : position.isLiquidate || position.roi <= -100
+            : position.isLiquidate
             ? themeColors.red2
             : themeColors.neutral1,
         size: isSelected ? 1.75 : 1.5,

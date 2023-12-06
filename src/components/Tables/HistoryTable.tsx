@@ -430,7 +430,7 @@ const pnlColumnFull: ColumnData<PositionData> = {
   render: (item) => {
     return (
       <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
-        {(item.isLiquidate || item.roi <= -100) && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
+        {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
         {SignedText({
           value: item.pnl,
           maxDigit: 1,
@@ -449,7 +449,7 @@ const pnlColumn: ColumnData<PositionData> = {
   render: (item) => {
     return (
       <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
-        {(item.isLiquidate || item.roi <= -100) && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
+        {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
         {SignedText({
           value: item.pnl,
           maxDigit: 1,

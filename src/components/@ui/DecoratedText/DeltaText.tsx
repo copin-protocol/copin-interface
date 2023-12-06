@@ -29,15 +29,23 @@ export const DeltaText = ({
   ...props
 }: {
   type: OrderTypeEnum
-  delta: number
+  delta: number | undefined
   maxDigit?: number
   minDigit?: number
   prefix?: string
   suffix?: string
-} & TextProps) => (
-  <Type.Caption {...props}>
-    {prefix}
-    {`${signOrderDelta(type, delta)}${formatNumber(delta, maxDigit, minDigit)}`}
-    {suffix}
-  </Type.Caption>
-)
+} & TextProps) => {
+  return (
+    <Type.Caption {...props}>
+      {delta == null || isNaN(delta) ? (
+        '--'
+      ) : (
+        <>
+          {prefix}
+          {`${signOrderDelta(type, delta)}${formatNumber(delta, maxDigit, minDigit)}`}
+          {suffix}
+        </>
+      )}
+    </Type.Caption>
+  )
+}
