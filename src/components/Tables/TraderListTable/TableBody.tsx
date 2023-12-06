@@ -37,7 +37,7 @@ export default function TableBody<T>({
             height: '100%',
             bg: 'modalBG',
             backdropFilter: 'blur(5px)',
-            zIndex: 4,
+            zIndex: 5,
             display: 'flex',
             alignItems: 'center',
           }}

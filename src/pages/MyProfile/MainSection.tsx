@@ -99,7 +99,7 @@ export default function MainSection({
       copyWalletId,
       accounts: state.selectedTraders,
       status: copyStatus.length === 1 ? copyStatus[0] : undefined,
-      protocol: selectedProtocol.length === 1 ? selectedProtocol[0] : undefined,
+      protocols: selectedProtocol,
     }),
     [copyStatus, selectedProtocol, state.selectedTraders, copyWalletId]
   )

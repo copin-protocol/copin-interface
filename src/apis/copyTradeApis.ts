@@ -58,7 +58,7 @@ export async function getCopyTradeSettingsListApi(params?: {
   accounts: string[]
   copyWalletId: string | undefined
   status: CopyTradeStatusEnum | undefined
-  protocol?: ProtocolEnum
+  protocols?: ProtocolEnum[]
 }) {
   return requester.post(`${SERVICE}/list`, params).then((res: any) => res.data as CopyTradeData[])
 }

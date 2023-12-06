@@ -136,7 +136,11 @@ export function FilterTradersProvider({
       return
     }
 
-    setSearchParams({ [rangeFilterKey]: null, [URL_PARAM_KEYS.EXPLORER_PAGE]: '1' })
+    setSearchParams({
+      [rangeFilterKey]: null,
+      [URL_PARAM_KEYS.EXPLORER_PAGE]: '1',
+      [timeFilterKey]: timeOption.id as unknown as string,
+    })
     setCurrentPage(1)
     setTimeOption(timeOption)
     setRangeSelection(false)
