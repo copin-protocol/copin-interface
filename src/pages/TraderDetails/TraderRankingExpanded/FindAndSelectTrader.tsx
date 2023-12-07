@@ -8,7 +8,6 @@ import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { useClickLoginButton } from 'components/LoginAction'
 import { TraderData } from 'entities/trader'
 import useMyProfileStore from 'hooks/store/useMyProfile'
-import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -52,6 +51,7 @@ export default function FindAndSelectTrader({
             }}
           >
             <SelectedTrader
+              forceReload
               selectedTrader={props.selectedTrader}
               timeOption={props.timeOption}
               handleSelectTrader={props.onSelect}
@@ -157,11 +157,13 @@ export function SelectedTrader({
   handleSelectTrader,
   timeOption,
   onClearTrader,
+  forceReload = false,
 }: {
   selectedTrader: TraderData
   handleSelectTrader: HandleSelectTrader
   timeOption: TimeFilterProps
   onClearTrader?: () => void
+  forceReload?: boolean
 }) {
   const prevTimeOption = useRef(timeOption)
   const { isLoading: isSelecting } = useSelectTrader({
@@ -172,7 +174,7 @@ export function SelectedTrader({
       handleSelectTrader(data)
     },
     timeOption,
-    enabled: !isEqual(prevTimeOption.current, timeOption) || !selectedTrader.ranking,
+    enabled: forceReload || !isEqual(prevTimeOption.current, timeOption) || !selectedTrader.ranking,
   })
 
   if (isSelecting) return <Loading />

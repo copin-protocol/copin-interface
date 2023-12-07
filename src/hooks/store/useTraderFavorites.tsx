@@ -6,8 +6,10 @@ import { immer } from 'zustand/middleware/immer'
 
 import { deleteFavoritesApi, getFavoritesApi, postFavoritesApi } from 'apis/favoriteApis'
 import ToastBody from 'components/@ui/ToastBody'
+import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { useAuthContext } from 'hooks/web3/useAuth'
+import ROUTES from 'utils/config/routes'
 
 interface TraderFavoritesState {
   tooltipAddress?: string
@@ -40,13 +42,28 @@ const useTraderFavoritesStore = create<TraderFavoritesState>()(
   }))
 )
 
+const EXCLUDING_PATH = [
+  ROUTES.STATS.path,
+  ROUTES.HOME_LEADERBOARD.path,
+  ROUTES.SUBSCRIPTION.path,
+  ROUTES.MY_MANAGEMENT.path,
+  ROUTES.MY_HISTORY.path,
+  ROUTES.USER_ACTIVITY.path,
+  ROUTES.WALLET_MANAGEMENT.path,
+  ROUTES.USER_SUBSCRIPTION.path,
+  ROUTES.ALERT_LIST.path,
+  ROUTES.REFERRAL.path,
+  ROUTES.COMPARING_TRADERS.path,
+  ROUTES.POSITION_DETAILS.path,
+]
 export const useInitTraderFavorites = () => {
   const { protocol } = useProtocolStore()
   const { profile } = useAuthContext()
   const { setTraderFavorites, setNotes, setLoading } = useTraderFavoritesStore()
+  const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH)
   const { data, isLoading } = useQuery(['favorites', profile?.username, protocol], () => getFavoritesApi(protocol), {
     retry: 0,
-    enabled: !!profile,
+    enabled: !!profile && enabledQueryByPaths,
   })
   useEffect(() => {
     if (data) {
