@@ -133,7 +133,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
   return (
     <>
-      <Box sx={{ p: 3 }}>
+      <Type.Caption color="orange1" mb={1} px={24}>
+        <Trans>This is a beta feature. Please DYOR before copytrading.</Trans>
+      </Type.Caption>
+      <Box sx={{ p: 24, pt: 3 }}>
         {(isEdit || isClone) && (
           <>
             <Flex sx={{ gap: [3, 3, 4] }} mb={[3, 4]} flexDirection={['column', 'column', 'row']}>
