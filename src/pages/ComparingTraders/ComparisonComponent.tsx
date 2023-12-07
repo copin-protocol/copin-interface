@@ -103,6 +103,8 @@ export default function ComparisonComponent({
             height: '100%',
             overflow: 'auto',
             backgroundImage: 'linear-gradient(180deg, rgba(255, 194, 75, 0.5) 0%, rgba(255, 194, 75, 0) 100%)',
+            borderLeft: 'small',
+            borderLeftColor: 'neutral4',
           }}
         >
           <SecondComponent firstTrader={firstTrader} secondTrader={secondTrader} timeOption={timeOption} />
