@@ -1,4 +1,5 @@
 import { Web3Provider } from '@ethersproject/providers'
+import { Trans } from '@lingui/macro'
 import { WalletState } from '@web3-onboard/core'
 import { useConnectWallet } from '@web3-onboard/react'
 import dayjs from 'dayjs'
@@ -41,6 +42,8 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [openingRefModal, setOpeningRefModal] = useState(false)
 
+  const authedRef = useRef<boolean>(false)
+  const eagerTriggeredRef = useRef<boolean>(false)
   const accountRef = useRef<string | null | undefined>(wallet?.accounts[0].address)
   const verifyCodeRef = useRef<string>()
   const { myProfile, setMyProfile } = useMyProfile()
@@ -68,7 +71,14 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   }, [deactivate, setMyProfile, wallet])
 
   useEffect(() => {
-    if (!wallet) return
+    if (!wallet) {
+      const { wallet: storedWallet } = getStoredWallet()
+      if (storedWallet && authedRef.current) {
+        setWaitingState(WaitingState.WalletLocked)
+      }
+      return
+    }
+    if (waitingState === WaitingState.WalletLocked) setWaitingState(null)
 
     const account = getAccount(wallet)
     const { account: storedAccount } = getStoredWallet()
@@ -82,7 +92,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   const auth = useCallback(
     async (wallet: WalletState): Promise<Account | null> => {
       const account = getAccount(wallet)
-      setWaitingState(WaitingState.Connecting)
+      setWaitingState(WaitingState.Signing)
       try {
         const { verifyCode } = await loginWeb3Api(account.address)
         verifyCodeRef.current = verifyCode
@@ -108,6 +118,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
             setOpeningRefModal(true)
           }
         }
+        authedRef.current = true
         return account
       } catch (err: any) {
         console.error(err)
@@ -118,6 +129,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
           setWaitingState(WaitingState.CancelSign)
         }
       }
+      authedRef.current = true
       return null
     },
     [disconnect, setMyProfile]
@@ -140,7 +152,8 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   }, [auth, wallet])
 
   const eagerAuth = useCallback(async () => {
-    if (!!myProfile) return
+    if (!!myProfile || eagerTriggeredRef.current) return
+    eagerTriggeredRef.current = true
 
     const { account: storedAccount, wallet: storedWallet } = getStoredWallet()
     const jwt = getStoredJwt()
@@ -149,12 +162,17 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       return
     }
     if (storedWallet) {
+      setWaitingState(WaitingState.Connecting)
       const [_wallet] = await activate({
         autoSelect: {
           label: storedWallet,
           disableModals: true,
         },
       })
+      if (!_wallet) {
+        disconnect()
+        return
+      }
       const _account = getAccount(_wallet)
       if (_account.address !== storedAccount) {
         setWaitingState(WaitingState.SwitchAccount)
@@ -166,16 +184,19 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       const user = await getMyProfileApi()
       setMyProfile(user)
       setIsAuthenticated(true)
+      setWaitingState(null)
     } catch (error: any) {
       if (error.message.includes('Unauthorized')) {
         if (storedWallet) setWaitingState(WaitingState.TokenExpired)
       } else {
+        setWaitingState(null)
         toast.error(<ToastBody title={error.name} message={error.message} />)
       }
       clearAuth()
       setIsAuthenticated(false)
       setMyProfile(null)
     }
+    authedRef.current = true
   }, [myProfile])
 
   const logout = useCallback(() => {
@@ -209,8 +230,32 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       {children}
       {waitingState != null && (
         <WaitingWallet
-          active={!!waitingState}
+          active={waitingState != null}
           waitingState={waitingState}
+          connect={async () => {
+            const { account: storedAccount, wallet: storedWallet } = getStoredWallet()
+            if (storedWallet) {
+              const [_wallet] = await activate({
+                autoSelect: {
+                  label: storedWallet,
+                  disableModals: true,
+                },
+              })
+              if (!_wallet) {
+                disconnect()
+                toast.error(
+                  <ToastBody title={<Trans>Error</Trans>} message={<Trans>Cannot unlock your wallet</Trans>} />
+                )
+                return
+              }
+              const _account = getAccount(_wallet)
+              if (_account.address !== storedAccount) {
+                setWaitingState(WaitingState.SwitchAccount)
+                return
+              }
+              setWaitingState(null)
+            }
+          }}
           disconnect={disconnect}
           handleAuth={handleAuth}
         />
