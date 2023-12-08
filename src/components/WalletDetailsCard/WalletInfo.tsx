@@ -1,16 +1,13 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
-import { ArrowSquareRight } from '@phosphor-icons/react'
 import React, { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
 
 import { CopyWalletData } from 'entities/copyWallet'
-import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
+import CopyButton from 'theme/Buttons/CopyButton'
 import { Flex, Type } from 'theme/base'
 import { BoxProps } from 'theme/types'
-import ROUTES from 'utils/config/routes'
 import { PLATFORM_TRANS } from 'utils/config/translations'
-import { formatNumber } from 'utils/helpers/format'
+import { addressShorten, formatNumber } from 'utils/helpers/format'
 
 interface WalletInfoProps {
   data: CopyWalletData
@@ -19,30 +16,39 @@ interface WalletInfoProps {
 export default function WalletInfo({ data, sx }: WalletInfoProps & BoxProps) {
   return (
     <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2, ...sx }}>
-      <InfoItem label={<Trans>Balance</Trans>} value={data.balance ? `$${formatNumber(data.balance)}` : '-'} />
+      {!!data.bingX && (
+        <InfoItem
+          width={['100%', '100%', 'calc(50% - 8px)']}
+          label={<Trans>API Key</Trans>}
+          value={
+            <Flex sx={{ gap: 2 }} alignItems="center">
+              <Type.CaptionBold>{data.bingX.apiKey ? addressShorten(data.bingX.apiKey, 8) : '-'}</Type.CaptionBold>
+              {!!data.bingX.apiKey && (
+                <CopyButton
+                  variant="ghost"
+                  size="xs"
+                  value={data.bingX.apiKey}
+                  iconSize={16}
+                  sx={{
+                    transition: 'none',
+                    p: 0,
+                  }}
+                ></CopyButton>
+              )}
+            </Flex>
+          }
+        />
+      )}
       <InfoItem
-        label={<Trans>Copy Volume</Trans>}
-        value={data.copyVolume ? `$${formatNumber(data.copyVolume)}` : '-'}
+        width={['calc(50% - 4px)', 'calc(50% - 4px)', 'calc(25% - 4px)']}
+        label={<Trans>Balance</Trans>}
+        value={data.balance ? `$${formatNumber(data.balance)}` : '-'}
       />
       <InfoItem
-        label={<Trans>Active Copy</Trans>}
-        value={
-          <Flex alignItems="center" sx={{ gap: 2 }}>
-            {formatNumber(data.activeCopy)}
-            {data.activeCopy && data.activeCopy > 0 && (
-              <Link to={ROUTES.MY_MANAGEMENT.path}>
-                <ButtonWithIcon
-                  type="button"
-                  variant="ghostPrimary"
-                  icon={<ArrowSquareRight size={20} />}
-                  sx={{ p: 0 }}
-                />
-              </Link>
-            )}
-          </Flex>
-        }
+        width={['calc(50% - 4px)', 'calc(50% - 4px)', 'calc(25% - 4px)']}
+        label={<Trans>Platform</Trans>}
+        value={<Type.CaptionBold>{PLATFORM_TRANS[data.exchange]}</Type.CaptionBold>}
       />
-      <InfoItem label={<Trans>Platform</Trans>} value={PLATFORM_TRANS[data.exchange]} />
     </Flex>
   )
 }
@@ -50,13 +56,14 @@ export default function WalletInfo({ data, sx }: WalletInfoProps & BoxProps) {
 interface InfoItemProps {
   label: ReactNode
   value: ReactNode
+  width?: string | string[]
 }
 
-function InfoItem({ label, value }: InfoItemProps) {
+function InfoItem({ label, value, width }: InfoItemProps) {
   return (
-    <Flex flex={1} flexDirection="column" sx={{ gap: 2 }}>
+    <Flex width={width} flexDirection="column" sx={{ gap: 2 }}>
       <Type.Caption color="neutral3">{label}</Type.Caption>
-      <Type.CaptionBold color="neutral1">{value}</Type.CaptionBold>
+      {typeof value === 'string' ? <Type.CaptionBold color="neutral1">{value}</Type.CaptionBold> : value}
     </Flex>
   )
 }

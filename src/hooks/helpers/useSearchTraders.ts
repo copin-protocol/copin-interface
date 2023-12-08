@@ -100,11 +100,32 @@ export default function useSearchTraders(args?: {
     }
   )
 
+  const { data: searchUserDataPolynomial, isFetching: searchingUserPolynomial } = useQuery(
+    [
+      QUERY_KEYS.GET_TOP_TRADERS,
+      debounceSearchText,
+      queryFilters,
+      ProtocolEnum.POLYNOMIAL,
+      returnRanking,
+      isPremiumUser,
+    ],
+    () =>
+      getTradersApi({
+        protocol: ProtocolEnum.POLYNOMIAL,
+        body: { pagination: { limit: 5 }, queries: queryFilters, keyword: debounceSearchText, returnRanking },
+      }),
+    {
+      enabled:
+        Boolean(debounceSearchText.length >= MIN_QUICK_SEARCH_LENGTH && debounceSearchText === trimmedSearchText) &&
+        allowSearchProtocol(ProtocolEnum.POLYNOMIAL),
+    }
+  )
+
   useEffect(() => {
-    if (!searchingUser && !searchingUserKwenta) {
+    if (!searchingUser && !searchingUserKwenta && !searchingUserPolynomial) {
       setIsLoading(false)
     }
-  }, [searchingUser, searchingUserKwenta])
+  }, [searchingUser, searchingUserKwenta, searchingUserPolynomial])
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value)
@@ -156,6 +177,8 @@ export default function useSearchTraders(args?: {
     if (!isAddress(debounceSearchText)) return
     if (searchUserDataKwenta && searchUserDataKwenta.data && searchUserDataKwenta.meta?.total > 0) {
       handleClick(searchUserDataKwenta.data[0])
+    } else if (searchUserDataPolynomial && searchUserDataPolynomial.data && searchUserDataPolynomial.meta?.total > 0) {
+      handleClick(searchUserDataPolynomial.data[0])
     } else {
       handleClick()
     }
@@ -185,6 +208,7 @@ export default function useSearchTraders(args?: {
     searchUserData,
     handleClick,
     searchUserDataKwenta,
+    searchUserDataPolynomial,
     allowSearchProtocol,
   }
 }

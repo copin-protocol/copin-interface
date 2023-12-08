@@ -10,14 +10,11 @@ import TitleWithIcon from 'components/@ui/TilleWithIcon'
 // import FundModal, { FundTab } from 'components/FundModal'
 import { CopyWalletData } from 'entities/copyWallet'
 import useChain from 'hooks/web3/useChain'
-import CopyButton from 'theme/Buttons/CopyButton'
-import Tooltip from 'theme/Tooltip'
-import { Flex, Type } from 'theme/base'
+import { Flex } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { getColorFromText } from 'utils/helpers/css'
-import { addressShorten } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
 
 import DeleteWalletAction from './DeleteWalletAction'
@@ -109,44 +106,8 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, re
             />
           )}
         </Flex>
-        {/* {isAPIKey ? ( */}
-        <Flex alignItems="center" sx={{ gap: 2 }}>
-          <Flex
-            alignItems="center"
-            sx={{ gap: 1 }}
-            data-tip="React-tooltip"
-            data-tooltip-id={`tt-copy-wallet-${data.id}`}
-            data-tooltip-delay-hide={0}
-            data-tooltip-delay-show={360}
-          >
-            <Type.CaptionBold>API Key:</Type.CaptionBold>
-            <Type.Caption color="neutral3">{addressShorten(data?.bingX?.apiKey ?? '')}</Type.Caption>
-          </Flex>
-          <DeleteWalletAction data={data} />
-          <Tooltip id={`tt-copy-wallet-${data.id}`} place="top" type="dark" effect="solid" clickable>
-            <div
-              onClick={(e) => {
-                e.stopPropagation()
-                e.preventDefault()
-              }}
-            >
-              <CopyButton
-                variant="ghost"
-                size="xs"
-                value={walletKey}
-                iconSize={16}
-                sx={{
-                  transition: 'none',
-                  p: 0,
-                }}
-              >
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  {walletKey}
-                </Type.Caption>
-              </CopyButton>
-            </div>
-          </Tooltip>
-        </Flex>
+        {!data?.smartWalletAddress && <DeleteWalletAction data={data} />}
+
         {/* ) : (
           <Flex alignItems="center" sx={{ gap: 20 }}>
             <Button type="button" variant="ghostPrimary" sx={{ p: 0 }} onClick={() => setFundingModal(FundTab.Deposit)}>

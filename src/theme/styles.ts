@@ -244,7 +244,7 @@ const ThemedGlobalStyle = createGlobalStyle`
     --onboard-wallet-button-background-hover: ${({ theme }) => theme.colors.neutral4};
     --onboard-warning-700: ${({ theme }) => theme.colors.orange3};
     --onboard-warning-400: ${({ theme }) => theme.colors.orange1};
-    --onboard-warning-100: transparent;
+    --onboard-warning-100: ${({ theme }) => theme.colors.orange2};
     --onboard-wallet-button-border-radius:  6px;
     --onboard-modal-z-index: 99999;
   }

@@ -42,6 +42,7 @@ const SearchBox = ({
     searchUserData,
     handleClick,
     searchUserDataKwenta,
+    searchUserDataPolynomial,
     allowSearchProtocol,
   } = useSearchTraders({ onSelect, returnRanking })
 
@@ -109,7 +110,27 @@ const SearchBox = ({
                   ))}
                 </Box>
               )}
-              {searchUserData?.meta?.total === 0 && searchUserDataKwenta?.meta?.total === 0 ? (
+              {(searchUserDataPolynomial?.meta?.total ?? 0) > 0 && allowSearchProtocol(ProtocolEnum.POLYNOMIAL) && (
+                <Box mt={2}>
+                  <Flex mb={1} alignItems="center" sx={{ gap: 2 }}>
+                    <Image src={parseProtocolImage(ProtocolEnum.POLYNOMIAL)} width={20} height={20} />
+                    <Type.CaptionBold color="neutral3">
+                      <Trans>Polynomial</Trans>
+                    </Type.CaptionBold>
+                  </Flex>
+                  {searchUserDataPolynomial?.data.map((userData) => (
+                    <SearchResultItems
+                      key={userData.id}
+                      actionTitle={actionTitle}
+                      data={userData}
+                      handleClick={handleClick}
+                    />
+                  ))}
+                </Box>
+              )}
+              {searchUserData?.meta?.total === 0 &&
+              searchUserDataKwenta?.meta?.total === 0 &&
+              searchUserDataPolynomial?.meta?.total === 0 ? (
                 <NoDataFound message={<Trans>No Trader Found In The Past 60 Days</Trans>} />
               ) : null}
             </Box>
