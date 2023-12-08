@@ -18,11 +18,11 @@ export default function ExpandTraderRankingButton(
   if (!md) return <></>
   return (
     <>
-      <Button variant="ghostWarning" onClick={() => setExpanded(true)} sx={{ p: 0 }} disabled={!props.traderData}>
+      <Button variant="ghostWarning" onClick={() => setExpanded(true)} sx={{ p: 0 }}>
         <Trans>Compare / Find similar traders</Trans>
       </Button>
       <Suspense fallback={<></>}>
-        {expanded && !!props.traderData && (
+        {expanded && (
           <TraderRankingExpanded {...(props as TraderRankingExpandedProps)} handleExpand={() => setExpanded(false)} />
         )}
       </Suspense>
