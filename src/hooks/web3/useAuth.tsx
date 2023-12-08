@@ -162,7 +162,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       return
     }
     if (storedWallet) {
-      setWaitingState(WaitingState.Connecting)
+      // setWaitingState(WaitingState.Connecting)
       const [_wallet] = await activate({
         autoSelect: {
           label: storedWallet,

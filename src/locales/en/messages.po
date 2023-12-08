@@ -96,6 +96,10 @@ msgstr "ALERT LIST"
 #~ msgid "ALL"
 #~ msgstr "ALL"
 
+#: src/components/WalletDetailsCard/WalletInfo.tsx
+msgid "API Key"
+msgstr "API Key"
+
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Account"
@@ -106,8 +110,8 @@ msgid "Active"
 msgstr "Active"
 
 #: src/components/WalletDetailsCard/WalletInfo.tsx
-msgid "Active Copy"
-msgstr "Active Copy"
+#~ msgid "Active Copy"
+#~ msgstr "Active Copy"
 
 #: src/pages/MyProfile/Layouts/Layout.tsx
 msgid "Activities"
@@ -155,6 +159,10 @@ msgstr "Alert List"
 #: src/pages/Subscription/Plans.tsx
 msgid "Alert traders signal"
 msgstr "Alert traders signal"
+
+#: src/components/@ui/TimeFilter/constants.tsx
+msgid "All"
+msgstr "All"
 
 #: src/components/CreateWalletAction/index.tsx
 msgid "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
@@ -293,12 +301,21 @@ msgstr "Can't copy"
 #~ msgstr "Can't switch to {0}"
 
 #: src/components/AuthWaitingWallet/index.tsx
+#: src/pages/@layouts/Navbar/index.tsx
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/components/AuthWaitingWallet/index.tsx
 msgid "Canceled"
 msgstr "Canceled"
 
 #: src/pages/Subscription/MintButton.tsx
 msgid "Cannot interact with contract at this moment"
 msgstr "Cannot interact with contract at this moment"
+
+#: src/hooks/web3/useAuth.tsx
+msgid "Cannot unlock your wallet"
+msgstr "Cannot unlock your wallet"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 #: src/pages/Subscription/MintButton.tsx
@@ -372,6 +389,10 @@ msgstr "Communicating with wallet. Sign message with your wallet"
 msgid "Compare"
 msgstr "Compare"
 
+#: src/pages/TraderDetails/ExpandTraderRankingButton.tsx
+msgid "Compare / Find similar traders"
+msgstr "Compare / Find similar traders"
+
 #: src/components/ConditionFilterForm/index.tsx
 msgid "Condition"
 msgstr "Condition"
@@ -395,6 +416,18 @@ msgstr "Congratulations!"
 #: src/components/LoginAction/ConnectButton.tsx
 msgid "Connect Wallet"
 msgstr "Connect Wallet"
+
+#: src/pages/@layouts/Navbar/index.tsx
+msgid "Connecting Wallet..."
+msgstr "Connecting Wallet..."
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Connecting with your wallet..."
+msgstr "Connecting with your wallet..."
+
+#: src/pages/@layouts/Navbar/index.tsx
+#~ msgid "Connecting..."
+#~ msgstr "Connecting..."
 
 #: src/pages/Stats/ChartComponent.tsx
 #: src/pages/Stats/ChartComponent.tsx
@@ -444,8 +477,8 @@ msgid "Copy Trader Setting"
 msgstr "Copy Trader Setting"
 
 #: src/components/WalletDetailsCard/WalletInfo.tsx
-msgid "Copy Volume"
-msgstr "Copy Volume"
+#~ msgid "Copy Volume"
+#~ msgstr "Copy Volume"
 
 #: src/theme/Tag/index.tsx
 msgid "Copying"
@@ -590,6 +623,7 @@ msgstr "Entry"
 #: src/hooks/features/useBacktestRequest.tsx
 #: src/hooks/features/useBacktestRequest.tsx
 #: src/hooks/features/useUpdateCopyTrade.tsx
+#: src/hooks/web3/useAuth.tsx
 #: src/hooks/web3/useContractMutation.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
@@ -821,6 +855,10 @@ msgstr "Kwenta"
 msgid "L"
 msgstr "L"
 
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "L/S Rate"
+msgstr "L/S Rate"
+
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 msgid "LEADERBOARD"
 msgstr "LEADERBOARD"
@@ -898,6 +936,10 @@ msgstr "Liquidated"
 msgid "Liquidation"
 msgstr "Liquidation"
 
+#: src/components/Tables/TraderListTable/dataConfig.tsx
+msgid "Liquidations"
+msgstr "Liquidations"
+
 #: src/pages/@layouts/Navbar/Menu.tsx
 #~ msgid "List Collection"
 #~ msgstr "List Collection"
@@ -911,7 +953,6 @@ msgstr "Load more positions"
 #~ msgstr "Loading..."
 
 #: src/components/LoginAction/ModalLogin.tsx
-#: src/components/LoginAction/index.tsx
 #: src/components/SubscriptionRestrictModal.tsx
 msgid "Login"
 msgstr "Login"
@@ -1064,8 +1105,8 @@ msgid "Min Leverage"
 msgstr "Min Leverage"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-msgid "Min ROI"
-msgstr "Min ROI"
+#~ msgid "Min ROI"
+#~ msgstr "Min ROI"
 
 #: src/pages/Subscription/MintButton.tsx
 msgid "Mint Again"
@@ -1095,6 +1136,10 @@ msgstr "Minted NFT"
 #: src/pages/Subscription/MintButton.tsx
 msgid "Minting NFT"
 msgstr "Minting NFT"
+
+#: src/components/PositionDetails/ListOrderTable.tsx
+msgid "Modified Margin"
+msgstr "Modified Margin"
 
 #: src/utils/config/options.tsx
 msgid "Monthly"
@@ -1312,6 +1357,10 @@ msgstr "Please pick trader to view your history"
 msgid "Please switch your wallet to {0}"
 msgstr "Please switch your wallet to {0}"
 
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Please unlock your wallet to continue"
+msgstr "Please unlock your wallet to continue"
+
 #: src/components/LoginAction/ModalRegister.tsx
 #: src/components/LoginAction/ModalResetPassword.tsx
 msgid "Please use a valid email address."
@@ -1331,6 +1380,10 @@ msgstr "PnL"
 #: src/utils/config/options.tsx
 msgid "PnL Ratio"
 msgstr "PnL Ratio"
+
+#: src/pages/@layouts/Navbar/SearchBox.tsx
+msgid "Polynomial"
+msgstr "Polynomial"
 
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "Position Details"
@@ -1840,6 +1893,10 @@ msgstr "This bot alert has been subscribed successfully"
 msgid "This copy position has been closed successfully"
 msgstr "This copy position has been closed successfully"
 
+#: src/components/CopyTradeForm/index.tsx
+msgid "This is a beta feature. Please DYOR before copytrading."
+msgstr "This is a beta feature. Please DYOR before copytrading."
+
 #: src/pages/Settings/AlertList/index.tsx
 #: src/pages/TraderDetails/AlertAction.tsx
 msgid "This trader alert has been removed successfully"
@@ -1974,6 +2031,7 @@ msgstr "Total Net Profit"
 msgid "Total Orders"
 msgstr "Total Orders"
 
+#: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/components/TopLeadboard/index.tsx
 msgid "Total Paid Fees"
 msgstr "Total Paid Fees"
@@ -1998,6 +2056,7 @@ msgstr "Total Trades"
 msgid "Total Unique Trader"
 msgstr "Total Unique Trader"
 
+#: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/components/TopLeadboard/index.tsx
 #: src/pages/Stats/Overview.tsx
 msgid "Total Volume"
@@ -2063,6 +2122,10 @@ msgstr "Unique traders are copied in the system"
 #: src/pages/Subscription/Plans.tsx
 msgid "Unlimited"
 msgstr "Unlimited"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Unlock"
+msgstr "Unlock"
 
 #: src/hooks/web3/useAuth.tsx
 #~ msgid "Unsupported Chain"
@@ -2139,8 +2202,8 @@ msgid "Volume"
 msgstr "Volume"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-msgid "W/L Ratio"
-msgstr "W/L Ratio"
+#~ msgid "W/L Ratio"
+#~ msgstr "W/L Ratio"
 
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx
@@ -2157,6 +2220,10 @@ msgstr "Wallet"
 #: src/pages/Settings/AlertList/MobileItem.tsx
 msgid "Wallet Address"
 msgstr "Wallet Address"
+
+#: src/components/AuthWaitingWallet/index.tsx
+msgid "Wallet Locked"
+msgstr "Wallet Locked"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/WalletManagement/index.tsx
