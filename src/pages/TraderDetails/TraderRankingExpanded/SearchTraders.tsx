@@ -26,10 +26,12 @@ export default function SearchTraders({
     isLoading,
     searchUserData,
     searchUserDataKwenta,
+    searchUserDataPolynomial,
   } = useSearchTraders({ onSelect: props.onSelect, returnRanking: true, allowAllProtocol: true })
   const traders = [
     ...filterFoundData(searchUserData?.data, props.ignoreSelectTraders),
     ...filterFoundData(searchUserDataKwenta?.data, props.ignoreSelectTraders),
+    ...filterFoundData(searchUserDataPolynomial?.data, props.ignoreSelectTraders),
   ]
   return (
     <Box ref={searchWrapperRef} sx={{ position: 'relative' }}>
