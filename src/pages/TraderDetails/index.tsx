@@ -172,7 +172,7 @@ export default function TraderDetails() {
             <ChartTrader protocol={protocol} account={_address} timeOption={timeOption} onChangeTime={setTimeOption} />
           )}
           <Box flex="1" overflow="auto" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative' }}>
-            {!!traderData && <TraderStats data={traderData} />}
+            {!!traderData && <TraderStats data={traderData} timeOption={timeOption} />}
           </Box>
         </Box>
 

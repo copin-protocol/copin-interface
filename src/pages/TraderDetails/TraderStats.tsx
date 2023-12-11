@@ -1,17 +1,29 @@
 import { Trans } from '@lingui/macro'
-import { ArrowLineUp } from '@phosphor-icons/react'
+import { ArrowLineUp, GridFour, ListDashes } from '@phosphor-icons/react'
 import { ReactNode, memo } from 'react'
 import styled from 'styled-components/macro'
 
 import CustomizeColumn from 'components/@ui/Table/CustomizeColumn'
+import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ExternalSource, tableSettings } from 'components/Tables/TraderListTable/dataConfig'
 import { TraderData } from 'entities/trader.d'
 import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import { IGNORE_FIELDS, useStatsCustomizeStore } from 'hooks/store/useStatsCustomize'
 import IconButton from 'theme/Buttons/IconButton'
+import Checkbox from 'theme/Checkbox'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, Grid, Type } from 'theme/base'
+import { TimeFilterByEnum } from 'utils/config/enums'
 import { formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
+
+const GridWrapper = styled(Grid)`
+  @media screen and (min-width: 1440px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media screen and (min-width: 1680px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+`
 
 const StatsWrapper = styled.div`
   width: 100%;
@@ -55,12 +67,48 @@ const statsObj = stats.reduce((prev, cur) => {
   return prev
 }, {} as { [key: string]: StatProps })
 
+const TYPES = {
+  [TimeFilterByEnum.ALL_TIME]: {
+    index: 0,
+    key: 'ALL',
+    text: 'All time',
+  },
+  [TimeFilterByEnum.S60_DAY]: {
+    index: 1,
+    key: '60D',
+    text: '60 days',
+  },
+  [TimeFilterByEnum.S30_DAY]: {
+    index: 2,
+    key: '30D',
+    text: '30 days',
+  },
+  [TimeFilterByEnum.S14_DAY]: {
+    index: 3,
+    key: '14D',
+    text: '14 days',
+  },
+  [TimeFilterByEnum.S7_DAY]: {
+    index: 4,
+    key: '7D',
+    text: '7 days',
+  },
+}
+
 export default memo(AccountStats)
-function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
+function AccountStats({ data, timeOption }: { data: (TraderData | undefined)[]; timeOption: TimeFilterProps }) {
   const isPremiumUser = useIsPremium()
-  const { customizeStats, toggleVisibleStat, moveStatToTop } = useStatsCustomizeStore()
+  const {
+    customizeStats,
+    toggleVisibleStat,
+    moveStatToTop,
+    changeView,
+    toogleCurrentStatOnly,
+    customizeView,
+    currentStatOnly,
+  } = useStatsCustomizeStore()
   return (
-    <Box display="flex" flexWrap="wrap" minWidth={610} pb={[3, 4, 4, 4, 3]}>
+    <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 610 : undefined} pb={[3, 4, 4, 4, 3]}>
       <Box
         sx={{
           mr: '1px',
@@ -83,7 +131,7 @@ function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
               top: 0,
 
               bg: 'neutral7',
-              flex: 1,
+              flex: 1.2,
               alignItems: 'center',
             }}
           >
@@ -96,10 +144,11 @@ function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
             >
               STATS
             </Type.Caption>
-            <Box
+            <Flex
               flex="1"
               sx={{
                 pl: 2,
+                gap: 2,
                 width: '100%',
                 borderBottom: 'small',
                 borderColor: 'neutral4',
@@ -116,66 +165,98 @@ function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
                   maxHeight: 300,
                 }}
               />
-            </Box>
+              <IconButton
+                mt={'-2px'}
+                variant={customizeView === 'LIST' ? 'ghostPrimary' : 'ghostInactive'}
+                onClick={() => customizeView !== 'LIST' && changeView('LIST')}
+                size={24}
+                icon={<ListDashes size={20} />}
+              />
+              <IconButton
+                mt={'-2px'}
+                variant={customizeView === 'GRID' ? 'ghostPrimary' : 'ghostInactive'}
+                onClick={() => customizeView !== 'GRID' && changeView('GRID')}
+                size={24}
+                icon={<GridFour size={20} />}
+              />
+            </Flex>
           </Flex>
-
-          {isPremiumUser && (
-            <Type.Caption
-              textAlign="right"
+          {customizeView === 'GRID' && (
+            <Flex
+              justifyContent="end"
               sx={{
                 flex: 1,
-                py: 2,
+                py: '11px',
                 borderBottom: 'small',
                 borderColor: 'neutral4',
               }}
             >
-              ALL TIME
-            </Type.Caption>
+              <Checkbox checked={currentStatOnly} onChange={(e) => toogleCurrentStatOnly(e.target.checked)}>
+                <Type.Caption>Only show {TYPES[timeOption.id].text}</Type.Caption>
+              </Checkbox>
+            </Flex>
           )}
-          <Type.Caption
-            textAlign="right"
-            sx={{
-              flex: 1,
-              py: 2,
-              borderBottom: 'small',
-              borderColor: 'neutral4',
-            }}
-          >
-            60 DAYS
-          </Type.Caption>
-          <Type.Caption
-            textAlign="right"
-            sx={{
-              flex: 1,
-              py: 2,
-              borderBottom: 'small',
-              borderColor: 'neutral4',
-            }}
-          >
-            30 DAYS
-          </Type.Caption>
-          <Type.Caption
-            textAlign="right"
-            sx={{
-              flex: 1,
-              py: 2,
-              borderBottom: 'small',
-              borderColor: 'neutral4',
-            }}
-          >
-            14 DAYS
-          </Type.Caption>
-          <Type.Caption
-            textAlign="right"
-            sx={{
-              flex: 1,
-              py: 2,
-              borderBottom: 'small',
-              borderColor: 'neutral4',
-            }}
-          >
-            7 DAYS
-          </Type.Caption>
+          {customizeView === 'LIST' && (
+            <>
+              {isPremiumUser && (
+                <Type.Caption
+                  textAlign="right"
+                  sx={{
+                    flex: 1,
+                    py: 2,
+                    borderBottom: 'small',
+                    borderColor: 'neutral4',
+                  }}
+                >
+                  ALL TIME
+                </Type.Caption>
+              )}
+              <Type.Caption
+                textAlign="right"
+                sx={{
+                  flex: 1,
+                  py: 2,
+                  borderBottom: 'small',
+                  borderColor: 'neutral4',
+                }}
+              >
+                60 DAYS
+              </Type.Caption>
+              <Type.Caption
+                textAlign="right"
+                sx={{
+                  flex: 1,
+                  py: 2,
+                  borderBottom: 'small',
+                  borderColor: 'neutral4',
+                }}
+              >
+                30 DAYS
+              </Type.Caption>
+              <Type.Caption
+                textAlign="right"
+                sx={{
+                  flex: 1,
+                  py: 2,
+                  borderBottom: 'small',
+                  borderColor: 'neutral4',
+                }}
+              >
+                14 DAYS
+              </Type.Caption>
+              <Type.Caption
+                textAlign="right"
+                sx={{
+                  flex: 1,
+                  py: 2,
+                  borderBottom: 'small',
+                  borderColor: 'neutral4',
+                }}
+              >
+                7 DAYS
+              </Type.Caption>
+            </>
+          )}
         </Flex>
       </Box>
 
@@ -212,56 +293,107 @@ function AccountStats({ data }: { data: (TraderData | undefined)[] }) {
           {`$${formatNumber(balance, 2, 2)}` ?? '--'}
         </Type.Caption>
       </Flex> */}
-      <StatsWrapper>
-        {customizeStats.map((key, index) => {
-          const stat = statsObj[key]
-          if (!stat) return <div key={key}></div>
-          return (
-            <Flex pr={3} key={key} alignItems="center" width="calc(100% - 2px)" mx="1px" className="stat">
-              <Flex
-                sx={{
-                  pl: 3,
-                  position: 'sticky',
-                  left: 0,
-                  flex: 1,
-                  py: 2,
-                  zIndex: 3,
-                }}
-                className="column-freeze"
-                alignItems="center"
-              >
-                <Type.Caption color="neutral3">{stat.label}</Type.Caption>
-                <IconButton
-                  data-tip="React-tooltip"
-                  data-tooltip-id="tt_to_top"
-                  data-tooltip-offset={0}
-                  variant="ghost"
-                  className="to-top-btn"
-                  onClick={() => moveStatToTop(stat.id)}
-                  size={24}
-                  icon={<ArrowLineUp size={13} fontVariant="bold" />}
-                />
-              </Flex>
 
-              {data.map((item, i) => (
-                <Box
-                  key={i}
-                  textAlign="right"
-                  sx={{
-                    flex: 1,
-                    py: 2,
-                  }}
-                >
-                  {stat.render && item ? stat.render(item, index) : '--'}
-                </Box>
-              ))}
-            </Flex>
-          )
-        })}
-      </StatsWrapper>
-      <Tooltip id="tt_to_top" place="top" type="dark" effect="solid" clickable={false}>
-        <Type.Caption>Move stat to top</Type.Caption>
-      </Tooltip>
+      {customizeView === 'GRID' && (
+        <GridWrapper
+          width="100%"
+          pt={3}
+          px={3}
+          sx={{
+            gap: 2,
+            gridTemplateColumns: ['1fr 1fr', '1fr 1fr', '1fr 1fr 1fr', '1fr 1fr'],
+          }}
+        >
+          {customizeStats.map((key, index) => {
+            const stat = statsObj[key]
+            if (!stat) return <div key={key}></div>
+            return (
+              <Box key={key} width="100%" variant="cardBorder" sx={{ borderColor: 'neutral5' }} p={12}>
+                <Type.CaptionBold>{stat.label}</Type.CaptionBold>
+                {currentStatOnly ? (
+                  <Box>
+                    {stat.render && data[TYPES[timeOption.id].index - (isPremiumUser ? 0 : 1)]
+                      ? stat.render(data[TYPES[timeOption.id].index - (isPremiumUser ? 0 : 1)] as TraderData, index)
+                      : '--'}
+                  </Box>
+                ) : (
+                  <div>
+                    {[
+                      ...(isPremiumUser ? [TYPES[TimeFilterByEnum.ALL_TIME].key] : []),
+                      TYPES[TimeFilterByEnum.S60_DAY].key,
+                      TYPES[TimeFilterByEnum.S30_DAY].key,
+                      TYPES[TimeFilterByEnum.S14_DAY].key,
+                      TYPES[TimeFilterByEnum.S7_DAY].key,
+                    ].map((item, i) => (
+                      <Flex key={item} justifyContent="space-between" mt={1}>
+                        <Type.Caption color="neutral3" width={40}>
+                          {item}
+                        </Type.Caption>
+                        {stat.render && data[i] ? stat.render(data[i] as TraderData, index) : '--'}
+                      </Flex>
+                    ))}
+                  </div>
+                )}
+              </Box>
+            )
+          })}
+        </GridWrapper>
+      )}
+
+      {customizeView === 'LIST' && (
+        <>
+          <StatsWrapper>
+            {customizeStats.map((key, index) => {
+              const stat = statsObj[key]
+              if (!stat) return <div key={key}></div>
+              return (
+                <Flex pr={3} key={key} alignItems="center" width="calc(100% - 2px)" mx="1px" className="stat">
+                  <Flex
+                    sx={{
+                      pl: 3,
+                      position: 'sticky',
+                      left: 0,
+                      flex: 1.2,
+                      py: 2,
+                      zIndex: 3,
+                    }}
+                    className="column-freeze"
+                    alignItems="center"
+                  >
+                    <Type.Caption color="neutral3">{stat.label}</Type.Caption>
+                    <IconButton
+                      data-tip="React-tooltip"
+                      data-tooltip-id="tt_to_top"
+                      data-tooltip-offset={0}
+                      variant="ghost"
+                      className="to-top-btn"
+                      onClick={() => moveStatToTop(stat.id)}
+                      size={24}
+                      icon={<ArrowLineUp size={13} fontVariant="bold" />}
+                    />
+                  </Flex>
+
+                  {data.map((item, i) => (
+                    <Box
+                      key={i}
+                      textAlign="right"
+                      sx={{
+                        flex: 1,
+                        py: 2,
+                      }}
+                    >
+                      {stat.render && item ? stat.render(item, index) : '--'}
+                    </Box>
+                  ))}
+                </Flex>
+              )
+            })}
+          </StatsWrapper>
+          <Tooltip id="tt_to_top" place="top" type="dark" effect="solid" clickable={false}>
+            <Type.Caption>Move stat to top</Type.Caption>
+          </Tooltip>
+        </>
+      )}
     </Box>
   )
 }

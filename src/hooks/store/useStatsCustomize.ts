@@ -6,7 +6,11 @@ import { immer } from 'zustand/middleware/immer'
 import { tableSettings } from 'components/Tables/TraderListTable/dataConfig'
 
 interface StatsCustomizeState {
+  customizeView: 'LIST' | 'GRID'
+  currentStatOnly: boolean
   customizeStats: string[]
+  toogleCurrentStatOnly: (bool: boolean) => void
+  changeView: (view: 'LIST' | 'GRID') => void
   toggleVisibleStat: (key: string) => void
   moveStatToTop: (key: string) => void
 }
@@ -19,6 +23,16 @@ export const useStatsCustomizeStore = create<StatsCustomizeState>()(
   persist(
     immer((set) => ({
       customizeStats: DEFAULT_LIST,
+      customizeView: 'LIST',
+      currentStatOnly: true,
+      toogleCurrentStatOnly: (bool: boolean) =>
+        set((state) => {
+          state.currentStatOnly = bool
+        }),
+      changeView: (view: 'LIST' | 'GRID') =>
+        set((state) => {
+          state.customizeView = view
+        }),
       toggleVisibleStat: (key) =>
         set((state) => {
           if (state.customizeStats.includes(key as Draft<string>)) {
