@@ -68,7 +68,7 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
     optionName: URL_PARAM_KEYS.LEADERBOARD_TYPE,
     options: LEADERBOARD_OPTIONS,
     callback: () => {
-      setQueryDate(dayjs().utc())
+      setQueryDate(parseQueryDate(dayjs().utc()))
     },
   })
 

@@ -46,6 +46,10 @@ export function generateChartDailyROI(fromDate: number, toDate: number, cumulati
   while (currentDate.isSame(toDate) || currentDate.isBefore(toDate)) {
     let amount = 0
     let roi = 0
+    if (dateArray.length > 0) {
+      amount = dateArray[dateArray.length - 1].amount
+      roi = dateArray[dateArray.length - 1].roi
+    }
     cumulativeDates.forEach((cumulativeDate) => {
       if (currentDate.isSame(cumulativeDate.date)) {
         amount = cumulativeDate.amount
