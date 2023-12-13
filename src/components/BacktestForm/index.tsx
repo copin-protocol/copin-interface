@@ -74,7 +74,13 @@ export default function BacktestForm({
   const enableStopLoss = watch('enableStopLoss')
   const startTime = watch('startTime')
   const endTime = watch('endTime')
-  const today = useMemo(() => new Date(), [])
+  const maxDate = useMemo(() => {
+    const dateOffset = 24 * 60 * 60 * 1000 * 1 //1 days
+    const _maxDate = new Date()
+    _maxDate.setTime(_maxDate.getTime() - dateOffset)
+    _maxDate.setHours(23, 59, 59, 999)
+    return _maxDate
+  }, [])
   const pairs = useMemo(() => getTokenTradeList(protocol), [protocol])
   const addressPairs = pairs.map((e) => e.address)
   const isSelectedAll = addressPairs.length === tokenAddresses?.length
@@ -283,9 +289,10 @@ export default function BacktestForm({
                 to={endTime}
                 changeTimeRange={(range) => {
                   clearErrors()
-                  setValue(fieldName.startTime, range.from ?? today)
-                  setValue(fieldName.endTime, range.to ?? today)
+                  setValue(fieldName.startTime, range.from ?? maxDate)
+                  setValue(fieldName.endTime, range.to ?? maxDate)
                 }}
+                maxDate={maxDate}
                 posDefine={{ top: '-350px' }}
                 iconColor="primary1"
                 iconHoverColor="primary1"

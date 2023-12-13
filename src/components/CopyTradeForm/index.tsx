@@ -105,6 +105,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     },
     {
       enabled: !isEdit && (isClone ? !!duplicateToAddress : !!account),
+      select: (data) => data.filter((address) => !TOKEN_TRADE_IGNORE[platform]?.includes(address)),
       onSuccess: (data) => {
         !!data?.length && setValue('tokenAddresses', data)
       },
