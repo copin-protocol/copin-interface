@@ -15,6 +15,7 @@ import Select from 'theme/Select'
 import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
+import { LINKS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
@@ -312,7 +313,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
         </Flex>
         <Divider my={20} />
         <Type.BodyBold mb={3}>3. Risk Management</Type.BodyBold>
-        <RowWrapper3>
+        <RowWrapper2>
           <Box>
             <SwitchInputField
               wrapperSx={{ mb: 12 }}
@@ -347,35 +348,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               suffix={<InputSuffix>Orders</InputSuffix>}
             />
           </Box>
-          <Box>
-            <SwitchInputField
-              wrapperSx={{ mb: 12 }}
-              switchLabel="Stoploss Amount"
-              {...register(fieldName.enableStopLoss, {
-                onChange: (e) => {
-                  const checked = e.target.checked
-                  if (checked) {
-                    setValue(
-                      fieldName.stopLossAmount,
-                      defaultFormValues?.stopLossAmount ?? defaultCopyTradeFormValues.stopLossAmount
-                    )
-                  } else {
-                    trigger(fieldName.stopLossAmount)
-                  }
-                },
-              })}
-              error={errors.enableStopLoss?.message}
-            />
-            <NumberInputField
-              block
-              name={fieldName.stopLossAmount}
-              control={control}
-              error={errors.stopLossAmount?.message}
-              disabled={!enableStopLoss}
-              inputHidden={!enableStopLoss}
-              suffix={<InputSuffix>USD</InputSuffix>}
-            />
-          </Box>
+
           <Box>
             <SwitchInputField
               wrapperSx={{ mb: 12 }}
@@ -410,7 +383,44 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               suffix={<InputSuffix>Times</InputSuffix>}
             />
           </Box>
-        </RowWrapper3>
+        </RowWrapper2>
+        <Box mt={3}>
+          <SwitchInputField
+            wrapperSx={{ mb: 12 }}
+            switchLabel="Stoploss Amount"
+            {...register(fieldName.enableStopLoss, {
+              onChange: (e) => {
+                const checked = e.target.checked
+                if (checked) {
+                  setValue(
+                    fieldName.stopLossAmount,
+                    defaultFormValues?.stopLossAmount ?? defaultCopyTradeFormValues.stopLossAmount
+                  )
+                } else {
+                  trigger(fieldName.stopLossAmount)
+                }
+              },
+            })}
+            error={errors.enableStopLoss?.message}
+          />
+          <NumberInputField
+            block
+            name={fieldName.stopLossAmount}
+            control={control}
+            error={errors.stopLossAmount?.message}
+            disabled={!enableStopLoss}
+            inputHidden={!enableStopLoss}
+            suffix={<InputSuffix>USD</InputSuffix>}
+          />
+          {enableStopLoss && (
+            <Type.Caption mt={2} color="orange1">
+              Make sure you have already activated the{' '}
+              <Box as="a" href={LINKS.bingXGuarantee} target="_blank" rel="noreferrer">
+                BingX Guaranteed TP
+              </Box>
+            </Type.Caption>
+          )}
+        </Box>
         <Box mt={3}>
           <SwitchInputField
             switchLabel="Skip Low Leverage"
@@ -441,10 +451,8 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   )
 }
 
-function RowWrapper3({ children }: { children: ReactNode }) {
-  return (
-    <Grid sx={{ gridTemplateColumns: ['1fr', '1fr', '1fr 1fr 1fr'], gap: [3, 3, 24], width: '100%' }}>{children}</Grid>
-  )
+function RowWrapper2({ children }: { children: ReactNode }) {
+  return <Grid sx={{ gridTemplateColumns: ['1fr', '1fr', '1fr 1fr'], gap: [3, 3, 24], width: '100%' }}>{children}</Grid>
 }
 
 function InputSuffix({ children }: { children: ReactNode }) {
