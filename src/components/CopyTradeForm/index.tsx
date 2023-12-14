@@ -416,8 +416,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             <Type.Caption mt={2} color="orange1">
               Make sure you have already activated the{' '}
               <Box as="a" href={LINKS.bingXGuarantee} target="_blank" rel="noreferrer">
-                BingX Guaranteed TP
-              </Box>
+                BingX Guaranteed Price
+              </Box>{' '}
+              to Prevent Slippage Losses
             </Type.Caption>
           )}
         </Box>
