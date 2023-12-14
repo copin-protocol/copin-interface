@@ -29,6 +29,7 @@ const RangeFilter = ({
   iconHoverColor,
   onSelectingChange,
   buttonType = 'icon',
+  maxDate = new Date(),
 }: {
   isRangeSelection: boolean
   from: Date | undefined
@@ -42,6 +43,7 @@ const RangeFilter = ({
   iconHoverColor?: string
   onSelectingChange?: () => void
   buttonType?: 'text' | 'icon'
+  maxDate?: Date
 }) => {
   const lastRangeRef = useRef<number[]>()
   const [selecting, setSelecting] = useState(false)
@@ -168,7 +170,7 @@ const RangeFilter = ({
               retainEndDateOnFirstSelection
               dateDisplayFormat="yyyy/MM/dd"
               minDate={new Date(START_DATE)}
-              maxDate={new Date()}
+              maxDate={maxDate}
               editableDateInputs={true}
               onChange={onChangeTime}
               ranges={[state]}

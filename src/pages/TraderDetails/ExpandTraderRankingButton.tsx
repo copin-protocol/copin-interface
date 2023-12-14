@@ -22,7 +22,6 @@ export default function ExpandTraderRankingButton(
       <Button
         variant="ghostPrimary"
         onClick={() => setExpanded(true)}
-        disabled={!props.traderData}
         sx={{ p: 0, display: 'flex', alignItems: 'center', gap: 1 }}
       >
         <span>
@@ -31,7 +30,7 @@ export default function ExpandTraderRankingButton(
         <ArrowRight size={16} weight="bold" />
       </Button>
       <Suspense fallback={<></>}>
-        {expanded && !!props.traderData && (
+        {expanded && (
           <TraderRankingExpanded {...(props as TraderRankingExpandedProps)} handleExpand={() => setExpanded(false)} />
         )}
       </Suspense>

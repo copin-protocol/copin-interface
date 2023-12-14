@@ -28,6 +28,8 @@ export const LINKS = {
   registerBingX: 'https://bingx.com/en-us/invite/DY5QNN',
   getBingXAPIKey: 'https://tutorial.copin.io/how-to-connecting-your-bingx-account/3.-generate-an-api-key',
   notice: 'https://copin.substack.com/p/copin-profile-login-updates-road',
+  bingXGuarantee:
+    'https://support.bingx.com/hc/en-001/articles/21313115553945-Perpetual-Futures-Exclusive-Guaranteed-Price-Launched-to-Prevent-Slippage-Losses',
 }
 
 export const NAVBAR_HEIGHT = 60

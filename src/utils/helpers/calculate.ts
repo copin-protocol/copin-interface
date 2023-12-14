@@ -17,7 +17,8 @@ export function calcSynthetixPnL(isLong: boolean, averagePrice: number, marketPr
 
 export function calcCopyOpeningPnL(position: CopyPositionData, marketPrice?: number | undefined) {
   if (!marketPrice || !position.entryPrice) return 0
-  const sizeUsd = Number(position.totalSizeDelta ?? position.sizeDelta) * position.entryPrice
+  const sizedDelta = Number(position.sizeDelta)
+  const sizeUsd = (!!sizedDelta ? position.totalSizeDelta ?? 0 : 0) * position.entryPrice
   return calcPnL(position.isLong, position.entryPrice, marketPrice, sizeUsd)
 }
 

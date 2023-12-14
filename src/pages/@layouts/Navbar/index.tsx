@@ -8,9 +8,10 @@ import Logo, { LogoText } from 'components/@ui/Logo'
 import LoginAction from 'components/LoginAction'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import NavbarUser from 'pages/@layouts/Navbar/NavUser'
+import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
-import { Box, Flex, LinkUnderline } from 'theme/base'
+import { Box, Flex, LinkUnderline, Type } from 'theme/base'
 import { LINKS, NAVBAR_HEIGHT } from 'utils/config/constants'
 import routes from 'utils/config/routes'
 import ROUTES from 'utils/config/routes'
@@ -19,7 +20,7 @@ import SearchBox from './SearchBox'
 import { LogoWrapper, Main, Wrapper } from './styled'
 
 const Navbar = ({ height }: { height: number }): ReactElement => {
-  const { isAuthenticated } = useAuthContext()
+  const { isAuthenticated, disconnect } = useAuthContext()
   const [isSearchOpening, setSearchOpening] = useState<boolean>(false)
   // const { md: isMobile } = useResponsive()
 
@@ -88,9 +89,19 @@ const Navbar = ({ height }: { height: number }): ReactElement => {
               {isAuthenticated === true && <NavbarUser />}
               {isAuthenticated === false && <LoginAction />}
               {isAuthenticated == null && (
-                <Box py={12} px={24}>
+                <Flex py={12} px={16} alignItems="center" sx={{ gap: 3 }}>
                   <Loading size={16} />
-                </Box>
+                  <Box>
+                    <Type.CaptionBold display="block" lineHeight="13px">
+                      <Trans>Connecting Wallet...</Trans>
+                    </Type.CaptionBold>
+                    <Button variant="ghost" px={0} py={0} my={0}>
+                      <Type.Caption lineHeight="13px" onClick={() => disconnect()}>
+                        <Trans>Cancel</Trans>
+                      </Type.Caption>
+                    </Button>
+                  </Box>
+                </Flex>
               )}
             </Box>
           </Box>
