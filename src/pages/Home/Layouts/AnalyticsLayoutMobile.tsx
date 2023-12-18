@@ -1,12 +1,6 @@
-import { cloneElement, useReducer } from 'react'
-
-import DirectionButton from 'components/@ui/DirectionButton'
 import { Box, Flex } from 'theme/base'
 
-import { ConditionFilterProps } from '../ConditionFilter/types'
-import SwitchProtocols from '../SwitchProtocols'
-import { TimeFilterSectionProps } from '../TimeFilterSection'
-import { RowConfig, RowState, mobileConfigs as configs } from './layoutConfigs'
+import { HomeSwitchProtocols } from '../SwitchProtocols'
 import { AnalyticsLayoutComponents } from './types'
 
 export default function AnalyticsLayoutMobile({
@@ -28,7 +22,7 @@ export default function AnalyticsLayoutMobile({
           {timeFilterSection}
           {conditionFilter}
         </Flex>
-        <SwitchProtocols buttonSx={{ borderBottom: 'none', borderRight: 'none' }} />
+        <HomeSwitchProtocols buttonSx={{ borderBottom: 'none', borderRight: 'none' }} />
       </Flex>
       <Box sx={{ flex: '1 0 0' }}>{listTradersSection}</Box>
     </Flex>

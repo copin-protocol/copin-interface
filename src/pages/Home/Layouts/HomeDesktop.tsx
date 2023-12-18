@@ -13,7 +13,7 @@ import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import Favorites from '../Favorites'
-import SwitchProtocols from '../SwitchProtocols'
+import { HomeSwitchProtocols } from '../SwitchProtocols'
 import { FilterTradersProvider } from '../useTradersContext'
 import TradersAnalytics from './TradersAnalytics'
 import { TabKeyEnum } from './layoutConfigs'
@@ -62,9 +62,7 @@ export default function HomeDesktop() {
             }
           }}
         />
-        <FilterTradersProvider tab={TabKeyEnum.Explorer}>
-          <SwitchProtocols buttonSx={{ height: '100%' }} />
-        </FilterTradersProvider>
+        <HomeSwitchProtocols buttonSx={{ height: '100%' }} />
       </Flex>
       <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
         <Switch>

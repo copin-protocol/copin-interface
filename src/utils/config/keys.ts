@@ -78,6 +78,7 @@ export const STORAGE_KEYS = {
 }
 
 export const URL_PARAM_KEYS = {
+  PROTOCOL: 'protocol',
   EXPLORER_TIME_FILTER: 'time',
   EXPLORER_TIME_RANGE_FILTER: 'range',
   FAVORITE_TIME_RANGE_FILTER: 'time-favorite',

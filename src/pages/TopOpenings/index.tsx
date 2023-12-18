@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import TopOpenPositions from 'components/TopOpeningPositions'
 import { useProtocolStore } from 'hooks/store/useProtocols'
-import SwitchProtocols from 'pages/Home/SwitchProtocols'
+import { OpeningSwitchProtocols } from 'pages/Home/SwitchProtocols'
 import IconButton from 'theme/Buttons/IconButton'
 import { Box, Flex, Type } from 'theme/base'
 
@@ -25,13 +25,7 @@ const TopOpenings = () => {
             <IconButton color="neutral1" icon={<CaretLeft size={24} />} variant="ghost" />
           </Link>
           <Type.H5>Top Opening Positions on</Type.H5>
-          {/*<ProtocolLogo*/}
-          {/*  pl={1}*/}
-          {/*  size={24}*/}
-          {/*  protocol={protocol}*/}
-          {/*  textSx={{ fontSize: '24px', fontWeight: 'bold', color: 'neutral1' }}*/}
-          {/*/>*/}
-          <SwitchProtocols
+          <OpeningSwitchProtocols
             buttonSx={{ border: 'none', px: 0, pt: 0, pb: 0 }}
             textSx={{ fontSize: '16px', fontWeight: 'bold' }}
           />

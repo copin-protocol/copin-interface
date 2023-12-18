@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs'
-import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { ApiListResponse } from 'apis/api'
@@ -11,7 +11,7 @@ import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { LeaderboardTypeEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { LeaderboardTypeEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { LEADERBOARD_OPTIONS, LeaderboardOptionProps } from 'utils/config/options'
 import { pageToOffset } from 'utils/helpers/transform'
@@ -45,9 +45,7 @@ export const LeaderboardContext = createContext({} as LeaderboardContextValues)
 export function LeaderboardProvider({ children }: { children: ReactNode }) {
   const { searchParams, setSearchParams } = useSearchParams()
   const dateParams = searchParams?.[URL_PARAM_KEYS.LEADERBOARD_DATE] as string
-  const protocolParam = searchParams?.protocol as ProtocolEnum
-  const { protocol: protocolStore } = useProtocolStore()
-  const protocol = protocolParam ?? protocolStore
+  const { protocol } = useProtocolStore()
   const initDate = dateParams ? dayjs(Number(dateParams)) : dayjs().utc()
   const [queryDate, setQueryDate] = useState(parseQueryDate(initDate))
   const [keyword, setKeyword] = useState<string | undefined>()
@@ -101,11 +99,6 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
   )
 
   const lastTimeUpdated = data?.data?.[0]?.rankingAt
-
-  useEffect(() => {
-    if (protocolParam) return
-    setTimeout(() => setSearchParams({ protocol }), 100)
-  }, [protocol, protocolParam, setSearchParams])
 
   const changeCurrentSort = (data: TableSortProps<TopTraderData> | undefined) => {
     setCurrentSort(data)

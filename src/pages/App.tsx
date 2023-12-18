@@ -8,7 +8,7 @@ import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import ROUTES from 'utils/config/routes'
 
-import AuthedRoute, { ProtocolRedirectRoute, ProtocolRoute } from './@helpers/CustomRoutes'
+import AuthedRoute from './@helpers/CustomRoutes'
 import ErrorFallback from './@helpers/ErrorFallback'
 import QSReader from './@helpers/QSReader'
 import ScrollToTop from './@helpers/ScrollToTop'
@@ -47,34 +47,16 @@ function App() {
           <ScrollToTop />
           <QSReader />
           <Switch>
+            <Route exact path={ROUTES.TRADER_DETAILS.path} component={TraderDetails}></Route>
+
             <Route exact path={ROUTES.COMPARING_TRADERS.path} component={ComparingTraders} />
             <Route exact path={ROUTES.SUBSCRIPTION.path} component={Subscription} />
-            <ProtocolRoute exact path={ROUTES.TRADER_DETAILS.path} component={TraderDetails}></ProtocolRoute>
-            <ProtocolRedirectRoute exact path={`${ROUTES.TRADER_DETAILS.path_prefix}/:address`} />
-
-            <ProtocolRoute
-              exact
-              path={ROUTES.SHARED_POSITION_DETAILS.path}
-              component={SharedPositionDetails}
-            ></ProtocolRoute>
-
-            <ProtocolRoute exact path={ROUTES.POSITION_DETAILS.path} component={PositionDetails}></ProtocolRoute>
-            <ProtocolRedirectRoute exact path={ROUTES.POSITION_DETAILS.path_prefix} />
-
-            <ProtocolRoute exact path={ROUTES.TOP_OPENINGS.path} component={TopOpenings}></ProtocolRoute>
-            <ProtocolRedirectRoute exact path={ROUTES.TOP_OPENINGS.path_prefix} />
-
+            <Route exact path={ROUTES.SHARED_POSITION_DETAILS.path} component={SharedPositionDetails}></Route>
+            <Route exact path={ROUTES.POSITION_DETAILS.path} component={PositionDetails}></Route>
+            <Route exact path={ROUTES.TOP_OPENINGS.path} component={TopOpenings}></Route>
+            <Route exact path={ROUTES.SHARED_BACKTEST_SINGLE.path} component={SharedBacktestSingle}></Route>
+            <Route exact path={ROUTES.SHARED_BACKTEST_MULTIPLE.path} component={SharedBacktestMultiple}></Route>
             <Route exact path={ROUTES.STATS.path} component={Stats}></Route>
-            <ProtocolRoute
-              exact
-              path={ROUTES.SHARED_BACKTEST_SINGLE.path}
-              component={SharedBacktestSingle}
-            ></ProtocolRoute>
-            <ProtocolRoute
-              exact
-              path={ROUTES.SHARED_BACKTEST_MULTIPLE.path}
-              component={SharedBacktestMultiple}
-            ></ProtocolRoute>
 
             <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>
             <AuthedRoute path={ROUTES.SETTINGS.path} component={Settings}></AuthedRoute>
