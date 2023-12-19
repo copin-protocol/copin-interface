@@ -18,8 +18,8 @@ msgid ". Try to reload the page to fix this issue"
 msgstr ". Try to reload the page to fix this issue"
 
 #: src/components/CopyTradeForm/index.tsx
-msgid "1. Choose Platform"
-msgstr "1. Choose Platform"
+#~ msgid "1. Choose Platform"
+#~ msgstr "1. Choose Platform"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "10 traders"
@@ -137,6 +137,11 @@ msgstr "Add referral successful!"
 #: src/pages/Settings/AlertList/DesktopItem.tsx
 msgid "Added"
 msgstr "Added"
+
+#: src/components/BacktestForm/index.tsx
+#: src/components/CopyTradeForm/index.tsx
+msgid "Advance Settings"
+msgstr "Advance Settings"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 #~ msgid "After extending, please wait 5 minutes for system updates your subscription plan. We appreciate your patience!"
@@ -461,6 +466,11 @@ msgstr "Copies"
 msgid "Copin Subscription {0}"
 msgstr "Copin Subscription {0}"
 
+#: src/components/BacktestForm/index.tsx
+#: src/components/CopyTradeForm/index.tsx
+msgid "Copin will execute the order that is the inverse of the trader's order."
+msgstr "Copin will execute the order that is the inverse of the trader's order."
+
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Copy"
@@ -484,8 +494,12 @@ msgid "Copy Statistic"
 msgstr "Copy Statistic"
 
 #: src/pages/TraderDetails/CopyTraderModal.tsx
-msgid "Copy Trader Setting"
-msgstr "Copy Trader Setting"
+msgid "Copy Trader"
+msgstr "Copy Trader"
+
+#: src/pages/TraderDetails/CopyTraderModal.tsx
+#~ msgid "Copy Trader Setting"
+#~ msgstr "Copy Trader Setting"
 
 #: src/components/WalletDetailsCard/WalletInfo.tsx
 #~ msgid "Copy Volume"
@@ -646,6 +660,11 @@ msgstr "Error"
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Error while place order"
 msgstr "Error while place order"
+
+#: src/components/BacktestForm/index.tsx
+#: src/components/CopyTradeForm/index.tsx
+msgid "Example: Trader opened LONG, you will open SHORT."
+msgstr "Example: Trader opened LONG, you will open SHORT."
 
 #: src/pages/Settings/AlertList/NoAlertList.tsx
 msgid "Explorer Traders"
@@ -924,6 +943,10 @@ msgstr "Let copy a trader and make profit!"
 msgid "Leverage"
 msgstr "Leverage"
 
+#: src/components/CopyTradeForm/index.tsx
+msgid "Leverage must be greater or equal to 2"
+msgstr "Leverage must be greater or equal to 2"
+
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 msgid "Limited"
 msgstr "Limited"
@@ -1059,6 +1082,10 @@ msgstr "MY SUBSCRIPTION"
 #: src/pages/TraderDetails/CopyTraderModal.tsx
 msgid "Make copy trade has been succeeded"
 msgstr "Make copy trade has been succeeded"
+
+#: src/components/CopyTradeForm/index.tsx
+msgid "Make sure you have already activated the <0>BingX Guaranteed Price</0> to Prevent Slippage Losses."
+msgstr "Make sure you have already activated the <0>BingX Guaranteed Price</0> to Prevent Slippage Losses."
 
 #: src/pages/TraderDetails/TraderRankingExpanded/Stats.tsx
 msgid "Markets"
@@ -2235,8 +2262,6 @@ msgstr "Volume"
 msgid "Waiting..."
 msgstr "Waiting..."
 
-#: src/components/CopyTradeForm/Wallets.tsx
-#: src/components/CopyTradeForm/Wallets.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Wallet"
 msgstr "Wallet"
@@ -2282,6 +2307,20 @@ msgstr "Weekly"
 #: src/components/CreateSmartWalletModal/index.tsx
 msgid "What is smart wallet?"
 msgstr "What is smart wallet?"
+
+#: src/components/BacktestForm/index.tsx
+#: src/components/CopyTradeForm/index.tsx
+msgid "When the loss exceeds {0}, the Stop Loss will be triggered to close the position."
+msgstr "When the loss exceeds {0}, the Stop Loss will be triggered to close the position."
+
+#: src/components/CopyTradeForm/index.tsx
+msgid "When the trader increases the position, you will follow with a maximum of {0} as the margin."
+msgstr "When the trader increases the position, you will follow with a maximum of {0} as the margin."
+
+#: src/components/BacktestForm/index.tsx
+#: src/components/CopyTradeForm/index.tsx
+msgid "When the trader opens a trade, the maximum margin per order is {0}."
+msgstr "When the trader opens a trade, the maximum margin per order is {0}."
 
 #: src/pages/Subscription/MintButton.tsx
 #~ msgid "While you wait,"
@@ -2346,8 +2385,8 @@ msgid "You don't have any wallet"
 msgstr "You don't have any wallet"
 
 #: src/components/CopyTradeForm/Wallets.tsx
-msgid "You don’t have any wallet yet"
-msgstr "You don’t have any wallet yet"
+#~ msgid "You don’t have any wallet yet"
+#~ msgstr "You don’t have any wallet yet"
 
 #: src/pages/WalletManagement/WalletList/index.tsx
 msgid "You don’t have any wallet. Please create a wallet"
@@ -2364,6 +2403,10 @@ msgstr "You need to upgrade to a premium account to use this feature"
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "You will extend your plan for an additional"
 msgstr "You will extend your plan for an additional"
+
+#: src/components/CopyTradeForm/index.tsx
+msgid "You will not copy the position has opened with leverage lower than {leverage}x."
+msgstr "You will not copy the position has opened with leverage lower than {leverage}x."
 
 #: src/pages/Subscription/MintButton.tsx
 msgid "You will receive <0>30 days</0> Premium NFT Plan"

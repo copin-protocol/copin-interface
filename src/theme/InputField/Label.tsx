@@ -9,7 +9,7 @@ const Label = ({
   columnGap = 8,
   required,
   annotation,
-  labelColor = 'neutral3',
+  labelColor = 'neutral2',
   bold = false,
   wrapperProps = {},
 }: {

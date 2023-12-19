@@ -14,10 +14,9 @@ export const fieldName: { [key in keyof BackTestFormValues]: keyof BackTestFormV
   endTime: 'endTime',
   volumeProtection: 'volumeProtection',
   lookBackOrders: 'lookBackOrders',
-  enableStopLoss: 'enableStopLoss',
   stopLossAmount: 'stopLossAmount',
+  maxMarginPerPosition: 'maxMarginPerPosition',
   reverseCopy: 'reverseCopy',
-  maxVolMultiplier: 'maxVolMultiplier',
 }
 
 // pairs can be from server response
@@ -33,8 +32,7 @@ export const getDefaultBackTestFormValues: (protcol: ProtocolEnum) => BackTestFo
   endTime: dayjs().subtract(1, 'days').toDate(),
   volumeProtection: true,
   lookBackOrders: 10,
-  enableStopLoss: false,
-  stopLossAmount: 10,
+  stopLossAmount: undefined,
   reverseCopy: false,
 })
 

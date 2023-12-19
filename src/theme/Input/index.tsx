@@ -60,7 +60,7 @@ export const InputWrapper = styled(Flex)<InputWrapperProps>(
       borderRadius: 'sm',
       fontSize: 13,
       lineHeight: '24px',
-      px: '16px',
+      px: '12px',
       py: '8px',
       color: 'inherit',
       cursor: 'pointer',

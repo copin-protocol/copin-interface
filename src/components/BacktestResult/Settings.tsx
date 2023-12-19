@@ -34,13 +34,13 @@ export default function BacktestSettings({
         <SettingItem label={'Investment Capital'} value={`$${formatNumber(data.balance, 0)}`} />
         {data.orderVolume ? (
           <SettingItem
-            label={'Amount Per Position | Leverage'}
+            label={'Margin | Leverage'}
             value={`$${formatNumber(data.orderVolume, 0)} | ${formatNumber(data.leverage, 1, 1)}x`}
           />
         ) : null}
         <SettingItem
-          label={'Max Volume Multiplier'}
-          value={data.maxVolMultiplier ? `${formatNumber(data.maxVolMultiplier, 1, 1)}x` : '--'}
+          label={'Max Margin Per Position'}
+          value={data.maxVolMultiplier ? `$${formatNumber(data.maxVolMultiplier * data.orderVolume, 0)}` : '--'}
         />
         <SettingItem
           label={'Volume Protection'}

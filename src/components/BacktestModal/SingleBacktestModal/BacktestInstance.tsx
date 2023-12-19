@@ -81,7 +81,7 @@ export default function BacktestInstance({
               pb: 3,
               pt: 24,
               width: '100%',
-              maxWidth: 1000,
+              maxWidth: 700,
               mx: 'auto',
             }}
           >

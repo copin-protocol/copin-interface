@@ -1,6 +1,6 @@
 import CopyTradeEditForm from 'components/CopyTradeForm/CopyTradeEditForm'
 import { CopyTradeData } from 'entities/copyTrade.d'
-import Drawer from 'theme/Modal/Drawer'
+import Modal from 'theme/Modal'
 import { Box } from 'theme/base'
 
 export default function CopyTradeEditDrawer({
@@ -15,9 +15,10 @@ export default function CopyTradeEditDrawer({
   copyTradeData: CopyTradeData | undefined
 }) {
   return (
-    <Drawer
+    <Modal
       title="Edit Copytrade Settings"
-      size="min(900px,90vh)"
+      minHeight="min(900px,90vh)"
+      maxWidth="520px"
       mode="bottom"
       background="neutral5"
       hasClose
@@ -25,16 +26,10 @@ export default function CopyTradeEditDrawer({
       // direction="bottom"
       isOpen={isOpen}
       onDismiss={onDismiss}
-      headSx={{
-        maxWidth: '100%',
-        width: 1000,
-        mx: 'auto',
-        px: 3,
-      }}
     >
-      <Box sx={{ position: 'relative', maxWidth: 1000, mx: 'auto' }}>
+      <Box sx={{ position: 'relative', width: '100%', mx: 'auto' }}>
         <CopyTradeEditForm copyTradeData={copyTradeData} onDismiss={onDismiss} onSuccess={onSuccess} />
       </Box>
-    </Drawer>
+    </Modal>
   )
 }

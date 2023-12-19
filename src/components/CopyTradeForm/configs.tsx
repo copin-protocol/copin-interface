@@ -15,7 +15,6 @@ const commonSchema = {
   }),
   leverage: yup.number().required().min(2).label('Leverage'),
   tokenAddresses: yup.array(yup.string()).required().min(1).label('Trading Pairs'),
-  enableStopLoss: yup.boolean(),
   stopLossAmount: yup.number().when('enableStopLoss', {
     is: true,
     then: (schema) => schema.required().min(0.1).label('Stop Loss Amount'),
@@ -76,8 +75,7 @@ export interface CopyTradeFormValues {
   tokenAddresses: string[]
   type?: CopyTradeTypeEnum
   protocol?: ProtocolEnum
-  enableStopLoss: boolean
-  stopLossAmount: number
+  stopLossAmount: number | undefined
   volumeProtection: boolean
   lookBackOrders: number
   exchange: CopyTradePlatformEnum
@@ -86,8 +84,7 @@ export interface CopyTradeFormValues {
   title: string
   reverseCopy: boolean
   duplicateToAddress?: string
-  enableMaxVolMultiplier: boolean
-  maxVolMultiplier: number
+  maxMarginPerPosition: number | undefined
   skipLowLeverage: boolean
   // privateKey: string
   // bingXApiKey: string
@@ -99,7 +96,6 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   volume: 'volume',
   leverage: 'leverage',
   tokenAddresses: 'tokenAddresses',
-  enableStopLoss: 'enableStopLoss',
   stopLossAmount: 'stopLossAmount',
   volumeProtection: 'volumeProtection',
   lookBackOrders: 'lookBackOrders',
@@ -109,8 +105,7 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   title: 'title',
   reverseCopy: 'reverseCopy',
   duplicateToAddress: 'duplicateToAddress',
-  enableMaxVolMultiplier: 'enableMaxVolMultiplier',
-  maxVolMultiplier: 'maxVolMultiplier',
+  maxMarginPerPosition: 'maxMarginPerPosition',
   skipLowLeverage: 'skipLowLeverage',
   // privateKey: 'privateKey',
   // bingXApiKey: 'bingXApiKey',
@@ -123,8 +118,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   leverage: 2,
   tokenAddresses: [],
   type: CopyTradeTypeEnum.FULL_ORDER,
-  enableStopLoss: false,
-  stopLossAmount: 1,
+  stopLossAmount: undefined,
   volumeProtection: true,
   lookBackOrders: 10,
   exchange: CopyTradePlatformEnum.BINGX,
@@ -133,8 +127,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   title: '',
   reverseCopy: false,
   duplicateToAddress: '',
-  enableMaxVolMultiplier: false,
-  maxVolMultiplier: 5,
+  maxMarginPerPosition: undefined,
   skipLowLeverage: false,
   // privateKey: '',
   // bingXApiKey: '',

@@ -92,15 +92,16 @@ export default function useBacktestRequest(
         toTime,
         tokenAddresses: formData.tokenAddresses,
         reverseCopy: formData.reverseCopy,
-        enableStopLoss: formData.enableStopLoss,
         volumeProtection: formData.volumeProtection,
-        maxVolMultiplier: formData.maxVolMultiplier,
+        maxVolMultiplier: formData.maxMarginPerPosition
+          ? Number(formData.maxMarginPerPosition / formData.orderVolume)
+          : undefined,
       }
       if (formData.volumeProtection) {
         requestData.volumeProtection = true
         requestData.lookBackOrders = formData.lookBackOrders
       }
-      if (formData.enableStopLoss) {
+      if (formData.stopLossAmount) {
         requestData.enableStopLoss = true
         requestData.stopLossAmount = formData.stopLossAmount
       }

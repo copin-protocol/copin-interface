@@ -148,7 +148,7 @@ export default function useCopyTradeColumns({
             {isRunningFn(item.status) && (
               <Tooltip id={`${TOOLTIP_KEYS.MY_COPY_ICON_STOPLOSS}_${item.id}`} place="top" type="dark" effect="solid">
                 <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Stoploss:{' '}
+                  Position Stop Loss:{' '}
                   <Box as="span" color="red1">
                     ${`${formatNumber(item.stopLossAmount, 2, 2)}`}
                   </Box>
@@ -173,9 +173,9 @@ export default function useCopyTradeColumns({
                 effect="solid"
               >
                 <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Max Volume Multiplier:{' '}
+                  Max Margin Per Position:{' '}
                   <Box as="span" color="red1">
-                    {`${formatNumber(item.maxVolMultiplier, 0, 0)}`} times
+                    {`$${formatNumber(item.maxVolMultiplier * item.volume, 2, 2)}`}
                   </Box>
                 </Type.Caption>
               </Tooltip>
@@ -198,7 +198,7 @@ export default function useCopyTradeColumns({
                 effect="solid"
               >
                 <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Skip Low Leverage:{' '}
+                  Skip Low Leverage Position:{' '}
                   <Box as="span" color="green1">
                     On
                   </Box>

@@ -110,7 +110,7 @@ export default function SettingsAndResult({ data }: { data: TestInstanceData }) 
       {stage === 'setting' && (
         <Box px={3} sx={{ flex: '1 0 0', overflow: 'auto' }}>
           <Box sx={{ py: 4 }}>
-            <Box sx={{ maxWidth: 1000, mx: 'auto' }}>
+            <Box sx={{ maxWidth: 700, mx: 'auto' }}>
               <BacktestForm
                 protocol={protocol}
                 onSubmit={handleSubmit}
