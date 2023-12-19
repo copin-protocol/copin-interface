@@ -1,7 +1,6 @@
 import { SystemStyleObject } from '@styled-system/css'
 import { useResponsive } from 'ahooks'
 import { useCallback } from 'react'
-import { useHistory } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -12,7 +11,6 @@ import { Box, Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { PROTOCOL_OPTIONS, ProtocolOptionProps } from 'utils/config/protocols'
-import { generateTopOpeningOrdersRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
 import { logEventSwitchProtocol } from 'utils/tracking/event'
 import { getChainMetadata } from 'utils/web3/chains'
@@ -27,14 +25,6 @@ export function HomeSwitchProtocols(props: SwitchProtocolComponentProps) {
   const { setSearchParams } = useSearchParams()
   const onSwitch = (protocol: ProtocolEnum) => {
     setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: protocol, [URL_PARAM_KEYS.EXPLORER_PAGE]: '1' })
-  }
-  return <SwitchProtocolsComponent {...props} onSwitch={onSwitch} />
-}
-
-export function OpeningSwitchProtocols(props: SwitchProtocolComponentProps) {
-  const history = useHistory()
-  const onSwitch = (protocol: ProtocolEnum) => {
-    history.push(`/${generateTopOpeningOrdersRoute(protocol)}`, { replace: true })
   }
   return <SwitchProtocolsComponent {...props} onSwitch={onSwitch} />
 }

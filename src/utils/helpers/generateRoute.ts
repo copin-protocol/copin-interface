@@ -3,7 +3,6 @@ import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 
-export const generateTopOpeningOrdersRoute = (protocol: ProtocolEnum) => `${protocol}${ROUTES.TOP_OPENINGS.path_prefix}`
 export const generateTraderDetailsRoute = (
   protocol: ProtocolEnum,
   address: string,

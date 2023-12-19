@@ -8,12 +8,8 @@ const ROUTES = {
   HOME_LEADERBOARD: {
     path: '/leaderboard',
   },
-  HOME_FAVORITE: {
-    path: '/favorite',
-  },
-  HOME_TOP_OPENINGS: {
-    path: '/:protocol/m/top-openings',
-    path_suffix: 'm/top-openings',
+  FAVORITES: {
+    path: '/favorites',
   },
   SEARCH: {
     path: '/search',
@@ -65,8 +61,7 @@ const ROUTES = {
     path: '/stats',
   },
   TOP_OPENINGS: {
-    path: '/:protocol/top-openings',
-    path_prefix: '/top-openings',
+    path: '/top-openings',
   },
   SHARED_BACKTEST_SINGLE: {
     path: '/:protocol/shared-backtest/single/:id',

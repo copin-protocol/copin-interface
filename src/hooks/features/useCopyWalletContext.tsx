@@ -28,7 +28,7 @@ const CopyWalletContext = createContext<CopyWalletContextData>({} as CopyWalletC
 const EXCLUDING_PATH = [
   ROUTES.STATS.path,
   ROUTES.HOME_LEADERBOARD.path,
-  ROUTES.HOME_FAVORITE.path,
+  ROUTES.FAVORITES.path,
   ROUTES.SUBSCRIPTION.path,
   ROUTES.USER_SUBSCRIPTION.path,
   ROUTES.MY_HISTORY.path,

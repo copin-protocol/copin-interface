@@ -13,6 +13,7 @@ import ErrorFallback from './@helpers/ErrorFallback'
 import QSReader from './@helpers/QSReader'
 import ScrollToTop from './@helpers/ScrollToTop'
 import AppWrapper from './AppWrapper'
+import Favorites from './MyProfile/Favorites'
 
 const Home = lazy(() => import('./Home'))
 const TraderDetails = lazy(() => import('./TraderDetails'))
@@ -53,7 +54,6 @@ function App() {
             <Route exact path={ROUTES.SUBSCRIPTION.path} component={Subscription} />
             <Route exact path={ROUTES.SHARED_POSITION_DETAILS.path} component={SharedPositionDetails}></Route>
             <Route exact path={ROUTES.POSITION_DETAILS.path} component={PositionDetails}></Route>
-            <Route exact path={ROUTES.TOP_OPENINGS.path} component={TopOpenings}></Route>
             <Route exact path={ROUTES.SHARED_BACKTEST_SINGLE.path} component={SharedBacktestSingle}></Route>
             <Route exact path={ROUTES.SHARED_BACKTEST_MULTIPLE.path} component={SharedBacktestMultiple}></Route>
             <Route exact path={ROUTES.STATS.path} component={Stats}></Route>
@@ -62,6 +62,7 @@ function App() {
             <AuthedRoute path={ROUTES.SETTINGS.path} component={Settings}></AuthedRoute>
             <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagement}></AuthedRoute>
             <AuthedRoute path={ROUTES.LINK_BOT_ALERT.path} component={LinkBotTelegram}></AuthedRoute>
+            <AuthedRoute path={ROUTES.FAVORITES.path} component={Favorites}></AuthedRoute>
             <Route path={ROUTES.HOME.path} component={Home}></Route>
 
             <Route path="*" component={NotFound}></Route>

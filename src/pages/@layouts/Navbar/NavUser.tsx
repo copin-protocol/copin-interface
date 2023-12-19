@@ -1,5 +1,16 @@
 import { Trans } from '@lingui/macro'
-import { Clock, Crown, CrownSimple, Key, Notebook, SignOut, UserCircle, Users, Wallet } from '@phosphor-icons/react'
+import {
+  Clock,
+  Crown,
+  CrownSimple,
+  Key,
+  Notebook,
+  SignOut,
+  Star,
+  UserCircle,
+  Users,
+  Wallet,
+} from '@phosphor-icons/react'
 import { ReactNode, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -263,5 +274,12 @@ const otherRoutes = [
     icon: <CrownSimple size={20} />,
     label: <Trans>Subscription Plans</Trans>,
     isWeb3Required: true,
+  },
+  {
+    link: ROUTES.FAVORITES.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].FAVORITES,
+    icon: <Star size={20} />,
+    label: <Trans>Trader Favorites</Trans>,
+    isWeb3Required: false,
   },
 ]

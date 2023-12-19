@@ -59,6 +59,7 @@ export const EVENT_ACTIONS = {
     WALLET_MANAGEMENT: 'wallet_management',
     HISTORY: 'history',
     TOP_OPENING_POSITIONS_ALL: 'top_opening_positions_all',
+    FAVORITES: 'favorites',
     JOIN_DISCORD: 'join_discord',
     JOIN_TELEGRAM: 'join_telegram',
     JOIN_TWITTER: 'join_twitter',

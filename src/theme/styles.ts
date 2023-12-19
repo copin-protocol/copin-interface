@@ -184,6 +184,58 @@ const ThemedGlobalStyle = createGlobalStyle`
     // border-color: ${({ theme }) => theme.colors.neutral6}!important;
     cursor: not-allowed;
   }
+  .circle-pulse {
+    position: relative;
+  }
+  
+  .circle-pulse::before,
+  .circle-pulse::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: currentColor;
+    border-radius: 50%;
+    opacity: 1;
+    transform: scale(0.2);
+    animation: linear 2s infinite circle-pulse-animation;
+  }
+  
+  .circle-pulse::after {
+    animation-delay: 1s;
+  }
+  
+  @keyframes circle-pulse-animation {
+    0% {
+      opacity: 1;
+      transform: scale(0.2);
+    }
+  
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+  @keyframes line-horizontal-animation {
+    0% {
+      transform: scaleX(0);
+      transform-origin: center left;
+    }
+
+    50% {
+      transform: scaleX(1);
+      transform-origin: center left;
+    }
+
+    51% {
+      transform: scaleX(1);
+      transform-origin: center right;
+    }
+
+    100% {
+      transform: scaleX(0);
+      transform-origin: center right;
+    }
+  }
   @keyframes spin {
     0% {
       transform: rotate(0deg);
