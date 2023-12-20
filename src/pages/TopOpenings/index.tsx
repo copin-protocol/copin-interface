@@ -1,12 +1,14 @@
 import { useResponsive } from 'ahooks'
-import { useState } from 'react'
+import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTopOpeningPositionsApi } from 'apis/positionApis'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import useSearchParams from 'hooks/router/useSearchParams'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
+import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 import ListSection from './ListSection'
@@ -17,7 +19,7 @@ const LIMITS = [100, 200, 500]
 const SORTS = [
   {
     text: 'Newest',
-    key: 'createdAt',
+    key: 'openBlockTime',
   },
   {
     text: 'PnL',
@@ -32,8 +34,21 @@ const SORTS = [
 const TopOpenings = () => {
   const { protocol } = useProtocolStore()
   const { lg } = useResponsive()
-  const [limit, setLimit] = useState(LIMITS[0])
-  const [sort, setSort] = useState(SORTS[0])
+  const { searchParams, setSearchParams } = useSearchParams()
+
+  const { limit, sort } = useMemo(() => {
+    let limit = LIMITS[0]
+    let sort = SORTS[0]
+
+    if (searchParams.top && LIMITS.includes(Number(searchParams.top))) {
+      limit = Number(searchParams.top)
+    }
+    if (searchParams.sort) {
+      const foundSort = SORTS.find((sort) => sort.key === searchParams.sort?.toString())
+      if (foundSort) sort = foundSort
+    }
+    return { limit, sort }
+  }, [searchParams])
 
   // const tested = useRef(false)
 
@@ -49,7 +64,7 @@ const TopOpenings = () => {
         limit,
         offset: 0,
         sortBy: sort.key,
-        sortType: 'desc',
+        sortType: SortTypeEnum.DESC,
       }).then((data) => data.data),
     {
       retry: 0,
@@ -82,7 +97,7 @@ const TopOpenings = () => {
                       key={option}
                       selected={option === limit}
                       text={option}
-                      onClick={() => setLimit(option)}
+                      onClick={() => setSearchParams({ top: option.toString() })}
                     />
                   ))}
                 </>
@@ -90,7 +105,7 @@ const TopOpenings = () => {
             >
               <Type.BodyBold>{limit}</Type.BodyBold>
             </Dropdown>
-            <Type.BodyBold sx={{ mt: '-1px' }}>By</Type.BodyBold>
+            <Type.BodyBold sx={{ mt: '-1px' }}>Open Interest By</Type.BodyBold>
             <Dropdown
               buttonSx={{
                 border: 'none',
@@ -109,7 +124,7 @@ const TopOpenings = () => {
                       key={option.key}
                       selected={option.key === sort.key}
                       text={option.text}
-                      onClick={() => setSort(option)}
+                      onClick={() => setSearchParams({ sort: option.key })}
                     />
                   ))}
                 </>
@@ -130,7 +145,7 @@ const TopOpenings = () => {
             </Box>
           )}
           <Box flex={[1, 1, 1, '0 0 650px']}>
-            <ListSection data={data} total={limit} />
+            <ListSection data={data} sort={sort.key} total={Math.min(limit, data?.length ?? 0)} isLoading={false} />
           </Box>
         </Flex>
 

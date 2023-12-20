@@ -54,6 +54,7 @@ export interface TableProps<T, K> {
   tableBodySx?: any
   tableBodyWrapperSx?: any
   checkIsTop?: (data: T) => boolean
+  scrollToTopDependencies?: any[]
   // topIndex?: number
   // title?: ReactNode
   // subTitle?: ReactNode

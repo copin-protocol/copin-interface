@@ -53,7 +53,7 @@ export default function TopOpeningsSection({ protocol }: { protocol: ProtocolEnu
         </Box>
       </Flex>
       <Box sx={{ flex: '1 0 0', overflowX: 'auto', overflowY: 'hidden' }}>
-        <OpeningsTable data={data?.data} isLoading={isLoading} />
+        <OpeningsTable data={data?.data} isLoading={isLoading} page={1} />
       </Box>
     </Flex>
   )

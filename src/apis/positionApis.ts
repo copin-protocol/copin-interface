@@ -1,14 +1,32 @@
 import { ChartData, ChartDataV2 } from 'entities/chart.d'
 import { PositionStatisticCounter, ResponsePositionData } from 'entities/trader.d'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { capitalizeFirstLetter } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
 import requester from './index'
 import { normalizePositionData, normalizePositionResponse } from './normalize'
-import { GetApiParams } from './types'
+import { GetApiParams, RequestBodyApiData } from './types'
 
 const SERVICE = 'position'
+
+const normalizePayload = (body: RequestBodyApiData) => {
+  let sortBy = body.sortBy
+  if (sortBy === 'pnl') {
+    sortBy = 'realised' + capitalizeFirstLetter(sortBy)
+  }
+  if (!body.ranges) return { ...body, sortBy }
+  const ranges = body.ranges.map((range) => ({
+    ...range,
+  }))
+  ranges.forEach((range) => {
+    if (range.fieldName === 'pnl') {
+      range.fieldName = 'realised' + capitalizeFirstLetter(range.fieldName)
+    }
+  })
+  return { ...body, ranges, sortBy }
+}
 
 export async function getTopOpeningPositionsApi({
   protocol,
@@ -16,15 +34,19 @@ export async function getTopOpeningPositionsApi({
   offset = 0,
   sortBy,
   sortType,
-}: GetApiParams & { protocol: ProtocolEnum; sortBy?: string; sortType?: string }) {
-  const params: Record<string, any> = {}
-  if (!!sortBy) params.sort_by = sortBy
-  if (!!sortType) params.sort_type = sortType
-  if (params.sort_by === 'pnl') {
-    params.sort_by = 'realisedPnl'
-  }
+}: GetApiParams & { protocol: ProtocolEnum; sortBy?: string; sortType?: SortTypeEnum }) {
   return requester
-    .get(`${protocol}/top-positions/opening`, { params: { limit, offset, ...params } })
+    .post(
+      `${protocol}/top-positions/opening`,
+      normalizePayload({
+        pagination: {
+          limit,
+          offset,
+        },
+        sortBy,
+        sortType,
+      })
+    )
     .then((res: any) => normalizePositionResponse(res.data as ApiListResponse<ResponsePositionData>))
 }
 

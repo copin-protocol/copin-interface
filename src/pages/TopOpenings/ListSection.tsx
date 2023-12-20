@@ -8,8 +8,19 @@ import { Box, Flex } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { pageToOffset } from 'utils/helpers/transform'
 
-export default function ListSection({ data, total }: { total: number; data: PositionData[] | undefined }) {
+export default function ListSection({
+  data,
+  total,
+  sort,
+  isLoading,
+}: {
+  total: number
+  sort: string
+  data: PositionData[] | undefined
+  isLoading: boolean
+}) {
   const totalRef = useRef(total)
+  const sortRef = useRef(sort)
   const { currentPage, currentLimit, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
     pageName: `page`,
     limitName: 'limit',
@@ -20,16 +31,17 @@ export default function ListSection({ data, total }: { total: number; data: Posi
   const pagedData = data?.slice(offset, offset + currentLimit)
 
   useEffect(() => {
-    if (totalRef.current !== total) {
+    if (totalRef.current !== total || sortRef.current !== sort) {
       totalRef.current = total
+      sortRef.current = sort
       changeCurrentPage(1)
     }
-  }, [total])
+  }, [total, sort])
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', bg: 'neutral5', pt: 2 }}>
       <Box sx={{ flex: '1', overflowX: 'auto', overflowY: 'hidden' }}>
-        <OpeningsTable data={pagedData} isLoading={false} />
+        <OpeningsTable data={pagedData} isLoading={isLoading} page={currentPage} />
       </Box>
       <Box px={2} sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
         <PaginationWithLimit

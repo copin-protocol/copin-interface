@@ -79,7 +79,15 @@ export const columns: ColumnData<PositionData, ExternalSource>[] = [
   },
 ]
 
-export default function TopOpeningsWindow({ isLoading, data }: { isLoading: boolean; data?: PositionData[] }) {
+export default function TopOpeningsWindow({
+  isLoading,
+  data,
+  page,
+}: {
+  isLoading: boolean
+  data?: PositionData[]
+  page: number
+}) {
   const { prices } = useRealtimeUsdPricesStore()
   const isMobile = useIsMobile()
   const history = useHistory()
@@ -102,13 +110,14 @@ export default function TopOpeningsWindow({ isLoading, data }: { isLoading: bool
   }
 
   return (
-    <>
+    <div style={{ height: '100%' }}>
       <Table
         restrictHeight
         wrapperSx={{
           minWidth: 650,
         }}
         data={data}
+        scrollToTopDependencies={[page]}
         columns={columns}
         externalSource={externalSource}
         isLoading={isLoading}
@@ -135,6 +144,6 @@ export default function TopOpeningsWindow({ isLoading, data }: { isLoading: bool
           )}
         </Container>
       </Drawer>
-    </>
+    </div>
   )
 }
