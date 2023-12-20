@@ -1,7 +1,5 @@
 import { Trans } from '@lingui/macro'
-import React from 'react'
 import { useMutation } from 'react-query'
-import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { createTraderAlertApi } from 'apis/alertApis'
@@ -14,13 +12,12 @@ import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import ROUTES from 'utils/config/routes'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
 import NoAlertList from './NoAlertList'
 
 export default function TraderLastViewed({ reload }: { reload: () => void }) {
-  const { traderLastViewed } = useTraderLastViewed()
+  const { traderLastViewed = [] } = useTraderLastViewed()
   const { botAlert, handleGenerateLinkBot, isLoading, isGeneratingLink } = useBotAlertContext()
 
   const { isAuthenticated } = useAuthContext()
@@ -58,20 +55,39 @@ export default function TraderLastViewed({ reload }: { reload: () => void }) {
   }
 
   return (
-    <Box sx={{ p: [3, 3, 0] }}>
-      {traderLastViewed && traderLastViewed.length > 0 ? (
-        <Box>
-          <Type.Caption color="neutral3">
-            <Trans>Last Viewed</Trans>
+    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
+      <NoAlertList />
+      {traderLastViewed && traderLastViewed.length > 0 && (
+        <Box
+          sx={{
+            flex: '1 0 0',
+            overflow: 'auto',
+            bg: 'neutral6',
+            borderTop: 'small',
+            borderTopColor: 'neutral4',
+            px: 3,
+            py: 1,
+          }}
+        >
+          <Type.Caption mb={2} color="neutral3">
+            <Trans>Recommend</Trans>
           </Type.Caption>
-          <Flex flexDirection="column">
-            {traderLastViewed?.map((data, index) => (
+          <Flex
+            flex="1"
+            flexDirection="column"
+            sx={{
+              overflow: 'auto',
+              '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4' },
+              '& > *:last-child': { borderBottom: 'none' },
+            }}
+          >
+            {traderLastViewed.map((data, index) => (
               <Flex
                 key={`${index}-${data.protocol}-${data.address}`}
                 justifyContent={'space-between'}
                 alignItems={'center'}
                 py={2}
-                sx={{ gap: [3, 4], borderBottom: 'small', borderColor: 'neutral4' }}
+                sx={{ gap: [3, 4] }}
               >
                 <AccountWithProtocol protocol={data.protocol} address={data.address} />
                 <Button
@@ -86,15 +102,8 @@ export default function TraderLastViewed({ reload }: { reload: () => void }) {
               </Flex>
             ))}
           </Flex>
-          <Link to={ROUTES.HOME_EXPLORER.path}>
-            <Button mt={3} type="button" variant="ghostPrimary" sx={{ p: 0 }}>
-              <Trans>Explorer new traders</Trans>
-            </Button>
-          </Link>
         </Box>
-      ) : (
-        <NoAlertList />
       )}
-    </Box>
+    </Flex>
   )
 }

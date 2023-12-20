@@ -10,7 +10,7 @@ import { deleteTraderAlertApi, getTraderAlertListApi } from 'apis/alertApis'
 import ToastBody from 'components/@ui/ToastBody'
 import UnsubscribeAlertModal from 'components/Modal/UnsubscribeAlertModal'
 import { TraderAlertData } from 'entities/alert'
-import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
+import useBotAlertContext, { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
 import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useMyProfile from 'hooks/store/useMyProfile'
@@ -29,9 +29,17 @@ import { pageToOffset } from 'utils/helpers/transform'
 import DesktopItem from './DesktopItem'
 import MobileItem from './MobileItem'
 import TraderLastViewed from './TraderLastViewed'
+import UnlinkAlertModal from './UnlinkAlertModal'
 
 const LIMIT = 10
 export default function AlertList() {
+  return (
+    <BotAlertProvider>
+      <AlertListComponent />
+    </BotAlertProvider>
+  )
+}
+function AlertListComponent() {
   const { myProfile } = useMyProfile()
   const isPremiumUser = useIsPremium()
   const { md } = useResponsive()
@@ -40,7 +48,11 @@ export default function AlertList() {
   const [currentAlert, setCurrentAlert] = useState<TraderAlertData | undefined>()
   const [openModal, setOpenModal] = useState(false)
 
-  const { data, isLoading, refetch } = useQuery(
+  const {
+    data,
+    isLoading,
+    refetch: refetchList,
+  } = useQuery(
     [QUERY_KEYS.GET_TRADER_ALERTS, currentPage, myProfile?.id],
     () => getTraderAlertListApi({ limit: LIMIT, offset: pageToOffset(currentPage, LIMIT) }),
     {
@@ -50,7 +62,7 @@ export default function AlertList() {
   )
 
   const reload = () => {
-    refetch()
+    refetchList()
   }
 
   const { mutate: deleteTraderAlert, isLoading: submitting } = useMutation(deleteTraderAlertApi, {
@@ -78,6 +90,21 @@ export default function AlertList() {
     if (currentAlert) {
       deleteTraderAlert(currentAlert?.id)
     }
+  }
+
+  const { botAlert, handleGenerateLinkBot, refetch } = useBotAlertContext()
+  const showUnlinkButton = !!botAlert?.chatId
+  const [showUnlinkModal, setShowUnlinkModal] = useState(false)
+  const onClickUnlinkButton = () => {
+    setShowUnlinkModal(true)
+  }
+  const onDismissUnlinkModal = () => {
+    setShowUnlinkModal(false)
+    refetch()
+  }
+  const showLinkButton = !botAlert?.chatId && !!data?.data?.length
+  const onClickLinkButton = () => {
+    handleGenerateLinkBot()
   }
 
   return (
@@ -125,21 +152,22 @@ export default function AlertList() {
               flexDirection: 'column',
               gap: [2, 2, 3],
               overflow: 'auto',
-              p: [0, 0, 3],
             }}
           >
             {isLoading && <Loading />}
-            {!isLoading && !data?.data?.length && (
-              <BotAlertProvider>
-                <TraderLastViewed reload={reload} />
-              </BotAlertProvider>
-            )}
-            {data?.data?.map((item) =>
-              md ? (
-                <DesktopItem key={item.id} data={item} onSelect={onSelect} submitting={isLoading || submitting} />
-              ) : (
-                <MobileItem key={item.id} data={item} onSelect={onSelect} submitting={isLoading || submitting} />
-              )
+            {!isLoading && !data?.data?.length && <TraderLastViewed reload={reload} />}
+            {!isLoading && !!data?.data.length && (
+              <>
+                <Box sx={{ p: [0, 0, 3] }}>
+                  {data?.data?.map((item) =>
+                    md ? (
+                      <DesktopItem key={item.id} data={item} onSelect={onSelect} submitting={isLoading || submitting} />
+                    ) : (
+                      <MobileItem key={item.id} data={item} onSelect={onSelect} submitting={isLoading || submitting} />
+                    )
+                  )}
+                </Box>
+              </>
             )}
           </Flex>
           <Box sx={{ backgroundColor: 'neutral7' }}>
@@ -156,15 +184,42 @@ export default function AlertList() {
                 borderColor: 'neutral4',
               }}
             />
-            <Box bg="neutral5" px={3} py={2} sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
+            <Flex
+              bg="neutral5"
+              px={3}
+              py={2}
+              sx={{
+                borderTop: 'small',
+                borderColor: 'neutral4',
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                rowGap: 2,
+              }}
+            >
               <Type.Caption color={'neutral3'}>
-                Using{' '}
-                <a href={generateTelegramBotAlertUrl()} target="_blank" rel="noreferrer">
-                  Copin Telegram Bot
-                </a>{' '}
-                to get notifications from traders.
+                Use{' '}
+                {showLinkButton ? (
+                  'Copin Telegram Bot'
+                ) : (
+                  <a href={generateTelegramBotAlertUrl()} target="_blank" rel="noreferrer">
+                    Copin Telegram Bot
+                  </a>
+                )}{' '}
+                to get notifications from traders
               </Type.Caption>
-            </Box>
+              {showUnlinkButton && (
+                <Type.Caption color="red2" sx={{ cursor: 'pointer' }} onClick={onClickUnlinkButton}>
+                  <Trans>Unlink Account</Trans>
+                </Type.Caption>
+              )}
+              {showLinkButton && (
+                <Type.Caption color="primary1" sx={{ cursor: 'pointer' }} onClick={onClickLinkButton}>
+                  <Trans>Link Account</Trans>
+                </Type.Caption>
+              )}
+            </Flex>
           </Box>
         </Flex>
       </Flex>
@@ -176,6 +231,7 @@ export default function AlertList() {
           isConfirming={false}
         />
       )}
+      {showUnlinkModal && <UnlinkAlertModal onDismiss={onDismissUnlinkModal} />}
     </>
   )
 }

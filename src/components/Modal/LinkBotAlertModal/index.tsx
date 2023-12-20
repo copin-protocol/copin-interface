@@ -38,7 +38,7 @@ export default function LinkBotAlertModal({ state, onDismiss }: { state: string;
             icon={<ArrowSquareOut />}
             direction="right"
             sx={{ flex: 1 }}
-            onClick={() => window.location.replace(generateTelegramBotAlertUrl(state))}
+            onClick={() => window.open(generateTelegramBotAlertUrl(state), '_top')}
           >
             <Trans>Open Telegram Bot</Trans>
           </ButtonWithIcon>

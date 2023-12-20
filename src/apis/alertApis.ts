@@ -38,3 +38,7 @@ export async function deleteTraderAlertApi(alertId: string) {
 export async function generateLinkBotAlertApi() {
   return requester.post(`${SERVICE}/state`).then((res: any) => res.data)
 }
+
+export async function unlinkToBotAlertApi() {
+  return requester.delete(`${SERVICE}/unlink`).then((res: any) => res?.data)
+}

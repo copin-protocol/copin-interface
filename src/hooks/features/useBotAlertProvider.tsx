@@ -11,13 +11,14 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
 export interface BotAlertContextValues {
-  botAlert?: BotAlertData
+  botAlert: BotAlertData | undefined
   isLoading: boolean
   isGeneratingLink: boolean
-  isOpenLinkBotModal: boolean
-  currentState?: string
-  setIsOpenLinkBotModal: (data: boolean) => void
   handleGenerateLinkBot: () => void
+  refetch: () => void
+  // isOpenLinkBotModal: boolean
+  // currentState?: string
+  // setIsOpenLinkBotModal: (data: boolean) => void
 }
 
 export const BotAlertContext = createContext({} as BotAlertContextValues)
@@ -27,7 +28,11 @@ export function BotAlertProvider({ children }: { children: ReactNode }) {
   const [isOpenLinkBotModal, setIsOpenLinkBotModal] = useState(false)
   const [currentState, setCurrentState] = useState<string | undefined>()
 
-  const { data: botAlert, isLoading } = useQuery([QUERY_KEYS.GET_BOT_ALERT, myProfile?.id], () => getBotAlertApi(), {
+  const {
+    data: botAlert,
+    isLoading,
+    refetch,
+  } = useQuery([QUERY_KEYS.GET_BOT_ALERT, myProfile?.id], () => getBotAlertApi(), {
     enabled: !!myProfile?.id,
     retry: 0,
   })
@@ -45,23 +50,25 @@ export function BotAlertProvider({ children }: { children: ReactNode }) {
   const handleGenerateLinkBot = () => {
     generateLinkBot()
   }
+  const handleDismiss = () => {
+    setIsOpenLinkBotModal(false)
+  }
 
   const contextValue: BotAlertContextValues = {
     botAlert,
     isLoading,
     isGeneratingLink,
-    isOpenLinkBotModal,
-    setIsOpenLinkBotModal,
-    currentState,
     handleGenerateLinkBot,
+    refetch,
+    // isOpenLinkBotModal,
+    // setIsOpenLinkBotModal,
+    // currentState,
   }
 
   return (
     <BotAlertContext.Provider value={contextValue}>
       {children}
-      {isOpenLinkBotModal && currentState && (
-        <LinkBotAlertModal state={currentState} onDismiss={() => setIsOpenLinkBotModal(false)} />
-      )}
+      {isOpenLinkBotModal && currentState && <LinkBotAlertModal state={currentState} onDismiss={handleDismiss} />}
     </BotAlertContext.Provider>
   )
 }
