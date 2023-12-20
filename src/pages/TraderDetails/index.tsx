@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
-import { getTraderApi } from 'apis/traderApis'
+import { getTraderApi, getTraderStatisticApi } from 'apis/traderApis'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NotFound from 'components/@ui/NotFound'
 import { TableSortProps } from 'components/@ui/Table/types'
@@ -54,15 +54,16 @@ export default function TraderDetails() {
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
     [QUERY_KEYS.GET_TRADER_DETAIL, _address, protocol, isPremiumUser],
-    () =>
-      Promise.all(
-        timeFilterOptions
-          .map((option) => getTraderApi({ protocol, account: _address, type: option.id, returnRanking: true }))
-          .reverse()
-      ),
+    () => getTraderStatisticApi({ protocol, account: _address }),
     {
       enabled: !!_address,
       retry: 0,
+      select: (data) =>
+        timeFilterOptions
+          .map((option) => {
+            return data[option.id]
+          })
+          .reverse(),
     }
   )
 

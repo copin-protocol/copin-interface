@@ -1,7 +1,13 @@
 // import requester from 'apis/index'
 // import { TraderData } from 'entities/trader'
 // import { ApiListResponse } from './api'
-import { CheckAvailableResultData, ResponsePositionData, ResponseTraderData, TraderCounter } from 'entities/trader.d'
+import {
+  CheckAvailableResultData,
+  ResponsePositionData,
+  ResponseTraderData,
+  TraderCounter,
+  TraderData,
+} from 'entities/trader.d'
 import { PositionSortPros } from 'pages/TraderDetails'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { capitalizeFirstLetter } from 'utils/helpers/transform'
@@ -196,4 +202,16 @@ export async function getTradersByTimeRangeApi({
   return requester
     .post(`${protocol}/${SERVICE}/custom/filter`, normalizePayload(body), { params })
     .then((res: any) => normalizeTraderResponse(res.data as ApiListResponse<ResponseTraderData>))
+}
+
+export async function getTraderStatisticApi({ protocol, account }: { protocol: ProtocolEnum; account: string }) {
+  return requester.get(apiWrapper(`${protocol}/${SERVICE}/statistic/trader/${account}`)).then((res: any) => {
+    const data = res.data as { [key in TimeFilterByEnum]: ResponseTraderData }
+    const normalizedData = {} as { [key in TimeFilterByEnum]: TraderData }
+    for (const key in data) {
+      const _key = key as unknown as TimeFilterByEnum
+      normalizedData[_key] = normalizeTraderData(data[_key])
+    }
+    return normalizedData
+  })
 }
