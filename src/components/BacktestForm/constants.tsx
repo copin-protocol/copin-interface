@@ -33,6 +33,7 @@ export const getDefaultBackTestFormValues: (protcol: ProtocolEnum) => BackTestFo
   volumeProtection: true,
   lookBackOrders: 10,
   stopLossAmount: undefined,
+  maxMarginPerPosition: null,
   reverseCopy: false,
 })
 

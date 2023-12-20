@@ -9,6 +9,6 @@ export interface BackTestFormValues {
   volumeProtection: boolean
   lookBackOrders: number
   stopLossAmount?: number
-  maxMarginPerPosition?: number
+  maxMarginPerPosition: number | null
   reverseCopy: boolean
 }

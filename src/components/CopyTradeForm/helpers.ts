@@ -38,6 +38,8 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   }
   if (typeof maxVolMultiplier === 'number' && maxVolMultiplier > 0) {
     result.maxMarginPerPosition = maxVolMultiplier * volume
+  } else {
+    result.maxMarginPerPosition = null
   }
   result.skipLowLeverage = !!skipLowLeverage
   result.exchange = exchange
@@ -56,9 +58,10 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
     stopLossAmount: formData.stopLossAmount,
     volumeProtection: formData.volumeProtection,
     lookBackOrders: formData.volumeProtection ? formData.lookBackOrders : undefined,
-    maxVolMultiplier: formData.maxMarginPerPosition
-      ? Number(formData.maxMarginPerPosition / formData.volume)
-      : undefined,
+    maxVolMultiplier:
+      formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0
+        ? Number(formData.maxMarginPerPosition / formData.volume)
+        : null,
     skipLowLeverage: formData.skipLowLeverage,
     protocol: formData.protocol,
     exchange: formData.exchange,

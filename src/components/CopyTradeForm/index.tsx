@@ -9,6 +9,7 @@ import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
+import Checkbox from 'theme/Checkbox'
 import InputField from 'theme/InputField'
 import Label from 'theme/InputField/Label'
 import NumberInputField from 'theme/InputField/NumberInputField'
@@ -87,6 +88,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const maxMarginPerPosition = watch('maxMarginPerPosition')
   const tokenAddresses = watch('tokenAddresses')
   const protocol = watch('protocol')
+  const agreement = watch('agreement')
 
   const pairs =
     protocol &&
@@ -279,10 +281,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               name={fieldName.leverage}
               control={control}
               error=""
-              minValue={1}
-              maxValue={10}
+              minValue={2}
+              maxValue={20}
               stepValue={1}
-              marksStep={1}
+              marksStep={2}
               marksUnit={'x'}
             />
           </Box>
@@ -392,13 +394,24 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           }
         />
 
+        <Box mt={3}>
+          <Checkbox {...register('agreement')}>
+            <Type.Caption>
+              I have read and I agree to the{' '}
+              <a href={LINKS.agreement} target="_blank" rel="noreferrer">
+                Copytrading Service Agreement
+              </a>
+            </Type.Caption>
+          </Checkbox>
+        </Box>
+
         <Box sx={{ gap: 4 }} mt={3}>
           <Button
             block
             variant="primary"
             onClick={() => handleSubmit(onSubmit)()}
             isLoading={isSubmitting}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !agreement}
           >
             {submitButtonText}
           </Button>

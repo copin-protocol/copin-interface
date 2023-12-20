@@ -16,9 +16,10 @@ export function getFormValuesFromRequestData(requestData: RequestBackTestData | 
     volumeProtection: requestData.volumeProtection ?? true,
     lookBackOrders: requestData.lookBackOrders ?? 10,
     stopLossAmount: requestData.enableStopLoss ? requestData.stopLossAmount : undefined,
-    maxMarginPerPosition: requestData.maxVolMultiplier
-      ? requestData.maxVolMultiplier * requestData.orderVolume
-      : undefined,
+    maxMarginPerPosition:
+      requestData.maxVolMultiplier && requestData.maxVolMultiplier > 0
+        ? requestData.maxVolMultiplier * requestData.orderVolume
+        : null,
     reverseCopy: requestData.reverseCopy ?? false,
   }
   return result

@@ -20,7 +20,7 @@ export interface RequestCopyTradeData {
   serviceKey?: string
   title?: string
   reverseCopy?: boolean
-  maxVolMultiplier?: number
+  maxVolMultiplier: number | null
   volumeProtection?: boolean
   lookBackOrders?: number
   skipLowLeverage?: boolean
@@ -52,7 +52,7 @@ export interface CopyTradeData {
   serviceKey?: string
   title?: string
   reverseCopy: boolean
-  maxVolMultiplier?: number
+  maxVolMultiplier: number | null
   skipLowLeverage?: boolean
   exchange: CopyTradePlatformEnum
   copyWalletId: string

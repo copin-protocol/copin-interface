@@ -30,6 +30,7 @@ const commonSchema = {
     then: (schema) => schema.required().min(0.1).label('Max Volume Multiplier'),
   }),
   skipLowLeverage: yup.boolean(),
+  agreement: yup.boolean().isTrue(),
 }
 
 export const copyTradeFormSchema = yup.object({
@@ -84,8 +85,9 @@ export interface CopyTradeFormValues {
   title: string
   reverseCopy: boolean
   duplicateToAddress?: string
-  maxMarginPerPosition: number | undefined
+  maxMarginPerPosition: number | null
   skipLowLeverage: boolean
+  agreement: boolean
   // privateKey: string
   // bingXApiKey: string
   // bingXSecretKey: string
@@ -107,6 +109,7 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   duplicateToAddress: 'duplicateToAddress',
   maxMarginPerPosition: 'maxMarginPerPosition',
   skipLowLeverage: 'skipLowLeverage',
+  agreement: 'agreement',
   // privateKey: 'privateKey',
   // bingXApiKey: 'bingXApiKey',
   // bingXSecretKey: 'bingXSecretKey',
@@ -127,8 +130,9 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   title: '',
   reverseCopy: false,
   duplicateToAddress: '',
-  maxMarginPerPosition: undefined,
+  maxMarginPerPosition: null,
   skipLowLeverage: false,
+  agreement: false,
   // privateKey: '',
   // bingXApiKey: '',
   // bingXSecretKey: '',

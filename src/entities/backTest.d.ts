@@ -15,7 +15,7 @@ export interface RequestBackTestData {
   enableStopLoss?: boolean
   stopLossAmount?: number
   reverseCopy?: boolean
-  maxVolMultiplier?: number
+  maxVolMultiplier?: number | null
   isReturnPositions?: boolean
 }
 

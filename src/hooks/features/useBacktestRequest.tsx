@@ -93,10 +93,12 @@ export default function useBacktestRequest(
         tokenAddresses: formData.tokenAddresses,
         reverseCopy: formData.reverseCopy,
         volumeProtection: formData.volumeProtection,
-        maxVolMultiplier: formData.maxMarginPerPosition
-          ? Number(formData.maxMarginPerPosition / formData.orderVolume)
-          : undefined,
+        maxVolMultiplier:
+          formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0
+            ? formData.maxMarginPerPosition / formData.orderVolume
+            : null,
       }
+      console.log('requestData', requestData)
       if (formData.volumeProtection) {
         requestData.volumeProtection = true
         requestData.lookBackOrders = formData.lookBackOrders

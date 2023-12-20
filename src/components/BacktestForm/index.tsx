@@ -180,9 +180,9 @@ export default function BacktestForm({
             control={control}
             error=""
             minValue={1}
-            maxValue={10}
+            maxValue={20}
             stepValue={1}
-            marksStep={1}
+            marksStep={2}
             marksUnit={'x'}
           />
         </Box>
