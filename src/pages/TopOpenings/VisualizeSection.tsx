@@ -5,19 +5,18 @@ import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 
-import LoadingBar from './LoadingBar'
 import OpeningPositionsBubble from './OpeningPositionsBubble'
 
 const VisualizeSection = ({
   protocol,
   data,
   isLoading,
-  isRefetching,
-}: {
+}: // isRefetching,
+{
   protocol: ProtocolEnum
   data: PositionData[] | undefined
   isLoading: boolean
-  isRefetching: boolean
+  // isRefetching: boolean
 }) => {
   // const queryClient = useQueryClient()
   const longVol = data ? data.filter((item) => item.isLong).reduce((prev, cur) => (prev += cur.size), 0) : undefined
@@ -55,14 +54,14 @@ const VisualizeSection = ({
             justifyContent: 'center',
           }}
         >
-          <Box sx={{ position: 'absolute', top: 0, right: 0, width: '100%' }}>
+          {/* <Box sx={{ position: 'absolute', top: 0, right: 0, width: '100%' }}>
             <LoadingBar isRefetching={isRefetching} />
             {isRefetching && (
               <Box sx={{ position: 'absolute', top: 0, right: '8px' }}>
                 <Loading />
               </Box>
             )}
-          </Box>
+          </Box> */}
 
           {!data && isLoading && <Loading />}
           {data && <OpeningPositionsBubble data={data} protocol={protocol} />}
