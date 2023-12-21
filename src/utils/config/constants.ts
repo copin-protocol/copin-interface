@@ -30,7 +30,7 @@ export const LINKS = {
   notice: 'https://copin.substack.com/p/copin-profile-login-updates-road',
   bingXGuarantee:
     'https://support.bingx.com/hc/en-001/articles/21313115553945-Perpetual-Futures-Exclusive-Guaranteed-Price-Launched-to-Prevent-Slippage-Losses',
-  agreement: 'https://docs.copin.io/agreement',
+  agreement: 'https://docs.copin.io/another/agreement',
 }
 
 export const NAVBAR_HEIGHT = 60
