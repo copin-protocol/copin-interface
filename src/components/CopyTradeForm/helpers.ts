@@ -21,6 +21,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     protocol,
     exchange,
     copyWalletId,
+    copyAll,
   } = copyTradeData
   if (account) result.account = account
   if (title) result.title = title
@@ -44,6 +45,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   result.skipLowLeverage = !!skipLowLeverage
   result.exchange = exchange
   result.copyWalletId = copyWalletId
+  result.copyAll = !!copyAll
   return result
 }
 
@@ -51,7 +53,7 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
   return {
     title: formData.title,
     volume: formData.volume,
-    tokenAddresses: formData.tokenAddresses,
+    tokenAddresses: formData.copyAll ? [] : formData.tokenAddresses,
     leverage: formData.leverage,
     reverseCopy: formData.reverseCopy,
     enableStopLoss: formData.stopLossAmount && formData.stopLossAmount > 0 ? true : false,
@@ -66,5 +68,6 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
     protocol: formData.protocol,
     exchange: formData.exchange,
     copyWalletId: formData.copyWalletId,
+    copyAll: formData.copyAll,
   }
 }

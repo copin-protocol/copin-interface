@@ -24,7 +24,7 @@ import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 export type ExternalSource = {
   prices: UsdPrices
 }
-export const columns: ColumnData<PositionData, ExternalSource>[] = [
+const columns: ColumnData<PositionData, ExternalSource>[] = [
   {
     title: 'Time',
     dataIndex: 'openBlockTime',

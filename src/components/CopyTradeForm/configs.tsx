@@ -14,7 +14,6 @@ const commonSchema = {
     otherwise: (schema) => schema.required().min(0).label('Margin'),
   }),
   leverage: yup.number().required().min(2).label('Leverage'),
-  tokenAddresses: yup.array(yup.string()).required().min(1).label('Trading Pairs'),
   stopLossAmount: yup.number().when('enableStopLoss', {
     is: true,
     then: (schema) => schema.required().min(0.1).label('Stop Loss Amount'),
@@ -31,6 +30,14 @@ const commonSchema = {
   }),
   skipLowLeverage: yup.boolean(),
   agreement: yup.boolean().isTrue(),
+  copyAll: yup.boolean(),
+  tokenAddresses: yup
+    .array(yup.string())
+    .when('copyAll', {
+      is: false,
+      then: (schema) => schema.required().min(1),
+    })
+    .label('Trading Pairs'),
 }
 
 export const copyTradeFormSchema = yup.object({
@@ -40,21 +47,6 @@ export const copyTradeFormSchema = yup.object({
     .mixed()
     .oneOf([CopyTradePlatformEnum.GMX, CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.SYNTHETIX])
     .label('Exchange'),
-  // privateKey: yup.string().when('exchange', {
-  //   is: CopyTradePlatformEnum.GMX,
-  //   then: (schema) => schema.required().label('Private Key'),
-  //   otherwise: (schema) => schema.nullable(),
-  // }),
-  // bingXApiKey: yup.string().when('exchange', {
-  //   is: CopyTradePlatformEnum.BINGX,
-  //   then: (schema) => schema.required().label('BingX Api Key'),
-  //   otherwise: (schema) => schema.nullable(),
-  // }),
-  // bingXSecretKey: yup.string().when('exchange', {
-  //   is: CopyTradePlatformEnum.BINGX,
-  //   then: (schema) => schema.required().label('BingX Secret Key'),
-  //   otherwise: (schema) => schema.nullable(),
-  // }),
   copyWalletId: yup.string().required().label('Wallet'),
 })
 
@@ -88,9 +80,7 @@ export interface CopyTradeFormValues {
   maxMarginPerPosition: number | null
   skipLowLeverage: boolean
   agreement: boolean
-  // privateKey: string
-  // bingXApiKey: string
-  // bingXSecretKey: string
+  copyAll: boolean
 }
 export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFormValues } = {
   protocol: 'protocol',
@@ -110,9 +100,7 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   maxMarginPerPosition: 'maxMarginPerPosition',
   skipLowLeverage: 'skipLowLeverage',
   agreement: 'agreement',
-  // privateKey: 'privateKey',
-  // bingXApiKey: 'bingXApiKey',
-  // bingXSecretKey: 'bingXSecretKey',
+  copyAll: 'copyAll',
 }
 
 export const defaultCopyTradeFormValues: CopyTradeFormValues = {
@@ -133,9 +121,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   maxMarginPerPosition: null,
   skipLowLeverage: false,
   agreement: false,
-  // privateKey: '',
-  // bingXApiKey: '',
-  // bingXSecretKey: '',
+  copyAll: false,
 }
 
 interface ExchangeOptions {

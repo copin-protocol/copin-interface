@@ -69,7 +69,6 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     setValue,
     handleSubmit,
     clearErrors,
-    trigger,
     setFocus,
     reset,
     formState: { errors },
@@ -86,18 +85,17 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const platform = watch('exchange')
   const stopLossAmount = watch('stopLossAmount')
   const maxMarginPerPosition = watch('maxMarginPerPosition')
-  const tokenAddresses = watch('tokenAddresses')
+  const tokenAddresses = watch('tokenAddresses') || []
   const protocol = watch('protocol')
   const agreement = watch('agreement')
+  const copyAll = watch('copyAll')
 
   const pairs =
     protocol &&
     getTokenTradeList(protocol).filter((tokenTrade) => !TOKEN_TRADE_IGNORE[platform]?.includes(tokenTrade.name))
-  const addressPairs = pairs?.map((e) => e.address)
   const pairOptions = pairs?.map((e) => {
     return { value: e.address, label: e.name }
   })
-  pairOptions?.unshift({ value: 'all', label: 'All Tokens' })
 
   const account = watch('account')
   const duplicateToAddress = watch('duplicateToAddress')
@@ -133,7 +131,6 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   }, [])
 
   const permissionToSelectProtocol = useCopyTradePermission(true)
-  const isSelectedAlltokens = tokenAddresses?.length === addressPairs?.length
 
   return (
     <>
@@ -236,20 +233,27 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           <FundChecking walletId={copyWalletId} amount={volume} />
         </Box>
         <Box mt={24}>
-          <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
-          <Flex sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}>
+          <Flex mb={2} sx={{ alignItems: 'center', gap: 12, '& *': { mb: '0 !important' } }}>
+            <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
+            <SwitchInputField
+              switchLabel="Follow the trader"
+              labelColor="neutral1"
+              {...register(fieldName.copyAll)}
+              error={errors.copyAll?.message}
+              wrapperSx={{ flexDirection: 'row-reverse', '*': { fontWeight: 400 } }}
+            />
+          </Flex>
+          <Box
+            display={copyAll ? 'none' : 'flex'}
+            sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}
+          >
             <Select
-              menuIsOpen={isSelectedAlltokens ? false : undefined}
               closeMenuOnSelect={false}
               className="select-container pad-right-0"
               options={pairOptions}
               value={pairOptions?.filter?.((option) => tokenAddresses.includes(option.value))}
-              onChange={(newValue: any, actionMeta: any) => {
+              onChange={(newValue: any) => {
                 clearErrors(fieldName.tokenAddresses)
-                if (actionMeta?.option?.value === 'all') {
-                  setValue(fieldName.tokenAddresses, addressPairs)
-                  return
-                }
                 setValue(
                   fieldName.tokenAddresses,
                   newValue?.map((data: any) => data.value)
@@ -261,7 +265,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               isSearchable
               isMulti
             />
-          </Flex>
+          </Box>
           {!!errors?.tokenAddresses?.message && (
             <Type.Caption color="red1" mt={1} display="block">
               {errors?.tokenAddresses?.message}
@@ -424,9 +428,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   )
 }
 
-function RowWrapper2({ children }: { children: ReactNode }) {
-  return <Grid sx={{ gridTemplateColumns: ['1fr', '1fr', '1fr 1fr'], gap: [3, 3, 24], width: '100%' }}>{children}</Grid>
-}
+// function RowWrapper2({ children }: { children: ReactNode }) {
+//   return <Grid sx={{ gridTemplateColumns: ['1fr', '1fr', '1fr 1fr'], gap: [3, 3, 24], width: '100%' }}>{children}</Grid>
+// }
 
 function InputSuffix({ children }: { children: ReactNode }) {
   return <Type.Caption color="neutral2">{children}</Type.Caption>
