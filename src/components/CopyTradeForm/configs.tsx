@@ -14,8 +14,6 @@ const commonSchema = {
     otherwise: (schema) => schema.required().min(0).label('Margin'),
   }),
   leverage: yup.number().required().min(2).label('Leverage'),
-  tokenAddresses: yup.array(yup.string()).required().min(1).label('Trading Pairs'),
-  enableStopLoss: yup.boolean(),
   stopLossAmount: yup.number().when('enableStopLoss', {
     is: true,
     then: (schema) => schema.required().min(0.1).label('Stop Loss Amount'),
@@ -31,6 +29,15 @@ const commonSchema = {
     then: (schema) => schema.required().min(0.1).label('Max Volume Multiplier'),
   }),
   skipLowLeverage: yup.boolean(),
+  agreement: yup.boolean().isTrue(),
+  copyAll: yup.boolean(),
+  tokenAddresses: yup
+    .array(yup.string())
+    .when('copyAll', {
+      is: false,
+      then: (schema) => schema.required().min(1),
+    })
+    .label('Trading Pairs'),
 }
 
 export const copyTradeFormSchema = yup.object({
@@ -40,21 +47,6 @@ export const copyTradeFormSchema = yup.object({
     .mixed()
     .oneOf([CopyTradePlatformEnum.GMX, CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.SYNTHETIX])
     .label('Exchange'),
-  // privateKey: yup.string().when('exchange', {
-  //   is: CopyTradePlatformEnum.GMX,
-  //   then: (schema) => schema.required().label('Private Key'),
-  //   otherwise: (schema) => schema.nullable(),
-  // }),
-  // bingXApiKey: yup.string().when('exchange', {
-  //   is: CopyTradePlatformEnum.BINGX,
-  //   then: (schema) => schema.required().label('BingX Api Key'),
-  //   otherwise: (schema) => schema.nullable(),
-  // }),
-  // bingXSecretKey: yup.string().when('exchange', {
-  //   is: CopyTradePlatformEnum.BINGX,
-  //   then: (schema) => schema.required().label('BingX Secret Key'),
-  //   otherwise: (schema) => schema.nullable(),
-  // }),
   copyWalletId: yup.string().required().label('Wallet'),
 })
 
@@ -76,8 +68,7 @@ export interface CopyTradeFormValues {
   tokenAddresses: string[]
   type?: CopyTradeTypeEnum
   protocol?: ProtocolEnum
-  enableStopLoss: boolean
-  stopLossAmount: number
+  stopLossAmount: number | undefined
   volumeProtection: boolean
   lookBackOrders: number
   exchange: CopyTradePlatformEnum
@@ -86,12 +77,10 @@ export interface CopyTradeFormValues {
   title: string
   reverseCopy: boolean
   duplicateToAddress?: string
-  enableMaxVolMultiplier: boolean
-  maxVolMultiplier: number
+  maxMarginPerPosition: number | null
   skipLowLeverage: boolean
-  // privateKey: string
-  // bingXApiKey: string
-  // bingXSecretKey: string
+  agreement: boolean
+  copyAll: boolean
 }
 export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFormValues } = {
   protocol: 'protocol',
@@ -99,7 +88,6 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   volume: 'volume',
   leverage: 'leverage',
   tokenAddresses: 'tokenAddresses',
-  enableStopLoss: 'enableStopLoss',
   stopLossAmount: 'stopLossAmount',
   volumeProtection: 'volumeProtection',
   lookBackOrders: 'lookBackOrders',
@@ -109,12 +97,10 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   title: 'title',
   reverseCopy: 'reverseCopy',
   duplicateToAddress: 'duplicateToAddress',
-  enableMaxVolMultiplier: 'enableMaxVolMultiplier',
-  maxVolMultiplier: 'maxVolMultiplier',
+  maxMarginPerPosition: 'maxMarginPerPosition',
   skipLowLeverage: 'skipLowLeverage',
-  // privateKey: 'privateKey',
-  // bingXApiKey: 'bingXApiKey',
-  // bingXSecretKey: 'bingXSecretKey',
+  agreement: 'agreement',
+  copyAll: 'copyAll',
 }
 
 export const defaultCopyTradeFormValues: CopyTradeFormValues = {
@@ -123,8 +109,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   leverage: 2,
   tokenAddresses: [],
   type: CopyTradeTypeEnum.FULL_ORDER,
-  enableStopLoss: false,
-  stopLossAmount: 1,
+  stopLossAmount: undefined,
   volumeProtection: true,
   lookBackOrders: 10,
   exchange: CopyTradePlatformEnum.BINGX,
@@ -133,12 +118,10 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   title: '',
   reverseCopy: false,
   duplicateToAddress: '',
-  enableMaxVolMultiplier: false,
-  maxVolMultiplier: 5,
+  maxMarginPerPosition: null,
   skipLowLeverage: false,
-  // privateKey: '',
-  // bingXApiKey: '',
-  // bingXSecretKey: '',
+  agreement: false,
+  copyAll: false,
 }
 
 interface ExchangeOptions {

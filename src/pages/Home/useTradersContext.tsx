@@ -1,11 +1,11 @@
 import dayjs from 'dayjs'
-import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
 
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ConditionFormValues } from 'components/ConditionFilterForm/types'
 import { TraderListSortProps } from 'components/Tables/TraderListTable/dataConfig'
 import { TraderData } from 'entities/trader.d'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -63,16 +63,9 @@ export function FilterTradersProvider({
 }) {
   const { myProfile } = useMyProfile()
   const { searchParams, setSearchParams } = useSearchParams()
-  const protocolParam = searchParams?.protocol as ProtocolEnum
-  const { protocol: protocolStore } = useProtocolStore()
-  const protocol = protocolParam ?? protocolStore
+  const { protocol } = useProtocolStore()
 
   const [currentSuggestion, setCurrentSuggestion] = useState<string | undefined>()
-
-  useEffect(() => {
-    if (protocolParam) return
-    setTimeout(() => setSearchParams({ protocol }), 100)
-  }, [protocol, protocolParam, setSearchParams])
 
   const logEventFilter = (action: string) => {
     logEvent({
@@ -88,7 +81,7 @@ export function FilterTradersProvider({
     tab === TabKeyEnum.Explorer ? URL_PARAM_KEYS.EXPLORER_TIME_RANGE_FILTER : URL_PARAM_KEYS.FAVORITE_TIME_RANGE_FILTER
 
   // START TIME FILTER
-  const { isPremiumUser, handleIsBasicUser } = useSubscriptionRestrict()
+  const { isPremiumUser, checkIsPremium } = useIsPremiumAndAction()
   const [isRangeSelection, setRangeSelection] = useState(() => {
     if (!isPremiumUser) return false
     if (searchParams[rangeFilterKey]) return true
@@ -131,8 +124,7 @@ export function FilterTradersProvider({
   }
 
   const handleSetTimeOption = (timeOption: TimeFilterProps) => {
-    if (!isPremiumUser && timeOption.id === TimeFilterByEnum.ALL_TIME) {
-      handleIsBasicUser()
+    if (timeOption.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) {
       return
     }
 

@@ -100,5 +100,7 @@ const createMarks = ({ maxValue, marksStep, marksUnit }: { maxValue: number; mar
       if (curr % marksStep !== 0) return result
       return { ...result, [curr]: `${curr}${marksUnit}` }
     },
-    { 1: `1${marksUnit}` }
+    {
+      // 1: `1${marksUnit}`
+    }
   )

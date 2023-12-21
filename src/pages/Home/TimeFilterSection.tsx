@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { useState } from 'react'
 
 import TimeFilter, { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex } from 'theme/base'
 import { DATE_FORMAT } from 'utils/config/constants'
@@ -19,7 +19,7 @@ export interface TimeFilterSectionProps {
 export default function TimeFilterSection({ triggerResize, contextValues }: TimeFilterSectionProps) {
   // TODO date range
   // const { isRangeSelection, from, to, changeTimeRange, timeOption, changeTimeOption } = contextValues
-  const { isPremiumUser } = useSubscriptionRestrict()
+  const isPremiumUser = useIsPremium()
   const { from, to, changeTimeRange, timeOption, changeTimeOption } = contextValues
   const { sm } = useResponsive()
 

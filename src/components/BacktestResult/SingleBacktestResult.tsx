@@ -200,7 +200,7 @@ export default function SingleBacktestResult({
               pb={4}
             >
               <SettingItem label={'Fund Tier'} value={data.fundTier} />
-              <SettingItem label={'Volume Suggestion'} value={`$${formatNumber(data.volumeSuggestion, 2, 2)}`} />
+              <SettingItem label={'Margin Suggestion'} value={`$${formatNumber(data.volumeSuggestion, 2, 2)}`} />
               <div></div>
             </Flex>
 

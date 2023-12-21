@@ -4,8 +4,10 @@ import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
 import { getTradersCopyingApi } from 'apis/copyTradeApis'
+import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { QUERY_KEYS } from 'utils/config/keys'
+import ROUTES from 'utils/config/routes'
 
 interface TraderCopyingState {
   isLoading: boolean
@@ -27,7 +29,17 @@ const useTraderCopyingStore = create<TraderCopyingState>()(
   }))
 )
 
+const EXCLUDING_PATH = [
+  ROUTES.STATS.path,
+  ROUTES.SUBSCRIPTION.path,
+  ROUTES.WALLET_MANAGEMENT.path,
+  ROUTES.USER_SUBSCRIPTION.path,
+  ROUTES.REFERRAL.path,
+  ROUTES.COMPARING_TRADERS.path,
+  ROUTES.POSITION_DETAILS.path,
+]
 export const useInitTraderCopying = () => {
+  const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH)
   const { profile } = useAuthContext()
   const { setTraderCopying, setLoading } = useTraderCopyingStore()
   const { data, isLoading } = useQuery(
@@ -35,7 +47,7 @@ export const useInitTraderCopying = () => {
     () => getTradersCopyingApi(),
     {
       retry: 0,
-      enabled: !!profile,
+      enabled: !!profile && enabledQueryByPaths,
     }
   )
   useEffect(() => {

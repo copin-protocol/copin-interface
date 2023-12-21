@@ -47,7 +47,12 @@ export default function RankingFilterForm({
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
       <Box sx={sm ? {} : { position: 'sticky', top: 0, bg: 'neutral7', zIndex: 2 }}>
-        <ResultEstimated ranges={ranges} protocol={protocol} timeOption={timeOption} />
+        <ResultEstimated
+          ranges={ranges}
+          protocol={protocol}
+          timeOption={timeOption}
+          filterTab={FilterTabEnum.RANKING}
+        />
       </Box>
 
       <Box flex="1 0 0" sx={{ overflow: 'auto', '.select__menu': { minWidth: 'max-content' } }}>

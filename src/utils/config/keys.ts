@@ -1,6 +1,7 @@
 import { ProtocolEnum } from './enums'
 
 export const QUERY_KEYS = {
+  GET_FAVORITE_TRADERS: 'GET_FAVORITE_TRADERS',
   GET_SYSTEM_STATS: 'GET_SYSTEM_STATS',
   GET_SYSTEM_STATS_OVERVIEW: 'GET_SYSTEM_STATS_OVERVIEW',
   GET_TOP_TRADERS: 'GET_TOP_TRADERS',
@@ -41,6 +42,8 @@ export const QUERY_KEYS = {
   GET_TRADER_ALERTS: 'GET_TRADER_ALERTS',
   GET_BOT_ALERT: 'GET_BOT_ALERT',
   GET_USER_PROFILE: 'GET_USER_PROFILE',
+  SEARCH_ALL_TRADERS: 'SEARCH_ALL_TRADERS',
+  SEARCH_TX_HASH: 'SEARCH_TX_HASH',
 }
 
 export const CONTRACT_QUERY_KEYS = {
@@ -77,6 +80,7 @@ export const STORAGE_KEYS = {
 }
 
 export const URL_PARAM_KEYS = {
+  PROTOCOL: 'protocol',
   EXPLORER_TIME_FILTER: 'time',
   EXPLORER_TIME_RANGE_FILTER: 'range',
   FAVORITE_TIME_RANGE_FILTER: 'time-favorite',
@@ -105,6 +109,10 @@ export const URL_PARAM_KEYS = {
   BOT_TELEGRAM_STATE: 'state',
   LEADERBOARD_TYPE: 'leaderboard_type',
   LEADERBOARD_DATE: 'leaderboard_date',
+  COMPARE_PROTOCOLS: 'protocols',
+  COMPARE_TRADERS: 'traders',
+  SEARCH_KEYWORD: 'keyword',
+  HIGHLIGHT_TX_HASH: 'tx_hash',
 }
 
 export const TOOLTIP_KEYS = {

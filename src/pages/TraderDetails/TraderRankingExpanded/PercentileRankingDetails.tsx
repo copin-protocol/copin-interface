@@ -7,7 +7,6 @@ import { renderTrader } from 'pages/MyProfile/renderProps'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { rankingFieldOptions } from 'utils/config/options'
-import { formatNumber } from 'utils/helpers/format'
 
 export default function PercentileRankingDetails({
   data,
@@ -65,7 +64,7 @@ export default function PercentileRankingDetails({
                 <RankingDetailsItem
                   key={index}
                   label={option.label}
-                  value={!value ? '--' : formatNumber(value, 0, 0)}
+                  value={!value ? '--' : Math.round(value)}
                   statLabel={option.statLabel}
                   statValue={option.statFormat?.(data[option.value])}
                   isActive={activeFields.includes(option.value)}
@@ -81,7 +80,7 @@ export default function PercentileRankingDetails({
                 <RankingDetailsItem
                   key={index}
                   label={option.label}
-                  value={!value ? '--' : formatNumber(value, 0, 0)}
+                  value={!value ? '--' : Math.round(value)}
                   statLabel={option.statLabel}
                   statValue={option.statFormat?.(data[option.value])}
                   isActive={activeFields.includes(option.value)}
@@ -95,7 +94,7 @@ export default function PercentileRankingDetails({
   )
 }
 
-function RankingComparedItem({
+export function RankingComparedItem({
   label,
   value,
   comparedValue,

@@ -7,7 +7,7 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { RELOAD_TOP_OPENING_POSITIONS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
-import { generateTopOpeningOrdersRoute } from 'utils/helpers/generateRoute'
+import ROUTES from 'utils/config/routes'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -31,7 +31,7 @@ export default function TopOpeningsSection({ protocol }: { protocol: ProtocolEnu
         </Flex>
         <Box
           as={Link}
-          to={generateTopOpeningOrdersRoute(protocol)}
+          to={ROUTES.TOP_OPENINGS.path}
           target="_blank"
           onClick={() => {
             logEvent({
@@ -53,7 +53,7 @@ export default function TopOpeningsSection({ protocol }: { protocol: ProtocolEnu
         </Box>
       </Flex>
       <Box sx={{ flex: '1 0 0', overflowX: 'auto', overflowY: 'hidden' }}>
-        <OpeningsTable topOpeningData={data} isLoading={isLoading} />
+        <OpeningsTable data={data?.data} isLoading={isLoading} page={1} />
       </Box>
     </Flex>
   )

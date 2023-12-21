@@ -32,7 +32,6 @@ export const backTestFormSchema = yup.object({
     is: true,
     then: (schema) => schema.required().min(1).label('Look Back Orders'),
   }),
-  enableStopLoss: yup.boolean(),
   stopLossAmount: yup.number().when('enableStopLoss', {
     is: true,
     then: (schema) => schema.required().min(1).label('Stop Loss Amount'),

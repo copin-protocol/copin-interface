@@ -4,9 +4,11 @@ import { useQuery } from 'react-query'
 import { getAllCopyWalletsApi } from 'apis/copyWalletApis'
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserData } from 'entities/user'
+import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import ROUTES from 'utils/config/routes'
 
 // import useWalletMargin, { SmartWalletMargin } from './useWalletMargin'
 
@@ -23,16 +25,31 @@ export interface CopyWalletContextData {
 
 const CopyWalletContext = createContext<CopyWalletContextData>({} as CopyWalletContextData)
 
+const EXCLUDING_PATH = [
+  ROUTES.STATS.path,
+  ROUTES.HOME_LEADERBOARD.path,
+  ROUTES.FAVORITES.path,
+  ROUTES.SUBSCRIPTION.path,
+  ROUTES.USER_SUBSCRIPTION.path,
+  ROUTES.MY_HISTORY.path,
+  ROUTES.USER_ACTIVITY.path,
+  ROUTES.ALERT_LIST.path,
+  ROUTES.REFERRAL.path,
+  ROUTES.COMPARING_TRADERS.path,
+  ROUTES.TOP_OPENINGS.path,
+  ROUTES.POSITION_DETAILS.path,
+]
 export function CopyWalletProvider({ children }: { children: ReactNode }) {
   const { myProfile } = useMyProfile()
   const [loadedTotalSmartWallet, setLoadedTotalSmartWallet] = useState(false)
 
+  const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH)
   const {
     data: copyWallets,
     isLoading: loadingCopyWallets,
     refetch: reloadCopyWallets,
   } = useQuery([QUERY_KEYS.GET_COPY_WALLETS_LIST, myProfile?.id], () => getAllCopyWalletsApi(), {
-    enabled: !!myProfile?.id,
+    enabled: !!myProfile?.id && enabledQueryByPaths,
     retry: 0,
   })
 

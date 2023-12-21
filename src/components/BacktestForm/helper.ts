@@ -15,9 +15,11 @@ export function getFormValuesFromRequestData(requestData: RequestBackTestData | 
     endTime: dayjs(requestData.toTime).utc().toDate(),
     volumeProtection: requestData.volumeProtection ?? true,
     lookBackOrders: requestData.lookBackOrders ?? 10,
-    enableStopLoss: requestData.enableStopLoss ?? false,
-    stopLossAmount: requestData.stopLossAmount ?? 1,
-    maxVolMultiplier: requestData.maxVolMultiplier,
+    stopLossAmount: requestData.enableStopLoss ? requestData.stopLossAmount : undefined,
+    maxMarginPerPosition:
+      requestData.maxVolMultiplier && requestData.maxVolMultiplier > 0
+        ? requestData.maxVolMultiplier * requestData.orderVolume
+        : null,
     reverseCopy: requestData.reverseCopy ?? false,
   }
   return result

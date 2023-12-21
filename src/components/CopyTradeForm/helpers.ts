@@ -21,6 +21,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     protocol,
     exchange,
     copyWalletId,
+    copyAll,
   } = copyTradeData
   if (account) result.account = account
   if (title) result.title = title
@@ -34,18 +35,17 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   }
   if (protocol) result.protocol = protocol
   if (enableStopLoss) {
-    result.enableStopLoss = true
     result.stopLossAmount = stopLossAmount
   }
   if (typeof maxVolMultiplier === 'number' && maxVolMultiplier > 0) {
-    result.enableMaxVolMultiplier = true
-    result.maxVolMultiplier = maxVolMultiplier
+    result.maxMarginPerPosition = maxVolMultiplier * volume
   } else {
-    result.enableMaxVolMultiplier = false
+    result.maxMarginPerPosition = null
   }
   result.skipLowLeverage = !!skipLowLeverage
   result.exchange = exchange
   result.copyWalletId = copyWalletId
+  result.copyAll = !!copyAll
   return result
 }
 
@@ -53,17 +53,21 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
   return {
     title: formData.title,
     volume: formData.volume,
-    tokenAddresses: formData.tokenAddresses,
+    tokenAddresses: formData.copyAll ? [] : formData.tokenAddresses,
     leverage: formData.leverage,
     reverseCopy: formData.reverseCopy,
-    enableStopLoss: formData.enableStopLoss,
-    stopLossAmount: formData.enableStopLoss ? formData.stopLossAmount : undefined,
+    enableStopLoss: formData.stopLossAmount && formData.stopLossAmount > 0 ? true : false,
+    stopLossAmount: formData.stopLossAmount,
     volumeProtection: formData.volumeProtection,
     lookBackOrders: formData.volumeProtection ? formData.lookBackOrders : undefined,
-    maxVolMultiplier: formData.enableMaxVolMultiplier ? formData.maxVolMultiplier : 0,
+    maxVolMultiplier:
+      formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0
+        ? Number(formData.maxMarginPerPosition / formData.volume)
+        : null,
     skipLowLeverage: formData.skipLowLeverage,
     protocol: formData.protocol,
     exchange: formData.exchange,
     copyWalletId: formData.copyWalletId,
+    copyAll: formData.copyAll,
   }
 }

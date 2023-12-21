@@ -1,14 +1,14 @@
 import { Trans } from '@lingui/macro'
-import { Wallet } from '@phosphor-icons/react'
+import { Plus } from '@phosphor-icons/react'
 import { useEffect, useMemo, useState } from 'react'
 
 import CreateSmartWalletModal from 'components/CreateSmartWalletModal'
 import CreateBingXWalletModal from 'components/Modal/CreateBingXWalletModal'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import Label from 'theme/InputField/Label'
+import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import Select from 'theme/Select'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { parseWalletName } from 'utils/helpers/transform'
 
@@ -47,15 +47,12 @@ export default function Wallets({
 
   const currentOption = walletOptions.find((option) => option.value === currentWalletId) ?? walletOptions[0]
   return !!currentWalletId ? (
-    <>
-      <Label label={<Trans>Wallet</Trans>} />
-      <Select
-        value={currentOption}
-        options={walletOptions}
-        onChange={(newValue: any) => onChangeWallet(newValue.value)}
-        isDisabled={disabledSelect}
-      />
-    </>
+    <Select
+      value={currentOption}
+      options={walletOptions}
+      onChange={(newValue: any) => onChangeWallet(newValue.value)}
+      isDisabled={disabledSelect}
+    />
   ) : null
 }
 
@@ -100,43 +97,9 @@ function NoWallet({
   }
   return (
     <Box>
-      <Flex
-        sx={{
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 3,
-          bg: 'neutral6',
-          px: 3,
-          py: 2,
-          borderRadius: '4px',
-        }}
-      >
-        <Box>
-          <Flex mb={'2px'} sx={{ alignItems: 'center', gap: 2 }}>
-            <Flex
-              sx={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 24,
-                height: 24,
-                borderRadius: '50%',
-                bg: 'neutral5',
-              }}
-            >
-              <IconBox icon={<Wallet size={18} />} color="neutral3" />
-            </Flex>
-            <Type.CaptionBold>
-              <Trans>Wallet</Trans>
-            </Type.CaptionBold>
-          </Flex>
-          <Type.Caption color="neutral3">
-            <Trans>You don’t have any wallet yet </Trans>
-          </Type.Caption>
-        </Box>
-        <Box role="button" onClick={handleOpenModal} sx={{ color: 'primary1', '&:hover': { color: 'primary2' } }}>
-          <Type.Caption>{text}</Type.Caption>
-        </Box>
-      </Flex>
+      <ButtonWithIcon block icon={<Plus size={20} />} variant="outlinePrimary" onClick={handleOpenModal} height={42}>
+        {text}
+      </ButtonWithIcon>
       {openModal && modalContent}
     </Box>
   )

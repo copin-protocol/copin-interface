@@ -2,7 +2,7 @@
 import { Trans, t } from '@lingui/macro'
 
 import NoDataFound from 'components/@ui/NoDataFound'
-import useSearchTraders from 'hooks/helpers/useSearchTraders'
+import useSearchAllData from 'hooks/features/useSearchAllData'
 import { renderTrader } from 'pages/MyProfile/renderProps'
 import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
@@ -11,7 +11,10 @@ import { Box, Flex } from 'theme/base'
 import { FindAndSelectTraderProps } from './FindAndSelectTrader'
 import { filterFoundData } from './helpers'
 
-export default function SearchTraders(props: FindAndSelectTraderProps) {
+export default function SearchTraders({
+  resultHeight = 200,
+  ...props
+}: FindAndSelectTraderProps & { resultHeight?: number }) {
   const {
     searchWrapperRef,
     inputSearchRef,
@@ -21,13 +24,9 @@ export default function SearchTraders(props: FindAndSelectTraderProps) {
     handleClearSearch,
     visibleSearchResult,
     isLoading,
-    searchUserData,
-    searchUserDataKwenta,
-  } = useSearchTraders({ onSelect: props.onSelect, returnRanking: true, allowAllProtocol: true })
-  const traders = [
-    ...filterFoundData(searchUserData?.data, { account: props.account, protocol: props.protocol }),
-    ...filterFoundData(searchUserDataKwenta?.data, { account: props.account, protocol: props.protocol }),
-  ]
+    searchTraders,
+  } = useSearchAllData({ onSelect: props.onSelect, returnRanking: true, allowAllProtocol: true })
+  const traders = [...filterFoundData(searchTraders?.data, props.ignoreSelectTraders)]
   return (
     <Box ref={searchWrapperRef} sx={{ position: 'relative' }}>
       <InputSearch
@@ -55,7 +54,7 @@ export default function SearchTraders(props: FindAndSelectTraderProps) {
             left: 0,
             right: 0,
             transform: 'translateY(100%)',
-            height: 200,
+            height: resultHeight,
             bg: 'neutral5',
             flexDirection: 'column',
             overflow: 'auto',

@@ -9,6 +9,7 @@ import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
+import useSearchParams from 'hooks/router/useSearchParams'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
@@ -17,7 +18,7 @@ import Tag from 'theme/Tag'
 import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum, TraderStatusEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
@@ -37,6 +38,9 @@ export default function PositionDetails({
   isShow?: boolean
   isDrawer?: boolean
 }) {
+  const { searchParams } = useSearchParams()
+  const highlightTxHash = searchParams?.[URL_PARAM_KEYS.HIGHLIGHT_TX_HASH] as string | undefined
+
   const { data, isLoading } = useQuery(
     [QUERY_KEYS.GET_POSITION_DETAIL, id, protocol],
     () => getPositionDetailByIdApi({ protocol, id }),
@@ -124,7 +128,12 @@ export default function PositionDetails({
 
           <Box width="100%" overflow="hidden" sx={{ pt: 12 }}>
             {data.orders && data.orders.length > 0 && (
-              <ListOrderTable protocol={data.protocol} data={data.orders} isLoading={isLoading} />
+              <ListOrderTable
+                protocol={data.protocol}
+                data={data.orders}
+                isLoading={isLoading}
+                highlightTxHash={highlightTxHash}
+              />
             )}
           </Box>
         </Box>

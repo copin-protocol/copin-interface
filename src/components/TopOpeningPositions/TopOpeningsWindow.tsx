@@ -1,25 +1,92 @@
-import { XCircle } from '@phosphor-icons/react'
+import { CaretRight, XCircle } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { ApiListResponse } from 'apis/api'
 import Container from 'components/@ui/Container'
+import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Table from 'components/@ui/Table'
+import {
+  renderEntry,
+  renderOpeningPnLWithPrices,
+  renderSizeOpening,
+  renderTrader,
+} from 'components/@ui/Table/renderProps'
+import { ColumnData } from 'components/@ui/Table/types'
 import PositionDetails from 'components/PositionDetails'
-import { ExternalSource, columns } from 'components/Tables/OpeningPositionTable'
 import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
-import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
+import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import IconButton from 'theme/Buttons/IconButton'
 import Drawer from 'theme/Modal/Drawer'
+import { Box, Type } from 'theme/base'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
+
+export type ExternalSource = {
+  prices: UsdPrices
+}
+const columns: ColumnData<PositionData, ExternalSource>[] = [
+  {
+    title: 'Time',
+    dataIndex: 'openBlockTime',
+    key: 'openBlockTime',
+    style: { width: '45px' },
+    render: (item) => (
+      <Type.Caption color="neutral3">
+        <RelativeShortTimeText date={item.openBlockTime} />
+      </Type.Caption>
+    ),
+  },
+  {
+    title: 'Trader',
+    dataIndex: 'account',
+    key: 'account',
+    style: { width: '120px' },
+    render: (item) => renderTrader(item.account, item.protocol),
+  },
+  {
+    title: 'Entry',
+    dataIndex: 'indexToken',
+    key: 'indexToken',
+    style: { width: '140px' },
+    render: (item) => renderEntry(item),
+  },
+  {
+    title: 'Size',
+    dataIndex: 'size',
+    key: 'size',
+    style: { width: '205px' },
+    render: (item, index, externalSource) =>
+      externalSource?.prices ? renderSizeOpening(item, externalSource?.prices) : '--',
+  },
+  {
+    title: 'PnL',
+    dataIndex: 'pnl',
+    key: 'pnl',
+    style: { width: '75px', textAlign: 'right' },
+    render: (item, index, externalSource) =>
+      externalSource?.prices ? renderOpeningPnLWithPrices(item, externalSource?.prices, true) : '--',
+  },
+  {
+    title: '',
+    dataIndex: 'id',
+    key: 'id',
+    style: { width: '20px', textAlign: 'right' },
+    render: () => (
+      <Box sx={{ position: 'relative', top: '2px' }}>
+        <CaretRight />
+      </Box>
+    ),
+  },
+]
 
 export default function TopOpeningsWindow({
   isLoading,
-  topOpeningData,
+  data,
+  page,
 }: {
   isLoading: boolean
-  topOpeningData?: ApiListResponse<PositionData>
+  data?: PositionData[]
+  page: number
 }) {
   const { prices } = useRealtimeUsdPricesStore()
   const isMobile = useIsMobile()
@@ -43,13 +110,14 @@ export default function TopOpeningsWindow({
   }
 
   return (
-    <>
+    <div style={{ height: '100%' }}>
       <Table
         restrictHeight
         wrapperSx={{
-          minWidth: 500,
+          minWidth: 650,
         }}
-        data={topOpeningData?.data}
+        data={data}
+        scrollToTopDependencies={[page]}
         columns={columns}
         externalSource={externalSource}
         isLoading={isLoading}
@@ -76,6 +144,6 @@ export default function TopOpeningsWindow({
           )}
         </Container>
       </Drawer>
-    </>
+    </div>
   )
 }

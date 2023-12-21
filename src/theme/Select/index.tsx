@@ -23,6 +23,7 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
       },
       border: 'none',
       width: '100%',
+
       '& .select__control': {
         minHeight: 42,
         alignItems: 'center',
@@ -41,7 +42,8 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
           boxShadow: 'none',
         },
         '& .select__value-container': {
-          px: 3,
+          pl: 12,
+          pr: 12,
           py: '5px',
           color: 'inherit',
           cursor: 'pointer',
@@ -57,12 +59,21 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
             color: 'inherit',
           },
         },
+
         '& .select__indicators': {
           color: 'neutral2',
           cursor: 'pointer',
           '& .select__indicator-separator': {
             bg: 'neutral6',
           },
+        },
+      },
+      '&.pad-right-0': {
+        '& .select__value-container': {
+          pr: 0,
+        },
+        '& .select__indicators': {
+          pr: 1,
         },
       },
       '& .select__control--is-disabled': {
@@ -145,7 +156,7 @@ const ClearIndicator = (props: ClearIndicatorProps<any>) => {
   } = props
   return (
     <div {...restInnerProps} ref={ref} style={getStyles('clearIndicator', props) as CSSProperties}>
-      <div style={{ padding: '0px 5px' }}>{children}</div>
+      <div style={{ padding: '0px' }}>{children}</div>
     </div>
   )
 }
@@ -166,7 +177,7 @@ const SelectStyles = {
   multiValue: (providedStyled: any) => ({ ...providedStyled, fontWeight: 400, fontSize: '15px' }),
 }
 
-const Select = (props: Omit<Props, 'theme'> & SelectProps) => {
+const Select = ({ components, ...props }: Omit<Props, 'theme'> & SelectProps) => {
   return (
     <StyledSelect
       isSearchable
@@ -175,7 +186,7 @@ const Select = (props: Omit<Props, 'theme'> & SelectProps) => {
       className="select-container"
       classNamePrefix="select"
       styles={SelectStyles}
-      components={{ ...(props.components || {}), DropdownIndicator, ClearIndicator, MultiValueRemove }}
+      components={{ DropdownIndicator, ClearIndicator, MultiValueRemove, ...(components || {}) }}
       {...props}
       // menuIsOpen
     />

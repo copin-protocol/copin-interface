@@ -414,7 +414,7 @@ const leverageColumn: ColumnData<PositionData> = {
   dataIndex: 'leverage',
   key: 'leverage',
   sortBy: 'leverage',
-  style: { minWidth: '65px', textAlign: 'right' },
+  style: { minWidth: '75px', textAlign: 'right' },
   render: (item) => (
     <Flex justifyContent="end" alignItems="center">
       <Type.Caption color="neutral1">{formatNumber(item.leverage, 1, 1)}x</Type.Caption>

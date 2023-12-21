@@ -108,7 +108,7 @@ const SwitchInputField = forwardRef(function SwitchInputField(
     required,
     switchLabel,
     error,
-    labelColor = 'neutral3',
+    labelColor = 'neutral2',
     tooltipContent,
     ...props
   }: {

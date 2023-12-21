@@ -1,15 +1,18 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
+import React from 'react'
 
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import NoDataFound from 'components/@ui/NoDataFound'
+import SearchPositionResultItem from 'components/@ui/SearchPositionResult'
 import { TraderData } from 'entities/trader'
-import useSearchTraders from 'hooks/helpers/useSearchTraders'
+import useSearchAllData from 'hooks/features/useSearchAllData'
 import { Button } from 'theme/Buttons'
 import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { SEARCH_DEFAULT_LIMIT } from 'utils/config/constants'
+import { formatNumber } from 'utils/helpers/format'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
 import { SearchResult, SearchWrapper } from './styled'
@@ -18,9 +21,11 @@ const SearchBox = ({
   bg,
   width,
   actionTitle = 'View',
-  placeholder = 'Search Address',
+  placeholder = 'Search for wallets or transactions',
   onSelect,
   returnRanking = false,
+  allowAllProtocol = true,
+  allowSearchPositions = true,
 }: {
   actionTitle?: string
   placeholder?: string
@@ -28,6 +33,8 @@ const SearchBox = ({
   width?: string | number
   onSelect?: (data: TraderData) => void
   returnRanking?: boolean
+  allowAllProtocol?: boolean
+  allowSearchPositions?: boolean
 }) => {
   const {
     searchWrapperRef,
@@ -36,18 +43,23 @@ const SearchBox = ({
     handleSearchFocus,
     handleSearchChange,
     handleClearSearch,
+    handleSearchEnter,
     handleClickViewAll,
     visibleSearchResult,
     isLoading,
-    searchUserData,
+    searchTraders,
+    searchPositions,
     handleClick,
-    searchUserDataKwenta,
-    searchUserDataPolynomial,
-    allowSearchProtocol,
-  } = useSearchTraders({ onSelect, returnRanking })
+    handleClickPosition,
+    handleSearchPositionsEnter,
+    isTxHash,
+  } = useSearchAllData({ onSelect, returnRanking, allowAllProtocol, allowSearchPositions })
+
+  const totalResultTraders = searchTraders?.meta?.total ?? 0
+  const totalResultPositions = searchPositions?.length ?? 0
 
   return (
-    <SearchWrapper ref={searchWrapperRef} width={width ?? ['100%', '100%', 220, 300]}>
+    <SearchWrapper ref={searchWrapperRef} width={width ?? ['100%', '100%', 220, 380]}>
       <InputSearch
         ref={inputSearchRef}
         placeholder={placeholder}
@@ -63,28 +75,35 @@ const SearchBox = ({
         onFocus={handleSearchFocus}
         onChange={handleSearchChange}
         onClear={handleClearSearch}
-        onKeyDown={(e) => e.key === 'Enter' && handleClickViewAll()}
+        onKeyDown={(e) => e.key === 'Enter' && (isTxHash ? handleSearchPositionsEnter() : handleSearchEnter())}
       />
 
       {visibleSearchResult && (
         <SearchResult>
           {isLoading ? (
-            <Box textAlign="center" py={4}>
+            <Box textAlign="center" p={4}>
               <Loading />
             </Box>
           ) : (
-            <Box p={2}>
-              {(searchUserData?.meta?.total ?? 0) > 0 && allowSearchProtocol(ProtocolEnum.GMX) && (
+            <Box>
+              {allowAllProtocol && (
+                <Flex px={3} py="6px" alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+                  <Type.CaptionBold color="neutral3">
+                    <Trans>Result</Trans> {isTxHash ? <Trans>Positions</Trans> : <Trans>Traders</Trans>}
+                  </Type.CaptionBold>
+                  <Button variant="ghostPrimary" type="button" onClick={handleClickViewAll} sx={{ p: 0, mx: 0 }}>
+                    <Type.Caption sx={{ ':hover': { textDecoration: 'underline' } }}>
+                      <Trans>View All</Trans> ({formatNumber(isTxHash ? totalResultPositions : totalResultTraders)})
+                    </Type.Caption>
+                  </Button>
+                </Flex>
+              )}
+              {!isTxHash && (searchTraders?.meta?.total ?? 0) > 0 && (
                 <Box>
-                  <Flex mb={1} alignItems="center" sx={{ gap: 2 }}>
-                    <Image src={parseProtocolImage(ProtocolEnum.GMX)} width={20} height={20} />
-                    <Type.CaptionBold color="neutral3">
-                      <Trans>GMX</Trans>
-                    </Type.CaptionBold>
-                  </Flex>
-                  {searchUserData?.data.map((userData) => (
+                  {searchTraders?.data.map((userData) => (
                     <SearchResultItems
                       key={userData.id}
+                      keyword={searchText}
                       actionTitle={actionTitle}
                       data={userData}
                       handleClick={handleClick}
@@ -92,47 +111,23 @@ const SearchBox = ({
                   ))}
                 </Box>
               )}
-              {(searchUserDataKwenta?.meta?.total ?? 0) > 0 && allowSearchProtocol(ProtocolEnum.KWENTA) && (
-                <Box mt={2}>
-                  <Flex mb={1} alignItems="center" sx={{ gap: 2 }}>
-                    <Image src={parseProtocolImage(ProtocolEnum.KWENTA)} width={20} height={20} />
-                    <Type.CaptionBold color="neutral3">
-                      <Trans>Kwenta</Trans>
-                    </Type.CaptionBold>
-                  </Flex>
-                  {searchUserDataKwenta?.data.map((userData) => (
-                    <SearchResultItems
-                      key={userData.id}
-                      actionTitle={actionTitle}
-                      data={userData}
-                      handleClick={handleClick}
+              {isTxHash && (searchPositions?.length ?? 0) > 0 && (
+                <Box>
+                  {searchPositions?.slice(0, SEARCH_DEFAULT_LIMIT)?.map((positionData) => (
+                    <SearchPositionResultItem
+                      key={positionData.id}
+                      data={positionData}
+                      handleClick={handleClickPosition}
                     />
                   ))}
                 </Box>
               )}
-              {(searchUserDataPolynomial?.meta?.total ?? 0) > 0 && allowSearchProtocol(ProtocolEnum.POLYNOMIAL) && (
-                <Box mt={2}>
-                  <Flex mb={1} alignItems="center" sx={{ gap: 2 }}>
-                    <Image src={parseProtocolImage(ProtocolEnum.POLYNOMIAL)} width={20} height={20} />
-                    <Type.CaptionBold color="neutral3">
-                      <Trans>Polynomial</Trans>
-                    </Type.CaptionBold>
-                  </Flex>
-                  {searchUserDataPolynomial?.data.map((userData) => (
-                    <SearchResultItems
-                      key={userData.id}
-                      actionTitle={actionTitle}
-                      data={userData}
-                      handleClick={handleClick}
-                    />
-                  ))}
-                </Box>
+              {!isTxHash && searchTraders?.meta?.total === 0 && (
+                <NoDataFound message={<Trans>No Trader Found</Trans>} />
               )}
-              {searchUserData?.meta?.total === 0 &&
-              searchUserDataKwenta?.meta?.total === 0 &&
-              searchUserDataPolynomial?.meta?.total === 0 ? (
-                <NoDataFound message={<Trans>No Trader Found In The Past 60 Days</Trans>} />
-              ) : null}
+              {isTxHash && searchPositions?.length === 0 && (
+                <NoDataFound message={<Trans>No Transaction Found</Trans>} />
+              )}
             </Box>
           )}
         </SearchResult>
@@ -144,16 +139,28 @@ const SearchBox = ({
 export default SearchBox
 
 const SearchResultItems = ({
+  keyword,
   data,
   actionTitle,
   handleClick,
 }: {
+  keyword: string
   data: TraderData
   actionTitle?: string
   handleClick?: (data: TraderData) => void
 }) => {
   return (
-    <Box py={1}>
+    <Box
+      px={3}
+      py="6px"
+      sx={{
+        borderTop: 'small',
+        borderColor: 'neutral4',
+        '&:hover': {
+          backgroundColor: '#292d40',
+        },
+      }}
+    >
       <Button
         variant="ghost"
         type="button"
@@ -162,10 +169,18 @@ const SearchResultItems = ({
         width="100%"
       >
         <Flex sx={{ gap: 3, alignItems: 'center', justifyContent: 'space-between' }}>
-          <AccountInfo isOpenPosition={data.isOpenPosition} address={data.account} protocol={data.protocol} />
-          <Type.Caption color="neutral3" sx={{ ':hover': { textDecoration: 'underline' } }}>
-            {actionTitle}
-          </Type.Caption>
+          <AccountInfo
+            isOpenPosition={data.isOpenPosition}
+            keyword={keyword}
+            address={data.account}
+            smartAccount={data.smartAccount}
+            protocol={data.protocol}
+            size={40}
+            sx={{
+              width: 168,
+            }}
+          />
+          <Image src={parseProtocolImage(data.protocol)} width={20} height={20} />
         </Flex>
       </Button>
     </Box>

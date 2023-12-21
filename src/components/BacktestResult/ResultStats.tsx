@@ -40,7 +40,7 @@ export default function ResultStats({
       <Item label={'Total Trade'} component={<Type.BodyBold display="block">{totalTrade}</Type.BodyBold>} />
       <Item label={'Win Rate (%)'} value={<SignedText value={winRate} maxDigit={2} fontInherit suffix="%" />} />
       <Item
-        label={'Max Vol Multiplier'}
+        label={'Max Margin Multiplier'}
         value={<Type.BodyBold display="block">{formatNumber(maxVolMultiplier, 1, 1)}x</Type.BodyBold>}
       />
       <Item label={'Total Liquidate'} component={<Type.BodyBold display="block">{totalLiquidate}</Type.BodyBold>} />

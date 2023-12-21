@@ -20,14 +20,114 @@ import useSelectTrader from './useSelectTrader'
 export type HandleSelectTrader = (data: TraderData) => void
 export interface FindAndSelectTraderProps {
   onSelect: HandleSelectTrader
-  account: string | undefined
-  protocol: ProtocolEnum
+  ignoreSelectTraders: { account: string; protocol: ProtocolEnum }[]
   timeOption: TimeFilterProps
   selectedTrader: TraderData | null
-  onClear: () => void
+  onClear?: () => void
 }
 
-export default function FindAndSelectTrader(props: FindAndSelectTraderProps) {
+export default function FindAndSelectTrader({
+  type = 'clear',
+  ...props
+}: FindAndSelectTraderProps & { type?: 'clear' | 'switch' }) {
+  const [expand, setExpand] = useState(false)
+  if (type === 'switch') {
+    const onSelect: HandleSelectTrader = (data) => {
+      setExpand(false)
+      props.onSelect(data)
+    }
+    return (
+      <Box sx={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
+        {props.selectedTrader && (
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              overflow: 'auto',
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <SelectedTrader
+              forceReload
+              selectedTrader={props.selectedTrader}
+              timeOption={props.timeOption}
+              handleSelectTrader={props.onSelect}
+            />
+            <Box flex="1" />
+            <Type.Caption
+              role="button"
+              color="primary1"
+              sx={{
+                position: 'sticky',
+                width: '100%',
+                textAlign: 'center',
+                p: 1,
+                '&:hover': {
+                  color: 'primary2',
+                },
+                bottom: 0,
+                borderTop: 'small',
+                borderTopColor: 'neutral4',
+                bg: 'modalBG',
+                backdropFilter: 'blur(5px)',
+              }}
+              onClick={() => setExpand(true)}
+            >
+              <Trans>Change Trader</Trans>
+            </Type.Caption>
+          </Box>
+        )}
+        <Box
+          sx={{
+            p: 3,
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            height: '100%',
+            bg: 'neutral5',
+            transform: expand ? 'translateY(0%)' : 'translateY(100%)',
+            transition: '0.3s',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Box flex="1">
+            <Type.CaptionBold mb={12}>
+              <Trans>Choose A Trader To Compare</Trans>
+            </Type.CaptionBold>
+            <Flex sx={{ flexDirection: 'column', gap: 12 }}>
+              <SearchTraders {...props} onSelect={onSelect} resultHeight={170} />
+              <PickFromFavorites {...props} onSelect={onSelect} />
+              <PickFromCopyTrades {...props} onSelect={onSelect} />
+            </Flex>
+          </Box>
+          <Type.Caption
+            role="button"
+            color="primary1"
+            sx={{
+              position: 'absolute',
+              width: '100%',
+              textAlign: 'center',
+              p: 1,
+              '&:hover': {
+                color: 'primary2',
+              },
+              bottom: 0,
+              borderTop: 'small',
+              borderTopColor: 'neutral4',
+            }}
+            onClick={() => setExpand(false)}
+          >
+            <Trans>Cancel</Trans>
+          </Type.Caption>
+        </Box>
+      </Box>
+    )
+  }
   return (
     <>
       {props.selectedTrader ? (
@@ -52,16 +152,18 @@ export default function FindAndSelectTrader(props: FindAndSelectTraderProps) {
     </>
   )
 }
-function SelectedTrader({
+export function SelectedTrader({
   selectedTrader,
   handleSelectTrader,
   timeOption,
   onClearTrader,
+  forceReload = false,
 }: {
   selectedTrader: TraderData
   handleSelectTrader: HandleSelectTrader
   timeOption: TimeFilterProps
-  onClearTrader: () => void
+  onClearTrader?: () => void
+  forceReload?: boolean
 }) {
   const prevTimeOption = useRef(timeOption)
   const { isLoading: isSelecting } = useSelectTrader({
@@ -72,19 +174,21 @@ function SelectedTrader({
       handleSelectTrader(data)
     },
     timeOption,
-    enabled: !isEqual(prevTimeOption.current, timeOption) || !selectedTrader.ranking,
+    enabled: forceReload || !isEqual(prevTimeOption.current, timeOption) || !selectedTrader.ranking,
   })
 
   if (isSelecting) return <Loading />
 
   return (
-    <Box sx={{ position: 'relative' }}>
-      <IconBox
-        role="button"
-        icon={<XCircle size={20} />}
-        onClick={onClearTrader}
-        sx={{ position: 'absolute', top: 16, right: 16, color: 'neutral2', '&:hover': { color: 'neutral1' } }}
-      />
+    <Box sx={{ position: 'relative', width: '100%' }}>
+      {onClearTrader && (
+        <IconBox
+          role="button"
+          icon={<XCircle size={20} />}
+          onClick={onClearTrader}
+          sx={{ position: 'absolute', top: 16, right: 16, color: 'neutral2', '&:hover': { color: 'neutral1' } }}
+        />
+      )}
       <Stats traderData={selectedTrader} indicatorColor="orange1" isLinkAddress />
     </Box>
   )

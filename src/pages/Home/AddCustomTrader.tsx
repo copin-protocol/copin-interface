@@ -8,6 +8,8 @@ const AddCustomTrader = () => {
   const { addTraderToHomeInstance } = useSelectBacktestTraders()
   return (
     <SearchBox
+      allowAllProtocol={false}
+      allowSearchPositions={false}
       bg="neutral6"
       placeholder="Enter address to add more traders"
       actionTitle="Add"

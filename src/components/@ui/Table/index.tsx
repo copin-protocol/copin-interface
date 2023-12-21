@@ -39,6 +39,7 @@ export default function Table<T, K>({
   dataMeta,
   // topIndex,
   checkIsTop,
+  scrollToTopDependencies,
 }: // title,
 // subTitle,
 TableProps<T, K>) {
@@ -56,10 +57,13 @@ TableProps<T, K>) {
     sourceRef?.current?.addEventListener('scroll', handleScrollHorizontal)
     return () => sourceRef?.current?.removeEventListener('scroll', handleScrollHorizontal)
   }, [isLoading])
-  useEffect(() => {
-    if (!isLoading || isInfiniteLoad) return
-    bodyRef?.current?.scrollTo(0, 0)
-  }, [isLoading])
+  useEffect(
+    () => {
+      if (!data || isInfiniteLoad) return
+      bodyRef?.current?.scrollTo(0, 0)
+    },
+    scrollToTopDependencies ? scrollToTopDependencies : [data]
+  )
   return (
     <Flex
       className="table_container"

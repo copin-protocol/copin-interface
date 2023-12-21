@@ -9,7 +9,7 @@ const Label = ({
   columnGap = 8,
   required,
   annotation,
-  labelColor = 'neutral3',
+  labelColor = 'neutral2',
   bold = false,
   wrapperProps = {},
 }: {
@@ -26,7 +26,7 @@ const Label = ({
   const Small = bold ? Type.CaptionBold : Type.Caption
   return (
     <Flex justifyContent={annotation ? 'space-between' : 'start'} alignItems="baseline" {...wrapperProps}>
-      <Box>
+      <Box sx={{ lineHeight: 0 }}>
         <Caption color={error ? 'red1' : labelColor} mb={columnGap} fontWeight={600}>
           {label}
         </Caption>

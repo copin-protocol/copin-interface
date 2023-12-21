@@ -207,7 +207,7 @@ export default function Modal({
                       alignItems="start"
                       justifyContent={hasClose ? 'flex-end' : 'flex-start'}
                       py={3}
-                      px={24}
+                      px={[12, 24]}
                     >
                       {Boolean(title) && (
                         <Flex flex="1 1 auto">

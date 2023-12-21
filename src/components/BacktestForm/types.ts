@@ -8,8 +8,7 @@ export interface BackTestFormValues {
   endTime: Date
   volumeProtection: boolean
   lookBackOrders: number
-  enableStopLoss: boolean
-  stopLossAmount: number
-  maxVolMultiplier?: number
+  stopLossAmount?: number
+  maxMarginPerPosition: number | null
   reverseCopy: boolean
 }

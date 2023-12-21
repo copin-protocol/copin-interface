@@ -16,8 +16,9 @@ export const SearchResult = styled<any>(Box)`
   background-color: ${({ theme }) => theme.colors.neutral7};
   width: 100%;
   border: 1px solid ${({ theme }) => theme.colors.neutral4};
-  padding: 4px 6px;
   z-index: 4;
+  max-height: 80vh;
+  overflow: auto;
 `
 
 export const Wrapper = styled(Box)`

@@ -89,8 +89,7 @@ export default function CopyTraderDrawer({
 
   return (
     <Modal
-      width="100vh"
-      maxWidth="1000px"
+      maxWidth="520px"
       title={
         <Flex
           sx={{
@@ -104,7 +103,7 @@ export default function CopyTraderDrawer({
         >
           {isNewTab && (
             <Box as="span">
-              <Trans>Copy Trader Setting</Trans>
+              <Trans>Copy Trader</Trans>
             </Box>
           )}
 
@@ -152,7 +151,7 @@ export default function CopyTraderDrawer({
       mode="bottom"
       background="neutral5"
     >
-      <Box sx={{ position: 'relative', maxWidth: 1000, mx: 'auto' }}>
+      <Box sx={{ position: 'relative', width: '100%', mx: 'auto' }}>
         {isNewTab && (
           <CopyTraderForm
             onSubmit={onSubmit}

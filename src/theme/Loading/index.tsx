@@ -17,6 +17,15 @@ const Loading = styled(Box)<{ size?: number; background?: keyof Colors; indicato
   margin: 10px auto;
 `
 
+export const LineLoading = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: ${({ theme }) => theme.colors.primary1};
+  transform: scaleX(0);
+  transform-origin: center left;
+  animation: cubic-bezier(0.85, 0, 0.15, 1) 2s infinite line-horizontal-animation;
+`
+
 export const CoverPhotoLoading = () => {
   const { md } = useResponsive()
   const size = md ? 200 : 150

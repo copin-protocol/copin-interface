@@ -1,7 +1,7 @@
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import TopLeaderboard from 'components/TopLeadboard'
 import { useProtocolStore } from 'hooks/store/useProtocols'
-import SwitchProtocols from 'pages/Home/SwitchProtocols'
+import { HomeSwitchProtocols } from 'pages/Home/SwitchProtocols'
 import { Box, Flex } from 'theme/base'
 
 import SearchRanking from './SearchRanking'
@@ -40,7 +40,7 @@ const Leaderboard = () => {
           >
             <SwitchLeaderboardType sx={{ pl: [3, 3, 0, 0], pr: [0, 0, 3, 3] }} />
             <Box display={['block', 'block', 'none', 'none']}>
-              <SwitchProtocols buttonSx={{ borderRight: 'none', borderBottom: 'none' }} />
+              <HomeSwitchProtocols buttonSx={{ borderRight: 'none', borderBottom: 'none' }} />
             </Box>
           </Flex>
           <Flex px={[3, 3, 0, 0]} width="100%" alignItems="center" flex={1} flexWrap="wrap">

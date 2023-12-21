@@ -79,7 +79,6 @@ export default function useBacktestRequest(
     }) =>
     (formData: BackTestFormValues) => {
       setIsSubmitting(true)
-      // const testingType = formData.tradingMethod ? CopyTradeTypeEnum.FULL_ORDER : CopyTradeTypeEnum.NOT_FULL_ORDER
       const fromTime = dayjs(formData.startTime).utc().valueOf()
       const toTime = dayjs(formData.endTime).utc().valueOf()
 
@@ -92,15 +91,17 @@ export default function useBacktestRequest(
         toTime,
         tokenAddresses: formData.tokenAddresses,
         reverseCopy: formData.reverseCopy,
-        enableStopLoss: formData.enableStopLoss,
         volumeProtection: formData.volumeProtection,
-        maxVolMultiplier: formData.maxVolMultiplier,
+        maxVolMultiplier:
+          formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0
+            ? formData.maxMarginPerPosition / formData.orderVolume
+            : null,
       }
       if (formData.volumeProtection) {
         requestData.volumeProtection = true
         requestData.lookBackOrders = formData.lookBackOrders
       }
-      if (formData.enableStopLoss) {
+      if (formData.stopLossAmount) {
         requestData.enableStopLoss = true
         requestData.stopLossAmount = formData.stopLossAmount
       }
@@ -109,13 +110,6 @@ export default function useBacktestRequest(
       callback && callback(requestData)
 
       requestTestMultiOrder({ protocol: protocol ?? reqProtocol ?? ProtocolEnum.GMX, data: requestData })
-      // if (testingType === CopyTradeTypeEnum.FULL_ORDER) {
-      //   requestTestMultiOrder({ data: requestData })
-      //   return
-      // }
-      // if (testingType === CopyTradeTypeEnum.NOT_FULL_ORDER) {
-      //   requestTestSingleOrder({ data: requestData })
-      // }
     }
   return {
     backtestResultData,

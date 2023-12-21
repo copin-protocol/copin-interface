@@ -4,7 +4,7 @@ import DirectionButton from 'components/@ui/DirectionButton'
 import { Box, Flex } from 'theme/base'
 
 import { ConditionFilterProps } from '../ConditionFilter/types'
-import SwitchProtocols from '../SwitchProtocols'
+import { HomeSwitchProtocols } from '../SwitchProtocols'
 import { TimeFilterSectionProps } from '../TimeFilterSection'
 import { RowConfig, RowState, mobileConfigs as configs } from './layoutConfigs'
 import { AnalyticsLayoutComponents } from './types'
@@ -47,7 +47,7 @@ export default function AnalyticsLayoutTablet({
         <Box sx={{ gridArea: GridAreas.CHART }}>
           <Flex>
             {cloneElement<TimeFilterSectionProps>(timeFilterSection, { triggerResize: LIST.state.toString() })}
-            <SwitchProtocols />
+            <HomeSwitchProtocols />
           </Flex>
         </Box>
         <Box

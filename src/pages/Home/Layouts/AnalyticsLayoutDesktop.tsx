@@ -1,7 +1,7 @@
 import { cloneElement, useCallback, useReducer } from 'react'
 
 import DirectionButton from 'components/@ui/DirectionButton'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Box } from 'theme/base'
 import { STORAGE_KEYS } from 'utils/config/keys'
@@ -16,16 +16,14 @@ export default function AnalyticsLayoutDesktop({
   timeFilterSection,
   filterTag,
   listTradersSection,
-  topOpeningsSection,
   conditionFilter,
 }: AnalyticsLayoutComponents) {
   const { myProfile } = useMyProfile()
-  const { isPremiumUser } = useSubscriptionRestrict()
+  const isPremiumUser = useIsPremium()
   const [state, dispatch] = useReducer(reducer, initialState, initState)
-  const { MAIN, COL_RIGHT, OPENINGS, FILTERS, CHART, LIST } = state
+  const { MAIN, COL_RIGHT, FILTERS, CHART, LIST } = state
   const mainExpanded = MAIN.state === ColumnState.EXPANDED_RIGHT
   const listExpanded = LIST.state === RowState.EXPANDED_TOP
-  const filtersExpanded = FILTERS.state === RowState.EXPANDED_TOP
 
   const logEventLayout = useCallback(
     (action: string) => {
@@ -83,7 +81,7 @@ export default function AnalyticsLayoutDesktop({
               logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].EXPAND_EXPLORER_MAIN)
             }
           }}
-          buttonSx={{ top: '-1px', right: mainExpanded ? '0px' : '-16px' }}
+          buttonSx={{ top: '-1px', right: 0, border: mainExpanded ? 'small' : 'none' }}
           direction={mainExpanded ? 'left' : 'right'}
         />
         <Box sx={{ gridArea: GridAreas.CHART, position: 'relative' }}>
@@ -96,7 +94,6 @@ export default function AnalyticsLayoutDesktop({
               sx={{ position: 'absolute', top: 9, right: 24, cursor: 'pointer' }}
               onClick={() => {
                 dispatch(ButtonName.MAIN)
-                !filtersExpanded && setTimeout(() => dispatch(ButtonName.FILTERS), 0)
                 if (mainExpanded) {
                   logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_EXPLORER_MAIN)
                 } else {
@@ -134,32 +131,17 @@ export default function AnalyticsLayoutDesktop({
           width: '100%',
           height: '100%',
           gridTemplate: `
-      "${GridAreas.TOP_OPENINGS}" minmax(${OPENINGS.minHeight}px, ${OPENINGS.ratioHeight}fr)
+      
       "${GridAreas.FILTERS}" minmax(${FILTERS.minHeight}px, ${FILTERS.ratioHeight}fr)
       `,
         }}
       >
-        <Box sx={{ gridArea: GridAreas.TOP_OPENINGS, overflow: 'hidden' }}>{topOpeningsSection}</Box>
         <Box
           sx={{
             gridArea: GridAreas.FILTERS,
             position: 'relative',
-            borderTop: filtersExpanded ? 'none' : 'small',
-            borderTopColor: 'neutral4',
           }}
         >
-          <DirectionButton
-            onClick={() => {
-              dispatch(ButtonName.FILTERS)
-              if (filtersExpanded) {
-                logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_EXPLORER_FILTER)
-              } else {
-                logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].EXPAND_EXPLORER_FILTER)
-              }
-            }}
-            buttonSx={{ top: filtersExpanded ? '0px' : '-16px', left: '50%', transform: 'translateX(-50%)' }}
-            direction={filtersExpanded ? 'bottom' : 'top'}
-          />
           {conditionFilter}
         </Box>
       </Box>
@@ -172,7 +154,6 @@ enum GridAreas {
   COL_RIGHT = 'COL_RIGHT',
   CHART = 'CHART',
   LIST = 'LIST',
-  TOP_OPENINGS = 'HOME_TOP_OPENINGS',
   FILTERS = 'HOME_FILTERS',
 }
 enum ButtonName {
@@ -185,7 +166,6 @@ interface LayoutState {
   COL_RIGHT: ColumnConfig
   CHART: RowConfig
   LIST: RowConfig
-  OPENINGS: RowConfig
   FILTERS: RowConfig
 }
 const initialState: LayoutState = {
@@ -212,11 +192,6 @@ const initialState: LayoutState = {
     state: RowState.DEFAULT,
   },
   // in col right
-  OPENINGS: {
-    minHeight: configs.OPENINGS_MIN_HEIGHT,
-    ratioHeight: configs.OPENINGS_HEIGHT_RATIO,
-    state: RowState.DEFAULT,
-  },
   FILTERS: {
     minHeight: configs.FILTERS_MIN_HEIGHT,
     ratioHeight: configs.FILTERS_HEIGHT_RATIO,
@@ -269,38 +244,6 @@ function reducer(state: LayoutState, buttonName: ButtonName): LayoutState {
           MAIN: {
             ...state.MAIN,
             state: ColumnState.EXPANDED_RIGHT,
-          },
-        }
-        break
-      }
-      break
-    case ButtonName.FILTERS:
-      if (state.FILTERS.state === RowState.EXPANDED_TOP) {
-        newState = {
-          ...state,
-          OPENINGS: {
-            ...state.OPENINGS,
-            minHeight: configs.OPENINGS_MIN_HEIGHT,
-            ratioHeight: configs.OPENINGS_HEIGHT_RATIO,
-          },
-          FILTERS: {
-            ...state.FILTERS,
-            state: RowState.DEFAULT,
-          },
-        }
-        break
-      }
-      if (state.FILTERS.state === RowState.DEFAULT) {
-        newState = {
-          ...state,
-          OPENINGS: {
-            ...state.OPENINGS,
-            minHeight: 0,
-            ratioHeight: 0,
-          },
-          FILTERS: {
-            ...state.FILTERS,
-            state: RowState.EXPANDED_TOP,
           },
         }
         break

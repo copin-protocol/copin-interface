@@ -169,7 +169,7 @@ export function PaginationWithLimit({
   apiMeta?: ApiMeta
   menuPosition?: 'top' | 'bottom'
 } & BoxProps) {
-  const { md } = useResponsive()
+  const { lg } = useResponsive()
   const { total = 0, totalPages = 0 } = apiMeta ?? {}
   const inputRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
@@ -233,7 +233,7 @@ export function PaginationWithLimit({
         currentPage={currentPage}
         apiMeta={apiMeta}
         onPageChange={onPageChange}
-        disabledInput={!md}
+        disabledInput={!lg}
       />
     </Flex>
   )

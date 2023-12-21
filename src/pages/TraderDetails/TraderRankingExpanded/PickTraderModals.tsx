@@ -16,6 +16,7 @@ import Loading from 'theme/Loading'
 import Drawer from 'theme/Modal/Drawer'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 
 import { FindAndSelectTraderProps } from './FindAndSelectTrader'
 import { filterFoundData } from './helpers'
@@ -23,27 +24,25 @@ import useSelectTrader from './useSelectTrader'
 
 export function PickFromFavoritesModal({
   onSelect,
-  account,
-  protocol,
+  ignoreSelectTraders,
   onDismiss,
   timeOption,
 }: FindAndSelectTraderProps & { onDismiss: () => void }) {
-  const { data: tradersGMX, isLoading: isLoadingTradersGMX } = useQuery(
-    ['favorites', account, ProtocolEnum.GMX],
-    () => getFavoritesApi(ProtocolEnum.GMX),
+  const { data: tradersData, isLoading } = useQuery(
+    [QUERY_KEYS.GET_FAVORITE_TRADERS, ignoreSelectTraders],
+    () => {
+      return Promise.all(
+        Object.values(ProtocolEnum).map((protocol) => {
+          return getFavoritesApi(protocol).then((data) => filterFoundData(data, ignoreSelectTraders))
+        })
+      )
+    },
     {
       retry: 0,
-      enabled: !!account,
-      select: (data) => filterFoundData(data, { account, protocol }),
-    }
-  )
-  const { data: tradersKWENTA, isLoading: isLoadingTradersKWENTA } = useQuery(
-    ['favorites', account, ProtocolEnum.KWENTA],
-    () => getFavoritesApi(ProtocolEnum.KWENTA),
-    {
-      retry: 0,
-      enabled: !!account,
-      select: (data) => filterFoundData(data, { account, protocol }),
+      select: (data) =>
+        data.reduce((result, traders) => {
+          return [...result, ...traders]
+        }, [] as FavoritedTrader[]),
     }
   )
 
@@ -62,9 +61,6 @@ export function PickFromFavoritesModal({
     timeOption,
   })
 
-  if (isLoadingTradersGMX && isLoadingTradersKWENTA) return <Loading />
-
-  const traders = [...(tradersGMX ?? []), ...(tradersKWENTA ?? [])]
   return (
     <Drawer
       mode="right"
@@ -77,19 +73,22 @@ export function PickFromFavoritesModal({
     >
       <Box sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
         <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
-          {!traders.length && <NoDataFound />}
-          {traders.map((data) => {
-            return (
-              <ModalItemWrapper key={data.id} role="button" onClick={() => setSelectedTrader(data)}>
-                {renderTrader(data.account, data.protocol ?? ProtocolEnum.GMX, {
-                  isLink: false,
-                  size: 32,
-                  textSx: { width: 80 },
-                })}
-                {data.note && <ModalItemTag className="favorite_note">{data.note}</ModalItemTag>}
-              </ModalItemWrapper>
-            )
-          })}
+          {isLoading && <Loading />}
+          {!isLoading && !tradersData?.length && <NoDataFound />}
+          {!isLoading &&
+            tradersData &&
+            tradersData.map((data) => {
+              return (
+                <ModalItemWrapper key={data.id} role="button" onClick={() => setSelectedTrader(data)}>
+                  {renderTrader(data.account, data.protocol ?? ProtocolEnum.GMX, {
+                    isLink: false,
+                    size: 32,
+                    textSx: { width: 80 },
+                  })}
+                  {data.note && <ModalItemTag className="favorite_note">{data.note}</ModalItemTag>}
+                </ModalItemWrapper>
+              )
+            })}
         </Box>
         <SelectTraderState isLoading={isSelecting} error={error} timeOption={timeOption} setError={setError} />
       </Box>
@@ -99,8 +98,7 @@ export function PickFromFavoritesModal({
 
 export function PickFromCopyTradesModal({
   onSelect,
-  account,
-  protocol,
+  ignoreSelectTraders,
   onDismiss,
   timeOption,
 }: FindAndSelectTraderProps & { onDismiss: () => void }) {
@@ -121,7 +119,7 @@ export function PickFromCopyTradesModal({
 
   const { allCopyTrades } = useAllCopyTrades()
   const checkerMapping: Record<string, { [protocol: string]: boolean }> = {}
-  const _allCopyTrades = filterFoundData(allCopyTrades, { account, protocol }).filter((data) => {
+  const _allCopyTrades = filterFoundData(allCopyTrades, ignoreSelectTraders).filter((data) => {
     if (!data.account || !data.protocol) return false
     if (checkerMapping[data.account]?.[data.protocol]) return false
     checkerMapping[data.account] = { [data.protocol]: true }

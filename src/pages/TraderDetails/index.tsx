@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
-import { getTraderApi } from 'apis/traderApis'
+import { getTraderApi, getTraderStatisticApi } from 'apis/traderApis'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NotFound from 'components/@ui/NotFound'
 import { TableSortProps } from 'components/@ui/Table/types'
@@ -13,7 +13,7 @@ import HistoryTable, { historyColumns } from 'components/Tables/HistoryTable'
 import OpeningPositionTable from 'components/Tables/OpeningPositionTable'
 import { PositionData } from 'entities/trader.d'
 import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
-import useSubscriptionRestrict from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import usePageChange from 'hooks/helpers/usePageChange'
@@ -42,7 +42,7 @@ export interface PositionSortPros {
   sortType: SortTypeEnum
 }
 export default function TraderDetails() {
-  const { isPremiumUser, handleIsBasicUser } = useSubscriptionRestrict()
+  const { isPremiumUser, checkIsPremium } = useIsPremiumAndAction()
   const timeFilterOptions = useMemo(
     () => (isPremiumUser ? TIME_FILTER_OPTIONS : TIME_FILTER_OPTIONS.filter((e) => e.id !== TimeFilterByEnum.ALL_TIME)),
     [isPremiumUser]
@@ -54,15 +54,16 @@ export default function TraderDetails() {
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
     [QUERY_KEYS.GET_TRADER_DETAIL, _address, protocol, isPremiumUser],
-    () =>
-      Promise.all(
-        timeFilterOptions
-          .map((option) => getTraderApi({ protocol, account: _address, type: option.id, returnRanking: true }))
-          .reverse()
-      ),
+    () => getTraderStatisticApi({ protocol, account: _address }),
     {
       enabled: !!_address,
       retry: 0,
+      select: (data) =>
+        timeFilterOptions
+          .map((option) => {
+            return data[option.id]
+          })
+          .reverse(),
     }
   )
 
@@ -86,10 +87,7 @@ export default function TraderDetails() {
   })
 
   const setTimeOption = (option: TimeFilterProps) => {
-    if (option.id === TimeFilterByEnum.ALL_TIME && !isPremiumUser) {
-      handleIsBasicUser()
-      return
-    }
+    if (option.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) return
     changeCurrentOption(option)
   }
   const resetSort = () =>
@@ -175,7 +173,7 @@ export default function TraderDetails() {
             <ChartTrader protocol={protocol} account={_address} timeOption={timeOption} onChangeTime={setTimeOption} />
           )}
           <Box flex="1" overflow="auto" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative' }}>
-            {!!traderData && <TraderStats data={traderData} />}
+            {!!traderData && <TraderStats data={traderData} timeOption={timeOption} />}
           </Box>
         </Box>
 

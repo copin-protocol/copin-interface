@@ -44,3 +44,8 @@ export const normalizePositionResponse = (
     data: res.data.map(normalizePositionData),
   }
 }
+
+export const normalizePositionListResponse = (res: ResponsePositionData[]): PositionData[] => {
+  if (!res) return res
+  return res.map(normalizePositionData)
+}

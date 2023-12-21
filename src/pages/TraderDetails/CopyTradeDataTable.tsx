@@ -8,7 +8,6 @@ import { Box, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { CopyTradeStatusEnum } from 'utils/config/enums'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { formatNumber } from 'utils/helpers/format'
 
 export default function CopyTradeDataTable({
   isLoading,
@@ -36,7 +35,7 @@ export default function CopyTradeDataTable({
         title: 'Trader',
         dataIndex: 'account',
         key: 'account',
-        style: { minWidth: '100px' },
+        style: { minWidth: '150px' },
         render: (item) =>
           renderTrader(item.account, item.protocol, {
             isLink: false,
@@ -47,45 +46,6 @@ export default function CopyTradeDataTable({
               filter: item.status === CopyTradeStatusEnum.RUNNING ? 'none' : 'grayscale(1)',
             },
           }),
-      },
-
-      {
-        title: 'Volume',
-        dataIndex: 'volume',
-        key: 'volume',
-        style: { minWidth: '100px' },
-        render: (item) => <Type.Caption color="neutral1">${formatNumber(item.volume)}</Type.Caption>,
-      },
-      {
-        title: 'Leverage',
-        dataIndex: 'leverage',
-        key: 'leverage',
-        style: { minWidth: '100px' },
-        render: (item) => <Type.Caption color="neutral1">x{formatNumber(item.leverage)}</Type.Caption>,
-      },
-      {
-        title: 'Vol Protection',
-        dataIndex: 'volumeProtection',
-        key: 'volumeProtection',
-        style: { minWidth: '100px' },
-        render: (item) =>
-          item.volumeProtection ? (
-            <Type.Caption color="green1">ON</Type.Caption>
-          ) : (
-            <Type.Caption color="red2">OFF</Type.Caption>
-          ),
-      },
-
-      {
-        title: 'Stoploss',
-        dataIndex: 'stopLossAmount',
-        key: 'stopLossAmount',
-        style: { minWidth: '100px' },
-        render: (item) => (
-          <Type.Caption color={item.enableStopLoss && item.stopLossAmount ? 'neutral1' : undefined}>
-            {item.enableStopLoss && item.stopLossAmount ? `$${formatNumber(item.stopLossAmount)}` : '--'}
-          </Type.Caption>
-        ),
       },
       {
         title: 'Status',

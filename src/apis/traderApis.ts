@@ -1,7 +1,10 @@
-// import requester from 'apis/index'
-// import { TraderData } from 'entities/trader'
-// import { ApiListResponse } from './api'
-import { CheckAvailableResultData, ResponsePositionData, ResponseTraderData, TraderCounter } from 'entities/trader.d'
+import {
+  CheckAvailableResultData,
+  ResponsePositionData,
+  ResponseTraderData,
+  TraderCounter,
+  TraderData,
+} from 'entities/trader.d'
 import { PositionSortPros } from 'pages/TraderDetails'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { capitalizeFirstLetter } from 'utils/helpers/transform'
@@ -10,78 +13,77 @@ import { ApiListResponse } from './api'
 import { apiWrapper } from './helpers'
 import requester from './index'
 import { normalizePositionResponse, normalizeTraderData, normalizeTraderResponse } from './normalize'
-import { GetApiParams, QueryFilter, RangeFilter, RequestBodyApiData } from './types'
+import { GetApiParams, QueryFilter, RangeFilter, RequestBodyApiData, SearchTradersParams } from './types'
 
 const SERVICE = 'position'
+
+function transformRelisedField(fieldName: string) {
+  switch (fieldName) {
+    case 'pnl':
+    case 'maxPnl':
+    case 'avgRoi':
+    case 'maxRoi':
+    case 'totalGain':
+    case 'totalLoss':
+    case 'maxDrawdown':
+    case 'maxDrawdownPnl':
+    case 'profitRate':
+    case 'gainLossRatio':
+    case 'profitLossRatio':
+      return 'realised' + capitalizeFirstLetter(fieldName)
+    default:
+      return fieldName
+  }
+}
 
 const normalizePayload = (body: RequestBodyApiData) => {
   let sortBy = body.sortBy
   if (!!sortBy) {
-    switch (sortBy) {
-      case 'pnl':
-      // case 'maxPnl':
-      case 'avgRoi':
-      case 'maxRoi':
-      case 'totalGain':
-      case 'totalLoss':
-      case 'maxDrawdown':
-      case 'maxDrawdownPnl':
-      case 'profitRate':
-      case 'gainLossRatio':
-      case 'profitLossRatio':
-        sortBy = 'realised' + capitalizeFirstLetter(sortBy)
-        break
-      default:
-        break
-    }
+    sortBy = transformRelisedField(sortBy)
   }
   if (!body.ranges) return { ...body, sortBy }
   const ranges = body.ranges.map((range) => ({
     ...range,
   }))
-  ranges.forEach((range) => {
-    switch (range.fieldName) {
-      case 'avgDuration':
-      case 'minDuration':
-      case 'maxDuration':
-        if (range.gte) {
-          range.gte = range.gte * 3600
-        }
-        if (range.lte) {
-          range.lte = range.lte * 3600
-        }
-        break
-      case 'lastTradeAtTs':
-        let gte, lte
-        if (range.gte) {
-          lte = Date.now() - range.gte * 24 * 3600 * 1000
-        }
-        if (range.lte) {
-          gte = Date.now() - range.lte * 24 * 3600 * 1000
-        }
-        range.gte = gte
-        range.lte = lte
-        break
-      case 'pnl':
-      case 'maxPnl':
-      case 'avgRoi':
-      case 'maxRoi':
-      case 'totalGain':
-      case 'totalLoss':
-      case 'maxDrawdown':
-      case 'maxDrawdownPnl':
-      case 'profitRate':
-      case 'gainLossRatio':
-      case 'profitLossRatio':
-        range.fieldName = 'realised' + capitalizeFirstLetter(range.fieldName)
-        break
-      case 'longRate':
-        if (range.gte && range.gte > 100) {
-          range.gte = 100
-        }
-        break
-    }
-  })
+  if (ranges?.[0].fieldName.match('ranking')) {
+    ranges.forEach((range) => {
+      const [_prefix, _fieldName] = range.fieldName.split('.')
+      if (_fieldName === 'pnl') return
+      range.fieldName = _prefix + '.' + transformRelisedField(_fieldName)
+    })
+  } else {
+    ranges.forEach((range) => {
+      range.fieldName = transformRelisedField(range.fieldName)
+      switch (range.fieldName) {
+        case 'avgDuration':
+        case 'minDuration':
+        case 'maxDuration':
+          if (range.gte) {
+            range.gte = range.gte * 3600
+          }
+          if (range.lte) {
+            range.lte = range.lte * 3600
+          }
+          break
+        case 'lastTradeAtTs':
+          let gte, lte
+          if (range.gte) {
+            lte = Date.now() - range.gte * 24 * 3600 * 1000
+          }
+          if (range.lte) {
+            gte = Date.now() - range.lte * 24 * 3600 * 1000
+          }
+          range.gte = gte
+          range.lte = lte
+          break
+        case 'longRate':
+          if (range.gte && range.gte > 100) {
+            range.gte = 100
+          }
+          break
+      }
+    })
+  }
   return { ...body, ranges, sortBy }
 }
 
@@ -126,6 +128,12 @@ export async function getTraderApi({
         ? normalizeTraderData(res.data.data[0] as ResponseTraderData)
         : undefined
     )
+}
+
+export async function searchTradersApi(params: SearchTradersParams) {
+  return requester
+    .get(`${SERVICE}/statistic/filter`, { params })
+    .then((res: any) => normalizeTraderResponse(res.data as ApiListResponse<ResponseTraderData>))
 }
 
 export async function getTraderHistoryApi({
@@ -196,4 +204,16 @@ export async function getTradersByTimeRangeApi({
   return requester
     .post(`${protocol}/${SERVICE}/custom/filter`, normalizePayload(body), { params })
     .then((res: any) => normalizeTraderResponse(res.data as ApiListResponse<ResponseTraderData>))
+}
+
+export async function getTraderStatisticApi({ protocol, account }: { protocol: ProtocolEnum; account: string }) {
+  return requester.get(apiWrapper(`${protocol}/${SERVICE}/statistic/trader/${account}`)).then((res: any) => {
+    const data = res.data as { [key in TimeFilterByEnum]: ResponseTraderData }
+    const normalizedData = {} as { [key in TimeFilterByEnum]: TraderData }
+    for (const key in data) {
+      const _key = key as unknown as TimeFilterByEnum
+      normalizedData[_key] = normalizeTraderData(data[_key])
+    }
+    return normalizedData
+  })
 }

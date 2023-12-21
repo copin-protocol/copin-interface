@@ -2,7 +2,6 @@ import { useState } from 'react'
 import ReactJoyride, { CallBackProps, STATUS, Step, TooltipRenderProps } from 'react-joyride'
 
 import Divider from 'components/@ui/Divider'
-import { volumeMultiplierContent, volumeProtectionContent } from 'components/TooltipContents'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -33,21 +32,6 @@ export default function BacktestGuideTour() {
         {
           content: tourConfigs.leverage.content,
           target: tourConfigs.leverage.target,
-          placement: 'top-end',
-        },
-        {
-          content: tourConfigs.volumeProtection.content,
-          target: tourConfigs.volumeProtection.target,
-          placement: 'top-start',
-        },
-        // {
-        //   content: tourConfigs.stoploss.content,
-        //   target: tourConfigs.stoploss.target,
-        //   placement: 'top',
-        // },
-        {
-          content: tourConfigs.maxVolMultiplier.content,
-          target: tourConfigs.maxVolMultiplier.target,
           placement: 'top-end',
         },
         {
@@ -117,7 +101,7 @@ export const tourConfigs = {
   amountPerOrder: {
     id: 'tour__amount_per_order',
     target: '#tour__amount_per_order',
-    content: <Type.Caption>Set Amount Per Position to 1/20 of your account or your own risk tolerance</Type.Caption>,
+    content: <Type.Caption>Set margin amount to 1/20 of your account or your own risk tolerance</Type.Caption>,
   },
   tradingPairs: {
     id: 'tour__trading_pairs',
@@ -138,25 +122,6 @@ export const tourConfigs = {
         capital
       </Type.Caption>
     ),
-  },
-  volumeProtection: {
-    id: 'tour__volume_protection',
-    target: '#tour__volume_protection',
-    content: volumeProtectionContent,
-    // <Type.Caption>Volume Protection ensures careful and efficient trading, minimizing unwanted risks</Type.Caption>
-  },
-  stoploss: {
-    id: 'tour__stoploss',
-    target: '#tour__stoploss',
-    content: (
-      <Type.Caption>Set your acceptable maximum loss in advance for stability and profit protection</Type.Caption>
-    ),
-  },
-  maxVolMultiplier: {
-    id: 'tour__max_vol_multiplier',
-    target: '#tour__max_vol_multiplier',
-    content: volumeMultiplierContent,
-    // <Type.Caption>Set your acceptable maximum loss in advance for stability and profit protection</Type.Caption>
   },
   timePeriod: {
     id: 'tour__time_period',

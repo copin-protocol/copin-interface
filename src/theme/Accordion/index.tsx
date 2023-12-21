@@ -1,4 +1,4 @@
-import { ArrowDown, CaretDown, CaretUp } from '@phosphor-icons/react'
+import { CaretDown, CaretUp } from '@phosphor-icons/react'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 
 import { Box, Flex, IconBox } from 'theme/base'
@@ -29,8 +29,6 @@ export default function Accordion({
     return (
       <Box
         sx={{
-          borderBottom: 'normal',
-          borderBottomColor: 'neutral6',
           padding: '16px 0',
           ...(wrapperSx || {}),
         }}
@@ -40,18 +38,18 @@ export default function Accordion({
           sx={{
             cursor: 'pointer',
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'start',
             alignItems: 'center',
             '& svg': {
-              color: 'primary1',
+              color: 'neutral3',
             },
           }}
         >
           {header}
           {isExpand ? (
-            <CaretUp weight="bold" size={24} style={{ flexShrink: 0, marginLeft: '8px' }} />
+            <CaretUp weight="bold" size={16} style={{ flexShrink: 0, marginLeft: '8px' }} />
           ) : (
-            <CaretDown weight="bold" size={24} style={{ flexShrink: 0, marginLeft: '8px' }} />
+            <CaretDown weight="bold" size={16} style={{ flexShrink: 0, marginLeft: '8px' }} />
           )}
         </Box>
         <Box

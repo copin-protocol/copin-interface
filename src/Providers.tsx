@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import ThemeProvider from 'theme'
 
 import { CopyWalletProvider } from 'hooks/features/useCopyWalletContext'
+import { ProtocolProvider } from 'hooks/store/useProtocols'
 import ThemedGlobalStyle from 'theme/styles'
 import PythConnection from 'utils/web3/pyth'
 
@@ -28,7 +29,9 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
           <BrowserRouter>
             <PythConnection />
             <DappProvider>
-              <CopyWalletProvider>{children}</CopyWalletProvider>
+              <ProtocolProvider>
+                <CopyWalletProvider>{children}</CopyWalletProvider>
+              </ProtocolProvider>
             </DappProvider>
           </BrowserRouter>
         </QueryClientProvider>

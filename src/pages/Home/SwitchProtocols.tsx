@@ -1,92 +1,74 @@
 import { SystemStyleObject } from '@styled-system/css'
 import { useResponsive } from 'ahooks'
 import { useCallback } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
-import { useOptionChange } from 'hooks/helpers/useOptionChange'
+import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolStore } from 'hooks/store/useProtocols'
-import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
+import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { PROTOCOL_OPTIONS, ProtocolOptionProps } from 'utils/config/protocols'
-import ROUTES from 'utils/config/routes'
-import { generateTopOpeningOrdersRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
 import { logEventSwitchProtocol } from 'utils/tracking/event'
 import { getChainMetadata } from 'utils/web3/chains'
 
-import useTradersContext from './useTradersContext'
-
-const SwitchProtocols = ({
-  buttonSx,
-  textSx,
-  sx,
-}: {
+type SwitchProtocolComponentProps = {
   buttonSx?: SystemStyleObject & GridProps
   textSx?: SystemStyleObject & GridProps
   sx?: SystemStyleObject & GridProps
-}) => {
-  const { md } = useResponsive()
-  const history = useHistory()
-  const { myProfile } = useMyProfile()
-  const { resetStore } = useSelectBacktestTraders()
-  const { protocol: protocolParam } = useParams<{ protocol: ProtocolEnum }>()
-  const { protocol: protocolStore, setProtocol } = useProtocolStore()
-  const protocol = protocolParam ?? protocolStore
-  const { setCurrentSuggestion, changeCurrentPage } = useTradersContext()
-  const { currentOption, changeCurrentOption } = useOptionChange({
-    optionName: 'protocol',
-    options: PROTOCOL_OPTIONS,
-    defaultOption: protocol,
-    optionNameToBeDelete: ['protocol'],
-  })
+}
 
+export function HomeSwitchProtocols(props: SwitchProtocolComponentProps) {
+  const { setSearchParams } = useSearchParams()
+  const onSwitch = (protocol: ProtocolEnum) => {
+    setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: protocol, [URL_PARAM_KEYS.EXPLORER_PAGE]: '1' })
+  }
+  return <SwitchProtocolsComponent {...props} onSwitch={onSwitch} />
+}
+
+function SwitchProtocolsComponent({
+  buttonSx,
+  textSx,
+  sx,
+  onSwitch,
+}: SwitchProtocolComponentProps & { onSwitch: (() => void) | ((protocol: ProtocolEnum) => void) }) {
+  const { md } = useResponsive()
+  const { myProfile } = useMyProfile()
+  const { protocol, setProtocol } = useProtocolStore()
+
+  const currentProtocolOption = PROTOCOL_OPTIONS.find((option) => option.id === protocol) ?? PROTOCOL_OPTIONS[0]
   const handleSwitchProtocol = useCallback(
     (protocol: ProtocolOptionProps) => {
-      changeCurrentOption(protocol)
       setProtocol(protocol.id)
-      resetStore()
-      if (changeCurrentPage) {
-        changeCurrentPage(1)
-      }
-      if (setCurrentSuggestion) {
-        setCurrentSuggestion(undefined)
-      }
+      onSwitch(protocol.id)
 
-      if (history.location.pathname.includes(ROUTES.TOP_OPENINGS.path_prefix)) {
-        history.push(`/${generateTopOpeningOrdersRoute(protocol.id)}`, { replace: true })
-      }
-
-      //log
       logEventSwitchProtocol({ protocol: protocol?.id, username: myProfile?.username })
     },
-    [
-      changeCurrentOption,
-      changeCurrentPage,
-      history,
-      myProfile?.username,
-      resetStore,
-      setCurrentSuggestion,
-      setProtocol,
-    ]
+    [myProfile?.username, onSwitch, setProtocol]
   )
 
   const renderProtocols = () => {
     return (
       <Box>
-        {PROTOCOL_OPTIONS.map((protocol) => (
-          <DropdownItem key={protocol.id} size="sm" onClick={() => handleSwitchProtocol(protocol)}>
+        {PROTOCOL_OPTIONS.map((option) => (
+          <DropdownItem key={option.id} size="sm" onClick={() => handleSwitchProtocol(option)}>
             <Flex py={1} alignItems="center" sx={{ gap: 2 }}>
-              <Image src={parseProtocolImage(protocol.id)} width={28} height={28} />
+              <Image src={parseProtocolImage(option.id)} width={28} height={28} />
               <Flex flexDirection="column">
-                <Type.Caption lineHeight="16px" color={currentOption.id === protocol.id ? 'primary1' : 'neutral1'}>
-                  {protocol.text}
+                <Type.Caption
+                  lineHeight="16px"
+                  color={currentProtocolOption.id === option.id ? 'primary1' : 'neutral1'}
+                >
+                  {option.text}
                 </Type.Caption>
-                <Type.Caption lineHeight="16px" color={currentOption.id === protocol.id ? 'primary1' : 'neutral3'}>
-                  {getChainMetadata(protocol.chainId).label}
+                <Type.Caption
+                  lineHeight="16px"
+                  color={currentProtocolOption.id === option.id ? 'primary1' : 'neutral3'}
+                >
+                  {getChainMetadata(option.chainId).label}
                 </Type.Caption>
               </Flex>
             </Flex>
@@ -129,14 +111,14 @@ const SwitchProtocols = ({
           gap: 2,
         }}
       >
-        <Image src={parseProtocolImage(currentOption.id)} width={28} height={28} />
+        <Image src={parseProtocolImage(protocol)} width={28} height={28} />
         <Box width={85}>
           <Type.Caption display="block" lineHeight="16px" color="neutral1" sx={{ ...textSx }}>
-            {currentOption.text}
+            {currentProtocolOption.text}
           </Type.Caption>
           {md && (
             <Type.Caption display="block" lineHeight="16px" color="neutral3">
-              {getChainMetadata(currentOption.chainId).label}
+              {getChainMetadata(currentProtocolOption.chainId).label}
             </Type.Caption>
           )}
         </Box>
@@ -144,5 +126,3 @@ const SwitchProtocols = ({
     </Dropdown>
   )
 }
-
-export default SwitchProtocols

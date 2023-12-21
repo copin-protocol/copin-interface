@@ -13,6 +13,7 @@ import { Box, Flex, TextProps, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
+import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 
@@ -63,6 +64,18 @@ export function renderCopyEntry(data: CopyPositionData | undefined, textSx?: Tex
     </Flex>
   )
 }
+
+export function renderSizeShorten(data: PositionData | undefined) {
+  if (!data) return <></>
+  return (
+    <Flex sx={{ gap: 2, alignItems: 'center' }}>
+      <Type.Caption>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
+      <VerticalDivider />
+      <Type.Caption>{formatNumber(data.leverage, 1, 1)}x</Type.Caption>
+    </Flex>
+  )
+}
+
 export function renderSize(data: PositionData | undefined) {
   if (!data) return <></>
   return (
@@ -76,33 +89,34 @@ export function renderSize(data: PositionData | undefined) {
   )
 }
 
-export function renderSizeOpeningWithPrices(data: PositionData | undefined, prices: UsdPrices, textSx?: TextProps) {
-  return <SizeOpeningComponent data={data} prices={prices} textSx={textSx} />
+export function renderSizeOpeningWithPrices(data: PositionData | undefined, prices: UsdPrices, textProps?: TextProps) {
+  return <SizeOpeningComponent data={data} prices={prices} textProps={textProps} />
 }
-export function renderSizeOpening(data: PositionData | undefined, textSx?: TextProps) {
-  return <SizeOpening data={data} textSx={textSx} />
+export function renderSizeOpening(data: PositionData | undefined, textProps?: TextProps) {
+  return <SizeOpening data={data} textProps={textProps} />
 }
 type SizeOpeningComponentProps = {
   data: PositionData | undefined
   prices: UsdPrices | undefined
-  textSx?: any
+  textProps?: TextProps
 }
 function SizeOpening(props: Omit<SizeOpeningComponentProps, 'prices'>) {
   const prices = useGetUsdPrices()
   if (!prices) return <>--</>
   return <SizeOpeningComponent {...props} prices={prices} />
 }
-function SizeOpeningComponent({ data, prices, textSx }: SizeOpeningComponentProps) {
+function SizeOpeningComponent({ data, prices, textProps }: SizeOpeningComponentProps) {
   if (!data || !prices) return <></>
   const marketPrice = prices[data.indexToken] ?? 0
   const liquidatePrice = calcLiquidatePrice(data)
   const riskPercent = calcRiskPercent(data.isLong, data.averagePrice, marketPrice, liquidatePrice ?? 0)
+  const { sx, ..._textProps } = textProps ?? {}
 
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
       <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
         <Flex flex="50%">
-          <Type.Caption {...textSx}>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
+          <Type.Caption {..._textProps}>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
         </Flex>
         <VerticalDivider />
         <Flex
@@ -110,14 +124,28 @@ function SizeOpeningComponent({ data, prices, textSx }: SizeOpeningComponentProp
           justifyContent="center"
           // sx={{ borderLeft: 'small', borderRight: 'small', borderColor: 'neutral4' }}
         >
-          <Type.Caption {...textSx} textAlign="center">
+          <Type.Caption {..._textProps} textAlign="center">
             {formatNumber(data.leverage, 1, 1)}x
           </Type.Caption>
         </Flex>
         <VerticalDivider />
-        <Flex flex="55%" justifyContent="flex-end" sx={{ gap: 1, alignItems: 'center' }}>
-          <SkullIcon />
-          <Type.Caption {...textSx}>
+        <Flex flex="55%" justifyContent="flex-end" sx={{ gap: 1, alignItems: 'center', height: 22 }}>
+          <SkullIcon style={{ flexShrink: 0 }} />
+          <Type.Caption
+            {..._textProps}
+            sx={{
+              ...sx,
+              height: '22px',
+              '& > *:first-child': {
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                width: '100%',
+                maxWidth: 160,
+                display: 'inline-block',
+              },
+            }}
+          >
             {liquidatePrice ? PriceTokenText({ value: liquidatePrice, maxDigit: 2, minDigit: 2 }) : '--'}
           </Type.Caption>
         </Flex>

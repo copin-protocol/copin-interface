@@ -1,6 +1,6 @@
 import CopyTradeCloneForm from 'components/CopyTradeForm/CopyTradeCloneForm'
 import { CopyTradeData } from 'entities/copyTrade.d'
-import Drawer from 'theme/Modal/Drawer'
+import Modal from 'theme/Modal'
 import { Box } from 'theme/base'
 
 export default function CopyTradeCloneDrawer({
@@ -15,24 +15,19 @@ export default function CopyTradeCloneDrawer({
   copyTradeData: CopyTradeData | undefined
 }) {
   return (
-    <Drawer
+    <Modal
       title="Clone Copytrade Settings"
-      size="min(800px,80vh)"
+      minHeight="min(800px,80vh)"
       mode="bottom"
       background="neutral5"
       hasClose
       isOpen={isOpen}
       onDismiss={onDismiss}
-      headSx={{
-        maxWidth: '100%',
-        width: 1000,
-        mx: 'auto',
-        px: 3,
-      }}
+      maxWidth="520px"
     >
-      <Box sx={{ position: 'relative', maxWidth: 1000, mx: 'auto' }}>
+      <Box sx={{ position: 'relative', maxWidth: '100%', mx: 'auto' }}>
         <CopyTradeCloneForm copyTradeData={copyTradeData} onDismiss={onDismiss} onSuccess={onSuccess} />
       </Box>
-    </Drawer>
+    </Modal>
   )
 }
