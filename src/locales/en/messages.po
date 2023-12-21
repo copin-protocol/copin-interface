@@ -671,8 +671,8 @@ msgid "Explorer Traders"
 msgstr "Explorer Traders"
 
 #: src/pages/Settings/AlertList/TraderLastViewed.tsx
-msgid "Explorer new traders"
-msgstr "Explorer new traders"
+#~ msgid "Explorer new traders"
+#~ msgstr "Explorer new traders"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "Extend"
@@ -703,8 +703,8 @@ msgid "Extending"
 msgstr "Extending"
 
 #: src/pages/Home/Layouts/HomeDesktop.tsx
-msgid "FAVORITES"
-msgstr "FAVORITES"
+#~ msgid "FAVORITES"
+#~ msgstr "FAVORITES"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "FREE"
@@ -719,8 +719,8 @@ msgid "Favorite List"
 msgstr "Favorite List"
 
 #: src/pages/Home/Layouts/HomeMobile.tsx
-msgid "Favorites"
-msgstr "Favorites"
+#~ msgid "Favorites"
+#~ msgstr "Favorites"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "Features"
@@ -928,8 +928,8 @@ msgid "Last Updated:"
 msgstr "Last Updated:"
 
 #: src/pages/Settings/AlertList/TraderLastViewed.tsx
-msgid "Last Viewed"
-msgstr "Last Viewed"
+#~ msgid "Last Viewed"
+#~ msgstr "Last Viewed"
 
 #: src/pages/Home/Layouts/HomeMobile.tsx
 msgid "Leaderboard"
@@ -952,6 +952,7 @@ msgid "Limited"
 msgstr "Limited"
 
 #: src/pages/LinkBotTelegram/index.tsx
+#: src/pages/Settings/AlertList/index.tsx
 msgid "Link Account"
 msgstr "Link Account"
 
@@ -1207,6 +1208,7 @@ msgid "New Password"
 msgstr "New Password"
 
 #: src/components/Modal/UnsubscribeAlertModal/index.tsx
+#: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 msgid "No"
@@ -1429,8 +1431,8 @@ msgstr "Polynomial"
 #~ msgstr "Position Details"
 
 #: src/pages/Home/Layouts/HomeMobile.tsx
-msgid "Positions"
-msgstr "Positions"
+#~ msgid "Positions"
+#~ msgstr "Positions"
 
 #: src/pages/Settings/UserSubscription/HasSubscription.tsx
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
@@ -1496,6 +1498,10 @@ msgstr "REFERRAL"
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "Read more"
 msgstr "Read more"
+
+#: src/pages/Settings/AlertList/TraderLastViewed.tsx
+msgid "Recommend"
+msgstr "Recommend"
 
 #: src/pages/MyProfile/Referral/ReferralList.tsx
 #~ msgid "Referee List"
@@ -1705,6 +1711,10 @@ msgstr "Smart wallets are a unique Copin offering that allows copiers to copytra
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
+#: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
+msgid "Something went wrong, please try later"
+msgstr "Something went wrong, please try later"
+
 #: src/pages/MyProfile/MyCopies/FilterSection.tsx
 msgid "Source"
 msgstr "Source"
@@ -1767,6 +1777,7 @@ msgstr "Subscription Plans"
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
 #: src/pages/MyProfile/UserActivity/configs.tsx
 #: src/pages/Settings/AlertList/TraderLastViewed.tsx
+#: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
 #: src/pages/Settings/AlertList/index.tsx
 #: src/pages/TraderDetails/AlertAction.tsx
 #: src/pages/TraderDetails/AlertAction.tsx
@@ -1797,6 +1808,10 @@ msgstr "Syncing Onchain Data"
 #: src/utils/config/translations.tsx
 msgid "Synthetix"
 msgstr "Synthetix"
+
+#: src/pages/Home/Layouts/HomeDesktop.tsx
+msgid "TOP OPENING"
+msgstr "TOP OPENING"
 
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 msgid "TRADER EXPLORER"
@@ -1933,8 +1948,16 @@ msgid "This copy position has been closed successfully"
 msgstr "This copy position has been closed successfully"
 
 #: src/components/CopyTradeForm/index.tsx
-msgid "This is a beta feature. Please DYOR before copytrading."
-msgstr "This is a beta feature. Please DYOR before copytrading."
+#~ msgid "This is a beta feature. Please DYOR before copytrading."
+#~ msgstr "This is a beta feature. Please DYOR before copytrading."
+
+#: src/components/CopyTradeForm/index.tsx
+msgid "This is a beta feature. Please copy at your own risk."
+msgstr "This is a beta feature. Please copy at your own risk."
+
+#: src/components/CopyTradeForm/index.tsx
+#~ msgid "This is a beta feature. Please trade at your own risk."
+#~ msgstr "This is a beta feature. Please trade at your own risk."
 
 #: src/pages/Settings/AlertList/index.tsx
 #: src/pages/TraderDetails/AlertAction.tsx
@@ -1987,12 +2010,16 @@ msgstr "Today"
 #~ msgstr "Top Min Roi"
 
 #: src/pages/Home/Layouts/HomeMobile.tsx
-msgid "Top Opening Positions"
-msgstr "Top Opening Positions"
+msgid "Top Opening"
+msgstr "Top Opening"
 
 #: src/pages/Home/Layouts/HomeMobile.tsx
-msgid "Top Opening Positions on {0}"
-msgstr "Top Opening Positions on {0}"
+#~ msgid "Top Opening Positions"
+#~ msgstr "Top Opening Positions"
+
+#: src/pages/Home/Layouts/HomeMobile.tsx
+#~ msgid "Top Opening Positions on {0}"
+#~ msgstr "Top Opening Positions on {0}"
 
 #: src/pages/Home/ConditionFilter/configs.tsx
 #~ msgid "Top PNL"
@@ -2118,6 +2145,14 @@ msgstr "Trader"
 msgid "Trader Explorer"
 msgstr "Trader Explorer"
 
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Trader Favorites"
+msgstr "Trader Favorites"
+
+#: src/pages/MyProfile/Favorites.tsx
+msgid "Trader Favorites Statistics"
+msgstr "Trader Favorites Statistics"
+
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "Trader don't have statistic in {0}"
 msgstr "Trader don't have statistic in {0}"
@@ -2173,6 +2208,18 @@ msgstr "Unique traders are copied in the system"
 #: src/pages/Subscription/Plans.tsx
 msgid "Unlimited"
 msgstr "Unlimited"
+
+#: src/pages/Settings/AlertList/index.tsx
+msgid "Unlink Account"
+msgstr "Unlink Account"
+
+#: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
+msgid "Unlink Copin Telegram Bot successfully"
+msgstr "Unlink Copin Telegram Bot successfully"
+
+#: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
+msgid "Unlink your account with Copin Telegram Bot?"
+msgstr "Unlink your account with Copin Telegram Bot?"
 
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Unlock"
@@ -2355,6 +2402,7 @@ msgid "Would you like to use a referral code?"
 msgstr "Would you like to use a referral code?"
 
 #: src/components/Modal/UnsubscribeAlertModal/index.tsx
+#: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 msgid "Yes"
@@ -2415,6 +2463,10 @@ msgstr "You will receive <0>30 days</0> Premium NFT Plan"
 #: src/components/Modal/UnsubscribeAlertModal/index.tsx
 msgid "You won’t be notified each time this trader engages in new activity."
 msgstr "You won’t be notified each time this trader engages in new activity."
+
+#: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
+msgid "You won’t get any notification from our bot."
+msgstr "You won’t get any notification from our bot."
 
 #: src/pages/Settings/UserSubscription/HasSubscription.tsx
 msgid "You'll still have access to Premium after your NFT expires in 30 minutes. Keep an eye on the renewal time."

@@ -138,7 +138,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   return (
     <>
       <Type.Caption color="orange1" mb={1} px={[12, 24]}>
-        <Trans>This is a beta feature. Please DYOR before copytrading.</Trans>
+        <Trans>This is a beta feature. Please copy at your own risk.</Trans>
       </Type.Caption>
       <Box sx={{ pb: 24, px: [12, 24], pt: 3 }}>
         <InputField block {...register(fieldName.title)} error={errors.title?.message} label="Label" />
@@ -311,7 +311,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
         </Box>
         <Divider mt={24} />
         <Accordion
-          header={<Type.BodyBold>SL / TP</Type.BodyBold>}
+          header={<Type.BodyBold>Stop Loss</Type.BodyBold>}
           body={
             <Box mt={3}>
               <NumberInputField
