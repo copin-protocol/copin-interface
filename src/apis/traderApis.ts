@@ -48,6 +48,7 @@ const normalizePayload = (body: RequestBodyApiData) => {
   if (ranges?.[0].fieldName.match('ranking')) {
     ranges.forEach((range) => {
       const [_prefix, _fieldName] = range.fieldName.split('.')
+      if (_fieldName === 'pnl') return
       range.fieldName = _prefix + '.' + transformRelisedField(_fieldName)
     })
   } else {
