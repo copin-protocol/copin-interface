@@ -22,7 +22,7 @@ export default function useTradersCount({
   ranges: FilterValues[]
   timeOption: TradersContextData['timeOption']
   protocol: TradersContextData['protocol']
-  filterTab?: TradersContextData['filterTab']
+  filterTab: TradersContextData['filterTab']
 }) {
   const [_ranges, setRanges] = useState<FilterValues[]>(ranges)
   const handleCallAPi = useMemo(

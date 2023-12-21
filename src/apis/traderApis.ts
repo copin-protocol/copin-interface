@@ -1,6 +1,3 @@
-// import requester from 'apis/index'
-// import { TraderData } from 'entities/trader'
-// import { ApiListResponse } from './api'
 import {
   CheckAvailableResultData,
   ResponsePositionData,
@@ -20,74 +17,72 @@ import { GetApiParams, QueryFilter, RangeFilter, RequestBodyApiData, SearchTrade
 
 const SERVICE = 'position'
 
+function transformRelisedField(fieldName: string) {
+  switch (fieldName) {
+    case 'pnl':
+    case 'maxPnl':
+    case 'avgRoi':
+    case 'maxRoi':
+    case 'totalGain':
+    case 'totalLoss':
+    case 'maxDrawdown':
+    case 'maxDrawdownPnl':
+    case 'profitRate':
+    case 'gainLossRatio':
+    case 'profitLossRatio':
+      return 'realised' + capitalizeFirstLetter(fieldName)
+    default:
+      return fieldName
+  }
+}
+
 const normalizePayload = (body: RequestBodyApiData) => {
   let sortBy = body.sortBy
   if (!!sortBy) {
-    switch (sortBy) {
-      case 'pnl':
-      // case 'maxPnl':
-      case 'avgRoi':
-      case 'maxRoi':
-      case 'totalGain':
-      case 'totalLoss':
-      case 'maxDrawdown':
-      case 'maxDrawdownPnl':
-      case 'profitRate':
-      case 'gainLossRatio':
-      case 'profitLossRatio':
-        sortBy = 'realised' + capitalizeFirstLetter(sortBy)
-        break
-      default:
-        break
-    }
+    sortBy = transformRelisedField(sortBy)
   }
   if (!body.ranges) return { ...body, sortBy }
   const ranges = body.ranges.map((range) => ({
     ...range,
   }))
-  ranges.forEach((range) => {
-    switch (range.fieldName) {
-      case 'avgDuration':
-      case 'minDuration':
-      case 'maxDuration':
-        if (range.gte) {
-          range.gte = range.gte * 3600
-        }
-        if (range.lte) {
-          range.lte = range.lte * 3600
-        }
-        break
-      case 'lastTradeAtTs':
-        let gte, lte
-        if (range.gte) {
-          lte = Date.now() - range.gte * 24 * 3600 * 1000
-        }
-        if (range.lte) {
-          gte = Date.now() - range.lte * 24 * 3600 * 1000
-        }
-        range.gte = gte
-        range.lte = lte
-        break
-      case 'pnl':
-      case 'maxPnl':
-      case 'avgRoi':
-      case 'maxRoi':
-      case 'totalGain':
-      case 'totalLoss':
-      case 'maxDrawdown':
-      case 'maxDrawdownPnl':
-      case 'profitRate':
-      case 'gainLossRatio':
-      case 'profitLossRatio':
-        range.fieldName = 'realised' + capitalizeFirstLetter(range.fieldName)
-        break
-      case 'longRate':
-        if (range.gte && range.gte > 100) {
-          range.gte = 100
-        }
-        break
-    }
-  })
+  if (ranges?.[0].fieldName.match('ranking')) {
+    ranges.forEach((range) => {
+      const [_prefix, _fieldName] = range.fieldName.split('.')
+      range.fieldName = _prefix + '.' + transformRelisedField(_fieldName)
+    })
+  } else {
+    ranges.forEach((range) => {
+      range.fieldName = transformRelisedField(range.fieldName)
+      switch (range.fieldName) {
+        case 'avgDuration':
+        case 'minDuration':
+        case 'maxDuration':
+          if (range.gte) {
+            range.gte = range.gte * 3600
+          }
+          if (range.lte) {
+            range.lte = range.lte * 3600
+          }
+          break
+        case 'lastTradeAtTs':
+          let gte, lte
+          if (range.gte) {
+            lte = Date.now() - range.gte * 24 * 3600 * 1000
+          }
+          if (range.lte) {
+            gte = Date.now() - range.lte * 24 * 3600 * 1000
+          }
+          range.gte = gte
+          range.lte = lte
+          break
+        case 'longRate':
+          if (range.gte && range.gte > 100) {
+            range.gte = 100
+          }
+          break
+      }
+    })
+  }
   return { ...body, ranges, sortBy }
 }
 

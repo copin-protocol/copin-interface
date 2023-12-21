@@ -8,6 +8,7 @@ import { ProtocolEnum } from 'utils/config/enums'
 import { formatNumber, nFormatter } from 'utils/helpers/format'
 import { getDurationFromTimeFilter } from 'utils/helpers/transform'
 
+import { FilterTabEnum } from './configs'
 import useTradersCount from './useTraderCount'
 
 const COLORS: string[] = ['#B6EBFB', '#6EB9F7', '#1183E1', '#0A53A9', '#083791']
@@ -16,13 +17,15 @@ export default function ResultEstimated({
   ranges,
   timeOption,
   protocol,
+  filterTab,
 }: {
   ranges: FilterValues[]
   timeOption: TimeFilterProps
   protocol: ProtocolEnum
+  filterTab: FilterTabEnum
 }) {
   const effectDays = getDurationFromTimeFilter(timeOption.id)
-  const { data, isLoading } = useTradersCount({ ranges, timeOption, protocol })
+  const { data, isLoading } = useTradersCount({ ranges, timeOption, protocol, filterTab })
   const lastData = data?.at?.(-1)
   const percent = lastData && lastData?.total > 0 ? ((lastData?.counter ?? 0) * 100) / lastData.total : 0
   const count = lastData?.counter ?? 0
