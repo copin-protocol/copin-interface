@@ -4891,7 +4891,7 @@ d3-zoom@3:
     d3-selection "2 - 3"
     d3-transition "2 - 3"
 
-d3@^7.8.5:
+d3@7.8.5:
   version "7.8.5"
   resolved "https://registry.yarnpkg.com/d3/-/d3-7.8.5.tgz#fde4b760d4486cdb6f0cc8e2cbff318af844635c"
   integrity sha512-JgoahDG51ncUfJu6wX/1vWQEqOflgXyl4MaHqlcSruTez7yhaRKR9i8VjjcQGeS2en/jnFivXuaIMnseMMt0XA==
@@ -8118,7 +8118,7 @@ react-clientside-effect@^1.2.5:
   dependencies:
     "@babel/runtime" "^7.12.13"
 
-react-confetti-explosion@^2.1.2:
+react-confetti-explosion@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/react-confetti-explosion/-/react-confetti-explosion-2.1.2.tgz#dfbccf28985ce6938143ceb1023b9facfb0a5835"
   integrity sha512-4UzDFBajAGXmF9TSJoRMO2QOBCIXc66idTxH8l7Mkul48HLGtk+tMzK9HYDYsy7Zmw5sEGchi2fbn4AJUuLrZw==

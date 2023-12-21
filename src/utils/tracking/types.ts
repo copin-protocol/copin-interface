@@ -74,6 +74,10 @@ export const EVENT_ACTIONS = {
     SEARCH_CLICK: 'search_click',
     SEARCH_ENTER: 'search_enter',
     SEARCH_CUSTOM_ADD: 'search_custom_add',
+    SEARCH_VIEW_ALL: 'search_view_all',
+    SEARCH_CLICK_POSITION: 'search_click_position',
+    SEARCH_ENTER_POSITION: 'search_enter_position',
+    SEARCH_VIEW_ALL_POSITIONS: 'search_view_all_positions',
   },
   [EventCategory.CHART]: {
     VIEW_ORDER_MARKER: 'view_order_marker',

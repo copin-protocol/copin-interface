@@ -63,6 +63,18 @@ export function renderCopyEntry(data: CopyPositionData | undefined, textSx?: Tex
     </Flex>
   )
 }
+
+export function renderSizeShorten(data: PositionData | undefined) {
+  if (!data) return <></>
+  return (
+    <Flex sx={{ gap: 2, alignItems: 'center' }}>
+      <Type.Caption>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
+      <VerticalDivider />
+      <Type.Caption>{formatNumber(data.leverage, 1, 1)}x</Type.Caption>
+    </Flex>
+  )
+}
+
 export function renderSize(data: PositionData | undefined) {
   if (!data) return <></>
   return (

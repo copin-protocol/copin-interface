@@ -16,7 +16,7 @@ import { ApiListResponse } from './api'
 import { apiWrapper } from './helpers'
 import requester from './index'
 import { normalizePositionResponse, normalizeTraderData, normalizeTraderResponse } from './normalize'
-import { GetApiParams, QueryFilter, RangeFilter, RequestBodyApiData } from './types'
+import { GetApiParams, QueryFilter, RangeFilter, RequestBodyApiData, SearchTradersParams } from './types'
 
 const SERVICE = 'position'
 
@@ -132,6 +132,12 @@ export async function getTraderApi({
         ? normalizeTraderData(res.data.data[0] as ResponseTraderData)
         : undefined
     )
+}
+
+export async function searchTradersApi(params: SearchTradersParams) {
+  return requester
+    .get(`${SERVICE}/statistic/filter`, { params })
+    .then((res: any) => normalizeTraderResponse(res.data as ApiListResponse<ResponseTraderData>))
 }
 
 export async function getTraderHistoryApi({

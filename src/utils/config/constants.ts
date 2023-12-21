@@ -41,6 +41,8 @@ export const DATE_FORMAT = 'YYYY/MM/DD'
 export const DAYJS_FULL_DATE_FORMAT = 'YYYY/MM/DD - HH:mm'
 export const DEFAULT_LIMIT = 20
 export const DEFAULT_LIMIT_VALUES = [20, 50, 100]
+export const SEARCH_DEFAULT_LIMIT = 3
+
 export const MIN_PARSE_ETHER = 0.00000001
 export const MIN_AMOUNT = 0.01
 export const SEARCH_DEBOUNCE_TIME = 200 //ms
@@ -48,6 +50,8 @@ export const SEARCH_DEBOUNCE_TIME = 200 //ms
 export const COUNTDOWN_TIME = 60 // s
 export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/
 export const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/
+
+export const EVM_TX_HASH_REGEX = /^0x?([a-fA-F0-9]{64})$/
 
 export const CHART_DAYS_DURATION = 30
 export const CHART_DATE_FORMAT = 'DD.MM'

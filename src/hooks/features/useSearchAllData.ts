@@ -1,31 +1,32 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 
-import { getTradersApi } from 'apis/traderApis'
-import { QueryFilter } from 'apis/types'
-import { TraderData } from 'entities/trader'
+import { searchPositionsApi } from 'apis/positionApis'
+import { searchTradersApi } from 'apis/traderApis'
+import { PositionData, TraderData } from 'entities/trader'
+import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import useDebounce from 'hooks/helpers/useDebounce'
 import useOnClickOutside from 'hooks/helpers/useOnClickOutside'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { useProtocolStore } from 'hooks/store/useProtocols'
-import { SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
-import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { EVM_TX_HASH_REGEX, SEARCH_DEBOUNCE_TIME, SEARCH_DEFAULT_LIMIT } from 'utils/config/constants'
+import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import ROUTES from 'utils/config/routes'
+import { generatePositionDetailsRoute, generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
 
-import { useIsPremium } from '../features/useSubscriptionRestrict'
-
 const MIN_QUICK_SEARCH_LENGTH = 3
-export default function useSearchTraders(args?: {
+export default function useSearchAllData(args?: {
   returnRanking?: boolean
   onSelect?: (data: TraderData) => void
   allowAllProtocol?: boolean
+  allowSearchPositions?: boolean
 }) {
-  const { onSelect, returnRanking = false, allowAllProtocol = false } = args ?? {}
+  const { onSelect, allowAllProtocol = false, allowSearchPositions = false } = args ?? {}
   const { protocol } = useProtocolStore()
   const { myProfile } = useMyProfileStore()
   const isPremiumUser = useIsPremium()
@@ -37,20 +38,11 @@ export default function useSearchTraders(args?: {
   const trimmedSearchText = searchText.trim()
   const debounceSearchText = useDebounce<string>(trimmedSearchText, SEARCH_DEBOUNCE_TIME)
   const [isLoading, setIsLoading] = useState(false)
-  const queryFilters: QueryFilter[] = []
-  if (!!debounceSearchText) {
-    // let keyword = debounceSearchText
-    // try {
-    //   keyword = getAddress(debounceSearchText.toLowerCase())
-    // } catch (e: any) {
-    //   //
-    // }
-    // queryFilters.push({ fieldName: 'account', value: keyword })
-    queryFilters.push({
-      fieldName: 'type',
-      value: isPremiumUser ? TimeFilterByEnum.ALL_TIME : TimeFilterByEnum.S60_DAY,
-    })
-  }
+
+  const isTxHash = useMemo(
+    () => allowSearchPositions && EVM_TX_HASH_REGEX.test(debounceSearchText),
+    [allowSearchPositions, debounceSearchText]
+  )
 
   const logEventSearch = useCallback(
     (action: string) => {
@@ -72,60 +64,41 @@ export default function useSearchTraders(args?: {
     return onSelect ? protocol === _protocol : true
   }
 
-  const { data: searchUserData, isFetching: searchingUser } = useQuery(
-    [QUERY_KEYS.GET_TOP_TRADERS, debounceSearchText, queryFilters, ProtocolEnum.GMX, returnRanking, isPremiumUser],
+  const { data: searchTraders, isFetching: searchingTraders } = useQuery(
+    [QUERY_KEYS.SEARCH_ALL_TRADERS, debounceSearchText, isPremiumUser, allowAllProtocol, protocol],
     () =>
-      getTradersApi({
-        protocol: ProtocolEnum.GMX,
-        body: { pagination: { limit: 5 }, queries: queryFilters, keyword: debounceSearchText, returnRanking },
+      searchTradersApi({
+        limit: SEARCH_DEFAULT_LIMIT,
+        keyword: debounceSearchText,
+        protocol: allowAllProtocol ? undefined : protocol,
+        sortBy: 'lastTradeAtTs',
+        sortType: SortTypeEnum.DESC,
       }),
     {
       enabled:
         Boolean(debounceSearchText.length >= MIN_QUICK_SEARCH_LENGTH && debounceSearchText === trimmedSearchText) &&
-        allowSearchProtocol(ProtocolEnum.GMX),
+        !isTxHash,
     }
   )
 
-  const { data: searchUserDataKwenta, isFetching: searchingUserKwenta } = useQuery(
-    [QUERY_KEYS.GET_TOP_TRADERS, debounceSearchText, queryFilters, ProtocolEnum.KWENTA, returnRanking, isPremiumUser],
+  const { data: searchPositions, isFetching: searchingPositions } = useQuery(
+    [QUERY_KEYS.SEARCH_TX_HASH, debounceSearchText, isPremiumUser, allowAllProtocol, protocol],
     () =>
-      getTradersApi({
-        protocol: ProtocolEnum.KWENTA,
-        body: { pagination: { limit: 5 }, queries: queryFilters, keyword: debounceSearchText, returnRanking },
+      searchPositionsApi({
+        limit: SEARCH_DEFAULT_LIMIT,
+        txHash: debounceSearchText,
+        protocol: allowAllProtocol ? undefined : protocol,
       }),
     {
-      enabled:
-        Boolean(debounceSearchText.length >= MIN_QUICK_SEARCH_LENGTH && debounceSearchText === trimmedSearchText) &&
-        allowSearchProtocol(ProtocolEnum.KWENTA),
-    }
-  )
-
-  const { data: searchUserDataPolynomial, isFetching: searchingUserPolynomial } = useQuery(
-    [
-      QUERY_KEYS.GET_TOP_TRADERS,
-      debounceSearchText,
-      queryFilters,
-      ProtocolEnum.POLYNOMIAL,
-      returnRanking,
-      isPremiumUser,
-    ],
-    () =>
-      getTradersApi({
-        protocol: ProtocolEnum.POLYNOMIAL,
-        body: { pagination: { limit: 5 }, queries: queryFilters, keyword: debounceSearchText, returnRanking },
-      }),
-    {
-      enabled:
-        Boolean(debounceSearchText.length >= MIN_QUICK_SEARCH_LENGTH && debounceSearchText === trimmedSearchText) &&
-        allowSearchProtocol(ProtocolEnum.POLYNOMIAL),
+      enabled: isTxHash,
     }
   )
 
   useEffect(() => {
-    if (!searchingUser && !searchingUserKwenta && !searchingUserPolynomial) {
+    if (!searchingTraders && !searchingPositions) {
       setIsLoading(false)
     }
-  }, [searchingUser, searchingUserKwenta, searchingUserPolynomial])
+  }, [searchingTraders, searchingPositions])
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value)
@@ -172,17 +145,48 @@ export default function useSearchTraders(args?: {
     [debounceSearchText, history, logEventSearch, onSelect, protocol]
   )
 
-  const handleClickViewAll = () => {
+  const handleClickPosition = useCallback(
+    (data: PositionData) => {
+      history.push(generatePositionDetailsRoute(data, { highlightTxHash: debounceSearchText }))
+      logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_CLICK_POSITION)
+      setVisibleSearchResult(false)
+    },
+    [debounceSearchText, history, logEventSearch]
+  )
+
+  const handleSearchEnter = () => {
     if (trimmedSearchText.length === 0) return
     if (!isAddress(debounceSearchText)) return
-    if (searchUserDataKwenta && searchUserDataKwenta.data && searchUserDataKwenta.meta?.total > 0) {
-      handleClick(searchUserDataKwenta.data[0])
-    } else if (searchUserDataPolynomial && searchUserDataPolynomial.data && searchUserDataPolynomial.meta?.total > 0) {
-      handleClick(searchUserDataPolynomial.data[0])
+    if (searchTraders && searchTraders.data && searchTraders.meta?.total > 0) {
+      handleClick(searchTraders.data[0])
     } else {
       handleClick()
     }
     logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_ENTER)
+  }
+
+  const handleSearchPositionsEnter = () => {
+    if (trimmedSearchText.length === 0) return
+    if (!isTxHash) return
+    if (searchPositions && searchPositions.length > 0) {
+      handleClickPosition(searchPositions[0])
+    }
+    logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_ENTER_POSITION)
+  }
+
+  const handleClickViewAll = () => {
+    if (trimmedSearchText.length === 0) return
+    if (isTxHash) {
+      history.push(`${ROUTES.SEARCH_TX_HASH.path_prefix}/${debounceSearchText}`)
+    } else {
+      const matchProtocol =
+        searchTraders?.data && searchTraders.data.length > 0 ? searchTraders.data[0].protocol : protocol
+      history.push(
+        `${ROUTES.SEARCH.path}?keyword=${trimmedSearchText}&protocol=${matchProtocol}&sort_by=lastTradeAtTs&sort_type=${SortTypeEnum.DESC}`
+      )
+    }
+    setVisibleSearchResult(false)
+    logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_VIEW_ALL)
   }
 
   const handleClearSearch = () => {
@@ -202,13 +206,17 @@ export default function useSearchTraders(args?: {
     handleSearchFocus,
     handleSearchChange,
     handleClearSearch,
+    handleSearchEnter,
     handleClickViewAll,
+    handleSearchPositionsEnter,
     visibleSearchResult,
     isLoading,
-    searchUserData,
     handleClick,
-    searchUserDataKwenta,
-    searchUserDataPolynomial,
+    handleClickPosition,
+    searchTraders,
+    searchPositions,
     allowSearchProtocol,
+    allowSearchPositions,
+    isTxHash,
   }
 }

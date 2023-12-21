@@ -2,7 +2,7 @@
 import { Trans, t } from '@lingui/macro'
 
 import NoDataFound from 'components/@ui/NoDataFound'
-import useSearchTraders from 'hooks/helpers/useSearchTraders'
+import useSearchAllData from 'hooks/features/useSearchAllData'
 import { renderTrader } from 'pages/MyProfile/renderProps'
 import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
@@ -24,15 +24,9 @@ export default function SearchTraders({
     handleClearSearch,
     visibleSearchResult,
     isLoading,
-    searchUserData,
-    searchUserDataKwenta,
-    searchUserDataPolynomial,
-  } = useSearchTraders({ onSelect: props.onSelect, returnRanking: true, allowAllProtocol: true })
-  const traders = [
-    ...filterFoundData(searchUserData?.data, props.ignoreSelectTraders),
-    ...filterFoundData(searchUserDataKwenta?.data, props.ignoreSelectTraders),
-    ...filterFoundData(searchUserDataPolynomial?.data, props.ignoreSelectTraders),
-  ]
+    searchTraders,
+  } = useSearchAllData({ onSelect: props.onSelect, returnRanking: true, allowAllProtocol: true })
+  const traders = [...filterFoundData(searchTraders?.data, props.ignoreSelectTraders)]
   return (
     <Box ref={searchWrapperRef} sx={{ position: 'relative' }}>
       <InputSearch

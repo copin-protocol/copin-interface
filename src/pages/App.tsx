@@ -29,6 +29,8 @@ const Settings = lazy(() => import('./Settings'))
 const Subscription = lazy(() => import('./Subscription'))
 const LinkBotTelegram = lazy(() => import('./LinkBotTelegram'))
 const ComparingTraders = lazy(() => import('./ComparingTraders'))
+const Search = lazy(() => import('./SearchTrader'))
+const SearchTxHash = lazy(() => import('./SearchTxHash'))
 
 function App() {
   useEffect(() => {
@@ -63,6 +65,8 @@ function App() {
             <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagement}></AuthedRoute>
             <AuthedRoute path={ROUTES.LINK_BOT_ALERT.path} component={LinkBotTelegram}></AuthedRoute>
             <AuthedRoute path={ROUTES.FAVORITES.path} component={Favorites}></AuthedRoute>
+            <Route exact path={ROUTES.SEARCH.path} component={Search}></Route>
+            <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHash}></Route>
             <Route path={ROUTES.HOME.path} component={Home}></Route>
 
             <Route path="*" component={NotFound}></Route>

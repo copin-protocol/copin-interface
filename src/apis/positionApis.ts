@@ -6,7 +6,7 @@ import { capitalizeFirstLetter } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
 import requester from './index'
-import { normalizePositionData, normalizePositionResponse } from './normalize'
+import { normalizePositionData, normalizePositionListResponse, normalizePositionResponse } from './normalize'
 import { GetApiParams, RequestBodyApiData } from './types'
 
 const SERVICE = 'position'
@@ -26,6 +26,27 @@ const normalizePayload = (body: RequestBodyApiData) => {
     }
   })
   return { ...body, ranges, sortBy }
+}
+
+export async function searchPositionsApi({
+  txHash,
+  protocol,
+  limit = DEFAULT_LIMIT,
+  offset = 0,
+  sortBy,
+  sortType,
+}: GetApiParams & { txHash: string; protocol?: ProtocolEnum; sortBy?: string; sortType?: string }) {
+  const params: Record<string, any> = {}
+  params.txHash = txHash
+  if (!!protocol) params.protocol = protocol
+  if (!!sortBy) params.sortBy = sortBy
+  if (!!sortType) params.sortType = sortType
+  if (params.sortBy === 'pnl') {
+    params.sortBy = 'realisedPnl'
+  }
+  return requester
+    .get(`${SERVICE}/filter`, { params: { limit, offset, ...params } })
+    .then((res: any) => normalizePositionListResponse(res.data as ResponsePositionData[]))
 }
 
 export async function getTopOpeningPositionsApi({

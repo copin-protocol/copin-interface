@@ -46,6 +46,13 @@ export type RequestBodyApiData = {
   returnRanking?: boolean
 }
 
+export type SearchTradersParams = GetApiParams & {
+  keyword?: string
+  protocol?: ProtocolEnum
+  sortBy?: string
+  sortType?: SortTypeEnum
+}
+
 export type GetCopyTradeSettingsParams = GetApiParams & {
   accounts?: string[]
   userId?: string

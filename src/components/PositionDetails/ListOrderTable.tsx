@@ -16,6 +16,7 @@ import { formatNumber } from 'utils/helpers/format'
 
 type ExternalSource = {
   totalOrders: number
+  highlightTxHash?: string
 }
 
 type ObjectTypes = {
@@ -56,10 +57,12 @@ export default function ListOrderTable({
   protocol,
   data,
   isLoading,
+  highlightTxHash,
 }: {
   protocol: ProtocolEnum
   data: OrderData[]
   isLoading: boolean
+  highlightTxHash?: string
 }) {
   let orders = data.sort((x, y) =>
     x.blockTime < y.blockTime ? 1 : x.blockTime > y.blockTime ? -1 : x.logId < y.logId ? 1 : x.logId > y.logId ? -1 : 0
@@ -193,7 +196,7 @@ export default function ListOrderTable({
         isLoading={isLoading}
         externalSource={externalSource}
         tableBodyWrapperSx={{ overflow: 'auto' }}
-        renderRowBackground={() => 'transparent'}
+        renderRowBackground={(data, _) => (data.txHash === highlightTxHash ? 'rgba(78, 174, 253, 0.2)' : 'transparent')}
       />
     </Box>
   )

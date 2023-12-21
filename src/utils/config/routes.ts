@@ -14,6 +14,10 @@ const ROUTES = {
   SEARCH: {
     path: '/search',
   },
+  SEARCH_TX_HASH: {
+    path: '/tx/:txHash',
+    path_prefix: '/tx',
+  },
   TRADER_DETAILS: {
     path: '/:protocol/trader/:address',
     path_prefix: '/trader',

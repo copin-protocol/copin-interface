@@ -1,4 +1,6 @@
+import { SystemStyleObject } from '@styled-system/css'
 import { Link } from 'react-router-dom'
+import { GridProps } from 'styled-system'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { useProtocolStore } from 'hooks/store/useProtocols'
@@ -19,6 +21,9 @@ export function AccountInfo({
   type,
   note,
   size = 40,
+  smartAccount,
+  keyword,
+  sx,
 }: {
   isOpenPosition: boolean
   address: string
@@ -26,6 +31,9 @@ export function AccountInfo({
   type?: TimeFrameEnum
   note?: string
   size?: number
+  smartAccount?: string
+  keyword?: string
+  sx?: SystemStyleObject & GridProps
 }) {
   const { protocol: defaultProtocol } = useProtocolStore()
   const { isCopying } = useTraderCopying(address)
@@ -51,6 +59,7 @@ export function AccountInfo({
         sx={{
           width: 90,
           textAlign: 'left',
+          ...sx,
         }}
       >
         <Flex alignItems="center" sx={{ gap: 1 }}>
@@ -68,6 +77,7 @@ export function AccountInfo({
                 textDecoration: 'underline',
               },
             }}
+            fontWeight={keyword && address.includes(keyword) ? 'bold' : 'normal'}
           >
             {addressShorten(address, 3, 5)}
           </Type.Caption>
@@ -122,7 +132,21 @@ export function AccountInfo({
             </Tooltip>
           )}
         </Flex>
-        {note != null ? (
+        {smartAccount ? (
+          <Type.Small
+            color="neutral3"
+            data-tip="React-tooltip"
+            data-tooltip-id={`tt_sm_${smartAccount}`}
+            data-tooltip-offset={0}
+            data-tooltip-delay-hide={0}
+            data-tooltip-delay-show={360}
+          >
+            Smart Account:{' '}
+            <Type.Small fontWeight={keyword && smartAccount.includes(keyword) ? 'bold' : 'normal'}>
+              {addressShorten(smartAccount, 3, 5)}
+            </Type.Small>
+          </Type.Small>
+        ) : note != null ? (
           note ? (
             <Type.Small
               px={2}
@@ -147,6 +171,11 @@ export function AccountInfo({
         {note && note.length > 10 && (
           <Tooltip id={`tt_note_${address}`} place="top" type="dark" effect="solid" clickable={false}>
             {note}
+          </Tooltip>
+        )}
+        {smartAccount && (
+          <Tooltip id={`tt_sm_${smartAccount}`} place="top" type="dark" effect="solid" clickable={false}>
+            Smart Account: {smartAccount}
           </Tooltip>
         )}
       </Flex>
