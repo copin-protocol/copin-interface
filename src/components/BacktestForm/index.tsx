@@ -210,7 +210,7 @@ export default function BacktestForm({
       <Divider mt={24} />
 
       <Accordion
-        header={<Type.BodyBold>SL / TP</Type.BodyBold>}
+        header={<Type.BodyBold>Stop Loss</Type.BodyBold>}
         body={
           <Box mt={3}>
             <NumberInputField
