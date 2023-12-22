@@ -102,7 +102,7 @@ function AlertListComponent() {
     setShowUnlinkModal(false)
     refetch()
   }
-  const showLinkButton = !botAlert?.chatId && !!data?.data?.length
+  const showLinkButton = !botAlert?.chatId
   const onClickLinkButton = () => {
     handleGenerateLinkBot()
   }
