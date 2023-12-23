@@ -131,7 +131,15 @@ export default function PickTradersButton({
   )
 }
 
-function CompareButton({ listAddress }: { listAddress: string[] | undefined }) {
+export function CompareButton({
+  listAddress,
+  hasDivider = true,
+  block = false,
+}: {
+  listAddress: string[] | undefined
+  hasDivider?: boolean
+  block?: boolean
+}) {
   const { pathname, search } = useLocation()
   const { searchParams } = useSearchParams()
   const time = searchParams[URL_PARAM_KEYS.EXPLORER_TIME_FILTER] ?? TimeFilterByEnum.S30_DAY
@@ -164,8 +172,25 @@ function CompareButton({ listAddress }: { listAddress: string[] | undefined }) {
 
   return (
     <>
-      <Box sx={{ width: '1px', height: '16px', bg: 'neutral4' }} />
-      <Type.CaptionBold role="button" color="primary1" sx={{ '&:hover': { color: 'primary2' } }} onClick={handleClick}>
+      {hasDivider && <Box sx={{ width: '1px', height: '16px', bg: 'neutral4' }} />}
+      <Type.CaptionBold
+        role="button"
+        color={block ? 'neutral8' : 'primary1'}
+        sx={{
+          '&:hover': { color: block ? 'neutral8' : 'primary2', bg: block ? 'primary2' : 'transparent' },
+          ...(block
+            ? {
+                display: 'block',
+                textAlign: 'center',
+                lineHeight: '40px',
+                width: '100%',
+                height: '100%',
+                bg: 'primary1',
+              }
+            : {}),
+        }}
+        onClick={handleClick}
+      >
         <Trans>Compare</Trans>
       </Type.CaptionBold>
       <Suspense fallback={<></>}>

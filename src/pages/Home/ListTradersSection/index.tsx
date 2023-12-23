@@ -1,9 +1,10 @@
+import { ArrowElbowLeftUp } from '@phosphor-icons/react'
 import { useResponsive, useSize } from 'ahooks'
 import { memo, useEffect, useRef } from 'react'
 import styled from 'styled-components/macro'
 
 import { ApiListResponse } from 'apis/api'
-import PickTradersButton from 'components/BacktestPickTradersButton'
+import PickTradersButton, { CompareButton } from 'components/BacktestPickTradersButton'
 import { useClickLoginButton } from 'components/LoginAction'
 import TraderListTable from 'components/Tables/TraderListTable'
 import CustomizeColumn from 'components/Tables/TraderListTable/CustomizeColumn'
@@ -135,7 +136,7 @@ function TablePagination({
   const size = useSize(ref)
   return (
     <>
-      {accounts?.length && <MultipleBacktestButton />}
+      {accounts?.length && <CompareTradersButton />}
       {!accounts?.length &&
         (md ? (
           <TabletWrapper ref={ref}>
@@ -252,5 +253,36 @@ function MultipleBacktestButton() {
     <Box sx={{ height: 40, width: ['100%', 228], flexShrink: 0 }}>
       <PickTradersButton enableCompare listAddress={listAddress} handleClick={handleClickBacktestButton} />
     </Box>
+  )
+}
+
+function CompareTradersButton() {
+  const { currentHomeInstanceId, getCommonData } = useSelectBacktestTraders()
+
+  const { homeInstance: currentHomeInstance } = getCommonData({ homeId: currentHomeInstanceId })
+  const listAddress = currentHomeInstance?.tradersByIds ?? []
+  return (
+    <Flex
+      width={['100%', 228]}
+      height={40}
+      sx={{
+        alignItems: 'center',
+        gap: 2,
+        px: listAddress.length === 2 ? 0 : 3,
+        flexShrink: 0,
+        borderRight: 'small',
+        borderColor: ['transparent', 'neutral4'],
+      }}
+      color="neutral3"
+    >
+      {listAddress.length === 2 ? (
+        <CompareButton listAddress={listAddress} hasDivider={false} block />
+      ) : (
+        <>
+          <ArrowElbowLeftUp size={16} />
+          <Type.Caption color="neutral3">Select 2 traders to compare</Type.Caption>
+        </>
+      )}
+    </Flex>
   )
 }

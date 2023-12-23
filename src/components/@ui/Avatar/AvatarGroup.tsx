@@ -11,13 +11,18 @@ export default function AvatarGroup({
   limit?: number
 }) {
   const numberOfAddress = addresses.length
-  const width = (((numberOfAddress <= limit ? numberOfAddress : limit + 1) + 1) * size) / 2
   if (!numberOfAddress) return <></>
   return (
-    <Box sx={{ position: 'relative', height: size, width }}>
-      {addresses.slice(0, limit).map((address, index) => {
+    <Flex sx={{ position: 'relative', height: size }}>
+      {addresses.slice(0, limit).map((address) => {
         return (
-          <Box key={address} sx={{ position: 'absolute', top: 0, left: (index * size) / 2, width: size, height: size }}>
+          <Box
+            key={address}
+            sx={{
+              width: size / 2,
+              height: size,
+            }}
+          >
             <AddressAvatar size={size} address={address} />
           </Box>
         )
@@ -25,24 +30,30 @@ export default function AvatarGroup({
       {numberOfAddress > limit ? (
         <Flex
           sx={{
-            width: size,
             height: size,
-            position: 'absolute',
-            top: 0,
-            left: (limit * size) / 2,
             alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: '50%',
+            borderRadius: '40px',
             bg: 'neutral4',
             border: 'small',
             borderColor: 'neutral1',
+            minWidth: size,
+            px: '2px',
           }}
         >
-          <Type.Caption sx={numberOfAddress - limit > 99 ? { fontSize: '12px', lineHeight: '12px' } : {}}>{`+${
-            numberOfAddress - limit
-          }`}</Type.Caption>
+          <Type.Caption
+            style={{
+              position: 'relative',
+              wordBreak: 'unset',
+              textAlign: 'center',
+              overflowWrap: 'unset',
+            }}
+            sx={{
+              ...(numberOfAddress - limit > 99 ? { fontSize: '12px', lineHeight: '12px' } : {}),
+            }}
+          >{`+${numberOfAddress - limit}`}</Type.Caption>
         </Flex>
       ) : null}
-    </Box>
+    </Flex>
   )
 }
