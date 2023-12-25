@@ -80,7 +80,7 @@ msgstr "A message with a verification code has been sent to your email. Enter th
 #~ msgid "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
 #~ msgstr "A non-custody wallet. Your own all your assets, fully decentralized copy trading"
 
-#: src/pages/MyProfile/Layouts/Layout.tsx
+#: src/pages/MyProfile/index.tsx
 msgid "ACTIVITIES"
 msgstr "ACTIVITIES"
 
@@ -113,7 +113,7 @@ msgstr "Active"
 #~ msgid "Active Copy"
 #~ msgstr "Active Copy"
 
-#: src/pages/MyProfile/Layouts/Layout.tsx
+#: src/pages/MyProfile/index.tsx
 msgid "Activities"
 msgstr "Activities"
 
@@ -477,7 +477,7 @@ msgid "Copy"
 msgstr "Copy"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
-#: src/pages/MyProfile/Layouts/Layout.tsx
+#: src/pages/MyProfile/index.tsx
 msgid "Copy Management"
 msgstr "Copy Management"
 
@@ -755,12 +755,11 @@ msgstr "Forgot password?"
 msgid "Frequently Trade"
 msgstr "Frequently Trade"
 
-#: src/pages/@layouts/Navbar/SearchBox.tsx
 #: src/utils/config/translations.tsx
 msgid "GMX"
 msgstr "GMX"
 
-#: src/pages/MyProfile/Layouts/Layout.tsx
+#: src/pages/MyProfile/index.tsx
 msgid "HISTORY"
 msgstr "HISTORY"
 
@@ -808,7 +807,7 @@ msgstr "High Profit Rate"
 msgid "High Win Rate"
 msgstr "High Win Rate"
 
-#: src/pages/MyProfile/Layouts/Layout.tsx
+#: src/pages/MyProfile/index.tsx
 msgid "History"
 msgstr "History"
 
@@ -874,8 +873,8 @@ msgid "Join Copin Alpha Club"
 msgstr "Join Copin Alpha Club"
 
 #: src/pages/@layouts/Navbar/SearchBox.tsx
-msgid "Kwenta"
-msgstr "Kwenta"
+#~ msgid "Kwenta"
+#~ msgstr "Kwenta"
 
 #: src/components/@ui/Table/renderProps.tsx
 #: src/components/@ui/Table/renderProps.tsx
@@ -922,6 +921,10 @@ msgstr "Last Trade"
 #: src/pages/TraderDetails/TraderStats.tsx
 msgid "Last Trade (All)"
 msgstr "Last Trade (All)"
+
+#: src/components/SearchAllResults/index.tsx
+msgid "Last Trade:"
+msgstr "Last Trade:"
 
 #: src/components/TopLeadboard/index.tsx
 msgid "Last Updated:"
@@ -1068,7 +1071,7 @@ msgstr "Low Overtrading"
 #~ msgid "Low Total Loss"
 #~ msgstr "Low Total Loss"
 
-#: src/pages/MyProfile/Layouts/Layout.tsx
+#: src/pages/MyProfile/index.tsx
 msgid "MANAGEMENT"
 msgstr "MANAGEMENT"
 
@@ -1188,6 +1191,10 @@ msgstr "Monthly"
 msgid "More insights, more benefits"
 msgstr "More insights, more benefits"
 
+#: src/pages/MyProfile/index.tsx
+msgid "My Profile"
+msgstr "My Profile"
+
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/Settings/Layouts/Layout.tsx
 #: src/pages/Subscription/index.tsx
@@ -1214,6 +1221,11 @@ msgstr "New Password"
 msgid "No"
 msgstr "No"
 
+#: src/pages/MyProfile/UserActivity/ListActivityMobile.tsx
+#: src/pages/MyProfile/UserActivity/index.tsx
+msgid "No Activity Found"
+msgstr "No Activity Found"
+
 #: src/components/CurrencyOption/index.tsx
 msgid "No Data"
 msgstr "No Data"
@@ -1223,10 +1235,26 @@ msgstr "No Data"
 msgid "No Data Found"
 msgstr "No Data Found"
 
+#: src/pages/MyProfile/HistoryPositions/index.tsx
+#: src/pages/MyProfile/HistoryPositions/index.tsx
+msgid "No History Found"
+msgstr "No History Found"
+
 #: src/pages/@layouts/Navbar/SearchBox.tsx
+msgid "No Trader Found"
+msgstr "No Trader Found"
+
 #: src/pages/TraderDetails/TraderRankingExpanded/SearchTraders.tsx
 msgid "No Trader Found In The Past 60 Days"
 msgstr "No Trader Found In The Past 60 Days"
+
+#: src/pages/@layouts/Navbar/SearchBox.tsx
+msgid "No Transaction Found"
+msgstr "No Transaction Found"
+
+#: src/pages/SearchTxHash/index.tsx
+msgid "No Transactions Found"
+msgstr "No Transactions Found"
 
 #: src/pages/MyProfile/PositionTable/PositionsContainer.tsx
 msgid "No link to the trader’s original position was found."
@@ -1269,6 +1297,10 @@ msgstr "Notice"
 #: src/utils/config/translations.tsx
 #~ msgid "OPEN"
 #~ msgstr "OPEN"
+
+#: src/pages/Home/Layouts/HomeDesktop.tsx
+msgid "OPEN INTEREST"
+msgstr "OPEN INTEREST"
 
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "OR LOGIN WITH"
@@ -1373,7 +1405,7 @@ msgstr "Platform"
 msgid "Please check the verification code from your email!"
 msgstr "Please check the verification code from your email!"
 
-#: src/pages/MyProfile/index.tsx
+#: src/pages/MyProfile/CheckingWalletRenderer.tsx
 msgid "Please create a wallet to start copy"
 msgstr "Please create a wallet to start copy"
 
@@ -1423,12 +1455,20 @@ msgid "PnL Ratio"
 msgstr "PnL Ratio"
 
 #: src/pages/@layouts/Navbar/SearchBox.tsx
-msgid "Polynomial"
-msgstr "Polynomial"
+#~ msgid "Polynomial"
+#~ msgstr "Polynomial"
+
+#: src/pages/@layouts/Navbar/SearchBox.tsx
+msgid "Position"
+msgstr "Position"
 
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "Position Details"
 #~ msgstr "Position Details"
+
+#: src/pages/SearchTxHash/index.tsx
+msgid "Position List"
+msgstr "Position List"
 
 #: src/pages/Home/Layouts/HomeMobile.tsx
 #~ msgid "Positions"
@@ -1474,6 +1514,11 @@ msgstr "Profit Rate"
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 #~ msgid "Profit factor"
 #~ msgstr "Profit factor"
+
+#: src/pages/SearchTrader/SwitchProtocolsDesktop.tsx
+#: src/pages/SearchTrader/SwitchProtocolsMobile.tsx
+msgid "Protocols:"
+msgstr "Protocols:"
 
 #: src/hooks/web3/useAuth.tsx
 #~ msgid "Provider Error"
@@ -1577,6 +1622,10 @@ msgstr "Reset password"
 msgid "Reset password successful!"
 msgstr "Reset password successful!"
 
+#: src/pages/@layouts/Navbar/SearchBox.tsx
+msgid "Results"
+msgstr "Results"
+
 #: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
 msgid "Reverse Copy"
 msgstr "Reverse Copy"
@@ -1622,7 +1671,6 @@ msgstr "Save {0}%"
 msgid "Search by address"
 msgstr "Search by address"
 
-#: src/pages/MyProfile/HistoryPositions/index.tsx
 #: src/pages/MyProfile/MyCopies/index.tsx
 msgid "Select All Traders"
 msgstr "Select All Traders"
@@ -1810,8 +1858,8 @@ msgid "Synthetix"
 msgstr "Synthetix"
 
 #: src/pages/Home/Layouts/HomeDesktop.tsx
-msgid "TOP OPENING"
-msgstr "TOP OPENING"
+#~ msgid "TOP OPENING"
+#~ msgstr "TOP OPENING"
 
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 msgid "TRADER EXPLORER"
@@ -2114,6 +2162,7 @@ msgstr "Total Pnl"
 msgid "Total Trade"
 msgstr "Total Trade"
 
+#: src/components/SearchAllResults/index.tsx
 #: src/components/TopLeadboard/index.tsx
 msgid "Total Trades"
 msgstr "Total Trades"
@@ -2122,6 +2171,7 @@ msgstr "Total Trades"
 msgid "Total Unique Trader"
 msgstr "Total Unique Trader"
 
+#: src/components/SearchAllResults/index.tsx
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/components/TopLeadboard/index.tsx
 #: src/pages/Stats/Overview.tsx
@@ -2136,6 +2186,7 @@ msgstr "Total Wins"
 msgid "Trade On"
 msgstr "Trade On"
 
+#: src/pages/@layouts/Navbar/SearchBox.tsx
 #: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
 #: src/pages/MyProfile/PositionTable/ListPositions.tsx
 msgid "Trader"
@@ -2149,7 +2200,7 @@ msgstr "Trader Explorer"
 msgid "Trader Favorites"
 msgstr "Trader Favorites"
 
-#: src/pages/MyProfile/Favorites.tsx
+#: src/pages/MyProfile/Favorites/index.tsx
 msgid "Trader Favorites Statistics"
 msgstr "Trader Favorites Statistics"
 
@@ -2282,6 +2333,10 @@ msgstr "Verify account"
 #~ msgid "View"
 #~ msgstr "View"
 
+#: src/pages/@layouts/Navbar/SearchBox.tsx
+msgid "View All"
+msgstr "View All"
+
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "View Order Detail"
 #~ msgstr "View Order Detail"
@@ -2373,6 +2428,7 @@ msgstr "When the trader opens a trade, the maximum margin per order is {0}."
 #~ msgid "While you wait,"
 #~ msgstr "While you wait,"
 
+#: src/components/SearchAllResults/index.tsx
 #: src/utils/config/options.tsx
 msgid "Win Rate"
 msgstr "Win Rate"
@@ -2428,7 +2484,7 @@ msgstr "You can extend your usage, with a discounted fee compared to the origina
 msgid "You do not have any referral"
 msgstr "You do not have any referral"
 
-#: src/pages/MyProfile/index.tsx
+#: src/pages/MyProfile/CheckingWalletRenderer.tsx
 msgid "You don't have any wallet"
 msgstr "You don't have any wallet"
 

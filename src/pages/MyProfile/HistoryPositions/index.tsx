@@ -8,7 +8,7 @@ import { getMyCopyPositionsApi } from 'apis/userApis'
 import { TableSortProps } from 'components/@ui/Table/types'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
-import { Button } from 'theme/Buttons'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 import { PaginationWithLimit } from 'theme/Pagination'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
@@ -17,14 +17,15 @@ import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, STORAGE_KEYS, TOOLTIP_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
-import NoDataOrSelect from '../NoDataOrSelect'
 import PositionTable, { ListPositionMobile } from '../PositionTable'
 import { historyColumns } from '../PositionTable/ListPositions'
 import SelectedTraders from './SelectedTraders'
 import useSelectTraders from './useSelectTraders'
 
 export default function HistoryPositions() {
+  const { myProfile } = useMyProfileStore()
   const storageData = sessionStorage.getItem(STORAGE_KEYS.MY_HISTORY_TRADERS)
+
   const [selectionState, dispatch] = useSelectTraders(storageData)
 
   const { currentPage, currentLimit, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
@@ -61,7 +62,7 @@ export default function HistoryPositions() {
     isFetching: isLoading,
     refetch,
   } = useQuery(
-    [QUERY_KEYS.GET_MY_COPY_POSITIONS, _queryParams, _queryBody, currentPage],
+    [QUERY_KEYS.GET_MY_COPY_POSITIONS, _queryParams, _queryBody, currentPage, myProfile?.id],
     () => getMyCopyPositionsApi(_queryParams, _queryBody),
     {
       retry: 0,
@@ -76,84 +77,81 @@ export default function HistoryPositions() {
   useEffect(() => {
     const dataStorage = JSON.stringify(selectionState)
     sessionStorage.setItem(STORAGE_KEYS.MY_HISTORY_TRADERS, dataStorage)
+    // return () => sessionStorage.removeItem(STORAGE_KEYS.MY_HISTORY_TRADERS)
   }, [selectionState])
-
-  const hasSelectedTraders = !!selectionState.selectedTraders.length
 
   const { sm } = useResponsive()
 
   return (
     <Flex width="100%" height="100%" flexDirection="column" bg="neutral7">
-      <Flex sx={{ alignItems: 'center', height: 50, borderBottom: 'small', borderBottomColor: 'neutral4' }}>
+      <Box
+        sx={{
+          alignItems: 'center',
+          height: 50,
+          borderBottom: 'small',
+          borderBottomColor: 'neutral4',
+          display: selectionState.allTraders?.length ? 'flex' : 'none',
+        }}
+      >
         <SelectedTraders
           allTraders={selectionState.allTraders}
           selectedTraders={selectionState.selectedTraders}
           dispatch={dispatch}
           onChangeTraders={onChangeTraders}
         />
-      </Flex>
+      </Box>
       <Box flex="1 0 0" overflow="hidden">
-        {!isLoading && !!selectionState.allTraders.length && !hasSelectedTraders && (
-          <NoDataOrSelect
-            type="noSelectTradersInHistory"
-            actionButton={
-              !!selectionState.allTraders.length ? (
-                <Button variant="primary" mt={3} onClick={() => dispatch({ type: 'setAllTraders' })}>
-                  <Trans>Select All Traders</Trans>
-                </Button>
-              ) : null
-            }
+        {sm ? (
+          <PositionTable
+            data={data?.data}
+            columns={historyColumns}
+            isLoading={isLoading}
+            currentSort={currentSort}
+            changeCurrentSort={changeCurrentSort}
+            onClosePositionSuccess={refetch}
+            wrapperSx={{ pt: 3 }}
+            tableHeadSx={{
+              '& th:first-child': {
+                pl: 3,
+              },
+              '& th': {
+                pr: '16px !important',
+                border: 'none',
+              },
+            }}
+            tableBodySx={{
+              borderSpacing: ' 0px 4px',
+              'td:first-child': {
+                pl: 3,
+              },
+              '& td': {
+                pr: 3,
+                bg: 'neutral6',
+              },
+              '& tbody tr:hover td': {
+                bg: 'neutral5',
+              },
+              ...generateDeletedTraderStyle(selectionState.deletedTraders),
+            }}
+            noDataMessage={<Trans>No History Found</Trans>}
+          />
+        ) : (
+          <ListPositionMobile
+            data={data?.data}
+            isLoading={isLoading}
+            onClosePositionSuccess={refetch}
+            noDataMessage={<Trans>No History Found</Trans>}
           />
         )}
-        {!isLoading && !selectionState.allTraders.length && <NoDataOrSelect type="noTraders" />}
-        {hasSelectedTraders &&
-          (sm ? (
-            <PositionTable
-              data={data?.data}
-              columns={historyColumns}
-              isLoading={isLoading}
-              currentSort={currentSort}
-              changeCurrentSort={changeCurrentSort}
-              onClosePositionSuccess={refetch}
-              wrapperSx={{ pt: 3 }}
-              tableHeadSx={{
-                '& th:first-child': {
-                  pl: 3,
-                },
-                '& th': {
-                  pr: '16px !important',
-                  border: 'none',
-                },
-              }}
-              tableBodySx={{
-                borderSpacing: ' 0px 4px',
-                'td:first-child': {
-                  pl: 3,
-                },
-                '& td': {
-                  pr: 3,
-                  bg: 'neutral6',
-                },
-                '& tbody tr:hover td': {
-                  bg: 'neutral5',
-                },
-                ...generateDeletedTraderStyle(selectionState.deletedTraders),
-              }}
-            />
-          ) : (
-            <ListPositionMobile data={data?.data} isLoading={isLoading} onClosePositionSuccess={refetch} />
-          ))}
       </Box>
-      {hasSelectedTraders && (
-        <PaginationWithLimit
-          currentLimit={currentLimit}
-          onLimitChange={changeCurrentLimit}
-          currentPage={currentPage}
-          onPageChange={changeCurrentPage}
-          apiMeta={data?.meta}
-          sx={{ py: 2 }}
-        />
-      )}
+      <PaginationWithLimit
+        currentLimit={currentLimit}
+        onLimitChange={changeCurrentLimit}
+        currentPage={currentPage}
+        onPageChange={changeCurrentPage}
+        apiMeta={data?.meta}
+        sx={{ py: 2 }}
+      />
       <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
         <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
           Reverse Copy

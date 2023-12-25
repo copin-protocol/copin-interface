@@ -105,7 +105,7 @@ export default function MainSection({
   )
   const prevResCopyTradeList = useRef<string[]>([])
   const { data: copyTrades, isFetching: isLoadingCopyTrades } = useQuery(
-    [QUERY_KEYS.GET_COPY_TRADE_SETTINGS, queryParams, sessionNum, copyStatus],
+    [QUERY_KEYS.GET_COPY_TRADE_SETTINGS, queryParams, sessionNum, copyStatus, myProfile.id],
 
     () => getCopyTradeSettingsListApi(queryParams),
     {
@@ -148,6 +148,7 @@ export default function MainSection({
   useEffect(() => {
     const dataStorage = JSON.stringify(state)
     sessionStorage.setItem(STORAGE_KEYS.MY_COPY_DATA, dataStorage)
+    // return () => sessionStorage.removeItem(STORAGE_KEYS.MY_COPY_DATA)
   }, [state])
 
   return (

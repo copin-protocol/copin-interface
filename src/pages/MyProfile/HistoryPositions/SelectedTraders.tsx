@@ -1,12 +1,9 @@
 import isEqual from 'lodash/isEqual'
-import { useEffect, useMemo, useRef } from 'react'
-import { useQueries } from 'react-query'
+import { useEffect, useRef } from 'react'
 
-import { getAllMyCopyTradersApi } from 'apis/copyTradeApis'
-import { ProtocolEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
+import useCopyTraderAddresses from 'hooks/features/useCopyTraderAddresses'
 
-import SelectTradersDropdown, { TradersByProtocolData, TradersByProtocolValuesData } from '../SelectTradersDropdown'
+import SelectTradersDropdown from '../SelectTradersDropdown'
 import { DispatchSelectTraders } from './useSelectTraders'
 
 export default function SelectedTraders({
@@ -20,22 +17,7 @@ export default function SelectedTraders({
   dispatch: DispatchSelectTraders
   onChangeTraders: () => void
 }) {
-  const copiedTraders = useQueries(QUERY_CONFIGS)
-
-  const listTraderAddresses = useMemo(
-    () =>
-      copiedTraders.reduce((result, dataByProtocol) => {
-        result = Array.from(
-          new Set([
-            ...result,
-            ...(dataByProtocol.data?.copyingTraders ?? []),
-            ...(dataByProtocol.data?.deletedTraders ?? []),
-          ])
-        )
-        return result
-      }, [] as string[]),
-    [copiedTraders]
-  )
+  const { listTraderAddresses, deletedTraderAddresses, tradersByProtocol } = useCopyTraderAddresses()
 
   const handleSelectAllTraders = (isSelectedAll: boolean) => {
     if (!listTraderAddresses.length) return
@@ -52,29 +34,9 @@ export default function SelectedTraders({
     onChangeTraders()
   }
 
-  const tradersByProtocol = PROTOCOL_ORDERS.reduce((result, protocol, index) => {
-    const newResult = { ...result }
-    const dataByProtocol = copiedTraders[index].data
-    const copyingTradersData: TradersByProtocolValuesData[] =
-      dataByProtocol?.copyingTraders.map((address) => ({ address, status: 'copying' })) ?? []
-    const deleteTradersData: TradersByProtocolValuesData[] =
-      dataByProtocol?.deletedTraders.map((address) => ({ address, status: 'deleted' })) ?? []
-    newResult[protocol] = [...(newResult[protocol] ?? []), ...copyingTradersData, ...deleteTradersData]
-    return newResult
-  }, {} as TradersByProtocolData)
-
-  const deletedTraderAddresses = useMemo(
-    () =>
-      copiedTraders.reduce((result, dataByProtocol) => {
-        result = Array.from(new Set([...result, ...(dataByProtocol.data?.deletedTraders ?? [])]))
-        return result
-      }, [] as string[]),
-    [copiedTraders]
-  )
-
   const prevAllTraders = useRef(allTraders)
   useEffect(() => {
-    if (isEqual(prevAllTraders.current, listTraderAddresses) || !listTraderAddresses.length) return
+    if (isEqual(prevAllTraders.current, listTraderAddresses)) return
     prevAllTraders.current = listTraderAddresses
     dispatch({
       type: 'setState',
@@ -99,11 +61,3 @@ export default function SelectedTraders({
     />
   )
 }
-
-const PROTOCOL_ORDERS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
-const QUERY_CONFIGS = PROTOCOL_ORDERS.map((protocol) => {
-  return {
-    queryKey: [QUERY_KEYS.GET_ALL_MY_COPY_TRADERS, protocol],
-    queryFn: () => getAllMyCopyTradersApi({ protocol }),
-  }
-})

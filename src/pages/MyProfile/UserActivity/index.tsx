@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useState } from 'react'
@@ -10,6 +11,7 @@ import CopyTradePositionDetails from 'components/CopyTradePositionDetails'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 import IconButton from 'theme/Buttons/IconButton'
 import Drawer from 'theme/Modal/Drawer'
 import { PaginationWithLimit } from 'theme/Pagination'
@@ -24,13 +26,15 @@ import { CopySelection, ExternalSource, userActivityColumns } from './configs'
 
 export default function UserActivity() {
   const { copyWallets } = useCopyWalletContext()
+  const { myProfile } = useMyProfileStore()
   const { currentPage, changeCurrentPage, currentLimit, changeCurrentLimit } = usePageChangeWithLimit({
     pageName: 'page',
     limitName: 'limit',
     defaultLimit: DEFAULT_LIMIT,
   })
-  const { data, isFetching } = useQuery([QUERY_KEYS.GET_USER_ACTIVITY_LOGS, currentPage, currentLimit], () =>
-    getUserActivityLogsApi({ limit: currentLimit, offset: pageToOffset(currentPage, currentLimit) })
+  const { data, isFetching } = useQuery(
+    [QUERY_KEYS.GET_USER_ACTIVITY_LOGS, currentPage, currentLimit, myProfile?.id],
+    () => getUserActivityLogsApi({ limit: currentLimit, offset: pageToOffset(currentPage, currentLimit) })
   )
   const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
   const [currentCopyPosition, setCurrentCopyPosition] = useState<CopySelection>()
@@ -70,6 +74,7 @@ export default function UserActivity() {
               externalSource={externalSource}
               tableBodyWrapperSx={{ table: { borderSpacing: '0 8px' }, '& tbody tr': { bg: 'neutral6' } }}
               tableHeadSx={{ th: { borderBottom: 'none' } }}
+              noDataMessage={<Trans>No Activity Found</Trans>}
             />
           ) : (
             <ListActivityMobile data={data?.data} isLoading={isFetching} externalSource={externalSource} />
