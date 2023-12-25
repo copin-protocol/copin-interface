@@ -63,7 +63,7 @@ function App() {
             <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>
             <AuthedRoute path={ROUTES.SETTINGS.path} component={Settings}></AuthedRoute>
             <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagement}></AuthedRoute>
-            <AuthedRoute path={ROUTES.LINK_BOT_ALERT.path} component={LinkBotTelegram}></AuthedRoute>
+            <Route path={ROUTES.LINK_BOT_ALERT.path} component={LinkBotTelegram}></Route>
             <AuthedRoute path={ROUTES.FAVORITES.path} component={Favorites}></AuthedRoute>
             <Route exact path={ROUTES.SEARCH.path} component={Search}></Route>
             <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHash}></Route>
