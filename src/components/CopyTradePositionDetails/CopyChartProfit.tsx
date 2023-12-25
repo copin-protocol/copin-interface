@@ -23,7 +23,7 @@ import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
-import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcPnL } from 'utils/helpers/calculate'
+import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcPnL, calcStopLossUsd } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
@@ -342,15 +342,15 @@ export default function CopyChartProfit({
       }
     }
     if (position.latestStopLossId && position.stopLossAmount) {
-      const value =
-        !low || low.value > 0 ? 0 : -position.stopLossAmount < low.value ? low.value : -position.stopLossAmount
+      const stopLossUsd = calcStopLossUsd(position.stopLossAmount, position.stopLossPrice, position.entryPrice)
+      const value = !low || low.value > 0 ? 0 : -stopLossUsd < low.value ? low.value : -stopLossUsd
       series.createPriceLine({
         price: value,
         color: themeColors.orange1,
         lineVisible: true,
         lineWidth: 1,
         axisLabelVisible: true,
-        title: `Stop Loss: -$${formatNumber(position.stopLossAmount, 2)}${
+        title: `Stop Loss: -$${formatNumber(stopLossUsd, 2)}${
           position.stopLossPrice ? ' - Est. Price: ' + formatNumber(position.stopLossPrice) : ''
         }`,
         lineStyle: LineStyle.SparseDotted,

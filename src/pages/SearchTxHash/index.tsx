@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory, useParams } from 'react-router-dom'
 
 import { searchPositionsApi } from 'apis/positionApis'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import SearchPositionResultItem from 'components/@ui/SearchPositionResult'
 import { PositionData } from 'entities/trader'
@@ -13,6 +14,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
@@ -32,6 +34,14 @@ const SearchTxHash = () => {
       enabled: !!txHash,
     }
   )
+
+  const protocols = useMemo(() => {
+    const uniqueMap = data?.reduce((acc, item) => {
+      acc.set(item.protocol, item.protocol)
+      return acc
+    }, new Map<string, string>())
+    return uniqueMap ? Array.from(uniqueMap?.values()) : undefined
+  }, [data])
 
   const handleClickPosition = useCallback(
     (data: PositionData) => {
@@ -62,6 +72,18 @@ const SearchTxHash = () => {
           <Type.LargeBold>
             All results for <Type.LargeBold color="primary1">{addressShorten(txHash, 6)}</Type.LargeBold>
           </Type.LargeBold>
+          {protocols &&
+            protocols.length > 0 &&
+            protocols.map((protocol) => {
+              return (
+                <ExplorerLogo
+                  key={protocol}
+                  protocol={protocol}
+                  explorerUrl={`${PROTOCOL_PROVIDER[protocol].explorerUrl}/tx/${txHash}`}
+                  size={18}
+                />
+              )
+            })}
         </Flex>
         <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', alignItems: 'center' }}>
           <Box
