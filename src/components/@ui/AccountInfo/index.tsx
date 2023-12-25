@@ -1,18 +1,18 @@
 import { SystemStyleObject } from '@styled-system/css'
+import Highlighter from 'react-highlight-words'
 import { Link } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
+import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
-import { addressShorten } from 'utils/helpers/format'
+import { addressShorten, shortenText } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
-
-import { BalanceText } from '../DecoratedText/ValueText'
 
 export function AccountInfo({
   isOpenPosition,
@@ -77,9 +77,8 @@ export function AccountInfo({
                 textDecoration: 'underline',
               },
             }}
-            fontWeight={keyword && address.includes(keyword) ? 'bold' : 'normal'}
           >
-            {addressShorten(address, 3, 5)}
+            <HighlightKeyword text={address} keyword={keyword} />
           </Type.Caption>
           <Tooltip
             id={`account-${address}-tt`}
@@ -142,8 +141,8 @@ export function AccountInfo({
             data-tooltip-delay-show={360}
           >
             Smart Account:{' '}
-            <Type.Small fontWeight={keyword && smartAccount.includes(keyword) ? 'bold' : 'normal'}>
-              {addressShorten(smartAccount, 3, 5)}
+            <Type.Small>
+              <HighlightKeyword text={smartAccount} keyword={keyword} />
             </Type.Small>
           </Type.Small>
         ) : note != null ? (
@@ -180,5 +179,20 @@ export function AccountInfo({
         )}
       </Flex>
     </Flex>
+  )
+}
+
+function HighlightKeyword({ text, keyword }: { text: string; keyword?: string }) {
+  return keyword ? (
+    <Highlighter
+      searchWords={[keyword, addressShorten(keyword, 3, 5), shortenText(keyword, 5), keyword.slice(-3, keyword.length)]}
+      textToHighlight={addressShorten(text, 3, 5)}
+      highlightStyle={{
+        backgroundColor: 'rgba(78, 174, 253, 0.3)',
+        color: 'white',
+      }}
+    />
+  ) : (
+    <>{addressShorten(text, 3, 5)}</>
   )
 }
