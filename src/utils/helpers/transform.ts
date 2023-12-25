@@ -163,6 +163,8 @@ export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
       return LINKS.tradeGMX
     case ProtocolEnum.KWENTA:
       return LINKS.tradeKwenta
+    case ProtocolEnum.POLYNOMIAL:
+      return LINKS.tradePolynomial
     default:
       return LINKS.tradeGMX
   }

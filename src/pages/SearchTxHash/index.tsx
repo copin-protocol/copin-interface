@@ -13,6 +13,7 @@ import { PositionData } from 'entities/trader'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
+import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
@@ -36,11 +37,15 @@ const SearchTxHash = () => {
   )
 
   const protocols = useMemo(() => {
-    const uniqueMap = data?.reduce((acc, item) => {
-      acc.set(item.protocol, item.protocol)
-      return acc
-    }, new Map<string, string>())
-    return uniqueMap ? Array.from(uniqueMap?.values()) : undefined
+    const uniqueProtocols = new Set(data?.map((item) => item.protocol))
+    if (uniqueProtocols && uniqueProtocols.size > 0) {
+      const listProtocols = Array.from(uniqueProtocols)
+      if (listProtocols.includes(ProtocolEnum.KWENTA) && listProtocols.includes(ProtocolEnum.POLYNOMIAL)) {
+        return listProtocols.filter((protocol) => protocol !== ProtocolEnum.POLYNOMIAL)
+      }
+      return listProtocols
+    }
+    return
   }, [data])
 
   const handleClickPosition = useCallback(
@@ -123,6 +128,7 @@ const SearchTxHash = () => {
                 {data.map((positionData) => (
                   <SearchPositionResultItem
                     isShowPnl
+                    hasArrow
                     key={positionData.id}
                     data={positionData}
                     handleClick={handleClickPosition}
