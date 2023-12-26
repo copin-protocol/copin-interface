@@ -28,7 +28,9 @@ export function calcOpeningPnL(position: PositionData, marketPrice?: number | un
     position.isLong,
     position.averagePrice,
     marketPrice,
-    !!position.lastSizeNumber ? Math.abs(position.lastSizeNumber) * position.averagePrice : position.size
+    position.status === PositionStatusEnum.OPEN && !!position.lastSizeNumber
+      ? Math.abs(position.lastSizeNumber) * position.averagePrice
+      : position.size
   )
 }
 

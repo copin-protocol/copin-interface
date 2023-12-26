@@ -519,6 +519,6 @@ export const generateTokenPrice = ({
     canvas.font = '700 32px Anuphan'
     canvas.fillText(formatNumber(decimalPart, 2), x + 48 + 12, y)
   } else {
-    canvas.fillText(formatNumber(formattedNumber, 2, 2), x, y)
+    canvas.fillText(formattedNumber && formattedNumber > 0 ? formatNumber(formattedNumber, 2, 2) : '--', x, y)
   }
 }

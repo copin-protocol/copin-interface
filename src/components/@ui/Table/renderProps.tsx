@@ -145,7 +145,9 @@ function SizeOpeningComponent({ data, prices, textProps }: SizeOpeningComponentP
               },
             }}
           >
-            {liquidatePrice ? PriceTokenText({ value: liquidatePrice, maxDigit: 2, minDigit: 2 }) : '--'}
+            {liquidatePrice && liquidatePrice > 0
+              ? PriceTokenText({ value: liquidatePrice, maxDigit: 2, minDigit: 2 })
+              : '--'}
           </Type.Caption>
         </Flex>
       </Flex>
