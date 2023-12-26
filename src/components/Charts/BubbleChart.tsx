@@ -50,12 +50,14 @@ const BubbleChart = (
 ) => {
   const margin = 1 // to avoid clipping the root circle stroke
 
+  const FONT_SIZE = Math.floor(Math.min(width, height) / 40)
+
   const svg = d3
     .create('svg')
     .attr('height', height)
     .attr('width', width)
     .attr('viewBox', [-margin, -margin, width, height])
-    .attr('style', 'max-width: 100%; height: auto; font-size: 13px;')
+    .attr('style', `max-width: 100%; height: auto; font-size: ${FONT_SIZE}px;`)
     .attr('text-anchor', 'middle')
 
   // const shuffleData = shuffle([...data])
@@ -164,9 +166,23 @@ const BubbleChart = (
   const text = node
     .append('text')
     .attr('clip-path', (d) => `circle(${d.r})`)
-    .attr('font-size', (d) => `${(d.r * 16) / maxR}px`)
+    .attr('font-size', (d) => `${Math.min((d.r * FONT_SIZE) / maxR, FONT_SIZE)}px`)
 
-  // Add a tspan for each CamelCase-separated word.
+  text
+    // .selectAll()
+    // @ts-ignore
+    .append('tspan')
+    .attr('class', 'title')
+    // .transition()
+    // .delay(600)
+    .attr('fill', (d: any) => (d.data.isLong ? 'black' : 'white'))
+    .attr('x', 0)
+    .attr('y', '-1em')
+    .attr('fill-opacity', 0.7)
+    // .attr('y', (d, i, nodes) => `${i - nodes.length / 2 + 0.35}em`)
+    // @ts-ignore
+    .text((d) => d.data.title)
+
   text
     // .selectAll()
     // @ts-ignore
@@ -177,10 +193,10 @@ const BubbleChart = (
     .attr('fill', (d: any) => (d.data.isLong ? 'black' : 'white'))
     .attr('font-weight', 'bold')
     .attr('x', 0)
-    .attr('y', 0)
+    .attr('y', '0.5em')
     // .attr('y', (d, i, nodes) => `${i - nodes.length / 2 + 0.35}em`)
     // @ts-ignore
-    .text((d) => d.data.title)
+    .text((d) => d.data.token)
 
   // Add a tspan for the node’s value.
   text
@@ -189,13 +205,13 @@ const BubbleChart = (
     // .transition()
     // .delay(600)
     .attr('x', 0)
-    .attr('y', '1.3em')
+    .attr('y', '2em')
     // @ts-ignore
     // .attr('y', (d, i, nodes) => `${i - nodes.length / 2 + 1.6}em`)
     .attr('fill', (d: any) => (d.data.isLong ? 'black' : 'white'))
     .attr('fill-opacity', 0.7)
     // @ts-ignore
-    .text((d) => `${d.data.token} | $${compactNumber(d.value)} | ${formatNumber(d.data.leverage, 1, 1)}x`)
+    .text((d) => `$${compactNumber(d.value)} | ${formatNumber(d.data.leverage, 1, 1)}x`)
 
   svg.call(
     d3
@@ -252,7 +268,7 @@ const BubbleChart = (
     const text = nodeEnter
       .append('text')
       .attr('clip-path', (d) => `circle(${d.r})`)
-      .attr('font-size', (d) => `${(d.r * 16) / maxR}px`)
+      .attr('font-size', (d) => `${Math.min((d.r * FONT_SIZE) / maxR, FONT_SIZE)}px`)
 
     // re-use enter selection for circles
     nodeEnter
@@ -274,10 +290,26 @@ const BubbleChart = (
       // .delay(600)
       .attr('fill', (d: any) => (d.data.isLong ? 'black' : 'white'))
       .attr('x', 0)
-      .attr('y', 0)
+      .attr('y', '-1em')
+      .attr('fill-opacity', 0.7)
       // .attr('y', (d, i, nodes) => `${i - nodes.length / 2 + 0.35}em`)
       // @ts-ignore
       .text((d) => d.data.title)
+
+    text
+      // .selectAll()
+      // @ts-ignore
+      .append('tspan')
+      .attr('class', 'title')
+      // .transition()
+      // .delay(600)
+      .attr('fill', (d: any) => (d.data.isLong ? 'black' : 'white'))
+      .attr('font-weight', 'bold')
+      .attr('x', 0)
+      .attr('y', '0.5em')
+      // .attr('y', (d, i, nodes) => `${i - nodes.length / 2 + 0.35}em`)
+      // @ts-ignore
+      .text((d) => d.data.token)
 
     // Add a tspan for the node’s value.
     text
@@ -286,7 +318,7 @@ const BubbleChart = (
       // .transition()
       // .delay(600)
       .attr('x', 0)
-      .attr('y', '1.3em')
+      .attr('y', '2em')
       // @ts-ignore
       // .attr('y', (d, i, nodes) => `${i - nodes.length / 2 + 1.6}em`)
       .attr('fill', (d: any) => (d.data.isLong ? 'black' : 'white'))
@@ -313,7 +345,7 @@ const BubbleChart = (
       .transition()
       .duration(1000)
       .attr('clip-path', (d) => `circle(${d.r})`)
-      .attr('font-size', (d: any) => `${(d.r * 16) / maxR}px`)
+      .attr('font-size', (d: any) => `${Math.min((d.r * FONT_SIZE) / maxR, FONT_SIZE)}px`)
 
     text.raise()
 
