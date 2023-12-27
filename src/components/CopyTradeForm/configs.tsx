@@ -18,11 +18,7 @@ const commonSchema = {
     is: true,
     then: (schema) => schema.required().min(0.1).label('Stop Loss Amount'),
   }),
-  volumeProtection: yup.boolean(),
-  lookBackOrders: yup.number().when('volumeProtection', {
-    is: true,
-    then: (schema) => schema.required().min(1).label('Look Back Orders'),
-  }),
+  lookBackOrders: yup.number().min(1).integer(),
   enableMaxVolMultiplier: yup.boolean(),
   maxVolMultiplier: yup.number().when('enableMaxVolMultiplier', {
     is: true,
@@ -69,8 +65,7 @@ export interface CopyTradeFormValues {
   type?: CopyTradeTypeEnum
   protocol?: ProtocolEnum
   stopLossAmount: number | undefined
-  volumeProtection: boolean
-  lookBackOrders: number
+  lookBackOrders: number | null
   exchange: CopyTradePlatformEnum
   copyWalletId: string
   serviceKey: string
@@ -89,7 +84,6 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   leverage: 'leverage',
   tokenAddresses: 'tokenAddresses',
   stopLossAmount: 'stopLossAmount',
-  volumeProtection: 'volumeProtection',
   lookBackOrders: 'lookBackOrders',
   exchange: 'exchange',
   copyWalletId: 'copyWalletId',
@@ -110,7 +104,6 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   tokenAddresses: [],
   type: CopyTradeTypeEnum.FULL_ORDER,
   stopLossAmount: undefined,
-  volumeProtection: true,
   lookBackOrders: 10,
   exchange: CopyTradePlatformEnum.BINGX,
   copyWalletId: '',

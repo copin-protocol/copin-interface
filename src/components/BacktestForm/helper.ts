@@ -13,7 +13,6 @@ export function getFormValuesFromRequestData(requestData: RequestBackTestData | 
     tokenAddresses: requestData.tokenAddresses ?? [],
     startTime: dayjs(requestData.fromTime).utc().toDate(),
     endTime: dayjs(requestData.toTime).utc().toDate(),
-    volumeProtection: requestData.volumeProtection ?? true,
     lookBackOrders: requestData.lookBackOrders ?? 10,
     stopLossAmount: requestData.enableStopLoss ? requestData.stopLossAmount : undefined,
     maxMarginPerPosition:

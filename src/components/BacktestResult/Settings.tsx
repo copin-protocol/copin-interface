@@ -44,14 +44,18 @@ export default function BacktestSettings({
         />
         <SettingItem
           label={'Volume Protection'}
-          value={data.volumeProtection ? `ON (${formatNumber(data.lookBackOrders, 0, 0)})` : 'OFF'}
-          valueProps={{ color: 'green1' }}
+          value={data.lookBackOrders ? `ON (${formatNumber(data.lookBackOrders, 0, 0)})` : 'OFF'}
+          valueProps={{ color: data.lookBackOrders ? 'green1' : 'neutral3' }}
         />
-        <SettingItem label={'Reverse'} value={data.reverseCopy ? 'ON' : 'OFF'} valueProps={{ color: 'green1' }} />
+        <SettingItem
+          label={'Reverse'}
+          value={data.reverseCopy ? 'ON' : 'OFF'}
+          valueProps={{ color: data.reverseCopy ? 'green1' : 'neutral3' }}
+        />
         <SettingItem
           label={'Stoploss'}
           value={data.enableStopLoss ? `ON (${formatNumber(data.stopLossAmount, 2, 2)}$)` : 'OFF'}
-          valueProps={{ color: 'green1' }}
+          valueProps={{ color: data.enableStopLoss ? 'green1' : 'neutral3' }}
         />
       </Box>
       <Box mt={3} />

@@ -30,7 +30,6 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   if (typeof leverage === 'number') result.leverage = leverage
   if (reverseCopy) result.reverseCopy = true
   if (volumeProtection) {
-    result.volumeProtection = true
     result.lookBackOrders = lookBackOrders
   }
   if (protocol) result.protocol = protocol
@@ -58,8 +57,8 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
     reverseCopy: formData.reverseCopy,
     enableStopLoss: formData.stopLossAmount && formData.stopLossAmount > 0 ? true : false,
     stopLossAmount: formData.stopLossAmount,
-    volumeProtection: formData.volumeProtection,
-    lookBackOrders: formData.volumeProtection ? formData.lookBackOrders : undefined,
+    volumeProtection: !!formData.lookBackOrders,
+    lookBackOrders: formData.lookBackOrders ? formData.lookBackOrders : null,
     maxVolMultiplier:
       formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0
         ? Number(formData.maxMarginPerPosition / formData.volume)
