@@ -4,22 +4,18 @@ import { ArrowRight } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { Link } from 'react-router-dom'
 
-import openseaIcon from 'assets/icons/ic-opensea.png'
-import optimismIcon from 'assets/icons/ic_op.svg'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import { GradientText } from 'components/GradientText'
+import NFTCollectionLinks from 'components/NFTCollectionLinks'
 import NFTSubscriptionCard from 'components/NFTSubscriptionCard'
 import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
 import useUserSubscription from 'hooks/features/useUserSubscription'
-import { Box, Flex, Image, Type } from 'theme/base'
-import { SUBSCRIPTION_COLLECTION_URL } from 'utils/config/constants'
-import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
+import { Box, Flex, Type } from 'theme/base'
 import ROUTES from 'utils/config/routes'
-import { CHAINS, OPTIMISM_MAINNET } from 'utils/web3/chains'
-import { CONTRACT_ADDRESSES } from 'utils/web3/contracts'
 
 import Plans, { MobilePlans } from './Plans'
 import TermsAndConditions from './TermsAndConditions'
-import { GradientText, SubscriptionColors, SubscriptionGrid } from './styled'
+import { SubscriptionColors, SubscriptionGrid } from './styled'
 
 export default function Subscription() {
   const { sm } = useResponsive()
@@ -37,7 +33,8 @@ export default function Subscription() {
           <Type.BodyBold mb={3} display="block" textAlign="center">
             <Trans>We&apos;ve got a pricing plan that&apos;s perfect for you</Trans>
           </Type.BodyBold>
-          <Box p={3}>
+          <NFTCollectionLinks />
+          <Box mt={4} p={3}>
             <SubscriptionCard />
           </Box>
           <Box p={3}>
@@ -70,10 +67,11 @@ export default function Subscription() {
               <Trans>Subscription</Trans>
             </GradientText>
           </Type.H1>
-          <Type.BodyBold mb={5} display="block" textAlign="center">
+          <Type.BodyBold mb={3} display="block" textAlign="center">
             <Trans>We&apos;ve got a pricing plan that&apos;s perfect for you</Trans>
           </Type.BodyBold>
-          <Flex width="100%" sx={{ gap: 24, flexDirection: ['column', 'column', 'column', 'column', 'row'] }}>
+          <NFTCollectionLinks />
+          <Flex mt={4} width="100%" sx={{ gap: 24, flexDirection: ['column', 'column', 'column', 'column', 'row'] }}>
             <SubscriptionCard />
             <Plans planPrice={priceData?.price} />
           </Flex>
@@ -92,47 +90,26 @@ function SubscriptionCard() {
       <NFTSubscriptionCard
         data={data}
         action={
-          <>
-            {data && (
-              <Flex
-                sx={{
-                  alignItems: 'center',
-                  gap: 1,
-                  borderBottom: 'small',
-                  borderBottomColor: 'primary1',
-                  color: 'primary1',
-                  width: 'max-content',
-                  mx: 'auto',
-                }}
-                as={Link}
-                to={ROUTES.USER_SUBSCRIPTION.path}
-              >
-                <Type.Body>
-                  <Trans>My Subscription</Trans>
-                </Type.Body>
-                <ArrowRight size={24} />
-              </Flex>
-            )}
-            <Flex mt={3} sx={{ width: '100%', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+          data && (
+            <Flex
+              sx={{
+                alignItems: 'center',
+                gap: 1,
+                borderBottom: 'small',
+                borderBottomColor: 'primary1',
+                color: 'primary1',
+                width: 'max-content',
+                mx: 'auto',
+              }}
+              as={Link}
+              to={ROUTES.USER_SUBSCRIPTION.path}
+            >
               <Type.Body>
-                <GradientText>
-                  <Trans>NFT Collection</Trans>
-                </GradientText>
+                <Trans>My Subscription</Trans>
               </Type.Body>
-              <Box as="a" href={SUBSCRIPTION_COLLECTION_URL} target="_blank">
-                <Image width={24} height={24} src={openseaIcon} alt="os" />
-              </Box>
-              <Box
-                as="a"
-                href={`${CHAINS[OPTIMISM_MAINNET].blockExplorerUrl}/token/${
-                  CONTRACT_ADDRESSES[OPTIMISM_MAINNET][CONTRACT_QUERY_KEYS.NFT_SUBSCRIPTION]
-                }`}
-                target="_blank"
-              >
-                <Image width={24} height={24} src={optimismIcon} alt="os" />
-              </Box>
+              <ArrowRight size={24} />
             </Flex>
-          </>
+          )
         }
       />
     </Box>

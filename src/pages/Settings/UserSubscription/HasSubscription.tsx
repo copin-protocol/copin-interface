@@ -3,6 +3,7 @@ import { CheckCircle, Note } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 
 import NoDataFound from 'components/@ui/NoDataFound'
+import NFTCollectionLinks from 'components/NFTCollectionLinks'
 import NFTSubscriptionCard from 'components/NFTSubscriptionCard'
 import useUserSubscription from 'hooks/features/useUserSubscription'
 import { planConfigs } from 'pages/Subscription/Plans'
@@ -10,10 +11,8 @@ import Alert from 'theme/Alert'
 import { CrowIconGold } from 'theme/Icons/CrowIcon'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { SUBSCRIPTION_COLLECTION_URL } from 'utils/config/constants'
 
 import ExtendPlan from './ExtendPlan'
-import OpenseaIcon from './OpenseaIcon'
 
 export default function HasSubscription() {
   const { data, isFetching } = useUserSubscription()
@@ -86,14 +85,9 @@ export function PremiumPlanDetails() {
             <Trans>Premium Plan</Trans>
           </Type.LargeBold>
         </Flex>
-        <Flex sx={{ alignItems: 'center', gap: 2 }}>
-          <OpenseaIcon />
-          <Type.Caption>
-            <Box as="a" href={SUBSCRIPTION_COLLECTION_URL} target="_blank">
-              <Trans>NFT Collection</Trans>
-            </Box>
-          </Type.Caption>
-        </Flex>
+        <Box>
+          <NFTCollectionLinks hasText sx={{ gap: 2 }} />
+        </Box>
       </Flex>
       <Type.Caption mb={24} color="neutral3">
         <Trans>The NFT subscription premium plan is a new way to provide premium features and benefits to users</Trans>
