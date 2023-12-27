@@ -612,7 +612,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.GMX]: [],
-  [CopyTradePlatformEnum.BINGX]: ['YFI', 'PERP', 'RPL'],
+  [CopyTradePlatformEnum.BINGX]: ['YFI', 'PERP', 'RPL', 'ZEC', 'RPL', 'UMA', 'BAL', 'XTZ'],
   [CopyTradePlatformEnum.SYNTHETIX]: [],
 }
 

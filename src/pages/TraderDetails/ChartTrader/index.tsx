@@ -49,6 +49,7 @@ const ChartTrader = ({
 
   return (
     <Box
+      mt={[0, 4, 4, 0]}
       sx={{
         height: 210,
       }}

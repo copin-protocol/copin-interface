@@ -69,6 +69,8 @@ export enum OrderTypeEnum {
   INCREASE = 'INCREASE',
   LIQUIDATE = 'LIQUIDATE',
   MARGIN_TRANSFERRED = 'MARGIN_TRANSFERRED',
+  STOP_LOSS = 'STOP_LOSS',
+  TAKE_PROFIT = 'TAKE_PROFIT',
 }
 
 export enum SortTypeEnum {
