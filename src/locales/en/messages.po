@@ -169,6 +169,11 @@ msgstr "Alert traders signal"
 msgid "All"
 msgstr "All"
 
+#: src/components/BacktestForm/index.tsx
+#: src/components/CopyTradeForm/index.tsx
+msgid "Allocating margin based on trader's average margin of the last {0}"
+msgstr "Allocating margin based on trader's average margin of the last {0}"
+
 #: src/components/CreateWalletAction/index.tsx
 msgid "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
 msgstr "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
@@ -663,6 +668,11 @@ msgstr "Error while place order"
 
 #: src/components/BacktestForm/index.tsx
 #: src/components/CopyTradeForm/index.tsx
+msgid "Example"
+msgstr "Example"
+
+#: src/components/BacktestForm/index.tsx
+#: src/components/CopyTradeForm/index.tsx
 msgid "Example: Trader opened LONG, you will open SHORT."
 msgstr "Example: Trader opened LONG, you will open SHORT."
 
@@ -1090,6 +1100,10 @@ msgstr "Make copy trade has been succeeded"
 #: src/components/CopyTradeForm/index.tsx
 msgid "Make sure you have already activated the <0>BingX Guaranteed Price</0> to Prevent Slippage Losses."
 msgstr "Make sure you have already activated the <0>BingX Guaranteed Price</0> to Prevent Slippage Losses."
+
+#: src/utils/config/translations.tsx
+msgid "Margin Transferred"
+msgstr "Margin Transferred"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/Stats.tsx
 msgid "Markets"
@@ -1796,6 +1810,10 @@ msgstr "Stats"
 msgid "Status"
 msgstr "Status"
 
+#: src/utils/config/translations.tsx
+msgid "Stop Loss"
+msgstr "Stop Loss"
+
 #: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
 msgid "Stopped"
@@ -1864,6 +1882,10 @@ msgstr "Synthetix"
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 msgid "TRADER EXPLORER"
 msgstr "TRADER EXPLORER"
+
+#: src/utils/config/translations.tsx
+msgid "Take Profit"
+msgstr "Take Profit"
 
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Target Action"
