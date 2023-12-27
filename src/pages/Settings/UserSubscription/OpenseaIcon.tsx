@@ -1,6 +1,6 @@
-export default function OpenseaIcon() {
+export default function OpenseaIcon({ size = 25 }: { size?: number }) {
   return (
-    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width={size} height={size} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="12" cy="12" r="8" fill="#2081E2" fillOpacity="0.28" />
       <g filter="url(#filter0_bd_4400_96733)">
         <circle
