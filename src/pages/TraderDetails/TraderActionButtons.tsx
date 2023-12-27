@@ -58,7 +58,7 @@ export default function TraderActionButtons({
         >
           <TradeProtocolAction protocol={protocol} />
           <AlertAction protocol={protocol} account={account} />
-          <BacktestButton protocol={protocol} account={account} />
+          <BacktestButton key={protocol + account} protocol={protocol} account={account} />
           <CopyTraderAction protocol={protocol} account={account} onForceReload={onCopyActionSuccess} />
         </Box>
       ) : (
@@ -86,7 +86,7 @@ export default function TraderActionButtons({
                   <AlertAction account={account} protocol={protocol} />
                 </Box>
                 <Box height="40px">
-                  <BacktestButton account={account} protocol={protocol} />
+                  <BacktestButton key={protocol + account} account={account} protocol={protocol} />
                 </Box>
                 <Box height="40px">
                   <CopyTraderAction account={account} protocol={protocol} onForceReload={onCopyActionSuccess} />

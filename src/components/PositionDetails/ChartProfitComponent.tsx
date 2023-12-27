@@ -155,10 +155,10 @@ export default function ChartProfitComponent({
         })
         .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
     )
-  }, [data, openOrder, orders, prices, to])
+  }, [data, openOrder, orders, prices, to, nextHoursParam, nextHours])
 
   const chartFutureData: LineData[] = useMemo(() => {
-    if (!data || isOpening || !nextHours || nextHours < 1) return []
+    if (!data || isOpening || ((!nextHours || nextHours < 1) && (!nextHoursParam || nextHoursParam < 1))) return []
     const chartData = data.filter((e) => e.timestamp > to)
     chartData.push({
       open: position.averagePrice,
@@ -181,7 +181,7 @@ export default function ChartProfitComponent({
         })
         .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
     )
-  }, [data, isOpening, nextHours, position, timezone, to])
+  }, [data, isOpening, nextHours, nextHoursParam, position, timezone, to])
 
   const priceData: CandlestickData[] = useMemo(() => {
     if (!data) return []

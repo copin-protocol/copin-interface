@@ -63,7 +63,7 @@ export default function BacktestSettings({
         label={'Trading Pair'}
         value={
           !!data.tokenAddresses?.length
-            ? data.tokenAddresses.map((address) => TOKEN_TRADE_SUPPORT[protocol][address].name).join(', ')
+            ? data.tokenAddresses.map((address) => TOKEN_TRADE_SUPPORT[protocol][address]?.name).join(', ')
             : ''
         }
       />
