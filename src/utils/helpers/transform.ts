@@ -130,7 +130,7 @@ export function getTimeframeFromTimeRange(from: number, to: number) {
   const diffHour = dayjs(to).utc().diff(dayjs(from).utc(), 'hour')
 
   return diffDay > 120
-    ? 60 * 24
+    ? TimeframeEnum.D1
     : diffDay > 4
     ? TimeframeEnum.H4
     : diffDay > 0
