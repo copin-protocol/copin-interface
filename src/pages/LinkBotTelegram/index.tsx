@@ -10,6 +10,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import { useClickLoginButton } from 'components/LoginAction'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useAuthContext } from 'hooks/web3/useAuth'
+import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
 import TelegramIcon from 'theme/Icons/TelegramIcon'
@@ -24,7 +25,7 @@ const LinkBotTelegram = () => {
   const history = useHistory()
   const currentState = (searchParams?.[URL_PARAM_KEYS.BOT_TELEGRAM_STATE] as string) ?? undefined
 
-  const { isAuthenticated } = useAuthContext()
+  const { isAuthenticated, loading } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
 
   const { mutate: linkBotAlert, isLoading: submitting } = useMutation(linkToBotAlertApi, {
@@ -53,6 +54,7 @@ const LinkBotTelegram = () => {
       window.open(generateTelegramBotAlertUrl(), '_blank')
     }
   }
+  const isLoging = isAuthenticated == null
 
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="center" sx={{ height: '100%' }}>
@@ -71,17 +73,23 @@ const LinkBotTelegram = () => {
         </Type.Caption>
       </Flex>
 
-      <ButtonWithIcon
-        variant="primary"
-        icon={<ArrowSquareOut size={16} />}
-        width={200}
-        direction="right"
-        isLoading={submitting}
-        disabled={submitting}
-        onClick={handleConfirmLinkAlert}
-      >
-        {currentState ? <Trans>Link Account</Trans> : <Trans>Open Telegram Bot</Trans>}
-      </ButtonWithIcon>
+      {isAuthenticated ? (
+        <ButtonWithIcon
+          variant="primary"
+          icon={currentState ? <></> : <ArrowSquareOut size={16} />}
+          width={200}
+          direction="right"
+          isLoading={submitting}
+          disabled={submitting || loading}
+          onClick={handleConfirmLinkAlert}
+        >
+          {currentState ? <Trans>Link Account</Trans> : <Trans>Open Telegram Bot</Trans>}
+        </ButtonWithIcon>
+      ) : (
+        <Button variant="primary" onClick={handleClickLogin} disabled={isLoging} isLoading={isLoging}>
+          Login
+        </Button>
+      )}
     </Flex>
   )
 }

@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TableProps } from 'components/@ui/Table/types'
 import { CopyPositionData } from 'entities/copyTrade.d'
@@ -22,13 +24,15 @@ export function ListPositionMobile({
   data,
   isLoading,
   onClosePositionSuccess,
+  noDataMessage,
 }: {
   data: CopyPositionData[] | undefined
   isLoading: boolean
   onClosePositionSuccess: () => void
+  noDataMessage?: ReactNode
 }) {
   if (isLoading) return <Loading />
-  if (!isLoading && !data?.length) return <NoDataFound />
+  if (!isLoading && !data?.length) return <NoDataFound message={noDataMessage} />
   return (
     <PositionsContainer onClosePositionSuccess={onClosePositionSuccess}>
       <ListForm data={data} />

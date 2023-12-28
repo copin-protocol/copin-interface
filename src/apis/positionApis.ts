@@ -1,7 +1,7 @@
 import { ChartData, ChartDataV2 } from 'entities/chart.d'
 import { PositionStatisticCounter, ResponsePositionData } from 'entities/trader.d'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum, TimeframeEnum } from 'utils/config/enums'
 import { capitalizeFirstLetter } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
@@ -128,20 +128,24 @@ export const getChartDataV2 = ({
   from: number
   to: number
 }) =>
-  requester.get(`prices/v2`, { params: { symbol, timeframe, from, to } }).then((res) => {
-    const data = res.data as ChartDataV2
-    const tempData: ChartData[] = []
-    for (let i = 0; i < data.o.length - 1; i++) {
-      tempData.push({
-        open: data.o[i],
-        close: data.c[i],
-        low: data.l[i],
-        high: data.h[i],
-        timestamp: data.t[i],
-      })
-    }
-    return tempData
-  })
+  requester
+    .get(`prices/v2`, {
+      params: { symbol, timeframe: timeframe === TimeframeEnum.D1 ? '1D' : timeframe, from, to },
+    })
+    .then((res) => {
+      const data = res.data as ChartDataV2
+      const tempData: ChartData[] = []
+      for (let i = 0; i < data.o.length - 1; i++) {
+        tempData.push({
+          open: data.o[i],
+          close: data.c[i],
+          low: data.l[i],
+          high: data.h[i],
+          timestamp: data.t[i],
+        })
+      }
+      return tempData
+    })
 
 export const getPositionsCounterApi = ({ protocol, account }: { protocol: ProtocolEnum; account: string }) =>
   requester

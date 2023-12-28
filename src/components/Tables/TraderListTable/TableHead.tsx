@@ -28,7 +28,7 @@ export default function TableHead<T>({
   tableSettings: TableSettingsProps<T>
   visibleColumns: string[]
   isSelectedAll?: boolean
-  handleSelectedAll?: (isSelectedAll: boolean) => void
+  handleSelectedAll?: ((isSelectedAll: boolean) => void) | null
 }) {
   const handleChangeSort = (columnSortBy: TraderListSortProps<T>['sortBy'] | undefined) => {
     if (!changeCurrentSort) return
@@ -64,7 +64,7 @@ export default function TableHead<T>({
       </colgroup> */}
       <thead>
         <tr style={style}>
-          {handleSelectedAll && (
+          {handleSelectedAll !== undefined && (
             <Box
               as="th"
               className={hasData ? 'column-freeze' : undefined}
@@ -80,13 +80,19 @@ export default function TableHead<T>({
                 left: 0,
               }}
             >
-              <Type.Caption>
-                <Checkbox
-                  checked={isSelectedAll}
-                  defaultChecked={isSelectedAll}
-                  onChange={() => handleSelectedAll(!!isSelectedAll)}
-                />
-              </Type.Caption>
+              {handleSelectedAll == null ? (
+                <Box sx={{ visibility: 'hidden' }}>
+                  <Checkbox />
+                </Box>
+              ) : (
+                <Type.Caption>
+                  <Checkbox
+                    checked={isSelectedAll}
+                    defaultChecked={isSelectedAll}
+                    onChange={() => handleSelectedAll(!!isSelectedAll)}
+                  />
+                </Type.Caption>
+              )}
             </Box>
           )}
           {tableSettings.map((column, index) => {

@@ -11,7 +11,7 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
 import { IconBox } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { generateTraderCanvas } from 'utils/helpers/generateImage'
 import { generateParamsUrl, generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
@@ -19,10 +19,12 @@ import { parseProtocolImage } from 'utils/helpers/transform'
 export default function ShareProfile({
   address,
   protocol,
+  type,
   stats,
 }: {
   address: string
   protocol: ProtocolEnum
+  type: TimeFrameEnum
   stats: TraderData | undefined
 }) {
   const { myProfile } = useMyProfile()
@@ -38,23 +40,21 @@ export default function ShareProfile({
   logoImg.src = logoWithText
 
   const handleShare = async () => {
-    if (!stats) {
-      toast.error(<ToastBody title="Error" message="Something went wrong" />)
-    }
     try {
       setIsSocialMediaSharingOpen(true)
+      if (!stats) return
       setIsGeneratingLink(true)
 
       // get Chart pnl
-      const canvas = generateTraderCanvas({ address, protocol, stats, colors: themeColors, logoImg, protocolImg })
+      const canvas = generateTraderCanvas({ address, protocol, type, stats, colors: themeColors, logoImg, protocolImg })
       if (canvas) {
         canvas.toBlob((blob) => {
           async function share() {
-            if (!stats || !blob) return
+            if (!blob) return
             const res = await shareTraderApi({
               protocol,
               traderAddress: address,
-              time: stats.type,
+              time: type,
               imageBlob: blob,
             })
             if (!res) {

@@ -32,7 +32,7 @@ export default function TraderListTable<T>({
   hideCustomColumns?: boolean
   tableSettings: TableSettingsProps<T>
   isSelectedAll?: boolean
-  handleSelectAll?: (isSelectedAll: boolean) => void
+  handleSelectAll?: ((isSelectedAll: boolean) => void) | null
   checkIsSelected?: (data: T) => boolean
   handleSelect?: (args: { isSelected: boolean; data: T }) => void
   scrollRef?: RefObject<HTMLDivElement | null>

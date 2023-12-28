@@ -124,7 +124,11 @@ export default function PositionDetails({
             )}
           </Flex>
 
-          {data && <ChartProfit data={data} isOpening={isOpening} protocol={protocol} isShow={isShow} />}
+          {data && (
+            <Box px={12}>
+              <ChartProfit data={data} isOpening={isOpening} protocol={protocol} isShow={isShow} />
+            </Box>
+          )}
 
           <Box width="100%" overflow="hidden" sx={{ pt: 12 }}>
             {data.orders && data.orders.length > 0 && (

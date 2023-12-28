@@ -69,6 +69,8 @@ export enum OrderTypeEnum {
   INCREASE = 'INCREASE',
   LIQUIDATE = 'LIQUIDATE',
   MARGIN_TRANSFERRED = 'MARGIN_TRANSFERRED',
+  STOP_LOSS = 'STOP_LOSS',
+  TAKE_PROFIT = 'TAKE_PROFIT',
 }
 
 export enum SortTypeEnum {
@@ -95,7 +97,7 @@ export enum TimeframeEnum { // Minutes
   M15 = 15,
   H1 = 60,
   H4 = 240,
-  D1 = '1D',
+  D1 = 1440,
 }
 
 export enum CheckAvailableStatus {

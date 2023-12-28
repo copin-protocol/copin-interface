@@ -102,7 +102,7 @@ function AlertListComponent() {
     setShowUnlinkModal(false)
     refetch()
   }
-  const showLinkButton = !botAlert?.chatId && !!data?.data?.length
+  const showLinkButton = !botAlert?.chatId
   const onClickLinkButton = () => {
     handleGenerateLinkBot()
   }
@@ -158,7 +158,7 @@ function AlertListComponent() {
             {!isLoading && !data?.data?.length && <TraderLastViewed reload={reload} />}
             {!isLoading && !!data?.data.length && (
               <>
-                <Box sx={{ p: [0, 0, 3] }}>
+                <Flex flexDirection="column" sx={{ p: [0, 0, 3], gap: [2, 2, 12] }}>
                   {data?.data?.map((item) =>
                     md ? (
                       <DesktopItem key={item.id} data={item} onSelect={onSelect} submitting={isLoading || submitting} />
@@ -166,7 +166,7 @@ function AlertListComponent() {
                       <MobileItem key={item.id} data={item} onSelect={onSelect} submitting={isLoading || submitting} />
                     )
                   )}
-                </Box>
+                </Flex>
               </>
             )}
           </Flex>

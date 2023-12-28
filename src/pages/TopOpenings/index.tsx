@@ -18,7 +18,7 @@ const LIMITS = [100, 200, 500]
 
 const SORTS = [
   {
-    text: 'Newest',
+    text: 'Latest',
     key: 'openBlockTime',
   },
   {
@@ -26,7 +26,7 @@ const SORTS = [
     key: 'pnl',
   },
   {
-    text: 'Size',
+    text: 'Volume',
     key: 'size',
   },
 ]
@@ -55,7 +55,7 @@ const TopOpenings = () => {
   const {
     data,
     isFetching: isLoading,
-    isRefetching,
+    // isRefetching,
   } = useQuery(
     [QUERY_KEYS.GET_TOP_OPEN_POSITIONS, protocol, limit, sort.key],
     () =>
@@ -69,7 +69,7 @@ const TopOpenings = () => {
     {
       retry: 0,
       // keepPreviousData: true,
-      refetchInterval: 5000,
+      // refetchInterval: 5000,
     }
   )
   return (
@@ -77,7 +77,7 @@ const TopOpenings = () => {
       <CustomPageTitle title={`Top Opening Positions on ${protocol}`} />
       <Box sx={{ flex: '1 0 0', borderTop: 'small', borderColor: 'neutral4', height: '100%' }}>
         <Flex justifyContent="space-between" p={12} height="48px">
-          <Flex sx={{ gap: 2 }} alignItems="center">
+          <Flex sx={{ gap: '6px' }} alignItems="center">
             <Type.BodyBold sx={{ mt: '-1px' }}>Top</Type.BodyBold>
             <Dropdown
               buttonSx={{
@@ -133,19 +133,20 @@ const TopOpenings = () => {
               <Type.BodyBold>{sort.text}</Type.BodyBold>
             </Dropdown>
           </Flex>
-          <Flex alignItems="center" sx={{ gap: 1 }}>
+          {/* <Flex alignItems="center" sx={{ gap: 1 }}>
             <Box width="16px" height="16px" color="green1" className="circle-pulse"></Box>
             <Type.Caption>Live</Type.Caption>
-          </Flex>
+          </Flex> */}
         </Flex>
         <Flex height="calc(100% - 48px)">
           {lg && (
             <Box flex="1" display={['none', 'none', 'none', 'block']}>
-              <VisualizeSection protocol={protocol} data={data} isLoading={isLoading} isRefetching={isRefetching} />
+              {/* isRefetching={isRefetching} */}
+              <VisualizeSection protocol={protocol} data={data} isLoading={isLoading} />
             </Box>
           )}
           <Box flex={[1, 1, 1, '0 0 650px']}>
-            <ListSection data={data} sort={sort.key} total={Math.min(limit, data?.length ?? 0)} isLoading={false} />
+            <ListSection data={data} sort={sort.key} total={Math.min(limit, data?.length ?? 0)} isLoading={isLoading} />
           </Box>
         </Flex>
 

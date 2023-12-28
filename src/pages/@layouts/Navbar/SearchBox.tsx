@@ -89,7 +89,7 @@ const SearchBox = ({
               {allowAllProtocol && (
                 <Flex px={3} py="6px" alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
                   <Type.CaptionBold color="neutral3">
-                    <Trans>Result</Trans> {isTxHash ? <Trans>Positions</Trans> : <Trans>Traders</Trans>}
+                    {isTxHash ? <Trans>Position</Trans> : <Trans>Trader</Trans>} <Trans>Results</Trans>
                   </Type.CaptionBold>
                   <Button variant="ghostPrimary" type="button" onClick={handleClickViewAll} sx={{ p: 0, mx: 0 }}>
                     <Type.Caption sx={{ ':hover': { textDecoration: 'underline' } }}>

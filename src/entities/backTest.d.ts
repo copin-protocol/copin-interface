@@ -10,7 +10,7 @@ export interface RequestBackTestData {
   leverage: number
   fromTime: number
   toTime: number
-  lookBackOrders?: number
+  lookBackOrders?: number | null
   volumeProtection?: boolean
   enableStopLoss?: boolean
   stopLossAmount?: number
@@ -99,7 +99,7 @@ export interface RequestBackTestTradersData {
   volume: number
   leverage: number
   volumeProtection: boolean
-  lookBackOrders: number
+  lookBackOrders: number | null
   fromTime: number
   toTime: number
   limit: number

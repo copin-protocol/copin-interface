@@ -5,6 +5,8 @@ import { useResponsive } from 'ahooks'
 import { Link } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import { GradientText } from 'components/GradientText'
+import NFTCollectionLinks from 'components/NFTCollectionLinks'
 import NFTSubscriptionCard from 'components/NFTSubscriptionCard'
 import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
 import useUserSubscription from 'hooks/features/useUserSubscription'
@@ -13,7 +15,7 @@ import ROUTES from 'utils/config/routes'
 
 import Plans, { MobilePlans } from './Plans'
 import TermsAndConditions from './TermsAndConditions'
-import { GradientText, SubscriptionColors, SubscriptionGrid } from './styled'
+import { SubscriptionColors, SubscriptionGrid } from './styled'
 
 export default function Subscription() {
   const { sm } = useResponsive()
@@ -31,7 +33,8 @@ export default function Subscription() {
           <Type.BodyBold mb={3} display="block" textAlign="center">
             <Trans>We&apos;ve got a pricing plan that&apos;s perfect for you</Trans>
           </Type.BodyBold>
-          <Box p={3}>
+          <NFTCollectionLinks />
+          <Box mt={4} p={3}>
             <SubscriptionCard />
           </Box>
           <Box p={3}>
@@ -53,7 +56,7 @@ export default function Subscription() {
           overflow: 'hidden',
           position: 'relative',
         }}
-        py={[4, 4, 4, 4, 100]}
+        py={4}
         px={3}
       >
         <SubscriptionColors />
@@ -64,10 +67,11 @@ export default function Subscription() {
               <Trans>Subscription</Trans>
             </GradientText>
           </Type.H1>
-          <Type.BodyBold mb={5} display="block" textAlign="center">
+          <Type.BodyBold mb={3} display="block" textAlign="center">
             <Trans>We&apos;ve got a pricing plan that&apos;s perfect for you</Trans>
           </Type.BodyBold>
-          <Flex width="100%" sx={{ gap: 24, flexDirection: ['column', 'column', 'column', 'column', 'row'] }}>
+          <NFTCollectionLinks />
+          <Flex mt={4} width="100%" sx={{ gap: 24, flexDirection: ['column', 'column', 'column', 'column', 'row'] }}>
             <SubscriptionCard />
             <Plans planPrice={priceData?.price} />
           </Flex>

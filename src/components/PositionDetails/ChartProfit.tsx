@@ -31,7 +31,9 @@ export default function PositionDetails({
   const tickPositions = useMemo(() => {
     const positions: TickPosition[] = []
     if (!data) return []
-    const orders = data.orders
+    const orders = data.orders.sort((x, y) =>
+      x.blockNumber < y.blockNumber ? -1 : x.blockNumber > y.blockNumber ? 1 : 0
+    )
     if (orders.length) {
       let totalTokenSize = 0
       let totalSize = 0

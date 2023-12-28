@@ -13,8 +13,7 @@ import { Box, Flex, TextProps, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
-import { overflowEllipsis } from 'utils/helpers/css'
-import { addressShorten, formatNumber } from 'utils/helpers/format'
+import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 
 import AddressAvatar from '../AddressAvatar'
@@ -69,7 +68,7 @@ export function renderSizeShorten(data: PositionData | undefined) {
   if (!data) return <></>
   return (
     <Flex sx={{ gap: 2, alignItems: 'center' }}>
-      <Type.Caption>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
+      <Type.Caption>${compactNumber(data.maxSizeNumber ?? data.size, 1)}</Type.Caption>
       <VerticalDivider />
       <Type.Caption>{formatNumber(data.leverage, 1, 1)}x</Type.Caption>
     </Flex>
@@ -146,7 +145,9 @@ function SizeOpeningComponent({ data, prices, textProps }: SizeOpeningComponentP
               },
             }}
           >
-            {liquidatePrice ? PriceTokenText({ value: liquidatePrice, maxDigit: 2, minDigit: 2 }) : '--'}
+            {liquidatePrice && liquidatePrice > 0
+              ? PriceTokenText({ value: liquidatePrice, maxDigit: 2, minDigit: 2 })
+              : '--'}
           </Type.Caption>
         </Flex>
       </Flex>

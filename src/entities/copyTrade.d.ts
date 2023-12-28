@@ -22,7 +22,7 @@ export interface RequestCopyTradeData {
   reverseCopy?: boolean
   maxVolMultiplier: number | null
   volumeProtection?: boolean
-  lookBackOrders?: number
+  lookBackOrders?: number | null
   skipLowLeverage?: boolean
   copyAll?: boolean
   // privateKey?: string
@@ -42,7 +42,7 @@ export interface CopyTradeData {
   enableStopLoss: boolean
   stopLossAmount: number
   volumeProtection: boolean
-  lookBackOrders: number
+  lookBackOrders: number | null
   pnl: number
   pnl7D: number
   pnl30D: number

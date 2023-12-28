@@ -7,7 +7,7 @@ const getPositionDetails = async (req, res) => {
   const { next_hours } = req.query
   const { protocol, id } = req.params
 
-  let thumbnail = `${configs.baseUrl}/images/cover/cover.png`
+  let thumbnail = `${configs.baseUrl}/images/cover/default-position-cover.png`
   try {
     const newThumbnail = `${configs.imageApiUrl}/share_closed_${protocol}_${id}`
     const image = await axios.get(`${newThumbnail}`)

@@ -1,7 +1,9 @@
+import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { ReactNode } from 'react'
 
 import Divider from 'components/@ui/Divider'
+import NoDataFound from 'components/@ui/NoDataFound'
 import { UserActivityData } from 'entities/user'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
@@ -19,11 +21,11 @@ export default function ListActivityMobile({
 }) {
   const { md } = useResponsive()
   if (isLoading) return <Loading />
-  if (!data) return <></>
+  if (!isLoading && !data?.length) return <NoDataFound message={<Trans>No Activity Found</Trans>} />
   return (
     <Flex sx={{ width: '100%', height: '100%', overflow: 'auto', flexDirection: 'column', gap: 3 }}>
-      {!md && data.map((value, index) => <MobileItem key={index} data={value} externalSource={externalSource} />)}
-      {md && data.map((value, index) => <TabletItem key={index} data={value} externalSource={externalSource} />)}
+      {!md && data?.map((value, index) => <MobileItem key={index} data={value} externalSource={externalSource} />)}
+      {md && data?.map((value, index) => <TabletItem key={index} data={value} externalSource={externalSource} />)}
     </Flex>
   )
 }

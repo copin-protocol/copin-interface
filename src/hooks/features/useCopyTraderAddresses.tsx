@@ -1,36 +1,19 @@
 import { useMemo } from 'react'
-import { useQueries } from 'react-query'
 
-import { getAllMyCopyTradersApi } from 'apis/copyTradeApis'
-import useMyProfileStore from 'hooks/store/useMyProfile'
 import { ProtocolEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
+
+import useGetAllCopyTrades from './useGetAllCopyTrades'
 
 type TradersByProtocolValuesData = { address: string; status: 'deleted' | 'copying' }
 export type TradersByProtocolData = Record<ProtocolEnum, TradersByProtocolValuesData[]>
 
-const PROTOCOL_ORDERS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
-const queryConfigsFactory = (myProfileId: string | undefined) =>
-  PROTOCOL_ORDERS.map((protocol) => {
-    return {
-      queryKey: [QUERY_KEYS.GET_ALL_MY_COPY_TRADERS, protocol, myProfileId],
-      queryFn: () => getAllMyCopyTradersApi({ protocol }),
-      enabled: !!myProfileId,
-    }
-  })
-
 export default function useCopyTraderAddresses() {
-  const { myProfile } = useMyProfileStore()
-  const copiedTraders = useQueries(queryConfigsFactory(myProfile?.id))
+  const { copiedTraders } = useGetAllCopyTrades()
   const listTraderAddresses = useMemo(
     () =>
       copiedTraders.reduce((result, dataByProtocol) => {
         result = Array.from(
-          new Set([
-            ...result,
-            ...(dataByProtocol.data?.copyingTraders ?? []),
-            ...(dataByProtocol.data?.deletedTraders ?? []),
-          ])
+          new Set([...result, ...(dataByProtocol.copyingTraders ?? []), ...(dataByProtocol.deletedTraders ?? [])])
         )
         return result
       }, [] as string[]),
@@ -39,19 +22,19 @@ export default function useCopyTraderAddresses() {
   const deletedTraderAddresses = useMemo(
     () =>
       copiedTraders.reduce((result, dataByProtocol) => {
-        result = Array.from(new Set([...result, ...(dataByProtocol.data?.deletedTraders ?? [])]))
+        result = Array.from(new Set([...result, ...(dataByProtocol.deletedTraders ?? [])]))
         return result
       }, [] as string[]),
     [copiedTraders]
   )
 
-  const tradersByProtocol = PROTOCOL_ORDERS.reduce((result, protocol, index) => {
+  const tradersByProtocol = Object.values(ProtocolEnum).reduce((result, protocol, index) => {
     const newResult = { ...result }
-    const dataByProtocol = copiedTraders[index].data
+    const dataByProtocol = copiedTraders[index]
     const copyingTradersData: TradersByProtocolValuesData[] =
-      dataByProtocol?.copyingTraders.map((address) => ({ address, status: 'copying' })) ?? []
+      dataByProtocol?.copyingTraders?.map((address) => ({ address, status: 'copying' })) ?? []
     const deleteTradersData: TradersByProtocolValuesData[] =
-      dataByProtocol?.deletedTraders.map((address) => ({ address, status: 'deleted' })) ?? []
+      dataByProtocol?.deletedTraders?.map((address) => ({ address, status: 'deleted' })) ?? []
     newResult[protocol] = [...(newResult[protocol] ?? []), ...copyingTradersData, ...deleteTradersData]
     return newResult
   }, {} as TradersByProtocolData)

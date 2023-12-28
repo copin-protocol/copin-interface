@@ -33,7 +33,7 @@ const tabConfigs: TabConfig[] = [
     route: ROUTES.HOME_LEADERBOARD.path,
   },
   {
-    name: <Trans>TOP OPENING</Trans>,
+    name: <Trans>OPEN INTEREST</Trans>,
     inactiveIcon: <Pulse size={24} />,
     activeIcon: <Pulse size={24} weight="fill" />,
     key: TabKeyEnum.TopOpenings,

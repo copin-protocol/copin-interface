@@ -3,9 +3,14 @@ import React, { useState } from 'react'
 import DirectionButton from 'components/@ui/DirectionButton'
 import { Box, Flex, Grid } from 'theme/base'
 
-import { LayoutComponents } from './types'
+import { MainLayoutComponents } from './types'
 
-export default function ManagementLayoutDesktop({ balanceMenu, mainSection, positionsTable, stats }: LayoutComponents) {
+export default function ManagementLayoutDesktop({
+  balanceMenu,
+  mainSection,
+  positionsTable,
+  stats,
+}: MainLayoutComponents) {
   const [mainExpanded, setMainExpanded] = useState(false)
   const handleExpand = () => {
     setMainExpanded((prev) => !prev)

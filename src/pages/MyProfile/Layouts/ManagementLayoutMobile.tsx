@@ -4,7 +4,7 @@ import { ReactNode, useState } from 'react'
 import Divider from 'components/@ui/Divider'
 import { Box, Flex, Type } from 'theme/base'
 
-import { LayoutComponents } from './types'
+import { MainLayoutComponents } from './types'
 
 enum TabEnum {
   SETTINGS = 'settings',
@@ -34,7 +34,12 @@ const TabButton = ({
   </Flex>
 )
 
-export default function ManagementLayoutMobile({ balanceMenu, mainSection, positionsTable, stats }: LayoutComponents) {
+export default function ManagementLayoutMobile({
+  balanceMenu,
+  mainSection,
+  positionsTable,
+  stats,
+}: MainLayoutComponents) {
   const [tab, setTab] = useState(TabEnum.SETTINGS)
   return (
     <Box sx={{ position: 'relative', height: '100%', overflow: 'hidden' }}>

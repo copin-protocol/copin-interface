@@ -8,8 +8,7 @@ import useTraderCopying from 'hooks/store/useTraderCopying'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tag from 'theme/Tag'
 import { Box, Flex, Type } from 'theme/base'
-import { LINKS } from 'utils/config/constants'
-import { TimeFrameEnum, TraderStatusEnum } from 'utils/config/enums'
+import { ProtocolEnum, TimeFrameEnum, TraderStatusEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
 
@@ -17,18 +16,19 @@ import ShareProfile from './ShareProfile'
 
 const TraderInfo = ({
   address,
+  protocol,
   traderData,
   timeOption,
   traderStats,
 }: {
   address: string
+  protocol: ProtocolEnum
   traderData?: TraderData
   timeOption: TimeFilterProps
   traderStats: (TraderData | undefined)[] | undefined
 }) => {
   const { isCopying } = useTraderCopying(traderData?.account)
-  const explorerUrl =
-    traderData && traderData.protocol ? PROTOCOL_PROVIDER[traderData.protocol].explorerUrl : LINKS.arbitrumExplorer
+  const explorerUrl = PROTOCOL_PROVIDER[protocol].explorerUrl
   const shareStats = traderStats?.find((data) => data && data.type === (timeOption.id as unknown as TimeFrameEnum))
 
   return (
@@ -41,14 +41,17 @@ const TraderInfo = ({
               <Type.LargeBold lineHeight="20px" textAlign="left" fontSize={['16px', '18px']}>
                 {addressShorten(address, 3, 5)}
               </Type.LargeBold>
-              {traderData && <ProtocolLogo protocol={traderData.protocol} />}
+              <ProtocolLogo protocol={protocol} />
             </Box>
             <CopyButton type="button" variant="ghost" value={address} size="sm" iconSize={20} sx={{ p: 0 }} />
-            {traderData && (
-              <ExplorerLogo protocol={traderData.protocol} explorerUrl={`${explorerUrl}/address/${address}`} />
-            )}
+            <ExplorerLogo protocol={protocol} explorerUrl={`${explorerUrl}/address/${address}`} />
             <FavoriteButton address={address} size={20} />
-            {traderData && <ShareProfile address={address} protocol={traderData.protocol} stats={shareStats} />}
+            <ShareProfile
+              address={address}
+              protocol={protocol}
+              type={timeOption.id as unknown as TimeFrameEnum}
+              stats={shareStats}
+            />
             {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
           </Flex>
         </Box>

@@ -91,13 +91,12 @@ export default function useBacktestRequest(
         toTime,
         tokenAddresses: formData.tokenAddresses,
         reverseCopy: formData.reverseCopy,
-        volumeProtection: formData.volumeProtection,
         maxVolMultiplier:
           formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0
             ? formData.maxMarginPerPosition / formData.orderVolume
             : null,
       }
-      if (formData.volumeProtection) {
+      if (formData.lookBackOrders) {
         requestData.volumeProtection = true
         requestData.lookBackOrders = formData.lookBackOrders
       }

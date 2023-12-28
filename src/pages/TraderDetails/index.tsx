@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
-import { getTraderApi, getTraderStatisticApi } from 'apis/traderApis'
+import { getTraderStatisticApi } from 'apis/traderApis'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NotFound from 'components/@ui/NotFound'
 import { TableSortProps } from 'components/@ui/Table/types'
@@ -158,6 +158,7 @@ export default function TraderDetails() {
           >
             <TraderInfo
               address={_address}
+              protocol={protocol}
               traderData={currentTraderData}
               timeOption={timeOption}
               traderStats={traderData}

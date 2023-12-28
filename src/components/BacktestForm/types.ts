@@ -6,8 +6,7 @@ export interface BackTestFormValues {
   // tradingMethod: boolean
   startTime: Date
   endTime: Date
-  volumeProtection: boolean
-  lookBackOrders: number
+  lookBackOrders: number | null
   stopLossAmount?: number
   maxMarginPerPosition: number | null
   reverseCopy: boolean

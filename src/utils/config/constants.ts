@@ -15,6 +15,7 @@ export const LINKS = {
   gmxHouse: 'https://www.gmx.house/arbitrum',
   tradeGMX: 'https://gmx.io/#/?ref=copin',
   tradeKwenta: 'https://kwenta.eth.limo/?ref=copin',
+  tradePolynomial: 'https://trade.polynomial.fi',
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
@@ -31,6 +32,7 @@ export const LINKS = {
   bingXGuarantee:
     'https://support.bingx.com/hc/en-001/articles/21313115553945-Perpetual-Futures-Exclusive-Guaranteed-Price-Launched-to-Prevent-Slippage-Losses',
   agreement: 'https://docs.copin.io/another/agreement',
+  subscriptionDocument: 'https://docs.copin.io/upgrade-to-premium',
 }
 
 export const NAVBAR_HEIGHT = 60

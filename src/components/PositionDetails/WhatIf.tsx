@@ -18,7 +18,7 @@ export default function WhatIf({
   protocol,
   ...props
 }: { positionId: string; protocol: ProtocolEnum } & BoxProps) {
-  const { searchParams } = useSearchParams()
+  const { searchParams, setSearchParams } = useSearchParams()
   const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
     ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
     : undefined
@@ -76,7 +76,8 @@ export default function WhatIf({
         placement="bottomRight"
         onReset={() => {
           setValue('amount', 0)
-          setNextHours(0)
+          setNextHours(undefined)
+          setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: null })
           window.history.replaceState(null, '', generatePositionDetailsRoute({ protocol, id: positionId }))
         }}
         onSubmit={() => {

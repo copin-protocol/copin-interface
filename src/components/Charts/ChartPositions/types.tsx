@@ -18,7 +18,7 @@ export interface ChartPositionsProps {
   openingPositions?: PositionData[]
   closedPositions: PositionData[]
   currencyOptions?: TokenOptionProps[]
-  currencyOption: TokenOptionProps
+  currencyOption?: TokenOptionProps
   changeCurrency?: (option: TokenOptionProps) => void
   timeframeOption: TimeFilterProps
   timeRange?: TimeRangeProps

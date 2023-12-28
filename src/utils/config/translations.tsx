@@ -20,6 +20,9 @@ export const ORDER_TYPE_TRANS: ObjectTrans = {
   [OrderTypeEnum.INCREASE]: <Trans>Increase</Trans>,
   [OrderTypeEnum.DECREASE]: <Trans>Decrease</Trans>,
   [OrderTypeEnum.LIQUIDATE]: <Trans>Liquidation</Trans>,
+  [OrderTypeEnum.STOP_LOSS]: <Trans>Stop Loss</Trans>,
+  [OrderTypeEnum.TAKE_PROFIT]: <Trans>Take Profit</Trans>,
+  [OrderTypeEnum.MARGIN_TRANSFERRED]: <Trans>Margin Transferred</Trans>,
 }
 
 export const PLATFORM_TRANS: ObjectTrans = {

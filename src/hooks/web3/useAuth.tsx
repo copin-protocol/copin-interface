@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { WalletState } from '@web3-onboard/core'
 import { useConnectWallet } from '@web3-onboard/react'
 import dayjs from 'dayjs'
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { cloneElement, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { loginWeb3Api, logoutApi, verifyLoginWeb3Api } from 'apis/authApis'
@@ -38,7 +38,7 @@ interface ContextValues {
 export const AuthContext = createContext({} as ContextValues)
 
 export function AuthProvider({ children }: { children: JSX.Element }) {
-  const [{ wallet, connecting }, activate, deactivate, updateBalances] = useConnectWallet()
+  const [{ wallet }, activate, deactivate, updateBalances] = useConnectWallet()
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [openingRefModal, setOpeningRefModal] = useState(false)
 
@@ -103,6 +103,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
         if (!sign) throw Error("Can't sign verify message")
         if (verifyCodeRef.current !== verifyCode || account.address !== accountRef.current) return null
         const response = await verifyLoginWeb3Api(account.address, sign, time)
+        sessionStorage.clear()
         storeAuth({
           jwt: response.access_token,
           wallet: wallet.label,
@@ -225,9 +226,10 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       eagerAuth,
     }
   }, [waitingState, isAuthenticated, wallet, myProfile, connect, disconnect, logout, eagerAuth])
+
   return (
     <AuthContext.Provider value={contextValue}>
-      {children}
+      {cloneElement(children, { key: myProfile?.id })}
       {waitingState != null && (
         <WaitingWallet
           active={waitingState != null}

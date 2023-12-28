@@ -40,6 +40,7 @@ export default function Table<T, K>({
   // topIndex,
   checkIsTop,
   scrollToTopDependencies,
+  noDataMessage,
 }: // title,
 // subTitle,
 TableProps<T, K>) {
@@ -159,7 +160,7 @@ TableProps<T, K>) {
 
         {!isLoading && !!data && data.length === 0 && (
           <Box mb={24} sx={{ bg: 'neutral8', borderRadius: 'sm' }}>
-            <NoDataFound />
+            <NoDataFound message={noDataMessage} />
           </Box>
         )}
 

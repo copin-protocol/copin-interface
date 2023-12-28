@@ -82,12 +82,12 @@ export default function ChartPositions({
   const [markerId, setMarkerId] = useState<string | undefined>()
   const [visibleRange, setVisibleRange] = useState<TimeScaleRange | undefined>()
   const [visibleLogicalRange, setVisibleLogicalRange] = useState<TimeScaleRange | undefined>()
-  const hasAllTokens = currencyOption.id === ALL_TOKENS_ID
+  const hasAllTokens = currencyOption?.id === ALL_TOKENS_ID
   const filterPositions = (positions?: PositionData[]) =>
     (positions &&
       positions.length > 0 &&
       positions.filter((e) =>
-        hasAllTokens ? e.indexToken === positions[0].indexToken : e.indexToken === currencyOption.id
+        hasAllTokens ? e.indexToken === positions[0].indexToken : e.indexToken === currencyOption?.id
       )) ||
     []
 
@@ -111,13 +111,10 @@ export default function ChartPositions({
       : undefined
   const oldestPosTime = oldestPosition ? dayjs(oldestPosition.openBlockTime).utc() : undefined
 
+  const defaultToken = getDefaultTokenTrade(protocol).address
   const tokenTrade =
     TOKEN_TRADE_SUPPORT[protocol][
-      hasAllTokens
-        ? mostRecentPos
-          ? mostRecentPos.indexToken
-          : getDefaultTokenTrade(protocol).address
-        : currencyOption.id
+      hasAllTokens ? (mostRecentPos ? mostRecentPos.indexToken : defaultToken) : currencyOption?.id ?? defaultToken
     ]
 
   const to = useMemo(() => (timeRange ? timeRange.to : dayjs().utc().valueOf()), [timeRange])
@@ -139,10 +136,11 @@ export default function ChartPositions({
   const [currentTimeframe, setCurrentTimeframe] = useState(timeframe)
 
   const { data, isLoading } = useQuery(
-    [QUERY_KEYS.GET_CHART_DATA, tokenTrade.symbol, from, to, currentTimeframe],
-    () => getChartDataV2({ symbol: tokenTrade.symbol, timeframe: currentTimeframe, from, to }),
+    [QUERY_KEYS.GET_CHART_DATA, tokenTrade?.symbol, from, to, currentTimeframe],
+    () => getChartDataV2({ symbol: tokenTrade?.symbol, timeframe: currentTimeframe, from, to }),
     {
       retry: 0,
+      enabled: !!tokenTrade?.symbol,
     }
   )
   const chartData: CandlestickData[] = useMemo(
@@ -161,10 +159,10 @@ export default function ChartPositions({
     [data, timezone]
   )
   const openingPos = (openingPositions ?? []).filter(
-    (e) => e.indexToken === tokenTrade.address && dayjs(e.openBlockTime).utc().valueOf() >= from
+    (e) => e.indexToken === tokenTrade?.address && dayjs(e.openBlockTime).utc().valueOf() >= from
   )
   const closedPos = closedPositions.filter(
-    (e) => e.indexToken === tokenTrade.address && dayjs(e.closeBlockTime).utc().valueOf() >= from
+    (e) => e.indexToken === tokenTrade?.address && dayjs(e.closeBlockTime).utc().valueOf() >= from
   )
   const listPositions = useMemo(() => [...closedPos, ...openingPos], [closedPos, openingPos])
   const currentPosition = listPositions.find((e) => markerId?.includes(e.id))
@@ -545,7 +543,7 @@ export default function ChartPositions({
     markerId,
     openingPositions,
     timezone,
-    tokenTrade.address,
+    tokenTrade?.address,
     tooltipId,
     visibleLogicalRange,
     visibleRange,
@@ -589,18 +587,20 @@ export default function ChartPositions({
         )}
         <Flex flex={1} alignItems="center" justifyContent="flex-end" sx={{ gap: 2 }}>
           <TimeframeSelection isExpanded={isExpanded} currentOption={currentTimeframe} changeOption={changeTimeframe} />
-          <CurrencyOption
-            options={tokenOptions}
-            currentOption={
-              currencyOption.id === ALL_TOKENS_ID
-                ? tokenOptions.find((e) => e.id === mostRecentPos?.indexToken) ?? currencyOption
-                : currencyOption
-            }
-            handleChangeOption={(option) => {
-              changeCurrency && changeCurrency(option)
-            }}
-            selectProps={currencySelectProps}
-          />
+          {tokenOptions && tokenOptions.length > 0 && (
+            <CurrencyOption
+              options={tokenOptions}
+              currentOption={
+                currencyOption?.id === ALL_TOKENS_ID
+                  ? tokenOptions.find((e) => e.id === mostRecentPos?.indexToken) ?? currencyOption
+                  : currencyOption ?? tokenOptions[0]
+              }
+              handleChangeOption={(option) => {
+                changeCurrency && changeCurrency(option)
+              }}
+              selectProps={currencySelectProps}
+            />
+          )}
           {toggleExpand && (
             <IconBox
               icon={isExpanded ? <ArrowsIn size={20} /> : <ArrowsOutSimple size={20} />}

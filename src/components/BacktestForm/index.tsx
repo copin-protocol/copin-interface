@@ -74,6 +74,7 @@ export default function BacktestForm({
   const leverage = watch('leverage')
   const stopLossAmount = watch('stopLossAmount')
   const maxMarginPerPosition = watch('maxMarginPerPosition')
+  const lookBackOrders = watch('lookBackOrders')
   const startTime = watch('startTime')
   const endTime = watch('endTime')
   const maxDate = useMemo(() => {
@@ -243,25 +244,47 @@ export default function BacktestForm({
           </Type.BodyBold>
         }
         body={
-          <Box mt={3}>
-            <NumberInputField
-              block
-              label="Max Margin Per Position"
-              name={fieldName.maxMarginPerPosition}
-              control={control}
-              error={errors.maxMarginPerPosition?.message}
-              suffix={<InputSuffix>USD</InputSuffix>}
-            />
-            <Type.Caption mt={1} color="neutral2">
-              When the trader increases the position, you will follow with a maximum of{' '}
-              {maxMarginPerPosition ? (
-                <Type.CaptionBold>{formatNumber(maxMarginPerPosition)} USD</Type.CaptionBold>
-              ) : (
-                '--'
-              )}{' '}
-              as the margin.
-            </Type.Caption>
-          </Box>
+          <>
+            <Box mt={3}>
+              <NumberInputField
+                block
+                label="Max Margin Per Position"
+                name={fieldName.maxMarginPerPosition}
+                control={control}
+                error={errors.maxMarginPerPosition?.message}
+                suffix={<InputSuffix>USD</InputSuffix>}
+              />
+              <Type.Caption mt={1} color="neutral2">
+                When the trader increases the position, you will follow with a maximum of{' '}
+                {maxMarginPerPosition ? (
+                  <Type.CaptionBold>{formatNumber(maxMarginPerPosition)} USD</Type.CaptionBold>
+                ) : (
+                  '--'
+                )}{' '}
+                as the margin.
+              </Type.Caption>
+            </Box>
+            <Box mt={24}>
+              <NumberInputField
+                block
+                label="Margin Protection"
+                name={fieldName.lookBackOrders}
+                control={control}
+                error={errors.lookBackOrders?.message}
+                suffix={<InputSuffix>Orders Lookback</InputSuffix>}
+              />
+              <Type.Caption mt={1} color="neutral2">
+                <Trans>
+                  Allocating margin based on trader&#39;s average margin of the last{' '}
+                  {lookBackOrders ? <Type.CaptionBold>{lookBackOrders}</Type.CaptionBold> : '--'}{' '}
+                </Trans>{' '}
+                orders.{' '}
+                <a href={'https://tutorial.copin.io/how-to-use-copy-trading'} target="_blank" rel="noreferrer">
+                  <Trans>Example</Trans>
+                </a>
+              </Type.Caption>
+            </Box>
+          </>
         }
       />
       <Divider mt={1} mb={24} />

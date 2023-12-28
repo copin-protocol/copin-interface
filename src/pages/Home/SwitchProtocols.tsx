@@ -19,13 +19,16 @@ type SwitchProtocolComponentProps = {
   buttonSx?: SystemStyleObject & GridProps
   textSx?: SystemStyleObject & GridProps
   sx?: SystemStyleObject & GridProps
+  onSwitch?: (protocol: ProtocolEnum) => void
 }
 
 export function HomeSwitchProtocols(props: SwitchProtocolComponentProps) {
   const { setSearchParams } = useSearchParams()
-  const onSwitch = (protocol: ProtocolEnum) => {
-    setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: protocol, [URL_PARAM_KEYS.EXPLORER_PAGE]: '1' })
-  }
+  const onSwitch =
+    props.onSwitch ??
+    ((protocol: ProtocolEnum) => {
+      setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: protocol, [URL_PARAM_KEYS.EXPLORER_PAGE]: '1' })
+    })
   return <SwitchProtocolsComponent {...props} onSwitch={onSwitch} />
 }
 

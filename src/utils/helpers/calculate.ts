@@ -28,7 +28,9 @@ export function calcOpeningPnL(position: PositionData, marketPrice?: number | un
     position.isLong,
     position.averagePrice,
     marketPrice,
-    !!position.lastSizeNumber ? Math.abs(position.lastSizeNumber) * position.averagePrice : position.size
+    position.status === PositionStatusEnum.OPEN && !!position.lastSizeNumber
+      ? Math.abs(position.lastSizeNumber) * position.averagePrice
+      : position.size
   )
 }
 
@@ -57,6 +59,7 @@ export function calcLiquidatePrice(position: PositionData) {
       totalFee -= position.funding
       break
   }
+
   return position.averagePrice + ((position.isLong ? 1 : -1) * (totalFee - 0.9 * lastCollateral)) / lastSizeInToken
 }
 
@@ -73,4 +76,8 @@ export function calcRiskPercent(isLong: boolean, entryPrice: number, marketPrice
     (Math.abs(marketPrice - entryPrice) / Math.abs(liquidatePrice - entryPrice)) *
     100
   )
+}
+
+export function calcStopLossUsd(stopLossAmount: number, stopLossPrice: number, entryPrice: number) {
+  return stopLossAmount * Math.abs(stopLossPrice - entryPrice)
 }

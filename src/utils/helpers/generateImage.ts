@@ -12,6 +12,7 @@ import { generateAvatar } from './generateAvatar'
 export const generateTraderCanvas = ({
   address,
   protocol,
+  type,
   stats,
   colors,
   logoImg,
@@ -19,6 +20,7 @@ export const generateTraderCanvas = ({
 }: {
   address: string
   protocol: ProtocolEnum
+  type: TimeFrameEnum
   stats: TraderData | undefined
   colors: Colors
   logoImg: HTMLImageElement
@@ -68,9 +70,17 @@ export const generateTraderCanvas = ({
   const valueStartY = titleStartY + titleStatsFontSize + titleAndValueGap
   rightCtx.fillStyle = colors.neutral1
   rightCtx.font = `700 ${valueStatsFontSize}px Anuphan`
-  rightCtx.fillText(formatNumber(stats?.totalTrade, 0, 0), rightWidth / 2, valueStartY)
-  rightCtx.fillText(formatNumber(stats?.winRate, 1, 1) + '%', rightWidth / 2, valueStartY + statsGap)
-  rightCtx.fillText(formatNumber(stats?.profitRate, 1, 1) + '%', rightWidth / 2, valueStartY + statsGap * 2)
+  rightCtx.fillText(stats?.totalTrade ? formatNumber(stats?.totalTrade, 0, 0) : '--', rightWidth / 2, valueStartY)
+  rightCtx.fillText(
+    stats?.winRate ? `${formatNumber(stats?.winRate, 1, 1)}%` : '--',
+    rightWidth / 2,
+    valueStartY + statsGap
+  )
+  rightCtx.fillText(
+    stats?.profitRate ? `${formatNumber(stats?.profitRate, 1, 1)}%` : '--',
+    rightWidth / 2,
+    valueStartY + statsGap * 2
+  )
 
   // draw avatar & address
   generateAvatarAddress({ address, colors, canvas: leftCtx })
@@ -90,7 +100,7 @@ export const generateTraderCanvas = ({
   leftCtx.fillStyle = colors.neutral1
   leftCtx.textBaseline = 'top'
   let time = ''
-  switch (stats?.type) {
+  switch (type) {
     case TimeFrameEnum.A_WEEK:
       time = '7'
       break
@@ -120,7 +130,11 @@ export const generateTraderCanvas = ({
     : stats.pnl < 0
     ? colors.red2
     : colors.neutral1
-  leftCtx.fillText('$' + formatNumber(stats?.pnl, 0, 0), leftWidth / 2, chartAreaOffsetY + 36 + 32 + 16)
+  leftCtx.fillText(
+    stats ? `$${formatNumber(stats?.pnl, 0, 0)}` : 'No Trading Data',
+    leftWidth / 2,
+    chartAreaOffsetY + 36 + 32 + 16
+  )
 
   // chart line
   const chartAxisOffsetY = chartAreaOffsetY + chartAreaHeight - chartFooterHeight
@@ -519,6 +533,6 @@ export const generateTokenPrice = ({
     canvas.font = '700 32px Anuphan'
     canvas.fillText(formatNumber(decimalPart, 2), x + 48 + 12, y)
   } else {
-    canvas.fillText(formatNumber(formattedNumber, 2, 2), x, y)
+    canvas.fillText(formattedNumber && formattedNumber > 0 ? formatNumber(formattedNumber, 2, 2) : '--', x, y)
   }
 }

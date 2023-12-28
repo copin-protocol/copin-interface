@@ -16,7 +16,7 @@ import NumberInputField from 'theme/InputField/NumberInputField'
 import Select from 'theme/Select'
 import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
-import { Box, Flex, Grid, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { SERVICE_KEYS } from 'utils/config/keys'
@@ -85,9 +85,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const platform = watch('exchange')
   const stopLossAmount = watch('stopLossAmount')
   const maxMarginPerPosition = watch('maxMarginPerPosition')
+  const lookBackOrders = watch('lookBackOrders')
   const tokenAddresses = watch('tokenAddresses') || []
   const protocol = watch('protocol')
-  const agreement = watch('agreement')
   const copyAll = watch('copyAll')
 
   const pairs =
@@ -384,6 +384,26 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                 </Trans>
               </Type.Caption>
               <Box mt={24}>
+                <NumberInputField
+                  block
+                  label="Margin Protection"
+                  name={fieldName.lookBackOrders}
+                  control={control}
+                  error={errors.lookBackOrders?.message}
+                  suffix={<InputSuffix>Orders Lookback</InputSuffix>}
+                />
+                <Type.Caption mt={1} color="neutral2">
+                  <Trans>
+                    Allocating margin based on trader&#39;s average margin of the last{' '}
+                    {lookBackOrders ? <Type.CaptionBold>{lookBackOrders}</Type.CaptionBold> : '--'}{' '}
+                  </Trans>{' '}
+                  orders.{' '}
+                  <a href={'https://tutorial.copin.io/how-to-use-copy-trading'} target="_blank" rel="noreferrer">
+                    <Trans>Example</Trans>
+                  </a>
+                </Type.Caption>
+              </Box>
+              <Box mt={24}>
                 <SwitchInputField
                   switchLabel="Skip Lower Leverage Position"
                   // labelColor="orange1"
@@ -407,6 +427,11 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               </a>
             </Type.Caption>
           </Checkbox>
+          {!!errors.agreement?.message && (
+            <Type.Caption color="red1" display="block" mt={1}>
+              You must agree to the agreement before continuing
+            </Type.Caption>
+          )}
         </Box>
 
         <Box sx={{ gap: 4 }} mt={3}>
@@ -415,7 +440,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             variant="primary"
             onClick={() => handleSubmit(onSubmit)()}
             isLoading={isSubmitting}
-            disabled={isSubmitting || !agreement}
+            disabled={isSubmitting}
           >
             {submitButtonText}
           </Button>
