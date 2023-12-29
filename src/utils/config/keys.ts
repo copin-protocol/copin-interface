@@ -119,8 +119,10 @@ export const URL_PARAM_KEYS = {
 export const TOOLTIP_KEYS = {
   MY_COPY_ICON_REVERSE: 'my_copy_icon_reverse',
   MY_COPY_ICON_STOPLOSS: 'my_copy_icon_stoploss',
+  MY_COPY_ICON_TAKE_PROFIT: 'my_copy_icon_take_profit',
   MY_COPY_ICON_MAX_VOL_MULTIPLIER: 'my_copy_icon_max_vol_multiplier',
   MY_COPY_ICON_SKIP_LOW_LEVERAGE: 'my_copy_icon_skip_low_leverage',
+  MY_COPY_ICON_LOOK_BACK_ORDERS: 'my_copy_icon_look_back_orders',
 }
 
 export const ELEMENT_IDS = {

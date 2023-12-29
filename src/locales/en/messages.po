@@ -1215,7 +1215,7 @@ msgstr "My Profile"
 msgid "My Subscription"
 msgstr "My Subscription"
 
-#: src/pages/Settings/UserSubscription/HasSubscription.tsx
+#: src/components/NFTCollectionLinks.tsx
 msgid "NFT Collection"
 msgstr "NFT Collection"
 
@@ -1554,6 +1554,10 @@ msgstr "REFERRAL"
 #~ msgid "Ranking Filter"
 #~ msgstr "Ranking Filter"
 
+#: src/pages/Subscription/TermsAndConditions.tsx
+msgid "Read More"
+msgstr "Read More"
+
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "Read more"
 msgstr "Read more"
@@ -1672,6 +1676,10 @@ msgstr "Runtime (All)"
 #: src/pages/MyProfile/renderProps.tsx
 msgid "S"
 msgstr "S"
+
+#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+msgid "SL/TP"
+msgstr "SL/TP"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "Save {0}%"
@@ -2434,8 +2442,17 @@ msgstr "What is smart wallet?"
 
 #: src/components/BacktestForm/index.tsx
 #: src/components/CopyTradeForm/index.tsx
-msgid "When the loss exceeds {0}, the Stop Loss will be triggered to close the position."
-msgstr "When the loss exceeds {0}, the Stop Loss will be triggered to close the position."
+#~ msgid "When the loss exceeds {0}, the Stop Loss will be triggered to close the position."
+#~ msgstr "When the loss exceeds {0}, the Stop Loss will be triggered to close the position."
+
+#: src/components/BacktestForm/index.tsx
+#: src/components/CopyTradeForm/index.tsx
+msgid "When the position's loss exceeds {0}, the Stop Loss will be triggered to close the position."
+msgstr "When the position's loss exceeds {0}, the Stop Loss will be triggered to close the position."
+
+#: src/components/CopyTradeForm/index.tsx
+msgid "When the position's profit exceeds {0}, the Take Profit will be triggered to close the position."
+msgstr "When the position's profit exceeds {0}, the Take Profit will be triggered to close the position."
 
 #: src/components/CopyTradeForm/index.tsx
 msgid "When the trader increases the position, you will follow with a maximum of {0} as the margin."

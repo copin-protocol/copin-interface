@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import {
-  CellSignalX,
+  ArrowLineLeft,
+  ArrowLineUp,
   CopySimple,
   DotsThreeOutlineVertical,
   PencilSimpleLine,
-  Plugs,
-  Radical,
+  ShieldChevron,
   Trash,
 } from '@phosphor-icons/react'
 import { MutableRefObject, SetStateAction, useCallback, useMemo } from 'react'
@@ -20,10 +20,11 @@ import Dropdown from 'theme/Dropdown'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
 import { TOOLTIP_KEYS } from 'utils/config/keys'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatNumber } from 'utils/helpers/format'
 
 import { renderTrader } from '../renderProps'
 import ActionItem from './ActionItem'
@@ -115,7 +116,7 @@ export default function useCopyTradeColumns({
   const renderVolume = useCallback(
     (item: CopyTradeData) => (
       <Type.Caption color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}>
-        ${formatNumber(item.volume)}
+        ${item.volume >= 10000 ? compactNumber(item.volume, 2) : formatNumber(item.volume)}
       </Type.Caption>
     ),
     [isRunningFn]
@@ -128,41 +129,47 @@ export default function useCopyTradeColumns({
     ),
     [isRunningFn]
   )
+  const renderSLTP = useCallback(
+    (item: CopyTradeData) => (
+      <Type.Caption sx={{ gap: '0.5ch', justifyContent: 'end' }}>
+        <Box as="span" color={isRunningFn(item.status) ? 'red1' : 'neutral3'}>
+          {item.enableStopLoss
+            ? (item?.stopLossAmount ?? 0) >= 10000
+              ? `$${compactNumber(item.stopLossAmount, 2)}`
+              : `$${formatNumber(item.stopLossAmount)}`
+            : '--'}
+        </Box>
+        <Box as="span" color="neutral3">
+          {' / '}
+        </Box>
+        <Box as="span" color={isRunningFn(item.status) ? 'green2' : 'neutral3'}>
+          {item.enableTakeProfit
+            ? (item?.takeProfitAmount ?? 0) >= 10000
+              ? `$${compactNumber(item.stopLossAmount, 2)}`
+              : `$${formatNumber(item.takeProfitAmount)}`
+            : '--'}
+        </Box>
+      </Type.Caption>
+    ),
+    [isRunningFn]
+  )
   const renderRiskControl = useCallback(
     (item: CopyTradeData) => (
       <Flex
         sx={{
+          width: '100%',
           alignItems: 'center',
+          justifyContent: 'end',
           gap: 2,
           filter: isRunningFn(item.status) ? undefined : 'grayscale(1)',
         }}
       >
-        {item.enableStopLoss && (
-          <>
-            <IconBox
-              icon={<Plugs size={16} />}
-              color="#FA5547"
-              sx={{ bg: '#FA55474D', p: '2px', borderRadius: 'sm' }}
-              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_STOPLOSS}_${item.id}`}
-            />
-            {isRunningFn(item.status) && (
-              <Tooltip id={`${TOOLTIP_KEYS.MY_COPY_ICON_STOPLOSS}_${item.id}`} place="top" type="dark" effect="solid">
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Position Stop Loss:{' '}
-                  <Box as="span" color="red1">
-                    ${`${formatNumber(item.stopLossAmount, 2, 2)}`}
-                  </Box>
-                </Type.Caption>
-              </Tooltip>
-            )}
-          </>
-        )}
         {!!item.maxVolMultiplier && (
           <>
             <IconBox
-              icon={<Radical size={16} />}
+              icon={<ArrowLineUp size={16} weight="bold" />}
               color="primary1"
-              sx={{ bg: '#97CFFD4D', p: '2px', borderRadius: 'sm' }}
+              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
               data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_MAX_VOL_MULTIPLIER}_${item.id}`}
             />
             {isRunningFn(item.status) && (
@@ -175,7 +182,32 @@ export default function useCopyTradeColumns({
                 <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
                   Max Margin Per Position:{' '}
                   <Box as="span" color="red1">
-                    {`$${formatNumber(item.maxVolMultiplier * item.volume, 2, 2)}`}
+                    {`$${formatNumber(item.maxVolMultiplier * item.volume)}`}
+                  </Box>
+                </Type.Caption>
+              </Tooltip>
+            )}
+          </>
+        )}
+        {!!item.lookBackOrders && (
+          <>
+            <IconBox
+              icon={<ShieldChevron size={16} weight="bold" />}
+              color="primary1"
+              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
+              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_LOOK_BACK_ORDERS}_${item.id}`}
+            />
+            {isRunningFn(item.status) && (
+              <Tooltip
+                id={`${TOOLTIP_KEYS.MY_COPY_ICON_LOOK_BACK_ORDERS}_${item.id}`}
+                place="top"
+                type="dark"
+                effect="solid"
+              >
+                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
+                  Orders Lookback :{' '}
+                  <Box as="span" color="red1">
+                    {formatNumber(item.lookBackOrders, 0, 0)}
                   </Box>
                 </Type.Caption>
               </Tooltip>
@@ -185,9 +217,9 @@ export default function useCopyTradeColumns({
         {item.skipLowLeverage && (
           <>
             <IconBox
-              icon={<CellSignalX mirrored size={16} />}
-              color="orange1"
-              sx={{ bg: 'neutral4', p: '2px', borderRadius: 'sm' }}
+              icon={<ArrowLineLeft mirrored size={16} weight="bold" />}
+              color={themeColors.primary1}
+              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
               data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_LEVERAGE}_${item.id}`}
             />
             {isRunningFn(item.status) && (
@@ -368,7 +400,7 @@ export default function useCopyTradeColumns({
         title: 'Title',
         dataIndex: 'title',
         key: 'title',
-        style: { minWidth: '120px', pr: 3 },
+        style: { minWidth: '150px', pr: 3 },
         render: renderTitle,
       },
       {
@@ -380,10 +412,10 @@ export default function useCopyTradeColumns({
         render: renderTraderAccount,
       },
       {
-        title: 'Vol/Order',
+        title: 'Margin/Order',
         dataIndex: 'volume',
         key: 'volume',
-        style: { minWidth: '80px', textAlign: 'right' },
+        style: { minWidth: '100px', textAlign: 'right' },
         render: renderVolume,
       },
       {
@@ -394,10 +426,17 @@ export default function useCopyTradeColumns({
         render: renderLeverage,
       },
       {
-        title: 'Risk Control',
+        title: 'SL/TP',
         dataIndex: undefined,
         key: undefined,
-        style: { minWidth: '90px', textAlign: 'left', pl: 3 },
+        style: { minWidth: '150px', maxWidth: '150px', textAlign: 'right' },
+        render: renderSLTP,
+      },
+      {
+        title: 'Advance Settings',
+        dataIndex: undefined,
+        key: undefined,
+        style: { minWidth: '120px', textAlign: 'right' },
         render: renderRiskControl,
       },
       {
@@ -439,6 +478,7 @@ export default function useCopyTradeColumns({
     renderLeverage,
     renderOptions,
     renderRiskControl,
+    renderSLTP,
     renderTitle,
     renderToggleRunning,
     renderTotalPNL,
@@ -458,6 +498,7 @@ export default function useCopyTradeColumns({
       renderTotalPNL,
       renderTraderAccount,
       renderVolume,
+      renderSLTP,
     },
   }
 }

@@ -13,6 +13,8 @@ export interface RequestCopyTradeData {
   volume?: number
   enableStopLoss?: boolean
   stopLossAmount?: number
+  enableTakeProfit?: boolean
+  takeProfitAmount?: number
   protocol?: ProtocolEnum
   type?: CopyTradeTypeEnum
   exchange?: CopyTradePlatformEnum
@@ -41,6 +43,8 @@ export interface CopyTradeData {
   volume: number
   enableStopLoss: boolean
   stopLossAmount: number
+  enableTakeProfit?: boolean
+  takeProfitAmount?: number
   volumeProtection: boolean
   lookBackOrders: number | null
   pnl: number
