@@ -25,7 +25,7 @@ import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { TIMEFRAME_NAMES, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcLiquidatePrice, calcOpeningPnL, calcPnL } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
@@ -520,7 +520,7 @@ export default function ChartProfitComponent({
               candleData.open
             )}</span> | H: <span>${formatNumber(candleData.high)}</span> | L: <span>${formatNumber(
               candleData.low
-            )}</span> | C: <span>${formatNumber(candleData.close)}</span></div>`
+            )}</span> | C: <span>${formatNumber(candleData.close)} (${TIMEFRAME_NAMES[timeframe]})</span></div>`
             legend.style.display = 'block'
           }
         }

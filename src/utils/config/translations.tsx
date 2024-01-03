@@ -2,7 +2,13 @@
 import { Trans, t } from '@lingui/macro'
 import { ReactNode } from 'react'
 
-import { CopyTradePlatformEnum, CopyTradeStatusEnum, OrderTypeEnum, PositionStatusEnum } from './enums'
+import {
+  CopyPositionCloseTypeEnum,
+  CopyTradePlatformEnum,
+  CopyTradeStatusEnum,
+  OrderTypeEnum,
+  PositionStatusEnum,
+} from './enums'
 
 type ObjectTrans = {
   [key: string]: ReactNode
@@ -23,6 +29,14 @@ export const ORDER_TYPE_TRANS: ObjectTrans = {
   [OrderTypeEnum.STOP_LOSS]: <Trans>Stop Loss</Trans>,
   [OrderTypeEnum.TAKE_PROFIT]: <Trans>Take Profit</Trans>,
   [OrderTypeEnum.MARGIN_TRANSFERRED]: <Trans>Margin Transferred</Trans>,
+}
+
+export const COPY_POSITION_CLOSE_TYPE_TRANS: ObjectTrans = {
+  [CopyPositionCloseTypeEnum.MANUAL]: <Trans>Manual</Trans>,
+  [CopyPositionCloseTypeEnum.COPY_TRADE]: <Trans>Follow Trader</Trans>,
+  [CopyPositionCloseTypeEnum.LIQUIDATE]: <Trans>Liquidation</Trans>,
+  [CopyPositionCloseTypeEnum.STOP_LOSS]: <Trans>Stop Loss</Trans>,
+  [CopyPositionCloseTypeEnum.TAKE_PROFIT]: <Trans>Take Profit</Trans>,
 }
 
 export const PLATFORM_TRANS: ObjectTrans = {

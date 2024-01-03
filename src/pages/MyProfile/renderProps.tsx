@@ -16,6 +16,7 @@ import { SxProps } from 'theme/types'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
@@ -149,6 +150,10 @@ export const renderStatus = (data: CopyPositionData) => (
   <Flex width="100%" alignItems="center" justifyContent="right">
     <Tag width={70} status={data.status} />
   </Flex>
+)
+
+export const renderCloseType = (data: CopyPositionData) => (
+  <Type.Caption>{!data.closeType ? '--' : COPY_POSITION_CLOSE_TYPE_TRANS[data.closeType]}</Type.Caption>
 )
 
 const VerticalDivider = styled(Box)`
