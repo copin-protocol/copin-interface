@@ -96,7 +96,7 @@ export function ListForm({
               <ListHistoryRow label={<Trans>Entry</Trans>} value={renderEntry(positionData)} />
               <ListHistoryRow label={<Trans>Size</Trans>} value={renderSizeMobile(positionData)} />
               <ListHistoryRow label={<Trans>PNL</Trans>} value={renderPnL(positionData, externalSource?.prices)} />
-              <ListHistoryRow label={<Trans>Close Type</Trans>} value={renderCloseType(positionData)} />
+              <ListHistoryRow label={<Trans>Closed Type</Trans>} value={renderCloseType(positionData)} />
               <Flex sx={{ justifyContent: 'space-between' }}>
                 <Flex sx={{ gap: 1 }}>
                   <Type.Caption color="neutral3">
@@ -249,7 +249,7 @@ export const historyColumns: typeof openingColumns = [
     render: (item, _, externalSource) => renderPnL(item, externalSource?.prices),
   },
   {
-    title: <Box pr={1}>Close Type</Box>,
+    title: <Box pr={1}>Closed Type</Box>,
     dataIndex: 'closeType',
     key: 'closeType',
     sortBy: 'closeType',

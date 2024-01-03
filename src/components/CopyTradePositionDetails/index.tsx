@@ -16,6 +16,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -127,7 +128,7 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
           <Flex
             alignItems="center"
             sx={{
-              gap: [1, 3],
+              gap: [2, 3],
               flexWrap: 'wrap',
               borderTop: 'small',
               borderColor: 'neutral4',
@@ -156,6 +157,16 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
                 <Type.Caption color="neutral3">Closed Time:</Type.Caption>
                 <Type.CaptionBold>
                   <LocalTimeText date={data.lastOrderAt} />
+                </Type.CaptionBold>
+              </StatsItemWrapper>
+            ) : (
+              <div></div>
+            )}
+            {!isOpening ? (
+              <StatsItemWrapper>
+                <Type.Caption color="neutral3">Closed Type:</Type.Caption>
+                <Type.CaptionBold>
+                  {data.closeType ? COPY_POSITION_CLOSE_TYPE_TRANS[data.closeType] : '--'}
                 </Type.CaptionBold>
               </StatsItemWrapper>
             ) : (
