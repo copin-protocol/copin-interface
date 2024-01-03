@@ -17,17 +17,17 @@ export interface ChartPositionsProps {
   targetPosition?: PositionData
   openingPositions?: PositionData[]
   closedPositions: PositionData[]
-  currencyOptions?: TokenOptionProps[]
-  currencyOption?: TokenOptionProps
-  changeCurrency?: (option: TokenOptionProps) => void
   timeframeOption: TimeFilterProps
   timeRange?: TimeRangeProps
   componentIds?: { legend?: string; tooltip?: string; chart?: string }
   sx?: SystemStyleObject & GridProps
   isExpanded?: boolean
-  toggleExpand?: () => void
   fetchNextPage?: () => void
   hasNextPage?: boolean
   isLoadingClosed?: boolean
+  account?: string
+  currencyOption: TokenOptionProps | undefined
+  currencyOptions?: TokenOptionProps[]
+  changeCurrency?: (option: TokenOptionProps) => void
   currencySelectProps?: Omit<Props, 'theme'>
 }

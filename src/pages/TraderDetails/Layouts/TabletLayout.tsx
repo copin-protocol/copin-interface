@@ -4,7 +4,7 @@ import { Box, Flex } from 'theme/base'
 
 import { LayoutProps } from './types'
 
-const TabletLayout = ({ children }: LayoutProps) => {
+const TabletLayout = (props: LayoutProps) => {
   return (
     <>
       <Box
@@ -15,7 +15,7 @@ const TabletLayout = ({ children }: LayoutProps) => {
           borderColor: 'neutral4',
         }}
       >
-        {children[0]}
+        {props.traderInfo}
       </Box>
 
       <Flex
@@ -31,7 +31,7 @@ const TabletLayout = ({ children }: LayoutProps) => {
             borderColor: 'neutral4',
           }}
         >
-          <Box>{children[1]}</Box>
+          <Box>{props.traderStats}</Box>
         </Box>
         <Box flex="0 0 500px">
           <Flex flexDirection="column" height="100%">
@@ -42,10 +42,10 @@ const TabletLayout = ({ children }: LayoutProps) => {
                 borderColor: 'neutral4',
               }}
             >
-              {children[5]}
+              {props.openingPositions}
             </Box>
             <Box sx={{ position: 'relative' }} flex="1">
-              {children[6]}
+              {props.closedPositions}
             </Box>
           </Flex>
         </Box>
@@ -60,10 +60,10 @@ const TabletLayout = ({ children }: LayoutProps) => {
             flexShrink: 0,
           }}
         >
-          {children[2]}
+          {props.traderRanking}
         </Flex>
-        <Box width="calc(100% - 350px)" p={12}>
-          {children[3]}
+        <Box width="calc(100% - 350px)">
+          {props.traderChartPositions}
           {/* <Box
             height={120}
             p={12}

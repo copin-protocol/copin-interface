@@ -135,7 +135,9 @@ export const getChartDataV2 = ({
     .then((res) => {
       const data = res.data as ChartDataV2
       const tempData: ChartData[] = []
+      let tempTime = 0
       for (let i = 0; i < data.o.length - 1; i++) {
+        if (tempTime === data.t[i]) continue
         tempData.push({
           open: data.o[i],
           close: data.c[i],
@@ -143,6 +145,7 @@ export const getChartDataV2 = ({
           high: data.h[i],
           timestamp: data.t[i],
         })
+        tempTime = data.t[i]
       }
       return tempData
     })

@@ -3,13 +3,12 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
-import { getTraderStatisticApi } from 'apis/traderApis'
+import { getTraderStatisticApi, getTraderTokensStatistic } from 'apis/traderApis'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NotFound from 'components/@ui/NotFound'
 import { TableSortProps } from 'components/@ui/Table/types'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
-import ChartPositions from 'components/Charts/ChartPositions'
-import HistoryTable, { historyColumns } from 'components/Tables/HistoryTable'
+import HistoryTable, { fullHistoryColumns, historyColumns } from 'components/Tables/HistoryTable'
 import OpeningPositionTable from 'components/Tables/OpeningPositionTable'
 import { PositionData } from 'entities/trader.d'
 import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
@@ -22,15 +21,17 @@ import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { getTokenOptions } from 'utils/config/trades'
+import { ALL_OPTION, getDefaultTokenOptions } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
 import { isAddress } from 'utils/web3/contracts'
 
 import ChartTrader from './ChartTrader'
+import TraderChartPositions from './ChartTrader/ChartPositions'
 import GeneralStats from './GeneralStats'
 import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
+import useHandleLayout from './Layouts/useHandleLayout'
 import TraderActionButtons from './TraderActionButtons'
 import TraderInfo from './TraderInfo'
 import TraderRanking from './TraderRanking'
@@ -66,8 +67,21 @@ export default function TraderDetails() {
           .reverse(),
     }
   )
+  const { data: tokensStatistic } = useQuery(
+    [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, _address],
+    () => getTraderTokensStatistic({ protocol, account: _address }),
+    { enabled: !!_address && !!protocol }
+  )
 
-  const tokenOptions = useMemo(() => getTokenOptions({ protocol }), [protocol])
+  const tokenOptions = useMemo(() => {
+    if (tokensStatistic?.data?.length) {
+      const indexTokenMapping = tokensStatistic.data.reduce((result, _data) => {
+        return { ...result, [_data.indexToken]: _data.indexToken }
+      }, {} as Record<string, string>)
+      return [ALL_OPTION, ...getDefaultTokenOptions(protocol).filter((option) => !!indexTokenMapping[option.id])]
+    }
+    return [ALL_OPTION]
+  }, [protocol, tokensStatistic])
   const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
     optionName: URL_PARAM_KEYS.CURRENCY,
     options: tokenOptions,
@@ -131,92 +145,99 @@ export default function TraderDetails() {
 
   const { lg, xl } = useResponsive()
 
-  let Layout = MobileLayout
-  if (xl) {
-    Layout = DesktopLayout
-  } else if (lg) {
-    Layout = TabletLayout
-  }
+  const Layout = useMemo(() => {
+    let layout = MobileLayout
+    if (xl) {
+      layout = DesktopLayout
+    } else if (lg) {
+      layout = TabletLayout
+    }
+    return layout
+  }, [lg, xl])
+
+  const { positionFullExpanded, handlePositionsExpand, chartFullExpanded, handleChartFullExpand } = useHandleLayout()
 
   if (!isLoadingTraderData && !traderData) return <NotFound title="Trader not found" message="" />
 
   return (
     <>
       <CustomPageTitle title={`Trader ${addressShorten(_address)} on ${protocol}`} />
-      <Layout resetSort={resetSort}>
-        {/* child 1 */}
-        <BotAlertProvider>
-          <Flex
-            sx={{
-              width: '100%',
-              height: '100%',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 3,
-            }}
-          >
-            <TraderInfo
-              address={_address}
-              protocol={protocol}
-              traderData={currentTraderData}
-              timeOption={timeOption}
-              traderStats={traderData}
-            />
-            <TraderActionButtons account={_address} protocol={protocol} onCopyActionSuccess={onForceReload} />
-          </Flex>
-        </BotAlertProvider>
-        {/* child 2 */}
-
-        <Box display={['block', 'block', 'flex']} flexDirection="column" height="100%">
-          <GeneralStats traderData={currentTraderData} />
-          {protocol && _address && (
-            <ChartTrader protocol={protocol} account={_address} timeOption={timeOption} onChangeTime={setTimeOption} />
-          )}
-          <Box flex="1" overflow="auto" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative' }}>
-            {!!traderData && <TraderStats data={traderData} timeOption={timeOption} />}
+      <Layout
+        traderInfo={
+          <BotAlertProvider>
+            <Flex
+              sx={{
+                width: '100%',
+                height: '100%',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 3,
+              }}
+            >
+              <TraderInfo
+                address={_address}
+                protocol={protocol}
+                traderData={currentTraderData}
+                timeOption={timeOption}
+                traderStats={traderData}
+              />
+              <TraderActionButtons account={_address} protocol={protocol} onCopyActionSuccess={onForceReload} />
+            </Flex>
+          </BotAlertProvider>
+        }
+        traderStats={
+          <Box display={['block', 'block', 'flex']} flexDirection="column" height="100%">
+            <GeneralStats traderData={currentTraderData} />
+            {protocol && _address && (
+              <ChartTrader
+                protocol={protocol}
+                account={_address}
+                timeOption={timeOption}
+                onChangeTime={setTimeOption}
+              />
+            )}
+            <Box flex="1" overflow="auto" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative' }}>
+              {!!traderData && <TraderStats data={traderData} timeOption={timeOption} />}
+            </Box>
           </Box>
-        </Box>
-
-        {/* child3 */}
-        <TraderRanking data={currentTraderData} timeOption={timeOption} onChangeTime={setTimeOption} />
-
-        {/* child 4 */}
-        <ChartPositions
-          sx={{
-            height: '100%',
-          }}
-          protocol={protocol ?? ProtocolEnum.GMX}
-          timeframeOption={TIME_FILTER_OPTIONS[1]}
-          currencyOption={currencyOption}
-          changeCurrency={changeCurrency}
-          openingPositions={openingPositions ?? []}
-          closedPositions={closedPositions?.data ?? []}
-          fetchNextPage={handleFetchClosedPositions}
-          hasNextPage={hasNextClosedPositions}
-          isLoadingClosed={isLoadingClosed}
-        />
-
-        {/* child 5 */}
-        <div>{/* {!!_address && <ActivityHeatmap account={_address} />} */}</div>
-
-        {/* child 6 */}
-        <OpeningPositionTable data={openingPositions} isLoading={isLoadingOpening} protocol={protocol} />
-        {/* child 7 */}
-        <HistoryTable
-          tokenOptions={tokenOptions}
-          data={closedPositions?.data}
-          dataMeta={closedPositions?.meta}
-          isLoading={isLoadingClosed}
-          currencyOption={currencyOption}
-          changeCurrency={changeCurrency}
-          fetchNextPage={handleFetchClosedPositions}
-          hasNextPage={hasNextClosedPositions}
-          tableSettings={historyColumns}
-          currentSort={xl ? currentSort : undefined}
-          changeCurrentSort={xl ? changeCurrentSort : undefined}
-        />
-      </Layout>
+        }
+        traderRanking={<TraderRanking data={currentTraderData} timeOption={timeOption} onChangeTime={setTimeOption} />}
+        traderChartPositions={
+          <TraderChartPositions
+            account={_address}
+            protocol={protocol}
+            isExpanded={chartFullExpanded}
+            handleExpand={handleChartFullExpand}
+          />
+        }
+        heatmap={<div></div>}
+        openingPositions={
+          <OpeningPositionTable data={openingPositions} isLoading={isLoadingOpening} protocol={protocol} />
+        }
+        closedPositions={
+          <HistoryTable
+            tokenOptions={tokenOptions}
+            data={closedPositions?.data}
+            dataMeta={closedPositions?.meta}
+            isLoading={isLoadingClosed}
+            currencyOption={currencyOption}
+            changeCurrency={changeCurrency}
+            fetchNextPage={handleFetchClosedPositions}
+            hasNextPage={hasNextClosedPositions}
+            tableSettings={xl && positionFullExpanded ? fullHistoryColumns : historyColumns}
+            currentSort={xl && positionFullExpanded ? currentSort : undefined}
+            changeCurrentSort={xl && positionFullExpanded ? changeCurrentSort : undefined}
+            isExpanded={positionFullExpanded}
+            toggleExpand={() => {
+              resetSort()
+              handlePositionsExpand()
+            }}
+          />
+        }
+        positionFullExpanded={positionFullExpanded}
+        chartFullExpanded={chartFullExpanded}
+      ></Layout>
     </>
   )
 }
