@@ -17,7 +17,7 @@ const commonSchema = {
   lookBackOrders: yup.number().min(1).integer().label('Orders To Lookback'),
   stopLossAmount: yup.number().positive().label('Stop Loss Amount'),
   takeProfitAmount: yup.number().positive().label('Take Profit Amount'),
-  maxMarginPerPosition: yup.number().positive().label('Max Margin Per Position'),
+  maxMarginPerPosition: yup.number().nullable().positive().label('Max Margin Per Position'),
   skipLowLeverage: yup.boolean(),
   agreement: yup.boolean().isTrue(),
   copyAll: yup.boolean(),

@@ -108,9 +108,8 @@ function TraderChartPositions({
           gap: 2,
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderBottom: 'small',
+          borderBottom: isExpanded ? 'small' : 'smallDashed',
           borderBottomColor: 'neutral4',
-          backgroundColor: isExpanded ? undefined : 'neutral5',
         }}
       >
         <Flex sx={{ gap: 2, alignItems: 'center' }}>
@@ -142,7 +141,14 @@ function TraderChartPositions({
       ) : !tokensStatistic?.data?.length ? (
         <NoDataFound />
       ) : (
-        <Flex sx={{ flex: '1 0 0', flexDirection: isExpanded ? 'row' : 'column', width: '100%', bg: 'neutral5' }}>
+        <Flex
+          sx={{
+            flex: '1 0 0',
+            flexDirection: isExpanded ? 'row' : 'column',
+            width: '100%',
+            bg: isExpanded ? 'neutral5' : 'transparent',
+          }}
+        >
           <ChartPositions
             sx={{
               flex: '1 0 0',

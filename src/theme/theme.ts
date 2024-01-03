@@ -86,6 +86,7 @@ function theme(darkMode: boolean): DefaultTheme {
       small: '1px solid',
       normal: '2px solid',
       large: '3px solid',
+      smallDashed: '1px dashed',
     },
     variants: {
       card: {

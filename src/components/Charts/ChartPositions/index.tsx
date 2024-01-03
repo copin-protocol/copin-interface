@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { useSize } from 'ahooks'
 import dayjs from 'dayjs'
 import { Range, UTCTimestamp } from 'lightweight-charts'
@@ -10,7 +9,6 @@ import CurrencyOption from 'components/CurrencyOption'
 // import CurrencyOption from 'components/CurrencyOption'
 import { PositionData } from 'entities/trader.d'
 import useMyProfile from 'hooks/store/useMyProfile'
-import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -100,7 +98,7 @@ export default function ChartPositions({
     timeRange,
     timeframe,
     protocol,
-    indexToken: tokenTrade.address,
+    indexToken: tokenTrade?.address,
   })
   const openingPos = (openingPositions ?? []).filter(
     (e) => e.indexToken === tokenTrade?.address && dayjs(e.openBlockTime).utc().valueOf() >= from
@@ -290,22 +288,9 @@ export default function ChartPositions({
         )}
       </Flex>
       <Flex alignItems="center" justifyContent="space-between" mr={12} mt={2} sx={{ gap: 2 }}>
-        {isExpanded && hasNextPage && hasAllTokens && (
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => {
-              if (hasNextPage) {
-                fetchNextPage && fetchNextPage()
-              }
-            }}
-            sx={{ p: 0 }}
-          >
-            <Type.Caption>
-              <Trans>Load more positions</Trans>
-            </Type.Caption>
-          </Button>
-        )}
+        <Type.Caption pl={12} color="neutral3">
+          {currencyOption?.label}/USD
+        </Type.Caption>
         <Flex flex={1} alignItems="center" justifyContent="flex-end" sx={{ gap: 2 }}>
           <TimeframeSelection isExpanded={isExpanded} currentOption={timeframe} changeOption={changeTimeframe} />
           {!!currencyOptions?.length && !!changeCurrency && (
@@ -347,7 +332,7 @@ export default function ChartPositions({
       <div id={chartId} style={{ padding: '0 12px', flex: '1 0 0' }} />
       {isExpanded && tokenTrade?.symbol && size && (
         <BrushChart
-          symbol={tokenTrade.symbol}
+          symbol={tokenTrade?.symbol}
           key={chartId}
           chartDimensions={{ width: size?.width, height: 100 }}
           onBrush={handleBrush}

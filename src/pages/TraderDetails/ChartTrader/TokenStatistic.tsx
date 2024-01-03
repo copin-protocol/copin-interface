@@ -10,7 +10,7 @@ import { TraderTokenStatistic } from 'entities/trader'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ALL_TOKENS_ID, TokenOptionProps } from 'utils/config/trades'
-import { formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatNumber } from 'utils/helpers/format'
 
 type TokenStatisticProps = {
   data: TraderTokenStatistic[] | undefined
@@ -25,7 +25,7 @@ const SLIDES_TO_SCROLL = 3
 const PIXEL_TOLERANCE = 20
 
 export function ListTokenStatistic({ data, currencyOption, currencyOptions, changeCurrency }: TokenStatisticProps) {
-  const { tokenMapping = {}, totalTrades = 0 } = getStatsConfigs({ data, currencyOptions })
+  const { tokenMapping = {} } = getStatsConfigs({ data, currencyOptions })
   const scrollRef = useRef<HTMLDivElement>(null)
   const scrollPositionsRef = useRef<number[]>([])
   const lastScrollPositionRef = useRef<number>(0)
@@ -114,27 +114,21 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
       {currentStats && (
-        <Flex
-          alignItems="center"
-          p={2}
-          height={32}
-          backgroundColor="neutral5"
-          sx={{ gap: 3, borderTop: 'small', borderColor: 'neutral4' }}
-        >
-          <Flex sx={{ gap: 2 }}>
+        <Flex alignItems="center" p={2} height={32} sx={{ gap: 0, borderTop: 'smallDashed', borderColor: 'neutral4' }}>
+          <Flex flex={1} sx={{ gap: 2 }}>
             <Type.Caption color="neutral2">Win Rate:</Type.Caption>
             <Type.CaptionBold>
               {formatNumber((currentStats.totalWin / currentStats.totalTrade) * 100, 2, 2)}%
             </Type.CaptionBold>
           </Flex>
-          <Flex sx={{ gap: 2 }}>
-            <Type.Caption color="neutral2">Trades:</Type.Caption>
-            <Type.CaptionBold>{formatNumber(currentStats.totalTrade, 0)}</Type.CaptionBold>
+          <Flex flex={1} sx={{ gap: 2 }}>
+            <Type.Caption color="neutral2">Volume:</Type.Caption>
+            <Type.CaptionBold>${compactNumber(currentStats.totalVolume, 1)}</Type.CaptionBold>
           </Flex>
-          <Flex sx={{ gap: 2 }}>
+          <Flex flex={1} sx={{ gap: 2 }}>
             <Type.Caption color="neutral2">PnL ($):</Type.Caption>
             <Type.CaptionBold>
-              <SignedText value={currentStats.realisedPnl} fontInherit minDigit={2} maxDigit={2} />
+              <SignedText value={currentStats.realisedPnl} fontInherit minDigit={0} maxDigit={0} />
             </Type.CaptionBold>
           </Flex>
         </Flex>
@@ -155,7 +149,7 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
             height: '100%',
             alignItems: 'center',
             overflow: 'auto',
-            borderTop: 'small',
+            borderTop: 'smallDashed',
             borderTopColor: 'neutral4',
             '& > *': { flexShrink: 0 },
             zIndex: 1,
@@ -167,7 +161,6 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
             const tokenOption = tokenMapping[indexToken]
             if (!tokenOption) return <></>
             const icon = `/svg/markets/${tokenOption.label}.svg`
-            const tradeRatio = Math.round((stats.totalTrade / totalTrades) * 100)
             return (
               <Flex
                 key={indexToken}
@@ -178,9 +171,9 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
                   py: '6px',
                   height: '100%',
                   alignItems: 'center',
-                  bg: currencyOption?.id === indexToken ? 'neutral5' : 'transparent',
+                  bg: currencyOption?.id === indexToken ? 'rgba(78, 174, 253, 0.25)' : 'transparent',
                   '&:hover': {
-                    bg: 'neutral4',
+                    bg: 'neutral5',
                   },
                   gap: 2,
                   '& > *': { flexShrink: 0 },
@@ -190,7 +183,7 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
                 <Type.Caption>
                   {tokenOption.label}{' '}
                   <Box as="span" color="neutral3">
-                    ({tradeRatio}%)
+                    ({formatNumber(stats.totalTrade, 0)})
                   </Box>
                 </Type.Caption>
               </Flex>
@@ -342,7 +335,9 @@ export function TableTokenStatistic({
       data={data}
       columns={tableColumns}
       isLoading={false}
-      renderRowBackground={(data) => (data.indexToken === currencyOption?.id ? themeColors.neutral5 : 'transparent')}
+      renderRowBackground={(data) =>
+        data.indexToken === currencyOption?.id ? 'rgba(78, 174, 253, 0.25)' : 'transparent'
+      }
       restrictHeight
       onClickRow={(data) => changeCurrency(tokenMapping[data.indexToken])}
       currentSort={currentSort}
