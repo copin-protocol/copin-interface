@@ -17,6 +17,10 @@ msgstr ""
 msgid ". Try to reload the page to fix this issue"
 msgstr ". Try to reload the page to fix this issue"
 
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+msgid "1 year"
+msgstr "1 year"
+
 #: src/components/CopyTradeForm/index.tsx
 #~ msgid "1. Choose Platform"
 #~ msgstr "1. Choose Platform"
@@ -386,6 +390,10 @@ msgid "Closed"
 msgstr "Closed"
 
 #: src/pages/MyProfile/PositionTable/ListPositions.tsx
+msgid "Closed Type"
+msgstr "Closed Type"
+
+#: src/pages/MyProfile/PositionTable/ListPositions.tsx
 msgid "Closed:"
 msgstr "Closed:"
 
@@ -688,15 +696,15 @@ msgstr "Explorer Traders"
 msgid "Extend"
 msgstr "Extend"
 
-#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Extend Again"
 msgstr "Extend Again"
 
-#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Extend Now"
 msgstr "Extend Now"
 
-#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Extend Your Subscription"
 msgstr "Extend Your Subscription"
 
@@ -704,11 +712,11 @@ msgstr "Extend Your Subscription"
 msgid "Extend plan"
 msgstr "Extend plan"
 
-#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Extended"
 msgstr "Extended"
 
-#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Extending"
 msgstr "Extending"
 
@@ -756,6 +764,10 @@ msgstr "Find the trader you want in the list of traders above, all of the trader
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Find the trader you want in the list of traders, all of the trader's copy settings will be listed here."
 msgstr "Find the trader you want in the list of traders, all of the trader's copy settings will be listed here."
+
+#: src/utils/config/translations.tsx
+msgid "Follow Trader"
+msgstr "Follow Trader"
 
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "Forgot password?"
@@ -981,6 +993,7 @@ msgstr "Liquidated"
 #: src/components/CopyTradePositionDetails/ListCopyOrderTable.tsx
 #: src/components/PositionDetails/ListOrderTable.tsx
 #: src/utils/config/translations.tsx
+#: src/utils/config/translations.tsx
 msgid "Liquidation"
 msgstr "Liquidation"
 
@@ -993,8 +1006,8 @@ msgstr "Liquidations"
 #~ msgstr "List Collection"
 
 #: src/components/Charts/ChartPositions/index.tsx
-msgid "Load more positions"
-msgstr "Load more positions"
+#~ msgid "Load more positions"
+#~ msgstr "Load more positions"
 
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "Loading..."
@@ -1102,6 +1115,10 @@ msgid "Make sure you have already activated the <0>BingX Guaranteed Price</0> to
 msgstr "Make sure you have already activated the <0>BingX Guaranteed Price</0> to Prevent Slippage Losses."
 
 #: src/utils/config/translations.tsx
+msgid "Manual"
+msgstr "Manual"
+
+#: src/utils/config/translations.tsx
 msgid "Margin Transferred"
 msgstr "Margin Transferred"
 
@@ -1164,6 +1181,17 @@ msgstr "Min Leverage"
 #~ msgid "Min ROI"
 #~ msgstr "Min ROI"
 
+#: src/pages/Settings/UserSubscription/NoSubscription.tsx
+#: src/pages/Settings/UserSubscription/NoSubscription.tsx
+#: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
+msgid "Mint"
+msgstr "Mint"
+
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+msgid "Mint A NFT Subscription"
+msgstr "Mint A NFT Subscription"
+
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
 #: src/pages/Subscription/MintButton.tsx
 msgid "Mint Again"
 msgstr "Mint Again"
@@ -1176,18 +1204,31 @@ msgstr "Mint NFT"
 msgid "Mint New Subscription"
 msgstr "Mint New Subscription"
 
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
 #: src/pages/Subscription/MintButton.tsx
 msgid "Mint Now"
 msgstr "Mint Now"
 
+#: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
+msgid "Mint new NFT"
+msgstr "Mint new NFT"
+
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
-msgid "Mint to upgrade"
-msgstr "Mint to upgrade"
+#~ msgid "Mint to upgrade"
+#~ msgstr "Mint to upgrade"
+
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+msgid "Minted"
+msgstr "Minted"
 
 #: src/pages/Subscription/MintButton.tsx
 msgid "Minted NFT"
 msgstr "Minted NFT"
+
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+msgid "Minting"
+msgstr "Minting"
 
 #: src/pages/Subscription/MintButton.tsx
 msgid "Minting NFT"
@@ -1295,7 +1336,7 @@ msgstr "No trader data was found to compare in the past {0}"
 msgid "No, thanks"
 msgstr "No, thanks"
 
-#: src/pages/Settings/UserSubscription/HasSubscription.tsx
+#: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
 msgid "Note:"
 msgstr "Note:"
 
@@ -1681,7 +1722,7 @@ msgstr "S"
 msgid "SL/TP"
 msgstr "SL/TP"
 
-#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Save {0}%"
 msgstr "Save {0}%"
 
@@ -1819,6 +1860,7 @@ msgid "Status"
 msgstr "Status"
 
 #: src/utils/config/translations.tsx
+#: src/utils/config/translations.tsx
 msgid "Stop Loss"
 msgstr "Stop Loss"
 
@@ -1891,6 +1933,7 @@ msgstr "Synthetix"
 msgid "TRADER EXPLORER"
 msgstr "TRADER EXPLORER"
 
+#: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
 msgid "Take Profit"
 msgstr "Take Profit"
@@ -2544,8 +2587,8 @@ msgid "You need to upgrade to a premium account to use this feature"
 msgstr "You need to upgrade to a premium account to use this feature"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
-msgid "You will extend your plan for an additional"
-msgstr "You will extend your plan for an additional"
+#~ msgid "You will extend your plan for an additional"
+#~ msgstr "You will extend your plan for an additional"
 
 #: src/components/CopyTradeForm/index.tsx
 msgid "You will not copy the position has opened with leverage lower than {leverage}x."
@@ -2555,6 +2598,10 @@ msgstr "You will not copy the position has opened with leverage lower than {leve
 msgid "You will receive <0>30 days</0> Premium NFT Plan"
 msgstr "You will receive <0>30 days</0> Premium NFT Plan"
 
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+msgid "You will {label} your plan for an additional"
+msgstr "You will {label} your plan for an additional"
+
 #: src/components/Modal/UnsubscribeAlertModal/index.tsx
 msgid "You won’t be notified each time this trader engages in new activity."
 msgstr "You won’t be notified each time this trader engages in new activity."
@@ -2563,7 +2610,7 @@ msgstr "You won’t be notified each time this trader engages in new activity."
 msgid "You won’t get any notification from our bot."
 msgstr "You won’t get any notification from our bot."
 
-#: src/pages/Settings/UserSubscription/HasSubscription.tsx
+#: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
 msgid "You'll still have access to Premium after your NFT expires in 30 minutes. Keep an eye on the renewal time."
 msgstr "You'll still have access to Premium after your NFT expires in 30 minutes. Keep an eye on the renewal time."
 
@@ -2595,7 +2642,11 @@ msgstr "Your NFT expires in {0} days"
 msgid "Your NFT expires in {0}h {1}m {2}s"
 msgstr "Your NFT expires in {0}h {1}m {2}s"
 
-#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+msgid "Your NFT has been Minted successfully"
+msgstr "Your NFT has been Minted successfully"
+
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Your NFT has been extended successfully"
 msgstr "Your NFT has been extended successfully"
 
@@ -2643,13 +2694,21 @@ msgstr "day"
 msgid "days"
 msgstr "days"
 
-#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
-msgid "month"
-msgstr "month"
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+msgid "extend"
+msgstr "extend"
+
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+msgid "mint"
+msgstr "mint"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
-msgid "months"
-msgstr "months"
+#~ msgid "month"
+#~ msgstr "month"
+
+#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+#~ msgid "months"
+#~ msgstr "months"
 
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "slippage"
@@ -2683,6 +2742,14 @@ msgstr "slippage"
 #: src/pages/WalletManagement/WalletList/index.tsx
 msgid "{0}"
 msgstr "{0}"
+
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+msgid "{0} month"
+msgstr "{0} month"
+
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+msgid "{0} months"
+msgstr "{0} months"
 
 #: src/pages/MyProfile/SelectTradersDropdown.tsx
 msgid "{0} traders"
