@@ -278,7 +278,7 @@ export default function ChartPositions({
     >
       {/*<div id={legendId} />*/}
       {/*<div id={tooltipId} />*/}
-      <Flex width="calc(100% - 24px)" alignItems="center" sx={{ position: 'absolute', top: 0, left: 12, zIndex: 100 }}>
+      <Flex width="100%" alignItems="center" sx={{ position: 'absolute', top: 0, left: 0, zIndex: 100 }}>
         {currentPosition && (
           <PositionLegend
             isExpanded={isExpanded}
