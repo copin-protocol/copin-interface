@@ -92,7 +92,12 @@ function DesktopNoSubscription() {
           rightContent={
             <>
               <Divider mt={1} mb={24} sx={{ bg: 'neutral5' }} />
-              <PricingDropdown method="mint" buttonLabel={<Trans>Mint</Trans>} modalLabels={MINT_MODAL_LABELS} />
+              <PricingDropdown
+                method="mint"
+                buttonLabel={<Trans>Mint NFT</Trans>}
+                modalLabels={MINT_MODAL_LABELS}
+                buttonSx={{ width: ['100%', 150] }}
+              />
             </>
           }
         />
@@ -167,7 +172,7 @@ export function MobileNoSubscription() {
         <Box height={0} />
         <PricingDropdown
           method="mint"
-          buttonLabel={<Trans>Mint</Trans>}
+          buttonLabel={<Trans>Mint NFT</Trans>}
           modalLabels={MINT_MODAL_LABELS}
           buttonSx={{ width: ['100%', 200] }}
         />

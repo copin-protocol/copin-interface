@@ -15,7 +15,10 @@ export default function NFTSubscriptionCard({ data, action }: { data?: UserSubsc
     <Box sx={{ position: 'relative', overflow: 'hidden', p: 3 }}>
       <CardDecorators />
       <Box sx={{ position: 'relative' }}>
-        <Image src={defaultNft} sx={{ width: '100%', maxWidth: '368px', height: 'auto' }} />
+        <Image
+          src={defaultNft}
+          sx={{ width: '100%', maxWidth: '368px', height: 'auto', mx: 'auto', display: 'block' }}
+        />
         <Type.H4 mt={3} sx={{ textAlign: 'center' }}>
           <GradientText>
             <Trans>Copin Subscription {data?.tokenId ? `#${data.tokenId}` : 'NFT'}</Trans>

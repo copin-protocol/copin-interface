@@ -171,7 +171,7 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
                   py: '6px',
                   height: '100%',
                   alignItems: 'center',
-                  bg: currencyOption?.id === indexToken ? 'rgba(78, 174, 253, 0.25)' : 'transparent',
+                  bg: currencyOption?.id === indexToken ? `${themeColors.primary1}25` : 'transparent',
                   '&:hover': {
                     bg: 'neutral5',
                   },
@@ -335,9 +335,7 @@ export function TableTokenStatistic({
       data={data}
       columns={tableColumns}
       isLoading={false}
-      renderRowBackground={(data) =>
-        data.indexToken === currencyOption?.id ? 'rgba(78, 174, 253, 0.25)' : 'transparent'
-      }
+      renderRowBackground={(data) => (data.indexToken === currencyOption?.id ? themeColors.neutral5 : 'transparent')}
       restrictHeight
       onClickRow={(data) => changeCurrency(tokenMapping[data.indexToken])}
       currentSort={currentSort}

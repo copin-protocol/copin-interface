@@ -18,9 +18,9 @@ import TermsAndConditions from './TermsAndConditions'
 import { SubscriptionColors, SubscriptionGrid } from './styled'
 
 export default function Subscription() {
-  const { sm } = useResponsive()
+  const { md } = useResponsive()
   const priceData = useSubscriptionPlanPrice()
-  if (!sm)
+  if (!md)
     return (
       <>
         <CustomPageTitle title="Subscription Plans" />
@@ -86,7 +86,7 @@ export default function Subscription() {
 function SubscriptionCard() {
   const { data } = useUserSubscription()
   return (
-    <Box sx={{ width: ['100%', 'max-content'], mx: 'auto', '& > *': { height: '100%' } }}>
+    <Box sx={{ width: ['100%', 'max-content'], maxWidth: 'max-content', mx: 'auto', '& > *': { height: '100%' } }}>
       <NFTSubscriptionCard
         data={data}
         action={

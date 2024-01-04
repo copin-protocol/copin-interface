@@ -32,7 +32,7 @@ export default function Plans({ planPrice }: { planPrice: BigNumber | undefined 
           </Flex>
           <Flex sx={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             <Type.BodyBold mb={2}>
-              <Trans>Basic plan</Trans>
+              <Trans>Basic Plan</Trans>
             </Type.BodyBold>
             <Type.H2>
               <Trans>FREE</Trans>
@@ -42,7 +42,7 @@ export default function Plans({ planPrice }: { planPrice: BigNumber | undefined 
             <Flex mb={2} sx={{ alignItems: 'center', gap: 12 }}>
               <CrowIconGold />
               <Type.BodyBold color="orange1">
-                <Trans>Premium plan</Trans>
+                <Trans>Premium Plan</Trans>
               </Type.BodyBold>
             </Flex>
             <Type.H2>

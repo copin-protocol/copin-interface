@@ -249,12 +249,12 @@ export default function ChartPositions({
           axisLabelVisible: true,
           title: (currentPosition.isLong ? 'Long' : 'Short') + ' - Avg. Price',
         })
-      } else {
-        avgPriceLine.applyOptions({
-          price: 0,
-          lineVisible: false,
-        })
       }
+    } else {
+      avgPriceLine.applyOptions({
+        price: 0,
+        lineVisible: false,
+      })
     }
   }, [candleStickChart, currentPosition, markerId])
 

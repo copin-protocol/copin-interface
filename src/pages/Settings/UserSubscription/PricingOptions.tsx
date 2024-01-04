@@ -113,6 +113,7 @@ export const PricingDropdown: PricingOptionsOverload = ({
           }}
         >
           <Select
+            isSearchable={false}
             className="price_dropdown"
             options={selectOptions}
             value={currentSelect}
@@ -306,7 +307,7 @@ function PrepairingState({ config, label }: { config: Config; label: ReactNode }
 }
 
 export const MINT_MODAL_LABELS: ComponentConfigs['modalLabels'] = {
-  modalTitle: <Trans>Mint A NFT Subscription</Trans>,
+  modalTitle: <Trans>Mint New Subscription</Trans>,
   idle: <Trans>Mint Now</Trans>,
   retry: <Trans>Mint Again</Trans>,
   preparing: <Trans>mint</Trans>,

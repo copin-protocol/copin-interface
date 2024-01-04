@@ -265,12 +265,16 @@ msgid "Balance"
 msgstr "Balance"
 
 #: src/pages/Subscription/Plans.tsx
+msgid "Basic Plan"
+msgstr "Basic Plan"
+
+#: src/pages/Subscription/Plans.tsx
 msgid "Basic Plan (FREE)"
 msgstr "Basic Plan (FREE)"
 
 #: src/pages/Subscription/Plans.tsx
-msgid "Basic plan"
-msgstr "Basic plan"
+#~ msgid "Basic plan"
+#~ msgstr "Basic plan"
 
 #: src/pages/TraderDetails/ScoreChart.tsx
 msgid "Better than {value} traders"
@@ -1187,22 +1191,26 @@ msgstr "Min Leverage"
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
 #: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
-msgid "Mint"
-msgstr "Mint"
+#~ msgid "Mint"
+#~ msgstr "Mint"
 
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
-msgid "Mint A NFT Subscription"
-msgstr "Mint A NFT Subscription"
+#~ msgid "Mint A NFT Subscription"
+#~ msgstr "Mint A NFT Subscription"
 
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
 #: src/pages/Subscription/MintButton.tsx
 msgid "Mint Again"
 msgstr "Mint Again"
 
+#: src/pages/Settings/UserSubscription/NoSubscription.tsx
+#: src/pages/Settings/UserSubscription/NoSubscription.tsx
+#: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
 #: src/pages/Subscription/MintButton.tsx
 msgid "Mint NFT"
 msgstr "Mint NFT"
 
+#: src/pages/Settings/UserSubscription/PricingOptions.tsx
 #: src/pages/Subscription/MintButton.tsx
 msgid "Mint New Subscription"
 msgstr "Mint New Subscription"
@@ -1536,12 +1544,13 @@ msgstr "Position List"
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
 #: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
 msgid "Premium Plan"
 msgstr "Premium Plan"
 
 #: src/pages/Subscription/Plans.tsx
-msgid "Premium plan"
-msgstr "Premium plan"
+#~ msgid "Premium plan"
+#~ msgstr "Premium plan"
 
 #: src/pages/@layouts/Footer/index.tsx
 msgid "Pricing"
@@ -2110,8 +2119,12 @@ msgid "To start, you need to create a smart wallet."
 msgstr "To start, you need to create a smart wallet."
 
 #: src/pages/Subscription/TermsAndConditions.tsx
-msgid "To unlock premium features, mint a Copin NFT."
-msgstr "To unlock premium features, mint a Copin NFT."
+#~ msgid "To unlock premium features, mint a Copin NFT."
+#~ msgstr "To unlock premium features, mint a Copin NFT."
+
+#: src/pages/Subscription/TermsAndConditions.tsx
+msgid "To unlock premium features, mint a Copin Subscription."
+msgstr "To unlock premium features, mint a Copin Subscription."
 
 #: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Today"

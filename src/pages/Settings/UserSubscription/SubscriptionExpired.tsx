@@ -48,7 +48,7 @@ export default function SubscriptionExpired() {
       <Box mt={24} />
       <PricingDropdown
         method="mint"
-        buttonLabel={<Trans>Mint</Trans>}
+        buttonLabel={<Trans>Mint NFT</Trans>}
         modalLabels={MINT_MODAL_LABELS}
         buttonSx={{ width: ['100%', 200] }}
       />
