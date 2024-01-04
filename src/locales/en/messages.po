@@ -40,7 +40,6 @@ msgid "30 days"
 msgstr "30 days"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 msgid "30D PnL"
 msgstr "30D PnL"
 
@@ -141,6 +140,10 @@ msgstr "Add referral successful!"
 #: src/pages/Settings/AlertList/DesktopItem.tsx
 msgid "Added"
 msgstr "Added"
+
+#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+msgid "Advance"
+msgstr "Advance"
 
 #: src/components/BacktestForm/index.tsx
 #: src/components/CopyTradeForm/index.tsx
@@ -1690,8 +1693,8 @@ msgid "Reverse Copy"
 msgstr "Reverse Copy"
 
 #: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
-msgid "Risk Control"
-msgstr "Risk Control"
+#~ msgid "Risk Control"
+#~ msgstr "Risk Control"
 
 #: src/pages/TraderDetails/TraderStats.tsx
 msgid "Run Time (All)"

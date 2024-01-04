@@ -1,13 +1,5 @@
 import { Trans } from '@lingui/macro'
-import {
-  ArrowLineLeft,
-  ArrowLineUp,
-  CopySimple,
-  DotsThreeOutlineVertical,
-  PencilSimpleLine,
-  ShieldChevron,
-  Trash,
-} from '@phosphor-icons/react'
+import { CopySimple, DotsThreeOutlineVertical, PencilSimpleLine, Trash } from '@phosphor-icons/react'
 import { MutableRefObject, SetStateAction, useCallback, useMemo } from 'react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
@@ -17,6 +9,9 @@ import { CopyTradeData } from 'entities/copyTrade'
 import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
 import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
+import MarginProtectionIcon from 'theme/Icons/MarginProtectionIcon'
+import MaxMarginIcon from 'theme/Icons/MaxMarginIcon'
+import SkipLowLeverageIcon from 'theme/Icons/SkipLowLeverageIcon'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -132,7 +127,7 @@ export default function useCopyTradeColumns({
   const renderSLTP = useCallback(
     (item: CopyTradeData) => (
       <Type.Caption sx={{ gap: '0.5ch', justifyContent: 'end' }}>
-        <Box as="span" color={isRunningFn(item.status) ? 'red1' : 'neutral3'}>
+        <Box as="span" color={isRunningFn(item.status) ? 'red2' : 'neutral3'}>
           {item.enableStopLoss
             ? (item?.stopLossAmount ?? 0) >= 10000
               ? `$${compactNumber(item.stopLossAmount, 2)}`
@@ -142,7 +137,7 @@ export default function useCopyTradeColumns({
         <Box as="span" color="neutral3">
           {' / '}
         </Box>
-        <Box as="span" color={isRunningFn(item.status) ? 'green2' : 'neutral3'}>
+        <Box as="span" color={isRunningFn(item.status) ? 'green1' : 'neutral3'}>
           {item.enableTakeProfit
             ? (item?.takeProfitAmount ?? 0) >= 10000
               ? `$${compactNumber(item.stopLossAmount, 2)}`
@@ -159,7 +154,7 @@ export default function useCopyTradeColumns({
         sx={{
           width: '100%',
           alignItems: 'center',
-          justifyContent: 'end',
+          justifyContent: ['end', 'start'],
           gap: 2,
           filter: isRunningFn(item.status) ? undefined : 'grayscale(1)',
         }}
@@ -167,7 +162,7 @@ export default function useCopyTradeColumns({
         {!!item.maxVolMultiplier && (
           <>
             <IconBox
-              icon={<ArrowLineUp size={16} weight="bold" />}
+              icon={<MaxMarginIcon size={20} />}
               color="primary1"
               sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
               data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_MAX_VOL_MULTIPLIER}_${item.id}`}
@@ -181,7 +176,7 @@ export default function useCopyTradeColumns({
               >
                 <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
                   Max Margin Per Position:{' '}
-                  <Box as="span" color="red1">
+                  <Box as="span" color="primary1">
                     {`$${formatNumber(item.maxVolMultiplier * item.volume)}`}
                   </Box>
                 </Type.Caption>
@@ -189,10 +184,10 @@ export default function useCopyTradeColumns({
             )}
           </>
         )}
-        {!!item.lookBackOrders && (
+        {!!item.volumeProtection && !!item.lookBackOrders && (
           <>
             <IconBox
-              icon={<ShieldChevron size={16} weight="bold" />}
+              icon={<MarginProtectionIcon size={20} />}
               color="primary1"
               sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
               data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_LOOK_BACK_ORDERS}_${item.id}`}
@@ -204,10 +199,16 @@ export default function useCopyTradeColumns({
                 type="dark"
                 effect="solid"
               >
+                <Type.Caption color="neutral1" display="block">
+                  Margin Protection:{' '}
+                  <Box as="span" color="primary1">
+                    On
+                  </Box>
+                </Type.Caption>
                 <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Orders Lookback :{' '}
-                  <Box as="span" color="red1">
-                    {formatNumber(item.lookBackOrders, 0, 0)}
+                  Lookback:{' '}
+                  <Box as="span" color="primary1">
+                    {formatNumber(item.lookBackOrders, 0, 0)} Orders
                   </Box>
                 </Type.Caption>
               </Tooltip>
@@ -217,7 +218,7 @@ export default function useCopyTradeColumns({
         {item.skipLowLeverage && (
           <>
             <IconBox
-              icon={<ArrowLineLeft mirrored size={16} weight="bold" />}
+              icon={<SkipLowLeverageIcon size={20} />}
               color={themeColors.primary1}
               sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
               data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_LEVERAGE}_${item.id}`}
@@ -231,7 +232,7 @@ export default function useCopyTradeColumns({
               >
                 <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
                   Skip Low Leverage Position:{' '}
-                  <Box as="span" color="green1">
+                  <Box as="span" color="primary1">
                     On
                   </Box>
                 </Type.Caption>
@@ -381,14 +382,14 @@ export default function useCopyTradeColumns({
       {
         title: (
           <Box as="span" pl={3}>
-            Run/Stop
+            Run
           </Box>
         ),
         dataIndex: 'status',
         key: 'status',
         sortBy: 'status',
         sortType: SortTypeEnum.ASC,
-        style: { minWidth: '110px' },
+        style: { minWidth: '80px', width: 80 },
         render: (item) => (
           <Box pl={3} sx={{ position: 'relative' }}>
             {item.reverseCopy && <ReverseTag />}
@@ -397,50 +398,50 @@ export default function useCopyTradeColumns({
         ),
       },
       {
-        title: 'Title',
+        title: 'Label',
         dataIndex: 'title',
         key: 'title',
-        style: { minWidth: '150px', pr: 3 },
+        style: { minWidth: '120px', width: 120, pr: 3 },
         render: renderTitle,
       },
       {
         title: 'Trader',
         dataIndex: 'account',
         key: 'account',
-        style: { minWidth: '150px' },
+        style: { minWidth: '150px', width: 150 },
         // TODO: 2
         render: renderTraderAccount,
       },
       {
-        title: 'Margin/Order',
+        title: 'Margin',
         dataIndex: 'volume',
         key: 'volume',
-        style: { minWidth: '100px', textAlign: 'right' },
+        style: { minWidth: '70px', width: 70, textAlign: 'right' },
         render: renderVolume,
       },
       {
         title: 'Leverage',
         dataIndex: 'leverage',
         key: 'leverage',
-        style: { minWidth: '80px', textAlign: 'right' },
+        style: { minWidth: '70px', width: 70, textAlign: 'right' },
         render: renderLeverage,
       },
       {
         title: 'SL/TP',
         dataIndex: undefined,
         key: undefined,
-        style: { minWidth: '150px', maxWidth: '150px', textAlign: 'right' },
+        style: { minWidth: '120px', width: 120, textAlign: 'right' },
         render: renderSLTP,
       },
       {
-        title: 'Advance Settings',
+        title: 'Advance',
         dataIndex: undefined,
         key: undefined,
-        style: { minWidth: '120px', textAlign: 'right' },
+        style: { minWidth: '110px', width: 110, textAlign: 'left', pl: 3 },
         render: renderRiskControl,
       },
       {
-        style: { minWidth: '100px', textAlign: 'right' },
+        style: { minWidth: '100px', width: 100, textAlign: 'right' },
         title: <Trans>7D PnL</Trans>,
         key: 'pnl7D',
         dataIndex: 'pnl7D',
@@ -448,15 +449,7 @@ export default function useCopyTradeColumns({
         render: render7DPNL,
       },
       {
-        style: { minWidth: '100px', textAlign: 'right' },
-        title: <Trans>30D PnL</Trans>,
-        key: 'pnl30D',
-        dataIndex: 'pnl30D',
-        sortBy: 'pnl30D',
-        render: render30DPNL,
-      },
-      {
-        style: { minWidth: '100px', textAlign: 'right' },
+        style: { minWidth: '100px', width: 100, textAlign: 'right' },
         title: <Trans>Total PnL</Trans>,
         key: 'pnl',
         dataIndex: 'pnl',
