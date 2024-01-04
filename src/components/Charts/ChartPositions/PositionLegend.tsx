@@ -61,8 +61,10 @@ export default function PositionLegend({
         mx: 0,
         px: 12,
         py: 2,
+        borderRadius: 0,
+        bg: 'neutral4',
         '&:hover:not(:disabled),&:active:not(:disabled)': {
-          bg: 'neutral7',
+          bg: '#414763',
         },
       }}
       onClick={() => handleSelectItem(data)}
