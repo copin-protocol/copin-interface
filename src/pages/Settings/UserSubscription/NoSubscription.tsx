@@ -3,21 +3,22 @@ import { CheckCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { ReactNode } from 'react'
 
+import Divider from 'components/@ui/Divider'
 import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
-import MintButton from 'pages/Subscription/MintButton'
+// import MintButton from 'pages/Subscription/MintButton'
 import { planConfigs } from 'pages/Subscription/Plans'
 import { CrowIconGold, CrowIconSilver } from 'theme/Icons/CrowIcon'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 
-import PlanPrice from './PlanPrice'
+// import PlanPrice from './PlanPrice'
+import { MINT_MODAL_LABELS, PricingDropdown } from './PricingOptions'
 
 export default function NoSubscription() {
-  const { md } = useResponsive()
-  return md ? <DesktopNoSubscription /> : <MobileNoSubscription />
+  const { lg } = useResponsive()
+  return lg ? <DesktopNoSubscription /> : <MobileNoSubscription />
 }
 
 function DesktopNoSubscription() {
-  const priceData = useSubscriptionPlanPrice()
   return (
     <Box
       sx={{
@@ -34,7 +35,7 @@ function DesktopNoSubscription() {
           position: 'absolute',
           top: [24, 24, 24, 48],
           bottom: [24, 24, 24, 48],
-          right: [260, 260, 260, 364],
+          left: 'calc(50% - 10px)',
           bg: 'neutral5',
           width: '1px',
         }}
@@ -90,15 +91,8 @@ function DesktopNoSubscription() {
           leftContent={<Box />}
           rightContent={
             <>
-              <Box mb={2}>
-                <PlanPrice planPrice={priceData?.price} />
-              </Box>
-              <MintButton
-                planPrice={priceData?.price}
-                buttonType="primary"
-                buttonSx={{ width: '100%' }}
-                buttonText={<Trans>Mint to upgrade</Trans>}
-              />
+              <Divider mt={1} mb={24} sx={{ bg: 'neutral5' }} />
+              <PricingDropdown method="mint" buttonLabel={<Trans>Mint</Trans>} modalLabels={MINT_MODAL_LABELS} />
             </>
           }
         />
@@ -110,8 +104,8 @@ function DesktopNoSubscription() {
 function RowWrapper({ leftContent, rightContent }: { leftContent: ReactNode; rightContent: ReactNode }) {
   return (
     <Flex>
-      <Box sx={{ flex: 1, px: [24, 24, 24, 48] }}>{leftContent}</Box>
-      <Box sx={{ flexShrink: 0, width: [260, 260, 260, 364], px: [24, 24, 24, 48] }}>{rightContent}</Box>
+      <Box sx={{ flex: 1, px: 24 }}>{leftContent}</Box>
+      <Box sx={{ flex: 1, px: 24, pl: 40 }}>{rightContent}</Box>
     </Flex>
   )
 }
@@ -150,6 +144,7 @@ export function MobileNoSubscription() {
           border: 'small',
           borderColor: 'neutral4',
           bg: 'neutral5',
+          width: '100%',
         }}
       >
         <Flex sx={{ alignItems: 'center', justifyContent: 'center', gap: 12 }}>
@@ -169,7 +164,14 @@ export function MobileNoSubscription() {
             </Flex>
           </Flex>
         ))}
-        <Box>
+        <Box height={0} />
+        <PricingDropdown
+          method="mint"
+          buttonLabel={<Trans>Mint</Trans>}
+          modalLabels={MINT_MODAL_LABELS}
+          buttonSx={{ width: ['100%', 200] }}
+        />
+        {/* <Box>
           <PlanPrice planPrice={priceData?.price} />
         </Box>
         <MintButton
@@ -177,7 +179,7 @@ export function MobileNoSubscription() {
           buttonType="primary"
           buttonSx={{ width: '100%', height: 40, '& *': { fontSize: '13px !important' } }}
           buttonText={<Trans>Mint to upgrade</Trans>}
-        />
+        /> */}
       </Flex>
     </>
   )

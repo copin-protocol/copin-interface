@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { CheckCircle, Note } from '@phosphor-icons/react'
+import { CheckCircle } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 
 import NoDataFound from 'components/@ui/NoDataFound'
@@ -7,16 +7,16 @@ import NFTCollectionLinks from 'components/NFTCollectionLinks'
 import NFTSubscriptionCard from 'components/NFTSubscriptionCard'
 import useUserSubscription from 'hooks/features/useUserSubscription'
 import { planConfigs } from 'pages/Subscription/Plans'
-import Alert from 'theme/Alert'
 import { CrowIconGold } from 'theme/Icons/CrowIcon'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 
 import ExtendPlan from './ExtendPlan'
+import SubscriptionExpired from './SubscriptionExpired'
 
 export default function HasSubscription() {
-  const { data, isFetching } = useUserSubscription()
-  if (isFetching) return <Loading />
+  const { data, isLoading } = useUserSubscription()
+  if (isLoading) return <Loading />
   if (!data) return <NoDataFound />
   const nftExpired = dayjs.utc(data.expiredTime).valueOf() < dayjs.utc().valueOf()
   return (
@@ -36,6 +36,7 @@ export default function HasSubscription() {
             borderRight: ['none', 'none', 'none', 'small'],
             borderRightColor: ['transparent', 'transparent', 'transparent', 'neutral4'],
             width: 'auto',
+            maxWidth: 360,
             mx: 'auto',
           }}
         >
@@ -45,30 +46,7 @@ export default function HasSubscription() {
           <Box sx={{ p: 3, bg: 'neutral6', borderBottom: 'small', borderBottomColor: 'neutral4' }}>
             <PremiumPlanDetails />
           </Box>
-          <Box sx={{ p: 3 }}>
-            {nftExpired ? (
-              <Alert
-                variant="warning"
-                message={
-                  <Flex sx={{ gap: 2, alignItems: 'center' }}>
-                    <IconBox icon={<Note size={16} />} />
-                    <Box as="span">
-                      <Trans>Note:</Trans>
-                    </Box>
-                  </Flex>
-                }
-                description={
-                  <Trans>
-                    You&apos;ll still have access to Premium after your NFT expires in 30 minutes. Keep an eye on the
-                    renewal time.
-                  </Trans>
-                }
-                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'start', textAlign: 'left' }}
-              />
-            ) : (
-              <ExtendPlan tokenId={data.tokenId} />
-            )}
-          </Box>
+          <Box sx={{ p: 3 }}>{nftExpired ? <SubscriptionExpired /> : <ExtendPlan tokenId={data.tokenId} />}</Box>
         </Box>
       </Flex>
     </>
@@ -78,7 +56,10 @@ export default function HasSubscription() {
 export function PremiumPlanDetails() {
   return (
     <Box>
-      <Flex mb={2} sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Flex
+        mb={2}
+        sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between', gap: 3, flexWrap: 'wrap' }}
+      >
         <Flex sx={{ alignItems: 'center', gap: 12 }}>
           <CrowIconGold />
           <Type.LargeBold>
