@@ -1,0 +1,383 @@
+import dayjs from 'dayjs'
+import {
+  CandlestickData,
+  ColorType,
+  CrosshairMode,
+  LineStyle,
+  MouseEventParams,
+  PriceScaleMode,
+  Range,
+  SeriesMarker,
+  Time,
+  UTCTimestamp,
+  createChart,
+} from 'lightweight-charts'
+import debounce from 'lodash/debounce'
+
+import { ChartData } from 'entities/chart'
+// import CurrencyOption from 'components/CurrencyOption'
+import { PositionData } from 'entities/trader.d'
+import { themeColors } from 'theme/colors'
+import { FONT_FAMILY } from 'utils/config/constants'
+import { formatNumber } from 'utils/helpers/format'
+import { getUserForTracking, logEvent } from 'utils/tracking/event'
+import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
+
+import { TimeScaleRange } from '.'
+
+type RenderArgs = {
+  chartMinHeight: number
+  username: string | undefined
+  data: ChartData[] | undefined
+  isLoading: boolean
+  chartId: string
+  legendId: string
+  chartData: CandlestickData<Time>[] | undefined
+  isLoadingClosed: boolean | undefined
+  hasBrush?: boolean
+  hasAllTokens: boolean
+  hasNextPage: boolean | undefined
+  setVisibleRange: (time: TimeScaleRange | undefined) => void
+  fetchNextPage: (() => void) | undefined
+  listPositions: PositionData[]
+  markerId: string | undefined
+  timezone: number
+  closedPos: PositionData[]
+  visibleRange: TimeScaleRange | undefined
+  setMarkerId: (id: string | undefined) => void
+  visibleLogicalRange: TimeScaleRange | undefined
+  setVisibleLogicalRange: (time: TimeScaleRange | undefined) => void
+  currentPosition: PositionData | undefined
+}
+export default function renderChart({
+  chartMinHeight,
+  username,
+  data,
+  isLoading,
+  chartId,
+  legendId,
+  chartData,
+  isLoadingClosed,
+  hasBrush,
+  hasAllTokens,
+  hasNextPage,
+  setVisibleRange,
+  fetchNextPage,
+  listPositions,
+  markerId,
+  timezone,
+  closedPos,
+  visibleRange,
+  setMarkerId,
+  setVisibleLogicalRange,
+  currentPosition,
+}: RenderArgs) {
+  if (isLoading || !data || data.length === 0 || !chartData || chartData?.length === 0) return
+
+  const container = document.getElementById(chartId)
+  const chart = createChart(container ? container : chartId, {
+    // height: Math.max(container?.clientHeight ?? 0, THE_REST_HEIGHT),
+    height: Math.max(container?.clientHeight ?? 0, chartMinHeight),
+    rightPriceScale: {
+      entireTextOnly: true,
+      borderVisible: false,
+      mode: PriceScaleMode.Logarithmic,
+      textColor: themeColors.neutral3,
+      scaleMargins: {
+        top: 0.1,
+        bottom: 0.1,
+      },
+    },
+    timeScale: {
+      timeVisible: true,
+      secondsVisible: true,
+      borderVisible: true,
+      borderColor: '#1f1a30',
+      rightOffset: 30,
+      fixLeftEdge: true,
+      fixRightEdge: true,
+      shiftVisibleRangeOnNewBar: true,
+    },
+    grid: {
+      horzLines: {
+        color: 'transparent',
+        visible: false,
+      },
+      vertLines: {
+        color: 'transparent',
+        visible: false,
+      },
+    },
+    overlayPriceScales: {
+      borderVisible: false,
+    },
+    leftPriceScale: {
+      visible: false,
+      scaleMargins: {
+        bottom: 0,
+        top: 0,
+      },
+    },
+    layout: {
+      textColor: themeColors.neutral3,
+      background: { type: ColorType.Solid, color: 'transparent' },
+      fontFamily: FONT_FAMILY,
+      fontSize: 13,
+    },
+    crosshair: {
+      mode: CrosshairMode.Normal,
+      horzLine: {
+        labelBackgroundColor: themeColors.neutral1,
+        color: themeColors.neutral3,
+        width: 1,
+        style: LineStyle.Dotted,
+      },
+      vertLine: {
+        color: themeColors.neutral3,
+        labelBackgroundColor: themeColors.neutral1,
+        width: 1,
+        style: LineStyle.Dotted,
+      },
+    },
+  })
+
+  const timeScale = chart.timeScale()
+  function onVisibleTimeRangeChanged(value: Range<any> | null) {
+    if (isLoadingClosed || hasAllTokens) return
+    if (chartData && chartData.length > 0 && value) {
+      const from = Number(value.from)
+      const to = Number(value.to)
+      if (hasNextPage && from === chartData[0].time) {
+        setVisibleRange({ from, to })
+        fetchNextPage && fetchNextPage()
+      } else {
+        if (!hasBrush || (visibleRange?.from === from && visibleRange?.to === to)) return
+        setVisibleRange({ from, to })
+      }
+    }
+  }
+  timeScale.subscribeVisibleTimeRangeChange(debounce(onVisibleTimeRangeChanged, 100))
+
+  const series = chart.addCandlestickSeries({
+    upColor: themeColors.neutral3,
+    downColor: 'transparent',
+    borderDownColor: themeColors.neutral3,
+    borderUpColor: themeColors.neutral3,
+    wickDownColor: themeColors.neutral3,
+    wickUpColor: themeColors.neutral3,
+  })
+  series.setData(chartData)
+  series.applyOptions({})
+
+  const increasePosMarkers = listPositions.map((position): SeriesMarker<Time> => {
+    const isSelected = markerId && markerId.includes(position.id)
+    return {
+      id: `${position.id}-OPEN`,
+      position: 'aboveBar',
+      color: markerId && !isSelected ? themeColors.neutral3 : position.isLong ? themeColors.green1 : themeColors.red2,
+      size: isSelected ? 1.85 : 1.35,
+      shape: position.isLong ? 'arrowUp' : 'arrowDown',
+      text: position.isLong ? 'L' : 'S',
+      time: (dayjs(position.openBlockTime).utc().unix() - timezone) as Time,
+    }
+  })
+
+  const closePosMarkers = closedPos.map((position): SeriesMarker<Time> => {
+    const isSelected = markerId && markerId.includes(position.id)
+    return {
+      id: `${position.id}-CLOSE`,
+      position: 'belowBar',
+      color:
+        markerId && !isSelected ? themeColors.neutral3 : position.isLiquidate ? themeColors.red2 : themeColors.neutral1,
+      size: isSelected ? 1.75 : 1.5,
+      shape: 'square',
+      text: '$' + formatNumber(position.pnl),
+      time: (dayjs(position.closeBlockTime).utc().unix() - timezone) as Time,
+    }
+  })
+
+  const markers = [...increasePosMarkers, ...closePosMarkers].sort((a, b) => (a.time as number) - (b.time as number))
+  series.setMarkers(markers)
+  if (visibleRange) {
+    if (
+      timeScale.getVisibleRange()?.from !== visibleRange.from ||
+      timeScale.getVisibleRange()?.to !== visibleRange.to
+    ) {
+      timeScale.setVisibleRange({
+        from: visibleRange.from as UTCTimestamp,
+        to: visibleRange.to as UTCTimestamp,
+      })
+    }
+  }
+  // if (visibleLogicalRange) {
+  //   timeScale.setVisibleLogicalRange({
+  //     from: visibleLogicalRange.from,
+  //     to: visibleLogicalRange.to,
+  //   })
+  // }
+
+  const avgPriceLine = series.createPriceLine({
+    id: 'averagePrice',
+    price: 0,
+    color: 'transparent',
+    lineWidth: 1,
+    lineVisible: false,
+    axisLabelVisible: false,
+    title: 'Avg. Price',
+    lineStyle: LineStyle.Dashed,
+  })
+
+  const handleClickEvent = (param: MouseEventParams) => {
+    const hoverMakerId = param.hoveredObjectId as string | undefined
+    setMarkerId(hoverMakerId)
+
+    const timeRange = timeScale.getVisibleRange()
+    setVisibleRange({ from: Number(timeRange?.from), to: Number(timeRange?.to) })
+    const logicalRange = timeScale.getVisibleLogicalRange()
+    setVisibleLogicalRange({ from: Number(logicalRange?.from), to: Number(logicalRange?.to) })
+
+    if (hoverMakerId && username) {
+      logEvent({
+        label: getUserForTracking(username),
+        category: EventCategory.CHART,
+        action: EVENT_ACTIONS[EventCategory.CHART].VIEW_ORDER_MARKER,
+      })
+    }
+  }
+
+  if (container) {
+    const legend = document.getElementById(legendId) ?? document.createElement('div')
+    legend.setAttribute('id', legendId)
+    if (legend) {
+      legend.style.position = 'absolute'
+      legend.style.left = '8px'
+      legend.style.bottom = hasBrush ? '140px' : '40px'
+      legend.style.zIndex = '1'
+      legend.style.fontSize = '13px'
+      legend.style.fontFamily = FONT_FAMILY
+      legend.style.lineHeight = '13px'
+      legend.style.color = themeColors.neutral3
+      legend.style.display = 'none'
+      container.appendChild(legend)
+    }
+
+    // Create and style the tooltip html element
+    // const toolTip = document.getElementById(tooltipId) ?? document.createElement('div')
+    // toolTip.setAttribute('id', tooltipId)
+    // if (toolTip) {
+    //   toolTip.style.position = 'absolute'
+    //   toolTip.style.display = 'none'
+    //   toolTip.style.padding = '8px'
+    //   toolTip.style.boxSizing = 'border-box'
+    //   toolTip.style.zIndex = '1001'
+    //   toolTip.style.background = themeColors.neutral5
+    //   toolTip.style.color = themeColors.neutral1
+    //   toolTip.style.fontSize = '12px'
+    //   toolTip.style.left = '16px'
+    //   toolTip.style.top = '20px'
+    //   if (!toolTip.isConnected) {
+    //     container.appendChild(toolTip)
+    //   }
+    // }
+
+    chart.subscribeCrosshairMove((param) => {
+      // const hoverMakerId = param.hoveredObjectId as string | undefined
+      // if (hoverMakerId) {
+      //   setMarkerId(hoverMakerId)
+      // }
+      if (
+        param.point === undefined ||
+        !param.time ||
+        param.point.x < 0 ||
+        param.point.x > container.clientWidth ||
+        param.point.y < 0 ||
+        param.point.y > container.clientHeight
+      ) {
+        // if (toolTip) {
+        //   toolTip.style.display = 'none'
+        // }
+        if (legend) {
+          legend.style.display = 'none'
+        }
+      } else {
+        // style="color: ${themeColors.neutral1}"
+        if (legend) {
+          const candleData = param.seriesData.get(series) as CandlestickData
+          if (candleData && candleData.time) {
+            legend.innerHTML = `<div style="font-size: 12px; margin: 1px 0;">O: <span>${formatNumber(
+              candleData.open
+            )}</span> | H: <span>${formatNumber(candleData.high)}</span> | L: <span>${formatNumber(
+              candleData.low
+            )}</span> | C: <span>${formatNumber(candleData.close)}</span></div>`
+            legend.style.display = 'block'
+          }
+        }
+
+        if (markerId) {
+          // const currentPosition = listPositions.find((e) => markerId.includes(e.id))
+          // toolTip.innerHTML = ''
+          if (currentPosition) {
+            avgPriceLine.applyOptions({
+              price: currentPosition.averagePrice,
+              color: currentPosition.isLong ? themeColors.green2 : themeColors.red1,
+              lineVisible: true,
+              axisLabelVisible: true,
+              title: (currentPosition.isLong ? 'Long' : 'Short') + ' - Avg. Price',
+            })
+
+            //       if (markerId.includes('OPEN')) {
+            //         toolTip.style.display = 'block'
+            //         toolTip.innerHTML = `<div>OPEN | ${formatLocalDate(
+            //           currentPosition.openBlockTime ?? currentPosition.blockTime,
+            //           DAYJS_FULL_DATE_FORMAT
+            //         )}</div><div style="color: ${themeColors.neutral1}">
+            // 	Avg. Price: ${formatNumber(currentPosition.averagePrice)} | <span style="color: ${
+            //           currentPosition.isLong ? themeColors.green1 : themeColors.red2
+            //         }">${currentPosition.isLong ? 'Long' : 'Short'}</span>
+            // 	</div><div style="color: ${themeColors.neutral1}">
+            // 	Size: ${formatNumber(currentPosition.size, 0)} | ${formatNumber(currentPosition.leverage, 1)}x
+            // 	</div>`
+            //       } else if (markerId.includes('CLOSE')) {
+            //         toolTip.style.display = 'block'
+            //         toolTip.innerHTML = `<div><span style="color: ${
+            //           currentPosition.roi <= -100 ? themeColors.red2 : themeColors.neutral1
+            //         }">${currentPosition.roi <= -100 ? 'LIQUIDATED' : 'CLOSED'}</span> | ${formatLocalDate(
+            //           currentPosition.closeBlockTime,
+            //           DAYJS_FULL_DATE_FORMAT
+            //         )}</div><div style="color: ${themeColors.neutral1}">
+            // 	Avg. Price: ${formatNumber(currentPosition.averagePrice)} | <span style="color: ${
+            //           currentPosition.isLong ? themeColors.green1 : themeColors.red2
+            //         }">${currentPosition.isLong ? 'Long' : 'Short'}</span>
+            // 	</div><div style="color: ${themeColors.neutral1}">
+            // 	Size: ${formatNumber(currentPosition.size, 0)} | ${formatNumber(currentPosition.leverage, 1)}x
+            // 	</div><div>Realised PnL: <span style="font-weight: 800;color: ${
+            //   currentPosition.realisedPnl === 0
+            //     ? themeColors.neutral1
+            //     : currentPosition.realisedPnl > 0
+            //     ? themeColors.green1
+            //     : themeColors.red2
+            // }">
+            // 	$${formatNumber(currentPosition.realisedPnl, 0)} (${formatNumber(currentPosition.roi, 0)}%)
+            // 	</span></div><div style="color: ${themeColors.neutral1}">
+            // 	Paid Fees: $${formatNumber(currentPosition.fee, 0)}
+            // 	</div>`
+            //       } else {
+            //         // toolTip.style.display = 'none'
+            //       }
+            //     } else {
+            //     }
+          } else {
+            // toolTip.style.display = 'none'
+            avgPriceLine.applyOptions({
+              price: 0,
+              lineVisible: false,
+            })
+          }
+        }
+      }
+    })
+
+    chart.subscribeClick(handleClickEvent)
+  }
+  return { chart, container, timeScale, onVisibleTimeRangeChanged, handleClickEvent }
+}

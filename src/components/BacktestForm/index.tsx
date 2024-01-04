@@ -224,7 +224,7 @@ export default function BacktestForm({
             />
             <Type.Caption mt={1} color="neutral2">
               <Trans>
-                When the loss exceeds{' '}
+                When the position&apos;s loss exceeds{' '}
                 {stopLossAmount ? (
                   <Type.CaptionBold color="red2">{formatNumber(stopLossAmount)} USD</Type.CaptionBold>
                 ) : (

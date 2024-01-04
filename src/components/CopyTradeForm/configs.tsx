@@ -14,16 +14,10 @@ const commonSchema = {
     otherwise: (schema) => schema.required().min(0).label('Margin'),
   }),
   leverage: yup.number().required().min(2).label('Leverage'),
-  stopLossAmount: yup.number().when('enableStopLoss', {
-    is: true,
-    then: (schema) => schema.required().min(0.1).label('Stop Loss Amount'),
-  }),
-  lookBackOrders: yup.number().min(1).integer(),
-  enableMaxVolMultiplier: yup.boolean(),
-  maxVolMultiplier: yup.number().when('enableMaxVolMultiplier', {
-    is: true,
-    then: (schema) => schema.required().min(0.1).label('Max Volume Multiplier'),
-  }),
+  lookBackOrders: yup.number().min(1).integer().label('Orders To Lookback'),
+  stopLossAmount: yup.number().positive().label('Stop Loss Amount'),
+  takeProfitAmount: yup.number().positive().label('Take Profit Amount'),
+  maxMarginPerPosition: yup.number().nullable().positive().label('Max Margin Per Position'),
   skipLowLeverage: yup.boolean(),
   agreement: yup.boolean().isTrue(),
   copyAll: yup.boolean(),
@@ -65,6 +59,7 @@ export interface CopyTradeFormValues {
   type?: CopyTradeTypeEnum
   protocol?: ProtocolEnum
   stopLossAmount: number | undefined
+  takeProfitAmount: number | undefined
   lookBackOrders: number | null
   exchange: CopyTradePlatformEnum
   copyWalletId: string
@@ -84,6 +79,7 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   leverage: 'leverage',
   tokenAddresses: 'tokenAddresses',
   stopLossAmount: 'stopLossAmount',
+  takeProfitAmount: 'takeProfitAmount',
   lookBackOrders: 'lookBackOrders',
   exchange: 'exchange',
   copyWalletId: 'copyWalletId',
@@ -104,6 +100,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   tokenAddresses: [],
   type: CopyTradeTypeEnum.FULL_ORDER,
   stopLossAmount: undefined,
+  takeProfitAmount: undefined,
   lookBackOrders: 10,
   exchange: CopyTradePlatformEnum.BINGX,
   copyWalletId: '',

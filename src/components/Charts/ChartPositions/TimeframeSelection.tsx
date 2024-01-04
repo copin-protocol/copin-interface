@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { Button } from 'theme/Buttons'
 import { Flex } from 'theme/base'
 import { TimeframeEnum } from 'utils/config/enums'
@@ -14,6 +16,12 @@ export default function TimeframeSelection({
   changeOption: (data: TimeframeEnum) => void
   isExpanded?: boolean
 }) {
+  useEffect(() => {
+    if (!isExpanded && currentOption === TimeframeEnum.D1) {
+      changeOption(TimeframeEnum.H1)
+    }
+  }, [isExpanded])
+
   return (
     <Flex alignItems="center" sx={{ gap: ['2px', '2px', '2px', 2] }}>
       {(isExpanded ? TIMEFRAME_OPTIONS_EXPANDED : TIMEFRAME_OPTIONS).map((option, index: number) => (

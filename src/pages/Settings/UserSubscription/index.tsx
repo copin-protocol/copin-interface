@@ -12,10 +12,14 @@ export default function UserSubscription() {
   const isPremium = myProfile && myProfile.plan === SubscriptionPlanEnum.PREMIUM
   return (
     <Box sx={{ width: '100%', height: '100%', overflow: 'hidden auto' }}>
-      <Container my={4} sx={{ maxWidth: 1000, px: 3 }}>
+      <Container my={4} sx={{ maxWidth: 1024, px: 3 }}>
         <Box>
-          {!isPremium && <NoSubscription />}
-          {isPremium && <HasSubscription />}
+          <Box display={isPremium ? 'none' : 'block'}>
+            <NoSubscription />
+          </Box>
+          <Box display={isPremium ? 'block' : 'none'}>
+            <HasSubscription />
+          </Box>
         </Box>
         <Box mt={42} />
         <TermsAndConditions text={Type.Caption} />

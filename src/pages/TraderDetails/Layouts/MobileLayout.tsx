@@ -29,10 +29,10 @@ const TabButton = ({
   </Flex>
 )
 
-const MobileLayout = ({ children }: LayoutProps) => {
+const MobileLayout = (props: LayoutProps) => {
   const [tab, setTab] = useState(TabEnum.STATS)
   return (
-    <Box sx={{ position: 'relative', pb: 96 }}>
+    <Box sx={{ position: 'relative', pb: 56 }}>
       <Box
         width="100%"
         height={72}
@@ -45,7 +45,7 @@ const MobileLayout = ({ children }: LayoutProps) => {
           zIndex: 100,
         }}
       >
-        {children[0]}
+        {props.traderInfo}
       </Box>
       {/* <Box
         display={tab === TabEnum.POSITIONS ? 'none' : 'block'}
@@ -59,7 +59,7 @@ const MobileLayout = ({ children }: LayoutProps) => {
       >
         {children[1]}
       </Box> */}
-      {tab === TabEnum.STATS && children[1]}
+      {tab === TabEnum.STATS && props.traderStats}
       {tab === TabEnum.CHARTS && (
         <>
           <Box
@@ -69,9 +69,9 @@ const MobileLayout = ({ children }: LayoutProps) => {
               borderColor: 'neutral4',
             }}
           >
-            {children[2]}
+            {props.traderRanking}
           </Box>
-          <Box height="max(calc(100vh - 580px), 330px)">{children[3]}</Box>
+          <Box height="max(calc(100vh - 577px), 330px)">{props.traderChartPositions}</Box>
           {/* <Box
             p={12}
             sx={{
@@ -93,10 +93,10 @@ const MobileLayout = ({ children }: LayoutProps) => {
               borderColor: 'neutral4',
             }}
           >
-            {children[5]}
+            {props.openingPositions}
           </Box>
           <Box sx={{ position: 'relative' }} flex="1">
-            {children[6]}
+            {props.closedPositions}
           </Box>
         </Flex>
       )}

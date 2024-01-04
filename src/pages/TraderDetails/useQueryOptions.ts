@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { useQuery } from 'react-query'
+import { useInfiniteQuery, useQuery } from 'react-query'
 
 import { getOpeningPositionsApi } from 'apis/positionApis'
 import { getTraderHistoryApi } from 'apis/traderApis'
@@ -10,6 +10,7 @@ import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { ALL_TOKENS_ID, TokenOptionProps } from 'utils/config/trades'
+import { getNextParam } from 'utils/helpers/transform'
 
 export default function useQueryPositions({
   address,
@@ -84,5 +85,87 @@ export default function useQueryPositions({
       isLoadingOpening,
       openingPositions,
     ]
+  )
+}
+
+export function useInfiniteQueryPositions({
+  address,
+  currencyOption,
+  protocol,
+  currentSort,
+  currentPage,
+  changeCurrentPage,
+  limit,
+}: {
+  address: string
+  protocol: ProtocolEnum
+  currencyOption: TokenOptionProps | undefined
+  currentSort: TableSortProps<PositionData> | undefined
+  currentPage: number
+  changeCurrentPage: (page: number) => void
+  limit: number
+}) {
+  const rangeFilters: RangeFilter[] = []
+  const queryFilters: QueryFilter[] = []
+  queryFilters.push({ fieldName: 'status', value: PositionStatusEnum.CLOSE })
+  if (!!address) {
+    queryFilters.push({ fieldName: 'account', value: address })
+  }
+  if (currencyOption?.id !== ALL_TOKENS_ID) {
+    queryFilters.push({ fieldName: 'indexToken', value: currencyOption?.id })
+  }
+  const { data: openingPositions, isLoading: isLoadingOpening } = useQuery(
+    [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol],
+    () => getOpeningPositionsApi({ protocol, account: address }),
+    { enabled: !!address, retry: 0 }
+  )
+  const {
+    data: closedPositions,
+    isFetching: isLoadingClosed,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery(
+    [
+      QUERY_KEYS.GET_POSITIONS_HISTORY,
+      address,
+      // currentPage,
+      currencyOption?.id,
+      currentSort?.sortBy,
+      currentSort?.sortType,
+      protocol,
+      limit,
+    ],
+    ({ pageParam = 0 }) => {
+      // return getNotificationsApi({ limit, offset: pageParam, otherParams })
+      return getTraderHistoryApi({
+        limit,
+        offset: pageParam,
+        sort: currentSort,
+        protocol,
+        queryFilters,
+        rangeFilters,
+      })
+    },
+    {
+      getNextPageParam: (prev) => {
+        return getNextParam(limit, prev.meta)
+      },
+      retry: 0,
+      enabled: !!address && !!currencyOption?.id,
+      keepPreviousData: true,
+    }
+  )
+  return useMemo(
+    () => ({
+      openingPositions,
+      isLoadingOpening,
+      closedPositions: closedPositions?.pages.reduce((result, data) => {
+        return [...result, ...(data?.data || [])]
+      }, [] as PositionData[]),
+      isLoadingClosed,
+      handleFetchClosedPositions: fetchNextPage,
+      hasNextClosedPositions: hasNextPage,
+    }),
+    [closedPositions, fetchNextPage, hasNextPage, isLoadingClosed, isLoadingOpening, openingPositions]
   )
 }

@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios'
+
 import {
   CheckAvailableResultData,
   ResponsePositionData,
@@ -5,8 +7,9 @@ import {
   TraderCounter,
   TraderData,
 } from 'entities/trader.d'
+import { TraderTokenStatistic } from 'entities/trader.d'
 import { PositionSortPros } from 'pages/TraderDetails'
-import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { capitalizeFirstLetter } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
@@ -17,7 +20,7 @@ import { GetApiParams, QueryFilter, RangeFilter, RequestBodyApiData, SearchTrade
 
 const SERVICE = 'position'
 
-function transformRelisedField(fieldName: string) {
+function transformRealisedField(fieldName: string) {
   switch (fieldName) {
     case 'pnl':
     case 'maxPnl':
@@ -39,7 +42,7 @@ function transformRelisedField(fieldName: string) {
 const normalizePayload = (body: RequestBodyApiData) => {
   let sortBy = body.sortBy
   if (!!sortBy) {
-    sortBy = transformRelisedField(sortBy)
+    sortBy = transformRealisedField(sortBy)
   }
   if (!body.ranges) return { ...body, sortBy }
   const ranges = body.ranges.map((range) => ({
@@ -49,11 +52,11 @@ const normalizePayload = (body: RequestBodyApiData) => {
     ranges.forEach((range) => {
       const [_prefix, _fieldName] = range.fieldName.split('.')
       if (_fieldName === 'pnl') return
-      range.fieldName = _prefix + '.' + transformRelisedField(_fieldName)
+      range.fieldName = _prefix + '.' + transformRealisedField(_fieldName)
     })
   } else {
     ranges.forEach((range) => {
-      range.fieldName = transformRelisedField(range.fieldName)
+      range.fieldName = transformRealisedField(range.fieldName)
       switch (range.fieldName) {
         case 'avgDuration':
         case 'minDuration':
@@ -216,4 +219,15 @@ export async function getTraderStatisticApi({ protocol, account }: { protocol: P
     }
     return normalizedData
   })
+}
+
+export async function getTraderTokensStatistic(
+  { protocol, account }: { protocol: ProtocolEnum; account: string },
+  others?: GetApiParams & { sortBy?: string; sortType?: SortTypeEnum }
+) {
+  const { limit = 100, offset = 0, sortBy: sort_by, sortType: sort_type } = others ?? {}
+  const params = { limit, offset, sort_by, sort_type }
+  return requester
+    .get(`${protocol}/${SERVICE}/tokens/${account}/statistic`, { params })
+    .then((res: AxiosResponse<ApiListResponse<TraderTokenStatistic>>) => res.data)
 }

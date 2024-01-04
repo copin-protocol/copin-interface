@@ -22,7 +22,6 @@ import {
   renderSource,
   renderStatus,
   renderTrader,
-  renderValue,
 } from '../renderProps'
 import { ExternalSource } from './PositionsContainer'
 
@@ -176,7 +175,7 @@ export const historyColumns: typeof openingColumns = [
     dataIndex: 'createdAt',
     key: 'createdAt',
     sortBy: 'createdAt',
-    style: { minWidth: '120px' },
+    style: { minWidth: '120px', width: 120 },
     render: (item) => (
       <Box sx={{ position: 'relative' }}>
         {item.isReverse && <ReverseTag sx={{ top: '-12px', left: '-16px' }} />}
@@ -189,28 +188,28 @@ export const historyColumns: typeof openingColumns = [
     dataIndex: 'lastOrderAt',
     key: 'lastOrderAt',
     sortBy: 'lastOrderAt',
-    style: { minWidth: '110px' },
+    style: { minWidth: '110px', width: 110 },
     render: renderCloseTime,
   },
   {
     title: 'Trader',
     dataIndex: 'copyAccount',
     key: 'copyAccount',
-    style: { minWidth: '180px' },
+    style: { minWidth: '180px', width: 180 },
     render: (item) => renderTrader(item.copyAccount, item.protocol),
   },
   {
     title: 'Copy',
     dataIndex: 'copyTradeTitle',
     key: 'copyTradeTitle',
-    style: { minWidth: '130px' },
+    style: { minWidth: '130px', width: 130 },
     render: renderCopyTitle,
   },
   {
     title: 'Source',
     dataIndex: 'id',
     key: 'id',
-    style: { minWidth: '100px', textAlign: 'center' },
+    style: { minWidth: '100px', width: 100, textAlign: 'center' },
     render: (item, index, externalSource) => renderSource(item, index, externalSource, true),
   },
   {
@@ -221,39 +220,32 @@ export const historyColumns: typeof openingColumns = [
     render: renderEntry,
   },
   {
-    title: 'Value',
-    dataIndex: 'sizeDelta',
-    key: 'sizeDelta',
-    style: { minWidth: '200px', width: 200, textAlign: 'right' },
-    render: renderValue,
-  },
-  {
     title: 'Size',
     dataIndex: 'totalSizeDelta',
     key: 'totalSizeDelta',
-    style: { minWidth: '130px', width: 130, textAlign: 'right' },
+    style: { minWidth: '100px', width: 100, textAlign: 'right' },
     render: renderSize,
   },
   {
     title: 'Leverage',
     dataIndex: 'leverage',
     key: 'leverage',
-    style: { minWidth: '100px', textAlign: 'right' },
+    style: { minWidth: '80px', width: 80, textAlign: 'right' },
     render: renderLeverage,
   },
   {
     title: 'PnL',
     dataIndex: 'pnl',
     key: 'pnl',
-    style: { minWidth: '130px', width: 130, textAlign: 'right' },
+    style: { minWidth: '100px', width: 100, textAlign: 'right' },
     render: (item, _, externalSource) => renderPnL(item, externalSource?.prices),
   },
   {
-    title: <Box pr={1}>Closed Type</Box>,
+    title: <Box>Closed Type</Box>,
     dataIndex: 'closeType',
     key: 'closeType',
     sortBy: 'closeType',
-    style: { minWidth: '100px', textAlign: 'right' },
+    style: { minWidth: '120px', width: 120, textAlign: 'left', pl: 2 },
     render: renderCloseType,
   },
   {
@@ -261,7 +253,7 @@ export const historyColumns: typeof openingColumns = [
     dataIndex: 'status',
     key: 'status',
     sortBy: 'status',
-    style: { minWidth: '100px', textAlign: 'right' },
+    style: { minWidth: '80px', width: 80, textAlign: 'left' },
     render: renderStatus,
   },
 ]

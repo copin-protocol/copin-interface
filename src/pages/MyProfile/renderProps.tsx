@@ -147,7 +147,7 @@ export const renderSizeMobile = (data: CopyPositionData) => (
   </Flex>
 )
 export const renderStatus = (data: CopyPositionData) => (
-  <Flex width="100%" alignItems="center" justifyContent="right">
+  <Flex width="100%" alignItems="center" justifyContent="left">
     <Tag width={70} status={data.status} />
   </Flex>
 )

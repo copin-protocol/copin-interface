@@ -1,8 +1,6 @@
-import { cloneElement, useCallback, useEffect, useReducer } from 'react'
+import { useCallback, useReducer } from 'react'
 
 import DirectionButton from 'components/@ui/DirectionButton'
-import { ChartPositionsProps } from 'components/Charts/ChartPositions/types'
-import { HistoryTableProps, fullHistoryColumns, historyColumns } from 'components/Tables/HistoryTable'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Box, Flex, Grid } from 'theme/base'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
@@ -10,14 +8,9 @@ import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import { LayoutProps } from './types'
 
-const DesktopLayout = ({ children, resetSort }: LayoutProps) => {
+const DesktopLayout = (props: LayoutProps) => {
+  const { positionFullExpanded, chartFullExpanded } = props
   const { myProfile } = useMyProfile()
-  const [positionFullExpanded, toggleFullExpand] = useReducer((state) => !state, false)
-  const [chartFullExpanded, toggleChartFullExpand] = useReducer((state) => !state, false)
-
-  useEffect(() => {
-    if (!positionFullExpanded) resetSort && resetSort()
-  }, [positionFullExpanded])
 
   const [positionTopExpanded, toggleTopExpand] = useReducer((state) => !state, false)
 
@@ -32,39 +25,17 @@ const DesktopLayout = ({ children, resetSort }: LayoutProps) => {
     [myProfile?.username]
   )
 
-  const handleFullExpand = () => {
-    if (chartFullExpanded) {
-      toggleChartFullExpand()
-    }
-    toggleFullExpand()
-    logEventLayout(
-      positionFullExpanded
-        ? EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_POSITION_FULL
-        : EVENT_ACTIONS[EventCategory.LAYOUT].EXPAND_POSITION_FULL
-    )
-  }
-
-  const handleChartFullExpand = () => {
-    if (positionFullExpanded) {
-      toggleFullExpand()
-    }
-    toggleChartFullExpand()
-    logEventLayout(
-      chartFullExpanded
-        ? EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_CHART_POSITION_FULL
-        : EVENT_ACTIONS[EventCategory.LAYOUT].EXPAND_CHART_POSITION_FULL
-    )
-  }
-
   return (
     <Grid
       sx={{
+        position: 'relative',
         overflow: 'hidden',
         height: '100%',
         gridTemplate: `
     "ACCOUNT ACCOUNT ACCOUNT" minmax(60px, 60px)
     "CHARTS STATS POSITIONS" minmax(0px, 1fr) / ${
-      positionFullExpanded ? '400px 0px 1fr' : chartFullExpanded ? '1fr 0px 510px' : '400px 1fr 510px'
+      positionFullExpanded ? '400px 0px 1fr' : '400px 1fr 510px'
+      // positionFullExpanded ? '400px 0px 1fr' : chartFullExpanded ? '1fr 0px 510px' : '400px 1fr 510px'
     }
     `,
       }}
@@ -77,17 +48,8 @@ const DesktopLayout = ({ children, resetSort }: LayoutProps) => {
           borderColor: 'neutral4',
         }}
       >
-        {children[0]}
+        {props.traderInfo}
       </Box>
-
-      {/* <Box
-        id="TIME_FILTER"
-        px={3}
-        py={2}
-        sx={{ borderBottom: 'small', borderColor: 'neutral4', gridArea: 'TIME_FILTER / TIME_FILTER / TIME_FILTER' }}
-      >
-        {children[1]}
-      </Box> */}
       <Box
         id="STATS"
         sx={{
@@ -95,32 +57,35 @@ const DesktopLayout = ({ children, resetSort }: LayoutProps) => {
           overflow: 'hidden',
         }}
       >
-        {children[1]}
+        {props.traderStats}
       </Box>
 
       <Box
         id="CHARTS"
         sx={{
           gridArea: 'CHARTS / CHARTS',
-          borderRight: chartFullExpanded ? 'none' : 'small',
+          // borderRight: chartFullExpanded ? 'none' : 'small',
+          borderRight: 'small',
           borderColor: 'neutral4',
           overflow: 'hidden',
           display: 'grid',
           gridTemplate: `
-    "RADAR" ${chartFullExpanded ? '0px' : 'minmax(1fr, 260px)'}
-    "CANDLESTICK" minmax(1fr, 1fr)
-    `,
+            "RADAR" minmax(1fr, 260px)
+            "CANDLESTICK" minmax(1fr, 1fr)
+          `,
+          // "RADAR" ${chartFullExpanded ? '0px' : 'minmax(1fr, 260px)'}
         }}
       >
         <Flex flexDirection="column" height="100%">
           <Box
-            height={chartFullExpanded ? 0 : 260}
+            // height={chartFullExpanded ? 0 : 260}
+            height={260}
             sx={{
               gridArea: 'RADAR',
               overflow: 'hidden',
             }}
           >
-            {children[2]}
+            {props.traderRanking}
           </Box>
           <Box
             sx={{
@@ -129,20 +94,24 @@ const DesktopLayout = ({ children, resetSort }: LayoutProps) => {
               borderColor: 'neutral4',
               // height: 'max(calc(100% - 120px - 260px),200px)',
               // '@media screen and (max-height: 800px)': {
-              height: chartFullExpanded ? '100%' : 'max(calc(100% - 260px),200px)',
+              // height: chartFullExpanded ? '100%' : 'max(calc(100% - 260px),200px)',
+              height: 'max(calc(100% - 260px),200px)',
               // },
+              ...(chartFullExpanded
+                ? {
+                    position: 'absolute',
+                    top: 60,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    bg: 'neutral8',
+                    height: 'auto',
+                    zIndex: 10,
+                  }
+                : {}),
             }}
           >
-            {/*{children[3]}*/}
-            {chartFullExpanded
-              ? cloneElement<ChartPositionsProps>(children[3], {
-                  isExpanded: true,
-                  toggleExpand: handleChartFullExpand,
-                })
-              : cloneElement<ChartPositionsProps>(children[3], {
-                  isExpanded: false,
-                  toggleExpand: handleChartFullExpand,
-                })}
+            {props.traderChartPositions}
           </Box>
 
           {/* <Box
@@ -183,7 +152,7 @@ const DesktopLayout = ({ children, resetSort }: LayoutProps) => {
             borderBottomColor: 'neutral4',
           }}
         >
-          {children[5]}
+          {props.openingPositions}
         </Box>
         <Box sx={{ gridArea: 'HISTORY', position: 'relative' }}>
           <DirectionButton
@@ -204,19 +173,7 @@ const DesktopLayout = ({ children, resetSort }: LayoutProps) => {
             }}
             direction={positionTopExpanded ? 'bottom' : 'top'}
           />
-          {positionFullExpanded
-            ? cloneElement<HistoryTableProps>(children[6], {
-                isExpanded: true,
-                toggleExpand: handleFullExpand,
-                tableSettings: fullHistoryColumns,
-              })
-            : cloneElement<HistoryTableProps>(children[6], {
-                isExpanded: false,
-                toggleExpand: handleFullExpand,
-                tableSettings: historyColumns,
-                currentSort: undefined,
-                changeCurrentSort: undefined,
-              })}
+          {props.closedPositions}
         </Box>
       </Box>
     </Grid>

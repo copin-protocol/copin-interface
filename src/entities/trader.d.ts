@@ -228,3 +228,40 @@ export type TickPosition = {
   collateral: number
   price: number
 }
+
+export interface TraderTokenStatistic {
+  indexToken: string
+  totalTrade: number
+  totalOrder: number
+  totalWin: number
+  totalLose: number
+  totalLong: number
+  totalShort: number
+  realisedPnl: number
+  totalLiquidation: number
+  totalLiquidationAmount: number
+  totalFee: number
+  realisedTotalGain: number
+  totalGainFee: number
+  realisedTotalLoss: number
+  totalLossFee: number
+  totalVolume: number
+  totalRoi: number
+  realisedTotalRoi: number
+  realisedAvgRoi: number
+  maxRoi: number
+  realisedMaxRoi: number
+  maxPnl: number
+  realisedMaxPnl: number
+  maxDrawDown: number
+  realisedMaxDrawdown: number
+  maxDrawDownPnl: number
+  realisedMaxDrawdownPnl: number
+  totalDuration: number
+  minDuration: number
+  maxDuration: number
+  totalLeverage: number
+  maxLeverage: number
+  minLeverage: number
+  winRate?: number
+}

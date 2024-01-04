@@ -91,7 +91,8 @@ export function ListCopy({
               <ListCopyRowItem label={<Trans>Trader</Trans>} value={renderProps.renderTraderAccount(data)} />
               <ListCopyRowItem label={<Trans>Vol/Order</Trans>} value={renderProps.renderVolume(data)} />
               <ListCopyRowItem label={<Trans>Leverage</Trans>} value={renderProps.renderLeverage(data)} />
-              <ListCopyRowItem label={<Trans>Risk Control</Trans>} value={renderProps.renderRiskControl(data)} />
+              <ListCopyRowItem label={<Trans>Advance</Trans>} value={renderProps.renderRiskControl(data)} />
+              <ListCopyRowItem label={<Trans>SL/TP</Trans>} value={renderProps.renderSLTP(data)} />
             </Flex>
             <Flex
               mt={2}
@@ -111,7 +112,9 @@ export function ListCopy({
 function ListCopyRowItem({ label, value }: { label: ReactNode; value: ReactNode }) {
   return (
     <Flex sx={{ alignItems: 'center', gap: 12, justifyContent: 'space-between' }}>
-      <Type.Caption color="neutral3">{label}</Type.Caption>
+      <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
+        {label}
+      </Type.Caption>
       {value}
     </Flex>
   )
