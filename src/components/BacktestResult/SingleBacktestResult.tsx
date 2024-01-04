@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
@@ -45,6 +45,7 @@ export default function SingleBacktestResult({
   renderActionButton?: () => ReactElement
   disabledShare?: boolean
 }) {
+  const defaultToken = useRef<string>('')
   const [targetPosition, setTargetPosition] = useState<PositionData | undefined>()
   const data = results[0]
   const { account = '', simulatorPositions } = data
@@ -63,6 +64,7 @@ export default function SingleBacktestResult({
         fee: 0,
       } as PositionData)
   )
+
   const tokenOptions = useMemo(
     () =>
       settings?.tokenAddresses && settings.tokenAddresses.length > 0
@@ -76,6 +78,15 @@ export default function SingleBacktestResult({
     options: tokenOptions,
     optionNameToBeDelete: ['currency'],
   })
+
+  useEffect(() => {
+    if (!!defaultToken.current || !positions || positions.length === 0) return
+    const option = tokenOptions.find((e) => e.id === positions[positions.length - 1].indexToken)
+    if (option) {
+      changeCurrency(option)
+      defaultToken.current = option.id
+    }
+  }, [positions, tokenOptions])
 
   const dataSimulations = useMemo(
     () =>

@@ -84,11 +84,13 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const leverage = watch('leverage')
   const platform = watch('exchange')
   const stopLossAmount = watch('stopLossAmount')
+  const takeProfitAmount = watch('takeProfitAmount')
   const maxMarginPerPosition = watch('maxMarginPerPosition')
   const lookBackOrders = watch('lookBackOrders')
   const tokenAddresses = watch('tokenAddresses') || []
   const protocol = watch('protocol')
   const copyAll = watch('copyAll')
+  const skipLowLeverage = watch('skipLowLeverage')
 
   const pairs =
     protocol &&
@@ -315,11 +317,12 @@ const CopyTraderForm: CopyTradeFormComponent = ({
         </Box>
         <Divider mt={24} />
         <Accordion
-          header={<Type.BodyBold>Stop Loss</Type.BodyBold>}
+          header={<Type.BodyBold>Stop Loss / Take Profit</Type.BodyBold>}
+          defaultOpen={(isEdit || isClone) && (!!stopLossAmount || !!takeProfitAmount)}
           body={
             <Box mt={3}>
               <NumberInputField
-                label="Position Stop Loss (Recommended)"
+                label="Stop Loss (Recommended)"
                 block
                 name={fieldName.stopLossAmount}
                 control={control}
@@ -328,7 +331,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               />
               <Type.Caption mt={1} color="neutral2">
                 <Trans>
-                  When the loss exceeds{' '}
+                  When the position&apos;s loss exceeds{' '}
                   {stopLossAmount ? (
                     <Type.CaptionBold color="red2">{formatNumber(stopLossAmount)} USD</Type.CaptionBold>
                   ) : (
@@ -337,7 +340,29 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                   , the Stop Loss will be triggered to close the position.
                 </Trans>
               </Type.Caption>
-              <Box bg="rgba(255, 194, 75, 0.10)" py={2} px={12} mt={3}>
+
+              <Box mt={3} />
+              <NumberInputField
+                label="Take Profit"
+                block
+                name={fieldName.takeProfitAmount}
+                control={control}
+                error={errors.takeProfitAmount?.message}
+                suffix={<InputSuffix>USD</InputSuffix>}
+              />
+              <Type.Caption mt={1} color="neutral2">
+                <Trans>
+                  When the position&apos;s profit exceeds{' '}
+                  {takeProfitAmount ? (
+                    <Type.CaptionBold color="green1">{formatNumber(takeProfitAmount)} USD</Type.CaptionBold>
+                  ) : (
+                    '--'
+                  )}
+                  , the Take Profit will be triggered to close the position.
+                </Trans>
+              </Type.Caption>
+
+              <Box bg="rgba(255, 194, 75, 0.10)" py={2} px={12} mt={20}>
                 <Flex sx={{ gap: 2 }} color="orange1" alignItems="center">
                   <ShieldWarning />
                   <Type.CaptionBold>Warning</Type.CaptionBold>
@@ -357,6 +382,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
         />
         <Divider />
         <Accordion
+          defaultOpen={(isEdit || isClone) && (!!maxMarginPerPosition || !!skipLowLeverage)}
           header={
             <Type.BodyBold>
               <Trans>Advance Settings</Trans>

@@ -19,7 +19,16 @@ export default function TermsAndConditions({ text: Text = Type.Body }: { text?: 
         background: 'rgba(0, 0, 0, 0.1)',
       }}
     >
-      <Flex mb={24} sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Flex
+        mb={24}
+        sx={{
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 2,
+          flexWrap: 'wrap',
+        }}
+      >
         <Type.BodyBold
           sx={{
             width: 'max-content',
@@ -56,7 +65,7 @@ export default function TermsAndConditions({ text: Text = Type.Body }: { text?: 
   )
 }
 const termConfigs = [
-  <Trans>To unlock premium features, mint a Copin NFT.</Trans>,
+  <Trans>To unlock premium features, mint a Copin Subscription.</Trans>,
   <Trans>
     Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To
     continue, mint a new NFT.

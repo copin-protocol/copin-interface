@@ -48,7 +48,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
   copy: (item) => (
     <Type.CaptionBold
       color="neutral1"
-      sx={{ width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: '1em' }}
+      sx={{ width: 104, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: '1em' }}
     >
       {item.copyTradeTitle}
     </Type.CaptionBold>
@@ -211,49 +211,49 @@ export const userActivityColumns: ColumnData<UserActivityData, ExternalSource>[]
     title: activityTitles.time,
     dataIndex: 'createdAt',
     key: 'createdAt',
-    style: { minWidth: 200, width: 200, pl: '16px !important' },
+    style: { minWidth: 150, width: 150, pl: '16px !important' },
     render: renderProps.time,
   },
   {
     title: activityTitles.copy,
     dataIndex: 'copyTradeTitle',
     key: 'copyTradeTitle',
-    style: { minWidth: 200, width: 200, pr: 3 },
+    style: { minWidth: 120, width: 120, pr: 3 },
     render: renderProps.copy,
   },
   {
     title: activityTitles.sourceTrader,
     dataIndex: 'sourceAccount',
     key: 'sourceAccount',
-    style: { minWidth: 200, width: 200 },
+    style: { minWidth: 150, width: 150 },
     render: renderProps.sourceTrader,
   },
   {
     title: activityTitles.sourceAction,
     dataIndex: 'type',
     key: 'type',
-    style: { minWidth: 120, width: 120 },
+    style: { minWidth: 110, width: 110 },
     render: renderProps.sourceAction,
   },
   {
     title: activityTitles.sourceDetails,
     dataIndex: 'sourcePrice',
     key: 'sourcePrice',
-    style: { minWidth: 200, width: 200 },
+    style: { minWidth: 190, width: 190 },
     render: renderProps.sourceDetails,
   },
   {
     title: activityTitles.targetWallet,
     dataIndex: 'copyWalletName',
     key: 'copyWalletName',
-    style: { minWidth: 200, width: 200 },
+    style: { minWidth: 150, width: 150 },
     render: renderProps.targetWallet,
   },
   {
     title: activityTitles.targetAction,
     dataIndex: 'price',
     key: 'price',
-    style: { minWidth: 350 },
+    style: { minWidth: 300, width: 300 },
     render: renderProps.targetAction,
   },
   {

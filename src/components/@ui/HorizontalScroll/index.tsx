@@ -7,8 +7,8 @@ import useDrag from 'hooks/helpers/useDrag'
 type ScrollVisibilityApiType = React.ContextType<typeof VisibilityContext>
 
 function onWheel(apiObj: ScrollVisibilityApiType, ev: React.WheelEvent): void {
-  const isThouchpad = Math.abs(ev.deltaX) !== 0 || Math.abs(ev.deltaY) < 15
-  if (isThouchpad) {
+  const isTouchpad = Math.abs(ev.deltaX) !== 0 || Math.abs(ev.deltaY) < 15
+  if (isTouchpad) {
     ev.stopPropagation()
     return
   }

@@ -20,7 +20,7 @@ export default function CurrencyOption({
 }) {
   const isMobile = useIsMobile()
   return (
-    <Box sx={{ width: 85, position: 'relative', zIndex: 9 }}>
+    <Box sx={{ width: 88, position: 'relative', zIndex: 9 }}>
       <Select
         isSearchable={isMobile ? false : true}
         menuPlacement="auto"
