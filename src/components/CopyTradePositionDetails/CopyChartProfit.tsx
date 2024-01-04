@@ -22,7 +22,7 @@ import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { TIMEFRAME_NAMES, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcPnL, calcStopLossUsd } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
@@ -429,7 +429,7 @@ export default function CopyChartProfit({
               candleData.open
             )}</span> | H: <span>${formatNumber(candleData.high)}</span> | L: <span>${formatNumber(
               candleData.low
-            )}</span> | C: <span>${formatNumber(candleData.close)}</span></div>`
+            )}</span> | C: <span>${formatNumber(candleData.close)} (${TIMEFRAME_NAMES[timeframe]})</span></div>`
             legend.style.display = 'block'
           }
         }

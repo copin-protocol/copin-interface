@@ -51,6 +51,14 @@ export enum CopyTradeConfigTypeEnum {
   GLOBAL = 'GLOBAL',
 }
 
+export enum CopyPositionCloseTypeEnum {
+  MANUAL = 'MANUAL',
+  COPY_TRADE = 'COPY_TRADE',
+  STOP_LOSS = 'STOP_LOSS',
+  TAKE_PROFIT = 'TAKE_PROFIT',
+  LIQUIDATE = 'LIQUIDATE',
+}
+
 export enum PositionStatusEnum {
   OPEN = 'OPEN',
   CLOSE = 'CLOSE',

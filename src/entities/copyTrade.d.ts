@@ -1,4 +1,5 @@
 import {
+  CopyPositionCloseTypeEnum,
   CopyTradePlatformEnum,
   CopyTradeStatusEnum,
   CopyTradeTypeEnum,
@@ -100,6 +101,7 @@ export interface CopyPositionData {
   stopLossAmount: number
   latestStopLossId?: string
   pnl: number
+  closeType: CopyPositionCloseTypeEnum
   status: PositionStatusEnum
   lastOrderAt: string
   createdAt: string
