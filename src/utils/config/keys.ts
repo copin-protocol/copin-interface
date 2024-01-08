@@ -77,6 +77,7 @@ export const STORAGE_KEYS = {
   MY_COPY_DATA: 'my-copy-data',
   MY_COPY_WALLET: 'my-copy-wallet',
   MY_HISTORY_TRADERS: 'my-history-traders',
+  MY_ACTIVITIES: 'my-activities',
   BACKTEST_GUIDE: 'backtest-guide',
   TRADER_RANKING_FIELDS: 'trader-ranking-fields',
 }
