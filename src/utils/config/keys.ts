@@ -116,6 +116,7 @@ export const URL_PARAM_KEYS = {
   COMPARE_TRADERS: 'traders',
   SEARCH_KEYWORD: 'keyword',
   HIGHLIGHT_TX_HASH: 'tx_hash',
+  ACTIVE_WALLET: 'wallet',
 }
 
 export const TOOLTIP_KEYS = {

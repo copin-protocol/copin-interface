@@ -55,7 +55,11 @@ export default function SelectCopyTradesDropdown({
               }}
             />
             <Type.CaptionBold color="neutral3">
-              <Trans>Select all</Trans>
+              <Trans>Select all</Trans> (
+              <Type.Caption>
+                <Trans>Includes deleted data</Trans>
+              </Type.Caption>
+              )
             </Type.CaptionBold>
           </Flex>
           <Divider mt={2} />
@@ -90,7 +94,7 @@ export default function SelectCopyTradesDropdown({
       }}
       placement={placement}
     >
-      {selectedCopyTrades.length}/{allCopyTrades.length} {allCopyTrades.length > 1 ? 'copytrades' : 'copytrade'}
+      {selectedCopyTrades.length}/{allCopyTrades.length} active {allCopyTrades.length > 1 ? 'copytrades' : 'copytrade'}
     </Dropdown>
   )
 }

@@ -37,11 +37,6 @@ export default function useProfileState(): ProfileState {
   }, [activeWallet])
   const { myProfile } = useMyProfileStore()
 
-  useEffect(() => {
-    return () => {
-      sessionStorage.removeItem(STORAGE_KEYS.MY_COPY_WALLET)
-    }
-  }, [])
   return {
     myProfile,
     copyWallets,

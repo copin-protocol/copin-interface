@@ -56,7 +56,11 @@ export default function SelectWalletsDropdown({
               }}
             />
             <Type.CaptionBold color="neutral3">
-              <Trans>Select all</Trans>
+              <Trans>Select all</Trans> (
+              <Type.Caption>
+                <Trans>Includes deleted data</Trans>
+              </Type.Caption>
+              )
             </Type.CaptionBold>
           </Flex>
           <Divider mt={2} />
@@ -91,7 +95,7 @@ export default function SelectWalletsDropdown({
       }}
       placement={placement}
     >
-      {selectedWallets.length}/{allWallets.length} {allWallets.length > 1 ? 'wallets' : 'wallet'}
+      {selectedWallets.length}/{allWallets.length} active {allWallets.length > 1 ? 'wallets' : 'wallet'}
     </Dropdown>
   )
 }
