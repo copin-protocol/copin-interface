@@ -150,3 +150,34 @@ export enum SubscriptionPlanEnum {
 export enum MaxCopyTradeQuotaEnum {
   BASIC = 3,
 }
+
+export enum UserActionEnum {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  CHANGE = 'CHANGE',
+  DELETE = 'DELETE',
+}
+
+export enum DataTypeEnum {
+  COPY_TRADE = 'COPY_TRADE',
+  COPY_WALLET = 'COPY_WALLET',
+  COPY_POSITION = 'COPY_POSITION',
+}
+
+export enum ChangeFieldEnum {
+  VOLUME = 'volume',
+  LEVERAGE = 'leverage',
+  TOKEN_ADDRESSES = 'tokenAddresses',
+  ENABLE_STOP_LOSS = 'enableStopLoss',
+  STOP_LOSS_AMOUNT = 'stopLossAmount',
+  ENABLE_TAKE_PROFIT = 'enableTakeProfit',
+  TAKE_PROFIT_AMOUNT = 'takeProfitAmount',
+  VOLUME_PROTECTION = 'volumeProtection',
+  LOOK_BACK_ORDERS = 'lookBackOrders',
+  COPY_ALL = 'copyAll',
+  REVERSE_COPY = 'reverseCopy',
+  MAX_VOL_MULTIPLIER = 'maxVolMultiplier',
+  SKIP_LOW_LEVERAGE = 'skipLowLeverage',
+  TITLE = 'title',
+  STATUS = 'status',
+}

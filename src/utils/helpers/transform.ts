@@ -6,7 +6,7 @@ import { LINKS, SUPPORTED_LOCALES } from 'utils/config/constants'
 import { CopyTradePlatformEnum, ProtocolEnum, TimeFilterByEnum, TimeframeEnum } from 'utils/config/enums'
 import { COPY_WALLET_TRANS } from 'utils/config/translations'
 
-import { addressShorten } from './format'
+import { addressShorten, formatNumber } from './format'
 
 // dayjs.extend(duration)
 
@@ -192,4 +192,14 @@ export function capitalizeFirstLetter(str: string) {
 
 export function lowerFirstLetter(str: string) {
   return str.charAt(0).toLowerCase() + str.slice(1)
+}
+
+export function convertDataToText(data: any) {
+  if (data === null || data === undefined) return '--'
+  if (typeof data === 'object' && !Array.isArray(data)) return JSON.stringify(data)
+  if (typeof data === 'boolean') return data ? 'On' : 'Off'
+  if (typeof data === 'string') return data
+  if (typeof data === 'number') return formatNumber(data)
+  if (Array.isArray(data)) return !!data.length ? data.join(', ') : '--'
+  return data
 }

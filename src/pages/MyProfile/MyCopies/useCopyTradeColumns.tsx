@@ -1,5 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { CopySimple, DotsThreeOutlineVertical, PencilSimpleLine, Trash } from '@phosphor-icons/react'
+import {
+  ClockCounterClockwise,
+  CopySimple,
+  DotsThreeOutlineVertical,
+  PencilSimpleLine,
+  Trash,
+} from '@phosphor-icons/react'
 import { MutableRefObject, SetStateAction, useCallback, useMemo } from 'react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
@@ -27,6 +33,7 @@ import ActionItem from './ActionItem'
 export default function useCopyTradeColumns({
   onSelect,
   isMutating,
+  setOpenHistoryDrawer,
   setOpenDrawer,
   setOpenCloneDrawer,
   setOpenDeleteModal,
@@ -36,6 +43,7 @@ export default function useCopyTradeColumns({
 }: {
   onSelect: (data?: CopyTradeData) => void
   isMutating: boolean
+  setOpenHistoryDrawer: (value: SetStateAction<boolean>) => void
   setOpenDrawer: (value: SetStateAction<boolean>) => void
   setOpenCloneDrawer: (value: SetStateAction<boolean>) => void
   setOpenDeleteModal: (value: SetStateAction<boolean>) => void
@@ -302,6 +310,14 @@ export default function useCopyTradeColumns({
     [isRunningFn]
   )
 
+  const handleOpenHistoryDrawer = useCallback(
+    (data?: CopyTradeData) => {
+      onSelect(data)
+      setOpenHistoryDrawer(true)
+    },
+    [onSelect, setOpenHistoryDrawer]
+  )
+
   const handleOpenDrawer = useCallback(
     (data?: CopyTradeData) => {
       if (data?.status === CopyTradeStatusEnum.STOPPED && !checkIsEligible()) return
@@ -338,6 +354,11 @@ export default function useCopyTradeColumns({
           }}
           menu={
             <>
+              <ActionItem
+                title={<Trans>History</Trans>}
+                icon={<ClockCounterClockwise size={18} />}
+                onSelect={() => handleOpenHistoryDrawer(item)}
+              />
               <ActionItem
                 title={<Trans>Edit</Trans>}
                 icon={<PencilSimpleLine size={18} />}

@@ -6,6 +6,7 @@ import { TableSortProps } from 'components/@ui/Table/types'
 import CopyTradeCloneDrawer from 'components/CopyTradeCloneDrawer'
 import CopyTradeEditDrawer from 'components/CopyTradeEditDrawer'
 import DeleteCopyTradeModal from 'components/CopyTradeForm/DeleteCopyTradeModal'
+import CopyTradeHistoryDrawer from 'components/CopyTradeHistoryDrawer'
 import { CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
 import useUpdateCopyTrade from 'hooks/features/useUpdateCopyTrade'
@@ -58,6 +59,7 @@ export default function MyCopies(props: MyCopiesProps) {
     },
   })
   const [openDrawer, setOpenDrawer] = useState(false)
+  const [openHistoryDrawer, setOpenHistoryDrawer] = useState(false)
   const [openCloneDrawer, setOpenCloneDrawer] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const copyTradeData = useRef<CopyTradeData>()
@@ -69,6 +71,11 @@ export default function MyCopies(props: MyCopiesProps) {
   const handleCloseDrawer = () => {
     onSelect(undefined)
     setOpenDrawer(false)
+  }
+
+  const handleCloseHistoryDrawer = () => {
+    onSelect(undefined)
+    setOpenHistoryDrawer(false)
   }
 
   const handleCloseCloneDrawer = () => {
@@ -97,6 +104,7 @@ export default function MyCopies(props: MyCopiesProps) {
   const { columns, renderProps } = useCopyTradeColumns({
     onSelect,
     setOpenDrawer,
+    setOpenHistoryDrawer,
     setOpenCloneDrawer,
     setOpenConfirmStopModal,
     setOpenDeleteModal,
@@ -183,6 +191,13 @@ export default function MyCopies(props: MyCopiesProps) {
           onDismiss={handleCloseDrawer}
           copyTradeData={copyTradeData.current}
           onSuccess={() => onRefresh()}
+        />
+      )}
+      {openHistoryDrawer && (
+        <CopyTradeHistoryDrawer
+          isOpen={openHistoryDrawer}
+          onDismiss={handleCloseHistoryDrawer}
+          copyTradeData={copyTradeData.current}
         />
       )}
       {openCloneDrawer && (

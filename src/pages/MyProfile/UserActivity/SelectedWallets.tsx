@@ -49,7 +49,7 @@ export default function SelectedWallets({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (!allWallets.length) return <></>
+  if (!allWallets?.length) return <></>
 
   return (
     <SelectWalletsDropdown
