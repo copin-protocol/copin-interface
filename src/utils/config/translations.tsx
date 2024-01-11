@@ -87,6 +87,19 @@ export const CHANGE_FIELD_TRANS: ObjectTrans = {
   [ChangeFieldEnum.REVERSE_COPY]: <Trans>Reverse Copy</Trans>,
   [ChangeFieldEnum.TITLE]: <Trans>Label</Trans>,
   [ChangeFieldEnum.STATUS]: <Trans>Status</Trans>,
+  [ChangeFieldEnum.ENTRY_PRICE]: <Trans>Entry Price</Trans>,
+  [ChangeFieldEnum.PNL]: <Trans>PnL</Trans>,
+  [ChangeFieldEnum.CLOSE_TYPE]: <Trans>Closed Type</Trans>,
+  [ChangeFieldEnum.SIZE_DELTA]: <Trans>Size Token</Trans>,
+  [ChangeFieldEnum.TOTAL_SIZE_DELTA]: <Trans>Total Size Token</Trans>,
+  [ChangeFieldEnum.SOURCE_SIZE_DELTA]: <Trans>Source Size Token</Trans>,
+  [ChangeFieldEnum.STOP_LOSS_DETAIL]: <Trans>Stop Loss Details</Trans>,
+  [ChangeFieldEnum.TAKE_PROFIT_DETAIL]: <Trans>Take Profit Details</Trans>,
+  [ChangeFieldEnum.QUANTITY]: <Trans>Quantity</Trans>,
+  [ChangeFieldEnum.STOP_PRICE]: <Trans>Est. Stop Price</Trans>,
+  [ChangeFieldEnum.TAKE_PROFIT_PRICE]: <Trans>Est. Take Profit Price</Trans>,
+  [ChangeFieldEnum.SIDE]: <Trans>Side</Trans>,
+  [ChangeFieldEnum.POSITION_SIDE]: <Trans>Position Side</Trans>,
 }
 
 export const ERRORS: ObjectTrans = {

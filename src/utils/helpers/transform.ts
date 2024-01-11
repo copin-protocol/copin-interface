@@ -3,8 +3,15 @@ import dayjs from 'dayjs'
 import { ApiListResponse, ApiMeta } from 'apis/api'
 import { CopyWalletData } from 'entities/copyWallet'
 import { LINKS, SUPPORTED_LOCALES } from 'utils/config/constants'
-import { CopyTradePlatformEnum, ProtocolEnum, TimeFilterByEnum, TimeframeEnum } from 'utils/config/enums'
-import { COPY_WALLET_TRANS } from 'utils/config/translations'
+import {
+  CopyPositionCloseTypeEnum,
+  CopyTradePlatformEnum,
+  OrderTypeEnum,
+  ProtocolEnum,
+  TimeFilterByEnum,
+  TimeframeEnum,
+} from 'utils/config/enums'
+import { COPY_POSITION_CLOSE_TYPE_TRANS, COPY_WALLET_TRANS, ORDER_TYPE_TRANS } from 'utils/config/translations'
 
 import { addressShorten, formatNumber } from './format'
 
@@ -194,12 +201,37 @@ export function lowerFirstLetter(str: string) {
   return str.charAt(0).toLowerCase() + str.slice(1)
 }
 
+export function convertCamelCaseToText(str: string) {
+  const result = str.replace(/([A-Z])/g, ' $1')
+  return result.charAt(0).toUpperCase() + result.slice(1)
+}
+
 export function convertDataToText(data: any) {
   if (data === null || data === undefined) return '--'
   if (typeof data === 'object' && !Array.isArray(data)) return JSON.stringify(data)
   if (typeof data === 'boolean') return data ? 'On' : 'Off'
-  if (typeof data === 'string') return data
-  if (typeof data === 'number') return formatNumber(data)
+  if (typeof data === 'number' || !isNaN(Number(data))) return formatNumber(data)
   if (Array.isArray(data)) return !!data.length ? data.join(', ') : '--'
+  if (typeof data === 'string') {
+    switch (data) {
+      case CopyPositionCloseTypeEnum.COPY_TRADE:
+      case CopyPositionCloseTypeEnum.MANUAL:
+      case CopyPositionCloseTypeEnum.STOP_LOSS:
+      case CopyPositionCloseTypeEnum.TAKE_PROFIT:
+      case CopyPositionCloseTypeEnum.LIQUIDATE:
+        return COPY_POSITION_CLOSE_TYPE_TRANS[data]
+      case OrderTypeEnum.OPEN:
+      case OrderTypeEnum.CLOSE:
+      case OrderTypeEnum.INCREASE:
+      case OrderTypeEnum.DECREASE:
+      case OrderTypeEnum.LIQUIDATE:
+      case OrderTypeEnum.STOP_LOSS:
+      case OrderTypeEnum.TAKE_PROFIT:
+      case OrderTypeEnum.MARGIN_TRANSFERRED:
+        return ORDER_TYPE_TRANS[data]
+      default:
+        return data
+    }
+  }
   return data
 }

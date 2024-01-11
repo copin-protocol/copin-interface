@@ -8,11 +8,11 @@ import { SxProps } from 'theme/types'
 import { ChangeFieldEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { CHANGE_FIELD_TRANS } from 'utils/config/translations'
-import { convertDataToText } from 'utils/helpers/transform'
+import { convertCamelCaseToText, convertDataToText } from 'utils/helpers/transform'
 
 const UserLogChanges = ({ data, ...props }: { data: UserLogData } & LayoutProps & SxProps & SpaceProps) => {
   return (
-    <Flex flexDirection="column" sx={{ gap: [2, 3] }} {...props}>
+    <Flex flexDirection="column" sx={{ gap: [2, 2, 3, 3], maxWidth: ['100%', '100%', '50%', '50%'] }} {...props}>
       {data.changeFields?.map((fieldName) => {
         const oldData = data.oldData?.[fieldName]
         const newData = data.newData?.[fieldName]
@@ -38,22 +38,21 @@ const UserLogChanges = ({ data, ...props }: { data: UserLogData } & LayoutProps 
         }
 
         return (
-          <Flex key={fieldName} alignItems="center" sx={{ gap: 2 }}>
-            <Type.Caption>•</Type.Caption>
-            <Type.Caption color="neutral2">{CHANGE_FIELD_TRANS[fieldName]}:</Type.Caption>
-            <Flex flexWrap="wrap" alignItems="center" sx={{ gap: 2 }}>
-              {!!oldData && typeof oldData === 'object' && !Array.isArray(oldData) ? (
-                <ChangeObjectValue object={oldData} />
-              ) : (
+          <Flex key={fieldName} alignItems="flex-start" sx={{ gap: 2 }}>
+            <Type.Caption minWidth="fit-content">•</Type.Caption>
+            <Type.Caption color="neutral2" minWidth="fit-content">
+              {CHANGE_FIELD_TRANS[fieldName] ?? convertCamelCaseToText(fieldName)}:
+            </Type.Caption>
+            {(!!parsedOldData && typeof parsedOldData === 'object' && !Array.isArray(parsedOldData)) ||
+            (!!parsedNewData && typeof parsedNewData === 'object' && !Array.isArray(parsedNewData)) ? (
+              <ChangeObjectValue oldValue={parsedOldData} newValue={parsedNewData} />
+            ) : (
+              <Flex flexWrap="wrap" alignItems="center" sx={{ gap: 2 }}>
                 <Type.CaptionBold color="neutral1">{convertDataToText(parsedOldData)}</Type.CaptionBold>
-              )}
-              <ArrowRight size={16} />
-              {!!newData && typeof newData === 'object' && !Array.isArray(newData) ? (
-                <ChangeObjectValue object={newData} />
-              ) : (
+                <ArrowRight size={16} />
                 <Type.CaptionBold color="neutral1">{convertDataToText(parsedNewData)}</Type.CaptionBold>
-              )}
-            </Flex>
+              </Flex>
+            )}
           </Flex>
         )
       })}
@@ -63,13 +62,19 @@ const UserLogChanges = ({ data, ...props }: { data: UserLogData } & LayoutProps 
 
 export default UserLogChanges
 
-function ChangeObjectValue(object: any) {
+function ChangeObjectValue({ oldValue, newValue }: { oldValue: any; newValue: any }) {
   return (
     <Flex flexDirection="column" alignItems="flex-start">
-      {Object.entries(object).map(([key, value]) => (
-        <Flex key={key} alignItems="center" sx={{ gap: 1 }}>
-          <Type.Caption color="neutral2">{CHANGE_FIELD_TRANS[key]}:</Type.Caption>
-          <Type.CaptionBold color="neutral1">{convertDataToText(value)}</Type.CaptionBold>
+      {Object.keys(oldValue ?? newValue)?.map((key: string) => (
+        <Flex key={key} flexWrap="wrap" alignItems="flex-start" sx={{ gap: 1 }}>
+          <Type.Caption color="neutral2" minWidth="fit-content">
+            {CHANGE_FIELD_TRANS[key] ?? convertCamelCaseToText(key)}:
+          </Type.Caption>
+          <Flex flexWrap="wrap" alignItems="center" sx={{ gap: 2 }}>
+            <Type.CaptionBold color="neutral1">{convertDataToText(oldValue?.[key])}</Type.CaptionBold>
+            <ArrowRight size={16} />
+            <Type.CaptionBold color="neutral1">{convertDataToText(newValue?.[key])}</Type.CaptionBold>
+          </Flex>
         </Flex>
       ))}
     </Flex>

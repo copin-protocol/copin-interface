@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import dayjs from 'dayjs'
 import { ReactNode, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -11,6 +12,7 @@ import { renderCopyEntry } from 'components/@ui/Table/renderProps'
 import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { renderTrader } from 'pages/MyProfile/renderProps'
 import Loading from 'theme/Loading'
+import Tabs, { TabPane } from 'theme/Tab'
 import Tag from 'theme/Tag'
 import { Box, Flex, Type } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
@@ -21,6 +23,7 @@ import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
 
 import CopyChartProfit from './CopyChartProfit'
+import CopyPositionHistories from './CopyPositionHistories'
 import ListCopyOrderTable from './ListCopyOrderTable'
 
 export default function CopyTradePositionDetails({ id }: { id: string }) {
@@ -96,6 +99,8 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
     () => (crossMovePnL === 0 ? 0 : data ? (isOpening || crossMovePnL ? calcCopyOpeningROI(data, latestPnL) : roi) : 0),
     [crossMovePnL, data, isOpening, latestPnL, roi]
   )
+
+  const [currentTab, setCurrentTab] = useState<string>(TabKeyEnum.ORDER)
 
   return (
     <>
@@ -258,14 +263,50 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
             )}
           </Box>
           <Box flex="1 1 0" width="100%" sx={{ overflow: 'hidden' }}>
-            {copyTradeOrders && copyTradeOrders.length > 0 && token && (
-              <ListCopyOrderTable
-                data={copyTradeOrders}
-                isLoading={loadingOrders}
-                isOpening={isOpening}
-                token={token}
-              />
-            )}
+            <Tabs
+              defaultActiveKey={currentTab}
+              onChange={(tab) => setCurrentTab(tab)}
+              sx={{
+                width: '100%',
+                height: '100%',
+              }}
+              headerSx={{
+                mb: 1,
+                gap: 0,
+                px: [0, 0, 3, 3],
+                width: '100%',
+                borderBottom: 'small',
+                borderColor: 'neutral4',
+              }}
+              tabItemSx={{
+                pt: 0,
+                width: ['50%', 155],
+                borderBottom: 'small',
+              }}
+              tabPanelSx={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                overflow: 'auto',
+                pb: 4,
+              }}
+            >
+              <TabPane tab={<Trans>Orders</Trans>} key={TabKeyEnum.ORDER}>
+                {currentTab === TabKeyEnum.ORDER && copyTradeOrders && copyTradeOrders.length > 0 && token ? (
+                  <ListCopyOrderTable
+                    data={copyTradeOrders}
+                    isLoading={loadingOrders}
+                    isOpening={isOpening}
+                    token={token}
+                  />
+                ) : (
+                  <></>
+                )}
+              </TabPane>
+              <TabPane tab={<Trans>History</Trans>} key={TabKeyEnum.HISTORY}>
+                {currentTab === TabKeyEnum.HISTORY ? <CopyPositionHistories position={data} /> : <></>}
+              </TabPane>
+            </Tabs>
           </Box>
         </Flex>
       )}
@@ -286,4 +327,9 @@ function StatsItemWrapperB({ children }: { children: ReactNode }) {
       {children}
     </Flex>
   )
+}
+
+enum TabKeyEnum {
+  ORDER = 'order',
+  HISTORY = 'history',
 }

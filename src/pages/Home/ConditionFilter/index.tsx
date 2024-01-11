@@ -26,7 +26,7 @@ export default function ConditionFilter({
   const filterKey = useMemo(
     () =>
       filters
-        .map((values) => {
+        ?.map((values) => {
           return Object.values(values).join('_')
         })
         .join('_'),
@@ -35,7 +35,7 @@ export default function ConditionFilter({
   const rankingKey = useMemo(
     () =>
       rankingFilters
-        .map((values) => {
+        ?.map((values) => {
           return Object.values(values).join('_')
         })
         .join('_'),
