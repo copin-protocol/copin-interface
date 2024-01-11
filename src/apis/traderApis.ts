@@ -15,7 +15,12 @@ import { capitalizeFirstLetter } from 'utils/helpers/transform'
 import { ApiListResponse } from './api'
 import { apiWrapper } from './helpers'
 import requester from './index'
-import { normalizePositionResponse, normalizeTraderData, normalizeTraderResponse } from './normalize'
+import {
+  normalizePositionResponse,
+  normalizeTokenStatisticResponse,
+  normalizeTraderData,
+  normalizeTraderResponse,
+} from './normalize'
 import { GetApiParams, QueryFilter, RangeFilter, RequestBodyApiData, SearchTradersParams } from './types'
 
 const SERVICE = 'position'
@@ -229,5 +234,7 @@ export async function getTraderTokensStatistic(
   const params = { limit, offset, sort_by, sort_type }
   return requester
     .get(`${protocol}/${SERVICE}/tokens/${account}/statistic`, { params })
-    .then((res: AxiosResponse<ApiListResponse<TraderTokenStatistic>>) => res.data)
+    .then((res: AxiosResponse<ApiListResponse<TraderTokenStatistic>>) =>
+      normalizeTokenStatisticResponse({ res: res.data, sortBy: sort_by, sortType: sort_type })
+    )
 }

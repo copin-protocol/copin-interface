@@ -278,8 +278,9 @@ export function TableTokenStatistic({
     },
     {
       title: 'Win Rate',
-      dataIndex: undefined,
-      key: undefined,
+      dataIndex: 'winRate',
+      key: 'winRate',
+      sortBy: 'winRate',
       style: { minWidth: '80px', textAlign: 'right' },
       render: (item) => {
         return (

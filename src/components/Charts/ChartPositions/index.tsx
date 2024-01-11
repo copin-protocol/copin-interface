@@ -151,7 +151,9 @@ export default function ChartPositions({
   const [candleStickChart, setCandleStickChart] = useState<ReturnType<typeof renderChart>>()
 
   // Render chart candle
+  const chartIsRemoved = useRef(false)
   useEffect(() => {
+    chartIsRemoved.current = false
     const renderResult = renderChart({
       chartMinHeight: THE_REST_HEIGHT,
       username: myProfile?.username,
@@ -181,12 +183,14 @@ export default function ChartPositions({
       window.removeEventListener('resize', handleResize)
       chart.unsubscribeClick(handleClickEvent)
       chart.remove()
+      setCandleStickChart(undefined)
+      chartIsRemoved.current = true
     }
   }, [chartData, chartId, hasBrush, legendId, myProfile?.username])
 
   // Subscribe time scale event
   useEffect(() => {
-    if (!candleStickChart) return
+    if (!candleStickChart || chartIsRemoved.current) return
     const { timeScale } = candleStickChart
     if (visibleRange) {
       if (
@@ -231,14 +235,14 @@ export default function ChartPositions({
 
   // Render markers
   useEffect(() => {
-    if (!candleStickChart) return
+    if (!candleStickChart || chartIsRemoved.current) return
     const { series } = candleStickChart
     renderMarker({ listPositions, markerId, timezone, closedPos, series })
   }, [candleStickChart, closedPos, listPositions, markerId, timezone])
 
   // Show marker details
   useEffect(() => {
-    if (!candleStickChart) return
+    if (!candleStickChart || chartIsRemoved.current) return
     const { avgPriceLine } = candleStickChart
     if (markerId) {
       if (currentPosition) {

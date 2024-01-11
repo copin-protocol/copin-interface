@@ -3,11 +3,14 @@ import { Trans, t } from '@lingui/macro'
 import { ReactNode } from 'react'
 
 import {
+  ChangeFieldEnum,
   CopyPositionCloseTypeEnum,
   CopyTradePlatformEnum,
   CopyTradeStatusEnum,
+  DataTypeEnum,
   OrderTypeEnum,
   PositionStatusEnum,
+  UserActionEnum,
 } from './enums'
 
 type ObjectTrans = {
@@ -53,6 +56,50 @@ export const COPY_WALLET_TRANS: ObjectTrans = {
 export const COPY_TRADE_STATUS_TRANS: ObjectTrans = {
   [CopyTradeStatusEnum.RUNNING]: <Trans>Running</Trans>,
   [CopyTradeStatusEnum.STOPPED]: <Trans>Stopped</Trans>,
+}
+
+export const USER_ACTION_TRANS: ObjectTrans = {
+  [UserActionEnum.CREATE]: <Trans>created</Trans>,
+  [UserActionEnum.UPDATE]: <Trans>changed</Trans>,
+  [UserActionEnum.CHANGE]: <Trans>changed</Trans>,
+  [UserActionEnum.DELETE]: <Trans>deleted</Trans>,
+}
+
+export const DATA_TYPE_TRANS: ObjectTrans = {
+  [DataTypeEnum.COPY_TRADE]: <Trans>copy-trade</Trans>,
+  [DataTypeEnum.COPY_POSITION]: <Trans>copy position</Trans>,
+  [DataTypeEnum.COPY_WALLET]: <Trans>copy wallet</Trans>,
+}
+
+export const CHANGE_FIELD_TRANS: ObjectTrans = {
+  [ChangeFieldEnum.VOLUME]: <Trans>Margin</Trans>,
+  [ChangeFieldEnum.LEVERAGE]: <Trans>Leverage</Trans>,
+  [ChangeFieldEnum.TOKEN_ADDRESSES]: <Trans>Trading Pairs</Trans>,
+  [ChangeFieldEnum.COPY_ALL]: <Trans>Follow The Trader</Trans>,
+  [ChangeFieldEnum.ENABLE_STOP_LOSS]: <Trans>Stop Loss</Trans>,
+  [ChangeFieldEnum.STOP_LOSS_AMOUNT]: <Trans>Stop Loss Amount</Trans>,
+  [ChangeFieldEnum.ENABLE_TAKE_PROFIT]: <Trans>Take Profit</Trans>,
+  [ChangeFieldEnum.TAKE_PROFIT_AMOUNT]: <Trans>Take Profit Amount</Trans>,
+  [ChangeFieldEnum.MAX_VOL_MULTIPLIER]: <Trans>Max Margin Per Position</Trans>,
+  [ChangeFieldEnum.VOLUME_PROTECTION]: <Trans>Margin Protection</Trans>,
+  [ChangeFieldEnum.LOOK_BACK_ORDERS]: <Trans>Orders Lookback</Trans>,
+  [ChangeFieldEnum.SKIP_LOW_LEVERAGE]: <Trans>Skip Lower Leverage Position</Trans>,
+  [ChangeFieldEnum.REVERSE_COPY]: <Trans>Reverse Copy</Trans>,
+  [ChangeFieldEnum.TITLE]: <Trans>Label</Trans>,
+  [ChangeFieldEnum.STATUS]: <Trans>Status</Trans>,
+  [ChangeFieldEnum.ENTRY_PRICE]: <Trans>Entry Price</Trans>,
+  [ChangeFieldEnum.PNL]: <Trans>PnL</Trans>,
+  [ChangeFieldEnum.CLOSE_TYPE]: <Trans>Closed Type</Trans>,
+  [ChangeFieldEnum.SIZE_DELTA]: <Trans>Size Token</Trans>,
+  [ChangeFieldEnum.TOTAL_SIZE_DELTA]: <Trans>Total Size Token</Trans>,
+  [ChangeFieldEnum.SOURCE_SIZE_DELTA]: <Trans>Source Size Token</Trans>,
+  [ChangeFieldEnum.STOP_LOSS_DETAIL]: <Trans>Stop Loss Details</Trans>,
+  [ChangeFieldEnum.TAKE_PROFIT_DETAIL]: <Trans>Take Profit Details</Trans>,
+  [ChangeFieldEnum.QUANTITY]: <Trans>Quantity</Trans>,
+  [ChangeFieldEnum.STOP_PRICE]: <Trans>Est. Stop Price</Trans>,
+  [ChangeFieldEnum.TAKE_PROFIT_PRICE]: <Trans>Est. Take Profit Price</Trans>,
+  [ChangeFieldEnum.SIDE]: <Trans>Side</Trans>,
+  [ChangeFieldEnum.POSITION_SIDE]: <Trans>Position Side</Trans>,
 }
 
 export const ERRORS: ObjectTrans = {

@@ -1,13 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getUserActivityLogsApi } from 'apis/activityLogApis'
 import Container from 'components/@ui/Container'
 import Table from 'components/@ui/Table'
+import { TableSortProps } from 'components/@ui/Table/types'
 import CopyTradePositionDetails from 'components/CopyTradePositionDetails'
+import { UserActivityData } from 'entities/user'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
@@ -18,23 +20,64 @@ import { PaginationWithLimit } from 'theme/Pagination'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { QUERY_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
+import { SortTypeEnum } from 'utils/config/enums'
+import { QUERY_KEYS, STORAGE_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import ListActivityMobile from './ListActivityMobile'
+import SelectedCopyTrades from './SelectedCopyTrades'
+import SelectedWallets from './SelectedWallets'
 import { CopySelection, ExternalSource, userActivityColumns } from './configs'
+import useFilterActivities from './useFilterActivities'
 
 export default function UserActivity() {
   const { copyWallets } = useCopyWalletContext()
   const { myProfile } = useMyProfileStore()
+  const storageData = sessionStorage.getItem(STORAGE_KEYS.MY_ACTIVITIES)
+  const [selectionState, dispatch] = useFilterActivities(storageData)
+  const selectedWalletIds = selectionState?.selectedWallets?.map((e) => e.id)
+  const selectedCopyTradeIds = selectionState?.selectedCopyTrades?.map((e) => e.id)
   const { currentPage, changeCurrentPage, currentLimit, changeCurrentLimit } = usePageChangeWithLimit({
     pageName: 'page',
     limitName: 'limit',
     defaultLimit: DEFAULT_LIMIT,
   })
+  const [currentSort, setCurrentSort] = useState<TableSortProps<UserActivityData> | undefined>(() => {
+    const initSortBy: TableSortProps<UserActivityData>['sortBy'] = 'createdAt'
+    const initSortType = SortTypeEnum.DESC
+    return { sortBy: initSortBy, sortType: initSortType }
+  })
+  const changeCurrentSort = (sort: TableSortProps<UserActivityData> | undefined) => {
+    setCurrentSort(sort)
+    changeCurrentPage(1)
+  }
+
+  const checkFilters = (allData: any[], selectedIds: string[]) => {
+    if (allData.length === selectedIds.length) return
+    if (!!selectedIds.length) return selectedIds
+    return ['']
+  }
+
   const { data, isFetching } = useQuery(
-    [QUERY_KEYS.GET_USER_ACTIVITY_LOGS, currentPage, currentLimit, myProfile?.id],
-    () => getUserActivityLogsApi({ limit: currentLimit, offset: pageToOffset(currentPage, currentLimit) })
+    [
+      QUERY_KEYS.GET_USER_ACTIVITY_LOGS,
+      currentPage,
+      currentLimit,
+      myProfile?.id,
+      currentSort,
+      selectedWalletIds,
+      selectedCopyTradeIds,
+    ],
+    () =>
+      getUserActivityLogsApi({
+        limit: currentLimit,
+        offset: pageToOffset(currentPage, currentLimit),
+        copyWalletIds: checkFilters(selectionState.allWallets, selectedWalletIds),
+        copyTradeIds: checkFilters(selectionState.allCopyTrades, selectedCopyTradeIds),
+        sortBy: currentSort?.sortBy,
+        sortType: currentSort?.sortType,
+      }),
+    { keepPreviousData: true, retry: 0 }
   )
   const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
   const [currentCopyPosition, setCurrentCopyPosition] = useState<CopySelection>()
@@ -46,6 +89,15 @@ export default function UserActivity() {
     setOpenCopyDrawer(false)
     setCurrentCopyPosition(undefined)
   }
+
+  const onChangeFilter = () => {
+    changeCurrentPage(1)
+  }
+
+  useEffect(() => {
+    const dataStorage = JSON.stringify(selectionState)
+    sessionStorage.setItem(STORAGE_KEYS.MY_ACTIVITIES, dataStorage)
+  }, [selectionState])
 
   const isMobile = useIsMobile()
   const { lg } = useResponsive()
@@ -63,6 +115,29 @@ export default function UserActivity() {
           <Trans>Activity</Trans>
         </Type.H5>
         <Divider mb={3} /> */}
+        <Flex
+          sx={{
+            alignItems: 'center',
+            borderBottom: 'small',
+            borderBottomColor: 'neutral4',
+            height: 50,
+            gap: 3,
+          }}
+        >
+          <SelectedWallets
+            allWallets={selectionState.allWallets}
+            selectedWallets={selectionState.selectedWallets}
+            dispatch={dispatch}
+            onChangeWallets={onChangeFilter}
+          />
+          <SelectedCopyTrades
+            selectedWallets={selectionState.selectedWallets}
+            allCopyTrades={selectionState.allCopyTrades}
+            selectedCopyTrades={selectionState.selectedCopyTrades}
+            dispatch={dispatch}
+            onChangeCopyTrades={onChangeFilter}
+          />
+        </Flex>
         <Box mt={2} />
         <Box flex="1 0 0" sx={{ overflow: 'hidden' }}>
           {lg ? (
@@ -75,6 +150,8 @@ export default function UserActivity() {
               tableBodyWrapperSx={{ table: { borderSpacing: '0 8px' }, '& tbody tr': { bg: 'neutral6' } }}
               tableHeadSx={{ th: { borderBottom: 'none' } }}
               noDataMessage={<Trans>No Activity Found</Trans>}
+              currentSort={currentSort}
+              changeCurrentSort={changeCurrentSort}
             />
           ) : (
             <ListActivityMobile data={data?.data} isLoading={isFetching} externalSource={externalSource} />

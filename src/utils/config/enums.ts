@@ -150,3 +150,47 @@ export enum SubscriptionPlanEnum {
 export enum MaxCopyTradeQuotaEnum {
   BASIC = 3,
 }
+
+export enum UserActionEnum {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  CHANGE = 'CHANGE',
+  DELETE = 'DELETE',
+}
+
+export enum DataTypeEnum {
+  COPY_TRADE = 'COPY_TRADE',
+  COPY_WALLET = 'COPY_WALLET',
+  COPY_POSITION = 'COPY_POSITION',
+}
+
+export enum ChangeFieldEnum {
+  VOLUME = 'volume',
+  LEVERAGE = 'leverage',
+  TOKEN_ADDRESSES = 'tokenAddresses',
+  ENABLE_STOP_LOSS = 'enableStopLoss',
+  STOP_LOSS_AMOUNT = 'stopLossAmount',
+  ENABLE_TAKE_PROFIT = 'enableTakeProfit',
+  TAKE_PROFIT_AMOUNT = 'takeProfitAmount',
+  VOLUME_PROTECTION = 'volumeProtection',
+  LOOK_BACK_ORDERS = 'lookBackOrders',
+  COPY_ALL = 'copyAll',
+  REVERSE_COPY = 'reverseCopy',
+  MAX_VOL_MULTIPLIER = 'maxVolMultiplier',
+  SKIP_LOW_LEVERAGE = 'skipLowLeverage',
+  TITLE = 'title',
+  STATUS = 'status',
+  CLOSE_TYPE = 'closeType',
+  ENTRY_PRICE = 'entryPrice',
+  PNL = 'pnl',
+  SIZE_DELTA = 'sizeDelta',
+  TOTAL_SIZE_DELTA = 'totalSizeDelta',
+  SOURCE_SIZE_DELTA = 'sourceSizeDelta',
+  STOP_LOSS_DETAIL = 'stopLossDetail',
+  TAKE_PROFIT_DETAIL = 'takeProfitDetail',
+  QUANTITY = 'quantity',
+  STOP_PRICE = 'stopPrice',
+  TAKE_PROFIT_PRICE = 'takeProfitPrice',
+  SIDE = 'side',
+  POSITION_SIDE = 'positionSide',
+}

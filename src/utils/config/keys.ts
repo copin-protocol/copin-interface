@@ -46,6 +46,7 @@ export const QUERY_KEYS = {
   SEARCH_ALL_TRADERS: 'SEARCH_ALL_TRADERS',
   SEARCH_TX_HASH: 'SEARCH_TX_HASH',
   GET_TRADER_TOKEN_STATISTIC: 'GET_TRADER_TOKEN_STATISTIC',
+  GET_USER_LOG_DETAILS_BY_MODEL_ID: 'GET_USER_LOG_DETAILS_BY_MODEL_ID',
 }
 
 export const CONTRACT_QUERY_KEYS = {
@@ -77,6 +78,7 @@ export const STORAGE_KEYS = {
   MY_COPY_DATA: 'my-copy-data',
   MY_COPY_WALLET: 'my-copy-wallet',
   MY_HISTORY_TRADERS: 'my-history-traders',
+  MY_ACTIVITIES: 'my-activities',
   BACKTEST_GUIDE: 'backtest-guide',
   TRADER_RANKING_FIELDS: 'trader-ranking-fields',
 }
@@ -115,6 +117,7 @@ export const URL_PARAM_KEYS = {
   COMPARE_TRADERS: 'traders',
   SEARCH_KEYWORD: 'keyword',
   HIGHLIGHT_TX_HASH: 'tx_hash',
+  ACTIVE_WALLET: 'wallet',
 }
 
 export const TOOLTIP_KEYS = {

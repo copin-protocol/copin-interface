@@ -1,4 +1,11 @@
-import { PositionData, ResponsePositionData, ResponseTraderData, TraderData } from 'entities/trader'
+import {
+  PositionData,
+  ResponsePositionData,
+  ResponseTraderData,
+  TraderData,
+  TraderTokenStatistic,
+} from 'entities/trader'
+import { SortTypeEnum } from 'utils/config/enums'
 import { decodeRealisedData } from 'utils/helpers/handleRealised'
 
 import { ApiListResponse } from './api'
@@ -48,4 +55,31 @@ export const normalizePositionResponse = (
 export const normalizePositionListResponse = (res: ResponsePositionData[]): PositionData[] => {
   if (!res) return res
   return res.map(normalizePositionData)
+}
+
+export const normalizeTokenStatisticResponse = ({
+  res,
+  sortBy,
+  sortType,
+}: {
+  res: ApiListResponse<TraderTokenStatistic>
+  sortBy?: string
+  sortType?: SortTypeEnum
+}): ApiListResponse<TraderTokenStatistic> => {
+  if (!res.data) return res
+  const data = res.data.map((item) => {
+    return { ...item, winRate: item.totalTrade ? (item.totalWin / item.totalTrade) * 100 : 0 } as TraderTokenStatistic
+  })
+  if (sortBy === 'winRate') {
+    return {
+      ...res,
+      data: data.sort((a, b) => {
+        return ((a.winRate ?? 0) - (b.winRate ?? 0)) * (sortType === SortTypeEnum.DESC ? -1 : 1)
+      }),
+    }
+  }
+  return {
+    ...res,
+    data,
+  }
 }
