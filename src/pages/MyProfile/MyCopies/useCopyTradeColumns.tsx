@@ -9,6 +9,7 @@ import {
 import { MutableRefObject, SetStateAction, useCallback, useMemo } from 'react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
+import Divider from 'components/@ui/Divider'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyTradeData } from 'entities/copyTrade'
@@ -359,6 +360,7 @@ export default function useCopyTradeColumns({
                 icon={<ClockCounterClockwise size={18} />}
                 onSelect={() => handleOpenHistoryDrawer(item)}
               />
+              <Divider />
               <ActionItem
                 title={<Trans>Edit</Trans>}
                 icon={<PencilSimpleLine size={18} />}

@@ -17,7 +17,7 @@ import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { getColorFromText } from 'utils/helpers/css'
 import { parseWalletName } from 'utils/helpers/transform'
 
-import DeleteWalletAction from './DeleteWalletAction'
+import WalletActions from './WalletActions'
 import WalletInfo from './WalletInfo'
 
 interface WalletDetailsProps {
@@ -106,7 +106,7 @@ export default function WalletDetailsCard({ data, hasBorderTop, handleUpdate, re
             />
           )}
         </Flex>
-        {!data?.smartWalletAddress && <DeleteWalletAction data={data} />}
+        <WalletActions data={data} />
 
         {/* ) : (
           <Flex alignItems="center" sx={{ gap: 20 }}>

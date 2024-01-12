@@ -27,7 +27,6 @@ const CopyTraderAction = ({
   const { checkIsEligible } = useCheckCopyTradeAction()
   const handleCloseModal = () => {
     setIsOpenModal(false)
-    onForceReload()
   }
 
   const hasCopyPermission = useCopyTradePermission()
@@ -57,7 +56,13 @@ const CopyTraderAction = ({
         Copy Trader
       </Button>
       {isOpenModal && !!profile && (
-        <CopyTraderModal protocol={protocol} account={account} isOpen={isOpenModal} onClose={handleCloseModal} />
+        <CopyTraderModal
+          protocol={protocol}
+          account={account}
+          isOpen={isOpenModal}
+          onClose={handleCloseModal}
+          onSuccess={onForceReload}
+        />
       )}
       {isOpenContactModal && <ModalContactUs onDismiss={() => setIsOpenContactModal(false)} />}
       {/*{!hasCopyPermission && (*/}

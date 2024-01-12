@@ -34,11 +34,13 @@ export default function CopyTraderDrawer({
   account,
   isOpen,
   onClose,
+  onSuccess,
 }: {
   protocol: ProtocolEnum
   account: string
   isOpen: boolean
   onClose: () => void
+  onSuccess?: () => void
 }) {
   const { myProfile } = useMyProfileStore()
   const { botAlert, handleGenerateLinkBot } = useBotAlertContext()
@@ -59,6 +61,7 @@ export default function CopyTraderDrawer({
         <ToastBody title={<Trans>Success</Trans>} message={<Trans>Make copy trade has been succeeded</Trans>} />
       )
       onClose()
+      onSuccess && onSuccess()
       if (!botAlert?.chatId) {
         handleGenerateLinkBot()
       }
