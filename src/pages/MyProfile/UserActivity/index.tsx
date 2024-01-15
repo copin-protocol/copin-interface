@@ -53,7 +53,7 @@ export default function UserActivity() {
   }
 
   const checkFilters = (allData: any[], selectedIds: string[]) => {
-    if (allData.length === selectedIds.length) return
+    if (allData?.length === selectedIds?.length) return
     if (!!selectedIds.length) return selectedIds
     return ['']
   }

@@ -44,9 +44,9 @@ export default function useFilterActivities(storageData: string | null) {
           newState.selectedWallets = state.allWallets
           break
         case 'toggleWallet':
-          const isSelected = state.selectedWallets.findIndex((e) => e.id === action.payload.id) !== -1
+          const isSelected = state.selectedWallets?.findIndex((e) => e.id === action.payload.id) !== -1
           if (isSelected) {
-            newState.selectedWallets = newState.selectedWallets.filter((e) => action.payload.id !== e.id)
+            newState.selectedWallets = newState.selectedWallets?.filter((e) => action.payload.id !== e.id)
           } else {
             newState.selectedWallets = Array.from(new Set([...newState.selectedWallets, action.payload]))
           }
@@ -58,9 +58,9 @@ export default function useFilterActivities(storageData: string | null) {
           newState.selectedCopyTrades = state.allCopyTrades
           break
         case 'toggleCopyTrade':
-          const isCopyTradeSelected = state.selectedCopyTrades.findIndex((e) => e.id === action.payload.id) !== -1
+          const isCopyTradeSelected = state.selectedCopyTrades?.findIndex((e) => e.id === action.payload.id) !== -1
           if (isCopyTradeSelected) {
-            newState.selectedCopyTrades = newState.selectedCopyTrades.filter((e) => action.payload.id !== e.id)
+            newState.selectedCopyTrades = newState.selectedCopyTrades?.filter((e) => action.payload.id !== e.id)
           } else {
             newState.selectedCopyTrades = Array.from(new Set([...newState.selectedCopyTrades, action.payload]))
           }

@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Link } from 'react-router-dom'
 
 import { ApiMeta } from 'apis/api'
+import AddressAvatar from 'components/@ui/AddressAvatar'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { VerticalDivider } from 'components/@ui/Table/renderProps'
@@ -59,6 +60,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
       to={generateTraderDetailsRoute(item.protocol, item.sourceAccount)}
       sx={{ alignItems: 'center', gap: 2 }}
     >
+      <AddressAvatar address={item.sourceAccount} size={24} />
       <Type.Caption color="neutral1">{addressShorten(item.sourceAccount)}</Type.Caption>
       <VerticalDivider />
       <Image src={parseProtocolImage(item.protocol)} width={20} height={20} />
