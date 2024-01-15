@@ -27,7 +27,7 @@ export default function SelectCopyTradesDropdown({
   if (!allCopyTrades.length) return <></>
   const isSelectedAll =
     !!allCopyTrades.length &&
-    allCopyTrades.every((copyTrade) => selectedCopyTrades.map((e) => e.id).includes(copyTrade.id))
+    allCopyTrades.every((copyTrade) => selectedCopyTrades?.map((e) => e.id).includes(copyTrade.id))
 
   return (
     <Dropdown

@@ -54,7 +54,7 @@ export default function SelectedWallets({
   return (
     <SelectWalletsDropdown
       allWallets={allWallets}
-      selectedWallets={selectedWallets}
+      selectedWallets={selectedWallets ?? []}
       handleSelectAllWallets={handleSelectAllWallets}
       handleToggleWallet={handleToggleWallet}
     />
