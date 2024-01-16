@@ -13,19 +13,20 @@ import { FONT_FAMILY } from 'utils/config/constants'
 
 import { styleVariants } from './theme'
 
-export type SelectProps = { error?: any; sx?: any } & VariantProps & SxProps
+export type SelectProps = { error?: any; sx?: any; width?: number; height?: number } & VariantProps & SxProps
 
 const StyledSelect = styled(ReactSelect)<SelectProps>(
-  ({ error }) =>
+  ({ error, width, height }) =>
     css({
       input: {
         fontSize: '16px !important',
       },
       border: 'none',
-      width: '100%',
+      width: width ?? '100%',
 
       '& .select__control': {
-        minHeight: 42,
+        minHeight: height ? 'auto' : 42,
+        height: height ?? 'auto',
         alignItems: 'center',
         position: 'relative',
         border: 'small',

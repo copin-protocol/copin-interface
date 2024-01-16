@@ -1,11 +1,11 @@
 /* eslint-disable react/display-name */
 import css, { get } from '@styled-system/css'
-import React, { ForwardedRef, HTMLAttributes, ImgHTMLAttributes, ReactNode, forwardRef } from 'react'
+import React, { ComponentProps, ForwardedRef, HTMLAttributes, ImgHTMLAttributes, ReactNode, forwardRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { SpaceProps, color, compose, flexbox, grid, layout, space, typography } from 'styled-system'
 
-import { BoxProps, CssProps, IconProps, SvgProps, SxProps, VariantProps } from './types'
+import { BoxProps, CssProps, SvgProps, SxProps, VariantProps } from './types'
 
 export const sx = ({ sx, theme }: SxProps) => css(sx)(theme)
 const base = ({ __css, theme }: CssProps) => css(__css)(theme)
@@ -63,7 +63,7 @@ export const EllipsisText = styled.div<any>`
   -webkit-box-orient: vertical;
 `
 
-export const IconBox = ({ sx, icon, ...props }: IconProps) => (
+export const IconBox = ({ sx, icon, ...props }: ComponentProps<typeof Box> & { icon: ReactNode }) => (
   <Box
     sx={{
       lineHeight: 0,

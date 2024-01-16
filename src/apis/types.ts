@@ -20,8 +20,8 @@ export type GetApiParams = {
   offset?: number
 }
 
-export interface RangeFilter {
-  fieldName: string
+export interface RangeFilter<T = string> {
+  fieldName: T
   in?: string[]
   gte?: number
   lte?: number
@@ -44,7 +44,8 @@ export type RequestBodyApiData = {
   sortType?: SortTypeEnum
   keyword?: string
   returnRanking?: boolean
-}
+  returnPnlStatistic?: boolean
+} & Partial<Record<string, any>>
 
 export type SearchTradersParams = GetApiParams & {
   keyword?: string

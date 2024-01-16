@@ -27,21 +27,21 @@ const CopyWalletContext = createContext<CopyWalletContextData>({} as CopyWalletC
 
 const EXCLUDING_PATH = [
   ROUTES.STATS.path,
-  ROUTES.HOME_LEADERBOARD.path,
+  ROUTES.LEADERBOARD.path,
   ROUTES.FAVORITES.path,
   ROUTES.SUBSCRIPTION.path,
   ROUTES.USER_SUBSCRIPTION.path,
   ROUTES.ALERT_LIST.path,
   ROUTES.REFERRAL.path,
   ROUTES.COMPARING_TRADERS.path,
-  ROUTES.TOP_OPENINGS.path,
+  ROUTES.OPEN_INTEREST.path_prefix,
   ROUTES.POSITION_DETAILS.path,
 ]
 export function CopyWalletProvider({ children }: { children: ReactNode }) {
   const { myProfile } = useMyProfile()
   const [loadedTotalSmartWallet, setLoadedTotalSmartWallet] = useState(false)
 
-  const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH)
+  const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH, true)
   const {
     data: copyWallets,
     isLoading: loadingCopyWallets,

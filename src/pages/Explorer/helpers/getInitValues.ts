@@ -11,14 +11,6 @@ import { rankingFieldOptions } from 'utils/config/options'
 import { FilterTabEnum, defaultFieldOptions } from '../ConditionFilter/configs'
 import { parseParams } from './handleParams'
 
-export const getInitValue = (searchParams: ParsedQs, key: string, defaultValue?: number) => {
-  const value = searchParams[key] as string
-  if (!value) return defaultValue ?? 0
-  const parsedNumber = Number(value)
-  if (isNaN(parsedNumber)) return defaultValue ?? 0
-  return parsedNumber
-}
-
 export const getInitFilters = ({
   searchParams,
   accounts,

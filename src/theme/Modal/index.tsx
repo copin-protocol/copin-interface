@@ -11,8 +11,12 @@ import { Colors } from 'theme/types'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ mode?: ModalProps['mode'] }>`
-  ${({ theme, mode }) => `
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{
+  mode?: ModalProps['mode']
+  backdropFilter?: string
+  overlayBackground?: string
+}>`
+  ${({ theme, mode, backdropFilter, overlayBackground }) => `
     &[data-reach-dialog-overlay] {
       z-index: 9998;
       width: 100%;
@@ -25,11 +29,11 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ mode?: ModalProps['m
       display: flex;
       align-items: ${mode === 'right' ? 'flex-start' : 'center'};
       justify-content: ${mode === 'right' ? 'right' : 'center'};
-      background-color: ${theme.colors.modalBG};
-      backdrop-filter: blur(5px);
+      background-color: ${overlayBackground ?? theme.colors.modalBG1};
     }
   `}
 `
+// backdrop-filter: ${backdropFilter ?? 'blur(5px)'};
 
 const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
@@ -112,6 +116,8 @@ export interface ModalProps {
   background?: keyof Colors | string
   dangerouslyBypassFocusLock?: boolean
   modalContentStyle?: any
+  backdropFilter?: string
+  overlayBackground?: string
 }
 
 export default function Modal({
@@ -127,6 +133,8 @@ export default function Modal({
   initialFocusRef,
   mode = 'center',
   background,
+  backdropFilter,
+  overlayBackground,
   footer,
   children,
   modalContentStyle,
@@ -167,6 +175,10 @@ export default function Modal({
               unstable_lockFocusAcrossFrames={false}
               mode={mode}
               dangerouslyBypassFocusLock={dangerouslyBypassFocusLock}
+              backdropFilter={backdropFilter}
+              overlayBackground={overlayBackground}
+              onDrag={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <StyledDialogContent
                 mode={mode}

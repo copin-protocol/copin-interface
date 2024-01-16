@@ -1,13 +1,14 @@
 import { Trans } from '@lingui/macro'
+import { CaretRight } from '@phosphor-icons/react'
 import { ReactNode } from 'react'
 
-import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
+import { LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Divider from 'components/@ui/Divider'
 import ReverseTag from 'components/@ui/ReverseTag'
 import Table from 'components/@ui/Table'
 import { ColumnData, TableProps } from 'components/@ui/Table/types'
 import { CopyPositionData } from 'entities/copyTrade.d'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 
 import {
   renderCloseTime,
@@ -47,7 +48,47 @@ export function TableForm({
           },
           ...(tableProps?.wrapperSx ?? {}),
         }}
-        restrictHeight
+        restrictHeight={tableProps?.restrictHeight ?? true}
+        externalSource={externalSource}
+        onClickRow={externalSource?.handleSelectCopyItem}
+      />
+    </Box>
+  )
+}
+export function SimpleTableForm({
+  tableProps,
+  externalSource,
+}: {
+  tableProps: TableProps<CopyPositionData, ExternalSource>
+  externalSource?: ExternalSource
+}) {
+  return (
+    <Box width="100%" height="100%" overflow="hidden">
+      <Table
+        {...(tableProps ?? {})}
+        containerSx={{ bg: 'neutral8' }}
+        wrapperSx={{
+          table: {
+            '& th': {
+              border: 'none',
+              pb: 0,
+            },
+            '& td': {
+              py: 2,
+            },
+            '& th:last-child, td:last-child': {
+              pr: 3,
+            },
+            '& td:last-child': {
+              pr: 3,
+            },
+            '& th:first-child, td:first-child': {
+              pl: 3,
+            },
+          },
+          ...(tableProps?.wrapperSx ?? {}),
+        }}
+        restrictHeight={tableProps?.restrictHeight ?? true}
         externalSource={externalSource}
         onClickRow={externalSource?.handleSelectCopyItem}
       />
@@ -127,6 +168,47 @@ function ListHistoryRow({ label, value }: { label: ReactNode; value: ReactNode }
   )
 }
 
+export const simpleOpeningColumns: ColumnData<CopyPositionData, ExternalSource>[] = [
+  {
+    title: 'Time',
+    dataIndex: 'createdAt',
+    key: 'createdAt',
+    style: { minWidth: '60px' },
+    render: (item) => (
+      <Type.Caption color="neutral3">
+        <RelativeShortTimeText date={item.createdAt} suffix="ago" />
+      </Type.Caption>
+    ),
+  },
+  // {
+  //   title: 'Trader',
+  //   dataIndex: 'copyAccount',
+  //   key: 'copyAccount',
+  //   style: { minWidth: '160px' },
+  //   render: (item) => <Type.Caption>{addressShorten(item.copyAccount)}</Type.Caption>,
+  // },
+  {
+    title: 'Entry',
+    dataIndex: 'sizeDelta',
+    key: 'sizeDelta',
+    style: { minWidth: '130px' },
+    render: (item) => renderEntry(item),
+  },
+  {
+    title: 'PnL',
+    dataIndex: 'pnl',
+    key: 'pnl',
+    style: { minWidth: '80px', textAlign: 'right' },
+    render: (item, _, externalSource) => renderPnL(item, externalSource?.prices),
+  },
+  {
+    title: '',
+    dataIndex: 'id',
+    key: 'id',
+    style: { minWidth: '40px', maxWidth: '40px', textAlign: 'right' },
+    render: () => <IconBox icon={<CaretRight size={16} />} color="neutral2" />,
+  },
+]
 export const openingColumns: ColumnData<CopyPositionData, ExternalSource>[] = [
   {
     title: 'Open Time',

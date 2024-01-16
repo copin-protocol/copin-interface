@@ -44,6 +44,7 @@ export default function SliderInput({
               marks={createMarks({ maxValue, marksStep, marksUnit })}
               tipFormatter={(v) => `${v}${marksUnit}`}
               disabled={disabled}
+              draggableTrack={false}
             />
           </SliderWrapper>
         )

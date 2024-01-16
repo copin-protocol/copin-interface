@@ -1,10 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { Bookmarks, Pulse, Trophy } from '@phosphor-icons/react'
-import { Route, Switch, useLocation } from 'react-router-dom'
+import { Bookmarks, Pulse } from '@phosphor-icons/react'
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
-import { LeaderboardProvider } from 'hooks/features/useLeaderboardProvider'
+import { HomeSwitchProtocols } from 'components/SwitchProtocols'
 import useMyProfile from 'hooks/store/useMyProfile'
-import Leaderboard from 'pages/Leaderboard'
 import TopOpenings from 'pages/TopOpenings'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
@@ -12,7 +11,6 @@ import ROUTES from 'utils/config/routes'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
-import { HomeSwitchProtocols } from '../SwitchProtocols'
 import { FilterTradersProvider } from '../useTradersContext'
 import TradersAnalytics from './TradersAnalytics'
 import { TabKeyEnum } from './layoutConfigs'
@@ -23,25 +21,18 @@ const tabConfigs: TabConfig[] = [
     inactiveIcon: <Bookmarks size={24} />,
     activeIcon: <Bookmarks size={24} weight="fill" />,
     key: TabKeyEnum.Explorer,
-    route: ROUTES.HOME_EXPLORER.path,
-  },
-  {
-    name: <Trans>LEADERBOARD</Trans>,
-    inactiveIcon: <Trophy size={24} />,
-    activeIcon: <Trophy size={24} weight="fill" />,
-    key: TabKeyEnum.Leaderboard,
-    route: ROUTES.HOME_LEADERBOARD.path,
+    route: ROUTES.TRADERS_EXPLORER.path,
   },
   {
     name: <Trans>OPEN INTEREST</Trans>,
     inactiveIcon: <Pulse size={24} />,
     activeIcon: <Pulse size={24} weight="fill" />,
     key: TabKeyEnum.TopOpenings,
-    route: ROUTES.TOP_OPENINGS.path,
+    route: ROUTES.OPEN_INTEREST.path,
   },
 ]
 
-export default function HomeDesktop() {
+export default function ExplorerDesktop() {
   const { myProfile } = useMyProfile()
   const { pathname } = useLocation()
   return (
@@ -65,19 +56,15 @@ export default function HomeDesktop() {
       </Flex>
       <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
         <Switch>
-          <Route exact path={ROUTES.HOME_EXPLORER.path}>
+          <Route exact path={ROUTES.TRADERS_EXPLORER.path}>
             <FilterTradersProvider tab={TabKeyEnum.Explorer}>
               <TradersAnalytics />
             </FilterTradersProvider>
           </Route>
-          <Route exact path={ROUTES.HOME_LEADERBOARD.path}>
-            <LeaderboardProvider>
-              <Leaderboard />
-            </LeaderboardProvider>
-          </Route>
-          <Route exact path={ROUTES.TOP_OPENINGS.path}>
+          <Route exact path={ROUTES.OPEN_INTEREST.path}>
             <TopOpenings />
           </Route>
+          <Redirect to={ROUTES.TRADERS_EXPLORER.path} />
         </Switch>
       </Box>
     </Flex>

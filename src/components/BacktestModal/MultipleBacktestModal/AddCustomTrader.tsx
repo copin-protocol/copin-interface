@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { TraderData } from 'entities/trader.d'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
 import SearchBox from 'pages/@layouts/Navbar/SearchBox'

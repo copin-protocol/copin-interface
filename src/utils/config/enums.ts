@@ -11,6 +11,7 @@ export enum UserRoleEnum {
 }
 
 export enum TimeFrameEnum {
+  A_DAY = 'D1',
   A_WEEK = 'D7',
   TWO_WEEK = 'D15',
   A_MONTH = 'D30',
@@ -19,6 +20,7 @@ export enum TimeFrameEnum {
 }
 
 export enum TimeFilterByEnum {
+  S1_DAY = TimeFrameEnum.A_DAY,
   S7_DAY = TimeFrameEnum.A_WEEK,
   S14_DAY = TimeFrameEnum.TWO_WEEK,
   S30_DAY = TimeFrameEnum.A_MONTH,

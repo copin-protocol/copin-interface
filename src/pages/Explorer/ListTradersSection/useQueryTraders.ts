@@ -6,11 +6,12 @@ import { TraderData } from 'entities/trader'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { CheckAvailableStatus } from 'utils/config/enums'
+import { getInitNumberValue } from 'utils/helpers/geInitialValue'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import { FilterTabEnum } from '../ConditionFilter/configs'
 import { formatRankingRanges } from '../helpers/formatRankingRanges'
-import { getInitFilters, getInitSort, getInitValue } from '../helpers/getInitValues'
+import { getInitFilters, getInitSort } from '../helpers/getInitValues'
 import { TradersContextData } from '../useTradersContext'
 import useRangeFilterData from './useRangeFilterData'
 import useTimeFilterData from './useTimeFilterData'
@@ -29,8 +30,8 @@ export default function useQueryTraders({
 >) {
   const { searchParams } = useSearchParams()
   const requestData = useMemo<RequestBodyApiData>(() => {
-    const page = getInitValue(searchParams, 'page', 1)
-    const limit = getInitValue(searchParams, 'limit', DEFAULT_LIMIT)
+    const page = getInitNumberValue(searchParams, 'page', 1)
+    const limit = getInitNumberValue(searchParams, 'limit', DEFAULT_LIMIT)
     const { sortBy, sortType } = getInitSort(searchParams)
     const request: Record<string, any> = {
       sortBy,

@@ -8,7 +8,19 @@ import IconButton from 'theme/Buttons/IconButton'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
-export default function FavoriteButton({ address, size = 24 }: { address: string; size?: number }) {
+export default function FavoriteButton({
+  address,
+  size = 24,
+  color = 'primary1',
+  hoverColor = 'primary2',
+  activeColor = 'primary1',
+}: {
+  address: string
+  size?: number
+  color?: string
+  hoverColor?: string
+  activeColor?: string
+}) {
   const {
     traderFavorites,
     submitting: favoriteSubmitting,
@@ -54,6 +66,7 @@ export default function FavoriteButton({ address, size = 24 }: { address: string
         size={size}
         variant="ghost"
         onClick={(e) => {
+          e.preventDefault()
           e.stopPropagation()
           if (hasFavorite) {
             handleAddFavorite(e)
@@ -69,9 +82,9 @@ export default function FavoriteButton({ address, size = 24 }: { address: string
         className={hasFavorite ? '' : 'hiding-btn'}
         icon={<Star weight={hasFavorite ? 'fill' : 'regular'} size={size} />}
         sx={{
-          color: 'primary1',
+          color: hasFavorite ? activeColor : color,
           '&:hover:not([disabled])': {
-            color: 'primary2',
+            color: hoverColor,
           },
         }}
         // onClick={handleAddFavorite}

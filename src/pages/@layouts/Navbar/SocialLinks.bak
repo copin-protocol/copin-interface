@@ -1,0 +1,55 @@
+import { Trans } from '@lingui/macro'
+import { ReactElement, ReactNode } from 'react'
+
+import { Box, LinkUnderline } from 'theme/base'
+import { LINKS } from 'utils/config/constants'
+
+export function DesktopSocialLinks(): ReactElement {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: [4, 4, 4, 40],
+        '@media screen and (max-width: 1500px)': {
+          display: 'none',
+        },
+      }}
+    >
+      <LinkItem text={<Trans>Twitter (X)</Trans>} url={LINKS.twitter} />
+      <LinkItem text={<Trans>Telegram</Trans>} url={LINKS.telegram} />
+    </Box>
+  )
+}
+export function MobileSocialLinks(): ReactElement {
+  return (
+    <>
+      <LinkItem text={<Trans>Twitter (X)</Trans>} url={LINKS.twitter} />
+      <LinkItem text={<Trans>Telegram</Trans>} url={LINKS.telegram} />
+    </>
+  )
+}
+
+function LinkItem({ url, text, sx }: { url: string; text: ReactNode; sx?: any }) {
+  return (
+    <LinkUnderline
+      sx={{
+        fontSize: 13,
+        fontWeight: 'bold',
+        '&:hover': {
+          color: 'neutral2',
+        },
+        display: ['none', 'none', 'flex', 'flex'],
+        alignItems: 'center',
+        ...(sx ?? {}),
+      }}
+      color="neutral1"
+      hoverHasLine
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+    >
+      {text}
+    </LinkUnderline>
+  )
+}

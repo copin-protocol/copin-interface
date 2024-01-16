@@ -1,6 +1,8 @@
+import { useResponsive } from 'ahooks'
+
+import { HomeSwitchProtocols } from 'components/SwitchProtocols'
 import { Box, Flex } from 'theme/base'
 
-import { HomeSwitchProtocols } from '../SwitchProtocols'
 import { AnalyticsLayoutComponents } from './types'
 
 export default function AnalyticsLayoutMobile({
@@ -8,6 +10,7 @@ export default function AnalyticsLayoutMobile({
   listTradersSection,
   conditionFilter,
 }: AnalyticsLayoutComponents) {
+  const { md, lg } = useResponsive()
   return (
     <Flex
       sx={{
@@ -22,7 +25,11 @@ export default function AnalyticsLayoutMobile({
           {timeFilterSection}
           {conditionFilter}
         </Flex>
-        <HomeSwitchProtocols buttonSx={{ borderBottom: 'none', borderRight: 'none' }} />
+        {md && !lg ? (
+          <Box height={40} />
+        ) : (
+          <HomeSwitchProtocols buttonSx={{ borderBottom: 'none', borderRight: 'none' }} />
+        )}
       </Flex>
       <Box sx={{ flex: '1 0 0' }}>{listTradersSection}</Box>
     </Flex>

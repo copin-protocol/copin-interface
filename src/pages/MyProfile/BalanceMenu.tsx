@@ -8,6 +8,7 @@ import { CopyWalletData } from 'entities/copyWallet'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 import { hideScrollbar } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
@@ -111,7 +112,7 @@ const BalanceMenu = ({
     return { title: foundItem ? parseWalletName(foundItem) : '', value: foundItem?.balance }
   }, [activeWallet, copyWallets])
   const { data: overview } = useQuery(
-    ['copytrade-balances/overview', activeWallet],
+    [QUERY_KEYS.GET_COPY_TRADE_BALANCE_OVERVIEW, activeWallet],
     () =>
       getMyCopyTradeOverviewApi({
         exchange: activeWallet?.exchange ?? CopyTradePlatformEnum.BINGX,

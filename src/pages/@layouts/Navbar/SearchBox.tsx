@@ -59,7 +59,7 @@ const SearchBox = ({
   const totalResultPositions = searchPositions?.length ?? 0
 
   return (
-    <SearchWrapper ref={searchWrapperRef} width={width ?? ['100%', '100%', 220, 380]}>
+    <SearchWrapper ref={searchWrapperRef} width={width ?? ['100%', '100%', 220, 220, 380]}>
       <InputSearch
         ref={inputSearchRef}
         placeholder={placeholder}

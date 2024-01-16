@@ -235,3 +235,7 @@ export function convertDataToText(data: any) {
   }
   return data
 }
+
+export function parseMarketImage(symbol: string) {
+  return `/svg/markets/${symbol}.svg`
+}

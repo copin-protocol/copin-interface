@@ -8,6 +8,7 @@ import TradeProtocolAction from 'components/@ui/TradeProtocol'
 import SingleBackTestModal from 'components/BacktestModal/SingleBacktestModal'
 import { initBacktestState, initialState, reducer } from 'components/BacktestModal/SingleBacktestModal/config'
 import { MIN_BACKTEST_VALUE, parseRequestData } from 'components/BacktestModal/helper'
+import CopyTraderButton from 'components/CopyTraderButton'
 import { useClickLoginButton } from 'components/LoginAction'
 import { PositionData } from 'entities/trader.d'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -23,7 +24,6 @@ import { URL_PARAM_KEYS } from 'utils/config/keys'
 
 import AlertAction from './AlertAction'
 import BackTestAction from './BackTestAction'
-import CopyTraderAction from './CopyTraderAction'
 
 export interface PositionSortPros {
   sortBy: keyof PositionData
@@ -59,7 +59,7 @@ export default function TraderActionButtons({
           <TradeProtocolAction protocol={protocol} />
           <AlertAction protocol={protocol} account={account} />
           <BacktestButton key={protocol + account} protocol={protocol} account={account} />
-          <CopyTraderAction protocol={protocol} account={account} onForceReload={onCopyActionSuccess} />
+          <CopyTraderButton protocol={protocol} account={account} onForceReload={onCopyActionSuccess} />
         </Box>
       ) : (
         <Box
@@ -89,7 +89,7 @@ export default function TraderActionButtons({
                   <BacktestButton key={protocol + account} account={account} protocol={protocol} />
                 </Box>
                 <Box height="40px">
-                  <CopyTraderAction account={account} protocol={protocol} onForceReload={onCopyActionSuccess} />
+                  <CopyTraderButton account={account} protocol={protocol} onForceReload={onCopyActionSuccess} />
                 </Box>
               </>
             }

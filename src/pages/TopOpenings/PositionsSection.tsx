@@ -8,7 +8,7 @@ import { Box, Flex } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { pageToOffset } from 'utils/helpers/transform'
 
-export default function ListSection({
+export default function PositionsSection({
   data,
   total,
   sort,

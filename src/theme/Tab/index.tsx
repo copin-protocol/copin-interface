@@ -120,6 +120,7 @@ export type TabConfig = {
   inactiveIcon?: ReactNode
   key: string
   route?: string
+  paramKey?: string
 }
 type TabHeadersProps = {
   configs: TabConfig[]

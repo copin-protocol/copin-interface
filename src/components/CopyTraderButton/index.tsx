@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { Trans } from '@lingui/macro'
+import { ComponentProps, ReactNode, useState } from 'react'
 
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
@@ -11,15 +12,21 @@ import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import CopyTraderModal from './CopyTraderModal'
 import ModalContactUs from './ModalContactUs'
 
-const CopyTraderAction = ({
+export default function CopyTraderButton({
   protocol,
   account,
   onForceReload,
+  buttonText = <Trans>Copy Trader</Trans>,
+  buttonSx = {},
+  modalStyles,
 }: {
   protocol: ProtocolEnum
   account: string
-  onForceReload: () => void
-}) => {
+  onForceReload?: () => void
+  buttonText?: ReactNode
+  buttonSx?: any
+  modalStyles?: ComponentProps<typeof CopyTraderModal>['modalStyles']
+}) {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenContactModal, setIsOpenContactModal] = useState(false)
 
@@ -27,7 +34,7 @@ const CopyTraderAction = ({
   const { checkIsEligible } = useCheckCopyTradeAction()
   const handleCloseModal = () => {
     setIsOpenModal(false)
-    onForceReload()
+    onForceReload?.()
   }
 
   const hasCopyPermission = useCopyTradePermission()
@@ -35,13 +42,16 @@ const CopyTraderAction = ({
   return (
     <>
       <Button
-        width={['100%', '100%', '100%', 150]}
         sx={{
           borderRadius: 0,
           height: '100%',
+          width: ['100%', '100%', '100%', 150],
+          ...buttonSx,
         }}
         variant="primary"
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
           if (!checkIsEligible()) return
 
           hasCopyPermission ? setIsOpenModal(true) : setIsOpenContactModal(true)
@@ -54,27 +64,18 @@ const CopyTraderAction = ({
         }}
         data-tooltip-id={`tt-kwenta_copytrade`}
       >
-        Copy Trader
+        {buttonText}
       </Button>
       {isOpenModal && !!profile && (
-        <CopyTraderModal protocol={protocol} account={account} isOpen={isOpenModal} onClose={handleCloseModal} />
+        <CopyTraderModal
+          protocol={protocol}
+          account={account}
+          isOpen={isOpenModal}
+          onClose={handleCloseModal}
+          modalStyles={modalStyles}
+        />
       )}
       {isOpenContactModal && <ModalContactUs onDismiss={() => setIsOpenContactModal(false)} />}
-      {/*{!hasCopyPermission && (*/}
-      {/*  <Tooltip id="tt-kwenta_copytrade" place="top" type="dark" effect="solid" clickable>*/}
-      {/*    <Flex flexDirection="column" maxWidth={350}>*/}
-      {/*      <Type.CaptionBold>Kwenta copy-trading is coming soon</Type.CaptionBold>*/}
-      {/*      <Type.Caption color="neutral2">*/}
-      {/*        Any ideas or support, reach us{' '}*/}
-      {/*        <a href={LINKS.telegram} target="_blank" rel="noreferrer">*/}
-      {/*          here*/}
-      {/*        </a>*/}
-      {/*      </Type.Caption>*/}
-      {/*    </Flex>*/}
-      {/*  </Tooltip>*/}
-      {/*)}*/}
     </>
   )
 }
-
-export default CopyTraderAction

@@ -12,7 +12,7 @@ export const RealtimeContext = createContext({})
 
 const INTERVAL_TIME = 5 // s
 const INCLUDE_PATH = [
-  ROUTES.TOP_OPENINGS.path,
+  ROUTES.OPEN_INTEREST.path_prefix,
   ROUTES.POSITION_DETAILS.path_prefix,
   ROUTES.TRADER_DETAILS.path_prefix,
   ROUTES.MY_MANAGEMENT.path,

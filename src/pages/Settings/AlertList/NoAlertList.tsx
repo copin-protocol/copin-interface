@@ -14,7 +14,7 @@ export default function NoAlertList({ buttonVariant = 'primary' }: { buttonVaria
       <Type.Caption mb={12} color="neutral2" textAlign="center">
         <Trans>Discover more than 100,000+ traders on Copin</Trans>
       </Type.Caption>
-      <Link to={ROUTES.HOME_EXPLORER.path}>
+      <Link to={ROUTES.TRADERS_EXPLORER.path}>
         <Button type="button" variant={buttonVariant} width={150}>
           <Trans>Explorer Traders</Trans>
         </Button>

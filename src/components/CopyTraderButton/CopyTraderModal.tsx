@@ -13,6 +13,7 @@ import { CopyTradeFormValues } from 'components/CopyTradeForm/configs'
 import { getRequestDataFromForm } from 'components/CopyTradeForm/helpers'
 import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade.d'
 import useBotAlertContext from 'hooks/features/useBotAlertProvider'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -34,12 +35,15 @@ export default function CopyTraderDrawer({
   account,
   isOpen,
   onClose,
+  modalStyles,
 }: {
   protocol: ProtocolEnum
   account: string
   isOpen: boolean
   onClose: () => void
+  modalStyles?: { backdropFilter?: string; overlayBackground?: string }
 }) {
+  const refetchQueries = useRefetchQueries()
   const { myProfile } = useMyProfileStore()
   const { botAlert, handleGenerateLinkBot } = useBotAlertContext()
   const [tab, handleTab] = useState<string>(TabKeyEnum.New)
@@ -55,12 +59,13 @@ export default function CopyTraderDrawer({
   )
   const { mutate: requestCopyTrade, isLoading } = useMutation(requestCopyTradeApi, {
     onSuccess: async () => {
+      refetchQueries([QUERY_KEYS.USE_GET_ALL_COPY_TRADES])
       toast.success(
         <ToastBody title={<Trans>Success</Trans>} message={<Trans>Make copy trade has been succeeded</Trans>} />
       )
       onClose()
       if (!botAlert?.chatId) {
-        handleGenerateLinkBot()
+        handleGenerateLinkBot?.()
       }
     },
     onError: (err) => {
@@ -89,7 +94,9 @@ export default function CopyTraderDrawer({
 
   return (
     <Modal
+      dismissable={false}
       maxWidth="520px"
+      {...(modalStyles || {})}
       title={
         <Flex
           sx={{

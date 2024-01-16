@@ -2,10 +2,22 @@ const ROUTES = {
   HOME: {
     path: '/',
   },
-  HOME_EXPLORER: {
-    path: '/',
+  TRADERS_EXPLORER: {
+    path: '/explorer',
   },
-  HOME_LEADERBOARD: {
+  OPEN_INTEREST: {
+    path: '/:protocol/open-interest',
+    path_prefix: '/open-interest',
+  },
+  OPEN_INTEREST_BY_MARKETS: {
+    path: '/:protocol/open-interest/markets',
+    path_prefix: '/open-interest/markets',
+  },
+  OPEN_INTEREST_BY_MARKET: {
+    path: '/:protocol/open-interest/market/:symbol',
+    path_prefix: '/open-interest/market',
+  },
+  LEADERBOARD: {
     path: '/leaderboard',
   },
   FAVORITES: {
@@ -63,9 +75,6 @@ const ROUTES = {
   },
   STATS: {
     path: '/stats',
-  },
-  TOP_OPENINGS: {
-    path: '/top-openings',
   },
   SHARED_BACKTEST_SINGLE: {
     path: '/:protocol/shared-backtest/single/:id',
