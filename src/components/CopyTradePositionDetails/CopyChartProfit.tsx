@@ -23,7 +23,7 @@ import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TIMEFRAME_NAMES, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
-import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcPnL, calcStopLossUsd } from 'utils/helpers/calculate'
+import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcPnL, calcSLTPUsd } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
@@ -327,7 +327,7 @@ export default function CopyChartProfit({
       })
     }
     if (low && low.value < 0) {
-      const liquidationPrice = calcCopyLiquidatePrice(position, prices)
+      const liquidationPrice = calcCopyLiquidatePrice(position)
       const posDelta = calcCopyOpeningPnL(position, liquidationPrice)
       if (posDelta) {
         series.createPriceLine({
@@ -342,7 +342,7 @@ export default function CopyChartProfit({
       }
     }
     if (position.latestStopLossId && position.stopLossAmount) {
-      const stopLossUsd = calcStopLossUsd(position.stopLossAmount, position.stopLossPrice, position.entryPrice)
+      const stopLossUsd = calcSLTPUsd(position.stopLossAmount, position.stopLossPrice, position.entryPrice)
       const value = !low || low.value > 0 ? 0 : -stopLossUsd < low.value ? low.value : -stopLossUsd
       series.createPriceLine({
         price: value,
@@ -352,6 +352,21 @@ export default function CopyChartProfit({
         axisLabelVisible: true,
         title: `Stop Loss: -$${formatNumber(stopLossUsd, 2)}${
           position.stopLossPrice ? ' - Est. Price: ' + formatNumber(position.stopLossPrice) : ''
+        }`,
+        lineStyle: LineStyle.SparseDotted,
+      })
+    }
+    if (position.latestTakeProfitId && position.takeProfitAmount) {
+      const takeProfitUsd = calcSLTPUsd(position.takeProfitAmount, position.takeProfitPrice, position.entryPrice)
+      const value = takeProfitUsd > high.value ? Number(series.coordinateToPrice(0)?.toString()) : takeProfitUsd
+      series.createPriceLine({
+        price: value,
+        color: themeColors.green1,
+        lineVisible: true,
+        lineWidth: 1,
+        axisLabelVisible: true,
+        title: `Take Profit: $${formatNumber(takeProfitUsd, 2)}${
+          position.takeProfitPrice ? ' - Est. Price: ' + formatNumber(position.takeProfitPrice) : ''
         }`,
         lineStyle: LineStyle.SparseDotted,
       })

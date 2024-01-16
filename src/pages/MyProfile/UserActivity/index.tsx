@@ -183,9 +183,12 @@ export default function UserActivity() {
             <IconButton
               icon={<XCircle size={24} />}
               variant="ghost"
-              sx={{ position: 'absolute', right: 1, top: 3, zIndex: 1 }}
+              sx={{ position: 'absolute', right: 1, top: 1, zIndex: 1 }}
               onClick={handleCopyDismiss}
             />
+            <Type.BodyBold p={3}>
+              <Trans>Copy Position Details</Trans>
+            </Type.BodyBold>
             <CopyTradePositionDetails id={currentCopyPosition?.id ?? ''} />
           </Container>
         </Drawer>

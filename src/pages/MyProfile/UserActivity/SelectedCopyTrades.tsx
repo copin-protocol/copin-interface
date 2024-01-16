@@ -52,7 +52,6 @@ export default function SelectedCopyTrades({
         allCopyTrades: availableAllCopyTrades,
       },
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [availableAllCopyTrades])
 
   if (!allCopyTrades?.length) return <></>

@@ -46,8 +46,7 @@ export default function SelectedWallets({
         allWallets: copyWallets,
       },
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [copyWallets])
 
   if (!allWallets?.length) return <></>
 

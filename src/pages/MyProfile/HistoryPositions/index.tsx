@@ -109,12 +109,12 @@ export default function HistoryPositions() {
             currentSort={currentSort}
             changeCurrentSort={changeCurrentSort}
             onClosePositionSuccess={refetch}
-            wrapperSx={{ pt: 3 }}
             tableHeadSx={{
               '& th:first-child': {
                 pl: 3,
               },
               '& th': {
+                py: 2,
                 pr: '16px !important',
                 border: 'none',
               },
