@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
-import { CopyPositionData } from 'entities/copyTrade.d'
+import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
@@ -13,13 +13,13 @@ import Tag from 'theme/Tag'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
-import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { addressShorten, formatNumber } from 'utils/helpers/format'
+import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
@@ -185,6 +185,36 @@ export function renderSource(item: CopyPositionData, index?: number, externalSou
         {addressShorten(item.sourceOrderTxHashes?.[0] ?? item.copyAccount, isHistory ? 4 : 3, isHistory ? 4 : 2)}
       </Type.Caption>
     </Button>
+  )
+}
+
+export function renderSLTPSetting(item: CopyTradeData, ignoreDisable?: boolean) {
+  return (
+    <Flex alignItems="center">
+      <Box
+        as="span"
+        color={ignoreDisable || (!ignoreDisable && item.status === CopyTradeStatusEnum.RUNNING) ? 'red2' : 'neutral3'}
+      >
+        {item.enableStopLoss
+          ? (item?.stopLossAmount ?? 0) >= 10000
+            ? `$${compactNumber(item.stopLossAmount, 2)}`
+            : `$${formatNumber(item.stopLossAmount)}`
+          : '--'}
+      </Box>
+      <Box as="span" color="neutral3">
+        {' / '}
+      </Box>
+      <Box
+        as="span"
+        color={ignoreDisable || (!ignoreDisable && item.status === CopyTradeStatusEnum.RUNNING) ? 'green1' : 'neutral3'}
+      >
+        {item.enableTakeProfit
+          ? (item?.takeProfitAmount ?? 0) >= 10000
+            ? `$${compactNumber(item.stopLossAmount, 2)}`
+            : `$${formatNumber(item.takeProfitAmount)}`
+          : '--'}
+      </Box>
+    </Flex>
   )
 }
 

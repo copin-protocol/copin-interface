@@ -9,6 +9,7 @@ import {
 import { MutableRefObject, SetStateAction, useCallback, useMemo } from 'react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
+import Divider from 'components/@ui/Divider'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyTradeData } from 'entities/copyTrade'
@@ -27,7 +28,7 @@ import { TOOLTIP_KEYS } from 'utils/config/keys'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 
-import { renderTrader } from '../renderProps'
+import { renderSLTPSetting, renderTrader } from '../renderProps'
 import ActionItem from './ActionItem'
 
 export default function useCopyTradeColumns({
@@ -134,27 +135,9 @@ export default function useCopyTradeColumns({
   )
   const renderSLTP = useCallback(
     (item: CopyTradeData) => (
-      <Type.Caption sx={{ gap: '0.5ch', justifyContent: 'end' }}>
-        <Box as="span" color={isRunningFn(item.status) ? 'red2' : 'neutral3'}>
-          {item.enableStopLoss
-            ? (item?.stopLossAmount ?? 0) >= 10000
-              ? `$${compactNumber(item.stopLossAmount, 2)}`
-              : `$${formatNumber(item.stopLossAmount)}`
-            : '--'}
-        </Box>
-        <Box as="span" color="neutral3">
-          {' / '}
-        </Box>
-        <Box as="span" color={isRunningFn(item.status) ? 'green1' : 'neutral3'}>
-          {item.enableTakeProfit
-            ? (item?.takeProfitAmount ?? 0) >= 10000
-              ? `$${compactNumber(item.stopLossAmount, 2)}`
-              : `$${formatNumber(item.takeProfitAmount)}`
-            : '--'}
-        </Box>
-      </Type.Caption>
+      <Type.Caption sx={{ gap: '0.5ch', justifyContent: 'end' }}>{renderSLTPSetting(item)}</Type.Caption>
     ),
-    [isRunningFn]
+    []
   )
   const renderRiskControl = useCallback(
     (item: CopyTradeData) => (
@@ -359,6 +342,7 @@ export default function useCopyTradeColumns({
                 icon={<ClockCounterClockwise size={18} />}
                 onSelect={() => handleOpenHistoryDrawer(item)}
               />
+              <Divider />
               <ActionItem
                 title={<Trans>Edit</Trans>}
                 icon={<PencilSimpleLine size={18} />}

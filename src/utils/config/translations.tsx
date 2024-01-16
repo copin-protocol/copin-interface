@@ -100,6 +100,14 @@ export const CHANGE_FIELD_TRANS: ObjectTrans = {
   [ChangeFieldEnum.TAKE_PROFIT_PRICE]: <Trans>Est. Take Profit Price</Trans>,
   [ChangeFieldEnum.SIDE]: <Trans>Side</Trans>,
   [ChangeFieldEnum.POSITION_SIDE]: <Trans>Position Side</Trans>,
+  [ChangeFieldEnum.BALANCE]: <Trans>Balance</Trans>,
+  [ChangeFieldEnum.AVAILABLE_BALANCE]: <Trans>Available Balance</Trans>,
+  [ChangeFieldEnum.NAME]: <Trans>Name</Trans>,
+  [ChangeFieldEnum.exchange]: <Trans>Exchange</Trans>,
+  [ChangeFieldEnum.bingX]: <Trans>BingX API Key</Trans>,
+  [ChangeFieldEnum.smartWalletAddress]: <Trans>Smart Wallet</Trans>,
+  [ChangeFieldEnum.copyVolume]: <Trans>Copy Volume</Trans>,
+  [ChangeFieldEnum.activeCopy]: <Trans>Active Copy</Trans>,
 }
 
 export const ERRORS: ObjectTrans = {

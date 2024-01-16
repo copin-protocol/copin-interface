@@ -28,7 +28,7 @@ export default function SelectWalletsDropdown({
   if (!allWallets.length) return <></>
   const isSelectedAll =
     !!allWallets.length &&
-    allWallets.every((copyWalletId) => selectedWallets.map((e) => e.id).includes(copyWalletId.id))
+    allWallets.every((copyWalletId) => selectedWallets?.map((e) => e.id).includes(copyWalletId.id))
 
   return (
     <Dropdown

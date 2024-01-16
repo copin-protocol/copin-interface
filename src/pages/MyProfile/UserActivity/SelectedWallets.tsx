@@ -46,15 +46,14 @@ export default function SelectedWallets({
         allWallets: copyWallets,
       },
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [copyWallets])
 
   if (!allWallets?.length) return <></>
 
   return (
     <SelectWalletsDropdown
       allWallets={allWallets}
-      selectedWallets={selectedWallets}
+      selectedWallets={selectedWallets ?? []}
       handleSelectAllWallets={handleSelectAllWallets}
       handleToggleWallet={handleToggleWallet}
     />

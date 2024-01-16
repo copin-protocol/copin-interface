@@ -100,6 +100,9 @@ export interface CopyPositionData {
   stopLossPrice: number
   stopLossAmount: number
   latestStopLossId?: string
+  takeProfitPrice: number
+  takeProfitAmount: number
+  latestTakeProfitId?: string
   pnl: number
   closeType: CopyPositionCloseTypeEnum
   status: PositionStatusEnum

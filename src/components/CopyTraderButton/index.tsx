@@ -72,6 +72,7 @@ export default function CopyTraderButton({
           account={account}
           isOpen={isOpenModal}
           onClose={handleCloseModal}
+          onSuccess={onForceReload}
           modalStyles={modalStyles}
         />
       )}

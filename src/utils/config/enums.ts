@@ -195,4 +195,12 @@ export enum ChangeFieldEnum {
   TAKE_PROFIT_PRICE = 'takeProfitPrice',
   SIDE = 'side',
   POSITION_SIDE = 'positionSide',
+  BALANCE = 'balance',
+  AVAILABLE_BALANCE = 'availableBalance',
+  NAME = 'name',
+  exchange = 'exchange',
+  bingX = 'bingX',
+  smartWalletAddress = 'smartWalletAddress',
+  copyVolume = 'copyVolume',
+  activeCopy = 'activeCopy',
 }

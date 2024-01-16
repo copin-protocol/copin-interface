@@ -35,12 +35,14 @@ export default function CopyTraderDrawer({
   account,
   isOpen,
   onClose,
+  onSuccess,
   modalStyles,
 }: {
   protocol: ProtocolEnum
   account: string
   isOpen: boolean
   onClose: () => void
+  onSuccess?: () => void
   modalStyles?: { backdropFilter?: string; overlayBackground?: string }
 }) {
   const refetchQueries = useRefetchQueries()
@@ -64,6 +66,7 @@ export default function CopyTraderDrawer({
         <ToastBody title={<Trans>Success</Trans>} message={<Trans>Make copy trade has been succeeded</Trans>} />
       )
       onClose()
+      onSuccess && onSuccess()
       if (!botAlert?.chatId) {
         handleGenerateLinkBot?.()
       }

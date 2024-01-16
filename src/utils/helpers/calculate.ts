@@ -1,6 +1,5 @@
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { PositionData } from 'entities/trader'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 
 export function calcPnL(isLong: boolean, averagePrice: number, lastPrice: number, sizeUsd: number) {
@@ -18,7 +17,7 @@ export function calcSynthetixPnL(isLong: boolean, averagePrice: number, marketPr
 export function calcCopyOpeningPnL(position: CopyPositionData, marketPrice?: number | undefined) {
   if (!marketPrice || !position.entryPrice) return 0
   const sizedDelta = Number(position.sizeDelta)
-  const sizeUsd = (!!sizedDelta ? sizedDelta : position.totalSizeDelta ?? 0) * position.entryPrice
+  const sizeUsd = (!!sizedDelta && sizedDelta > 0 ? sizedDelta : position.totalSizeDelta ?? 0) * position.entryPrice
   return calcPnL(position.isLong, position.entryPrice, marketPrice, sizeUsd)
 }
 
@@ -63,9 +62,7 @@ export function calcLiquidatePrice(position: PositionData) {
   return position.averagePrice + ((position.isLong ? 1 : -1) * (totalFee - 0.9 * lastCollateral)) / lastSizeInToken
 }
 
-export function calcCopyLiquidatePrice(position: CopyPositionData, prices: UsdPrices) {
-  const gmxPrice = prices[position.indexToken]
-  if (!gmxPrice) return undefined
+export function calcCopyLiquidatePrice(position: CopyPositionData) {
   const deltaPrice = (1 / position.leverage) * position.entryPrice
   return position.isLong ? position.entryPrice - deltaPrice : position.entryPrice + deltaPrice
 }
@@ -78,6 +75,6 @@ export function calcRiskPercent(isLong: boolean, entryPrice: number, marketPrice
   )
 }
 
-export function calcStopLossUsd(stopLossAmount: number, stopLossPrice: number, entryPrice: number) {
-  return stopLossAmount * Math.abs(stopLossPrice - entryPrice)
+export function calcSLTPUsd(amount: number, price: number, entryPrice: number) {
+  return amount * Math.abs(price - entryPrice)
 }

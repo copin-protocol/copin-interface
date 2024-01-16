@@ -23,7 +23,7 @@ export default function SelectedCopyTrades({
 }) {
   const { allCopyTrades: data } = useAllCopyTrades()
   const availableAllCopyTrades = data?.filter(
-    (copyTrade) => selectedWallets.findIndex((e) => e.id === copyTrade.copyWalletId) !== -1
+    (copyTrade) => selectedWallets?.findIndex((e) => e.id === copyTrade.copyWalletId) !== -1
   )
 
   const handleSelectAllCopyTrades = (isSelectedAll: boolean) => {
@@ -52,7 +52,6 @@ export default function SelectedCopyTrades({
         allCopyTrades: availableAllCopyTrades,
       },
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [availableAllCopyTrades])
 
   if (!allCopyTrades?.length) return <></>
@@ -60,7 +59,7 @@ export default function SelectedCopyTrades({
   return (
     <SelectCopyTradesDropdown
       allCopyTrades={allCopyTrades}
-      selectedCopyTrades={selectedCopyTrades}
+      selectedCopyTrades={selectedCopyTrades ?? []}
       handleSelectAllCopyTrades={handleSelectAllCopyTrades}
       handleToggleCopyTrade={handleToggleCopyTrade}
     />
