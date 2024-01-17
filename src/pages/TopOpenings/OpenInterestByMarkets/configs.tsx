@@ -94,13 +94,13 @@ export function getColumns({ protocol, timeOption }: { protocol: ProtocolEnum; t
   const tokenTradeSupport = TOKEN_TRADE_SUPPORT[protocol]
   const columns: ColumnData<OpenInterestMarketData>[] = [
     {
-      title: titlesMapping.market,
+      title: <Box pl={2}>{titlesMapping.market}</Box>,
       dataIndex: 'indexToken',
       key: 'indexToken',
       style: { minWidth: '120px' },
       render: (item) => {
         const { symbol } = tokenTradeSupport?.[item.indexToken]
-        return renderMarket(symbol)
+        return <Box pl={2}>{renderMarket(symbol)}</Box>
       },
     },
     {

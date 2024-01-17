@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { BookBookmark, Bookmarks } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
 
 import PageHeader from 'components/@ui/PageHeader'
 import MultipleBackTestModal from 'components/BacktestModal/MultipleBacktestModal'
@@ -21,6 +20,7 @@ export default function Explorer() {
           pageTitle={`Traders Explorer on ${protocol}`}
           headerText={<Trans>TRADER EXPLORER</Trans>}
           icon={BookBookmark}
+          routeSwitchProtocol
         />
         <Box sx={{ overflow: 'hidden', flex: '1 0 0' }}>
           <FilterTradersProvider tab={TabKeyEnum.Explorer}>

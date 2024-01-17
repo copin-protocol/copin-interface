@@ -6,6 +6,7 @@ import Table from 'components/@ui/Table'
 import { TableProps } from 'components/@ui/Table/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { OpenInterestMarketData } from 'entities/statistic'
+import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
@@ -64,6 +65,24 @@ export function ListForm({ data, isFetching, protocol, timeOption }: ListMarkets
         '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4', '& > *:last-child': { borderBottom: 'none' } },
       }}
     >
+      {isFetching && (
+        <Flex
+          sx={{
+            alignItems: 'start',
+            justifyContent: 'center',
+            bg: 'modalBG1',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          <Box pt={100}>
+            <Loading />
+          </Box>
+        </Flex>
+      )}
       {data?.map((marketData) => {
         const { symbol } = tokensMapping[marketData.indexToken]
         return (

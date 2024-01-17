@@ -80,12 +80,11 @@ function OpenInterestByMarketsPage() {
         icon={Pulse}
         showOnMobile
         routeSwitchProtocol
-        keepSearchOnSwitchProtocol
       />
       {sm ? (
         <Flex
           justifyContent="space-between"
-          p={12}
+          p={3}
           height="48px"
           sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}
         >

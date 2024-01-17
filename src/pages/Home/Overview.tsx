@@ -23,7 +23,7 @@ import { LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
-import { addressShorten, formatNumber, shortenText } from 'utils/helpers/format'
+import { addressShorten, compactNumber, formatNumber, shortenText } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseWalletName } from 'utils/helpers/transform'
 
@@ -102,19 +102,19 @@ function WalletOverview({
           <Navigator route={ROUTES.WALLET_MANAGEMENT.path} />
         </Flex>
         {selectedWallet ? (
-          <Flex sx={{ gap: 48 }}>
-            <WalletStateItem label={<Trans>BingX:</Trans>} value={parseWalletName(selectedWallet)} />
+          <Flex sx={{ gap: 24 }}>
+            <WalletStateItem label={<Trans>Copy Wallet</Trans>} value={parseWalletName(selectedWallet, true, true)} />
             <WalletStateItem
               label={<Trans>Balance</Trans>}
               value={
-                <Flex sx={{ alignItems: 'center', height: 22 }}>
-                  <BalanceText value={formatNumber(selectedWallet.balance, 2, 2)} component={Type.Caption} />
+                <Flex sx={{ alignItems: 'center', height: 22, width: 60 }}>
+                  <BalanceText value={compactNumber(selectedWallet.balance, 2)} component={Type.Caption} />
                 </Flex>
               }
             />
             <WalletStateItem
               label={<Trans>Total PnL</Trans>}
-              value={<SignedText value={overview?.pnl || undefined} maxDigit={2} minDigit={2} />}
+              value={<SignedText isCompactNumber value={overview?.pnl || undefined} maxDigit={2} minDigit={2} />}
             />
           </Flex>
         ) : (
@@ -132,7 +132,7 @@ function WalletStateItem({ label, value }: { label: ReactNode; value: ReactNode 
   return (
     <Flex sx={{ flexDirection: 'column', gap: 1 }}>
       <Type.Caption>{label}</Type.Caption>
-      <Type.Caption>{value}</Type.Caption>
+      <Type.CaptionBold>{value}</Type.CaptionBold>
     </Flex>
   )
 }
@@ -187,7 +187,7 @@ function Activities() {
   return activities?.length ? (
     <Flex pb={3} sx={{ width: '100%', flex: '1 0 0', flexDirection: 'column', overflow: 'hidden', minHeight: 200 }}>
       <Box px={3}>
-        <SectionLabel icon={<SpeakerSimpleHigh size={24} />} label={<Trans>Lasted activities</Trans>} />
+        <SectionLabel icon={<SpeakerSimpleHigh size={24} />} label={<Trans>Latest activities</Trans>} />
       </Box>
       <Flex
         mt={3}
@@ -201,15 +201,21 @@ function Activities() {
       >
         {activities.map((data) => {
           return (
-            <Box key={data.id} sx={{ a: { color: 'inherit !important', '&:hover': { textDecoration: 'underline' } } }}>
+            <Box
+              key={data.id}
+              sx={{ a: { color: 'neutral1', textDecoration: 'underline', '&:hover': { color: 'neutral2' } } }}
+            >
               <Type.Caption mb={1} color="neutral3">
                 <RelativeTimeText date={data.createdAt} />
               </Type.Caption>
-              <Type.Caption>
-                {shortenText(data.username, 8)} <Trans>copied a position from trader</Trans>{' '}
-                <Link to={generateTraderDetailsRoute(data.protocol, data.sourceAccount)}>
+              <Type.Caption color="neutral3">
+                <Box as="span" color="neutral1">
+                  {shortenText(data.username, 8)}
+                </Box>{' '}
+                <Trans>copied a position from trader</Trans>{' '}
+                <Box as={Link} to={generateTraderDetailsRoute(data.protocol, data.sourceAccount)}>
                   {addressShorten(data.sourceAccount)}
-                </Link>{' '}
+                </Box>{' '}
                 with a size of ${formatNumber(data?.volume, 2, 2)}
               </Type.Caption>
             </Box>

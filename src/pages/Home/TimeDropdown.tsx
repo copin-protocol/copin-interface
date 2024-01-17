@@ -12,10 +12,10 @@ export default function TimeDropdown({
 }) {
   return (
     <Dropdown
-      {...getDropdownProps({})}
+      {...getDropdownProps({ menuSx: { width: 100 } })}
       menu={
         <>
-          {TIME_FILTER_OPTIONS.map((option) => (
+          {TIME_FILTER_OPTIONS.slice(0, 4).map((option) => (
             <CheckableDropdownItem
               key={option.id}
               selected={option.id === timeOption.id}

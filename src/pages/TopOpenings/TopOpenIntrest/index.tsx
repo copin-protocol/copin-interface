@@ -62,10 +62,9 @@ function TopOpeningsPage() {
           icon={Pulse}
           showOnMobile
           routeSwitchProtocol
-          keepSearchOnSwitchProtocol
         />
         {sm ? (
-          <Flex justifyContent="space-between" p={12} height="48px">
+          <Flex justifyContent="space-between" p={16} height="48px">
             <Filters
               currentSort={sort}
               currentLimit={limit}

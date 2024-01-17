@@ -44,7 +44,7 @@ const SORT_OPTIONS: SortOption[] = [
   },
   {
     id: 'avgRoi',
-    text: <Trans>ROI</Trans>,
+    text: <Trans>Avg ROI</Trans>,
   },
   {
     id: 'winRate',

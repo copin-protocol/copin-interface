@@ -44,7 +44,7 @@ const useTraderFavoritesStore = create<TraderFavoritesState>()(
 
 const EXCLUDING_PATH = [
   ROUTES.STATS.path,
-  ROUTES.LEADERBOARD.path,
+  ROUTES.LEADERBOARD.path_prefix,
   ROUTES.SUBSCRIPTION.path,
   ROUTES.MY_MANAGEMENT.path,
   ROUTES.MY_HISTORY.path,
@@ -64,6 +64,7 @@ export const useInitTraderFavorites = () => {
   const { data, isLoading } = useQuery(['favorites', profile?.username, protocol], () => getFavoritesApi(protocol), {
     retry: 0,
     enabled: !!profile && enabledQueryByPaths,
+    keepPreviousData: true,
   })
   useEffect(() => {
     if (data) {

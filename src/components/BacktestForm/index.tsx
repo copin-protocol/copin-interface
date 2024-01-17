@@ -35,7 +35,7 @@ export default function BacktestForm({
 }: {
   protocol: ProtocolEnum
   tokensTraded?: string[]
-  onSubmit: (data: BackTestFormValues) => void
+  onSubmit: ((data: BackTestFormValues) => void) | undefined
   onCancel?: () => void
   isSubmitting: boolean
   defaultValues?: BackTestFormValues
@@ -323,7 +323,7 @@ export default function BacktestForm({
           direction="right"
           variant="primary"
           icon={<ArrowRight size={16} weight="bold" />}
-          onClick={() => handleSubmit(onSubmit)()}
+          onClick={() => onSubmit && handleSubmit(onSubmit)()}
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >

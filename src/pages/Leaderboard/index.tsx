@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Trophy } from '@phosphor-icons/react'
 
 import PageHeader from 'components/@ui/PageHeader'
-import { HomeSwitchProtocols } from 'components/SwitchProtocols'
+import { RouteSwitchProtocol } from 'components/SwitchProtocols'
 import TopLeaderboard from 'components/TopLeadboard'
 import { LeaderboardProvider } from 'hooks/features/useLeaderboardProvider'
 import { useProtocolStore } from 'hooks/store/useProtocols'
@@ -25,7 +25,12 @@ const Leaderboard = () => {
             flexDirection: 'column',
           }}
         >
-          <PageHeader pageTitle={`Leaderboard on ${protocol}`} headerText={<Trans>LEADERBOARD</Trans>} icon={Trophy} />
+          <PageHeader
+            pageTitle={`Leaderboard on ${protocol}`}
+            headerText={<Trans>LEADERBOARD</Trans>}
+            icon={Trophy}
+            routeSwitchProtocol
+          />
           <Flex
             px={[0, 0, 3, 3]}
             sx={{ borderBottom: 'small', borderColor: 'neutral4', width: '100%', mb: 0 }}
@@ -46,7 +51,12 @@ const Leaderboard = () => {
             >
               <SwitchLeaderboardType sx={{ pl: [3, 3, 0, 0], pr: [0, 0, 3, 3] }} />
               <Box display={['block', 'block', 'none']}>
-                <HomeSwitchProtocols buttonSx={{ borderRight: 'none', borderBottom: 'none' }} />
+                <RouteSwitchProtocol
+                  componentProps={{
+                    buttonSx: { height: 40, px: '8px !important', borderLeft: 'small', borderLeftColor: 'neutral4' },
+                    showIcon: true,
+                  }}
+                />
               </Box>
             </Flex>
             <Flex px={[3, 3, 0, 0]} width="100%" alignItems="center" flex={1} flexWrap="wrap">

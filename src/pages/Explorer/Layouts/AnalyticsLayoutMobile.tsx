@@ -1,6 +1,6 @@
 import { useResponsive } from 'ahooks'
 
-import { HomeSwitchProtocols } from 'components/SwitchProtocols'
+import { RouteSwitchProtocol } from 'components/SwitchProtocols'
 import { Box, Flex } from 'theme/base'
 
 import { AnalyticsLayoutComponents } from './types'
@@ -10,7 +10,7 @@ export default function AnalyticsLayoutMobile({
   listTradersSection,
   conditionFilter,
 }: AnalyticsLayoutComponents) {
-  const { md, lg } = useResponsive()
+  const { md } = useResponsive()
   return (
     <Flex
       sx={{
@@ -20,15 +20,20 @@ export default function AnalyticsLayoutMobile({
         flexDirection: 'column',
       }}
     >
-      <Flex sx={{ alignItems: 'center', borderBottom: 'small', borderBottomColor: 'neutral4' }}>
-        <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', flex: 1, px: 3, gap: 2 }}>
+      <Flex
+        sx={{ alignItems: 'center', borderBottom: 'small', borderBottomColor: 'neutral4', height: 40, px: 3, gap: 3 }}
+      >
+        <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', flex: 1, gap: 2 }}>
           {timeFilterSection}
           {conditionFilter}
         </Flex>
-        {md && !lg ? (
-          <Box height={40} />
-        ) : (
-          <HomeSwitchProtocols buttonSx={{ borderBottom: 'none', borderRight: 'none' }} />
+        {!md && (
+          <RouteSwitchProtocol
+            componentProps={{
+              buttonSx: { height: 40, px: '8px !important', borderLeft: 'small', borderLeftColor: 'neutral4' },
+              showIcon: true,
+            }}
+          />
         )}
       </Flex>
       <Box sx={{ flex: '1 0 0' }}>{listTradersSection}</Box>

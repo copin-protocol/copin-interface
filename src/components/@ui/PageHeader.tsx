@@ -1,3 +1,4 @@
+import { useResponsive } from 'ahooks'
 import { ComponentType, ReactNode } from 'react'
 
 import { HomeSwitchProtocols, RouteSwitchProtocol } from 'components/SwitchProtocols'
@@ -20,6 +21,7 @@ export default function PageHeader({
   keepSearchOnSwitchProtocol?: boolean
   routeSwitchProtocol?: boolean
 }) {
+  const { md } = useResponsive()
   return (
     <>
       <CustomPageTitle title={pageTitle} />
@@ -27,7 +29,8 @@ export default function PageHeader({
         display={showOnMobile ? 'flex' : ['none', 'none', 'flex']}
         sx={{
           width: '100%',
-          px: 3,
+          pl: 3,
+          pr: showOnMobile && !md ? 3 : 0,
           alignItems: 'center',
           justifyContent: 'space-between',
           borderBottom: 'small',
@@ -50,12 +53,7 @@ export default function PageHeader({
           <Type.Body sx={{ flex: 1, flexShrink: 0, fontWeight: 500 }}>{headerText}</Type.Body>
         </Flex>
         {routeSwitchProtocol ? (
-          <RouteSwitchProtocol
-            componentProps={{
-              buttonSx: { border: 'none', borderLeft: 'small', borderLeftColor: 'neutral4' },
-            }}
-            keepSearch={keepSearchOnSwitchProtocol}
-          />
+          <RouteSwitchProtocol keepSearch={keepSearchOnSwitchProtocol} />
         ) : (
           <HomeSwitchProtocols buttonSx={{ border: 'none', borderLeft: 'small', borderLeftColor: 'neutral4' }} />
         )}

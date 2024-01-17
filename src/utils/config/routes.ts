@@ -3,7 +3,8 @@ const ROUTES = {
     path: '/',
   },
   TRADERS_EXPLORER: {
-    path: '/explorer',
+    path: '/:protocol/explorer',
+    path_prefix: '/explorer',
   },
   OPEN_INTEREST: {
     path: '/:protocol/open-interest',
@@ -18,7 +19,8 @@ const ROUTES = {
     path_prefix: '/open-interest/market',
   },
   LEADERBOARD: {
-    path: '/leaderboard',
+    path: '/:protocol/leaderboard',
+    path_prefix: '/leaderboard',
   },
   FAVORITES: {
     path: '/favorites',

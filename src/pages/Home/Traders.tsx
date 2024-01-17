@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { CaretRight } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { Dispatch, MouseEvent, ReactNode, useEffect, useReducer, useRef, useState } from 'react'
+import { MouseEvent, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
@@ -13,24 +13,20 @@ import ChartTraderPnL from 'components/Charts/ChartTraderPnL'
 import { parsePnLStatsData } from 'components/Charts/ChartTraderPnL/helpers'
 import CopyTraderButton from 'components/CopyTraderButton'
 import FavoriteButton from 'components/FavoriteButton'
-import { useClickLoginButton } from 'components/LoginAction'
 import TraderAddress from 'components/TraderAddress'
 import { TraderData } from 'entities/trader'
-import { UserData } from 'entities/user'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useIsMobile from 'hooks/helpers/useIsMobile'
-import usePageChange from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
-import useMyProfileStore from 'hooks/store/useMyProfile'
+import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import ROUTES from 'utils/config/routes'
 import { formatDate } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateExplorerRoute, generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import ProtocolDropdown from './ProtocolDropdown'
@@ -40,19 +36,23 @@ import { BASE_RANGE_FILTER } from './configs'
 
 const PADDING_X = 12
 export default function Traders() {
-  const { searchParams } = useSearchParams()
-  const [filters, setFilter] = useReducer(reducer, initialFilters, (state) => {
-    const sortBy = searchParams[URL_PARAM_KEYS.HOME_SORT_BY] as unknown as keyof TraderData
-    const time = searchParams[URL_PARAM_KEYS.HOME_TIME] as unknown as TimeFilterByEnum
-    const timeOption = time ? TIME_FILTER_OPTIONS.find((option) => option.id === time) : undefined
-    const protocol = searchParams[URL_PARAM_KEYS.HOME_PROTOCOL] as unknown as ProtocolEnum
+  const { searchParams, setSearchParams } = useSearchParams()
+  const filters: FiltersState = useMemo(() => {
+    const sortBy = (searchParams[URL_PARAM_KEYS.HOME_SORT_BY] as unknown as keyof TraderData | undefined) ?? 'pnl'
+    const time =
+      (searchParams[URL_PARAM_KEYS.HOME_TIME] as unknown as TimeFilterByEnum | undefined) ?? TimeFilterByEnum.S30_DAY
+    const timeOption = time
+      ? TIME_FILTER_OPTIONS.find((option) => option.id === time) ?? TIME_FILTER_OPTIONS[2]
+      : TIME_FILTER_OPTIONS[2]
+    const protocol =
+      (searchParams[URL_PARAM_KEYS.HOME_PROTOCOL] as unknown as ProtocolEnum | undefined) ?? ProtocolEnum.KWENTA
+    if (!protocol) setSearchParams({ [URL_PARAM_KEYS.HOME_PROTOCOL]: protocol })
     return {
-      ...state,
-      ...(sortBy ? { sortBy } : {}),
-      ...(timeOption ? { time: timeOption } : {}),
-      ...(protocol ? { protocol } : {}),
+      sortBy,
+      time: timeOption,
+      protocol,
     }
-  })
+  }, [searchParams, setSearchParams])
   return (
     <Flex
       sx={{
@@ -81,9 +81,9 @@ export default function Traders() {
             justifyContent: 'space-between',
           }}
         >
-          <Filters filters={filters} setFilter={setFilter} />
+          <Filters filters={filters} />
           <Type.CaptionBold>
-            <Link to={`${ROUTES.TRADERS_EXPLORER.path}?${URL_PARAM_KEYS.PROTOCOL}=${filters.protocol}`}>
+            <Link to={generateExplorerRoute({ protocol: filters.protocol })}>
               <Trans>Explore More</Trans>
             </Link>
           </Type.CaptionBold>
@@ -102,49 +102,19 @@ type FiltersState = {
   time: TimeFilterProps
   protocol: ProtocolEnum
 }
-const initialFilters: FiltersState = {
-  sortBy: 'pnl',
-  time: TIME_FILTER_OPTIONS[2],
-  protocol: ProtocolEnum.KWENTA,
-}
-type Action = 'setSortBy' | 'setTime' | 'setProtocol'
-function reducer(state: FiltersState, action: { type: Action; payload: any }): FiltersState {
-  switch (action.type) {
-    case 'setSortBy':
-      return { ...state, sortBy: action.payload }
-    case 'setTime':
-      return { ...state, time: action.payload }
-    case 'setProtocol':
-      return { ...state, protocol: action.payload }
-    default:
-      return state
-  }
-}
 
-function Filters({
-  filters,
-  setFilter,
-}: {
-  filters: FiltersState
-  setFilter: Dispatch<{
-    type: Action
-    payload: any
-  }>
-}) {
+function Filters({ filters }: { filters: FiltersState }) {
   const { setSearchParams } = useSearchParams()
   const { checkIsPremium } = useIsPremiumAndAction()
   const handleChangeSort = (sortBy: keyof TraderData) => {
     setSearchParams({ [URL_PARAM_KEYS.HOME_SORT_BY]: sortBy as unknown as string, [URL_PARAM_KEYS.HOME_PAGE]: '1' })
-    setFilter({ type: 'setSortBy', payload: sortBy })
   }
   const handleChangeTime = (option: TimeFilterProps) => {
     if (option.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) return
     setSearchParams({ [URL_PARAM_KEYS.HOME_TIME]: option.id as unknown as string, [URL_PARAM_KEYS.HOME_PAGE]: '1' })
-    setFilter({ type: 'setTime', payload: option })
   }
   const handleChangeProtocol = (protocol: ProtocolEnum) => {
     setSearchParams({ [URL_PARAM_KEYS.HOME_PROTOCOL]: protocol as unknown as string, [URL_PARAM_KEYS.HOME_PAGE]: '1' })
-    setFilter({ type: 'setProtocol', payload: protocol })
   }
   return (
     <Flex sx={{ gap: 3, flexWrap: 'wrap' }}>
@@ -172,11 +142,12 @@ function Filters({
 
 const LIMIT = 12
 function ListTraders({ filters }: { filters: FiltersState }) {
-  const { myProfile } = useMyProfileStore()
-  const { currentPage, changeCurrentPage } = usePageChange({ pageName: URL_PARAM_KEYS.HOME_PAGE })
-  useEffect(() => {
-    changeCurrentPage(1)
-  }, [filters])
+  const { profile, isAuthenticated } = useAuthContext()
+  const { searchParams, setSearchParams } = useSearchParams()
+  const currentPageParam = Number(searchParams[URL_PARAM_KEYS.HOME_PAGE])
+  const currentPage = !isNaN(currentPageParam) ? currentPageParam : 1
+  const changeCurrentPage = (page: number) => setSearchParams({ [URL_PARAM_KEYS.HOME_PAGE]: page.toString() })
+
   const {
     data: traders,
     isLoading,
@@ -197,7 +168,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     {
       keepPreviousData: true,
       retry: 0,
-      enabled: filters.time.id !== TimeFilterByEnum.ALL_TIME || myProfile?.plan === SubscriptionPlanEnum.PREMIUM,
+      enabled: filters.time.id !== TimeFilterByEnum.ALL_TIME || profile?.plan === SubscriptionPlanEnum.PREMIUM,
     }
   )
   const [selectedTrader, setSelectedTrader] = useState<{ account: string; protocol: ProtocolEnum } | null>(null)
@@ -270,9 +241,15 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     setSelectedTrader({ account: traderData.account, protocol: traderData.protocol })
   }
 
+  // Logic apply when need fetching state and api is public & private
+  const isDuplicateLoading = useRef(true)
+  useEffect(() => {
+    if (!isLoading && !isFetching && isAuthenticated != null) isDuplicateLoading.current = false
+  }, [isLoading, isFetching, isAuthenticated])
+
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
-      {isFetching && (
+      {(isLoading || (isFetching && !isDuplicateLoading.current)) && (
         <Box
           sx={{
             display: 'flex',
@@ -320,7 +297,6 @@ function ListTraders({ filters }: { filters: FiltersState }) {
               <TraderItem
                 key={traderData.id}
                 traderData={traderData}
-                myProfile={myProfile}
                 timeOption={filters.time}
                 onClickBacktest={onClickBacktest}
               />
@@ -369,12 +345,10 @@ function ListTraders({ filters }: { filters: FiltersState }) {
 }
 function TraderItem({
   traderData,
-  myProfile,
   onClickBacktest,
   timeOption,
 }: {
   traderData: TraderData
-  myProfile: UserData | null
   onClickBacktest: (traderData: TraderData) => void
   timeOption: TimeFilterProps
 }) {
@@ -401,7 +375,7 @@ function TraderItem({
         e.stopPropagation()
       }}
     >
-      <Flex sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+      <Flex sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between', '& *': { fontWeight: 600 } }}>
         <TraderAddress
           address={traderData.account}
           protocol={traderData.protocol}
@@ -422,7 +396,7 @@ function TraderItem({
         </Flex>
       </Flex>
 
-      <Box mt={3} mb={20} sx={{ height: 30 }}>
+      <Box mt={3} mb={20} sx={{ height: 60 }}>
         <ChartTraderPnL data={parsePnLStatsData(traderData.pnlStatistics)} dayCount={timeOption.value} height={30} />
       </Box>
 
@@ -431,15 +405,15 @@ function TraderItem({
           <Type.Caption display="block">
             <Trans>{TIME_TRANSLATION[traderData.type]} PnL ($)</Trans>
           </Type.Caption>
-          <Type.Caption>
-            <SignedText value={traderData.pnl} minDigit={2} maxDigit={2} fontInherit prefix="$" />
+          <Type.Caption sx={{ fontWeight: 600 }}>
+            <SignedText value={traderData.pnl} minDigit={0} maxDigit={0} fontInherit prefix="$" />
           </Type.Caption>
         </Box>
         <Box>
           <Type.Caption display="block">
-            <Trans>{TIME_TRANSLATION[traderData.type]} ROI (%)</Trans>
+            <Trans>{TIME_TRANSLATION[traderData.type]} Avg ROI (%)</Trans>
           </Type.Caption>
-          <Type.Caption>
+          <Type.Caption sx={{ fontWeight: 600 }}>
             <SignedText value={traderData.avgRoi} minDigit={2} maxDigit={2} fontInherit suffix="%" />
           </Type.Caption>
         </Box>
@@ -447,7 +421,7 @@ function TraderItem({
           <Type.Caption display="block">
             <Trans>Win/Trades</Trans>
           </Type.Caption>
-          <Type.Caption>
+          <Type.Caption sx={{ fontWeight: 600 }}>
             {traderData.totalWin}/{traderData.totalTrade}
           </Type.Caption>
         </Box>
@@ -460,7 +434,7 @@ function TraderItem({
           buttonSx={{ width: 100, borderRadius: '4px' }}
           modalStyles={{ backdropFilter: 'none', overlayBackground: 'rgba(0, 0, 0, 0.85)' }}
         />
-        <BacktestButton onClick={() => onClickBacktest(traderData)} myProfile={myProfile} />
+        <BacktestButton onClick={() => onClickBacktest(traderData)} />
       </Flex>
     </Box>
   )
@@ -474,15 +448,10 @@ const TIME_TRANSLATION: Record<string, ReactNode> = {
   [TimeFilterByEnum.S60_DAY]: <Trans>60D</Trans>,
 }
 
-function BacktestButton({ myProfile, onClick }: { onClick: () => void; myProfile: UserData | null }) {
-  const handleClickLogin = useClickLoginButton()
+function BacktestButton({ onClick }: { onClick: () => void }) {
   const handleOpenBackTestModal = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     e.stopPropagation()
-    if (!myProfile) {
-      handleClickLogin()
-      return
-    }
     onClick()
   }
 

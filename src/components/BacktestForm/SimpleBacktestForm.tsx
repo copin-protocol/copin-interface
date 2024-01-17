@@ -6,7 +6,9 @@ import { ReactNode, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
+import { useClickLoginButton } from 'components/LoginAction'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Label from 'theme/InputField/Label'
@@ -33,7 +35,7 @@ export default function SimpleBacktestForm({
   timeOption: TimeFilterProps
   onChangeTimeOption: (option: TimeFilterProps) => void
   protocol: ProtocolEnum
-  onSubmit: (data: BackTestFormValues) => void
+  onSubmit: ((data: BackTestFormValues) => void) | undefined
   onCancel?: () => void
   isSubmitting: boolean
   defaultValues?: BackTestFormValues
@@ -43,10 +45,12 @@ export default function SimpleBacktestForm({
     watch,
     setValue,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<BackTestFormValues>({
     resolver: yupResolver(backTestFormSchema),
   })
+
   const _timeOption = timeOption.id === TimeFilterByEnum.ALL_TIME ? TIME_FILTER_OPTIONS[3] : timeOption
 
   useEffect(() => {
@@ -84,6 +88,8 @@ export default function SimpleBacktestForm({
       TIME_FILTER_OPTIONS.find((option) => option.id === _selectValue?.value) ?? TIME_FILTER_OPTIONS[0]
     )
   }
+  const { myProfile } = useMyProfileStore()
+  const handleClickLogin = useClickLoginButton()
 
   return (
     <Box>
@@ -144,7 +150,13 @@ export default function SimpleBacktestForm({
           variant="primary"
           block
           icon={isSubmitting ? <></> : <ArrowRight size={16} weight="bold" />}
-          onClick={() => handleSubmit(onSubmit)()}
+          onClick={() => {
+            if (!myProfile) {
+              handleClickLogin()
+              return
+            }
+            onSubmit && handleSubmit(onSubmit)()
+          }}
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >

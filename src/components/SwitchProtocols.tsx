@@ -21,6 +21,7 @@ type SwitchProtocolComponentProps = {
   textSx?: SystemStyleObject & GridProps
   sx?: SystemStyleObject & GridProps
   onSwitch?: (protocol: ProtocolEnum) => void
+  showIcon?: boolean
 }
 
 export function HomeSwitchProtocols(props: SwitchProtocolComponentProps) {
@@ -34,10 +35,10 @@ export function HomeSwitchProtocols(props: SwitchProtocolComponentProps) {
 }
 
 export function RouteSwitchProtocol({
-  componentProps,
+  componentProps = {},
   keepSearch = true,
 }: {
-  componentProps: SwitchProtocolComponentProps
+  componentProps?: SwitchProtocolComponentProps
   keepSearch?: boolean
 }) {
   const history = useHistory()
@@ -57,6 +58,7 @@ function SwitchProtocolsComponent({
   textSx,
   sx,
   onSwitch,
+  showIcon = false,
 }: SwitchProtocolComponentProps & { onSwitch: (() => void) | ((protocol: ProtocolEnum) => void) }) {
   const { md } = useResponsive()
   const { myProfile } = useMyProfile()
@@ -122,13 +124,13 @@ function SwitchProtocolsComponent({
                 borderColor: 'neutral4',
                 cursor: 'not-allowed',
               },
-              ...buttonSx,
+              ...(buttonSx ?? {}),
             }
-          : { border: 'none', p: 0 }
+          : { borderRadius: 0, border: 'none', p: 0, ...(buttonSx ?? {}) }
       }
       menuSx={{ width: 160 }}
       hasArrow={true}
-      sx={{ minWidth: 'fit-content', ...sx }}
+      sx={{ minWidth: 'fit-content', ...(sx ?? {}) }}
     >
       <Flex
         width="fit-content"
@@ -138,9 +140,9 @@ function SwitchProtocolsComponent({
           gap: 2,
         }}
       >
-        {md && <Image src={parseProtocolImage(protocol)} width={28} height={28} />}
+        {(showIcon || md) && <Image src={parseProtocolImage(protocol)} width={28} height={28} />}
         <Box width={md ? 85 : 'auto'}>
-          <Type.Caption display="block" lineHeight="16px" color="neutral1" sx={{ ...textSx }}>
+          <Type.Caption display="block" lineHeight="16px" color="neutral1" sx={{ ...(textSx ?? {}) }}>
             {currentProtocolOption.text}
           </Type.Caption>
           {md && (

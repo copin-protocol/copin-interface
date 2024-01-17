@@ -26,8 +26,8 @@ export default function SimpleBacktestResult({
           value={<SignedText value={result.profit} maxDigit={2} minDigit={2} prefix="$" />}
         />
         <ResultItem
-          label={<Trans>Avg ROI</Trans>}
-          value={<SignedText value={result.avgRoi} maxDigit={2} minDigit={2} suffix="%" />}
+          label={<Trans>ROI</Trans>}
+          value={<SignedText value={result.roi} maxDigit={2} minDigit={2} suffix="%" />}
         />
         <ResultItem label={<Trans>Total trade</Trans>} value={formatNumber(result.totalTrade)} />
         <ResultItem
@@ -37,7 +37,7 @@ export default function SimpleBacktestResult({
         <ResultItem label={<Trans>Leverage</Trans>} value={`${formatNumber(settings.leverage)}x`} />
         <ResultItem
           label={<Trans>Max margin multiplier</Trans>}
-          value={formatNumber(settings.maxVolMultiplier ?? undefined)}
+          value={formatNumber(result.maxVolMultiplier ?? undefined)}
         />
         <ResultItem
           label={<Trans>Max draw down</Trans>}

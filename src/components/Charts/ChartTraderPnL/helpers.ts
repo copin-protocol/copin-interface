@@ -8,8 +8,8 @@ export function parsePnLStatsData(data: TraderData['pnlStatistics'] | undefined)
     return [
       ...result,
       {
-        pnl: data.value[index] ?? 0,
-        fee: 0,
+        pnl: data.pnl?.[index] ?? 0,
+        fee: data.fee?.[index] ?? 0,
         date,
       },
     ]

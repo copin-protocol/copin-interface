@@ -185,7 +185,18 @@ export function parseExchangeImage(exchange: CopyTradePlatformEnum) {
   return `/images/exchanges/${exchange}.png`
 }
 
-export function parseWalletName(wallet: CopyWalletData) {
+export function parseWalletName(wallet: CopyWalletData, returnExchange?: boolean, shortenName?: boolean) {
+  if (returnExchange)
+    return `${COPY_WALLET_TRANS[wallet.exchange]}: ${
+      wallet?.name
+        ? shortenName
+          ? addressShorten(wallet.name)
+          : wallet.name
+        : wallet?.smartWalletAddress
+        ? addressShorten(wallet?.smartWalletAddress)
+        : wallet.bingX?.apiKey?.slice(0, 5)
+    }`
+
   return wallet.name
     ? wallet.name
     : `${COPY_WALLET_TRANS[wallet.exchange]}: ${

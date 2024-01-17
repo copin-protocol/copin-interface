@@ -85,3 +85,17 @@ export function generateOIRoute(data: { protocol: string; params?: Record<string
     params: data.params,
   })
 }
+
+export function generateExplorerRoute(data: { protocol: string; params?: Record<string, any> }) {
+  return createUrlWithParams({
+    url: `/${data.protocol}${ROUTES.TRADERS_EXPLORER.path_prefix}`,
+    params: data.params,
+  })
+}
+
+export function generateLeaderboardRoute(data: { protocol: string; params?: Record<string, any> }) {
+  return createUrlWithParams({
+    url: `/${data.protocol}${ROUTES.LEADERBOARD.path_prefix}`,
+    params: data.params,
+  })
+}

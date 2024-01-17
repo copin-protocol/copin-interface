@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { Box } from 'theme/base'
 import ROUTES from 'utils/config/routes'
-import { generateOIRoute } from 'utils/helpers/generateRoute'
+import { generateExplorerRoute, generateLeaderboardRoute, generateOIRoute } from 'utils/helpers/generateRoute'
 
 export function DesktopNavLinks() {
   return (
@@ -27,12 +27,13 @@ function NavLinks({ onClose }: { onClose?: () => void }) {
 
   return (
     <>
-      {configs.map((config) => {
+      {configs.map((config, index) => {
         return (
           <NavLink
-            key={config.route}
+            key={index}
             to={config.routeFactory ? config.routeFactory({ protocol }) : { pathname: config.route }}
             onClick={onClose}
+            matchpath={config.matchpath}
           >
             {config.label}
           </NavLink>
@@ -48,23 +49,32 @@ const configs = [
     label: <Trans>Home</Trans>,
   },
   {
-    route: ROUTES.TRADERS_EXPLORER.path,
+    routeFactory: (configs: Record<string, any>) => {
+      if (configs.protocol) return generateExplorerRoute({ protocol: configs.protocol })
+      return ''
+    },
     label: <Trans>Traders Explorer</Trans>,
+    matchpath: ROUTES.TRADERS_EXPLORER.path_prefix,
   },
   {
     routeFactory: (configs: Record<string, any>) => {
       if (configs.protocol) return generateOIRoute({ protocol: configs.protocol })
       return ''
     },
+    matchpath: ROUTES.OPEN_INTEREST.path_prefix,
     label: <Trans>Open Interest</Trans>,
   },
   {
-    route: ROUTES.LEADERBOARD.path,
+    routeFactory: (configs: Record<string, any>) => {
+      if (configs.protocol) return generateLeaderboardRoute({ protocol: configs.protocol })
+      return ''
+    },
+    matchpath: ROUTES.LEADERBOARD.path_prefix,
     label: <Trans>Leaderboard</Trans>,
   },
 ]
 
-function NavLink(props: NavLinkProps) {
+function NavLink(props: NavLinkProps & { matchpath?: string }) {
   return (
     <Link
       className="navlink-default"
@@ -74,7 +84,11 @@ function NavLink(props: NavLinkProps) {
           return false
         }
 
-        if (location.pathname === (props.to as Location).pathname) return true
+        if (
+          (!!props.matchpath && !!location.pathname.match(props?.matchpath)) ||
+          location.pathname === (props.to as Location).pathname
+        )
+          return true
         return false
       }}
       {...props}

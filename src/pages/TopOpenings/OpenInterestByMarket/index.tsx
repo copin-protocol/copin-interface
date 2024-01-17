@@ -102,10 +102,9 @@ function OpenInterestByMarketPage() {
           icon={Pulse}
           showOnMobile
           routeSwitchProtocol
-          keepSearchOnSwitchProtocol
         />
         {sm ? (
-          <Flex justifyContent="space-between" p={12} height="48px">
+          <Flex justifyContent="space-between" p={3} height="48px">
             <Flex>
               <Filters
                 currentSort={sort}

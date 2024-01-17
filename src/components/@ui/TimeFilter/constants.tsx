@@ -75,7 +75,7 @@ export const TIME_WITH_RANGE_FILTER_OPTIONS: TimeWithRangeFilterProps[] = [
 export const ALL_TIME_FILTER_OPTIONS: TimeFilterProps[] = [
   {
     id: TimeFilterByEnum.S1_DAY,
-    text: <Trans>1 days</Trans>,
+    text: <Trans>1 day</Trans>,
     sort_by: TimeFilterByEnum.S1_DAY,
     value: 1,
     premiumFilter: true,
