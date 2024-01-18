@@ -75,6 +75,7 @@ export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSou
           return (
             <Box as="th" key={key.toString()} sx={column.style} data-table-key={column.key}>
               <Box
+                width="100%"
                 role={column?.sortBy && changeCurrentSort ? 'button' : 'none'}
                 onClick={() => {
                   handleChangeSort(column?.sortBy, column?.sortType)
@@ -87,8 +88,8 @@ export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSou
                 }}
               >
                 {column.sortBy && changeCurrentSort ? (
-                  <Type.Caption fontWeight={isCurrentSort ? 'bold' : 'normal'}>
-                    <Flex alignItems="center">
+                  <Type.Caption fontWeight={isCurrentSort ? 'bold' : 'normal'} sx={{ width: '100%' }}>
+                    <Flex alignItems="center" as="span" sx={{ justifyContent: column.style?.textAlign }}>
                       {column.title}
                       {isCurrentSort ? (
                         currentSort?.sortType === SortTypeEnum.DESC ? (
@@ -102,7 +103,7 @@ export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSou
                     </Flex>
                   </Type.Caption>
                 ) : (
-                  <Type.Caption>{column.title}</Type.Caption>
+                  <Type.Caption sx={{ width: '100%' }}>{column.title}</Type.Caption>
                 )}
               </Box>
             </Box>

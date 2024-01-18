@@ -12,6 +12,7 @@ export const variants = {
   OUTLINE: 'outline',
   CARD: 'card',
   CARD_WARNING: 'cardWarning',
+  WARNING_PRIMARY: 'warningPrimary',
 } as const
 
 export type AlertProps = { block?: boolean } & SxProps &

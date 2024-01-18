@@ -32,7 +32,7 @@ export function getFormValuesFromFilters<T>(data: FilterValues[], factory: (data
   return data.map((e) => factory(e)) as ConditionFormValues<T>
 }
 
-export function getFieldOptions<T>(settings: { id: any; text?: any; filter?: any; unit?: any }[]) {
+export function getFieldOptions<T>(settings: { id: any; text?: any; filter?: any; unit?: any; searchText?: string }[]) {
   const fieldOptions: FieldOption<T>[] = settings
     .filter((item) => item.filter != null)
     .map((item) => ({
@@ -40,6 +40,7 @@ export function getFieldOptions<T>(settings: { id: any; text?: any; filter?: any
       label: <div>{item.text}</div>,
       default: item.filter,
       unit: item.unit,
+      searchText: item.searchText,
     }))
   return fieldOptions
 }

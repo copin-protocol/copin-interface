@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify'
 import FavoriteNoteTooltip from 'components/FavoriteButton/FavoriteNoteTooltip'
 import SubscriptionRestrictModal from 'components/SubscriptionRestrictModal'
 import useModifyStorage from 'hooks/features/useModifyStorage'
+import useResetSearchParams from 'hooks/helpers/useResetSearchParams'
 import useGlobalDialog from 'hooks/store/useGlobalDialog'
 import useSubscriptionRestrictStore from 'hooks/store/useSubscriptionRestrictStore'
 import { useInitTraderCopying } from 'hooks/store/useTraderCopying'
@@ -25,6 +26,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
   useEagerConnect()
   usePollingUsdPrice()
   useModifyStorage()
+  useResetSearchParams()
   const dialog = useGlobalDialog((state) => state.dialog)
   const restrictState = useSubscriptionRestrictStore((state) => state.state)
 

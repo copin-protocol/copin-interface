@@ -1,4 +1,5 @@
 import openingBg from 'assets/images/opening_bg.svg'
+import { DifferentialBar } from 'components/@ui/DifferentialBar'
 import { PositionData } from 'entities/trader'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
@@ -7,35 +8,14 @@ import { formatNumber } from 'utils/helpers/format'
 
 import OpeningPositionsBubble from './OpeningPositionsBubble'
 
-const VisualizeSection = ({
-  protocol,
-  data,
-  isLoading,
-}: // isRefetching,
-{
+type VisualizeSectionProps = {
   protocol: ProtocolEnum
   data: PositionData[] | undefined
   isLoading: boolean
-  // isRefetching: boolean
-}) => {
-  // const queryClient = useQueryClient()
-  const longVol = data ? data.filter((item) => item.isLong).reduce((prev, cur) => (prev += cur.size), 0) : undefined
-  const longTraders = data ? new Set(data.filter((item) => item.isLong).map((item) => item.account)) : undefined
-  const shortTraders = data ? new Set(data.filter((item) => !item.isLong).map((item) => item.account)) : undefined
-  const shortVol = data ? data.filter((item) => !item.isLong).reduce((prev, cur) => (prev += cur.size), 0) : undefined
-  const longRate = longVol != null && shortVol != null ? (longVol * 100) / (longVol + shortVol) : undefined
-  // useEffect(() => {
-  //   if (!data) return
-  //   setTimeout(() => {
-  //     if (data) {
-  //       if (tested.current) return
-  //       tested.current = true
-  //       queryClient.setQueryData([QUERY_KEYS.GET_TOP_OPEN_POSITIONS, protocol, limit], (data: any) => {
-  //         return [...data, { ...data[0], id: 'test' }]
-  //       })
-  //     }
-  //   }, 3000)
-  // }, [data])
+}
+
+export default function VisualizeSection({ protocol, data, isLoading }: VisualizeSectionProps) {
+  const longShortData = getLongShortData(data)
   return (
     <>
       <Box height="100%">
@@ -54,80 +34,65 @@ const VisualizeSection = ({
             justifyContent: 'center',
           }}
         >
-          {/* <Box sx={{ position: 'absolute', top: 0, right: 0, width: '100%' }}>
-            <LoadingBar isRefetching={isRefetching} />
-            {isRefetching && (
-              <Box sx={{ position: 'absolute', top: 0, right: '8px' }}>
-                <Loading />
-              </Box>
-            )}
-          </Box> */}
-
           {!data && isLoading && <Loading />}
           {data && <OpeningPositionsBubble data={data} protocol={protocol} />}
         </Flex>
         <Box height="136px" p={12}>
-          {!!longRate && (
-            <>
-              <Flex justifyContent="space-between" mb={3}>
-                <Type.CaptionBold>Long Rate: {formatNumber(longRate, 1, 1)}%</Type.CaptionBold>
-                <Type.CaptionBold>Short Rate: {formatNumber(100 - longRate, 1, 1)}%</Type.CaptionBold>
-              </Flex>
-
-              <Flex width="100%" height="8px">
-                <Box width={`calc(${longRate}% - 6px)`} height="100%" bg="green1"></Box>
-                <Box width="12px" sx={{ position: 'relative' }}>
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      display: 'inline-block',
-                      borderStyle: 'solid',
-                      borderWidth: '4px',
-                      borderTopColor: 'green1',
-                      borderLeftColor: 'green1',
-                      borderBottomColor: 'transparent',
-                      borderRightColor: 'transparent',
-                    }}
-                    width="0"
-                    height="0"
-                  ></Box>
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      right: 0,
-                      display: 'inline-block',
-                      borderStyle: 'solid',
-                      borderWidth: '4px',
-                      borderTopColor: 'transparent',
-                      borderLeftColor: 'transparent',
-                      borderBottomColor: 'red1',
-                      borderRightColor: 'red1',
-                    }}
-                    width="0"
-                    height="0"
-                  ></Box>
-                </Box>
-                <Box width={`calc(${100 - longRate}% - 6px)`} height="100%" bg="red1"></Box>
-              </Flex>
-              <Flex justifyContent="space-between" mt={3}>
-                <Box>
-                  <Type.Caption display="block">Long Volume: ${formatNumber(longVol, 0, 0)}</Type.Caption>
-                  <Type.Caption>{longTraders?.size ?? '--'} traders</Type.Caption>
-                </Box>
-                <Box textAlign="right">
-                  <Type.Caption display="block">Short Volume: ${formatNumber(shortVol, 0, 0)}</Type.Caption>
-                  <Type.Caption>{shortTraders?.size ?? '--'} traders</Type.Caption>
-                </Box>
-              </Flex>
-            </>
-          )}
+          <LongShortRate {...longShortData} />
         </Box>
       </Box>
     </>
   )
 }
 
-export default VisualizeSection
+export function VisualizeSectionMobile({ data }: Pick<VisualizeSectionProps, 'data'>) {
+  const longShortData = getLongShortData(data)
+  return <LongShortRate {...longShortData} />
+}
+
+type LongShortRateProps = {
+  longRate: number | undefined
+  shortRate: number | undefined
+  longTraders: Set<string> | undefined
+  shortTraders: Set<string> | undefined
+  longVol: number | undefined
+  shortVol: number | undefined
+}
+function LongShortRate({ longRate, shortRate, longTraders, shortTraders, longVol, shortVol }: LongShortRateProps) {
+  return (
+    <Box>
+      <Flex justifyContent="space-between" mb={3}>
+        <Type.CaptionBold>Long Rate: {formatNumber(longRate, 1, 1)}%</Type.CaptionBold>
+        <Type.CaptionBold>Short Rate: {formatNumber(shortRate, 1, 1)}%</Type.CaptionBold>
+      </Flex>
+      <DifferentialBar sourceRate={longRate ?? 0} targetRate={shortRate ?? 0} />
+      <Flex justifyContent="space-between" mt={3}>
+        <Box>
+          <Type.Caption display="block">Long Volume: ${formatNumber(longVol, 0, 0)}</Type.Caption>
+          <Type.Caption>{longTraders?.size ?? '--'} traders</Type.Caption>
+        </Box>
+        <Box textAlign="right">
+          <Type.Caption display="block">Short Volume: ${formatNumber(shortVol, 0, 0)}</Type.Caption>
+          <Type.Caption>{shortTraders?.size ?? '--'} traders</Type.Caption>
+        </Box>
+      </Flex>
+    </Box>
+  )
+}
+
+function getLongShortData(data: PositionData[] | undefined): LongShortRateProps {
+  const longVol = data ? data.filter((item) => item.isLong).reduce((prev, cur) => (prev += cur.size), 0) : undefined
+  const longTraders = data ? new Set(data.filter((item) => item.isLong).map((item) => item.account)) : undefined
+  const shortTraders = data ? new Set(data.filter((item) => !item.isLong).map((item) => item.account)) : undefined
+  const shortVol = data ? data.filter((item) => !item.isLong).reduce((prev, cur) => (prev += cur.size), 0) : undefined
+  const longRate = longVol != null && shortVol != null ? (longVol * 100) / (longVol + shortVol) : undefined
+  const shortRate = longRate != null ? 100 - longRate : undefined
+  return {
+    longRate,
+    shortRate,
+    longTraders,
+    shortTraders,
+    longVol,
+    shortVol,
+  }
+}

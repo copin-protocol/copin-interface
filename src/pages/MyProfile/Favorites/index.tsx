@@ -4,13 +4,13 @@ import { useLocation } from 'react-router'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoFavoriteFound from 'components/@ui/NoDataFound/NoFavoriteFound'
 import NoLoginFavorite from 'components/@ui/NoLogin/NoLoginFavorite'
+import { HomeSwitchProtocols } from 'components/SwitchProtocols'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useTraderFavorites from 'hooks/store/useTraderFavorites'
 import { useAuthContext } from 'hooks/web3/useAuth'
-import { TabKeyEnum } from 'pages/Home/Layouts/layoutConfigs'
-import { HomeSwitchProtocols } from 'pages/Home/SwitchProtocols'
-import TimeFilterSection from 'pages/Home/TimeFilterSection'
-import useTradersContext, { FilterTradersProvider } from 'pages/Home/useTradersContext'
+import { TabKeyEnum } from 'pages/Explorer/Layouts/layoutConfigs'
+import TimeFilterSection from 'pages/Explorer/TimeFilterSection'
+import useTradersContext, { FilterTradersProvider } from 'pages/Explorer/useTradersContext'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -18,7 +18,7 @@ import { URL_PARAM_KEYS } from 'utils/config/keys'
 
 import ListTraderFavorites from './ListTraderFavorites'
 
-const Favorites = ({ tab }: { tab: TabKeyEnum }) => {
+const Favorites = () => {
   const { setSearchParams } = useSearchParams()
   const { traderFavorites, notes, isLoading } = useTraderFavorites()
   const { isAuthenticated } = useAuthContext()
@@ -47,7 +47,7 @@ const Favorites = ({ tab }: { tab: TabKeyEnum }) => {
         </Flex>
         <Box flex="1">
           {traderFavorites.length ? (
-            <FilterTradersProvider key={pathname} tab={tab} accounts={traderFavorites}>
+            <FilterTradersProvider key={pathname} tab={TabKeyEnum.Favorite} accounts={traderFavorites}>
               <ListTraders notes={notes} />
             </FilterTradersProvider>
           ) : (

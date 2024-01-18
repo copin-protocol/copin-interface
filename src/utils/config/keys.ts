@@ -47,6 +47,9 @@ export const QUERY_KEYS = {
   SEARCH_TX_HASH: 'SEARCH_TX_HASH',
   GET_TRADER_TOKEN_STATISTIC: 'GET_TRADER_TOKEN_STATISTIC',
   GET_USER_LOG_DETAILS_BY_MODEL_ID: 'GET_USER_LOG_DETAILS_BY_MODEL_ID',
+  GET_COPY_TRADE_BALANCE_OVERVIEW: 'GET_COPY_TRADE_BALANCE_OVERVIEW',
+  GET_LATEST_ACTIVITY_LOGS: 'GET_LATEST_ACTIVITY_LOGS',
+  GET_OPEN_INTEREST_BY_MARKET: 'GET_OPEN_INTEREST_BY_MARKET',
 }
 
 export const CONTRACT_QUERY_KEYS = {
@@ -84,9 +87,14 @@ export const STORAGE_KEYS = {
 }
 
 export const URL_PARAM_KEYS = {
+  HOME_SORT_BY: 'sort',
+  HOME_TIME: 'time',
+  HOME_PROTOCOL: 'protocol',
+  HOME_PAGE: 'page',
   PROTOCOL: 'protocol',
   EXPLORER_TIME_FILTER: 'time',
   EXPLORER_TIME_RANGE_FILTER: 'range',
+  EXPLORER_SORT_BY: 'sort_by',
   FAVORITE_TIME_RANGE_FILTER: 'time-favorite',
   FAVORITE_TIME_FILTER: 'range-favorite',
   EXPLORER_PAGE: 'page',
@@ -133,6 +141,8 @@ export const ELEMENT_IDS = {
   TRADER_CHART_PNL: 'trader-chart-pnl-container',
   POSITION_CHART_PNL: 'position-chart-pnl-container',
   APP_MAIN_WRAPPER: 'app_main__wrapper',
+  HOME_HEADER_WRAPPER: 'home__header__wrapper',
+  HOME_TRADERS_WRAPPER: 'home__traders__wrapper',
 }
 
 export const ELEMENT_CLASSNAMES = {

@@ -1,22 +1,52 @@
-export const styleVariants = {
-  ghost: {
-    '& .select__control': {
-      border: 'none',
-      borderColor: 'transparent',
-      borderRadius: 0,
-      bg: 'transparent !important',
-      color: 'neutral1',
-      '& .select__value-container': {
-        px: 2,
-      },
-      '&:hover:not([disabled]), &--is-hovered': {
-        boxShadow: 'none',
-        color: 'neutral2',
-        '& .select__indicators': {
-          color: 'primary1',
-        },
+const ghostStyle = ({
+  color,
+  hoverColor,
+  indicatorColor,
+  indicatorHoverColor,
+}: {
+  color: string
+  hoverColor: string
+  indicatorColor: string
+  indicatorHoverColor: string
+}) => ({
+  '& .select__control': {
+    border: 'none',
+    borderColor: 'transparent',
+    borderRadius: 0,
+    bg: 'transparent !important',
+    color,
+    '& .select__value-container': {
+      px: 0,
+    },
+    '& .select__indicators': {
+      color: indicatorColor,
+    },
+    '&:hover:not([disabled]), &--is-hovered': {
+      boxShadow: 'none',
+      color: hoverColor,
+      '& .select__indicators': {
+        color: indicatorHoverColor,
       },
     },
+  },
+})
+
+export const styleVariants = {
+  ghost: {
+    ...ghostStyle({
+      color: 'neutral1',
+      hoverColor: 'neutral2',
+      indicatorColor: 'neutral1',
+      indicatorHoverColor: 'primary1',
+    }),
+  },
+  ghostPrimary: {
+    ...ghostStyle({
+      color: 'primary1',
+      hoverColor: 'primary2',
+      indicatorColor: 'primary1',
+      indicatorHoverColor: 'primary1',
+    }),
   },
   outlinedSecondary: {
     '& .select__control': {

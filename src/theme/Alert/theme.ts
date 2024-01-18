@@ -1,3 +1,5 @@
+import { themeColors } from 'theme/colors'
+
 import { variants } from './types'
 
 export const styleVariants = {
@@ -35,6 +37,11 @@ export const styleVariants = {
   [variants.CARD_WARNING]: {
     color: 'orange1',
     bg: 'rgba(255, 194, 75, 0.25)',
+    border: 'none',
+  },
+  [variants.WARNING_PRIMARY]: {
+    color: 'primary1',
+    bg: `${themeColors.primary1}25`,
     border: 'none',
   },
 }

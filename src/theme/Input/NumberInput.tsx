@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Controller } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
 
@@ -21,42 +21,50 @@ const NumberInput = ({
   onInputChange,
   inputHidden = false,
   ...props
-}: NumberInputProps & InputProps & SxProps) => (
-  <InputWrapper
-    disabled={props.disabled}
-    variant={error ? 'error' : variant}
-    block={block}
-    sx={{ ...sx, ...(inputHidden ? { '& input': { opacity: 0 } } : {}) }}
-  >
-    {!!affix && <StyledPrefix>{affix}</StyledPrefix>}
-    <Controller
-      name={props.name || ''}
-      control={control}
-      rules={rules}
-      defaultValue={props.defaultValue as string | number | undefined}
-      render={({ field: { onChange, value, onBlur } }) => {
-        return (
-          <NumericFormat
-            disabled={props.disabled}
-            value={value}
-            thousandSeparator
-            decimalScale={isInteger ? 0 : undefined}
-            isNumericString
-            isAllowed={isAllowed}
-            placeholder={props.placeholder}
-            customInput={StyledInput}
-            onBlur={onBlur}
-            onValueChange={(v: any) => {
-              onChange(v.floatValue)
-              onInputChange && onInputChange(value)
-            }}
-          />
-        )
-      }}
-    />
+}: NumberInputProps & InputProps & SxProps) => {
+  const ref = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    if (!ref.current) return
+    if (props.maxLength) ref.current.maxLength = props.maxLength
+  }, [props.maxLength])
+  return (
+    <InputWrapper
+      disabled={props.disabled}
+      variant={error ? 'error' : variant}
+      block={block}
+      sx={{ ...sx, ...(inputHidden ? { '& input': { opacity: 0 } } : {}) }}
+    >
+      {!!affix && <StyledPrefix>{affix}</StyledPrefix>}
+      <Controller
+        name={props.name || ''}
+        control={control}
+        rules={rules}
+        defaultValue={props.defaultValue as string | number | undefined}
+        render={({ field: { onChange, value, onBlur } }) => {
+          return (
+            <NumericFormat
+              getInputRef={ref}
+              disabled={props.disabled}
+              value={value}
+              thousandSeparator
+              decimalScale={isInteger ? 0 : undefined}
+              isNumericString
+              isAllowed={isAllowed}
+              placeholder={props.placeholder}
+              customInput={StyledInput}
+              onBlur={onBlur}
+              onValueChange={(v: any) => {
+                onChange(v.floatValue)
+                onInputChange && onInputChange(value)
+              }}
+            />
+          )
+        }}
+      />
 
-    {!!suffix && <StyledSuffix>{suffix}</StyledSuffix>}
-  </InputWrapper>
-)
+      {!!suffix && <StyledSuffix>{suffix}</StyledSuffix>}
+    </InputWrapper>
+  )
+}
 
 export default NumberInput

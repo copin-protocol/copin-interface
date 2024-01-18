@@ -14,8 +14,9 @@ import {
 import { ColumnData } from 'components/@ui/Table/types'
 import PositionDetails from 'components/PositionDetails'
 import { PositionData } from 'entities/trader'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useIsMobile from 'hooks/helpers/useIsMobile'
-import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
+import { UsdPrices } from 'hooks/store/useUsdPrices'
 import IconButton from 'theme/Buttons/IconButton'
 import Drawer from 'theme/Modal/Drawer'
 import { Box, Type } from 'theme/base'
@@ -88,7 +89,7 @@ export default function TopOpeningsWindow({
   data?: PositionData[]
   page: number
 }) {
-  const { prices } = useRealtimeUsdPricesStore()
+  const { prices } = useGetUsdPrices()
   const isMobile = useIsMobile()
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)

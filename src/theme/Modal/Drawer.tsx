@@ -28,8 +28,8 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ mode?: ModalProps['m
       display: flex;
       align-items: ${mode === 'bottom' ? 'end' : 'center'};
       justify-content: ${mode === 'bottom' ? 'center' : 'end'};
-      background-color: ${theme.colors.modalBG};
-      backdrop-filter: blur(5px);
+      background-color: ${theme.colors.modalBG1};
+      // backdrop-filter: blur(5px);
     }
   `}
 `

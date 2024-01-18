@@ -39,3 +39,16 @@ export interface TraderPnlStatisticData {
   percentage?: number
   date: string
 }
+
+export interface OpenInterestMarketData {
+  indexToken: string
+  latestPrice: number
+  price: number
+  totalLong: number
+  totalShort: number
+  totalTraderLong: number
+  totalTraderShort: number
+  totalVolumeLong: number
+  totalVolumeShort: number
+  totalInterest: number
+}

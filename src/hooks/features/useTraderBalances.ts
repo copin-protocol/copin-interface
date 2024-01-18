@@ -35,7 +35,7 @@ const useTraderBalances = ({ account, protocol }: { account?: string; protocol: 
   const calls: { address: string; name: string; params: any[] }[] = []
   const tokens = useMemo(
     () =>
-      protocol
+      protocol && TOKEN_COLLATERAL_SUPPORT[protocol]
         ? [
             // ...Object.keys(TOKEN_TRADE_SUPPORT[protocol]).map((key) => TOKEN_TRADE_SUPPORT[protocol][key]),
             ...Object.keys(TOKEN_COLLATERAL_SUPPORT[protocol]).map((key) => TOKEN_COLLATERAL_SUPPORT[protocol][key]),

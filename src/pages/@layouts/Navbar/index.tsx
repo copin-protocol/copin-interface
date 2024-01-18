@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { MagnifyingGlass, XCircle } from '@phosphor-icons/react'
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-// import Cart from 'components/Cart'
 import Logo, { LogoText } from 'components/@ui/Logo'
 import LoginAction from 'components/LoginAction'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -11,18 +10,20 @@ import NavbarUser from 'pages/@layouts/Navbar/NavUser'
 import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
-import { Box, Flex, LinkUnderline, Type } from 'theme/base'
-import { LINKS, NAVBAR_HEIGHT } from 'utils/config/constants'
+import { Box, Flex, Type } from 'theme/base'
 import routes from 'utils/config/routes'
-import ROUTES from 'utils/config/routes'
 
+import HamburgerMenu from './HamburgetMenu'
+import Menu from './Menu'
+import MoreDropdown from './MoreDropdown'
+import { DesktopNavLinks } from './NavLinks'
 import SearchBox from './SearchBox'
+import { LARGE_BREAK_POINT } from './configs'
 import { LogoWrapper, Main, Wrapper } from './styled'
 
-const Navbar = ({ height }: { height: number }): ReactElement => {
+export default function Navbar({ height }: { height: number }): ReactElement {
   const { isAuthenticated, disconnect } = useAuthContext()
   const [isSearchOpening, setSearchOpening] = useState<boolean>(false)
-  // const { md: isMobile } = useResponsive()
 
   const location = useLocation()
 
@@ -31,10 +32,12 @@ const Navbar = ({ height }: { height: number }): ReactElement => {
     setSearchOpening(false)
   }, [location.pathname])
 
+  const [activeMobileMenu, setActiveMobileMenu] = useState(false)
+
   return (
     <Box as="header" sx={{ zIndex: [101, 101, 101, 11] }}>
       <Wrapper height={height}>
-        {/* <Container> */}
+        <Menu visible={activeMobileMenu} onClose={() => setActiveMobileMenu(false)} />
         <Main>
           {!isSearchOpening ? (
             <Flex alignItems="center" sx={{ gap: 2 }}>
@@ -68,23 +71,23 @@ const Navbar = ({ height }: { height: number }): ReactElement => {
             <SearchBox />
           </Box>
 
-          <Box alignItems="center" display={{ _: isSearchOpening ? 'none' : 'flex', md: 'flex' }}>
-            <Flex
+          <Box alignItems="center" display={{ _: isSearchOpening ? 'none' : 'flex', md: 'flex' }} height="100%">
+            <Box
               alignItems="center"
               px={[3, 3, 3, 4]}
               sx={{
+                display: 'flex',
                 textAlign: 'center',
                 borderRight: 'small',
                 borderColor: 'neutral4',
-                gap: [4, 4, 4, 40],
+                gap: 32,
                 height: '100%',
-                lineHeight: `${NAVBAR_HEIGHT - 1}px`,
+                [`@media all and (max-width: ${LARGE_BREAK_POINT}px)`]: { display: 'none' },
               }}
             >
-              <LinkItem text={<Trans>Twitter (X)</Trans>} url={LINKS.twitter} />
-              <LinkItem text={<Trans>Telegram</Trans>} url={LINKS.telegram} />
-              <LinkItem text={<Trans>Stats</Trans>} url={ROUTES.STATS.path} sx={{ display: 'flex' }} />
-            </Flex>
+              <DesktopNavLinks />
+              <MoreDropdown />
+            </Box>
             <Box flex="0 0 fit-content" sx={{ alignItems: 'center' }}>
               {isAuthenticated === true && <NavbarUser />}
               {isAuthenticated === false && <LoginAction />}
@@ -104,37 +107,22 @@ const Navbar = ({ height }: { height: number }): ReactElement => {
                 </Flex>
               )}
             </Box>
+            <Box
+              p={3}
+              height="100%"
+              sx={{
+                display: 'none',
+                borderLeft: 'small',
+                borderLeftColor: 'neutral4',
+                [`@media all and (max-width: ${LARGE_BREAK_POINT}px)`]: { display: 'block' },
+              }}
+            >
+              <HamburgerMenu active={activeMobileMenu} onClick={() => setActiveMobileMenu((prev) => !prev)} />
+            </Box>
           </Box>
         </Main>
         {/* </Container> */}
       </Wrapper>
     </Box>
-  )
-}
-
-Navbar.displayName = 'Header'
-export default Navbar
-
-function LinkItem({ url, text, sx }: { url: string; text: ReactNode; sx?: any }) {
-  return (
-    <LinkUnderline
-      sx={{
-        fontSize: 13,
-        fontWeight: 'bold',
-        '&:hover': {
-          color: 'neutral2',
-        },
-        display: ['none', 'none', 'flex', 'flex'],
-        alignItems: 'center',
-        ...(sx ?? {}),
-      }}
-      color="neutral1"
-      hoverHasLine
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-    >
-      {text}
-    </LinkUnderline>
   )
 }

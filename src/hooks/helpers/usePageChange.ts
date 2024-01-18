@@ -1,12 +1,12 @@
 import { useState } from 'react'
 
 import useSearchParams from 'hooks/router/useSearchParams'
-import { getInitValue } from 'pages/Home/helpers/getInitValues'
+import { getInitNumberValue } from 'utils/helpers/geInitialValue'
 
 export default function usePageChange({ pageName, callback }: { pageName: string; callback?: () => void }) {
   const { searchParams, setSearchParams } = useSearchParams()
 
-  const [currentPage, setCurrentPage] = useState(getInitValue(searchParams, pageName, 1))
+  const [currentPage, setCurrentPage] = useState(getInitNumberValue(searchParams, pageName, 1))
 
   const changeCurrentPage = (page: number) => {
     if (page === currentPage) return
@@ -29,8 +29,8 @@ export function usePageChangeWithLimit({
 }) {
   const { searchParams, setSearchParams } = useSearchParams()
 
-  const [currentPage, setCurrentPage] = useState(getInitValue(searchParams, pageName, 1))
-  const [currentLimit, setCurrentLimit] = useState(getInitValue(searchParams, limitName, defaultLimit))
+  const [currentPage, setCurrentPage] = useState(getInitNumberValue(searchParams, pageName, 1))
+  const [currentLimit, setCurrentLimit] = useState(getInitNumberValue(searchParams, limitName, defaultLimit))
 
   // useEffect(() => {
   //   callback && callback({ page: currentPage, limit: currentLimit })

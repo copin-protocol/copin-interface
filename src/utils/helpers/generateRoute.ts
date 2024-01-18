@@ -1,12 +1,12 @@
 import { LINKS, TELEGRAM_BOT_ALERT } from 'utils/config/constants'
-import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
+import { ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 
 export const generateTraderDetailsRoute = (
   protocol: ProtocolEnum,
   address: string,
-  others?: { type?: TimeFrameEnum }
+  others?: { type?: TimeFrameEnum | TimeFilterByEnum }
 ) =>
   `/${protocol}${ROUTES.TRADER_DETAILS.path_prefix}/${address}${
     others?.type ? `?${URL_PARAM_KEYS.EXPLORER_TIME_FILTER}=${others.type}` : ''
@@ -55,7 +55,7 @@ export const generateTelegramBotAlertUrl = (state?: string) => {
   return `${LINKS.baseTelegram}/${TELEGRAM_BOT_ALERT}?${state ? `start=${state}` : ''}`
 }
 
-function createUrlWithParams({ url, params }: { url: string; params: Record<string, any> }): string {
+function createUrlWithParams({ url, params = {} }: { url: string; params?: Record<string, any> }): string {
   let query = ''
   for (const key of Object.keys(params)) {
     if (params[key] !== undefined) {
@@ -63,4 +63,39 @@ function createUrlWithParams({ url, params }: { url: string; params: Record<stri
     }
   }
   return url + `${!!query ? `?${query}` : ''}`
+}
+
+export function generateOIByMarketRoute(data: { protocol: string; symbol: string; params?: Record<string, any> }) {
+  return createUrlWithParams({
+    url: `/${data.protocol}${ROUTES.OPEN_INTEREST_BY_MARKET.path_prefix}/${data.symbol}`,
+    params: data.params,
+  })
+}
+
+export function generateOIMarketsRoute(data: { protocol: string; params?: Record<string, any> }) {
+  return createUrlWithParams({
+    url: `/${data.protocol}${ROUTES.OPEN_INTEREST_BY_MARKETS.path_prefix}`,
+    params: data.params,
+  })
+}
+
+export function generateOIRoute(data: { protocol: string; params?: Record<string, any> }) {
+  return createUrlWithParams({
+    url: `/${data.protocol}${ROUTES.OPEN_INTEREST.path_prefix}`,
+    params: data.params,
+  })
+}
+
+export function generateExplorerRoute(data: { protocol: string; params?: Record<string, any> }) {
+  return createUrlWithParams({
+    url: `/${data.protocol}${ROUTES.TRADERS_EXPLORER.path_prefix}`,
+    params: data.params,
+  })
+}
+
+export function generateLeaderboardRoute(data: { protocol: string; params?: Record<string, any> }) {
+  return createUrlWithParams({
+    url: `/${data.protocol}${ROUTES.LEADERBOARD.path_prefix}`,
+    params: data.params,
+  })
 }

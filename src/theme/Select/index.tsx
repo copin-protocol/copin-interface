@@ -13,19 +13,20 @@ import { FONT_FAMILY } from 'utils/config/constants'
 
 import { styleVariants } from './theme'
 
-export type SelectProps = { error?: any; sx?: any } & VariantProps & SxProps
+export type SelectProps = { error?: any; sx?: any; width?: number; height?: number } & VariantProps & SxProps
 
 const StyledSelect = styled(ReactSelect)<SelectProps>(
-  ({ error }) =>
+  ({ error, width, height }) =>
     css({
       input: {
         fontSize: '16px !important',
       },
       border: 'none',
-      width: '100%',
+      width: width ?? '100%',
 
       '& .select__control': {
-        minHeight: 42,
+        minHeight: height ? 'auto' : 42,
+        height: height ?? 'auto',
         alignItems: 'center',
         position: 'relative',
         border: 'small',
@@ -176,6 +177,18 @@ const SelectStyles = {
   singleValue: (providedStyled: any) => ({ ...providedStyled, fontWeight: 400 }),
   multiValue: (providedStyled: any) => ({ ...providedStyled, fontWeight: 400, fontSize: '15px' }),
 }
+const customFilter: any = (option: any, searchText: any) => {
+  if (!!option?.data?.searchText && option.data.searchText.toLowerCase().includes(searchText.toLowerCase())) {
+    return true
+  }
+  if (typeof option?.label === 'string' && option.label.toLowerCase().includes(searchText.toLowerCase())) {
+    return true
+  }
+  if (option.value.toLowerCase().includes(searchText.toLowerCase())) {
+    return true
+  }
+  return false
+}
 
 const Select = ({ components, ...props }: Omit<Props, 'theme'> & SelectProps) => {
   return (
@@ -183,6 +196,7 @@ const Select = ({ components, ...props }: Omit<Props, 'theme'> & SelectProps) =>
       isSearchable
       maxMenuHeight={250}
       noOptionsMessage={() => t`No Data Found`}
+      filterOption={customFilter}
       className="select-container"
       classNamePrefix="select"
       styles={SelectStyles}

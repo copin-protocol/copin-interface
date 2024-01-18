@@ -57,6 +57,7 @@ export interface TraderData {
   createdAt: string
   updatedAt: string
   ranking: { [key: string]: number }
+  pnlStatistics?: { date: string[]; pnl?: number[]; fee?: number[] }
 }
 
 export interface ResponseTraderData extends TraderData {

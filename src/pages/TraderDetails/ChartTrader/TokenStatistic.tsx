@@ -11,6 +11,7 @@ import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ALL_TOKENS_ID, TokenOptionProps } from 'utils/config/trades'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
+import { parseMarketImage } from 'utils/helpers/transform'
 
 type TokenStatisticProps = {
   data: TraderTokenStatistic[] | undefined
@@ -160,7 +161,7 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
             const indexToken = stats.indexToken
             const tokenOption = tokenMapping[indexToken]
             if (!tokenOption) return <></>
-            const icon = `/svg/markets/${tokenOption.label}.svg`
+            const icon = parseMarketImage(tokenOption.label)
             return (
               <Flex
                 key={indexToken}

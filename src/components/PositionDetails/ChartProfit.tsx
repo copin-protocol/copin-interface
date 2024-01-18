@@ -4,8 +4,8 @@ import { useMemo, useState } from 'react'
 import { AmountText, PercentText } from 'components/@ui/DecoratedText/ValueText'
 import { VerticalDivider, renderEntry, renderSize, renderSizeOpeningWithPrices } from 'components/@ui/Table/renderProps'
 import { PositionData, TickPosition } from 'entities/trader'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useIsMobile from 'hooks/helpers/useIsMobile'
-import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import Tag from 'theme/Tag'
 import { Box, Flex, Type } from 'theme/base'
 import { OrderTypeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
@@ -26,7 +26,7 @@ export default function PositionDetails({
   isShow?: boolean
 }) {
   const isMobile = useIsMobile()
-  const { prices } = useRealtimeUsdPricesStore()
+  const { prices } = useGetUsdPrices()
 
   const tickPositions = useMemo(() => {
     const positions: TickPosition[] = []

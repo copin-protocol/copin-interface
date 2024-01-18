@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 import ExplorerTraders from 'assets/images/explorer-traders.png'
 import { Button } from 'theme/Buttons'
 import { Flex, Image, Type } from 'theme/base'
-import ROUTES from 'utils/config/routes'
+import { ProtocolEnum } from 'utils/config/enums'
+import { generateExplorerRoute } from 'utils/helpers/generateRoute'
 
 export default function NoAlertList({ buttonVariant = 'primary' }: { buttonVariant?: string }) {
   return (
@@ -14,7 +14,7 @@ export default function NoAlertList({ buttonVariant = 'primary' }: { buttonVaria
       <Type.Caption mb={12} color="neutral2" textAlign="center">
         <Trans>Discover more than 100,000+ traders on Copin</Trans>
       </Type.Caption>
-      <Link to={ROUTES.HOME_EXPLORER.path}>
+      <Link to={generateExplorerRoute({ protocol: ProtocolEnum.GMX })}>
         <Button type="button" variant={buttonVariant} width={150}>
           <Trans>Explorer Traders</Trans>
         </Button>
