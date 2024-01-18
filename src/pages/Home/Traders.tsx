@@ -16,13 +16,15 @@ import FavoriteButton from 'components/FavoriteButton'
 import TraderAddress from 'components/TraderAddress'
 import { TraderData } from 'entities/trader'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
-import useIsMobile from 'hooks/helpers/useIsMobile'
+// import useIsMobile from 'hooks/helpers/useIsMobile'
+// import useIsSafari from 'hooks/helpers/useIsSafari'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { DATE_FORMAT } from 'utils/config/constants'
 import { ProtocolEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatDate } from 'utils/helpers/format'
@@ -59,16 +61,25 @@ export default function Traders() {
         flexDirection: 'column',
         width: '100%',
         height: '100%',
-        background: 'linear-gradient(180.16deg, #1D2238 0.14%, rgba(11, 13, 23, 0) 24.31%) no-repeat',
-        backgroundSize: '100% 500px',
+        maxWidth: 2500,
+        mx: 'auto',
       }}
     >
       <Box id={ELEMENT_IDS.HOME_HEADER_WRAPPER} sx={{ overflow: 'hidden', transition: 'max-height 0.5s ease-in-out' }}>
-        <Box mt={[0, 0, 2]} mb={[24, 24, 40]} sx={{ px: PADDING_X, pt: 3 }}>
+        <Flex
+          mt={['-8px', 0, 2]}
+          mb={[8, 24, 40]}
+          sx={{ px: PADDING_X, pt: 3, width: '100%', alignItems: 'center', justifyContent: 'space-between' }}
+        >
           <Type.H5 fontSize={['16px', '16px', '24px']}>
-            <Trans>Follow more than 100,000+ traders on Copin</Trans>
+            <Trans>Follow 100,000+ traders on Copin</Trans>
           </Type.H5>
-        </Box>
+          <Type.CaptionBold display={{ _: 'block', sm: 'none' }}>
+            <Link to={generateExplorerRoute({ protocol: filters.protocol })}>
+              <Trans>Explore More</Trans>
+            </Link>
+          </Type.CaptionBold>
+        </Flex>
 
         <Flex
           mb={12}
@@ -82,7 +93,7 @@ export default function Traders() {
           }}
         >
           <Filters filters={filters} />
-          <Type.CaptionBold>
+          <Type.CaptionBold display={{ _: 'none', sm: 'block' }}>
             <Link to={generateExplorerRoute({ protocol: filters.protocol })}>
               <Trans>Explore More</Trans>
             </Link>
@@ -180,62 +191,63 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     }
   }, [traders])
 
-  const isMobile = useIsMobile()
-  const { sm } = useResponsive()
+  // const isMobile = useIsMobile()
+  const { md } = useResponsive()
+  // const isSafari = useIsSafari()
 
-  useEffect(() => {
-    if (!isMobile || sm) {
-      const homeHeader = document.getElementById(ELEMENT_IDS.HOME_HEADER_WRAPPER)
-      if (!!homeHeader) {
-        homeHeader.style.cssText = ''
-      }
-      return
-    }
-    if (!scrollRef.current) return
-    const homeHeader = document.getElementById(ELEMENT_IDS.HOME_HEADER_WRAPPER)
-    let prevPos = 0
-    let diff = 0
-    let shouldChange = false
-    const handleScroll = () => {
-      if (!homeHeader || !scrollRef.current || !shouldChange) return
-      shouldChange = false
-      const showHeader = diff < 0
-      if (showHeader) {
-        homeHeader.style.cssText = 'max-height: 200px'
-      } else {
-        homeHeader.style.cssText = 'max-height: 0px'
-      }
-    }
-    const handleTouchStart = (e: any) => {
-      prevPos = e?.changedTouches?.[0]?.clientY ?? 0
-    }
-    const handleTouchEnd = (e: any) => {
-      const newDiff = prevPos - (e?.changedTouches?.[0]?.clientY ?? 0)
-      if (diff === 0) {
-        diff = newDiff
-        shouldChange = true
-      } else {
-        if (diff / newDiff < 1) {
-          shouldChange = true
-        }
-        if (diff / newDiff >= 1) {
-          shouldChange = false
-        }
-        diff = newDiff
-      }
-    }
-    window.addEventListener('touchstart', handleTouchStart)
-    window.addEventListener('touchend', handleTouchEnd)
-    scrollRef.current.addEventListener('scroll', handleScroll)
-    return () => {
-      window.removeEventListener('touchstart', handleTouchStart)
-      window.removeEventListener('touchend', handleTouchEnd)
-      scrollRef.current?.removeEventListener('scroll', handleScroll)
-      prevPos = 0
-      diff = 0
-      shouldChange = false
-    }
-  }, [isMobile, sm])
+  // useEffect(() => {
+  //   if (!isMobile || sm || isSafari) {
+  //     const homeHeader = document.getElementById(ELEMENT_IDS.HOME_HEADER_WRAPPER)
+  //     if (!!homeHeader) {
+  //       homeHeader.style.cssText = ''
+  //     }
+  //     return
+  //   }
+  //   if (!scrollRef.current) return
+  //   const homeHeader = document.getElementById(ELEMENT_IDS.HOME_HEADER_WRAPPER)
+  //   let prevPos = 0
+  //   let diff = 0
+  //   let shouldChange = false
+  //   const handleScroll = () => {
+  //     if (!homeHeader || !scrollRef.current || !shouldChange) return
+  //     shouldChange = false
+  //     const showHeader = diff < 0
+  //     if (showHeader) {
+  //       homeHeader.style.cssText = 'max-height: 200px'
+  //     } else {
+  //       homeHeader.style.cssText = 'max-height: 0px'
+  //     }
+  //   }
+  //   const handleTouchStart = (e: any) => {
+  //     prevPos = e?.changedTouches?.[0]?.clientY ?? 0
+  //   }
+  //   const handleTouchEnd = (e: any) => {
+  //     const newDiff = prevPos - (e?.changedTouches?.[0]?.clientY ?? 0)
+  //     if (diff === 0) {
+  //       diff = newDiff
+  //       shouldChange = true
+  //     } else {
+  //       if (diff / newDiff < 1) {
+  //         shouldChange = true
+  //       }
+  //       if (diff / newDiff >= 1) {
+  //         shouldChange = false
+  //       }
+  //       diff = newDiff
+  //     }
+  //   }
+  //   window.addEventListener('touchstart', handleTouchStart)
+  //   window.addEventListener('touchend', handleTouchEnd)
+  //   scrollRef.current.addEventListener('scroll', handleScroll)
+  //   return () => {
+  //     window.removeEventListener('touchstart', handleTouchStart)
+  //     window.removeEventListener('touchend', handleTouchEnd)
+  //     scrollRef.current?.removeEventListener('scroll', handleScroll)
+  //     prevPos = 0
+  //     diff = 0
+  //     shouldChange = false
+  //   }
+  // }, [isMobile, sm])
 
   const onClickBacktest = (traderData: TraderData) => {
     setSelectedTrader({ account: traderData.account, protocol: traderData.protocol })
@@ -248,7 +260,15 @@ function ListTraders({ filters }: { filters: FiltersState }) {
   }, [isLoading, isFetching, isAuthenticated])
 
   return (
-    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
+    <Flex
+      sx={{
+        width: '100%',
+        height: '100%',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        position: 'relative',
+      }}
+    >
       {(isLoading || (isFetching && !isDuplicateLoading.current)) && (
         <Box
           sx={{
@@ -287,9 +307,6 @@ function ListTraders({ filters }: { filters: FiltersState }) {
             '@media all and (min-width: 1800px)': {
               gridTemplateColumns: 'repeat(4, 1fr)',
             },
-            '@media all and (min-width: 2560px)': {
-              gridTemplateColumns: 'repeat(auto-fill, 460px)',
-            },
           }}
         >
           {traders?.data?.map((traderData) => {
@@ -306,6 +323,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
       </Box>
       <Box display="none">
         <SimpleBacktestModal
+          key={selectedTrader?.account ?? '' + selectedTrader?.protocol ?? ''}
           isOpen={!!selectedTrader}
           onDismiss={() => {
             setSelectedTrader(null)
@@ -322,9 +340,11 @@ function ListTraders({ filters }: { filters: FiltersState }) {
             borderTop: 'small',
             borderTopColor: 'neutral4',
             width: '100%',
-            justifyContent: ['start', 'start', 'start', 'space-between'],
-            alignItems: ['start', 'start', 'start', 'center'],
-            flexDirection: ['column', 'column', 'column', 'row'],
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            // justifyContent: ['start', 'start', 'start', 'space-between'],
+            // alignItems: ['start', 'start', 'start', 'center'],
+            // flexDirection: ['column', 'column', 'column', 'row'],
             flexWrap: 'wrap',
             py: [1, 1, 1, 0],
             px: [3, 3, 3, 0],
@@ -332,11 +352,21 @@ function ListTraders({ filters }: { filters: FiltersState }) {
             rowGap: 1,
           }}
         >
-          <Type.Caption color="neutral3" sx={{ order: [2, 1] }}>
-            <Trans>Last update:</Trans> {formatDate(traders?.data?.[0].statisticAt)} UTC
+          <Type.Caption display={{ _: 'block', sm: 'none' }} color="neutral3" sx={{ order: [2, 1] }}>
+            <Trans>Last update:</Trans>{' '}
+            {traders?.data?.[0]?.statisticAt ? formatDate(traders?.data?.[0]?.statisticAt, DATE_FORMAT) : '--'}
+          </Type.Caption>
+          <Type.Caption display={{ _: 'none', sm: 'block' }} color="neutral3" sx={{ order: [2, 1] }}>
+            <Trans>Last update:</Trans>{' '}
+            {traders?.data?.[0]?.statisticAt ? formatDate(traders?.data?.[0]?.statisticAt) : '--'} UTC
           </Type.Caption>
           <Box sx={{ order: [1, 2] }}>
-            <PaginationWithSelect apiMeta={traders.meta} currentPage={currentPage} onPageChange={changeCurrentPage} />
+            <PaginationWithSelect
+              disabledInput={!md}
+              apiMeta={traders.meta}
+              currentPage={currentPage}
+              onPageChange={changeCurrentPage}
+            />
           </Box>
         </Flex>
       )}

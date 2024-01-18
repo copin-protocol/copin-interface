@@ -8,7 +8,7 @@ import { sx } from 'theme/base'
 export const BottomTabWrapperMobile = styled(Box)(
   css({
     display: ['flex', 'flex', 'none'],
-    height: 56,
+    height: 40,
     bg: 'neutral8',
     width: '100%',
     alignItems: 'center',
@@ -20,7 +20,7 @@ export const BottomTabWrapperMobile = styled(Box)(
 
 export const BodyWrapperMobile = styled(Box)(
   css({
-    pb: 56,
+    pb: 40,
     width: '100%',
     height: '100%',
   }),

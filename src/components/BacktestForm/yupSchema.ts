@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import { t } from '@lingui/macro'
 import dayjs from 'dayjs'
 import * as yup from 'yup'
 
@@ -8,8 +10,8 @@ export const backTestFormSchema = yup.object({
     .required()
     .min(10)
     .when('orderVolume', (orderVolume, schema) => {
-      if (orderVolume <= 0) return schema
-      return schema.min(orderVolume)
+      if (!orderVolume || orderVolume <= 0) return schema
+      return schema.min(orderVolume, t`Balance must be greater than or equal to margin`)
     })
     .label('Balance'),
   orderVolume: yup.number().required().min(1).label('Order Volume'),

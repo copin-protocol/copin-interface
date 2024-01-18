@@ -44,10 +44,10 @@ export const Wrapper = styled.div<{ active: boolean }>`
         transform: scaleY(0);
       }
       ${Line2} {
-        transform: rotate(45deg) scaleX(${Math.sqrt(2)});
+        transform: rotate(45deg) scaleX(1.1);
       }
       ${Line4} {
-        transform: rotate(-45deg) scaleX(${Math.sqrt(2)});
+        transform: rotate(-45deg) scaleX(1.1);
       }
     `}
 `

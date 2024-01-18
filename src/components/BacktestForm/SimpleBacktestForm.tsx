@@ -45,7 +45,6 @@ export default function SimpleBacktestForm({
     watch,
     setValue,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm<BackTestFormValues>({
     resolver: yupResolver(backTestFormSchema),
@@ -95,6 +94,7 @@ export default function SimpleBacktestForm({
     <Box>
       <NumberInputField
         block
+        maxLength={15}
         name={fieldName.balance}
         control={control}
         label={
@@ -109,6 +109,7 @@ export default function SimpleBacktestForm({
       <Box mt={20}>
         <NumberInputField
           block
+          maxLength={15}
           name={fieldName.orderVolume}
           control={control}
           label={

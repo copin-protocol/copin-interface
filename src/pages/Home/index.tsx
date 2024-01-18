@@ -27,7 +27,14 @@ export default function Home() {
             overflow: 'hidden',
           }}
         >
-          <Box sx={{ flex: 1, height: '100%' }}>
+          <Box
+            sx={{
+              flex: 1,
+              height: '100%',
+              background: 'linear-gradient(180.16deg, #1D2238 0.14%, rgba(11, 13, 23, 0) 24.31%) no-repeat',
+              backgroundSize: '100% 500px',
+            }}
+          >
             <Traders />
           </Box>
           <Box width={OVERVIEW_WIDTH} sx={{ height: '100%', flexShrink: 0 }}>

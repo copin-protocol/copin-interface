@@ -81,7 +81,7 @@ export default function AnalyticsLayoutDesktop({
               logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].EXPAND_EXPLORER_MAIN)
             }
           }}
-          buttonSx={{ top: '-1px', right: 0, border: mainExpanded ? 'small' : 'none' }}
+          buttonSx={{ top: '-1px', right: mainExpanded ? '0px' : '-16px', border: 'small', height: 42 }}
           direction={mainExpanded ? 'left' : 'right'}
         />
         <Box sx={{ gridArea: GridAreas.CHART, position: 'relative' }}>

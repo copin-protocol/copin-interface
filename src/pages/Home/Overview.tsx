@@ -98,7 +98,7 @@ function WalletOverview({
     <Box>
       <Box px={3} pt={3}>
         <Flex mb={12} sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-          <SectionLabel icon={<Wallet size={24} />} label={<Trans>Your copy wallet</Trans>} />
+          <SectionLabel icon={<Wallet size={24} weight="fill" />} label={<Trans>Your copy wallet</Trans>} />
           <Navigator route={ROUTES.WALLET_MANAGEMENT.path} />
         </Flex>
         {selectedWallet ? (
@@ -137,7 +137,6 @@ function WalletStateItem({ label, value }: { label: ReactNode; value: ReactNode 
   )
 }
 
-const POSITIONS_LIMIT = 3
 function OpeningSection({ selectedWallet }: { selectedWallet: CopyWalletData | undefined }) {
   const [hasPositions, setHasPositions] = useState<boolean | null>(null)
   const handleLoadPositionSuccess = (data: CopyPositionData[] | undefined) => {
@@ -152,7 +151,10 @@ function OpeningSection({ selectedWallet }: { selectedWallet: CopyWalletData | u
     <Box display={hasPositions ? 'block' : 'none'}>
       <Box>
         <Flex px={3} mb={20} sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-          <SectionLabel icon={<CopySimple size={24} />} label={<Trans>Your copy opening positions</Trans>} />
+          <SectionLabel
+            icon={<CopySimple size={24} weight="fill" />}
+            label={<Trans>Your copy opening positions</Trans>}
+          />
           <Navigator route={ROUTES.MY_MANAGEMENT.path} />
         </Flex>
         <Box>
@@ -162,7 +164,6 @@ function OpeningSection({ selectedWallet }: { selectedWallet: CopyWalletData | u
             activeWallet={selectedWallet}
             copyWallets={undefined}
             onSuccess={handleLoadPositionSuccess}
-            limit={POSITIONS_LIMIT}
             layoutType="simple"
             tableProps={{
               tableBodyWrapperSx: {
@@ -187,7 +188,7 @@ function Activities() {
   return activities?.length ? (
     <Flex pb={3} sx={{ width: '100%', flex: '1 0 0', flexDirection: 'column', overflow: 'hidden', minHeight: 200 }}>
       <Box px={3}>
-        <SectionLabel icon={<SpeakerSimpleHigh size={24} />} label={<Trans>Latest activities</Trans>} />
+        <SectionLabel icon={<SpeakerSimpleHigh size={24} weight="fill" />} label={<Trans>Latest activities</Trans>} />
       </Box>
       <Flex
         mt={3}
@@ -210,7 +211,7 @@ function Activities() {
               </Type.Caption>
               <Type.Caption color="neutral3">
                 <Box as="span" color="neutral1">
-                  {shortenText(data.username, 8)}
+                  {addressShorten(data.username)}
                 </Box>{' '}
                 <Trans>copied a position from trader</Trans>{' '}
                 <Box as={Link} to={generateTraderDetailsRoute(data.protocol, data.sourceAccount)}>
@@ -232,7 +233,7 @@ function Tutorial() {
     <Box>
       <Box px={3}>
         <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-          <SectionLabel icon={<BookBookmark size={24} />} label={<Trans>Getting started</Trans>} />
+          <SectionLabel icon={<BookBookmark size={24} weight="fill" />} label={<Trans>Getting started</Trans>} />
           <ExternalLink href={LINKS.docs} />
         </Flex>
       </Box>
