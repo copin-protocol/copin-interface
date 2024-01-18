@@ -3,7 +3,6 @@ import { ArrowSquareOut, BookBookmark, CaretRight, CopySimple, SpeakerSimpleHigh
 import { ReactNode, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import { Settings } from 'react-slick'
 
 import { getLatestActivityLogsApi } from 'apis/activityLogApis'
 import { getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
@@ -226,7 +225,7 @@ function Activities() {
                 <Box as={Link} to={generateTraderDetailsRoute(data.protocol, data.sourceAccount)}>
                   {addressShorten(data.sourceAccount)}
                 </Box>{' '}
-                with a size of ${formatNumber(data?.volume, 2, 2)}
+                with a size of ${formatNumber((data?.volume ?? 0) * (data?.price ?? 0), 2, 2)}
               </Type.Caption>
             </Box>
           )
@@ -259,17 +258,17 @@ function Tutorial() {
     </Box>
   )
 }
-const settings: Settings = {
-  speed: 500,
-  autoplay: true,
-  autoplaySpeed: 8000,
-  pauseOnHover: true,
-  infinite: true,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  arrows: false,
-  dots: true,
-}
+// const settings: Settings = {
+//   speed: 500,
+//   autoplay: true,
+//   autoplaySpeed: 8000,
+//   pauseOnHover: true,
+//   infinite: true,
+//   slidesToShow: 1,
+//   slidesToScroll: 1,
+//   arrows: false,
+//   dots: true,
+// }
 
 function Navigator({ route }: { route: string }) {
   return (

@@ -72,7 +72,7 @@ export default function Traders() {
           sx={{ px: PADDING_X, pt: 3, width: '100%', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Type.H5 fontSize={['16px', '16px', '24px']}>
-            <Trans>Follow 100,000+ traders on Copin</Trans>
+            <Trans>Follow 200,000+ on-chain traders</Trans>
           </Type.H5>
           <Type.CaptionBold display={{ _: 'block', sm: 'none' }}>
             <Link to={generateExplorerRoute({ protocol: filters.protocol })}>

@@ -16,7 +16,7 @@ export default function Home() {
   const { md } = useResponsive()
   return (
     <>
-      <CustomPageTitle title="Top Traders" />
+      <CustomPageTitle title="Copin Analyzer" />
       {md ? (
         <Flex
           sx={{
