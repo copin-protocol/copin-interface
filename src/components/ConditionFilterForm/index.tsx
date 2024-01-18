@@ -166,7 +166,7 @@ function Row<T>({
           },
         }}
       >
-        <Box flex="7">
+        <Box flex="7" pl={2}>
           <Select
             menuPlacement="top"
             maxMenuHeight={300}
@@ -188,7 +188,7 @@ function Row<T>({
           />
         </Box>
         {/* <VerticalDivider /> */}
-        <Box flex="6">
+        <Box flex="6" pl={2}>
           <Select
             isSearchable={false}
             menuPlacement="top"

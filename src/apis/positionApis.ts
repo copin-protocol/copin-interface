@@ -1,4 +1,5 @@
 import { ChartData, ChartDataV2 } from 'entities/chart.d'
+import { OpenInterestMarketData } from 'entities/statistic'
 import { PositionStatisticCounter, ResponsePositionData } from 'entities/trader.d'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum, TimeframeEnum } from 'utils/config/enums'
@@ -55,7 +56,17 @@ export async function getTopOpeningPositionsApi({
   offset = 0,
   sortBy,
   sortType,
-}: GetApiParams & { protocol: ProtocolEnum; sortBy?: string; sortType?: SortTypeEnum }) {
+  indexToken,
+  from,
+  to,
+}: GetApiParams & {
+  protocol: ProtocolEnum
+  sortBy?: string
+  sortType?: SortTypeEnum
+  indexToken?: string
+  from?: string
+  to?: string
+}) {
   return requester
     .post(
       `${protocol}/top-positions/opening`,
@@ -66,9 +77,39 @@ export async function getTopOpeningPositionsApi({
         },
         sortBy,
         sortType,
+        indexToken,
+        from,
+        to,
       })
     )
     .then((res: any) => normalizePositionResponse(res.data as ApiListResponse<ResponsePositionData>))
+}
+export async function getOpenInterestMarketApi({
+  protocol,
+  sortBy,
+  sortType,
+  indexToken,
+  from,
+  to,
+}: GetApiParams & {
+  protocol: ProtocolEnum
+  sortBy?: string
+  sortType?: SortTypeEnum
+  indexToken?: string
+  from?: string
+  to?: string
+}) {
+  return requester
+    .get(`${protocol}/top-positions/open-interest`, {
+      params: {
+        sortBy,
+        sortType,
+        indexToken,
+        from,
+        to,
+      },
+    })
+    .then((res: any) => res.data as OpenInterestMarketData[])
 }
 
 export async function getPositionDetailByIdApi({ protocol, id }: { protocol: ProtocolEnum; id: string }) {

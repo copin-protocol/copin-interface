@@ -11,9 +11,10 @@ import CopyTradePositionDetails from 'components/CopyTradePositionDetails'
 import PositionDetails from 'components/PositionDetails'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { PositionData } from 'entities/trader'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
+import { UsdPrices } from 'hooks/store/useUsdPrices'
 import IconButton from 'theme/Buttons/IconButton'
 import Drawer from 'theme/Modal/Drawer'
 import { Type } from 'theme/base'
@@ -38,7 +39,7 @@ export default function PositionsContainer({
   children: any
 }) {
   const isMobile = useIsMobile()
-  const { prices } = useRealtimeUsdPricesStore()
+  const { prices } = useGetUsdPrices()
   const [openSourceDrawer, setOpenSourceDrawer] = useState(false)
   const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
   const [openCloseModal, setOpenCloseModal] = useState(false)

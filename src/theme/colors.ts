@@ -39,6 +39,7 @@ function colors(darkMode: boolean): Colors {
     orange3: '#CB8D14',
 
     modalBG: darkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.3)',
+    modalBG1: darkMode ? 'rgba(0, 0, 0, 0.85)' : 'rgba(0, 0, 0, 0.85)',
   }
 }
 

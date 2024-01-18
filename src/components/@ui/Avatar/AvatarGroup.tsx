@@ -27,6 +27,7 @@ export default function AvatarGroup({
           </Box>
         )
       })}
+      {numberOfAddress <= limit && <Box width={size / 2} />}
       {numberOfAddress > limit ? (
         <Flex
           sx={{

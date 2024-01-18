@@ -4,11 +4,23 @@ import { useEffect } from 'react'
 import { useClickLoginButton } from 'components/LoginAction'
 import useTraderFavorites from 'hooks/store/useTraderFavorites'
 import { useAuthContext } from 'hooks/web3/useAuth'
-import IconButton from 'theme/Buttons/IconButton'
+import { IconBox } from 'theme/base'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
-export default function FavoriteButton({ address, size = 24 }: { address: string; size?: number }) {
+export default function FavoriteButton({
+  address,
+  size = 24,
+  color = 'primary1',
+  hoverColor = 'primary2',
+  activeColor = 'primary1',
+}: {
+  address: string
+  size?: number
+  color?: string
+  hoverColor?: string
+  activeColor?: string
+}) {
   const {
     traderFavorites,
     submitting: favoriteSubmitting,
@@ -46,14 +58,14 @@ export default function FavoriteButton({ address, size = 24 }: { address: string
   }, [setTooltip, tooltipAddress])
   return (
     <div className="favorite-btn">
-      <IconButton
+      <IconBox
         // data-tip="React-tooltip"
         // data-tooltip-id={`tt_favorite_note_${address}`}
         // data-tooltip-delay-hide={240}
-        type="button"
-        size={size}
+        role="button"
         variant="ghost"
-        onClick={(e) => {
+        onClick={(e: any) => {
+          e.preventDefault()
           e.stopPropagation()
           if (hasFavorite) {
             handleAddFavorite(e)
@@ -69,9 +81,9 @@ export default function FavoriteButton({ address, size = 24 }: { address: string
         className={hasFavorite ? '' : 'hiding-btn'}
         icon={<Star weight={hasFavorite ? 'fill' : 'regular'} size={size} />}
         sx={{
-          color: 'primary1',
+          color: hasFavorite ? activeColor : color,
           '&:hover:not([disabled])': {
-            color: 'primary2',
+            color: hoverColor,
           },
         }}
         // onClick={handleAddFavorite}

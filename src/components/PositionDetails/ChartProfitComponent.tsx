@@ -16,8 +16,8 @@ import { useQuery } from 'react-query'
 
 import { getChartDataV2 } from 'apis/positionApis'
 import { PositionData, TickPosition } from 'entities/trader.d'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { useWhatIfStore } from 'hooks/store/useWhatIf'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
@@ -52,7 +52,7 @@ export default function ChartProfitComponent({
 }) {
   const { sm } = useResponsive()
   const CHART_HEIGHT = sm ? 250 : 150
-  const { prices } = useRealtimeUsdPricesStore()
+  const { prices } = useGetUsdPrices()
   const { nextHours } = useWhatIfStore()
   const { searchParams } = useSearchParams()
   const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]

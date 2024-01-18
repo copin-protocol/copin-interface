@@ -65,19 +65,18 @@ export default function useBacktestRequest(
     setBacktestSettings(requestData)
     requestTestMultiOrder({ protocol: protocol ?? reqProtocol ?? ProtocolEnum.GMX, data: requestData })
   }
-  const onSubmit =
-    ({
-      accounts,
-      callback,
-      isReturnPositions = false,
-      reqProtocol,
-    }: {
-      accounts: string[]
-      callback?: (requestData: RequestBackTestData) => void
-      isReturnPositions?: boolean
-      reqProtocol?: ProtocolEnum
-    }) =>
-    (formData: BackTestFormValues) => {
+  const onSubmit = ({
+    accounts,
+    callback,
+    isReturnPositions = false,
+    reqProtocol,
+  }: {
+    accounts: string[]
+    callback?: (requestData: RequestBackTestData) => void
+    isReturnPositions?: boolean
+    reqProtocol?: ProtocolEnum
+  }) => {
+    return (formData: BackTestFormValues) => {
       setIsSubmitting(true)
       const fromTime = dayjs(formData.startTime).utc().valueOf()
       const toTime = dayjs(formData.endTime).utc().valueOf()
@@ -110,6 +109,7 @@ export default function useBacktestRequest(
 
       requestTestMultiOrder({ protocol: protocol ?? reqProtocol ?? ProtocolEnum.GMX, data: requestData })
     }
+  }
   return {
     backtestResultData,
     backtestSettings,

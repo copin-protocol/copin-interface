@@ -7,6 +7,7 @@ export type TimeFilterProps = {
   text: ReactNode
   sort_by: TimeFilterByEnum
   value: number
+  premiumFilter?: boolean
 }
 
 export type TimeWithRangeFilterProps = {

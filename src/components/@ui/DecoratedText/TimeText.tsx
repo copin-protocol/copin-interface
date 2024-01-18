@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 import Tooltip from 'theme/Tooltip'
@@ -34,12 +35,15 @@ export const LocalTimeText = ({ date }: { date: string | undefined }) => {
   )
 }
 
-export const RelativeShortTimeText = ({ date }: { date: string | undefined }) => {
+export const RelativeShortTimeText = ({ date, suffix }: { date: string | undefined; suffix?: ReactNode }) => {
   const uuid = uuidv4()
   const tooltipId = `tt_${uuid}`
   return (
     <Box as="span" sx={{ display: 'block' }} data-tip="React-tooltip" data-tooltip-id={tooltipId}>
-      <span>{`${formatLocalRelativeShortDate(date ?? '')}`}</span>
+      <span>
+        {`${formatLocalRelativeShortDate(date ?? '')}`}
+        {suffix ? ` ${suffix}` : ''}
+      </span>
       <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
         <Type.Caption sx={{ maxWidth: [300, 400] }}>{formatLocalDate(date ?? '', DAYJS_FULL_DATE_FORMAT)}</Type.Caption>
       </Tooltip>

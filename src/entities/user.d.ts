@@ -46,6 +46,7 @@ export interface ReferralStat {
 }
 
 export interface UserActivityData {
+  id: string
   createdAt: string
   protocol: ProtocolEnum
   sourceAccount: string
@@ -72,6 +73,33 @@ export interface UserActivityData {
   sourcePrice: number
   copyOrderId?: string
   targetTxHash?: string
+}
+
+export interface LatestActivityLogData {
+  id: string
+  protocol: ProtocolEnum
+  sourceAccount: string
+  copyTradeTitle: string
+  exchange: CopyTradePlatformEnum
+  indexToken: string
+  pair: string
+  price: number
+  sourcePrice: number
+  copyTradeId: string
+  volume: number
+  leverage: number
+  isLong: true
+  type: OrderTypeEnum
+  isSuccess: true
+  sourceTxHash: string
+  copyWalletId: string
+  bingXOrderId: string
+  isReverse: false
+  copyOrderId: string
+  copyPositionId: string
+  userId: string
+  username: string
+  createdAt: string
 }
 
 export interface UserSubscriptionData {

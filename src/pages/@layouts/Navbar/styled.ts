@@ -2,7 +2,10 @@ import styled, { css } from 'styled-components/macro'
 
 import { Box, Flex } from 'theme/base'
 import { MEDIA_WIDTHS } from 'theme/theme'
+import { NAVBAR_HEIGHT } from 'utils/config/constants'
 import { transition } from 'utils/helpers/css'
+
+import { LARGE_BREAK_POINT } from './configs'
 
 export const SearchWrapper = styled<any>(Box)`
   position: relative;
@@ -22,6 +25,7 @@ export const SearchResult = styled<any>(Box)`
 `
 
 export const Wrapper = styled(Box)`
+  position: relative;
   width: 100%;
   background: ${({ theme }) => `${theme.colors.neutral7}`};
   padding-left: 16px;
@@ -35,6 +39,7 @@ export const Wrapper = styled(Box)`
 `
 
 export const Main = styled(Flex)`
+  gap: 16px;
   margin: 0 auto;
   height: 100%;
   justify-content: space-between;
@@ -49,44 +54,19 @@ export const LogoWrapper = styled.div`
 `
 
 export const MenuWrapper = styled.div<{ visible: boolean }>`
-  display: flex;
-  gap: 30px;
+  display: none;
 
-  p a {
-    color: ${({ theme }) => theme.colors.neutral3};
-    font-size: 18px;
-    font-weight: 500;
-    text-transform: uppercase;
-
-    &:hover {
-      color: ${({ theme }) => theme.colors.neutral3};
-      border-bottom: 2px solid ${({ theme }) => theme.colors.primary1};
-      padding-bottom: 6px;
-    }
-  }
-
-  @media screen and (max-width: ${MEDIA_WIDTHS.upToMedium}px) {
+  @media screen and (max-width: ${LARGE_BREAK_POINT}px) {
     position: fixed;
-    z-index: 107;
-    top: 0;
+    z-index: 100;
+    top: ${NAVBAR_HEIGHT}px;
     left: 0;
+    height: calc(100vh - ${NAVBAR_HEIGHT}px);
     width: 100%;
-    height: 100vh;
     display: block;
-    background: ${({ theme }) => theme.colors.neutral7};
-    backdrop-filter: blur(10px);
-    padding: 30px 20px;
-    transform: translateX(-100%);
+    background: #0b0e18d6;
+    transform: translateX(100%);
     ${transition()}
-
-    p {
-      margin-bottom: 30px;
-    }
-
-    p a {
-      font-size: 15px;
-      text-transform: capitalize;
-    }
 
     ${({ visible }) => {
       return visible
@@ -95,15 +75,6 @@ export const MenuWrapper = styled.div<{ visible: boolean }>`
           `
         : ''
     }}
-  }
-
-  @media screen and (max-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    gap: 15px;
-
-    p a {
-      font-size: 15px;
-      text-transform: capitalize;
-    }
   }
 `
 

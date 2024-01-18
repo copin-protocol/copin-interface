@@ -81,6 +81,7 @@
     "lightweight-charts": "4.1.1",
     "lodash": "4.17.21",
     "qs": "6.11.0",
+    "rc-drawer": "7.0.0",
     "rc-dropdown": "4.1.0",
     "rc-slider": "9.7.5",
     "react": "18.2.0",

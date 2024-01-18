@@ -1,4 +1,4 @@
-import { ReactNode, cloneElement, createContext, useContext, useMemo, useState } from 'react'
+import { cloneElement, createContext, useContext, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { parsedQueryString } from 'hooks/router/useParsedQueryString'
@@ -6,7 +6,7 @@ import { ProtocolEnum } from 'utils/config/enums'
 
 interface Context {
   protocol: ProtocolEnum
-  setProtocol: (protocol: ProtocolEnum) => void
+  // setProtocol: (protocol: ProtocolEnum) => void
 }
 
 const ProtocolContext = createContext<Context>({} as Context)
@@ -17,13 +17,11 @@ export function ProtocolProvider({ children }: { children: any }) {
   const protocolParam = Object.values(ProtocolEnum).find((protocol) => parsedProtocolParam === protocol)
   const searchParams = parsedQueryString(search)
   const protocolSearch = searchParams.protocol
-  const [protocol, setProtocol] = useState(() => {
-    if (protocolParam) return protocolParam as ProtocolEnum
-    if (protocolSearch) return protocolSearch as ProtocolEnum
-    return ProtocolEnum.GMX
-  })
+  let protocol = ProtocolEnum.GMX
+  if (protocolParam) protocol = protocolParam as ProtocolEnum
+  if (protocolSearch) protocol = protocolSearch as ProtocolEnum
 
-  const values = useMemo(() => ({ protocol, setProtocol }), [protocol])
+  const values = useMemo(() => ({ protocol }), [protocol])
 
   return <ProtocolContext.Provider value={values}>{cloneElement(children, { key: protocol })}</ProtocolContext.Provider>
 }

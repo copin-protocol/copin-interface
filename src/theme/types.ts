@@ -38,6 +38,7 @@ export type Colors = {
   orange3: Color
 
   modalBG: Color
+  modalBG1: Color
 }
 
 export type VariantProps = {

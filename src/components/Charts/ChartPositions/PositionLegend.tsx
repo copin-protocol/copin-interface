@@ -8,9 +8,9 @@ import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { renderEntry, renderOpeningPnLWithPrices, renderOpeningRoiWithPrices } from 'components/@ui/Table/renderProps'
 import PositionDetails from 'components/PositionDetails'
 import { PositionData } from 'entities/trader'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
@@ -29,7 +29,7 @@ export default function PositionLegend({
   isOpening: boolean
   data: PositionData
 }) {
-  const { prices } = useRealtimeUsdPricesStore()
+  const { prices } = useGetUsdPrices()
   const isMobile = useIsMobile()
   const [openDrawer, setOpenDrawer] = useState(false)
   const history = useHistory()

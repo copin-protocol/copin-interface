@@ -13,7 +13,7 @@ import {
 } from 'utils/config/enums'
 import { COPY_POSITION_CLOSE_TYPE_TRANS, COPY_WALLET_TRANS, ORDER_TYPE_TRANS } from 'utils/config/translations'
 
-import { addressShorten, formatNumber } from './format'
+import { addressShorten, formatNumber, shortenText } from './format'
 
 // dayjs.extend(duration)
 
@@ -152,7 +152,7 @@ export const getDurationFromTimeFilter = (timeFilter?: TimeFilterByEnum) => {
     case TimeFilterByEnum.S7_DAY:
       return 7
     case TimeFilterByEnum.S14_DAY:
-      return 14
+      return 15
     case TimeFilterByEnum.S30_DAY:
       return 30
     case TimeFilterByEnum.S60_DAY:
@@ -185,7 +185,18 @@ export function parseExchangeImage(exchange: CopyTradePlatformEnum) {
   return `/images/exchanges/${exchange}.png`
 }
 
-export function parseWalletName(wallet: CopyWalletData) {
+export function parseWalletName(wallet: CopyWalletData, returnExchange?: boolean, shortenName?: boolean) {
+  if (returnExchange)
+    return `${COPY_WALLET_TRANS[wallet.exchange]}: ${
+      wallet?.name
+        ? shortenName
+          ? shortenText(wallet.name, 8)
+          : wallet.name
+        : wallet?.smartWalletAddress
+        ? addressShorten(wallet?.smartWalletAddress)
+        : wallet.bingX?.apiKey?.slice(0, 5)
+    }`
+
   return wallet.name
     ? wallet.name
     : `${COPY_WALLET_TRANS[wallet.exchange]}: ${
@@ -234,4 +245,8 @@ export function convertDataToText(data: any) {
     }
   }
   return data
+}
+
+export function parseMarketImage(symbol: string) {
+  return `/svg/markets/${symbol}.svg`
 }

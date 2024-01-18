@@ -21,6 +21,7 @@ export interface FieldOption<T> {
   label: ReactNode
   default?: FilterCondition
   unit?: string
+  searchText?: string
 }
 export interface RankingFieldOption<T> extends FieldOption<T> {
   statLabel?: string

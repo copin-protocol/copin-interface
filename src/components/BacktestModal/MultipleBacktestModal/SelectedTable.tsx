@@ -9,7 +9,6 @@ import { TraderListSortProps, mobileTableSettings, tableSettings } from 'compone
 import { TraderData } from 'entities/trader'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
-import AddCustomTrader from 'pages/Home/AddCustomTrader'
 import { PaginationWithLimit, PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
@@ -17,6 +16,8 @@ import { SortTypeEnum } from 'utils/config/enums'
 import { getPaginationDataFromList } from 'utils/helpers/transform'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
+
+import AddCustomTrader from './AddCustomTrader'
 
 export default function HomeSelectedTable({ scrollRef }: { scrollRef: RefObject<HTMLDivElement | null> }) {
   const { myProfile } = useMyProfile()

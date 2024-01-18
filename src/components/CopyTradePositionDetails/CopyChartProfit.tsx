@@ -16,7 +16,7 @@ import { useQuery } from 'react-query'
 
 import { getChartDataV2 } from 'apis/positionApis'
 import { CopyOrderData, CopyPositionData } from 'entities/copyTrade.d'
-import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -42,7 +42,7 @@ export default function CopyChartProfit({
   closeBlockTime: number
   setCrossMovePnL: (value: number | undefined) => void
 }) {
-  const { prices } = useRealtimeUsdPricesStore()
+  const { prices } = useGetUsdPrices()
   const { sm } = useResponsive()
   const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken].symbol
   const from = openBlockTime * 1000
