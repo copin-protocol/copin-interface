@@ -32,7 +32,6 @@ export default function BalanceText({
         role="button"
         onClick={() => setShow((prev) => !prev)}
         sx={{ color: 'neutral3', '&:hover': { color: 'neutral2' }, lineHeight: 0 }}
-        display={{ _: 'none', xl: 'block' }}
       >
         {show ? <EyeClosed onClick={() => setShow(true)} /> : <Eye />}
       </Box>

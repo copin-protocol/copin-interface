@@ -152,7 +152,7 @@ export const getDurationFromTimeFilter = (timeFilter?: TimeFilterByEnum) => {
     case TimeFilterByEnum.S7_DAY:
       return 7
     case TimeFilterByEnum.S14_DAY:
-      return 14
+      return 15
     case TimeFilterByEnum.S30_DAY:
       return 30
     case TimeFilterByEnum.S60_DAY:

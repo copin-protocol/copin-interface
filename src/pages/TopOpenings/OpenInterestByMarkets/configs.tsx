@@ -20,6 +20,7 @@ const renderMarket = (symbol: string) => {
   )
 }
 const renderPrice = (item: OpenInterestMarketData) => {
+  if (!item.price) return '--'
   const diffPercent = !!item?.latestPrice ? (((item?.price ?? 0) - item.latestPrice) / item.latestPrice) * 100 : 0
   return (
     <Type.Caption color="neutral1" sx={{ display: 'flex', gap: '1ch', '& *': { display: 'inline-block', flex: 1 } }}>
@@ -58,7 +59,7 @@ const renderLongShortRate = (item: OpenInterestMarketData) => {
     <Flex sx={{ alignItems: 'center', gap: 1 }}>
       <Type.Caption
         color={longRate > shortRate ? 'neutral1' : 'neutral3'}
-        sx={{ flexShrink: 0, width: 50, textAlign: 'right' }}
+        sx={{ flexShrink: 0, width: 60, textAlign: 'right' }}
       >
         {formatNumber(longRate, 2, 2)}%
       </Type.Caption>
@@ -67,7 +68,7 @@ const renderLongShortRate = (item: OpenInterestMarketData) => {
       </Box>
       <Type.Caption
         color={shortRate > longRate ? 'neutral1' : 'neutral3'}
-        sx={{ flexShrink: 0, width: 50, textAlign: 'left' }}
+        sx={{ flexShrink: 0, width: 60, textAlign: 'left' }}
       >
         {formatNumber(shortRate, 2, 2)}%
       </Type.Caption>
