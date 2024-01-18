@@ -13,7 +13,7 @@ import {
 } from 'utils/config/enums'
 import { COPY_POSITION_CLOSE_TYPE_TRANS, COPY_WALLET_TRANS, ORDER_TYPE_TRANS } from 'utils/config/translations'
 
-import { addressShorten, formatNumber } from './format'
+import { addressShorten, formatNumber, shortenText } from './format'
 
 // dayjs.extend(duration)
 
@@ -190,7 +190,7 @@ export function parseWalletName(wallet: CopyWalletData, returnExchange?: boolean
     return `${COPY_WALLET_TRANS[wallet.exchange]}: ${
       wallet?.name
         ? shortenName
-          ? addressShorten(wallet.name)
+          ? shortenText(wallet.name, 8)
           : wallet.name
         : wallet?.smartWalletAddress
         ? addressShorten(wallet?.smartWalletAddress)
