@@ -81,6 +81,7 @@ export default function DefaultFilterForm({
 
       <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
         <FilterForm
+          formType="default"
           fieldOptions={defaultFieldOptions}
           initialFormValues={defaultFormValues}
           onApply={onApply}
