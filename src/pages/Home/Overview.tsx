@@ -23,7 +23,7 @@ import { LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
-import { addressShorten, compactNumber, formatNumber, shortenText } from 'utils/helpers/format'
+import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseWalletName } from 'utils/helpers/transform'
 
@@ -132,7 +132,16 @@ function WalletStateItem({ label, value }: { label: ReactNode; value: ReactNode 
   return (
     <Flex sx={{ flexDirection: 'column', gap: 1 }}>
       <Type.Caption>{label}</Type.Caption>
-      <Type.CaptionBold>{value}</Type.CaptionBold>
+      <Type.CaptionBold
+        sx={{
+          maxWidth: '120px',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {value}
+      </Type.CaptionBold>
     </Flex>
   )
 }
