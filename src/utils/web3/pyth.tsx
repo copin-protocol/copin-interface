@@ -7,7 +7,7 @@ import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { TOKEN_TRADE_SUPPORT, TokenTrade } from 'utils/config/trades'
 
-export const pyth = new EvmPriceServiceConnection('https://xc-mainnet.pyth.network')
+export const pyth = new EvmPriceServiceConnection('https://hermes.pyth.network')
 export const RealtimeContext = createContext({})
 
 const INTERVAL_TIME = 5 // s
