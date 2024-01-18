@@ -100,7 +100,7 @@ type SizeOpeningComponentProps = {
   textProps?: TextProps
 }
 function SizeOpening(props: Omit<SizeOpeningComponentProps, 'prices'>) {
-  const prices = useGetUsdPrices()
+  const { prices } = useGetUsdPrices()
   if (!prices) return <>--</>
   return <SizeOpeningComponent {...props} prices={prices} />
 }
@@ -174,7 +174,7 @@ export function renderOpeningPnLWithPrices(
   return <OpeningPnLComponent data={data} prices={prices} ignoreFee={ignoreFee} sx={sx} />
 }
 function OpeningPnL(props: Omit<OpeningPnLComponentProps, 'prices'>) {
-  const prices = useGetUsdPrices()
+  const { prices } = useGetUsdPrices()
   if (!prices) return <>--</>
   return <OpeningPnLComponent {...props} prices={prices} />
 }
@@ -204,7 +204,7 @@ export function renderOpeningRoi(data: PositionData | undefined, ignoreFee?: boo
   return <OpeningRoi data={data} ignoreFee={ignoreFee} sx={sx} />
 }
 function OpeningRoi(props: Omit<OpeningRoiComponentProps, 'prices'>) {
-  const prices = useGetUsdPrices()
+  const { prices } = useGetUsdPrices()
   if (!prices) return <>--</>
   return <OpeningRoiComponent {...props} prices={prices} />
 }

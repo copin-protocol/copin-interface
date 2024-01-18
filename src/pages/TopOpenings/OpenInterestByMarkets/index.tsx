@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { ComponentProps, useState } from 'react'
+import { ComponentProps, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
@@ -19,6 +19,7 @@ import { generateOIRoute } from 'utils/helpers/generateRoute'
 
 import { TopOpenLink } from '../Navigators'
 import { TimeDropdown, useTimeFilter } from '../TopOpenIntrest/Filters'
+import useSearchParamsState from '../useSearchParamsState'
 import { ListForm, TableForm } from './ListMarkets'
 
 export default function OpenInterestByMarkets() {
@@ -32,6 +33,12 @@ function OpenInterestByMarketsPage() {
   const { sm } = useResponsive()
 
   const { searchParams, setSearchParams } = useSearchParams()
+
+  const { setMarketsPageParams } = useSearchParamsState()
+  useEffect(() => {
+    setMarketsPageParams(searchParams as any)
+  }, [searchParams])
+
   const { from, to, time, onChangeTime } = useTimeFilter()
   const [currentSort, setCurrentShort] = useState<TableSortProps<OpenInterestMarketData> | undefined>(() => {
     if (searchParams.sort_by) {

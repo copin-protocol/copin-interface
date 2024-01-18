@@ -1,12 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
+import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getTopOpeningPositionsApi } from 'apis/positionApis'
 import PageHeader from 'components/@ui/PageHeader'
 import { ProtocolPageWrapper } from 'components/RouteWrapper'
+import useSearchParams from 'hooks/router/useSearchParams'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -14,9 +16,15 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import { MarketLink } from '../Navigators'
 import PositionsSection from '../PositionsSection'
 import VisualizeSection, { VisualizeSectionMobile } from '../VisualizeSection'
+import useSearchParamsState from '../useSearchParamsState'
 import Filters, { useFilters } from './Filters'
 
 export default function TopOpenings() {
+  const { searchParams } = useSearchParams()
+  const { setOverallPageParams } = useSearchParamsState()
+  useEffect(() => {
+    setOverallPageParams(searchParams as any)
+  }, [searchParams])
   return (
     <ProtocolPageWrapper>
       <TopOpeningsPage />

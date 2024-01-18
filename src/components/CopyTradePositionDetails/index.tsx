@@ -10,7 +10,7 @@ import { AmountText, PercentText } from 'components/@ui/DecoratedText/ValueText'
 import NoDataFound from 'components/@ui/NoDataFound'
 import PositionStatus from 'components/@ui/PositionStatus'
 import { renderCopyEntry } from 'components/@ui/Table/renderProps'
-import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { renderSLTPSetting, renderTrader } from 'pages/MyProfile/renderProps'
 import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
@@ -27,7 +27,7 @@ import CopyPositionHistories from './CopyPositionHistories'
 import ListCopyOrderTable from './ListCopyOrderTable'
 
 export default function CopyTradePositionDetails({ id }: { id: string }) {
-  const { prices } = useRealtimeUsdPricesStore()
+  const { prices } = useGetUsdPrices()
   const { data, isLoading } = useQuery(
     [QUERY_KEYS.GET_MY_COPY_POSITION_DETAIL, id],
     () => getMyCopyPositionDetailApi({ copyId: id }),

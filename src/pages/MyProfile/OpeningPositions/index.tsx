@@ -8,7 +8,7 @@ import { getMyCopyPositionsApi } from 'apis/userApis'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { CopyPositionData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
-import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
@@ -38,7 +38,7 @@ export default function OpeningPositions({
   layoutType?: 'simple' | 'normal'
   tableProps?: Partial<ComponentProps<typeof PositionTable>>
 }) {
-  const { prices } = useRealtimeUsdPricesStore()
+  const { prices } = useGetUsdPrices()
   const _queryParams: GetMyPositionsParams = {
     limit,
     offset: 0,

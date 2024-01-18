@@ -8,14 +8,26 @@ import { useProtocolStore } from 'hooks/store/useProtocols'
 import { Flex, IconBox, Type } from 'theme/base'
 import { generateOIMarketsRoute, generateOIRoute } from 'utils/helpers/generateRoute'
 
+import useSearchParamsState from './useSearchParamsState'
+
 export function MarketLink({ text }: { text: ReactNode }) {
   const protocol = useProtocolStore((state) => state.protocol)
-  return <LinkItem text={text} link={generateOIMarketsRoute({ protocol })} isPremiumFeature={false} />
+  const { marketsPage } = useSearchParamsState()
+  return (
+    <LinkItem text={text} link={generateOIMarketsRoute({ protocol, params: marketsPage })} isPremiumFeature={false} />
+  )
 }
 
 export function TopOpenLink() {
   const protocol = useProtocolStore((state) => state.protocol)
-  return <LinkItem text={<Trans>Overall</Trans>} link={generateOIRoute({ protocol })} isPremiumFeature={false} />
+  const { overallPage } = useSearchParamsState()
+  return (
+    <LinkItem
+      text={<Trans>Overall</Trans>}
+      link={generateOIRoute({ protocol, params: overallPage })}
+      isPremiumFeature={false}
+    />
+  )
 }
 
 function LinkItem({ text, link, isPremiumFeature }: { text: ReactNode; link: string; isPremiumFeature: boolean }) {

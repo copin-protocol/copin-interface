@@ -7,8 +7,8 @@ import logoWithText from 'assets/images/logo.png'
 import ToastBody from 'components/@ui/ToastBody'
 import { SharePositionData } from 'entities/share'
 import { PositionData } from 'entities/trader'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMyProfile from 'hooks/store/useMyProfile'
-import { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
 import { IconBox } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -18,7 +18,7 @@ import { generateParamsUrl, generatePositionDetailsRoute } from 'utils/helpers/g
 import { parseProtocolImage } from 'utils/helpers/transform'
 
 export default function SharePosition({ isOpening, stats }: { isOpening: boolean; stats: PositionData }) {
-  const { prices } = useRealtimeUsdPricesStore()
+  const { prices } = useGetUsdPrices()
   const [isSocialMediaSharingOpen, setIsSocialMediaSharingOpen] = useState(false)
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
   const [shareData, setShareData] = useState<SharePositionData>()

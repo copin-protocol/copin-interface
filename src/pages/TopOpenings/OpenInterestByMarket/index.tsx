@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { Pulse } from '@phosphor-icons/react'
+import { CaretDown, Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory, useParams } from 'react-router-dom'
+import { SingleValueProps } from 'react-select'
+import { components } from 'react-select'
 
 import { getTopOpeningPositionsApi } from 'apis/positionApis'
 import tokenNotFound from 'assets/images/token-not-found.png'
@@ -15,7 +17,6 @@ import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import Select from 'theme/Select'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getTokenTradeList } from 'utils/config/trades'
@@ -25,6 +26,7 @@ import { MarketLink, TopOpenLink } from '../Navigators'
 import PositionsSection from '../PositionsSection'
 import Filters, { useFilters } from '../TopOpenIntrest/Filters'
 import VisualizeSection, { VisualizeSectionMobile } from '../VisualizeSection'
+import useSearchParamsState from '../useSearchParamsState'
 
 export default function OpenInterestByMarket() {
   return (
@@ -44,6 +46,11 @@ function OpenInterestByMarketPage() {
 
   const { sort, onChangeSort, limit, onChangeLimit, time, from, to, onChangeTime } = useFilters()
   const { searchParams } = useSearchParams()
+
+  const { setMarketPageParams } = useSearchParamsState()
+  useEffect(() => {
+    setMarketPageParams(searchParams as any)
+  }, [searchParams])
 
   const { data, isLoading, isFetching } = useQuery(
     [QUERY_KEYS.GET_TOP_OPEN_POSITIONS, protocol, limit, from, to, sort.key, symbol],
@@ -85,17 +92,19 @@ function OpenInterestByMarketPage() {
               </Box>
               <Box
                 sx={{
-                  '.select__single-value': {
-                    fontSize: '16px',
-                    color: `${themeColors.primary1} !important`,
-                  },
                   '.select__control': {
                     width: 100,
-                    input: { width: '100% !important', margin: '0 !important' },
+                    input: { width: '80px !important', margin: '0 !important' },
                   },
                 }}
               >
-                <Select variant="ghost" value={selectOption} options={tokenSelectOptions} onChange={onChangeToken} />
+                <Select
+                  variant="ghost"
+                  value={selectOption}
+                  options={tokenSelectOptions}
+                  onChange={onChangeToken}
+                  components={{ SingleValue, DropdownIndicator }}
+                />
               </Box>
             </Flex>
           }
@@ -226,3 +235,16 @@ const breadcrumbItems = (symbol: string, protocol: ProtocolEnum, params: Record<
   { title: <Trans>Markets</Trans>, path: generateOIMarketsRoute({ protocol, params }) },
   { title: <Trans>{symbol}</Trans> },
 ]
+
+const SingleValue = ({ children, ...props }: SingleValueProps<any>) => {
+  return (
+    <components.SingleValue {...props}>
+      <Type.Body color="primary1">
+        {children} <CaretDown size={16} style={{ transform: 'translateY(2px)' }} />
+      </Type.Body>
+    </components.SingleValue>
+  )
+}
+const DropdownIndicator = () => {
+  return null
+}

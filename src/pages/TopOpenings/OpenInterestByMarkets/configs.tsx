@@ -56,12 +56,20 @@ const renderLongShortRate = (item: OpenInterestMarketData) => {
   const shortRate = shortRateMulti100 / 100
   return (
     <Flex sx={{ alignItems: 'center', gap: 1 }}>
-      <Type.Caption color={longRate > shortRate ? 'neutral1' : 'neutral3'} sx={{ flexShrink: 0 }}>
-        {longRate}%
+      <Type.Caption
+        color={longRate > shortRate ? 'neutral1' : 'neutral3'}
+        sx={{ flexShrink: 0, width: 50, textAlign: 'right' }}
+      >
+        {formatNumber(longRate, 2, 2)}%
       </Type.Caption>
-      <DifferentialBar sourceRate={longRate} targetRate={shortRate} />
-      <Type.Caption color={shortRate > longRate ? 'neutral1' : 'neutral3'} sx={{ flexShrink: 0 }}>
-        {shortRate}%
+      <Box flex="1" sx={{ transform: 'translateY(1px)' }}>
+        <DifferentialBar sourceRate={longRate} targetRate={shortRate} />
+      </Box>
+      <Type.Caption
+        color={shortRate > longRate ? 'neutral1' : 'neutral3'}
+        sx={{ flexShrink: 0, width: 50, textAlign: 'left' }}
+      >
+        {formatNumber(shortRate, 2, 2)}%
       </Type.Caption>
     </Flex>
   )
