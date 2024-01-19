@@ -62,7 +62,7 @@ export default function WhatIf({
             </form>
           </Box>
         }
-        sx={{ height: '100%', justifyContent: 'center', px: 3 }}
+        sx={{ height: '100%', justifyContent: 'center' }}
         buttonSx={{
           border: 'none',
           height: '100%',

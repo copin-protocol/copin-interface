@@ -26,7 +26,7 @@ type ObjectTypes = {
   }
 }
 
-const ORDER_TYPES: ObjectTypes = {
+export const ORDER_TYPES: ObjectTypes = {
   [OrderTypeEnum.OPEN]: {
     text: <Trans>Open</Trans>,
     icon: <IconBox icon={<ArrowFatUp weight={'fill'} />} />,
@@ -190,6 +190,11 @@ export default function ListOrderTable({
         wrapperSx={{
           display: 'block !important',
           pr: 0,
+          table: {
+            '& th:first-child, td:first-child': {
+              pl: 3,
+            },
+          },
         }}
         data={tableData?.data}
         columns={columns}

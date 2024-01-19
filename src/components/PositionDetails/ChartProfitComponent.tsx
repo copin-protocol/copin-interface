@@ -11,7 +11,7 @@ import {
   Time,
   createChart,
 } from 'lightweight-charts'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getChartDataV2 } from 'apis/positionApis'
@@ -30,6 +30,8 @@ import { calcLiquidatePrice, calcOpeningPnL, calcPnL } from 'utils/helpers/calcu
 import { formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
+
+import OrderTooltip from './OrderTooltip'
 
 export default function ChartProfitComponent({
   position,
@@ -81,8 +83,10 @@ export default function ChartProfitComponent({
     }
   )
 
+  const [markerId, setMarkerId] = useState<string | undefined>()
   const orders = position.orders.sort((x, y) => (x.blockTime < y.blockTime ? -1 : x.blockTime > y.blockTime ? 1 : 0))
   const openOrder = orders.find((e) => e.isOpen || e.type === OrderTypeEnum.OPEN) ?? position.orders?.[0]
+  const closeOrder = orders.find((e) => e.isClose) ?? orders?.[0]
   const increaseList = orders.filter((e) => e.type === OrderTypeEnum.INCREASE || e.type === OrderTypeEnum.OPEN)
   const decreaseList = orders.filter(
     (e) =>
@@ -90,7 +94,9 @@ export default function ChartProfitComponent({
       (position.protocol !== ProtocolEnum.GMX && e.type === OrderTypeEnum.CLOSE) ||
       e.type === OrderTypeEnum.LIQUIDATE
   )
-  const mofifiedMarginList = orders.filter((e) => e.type === OrderTypeEnum.MARGIN_TRANSFERRED)
+  const modifiedMarginList = orders.filter((e) => e.type === OrderTypeEnum.MARGIN_TRANSFERRED)
+  const currentOrder = orders.find((e) => e.id === markerId)
+
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
   const chartData: LineData[] = useMemo(() => {
     if (!data) return []
@@ -428,6 +434,7 @@ export default function ChartProfitComponent({
       if (high && low && low.value !== high.value) {
         const increaseMarkers = increaseList.slice(1).map((order): SeriesMarker<Time> => {
           return {
+            id: order.id,
             color: themeColors.neutral2,
             position: 'aboveBar',
             shape: 'arrowUp',
@@ -438,6 +445,7 @@ export default function ChartProfitComponent({
         const decreaseMarkers = (isOpening ? decreaseList : decreaseList.slice(0, -1)).map(
           (order): SeriesMarker<Time> => {
             return {
+              id: order.id,
               color: themeColors.neutral2,
               position: 'belowBar',
               shape: 'arrowDown',
@@ -446,8 +454,9 @@ export default function ChartProfitComponent({
             }
           }
         )
-        const modifiedMarkers = mofifiedMarginList.map((order): SeriesMarker<Time> => {
+        const modifiedMarkers = modifiedMarginList.map((order): SeriesMarker<Time> => {
           return {
+            id: order.id,
             color: themeColors.orange1,
             position: order.collateralDeltaNumber > 0 ? 'aboveBar' : 'belowBar',
             shape: 'circle',
@@ -459,6 +468,7 @@ export default function ChartProfitComponent({
         const makers = [...increaseMarkers, ...decreaseMarkers, ...modifiedMarkers]
         if (!isOpening && nextHours) {
           const closeMarkers: SeriesMarker<Time> = {
+            id: closeOrder?.id ?? 'CLOSED',
             color: hasLiquidate ? themeColors.red2 : themeColors.neutral1,
             position: 'belowBar',
             shape: 'square',
@@ -495,6 +505,9 @@ export default function ChartProfitComponent({
     }
 
     chart.subscribeCrosshairMove((param) => {
+      const hoverMakerId = param.hoveredObjectId as string | undefined
+      setMarkerId(hoverMakerId)
+
       const data = param.seriesData.get(series) as LineData
       const dataFuture = param.seriesData.get(futureSeries) as LineData
       const time = (dataFuture?.time ?? data?.time) as number
@@ -554,6 +567,7 @@ export default function ChartProfitComponent({
   return (
     <Box mt={24} sx={{ position: 'relative' }} minHeight={CHART_HEIGHT}>
       <div id="legend-profit" />
+      {currentOrder && <OrderTooltip data={currentOrder} />}
       {isLoading ? <Loading /> : <div id={ELEMENT_IDS.POSITION_CHART_PNL} />}
     </Box>
   )

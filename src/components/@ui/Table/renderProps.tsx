@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { Square } from '@phosphor-icons/react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -10,9 +11,10 @@ import { UsdPrices } from 'hooks/store/useUsdPrices'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, TextProps, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
-import { calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
+import { calcClosedPrice, calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
 import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 
@@ -75,13 +77,24 @@ export function renderSizeShorten(data: PositionData | undefined) {
   )
 }
 
-export function renderSize(data: PositionData | undefined) {
+export function renderSize(data: PositionData | undefined, hasLiquidate?: boolean) {
   if (!data) return <></>
+  const closedPrice = calcClosedPrice(data)
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
       <Flex minWidth={190} sx={{ gap: '1px', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-        <Type.Caption>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
-        <Type.Caption textAlign="right">{formatNumber(data.leverage, 1, 1)}x</Type.Caption>
+        <Flex flex="50%">
+          <Type.Caption>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
+        </Flex>
+        <VerticalDivider />
+        <Flex minWidth={40} justifyContent="center">
+          <Type.Caption textAlign="right">{formatNumber(data.leverage, 1, 1)}x</Type.Caption>
+        </Flex>
+        <VerticalDivider />
+        <Flex flex="55%" justifyContent="flex-end" sx={{ gap: 1, alignItems: 'center', height: 22 }}>
+          <Square weight={'fill'} color={hasLiquidate ? themeColors.red2 : themeColors.neutral1} />
+          <Type.Caption>{closedPrice ? formatNumber(closedPrice, 2, 2) : '--'}</Type.Caption>
+        </Flex>
       </Flex>
       <ProgressBar percent={0} sx={{ width: '100%' }} />
     </Flex>
