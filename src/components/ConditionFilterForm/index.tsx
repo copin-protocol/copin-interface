@@ -91,6 +91,7 @@ export default function ConditionFilterForm<T>({
               excludingKeys={formValues.map((item) => item.key)}
               onChange={(values) => onChangeRowValues(index, values)}
               onRemove={() => handleClearRow(values.key)}
+              type={type}
             />
           )
         })}
@@ -124,12 +125,14 @@ function Row<T>({
   excludingKeys,
   onChange,
   onRemove,
+  type,
 }: {
   fieldOptions: FieldOption<T>[]
   data: RowValues<T>
   excludingKeys: (keyof T)[]
   onChange: (values: RowValues<T>) => void
   onRemove: () => void
+  type: ConditionFilterFormProps<T>['type']
 }) {
   const [conditionOption, setConditionOption] = useState<ConditionOption>(() => getConditionOption(data.conditionType))
   const [fieldNameOption, setFieldNameOption] = useState<FieldOption<T>>(() => {
@@ -175,6 +178,7 @@ function Row<T>({
             options={fieldOptions.filter(
               (option) => option.value === fieldNameOption.value || !excludingKeys.includes(option.value)
             )}
+            filterOption={type === 'default' ? customFilter : undefined}
             value={fieldNameOption}
             onChange={(newValue) => {
               const value = newValue as FieldOption<T>
@@ -290,3 +294,19 @@ const conditionOptions: ConditionOption[] = [
     label: 'Between',
   },
 ]
+
+const customFilter: any = (option: any, searchText: any) => {
+  if (
+    typeof option?.data?.searchText === 'string' &&
+    option.data.searchText.toLowerCase().includes(searchText?.toLowerCase?.())
+  ) {
+    return true
+  }
+  if (typeof option?.label === 'string' && option.label.toLowerCase().includes(searchText?.toLowerCase?.())) {
+    return true
+  }
+  if (typeof option?.value === 'string' && option.value.toLowerCase().includes(searchText?.toLowerCase?.())) {
+    return true
+  }
+  return false
+}
