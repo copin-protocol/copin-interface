@@ -13,7 +13,7 @@ import Tag from 'theme/Tag'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
-import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
@@ -189,17 +189,17 @@ export function renderSource(item: CopyPositionData, index?: number, externalSou
 }
 
 export function renderSLTPSetting(item: CopyTradeData, ignoreDisable?: boolean) {
+  const formatSLTP = (type: SLTPTypeEnum, amount?: number) => {
+    const formatAmount = (amount ?? 0) >= 10000 ? compactNumber(item.stopLossAmount, 2) : formatNumber(amount)
+    return type === SLTPTypeEnum.PERCENT ? `${formatAmount}%` : `$${formatAmount}`
+  }
   return (
     <Flex alignItems="center">
       <Box
         as="span"
         color={ignoreDisable || (!ignoreDisable && item.status === CopyTradeStatusEnum.RUNNING) ? 'red2' : 'neutral3'}
       >
-        {item.enableStopLoss
-          ? (item?.stopLossAmount ?? 0) >= 10000
-            ? `$${compactNumber(item.stopLossAmount, 2)}`
-            : `$${formatNumber(item.stopLossAmount)}`
-          : '--'}
+        {item.enableStopLoss ? formatSLTP(item.stopLossType, item.stopLossAmount) : '--'}
       </Box>
       <Box as="span" color="neutral3">
         {' / '}
@@ -208,11 +208,7 @@ export function renderSLTPSetting(item: CopyTradeData, ignoreDisable?: boolean) 
         as="span"
         color={ignoreDisable || (!ignoreDisable && item.status === CopyTradeStatusEnum.RUNNING) ? 'green1' : 'neutral3'}
       >
-        {item.enableTakeProfit
-          ? (item?.takeProfitAmount ?? 0) >= 10000
-            ? `$${compactNumber(item.stopLossAmount, 2)}`
-            : `$${formatNumber(item.takeProfitAmount)}`
-          : '--'}
+        {item.enableTakeProfit ? formatSLTP(item.takeProfitType, item.takeProfitAmount) : '--'}
       </Box>
     </Flex>
   )

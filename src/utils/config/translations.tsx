@@ -10,6 +10,7 @@ import {
   DataTypeEnum,
   OrderTypeEnum,
   PositionStatusEnum,
+  SLTPTypeEnum,
   UserActionEnum,
 } from './enums'
 
@@ -71,14 +72,21 @@ export const DATA_TYPE_TRANS: ObjectTrans = {
   [DataTypeEnum.COPY_WALLET]: <Trans>copy wallet</Trans>,
 }
 
+export const SLTP_TYPE_TRANS: ObjectTrans = {
+  [SLTPTypeEnum.USD]: 'USD',
+  [SLTPTypeEnum.PERCENT]: '% ROI',
+}
+
 export const CHANGE_FIELD_TRANS: ObjectTrans = {
   [ChangeFieldEnum.VOLUME]: <Trans>Margin</Trans>,
   [ChangeFieldEnum.LEVERAGE]: <Trans>Leverage</Trans>,
   [ChangeFieldEnum.TOKEN_ADDRESSES]: <Trans>Trading Pairs</Trans>,
   [ChangeFieldEnum.COPY_ALL]: <Trans>Follow The Trader</Trans>,
   [ChangeFieldEnum.ENABLE_STOP_LOSS]: <Trans>Stop Loss</Trans>,
+  [ChangeFieldEnum.STOP_LOSS_TYPE]: <Trans>Stop Loss Type</Trans>,
   [ChangeFieldEnum.STOP_LOSS_AMOUNT]: <Trans>Stop Loss Amount</Trans>,
   [ChangeFieldEnum.ENABLE_TAKE_PROFIT]: <Trans>Take Profit</Trans>,
+  [ChangeFieldEnum.TAKE_PROFIT_TYPE]: <Trans>Take Profit Type</Trans>,
   [ChangeFieldEnum.TAKE_PROFIT_AMOUNT]: <Trans>Take Profit Amount</Trans>,
   [ChangeFieldEnum.MAX_VOL_MULTIPLIER]: <Trans>Max Margin Per Position</Trans>,
   [ChangeFieldEnum.VOLUME_PROTECTION]: <Trans>Margin Protection</Trans>,

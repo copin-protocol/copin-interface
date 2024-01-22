@@ -25,7 +25,7 @@ type ObjectTypes = {
   }
 }
 
-const ORDER_TYPES: ObjectTypes = {
+export const ORDER_TYPES: ObjectTypes = {
   [OrderTypeEnum.OPEN]: {
     text: <Trans>Open</Trans>,
     icon: <IconBox icon={<ArrowFatUp weight={'fill'} />} />,

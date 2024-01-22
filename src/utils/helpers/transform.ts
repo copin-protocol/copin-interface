@@ -8,10 +8,16 @@ import {
   CopyTradePlatformEnum,
   OrderTypeEnum,
   ProtocolEnum,
+  SLTPTypeEnum,
   TimeFilterByEnum,
   TimeframeEnum,
 } from 'utils/config/enums'
-import { COPY_POSITION_CLOSE_TYPE_TRANS, COPY_WALLET_TRANS, ORDER_TYPE_TRANS } from 'utils/config/translations'
+import {
+  COPY_POSITION_CLOSE_TYPE_TRANS,
+  COPY_WALLET_TRANS,
+  ORDER_TYPE_TRANS,
+  SLTP_TYPE_TRANS,
+} from 'utils/config/translations'
 
 import { addressShorten, formatNumber, shortenText } from './format'
 
@@ -240,6 +246,9 @@ export function convertDataToText(data: any) {
       case OrderTypeEnum.TAKE_PROFIT:
       case OrderTypeEnum.MARGIN_TRANSFERRED:
         return ORDER_TYPE_TRANS[data]
+      case SLTPTypeEnum.USD:
+      case SLTPTypeEnum.PERCENT:
+        return SLTP_TYPE_TRANS[data]
       default:
         return data
     }

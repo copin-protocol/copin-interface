@@ -11,7 +11,7 @@ import {
   Time,
   createChart,
 } from 'lightweight-charts'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getChartDataV2 } from 'apis/positionApis'
@@ -26,6 +26,8 @@ import { TIMEFRAME_NAMES, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcPnL, calcSLTPUsd } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
+
+import CopyOrderTooltip from './CopyOrderTooltip'
 
 export default function CopyChartProfit({
   position,
@@ -44,6 +46,7 @@ export default function CopyChartProfit({
 }) {
   const { prices } = useGetUsdPrices()
   const { sm } = useResponsive()
+  const [markerId, setMarkerId] = useState<string | undefined>()
   const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken].symbol
   const from = openBlockTime * 1000
   const to = useMemo(() => (isOpening ? dayjs().utc().valueOf() : closeBlockTime * 1000), [closeBlockTime, isOpening])
@@ -69,6 +72,7 @@ export default function CopyChartProfit({
   const openOrder = orders && orders.length > 0 ? orders[0] : undefined
   const increaseList = orders.filter((e) => e.isIncrease)
   const decreaseList = orders.filter((e) => !e.isIncrease)
+  const currentOrder = orders.find((e) => e.createdAt === markerId)
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
   const chartData: LineData[] = useMemo(() => {
     if (!data) return []
@@ -208,9 +212,10 @@ export default function CopyChartProfit({
   useEffect(() => {
     if (isLoading || !data) return
 
+    const chartHeight = sm ? 220 : 150
     const container = document.getElementById('chart-container')
     const chart = createChart(container ? container : 'chart-container', {
-      height: sm ? 220 : 150,
+      height: chartHeight,
       rightPriceScale: {
         autoScale: true,
         visible: false,
@@ -343,7 +348,13 @@ export default function CopyChartProfit({
     }
     if (position.latestStopLossId && position.stopLossAmount) {
       const stopLossUsd = calcSLTPUsd(position.stopLossAmount, position.stopLossPrice, position.entryPrice)
-      const value = !low || low.value > 0 ? 0 : -stopLossUsd < low.value ? low.value : -stopLossUsd
+      const minChartValue = Number(series.coordinateToPrice(Math.max(chartHeight - 30))?.toString())
+      const value =
+        low?.value === undefined
+          ? minChartValue
+          : -stopLossUsd < low.value
+          ? Math.min(minChartValue, low.value)
+          : -stopLossUsd
       series.createPriceLine({
         price: value,
         color: themeColors.orange1,
@@ -358,7 +369,8 @@ export default function CopyChartProfit({
     }
     if (position.latestTakeProfitId && position.takeProfitAmount) {
       const takeProfitUsd = calcSLTPUsd(position.takeProfitAmount, position.takeProfitPrice, position.entryPrice)
-      const value = takeProfitUsd > high.value ? Number(series.coordinateToPrice(0)?.toString()) : takeProfitUsd
+      const maxChartValue = Number(series.coordinateToPrice(0)?.toString())
+      const value = high?.value && takeProfitUsd > high.value ? maxChartValue : takeProfitUsd
       series.createPriceLine({
         price: value,
         color: themeColors.green1,
@@ -376,6 +388,7 @@ export default function CopyChartProfit({
       if (high && low && low.value !== high.value) {
         const increaseMarkers = increaseList.slice(1).map((order): SeriesMarker<Time> => {
           return {
+            id: order.createdAt,
             color: themeColors.neutral2,
             position: 'aboveBar',
             shape: 'arrowUp',
@@ -386,6 +399,7 @@ export default function CopyChartProfit({
         const decreaseMarkers = (isOpening ? decreaseList : decreaseList.slice(0, -1)).map(
           (order): SeriesMarker<Time> => {
             return {
+              id: order.createdAt,
               color: themeColors.neutral2,
               position: 'belowBar',
               shape: 'arrowDown',
@@ -400,7 +414,7 @@ export default function CopyChartProfit({
         series.priceScale().applyOptions({
           scaleMargins: {
             top: 0.1,
-            bottom: 0.03,
+            bottom: 0.14,
           },
         })
 
@@ -424,6 +438,9 @@ export default function CopyChartProfit({
     }
 
     chart.subscribeCrosshairMove((param) => {
+      const hoverMakerId = param.hoveredObjectId as string | undefined
+      setMarkerId(hoverMakerId)
+
       const data = param.seriesData.get(series) as LineData
       setCrossMovePnL(data?.value)
 
@@ -478,6 +495,7 @@ export default function CopyChartProfit({
   return (
     <Box mt={[1, 24]} sx={{ position: 'relative' }} minHeight={[150, 220]}>
       <div id="legend-profit" />
+      {currentOrder && <CopyOrderTooltip data={currentOrder} />}
       {isLoading ? <Loading /> : <div id="chart-container" />}
     </Box>
   )

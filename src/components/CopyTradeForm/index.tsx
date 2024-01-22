@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Trans } from '@lingui/macro'
 import { ShieldWarning } from '@phosphor-icons/react'
-import { ReactNode, useEffect } from 'react'
+import React, { ReactNode, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Divider from 'components/@ui/Divider'
@@ -10,6 +10,7 @@ import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
+import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import InputField from 'theme/InputField'
 import Label from 'theme/InputField/Label'
 import NumberInputField from 'theme/InputField/NumberInputField'
@@ -18,10 +19,11 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
 import { TOKEN_TRADE_IGNORE, getTokenTradeList } from 'utils/config/trades'
+import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 
 import FundChecking from './FundChecking'
@@ -83,7 +85,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const copyWalletId = watch('copyWalletId')
   const leverage = watch('leverage')
   const platform = watch('exchange')
+  const stopLossType = watch('stopLossType')
   const stopLossAmount = watch('stopLossAmount')
+  const takeProfitType = watch('takeProfitType')
   const takeProfitAmount = watch('takeProfitAmount')
   const maxMarginPerPosition = watch('maxMarginPerPosition')
   const lookBackOrders = watch('lookBackOrders')
@@ -117,6 +121,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
   const currentWalletId = watch('copyWalletId')
   const onChangeWallet = (walletId: string) => setValue(fieldName.copyWalletId, walletId, { shouldValidate: true })
+
+  const onChangeSLType = (type: SLTPTypeEnum) => setValue(fieldName.stopLossType, type)
+
+  const onChangeTPType = (type: SLTPTypeEnum) => setValue(fieldName.takeProfitType, type)
 
   useEffect(() => {
     reset(defaultFormValues)
@@ -167,8 +175,8 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                   />
                 </Box>
                 {permissionToSelectProtocol && (
-                  <Box sx={{ flex: '0 0 max-content' }}>
-                    <Label label="Copy Wallet" />
+                  <Box mt={24} sx={{ flex: '0 0 max-content' }}>
+                    <Label label="Protocol" />
                     <Select
                       options={protocolOptions}
                       defaultMenuIsOpen={false}
@@ -327,13 +335,20 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                 name={fieldName.stopLossAmount}
                 control={control}
                 error={errors.stopLossAmount?.message}
-                suffix={<InputSuffix>USD</InputSuffix>}
+                suffix={
+                  <InputSuffix>
+                    <SelectSLTPType type={stopLossType} onTypeChange={onChangeSLType} />
+                    {/*<SelectSLTPType name={fieldName.stopLossType} type={stopLossType} onTypeChange={onChangeSLType} />*/}
+                  </InputSuffix>
+                }
               />
               <Type.Caption mt={1} color="neutral2">
                 <Trans>
                   When the position&apos;s loss exceeds{' '}
                   {stopLossAmount ? (
-                    <Type.CaptionBold color="red2">{formatNumber(stopLossAmount)} USD</Type.CaptionBold>
+                    <Type.CaptionBold color="red2">
+                      {formatNumber(stopLossAmount)} {SLTP_TYPE_TRANS[stopLossType]}
+                    </Type.CaptionBold>
                   ) : (
                     '--'
                   )}
@@ -348,13 +363,19 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                 name={fieldName.takeProfitAmount}
                 control={control}
                 error={errors.takeProfitAmount?.message}
-                suffix={<InputSuffix>USD</InputSuffix>}
+                suffix={
+                  <InputSuffix>
+                    <SelectSLTPType type={takeProfitType} onTypeChange={onChangeTPType} />
+                  </InputSuffix>
+                }
               />
               <Type.Caption mt={1} color="neutral2">
                 <Trans>
                   When the position&apos;s profit exceeds{' '}
                   {takeProfitAmount ? (
-                    <Type.CaptionBold color="green1">{formatNumber(takeProfitAmount)} USD</Type.CaptionBold>
+                    <Type.CaptionBold color="green1">
+                      {formatNumber(takeProfitAmount)} {SLTP_TYPE_TRANS[takeProfitType]}
+                    </Type.CaptionBold>
                   ) : (
                     '--'
                   )}
@@ -482,6 +503,41 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 // function RowWrapper2({ children }: { children: ReactNode }) {
 //   return <Grid sx={{ gridTemplateColumns: ['1fr', '1fr', '1fr 1fr'], gap: [3, 3, 24], width: '100%' }}>{children}</Grid>
 // }
+
+const SelectSLTPType = ({
+  type = SLTPTypeEnum.USD,
+  onTypeChange,
+}: {
+  type?: SLTPTypeEnum
+  onTypeChange: (type: SLTPTypeEnum) => void
+}) => {
+  const options = [
+    { label: SLTP_TYPE_TRANS[SLTPTypeEnum.USD], value: SLTPTypeEnum.USD },
+    { label: SLTP_TYPE_TRANS[SLTPTypeEnum.PERCENT], value: SLTPTypeEnum.PERCENT },
+  ]
+  const renderTypes = useCallback(() => {
+    return (
+      <Box>
+        {options.map((option) => (
+          <DropdownItem key={option.value} size="sm" onClick={() => onTypeChange(option.value)}>
+            <Type.Caption color={type === option.value ? 'primary1' : 'inherit'}>{option.label}</Type.Caption>
+          </DropdownItem>
+        ))}
+      </Box>
+    )
+  }, [options, type])
+  return (
+    <Dropdown
+      menu={renderTypes()}
+      buttonVariant="ghost"
+      buttonSx={{ p: 0, border: 'none' }}
+      menuSx={{ minWidth: 70, width: 70 }}
+      hasArrow
+    >
+      <Type.Caption>{SLTP_TYPE_TRANS[type]}</Type.Caption>
+    </Dropdown>
+  )
+}
 
 function InputSuffix({ children }: { children: ReactNode }) {
   return <Type.Caption color="neutral2">{children}</Type.Caption>
