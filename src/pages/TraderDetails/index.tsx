@@ -187,17 +187,28 @@ export default function TraderDetails() {
           </BotAlertProvider>
         }
         traderStats={
-          <Box display={['block', 'block', 'flex']} flexDirection="column" height="100%">
-            <GeneralStats traderData={currentTraderData} />
-            {protocol && _address && (
-              <ChartTrader
-                protocol={protocol}
-                account={_address}
-                timeOption={timeOption}
-                onChangeTime={setTimeOption}
-              />
-            )}
-            <Box flex="1" overflow="auto" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative' }}>
+          <Box height="100%">
+            <Flex
+              sx={{
+                width: '100%',
+                height: 'max(33%, 260px)',
+                flexDirection: 'column',
+                overflow: 'hidden',
+              }}
+            >
+              <GeneralStats traderData={currentTraderData} />
+              {protocol && _address && (
+                <Box flex="1 0 0">
+                  <ChartTrader
+                    protocol={protocol}
+                    account={_address}
+                    timeOption={timeOption}
+                    onChangeTime={setTimeOption}
+                  />
+                </Box>
+              )}
+            </Flex>
+            <Box overflow="auto" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative', maxHeight: '67%' }}>
               {!!traderData && <TraderStats data={traderData} timeOption={timeOption} />}
             </Box>
           </Box>

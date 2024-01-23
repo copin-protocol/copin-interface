@@ -165,6 +165,7 @@ function TraderChartPositions({
             hasNextPage={hasNextClosedPositions}
             isLoadingClosed={isLoadingClosed}
             account={account}
+            handleExpand={handleExpand}
             isExpanded={isExpanded}
           />
           <Box

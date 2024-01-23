@@ -13,6 +13,7 @@ const DesktopLayout = (props: LayoutProps) => {
   const { myProfile } = useMyProfile()
 
   const [positionTopExpanded, toggleTopExpand] = useReducer((state) => !state, false)
+  const rowOneHeight = 'max(33%, 260px)'
 
   const logEventLayout = useCallback(
     (action: string) => {
@@ -70,7 +71,7 @@ const DesktopLayout = (props: LayoutProps) => {
           overflow: 'hidden',
           display: 'grid',
           gridTemplate: `
-            "RADAR" minmax(1fr, 260px)
+            "RADAR" minmax(1fr, ${rowOneHeight})
             "CANDLESTICK" minmax(1fr, 1fr)
           `,
           // "RADAR" ${chartFullExpanded ? '0px' : 'minmax(1fr, 260px)'}
@@ -79,7 +80,7 @@ const DesktopLayout = (props: LayoutProps) => {
         <Flex flexDirection="column" height="100%">
           <Box
             // height={chartFullExpanded ? 0 : 260}
-            height={260}
+            height={rowOneHeight}
             sx={{
               gridArea: 'RADAR',
               overflow: 'hidden',
@@ -95,7 +96,7 @@ const DesktopLayout = (props: LayoutProps) => {
               // height: 'max(calc(100% - 120px - 260px),200px)',
               // '@media screen and (max-height: 800px)': {
               // height: chartFullExpanded ? '100%' : 'max(calc(100% - 260px),200px)',
-              height: 'max(calc(100% - 260px),200px)',
+              height: `max(calc(100% - ${rowOneHeight}),200px)`,
               // },
               ...(chartFullExpanded
                 ? {
@@ -139,7 +140,7 @@ const DesktopLayout = (props: LayoutProps) => {
           overflow: 'hidden',
           display: 'grid',
           gridTemplate: `
-    "OPENINGS" ${positionFullExpanded || positionTopExpanded ? '0px' : 'minmax(261px, 261px)'}
+    "OPENINGS" ${positionFullExpanded || positionTopExpanded ? '0px' : `${rowOneHeight}`}
     "HISTORY" minmax(0px, 1fr)
     `,
         }}

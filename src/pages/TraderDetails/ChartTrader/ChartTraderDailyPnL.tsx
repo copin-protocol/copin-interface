@@ -5,7 +5,7 @@ import { Bar, CartesianGrid, Cell, ComposedChart, ResponsiveContainer, Tooltip, 
 
 import { TraderPnlStatisticData } from 'entities/statistic'
 import Loading from 'theme/Loading'
-import { Box, Flex, Type } from 'theme/base'
+import { Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { DAYJS_FULL_DATE_FORMAT, FONT_FAMILY } from 'utils/config/constants'
 import { compactNumber, formatLocalDate, formatNumber } from 'utils/helpers/format'
@@ -47,13 +47,20 @@ export default function ChartTraderDailyPnL({
 
     return stats
   }, [data, chartData])
-
   return (
     <>
       {isLoading && <Loading />}
       {chartData && stats && (
-        <Box
+        //@ts-ignore
+        <Flex
+          height="100%"
           sx={{
+            flexDirection: 'column',
+            justifyContent: 'end',
+            overflow: 'hidden',
+            '& .recharts-wrapper': {
+              position: 'absolute !important',
+            },
             '.recharts-cartesian-axis-tick': {
               text: {
                 fill: 'neutral3',
@@ -62,7 +69,7 @@ export default function ChartTraderDailyPnL({
             },
           }}
         >
-          <ResponsiveContainer minHeight={170}>
+          <ResponsiveContainer height="100%" width="100%">
             <ComposedChart data={chartData} margin={{ top: 0, left: 4, right: 4, bottom: 0 }}>
               <CartesianGrid stroke={themeColors.neutral4} strokeDasharray="3 3" opacity={0.5} />
               <XAxis dataKey="label" stroke={themeColors.neutral4} />
@@ -93,7 +100,7 @@ export default function ChartTraderDailyPnL({
               />
             </ComposedChart>
           </ResponsiveContainer>
-        </Box>
+        </Flex>
       )}
     </>
   )
