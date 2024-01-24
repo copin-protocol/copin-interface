@@ -6,9 +6,10 @@ import useTraderFavorites from 'hooks/store/useTraderFavorites'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { IconBox } from 'theme/base'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
-import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
+import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 
 export default function FavoriteButton({
+  source,
   address,
   size = 24,
   color = 'primary1',
@@ -20,6 +21,7 @@ export default function FavoriteButton({
   color?: string
   hoverColor?: string
   activeColor?: string
+  source?: EventSource
 }) {
   const {
     traderFavorites,
@@ -32,20 +34,36 @@ export default function FavoriteButton({
   const { isAuthenticated, profile } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
   const hasFavorite = traderFavorites.includes(address)
+
+  const logEventFavorite = (action: string) => {
+    logEvent({
+      label: getUserForTracking(profile?.username),
+      category: EventCategory.FAVORITES,
+      action,
+    })
+  }
+
   const handleAddFavorite = (e: any, note?: string) => {
     e.stopPropagation()
 
     if (hasFavorite) {
       unsetTraderFavorite(address)
-      logEvent({
-        label: getUserForTracking(profile?.username),
-        category: EventCategory.FAVORITES,
-        action: EVENT_ACTIONS[EventCategory.FAVORITES].REMOVE_FAVORITE,
-      })
+
+      logEventFavorite(
+        source === EventSource.HOME
+          ? EVENT_ACTIONS[EventCategory.FAVORITES].HOME_CANCEL_FAVORITE
+          : EVENT_ACTIONS[EventCategory.FAVORITES].REMOVE_FAVORITE
+      )
       return
     }
     setTraderFavorite(address, note)
     setTooltip(undefined)
+
+    logEventFavorite(
+      source === EventSource.HOME
+        ? EVENT_ACTIONS[EventCategory.FAVORITES].HOME_OPEN_FAVORITES
+        : EVENT_ACTIONS[EventCategory.FAVORITES].OPEN_FAVORITES
+    )
   }
   useEffect(() => {
     if (!tooltipAddress) return

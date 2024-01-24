@@ -17,6 +17,8 @@ import RcDrawer, { DrawerTitle } from 'theme/RcDrawer'
 import { levelTwoStyles } from 'theme/RcDrawer/styles'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
+import { logEventBacktest } from 'utils/tracking/event'
+import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 
 export default function SimpleBacktestModal({
   isOpen,
@@ -43,6 +45,8 @@ export default function SimpleBacktestModal({
       if (!!result?.length) {
         setBacktestData({ result: result[0], settings })
         setOpenResult(true)
+
+        logEventBacktest({ event: EVENT_ACTIONS[EventCategory.BACK_TEST].HOME_SUCCESS_SINGLE, username: account })
       } else setBacktestData(null)
     },
     onError: () => {
@@ -50,6 +54,8 @@ export default function SimpleBacktestModal({
       toast.error(
         <ToastBody title={<Trans>Error</Trans>} message={<Trans>Something went wrong, please try later.</Trans>} />
       )
+
+      logEventBacktest({ event: EVENT_ACTIONS[EventCategory.BACK_TEST].HOME_FAILED_SINGLE, username: account })
     },
   })
   const handleClearResult = () => {
@@ -79,7 +85,11 @@ export default function SimpleBacktestModal({
             onSubmit={onSubmit({ accounts: [account] })}
             isSubmitting={isSubmitting}
             timeOption={_timeOption}
-            onChangeTimeOption={(option) => setTimeOption(option)}
+            onChangeTimeOption={(option) => {
+              setTimeOption(option)
+
+              logEventBacktest({ event: option.id, username: account })
+            }}
           />
         )}
       </Box>
@@ -127,7 +137,12 @@ export default function SimpleBacktestModal({
           />
           <Box mb={24} />
           {!!account && !!protocol && (
-            <CopyTraderButton protocol={protocol} account={account} buttonSx={{ width: '100%', borderRadius: 'sm' }} />
+            <CopyTraderButton
+              source={EventSource.HOME_BACKTEST}
+              protocol={protocol}
+              account={account}
+              buttonSx={{ width: '100%', borderRadius: 'sm' }}
+            />
           )}
         </Box>
       </RcDrawer>

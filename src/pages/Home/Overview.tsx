@@ -10,12 +10,14 @@ import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Divider from 'components/@ui/Divider'
 import Logo from 'components/@ui/Logo'
+import TrackingRouteWrapper from 'components/@ui/TrackingRoute'
 import BalanceText from 'components/BalanceText'
 import ConnectButton from 'components/LoginAction/ConnectButton'
 import { CopyPositionData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useMyProfileStore from 'hooks/store/useMyProfile'
+import useMyProfile from 'hooks/store/useMyProfile'
 import OpeningPositions from 'pages/MyProfile/OpeningPositions'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
@@ -25,6 +27,7 @@ import ROUTES from 'utils/config/routes'
 import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseWalletName } from 'utils/helpers/transform'
+import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 export default function Overview() {
   return (
@@ -98,7 +101,9 @@ function WalletOverview({
       <Box px={3} pt={3}>
         <Flex mb={12} sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
           <SectionLabel icon={<Wallet size={24} weight="fill" />} label={<Trans>Your copy wallet</Trans>} />
-          <Navigator route={ROUTES.WALLET_MANAGEMENT.path} />
+          <TrackingRouteWrapper event={EVENT_ACTIONS[EventCategory.ROUTES].HOME_WALLET_MANAGEMENT}>
+            <Navigator route={ROUTES.WALLET_MANAGEMENT.path} />
+          </TrackingRouteWrapper>
         </Flex>
         {selectedWallet ? (
           <Flex sx={{ gap: 24 }}>
@@ -163,7 +168,9 @@ function OpeningSection({ selectedWallet }: { selectedWallet: CopyWalletData | u
             icon={<CopySimple size={24} weight="fill" />}
             label={<Trans>Your copy opening positions</Trans>}
           />
-          <Navigator route={ROUTES.MY_MANAGEMENT.path} />
+          <TrackingRouteWrapper event={EVENT_ACTIONS[EventCategory.ROUTES].HOME_COPYTRADE_MANAGEMENT}>
+            <Navigator route={ROUTES.MY_MANAGEMENT.path} />
+          </TrackingRouteWrapper>
         </Flex>
         <Box>
           <OpeningPositions
@@ -236,13 +243,17 @@ function Activities() {
 }
 
 function Tutorial() {
+  const { myProfile } = useMyProfile()
   return (
     // <Box sx={{ borderTop: 'small', borderTopColor: 'neutral4' }}>
     <Box>
       <Box px={3}>
         <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
           <SectionLabel icon={<BookBookmark size={24} weight="fill" />} label={<Trans>Getting started</Trans>} />
-          <ExternalLink href={LINKS.docs} />
+
+          <TrackingRouteWrapper event={EVENT_ACTIONS[EventCategory.ROUTES].HOME_GETTING_STARTED}>
+            <ExternalLink href={LINKS.docs} />
+          </TrackingRouteWrapper>
         </Flex>
       </Box>
       <Divider my={3} />
