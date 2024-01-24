@@ -3,7 +3,7 @@ import { ReactElement, ReactNode } from 'react'
 import TableLabel from 'components/@ui/Table/TableLabel'
 import { RequestBackTestData } from 'entities/backTest.d'
 import { Box, Flex, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
 
@@ -53,21 +53,58 @@ export default function BacktestSettings({
           valueProps={{ color: data.reverseCopy ? 'green1' : 'neutral3' }}
         />
         <SettingItem
-          label={'Stoploss'}
-          value={data.enableStopLoss ? `ON (${formatNumber(data.stopLossAmount, 2, 2)}$)` : 'OFF'}
-          valueProps={{ color: data.enableStopLoss ? 'green1' : 'neutral3' }}
+          label={'Stop Loss/Take Profit'}
+          value={
+            data.enableStopLoss || data.enableTakeProfit ? (
+              <>
+                {renderSLTPType({ type: data.stopLossType, value: data.stopLossAmount, color: 'red2' })}
+                {' / '}
+                {renderSLTPType({ type: data.takeProfitType, value: data.takeProfitAmount, color: 'green1' })}
+              </>
+            ) : (
+              'OFF'
+            )
+          }
+          // valueProps={{ color: data.enableStopLoss ? 'green1' : 'neutral3' }}
         />
       </Box>
       <Box mt={3} />
       <SettingItem
         label={'Trading Pair'}
         value={
-          !!data.tokenAddresses?.length
+          data?.copyAll
+            ? 'Followed trader'
+            : !!data.tokenAddresses?.length
             ? data.tokenAddresses.map((address) => TOKEN_TRADE_SUPPORT[protocol][address]?.name).join(', ')
             : ''
         }
       />
     </>
+  )
+}
+const renderSLTPType = ({
+  type,
+  value,
+  color,
+}: {
+  type: SLTPTypeEnum | undefined
+  value: number | undefined
+  color: string
+}) => {
+  if (!value) return '--'
+  if (type === SLTPTypeEnum.PERCENT) {
+    return (
+      <Box as="span" color={color}>
+        {formatNumber(value, 2, 2) + '% ROI'}
+      </Box>
+    )
+  }
+  return (
+    <Box as="span" color="green1">
+      <Box as="span" color={color}>
+        {'$' + formatNumber(value, 2, 2)}
+      </Box>
+    </Box>
   )
 }
 

@@ -23,6 +23,7 @@ export default function ResultStats({
     winRate = 0,
     maxVolMultiplier,
     totalStopLoss = 0,
+    totalTakeProfit = 0,
   } = data
   const { balance = 0 } = settings ?? {}
   const balanceAfterSimulate = balance + profit
@@ -43,8 +44,16 @@ export default function ResultStats({
         label={'Max Margin Multiplier'}
         value={<Type.BodyBold display="block">{formatNumber(maxVolMultiplier, 1, 1)}x</Type.BodyBold>}
       />
+
       <Item label={'Total Liquidate'} component={<Type.BodyBold display="block">{totalLiquidate}</Type.BodyBold>} />
-      <Item label={'Total Stoploss'} component={<Type.BodyBold display="block">{totalStopLoss}</Type.BodyBold>} />
+      <Item
+        label={'Total Stop Loss / Total Take Profit'}
+        component={
+          <Type.BodyBold display="block">
+            {totalStopLoss} / {totalTakeProfit}
+          </Type.BodyBold>
+        }
+      />
 
       <Item
         label={'Max Draw Down (%)'}

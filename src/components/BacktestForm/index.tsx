@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 
 import Divider from 'components/@ui/Divider'
 import RangeFilter from 'components/@ui/TimeFilter/RangeFilter'
+import { SelectSLTPType } from 'components/CopyTradeForm'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -15,9 +16,10 @@ import NumberInputField from 'theme/InputField/NumberInputField'
 import Select from 'theme/Select'
 import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
-import { Box, Flex, Grid, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { Box, Flex, Type } from 'theme/base'
+import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { TOKEN_ADDRESSES, getTokenTradeList } from 'utils/config/trades'
+import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 
 import BacktestGuideTour, { tourConfigs } from './BacktestGuideTour'
@@ -69,10 +71,14 @@ export default function BacktestForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultValues, tokensTraded, protocol])
 
+  const copyAll = watch('copyAll')
   const orderVolume = watch('orderVolume')
   const tokenAddresses = watch('tokenAddresses')
   const leverage = watch('leverage')
   const stopLossAmount = watch('stopLossAmount')
+  const stopLossType = watch('stopLossType')
+  const takeProfitType = watch('takeProfitType')
+  const takeProfitAmount = watch('takeProfitAmount')
   const maxMarginPerPosition = watch('maxMarginPerPosition')
   const lookBackOrders = watch('lookBackOrders')
   const startTime = watch('startTime')
@@ -94,6 +100,9 @@ export default function BacktestForm({
 
   const { sm } = useResponsive()
   const [showGuide, setShowGuide] = useState(false)
+
+  const onChangeSLType = (type: SLTPTypeEnum) => setValue(fieldName.stopLossType, type)
+  const onChangeTPType = (type: SLTPTypeEnum) => setValue(fieldName.takeProfitType, type)
 
   useEffect(() => {
     sm ? setTimeout(() => setShowGuide(true), 300) : setShowGuide(false)
@@ -134,8 +143,20 @@ export default function BacktestForm({
 
       <Box mt={24} id={tourConfigs.tradingPairs.id}>
         <Box mb={3}>
-          <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
-          <Flex sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}>
+          <Flex mb={2} sx={{ alignItems: 'center', gap: 12, '& *': { mb: '0 !important' } }}>
+            <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
+            <SwitchInputField
+              switchLabel="Follow the trader"
+              labelColor="neutral1"
+              {...register(fieldName.copyAll)}
+              error={errors.copyAll?.message}
+              wrapperSx={{ flexDirection: 'row-reverse', '*': { fontWeight: 400 } }}
+            />
+          </Flex>
+          <Box
+            display={copyAll ? 'none' : 'flex'}
+            sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}
+          >
             <Select
               menuIsOpen={isSelectedAll ? false : undefined}
               closeMenuOnSelect={false}
@@ -159,7 +180,7 @@ export default function BacktestForm({
               isSearchable
               isMulti
             />
-          </Flex>
+          </Box>
           {!!errors?.tokenAddresses?.message && (
             <Type.Caption color="red1" mt={1} display="block">
               {errors?.tokenAddresses?.message}
@@ -211,7 +232,8 @@ export default function BacktestForm({
       <Divider mt={24} />
 
       <Accordion
-        header={<Type.BodyBold>Stop Loss</Type.BodyBold>}
+        header={<Type.BodyBold>Stop Loss / Take Profit</Type.BodyBold>}
+        defaultOpen={!!stopLossAmount || !!takeProfitAmount}
         body={
           <Box mt={3}>
             <NumberInputField
@@ -220,17 +242,51 @@ export default function BacktestForm({
               name={fieldName.stopLossAmount}
               control={control}
               error={errors.stopLossAmount?.message}
-              suffix={<InputSuffix>USD</InputSuffix>}
+              suffix={
+                <InputSuffix>
+                  <SelectSLTPType type={stopLossType} onTypeChange={onChangeSLType} />
+                </InputSuffix>
+              }
             />
             <Type.Caption mt={1} color="neutral2">
               <Trans>
                 When the position&apos;s loss exceeds{' '}
                 {stopLossAmount ? (
-                  <Type.CaptionBold color="red2">{formatNumber(stopLossAmount)} USD</Type.CaptionBold>
+                  <Type.CaptionBold color="red2">
+                    {formatNumber(stopLossAmount)} {SLTP_TYPE_TRANS[stopLossType]}
+                  </Type.CaptionBold>
                 ) : (
                   '--'
                 )}
                 , the Stop Loss will be triggered to close the position.
+              </Trans>
+            </Type.Caption>
+
+            <Box mt={3} />
+
+            <NumberInputField
+              label="Take Profit"
+              block
+              name={fieldName.takeProfitAmount}
+              control={control}
+              error={errors.takeProfitAmount?.message}
+              suffix={
+                <InputSuffix>
+                  <SelectSLTPType type={takeProfitType} onTypeChange={onChangeTPType} />
+                </InputSuffix>
+              }
+            />
+            <Type.Caption mt={1} color="neutral2">
+              <Trans>
+                When the position&apos;s profit exceeds{' '}
+                {takeProfitAmount ? (
+                  <Type.CaptionBold color="green1">
+                    {formatNumber(takeProfitAmount)} {SLTP_TYPE_TRANS[takeProfitType]}
+                  </Type.CaptionBold>
+                ) : (
+                  '--'
+                )}
+                , the Take Profit will be triggered to close the position.
               </Trans>
             </Type.Caption>
           </Box>
@@ -331,16 +387,6 @@ export default function BacktestForm({
         </ButtonWithIcon>
       </Flex>
     </Box>
-  )
-}
-
-function RowWrapper2({ children }: { children: ReactNode }) {
-  return <Grid sx={{ gridTemplateColumns: ['1fr', '1fr', '1fr 1fr'], gap: [3, 3, 24], width: '100%' }}>{children}</Grid>
-}
-
-function RowWrapper3({ children }: { children: ReactNode }) {
-  return (
-    <Grid sx={{ gridTemplateColumns: ['1fr', '1fr', '1fr 1fr 1fr'], gap: [3, 3, 24], width: '100%' }}>{children}</Grid>
   )
 }
 

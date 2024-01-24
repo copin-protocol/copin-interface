@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 
 import { RequestBackTestData } from 'entities/backTest'
+import { SLTPTypeEnum } from 'utils/config/enums'
 
 import { BackTestFormValues } from './types'
 
@@ -15,6 +16,10 @@ export function getFormValuesFromRequestData(requestData: RequestBackTestData | 
     endTime: dayjs(requestData.toTime).utc().toDate(),
     lookBackOrders: requestData.lookBackOrders ?? 10,
     stopLossAmount: requestData.enableStopLoss ? requestData.stopLossAmount : undefined,
+    stopLossType: requestData.stopLossType ?? SLTPTypeEnum.USD,
+    takeProfitAmount: requestData.enableTakeProfit ? requestData.takeProfitAmount : undefined,
+    takeProfitType: requestData.takeProfitType ?? SLTPTypeEnum.USD,
+    copyAll: !!requestData?.copyAll,
     maxMarginPerPosition:
       requestData.maxVolMultiplier && requestData.maxVolMultiplier > 0
         ? requestData.maxVolMultiplier * requestData.orderVolume

@@ -504,7 +504,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 //   return <Grid sx={{ gridTemplateColumns: ['1fr', '1fr', '1fr 1fr'], gap: [3, 3, 24], width: '100%' }}>{children}</Grid>
 // }
 
-const SelectSLTPType = ({
+export const SelectSLTPType = ({
   type = SLTPTypeEnum.USD,
   onTypeChange,
 }: {

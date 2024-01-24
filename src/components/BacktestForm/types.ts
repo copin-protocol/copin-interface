@@ -1,3 +1,5 @@
+import { SLTPTypeEnum } from 'utils/config/enums'
+
 export interface BackTestFormValues {
   balance: number
   orderVolume: number
@@ -7,7 +9,11 @@ export interface BackTestFormValues {
   startTime: Date
   endTime: Date
   lookBackOrders: number | null
-  stopLossAmount?: number
+  stopLossType: SLTPTypeEnum
+  stopLossAmount: number | undefined
+  takeProfitType: SLTPTypeEnum
+  takeProfitAmount: number | undefined
   maxMarginPerPosition: number | null
   reverseCopy: boolean
+  copyAll: boolean
 }

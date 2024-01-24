@@ -9,6 +9,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import { BackTestFormValues } from 'components/BacktestForm/types'
 import { BackTestResultData, RequestBackTestData } from 'entities/backTest.d'
 import { ProtocolEnum } from 'utils/config/enums'
+import { getTokenTradeList } from 'utils/config/trades'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
 export default function useBacktestRequest(
@@ -77,6 +78,7 @@ export default function useBacktestRequest(
     reqProtocol?: ProtocolEnum
   }) => {
     return (formData: BackTestFormValues) => {
+      const _protocol = protocol ?? reqProtocol ?? ProtocolEnum.GMX
       setIsSubmitting(true)
       const fromTime = dayjs(formData.startTime).utc().valueOf()
       const toTime = dayjs(formData.endTime).utc().valueOf()
@@ -88,8 +90,11 @@ export default function useBacktestRequest(
         leverage: formData.leverage,
         fromTime,
         toTime,
-        tokenAddresses: formData.tokenAddresses,
+        tokenAddresses: formData.copyAll
+          ? getTokenTradeList(_protocol).map((token) => token.address)
+          : formData.tokenAddresses,
         reverseCopy: formData.reverseCopy,
+        copyAll: formData.copyAll,
         maxVolMultiplier:
           formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0
             ? formData.maxMarginPerPosition / formData.orderVolume
@@ -102,12 +107,18 @@ export default function useBacktestRequest(
       if (formData.stopLossAmount) {
         requestData.enableStopLoss = true
         requestData.stopLossAmount = formData.stopLossAmount
+        requestData.stopLossType = formData.stopLossType
+      }
+      if (formData.takeProfitAmount) {
+        requestData.enableTakeProfit = true
+        requestData.takeProfitAmount = formData.takeProfitAmount
+        requestData.takeProfitType = formData.takeProfitType
       }
       if (isReturnPositions) requestData.isReturnPositions = true
       setBacktestSettings(requestData)
       callback && callback(requestData)
 
-      requestTestMultiOrder({ protocol: protocol ?? reqProtocol ?? ProtocolEnum.GMX, data: requestData })
+      requestTestMultiOrder({ protocol: _protocol, data: requestData })
     }
   }
   return {

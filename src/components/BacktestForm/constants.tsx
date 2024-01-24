@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { getTokenTradeList } from 'utils/config/trades'
 
 import { BackTestFormValues } from './types'
@@ -14,8 +14,12 @@ export const fieldName: { [key in keyof BackTestFormValues]: keyof BackTestFormV
   endTime: 'endTime',
   lookBackOrders: 'lookBackOrders',
   stopLossAmount: 'stopLossAmount',
+  takeProfitAmount: 'takeProfitAmount',
+  stopLossType: 'stopLossType',
+  takeProfitType: 'takeProfitType',
   maxMarginPerPosition: 'maxMarginPerPosition',
   reverseCopy: 'reverseCopy',
+  copyAll: 'copyAll',
 }
 
 // pairs can be from server response
@@ -31,8 +35,12 @@ export const getDefaultBackTestFormValues: (protcol: ProtocolEnum) => BackTestFo
   endTime: dayjs().subtract(1, 'days').toDate(),
   lookBackOrders: 10,
   stopLossAmount: undefined,
+  stopLossType: SLTPTypeEnum.USD,
+  takeProfitAmount: undefined,
+  takeProfitType: SLTPTypeEnum.USD,
   maxMarginPerPosition: null,
   reverseCopy: false,
+  copyAll: false,
 })
 
 export const defaultMaxVolMultiplier = 5
