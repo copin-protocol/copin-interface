@@ -40,6 +40,9 @@ export const COPY_POSITION_CLOSE_TYPE_TRANS: ObjectTrans = {
   [CopyPositionCloseTypeEnum.LIQUIDATE]: <Trans>Liquidation</Trans>,
   [CopyPositionCloseTypeEnum.STOP_LOSS]: <Trans>Stop Loss</Trans>,
   [CopyPositionCloseTypeEnum.TAKE_PROFIT]: <Trans>Take Profit</Trans>,
+  [CopyPositionCloseTypeEnum.STOP_COPY_TRADE]: <Trans>Stop Copy</Trans>,
+  [CopyPositionCloseTypeEnum.FORCE_CLOSE]: <Trans>Force Close</Trans>,
+  [CopyPositionCloseTypeEnum.OVERWRITE]: <Trans>Overwrite</Trans>,
 }
 
 export const PLATFORM_TRANS: ObjectTrans = {

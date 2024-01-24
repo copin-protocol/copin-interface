@@ -59,6 +59,9 @@ export enum CopyPositionCloseTypeEnum {
   STOP_LOSS = 'STOP_LOSS',
   TAKE_PROFIT = 'TAKE_PROFIT',
   LIQUIDATE = 'LIQUIDATE',
+  STOP_COPY_TRADE = 'STOP_COPY_TRADE',
+  OVERWRITE = 'OVERWRITE',
+  FORCE_CLOSE = 'FORCE_CLOSE',
 }
 
 export enum PositionStatusEnum {

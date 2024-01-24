@@ -230,6 +230,9 @@ export function convertDataToText(data: any) {
       case CopyPositionCloseTypeEnum.STOP_LOSS:
       case CopyPositionCloseTypeEnum.TAKE_PROFIT:
       case CopyPositionCloseTypeEnum.LIQUIDATE:
+      case CopyPositionCloseTypeEnum.STOP_COPY_TRADE:
+      case CopyPositionCloseTypeEnum.FORCE_CLOSE:
+      case CopyPositionCloseTypeEnum.OVERWRITE:
         return COPY_POSITION_CLOSE_TYPE_TRANS[data]
       case OrderTypeEnum.OPEN:
       case OrderTypeEnum.CLOSE:
