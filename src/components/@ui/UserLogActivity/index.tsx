@@ -17,10 +17,16 @@ const UserLogActivity = ({
   SxProps &
   SpaceProps) => {
   return (
-    <Flex alignItems="center" minWidth="fit-content" sx={{ gap: 1 }} {...props}>
-      <Type.Caption color="neutral1">{username ? addressShorten(username) : 'System'}</Type.Caption>
-      <Type.Caption color="neutral2">{USER_ACTION_TRANS[action]}</Type.Caption>
-      <Type.Caption color="neutral2">{DATA_TYPE_TRANS[type]}</Type.Caption>
+    <Flex alignItems="flex-start" minWidth="fit-content" sx={{ gap: 1 }} {...props}>
+      <Type.Caption minWidth="fit-content" color="neutral1">
+        {username ? addressShorten(username) : 'System'}
+      </Type.Caption>
+      <Type.Caption minWidth="fit-content" color="neutral2">
+        {USER_ACTION_TRANS[action]}
+      </Type.Caption>
+      <Type.Caption minWidth="fit-content" color="neutral2">
+        {DATA_TYPE_TRANS[type]}
+      </Type.Caption>
       <Type.Caption color="neutral1">{label?.startsWith('0x') ? addressShorten(label) : label}</Type.Caption>
     </Flex>
   )

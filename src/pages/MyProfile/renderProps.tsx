@@ -76,11 +76,12 @@ export function renderTrader(
     <Flex
       as={isLink && protocol ? Link : undefined}
       to={isLink && protocol ? generateTraderDetailsRoute(protocol, address) : ''}
-      sx={{ gap: 2, ...sx }}
+      sx={{ gap: '6px', ...sx }}
       alignItems="center"
     >
       <AddressAvatar address={address} size={size} />
       <Type.Caption
+        minWidth="fit-content"
         className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
         color="inherit"
         data-trader-address={address}
