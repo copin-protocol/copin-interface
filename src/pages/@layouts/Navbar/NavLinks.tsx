@@ -5,7 +5,12 @@ import styled from 'styled-components/macro'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { Box } from 'theme/base'
 import ROUTES from 'utils/config/routes'
-import { generateExplorerRoute, generateLeaderboardRoute, generateOIRoute } from 'utils/helpers/generateRoute'
+import {
+  generateExplorerRoute,
+  generateLeaderboardRoute,
+  generateOIPositionsRoute,
+  generateOIRoute,
+} from 'utils/helpers/generateRoute'
 
 export function DesktopNavLinks() {
   return (

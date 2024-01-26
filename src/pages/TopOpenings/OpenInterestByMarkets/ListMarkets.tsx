@@ -1,5 +1,4 @@
-import { CaretRight } from '@phosphor-icons/react'
-import { Link, useHistory } from 'react-router-dom'
+import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 
 import Table from 'components/@ui/Table'
@@ -7,15 +6,16 @@ import { TableProps } from 'components/@ui/Table/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { OpenInterestMarketData } from 'entities/statistic'
 import Loading from 'theme/Loading'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
-import { generateOIByMarketRoute } from 'utils/helpers/generateRoute'
 
+import { NoMarketFound } from '../OpenInterestByMarket'
 import { getColumns, getRenderProps, titlesMapping } from './configs'
 
 type ListMarketsProps = {
   protocol: ProtocolEnum
+  symbol: string | undefined
   timeOption: TimeFilterProps
   isFetching: boolean
   data: OpenInterestMarketData[] | undefined
@@ -32,8 +32,8 @@ export function TableForm({
   changeCurrentSort,
 }: ListMarketsProps) {
   const columns = getColumns({ protocol, timeOption })
-  const tokensMapping = TOKEN_TRADE_SUPPORT[protocol]
-  const history = useHistory()
+  // const tokensMapping = TOKEN_TRADE_SUPPORT[protocol]
+  // const history = useHistory()
   return (
     <Table
       isLoading={isFetching}
@@ -43,15 +43,15 @@ export function TableForm({
       tableBodySx={{ 'tr:hover': { '.table_icon': { color: 'neutral1' } } }}
       currentSort={currentSort}
       changeCurrentSort={changeCurrentSort}
-      onClickRow={(data) => {
-        const { symbol } = tokensMapping[data.indexToken]
-        history.push(generateOIByMarketRoute({ protocol, symbol, params: { time: timeOption.id.toString() } }))
-      }}
+      // onClickRow={(data) => {
+      //   const { symbol } = tokensMapping[data.indexToken]
+      //   history.push(generateOIByMarketRoute({ protocol, symbol, params: { time: timeOption.id.toString() } }))
+      // }}
     />
   )
 }
 
-export function ListForm({ data, isFetching, protocol, timeOption }: ListMarketsProps) {
+export function ListForm({ data, isFetching, protocol, timeOption, symbol }: ListMarketsProps) {
   const renders = getRenderProps()
   const tokensMapping = TOKEN_TRADE_SUPPORT[protocol]
   return (
@@ -65,6 +65,9 @@ export function ListForm({ data, isFetching, protocol, timeOption }: ListMarkets
         '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4', '& > *:last-child': { borderBottom: 'none' } },
       }}
     >
+      {!isFetching && !data?.length && (
+        <NoMarketFound message={symbol && <Trans>{symbol} market data was not found</Trans>} />
+      )}
       {isFetching && (
         <Flex
           sx={{
@@ -76,6 +79,7 @@ export function ListForm({ data, isFetching, protocol, timeOption }: ListMarkets
             left: 0,
             width: '100%',
             height: '100%',
+            zIndex: 10,
           }}
         >
           <Box pt={100}>
@@ -86,18 +90,12 @@ export function ListForm({ data, isFetching, protocol, timeOption }: ListMarkets
       {data?.map((marketData) => {
         const { symbol } = tokensMapping[marketData.indexToken]
         return (
-          <Box
-            as={Link}
-            to={generateOIByMarketRoute({ protocol, symbol, params: { time: timeOption.id.toString() } })}
-            sx={{ p: 3, display: 'block', color: 'inherit' }}
-            key={marketData.indexToken}
-          >
+          <Box sx={{ p: 3 }} key={marketData.indexToken}>
             <Flex mb={2} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
               {renders.renderMarket(symbol)}
               <Flex sx={{ alignItems: 'center', gap: '0.5ch' }}>
                 <Type.Caption color="neutral3">{titlesMapping.total}:</Type.Caption>
                 {renders.renderTotalInterest(marketData)}
-                <IconBox ml={20} icon={<CaretRight size={16} />} color="neutral2" />
               </Flex>
             </Flex>
             <FlexBetween mb={1} color="neutral3">

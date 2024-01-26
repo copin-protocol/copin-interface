@@ -59,7 +59,7 @@ const renderLongShortRate = (item: OpenInterestMarketData) => {
     <Flex sx={{ alignItems: 'center', gap: 1 }}>
       <Type.Caption
         color={longRate > shortRate ? 'neutral1' : 'neutral3'}
-        sx={{ flexShrink: 0, width: 60, textAlign: 'right' }}
+        sx={{ flexShrink: 0, width: 60, textAlign: ['left', 'left', 'right'] }}
       >
         {formatNumber(longRate, 2, 2)}%
       </Type.Caption>
@@ -68,7 +68,7 @@ const renderLongShortRate = (item: OpenInterestMarketData) => {
       </Box>
       <Type.Caption
         color={shortRate > longRate ? 'neutral1' : 'neutral3'}
-        sx={{ flexShrink: 0, width: 60, textAlign: 'left' }}
+        sx={{ flexShrink: 0, width: 60, textAlign: ['right', 'right', 'left'] }}
       >
         {formatNumber(shortRate, 2, 2)}%
       </Type.Caption>
@@ -175,15 +175,15 @@ export function getColumns({ protocol, timeOption }: { protocol: ProtocolEnum; t
       style: { minWidth: '200px', maxWidth: '250px', textAlign: 'left', pl: 3 },
       render: renderLongShortRate,
     },
-    {
-      title: <Box sx={{ width: '40px' }}></Box>,
-      dataIndex: undefined,
-      key: undefined,
-      style: { width: '40px', maxWidth: '40px', textAlign: 'right', pr: 3 },
-      render: () => {
-        return <IconBox className="table_icon" icon={<CaretRight size={16} />} />
-      },
-    },
+    // {
+    //   title: <Box sx={{ width: '40px' }}></Box>,
+    //   dataIndex: undefined,
+    //   key: undefined,
+    //   style: { width: '40px', maxWidth: '40px', textAlign: 'right', pr: 3 },
+    //   render: () => {
+    //     return <IconBox className="table_icon" icon={<CaretRight size={16} />} />
+    //   },
+    // },
   ]
 
   return columns

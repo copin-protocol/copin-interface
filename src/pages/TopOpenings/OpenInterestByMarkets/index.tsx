@@ -1,32 +1,27 @@
-import { Trans } from '@lingui/macro'
-import { Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { ComponentProps, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getOpenInterestMarketApi } from 'apis/positionApis'
-import PageHeader from 'components/@ui/PageHeader'
 import { TableProps, TableSortProps } from 'components/@ui/Table/types'
-import { ProtocolPageWrapper } from 'components/RouteWrapper'
 import { OpenInterestMarketData } from 'entities/statistic'
 import useSearchParams from 'hooks/router/useSearchParams'
-import Breadcrumb from 'theme/Breadcrumbs'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { generateOIRoute } from 'utils/helpers/generateRoute'
+import { getTokenTradeList } from 'utils/config/trades'
 
-import { TopOpenLink } from '../Navigators'
+import RouteWrapper from '../RouteWrapper'
 import { TimeDropdown, useTimeFilter } from '../TopOpenIntrest/Filters'
 import useSearchParamsState from '../useSearchParamsState'
 import { ListForm, TableForm } from './ListMarkets'
 
 export default function OpenInterestByMarkets() {
   return (
-    <ProtocolPageWrapper>
+    <RouteWrapper>
       <OpenInterestByMarketsPage />
-    </ProtocolPageWrapper>
+    </RouteWrapper>
   )
 }
 function OpenInterestByMarketsPage() {
@@ -54,7 +49,10 @@ function OpenInterestByMarketsPage() {
     setCurrentShort(sort)
   }
 
-  const { protocol } = useParams<{ protocol: ProtocolEnum }>()
+  const { symbol, protocol = ProtocolEnum.GMX } = useParams<{
+    symbol: string | undefined
+    protocol: ProtocolEnum | undefined
+  }>()
 
   const { data, isFetching } = useQuery(
     [QUERY_KEYS.GET_OPEN_INTEREST_BY_MARKET, protocol, from, to],
@@ -63,12 +61,16 @@ function OpenInterestByMarketsPage() {
       keepPreviousData: true,
     }
   )
+
+  const symbolInfo = symbol && getTokenTradeList(protocol).find((token) => token.symbol === symbol)
   const sortedData = data?.length
-    ? [...data].map((_data) => ({
-        ..._data,
-        totalInterest: _data.totalLong + _data.totalShort,
-        protocol,
-      }))
+    ? [...data]
+        .map((_data) => ({
+          ..._data,
+          totalInterest: _data.totalLong + _data.totalShort,
+          protocol,
+        }))
+        .filter((_data) => (symbolInfo ? _data.indexToken === symbolInfo?.address : true))
     : []
 
   if (currentSort) {
@@ -81,48 +83,25 @@ function OpenInterestByMarketsPage() {
 
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>
-      <PageHeader
-        pageTitle={`Open Interest By Markets On ${protocol}`}
-        headerText={<Trans>OPEN INTEREST BY MARKETS</Trans>}
-        icon={Pulse}
-        showOnMobile
-        routeSwitchProtocol
-      />
+      <Flex height="48px" px={3} sx={{ alignItems: 'center', borderBottom: 'small', borderBottomColor: 'neutral4' }}>
+        <Filter currentTimeOption={time} onChangeTime={onChangeTime} />
+      </Flex>
       {sm ? (
-        <Flex
-          justifyContent="space-between"
-          p={3}
-          height="48px"
-          sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}
-        >
-          <Filter currentTimeOption={time} onChangeTime={onChangeTime} />
-          <TopOpenLink />
-        </Flex>
-      ) : (
-        <Box px={3} py={12} sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}>
-          <Breadcrumb
-            items={[
-              { title: <Trans>Overall</Trans>, path: generateOIRoute({ protocol, params: searchParams }) },
-              { title: <Trans>Markets</Trans> },
-            ]}
+        <Box flex="1 0 0">
+          <TableForm
+            symbol={symbol}
+            isFetching={isFetching}
+            data={sortedData}
+            timeOption={time}
+            protocol={protocol}
+            currentSort={symbolInfo ? undefined : currentSort}
+            changeCurrentSort={symbolInfo ? undefined : onChangeSort}
           />
-          <Filter currentTimeOption={time} onChangeTime={onChangeTime} />
         </Box>
-      )}
-      <Box flex="1 0 0">
-        {sm ? (
-          <Box sx={{ height: '100%', pt: 2 }}>
-            <TableForm
-              isFetching={isFetching}
-              data={sortedData}
-              timeOption={time}
-              protocol={protocol}
-              currentSort={currentSort}
-              changeCurrentSort={onChangeSort}
-            />
-          </Box>
-        ) : (
+      ) : (
+        <Box flex="1 0 0" overflow="hidden">
           <ListForm
+            symbol={symbol}
             isFetching={isFetching}
             data={sortedData}
             timeOption={time}
@@ -130,8 +109,8 @@ function OpenInterestByMarketsPage() {
             currentSort={currentSort}
             changeCurrentSort={onChangeSort}
           />
-        )}
-      </Box>
+        </Box>
+      )}
     </Flex>
   )
 }

@@ -45,7 +45,9 @@ export default function Filters({
       >
         <Type.CaptionBold>{currentLimit}</Type.CaptionBold>
       </Dropdown>
-      <Type.CaptionBold sx={{ mt: '-1px' }}>By</Type.CaptionBold>
+      <Type.CaptionBold ml={2} sx={{ mt: '-1px' }}>
+        By
+      </Type.CaptionBold>
       <Dropdown
         {...getDropdownProps({})}
         menu={
@@ -63,7 +65,9 @@ export default function Filters({
       >
         <Type.CaptionBold>{currentSort.text}</Type.CaptionBold>
       </Dropdown>
-      <Type.CaptionBold sx={{ mt: '-1px' }}>In</Type.CaptionBold>
+      <Type.CaptionBold ml={2} sx={{ mt: '-1px' }}>
+        In
+      </Type.CaptionBold>
       <TimeDropdown currentTimeOption={currentTimeOption} onChangeTime={onChangeTime} />
     </Flex>
   )

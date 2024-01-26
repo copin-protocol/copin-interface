@@ -65,23 +65,27 @@ function createUrlWithParams({ url, params = {} }: { url: string; params?: Recor
   return url + `${!!query ? `?${query}` : ''}`
 }
 
-export function generateOIByMarketRoute(data: { protocol: string; symbol: string; params?: Record<string, any> }) {
+export function generateOIRoute(data: { protocol: string; symbol?: string; params?: Record<string, any> }) {
   return createUrlWithParams({
-    url: `/${data.protocol}${ROUTES.OPEN_INTEREST_BY_MARKET.path_prefix}/${data.symbol}`,
+    url: data.symbol
+      ? `/${data.protocol}${ROUTES.OPEN_INTEREST_POSITIONS.path_prefix}/${data.symbol}`
+      : `/${data.protocol}${ROUTES.OPEN_INTEREST.path_prefix}`,
     params: data.params,
   })
 }
-
-export function generateOIMarketsRoute(data: { protocol: string; params?: Record<string, any> }) {
+export function generateOIOverviewRoute(data: { protocol: string; symbol?: string; params?: Record<string, any> }) {
   return createUrlWithParams({
-    url: `/${data.protocol}${ROUTES.OPEN_INTEREST_BY_MARKETS.path_prefix}`,
+    url: data.symbol
+      ? `/${data.protocol}${ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix}/${data.symbol}`
+      : `/${data.protocol}${ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix}`,
     params: data.params,
   })
 }
-
-export function generateOIRoute(data: { protocol: string; params?: Record<string, any> }) {
+export function generateOIPositionsRoute(data: { protocol: string; symbol?: string; params?: Record<string, any> }) {
   return createUrlWithParams({
-    url: `/${data.protocol}${ROUTES.OPEN_INTEREST.path_prefix}`,
+    url: data.symbol
+      ? `/${data.protocol}${ROUTES.OPEN_INTEREST_POSITIONS.path_prefix}/${data.symbol}`
+      : `/${data.protocol}${ROUTES.OPEN_INTEREST_POSITIONS.path_prefix}`,
     params: data.params,
   })
 }

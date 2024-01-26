@@ -17,9 +17,7 @@ import Favorites from './MyProfile/Favorites'
 
 const Home = lazy(() => import('./Home'))
 const Explorer = lazy(() => import('./Explorer'))
-const OpenInterest = lazy(() => import('./TopOpenings/TopOpenIntrest'))
-const OpenInterestByMarkets = lazy(() => import('./TopOpenings/OpenInterestByMarkets'))
-const OpenInterestByMarket = lazy(() => import('./TopOpenings/OpenInterestByMarket'))
+const OpenInterest = lazy(() => import('./TopOpenings'))
 const Leaderboard = lazy(() => import('./Leaderboard'))
 const TraderDetails = lazy(() => import('./TraderDetails'))
 const PositionDetails = lazy(() => import('./PositionDetails'))
@@ -73,8 +71,6 @@ function App() {
             <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHash}></Route>
             <Route path={ROUTES.LEADERBOARD.path} component={Leaderboard}></Route>
             <Route path={ROUTES.TRADERS_EXPLORER.path} component={Explorer}></Route>
-            <Route path={ROUTES.OPEN_INTEREST_BY_MARKET.path} component={OpenInterestByMarket}></Route>
-            <Route path={ROUTES.OPEN_INTEREST_BY_MARKETS.path} component={OpenInterestByMarkets}></Route>
             <Route path={ROUTES.OPEN_INTEREST.path} component={OpenInterest}></Route>
             <Route path={ROUTES.HOME.path} component={Home}></Route>
 

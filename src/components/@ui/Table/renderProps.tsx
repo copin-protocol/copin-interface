@@ -10,19 +10,21 @@ import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
-import { Box, Flex, TextProps, Type } from 'theme/base'
+import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcClosedPrice, calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
 import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { parseMarketImage } from 'utils/helpers/transform'
 
 import AddressAvatar from '../AddressAvatar'
 import { PriceTokenText } from '../DecoratedText/ValueText'
 
-export function renderEntry(data: PositionData | undefined, textSx?: TextProps) {
+export function renderEntry(data: PositionData | undefined, textSx?: TextProps, showMarketIcon?: boolean) {
   if (!data || !data.protocol) return <></>
+  const symbol = TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol
 
   return (
     <Flex
@@ -36,6 +38,7 @@ export function renderEntry(data: PositionData | undefined, textSx?: TextProps) 
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
+      {showMarketIcon && <Image width={24} height={24} src={parseMarketImage(symbol)} />}
       <Type.Caption {...textSx}>{TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>

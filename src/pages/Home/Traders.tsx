@@ -458,7 +458,7 @@ function TraderItem({
         <ChartTraderPnL data={parsePnLStatsData(traderData.pnlStatistics)} dayCount={timeOption.value} height={30} />
       </Box>
 
-      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+      <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: '1fr 1fr 1fr' }}>
         <Box>
           <Type.Caption display="block">
             <Trans>{TIME_TRANSLATION[traderData.type]} PnL ($)</Trans>

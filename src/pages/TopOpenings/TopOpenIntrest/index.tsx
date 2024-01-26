@@ -1,20 +1,16 @@
-import { Trans } from '@lingui/macro'
-import { Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getTopOpeningPositionsApi } from 'apis/positionApis'
-import PageHeader from 'components/@ui/PageHeader'
-import { ProtocolPageWrapper } from 'components/RouteWrapper'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
-import { MarketLink } from '../Navigators'
 import PositionsSection from '../PositionsSection'
+import RouteWrapper from '../RouteWrapper'
 import VisualizeSection, { VisualizeSectionMobile } from '../VisualizeSection'
 import useSearchParamsState from '../useSearchParamsState'
 import Filters, { useFilters } from './Filters'
@@ -26,9 +22,9 @@ export default function TopOpenings() {
     setOverallPageParams(searchParams as any)
   }, [searchParams])
   return (
-    <ProtocolPageWrapper>
+    <RouteWrapper>
       <TopOpeningsPage />
-    </ProtocolPageWrapper>
+    </RouteWrapper>
   )
 }
 
@@ -64,43 +60,24 @@ function TopOpeningsPage() {
   return (
     <>
       <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-        <PageHeader
-          pageTitle={`Open Interest on ${protocol}`}
-          headerText={<Trans>OPEN INTEREST</Trans>}
-          icon={Pulse}
-          showOnMobile
-          routeSwitchProtocol
-        />
-        {sm ? (
-          <Flex justifyContent="space-between" p={16} height="48px">
-            <Filters
-              currentSort={sort}
-              currentLimit={limit}
-              onChangeSort={onChangeSort}
-              onChangeLimit={onChangeLimit}
-              currentTimeOption={time}
-              onChangeTime={onChangeTime}
-            />
-            <MarketLink text={<Trans>By Markets</Trans>} />
-          </Flex>
-        ) : (
-          <Box px={3} py={12} sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}>
-            <Flex mb={12} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-              <Type.CaptionBold>
-                <Trans>Overall</Trans>
-              </Type.CaptionBold>
-              <MarketLink text={<Trans>By Markets</Trans>} />
-            </Flex>
-            <Filters
-              currentSort={sort}
-              currentLimit={limit}
-              onChangeSort={onChangeSort}
-              onChangeLimit={onChangeLimit}
-              currentTimeOption={time}
-              onChangeTime={onChangeTime}
-            />
-          </Box>
-        )}
+        <Flex
+          justifyContent="space-between"
+          p={3}
+          height="48px"
+          sx={{
+            borderBottom: ['small', 'small', 'small', 'none'],
+            borderBottomColor: ['neutral4', 'neutral4', 'neutral4', 'none'],
+          }}
+        >
+          <Filters
+            currentSort={sort}
+            currentLimit={limit}
+            onChangeSort={onChangeSort}
+            onChangeLimit={onChangeLimit}
+            currentTimeOption={time}
+            onChangeTime={onChangeTime}
+          />
+        </Flex>
         <Box sx={{ flex: '1 0 0' }}>
           <Flex height="100%" flexDirection={lg ? 'row' : 'column'}>
             {lg ? (
@@ -112,7 +89,7 @@ function TopOpeningsPage() {
                 <VisualizeSectionMobile data={data} />
               </Box>
             )}
-            <Box flex={[1, 1, 1, '0 0 650px']}>
+            <Box flex={[1, 1, 1, '0 0 680px']}>
               <PositionsSection
                 data={data}
                 sort={sort.key}
