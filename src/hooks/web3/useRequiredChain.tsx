@@ -1,10 +1,12 @@
+import { Trans } from '@lingui/macro'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 
+import switchChain from 'assets/images/switch-chain.png'
 import useGlobalDialog from 'hooks/store/useGlobalDialog'
 import useChain from 'hooks/web3/useChain'
 import Alert from 'theme/Alert'
 import { Button } from 'theme/Buttons'
-import { Flex } from 'theme/base'
+import { Box, Flex, Image, Type } from 'theme/base'
 import { DEFAULT_CHAIN_ID, getChainMetadata } from 'utils/web3/chains'
 
 const useRequiredChain = ({
@@ -26,23 +28,34 @@ const useRequiredChain = ({
 
   const renderComponent = useCallback(() => {
     return (
-      <Alert
-        variant="warning"
-        message={title}
-        description={
-          <Button
-            size="xs"
-            variant="primary"
-            onClick={() =>
-              setChain({
-                chainId: requiredChain.id,
-              })
-            }
-          >
+      <Box sx={{ minWidth: 300 }}>
+        <Flex sx={{ alignItems: 'center', flexDirection: 'column' }}>
+          <Image mb={3} width={150} height={150} src={switchChain} />
+          <Type.Caption mb={3} color="neutral2">
+            {title}
+          </Type.Caption>
+          <Button variant="primary" width={200} onClick={() => setChain({ chainId: requiredChain.id })}>
             Switch Chain
           </Button>
-        }
-      />
+        </Flex>
+      </Box>
+      // <Alert
+      //   variant="warning"
+      //   message={title}
+      //   description={
+      //     <Button
+      //       size="xs"
+      //       variant="primary"
+      //       onClick={() =>
+      //         setChain({
+      //           chainId: requiredChain.id,
+      //         })
+      //       }
+      //     >
+      //       Switch Chain
+      //     </Button>
+      //   }
+      // />
       // <Flex sx={{ gap: 2 }}>
       //   <Type.Caption>{title}</Type.Caption>
 
