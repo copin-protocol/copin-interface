@@ -290,7 +290,7 @@ export default function CopyChartProfit({
     priceSeries.priceScale().applyOptions({
       scaleMargins: {
         top: 0.1,
-        bottom: 0.03,
+        bottom: 0.1,
       },
     })
 
@@ -361,7 +361,7 @@ export default function CopyChartProfit({
         lineVisible: true,
         lineWidth: 1,
         axisLabelVisible: true,
-        title: `Stop Loss: -$${formatNumber(stopLossUsd, 2)}${
+        title: `SL: -$${formatNumber(stopLossUsd, 2)}${
           position.stopLossPrice ? ' - Est. Price: ' + formatNumber(position.stopLossPrice) : ''
         }`,
         lineStyle: LineStyle.SparseDotted,
@@ -369,15 +369,21 @@ export default function CopyChartProfit({
     }
     if (position.latestTakeProfitId && position.takeProfitAmount) {
       const takeProfitUsd = calcSLTPUsd(position.takeProfitAmount, position.takeProfitPrice, position.entryPrice)
-      const maxChartValue = Number(series.coordinateToPrice(0)?.toString())
-      const value = high?.value && takeProfitUsd > high.value ? maxChartValue : takeProfitUsd
+      const maxChartValue = Number(series.coordinateToPrice(20)?.toString())
+      const value =
+        high === undefined
+          ? maxChartValue
+          : takeProfitUsd > high.value
+          ? Math.max(maxChartValue, high.value)
+          : takeProfitUsd
+
       series.createPriceLine({
         price: value,
         color: themeColors.green1,
         lineVisible: true,
         lineWidth: 1,
         axisLabelVisible: true,
-        title: `Take Profit: $${formatNumber(takeProfitUsd, 2)}${
+        title: `TP: $${formatNumber(takeProfitUsd, 2)}${
           position.takeProfitPrice ? ' - Est. Price: ' + formatNumber(position.takeProfitPrice) : ''
         }`,
         lineStyle: LineStyle.SparseDotted,
@@ -413,7 +419,7 @@ export default function CopyChartProfit({
         series.setMarkers(makers.sort((a, b) => Number(a.time) - Number(b.time)))
         series.priceScale().applyOptions({
           scaleMargins: {
-            top: 0.1,
+            top: 0.14,
             bottom: 0.14,
           },
         })
