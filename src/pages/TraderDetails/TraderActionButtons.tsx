@@ -7,7 +7,7 @@ import { requestTestMultiOrderApi } from 'apis/backTestApis'
 import TradeProtocolAction from 'components/@ui/TradeProtocol'
 import SingleBackTestModal from 'components/BacktestModal/SingleBacktestModal'
 import { initBacktestState, initialState, reducer } from 'components/BacktestModal/SingleBacktestModal/config'
-import { MIN_BACKTEST_VALUE, parseRequestData } from 'components/BacktestModal/helper'
+import { parseRequestData } from 'components/BacktestModal/helper'
 import CopyTraderButton from 'components/CopyTraderButton'
 import { useClickLoginButton } from 'components/LoginAction'
 import { PositionData } from 'entities/trader.d'
@@ -120,8 +120,7 @@ function BacktestButton({ account, protocol }: { account: string; protocol: Prot
   const { searchParams, setSearchParams } = useSearchParams()
   const myProfile = useMyProfileStore((state) => state.myProfile)
   const isForceOpenModal = searchParams[URL_PARAM_KEYS.OPEN_BACKTEST_MODAL] === '1' ? true : false
-  const requestDataStr = searchParams?.[URL_PARAM_KEYS.BACKTEST_DATA] as string
-  const requestData = !!requestDataStr ? parseRequestData(requestDataStr, protocol) : undefined
+  const requestData = parseRequestData(searchParams, protocol)
   const { mutate: requestBacktest } = useMutation(requestTestMultiOrderApi, {
     onSuccess: (data, variables) => {
       const currentInstanceId = backtestState.currentInstanceId
@@ -140,8 +139,7 @@ function BacktestButton({ account, protocol }: { account: string; protocol: Prot
 
   const requestedBacktest = useRef(false)
   useEffect(() => {
-    if (!myProfile || !requestData || requestedBacktest.current) return
-    if (Object.keys(requestData).length < MIN_BACKTEST_VALUE) return
+    if (!myProfile || !Object.keys(requestData).length || requestedBacktest.current) return
     requestBacktest({ protocol, data: { ...requestData, isReturnPositions: true } })
     requestedBacktest.current = true
   }, [myProfile])
@@ -173,6 +171,7 @@ function BacktestButton({ account, protocol }: { account: string; protocol: Prot
       <BackTestAction onClick={handleOpenBackTestModal} hadBacktest={hadBacktest} />
       {backtestState.isFocusBacktest && (
         <SingleBackTestModal
+          isForceOpen={isForceOpenModal}
           account={account}
           isOpen={backtestState.isFocusBacktest}
           onDismiss={handleDismissBackTestModal}

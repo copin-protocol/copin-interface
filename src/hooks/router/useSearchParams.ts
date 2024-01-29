@@ -9,7 +9,7 @@ export default function useSearchParams() {
   const searchParams = useMemo(() => parsedQueryString(search), [search])
 
   const setSearchParams = useCallback(
-    (params: { [key: string]: string | null }) => {
+    (params: { [key: string]: string | null | undefined }) => {
       if (Object.keys(params).length === 0) return
       const urlSearchParams = new URLSearchParams(search)
       for (const key in params) {

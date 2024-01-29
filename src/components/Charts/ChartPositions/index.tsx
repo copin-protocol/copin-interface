@@ -47,6 +47,7 @@ export default function ChartPositions({
   currencyOptions,
   changeCurrency,
   currencySelectProps,
+  showLoadMoreButton = true,
 }: ChartPositionsProps) {
   const hasBrush = !!isExpanded
   const { myProfile } = useMyProfile()
@@ -108,7 +109,11 @@ export default function ChartPositions({
   )
 
   const { chartData, isLoading, from, timezone } = useChartPositionData({
-    timeRange: isExpanded ? timeRange : _timeRange,
+    timeRange: isExpanded
+      ? timeRange
+        ? { ...timeRange, from: dayjs(timeRange?.from).subtract(7, 'day').valueOf() }
+        : undefined
+      : _timeRange,
     timeframe,
     protocol,
     indexToken: tokenTrade?.address,
@@ -219,7 +224,7 @@ export default function ChartPositions({
       }
     }
     function onVisibleTimeRangeChanged(value: Range<any> | null) {
-      if (!isExpanded) {
+      if (showLoadMoreButton && !isExpanded) {
         if (!value?.from) return
         if (value.from < (chartData?.[5]?.time ?? 0)) {
           setShowSeeMorePositions(true)
@@ -359,7 +364,7 @@ export default function ChartPositions({
       )}
       {!isLoading && chartData && chartData.length === 0 && <NoDataFound />}
       <div id={chartId} style={{ padding: '0 12px', flex: '1 0 0' }} />
-      {!isExpanded && showSeeMorePositions && (
+      {showLoadMoreButton && !isExpanded && showSeeMorePositions && (
         <Button
           variant="outline"
           sx={{

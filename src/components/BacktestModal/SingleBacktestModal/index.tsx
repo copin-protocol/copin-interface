@@ -8,7 +8,7 @@ import { Box, Flex } from 'theme/base'
 import { CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 
-import { stringifyRequestData } from '../helper'
+import { RESET_BACKTEST_PARAMS, stringifyRequestData } from '../helper'
 import BacktestInstance from './BacktestInstance'
 import TabHeader from './TabHeader'
 import { ActionType, State } from './config'
@@ -19,12 +19,14 @@ export default function SingleBackTestModal({
   onDismiss,
   state,
   dispatch,
+  isForceOpen = false,
 }: {
   account: string
   isOpen: boolean
   onDismiss: () => void
   dispatch: Dispatch<ActionType>
   state: State
+  isForceOpen?: boolean
 }) {
   const { setSearchParams } = useSearchParams()
   const { protocol } = useParams<{ protocol: ProtocolEnum }>()
@@ -33,10 +35,11 @@ export default function SingleBackTestModal({
   const { data: tokensTraded } = useGetTokensTraded({ account, protocol })
 
   useEffect(() => {
-    if (!currentInstanceData) return
+    if (!currentInstanceData || isForceOpen) return
     if (currentInstanceData.settings) {
       setSearchParams({
-        [URL_PARAM_KEYS.BACKTEST_DATA]: stringifyRequestData(
+        [URL_PARAM_KEYS.BACKTEST_DATA]: '1',
+        ...stringifyRequestData(
           {
             ...currentInstanceData.settings,
             testingType: CopyTradeTypeEnum.FULL_ORDER,
@@ -45,7 +48,7 @@ export default function SingleBackTestModal({
         ),
       })
     } else {
-      setSearchParams({ [URL_PARAM_KEYS.BACKTEST_DATA]: null })
+      setSearchParams({ [URL_PARAM_KEYS.BACKTEST_DATA]: null, ...RESET_BACKTEST_PARAMS })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentInstanceData.status, state.currentInstanceId])
@@ -65,7 +68,7 @@ export default function SingleBackTestModal({
           }}
           onDeleteItem={(id) => {
             if (state.instanceIds.length === 1) {
-              setSearchParams({ [URL_PARAM_KEYS.BACKTEST_DATA]: null })
+              setSearchParams({ [URL_PARAM_KEYS.BACKTEST_DATA]: null, ...RESET_BACKTEST_PARAMS })
             }
             dispatch({ type: 'removeInstance', payload: id })
           }}

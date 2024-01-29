@@ -62,10 +62,11 @@ export default function BacktestSettings({
                 {renderSLTPType({ type: data.takeProfitType, value: data.takeProfitAmount, color: 'green1' })}
               </>
             ) : (
-              'OFF'
+              <Box as="span" color="neutral3">
+                OFF
+              </Box>
             )
           }
-          // valueProps={{ color: data.enableStopLoss ? 'green1' : 'neutral3' }}
         />
       </Box>
       <Box mt={3} />

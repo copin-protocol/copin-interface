@@ -303,11 +303,10 @@ export default function useCopyTradeColumns({
 
   const handleOpenDrawer = useCallback(
     (data?: CopyTradeData) => {
-      if (data?.status === CopyTradeStatusEnum.STOPPED && !checkIsEligible()) return
       onSelect(data)
       setOpenDrawer(true)
     },
-    [checkIsEligible, onSelect, setOpenDrawer]
+    [onSelect, setOpenDrawer]
   )
 
   const handleOpenCloneDrawer = useCallback(

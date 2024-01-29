@@ -31,4 +31,5 @@ export interface ChartPositionsProps {
   currencyOptions?: TokenOptionProps[]
   changeCurrency?: (option: TokenOptionProps) => void
   currencySelectProps?: Omit<Props, 'theme'>
+  showLoadMoreButton?: boolean
 }
