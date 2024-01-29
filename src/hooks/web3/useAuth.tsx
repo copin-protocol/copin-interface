@@ -229,7 +229,8 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
 
   return (
     <AuthContext.Provider value={contextValue}>
-      {cloneElement(children, { key: myProfile?.id })}
+      {/* {cloneElement(children, { key: myProfile?.id })} */}
+      {children}
       {waitingState != null && (
         <WaitingWallet
           active={waitingState != null}
