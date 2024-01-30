@@ -86,13 +86,14 @@ export default function MainSection({
     paramKey: URL_PARAM_KEYS.MY_COPIES_STATUS,
     defaultSelected: [CopyTradeStatusEnum.RUNNING, CopyTradeStatusEnum.STOPPED],
   })
+  // TODO: Check when add new protocol
   const {
     selected: selectedProtocol,
     checkIsSelected: checkIsProtocolChecked,
     handleToggleSelect: handleToggleProtocol,
   } = useSelectMultiple({
     paramKey: URL_PARAM_KEYS.MY_COPIES_PROTOCOL,
-    defaultSelected: [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL],
+    defaultSelected: Object.values(ProtocolEnum),
   })
   const queryParams = useMemo(
     () => ({

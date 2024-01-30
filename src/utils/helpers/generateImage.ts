@@ -401,6 +401,7 @@ export const generateAvatarAddress = ({
   canvas.fillText(addressShorten(address), addressOffsetX, addressOffsetY)
 }
 
+// TODO: Check when add new protocol
 export const generateProtocol = ({
   protocol,
   protocolImg,
@@ -419,6 +420,7 @@ export const generateProtocol = ({
   let protocolText = 'GMX'
   switch (protocol) {
     case ProtocolEnum.GMX:
+    case ProtocolEnum.GMX_V2:
       protocolTextWidth = 72
       protocolText = 'GMX'
       break

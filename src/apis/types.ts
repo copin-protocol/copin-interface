@@ -68,7 +68,7 @@ export type GetMyPositionsParams = GetApiParams & {
   protocol?: ProtocolEnum
   sortBy?: string
   sortType?: string
-  copyWalletId?: string // Todo: Check wallet id in params or body
+  copyWalletId?: string
 }
 export type GetMyPositionRequestBody = {
   copyTradeIds?: string[]

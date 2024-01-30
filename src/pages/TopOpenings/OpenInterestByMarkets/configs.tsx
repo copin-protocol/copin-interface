@@ -108,7 +108,8 @@ export function getColumns({ protocol, timeOption }: { protocol: ProtocolEnum; t
       key: 'indexToken',
       style: { minWidth: '120px' },
       render: (item) => {
-        const { symbol } = tokenTradeSupport?.[item.indexToken]
+        const { symbol } = tokenTradeSupport?.[item.indexToken] ?? {}
+        if (!symbol) return <></>
         return <Box pl={2}>{renderMarket(symbol)}</Box>
       },
     },

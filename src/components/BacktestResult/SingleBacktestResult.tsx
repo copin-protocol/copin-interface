@@ -239,7 +239,7 @@ export default function SingleBacktestResult({
                 [`& > *:nth-child(${statsColumns}n)`]: {
                   borderRight: 'none',
                 },
-                [`& > ${Array.from({ length: statsColumns }, (_, v) => totalStatsItems - v + 1).reduce(
+                [`& > ${Array.from({ length: statsColumns }, (_, v) => totalStatsItems - v).reduce(
                   (result, value, index) => {
                     if (index === statsColumns - 1) {
                       result += `*:nth-child(${value})`

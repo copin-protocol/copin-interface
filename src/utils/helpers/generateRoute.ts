@@ -103,3 +103,11 @@ export function generateLeaderboardRoute(data: { protocol: string; params?: Reco
     params: data.params,
   })
 }
+
+export function generateHomeRoute(data: { params?: Record<string, any> }) {
+  if (data.params?.protocol === ProtocolEnum.GMX_V2) return ROUTES.HOME.path
+  return createUrlWithParams({
+    url: ROUTES.HOME.path,
+    params: data.params,
+  })
+}

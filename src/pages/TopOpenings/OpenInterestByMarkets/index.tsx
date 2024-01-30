@@ -62,7 +62,8 @@ function OpenInterestByMarketsPage() {
     }
   )
 
-  const symbolInfo = symbol && getTokenTradeList(protocol).find((token) => token.symbol === symbol)
+  const tokenTradeList = getTokenTradeList(protocol)
+  const symbolInfo = symbol && tokenTradeList.find((token) => token.symbol === symbol)
   const sortedData = data?.length
     ? [...data]
         .map((_data) => ({
@@ -71,6 +72,7 @@ function OpenInterestByMarketsPage() {
           protocol,
         }))
         .filter((_data) => (symbolInfo ? _data.indexToken === symbolInfo?.address : true))
+        .filter((_data) => !!tokenTradeList.find((_token) => _token.address === _data.indexToken))
     : []
 
   if (currentSort) {

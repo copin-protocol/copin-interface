@@ -88,6 +88,8 @@ export default function ChartProfitComponent({
   const openOrder = orders.find((e) => e.isOpen || e.type === OrderTypeEnum.OPEN) ?? position.orders?.[0]
   const closeOrder = orders.find((e) => e.isClose) ?? orders?.[0]
   const increaseList = orders.filter((e) => e.type === OrderTypeEnum.INCREASE || e.type === OrderTypeEnum.OPEN)
+
+  // TODO: Check when add new protocol
   const decreaseList = orders.filter(
     (e) =>
       e.type === OrderTypeEnum.DECREASE ||

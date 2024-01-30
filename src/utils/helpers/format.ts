@@ -138,7 +138,7 @@ export function compactNumber(num: number, digits = 1) {
   const item = lookup.find(function (item) {
     return Math.abs(num) >= item.value
   })
-  return item ? (num / item.value).toFixed(digits) + item.symbol : '-'
+  return item ? (num / item.value).toFixed(digits) + item.symbol : '--'
 }
 
 export function breakLineTextToArray({ text = '', maxLine = 2, lineMaxLength = 40 }) {

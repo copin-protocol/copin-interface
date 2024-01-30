@@ -2,6 +2,7 @@ export enum ProtocolEnum {
   GMX = 'GMX',
   KWENTA = 'KWENTA',
   POLYNOMIAL = 'POLYNOMIAL',
+  GMX_V2 = 'GMX_V2',
 }
 
 export enum UserRoleEnum {

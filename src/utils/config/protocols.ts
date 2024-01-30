@@ -10,7 +10,15 @@ export type ProtocolOptionProps = {
 }
 
 export const PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
+
+// TODO: Check when add new protocol
 export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps> = {
+  [ProtocolEnum.GMX_V2]: {
+    id: ProtocolEnum.GMX_V2,
+    text: 'GMX V2',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+  },
   [ProtocolEnum.GMX]: {
     id: ProtocolEnum.GMX,
     text: 'GMX',
@@ -34,4 +42,5 @@ export const PROTOCOL_OPTIONS: ProtocolOptionProps[] = [
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GMX],
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.KWENTA],
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.POLYNOMIAL],
+  PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GMX_V2],
 ]

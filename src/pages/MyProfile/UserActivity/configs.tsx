@@ -92,7 +92,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
           <Type.Caption>
             <Box
               as="a"
-              href={`${PROTOCOL_PROVIDER[item.protocol].explorerUrl}/tx/${item.sourceTxHash}`}
+              href={`${PROTOCOL_PROVIDER[item.protocol]?.explorerUrl}/tx/${item.sourceTxHash}`}
               target="_blank"
             >
               <Trans>TxHash</Trans>
@@ -172,7 +172,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
             <Type.Caption>
               <Box
                 as="a"
-                href={`${PROTOCOL_PROVIDER[item.protocol].explorerUrl}/tx/${item.sourceTxHash}`}
+                href={`${PROTOCOL_PROVIDER[item.protocol]?.explorerUrl}/tx/${item.sourceTxHash}`}
                 target="_blank"
               >
                 <Trans>TxHash</Trans>

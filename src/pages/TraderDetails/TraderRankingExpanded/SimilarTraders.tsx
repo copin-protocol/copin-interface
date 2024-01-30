@@ -88,19 +88,18 @@ export default function SimilarTraders({
     returnRanking: true,
   }
   const [isFetching, setIsFetching] = useState(true)
+  // TODO: Check when add new protocol
   const { data: similarTraders } = useQuery(
     [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, similarTradersFilter, ProtocolEnum.GMX, retryTime],
     () =>
-      Promise.all([
-        getTradersApi({
-          protocol: ProtocolEnum.GMX,
-          body: queryBody,
-        }),
-        getTradersApi({
-          protocol: ProtocolEnum.KWENTA,
-          body: queryBody,
-        }),
-      ]),
+      Promise.all(
+        Object.values(ProtocolEnum).map((protocol) => {
+          return getTradersApi({
+            protocol,
+            body: queryBody,
+          })
+        })
+      ),
     {
       keepPreviousData: true,
       retry: 0,

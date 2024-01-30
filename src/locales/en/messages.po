@@ -17,6 +17,10 @@ msgstr ""
 msgid "(24h change)"
 msgstr "(24h change)"
 
+#: src/pages/Home/ProtocolDropdown.tsx
+msgid "(Coming soon)"
+msgstr "(Coming soon)"
+
 #: src/pages/@helpers/ErrorFallback.tsx
 msgid ". Try to reload the page to fix this issue"
 msgstr ". Try to reload the page to fix this issue"
@@ -508,6 +512,14 @@ msgstr "Collateral:"
 #: src/components/CreateWalletAction/index.tsx
 msgid "Coming Soon"
 msgstr "Coming Soon"
+
+#: src/pages/Home/Traders.tsx
+msgid "Coming Soon!"
+msgstr "Coming Soon!"
+
+#: src/components/CopyTraderButton/index.tsx
+msgid "Coming soon!"
+msgstr "Coming soon!"
 
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Communicating with wallet. Sign message with your wallet"

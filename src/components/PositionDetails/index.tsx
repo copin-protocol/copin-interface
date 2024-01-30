@@ -50,7 +50,7 @@ export default function PositionDetails({
 
   const { isCopying } = useTraderCopying(data?.account)
 
-  const explorerUrl = data && data.protocol ? PROTOCOL_PROVIDER[data.protocol].explorerUrl : LINKS.arbitrumExplorer
+  const explorerUrl = data && data.protocol ? PROTOCOL_PROVIDER[data.protocol]?.explorerUrl : LINKS.arbitrumExplorer
   const isOpening = data?.status === PositionStatusEnum.OPEN
 
   return (

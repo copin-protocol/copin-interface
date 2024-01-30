@@ -41,13 +41,14 @@ export function calcCopyOpeningROI(position: CopyPositionData, realPnL: number) 
   const sizeUsd = Number(position.totalSizeDelta ?? position.sizeDelta) * position.entryPrice
   return (realPnL / (sizeUsd / position.leverage)) * 100
 }
-
+// TODO: Check when add new protocol
 export function calcLiquidatePrice(position: PositionData) {
   let lastCollateral = position.size / position.leverage
   let lastSizeInToken = position.size / position.averagePrice
   let totalFee = position.fee
   switch (position.protocol) {
     case ProtocolEnum.GMX:
+    case ProtocolEnum.GMX_V2:
       break
     case ProtocolEnum.KWENTA:
     case ProtocolEnum.POLYNOMIAL:

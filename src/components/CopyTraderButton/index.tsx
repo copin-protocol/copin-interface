@@ -5,6 +5,7 @@ import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
+import Tooltip from 'theme/Tooltip'
 import { ProtocolEnum } from 'utils/config/enums'
 import { logEventCopyTrade } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
@@ -41,6 +42,9 @@ export default function CopyTraderButton({
 
   const hasCopyPermission = useCopyTradePermission()
 
+  const disabledCopy = protocol === ProtocolEnum.GMX_V2
+  const disabledCopyTooltipId = `tt_copy_trade_${account}_${protocol}`
+
   return (
     <>
       <Button
@@ -50,6 +54,7 @@ export default function CopyTraderButton({
           width: ['100%', '100%', '100%', 150],
           ...buttonSx,
         }}
+        disabled={disabledCopy}
         variant="primary"
         onClick={(e) => {
           e.preventDefault()
@@ -78,11 +83,16 @@ export default function CopyTraderButton({
               })
           }
         }}
-        data-tooltip-id={`tt-kwenta_copytrade`}
+        data-tooltip-id={disabledCopy ? disabledCopyTooltipId : undefined}
       >
         {buttonText}
       </Button>
-      {isOpenModal && !!profile && (
+      {disabledCopy && (
+        <Tooltip id={disabledCopyTooltipId} place="bottom">
+          <Trans>Coming soon!</Trans>
+        </Tooltip>
+      )}
+      {!disabledCopy && isOpenModal && !!profile && (
         <CopyTraderModal
           protocol={protocol}
           account={account}

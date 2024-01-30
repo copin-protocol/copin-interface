@@ -67,6 +67,8 @@ export default function ListOrderTable({
   let orders = data.sort((x, y) =>
     x.blockTime < y.blockTime ? 1 : x.blockTime > y.blockTime ? -1 : x.logId < y.logId ? 1 : x.logId > y.logId ? -1 : 0
   )
+
+  // TODO: Check when add new protocol
   if (protocol === ProtocolEnum.GMX) {
     orders = orders.filter((e) => e.type !== OrderTypeEnum.CLOSE)
   }
@@ -89,7 +91,7 @@ export default function ListOrderTable({
 
             <ExplorerLogo
               protocol={protocol}
-              explorerUrl={`${PROTOCOL_PROVIDER[protocol].explorerUrl}/tx/${item.txHash}`}
+              explorerUrl={`${PROTOCOL_PROVIDER[protocol]?.explorerUrl}/tx/${item.txHash}`}
               size={18}
             />
           </Flex>

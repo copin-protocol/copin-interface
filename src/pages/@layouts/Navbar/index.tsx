@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom'
 
 import Logo, { LogoText } from 'components/@ui/Logo'
 import LoginAction from 'components/LoginAction'
+import { useProtocolStore } from 'hooks/store/useProtocols'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import NavbarUser from 'pages/@layouts/Navbar/NavUser'
 import { Button } from 'theme/Buttons'
@@ -12,6 +13,7 @@ import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import routes from 'utils/config/routes'
+import { generateHomeRoute } from 'utils/helpers/generateRoute'
 
 import HamburgerMenu from './HamburgetMenu'
 import Menu from './Menu'
@@ -33,6 +35,7 @@ export default function Navbar({ height }: { height: number }): ReactElement {
   }, [location.pathname])
 
   const [activeMobileMenu, setActiveMobileMenu] = useState(false)
+  const protocol = useProtocolStore((state) => state.protocol)
 
   return (
     <Box as="header" sx={{ zIndex: [101, 101, 101, 11] }}>
@@ -41,7 +44,7 @@ export default function Navbar({ height }: { height: number }): ReactElement {
         <Main>
           {!isSearchOpening ? (
             <Flex alignItems="center" sx={{ gap: 2 }}>
-              <Link to={routes.HOME.path}>
+              <Link to={generateHomeRoute({ params: { protocol } })}>
                 <LogoWrapper>
                   <Logo />
                   <LogoText size={20} />

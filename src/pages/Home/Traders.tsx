@@ -153,6 +153,7 @@ function Filters({ filters }: { filters: FiltersState }) {
 
     logEventHomeFilter({ filter: protocol, username: myProfile?.username })
   }
+
   return (
     <Flex sx={{ gap: 3, flexWrap: 'wrap' }}>
       <Flex sx={{ alignItems: 'center', gap: '0.5ch' }}>
@@ -167,7 +168,7 @@ function Filters({ filters }: { filters: FiltersState }) {
         </Type.CaptionBold>
         <TimeFilter timeOption={filters.time} onChangeTime={handleChangeTime} />
       </Flex>
-      <Flex sx={{ alignItems: 'center', gap: '0.5ch' }}>
+      <Flex sx={{ alignItems: 'center', gap: 2 }}>
         <Type.CaptionBold>
           <Trans>Source</Trans>
         </Type.CaptionBold>
@@ -179,6 +180,8 @@ function Filters({ filters }: { filters: FiltersState }) {
 
 const LIMIT = 12
 function ListTraders({ filters }: { filters: FiltersState }) {
+  const enabledGetData = filters.protocol !== ProtocolEnum.GMX_V2
+
   const { profile, isAuthenticated } = useAuthContext()
   const { searchParams, setSearchParams } = useSearchParams()
   const currentPageParam = Number(searchParams[URL_PARAM_KEYS.HOME_PAGE])
@@ -205,7 +208,9 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     {
       keepPreviousData: true,
       retry: 0,
-      enabled: filters.time.id !== TimeFilterByEnum.ALL_TIME || profile?.plan === SubscriptionPlanEnum.PREMIUM,
+      enabled:
+        enabledGetData &&
+        (filters.time.id !== TimeFilterByEnum.ALL_TIME || profile?.plan === SubscriptionPlanEnum.PREMIUM),
     }
   )
   const [selectedTrader, setSelectedTrader] = useState<{ account: string; protocol: ProtocolEnum } | null>(null)
@@ -286,6 +291,13 @@ function ListTraders({ filters }: { filters: FiltersState }) {
   useEffect(() => {
     if (!isLoading && !isFetching && isAuthenticated != null) isDuplicateLoading.current = false
   }, [isLoading, isFetching, isAuthenticated])
+
+  if (!enabledGetData)
+    return (
+      <Type.H5 sx={{ display: 'block', mx: 'auto', textAlign: 'center', mt: 4 }}>
+        <Trans>Coming Soon!</Trans>
+      </Type.H5>
+    )
 
   return (
     <Flex

@@ -152,7 +152,9 @@ export const ELEMENT_CLASSNAMES = {
   TRADER_ADDRESS: 'trader_address',
 }
 
+// TODO: Check when add new protocol
 export const SERVICE_KEYS = {
+  [ProtocolEnum.GMX_V2]: '',
   [ProtocolEnum.GMX]: 'GMX_COPY_TRADE',
   [ProtocolEnum.KWENTA]: 'SYNTHETIX_COPY_TRADE',
   [ProtocolEnum.POLYNOMIAL]: 'SYNTHETIX_COPY_TRADE',

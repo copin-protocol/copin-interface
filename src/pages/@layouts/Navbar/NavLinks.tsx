@@ -4,13 +4,9 @@ import styled from 'styled-components/macro'
 
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { Box } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
-import {
-  generateExplorerRoute,
-  generateLeaderboardRoute,
-  generateOIPositionsRoute,
-  generateOIRoute,
-} from 'utils/helpers/generateRoute'
+import { generateExplorerRoute, generateLeaderboardRoute, generateOIRoute } from 'utils/helpers/generateRoute'
 
 export function DesktopNavLinks() {
   return (
@@ -34,12 +30,7 @@ function NavLinks({ onClose }: { onClose?: () => void }) {
     <>
       {configs.map((config, index) => {
         return (
-          <NavLink
-            key={index}
-            to={config.routeFactory ? config.routeFactory({ protocol }) : { pathname: config.route }}
-            onClick={onClose}
-            matchpath={config.matchpath}
-          >
+          <NavLink key={index} to={config.routeFactory({ protocol })} onClick={onClose} matchpath={config.matchpath}>
             {config.label}
           </NavLink>
         )
@@ -50,30 +41,24 @@ function NavLinks({ onClose }: { onClose?: () => void }) {
 
 const configs = [
   {
-    route: ROUTES.HOME.path,
+    routeFactory: (configs: { protocol: ProtocolEnum }) => ({
+      pathname: '/',
+      search: configs.protocol === ProtocolEnum.GMX_V2 ? '' : `?protocol=${configs.protocol}`,
+    }),
     label: <Trans>Home</Trans>,
   },
   {
-    routeFactory: (configs: Record<string, any>) => {
-      if (configs.protocol) return generateExplorerRoute({ protocol: configs.protocol })
-      return ''
-    },
+    routeFactory: (configs: { protocol: ProtocolEnum }) => generateExplorerRoute({ protocol: configs.protocol }),
     label: <Trans>Traders Explorer</Trans>,
     matchpath: ROUTES.TRADERS_EXPLORER.path_prefix,
   },
   {
-    routeFactory: (configs: Record<string, any>) => {
-      if (configs.protocol) return generateOIRoute({ protocol: configs.protocol })
-      return ''
-    },
+    routeFactory: (configs: { protocol: ProtocolEnum }) => generateOIRoute({ protocol: configs.protocol }),
     matchpath: ROUTES.OPEN_INTEREST.path_prefix,
     label: <Trans>Open Interest</Trans>,
   },
   {
-    routeFactory: (configs: Record<string, any>) => {
-      if (configs.protocol) return generateLeaderboardRoute({ protocol: configs.protocol })
-      return ''
-    },
+    routeFactory: (configs: { protocol: ProtocolEnum }) => generateLeaderboardRoute({ protocol: configs.protocol }),
     matchpath: ROUTES.LEADERBOARD.path_prefix,
     label: <Trans>Leaderboard</Trans>,
   },

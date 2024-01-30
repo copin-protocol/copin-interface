@@ -1,3 +1,4 @@
+// TODO: Check when add new protocol
 import { JsonRpcProvider } from '@ethersproject/providers'
 
 import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
@@ -6,6 +7,11 @@ import { rpcProvider } from 'utils/web3/providers'
 
 type ProtocolProvider = { [key: string]: { chainId: number; provider: JsonRpcProvider; explorerUrl: string } }
 export const PROTOCOL_PROVIDER: ProtocolProvider = {
+  [ProtocolEnum.GMX_V2]: {
+    chainId: ARBITRUM_MAINNET,
+    provider: rpcProvider(ARBITRUM_MAINNET),
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
   [ProtocolEnum.GMX]: {
     chainId: ARBITRUM_MAINNET,
     provider: rpcProvider(ARBITRUM_MAINNET),
@@ -576,7 +582,6 @@ const TOKEN_TRADE_GMX = {
     symbol: 'BTC',
     decimals: 8,
     priceFeedId: '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43',
-    // icon: IconBTC,
   },
   '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1': {
     address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
@@ -584,7 +589,6 @@ const TOKEN_TRADE_GMX = {
     symbol: 'ETH',
     decimals: 18,
     priceFeedId: '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
-    // icon: IconETH,
   },
 
   '0xf97f4df75117a78c1A5a0DBb814Af92458539FB4': {
@@ -593,7 +597,6 @@ const TOKEN_TRADE_GMX = {
     symbol: 'LINK',
     decimals: 18,
     priceFeedId: '0x8ac0c70fff57e9aefdf5edf44b51d62c2d433653cbb2cf5cc06bb115af04d221',
-    // icon: IconLINK,
   },
   '0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0': {
     address: '0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0',
@@ -601,12 +604,84 @@ const TOKEN_TRADE_GMX = {
     symbol: 'UNI',
     decimals: 18,
     priceFeedId: '0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501',
-    // icon: IconUNI,
+  },
+}
+const TOKEN_TRADE_GMX_V2 = {
+  '0x47c031236e19d024b42f8AE6780E44A573170703': {
+    address: '0x47c031236e19d024b42f8AE6780E44A573170703',
+    name: 'BTC',
+    symbol: 'BTC',
+    decimals: 22,
+    priceFeedId: '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43',
+  },
+  '0x70d95587d40A2caf56bd97485aB3Eec10Bee6336': {
+    address: '0x70d95587d40A2caf56bd97485aB3Eec10Bee6336',
+    name: 'ETH',
+    symbol: 'ETH',
+    decimals: 12,
+    priceFeedId: '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
+  },
+  '0x09400D9DB990D5ed3f35D7be61DfAEB900Af03C9': {
+    address: '0x09400D9DB990D5ed3f35D7be61DfAEB900Af03C9',
+    name: 'SOL',
+    symbol: 'SOL',
+    decimals: 21,
+    priceFeedId: '0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d',
+  },
+  '0xC25cEf6061Cf5dE5eb761b50E4743c1F5D7E5407': {
+    address: '0xC25cEf6061Cf5dE5eb761b50E4743c1F5D7E5407',
+    name: 'ARB',
+    symbol: 'ARB',
+    decimals: 12,
+    priceFeedId: '0x3fa4252848f9f0a1480be62745a4629d9eb1322aebab8a791e344b3b9c1adcf5',
+  },
+  '0x7f1fa204bb700853D36994DA19F830b6Ad18455C': {
+    address: '0x7f1fa204bb700853D36994DA19F830b6Ad18455C',
+    name: 'LINK',
+    symbol: 'LINK',
+    decimals: 12,
+    priceFeedId: '0x8ac0c70fff57e9aefdf5edf44b51d62c2d433653cbb2cf5cc06bb115af04d221',
+  },
+  '0x6853EA96FF216fAb11D2d930CE3C508556A4bdc4': {
+    address: '0x6853EA96FF216fAb11D2d930CE3C508556A4bdc4',
+    name: 'DOGE',
+    symbol: 'DOGE',
+    decimals: 22,
+    priceFeedId: '0xdcef50dd0a4cd2dcc17e45df1676dcb336a11a61c69df7a0299b0150c672d25c',
+  },
+  '0x0CCB4fAa6f1F1B30911619f1184082aB4E25813c': {
+    address: '0x0CCB4fAa6f1F1B30911619f1184082aB4E25813c',
+    name: 'XRP',
+    symbol: 'XRP',
+    decimals: 24,
+    priceFeedId: '0xec5d399846a9209f3fe5881d70aae9268c94339ff9817e8d18ff19fa05eea1c8',
+  },
+  '0xc7Abb2C5f3BF3CEB389dF0Eecd6120D451170B50': {
+    address: '0xc7Abb2C5f3BF3CEB389dF0Eecd6120D451170B50',
+    name: 'UNI',
+    symbol: 'UNI',
+    decimals: 12,
+    priceFeedId: '0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501',
+  },
+  '0xD9535bB5f58A1a75032416F2dFe7880C30575a41': {
+    address: '0xD9535bB5f58A1a75032416F2dFe7880C30575a41',
+    name: 'LTC',
+    symbol: 'LTC',
+    decimals: 22,
+    priceFeedId: '0x6e3f3fa8253588df9326580180233eb791e03b443a3ba7a1d892e73874e19a54',
+  },
+  '0x2d340912Aa47e33c90Efb078e69E70EFe2B34b9B': {
+    address: '0x2d340912Aa47e33c90Efb078e69E70EFe2B34b9B',
+    name: 'BNB',
+    symbol: 'BNB',
+    decimals: 12,
+    priceFeedId: '0x2f95862b045670cd22bee3114c39763a4a08beeb663b145d283c31d7d1101c4f',
   },
 }
 
 export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.GMX]: TOKEN_TRADE_GMX,
+  [ProtocolEnum.GMX_V2]: TOKEN_TRADE_GMX_V2,
   [ProtocolEnum.KWENTA]: TOKEN_TRADE_SYNTHETIX,
   [ProtocolEnum.POLYNOMIAL]: TOKEN_TRADE_SYNTHETIX,
 }
@@ -619,6 +694,9 @@ export const TOKEN_TRADE_IGNORE: TokenIgnore = {
 export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
   [ProtocolEnum.GMX]: {
     ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX],
+  },
+  [ProtocolEnum.GMX_V2]: {
+    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX_V2],
   },
   [ProtocolEnum.KWENTA]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
@@ -643,6 +721,10 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
 }
 
 export const TOKEN_ADDRESSES = {
+  [ProtocolEnum.GMX_V2]: {
+    BTC: '0x47c031236e19d024b42f8AE6780E44A573170703',
+    ETH: '0x70d95587d40A2caf56bd97485aB3Eec10Bee6336',
+  },
   [ProtocolEnum.GMX]: {
     BTC: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
     ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
