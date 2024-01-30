@@ -110,9 +110,9 @@ export default function ChartPositions({
 
   const { chartData, isLoading, from, timezone } = useChartPositionData({
     timeRange: isExpanded
-      ? timeRange
-        ? { ...timeRange, from: dayjs(timeRange?.from).subtract(7, 'day').valueOf() }
-        : undefined
+      ? undefined
+      : timeRange
+      ? { ...timeRange, from: dayjs(timeRange?.from).subtract(7, 'day').valueOf() }
       : _timeRange,
     timeframe,
     protocol,

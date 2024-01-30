@@ -36,7 +36,7 @@ export default function SingleBackTestModal({
 
   useEffect(() => {
     if (!currentInstanceData || isForceOpen) return
-    if (currentInstanceData.settings) {
+    if (!!currentInstanceData.settings && !!Object.keys(currentInstanceData.settings).length) {
       setSearchParams({
         [URL_PARAM_KEYS.BACKTEST_DATA]: '1',
         ...stringifyRequestData(

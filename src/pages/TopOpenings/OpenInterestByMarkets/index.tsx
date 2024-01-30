@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { ComponentProps, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -10,8 +11,10 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { getTokenTradeList } from 'utils/config/trades'
 
+import { NoMarketFound } from '../OpenInterestByMarket'
 import RouteWrapper from '../RouteWrapper'
 import { TimeDropdown, useTimeFilter } from '../TopOpenIntrest/Filters'
 import useSearchParamsState from '../useSearchParamsState'
@@ -88,30 +91,46 @@ function OpenInterestByMarketsPage() {
       <Flex height="48px" px={3} sx={{ alignItems: 'center', borderBottom: 'small', borderBottomColor: 'neutral4' }}>
         <Filter currentTimeOption={time} onChangeTime={onChangeTime} />
       </Flex>
-      {sm ? (
-        <Box flex="1 0 0">
-          <TableForm
-            symbol={symbol}
-            isFetching={isFetching}
-            data={sortedData}
-            timeOption={time}
-            protocol={protocol}
-            currentSort={symbolInfo ? undefined : currentSort}
-            changeCurrentSort={symbolInfo ? undefined : onChangeSort}
-          />
+      {symbol && !symbolInfo ? (
+        <NoMarketFound
+          message={
+            <Trans>
+              {symbol} market does not exist on {PROTOCOL_OPTIONS_MAPPING[protocol].text}
+            </Trans>
+          }
+        />
+      ) : !isFetching && !sortedData?.length ? (
+        <Box>
+          <NoMarketFound message={symbol && <Trans>{symbol} market data was not found</Trans>} />
         </Box>
       ) : (
-        <Box flex="1 0 0" overflow="hidden">
-          <ListForm
-            symbol={symbol}
-            isFetching={isFetching}
-            data={sortedData}
-            timeOption={time}
-            protocol={protocol}
-            currentSort={currentSort}
-            changeCurrentSort={onChangeSort}
-          />
-        </Box>
+        <>
+          {sm ? (
+            <Box flex="1 0 0">
+              <TableForm
+                symbol={symbol}
+                isFetching={isFetching}
+                data={sortedData}
+                timeOption={time}
+                protocol={protocol}
+                currentSort={symbolInfo ? undefined : currentSort}
+                changeCurrentSort={symbolInfo ? undefined : onChangeSort}
+              />
+            </Box>
+          ) : (
+            <Box flex="1 0 0" overflow="hidden">
+              <ListForm
+                symbol={symbol}
+                isFetching={isFetching}
+                data={sortedData}
+                timeOption={time}
+                protocol={protocol}
+                currentSort={currentSort}
+                changeCurrentSort={onChangeSort}
+              />
+            </Box>
+          )}
+        </>
       )}
     </Flex>
   )

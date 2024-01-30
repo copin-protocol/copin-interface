@@ -12,6 +12,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { getTokenTradeList } from 'utils/config/trades'
 
 import PositionsSection from '../PositionsSection'
@@ -128,7 +129,7 @@ function OpenInterestByMarketPage() {
           <NoMarketFound
             message={
               <Trans>
-                {symbol} market does not exist on {protocol}
+                {symbol} market does not exist on {PROTOCOL_OPTIONS_MAPPING[protocol].text}
               </Trans>
             }
             actionButton={

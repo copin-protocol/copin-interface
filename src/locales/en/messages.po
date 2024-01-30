@@ -3281,12 +3281,18 @@ msgstr "{label} is better than {value} traders"
 
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
 #: src/pages/TopOpenings/OpenInterestByMarkets/ListMarkets.tsx
+#: src/pages/TopOpenings/OpenInterestByMarkets/index.tsx
 msgid "{symbol} market data was not found"
 msgstr "{symbol} market data was not found"
 
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
-msgid "{symbol} market does not exist on {protocol}"
-msgstr "{symbol} market does not exist on {protocol}"
+#: src/pages/TopOpenings/OpenInterestByMarkets/index.tsx
+msgid "{symbol} market does not exist on {0}"
+msgstr "{symbol} market does not exist on {0}"
+
+#: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
+#~ msgid "{symbol} market does not exist on {protocol}"
+#~ msgstr "{symbol} market does not exist on {protocol}"
 
 #: src/theme/Tab/IconTabItem.tsx
 msgid "{text}"

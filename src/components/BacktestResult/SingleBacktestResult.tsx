@@ -324,6 +324,7 @@ export default function SingleBacktestResult({
               timeRange={timeRange}
               componentIds={{ legend: 'legend_chart_id', tooltip: 'tooltip_chart_id', chart: 'position_chart_id' }}
               currencySelectProps={{ menuPosition: undefined, menuPlacement: 'bottom' }}
+              showLoadMoreButton={false}
             />
           </Box>
         </Box>

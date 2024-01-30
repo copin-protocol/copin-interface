@@ -121,6 +121,7 @@ function BacktestButton({ account, protocol }: { account: string; protocol: Prot
   const myProfile = useMyProfileStore((state) => state.myProfile)
   const isForceOpenModal = searchParams[URL_PARAM_KEYS.OPEN_BACKTEST_MODAL] === '1' ? true : false
   const requestData = parseRequestData(searchParams, protocol)
+  const hasRequestBacktestData = !!Object.keys(requestData).length
   const { mutate: requestBacktest } = useMutation(requestTestMultiOrderApi, {
     onSuccess: (data, variables) => {
       const currentInstanceId = backtestState.currentInstanceId
@@ -139,7 +140,7 @@ function BacktestButton({ account, protocol }: { account: string; protocol: Prot
 
   const requestedBacktest = useRef(false)
   useEffect(() => {
-    if (!myProfile || !Object.keys(requestData).length || requestedBacktest.current) return
+    if (!myProfile || !hasRequestBacktestData || requestedBacktest.current) return
     requestBacktest({ protocol, data: { ...requestData, isReturnPositions: true } })
     requestedBacktest.current = true
   }, [myProfile])
@@ -147,8 +148,8 @@ function BacktestButton({ account, protocol }: { account: string; protocol: Prot
   const [backtestState, dispatch] = useReducer(reducer, initialState, () =>
     initBacktestState({
       isFocusBacktest: isForceOpenModal,
-      status: requestData ? 'testing' : undefined,
-      settings: requestData,
+      status: hasRequestBacktestData ? 'testing' : undefined,
+      settings: hasRequestBacktestData ? requestData : undefined,
     })
   )
   const { isAuthenticated } = useAuthContext()
@@ -165,7 +166,8 @@ function BacktestButton({ account, protocol }: { account: string; protocol: Prot
   }
   const currentBacktestId = backtestState.currentInstanceId
   const currentBacktestInstance = currentBacktestId && backtestState.instancesMapping[currentBacktestId]
-  const hadBacktest = !!requestData || (!!currentBacktestInstance && !!currentBacktestInstance.result)
+  const hadBacktest =
+    !!Object.values(requestData).length || (!!currentBacktestInstance && !!currentBacktestInstance.result)
   return (
     <>
       <BackTestAction onClick={handleOpenBackTestModal} hadBacktest={hadBacktest} />

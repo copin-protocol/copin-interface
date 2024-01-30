@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { WalletState } from '@web3-onboard/core'
 import { useConnectWallet } from '@web3-onboard/react'
 import dayjs from 'dayjs'
-import { cloneElement, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { loginWeb3Api, logoutApi, verifyLoginWeb3Api } from 'apis/authApis'
