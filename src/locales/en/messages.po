@@ -607,8 +607,7 @@ msgstr "Copy Management"
 #~ msgid "Copy Order"
 #~ msgstr "Copy Order"
 
-#: src/pages/MyProfile/PositionTable/PositionsContainer.tsx
-#: src/pages/MyProfile/UserActivity/index.tsx
+#: src/components/CopyTradePositionDetails/index.tsx
 msgid "Copy Position Details"
 msgstr "Copy Position Details"
 
@@ -832,6 +831,10 @@ msgstr "Example: Trader opened LONG, you will open SHORT."
 #: src/utils/config/translations.tsx
 msgid "Exchange"
 msgstr "Exchange"
+
+#: src/pages/Subscription/TermsAndConditions.tsx
+msgid "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
+msgstr "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
 
 #: src/pages/Home/Traders.tsx
 #: src/pages/Home/Traders.tsx
@@ -1417,6 +1420,10 @@ msgstr "Max margin multiplier"
 msgid "Maybe Later"
 msgstr "Maybe Later"
 
+#: src/components/PositionTxResults/index.tsx
+msgid "Maybe you are missing an trader address, you can refer to \"Recommend Results\" section."
+msgstr "Maybe you are missing an trader address, you can refer to \"Recommend Results\" section."
+
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Min Duration"
 msgstr "Min Duration"
@@ -1498,6 +1505,7 @@ msgstr "Monthly"
 
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/Subscription/TermsAndConditions.tsx
 msgid "More"
 msgstr "More"
 
@@ -1570,6 +1578,7 @@ msgstr "No Trader Found In The Past 60 Days"
 msgid "No Transaction Found"
 msgstr "No Transaction Found"
 
+#: src/components/PositionTxResults/index.tsx
 #: src/pages/SearchTxHash/index.tsx
 msgid "No Transactions Found"
 msgstr "No Transactions Found"
@@ -1824,6 +1833,7 @@ msgstr "Position"
 #~ msgid "Position Details"
 #~ msgstr "Position Details"
 
+#: src/components/PositionTxResults/index.tsx
 #: src/pages/SearchTxHash/index.tsx
 msgid "Position List"
 msgstr "Position List"
@@ -1922,6 +1932,10 @@ msgstr "Read more"
 #: src/pages/Settings/AlertList/TraderLastViewed.tsx
 msgid "Recommend"
 msgstr "Recommend"
+
+#: src/pages/PositionDetails/index.tsx
+msgid "Recommend Results"
+msgstr "Recommend Results"
 
 #: src/pages/MyProfile/Referral/ReferralList.tsx
 #~ msgid "Referee List"
@@ -2749,8 +2763,8 @@ msgstr "TxHash"
 #~ msgstr "Tải ảnh không thành công do sai định dạnh ảnh!"
 
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
-msgid "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
-msgstr "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
+#~ msgid "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
+#~ msgstr "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
 
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Unique traders are copied in the system"

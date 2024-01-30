@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
+import React from 'react'
 
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
@@ -71,4 +72,16 @@ const termConfigs = [
     continue, mint a new NFT.
   </Trans>,
   <Trans>A 10% loyalty fee applies when trading the NFT.</Trans>,
+  <Flex alignItems="center" flexWrap="wrap">
+    <Trans>
+      Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior
+      trading insights.
+    </Trans>
+    <a href={LINKS.copinEliteClub} target="_blank" style={{ paddingLeft: '4px' }} rel="noreferrer">
+      <Flex alignItems="center" sx={{ gap: 1 }}>
+        <Trans>More</Trans>
+        <ArrowSquareOut />
+      </Flex>
+    </a>
+  </Flex>,
 ]
