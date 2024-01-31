@@ -41,7 +41,8 @@ export default function PositionDetailsPage() {
       <CustomPageTitle title="Position Details" />
       <Container maxWidth={{ lg: 1000 }} height="100%">
         {isLoading && <Loading />}
-        {!!txHash && !!account && (
+        {!!positionId && <PositionDetails protocol={protocol} id={positionId} isShow isDrawer={false} />}
+        {!!txHash && !!account && !positionId && (
           <PositionTxResults
             txHash={txHash}
             protocol={protocol}
@@ -49,7 +50,6 @@ export default function PositionDetailsPage() {
             title={<Trans>Recommend Results</Trans>}
           />
         )}
-        {!!positionId && <PositionDetails protocol={protocol} id={positionId} isShow isDrawer={false} />}
       </Container>
     </>
   )
