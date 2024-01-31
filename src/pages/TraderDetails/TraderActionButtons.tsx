@@ -38,10 +38,10 @@ export default function TraderActionButtons({
   protocol: ProtocolEnum
   onCopyActionSuccess: () => void
 }) {
-  const { sm } = useResponsive()
+  const { lg } = useResponsive()
   return (
     <>
-      {sm ? (
+      {lg ? (
         <Box
           sx={{
             alignItems: 'center',

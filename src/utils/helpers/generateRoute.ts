@@ -65,14 +65,6 @@ function createUrlWithParams({ url, params = {} }: { url: string; params?: Recor
   return url + `${!!query ? `?${query}` : ''}`
 }
 
-export function generateOIRoute(data: { protocol: string; symbol?: string; params?: Record<string, any> }) {
-  return createUrlWithParams({
-    url: data.symbol
-      ? `/${data.protocol}${ROUTES.OPEN_INTEREST_POSITIONS.path_prefix}/${data.symbol}`
-      : `/${data.protocol}${ROUTES.OPEN_INTEREST.path_prefix}`,
-    params: data.params,
-  })
-}
 export function generateOIOverviewRoute(data: { protocol: string; symbol?: string; params?: Record<string, any> }) {
   return createUrlWithParams({
     url: data.symbol

@@ -6,7 +6,7 @@ import { useProtocolStore } from 'hooks/store/useProtocols'
 import { Box } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
-import { generateExplorerRoute, generateLeaderboardRoute, generateOIRoute } from 'utils/helpers/generateRoute'
+import { generateExplorerRoute, generateLeaderboardRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
 
 export function DesktopNavLinks() {
   return (
@@ -53,7 +53,8 @@ const configs = [
     matchpath: ROUTES.TRADERS_EXPLORER.path_prefix,
   },
   {
-    routeFactory: (configs: { protocol: ProtocolEnum }) => generateOIRoute({ protocol: configs.protocol }),
+    routeFactory: (configs: { protocol: ProtocolEnum }) => generateOIPositionsRoute({ protocol: configs.protocol }),
+
     matchpath: ROUTES.OPEN_INTEREST.path_prefix,
     label: <Trans>Open Interest</Trans>,
   },

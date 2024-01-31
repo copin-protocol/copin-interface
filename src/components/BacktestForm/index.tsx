@@ -344,7 +344,10 @@ export default function BacktestForm({
         }
       />
       <Divider mt={1} mb={24} />
-      <Flex id={tourConfigs.timePeriod.id} alignItems="center" sx={{ gap: 2 }}>
+      <Flex
+        id={tourConfigs.timePeriod.id}
+        sx={{ columnGap: 2, rowGap: 1, flexDirection: ['column', 'row'], alignItems: ['start', 'center'] }}
+      >
         <Type.BodyBold>Backtest Period</Type.BodyBold>
         <Box>
           {startTime && (

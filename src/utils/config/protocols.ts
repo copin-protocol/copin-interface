@@ -40,7 +40,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
 }
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] = [
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GMX],
+  PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GMX_V2],
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.KWENTA],
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.POLYNOMIAL],
-  PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GMX_V2],
 ]
