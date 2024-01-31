@@ -22,6 +22,7 @@ export interface ChartPositionsProps {
   componentIds?: { legend?: string; tooltip?: string; chart?: string }
   sx?: SystemStyleObject & GridProps
   isExpanded?: boolean
+  handleExpand?: () => void
   fetchNextPage?: () => void
   hasNextPage?: boolean
   isLoadingClosed?: boolean
@@ -30,4 +31,5 @@ export interface ChartPositionsProps {
   currencyOptions?: TokenOptionProps[]
   changeCurrency?: (option: TokenOptionProps) => void
   currencySelectProps?: Omit<Props, 'theme'>
+  showLoadMoreButton?: boolean
 }

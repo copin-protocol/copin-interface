@@ -2,13 +2,10 @@ import dayjs from 'dayjs'
 import { useMemo, useState } from 'react'
 
 import { AmountText, PercentText } from 'components/@ui/DecoratedText/ValueText'
-import { VerticalDivider, renderEntry, renderSize, renderSizeOpeningWithPrices } from 'components/@ui/Table/renderProps'
 import { PositionData, TickPosition } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
-import useIsMobile from 'hooks/helpers/useIsMobile'
-import Tag from 'theme/Tag'
 import { Box, Flex, Type } from 'theme/base'
-import { OrderTypeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { calcOpeningPnL, calcOpeningROI } from 'utils/helpers/calculate'
 
 import ChartProfitComponent from './ChartProfitComponent'
@@ -25,7 +22,6 @@ export default function PositionDetails({
   protocol: ProtocolEnum
   isShow?: boolean
 }) {
-  const isMobile = useIsMobile()
   const { prices } = useGetUsdPrices()
 
   const tickPositions = useMemo(() => {
@@ -90,42 +86,19 @@ export default function PositionDetails({
     <>
       {data && (
         <Box>
-          <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ flexWrap: 'wrap' }}>
-            {isMobile ? (
-              <Flex width="100%" flexDirection="column" sx={{ gap: 2, mb: 3 }}>
-                <Flex alignItems="center" sx={{ gap: 2 }}>
-                  <Tag
-                    minWidth={70}
-                    status={
-                      hasLiquidate ? PositionStatusEnum.LIQUIDATE : isOpening ? PositionStatusEnum.OPEN : data.status
-                    }
-                    bg="neutral4"
-                  />
-                  <VerticalDivider />
-                  {renderEntry(data)}
-                </Flex>
-                <Flex>{isOpening ? renderSizeOpeningWithPrices(data, prices) : renderSize(data)}</Flex>
-              </Flex>
-            ) : (
-              <Flex alignItems="center" sx={{ gap: 3 }}>
-                <Tag
-                  minWidth={70}
-                  status={
-                    hasLiquidate ? PositionStatusEnum.LIQUIDATE : isOpening ? PositionStatusEnum.OPEN : data.status
-                  }
-                  bg="neutral4"
-                />
-                {renderEntry(data)}
-                <Flex width={220}>{isOpening ? renderSizeOpeningWithPrices(data, prices) : renderSize(data)}</Flex>
-              </Flex>
-            )}
-            {!isOpening && data.id && <WhatIf protocol={protocol} positionId={data.id} />}
-          </Flex>
-
-          <Flex mt={3} mb={3} width="100%" alignItems="center" justifyContent="center" sx={{ gap: 2 }}>
-            <Type.H5 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
-              <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
-            </Type.H5>
+          <Flex
+            mt={[20, 4]}
+            mb={3}
+            width="100%"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ gap: 2, position: 'relative' }}
+          >
+            <Flex>
+              <Type.H5 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
+                <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
+              </Type.H5>
+            </Flex>
             {!!latestROI && (
               <Flex alignItems="center">
                 <Type.H5 color="neutral3">(</Type.H5>
@@ -134,6 +107,13 @@ export default function PositionDetails({
                 </Type.H5>
                 <Type.H5 color="neutral3">)</Type.H5>
               </Flex>
+            )}
+            {!isOpening && data.id && (
+              <WhatIf
+                protocol={protocol}
+                positionId={data.id}
+                sx={{ position: 'absolute', top: [-3, -24], right: 0 }}
+              />
             )}
           </Flex>
           {data && (

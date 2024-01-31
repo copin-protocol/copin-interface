@@ -170,7 +170,7 @@ export const sizeVariants = {
     px: '8px',
     py: '4px',
     fontSize: '14px',
-    borderRadius: '24px',
+    borderRadius: '4px',
   },
   [sizes.SM]: {
     px: '12px',

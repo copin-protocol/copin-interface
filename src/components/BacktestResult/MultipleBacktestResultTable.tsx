@@ -441,16 +441,22 @@ export const multipleBacktestResultColumns: ColumnData<TableResultData, RequestB
     style: { minWidth: '60px', textAlign: 'right' },
     render: (item, index, settings) => {
       if (!settings) return <></>
+      const backtestQuery = Object.entries(
+        stringifyRequestData(
+          {
+            ...settings,
+            accounts: [item.account],
+            testingType: CopyTradeTypeEnum.FULL_ORDER,
+          },
+          item.protocol
+        )
+      ).reduce((result, [key, value]) => {
+        if (!value) return result
+        return result + `&${key}=${encodeURIComponent(value)}`
+      }, '')
       const link = `${generateTraderDetailsRoute(item.protocol, item.account)}?${
         URL_PARAM_KEYS.BACKTEST_DATA
-      }=${stringifyRequestData(
-        {
-          ...settings,
-          accounts: [item.account],
-          testingType: CopyTradeTypeEnum.FULL_ORDER,
-        },
-        item.protocol
-      )}&${URL_PARAM_KEYS.OPEN_BACKTEST_MODAL}=1`
+      }=1${backtestQuery}&${URL_PARAM_KEYS.OPEN_BACKTEST_MODAL}=1`
       return (
         <Flex as={Link} to={link} target="_blank" sx={{ width: '100%', justifyContent: 'right', pr: 3 }}>
           <IconBox

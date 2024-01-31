@@ -26,7 +26,7 @@ type ObjectTypes = {
   }
 }
 
-const ORDER_TYPES: ObjectTypes = {
+export const ORDER_TYPES: ObjectTypes = {
   [OrderTypeEnum.OPEN]: {
     text: <Trans>Open</Trans>,
     icon: <IconBox icon={<ArrowFatUp weight={'fill'} />} />,
@@ -67,6 +67,8 @@ export default function ListOrderTable({
   let orders = data.sort((x, y) =>
     x.blockTime < y.blockTime ? 1 : x.blockTime > y.blockTime ? -1 : x.logId < y.logId ? 1 : x.logId > y.logId ? -1 : 0
   )
+
+  // TODO: Check when add new protocol
   if (protocol === ProtocolEnum.GMX) {
     orders = orders.filter((e) => e.type !== OrderTypeEnum.CLOSE)
   }
@@ -89,7 +91,7 @@ export default function ListOrderTable({
 
             <ExplorerLogo
               protocol={protocol}
-              explorerUrl={`${PROTOCOL_PROVIDER[protocol].explorerUrl}/tx/${item.txHash}`}
+              explorerUrl={`${PROTOCOL_PROVIDER[protocol]?.explorerUrl}/tx/${item.txHash}`}
               size={18}
             />
           </Flex>
@@ -124,7 +126,7 @@ export default function ListOrderTable({
         style: { minWidth: '70px', textAlign: 'right' },
         render: (item) => (
           <Type.Caption color="neutral1" textAlign="right">
-            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED || item.leverage == null
+            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED || item.leverage == null || item.leverage < 0
               ? '--'
               : `${formatNumber(item.leverage, 1, 1)}x`}
           </Type.Caption>
@@ -190,6 +192,11 @@ export default function ListOrderTable({
         wrapperSx={{
           display: 'block !important',
           pr: 0,
+          table: {
+            '& th:first-child, td:first-child': {
+              pl: 3,
+            },
+          },
         }}
         data={tableData?.data}
         columns={columns}

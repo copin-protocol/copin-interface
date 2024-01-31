@@ -5,9 +5,10 @@ import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
+import Tooltip from 'theme/Tooltip'
 import { ProtocolEnum } from 'utils/config/enums'
-import { getUserForTracking, logEvent } from 'utils/tracking/event'
-import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
+import { logEventCopyTrade } from 'utils/tracking/event'
+import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 
 import CopyTraderModal from './CopyTraderModal'
 import ModalContactUs from './ModalContactUs'
@@ -19,6 +20,7 @@ export default function CopyTraderButton({
   buttonText = <Trans>Copy Trader</Trans>,
   buttonSx = {},
   modalStyles,
+  source = EventSource.TRADER_PROFILE,
 }: {
   protocol: ProtocolEnum
   account: string
@@ -26,6 +28,7 @@ export default function CopyTraderButton({
   buttonText?: ReactNode
   buttonSx?: any
   modalStyles?: ComponentProps<typeof CopyTraderModal>['modalStyles']
+  source?: EventSource
 }) {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenContactModal, setIsOpenContactModal] = useState(false)
@@ -39,6 +42,9 @@ export default function CopyTraderButton({
 
   const hasCopyPermission = useCopyTradePermission()
 
+  const disabledCopy = protocol === ProtocolEnum.GMX_V2
+  const disabledCopyTooltipId = `tt_copy_trade_${account}_${protocol}`
+
   return (
     <>
       <Button
@@ -48,6 +54,7 @@ export default function CopyTraderButton({
           width: ['100%', '100%', '100%', 150],
           ...buttonSx,
         }}
+        disabled={disabledCopy}
         variant="primary"
         onClick={(e) => {
           e.preventDefault()
@@ -56,17 +63,36 @@ export default function CopyTraderButton({
 
           hasCopyPermission ? setIsOpenModal(true) : setIsOpenContactModal(true)
 
-          logEvent({
-            label: getUserForTracking(profile?.username),
-            category: EventCategory.COPY_TRADE,
-            action: EVENT_ACTIONS[EventCategory.COPY_TRADE].OPEN_COPY_TRADE,
-          })
+          switch (source) {
+            case EventSource.HOME:
+              logEventCopyTrade({
+                event: EVENT_ACTIONS[EventCategory.COPY_TRADE].HOME_OPEN_COPY_TRADE,
+                username: profile?.username,
+              })
+              break
+            case EventSource.HOME_BACKTEST:
+              logEventCopyTrade({
+                event: EVENT_ACTIONS[EventCategory.COPY_TRADE].HOME_BACKTEST_OPEN_COPY_TRADE,
+                username: profile?.username,
+              })
+              break
+            default:
+              logEventCopyTrade({
+                event: EVENT_ACTIONS[EventCategory.COPY_TRADE].OPEN_COPY_TRADE,
+                username: profile?.username,
+              })
+          }
         }}
-        data-tooltip-id={`tt-kwenta_copytrade`}
+        data-tooltip-id={disabledCopy ? disabledCopyTooltipId : undefined}
       >
         {buttonText}
       </Button>
-      {isOpenModal && !!profile && (
+      {disabledCopy && (
+        <Tooltip id={disabledCopyTooltipId} place="bottom">
+          <Trans>Coming soon!</Trans>
+        </Tooltip>
+      )}
+      {!disabledCopy && isOpenModal && !!profile && (
         <CopyTraderModal
           protocol={protocol}
           account={account}
@@ -74,6 +100,7 @@ export default function CopyTraderButton({
           onClose={handleCloseModal}
           onSuccess={onForceReload}
           modalStyles={modalStyles}
+          source={source}
         />
       )}
       {isOpenContactModal && <ModalContactUs onDismiss={() => setIsOpenContactModal(false)} />}

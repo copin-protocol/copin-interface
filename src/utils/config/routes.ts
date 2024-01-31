@@ -10,13 +10,15 @@ const ROUTES = {
     path: '/:protocol/open-interest',
     path_prefix: '/open-interest',
   },
-  OPEN_INTEREST_BY_MARKETS: {
-    path: '/:protocol/open-interest/markets',
-    path_prefix: '/open-interest/markets',
+  OPEN_INTEREST_OVERVIEW: {
+    path: '/:protocol/open-interest/overview/:symbol',
+    alter_path: '/:protocol/open-interest/overview',
+    path_prefix: '/open-interest/overview',
   },
-  OPEN_INTEREST_BY_MARKET: {
-    path: '/:protocol/open-interest/market/:symbol',
-    path_prefix: '/open-interest/market',
+  OPEN_INTEREST_POSITIONS: {
+    path: '/:protocol/open-interest/positions/:symbol',
+    alter_path: '/:protocol/open-interest/positions',
+    path_prefix: '/open-interest/positions',
   },
   LEADERBOARD: {
     path: '/:protocol/leaderboard',

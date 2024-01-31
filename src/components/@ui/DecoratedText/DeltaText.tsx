@@ -5,13 +5,12 @@ import { formatNumber } from 'utils/helpers/format'
 function signOrderDelta(type: OrderTypeEnum, delta: number) {
   if (delta === 0) return ''
   switch (type) {
-    case OrderTypeEnum.OPEN:
-    case OrderTypeEnum.INCREASE:
-      return '+'
     case OrderTypeEnum.DECREASE:
     case OrderTypeEnum.CLOSE:
     case OrderTypeEnum.LIQUIDATE:
       return '-'
+    case OrderTypeEnum.OPEN:
+    case OrderTypeEnum.INCREASE:
     case OrderTypeEnum.MARGIN_TRANSFERRED:
       return delta > 0 ? '+' : ''
     default:

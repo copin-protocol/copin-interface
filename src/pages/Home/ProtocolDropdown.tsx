@@ -1,4 +1,9 @@
-import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
+import { Trans } from '@lingui/macro'
+
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
+import Dropdown, { DropdownItem } from 'theme/Dropdown'
+import { Box } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_OPTIONS } from 'utils/config/protocols'
 
@@ -15,21 +20,52 @@ export default function ProtocolDropdown({
   return (
     <Dropdown
       {...getDropdownProps({})}
-      menuSx={{ width: 100 }}
+      menuSx={{ width: 190 }}
       menu={
         <>
-          {PROTOCOL_OPTIONS.map((option) => (
-            <CheckableDropdownItem
-              key={option.id}
-              selected={option.id === protocol}
-              text={option.text}
-              onClick={() => onChangeProtocol(option.id)}
-            />
-          ))}
+          {PROTOCOL_OPTIONS.map((option) => {
+            const disabled = option.id === ProtocolEnum.GMX_V2
+            const isActive = option.id === protocol
+            return (
+              <DropdownItem
+                key={option.id}
+                variant="ghost"
+                onClick={() => {
+                  if (disabled) return
+                  onChangeProtocol(option.id)
+                }}
+                isActive={option.id === protocol}
+                disabled={disabled}
+                sx={{
+                  '&[disabled]': { opacity: 1 },
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5ch',
+                  '& *': {
+                    color: isActive
+                      ? `${themeColors.primary1} !important`
+                      : disabled
+                      ? `${themeColors.neutral3} !important`
+                      : `${themeColors.neutral1} !important`,
+                  },
+                  // bg: isActive ? `${themeColors.neutral6} !important` : '',
+                  '& img': { filter: disabled ? 'grayscale(100%)' : 'none' },
+                }}
+              >
+                <ProtocolLogo protocol={option.id} size={20} />{' '}
+                {disabled && (
+                  <Box as="span">
+                    <Trans>(Coming soon)</Trans>
+                  </Box>
+                )}
+              </DropdownItem>
+            )
+          })}
         </>
       }
     >
-      {protocolOption.text}
+      {/* {protocolOption.text} */}
+      <ProtocolLogo protocol={protocolOption.id} sx={{ gap: 1 }} size={20} />
     </Dropdown>
   )
 }

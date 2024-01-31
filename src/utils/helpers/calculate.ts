@@ -1,6 +1,6 @@
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { PositionData } from 'entities/trader'
-import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { OrderTypeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 
 export function calcPnL(isLong: boolean, averagePrice: number, lastPrice: number, sizeUsd: number) {
   const priceDelta = averagePrice > lastPrice ? averagePrice - lastPrice : lastPrice - averagePrice
@@ -41,13 +41,14 @@ export function calcCopyOpeningROI(position: CopyPositionData, realPnL: number) 
   const sizeUsd = Number(position.totalSizeDelta ?? position.sizeDelta) * position.entryPrice
   return (realPnL / (sizeUsd / position.leverage)) * 100
 }
-
+// TODO: Check when add new protocol
 export function calcLiquidatePrice(position: PositionData) {
   let lastCollateral = position.size / position.leverage
   let lastSizeInToken = position.size / position.averagePrice
   let totalFee = position.fee
   switch (position.protocol) {
     case ProtocolEnum.GMX:
+    case ProtocolEnum.GMX_V2:
       break
     case ProtocolEnum.KWENTA:
     case ProtocolEnum.POLYNOMIAL:
@@ -77,4 +78,28 @@ export function calcRiskPercent(isLong: boolean, entryPrice: number, marketPrice
 
 export function calcSLTPUsd(amount: number, price: number, entryPrice: number) {
   return amount * Math.abs(price - entryPrice)
+}
+
+export function calcClosedPrice(position?: PositionData) {
+  if (!position || !position.orders?.length) return
+  const decreaseList =
+    position.orders.filter(
+      (e) =>
+        e.type === OrderTypeEnum.DECREASE ||
+        (position.protocol !== ProtocolEnum.GMX && e.type === OrderTypeEnum.CLOSE) ||
+        e.type === OrderTypeEnum.LIQUIDATE
+    ) ?? []
+  if (!decreaseList.length) return
+  let totalSizeDecrease = 0
+  let totalVolumeDecrease = 0
+
+  decreaseList.forEach((order) => {
+    const sizeNumber = order.sizeNumber
+      ? Math.abs(order.sizeNumber)
+      : Math.abs(order.sizeDeltaNumber / order.priceNumber)
+    totalSizeDecrease += sizeNumber
+    totalVolumeDecrease += order.sizeDeltaNumber
+  })
+
+  return totalSizeDecrease === 0 ? 0 : totalVolumeDecrease / totalSizeDecrease
 }

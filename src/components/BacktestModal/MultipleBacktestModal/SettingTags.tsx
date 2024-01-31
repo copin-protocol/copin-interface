@@ -1,7 +1,7 @@
 import { TestInstanceData } from 'hooks/store/useSelectBacktestTraders'
 import { Box, Flex, Type } from 'theme/base'
 import { DATE_FORMAT } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { formatLocalDate } from 'utils/helpers/format'
 
@@ -28,7 +28,17 @@ export default function SettingTags({
         <SettingItem titleKey={'reverseCopy'} value={settings.reverseCopy ? 'ON' : 'OFF'} />
         <SettingItem
           titleKey={'enableStopLoss'}
-          value={settings.enableStopLoss ? `ON(${settings.stopLossAmount})` : 'OFF'}
+          value={
+            settings.enableStopLoss ? `ON(${getSLTPValue(settings.stopLossType, settings.stopLossAmount)})` : 'OFF'
+          }
+        />
+        <SettingItem
+          titleKey={'enableTakeProfit'}
+          value={
+            settings.enableTakeProfit
+              ? `ON(${getSLTPValue(settings.takeProfitType, settings.takeProfitAmount)})`
+              : 'OFF'
+          }
         />
         <SettingItem
           titleKey={'maxVolMultiplier'}
@@ -44,7 +54,9 @@ export default function SettingTags({
         <SettingItem
           titleKey={'tokenAddresses'}
           value={
-            !!settings.tokenAddresses?.length
+            settings.copyAll
+              ? 'FOLLOW TRADER'
+              : !!settings.tokenAddresses?.length
               ? settings.tokenAddresses.map((address) => TOKEN_TRADE_SUPPORT[protocol][address].name).join(', ')
               : ''
           }
@@ -52,6 +64,12 @@ export default function SettingTags({
       </Flex>
     </Box>
   )
+}
+
+function getSLTPValue(type: SLTPTypeEnum | undefined, value: number | undefined) {
+  if (!type || !value) return '--'
+  if (type === SLTPTypeEnum.PERCENT) return `${value}% ROI`
+  return `$${value}`
 }
 
 function SettingItem({
@@ -98,7 +116,10 @@ function getTitle({ key }: { key: keyof NonNullable<TestInstanceData['settings']
       title = 'REVERSE:'
       break
     case 'enableStopLoss':
-      title = 'STOPLOSS:'
+      title = 'STOP LOSS:'
+      break
+    case 'enableTakeProfit':
+      title = 'TAKE PROFIT:'
       break
     case 'maxVolMultiplier':
       title = 'MAX VOL MULTIPLIER:'

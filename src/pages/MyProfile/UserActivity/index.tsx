@@ -186,9 +186,6 @@ export default function UserActivity() {
               sx={{ position: 'absolute', right: 1, top: 1, zIndex: 1 }}
               onClick={handleCopyDismiss}
             />
-            <Type.BodyBold p={3}>
-              <Trans>Copy Position Details</Trans>
-            </Type.BodyBold>
             <CopyTradePositionDetails id={currentCopyPosition?.id ?? ''} />
           </Container>
         </Drawer>

@@ -13,7 +13,7 @@ import { FONT_FAMILY } from 'utils/config/constants'
 
 import { styleVariants } from './theme'
 
-export type SelectProps = { error?: any; sx?: any; width?: number; height?: number } & VariantProps & SxProps
+export type SelectProps = { error?: any; sx?: any; width?: number | string; height?: number } & VariantProps & SxProps
 
 const StyledSelect = styled(ReactSelect)<SelectProps>(
   ({ error, width, height }) =>

@@ -28,7 +28,7 @@ const TraderInfo = ({
   traderStats: (TraderData | undefined)[] | undefined
 }) => {
   const { isCopying } = useTraderCopying(traderData?.account)
-  const explorerUrl = PROTOCOL_PROVIDER[protocol].explorerUrl
+  const explorerUrl = PROTOCOL_PROVIDER[protocol]?.explorerUrl
   const shareStats = traderStats?.find((data) => data && data.type === (timeOption.id as unknown as TimeFrameEnum))
 
   return (

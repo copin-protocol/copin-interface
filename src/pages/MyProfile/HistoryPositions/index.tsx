@@ -44,6 +44,11 @@ export default function HistoryPositions() {
     changeCurrentPage(1)
   }
 
+  const checkFilters = (allData: any[], selectedIds: string[]) => {
+    if (allData?.length === selectedIds?.length) return
+    if (!!selectedIds.length) return selectedIds
+    return ['']
+  }
   const _queryParams: GetMyPositionsParams = useMemo(
     () => ({
       limit: currentLimit,
@@ -54,8 +59,8 @@ export default function HistoryPositions() {
     [currentLimit, currentPage, currentSort?.sortBy, currentSort?.sortType]
   )
   const _queryBody: GetMyPositionRequestBody = useMemo(
-    () => ({ traders: selectionState.selectedTraders }),
-    [selectionState.selectedTraders]
+    () => ({ traders: checkFilters(selectionState.allTraders, selectionState.selectedTraders) }),
+    [selectionState.allTraders, selectionState.selectedTraders]
   )
   const {
     data,

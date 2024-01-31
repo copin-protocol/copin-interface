@@ -4,6 +4,7 @@ import { Box } from 'theme/base'
 import { BoxProps } from 'theme/types'
 import { ProtocolEnum } from 'utils/config/enums'
 
+// TODO: Check when add new protocol
 const ExplorerLogo = ({
   protocol,
   explorerUrl,
@@ -13,6 +14,7 @@ const ExplorerLogo = ({
   let icon
   switch (protocol) {
     case ProtocolEnum.GMX:
+    case ProtocolEnum.GMX_V2:
       icon = 'ARBITRUM'
       break
     case ProtocolEnum.KWENTA:

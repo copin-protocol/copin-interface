@@ -1,4 +1,4 @@
-import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
+import { ProtocolEnum, SLTPTypeEnum, SortTypeEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
 
 import { PositionData } from './trader'
 
@@ -13,10 +13,15 @@ export interface RequestBackTestData {
   lookBackOrders?: number | null
   volumeProtection?: boolean
   enableStopLoss?: boolean
+  enableTakeProfit?: boolean
   stopLossAmount?: number
+  stopLossType?: SLTPTypeEnum
+  takeProfitAmount?: number
+  takeProfitType?: SLTPTypeEnum
   reverseCopy?: boolean
   maxVolMultiplier?: number | null
   isReturnPositions?: boolean
+  copyAll?: boolean
 }
 
 export type UpdateBackTestData = Partial<RequestBackTestData>
@@ -58,6 +63,7 @@ export interface BackTestResultData {
   profitLossRatio: number
   totalTrade: number
   totalStopLoss: number
+  totalTakeProfit?: number
   totalLiquidate: number
   roiWMaxDrawDownRatio: number
   profitRate: number

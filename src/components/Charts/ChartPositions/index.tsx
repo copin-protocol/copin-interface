@@ -9,6 +9,7 @@ import CurrencyOption from 'components/CurrencyOption'
 // import CurrencyOption from 'components/CurrencyOption'
 import { PositionData } from 'entities/trader.d'
 import useMyProfile from 'hooks/store/useMyProfile'
+import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -38,6 +39,7 @@ export default function ChartPositions({
   componentIds,
   sx,
   isExpanded,
+  handleExpand,
   hasNextPage,
   fetchNextPage,
   isLoadingClosed,
@@ -45,6 +47,7 @@ export default function ChartPositions({
   currencyOptions,
   changeCurrency,
   currencySelectProps,
+  showLoadMoreButton = true,
 }: ChartPositionsProps) {
   const hasBrush = !!isExpanded
   const { myProfile } = useMyProfile()
@@ -78,6 +81,17 @@ export default function ChartPositions({
     () => (mostRecentPos ? dayjs(mostRecentPos.closeBlockTime ?? mostRecentPos.openBlockTime).utc() : undefined),
     [mostRecentPos]
   )
+  // time range when not expand
+  const _timeRange = useMemo(() => {
+    const today = dayjs().utc()
+    if (mostRecentTrade) {
+      return {
+        to: today.valueOf(),
+        from: mostRecentTrade.subtract(7, 'day').valueOf(),
+      }
+    }
+    return { to: dayjs().utc().valueOf(), from: dayjs().utc().subtract(7, 'day').valueOf() }
+  }, [mostRecentTrade])
 
   const oldestPosition =
     filteredClosedPositions && filteredClosedPositions.length > 0
@@ -95,7 +109,11 @@ export default function ChartPositions({
   )
 
   const { chartData, isLoading, from, timezone } = useChartPositionData({
-    timeRange,
+    timeRange: isExpanded
+      ? undefined
+      : timeRange
+      ? { ...timeRange, from: dayjs(timeRange?.from).subtract(7, 'day').valueOf() }
+      : _timeRange,
     timeframe,
     protocol,
     indexToken: tokenTrade?.address,
@@ -188,6 +206,8 @@ export default function ChartPositions({
     }
   }, [chartData, chartId, hasBrush, legendId, myProfile?.username])
 
+  const [showSeeMorePositions, setShowSeeMorePositions] = useState(false)
+
   // Subscribe time scale event
   useEffect(() => {
     if (!candleStickChart || chartIsRemoved.current) return
@@ -204,6 +224,15 @@ export default function ChartPositions({
       }
     }
     function onVisibleTimeRangeChanged(value: Range<any> | null) {
+      if (showLoadMoreButton && !isExpanded) {
+        if (!value?.from) return
+        if (value.from < (chartData?.[5]?.time ?? 0)) {
+          setShowSeeMorePositions(true)
+        } else {
+          setShowSeeMorePositions(false)
+        }
+        return
+      }
       if (isLoadingClosed || hasAllTokens) return
       if (chartData && chartData.length > 0 && value) {
         const from = Number(value.from)
@@ -231,6 +260,7 @@ export default function ChartPositions({
     isLoadingClosed,
     visibleRange?.from,
     visibleRange?.to,
+    isExpanded,
   ])
 
   // Render markers
@@ -334,6 +364,22 @@ export default function ChartPositions({
       )}
       {!isLoading && chartData && chartData.length === 0 && <NoDataFound />}
       <div id={chartId} style={{ padding: '0 12px', flex: '1 0 0' }} />
+      {showLoadMoreButton && !isExpanded && showSeeMorePositions && (
+        <Button
+          variant="outline"
+          sx={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translateX(-50%) translateY(-50%)',
+            zIndex: 8,
+            backdropFilter: 'blur(3px)',
+          }}
+          onClick={handleExpand}
+        >
+          See all positions
+        </Button>
+      )}
       {isExpanded && tokenTrade?.symbol && size && (
         <BrushChart
           symbol={tokenTrade?.symbol}

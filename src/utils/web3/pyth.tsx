@@ -20,13 +20,15 @@ const INCLUDE_PATH = [
   ROUTES.MY_HISTORY.path,
 ]
 
+// TODO: Check when add new protocol
 export default function PythConnection() {
   const { setPrices, setIsReady } = useRealtimeUsdPricesStore()
   const tokenSupports = [
     ...Object.values(TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX]),
+    ...Object.values(TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX_V2]),
     ...Object.values(TOKEN_TRADE_SUPPORT[ProtocolEnum.KWENTA]),
   ]
-  const pythIds = tokenSupports.map((x) => x.priceFeedId)
+  const pythIds = Array.from(new Set(tokenSupports.map((x) => x.priceFeedId)))
   const { pathname } = useLocation()
 
   useEffect(() => {

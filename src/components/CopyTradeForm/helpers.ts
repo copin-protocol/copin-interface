@@ -15,6 +15,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     volumeProtection,
     lookBackOrders,
     enableStopLoss,
+    stopLossType,
     stopLossAmount,
     maxVolMultiplier,
     skipLowLeverage,
@@ -23,6 +24,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     copyWalletId,
     copyAll,
     enableTakeProfit,
+    takeProfitType,
     takeProfitAmount,
   } = copyTradeData
   if (account) result.account = account
@@ -36,9 +38,11 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   }
   if (protocol) result.protocol = protocol
   if (enableStopLoss) {
+    result.stopLossType = stopLossType
     result.stopLossAmount = stopLossAmount
   }
   if (enableTakeProfit) {
+    result.takeProfitType = takeProfitType
     result.takeProfitAmount = takeProfitAmount
   }
   if (typeof maxVolMultiplier === 'number' && maxVolMultiplier > 0) {
@@ -61,10 +65,12 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
     leverage: formData.leverage,
     reverseCopy: formData.reverseCopy,
     enableStopLoss: !!formData?.stopLossAmount,
+    stopLossType: formData.stopLossType,
     stopLossAmount: formData.stopLossAmount,
     volumeProtection: !!formData.lookBackOrders,
     lookBackOrders: formData.lookBackOrders ? formData.lookBackOrders : null,
     enableTakeProfit: !!formData?.takeProfitAmount,
+    takeProfitType: formData.takeProfitType,
     takeProfitAmount: formData.takeProfitAmount,
     maxVolMultiplier:
       formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0

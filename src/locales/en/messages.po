@@ -17,6 +17,10 @@ msgstr ""
 msgid "(24h change)"
 msgstr "(24h change)"
 
+#: src/pages/Home/ProtocolDropdown.tsx
+msgid "(Coming soon)"
+msgstr "(Coming soon)"
+
 #: src/pages/@helpers/ErrorFallback.tsx
 msgid ". Try to reload the page to fix this issue"
 msgstr ". Try to reload the page to fix this issue"
@@ -136,6 +140,11 @@ msgstr "API Key"
 msgid "Account"
 msgstr "Account"
 
+#: src/components/CopyTradePositionDetails/CopyOrderTooltip.tsx
+#: src/components/PositionDetails/OrderTooltip.tsx
+msgid "Action:"
+msgstr "Action:"
+
 #: src/pages/MyProfile/SelectTradersDropdown.tsx
 msgid "Active"
 msgstr "Active"
@@ -205,8 +214,8 @@ msgid "All"
 msgstr "All"
 
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
-msgid "All Markets"
-msgstr "All Markets"
+#~ msgid "All Markets"
+#~ msgstr "All Markets"
 
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
@@ -383,8 +392,8 @@ msgstr "BingX Wallet"
 
 #: src/pages/TopOpenings/TopOpenIntrest/index.tsx
 #: src/pages/TopOpenings/TopOpenIntrest/index.tsx
-msgid "By Markets"
-msgstr "By Markets"
+#~ msgid "By Markets"
+#~ msgstr "By Markets"
 
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx
@@ -492,9 +501,25 @@ msgstr "Closed:"
 #~ msgid "Collapse"
 #~ msgstr "Collapse"
 
+#: src/components/PositionDetails/OrderTooltip.tsx
+msgid "Collateral Delta:"
+msgstr "Collateral Delta:"
+
+#: src/components/CopyTradePositionDetails/CopyOrderTooltip.tsx
+msgid "Collateral:"
+msgstr "Collateral:"
+
 #: src/components/CreateWalletAction/index.tsx
 msgid "Coming Soon"
 msgstr "Coming Soon"
+
+#: src/pages/Home/Traders.tsx
+msgid "Coming Soon!"
+msgstr "Coming Soon!"
+
+#: src/components/CopyTraderButton/index.tsx
+msgid "Coming soon!"
+msgstr "Coming soon!"
 
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Communicating with wallet. Sign message with your wallet"
@@ -594,8 +619,7 @@ msgstr "Copy Management"
 #~ msgid "Copy Order"
 #~ msgstr "Copy Order"
 
-#: src/pages/MyProfile/PositionTable/PositionsContainer.tsx
-#: src/pages/MyProfile/UserActivity/index.tsx
+#: src/components/CopyTradePositionDetails/index.tsx
 msgid "Copy Position Details"
 msgstr "Copy Position Details"
 
@@ -751,6 +775,11 @@ msgstr "Don’t have a BingX account?"
 #~ msgid "Don’t have a Copin account?"
 #~ msgstr "Don’t have a Copin account?"
 
+#: src/components/PositionDetails/PositionStats.tsx
+#: src/components/PositionDetails/PositionStats.tsx
+msgid "Duration:"
+msgstr "Duration:"
+
 #: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 msgid "Edit"
 msgstr "Edit"
@@ -814,6 +843,10 @@ msgstr "Example: Trader opened LONG, you will open SHORT."
 #: src/utils/config/translations.tsx
 msgid "Exchange"
 msgstr "Exchange"
+
+#: src/pages/Subscription/TermsAndConditions.tsx
+msgid "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
+msgstr "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
 
 #: src/pages/Home/Traders.tsx
 #: src/pages/Home/Traders.tsx
@@ -906,8 +939,12 @@ msgid "Find the trader you want in the list of traders, all of the trader's copy
 msgstr "Find the trader you want in the list of traders, all of the trader's copy settings will be listed here."
 
 #: src/pages/Home/Traders.tsx
-msgid "Follow 100,000+ traders on Copin"
-msgstr "Follow 100,000+ traders on Copin"
+#~ msgid "Follow 100,000+ traders on Copin"
+#~ msgstr "Follow 100,000+ traders on Copin"
+
+#: src/pages/Home/Traders.tsx
+msgid "Follow 200,000+ on-chain traders"
+msgstr "Follow 200,000+ on-chain traders"
 
 #: src/utils/config/translations.tsx
 msgid "Follow The Trader"
@@ -928,6 +965,11 @@ msgstr "Forgot password?"
 #: src/utils/config/options.tsx
 msgid "Frequently Trade"
 msgstr "Frequently Trade"
+
+#: src/components/PositionDetails/PositionStats.tsx
+#: src/components/PositionDetails/PositionStats.tsx
+msgid "Funding:"
+msgstr "Funding:"
 
 #: src/utils/config/translations.tsx
 msgid "GMX"
@@ -1291,6 +1333,10 @@ msgstr "Low Overtrading"
 msgid "MANAGEMENT"
 msgstr "MANAGEMENT"
 
+#: src/pages/TopOpenings/RouteWrapper.tsx
+msgid "MARKET"
+msgstr "MARKET"
+
 #: src/utils/config/options.tsx
 msgid "MDD"
 msgstr "MDD"
@@ -1324,8 +1370,11 @@ msgstr "Margin Protection"
 msgid "Margin Transferred"
 msgstr "Margin Transferred"
 
-#: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
-#: src/pages/TopOpenings/OpenInterestByMarkets/index.tsx
+#: src/components/CopyTradePositionDetails/CopyOrderTooltip.tsx
+#: src/components/PositionDetails/OrderTooltip.tsx
+msgid "Market Price:"
+msgstr "Market Price:"
+
 #: src/pages/TraderDetails/TraderRankingExpanded/Stats.tsx
 msgid "Markets"
 msgstr "Markets"
@@ -1382,6 +1431,10 @@ msgstr "Max margin multiplier"
 #: src/components/SubscriptionRestrictModal.tsx
 msgid "Maybe Later"
 msgstr "Maybe Later"
+
+#: src/components/PositionTxResults/index.tsx
+msgid "Maybe you are missing an trader address, you can refer to \"Recommend Results\" section."
+msgstr "Maybe you are missing an trader address, you can refer to \"Recommend Results\" section."
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Min Duration"
@@ -1464,6 +1517,7 @@ msgstr "Monthly"
 
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/Subscription/TermsAndConditions.tsx
 msgid "More"
 msgstr "More"
 
@@ -1536,6 +1590,7 @@ msgstr "No Trader Found In The Past 60 Days"
 msgid "No Transaction Found"
 msgstr "No Transaction Found"
 
+#: src/components/PositionTxResults/index.tsx
 #: src/pages/SearchTxHash/index.tsx
 msgid "No Transactions Found"
 msgstr "No Transactions Found"
@@ -1543,6 +1598,10 @@ msgstr "No Transactions Found"
 #: src/pages/MyProfile/PositionTable/PositionsContainer.tsx
 msgid "No link to the trader’s original position was found."
 msgstr "No link to the trader’s original position was found."
+
+#: src/components/TopOpeningPositions/TopOpeningsWindow.tsx
+msgid "No opening positions"
+msgstr "No opening positions"
 
 #: src/hooks/web3/useAuth.tsx
 #~ msgid "No provider was found"
@@ -1586,14 +1645,13 @@ msgstr "Notice:"
 #~ msgid "OPEN"
 #~ msgstr "OPEN"
 
-#: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
-#: src/pages/TopOpenings/TopOpenIntrest/index.tsx
+#: src/pages/TopOpenings/RouteWrapper.tsx
 msgid "OPEN INTEREST"
 msgstr "OPEN INTEREST"
 
 #: src/pages/TopOpenings/OpenInterestByMarkets/index.tsx
-msgid "OPEN INTEREST BY MARKETS"
-msgstr "OPEN INTEREST BY MARKETS"
+#~ msgid "OPEN INTEREST BY MARKETS"
+#~ msgstr "OPEN INTEREST BY MARKETS"
 
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "OR LOGIN WITH"
@@ -1659,8 +1717,8 @@ msgstr "Orders Lookback"
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
 #: src/pages/TopOpenings/OpenInterestByMarkets/index.tsx
 #: src/pages/TopOpenings/TopOpenIntrest/index.tsx
-msgid "Overall"
-msgstr "Overall"
+#~ msgid "Overall"
+#~ msgstr "Overall"
 
 #: src/pages/Home/index.tsx
 #: src/pages/Stats/index.tsx
@@ -1675,6 +1733,11 @@ msgstr "PNL"
 #: src/pages/TraderDetails/TraderStats.tsx
 msgid "PNL Ratio"
 msgstr "PNL Ratio"
+
+#: src/components/PositionDetails/PositionStats.tsx
+#: src/components/PositionDetails/PositionStats.tsx
+msgid "Paid Fees:"
+msgstr "Paid Fees:"
 
 #: src/components/LoginAction/ModalLogin.tsx
 #: src/components/LoginAction/ModalRegister.tsx
@@ -1782,6 +1845,7 @@ msgstr "Position"
 #~ msgid "Position Details"
 #~ msgstr "Position Details"
 
+#: src/components/PositionTxResults/index.tsx
 #: src/pages/SearchTxHash/index.tsx
 msgid "Position List"
 msgstr "Position List"
@@ -1880,6 +1944,10 @@ msgstr "Read more"
 #: src/pages/Settings/AlertList/TraderLastViewed.tsx
 msgid "Recommend"
 msgstr "Recommend"
+
+#: src/pages/PositionDetails/index.tsx
+msgid "Recommend Results"
+msgstr "Recommend Results"
 
 #: src/pages/MyProfile/Referral/ReferralList.tsx
 #~ msgid "Referee List"
@@ -2047,6 +2115,10 @@ msgstr "Setting configs has been succeeded"
 msgid "Settings"
 msgstr "Settings"
 
+#: src/components/PositionDetails/SharePosition.tsx
+msgid "Share"
+msgstr "Share"
+
 #: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Share DApp"
 msgstr "Share DApp"
@@ -2086,6 +2158,14 @@ msgstr "Similar Traders"
 #: src/pages/MyProfile/PositionTable/ListPositions.tsx
 msgid "Size"
 msgstr "Size"
+
+#: src/components/CopyTradePositionDetails/CopyOrderTooltip.tsx
+msgid "Size ($):"
+msgstr "Size ($):"
+
+#: src/components/PositionDetails/OrderTooltip.tsx
+msgid "Size Delta:"
+msgstr "Size Delta:"
 
 #: src/utils/config/translations.tsx
 msgid "Size Token"
@@ -2159,6 +2239,10 @@ msgstr "Stats"
 msgid "Status"
 msgstr "Status"
 
+#: src/components/PositionDetails/PositionStats.tsx
+msgid "Status:"
+msgstr "Status:"
+
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
@@ -2172,6 +2256,10 @@ msgstr "Stop Loss Amount"
 #: src/utils/config/translations.tsx
 msgid "Stop Loss Details"
 msgstr "Stop Loss Details"
+
+#: src/utils/config/translations.tsx
+msgid "Stop Loss Type"
+msgstr "Stop Loss Type"
 
 #: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
@@ -2256,6 +2344,10 @@ msgstr "Take Profit Amount"
 #: src/utils/config/translations.tsx
 msgid "Take Profit Details"
 msgstr "Take Profit Details"
+
+#: src/utils/config/translations.tsx
+msgid "Take Profit Type"
+msgstr "Take Profit Type"
 
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Target Action"
@@ -2513,6 +2605,11 @@ msgstr "Top"
 msgid "Total"
 msgstr "Total"
 
+#: src/components/PositionDetails/PositionStats.tsx
+#: src/components/PositionDetails/PositionStats.tsx
+msgid "Total Collateral:"
+msgstr "Total Collateral:"
+
 #: src/pages/Stats/index.tsx
 msgid "Total Copier"
 msgstr "Total Copier"
@@ -2678,8 +2775,8 @@ msgstr "TxHash"
 #~ msgstr "Tải ảnh không thành công do sai định dạnh ảnh!"
 
 #: src/pages/MyProfile/PositionTable/ClosePositionModal.tsx
-msgid "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
-msgstr "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
+#~ msgid "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
+#~ msgstr "Unable to find a link to the trader’s original position. You can continue to click <0>[Close this position]</0> to finalize this in Copin."
 
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Unique traders are copied in the system"
@@ -2851,6 +2948,7 @@ msgstr "What is smart wallet?"
 msgid "When the position's loss exceeds {0}, the Stop Loss will be triggered to close the position."
 msgstr "When the position's loss exceeds {0}, the Stop Loss will be triggered to close the position."
 
+#: src/components/BacktestForm/index.tsx
 #: src/components/CopyTradeForm/index.tsx
 msgid "When the position's profit exceeds {0}, the Take Profit will be triggered to close the position."
 msgstr "When the position's profit exceeds {0}, the Take Profit will be triggered to close the position."
@@ -3178,16 +3276,23 @@ msgid "{label} is better than {value} traders"
 msgstr "{label} is better than {value} traders"
 
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
-msgid "{symbol}"
-msgstr "{symbol}"
+#~ msgid "{symbol}"
+#~ msgstr "{symbol}"
 
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
+#: src/pages/TopOpenings/OpenInterestByMarkets/ListMarkets.tsx
+#: src/pages/TopOpenings/OpenInterestByMarkets/index.tsx
 msgid "{symbol} market data was not found"
 msgstr "{symbol} market data was not found"
 
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
-msgid "{symbol} market does not exist on {protocol}"
-msgstr "{symbol} market does not exist on {protocol}"
+#: src/pages/TopOpenings/OpenInterestByMarkets/index.tsx
+msgid "{symbol} market does not exist on {0}"
+msgstr "{symbol} market does not exist on {0}"
+
+#: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
+#~ msgid "{symbol} market does not exist on {protocol}"
+#~ msgstr "{symbol} market does not exist on {protocol}"
 
 #: src/theme/Tab/IconTabItem.tsx
 msgid "{text}"

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { ColorType, CrosshairMode, LineData, LineStyle, PriceScaleMode, createChart } from 'lightweight-charts'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { AmountText } from 'components/@ui/DecoratedText/ValueText'
 import { TraderPnlStatisticData } from 'entities/statistic'
@@ -23,6 +23,15 @@ export default function ChartTraderPnL({
   from: number
   to: number
 }) {
+  const [chartHeight, setChartHeight] = useState(250)
+  const containerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      setChartHeight(entries?.[0]?.contentRect?.height ?? 120)
+    })
+    if (containerRef.current) observer.observe(containerRef.current)
+  }, [])
+
   const [crossMovePnL, setCrossMovePnL] = useState<number | undefined>()
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
   const generateData = useMemo(() => (data ? generateChartPnL(from, to, data) : []), [data, from, to])
@@ -54,7 +63,7 @@ export default function ChartTraderPnL({
 
     const container = document.getElementById(ELEMENT_IDS.TRADER_CHART_PNL)
     const chart = createChart(container ? container : ELEMENT_IDS.TRADER_CHART_PNL, {
-      height: 120,
+      height: chartHeight,
       rightPriceScale: {
         autoScale: true,
         visible: false,
@@ -153,22 +162,23 @@ export default function ChartTraderPnL({
 
       chart.remove()
     }
-  }, [chartData, data, isLoading, timezone])
+  }, [chartData, data, isLoading, timezone, chartHeight])
 
   return (
-    <Box>
+    <Flex sx={{ height: '100%', width: '100%', flexDirection: 'column' }}>
       {data && chartData && !isLoading && (
-        <Box>
-          <Flex width="100%" alignItems="center" justifyContent="center" flexDirection="column">
-            <Type.H3 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
-              <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
-            </Type.H3>
-          </Flex>
-          <Box mt={1} sx={{ position: 'relative' }} minHeight={120}>
+        <>
+          <Type.H3
+            color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}
+            sx={{ display: 'block', textAlign: 'center' }}
+          >
+            <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
+          </Type.H3>
+          <Box flex="1 0 0" mt={1} sx={{ position: 'relative' }} minHeight={120} ref={containerRef}>
             <div id={ELEMENT_IDS.TRADER_CHART_PNL} />
           </Box>
-        </Box>
+        </>
       )}
-    </Box>
+    </Flex>
   )
 }

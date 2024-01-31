@@ -20,8 +20,8 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 import { CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getErrorMessage } from 'utils/helpers/handleError'
-import { getUserForTracking, logEvent } from 'utils/tracking/event'
-import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
+import { logEventCopyTrade } from 'utils/tracking/event'
+import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 
 import CopyTradeDataTable from './CopyTradeDataTable'
 
@@ -37,6 +37,7 @@ export default function CopyTraderDrawer({
   onClose,
   onSuccess,
   modalStyles,
+  source,
 }: {
   protocol: ProtocolEnum
   account: string
@@ -44,6 +45,7 @@ export default function CopyTraderDrawer({
   onClose: () => void
   onSuccess?: () => void
   modalStyles?: { backdropFilter?: string; overlayBackground?: string }
+  source?: EventSource
 }) {
   const refetchQueries = useRefetchQueries()
   const { myProfile } = useMyProfileStore()
@@ -70,9 +72,31 @@ export default function CopyTraderDrawer({
       if (!botAlert?.chatId) {
         handleGenerateLinkBot?.()
       }
+
+      switch (source) {
+        case EventSource.HOME:
+          logEventCopyTrade({ event: EVENT_ACTIONS[EventCategory.COPY_TRADE].HOME_SUCCESS_COPY_TRADE })
+          break
+        case EventSource.HOME_BACKTEST:
+          logEventCopyTrade({ event: EVENT_ACTIONS[EventCategory.COPY_TRADE].HOME_BACKTEST_SUCCESS_COPY_TRADE })
+          break
+        default:
+          logEventCopyTrade({ event: EVENT_ACTIONS[EventCategory.COPY_TRADE].SUCCESS_COPY_TRADE })
+      }
     },
     onError: (err) => {
       toast.error(<ToastBody title={<Trans>Error</Trans>} message={getErrorMessage(err)} />)
+
+      switch (source) {
+        case EventSource.HOME:
+          logEventCopyTrade({ event: EVENT_ACTIONS[EventCategory.COPY_TRADE].HOME_FAILED_COPY_TRADE })
+          break
+        case EventSource.HOME_BACKTEST:
+          logEventCopyTrade({ event: EVENT_ACTIONS[EventCategory.COPY_TRADE].HOME_BACKTEST_FAILED_COPY_TRADE })
+          break
+        default:
+          logEventCopyTrade({ event: EVENT_ACTIONS[EventCategory.COPY_TRADE].FAILED_COPY_TRADE })
+      }
     },
   })
 
@@ -85,11 +109,16 @@ export default function CopyTraderDrawer({
     }
     requestCopyTrade({ data })
 
-    logEvent({
-      label: getUserForTracking(myProfile?.username),
-      category: EventCategory.COPY_TRADE,
-      action: EVENT_ACTIONS[EventCategory.COPY_TRADE].REQUEST_COPY_TRADE,
-    })
+    switch (source) {
+      case EventSource.HOME:
+        logEventCopyTrade({ event: EVENT_ACTIONS[EventCategory.COPY_TRADE].HOME_REQUEST_COPY_TRADE })
+        break
+      case EventSource.HOME_BACKTEST:
+        logEventCopyTrade({ event: EVENT_ACTIONS[EventCategory.COPY_TRADE].HOME_BACKTEST_REQUEST_COPY_TRADE })
+        break
+      default:
+        logEventCopyTrade({ event: EVENT_ACTIONS[EventCategory.COPY_TRADE].REQUEST_COPY_TRADE })
+    }
   }
   const isNewTab = tab === TabKeyEnum.New
   const isCloneTab = tab === TabKeyEnum.Clone
@@ -179,7 +208,14 @@ export default function CopyTraderDrawer({
                   protocol={protocol}
                   copyTradeData={copyTradeData}
                   onDismiss={onClose}
-                  onSuccess={() => setCopyTradeData(null)}
+                  onSuccess={() => {
+                    setCopyTradeData(null)
+
+                    logEventCopyTrade({
+                      event: EVENT_ACTIONS[EventCategory.COPY_TRADE].CLONE_COPY_TRADE,
+                      username: myProfile?.username,
+                    })
+                  }}
                 />
               </Box>
             ) : (

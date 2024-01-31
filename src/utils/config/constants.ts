@@ -13,7 +13,8 @@ export const LINKS = {
   webapp: 'https://app.copin.io',
   arbitrumExplorer: 'https://arbiscan.io',
   gmxHouse: 'https://www.gmx.house/arbitrum',
-  tradeGMX: 'https://gmx.io/#/?ref=copin',
+  tradeGMX: 'https://app.gmx.io/#/v1',
+  tradeGMXv2: 'https://app.gmx.io/#/trade',
   tradeKwenta: 'https://kwenta.eth.limo/?ref=copin',
   tradePolynomial: 'https://trade.polynomial.fi',
   github: 'https://github.com/copin-protocol',
@@ -33,6 +34,7 @@ export const LINKS = {
     'https://support.bingx.com/hc/en-001/articles/21313115553945-Perpetual-Futures-Exclusive-Guaranteed-Price-Launched-to-Prevent-Slippage-Losses',
   agreement: 'https://docs.copin.io/another/agreement',
   subscriptionDocument: 'https://docs.copin.io/upgrade-to-premium',
+  copinEliteClub: 'https://docs.copin.io/welcome/copin-elite-club',
 }
 
 export const NAVBAR_HEIGHT = 60

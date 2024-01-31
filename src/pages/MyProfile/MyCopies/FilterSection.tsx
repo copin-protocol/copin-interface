@@ -60,7 +60,7 @@ export default function FilterSection({
             >
               <Flex sx={{ alignItems: 'center', gap: 2 }}>
                 <Image src={parseProtocolImage(protocol)} width={20} height={20} />
-                <Type.Caption lineHeight="16px">{PROTOCOL_OPTIONS_MAPPING[protocol].text}</Type.Caption>
+                <Type.Caption lineHeight="16px">{PROTOCOL_OPTIONS_MAPPING[protocol]?.text}</Type.Caption>
               </Flex>
             </Checkbox>
           )
@@ -152,6 +152,7 @@ function AvailableMargin({ value }: { value: number | undefined }) {
   )
 }
 
-const protocolFilters = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
+// TODO: Check when add new protocol
+const protocolFilters = Object.values(ProtocolEnum)
 
 const statusFilters = [CopyTradeStatusEnum.RUNNING, CopyTradeStatusEnum.STOPPED]

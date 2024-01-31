@@ -25,16 +25,17 @@ import { formatNumber } from 'utils/helpers/format'
 import CopyChartProfit from './CopyChartProfit'
 import CopyPositionHistories from './CopyPositionHistories'
 import ListCopyOrderTable from './ListCopyOrderTable'
+import UnlinkPosition from './UnlinkPosition'
 
 export default function CopyTradePositionDetails({ id }: { id: string }) {
   const { prices } = useGetUsdPrices()
-  const { data, isLoading } = useQuery(
-    [QUERY_KEYS.GET_MY_COPY_POSITION_DETAIL, id],
-    () => getMyCopyPositionDetailApi({ copyId: id }),
-    {
-      retry: 0,
-    }
-  )
+  const {
+    data,
+    isLoading,
+    refetch: reloadPosition,
+  } = useQuery([QUERY_KEYS.GET_MY_COPY_POSITION_DETAIL, id], () => getMyCopyPositionDetailApi({ copyId: id }), {
+    retry: 0,
+  })
   const { data: copyTradeDetails, isLoading: loadingInfo } = useQuery(
     [QUERY_KEYS.GET_COPY_TRADE_SETTING_DETAIL, data?.copyTradeId],
     () => getCopyTradeDetailsApi({ id: data?.copyTradeId ?? '' }),
@@ -43,7 +44,11 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
       retry: 0,
     }
   )
-  const { data: dataOrders, isLoading: loadingOrders } = useQuery(
+  const {
+    data: dataOrders,
+    isLoading: loadingOrders,
+    refetch: reloadOrders,
+  } = useQuery(
     [QUERY_KEYS.GET_MY_COPY_ORDERS, data?.copyTradeId],
     () => getMyCopyOrdersApi({ copyId: data?.id ?? '' }),
     {
@@ -102,12 +107,25 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
 
   const [currentTab, setCurrentTab] = useState<string>(TabKeyEnum.ORDER)
 
+  const onForceReload = () => {
+    reloadPosition()
+    reloadOrders()
+  }
+
   return (
     <>
       {(isLoading || loadingInfo) && <Loading />}
       {!isLoading && !loadingInfo && !data && <NoDataFound />}
       {data && (
         <Flex sx={{ width: '100%', height: '100%', position: 'relative', flexDirection: 'column' }}>
+          <Flex p={3} alignItems="center" justifyContent="space-between">
+            <Type.BodyBold>
+              <Trans>Copy Position Details</Trans>
+            </Type.BodyBold>
+            {data.status === PositionStatusEnum.OPEN && (
+              <UnlinkPosition copyPosition={data} onSuccess={onForceReload} mr={40} />
+            )}
+          </Flex>
           <Box bg="neutral7" mb={3} mx={3} sx={{ borderRadius: '2px', border: 'small', borderColor: 'neutral4' }}>
             <Flex
               alignItems="center"
@@ -120,7 +138,7 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
             >
               <StatsItemWrapper>
                 <Type.Caption color="neutral3">Status:</Type.Caption>
-                <PositionStatus width={70} status={data.status} />
+                <PositionStatus status={data.status} />
               </StatsItemWrapper>
               <StatsItemWrapper>
                 <Type.Caption color="neutral3">Copy Address:</Type.Caption>
@@ -215,7 +233,7 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
               )}
             </Box>
           </Box>
-          <Box flex="1 1 0" width="100%" sx={{ overflow: 'hidden' }}>
+          <Box flex="1 1 0" width="100%">
             <Tabs
               defaultActiveKey={currentTab}
               onChange={(tab) => setCurrentTab(tab)}

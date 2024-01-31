@@ -36,6 +36,7 @@ const SearchTxHash = () => {
     }
   )
 
+  // TODO: Check when add new protocol
   const protocols = useMemo(() => {
     const uniqueProtocols = new Set(data?.map((item) => item.protocol))
     if (uniqueProtocols && uniqueProtocols.size > 0) {
@@ -84,7 +85,7 @@ const SearchTxHash = () => {
                 <ExplorerLogo
                   key={protocol}
                   protocol={protocol}
-                  explorerUrl={`${PROTOCOL_PROVIDER[protocol].explorerUrl}/tx/${txHash}`}
+                  explorerUrl={`${PROTOCOL_PROVIDER[protocol]?.explorerUrl}/tx/${txHash}`}
                   size={18}
                 />
               )

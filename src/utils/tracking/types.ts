@@ -4,6 +4,12 @@ export interface EventGoogleAnalytic {
   label: string
 }
 
+export enum EventSource {
+  HOME = 'HOME',
+  HOME_BACKTEST = 'HOME_BACKTEST',
+  TRADER_PROFILE = 'TRADER_PROFILE',
+}
+
 export enum EventCategory {
   FILTER = 'FILTER',
   FAVORITES = 'FAVORITES',
@@ -20,7 +26,17 @@ export const EVENT_ACTIONS = {
   [EventCategory.COPY_TRADE]: {
     OPEN_COPY_TRADE: 'open_copy_trade',
     REQUEST_COPY_TRADE: 'request_copy_trade',
+    SUCCESS_COPY_TRADE: 'success_copy_trade',
+    FAILED_COPY_TRADE: 'failed_copy_trade',
     CLONE_COPY_TRADE: 'clone_copy_trade',
+    HOME_OPEN_COPY_TRADE: 'home_open_copy_trade',
+    HOME_REQUEST_COPY_TRADE: 'home_request_copy_trade',
+    HOME_SUCCESS_COPY_TRADE: 'home_success_copy_trade',
+    HOME_FAILED_COPY_TRADE: 'home_failed_copy_trade',
+    HOME_BACKTEST_OPEN_COPY_TRADE: 'home_backtest_open_copy_trade',
+    HOME_BACKTEST_REQUEST_COPY_TRADE: 'home_backtest_request_copy_trade',
+    HOME_BACKTEST_SUCCESS_COPY_TRADE: 'home_backtest_success_copy_trade',
+    HOME_BACKTEST_FAILED_COPY_TRADE: 'home_backtest_failed_copy_trade',
   },
   [EventCategory.BACK_TEST]: {
     OPEN_SINGLE: 'open_backtest_single',
@@ -30,6 +46,14 @@ export const EVENT_ACTIONS = {
     SET_STRATEGY_MULTIPLE: 'set_strategy_backtest_multiple',
     CONTINUE_MULTIPLE: 'continue_backtest_multiple',
     VIEW_RESULT: 'view_backtest_result',
+    HOME_OPEN_SINGLE: 'home_open_backtest_single',
+    HOME_REQUEST_SINGLE: 'home_request_backtest_single',
+    HOME_SUCCESS_SINGLE: 'home_success_backtest_single',
+    HOME_FAILED_SINGLE: 'home_failed_backtest_single',
+    HOME_BACKTEST_D7: 'home_backtest_7_days',
+    HOME_BACKTEST_D15: 'home_backtest_14_days',
+    HOME_BACKTEST_D30: 'home_backtest_30_days',
+    HOME_BACKTEST_D60: 'home_backtest_60_days',
   },
   [EventCategory.FILTER]: {
     CUSTOM_RANGE: 'filer_custom_range',
@@ -40,7 +64,19 @@ export const EVENT_ACTIONS = {
     D15: 'filter_14_days',
     D30: 'filter_30_days',
     D60: 'filter_60_days',
-    ALL_TIME: 'filter_all_time',
+    ALL_TIME: 'home_filter_all_time',
+    HOME_DEFAULT: 'home_filter_default',
+    HOME_TOP_PNL: 'home_filter_pnl',
+    HOME_TOP_ROI: 'home_filter_roi',
+    HOME_TOP_WIN_RATE: 'home_filter_win_rate',
+    HOME_D7: 'home_filter_7_days',
+    HOME_D15: 'home_filter_14_days',
+    HOME_D30: 'home_filter_30_days',
+    HOME_D60: 'home_filter_60_days',
+    HOME_SOURCE_GMX: 'home_filter_GMX',
+    HOME_SOURCE_GMX_V2: 'home_filter_GMX_V2',
+    HOME_SOURCE_KWENTA: 'home_filter_KWENTA',
+    HOME_SOURCE_POLINOMIAL: 'home_filter_POLINOMIAL',
   },
   [EventCategory.FAVORITES]: {
     ADD_FAVORITE_WITH_NOTE: 'add_favorite_with_note',
@@ -48,6 +84,8 @@ export const EVENT_ACTIONS = {
     REMOVE_FAVORITE: 'remove_favorite',
     CANCEL_FAVORITE: 'cancel_favorite',
     OPEN_FAVORITES: 'open_favorites',
+    HOME_OPEN_FAVORITES: 'home_open_favorites',
+    HOME_CANCEL_FAVORITE: 'home_cancel_favorite',
   },
   [EventCategory.MULTI_CHAIN]: {
     SWITCH_GMX: 'switch_gmx',
@@ -69,6 +107,11 @@ export const EVENT_ACTIONS = {
     USER_ACTIVITY: 'user_activity',
     SUBSCRIPTION: 'SUBSCRIPTION',
     USER_SUBSCRIPTION: 'USER_SUBSCRIPTION',
+    HOME_EXPLORE_MORE: 'home_explorer_more',
+    HOME_WALLET_MANAGEMENT: 'home_wallet_management',
+    HOME_COPYTRADE_MANAGEMENT: 'home_copytrade_management',
+    HOME_GETTING_STARTED: 'home_getting_started',
+    HOME_POSITION_DETAILS: 'home_position_details',
   },
   [EventCategory.SEARCH]: {
     SEARCH_CLICK: 'search_click',

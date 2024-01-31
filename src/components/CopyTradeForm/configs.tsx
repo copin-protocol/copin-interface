@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import * as yup from 'yup'
 
 import { Flex, Image, Type } from 'theme/base'
-import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { SERVICE_KEYS } from 'utils/config/keys'
 import { parseExchangeImage, parseProtocolImage } from 'utils/helpers/transform'
 
@@ -15,7 +15,9 @@ const commonSchema = {
   }),
   leverage: yup.number().required().min(2).label('Leverage'),
   lookBackOrders: yup.number().min(1).integer().label('Orders To Lookback'),
+  stopLossType: yup.string().label('Stop Loss Type'),
   stopLossAmount: yup.number().positive().label('Stop Loss Amount'),
+  takeProfitType: yup.string().label('Take Profit Type'),
   takeProfitAmount: yup.number().positive().label('Take Profit Amount'),
   maxMarginPerPosition: yup.number().nullable().positive().label('Max Margin Per Position'),
   skipLowLeverage: yup.boolean(),
@@ -58,7 +60,9 @@ export interface CopyTradeFormValues {
   tokenAddresses: string[]
   type?: CopyTradeTypeEnum
   protocol?: ProtocolEnum
+  stopLossType: SLTPTypeEnum
   stopLossAmount: number | undefined
+  takeProfitType: SLTPTypeEnum
   takeProfitAmount: number | undefined
   lookBackOrders: number | null
   exchange: CopyTradePlatformEnum
@@ -78,7 +82,9 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   volume: 'volume',
   leverage: 'leverage',
   tokenAddresses: 'tokenAddresses',
+  stopLossType: 'stopLossType',
   stopLossAmount: 'stopLossAmount',
+  takeProfitType: 'takeProfitType',
   takeProfitAmount: 'takeProfitAmount',
   lookBackOrders: 'lookBackOrders',
   exchange: 'exchange',
@@ -99,7 +105,9 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   leverage: 2,
   tokenAddresses: [],
   type: CopyTradeTypeEnum.FULL_ORDER,
+  stopLossType: SLTPTypeEnum.USD,
   stopLossAmount: undefined,
+  takeProfitType: SLTPTypeEnum.USD,
   takeProfitAmount: undefined,
   lookBackOrders: 10,
   exchange: CopyTradePlatformEnum.BINGX,
@@ -151,7 +159,7 @@ export const protocolOptions = Object.values(ProtocolEnum).map((value) => {
   return {
     value,
     label: (
-      <Flex sx={{ alignItems: 'center', gap: 1, width: 90 }}>
+      <Flex sx={{ alignItems: 'center', gap: 1 }}>
         <Type.Body>{value}</Type.Body> <Image src={parseProtocolImage(value)} sx={{ width: 16, height: 16 }} />
       </Flex>
     ),

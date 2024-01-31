@@ -34,11 +34,12 @@ export function SignedText({
       color = value > 0 ? 'green1' : 'inherit'
     }
   }
-  const formatedValue = !!value
-    ? isCompactNumber
+  const formatedValue =
+    typeof value !== 'number'
+      ? '--'
+      : isCompactNumber
       ? compactNumber(Math.abs(value), maxDigit)
       : formatNumber(Math.abs(value), maxDigit, minDigit)
-    : '--'
   return (
     <>
       {fontInherit ? (

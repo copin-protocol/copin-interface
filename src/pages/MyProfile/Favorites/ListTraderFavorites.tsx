@@ -101,7 +101,8 @@ export default memo(ListTraderFavorites)
 
 function CompareTradersButton({ selectedTraders }: { selectedTraders: string[] }) {
   return (
-    <Flex
+    <Box
+      display={{ _: 'none', lg: 'flex' }}
       width={['100%', 228]}
       height={40}
       sx={{
@@ -122,6 +123,6 @@ function CompareTradersButton({ selectedTraders }: { selectedTraders: string[] }
           <Type.Caption color="neutral3">Select 2 traders to compare</Type.Caption>
         </>
       )}
-    </Flex>
+    </Box>
   )
 }

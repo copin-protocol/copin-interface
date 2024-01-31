@@ -121,7 +121,6 @@ const FavoriteNoteTooltip = () => {
                   }}
                   onChange={(event) => {
                     if (event.target.value.length <= NOTE_MAX_LENGTH) {
-                      event.target.value = event.target.value
                       setNote(event.target.value)
                     } else {
                       event.target.value = note || ''

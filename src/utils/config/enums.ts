@@ -2,6 +2,7 @@ export enum ProtocolEnum {
   GMX = 'GMX',
   KWENTA = 'KWENTA',
   POLYNOMIAL = 'POLYNOMIAL',
+  GMX_V2 = 'GMX_V2',
 }
 
 export enum UserRoleEnum {
@@ -84,6 +85,11 @@ export enum OrderTypeEnum {
   MARGIN_TRANSFERRED = 'MARGIN_TRANSFERRED',
   STOP_LOSS = 'STOP_LOSS',
   TAKE_PROFIT = 'TAKE_PROFIT',
+}
+
+export enum SLTPTypeEnum {
+  USD = 'USD',
+  PERCENT = 'PERCENT',
 }
 
 export enum SortTypeEnum {
@@ -174,9 +180,13 @@ export enum ChangeFieldEnum {
   LEVERAGE = 'leverage',
   TOKEN_ADDRESSES = 'tokenAddresses',
   ENABLE_STOP_LOSS = 'enableStopLoss',
+  STOP_LOSS_TYPE = 'stopLossType',
   STOP_LOSS_AMOUNT = 'stopLossAmount',
+  LATEST_STOP_LOSS_ID = 'latestStopLossId',
   ENABLE_TAKE_PROFIT = 'enableTakeProfit',
   TAKE_PROFIT_AMOUNT = 'takeProfitAmount',
+  TAKE_PROFIT_TYPE = 'takeProfitType',
+  LATEST_TAKE_PROFIT_ID = 'latestTakeProfitId',
   VOLUME_PROTECTION = 'volumeProtection',
   LOOK_BACK_ORDERS = 'lookBackOrders',
   COPY_ALL = 'copyAll',

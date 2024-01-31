@@ -5,6 +5,7 @@ import {
   CopyTradeTypeEnum,
   PositionStatusEnum,
   ProtocolEnum,
+  SLTPTypeEnum,
 } from 'utils/config/enums'
 
 export interface RequestCopyTradeData {
@@ -13,8 +14,10 @@ export interface RequestCopyTradeData {
   leverage?: number
   volume?: number
   enableStopLoss?: boolean
+  stopLossType?: SLTPTypeEnum
   stopLossAmount?: number
   enableTakeProfit?: boolean
+  takeProfitType?: SLTPTypeEnum
   takeProfitAmount?: number
   protocol?: ProtocolEnum
   type?: CopyTradeTypeEnum
@@ -43,9 +46,11 @@ export interface CopyTradeData {
   leverage: number
   volume: number
   enableStopLoss: boolean
+  stopLossType: SLTPTypeEnum
   stopLossAmount: number
-  enableTakeProfit?: boolean
-  takeProfitAmount?: number
+  enableTakeProfit: boolean
+  takeProfitType: SLTPTypeEnum
+  takeProfitAmount: number
   volumeProtection: boolean
   lookBackOrders: number | null
   pnl: number

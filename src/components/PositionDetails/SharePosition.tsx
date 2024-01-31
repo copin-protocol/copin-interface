@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { ShareFat } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -9,8 +10,9 @@ import { SharePositionData } from 'entities/share'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMyProfile from 'hooks/store/useMyProfile'
+import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
-import { IconBox } from 'theme/base'
+import { Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { generatePositionCanvas } from 'utils/helpers/generateImage'
@@ -86,12 +88,19 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
 
   return (
     <>
-      <IconBox
-        role="button"
-        onClick={handleShare}
-        icon={<ShareFat size={20} />}
-        sx={{ color: 'neutral3', '&:hover': { color: 'neutral2' } }}
-      />
+      <Flex alignItems="center">
+        <ButtonWithIcon
+          variant="ghost"
+          icon={<ShareFat size={20} />}
+          onClick={handleShare}
+          spacing={1}
+          sx={{ color: 'neutral3', p: 0 }}
+        >
+          <Type.Caption>
+            <Trans>Share</Trans>
+          </Type.Caption>
+        </ButtonWithIcon>
+      </Flex>
       {isSocialMediaSharingOpen && (
         <SocialMediaSharingModal
           title="Share This Position"

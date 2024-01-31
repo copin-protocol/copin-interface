@@ -1,6 +1,7 @@
+import { useResponsive } from 'ahooks'
 import { useEffect, useRef } from 'react'
 
-import { default as OpeningsTable } from 'components/TopOpeningPositions/TopOpeningsWindow'
+import { ListOpeningPositions, default as OpeningsTable } from 'components/TopOpeningPositions/TopOpeningsWindow'
 import { PositionData } from 'entities/trader'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import { PaginationWithLimit } from 'theme/Pagination'
@@ -37,11 +38,16 @@ export default function PositionsSection({
       changeCurrentPage(1)
     }
   }, [total, sort])
+  const { sm } = useResponsive()
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', bg: 'neutral5', pt: 2 }}>
-      <Box sx={{ flex: '1', overflowX: 'auto', overflowY: 'hidden' }}>
-        <OpeningsTable data={pagedData} isLoading={isLoading} page={currentPage} />
+      <Box sx={{ flex: '1 0 0', overflowX: 'auto', overflowY: 'hidden' }}>
+        {sm ? (
+          <OpeningsTable data={pagedData} isLoading={isLoading} page={currentPage} />
+        ) : (
+          <ListOpeningPositions data={pagedData} isLoading={isLoading} page={currentPage} />
+        )}
       </Box>
       <Box px={2} sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
         <PaginationWithLimit

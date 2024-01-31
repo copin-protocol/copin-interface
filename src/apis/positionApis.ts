@@ -118,6 +118,25 @@ export async function getPositionDetailByIdApi({ protocol, id }: { protocol: Pro
     .then((res: any) => normalizePositionData(res.data as ResponsePositionData))
 }
 
+export async function searchPositionDetailByTxHashApi({
+  protocol,
+  txHash,
+  account,
+  logId,
+}: {
+  protocol: ProtocolEnum
+  txHash: string
+  account?: string
+  logId?: number
+}) {
+  const params: Record<string, any> = {}
+  if (!!account) params.account = account
+  if (!!logId) params.logId = logId
+  return requester
+    .get(`${protocol}/${SERVICE}/${txHash}`, { params })
+    .then((res: any) => normalizePositionListResponse(res.data as ResponsePositionData[]))
+}
+
 export async function getOpeningPositionDetailApi({
   protocol,
   account,

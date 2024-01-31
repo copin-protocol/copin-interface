@@ -18,7 +18,7 @@ export default function TimeDropdown({
         px: 0,
       }}
       menuSx={{
-        width: '80px',
+        width: '100px',
         minWidth: 'auto',
       }}
       placement="bottom"
