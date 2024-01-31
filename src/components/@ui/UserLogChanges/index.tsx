@@ -48,9 +48,13 @@ const UserLogChanges = ({ data, ...props }: { data: UserLogData } & LayoutProps 
               <ChangeObjectValue oldValue={parsedOldData} newValue={parsedNewData} />
             ) : (
               <Flex flexWrap="wrap" alignItems="center" sx={{ gap: 2 }}>
-                <Type.CaptionBold color="neutral1">{convertDataToText(parsedOldData)}</Type.CaptionBold>
+                <Type.CaptionBold color="neutral1">
+                  {fieldName.endsWith('Id') ? parsedOldData : convertDataToText(parsedOldData)}
+                </Type.CaptionBold>
                 <ArrowRight size={16} />
-                <Type.CaptionBold color="neutral1">{convertDataToText(parsedNewData)}</Type.CaptionBold>
+                <Type.CaptionBold color="neutral1">
+                  {fieldName.endsWith('Id') ? parsedNewData : convertDataToText(parsedNewData)}
+                </Type.CaptionBold>
               </Flex>
             )}
           </Flex>
@@ -71,9 +75,13 @@ function ChangeObjectValue({ oldValue, newValue }: { oldValue: any; newValue: an
             {CHANGE_FIELD_TRANS[key] ?? convertCamelCaseToText(key)}:
           </Type.Caption>
           <Flex flexWrap="wrap" alignItems="center" sx={{ gap: 2 }}>
-            <Type.CaptionBold color="neutral1">{convertDataToText(oldValue?.[key])}</Type.CaptionBold>
+            <Type.CaptionBold color="neutral1">
+              {key.endsWith('Id') ? oldValue?.[key] : convertDataToText(oldValue?.[key])}
+            </Type.CaptionBold>
             <ArrowRight size={16} />
-            <Type.CaptionBold color="neutral1">{convertDataToText(newValue?.[key])}</Type.CaptionBold>
+            <Type.CaptionBold color="neutral1">
+              {key.endsWith('Id') ? newValue?.[key] : convertDataToText(newValue?.[key])}
+            </Type.CaptionBold>
           </Flex>
         </Flex>
       ))}

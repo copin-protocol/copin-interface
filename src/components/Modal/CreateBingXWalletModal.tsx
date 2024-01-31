@@ -105,7 +105,7 @@ export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () =>
 
           <Divider />
 
-          <BingXHelp />
+          <BingXHelp hasBorder />
 
           <Button
             size="xl"

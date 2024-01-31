@@ -17,6 +17,7 @@ import useReferralActions from 'hooks/features/useReferralActions'
 import useParsedQueryString from 'hooks/router/useParsedQueryString'
 import useMyProfile from 'hooks/store/useMyProfile'
 import useUserReferral from 'hooks/store/useReferral'
+import { STORAGE_KEYS } from 'utils/config/keys'
 import { Account } from 'utils/web3/types'
 import { signVerifyCode } from 'utils/web3/wallet'
 
@@ -60,6 +61,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   const { addReferral } = useReferralActions({ onSuccess })
 
   const disconnect = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEYS.BINGX_NOTE)
     clearAuth()
     setWaitingState(null)
     setMyProfile(null)

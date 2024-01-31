@@ -85,6 +85,8 @@ export const STORAGE_KEYS = {
   MY_ACTIVITIES: 'my-activities',
   BACKTEST_GUIDE: 'backtest-guide',
   TRADER_RANKING_FIELDS: 'trader-ranking-fields',
+  BINGX_NOTE: 'bingx-note',
+  TABS_OPEN: 'tabs-open',
 }
 
 export const URL_PARAM_KEYS = {

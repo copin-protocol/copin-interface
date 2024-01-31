@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import ThemeProvider from 'theme'
 
 import { CopyWalletProvider } from 'hooks/features/useCopyWalletContext'
+import { useInitTabsOpen } from 'hooks/helpers/useTabsOpen'
 import { ProtocolProvider } from 'hooks/store/useProtocols'
 import ThemedGlobalStyle from 'theme/styles'
 import PythConnection from 'utils/web3/pyth'
@@ -20,6 +21,8 @@ const queryClient = new QueryClient({
 })
 
 const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+  useInitTabsOpen()
+
   return (
     <ThemeProvider>
       <ThemedGlobalStyle />

@@ -85,7 +85,7 @@ function WalletItem({ exchange, label, description, handleClick }: WalletItemPro
       </Type.Caption>
       <Button
         type="button"
-        variant="outlineActive"
+        variant="outlinePrimary"
         onClick={() => handleClick && handleClick(exchange)}
         disabled={!handleClick}
       >

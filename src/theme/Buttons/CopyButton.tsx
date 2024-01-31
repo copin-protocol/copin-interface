@@ -135,7 +135,7 @@ const CopyButton = ({
             <Type.Caption fontWeight="normal" sx={{ wordBreak: 'break-all' }}>
               {children}
             </Type.Caption>
-            <IconBox color="neutral3" ml={2} icon={copyIcon} sx={iconSx} />
+            <IconBox className="icon_wrapper" color="neutral3" ml={2} icon={copyIcon} sx={iconSx} />
           </Flex>
         )}
       </Button>
