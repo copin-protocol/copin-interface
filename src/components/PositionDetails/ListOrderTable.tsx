@@ -126,7 +126,7 @@ export default function ListOrderTable({
         style: { minWidth: '70px', textAlign: 'right' },
         render: (item) => (
           <Type.Caption color="neutral1" textAlign="right">
-            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED || item.leverage == null
+            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED || item.leverage == null || item.leverage < 0
               ? '--'
               : `${formatNumber(item.leverage, 1, 1)}x`}
           </Type.Caption>
