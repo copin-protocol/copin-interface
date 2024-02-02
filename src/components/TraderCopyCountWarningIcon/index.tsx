@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { WarningDiamond } from '@phosphor-icons/react'
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { v4 as uuid } from 'uuid'
 
 import Tooltip from 'theme/Tooltip'
 import { Box, IconBox, Type } from 'theme/base'
@@ -11,33 +13,37 @@ import ROUTES from 'utils/config/routes'
 export default function TraderCopyCountWarningIcon({
   account,
   protocol,
+  size = 24,
 }: {
   account: string
   protocol: ProtocolEnum | undefined
+  size?: number
 }) {
+  const id = useRef(uuid())
+
   return (
     <>
       <IconBox
         {...{ [DATA_ATTRIBUTES.TRADER_COPY_COUNT_WARNING]: account + '-' + (protocol ?? '') }}
-        icon={<WarningDiamond size={24} />}
+        icon={<WarningDiamond size={size} />}
         sx={{ flexShrink: 0, display: 'none' }}
         color="primary1"
-        data-tooltip-id={TOOLTIP_KEYS.TRADER_COPY_COUNT_WARNING}
+        data-tooltip-id={TOOLTIP_KEYS.TRADER_COPY_COUNT_WARNING + id.current}
       />
       <IconBox
         {...{ [DATA_ATTRIBUTES.TRADER_COPY_COUNT_WARNING_BASIC]: account + '-' + (protocol ?? '') }}
-        icon={<WarningDiamond size={24} />}
+        icon={<WarningDiamond size={size} />}
         sx={{ flexShrink: 0, display: 'none' }}
         color="red2"
-        data-tooltip-id={TOOLTIP_KEYS.TRADER_COPY_COUNT_WARNING_BASIC}
+        data-tooltip-id={TOOLTIP_KEYS.TRADER_COPY_COUNT_WARNING_BASIC + id.current}
       />
-      <Tooltip id={TOOLTIP_KEYS.TRADER_COPY_COUNT_WARNING} place="top" type="dark" effect="solid">
+      <Tooltip id={TOOLTIP_KEYS.TRADER_COPY_COUNT_WARNING + id.current} place="top" type="dark" effect="solid">
         <Type.Caption sx={{ maxWidth: 350 }}>
           <Trans>This trader is being copied by 10 or more copiers.</Trans>
         </Type.Caption>
       </Tooltip>
       <Tooltip
-        id={TOOLTIP_KEYS.TRADER_COPY_COUNT_WARNING_BASIC}
+        id={TOOLTIP_KEYS.TRADER_COPY_COUNT_WARNING_BASIC + id.current}
         place="top"
         type="dark"
         effect="solid"

@@ -103,7 +103,7 @@ export function renderTrader(
         </>
       )}
       {hasAddressTooltip && <Tooltip id={tooltipId}>{address}</Tooltip>}
-      <TraderCopyCountWarningIcon account={address} protocol={protocol} />
+      <TraderCopyCountWarningIcon account={address} protocol={protocol} size={18} />
     </Flex>
   )
 }

@@ -11,9 +11,12 @@ export default function TradeProtocolAction({ protocol = ProtocolEnum.GMX }: { p
   return (
     <Button
       variant="ghost"
-      onClick={() => window.open(getProtocolTradeUrl(protocol), '_blank')}
+      as="a"
+      href={getProtocolTradeUrl(protocol)}
+      target="_blank"
       width={['100%', '100%', '100%', 'fit-content']}
       sx={{
+        display: 'block',
         borderRadius: 0,
         height: '100%',
         borderLeft: ['none', 'none', 'none', 'small'],
@@ -21,7 +24,7 @@ export default function TradeProtocolAction({ protocol = ProtocolEnum.GMX }: { p
         borderColor: ['neutral4', 'neutral4', 'neutral4', 'neutral4'],
       }}
     >
-      <Flex sx={{ alignItems: 'center', justifyContent: 'center', gap: 2 }} flexWrap="wrap">
+      <Flex sx={{ height: '100%', alignItems: 'center', justifyContent: 'center', gap: 2 }} flexWrap="wrap">
         <Type.Caption color="neutral2">
           <Trans>Trade On</Trans>
         </Type.Caption>
