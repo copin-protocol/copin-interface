@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
+import TraderCopyCountWarningIcon from 'components/TraderCopyCountWarningIcon'
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
@@ -85,7 +86,12 @@ export function renderTrader(
         className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
         color="inherit"
         data-trader-address={address}
-        sx={{ color: 'neutral1', ':hover': { textDecoration: isLink ? 'underline' : undefined }, ...textSx }}
+        sx={{
+          flexShrink: 0,
+          color: 'neutral1',
+          ':hover': { textDecoration: isLink ? 'underline' : undefined },
+          ...textSx,
+        }}
         {...(hasAddressTooltip ? { 'data-tooltip-id': tooltipId, 'data-tooltip-delay-show': 360 } : {})}
       >
         {addressShorten(address, 3, 5)}
@@ -93,10 +99,11 @@ export function renderTrader(
       {protocol && (
         <>
           <Type.Caption color={dividerColor}>|</Type.Caption>
-          <Image src={parseProtocolImage(protocol)} width={16} height={16} />
+          <Image src={parseProtocolImage(protocol)} width={16} height={16} sx={{ flexShrink: 0 }} />
         </>
       )}
       {hasAddressTooltip && <Tooltip id={tooltipId}>{address}</Tooltip>}
+      <TraderCopyCountWarningIcon account={address} protocol={protocol} />
     </Flex>
   )
 }

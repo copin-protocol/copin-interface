@@ -151,3 +151,8 @@ export interface MyCopyTradeOverview {
   pnl: number | null
   totalVolume: number
 }
+
+export interface TraderCopyCountData {
+  account: string
+  count: number
+}

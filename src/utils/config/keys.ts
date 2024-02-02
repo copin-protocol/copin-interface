@@ -51,6 +51,7 @@ export const QUERY_KEYS = {
   GET_COPY_TRADE_BALANCE_OVERVIEW: 'GET_COPY_TRADE_BALANCE_OVERVIEW',
   GET_LATEST_ACTIVITY_LOGS: 'GET_LATEST_ACTIVITY_LOGS',
   GET_OPEN_INTEREST_BY_MARKET: 'GET_OPEN_INTEREST_BY_MARKET',
+  GET_TRADER_COPY_COUNT: 'GET_TRADER_COPY_COUNT',
 }
 
 export const CONTRACT_QUERY_KEYS = {
@@ -140,6 +141,8 @@ export const TOOLTIP_KEYS = {
   MY_COPY_ICON_MAX_VOL_MULTIPLIER: 'my_copy_icon_max_vol_multiplier',
   MY_COPY_ICON_SKIP_LOW_LEVERAGE: 'my_copy_icon_skip_low_leverage',
   MY_COPY_ICON_LOOK_BACK_ORDERS: 'my_copy_icon_look_back_orders',
+  TRADER_COPY_COUNT_WARNING: 'data-trader-copy-count',
+  TRADER_COPY_COUNT_WARNING_BASIC: 'data-trader-copy-count-basic',
 }
 
 export const ELEMENT_IDS = {
@@ -148,6 +151,11 @@ export const ELEMENT_IDS = {
   APP_MAIN_WRAPPER: 'app_main__wrapper',
   HOME_HEADER_WRAPPER: 'home__header__wrapper',
   HOME_TRADERS_WRAPPER: 'home__traders__wrapper',
+}
+
+export const DATA_ATTRIBUTES = {
+  TRADER_COPY_COUNT_WARNING: 'data-trader-copy-count',
+  TRADER_COPY_COUNT_WARNING_BASIC: 'data-trader-copy-count-basic',
 }
 
 export const ELEMENT_CLASSNAMES = {

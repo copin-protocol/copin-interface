@@ -18,6 +18,7 @@ import NoDataOrSelect from '../NoDataOrSelect'
 import ConfirmStopModal from './ConfirmStopModal'
 import FilterSection from './FilterSection'
 import { CopyTable, ListCopy } from './ListCopyTrade'
+import { TraderCopyCountWarning } from './TraderCopyCountWarning'
 import useCopyTradeColumns from './useCopyTradeColumns'
 
 export interface MyCopiesProps {
@@ -151,8 +152,15 @@ export default function MyCopies(props: MyCopiesProps) {
   const { sm } = useResponsive()
 
   return (
-    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
+    <Flex
+      sx={{
+        width: '100%',
+        height: '100%',
+        flexDirection: 'column',
+      }}
+    >
       <FilterSection {...props} />
+      <TraderCopyCountWarning allCopyTrades={props.allCopyTrades} traderAddresses={props.traders} />
       <Box flex="1 0 0" overflow="hidden">
         {hasSelectedTraders &&
           (sm ? (

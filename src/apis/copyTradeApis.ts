@@ -5,6 +5,7 @@ import {
   MyCopyTradeOverview,
   PreDeleteCopyTradeData,
   RequestCopyTradeData,
+  TraderCopyCountData,
   UpdateCopyTradeData,
 } from 'entities/copyTrade.d'
 import { MyAllCopyTradersData, MyCopyTraderData } from 'entities/trader'
@@ -120,4 +121,8 @@ export async function getMyCopyTradeOverviewApi(params: {
   protocol?: ProtocolEnum
 }) {
   return requester.get(`${SERVICE}/overview`, { params }).then((res: any) => res.data as MyCopyTradeOverview)
+}
+
+export async function getTraderCopyCount(params: { protocol: ProtocolEnum; accounts: string[] }) {
+  return requester.get(`/public/${SERVICE}/count`, { params }).then((res: any) => res.data as TraderCopyCountData[])
 }

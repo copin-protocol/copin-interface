@@ -5,7 +5,7 @@ import { ProtocolEnum } from 'utils/config/enums'
 import useGetAllCopyTrades from './useGetAllCopyTrades'
 
 type TradersByProtocolValuesData = { address: string; status: 'deleted' | 'copying' }
-export type TradersByProtocolData = Record<ProtocolEnum, TradersByProtocolValuesData[]>
+type TradersByProtocolData = Record<ProtocolEnum, TradersByProtocolValuesData[]>
 
 export default function useCopyTraderAddresses() {
   const { copiedTraders } = useGetAllCopyTrades()

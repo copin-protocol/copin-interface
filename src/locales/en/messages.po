@@ -790,6 +790,10 @@ msgstr "Edit"
 msgid "Email"
 msgstr "Email"
 
+#: src/pages/@layouts/BingXBanner.tsx
+msgid "Enjoy a 10% transaction fee rebate"
+msgstr "Enjoy a 10% transaction fee rebate"
+
 #: src/components/InputReferral/index.tsx
 msgid "Enter referral code"
 msgstr "Enter referral code"
@@ -958,6 +962,10 @@ msgstr "Follow Trader"
 #~ msgid "Follow more than 100,000+ traders on Copin"
 #~ msgstr "Follow more than 100,000+ traders on Copin"
 
+#: src/utils/config/translations.tsx
+msgid "Force Close"
+msgstr "Force Close"
+
 #: src/components/LoginAction/ModalLogin.tsx
 msgid "Forgot password?"
 msgstr "Forgot password?"
@@ -974,6 +982,10 @@ msgstr "Funding:"
 #: src/utils/config/translations.tsx
 msgid "GMX"
 msgstr "GMX"
+
+#: src/components/@ui/BingXHelp/index.tsx
+msgid "Get 10% transaction fee rebate with code:"
+msgstr "Get 10% transaction fee rebate with code:"
 
 #: src/pages/Home/Overview.tsx
 msgid "Getting started"
@@ -1725,6 +1737,10 @@ msgstr "Orders Lookback"
 msgid "Overview"
 msgstr "Overview"
 
+#: src/utils/config/translations.tsx
+msgid "Overwrite"
+msgstr "Overwrite"
+
 #: src/components/TopLeadboard/index.tsx
 #: src/pages/MyProfile/PositionTable/ListPositions.tsx
 msgid "PNL"
@@ -2229,6 +2245,10 @@ msgstr "Source Size Token"
 msgid "Source Trader"
 msgstr "Source Trader"
 
+#: src/components/TraderCopyCountWarningIcon/index.tsx
+msgid "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
+msgstr "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
+
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 msgid "Stats"
 msgstr "Stats"
@@ -2242,6 +2262,10 @@ msgstr "Status"
 #: src/components/PositionDetails/PositionStats.tsx
 msgid "Status:"
 msgstr "Status:"
+
+#: src/utils/config/translations.tsx
+msgid "Stop Copy"
+msgstr "Stop Copy"
 
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
@@ -2505,6 +2529,10 @@ msgstr "This trader alert has been removed successfully"
 msgid "This trader alert has been subscribed successfully"
 msgstr "This trader alert has been subscribed successfully"
 
+#: src/components/TraderCopyCountWarningIcon/index.tsx
+msgid "This trader is being copied by 10 or more copiers."
+msgstr "This trader is being copied by 10 or more copiers."
+
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "This trader list is empty"
 msgstr "This trader list is empty"
@@ -2520,6 +2548,10 @@ msgstr "To get notifications from traders, you must use Copin Telegram Bot"
 #: src/components/CreateSmartWalletModal/index.tsx
 msgid "To start, you need to create a smart wallet."
 msgstr "To start, you need to create a smart wallet."
+
+#: src/pages/@layouts/BingXBanner.tsx
+msgid "To support Copin, please register a BingX account using the referral link: DY5QNN"
+msgstr "To support Copin, please register a BingX account using the referral link: DY5QNN"
 
 #: src/pages/Subscription/TermsAndConditions.tsx
 #~ msgid "To unlock premium features, mint a Copin NFT."
