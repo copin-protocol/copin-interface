@@ -20,6 +20,7 @@ import Loading from 'theme/Loading'
 import Drawer from 'theme/Modal/Drawer'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
+import { formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 const emptyCss = {
@@ -67,6 +68,7 @@ export default function OpeningPositionTable({
     setOpenDrawer(false)
   }
 
+  const totalOpening = data?.length ?? 0
   const externalSource: ExternalSource = {
     prices,
   }
@@ -79,13 +81,16 @@ export default function OpeningPositionTable({
       flexDirection="column"
       height="100%"
       sx={{
-        backgroundColor: data?.length ? 'neutral5' : 'neutral7',
-        ...(data?.length || isLoading ? {} : emptyCss),
+        backgroundColor: totalOpening ? 'neutral5' : 'neutral7',
+        ...(totalOpening || isLoading ? {} : emptyCss),
         pb: 12,
       }}
     >
       <Box px={12} pt={12}>
-        <SectionTitle icon={<Pulse size={24} />} title="Opening Positions" />
+        <SectionTitle
+          icon={<Pulse size={24} />}
+          title={`Opening Positions${totalOpening ? ` (${formatNumber(totalOpening)})` : ''}`}
+        />
       </Box>
       {isLoading && <Loading />}
       {!data?.length && !isLoading && (

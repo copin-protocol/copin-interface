@@ -199,7 +199,7 @@ function OpeningPnLComponent({ data, prices, ignoreFee, sx }: OpeningPnLComponen
   const marketPrice = prices[data.indexToken]
   const openingPnl = calcOpeningPnL(data, marketPrice)
   const pnl = ignoreFee ? openingPnl : openingPnl - data.fee
-  return SignedText({ value: pnl, maxDigit: 0, sx: { textAlign: 'right', width: '100%', ...sx } })
+  return SignedText({ value: pnl, maxDigit: 1, minDigit: 1, sx: { textAlign: 'right', width: '100%', ...sx } })
 }
 
 type OpeningRoiComponentProps = {

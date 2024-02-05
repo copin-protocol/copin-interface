@@ -696,7 +696,7 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
     ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX],
   },
   [ProtocolEnum.GMX_V2]: {
-    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX_V2],
+    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX],
   },
   [ProtocolEnum.KWENTA]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {

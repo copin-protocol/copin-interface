@@ -13,6 +13,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { formatNumber } from 'utils/helpers/format'
 
 import PositionTable from '../PositionTable'
 import { openingColumns, simpleOpeningColumns } from '../PositionTable/ListPositions'
@@ -63,6 +64,7 @@ export default function OpeningPositions({
     }
   )
 
+  const totalOpening = data?.data?.length ?? 0
   const title = <Trans>Opening Positions</Trans>
 
   const externalSource: ExternalSource = {
@@ -81,7 +83,12 @@ export default function OpeningPositions({
         <Box px={3} pt={16}>
           <SectionTitle
             icon={<Pulse size={24} />}
-            title={title}
+            title={
+              <>
+                {title}
+                {totalOpening > 0 ? ` (${formatNumber(totalOpening)})` : ''}
+              </>
+            }
             iconColor="primary1"
             suffix={<SettingConfigs activeWallet={activeWallet ?? null} copyWallets={copyWallets} />}
           />
