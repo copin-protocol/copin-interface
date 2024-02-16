@@ -6,6 +6,7 @@ import { useHistory, useParams } from 'react-router-dom'
 
 import { getTopOpeningPositionsApi } from 'apis/positionApis'
 import tokenNotFound from 'assets/images/token-not-found.png'
+import PythWatermark from 'components/@ui/PythWatermark'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
@@ -71,6 +72,7 @@ function OpenInterestByMarketPage() {
     <>
       <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
         <Flex
+          alignItems="center"
           justifyContent="space-between"
           p={3}
           height="48px"
@@ -87,6 +89,7 @@ function OpenInterestByMarketPage() {
             currentTimeOption={time}
             onChangeTime={onChangeTime}
           />
+          <PythWatermark />
         </Flex>
 
         {tokenInfo ? (

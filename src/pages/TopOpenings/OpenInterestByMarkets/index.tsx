@@ -5,6 +5,7 @@ import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getOpenInterestMarketApi } from 'apis/positionApis'
+import PythWatermark from 'components/@ui/PythWatermark'
 import { TableProps, TableSortProps } from 'components/@ui/Table/types'
 import { OpenInterestMarketData } from 'entities/statistic'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -88,8 +89,18 @@ function OpenInterestByMarketsPage() {
 
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>
-      <Flex height="48px" px={3} sx={{ alignItems: 'center', borderBottom: 'small', borderBottomColor: 'neutral4' }}>
+      <Flex
+        height="48px"
+        px={3}
+        sx={{
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: 'small',
+          borderBottomColor: 'neutral4',
+        }}
+      >
         <Filter currentTimeOption={time} onChangeTime={onChangeTime} />
+        <PythWatermark />
       </Flex>
       {symbol && !symbolInfo ? (
         <NoMarketFound

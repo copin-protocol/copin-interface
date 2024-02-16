@@ -179,10 +179,10 @@ function StatisticChart({ timeRange }: { timeRange: TimeRange }) {
           gap: 24,
         }}
       >
-        <ChartWrapper isLoading={isLoading} title={<Trans>Volume</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Volume</Trans>} time={lastUpdatedTime}>
           <VolumeChartComponent data={chartData} syncId="volume_chart" />
         </ChartWrapper>
-        <ChartWrapper isLoading={isLoading} title={<Trans>Order</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Orders</Trans>} time={lastUpdatedTime}>
           <OrderChartComponent data={chartData} syncId="volume_chart" />
         </ChartWrapper>
       </Box>
@@ -223,13 +223,13 @@ function StatisticChart({ timeRange }: { timeRange: TimeRange }) {
           gap: 24,
         }}
       >
-        <ChartWrapper isLoading={isLoading} title={<Trans>Total Copier</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>Total Copiers</Trans>} time={lastUpdatedTime}>
           {<CopierChartComponent data={chartData} syncId="copy_chart" />}
         </ChartWrapper>
-        <ChartWrapper isLoading={isLoading} title={<Trans>Total Copy Trade</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>Total Copy Trades</Trans>} time={lastUpdatedTime}>
           {<CopyTradeChartComponent data={chartData} syncId="copy_chart" />}
         </ChartWrapper>
-        <ChartWrapper isLoading={isLoading} title={<Trans>Total Unique Trader</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>Total Unique Traders</Trans>} time={lastUpdatedTime}>
           {<TraderChartComponent data={chartData} syncId="copy_chart" />}
         </ChartWrapper>
       </Box>

@@ -4,6 +4,7 @@ import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getTopOpeningPositionsApi } from 'apis/positionApis'
+import PythWatermark from 'components/@ui/PythWatermark'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
@@ -61,6 +62,7 @@ function TopOpeningsPage() {
     <>
       <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
         <Flex
+          alignItems="center"
           justifyContent="space-between"
           p={3}
           height="48px"
@@ -77,6 +79,7 @@ function TopOpeningsPage() {
             currentTimeOption={time}
             onChangeTime={onChangeTime}
           />
+          <PythWatermark />
         </Flex>
         <Box sx={{ flex: '1 0 0' }}>
           <Flex height="100%" flexDirection={lg ? 'row' : 'column'}>
