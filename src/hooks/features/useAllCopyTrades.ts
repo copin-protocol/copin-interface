@@ -16,5 +16,5 @@ export default function useAllCopyTrades() {
       keepPreviousData: true,
     }
   )
-  return { allCopyTrades }
+  return { allCopyTrades: myProfile ? allCopyTrades : undefined }
 }

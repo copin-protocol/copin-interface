@@ -53,13 +53,13 @@ export const LogoWrapper = styled.div`
   gap: 8px;
 `
 
-export const MenuWrapper = styled.div<{ visible: boolean }>`
+export const MenuWrapper = styled.div<{ visible: boolean; top?: number }>`
   display: none;
 
   @media screen and (max-width: ${LARGE_BREAK_POINT}px) {
     position: fixed;
     z-index: 100;
-    top: ${NAVBAR_HEIGHT}px;
+    top: ${({ top }) => (top == null ? NAVBAR_HEIGHT : top)}px;
     left: 0;
     height: calc(100vh - ${NAVBAR_HEIGHT}px);
     width: 100%;

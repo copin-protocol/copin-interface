@@ -14,7 +14,7 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
-import { QUERY_KEYS, STORAGE_KEYS, TOOLTIP_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { DATA_ATTRIBUTES, QUERY_KEYS, STORAGE_KEYS, TOOLTIP_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import PositionTable, { ListPositionMobile } from '../PositionTable'
@@ -169,7 +169,7 @@ export default function HistoryPositions() {
 function generateDeletedTraderStyle(addresses: string[]) {
   const key = addresses
     .map((address) => {
-      return `[data-trader-address="${address}"]`
+      return `[${DATA_ATTRIBUTES.TRADER_COPY_DELETED}="${address}"]`
     })
     .join(',')
   return {

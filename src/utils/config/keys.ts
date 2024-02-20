@@ -143,6 +143,7 @@ export const TOOLTIP_KEYS = {
   MY_COPY_ICON_LOOK_BACK_ORDERS: 'my_copy_icon_look_back_orders',
   TRADER_COPY_COUNT_WARNING: 'data-trader-copy-count',
   TRADER_COPY_COUNT_WARNING_BASIC: 'data-trader-copy-count-basic',
+  TRADER_COPY_VOLUME_WARNING: 'data-trader-copy-volume',
 }
 
 export const ELEMENT_IDS = {
@@ -151,11 +152,15 @@ export const ELEMENT_IDS = {
   APP_MAIN_WRAPPER: 'app_main__wrapper',
   HOME_HEADER_WRAPPER: 'home__header__wrapper',
   HOME_TRADERS_WRAPPER: 'home__traders__wrapper',
+  WARNING_LIMIT_VOLUME_WRAPPER: 'warning_limit_volume__wrapper',
+  BINGX_INFO_WRAPPER: 'bingx_info__wrapper',
 }
 
 export const DATA_ATTRIBUTES = {
   TRADER_COPY_COUNT_WARNING: 'data-trader-copy-count',
   TRADER_COPY_COUNT_WARNING_BASIC: 'data-trader-copy-count-basic',
+  TRADER_COPY_DELETED: 'data-trader-copy-deleted',
+  TRADER_COPY_VOLUME_WARNING: 'data-trader-copy-volume',
 }
 
 export const ELEMENT_CLASSNAMES = {

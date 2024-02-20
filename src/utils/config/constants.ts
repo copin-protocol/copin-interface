@@ -35,6 +35,7 @@ export const LINKS = {
   agreement: 'https://docs.copin.io/another/agreement',
   subscriptionDocument: 'https://docs.copin.io/upgrade-to-premium',
   copinEliteClub: 'https://docs.copin.io/welcome/copin-elite-club',
+  support: 'https://t.me/leecopin',
 }
 
 export const NAVBAR_HEIGHT = 60
@@ -82,3 +83,5 @@ export const SUBSCRIPTION_COLLECTION_URL =
 
 export const MAX_TRADER_ALERT_BASIC = 10
 export const MAX_TRADER_ALERT_PREMIUM = 50
+
+export const VOLUME_LIMIT = 20000

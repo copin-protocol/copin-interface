@@ -38,7 +38,7 @@ export default function TraderCopyCountWarningIcon({
         data-tooltip-id={TOOLTIP_KEYS.TRADER_COPY_COUNT_WARNING_BASIC + id.current}
       />
       <Tooltip id={TOOLTIP_KEYS.TRADER_COPY_COUNT_WARNING + id.current} place="top" type="dark" effect="solid">
-        <Type.Caption sx={{ maxWidth: 350 }}>
+        <Type.Caption sx={{ maxWidth: 300 }}>
           <Trans>This trader is being copied by 10 or more copiers.</Trans>
         </Type.Caption>
       </Tooltip>
@@ -49,7 +49,7 @@ export default function TraderCopyCountWarningIcon({
         effect="solid"
         clickable={true}
       >
-        <Type.Caption sx={{ maxWidth: 350 }}>
+        <Type.Caption sx={{ maxWidth: 300 }}>
           <Trans>
             Starting from{' '}
             <Box as="span" fontWeight="bold">

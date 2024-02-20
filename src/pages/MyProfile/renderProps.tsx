@@ -6,6 +6,7 @@ import { v4 as uuid } from 'uuid'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import TraderCopyCountWarningIcon from 'components/TraderCopyCountWarningIcon'
+import TraderCopyVolumeWarningIcon from 'components/TraderCopyVolumeWarningIcon'
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
@@ -15,7 +16,7 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
 import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { ELEMENT_CLASSNAMES } from 'utils/config/keys'
+import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
@@ -64,46 +65,55 @@ export function renderTrader(
     size = 24,
     dividerColor = 'neutral4',
     hasAddressTooltip = false,
+    hasCopyCountWarningIcon = false,
+    hasCopyVolumeWarningIcon = false,
   }: {
     textSx?: TextProps
     isLink?: boolean
     size?: number
     dividerColor?: string
     hasAddressTooltip?: boolean
+    hasCopyCountWarningIcon?: boolean
+    hasCopyVolumeWarningIcon?: boolean
   } & SxProps = {}
 ) {
   const tooltipId = uuid()
   return (
-    <Flex
-      as={isLink && protocol ? Link : undefined}
-      to={isLink && protocol ? generateTraderDetailsRoute(protocol, address) : ''}
-      sx={{ gap: '6px', ...sx }}
-      alignItems="center"
-    >
-      <AddressAvatar address={address} size={size} />
-      <Type.Caption
-        minWidth="fit-content"
-        className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
-        color="inherit"
-        data-trader-address={address}
-        sx={{
-          flexShrink: 0,
-          color: 'neutral1',
-          ':hover': { textDecoration: isLink ? 'underline' : undefined },
-          ...textSx,
-        }}
-        {...(hasAddressTooltip ? { 'data-tooltip-id': tooltipId, 'data-tooltip-delay-show': 360 } : {})}
+    <Flex sx={{ alignItems: 'center', '& > *': { flexShrink: 0 }, gap: 1 }}>
+      <Flex
+        as={isLink && protocol ? Link : undefined}
+        to={isLink && protocol ? generateTraderDetailsRoute(protocol, address) : ''}
+        sx={{ gap: 1, flexShrink: 0, '& > *': { flexShrink: 0 }, ...sx }}
+        alignItems="center"
       >
-        {addressShorten(address, 3, 5)}
-      </Type.Caption>
-      {protocol && (
-        <>
-          <Type.Caption color={dividerColor}>|</Type.Caption>
-          <Image src={parseProtocolImage(protocol)} width={16} height={16} sx={{ flexShrink: 0 }} />
-        </>
-      )}
+        <AddressAvatar address={address} size={size} />
+        <Type.Caption
+          minWidth="fit-content"
+          className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
+          color="inherit"
+          {...{ [DATA_ATTRIBUTES.TRADER_COPY_DELETED]: address }}
+          sx={{
+            flexShrink: 0,
+            color: 'neutral1',
+            ':hover': { textDecoration: isLink ? 'underline' : undefined },
+            minWidth: 74,
+            ...textSx,
+          }}
+          {...(hasAddressTooltip ? { 'data-tooltip-id': tooltipId, 'data-tooltip-delay-show': 360 } : {})}
+        >
+          {addressShorten(address, 3, 5)}
+        </Type.Caption>
+        {protocol && (
+          <>
+            <Type.Caption color={dividerColor}>|</Type.Caption>
+            <Image src={parseProtocolImage(protocol)} width={16} height={16} sx={{ flexShrink: 0 }} />
+          </>
+        )}
+      </Flex>
       {hasAddressTooltip && <Tooltip id={tooltipId}>{address}</Tooltip>}
-      <TraderCopyCountWarningIcon account={address} protocol={protocol} size={18} />
+      {(hasCopyCountWarningIcon || hasCopyVolumeWarningIcon) && <Type.Caption color={dividerColor}>|</Type.Caption>}
+      {hasCopyCountWarningIcon && <TraderCopyCountWarningIcon account={address} protocol={protocol} size={18} />}
+      {hasCopyVolumeWarningIcon && <TraderCopyVolumeWarningIcon account={address} protocol={protocol} size={18} />}
     </Flex>
   )
 }

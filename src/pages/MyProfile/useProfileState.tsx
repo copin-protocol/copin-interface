@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserData } from 'entities/user'
@@ -15,6 +16,7 @@ export type ProfileState = {
 }
 
 export default function useProfileState(): ProfileState {
+  const { state } = useLocation<{ copyWalletId: string }>()
   const { copyWallets, loadingCopyWallets } = useCopyWalletContext()
   const [activeWallet, setActiveWallet] = useState<CopyWalletData | null>(null)
   useEffect(() => {
@@ -23,13 +25,22 @@ export default function useProfileState(): ProfileState {
     const walletStored = storedKey ? (JSON.parse(storedKey) as CopyWalletData) : null
     setActiveWallet((prev) => {
       if (!!prev) return prev
-      if (!!walletStored && copyWallets.some((data) => data.id === walletStored.id)) {
-        return walletStored
-      }
+      const foundWallet = copyWallets.find((data) => (walletStored ? data.id === walletStored.id : false))
+      if (foundWallet) return foundWallet
       return copyWallets[0]
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingCopyWallets])
+
+  useEffect(() => {
+    if (!copyWallets?.length || loadingCopyWallets || !state) return
+    setActiveWallet((prev) => {
+      const foundWallet = copyWallets.find((data) => (state?.copyWalletId ? data.id === state.copyWalletId : false))
+      if (foundWallet) return foundWallet
+      return prev
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingCopyWallets, state])
 
   useEffect(() => {
     if (!activeWallet) return

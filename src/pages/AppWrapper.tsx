@@ -20,6 +20,7 @@ import { FOOTER_HEIGHT, NAVBAR_HEIGHT } from 'utils/config/constants'
 import { ELEMENT_IDS } from 'utils/config/keys'
 
 import BingXBanner from './@layouts/BingXBanner'
+import WarningLimitVolume from './@layouts/WarningLimitVolume'
 
 const AppWrapper = ({ children }: { children: ReactNode }) => {
   useChainRestrict()
@@ -36,6 +37,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
     <>
       <Flex flexDirection="column" width="100vw" height="100vh" margin="0px auto" maxHeight="100%">
         <BingXBanner />
+        <WarningLimitVolume />
         <Navbar height={NAVBAR_HEIGHT} />
         <Box id={ELEMENT_IDS.APP_MAIN_WRAPPER} width="100%" flex="1" sx={{ position: 'relative', overflowY: 'auto' }}>
           {children}

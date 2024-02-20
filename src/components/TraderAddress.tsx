@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid'
 import Tooltip from 'theme/Tooltip'
 import { Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
-import { ELEMENT_CLASSNAMES } from 'utils/config/keys'
+import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { addressShorten } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
@@ -50,7 +50,7 @@ export default function TraderAddress({
       <Type.Caption
         className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
         color="inherit"
-        data-trader-address={address}
+        {...{ [DATA_ATTRIBUTES.TRADER_COPY_DELETED]: address }}
         sx={{ color: 'neutral1', ':hover': { textDecoration: isLink ? 'underline' : undefined }, ...textSx }}
         {...(hasAddressTooltip ? { 'data-tooltip-id': tooltipId, 'data-tooltip-delay-show': 360 } : {})}
       >

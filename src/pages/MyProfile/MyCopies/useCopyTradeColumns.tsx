@@ -106,15 +106,19 @@ export default function useCopyTradeColumns({
     [isRunningFn]
   )
   const renderTraderAccount = useCallback(
-    (item: CopyTradeData) =>
-      renderTrader(item.account, item.protocol, {
+    (item: CopyTradeData) => {
+      const isRunning = isRunningFn(item.status)
+      return renderTrader(item.account, item.protocol, {
         textSx: {
-          color: isRunningFn(item.status) ? 'neutral1' : 'neutral3',
+          color: isRunning ? 'neutral1' : 'neutral3',
         },
         sx: {
-          filter: isRunningFn(item.status) ? 'none' : 'grayscale(1)',
+          filter: isRunning ? 'none' : 'grayscale(1)',
         },
-      }),
+        hasCopyCountWarningIcon: isRunning,
+        hasCopyVolumeWarningIcon: isRunning,
+      })
+    },
     [isRunningFn]
   )
   const renderVolume = useCallback(
@@ -412,7 +416,7 @@ export default function useCopyTradeColumns({
         title: 'Trader',
         dataIndex: 'account',
         key: 'account',
-        style: { minWidth: '150px', width: 150 },
+        style: { minWidth: '170px', width: 170 },
         // TODO: 2
         render: renderTraderAccount,
       },

@@ -65,9 +65,10 @@ export default function TraderActionButtons({
         <Box
           sx={{
             display: 'flex',
-            position: 'fixed',
-            top: NAVBAR_HEIGHT + 24,
-            right: 12,
+            // position: 'fixed',
+            // top: NAVBAR_HEIGHT + 24,
+            // right: 12,
+            pr: 12,
             zIndex: 10,
           }}
         >

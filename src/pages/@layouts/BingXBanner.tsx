@@ -6,12 +6,13 @@ import { getStoredWallet } from 'apis/helpers'
 import bingXText from 'assets/images/bingx-text.png'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
-import { STORAGE_KEYS } from 'utils/config/keys'
+import { ELEMENT_IDS, STORAGE_KEYS } from 'utils/config/keys'
 
 export default function BingXBanner() {
   const { showBanner, handleCloseBanner } = useBingXBannerDisplay()
   return (
     <Flex
+      id={ELEMENT_IDS.BINGX_INFO_WRAPPER}
       sx={{
         position: 'relative',
         width: '100%',
