@@ -265,3 +265,7 @@ export function convertDataToText(data: any) {
 export function parseMarketImage(symbol: string) {
   return `/svg/markets/${symbol}.svg`
 }
+
+export function convertDurationInSecond(openTime: string) {
+  return dayjs.duration(dayjs().diff(dayjs(openTime))).asSeconds()
+}

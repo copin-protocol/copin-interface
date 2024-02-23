@@ -43,7 +43,13 @@ export default function PositionLegend({
     window.history.replaceState(
       null,
       '',
-      generatePositionDetailsRoute({ id: data.id, protocol: data.protocol, nextHours: nextHoursParam })
+      generatePositionDetailsRoute({
+        txHash: data.txHashes[0],
+        account: data.account,
+        logId: data.logId,
+        protocol: data.protocol,
+        nextHours: nextHoursParam,
+      })
     )
   }
 

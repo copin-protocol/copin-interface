@@ -68,15 +68,19 @@ export default function PositionsContainer({
         setSourcePosition(positionDetail)
         if (isCopyOpen) {
           setOpenSourceDrawer(true)
-          window.history.replaceState(null, '', generatePositionDetailsRoute(positionDetail))
+          window.history.replaceState(
+            null,
+            '',
+            generatePositionDetailsRoute({ ...positionDetail, txHash: positionDetail.txHashes[0] })
+          )
         } else {
           setOpenSourceDrawer(true)
           window.history.replaceState(
             null,
             '',
             generatePositionDetailsRoute({
-              protocol: positionDetail.protocol,
-              id: positionDetail.id,
+              ...positionDetail,
+              txHash: positionDetail.txHashes[0],
               nextHours: nextHoursParam,
             })
           )

@@ -170,12 +170,12 @@ export function renderChart({
     const watermark = document.getElementById('watermark') ?? document.createElement('div')
     watermark.setAttribute('id', 'watermark')
     // place below the chart
-    watermark.style.zIndex = '-1'
+    watermark.style.zIndex = '100'
     watermark.style.position = 'absolute'
     // set size and position to match container
     watermark.style.inset = '0px'
-    watermark.style.bottom = hasBrush ? '80px' : '32px'
-    watermark.style.right = hasBrush ? '40px' : '40px'
+    watermark.style.bottom = hasBrush ? '80px' : '8px'
+    watermark.style.right = hasBrush ? '40px' : '4px'
     watermark.style.backgroundImage = `url("${PythWatermark}")`
     watermark.style.backgroundSize = hasBrush ? '65px 18px' : '58px 16px'
     watermark.style.backgroundRepeat = 'no-repeat'

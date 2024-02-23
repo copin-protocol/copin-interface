@@ -170,7 +170,12 @@ export async function getTraderHistoryApi({
   if (!!rangeFilters && rangeFilters.length > 0) params.ranges = rangeFilters
   if (!!sort) {
     params.sortBy = sort.sortBy
-    params.sortType = sort.sortType
+    params.sortType = sort?.sortType
+    switch (sort.sortBy) {
+      case 'fee':
+        params.sortType = sort.sortType === SortTypeEnum.ASC ? SortTypeEnum.DESC : SortTypeEnum.ASC
+        break
+    }
   }
   return requester
     .post(`${protocol}/${SERVICE}/filter`, params)

@@ -147,7 +147,9 @@ export default function useSearchAllData(args?: {
 
   const handleClickPosition = useCallback(
     (data: PositionData) => {
-      history.push(generatePositionDetailsRoute(data, { highlightTxHash: debounceSearchText }))
+      history.push(
+        generatePositionDetailsRoute({ ...data, txHash: data.txHashes[0] }, { highlightTxHash: debounceSearchText })
+      )
       logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_CLICK_POSITION)
       setVisibleSearchResult(false)
     },

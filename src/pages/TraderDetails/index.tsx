@@ -8,8 +8,9 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NotFound from 'components/@ui/NotFound'
 import { TableSortProps } from 'components/@ui/Table/types'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
-import HistoryTable, { fullHistoryColumns, historyColumns } from 'components/Tables/HistoryTable'
+import HistoryTable from 'components/Tables/HistoryTable'
 import OpeningPositionTable from 'components/Tables/OpeningPositionTable'
+import { fullHistoryColumns, historyColumns } from 'components/Tables/render'
 import { PositionData } from 'entities/trader.d'
 import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
@@ -99,6 +100,10 @@ export default function TraderDetails() {
     sortBy: 'closeBlockTime',
     sortType: SortTypeEnum.DESC,
   })
+  const [currentSortOpening, setCurrentSortOpening] = useState<TableSortProps<PositionData> | undefined>({
+    sortBy: 'openBlockTime',
+    sortType: SortTypeEnum.DESC,
+  })
 
   const setTimeOption = (option: TimeFilterProps) => {
     if (option.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) return
@@ -109,8 +114,17 @@ export default function TraderDetails() {
       sortBy: 'closeBlockTime',
       sortType: SortTypeEnum.DESC,
     })
+  const resetSortOpening = () =>
+    setCurrentSort({
+      sortBy: 'openBlockTime',
+      sortType: SortTypeEnum.DESC,
+    })
   const changeCurrentSort = (sort: TableSortProps<PositionData> | undefined) => {
     setCurrentSort(sort)
+  }
+
+  const changeCurrentSortOpening = (sort: TableSortProps<PositionData> | undefined) => {
+    setCurrentSortOpening(sort)
   }
 
   const {
@@ -120,7 +134,15 @@ export default function TraderDetails() {
     isLoadingClosed,
     handleFetchClosedPositions,
     hasNextClosedPositions,
-  } = useQueryPositions({ address: _address, protocol, currencyOption, currentSort, currentPage, changeCurrentPage })
+  } = useQueryPositions({
+    address: _address,
+    protocol,
+    currencyOption,
+    currentSort,
+    currentSortOpening,
+    currentPage,
+    changeCurrentPage,
+  })
 
   const currentTraderData = useMemo(() => {
     return traderData?.find((item) => (item?.type as string) === (timeOption.id as unknown as string)) // TODO: remove timeTilter enum
@@ -155,7 +177,14 @@ export default function TraderDetails() {
     return layout
   }, [lg, xl])
 
-  const { positionFullExpanded, handlePositionsExpand, chartFullExpanded, handleChartFullExpand } = useHandleLayout()
+  const {
+    openingPositionFullExpanded,
+    handleOpeningPositionsExpand,
+    positionFullExpanded,
+    handlePositionsExpand,
+    chartFullExpanded,
+    handleChartFullExpand,
+  } = useHandleLayout()
 
   if (!isLoadingTraderData && !traderData) return <NotFound title="Trader not found" message="" />
 
@@ -224,7 +253,18 @@ export default function TraderDetails() {
         }
         heatmap={<div></div>}
         openingPositions={
-          <OpeningPositionTable data={openingPositions} isLoading={isLoadingOpening} protocol={protocol} />
+          <OpeningPositionTable
+            data={openingPositions}
+            isLoading={isLoadingOpening}
+            protocol={protocol}
+            currentSort={xl && openingPositionFullExpanded ? currentSortOpening : undefined}
+            changeCurrentSort={xl && openingPositionFullExpanded ? changeCurrentSortOpening : undefined}
+            isExpanded={openingPositionFullExpanded}
+            toggleExpand={() => {
+              resetSortOpening()
+              handleOpeningPositionsExpand()
+            }}
+          />
         }
         closedPositions={
           <HistoryTable
@@ -246,6 +286,7 @@ export default function TraderDetails() {
             }}
           />
         }
+        openingPositionFullExpanded={openingPositionFullExpanded}
         positionFullExpanded={positionFullExpanded}
         chartFullExpanded={chartFullExpanded}
       ></Layout>

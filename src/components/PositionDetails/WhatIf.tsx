@@ -14,10 +14,12 @@ import { formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 export default function WhatIf({
-  positionId,
+  txHash,
+  account,
+  logId,
   protocol,
   ...props
-}: { positionId: string; protocol: ProtocolEnum } & BoxProps) {
+}: { protocol: ProtocolEnum; txHash: string; account: string; logId: number } & BoxProps) {
   const { searchParams, setSearchParams } = useSearchParams()
   const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
     ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
@@ -78,14 +80,14 @@ export default function WhatIf({
           setValue('amount', 0)
           setNextHours(undefined)
           setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: null })
-          window.history.replaceState(null, '', generatePositionDetailsRoute({ protocol, id: positionId }))
+          window.history.replaceState(null, '', generatePositionDetailsRoute({ protocol, txHash, account, logId }))
         }}
         onSubmit={() => {
           setNextHours(amount)
           window.history.replaceState(
             null,
             '',
-            generatePositionDetailsRoute({ protocol, id: positionId, nextHours: amount })
+            generatePositionDetailsRoute({ protocol, txHash, account, logId, nextHours: amount })
           )
           // setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: amount ? amount.toString() : null })
         }}

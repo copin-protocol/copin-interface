@@ -17,6 +17,7 @@ export default function useQueryPositions({
   currencyOption,
   protocol,
   currentSort,
+  currentSortOpening,
   currentPage,
   changeCurrentPage,
 }: {
@@ -24,6 +25,7 @@ export default function useQueryPositions({
   protocol: ProtocolEnum
   currencyOption: TokenOptionProps | undefined
   currentSort: TableSortProps<PositionData> | undefined
+  currentSortOpening: TableSortProps<PositionData> | undefined
   currentPage: number
   changeCurrentPage: (page: number) => void
 }) {
@@ -37,8 +39,14 @@ export default function useQueryPositions({
     queryFilters.push({ fieldName: 'indexToken', value: currencyOption?.id })
   }
   const { data: openingPositions, isLoading: isLoadingOpening } = useQuery(
-    [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol],
-    () => getOpeningPositionsApi({ protocol, account: address }),
+    [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol, currentSortOpening],
+    () =>
+      getOpeningPositionsApi({
+        protocol,
+        account: address,
+        sortBy: currentSortOpening?.sortBy,
+        sortType: currentSortOpening?.sortType,
+      }),
     { enabled: !!address, retry: 0 }
   )
   const { data: closedPositions, isFetching: isLoadingClosed } = useQuery(
@@ -116,7 +124,11 @@ export function useInfiniteQueryPositions({
   }
   const { data: openingPositions, isLoading: isLoadingOpening } = useQuery(
     [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol],
-    () => getOpeningPositionsApi({ protocol, account: address }),
+    () =>
+      getOpeningPositionsApi({
+        protocol,
+        account: address,
+      }),
     { enabled: !!address, retry: 0 }
   )
   const {

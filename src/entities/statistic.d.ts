@@ -40,8 +40,12 @@ export interface TraderPnlStatisticData {
   date: string
 }
 
-export interface OpenInterestMarketData {
+export interface OpenInterestMarketData extends MarketStatData {
   indexToken: string
+  latestStat: MarketStatData
+}
+
+export interface MarketStatData {
   latestPrice: number
   price: number
   totalLong: number

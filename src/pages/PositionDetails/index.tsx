@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import { searchPositionDetailByTxHashApi } from 'apis/positionApis'
 import Container from 'components/@ui/Container'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import NoDataFound from 'components/@ui/NoDataFound'
 import PositionDetails from 'components/PositionDetails'
 import PositionTxResults from 'components/PositionTxResults'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -41,6 +42,7 @@ export default function PositionDetailsPage() {
       <CustomPageTitle title="Position Details" />
       <Container maxWidth={{ lg: 1000 }} height="100%">
         {isLoading && <Loading />}
+        {!isLoading && !account && !data?.length && <NoDataFound message={<Trans>No Position Found</Trans>} />}
         {!!positionId && <PositionDetails protocol={protocol} id={positionId} isShow isDrawer={false} />}
         {!!txHash && !!account && !positionId && (
           <PositionTxResults

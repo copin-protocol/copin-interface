@@ -51,7 +51,7 @@ const SearchTxHash = () => {
 
   const handleClickPosition = useCallback(
     (data: PositionData) => {
-      history.push(generatePositionDetailsRoute(data, { highlightTxHash: txHash }))
+      history.push(generatePositionDetailsRoute({ ...data, txHash }, { highlightTxHash: txHash }))
     },
     [history, txHash]
   )

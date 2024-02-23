@@ -115,6 +115,7 @@ export interface PositionData {
   isWin: boolean
   isLiquidate: boolean
   status: PositionStatusEnum
+  txHashes: string[]
   orderIds: string[]
   orders: OrderData[]
   createdAt: string

@@ -72,7 +72,7 @@ const TopOpenPositions = () => {
   const handleSelectItem = (data: PositionData) => {
     setCurrentPosition(data)
     setOpenDrawer(true)
-    window.history.replaceState(null, '', generatePositionDetailsRoute(data))
+    window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes[0] }))
   }
 
   const handleDismiss = () => {

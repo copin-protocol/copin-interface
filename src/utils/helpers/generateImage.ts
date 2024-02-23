@@ -6,7 +6,7 @@ import { ELEMENT_IDS } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 
 import { calcLiquidatePrice, calcOpeningPnL, calcOpeningROI } from './calculate'
-import formatTokenPrices, { addressShorten, formatNumber } from './format'
+import formatTokenPrices, { addressShorten, formatDuration, formatNumber } from './format'
 import { generateAvatar } from './generateAvatar'
 
 export const generateTraderCanvas = ({
@@ -327,7 +327,7 @@ export const generatePositionCanvas = ({
       y: chartAreaOffsetY + 52,
     })
   } else {
-    leftCtx.fillText(`${formatNumber(stats.durationInSecond / (60 * 60), 1)}h`, durationX, chartAreaOffsetY + 52)
+    leftCtx.fillText(formatDuration(stats.durationInSecond), durationX, chartAreaOffsetY + 52)
   }
 
   // chart line

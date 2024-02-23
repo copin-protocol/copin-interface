@@ -108,10 +108,12 @@ export default function PositionDetails({
                 <Type.H5 color="neutral3">)</Type.H5>
               </Flex>
             )}
-            {!isOpening && data.id && (
+            {!isOpening && !!data.txHashes?.length && (
               <WhatIf
                 protocol={protocol}
-                positionId={data.id}
+                txHash={data.txHashes[0]}
+                account={data.account}
+                logId={data.logId}
                 sx={{ position: 'absolute', top: [-3, -24], right: 0 }}
               />
             )}

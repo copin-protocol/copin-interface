@@ -9,7 +9,7 @@ import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { LayoutProps } from './types'
 
 const DesktopLayout = (props: LayoutProps) => {
-  const { positionFullExpanded, chartFullExpanded } = props
+  const { openingPositionFullExpanded, positionFullExpanded, chartFullExpanded } = props
   const { myProfile } = useMyProfile()
 
   const [positionTopExpanded, toggleTopExpand] = useReducer((state) => !state, false)
@@ -35,7 +35,7 @@ const DesktopLayout = (props: LayoutProps) => {
         gridTemplate: `
     "ACCOUNT ACCOUNT ACCOUNT" minmax(60px, 60px)
     "CHARTS STATS POSITIONS" minmax(0px, 1fr) / ${
-      positionFullExpanded ? '400px 0px 1fr' : '400px 1fr 510px'
+      openingPositionFullExpanded || positionFullExpanded ? '400px 0px 1fr' : '400px 1fr 510px'
       // positionFullExpanded ? '400px 0px 1fr' : chartFullExpanded ? '1fr 0px 510px' : '400px 1fr 510px'
     }
     `,
@@ -135,13 +135,19 @@ const DesktopLayout = (props: LayoutProps) => {
         id="POSITIONS"
         sx={{
           gridArea: 'POSITIONS / POSITIONS',
-          borderLeft: positionFullExpanded ? 'none' : 'small',
+          borderLeft: openingPositionFullExpanded || positionFullExpanded ? 'none' : 'small',
           borderColor: 'neutral4',
           overflow: 'hidden',
           display: 'grid',
           gridTemplate: `
-    "OPENINGS" ${positionFullExpanded || positionTopExpanded ? '0px' : `${rowOneHeight}`}
-    "HISTORY" minmax(0px, 1fr)
+    "OPENINGS" ${
+      openingPositionFullExpanded
+        ? 'minmax(0px, 1fr)'
+        : positionFullExpanded || positionTopExpanded
+        ? '0px'
+        : `${rowOneHeight}`
+    }
+    "HISTORY" ${openingPositionFullExpanded ? '0px' : 'minmax(0px, 1fr)'}
     `,
         }}
       >
@@ -149,7 +155,7 @@ const DesktopLayout = (props: LayoutProps) => {
           sx={{
             gridArea: 'OPENINGS',
             overflow: 'hidden',
-            borderBottom: positionFullExpanded || positionTopExpanded ? 'none' : 'small',
+            borderBottom: openingPositionFullExpanded || positionFullExpanded || positionTopExpanded ? 'none' : 'small',
             borderBottomColor: 'neutral4',
           }}
         >
@@ -167,7 +173,7 @@ const DesktopLayout = (props: LayoutProps) => {
               }
             }}
             buttonSx={{
-              display: positionFullExpanded ? 'none' : 'block',
+              display: openingPositionFullExpanded || positionFullExpanded ? 'none' : 'block',
               top: positionTopExpanded ? '0px' : '-16px',
               left: '50%',
               transform: 'translateX(-50%)',

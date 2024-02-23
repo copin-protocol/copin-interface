@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import { sharePositionApi } from 'apis/shareApis'
 import logoWithText from 'assets/images/logo.png'
 import ToastBody from 'components/@ui/ToastBody'
-import { SharePositionData } from 'entities/share'
+import { ImageData } from 'entities/image'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMyProfile from 'hooks/store/useMyProfile'
@@ -23,7 +23,8 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
   const { prices } = useGetUsdPrices()
   const [isSocialMediaSharingOpen, setIsSocialMediaSharingOpen] = useState(false)
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
-  const [shareData, setShareData] = useState<SharePositionData>()
+  // const [shareData, setShareData] = useState<SharePositionData>()
+  const [image, setImage] = useState<ImageData | null>(null)
 
   const { protocolImg, logoImg } = useMemo(() => {
     const protocolImg = new Image(32, 32)
@@ -63,7 +64,7 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
               setIsSocialMediaSharingOpen(false)
               return
             }
-            setShareData(res)
+            setImage(res)
             setIsGeneratingLink(false)
           }
           share()
@@ -80,7 +81,9 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
   const shareLink = generateParamsUrl({
     url: `${import.meta.env.VITE_URL}${generatePositionDetailsRoute({
       protocol: stats?.protocol,
-      id: stats?.id,
+      txHash: stats?.txHashes[0],
+      account: stats?.account,
+      logId: stats?.logId,
     })}`,
     key: 'ref',
     value: referralCode,
@@ -108,7 +111,7 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
           link={shareLink}
           onDismiss={() => setIsSocialMediaSharingOpen(false)}
           isGeneratingLink={isGeneratingLink}
-          image={shareData?.file}
+          image={image}
         />
       )}
     </>

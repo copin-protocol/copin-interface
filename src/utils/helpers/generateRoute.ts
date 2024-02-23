@@ -24,14 +24,16 @@ export const generateMyOpeningPositionRoute = (data: {
   `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}?account=${data.copyAccount}&indexToken=${data.indexToken}&key=${data.key}`
 
 export const generatePositionDetailsRoute = (
-  data: Partial<{ protocol: ProtocolEnum; id: string; nextHours?: number }>,
+  data: Partial<{ protocol: ProtocolEnum; txHash: string; account: string; logId: number; nextHours?: number }>,
   others?: {
     highlightTxHash?: string
   }
 ) =>
   createUrlWithParams({
-    url: `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}/${data.id}`,
+    url: `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}/${data.txHash}`,
     params: {
+      [URL_PARAM_KEYS.ACCOUNT]: data.account,
+      [URL_PARAM_KEYS.LOG_ID]: data.logId,
       [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: data.nextHours,
       [URL_PARAM_KEYS.HIGHLIGHT_TX_HASH]: others?.highlightTxHash,
     },
@@ -62,7 +64,7 @@ function createUrlWithParams({ url, params = {} }: { url: string; params?: Recor
       query += `&${key}=${encodeURIComponent(params[key])}`
     }
   }
-  return url + `${!!query ? `?${query}` : ''}`
+  return url + `${!!query ? `?${query.slice(1)}` : ''}`
 }
 
 export function generateOIOverviewRoute(data: { protocol: string; symbol?: string; params?: Record<string, any> }) {

@@ -9,12 +9,10 @@ const getSharedPositionDetails = async (req, res) => {
 
   try {
     const sharedData = await apiRequester.get(`/share/${sharedId}`).then((res) => res.query)
-    const { account, positionId, indexToken, key, blockNumber } = sharedData
-    const isOpening = !positionId && !!account && !!indexToken && !!key
+    const { account, txHashes, logId } = sharedData
+    const txHash = txHashes[0]
     let thumbnail = `${configs.baseUrl}/images/cover/default-position-cover.png`
-    const newThumbnail = isOpening
-      ? `${configs.imageApiUrl}/share_opening_${protocol}_${key}_${blockNumber}`
-      : `${configs.imageApiUrl}/share_closed_${protocol}_${positionId}`
+    const newThumbnail = `${configs.imageApiUrl}/share_${protocol}_${txHash}_${account}_${logId}`
     const image = await axios.get(`${newThumbnail}`)
     if (image.data) thumbnail = newThumbnail + `?${new Date().getTime()}`
 
@@ -22,7 +20,7 @@ const getSharedPositionDetails = async (req, res) => {
       req,
       res,
       params: {
-        title: `Trader ${addressShorten(account)} on ${protocol} | Copin Analyzer`,
+        title: `Trader ${addressShorten(account)} on ${protocol} - View this position details on Copin`,
         thumbnail,
         url: `${configs.baseUrl}/${protocol}/position/share/${sharedId}`,
       },

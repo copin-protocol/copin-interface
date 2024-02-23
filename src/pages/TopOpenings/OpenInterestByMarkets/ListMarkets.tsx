@@ -41,6 +41,11 @@ export function TableForm({
       data={data}
       restrictHeight
       tableBodySx={{ 'tr:hover': { '.table_icon': { color: 'neutral1' } } }}
+      tableHeadSx={{
+        th: {
+          pt: 1,
+        },
+      }}
       currentSort={currentSort}
       changeCurrentSort={changeCurrentSort}
       // onClickRow={(data) => {

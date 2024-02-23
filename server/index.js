@@ -4,16 +4,16 @@ import { resolve } from 'path'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { getLeaderboard } from './leaderboard.controller.js'
 import { getPositionDetails } from './positionDetail.controller.js'
 import { getBacktestMultiple } from './sharedBacktestMultiple.controller.js'
 import { getBacktestSingle } from './sharedBacktestSingle.controller.js'
 import { getSharedPositionDetails } from './sharedPositionDetail.controller.js'
 import { getStats } from './stats.controller.js'
+import { getSubscription } from './subscription.controller.js'
 import { getTopOpenings } from './topOpening.controller.js'
 import { getTraderDetail } from './traderDetail.controller.js'
 import { renderHTML } from './utils.js'
-import {getLeaderboard} from "./leaderboard.controller.js";
-import {getSubscription} from "./subscription.controller.js";
 
 const __filename = fileURLToPath(import.meta.url)
 

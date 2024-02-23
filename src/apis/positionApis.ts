@@ -153,10 +153,35 @@ export async function getOpeningPositionDetailApi({
     .then((res: any) => normalizePositionData(res.data as ResponsePositionData))
 }
 
-export async function getOpeningPositionsApi({ protocol, account }: { protocol: ProtocolEnum; account: string }) {
-  return requester
-    .get(`${protocol}/${SERVICE}/opening/${account}`)
-    .then((res: any) => (res.data as ResponsePositionData[])?.map((p) => normalizePositionData(p)))
+export async function getOpeningPositionsApi({
+  protocol,
+  account,
+  sortBy,
+  sortType,
+}: {
+  protocol: ProtocolEnum
+  account: string
+  sortBy?: string
+  sortType?: string
+}) {
+  const params: Record<string, any> = {}
+  if (!!sortBy && !!sortType) {
+    params.sortBy = sortBy
+    params.sortType = sortType
+    switch (sortBy) {
+      case 'fee':
+        params.sortType = sortType === SortTypeEnum.ASC ? SortTypeEnum.DESC : SortTypeEnum.ASC
+        break
+      case 'pnl':
+        params.sortBy = 'realisedPnl'
+        break
+    }
+  }
+  return requester.get(`${protocol}/${SERVICE}/opening/${account}`, { params }).then((res: any) =>
+    (res.data as ResponsePositionData[])?.map((p) => {
+      return normalizePositionData(p)
+    })
+  )
 }
 
 export async function getTokenTradesByTraderApi({ protocol, account }: { protocol: ProtocolEnum; account: string }) {

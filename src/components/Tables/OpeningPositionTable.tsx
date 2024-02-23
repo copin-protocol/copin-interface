@@ -1,27 +1,26 @@
-import { CaretRight, Pulse, XCircle } from '@phosphor-icons/react'
+import { ArrowsIn, ArrowsOutSimple, Pulse, XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import emptyBg from 'assets/images/opening_empty_bg.png'
 import Container from 'components/@ui/Container'
-import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import SectionTitle from 'components/@ui/SectionTitle'
 import Table from 'components/@ui/Table'
-import { renderEntry, renderOpeningPnLWithPrices, renderSizeOpening } from 'components/@ui/Table/renderProps'
-import { ColumnData } from 'components/@ui/Table/types'
+import { TableSortProps } from 'components/@ui/Table/types'
 import PositionDetails from 'components/PositionDetails'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useIsMobile from 'hooks/helpers/useIsMobile'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
 import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
 import Drawer from 'theme/Modal/Drawer'
-import { Box, Flex, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { Box, Flex, IconBox, Type } from 'theme/base'
+import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
+
+import { ExternalSource, fullOpeningColumns, openingColumns } from './render'
 
 const emptyCss = {
   backgroundImage: `url(${emptyBg})`,
@@ -34,33 +33,49 @@ export default function OpeningPositionTable({
   data,
   isLoading,
   protocol,
+  currentSort,
+  changeCurrentSort,
+  toggleExpand,
+  isExpanded,
 }: {
   data: PositionData[] | undefined
   isLoading: boolean
   protocol: ProtocolEnum
+  currentSort?: TableSortProps<PositionData> | undefined
+  changeCurrentSort?: (sort: TableSortProps<PositionData> | undefined) => void
+  toggleExpand?: () => void
+  isExpanded?: boolean
 }) {
   const { prices } = useGetUsdPrices()
   const isMobile = useIsMobile()
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
+
   const tableData = useMemo(() => {
     if (!data) return undefined
     let openingPositions = data
-    openingPositions = openingPositions.sort((x, y) =>
-      x.openBlockTime < y.openBlockTime ? 1 : x.openBlockTime > y.openBlockTime ? -1 : 0
-    )
+    switch (currentSort?.sortBy) {
+      case 'durationInSecond':
+        openingPositions = openingPositions.sort((a, b) => {
+          return (
+            (((a?.[currentSort.sortBy] as number) ?? 0) - ((b?.[currentSort.sortBy] as number) ?? 0)) *
+            (currentSort?.sortType === SortTypeEnum.DESC ? -1 : 1)
+          )
+        })
+        break
+    }
 
     return {
       data: openingPositions,
       meta: { limit: openingPositions.length, offset: 0, total: openingPositions.length, totalPages: 1 },
     }
-  }, [data])
+  }, [currentSort, data])
 
   const handleSelectItem = (data: PositionData) => {
     setCurrentPosition(data)
     setOpenDrawer(true)
-    window.history.replaceState(null, '', generatePositionDetailsRoute(data))
+    window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes[0] }))
   }
 
   const handleDismiss = () => {
@@ -73,7 +88,7 @@ export default function OpeningPositionTable({
     prices,
   }
 
-  const { lg } = useResponsive()
+  const { lg, xl } = useResponsive()
 
   return (
     <Box
@@ -86,12 +101,33 @@ export default function OpeningPositionTable({
         pb: 12,
       }}
     >
-      <Box px={12} pt={12}>
+      <Flex px={12} pt={12} alignItems="center" justifyContent="space-between">
         <SectionTitle
           icon={<Pulse size={24} />}
           title={`Opening Positions${totalOpening ? ` (${formatNumber(totalOpening)})` : ''}`}
+          suffix={
+            toggleExpand && (
+              <IconBox
+                icon={isExpanded ? <ArrowsIn size={20} /> : <ArrowsOutSimple size={20} />}
+                role="button"
+                sx={{
+                  width: 32,
+                  height: 32,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 'sm',
+                  border: 'small',
+                  borderColor: 'neutral4',
+                  color: 'neutral2',
+                  '&:hover': { color: 'neutral1' },
+                }}
+                onClick={toggleExpand}
+              />
+            )
+          }
         />
-      </Box>
+      </Flex>
       {isLoading && <Loading />}
       {!data?.length && !isLoading && (
         <Flex p={3} flexDirection="column" width="100%" height={180} justifyContent="center" alignItems="center">
@@ -109,8 +145,10 @@ export default function OpeningPositionTable({
               minWidth: 500,
             }}
             data={tableData?.data}
-            columns={columns}
+            columns={xl && isExpanded ? fullOpeningColumns : openingColumns}
             externalSource={externalSource}
+            currentSort={currentSort}
+            changeCurrentSort={changeCurrentSort}
             isLoading={isLoading}
             onClickRow={handleSelectItem}
             renderRowBackground={() => 'rgb(31, 34, 50)'}
@@ -138,54 +176,3 @@ export default function OpeningPositionTable({
     </Box>
   )
 }
-
-export type ExternalSource = {
-  prices: UsdPrices
-}
-export const columns: ColumnData<PositionData, ExternalSource>[] = [
-  {
-    title: 'Time',
-    dataIndex: 'openBlockTime',
-    key: 'openBlockTime',
-    style: { width: '45px' },
-    render: (item) => (
-      <Type.Caption color="neutral3">
-        <RelativeShortTimeText date={item.openBlockTime} />
-      </Type.Caption>
-    ),
-  },
-  {
-    title: 'Entry',
-    dataIndex: 'indexToken',
-    key: 'indexToken',
-    style: { width: '140px' },
-    render: (item) => renderEntry(item),
-  },
-  {
-    title: 'Size',
-    dataIndex: 'size',
-    key: 'size',
-    style: { width: '205px' },
-    render: (item, index, externalSource) =>
-      externalSource?.prices ? renderSizeOpening(item, externalSource?.prices) : '--',
-  },
-  {
-    title: 'PnL',
-    dataIndex: 'pnl',
-    key: 'pnl',
-    style: { width: '75px', textAlign: 'right' },
-    render: (item, index, externalSource) =>
-      externalSource?.prices ? renderOpeningPnLWithPrices(item, externalSource?.prices, true) : '--',
-  },
-  {
-    title: '',
-    dataIndex: 'id',
-    key: 'id',
-    style: { width: '20px', textAlign: 'right' },
-    render: () => (
-      <Box sx={{ position: 'relative', top: '2px' }}>
-        <CaretRight />
-      </Box>
-    ),
-  },
-]

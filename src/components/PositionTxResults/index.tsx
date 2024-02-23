@@ -59,7 +59,12 @@ const PositionTxResults = ({
 
   const handleClickPosition = useCallback(
     (data: PositionData) => {
-      history.push(generatePositionDetailsRoute(data, { highlightTxHash: txHash }))
+      history.push(
+        generatePositionDetailsRoute(
+          { protocol: data.protocol, txHash: data.txHashes[0], account: data.account, logId: data.logId },
+          { highlightTxHash: txHash }
+        )
+      )
     },
     [history, txHash]
   )
@@ -128,7 +133,8 @@ const PositionTxResults = ({
                 <NoDataFound
                   message={
                     <Trans>
-                      Maybe you are missing an trader address, you can refer to &quot;Recommend Results&quot; section.
+                      Maybe you are missing a trader address or have incorrect logs, you can refer to &quot;Recommend
+                      Results&quot; section.
                     </Trans>
                   }
                 />

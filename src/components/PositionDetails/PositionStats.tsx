@@ -10,7 +10,7 @@ import { PositionData } from 'entities/trader'
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
 import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
-import { formatNumber } from 'utils/helpers/format'
+import { formatDuration, formatNumber } from 'utils/helpers/format'
 
 import SharePosition from './SharePosition'
 
@@ -74,10 +74,7 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }:
       </Flex>
       <Flex mt={3} alignItems="center" justifyContent="space-between" sx={{ gap: [2, 24], flexWrap: 'wrap' }}>
         <Flex alignItems="center" sx={{ gap: [2, 24], flexWrap: 'wrap' }}>
-          <DesktopItemInfo
-            label={<Trans>Duration:</Trans>}
-            value={data.durationInSecond ? `${formatNumber(data.durationInSecond / (60 * 60), 1)}h` : '--'}
-          />
+          <DesktopItemInfo label={<Trans>Duration:</Trans>} value={formatDuration(data.durationInSecond)} />
           <DesktopItemInfo
             label={<Trans>Total Collateral:</Trans>}
             value={data.collateral ? `$${formatNumber(data.collateral, 0)}` : '--'}
@@ -116,10 +113,7 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }: 
           label={<Trans>Total Collateral:</Trans>}
           value={data.collateral ? `$${formatNumber(data.collateral, 0)}` : '--'}
         />
-        <MobileItemInfo
-          label={<Trans>Duration:</Trans>}
-          value={data.durationInSecond ? `${formatNumber(data.durationInSecond / (60 * 60), 1)}h` : '--'}
-        />
+        <MobileItemInfo label={<Trans>Duration:</Trans>} value={formatDuration(data.durationInSecond)} />
         <MobileItemInfo
           label={<Trans>Status:</Trans>}
           value={

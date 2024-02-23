@@ -248,7 +248,11 @@ export default function ChartProfitComponent({
       window.history.replaceState(
         null,
         '',
-        generatePositionDetailsRoute({ protocol: position.protocol, id: position.id, nextHours })
+        generatePositionDetailsRoute({
+          ...position,
+          txHash: position.txHashes[0],
+          nextHours,
+        })
       )
     }
   }, [])

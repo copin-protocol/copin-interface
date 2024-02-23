@@ -6,6 +6,7 @@ export type LayoutProps = {
   heatmap?: JSX.Element
   openingPositions?: JSX.Element
   closedPositions?: JSX.Element
+  openingPositionFullExpanded?: boolean
   positionFullExpanded?: boolean
   chartFullExpanded?: boolean
 }

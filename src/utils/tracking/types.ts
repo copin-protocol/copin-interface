@@ -140,6 +140,8 @@ export const EVENT_ACTIONS = {
     HIDE_POSITION_FULL: 'hide_trader_position_full',
     EXPAND_POSITION_TOP: 'expand_trader_position_top',
     HIDE_POSITION_TOP: 'hide_trader_position_top',
+    EXPAND_OPENING_POSITION_FULL: 'expand_trader_opening_position_full',
+    HIDE_OPENING_POSITION_FULL: 'hide_trader_opening_position_full',
     EXPAND_CHART_POSITION_FULL: 'expand_chart_position_full',
     HIDE_CHART_POSITION_FULL: 'hide_chart_position_full',
   },

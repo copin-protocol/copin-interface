@@ -16,7 +16,7 @@ const SectionTitle = ({
   suffix?: ReactNode
 }) => {
   return (
-    <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2, pb: 12 }}>
+    <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ gap: 2, pb: 12 }}>
       <Flex alignItems="center" sx={{ gap: 2, ...(sx ?? {}) }}>
         <IconBox color={iconColor} icon={icon} />
         <Type.BodyBold>{title}</Type.BodyBold>

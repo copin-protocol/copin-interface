@@ -545,7 +545,10 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     text: <Trans>Avg Duration</Trans>,
     searchText: 'Avg Duration',
     label: (
-      <LabelWithTooltip id="tt_avg_duration_label" tooltip="The average duration of trades in hours">
+      <LabelWithTooltip
+        id="tt_avg_duration_label"
+        tooltip="The average duration of trades (h: hours | m: minutes | s: seconds)"
+      >
         Avg Duration
       </LabelWithTooltip>
     ),
@@ -557,14 +560,17 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       lte: 10,
     },
     id: 'avgDuration',
-    render: (item) => <Text text={formatDuration(item.avgDuration * 1000)} />,
+    render: (item) => <Text text={formatDuration(item.avgDuration)} />,
   },
   {
     style: { minWidth: ['120px', '132px'] },
     text: <Trans>Min Duration</Trans>,
     searchText: 'Min Duration',
     label: (
-      <LabelWithTooltip id="tt_min_duration_label" tooltip="The minimum duration of a trade in hours">
+      <LabelWithTooltip
+        id="tt_min_duration_label"
+        tooltip="The minimum duration of a trade (h: hours | m: minutes | s: seconds)"
+      >
         Min Duration
       </LabelWithTooltip>
     ),
@@ -576,14 +582,17 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       lte: 1,
     },
     id: 'minDuration',
-    render: (item) => <Text text={formatDuration(item.minDuration * 1000)} />,
+    render: (item) => <Text text={formatDuration(item.minDuration)} />,
   },
   {
     style: { minWidth: ['120px', '135px'] },
     text: <Trans>Max Duration</Trans>,
     searchText: 'Max Duration',
     label: (
-      <LabelWithTooltip id="tt_max_duration_label" tooltip="The maximum duration of a trade in hours">
+      <LabelWithTooltip
+        id="tt_max_duration_label"
+        tooltip="The maximum duration of a trade (h: hours | m: minutes | s: seconds)"
+      >
         Max Duration
       </LabelWithTooltip>
     ),
@@ -595,7 +604,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       lte: 50,
     },
     id: 'maxDuration',
-    render: (item) => <Text text={formatDuration(item.maxDuration * 1000)} />,
+    render: (item) => <Text text={formatDuration(item.maxDuration)} />,
   },
   {
     style: { minWidth: ['130px', '150px'] },

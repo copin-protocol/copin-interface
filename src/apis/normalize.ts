@@ -7,6 +7,7 @@ import {
 } from 'entities/trader'
 import { SortTypeEnum } from 'utils/config/enums'
 import { decodeRealisedData } from 'utils/helpers/handleRealised'
+import { convertDurationInSecond } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
 
@@ -31,6 +32,9 @@ export const normalizeTraderData = (t: ResponseTraderData) => {
 export const normalizePositionData = (p: ResponsePositionData) => {
   p.roi = p.realisedRoi
   p.pnl = p.realisedPnl
+  if (!p.durationInSecond) {
+    p.durationInSecond = convertDurationInSecond(p.openBlockTime)
+  }
   return p as PositionData
 }
 

@@ -1,5 +1,6 @@
 import { BackTestResultData } from 'entities/backTest'
-import { GetSharedPositionData, ShareBacktestData, SharePositionData } from 'entities/share'
+import { ImageData } from 'entities/image'
+import { GetSharedPositionData, ShareBacktestData } from 'entities/share'
 import { PositionData } from 'entities/trader'
 import { ProtocolEnum } from 'utils/config/enums'
 
@@ -24,10 +25,15 @@ export async function sharePositionApi({ position, imageBlob }: { position: Posi
   const formData = new FormData()
   let endPoint = ''
   let params: Record<string, any> = {}
-  endPoint = `/share/position/closed/${position.protocol}`
-  formData.append('image', imageBlob, `share_${position.protocol}_${position.id}.png`)
+  endPoint = `/storage/share-position/${position.protocol}/${position.txHashes[0]}`
+  formData.append(
+    'image',
+    imageBlob,
+    `share_${position.protocol}_${position.txHashes[0]}_${position.account}_${position.logId}.png`
+  )
   params = {
-    positionId: position.id,
+    account: position.account,
+    logId: position.logId,
   }
 
   return requester
@@ -35,5 +41,5 @@ export async function sharePositionApi({ position, imageBlob }: { position: Posi
       params,
       headers: { 'Content-Type': 'multipart/form-data' },
     })
-    .then((res: any) => res.data as SharePositionData)
+    .then((res: any) => res.data as ImageData)
 }

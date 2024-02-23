@@ -15,10 +15,11 @@ dayjs.extend(weekOfYear)
 dayjs.extend(isoWeek)
 dayjs.extend(duration)
 
-export function formatDuration(duration: number | undefined) {
-  if (!duration) return '--'
-  return `${formatNumber(dayjs.duration(duration).asHours(), 1, 1)}h`
-  // return dayjs.duration(duration, 'second').format(' D H[h] m[m]')
+export function formatDuration(durationInSecond: number | undefined) {
+  if (!durationInSecond) return '--'
+  if (durationInSecond < 60) return `${durationInSecond}s`
+  if (durationInSecond < 3600) return `${formatNumber(durationInSecond / 60, 1, 1)}m`
+  return `${formatNumber(durationInSecond / (60 * 60), 1, 1)}h`
 }
 
 export const formatLocalRelativeDate = (date: string | number) => dayjs.utc(date).local().fromNow()
