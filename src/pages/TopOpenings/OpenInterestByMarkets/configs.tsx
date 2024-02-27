@@ -300,7 +300,7 @@ export function getColumns({ protocol, timeOption }: { protocol: ProtocolEnum; t
       title: titlesMapping.longShortRate,
       dataIndex: undefined,
       key: undefined,
-      style: { minWidth: '200px', maxWidth: '250px', textAlign: 'left', pl: 3 },
+      style: { minWidth: '200px', maxWidth: '250px', textAlign: 'left', px: 3 },
       render: renderLongShortRate,
     },
     // {
