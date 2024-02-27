@@ -107,6 +107,7 @@ const renderLongShortRate = (item: OpenInterestMarketData) => {
   )
   const diffLongRate = !!longRateLatest ? longRate - longRateLatest : 0
   const diffShortRate = !!shortRateLatest ? shortRate - shortRateLatest : 0
+
   return (
     <Flex flexDirection="column" sx={{ gap: 2 }}>
       <Box flex="1" sx={{ transform: 'translateY(1px)' }}>
@@ -120,9 +121,16 @@ const renderLongShortRate = (item: OpenInterestMarketData) => {
         >
           {formatNumber(longRate, 2, 2)}%
           {longRate > shortRate && !!diffLongRate && (
-            <Type.Small px={1} fontSize="11px" color="green2" display={['none', 'inline-block']}>
+            <Type.Small
+              px={1}
+              fontSize="11px"
+              color={diffLongRate > 0 ? 'green2' : diffLongRate < 0 ? 'red1' : 'neutral3'}
+              display={['none', 'inline-block']}
+            >
               <Type.Small color="neutral3">(</Type.Small>
-              {diffLongRate === 0 ? '--' : `${formatNumber(Math.abs(diffLongRate), 2, 2)}%`}
+              {diffLongRate === 0
+                ? '--'
+                : `${diffLongRate > 0 ? '+' : ''}${formatNumber(Math.abs(diffLongRate), 2, 2)}%`}
               <Type.Small color="neutral3">)</Type.Small>
             </Type.Small>
           )}
@@ -133,9 +141,14 @@ const renderLongShortRate = (item: OpenInterestMarketData) => {
           sx={{ flexShrink: 0, textAlign: ['right', 'right', 'left'] }}
         >
           {shortRate > longRate && !!diffShortRate && (
-            <Type.Small px={1} fontSize="11px" color="green2" display={['none', 'inline-block']}>
+            <Type.Small
+              px={1}
+              fontSize="11px"
+              color={diffShortRate > 0 ? 'green2' : diffShortRate < 0 ? 'red1' : 'neutral3'}
+              display={['none', 'inline-block']}
+            >
               <Type.Small color="neutral3">(</Type.Small>
-              {diffShortRate === 0 ? '--' : `${formatNumber(Math.abs(diffShortRate), 2, 2)}%`}
+              {diffShortRate === 0 ? '--' : `${diffShortRate > 0 ? '+' : ''}${formatNumber(diffShortRate, 2, 2)}%`}
               <Type.Small color="neutral3">)</Type.Small>
             </Type.Small>
           )}
@@ -175,7 +188,8 @@ const renderValueWithChange = ({
         {suffix}
       </Type.Caption>
       <Flex alignItems="center" sx={{ gap: 1 }} justifyContent="flex-end">
-        {!isOnlyPercent && (
+        {!latest && <Type.Small fontSize="11px">--</Type.Small>}
+        {!isOnlyPercent && !!latest && (
           <Type.Small
             fontSize="11px"
             color={diff > 0 ? 'green2' : diff < 0 ? 'red1' : 'neutral3'}
@@ -190,7 +204,7 @@ const renderValueWithChange = ({
               : formatNumber(Math.abs(diff), maxDigit, minDigit)}
           </Type.Small>
         )}
-        {!!diffPercent && (
+        {!!diffPercent && !!latest && (
           <Type.Small
             fontSize="11px"
             color={diffPercent > 0 ? 'green2' : diffPercent < 0 ? 'red1' : 'neutral3'}
