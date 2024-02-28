@@ -108,6 +108,6 @@ export const ALL_TIME_FILTER_OPTIONS: TimeFilterProps[] = [
     id: TimeFilterByEnum.ALL_TIME,
     text: <Trans>All Time</Trans>,
     sort_by: TimeFilterByEnum.ALL_TIME,
-    value: 0,
+    value: 1000,
   },
 ]

@@ -187,7 +187,7 @@ const SORTS: SortOption[] = [
 ]
 const DEFAULT_SORT = SORTS[0]
 const DEFAULT_LIMIT = LIMITS[0]
-const DEFAULT_TIME = ALL_TIME_FILTER_OPTIONS[5]
+const DEFAULT_TIME = ALL_TIME_FILTER_OPTIONS[1]
 
 function getTimePeriod(timeValue: number | undefined) {
   if (!timeValue) return { from: undefined, to: undefined }

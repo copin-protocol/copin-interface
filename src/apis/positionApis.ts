@@ -91,6 +91,7 @@ export async function getOpenInterestMarketApi({
   indexToken,
   from,
   to,
+  timeframe,
 }: GetApiParams & {
   protocol: ProtocolEnum
   sortBy?: string
@@ -98,6 +99,7 @@ export async function getOpenInterestMarketApi({
   indexToken?: string
   from?: string
   to?: string
+  timeframe?: number
 }) {
   return requester
     .get(`${protocol}/top-positions/open-interest`, {
@@ -107,6 +109,7 @@ export async function getOpenInterestMarketApi({
         indexToken,
         from,
         to,
+        timeframe,
       },
     })
     .then((res: any) => res.data as OpenInterestMarketData[])

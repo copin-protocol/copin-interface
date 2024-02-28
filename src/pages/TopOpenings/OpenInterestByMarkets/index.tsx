@@ -59,8 +59,8 @@ function OpenInterestByMarketsPage() {
   }>()
 
   const { data, isFetching } = useQuery(
-    [QUERY_KEYS.GET_OPEN_INTEREST_BY_MARKET, protocol, from, to],
-    () => getOpenInterestMarketApi({ protocol, from, to }),
+    [QUERY_KEYS.GET_OPEN_INTEREST_BY_MARKET, protocol, from, to, time],
+    () => getOpenInterestMarketApi({ protocol, from, to, timeframe: time.value }),
     {
       keepPreviousData: true,
     }
