@@ -90,7 +90,7 @@ export const ALL_TIME_FILTER_OPTIONS: TimeFilterProps[] = [
     id: TimeFilterByEnum.S14_DAY,
     text: <Trans>14 days</Trans>,
     sort_by: TimeFilterByEnum.S14_DAY,
-    value: 14,
+    value: 15,
   },
   {
     id: TimeFilterByEnum.S30_DAY,

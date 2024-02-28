@@ -12,7 +12,6 @@ import {
   createChart,
 } from 'lightweight-charts'
 
-import PythWatermark from 'assets/images/pyth-watermark.png'
 import { PositionData } from 'entities/trader.d'
 import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
@@ -166,21 +165,6 @@ export function renderChart({
       legend.style.display = 'none'
       container.appendChild(legend)
     }
-
-    const watermark = document.getElementById('watermark') ?? document.createElement('div')
-    watermark.setAttribute('id', 'watermark')
-    // place below the chart
-    watermark.style.zIndex = '100'
-    watermark.style.position = 'absolute'
-    // set size and position to match container
-    watermark.style.inset = '0px'
-    watermark.style.bottom = hasBrush ? '80px' : '8px'
-    watermark.style.right = hasBrush ? '40px' : '4px'
-    watermark.style.backgroundImage = `url("${PythWatermark}")`
-    watermark.style.backgroundSize = hasBrush ? '65px 18px' : '58px 16px'
-    watermark.style.backgroundRepeat = 'no-repeat'
-    watermark.style.backgroundPosition = 'bottom right'
-    container.appendChild(watermark)
 
     chart.subscribeCrosshairMove((param) => {
       if (
