@@ -42,7 +42,9 @@ export default function PositionDetailsPage() {
       <CustomPageTitle title="Position Details" />
       <Container maxWidth={{ lg: 1000 }} height="100%">
         {isLoading && <Loading />}
-        {!isLoading && !account && !data?.length && <NoDataFound message={<Trans>No Position Found</Trans>} />}
+        {!isLoading && !account && !data?.length && !!txHash && (
+          <NoDataFound message={<Trans>No Position Found</Trans>} />
+        )}
         {!!positionId && <PositionDetails protocol={protocol} id={positionId} isShow isDrawer={false} />}
         {!!txHash && !!account && !positionId && (
           <PositionTxResults
