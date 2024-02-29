@@ -61,7 +61,7 @@ export default function WarningLimitVolume() {
           </Box>{' '}
           after{' '}
           <Box as="span" fontWeight={600}>
-            1st Mar 2024
+            1st April 2024
           </Box>
           . Contact support{' '}
           <Box as="a" href={LINKS.support} target="_blank" sx={{ fontWeight: 600 }}>
