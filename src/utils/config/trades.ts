@@ -677,6 +677,27 @@ const TOKEN_TRADE_GMX_V2 = {
     decimals: 12,
     priceFeedId: '0x2f95862b045670cd22bee3114c39763a4a08beeb663b145d283c31d7d1101c4f',
   },
+  '0x248C35760068cE009a13076D573ed3497A47bCD4': {
+    address: '0x248C35760068cE009a13076D573ed3497A47bCD4',
+    name: 'ATOM',
+    symbol: 'ATOM',
+    decimals: 24,
+    priceFeedId: '0xb00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819',
+  },
+  '0x63Dc80EE90F26363B3FCD609007CC9e14c8991BE': {
+    address: '0x63Dc80EE90F26363B3FCD609007CC9e14c8991BE',
+    name: 'NEAR',
+    symbol: 'NEAR',
+    decimals: 6,
+    priceFeedId: '0xc415de8d2eba7db216527dff4b60e8f3a5311c740dadb233e13e12547e226750',
+  },
+  '0x1CbBa6346F110c8A5ea739ef2d1eb182990e4EB2': {
+    address: '0x1CbBa6346F110c8A5ea739ef2d1eb182990e4EB2',
+    name: 'AAVE',
+    symbol: 'AAVE',
+    decimals: 12,
+    priceFeedId: '0x2b9ab1e972a281585084148ba1389800799bd4be63b957507db1349314e47445',
+  },
 }
 
 export const TOKEN_TRADE_SUPPORT: TokenSupport = {
@@ -687,7 +708,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.GMX]: [],
-  [CopyTradePlatformEnum.BINGX]: ['YFI', 'PERP', 'RPL', 'ZEC', 'RPL', 'UMA', 'BAL', 'XTZ'],
+  [CopyTradePlatformEnum.BINGX]: ['YFI', 'RPL', 'ZEC', 'RPL', 'UMA', 'BAL', 'XTZ'],
   [CopyTradePlatformEnum.SYNTHETIX]: [],
 }
 
