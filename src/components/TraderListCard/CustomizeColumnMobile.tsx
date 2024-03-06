@@ -1,49 +1,41 @@
 import { Gear } from '@phosphor-icons/react'
 
-import { useHomeCustomizeStore } from 'hooks/store/useHomeCustomize'
+import { mobileTableSettings } from 'components/Tables/TraderListTable/dataConfig'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, IconBox } from 'theme/base'
 
-import { tableSettings } from './dataConfig'
+import { useExplorerColumnsMobile } from './useExplorerColumnsMobile'
 
 const REQUIRED_FIELDS = ['account', 'pnl', 'avgRoi', 'winRate']
 
-const CustomizeColumn = ({ hasTitle, menuSx = {} }: { hasTitle?: boolean; menuSx?: any }) => {
-  const { userTraderList, setUserTraderList } = useHomeCustomizeStore()
-  const onChange = (index: number) => {
-    const id = tableSettings[index].id
-    if (id) {
-      // setUserTraderList(new Set(userTraderList).add(tableSettings[index].id))
-      setUserTraderList(userTraderList.includes(id) ? userTraderList.filter((e) => e !== id) : [...userTraderList, id])
-    }
+//Note: using different component because local storage conflict
+export default function CustomizeColumnMobile() {
+  const { columnKeys, setColumnKeys } = useExplorerColumnsMobile()
+  const onChange = (key: string) => {
+    setColumnKeys(columnKeys.includes(key) ? columnKeys.filter((e) => e !== key) : [...columnKeys, key])
   }
 
   return (
     <Dropdown
       menuPosition="top"
-      menuSx={{
-        width: 220,
-        p: 2,
-        maxHeight: 400,
-        ...menuSx,
-      }}
+      menuSx={{ width: 220, p: 2, maxHeight: 400 }}
       hasArrow={false}
       dismissible={false}
       menuDismissible
       menu={
         <>
-          {tableSettings.map((item, index) => {
+          {mobileTableSettings.map((item, index) => {
             const isDisable = REQUIRED_FIELDS.includes(item.id)
             return (
               <Box mb={2} key={index}>
                 <ControlledCheckbox
                   disabled={isDisable}
-                  checked={userTraderList.includes(item.id)}
+                  checked={columnKeys.includes(item.id)}
                   label={item.label}
                   // labelSx={{ fontSize: 14, lineHeight: '20px' }}
                   size={16}
-                  onChange={() => onChange(index)}
+                  onChange={() => onChange(item.id)}
                 />
               </Box>
             )
@@ -67,10 +59,7 @@ const CustomizeColumn = ({ hasTitle, menuSx = {} }: { hasTitle?: boolean; menuSx
     >
       <Flex sx={{ gap: 1, alignItems: 'center' }}>
         <IconBox icon={<Gear size={18} />} color="neutral3" />
-        {hasTitle && <Type.Caption>Customize Column</Type.Caption>}
       </Flex>
     </Dropdown>
   )
 }
-
-export default CustomizeColumn

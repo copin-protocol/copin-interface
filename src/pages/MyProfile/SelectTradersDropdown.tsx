@@ -23,6 +23,7 @@ export default function SelectTradersDropdown({
   tradersByProtocol,
   menuSx = {},
   placement = 'bottomLeft',
+  buttonSx,
 }: {
   allTraders: string[]
   selectedTraders: string[]
@@ -31,6 +32,7 @@ export default function SelectTradersDropdown({
   tradersByProtocol: TradersByProtocolData
   menuSx?: SystemStyleObject & GridProps
   placement?: 'bottom' | 'top' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
+  buttonSx?: any
 }) {
   if (!allTraders.length) return <></>
   const isSelectedAll = !!allTraders.length && allTraders.every((address) => selectedTraders.includes(address))
@@ -109,6 +111,7 @@ export default function SelectTradersDropdown({
       }
       buttonSx={{
         border: 'none',
+        ...(buttonSx || {}),
       }}
       placement={placement}
     >

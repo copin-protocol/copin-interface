@@ -1,29 +1,26 @@
-import { Trans } from '@lingui/macro'
 import { CaretRight, XCircle } from '@phosphor-icons/react'
-import { cloneElement, useEffect, useRef, useState } from 'react'
+import { cloneElement, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Container from 'components/@ui/Container'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
-import NoDataFound from 'components/@ui/NoDataFound'
 import Table from 'components/@ui/Table'
 import {
   renderEntry,
-  renderOpeningPnL,
   renderOpeningPnLWithPrices,
   renderSizeOpening,
   renderTrader,
 } from 'components/@ui/Table/renderProps'
 import { ColumnData } from 'components/@ui/Table/types'
 import PositionDetails from 'components/PositionDetails'
+import PositionListCard from 'components/PositionListCard'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import IconButton from 'theme/Buttons/IconButton'
-import Loading from 'theme/Loading'
 import Drawer from 'theme/Modal/Drawer'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Type } from 'theme/base'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 export type ExternalSource = {
@@ -87,7 +84,7 @@ const columns: ColumnData<PositionData, ExternalSource>[] = [
 export type OpeningPositionProps = {
   isLoading: boolean
   data?: PositionData[]
-  page: number
+  scrollDep: number
 }
 export type OpeningPositionComponentProps = {
   onClickItem?: (data: PositionData) => void
@@ -102,7 +99,7 @@ export default function TopOpeningsWindow(props: OpeningPositionProps) {
     </div>
   )
 }
-function OpeningPositionsTable({ isLoading, data, page, onClickItem }: OpeningPositionComponentProps) {
+function OpeningPositionsTable({ isLoading, data, scrollDep, onClickItem }: OpeningPositionComponentProps) {
   const { prices } = useGetUsdPrices()
 
   const externalSource: ExternalSource = {
@@ -116,7 +113,7 @@ function OpeningPositionsTable({ isLoading, data, page, onClickItem }: OpeningPo
         minWidth: 650,
       }}
       data={data}
-      scrollToTopDependencies={[page]}
+      scrollToTopDependencies={[scrollDep]}
       columns={columns}
       externalSource={externalSource}
       isLoading={isLoading}
@@ -172,71 +169,7 @@ export function OpeningPositionsWrapper({ children }: { children: any }) {
 export function ListOpeningPositions(props: OpeningPositionProps) {
   return (
     <OpeningPositionsWrapper>
-      <ListForm {...props} />
+      <PositionListCard {...props} />
     </OpeningPositionsWrapper>
-  )
-}
-
-function ListForm({ data, isLoading, page, onClickItem }: OpeningPositionComponentProps) {
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    wrapperRef.current?.scrollTo(0, 0)
-  }, [page])
-  return (
-    <Flex
-      ref={wrapperRef}
-      sx={{
-        flexDirection: 'column',
-        width: '100%',
-        height: '100%',
-        overflow: 'auto',
-        position: 'relative',
-        '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4', '& > *:last-child': { borderBottom: 'none' } },
-      }}
-    >
-      {!isLoading && !data?.length && <NoDataFound message={<Trans>No opening positions</Trans>} />}
-      {isLoading && (
-        <Flex
-          sx={{
-            alignItems: 'start',
-            justifyContent: 'center',
-            bg: 'modalBG1',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 10,
-          }}
-        >
-          <Box pt={100}>
-            <Loading />
-          </Box>
-        </Flex>
-      )}
-      {data?.map((position) => {
-        return (
-          <Box role="button" sx={{ p: 3 }} key={position.id} onClick={() => onClickItem?.(position)}>
-            <Flex sx={{ alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
-              <Type.Caption color="neutral3" minWidth={30} sx={{ flexShrink: 0 }}>
-                <RelativeShortTimeText date={position.openBlockTime} />
-              </Type.Caption>
-              <Type.Caption color="neutral3">-</Type.Caption>
-              <Box>{renderTrader(position.account, position.protocol)}</Box>
-              <Type.Caption color="neutral3">-</Type.Caption>
-              <Box>{renderEntry(position)}</Box>
-            </Flex>
-            <Flex mt={3} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-              <Flex sx={{ alignItems: 'center', gap: 3 }}>
-                <Box sx={{ width: 200, flexShrink: 0 }}>{renderSizeOpening(position)}</Box>
-                <Type.Caption color="neutral3">-</Type.Caption>
-                <Box>{renderOpeningPnL(position)}</Box>
-              </Flex>
-              <IconBox icon={<CaretRight size={16} />} color="neutral3" />
-            </Flex>
-          </Box>
-        )
-      })}
-    </Flex>
   )
 }

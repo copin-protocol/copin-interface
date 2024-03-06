@@ -1,4 +1,5 @@
 import { Eye, EyeClosed } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { ReactNode, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
@@ -13,7 +14,89 @@ import { hideScrollbar } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
 
-const ListItem = ({
+export default function BalanceMenu({
+  copyWallets,
+  activeWallet,
+  onChangeKey,
+}: {
+  copyWallets: CopyWalletData[] | undefined
+  activeWallet: CopyWalletData | null
+  onChangeKey: (key: CopyWalletData | null) => void
+}) {
+  const currentOption = useMemo(() => {
+    const foundItem = copyWallets?.find((e) => e.id === activeWallet?.id)
+    return { title: foundItem ? parseWalletName(foundItem) : '', value: foundItem?.balance }
+  }, [activeWallet, copyWallets])
+  const { data: overview } = useQuery(
+    [QUERY_KEYS.GET_COPY_TRADE_BALANCE_OVERVIEW, activeWallet],
+    () =>
+      getMyCopyTradeOverviewApi({
+        exchange: activeWallet?.exchange ?? CopyTradePlatformEnum.BINGX,
+        copyWalletId: activeWallet?.id,
+      }),
+    {
+      enabled: !!activeWallet,
+    }
+  )
+
+  if (!copyWallets) return <></>
+  return (
+    <Flex
+      sx={{
+        flexWrap: ['nowrap', 'nowrap', 'wrap'],
+        gap: [0, 24],
+        alignItems: ['start', 'start', 'center'],
+        justifyContent: ['start', 'start', 'space-between'],
+      }}
+      py={[1, 12]}
+    >
+      <Dropdown
+        buttonVariant="ghost"
+        buttonSx={{ height: '100%', border: 'none', p: 0 }}
+        sx={{ height: '100%', pl: 3, pr: 2, flexShrink: 0, borderRight: 'small', borderRightColor: 'neutral4' }}
+        menuSx={{ width: ['100%', 200] }}
+        menu={
+          <>
+            {copyWallets.map((wallet) => {
+              return (
+                <DropdownItem key={wallet.id} onClick={() => onChangeKey(wallet)}>
+                  {parseWalletName(wallet)}
+                </DropdownItem>
+              )
+            })}
+          </>
+        }
+      >
+        <Type.CaptionBold>{currentOption.title}</Type.CaptionBold>
+      </Dropdown>
+      <Flex
+        width={{ _: '100%', sm: 'auto' }}
+        height="100%"
+        sx={{
+          px: [0, 0, 0, 0, 3],
+          gap: [0, 24, 24, 24, 40],
+          alignItems: 'center',
+          overflow: 'auto',
+          ...hideScrollbar(),
+        }}
+      >
+        <ListItem title={'Balance'} value={overview?.balance} prefix="$" withHideAction />
+        <ListItem title={'Total Volume'} value={overview?.totalVolume} prefix="$" />
+        <ListItem
+          title={'Total PnL'}
+          valueComponent={
+            <Type.CaptionBold>
+              <SignedText value={overview?.pnl ?? undefined} maxDigit={2} minDigit={2} fontInherit prefix="$" />
+            </Type.CaptionBold>
+          }
+        />
+        <ListItem title={'Copies'} valueComponent={<Type.CaptionBold>{overview?.copies ?? '-'}</Type.CaptionBold>} />
+      </Flex>
+    </Flex>
+  )
+}
+
+function ListItem({
   title,
   titleComponent,
   value,
@@ -29,17 +112,24 @@ const ListItem = ({
   withHideAction?: boolean
   prefix?: string
   suffix?: string
-}) => {
+}) {
   const [show, setShow] = useState(false)
+  const { sm } = useResponsive()
 
   return (
     <Flex
       sx={{
         gap: [1, 1, 1, 1, 2],
-        alignItems: 'center',
+        alignItems: ['start', 'center'],
         justifyContent: 'center',
         height: '100%',
         flexShrink: 0,
+        flexDirection: sm ? 'row' : 'column',
+        px: 2,
+        borderRight: 'small',
+        borderRightColor: 'neutral4',
+        '&:last-child': { borderRight: 'none' },
+        '*': { lineHeight: '1.5em !important' },
       }}
     >
       <Flex sx={{ gap: '1ch', alignItems: 'center' }}>
@@ -97,87 +187,3 @@ const ListItem = ({
     </Flex>
   )
 }
-
-const BalanceMenu = ({
-  copyWallets,
-  activeWallet,
-  onChangeKey,
-}: {
-  copyWallets: CopyWalletData[] | undefined
-  activeWallet: CopyWalletData | null
-  onChangeKey: (key: CopyWalletData | null) => void
-}) => {
-  const currentOption = useMemo(() => {
-    const foundItem = copyWallets?.find((e) => e.id === activeWallet?.id)
-    return { title: foundItem ? parseWalletName(foundItem) : '', value: foundItem?.balance }
-  }, [activeWallet, copyWallets])
-  const { data: overview } = useQuery(
-    [QUERY_KEYS.GET_COPY_TRADE_BALANCE_OVERVIEW, activeWallet],
-    () =>
-      getMyCopyTradeOverviewApi({
-        exchange: activeWallet?.exchange ?? CopyTradePlatformEnum.BINGX,
-        copyWalletId: activeWallet?.id,
-      }),
-    {
-      enabled: !!activeWallet,
-    }
-  )
-
-  if (!copyWallets) return <></>
-  return (
-    <Flex
-      sx={{
-        flexWrap: ['nowrap', 'nowrap', 'wrap'],
-        gap: 24,
-        alignItems: ['start', 'start', 'center'],
-        justifyContent: ['start', 'start', 'space-between'],
-      }}
-      pr={2}
-      py={[2, 12]}
-    >
-      <Dropdown
-        buttonVariant="ghost"
-        buttonSx={{ height: '100%', border: 'none', p: 0 }}
-        sx={{ height: '100%', pl: 3, flexShrink: 0 }}
-        menuSx={{ width: ['100%', 200] }}
-        menu={
-          <>
-            {copyWallets.map((wallet) => {
-              return (
-                <DropdownItem key={wallet.id} onClick={() => onChangeKey(wallet)}>
-                  {parseWalletName(wallet)}
-                </DropdownItem>
-              )
-            })}
-          </>
-        }
-      >
-        <Type.CaptionBold>{currentOption.title}</Type.CaptionBold>
-      </Dropdown>
-      <Flex
-        width={{ _: '100%', sm: 'auto' }}
-        sx={{
-          px: [0, 0, 0, 0, 3],
-          gap: [3, 24, 24, 24, 40],
-          alignItems: 'center',
-          overflow: 'auto',
-          ...hideScrollbar(),
-        }}
-      >
-        <ListItem title={'Balance'} value={overview?.balance} prefix="$" withHideAction />
-        <ListItem title={'Total Volume'} value={overview?.totalVolume} prefix="$" />
-        <ListItem
-          title={'Total PnL'}
-          valueComponent={
-            <Type.CaptionBold>
-              <SignedText value={overview?.pnl ?? undefined} maxDigit={2} minDigit={2} fontInherit prefix="$" />
-            </Type.CaptionBold>
-          }
-        />
-        <ListItem title={'Copies'} valueComponent={<Type.CaptionBold>{overview?.copies ?? '-'}</Type.CaptionBold>} />
-      </Flex>
-    </Flex>
-  )
-}
-
-export default BalanceMenu

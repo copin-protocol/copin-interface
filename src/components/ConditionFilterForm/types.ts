@@ -6,6 +6,7 @@ export interface RowValues<T> {
   key: keyof T
   gte?: number | null
   lte?: number | null
+  in?: string[]
   conditionType: ConditionType
 }
 
@@ -15,6 +16,7 @@ export interface FilterValues {
   fieldName: string
   gte?: number
   lte?: number
+  in?: string[]
 }
 export interface FieldOption<T> {
   value: keyof T

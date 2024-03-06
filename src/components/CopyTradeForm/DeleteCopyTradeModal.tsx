@@ -1,4 +1,3 @@
-import React from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
@@ -9,20 +8,23 @@ import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import Modal from 'theme/Modal'
 import { Box, Flex, Li, Type } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 export default function DeleteCopyTradeModal({
   copyTradeId = '',
   account,
+  protocol,
   onSuccess,
   onDismiss,
 }: {
   copyTradeId: string | undefined
-  account?: string | undefined
+  account: string | undefined
+  protocol: ProtocolEnum | undefined
   onSuccess: () => void
   onDismiss: () => void
 }) {
-  const { removeTraderCopying } = useTraderCopying()
+  const { removeTraderCopying } = useTraderCopying(account, protocol)
   const { data: preDeleteData, isLoading: preDeleting } = useQuery(
     [QUERY_KEYS.GET_PRE_DELETE_DATA, copyTradeId],
     () => preDeleteCopyTradeApi({ copyTradeId }),
@@ -32,8 +34,8 @@ export default function DeleteCopyTradeModal({
   )
   const { mutate: deleteCopyTrade } = useMutation(() => deleteCopyTradeApi({ copyTradeId }), {
     onSuccess() {
-      if (account) {
-        removeTraderCopying(account)
+      if (account && protocol) {
+        removeTraderCopying(account, protocol)
       }
       onSuccess()
       onDismiss()

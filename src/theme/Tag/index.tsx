@@ -66,6 +66,7 @@ const STATUSES: StatusProps[] = [
 const Tag = ({
   bg,
   status,
+  sx,
   ...props
 }: { status: PositionStatusEnum | PositionSideEnum | CopyTradeStatusEnum | TraderStatusEnum; bg?: string } & any) => {
   const finder = STATUSES.find((e) => e.id === status)
@@ -81,6 +82,7 @@ const Tag = ({
       sx={{
         borderRadius: '16px',
         gap: 1,
+        ...(sx ?? {}),
       }}
       {...props}
     >

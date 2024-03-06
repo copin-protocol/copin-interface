@@ -24,6 +24,7 @@ export function AccountInfo({
   smartAccount,
   keyword,
   sx,
+  wrapperSx,
 }: {
   isOpenPosition: boolean
   address: string
@@ -34,10 +35,11 @@ export function AccountInfo({
   smartAccount?: string
   keyword?: string
   sx?: SystemStyleObject & GridProps
+  wrapperSx?: any
 }) {
   const { protocol: defaultProtocol } = useProtocolStore()
-  const { isCopying } = useTraderCopying(address)
   protocol = protocol ?? defaultProtocol
+  const { isCopying } = useTraderCopying(address, protocol)
 
   return (
     <Flex
@@ -50,6 +52,7 @@ export function AccountInfo({
         color: 'inherit',
         font: 'inherit !important',
         py: 1,
+        ...(wrapperSx || {}),
       }}
       onClick={(e: any) => e.stopPropagation()}
     >

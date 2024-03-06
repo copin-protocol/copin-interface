@@ -3,9 +3,9 @@ import CenterItemContainer from 'components/@ui/Container/CenterItemContainer'
 import { Image, Type } from 'theme/base'
 import { linearGradient3 } from 'theme/colors'
 
-export default function NoFavoriteFound() {
+export default function NoFavoriteFound({ sx }: { sx?: any }) {
   return (
-    <CenterItemContainer sx={{ color: 'neutral3', backgroundImage: linearGradient3 }}>
+    <CenterItemContainer sx={{ color: 'neutral3', backgroundImage: linearGradient3, ...(sx || {}) }}>
       <Image src={noFavorite} width={263} />
       <Type.CaptionBold color="neutral1" display="block" mt={40} fontWeight={600}>
         Looks like you don&apos;t have any favorite traders

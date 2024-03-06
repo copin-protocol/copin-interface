@@ -2,8 +2,8 @@ import {
   ArrowsIn,
   ArrowsOutSimple,
   ChartBarHorizontal,
+  ChartScatter,
   ClockCounterClockwise,
-  DotsNine,
   XCircle,
 } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
@@ -18,6 +18,7 @@ import Table from 'components/@ui/Table'
 import { ColumnData, TableSortProps } from 'components/@ui/Table/types'
 import CurrencyOption from 'components/CurrencyOption'
 import PositionDetails from 'components/PositionDetails'
+import PositionListCard from 'components/PositionListCard'
 import { PositionData } from 'entities/trader'
 import useInfiniteLoadMore from 'hooks/features/useInfiniteLoadMore'
 import useIsMobile from 'hooks/helpers/useIsMobile'
@@ -27,6 +28,7 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import ActivityHeatmap from 'pages/TraderDetails/ActivityHeatmap'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
+import Loading from 'theme/Loading'
 import Drawer from 'theme/Modal/Drawer'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -118,7 +120,7 @@ export default function HistoryTable({
 
   const highValue: number = data?.length ? getHighestPnl(data) : 0
 
-  const { lg } = useResponsive()
+  const { lg, sm } = useResponsive()
 
   const { scrollRef } = useInfiniteLoadMore({ isDesktop: lg, hasNextPage, fetchNextPage, isLoading })
 
@@ -132,7 +134,7 @@ export default function HistoryTable({
 
   return (
     <Box display={['block', 'block', 'block', 'flex']} flexDirection="column" height={['auto', 'auto', 'auto', '100%']}>
-      <Flex pt={16} pb={12} px={12} alignItems="center">
+      <Flex pt={16} pb={12} px={12} alignItems="center" sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}>
         <Box flex="1">
           <SectionTitle icon={<ClockCounterClockwise size={24} />} title="History" />
         </Box>
@@ -140,7 +142,7 @@ export default function HistoryTable({
           <ButtonWithIcon
             icon={
               <Box color={heatmapVisible ? 'primary1' : 'neutral3'}>
-                <DotsNine fontVariant="bold" size={20} />
+                <ChartScatter fontVariant="bold" size={20} />
               </Box>
             }
             variant="ghost"
@@ -163,7 +165,7 @@ export default function HistoryTable({
           <ButtonWithIcon
             icon={
               <Box color={showChart ? 'primary1' : 'neutral3'}>
-                <ChartBarHorizontal mirrored size={20} />
+                <ChartBarHorizontal size={20} />
               </Box>
             }
             variant="ghost"
@@ -203,7 +205,7 @@ export default function HistoryTable({
               sx={{
                 width: 32,
                 height: 32,
-                display: 'flex',
+                display: ['none', 'none', 'none', 'none', 'flex'],
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderRadius: 'sm',
@@ -222,47 +224,58 @@ export default function HistoryTable({
           <ActivityHeatmap account={data[0].account} protocol={data[0].protocol} />
         </Box>
       )}
-      <Box flex="1" overflowX="auto" overflowY="hidden">
-        <Table
-          scrollRef={scrollRef}
-          wrapperSx={{
-            minWidth: 500,
-          }}
-          isInfiniteLoad
-          dataMeta={dataMeta}
-          // loadingSx={
-          //   lg
-          //     ? {
-          //         position: 'absolute',
-          //         left: 0,
-          //         bottom: 0,
-          //         right: 0,
-          //       }
-          //     : {
-          //         position: 'fixed',
-          //         bottom: 140,
-          //         left: 0,
-          //         right: 0,
-          //       }
-          // }
-          currentSort={currentSort}
-          changeCurrentSort={changeCurrentSort}
-          restrictHeight={lg}
-          data={data}
-          columns={tableSettings}
-          isLoading={isLoading}
-          onClickRow={handleSelectItem}
-          renderRowBackground={(dataRow: any, index: number) => {
-            if (!data || !showChart) return '#0B0E18'
+      <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
+        {sm ? (
+          <Table
+            scrollRef={scrollRef}
+            wrapperSx={{
+              minWidth: 500,
+            }}
+            isInfiniteLoad
+            dataMeta={dataMeta}
+            currentSort={currentSort}
+            changeCurrentSort={changeCurrentSort}
+            restrictHeight={lg}
+            data={data}
+            columns={tableSettings}
+            isLoading={isLoading}
+            onClickRow={handleSelectItem}
+            renderRowBackground={(dataRow: any, index: number) => {
+              if (!data || !showChart) return '#0B0E18'
 
-            const sumProfit = data.slice(index, data.length).reduce((sum, item) => sum + item.pnl, 0)
+              const sumProfit = data.slice(index, data.length).reduce((sum, item) => sum + item.pnl, 0)
 
-            const percent = (Math.abs(sumProfit) * 100) / highValue
-            return `linear-gradient(to right, #0B0E18 ${100 - percent}%, ${
-              sumProfit > 0 ? 'rgba(56, 208, 96, 0.15)' : 'rgba(239, 53, 53, 0.15)'
-            } 0%)`
-          }}
-        />
+              const percent = (Math.abs(sumProfit) * 100) / highValue
+              return `linear-gradient(to right, #0B0E18 ${100 - percent}%, ${
+                sumProfit > 0 ? 'rgba(56, 208, 96, 0.15)' : 'rgba(239, 53, 53, 0.15)'
+              } 0%)`
+            }}
+          />
+        ) : (
+          <>
+            <PositionListCard
+              data={data}
+              isLoading={false}
+              scrollDep={data}
+              onClickItem={handleSelectItem}
+              hasAccountAddress={false}
+              isOpening={false}
+            />
+            {isLoading && <Loading />}
+            {data && !isLoading && (dataMeta?.total ?? 0) === data.length && (
+              <Flex
+                sx={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  bg: 'neutral6',
+                  height: 40,
+                }}
+              >
+                <Type.Caption color="neutral3">End of list</Type.Caption>
+              </Flex>
+            )}
+          </>
+        )}
       </Box>
 
       <Drawer

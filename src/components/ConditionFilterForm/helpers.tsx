@@ -16,6 +16,8 @@ export function getDefaultFormValues<T>(
 
 export function getFiltersFromFormValues<T>(data: ConditionFormValues<T>) {
   return Object.values(data).reduce<FilterValues[]>((result, values) => {
+    if (typeof values?.in === 'object' && values.conditionType === 'in')
+      return [...result, { fieldName: values.key, in: values.in } as FilterValues]
     if (typeof values?.gte !== 'number' && typeof values?.lte !== 'number') return result
     const currFilter = {} as FilterValues
     if (values?.key) currFilter['fieldName'] = values.key as string
@@ -23,8 +25,8 @@ export function getFiltersFromFormValues<T>(data: ConditionFormValues<T>) {
       currFilter['gte'] = values.gte
     if (typeof values?.lte === 'number' && (values.conditionType === 'between' || values?.conditionType === 'lte'))
       currFilter['lte'] = values.lte
-    result.push(currFilter)
-    return result
+    // result.push(currFilter)
+    return [...result, currFilter]
   }, [])
 }
 

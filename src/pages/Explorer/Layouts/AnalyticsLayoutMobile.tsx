@@ -9,6 +9,7 @@ export default function AnalyticsLayoutMobile({
   timeFilterSection,
   listTradersSection,
   conditionFilter,
+  sortSection,
 }: AnalyticsLayoutComponents) {
   const { md } = useResponsive()
   return (
@@ -20,12 +21,13 @@ export default function AnalyticsLayoutMobile({
         flexDirection: 'column',
       }}
     >
-      <Flex
-        sx={{ alignItems: 'center', borderBottom: 'small', borderBottomColor: 'neutral4', height: 40, px: 3, gap: 3 }}
-      >
-        <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', flex: 1, gap: 2 }}>
+      <Flex sx={{ alignItems: 'center', borderBottom: 'small', borderBottomColor: 'neutral4', height: 40, px: 3 }}>
+        <Flex sx={{ height: '100%', alignItems: 'center', justifyContent: 'space-between', flex: 1, gap: 2 }}>
           {timeFilterSection}
-          {conditionFilter}
+          <Flex sx={{ height: '100%', gap: 3 }}>
+            {conditionFilter}
+            <Flex sx={{ alignItems: 'center', borderLeft: 'small', borderLeftColor: 'neutral4' }}>{sortSection}</Flex>
+          </Flex>
         </Flex>
         {!md && (
           <RouteSwitchProtocol
@@ -33,6 +35,7 @@ export default function AnalyticsLayoutMobile({
               buttonSx: { height: 40, px: '8px !important', borderLeft: 'small', borderLeftColor: 'neutral4' },
               showIcon: true,
             }}
+            keepSearch={false}
           />
         )}
       </Flex>

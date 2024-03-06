@@ -312,7 +312,7 @@ const ThemedGlobalStyle = createGlobalStyle`
     padding-left: 8px;
     padding-right: 8px;
     opacity: 1;
-    z-index: 4;
+    z-index: 100;
     box-shadow: 0px 0px 6px 6px ${({ theme }) => theme.colors.neutral3}03;
   }
   .custom_react_tooltip_arrow_place_top_css {

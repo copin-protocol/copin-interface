@@ -150,12 +150,12 @@ export default function TraderDetails() {
 
   const refetchQueries = useRefetchQueries()
   const [, setForceReload] = useState(1)
-  const { saveTraderCopying } = useTraderCopying()
+  const { saveTraderCopying } = useTraderCopying(undefined, undefined)
   const onForceReload = () => {
     refetchQueries([QUERY_KEYS.USE_GET_ALL_COPY_TRADES])
     setForceReload((prev) => prev + 1)
     if (currentTraderData) {
-      saveTraderCopying(currentTraderData.account)
+      saveTraderCopying(currentTraderData.account, currentTraderData.protocol)
     }
   }
 

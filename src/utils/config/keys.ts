@@ -88,6 +88,7 @@ export const STORAGE_KEYS = {
   TRADER_RANKING_FIELDS: 'trader-ranking-fields',
   BINGX_NOTE: 'bingx-note',
   TABS_OPEN: 'tabs-open',
+  SUBSCRIPTION_LAST_CHECK: 'subscription-last-check',
 }
 
 export const URL_PARAM_KEYS = {

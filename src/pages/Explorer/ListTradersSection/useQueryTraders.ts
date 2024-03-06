@@ -41,15 +41,17 @@ export default function useQueryTraders({
         offset: pageToOffset(page ?? 0, limit ?? 0),
       },
     }
-    request.ranges = getFiltersFromFormValues(
+
+    const ranges = getFiltersFromFormValues(
       getInitFilters({
         searchParams,
         accounts,
         filterTab,
       })
     )
+    request.ranges = ranges
     if (filterTab === FilterTabEnum.RANKING) {
-      request.ranges = formatRankingRanges(request.ranges)
+      request.ranges = formatRankingRanges(ranges)
     }
     if (accounts) transformRequestWithAccounts(request, accounts)
     return request

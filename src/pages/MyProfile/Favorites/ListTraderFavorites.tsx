@@ -5,6 +5,7 @@ import { memo, useState } from 'react'
 import { CompareButton } from 'components/BacktestPickTradersButton'
 import TraderListTable from 'components/Tables/TraderListTable'
 import { mobileTableSettings, tableSettings } from 'components/Tables/TraderListTable/dataConfig'
+import TraderListCard from 'components/TraderListCard'
 import { TraderData } from 'entities/trader.d'
 import useQueryTraders from 'pages/Explorer/ListTradersSection/useQueryTraders'
 import { TradersContextData } from 'pages/Explorer/useTradersContext'
@@ -52,6 +53,7 @@ function ListTraderFavorites({
     })
   }
   const checkIsSelected = (data: TraderData) => selectedTraders.includes(data.account)
+  const formatedData = data?.data.map((item) => ({ ...item, note: notes ? notes[item.account] : undefined }))
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
@@ -75,19 +77,29 @@ function ListTraderFavorites({
       {isRangeProgressing ? null : (
         <>
           <Box
-            flex="1"
-            sx={{ overflow: 'hidden', borderBottom: 'small', borderBottomColor: 'neutral5', bg: 'neutral7' }}
+            flex="1 0 0"
+            sx={{
+              overflow: 'hidden',
+              borderBottom: 'small',
+              borderBottomColor: 'neutral5',
+              bg: 'neutral7',
+              position: 'relative',
+            }}
           >
-            <TraderListTable
-              data={data?.data.map((item) => ({ ...item, note: notes ? notes[item.account] : undefined }))}
-              isLoading={isLoading}
-              currentSort={currentSort}
-              changeCurrentSort={changeCurrentSort}
-              handleSelectAll={null}
-              tableSettings={settings}
-              checkIsSelected={checkIsSelected}
-              handleSelect={handleSelect}
-            />
+            {sm ? (
+              <TraderListTable
+                data={formatedData}
+                isLoading={isLoading}
+                currentSort={currentSort}
+                changeCurrentSort={changeCurrentSort}
+                handleSelectAll={null}
+                tableSettings={settings}
+                checkIsSelected={checkIsSelected}
+                handleSelect={handleSelect}
+              />
+            ) : (
+              <TraderListCard data={formatedData} isLoading={isLoading} />
+            )}
           </Box>
 
           <CompareTradersButton selectedTraders={selectedTraders} />

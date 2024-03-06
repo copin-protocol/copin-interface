@@ -9,6 +9,7 @@ import SectionTitle from 'components/@ui/SectionTitle'
 import Table from 'components/@ui/Table'
 import { TableSortProps } from 'components/@ui/Table/types'
 import PositionDetails from 'components/PositionDetails'
+import PositionListCard from 'components/PositionListCard'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useIsMobile from 'hooks/helpers/useIsMobile'
@@ -88,7 +89,7 @@ export default function OpeningPositionTable({
     prices,
   }
 
-  const { lg, xl } = useResponsive()
+  const { lg, xl, sm } = useResponsive()
 
   return (
     <Box
@@ -98,7 +99,7 @@ export default function OpeningPositionTable({
       sx={{
         backgroundColor: totalOpening ? 'neutral5' : 'neutral7',
         ...(totalOpening || isLoading ? {} : emptyCss),
-        pb: 12,
+        pb: [0, 12],
       }}
     >
       <Flex px={12} pt={12} alignItems="center" justifyContent="space-between">
@@ -113,7 +114,7 @@ export default function OpeningPositionTable({
                 sx={{
                   width: 32,
                   height: 32,
-                  display: 'flex',
+                  display: ['none', 'none', 'none', 'none', 'flex'],
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderRadius: 'sm',
@@ -138,21 +139,31 @@ export default function OpeningPositionTable({
         </Flex>
       )}
       {data && data.length > 0 && (
-        <Box flex="1" overflowX="auto" overflowY="hidden">
-          <Table
-            restrictHeight={lg}
-            wrapperSx={{
-              minWidth: 500,
-            }}
-            data={tableData?.data}
-            columns={xl && isExpanded ? fullOpeningColumns : openingColumns}
-            externalSource={externalSource}
-            currentSort={currentSort}
-            changeCurrentSort={changeCurrentSort}
-            isLoading={isLoading}
-            onClickRow={handleSelectItem}
-            renderRowBackground={() => 'rgb(31, 34, 50)'}
-          />
+        <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
+          {sm ? (
+            <Table
+              restrictHeight={lg}
+              wrapperSx={{
+                minWidth: 500,
+              }}
+              data={tableData?.data}
+              columns={xl && isExpanded ? fullOpeningColumns : openingColumns}
+              externalSource={externalSource}
+              currentSort={currentSort}
+              changeCurrentSort={changeCurrentSort}
+              isLoading={isLoading}
+              onClickRow={handleSelectItem}
+              renderRowBackground={() => 'rgb(31, 34, 50)'}
+            />
+          ) : (
+            <PositionListCard
+              data={tableData?.data}
+              isLoading={isLoading}
+              scrollDep={tableData?.meta?.offset}
+              onClickItem={handleSelectItem}
+              hasAccountAddress={false}
+            />
+          )}
         </Box>
       )}
 

@@ -4,14 +4,14 @@ import { getCopyTradeSettingsListApi } from 'apis/copyTradeApis'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { QUERY_KEYS } from 'utils/config/keys'
 
-export default function useAllCopyTrades() {
+export default function useAllCopyTrades(params?: { enabled?: boolean }) {
   const { myProfile } = useMyProfileStore()
   const { data: allCopyTrades } = useQuery(
     [QUERY_KEYS.USE_GET_ALL_COPY_TRADES, myProfile?.id],
 
     () => getCopyTradeSettingsListApi(),
     {
-      enabled: !!myProfile?.id,
+      enabled: !!myProfile?.id && (params?.enabled ?? true),
       retry: 0,
       keepPreviousData: true,
     }

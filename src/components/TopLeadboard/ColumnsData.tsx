@@ -158,7 +158,7 @@ export function AccountInfo({
   isCurrentLeaderboard?: boolean
 }) {
   const { protocol: defaultProtocol } = useProtocolStore()
-  const { isCopying } = useTraderCopying(info.account)
+  const { isCopying } = useTraderCopying(info.account, info.protocol)
   const protocol = info.protocol ?? defaultProtocol
   const deltaRanking = isCurrentLeaderboard ? (info?.lastRanking ?? 1001) - info.ranking : 0
 

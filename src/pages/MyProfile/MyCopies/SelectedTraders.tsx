@@ -9,12 +9,14 @@ function SelectedTraders({
   handleToggleTrader,
   handleSelectAllTraders,
   allCopyTrades,
+  buttonSx,
 }: {
   allTraders: string[] // to check two request has same addresses
   selectedTraders: string[]
   allCopyTrades: CopyTradeData[] | undefined
   handleToggleTrader: (key: string) => void
   handleSelectAllTraders: (isSelectedAll: boolean) => void
+  buttonSx?: any
 }) {
   const tradersByProtocol = getTradersByProtocolFromCopyTrade(allCopyTrades, allTraders)
 
@@ -26,6 +28,7 @@ function SelectedTraders({
       handleSelectAllTraders={handleSelectAllTraders}
       handleToggleTrader={handleToggleTrader}
       tradersByProtocol={tradersByProtocol}
+      buttonSx={buttonSx}
     />
   )
 }

@@ -6,6 +6,7 @@ import { Redirect, Route, Switch, useLocation } from 'react-router'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
+import WarningLimitVolume from 'pages/@layouts/WarningLimitVolume'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
@@ -31,6 +32,7 @@ export default function MyProfile() {
   return (
     <>
       <CustomPageTitle title={pageTitleMapping[pathname] ?? t`My Profile`} />
+      <WarningLimitVolume />
       <Flex
         sx={{
           flexDirection: 'column',

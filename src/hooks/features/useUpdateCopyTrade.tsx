@@ -9,16 +9,16 @@ import { CopyTradeStatusEnum } from 'utils/config/enums'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
 export default function useUpdateCopyTrade({ onSuccess }: { onSuccess?: () => void }) {
-  const { saveTraderCopying, removeTraderCopying } = useTraderCopying()
+  const { saveTraderCopying, removeTraderCopying } = useTraderCopying(undefined, undefined)
   const { mutate: updateCopyTrade, isLoading: isMutating } = useMutation(updateCopyTradeApi, {
     onSuccess: async (data) => {
       toast.success(
         <ToastBody title={<Trans>Success</Trans>} message={<Trans>Your update has been succeeded</Trans>} />
       )
       if (data.status === CopyTradeStatusEnum.RUNNING) {
-        saveTraderCopying(data.account)
+        saveTraderCopying(data.account, data.protocol)
       } else {
-        removeTraderCopying(data.account)
+        removeTraderCopying(data.account, data.protocol)
       }
       onSuccess && onSuccess()
     },

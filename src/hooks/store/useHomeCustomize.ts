@@ -22,10 +22,10 @@ export const useHomeCustomizeStore = create<HomeCustomizeState>()(
     })),
     {
       name: 'home-customize',
-      version: 6,
+      version: 8,
       getStorage: () => localStorage,
       migrate: (persistedState, version) => {
-        if (version < 6) {
+        if (version < 8) {
           ;(persistedState as HomeCustomizeState).userTraderList = DEFAULT_LIST
           // if the stored value is in version lower, we set state to default
         }

@@ -10,6 +10,7 @@ import TimeFilterSection, { TimeFilterDropdown } from '../TimeFilterSection'
 import useTradersContext from '../useTradersContext'
 import AnalyticsLayoutDesktop from './AnalyticsLayoutDesktop'
 import AnalyticsLayoutMobile from './AnalyticsLayoutMobile'
+import SortTradersDropdown from './SortTradersDropdown'
 
 export default function TradersAnalytics() {
   const contextValues = useTradersContext()
@@ -41,6 +42,12 @@ export default function TradersAnalytics() {
           filterTag={null}
           timeFilterSection={<TimeFilterDropdown contextValues={contextValues} />}
           listTradersSection={<ListTradersSection contextValues={contextValues} />}
+          sortSection={
+            <SortTradersDropdown
+              currentSort={contextValues.currentSort}
+              changeCurrentSort={contextValues.changeCurrentSort}
+            />
+          }
           conditionFilter={
             <ConditionFilterButton
               filters={filters}

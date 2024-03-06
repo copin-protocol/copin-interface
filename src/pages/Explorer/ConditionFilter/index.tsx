@@ -129,7 +129,7 @@ export default function ConditionFilter({
   )
 }
 
-export function ConditionFilterButton(props: ConditionFilterProps) {
+export function ConditionFilterButton(props: ConditionFilterProps & { hasText?: boolean }) {
   const [openModal, setOpenModal] = useState(false)
   return (
     <>
@@ -138,10 +138,12 @@ export function ConditionFilterButton(props: ConditionFilterProps) {
         sx={{ p: 0, display: 'flex', alignItems: 'center', gap: 1, fontWeight: 'normal' }}
         onClick={() => setOpenModal(true)}
       >
-        <IconBox icon={<Funnel size={16} />} color="neutral3" />
-        <Box as="span">
-          <Trans>Filters</Trans>
-        </Box>
+        <IconBox icon={<Funnel size={20} />} color="neutral3" />
+        {props.hasText && (
+          <Box as="span">
+            <Trans>Filters</Trans>
+          </Box>
+        )}
         <Box
           sx={{
             width: 16,
@@ -157,7 +159,7 @@ export function ConditionFilterButton(props: ConditionFilterProps) {
         </Box>
       </Button>
       {openModal && (
-        <Modal isOpen minHeight="90vh" mode="bottom" maxHeight="100svh" onDismiss={() => setOpenModal(false)}>
+        <Modal isOpen minHeight="80svh" mode="bottom" maxHeight="80svh" onDismiss={() => setOpenModal(false)}>
           <ConditionFilter {...props} filtersExpanded onCancel={() => setOpenModal(false)} />
         </Modal>
       )}

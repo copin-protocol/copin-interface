@@ -23,7 +23,8 @@ export const getInitFilters = ({
   const paramKey = filterTab === FilterTabEnum.DEFAULT ? URL_PARAM_KEYS.DEFAULT_FILTERS : URL_PARAM_KEYS.RANKING_FILTERS
   const storageKey = filterTab === FilterTabEnum.DEFAULT ? STORAGE_KEYS.DEFAULT_FILTERS : STORAGE_KEYS.RANKING_FILTERS
   const fieldOptions = filterTab === FilterTabEnum.DEFAULT ? defaultFieldOptions : rankingFieldOptions
-  const filtersFromParams = parseParams(searchParams[paramKey] as string)
+  const paramsStr = searchParams[paramKey] as string
+  const filtersFromParams = parseParams(paramsStr)
   if (Object.keys(filtersFromParams).length !== 0) {
     return filtersFromParams
   }
@@ -31,6 +32,9 @@ export const getInitFilters = ({
   if (!!localFilterStr) {
     try {
       const filtersFromStorage = JSON.parse(localFilterStr) as ConditionFormValues<TraderData>
+      if (!paramsStr?.includes('indexTokens')) {
+        return filtersFromStorage.filter((e) => e.key !== 'indexTokens')
+      }
       return filtersFromStorage
     } catch (error) {}
   }

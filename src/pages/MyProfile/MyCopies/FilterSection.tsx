@@ -47,24 +47,26 @@ export default function FilterSection({
   }, [checkIsStatusChecked, handleToggleStatus])
   const FilterBySource = useCallback(() => {
     return (
-      <Flex alignItems="center" sx={{ gap: 3 }}>
+      <Flex alignItems="start" sx={{ gap: 3 }}>
         <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
           <Trans>Source</Trans>
         </Type.Caption>
-        {protocolFilters.map((protocol) => {
-          return (
-            <Checkbox
-              key={protocol}
-              checked={checkIsProtocolChecked(protocol)}
-              onChange={() => handleToggleProtocol(protocol)}
-            >
-              <Flex sx={{ alignItems: 'center', gap: 2 }}>
-                <Image src={parseProtocolImage(protocol)} width={20} height={20} />
-                <Type.Caption lineHeight="16px">{PROTOCOL_OPTIONS_MAPPING[protocol]?.text}</Type.Caption>
-              </Flex>
-            </Checkbox>
-          )
-        })}
+        <Flex sx={{ pt: 1, alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
+          {protocolFilters.map((protocol) => {
+            return (
+              <Checkbox
+                key={protocol}
+                checked={checkIsProtocolChecked(protocol)}
+                onChange={() => handleToggleProtocol(protocol)}
+              >
+                <Flex sx={{ alignItems: 'center', gap: 2 }}>
+                  <Image src={parseProtocolImage(protocol)} width={20} height={20} />
+                  <Type.Caption lineHeight="16px">{PROTOCOL_OPTIONS_MAPPING[protocol]?.text}</Type.Caption>
+                </Flex>
+              </Checkbox>
+            )
+          })}
+        </Flex>
       </Flex>
     )
   }, [checkIsProtocolChecked, handleToggleProtocol])
@@ -92,18 +94,22 @@ export default function FilterSection({
     </Flex>
   ) : (
     <>
-      <Flex sx={{ alignItems: 'center', borderBottom: 'small', borderColor: 'neutral5' }}>
+      <Flex sx={{ alignItems: 'center', borderBottom: 'small', borderColor: 'neutral5', py: 1 }}>
         <SelectedTraders
           selectedTraders={selectedTraders}
           allTraders={traders}
           allCopyTrades={allCopyTrades}
           handleToggleTrader={handleToggleTrader}
           handleSelectAllTraders={handleSelectAllTraders}
+          buttonSx={{ py: 0, '& > *:first-child': { display: 'flex', flexDirection: 'column' } }}
         />
         <Box sx={{ width: '1px', height: '100%', bg: 'neutral4' }} />
-        <Flex sx={{ flex: 1, justifyContent: 'center' }}>
-          <AvailableMargin value={copyWallet?.availableBalance} />
-        </Flex>
+
+        <AvailableMargin
+          value={copyWallet?.availableBalance}
+          sx={{ flexDirection: 'column', px: 2, gap: 0, flex: 1 }}
+        />
+
         <Box sx={{ width: '1px', height: '100%', bg: 'neutral4' }} />
         <Dropdown
           hasArrow={false}
@@ -141,10 +147,10 @@ export default function FilterSection({
     </>
   )
 }
-function AvailableMargin({ value }: { value: number | undefined }) {
+function AvailableMargin({ value, sx }: { value: number | undefined; sx?: any }) {
   return (
-    <Flex sx={{ gap: 2 }}>
-      <Type.Caption color="neutral1">
+    <Flex sx={{ gap: 2, ...(sx || {}) }}>
+      <Type.Caption color="neutral3">
         <Trans>Available Margin</Trans>:
       </Type.Caption>
       <Type.CaptionBold color="neutral1">${formatNumber(value)}</Type.CaptionBold>

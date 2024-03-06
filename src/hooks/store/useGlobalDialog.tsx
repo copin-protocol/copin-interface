@@ -2,7 +2,10 @@ import { ReactNode } from 'react'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
-interface DialogContent {
+import Loading from 'theme/Loading'
+import { Box, Flex, Type } from 'theme/base'
+
+interface DialogContentData {
   id?: string
   hasLoading?: boolean
   title?: ReactNode
@@ -10,21 +13,21 @@ interface DialogContent {
   body?: ReactNode
 }
 interface GlobalDialogState {
-  dialog: DialogContent | undefined
-  showDialog: (data: DialogContent) => void
+  dialog: DialogContentData | undefined
+  showDialog: (data: DialogContentData) => void
   hideDialog: () => void
-  updateDialog: (data: DialogContent) => void
+  updateDialog: (data: DialogContentData) => void
 }
 
 const useGlobalDialog = create<GlobalDialogState>()(
   immer((set) => ({
     dialog: undefined,
-    showDialog: (data: DialogContent) =>
+    showDialog: (data: DialogContentData) =>
       set({
         dialog: data,
       }),
     hideDialog: () => set({ dialog: undefined }),
-    updateDialog: (data: DialogContent) =>
+    updateDialog: (data: DialogContentData) =>
       set((state) => {
         state.dialog = { ...state.dialog, ...data }
         return state
@@ -33,3 +36,34 @@ const useGlobalDialog = create<GlobalDialogState>()(
 )
 
 export default useGlobalDialog
+
+export function DialogContent({ data }: { data: DialogContentData }) {
+  return (
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      variant="shadow"
+      sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 10000,
+      }}
+    >
+      <Box
+        variant="card"
+        width="fit-content"
+        height="fit-content"
+        textAlign="center"
+        sx={{ border: 'normal', borderColor: 'neutral6' }}
+      >
+        {data.hasLoading && <Loading />}
+        <Type.BodyBold display="block">{data.title}</Type.BodyBold>
+        {!!data.description && <Type.Caption color="neutral3">{data.description}</Type.Caption>}
+        <Box>{data.body}</Box>
+      </Box>
+    </Flex>
+  )
+}

@@ -8,7 +8,9 @@ import PickTradersButton, { CompareButton } from 'components/BacktestPickTraders
 import { useClickLoginButton } from 'components/LoginAction'
 import TraderListTable from 'components/Tables/TraderListTable'
 import CustomizeColumn from 'components/Tables/TraderListTable/CustomizeColumn'
-import { mobileTableSettings, tableSettings } from 'components/Tables/TraderListTable/dataConfig'
+import { tableSettings } from 'components/Tables/TraderListTable/dataConfig'
+import TraderListCard from 'components/TraderListCard'
+import CustomizeColumnMobile from 'components/TraderListCard/CustomizeColumnMobile'
 import { TraderData } from 'entities/trader.d'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -31,7 +33,6 @@ function ListTradersSection({
   notes?: { [key: string]: string }
 }) {
   const { sm } = useResponsive()
-  const settings = sm ? tableSettings : mobileTableSettings
   const {
     protocol,
     tab,
@@ -63,6 +64,8 @@ function ListTradersSection({
     isLoading,
   })
 
+  const formatedData = data?.data.map((item) => ({ ...item, note: notes ? notes[item.account] : undefined }))
+
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
       <>
@@ -85,20 +88,30 @@ function ListTradersSection({
       {isRangeProgressing ? null : (
         <>
           <Box
-            flex="1"
-            sx={{ overflow: 'hidden', borderBottom: 'small', borderBottomColor: 'neutral5', bg: 'neutral7' }}
+            flex="1 0 0"
+            sx={{
+              overflow: 'hidden',
+              borderBottom: 'small',
+              borderBottomColor: 'neutral5',
+              bg: 'neutral7',
+              position: 'relative',
+            }}
           >
-            <TraderListTable
-              data={data?.data.map((item) => ({ ...item, note: notes ? notes[item.account] : undefined }))}
-              isLoading={isLoading}
-              currentSort={currentSort}
-              changeCurrentSort={changeCurrentSort}
-              isSelectedAll={isSelectedAll}
-              handleSelectAll={handleSelectAll}
-              tableSettings={settings}
-              checkIsSelected={checkIsSelected}
-              handleSelect={handleSelect}
-            />
+            {sm ? (
+              <TraderListTable
+                data={formatedData}
+                isLoading={isLoading}
+                currentSort={currentSort}
+                changeCurrentSort={changeCurrentSort}
+                isSelectedAll={isSelectedAll}
+                handleSelectAll={handleSelectAll}
+                tableSettings={tableSettings}
+                checkIsSelected={checkIsSelected}
+                handleSelect={handleSelect}
+              />
+            ) : (
+              <TraderListCard data={formatedData} isLoading={isLoading} />
+            )}
           </Box>
           <TablePagination
             data={data}
@@ -176,7 +189,6 @@ function TablePagination({
           </TabletWrapper>
         ) : (
           <Box display={['block', 'flex']}>
-            <MultipleBacktestButton />
             <Flex
               sx={{
                 px: 12,
@@ -198,7 +210,7 @@ function TablePagination({
                 />
               </Box>
               <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
-              <CustomizeColumn hasTitle={false} />
+              <CustomizeColumnMobile />
             </Flex>
           </Box>
         ))}

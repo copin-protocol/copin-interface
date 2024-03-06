@@ -1,10 +1,11 @@
-import { useSize } from 'ahooks'
+import { useResponsive, useSize } from 'ahooks'
 import dayjs from 'dayjs'
 import { Range, UTCTimestamp } from 'lightweight-charts'
 import debounce from 'lodash/debounce'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import NoDataFound from 'components/@ui/NoDataFound'
+import PythWatermark from 'components/@ui/PythWatermark'
 import CurrencyOption from 'components/CurrencyOption'
 // import CurrencyOption from 'components/CurrencyOption'
 import { PositionData } from 'entities/trader.d'
@@ -302,6 +303,8 @@ export default function ChartPositions({
     setVisibleRange({ from: extent[0], to: extent[1] })
   }
 
+  const { sm } = useResponsive()
+
   return (
     <Flex
       ref={wrapperRef}
@@ -322,26 +325,28 @@ export default function ChartPositions({
         )}
       </Flex>
       <Flex alignItems="center" justifyContent="space-between" mr={12} mt={2} sx={{ gap: 2 }}>
-        <Type.Caption pl={12} color="neutral3">
-          {currencyOption?.label}/USD
-        </Type.Caption>
-        <Flex flex={1} alignItems="center" justifyContent="flex-end" sx={{ gap: 2 }}>
-          <TimeframeSelection isExpanded={isExpanded} currentOption={timeframe} changeOption={changeTimeframe} />
-          {!!currencyOptions?.length && !!changeCurrency && (
-            <CurrencyOption
-              options={currencyOptions}
-              currentOption={
-                currencyOption?.id === ALL_TOKENS_ID
-                  ? currencyOptions.find((e) => e.id === mostRecentPos?.indexToken) ?? currencyOption
-                  : currencyOption ?? currencyOptions[0]
-              }
-              handleChangeOption={(option) => {
-                changeCurrency && changeCurrency(option)
-              }}
-              selectProps={currencySelectProps}
-            />
-          )}
+        <Flex pl={12} alignItems="center" sx={{ gap: 2 }}>
+          <Type.Caption color="neutral3">{currencyOption?.label}/USD</Type.Caption>
+          <Type.Small color="neutral1">-</Type.Small>
+          <Flex alignItems="center" sx={{ gap: 2 }}>
+            <TimeframeSelection isExpanded={isExpanded} currentOption={timeframe} changeOption={changeTimeframe} />
+            {!!currencyOptions?.length && !!changeCurrency && (
+              <CurrencyOption
+                options={currencyOptions}
+                currentOption={
+                  currencyOption?.id === ALL_TOKENS_ID
+                    ? currencyOptions.find((e) => e.id === mostRecentPos?.indexToken) ?? currencyOption
+                    : currencyOption ?? currencyOptions[0]
+                }
+                handleChangeOption={(option) => {
+                  changeCurrency && changeCurrency(option)
+                }}
+                selectProps={currencySelectProps}
+              />
+            )}
+          </Flex>
         </Flex>
+        {(isExpanded || (!!currencyOptions?.length && !!changeCurrency)) && <PythWatermark size={24} />}
       </Flex>
       {isLoading && (
         <Box
@@ -364,22 +369,45 @@ export default function ChartPositions({
       )}
       {!isLoading && chartData && chartData.length === 0 && <NoDataFound />}
       <div id={chartId} style={{ padding: '0 12px', flex: '1 0 0' }} />
-      {showLoadMoreButton && !isExpanded && showSeeMorePositions && (
-        <Button
-          variant="outline"
-          sx={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translateX(-50%) translateY(-50%)',
-            zIndex: 8,
-            backdropFilter: 'blur(3px)',
-          }}
-          onClick={handleExpand}
-        >
-          See all positions
-        </Button>
-      )}
+      {showLoadMoreButton &&
+        !isExpanded &&
+        showSeeMorePositions &&
+        (sm ? (
+          <Button
+            variant="outline"
+            sx={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translateX(-50%) translateY(-50%)',
+              zIndex: 8,
+              backdropFilter: 'blur(3px)',
+            }}
+            onClick={handleExpand}
+          >
+            See all positions
+          </Button>
+        ) : (
+          <Type.Caption
+            sx={{
+              width: 'max-content',
+              textAlign: 'center',
+              fontWeight: 600,
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translateX(-50%) translateY(-50%)',
+              p: 3,
+              border: 'small',
+              borderRadius: '8px',
+              bg: 'modalBG',
+              backdropFilter: 'blur(3px)',
+              zIndex: 8,
+            }}
+          >
+            Use desktop to experience more
+          </Type.Caption>
+        ))}
       {isExpanded && tokenTrade?.symbol && size && (
         <BrushChart
           symbol={tokenTrade?.symbol}

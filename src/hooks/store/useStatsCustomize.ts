@@ -49,10 +49,10 @@ export const useStatsCustomizeStore = create<StatsCustomizeState>()(
     })),
     {
       name: 'stats-customize',
-      version: 3,
+      version: 4,
       getStorage: () => localStorage,
       migrate: (persistedState, version) => {
-        if (version < 3) {
+        if (version < 4) {
           ;(persistedState as StatsCustomizeState).customizeStats = DEFAULT_LIST
           // if the stored value is in version lower, we set state to default
         }

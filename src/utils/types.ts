@@ -3,10 +3,11 @@ export type TimeRange = {
   to?: Date
 }
 
-export type ConditionType = 'gte' | 'lte' | 'between'
+export type ConditionType = 'gte' | 'lte' | 'between' | 'in'
 
 export type FilterCondition = {
   gte?: number | null
   lte?: number | null
+  in?: string[]
   conditionType: ConditionType
 }

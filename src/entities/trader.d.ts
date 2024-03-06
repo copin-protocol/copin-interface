@@ -51,6 +51,7 @@ export interface TraderData {
   minLeverage: number
   runTimeDays: number
   isOpenPosition: boolean
+  indexTokens: string[]
   lastTradeAt: string
   lastTradeAtTs: number
   statisticAt: string

@@ -1,31 +1,31 @@
 import { useEffect, useMemo } from 'react'
-import { useQuery } from 'react-query'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
-import { getTradersCopyingApi } from 'apis/copyTradeApis'
+import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
 import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
-import { useAuthContext } from 'hooks/web3/useAuth'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
+
+type TraderCopying = Record<string, ProtocolEnum[]>
 
 interface TraderCopyingState {
   isLoading: boolean
   submitting: boolean
-  traderCopying: string[]
+  traderCopying: TraderCopying
   setLoading: (bool: boolean) => void
   setSubmitting: (bool: boolean) => void
-  setTraderCopying: (addresses: string[]) => void
+  setTraderCopying: (traders: TraderCopying) => void
 }
 
 const useTraderCopyingStore = create<TraderCopyingState>()(
   immer((set) => ({
-    traderCopying: [],
+    traderCopying: {},
     isLoading: false,
     submitting: false,
     setLoading: (bool: boolean) => set({ isLoading: bool }),
     setSubmitting: (bool: boolean) => set({ submitting: bool }),
-    setTraderCopying: (addresses: string[]) => set({ traderCopying: addresses }),
+    setTraderCopying: (traders: TraderCopying) => set({ traderCopying: traders }),
   }))
 )
 
@@ -40,36 +40,39 @@ const EXCLUDING_PATH = [
 ]
 export const useInitTraderCopying = () => {
   const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH)
-  const { profile } = useAuthContext()
   const { setTraderCopying, setLoading } = useTraderCopyingStore()
-  const { data, isLoading } = useQuery(
-    [QUERY_KEYS.GET_TRADERS_COPYING, profile?.username],
-    () => getTradersCopyingApi(),
-    {
-      retry: 0,
-      enabled: !!profile && enabledQueryByPaths,
-    }
-  )
+  const { allCopyTrades } = useAllCopyTrades({ enabled: enabledQueryByPaths })
+
   useEffect(() => {
-    if (data) setTraderCopying(data)
-  }, [data, setTraderCopying])
-  useEffect(() => {
-    setLoading(isLoading)
-  }, [isLoading, setLoading])
+    const copyingTrader: TraderCopying | undefined = allCopyTrades?.reduce((result, copyTrade) => {
+      if (copyTrade.status === CopyTradeStatusEnum.RUNNING)
+        return {
+          ...result,
+          [copyTrade.account]: Array.from(new Set([...(result[copyTrade.account] ?? []), copyTrade.protocol])),
+        }
+      return result
+    }, {} as TraderCopying)
+    if (!copyingTrader) return
+    setTraderCopying(copyingTrader)
+    setLoading(true)
+  }, [allCopyTrades])
 }
 
-const useTraderCopying = (account?: string) => {
+const useTraderCopying = (account: string | undefined, protocol: ProtocolEnum | undefined) => {
   const { isLoading, traderCopying, setTraderCopying } = useTraderCopyingStore()
-  const isCopying = useMemo(() => (account ? traderCopying.includes(account) : false), [account, traderCopying])
+  const isCopying = account && protocol ? traderCopying[account]?.includes(protocol) : false
 
-  const saveTraderCopying = (address: string) => {
-    if (!traderCopying.includes(address)) {
-      setTraderCopying([address, ...traderCopying])
+  const saveTraderCopying = (address: string, protocol: ProtocolEnum) => {
+    if (!traderCopying[address]?.includes(protocol)) {
+      setTraderCopying({ ...traderCopying, [address]: [...traderCopying[address], protocol] })
     }
   }
-  const removeTraderCopying = (address: string) => {
-    if (traderCopying.includes(address)) {
-      setTraderCopying(traderCopying.filter((account) => account !== address))
+  const removeTraderCopying = (address: string, protocol: ProtocolEnum) => {
+    if (traderCopying[address]?.includes(protocol)) {
+      setTraderCopying({
+        ...traderCopying,
+        [address]: traderCopying[address].filter((_protocol) => _protocol !== protocol),
+      })
     }
   }
   return {

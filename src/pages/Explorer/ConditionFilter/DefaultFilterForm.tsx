@@ -1,5 +1,7 @@
 import { useResponsive } from 'ahooks'
+import { useState } from 'react'
 
+import Divider from 'components/@ui/Divider'
 import { ConditionFormValues } from 'components/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import useMyProfile from 'hooks/store/useMyProfile'
@@ -9,6 +11,7 @@ import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import useTradersContext from '../useTradersContext'
 import FilterForm, { FilterFormProps } from './FilterForm'
+import FilterMarket from './FilterMarket'
 import ResultEstimated from './ResultEstimated'
 import { FilterTabEnum, defaultFieldOptions } from './configs'
 import { useTraderCountState } from './useTraderCount'
@@ -26,15 +29,28 @@ export default function DefaultFilterForm({
   currentTab: FilterTabEnum
   lastFilterTab: FilterTabEnum
 }) {
+  const [formValues, setFormValues] = useState(defaultFormValues)
   const { myProfile } = useMyProfile()
   const { timeOption, protocol, setCurrentSuggestion } = useTradersContext()
   const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues })
+  const [enableApply, setEnableApply] = useState(false)
 
   const onChangeFormValues: FilterFormProps['onValuesChange'] = (values) => {
-    handleChangeRanges(values)
+    let newValues = [...values]
+    const marketValues = formValues.find((e) => e.key === 'indexTokens')
+    if (marketValues) {
+      newValues = [...values, marketValues]
+    }
+    setFormValues(newValues)
+    handleChangeRanges(newValues)
+    setEnableApply(true)
   }
-
-  const onApply: FilterFormProps['onApply'] = (formValues) => {
+  const onChangeMarketFormValues: FilterFormProps['onValuesChange'] = (values) => {
+    setFormValues(values)
+    handleChangeRanges(values)
+    setEnableApply(true)
+  }
+  const onApply: FilterFormProps['onApply'] = (_formValues) => {
     handleChangeOption(formValues)
     handleClose && handleClose()
     setCurrentSuggestion(undefined)
@@ -48,6 +64,7 @@ export default function DefaultFilterForm({
       { protocol, data: JSON.stringify(formValues) }
     )
   }
+
   const onReset: FilterFormProps['onReset'] = (formValueFactory) => {
     if (formValueFactory) {
       const formValues = formValueFactory(['pnl', 'winRate'])
@@ -79,15 +96,20 @@ export default function DefaultFilterForm({
         />
       </Box>
 
+      <FilterMarket filters={formValues} changeFilters={onChangeMarketFormValues} />
+      <Divider my={1} color="neutral5" />
       <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
         <FilterForm
+          key={formValues.map((e) => e.key).join('-')}
           formType="default"
-          fieldOptions={defaultFieldOptions}
-          initialFormValues={defaultFormValues}
+          fieldOptions={defaultFieldOptions.filter((e) => e.value !== 'indexTokens')}
+          initialFormValues={formValues.filter((e) => e.key !== 'indexTokens')}
           onApply={onApply}
           onReset={onReset}
           onValuesChange={onChangeFormValues}
-          enabledApply={currentTab === FilterTabEnum.DEFAULT && lastFilterTab !== FilterTabEnum.DEFAULT}
+          enabledApply={
+            enableApply || (currentTab === FilterTabEnum.DEFAULT && lastFilterTab !== FilterTabEnum.DEFAULT)
+          }
         />
       </Box>
     </Flex>

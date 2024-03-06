@@ -1,13 +1,14 @@
 import { useResponsive } from 'ahooks'
 import { useEffect, useRef } from 'react'
 
-import { ListOpeningPositions, default as OpeningsTable } from 'components/TopOpeningPositions/TopOpeningsWindow'
 import { PositionData } from 'entities/trader'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import { PaginationWithLimit } from 'theme/Pagination'
 import { Box, Flex } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { pageToOffset } from 'utils/helpers/transform'
+
+import { ListOpeningPositions, default as OpeningsTable } from './OpeningPositionList'
 
 export default function PositionsSection({
   data,
@@ -44,9 +45,9 @@ export default function PositionsSection({
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', bg: 'neutral5', pt: 2 }}>
       <Box sx={{ flex: '1 0 0', overflowX: 'auto', overflowY: 'hidden' }}>
         {sm ? (
-          <OpeningsTable data={pagedData} isLoading={isLoading} page={currentPage} />
+          <OpeningsTable data={pagedData} isLoading={isLoading} scrollDep={currentPage} />
         ) : (
-          <ListOpeningPositions data={pagedData} isLoading={isLoading} page={currentPage} />
+          <ListOpeningPositions data={pagedData} isLoading={isLoading} scrollDep={currentPage} />
         )}
       </Box>
       <Box px={2} sx={{ borderTop: 'small', borderColor: 'neutral4' }}>

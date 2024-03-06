@@ -3,4 +3,5 @@ export interface AnalyticsLayoutComponents {
   filterTag: JSX.Element | null
   listTradersSection: JSX.Element
   conditionFilter: JSX.Element
+  sortSection?: JSX.Element
 }

@@ -16,7 +16,15 @@ const commonSchema = {
   leverage: yup.number().required().min(2).label('Leverage'),
   lookBackOrders: yup.number().min(1).integer().label('Orders To Lookback'),
   stopLossType: yup.string().label('Stop Loss Type'),
-  stopLossAmount: yup.number().positive().label('Stop Loss Amount'),
+  stopLossAmount: yup
+    .number()
+    .positive()
+    // @ts-ignore
+    .when(['stopLossType', 'volume'], (stopLossType, volume, schema) => {
+      if (stopLossType === SLTPTypeEnum.PERCENT) return schema.max(100)
+      return schema.max(volume)
+    })
+    .label('Stop Loss Amount'),
   takeProfitType: yup.string().label('Take Profit Type'),
   takeProfitAmount: yup.number().positive().label('Take Profit Amount'),
   maxMarginPerPosition: yup.number().nullable().positive().label('Max Margin Per Position'),

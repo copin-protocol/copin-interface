@@ -5,6 +5,7 @@ import { ReactElement, ReactNode } from 'react'
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
+import MarketGroup from 'components/@ui/MarketGroup'
 import FavoriteButton from 'components/FavoriteButton'
 import { MyCopyTraderData, TraderData } from 'entities/trader.d'
 import ProgressBar from 'theme/ProgressBar'
@@ -25,13 +26,14 @@ export type TableSettings<T, K = unknown> = {
   id: keyof T
   freezeLeft?: number
   freezeIndex?: number
-  render?: (text: T, index: number, externalSource?: K) => React.ReactNode
+  render?: (text: T, index?: number, externalSource?: K) => React.ReactNode
   searchText?: string
 }
 
 export type ExternalSource = {
-  traderFavorites: string[]
-  onToggleFavorite: (account: string) => void
+  traderFavorites?: string[]
+  onToggleFavorite?: (account: string) => void
+  isMarketsLeft?: boolean
 }
 
 export type TableSettingsProps<T> = TableSettings<T, ExternalSource>[]
@@ -61,8 +63,8 @@ export const emptyColumn = {
   render: () => <div />,
 } as unknown as TableSettings<TraderData, any>
 
-export const tableSettings: TableSettingsProps<TraderData> = [
-  {
+const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, ExternalSource> } = {
+  account: {
     style: {
       minWidth: '180px',
     },
@@ -81,7 +83,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       <AccountCell data={item} additionalComponent={<FavoriteButton address={item.account} size={16} />} />
     ),
   },
-  {
+  runTimeDays: {
     style: { minWidth: ['120px', '130px'] },
     text: <Trans>Runtime (All)</Trans>,
     searchText: 'Runtime All',
@@ -106,7 +108,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       </div>
     ),
   },
-  {
+  lastTradeAtTs: {
     style: { minWidth: ['110px', '140px'] },
     text: <Trans>Last Trade</Trans>,
     searchText: 'Last Trade',
@@ -129,7 +131,33 @@ export const tableSettings: TableSettingsProps<TraderData> = [
       return <Type.Caption>{item.lastTradeAt ? formatLocalRelativeDate(item.lastTradeAt) : '--'}</Type.Caption>
     },
   },
-  {
+  indexTokens: {
+    style: { minWidth: ['100px', '120px'] },
+    text: <Trans>Markets</Trans>,
+    searchText: 'Markets',
+    label: (
+      <LabelWithTooltip
+        id="tt_market_label"
+        tooltip="These are the markets that traders have been active in during this period."
+      >
+        Markets
+      </LabelWithTooltip>
+    ),
+    visible: true,
+    filter: {
+      conditionType: 'in',
+      in: [],
+    },
+    id: 'indexTokens',
+    render: (item, _, externalSource) => (
+      <MarketGroup
+        protocol={item.protocol}
+        indexTokens={item.indexTokens}
+        sx={{ justifyContent: externalSource?.isMarketsLeft ? 'flex-start' : 'flex-end' }}
+      />
+    ),
+  },
+  pnl: {
     style: { minWidth: ['100px', '120px'] },
     text: <Trans>PnL</Trans>,
     searchText: 'PnL',
@@ -148,7 +176,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'pnl',
     render: (item) => <SignedText value={item.pnl} maxDigit={0} prefix="$" />,
   },
-  {
+  totalGain: {
     searchText: 'Total Gain',
     style: { minWidth: ['100px', '111px'] },
     text: <Trans>Total Gain</Trans>,
@@ -167,7 +195,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'totalGain',
     render: (item) => <SignedText value={item.totalGain} maxDigit={0} pos prefix="$" />,
   },
-  {
+  totalLoss: {
     style: { minWidth: ['100px', '111px'] },
     text: <Trans>Total Loss</Trans>,
     searchText: 'Total Loss',
@@ -186,7 +214,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'totalLoss',
     render: (item) => <SignedText value={item.totalLoss} maxDigit={0} neg prefix="$" />,
   },
-  {
+  totalFee: {
     style: { minWidth: ['135px', '140px'] },
     text: <Trans>Total Paid Fees</Trans>,
     searchText: 'Total Paid Fees',
@@ -205,7 +233,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'totalFee',
     render: (item) => <SignedText value={item.totalFee} maxDigit={0} neg prefix="$" />,
   },
-  {
+  totalVolume: {
     style: { minWidth: ['120px', '130px'] },
     text: <Trans>Total Volume</Trans>,
     searchText: 'Total Volume',
@@ -224,7 +252,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'totalVolume',
     render: (item) => <Text text={item.totalVolume ? `$${formatNumber(item.totalVolume, 0, 0)}` : undefined} />,
   },
-  {
+  avgVolume: {
     style: { minWidth: ['110px', '120px'] },
     text: <Trans>Avg Volume</Trans>,
     searchText: 'Avg Volume',
@@ -243,7 +271,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'avgVolume',
     render: (item) => <Text text={item.avgVolume ? `$${formatNumber(item.avgVolume, 0, 0)}` : undefined} />,
   },
-  {
+  avgRoi: {
     style: { minWidth: '90px' },
     text: <Trans>Avg ROI</Trans>,
     searchText: 'Avg ROI',
@@ -265,7 +293,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'avgRoi',
     render: (item) => <SignedText value={item.avgRoi} maxDigit={2} minDigit={2} suffix="%" />,
   },
-  {
+  maxRoi: {
     style: { minWidth: '90px' },
     text: <Trans>Max ROI</Trans>,
     searchText: 'Max ROI',
@@ -287,7 +315,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'maxRoi',
     render: (item) => <SignedText value={item.maxRoi} maxDigit={2} minDigit={2} suffix="%" />,
   },
-  {
+  totalTrade: {
     style: { minWidth: '85px' },
     text: <Trans>Trades</Trans>,
     searchText: 'Trades',
@@ -305,7 +333,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'totalTrade',
     render: (item) => <Text text={item.totalTrade} />,
   },
-  {
+  totalWin: {
     style: { minWidth: '70px' },
     text: <Trans>Wins</Trans>,
     label: (
@@ -315,7 +343,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     ),
     sortBy: 'totalWin',
     searchText: 'Wins',
-    visible: false,
+    visible: true,
     filter: {
       conditionType: 'gte',
       gte: 5,
@@ -323,7 +351,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'totalWin',
     render: (item) => <Text text={item.totalWin} />,
   },
-  {
+  totalLose: {
     style: { minWidth: '75px' },
     text: <Trans>Loses</Trans>,
     searchText: 'Loses',
@@ -341,7 +369,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'totalLose',
     render: (item) => <Text text={item.totalLose} />,
   },
-  {
+  totalLiquidation: {
     style: { minWidth: '125px' },
     text: <Trans>Liquidations</Trans>,
     searchText: 'Liquidations',
@@ -359,9 +387,9 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'totalLiquidation',
     render: (item) => <Text text={item.totalLiquidation} />,
   },
-  {
+  winRate: {
     style: { minWidth: '100px' },
-    text: <Trans>Win rate</Trans>,
+    text: <Trans>Win Rate</Trans>,
     searchText: 'Win rate',
     label: (
       <LabelWithTooltip id="tt_win_rate_label" tooltip="The percentage of winning trades out of the total trades">
@@ -378,7 +406,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'winRate',
     render: (item) => <Text text={item.winRate ? `${formatNumber(item.winRate, 2, 2)}%` : undefined} />,
   },
-  {
+  profitRate: {
     style: { minWidth: ['110px', '120px'] },
     text: <Trans>Profit Rate</Trans>,
     searchText: 'Profit rate',
@@ -400,7 +428,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'profitRate',
     render: (item) => <Text text={item.profitRate ? `${formatNumber(item.profitRate, 2, 2)}%` : undefined} />,
   },
-  {
+  longRate: {
     style: { minWidth: ['100px', '110px'] },
     text: <Trans>L/S Rate</Trans>,
     searchText: 'L/S rate',
@@ -430,7 +458,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
         </Flex>
       ),
   },
-  {
+  orderPositionRatio: {
     style: { minWidth: ['140px', '160px'] },
     text: <Trans>Order/Pos Ratio</Trans>,
     searchText: 'Order/Pos Ratio',
@@ -451,7 +479,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'orderPositionRatio',
     render: (item) => <Text text={item.orderPositionRatio ? formatNumber(item.orderPositionRatio, 1, 1) : undefined} />,
   },
-  {
+  profitLossRatio: {
     style: { minWidth: ['90px', '105px'] },
     text: <Trans>PnL Ratio</Trans>,
     searchText: 'PnL Ratio',
@@ -472,7 +500,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'profitLossRatio',
     render: (item) => <Text text={item.profitLossRatio ? formatNumber(item.profitLossRatio, 1, 1) : undefined} />,
   },
-  {
+  gainLossRatio: {
     style: { minWidth: ['120px', '136px'] },
     text: <Trans>Profit Factor</Trans>,
     searchText: 'Profit Factor',
@@ -490,7 +518,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'gainLossRatio',
     render: (item) => <Text text={item.gainLossRatio ? formatNumber(item.gainLossRatio, 1, 1) : undefined} />,
   },
-  {
+  avgLeverage: {
     style: { minWidth: ['125px', '145px'] },
     text: <Trans>Avg Leverage</Trans>,
     searchText: 'Avg Leverage',
@@ -510,7 +538,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'avgLeverage',
     render: (item) => <Text text={item.avgLeverage ? formatNumber(item.avgLeverage, 1, 1) + 'x' : undefined} />,
   },
-  {
+  maxLeverage: {
     style: { minWidth: ['125px', '145px'] },
     text: <Trans>Max Leverage</Trans>,
     label: <Trans>Max Leverage</Trans>,
@@ -525,7 +553,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'maxLeverage',
     render: (item) => <Text text={item.maxLeverage ? formatNumber(item.maxLeverage, 1, 1) + 'x' : undefined} />,
   },
-  {
+  minLeverage: {
     style: { minWidth: ['125px', '145px'] },
     text: <Trans>Min Leverage</Trans>,
     label: <Trans>Min Leverage</Trans>,
@@ -540,7 +568,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'minLeverage',
     render: (item) => <Text text={item.minLeverage ? formatNumber(item.minLeverage, 1, 1) + 'x' : undefined} />,
   },
-  {
+  avgDuration: {
     style: { minWidth: ['120px', '132px'] },
     text: <Trans>Avg Duration</Trans>,
     searchText: 'Avg Duration',
@@ -562,7 +590,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'avgDuration',
     render: (item) => <Text text={formatDuration(item.avgDuration)} />,
   },
-  {
+  minDuration: {
     style: { minWidth: ['120px', '132px'] },
     text: <Trans>Min Duration</Trans>,
     searchText: 'Min Duration',
@@ -584,7 +612,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'minDuration',
     render: (item) => <Text text={formatDuration(item.minDuration)} />,
   },
-  {
+  maxDuration: {
     style: { minWidth: ['120px', '135px'] },
     text: <Trans>Max Duration</Trans>,
     searchText: 'Max Duration',
@@ -606,7 +634,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'maxDuration',
     render: (item) => <Text text={formatDuration(item.maxDuration)} />,
   },
-  {
+  maxDrawdown: {
     style: { minWidth: ['130px', '150px'] },
     text: <Trans>Max Drawdown</Trans>,
     searchText: 'Max Drawdown',
@@ -628,7 +656,7 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'maxDrawdown',
     render: (item) => <SignedText value={item.maxDrawdown} maxDigit={2} minDigit={2} neg suffix="%" />,
   },
-  {
+  maxDrawdownPnl: {
     style: { minWidth: ['160px', '175px'] },
     text: <Trans>Max Drawdown PnL</Trans>,
     searchText: 'Max Drawdown PnL',
@@ -650,23 +678,119 @@ export const tableSettings: TableSettingsProps<TraderData> = [
     id: 'maxDrawdownPnl',
     render: (item) => <SignedText value={item.maxDrawdownPnl} maxDigit={0} neg prefix="$" />,
   },
+}
+
+const tableColumnKeys: (keyof TraderData)[] = [
+  'account',
+  'runTimeDays',
+  'lastTradeAtTs',
+  'indexTokens',
+  'pnl',
+  'totalGain',
+  'totalLoss',
+  'totalFee',
+  'totalVolume',
+  'avgVolume',
+  'avgRoi',
+  'maxRoi',
+  'totalTrade',
+  'totalWin',
+  'totalLose',
+  'totalLiquidation',
+  'winRate',
+  'profitRate',
+  'longRate',
+  'orderPositionRatio',
+  'profitLossRatio',
+  'gainLossRatio',
+  'avgLeverage',
+  'maxLeverage',
+  'minLeverage',
+  'avgDuration',
+  'minDuration',
+  'maxDuration',
+  'maxDrawdown',
+  'maxDrawdownPnl',
+]
+export const tableSettings: TableSettingsProps<TraderData> = tableColumnKeys
+  .map((key) => columnsMapping[key]!)
+  .filter((data) => !!data)
+
+const mobileTableColumnKeys: (keyof TraderData)[] = [
+  'account',
+  'pnl',
+  'avgRoi',
+  'winRate',
+  'runTimeDays',
+  'lastTradeAtTs',
+  'indexTokens',
+  'totalGain',
+  'totalLoss',
+  'totalFee',
+  'totalVolume',
+  'avgVolume',
+  'maxRoi',
+  'totalTrade',
+  'totalWin',
+  'totalLose',
+  'totalLiquidation',
+  'profitRate',
+  'longRate',
+  'orderPositionRatio',
+  'profitLossRatio',
+  'gainLossRatio',
+  'avgLeverage',
+  'maxLeverage',
+  'minLeverage',
+  'avgDuration',
+  'minDuration',
+  'maxDuration',
+  'maxDrawdown',
+  'maxDrawdownPnl',
 ]
 export const mobileTableSettings: TableSettingsProps<TraderData> = [
   {
     style: {
-      minWidth: '150px',
+      minWidth: '180px',
     },
-    text: <Trans>Account</Trans>,
-    label: <Box textAlign="left">Account</Box>,
+    text: 'Account',
+    searchText: 'Account',
+    label: (
+      <Box textAlign="left">
+        <Trans>Account</Trans>
+      </Box>
+    ),
     visible: true,
     id: 'account',
-    freezeLeft: 150,
+    freezeLeft: 180,
     freezeIndex: 3,
     render: (item) => (
-      <AccountCell data={item} additionalComponent={<FavoriteButton address={item.account} size={16} />} />
+      <AccountCellMobile data={item} additionalComponent={<FavoriteButton address={item.account} size={16} />} />
     ),
   },
-  ...tableSettings.slice(1),
+  ...mobileTableColumnKeys
+    .slice(1)
+    .map((key) => columnsMapping[key]!)
+    .filter((data) => !!data)
+    .map((data) => {
+      const newData = { ...data }
+      if (newData.id === 'longRate') {
+        newData.render = (item) =>
+          item.longRate == null ? (
+            '--'
+          ) : (
+            <Flex flexDirection="column" width="100%" alignItems="start">
+              <ProgressBar percent={item.longRate} color="green2" bg="red2" sx={{ width: '90%' }} />
+              <Flex alignItems="center" justifyContent="space-between" sx={{ width: '90%' }}>
+                <Type.Small color="green2">{compactNumber(item.longRate, 0)}%</Type.Small>
+                <Type.Small color="red2">{compactNumber(100 - item.longRate, 0)}%</Type.Small>
+              </Flex>
+            </Flex>
+          )
+        return newData
+      }
+      return data
+    }),
 ]
 
 function Text({ text, ...props }: { text: string | number | undefined } & Record<string, any>) {
@@ -697,6 +821,22 @@ export function AccountCell({ data, additionalComponent }: { data: TraderData; a
         size={sm ? 40 : 28}
       />
       {additionalComponent ? additionalComponent : null}
+    </Flex>
+  )
+}
+function AccountCellMobile({ data, additionalComponent }: { data: TraderData; additionalComponent?: ReactElement }) {
+  return (
+    <Flex alignItems="start" justifyContent="start" sx={{ gap: [1, 2], position: 'relative' }}>
+      <AccountInfo
+        isOpenPosition={data.isOpenPosition}
+        address={data.account}
+        protocol={data.protocol}
+        type={data.type}
+        note={data.note}
+        size={40}
+        wrapperSx={{ py: 0, gap: 2 }}
+      />
+      <Box>{additionalComponent ? additionalComponent : null}</Box>
     </Flex>
   )
 }

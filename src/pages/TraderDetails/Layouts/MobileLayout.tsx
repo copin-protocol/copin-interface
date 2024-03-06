@@ -63,7 +63,7 @@ const MobileLayout = (props: LayoutProps) => {
       {tab === TabEnum.CHARTS && (
         <>
           <Box
-            height={350}
+            height={250}
             sx={{
               borderBottom: 'small',
               borderColor: 'neutral4',
@@ -71,7 +71,7 @@ const MobileLayout = (props: LayoutProps) => {
           >
             {props.traderRanking}
           </Box>
-          <Box height="max(calc(100vh - 577px), 330px)">{props.traderChartPositions}</Box>
+          <Box height="max(calc(100vh - 480px), 330px)">{props.traderChartPositions}</Box>
           {/* <Box
             p={12}
             sx={{
@@ -87,7 +87,7 @@ const MobileLayout = (props: LayoutProps) => {
       {tab === TabEnum.POSITIONS && (
         <Flex flexDirection="column" height="100%">
           <Box
-            minHeight={261}
+            minHeight={120}
             sx={{
               borderBottom: 'small',
               borderColor: 'neutral4',

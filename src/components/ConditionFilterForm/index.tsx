@@ -1,12 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { Plus, Trash } from '@phosphor-icons/react'
-import { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 
+import { useProtocolStore } from 'hooks/store/useProtocols'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
 import Input from 'theme/Input'
 import Select from 'theme/Select'
 import { Box, Flex, Type } from 'theme/base'
+import { getTokenTradeList } from 'utils/config/trades'
 
 import { parseNumber } from './helpers'
 import { ConditionFilterFormProps, ConditionOption, FieldOption, RowValues } from './types'
@@ -61,7 +63,7 @@ export default function ConditionFilterForm<T>({
   }
 
   return (
-    <Box px={12} width="100%" height="100%">
+    <Box pl={2} pr={3} width="100%" height="100%">
       <RowWrapper sx={{ width: '100%' }}>
         <Box px={2} flex="7">
           <Type.Caption color="neutral3">
@@ -134,6 +136,7 @@ function Row<T>({
   onRemove: () => void
   type: ConditionFilterFormProps<T>['type']
 }) {
+  const { protocol } = useProtocolStore()
   const [conditionOption, setConditionOption] = useState<ConditionOption>(() => getConditionOption(data.conditionType))
   const [fieldNameOption, setFieldNameOption] = useState<FieldOption<T>>(() => {
     const option = fieldOptions.find((option) => option.value === data.key)
@@ -144,11 +147,17 @@ function Row<T>({
   const conditionType = conditionOption.value
   const [gte, setGte] = useState<string | undefined>(data?.gte?.toString())
   const [lte, setLte] = useState<string | undefined>(data?.lte?.toString())
+  const [inList, setInList] = useState<string[] | undefined>(data?.in ?? undefined)
+
+  const pairs = protocol && getTokenTradeList(protocol)
+  const pairOptions = pairs?.map((e) => {
+    return { value: e.address, label: e.name }
+  })
 
   useEffect(() => {
-    onChange({ key: fieldName, conditionType, gte: parseNumber(gte), lte: parseNumber(lte) })
+    onChange({ key: fieldName, conditionType, gte: parseNumber(gte), lte: parseNumber(lte), in: inList })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conditionType, fieldName, gte, lte])
+  }, [conditionType, fieldName, gte, lte, inList])
 
   return (
     <Flex
@@ -186,72 +195,78 @@ function Row<T>({
               if (value.default) {
                 setGte(value.default?.gte?.toString())
                 setLte(value.default?.lte?.toString())
+                setInList([])
                 setConditionOption(getConditionOption(value.default.conditionType))
               }
             }}
           />
         </Box>
         {/* <VerticalDivider /> */}
-        <Box flex="6" pl={2}>
-          <Select
-            isSearchable={false}
-            menuPlacement="top"
-            maxMenuHeight={300}
-            menuPosition="fixed"
-            variant="ghost"
-            options={conditionOptions}
-            value={conditionOption}
-            onChange={(newValue) => {
-              setGte(gte || '0')
-              setLte(lte || '0')
-              setConditionOption(newValue as ConditionOption)
-            }}
-          />
-        </Box>
-        {/* <VerticalDivider /> */}
-        <Box height="100%" flex="7">
-          <Flex sx={{ alignItems: 'center', gap: 2, '& > *': { flex: 1 }, height: '100%' }}>
-            {conditionOption.value === 'gte' || conditionOption.value === 'between' ? (
-              <Input
-                key="gte"
-                type="number"
-                placeholder=""
-                value={gte}
-                onChange={(e) => {
-                  const value = e.target.value
-                  setGte(value)
-                }}
-                sx={{
-                  px: 2,
-                  border: 'none',
-                  bg: 'transparent !important',
-                }}
-                suffix={fieldNameOption.unit}
-              />
-            ) : null}
-            {conditionOption.value === 'lte' || conditionOption.value === 'between' ? (
-              <>
-                {conditionOption.value === 'between' && <VerticalDivider sx={{ height: 'calc(100% - 16px)' }} />}
-                <Input
-                  key="lte"
-                  type="number"
-                  placeholder=""
-                  value={lte}
-                  onChange={(e) => {
-                    const value = e.target.value
-                    setLte(value)
-                  }}
-                  sx={{
-                    px: 2,
-                    border: 'none',
-                    bg: 'transparent !important',
-                  }}
-                  suffix={fieldNameOption.unit}
-                />
-              </>
-            ) : null}
-          </Flex>
-        </Box>
+        {fieldName === 'indexTokens' ? (
+          <Box flex="13">
+            <Select
+              closeMenuOnSelect={false}
+              className="select-container pad-right-0"
+              options={pairOptions}
+              value={pairOptions?.filter?.((option) => inList?.includes(option.value))}
+              onChange={(newValue: any) => {
+                setInList(newValue?.map((data: any) => data.value) ?? [])
+              }}
+              components={{
+                DropdownIndicator: () => <div></div>,
+              }}
+              isSearchable
+              isMulti
+            />
+          </Box>
+        ) : (
+          <>
+            {/* <VerticalDivider /> */}
+            <Box height="100%" flex="7">
+              <Flex sx={{ alignItems: 'center', gap: 2, '& > *': { flex: 1 }, height: '100%' }}>
+                {conditionOption.value === 'gte' || conditionOption.value === 'between' ? (
+                  <Input
+                    key="gte"
+                    type="number"
+                    placeholder=""
+                    value={gte}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      setGte(value)
+                    }}
+                    sx={{
+                      px: 2,
+                      border: 'none',
+                      bg: 'transparent !important',
+                    }}
+                    suffix={fieldNameOption.unit}
+                  />
+                ) : null}
+                {conditionOption.value === 'lte' || conditionOption.value === 'between' ? (
+                  <>
+                    {conditionOption.value === 'between' && <VerticalDivider sx={{ height: 'calc(100% - 16px)' }} />}
+                    <Input
+                      key="lte"
+                      type="number"
+                      placeholder=""
+                      value={lte}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        setLte(value)
+                      }}
+                      sx={{
+                        px: 2,
+                        border: 'none',
+                        bg: 'transparent !important',
+                      }}
+                      suffix={fieldNameOption.unit}
+                    />
+                  </>
+                ) : null}
+              </Flex>
+            </Box>
+          </>
+        )}
       </RowWrapper>
       <IconButton
         variant="ghost"
@@ -292,6 +307,10 @@ const conditionOptions: ConditionOption[] = [
   {
     value: 'between',
     label: 'Between',
+  },
+  {
+    value: 'in',
+    label: 'In',
   },
 ]
 

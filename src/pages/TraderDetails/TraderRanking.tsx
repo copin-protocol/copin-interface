@@ -52,7 +52,7 @@ function TraderRanking({
         flexDirection: 'column',
         alignItems: 'center',
         position: 'relative',
-        paddingTop: [24, 56, 56, 10],
+        paddingTop: [3, 56, 56, 10],
       }}
     >
       <Type.CaptionBold sx={{ width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">

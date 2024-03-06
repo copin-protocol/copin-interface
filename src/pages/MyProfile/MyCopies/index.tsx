@@ -223,6 +223,7 @@ export default function MyCopies(props: MyCopiesProps) {
         <DeleteCopyTradeModal
           copyTradeId={copyTradeData.current?.id}
           account={copyTradeData.current?.account}
+          protocol={copyTradeData.current?.protocol}
           onDismiss={handleCloseDeleteModal}
           onSuccess={() => onRefresh()}
         />

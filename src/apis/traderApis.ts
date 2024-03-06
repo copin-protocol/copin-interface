@@ -50,10 +50,12 @@ const normalizePayload = (body: RequestBodyApiData) => {
     sortBy = transformRealisedField(sortBy)
   }
   if (!body.ranges) return { ...body, sortBy }
-  const ranges = body.ranges.map((range) => ({
-    ...range,
-  }))
-  if (ranges?.[0].fieldName.match('ranking')) {
+  const ranges = body.ranges
+    .map((range) => ({
+      ...range,
+    }))
+    .filter((range) => range.fieldName !== 'indexTokens' || !!range.in?.length)
+  if (ranges?.[0]?.fieldName?.match('ranking')) {
     ranges.forEach((range) => {
       const [_prefix, _fieldName] = range.fieldName.split('.')
       if (_fieldName === 'pnl') return

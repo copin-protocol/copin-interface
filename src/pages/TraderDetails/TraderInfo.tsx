@@ -1,3 +1,5 @@
+import { useResponsive } from 'ahooks'
+
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
@@ -27,22 +29,20 @@ const TraderInfo = ({
   timeOption: TimeFilterProps
   traderStats: (TraderData | undefined)[] | undefined
 }) => {
-  const { isCopying } = useTraderCopying(traderData?.account)
+  const { isCopying } = useTraderCopying(address, protocol)
   const explorerUrl = PROTOCOL_PROVIDER[protocol]?.explorerUrl
   const shareStats = traderStats?.find((data) => data && data.type === (timeOption.id as unknown as TimeFrameEnum))
+  const { sm } = useResponsive()
 
   return (
     <Box px={3} py={2}>
       <Flex sx={{ gap: 2, alignItems: 'center' }}>
         <AddressAvatar address={address} size={42} />
         <Box>
-          <Flex alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
-            <Box textAlign="left" alignItems="center">
-              <Type.LargeBold lineHeight="20px" textAlign="left" fontSize={['16px', '18px']}>
-                {addressShorten(address, 3, 5)}
-              </Type.LargeBold>
-              <ProtocolLogo protocol={protocol} />
-            </Box>
+          <Flex mb={{ _: 1, sm: 0 }} alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
+            <Type.LargeBold lineHeight="20px" textAlign="left" fontSize={['16px', '18px']}>
+              {addressShorten(address, 3, 5)}
+            </Type.LargeBold>
             <CopyButton type="button" variant="ghost" value={address} size="sm" iconSize={20} sx={{ p: 0 }} />
             <ExplorerLogo protocol={protocol} explorerUrl={`${explorerUrl}/address/${address}`} />
             <FavoriteButton address={address} size={20} />
@@ -52,7 +52,17 @@ const TraderInfo = ({
               type={timeOption.id as unknown as TimeFrameEnum}
               stats={shareStats}
             />
-            {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
+            {sm && isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
+          </Flex>
+          <Flex sx={{ alignItems: 'center', gap: 2 }}>
+            <ProtocolLogo protocol={protocol} />
+            {!sm && isCopying && (
+              <Tag
+                width={70}
+                status={TraderStatusEnum.COPYING}
+                sx={{ p: 0, '& *': { lineHeight: '1em', pt: '2px', pb: '4px' } }}
+              />
+            )}
           </Flex>
         </Box>
       </Flex>
