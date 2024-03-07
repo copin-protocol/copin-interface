@@ -18,9 +18,11 @@ export default function FilterMarket({
 }) {
   const { protocol } = useProtocolStore()
   const pairs = protocol && getTokenTradeList(protocol)
-  const pairOptions = pairs?.map((e) => {
-    return { value: e.address, label: e.name }
-  })
+  const pairOptions = pairs
+    ?.sort((x, y) => (x.symbol < y.symbol ? -1 : x.symbol > y.symbol ? 1 : 0))
+    ?.map((e) => {
+      return { value: e.address, label: e.name }
+    })
   const allPairs = pairs?.map((e) => e.address) ?? []
   const initSelected = filters.find((e) => e.key === 'indexTokens')?.in
   const [keyword, setKeyword] = useState<string | undefined>()
