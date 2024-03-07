@@ -64,7 +64,7 @@ const useTraderCopying = (account: string | undefined, protocol: ProtocolEnum | 
 
   const saveTraderCopying = (address: string, protocol: ProtocolEnum) => {
     if (!traderCopying[address]?.includes(protocol)) {
-      setTraderCopying({ ...traderCopying, [address]: [...traderCopying[address], protocol] })
+      setTraderCopying({ ...traderCopying, [address]: [...(traderCopying[address] || []), protocol] })
     }
   }
   const removeTraderCopying = (address: string, protocol: ProtocolEnum) => {
