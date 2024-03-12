@@ -25,10 +25,10 @@ export default function WarningLimitVolume() {
 function useLimitVolume() {
   const { allCopyTrades } = useAllCopyTrades()
   if (!allCopyTrades?.length) {
-    const bingXInfoWrapper = document.getElementById(ELEMENT_IDS.BINGX_INFO_WRAPPER)
-    if (!!bingXInfoWrapper) {
-      bingXInfoWrapper.style.cssText = ''
-    }
+    // const bingXInfoWrapper = document.getElementById(ELEMENT_IDS.BINGX_INFO_WRAPPER)
+    // if (!!bingXInfoWrapper) {
+    //   bingXInfoWrapper.style.cssText = ''
+    // }
     return { listWarning: null }
   }
   const copyTradeVolumeMapping = allCopyTrades.reduce<

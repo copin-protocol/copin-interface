@@ -26,8 +26,9 @@ export default function Menu({ visible, onClose }: Props) {
   useEffect(() => {
     const handleResize = () => {
       const warningLimitWrapper = document.getElementById(ELEMENT_IDS.WARNING_LIMIT_VOLUME_WRAPPER)
-      const bingXWrapper = document.getElementById(ELEMENT_IDS.BINGX_INFO_WRAPPER)
-      const _menuTop = NAVBAR_HEIGHT + (warningLimitWrapper?.clientHeight ?? 0) + (bingXWrapper?.clientHeight ?? 0)
+      // const bingXWrapper = document.getElementById(ELEMENT_IDS.BINGX_INFO_WRAPPER)
+      // const _menuTop = NAVBAR_HEIGHT + (warningLimitWrapper?.clientHeight ?? 0) + (bingXWrapper?.clientHeight ?? 0)
+      const _menuTop = NAVBAR_HEIGHT + (warningLimitWrapper?.clientHeight ?? 0)
       setMenuTop(_menuTop)
     }
     handleResize()
