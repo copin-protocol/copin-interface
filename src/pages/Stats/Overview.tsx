@@ -69,7 +69,7 @@ export default function Overview() {
       <GridItemWrapper>
         <StatsItemWrapper>
           <StatsWithTooltip
-            label={<Trans>Total Copiers</Trans>}
+            label={<Trans>Total Users</Trans>}
             value={data?.totalCopier?.allTime}
             valueConversionFactor={
               data?.totalCopier && data.totalCopier.allTime && data.totalCopier.yesterday

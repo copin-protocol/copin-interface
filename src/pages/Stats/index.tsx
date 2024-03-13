@@ -197,12 +197,12 @@ function StatisticChart({ timeRange }: { timeRange: TimeRange }) {
           gap: 24,
         }}
       >
-        <ChartWrapper isLoading={isLoading} title={<Trans>Copiers Net PnL</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>Users Net PnL</Trans>} time={lastUpdatedTime}>
           {stats && <NetProfitChartComponent data={chartData} stats={stats} syncId="pnl_chart" />}
         </ChartWrapper>
         <ChartWrapper
           isLoading={isLoading}
-          title={<Trans>Copiers Profit vs Loss</Trans>}
+          title={<Trans>Users Profit vs Loss</Trans>}
           time={lastUpdatedTime}
           isPercentsView={isPercentView}
           togglePercentView={setIsPercentView}
@@ -223,13 +223,13 @@ function StatisticChart({ timeRange }: { timeRange: TimeRange }) {
           gap: 24,
         }}
       >
-        <ChartWrapper isLoading={isLoading} title={<Trans>Total Copiers</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Active Users (DAU)</Trans>} time={lastUpdatedTime}>
           {<CopierChartComponent data={chartData} syncId="copy_chart" />}
         </ChartWrapper>
-        <ChartWrapper isLoading={isLoading} title={<Trans>Total Copy Trades</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Copy Trades</Trans>} time={lastUpdatedTime}>
           {<CopyTradeChartComponent data={chartData} syncId="copy_chart" />}
         </ChartWrapper>
-        <ChartWrapper isLoading={isLoading} title={<Trans>Total Unique Traders</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Unique Traders</Trans>} time={lastUpdatedTime}>
           {<TraderChartComponent data={chartData} syncId="copy_chart" />}
         </ChartWrapper>
       </Box>

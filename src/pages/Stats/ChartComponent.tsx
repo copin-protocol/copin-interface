@@ -245,20 +245,20 @@ export function CopierChartComponent({ data, syncId }: { data: StatisticChartDat
       <Bar
         // stackId="copier"
         type="monotone"
-        name="Total Copier Active"
+        name="Daily Active Users"
         dataKey="totalActiveCopier"
         fill={themeColors.primary1}
       />
-      <Bar
-        // stackId="copier"
-        type="monotone"
-        name="Total Copier Inactive"
-        dataKey="totalInactiveCopier"
-        fill={themeColors.primary2}
-      />
+      {/*<Bar*/}
+      {/*  // stackId="copier"*/}
+      {/*  type="monotone"*/}
+      {/*  name="Total Copier Inactive"*/}
+      {/*  dataKey="totalInactiveCopier"*/}
+      {/*  fill={themeColors.primary2}*/}
+      {/*/>*/}
       <Line
         type="monotone"
-        name="Cumulative Copier"
+        name="Cumulative Users"
         dataKey="totalCopier"
         yAxisId="right"
         dot={false}
@@ -287,20 +287,20 @@ export function CopyTradeChartComponent({ data, syncId }: { data: StatisticChart
       <Bar
         // stackId="copyTrade"
         type="monotone"
-        name="Total Copy Trade Active"
+        name="Daily Active Copy Trades"
         dataKey="totalActiveCopyTrade"
         fill={themeColors.primary1}
       />
-      <Bar
-        // stackId="copyTrade"
-        type="monotone"
-        name="Total Copy Trade Inactive"
-        dataKey="totalInactiveCopyTrade"
-        fill={themeColors.primary2}
-      />
+      {/*<Bar*/}
+      {/*  // stackId="copyTrade"*/}
+      {/*  type="monotone"*/}
+      {/*  name="Total Copy Trade Inactive"*/}
+      {/*  dataKey="totalInactiveCopyTrade"*/}
+      {/*  fill={themeColors.primary2}*/}
+      {/*/>*/}
       <Line
         type="monotone"
-        name="Cumulative Copy Trade"
+        name="Cumulative Copy Trades"
         dataKey="totalCopyTrade"
         yAxisId="right"
         dot={false}
@@ -326,10 +326,10 @@ export function OrderChartComponent({ data, syncId }: { data: StatisticChartData
         stroke={themeColors.neutral4}
         tickFormatter={(value) => `${compactNumber(value, 0)}`}
       />
-      <Bar type="monotone" name="Total Order" dataKey="totalOrder" fill={themeColors.primary1} />
+      <Bar type="monotone" name="Daily Orders" dataKey="totalOrder" fill={themeColors.primary1} />
       <Line
         type="monotone"
-        name="Cumulative Order"
+        name="Cumulative Orders"
         dataKey="orderCumulative"
         yAxisId="right"
         dot={false}
@@ -355,7 +355,7 @@ export function VolumeChartComponent({ data, syncId }: { data: StatisticChartDat
         stroke={themeColors.neutral4}
         tickFormatter={(value) => `$${compactNumber(value, 1)}`}
       />
-      <Bar type="monotone" name="Total Volume" unit="$" dataKey="totalVolume" fill={themeColors.primary1} />
+      <Bar type="monotone" name="Daily Volume" unit="$" dataKey="totalVolume" fill={themeColors.primary1} />
       <Line
         type="monotone"
         name="Cumulative Volume"
@@ -395,7 +395,7 @@ export function TraderChartComponent({ data, syncId }: { data: StatisticChartDat
       <Bar
         // stackId="copier"
         type="monotone"
-        name="Total Unique Trader"
+        name="Daily Unique Trader"
         dataKey="totalDistinctTrader"
         fill={themeColors.primary1}
       />
