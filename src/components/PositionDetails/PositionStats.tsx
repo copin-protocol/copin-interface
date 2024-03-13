@@ -61,7 +61,7 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }:
             <RelativeTimeText date={data.openBlockTime} />
           </Type.Caption>
           {renderEntry(data)}
-          <Flex width={220}>
+          <Flex width={240}>
             {isOpening ? renderSizeOpeningWithPrices(data, prices) : renderSize(data, hasLiquidate)}
           </Flex>
         </Flex>

@@ -69,7 +69,7 @@ export interface UserActivityData {
   sourceTxHash?: string
   copyWalletId?: string
   copyWalletName?: string
-  bingXOrderIds?: string[]
+  cexOrderIds?: string[]
   sourcePrice: number
   copyOrderId?: string
   targetTxHash?: string
@@ -93,7 +93,7 @@ export interface LatestActivityLogData {
   isSuccess: true
   sourceTxHash: string
   copyWalletId: string
-  bingXOrderId: string
+  cexOrderId: string
   isReverse: false
   copyOrderId: string
   copyPositionId: string

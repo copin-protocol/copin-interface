@@ -170,8 +170,17 @@ export const ELEMENT_CLASSNAMES = {
 
 // TODO: Check when add new protocol
 export const SERVICE_KEYS = {
+  [ProtocolEnum.GNS]: '',
   [ProtocolEnum.GMX_V2]: '',
   [ProtocolEnum.GMX]: 'GMX_COPY_TRADE',
   [ProtocolEnum.KWENTA]: 'SYNTHETIX_COPY_TRADE',
   [ProtocolEnum.POLYNOMIAL]: 'SYNTHETIX_COPY_TRADE',
+}
+
+export const INTERNAL_SERVICE_KEYS = {
+  [ProtocolEnum.GNS]: '',
+  [ProtocolEnum.GMX_V2]: '',
+  [ProtocolEnum.GMX]: 'GMX_COPY_TRADE',
+  [ProtocolEnum.KWENTA]: 'SYNTHETIX_COPY_TRADE_BITGET',
+  [ProtocolEnum.POLYNOMIAL]: 'SYNTHETIX_COPY_TRADE_BITGET',
 }

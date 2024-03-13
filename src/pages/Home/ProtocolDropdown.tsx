@@ -5,9 +5,17 @@ import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
-import { PROTOCOL_OPTIONS } from 'utils/config/protocols'
+import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 
-import { getDropdownProps } from './configs'
+import { ALLOWED_PROTOCOLS, getDropdownProps } from './configs'
+
+const PROTOCOL_OPTIONS = [
+  PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GMX],
+  PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.KWENTA],
+  PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.POLYNOMIAL],
+  PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GMX_V2],
+  PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GNS],
+] //todo: Check when add new protocol
 
 export default function ProtocolDropdown({
   protocol,
@@ -24,7 +32,7 @@ export default function ProtocolDropdown({
       menu={
         <>
           {PROTOCOL_OPTIONS.map((option) => {
-            const disabled = option.id === ProtocolEnum.GMX_V2
+            const disabled = !ALLOWED_PROTOCOLS.includes(option.id)
             const isActive = option.id === protocol
             return (
               <DropdownItem

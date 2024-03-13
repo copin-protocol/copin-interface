@@ -19,18 +19,30 @@ export const RelativeTimeText = ({ date }: { date: string | undefined }) => {
   )
 }
 
-export const LocalTimeText = ({ date }: { date: string | undefined }) => {
+export const LocalTimeText = ({
+  date,
+  format,
+  hasTooltip = true,
+}: {
+  date: string | undefined
+  format?: string
+  hasTooltip?: boolean
+}) => {
   const uuid = uuidv4()
   const tooltipId = `tt_${uuid}`
   return (
     <Box as="span" sx={{ display: 'block' }} data-tip="React-tooltip" data-tooltip-id={tooltipId}>
-      <span>{`${formatLocalDate(date ?? '')}`}</span>
-      <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
-        <Type.Caption display="block" mb={1} sx={{ maxWidth: [300, 400] }}>
-          {formatLocalRelativeDate(date ?? '')}
-        </Type.Caption>
-        <Type.Caption sx={{ maxWidth: [300, 400] }}>{formatLocalDate(date ?? '', DAYJS_FULL_DATE_FORMAT)}</Type.Caption>
-      </Tooltip>
+      <span>{`${formatLocalDate(date ?? '', format)}`}</span>
+      {hasTooltip && (
+        <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
+          <Type.Caption display="block" mb={1} sx={{ maxWidth: [300, 400] }}>
+            {formatLocalRelativeDate(date ?? '')}
+          </Type.Caption>
+          <Type.Caption sx={{ maxWidth: [300, 400] }}>
+            {formatLocalDate(date ?? '', DAYJS_FULL_DATE_FORMAT)}
+          </Type.Caption>
+        </Tooltip>
+      )}
     </Box>
   )
 }

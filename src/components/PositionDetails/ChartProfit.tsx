@@ -22,6 +22,7 @@ export default function PositionDetails({
   protocol: ProtocolEnum
   isShow?: boolean
 }) {
+  const useSizeNumber = [ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL].includes(protocol)
   const { prices } = useGetUsdPrices()
 
   const tickPositions = useMemo(() => {
@@ -41,7 +42,11 @@ export default function PositionDetails({
           orders[i].type === OrderTypeEnum.LIQUIDATE
         const sign = isDecrease ? -1 : 1
         const sizeDelta = sign * Math.abs(orders[i].sizeDeltaNumber)
-        const sizeTokenDelta = sign * (orders[i].sizeNumber ?? orders[i].sizeDeltaNumber / orders[i].priceNumber)
+        const sizeTokenDelta =
+          sign *
+          (useSizeNumber
+            ? orders[i].sizeNumber ?? orders[i].sizeDeltaNumber / orders[i].priceNumber
+            : orders[i].sizeDeltaNumber / orders[i].priceNumber)
         const collateralDelta = sign * orders[i].collateralDeltaNumber
         const pos = {
           size: totalSize + sizeDelta,
@@ -56,7 +61,7 @@ export default function PositionDetails({
       }
     }
     return positions
-  }, [data])
+  }, [data, useSizeNumber])
   const hasLiquidate = (data?.orders?.filter((e) => e.type === OrderTypeEnum.LIQUIDATE) ?? []).length > 0
 
   const openBlockTimeUnix = useMemo(() => (data ? dayjs(data.openBlockTime).utc().unix() : 0), [data])

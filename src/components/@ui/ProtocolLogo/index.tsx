@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Flex, Image, TextProps, Type } from 'theme/base'
 import { BoxProps } from 'theme/types'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -18,14 +16,15 @@ const ProtocolLogo = ({
     <Flex height={size} alignItems="center" sx={{ gap: 2, ...(sx || {}) }} {...props}>
       <Image src={parseProtocolImage(protocol)} width={size} height={size} />
       <Type.Caption
-        sx={{
-          textTransform: protocol === ProtocolEnum.GMX || protocol === ProtocolEnum.GMX_V2 ? 'uppercase' : 'capitalize',
-        }}
+        // sx={{
+        //   textTransform: protocol === ProtocolEnum.GMX || protocol === ProtocolEnum.GMX_V2 ? 'uppercase' : 'capitalize',
+        // }}
         lineHeight={`${size}px`}
         color="neutral2"
         {...textSx}
       >
-        {PROTOCOL_OPTIONS_MAPPING[protocol].text?.toLowerCase()}
+        {/* {PROTOCOL_OPTIONS_MAPPING[protocol].text?.toLowerCase()} */}
+        {PROTOCOL_OPTIONS_MAPPING[protocol].text}
       </Type.Caption>
     </Flex>
   )

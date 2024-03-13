@@ -7,7 +7,9 @@ import { useForm } from 'react-hook-form'
 
 import Divider from 'components/@ui/Divider'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
+import useInternalRole from 'hooks/features/useInternalRole'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
@@ -21,7 +23,7 @@ import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { SERVICE_KEYS } from 'utils/config/keys'
+import { INTERNAL_SERVICE_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
 import { TOKEN_TRADE_IGNORE, getTokenTradeList } from 'utils/config/trades'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
@@ -36,6 +38,7 @@ import {
   copyTradeFormSchema,
   exchangeOptions,
   fieldName,
+  internalExchangeOptions,
   protocolOptions,
   updateCopyTradeFormSchema,
 } from './configs'
@@ -82,6 +85,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
       isClone ? cloneCopyTradeFormSchema : isEdit ? updateCopyTradeFormSchema : copyTradeFormSchema
     ),
   })
+  const isInternal = useInternalRole()
+  const options = isInternal ? internalExchangeOptions : exchangeOptions
+  const serviceCopy = isInternal ? INTERNAL_SERVICE_KEYS : SERVICE_KEYS
 
   const volume = watch('volume')
   const copyWalletId = watch('copyWalletId')
@@ -120,6 +126,12 @@ const CopyTraderForm: CopyTradeFormComponent = ({
       },
     }
   )
+
+  const { copyWallets } = useCopyWalletContext()
+  const setDefaultWallet = (currentPlatform: string) => {
+    const copyWalletsByExchange = copyWallets?.filter((e) => e.exchange === currentPlatform)
+    onChangeWallet(copyWalletsByExchange?.[0]?.id ?? '')
+  }
 
   const currentWalletId = watch('copyWalletId')
   const onChangeWallet = (walletId: string) => setValue(fieldName.copyWalletId, walletId, { shouldValidate: true })
@@ -186,7 +198,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                       value={protocolOptions.find((option) => option.value === protocol)}
                       onChange={(newValue: any) => {
                         setValue('protocol', newValue.value)
-                        setValue('serviceKey', SERVICE_KEYS[newValue.value as ProtocolEnum])
+                        setValue('serviceKey', serviceCopy[newValue.value as ProtocolEnum])
                       }}
                       isSearchable={false}
                       isDisabled={!!defaultFormValues.duplicateToAddress}
@@ -203,10 +215,15 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           <Flex sx={{ gap: 2, alignItems: ['start', 'end'] }}>
             <Box flex={1}>
               <Select
-                options={exchangeOptions}
+                options={options}
                 defaultMenuIsOpen={false}
-                value={exchangeOptions.find((option) => option.value === platform)}
-                onChange={(newValue: any) => setValue(fieldName.exchange, newValue.value)}
+                value={options.find((option) => option.value === platform)}
+                onChange={(newValue: any) => {
+                  if (platform !== newValue.value) {
+                    setDefaultWallet(newValue.value)
+                  }
+                  setValue(fieldName.exchange, newValue.value)
+                }}
                 isSearchable={false}
                 isDisabled={isEdit || isClone}
               />
@@ -299,9 +316,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               control={control}
               error=""
               minValue={2}
-              maxValue={30}
+              maxValue={isInternal ? 50 : 30}
               stepValue={1}
-              marksStep={sm ? 2 : 5}
+              marksStep={sm ? (isInternal ? 5 : 2) : 5}
               marksUnit={'x'}
             />
           </Box>

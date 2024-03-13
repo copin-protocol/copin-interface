@@ -1,4 +1,4 @@
-import { CaretRight } from '@phosphor-icons/react'
+import { CaretRight, ClockCounterClockwise } from '@phosphor-icons/react'
 import React from 'react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
@@ -14,6 +14,7 @@ import { PositionData } from 'entities/trader'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { formatDuration, formatNumber } from 'utils/helpers/format'
 
 export type ExternalSource = {
@@ -87,10 +88,10 @@ const openTimeColumn: ColumnData<PositionData> = {
   dataIndex: 'openBlockTime',
   key: 'openBlockTime',
   sortBy: 'openBlockTime',
-  style: { minWidth: '100px' },
+  style: { minWidth: '140px' },
   render: (item) => (
     <Type.Caption color="neutral1">
-      <LocalTimeText date={item.openBlockTime} />
+      <LocalTimeText date={item.openBlockTime} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
     </Type.Caption>
   ),
 }
@@ -110,10 +111,10 @@ const closeTimeColumn: ColumnData<PositionData> = {
   dataIndex: 'closeBlockTime',
   key: 'closeBlockTime',
   sortBy: 'closeBlockTime',
-  style: { minWidth: '100px' },
+  style: { minWidth: '140px' },
   render: (item) => (
     <Type.Caption color="neutral1">
-      <LocalTimeText date={item.closeBlockTime} />
+      <LocalTimeText date={item.closeBlockTime} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
     </Type.Caption>
   ),
 }
@@ -303,3 +304,12 @@ export const openingColumns: ColumnData<PositionData, ExternalSource>[] = [
   pnlOpeningColumn,
   actionColumn,
 ]
+
+export function ShortDuration({ durationInSecond }: { durationInSecond?: number }) {
+  return (
+    <Flex alignItems="center" sx={{ gap: 1 }}>
+      <IconBox icon={<ClockCounterClockwise size={16} />} color="neutral3" />
+      <Type.Caption color="neutral1">{formatDuration(durationInSecond)}</Type.Caption>
+    </Flex>
+  )
+}

@@ -18,7 +18,7 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { TOKEN_ADDRESSES, getTokenTradeList } from 'utils/config/trades'
+import { getTokenTradeList } from 'utils/config/trades'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -65,7 +65,10 @@ export default function BacktestForm({
       return
     }
     if (!_defaultValues.tokenAddresses.length) {
-      setValue('tokenAddresses', Object.values(TOKEN_ADDRESSES[protocol]))
+      setValue(
+        'tokenAddresses',
+        getTokenTradeList(protocol).map((v) => v.address)
+      )
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

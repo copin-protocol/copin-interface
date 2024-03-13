@@ -47,6 +47,7 @@ export function calcLiquidatePrice(position: PositionData) {
   let lastSizeInToken = position.size / position.averagePrice
   let totalFee = position.fee
   switch (position.protocol) {
+    case ProtocolEnum.GNS:
     case ProtocolEnum.GMX:
     case ProtocolEnum.GMX_V2:
       break
@@ -92,11 +93,15 @@ export function calcClosedPrice(position?: PositionData) {
   if (!decreaseList.length) return
   let totalSizeDecrease = 0
   let totalVolumeDecrease = 0
+  const useSizeNumber = [ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL].includes(position.protocol)
 
   decreaseList.forEach((order) => {
-    const sizeNumber = order.sizeNumber
-      ? Math.abs(order.sizeNumber)
-      : Math.abs(order.sizeDeltaNumber / order.priceNumber)
+    let sizeNumber = 0
+    if (useSizeNumber && sizeNumber) {
+      sizeNumber = order.sizeNumber
+    } else {
+      sizeNumber = Math.abs(order.sizeDeltaNumber / order.priceNumber)
+    }
     totalSizeDecrease += sizeNumber
     totalVolumeDecrease += order.sizeDeltaNumber
   })

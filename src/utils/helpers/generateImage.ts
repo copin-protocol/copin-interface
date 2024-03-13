@@ -419,6 +419,7 @@ export const generateProtocol = ({
   let protocolTextWidth = 72
   let protocolText = 'GMX'
   switch (protocol) {
+    case ProtocolEnum.GNS:
     case ProtocolEnum.GMX:
     case ProtocolEnum.GMX_V2:
       protocolTextWidth = 72

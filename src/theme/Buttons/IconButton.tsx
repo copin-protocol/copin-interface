@@ -1,10 +1,9 @@
-import { ReactNode } from 'react'
+import { ComponentProps, ReactNode } from 'react'
 
 import { Box } from 'theme/base'
 import { BoxProps } from 'theme/types'
 
 import { Button } from '.'
-import { ButtonProps } from './types'
 
 const IconButton = ({
   icon,
@@ -20,9 +19,7 @@ const IconButton = ({
   variant?: string
   borderRadius?: number | string
   size?: number | string
-  as?: any
-  htmlFor?: string
-} & ButtonProps) => (
+} & ComponentProps<typeof Button>) => (
   <Button
     width={size}
     height={size}

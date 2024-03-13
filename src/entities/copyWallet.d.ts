@@ -3,6 +3,8 @@ import { CopyTradePlatformEnum } from 'utils/config/enums'
 export interface RequestCopyWalletData {
   exchange?: CopyTradePlatformEnum
   bingX?: ApiKeyWallet
+  bitget?: ApiKeyWallet
+  binance?: ApiKeyWallet
   name?: string
 }
 
@@ -12,6 +14,8 @@ export interface CopyWalletData {
   name?: string
   exchange: CopyTradePlatformEnum
   bingX?: ApiKeyWallet
+  bitget?: ApiKeyWallet
+  binance?: ApiKeyWallet
   smartWalletAddress?: string
   balance: number
   availableBalance: number
@@ -23,4 +27,5 @@ export interface CopyWalletData {
 export interface ApiKeyWallet {
   apiKey?: string
   secretKey?: string
+  passPhrase?: string
 }

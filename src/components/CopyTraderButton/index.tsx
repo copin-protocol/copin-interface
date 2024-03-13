@@ -13,6 +13,8 @@ import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 import CopyTraderModal from './CopyTraderModal'
 import ModalContactUs from './ModalContactUs'
 
+const ALLOWED_LIST = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
+
 export default function CopyTraderButton({
   protocol,
   account,
@@ -42,7 +44,7 @@ export default function CopyTraderButton({
 
   const hasCopyPermission = useCopyTradePermission()
 
-  const disabledCopy = protocol === ProtocolEnum.GMX_V2
+  const disabledCopy = !ALLOWED_LIST.includes(protocol)
   const disabledCopyTooltipId = `tt_copy_trade_${account}_${protocol}`
 
   return (

@@ -45,7 +45,13 @@ export const copyTradeFormSchema = yup.object({
   serviceKey: yup.string().required().label('Service Key'),
   exchange: yup
     .mixed()
-    .oneOf([CopyTradePlatformEnum.GMX, CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.SYNTHETIX])
+    .oneOf([
+      CopyTradePlatformEnum.GMX,
+      CopyTradePlatformEnum.BINGX,
+      CopyTradePlatformEnum.BITGET,
+      CopyTradePlatformEnum.BINANCE,
+      CopyTradePlatformEnum.SYNTHETIX,
+    ])
     .label('Exchange'),
   copyWalletId: yup.string().required().label('Wallet'),
 })
@@ -139,11 +145,23 @@ export const exchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BINGX),
   // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
 ]
+export const internalExchangeOptions: ExchangeOptions[] = [
+  getExchangeOption(CopyTradePlatformEnum.BINGX),
+  getExchangeOption(CopyTradePlatformEnum.BITGET),
+  getExchangeOption(CopyTradePlatformEnum.BINANCE),
+  // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
+]
 function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {
   let label = ''
   switch (exchange) {
     case CopyTradePlatformEnum.BINGX:
       label = 'BingX'
+      break
+    case CopyTradePlatformEnum.BITGET:
+      label = 'Bitget'
+      break
+    case CopyTradePlatformEnum.BINANCE:
+      label = 'Binance'
       break
     case CopyTradePlatformEnum.SYNTHETIX:
       label = 'Synthetix'

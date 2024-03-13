@@ -7,7 +7,7 @@ import AddressAvatar from 'components/@ui/AddressAvatar'
 import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderCopying from 'hooks/store/useTraderCopying'
-import CopyButton from 'theme/Buttons/CopyButton'
+// import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
@@ -67,11 +67,11 @@ export function AccountInfo({
       >
         <Flex alignItems="center" sx={{ gap: 1 }}>
           <Type.Caption
-            data-tip="React-tooltip"
-            data-tooltip-id={`account-${address}-tt`}
-            data-tooltip-delay-hide={0}
-            data-tooltip-delay-show={360}
-            data-tooltip-offset={-8}
+            // data-tip="React-tooltip"
+            // data-tooltip-id={`account-${address}-tt`}
+            // data-tooltip-delay-hide={0}
+            // data-tooltip-delay-show={360}
+            // data-tooltip-offset={-8}
             lineHeight="24px"
             color={isCopying ? 'orange1' : 'inherit'}
             sx={{
@@ -83,7 +83,7 @@ export function AccountInfo({
           >
             <HighlightKeyword text={address} keyword={keyword} />
           </Type.Caption>
-          <Tooltip
+          {/* <Tooltip
             id={`account-${address}-tt`}
             place="top"
             type="dark"
@@ -114,7 +114,7 @@ export function AccountInfo({
                 Copy
               </CopyButton>
             </div>
-          </Tooltip>
+          </Tooltip> */}
 
           {isOpenPosition && (
             <Box

@@ -13,6 +13,7 @@ import { useHistory } from 'react-router-dom'
 
 import { ApiMeta } from 'apis/api'
 import Container from 'components/@ui/Container'
+import NoDataFound from 'components/@ui/NoDataFound'
 import SectionTitle from 'components/@ui/SectionTitle'
 import Table from 'components/@ui/Table'
 import { ColumnData, TableSortProps } from 'components/@ui/Table/types'
@@ -219,6 +220,7 @@ export default function HistoryTable({
           )}
         </Flex>
       </Flex>
+      {!isLoading && !data?.length && <NoDataFound message="No positions history" />}
       {!!data && data.length > 0 && !!data[0].account && heatmapVisible && (
         <Box height={130} px={12}>
           <ActivityHeatmap account={data[0].account} protocol={data[0].protocol} />

@@ -139,7 +139,7 @@ function TraderChartPositions({
       {loadingTokenStatistic ? (
         <Loading />
       ) : !tokensStatistic?.data?.length ? (
-        <NoDataFound />
+        <NoDataFound message="No token preference statistic" />
       ) : (
         <Flex
           sx={{

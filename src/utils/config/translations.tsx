@@ -48,12 +48,16 @@ export const COPY_POSITION_CLOSE_TYPE_TRANS: ObjectTrans = {
 
 export const PLATFORM_TRANS: ObjectTrans = {
   [CopyTradePlatformEnum.BINGX]: <Trans>BingX</Trans>,
+  [CopyTradePlatformEnum.BITGET]: <Trans>Bitget</Trans>,
+  [CopyTradePlatformEnum.BINANCE]: <Trans>Binance</Trans>,
   [CopyTradePlatformEnum.GMX]: <Trans>GMX</Trans>,
   [CopyTradePlatformEnum.SYNTHETIX]: <Trans>Synthetix</Trans>,
 }
 
 export const COPY_WALLET_TRANS: ObjectTrans = {
   [CopyTradePlatformEnum.BINGX]: 'BingX',
+  [CopyTradePlatformEnum.BITGET]: 'Bitget',
+  [CopyTradePlatformEnum.BINANCE]: 'Binance',
   [CopyTradePlatformEnum.SYNTHETIX]: 'SW',
 }
 

@@ -7,7 +7,10 @@ import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { TOKEN_TRADE_SUPPORT, TokenTrade } from 'utils/config/trades'
 
-export const pyth = new EvmPriceServiceConnection('https://hermes.pyth.network')
+import { NETWORK } from '../config/constants'
+
+const PYTH_PRICE_FEED_URL = NETWORK === 'devnet' ? 'https://hermes.pyth.network' : 'https://hermes.copin.io'
+export const pyth = new EvmPriceServiceConnection(PYTH_PRICE_FEED_URL)
 export const RealtimeContext = createContext({})
 
 const INTERVAL_TIME = 5 // s
@@ -23,11 +26,9 @@ const INCLUDE_PATH = [
 // TODO: Check when add new protocol
 export default function PythConnection() {
   const { setPrices, setIsReady } = useRealtimeUsdPricesStore()
-  const tokenSupports = [
-    ...Object.values(TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX]),
-    ...Object.values(TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX_V2]),
-    ...Object.values(TOKEN_TRADE_SUPPORT[ProtocolEnum.KWENTA]),
-  ]
+  const tokenSupports = Object.values(TOKEN_TRADE_SUPPORT).reduce((result, values) => {
+    return [...result, ...Object.values(values).filter((value) => !!value.priceFeedId)]
+  }, [] as TokenTrade[])
   const pythIds = Array.from(new Set(tokenSupports.map((x) => x.priceFeedId)))
   const { pathname } = useLocation()
 

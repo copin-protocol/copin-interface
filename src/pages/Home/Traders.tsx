@@ -37,7 +37,7 @@ import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 import ProtocolDropdown from './ProtocolDropdown'
 import SortDropdown from './SortDropdown'
 import TimeFilter from './TimeDropdown'
-import { BASE_RANGE_FILTER } from './configs'
+import { ALLOWED_PROTOCOLS, BASE_RANGE_FILTER } from './configs'
 
 const PADDING_X = 12
 export default function Traders() {
@@ -180,7 +180,7 @@ function Filters({ filters }: { filters: FiltersState }) {
 
 const LIMIT = 12
 function ListTraders({ filters }: { filters: FiltersState }) {
-  const enabledGetData = filters.protocol !== ProtocolEnum.GMX_V2
+  const enabledGetData = ALLOWED_PROTOCOLS.includes(filters.protocol)
 
   const { profile, isAuthenticated } = useAuthContext()
   const { searchParams, setSearchParams } = useSearchParams()

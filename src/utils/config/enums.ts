@@ -3,6 +3,7 @@ export enum ProtocolEnum {
   KWENTA = 'KWENTA',
   POLYNOMIAL = 'POLYNOMIAL',
   GMX_V2 = 'GMX_V2',
+  GNS = 'GNS',
 }
 
 export enum UserRoleEnum {
@@ -45,6 +46,8 @@ export enum CopyTradeTypeEnum {
 export enum CopyTradePlatformEnum {
   GMX = 'GMX',
   BINGX = 'BINGX',
+  BITGET = 'BITGET',
+  BINANCE = 'BINANCE',
   SYNTHETIX = 'SYNTHETIX',
 }
 

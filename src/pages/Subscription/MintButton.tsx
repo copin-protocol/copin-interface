@@ -446,39 +446,30 @@ export function SuccessState({
             <Flex sx={{ alignItems: 'center', gap: 3 }}>
               <IconBox
                 role="button"
+                as="a"
+                href={`${TWITTER_SHARE_URL}?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`}
+                target="_blank"
                 icon={<TwitterIcon size={32} />}
                 color="neutral1"
                 sx={{ '&:hover': { color: 'primary1' } }}
-                onClick={() =>
-                  window.open(
-                    `${TWITTER_SHARE_URL}?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`,
-                    '_blank'
-                  )
-                }
               />
               <IconBox
                 role="button"
+                as="a"
+                href={`${FACEBOOK_SHARE_URL}?quote=${encodeURIComponent(text)}&u=${encodeURIComponent(link)}`}
+                target="_blank"
                 icon={<FacebookLogo size={32} weight="fill" />}
                 color="neutral1"
                 sx={{ '&:hover': { color: 'primary1' } }}
-                onClick={() =>
-                  window.open(
-                    `${FACEBOOK_SHARE_URL}?quote=${encodeURIComponent(text)}&u=${encodeURIComponent(link)}`,
-                    '_blank'
-                  )
-                }
               />
               <IconBox
                 role="button"
+                as="a"
+                href={`${TELEGRAM_SHARE_URL}?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`}
+                target="_blank"
                 icon={<TelegramLogo size={32} weight="fill" />}
                 color="neutral1"
                 sx={{ '&:hover': { color: 'primary1' } }}
-                onClick={() =>
-                  window.open(
-                    `${TELEGRAM_SHARE_URL}?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`,
-                    '_blank'
-                  )
-                }
               />
             </Flex>
           </Flex>

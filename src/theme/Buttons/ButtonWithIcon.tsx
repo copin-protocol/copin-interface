@@ -1,11 +1,10 @@
 import { SystemStyleObject } from '@styled-system/css'
-import React, { ReactNode } from 'react'
+import React, { ComponentProps, ReactNode } from 'react'
 import { GridProps } from 'styled-system'
 
 import { IconBox } from 'theme/base'
 
 import { Button } from '.'
-import { ButtonProps } from './types'
 
 const ButtonWithIcon = ({
   icon,
@@ -24,9 +23,7 @@ const ButtonWithIcon = ({
   centered?: boolean
   direction?: 'left' | 'right'
   disabled?: boolean
-  as?: any
-  htmlFor?: string
-} & ButtonProps) => (
+} & ComponentProps<typeof Button>) => (
   <Button
     type={type}
     sx={{

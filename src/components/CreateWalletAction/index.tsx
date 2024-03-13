@@ -1,15 +1,24 @@
 import { Trans } from '@lingui/macro'
+import { ArrowSquareOut } from '@phosphor-icons/react'
 import React, { ReactNode, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import CreateSmartWalletModal from 'components/CreateSmartWalletModal'
 import CreateBingXWalletModal from 'components/Modal/CreateBingXWalletModal'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useInternalRole from 'hooks/features/useInternalRole'
 import { Button } from 'theme/Buttons'
-import { Flex, Image, Type } from 'theme/base'
+import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
+import { Box, Flex, Image, Type } from 'theme/base'
+import { LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
+import CreateBinanceWalletModal from '../Modal/CreateBinanceWalletModal'
+import CreateBitgetWalletModal from '../Modal/CreateBitgetWalletModal'
+
 export default function CreateWalletAction() {
+  const isInternal = useInternalRole()
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [currentExchange, setCurrentExchange] = useState<CopyTradePlatformEnum | undefined>()
@@ -26,13 +35,78 @@ export default function CreateWalletAction() {
         exchange={CopyTradePlatformEnum.BINGX}
         label={<Trans>BingX Wallet</Trans>}
         description={
-          <Trans>
-            Link with your BingX account through API key. All your assets and your positions management by BingX. Lowest
-            fee, CEX trading
-          </Trans>
+          <Box>
+            <Trans>
+              Link with your BingX account through API key. All your assets and your positions management by BingX.
+              Lowest fee, CEX trading
+            </Trans>
+            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+              <Type.Caption color="neutral2">
+                <Trans>Don’t have a BingX account?</Trans>
+              </Type.Caption>
+              <ButtonWithIcon
+                type="button"
+                variant="ghostPrimary"
+                as={Link}
+                to={LINKS.registerBingX}
+                target="_blank"
+                direction="right"
+                icon={<ArrowSquareOut size={16} />}
+                sx={{ mx: 0, p: 0, fontSize: '14px' }}
+              >
+                <Trans>Register</Trans>
+              </ButtonWithIcon>
+            </Flex>
+          </Box>
         }
         handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BINGX)}
       />
+      {isInternal && (
+        <WalletItem
+          exchange={CopyTradePlatformEnum.BITGET}
+          label={<Trans>Bitget Wallet</Trans>}
+          description={
+            <Box>
+              <Trans>
+                Link with your Bitget account through API key. All your assets and your positions management by Bitget.
+                Lowest fee, CEX trading
+              </Trans>
+              <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+                <Type.Caption color="neutral2">
+                  <Trans>Don’t have a Bitget account?</Trans>
+                </Type.Caption>
+                <ButtonWithIcon
+                  type="button"
+                  variant="ghostPrimary"
+                  as={Link}
+                  to={LINKS.registerBitget}
+                  target="_blank"
+                  direction="right"
+                  icon={<ArrowSquareOut size={16} />}
+                  sx={{ mx: 0, p: 0, fontSize: '14px' }}
+                >
+                  <Trans>Register</Trans>
+                </ButtonWithIcon>
+              </Flex>
+            </Box>
+          }
+          handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BITGET)}
+        />
+      )}
+      {isInternal && (
+        <WalletItem
+          exchange={CopyTradePlatformEnum.BINANCE}
+          label={<Trans>Binance Wallet</Trans>}
+          description={
+            <Trans>
+              Link with your Binance account through API key. All your assets and your positions management by Binance.
+              Lowest fee, CEX trading
+            </Trans>
+          }
+          handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BINANCE)}
+        />
+      )}
+
       <WalletItem
         exchange={CopyTradePlatformEnum.SYNTHETIX}
         label={<Trans>Smart Wallet</Trans>}
@@ -48,6 +122,22 @@ export default function CreateWalletAction() {
       />
       {openCreateModal && currentExchange === CopyTradePlatformEnum.BINGX && (
         <CreateBingXWalletModal
+          onDismiss={() => {
+            setOpenCreateModal(false)
+            reloadCopyWallets()
+          }}
+        />
+      )}
+      {openCreateModal && currentExchange === CopyTradePlatformEnum.BITGET && (
+        <CreateBitgetWalletModal
+          onDismiss={() => {
+            setOpenCreateModal(false)
+            reloadCopyWallets()
+          }}
+        />
+      )}
+      {openCreateModal && currentExchange === CopyTradePlatformEnum.BINANCE && (
+        <CreateBinanceWalletModal
           onDismiss={() => {
             setOpenCreateModal(false)
             reloadCopyWallets()
@@ -74,8 +164,11 @@ interface WalletItemProps {
 }
 
 function WalletItem({ exchange, label, description, handleClick }: WalletItemProps) {
+  const isInternal = useInternalRole()
+  const isComingSoon =
+    exchange === CopyTradePlatformEnum.SYNTHETIX || (!isInternal && exchange !== CopyTradePlatformEnum.BINGX)
   return (
-    <Flex p={24} flexDirection="column" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
+    <Flex minWidth={350} p={24} flexDirection="column" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
       <Flex alignItems="center" sx={{ gap: 3 }}>
         <Image src={parseExchangeImage(exchange)} width={40} height={40} />
         <Type.LargeBold>{label}</Type.LargeBold>
@@ -87,9 +180,9 @@ function WalletItem({ exchange, label, description, handleClick }: WalletItemPro
         type="button"
         variant="outlinePrimary"
         onClick={() => handleClick && handleClick(exchange)}
-        disabled={!handleClick}
+        disabled={!handleClick || isComingSoon}
       >
-        {exchange === CopyTradePlatformEnum.SYNTHETIX ? <Trans>Coming Soon</Trans> : <Trans>Create</Trans>}
+        {isComingSoon ? <Trans>Coming Soon</Trans> : <Trans>Create</Trans>}
       </Button>
     </Flex>
   )

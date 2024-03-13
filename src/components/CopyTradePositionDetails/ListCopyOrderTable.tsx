@@ -9,6 +9,7 @@ import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyOrderData } from 'entities/copyTrade.d'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { OrderTypeEnum } from 'utils/config/enums'
 import { TokenTrade } from 'utils/config/trades'
 
@@ -72,7 +73,7 @@ export default function ListCopyOrderTable({
         render: (item) => (
           <Flex alignItems="center" sx={{ gap: 2 }}>
             <Type.Caption color="neutral1">
-              <LocalTimeText date={item.createdAt} />
+              <LocalTimeText date={item.createdAt} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
             </Type.Caption>
           </Flex>
         ),

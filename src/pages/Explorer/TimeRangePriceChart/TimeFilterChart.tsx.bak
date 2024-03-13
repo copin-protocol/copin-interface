@@ -29,7 +29,7 @@ const TimeFilterChart = ({
       disabled,
       width,
       height,
-      label: 'BTC/USD',
+      label: 'BTC:',
       onChange: ({ from, to }) => {
         if (!lastRangeRef.current) return
         from.setHours(0, 0, 0, 0)

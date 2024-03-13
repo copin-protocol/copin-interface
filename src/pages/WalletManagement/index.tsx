@@ -10,7 +10,6 @@ import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
 import WalletList from './WalletList'
-import YouMightNeed from './YouMightNeed'
 
 export default function WalletManagement() {
   const { lg, xl } = useResponsive()
@@ -55,7 +54,7 @@ export default function WalletManagement() {
           <Flex flexDirection="column">
             <CreateWalletAction />
           </Flex>
-          <YouMightNeed />
+          {/*<YouMightNeed />*/}
         </Box>
 
         {/* child 3 */}

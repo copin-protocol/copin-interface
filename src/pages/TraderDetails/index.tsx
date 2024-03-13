@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 
 import { getTraderStatisticApi, getTraderTokensStatistic } from 'apis/traderApis'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import NoDataFound from 'components/@ui/NoDataFound'
 import NotFound from 'components/@ui/NotFound'
 import { TableSortProps } from 'components/@ui/Table/types'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
@@ -186,7 +187,7 @@ export default function TraderDetails() {
     handleChartFullExpand,
   } = useHandleLayout()
 
-  if (!isLoadingTraderData && !traderData) return <NotFound title="Trader not found" message="" />
+  if (!_address) return <NotFound title="Trader not found" message="" /> // todo: temp remove for test
 
   return (
     <>
@@ -217,29 +218,35 @@ export default function TraderDetails() {
         }
         traderStats={
           <Box height="100%">
-            <Flex
-              sx={{
-                width: '100%',
-                height: 'max(33%, 260px)',
-                flexDirection: 'column',
-                overflow: 'hidden',
-              }}
-            >
-              <GeneralStats traderData={currentTraderData} />
-              {protocol && _address && (
-                <Box flex="1 0 0">
-                  <ChartTrader
-                    protocol={protocol}
-                    account={_address}
-                    timeOption={timeOption}
-                    onChangeTime={setTimeOption}
-                  />
+            {!currentTraderData && (!traderData || traderData?.every((data) => !data)) ? (
+              <NoDataFound message="No statistic" />
+            ) : (
+              <>
+                <Flex
+                  sx={{
+                    width: '100%',
+                    height: 'max(33%, 260px)',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <GeneralStats traderData={currentTraderData} />
+                  {protocol && _address && (
+                    <Box flex="1 0 0">
+                      <ChartTrader
+                        protocol={protocol}
+                        account={_address}
+                        timeOption={timeOption}
+                        onChangeTime={setTimeOption}
+                      />
+                    </Box>
+                  )}
+                </Flex>
+                <Box overflow="auto" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative', maxHeight: '67%' }}>
+                  {!!traderData && <TraderStats data={traderData} timeOption={timeOption} />}
                 </Box>
-              )}
-            </Flex>
-            <Box overflow="auto" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative', maxHeight: '67%' }}>
-              {!!traderData && <TraderStats data={traderData} timeOption={timeOption} />}
-            </Box>
+              </>
+            )}
           </Box>
         }
         traderRanking={<TraderRanking data={currentTraderData} timeOption={timeOption} onChangeTime={setTimeOption} />}

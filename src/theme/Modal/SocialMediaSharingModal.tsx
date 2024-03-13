@@ -64,25 +64,15 @@ const SocialMediaSharingModal = ({ title, link, isOpen, onDismiss, isGeneratingL
             )}
             <Flex justifyContent="center" mb={4}>
               {/* need a quote */}
-              <IconButton
-                variant="white"
-                size={32}
-                icon={<FacebookLogo size={20} weight="fill" />}
-                onClick={() => window.open(`${FACEBOOK_SHARE_URL}?u=${encodeURIComponent(link)}&quote=`, '_blank')}
-              />
-              <IconButton
-                mx={32}
-                size={32}
-                variant="white"
-                icon={<TwitterLogo size={20} weight="fill" />}
-                onClick={() => window.open(`${TWITTER_SHARE_URL}?url=${encodeURIComponent(link)}&text=`, '_blank')}
-              />
-              <IconButton
-                size={32}
-                variant="white"
-                icon={<TelegramLogo size={20} weight="fill" />}
-                onClick={() => window.open(`${TELEGRAM_SHARE_URL}?url=${encodeURIComponent(link)}&text=`, '_blank')}
-              />
+              <a href={`${FACEBOOK_SHARE_URL}?u=${encodeURIComponent(link)}&quote=`} target="_blank" rel="noreferrer">
+                <IconButton variant="white" size={32} icon={<FacebookLogo size={20} weight="fill" />} />
+              </a>
+              <a href={`${TWITTER_SHARE_URL}?url=${encodeURIComponent(link)}&text=`} target="_blank" rel="noreferrer">
+                <IconButton mx={32} size={32} variant="white" icon={<TwitterLogo size={20} weight="fill" />} />
+              </a>
+              <a href={`${TELEGRAM_SHARE_URL}?url=${encodeURIComponent(link)}&text=`} target="_blank" rel="noreferrer">
+                <IconButton size={32} variant="white" icon={<TelegramLogo size={20} weight="fill" />} />
+              </a>
             </Flex>
             <CopyButton
               type="button"

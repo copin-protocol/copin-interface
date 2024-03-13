@@ -10,6 +10,7 @@ import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
 import { OrderData } from 'entities/trader.d'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
@@ -86,7 +87,7 @@ export default function ListOrderTable({
         render: (item) => (
           <Flex alignItems="center" sx={{ gap: 2 }}>
             <Type.Caption color="neutral1">
-              <LocalTimeText date={item.blockTime} />
+              <LocalTimeText date={item.blockTime} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
             </Type.Caption>
 
             <ExplorerLogo

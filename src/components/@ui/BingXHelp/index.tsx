@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
 import React, { Fragment } from 'react'
+import { Link } from 'react-router-dom'
 
-import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import CopyButton from 'theme/Buttons/CopyButton'
 import { Box, Flex, Li, Type } from 'theme/base'
@@ -14,9 +14,6 @@ const BingXHelp = ({
   isList = false,
   ...props
 }: BoxProps & { hasBorder?: boolean; isList?: boolean }) => {
-  const handleOpenUrl = (url: string) => {
-    return window.open(url, '_blank')
-  }
   const Wrapper = isList ? Li : Fragment
 
   return (
@@ -25,7 +22,7 @@ const BingXHelp = ({
         <Box
           sx={{
             ...(hasBorder
-              ? { p: 2, border: 'small', bg: 'neutral6', borderColor: 'neutral4', borderRadius: 'sm' }
+              ? { p: 2, border: 'small', bg: 'neutral4', borderColor: 'neutral4', borderRadius: 'sm' }
               : {}),
           }}
         >
@@ -33,20 +30,25 @@ const BingXHelp = ({
             <Type.Caption>
               <Trans>Don’t have a BingX account?</Trans>
             </Type.Caption>
-            <Button
+            <ButtonWithIcon
               type="button"
               variant="ghostPrimary"
-              onClick={() => handleOpenUrl(LINKS.registerBingX)}
-              sx={{ mx: 0, p: 0 }}
+              as={Link}
+              to={LINKS.registerBingX}
+              target="_blank"
+              direction="right"
+              icon={<ArrowSquareOut size={16} />}
+              sx={{ mx: 0, p: 0, fontSize: '14px' }}
             >
               <Trans>Register</Trans>
-            </Button>
+            </ButtonWithIcon>
           </Flex>
           <Type.Caption color="neutral3">
             <Trans>Get 10% transaction fee rebate with code:</Trans>{' '}
             <CopyButton
               value={'DY5QNN'}
               sx={{
+                backgroundColor: 'transparent',
                 display: 'inline-block',
                 color: 'neutral1',
                 '&:hover': {
@@ -73,9 +75,12 @@ const BingXHelp = ({
           <ButtonWithIcon
             type="button"
             variant="ghostPrimary"
+            as={Link}
+            to={LINKS.getBingXAPIKey}
+            target="_blank"
             icon={<ArrowSquareOut size={20} />}
             size={20}
-            onClick={() => handleOpenUrl(LINKS.getBingXAPIKey)}
+            // onClick={() => handleOpenUrl(LINKS.getBingXAPIKey)}
             sx={{ mx: 0, p: 0 }}
           />
         </Flex>
@@ -89,9 +94,11 @@ const BingXHelp = ({
           <ButtonWithIcon
             type="button"
             variant="ghostPrimary"
+            as={Link}
+            to={LINKS.getBingXAPIKey}
+            target="_blank"
             icon={<ArrowSquareOut size={20} />}
             size={20}
-            onClick={() => handleOpenUrl(LINKS.getBingXAPIKey)}
             sx={{ mx: 0, p: 0 }}
           />
         </Flex>

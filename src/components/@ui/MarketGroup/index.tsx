@@ -20,7 +20,7 @@ export default function MarketGroup({
   limit?: number
   sx?: SystemStyleObject & GridProps
 }) {
-  const numberOfAddress = indexTokens.length
+  const numberOfAddress = indexTokens?.length
   if (!numberOfAddress) return <></>
   const tooltipId = protocol + indexTokens?.join('_')
   return (
@@ -90,7 +90,7 @@ export function MarketGroupFull({
   size?: number
   sx?: SystemStyleObject & GridProps
 }) {
-  const numberOfAddress = indexTokens.length
+  const numberOfAddress = indexTokens?.length
   if (!numberOfAddress) return <></>
   return (
     <Flex sx={{ flexWrap: 'wrap', gap: 2, ...sx }}>

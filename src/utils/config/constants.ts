@@ -16,6 +16,7 @@ export const LINKS = {
   tradeGMX: 'https://gmx.io/#/?ref=copin',
   tradeGMXv2: 'https://gmx.io/#/?ref=copin',
   tradeKwenta: 'https://kwenta.eth.limo/?ref=copin',
+  tradeGains: 'https://gains.trade/trading',
   tradePolynomial: 'https://trade.polynomial.fi',
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
@@ -28,7 +29,9 @@ export const LINKS = {
   upgradePremium: 'https://docs.copin.io/upgrade-to-premium',
   referralProgram: 'https://docs.copin.io/features/referral-program',
   registerBingX: 'https://bingx.com/en-us/invite/DY5QNN',
+  registerBitget: 'https://partner.bitget.online/bg/HPM3BN',
   getBingXAPIKey: 'https://tutorial.copin.io/how-to-connecting-your-bingx-account/3.-generate-an-api-key',
+  getBitgetAPIKey: 'https://tutorial.copin.io/how-to-connecting-your-bingx-account/3.-generate-an-api-key',
   notice: 'https://copin.substack.com/p/copin-profile-login-updates-road',
   bingXGuarantee:
     'https://support.bingx.com/hc/en-001/articles/21313115553945-Perpetual-Futures-Exclusive-Guaranteed-Price-Launched-to-Prevent-Slippage-Losses',
@@ -43,7 +46,7 @@ export const FOOTER_HEIGHT = 40
 
 export const FONT_FAMILY = 'Anuphan'
 export const DATE_FORMAT = 'YYYY/MM/DD'
-export const DAYJS_FULL_DATE_FORMAT = 'YYYY/MM/DD - HH:mm'
+export const DAYJS_FULL_DATE_FORMAT = 'YYYY/MM/DD HH:mm:ss'
 export const DEFAULT_LIMIT = 20
 export const DEFAULT_LIMIT_VALUES = [20, 50, 100]
 export const SEARCH_DEFAULT_LIMIT = 3

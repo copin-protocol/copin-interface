@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -35,10 +36,12 @@ export default function LinkBotAlertModal({ state, onDismiss }: { state: string;
           <ButtonWithIcon
             type="button"
             variant="primary"
+            as={Link}
+            to={generateTelegramBotAlertUrl(state)}
+            target="_top"
             icon={<ArrowSquareOut />}
             direction="right"
             sx={{ flex: 1 }}
-            onClick={() => window.open(generateTelegramBotAlertUrl(state), '_top')}
           >
             <Trans>Open Telegram Bot</Trans>
           </ButtonWithIcon>

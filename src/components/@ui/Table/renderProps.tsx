@@ -90,7 +90,7 @@ export function renderSize(data: PositionData | undefined, hasLiquidate?: boolea
           <Type.Caption>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
         </Flex>
         <VerticalDivider />
-        <Flex minWidth={40} justifyContent="center">
+        <Flex minWidth={50} justifyContent="center">
           <Type.Caption textAlign="right">{formatNumber(data.leverage, 1, 1)}x</Type.Caption>
         </Flex>
         <VerticalDivider />
@@ -129,22 +129,18 @@ function SizeOpeningComponent({ data, prices, textProps }: SizeOpeningComponentP
 
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
-      <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-        <Flex flex="50%">
+      <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '2px' }}>
+        <Flex flex="1">
           <Type.Caption {..._textProps}>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
         </Flex>
         <VerticalDivider />
-        <Flex
-          minWidth={40}
-          justifyContent="center"
-          // sx={{ borderLeft: 'small', borderRight: 'small', borderColor: 'neutral4' }}
-        >
+        <Flex minWidth={40} justifyContent="center" flexShrink={0}>
           <Type.Caption {..._textProps} textAlign="center">
             {formatNumber(data.leverage, 1, 1)}x
           </Type.Caption>
         </Flex>
         <VerticalDivider />
-        <Flex flex="55%" justifyContent="flex-end" sx={{ gap: 1, alignItems: 'center', height: 22 }}>
+        <Flex flex="1.3" justifyContent="flex-end" sx={{ gap: 1, alignItems: 'center', height: 22 }}>
           <SkullIcon style={{ flexShrink: 0 }} />
           <Type.Caption
             {..._textProps}
@@ -240,7 +236,7 @@ function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponen
 
 export function renderTrader(address: string, protocol: ProtocolEnum) {
   return (
-    <Link to={generateTraderDetailsRoute(protocol, address)}>
+    <Link to={generateTraderDetailsRoute(protocol, address)} onClick={(e) => e.stopPropagation()}>
       <Flex sx={{ gap: 2 }} alignItems="center">
         <AddressAvatar address={address} size={24} />
         <Type.Caption color="neutral1" sx={{ ':hover': { textDecoration: 'underline' } }}>

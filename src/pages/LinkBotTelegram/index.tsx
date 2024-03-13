@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
 import React from 'react'
 import { useMutation } from 'react-query'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { linkToBotAlertApi } from 'apis/alertApis'
@@ -27,6 +27,7 @@ const LinkBotTelegram = () => {
 
   const { isAuthenticated, loading } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
+  const telegramUrl = generateTelegramBotAlertUrl()
 
   const { mutate: linkBotAlert, isLoading: submitting } = useMutation(linkToBotAlertApi, {
     onSuccess: () => {
@@ -51,7 +52,7 @@ const LinkBotTelegram = () => {
     if (currentState) {
       linkBotAlert(currentState)
     } else {
-      window.open(generateTelegramBotAlertUrl(), '_blank')
+      window.open(telegramUrl, '_blank')
     }
   }
   const isLoging = isAuthenticated == null
@@ -76,12 +77,15 @@ const LinkBotTelegram = () => {
       {isAuthenticated ? (
         <ButtonWithIcon
           variant="primary"
+          as={!currentState ? Link : undefined}
+          to={telegramUrl}
+          target="_blank"
           icon={currentState ? <></> : <ArrowSquareOut size={16} />}
           width={200}
           direction="right"
           isLoading={submitting}
           disabled={submitting || loading}
-          onClick={handleConfirmLinkAlert}
+          onClick={currentState ? handleConfirmLinkAlert : undefined}
         >
           {currentState ? <Trans>Link Account</Trans> : <Trans>Open Telegram Bot</Trans>}
         </ButtonWithIcon>

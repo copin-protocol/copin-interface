@@ -57,7 +57,7 @@ export default function SettingTags({
             settings.copyAll
               ? 'FOLLOW TRADER'
               : !!settings.tokenAddresses?.length
-              ? settings.tokenAddresses.map((address) => TOKEN_TRADE_SUPPORT[protocol][address].name).join(', ')
+              ? settings.tokenAddresses.map((address) => TOKEN_TRADE_SUPPORT[protocol][address]?.name).join(', ')
               : ''
           }
         />

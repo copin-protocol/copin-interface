@@ -15,6 +15,7 @@ import Tag from 'theme/Tag'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
+import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
@@ -85,6 +86,7 @@ export function renderTrader(
         to={isLink && protocol ? generateTraderDetailsRoute(protocol, address) : ''}
         sx={{ gap: 1, flexShrink: 0, '& > *': { flexShrink: 0 }, ...sx }}
         alignItems="center"
+        onClick={(e) => e.stopPropagation()}
       >
         <AddressAvatar address={address} size={size} />
         <Type.Caption
@@ -120,13 +122,17 @@ export function renderTrader(
 
 export const renderOpenTime = (data: CopyPositionData) => (
   <Type.Caption color="neutral3">
-    <LocalTimeText date={data.createdAt} />
+    <LocalTimeText date={data.createdAt} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
   </Type.Caption>
 )
 
 export const renderCloseTime = (data: CopyPositionData) => (
   <Type.Caption color="neutral3">
-    {data.status === PositionStatusEnum.CLOSE ? <LocalTimeText date={data.lastOrderAt} /> : '--'}
+    {data.status === PositionStatusEnum.CLOSE ? (
+      <LocalTimeText date={data.lastOrderAt} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
+    ) : (
+      '--'
+    )}
   </Type.Caption>
 )
 

@@ -12,6 +12,9 @@ import { Box } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { parseWalletName } from 'utils/helpers/transform'
 
+import CreateBinanceWalletModal from '../Modal/CreateBinanceWalletModal'
+import CreateBitgetWalletModal from '../Modal/CreateBitgetWalletModal'
+
 export default function Wallets({
   platform,
   currentWalletId,
@@ -73,6 +76,28 @@ function NoWallet({
       text = <Trans>Create BingX wallet</Trans>
       modalContent = (
         <CreateBingXWalletModal
+          onDismiss={() => {
+            onCreateWalletSuccess()
+            onDismissModal()
+          }}
+        />
+      )
+      break
+    case CopyTradePlatformEnum.BITGET:
+      text = <Trans>Create Bitget wallet</Trans>
+      modalContent = (
+        <CreateBitgetWalletModal
+          onDismiss={() => {
+            onCreateWalletSuccess()
+            onDismissModal()
+          }}
+        />
+      )
+      break
+    case CopyTradePlatformEnum.BINANCE:
+      text = <Trans>Create Binance wallet</Trans>
+      modalContent = (
+        <CreateBinanceWalletModal
           onDismiss={() => {
             onCreateWalletSuccess()
             onDismissModal()
