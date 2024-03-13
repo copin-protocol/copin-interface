@@ -173,3 +173,5 @@ export const protocolOptions = Object.values(ProtocolEnum).map((value) => {
     ),
   }
 })
+
+export const RISK_LEVERAGE = 20

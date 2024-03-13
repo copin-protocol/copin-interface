@@ -17,6 +17,7 @@ export default function SliderInput({
   marksStep,
   marksUnit,
   disabled,
+  railBg,
 }: {
   name: string
   control: any
@@ -27,6 +28,7 @@ export default function SliderInput({
   marksStep: number
   marksUnit: string
   disabled?: boolean
+  railBg?: string
 }) {
   return (
     <Controller
@@ -34,7 +36,7 @@ export default function SliderInput({
       control={control}
       render={({ field: { onChange, value, onBlur } }) => {
         return (
-          <SliderWrapper>
+          <SliderWrapper railbg={railBg}>
             <Slider
               value={value}
               onChange={onChange}
@@ -53,13 +55,13 @@ export default function SliderInput({
   )
 }
 
-const SliderWrapper = styled(Box)`
-  ${({ theme }) => `
+const SliderWrapper = styled(Box)<{ railbg?: string }>`
+  ${({ theme, railbg }) => `
     .rc-slider {
       height: 12px;
     }
     .rc-slider-rail {
-      background-color: ${theme.colors.neutral4};
+      background-color: ${railbg ?? theme.colors.neutral4};
       height: 2px;
     }
     .rc-slider-track {

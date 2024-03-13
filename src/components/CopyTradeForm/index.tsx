@@ -1,7 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Trans } from '@lingui/macro'
 import { ShieldWarning } from '@phosphor-icons/react'
-import React, { ReactNode, useCallback, useEffect } from 'react'
+import { useResponsive } from 'ahooks'
+import { ReactNode, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Divider from 'components/@ui/Divider'
@@ -30,6 +31,7 @@ import FundChecking from './FundChecking'
 import Wallets from './Wallets'
 import {
   CopyTradeFormValues,
+  RISK_LEVERAGE,
   cloneCopyTradeFormSchema,
   copyTradeFormSchema,
   exchangeOptions,
@@ -141,6 +143,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   }, [])
 
   const permissionToSelectProtocol = useCopyTradePermission(true)
+  const { sm } = useResponsive()
 
   return (
     <>
@@ -284,21 +287,21 @@ const CopyTraderForm: CopyTradeFormComponent = ({
         </Box>
 
         <Box mt={24}>
-          <Type.Caption color="neutral2" mb={16} fontWeight={600}>
+          <Type.Caption color="neutral2" fontWeight={600}>
             Leverage
-            <Box as="span" color="primary1" ml={2}>
+            <Box as="span" color={leverage > RISK_LEVERAGE ? 'orange1' : 'primary1'} ml={2}>
               {leverage}x
             </Box>
           </Type.Caption>
-          <Box pb={24}>
+          <Box mt={3} pb={28} pl={'6px'} pr={'10px'}>
             <SliderInput
               name={fieldName.leverage}
               control={control}
               error=""
               minValue={2}
-              maxValue={20}
+              maxValue={30}
               stepValue={1}
-              marksStep={2}
+              marksStep={sm ? 2 : 5}
               marksUnit={'x'}
             />
           </Box>
@@ -308,8 +311,20 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             </Type.Caption>
           ) : null}
         </Box>
+        <Type.Caption
+          color="orange1"
+          sx={{
+            visibility: leverage > RISK_LEVERAGE ? 'visible' : 'hidden',
+            display: [leverage > RISK_LEVERAGE ? 'block' : 'none', 'block'],
+            textAlign: ['left', 'justify'],
+            textJustify: 'inter-word',
+            textAlignLast: ['left', 'justify'],
+          }}
+        >
+          The current position is highly leveraged. Please be cautious of the risk involved
+        </Type.Caption>
 
-        <Box mt={24} sx={{ borderRadius: 'xs', border: 'small', borderColor: 'orange1', py: 2, px: 12 }}>
+        <Box mt={[24, 12]} sx={{ borderRadius: 'xs', border: 'small', borderColor: 'orange1', py: 2, px: 12 }}>
           <SwitchInputField
             switchLabel="Reverse Copy"
             labelColor="orange1"
