@@ -22,7 +22,7 @@ export interface CopyStatisticData {
   totalActiveCopyTrade: number
   totalInactiveCopyTrade: number
   totalDistinctTrader: number
-  exchange: ExchangeStatsData
+  exchanges: ExchangeStatsData
   statisticAt: string
 }
 

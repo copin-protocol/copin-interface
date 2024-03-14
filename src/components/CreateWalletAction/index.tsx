@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
 import React, { ReactNode, useState } from 'react'
-import { Link } from 'react-router-dom'
 
 import CreateSmartWalletModal from 'components/CreateSmartWalletModal'
 import CreateBingXWalletModal from 'components/Modal/CreateBingXWalletModal'
@@ -18,7 +17,6 @@ import CreateBinanceWalletModal from '../Modal/CreateBinanceWalletModal'
 import CreateBitgetWalletModal from '../Modal/CreateBitgetWalletModal'
 
 export default function CreateWalletAction() {
-  const isInternal = useInternalRole()
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [currentExchange, setCurrentExchange] = useState<CopyTradePlatformEnum | undefined>()
@@ -47,8 +45,8 @@ export default function CreateWalletAction() {
               <ButtonWithIcon
                 type="button"
                 variant="ghostPrimary"
-                as={Link}
-                to={LINKS.registerBingX}
+                as="a"
+                href={LINKS.registerBingX}
                 target="_blank"
                 direction="right"
                 icon={<ArrowSquareOut size={16} />}
@@ -61,51 +59,47 @@ export default function CreateWalletAction() {
         }
         handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BINGX)}
       />
-      {isInternal && (
-        <WalletItem
-          exchange={CopyTradePlatformEnum.BITGET}
-          label={<Trans>Bitget Wallet</Trans>}
-          description={
-            <Box>
-              <Trans>
-                Link with your Bitget account through API key. All your assets and your positions management by Bitget.
-                Lowest fee, CEX trading
-              </Trans>
-              <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
-                <Type.Caption color="neutral2">
-                  <Trans>Don’t have a Bitget account?</Trans>
-                </Type.Caption>
-                <ButtonWithIcon
-                  type="button"
-                  variant="ghostPrimary"
-                  as={Link}
-                  to={LINKS.registerBitget}
-                  target="_blank"
-                  direction="right"
-                  icon={<ArrowSquareOut size={16} />}
-                  sx={{ mx: 0, p: 0, fontSize: '14px' }}
-                >
-                  <Trans>Register</Trans>
-                </ButtonWithIcon>
-              </Flex>
-            </Box>
-          }
-          handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BITGET)}
-        />
-      )}
-      {isInternal && (
-        <WalletItem
-          exchange={CopyTradePlatformEnum.BINANCE}
-          label={<Trans>Binance Wallet</Trans>}
-          description={
+      <WalletItem
+        exchange={CopyTradePlatformEnum.BITGET}
+        label={<Trans>Bitget Wallet</Trans>}
+        description={
+          <Box>
             <Trans>
-              Link with your Binance account through API key. All your assets and your positions management by Binance.
+              Link with your Bitget account through API key. All your assets and your positions management by Bitget.
               Lowest fee, CEX trading
             </Trans>
-          }
-          handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BINANCE)}
-        />
-      )}
+            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+              <Type.Caption color="neutral2">
+                <Trans>Don’t have a Bitget account?</Trans>
+              </Type.Caption>
+              <ButtonWithIcon
+                type="button"
+                variant="ghostPrimary"
+                as="a"
+                href={LINKS.registerBitget}
+                target="_blank"
+                direction="right"
+                icon={<ArrowSquareOut size={16} />}
+                sx={{ mx: 0, p: 0, fontSize: '14px' }}
+              >
+                <Trans>Register</Trans>
+              </ButtonWithIcon>
+            </Flex>
+          </Box>
+        }
+        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BITGET)}
+      />
+      <WalletItem
+        exchange={CopyTradePlatformEnum.BINANCE}
+        label={<Trans>Binance Wallet</Trans>}
+        description={
+          <Trans>
+            Link with your Binance account through API key. All your assets and your positions management by Binance.
+            Lowest fee, CEX trading
+          </Trans>
+        }
+        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BINANCE)}
+      />
 
       <WalletItem
         exchange={CopyTradePlatformEnum.SYNTHETIX}

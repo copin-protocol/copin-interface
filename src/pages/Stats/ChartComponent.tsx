@@ -21,7 +21,15 @@ import { isMobile } from 'hooks/helpers/useIsMobile'
 import { Box, Li, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { Colors } from 'theme/types'
-import { CHART_DATE_FORMAT, CHART_MIN_HEIGHT, MIN_TICK_GAP, YAXIS_WIDTH } from 'utils/config/constants'
+import {
+  CHART_DATE_FORMAT,
+  CHART_MIN_HEIGHT,
+  EXCHANGE_COLOR,
+  EXCHANGE_STATS,
+  MIN_TICK_GAP,
+  YAXIS_WIDTH,
+} from 'utils/config/constants'
+import { PLATFORM_TEXT_TRANS } from 'utils/config/translations'
 import { compactNumber, formatLocalDate, formatNumber } from 'utils/helpers/format'
 
 export function NetProfitChartComponent({
@@ -284,13 +292,25 @@ export function CopyTradeChartComponent({ data, syncId }: { data: StatisticChart
         stroke={themeColors.neutral4}
         tickFormatter={(value) => `${compactNumber(value, 0)}`}
       />
-      <Bar
-        // stackId="copyTrade"
-        type="monotone"
-        name="Daily Active Copy Trades"
-        dataKey="totalActiveCopyTrade"
-        fill={themeColors.primary1}
-      />
+      {EXCHANGE_STATS.map((exchange, index) => {
+        return (
+          <Bar
+            key={`activeCopyTrade-${index}`}
+            name={PLATFORM_TEXT_TRANS[exchange]}
+            dataKey={`exchanges.${exchange}.totalActiveCopyTrade`}
+            stackId="1"
+            fill={EXCHANGE_COLOR[exchange]}
+            stroke={EXCHANGE_COLOR[exchange]}
+          />
+        )
+      })}
+      {/*<Bar*/}
+      {/*  stackId="1"*/}
+      {/*  type="monotone"*/}
+      {/*  name="Daily Active Copy Trades"*/}
+      {/*  dataKey="totalActiveCopyTrade"*/}
+      {/*  fill={themeColors.primary1}*/}
+      {/*/>*/}
       {/*<Bar*/}
       {/*  // stackId="copyTrade"*/}
       {/*  type="monotone"*/}
@@ -505,8 +525,9 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
         copyTradeCumulative += totalCopyTrade
         copyTradeActiveCumulative += stats.totalActiveCopyTrade
 
-        return {
+        const formattedData: StatisticChartData = {
           date: formatLocalDate(stats.statisticAt, CHART_DATE_FORMAT),
+          exchanges: stats.exchanges,
           // Volume Chart
           volumeCumulative,
           orderCumulative,
@@ -533,7 +554,13 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
           totalActiveCopyTrade: stats.totalActiveCopyTrade,
           totalInactiveCopyTrade: stats.totalInactiveCopyTrade,
           totalDistinctTrader: stats.totalDistinctTrader,
-        } as StatisticChartData
+        }
+
+        // for (const exchange in stats.exchanges) {
+        //   formattedData['activeCopyTrade' + exchange] = stats.exchanges[exchange].totalActiveCopyTrade
+        // }
+
+        return formattedData
       })
   }
 

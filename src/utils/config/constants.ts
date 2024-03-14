@@ -1,5 +1,7 @@
 import { isMobile } from 'hooks/helpers/useIsMobile'
 
+import { CopyTradePlatformEnum } from './enums'
+
 export const SUPPORTED_LOCALES = ['en']
 export const DEFAULT_LOCALE = 'en'
 
@@ -88,3 +90,20 @@ export const MAX_TRADER_ALERT_BASIC = 10
 export const MAX_TRADER_ALERT_PREMIUM = 50
 
 export const VOLUME_LIMIT = 20000
+
+export const EXCHANGE_STATS = [
+  CopyTradePlatformEnum.BINGX,
+  CopyTradePlatformEnum.BITGET,
+  // CopyTradePlatformEnum.BINANCE,
+  // CopyTradePlatformEnum.SYNTHETIX,
+  // CopyTradePlatformEnum.GMX,
+  // CopyTradePlatformEnum.GNS,
+]
+export const EXCHANGE_COLOR = {
+  [CopyTradePlatformEnum.BINGX]: '#4277FD',
+  [CopyTradePlatformEnum.BITGET]: '#00F0FF',
+  [CopyTradePlatformEnum.BINANCE]: '#FDBA0D',
+  [CopyTradePlatformEnum.SYNTHETIX]: '#9573F7',
+  [CopyTradePlatformEnum.GMX]: '#E978F3',
+  // [CopyTradePlatformEnum.GNS]: '#4AF994',
+}

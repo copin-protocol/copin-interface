@@ -49,6 +49,7 @@ export enum CopyTradePlatformEnum {
   BITGET = 'BITGET',
   BINANCE = 'BINANCE',
   SYNTHETIX = 'SYNTHETIX',
+  // GNS = 'GNS',
 }
 
 export enum CopyTradeConfigTypeEnum {

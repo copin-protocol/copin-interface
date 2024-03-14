@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
 import React, { Fragment } from 'react'
-import { Link } from 'react-router-dom'
 
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import CopyButton from 'theme/Buttons/CopyButton'
@@ -36,8 +35,8 @@ const BitgetHelp = ({
             <ButtonWithIcon
               type="button"
               variant="ghostPrimary"
-              as={Link}
-              to={LINKS.registerBitget}
+              as="a"
+              href={LINKS.registerBitget}
               target="_blank"
               direction="right"
               icon={<ArrowSquareOut size={16} />}

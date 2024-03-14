@@ -135,6 +135,7 @@ function StatisticChart({ timeRange }: { timeRange: TimeRange }) {
     () => (data && data.length > 0 ? data[data.length - 1].statisticAt : dayjs().toISOString()),
     [data]
   )
+  console.log('chartData', chartData)
 
   const stats = useMemo(() => {
     let stats

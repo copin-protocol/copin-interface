@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 
 import CreateWalletAction from 'components/CreateWalletAction'
 import { CopyWalletData } from 'entities/copyWallet'
-import useInternalRole from 'hooks/features/useInternalRole'
 import Loading from 'theme/Loading'
 import { Flex, Type } from 'theme/base'
 
@@ -15,7 +14,6 @@ export default function CheckingWalletRenderer({
   loadingCopyWallets: boolean
   copyWallets: CopyWalletData[] | undefined
 }) {
-  const isInternal = useInternalRole()
   if (loadingCopyWallets) return <Loading />
 
   if (!loadingCopyWallets && !copyWallets?.length)
@@ -30,7 +28,7 @@ export default function CheckingWalletRenderer({
         <Flex
           sx={{
             flexWrap: 'wrap',
-            maxWidth: ['100%', isInternal ? '80%' : 600],
+            maxWidth: ['100%', '80%'],
             flexDirection: ['column', 'row'],
             gap: 3,
             '& > *': {

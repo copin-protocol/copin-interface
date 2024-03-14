@@ -1,3 +1,5 @@
+import { ExchangeStatsData } from './statistic'
+
 export interface ChartData {
   open: number
   close: number
@@ -16,6 +18,7 @@ export interface ChartDataV2 {
 
 export type StatisticChartData = {
   date: string
+  exchanges: ExchangeStatsData
   totalDistinctTrader: number
   totalVolume: number
   volumeCumulative: number

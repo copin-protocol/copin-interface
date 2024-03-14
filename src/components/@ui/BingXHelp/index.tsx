@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
 import React, { Fragment } from 'react'
-import { Link } from 'react-router-dom'
 
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import CopyButton from 'theme/Buttons/CopyButton'
@@ -33,8 +32,8 @@ const BingXHelp = ({
             <ButtonWithIcon
               type="button"
               variant="ghostPrimary"
-              as={Link}
-              to={LINKS.registerBingX}
+              as="a"
+              href={LINKS.registerBingX}
               target="_blank"
               direction="right"
               icon={<ArrowSquareOut size={16} />}
@@ -75,8 +74,8 @@ const BingXHelp = ({
           <ButtonWithIcon
             type="button"
             variant="ghostPrimary"
-            as={Link}
-            to={LINKS.getBingXAPIKey}
+            as="a"
+            href={LINKS.getBingXAPIKey}
             target="_blank"
             icon={<ArrowSquareOut size={20} />}
             size={20}
@@ -94,8 +93,8 @@ const BingXHelp = ({
           <ButtonWithIcon
             type="button"
             variant="ghostPrimary"
-            as={Link}
-            to={LINKS.getBingXAPIKey}
+            as="a"
+            href={LINKS.getBingXAPIKey}
             target="_blank"
             icon={<ArrowSquareOut size={20} />}
             size={20}
