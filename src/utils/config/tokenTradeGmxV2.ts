@@ -99,6 +99,13 @@ const TOKEN_TRADE_GMX_V2 = {
     decimals: 12,
     priceFeedId: '',
   },
+  '0x4fDd333FF9cA409df583f306B6F5a7fFdE790739': {
+    address: '0x4fDd333FF9cA409df583f306B6F5a7fFdE790739',
+    name: 'OP',
+    symbol: 'OP',
+    decimals: 12,
+    priceFeedId: '',
+  },
 }
 
 for (const key in TOKEN_TRADE_GMX_V2) {
