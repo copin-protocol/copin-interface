@@ -257,7 +257,7 @@ export const historyColumns: typeof openingColumns = [
     dataIndex: 'createdAt',
     key: 'createdAt',
     sortBy: 'createdAt',
-    style: { minWidth: '120px', width: 120 },
+    style: { minWidth: '140px', width: 140 },
     render: (item) => (
       <Box sx={{ position: 'relative' }}>
         {item.isReverse && <ReverseTag sx={{ top: '-12px', left: '-16px' }} />}
@@ -270,7 +270,7 @@ export const historyColumns: typeof openingColumns = [
     dataIndex: 'lastOrderAt',
     key: 'lastOrderAt',
     sortBy: 'lastOrderAt',
-    style: { minWidth: '110px', width: 110 },
+    style: { minWidth: '140px', width: 140 },
     render: renderCloseTime,
   },
   {
