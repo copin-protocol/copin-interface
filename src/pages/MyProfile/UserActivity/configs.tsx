@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { ApiMeta } from 'apis/api'
 import AddressAvatar from 'components/@ui/AddressAvatar'
+import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { VerticalDivider } from 'components/@ui/Table/renderProps'
@@ -13,7 +14,7 @@ import { Box, Flex, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { PROTOCOL_PROVIDER, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { ORDER_TYPE_TRANS } from 'utils/config/translations'
-import { addressShorten, formatLocalDate, formatNumber } from 'utils/helpers/format'
+import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseExchangeImage, parseProtocolImage, parseWalletName } from 'utils/helpers/transform'
 
@@ -42,7 +43,9 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
     return (
       <Box sx={{ position: 'relative' }}>
         {item.isReverse && <ReverseTag sx={{ top: isMobile ? '-45px' : '-12px', left: '-16px' }} />}
-        <Type.Caption color="neutral3">{formatLocalDate(item.createdAt, DAYJS_FULL_DATE_FORMAT)}</Type.Caption>
+        <Type.Caption color="neutral1">
+          <LocalTimeText date={item.createdAt} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
+        </Type.Caption>
       </Box>
     )
   },

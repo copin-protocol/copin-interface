@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import Divider from 'components/@ui/Divider'
 import RangeFilter from 'components/@ui/TimeFilter/RangeFilter'
 import { SelectSLTPType } from 'components/CopyTradeForm'
+import useInternalRole from 'hooks/features/useInternalRole'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -22,6 +23,7 @@ import { getTokenTradeList } from 'utils/config/trades'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 
+import { RISK_LEVERAGE } from '../CopyTradeForm/configs'
 import BacktestGuideTour, { tourConfigs } from './BacktestGuideTour'
 import { fieldName, getDefaultBackTestFormValues } from './constants'
 import { BackTestFormValues } from './types'
@@ -53,6 +55,7 @@ export default function BacktestForm({
   } = useForm<BackTestFormValues>({
     resolver: yupResolver(backTestFormSchema),
   })
+  const isInternal = useInternalRole()
 
   useEffect(() => {
     const _defaultValues = defaultValues ?? getDefaultBackTestFormValues(protocol)
@@ -195,7 +198,7 @@ export default function BacktestForm({
       <Box mt={24} height={80} id={tourConfigs.leverage.id}>
         <Type.Caption color="neutral2" mb={16} fontWeight={600}>
           Leverage
-          <Box as="span" color="primary1" ml={2}>
+          <Box as="span" color={leverage > RISK_LEVERAGE ? 'orange1' : 'primary1'} ml={2}>
             {leverage}x
           </Box>
         </Type.Caption>
@@ -204,10 +207,10 @@ export default function BacktestForm({
             name={fieldName.leverage}
             control={control}
             error=""
-            minValue={1}
-            maxValue={30}
+            minValue={2}
+            maxValue={isInternal ? 50 : 30}
             stepValue={1}
-            marksStep={sm ? 2 : 5}
+            marksStep={sm ? (isInternal ? 5 : 2) : 5}
             marksUnit={'x'}
           />
         </Box>

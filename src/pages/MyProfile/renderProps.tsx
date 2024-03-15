@@ -121,13 +121,13 @@ export function renderTrader(
 }
 
 export const renderOpenTime = (data: CopyPositionData) => (
-  <Type.Caption color="neutral3">
+  <Type.Caption color="neutral1">
     <LocalTimeText date={data.createdAt} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
   </Type.Caption>
 )
 
 export const renderCloseTime = (data: CopyPositionData) => (
-  <Type.Caption color="neutral3">
+  <Type.Caption color="neutral1">
     {data.status === PositionStatusEnum.CLOSE ? (
       <LocalTimeText date={data.lastOrderAt} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
     ) : (

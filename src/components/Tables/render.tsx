@@ -134,7 +134,7 @@ const entryColumn: ColumnData<PositionData> = {
   dataIndex: 'averagePrice',
   key: 'averagePrice',
   sortBy: 'averagePrice',
-  style: { minWidth: '140px' },
+  style: { minWidth: '135px' },
   render: (item) => renderEntry(item),
 }
 const sizeColumn: ColumnData<PositionData> = {

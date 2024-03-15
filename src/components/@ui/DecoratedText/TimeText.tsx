@@ -3,7 +3,8 @@ import { v4 as uuidv4 } from 'uuid'
 
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, TextProps, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { themeColors } from 'theme/colors'
+import { DATE_FORMAT, DAYJS_FULL_DATE_FORMAT, TIME_FORMAT } from 'utils/config/constants'
 import { formatLocalDate, formatLocalRelativeDate, formatLocalRelativeShortDate } from 'utils/helpers/format'
 
 export const RelativeTimeText = ({ date }: { date: string | undefined }) => {
@@ -32,7 +33,14 @@ export const LocalTimeText = ({
   const tooltipId = `tt_${uuid}`
   return (
     <Box as="span" sx={{ display: 'block' }} data-tip="React-tooltip" data-tooltip-id={tooltipId}>
-      <span>{`${formatLocalDate(date ?? '', format)}`}</span>
+      {format === DAYJS_FULL_DATE_FORMAT ? (
+        <Flex alignItems="center" sx={{ gap: 1 }}>
+          <span>{`${formatLocalDate(date ?? '', DATE_FORMAT)}`}</span>
+          <span style={{ color: themeColors.neutral3 }}>{`${formatLocalDate(date ?? '', TIME_FORMAT)}`}</span>
+        </Flex>
+      ) : (
+        <span>{`${formatLocalDate(date ?? '', format)}`}</span>
+      )}
       {hasTooltip && (
         <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
           <Type.Caption display="block" mb={1} sx={{ maxWidth: [300, 400] }}>

@@ -216,7 +216,7 @@ export const openingColumns: ColumnData<CopyPositionData, ExternalSource>[] = [
     key: 'createdAt',
     style: { minWidth: '90px' },
     render: (item) => (
-      <Type.Caption color="neutral3">
+      <Type.Caption color="neutral1">
         <LocalTimeText date={item.createdAt} />
       </Type.Caption>
     ),
