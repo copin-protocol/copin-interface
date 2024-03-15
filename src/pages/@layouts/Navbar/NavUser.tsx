@@ -21,6 +21,7 @@ import { isAddress } from 'utils/web3/contracts'
 
 import ChangePasswordModal from './ChangePasswordModal'
 import PremiumTag from './PremiumTag'
+import WarningExpiredSubscriptionIcon from './WarningExpiredSubscriptionIcon'
 
 const NavUser = () => {
   const [isShowModalLogout, setIsShowModalLogout] = useState(false)
@@ -151,7 +152,10 @@ const NavUser = () => {
             {_address ? addressShorten(_address) : profile?.username}
           </Type.CaptionBold>
         </Dropdown>
-        <PremiumTag />
+        <Flex sx={{ alignItems: 'center', gap: 1, px: 3 }}>
+          <PremiumTag />
+          <WarningExpiredSubscriptionIcon />
+        </Flex>
       </Flex>
       {isShowModalChangePassword && <ChangePasswordModal onDismiss={() => setIsShowModalChangePassword(false)} />}
       {isShowModalLogout && (

@@ -14,7 +14,6 @@ const PremiumTag = () => {
   return myProfile ? (
     <Box>
       <Flex
-        px={3}
         alignItems="center"
         sx={{ gap: 1 }}
         data-tip="React-tooltip"

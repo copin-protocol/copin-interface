@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
-export const getCountdownSeconds = (time: number, now: number) => Math.floor((time - now ?? Date.now()) / 1000)
+export const getCountdownSeconds = (time: number, now: number) =>
+  Math.floor((Math.abs(time - now) ?? Date.now()) / 1000)
 
 const getTimerString = (num: number) => num.toString().padStart(2, '0')
 
