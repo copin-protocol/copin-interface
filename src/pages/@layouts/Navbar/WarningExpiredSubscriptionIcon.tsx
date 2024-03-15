@@ -1,10 +1,12 @@
 import { Clock } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
+import { Link } from 'react-router-dom'
 
 import useUserSubscription from 'hooks/features/useUserSubscription'
 import useCountdown from 'hooks/helpers/useCountdown'
 import Tooltip from 'theme/Tooltip'
 import { Box, IconBox, Type } from 'theme/base'
+import ROUTES from 'utils/config/routes'
 
 export default function WarningExpiredSubscriptionIcon() {
   const { data } = useUserSubscription()
@@ -25,10 +27,13 @@ export default function WarningExpiredSubscriptionIcon() {
         data-tooltip-id="tt_warning_subscription_expire"
         data-tooltip-delay-show={360}
       />
-      <Tooltip id="tt_warning_subscription_expire">
+      <Tooltip id="tt_warning_subscription_expire" clickable>
         <Type.Caption sx={{ maxWidth: 300 }}>
-          Your premium plan will expire in <MinuteCountdown endTime={expiredTime.valueOf()} />. Please extend to ensure
-          that your copy trade are not disrupted.
+          Your premium plan will expire in <MinuteCountdown endTime={expiredTime.valueOf()} />. Please{' '}
+          <Box as={Link} to={ROUTES.USER_SUBSCRIPTION.path} sx={{ textDecoration: 'underline' }}>
+            extend
+          </Box>{' '}
+          to ensure that your copy trade are not disrupted.
         </Type.Caption>
       </Tooltip>
     </>
