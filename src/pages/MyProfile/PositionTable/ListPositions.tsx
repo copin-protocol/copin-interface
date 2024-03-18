@@ -137,20 +137,8 @@ export function ListForm({
               <ListHistoryRow label={<Trans>Size</Trans>} value={renderSizeMobile(positionData)} />
               <ListHistoryRow label={<Trans>PNL</Trans>} value={renderPnL(positionData, externalSource?.prices)} />
               <ListHistoryRow label={<Trans>Closed Type</Trans>} value={renderCloseType(positionData)} />
-              <Flex sx={{ justifyContent: 'space-between' }}>
-                <Flex sx={{ gap: 1 }}>
-                  <Type.Caption color="neutral3">
-                    <Trans>Open:</Trans>
-                  </Type.Caption>
-                  {renderOpenTime(positionData)}
-                </Flex>
-                <Flex sx={{ gap: 1 }}>
-                  <Type.Caption color="neutral3">
-                    <Trans>Closed:</Trans>
-                  </Type.Caption>
-                  {renderCloseTime(positionData)}
-                </Flex>
-              </Flex>
+              <ListHistoryRow label={<Trans>Open</Trans>} value={renderOpenTime(positionData)} />
+              <ListHistoryRow label={<Trans>Close</Trans>} value={renderCloseTime(positionData)} />
             </Flex>
           </Box>
         )
