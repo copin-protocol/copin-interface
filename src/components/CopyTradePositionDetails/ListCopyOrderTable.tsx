@@ -69,7 +69,7 @@ export default function ListCopyOrderTable({
         title: 'Timestamp',
         dataIndex: 'createdAt',
         key: 'createdAt',
-        style: { minWidth: '150px' },
+        style: { minWidth: '156px' },
         render: (item) => (
           <Flex alignItems="center" sx={{ gap: 2 }}>
             <Type.Caption color="neutral1">

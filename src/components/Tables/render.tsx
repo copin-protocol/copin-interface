@@ -68,7 +68,7 @@ const avgDurationColumn: ColumnData<PositionData> = {
   dataIndex: 'durationInSecond',
   key: 'durationInSecond',
   sortBy: 'durationInSecond',
-  style: { minWidth: '110px', textAlign: 'right' },
+  style: { minWidth: '100px', textAlign: 'right' },
   render: (item) => <Type.Caption color="neutral1">{formatDuration(item.durationInSecond)}</Type.Caption>,
 }
 const roiColumn: ColumnData<PositionData> = {
@@ -88,7 +88,7 @@ const openTimeColumn: ColumnData<PositionData> = {
   dataIndex: 'openBlockTime',
   key: 'openBlockTime',
   sortBy: 'openBlockTime',
-  style: { minWidth: '140px' },
+  style: { minWidth: '156px' },
   render: (item) => (
     <Type.Caption color="neutral1">
       <LocalTimeText date={item.openBlockTime} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
@@ -111,7 +111,7 @@ const closeTimeColumn: ColumnData<PositionData> = {
   dataIndex: 'closeBlockTime',
   key: 'closeBlockTime',
   sortBy: 'closeBlockTime',
-  style: { minWidth: '140px' },
+  style: { minWidth: '156px' },
   render: (item) => (
     <Type.Caption color="neutral1">
       <LocalTimeText date={item.closeBlockTime} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />

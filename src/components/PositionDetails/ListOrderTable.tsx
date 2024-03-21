@@ -83,7 +83,7 @@ export default function ListOrderTable({
         title: 'Timestamp',
         dataIndex: 'blockTime',
         key: 'blockTime',
-        style: { minWidth: '150px' },
+        style: { minWidth: '182px' },
         render: (item) => (
           <Flex alignItems="center" sx={{ gap: 2 }}>
             <Type.Caption color="neutral1">
