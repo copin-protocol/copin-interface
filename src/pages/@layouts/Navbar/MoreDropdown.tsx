@@ -52,6 +52,7 @@ export default function MoreDropdown() {
 export function MoreDropdownMobile({ onClickItem }: { onClickItem: (() => void) | undefined }) {
   return (
     <Accordion
+      defaultOpen
       header={
         <Type.CaptionBold>
           <Trans>More</Trans>

@@ -7,6 +7,7 @@ import Divider from 'components/@ui/Divider'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
+import CopyButton from 'theme/Buttons/CopyButton'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import AlertIcon from 'theme/Icons/AlertIcon'
 import Modal from 'theme/Modal'
@@ -55,6 +56,24 @@ const NavUser = () => {
           menu={
             <>
               <Box mt={2} />
+              <DropdownItem>
+                <Flex alignItems="center" sx={{ gap: 2 }}>
+                  <CopyButton
+                    type="button"
+                    variant="ghost"
+                    iconDirection="left"
+                    value={_address}
+                    size="sm"
+                    iconSize={20}
+                    sx={{ p: 0, width: '100%', justifyContent: 'flex-start' }}
+                    iconSx={{ color: 'neutral1' }}
+                  >
+                    <Box>
+                      <Trans>Copy Your Address</Trans>
+                    </Box>
+                  </CopyButton>
+                </Flex>
+              </DropdownItem>
               {otherRoutes.map((configs, index) =>
                 configs.isWeb3Required && !account ? null : (
                   <NavItem

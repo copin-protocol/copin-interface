@@ -21,12 +21,14 @@ const CopyButton = ({
   block = false,
   sx,
   iconSx,
+  iconDirection = 'right',
   direction = 'center',
   ...props
 }: ButtonProps & {
   iconSize?: number
   iconSx?: SystemStyleObject & GridProps
   type?: 'button' | 'submit' | 'reset'
+  iconDirection?: 'left' | 'right'
   direction?: 'center' | 'right'
   fontSize?: 'sm' | 'md' | 'lg'
   value: string
@@ -132,10 +134,15 @@ const CopyButton = ({
           />
         ) : (
           <Flex alignItems="center" width={block ? '100%' : 'auto'} justifyContent={block ? 'space-between' : 'normal'}>
+            {iconDirection === 'left' && (
+              <IconBox className="icon_wrapper" color="neutral3" mr={2} icon={copyIcon} sx={iconSx} />
+            )}
             <Type.Caption fontWeight="normal" sx={{ wordBreak: 'break-all' }}>
               {children}
             </Type.Caption>
-            <IconBox className="icon_wrapper" color="neutral3" ml={2} icon={copyIcon} sx={iconSx} />
+            {iconDirection === 'right' && (
+              <IconBox className="icon_wrapper" color="neutral3" ml={2} icon={copyIcon} sx={iconSx} />
+            )}
           </Flex>
         )}
       </Button>
