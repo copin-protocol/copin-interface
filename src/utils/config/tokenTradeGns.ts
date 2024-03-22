@@ -125,6 +125,17 @@ const GNS_PAIRS = {
   'GNS-197': 'UMA',
   'GNS-198': 'MAGIC',
   'GNS-199': 'API3',
+  'GNS-200': 'STRK',
+  'GNS-201': 'DYM',
+  'GNS-202': 'NTRN',
+  'GNS-203': 'PYTH',
+  'GNS-204': 'SC',
+  'GNS-205': 'WIF',
+  'GNS-206': 'PIXEL',
+  'GNS-207': 'JTO',
+  'GNS-208': 'MAVIA',
+  'GNS-209': 'MYRO',
+  'GNS-210': 'STG',
 }
 
 type TokenValues = Record<
