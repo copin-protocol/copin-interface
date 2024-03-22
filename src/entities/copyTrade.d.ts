@@ -65,6 +65,7 @@ export interface CopyTradeData {
   reverseCopy: boolean
   maxVolMultiplier: number | null
   skipLowLeverage?: boolean
+  lowLeverage?: number
   exchange: CopyTradePlatformEnum
   copyWalletId: string
   copyAll?: boolean

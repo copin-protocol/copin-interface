@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getUserActivityLogsApi } from 'apis/activityLogApis'
@@ -21,20 +21,19 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
-import { QUERY_KEYS, STORAGE_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
+import SelectWallets from '../SelectWallets'
 import ListActivityMobile from './ListActivityMobile'
 import SelectedCopyTrades from './SelectedCopyTrades'
-import SelectedWallets from './SelectedWallets'
 import { CopySelection, ExternalSource, userActivityColumns } from './configs'
 import useFilterActivities from './useFilterActivities'
 
 export default function UserActivity() {
   const { copyWallets } = useCopyWalletContext()
   const { myProfile } = useMyProfileStore()
-  const storageData = sessionStorage.getItem(STORAGE_KEYS.MY_ACTIVITIES)
-  const [selectionState, dispatch] = useFilterActivities(storageData)
+  const [selectionState, dispatch] = useFilterActivities()
   const selectedWalletIds = selectionState?.selectedWallets?.map((e) => e.id)
   const selectedCopyTradeIds = selectionState?.selectedCopyTrades?.map((e) => e.id)
   const { currentPage, changeCurrentPage, currentLimit, changeCurrentLimit } = usePageChangeWithLimit({
@@ -94,11 +93,6 @@ export default function UserActivity() {
     changeCurrentPage(1)
   }
 
-  useEffect(() => {
-    const dataStorage = JSON.stringify(selectionState)
-    sessionStorage.setItem(STORAGE_KEYS.MY_ACTIVITIES, dataStorage)
-  }, [selectionState])
-
   const isMobile = useIsMobile()
   const { lg } = useResponsive()
 
@@ -111,25 +105,21 @@ export default function UserActivity() {
   return (
     <>
       <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
-        {/* <Type.H5 p={3}>
-          <Trans>Activity</Trans>
-        </Type.H5>
-        <Divider mb={3} /> */}
         <Flex
           sx={{
             alignItems: 'center',
             borderBottom: 'small',
             borderBottomColor: 'neutral4',
             height: 50,
-            gap: 3,
+            gap: 2,
           }}
         >
-          <SelectedWallets
+          <SelectWallets
             allWallets={selectionState.allWallets}
             selectedWallets={selectionState.selectedWallets}
-            dispatch={dispatch}
-            onChangeWallets={onChangeFilter}
+            onChangeWallets={(wallets) => dispatch({ type: 'setWallets', payload: wallets })}
           />
+          <Type.Caption color="neutral4">|</Type.Caption>
           <SelectedCopyTrades
             selectedWallets={selectionState.selectedWallets}
             allCopyTrades={selectionState.allCopyTrades}

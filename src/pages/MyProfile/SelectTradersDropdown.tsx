@@ -25,7 +25,7 @@ export default function SelectTradersDropdown({
   placement = 'bottomLeft',
   buttonSx,
 }: {
-  allTraders: string[]
+  allTraders: string[] | undefined
   selectedTraders: string[]
   handleToggleTrader: (key: string) => void
   handleSelectAllTraders: (isSelectedAll: boolean) => void
@@ -34,14 +34,17 @@ export default function SelectTradersDropdown({
   placement?: 'bottom' | 'top' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
   buttonSx?: any
 }) {
-  if (!allTraders.length) return <></>
-  const isSelectedAll = !!allTraders.length && allTraders.every((address) => selectedTraders.includes(address))
-  let activeTradersCount = 0
+  const isSelectedAll = !!allTraders?.length && allTraders.every((address) => selectedTraders.includes(address))
+  let activeTraderAddress: string[] = []
+  let deletedTraderAddresses: string[] = []
   Object.entries(tradersByProtocol).forEach(([_, traderData]) => {
     traderData.forEach((data) => {
-      if (data.status === 'copying') activeTradersCount += 1
+      if (data.status === 'copying') activeTraderAddress.push(data.address)
+      if (data.status === 'deleted') deletedTraderAddresses.push(data.address)
     })
   })
+  activeTraderAddress = Array.from(new Set(activeTraderAddress))
+  deletedTraderAddresses = Array.from(new Set(deletedTraderAddresses))
 
   return (
     <Dropdown
@@ -73,52 +76,75 @@ export default function SelectTradersDropdown({
             </Type.CaptionBold>
           </Flex>
           <Divider mt={2} />
-          {Object.entries(tradersByProtocol).map(([protocol, traderAddresses], index) => {
-            if (!traderAddresses.length) return <></>
-            return (
-              <Fragment key={protocol}>
-                <Grid
-                  sx={{
-                    gridTemplateColumns: '1fr 1fr',
-                    columnGap: 3,
-                    rowGap: 2,
-                  }}
-                  mb={index === 0 ? 2 : 0}
-                >
-                  {traderAddresses.map((item) => {
-                    const key = item.address
-                    if (key == null) return <></>
-                    const isChecked = selectedTraders.includes(key)
-                    return (
-                      <Box py={2} key={key.toString()}>
-                        <ControlledCheckbox
-                          checked={isChecked}
-                          label={renderTrader(item.address, protocol as ProtocolEnum, {
-                            sx: { gap: [1, 2] },
-                            textSx: { minWidth: '71px', color: item.status === 'deleted' ? 'neutral3' : 'neutral1' },
-                          })}
-                          size={16}
-                          onChange={() => handleToggleTrader(key)}
-                        />
-                      </Box>
-                    )
-                  })}
-                </Grid>
-              </Fragment>
-            )
-          })}
+          <ListTraderCheckboxes
+            addresses={activeTraderAddress}
+            selectedTraders={selectedTraders}
+            handleToggleTrader={handleToggleTrader}
+          />
+          <Box mb={2} />
+          <ListTraderCheckboxes
+            addresses={deletedTraderAddresses}
+            selectedTraders={selectedTraders}
+            handleToggleTrader={handleToggleTrader}
+            isDeleted
+          />
         </>
       }
       buttonSx={{
         border: 'none',
+        alignItems: 'start',
+        '.icon_dropdown': { pt: '3px' },
+        ...(!allTraders?.length ? { '&[disabled]': { color: 'neutral3' } } : {}),
         ...(buttonSx || {}),
       }}
+      disabled={!allTraders?.length}
       placement={placement}
     >
       <Trans>{selectedTraders.length} traders</Trans>{' '}
       <Box as="span" color="neutral3">
-        ({activeTradersCount} <Trans>Active</Trans>)
+        ({activeTraderAddress.length} <Trans>Active</Trans>)
       </Box>
     </Dropdown>
+  )
+}
+
+function ListTraderCheckboxes({
+  addresses,
+  selectedTraders,
+  handleToggleTrader,
+  isDeleted,
+}: {
+  addresses: string[]
+  selectedTraders: string[]
+  handleToggleTrader: (address: string) => void
+  isDeleted?: boolean
+}) {
+  return (
+    <Grid
+      sx={{
+        gridTemplateColumns: '1fr 1fr',
+        columnGap: 3,
+        rowGap: 2,
+      }}
+    >
+      {addresses.map((item) => {
+        const key = item
+        if (key == null) return <></>
+        const isChecked = selectedTraders.includes(key)
+        return (
+          <Box py={2} key={key.toString()}>
+            <ControlledCheckbox
+              checked={isChecked}
+              label={renderTrader(item, undefined, {
+                sx: { gap: [1, 2] },
+                textSx: { minWidth: '71px', color: isDeleted ? 'neutral3' : 'neutral1' },
+              })}
+              size={16}
+              onChange={() => handleToggleTrader(key)}
+            />
+          </Box>
+        )
+      })}
+    </Grid>
   )
 }

@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ComponentProps, ReactNode, useState } from 'react'
 
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
+import useInternalRole from 'hooks/features/useInternalRole'
 import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
@@ -13,6 +14,7 @@ import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 import CopyTraderModal from './CopyTraderModal'
 import ModalContactUs from './ModalContactUs'
 
+// TODO: Check when add new protocol
 const ALLOWED_LIST = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
 
 export default function CopyTraderButton({
@@ -35,6 +37,7 @@ export default function CopyTraderButton({
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenContactModal, setIsOpenContactModal] = useState(false)
 
+  const isInternal = useInternalRole()
   const { profile } = useAuthContext()
   const { checkIsEligible } = useCheckCopyTradeAction()
   const handleCloseModal = () => {
@@ -44,7 +47,8 @@ export default function CopyTraderButton({
 
   const hasCopyPermission = useCopyTradePermission()
 
-  const disabledCopy = !ALLOWED_LIST.includes(protocol)
+  const allowList = isInternal ? [...ALLOWED_LIST, ProtocolEnum.GNS] : ALLOWED_LIST
+  const disabledCopy = !allowList.includes(protocol)
   const disabledCopyTooltipId = `tt_copy_trade_${account}_${protocol}`
 
   return (

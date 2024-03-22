@@ -160,7 +160,7 @@ interface WalletItemProps {
 function WalletItem({ exchange, label, description, handleClick }: WalletItemProps) {
   const isInternal = useInternalRole()
   const isComingSoon =
-    exchange === CopyTradePlatformEnum.SYNTHETIX || (!isInternal && exchange !== CopyTradePlatformEnum.BINGX)
+    exchange === CopyTradePlatformEnum.SYNTHETIX || (!isInternal && exchange === CopyTradePlatformEnum.BINANCE)
   return (
     <Flex minWidth={350} p={24} flexDirection="column" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
       <Flex alignItems="center" sx={{ gap: 3 }}>

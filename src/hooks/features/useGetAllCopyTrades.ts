@@ -1,24 +1,27 @@
-import { useQueries } from 'react-query'
+import { useQuery } from 'react-query'
 
 import { getAllMyCopyTradersApi } from 'apis/copyTradeApis'
-import { MyAllCopyTradersData } from 'entities/trader'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
-export default function useGetAllCopyTrades() {
+export default function useGetAllCopyTrades(params?: { copyWalletIds: string[] | undefined }) {
   const { profile: myProfile } = useAuthContext()
-  const data = useQueries(queriesFactory(myProfile?.id))
+
+  const queriesFactory = async () => {
+    return Promise.all(
+      Object.values(ProtocolEnum).map((protocol) => {
+        return getAllMyCopyTradersApi({ protocol, copyWalletIds: params?.copyWalletIds })
+      })
+    )
+  }
+
+  const { data } = useQuery([QUERY_KEYS.GET_ALL_MY_COPY_TRADERS, params, myProfile?.id], queriesFactory, {
+    keepPreviousData: true,
+    enabled: !!myProfile?.id,
+  })
 
   return {
-    copiedTraders: data?.map?.((_data) => _data?.data ?? []) as unknown as MyAllCopyTradersData[],
+    copiedTraders: data ?? [],
   }
 }
-
-const queriesFactory = (profileId: string | undefined) =>
-  Object.values(ProtocolEnum).map((protocol) => {
-    return {
-      queryKey: [QUERY_KEYS.USE_GET_ALL_COPY_TRADES_WITH_DELETED, protocol, profileId],
-      queryFn: () => getAllMyCopyTradersApi({ protocol }),
-    }
-  })

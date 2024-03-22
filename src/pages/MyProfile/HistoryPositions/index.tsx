@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { GetMyPositionRequestBody, GetMyPositionsParams } from 'apis/types'
@@ -14,19 +14,25 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
-import { DATA_ATTRIBUTES, QUERY_KEYS, STORAGE_KEYS, TOOLTIP_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { DATA_ATTRIBUTES, QUERY_KEYS, TOOLTIP_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import PositionTable, { ListPositionMobile } from '../PositionTable'
 import { historyColumns } from '../PositionTable/ListPositions'
+import SelectWallets from '../SelectWallets'
+import FilterByStatus from './FilterByStatus'
 import SelectedTraders from './SelectedTraders'
-import useSelectTraders from './useSelectTraders'
+import useFilterHistory from './useFilterHistory'
 
 export default function HistoryPositions() {
   const { myProfile } = useMyProfileStore()
-  const storageData = sessionStorage.getItem(STORAGE_KEYS.MY_HISTORY_TRADERS)
 
-  const [selectionState, dispatch] = useSelectTraders(storageData)
+  const [selectionState, dispatch] = useFilterHistory()
+
+  const selectedWallets =
+    selectionState.allWallets?.length === selectionState.selectedWallets?.length
+      ? undefined
+      : selectionState.selectedWallets?.map((data) => data.id)
 
   const { currentPage, currentLimit, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
     limitName: URL_PARAM_KEYS.MY_PROFILE_ALL_HISTORY_LIMIT,
@@ -45,22 +51,29 @@ export default function HistoryPositions() {
   }
 
   const checkFilters = (allData: any[], selectedIds: string[]) => {
-    if (allData?.length === selectedIds?.length) return
-    if (!!selectedIds.length) return selectedIds
-    return ['']
+    if (selectedWallets == null && allData?.length === selectedIds?.length) {
+      return undefined
+    } else {
+      return selectedIds?.length ? selectedIds : ['']
+    }
   }
+
   const _queryParams: GetMyPositionsParams = useMemo(
     () => ({
       limit: currentLimit,
       offset: pageToOffset(currentPage, currentLimit),
       sortBy: currentSort?.sortBy,
       sortType: currentSort?.sortType,
+      status: selectionState.selectedStatus?.length > 1 ? undefined : selectionState.selectedStatus,
     }),
-    [currentLimit, currentPage, currentSort?.sortBy, currentSort?.sortType]
+    [currentLimit, currentPage, currentSort?.sortBy, currentSort?.sortType, selectionState.selectedStatus]
   )
   const _queryBody: GetMyPositionRequestBody = useMemo(
-    () => ({ traders: checkFilters(selectionState.allTraders, selectionState.selectedTraders) }),
-    [selectionState.allTraders, selectionState.selectedTraders]
+    () => ({
+      traders: checkFilters(selectionState.allTraders, selectionState.selectedTraders),
+      copyWalletIds: selectionState.selectedWallets.map((wallet) => wallet.id),
+    }),
+    [selectionState.allTraders, selectionState.selectedTraders, selectionState.selectedWallets]
   )
   const {
     data,
@@ -79,32 +92,43 @@ export default function HistoryPositions() {
     changeCurrentPage(1)
   }
 
-  useEffect(() => {
-    const dataStorage = JSON.stringify(selectionState)
-    sessionStorage.setItem(STORAGE_KEYS.MY_HISTORY_TRADERS, dataStorage)
-    // return () => sessionStorage.removeItem(STORAGE_KEYS.MY_HISTORY_TRADERS)
-  }, [selectionState])
-
   const { sm } = useResponsive()
 
   return (
     <Flex width="100%" height="100%" flexDirection="column" bg="neutral7">
-      <Box
+      <Flex
         sx={{
           alignItems: 'center',
           height: 50,
           borderBottom: 'small',
           borderBottomColor: 'neutral4',
           display: selectionState.allTraders?.length ? 'flex' : 'none',
+          gap: 2,
+          pr: 2,
         }}
       >
+        <SelectWallets
+          allWallets={selectionState.allWallets}
+          selectedWallets={selectionState.selectedWallets}
+          onChangeWallets={(wallets) => dispatch({ type: 'setWallets', payload: wallets })}
+        />
+        <Type.Caption color="neutral4">|</Type.Caption>
         <SelectedTraders
+          copyWalletIds={selectedWallets}
           allTraders={selectionState.allTraders}
           selectedTraders={selectionState.selectedTraders}
           dispatch={dispatch}
           onChangeTraders={onChangeTraders}
         />
-      </Box>
+        <Type.Caption color="neutral4">|</Type.Caption>
+        <Box sx={{ flexShrink: 0, minWidth: 100 }}>
+          <FilterByStatus
+            selected={selectionState.selectedStatus}
+            handleChangeStatus={(status) => dispatch({ type: 'toggleStatus', payload: status })}
+            vertical
+          />
+        </Box>
+      </Flex>
       <Box flex="1 0 0" overflow="hidden">
         {sm ? (
           <PositionTable

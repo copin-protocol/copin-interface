@@ -197,12 +197,12 @@ function StatisticChart({ timeRange }: { timeRange: TimeRange }) {
           gap: 24,
         }}
       >
-        <ChartWrapper isLoading={isLoading} title={<Trans>Users Net PnL</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Net PnL</Trans>} time={lastUpdatedTime}>
           {stats && <NetProfitChartComponent data={chartData} stats={stats} syncId="pnl_chart" />}
         </ChartWrapper>
         <ChartWrapper
           isLoading={isLoading}
-          title={<Trans>Users Profit vs Loss</Trans>}
+          title={<Trans>Daily Profit vs Loss</Trans>}
           time={lastUpdatedTime}
           isPercentsView={isPercentView}
           togglePercentView={setIsPercentView}

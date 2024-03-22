@@ -18,7 +18,7 @@ import { StackOffsetType } from 'recharts/types/util/types'
 import { StatisticChartData, StatsData } from 'entities/chart'
 import { CopyStatisticData } from 'entities/statistic'
 import { isMobile } from 'hooks/helpers/useIsMobile'
-import { Box, Li, Type } from 'theme/base'
+import { Box, Flex, Li, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { Colors } from 'theme/types'
 import {
@@ -46,7 +46,9 @@ export function NetProfitChartComponent({
       data={data}
       colors={themeColors}
       syncId={syncId}
-      legend={
+      tooltip={DailyNetPnlTooltip}
+      legend={DailyNetPnlLegend}
+      externalLegend={
         <>
           <Li color="neutral2">
             <Type.Caption>
@@ -77,7 +79,7 @@ export function NetProfitChartComponent({
         ticks={[-stats.maxAbsPnl * 1.05, 0, stats.maxAbsPnl * 1.05]}
         tickFormatter={(value) => `$${compactNumber(value, 1)}`}
       />
-      <Bar type="monotone" name="Net PnL" unit="$" dataKey="pnl" fill={themeColors.neutral1}>
+      <Bar type="monotone" name="Daily Net PnL" unit="$" dataKey="pnl" fill={themeColors.neutral1}>
         {data.map((item, i) => {
           return <Cell key={`cell-${i}`} fill={item.pnl > 0 ? themeColors.green1 : themeColors.red2} />
         })}
@@ -113,7 +115,7 @@ export function ProfitLossChartComponent({
       colors={themeColors}
       syncId={syncId}
       stackOffset="sign"
-      legend={
+      externalLegend={
         <>
           <Li color="neutral2">
             <Type.Caption>
@@ -346,7 +348,19 @@ export function OrderChartComponent({ data, syncId }: { data: StatisticChartData
         stroke={themeColors.neutral4}
         tickFormatter={(value) => `${compactNumber(value, 0)}`}
       />
-      <Bar type="monotone" name="Daily Orders" dataKey="totalOrder" fill={themeColors.primary1} />
+      {/*<Bar type="monotone" name="Daily Orders" dataKey="totalOrder" fill={themeColors.primary1} />*/}
+      {EXCHANGE_STATS.map((exchange, index) => {
+        return (
+          <Bar
+            key={`totalOrder-${index}`}
+            name={PLATFORM_TEXT_TRANS[exchange]}
+            dataKey={`exchanges.${exchange}.totalOrder`}
+            stackId="totalOrder"
+            fill={EXCHANGE_COLOR[exchange]}
+            stroke={EXCHANGE_COLOR[exchange]}
+          />
+        )
+      })}
       <Line
         type="monotone"
         name="Cumulative Orders"
@@ -375,7 +389,20 @@ export function VolumeChartComponent({ data, syncId }: { data: StatisticChartDat
         stroke={themeColors.neutral4}
         tickFormatter={(value) => `$${compactNumber(value, 1)}`}
       />
-      <Bar type="monotone" name="Daily Volume" unit="$" dataKey="totalVolume" fill={themeColors.primary1} />
+      {/*<Bar type="monotone" name="Daily Volume" unit="$" dataKey="totalVolume" fill={themeColors.primary1} />*/}
+      {EXCHANGE_STATS.map((exchange, index) => {
+        return (
+          <Bar
+            key={`totalVolume-${index}`}
+            name={PLATFORM_TEXT_TRANS[exchange]}
+            unit="$"
+            dataKey={`exchanges.${exchange}.totalVolume`}
+            stackId="totalVolume"
+            fill={EXCHANGE_COLOR[exchange]}
+            stroke={EXCHANGE_COLOR[exchange]}
+          />
+        )
+      })}
       <Line
         type="monotone"
         name="Cumulative Volume"
@@ -396,7 +423,7 @@ export function TraderChartComponent({ data, syncId }: { data: StatisticChartDat
       colors={themeColors}
       data={data}
       syncId={syncId}
-      legend={
+      externalLegend={
         <>
           <Li color="neutral2">
             <Type.Caption>
@@ -427,14 +454,18 @@ function ChartComponentWrapper({
   data,
   colors,
   children,
+  externalLegend,
   legend,
+  tooltip,
   syncId,
   stackOffset,
 }: {
   data: StatisticChartData[]
   colors: Colors
   children: ReactNode
-  legend?: ReactNode
+  externalLegend?: ReactNode
+  legend?: any
+  tooltip?: any
   syncId?: string
   stackOffset?: StackOffsetType
 }) {
@@ -460,9 +491,10 @@ function ChartComponentWrapper({
             <CartesianGrid stroke={colors.neutral4} strokeDasharray="3 3" opacity={0.5} />
             <XAxis dataKey="date" stroke={colors.neutral4} minTickGap={MIN_TICK_GAP} />
             {children}
-            <Legend />
+            <Legend content={legend} />
             <Tooltip
               offset={isMobile ? 100 : 20}
+              content={tooltip}
               contentStyle={{
                 backgroundColor: colors.neutral8,
                 borderColor: 'transparent',
@@ -473,7 +505,7 @@ function ChartComponentWrapper({
         </ResponsiveContainer>
       </Box>
       <Box mb={3} />
-      {legend}
+      {externalLegend}
     </Box>
   )
 }
@@ -565,4 +597,85 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
   }
 
   return chartData
+}
+
+interface TooltipProps {
+  active?: boolean
+  payload?: any[]
+  label?: string
+}
+
+const DailyNetPnlTooltip = ({ payload }: TooltipProps) => {
+  const pnl = payload?.[0]
+  const pnlCumulative = payload?.[1]
+  const pnlPayload = pnl?.payload
+  const pnlValue = pnl?.value ?? 0
+  const pnlCumulativeValue = pnlCumulative?.value ?? 0
+  if (!pnlPayload) {
+    return null
+  }
+
+  return (
+    <Flex flexDirection="column" p={3} backgroundColor="neutral7" sx={{ gap: 2 }}>
+      <Type.Body>{pnlPayload?.date}</Type.Body>
+      {EXCHANGE_STATS.map((exchange) => {
+        const pnl = pnlPayload?.exchanges[exchange]?.totalPnl
+        return !!pnl ? (
+          <Flex key={exchange} alignItems="center" color={EXCHANGE_COLOR[exchange]} sx={{ gap: 2 }}>
+            <Type.Body>{PLATFORM_TEXT_TRANS[exchange]} :</Type.Body>
+            <Type.Body>
+              {formatNumber(pnl, pnl < 1 && pnl > -1 ? 1 : 0)}
+              {pnlCumulative?.unit ?? ''}
+            </Type.Body>
+          </Flex>
+        ) : (
+          <></>
+        )
+      })}
+      <Flex alignItems="center" color={pnl?.color} sx={{ gap: 2 }}>
+        <Type.Body>{pnl?.name} :</Type.Body>
+        <Type.Body>
+          {formatNumber(pnlValue, pnlValue < 1 && pnlValue > -1 ? 1 : 0)}
+          {pnlCumulative?.unit ?? ''}
+        </Type.Body>
+      </Flex>
+      <Flex alignItems="center" color={pnlCumulative?.color} sx={{ gap: 2 }}>
+        <Type.Body>{pnlCumulative?.name} :</Type.Body>
+        <Type.Body>
+          {formatNumber(pnlCumulativeValue, pnlCumulativeValue < 1 && pnlCumulativeValue > -1 ? 1 : 0)}
+          {pnlCumulative?.unit ?? ''}
+        </Type.Body>
+      </Flex>
+    </Flex>
+  )
+}
+
+const DailyNetPnlLegend = ({ payload }: any) => {
+  const pnlPayload = payload?.[0]?.payload
+  if (!pnlPayload) {
+    return null
+  }
+
+  const exchangePayload: any[] = []
+  EXCHANGE_STATS.map((exchange) => {
+    exchangePayload.push({
+      id: exchange,
+      value: PLATFORM_TEXT_TRANS[exchange],
+      color: EXCHANGE_COLOR[exchange],
+      type: 'rect',
+    })
+  })
+
+  const customPayload = [...exchangePayload, ...payload]
+
+  return (
+    <Flex
+      alignItems="center"
+      justifyContent="center"
+      // @ts-ignore
+      sx={{ '.recharts-legend-wrapper': { position: 'relative !important' } }}
+    >
+      <Legend payload={customPayload} />
+    </Flex>
+  )
 }

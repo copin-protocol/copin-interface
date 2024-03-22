@@ -107,6 +107,11 @@ function AccountStats({ data, timeOption }: { data: (TraderData | undefined)[]; 
     customizeView,
     currentStatOnly,
   } = useStatsCustomizeStore()
+
+  const externalSource: ExternalSource = {
+    isMarketsLeft: customizeView === 'GRID',
+  }
+
   return (
     <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 610 : undefined} pb={[3, 4, 4, 4, 3]}>
       <Box
@@ -313,7 +318,11 @@ function AccountStats({ data, timeOption }: { data: (TraderData | undefined)[]; 
                 {currentStatOnly ? (
                   <Box>
                     {stat.render && data[TYPES[timeOption.id].index - (isPremiumUser ? 0 : 1)]
-                      ? stat.render(data[TYPES[timeOption.id].index - (isPremiumUser ? 0 : 1)] as TraderData, index)
+                      ? stat.render(
+                          data[TYPES[timeOption.id].index - (isPremiumUser ? 0 : 1)] as TraderData,
+                          index,
+                          externalSource
+                        )
                       : '--'}
                   </Box>
                 ) : (
@@ -329,7 +338,7 @@ function AccountStats({ data, timeOption }: { data: (TraderData | undefined)[]; 
                         <Type.Caption color="neutral3" width={40}>
                           {item}
                         </Type.Caption>
-                        {stat.render && data[i] ? stat.render(data[i] as TraderData, index) : '--'}
+                        {stat.render && data[i] ? stat.render(data[i] as TraderData, index, externalSource) : '--'}
                       </Flex>
                     ))}
                   </div>

@@ -30,6 +30,11 @@ export interface ExchangeStatsData {
   [key: string]: {
     totalActiveCopyTrade: number
     totalInactiveCopyTrade: number
+    totalOrder: number
+    totalVolume: number
+    totalPnl: number
+    totalProfit: number
+    totalLoss: number
   }
 }
 

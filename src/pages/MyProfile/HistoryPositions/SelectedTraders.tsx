@@ -4,20 +4,25 @@ import { useEffect, useRef } from 'react'
 import useCopyTraderAddresses from 'hooks/features/useCopyTraderAddresses'
 
 import SelectTradersDropdown from '../SelectTradersDropdown'
-import { DispatchSelectTraders } from './useSelectTraders'
+import { DispatchSelectTraders } from './useFilterHistory'
 
 export default function SelectedTraders({
+  copyWalletIds,
   allTraders,
   selectedTraders,
   dispatch,
   onChangeTraders,
 }: {
+  copyWalletIds: string[] | undefined
   allTraders: string[]
   selectedTraders: string[]
   dispatch: DispatchSelectTraders
   onChangeTraders: () => void
 }) {
-  const { listTraderAddresses, deletedTraderAddresses, tradersByProtocol } = useCopyTraderAddresses()
+  const _copyWalletIds = copyWalletIds == null ? undefined : copyWalletIds.length ? copyWalletIds : ['']
+  const { listTraderAddresses, deletedTraderAddresses, tradersByProtocol } = useCopyTraderAddresses({
+    copyWalletIds: _copyWalletIds,
+  })
 
   const handleSelectAllTraders = (isSelectedAll: boolean) => {
     if (!listTraderAddresses.length) return
@@ -48,8 +53,6 @@ export default function SelectedTraders({
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listTraderAddresses])
-
-  if (!allTraders.length) return <></>
 
   return (
     <SelectTradersDropdown

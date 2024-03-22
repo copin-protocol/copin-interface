@@ -97,14 +97,16 @@ export const EXCHANGE_STATS = [
   CopyTradePlatformEnum.BITGET,
   // CopyTradePlatformEnum.BINANCE,
   // CopyTradePlatformEnum.SYNTHETIX,
+  // CopyTradePlatformEnum.SYNTHETIX_V2,
   // CopyTradePlatformEnum.GMX,
   // CopyTradePlatformEnum.GNS,
 ]
-export const EXCHANGE_COLOR = {
+export const EXCHANGE_COLOR: { [key: string]: string } = {
   [CopyTradePlatformEnum.BINGX]: '#4277FD',
   [CopyTradePlatformEnum.BITGET]: '#00F0FF',
   [CopyTradePlatformEnum.BINANCE]: '#FDBA0D',
   [CopyTradePlatformEnum.SYNTHETIX]: '#9573F7',
+  [CopyTradePlatformEnum.SYNTHETIX_V2]: '#9573F7',
   [CopyTradePlatformEnum.GMX]: '#E978F3',
   // [CopyTradePlatformEnum.GNS]: '#4AF994',
 }

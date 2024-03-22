@@ -187,7 +187,9 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
           <Type.CaptionBold flex="1 1 auto" textAlign="left">
             {children}
           </Type.CaptionBold>
-          {hasArrow && <IconBox color={iconColor} ml={1} icon={showing ? upIcon : downIcon} />}
+          {hasArrow && (
+            <IconBox className="icon_dropdown" color={iconColor} ml={1} icon={showing ? upIcon : downIcon} />
+          )}
         </ToggleButton>
       </RcDropdown>
     </Box>

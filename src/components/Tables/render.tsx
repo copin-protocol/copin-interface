@@ -134,7 +134,7 @@ const entryColumn: ColumnData<PositionData> = {
   dataIndex: 'averagePrice',
   key: 'averagePrice',
   sortBy: 'averagePrice',
-  style: { minWidth: '135px' },
+  style: { minWidth: '115px' },
   render: (item) => renderEntry(item),
 }
 const sizeColumn: ColumnData<PositionData> = {
@@ -154,7 +154,7 @@ const sizeOpeningColumn: ColumnData<PositionData, ExternalSource> = {
   dataIndex: 'size',
   key: 'size',
   sortBy: 'size',
-  style: { width: '205px' },
+  style: { width: '215px' },
   render: (item, index, externalSource) =>
     externalSource?.prices ? renderSizeOpening(item, externalSource?.prices) : '--',
 }

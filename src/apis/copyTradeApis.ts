@@ -121,7 +121,10 @@ export async function getMyCopyTradersApi(params: {
   return requester.get(`${SERVICE}/traders/list`, { params }).then((res: any) => res.data as MyCopyTraderData[])
 }
 
-export async function getAllMyCopyTradersApi(params?: { protocol?: ProtocolEnum }) {
+export async function getAllMyCopyTradersApi(params?: {
+  protocol?: ProtocolEnum
+  copyWalletIds: string[] | undefined
+}) {
   return requester.get(`${SERVICE}/traders/group`, { params }).then((res: any) => res.data as MyAllCopyTradersData)
 }
 

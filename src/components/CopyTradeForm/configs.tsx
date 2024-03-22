@@ -29,6 +29,14 @@ const commonSchema = {
   takeProfitAmount: yup.number().positive().label('Take Profit Amount'),
   maxMarginPerPosition: yup.number().nullable().positive().label('Max Margin Per Position'),
   skipLowLeverage: yup.boolean(),
+  lowLeverage: yup
+    .number()
+    .positive()
+    .when('skipLowLeverage', {
+      is: true,
+      then: (schema) => schema.required().min(1).max(150),
+    })
+    .label('Low Leverage'),
   agreement: yup.boolean().isTrue(),
   copyAll: yup.boolean(),
   tokenAddresses: yup
@@ -87,6 +95,7 @@ export interface CopyTradeFormValues {
   duplicateToAddress?: string
   maxMarginPerPosition: number | null
   skipLowLeverage: boolean
+  lowLeverage: number | undefined
   agreement: boolean
   copyAll: boolean
 }
@@ -109,6 +118,7 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   duplicateToAddress: 'duplicateToAddress',
   maxMarginPerPosition: 'maxMarginPerPosition',
   skipLowLeverage: 'skipLowLeverage',
+  lowLeverage: 'lowLeverage',
   agreement: 'agreement',
   copyAll: 'copyAll',
 }
@@ -132,6 +142,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   duplicateToAddress: '',
   maxMarginPerPosition: null,
   skipLowLeverage: false,
+  lowLeverage: undefined,
   agreement: false,
   copyAll: false,
 }
@@ -143,6 +154,7 @@ interface ExchangeOptions {
 }
 export const exchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BINGX),
+  getExchangeOption(CopyTradePlatformEnum.BITGET),
   // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
 ]
 export const internalExchangeOptions: ExchangeOptions[] = [

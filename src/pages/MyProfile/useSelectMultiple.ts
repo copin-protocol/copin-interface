@@ -6,11 +6,12 @@ export default function useSelectMultiple<T>({
   paramKey,
   defaultSelected,
 }: {
-  paramKey: string
+  paramKey: string | undefined
   defaultSelected: T[]
 }) {
   const { searchParams, setSearchParams } = useSearchParams()
   const [selected, setSelected] = useState<T[]>(() => {
+    if (!paramKey) return defaultSelected
     const str = searchParams[paramKey] as string
     if (!str) return defaultSelected
     return str.split('_') as T[]
@@ -28,7 +29,7 @@ export default function useSelectMultiple<T>({
       } else {
         newState = [...prev, option]
       }
-      setSearchParams({ [paramKey]: newState.join('_') })
+      paramKey && setSearchParams({ [paramKey]: newState.join('_') })
       return newState
     })
   }

@@ -228,7 +228,7 @@ export default function useCopyTradeColumns({
                 <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
                   Skip Low Leverage Position:{' '}
                   <Box as="span" color="primary1">
-                    On
+                    On ({item.lowLeverage}x)
                   </Box>
                 </Type.Caption>
               </Tooltip>

@@ -73,10 +73,11 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.GMX]: [],
-  [CopyTradePlatformEnum.BINGX]: ['YFI', 'RPL', 'ZEC', 'RPL', 'UMA', 'BAL', 'XTZ'],
+  [CopyTradePlatformEnum.BINGX]: ['YFI', 'RPL', 'ZEC', 'RPL', 'UMA', 'BAL', 'XTZ', 'AR'],
   [CopyTradePlatformEnum.BITGET]: [],
   [CopyTradePlatformEnum.BINANCE]: [],
   [CopyTradePlatformEnum.SYNTHETIX]: [],
+  [CopyTradePlatformEnum.SYNTHETIX_V2]: [],
 }
 
 export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {

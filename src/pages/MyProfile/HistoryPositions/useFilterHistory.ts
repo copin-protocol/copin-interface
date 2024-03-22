@@ -1,46 +1,70 @@
-import isEqual from 'lodash/isEqual'
 import { useEffect, useReducer, useRef } from 'react'
 
-import { CopyTradeData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import { PositionStatusEnum } from 'utils/config/enums'
 import { STORAGE_KEYS } from 'utils/config/keys'
 
+import { checkEqualWallets, toggleSelectedItem } from '../helpers'
+
 export type SelectionState = {
+  selectedStatus: PositionStatusEnum[]
   selectedWallets: CopyWalletData[]
   allWallets: CopyWalletData[]
-  selectedCopyTrades: CopyTradeData[]
-  allCopyTrades: CopyTradeData[]
+  selectedTraders: string[]
+  deletedTraders: string[]
+  allTraders: string[]
   version: number
 }
 
 const defaultState: SelectionState = {
+  selectedStatus: [PositionStatusEnum.OPEN, PositionStatusEnum.CLOSE],
   selectedWallets: [],
   allWallets: [],
-  selectedCopyTrades: [],
-  allCopyTrades: [],
+  selectedTraders: [],
+  deletedTraders: [],
+  allTraders: [],
   version: 1,
 }
 
-export default function useFilterActivities() {
+export default function useFilterHistory() {
   const { copyWallets } = useCopyWalletContext()
-
   const state = useReducer(
     (
       state: SelectionState,
       action:
+        | { type: 'setTraders'; payload: string[] }
+        | { type: 'toggleTrader'; payload: string }
+        | { type: 'setDeletedTraders'; payload: string[] }
+        | { type: 'setAllTraders' }
+        | { type: 'setState'; payload: Partial<Omit<SelectionState, 'version'>> }
         | { type: 'setWallets'; payload: CopyWalletData[] }
         | { type: 'toggleWallet'; payload: CopyWalletData }
         | { type: 'setAllWallets' }
-        | { type: 'setCopyTrades'; payload: CopyTradeData[] }
-        | { type: 'toggleCopyTrade'; payload: CopyTradeData }
-        | { type: 'setAllCopyTrades' }
-        | { type: 'setState'; payload: Partial<Omit<SelectionState, 'version'>> }
+        | { type: 'toggleStatus'; payload: PositionStatusEnum }
     ) => {
       let newState = { ...state }
       switch (action.type) {
         case 'setState':
           newState = { ...newState, ...action.payload }
+          break
+        case 'setTraders':
+          newState.selectedTraders = action.payload
+          break
+        case 'setAllTraders':
+          newState.selectedTraders = state.allTraders
+          break
+        case 'setDeletedTraders':
+          newState.deletedTraders = action.payload
+          break
+        case 'toggleTrader':
+          newState.selectedTraders = toggleSelectedItem({
+            item: action.payload,
+            selected: state.selectedTraders,
+            checkSelected(source, target) {
+              return source === target
+            },
+          })
           break
         case 'setWallets':
           newState.selectedWallets = action.payload
@@ -49,25 +73,25 @@ export default function useFilterActivities() {
           newState.selectedWallets = state.allWallets
           break
         case 'toggleWallet':
-          const isSelected = state.selectedWallets?.findIndex((e) => e.id === action.payload.id) !== -1
-          if (isSelected) {
-            newState.selectedWallets = newState.selectedWallets?.filter((e) => action.payload.id !== e.id)
+          newState.selectedWallets = toggleSelectedItem({
+            item: action.payload,
+            selected: state.selectedWallets,
+            checkSelected(source, target) {
+              return source.id === target.id
+            },
+          })
+          break
+        case 'toggleStatus':
+          if (state.selectedStatus?.length === 1 && action.payload === state.selectedStatus?.[0]) {
+            break
           } else {
-            newState.selectedWallets = Array.from(new Set([...newState.selectedWallets, action.payload]))
-          }
-          break
-        case 'setCopyTrades':
-          newState.selectedCopyTrades = action.payload
-          break
-        case 'setAllCopyTrades':
-          newState.selectedCopyTrades = state.allCopyTrades
-          break
-        case 'toggleCopyTrade':
-          const isCopyTradeSelected = state.selectedCopyTrades?.findIndex((e) => e.id === action.payload.id) !== -1
-          if (isCopyTradeSelected) {
-            newState.selectedCopyTrades = newState.selectedCopyTrades?.filter((e) => action.payload.id !== e.id)
-          } else {
-            newState.selectedCopyTrades = Array.from(new Set([...newState.selectedCopyTrades, action.payload]))
+            newState.selectedStatus = toggleSelectedItem({
+              item: action.payload,
+              selected: state.selectedStatus,
+              checkSelected(source, target) {
+                return source === target
+              },
+            })
           }
           break
         default:
@@ -77,7 +101,7 @@ export default function useFilterActivities() {
     },
     {},
     () => {
-      const storageData = sessionStorage.getItem(STORAGE_KEYS.MY_ACTIVITIES)
+      const storageData = sessionStorage.getItem(STORAGE_KEYS.MY_HISTORY_TRADERS)
       if (!!storageData) {
         try {
           const _storageData = JSON.parse(storageData) as SelectionState
@@ -109,17 +133,10 @@ export default function useFilterActivities() {
 
   useEffect(() => {
     const dataStorage = JSON.stringify(state[0])
-    sessionStorage.setItem(STORAGE_KEYS.MY_ACTIVITIES, dataStorage)
+    sessionStorage.setItem(STORAGE_KEYS.MY_HISTORY_TRADERS, dataStorage)
   }, [state[0]])
 
   return state
 }
 
-function checkEqualWallets(source: CopyWalletData[] | undefined, target: CopyWalletData[] | undefined) {
-  if (!source?.length || !target?.length) return false
-  const sourceIds = source.map((wallet) => wallet.id)
-  const targetIds = target.map((wallet) => wallet.id)
-  return isEqual(sourceIds, targetIds)
-}
-
-export type DispatchFilterActivities = ReturnType<typeof useFilterActivities>['1']
+export type DispatchSelectTraders = ReturnType<typeof useFilterHistory>['1']

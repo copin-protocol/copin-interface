@@ -7,8 +7,8 @@ import useGetAllCopyTrades from './useGetAllCopyTrades'
 type TradersByProtocolValuesData = { address: string; status: 'deleted' | 'copying' }
 type TradersByProtocolData = Record<ProtocolEnum, TradersByProtocolValuesData[]>
 
-export default function useCopyTraderAddresses() {
-  const { copiedTraders } = useGetAllCopyTrades()
+export default function useCopyTraderAddresses(params?: { copyWalletIds: string[] | undefined }) {
+  const { copiedTraders } = useGetAllCopyTrades({ copyWalletIds: params?.copyWalletIds })
   const listTraderAddresses = useMemo(
     () =>
       copiedTraders.reduce((result, dataByProtocol) => {

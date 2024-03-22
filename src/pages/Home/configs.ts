@@ -41,3 +41,9 @@ export const BASE_RANGE_FILTER: RangeFilter<keyof TraderData>[] = [
 ]
 
 export const ALLOWED_PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
+export const INTERNAL_ALLOWED_PROTOCOLS = [
+  ProtocolEnum.GMX,
+  ProtocolEnum.KWENTA,
+  ProtocolEnum.POLYNOMIAL,
+  ProtocolEnum.GNS,
+]

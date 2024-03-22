@@ -15,6 +15,7 @@ import CopyTraderButton from 'components/CopyTraderButton'
 import FavoriteButton from 'components/FavoriteButton'
 import TraderAddress from 'components/TraderAddress'
 import { TraderData } from 'entities/trader'
+import useInternalRole from 'hooks/features/useInternalRole'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 // import useIsMobile from 'hooks/helpers/useIsMobile'
 // import useIsSafari from 'hooks/helpers/useIsSafari'
@@ -37,7 +38,7 @@ import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 import ProtocolDropdown from './ProtocolDropdown'
 import SortDropdown from './SortDropdown'
 import TimeFilter from './TimeDropdown'
-import { ALLOWED_PROTOCOLS, BASE_RANGE_FILTER } from './configs'
+import { ALLOWED_PROTOCOLS, BASE_RANGE_FILTER, INTERNAL_ALLOWED_PROTOCOLS } from './configs'
 
 const PADDING_X = 12
 export default function Traders() {
@@ -180,7 +181,9 @@ function Filters({ filters }: { filters: FiltersState }) {
 
 const LIMIT = 12
 function ListTraders({ filters }: { filters: FiltersState }) {
-  const enabledGetData = ALLOWED_PROTOCOLS.includes(filters.protocol)
+  const isInternal = useInternalRole()
+  const allowList = isInternal ? INTERNAL_ALLOWED_PROTOCOLS : ALLOWED_PROTOCOLS
+  const enabledGetData = allowList.includes(filters.protocol)
 
   const { profile, isAuthenticated } = useAuthContext()
   const { searchParams, setSearchParams } = useSearchParams()

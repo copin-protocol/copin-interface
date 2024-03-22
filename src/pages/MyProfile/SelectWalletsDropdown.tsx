@@ -8,6 +8,7 @@ import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
+import { overflowEllipsis } from 'utils/helpers/css'
 import { parseWalletName } from 'utils/helpers/transform'
 
 export default function SelectWalletsDropdown({
@@ -79,7 +80,14 @@ export default function SelectWalletsDropdown({
                 <Box py={2} key={key.toString()}>
                   <ControlledCheckbox
                     checked={isChecked}
-                    label={parseWalletName(item)}
+                    label={
+                      <Box
+                        as="span"
+                        sx={{ display: 'inline-block', width: '100%', maxWidth: 200, ...overflowEllipsis() }}
+                      >
+                        {parseWalletName(item)}
+                      </Box>
+                    }
                     size={16}
                     onChange={() => handleToggleWallet(item)}
                   />
@@ -91,7 +99,8 @@ export default function SelectWalletsDropdown({
       }
       buttonSx={{
         border: 'none',
-        height: 50,
+        alignItems: ['start', 'center'],
+        '.icon_dropdown': { pt: ['3px', 0] },
       }}
       placement={placement}
     >

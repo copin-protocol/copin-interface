@@ -19,6 +19,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     stopLossAmount,
     maxVolMultiplier,
     skipLowLeverage,
+    lowLeverage,
     protocol,
     exchange,
     copyWalletId,
@@ -50,7 +51,10 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   } else {
     result.maxMarginPerPosition = null
   }
-  result.skipLowLeverage = !!skipLowLeverage
+  if (!!skipLowLeverage) {
+    result.skipLowLeverage = skipLowLeverage
+    result.lowLeverage = lowLeverage
+  }
   result.exchange = exchange
   result.copyWalletId = copyWalletId
   result.copyAll = !!copyAll
@@ -77,6 +81,7 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
         ? Number(formData.maxMarginPerPosition / formData.volume)
         : null,
     skipLowLeverage: formData.skipLowLeverage,
+    lowLeverage: formData.lowLeverage,
     protocol: formData.protocol,
     exchange: formData.exchange,
     copyWalletId: formData.copyWalletId,

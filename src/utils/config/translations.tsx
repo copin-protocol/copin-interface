@@ -52,6 +52,7 @@ export const PLATFORM_TRANS: ObjectTrans = {
   [CopyTradePlatformEnum.BINANCE]: <Trans>Binance</Trans>,
   [CopyTradePlatformEnum.GMX]: <Trans>GMX</Trans>,
   [CopyTradePlatformEnum.SYNTHETIX]: <Trans>Synthetix</Trans>,
+  [CopyTradePlatformEnum.SYNTHETIX_V2]: <Trans>Synthetix V2</Trans>,
 }
 
 export const PLATFORM_TEXT_TRANS: { [key: string]: string } = {
@@ -59,7 +60,8 @@ export const PLATFORM_TEXT_TRANS: { [key: string]: string } = {
   [CopyTradePlatformEnum.BITGET]: 'Bitget',
   [CopyTradePlatformEnum.BINANCE]: 'Binance',
   [CopyTradePlatformEnum.GMX]: 'GMX',
-  [CopyTradePlatformEnum.SYNTHETIX]: 'Synthetix',
+  [CopyTradePlatformEnum.SYNTHETIX]: 'Synthetix V3',
+  [CopyTradePlatformEnum.SYNTHETIX_V2]: 'Synthetix V2',
 }
 
 export const COPY_WALLET_TRANS: ObjectTrans = {
