@@ -136,6 +136,10 @@ const GNS_PAIRS = {
   'GNS-208': 'MAVIA',
   'GNS-209': 'MYRO',
   'GNS-210': 'STG',
+  'GNS-211': 'BOME',
+  'GNS-212': 'ETHFI',
+  'GNS-213': 'METIS',
+  'GNS-214': 'AEVO',
 }
 
 type TokenValues = Record<
