@@ -1,5 +1,5 @@
 import { configs } from './configs.js'
-import { renderHTML } from './utils.js'
+import { generateProtocolName, renderHTML } from './utils.js'
 
 const getLeaderboard = async (req, res) => {
   const { protocol } = req.query
@@ -10,7 +10,7 @@ const getLeaderboard = async (req, res) => {
       req,
       res,
       params: {
-        title: `Leaderboard on ${protocol} | Copin Analyzer`,
+        title: `Leaderboard on ${generateProtocolName(protocol)} | Copin Analyzer`,
         thumbnail,
         url: `${configs.baseUrl}/leaderboard?protocol=${protocol}`,
       },

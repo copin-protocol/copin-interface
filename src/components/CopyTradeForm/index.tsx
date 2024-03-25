@@ -22,7 +22,7 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
-import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { INTERNAL_SERVICE_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
 import { TOKEN_TRADE_IGNORE, getTokenTradeList } from 'utils/config/trades'
@@ -133,6 +133,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     const copyWalletsByExchange = copyWallets?.filter((e) => e.exchange === currentPlatform)
     onChangeWallet(copyWalletsByExchange?.[0]?.id ?? '')
   }
+  const isBingXWallet = copyWallets?.find((e) => e.id === copyWalletId)?.exchange === CopyTradePlatformEnum.BINGX
 
   const currentWalletId = watch('copyWalletId')
   const onChangeWallet = (walletId: string) => setValue(fieldName.copyWalletId, walletId, { shouldValidate: true })
@@ -416,21 +417,23 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                 </Trans>
               </Type.Caption>
 
-              <Box bg="rgba(255, 194, 75, 0.10)" py={2} px={12} mt={20}>
-                <Flex sx={{ gap: 2 }} color="orange1" alignItems="center">
-                  <ShieldWarning />
-                  <Type.CaptionBold>Warning</Type.CaptionBold>
-                </Flex>
-                <Type.Caption mt={2}>
-                  <Trans>
-                    Make sure you have already activated the{' '}
-                    <Box as="a" href={LINKS.bingXGuarantee} target="_blank" rel="noreferrer">
-                      BingX Guaranteed Price
-                    </Box>{' '}
-                    to Prevent Slippage Losses.
-                  </Trans>
-                </Type.Caption>
-              </Box>
+              {isBingXWallet && (
+                <Box bg="rgba(255, 194, 75, 0.10)" py={2} px={12} mt={20}>
+                  <Flex sx={{ gap: 2 }} color="orange1" alignItems="center">
+                    <ShieldWarning />
+                    <Type.CaptionBold>Warning</Type.CaptionBold>
+                  </Flex>
+                  <Type.Caption mt={2}>
+                    <Trans>
+                      Make sure you have already activated the{' '}
+                      <Box as="a" href={LINKS.bingXGuarantee} target="_blank" rel="noreferrer">
+                        BingX Guaranteed Price
+                      </Box>{' '}
+                      to Prevent Slippage Losses.
+                    </Trans>
+                  </Type.Caption>
+                </Box>
+              )}
             </Box>
           }
         />

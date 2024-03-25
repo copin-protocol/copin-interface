@@ -66,4 +66,20 @@ function addressShorten(address, num, numsPrefix) {
   return `${prefix}...${suffix}`
 }
 
-export { renderHTML, normalizeText, shortenText, addressShorten }
+function generateProtocolName(protocol) {
+  if (!protocol) return ''
+  //TODO: Add more protocols
+  switch (protocol) {
+    case 'GMX':
+    case 'GMX_V2':
+      return 'GMX'
+    case 'GNS':
+      return 'gTrade'
+    case 'KWENTA':
+      return 'Kwenta'
+    case 'POLYNOMIAL':
+      return 'Polynomial'
+  }
+}
+
+export { renderHTML, normalizeText, shortenText, addressShorten, generateProtocolName }

@@ -23,6 +23,7 @@ import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { ALL_OPTION, getDefaultTokenOptions } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
 import { isAddress } from 'utils/web3/contracts'
@@ -191,7 +192,7 @@ export default function TraderDetails() {
 
   return (
     <>
-      <CustomPageTitle title={`Trader ${addressShorten(_address)} on ${protocol}`} />
+      <CustomPageTitle title={`Trader ${addressShorten(_address)} on ${PROTOCOL_OPTIONS_MAPPING[protocol].text}`} />
       <Layout
         traderInfo={
           <BotAlertProvider>

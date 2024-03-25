@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import { configs } from './configs.js'
-import { addressShorten, renderHTML } from './utils.js'
+import { addressShorten, generateProtocolName, renderHTML } from './utils.js'
 
 const getPositionDetails = async (req, res) => {
   const { account, log_id, next_hours } = req.query
@@ -16,20 +16,22 @@ const getPositionDetails = async (req, res) => {
     if (image.data) thumbnail = newThumbnail + `?${new Date().getTime()}`
   } catch {}
 
+  const protocolName = generateProtocolName(protocol)
+
   try {
     renderHTML({
       req,
       res,
       params: id?.startsWith('0x')
         ? {
-            title: `Trader ${addressShorten(account)} on ${protocol} - View this position details on Copin`,
+            title: `Trader ${addressShorten(account)} on ${protocolName} - View this position details on Copin`,
             thumbnail,
             url: `${configs.baseUrl}/${protocol}/position/${id}?account=${account}&log_id=${log_id}${
               next_hours ? `?next_hours=${next_hours}` : ''
             }`,
           }
         : {
-            title: `Trade on ${protocol} - View this position details on Copin`,
+            title: `Trade on ${protocolName} - View this position details on Copin`,
             thumbnail,
             url: `${configs.baseUrl}/${protocol}/position/${id}${next_hours ? `?next_hours=${next_hours}` : ''}`,
           },
