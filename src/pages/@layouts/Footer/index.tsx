@@ -77,7 +77,7 @@ const Footer = ({ height }: { height: number }) => {
                 fontSize: '13px',
               }}
             >
-              <Trans>Pricing</Trans>
+              <Trans>Upgrade</Trans>
             </a>
             <a
               href={LINKS.docs}

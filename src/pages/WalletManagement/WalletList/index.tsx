@@ -66,10 +66,10 @@ export default function WalletList() {
       <Flex flexDirection="column" sx={{ overflowY: 'auto' }}>
         {copyWallets &&
           copyWallets.length > 0 &&
-          copyWallets.map((wallet, index) => {
+          copyWallets.map((wallet) => {
             return (
               <WalletDetailsCard
-                key={index}
+                key={wallet.id}
                 data={wallet}
                 hasBorderTop={false}
                 handleUpdate={handleUpdate}
