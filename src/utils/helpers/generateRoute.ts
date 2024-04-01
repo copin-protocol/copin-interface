@@ -57,7 +57,7 @@ export const generateTelegramBotAlertUrl = (state?: string) => {
   return `${LINKS.baseTelegram}/${TELEGRAM_BOT_ALERT}?${state ? `start=${state}` : ''}`
 }
 
-function createUrlWithParams({ url, params = {} }: { url: string; params?: Record<string, any> }): string {
+export function createUrlWithParams({ url, params = {} }: { url: string; params?: Record<string, any> }): string {
   let query = ''
   for (const key of Object.keys(params)) {
     if (params[key] !== undefined) {
@@ -102,6 +102,28 @@ export function generateHomeRoute(data: { params?: Record<string, any> }) {
   if (data.params?.protocol === ProtocolEnum.GMX_V2) return ROUTES.HOME.path
   return createUrlWithParams({
     url: ROUTES.HOME.path,
+    params: data.params,
+  })
+}
+
+export function generateTraderMultiExchangeRoute(data: {
+  address: string
+  protocol: ProtocolEnum
+  params?: Record<string, any>
+}) {
+  return createUrlWithParams({
+    url: `${ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.path_prefix}/${data.address}/${data.protocol.toLocaleLowerCase()}`,
+    params: data.params,
+  })
+}
+
+export function generateTraderExchangesStatsRoute(data: {
+  address: string
+  protocol: ProtocolEnum
+  params?: Record<string, any>
+}) {
+  return createUrlWithParams({
+    url: `${ROUTES.TRADER_EXCHANGES_STATS.path_prefix}/${data.address}/${data.protocol}`,
     params: data.params,
   })
 }

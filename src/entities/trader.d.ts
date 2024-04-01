@@ -7,6 +7,8 @@ import {
   TimeFrameEnum,
 } from 'utils/config/enums'
 
+import { TraderPnlStatisticData } from './statistic'
+
 // import { ImageData } from './image'
 // import { LinksData } from './types'
 
@@ -58,7 +60,7 @@ export interface TraderData {
   createdAt: string
   updatedAt: string
   ranking: { [key: string]: number }
-  pnlStatistics?: { date: string[]; pnl?: number[]; fee?: number[] }
+  pnlStatistics?: TraderPnlStatisticData[]
 }
 
 export interface ResponseTraderData extends TraderData {
@@ -267,4 +269,13 @@ export interface TraderTokenStatistic {
   maxLeverage: number
   minLeverage: number
   winRate?: number
+}
+
+export interface TraderExchangeStatistic {
+  id: string
+  isOpenPosition: boolean
+  lastTradeAt: string
+  lastTradeAtTs: number
+  protocol: ProtocolEnum
+  totalVolume: number
 }

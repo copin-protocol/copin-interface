@@ -52,7 +52,7 @@ export default function AssetDistribution() {
             }}
             formatter={tooltipFormatter}
           />
-          <Legend layout="vertical" />
+          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </Flex>

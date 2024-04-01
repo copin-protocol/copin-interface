@@ -30,7 +30,7 @@ import { DATE_FORMAT } from 'utils/config/constants'
 import { ProtocolEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatDate } from 'utils/helpers/format'
-import { generateExplorerRoute, generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateExplorerRoute, generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { pageToOffset } from 'utils/helpers/transform'
 import { getUserForTracking, logEvent, logEventBacktest, logEventHomeFilter } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
@@ -428,8 +428,12 @@ function TraderItem({
   return (
     <Box
       as={Link}
-      to={generateTraderDetailsRoute(traderData.protocol, traderData.account, {
-        type: traderData.type,
+      to={generateTraderMultiExchangeRoute({
+        protocol: traderData.protocol,
+        address: traderData.account,
+        params: {
+          time: traderData.type,
+        },
       })}
       sx={{
         display: 'block',
@@ -455,12 +459,22 @@ function TraderItem({
           options={{ timeType: traderData.type }}
         />
         <Flex sx={{ alignItems: 'center', gap: 3 }}>
-          <FavoriteButton address={traderData.account} size={20} color="neutral2" hoverColor="neutral1" />
+          <FavoriteButton
+            address={traderData.account}
+            protocol={traderData.protocol}
+            size={20}
+            color="neutral2"
+            hoverColor="neutral1"
+          />
           <IconBox
             role="button"
             as={Link}
-            to={generateTraderDetailsRoute(traderData.protocol, traderData.account, {
-              type: traderData.type,
+            to={generateTraderMultiExchangeRoute({
+              protocol: traderData.protocol,
+              address: traderData.account,
+              params: {
+                time: traderData.type,
+              },
             })}
             icon={<CaretRight size={20} />}
             color="neutral2"

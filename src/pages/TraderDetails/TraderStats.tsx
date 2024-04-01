@@ -32,7 +32,7 @@ const StatsWrapper = styled.div`
       background-color: ${({ theme }) => theme.colors.neutral8};
     }
     .to-top-btn {
-      display: none;
+      visibility: hidden;
       transform: translateY(-1px);
     }
     &:hover {
@@ -41,7 +41,7 @@ const StatsWrapper = styled.div`
         background-color: ${({ theme }) => theme.colors.neutral5};
       }
       .to-top-btn {
-        display: block;
+        visibility: visible;
       }
     }
   }
@@ -127,7 +127,7 @@ function AccountStats({ data, timeOption }: { data: (TraderData | undefined)[]; 
           zIndex: 4,
         }}
       >
-        <Flex width="100%" alignItems="center" color="neutral3">
+        <Flex width="100%" alignItems="center" color="neutral3" height={44}>
           <Flex
             sx={{
               pl: 3,
@@ -362,7 +362,7 @@ function AccountStats({ data, timeOption }: { data: (TraderData | undefined)[]; 
                       pl: 3,
                       position: 'sticky',
                       left: 0,
-                      flex: 1.2,
+                      flex: 1.4,
                       py: 2,
                       zIndex: 3,
                     }}

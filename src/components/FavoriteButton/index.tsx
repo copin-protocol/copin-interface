@@ -2,21 +2,24 @@ import { Star } from '@phosphor-icons/react'
 import { useEffect } from 'react'
 
 import { useClickLoginButton } from 'components/LoginAction'
-import useTraderFavorites from 'hooks/store/useTraderFavorites'
+import useTraderFavorites, { getTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { IconBox } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 
 export default function FavoriteButton({
   source,
   address,
+  protocol,
   size = 24,
   color = 'primary1',
   hoverColor = 'primary2',
   activeColor = 'primary1',
 }: {
   address: string
+  protocol: ProtocolEnum
   size?: number
   color?: string
   hoverColor?: string
@@ -33,7 +36,8 @@ export default function FavoriteButton({
   } = useTraderFavorites()
   const { isAuthenticated, profile } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
-  const hasFavorite = traderFavorites.includes(address)
+  const traderFavorite = getTraderFavoriteValue({ address, protocol })
+  const hasFavorite = traderFavorites.includes(traderFavorite)
 
   const logEventFavorite = (action: string) => {
     logEvent({
@@ -47,7 +51,7 @@ export default function FavoriteButton({
     e.stopPropagation()
 
     if (hasFavorite) {
-      unsetTraderFavorite(address)
+      unsetTraderFavorite({ address, protocol })
 
       logEventFavorite(
         source === EventSource.HOME
@@ -56,7 +60,7 @@ export default function FavoriteButton({
       )
       return
     }
-    setTraderFavorite(address, note)
+    setTraderFavorite({ address, protocol, note })
     setTooltip(undefined)
 
     logEventFavorite(
@@ -92,7 +96,7 @@ export default function FavoriteButton({
               handleClickLogin()
               return
             }
-            setTooltip(address, e.currentTarget.getBoundingClientRect())
+            setTooltip({ address, protocol, position: e.currentTarget.getBoundingClientRect() })
           }
         }}
         disabled={favoriteSubmitting}

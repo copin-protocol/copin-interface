@@ -1,8 +1,9 @@
+import { ArrowElbowUpLeft } from '@phosphor-icons/react'
 import React from 'react'
 
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
-import { Button } from 'theme/Buttons'
+import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -21,9 +22,10 @@ const BackTestAction = ({ onClick, hadBacktest }: { onClick: () => void; hadBack
     })
   }
   return (
-    <Button
-      width={['100%', '100%', '100%', 150]}
+    <ButtonWithIcon
+      width={['100%', '100%', '100%', 'auto']}
       variant={hadBacktest ? 'ghostSuccess' : 'ghost'}
+      icon={<ArrowElbowUpLeft size={20} />}
       onClick={() => {
         onClick()
         logEventBacktest(
@@ -33,16 +35,16 @@ const BackTestAction = ({ onClick, hadBacktest }: { onClick: () => void; hadBack
         )
       }}
       sx={{
-        p: hadBacktest ? 0 : undefined,
+        // p: hadBacktest ? 0 : undefined,
+        px: 3,
         borderRadius: 0,
         height: '100%',
-        borderLeft: ['none', 'small', 'small', 'small'],
-        borderTop: ['small', 'small', 'small', 'none'],
-        borderColor: ['neutral4', 'neutral4', 'neutral4', 'neutral4'],
+        color: 'neutral2',
+        '&:hover:not(:disabled)': { color: 'neutral1' },
       }}
     >
       {hadBacktest ? 'Backtest Result' : 'Backtest'}
-    </Button>
+    </ButtonWithIcon>
   )
 }
 

@@ -14,7 +14,7 @@ import { EVM_TX_HASH_REGEX, SEARCH_DEBOUNCE_TIME, SEARCH_DEFAULT_LIMIT } from 'u
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
-import { generatePositionDetailsRoute, generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generatePositionDetailsRoute, generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
@@ -133,10 +133,10 @@ export default function useSearchAllData(args?: {
         logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_CUSTOM_ADD)
       } else {
         history.push(
-          generateTraderDetailsRoute(
-            data?.protocol ?? protocol ?? ProtocolEnum.GMX,
-            data?.account ?? debounceSearchText
-          )
+          generateTraderMultiExchangeRoute({
+            protocol: data?.protocol ?? protocol ?? ProtocolEnum.GMX,
+            address: data?.account ?? debounceSearchText,
+          })
         )
         logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_CLICK)
       }

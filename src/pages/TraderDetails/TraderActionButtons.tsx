@@ -1,29 +1,32 @@
-import { CirclesThreePlus } from '@phosphor-icons/react'
+import { CirclesThreePlus, UniteSquare } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useEffect, useReducer, useRef } from 'react'
 import { useMutation } from 'react-query'
 
 import { requestTestMultiOrderApi } from 'apis/backTestApis'
+import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TradeProtocolAction from 'components/@ui/TradeProtocol'
 import SingleBackTestModal from 'components/BacktestModal/SingleBacktestModal'
 import { initBacktestState, initialState, reducer } from 'components/BacktestModal/SingleBacktestModal/config'
 import { parseRequestData } from 'components/BacktestModal/helper'
 import CopyTraderButton from 'components/CopyTraderButton'
 import { useClickLoginButton } from 'components/LoginAction'
-import { PositionData } from 'entities/trader.d'
+import { PositionData, TraderData } from 'entities/trader.d'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 // import useSearchParams from 'hooks/router/useSearchParams'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
-import { Box } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { NAVBAR_HEIGHT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 
 import AlertAction from './AlertAction'
 import BackTestAction from './BackTestAction'
+import ExpandTraderRankingButton from './ExpandTraderRankingButton'
 
 export interface PositionSortPros {
   sortBy: keyof PositionData
@@ -31,9 +34,15 @@ export interface PositionSortPros {
 }
 export default function TraderActionButtons({
   account,
+  traderData,
   protocol,
   onCopyActionSuccess,
+  timeOption,
+  onChangeTime,
 }: {
+  traderData: TraderData | undefined
+  timeOption: TimeFilterProps
+  onChangeTime: (option: TimeFilterProps) => void
   account: string
   protocol: ProtocolEnum
   onCopyActionSuccess: () => void
@@ -48,7 +57,7 @@ export default function TraderActionButtons({
             borderBottom: ['small', 'small', 'small', 'none'],
             borderColor: ['neutral4', 'neutral4', 'neutral4', 'transparent'],
             width: [0, '100%', '100%', 'auto'],
-            height: ['40px', '40px', '40px', '100%'],
+            height: ['40px', '40px', '40px', 'auto'],
             display: ['none', 'flex', 'flex', 'flex'],
             position: [undefined, 'fixed', 'fixed', 'static'],
             top: [undefined, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71],
@@ -56,10 +65,28 @@ export default function TraderActionButtons({
             bg: ['neutral7', 'neutral7', 'neutral7', undefined],
           }}
         >
-          <TradeProtocolAction protocol={protocol} />
+          {/* <TradeProtocolAction protocol={protocol} /> */}
           <AlertAction protocol={protocol} account={account} />
+          <ExpandTraderRankingButton traderData={traderData} timeOption={timeOption} onChangeTime={onChangeTime} />
           <BacktestButton key={protocol + account} protocol={protocol} account={account} />
-          <CopyTraderButton protocol={protocol} account={account} onForceReload={onCopyActionSuccess} />
+          <CopyTraderButton
+            protocol={protocol}
+            account={account}
+            onForceReload={onCopyActionSuccess}
+            buttonSx={{
+              px: 3,
+              width: 'auto',
+              bg: 'transparent !important',
+              color: `${themeColors.primary1} !important`,
+              '&:hover:not(:disabled)': { color: `${themeColors.primary2} !important` },
+            }}
+            buttonText={
+              <Flex sx={{ alignItems: 'center', gap: 2 }}>
+                <UniteSquare size={20} />
+                <Type.CaptionBold>Copy Trader</Type.CaptionBold>
+              </Flex>
+            }
+          />
         </Box>
       ) : (
         <Box
@@ -176,6 +203,7 @@ function BacktestButton({ account, protocol }: { account: string; protocol: Prot
         <SingleBackTestModal
           isForceOpen={isForceOpenModal}
           account={account}
+          protocol={protocol}
           isOpen={backtestState.isFocusBacktest}
           onDismiss={handleDismissBackTestModal}
           state={backtestState}

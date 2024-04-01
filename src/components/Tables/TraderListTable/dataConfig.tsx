@@ -80,7 +80,10 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     freezeLeft: 180,
     freezeIndex: 3,
     render: (item) => (
-      <AccountCell data={item} additionalComponent={<FavoriteButton address={item.account} size={16} />} />
+      <AccountCell
+        data={item}
+        additionalComponent={<FavoriteButton address={item.account} protocol={item.protocol} size={16} />}
+      />
     ),
   },
   runTimeDays: {
@@ -765,7 +768,10 @@ export const mobileTableSettings: TableSettingsProps<TraderData> = [
     freezeLeft: 180,
     freezeIndex: 3,
     render: (item) => (
-      <AccountCellMobile data={item} additionalComponent={<FavoriteButton address={item.account} size={16} />} />
+      <AccountCellMobile
+        data={item}
+        additionalComponent={<FavoriteButton address={item.account} protocol={item.protocol} size={16} />}
+      />
     ),
   },
   ...mobileTableColumnKeys
@@ -905,7 +911,7 @@ export function MyCopyAccountCell({ data }: { data: MyCopyTraderData }) {
   return (
     <Flex alignItems="center" justifyContent="start" sx={{ gap: [1, 2], position: 'relative' }}>
       <AccountInfo isOpenPosition={false} address={data.account} protocol={data.protocol} size={sm ? 40 : 28} />
-      <FavoriteButton address={data.account} size={16} />
+      <FavoriteButton address={data.account} protocol={data.protocol} size={16} />
     </Flex>
   )
 }

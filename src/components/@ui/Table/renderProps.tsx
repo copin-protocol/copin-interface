@@ -16,7 +16,7 @@ import { ProtocolEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcClosedPrice, calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
 import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseMarketImage } from 'utils/helpers/transform'
 
 import AddressAvatar from '../AddressAvatar'
@@ -62,7 +62,7 @@ export function renderCopyEntry(data: CopyPositionData | undefined, textSx?: Tex
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol}</Type.Caption>
+      <Type.Caption>{TOKEN_TRADE_SUPPORT[data.protocol]?.[data.indexToken]?.symbol}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>${PriceTokenText({ value: data.entryPrice, maxDigit: 2, minDigit: 2 })}</Type.Caption>
     </Flex>
@@ -236,7 +236,7 @@ function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponen
 
 export function renderTrader(address: string, protocol: ProtocolEnum) {
   return (
-    <Link to={generateTraderDetailsRoute(protocol, address)} onClick={(e) => e.stopPropagation()}>
+    <Link to={generateTraderMultiExchangeRoute({ protocol, address })} onClick={(e) => e.stopPropagation()}>
       <Flex sx={{ gap: 2 }} alignItems="center">
         <AddressAvatar address={address} size={24} />
         <Type.Caption color="neutral1" sx={{ ':hover': { textDecoration: 'underline' } }}>

@@ -15,7 +15,7 @@ import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { PROTOCOL_PROVIDER, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { ORDER_TYPE_TRANS } from 'utils/config/translations'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseExchangeImage, parseProtocolImage, parseWalletName } from 'utils/helpers/transform'
 
 export interface UserActivityTableProps {
@@ -60,7 +60,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
   sourceTrader: (item) => (
     <Flex
       as={Link}
-      to={generateTraderDetailsRoute(item.protocol, item.sourceAccount)}
+      to={generateTraderMultiExchangeRoute({ protocol: item.protocol, address: item.sourceAccount })}
       sx={{ alignItems: 'center', gap: 2 }}
     >
       <AddressAvatar address={item.sourceAccount} size={24} />

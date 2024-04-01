@@ -190,7 +190,7 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
                   <Type.Caption color="neutral3" px={1}>
                     |
                   </Type.Caption>{' '}
-                  {formatNumber(sizeDelta, 4, 4)} {TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken].symbol}
+                  {formatNumber(sizeDelta, 4, 4)} {TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol}
                 </Type.CaptionBold>
               </StatsItemWrapperB>
               <StatsItemWrapperB>

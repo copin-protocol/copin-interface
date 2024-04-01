@@ -1,5 +1,4 @@
 import { CaretRight, ClockCounterClockwise } from '@phosphor-icons/react'
-import React from 'react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
@@ -269,7 +268,7 @@ export const historyColumns: ColumnData<PositionData>[] = [
 export const fullHistoryColumns: ColumnData<PositionData>[] = [
   openTimeColumn,
   closeTimeColumn,
-  entryColumn,
+  { ...entryColumn, style: { minWidth: 150 } },
   sizeColumn,
   leverageColumn,
   collateralColumn,
@@ -286,14 +285,14 @@ export const fullHistoryColumns: ColumnData<PositionData>[] = [
 
 export const fullOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
   openTimeColumn,
-  entryColumn,
-  sizeOpeningColumn,
+  { ...entryColumn, style: { minWidth: 150 } },
+  { ...sizeOpeningColumn, style: { minWidth: 200 } },
   collateralColumn,
   avgDurationColumn,
   orderCountColumn,
   feeColumn,
   roiOpeningColumn,
-  pnlOpeningColumn,
+  { ...pnlOpeningColumn, style: { minWidth: 100, textAlign: 'right' } },
   actionColumn,
 ]
 

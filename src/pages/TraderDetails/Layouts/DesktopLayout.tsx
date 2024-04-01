@@ -13,7 +13,7 @@ const DesktopLayout = (props: LayoutProps) => {
   const { myProfile } = useMyProfile()
 
   const [positionTopExpanded, toggleTopExpand] = useReducer((state) => !state, false)
-  const rowOneHeight = 'max(33%, 260px)'
+  const rowOneHeight = 'max(33%, 300px)'
 
   const logEventLayout = useCallback(
     (action: string) => {
@@ -27,95 +27,100 @@ const DesktopLayout = (props: LayoutProps) => {
   )
 
   return (
-    <Grid
-      sx={{
-        position: 'relative',
-        overflow: 'hidden',
-        height: '100%',
-        gridTemplate: `
-    "ACCOUNT ACCOUNT ACCOUNT" minmax(60px, 60px)
+    <Flex sx={{ height: '100%', width: '100%', flexDirection: 'column' }}>
+      <Box sx={{ flexShrink: 0, height: 56, borderBottom: 'small', borderBottomColor: 'neutral4' }}>
+        {props.protocolStats}
+      </Box>
+      <Box sx={{ flexShrink: 0, borderBottom: 'small', borderBottomColor: 'neutral4' }}>{props.traderInfo}</Box>
+      <Box flex="1 0 0" overflow="hidden">
+        <Grid
+          sx={{
+            height: '100%',
+            position: 'relative',
+            overflow: 'hidden',
+            gridTemplate: `
     "CHARTS STATS POSITIONS" minmax(0px, 1fr) / ${
-      openingPositionFullExpanded || positionFullExpanded ? '400px 0px 1fr' : '400px 1fr 510px'
+      openingPositionFullExpanded || positionFullExpanded ? '0px 0px 1fr' : '400px 1fr 510px'
       // positionFullExpanded ? '400px 0px 1fr' : chartFullExpanded ? '1fr 0px 510px' : '400px 1fr 510px'
     }
     `,
-      }}
-    >
-      <Box
-        id="ACCOUNT"
-        sx={{
-          gridArea: 'ACCOUNT / ACCOUNT',
-          borderBottom: 'small',
-          borderColor: 'neutral4',
-        }}
-      >
-        {props.traderInfo}
-      </Box>
-      <Box
-        id="STATS"
-        sx={{
-          gridArea: 'STATS / STATS',
-          overflow: 'hidden',
-        }}
-      >
-        {props.traderStats}
-      </Box>
-
-      <Box
-        id="CHARTS"
-        sx={{
-          gridArea: 'CHARTS / CHARTS',
-          // borderRight: chartFullExpanded ? 'none' : 'small',
-          borderRight: 'small',
-          borderColor: 'neutral4',
-          overflow: 'hidden',
-          display: 'grid',
-          gridTemplate: `
-            "RADAR" minmax(1fr, ${rowOneHeight})
-            "CANDLESTICK" minmax(1fr, 1fr)
-          `,
-          // "RADAR" ${chartFullExpanded ? '0px' : 'minmax(1fr, 260px)'}
-        }}
-      >
-        <Flex flexDirection="column" height="100%">
+          }}
+        >
           <Box
-            // height={chartFullExpanded ? 0 : 260}
-            height={rowOneHeight}
+            id="STATS"
             sx={{
-              gridArea: 'RADAR',
+              gridArea: 'STATS / STATS',
               overflow: 'hidden',
             }}
           >
-            {props.traderRanking}
-          </Box>
-          <Box
-            sx={{
-              gridArea: 'CANDLESTICK',
-              borderTop: chartFullExpanded ? 'none' : 'small',
-              borderColor: 'neutral4',
-              // height: 'max(calc(100% - 120px - 260px),200px)',
-              // '@media screen and (max-height: 800px)': {
-              // height: chartFullExpanded ? '100%' : 'max(calc(100% - 260px),200px)',
-              height: `max(calc(100% - ${rowOneHeight}),200px)`,
-              // },
-              ...(chartFullExpanded
-                ? {
-                    position: 'absolute',
-                    top: 60,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    bg: 'neutral8',
-                    height: 'auto',
-                    zIndex: 10,
-                  }
-                : {}),
-            }}
-          >
-            {props.traderChartPositions}
+            {props.traderStats}
           </Box>
 
-          {/* <Box
+          <Box
+            id="CHARTS"
+            sx={{
+              gridArea: 'CHARTS / CHARTS',
+              // borderRight: chartFullExpanded ? 'none' : 'small',
+              overflow: 'hidden',
+              display: 'grid',
+              gridTemplate: `
+            "RADAR" minmax(1fr, ${rowOneHeight})
+            "CANDLESTICK" minmax(1fr, 1fr)
+          `,
+              // "RADAR" ${chartFullExpanded ? '0px' : 'minmax(1fr, 260px)'}
+            }}
+          >
+            <Flex flexDirection="column" height="100%">
+              <Box
+                // height={chartFullExpanded ? 0 : 260}
+                height={rowOneHeight}
+                sx={{
+                  gridArea: 'RADAR',
+                  overflow: 'hidden',
+                  position: 'relative',
+                }}
+              >
+                {props.traderRanking}
+                <Box
+                  sx={{
+                    height: 'calc(100% - 72px)',
+                    width: '1px',
+                    bg: 'neutral4',
+                    position: 'absolute',
+                    right: 0,
+                    top: 56,
+                  }}
+                />
+              </Box>
+              <Box
+                sx={{
+                  gridArea: 'CANDLESTICK',
+                  borderRight: 'small',
+                  borderTop: chartFullExpanded ? 'none' : 'small',
+                  borderColor: 'neutral4',
+                  // height: 'max(calc(100% - 120px - 260px),200px)',
+                  // '@media screen and (max-height: 800px)': {
+                  // height: chartFullExpanded ? '100%' : 'max(calc(100% - 260px),200px)',
+                  height: `max(calc(100% - ${rowOneHeight}),200px)`,
+                  // },
+                  ...(chartFullExpanded
+                    ? {
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        bg: 'neutral8',
+                        height: 'auto',
+                        zIndex: 10,
+                      }
+                    : {}),
+                }}
+              >
+                {props.traderChartPositions}
+              </Box>
+
+              {/* <Box
             px={12}
             pt={12}
             height="120px"
@@ -129,17 +134,17 @@ const DesktopLayout = (props: LayoutProps) => {
           >
             {children[4]}
           </Box> */}
-        </Flex>
-      </Box>
-      <Box
-        id="POSITIONS"
-        sx={{
-          gridArea: 'POSITIONS / POSITIONS',
-          borderLeft: openingPositionFullExpanded || positionFullExpanded ? 'none' : 'small',
-          borderColor: 'neutral4',
-          overflow: 'hidden',
-          display: 'grid',
-          gridTemplate: `
+            </Flex>
+          </Box>
+          <Box
+            id="POSITIONS"
+            sx={{
+              gridArea: 'POSITIONS / POSITIONS',
+              borderLeft: openingPositionFullExpanded || positionFullExpanded ? 'none' : 'small',
+              borderColor: 'neutral4',
+              overflow: 'hidden',
+              display: 'grid',
+              gridTemplate: `
     "OPENINGS" ${
       openingPositionFullExpanded
         ? 'minmax(0px, 1fr)'
@@ -149,41 +154,44 @@ const DesktopLayout = (props: LayoutProps) => {
     }
     "HISTORY" ${openingPositionFullExpanded ? '0px' : 'minmax(0px, 1fr)'}
     `,
-        }}
-      >
-        <Box
-          sx={{
-            gridArea: 'OPENINGS',
-            overflow: 'hidden',
-            borderBottom: openingPositionFullExpanded || positionFullExpanded || positionTopExpanded ? 'none' : 'small',
-            borderBottomColor: 'neutral4',
-          }}
-        >
-          {props.openingPositions}
-        </Box>
-        <Box sx={{ gridArea: 'HISTORY', position: 'relative' }}>
-          <DirectionButton
-            onClick={() => {
-              toggleTopExpand()
+            }}
+          >
+            <Box
+              sx={{
+                gridArea: 'OPENINGS',
+                overflow: 'hidden',
+                borderBottom:
+                  openingPositionFullExpanded || positionFullExpanded || positionTopExpanded ? 'none' : 'small',
+                borderBottomColor: 'neutral4',
+              }}
+            >
+              {props.openingPositions}
+            </Box>
+            <Box sx={{ gridArea: 'HISTORY', position: 'relative' }}>
+              <DirectionButton
+                onClick={() => {
+                  toggleTopExpand()
 
-              if (positionTopExpanded) {
-                logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_POSITION_TOP)
-              } else {
-                logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].EXPAND_POSITION_TOP)
-              }
-            }}
-            buttonSx={{
-              display: openingPositionFullExpanded || positionFullExpanded ? 'none' : 'block',
-              top: positionTopExpanded ? '0px' : '-16px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-            }}
-            direction={positionTopExpanded ? 'bottom' : 'top'}
-          />
-          {props.closedPositions}
-        </Box>
+                  if (positionTopExpanded) {
+                    logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_POSITION_TOP)
+                  } else {
+                    logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].EXPAND_POSITION_TOP)
+                  }
+                }}
+                buttonSx={{
+                  display: openingPositionFullExpanded || positionFullExpanded ? 'none' : 'block',
+                  top: positionTopExpanded ? '0px' : '-16px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                }}
+                direction={positionTopExpanded ? 'bottom' : 'top'}
+              />
+              {props.closedPositions}
+            </Box>
+          </Box>
+        </Grid>
       </Box>
-    </Grid>
+    </Flex>
   )
 }
 

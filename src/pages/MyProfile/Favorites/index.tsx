@@ -7,7 +7,8 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoLoginFavorite from 'components/@ui/NoLogin/NoLoginFavorite'
 import { HomeSwitchProtocols } from 'components/SwitchProtocols'
 import useSearchParams from 'hooks/router/useSearchParams'
-import useTraderFavorites from 'hooks/store/useTraderFavorites'
+import { useProtocolStore } from 'hooks/store/useProtocols'
+import useTraderFavorites, { parseTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { BottomTabItemMobile, BottomTabWrapperMobile } from 'pages/@layouts/Components'
 import SortTradersDropdown from 'pages/Explorer/Layouts/SortTradersDropdown'
@@ -24,6 +25,7 @@ import ListTraderFavorites from './ListTraderFavorites'
 const Favorites = () => {
   const { setSearchParams } = useSearchParams()
   const { traderFavorites, notes, isLoading } = useTraderFavorites()
+  const { protocol } = useProtocolStore()
   const { isAuthenticated } = useAuthContext()
   const { pathname } = useLocation()
   const { sm } = useResponsive()
@@ -52,7 +54,13 @@ const Favorites = () => {
           </Flex>
         )}
         <Box flex="1 0 0">
-          <FilterTradersProvider key={pathname} tab={TabKeyEnum.Favorite} accounts={traderFavorites}>
+          <FilterTradersProvider
+            key={pathname}
+            tab={TabKeyEnum.Favorite}
+            accounts={traderFavorites
+              .filter((value) => parseTraderFavoriteValue(value).protocol === protocol)
+              .map((value) => parseTraderFavoriteValue(value).address)}
+          >
             <ListTraders notes={notes} />
           </FilterTradersProvider>
         </Box>

@@ -25,7 +25,7 @@ import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseWalletName } from 'utils/helpers/transform'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -229,7 +229,10 @@ function Activities() {
                   {addressShorten(data.username)}
                 </Box>{' '}
                 <Trans>copied a position from trader</Trans>{' '}
-                <Box as={Link} to={generateTraderDetailsRoute(data.protocol, data.sourceAccount)}>
+                <Box
+                  as={Link}
+                  to={generateTraderMultiExchangeRoute({ protocol: data.protocol, address: data.sourceAccount })}
+                >
                   {addressShorten(data.sourceAccount)}
                 </Box>{' '}
                 with a size of ${formatNumber((data?.volume ?? 0) * (data?.price ?? 0), 2, 2)}

@@ -60,7 +60,7 @@ export default function ChartProfitComponent({
   const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
     ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
     : undefined
-  const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken].symbol
+  const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken]?.symbol
   const from = useMemo(() => openBlockTime * 1000, [openBlockTime])
   const to = useMemo(() => (isOpening ? dayjs().utc().valueOf() : closeBlockTime * 1000), [closeBlockTime, isOpening])
   const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])

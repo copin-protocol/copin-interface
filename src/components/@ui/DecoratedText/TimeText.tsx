@@ -7,15 +7,28 @@ import { themeColors } from 'theme/colors'
 import { DATE_FORMAT, DAYJS_FULL_DATE_FORMAT, TIME_FORMAT } from 'utils/config/constants'
 import { formatLocalDate, formatLocalRelativeDate, formatLocalRelativeShortDate } from 'utils/helpers/format'
 
-export const RelativeTimeText = ({ date }: { date: string | undefined }) => {
+export const RelativeTimeText = ({
+  date,
+  tooltipLabel = '',
+  hasTooltip = true,
+}: {
+  date: string | undefined
+  tooltipLabel?: ReactNode
+  hasTooltip?: boolean
+}) => {
   const uuid = uuidv4()
   const tooltipId = `tt_${uuid}`
   return (
     <Box as="span" sx={{ display: 'block' }} data-tip="React-tooltip" data-tooltip-id={tooltipId}>
       <span>{`${formatLocalRelativeDate(date ?? '')}`}</span>
-      <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
-        <Type.Caption sx={{ maxWidth: [300, 400] }}>{formatLocalDate(date ?? '', DAYJS_FULL_DATE_FORMAT)}</Type.Caption>
-      </Tooltip>
+      {hasTooltip && (
+        <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
+          <Type.Caption sx={{ maxWidth: [300, 400] }}>
+            {tooltipLabel}
+            {formatLocalDate(date ?? '', DAYJS_FULL_DATE_FORMAT)}
+          </Type.Caption>
+        </Tooltip>
+      )}
     </Box>
   )
 }

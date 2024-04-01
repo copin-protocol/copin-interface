@@ -40,9 +40,10 @@ export const BASE_RANGE_FILTER: RangeFilter<keyof TraderData>[] = [
   { fieldName: 'winRate', gte: 51 },
 ]
 
-export const ALLOWED_PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
+export const ALLOWED_PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.GMX_V2, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
 export const INTERNAL_ALLOWED_PROTOCOLS = [
   ProtocolEnum.GMX,
+  ProtocolEnum.GMX_V2,
   ProtocolEnum.KWENTA,
   ProtocolEnum.POLYNOMIAL,
   ProtocolEnum.GNS,

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
-import { getTraderStatisticApi, getTraderTokensStatistic } from 'apis/traderApis'
+import { getTraderExchangeStatistic, getTraderStatisticApi, getTraderTokensStatistic } from 'apis/traderApis'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
 import NotFound from 'components/@ui/NotFound'
@@ -18,8 +18,8 @@ import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import usePageChange from 'hooks/helpers/usePageChange'
-import useTraderCopying from 'hooks/store/useTraderCopying'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
+import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
@@ -35,6 +35,7 @@ import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
 import useHandleLayout from './Layouts/useHandleLayout'
+import ProtocolStats from './ProtocolStats'
 import TraderActionButtons from './TraderActionButtons'
 import TraderInfo from './TraderInfo'
 import TraderRanking from './TraderRanking'
@@ -52,15 +53,15 @@ export default function TraderDetails() {
     [isPremiumUser]
   )
 
-  const { address, protocol } = useParams<{ address: string; protocol: ProtocolEnum }>()
-  const _address = isAddress(address)
-  const { isLastViewed, addTraderLastViewed } = useTraderLastViewed(protocol, _address)
+  const { address: _address, protocol: _protocol } = useParams<{ address: string; protocol: ProtocolEnum }>()
+  const address = isAddress(_address)
+  const protocol = _protocol.split('-')[0].toUpperCase() as ProtocolEnum
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
-    [QUERY_KEYS.GET_TRADER_DETAIL, _address, protocol, isPremiumUser],
-    () => getTraderStatisticApi({ protocol, account: _address }),
+    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol, isPremiumUser],
+    () => getTraderStatisticApi({ protocol, account: address }),
     {
-      enabled: !!_address,
+      enabled: !!address,
       retry: 0,
       select: (data) =>
         timeFilterOptions
@@ -71,9 +72,9 @@ export default function TraderDetails() {
     }
   )
   const { data: tokensStatistic } = useQuery(
-    [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, _address],
-    () => getTraderTokensStatistic({ protocol, account: _address }),
-    { enabled: !!_address && !!protocol }
+    [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, address],
+    () => getTraderTokensStatistic({ protocol, account: address }),
+    { enabled: !!address && !!protocol }
   )
 
   const tokenOptions = useMemo(() => {
@@ -95,7 +96,7 @@ export default function TraderDetails() {
   const { currentOption: timeOption, changeCurrentOption } = useOptionChange({
     optionName: URL_PARAM_KEYS.EXPLORER_TIME_FILTER,
     options: timeFilterOptions,
-    defaultOption: timeFilterOptions[timeFilterOptions.length - 1].id as unknown as string,
+    defaultOption: timeFilterOptions[2].id as unknown as string,
   })
   const { currentPage, changeCurrentPage } = usePageChange({ pageName: URL_PARAM_KEYS.TRADER_HISTORY_PAGE })
   const [currentSort, setCurrentSort] = useState<TableSortProps<PositionData> | undefined>({
@@ -137,7 +138,7 @@ export default function TraderDetails() {
     handleFetchClosedPositions,
     hasNextClosedPositions,
   } = useQueryPositions({
-    address: _address,
+    address,
     protocol,
     currencyOption,
     currentSort,
@@ -152,20 +153,17 @@ export default function TraderDetails() {
 
   const refetchQueries = useRefetchQueries()
   const [, setForceReload] = useState(1)
-  const { saveTraderCopying } = useTraderCopying(undefined, undefined)
   const onForceReload = () => {
     refetchQueries([QUERY_KEYS.USE_GET_ALL_COPY_TRADES])
     setForceReload((prev) => prev + 1)
-    if (currentTraderData) {
-      saveTraderCopying(currentTraderData.account, currentTraderData.protocol)
-    }
   }
 
+  const { isLastViewed, addTraderLastViewed } = useTraderLastViewed(protocol, address)
   useEffect(() => {
-    if (_address && protocol && !isLastViewed) {
-      addTraderLastViewed(protocol, _address)
+    if (address && protocol && !isLastViewed) {
+      addTraderLastViewed(protocol, address)
     }
-  }, [])
+  }, [address, protocol, isLastViewed])
 
   const { lg, xl } = useResponsive()
 
@@ -188,12 +186,21 @@ export default function TraderDetails() {
     handleChartFullExpand,
   } = useHandleLayout()
 
-  if (!_address) return <NotFound title="Trader not found" message="" /> // todo: temp remove for test
+  const { data: exchangeStats } = useQuery([QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address], () =>
+    getTraderExchangeStatistic({ account: address })
+  )
+
+  if (!PROTOCOL_OPTIONS_MAPPING[protocol]) {
+    return <NotFound title="Protocol not support" message="" />
+  }
+
+  if (!address) return <NotFound title="Trader not found" message="" />
 
   return (
     <>
       <CustomPageTitle title={`Trader ${addressShorten(_address)} on ${PROTOCOL_OPTIONS_MAPPING[protocol].text}`} />
       <Layout
+        protocolStats={<ProtocolStats page="details" exchangeStats={exchangeStats} />}
         traderInfo={
           <BotAlertProvider>
             <Flex
@@ -206,46 +213,57 @@ export default function TraderDetails() {
                 gap: 3,
               }}
             >
-              <TraderInfo
-                address={_address}
-                protocol={protocol}
+              <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
+              <TraderActionButtons
                 traderData={currentTraderData}
                 timeOption={timeOption}
-                traderStats={traderData}
+                onChangeTime={setTimeOption}
+                account={address}
+                protocol={protocol}
+                onCopyActionSuccess={onForceReload}
               />
-              <TraderActionButtons account={_address} protocol={protocol} onCopyActionSuccess={onForceReload} />
             </Flex>
           </BotAlertProvider>
         }
         traderStats={
-          <Box height="100%">
-            {!currentTraderData && (!traderData || traderData?.every((data) => !data)) ? (
-              <NoDataFound message="No statistic" />
+          <Box height="100%" sx={{ flexDirection: 'column', display: ['block', 'block', 'block', 'block', 'flex'] }}>
+            {isLoadingTraderData ? (
+              <Loading />
             ) : (
               <>
-                <Flex
-                  sx={{
-                    width: '100%',
-                    height: 'max(33%, 260px)',
-                    flexDirection: 'column',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <GeneralStats traderData={currentTraderData} />
-                  {protocol && _address && (
-                    <Box flex="1 0 0">
-                      <ChartTrader
-                        protocol={protocol}
-                        account={_address}
-                        timeOption={timeOption}
-                        onChangeTime={setTimeOption}
-                      />
+                {!currentTraderData && (!traderData || traderData?.every((data) => !data)) ? (
+                  <NoDataFound message="No statistic" />
+                ) : (
+                  <>
+                    <Flex
+                      sx={{
+                        width: '100%',
+                        height: [300, 300, 300, 260, 'max(33%, 300px)'],
+                        flexDirection: 'column',
+                        overflow: 'hidden',
+                        bg: 'neutral5',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <GeneralStats traderData={currentTraderData} />
+                      {protocol && address && (
+                        <Box flex="1 0 0">
+                          <ChartTrader
+                            protocol={protocol}
+                            account={address}
+                            timeOption={timeOption}
+                            onChangeTime={setTimeOption}
+                          />
+                        </Box>
+                      )}
+                    </Flex>
+                    <Box overflow="auto" flex="1 0 0" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative' }}>
+                      <Box height="100%">
+                        {!!traderData && <TraderStats data={traderData} timeOption={timeOption} />}
+                      </Box>
                     </Box>
-                  )}
-                </Flex>
-                <Box overflow="auto" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative', maxHeight: '67%' }}>
-                  {!!traderData && <TraderStats data={traderData} timeOption={timeOption} />}
-                </Box>
+                  </>
+                )}
               </>
             )}
           </Box>
@@ -253,7 +271,7 @@ export default function TraderDetails() {
         traderRanking={<TraderRanking data={currentTraderData} timeOption={timeOption} onChangeTime={setTimeOption} />}
         traderChartPositions={
           <TraderChartPositions
-            account={_address}
+            account={address}
             protocol={protocol}
             isExpanded={chartFullExpanded}
             handleExpand={handleChartFullExpand}

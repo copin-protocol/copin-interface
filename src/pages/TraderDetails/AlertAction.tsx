@@ -98,13 +98,13 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
   return (
     <>
       <ButtonWithIcon
-        width={['100%', '100%', '100%', 105]}
+        width={['100%', '100%', '100%', 'auto']}
         sx={{
+          px: 3,
           borderRadius: 0,
           height: '100%',
-          borderLeft: ['none', 'small', 'small', 'small'],
-          borderTop: ['small', 'small', 'small', 'none'],
-          borderColor: ['neutral4', 'neutral4', 'neutral4', 'neutral4'],
+          color: 'neutral2',
+          '&:hover:not(:disabled)': { color: 'neutral1' },
         }}
         variant={currentAlert ? 'ghostDanger' : 'ghost'}
         icon={currentAlert ? <AlertOffIcon /> : <AlertIcon />}

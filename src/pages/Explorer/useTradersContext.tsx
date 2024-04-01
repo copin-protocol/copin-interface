@@ -91,7 +91,7 @@ export function FilterTradersProvider({
   const { currentOption: timeOption, setCurrentOption: setTimeOption } = useOptionChange({
     optionName: timeFilterKey,
     options: TIME_FILTER_OPTIONS,
-    defaultOption: isPremiumUser ? TimeFilterByEnum.ALL_TIME.toString() : TimeFilterByEnum.S30_DAY.toString(),
+    defaultOption: TimeFilterByEnum.S30_DAY.toString(),
     // optionNameToBeDelete: [rangeFilterKey],
     // callback: () => {
     //   changeCurrentPage(1)

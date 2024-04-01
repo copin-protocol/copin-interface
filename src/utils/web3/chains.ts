@@ -3,17 +3,19 @@ import { Chain, NativeCurrency } from 'utils/web3/types'
 
 export const ETHEREUM_MAINNET = 1
 export const GOERLI = 5
+export const SEPOLIA = 11155111
 export const OPTIMISM_MAINNET = 10
 export const OPTIMISM_GOERLI = 420
+export const OPTIMISM_SEPOLIA = 11155420
 export const ARBITRUM_MAINNET = 42161
 export const ARBITRUM_GOERLI = 421613
 export const ZKSYNC_ERA_MAINNET = 324
-export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_GOERLI : OPTIMISM_MAINNET
-export const SUBSCRIPTION_CHAIN_ID = NETWORK === 'devnet' ? GOERLI : OPTIMISM_MAINNET
+export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
+export const SUBSCRIPTION_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 
 export const SUPPORTED_CHAIN_IDS: number[] =
   NETWORK === 'devnet'
-    ? [GOERLI, OPTIMISM_GOERLI, ARBITRUM_GOERLI]
+    ? [GOERLI, SEPOLIA, OPTIMISM_GOERLI, OPTIMISM_SEPOLIA, ARBITRUM_GOERLI]
     : [ETHEREUM_MAINNET, ARBITRUM_MAINNET, OPTIMISM_MAINNET]
 
 const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
@@ -43,6 +45,11 @@ const SECONDARY_TOKENS: {
   [OPTIMISM_GOERLI]: [
     {
       address: '0xeBaEAAD9236615542844adC5c149F86C36aD1136',
+    },
+  ],
+  [OPTIMISM_SEPOLIA]: [
+    {
+      address: '0xD7D674d80e79CF3A3b67D6a510AC1B0493dF47cF',
     },
   ],
 }
@@ -84,6 +91,15 @@ const CHAINS: { [key: number]: Chain } = {
     blockExplorerUrl: 'https://goerli.etherscan.io',
     secondaryTokens: SECONDARY_TOKENS[GOERLI],
   },
+  [SEPOLIA]: {
+    id: `0x${SEPOLIA.toString(16)}`,
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    label: 'Sepolia',
+    icon: 'ETH',
+    rpcUrl: 'https://ethereum-sepolia-rpc.publicnode.com',
+    blockExplorerUrl: 'https://sepolia.etherscan.io',
+    secondaryTokens: SECONDARY_TOKENS[SEPOLIA],
+  },
   [OPTIMISM_GOERLI]: {
     id: `0x${OPTIMISM_GOERLI.toString(16)}`,
     token: NATIVE_CURRENCIES.ETH.symbol,
@@ -92,6 +108,15 @@ const CHAINS: { [key: number]: Chain } = {
     rpcUrl: 'https://optimism-goerli.publicnode.com',
     blockExplorerUrl: 'https://goerli-optimism.etherscan.io',
     secondaryTokens: SECONDARY_TOKENS[OPTIMISM_GOERLI],
+  },
+  [OPTIMISM_SEPOLIA]: {
+    id: `0x${OPTIMISM_SEPOLIA.toString(16)}`,
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    label: 'Optimism Sepolia',
+    icon: 'OP',
+    rpcUrl: 'https://optimism-sepolia.publicnode.com',
+    blockExplorerUrl: 'https://sepolia-optimism.etherscan.io',
+    secondaryTokens: SECONDARY_TOKENS[OPTIMISM_SEPOLIA],
   },
   [ARBITRUM_GOERLI]: {
     id: `0x${ARBITRUM_GOERLI.toString(16)}`,

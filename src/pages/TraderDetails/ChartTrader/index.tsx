@@ -48,7 +48,7 @@ const ChartTrader = ({
   )
 
   return (
-    <Flex mt={[0, 4, 4, 0]} sx={{ width: '100%', height: '100%', flexDirection: 'column', px: 12, pt: 12, pb: 1 }}>
+    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', px: 12, pt: 12, pb: 1 }}>
       {loadingStats && <Loading />}
       {stats && !loadingStats && (
         <>
@@ -60,6 +60,7 @@ const ChartTrader = ({
             </Flex>
             <Flex alignItems="center">
               <ButtonWithIcon
+                sx={{ border: 'none' }}
                 icon={
                   <Box color={!isBarChart ? 'primary1' : 'neutral3'}>
                     <ChartLine size={20} />
@@ -72,7 +73,6 @@ const ChartTrader = ({
                 onClick={() => {
                   setIsBarChart(false)
                 }}
-                sx={{ borderBottomRightRadius: 0, borderTopRightRadius: 0 }}
                 data-tip="React-tooltip"
                 data-tooltip-id="trader_line_chart"
                 data-tooltip-offset={8}
@@ -90,7 +90,7 @@ const ChartTrader = ({
                 onClick={() => {
                   setIsBarChart(true)
                 }}
-                sx={{ borderBottomLeftRadius: 0, borderTopLeftRadius: 0, borderLeft: 'none' }}
+                sx={{ border: 'none' }}
                 data-tip="React-tooltip"
                 data-tooltip-id="trader_bar_chart"
                 data-tooltip-offset={8}

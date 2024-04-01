@@ -93,6 +93,7 @@ export default function OpeningPositionTable({
 
   return (
     <Box
+      className="opening"
       display={['block', 'block', 'block', 'flex']}
       flexDirection="column"
       height="100%"
@@ -118,8 +119,8 @@ export default function OpeningPositionTable({
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderRadius: 'sm',
-                  border: 'small',
-                  borderColor: 'neutral4',
+                  // border: 'small',
+                  // borderColor: 'neutral4',
                   color: 'neutral2',
                   '&:hover': { color: 'neutral1' },
                 }}

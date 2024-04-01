@@ -47,7 +47,7 @@ export default function CopyChartProfit({
   const { prices } = useGetUsdPrices()
   const { sm } = useResponsive()
   const [markerId, setMarkerId] = useState<string | undefined>()
-  const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken].symbol
+  const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken]?.symbol
   const from = openBlockTime * 1000
   const to = useMemo(() => (isOpening ? dayjs().utc().valueOf() : closeBlockTime * 1000), [closeBlockTime, isOpening])
   const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])

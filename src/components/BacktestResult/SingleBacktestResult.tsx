@@ -24,7 +24,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { ALL_OPTION, getDefaultTokenOptions } from 'utils/config/trades'
 import { addressShorten, formatLocalDate, formatNumber } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import ResultStats from './ResultStats'
 import BacktestSettings, { SettingItem } from './Settings'
@@ -166,7 +166,7 @@ export default function SingleBacktestResult({
                 ...(disabledShare ? { color: 'neutral1', '&:hover': { color: 'primary1' } } : {}),
               }}
               as={disabledShare ? Link : 'div'}
-              to={disabledShare ? generateTraderDetailsRoute(protocol, account) : ''}
+              to={disabledShare ? generateTraderMultiExchangeRoute({ protocol, address: account }) : ''}
               target="_blank"
             >
               <AddressAvatar address={account} size={40} />

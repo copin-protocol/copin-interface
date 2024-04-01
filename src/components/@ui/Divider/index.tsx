@@ -7,6 +7,7 @@ const Divider = ({ color = 'neutral4', isDashed = false, ...props }: { color?: s
     <Box
       {...props}
       sx={{
+        flexShrink: 0,
         height: '1px',
         bg: isDashed ? 'transparent' : color,
         borderTop: isDashed ? '1px dashed' : undefined,

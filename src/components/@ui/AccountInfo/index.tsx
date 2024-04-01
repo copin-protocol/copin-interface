@@ -12,7 +12,7 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { addressShorten, shortenText } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 export function AccountInfo({
   isOpenPosition,
@@ -44,7 +44,7 @@ export function AccountInfo({
   return (
     <Flex
       as={Link}
-      to={generateTraderDetailsRoute(protocol, address, { type })}
+      to={generateTraderMultiExchangeRoute({ protocol, address, params: { time: type } })}
       // target="_blank"
       alignItems="center"
       sx={{

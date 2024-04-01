@@ -15,7 +15,7 @@ import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
 import { Flex, IconBox, Image, Type } from 'theme/base'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 export type ExternalSource = {
   isCurrentLeaderboard?: boolean
@@ -165,7 +165,7 @@ export function AccountInfo({
   return (
     <Flex
       as={Link}
-      to={generateTraderDetailsRoute(protocol, info.account)}
+      to={generateTraderMultiExchangeRoute({ protocol, address: info.account })}
       // target="_blank"
       alignItems="center"
       sx={{

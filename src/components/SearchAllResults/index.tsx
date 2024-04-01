@@ -11,7 +11,7 @@ import { TraderData } from 'entities/trader'
 import { PaginationWithLimit } from 'theme/Pagination'
 import { Box, Flex, Type } from 'theme/base'
 import { formatNumber } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import { ExternalSource, searchResultsColumn } from './ColumnsData'
 
@@ -43,7 +43,7 @@ const SearchAllResults = ({
   const history = useHistory()
 
   const handleSelectItem = (data: TraderData) => {
-    history.push(generateTraderDetailsRoute(data.protocol, data.account))
+    history.push(generateTraderMultiExchangeRoute({ protocol: data.protocol, address: data.account }))
   }
 
   const externalSource: ExternalSource = {

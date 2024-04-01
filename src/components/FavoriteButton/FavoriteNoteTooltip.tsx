@@ -32,6 +32,7 @@ const FavoriteNoteTooltip = () => {
     submitting,
     setTraderFavorite,
     tooltipAddress: address,
+    tooltipProtocol: protocol,
     tooltipPosition: position,
     setTooltip,
   } = useTraderFavorites()
@@ -84,7 +85,7 @@ const FavoriteNoteTooltip = () => {
           transform: position && position?.top > 200 ? 'translateY(calc(-100% - 4px))' : 'translateY(28px)',
         }}
       >
-        {!!address && (
+        {!!address && !!protocol && (
           <OutsideClickHandler
             onOutsideClick={(e) => {
               e.stopPropagation()
@@ -99,7 +100,7 @@ const FavoriteNoteTooltip = () => {
               onSubmit={(e) => {
                 e.stopPropagation()
                 e.preventDefault()
-                setTraderFavorite(address, note)
+                setTraderFavorite({ address, protocol, note })
                 reset()
                 logEventFavorite(
                   !!note

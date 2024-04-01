@@ -62,7 +62,7 @@ const ActivityHeatmap = ({ protocol, account }: { protocol: ProtocolEnum; accoun
     return heatmapData
   }, [days, data])
   return (
-    <Box ref={ref} sx={{ position: 'relative', width: '100%' }}>
+    <Box ref={ref} sx={{ position: 'relative', width: '100%', svg: { float: 'right' } }}>
       {!!heatmapData && (
         <>
           <ActivityCalendar

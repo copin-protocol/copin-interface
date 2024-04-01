@@ -135,11 +135,26 @@ export default function HistoryTable({
 
   return (
     <Box display={['block', 'block', 'block', 'flex']} flexDirection="column" height={['auto', 'auto', 'auto', '100%']}>
-      <Flex pt={16} pb={12} px={12} alignItems="center" sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}>
-        <Box flex="1">
+      <Flex pt={16} px={12} pb={12} alignItems="center">
+        <Box flex="1" sx={{ '& > *': { pb: 0 } }}>
           <SectionTitle icon={<ClockCounterClockwise size={24} />} title="History" />
         </Box>
-        <Flex sx={{ alignItems: 'center', gap: 2 }}>
+        <Flex
+          sx={{
+            alignItems: 'center',
+            gap: 2,
+            '.select__control': { border: 'none !important' },
+            '.currency_option': { width: 'auto !important' },
+            '.select__value-container': { p: '0 !important', '*': { p: '0 !important' } },
+          }}
+        >
+          <CurrencyOption
+            options={tokenOptions}
+            currentOption={currencyOption}
+            handleChangeOption={(option) => {
+              changeCurrency(option)
+            }}
+          />
           <ButtonWithIcon
             icon={
               <Box color={heatmapVisible ? 'primary1' : 'neutral3'}>
@@ -163,55 +178,52 @@ export default function HistoryTable({
             data-tooltip-id="history_table_heatmap"
             data-tooltip-offset={8}
           />
-          <ButtonWithIcon
-            icon={
-              <Box color={showChart ? 'primary1' : 'neutral3'}>
-                <ChartBarHorizontal size={20} />
-              </Box>
-            }
-            variant="ghost"
-            p={0}
-            width={'auto'}
-            block
-            onClick={() => {
-              if (showChart) {
-                logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_PNL_CHART)
-              } else {
-                logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].SHOW_PNL_CHART)
-              }
+          {sm && (
+            <>
+              <ButtonWithIcon
+                icon={
+                  <Box color={showChart ? 'primary1' : 'neutral3'}>
+                    <ChartBarHorizontal size={20} />
+                  </Box>
+                }
+                variant="ghost"
+                p={0}
+                width={'auto'}
+                block
+                onClick={() => {
+                  if (showChart) {
+                    logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_PNL_CHART)
+                  } else {
+                    logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].SHOW_PNL_CHART)
+                  }
 
-              setShowChart(!showChart)
-            }}
-            data-tip="React-tooltip"
-            data-tooltip-id="history_table_chart"
-            data-tooltip-offset={8}
-          />
-          <Tooltip id="history_table_chart" place="bottom" type="dark" effect="solid">
-            <Type.Caption>Show/Hide PnL Chart</Type.Caption>
-          </Tooltip>
+                  setShowChart(!showChart)
+                }}
+                data-tip="React-tooltip"
+                data-tooltip-id="history_table_chart"
+                data-tooltip-offset={8}
+              />
+              <Tooltip id="history_table_chart" place="bottom" type="dark" effect="solid">
+                <Type.Caption>Show/Hide PnL Chart</Type.Caption>
+              </Tooltip>
+            </>
+          )}
           <Tooltip id="history_table_heatmap" place="bottom" type="dark" effect="solid">
             <Type.Caption>Show/Hide Heatmap Activity</Type.Caption>
           </Tooltip>
-          <CurrencyOption
-            options={tokenOptions}
-            currentOption={currencyOption}
-            handleChangeOption={(option) => {
-              changeCurrency(option)
-            }}
-          />
           {toggleExpand && (
             <IconBox
               icon={isExpanded ? <ArrowsIn size={20} /> : <ArrowsOutSimple size={20} />}
               role="button"
               sx={{
-                width: 32,
-                height: 32,
+                width: 24,
+                height: 24,
                 display: ['none', 'none', 'none', 'none', 'flex'],
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderRadius: 'sm',
-                border: 'small',
-                borderColor: 'neutral4',
+                // border: 'small',
+                // borderColor: 'neutral4',
                 color: 'neutral2',
                 '&:hover': { color: 'neutral1' },
               }}

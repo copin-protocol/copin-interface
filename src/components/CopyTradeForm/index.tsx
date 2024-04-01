@@ -6,6 +6,8 @@ import { ReactNode, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Divider from 'components/@ui/Divider'
+import ProtocolWithChainIcon from 'components/@ui/ProtocolWithChainIcon'
+import { renderTrader } from 'components/@ui/Table/renderProps'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
@@ -25,6 +27,7 @@ import { LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { INTERNAL_SERVICE_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
+import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { TOKEN_TRADE_IGNORE, getTokenTradeList } from 'utils/config/trades'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
@@ -159,11 +162,24 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const permissionToSelectProtocol = useCopyTradePermission(true)
   const { sm } = useResponsive()
 
+  const protocolOption = protocol && PROTOCOL_OPTIONS_MAPPING[protocol]
+
   return (
     <>
-      <Type.Caption color="orange1" mb={1} px={[12, 24]}>
+      <Type.Caption color="orange1" mb={20} px={[12, 24]}>
         <Trans>This is a beta feature. Please copy at your own risk.</Trans>
       </Type.Caption>
+      {account && protocol && (
+        <Flex mb={1} px={[12, 24]} sx={{ alignItems: 'center', gap: 2 }}>
+          {renderTrader(account, protocol)}
+          <Type.Caption>-</Type.Caption>
+          <Flex sx={{ alignItems: 'center', gap: 2 }}>
+            <ProtocolWithChainIcon protocol={protocol} size={12} />
+            <Type.Caption>{protocolOption?.text}</Type.Caption>
+          </Flex>
+        </Flex>
+      )}
+
       <Box sx={{ pb: 24, px: [12, 24], pt: 3 }}>
         <InputField block {...register(fieldName.title)} error={errors.title?.message} label="Label" />
         {(isEdit || isClone) && (

@@ -6,7 +6,7 @@ import { Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
 import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { addressShorten } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
 import AddressAvatar from './@ui/AddressAvatar'
@@ -42,7 +42,7 @@ export default function TraderAddress({
   return (
     <Flex
       as={isLink && protocol ? Link : undefined}
-      to={isLink && protocol ? generateTraderDetailsRoute(protocol, address, { type: timeType }) : ''}
+      to={isLink && protocol ? generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeType } }) : ''}
       sx={{ gap: 2, ...wrapperSx }}
       alignItems="center"
     >

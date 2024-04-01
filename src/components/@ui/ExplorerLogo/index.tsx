@@ -9,8 +9,9 @@ const ExplorerLogo = ({
   protocol,
   explorerUrl,
   size = 20,
+  sx = {},
   ...props
-}: { protocol: string; explorerUrl: string; size?: number } & BoxProps) => {
+}: { protocol: string; explorerUrl?: string; size?: number } & BoxProps) => {
   let icon
   switch (protocol) {
     case ProtocolEnum.GNS:
@@ -25,10 +26,16 @@ const ExplorerLogo = ({
       icon = 'OPTIMISM'
   }
   return (
-    <Box sx={{ width: size, height: size, filter: 'grayscale(100%)', ':hover': { filter: 'none' } }} {...props}>
-      <a href={explorerUrl} target="_blank" rel="noreferrer">
+    <Box sx={{ width: size, height: size, filter: 'grayscale(100%)', ':hover': { filter: 'none' }, ...sx }} {...props}>
+      <Box
+        as={explorerUrl ? 'a' : undefined}
+        href={explorerUrl}
+        target="_blank"
+        rel="noreferrer"
+        sx={{ height: size, display: 'block', lineHeight: `${size}px` }}
+      >
         <img width="100%" src={`/images/protocols/ic-${icon}-explorer.png`} alt={protocol} />
-      </a>
+      </Box>
     </Box>
   )
 }

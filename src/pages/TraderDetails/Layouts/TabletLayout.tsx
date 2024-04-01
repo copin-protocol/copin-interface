@@ -9,7 +9,16 @@ const TabletLayout = (props: LayoutProps) => {
     <>
       <Box
         width="100%"
-        height={60}
+        height={56}
+        sx={{
+          borderBottom: 'small',
+          borderColor: 'neutral4',
+        }}
+      >
+        {props.protocolStats}
+      </Box>
+      <Box
+        width="100%"
         sx={{
           borderBottom: 'small',
           borderColor: 'neutral4',
@@ -33,7 +42,7 @@ const TabletLayout = (props: LayoutProps) => {
         >
           <Box>{props.traderStats}</Box>
         </Box>
-        <Box flex="0 0 500px">
+        <Box flex="1" minHeight={700}>
           <Flex flexDirection="column" height="100%">
             <Box
               height={261}

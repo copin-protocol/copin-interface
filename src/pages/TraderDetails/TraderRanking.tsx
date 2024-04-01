@@ -52,20 +52,34 @@ function TraderRanking({
         flexDirection: 'column',
         alignItems: 'center',
         position: 'relative',
-        paddingTop: [3, 56, 56, 10],
+        // paddingTop: [3, 56, 56, 10],
+        bg: 'neutral5',
       }}
     >
-      <Type.CaptionBold sx={{ width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">
-        <Flex sx={{ alignItems: 'center', justifyContent: 'center', width: '100%', gap: '0.5ch' }}>
-          <Box as="span">Better than {avgScore.toFixed(0)}% traders in</Box>
-          <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
+      <Flex
+        sx={{
+          flexShrink: 0,
+          px: 3,
+          width: '100%',
+          alignItems: 'center',
+          height: 40,
+          borderBottom: 'small',
+          borderBottomColor: 'neutral4',
+        }}
+      >
+        <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
+      </Flex>
+      <Type.CaptionBold mt={12} sx={{ px: 3, width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">
+        <Flex sx={{ alignItems: 'center', justifyContent: 'start', width: '100%', gap: 12 }}>
+          <Box as="span">Better than {avgScore.toFixed(0)}% traders</Box>
+          <CustomizeRankingColumns />
         </Flex>
       </Type.CaptionBold>
       <Flex sx={{ flex: 1, alignItems: 'center', justifyContent: 'center', width: '100%' }}>
         <ScoreChart data={ranking} width={400} height={175} />
       </Flex>
-      <Box sx={{ display: ['none', 'none', 'block'], width: 'calc(100% - 32px)', height: '1px', bg: 'neutral4' }} />
-      <Box
+      {/* <Box sx={{ display: ['none', 'none', 'block'], width: 'calc(100% - 32px)', height: '1px', bg: 'neutral4' }} /> */}
+      {/* <Box
         sx={{
           display: ['none', 'none', 'flex'],
           alignItems: 'center',
@@ -81,10 +95,7 @@ function TraderRanking({
           timeOption={timeOption}
           onChangeTime={onChangeTime}
         />
-      </Box>
-      <Flex sx={{ position: 'absolute', top: [16, 50, 50, 10], right: 10, alignItems: 'center', gap: 2 }}>
-        <CustomizeRankingColumns />
-      </Flex>
+      </Box> */}
     </Flex>
   )
 }

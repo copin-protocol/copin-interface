@@ -118,7 +118,6 @@ const CopyButton = ({
           alignItems: 'center',
           justifyContent: direction === 'center' ? 'center' : 'space-between',
           flexDirection: direction === 'right' ? 'row-reverse' : 'row',
-
           ...sx,
         }}
         {...props}

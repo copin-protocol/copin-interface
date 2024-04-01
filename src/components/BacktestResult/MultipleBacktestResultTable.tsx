@@ -20,10 +20,10 @@ import { PaginationWithSelect } from 'theme/Pagination'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { CopyTradeTypeEnum, SortTypeEnum } from 'utils/config/enums'
+import { CopyTradeTypeEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { getPaginationDataFromList } from 'utils/helpers/transform'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
@@ -258,10 +258,13 @@ export const multipleBacktestResultColumns: ColumnData<TableResultData, RequestB
     style: { minWidth: '150px' },
     render: (item) => {
       if (!item.traderData) return
-      const { account = '' } = item
+      const { account = '', protocol = ProtocolEnum.GMX } = item
       return (
         <Box color="neutral1">
-          <AccountCell data={item.traderData} additionalComponent={<FavoriteButton address={account} size={16} />} />
+          <AccountCell
+            data={item.traderData}
+            additionalComponent={<FavoriteButton address={account} protocol={protocol} size={16} />}
+          />
         </Box>
       )
     },
@@ -454,7 +457,7 @@ export const multipleBacktestResultColumns: ColumnData<TableResultData, RequestB
         if (!value) return result
         return result + `&${key}=${encodeURIComponent(value)}`
       }, '')
-      const link = `${generateTraderDetailsRoute(item.protocol, item.account)}?${
+      const link = `${generateTraderMultiExchangeRoute({ protocol: item.protocol, address: item.account })}?${
         URL_PARAM_KEYS.BACKTEST_DATA
       }=1${backtestQuery}&${URL_PARAM_KEYS.OPEN_BACKTEST_MODAL}=1`
       return (

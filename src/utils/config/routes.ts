@@ -94,6 +94,18 @@ const ROUTES = {
   COMPARING_TRADERS: {
     path: '/compare',
   },
+  TRADER_DETAILS_WRAPPER: {
+    path: '/trader/:address',
+    path_prefix: '/trader',
+  },
+  TRADER_DETAILS_MULTI_EXCHANGE: {
+    path: '/trader/:address/:protocol',
+    path_prefix: '/trader',
+  },
+  TRADER_EXCHANGES_STATS: {
+    path: '/trader/stats/:address/:protocol',
+    path_prefix: '/trader/stats',
+  },
 }
 
 export default ROUTES

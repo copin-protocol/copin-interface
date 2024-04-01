@@ -19,7 +19,7 @@ import { PositionStatusEnum, ProtocolEnum, TraderStatusEnum } from 'utils/config
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import ChartProfit from './ChartProfit'
 import ListOrderTable from './ListOrderTable'
@@ -62,7 +62,7 @@ export default function PositionDetails({
           <Flex p={12} alignItems="center" justifyContent="space-between" flexWrap="wrap" sx={{ gap: 2 }}>
             <Flex alignItems="center" sx={{ gap: 12 }}>
               <AddressAvatar address={data.account} size={40} />
-              <Link to={generateTraderDetailsRoute(protocol, data.account)}>
+              <Link to={generateTraderMultiExchangeRoute({ protocol, address: data.account })}>
                 <Button type="button" variant="ghost" sx={{ p: 0 }}>
                   <Flex flexDirection="column" textAlign="left">
                     <Type.BodyBold>{addressShorten(data.account)}</Type.BodyBold>

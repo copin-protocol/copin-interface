@@ -1,37 +1,57 @@
 import { Trans } from '@lingui/macro'
-import { ArrowRight } from '@phosphor-icons/react'
+import { Users } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { ComponentProps, Suspense, lazy, useState } from 'react'
 
 import { TraderData } from 'entities/trader'
-import { Button } from 'theme/Buttons'
+import { useRankingCustomizeStore } from 'hooks/store/useRankingCustomize'
+import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 
 const TraderRankingExpanded = lazy(() => import('./TraderRankingExpanded'))
 type TraderRankingExpandedProps = ComponentProps<typeof TraderRankingExpanded>
 
 export default function ExpandTraderRankingButton(
-  props: Omit<TraderRankingExpandedProps, 'handleExpand' | 'traderData'> & {
+  props: Omit<TraderRankingExpandedProps, 'handleExpand' | 'traderData' | 'traderScore'> & {
     traderData: TraderData | undefined
   }
 ) {
+  const { customizedRanking } = useRankingCustomizeStore()
+
+  const avgScore = !props.traderData
+    ? 0
+    : customizedRanking.reduce((result, key) => {
+        const score = props.traderData?.ranking[key]
+        if (score == null) return result
+        result += score
+        return result
+      }, 0) / customizedRanking.length
   const [expanded, setExpanded] = useState(false)
   const { md } = useResponsive()
   if (!md) return <></>
   return (
     <>
-      <Button
-        variant="ghostPrimary"
+      <ButtonWithIcon
+        variant="ghost"
         onClick={() => setExpanded(true)}
-        sx={{ p: 0, display: 'flex', alignItems: 'center', gap: 1 }}
+        sx={{
+          px: 3,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          color: 'neutral2',
+          '&:hover:not(:disabled)': { color: 'neutral1' },
+        }}
+        icon={<Users size={20} />}
       >
-        <span>
-          <Trans>Compare / Find similar traders</Trans>
-        </span>
-        <ArrowRight size={16} weight="bold" />
-      </Button>
+        <Trans>Compare Trader</Trans>
+      </ButtonWithIcon>
       <Suspense fallback={<></>}>
         {expanded && (
-          <TraderRankingExpanded {...(props as TraderRankingExpandedProps)} handleExpand={() => setExpanded(false)} />
+          <TraderRankingExpanded
+            {...(props as TraderRankingExpandedProps)}
+            traderScore={avgScore}
+            handleExpand={() => setExpanded(false)}
+          />
         )}
       </Suspense>
     </>

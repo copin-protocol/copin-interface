@@ -176,7 +176,7 @@ export default function ListCopyOrderTable({
   const externalSource: ExternalSource = {
     isOpening,
     totalOrders: tableData.meta.total,
-    symbol: token.symbol,
+    symbol: token?.symbol,
   }
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>

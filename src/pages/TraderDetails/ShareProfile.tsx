@@ -13,7 +13,7 @@ import { IconBox } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { generateTraderCanvas } from 'utils/helpers/generateImage'
-import { generateParamsUrl, generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateParamsUrl, generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
 export default function ShareProfile({
@@ -21,11 +21,13 @@ export default function ShareProfile({
   protocol,
   type,
   stats,
+  iconSize = 20,
 }: {
   address: string
   protocol: ProtocolEnum
   type: TimeFrameEnum
   stats: TraderData | undefined
+  iconSize?: number
 }) {
   const { myProfile } = useMyProfile()
   const referralCode = myProfile?.referralCode ?? null
@@ -76,7 +78,7 @@ export default function ShareProfile({
   }
 
   let shareLink = generateParamsUrl({
-    url: `${import.meta.env.VITE_URL}${generateTraderDetailsRoute(protocol, address)}`,
+    url: `${import.meta.env.VITE_URL}${generateTraderMultiExchangeRoute({ protocol, address })}`,
     key: 'ref',
     value: referralCode,
   })
@@ -94,8 +96,8 @@ export default function ShareProfile({
       <IconBox
         role="button"
         onClick={handleShare}
-        icon={<ShareFat size={20} />}
-        sx={{ color: 'neutral3', '&:hover': { color: 'neutral2' } }}
+        icon={<ShareFat size={iconSize} />}
+        sx={{ color: 'neutral2', '&:hover': { color: 'neutral2' } }}
       />
       {isSocialMediaSharingOpen && (
         <SocialMediaSharingModal

@@ -15,7 +15,7 @@ import CopyTraderModal from './CopyTraderModal'
 import ModalContactUs from './ModalContactUs'
 
 // TODO: Check when add new protocol
-const ALLOWED_LIST = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
+const ALLOWED_LIST = [ProtocolEnum.GMX, ProtocolEnum.GMX_V2, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
 
 export default function CopyTraderButton({
   protocol,

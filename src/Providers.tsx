@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import ThemeProvider from 'theme'
 
 import { CopyWalletProvider } from 'hooks/features/useCopyWalletContext'
+import UseRemoveTimeFilter from 'hooks/helpers/useRemoveTimeFilter'
 import { useInitTabsOpen } from 'hooks/helpers/useTabsOpen'
 import { ProtocolProvider } from 'hooks/store/useProtocols'
 import ThemedGlobalStyle from 'theme/styles'
@@ -30,6 +31,7 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
         <QueryClientProvider client={queryClient}>
           {/* <Updaters /> */}
           <BrowserRouter>
+            <UseRemoveTimeFilter />
             <PythConnection />
             <DappProvider>
               <ProtocolProvider>

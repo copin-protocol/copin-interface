@@ -35,12 +35,25 @@ const MobileLayout = (props: LayoutProps) => {
     <Box sx={{ position: 'relative', pb: 56 }}>
       <Box
         width="100%"
-        height={72}
+        height={56}
         sx={{
           borderBottom: 'small',
           borderColor: 'neutral4',
           position: 'sticky',
           top: 0,
+          bg: 'neutral7',
+          zIndex: 100,
+        }}
+      >
+        {props.protocolStats}
+      </Box>
+      <Box
+        width="100%"
+        sx={{
+          borderBottom: 'small',
+          borderColor: 'neutral4',
+          position: 'sticky',
+          top: 56,
           bg: 'neutral7',
           zIndex: 100,
         }}
@@ -63,7 +76,7 @@ const MobileLayout = (props: LayoutProps) => {
       {tab === TabEnum.CHARTS && (
         <>
           <Box
-            height={250}
+            height={270}
             sx={{
               borderBottom: 'small',
               borderColor: 'neutral4',
@@ -71,7 +84,7 @@ const MobileLayout = (props: LayoutProps) => {
           >
             {props.traderRanking}
           </Box>
-          <Box height="max(calc(100vh - 480px), 330px)">{props.traderChartPositions}</Box>
+          <Box height="max(calc(100vh - 545px), 330px)">{props.traderChartPositions}</Box>
           {/* <Box
             p={12}
             sx={{

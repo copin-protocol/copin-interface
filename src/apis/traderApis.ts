@@ -1,11 +1,13 @@
 import { AxiosResponse } from 'axios'
 
+import { TraderPnlStatisticData } from 'entities/statistic'
 import {
   CheckAvailableResultData,
   ResponsePositionData,
   ResponseTraderData,
   TraderCounter,
   TraderData,
+  TraderExchangeStatistic,
 } from 'entities/trader.d'
 import { TraderTokenStatistic } from 'entities/trader.d'
 import { PositionSortPros } from 'pages/TraderDetails'
@@ -146,7 +148,7 @@ export async function getTraderApi({
 
 export async function searchTradersApi(params: SearchTradersParams) {
   return requester
-    .get(`${SERVICE}/statistic/filter`, { params })
+    .get(`/public/${SERVICE}/statistic/filter`, { params })
     .then((res: any) => normalizeTraderResponse(res.data as ApiListResponse<ResponseTraderData>))
 }
 
@@ -248,4 +250,22 @@ export async function getTraderTokensStatistic(
     .then((res: AxiosResponse<ApiListResponse<TraderTokenStatistic>>) =>
       normalizeTokenStatisticResponse({ res: res.data, sortBy: sort_by, sortType: sort_type })
     )
+}
+
+export async function getTraderExchangeStatistic({ account }: { account: string }) {
+  return requester
+    .get(`public/${SERVICE}/statistic/exchange/${account}`)
+    .then((res: any) => res.data as { [protocol in ProtocolEnum]: TraderExchangeStatistic })
+}
+
+export async function getTraderMultiExchangeStatistic({
+  account,
+  params,
+}: {
+  account: string
+  params: { statisticType: TimeFilterByEnum }
+}) {
+  return requester.get(`public/${SERVICE}/statistic/trader/${account}`, { params }).then((res: any) => {
+    return res.data as { [protocol in ProtocolEnum]: ResponseTraderData }
+  })
 }

@@ -7,27 +7,31 @@ import { immer } from 'zustand/middleware/immer'
 import { deleteFavoritesApi, getFavoritesApi, postFavoritesApi } from 'apis/favoriteApis'
 import ToastBody from 'components/@ui/ToastBody'
 import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
-import { useProtocolStore } from 'hooks/store/useProtocols'
 import { useAuthContext } from 'hooks/web3/useAuth'
+import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 
 interface TraderFavoritesState {
-  tooltipAddress?: string
-  tooltipPosition?: { top: number; left: number }
+  tooltipAddress: string | undefined
+  tooltipProtocol: ProtocolEnum | undefined
+  tooltipPosition: { top: number; left: number } | undefined
   isLoading: boolean
   submitting: boolean
-  traderFavorites: string[]
+  traderFavorites: string[] // address_protocol
   notes: { [key: string]: string }
   setLoading: (bool: boolean) => void
   setSubmitting: (bool: boolean) => void
-  setTraderFavorites: (addresses: string[]) => void
+  setTraderFavorites: (addressesAndProtocol: string[]) => void
   setNotes: (notes: { [key: string]: string }) => void
-  setTooltip: (address?: string, position?: { top: number; left: number }) => void
+  setTooltip: (
+    params: { address: string; protocol: ProtocolEnum; position?: { top: number; left: number } } | undefined
+  ) => void
 }
 
 const useTraderFavoritesStore = create<TraderFavoritesState>()(
   immer((set) => ({
     tooltipAddress: undefined,
+    tooltipProtocol: undefined,
     tooltipPosition: undefined,
     traderFavorites: [],
     notes: {},
@@ -37,8 +41,8 @@ const useTraderFavoritesStore = create<TraderFavoritesState>()(
     setSubmitting: (bool: boolean) => set({ submitting: bool }),
     setTraderFavorites: (addresses: string[]) => set({ traderFavorites: addresses }),
     setNotes: (notes: { [key: string]: string }) => set({ notes }),
-    setTooltip: (address?: string, position?: { top: number; left: number }) =>
-      set({ tooltipAddress: address, tooltipPosition: position }),
+    setTooltip: (params) =>
+      set({ tooltipAddress: params?.address, tooltipProtocol: params?.protocol, tooltipPosition: params?.position }),
   }))
 )
 
@@ -57,18 +61,33 @@ const EXCLUDING_PATH = [
   ROUTES.POSITION_DETAILS.path,
 ]
 export const useInitTraderFavorites = () => {
-  const { protocol } = useProtocolStore()
   const { profile } = useAuthContext()
   const { setTraderFavorites, setNotes, setLoading } = useTraderFavoritesStore()
   const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH, true)
-  const { data, isLoading } = useQuery(['favorites', profile?.username, protocol], () => getFavoritesApi(protocol), {
-    retry: 0,
-    enabled: !!profile && enabledQueryByPaths,
-    keepPreviousData: true,
-  })
+  const { data, isLoading } = useQuery(
+    ['favorites', profile?.username],
+    () => {
+      return Promise.all(Object.values(ProtocolEnum).map((_protocol) => getFavoritesApi(_protocol)))
+    },
+    {
+      select(data) {
+        const result = []
+        for (const addresses of data) {
+          if (!addresses?.length) continue
+          for (const address of addresses) {
+            result.push(address)
+          }
+        }
+        return result
+      },
+      retry: 0,
+      enabled: !!profile && enabledQueryByPaths,
+      keepPreviousData: true,
+    }
+  )
   useEffect(() => {
     if (data) {
-      setTraderFavorites(data.map((trader) => trader.account))
+      setTraderFavorites(data.map((trader) => `${trader.account}-${trader.protocol}`))
       setNotes(
         data.reduce((prev, cur) => {
           prev[cur.account] = cur.note || ''
@@ -84,12 +103,13 @@ export const useInitTraderFavorites = () => {
 }
 
 const useTraderFavorites = () => {
-  const { protocol } = useProtocolStore()
+  // const { protocol } = useProtocolStore()
   const {
     isLoading,
     submitting,
     notes,
     traderFavorites,
+    tooltipProtocol,
     setSubmitting,
     setTraderFavorites,
     setNotes,
@@ -98,14 +118,23 @@ const useTraderFavorites = () => {
     setTooltip,
   } = useTraderFavoritesStore()
 
-  const setTraderFavorite = async (address: string, note?: string) => {
+  const setTraderFavorite = async ({
+    address,
+    protocol,
+    note,
+  }: {
+    address: string
+    protocol: ProtocolEnum
+    note?: string
+  }) => {
     setSubmitting(true)
     const oldData = traderFavorites
     const oldDataNotes = notes
-    if (!traderFavorites.includes(address)) {
-      setTraderFavorites([address, ...traderFavorites])
+    const traderFavorite = getTraderFavoriteValue({ address, protocol })
+    if (!traderFavorites.includes(traderFavorite)) {
+      setTraderFavorites([traderFavorite, ...traderFavorites])
       if (note) {
-        setNotes({ ...notes, [address]: note })
+        setNotes({ ...notes, [traderFavorite]: note })
       }
     }
     try {
@@ -117,14 +146,15 @@ const useTraderFavorites = () => {
     }
     setSubmitting(false)
   }
-  const unsetTraderFavorite = async (address: string) => {
+  const unsetTraderFavorite = async ({ address, protocol }: { address: string; protocol: ProtocolEnum }) => {
     setSubmitting(true)
     const oldData = traderFavorites
     const oldDataNotes = notes
-    if (traderFavorites.includes(address)) {
-      setTraderFavorites(traderFavorites.filter((account) => account !== address))
-      if (notes[address]) {
-        const { ...rest } = Object.fromEntries(Object.entries(notes).filter(([key]) => key !== address))
+    const traderFavorite = getTraderFavoriteValue({ address, protocol })
+    if (traderFavorites.includes(traderFavorite)) {
+      setTraderFavorites(traderFavorites.filter((value) => value !== traderFavorite))
+      if (notes[traderFavorite]) {
+        const { ...rest } = Object.fromEntries(Object.entries(notes).filter(([key]) => key !== traderFavorite))
         setNotes(rest)
       }
     }
@@ -145,9 +175,21 @@ const useTraderFavorites = () => {
     setTraderFavorite,
     unsetTraderFavorite,
     tooltipAddress,
+    tooltipProtocol,
     tooltipPosition,
     setTooltip,
   }
 }
 
 export default useTraderFavorites
+
+export function getTraderFavoriteValue({ address, protocol }: { address: string; protocol: ProtocolEnum }) {
+  return `${address}-${protocol}`
+}
+export function parseTraderFavoriteValue(value: string) {
+  const chunks = value.split('-')
+  return {
+    address: chunks[0],
+    protocol: chunks[1] as ProtocolEnum,
+  }
+}

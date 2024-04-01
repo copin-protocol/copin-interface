@@ -19,6 +19,7 @@ const Home = lazy(() => import('./Home'))
 const Explorer = lazy(() => import('./Explorer'))
 const OpenInterest = lazy(() => import('./TopOpenings'))
 const Leaderboard = lazy(() => import('./Leaderboard'))
+const TraderExchangesStats = lazy(() => import('./TraderDetails/ExchangesStats'))
 const TraderDetails = lazy(() => import('./TraderDetails'))
 const PositionDetails = lazy(() => import('./PositionDetails'))
 const SharedPositionDetails = lazy(() => import('./SharedPositionDetails'))
@@ -72,7 +73,11 @@ function App() {
             <Route path={ROUTES.LEADERBOARD.path} component={Leaderboard}></Route>
             <Route path={ROUTES.TRADERS_EXPLORER.path} component={Explorer}></Route>
             <Route path={ROUTES.OPEN_INTEREST.path} component={OpenInterest}></Route>
-            <Route path={ROUTES.HOME.path} component={Home}></Route>
+
+            <Route exact path={ROUTES.TRADER_EXCHANGES_STATS.path} component={TraderExchangesStats}></Route>
+            <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.path} component={TraderDetails}></Route>
+
+            <Route path={ROUTES.HOME.path} exact component={Home}></Route>
 
             <Route path="*" component={NotFound}></Route>
           </Switch>

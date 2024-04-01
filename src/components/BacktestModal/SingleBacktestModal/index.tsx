@@ -15,12 +15,14 @@ import { ActionType, State } from './config'
 
 export default function SingleBackTestModal({
   account,
+  protocol,
   isOpen,
   onDismiss,
   state,
   dispatch,
   isForceOpen = false,
 }: {
+  protocol: ProtocolEnum
   account: string
   isOpen: boolean
   onDismiss: () => void
@@ -29,7 +31,6 @@ export default function SingleBackTestModal({
   isForceOpen?: boolean
 }) {
   const { setSearchParams } = useSearchParams()
-  const { protocol } = useParams<{ protocol: ProtocolEnum }>()
   const currentInstanceData = state.instancesMapping[state.currentInstanceId ?? '']
 
   const { data: tokensTraded } = useGetTokensTraded({ account, protocol })

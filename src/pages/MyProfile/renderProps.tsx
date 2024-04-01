@@ -23,7 +23,7 @@ import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
-import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
 export const renderCopyTitle = (data: CopyPositionData) => (
@@ -39,7 +39,7 @@ export function renderEntry(data: CopyPositionData) {
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken].symbol}</Type.Caption>
+      <Type.Caption>{TOKEN_TRADE_SUPPORT[data.protocol]?.[data.indexToken]?.symbol}</Type.Caption>
       <VerticalDivider />
       <Type.Caption>{formatNumber(data.entryPrice, 2)}</Type.Caption>
     </Flex>
@@ -82,11 +82,12 @@ export function renderTrader(
   return (
     <Flex sx={{ alignItems: 'center', '& > *': { flexShrink: 0 }, gap: 1 }}>
       <Flex
+        //@ts-ignore
         as={isLink && protocol ? Link : undefined}
-        to={isLink && protocol ? generateTraderDetailsRoute(protocol, address) : ''}
+        to={isLink && protocol ? generateTraderMultiExchangeRoute({ protocol, address }) : undefined}
         sx={{ gap: 1, flexShrink: 0, '& > *': { flexShrink: 0 }, ...sx }}
         alignItems="center"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => isLink && e.stopPropagation()}
       >
         <AddressAvatar address={address} size={size} />
         <Type.Caption
@@ -143,7 +144,7 @@ export const renderValue = (data: CopyPositionData) => (
       : !isNaN(Number(data.totalSizeDelta))
       ? formatNumber(Number(data.totalSizeDelta), 4, 4)
       : '--'}{' '}
-    {TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken].symbol}
+    {TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol}
   </Type.Caption>
 )
 export const renderSize = (data: CopyPositionData) => (

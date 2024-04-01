@@ -45,7 +45,7 @@ export default function TraderRankingExpanded({
     const handleResize = () => {
       const windowWidth = window.innerWidth
       if (windowWidth >= MEDIA_WIDTHS.upToLarge) {
-        setLayoutConfigs({ position: { top: 120, left: 0, right: 0, bottom: 40 }, windowWidth })
+        setLayoutConfigs({ position: { top: 172, left: 0, right: 0, bottom: 40 }, windowWidth })
       } else if (windowWidth >= MEDIA_WIDTHS.upToMedium) {
         setLayoutConfigs({ position: { top: 60, left: 0, right: 0, bottom: 40 }, windowWidth })
       } else if (windowWidth >= MEDIA_WIDTHS.upToSmall) {
