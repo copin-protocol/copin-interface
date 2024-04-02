@@ -100,6 +100,7 @@ const ROUTES = {
   },
   TRADER_DETAILS_MULTI_EXCHANGE: {
     path: '/trader/:address/:protocol',
+    alter_ath: '/trader/:address',
     path_prefix: '/trader',
   },
   TRADER_EXCHANGES_STATS: {

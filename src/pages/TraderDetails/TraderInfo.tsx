@@ -34,18 +34,18 @@ const TraderInfo = ({
   return (
     <Box px={3} py={2}>
       <Flex sx={{ gap: 2, alignItems: 'center' }}>
-        <AddressAvatar address={address} size={42} />
+        <AddressAvatar address={address} size={40} />
         <Box>
           <Flex mb={{ _: 1, sm: 0 }} alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
             <Type.LargeBold lineHeight="20px" textAlign="left" fontSize={['16px', '18px']}>
               {addressShorten(address, 3, 5)}
             </Type.LargeBold>
+            <FavoriteButton address={address} protocol={protocol} size={16} />
             {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
           </Flex>
           <Flex sx={{ alignItems: 'center', gap: 2 }}>
             <CopyButton type="button" variant="ghost" value={address} size="sm" iconSize={16} sx={{ p: 0 }} />
             <ExplorerLogo protocol={protocol} explorerUrl={`${explorerUrl}/address/${address}`} size={16} />
-            <FavoriteButton address={address} protocol={protocol} size={16} />
             <ShareProfile
               address={address}
               protocol={protocol}

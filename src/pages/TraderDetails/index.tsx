@@ -12,7 +12,7 @@ import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import HistoryTable from 'components/Tables/HistoryTable'
 import OpeningPositionTable from 'components/Tables/OpeningPositionTable'
 import { fullHistoryColumns, historyColumns } from 'components/Tables/render'
-import { PositionData } from 'entities/trader.d'
+import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d'
 import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
@@ -46,16 +46,59 @@ export interface PositionSortPros {
   sortBy: keyof PositionData
   sortType: SortTypeEnum
 }
+
 export default function TraderDetails() {
+  const { address: _address, protocol: _protocol } = useParams<{ address: string; protocol: ProtocolEnum }>()
+  const address = isAddress(_address)
+
+  const { data: exchangeStats, isLoading } = useQuery([QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address], () =>
+    getTraderExchangeStatistic({ account: address })
+  )
+
+  const orderedStats = getOrderedExchangeStats(exchangeStats)
+
+  if (isLoading)
+    return (
+      <Box p={4}>
+        <Loading />
+      </Box>
+    )
+
+  if (!isLoading && !orderedStats?.length) return <NotFound message="" title="Trader have no statistic" />
+
+  let protocol = null
+  if (_protocol) {
+    protocol = _protocol.split('-')[0].toUpperCase() as ProtocolEnum
+  } else {
+    protocol = orderedStats[0].protocol
+  }
+
+  if (!protocol) return null
+
+  return <TraderDetailsComponent address={address} protocol={protocol} exchangeStats={exchangeStats} />
+}
+
+function getOrderedExchangeStats(stats: ResponseTraderExchangeStatistic) {
+  if (!Object.keys(stats || {})?.length) return []
+  const orderedStats = stats ? Object.values(stats) : []
+  orderedStats.sort((x, y) => (y?.lastTradeAtTs ?? 0) - (x?.lastTradeAtTs ?? 0))
+  return orderedStats
+}
+
+export function TraderDetailsComponent({
+  address,
+  protocol,
+  exchangeStats,
+}: {
+  address: string
+  protocol: ProtocolEnum
+  exchangeStats: ResponseTraderExchangeStatistic
+}) {
   const { isPremiumUser, checkIsPremium } = useIsPremiumAndAction()
   const timeFilterOptions = useMemo(
     () => (isPremiumUser ? TIME_FILTER_OPTIONS : TIME_FILTER_OPTIONS.filter((e) => e.id !== TimeFilterByEnum.ALL_TIME)),
     [isPremiumUser]
   )
-
-  const { address: _address, protocol: _protocol } = useParams<{ address: string; protocol: ProtocolEnum }>()
-  const address = isAddress(_address)
-  const protocol = _protocol.split('-')[0].toUpperCase() as ProtocolEnum
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
     [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol, isPremiumUser],
@@ -185,22 +228,19 @@ export default function TraderDetails() {
     chartFullExpanded,
     handleChartFullExpand,
   } = useHandleLayout()
-
-  const { data: exchangeStats } = useQuery([QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address], () =>
-    getTraderExchangeStatistic({ account: address })
-  )
-
   if (!PROTOCOL_OPTIONS_MAPPING[protocol]) {
     return <NotFound title="Protocol not support" message="" />
   }
 
-  if (!address) return <NotFound title="Trader not found" message="" />
+  if (!address) return <NotFound title="No statistics found for this trader" message="" />
 
   return (
     <>
-      <CustomPageTitle title={`Trader ${addressShorten(_address)} on ${PROTOCOL_OPTIONS_MAPPING[protocol].text}`} />
+      <CustomPageTitle title={`Trader ${addressShorten(address)} on ${PROTOCOL_OPTIONS_MAPPING[protocol].text}`} />
       <Layout
-        protocolStats={<ProtocolStats page="details" exchangeStats={exchangeStats} />}
+        protocolStats={
+          <ProtocolStats address={address} protocol={protocol} page="details" exchangeStats={exchangeStats} />
+        }
         traderInfo={
           <BotAlertProvider>
             <Flex
@@ -252,7 +292,7 @@ export default function TraderDetails() {
                             protocol={protocol}
                             account={address}
                             timeOption={timeOption}
-                            onChangeTime={setTimeOption}
+                            // onChangeTime={setTimeOption}
                           />
                         </Box>
                       )}

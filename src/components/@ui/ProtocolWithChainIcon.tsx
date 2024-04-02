@@ -7,7 +7,7 @@ import ExplorerLogo from './ExplorerLogo'
 export default function ProtocolWithChainIcon({ protocol, size = 18 }: { protocol: ProtocolEnum; size?: number }) {
   return (
     <Box sx={{ position: 'relative', height: 'auto' }}>
-      <Flex sx={{ borderRadius: '50%', p: '6px', border: 'small', borderColor: 'primary1' }}>
+      <Flex sx={{ borderRadius: '50%', p: '4px', border: 'small', borderColor: 'primary1' }}>
         <Image src={parseProtocolImage(protocol)} width={size} height={size} sx={{ overflow: 'hidden' }} />
       </Flex>
       <ExplorerLogo

@@ -5,7 +5,7 @@ import { useQuery } from 'react-query'
 
 import { getTraderPnlStatsApi } from 'apis/statisticApi'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
-import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
+// import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import Tooltip from 'theme/Tooltip'
@@ -21,12 +21,12 @@ const ChartTrader = ({
   protocol,
   account,
   timeOption,
-  onChangeTime,
-}: {
+}: // onChangeTime,
+{
   protocol: ProtocolEnum
   account: string
   timeOption: TimeFilterProps
-  onChangeTime: (option: TimeFilterProps) => void
+  // onChangeTime: (option: TimeFilterProps) => void
 }) => {
   const [isBarChart, setIsBarChart] = useState(false)
   const to = useMemo(() => dayjs().utc().startOf('day').valueOf(), [])
@@ -55,8 +55,8 @@ const ChartTrader = ({
           <Flex width="100%" alignItems="center" justifyContent="space-between">
             <Box width={56} />
             <Flex alignItems="center" sx={{ gap: 2 }} mb={1}>
-              <Type.Caption color="neutral3">PnL in the past</Type.Caption>
-              <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
+              <Type.Caption color="neutral3">PnL</Type.Caption>
+              {/* <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} /> */}
             </Flex>
             <Flex alignItems="center">
               <ButtonWithIcon

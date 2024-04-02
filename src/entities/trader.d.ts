@@ -279,3 +279,5 @@ export interface TraderExchangeStatistic {
   protocol: ProtocolEnum
   totalVolume: number
 }
+
+export type ResponseTraderExchangeStatistic = Record<ProtocolEnum, TraderExchangeStatistic> | undefined

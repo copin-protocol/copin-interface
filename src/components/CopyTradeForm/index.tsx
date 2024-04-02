@@ -509,19 +509,17 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                   {...register(fieldName.skipLowLeverage)}
                   error={errors.skipLowLeverage?.message}
                 />
-                {skipLowLeverage && (
-                  <Box mt={2}>
-                    <NumberInputField
-                      block
-                      required
-                      label="Low Leverage"
-                      name={fieldName.lowLeverage}
-                      control={control}
-                      error={errors.lowLeverage?.message}
-                      suffix={<InputSuffix>x</InputSuffix>}
-                    />
-                  </Box>
-                )}
+                <Box mt={2} sx={{ display: skipLowLeverage ? 'block' : 'none' }}>
+                  <NumberInputField
+                    block
+                    required
+                    label="Low Leverage"
+                    name={fieldName.lowLeverage}
+                    control={control}
+                    error={errors.lowLeverage?.message}
+                    suffix={<InputSuffix>x</InputSuffix>}
+                  />
+                </Box>
                 <Type.Caption mt={1} color="neutral2">
                   <Trans>You will not copy the position has opened with leverage lower than</Trans> {lowLeverage}x.
                 </Type.Caption>

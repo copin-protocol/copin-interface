@@ -113,7 +113,9 @@ export default function ExchangesStats() {
         }}
       >
         {isLoadingExchangeStats && <Loading />}
-        {!isLoadingExchangeStats && exchangeStats && <ProtocolStats page="stats" exchangeStats={exchangeStats} />}
+        {!isLoadingExchangeStats && exchangeStats && (
+          <ProtocolStats address={address} protocol={protocol} page="stats" exchangeStats={exchangeStats} />
+        )}
       </Box>
       <Flex
         sx={{

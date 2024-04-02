@@ -1,13 +1,12 @@
 import { AxiosResponse } from 'axios'
 
-import { TraderPnlStatisticData } from 'entities/statistic'
 import {
   CheckAvailableResultData,
   ResponsePositionData,
   ResponseTraderData,
+  ResponseTraderExchangeStatistic,
   TraderCounter,
   TraderData,
-  TraderExchangeStatistic,
 } from 'entities/trader.d'
 import { TraderTokenStatistic } from 'entities/trader.d'
 import { PositionSortPros } from 'pages/TraderDetails'
@@ -255,7 +254,7 @@ export async function getTraderTokensStatistic(
 export async function getTraderExchangeStatistic({ account }: { account: string }) {
   return requester
     .get(`public/${SERVICE}/statistic/exchange/${account}`)
-    .then((res: any) => res.data as { [protocol in ProtocolEnum]: TraderExchangeStatistic })
+    .then((res: any) => res.data as ResponseTraderExchangeStatistic)
 }
 
 export async function getTraderMultiExchangeStatistic({

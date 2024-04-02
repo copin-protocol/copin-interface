@@ -107,7 +107,7 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
           '&:hover:not(:disabled)': { color: 'neutral1' },
         }}
         variant={currentAlert ? 'ghostDanger' : 'ghost'}
-        icon={currentAlert ? <AlertOffIcon /> : <AlertIcon />}
+        icon={currentAlert ? <AlertOffIcon size={20} /> : <AlertIcon size={20} />}
         disabled={isLoading || submittingCreate || submittingDelete || isGeneratingLink}
         onClick={onSubmit}
       >

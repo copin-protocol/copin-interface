@@ -14,8 +14,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/pages/TopOpenings/OpenInterestByMarkets/configs.tsx
-msgid "(24h change)"
-msgstr "(24h change)"
+#~ msgid "(24h change)"
+#~ msgstr "(24h change)"
 
 #: src/pages/Home/ProtocolDropdown.tsx
 msgid "(Coming soon)"
@@ -362,6 +362,22 @@ msgid "Better than {value} traders"
 msgstr "Better than {value} traders"
 
 #: src/utils/config/translations.tsx
+msgid "Binance"
+msgstr "Binance"
+
+#: src/components/Modal/CreateBinanceWalletModal.tsx
+msgid "Binance API Key"
+msgstr "Binance API Key"
+
+#: src/components/Modal/CreateBinanceWalletModal.tsx
+msgid "Binance Secret Key"
+msgstr "Binance Secret Key"
+
+#: src/components/CreateWalletAction/index.tsx
+msgid "Binance Wallet"
+msgstr "Binance Wallet"
+
+#: src/utils/config/translations.tsx
 msgid "BingX"
 msgstr "BingX"
 
@@ -381,6 +397,26 @@ msgstr "BingX Wallet"
 #: src/pages/Home/Overview.tsx
 #~ msgid "BingX:"
 #~ msgstr "BingX:"
+
+#: src/utils/config/translations.tsx
+msgid "Bitget"
+msgstr "Bitget"
+
+#: src/components/Modal/CreateBitgetWalletModal.tsx
+msgid "Bitget API Key"
+msgstr "Bitget API Key"
+
+#: src/components/Modal/CreateBitgetWalletModal.tsx
+msgid "Bitget Pass Phrase"
+msgstr "Bitget Pass Phrase"
+
+#: src/components/Modal/CreateBitgetWalletModal.tsx
+msgid "Bitget Secret Key"
+msgstr "Bitget Secret Key"
+
+#: src/components/CreateWalletAction/index.tsx
+msgid "Bitget Wallet"
+msgstr "Bitget Wallet"
 
 #: src/components/MockSmartWallet/BridgeAndSwap/BridgeETH.tsx
 #~ msgid "Bridge ETH to OP (Goerli)"
@@ -478,6 +514,7 @@ msgstr "Clone copy trade has been succeeded"
 
 #: src/components/CopyTradePositionDetails/ListCopyOrderTable.tsx
 #: src/components/PositionDetails/ListOrderTable.tsx
+#: src/pages/MyProfile/PositionTable/ListPositions.tsx
 #: src/utils/config/translations.tsx
 msgid "Close"
 msgstr "Close"
@@ -494,8 +531,8 @@ msgid "Closed Type"
 msgstr "Closed Type"
 
 #: src/pages/MyProfile/PositionTable/ListPositions.tsx
-msgid "Closed:"
-msgstr "Closed:"
+#~ msgid "Closed:"
+#~ msgstr "Closed:"
 
 #: src/pages/MyProfile/renderProps.tsx
 #~ msgid "Collapse"
@@ -535,8 +572,12 @@ msgstr "Compare"
 #~ msgstr "Compare ({0})"
 
 #: src/pages/TraderDetails/ExpandTraderRankingButton.tsx
-msgid "Compare / Find similar traders"
-msgstr "Compare / Find similar traders"
+#~ msgid "Compare / Find similar traders"
+#~ msgstr "Compare / Find similar traders"
+
+#: src/pages/TraderDetails/ExpandTraderRankingButton.tsx
+msgid "Compare Trader"
+msgstr "Compare Trader"
 
 #: src/components/ConditionFilterForm/index.tsx
 msgid "Condition"
@@ -584,12 +625,12 @@ msgid "Considers settled (closed) positions"
 msgstr "Considers settled (closed) positions"
 
 #: src/pages/Stats/index.tsx
-msgid "Copiers Net PnL"
-msgstr "Copiers Net PnL"
+#~ msgid "Copiers Net PnL"
+#~ msgstr "Copiers Net PnL"
 
 #: src/pages/Stats/index.tsx
-msgid "Copiers Profit vs Loss"
-msgstr "Copiers Profit vs Loss"
+#~ msgid "Copiers Profit vs Loss"
+#~ msgstr "Copiers Profit vs Loss"
 
 #: src/pages/MyProfile/Layouts/ManagementLayoutMobile.tsx
 msgid "Copies"
@@ -652,6 +693,10 @@ msgstr "Copy Wallet"
 msgid "Copy Wallet History"
 msgstr "Copy Wallet History"
 
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Copy Your Address"
+msgstr "Copy Your Address"
+
 #: src/theme/Tag/index.tsx
 msgid "Copying"
 msgstr "Copying"
@@ -672,6 +717,14 @@ msgstr "Copytrades"
 msgid "Create"
 msgstr "Create"
 
+#: src/components/Modal/CreateBinanceWalletModal.tsx
+msgid "Create Binance Wallet"
+msgstr "Create Binance Wallet"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "Create Binance wallet"
+msgstr "Create Binance wallet"
+
 #: src/components/Modal/CreateBingXWalletModal.tsx
 msgid "Create BingX Wallet"
 msgstr "Create BingX Wallet"
@@ -679,6 +732,14 @@ msgstr "Create BingX Wallet"
 #: src/components/CopyTradeForm/Wallets.tsx
 msgid "Create BingX wallet"
 msgstr "Create BingX wallet"
+
+#: src/components/Modal/CreateBitgetWalletModal.tsx
+msgid "Create Bitget Wallet"
+msgstr "Create Bitget Wallet"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "Create Bitget wallet"
+msgstr "Create Bitget wallet"
 
 #: src/components/CreateSmartWalletModal/index.tsx
 msgid "Create Smart Wallet"
@@ -692,11 +753,15 @@ msgstr "Create an account"
 msgid "Create smart wallet"
 msgstr "Create smart wallet"
 
+#: src/components/Modal/CreateBinanceWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
+#: src/components/Modal/CreateBitgetWalletModal.tsx
 msgid "Create wallet successful!"
 msgstr "Create wallet successful!"
 
+#: src/components/Modal/CreateBinanceWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
+#: src/components/Modal/CreateBitgetWalletModal.tsx
 msgid "Creating..."
 msgstr "Creating..."
 
@@ -716,6 +781,34 @@ msgstr "Custom"
 #: src/pages/Subscription/Plans.tsx
 msgid "Custom trader percentile rank"
 msgstr "Custom trader percentile rank"
+
+#: src/pages/Stats/index.tsx
+msgid "Daily Active Users (DAU)"
+msgstr "Daily Active Users (DAU)"
+
+#: src/pages/Stats/index.tsx
+msgid "Daily Copy Trades"
+msgstr "Daily Copy Trades"
+
+#: src/pages/Stats/index.tsx
+msgid "Daily Net PnL"
+msgstr "Daily Net PnL"
+
+#: src/pages/Stats/index.tsx
+msgid "Daily Orders"
+msgstr "Daily Orders"
+
+#: src/pages/Stats/index.tsx
+msgid "Daily Profit vs Loss"
+msgstr "Daily Profit vs Loss"
+
+#: src/pages/Stats/index.tsx
+msgid "Daily Unique Traders"
+msgstr "Daily Unique Traders"
+
+#: src/pages/Stats/index.tsx
+msgid "Daily Volume"
+msgstr "Daily Volume"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "Data filter"
@@ -768,8 +861,14 @@ msgid "Document"
 msgstr "Document"
 
 #: src/components/@ui/BingXHelp/index.tsx
+#: src/components/CreateWalletAction/index.tsx
 msgid "Don’t have a BingX account?"
 msgstr "Don’t have a BingX account?"
+
+#: src/components/@ui/BitgetHelp/index.tsx
+#: src/components/CreateWalletAction/index.tsx
+msgid "Don’t have a Bitget account?"
+msgstr "Don’t have a Bitget account?"
 
 #: src/components/LoginAction/ModalLogin.tsx
 #~ msgid "Don’t have a Copin account?"
@@ -791,8 +890,8 @@ msgid "Email"
 msgstr "Email"
 
 #: src/pages/@layouts/BingXBanner.tsx
-msgid "Enjoy a 10% transaction fee rebate"
-msgstr "Enjoy a 10% transaction fee rebate"
+#~ msgid "Enjoy a 10% transaction fee rebate"
+#~ msgstr "Enjoy a 10% transaction fee rebate"
 
 #: src/components/InputReferral/index.tsx
 msgid "Enter referral code"
@@ -873,6 +972,7 @@ msgstr "Extend"
 msgid "Extend Again"
 msgstr "Extend Again"
 
+#: src/pages/@layouts/SubscriptionExpiredWarning.tsx
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Extend Now"
 msgstr "Extend Now"
@@ -984,6 +1084,7 @@ msgid "GMX"
 msgstr "GMX"
 
 #: src/components/@ui/BingXHelp/index.tsx
+#: src/components/@ui/BitgetHelp/index.tsx
 msgid "Get 10% transaction fee rebate with code:"
 msgstr "Get 10% transaction fee rebate with code:"
 
@@ -1105,7 +1206,9 @@ msgstr "Input new password"
 msgid "Input password"
 msgstr "Input password"
 
+#: src/components/Modal/CreateBinanceWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
+#: src/components/Modal/CreateBitgetWalletModal.tsx
 msgid "Input wallet name"
 msgstr "Input wallet name"
 
@@ -1228,8 +1331,16 @@ msgid "Link Account"
 msgstr "Link Account"
 
 #: src/components/CreateWalletAction/index.tsx
+msgid "Link with your Binance account through API key. All your assets and your positions management by Binance. Lowest fee, CEX trading"
+msgstr "Link with your Binance account through API key. All your assets and your positions management by Binance. Lowest fee, CEX trading"
+
+#: src/components/CreateWalletAction/index.tsx
 msgid "Link with your BingX account through API key. All your assets and your positions management by BingX. Lowest fee, CEX trading"
 msgstr "Link with your BingX account through API key. All your assets and your positions management by BingX. Lowest fee, CEX trading"
+
+#: src/components/CreateWalletAction/index.tsx
+msgid "Link with your Bitget account through API key. All your assets and your positions management by Bitget. Lowest fee, CEX trading"
+msgstr "Link with your Bitget account through API key. All your assets and your positions management by Bitget. Lowest fee, CEX trading"
 
 #: src/components/@ui/PositionStatus/index.tsx
 #: src/theme/Tag/index.tsx
@@ -1387,6 +1498,11 @@ msgstr "Margin Transferred"
 msgid "Market Price:"
 msgstr "Market Price:"
 
+#: src/pages/Explorer/ConditionFilter/FilterMarket.tsx
+msgid "Market:"
+msgstr "Market:"
+
+#: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/Stats.tsx
 msgid "Markets"
 msgstr "Markets"
@@ -1445,8 +1561,12 @@ msgid "Maybe Later"
 msgstr "Maybe Later"
 
 #: src/components/PositionTxResults/index.tsx
-msgid "Maybe you are missing an trader address, you can refer to \"Recommend Results\" section."
-msgstr "Maybe you are missing an trader address, you can refer to \"Recommend Results\" section."
+msgid "Maybe you are missing a trader address or have incorrect logs, you can refer to \"Recommend Results\" section."
+msgstr "Maybe you are missing a trader address or have incorrect logs, you can refer to \"Recommend Results\" section."
+
+#: src/components/PositionTxResults/index.tsx
+#~ msgid "Maybe you are missing an trader address, you can refer to \"Recommend Results\" section."
+#~ msgstr "Maybe you are missing an trader address, you can refer to \"Recommend Results\" section."
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Min Duration"
@@ -1590,6 +1710,10 @@ msgstr "No Data Found"
 msgid "No History Found"
 msgstr "No History Found"
 
+#: src/pages/PositionDetails/index.tsx
+msgid "No Position Found"
+msgstr "No Position Found"
+
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 msgid "No Trader Found"
 msgstr "No Trader Found"
@@ -1611,7 +1735,7 @@ msgstr "No Transactions Found"
 msgid "No link to the trader’s original position was found."
 msgstr "No link to the trader’s original position was found."
 
-#: src/components/TopOpeningPositions/TopOpeningsWindow.tsx
+#: src/components/PositionListCard/index.tsx
 msgid "No opening positions"
 msgstr "No opening positions"
 
@@ -1676,6 +1800,7 @@ msgstr "Only"
 #: src/components/@ui/PositionStatus/index.tsx
 #: src/components/CopyTradePositionDetails/ListCopyOrderTable.tsx
 #: src/components/PositionDetails/ListOrderTable.tsx
+#: src/pages/MyProfile/PositionTable/ListPositions.tsx
 #: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
@@ -1696,8 +1821,8 @@ msgid "Open Telegram Bot"
 msgstr "Open Telegram Bot"
 
 #: src/pages/MyProfile/PositionTable/ListPositions.tsx
-msgid "Open:"
-msgstr "Open:"
+#~ msgid "Open:"
+#~ msgstr "Open:"
 
 #: src/pages/MyProfile/Layouts/ManagementLayoutMobile.tsx
 #: src/pages/MyProfile/OpeningPositions/index.tsx
@@ -1705,8 +1830,8 @@ msgid "Opening Positions"
 msgstr "Opening Positions"
 
 #: src/pages/Stats/index.tsx
-msgid "Order"
-msgstr "Order"
+#~ msgid "Order"
+#~ msgstr "Order"
 
 #: src/utils/config/options.tsx
 msgid "Order/Pos"
@@ -1887,8 +2012,8 @@ msgstr "Premium Plan"
 #~ msgstr "Premium plan"
 
 #: src/pages/@layouts/Footer/index.tsx
-msgid "Pricing"
-msgstr "Pricing"
+#~ msgid "Pricing"
+#~ msgstr "Pricing"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #~ msgid "Profile"
@@ -2000,6 +2125,9 @@ msgid "Referrals"
 msgstr "Referrals"
 
 #: src/components/@ui/BingXHelp/index.tsx
+#: src/components/@ui/BitgetHelp/index.tsx
+#: src/components/CreateWalletAction/index.tsx
+#: src/components/CreateWalletAction/index.tsx
 #: src/components/LoginAction/ModalRegister.tsx
 msgid "Register"
 msgstr "Register"
@@ -2105,6 +2233,7 @@ msgstr "Select Date"
 msgid "Select Other Trader"
 msgstr "Select Other Trader"
 
+#: src/components/SelectMarketWithSearch/index.tsx
 #: src/pages/MyProfile/SelectCopyTradesDropdown.tsx
 #: src/pages/MyProfile/SelectTradersDropdown.tsx
 #: src/pages/MyProfile/SelectWalletsDropdown.tsx
@@ -2305,7 +2434,9 @@ msgstr "Subscription"
 #: src/components/CopyTraderButton/CopyTraderModal.tsx
 #: src/components/LoginAction/ModalRegister.tsx
 #: src/components/LoginAction/ModalResetPassword.tsx
+#: src/components/Modal/CreateBinanceWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
+#: src/components/Modal/CreateBitgetWalletModal.tsx
 #: src/components/WalletDetailsCard/WalletActions.tsx
 #: src/hooks/features/useUpdateCopyTrade.tsx
 #: src/hooks/web3/useContractMutation.tsx
@@ -2346,6 +2477,10 @@ msgstr "Syncing Onchain Data"
 #: src/utils/config/translations.tsx
 msgid "Synthetix"
 msgstr "Synthetix"
+
+#: src/utils/config/translations.tsx
+msgid "Synthetix V2"
+msgstr "Synthetix V2"
 
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 #~ msgid "TOP OPENING"
@@ -2550,8 +2685,8 @@ msgid "To start, you need to create a smart wallet."
 msgstr "To start, you need to create a smart wallet."
 
 #: src/pages/@layouts/BingXBanner.tsx
-msgid "To support Copin, please register a BingX account using the referral link: DY5QNN"
-msgstr "To support Copin, please register a BingX account using the referral link: DY5QNN"
+#~ msgid "To support Copin, please register a BingX account using the referral link: DY5QNN"
+#~ msgstr "To support Copin, please register a BingX account using the referral link: DY5QNN"
 
 #: src/pages/Subscription/TermsAndConditions.tsx
 #~ msgid "To unlock premium features, mint a Copin NFT."
@@ -2643,16 +2778,16 @@ msgid "Total Collateral:"
 msgstr "Total Collateral:"
 
 #: src/pages/Stats/index.tsx
-msgid "Total Copier"
-msgstr "Total Copier"
+#~ msgid "Total Copier"
+#~ msgstr "Total Copier"
 
 #: src/pages/Stats/Overview.tsx
-msgid "Total Copiers"
-msgstr "Total Copiers"
+#~ msgid "Total Copiers"
+#~ msgstr "Total Copiers"
 
 #: src/pages/Stats/index.tsx
-msgid "Total Copy Trade"
-msgstr "Total Copy Trade"
+#~ msgid "Total Copy Trade"
+#~ msgstr "Total Copy Trade"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Total Gain"
@@ -2707,8 +2842,12 @@ msgid "Total Trades"
 msgstr "Total Trades"
 
 #: src/pages/Stats/index.tsx
-msgid "Total Unique Trader"
-msgstr "Total Unique Trader"
+#~ msgid "Total Unique Trader"
+#~ msgstr "Total Unique Trader"
+
+#: src/pages/Stats/Overview.tsx
+msgid "Total Users"
+msgstr "Total Users"
 
 #: src/components/SearchAllResults/index.tsx
 #: src/components/Tables/TraderListTable/dataConfig.tsx
@@ -2747,6 +2886,7 @@ msgstr "Trader"
 msgid "Trader Favorites"
 msgstr "Trader Favorites"
 
+#: src/pages/MyProfile/Favorites/index.tsx
 #: src/pages/MyProfile/Favorites/index.tsx
 msgid "Trader Favorites Statistics"
 msgstr "Trader Favorites Statistics"
@@ -2856,6 +2996,10 @@ msgstr "Up to 3 traders"
 msgid "Update configs has been succeeded"
 msgstr "Update configs has been succeeded"
 
+#: src/pages/@layouts/Footer/index.tsx
+msgid "Upgrade"
+msgstr "Upgrade"
+
 #: src/components/SubscriptionRestrictModal.tsx
 #: src/pages/Settings/AlertList/index.tsx
 msgid "Upgrade Account"
@@ -2910,7 +3054,6 @@ msgid "Vol/Order"
 msgstr "Vol/Order"
 
 #: src/pages/Stats/index.tsx
-#: src/pages/Stats/index.tsx
 msgid "Volume"
 msgstr "Volume"
 
@@ -2941,7 +3084,9 @@ msgstr "Wallet Locked"
 msgid "Wallet Management"
 msgstr "Wallet Management"
 
+#: src/components/Modal/CreateBinanceWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
+#: src/components/Modal/CreateBitgetWalletModal.tsx
 msgid "Wallet Name"
 msgstr "Wallet Name"
 
@@ -3004,13 +3149,13 @@ msgstr "When the trader opens a trade, the maximum margin per order is {0}."
 #~ msgstr "Win / Trades"
 
 #: src/components/SearchAllResults/index.tsx
+#: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/pages/Home/SortDropdown.tsx
 #: src/utils/config/options.tsx
 msgid "Win Rate"
 msgstr "Win Rate"
 
 #: src/components/BacktestResult/SimpleBacktestResult.tsx
-#: src/components/Tables/TraderListTable/dataConfig.tsx
 msgid "Win rate"
 msgstr "Win rate"
 
@@ -3090,8 +3235,12 @@ msgstr "You need to upgrade to a premium account to use this feature"
 #~ msgstr "You will extend your plan for an additional"
 
 #: src/components/CopyTradeForm/index.tsx
-msgid "You will not copy the position has opened with leverage lower than {leverage}x."
-msgstr "You will not copy the position has opened with leverage lower than {leverage}x."
+msgid "You will not copy the position has opened with leverage lower than"
+msgstr "You will not copy the position has opened with leverage lower than"
+
+#: src/components/CopyTradeForm/index.tsx
+#~ msgid "You will not copy the position has opened with leverage lower than {leverage}x."
+#~ msgstr "You will not copy the position has opened with leverage lower than {leverage}x."
 
 #: src/pages/Subscription/MintButton.tsx
 msgid "You will receive <0>30 days</0> Premium NFT Plan"
@@ -3113,6 +3262,14 @@ msgstr "You won’t get any notification from our bot."
 msgid "You'll still have access to Premium after your NFT expires in 30 minutes. Keep an eye on the renewal time."
 msgstr "You'll still have access to Premium after your NFT expires in 30 minutes. Keep an eye on the renewal time."
 
+#: src/components/Modal/CreateBinanceWalletModal.tsx
+msgid "Your Binance API Key"
+msgstr "Your Binance API Key"
+
+#: src/components/Modal/CreateBinanceWalletModal.tsx
+msgid "Your Binance Secret Key"
+msgstr "Your Binance Secret Key"
+
 #: src/components/Modal/CreateBingXWalletModal.tsx
 msgid "Your BingX API Key"
 msgstr "Your BingX API Key"
@@ -3120,6 +3277,18 @@ msgstr "Your BingX API Key"
 #: src/components/Modal/CreateBingXWalletModal.tsx
 msgid "Your BingX Secret Key"
 msgstr "Your BingX Secret Key"
+
+#: src/components/Modal/CreateBitgetWalletModal.tsx
+msgid "Your Bitget API Key"
+msgstr "Your Bitget API Key"
+
+#: src/components/Modal/CreateBitgetWalletModal.tsx
+msgid "Your Bitget Pass Phrase"
+msgstr "Your Bitget Pass Phrase"
+
+#: src/components/Modal/CreateBitgetWalletModal.tsx
+msgid "Your Bitget Secret Key"
+msgstr "Your Bitget Secret Key"
 
 #: src/components/NFTSubscriptionCard.tsx
 msgid "Your NFT expires in {0} day"
@@ -3264,8 +3433,12 @@ msgstr "slippage"
 #: src/components/LoginAction/ModalResetPassword.tsx
 #: src/components/LoginAction/ModalResetPassword.tsx
 #: src/components/LoginAction/ModalResetPassword.tsx
+#: src/components/Modal/CreateBinanceWalletModal.tsx
+#: src/components/Modal/CreateBinanceWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
+#: src/components/Modal/CreateBitgetWalletModal.tsx
+#: src/components/Modal/CreateBitgetWalletModal.tsx
 #: src/components/WalletDetailsCard/WalletActions.tsx
 #: src/components/WalletDetailsCard/WalletActions.tsx
 #: src/hooks/features/useReferralActions.tsx
@@ -3335,5 +3508,9 @@ msgstr "{text}"
 #~ msgstr "{title}"
 
 #: src/pages/@layouts/Footer/index.tsx
-msgid "© 2023 Copin. All rights reserved."
-msgstr "© 2023 Copin. All rights reserved."
+#~ msgid "© 2023 Copin. All rights reserved."
+#~ msgstr "© 2023 Copin. All rights reserved."
+
+#: src/pages/@layouts/Footer/index.tsx
+msgid "© 2024 Copin. All rights reserved. Data has been updated since Nov 2022"
+msgstr "© 2024 Copin. All rights reserved. Data has been updated since Nov 2022"

@@ -134,7 +134,7 @@ export default function useSearchAllData(args?: {
       } else {
         history.push(
           generateTraderMultiExchangeRoute({
-            protocol: data?.protocol ?? protocol ?? ProtocolEnum.GMX,
+            protocol: data?.protocol,
             address: data?.account ?? debounceSearchText,
           })
         )
@@ -178,6 +178,11 @@ export default function useSearchAllData(args?: {
 
   const handleClickViewAll = () => {
     if (trimmedSearchText.length === 0) return
+    if (isAddress(debounceSearchText)) {
+      history.push(generateTraderMultiExchangeRoute({ address: debounceSearchText }))
+      setVisibleSearchResult(false)
+      return
+    }
     if (isTxHash) {
       history.push(`${ROUTES.SEARCH_TX_HASH.path_prefix}/${debounceSearchText}`)
     } else {

@@ -88,6 +88,8 @@ export default function TraderRankingExpanded({
       sx={{
         overflow: 'hidden',
         position: 'fixed',
+        borderTop: 'small',
+        borderTopColor: 'neutral4',
         ...layoutConfigs.position,
         bg: 'neutral8',
         zIndex: 10,

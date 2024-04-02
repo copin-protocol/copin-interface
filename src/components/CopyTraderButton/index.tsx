@@ -64,13 +64,13 @@ export default function CopyTraderButton({
         variant="primary"
         onClick={(e) => {
           e.preventDefault()
-          e.stopPropagation()
           if (!checkIsEligible()) return
 
           hasCopyPermission ? setIsOpenModal(true) : setIsOpenContactModal(true)
 
           switch (source) {
             case EventSource.HOME:
+              e.stopPropagation()
               logEventCopyTrade({
                 event: EVENT_ACTIONS[EventCategory.COPY_TRADE].HOME_OPEN_COPY_TRADE,
                 username: profile?.username,

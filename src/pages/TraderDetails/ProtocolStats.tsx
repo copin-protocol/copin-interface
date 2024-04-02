@@ -1,55 +1,55 @@
-import { GridFour, Stack } from '@phosphor-icons/react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ProtocolWithChainIcon from 'components/@ui/ProtocolWithChainIcon'
-import { TraderExchangeStatistic } from 'entities/trader'
-import useSearchParams from 'hooks/router/useSearchParams'
-import Tooltip from 'theme/Tooltip'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { ResponseTraderExchangeStatistic, TraderExchangeStatistic } from 'entities/trader'
+import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { compactNumber } from 'utils/helpers/format'
-import { generateTraderExchangesStatsRoute, generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 export default function ProtocolStats({
   page,
   exchangeStats,
+  address,
+  protocol,
 }: {
   page: 'details' | 'stats'
-  exchangeStats: Record<ProtocolEnum, TraderExchangeStatistic> | undefined
+  exchangeStats: ResponseTraderExchangeStatistic
+  address: string
+  protocol: ProtocolEnum
 }) {
-  const { address, protocol } = useParams<{ address: string; protocol: ProtocolEnum }>()
-  const { searchParams } = useSearchParams()
+  // const { searchParams } = useSearchParams()
   const history = useHistory()
   const currentProtocol =
     PROTOCOL_OPTIONS_MAPPING[protocol?.toUpperCase?.() as ProtocolEnum] && protocol?.toUpperCase?.()
 
-  const paramProtocol = protocol.toLocaleLowerCase() as unknown as ProtocolEnum
+  // const paramProtocol = protocol.toLocaleLowerCase() as unknown as ProtocolEnum
   const onChangeSelection = (protocol: ProtocolEnum) => {
     const _paramProtocol = protocol.toLocaleLowerCase() as unknown as ProtocolEnum
     history.push(generateTraderMultiExchangeRoute({ address, protocol: _paramProtocol }))
   }
-  const Icon = page === 'details' ? GridFour : Stack
-  const tooltipId = 'tt_trader_detail_multiple_exchange'
-  const tooltipContent = page === 'details' ? 'Exchanges Compare' : 'Back to details'
-  const onClickChangePage = () => {
-    page === 'details'
-      ? history.push(
-          generateTraderExchangesStatsRoute({
-            address,
-            protocol: paramProtocol,
-            params: searchParams,
-          })
-        )
-      : history.push(
-          generateTraderMultiExchangeRoute({
-            address,
-            protocol: paramProtocol,
-            params: searchParams,
-          })
-        )
-  }
+  // const Icon = page === 'details' ? GridFour : Stack
+  // const tooltipId = 'tt_trader_detail_multiple_exchange'
+  // const tooltipContent = page === 'details' ? 'Exchanges Compare' : 'Back to details'
+  // const onClickChangePage = () => {
+  //   page === 'details'
+  //     ? history.push(
+  //         generateTraderExchangesStatsRoute({
+  //           address,
+  //           protocol: paramProtocol,
+  //           params: searchParams,
+  //         })
+  //       )
+  //     : history.push(
+  //         generateTraderMultiExchangeRoute({
+  //           address,
+  //           protocol: paramProtocol,
+  //           params: searchParams,
+  //         })
+  //       )
+  // }
   const orderedStats = exchangeStats ? Object.values(exchangeStats) : []
   orderedStats.sort((x, y) => (y?.lastTradeAtTs ?? 0) - (x?.lastTradeAtTs ?? 0))
   return (
@@ -77,7 +77,7 @@ export default function ProtocolStats({
           )
         })}
       </Flex>
-      <IconBox
+      {/* <IconBox
         role="button"
         color="neutral3"
         icon={<Icon size={20} />}
@@ -95,7 +95,7 @@ export default function ProtocolStats({
       />
       <Tooltip id={tooltipId} place="bottom">
         {tooltipContent}
-      </Tooltip>
+      </Tooltip> */}
     </Flex>
   )
 }

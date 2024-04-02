@@ -108,11 +108,13 @@ export function generateHomeRoute(data: { params?: Record<string, any> }) {
 
 export function generateTraderMultiExchangeRoute(data: {
   address: string
-  protocol: ProtocolEnum
+  protocol?: ProtocolEnum
   params?: Record<string, any>
 }) {
   return createUrlWithParams({
-    url: `${ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.path_prefix}/${data.address}/${data.protocol.toLocaleLowerCase()}`,
+    url: `${ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.path_prefix}/${data.address}/${
+      data.protocol?.toLocaleLowerCase?.() || ''
+    }`,
     params: data.params,
   })
 }

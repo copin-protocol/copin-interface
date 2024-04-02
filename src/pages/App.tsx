@@ -74,8 +74,9 @@ function App() {
             <Route path={ROUTES.TRADERS_EXPLORER.path} component={Explorer}></Route>
             <Route path={ROUTES.OPEN_INTEREST.path} component={OpenInterest}></Route>
 
-            <Route exact path={ROUTES.TRADER_EXCHANGES_STATS.path} component={TraderExchangesStats}></Route>
+            {/* <Route exact path={ROUTES.TRADER_EXCHANGES_STATS.path} component={TraderExchangesStats}></Route> */}
             <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.path} component={TraderDetails}></Route>
+            <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.alter_ath} component={TraderDetails}></Route>
 
             <Route path={ROUTES.HOME.path} exact component={Home}></Route>
 
