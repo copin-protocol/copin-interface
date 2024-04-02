@@ -5,7 +5,8 @@ import { addressShorten, generateProtocolName, renderHTML } from './utils.js'
 
 const getTraderDetail = async (req, res) => {
   const { time = 'D60' } = req.query
-  const { protocol, address } = req.params
+  const { protocol: _protocol, address } = req.params
+  const protocol = _protocol ? _protocol.split('-')[0].toUpperCase() : 'GMX'
 
   let thumbnail = `${configs.baseUrl}/images/cover/default-trader-cover.png`
   try {
@@ -25,7 +26,7 @@ const getTraderDetail = async (req, res) => {
       params: {
         title: `Trader ${addressShorten(address)} on ${protocolName} - Copy this trader on Copin`,
         thumbnail,
-        url: `${configs.baseUrl}/${protocol}/trader/${address}?time=${time}`,
+        url: `${configs.baseUrl}/trader/${address}/${protocol.toLowerCase()}?time=${time}`,
       },
     })
   } catch {
