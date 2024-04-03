@@ -114,40 +114,46 @@ export default function CreateWalletAction() {
         //     : undefined
         // }
       />
-      {openCreateModal && currentExchange === CopyTradePlatformEnum.BINGX && (
-        <CreateBingXWalletModal
-          onDismiss={() => {
-            setOpenCreateModal(false)
-            reloadCopyWallets()
-          }}
-        />
-      )}
-      {openCreateModal && currentExchange === CopyTradePlatformEnum.BITGET && (
-        <CreateBitgetWalletModal
-          onDismiss={() => {
-            setOpenCreateModal(false)
-            reloadCopyWallets()
-          }}
-        />
-      )}
-      {openCreateModal && currentExchange === CopyTradePlatformEnum.BINANCE && (
-        <CreateBinanceWalletModal
-          onDismiss={() => {
-            setOpenCreateModal(false)
-            reloadCopyWallets()
-          }}
-        />
-      )}
-      {openCreateModal && currentExchange === CopyTradePlatformEnum.SYNTHETIX && (
-        <CreateSmartWalletModal
-          onDismiss={() => {
-            setOpenCreateModal(false)
-            reloadCopyWallets()
-          }}
-        />
-      )}
+
+      <CreateWalletModal
+        isOpen={openCreateModal}
+        exchange={currentExchange}
+        onDismiss={() => {
+          setOpenCreateModal(false)
+          reloadCopyWallets()
+        }}
+      />
     </>
   )
+}
+
+export function CreateWalletModal({
+  exchange,
+  isOpen,
+  onDismiss,
+}: {
+  exchange: CopyTradePlatformEnum | undefined
+  isOpen: boolean
+  onDismiss: () => void
+}) {
+  if (!exchange) return null
+  let Modal = null
+  switch (exchange) {
+    case CopyTradePlatformEnum.BINGX:
+      Modal = CreateBingXWalletModal
+      break
+    case CopyTradePlatformEnum.BITGET:
+      Modal = CreateBitgetWalletModal
+      break
+    case CopyTradePlatformEnum.BINANCE:
+      Modal = CreateBinanceWalletModal
+      break
+    // case CopyTradePlatformEnum.SYNTHETIX:
+    //   Modal = CreateSmartWalletModal
+    //   break
+  }
+  if (!Modal) return null
+  return <Modal isOpen={isOpen} onDismiss={onDismiss} />
 }
 
 interface WalletItemProps {

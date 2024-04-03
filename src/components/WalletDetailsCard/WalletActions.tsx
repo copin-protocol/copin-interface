@@ -1,20 +1,18 @@
 import { Trans } from '@lingui/macro'
-import { ClockCounterClockwise, DotsThreeOutlineVertical, Trash } from '@phosphor-icons/react'
-import React, { useState } from 'react'
+import { ClockCounterClockwise, Trash, UserCircle } from '@phosphor-icons/react'
+import { useState } from 'react'
 import { useMutation } from 'react-query'
+import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { deleteCopyWalletApi } from 'apis/copyWalletApis'
-import Divider from 'components/@ui/Divider'
 import ToastBody from 'components/@ui/ToastBody'
 import CopyWalletHistoryDrawer from 'components/CopyWalletHistoryDrawer'
 import { CopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import ActionItem from 'pages/MyProfile/MyCopies/ActionItem'
-import IconButton from 'theme/Buttons/IconButton'
-import Dropdown from 'theme/Dropdown'
-import { Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
+import { Flex, IconBox } from 'theme/base'
+import { URL_PARAM_KEYS } from 'utils/config/keys'
+import ROUTES from 'utils/config/routes'
 
 import ConfirmDeleteModal from './ConfirmDeleteModal'
 
@@ -40,51 +38,27 @@ const WalletActions = ({ data }: { data: CopyWalletData }) => {
 
   return (
     <>
-      <Dropdown
-        hasArrow={false}
-        menuSx={{
-          bg: 'neutral7',
-          width: 150,
-        }}
-        menu={
-          <>
-            <ActionItem
-              title={<Trans>History</Trans>}
-              icon={<ClockCounterClockwise size={18} />}
-              onSelect={() => setOpenHistoryDrawer(true)}
-            />
-            <Divider />
-            {!data.smartWalletAddress && (
-              <ActionItem
-                title={
-                  <Type.Caption color="red2">
-                    <Trans>Delete Wallet</Trans>
-                  </Type.Caption>
-                }
-                icon={<Trash size={18} color={themeColors.red2} />}
-                onSelect={() => setOpenDeleteModal(true)}
-              />
-            )}
-          </>
-        }
-        sx={{}}
-        buttonSx={{
-          border: 'none',
-          height: '100%',
-          p: 0,
-        }}
-        placement="topRight"
-      >
-        <IconButton
-          size={24}
-          type="button"
-          icon={<DotsThreeOutlineVertical size={16} weight="fill" />}
-          variant="ghost"
-          sx={{
-            color: 'neutral3',
-          }}
+      <Flex sx={{ alignItems: 'center', gap: 16 }}>
+        <IconBox
+          as={Link}
+          to={`${ROUTES.MY_MANAGEMENT.path}?${URL_PARAM_KEYS.MY_MANAGEMENT_WALLET_ID}=${data.id}`}
+          target="_blank"
+          icon={<UserCircle size={18} />}
+          sx={{ color: 'neutral3', '&:hover': { color: 'neutral2' } }}
         />
-      </Dropdown>
+        <IconBox
+          role="button"
+          icon={<ClockCounterClockwise size={18} />}
+          onClick={() => setOpenHistoryDrawer(true)}
+          sx={{ color: 'neutral3', '&:hover': { color: 'neutral2' } }}
+        />
+        <IconBox
+          role="button"
+          icon={<Trash size={18} />}
+          onClick={() => setOpenDeleteModal(true)}
+          sx={{ color: 'red2', '&:hover': { color: 'red1' } }}
+        />
+      </Flex>
       {openHistoryDrawer && (
         <CopyWalletHistoryDrawer
           copyWallet={data}

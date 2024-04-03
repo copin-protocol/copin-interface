@@ -32,6 +32,7 @@ export const LINKS = {
   referralProgram: 'https://docs.copin.io/features/referral-program',
   registerBingX: 'https://bingx.com/en-us/invite/DY5QNN',
   registerBitget: 'https://partner.bitget.online/bg/HPM3BN',
+  registerBinance: 'https://accounts.binance.com/register?ref=19902233',
   getBingXAPIKey: 'https://tutorial.copin.io/how-to-connecting-your-bingx-account/3.-generate-an-api-key',
   getBitgetAPIKey: 'https://tutorial.copin.io/how-to-connecting-your-bingx-account/3.-generate-an-api-key',
   notice: 'https://copin.substack.com/p/copin-profile-login-updates-road',

@@ -1,4 +1,5 @@
 export type LayoutProps = {
-  children: JSX.Element[]
-  resetSort?: () => void
+  header: JSX.Element
+  walletList: JSX.Element
+  assetDistribution: JSX.Element
 }

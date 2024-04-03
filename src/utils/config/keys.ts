@@ -135,6 +135,7 @@ export const URL_PARAM_KEYS = {
   ACTIVE_WALLET: 'wallet',
   ACCOUNT: 'account',
   LOG_ID: 'log_id',
+  MY_MANAGEMENT_WALLET_ID: 'copy_id',
 }
 
 export const TOOLTIP_KEYS = {

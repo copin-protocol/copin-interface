@@ -18,7 +18,7 @@ import { CopyTradePlatformEnum } from 'utils/config/enums'
 
 import { ApiWalletFormValues, apiWalletFormSchema, defaultFormValues } from './schema'
 
-export default function CreateBinanceWalletModal({ onDismiss }: { onDismiss: () => void }) {
+export default function CreateBinanceWalletModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
   const {
     register,
     handleSubmit,
@@ -59,7 +59,14 @@ export default function CreateBinanceWalletModal({ onDismiss }: { onDismiss: () 
   }
 
   return (
-    <Modal isOpen hasClose title={'Create Your Binance Wallet'} onDismiss={onDismiss} width="90vw" maxWidth="450px">
+    <Modal
+      isOpen={isOpen}
+      hasClose
+      title={'Create Your Binance Wallet'}
+      onDismiss={onDismiss}
+      width="90vw"
+      maxWidth="450px"
+    >
       <Box variant="card" sx={{ backgroundColor: 'modalBG' }}>
         <form
           onSubmit={handleSubmit(onSubmit)}

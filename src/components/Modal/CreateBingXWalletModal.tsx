@@ -19,7 +19,7 @@ import { CopyTradePlatformEnum } from 'utils/config/enums'
 
 import { ApiWalletFormValues, apiWalletFormSchema, defaultFormValues } from './schema'
 
-export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () => void }) {
+export default function CreateBingXWalletModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
   const {
     register,
     handleSubmit,
@@ -60,7 +60,14 @@ export default function CreateBingXWalletModal({ onDismiss }: { onDismiss: () =>
   }
 
   return (
-    <Modal isOpen hasClose title={'Create Your BingX Wallet'} onDismiss={onDismiss} width="90vw" maxWidth="450px">
+    <Modal
+      isOpen={isOpen}
+      hasClose
+      title={'Create Your BingX Wallet'}
+      onDismiss={onDismiss}
+      width="90vw"
+      maxWidth="450px"
+    >
       <Box variant="card" sx={{ backgroundColor: 'modalBG' }}>
         <form
           onSubmit={handleSubmit(onSubmit)}

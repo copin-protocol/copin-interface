@@ -29,7 +29,7 @@ const TabButton = ({
   </Flex>
 )
 
-const MobileLayout = ({ children }: LayoutProps) => {
+const MobileLayout = ({ header, walletList, assetDistribution }: LayoutProps) => {
   const [tab, setTab] = useState(TabEnum.WALLETS)
   return (
     <Box sx={{ position: 'relative', pb: 96 }}>
@@ -45,32 +45,14 @@ const MobileLayout = ({ children }: LayoutProps) => {
           zIndex: 100,
         }}
       >
-        {children[0]}
+        {header}
       </Box>
 
-      {tab === TabEnum.WALLETS && children[1]}
-      {tab === TabEnum.CREATE && (
-        <>
-          {children[2]}
-          {children[3]}
-        </>
-      )}
+      {tab === TabEnum.WALLETS && walletList}
 
       {tab === TabEnum.ASSETS && (
-        <Flex flexDirection="column" height="100%">
-          {children[5]}
-          {/* <Box
-            minHeight={261}
-            sx={{
-              borderBottom: 'small',
-              borderColor: 'neutral4',
-            }}
-          >
-            {children[5]}
-          </Box>
-          <Box sx={{ position: 'relative' }} flex="1">
-            {children[6]}
-          </Box> */}
+        <Flex flexDirection="column" height="600px">
+          {assetDistribution}
         </Flex>
       )}
       <Flex
@@ -98,12 +80,12 @@ const MobileLayout = ({ children }: LayoutProps) => {
           isActive={tab === TabEnum.ASSETS}
           onClick={() => setTab(TabEnum.ASSETS)}
         />
-        <TabButton
+        {/* <TabButton
           icon={PlusSquare}
           title="Create"
           isActive={tab === TabEnum.CREATE}
           onClick={() => setTab(TabEnum.CREATE)}
-        />
+        /> */}
       </Flex>
     </Box>
   )

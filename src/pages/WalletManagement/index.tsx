@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
+import { useState } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import CreateWalletAction from 'components/CreateWalletAction'
+import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
+// import CreateWalletAction from 'components/CreateWalletAction'
 import { Box, Flex, Type } from 'theme/base'
 
 import AssetDistribution from './AssetDistribution'
@@ -13,6 +15,7 @@ import WalletList from './WalletList'
 
 export default function WalletManagement() {
   const { lg, xl } = useResponsive()
+  const [hiddenBalance, hideBalance] = useState(true)
 
   let Layout = MobileLayout
   if (xl) {
@@ -23,51 +26,42 @@ export default function WalletManagement() {
   return (
     <>
       <CustomPageTitle title={`Wallet Management`} />
-      <Layout>
-        {/* child 0 */}
-        <Flex
-          sx={{
-            width: '100%',
-            height: '100%',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 3,
-          }}
-        >
-          <Type.H5 px={3} lineHeight="24px" textAlign="left">
-            <Trans>Wallet Management</Trans>
-          </Type.H5>
-        </Flex>
-
-        {/* child 1 */}
-        <Box
-          display={['block', 'block', 'flex']}
-          flexDirection="column"
-          height={['auto', 'auto', 'auto', 'auto', '100%']}
-        >
-          <WalletList />
-        </Box>
-
-        {/* child 2 */}
-        <Box display={['block', 'block', 'flex']} flexDirection="column" height="100%">
-          <Flex flexDirection="column">
-            <CreateWalletAction />
+      <Layout
+        header={
+          <Flex
+            sx={{
+              width: '100%',
+              height: '100%',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              columnGap: [2, 3],
+              rowGap: 1,
+              px: 3,
+            }}
+          >
+            <Type.H5 lineHeight="24px" textAlign="left" sx={{ fontSize: ['18px', '18px', '24px'] }}>
+              <Trans>Wallet Management</Trans>
+            </Type.H5>
+            <SwitchInputField
+              switchLabel="Hide/Show Balance"
+              checked={!hiddenBalance}
+              onChange={() => hideBalance(!hiddenBalance)}
+              wrapperSx={{ '*': { fontWeight: 400 } }}
+            />
           </Flex>
-          {/*<YouMightNeed />*/}
-        </Box>
-
-        {/* child 3 */}
-        <></>
-
-        {/* child 4 */}
-        <div>{/* {!!_address && <ActivityHeatmap account={_address} />} */}</div>
-
-        {/* child 5 */}
-        <Box>
-          <AssetDistribution />
-        </Box>
-      </Layout>
+        }
+        walletList={
+          <Box height={['auto', 'auto', 'auto', 'auto', '100%']}>
+            <WalletList hiddenBalance={hiddenBalance} />
+          </Box>
+        }
+        assetDistribution={
+          <Box width="100%" height="100%" overflow="hidden">
+            <AssetDistribution hiddenBalance={hiddenBalance} />
+          </Box>
+        }
+      />
     </>
   )
 }

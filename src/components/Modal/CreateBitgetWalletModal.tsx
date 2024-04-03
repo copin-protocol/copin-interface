@@ -19,7 +19,7 @@ import { CopyTradePlatformEnum } from 'utils/config/enums'
 
 import { BitgetWalletFormValues, bitgetWalletFormSchema, defaultFormValues } from './bitgetSchema'
 
-export default function CreateBitgetWalletModal({ onDismiss }: { onDismiss: () => void }) {
+export default function CreateBitgetWalletModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
   const {
     register,
     handleSubmit,
@@ -61,7 +61,14 @@ export default function CreateBitgetWalletModal({ onDismiss }: { onDismiss: () =
   }
 
   return (
-    <Modal isOpen hasClose title={'Create Your Bitget Wallet'} onDismiss={onDismiss} width="90vw" maxWidth="450px">
+    <Modal
+      isOpen={isOpen}
+      hasClose
+      title={'Create Your Bitget Wallet'}
+      onDismiss={onDismiss}
+      width="90vw"
+      maxWidth="450px"
+    >
       <Box variant="card" sx={{ backgroundColor: 'modalBG' }}>
         <form
           onSubmit={handleSubmit(onSubmit)}

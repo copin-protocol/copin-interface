@@ -4,8 +4,9 @@ import { useLocation } from 'react-router-dom'
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserData } from 'entities/user'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfileStore from 'hooks/store/useMyProfile'
-import { STORAGE_KEYS } from 'utils/config/keys'
+import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 
 export type ProfileState = {
   copyWallets: CopyWalletData[] | undefined
@@ -16,6 +17,7 @@ export type ProfileState = {
 }
 
 export default function useProfileState(): ProfileState {
+  const { searchParams, setSearchParams } = useSearchParams()
   const { state } = useLocation<{ copyWalletId: string }>()
   const { copyWallets, loadingCopyWallets } = useCopyWalletContext()
   const [activeWallet, setActiveWallet] = useState<CopyWalletData | null>(null)
@@ -33,12 +35,16 @@ export default function useProfileState(): ProfileState {
   }, [loadingCopyWallets])
 
   useEffect(() => {
-    if (!copyWallets?.length || loadingCopyWallets || !state) return
+    const paramWalletId = searchParams[URL_PARAM_KEYS.MY_MANAGEMENT_WALLET_ID]
+    if (!copyWallets?.length || loadingCopyWallets) return
+    const defaultWalletId = state?.copyWalletId || paramWalletId
+    if (!defaultWalletId) return
     setActiveWallet((prev) => {
-      const foundWallet = copyWallets.find((data) => (state?.copyWalletId ? data.id === state.copyWalletId : false))
+      const foundWallet = copyWallets.find((data) => data.id === defaultWalletId)
       if (foundWallet) return foundWallet
       return prev
     })
+    setSearchParams({ [URL_PARAM_KEYS.MY_MANAGEMENT_WALLET_ID]: null })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingCopyWallets, state])
 

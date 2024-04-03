@@ -16,7 +16,7 @@ import delay from 'utils/helpers/delay'
 import { DEFAULT_CHAIN_ID } from 'utils/web3/chains'
 import { CONTRACT_ABIS, CONTRACT_ADDRESSES } from 'utils/web3/contracts'
 
-const CreateSmartWalletModal = ({ onDismiss }: { onDismiss: () => void }) => {
+const CreateSmartWalletModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { isValid, alert } = useRequiredChain()
   const { walletProvider, publicProvider, walletAccount } = useWeb3()
   const [submitting, setSubmitting] = useState(false)
@@ -50,7 +50,7 @@ const CreateSmartWalletModal = ({ onDismiss }: { onDismiss: () => void }) => {
   }
 
   return (
-    <Modal isOpen onDismiss={() => onDismiss()}>
+    <Modal isOpen={isOpen} onDismiss={() => onDismiss()}>
       <Box sx={{ p: 3 }}>
         <Flex mb={2} sx={{ alignItems: 'center', gap: 2 }}>
           <IconBox color="primary1" icon={<HandWaving size={32} />} />
