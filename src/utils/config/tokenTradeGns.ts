@@ -140,6 +140,10 @@ const GNS_PAIRS = {
   'GNS-212': 'ETHFI',
   'GNS-213': 'METIS',
   'GNS-214': 'AEVO',
+  'GNS-215': 'ONDO',
+  'GNS-216': 'MNT',
+  'GNS-217': 'KAS',
+  'GNS-218': 'RON',
 }
 
 type TokenValues = Record<
