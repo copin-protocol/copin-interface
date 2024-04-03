@@ -7,16 +7,45 @@ export const SEPOLIA = 11155111
 export const OPTIMISM_MAINNET = 10
 export const OPTIMISM_GOERLI = 420
 export const OPTIMISM_SEPOLIA = 11155420
+export const BLAST_SEPOLIA = 168587773
+export const BLAST_MAINNET = 81457
 export const ARBITRUM_MAINNET = 42161
 export const ARBITRUM_GOERLI = 421613
 export const ZKSYNC_ERA_MAINNET = 324
+export const BNB_MAINNET = 56
+export const AVALANCHE_MAINNET = 43114
+export const BASE_MAINNET = 8453
+export const POLYGON_MAINNET = 137
+export const MANTA_MAINNET = 169
+export const MANTLE_MAINNET = 5000
+export const LINEA_MAINNET = 59144
+export const FANTOM_MAINNET = 250
+export const MODE_MAINNET = 34443
 export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 export const SUBSCRIPTION_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 
-export const SUPPORTED_CHAIN_IDS: number[] =
-  NETWORK === 'devnet'
-    ? [GOERLI, SEPOLIA, OPTIMISM_GOERLI, OPTIMISM_SEPOLIA, ARBITRUM_GOERLI]
-    : [ETHEREUM_MAINNET, ARBITRUM_MAINNET, OPTIMISM_MAINNET]
+export const SUPPORTED_CHAIN_IDS: number[] = [
+  GOERLI,
+  SEPOLIA,
+  OPTIMISM_GOERLI,
+  OPTIMISM_SEPOLIA,
+  BLAST_SEPOLIA,
+  ARBITRUM_GOERLI,
+  ETHEREUM_MAINNET,
+  ARBITRUM_MAINNET,
+  OPTIMISM_MAINNET,
+  BLAST_MAINNET,
+  BNB_MAINNET,
+  AVALANCHE_MAINNET,
+  BASE_MAINNET,
+  POLYGON_MAINNET,
+  FANTOM_MAINNET,
+  LINEA_MAINNET,
+  MODE_MAINNET,
+  // ZKSYNC_ERA_MAINNET,
+  // MANTA_MAINNET,
+  // MANTLE_MAINNET,
+]
 
 const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
   ETH: {
@@ -32,6 +61,31 @@ const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
   OP: {
     name: 'OP',
     symbol: 'OP',
+    decimals: 18,
+  },
+  BNB: {
+    name: 'BNB',
+    symbol: 'BNB',
+    decimals: 18,
+  },
+  AVAX: {
+    name: 'AVAX',
+    symbol: 'AVAX',
+    decimals: 18,
+  },
+  MATIC: {
+    name: 'MATIC',
+    symbol: 'MATIC',
+    decimals: 18,
+  },
+  MNT: {
+    name: 'MNT',
+    symbol: 'MNT',
+    decimals: 18,
+  },
+  FTM: {
+    name: 'FTM',
+    symbol: 'FTM',
     decimals: 18,
   },
 }
@@ -126,6 +180,96 @@ const CHAINS: { [key: number]: Chain } = {
     rpcUrl: 'https://arbitrum-goerli.publicnode.com',
     blockExplorerUrl: 'https://testnet.arbiscan.io',
     secondaryTokens: SECONDARY_TOKENS[ARBITRUM_GOERLI],
+  },
+  [BNB_MAINNET]: {
+    id: `0x${BNB_MAINNET.toString(16)}`,
+    label: 'BNB Chain',
+    icon: 'BNB',
+    token: NATIVE_CURRENCIES.BNB.symbol,
+    rpcUrl: 'https://bsc-rpc.publicnode.com',
+    blockExplorerUrl: 'https://bscsan.com',
+    secondaryTokens: SECONDARY_TOKENS[BNB_MAINNET],
+  },
+  [BNB_MAINNET]: {
+    id: `0x${BNB_MAINNET.toString(16)}`,
+    label: 'BNB Chain',
+    icon: 'BNB',
+    token: NATIVE_CURRENCIES.BNB.symbol,
+    rpcUrl: 'https://bsc-rpc.publicnode.com',
+    blockExplorerUrl: 'https://bscsan.com',
+    secondaryTokens: SECONDARY_TOKENS[BNB_MAINNET],
+  },
+  [BLAST_MAINNET]: {
+    id: `0x${BLAST_MAINNET.toString(16)}`,
+    label: 'Blast',
+    icon: 'BLAST',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://rpc.blast.io',
+    blockExplorerUrl: 'https://blastscan.io',
+    secondaryTokens: SECONDARY_TOKENS[BLAST_MAINNET],
+  },
+  [BLAST_SEPOLIA]: {
+    id: `0x${BLAST_SEPOLIA.toString(16)}`,
+    label: 'Blast Sepolia',
+    icon: 'BLAST',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://sepolia.blast.io',
+    blockExplorerUrl: 'https://testnet.blastscan.io',
+    secondaryTokens: SECONDARY_TOKENS[BLAST_SEPOLIA],
+  },
+  [AVALANCHE_MAINNET]: {
+    id: `0x${AVALANCHE_MAINNET.toString(16)}`,
+    label: 'Avalanche',
+    icon: 'AVAX',
+    token: NATIVE_CURRENCIES.AVAX.symbol,
+    rpcUrl: 'https://avalanche.public-rpc.com',
+    blockExplorerUrl: 'https://nets.avax.netwosubrk/dexalot',
+    secondaryTokens: SECONDARY_TOKENS[AVALANCHE_MAINNET],
+  },
+  [FANTOM_MAINNET]: {
+    id: `0x${FANTOM_MAINNET.toString(16)}`,
+    label: 'Fantom',
+    icon: 'FTM',
+    token: NATIVE_CURRENCIES.FTM.symbol,
+    rpcUrl: 'https://fantom-rpc.publicnode.com',
+    blockExplorerUrl: 'https://ftmscan.com',
+    secondaryTokens: SECONDARY_TOKENS[FANTOM_MAINNET],
+  },
+  [BASE_MAINNET]: {
+    id: `0x${BASE_MAINNET.toString(16)}`,
+    label: 'Base',
+    icon: 'BASE',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://base-rpc.publicnode.com',
+    blockExplorerUrl: 'https://basescan.org',
+    secondaryTokens: SECONDARY_TOKENS[BASE_MAINNET],
+  },
+  [POLYGON_MAINNET]: {
+    id: `0x${POLYGON_MAINNET.toString(16)}`,
+    label: 'Polygon',
+    icon: 'MATIC',
+    token: NATIVE_CURRENCIES.MATIC.symbol,
+    rpcUrl: 'https://polygon-bor-rpc.publicnode.com',
+    blockExplorerUrl: 'https://polygonscan.com',
+    secondaryTokens: SECONDARY_TOKENS[POLYGON_MAINNET],
+  },
+  [LINEA_MAINNET]: {
+    id: `0x${LINEA_MAINNET.toString(16)}`,
+    label: 'Linea',
+    icon: 'LINEA',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://rpc.linea.build',
+    blockExplorerUrl: 'https://lineascan.build',
+    secondaryTokens: SECONDARY_TOKENS[LINEA_MAINNET],
+  },
+  [MODE_MAINNET]: {
+    id: `0x${MODE_MAINNET.toString(16)}`,
+    label: 'Mode',
+    icon: 'MODE',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://mainnet.mode.network',
+    blockExplorerUrl: 'https://modescan.io',
+    secondaryTokens: SECONDARY_TOKENS[MODE_MAINNET],
   },
 }
 

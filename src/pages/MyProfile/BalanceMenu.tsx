@@ -54,7 +54,7 @@ export default function BalanceMenu({
         buttonVariant="ghost"
         buttonSx={{ height: '100%', border: 'none', p: 0 }}
         sx={{ height: '100%', pl: 3, pr: 2, flexShrink: 0, borderRight: 'small', borderRightColor: 'neutral4' }}
-        menuSx={{ width: ['100%', 200] }}
+        menuSx={{ width: ['100%', 200], overflow: 'hidden auto', height: 'max-content', maxHeight: [400, 500], py: 2 }}
         menu={
           <>
             {copyWallets.map((wallet) => {
