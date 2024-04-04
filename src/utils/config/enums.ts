@@ -44,6 +44,7 @@ export enum CopyTradeTypeEnum {
   NOT_FULL_ORDER = 'NOT_FULL_ORDER',
 }
 export enum CopyTradePlatformEnum {
+  OTHERS = 'OTHERS',
   GMX = 'GMX',
   BINGX = 'BINGX',
   BITGET = 'BITGET',

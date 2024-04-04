@@ -96,6 +96,7 @@ export const VOLUME_LIMIT = 20000
 export const EXCHANGE_STATS = [
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
+  CopyTradePlatformEnum.OTHERS,
   // CopyTradePlatformEnum.BINANCE,
   // CopyTradePlatformEnum.SYNTHETIX,
   // CopyTradePlatformEnum.SYNTHETIX_V2,
@@ -103,6 +104,7 @@ export const EXCHANGE_STATS = [
   // CopyTradePlatformEnum.GNS,
 ]
 export const EXCHANGE_COLOR: { [key: string]: string } = {
+  [CopyTradePlatformEnum.OTHERS]: '#FCEFD1',
   [CopyTradePlatformEnum.BINGX]: '#4277FD',
   [CopyTradePlatformEnum.BITGET]: '#00F0FF',
   [CopyTradePlatformEnum.BINANCE]: '#FDBA0D',

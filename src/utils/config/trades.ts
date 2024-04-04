@@ -72,6 +72,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.POLYNOMIAL]: TOKEN_TRADE_SYNTHETIX,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
+  [CopyTradePlatformEnum.OTHERS]: [],
   [CopyTradePlatformEnum.GMX]: [],
   [CopyTradePlatformEnum.BINGX]: ['YFI', 'RPL', 'ZEC', 'RPL', 'UMA', 'BAL', 'XTZ', 'AR'],
   [CopyTradePlatformEnum.BITGET]: [],

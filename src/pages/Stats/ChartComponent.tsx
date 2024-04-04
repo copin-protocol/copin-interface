@@ -29,6 +29,7 @@ import {
   MIN_TICK_GAP,
   YAXIS_WIDTH,
 } from 'utils/config/constants'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { PLATFORM_TEXT_TRANS } from 'utils/config/translations'
 import { compactNumber, formatLocalDate, formatNumber } from 'utils/helpers/format'
 
@@ -556,6 +557,47 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
         copierActiveCumulative += stats.totalActiveCopier
         copyTradeCumulative += totalCopyTrade
         copyTradeActiveCumulative += stats.totalActiveCopyTrade
+
+        // Other Exchanges
+        const otherExchanges = (stats: any) => {
+          let totalActiveCopyTrade = 0
+          let totalInactiveCopyTrade = 0
+          let totalOrder = 0
+          let totalVolume = 0
+          let totalPnl = 0
+          let totalProfit = 0
+          let totalLoss = 0
+
+          for (const exchange in stats.exchanges) {
+            if (
+              [CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.BITGET].includes(exchange as CopyTradePlatformEnum)
+            ) {
+              const exchangeStats = stats.exchanges[exchange] || {}
+              totalActiveCopyTrade += exchangeStats.totalActiveCopyTrade || 0
+              totalInactiveCopyTrade += exchangeStats.totalInactiveCopyTrade || 0
+              totalOrder += exchangeStats.totalOrder || 0
+              totalVolume += exchangeStats.totalVolume || 0
+              totalPnl += exchangeStats.totalPnl || 0
+              totalProfit += exchangeStats.totalProfit || 0
+              totalLoss += exchangeStats.totalLoss || 0
+            }
+          }
+
+          return {
+            totalActiveCopyTrade: stats.totalActiveCopyTrade - totalActiveCopyTrade,
+            totalInactiveCopyTrade: stats.totalInactiveCopyTrade - totalInactiveCopyTrade,
+            totalOrder: stats.totalOrder - totalOrder,
+            totalVolume: stats.totalVolume - totalVolume,
+            totalPnl: pnl - totalPnl,
+            totalProfit: stats.totalProfit - totalProfit,
+            totalLoss: stats.totalLoss - totalLoss,
+          }
+        }
+
+        stats.exchanges = {
+          ...stats.exchanges,
+          [CopyTradePlatformEnum.OTHERS]: otherExchanges(stats),
+        }
 
         const formattedData: StatisticChartData = {
           date: formatLocalDate(stats.statisticAt, CHART_DATE_FORMAT),
