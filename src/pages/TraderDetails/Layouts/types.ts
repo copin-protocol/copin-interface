@@ -1,8 +1,10 @@
 export type LayoutProps = {
   protocolStats?: JSX.Element
   traderInfo?: JSX.Element
+  traderStatsSummary?: JSX.Element
   traderStats?: JSX.Element
   traderRanking?: JSX.Element
+  traderChartPnl?: JSX.Element
   traderChartPositions?: JSX.Element
   heatmap?: JSX.Element
   openingPositions?: JSX.Element

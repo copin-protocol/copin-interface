@@ -265,48 +265,27 @@ export function TraderDetailsComponent({
             </Flex>
           </BotAlertProvider>
         }
+        traderChartPnl={
+          <ChartTrader
+            protocol={protocol}
+            account={address}
+            timeOption={timeOption}
+            // onChangeTime={setTimeOption}
+          />
+        }
+        traderStatsSummary={!!currentTraderData ? <GeneralStats traderData={currentTraderData} /> : <></>}
         traderStats={
-          <Box height="100%" sx={{ flexDirection: 'column', display: ['block', 'block', 'block', 'block', 'flex'] }}>
-            {isLoadingTraderData ? (
-              <Loading />
-            ) : (
-              <>
-                {!currentTraderData && (!traderData || traderData?.every((data) => !data)) ? (
-                  <NoDataFound message="No statistic" />
-                ) : (
-                  <>
-                    <Flex
-                      sx={{
-                        width: '100%',
-                        height: [300, 300, 300, 260, 'max(33%, 300px)'],
-                        flexDirection: 'column',
-                        overflow: 'hidden',
-                        bg: 'neutral5',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <GeneralStats traderData={currentTraderData} />
-                      {protocol && address && (
-                        <Box flex="1 0 0">
-                          <ChartTrader
-                            protocol={protocol}
-                            account={address}
-                            timeOption={timeOption}
-                            // onChangeTime={setTimeOption}
-                          />
-                        </Box>
-                      )}
-                    </Flex>
-                    <Box overflow="auto" flex="1 0 0" mr={[0, 0, 0, '-1px']} sx={{ position: 'relative' }}>
-                      <Box height="100%">
-                        {!!traderData && <TraderStats data={traderData} timeOption={timeOption} />}
-                      </Box>
-                    </Box>
-                  </>
-                )}
-              </>
-            )}
-          </Box>
+          isLoadingTraderData ? (
+            <Loading />
+          ) : (
+            <>
+              {!currentTraderData && (!traderData || traderData?.every((data) => !data)) ? (
+                <NoDataFound message="No statistic" />
+              ) : (
+                !!traderData && <TraderStats data={traderData} timeOption={timeOption} />
+              )}
+            </>
+          )
         }
         traderRanking={<TraderRanking data={currentTraderData} timeOption={timeOption} onChangeTime={setTimeOption} />}
         traderChartPositions={

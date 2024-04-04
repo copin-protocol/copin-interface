@@ -5,7 +5,7 @@ import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 
 import { updateCopyWalletApi } from 'apis/copyWalletApis'
-import NoDataFound from 'components/@ui/NoDataFound'
+// import NoDataFound from 'components/@ui/NoDataFound'
 import ToastBody from 'components/@ui/ToastBody'
 import { CreateWalletModal } from 'components/CreateWalletAction'
 import WalletDetailsCard from 'components/WalletDetailsCard'
@@ -75,9 +75,9 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
   return (
     <Flex flexDirection="column" height="100%">
       {loadingCopyWallets && <Loading />}
-      {!loadingCopyWallets && (!copyWallets || copyWallets.length === 0) && (
+      {/* {!loadingCopyWallets && (!copyWallets || copyWallets.length === 0) && (
         <NoDataFound message={<Trans>You don’t have any wallet. Please create a wallet</Trans>} />
-      )}
+      )} */}
       <Flex
         flexDirection="column"
         sx={{

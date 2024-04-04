@@ -40,7 +40,28 @@ const TabletLayout = (props: LayoutProps) => {
             borderColor: 'neutral4',
           }}
         >
-          <Box>{props.traderStats}</Box>
+          <Box>
+            {
+              <Box height="100%">
+                <Flex
+                  sx={{
+                    width: '100%',
+                    height: 300,
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                    bg: 'neutral5',
+                    flexShrink: 0,
+                  }}
+                >
+                  {props.traderStatsSummary}
+                  <Box flex="1 0 0">{props.traderChartPnl}</Box>
+                </Flex>
+                <Box overflow="auto" flex="1 0 0" sx={{ position: 'relative' }}>
+                  <Box height="100%">{props.traderStats}</Box>
+                </Box>
+              </Box>
+            }
+          </Box>
         </Box>
         <Box flex="1" minHeight={700}>
           <Flex flexDirection="column" height="100%">
@@ -71,19 +92,7 @@ const TabletLayout = (props: LayoutProps) => {
         >
           {props.traderRanking}
         </Flex>
-        <Box width="calc(100% - 350px)">
-          {props.traderChartPositions}
-          {/* <Box
-            height={120}
-            p={12}
-            sx={{
-              borderTop: 'small',
-              borderColor: 'neutral4',
-            }}
-          >
-            {children[4]}
-          </Box> */}
-        </Box>
+        <Box width="calc(100% - 350px)">{props.traderChartPositions}</Box>
       </Flex>
     </>
   )

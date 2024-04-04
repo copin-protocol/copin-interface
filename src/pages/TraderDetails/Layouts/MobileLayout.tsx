@@ -24,7 +24,7 @@ const TabButton = ({
   onClick: () => void
 }) => (
   <Flex role="button" onClick={onClick} width="fit-content" sx={{ gap: 2 }} justifyContent="center" alignItems="center">
-    <IconBox color={isActive ? 'primary1' : 'neutral3'} icon={<TabIcon size={24} />}></IconBox>
+    <IconBox color={isActive ? 'primary1' : 'neutral3'} icon={<TabIcon size={24} weight="fill" />}></IconBox>
     <Type.BodyBold color={isActive ? 'neutral1' : 'neutral3'}>{title}</Type.BodyBold>
   </Flex>
 )
@@ -60,19 +60,25 @@ const MobileLayout = (props: LayoutProps) => {
       >
         {props.traderInfo}
       </Box>
-      {/* <Box
-        display={tab === TabEnum.POSITIONS ? 'none' : 'block'}
-        px={12}
-        pb={12}
-        pt={1}
-        sx={{
-          borderBottom: 'small',
-          borderColor: 'neutral4',
-        }}
-      >
-        {children[1]}
-      </Box> */}
-      {tab === TabEnum.STATS && props.traderStats}
+      {tab === TabEnum.STATS && (
+        <Box height="100%">
+          <Flex
+            sx={{
+              width: '100%',
+              height: 300,
+              flexDirection: 'column',
+              overflow: 'hidden',
+              bg: 'neutral5',
+              flexShrink: 0,
+            }}
+          >
+            <Box flex="1 0 0">{props.traderChartPositions}</Box>
+          </Flex>
+          <Box overflow="auto" flex="1 0 0" sx={{ position: 'relative' }}>
+            <Box height="100%">{props.traderStats}</Box>
+          </Box>
+        </Box>
+      )}
       {tab === TabEnum.CHARTS && (
         <>
           <Box
@@ -84,19 +90,11 @@ const MobileLayout = (props: LayoutProps) => {
           >
             {props.traderRanking}
           </Box>
-          <Box height="max(calc(100vh - 545px), 330px)">{props.traderChartPositions}</Box>
-          {/* <Box
-            p={12}
-            sx={{
-              borderTop: 'small',
-              borderColor: 'neutral4',
-            }}
-          >
-            {children[4]}
-          </Box> */}
+          <Box mt={1} height="max(calc(100vh - 545px), 330px)" bg="neutral5">
+            {props.traderChartPnl}
+          </Box>
         </>
       )}
-
       {tab === TabEnum.POSITIONS && (
         <Flex flexDirection="column" height="100%">
           <Box
@@ -127,6 +125,12 @@ const MobileLayout = (props: LayoutProps) => {
         }}
       >
         <TabButton
+          icon={ChartLine}
+          title="Charts"
+          isActive={tab === TabEnum.CHARTS}
+          onClick={() => setTab(TabEnum.CHARTS)}
+        />
+        <TabButton
           icon={BookOpenText}
           title="Stats"
           isActive={tab === TabEnum.STATS}
@@ -137,12 +141,6 @@ const MobileLayout = (props: LayoutProps) => {
           title="Positions"
           isActive={tab === TabEnum.POSITIONS}
           onClick={() => setTab(TabEnum.POSITIONS)}
-        />
-        <TabButton
-          icon={ChartLine}
-          title="Charts"
-          isActive={tab === TabEnum.CHARTS}
-          onClick={() => setTab(TabEnum.CHARTS)}
         />
       </Flex>
     </Box>

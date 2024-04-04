@@ -39,11 +39,10 @@ const DesktopLayout = (props: LayoutProps) => {
             position: 'relative',
             overflow: 'hidden',
             gridTemplate: `
-    "CHARTS STATS POSITIONS" minmax(0px, 1fr) / ${
-      openingPositionFullExpanded || positionFullExpanded ? '0px 0px 1fr' : '400px 1fr 510px'
-      // positionFullExpanded ? '400px 0px 1fr' : chartFullExpanded ? '1fr 0px 510px' : '400px 1fr 510px'
-    }
-    `,
+              "CHARTS STATS POSITIONS" minmax(0px, 1fr) / ${
+                openingPositionFullExpanded || positionFullExpanded ? '0px 0px 1fr' : '400px 1fr 510px'
+              }
+            `,
           }}
         >
           <Box
@@ -53,26 +52,42 @@ const DesktopLayout = (props: LayoutProps) => {
               overflow: 'hidden',
             }}
           >
-            {props.traderStats}
+            {
+              <Box height="100%" sx={{ flexDirection: 'column', display: 'flex' }}>
+                <Flex
+                  sx={{
+                    width: '100%',
+                    height: 'max(33%, 300px)',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                    bg: 'neutral5',
+                    flexShrink: 0,
+                  }}
+                >
+                  {props.traderStatsSummary}
+                  <Box flex="1 0 0">{props.traderChartPnl}</Box>
+                </Flex>
+                <Box overflow="auto" flex="1 0 0" mr={'-1px'} sx={{ position: 'relative' }}>
+                  <Box height="100%">{props.traderStats}</Box>
+                </Box>
+              </Box>
+            }
           </Box>
 
           <Box
             id="CHARTS"
             sx={{
               gridArea: 'CHARTS / CHARTS',
-              // borderRight: chartFullExpanded ? 'none' : 'small',
               overflow: 'hidden',
               display: 'grid',
               gridTemplate: `
             "RADAR" minmax(1fr, ${rowOneHeight})
             "CANDLESTICK" minmax(1fr, 1fr)
           `,
-              // "RADAR" ${chartFullExpanded ? '0px' : 'minmax(1fr, 260px)'}
             }}
           >
             <Flex flexDirection="column" height="100%">
               <Box
-                // height={chartFullExpanded ? 0 : 260}
                 height={rowOneHeight}
                 sx={{
                   gridArea: 'RADAR',
@@ -98,11 +113,7 @@ const DesktopLayout = (props: LayoutProps) => {
                   borderRight: 'small',
                   borderTop: chartFullExpanded ? 'none' : 'small',
                   borderColor: 'neutral4',
-                  // height: 'max(calc(100% - 120px - 260px),200px)',
-                  // '@media screen and (max-height: 800px)': {
-                  // height: chartFullExpanded ? '100%' : 'max(calc(100% - 260px),200px)',
                   height: `max(calc(100% - ${rowOneHeight}),200px)`,
-                  // },
                   ...(chartFullExpanded
                     ? {
                         position: 'absolute',
@@ -119,21 +130,6 @@ const DesktopLayout = (props: LayoutProps) => {
               >
                 {props.traderChartPositions}
               </Box>
-
-              {/* <Box
-            px={12}
-            pt={12}
-            height="120px"
-            sx={{
-              borderTop: 'small',
-              borderColor: 'neutral4',
-              '@media screen and (max-height: 800px)': {
-                display: 'none',
-              },
-            }}
-          >
-            {children[4]}
-          </Box> */}
             </Flex>
           </Box>
           <Box
@@ -145,15 +141,15 @@ const DesktopLayout = (props: LayoutProps) => {
               overflow: 'hidden',
               display: 'grid',
               gridTemplate: `
-    "OPENINGS" ${
-      openingPositionFullExpanded
-        ? 'minmax(0px, 1fr)'
-        : positionFullExpanded || positionTopExpanded
-        ? '0px'
-        : `${rowOneHeight}`
-    }
-    "HISTORY" ${openingPositionFullExpanded ? '0px' : 'minmax(0px, 1fr)'}
-    `,
+                "OPENINGS" ${
+                  openingPositionFullExpanded
+                    ? 'minmax(0px, 1fr)'
+                    : positionFullExpanded || positionTopExpanded
+                    ? '0px'
+                    : `${rowOneHeight}`
+                }
+                "HISTORY" ${openingPositionFullExpanded ? '0px' : 'minmax(0px, 1fr)'}
+              `,
             }}
           >
             <Box
