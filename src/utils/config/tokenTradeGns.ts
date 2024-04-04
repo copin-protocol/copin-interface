@@ -144,6 +144,7 @@ const GNS_PAIRS = {
   'GNS-216': 'MNT',
   'GNS-217': 'KAS',
   'GNS-218': 'RON',
+  'GNS-219': 'ENA',
 }
 
 type TokenValues = Record<

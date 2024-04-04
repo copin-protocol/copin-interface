@@ -11,6 +11,7 @@ import { CreateWalletModal } from 'components/CreateWalletAction'
 import WalletDetailsCard from 'components/WalletDetailsCard'
 import { CopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useInternalRole from 'hooks/features/useInternalRole'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -26,9 +27,16 @@ const EXCHANGES = [
   CopyTradePlatformEnum.BINANCE,
   CopyTradePlatformEnum.SYNTHETIX,
 ]
-const ALLOW_EXCHANGE = [CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.BITGET, CopyTradePlatformEnum.BINANCE]
+const ALLOW_EXCHANGE = [CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.BITGET]
+const INTERNAL_ALLOW_EXCHANGE = [
+  CopyTradePlatformEnum.BINGX,
+  CopyTradePlatformEnum.BITGET,
+  CopyTradePlatformEnum.BINANCE,
+]
 
 export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean }) {
+  const isInternal = useInternalRole()
+  const allowExchanges = isInternal ? INTERNAL_ALLOW_EXCHANGE : ALLOW_EXCHANGE
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
 
   const updateCopyWallet = useMutation(updateCopyWalletApi, {
@@ -87,7 +95,7 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
         }}
       >
         {EXCHANGES.map((exchange) => {
-          const isAllowed = ALLOW_EXCHANGE.includes(exchange)
+          const isAllowed = allowExchanges.includes(exchange)
           const wallets = walletMapping[exchange] ?? []
           return (
             <Accordion
