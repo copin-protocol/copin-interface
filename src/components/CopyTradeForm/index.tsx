@@ -111,9 +111,11 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const pairs =
     protocol &&
     getTokenTradeList(protocol).filter((tokenTrade) => !TOKEN_TRADE_IGNORE[platform]?.includes(tokenTrade.name))
+  const addressPairs = pairs?.map((e) => e.address) ?? []
   const pairOptions = pairs?.map((e) => {
     return { value: e.address, label: e.name }
   })
+  pairOptions?.unshift({ value: 'all', label: 'All Tokens' })
 
   const account = watch('account')
   const duplicateToAddress = watch('duplicateToAddress')
@@ -300,8 +302,12 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               className="select-container pad-right-0"
               options={pairOptions}
               value={pairOptions?.filter?.((option) => tokenAddresses.includes(option.value))}
-              onChange={(newValue: any) => {
+              onChange={(newValue: any, actionMeta: any) => {
                 clearErrors(fieldName.tokenAddresses)
+                if (actionMeta?.option?.value === 'all') {
+                  setValue(fieldName.tokenAddresses, addressPairs)
+                  return
+                }
                 setValue(
                   fieldName.tokenAddresses,
                   newValue?.map((data: any) => data.value)
