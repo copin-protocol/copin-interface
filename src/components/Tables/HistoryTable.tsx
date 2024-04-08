@@ -146,6 +146,7 @@ export default function HistoryTable({
             '.select__control': { border: 'none !important' },
             '.currency_option': { width: 'auto !important' },
             '.select__value-container': { p: '0 !important', '*': { p: '0 !important' } },
+            '.select__menu': { minWidth: 88 },
           }}
         >
           <CurrencyOption

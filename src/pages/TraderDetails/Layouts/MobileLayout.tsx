@@ -62,18 +62,15 @@ const MobileLayout = (props: LayoutProps) => {
       </Box>
       {tab === TabEnum.STATS && (
         <Box height="100%">
-          <Flex
+          <Box
             sx={{
-              width: '100%',
-              height: 300,
-              flexDirection: 'column',
+              height: 350,
               overflow: 'hidden',
               bg: 'neutral5',
-              flexShrink: 0,
             }}
           >
-            <Box flex="1 0 0">{props.traderChartPositions}</Box>
-          </Flex>
+            {props.traderChartPositions}
+          </Box>
           <Box overflow="auto" flex="1 0 0" sx={{ position: 'relative' }}>
             <Box height="100%">{props.traderStats}</Box>
           </Box>
