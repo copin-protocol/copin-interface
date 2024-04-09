@@ -1,7 +1,7 @@
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
-import { SystemConfigData } from 'entities/systemConfig.d'
+import { SystemConfigData } from 'entities/system'
 
 interface SystemConfigState {
   systemConfig: SystemConfigData | null

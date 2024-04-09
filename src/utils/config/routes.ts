@@ -80,6 +80,9 @@ const ROUTES = {
   STATS: {
     path: '/stats',
   },
+  SYSTEM_STATUS: {
+    path: '/system',
+  },
   SHARED_BACKTEST_SINGLE: {
     path: '/:protocol/shared-backtest/single/:id',
     path_prefix: '/shared-backtest/single',

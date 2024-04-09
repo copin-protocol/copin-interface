@@ -1,14 +1,16 @@
 import { Trans } from '@lingui/macro'
-import { BookBookmark, ChartBar, CrownSimple } from '@phosphor-icons/react'
+import { BookBookmark, ChartBar, CrownSimple, ThermometerSimple } from '@phosphor-icons/react'
 import { ComponentType, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
+import useInternalRole from 'hooks/features/useInternalRole'
 import Accordion from 'theme/Accordion'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
 
 export default function MoreDropdown() {
+  const isInternal = useInternalRole()
   return (
     <Box
       sx={{
@@ -40,7 +42,7 @@ export default function MoreDropdown() {
       >
         <Box sx={{ p: 2, width: 140, bg: 'neutral8', border: 'small', borderColor: 'neutral4' }}>
           <Flex sx={{ flexDirection: 'column', gap: 12 }}>
-            {configs.map((config, index) => {
+            {(isInternal ? internalConfigs : configs).map((config, index) => {
               return <MoreItem key={index} {...config} />
             })}
           </Flex>
@@ -50,6 +52,7 @@ export default function MoreDropdown() {
   )
 }
 export function MoreDropdownMobile({ onClickItem }: { onClickItem: (() => void) | undefined }) {
+  const isInternal = useInternalRole()
   return (
     <Accordion
       defaultOpen
@@ -60,7 +63,7 @@ export function MoreDropdownMobile({ onClickItem }: { onClickItem: (() => void) 
       }
       body={
         <Flex py={3} sx={{ flexDirection: 'column', gap: 3, '& *': { fontWeight: 'bold' } }} onClick={onClickItem}>
-          {configs.map((config, index) => {
+          {(isInternal ? internalConfigs : configs).map((config, index) => {
             return <MoreItem key={index} {...config} />
           })}
         </Flex>
@@ -70,6 +73,29 @@ export function MoreDropdownMobile({ onClickItem }: { onClickItem: (() => void) 
 }
 
 const configs = [
+  {
+    icon: ChartBar,
+    text: <Trans>Stats</Trans>,
+    route: ROUTES.STATS.path,
+  },
+  {
+    icon: BookBookmark,
+    text: <Trans>Document</Trans>,
+    link: LINKS.docs,
+  },
+  {
+    icon: CrownSimple,
+    text: <Trans>Subscription</Trans>,
+    route: ROUTES.SUBSCRIPTION.path,
+  },
+]
+
+const internalConfigs = [
+  {
+    icon: ThermometerSimple,
+    text: <Trans>System Status</Trans>,
+    route: ROUTES.SYSTEM_STATUS.path,
+  },
   {
     icon: ChartBar,
     text: <Trans>Stats</Trans>,

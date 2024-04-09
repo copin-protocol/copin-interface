@@ -3,6 +3,7 @@ import { Trans, t } from '@lingui/macro'
 import { ReactNode } from 'react'
 
 import {
+  ChainStatsEnum,
   ChangeFieldEnum,
   CopyPositionCloseTypeEnum,
   CopyTradePlatformEnum,
@@ -135,6 +136,11 @@ export const CHANGE_FIELD_TRANS: ObjectTrans = {
   [ChangeFieldEnum.smartWalletAddress]: <Trans>Smart Wallet</Trans>,
   [ChangeFieldEnum.copyVolume]: <Trans>Copy Volume</Trans>,
   [ChangeFieldEnum.activeCopy]: <Trans>Active Copy</Trans>,
+}
+
+export const CHAIN_STATS_TRANS: ObjectTrans = {
+  [ChainStatsEnum.ARB]: 'Arbitrum',
+  [ChainStatsEnum.OP]: 'Optimism',
 }
 
 export const ERRORS: ObjectTrans = {

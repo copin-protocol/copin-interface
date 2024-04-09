@@ -1,9 +1,9 @@
 import requester from 'apis'
 
-import { SystemConfigData } from 'entities/systemConfig.d'
+import { ListenerStatsData } from 'entities/system'
 
-const SERVICE = 'main-service/public/system-configs'
+const SERVICE = 'system-statuses'
 
-export async function getSystemConfigsApi() {
-  return requester.get(`${SERVICE}`).then((res: any) => res.data?.data as SystemConfigData)
+export async function getListenerStatsApi() {
+  return requester.get(`${SERVICE}/listener-stats`).then((res: any) => res.data as ListenerStatsData)
 }

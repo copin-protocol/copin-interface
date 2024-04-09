@@ -223,3 +223,8 @@ export enum ChangeFieldEnum {
   copyVolume = 'copyVolume',
   activeCopy = 'activeCopy',
 }
+
+export enum ChainStatsEnum {
+  ARB = 'arb',
+  OP = 'op',
+}
