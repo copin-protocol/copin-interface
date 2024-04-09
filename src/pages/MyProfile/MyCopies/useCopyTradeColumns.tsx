@@ -10,6 +10,7 @@ import { MutableRefObject, SetStateAction, useCallback, useMemo } from 'react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import Divider from 'components/@ui/Divider'
+import MarketGroup from 'components/@ui/MarketGroup'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyTradeData } from 'entities/copyTrade'
@@ -133,6 +134,20 @@ export default function useCopyTradeColumns({
     (item: CopyTradeData) => (
       <Type.Caption color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}>
         x{formatNumber(item.leverage)}
+      </Type.Caption>
+    ),
+    [isRunningFn]
+  )
+  const renderMarkets = useCallback(
+    (item: CopyTradeData) => (
+      <Type.Caption color="neutral1">
+        {item.copyAll ? (
+          'Follow Trader'
+        ) : item?.protocol && item?.tokenAddresses ? (
+          <MarketGroup protocol={item.protocol} indexTokens={item.tokenAddresses} />
+        ) : (
+          '--'
+        )}
       </Type.Caption>
     ),
     [isRunningFn]
@@ -409,6 +424,7 @@ export default function useCopyTradeColumns({
         title: 'Label',
         dataIndex: 'title',
         key: 'title',
+        sortBy: 'title',
         style: { minWidth: '120px', width: 120, pr: 3 },
         render: renderTitle,
       },
@@ -416,6 +432,7 @@ export default function useCopyTradeColumns({
         title: 'Trader',
         dataIndex: 'account',
         key: 'account',
+        sortBy: 'account',
         style: { minWidth: '170px', width: 170 },
         // TODO: 2
         render: renderTraderAccount,
@@ -424,6 +441,7 @@ export default function useCopyTradeColumns({
         title: 'Margin',
         dataIndex: 'volume',
         key: 'volume',
+        sortBy: 'volume',
         style: { minWidth: '70px', width: 70, textAlign: 'right' },
         render: renderVolume,
       },
@@ -431,14 +449,23 @@ export default function useCopyTradeColumns({
         title: 'Leverage',
         dataIndex: 'leverage',
         key: 'leverage',
+        sortBy: 'leverage',
         style: { minWidth: '70px', width: 70, textAlign: 'right' },
         render: renderLeverage,
+      },
+      {
+        title: 'Trading Pairs',
+        dataIndex: 'tokenAddresses',
+        key: 'tokenAddresses',
+        sortBy: 'tokenAddresses',
+        style: { minWidth: '100px', width: 100, textAlign: 'right' },
+        render: renderMarkets,
       },
       {
         title: 'SL/TP',
         dataIndex: undefined,
         key: undefined,
-        style: { minWidth: '120px', width: 120, textAlign: 'right' },
+        style: { minWidth: '100px', width: 100, textAlign: 'right' },
         render: renderSLTP,
       },
       {
@@ -477,6 +504,7 @@ export default function useCopyTradeColumns({
     render30DPNL,
     render7DPNL,
     renderLeverage,
+    renderMarkets,
     renderOptions,
     renderRiskControl,
     renderSLTP,
@@ -492,6 +520,7 @@ export default function useCopyTradeColumns({
       render30DPNL,
       render7DPNL,
       renderLeverage,
+      renderMarkets,
       renderOptions,
       renderRiskControl,
       renderTitle,

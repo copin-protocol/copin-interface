@@ -12,12 +12,14 @@ export default function MarketGroup({
   indexTokens,
   size = 20,
   limit = 3,
+  hasName = true,
   sx,
 }: {
   protocol: ProtocolEnum
   indexTokens: string[]
   size?: number
   limit?: number
+  hasName?: boolean
   sx?: SystemStyleObject & GridProps
 }) {
   const numberOfAddress = indexTokens?.length
@@ -70,8 +72,13 @@ export default function MarketGroup({
               }}
             >{`+${numberOfAddress - limit}`}</Type.Caption>
           </Flex>
-          <Tooltip id={tooltipId} place="top" type="dark" effect="solid">
-            <MarketGroupFull protocol={protocol} indexTokens={indexTokens} sx={{ maxWidth: 280 }} />
+          <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
+            <MarketGroupFull
+              protocol={protocol}
+              indexTokens={indexTokens}
+              hasName={hasName}
+              sx={{ maxWidth: 400, maxHeight: 350, overflowY: 'auto' }}
+            />
           </Tooltip>
         </>
       ) : null}
@@ -82,21 +89,30 @@ export default function MarketGroup({
 export function MarketGroupFull({
   protocol,
   indexTokens,
-  size = 24,
+  size = 20,
+  hasName = true,
   sx,
 }: {
   protocol: ProtocolEnum
   indexTokens: string[]
   size?: number
+  hasName?: boolean
   sx?: SystemStyleObject & GridProps
 }) {
   const numberOfAddress = indexTokens?.length
   if (!numberOfAddress) return <></>
   return (
-    <Flex sx={{ flexWrap: 'wrap', gap: 2, ...sx }}>
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: ['1fr 1fr 1fr 1fr', '1fr 1fr 1fr 1fr'],
+        gap: '6px',
+        ...sx,
+      }}
+    >
       {indexTokens.map((indexToken) => {
-        return <Market key={indexToken} protocol={protocol} indexToken={indexToken} size={size} />
+        return <Market key={indexToken} protocol={protocol} indexToken={indexToken} size={size} hasName={hasName} />
       })}
-    </Flex>
+    </Box>
   )
 }

@@ -91,6 +91,7 @@ export function ListCopy({
               <ListCopyRowItem label={<Trans>Trader</Trans>} value={renderProps.renderTraderAccount(data)} />
               <ListCopyRowItem label={<Trans>Vol/Order</Trans>} value={renderProps.renderVolume(data)} />
               <ListCopyRowItem label={<Trans>Leverage</Trans>} value={renderProps.renderLeverage(data)} />
+              <ListCopyRowItem label={<Trans>Trading Pairs</Trans>} value={renderProps.renderMarkets(data)} />
               <ListCopyRowItem label={<Trans>Advance</Trans>} value={renderProps.renderRiskControl(data)} />
               <ListCopyRowItem label={<Trans>SL/TP</Trans>} value={renderProps.renderSLTP(data)} />
             </Flex>
