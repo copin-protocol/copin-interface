@@ -22,7 +22,7 @@ import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
+import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
@@ -41,7 +41,7 @@ export function renderEntry(data: CopyPositionData) {
       <VerticalDivider />
       <Type.Caption>{TOKEN_TRADE_SUPPORT[data.protocol]?.[data.indexToken]?.symbol}</Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{formatNumber(data.entryPrice, 2)}</Type.Caption>
+      <Type.Caption>{formatPrice(data.entryPrice)}</Type.Caption>
     </Flex>
   )
 }

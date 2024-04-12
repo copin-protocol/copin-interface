@@ -4,7 +4,7 @@ import useTraderBalances from 'hooks/features/useTraderBalances'
 import Tooltip from 'theme/Tooltip'
 import { Box, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import formatTokenPrices, { formatNumber } from 'utils/helpers/format'
+import formatTokenPrices, { formatNumber, formatPrice } from 'utils/helpers/format'
 
 export const ValueText = ({
   value,
@@ -172,7 +172,7 @@ export const PriceTokenText = ({
     </>
   ) : (
     <ValueText
-      value={formatNumber(formattedNumber, maxDigit, minDigit)}
+      value={formatPrice(formattedNumber, maxDigit, minDigit)}
       suffix={suffix}
       prefix={prefix}
       sx={sx}

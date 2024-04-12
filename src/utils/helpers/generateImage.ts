@@ -6,7 +6,7 @@ import { ELEMENT_IDS } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 
 import { calcLiquidatePrice, calcOpeningPnL, calcOpeningROI } from './calculate'
-import formatTokenPrices, { addressShorten, formatDuration, formatNumber } from './format'
+import formatTokenPrices, { addressShorten, formatDuration, formatNumber, formatPrice } from './format'
 import { generateAvatar } from './generateAvatar'
 
 export const generateTraderCanvas = ({
@@ -539,6 +539,6 @@ export const generateTokenPrice = ({
     canvas.font = '700 32px Anuphan'
     canvas.fillText(formatNumber(decimalPart, 2), x + 48 + 12, y)
   } else {
-    canvas.fillText(formattedNumber && formattedNumber > 0 ? formatNumber(formattedNumber, 2, 2) : '--', x, y)
+    canvas.fillText(formattedNumber && formattedNumber > 0 ? formatPrice(formattedNumber, 2, 2) : '--', x, y)
   }
 }

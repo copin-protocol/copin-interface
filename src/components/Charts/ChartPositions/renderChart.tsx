@@ -15,7 +15,7 @@ import {
 import { PositionData } from 'entities/trader.d'
 import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
-import { formatNumber } from 'utils/helpers/format'
+import { formatNumber, formatPrice } from 'utils/helpers/format'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -197,11 +197,11 @@ export function renderChart({
         if (legend) {
           const candleData = param.seriesData.get(series) as CandlestickData
           if (candleData && candleData.time) {
-            legend.innerHTML = `<div style="font-size: 12px; margin: 1px 0;">O: <span>${formatNumber(
+            legend.innerHTML = `<div style="font-size: 12px; margin: 1px 0;">O: <span>${formatPrice(
               candleData.open
-            )}</span> | H: <span>${formatNumber(candleData.high)}</span> | L: <span>${formatNumber(
+            )}</span> | H: <span>${formatPrice(candleData.high)}</span> | L: <span>${formatPrice(
               candleData.low
-            )}</span> | C: <span>${formatNumber(candleData.close)}</span></div>`
+            )}</span> | C: <span>${formatPrice(candleData.close)}</span></div>`
             legend.style.display = 'block'
           }
         }

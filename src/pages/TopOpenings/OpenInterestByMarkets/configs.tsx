@@ -1,3 +1,4 @@
+import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import { DifferentialBar } from 'components/@ui/DifferentialBar'
 import { ColumnData } from 'components/@ui/Table/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
@@ -25,6 +26,7 @@ const renderPrice = (item: OpenInterestMarketData) => {
         maxDigit: 2,
         minDigit: 2,
         isOnlyPercent: true,
+        isPrice: true,
       })}
     </>
   )
@@ -168,6 +170,7 @@ const renderValueWithChange = ({
   suffix = '',
   isOnlyPercent,
   isCompact,
+  isPrice,
 }: {
   current?: number
   latest?: number
@@ -177,6 +180,7 @@ const renderValueWithChange = ({
   suffix?: string
   isOnlyPercent?: boolean
   isCompact?: boolean
+  isPrice?: boolean
 }) => {
   const diff = (current ?? 0) - (latest ?? 0)
   const diffPercent = !!latest ? (diff / latest) * 100 : diff === 0 ? 0 : 100
@@ -184,7 +188,7 @@ const renderValueWithChange = ({
     <Flex flexDirection="column" justifyContent="flex-end">
       <Type.Caption color="neutral1">
         {prefix}
-        {formatNumber(current, maxDigit, minDigit)}
+        {isPrice ? PriceTokenText({ value: current, maxDigit, minDigit }) : formatNumber(current, maxDigit, minDigit)}
         {suffix}
       </Type.Caption>
       <Flex alignItems="center" sx={{ gap: 1 }} justifyContent="flex-end">

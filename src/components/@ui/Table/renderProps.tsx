@@ -15,7 +15,7 @@ import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcClosedPrice, calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
-import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
+import {addressShorten, compactNumber, formatNumber, formatPrice} from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseMarketImage } from 'utils/helpers/transform'
 
@@ -96,7 +96,7 @@ export function renderSize(data: PositionData | undefined, hasLiquidate?: boolea
         <VerticalDivider />
         <Flex flex="55%" justifyContent="flex-end" sx={{ gap: 1, alignItems: 'center', height: 22 }}>
           <Square weight={'fill'} color={hasLiquidate ? themeColors.red2 : themeColors.neutral1} />
-          <Type.Caption>{closedPrice ? formatNumber(closedPrice, 2, 2) : '--'}</Type.Caption>
+          <Type.Caption>{closedPrice ? formatPrice(closedPrice, 2, 2) : '--'}</Type.Caption>
         </Flex>
       </Flex>
       <ProgressBar percent={0} sx={{ width: '100%' }} />

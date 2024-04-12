@@ -6,7 +6,7 @@ import { useQuery } from 'react-query'
 import { getMyCopyOrdersApi, getMyCopyPositionDetailApi } from 'apis/copyPositionApis'
 import { getCopyTradeDetailsApi } from 'apis/copyTradeApis'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
-import { AmountText, PercentText } from 'components/@ui/DecoratedText/ValueText'
+import { AmountText, PercentText, PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import NoDataFound from 'components/@ui/NoDataFound'
 import PositionStatus from 'components/@ui/PositionStatus'
 import { renderCopyEntry } from 'components/@ui/Table/renderProps'
@@ -205,7 +205,9 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
               </StatsItemWrapperB>
               <StatsItemWrapperB>
                 <Type.Caption color="neutral3">Closed Price:</Type.Caption>
-                <Type.CaptionBold>{isOpening ? '--' : `$${formatNumber(data.closePrice, 2, 2)}`}</Type.CaptionBold>
+                <Type.CaptionBold>
+                  {isOpening ? '--' : `$${PriceTokenText({ value: data.closePrice, maxDigit: 2, minDigit: 2 })}`}
+                </Type.CaptionBold>
               </StatsItemWrapperB>
             </Flex>
             <Box px={2} py={[2, 12]}>

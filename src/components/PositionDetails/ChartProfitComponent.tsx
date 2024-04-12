@@ -27,7 +27,7 @@ import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { TIMEFRAME_NAMES, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcLiquidatePrice, calcOpeningPnL, calcPnL } from 'utils/helpers/calculate'
-import { formatNumber } from 'utils/helpers/format'
+import { formatNumber, formatPrice } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
@@ -535,11 +535,11 @@ export default function ChartProfitComponent({
         } else {
           const candleData = param.seriesData.get(priceSeries) as CandlestickData
           if (candleData && candleData.time) {
-            legend.innerHTML = `<div style="font-size: 13px; margin: 1px 0;">O: <span>${formatNumber(
+            legend.innerHTML = `<div style="font-size: 13px; margin: 1px 0;">O: <span>${formatPrice(
               candleData.open
-            )}</span> | H: <span>${formatNumber(candleData.high)}</span> | L: <span>${formatNumber(
+            )}</span> | H: <span>${formatPrice(candleData.high)}</span> | L: <span>${formatPrice(
               candleData.low
-            )}</span> | C: <span>${formatNumber(candleData.close)} (${TIMEFRAME_NAMES[timeframe]})</span></div>`
+            )}</span> | C: <span>${formatPrice(candleData.close)} (${TIMEFRAME_NAMES[timeframe]})</span></div>`
             legend.style.display = 'block'
           }
         }

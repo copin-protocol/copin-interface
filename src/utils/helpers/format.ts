@@ -70,6 +70,16 @@ export function formatNumber(num?: number | string, maxDigit = 2, minDigit?: num
   return `${num.toLocaleString('en-US', { minimumFractionDigits: minDigit, maximumFractionDigits: maxDigit })}`
 }
 
+export function formatPrice(num?: number | string, maxDigit = 2, minDigit = 2) {
+  if (num == null) return '--'
+  if (typeof num === 'string') num = Number(num)
+  if (Math.abs(num) < 100) {
+    maxDigit = 4
+    minDigit = 4
+  }
+  return formatNumber(num, maxDigit, minDigit)
+}
+
 export function generateImageUrl(image: ImageData | undefined) {
   if (!image || !image.url) return `/images/default-thumbnail.png`
   return `${import.meta.env.VITE_API}/storage${image?.url}`
