@@ -46,6 +46,14 @@ const commonSchema = {
       then: (schema) => schema.required().min(1),
     })
     .label('Trading Pairs'),
+  hasExclude: yup.boolean(),
+  excludingTokenAddresses: yup
+    .array(yup.string())
+    .when('hasExclude', {
+      is: true,
+      then: (schema) => schema.required().min(1),
+    })
+    .label('Excluding Trading Pairs'),
 }
 
 export const copyTradeFormSchema = yup.object({
@@ -80,6 +88,7 @@ export interface CopyTradeFormValues {
   volume: number
   leverage: number
   tokenAddresses: string[]
+  excludingTokenAddresses: string[]
   type?: CopyTradeTypeEnum
   protocol?: ProtocolEnum
   stopLossType: SLTPTypeEnum
@@ -98,6 +107,7 @@ export interface CopyTradeFormValues {
   lowLeverage: number | undefined
   agreement: boolean
   copyAll: boolean
+  hasExclude: boolean
 }
 export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFormValues } = {
   protocol: 'protocol',
@@ -105,6 +115,7 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   volume: 'volume',
   leverage: 'leverage',
   tokenAddresses: 'tokenAddresses',
+  excludingTokenAddresses: 'excludingTokenAddresses',
   stopLossType: 'stopLossType',
   stopLossAmount: 'stopLossAmount',
   takeProfitType: 'takeProfitType',
@@ -121,6 +132,7 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   lowLeverage: 'lowLeverage',
   agreement: 'agreement',
   copyAll: 'copyAll',
+  hasExclude: 'hasExclude',
 }
 
 export const defaultCopyTradeFormValues: CopyTradeFormValues = {
@@ -128,6 +140,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   volume: 0,
   leverage: 2,
   tokenAddresses: [],
+  excludingTokenAddresses: [],
   type: CopyTradeTypeEnum.FULL_ORDER,
   stopLossType: SLTPTypeEnum.USD,
   stopLossAmount: undefined,
@@ -145,6 +158,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   lowLeverage: undefined,
   agreement: false,
   copyAll: false,
+  hasExclude: false,
 }
 
 interface ExchangeOptions {

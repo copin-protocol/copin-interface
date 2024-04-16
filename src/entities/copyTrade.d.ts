@@ -43,6 +43,7 @@ export interface CopyTradeData {
   account: string
   traderName: string
   tokenAddresses: string[]
+  excludingTokenAddresses: string[]
   leverage: number
   volume: number
   enableStopLoss: boolean

@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Trans } from '@lingui/macro'
 import { ShieldWarning } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { ReactNode, useCallback, useEffect } from 'react'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Divider from 'components/@ui/Divider'
@@ -23,6 +23,7 @@ import Select from 'theme/Select'
 import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { INTERNAL_SERVICE_KEYS, SERVICE_KEYS } from 'utils/config/keys'
@@ -107,7 +108,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const copyAll = watch('copyAll')
   const skipLowLeverage = watch('skipLowLeverage')
   const lowLeverage = watch('lowLeverage')
+  const excludingTokenAddresses = watch('excludingTokenAddresses')
+  const hasExclude = watch('hasExclude')
 
+  const [tradedPairs, setTradedPairs] = useState<string[]>([])
   const pairs =
     protocol &&
     getTokenTradeList(protocol).filter((tokenTrade) => !TOKEN_TRADE_IGNORE[platform]?.includes(tokenTrade.name))
@@ -128,7 +132,12 @@ const CopyTraderForm: CopyTradeFormComponent = ({
       enabled: !isEdit && (isClone ? !!duplicateToAddress : !!account),
       select: (data) => data.filter((address) => !TOKEN_TRADE_IGNORE[platform]?.includes(address)),
       onSuccess: (data) => {
-        !!data?.length && setValue('tokenAddresses', data)
+        if (!!data?.length) {
+          if (!isEdit && (isClone ? !!duplicateToAddress : !!account)) {
+            setValue('tokenAddresses', data)
+          }
+          setTradedPairs(data ?? [])
+        }
       },
     }
   )
@@ -283,15 +292,56 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           <FundChecking walletId={copyWalletId} amount={volume} />
         </Box>
         <Box mt={24}>
-          <Flex mb={2} sx={{ alignItems: 'center', gap: 12, '& *': { mb: '0 !important' } }}>
-            <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
-            <SwitchInputField
-              switchLabel="Follow the trader"
-              labelColor="neutral1"
-              {...register(fieldName.copyAll)}
-              error={errors.copyAll?.message}
-              wrapperSx={{ flexDirection: 'row-reverse', '*': { fontWeight: 400 } }}
-            />
+          <Flex mb={2} alignItems="center" justifyContent="space-between">
+            <Flex sx={{ alignItems: 'center', gap: 12, '& *': { mb: '0 !important' } }}>
+              <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
+              <SwitchInputField
+                switchLabel="Follow the trader"
+                labelColor="neutral1"
+                {...register(fieldName.copyAll)}
+                error={errors.copyAll?.message}
+                wrapperSx={{ flexDirection: 'row-reverse', '*': { fontWeight: 400 } }}
+                onChange={(newValue: any) => {
+                  clearErrors(fieldName.excludingTokenAddresses)
+                  setValue(fieldName.copyAll, newValue.target.checked)
+                  if (!newValue.target.checked) {
+                    setValue(fieldName.excludingTokenAddresses, [])
+                    setValue(fieldName.hasExclude, false)
+                    setValue(fieldName.tokenAddresses, tradedPairs)
+                  }
+                }}
+              />
+            </Flex>
+
+            {copyAll && (
+              <Flex
+                sx={{
+                  alignItems: 'center',
+                  gap: 12,
+                  '& *': { mb: '0 !important' },
+                  '& input:checked + .slider': {
+                    backgroundColor: `${themeColors.red1}50 !important`,
+                  },
+                }}
+              >
+                <SwitchInputField
+                  switchLabel={`Exclude (${excludingTokenAddresses.length})`}
+                  labelColor="neutral3"
+                  {...register(fieldName.hasExclude)}
+                  error={errors.hasExclude?.message}
+                  wrapperSx={{
+                    flexDirection: 'row-reverse',
+
+                    '*': { fontWeight: 400 },
+                  }}
+                  tooltipContent={
+                    <Type.Caption color="neutral2" maxWidth={400}>
+                      The pairs you choose below will not be copied if the trader has a newly opened position.
+                    </Type.Caption>
+                  }
+                />
+              </Flex>
+            )}
           </Flex>
           <Box
             display={copyAll ? 'none' : 'flex'}
@@ -326,6 +376,38 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             </Type.Caption>
           )}
         </Box>
+        <Box
+          display={copyAll && hasExclude ? 'flex' : 'none'}
+          sx={{ alignItems: 'center', width: '100%', gap: 1, flexWrap: 'wrap' }}
+        >
+          <Select
+            closeMenuOnSelect={false}
+            className="select-container pad-right-0 warning"
+            options={pairOptions}
+            value={pairOptions?.filter?.((option) => excludingTokenAddresses.includes(option.value))}
+            onChange={(newValue: any, actionMeta: any) => {
+              clearErrors(fieldName.excludingTokenAddresses)
+              if (actionMeta?.option?.value === 'all') {
+                setValue(fieldName.excludingTokenAddresses, addressPairs)
+                return
+              }
+              setValue(
+                fieldName.excludingTokenAddresses,
+                newValue?.map((data: any) => data.value)
+              )
+            }}
+            components={{
+              DropdownIndicator: () => <div></div>,
+            }}
+            isSearchable
+            isMulti
+          />
+        </Box>
+        {!!errors?.excludingTokenAddresses?.message && (
+          <Type.Caption color="red1" mt={1} display="block">
+            {errors?.excludingTokenAddresses?.message}
+          </Type.Caption>
+        )}
 
         <Box mt={24}>
           <Type.Caption color="neutral2" fontWeight={600}>

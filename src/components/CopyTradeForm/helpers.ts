@@ -10,6 +10,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     title,
     volume,
     tokenAddresses,
+    excludingTokenAddresses,
     leverage,
     reverseCopy,
     volumeProtection,
@@ -58,6 +59,10 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   result.exchange = exchange
   result.copyWalletId = copyWalletId
   result.copyAll = !!copyAll
+  if (excludingTokenAddresses?.length) {
+    result.excludingTokenAddresses = excludingTokenAddresses
+    result.hasExclude = true
+  }
   return result
 }
 
@@ -66,6 +71,7 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
     title: formData.title,
     volume: formData.volume,
     tokenAddresses: formData.copyAll ? [] : formData.tokenAddresses,
+    excludingTokenAddresses: formData.copyAll && formData.hasExclude ? formData.excludingTokenAddresses : [],
     leverage: formData.leverage,
     reverseCopy: formData.reverseCopy,
     enableStopLoss: !!formData?.stopLossAmount,
@@ -86,5 +92,6 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
     exchange: formData.exchange,
     copyWalletId: formData.copyWalletId,
     copyAll: formData.copyAll,
+    hasExclude: formData.hasExclude,
   }
 }

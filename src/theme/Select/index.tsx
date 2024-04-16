@@ -8,6 +8,7 @@ import styled from 'styled-components/macro'
 import { variant } from 'styled-system'
 
 import { IconBox } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { SxProps, VariantProps } from 'theme/types'
 import { FONT_FAMILY } from 'utils/config/constants'
 
@@ -75,6 +76,11 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
         },
         '& .select__indicators': {
           pr: 1,
+        },
+      },
+      '&.warning': {
+        '& .select__multi-value': {
+          backgroundColor: `${themeColors.red1}25`,
         },
       },
       '& .select__control--is-disabled': {
