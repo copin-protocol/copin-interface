@@ -2,16 +2,29 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 
 import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
-import { ARBITRUM_MAINNET, CHAINS, OPTIMISM_GOERLI, OPTIMISM_MAINNET, OPTIMISM_SEPOLIA } from 'utils/web3/chains'
+import {
+  ARBITRUM_MAINNET,
+  BNB_MAINNET,
+  CHAINS,
+  OPTIMISM_GOERLI,
+  OPTIMISM_MAINNET,
+  OPTIMISM_SEPOLIA,
+} from 'utils/web3/chains'
 import { rpcProvider } from 'utils/web3/providers'
 
 import { TOKEN_TRADE_GMX } from './tokenTradeGmx'
 import { TOKEN_TRADE_GMX_V2 } from './tokenTradeGmxV2'
 import { TOKEN_TRADE_GNS } from './tokenTradeGns'
+import { TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
 import { TOKEN_TRADE_SYNTHETIX } from './tokenTradeSynthetix'
 
 type ProtocolProvider = { [key: string]: { chainId: number; provider: JsonRpcProvider; explorerUrl: string } }
 export const PROTOCOL_PROVIDER: ProtocolProvider = {
+  [ProtocolEnum.LEVEL_BNB]: {
+    chainId: BNB_MAINNET,
+    provider: rpcProvider(BNB_MAINNET),
+    explorerUrl: CHAINS[BNB_MAINNET].blockExplorerUrl,
+  },
   [ProtocolEnum.GNS]: {
     chainId: ARBITRUM_MAINNET,
     provider: rpcProvider(ARBITRUM_MAINNET),
@@ -70,6 +83,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.GMX_V2]: TOKEN_TRADE_GMX_V2,
   [ProtocolEnum.KWENTA]: TOKEN_TRADE_SYNTHETIX,
   [ProtocolEnum.POLYNOMIAL]: TOKEN_TRADE_SYNTHETIX,
+  [ProtocolEnum.LEVEL_BNB]: TOKEN_TRADE_LEVEL_BNB,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -135,6 +149,10 @@ export const TOKEN_ADDRESSES = {
   [ProtocolEnum.POLYNOMIAL]: {
     BTC: '0x59b007E9ea8F89b069c43F8f45834d30853e3699',
     ETH: '0x2B3bb4c683BFc5239B029131EEf3B1d214478d93',
+  },
+  [ProtocolEnum.LEVEL_BNB]: {
+    BTC: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+    ETH: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
   },
 }
 

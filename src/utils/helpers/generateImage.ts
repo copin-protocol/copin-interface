@@ -419,6 +419,10 @@ export const generateProtocol = ({
   let protocolTextWidth = 72
   let protocolText = 'GMX'
   switch (protocol) {
+    case ProtocolEnum.LEVEL_BNB:
+      protocolTextWidth = 117
+      protocolText = 'Level'
+      break
     case ProtocolEnum.GNS:
       protocolTextWidth = 117
       protocolText = 'gTrade'

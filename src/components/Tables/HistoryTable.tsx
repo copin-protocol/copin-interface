@@ -233,7 +233,7 @@ export default function HistoryTable({
           )}
         </Flex>
       </Flex>
-      {!isLoading && !data?.length && <NoDataFound message="No positions history" />}
+      {!isLoading && !data?.length && !sm && <NoDataFound message="No positions history" />}
       {!!data && data.length > 0 && !!data[0].account && heatmapVisible && (
         <Box height={130} px={12}>
           <ActivityHeatmap account={data[0].account} protocol={data[0].protocol} />

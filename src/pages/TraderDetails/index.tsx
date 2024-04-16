@@ -64,7 +64,7 @@ export default function TraderDetails() {
       </Box>
     )
 
-  if (!isLoading && !orderedStats?.length) return <NotFound message="" title="Trader have no statistic" />
+  if (!isLoading && !orderedStats?.length && !_protocol) return <NotFound message="" title="Trader have no statistic" />
 
   let protocol = null
   if (_protocol) {

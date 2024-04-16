@@ -1,4 +1,4 @@
-import { ARBITRUM_MAINNET, OPTIMISM_MAINNET } from 'utils/web3/chains'
+import { ARBITRUM_MAINNET, BNB_MAINNET, OPTIMISM_MAINNET } from 'utils/web3/chains'
 
 import { ProtocolEnum } from './enums'
 
@@ -43,6 +43,12 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Synthetix',
     chainId: OPTIMISM_MAINNET,
   },
+  [ProtocolEnum.LEVEL_BNB]: {
+    id: ProtocolEnum.LEVEL_BNB,
+    text: 'Level',
+    label: 'BNB Chain',
+    chainId: BNB_MAINNET,
+  },
 }
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] = [
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GMX],
@@ -50,4 +56,5 @@ export const PROTOCOL_OPTIONS: ProtocolOptionProps[] = [
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.KWENTA],
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.POLYNOMIAL],
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GNS],
+  PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.LEVEL_BNB],
 ]

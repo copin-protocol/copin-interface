@@ -4,6 +4,7 @@ export enum ProtocolEnum {
   POLYNOMIAL = 'POLYNOMIAL',
   GMX_V2 = 'GMX_V2',
   GNS = 'GNS',
+  LEVEL_BNB = 'LEVEL_BNB',
 }
 
 export enum UserRoleEnum {

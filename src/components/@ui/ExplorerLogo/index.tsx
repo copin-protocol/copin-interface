@@ -22,6 +22,9 @@ const ExplorerLogo = ({
     case ProtocolEnum.KWENTA:
       icon = 'OPTIMISM'
       break
+    case ProtocolEnum.LEVEL_BNB:
+      icon = 'BNB'
+      break
     default:
       icon = 'OPTIMISM'
   }

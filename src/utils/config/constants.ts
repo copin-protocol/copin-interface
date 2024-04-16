@@ -20,6 +20,7 @@ export const LINKS = {
   tradeKwenta: 'https://kwenta.eth.limo/?ref=copin',
   tradeGains: 'https://gains.trade/trading',
   tradePolynomial: 'https://trade.polynomial.fi',
+  tradeLevel: 'https://app.level.finance/',
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',

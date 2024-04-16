@@ -37,7 +37,7 @@ pipelines:
             - docker build -t $IMAGE_NAME .
             - docker push $IMAGE_NAME
             - curl --location --request POST $PROD_WEBHOOK?tag=v0.0.1.$BITBUCKET_COMMIT
-    develop:
+    develop-new:
       - step:
           runs-on:
             - self.hosted

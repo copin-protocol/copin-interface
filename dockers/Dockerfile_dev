@@ -13,7 +13,7 @@ RUN chown -R root:root $HOME/app
 
 USER root
 
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NODE_OPTIONS="--max-old-space-size=8192"
 
 RUN yarn && yarn cache clean
 RUN yarn run build:dev

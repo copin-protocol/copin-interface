@@ -53,7 +53,7 @@ function ListTraderFavorites({
     })
   }
   const checkIsSelected = (data: TraderData) => selectedTraders.includes(data.account)
-  const formatedData = data?.data.map((item) => ({ ...item, note: notes ? notes[item.account] : undefined }))
+  const formatedData = data?.data.map((item) => ({ ...item, note: notes ? notes[item.account] : undefined, protocol }))
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>

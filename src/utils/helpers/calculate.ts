@@ -47,10 +47,6 @@ export function calcLiquidatePrice(position: PositionData) {
   let lastSizeInToken = position.size / position.averagePrice
   let totalFee = position.fee
   switch (position.protocol) {
-    case ProtocolEnum.GNS:
-    case ProtocolEnum.GMX:
-    case ProtocolEnum.GMX_V2:
-      break
     case ProtocolEnum.KWENTA:
     case ProtocolEnum.POLYNOMIAL:
       if (position.status === PositionStatusEnum.OPEN) {

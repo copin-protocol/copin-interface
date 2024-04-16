@@ -179,6 +179,7 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.GMX]: 'GMX_COPY_TRADE',
   [ProtocolEnum.KWENTA]: 'SYNTHETIX_COPY_TRADE',
   [ProtocolEnum.POLYNOMIAL]: 'SYNTHETIX_COPY_TRADE',
+  [ProtocolEnum.LEVEL_BNB]: '',
 }
 
 export const INTERNAL_SERVICE_KEYS = {
@@ -187,4 +188,5 @@ export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.GMX]: 'GMX_COPY_TRADE',
   [ProtocolEnum.KWENTA]: 'SYNTHETIX_COPY_TRADE_BITGET',
   [ProtocolEnum.POLYNOMIAL]: 'SYNTHETIX_COPY_TRADE_BITGET',
+  [ProtocolEnum.LEVEL_BNB]: '',
 }

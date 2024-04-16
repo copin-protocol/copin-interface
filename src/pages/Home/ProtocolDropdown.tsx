@@ -16,6 +16,7 @@ const PROTOCOL_OPTIONS = [
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.KWENTA],
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.POLYNOMIAL],
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GNS],
+  PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.LEVEL_BNB],
 ] //todo: Check when add new protocol
 export default function ProtocolDropdown({
   protocol,

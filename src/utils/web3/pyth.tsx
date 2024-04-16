@@ -3,7 +3,6 @@ import { createContext, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
-import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { TOKEN_TRADE_SUPPORT, TokenTrade } from 'utils/config/trades'
 

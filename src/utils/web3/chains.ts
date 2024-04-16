@@ -187,16 +187,7 @@ const CHAINS: { [key: number]: Chain } = {
     icon: 'BNB',
     token: NATIVE_CURRENCIES.BNB.symbol,
     rpcUrl: 'https://bsc-rpc.publicnode.com',
-    blockExplorerUrl: 'https://bscsan.com',
-    secondaryTokens: SECONDARY_TOKENS[BNB_MAINNET],
-  },
-  [BNB_MAINNET]: {
-    id: `0x${BNB_MAINNET.toString(16)}`,
-    label: 'BNB Chain',
-    icon: 'BNB',
-    token: NATIVE_CURRENCIES.BNB.symbol,
-    rpcUrl: 'https://bsc-rpc.publicnode.com',
-    blockExplorerUrl: 'https://bscsan.com',
+    blockExplorerUrl: 'https://bscscan.com',
     secondaryTokens: SECONDARY_TOKENS[BNB_MAINNET],
   },
   [BLAST_MAINNET]: {

@@ -71,14 +71,21 @@ function generateProtocolName(protocol) {
   //TODO: Add more protocols
   switch (protocol) {
     case 'GMX':
-    case 'GMX_V2':
       return 'GMX'
+    case 'GMX_V2':
+      return 'GMX (V2)'
     case 'GNS':
       return 'gTrade'
     case 'KWENTA':
       return 'Kwenta'
     case 'POLYNOMIAL':
       return 'Polynomial'
+    case 'LEVEL_BNB':
+      return 'Level (BNB)'
+    case 'LEVEL_ARB':
+      return 'Level (ARB)'
+    case 'MUX':
+      return 'MUX'
   }
 }
 
