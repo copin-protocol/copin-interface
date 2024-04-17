@@ -27,6 +27,9 @@ pipelines:
             - linux
           name: Deploy Gmx Copy Trade Web
           image: google/cloud-sdk:latest
+          services:
+            - docker
+          size: 2x
           script:
             - export IMAGE_NAME=gcr.io/$GCR_PROJECT/gmxcopytrade-web:v0.0.1.$BITBUCKET_COMMIT
             - export DOCKER_BUILDKIT=0
@@ -44,6 +47,9 @@ pipelines:
             - linux
           name: Deploy Gmx Copy Trade Web
           image: google/cloud-sdk:latest
+          services:
+            - docker
+          size: 2x
           script:
             - export IMAGE_NAME=gcr.io/$GCR_PROJECT/gmxcopytrade-web:v0.0.1.$BITBUCKET_COMMIT
             - export DOCKER_BUILDKIT=0
