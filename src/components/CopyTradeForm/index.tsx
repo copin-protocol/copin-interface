@@ -325,7 +325,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                 }}
               >
                 <SwitchInputField
-                  switchLabel={`Exclude (${excludingTokenAddresses.length})`}
+                  switchLabel={`Exclude (${excludingTokenAddresses?.length ?? 0})`}
                   labelColor="neutral3"
                   {...register(fieldName.hasExclude)}
                   error={errors.hasExclude?.message}
@@ -384,7 +384,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             closeMenuOnSelect={false}
             className="select-container pad-right-0 warning"
             options={pairOptions}
-            value={pairOptions?.filter?.((option) => excludingTokenAddresses.includes(option.value))}
+            value={pairOptions?.filter?.((option) => excludingTokenAddresses?.includes(option.value))}
             onChange={(newValue: any, actionMeta: any) => {
               clearErrors(fieldName.excludingTokenAddresses)
               if (actionMeta?.option?.value === 'all') {

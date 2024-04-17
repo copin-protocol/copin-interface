@@ -59,9 +59,12 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   result.exchange = exchange
   result.copyWalletId = copyWalletId
   result.copyAll = !!copyAll
-  if (excludingTokenAddresses?.length) {
+  if (!!excludingTokenAddresses?.length) {
     result.excludingTokenAddresses = excludingTokenAddresses
     result.hasExclude = true
+  } else {
+    result.excludingTokenAddresses = []
+    result.hasExclude = false
   }
   return result
 }
