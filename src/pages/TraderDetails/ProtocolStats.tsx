@@ -5,7 +5,7 @@ import ProtocolWithChainIcon from 'components/@ui/ProtocolWithChainIcon'
 import { ResponseTraderExchangeStatistic, TraderExchangeStatistic } from 'entities/trader'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
+import { PROTOCOL_OPTIONS, PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { compactNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
@@ -50,7 +50,9 @@ export default function ProtocolStats({
   //         })
   //       )
   // }
-  const orderedStats = exchangeStats ? Object.values(exchangeStats) : []
+  const orderedStats = exchangeStats
+    ? Object.values(exchangeStats)?.filter((e) => PROTOCOL_OPTIONS.map((e) => e.id)?.includes(e.protocol))
+    : []
   orderedStats.sort((x, y) => (y?.lastTradeAtTs ?? 0) - (x?.lastTradeAtTs ?? 0))
   return (
     <Flex
