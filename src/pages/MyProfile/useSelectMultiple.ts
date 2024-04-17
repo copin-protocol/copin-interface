@@ -14,7 +14,7 @@ export default function useSelectMultiple<T>({
     if (!paramKey) return defaultSelected
     const str = searchParams[paramKey] as string
     if (!str) return defaultSelected
-    return str.split('_') as T[]
+    return str.toUpperCase().split('__') as T[]
   })
   const checkIsSelected = (status: T) => {
     if (selected.includes(status)) return true
@@ -29,7 +29,7 @@ export default function useSelectMultiple<T>({
       } else {
         newState = [...prev, option]
       }
-      paramKey && setSearchParams({ [paramKey]: newState.join('_') })
+      paramKey && setSearchParams({ [paramKey]: newState.join('__').toLowerCase() })
       return newState
     })
   }
