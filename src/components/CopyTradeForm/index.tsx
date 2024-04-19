@@ -4,14 +4,19 @@ import { ShieldWarning } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useQuery } from 'react-query'
 
+import { getTraderVolumeCopy } from 'apis/copyTradeApis'
 import Divider from 'components/@ui/Divider'
 import ProtocolWithChainIcon from 'components/@ui/ProtocolWithChainIcon'
 import { renderTrader } from 'components/@ui/Table/renderProps'
+import { getCopyVolumeColor } from 'components/TraderCopyVolumeWarningIcon/helper'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import useInternalRole from 'hooks/features/useInternalRole'
+import { getMaxVolumeCopy, useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
@@ -25,8 +30,8 @@ import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { LINKS } from 'utils/config/constants'
-import { CopyTradePlatformEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { INTERNAL_SERVICE_KEYS, SERVICE_KEYS } from 'utils/config/keys'
+import { CopyTradePlatformEnum, ProtocolEnum, SLTPTypeEnum, SubscriptionPlanEnum } from 'utils/config/enums'
+import { INTERNAL_SERVICE_KEYS, QUERY_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
 import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { TOKEN_TRADE_IGNORE, getTokenTradeList } from 'utils/config/trades'
@@ -42,6 +47,7 @@ import {
   copyTradeFormSchema,
   exchangeOptions,
   fieldName,
+  getExchangeOption,
   internalExchangeOptions,
   protocolOptions,
   updateCopyTradeFormSchema,
@@ -82,9 +88,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     clearErrors,
     setFocus,
     reset,
+    setError,
     formState: { errors },
   } = useForm<CopyTradeFormValues>({
-    mode: 'onChange',
+    // mode: 'onChange',
     resolver: yupResolver(
       isClone ? cloneCopyTradeFormSchema : isEdit ? updateCopyTradeFormSchema : copyTradeFormSchema
     ),
@@ -149,12 +156,52 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   }
   const isBingXWallet = copyWallets?.find((e) => e.id === copyWalletId)?.exchange === CopyTradePlatformEnum.BINGX
 
-  const currentWalletId = watch('copyWalletId')
   const onChangeWallet = (walletId: string) => setValue(fieldName.copyWalletId, walletId, { shouldValidate: true })
 
   const onChangeSLType = (type: SLTPTypeEnum) => setValue(fieldName.stopLossType, type)
 
   const onChangeTPType = (type: SLTPTypeEnum) => setValue(fieldName.takeProfitType, type)
+
+  const myProfile = useMyProfileStore((_s) => _s.myProfile)
+
+  const currentWallet = copyWallets?.find((_w) => _w.id === copyWalletId)
+  const currentWalletOption = currentWallet?.exchange && getExchangeOption(currentWallet.exchange)
+  const walletHasRef = !!currentWallet?.isReferral
+  const userPlan = myProfile?.plan
+  const totalVolume = volume * leverage
+
+  const { data: traderVolumeCopy } = useQuery(
+    [QUERY_KEYS.GET_TRADER_VOLUME_COPY, protocol, account, platform],
+    () => getTraderVolumeCopy({ protocol, account, exchange: platform }),
+    { enabled: !!account && !!protocol && !!platform }
+  )
+  const { volumeLimit } = useSystemConfigContext()
+
+  const maxVolume = getMaxVolumeCopy({ plan: myProfile?.plan, isRef: walletHasRef, volumeLimitData: volumeLimit })
+  const currentCopyVolume = traderVolumeCopy?.[0]?.totalVolume
+
+  const showWarningVolume = totalVolume > maxVolume
+
+  // Todo: uncomment after 20/4
+  const _handleSubmit = () =>
+    handleSubmit((formValues) => {
+      // if (formValues.volume * formValues.leverage > maxVolume) {
+      //   const errorMsg = `Maximum volume (include leverage) is ${formatNumber(maxVolume, 0, 0)}`
+      //   setError('totalVolume', { message: errorMsg })
+      //   return
+      // }
+      delete formValues.totalVolume
+      onSubmit(formValues)
+    })()
+
+  // useEffect(() => {
+  //   if (totalVolume > maxVolume) {
+  //     const errorMsg = `Maximum volume (include leverage) is ${formatNumber(maxVolume, 0, 0)}`
+  //     setError('totalVolume', { message: errorMsg })
+  //   } else {
+  //     clearErrors('totalVolume')
+  //   }
+  // }, [maxVolume, totalVolume])
 
   useEffect(() => {
     reset(defaultFormValues)
@@ -175,20 +222,34 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
   const protocolOption = protocol && PROTOCOL_OPTIONS_MAPPING[protocol]
 
+  const leverageError = errors.leverage?.message || errors.totalVolume?.message
+  const volumeError = errors.volume?.message || errors.totalVolume?.message
+
   return (
     <>
       <Type.Caption color="orange1" mb={20} px={[12, 24]}>
         <Trans>This is a beta feature. Please copy at your own risk.</Trans>
       </Type.Caption>
       {account && protocol && (
-        <Flex mb={1} px={[12, 24]} sx={{ alignItems: 'center', gap: 2 }}>
-          {renderTrader(account, protocol)}
-          <Type.Caption>-</Type.Caption>
-          <Flex sx={{ alignItems: 'center', gap: 2 }}>
-            <ProtocolWithChainIcon protocol={protocol} size={12} />
-            <Type.Caption>{protocolOption?.text}</Type.Caption>
+        <Box px={[12, 24]}>
+          <Flex mb={1} sx={{ alignItems: 'center', gap: 2 }}>
+            {renderTrader(account, protocol)}
+            <Type.Caption>-</Type.Caption>
+            <Flex sx={{ alignItems: 'center', gap: 2 }}>
+              <ProtocolWithChainIcon protocol={protocol} size={12} />
+              <Type.Caption>{protocolOption?.text}</Type.Caption>
+            </Flex>
           </Flex>
-        </Flex>
+          <Type.Caption mt={12} display="inline-block" color="neutral3">
+            Your copy size:{' '}
+            <Box as="span" color={getCopyVolumeColor({ copyVolume: currentCopyVolume ?? 0, maxVolume })}>
+              {currentCopyVolume == null ? '--' : `$${formatNumber(currentCopyVolume, 0, 0)}`}
+            </Box>{' '}
+            <Box as="span" sx={{ fontWeight: 600, color: 'neutral1' }}>
+              / ${formatNumber(maxVolume, 0, 0)}
+            </Box>
+          </Type.Caption>
+        </Box>
       )}
 
       <Box sx={{ pb: 24, px: [12, 24], pt: 3 }}>
@@ -262,7 +323,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               <Wallets
                 disabledSelect={!!isEdit || !!isClone}
                 platform={platform}
-                currentWalletId={currentWalletId}
+                currentWalletId={copyWalletId}
                 onChangeWallet={onChangeWallet}
               />
             </Box>
@@ -272,6 +333,27 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               {errors.copyWalletId.message}
             </Type.Caption>
           )}
+          {/* {!!currentWallet?.exchange && (
+            <Type.Caption color="neutral2" mt={2}>
+              Copin&apos;s referral code:{' '}
+              <Box as="span" color="neutral1" fontWeight={600}>
+                {currentWalletOption?.refCode}
+              </Box>{' '}
+              {walletHasRef ? 'is ' : 'is not '} used with your {currentWalletOption?.labelText} account. The maximum
+              volume that you can set up for copies is{' '}
+              <Box as="span" color="neutral1" fontWeight={600}>
+                {maxVolume} USDT
+              </Box>{' '}
+              (include leverage). Applicable from{' '}
+              <Box as="span" color="neutral1" fontWeight={600}>
+                April 20 2024
+              </Box>
+              .{' '}
+              <Box as="a" target="_blank" href="/">
+                Learn more.
+              </Box>
+            </Type.Caption>
+          )} */}
         </Box>
 
         <Box mt={24}>
@@ -281,7 +363,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             name={fieldName.volume}
             control={control}
             suffix={<Type.Caption color="neutral2">{CURRENCY_PLATFORMS[platform]}</Type.Caption>}
-            error={errors.volume?.message}
+            error={volumeError}
           />
           <Type.Caption mt={1} color="neutral2">
             <Trans>
@@ -428,24 +510,26 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               marksUnit={'x'}
             />
           </Box>
-          {errors.leverage?.message ? (
-            <Type.Caption color="red1" display="block">
-              <Trans>Leverage must be greater or equal to 2</Trans>
-            </Type.Caption>
-          ) : null}
+          <Type.Caption
+            color={leverageError ? 'red1' : leverage > RISK_LEVERAGE ? 'orange1' : 'inherit'}
+            display="block"
+            sx={{
+              height: 22,
+              visibility: leverageError || leverage > RISK_LEVERAGE ? 'visible' : 'hidden',
+              ...(!leverageError && leverage > RISK_LEVERAGE
+                ? {
+                    textAlign: ['left', 'justify'],
+                    textJustify: 'inter-word',
+                    textAlignLast: ['left', 'justify'],
+                  }
+                : {}),
+            }}
+          >
+            {leverageError
+              ? leverageError
+              : `The current position is highly leveraged. Please be cautious of the risk involved`}
+          </Type.Caption>
         </Box>
-        <Type.Caption
-          color="orange1"
-          sx={{
-            visibility: leverage > RISK_LEVERAGE ? 'visible' : 'hidden',
-            display: [leverage > RISK_LEVERAGE ? 'block' : 'none', 'block'],
-            textAlign: ['left', 'justify'],
-            textJustify: 'inter-word',
-            textAlignLast: ['left', 'justify'],
-          }}
-        >
-          The current position is highly leveraged. Please be cautious of the risk involved
-        </Type.Caption>
 
         <Box mt={[24, 12]} sx={{ borderRadius: 'xs', border: 'small', borderColor: 'orange1', py: 2, px: 12 }}>
           <SwitchInputField
@@ -636,9 +720,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           <Button
             block
             variant="primary"
-            onClick={() => handleSubmit(onSubmit)()}
+            onClick={_handleSubmit}
             isLoading={isSubmitting}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !!Object.keys(errors).length}
           >
             {submitButtonText}
           </Button>

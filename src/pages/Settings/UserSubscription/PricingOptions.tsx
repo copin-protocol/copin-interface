@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
+import dayjs from 'dayjs'
 import { ReactNode, useState } from 'react'
 
 // import { useForm } from 'react-hook-form'
@@ -7,7 +8,7 @@ import Divider from 'components/@ui/Divider'
 import ETHPriceInUSD from 'components/ETHPriceInUSD'
 import Num from 'entities/Num'
 import useSubscriptionContract from 'hooks/features/useSubscriptionContract'
-import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
+import useUserSubscription from 'hooks/features/useUserSubscription'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import CopinIcon from 'pages/Subscription/CopinIcon'
@@ -17,6 +18,7 @@ import Modal from 'theme/Modal'
 // import Radio from 'theme/Radio'
 import Select from 'theme/Select'
 import { Box, Flex, Type } from 'theme/base'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 import { getContractErrorMessage } from 'utils/helpers/handleError'
 import { SUBSCRIPTION_CHAIN_ID } from 'utils/web3/chains'
@@ -41,23 +43,33 @@ type ComponentConfigs = {
   buttonSx?: any
   dropdownSx?: any
   textSx?: any
+  plan: SubscriptionPlanEnum
+  planPrice: BigNumber | undefined
+  wrapperSx?: any
 }
 type PricingOptionsOverload = {
   (props: ComponentConfigs & { method: 'extend'; tokenId: number }): JSX.Element
   (props: ComponentConfigs & { method: 'mint' }): JSX.Element
 }
-type PricingOptionsProps = ComponentConfigs & { method: 'extend' | 'mint'; tokenId?: number }
+type PricingOptionsProps = ComponentConfigs & {
+  method: 'extend' | 'mint'
+  plan: SubscriptionPlanEnum
+  planPrice: BigNumber | undefined
+  tokenId?: number
+}
 export const PricingDropdown: PricingOptionsOverload = ({
   tokenId,
+  plan,
   method,
   modalLabels,
   buttonLabel,
   buttonSx,
   dropdownSx,
   textSx,
+  planPrice,
+  wrapperSx = {},
 }: PricingOptionsProps) => {
-  const pricePlanData = useSubscriptionPlanPrice()
-  const configs = getPlanPriceConfigs(pricePlanData?.price)
+  const configs = getPlanPriceConfigs(planPrice)
   const [monthCount, setMonthCount] = useState(MONTHS[0])
 
   const [openModal, setOpenModal] = useState(false)
@@ -79,6 +91,16 @@ export const PricingDropdown: PricingOptionsOverload = ({
   }))
   const currentSelect = selectOptions.find((option) => option.value === monthCount)
 
+  let color = ''
+  switch (plan) {
+    case SubscriptionPlanEnum.PREMIUM:
+      color = 'orange1'
+      break
+    case SubscriptionPlanEnum.VIP:
+      color = 'violet'
+      break
+  }
+
   return (
     <>
       <Flex
@@ -88,6 +110,7 @@ export const PricingDropdown: PricingOptionsOverload = ({
           justifyContent: 'space-between',
           gap: 3,
           width: '100%',
+          ...wrapperSx,
         }}
       >
         <Flex
@@ -123,6 +146,7 @@ export const PricingDropdown: PricingOptionsOverload = ({
           />
           <PriceText
             data={currentSelection!}
+            color={color}
             sx={{
               columnGap: 1,
               rowGap: 2,
@@ -144,7 +168,7 @@ export const PricingDropdown: PricingOptionsOverload = ({
           {buttonLabel}
         </Button>
       </Flex>
-      {currentSelection && (
+      {currentSelection && openModal && (
         <ActionModal
           isOpen={openModal}
           data={currentSelection}
@@ -152,17 +176,18 @@ export const PricingDropdown: PricingOptionsOverload = ({
           tokenId={tokenId}
           method={method}
           labels={modalLabels}
+          plan={plan}
         />
       )}
     </>
   )
 }
 
-function PriceText({ data, sx }: { data: Config; sx?: any }) {
+function PriceText({ data, sx, color }: { data: Config; sx?: any; color?: string }) {
   return (
     <Type.H5
       ml={3}
-      color="orange1"
+      color={color}
       sx={{
         display: 'flex',
         flexDirection: ['column', 'row'],
@@ -204,7 +229,6 @@ function getPlanPriceConfigs(planPrice: BigNumber | undefined) {
 }
 
 type ActionState = 'preparing' | 'processing' | 'syncing' | 'success'
-const MINT_TIER = 1
 function ActionModal({
   isOpen,
   onDismiss,
@@ -212,6 +236,7 @@ function ActionModal({
   tokenId,
   method,
   labels,
+  plan,
 }: {
   isOpen: boolean
   onDismiss: () => void
@@ -219,7 +244,9 @@ function ActionModal({
   tokenId: number | undefined
   method: PricingOptionsProps['method']
   labels: PricingOptionsProps['modalLabels']
+  plan: SubscriptionPlanEnum
 }) {
+  const { data: userSubscription } = useUserSubscription()
   const { isValid, alert } = useRequiredChain({ chainId: SUBSCRIPTION_CHAIN_ID })
   const subscriptionContract = useSubscriptionContract()
   const [state, setState] = useState<ActionState>('preparing')
@@ -235,7 +262,7 @@ function ActionModal({
 
   const handleAction = () => {
     let params: any = []
-    if (method === 'mint') params = [MINT_TIER, data?.monthCount]
+    if (method === 'mint') params = [plan, data?.monthCount]
     if (method === 'extend') params = [tokenId, data?.monthCount]
     subscriptionMutation.mutate({ method, params, value: data?.price.bn })
   }
@@ -279,9 +306,11 @@ function ActionModal({
               onSyncSuccess={handleSyncSuccess}
               txHash={subscriptionMutation.data?.transactionHash}
               processingText={[labels.success, labels.processing]}
+              upgradePlan={plan}
+              prevExpiredTime={dayjs.utc(userSubscription?.expiredTime).valueOf()}
             />
           )}
-          {isSuccess && <SuccessState handleClose={onDismiss} successText={labels.congrats} />}
+          {isSuccess && <SuccessState handleClose={onDismiss} successText={labels.congrats} plan={plan} />}
         </Box>
       )}
     </Modal>

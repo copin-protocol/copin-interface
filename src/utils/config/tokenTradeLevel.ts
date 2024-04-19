@@ -15,9 +15,8 @@ const TOKEN_TRADE_LEVEL_ARB = {
     decimals: 18,
     priceFeedId: '',
   },
-
-  '0x912ce59144191c1204e64559fe8253a0e49e6548': {
-    address: '0x912ce59144191c1204e64559fe8253a0e49e6548',
+  '0x912CE59144191C1204E64559FE8253a0e49E6548': {
+    address: '0x912CE59144191C1204E64559FE8253a0e49E6548',
     name: 'ARB',
     symbol: 'ARB',
     decimals: 18,

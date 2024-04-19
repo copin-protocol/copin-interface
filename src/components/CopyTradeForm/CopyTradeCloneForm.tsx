@@ -6,8 +6,10 @@ import { toast } from 'react-toastify'
 import { duplicateCopyTradeApi } from 'apis/copyTradeApis'
 import ToastBody from 'components/@ui/ToastBody'
 import { CopyTradeData, UpdateCopyTradeData } from 'entities/copyTrade'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 import { getErrorMessage } from 'utils/helpers/handleError'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
@@ -38,8 +40,10 @@ const CopyTradeCloneForm: CopyTradeCloneFormComponent = ({
   onSuccess,
 }: CloneTraderProps & Partial<DedicatedTraderProps>) => {
   const { myProfile } = useMyProfileStore()
+  const refetchQueries = useRefetchQueries()
   const { mutate: duplicateCopyTrade, isLoading } = useMutation(duplicateCopyTradeApi, {
     onSuccess: (data) => {
+      refetchQueries([QUERY_KEYS.GET_TRADER_VOLUME_COPY])
       toast.success(
         <ToastBody title={<Trans>Success</Trans>} message={<Trans>Clone copy trade has been succeeded</Trans>} />
       )

@@ -63,7 +63,7 @@ export default function CopyTraderDrawer({
   )
   const { mutate: requestCopyTrade, isLoading } = useMutation(requestCopyTradeApi, {
     onSuccess: async () => {
-      refetchQueries([QUERY_KEYS.USE_GET_ALL_COPY_TRADES])
+      refetchQueries([QUERY_KEYS.USE_GET_ALL_COPY_TRADES, QUERY_KEYS.GET_TRADER_VOLUME_COPY])
       toast.success(
         <ToastBody title={<Trans>Success</Trans>} message={<Trans>Make copy trade has been succeeded</Trans>} />
       )

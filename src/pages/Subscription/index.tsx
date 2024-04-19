@@ -1,26 +1,20 @@
 /* eslint-disable react/jsx-key */
 import { Trans } from '@lingui/macro'
-import { ArrowRight } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { Link } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { GradientText } from 'components/GradientText'
 import NFTCollectionLinks from 'components/NFTCollectionLinks'
-import NFTSubscriptionCard from 'components/NFTSubscriptionCard'
-import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
-import useUserSubscription from 'hooks/features/useUserSubscription'
 import { Box, Flex, Type } from 'theme/base'
-import ROUTES from 'utils/config/routes'
+import { themeColors } from 'theme/colors'
 
 import Plans, { MobilePlans } from './Plans'
 import TermsAndConditions from './TermsAndConditions'
 import { SubscriptionColors, SubscriptionGrid } from './styled'
 
 export default function Subscription() {
-  const { md } = useResponsive()
-  const priceData = useSubscriptionPlanPrice()
-  if (!md)
+  const { xl } = useResponsive()
+  if (!xl)
     return (
       <>
         <CustomPageTitle title="Subscription Plans" />
@@ -34,11 +28,11 @@ export default function Subscription() {
             <Trans>We&apos;ve got a pricing plan that&apos;s perfect for you</Trans>
           </Type.BodyBold>
           <NFTCollectionLinks />
-          <Box mt={4} p={3}>
+          {/* <Box mt={4} p={3}>
             <SubscriptionCard />
-          </Box>
+          </Box> */}
           <Box p={3}>
-            <MobilePlans planPrice={priceData?.price} />
+            <MobilePlans />
           </Box>
           <Box mb={42} />
           <Box p={3}>
@@ -59,9 +53,21 @@ export default function Subscription() {
         py={4}
         px={3}
       >
-        <SubscriptionColors />
-        <SubscriptionGrid />
-        <Box sx={{ width: '100%', maxWidth: 1248, mx: 'auto', position: 'relative' }}>
+        <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: '60vh', overflow: 'hidden' }}>
+          <SubscriptionColors />
+          <SubscriptionGrid />
+          <Box
+            sx={{
+              backgroundImage: `linear-gradient(180deg, rgba(11,14,24,0) 0%, rgba(11,14,24,1) 100%)`,
+              position: 'absolute',
+              bottom: 0,
+              top: '50%',
+              left: 0,
+              right: 0,
+            }}
+          />
+        </Box>
+        <Box sx={{ width: '100%', maxWidth: 1200, mx: 'auto', position: 'relative' }}>
           <Type.H1 mb={3} textAlign="center">
             <GradientText>
               <Trans>Subscription</Trans>
@@ -71,9 +77,9 @@ export default function Subscription() {
             <Trans>We&apos;ve got a pricing plan that&apos;s perfect for you</Trans>
           </Type.BodyBold>
           <NFTCollectionLinks />
-          <Flex mt={4} width="100%" sx={{ gap: 24, flexDirection: ['column', 'column', 'column', 'column', 'row'] }}>
-            <SubscriptionCard />
-            <Plans planPrice={priceData?.price} />
+          <Flex mt={5} width="100%" sx={{ gap: 24, flexDirection: ['column', 'column', 'column', 'column', 'row'] }}>
+            {/* <SubscriptionCard /> */}
+            <Plans />
           </Flex>
           <Box mb={42} />
           <TermsAndConditions />
@@ -83,35 +89,35 @@ export default function Subscription() {
   )
 }
 
-function SubscriptionCard() {
-  const { data } = useUserSubscription()
-  return (
-    <Box sx={{ width: ['100%', 'max-content'], maxWidth: 'max-content', mx: 'auto', '& > *': { height: '100%' } }}>
-      <NFTSubscriptionCard
-        data={data}
-        action={
-          data && (
-            <Flex
-              sx={{
-                alignItems: 'center',
-                gap: 1,
-                borderBottom: 'small',
-                borderBottomColor: 'primary1',
-                color: 'primary1',
-                width: 'max-content',
-                mx: 'auto',
-              }}
-              as={Link}
-              to={ROUTES.USER_SUBSCRIPTION.path}
-            >
-              <Type.Body>
-                <Trans>My Subscription</Trans>
-              </Type.Body>
-              <ArrowRight size={24} />
-            </Flex>
-          )
-        }
-      />
-    </Box>
-  )
-}
+// function SubscriptionCard() {
+//   const { data } = useUserSubscription()
+//   return (
+//     <Box sx={{ width: ['100%', 'max-content'], maxWidth: 'max-content', mx: 'auto', '& > *': { height: '100%' } }}>
+//       <NFTSubscriptionCard
+//         data={data}
+//         action={
+//           data && (
+//             <Flex
+//               sx={{
+//                 alignItems: 'center',
+//                 gap: 1,
+//                 borderBottom: 'small',
+//                 borderBottomColor: 'primary1',
+//                 color: 'primary1',
+//                 width: 'max-content',
+//                 mx: 'auto',
+//               }}
+//               as={Link}
+//               to={ROUTES.USER_SUBSCRIPTION.path}
+//             >
+//               <Type.Body>
+//                 <Trans>My Subscription</Trans>
+//               </Type.Body>
+//               <ArrowRight size={24} />
+//             </Flex>
+//           )
+//         }
+//       />
+//     </Box>
+//   )
+// }

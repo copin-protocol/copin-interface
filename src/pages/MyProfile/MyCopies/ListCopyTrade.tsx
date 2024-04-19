@@ -6,6 +6,7 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import ReverseTag from 'components/@ui/ReverseTag'
 import Table from 'components/@ui/Table'
 import { ColumnData, TableSortProps } from 'components/@ui/Table/types'
+import { TraderCopyVolumeCheckingData } from 'components/TraderCopyVolumeWarningIcon'
 import { CopyTradeData } from 'entities/copyTrade'
 import Loading from 'theme/Loading'
 import Tooltip from 'theme/Tooltip'
@@ -14,6 +15,8 @@ import { TOOLTIP_KEYS } from 'utils/config/keys'
 
 import { CopyTradeRenderProps } from './useCopyTradeColumns'
 
+export type CopyTradeWithCheckingData = CopyTradeData & TraderCopyVolumeCheckingData
+
 export function CopyTable({
   sortedData,
   columns,
@@ -21,11 +24,11 @@ export function CopyTable({
   currentSort,
   changeCurrentSort,
 }: {
-  sortedData: CopyTradeData[] | undefined
-  columns: ColumnData<CopyTradeData>[]
+  sortedData: CopyTradeWithCheckingData[] | undefined
+  columns: ColumnData<CopyTradeWithCheckingData>[]
   isLoading: boolean
-  currentSort: TableSortProps<CopyTradeData> | undefined
-  changeCurrentSort: (sort: TableSortProps<CopyTradeData> | undefined) => void
+  currentSort: TableSortProps<CopyTradeWithCheckingData> | undefined
+  changeCurrentSort: (sort: TableSortProps<CopyTradeWithCheckingData> | undefined) => void
 }) {
   return (
     <>
@@ -65,7 +68,7 @@ export function ListCopy({
   isLoading,
   renderProps,
 }: {
-  sortedData: CopyTradeData[] | undefined
+  sortedData: CopyTradeWithCheckingData[] | undefined
   isLoading: boolean
   renderProps: CopyTradeRenderProps
 }) {

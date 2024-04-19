@@ -49,6 +49,12 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'BNB Chain',
     chainId: BNB_MAINNET,
   },
+  [ProtocolEnum.LEVEL_ARB]: {
+    id: ProtocolEnum.LEVEL_ARB,
+    text: 'Level',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+  },
 }
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] = [
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GMX],
@@ -57,4 +63,5 @@ export const PROTOCOL_OPTIONS: ProtocolOptionProps[] = [
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.POLYNOMIAL],
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.GNS],
   PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.LEVEL_BNB],
+  PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.LEVEL_ARB],
 ]

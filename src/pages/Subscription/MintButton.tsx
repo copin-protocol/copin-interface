@@ -11,6 +11,7 @@ import styled from 'styled-components/macro'
 import { getMyProfileApi } from 'apis/userApis'
 import confetti from 'assets/icons/confetti.png'
 import defaultNft from 'assets/images/default-nft.webp'
+import vipNft from 'assets/images/vip-nft.webp'
 import Divider from 'components/@ui/Divider'
 import ETHPriceInUSD from 'components/ETHPriceInUSD'
 import { useClickLoginButton } from 'components/LoginAction'
@@ -39,14 +40,18 @@ import CopinIcon from './CopinIcon'
 
 export default function MintButton({
   planPrice,
+  plan,
   buttonType = 'gradient',
   buttonSx,
   buttonText = <Trans>Mint NFT</Trans>,
+  bgType = '1',
 }: {
   planPrice: BigNumber | undefined
+  plan: SubscriptionPlanEnum
   buttonType?: 'primary' | 'gradient'
   buttonSx?: any
   buttonText?: ReactNode
+  bgType?: '1' | '2'
 }) {
   const { isAuthenticated } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
@@ -83,18 +88,17 @@ export default function MintButton({
         disabled={!planPrice}
         onClick={handleOpenModal}
       >
-        {buttonType === 'gradient' && <Decorators />}
+        {buttonType === 'gradient' && <Decorators bgType={bgType} />}
         <Type.BodyBold color={buttonType === 'gradient' ? 'neutral1' : 'neutral8'} sx={{ position: 'relative' }}>
           {buttonText}
         </Type.BodyBold>
       </StyledButton>
-      {openModal && <MintModal isOpen={openModal} onDismiss={handleDismiss} planPrice={planPrice} />}
+      {openModal && <MintModal isOpen={openModal} onDismiss={handleDismiss} planPrice={planPrice} plan={plan} />}
     </>
   )
 }
 
 const MINT_DURATION = 1 // month
-const MINT_TIER = 1 // premium
 
 type MintState = 'preparing' | 'minting' | 'syncing' | 'success'
 
@@ -102,11 +106,14 @@ function MintModal({
   isOpen,
   onDismiss,
   planPrice,
+  plan,
 }: {
   isOpen: boolean
   onDismiss: () => void
   planPrice: BigNumber | undefined
+  plan: SubscriptionPlanEnum
 }) {
+  const { data: userSubscription } = useUserSubscription()
   const { isValid, alert } = useRequiredChain({ chainId: SUBSCRIPTION_CHAIN_ID })
   const subscriptionContract = useSubscriptionContract()
   const [state, setState] = useState<MintState>('preparing')
@@ -121,7 +128,7 @@ function MintModal({
   } as any)
 
   const handleMint = () => {
-    subscriptionMutation.mutate({ method: 'mint', params: [MINT_TIER, MINT_DURATION], value: planPrice })
+    subscriptionMutation.mutate({ method: 'mint', params: [plan, MINT_DURATION], value: planPrice })
   }
   const handleSyncSuccess = () => {
     setState('success')
@@ -143,7 +150,7 @@ function MintModal({
           <Box>
             {state === 'preparing' && (
               <Box p={3}>
-                <PrepairingState planPrice={planPrice} />
+                <PrepairingState planPrice={planPrice} plan={plan} />
                 <Box mb={3} />
                 {subscriptionMutation.error && (
                   <Type.Caption my={2} color="red1">
@@ -161,9 +168,11 @@ function MintModal({
                 isSyncing={state === 'syncing'}
                 onSyncSuccess={handleSyncSuccess}
                 txHash={subscriptionMutation.data?.transactionHash}
+                upgradePlan={plan}
+                prevExpiredTime={dayjs.utc(userSubscription?.expiredTime).valueOf()}
               />
             )}
-            {isSuccess && <SuccessState handleClose={onDismiss} />}
+            {isSuccess && <SuccessState handleClose={onDismiss} plan={plan} />}
           </Box>
           {!planPrice && (
             <Type.Body sx={{ display: 'block', p: 3, textAlign: 'center' }}>
@@ -176,7 +185,7 @@ function MintModal({
   )
 }
 
-function PrepairingState({ planPrice }: { planPrice: BigNumber | undefined }) {
+function PrepairingState({ planPrice, plan }: { planPrice: BigNumber | undefined; plan: SubscriptionPlanEnum }) {
   const price = planPrice ? new Num(planPrice) : undefined
   if (!price) return <></>
 
@@ -190,7 +199,7 @@ function PrepairingState({ planPrice }: { planPrice: BigNumber | undefined }) {
             <Box as="span" color="primary1">
               30 days
             </Box>{' '}
-            Premium NFT Plan
+            {plan === SubscriptionPlanEnum.PREMIUM ? 'Premium ' : 'VIP '} NFT Plan
           </Trans>
         </Type.Caption>
         <ModalPriceFormat price={price} />
@@ -242,34 +251,39 @@ export function ProcessingState({
   onSyncSuccess,
   txHash,
   processingText = [<Trans key={1}>Minted NFT</Trans>, <Trans key={2}>Minting NFT</Trans>],
+  upgradePlan,
+  prevExpiredTime,
 }: {
   isProcessing: boolean
   isSyncing: boolean
   onSyncSuccess: () => void
   txHash: string | undefined
   processingText?: ReactNode[]
+  upgradePlan: SubscriptionPlanEnum
+  prevExpiredTime: number
 }) {
   const { chain } = useChain()
   const refetchTime = useRef(0)
   const { myProfile, setMyProfile } = useMyProfileStore()
   const refetchQueries = useRefetchQueries()
-  const prevExpiredTime = useRef<number>(0)
+  const _prevExpiredTime = useRef<number>(prevExpiredTime)
+  // check for extend
   useUserSubscription({
-    enabled: isSyncing && !!myProfile?.plan,
+    enabled: isSyncing && myProfile?.plan != null && myProfile?.plan === upgradePlan,
     onSuccess: (data) => {
       if (refetchTime.current > MAXIMUM_CHECK_TIME) {
         onSyncSuccess()
         return
       }
       refetchTime.current += 1
-      if (!prevExpiredTime.current) {
-        prevExpiredTime.current = dayjs.utc(data?.expiredTime).valueOf()
+      if (!_prevExpiredTime.current) {
+        _prevExpiredTime.current = dayjs.utc(data?.expiredTime).valueOf()
         return
       }
       if (
-        !!prevExpiredTime.current &&
+        !!_prevExpiredTime.current &&
         data?.expiredTime &&
-        dayjs.utc(data?.expiredTime).valueOf() > prevExpiredTime.current
+        dayjs.utc(data?.expiredTime).valueOf() > _prevExpiredTime.current
       ) {
         refetchQueries([QUERY_KEYS.GET_USER_SUBSCRIPTION], () => {
           onSyncSuccess()
@@ -278,16 +292,21 @@ export function ProcessingState({
     },
     refetchInterval: 5_000,
   })
+  // Check for mint
   useQuery([QUERY_KEYS.GET_USER_PROFILE], getMyProfileApi, {
-    enabled: isSyncing && !myProfile?.plan,
+    enabled: isSyncing && myProfile?.plan != null,
     onSuccess: (data) => {
-      if (refetchTime.current > MAXIMUM_CHECK_TIME) {
-        onSyncSuccess()
-        return
-      }
-      refetchTime.current += 1
-      if (data.plan === SubscriptionPlanEnum.PREMIUM) {
-        setMyProfile(data)
+      try {
+        if (refetchTime.current > MAXIMUM_CHECK_TIME) {
+          onSyncSuccess()
+          return
+        }
+        refetchTime.current += 1
+        if (Number(upgradePlan) < Number(data.plan) || data.plan === upgradePlan) {
+          setMyProfile(data)
+          onSyncSuccess()
+        }
+      } catch (error) {
         onSyncSuccess()
       }
     },
@@ -383,13 +402,27 @@ export function ProcessingState({
 export function SuccessState({
   handleClose,
   successText = <Trans>Your NFT has been successfully minted</Trans>,
+  plan,
 }: {
   handleClose: () => void
   successText?: ReactNode
+  plan: SubscriptionPlanEnum
 }) {
   const [showConfetti, setShowConfetti] = useState(true)
-  const text =
-    "Hey there! Just minted my @Copin_io Premium NFT\n📌 It's like an insights party with traders from the perpetual DEX world!\nCome and check it out: "
+
+  let nftImageSrc = ''
+  let description = ''
+  switch (plan) {
+    case SubscriptionPlanEnum.PREMIUM:
+      nftImageSrc = defaultNft
+      description = `Hey there! Just minted my @Copin_io Premium NFT 📌 It's like an insights party with traders from the perpetual DEX world!\nCome and check it out`
+      break
+    case SubscriptionPlanEnum.VIP:
+      nftImageSrc = vipNft
+      description = `Just minted my Subscription NFT on @Copin_io! 🚀 I'm proud to contribute to the mission of driving mass adoption of perp DEX narrative. Get yours and join the Copin.io community today! #Copin #NFT`
+      break
+  }
+
   const link = `${APP_URL}/subscription`
 
   return (
@@ -428,7 +461,7 @@ export function SuccessState({
           }}
         />
         <Box sx={{ position: 'relative', zIndex: 10 }}>
-          <Image src={defaultNft} sx={{ width: 327, height: 'auto', mx: 'auto', display: 'block' }} />
+          <Image src={nftImageSrc} sx={{ width: 327, height: 'auto', mx: 'auto', display: 'block' }} />
           <Flex mt={4} mb={2} sx={{ width: '100%', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
             <Image src={confetti} sx={{ width: 24, height: 24 }} />
             <Type.H5>
@@ -447,7 +480,7 @@ export function SuccessState({
               <IconBox
                 role="button"
                 as="a"
-                href={`${TWITTER_SHARE_URL}?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`}
+                href={`${TWITTER_SHARE_URL}?text=${encodeURIComponent(description)}&url=${encodeURIComponent(link)}`}
                 target="_blank"
                 icon={<TwitterIcon size={32} />}
                 color="neutral1"
@@ -456,7 +489,7 @@ export function SuccessState({
               <IconBox
                 role="button"
                 as="a"
-                href={`${FACEBOOK_SHARE_URL}?quote=${encodeURIComponent(text)}&u=${encodeURIComponent(link)}`}
+                href={`${FACEBOOK_SHARE_URL}?quote=${encodeURIComponent(description)}&u=${encodeURIComponent(link)}`}
                 target="_blank"
                 icon={<FacebookLogo size={32} weight="fill" />}
                 color="neutral1"
@@ -465,7 +498,7 @@ export function SuccessState({
               <IconBox
                 role="button"
                 as="a"
-                href={`${TELEGRAM_SHARE_URL}?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`}
+                href={`${TELEGRAM_SHARE_URL}?text=${encodeURIComponent(description)}&url=${encodeURIComponent(link)}`}
                 target="_blank"
                 icon={<TelegramLogo size={32} weight="fill" />}
                 color="neutral1"
@@ -486,7 +519,7 @@ export function SuccessState({
   )
 }
 
-function Decorators() {
+function Decorators({ bgType = '1' }: { bgType: '1' | '2' }) {
   return (
     <>
       <Box
@@ -499,7 +532,10 @@ function Decorators() {
           height: 40,
           transform: 'translateX(-50%) translateY(-50%)',
           borderRadius: '40px',
-          background: 'radial-gradient(75.94% 115.68% at 73.2% 6.65%, #FFF 0%, #3EA2F4 27.6%, #423EF4 100%)',
+          background:
+            bgType === '1'
+              ? 'radial-gradient(75.94% 115.68% at 73.2% 6.65%, #FFF 0%, #3EA2F4 27.6%, #423EF4 100%)'
+              : 'radial-gradient(84.44% 102.83% at 80.14% -10.29%, #FFFFFF 0%, #32424F 27.6%, #393869 100%)',
           backdropFilter: 'blur(16px)',
           transition: '0.3s',
         }}
@@ -514,6 +550,8 @@ function Decorators() {
           borderRadius: '2px',
           border: '0.5px solid #DCBFF280',
           background: 'linear-gradient(180deg, rgba(62, 162, 244, 0.05) 0%, rgba(66, 62, 244, 0.05) 100%)',
+          // background:
+          //   bgType === '1' ? 'linear-gradient(180deg, rgba(62, 162, 244, 0.05) 0%, rgba(66, 62, 244, 0.05) 100%)' : '',
           boxShadow: '1px 1px 0px 0px #3D7AF0',
           backdropFilter: 'blur(20px)',
         }}

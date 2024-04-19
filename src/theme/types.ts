@@ -39,6 +39,8 @@ export type Colors = {
 
   modalBG: Color
   modalBG1: Color
+
+  violet: Color
 }
 
 export type VariantProps = {

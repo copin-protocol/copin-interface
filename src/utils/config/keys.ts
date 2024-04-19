@@ -55,6 +55,8 @@ export const QUERY_KEYS = {
   GET_TRADER_COPY_COUNT: 'GET_TRADER_COPY_COUNT',
   GET_TRADER_EXCHANGE_STATISTIC: 'GET_TRADER_EXCHANGE_STATISTIC',
   GET_TRADER_MULTI_EXCHANGE_STATISTIC: 'GET_TRADER_MULTI_EXCHANGE_STATISTIC',
+  GET_SYSTEM_CONFIG: 'GET_SYSTEM_CONFIG',
+  GET_TRADER_VOLUME_COPY: 'GET_TRADER_VOLUME_COPY',
 }
 
 export const CONTRACT_QUERY_KEYS = {
@@ -149,6 +151,7 @@ export const TOOLTIP_KEYS = {
   TRADER_COPY_COUNT_WARNING: 'data-trader-copy-count',
   TRADER_COPY_COUNT_WARNING_BASIC: 'data-trader-copy-count-basic',
   TRADER_COPY_VOLUME_WARNING: 'data-trader-copy-volume',
+  TRADER_TOTAL_COPY_VOLUME: 'tt-trader-total-copy-volume',
 }
 
 export const ELEMENT_IDS = {
@@ -166,6 +169,7 @@ export const DATA_ATTRIBUTES = {
   TRADER_COPY_COUNT_WARNING_BASIC: 'data-trader-copy-count-basic',
   TRADER_COPY_DELETED: 'data-trader-copy-deleted',
   TRADER_COPY_VOLUME_WARNING: 'data-trader-copy-volume',
+  TRADER_TOTAL_COPY_VOLUME: 'data-trader-total-copy-volume',
 }
 
 export const ELEMENT_CLASSNAMES = {
@@ -180,6 +184,7 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.KWENTA]: 'SYNTHETIX_COPY_TRADE',
   [ProtocolEnum.POLYNOMIAL]: 'SYNTHETIX_COPY_TRADE',
   [ProtocolEnum.LEVEL_BNB]: '',
+  [ProtocolEnum.LEVEL_ARB]: '',
 }
 
 export const INTERNAL_SERVICE_KEYS = {
@@ -189,4 +194,5 @@ export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.KWENTA]: 'SYNTHETIX_COPY_TRADE_BITGET',
   [ProtocolEnum.POLYNOMIAL]: 'SYNTHETIX_COPY_TRADE_BITGET',
   [ProtocolEnum.LEVEL_BNB]: '',
+  [ProtocolEnum.LEVEL_ARB]: '',
 }

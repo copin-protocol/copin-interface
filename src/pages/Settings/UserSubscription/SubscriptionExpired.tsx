@@ -1,17 +1,19 @@
 import { Trans } from '@lingui/macro'
 import { WarningCircle } from '@phosphor-icons/react'
+import { Link } from 'react-router-dom'
 
-import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
+// import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
 import Alert from 'theme/Alert'
+import { Button } from 'theme/Buttons'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+// import { SubscriptionPlanEnum } from 'utils/config/enums'
+import ROUTES from 'utils/config/routes'
 
-import { MINT_MODAL_LABELS, PricingDropdown } from './PricingOptions'
+// import { MINT_MODAL_LABELS, PricingDropdown } from './PricingOptions'
 
 export default function SubscriptionExpired() {
-  const pricePlanData = useSubscriptionPlanPrice()
-
-  if (!pricePlanData) return <></>
+  // const pricePlan = useSubscriptionPlanPrice()
 
   return (
     <>
@@ -45,13 +47,30 @@ export default function SubscriptionExpired() {
         }}
       />
 
-      <Box mt={24} />
-      <PricingDropdown
+      {/* <Box mt={24} /> */}
+      <Flex mt={24} sx={{ alignItems: 'center', gap: 3 }}>
+        <Button size="xs" variant="primary" as={Link} to={ROUTES.SUBSCRIPTION.path} sx={{ fontWeight: 600 }}>
+          Mint New NFT
+        </Button>
+      </Flex>
+
+      {/* <PricingDropdown
         method="mint"
-        buttonLabel={<Trans>Mint NFT</Trans>}
+        plan={SubscriptionPlanEnum.PREMIUM}
+        planPrice={pricePlan[SubscriptionPlanEnum.PREMIUM]?.price}
+        buttonLabel={<Trans>Mint Premium NFT</Trans>}
         modalLabels={MINT_MODAL_LABELS}
         buttonSx={{ width: ['100%', 200] }}
       />
+      <Box mt={3} />
+      <PricingDropdown
+        method="mint"
+        plan={SubscriptionPlanEnum.VIP}
+        planPrice={pricePlan[SubscriptionPlanEnum.VIP]?.price}
+        buttonLabel={<Trans>Mint VIP NFT</Trans>}
+        modalLabels={MINT_MODAL_LABELS}
+        buttonSx={{ width: ['100%', 200] }}
+      /> */}
     </>
   )
 }

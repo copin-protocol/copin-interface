@@ -420,6 +420,7 @@ export const generateProtocol = ({
   let protocolText = 'GMX'
   switch (protocol) {
     case ProtocolEnum.LEVEL_BNB:
+    case ProtocolEnum.LEVEL_ARB:
       protocolTextWidth = 117
       protocolText = 'Level'
       break

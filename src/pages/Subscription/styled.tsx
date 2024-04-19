@@ -5,9 +5,10 @@ import grid from 'assets/images/subscription-grid.png'
 import { Box } from 'theme/base'
 
 export const PlanRowWrapper = styled(Box)`
+  margin: 0 auto;
   width: 100%;
   display: grid;
-  grid-template-columns: 236px 1fr 294px;
+  grid-template-columns: repeat(4, 1fr);
 `
 
 export const SubscriptionGrid = styled(Box)`

@@ -40,7 +40,7 @@ export function useCheckCopyTradeAction() {
 
 export function useIsPremium() {
   const myProfile = useMyProfileStore((state) => state.myProfile)
-  const isPremiumUser = myProfile ? myProfile.plan === SubscriptionPlanEnum.PREMIUM : null
+  const isPremiumUser = myProfile ? myProfile.plan !== SubscriptionPlanEnum.BASIC : null
   return isPremiumUser
 }
 

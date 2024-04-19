@@ -139,3 +139,13 @@ export async function getMyCopyTradeOverviewApi(params: {
 export async function getTraderCopyCount(params: { protocol: ProtocolEnum; accounts: string[] }) {
   return requester.get(`/public/${SERVICE}/count`, { params }).then((res: any) => res.data as TraderCopyCountData[])
 }
+
+export async function getTraderVolumeCopy(params?: {
+  exchange?: CopyTradePlatformEnum
+  protocol?: ProtocolEnum
+  account?: string
+}) {
+  return requester
+    .get(`${SERVICE}/copy-trade-volume`, { params })
+    .then((res: any) => res.data as { account: string; protocol: ProtocolEnum; totalVolume: number }[])
+}

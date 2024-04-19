@@ -17,6 +17,7 @@ const ExplorerLogo = ({
     case ProtocolEnum.GNS:
     case ProtocolEnum.GMX:
     case ProtocolEnum.GMX_V2:
+    case ProtocolEnum.LEVEL_ARB:
       icon = 'ARBITRUM'
       break
     case ProtocolEnum.KWENTA:

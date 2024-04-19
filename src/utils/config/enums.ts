@@ -5,6 +5,7 @@ export enum ProtocolEnum {
   GMX_V2 = 'GMX_V2',
   GNS = 'GNS',
   LEVEL_BNB = 'LEVEL_BNB',
+  LEVEL_ARB = 'LEVEL_ARB',
 }
 
 export enum UserRoleEnum {
@@ -164,6 +165,7 @@ export enum LeaderboardTypeEnum {
 export enum SubscriptionPlanEnum {
   BASIC = 0,
   PREMIUM = 1,
+  VIP = 2,
 }
 export enum MaxCopyTradeQuotaEnum {
   BASIC = 3,

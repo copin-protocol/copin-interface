@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { useCallback, useRef, useState } from 'react'
+import { useQuery } from 'react-query'
 
+import { getTraderVolumeCopy } from 'apis/copyTradeApis'
 import { TableSortProps } from 'components/@ui/Table/types'
 import CopyTradeCloneDrawer from 'components/CopyTradeCloneDrawer'
 import CopyTradeEditDrawer from 'components/CopyTradeEditDrawer'
@@ -9,15 +11,18 @@ import DeleteCopyTradeModal from 'components/CopyTradeForm/DeleteCopyTradeModal'
 import CopyTradeHistoryDrawer from 'components/CopyTradeHistoryDrawer'
 import { CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
+import { getMaxVolumeCopy, useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useUpdateCopyTrade from 'hooks/features/useUpdateCopyTrade'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
 import { Box, Flex } from 'theme/base'
 import { CopyTradeStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 
 import NoDataOrSelect from '../NoDataOrSelect'
 import ConfirmStopModal from './ConfirmStopModal'
 import FilterSection from './FilterSection'
-import { CopyTable, ListCopy } from './ListCopyTrade'
+import { CopyTable, CopyTradeWithCheckingData, ListCopy } from './ListCopyTrade'
 import { TraderCopyCountWarning } from './TraderCopyCountWarning'
 import useCopyTradeColumns from './useCopyTradeColumns'
 
@@ -51,7 +56,9 @@ export default function MyCopies(props: MyCopiesProps) {
     handleSelectAllTraders,
     isLoadingTraders,
     handleAddTrader,
+    copyWallet,
   } = props
+  const myProfile = useMyProfileStore((_s) => _s.myProfile)
   const [openConfirmStopModal, setOpenConfirmStopModal] = useState(false)
   const { updateCopyTrade, isMutating } = useUpdateCopyTrade({
     onSuccess: () => {
@@ -63,9 +70,9 @@ export default function MyCopies(props: MyCopiesProps) {
   const [openHistoryDrawer, setOpenHistoryDrawer] = useState(false)
   const [openCloneDrawer, setOpenCloneDrawer] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const copyTradeData = useRef<CopyTradeData>()
+  const copyTradeData = useRef<CopyTradeWithCheckingData>()
 
-  const onSelect = useCallback((data?: CopyTradeData) => {
+  const onSelect = useCallback((data?: CopyTradeWithCheckingData) => {
     copyTradeData.current = data
   }, [])
 
@@ -114,6 +121,12 @@ export default function MyCopies(props: MyCopiesProps) {
     copyTradeData,
   })
 
+  const { data: volumeCopies } = useQuery(
+    [QUERY_KEYS.GET_TRADER_VOLUME_COPY, copyWallet?.id],
+    () => getTraderVolumeCopy({ exchange: copyWallet?.exchange }),
+    { enabled: !!copyWallet?.id }
+  )
+
   const handleConfirmStop = () => {
     if (!copyTradeData.current) {
       console.debug('cannot select copy trade')
@@ -125,15 +138,16 @@ export default function MyCopies(props: MyCopiesProps) {
     setOpenConfirmStopModal(false)
   }
 
-  const [currentSort, setCurrentSort] = useState<TableSortProps<CopyTradeData> | undefined>({
+  const [currentSort, setCurrentSort] = useState<TableSortProps<CopyTradeWithCheckingData> | undefined>({
     sortBy: 'status',
     sortType: SortTypeEnum.ASC,
   })
-  const changeCurrentSort = (sort: TableSortProps<CopyTradeData> | undefined) => {
+  const changeCurrentSort = (sort: TableSortProps<CopyTradeWithCheckingData> | undefined) => {
     setCurrentSort(sort)
   }
-  let sortedData: CopyTradeData[] | undefined = Array.isArray(data) ? [] : undefined
+  let sortedData: CopyTradeWithCheckingData[] | undefined = Array.isArray(data) ? [] : undefined
   if (data?.length) {
+    //@ts-ignore
     sortedData = [...data]
     if (sortedData && sortedData.length > 0 && !!currentSort) {
       sortedData.sort((a, b) => {
@@ -147,6 +161,15 @@ export default function MyCopies(props: MyCopiesProps) {
       })
     }
   }
+  const isRef = !!copyWallet?.isReferral
+  const systemVolumeLimit = useSystemConfigContext()
+  sortedData = sortedData?.map((_d) => ({
+    ..._d,
+    isRef,
+    maxVolume: getMaxVolumeCopy({ plan: myProfile?.plan, isRef, volumeLimitData: systemVolumeLimit.volumeLimit }),
+    copyVolume: volumeCopies?.find((_v) => _v.account === _d.account && _v.protocol === _d.protocol)?.totalVolume ?? 0,
+    plan: myProfile?.plan,
+  }))
 
   const hasSelectedTraders = !!selectedTraders.length
   const { sm } = useResponsive()

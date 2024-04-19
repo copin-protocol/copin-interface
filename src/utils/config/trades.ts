@@ -15,11 +15,16 @@ import { rpcProvider } from 'utils/web3/providers'
 import { TOKEN_TRADE_GMX } from './tokenTradeGmx'
 import { TOKEN_TRADE_GMX_V2 } from './tokenTradeGmxV2'
 import { TOKEN_TRADE_GNS } from './tokenTradeGns'
-import { TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
+import { TOKEN_TRADE_LEVEL_ARB, TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
 import { TOKEN_TRADE_SYNTHETIX } from './tokenTradeSynthetix'
 
 type ProtocolProvider = { [key: string]: { chainId: number; provider: JsonRpcProvider; explorerUrl: string } }
 export const PROTOCOL_PROVIDER: ProtocolProvider = {
+  [ProtocolEnum.LEVEL_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    provider: rpcProvider(ARBITRUM_MAINNET),
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
   [ProtocolEnum.LEVEL_BNB]: {
     chainId: BNB_MAINNET,
     provider: rpcProvider(BNB_MAINNET),
@@ -84,6 +89,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.KWENTA]: TOKEN_TRADE_SYNTHETIX,
   [ProtocolEnum.POLYNOMIAL]: TOKEN_TRADE_SYNTHETIX,
   [ProtocolEnum.LEVEL_BNB]: TOKEN_TRADE_LEVEL_BNB,
+  [ProtocolEnum.LEVEL_ARB]: TOKEN_TRADE_LEVEL_ARB,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -96,6 +102,12 @@ export const TOKEN_TRADE_IGNORE: TokenIgnore = {
 }
 
 export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
+  [ProtocolEnum.LEVEL_BNB]: {
+    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.LEVEL_BNB],
+  },
+  [ProtocolEnum.LEVEL_ARB]: {
+    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.LEVEL_ARB],
+  },
   [ProtocolEnum.GNS]: {
     ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX],
   },
@@ -153,6 +165,10 @@ export const TOKEN_ADDRESSES = {
   [ProtocolEnum.LEVEL_BNB]: {
     BTC: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
     ETH: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
+  },
+  [ProtocolEnum.LEVEL_ARB]: {
+    BTC: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
+    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
   },
 }
 

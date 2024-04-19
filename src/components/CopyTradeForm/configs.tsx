@@ -7,6 +7,7 @@ import { SERVICE_KEYS } from 'utils/config/keys'
 import { parseExchangeImage, parseProtocolImage } from 'utils/helpers/transform'
 
 const commonSchema = {
+  totalVolume: yup.number(),
   title: yup.string().required().label('Title'),
   volume: yup.number().when('exchange', {
     is: CopyTradePlatformEnum.SYNTHETIX,
@@ -84,6 +85,7 @@ export const cloneCopyTradeFormSchema = yup.object({
 })
 
 export interface CopyTradeFormValues {
+  totalVolume?: number
   account?: string
   volume: number
   leverage: number
@@ -177,17 +179,21 @@ export const internalExchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BINANCE),
   // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
 ]
-function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {
+export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {
   let label = ''
+  let refCode = ''
   switch (exchange) {
     case CopyTradePlatformEnum.BINGX:
       label = 'BingX'
+      refCode = 'DY5QNN'
       break
     case CopyTradePlatformEnum.BITGET:
       label = 'Bitget'
+      refCode = '1qlg'
       break
     case CopyTradePlatformEnum.BINANCE:
       label = 'Binance'
+      refCode = ''
       break
     case CopyTradePlatformEnum.SYNTHETIX:
       label = 'Synthetix'
@@ -203,6 +209,8 @@ function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {
         <Type.Caption>{label}</Type.Caption>
       </Flex>
     ),
+    refCode,
+    labelText: label,
     isDisabled: enabled != null && !enabled,
   }
 }

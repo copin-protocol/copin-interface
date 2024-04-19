@@ -2,13 +2,15 @@ import { Trans } from '@lingui/macro'
 
 import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
 import { Type } from 'theme/base'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 
 import { EXTEND_MODAL_LABELS, PricingDropdown } from './PricingOptions'
 
-export default function ExtendPlan({ tokenId }: { tokenId: number }) {
+export default function ExtendPlan({ tokenId, plan }: { tokenId: number; plan: SubscriptionPlanEnum }) {
   const pricePlanData = useSubscriptionPlanPrice()
+  const planData = pricePlanData[plan]
 
-  if (!pricePlanData) return <></>
+  if (!planData) return <></>
 
   return (
     <>
@@ -20,6 +22,8 @@ export default function ExtendPlan({ tokenId }: { tokenId: number }) {
       </Type.Caption>
       <PricingDropdown
         tokenId={tokenId}
+        plan={plan}
+        planPrice={planData.price}
         method="extend"
         buttonLabel={<Trans>Extend</Trans>}
         modalLabels={EXTEND_MODAL_LABELS}

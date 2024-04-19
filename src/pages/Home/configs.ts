@@ -48,4 +48,5 @@ export const INTERNAL_ALLOWED_PROTOCOLS = [
   ProtocolEnum.POLYNOMIAL,
   ProtocolEnum.GNS,
   ProtocolEnum.LEVEL_BNB,
+  ProtocolEnum.LEVEL_ARB,
 ]

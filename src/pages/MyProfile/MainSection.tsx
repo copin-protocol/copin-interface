@@ -142,7 +142,7 @@ export default function MainSection({
   }
 
   const handleRefresh = () => {
-    refetchQueries([QUERY_KEYS.USE_GET_ALL_COPY_TRADES])
+    refetchQueries([QUERY_KEYS.USE_GET_ALL_COPY_TRADES, QUERY_KEYS.GET_TRADER_VOLUME_COPY])
     setNewSession()
   }
 

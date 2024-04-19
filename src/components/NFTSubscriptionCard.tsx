@@ -4,19 +4,28 @@ import Dayjs from 'dayjs'
 import { ReactNode } from 'react'
 
 import defaultNft from 'assets/images/default-nft.webp'
+import vipNft from 'assets/images/vip-nft.webp'
 import { UserSubscriptionData } from 'entities/user'
 import useCountdown from 'hooks/helpers/useCountdown'
 import { Box, Image, Type } from 'theme/base'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 
 import { GradientText } from './GradientText'
 
-export default function NFTSubscriptionCard({ data, action }: { data?: UserSubscriptionData; action?: ReactNode }) {
+export default function NFTSubscriptionCard({
+  data,
+  action,
+}: {
+  data?: Partial<UserSubscriptionData>
+  action?: ReactNode
+}) {
+  const nftImageSrc = data?.tierId === SubscriptionPlanEnum.VIP ? vipNft : defaultNft
   return (
     <Box sx={{ position: 'relative', overflow: 'hidden', p: 3 }}>
       <CardDecorators />
       <Box sx={{ position: 'relative' }}>
         <Image
-          src={defaultNft}
+          src={nftImageSrc}
           sx={{ width: '100%', maxWidth: '368px', height: 'auto', mx: 'auto', display: 'block' }}
         />
         <Type.H4 mt={3} sx={{ textAlign: 'center' }}>

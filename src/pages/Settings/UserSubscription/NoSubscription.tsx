@@ -1,17 +1,17 @@
 import { Trans } from '@lingui/macro'
-import { CheckCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 
-import Divider from 'components/@ui/Divider'
-import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
+// import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
 // import MintButton from 'pages/Subscription/MintButton'
-import { planConfigs } from 'pages/Subscription/Plans'
-import { CrowIconGold, CrowIconSilver } from 'theme/Icons/CrowIcon'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { MobilePlanItem, Tooltips, usePlanConfigs } from 'pages/Subscription/Plans'
+import { Button } from 'theme/Buttons'
+import { CrowIconSilver } from 'theme/Icons/CrowIcon'
+import { Box, Flex, Grid, Type } from 'theme/base'
+import ROUTES from 'utils/config/routes'
 
 // import PlanPrice from './PlanPrice'
-import { MINT_MODAL_LABELS, PricingDropdown } from './PricingOptions'
 
 export default function NoSubscription() {
   const { lg } = useResponsive()
@@ -19,104 +19,141 @@ export default function NoSubscription() {
 }
 
 function DesktopNoSubscription() {
+  // const priceData = useSubscriptionPlanPrice()
+  const planConfigs = usePlanConfigs()
   return (
     <Box
       sx={{
-        py: [24, 24, 24, 48],
+        py: 24,
         position: 'relative',
         borderRadius: '4px',
         border: '0.5px solid #DCBFF220',
         background: 'linear-gradient(180deg, rgba(62, 162, 244, 0.05) 0%, rgba(66, 62, 244, 0.05) 100%)',
         backdropFilter: 'blur(15.397562980651855px)',
+        width: '100%',
+        maxWidth: 700,
+        mx: 'auto',
       }}
     >
+      {/* <Box
+        sx={{
+          position: 'absolute',
+          top: [24, 24, 24, 48],
+          bottom: [24, 24, 24, 48],
+          right: '640px',
+          bg: 'neutral5',
+          width: '1px',
+        }}
+      />
       <Box
         sx={{
           position: 'absolute',
           top: [24, 24, 24, 48],
           bottom: [24, 24, 24, 48],
-          left: 'calc(50% - 10px)',
+          right: '320px',
           bg: 'neutral5',
           width: '1px',
         }}
-      />
-      <RowWrapper
-        leftContent={
-          <>
-            <Flex mb={1} sx={{ alignItems: 'center', gap: 3 }}>
-              <CrowIconSilver />
-              <Type.LargeBold>
-                <Trans>Current Plan</Trans>
-              </Type.LargeBold>
-            </Flex>
-            <Type.Caption color="neutral3">
-              <Trans>The basic plan allows your to experience the basic features of Copin</Trans>
-            </Type.Caption>
-          </>
-        }
-        rightContent={
-          <>
-            <Flex mb={1} sx={{ alignItems: 'center', gap: 3 }}>
-              <CrowIconGold />
-              <Type.LargeBold>
-                <Trans>Premium Plan</Trans>
-              </Type.LargeBold>
-            </Flex>
-            <Type.Caption color="neutral3">
-              <Trans>More insights, more benefits</Trans>
-            </Type.Caption>
-          </>
-        }
-      />
+      /> */}
+      {/* <RowWrapper> */}
+      <Box px={24}>
+        <Flex mb={1} sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: 3 }}>
+          <Flex sx={{ alignItems: 'center', gap: 3 }}>
+            <CrowIconSilver />
+            <Type.LargeBold>
+              <Trans>Basic Plan</Trans>
+            </Type.LargeBold>
+          </Flex>
+          <Button size="xs" px={4} as={Link} to={ROUTES.SUBSCRIPTION.path} variant="primary">
+            Upgrade
+          </Button>
+        </Flex>
+        <Type.Caption color="neutral3">
+          <Trans>The basic plan allows your to experience the basic features of Copin</Trans>
+        </Type.Caption>
+      </Box>
+      {/* <Box px={3}>
+          <Flex mb={1} sx={{ alignItems: 'center', gap: 3 }}>
+            <CrowIconGold />
+            <Type.LargeBold>
+              <Trans>Premium Plan</Trans>
+            </Type.LargeBold>
+          </Flex>
+          <Type.Caption color="neutral3">
+            <Trans>More insights, more benefits</Trans>
+          </Type.Caption>
+        </Box>
+        <Box px={3}>
+          <Flex mb={1} sx={{ alignItems: 'center', gap: 3 }}>
+            <CrowIconGold />
+            <Type.LargeBold>
+              <Trans>VIP Plan</Trans>
+            </Type.LargeBold>
+          </Flex>
+          <Type.Caption color="neutral3">
+            <Trans>More insights, more benefits</Trans>
+          </Type.Caption>
+        </Box> */}
+      {/* </RowWrapper> */}
 
       <Flex mt={20} sx={{ flexDirection: 'column', gap: 20 }}>
         {planConfigs.features.map((value, index) => (
-          <RowWrapper
-            key={index}
-            leftContent={
-              <Flex>
-                <Type.Caption sx={{ width: [260, 260, 260, 300], flexShrink: 0 }}>{value}</Type.Caption>
-                <Type.Caption px={3}>{planConfigs.basic[index]}</Type.Caption>
-              </Flex>
-            }
-            rightContent={
-              <Flex sx={{ alignItems: 'center' }}>
-                <IconBox icon={<CheckCircle size={24} />} color="primary1" />
-                <Type.Caption px={3}>{planConfigs.premium[index]}</Type.Caption>
-              </Flex>
-            }
-          ></RowWrapper>
+          <RowWrapper key={index}>
+            <Type.Caption px={24}>{value}</Type.Caption>
+            <Flex px={24}>
+              <Type.Caption>{planConfigs.basic[index]}</Type.Caption>
+            </Flex>
+            {/* <Flex px={3} sx={{ alignItems: 'center', gap: 3 }}>
+              <IconBox icon={<CheckCircle size={24} />} color="primary1" />
+              <Type.Caption>{planConfigs.premium[index]}</Type.Caption>
+            </Flex>
+            <Flex px={3} sx={{ alignItems: 'center', gap: 3 }}>
+              <IconBox icon={<CheckCircle size={24} />} color="primary1" />
+              <Type.Caption>{planConfigs.vip[index]}</Type.Caption>
+            </Flex> */}
+          </RowWrapper>
         ))}
-        <RowWrapper
-          leftContent={<Box />}
-          rightContent={
-            <>
-              <Divider mt={1} mb={24} sx={{ bg: 'neutral5' }} />
-              <PricingDropdown
-                method="mint"
-                buttonLabel={<Trans>Mint NFT</Trans>}
-                modalLabels={MINT_MODAL_LABELS}
-                buttonSx={{ width: ['100%', 150] }}
-              />
-            </>
-          }
-        />
+        {/* <RowWrapper>
+          <Box />
+          <Box />
+          <Box px={3}>
+            <Divider mb={3} />
+            <PricingDropdown
+              method="mint"
+              plan={SubscriptionPlanEnum.PREMIUM}
+              planPrice={priceData[SubscriptionPlanEnum.PREMIUM]?.price}
+              buttonLabel={<Trans>Mint Premium NFT</Trans>}
+              modalLabels={MINT_MODAL_LABELS}
+              buttonSx={{ width: ['100%', 150] }}
+              wrapperSx={{ flexDirection: 'column' }}
+            />
+          </Box>
+          <Box px={3}>
+            <Divider mb={3} />
+            <PricingDropdown
+              method="mint"
+              plan={SubscriptionPlanEnum.VIP}
+              planPrice={priceData[SubscriptionPlanEnum.VIP]?.price}
+              buttonLabel={<Trans>Mint VIP NFT</Trans>}
+              modalLabels={MINT_MODAL_LABELS}
+              buttonSx={{ width: ['100%', 150] }}
+              wrapperSx={{ flexDirection: 'column' }}
+            />
+          </Box>
+        </RowWrapper> */}
       </Flex>
     </Box>
   )
 }
 
-function RowWrapper({ leftContent, rightContent }: { leftContent: ReactNode; rightContent: ReactNode }) {
-  return (
-    <Flex>
-      <Box sx={{ flex: 1, px: 24 }}>{leftContent}</Box>
-      <Box sx={{ flex: 1, px: 24, pl: 40 }}>{rightContent}</Box>
-    </Flex>
-  )
+function RowWrapper({ children }: { children: ReactNode }) {
+  // return <Grid sx={{ gridTemplateColumns: '240px 320px 320px 320px' }}>{children}</Grid>
+  return <Grid sx={{ gridTemplateColumns: '1fr 1fr' }}>{children}</Grid>
 }
 
 export function MobileNoSubscription() {
-  const priceData = useSubscriptionPlanPrice()
+  // const priceData = useSubscriptionPlanPrice()
+  const planConfigs = usePlanConfigs()
   return (
     <>
       <Flex
@@ -129,18 +166,15 @@ export function MobileNoSubscription() {
             <Trans>Current Plan</Trans>
           </Type.BodyBold>
         </Flex>
-        {planConfigs.features.map((value, index) => (
-          <Flex key={index} sx={{ alignItems: 'center', gap: 3 }}>
-            <Flex sx={{ alignItems: 'center', width: 175, flexShrink: 0 }}>
-              <Type.Caption>{value}</Type.Caption>
-            </Flex>
-            <Flex sx={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Type.CaptionBold>{planConfigs.basic[index]}</Type.CaptionBold>
-            </Flex>
-          </Flex>
+        {planConfigs.features.map((label, index) => (
+          <MobilePlanItem key={index} label={label} value={planConfigs.basic[index]} />
         ))}
+        <Button size="xs" px={4} as={Link} to={ROUTES.SUBSCRIPTION.path} variant="primary">
+          Upgrade
+        </Button>
       </Flex>
-      <Flex
+      <Tooltips />
+      {/* <Flex
         sx={{
           flexDirection: 'column',
           gap: 3,
@@ -172,11 +206,21 @@ export function MobileNoSubscription() {
         <Box height={0} />
         <PricingDropdown
           method="mint"
-          buttonLabel={<Trans>Mint NFT</Trans>}
+          plan={SubscriptionPlanEnum.PREMIUM}
+          planPrice={priceData[SubscriptionPlanEnum.PREMIUM]?.price}
+          buttonLabel={<Trans>Mint Premium NFT</Trans>}
+          modalLabels={MINT_MODAL_LABELS}
+          buttonSx={{ width: ['100%', 200] }}
+        /> 
+        <PricingDropdown
+          method="mint"
+          plan={SubscriptionPlanEnum.VIP}
+          planPrice={priceData[SubscriptionPlanEnum.VIP]?.price}
+          buttonLabel={<Trans>Mint VIP NFT</Trans>}
           modalLabels={MINT_MODAL_LABELS}
           buttonSx={{ width: ['100%', 200] }}
         />
-        {/* <Box>
+        <Box>
           <PlanPrice planPrice={priceData?.price} />
         </Box>
         <MintButton
@@ -184,8 +228,8 @@ export function MobileNoSubscription() {
           buttonType="primary"
           buttonSx={{ width: '100%', height: 40, '& *': { fontSize: '13px !important' } }}
           buttonText={<Trans>Mint to upgrade</Trans>}
-        /> */}
-      </Flex>
+        /> 
+      </Flex> */}
     </>
   )
 }

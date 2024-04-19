@@ -17,3 +17,12 @@ export interface ListenerBlockData {
   synthetixOpLatestRawDataBlock: number
   synthetixOpLatestOrderBlock: number
 }
+
+export interface VolumeLimitData {
+  volumeWoReferral: number
+  volumeReferral: number
+  volumePremiumWoReferral: number
+  volumePremiumReferral: number
+  volumeVipWoReferral: number
+  volumeVipReferral: number
+}

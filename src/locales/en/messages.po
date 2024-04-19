@@ -17,9 +17,17 @@ msgstr ""
 #~ msgid "(24h change)"
 #~ msgstr "(24h change)"
 
+#: src/pages/Subscription/Plans.tsx
+#~ msgid "(BingX, Bitget, OKX, Gate, ByBit, Binance)"
+#~ msgstr "(BingX, Bitget, OKX, Gate, ByBit, Binance)"
+
 #: src/pages/Home/ProtocolDropdown.tsx
 msgid "(Coming soon)"
 msgstr "(Coming soon)"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "(Go live on 1st May)"
+msgstr "(Go live on 1st May)"
 
 #: src/pages/@helpers/ErrorFallback.tsx
 msgid ". Try to reload the page to fix this issue"
@@ -41,6 +49,10 @@ msgstr "1 year"
 msgid "10 traders"
 msgstr "10 traders"
 
+#: src/pages/Subscription/Plans.tsx
+msgid "100 traders"
+msgstr "100 traders"
+
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
@@ -50,6 +62,11 @@ msgstr "14 days"
 #: src/pages/Home/Traders.tsx
 msgid "14D"
 msgstr "14D"
+
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+msgid "2 exchanges (BingX, Bitget)"
+msgstr "2 exchanges (BingX, Bitget)"
 
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
@@ -70,8 +87,25 @@ msgid "30D Pnl"
 msgstr "30D Pnl"
 
 #: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+msgid "4 perpetual DEX: GMX, GMXV2, Kwenta, Polynomial"
+msgstr "4 perpetual DEX: GMX, GMXV2, Kwenta, Polynomial"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "5 perpetual DEX: GMX, GMXv2, Kwenta, Polynomial, gTrade and more..."
+msgstr "5 perpetual DEX: GMX, GMXv2, Kwenta, Polynomial, gTrade and more..."
+
+#: src/pages/Subscription/Plans.tsx
 msgid "50 traders"
 msgstr "50 traders"
+
+#: src/pages/Subscription/Plans.tsx
+#~ msgid "6 exchanges and more..."
+#~ msgstr "6 exchanges and more..."
+
+#: src/pages/Subscription/Plans.tsx
+msgid "6 exchanges and more... (BingX, Bitget, OKX, Gate, ByBit, Binance)"
+msgstr "6 exchanges and more... (BingX, Bitget, OKX, Gate, ByBit, Binance)"
 
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
@@ -345,6 +379,7 @@ msgstr "Balance after simulation"
 msgid "Balance must be greater than or equal to margin"
 msgstr "Balance must be greater than or equal to margin"
 
+#: src/pages/Settings/UserSubscription/NoSubscription.tsx
 #: src/pages/Subscription/Plans.tsx
 msgid "Basic Plan"
 msgstr "Basic Plan"
@@ -356,6 +391,10 @@ msgstr "Basic Plan (FREE)"
 #: src/pages/Subscription/Plans.tsx
 #~ msgid "Basic plan"
 #~ msgstr "Basic plan"
+
+#: src/pages/Subscription/TermsAndConditions.tsx
+msgid "Benefits in each plan are added or removed continuously without prior notice."
+msgstr "Benefits in each plan are added or removed continuously without prior notice."
 
 #: src/pages/TraderDetails/ScoreChart.tsx
 msgid "Better than {value} traders"
@@ -435,6 +474,10 @@ msgstr "Bitget Wallet"
 #: src/components/LoginAction/ModalRegister.tsx
 msgid "By continuing, you agree to our"
 msgstr "By continuing, you agree to our"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "CEX account connection"
+msgstr "CEX account connection"
 
 #: src/utils/config/translations.tsx
 #~ msgid "CLOSED"
@@ -697,6 +740,34 @@ msgstr "Copy Wallet History"
 msgid "Copy Your Address"
 msgstr "Copy Your Address"
 
+#: src/pages/Subscription/Plans.tsx
+msgid "Copy hot trader"
+msgstr "Copy hot trader"
+
+#: src/pages/Subscription/Plans.tsx
+#~ msgid "Copy size if non-referral <0/><1/>Copin on CEX"
+#~ msgstr "Copy size if non-referral <0/><1/>Copin on CEX"
+
+#: src/pages/Subscription/Plans.tsx
+#~ msgid "Copy size if non-referral Copin on CEX"
+#~ msgstr "Copy size if non-referral Copin on CEX"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "Copy size if non-referral Copin on CEX <0/>"
+msgstr "Copy size if non-referral Copin on CEX <0/>"
+
+#: src/pages/Subscription/Plans.tsx
+#~ msgid "Copy size if referral <0/><1/>Copin on CEX"
+#~ msgstr "Copy size if referral <0/><1/>Copin on CEX"
+
+#: src/pages/Subscription/Plans.tsx
+#~ msgid "Copy size if referral Copin on CEX"
+#~ msgstr "Copy size if referral Copin on CEX"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "Copy size if referral Copin on CEX <0/>"
+msgstr "Copy size if referral Copin on CEX <0/>"
+
 #: src/theme/Tag/index.tsx
 msgid "Copying"
 msgstr "Copying"
@@ -710,8 +781,8 @@ msgid "Copytrade Settings History"
 msgstr "Copytrade Settings History"
 
 #: src/pages/Subscription/Plans.tsx
-msgid "Copytrades"
-msgstr "Copytrades"
+#~ msgid "Copytrades"
+#~ msgstr "Copytrades"
 
 #: src/components/CreateWalletAction/index.tsx
 msgid "Create"
@@ -770,7 +841,6 @@ msgid "Current Password"
 msgstr "Current Password"
 
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
-#: src/pages/Settings/UserSubscription/NoSubscription.tsx
 msgid "Current Plan"
 msgstr "Current Plan"
 
@@ -825,8 +895,8 @@ msgid "Default Filter"
 msgstr "Default Filter"
 
 #: src/components/WalletDetailsCard/WalletActions.tsx
-msgid "Delete Wallet"
-msgstr "Delete Wallet"
+#~ msgid "Delete Wallet"
+#~ msgstr "Delete Wallet"
 
 #: src/components/WalletDetailsCard/WalletActions.tsx
 msgid "Delete wallet successful!"
@@ -856,6 +926,7 @@ msgstr "Discover more than 100,000+ traders on Copin"
 msgid "Docs"
 msgstr "Docs"
 
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 msgid "Document"
 msgstr "Document"
@@ -1141,7 +1212,6 @@ msgid "High Win Rate"
 msgstr "High Win Rate"
 
 #: src/components/CopyTradePositionDetails/index.tsx
-#: src/components/WalletDetailsCard/WalletActions.tsx
 #: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 #: src/pages/MyProfile/index.tsx
 msgid "History"
@@ -1221,8 +1291,12 @@ msgid "Investment Capital"
 msgstr "Investment Capital"
 
 #: src/pages/Subscription/Plans.tsx
-msgid "Join Copin Alpha Club"
-msgstr "Join Copin Alpha Club"
+#~ msgid "Join Copin Alpha Club"
+#~ msgstr "Join Copin Alpha Club"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "Join Copin Elite club"
+msgstr "Join Copin Elite club"
 
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 #~ msgid "Kwenta"
@@ -1318,8 +1392,12 @@ msgid "Leverage"
 msgstr "Leverage"
 
 #: src/components/CopyTradeForm/index.tsx
-msgid "Leverage must be greater or equal to 2"
-msgstr "Leverage must be greater or equal to 2"
+#~ msgid "Leverage must be greater or equal to 2"
+#~ msgstr "Leverage must be greater or equal to 2"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "License copyright of Copin"
+msgstr "License copyright of Copin"
 
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 msgid "Limited"
@@ -1556,6 +1634,30 @@ msgstr "Max draw down"
 msgid "Max margin multiplier"
 msgstr "Max margin multiplier"
 
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#~ msgid "Maximum $10,000"
+#~ msgstr "Maximum $10,000"
+
+#: src/pages/Subscription/Plans.tsx
+#~ msgid "Maximum $2,000,000"
+#~ msgstr "Maximum $2,000,000"
+
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#~ msgid "Maximum $200,000"
+#~ msgstr "Maximum $200,000"
+
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+msgid "Maximum ${0}"
+msgstr "Maximum ${0}"
+
 #: src/components/SubscriptionRestrictModal.tsx
 msgid "Maybe Later"
 msgstr "Maybe Later"
@@ -1597,9 +1699,6 @@ msgstr "Min Leverage"
 msgid "Mint Again"
 msgstr "Mint Again"
 
-#: src/pages/Settings/UserSubscription/NoSubscription.tsx
-#: src/pages/Settings/UserSubscription/NoSubscription.tsx
-#: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
 #: src/pages/Subscription/MintButton.tsx
 msgid "Mint NFT"
 msgstr "Mint NFT"
@@ -1614,6 +1713,15 @@ msgstr "Mint New Subscription"
 msgid "Mint Now"
 msgstr "Mint Now"
 
+#: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
+#~ msgid "Mint Premium NFT"
+#~ msgstr "Mint Premium NFT"
+
+#: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
+#~ msgid "Mint VIP NFT"
+#~ msgstr "Mint VIP NFT"
+
+#: src/pages/@layouts/SubscriptionExpiredWarning.tsx
 #: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
 msgid "Mint new NFT"
 msgstr "Mint new NFT"
@@ -1649,13 +1757,16 @@ msgstr "Monthly"
 
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
-#: src/pages/Subscription/TermsAndConditions.tsx
 msgid "More"
 msgstr "More"
 
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
-msgid "More insights, more benefits"
-msgstr "More insights, more benefits"
+#~ msgid "More insights, more benefits"
+#~ msgstr "More insights, more benefits"
+
+#: src/pages/Subscription/TermsAndConditions.tsx
+msgid "More."
+msgstr "More."
 
 #: src/pages/MyProfile/index.tsx
 msgid "My Profile"
@@ -1663,7 +1774,6 @@ msgstr "My Profile"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/Settings/Layouts/Layout.tsx
-#: src/pages/Subscription/index.tsx
 msgid "My Subscription"
 msgstr "My Subscription"
 
@@ -1686,6 +1796,10 @@ msgstr "New Password"
 
 #: src/components/Modal/UnsubscribeAlertModal/index.tsx
 #: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 msgid "No"
@@ -1850,6 +1964,10 @@ msgstr "Orders"
 msgid "Orders Lookback"
 msgstr "Orders Lookback"
 
+#: src/utils/config/translations.tsx
+msgid "Others"
+msgstr "Others"
+
 #: src/pages/TopOpenings/Navigators.tsx
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
 #: src/pages/TopOpenings/OpenInterestByMarkets/index.tsx
@@ -1902,6 +2020,12 @@ msgstr "Percentile Filter"
 msgid "Percentile Ranking Comparison"
 msgstr "Percentile Ranking Comparison"
 
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+msgid "Personal"
+msgstr "Personal"
+
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 msgid "Pick From Copytrades"
 msgstr "Pick From Copytrades"
@@ -1912,6 +2036,7 @@ msgstr "Pick From Favorites"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
 #: src/components/WalletDetailsCard/WalletInfo.tsx
+#: src/pages/Subscription/Plans.tsx
 msgid "Platform"
 msgstr "Platform"
 
@@ -1999,9 +2124,6 @@ msgstr "Position Side"
 #~ msgid "Positions"
 #~ msgstr "Positions"
 
-#: src/pages/Settings/UserSubscription/HasSubscription.tsx
-#: src/pages/Settings/UserSubscription/NoSubscription.tsx
-#: src/pages/Settings/UserSubscription/NoSubscription.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 msgid "Premium Plan"
@@ -2010,6 +2132,10 @@ msgstr "Premium Plan"
 #: src/pages/Subscription/Plans.tsx
 #~ msgid "Premium plan"
 #~ msgstr "Premium plan"
+
+#: src/pages/Subscription/TermsAndConditions.tsx
+msgid "Prices may be changed by Copin depending on the project's performance and operations."
+msgstr "Prices may be changed by Copin depending on the project's performance and operations."
 
 #: src/pages/@layouts/Footer/index.tsx
 #~ msgid "Pricing"
@@ -2124,11 +2250,16 @@ msgstr "Referral List"
 msgid "Referrals"
 msgstr "Referrals"
 
+#: src/pages/Subscription/TermsAndConditions.tsx
+msgid "Refund not accepted."
+msgstr "Refund not accepted."
+
 #: src/components/@ui/BingXHelp/index.tsx
 #: src/components/@ui/BitgetHelp/index.tsx
 #: src/components/CreateWalletAction/index.tsx
 #: src/components/CreateWalletAction/index.tsx
 #: src/components/LoginAction/ModalRegister.tsx
+#: src/pages/WalletManagement/WalletList/index.tsx
 msgid "Register"
 msgstr "Register"
 
@@ -2379,6 +2510,7 @@ msgid "Starting from <0>5/2/2024</0>, your order will not be executed because th
 msgstr "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
 
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
 msgid "Stats"
 msgstr "Stats"
 
@@ -2419,6 +2551,7 @@ msgstr "Stop Loss Type"
 msgid "Stopped"
 msgstr "Stopped"
 
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/Subscription/index.tsx
 #: src/pages/Subscription/index.tsx
@@ -2482,6 +2615,10 @@ msgstr "Synthetix"
 msgid "Synthetix V2"
 msgstr "Synthetix V2"
 
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+msgid "System Status"
+msgstr "System Status"
+
 #: src/pages/Home/Layouts/HomeDesktop.tsx
 #~ msgid "TOP OPENING"
 #~ msgstr "TOP OPENING"
@@ -2534,8 +2671,8 @@ msgid "Terms and conditions"
 msgstr "Terms and conditions"
 
 #: src/pages/Settings/UserSubscription/HasSubscription.tsx
-msgid "The NFT subscription premium plan is a new way to provide premium features and benefits to users"
-msgstr "The NFT subscription premium plan is a new way to provide premium features and benefits to users"
+#~ msgid "The NFT subscription premium plan is a new way to provide premium features and benefits to users"
+#~ msgstr "The NFT subscription premium plan is a new way to provide premium features and benefits to users"
 
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
 msgid "The basic plan allows your to experience the basic features of Copin"
@@ -2689,12 +2826,16 @@ msgstr "To start, you need to create a smart wallet."
 #~ msgstr "To support Copin, please register a BingX account using the referral link: DY5QNN"
 
 #: src/pages/Subscription/TermsAndConditions.tsx
+msgid "To unlock premium and VIP features, mint a Copin NFT."
+msgstr "To unlock premium and VIP features, mint a Copin NFT."
+
+#: src/pages/Subscription/TermsAndConditions.tsx
 #~ msgid "To unlock premium features, mint a Copin NFT."
 #~ msgstr "To unlock premium features, mint a Copin NFT."
 
 #: src/pages/Subscription/TermsAndConditions.tsx
-msgid "To unlock premium features, mint a Copin Subscription."
-msgstr "To unlock premium features, mint a Copin Subscription."
+#~ msgid "To unlock premium features, mint a Copin Subscription."
+#~ msgstr "To unlock premium features, mint a Copin Subscription."
 
 #: src/pages/Settings/Referral/ReferralOverview.tsx
 msgid "Today"
@@ -2891,9 +3032,17 @@ msgstr "Trader Favorites"
 msgid "Trader Favorites Statistics"
 msgstr "Trader Favorites Statistics"
 
+#: src/pages/Subscription/Plans.tsx
+msgid "Trader data source to copy"
+msgstr "Trader data source to copy"
+
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "Trader don't have statistic in {0}"
 msgstr "Trader don't have statistic in {0}"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "Trader to copy"
+msgstr "Trader to copy"
 
 #: src/pages/Home/index.tsx
 msgid "Traders"
@@ -2921,6 +3070,7 @@ msgstr "Traders explorer"
 msgid "Trades"
 msgstr "Trades"
 
+#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
 #: src/utils/config/translations.tsx
 msgid "Trading Pairs"
 msgstr "Trading Pairs"
@@ -2955,6 +3105,8 @@ msgid "Unique traders are copied in the system"
 msgstr "Unique traders are copied in the system"
 
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 msgid "Unlimited"
@@ -3024,6 +3176,15 @@ msgstr "Use this code"
 #: src/components/ConfirmReferralModal/index.tsx
 #~ msgid "Use this referral code"
 #~ msgstr "Use this referral code"
+
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+msgid "VIP Plan"
+msgstr "VIP Plan"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "VIP support and exclusive signal"
+msgstr "VIP support and exclusive signal"
 
 #: src/components/ConditionFilterForm/index.tsx
 msgid "Value"
@@ -3187,6 +3348,10 @@ msgstr "Would you like to use a referral code?"
 #: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
 msgid "Yes"
 msgstr "Yes"
 
@@ -3195,8 +3360,8 @@ msgid "Yesterday"
 msgstr "Yesterday"
 
 #: src/pages/WalletManagement/YouMightNeed/index.tsx
-msgid "You Might Need"
-msgstr "You Might Need"
+#~ msgid "You Might Need"
+#~ msgstr "You Might Need"
 
 #: src/utils/config/translations.tsx
 msgid "You are not authorized to perform this action"
@@ -3219,8 +3384,8 @@ msgstr "You don't have any wallet"
 #~ msgstr "You don’t have any wallet yet"
 
 #: src/pages/WalletManagement/WalletList/index.tsx
-msgid "You don’t have any wallet. Please create a wallet"
-msgstr "You don’t have any wallet. Please create a wallet"
+#~ msgid "You don’t have any wallet. Please create a wallet"
+#~ msgstr "You don’t have any wallet. Please create a wallet"
 
 #: src/components/SubscriptionRestrictModal.tsx
 msgid "You have exceeded your quota for this feature."
@@ -3243,8 +3408,12 @@ msgstr "You will not copy the position has opened with leverage lower than"
 #~ msgstr "You will not copy the position has opened with leverage lower than {leverage}x."
 
 #: src/pages/Subscription/MintButton.tsx
-msgid "You will receive <0>30 days</0> Premium NFT Plan"
-msgstr "You will receive <0>30 days</0> Premium NFT Plan"
+#~ msgid "You will receive <0>30 days</0> Premium NFT Plan"
+#~ msgstr "You will receive <0>30 days</0> Premium NFT Plan"
+
+#: src/pages/Subscription/MintButton.tsx
+msgid "You will receive <0>30 days</0> {0} NFT Plan"
+msgstr "You will receive <0>30 days</0> {0} NFT Plan"
 
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "You will {label} your plan for an additional"
@@ -3327,8 +3496,8 @@ msgid "Your NFT is expired"
 msgstr "Your NFT is expired"
 
 #: src/pages/WalletManagement/WalletList/index.tsx
-msgid "Your Wallet List"
-msgstr "Your Wallet List"
+#~ msgid "Your Wallet List"
+#~ msgstr "Your Wallet List"
 
 #: src/components/CopyTradeForm/FundChecking.tsx
 msgid "Your copy may failed due to insufficient available margin"
@@ -3402,6 +3571,15 @@ msgstr "deleted"
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "extend"
 msgstr "extend"
+
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+msgid "https://app.copin.io"
+msgstr "https://app.copin.io"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "https://vip.copin.io"
+msgstr "https://vip.copin.io"
 
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "mint"

@@ -22,6 +22,7 @@ export interface CopyWalletData {
   copyVolume: number
   activeCopy: number
   createdAt: string
+  isReferral?: boolean
 }
 
 export interface ApiKeyWallet {

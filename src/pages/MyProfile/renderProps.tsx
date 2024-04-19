@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import TraderCopyCountWarningIcon from 'components/TraderCopyCountWarningIcon'
-import TraderCopyVolumeWarningIcon from 'components/TraderCopyVolumeWarningIcon'
+import TraderCopyVolumeWarningIcon, { TraderTotalCopyVolumeIcon } from 'components/TraderCopyVolumeWarningIcon'
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
@@ -16,7 +16,13 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
-import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
+import {
+  CopyTradeStatusEnum,
+  PositionStatusEnum,
+  ProtocolEnum,
+  SLTPTypeEnum,
+  SubscriptionPlanEnum,
+} from 'utils/config/enums'
 import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
@@ -68,6 +74,11 @@ export function renderTrader(
     hasAddressTooltip = false,
     hasCopyCountWarningIcon = false,
     hasCopyVolumeWarningIcon = false,
+    hasCopyTradeVolumeIcon = false,
+    copyVolume,
+    maxCopyVolume,
+    isRef,
+    plan,
   }: {
     textSx?: TextProps
     isLink?: boolean
@@ -76,6 +87,11 @@ export function renderTrader(
     hasAddressTooltip?: boolean
     hasCopyCountWarningIcon?: boolean
     hasCopyVolumeWarningIcon?: boolean
+    hasCopyTradeVolumeIcon?: boolean
+    copyVolume?: number
+    maxCopyVolume?: number
+    isRef?: boolean
+    plan?: SubscriptionPlanEnum
   } & SxProps = {}
 ) {
   const tooltipId = uuid()
@@ -116,7 +132,19 @@ export function renderTrader(
       {hasAddressTooltip && <Tooltip id={tooltipId}>{address}</Tooltip>}
       {(hasCopyCountWarningIcon || hasCopyVolumeWarningIcon) && <Type.Caption color={dividerColor}>|</Type.Caption>}
       {hasCopyCountWarningIcon && <TraderCopyCountWarningIcon account={address} protocol={protocol} size={18} />}
-      {hasCopyVolumeWarningIcon && <TraderCopyVolumeWarningIcon account={address} protocol={protocol} size={18} />}
+      {hasCopyVolumeWarningIcon && (
+        <TraderCopyVolumeWarningIcon account={address} protocol={protocol} size={18} copyVolume={copyVolume} />
+      )}
+      {hasCopyTradeVolumeIcon && copyVolume != null && maxCopyVolume && (
+        <TraderTotalCopyVolumeIcon
+          account={address}
+          protocol={protocol}
+          copyVolume={copyVolume}
+          maxVolume={maxCopyVolume}
+          isRef={isRef}
+          plan={plan}
+        />
+      )}
     </Flex>
   )
 }

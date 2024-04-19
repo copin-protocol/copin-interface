@@ -123,7 +123,7 @@ function StatsItem({
       </Box>
       <Box>
         <Type.Caption display="block" color={isActive ? 'primary1' : 'neutral3'}>
-          {protocolOption.text}
+          {protocolOption?.text}
         </Type.Caption>
         <Type.Small sx={{ display: 'flex', alignItems: 'center', gap: '1ch' }}>
           <Box as="span" color={isActive ? 'neutral1' : 'neutral3'}>

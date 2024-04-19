@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
-import React from 'react'
 
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
@@ -66,22 +65,25 @@ export default function TermsAndConditions({ text: Text = Type.Body }: { text?: 
   )
 }
 const termConfigs = [
-  <Trans>To unlock premium features, mint a Copin Subscription.</Trans>,
+  <Trans>To unlock premium and VIP features, mint a Copin NFT.</Trans>,
   <Trans>
     Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To
     continue, mint a new NFT.
   </Trans>,
   <Trans>A 10% loyalty fee applies when trading the NFT.</Trans>,
-  <Flex alignItems="center" flexWrap="wrap">
+  <Trans>Benefits in each plan are added or removed continuously without prior notice.</Trans>,
+  <Trans>Prices may be changed by Copin depending on the project&apos;s performance and operations.</Trans>,
+  <Trans>Refund not accepted.</Trans>,
+  <p>
     <Trans>
       Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior
       trading insights.
-    </Trans>
-    <a href={LINKS.copinEliteClub} target="_blank" style={{ paddingLeft: '4px' }} rel="noreferrer">
-      <Flex alignItems="center" sx={{ gap: 1 }}>
-        <Trans>More</Trans>
+    </Trans>{' '}
+    <a href={LINKS.copinEliteClub} target="_blank" rel="noreferrer">
+      <Box alignItems="center" sx={{ gap: 1, display: 'inline-flex' }}>
+        <Trans>More.</Trans>
         <ArrowSquareOut />
-      </Flex>
+      </Box>
     </a>
-  </Flex>,
+  </p>,
 ]

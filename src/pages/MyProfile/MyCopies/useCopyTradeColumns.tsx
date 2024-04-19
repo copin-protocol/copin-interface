@@ -31,6 +31,7 @@ import { compactNumber, formatNumber } from 'utils/helpers/format'
 
 import { renderSLTPSetting, renderTrader } from '../renderProps'
 import ActionItem from './ActionItem'
+import { CopyTradeWithCheckingData } from './ListCopyTrade'
 
 export default function useCopyTradeColumns({
   onSelect,
@@ -43,7 +44,7 @@ export default function useCopyTradeColumns({
   toggleStatus,
   copyTradeData,
 }: {
-  onSelect: (data?: CopyTradeData) => void
+  onSelect: (data?: CopyTradeWithCheckingData) => void
   isMutating: boolean
   setOpenHistoryDrawer: (value: SetStateAction<boolean>) => void
   setOpenDrawer: (value: SetStateAction<boolean>) => void
@@ -51,11 +52,11 @@ export default function useCopyTradeColumns({
   setOpenDeleteModal: (value: SetStateAction<boolean>) => void
   setOpenConfirmStopModal: (value: SetStateAction<boolean>) => void
   toggleStatus: ({ id, currentStatus }: { id: string; currentStatus: CopyTradeStatusEnum }) => void
-  copyTradeData: MutableRefObject<CopyTradeData | undefined>
+  copyTradeData: MutableRefObject<CopyTradeWithCheckingData | undefined>
 }) {
   const { checkIsEligible } = useCheckCopyTradeAction()
   const toggleStatusCopyTrade = useCallback(
-    (item: CopyTradeData) => {
+    (item: CopyTradeWithCheckingData) => {
       if (isMutating) return
       onSelect(item)
       if (item.status === CopyTradeStatusEnum.STOPPED) {
@@ -74,7 +75,7 @@ export default function useCopyTradeColumns({
   )
   const isRunningFn = useCallback((status: CopyTradeStatusEnum) => status === CopyTradeStatusEnum.RUNNING, [])
   const renderToggleRunning = useCallback(
-    (item: CopyTradeData) => (
+    (item: CopyTradeWithCheckingData) => (
       <SwitchInput
         checked={isRunningFn(item.status)}
         onChange={() => {
@@ -87,7 +88,7 @@ export default function useCopyTradeColumns({
     [copyTradeData, isMutating, isRunningFn, toggleStatusCopyTrade]
   )
   const renderTitle = useCallback(
-    (item: CopyTradeData, sx?: any) => (
+    (item: CopyTradeWithCheckingData, sx?: any) => (
       <Flex sx={{ alignItems: 'center', gap: 2 }}>
         <Type.Caption
           maxWidth={104}
@@ -107,7 +108,7 @@ export default function useCopyTradeColumns({
     [isRunningFn]
   )
   const renderTraderAccount = useCallback(
-    (item: CopyTradeData) => {
+    (item: CopyTradeWithCheckingData) => {
       const isRunning = isRunningFn(item.status)
       return renderTrader(item.account, item.protocol, {
         textSx: {
@@ -118,12 +119,17 @@ export default function useCopyTradeColumns({
         },
         hasCopyCountWarningIcon: isRunning,
         hasCopyVolumeWarningIcon: isRunning,
+        copyVolume: item.copyVolume,
+        maxCopyVolume: item.maxVolume,
+        isRef: item.isRef,
+        plan: item.plan,
+        hasCopyTradeVolumeIcon: isRunning,
       })
     },
     [isRunningFn]
   )
   const renderVolume = useCallback(
-    (item: CopyTradeData) => (
+    (item: CopyTradeWithCheckingData) => (
       <Type.Caption color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}>
         ${item.volume >= 10000 ? compactNumber(item.volume, 2) : formatNumber(item.volume)}
       </Type.Caption>
@@ -131,7 +137,7 @@ export default function useCopyTradeColumns({
     [isRunningFn]
   )
   const renderLeverage = useCallback(
-    (item: CopyTradeData) => (
+    (item: CopyTradeWithCheckingData) => (
       <Type.Caption color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}>
         x{formatNumber(item.leverage)}
       </Type.Caption>
@@ -139,7 +145,7 @@ export default function useCopyTradeColumns({
     [isRunningFn]
   )
   const renderMarkets = useCallback(
-    (item: CopyTradeData) => (
+    (item: CopyTradeWithCheckingData) => (
       <Type.Caption color="neutral1">
         {item.copyAll ? (
           'Follow Trader'
@@ -153,7 +159,7 @@ export default function useCopyTradeColumns({
     [isRunningFn]
   )
   const renderSLTP = useCallback(
-    (item: CopyTradeData) => (
+    (item: CopyTradeWithCheckingData) => (
       <Type.Caption sx={{ gap: '0.5ch', justifyContent: 'end' }}>{renderSLTPSetting(item)}</Type.Caption>
     ),
     []
@@ -255,7 +261,7 @@ export default function useCopyTradeColumns({
     [isRunningFn]
   )
   const render7DPNL = useCallback(
-    (item: CopyTradeData) => (
+    (item: CopyTradeWithCheckingData) => (
       <SignedText
         isCompactNumber
         value={item.pnl7D}
@@ -274,7 +280,7 @@ export default function useCopyTradeColumns({
     [isRunningFn]
   )
   const render30DPNL = useCallback(
-    (item: CopyTradeData) => (
+    (item: CopyTradeWithCheckingData) => (
       <SignedText
         isCompactNumber
         value={item.pnl30D}
@@ -293,7 +299,7 @@ export default function useCopyTradeColumns({
     [isRunningFn]
   )
   const renderTotalPNL = useCallback(
-    (item: CopyTradeData) => (
+    (item: CopyTradeWithCheckingData) => (
       <SignedText
         isCompactNumber
         value={item.pnl}
@@ -313,7 +319,7 @@ export default function useCopyTradeColumns({
   )
 
   const handleOpenHistoryDrawer = useCallback(
-    (data?: CopyTradeData) => {
+    (data?: CopyTradeWithCheckingData) => {
       onSelect(data)
       setOpenHistoryDrawer(true)
     },
@@ -321,7 +327,7 @@ export default function useCopyTradeColumns({
   )
 
   const handleOpenDrawer = useCallback(
-    (data?: CopyTradeData) => {
+    (data?: CopyTradeWithCheckingData) => {
       onSelect(data)
       setOpenDrawer(true)
     },
@@ -329,7 +335,7 @@ export default function useCopyTradeColumns({
   )
 
   const handleOpenCloneDrawer = useCallback(
-    (data?: CopyTradeData) => {
+    (data?: CopyTradeWithCheckingData) => {
       if (!checkIsEligible()) return
       onSelect(data)
       setOpenCloneDrawer(true)
@@ -338,14 +344,14 @@ export default function useCopyTradeColumns({
   )
 
   const handleOpenDeleteModal = useCallback(
-    (data?: CopyTradeData) => {
+    (data?: CopyTradeWithCheckingData) => {
       onSelect(data)
       setOpenDeleteModal(true)
     },
     [onSelect, setOpenDeleteModal]
   )
   const renderOptions = useCallback(
-    (item: CopyTradeData, option?: { placement: any }) => (
+    (item: CopyTradeWithCheckingData, option?: { placement: any }) => (
       <Flex justifyContent="end">
         <Dropdown
           hasArrow={false}
@@ -401,7 +407,7 @@ export default function useCopyTradeColumns({
     [handleOpenCloneDrawer, handleOpenDeleteModal, handleOpenDrawer]
   )
   const columns = useMemo(() => {
-    const result: ColumnData<CopyTradeData>[] = [
+    const result: ColumnData<CopyTradeWithCheckingData>[] = [
       {
         title: (
           <Box as="span" pl={3}>
@@ -433,7 +439,7 @@ export default function useCopyTradeColumns({
         dataIndex: 'account',
         key: 'account',
         sortBy: 'account',
-        style: { minWidth: '170px', width: 170 },
+        style: { minWidth: '210px', width: 210 },
         // TODO: 2
         render: renderTraderAccount,
       },

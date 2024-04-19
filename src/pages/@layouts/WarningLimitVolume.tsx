@@ -5,6 +5,7 @@ import { VOLUME_LIMIT } from 'utils/config/constants'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { DATA_ATTRIBUTES, ELEMENT_IDS } from 'utils/config/keys'
 
+// Deprecate
 export default function WarningLimitVolume() {
   const { listWarning } = useLimitVolume()
   const key = listWarning?.length

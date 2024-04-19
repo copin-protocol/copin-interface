@@ -9,6 +9,7 @@ import {
   OrderTypeEnum,
   ProtocolEnum,
   SLTPTypeEnum,
+  SubscriptionPlanEnum,
   TimeFilterByEnum,
   TimeframeEnum,
 } from 'utils/config/enums'
@@ -184,6 +185,7 @@ export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
     case ProtocolEnum.POLYNOMIAL:
       return LINKS.tradePolynomial
     case ProtocolEnum.LEVEL_BNB:
+    case ProtocolEnum.LEVEL_ARB:
       return LINKS.tradeLevel
     default:
       return LINKS.tradeGMX
@@ -272,4 +274,20 @@ export function parseMarketImage(symbol: string) {
 
 export function convertDurationInSecond(openTime: string) {
   return dayjs.duration(dayjs().diff(dayjs(openTime))).asSeconds()
+}
+
+export function getSubscriptionPlanConfigs(plan: SubscriptionPlanEnum | undefined) {
+  let label = ''
+  let color = ''
+  switch (plan) {
+    case SubscriptionPlanEnum.PREMIUM:
+      label = 'Premium'
+      color = 'orange'
+      break
+    case SubscriptionPlanEnum.VIP:
+      label = 'VIP'
+      color = 'violet'
+      break
+  }
+  return { label, color }
 }
