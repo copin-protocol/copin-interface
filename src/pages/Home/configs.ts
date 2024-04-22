@@ -36,8 +36,9 @@ export const getDropdownProps = ({
 export const BASE_RANGE_FILTER: RangeFilter<keyof TraderData>[] = [
   { fieldName: 'totalTrade', gte: 7 },
   { fieldName: 'profitRate', gte: 80 },
-  { fieldName: 'avgRoi', gte: 5 },
+  { fieldName: 'avgRoi', gte: 1 },
   { fieldName: 'winRate', gte: 51 },
+  { fieldName: 'runTimeDays', gte: 30 },
 ]
 
 export const ALLOWED_PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.GMX_V2, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
