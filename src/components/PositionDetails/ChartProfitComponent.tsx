@@ -25,7 +25,7 @@ import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { TIMEFRAME_NAMES, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { TIMEFRAME_NAMES, getTokenTradeSupport } from 'utils/config/trades'
 import { calcLiquidatePrice, calcOpeningPnL, calcPnL } from 'utils/helpers/calculate'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
@@ -60,7 +60,7 @@ export default function ChartProfitComponent({
   const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
     ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
     : undefined
-  const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken]?.symbol
+  const tokenSymbol = getTokenTradeSupport(position.protocol)?.[position.indexToken]?.symbol ?? ''
   const from = useMemo(() => openBlockTime * 1000, [openBlockTime])
   const to = useMemo(() => (isOpening ? dayjs().utc().valueOf() : closeBlockTime * 1000), [closeBlockTime, isOpening])
   const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])

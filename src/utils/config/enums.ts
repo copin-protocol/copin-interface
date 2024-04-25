@@ -3,7 +3,6 @@ export enum ProtocolEnum {
   KWENTA = 'KWENTA',
   POLYNOMIAL = 'POLYNOMIAL',
   GMX_V2 = 'GMX_V2',
-  GNS = 'GNS',
   LEVEL_BNB = 'LEVEL_BNB',
   LEVEL_ARB = 'LEVEL_ARB',
 }
@@ -53,7 +52,6 @@ export enum CopyTradePlatformEnum {
   BINANCE = 'BINANCE',
   SYNTHETIX = 'SYNTHETIX',
   SYNTHETIX_V2 = 'SYNTHETIX_V2',
-  // GNS = 'GNS',
 }
 
 export enum CopyTradeConfigTypeEnum {

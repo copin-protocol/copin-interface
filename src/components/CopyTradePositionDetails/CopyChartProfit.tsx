@@ -22,7 +22,7 @@ import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { TIMEFRAME_NAMES, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { TIMEFRAME_NAMES, getTokenTradeSupport } from 'utils/config/trades'
 import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcPnL, calcSLTPUsd } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
@@ -47,7 +47,8 @@ export default function CopyChartProfit({
   const { prices } = useGetUsdPrices()
   const { sm } = useResponsive()
   const [markerId, setMarkerId] = useState<string | undefined>()
-  const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken]?.symbol
+  const tokensSupport = getTokenTradeSupport(position.protocol)
+  const tokenSymbol = tokensSupport[position.indexToken]?.symbol ?? ''
   const from = openBlockTime * 1000
   const to = useMemo(() => (isOpening ? dayjs().utc().valueOf() : closeBlockTime * 1000), [closeBlockTime, isOpening])
   const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])

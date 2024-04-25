@@ -15,7 +15,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { PositionStatusEnum, TimeframeEnum } from 'utils/config/enums'
-import { ALL_TOKENS_ID, TOKEN_TRADE_SUPPORT, getDefaultTokenTrade } from 'utils/config/trades'
+import { ALL_TOKENS_ID, getDefaultTokenTrade, getTokenTradeSupport } from 'utils/config/trades'
 
 import useChartPositionData from '../useChartPositionData'
 import BrushChart from './BrushChart'
@@ -100,10 +100,10 @@ export default function ChartPositions({
       : undefined
   const oldestPosTime = oldestPosition ? dayjs(oldestPosition.openBlockTime).utc() : undefined
 
-  const defaultToken = getDefaultTokenTrade(protocol).address
+  const defaultToken = getDefaultTokenTrade(protocol)?.address ?? ''
   const tokenTrade = useMemo(
     () =>
-      TOKEN_TRADE_SUPPORT[protocol][
+      getTokenTradeSupport(protocol)[
         hasAllTokens ? (mostRecentPos ? mostRecentPos.indexToken : defaultToken) : currencyOption?.id ?? defaultToken
       ],
     [currencyOption?.id, defaultToken, hasAllTokens, mostRecentPos, protocol]
@@ -117,7 +117,7 @@ export default function ChartPositions({
       : _timeRange,
     timeframe,
     protocol,
-    indexToken: tokenTrade?.address,
+    indexToken: tokenTrade?.address ?? '',
   })
   const openingPos = (openingPositions ?? []).filter(
     (e) => e.indexToken === tokenTrade?.address && dayjs(e.openBlockTime).utc().valueOf() >= from

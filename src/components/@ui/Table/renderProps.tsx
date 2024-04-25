@@ -13,9 +13,9 @@ import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 import { calcClosedPrice, calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
-import {addressShorten, compactNumber, formatNumber, formatPrice} from 'utils/helpers/format'
+import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseMarketImage } from 'utils/helpers/transform'
 
@@ -24,7 +24,7 @@ import { PriceTokenText } from '../DecoratedText/ValueText'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps, showMarketIcon?: boolean) {
   if (!data || !data.protocol) return <></>
-  const symbol = TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol
+  const symbol = getTokenTradeSupport(data.protocol)[data.indexToken]?.symbol ?? ''
 
   return (
     <Flex
@@ -39,7 +39,7 @@ export function renderEntry(data: PositionData | undefined, textSx?: TextProps, 
       </Type.Caption>
       <VerticalDivider />
       {showMarketIcon && <Image width={24} height={24} src={parseMarketImage(symbol)} />}
-      <Type.Caption {...textSx}>{TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol}</Type.Caption>
+      <Type.Caption {...textSx}>{getTokenTradeSupport(data.protocol)[data.indexToken]?.symbol}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>
         {data.averagePrice ? PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2 }) : '--'}
@@ -62,7 +62,7 @@ export function renderCopyEntry(data: CopyPositionData | undefined, textSx?: Tex
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{TOKEN_TRADE_SUPPORT[data.protocol]?.[data.indexToken]?.symbol}</Type.Caption>
+      <Type.Caption>{getTokenTradeSupport(data.protocol)?.[data.indexToken]?.symbol}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>${PriceTokenText({ value: data.entryPrice, maxDigit: 2, minDigit: 2 })}</Type.Caption>
     </Flex>

@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
+import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolStore } from 'hooks/store/useProtocols'
@@ -11,7 +12,7 @@ import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
-import { PROTOCOL_OPTIONS, ProtocolOptionProps } from 'utils/config/protocols'
+import { ProtocolOptionProps } from 'utils/config/protocols'
 import { parseProtocolImage } from 'utils/helpers/transform'
 import { logEventSwitchProtocol } from 'utils/tracking/event'
 import { getChainMetadata } from 'utils/web3/chains'
@@ -63,8 +64,9 @@ function SwitchProtocolsComponent({
   const { md } = useResponsive()
   const { myProfile } = useMyProfile()
   const { protocol } = useProtocolStore()
+  const protocolOptions = useGetProtocolOptions()
 
-  const currentProtocolOption = PROTOCOL_OPTIONS.find((option) => option.id === protocol) ?? PROTOCOL_OPTIONS[0]
+  const currentProtocolOption = protocolOptions.find((option) => option.id === protocol) ?? protocolOptions[0]
   const handleSwitchProtocol = useCallback(
     (protocol: ProtocolOptionProps) => {
       // setProtocol(protocol.id)
@@ -78,27 +80,32 @@ function SwitchProtocolsComponent({
   const renderProtocols = () => {
     return (
       <Box>
-        {PROTOCOL_OPTIONS.map((option) => (
-          <DropdownItem key={option.id} size="sm" onClick={() => handleSwitchProtocol(option)}>
-            <Flex py={1} alignItems="center" sx={{ gap: 2 }}>
-              <Image src={parseProtocolImage(option.id)} width={28} height={28} />
-              <Flex flexDirection="column">
-                <Type.Caption
-                  lineHeight="16px"
-                  color={currentProtocolOption.id === option.id ? 'primary1' : 'neutral1'}
-                >
-                  {option.text}
-                </Type.Caption>
-                <Type.Caption
-                  lineHeight="16px"
-                  color={currentProtocolOption.id === option.id ? 'primary1' : 'neutral3'}
-                >
-                  {getChainMetadata(option.chainId).label}
-                </Type.Caption>
+        {protocolOptions.map((option) => {
+          if (!option) {
+            return null
+          }
+          return (
+            <DropdownItem key={option.id} size="sm" onClick={() => handleSwitchProtocol(option)}>
+              <Flex py={1} alignItems="center" sx={{ gap: 2 }}>
+                <Image src={parseProtocolImage(option.id)} width={28} height={28} />
+                <Flex flexDirection="column">
+                  <Type.Caption
+                    lineHeight="16px"
+                    color={currentProtocolOption.id === option.id ? 'primary1' : 'neutral1'}
+                  >
+                    {option.text}
+                  </Type.Caption>
+                  <Type.Caption
+                    lineHeight="16px"
+                    color={currentProtocolOption.id === option.id ? 'primary1' : 'neutral3'}
+                  >
+                    {getChainMetadata(option.chainId).label}
+                  </Type.Caption>
+                </Flex>
               </Flex>
-            </Flex>
-          </DropdownItem>
-        ))}
+            </DropdownItem>
+          )
+        })}
       </Box>
     )
   }

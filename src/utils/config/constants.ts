@@ -18,7 +18,6 @@ export const LINKS = {
   tradeGMX: 'https://gmx.io/#/?ref=copin',
   tradeGMXv2: 'https://gmx.io/#/?ref=copin',
   tradeKwenta: 'https://kwenta.eth.limo/?ref=copin',
-  tradeGains: 'https://gains.trade/trading',
   tradePolynomial: 'https://trade.polynomial.fi',
   tradeLevel: 'https://app.level.finance/',
   github: 'https://github.com/copin-protocol',
@@ -102,7 +101,6 @@ export const EXCHANGE_STATS = [
   // CopyTradePlatformEnum.SYNTHETIX,
   // CopyTradePlatformEnum.SYNTHETIX_V2,
   // CopyTradePlatformEnum.GMX,
-  // CopyTradePlatformEnum.GNS,
 ]
 export const EXCHANGE_COLOR: { [key: string]: string } = {
   [CopyTradePlatformEnum.OTHERS]: '#FCEFD1',
@@ -112,5 +110,4 @@ export const EXCHANGE_COLOR: { [key: string]: string } = {
   [CopyTradePlatformEnum.SYNTHETIX]: '#9573F7',
   [CopyTradePlatformEnum.SYNTHETIX_V2]: '#9573F7',
   [CopyTradePlatformEnum.GMX]: '#E978F3',
-  // [CopyTradePlatformEnum.GNS]: '#4AF994',
 }

@@ -5,7 +5,7 @@ import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { OpenInterestMarketData } from 'entities/statistic'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { parseMarketImage } from 'utils/helpers/transform'
 
@@ -248,7 +248,7 @@ export const titlesMapping = {
 }
 
 export function getColumns({ protocol, timeOption }: { protocol: ProtocolEnum; timeOption: TimeFilterProps }) {
-  const tokenTradeSupport = TOKEN_TRADE_SUPPORT[protocol]
+  const tokenTradeSupport = getTokenTradeSupport(protocol)
   const columns: ColumnData<OpenInterestMarketData>[] = [
     {
       title: <Box pl={2}>{titlesMapping.market}</Box>,

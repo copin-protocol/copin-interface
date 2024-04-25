@@ -165,11 +165,10 @@ export function AccountInfo({
           ) : (
             <div></div>
           )
-        ) : (
-          <Type.Small color="neutral3">
-            <BalanceText protocol={protocol} account={address} />
-          </Type.Small>
-        )}
+        ) : // <Type.Small color="neutral3">
+        //   <BalanceText protocol={protocol} account={address} />
+        // </Type.Small>
+        null}
         {note && note.length > 10 && (
           <Tooltip id={`tt_note_${address}`} place="top" type="dark" effect="solid" clickable={false}>
             {note}

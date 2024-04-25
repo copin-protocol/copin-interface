@@ -14,7 +14,6 @@ import { rpcProvider } from 'utils/web3/providers'
 
 import { TOKEN_TRADE_GMX } from './tokenTradeGmx'
 import { TOKEN_TRADE_GMX_V2 } from './tokenTradeGmxV2'
-import { TOKEN_TRADE_GNS } from './tokenTradeGns'
 import { TOKEN_TRADE_LEVEL_ARB, TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
 import { TOKEN_TRADE_SYNTHETIX } from './tokenTradeSynthetix'
 
@@ -29,11 +28,6 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: BNB_MAINNET,
     provider: rpcProvider(BNB_MAINNET),
     explorerUrl: CHAINS[BNB_MAINNET].blockExplorerUrl,
-  },
-  [ProtocolEnum.GNS]: {
-    chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
-    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.GMX_V2]: {
     chainId: ARBITRUM_MAINNET,
@@ -83,7 +77,6 @@ type TokenSupport = { [key: string]: { [key: string]: TokenTrade } }
 type TokenIgnore = { [key in CopyTradePlatformEnum]: string[] }
 
 export const TOKEN_TRADE_SUPPORT: TokenSupport = {
-  [ProtocolEnum.GNS]: TOKEN_TRADE_GNS,
   [ProtocolEnum.GMX]: TOKEN_TRADE_GMX,
   [ProtocolEnum.GMX_V2]: TOKEN_TRADE_GMX_V2,
   [ProtocolEnum.KWENTA]: TOKEN_TRADE_SYNTHETIX,
@@ -107,9 +100,6 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
   },
   [ProtocolEnum.LEVEL_ARB]: {
     ...TOKEN_TRADE_SUPPORT[ProtocolEnum.LEVEL_ARB],
-  },
-  [ProtocolEnum.GNS]: {
-    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX],
   },
   [ProtocolEnum.GMX]: {
     ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX],
@@ -140,12 +130,6 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
 }
 
 export const TOKEN_ADDRESSES = {
-  [ProtocolEnum.GNS]: {
-    BTC: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    DAI: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-  },
   [ProtocolEnum.GMX_V2]: {
     BTC: '0x47c031236e19d024b42f8AE6780E44A573170703',
     ETH: '0x70d95587d40A2caf56bd97485aB3Eec10Bee6336',
@@ -178,25 +162,30 @@ export const SYNTHETIX_MARKETS = {
   [OPTIMISM_SEPOLIA]: ['0x111BAbcdd66b1B60A20152a2D3D06d36F8B5703c'],
 }
 
-export const getDefaultTokenTrade = (protocol: ProtocolEnum) =>
-  TOKEN_TRADE_SUPPORT[protocol][Object.keys(TOKEN_TRADE_SUPPORT[protocol])[0]]
+export const getDefaultTokenTrade = (protocol: ProtocolEnum) => {
+  const tokensSupport = getTokenTradeSupport(protocol)
+  return Object.values(tokensSupport)[0]
+}
 
-export const getTokenTradeList = (protocol: ProtocolEnum) => Object.values(TOKEN_TRADE_SUPPORT[protocol])
+export const getTokenTradeList = (protocol: ProtocolEnum) => {
+  const tokensSupport = getTokenTradeSupport(protocol)
+  return (tokensSupport ? Object.values(tokensSupport) : []) as TokenTrade[]
+}
 
-export const getDefaultTokenOptions = (protocol: ProtocolEnum) =>
-  Object.keys(TOKEN_TRADE_SUPPORT[protocol]).map((key) => ({
+export const getDefaultTokenOptions = (protocol: ProtocolEnum) => {
+  const tokensSupport = getTokenTradeSupport(protocol)
+  return Object.keys(tokensSupport).map((key) => ({
     id: key,
-    label: TOKEN_TRADE_SUPPORT[protocol][key]?.symbol,
+    label: tokensSupport[key]?.symbol ?? '',
     value: key,
   }))
-export const getTokenOptions = ({
-  protocol,
-  ignoredAll,
-}: {
-  protocol: ProtocolEnum
-  ignoredAll?: boolean
-}): TokenOptionProps[] =>
-  ignoredAll ? getDefaultTokenOptions(protocol) : [ALL_OPTION, ...getDefaultTokenOptions(protocol)]
+}
+export const getTokenOptions = ({ protocol, ignoredAll }: { protocol: ProtocolEnum; ignoredAll?: boolean }) => {
+  const tokenOptions = getDefaultTokenOptions(protocol)
+  if (!tokenOptions) return [ALL_OPTION]
+
+  return ignoredAll ? tokenOptions : [ALL_OPTION, ...tokenOptions]
+}
 
 export const TIMEFRAME_NAMES = {
   // Minutes
@@ -206,6 +195,13 @@ export const TIMEFRAME_NAMES = {
   60: 'H1',
   240: 'H4',
   1440: 'D1',
+}
+
+export function getTokenTradeSupport(protocol: ProtocolEnum): {
+  [key: string]: TokenTrade | undefined
+} {
+  const tokens = TOKEN_TRADE_SUPPORT[protocol]
+  return !!tokens ? tokens : {}
 }
 
 export const GMX_CLOSE_POSITION_TOPIC = '0x73af1d417d82c240fdb6d319b34ad884487c6bf2845d98980cc52ad9171cb455'

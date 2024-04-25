@@ -6,7 +6,7 @@ import { UserLogData } from 'entities/userLog'
 import { Flex, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
 import { ChangeFieldEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 import { CHANGE_FIELD_TRANS } from 'utils/config/translations'
 import { convertCamelCaseToText, convertDataToText } from 'utils/helpers/transform'
 
@@ -22,12 +22,12 @@ const UserLogChanges = ({ data, ...props }: { data: UserLogData } & LayoutProps 
           case ChangeFieldEnum.TOKEN_ADDRESSES:
             if (data.oldData?.protocol) {
               parsedOldData = data.oldData?.[fieldName]?.map(
-                (e: string) => TOKEN_TRADE_SUPPORT[data.oldData?.protocol][e].symbol
+                (e: string) => getTokenTradeSupport(data.oldData?.protocol)[e]?.symbol
               )
             }
             if (data.newData?.protocol) {
               parsedNewData = data.newData?.[fieldName]?.map(
-                (e: string) => TOKEN_TRADE_SUPPORT[data.oldData?.protocol][e].symbol
+                (e: string) => getTokenTradeSupport(data.oldData?.protocol)[e]?.symbol
               )
             }
             break

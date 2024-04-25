@@ -17,7 +17,7 @@ import Tabs, { TabPane } from 'theme/Tab'
 import { Box, Flex, Type } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
@@ -67,7 +67,7 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
     [copyTradeDetails, dataOrders]
   )
   const isOpening = data && data.status === PositionStatusEnum.OPEN
-  const token = data ? TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken] : undefined
+  const token = data ? getTokenTradeSupport(data.protocol)?.[data.indexToken] : undefined
   const sizeDelta = useMemo(
     () =>
       isOpening
@@ -190,7 +190,7 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
                   <Type.Caption color="neutral3" px={1}>
                     |
                   </Type.Caption>{' '}
-                  {formatNumber(sizeDelta, 4, 4)} {TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol}
+                  {formatNumber(sizeDelta, 4, 4)} {getTokenTradeSupport(data.protocol)[data.indexToken]?.symbol}
                 </Type.CaptionBold>
               </StatsItemWrapperB>
               <StatsItemWrapperB>
@@ -206,7 +206,7 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
               <StatsItemWrapperB>
                 <Type.Caption color="neutral3">Closed Price:</Type.Caption>
                 <Type.CaptionBold>
-                  {isOpening ? '--' : `$${PriceTokenText({ value: data.closePrice, maxDigit: 2, minDigit: 2 })}`}
+                  {isOpening ? '--' : <PriceTokenText value={data.closePrice} maxDigit={2} minDigit={2} />}
                 </Type.CaptionBold>
               </StatsItemWrapperB>
             </Flex>

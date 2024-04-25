@@ -16,6 +16,7 @@ import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d
 import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
+import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
@@ -23,7 +24,6 @@ import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { ALL_OPTION, getDefaultTokenOptions } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
 import { isAddress } from 'utils/web3/contracts'
@@ -228,7 +228,8 @@ export function TraderDetailsComponent({
     chartFullExpanded,
     handleChartFullExpand,
   } = useHandleLayout()
-  if (!PROTOCOL_OPTIONS_MAPPING[protocol]) {
+  const protocolOptionsMapping = useGetProtocolOptionsMapping()
+  if (!protocolOptionsMapping[protocol]) {
     return <NotFound title="Protocol not support" message="" />
   }
 
@@ -236,7 +237,8 @@ export function TraderDetailsComponent({
 
   return (
     <>
-      <CustomPageTitle title={`Trader ${addressShorten(address)} on ${PROTOCOL_OPTIONS_MAPPING[protocol].text}`} />
+      <CustomPageTitle title={`Trader ${addressShorten(address)} on ${protocolOptionsMapping[protocol]?.text}`} />
+
       <Layout
         protocolStats={
           <ProtocolStats address={address} protocol={protocol} page="details" exchangeStats={exchangeStats} />

@@ -3,11 +3,11 @@ import { Funnel } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useCallback } from 'react'
 
+import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import Checkbox from 'theme/Checkbox'
 import Dropdown from 'theme/Dropdown'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
-import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { COPY_TRADE_STATUS_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 import { parseProtocolImage } from 'utils/helpers/transform'
@@ -29,6 +29,7 @@ export default function FilterSection({
   copyStatus,
   selectedProtocol,
 }: MyCopiesProps) {
+  const protocolOptionsMapping = useGetProtocolOptionsMapping()
   const FilterByStatus = useCallback(() => {
     return (
       <Flex alignItems="center" sx={{ gap: 3 }}>
@@ -61,7 +62,7 @@ export default function FilterSection({
               >
                 <Flex sx={{ alignItems: 'center', gap: 2 }}>
                   <Image src={parseProtocolImage(protocol)} width={20} height={20} />
-                  <Type.Caption lineHeight="16px">{PROTOCOL_OPTIONS_MAPPING[protocol]?.text}</Type.Caption>
+                  <Type.Caption lineHeight="16px">{protocolOptionsMapping[protocol]?.text}</Type.Caption>
                 </Flex>
               </Checkbox>
             )
@@ -69,7 +70,8 @@ export default function FilterSection({
         </Flex>
       </Flex>
     )
-  }, [checkIsProtocolChecked, handleToggleProtocol])
+  }, [checkIsProtocolChecked, handleToggleProtocol, protocolOptionsMapping])
+
   const { sm } = useResponsive()
   return sm ? (
     <Flex p={2} pr={3} sx={{ gap: 3, borderBottom: 'small', borderColor: 'neutral5' }}>

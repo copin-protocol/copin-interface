@@ -11,6 +11,7 @@ export default function useRefetchQueries() {
             predicate: ({ queryKey }) => {
               return queryKeysToFetch.includes(queryKey[0] as string)
             },
+            active: true,
           })
           .then(() => {
             callback && callback()

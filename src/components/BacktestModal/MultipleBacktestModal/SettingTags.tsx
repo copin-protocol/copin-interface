@@ -2,7 +2,7 @@ import { TestInstanceData } from 'hooks/store/useSelectBacktestTraders'
 import { Box, Flex, Type } from 'theme/base'
 import { DATE_FORMAT } from 'utils/config/constants'
 import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 import { formatLocalDate } from 'utils/helpers/format'
 
 export default function SettingTags({
@@ -57,7 +57,7 @@ export default function SettingTags({
             settings.copyAll
               ? 'FOLLOW TRADER'
               : !!settings.tokenAddresses?.length
-              ? settings.tokenAddresses.map((address) => TOKEN_TRADE_SUPPORT[protocol][address]?.name).join(', ')
+              ? settings.tokenAddresses.map((address) => getTokenTradeSupport(protocol)[address]?.name).join(', ')
               : ''
           }
         />

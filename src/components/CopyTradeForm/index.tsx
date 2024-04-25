@@ -16,6 +16,7 @@ import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import useInternalRole from 'hooks/features/useInternalRole'
 import { getMaxVolumeCopy, useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
@@ -30,10 +31,9 @@ import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { LINKS } from 'utils/config/constants'
-import { CopyTradePlatformEnum, ProtocolEnum, SLTPTypeEnum, SubscriptionPlanEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { INTERNAL_SERVICE_KEYS, QUERY_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
-import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { TOKEN_TRADE_IGNORE, getTokenTradeList } from 'utils/config/trades'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
@@ -220,7 +220,8 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const permissionToSelectProtocol = useCopyTradePermission(true)
   const { sm } = useResponsive()
 
-  const protocolOption = protocol && PROTOCOL_OPTIONS_MAPPING[protocol]
+  const protocolOptionsMapping = useGetProtocolOptionsMapping()
+  const protocolOption = protocol && protocolOptionsMapping[protocol]
 
   const leverageError = errors.leverage?.message || errors.totalVolume?.message
   const volumeError = errors.volume?.message || errors.totalVolume?.message

@@ -10,7 +10,7 @@ import useIsMobile from 'hooks/helpers/useIsMobile'
 import IconButton from 'theme/Buttons/IconButton'
 import Drawer from 'theme/Modal/Drawer'
 import { ProtocolEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
 
 // const RED = '#EC313A'
@@ -33,7 +33,7 @@ const OpeningPositionsBubble = ({ data, protocol }: { data: PositionData[]; prot
       id: item.id,
       title: addressShorten(item.account),
       value: item.size,
-      token: TOKEN_TRADE_SUPPORT[item.protocol][item.indexToken]?.symbol,
+      token: getTokenTradeSupport(item.protocol)?.[item.indexToken]?.symbol ?? '',
       leverage: item.leverage,
       isLong: item.isLong,
     }))

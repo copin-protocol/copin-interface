@@ -7,13 +7,13 @@ import { useHistory, useParams } from 'react-router-dom'
 import { getTopOpeningPositionsApi } from 'apis/positionApis'
 import tokenNotFound from 'assets/images/token-not-found.png'
 import PythWatermark from 'components/@ui/PythWatermark'
+import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { getTokenTradeList } from 'utils/config/trades'
 
 import PositionsSection from '../PositionsSection'
@@ -67,6 +67,7 @@ function OpenInterestByMarketPage() {
 
   const history = useHistory<{ prevProtocol: ProtocolEnum | undefined }>()
   const prevProtocol = history.location.state?.prevProtocol
+  const protocolOptionsMapping = useGetProtocolOptionsMapping()
 
   return (
     <>
@@ -132,7 +133,7 @@ function OpenInterestByMarketPage() {
           <NoMarketFound
             message={
               <Trans>
-                {symbol} market does not exist on {PROTOCOL_OPTIONS_MAPPING[protocol].text}
+                {symbol} market does not exist on {protocolOptionsMapping[protocol]?.text}
               </Trans>
             }
             actionButton={

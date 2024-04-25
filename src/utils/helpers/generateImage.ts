@@ -3,7 +3,7 @@ import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Colors } from 'theme/types'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { ELEMENT_IDS } from 'utils/config/keys'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 
 import { calcLiquidatePrice, calcOpeningPnL, calcOpeningROI } from './calculate'
 import formatTokenPrices, { addressShorten, formatDuration, formatNumber, formatPrice } from './format'
@@ -274,7 +274,7 @@ export const generatePositionCanvas = ({
   leftCtx.fillText('|', 60, chartAreaOffsetY + 52)
   leftCtx.font = '700 32px Anuphan'
   leftCtx.fillStyle = colors.neutral1
-  const tokenSymbol = TOKEN_TRADE_SUPPORT[stats.protocol][stats.indexToken].symbol
+  const tokenSymbol = getTokenTradeSupport(stats.protocol)?.[stats.indexToken]?.symbol ?? ''
   leftCtx.fillText(tokenSymbol, 60 + 24, chartAreaOffsetY + 52)
   leftCtx.fillStyle = colors.neutral3
   leftCtx.font = '400 32px Anuphan'
@@ -423,10 +423,6 @@ export const generateProtocol = ({
     case ProtocolEnum.LEVEL_ARB:
       protocolTextWidth = 117
       protocolText = 'Level'
-      break
-    case ProtocolEnum.GNS:
-      protocolTextWidth = 117
-      protocolText = 'gTrade'
       break
     case ProtocolEnum.GMX:
     case ProtocolEnum.GMX_V2:

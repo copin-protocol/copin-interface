@@ -19,6 +19,8 @@ import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
 
+import useInternalRole from './useInternalRole'
+
 const MIN_QUICK_SEARCH_LENGTH = 3
 export default function useSearchAllData(args?: {
   returnRanking?: boolean

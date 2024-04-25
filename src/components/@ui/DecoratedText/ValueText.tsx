@@ -137,7 +137,7 @@ export const PriceTokenText = ({
   suffixSx?: any
   prefixSx?: any
 }) => {
-  if (value == null) return '--'
+  if (value == null) return <>--</>
   const { formattedNumber, integerPart, zeroPart, decimalPart } = formatTokenPrices({
     value,
   })

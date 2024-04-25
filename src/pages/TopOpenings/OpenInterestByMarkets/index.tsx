@@ -8,11 +8,11 @@ import { getOpenInterestMarketApi } from 'apis/positionApis'
 import PythWatermark from 'components/@ui/PythWatermark'
 import { TableProps, TableSortProps } from 'components/@ui/Table/types'
 import { OpenInterestMarketData } from 'entities/statistic'
+import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { getTokenTradeList } from 'utils/config/trades'
 
 import { NoMarketFound } from '../OpenInterestByMarket'
@@ -29,6 +29,8 @@ export default function OpenInterestByMarkets() {
   )
 }
 function OpenInterestByMarketsPage() {
+  const protocolOptionsMapping = useGetProtocolOptionsMapping()
+
   const { sm } = useResponsive()
 
   const { searchParams, setSearchParams } = useSearchParams()
@@ -106,7 +108,7 @@ function OpenInterestByMarketsPage() {
         <NoMarketFound
           message={
             <Trans>
-              {symbol} market does not exist on {PROTOCOL_OPTIONS_MAPPING[protocol].text}
+              {symbol} market does not exist on {protocolOptionsMapping[protocol]?.text}
             </Trans>
           }
         />

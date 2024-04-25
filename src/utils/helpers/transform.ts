@@ -174,8 +174,6 @@ export const getDurationFromTimeFilter = (timeFilter?: TimeFilterByEnum) => {
 // TODO: Check when add new protocol
 export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
   switch (protocol) {
-    case ProtocolEnum.GNS:
-      return LINKS.tradeGains
     case ProtocolEnum.GMX:
       return LINKS.tradeGMX
     case ProtocolEnum.GMX_V2:

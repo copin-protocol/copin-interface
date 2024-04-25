@@ -3,7 +3,7 @@ import { GridProps } from 'styled-system'
 
 import { Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 import { parseMarketImage } from 'utils/helpers/transform'
 
 export default function Market({
@@ -19,8 +19,8 @@ export default function Market({
   hasName?: boolean
   sx?: SystemStyleObject & GridProps
 }) {
-  const symbol = TOKEN_TRADE_SUPPORT[protocol][indexToken]?.symbol
-  const name = TOKEN_TRADE_SUPPORT[protocol][indexToken]?.name
+  const symbol = getTokenTradeSupport(protocol)[indexToken]?.symbol
+  const name = getTokenTradeSupport(protocol)[indexToken]?.name
   if (!symbol) return <></>
   return (
     <Flex alignItems="center" sx={{ gap: 1 }}>

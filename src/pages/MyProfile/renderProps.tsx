@@ -24,7 +24,7 @@ import {
   SubscriptionPlanEnum,
 } from 'utils/config/enums'
 import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
@@ -45,7 +45,7 @@ export function renderEntry(data: CopyPositionData) {
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{TOKEN_TRADE_SUPPORT[data.protocol]?.[data.indexToken]?.symbol}</Type.Caption>
+      <Type.Caption>{getTokenTradeSupport(data.protocol)?.[data.indexToken]?.symbol}</Type.Caption>
       <VerticalDivider />
       <Type.Caption>{formatPrice(data.entryPrice)}</Type.Caption>
     </Flex>
@@ -172,7 +172,7 @@ export const renderValue = (data: CopyPositionData) => (
       : !isNaN(Number(data.totalSizeDelta))
       ? formatNumber(Number(data.totalSizeDelta), 4, 4)
       : '--'}{' '}
-    {TOKEN_TRADE_SUPPORT[data.protocol][data.indexToken]?.symbol}
+    {getTokenTradeSupport(data.protocol)?.[data.indexToken]?.symbol}
   </Type.Caption>
 )
 export const renderSize = (data: CopyPositionData) => (

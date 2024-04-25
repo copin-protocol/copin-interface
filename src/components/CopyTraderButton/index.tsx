@@ -37,7 +37,6 @@ export default function CopyTraderButton({
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenContactModal, setIsOpenContactModal] = useState(false)
 
-  const isInternal = useInternalRole()
   const { profile } = useAuthContext()
   const { checkIsEligible } = useCheckCopyTradeAction()
   const handleCloseModal = () => {
@@ -47,7 +46,7 @@ export default function CopyTraderButton({
 
   const hasCopyPermission = useCopyTradePermission()
 
-  const allowList = isInternal ? [...ALLOWED_LIST, ProtocolEnum.GNS] : ALLOWED_LIST
+  const allowList = ALLOWED_LIST
   const disabledCopy = !allowList.includes(protocol)
   const disabledCopyTooltipId = `tt_copy_trade_${account}_${protocol}`
 

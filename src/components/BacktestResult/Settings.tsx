@@ -4,7 +4,7 @@ import TableLabel from 'components/@ui/Table/TableLabel'
 import { RequestBackTestData } from 'entities/backTest.d'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
 
 export default function BacktestSettings({
@@ -76,7 +76,7 @@ export default function BacktestSettings({
           data?.copyAll
             ? 'Followed trader'
             : !!data.tokenAddresses?.length
-            ? data.tokenAddresses.map((address) => TOKEN_TRADE_SUPPORT[protocol][address]?.name).join(', ')
+            ? data.tokenAddresses.map((address) => getTokenTradeSupport(protocol)[address]?.name).join(', ')
             : ''
         }
       />

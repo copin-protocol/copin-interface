@@ -45,6 +45,7 @@ export default function MintButton({
   buttonSx,
   buttonText = <Trans>Mint NFT</Trans>,
   bgType = '1',
+  disabled = false,
 }: {
   planPrice: BigNumber | undefined
   plan: SubscriptionPlanEnum
@@ -52,6 +53,7 @@ export default function MintButton({
   buttonSx?: any
   buttonText?: ReactNode
   bgType?: '1' | '2'
+  disabled?: boolean
 }) {
   const { isAuthenticated } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
@@ -85,7 +87,7 @@ export default function MintButton({
             : {}),
           ...(buttonSx ?? {}),
         }}
-        disabled={!planPrice}
+        disabled={!planPrice || disabled}
         onClick={handleOpenModal}
       >
         {buttonType === 'gradient' && <Decorators bgType={bgType} />}

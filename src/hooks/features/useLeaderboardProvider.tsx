@@ -16,6 +16,8 @@ import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { LEADERBOARD_OPTIONS, LeaderboardOptionProps } from 'utils/config/options'
 import { pageToOffset } from 'utils/helpers/transform'
 
+import useInternalRole from './useInternalRole'
+
 export interface LeaderboardContextValues {
   data: ApiListResponse<TopTraderData> | undefined
   isLoading: boolean

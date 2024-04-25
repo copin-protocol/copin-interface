@@ -3,10 +3,10 @@ import React, { ReactNode } from 'react'
 import { useQuery } from 'react-query'
 
 import { getListenerStatsApi } from 'apis/systemApis'
+import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { ChainStatsEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { CHAIN_STATS_TRANS } from 'utils/config/translations'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { parseProtocolImage } from 'utils/helpers/transform'
@@ -34,12 +34,6 @@ export default function Overview() {
         latestOrderBlock={data?.[ChainStatsEnum.ARB]?.gmxV2ArbLatestOrderBlock}
         latestPositionBlock={data?.[ChainStatsEnum.ARB]?.gmxV2ArbLatestPositionBlock}
       />
-      <ProtocolItem
-        protocol={ProtocolEnum.GNS}
-        rawBlock={data?.[ChainStatsEnum.ARB]?.gnsArbLatestRawDataBlock}
-        latestOrderBlock={data?.[ChainStatsEnum.ARB]?.gnsArbLatestOrderBlock}
-        latestPositionBlock={data?.[ChainStatsEnum.ARB]?.gnsArbLatestPositionBlock}
-      />
       <Type.H5 mt={24} color="neutral8" maxWidth="fit-content" sx={{ px: 2, py: 1, bg: 'neutral1' }}>
         {CHAIN_STATS_TRANS[ChainStatsEnum.OP]}
       </Type.H5>
@@ -63,13 +57,14 @@ function ProtocolItem({
   latestOrderBlock?: number
   latestPositionBlock?: number
 }) {
+  const protocolOptionsMapping = useGetProtocolOptionsMapping()
   const delayOrderBlock = latestOrderBlock ? (rawBlock ?? 0) - (latestOrderBlock ?? 0) : undefined
   const delayPositionBlock = latestPositionBlock ? (rawBlock ?? 0) - (latestPositionBlock ?? 0) : undefined
   return (
     <Box>
       <Flex mt={3} sx={{ alignItems: 'center', gap: 2 }}>
         <Image src={parseProtocolImage(protocol)} width={32} height={32} />
-        <Type.H4>{PROTOCOL_OPTIONS_MAPPING[protocol]?.text}</Type.H4>
+        <Type.H4>{protocolOptionsMapping[protocol]?.text}</Type.H4>
       </Flex>
       <Box
         mt={2}

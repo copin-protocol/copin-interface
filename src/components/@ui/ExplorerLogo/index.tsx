@@ -14,7 +14,6 @@ const ExplorerLogo = ({
 }: { protocol: string; explorerUrl?: string; size?: number } & BoxProps) => {
   let icon
   switch (protocol) {
-    case ProtocolEnum.GNS:
     case ProtocolEnum.GMX:
     case ProtocolEnum.GMX_V2:
     case ProtocolEnum.LEVEL_ARB:

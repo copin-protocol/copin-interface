@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 
+import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { PROTOCOL_OPTIONS, ProtocolOptionProps } from 'utils/config/protocols'
+import { ProtocolOptionProps } from 'utils/config/protocols'
 import { parseProtocolImage } from 'utils/helpers/transform'
 import { getChainMetadata } from 'utils/web3/chains'
 
@@ -13,12 +14,13 @@ const SwitchProtocolsDesktop = ({
   currentProtocol: ProtocolOptionProps
   changeCurrentProtocol: (data: ProtocolOptionProps) => void
 }) => {
+  const protocolOptions = useGetProtocolOptions()
   return (
     <Box width={130} height="fit-content" sx={{ border: 'small', borderRight: 'none', borderColor: 'neutral4' }}>
       <Type.CaptionBold px={3} py={2}>
         <Trans>Protocols:</Trans>
       </Type.CaptionBold>
-      {PROTOCOL_OPTIONS.map((protocol) => (
+      {protocolOptions.map((protocol) => (
         <DropdownItem
           key={protocol.id}
           size="sm"

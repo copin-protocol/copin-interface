@@ -3,9 +3,9 @@ import { useHistory } from 'react-router-dom'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ProtocolWithChainIcon from 'components/@ui/ProtocolWithChainIcon'
 import { ResponseTraderExchangeStatistic, TraderExchangeStatistic } from 'entities/trader'
+import useGetProtocolOptions, { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { PROTOCOL_OPTIONS, PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { compactNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
@@ -20,10 +20,9 @@ export default function ProtocolStats({
   address: string
   protocol: ProtocolEnum
 }) {
-  // const { searchParams } = useSearchParams()
+  const protocolOptionsMapping = useGetProtocolOptionsMapping()
   const history = useHistory()
-  const currentProtocol =
-    PROTOCOL_OPTIONS_MAPPING[protocol?.toUpperCase?.() as ProtocolEnum] && protocol?.toUpperCase?.()
+  const currentProtocol = protocolOptionsMapping[protocol?.toUpperCase?.() as ProtocolEnum] && protocol?.toUpperCase?.()
 
   // const paramProtocol = protocol.toLocaleLowerCase() as unknown as ProtocolEnum
   const onChangeSelection = (protocol: ProtocolEnum) => {
@@ -50,8 +49,9 @@ export default function ProtocolStats({
   //         })
   //       )
   // }
+  const protocolOptions = useGetProtocolOptions()
   const orderedStats = exchangeStats
-    ? Object.values(exchangeStats)?.filter((e) => PROTOCOL_OPTIONS.map((e) => e.id)?.includes(e.protocol))
+    ? Object.values(exchangeStats)?.filter((e) => protocolOptions.map((e) => e.id)?.includes(e.protocol))
     : []
   orderedStats.sort((x, y) => (y?.lastTradeAtTs ?? 0) - (x?.lastTradeAtTs ?? 0))
   return (
@@ -111,7 +111,8 @@ function StatsItem({
   isActive: boolean
   onChangeSelection: (protocol: ProtocolEnum) => void
 }) {
-  const protocolOption = PROTOCOL_OPTIONS_MAPPING[data.protocol]
+  const protocolOptionsMapping = useGetProtocolOptionsMapping()
+  const protocolOption = protocolOptionsMapping[data.protocol]
   return (
     <Flex
       role="button"

@@ -156,7 +156,13 @@ export default function Plans() {
             </Box>
             <Box>
               <Flex sx={{ alignItems: 'center', justifyContent: 'center' }} px={3}>
-                <MintButton planPrice={priceVip?.bn} plan={SubscriptionPlanEnum.VIP} bgType="2" />
+                <MintButton
+                  planPrice={priceVip?.bn}
+                  plan={SubscriptionPlanEnum.VIP}
+                  bgType="2"
+                  disabled
+                  buttonText="Coming Soon"
+                />
               </Flex>
               <Button
                 mt={2}

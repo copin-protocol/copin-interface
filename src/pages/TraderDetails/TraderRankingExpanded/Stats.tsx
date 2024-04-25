@@ -7,7 +7,7 @@ import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import { renderTrader } from 'pages/MyProfile/renderProps'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 import { formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
 
 export default function Stats({
@@ -57,7 +57,7 @@ function TokenTrades({
   protocol: ProtocolEnum | undefined
 }) {
   const { data } = useGetTokensTraded({ account, protocol })
-  const tokens = data?.length ? data.map((address) => TOKEN_TRADE_SUPPORT[protocol][address]?.name).join(', ') : '--'
+  const tokens = data?.length ? data.map((address) => getTokenTradeSupport(protocol)?.[address]?.name).join(', ') : '--'
   return <StatsRow label={<Trans>Markets</Trans>} value={tokens} />
 }
 

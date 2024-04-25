@@ -3,9 +3,10 @@ import { SystemStyleObject } from '@styled-system/css'
 import { useResponsive } from 'ahooks'
 import { GridProps } from 'styled-system'
 
+import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { PROTOCOL_OPTIONS, ProtocolOptionProps } from 'utils/config/protocols'
+import { ProtocolOptionProps } from 'utils/config/protocols'
 import { parseProtocolImage } from 'utils/helpers/transform'
 import { getChainMetadata } from 'utils/web3/chains'
 
@@ -23,11 +24,12 @@ const SwitchProtocolsMobile = ({
   changeCurrentProtocol: (data: ProtocolOptionProps) => void
 }) => {
   const { md } = useResponsive()
+  const protocolOptions = useGetProtocolOptions()
 
   const renderProtocols = () => {
     return (
       <Box>
-        {PROTOCOL_OPTIONS.map((protocol) => (
+        {protocolOptions.map((protocol) => (
           <DropdownItem key={protocol.id} size="sm" onClick={() => changeCurrentProtocol(protocol)}>
             <Flex py={1} alignItems="center" sx={{ gap: 2 }}>
               <Image src={parseProtocolImage(protocol.id)} width={28} height={28} />

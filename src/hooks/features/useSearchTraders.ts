@@ -4,6 +4,7 @@ import { useQuery } from 'react-query'
 import { searchTradersApi } from 'apis/traderApis'
 import { TableSortProps } from 'components/@ui/Table/types'
 import { TraderData } from 'entities/trader'
+import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -11,7 +12,6 @@ import { useProtocolStore } from 'hooks/store/useProtocols'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { PROTOCOL_OPTIONS } from 'utils/config/protocols'
 import { pageToOffset } from 'utils/helpers/transform'
 
 export default function useSearchTraders() {
@@ -26,9 +26,11 @@ export default function useSearchTraders() {
     return { sortBy: initSortBy as TableSortProps<TraderData>['sortBy'], sortType: initSortType as SortTypeEnum }
   })
 
+  const protocolOptions = useGetProtocolOptions()
+
   const { currentOption: currentProtocol, changeCurrentOption: changeCurrentProtocol } = useOptionChange({
     optionName: 'protocol',
-    options: PROTOCOL_OPTIONS,
+    options: protocolOptions,
     defaultOption: protocol,
     callback: () => {
       changeCurrentPage(1)

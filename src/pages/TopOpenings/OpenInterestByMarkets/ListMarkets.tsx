@@ -8,7 +8,7 @@ import { OpenInterestMarketData } from 'entities/statistic'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { getTokenTradeSupport } from 'utils/config/trades'
 
 import { NoMarketFound } from '../OpenInterestByMarket'
 import { getColumns, getRenderProps, titlesMapping } from './configs'
@@ -58,7 +58,7 @@ export function TableForm({
 
 export function ListForm({ data, isFetching, protocol, timeOption, symbol }: ListMarketsProps) {
   const renders = getRenderProps()
-  const tokensMapping = TOKEN_TRADE_SUPPORT[protocol]
+  const tokensMapping = getTokenTradeSupport(protocol)
   return (
     <Flex
       sx={{
@@ -93,7 +93,9 @@ export function ListForm({ data, isFetching, protocol, timeOption, symbol }: Lis
         </Flex>
       )}
       {data?.map((marketData) => {
-        const { symbol } = tokensMapping[marketData.indexToken]
+        const token = tokensMapping[marketData.indexToken]
+        if (!token) return null
+        const symbol = token.symbol
         return (
           <Box sx={{ p: 3 }} key={marketData.indexToken}>
             <Flex mb={2} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
