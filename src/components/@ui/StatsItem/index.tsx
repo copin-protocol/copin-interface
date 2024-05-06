@@ -78,7 +78,7 @@ export function StatsWithTooltip({
       <Flex flexDirection="column" sx={{ gap: 12, ...(sx ?? {}) }}>
         <Flex sx={{ alignItems: 'center', gap: '4px' }}>
           {labelIcon ? labelIcon : null}
-          <Type.Body textAlign="center" color="neutral2" sx={labelSx}>
+          <Type.Body width="100%" textAlign="center" color="neutral2" sx={labelSx}>
             {label}
           </Type.Body>
           {tooltipText ? (
