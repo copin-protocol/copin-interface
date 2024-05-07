@@ -10,11 +10,12 @@ import PositionDetails from 'components/PositionDetails'
 import PositionTxResults from 'components/PositionTxResults'
 import useSearchParams from 'hooks/router/useSearchParams'
 import Loading from 'theme/Loading'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 
 export default function PositionDetailsPage() {
-  const { protocol = ProtocolEnum.GMX, id } = useParams<{ protocol: ProtocolEnum; id: string }>()
+  const { protocol = DEFAULT_PROTOCOL, id } = useParams<{ protocol: ProtocolEnum; id: string }>()
   const { searchParams } = useSearchParams()
   const txHash = id?.startsWith('0x') ? id : ''
   const account = searchParams?.[URL_PARAM_KEYS.ACCOUNT] as string

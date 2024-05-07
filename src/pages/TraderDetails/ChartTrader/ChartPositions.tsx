@@ -12,6 +12,7 @@ import { PositionData, TraderTokenStatistic } from 'entities/trader.d'
 import useSearchParams from 'hooks/router/useSearchParams'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getTokenOptions } from 'utils/config/trades'
@@ -155,7 +156,7 @@ function TraderChartPositions({
               height: '100%',
               order: isExpanded ? 2 : 1,
             }}
-            protocol={protocol ?? ProtocolEnum.GMX}
+            protocol={protocol ?? DEFAULT_PROTOCOL}
             timeframeOption={TIME_FILTER_OPTIONS[1]}
             currencyOption={currencyOption}
             openingPositions={openingPositions ?? []}

@@ -6,6 +6,7 @@ import { TraderData } from 'entities/trader'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import { renderTrader } from 'pages/MyProfile/renderProps'
 import { Box, Flex, Type } from 'theme/base'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { getTokenTradeSupport } from 'utils/config/trades'
 import { formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
@@ -51,7 +52,7 @@ export default function Stats({
 
 function TokenTrades({
   account = '',
-  protocol = ProtocolEnum.GMX,
+  protocol = DEFAULT_PROTOCOL,
 }: {
   account: string | undefined
   protocol: ProtocolEnum | undefined

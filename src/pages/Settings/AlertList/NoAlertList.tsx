@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import ExplorerTraders from 'assets/images/explorer-traders.png'
 import { Button } from 'theme/Buttons'
 import { Flex, Image, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { generateExplorerRoute } from 'utils/helpers/generateRoute'
 
 export default function NoAlertList({ buttonVariant = 'primary' }: { buttonVariant?: string }) {
@@ -14,7 +14,7 @@ export default function NoAlertList({ buttonVariant = 'primary' }: { buttonVaria
       <Type.Caption mb={12} color="neutral2" textAlign="center">
         <Trans>Discover more than 100,000+ traders on Copin</Trans>
       </Type.Caption>
-      <Link to={generateExplorerRoute({ protocol: ProtocolEnum.GMX })}>
+      <Link to={generateExplorerRoute({ protocol: DEFAULT_PROTOCOL })}>
         <Button type="button" variant={buttonVariant} width={150}>
           <Trans>Explorer Traders</Trans>
         </Button>

@@ -3,6 +3,7 @@ import { useQuery } from 'react-query'
 
 import { getTraderApi } from 'apis/traderApis'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
@@ -10,7 +11,7 @@ import { HandleSelectTrader } from './FindAndSelectTrader'
 
 export default function useSelectTrader({
   account = '',
-  protocol = ProtocolEnum.GMX,
+  protocol = DEFAULT_PROTOCOL,
   onSuccess,
   timeOption,
   enabled = true,

@@ -90,7 +90,7 @@ export default function SimilarTraders({
   const [isFetching, setIsFetching] = useState(true)
   // TODO: Check when add new protocol
   const { data: similarTraders } = useQuery(
-    [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, similarTradersFilter, ProtocolEnum.GMX, retryTime],
+    [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, similarTradersFilter, retryTime],
     () =>
       Promise.all(
         Object.values(ProtocolEnum).map((protocol) => {

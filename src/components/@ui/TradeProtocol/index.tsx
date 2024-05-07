@@ -4,10 +4,11 @@ import React from 'react'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { Button } from 'theme/Buttons'
 import { Flex, Type } from 'theme/base'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { getProtocolTradeUrl } from 'utils/helpers/transform'
 
-export default function TradeProtocolAction({ protocol = ProtocolEnum.GMX }: { protocol?: ProtocolEnum }) {
+export default function TradeProtocolAction({ protocol = DEFAULT_PROTOCOL }: { protocol?: ProtocolEnum }) {
   return (
     <Button
       variant="ghost"

@@ -11,6 +11,7 @@ import { OpenInterestMarketData } from 'entities/statistic'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Box, Flex, Type } from 'theme/base'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getTokenTradeList } from 'utils/config/trades'
@@ -55,7 +56,7 @@ function OpenInterestByMarketsPage() {
     setCurrentShort(sort)
   }
 
-  const { symbol, protocol = ProtocolEnum.GMX } = useParams<{
+  const { symbol, protocol = DEFAULT_PROTOCOL } = useParams<{
     symbol: string | undefined
     protocol: ProtocolEnum | undefined
   }>()

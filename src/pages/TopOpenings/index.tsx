@@ -2,7 +2,7 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 
 import { ProtocolPageWrapper } from 'components/RouteWrapper'
 import { Box } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
 import { generateOIPositionsRoute } from 'utils/helpers/generateRoute'
 
@@ -32,7 +32,7 @@ function TopOpeningsPage() {
         <Route exact path={ROUTES.OPEN_INTEREST_POSITIONS.alter_path}>
           <OpenInterestPositions />
         </Route>
-        <Redirect to={generateOIPositionsRoute({ protocol: ProtocolEnum.GMX })} />
+        <Redirect to={generateOIPositionsRoute({ protocol: DEFAULT_PROTOCOL })} />
       </Switch>
     </Box>
   )

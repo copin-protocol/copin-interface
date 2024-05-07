@@ -15,6 +15,7 @@ import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import Drawer from 'theme/Modal/Drawer'
 import { Box, Flex, Type } from 'theme/base'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
@@ -80,7 +81,7 @@ export function PickFromFavoritesModal({
             tradersData.map((data) => {
               return (
                 <ModalItemWrapper key={data.id} role="button" onClick={() => setSelectedTrader(data)}>
-                  {renderTrader(data.account, data.protocol ?? ProtocolEnum.GMX, {
+                  {renderTrader(data.account, data.protocol ?? DEFAULT_PROTOCOL, {
                     isLink: false,
                     size: 32,
                     textSx: { width: 80 },

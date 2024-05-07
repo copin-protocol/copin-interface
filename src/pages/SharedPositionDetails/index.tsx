@@ -6,11 +6,12 @@ import Container from 'components/@ui/Container'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import PositionDetails from 'components/PositionDetails'
 import Loading from 'theme/Loading'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 export default function SharedPositionDetailsPage() {
-  const { protocol = ProtocolEnum.GMX, sharedId } = useParams<{
+  const { protocol = DEFAULT_PROTOCOL, sharedId } = useParams<{
     protocol: ProtocolEnum
     sharedId: string
   }>()

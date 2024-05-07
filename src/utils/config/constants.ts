@@ -1,6 +1,6 @@
 import { isMobile } from 'hooks/helpers/useIsMobile'
 
-import { CopyTradePlatformEnum } from './enums'
+import { CopyTradePlatformEnum, ProtocolEnum } from './enums'
 
 export const SUPPORTED_LOCALES = ['en']
 export const DEFAULT_LOCALE = 'en'
@@ -111,3 +111,5 @@ export const EXCHANGE_COLOR: { [key: string]: string } = {
   [CopyTradePlatformEnum.SYNTHETIX_V2]: '#9573F7',
   [CopyTradePlatformEnum.GMX]: '#E978F3',
 }
+
+export const DEFAULT_PROTOCOL = ProtocolEnum.KWENTA

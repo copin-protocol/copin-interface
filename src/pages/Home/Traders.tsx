@@ -27,7 +27,7 @@ import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { DATE_FORMAT } from 'utils/config/constants'
+import { DATE_FORMAT, DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatDate } from 'utils/helpers/format'
@@ -201,7 +201,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     [QUERY_KEYS.GET_TOP_TRADERS, filters, currentPage],
     () =>
       getTradersApi({
-        protocol: filters.protocol ?? ProtocolEnum.GMX,
+        protocol: filters.protocol ?? DEFAULT_PROTOCOL,
         body: {
           queries: [{ fieldName: 'type', value: filters.time.id }],
           ranges: BASE_RANGE_FILTER,
