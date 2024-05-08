@@ -4,16 +4,16 @@ import React from 'react'
 
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import NoDataFound from 'components/@ui/NoDataFound'
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import SearchPositionResultItem from 'components/@ui/SearchPositionResult'
 import { TraderData } from 'entities/trader'
 import useSearchAllData from 'hooks/features/useSearchAllData'
 import { Button } from 'theme/Buttons'
 import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
-import { Box, Flex, Image, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { SEARCH_DEFAULT_LIMIT } from 'utils/config/constants'
 import { formatNumber } from 'utils/helpers/format'
-import { parseProtocolImage } from 'utils/helpers/transform'
 
 import { SearchResult, SearchWrapper } from './styled'
 
@@ -180,7 +180,7 @@ const SearchResultItems = ({
               width: 168,
             }}
           />
-          <Image src={parseProtocolImage(data.protocol)} width={20} height={20} />
+          <ProtocolLogo protocol={data.protocol} size={24} hasText={false} />
         </Flex>
       </Button>
     </Box>

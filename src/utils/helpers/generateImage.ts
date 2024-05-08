@@ -441,14 +441,14 @@ export const generateProtocol = ({
       break
   }
   // protocol text
-  const protocolTextOffsetLeft = width - 24 - protocolTextWidth
+  const protocolTextOffsetLeft = width - protocolImg.width - protocolTextWidth
   canvas.font = '700 32px Anuphan'
   canvas.textAlign = 'left'
   canvas.fillStyle = colors.neutral1
   canvas.fillText(protocolText, protocolTextOffsetLeft, avatarCenterY)
 
   // protocol img
-  const protocolImgSize = 32
+  const protocolImgSize = protocolImg.width
   const protocolImgOffsetLeft = protocolTextOffsetLeft - 8 - protocolImgSize
   canvas.drawImage(
     protocolImg,

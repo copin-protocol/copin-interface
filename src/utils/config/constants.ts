@@ -12,6 +12,7 @@ export const TELEGRAM_BOT_ALERT = import.meta.env.VITE_TELEGRAM_BOT_ALERT
 
 export const LINKS = {
   website: 'https://copin.io',
+  blog: 'https://blog.copin.io',
   webapp: 'https://app.copin.io',
   arbitrumExplorer: 'https://arbiscan.io',
   gmxHouse: 'https://www.gmx.house/arbitrum',

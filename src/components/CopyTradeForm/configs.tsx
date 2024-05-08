@@ -1,10 +1,11 @@
 import { ReactNode } from 'react'
 import * as yup from 'yup'
 
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { Flex, Image, Type } from 'theme/base'
 import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { SERVICE_KEYS } from 'utils/config/keys'
-import { parseExchangeImage, parseProtocolImage } from 'utils/helpers/transform'
+import { parseExchangeImage } from 'utils/helpers/transform'
 
 const commonSchema = {
   totalVolume: yup.number(),
@@ -220,7 +221,7 @@ export const protocolOptions = Object.values(ProtocolEnum).map((value) => {
     value,
     label: (
       <Flex sx={{ alignItems: 'center', gap: 1 }}>
-        <Type.Body>{value}</Type.Body> <Image src={parseProtocolImage(value)} sx={{ width: 16, height: 16 }} />
+        <Type.Body>{value}</Type.Body> <ProtocolLogo protocol={value} isActive={false} size={16} hasText={false} />
       </Flex>
     ),
   }

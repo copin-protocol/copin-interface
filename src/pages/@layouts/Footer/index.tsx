@@ -57,89 +57,39 @@ const Footer = ({ height }: { height: number }) => {
             }}
             color="neutral3"
           >
-            <a
-              href={LINKS.website}
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                lineHeight: '16px',
-                fontSize: '13px',
-              }}
-            >
-              <Trans>Home</Trans>
-            </a>
-            <a
-              href={ROUTES.SUBSCRIPTION.path}
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                lineHeight: '16px',
-                fontSize: '13px',
-              }}
-            >
-              <Trans>Upgrade</Trans>
-            </a>
-            <a
-              href={LINKS.docs}
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                lineHeight: '16px',
-                fontSize: '13px',
-              }}
-            >
-              <Trans>Docs</Trans>
-            </a>
-            <a
-              href={LINKS.policy}
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                lineHeight: '16px',
-                fontSize: '13px',
-              }}
-            >
-              <Trans>Terms & Policy</Trans>
-            </a>
+            {links.map((_d, index) => {
+              return (
+                <a
+                  key={index}
+                  href={_d.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    lineHeight: '16px',
+                    fontSize: '13px',
+                  }}
+                >
+                  {_d.label}
+                </a>
+              )
+            })}
           </Flex>
           <Box sx={{ width: '1px', height: '24px', bg: 'neutral4' }} />
           <Flex color="neutral3" sx={{ alignItems: ['flex-start', 'center'], gap: [2, 3] }}>
-            <Box
-              as="a"
-              href={LINKS.discord}
-              target="_blank"
-              sx={{ lineHeight: 0 }}
-              onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].JOIN_DISCORD)}
-            >
-              <DiscordIcon variant="Bold" size={20} />
-            </Box>
-            <Box
-              as="a"
-              href={LINKS.telegram}
-              target="_blank"
-              sx={{ lineHeight: 0 }}
-              onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].JOIN_TELEGRAM)}
-            >
-              <TelegramIcon variant="Bold" size={20} />
-            </Box>
-            <Box
-              as="a"
-              href={LINKS.twitter}
-              target="_blank"
-              sx={{ lineHeight: 0 }}
-              onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].JOIN_TWITTER)}
-            >
-              <TwitterIcon size={20} />
-            </Box>
-            <Box
-              as="a"
-              href={LINKS.github}
-              target="_blank"
-              sx={{ lineHeight: 0 }}
-              onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].JOIN_GITHUB)}
-            >
-              <GithubIcon variant="Bold" size={20} />
-            </Box>
+            {channels.map((_d, index) => {
+              return (
+                <Box
+                  key={index}
+                  as="a"
+                  href={_d.href}
+                  target="_blank"
+                  sx={{ lineHeight: 0 }}
+                  onClick={() => logEventRoutes(EVENT_ACTIONS[EventCategory.ROUTES].JOIN_DISCORD)}
+                >
+                  <_d.Icon variant="Bold" size={20} />
+                </Box>
+              )
+            })}
           </Flex>
         </Flex>
       </Flex>
@@ -147,5 +97,19 @@ const Footer = ({ height }: { height: number }) => {
     </Box>
   )
 }
+
+const links = [
+  { label: <Trans>Home</Trans>, href: LINKS.website },
+  { label: <Trans>Upgrade</Trans>, href: ROUTES.SUBSCRIPTION.path },
+  { label: <Trans>Blog</Trans>, href: LINKS.blog },
+  { label: <Trans>Docs</Trans>, href: LINKS.docs },
+  { label: <Trans>Terms & Policy</Trans>, href: LINKS.policy },
+]
+const channels = [
+  { Icon: DiscordIcon, href: LINKS.discord, event: EVENT_ACTIONS[EventCategory.ROUTES].JOIN_DISCORD },
+  { Icon: TelegramIcon, href: LINKS.telegram, event: EVENT_ACTIONS[EventCategory.ROUTES].JOIN_TELEGRAM },
+  { Icon: TwitterIcon, href: LINKS.twitter, event: EVENT_ACTIONS[EventCategory.ROUTES].JOIN_TWITTER },
+  { Icon: GithubIcon, href: LINKS.github, event: EVENT_ACTIONS[EventCategory.ROUTES].JOIN_GITHUB },
+]
 
 export default Footer

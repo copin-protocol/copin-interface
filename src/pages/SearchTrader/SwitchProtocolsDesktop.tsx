@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
 
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { DropdownItem } from 'theme/Dropdown'
-import { Box, Flex, Image, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { ProtocolOptionProps } from 'utils/config/protocols'
-import { parseProtocolImage } from 'utils/helpers/transform'
 import { getChainMetadata } from 'utils/web3/chains'
 
 const SwitchProtocolsDesktop = ({
@@ -20,26 +20,29 @@ const SwitchProtocolsDesktop = ({
       <Type.CaptionBold px={3} py={2}>
         <Trans>Protocols:</Trans>
       </Type.CaptionBold>
-      {protocolOptions.map((protocol) => (
-        <DropdownItem
-          key={protocol.id}
-          size="sm"
-          onClick={() => changeCurrentProtocol(protocol)}
-          sx={{ maxWidth: 130 }}
-        >
-          <Flex py={1} alignItems="center" sx={{ gap: 2 }}>
-            <Image src={parseProtocolImage(protocol.id)} width={28} height={28} />
-            <Flex flexDirection="column">
-              <Type.Caption lineHeight="16px" color={currentProtocol.id === protocol.id ? 'primary1' : 'neutral1'}>
-                {protocol.text}
-              </Type.Caption>
-              <Type.Caption lineHeight="16px" color={currentProtocol.id === protocol.id ? 'primary1' : 'neutral3'}>
-                {getChainMetadata(protocol.chainId).label}
-              </Type.Caption>
+      {protocolOptions.map((protocol) => {
+        const isActive = currentProtocol.id === protocol.id
+        return (
+          <DropdownItem
+            key={protocol.id}
+            size="sm"
+            onClick={() => changeCurrentProtocol(protocol)}
+            sx={{ maxWidth: 130 }}
+          >
+            <Flex py={1} alignItems="center" sx={{ gap: 2 }}>
+              <ProtocolLogo protocol={protocol.id} size={32} hasText={false} isActive={isActive} />
+              <Flex flexDirection="column">
+                <Type.Caption lineHeight="16px" color={currentProtocol.id === protocol.id ? 'primary1' : 'neutral1'}>
+                  {protocol.text}
+                </Type.Caption>
+                <Type.Caption lineHeight="16px" color={currentProtocol.id === protocol.id ? 'primary1' : 'neutral3'}>
+                  {getChainMetadata(protocol.chainId).label}
+                </Type.Caption>
+              </Flex>
             </Flex>
-          </Flex>
-        </DropdownItem>
-      ))}
+          </DropdownItem>
+        )
+      })}
     </Box>
   )
 }

@@ -4,7 +4,7 @@ import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useInternalRole from 'hooks/features/useInternalRole'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
-import { Box } from 'theme/base'
+import { Box, Flex } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 
@@ -58,7 +58,8 @@ export default function ProtocolDropdown({
                   '& img': { filter: disabled ? 'grayscale(100%)' : 'none' },
                 }}
               >
-                <ProtocolLogo protocol={option.id} size={20} />{' '}
+                <ProtocolLogo protocol={option.id} isActive={isActive} size={24} hasText={false} />
+                <Box as="span">{option.text}</Box>
                 {disabled && (
                   <Box as="span">
                     <Trans>(Coming soon)</Trans>
@@ -70,8 +71,10 @@ export default function ProtocolDropdown({
         </>
       }
     >
-      {/* {protocolOption.text} */}
-      <ProtocolLogo protocol={protocolOption.id} sx={{ gap: 1 }} size={20} />
+      <Flex sx={{ alignItems: 'center', gap: 1 }}>
+        <ProtocolLogo protocol={protocolOption.id} isActive={true} size={24} hasText={false} />
+        <Box as="span">{protocolOption.text}</Box>
+      </Flex>
     </Dropdown>
   )
 }

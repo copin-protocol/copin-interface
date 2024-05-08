@@ -2,14 +2,14 @@ import { Link } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 
 import Tooltip from 'theme/Tooltip'
-import { Flex, Image, Type } from 'theme/base'
+import { Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
 import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { addressShorten } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { parseProtocolImage } from 'utils/helpers/transform'
 
 import AddressAvatar from './@ui/AddressAvatar'
+import ProtocolLogo from './@ui/ProtocolLogo'
 
 export default function TraderAddress({
   address,
@@ -59,7 +59,7 @@ export default function TraderAddress({
       {protocol && (
         <>
           <Type.Caption color={dividerColor}>|</Type.Caption>
-          <Image src={parseProtocolImage(protocol)} width={16} height={16} />
+          <ProtocolLogo protocol={protocol} isActive={false} size={24} hasText={false} />
         </>
       )}
       {hasAddressTooltip && <Tooltip id={tooltipId}>{address}</Tooltip>}

@@ -6,7 +6,7 @@ import { getTraderExchangeStatistic, getTraderMultiExchangeStatistic, getTraderS
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import MarketGroup from 'components/@ui/MarketGroup'
-import ProtocolWithChainIcon from 'components/@ui/ProtocolWithChainIcon'
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import ChartTraderPnL from 'components/Charts/ChartTraderPnL'
@@ -159,7 +159,7 @@ export default function ExchangesStats() {
               return (
                 <Box key={index} sx={{ p: 24, bg: 'neutral5', border: 'small', borderColor: 'neutral4' }}>
                   <Box sx={{ width: 'max-content' }}>
-                    <ProtocolWithChainIcon protocol={data?.protocol} />
+                    <ProtocolLogo protocol={data?.protocol} />
                   </Box>
                   <Box my={12} height={50}>
                     {data?.pnlStatistics ? (

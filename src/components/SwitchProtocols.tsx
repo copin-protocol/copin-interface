@@ -9,13 +9,14 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
-import { Box, Flex, Image, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { ProtocolOptionProps } from 'utils/config/protocols'
-import { parseProtocolImage } from 'utils/helpers/transform'
 import { logEventSwitchProtocol } from 'utils/tracking/event'
 import { getChainMetadata } from 'utils/web3/chains'
+
+import ProtocolLogo from './@ui/ProtocolLogo'
 
 type SwitchProtocolComponentProps = {
   buttonSx?: SystemStyleObject & GridProps
@@ -84,21 +85,16 @@ function SwitchProtocolsComponent({
           if (!option) {
             return null
           }
+          const isActive = currentProtocolOption.id === option.id
           return (
             <DropdownItem key={option.id} size="sm" onClick={() => handleSwitchProtocol(option)}>
               <Flex py={1} alignItems="center" sx={{ gap: 2 }}>
-                <Image src={parseProtocolImage(option.id)} width={28} height={28} />
+                <ProtocolLogo protocol={option.id} isActive={isActive} hasText={false} size={32} />
                 <Flex flexDirection="column">
-                  <Type.Caption
-                    lineHeight="16px"
-                    color={currentProtocolOption.id === option.id ? 'primary1' : 'neutral1'}
-                  >
+                  <Type.Caption lineHeight="16px" color={isActive ? 'primary1' : 'neutral1'}>
                     {option.text}
                   </Type.Caption>
-                  <Type.Caption
-                    lineHeight="16px"
-                    color={currentProtocolOption.id === option.id ? 'primary1' : 'neutral3'}
-                  >
+                  <Type.Caption lineHeight="16px" color={isActive ? 'primary1' : 'neutral3'}>
                     {getChainMetadata(option.chainId).label}
                   </Type.Caption>
                 </Flex>
@@ -147,7 +143,7 @@ function SwitchProtocolsComponent({
           gap: 2,
         }}
       >
-        {(showIcon || md) && <Image src={parseProtocolImage(protocol)} width={28} height={28} />}
+        {(showIcon || md) && <ProtocolLogo protocol={protocol} isActive={true} hasText={false} size={32} />}
         <Box width={md ? 85 : 'auto'}>
           <Type.Caption display="block" lineHeight="16px" color="neutral1" sx={{ ...(textSx ?? {}) }}>
             {currentProtocolOption.text}

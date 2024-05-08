@@ -8,7 +8,7 @@ import { useQuery } from 'react-query'
 
 import { getTraderVolumeCopy } from 'apis/copyTradeApis'
 import Divider from 'components/@ui/Divider'
-import ProtocolWithChainIcon from 'components/@ui/ProtocolWithChainIcon'
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { renderTrader } from 'components/@ui/Table/renderProps'
 import { getCopyVolumeColor } from 'components/TraderCopyVolumeWarningIcon/helper'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
@@ -16,7 +16,6 @@ import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import useInternalRole from 'hooks/features/useInternalRole'
 import { getMaxVolumeCopy, useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
-import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
@@ -220,9 +219,6 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const permissionToSelectProtocol = useCopyTradePermission(true)
   const { sm } = useResponsive()
 
-  const protocolOptionsMapping = useGetProtocolOptionsMapping()
-  const protocolOption = protocol && protocolOptionsMapping[protocol]
-
   const leverageError = errors.leverage?.message || errors.totalVolume?.message
   const volumeError = errors.volume?.message || errors.totalVolume?.message
 
@@ -237,8 +233,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             {renderTrader(account, protocol)}
             <Type.Caption>-</Type.Caption>
             <Flex sx={{ alignItems: 'center', gap: 2 }}>
-              <ProtocolWithChainIcon protocol={protocol} size={12} />
-              <Type.Caption>{protocolOption?.text}</Type.Caption>
+              <ProtocolLogo protocol={protocol} size={24} />
             </Flex>
           </Flex>
           <Type.Caption mt={12} display="inline-block" color="neutral3">

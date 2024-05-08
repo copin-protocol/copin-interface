@@ -17,7 +17,7 @@ import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { generatePositionCanvas } from 'utils/helpers/generateImage'
 import { generateParamsUrl, generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
-import { parseProtocolImage } from 'utils/helpers/transform'
+import { getProtocolDropdownImage } from 'utils/helpers/transform'
 
 export default function SharePosition({ isOpening, stats }: { isOpening: boolean; stats: PositionData }) {
   const { prices } = useGetUsdPrices()
@@ -27,8 +27,8 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
   const [image, setImage] = useState<ImageData | null>(null)
 
   const { protocolImg, logoImg } = useMemo(() => {
-    const protocolImg = new Image(32, 32)
-    protocolImg.src = parseProtocolImage(stats?.protocol ?? ProtocolEnum.GMX)
+    const protocolImg = new Image(40, 40)
+    protocolImg.src = getProtocolDropdownImage({ protocol: stats?.protocol ?? ProtocolEnum.GMX, isActive: false })
     const logoImg = new Image(182, 42)
     logoImg.src = logoWithText
     return { protocolImg, logoImg }

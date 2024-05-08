@@ -3,14 +3,14 @@ import { Funnel } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useCallback } from 'react'
 
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import Checkbox from 'theme/Checkbox'
 import Dropdown from 'theme/Dropdown'
-import { Box, Flex, IconBox, Image, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { COPY_TRADE_STATUS_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
-import { parseProtocolImage } from 'utils/helpers/transform'
 
 import { MyCopiesProps } from '.'
 import SelectedTraders from './SelectedTraders'
@@ -61,7 +61,7 @@ export default function FilterSection({
                 onChange={() => handleToggleProtocol(protocol)}
               >
                 <Flex sx={{ alignItems: 'center', gap: 2 }}>
-                  <Image src={parseProtocolImage(protocol)} width={20} height={20} />
+                  <ProtocolLogo protocol={protocol} hasText={false} size={24} />
                   <Type.Caption lineHeight="16px">{protocolOptionsMapping[protocol]?.text}</Type.Caption>
                 </Flex>
               </Checkbox>

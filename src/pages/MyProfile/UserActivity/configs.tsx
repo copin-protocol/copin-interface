@@ -5,6 +5,7 @@ import { ApiMeta } from 'apis/api'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { VerticalDivider } from 'components/@ui/Table/renderProps'
 import { ColumnData } from 'components/@ui/Table/types'
@@ -16,7 +17,7 @@ import { PROTOCOL_PROVIDER, getTokenTradeSupport } from 'utils/config/trades'
 import { ORDER_TYPE_TRANS } from 'utils/config/translations'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { parseExchangeImage, parseProtocolImage, parseWalletName } from 'utils/helpers/transform'
+import { parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 
 export interface UserActivityTableProps {
   data: UserActivityData[] | undefined
@@ -66,7 +67,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
       <AddressAvatar address={item.sourceAccount} size={24} />
       <Type.Caption color="neutral1">{addressShorten(item.sourceAccount)}</Type.Caption>
       <VerticalDivider />
-      <Image src={parseProtocolImage(item.protocol)} width={20} height={20} />
+      <ProtocolLogo protocol={item.protocol} hasText={false} size={24} />
     </Flex>
   ),
   sourceAction: (item) => (

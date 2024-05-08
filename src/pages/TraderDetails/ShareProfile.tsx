@@ -14,7 +14,7 @@ import { themeColors } from 'theme/colors'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { generateTraderCanvas } from 'utils/helpers/generateImage'
 import { generateParamsUrl, generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { parseProtocolImage } from 'utils/helpers/transform'
+import { getProtocolDropdownImage } from 'utils/helpers/transform'
 
 export default function ShareProfile({
   address,
@@ -36,8 +36,8 @@ export default function ShareProfile({
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
   const [image, setImage] = useState<ImageData | null>(null)
 
-  const protocolImg = new Image(32, 32)
-  protocolImg.src = parseProtocolImage(protocol ?? 'KWENTA')
+  const protocolImg = new Image(40, 40)
+  protocolImg.src = getProtocolDropdownImage({ protocol: protocol ?? ProtocolEnum.KWENTA, isActive: false })
   const logoImg = new Image(182, 42)
   logoImg.src = logoWithText
 

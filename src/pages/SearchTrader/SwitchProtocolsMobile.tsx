@@ -3,11 +3,11 @@ import { SystemStyleObject } from '@styled-system/css'
 import { useResponsive } from 'ahooks'
 import { GridProps } from 'styled-system'
 
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
-import { Box, Flex, Image, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { ProtocolOptionProps } from 'utils/config/protocols'
-import { parseProtocolImage } from 'utils/helpers/transform'
 import { getChainMetadata } from 'utils/web3/chains'
 
 const SwitchProtocolsMobile = ({
@@ -32,7 +32,7 @@ const SwitchProtocolsMobile = ({
         {protocolOptions.map((protocol) => (
           <DropdownItem key={protocol.id} size="sm" onClick={() => changeCurrentProtocol(protocol)}>
             <Flex py={1} alignItems="center" sx={{ gap: 2 }}>
-              <Image src={parseProtocolImage(protocol.id)} width={28} height={28} />
+              <ProtocolLogo protocol={protocol.id} size={32} hasText={false} />
               <Flex flexDirection="column">
                 <Type.Caption lineHeight="16px" color={currentProtocol.id === protocol.id ? 'primary1' : 'neutral1'}>
                   {protocol.text}
@@ -86,7 +86,7 @@ const SwitchProtocolsMobile = ({
             gap: 2,
           }}
         >
-          <Image src={parseProtocolImage(currentProtocol.id)} width={24} height={24} />
+          <ProtocolLogo protocol={currentProtocol.id} size={32} hasText={false} />
           <Box width={65}>
             <Type.Caption display="block" lineHeight="16px" color="neutral1" sx={{ ...textSx }}>
               {currentProtocol.text}

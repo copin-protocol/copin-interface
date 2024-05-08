@@ -1,10 +1,9 @@
 import { useHistory } from 'react-router-dom'
 
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
-import ProtocolWithChainIcon from 'components/@ui/ProtocolWithChainIcon'
 import { ResponseTraderExchangeStatistic, TraderExchangeStatistic } from 'entities/trader'
 import useGetProtocolOptions, { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { compactNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
@@ -119,8 +118,8 @@ function StatsItem({
       sx={{ position: 'relative', width: 'max-content', height: '100%', px: 3, alignItems: 'center', gap: 12 }}
       onClick={() => onChangeSelection(data.protocol)}
     >
-      <Box sx={{ filter: isActive ? 'none' : 'grayscale(100%)' }}>
-        <ProtocolWithChainIcon protocol={data.protocol} />
+      <Box>
+        <Image src={getProtocolStatsImage({ protocol: protocolOption.id, isActive })} width={32} height={32} />
       </Box>
       <Box>
         <Type.Caption display="block" color={isActive ? 'primary1' : 'neutral3'}>
@@ -143,4 +142,8 @@ function StatsItem({
       )}
     </Flex>
   )
+}
+
+function getProtocolStatsImage({ protocol, isActive }: { protocol: ProtocolEnum; isActive: boolean }) {
+  return `/images/protocols_with_status/${protocol}-${isActive ? 'active' : 'inactive'}.png`
 }

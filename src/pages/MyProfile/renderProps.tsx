@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import TraderCopyCountWarningIcon from 'components/TraderCopyCountWarningIcon'
 import TraderCopyVolumeWarningIcon, { TraderTotalCopyVolumeIcon } from 'components/TraderCopyVolumeWarningIcon'
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
@@ -30,7 +31,6 @@ import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { parseProtocolImage } from 'utils/helpers/transform'
 
 export const renderCopyTitle = (data: CopyPositionData) => (
   <Type.Caption color="neutral1" sx={{ maxWidth: '110px', ...overflowEllipsis(), display: 'block' }}>
@@ -125,7 +125,7 @@ export function renderTrader(
         {protocol && (
           <>
             <Type.Caption color={dividerColor}>|</Type.Caption>
-            <Image src={parseProtocolImage(protocol)} width={16} height={16} sx={{ flexShrink: 0 }} />
+            <ProtocolLogo protocol={protocol} hasText={false} size={20} />
           </>
         )}
       </Flex>
