@@ -3,8 +3,14 @@ export enum ProtocolEnum {
   KWENTA = 'KWENTA',
   POLYNOMIAL = 'POLYNOMIAL',
   GMX_V2 = 'GMX_V2',
+  GNS = 'GNS',
+  GNS_POLY = 'GNS_POLY',
   LEVEL_BNB = 'LEVEL_BNB',
   LEVEL_ARB = 'LEVEL_ARB',
+  MUX_ARB = 'MUX_ARB',
+  EQUATION_ARB = 'EQUATION_ARB',
+  BLOOM_BLAST = 'BLOOM_BLAST',
+  APOLLOX_BNB = 'APOLLOX_BNB',
 }
 
 export enum UserRoleEnum {

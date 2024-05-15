@@ -40,7 +40,7 @@ export default function SelectMarketWithSearch({
   return (
     <Dropdown
       menuSx={{
-        width: 280,
+        width: 330,
         height: 324,
         overflow: 'auto',
         p: 2,

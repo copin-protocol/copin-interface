@@ -42,14 +42,14 @@ const columns: ColumnData<PositionData, ExternalSource>[] = [
     title: 'Trader',
     dataIndex: 'account',
     key: 'account',
-    style: { width: '120px' },
+    style: { width: '115px' },
     render: (item) => renderTrader(item.account, item.protocol),
   },
   {
     title: 'Entry',
     dataIndex: 'indexToken',
     key: 'indexToken',
-    style: { width: '170px' },
+    style: { width: '175px' },
     render: (item) => renderEntry(item, undefined, true),
   },
   {

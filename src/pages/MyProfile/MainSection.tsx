@@ -6,7 +6,8 @@ import { CopyWalletData } from 'entities/copyWallet'
 import { UserData } from 'entities/user'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
-import { CopyTradePlatformEnum, CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { RELEASED_PROTOCOLS } from 'utils/config/constants'
+import { CopyTradePlatformEnum, CopyTradeStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS, STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 
 import MyCopies from './MyCopies'
@@ -93,7 +94,7 @@ export default function MainSection({
     handleToggleSelect: handleToggleProtocol,
   } = useSelectMultiple({
     paramKey: URL_PARAM_KEYS.MY_COPIES_PROTOCOL,
-    defaultSelected: Object.values(ProtocolEnum),
+    defaultSelected: RELEASED_PROTOCOLS,
   })
   const queryParams = useMemo(
     () => ({

@@ -8,6 +8,7 @@ import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useSearchParams from 'hooks/router/useSearchParams'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
@@ -24,6 +25,7 @@ import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import ChartProfit from './ChartProfit'
 import ListOrderTable from './ListOrderTable'
 import PositionStats from './PositionStats'
+import { getOrderData } from './helper'
 
 export default function PositionDetails({
   protocol,
@@ -39,19 +41,27 @@ export default function PositionDetails({
   const { searchParams } = useSearchParams()
   const highlightTxHash = searchParams?.[URL_PARAM_KEYS.HIGHLIGHT_TX_HASH] as string | undefined
 
+  const myProfile = useMyProfileStore((_s) => _s.myProfile)
   const { data, isLoading } = useQuery(
-    [QUERY_KEYS.GET_POSITION_DETAIL, id, protocol],
+    [QUERY_KEYS.GET_POSITION_DETAIL, id, protocol, myProfile?.id],
     () => getPositionDetailByIdApi({ protocol, id }),
     {
       enabled: !!id,
       retry: 0,
+      select(data) {
+        const orders = getOrderData({
+          isOpening: data.status === PositionStatusEnum.OPEN,
+          protocol: data.protocol,
+          orderData: data.orders,
+        })
+        return { ...data, orders }
+      },
     }
   )
 
   const { isCopying } = useTraderCopying(data?.account, data?.protocol)
 
   const explorerUrl = data && data.protocol ? PROTOCOL_PROVIDER[data.protocol]?.explorerUrl : LINKS.arbitrumExplorer
-  const isOpening = data?.status === PositionStatusEnum.OPEN
 
   return (
     <>
@@ -97,7 +107,7 @@ export default function PositionDetails({
             }}
           >
             <PositionStats data={data} />
-            {data && <ChartProfit data={data} isOpening={isOpening} protocol={protocol} isShow={isShow} />}
+            {data && <ChartProfit data={data} protocol={protocol} isShow={isShow} />}
           </Box>
 
           <Box width="100%" overflow="hidden" sx={{ pt: 12 }}>

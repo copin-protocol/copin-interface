@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 
+import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 
 import useGetAllCopyTrades from './useGetAllCopyTrades'
@@ -28,7 +29,7 @@ export default function useCopyTraderAddresses(params?: { copyWalletIds: string[
     [copiedTraders]
   )
 
-  const tradersByProtocol = Object.values(ProtocolEnum).reduce((result, protocol, index) => {
+  const tradersByProtocol = RELEASED_PROTOCOLS.reduce((result, protocol, index) => {
     const newResult = { ...result }
     const dataByProtocol = copiedTraders[index]
     const copyingTradersData: TradersByProtocolValuesData[] =

@@ -21,7 +21,12 @@ const INCLUDE_PATH = [
   ROUTES.USER_SUBSCRIPTION.path,
   ROUTES.MY_HISTORY.path,
 ]
-
+// TODO: Check when add new pair as the same 1000BONK, 1000PEPE
+const NORMALIZE_LIST = [
+  '0xD020364b804f5aDeEB1f0Df9b76d08Ef9eF84C0C',
+  '0x32E8C41779fF521aE5688d0F31B32C138bCC85eC',
+  '0x43B9cE0394d9AFfc97501359646A410A48c21a11',
+]
 // TODO: Check when add new protocol
 export default function PythConnection() {
   const { setPrices, setIsReady } = useRealtimeUsdPricesStore()
@@ -44,7 +49,12 @@ export default function PythConnection() {
           const data = getPriceData({ tokenSupports, price })
           if (!data) return
           for (let i = 0; i < data.tokenAddresses.length; i++) {
-            pricesData = { ...pricesData, [data.tokenAddresses[i]]: data.value }
+            pricesData = {
+              ...pricesData,
+              [data.tokenAddresses[i]]: NORMALIZE_LIST.includes(data.tokenAddresses[i])
+                ? data.value * 1000
+                : data.value,
+            }
           }
         })
         setPrices(pricesData)
@@ -55,7 +65,12 @@ export default function PythConnection() {
           const data = getPriceData({ tokenSupports, price })
           if (!data) return
           for (let i = 0; i < data.tokenAddresses.length; i++) {
-            pricesData = { ...pricesData, [data.tokenAddresses[i]]: data.value }
+            pricesData = {
+              ...pricesData,
+              [data.tokenAddresses[i]]: NORMALIZE_LIST.includes(data.tokenAddresses[i])
+                ? data.value * 1000
+                : data.value,
+            }
           }
           const publishTime = price?.getPriceNoOlderThan?.(60)?.publishTime ?? 0
           if (publishTime >= lastUpdate + INTERVAL_TIME) {

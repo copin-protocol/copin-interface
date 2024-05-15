@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { ComponentProps, ReactNode, useState } from 'react'
 
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
-import useInternalRole from 'hooks/features/useInternalRole'
 import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
@@ -15,7 +14,14 @@ import CopyTraderModal from './CopyTraderModal'
 import ModalContactUs from './ModalContactUs'
 
 // TODO: Check when add new protocol
-const ALLOWED_LIST = [ProtocolEnum.GMX, ProtocolEnum.GMX_V2, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
+const ALLOWED_LIST = [
+  ProtocolEnum.GMX,
+  ProtocolEnum.GMX_V2,
+  ProtocolEnum.KWENTA,
+  ProtocolEnum.POLYNOMIAL,
+  ProtocolEnum.GNS,
+  ProtocolEnum.GNS_POLY,
+]
 
 export default function CopyTraderButton({
   protocol,

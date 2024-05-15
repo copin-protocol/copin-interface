@@ -15,7 +15,7 @@ import { renderTrader } from 'pages/MyProfile/renderProps'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { encodeRealised } from 'utils/helpers/handleRealised'
 
@@ -93,7 +93,7 @@ export default function SimilarTraders({
     [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, similarTradersFilter, retryTime],
     () =>
       Promise.all(
-        Object.values(ProtocolEnum).map((protocol) => {
+        RELEASED_PROTOCOLS.map((protocol) => {
           return getTradersApi({
             protocol,
             body: queryBody,

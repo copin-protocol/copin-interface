@@ -11,10 +11,11 @@ import TraderCopyVolumeWarningIcon, { TraderTotalCopyVolumeIcon } from 'componen
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
+import CopyButton from 'theme/Buttons/CopyButton'
 import Loading from 'theme/Loading'
 import Tag from 'theme/Tag'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Image, TextProps, Type } from 'theme/base'
+import { Box, Flex, TextProps, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import {
@@ -122,6 +123,14 @@ export function renderTrader(
         >
           {addressShorten(address, 3, 5)}
         </Type.Caption>
+        <CopyButton
+          type="button"
+          variant="ghost"
+          value={address}
+          size="sm"
+          sx={{ color: 'neutral3', p: 0 }}
+          iconSize={14}
+        ></CopyButton>
         {protocol && (
           <>
             <Type.Caption color={dividerColor}>|</Type.Caption>

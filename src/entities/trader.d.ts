@@ -87,10 +87,12 @@ export interface PositionData {
   name: string
   protocol: ProtocolEnum
   indexToken: string
+  collateralToken: string
   key: string
   reverseIndex: number
   logId: number
   blockTime: string
+  collateralInToken: number
   collateral: number
   lastCollateral: number
   size: number
@@ -146,6 +148,7 @@ export interface OrderData {
   collateralToken: string
   sizeDeltaNumber: number
   sizeNumber: number
+  collateralDeltaInTokenNumber: number
   collateralDeltaNumber: number
   collateralNumber: number
   priceNumber: number
@@ -158,6 +161,7 @@ export interface OrderData {
   isClose: boolean
   leverage: number
   type: OrderTypeEnum
+  protocol: ProtocolEnum
   logId: number
   blockNumber: number
   blockTime: string

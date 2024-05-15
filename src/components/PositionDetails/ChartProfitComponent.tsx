@@ -25,7 +25,7 @@ import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { TIMEFRAME_NAMES, getTokenTradeSupport } from 'utils/config/trades'
+import { TIMEFRAME_NAMES, TOKEN_COLLATERAL_SUPPORT, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcLiquidatePrice, calcOpeningPnL, calcPnL } from 'utils/helpers/calculate'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
@@ -35,23 +35,21 @@ import OrderTooltip from './OrderTooltip'
 
 export default function ChartProfitComponent({
   position,
-  tickPositions,
   isOpening,
-  hasLiquidate,
   openBlockTime,
   closeBlockTime,
   setCrossMove,
   isShow,
 }: {
   position: PositionData
-  tickPositions: TickPosition[]
   isOpening: boolean
-  hasLiquidate: boolean
   openBlockTime: number
   closeBlockTime: number
   setCrossMove: (value?: { pnl?: number; time?: number }) => void
   isShow?: boolean
 }) {
+  const protocol = position.protocol
+
   const { sm } = useResponsive()
   const CHART_HEIGHT = sm ? 250 : 150
   const { prices } = useGetUsdPrices()
@@ -60,7 +58,7 @@ export default function ChartProfitComponent({
   const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
     ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
     : undefined
-  const tokenSymbol = getTokenTradeSupport(position.protocol)?.[position.indexToken]?.symbol ?? ''
+  const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken]?.symbol
   const from = useMemo(() => openBlockTime * 1000, [openBlockTime])
   const to = useMemo(() => (isOpening ? dayjs().utc().valueOf() : closeBlockTime * 1000), [closeBlockTime, isOpening])
   const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])
@@ -84,7 +82,7 @@ export default function ChartProfitComponent({
   )
 
   const [markerId, setMarkerId] = useState<string | undefined>()
-  const orders = position.orders.sort((x, y) => (x.blockTime < y.blockTime ? -1 : x.blockTime > y.blockTime ? 1 : 0))
+  const orders = position.orders
   const openOrder = orders.find((e) => e.isOpen || e.type === OrderTypeEnum.OPEN) ?? position.orders?.[0]
   const closeOrder = orders.find((e) => e.isClose) ?? orders?.[0]
   const increaseList = orders.filter((e) => e.type === OrderTypeEnum.INCREASE || e.type === OrderTypeEnum.OPEN)
@@ -97,12 +95,55 @@ export default function ChartProfitComponent({
       e.type === OrderTypeEnum.LIQUIDATE
   )
   const modifiedMarginList = orders.filter((e) => e.type === OrderTypeEnum.MARGIN_TRANSFERRED)
+
+  const hasLiquidate = (position.orders.filter((e) => e.type === OrderTypeEnum.LIQUIDATE) ?? []).length > 0
+
+  const useSizeNumber = [ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL].includes(protocol)
+  const tickPositions = useMemo(() => {
+    const positions: TickPosition[] = []
+    if (!position) return []
+    if (orders.length) {
+      let totalTokenSize = 0
+      let totalSize = 0
+      let collateral = 0
+      for (let i = 0; i < orders.length; i++) {
+        if (orders[i].type === OrderTypeEnum.MARGIN_TRANSFERRED) {
+          continue
+        }
+        const isDecrease =
+          orders[i].type === OrderTypeEnum.DECREASE ||
+          orders[i].type === OrderTypeEnum.CLOSE ||
+          orders[i].type === OrderTypeEnum.LIQUIDATE
+        const sign = isDecrease ? -1 : 1
+        const sizeDeltaNumber = orders[i]?.sizeDeltaNumber ?? 0
+        const sizeDelta = sign * Math.abs(sizeDeltaNumber)
+        const sizeTokenDelta =
+          sign *
+          (useSizeNumber
+            ? orders[i].sizeNumber ?? sizeDeltaNumber / orders[i].priceNumber
+            : sizeDeltaNumber / orders[i].priceNumber)
+        const collateralDeltaNumber = orders[i]?.collateralDeltaNumber ?? 0
+        const collateralDelta = sign * collateralDeltaNumber
+        const pos = {
+          size: totalSize + sizeDelta,
+          time: dayjs(orders[i].blockTime).utc().valueOf(),
+          collateral: collateral + collateralDelta,
+          price: (totalSize + sizeDelta) / (totalTokenSize + sizeTokenDelta),
+        }
+        positions.push(pos)
+        totalSize += sizeDelta
+        totalTokenSize += sizeTokenDelta
+        collateral += collateralDelta
+      }
+    }
+    return positions
+  }, [orders, position, useSizeNumber])
   const currentOrder = orders.find((e) => e.id === markerId)
 
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
   const chartData: LineData[] = useMemo(() => {
     if (!data) return []
-    const tempData = [...data]
+    const tempData = [...data].filter((e) => e.timestamp > dayjs(openOrder?.blockTime).utc().valueOf())
 
     if (openOrder) {
       tempData.push({
@@ -126,22 +167,22 @@ export default function ChartProfitComponent({
         })
       }
     } else {
-      tempData.push({
-        open: position.averagePrice,
-        close: position.averagePrice,
-        low: position.averagePrice,
-        high: position.averagePrice,
-        timestamp: dayjs(position.closeBlockTime).utc().valueOf(),
-      })
+      const closeTimestamp = dayjs(position.closeBlockTime).utc().valueOf()
+      const index = tempData.findIndex((e) => e.timestamp === closeTimestamp)
+      if (index < 0) {
+        tempData.push({
+          open: position.averagePrice,
+          close: position.averagePrice,
+          low: position.averagePrice,
+          high: position.averagePrice,
+          timestamp: closeTimestamp,
+        })
+      }
     }
 
     const chartData = !isOpening
-      ? tempData.filter(
-          (e) =>
-            e.timestamp >= dayjs(openOrder?.blockTime).utc().valueOf() &&
-            e.timestamp <= tempData[tempData.length - 1].timestamp
-        )
-      : tempData.filter((e) => e.timestamp >= dayjs(openOrder?.blockTime).utc().valueOf())
+      ? tempData.filter((e) => e.timestamp <= dayjs(position.closeBlockTime).utc().valueOf())
+      : tempData
 
     return (
       chartData
@@ -461,13 +502,17 @@ export default function ChartProfitComponent({
           }
         )
         const modifiedMarkers = modifiedMarginList.map((order): SeriesMarker<Time> => {
+          const collateral = order.collateralDeltaInTokenNumber ?? order.collateralDeltaNumber
           return {
             id: order.id,
             color: themeColors.orange1,
-            position: order.collateralDeltaNumber > 0 ? 'aboveBar' : 'belowBar',
+            position: collateral > 0 ? 'aboveBar' : 'belowBar',
             shape: 'circle',
             time: (dayjs(order.blockTime).utc().unix() - timezone) as Time,
-            text: '$' + formatNumber(order.collateralDeltaNumber, 0),
+            text: order.collateralDeltaInTokenNumber
+              ? formatNumber(collateral, 0) +
+                ` ${TOKEN_COLLATERAL_SUPPORT[position.protocol][position.collateralToken].symbol}`
+              : '$' + formatNumber(collateral, 0),
           }
         })
 

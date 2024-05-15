@@ -8,6 +8,7 @@ import { deleteFavoritesApi, getFavoritesApi, postFavoritesApi } from 'apis/favo
 import ToastBody from 'components/@ui/ToastBody'
 import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
 import { useAuthContext } from 'hooks/web3/useAuth'
+import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 
@@ -67,7 +68,7 @@ export const useInitTraderFavorites = () => {
   const { data, isLoading } = useQuery(
     ['favorites', profile?.username],
     () => {
-      return Promise.all(Object.values(ProtocolEnum).map((_protocol) => getFavoritesApi(_protocol)))
+      return Promise.all(RELEASED_PROTOCOLS.map((_protocol) => getFavoritesApi(_protocol)))
     },
     {
       select(data) {

@@ -59,11 +59,11 @@ export const getUnitDate = (
 export function formatNumber(num?: number | string, maxDigit = 2, minDigit?: number) {
   if (num == null) return '--'
   if (typeof num === 'string') num = Number(num)
-  if (Math.abs(num) < 1 && maxDigit === 0) {
+  if ((Math.abs(num) < 1 && maxDigit === 0) || (Math.abs(num) < 0.1 && maxDigit === 1)) {
     maxDigit = 2
     minDigit = 2
   }
-  if (Math.abs(num) < 0.01 && maxDigit === 2) {
+  if (Math.abs(num) < 0.01 && (maxDigit === 2 || maxDigit === 1)) {
     maxDigit = 6
   }
   // if (num > 1000000000) return t`${(num / 1000000000).toFixed(0)} tỷ`

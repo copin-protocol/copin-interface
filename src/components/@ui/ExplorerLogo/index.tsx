@@ -14,16 +14,26 @@ const ExplorerLogo = ({
 }: { protocol: string; explorerUrl?: string; size?: number } & BoxProps) => {
   let icon
   switch (protocol) {
+    case ProtocolEnum.GNS:
     case ProtocolEnum.GMX:
     case ProtocolEnum.GMX_V2:
     case ProtocolEnum.LEVEL_ARB:
+    case ProtocolEnum.MUX_ARB:
+    case ProtocolEnum.EQUATION_ARB:
       icon = 'ARBITRUM'
       break
     case ProtocolEnum.KWENTA:
       icon = 'OPTIMISM'
       break
     case ProtocolEnum.LEVEL_BNB:
+    case ProtocolEnum.APOLLOX_BNB:
       icon = 'BNB'
+      break
+    case ProtocolEnum.GNS_POLY:
+      icon = 'POLYGON'
+      break
+    case ProtocolEnum.BLOOM_BLAST:
+      icon = 'BLAST'
       break
     default:
       icon = 'OPTIMISM'

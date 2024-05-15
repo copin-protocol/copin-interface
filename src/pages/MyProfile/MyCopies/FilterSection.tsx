@@ -5,10 +5,11 @@ import { useCallback } from 'react'
 
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
+import { ALLOWED_PROTOCOLS } from 'pages/Home/configs'
 import Checkbox from 'theme/Checkbox'
 import Dropdown from 'theme/Dropdown'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { CopyTradeStatusEnum } from 'utils/config/enums'
 import { COPY_TRADE_STATUS_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -161,6 +162,6 @@ function AvailableMargin({ value, sx }: { value: number | undefined; sx?: any })
 }
 
 // TODO: Check when add new protocol
-const protocolFilters = Object.values(ProtocolEnum)
+const protocolFilters = ALLOWED_PROTOCOLS
 
 const statusFilters = [CopyTradeStatusEnum.RUNNING, CopyTradeStatusEnum.STOPPED]

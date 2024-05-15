@@ -15,8 +15,7 @@ import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import Drawer from 'theme/Modal/Drawer'
 import { Box, Flex, Type } from 'theme/base'
-import { DEFAULT_PROTOCOL } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
+import { DEFAULT_PROTOCOL, RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 import { FindAndSelectTraderProps } from './FindAndSelectTrader'
@@ -33,7 +32,7 @@ export function PickFromFavoritesModal({
     [QUERY_KEYS.GET_FAVORITE_TRADERS, ignoreSelectTraders],
     () => {
       return Promise.all(
-        Object.values(ProtocolEnum).map((protocol) => {
+        RELEASED_PROTOCOLS.map((protocol) => {
           return getFavoritesApi(protocol).then((data) => filterFoundData(data, ignoreSelectTraders))
         })
       )

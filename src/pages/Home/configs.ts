@@ -41,4 +41,12 @@ export const BASE_RANGE_FILTER: RangeFilter<keyof TraderData>[] = [
   { fieldName: 'runTimeDays', gte: 30 },
 ]
 
-export const ALLOWED_PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.GMX_V2, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
+// TODO: Check when add new protocol
+export const ALLOWED_PROTOCOLS = [
+  ProtocolEnum.GMX,
+  ProtocolEnum.GMX_V2,
+  ProtocolEnum.KWENTA,
+  ProtocolEnum.POLYNOMIAL,
+  ProtocolEnum.GNS,
+  ProtocolEnum.GNS_POLY,
+]

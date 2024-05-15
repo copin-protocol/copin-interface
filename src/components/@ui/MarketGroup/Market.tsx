@@ -1,6 +1,9 @@
 import { SystemStyleObject } from '@styled-system/css'
+import { useMemo } from 'react'
 import { GridProps } from 'styled-system'
+import { v4 as uuid } from 'uuid'
 
+import Tooltip from 'theme/Tooltip'
 import { Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { getTokenTradeSupport } from 'utils/config/trades'
@@ -11,14 +14,17 @@ export default function Market({
   indexToken,
   size = 20,
   hasName = false,
+  hasTooltip = false,
   sx,
 }: {
   protocol: ProtocolEnum
   indexToken: string
   size?: number
   hasName?: boolean
+  hasTooltip?: boolean
   sx?: SystemStyleObject & GridProps
 }) {
+  const tooltipId = useMemo(() => uuid(), [])
   const symbol = getTokenTradeSupport(protocol)[indexToken]?.symbol
   const name = getTokenTradeSupport(protocol)[indexToken]?.name
   if (!symbol) return <></>
@@ -37,10 +43,21 @@ export default function Market({
         }}
         alignItems="center"
         justifyContent="center"
+        data-tip="React-tooltip"
+        data-tooltip-id={hasTooltip ? tooltipId : undefined}
+        data-tooltip-delay-show={360}
       >
         <Image src={parseMarketImage(symbol)} sx={{ width: size, height: size }} />
       </Flex>
       {hasName && !!name && <Type.Small fontSize="10px">{name}</Type.Small>}
+      {hasTooltip && (
+        <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
+          <Flex alignItems="center" justifyContent="center" sx={{ gap: 1 }}>
+            <Image src={parseMarketImage(symbol)} sx={{ width: size, height: size }} />
+            <Type.Small fontSize="10px">{name}</Type.Small>
+          </Flex>
+        </Tooltip>
+      )}
     </Flex>
   )
 }

@@ -3,11 +3,16 @@ import { OpenInterestMarketData } from 'entities/statistic'
 import { PositionStatisticCounter, ResponsePositionData } from 'entities/trader.d'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum, TimeframeEnum } from 'utils/config/enums'
-import { capitalizeFirstLetter } from 'utils/helpers/transform'
+import { capitalizeFirstLetter, normalizePriceData } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
 import requester from './index'
-import { normalizePositionData, normalizePositionListResponse, normalizePositionResponse } from './normalize'
+import {
+  normalizePositionData,
+  normalizePositionListResponse,
+  normalizePositionResponse,
+  normalizeSymbolData,
+} from './normalize'
 import { GetApiParams, RequestBodyApiData } from './types'
 
 const SERVICE = 'position'
@@ -218,7 +223,12 @@ export const getChartDataV2 = ({
 }) =>
   requester
     .get(`prices/v2`, {
-      params: { symbol, timeframe: timeframe === TimeframeEnum.D1 ? '1D' : timeframe, from, to },
+      params: {
+        symbol: normalizeSymbolData(symbol),
+        timeframe: timeframe === TimeframeEnum.D1 ? '1D' : timeframe,
+        from,
+        to,
+      },
     })
     .then((res) => {
       const data = res.data as ChartDataV2
@@ -227,10 +237,10 @@ export const getChartDataV2 = ({
       for (let i = 0; i < data.o.length - 1; i++) {
         if (tempTime === data.t[i]) continue
         tempData.push({
-          open: data.o[i],
-          close: data.c[i],
-          low: data.l[i],
-          high: data.h[i],
+          open: normalizePriceData(symbol, data.o[i]),
+          close: normalizePriceData(symbol, data.c[i]),
+          low: normalizePriceData(symbol, data.l[i]),
+          high: normalizePriceData(symbol, data.h[i]),
           timestamp: data.t[i],
         })
         tempTime = data.t[i]

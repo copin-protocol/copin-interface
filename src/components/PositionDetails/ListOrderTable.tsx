@@ -9,11 +9,12 @@ import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
 import { OrderData } from 'entities/trader.d'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
-import { PROTOCOL_PROVIDER } from 'utils/config/trades'
+import { PROTOCOL_PROVIDER, TOKEN_COLLATERAL_SUPPORT } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
+import { parseCollateralImage } from 'utils/helpers/transform'
 
 type ExternalSource = {
   totalOrders: number
@@ -65,14 +66,8 @@ export default function ListOrderTable({
   isLoading: boolean
   highlightTxHash?: string
 }) {
-  let orders = data.sort((x, y) =>
-    x.blockTime < y.blockTime ? 1 : x.blockTime > y.blockTime ? -1 : x.logId < y.logId ? 1 : x.logId > y.logId ? -1 : 0
-  )
+  const orders = [...(data ?? [])].reverse()
 
-  // TODO: Check when add new protocol
-  if (protocol === ProtocolEnum.GMX) {
-    orders = orders.filter((e) => e.type !== OrderTypeEnum.CLOSE)
-  }
   const tableData = useMemo(() => {
     return { data: orders, meta: { limit: orders.length, offset: 0, total: orders.length, totalPages: 1 } }
   }, [orders])
@@ -138,7 +133,23 @@ export default function ListOrderTable({
         dataIndex: 'collateralDeltaNumber',
         key: 'collateralDeltaNumber',
         style: { minWidth: '105px', textAlign: 'right' },
-        render: (item) => <DeltaText color="neutral1" type={item.type} delta={item.collateralDeltaNumber} />,
+        render: (item) => (
+          <Flex justifyContent="flex-end" alignItems="center" sx={{ gap: '2px' }}>
+            <DeltaText
+              color="neutral1"
+              type={item.type}
+              delta={item.collateralToken ? item.collateralDeltaInTokenNumber : item.collateralDeltaNumber}
+              maxDigit={item.collateralToken ? 2 : undefined}
+              minDigit={item.collateralToken ? 2 : undefined}
+            />
+            {item.collateralToken && item.protocol && (
+              <Image
+                src={parseCollateralImage(TOKEN_COLLATERAL_SUPPORT[item.protocol][item.collateralToken]?.symbol)}
+                sx={{ width: 16, height: 16 }}
+              />
+            )}
+          </Flex>
+        ),
       },
       {
         title: 'Size Delta',

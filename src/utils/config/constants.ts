@@ -19,8 +19,11 @@ export const LINKS = {
   tradeGMX: 'https://gmx.io/#/?ref=copin',
   tradeGMXv2: 'https://gmx.io/#/?ref=copin',
   tradeKwenta: 'https://kwenta.eth.limo/?ref=copin',
+  tradeGains: 'https://gains.trade/trading',
   tradePolynomial: 'https://trade.polynomial.fi',
   tradeLevel: 'https://app.level.finance/',
+  tradeBloom: 'https://bloom.trading/trade',
+  tradeApolloX: 'https://apollox.finance',
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
@@ -114,3 +117,18 @@ export const EXCHANGE_COLOR: { [key: string]: string } = {
 }
 
 export const DEFAULT_PROTOCOL = ProtocolEnum.KWENTA
+
+export const RELEASED_PROTOCOLS = [
+  ProtocolEnum.GMX,
+  ProtocolEnum.KWENTA,
+  ProtocolEnum.POLYNOMIAL,
+  ProtocolEnum.GMX_V2,
+  ProtocolEnum.GNS,
+  ProtocolEnum.GNS_POLY,
+  ProtocolEnum.LEVEL_BNB,
+  ProtocolEnum.LEVEL_ARB,
+  // ProtocolEnum.MUX_ARB,
+  // ProtocolEnum.EQUATION_ARB,
+  // ProtocolEnum.BLOOM_BLAST,
+  // ProtocolEnum.APOLLOX_BNB,
+]

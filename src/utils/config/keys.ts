@@ -182,8 +182,14 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.GMX]: 'GMX_COPY_TRADE',
   [ProtocolEnum.KWENTA]: 'SYNTHETIX_COPY_TRADE',
   [ProtocolEnum.POLYNOMIAL]: 'SYNTHETIX_COPY_TRADE',
-  [ProtocolEnum.LEVEL_BNB]: '',
   [ProtocolEnum.LEVEL_ARB]: '',
+  [ProtocolEnum.LEVEL_BNB]: '',
+  [ProtocolEnum.GNS]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.GNS_POLY]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.MUX_ARB]: '',
+  [ProtocolEnum.EQUATION_ARB]: '',
+  [ProtocolEnum.BLOOM_BLAST]: '',
+  [ProtocolEnum.APOLLOX_BNB]: '',
 }
 
 export const INTERNAL_SERVICE_KEYS = {
@@ -193,4 +199,10 @@ export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.POLYNOMIAL]: 'SYNTHETIX_COPY_TRADE_BITGET',
   [ProtocolEnum.LEVEL_BNB]: '',
   [ProtocolEnum.LEVEL_ARB]: '',
+  [ProtocolEnum.GNS]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.GNS_POLY]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.MUX_ARB]: '',
+  [ProtocolEnum.EQUATION_ARB]: '',
+  [ProtocolEnum.BLOOM_BLAST]: '',
+  [ProtocolEnum.APOLLOX_BNB]: '',
 }

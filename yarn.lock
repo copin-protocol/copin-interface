@@ -6982,10 +6982,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-lightweight-charts@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/lightweight-charts/-/lightweight-charts-4.1.1.tgz#69e0e45d2c08a23b4a40241cec0b1748fd3aaafb"
-  integrity sha512-HYjm66NAIOhoLDNaaQsiwOVWiFHL1yrygZeKd4PgdZESnWyp5dPoTe3pH3t2h4ix+Ix5TwLZaNbWroZqQuj6OA==
+lightweight-charts@4.1.4:
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/lightweight-charts/-/lightweight-charts-4.1.4.tgz#8a41df9183a1af43dde6c12e2475a02fc64661dd"
+  integrity sha512-jsQOK27a3wiw/Db3Eoo3VX93LGovXA/sOWHVEiEosGOOGtxSSuIWTYVebjRKGK0SWkkUwI8AHQ4j7HZSKm7fxA==
   dependencies:
     fancy-canvas "2.1.0"
 

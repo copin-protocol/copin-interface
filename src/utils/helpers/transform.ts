@@ -174,6 +174,9 @@ export const getDurationFromTimeFilter = (timeFilter?: TimeFilterByEnum) => {
 // TODO: Check when add new protocol
 export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
   switch (protocol) {
+    case ProtocolEnum.GNS:
+    case ProtocolEnum.GNS_POLY:
+      return LINKS.tradeGains
     case ProtocolEnum.GMX:
       return LINKS.tradeGMX
     case ProtocolEnum.GMX_V2:
@@ -185,6 +188,10 @@ export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
     case ProtocolEnum.LEVEL_BNB:
     case ProtocolEnum.LEVEL_ARB:
       return LINKS.tradeLevel
+    case ProtocolEnum.BLOOM_BLAST:
+      return LINKS.tradeBloom
+    case ProtocolEnum.APOLLOX_BNB:
+      return LINKS.tradeApolloX
     default:
       return LINKS.tradeGMX
   }
@@ -270,6 +277,10 @@ export function parseMarketImage(symbol: string) {
   return `/svg/markets/${symbol}.svg`
 }
 
+export function parseCollateralImage(symbol: string) {
+  return `/images/collaterals/${symbol}.png`
+}
+
 export function convertDurationInSecond(openTime: string) {
   return dayjs.duration(dayjs().diff(dayjs(openTime))).asSeconds()
 }
@@ -292,4 +303,15 @@ export function getSubscriptionPlanConfigs(plan: SubscriptionPlanEnum | undefine
 
 export function getProtocolDropdownImage({ protocol, isActive }: { protocol: ProtocolEnum; isActive: boolean }) {
   return `/images/protocols_with_status/${protocol}-${isActive ? 'active' : 'inactive_color'}.png`
+}
+
+export const normalizePriceData = (symbol: string, value?: number) => {
+  if (!value) return 0
+  switch (symbol) {
+    case '1000BONK':
+    case '1000PEPE':
+      return value * 1000
+    default:
+      return value
+  }
 }

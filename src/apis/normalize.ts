@@ -87,3 +87,14 @@ export const normalizeTokenStatisticResponse = ({
     data,
   }
 }
+
+export const normalizeSymbolData = (symbol: string) => {
+  switch (symbol) {
+    case '1000BONK':
+      return 'BONK'
+    case '1000PEPE':
+      return 'PEPE'
+    default:
+      return symbol
+  }
+}

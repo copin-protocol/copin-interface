@@ -419,10 +419,19 @@ export const generateProtocol = ({
   let protocolTextWidth = 72
   let protocolText = 'GMX'
   switch (protocol) {
+    case ProtocolEnum.MUX_ARB:
+      protocolTextWidth = 72
+      protocolText = 'MUX'
+      break
     case ProtocolEnum.LEVEL_BNB:
     case ProtocolEnum.LEVEL_ARB:
       protocolTextWidth = 117
       protocolText = 'Level'
+      break
+    case ProtocolEnum.GNS:
+    case ProtocolEnum.GNS_POLY:
+      protocolTextWidth = 117
+      protocolText = 'gTrade'
       break
     case ProtocolEnum.GMX:
     case ProtocolEnum.GMX_V2:
@@ -436,6 +445,18 @@ export const generateProtocol = ({
     case ProtocolEnum.POLYNOMIAL:
       protocolTextWidth = 168
       protocolText = 'Polynomial'
+      break
+    case ProtocolEnum.EQUATION_ARB:
+      protocolTextWidth = 141
+      protocolText = 'Equation'
+      break
+    case ProtocolEnum.BLOOM_BLAST:
+      protocolTextWidth = 117
+      protocolText = 'Bloom'
+      break
+    case ProtocolEnum.APOLLOX_BNB:
+      protocolTextWidth = 141
+      protocolText = 'ApolloX'
       break
     default:
       break

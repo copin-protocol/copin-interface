@@ -3,6 +3,7 @@ import * as yup from 'yup'
 
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { Flex, Image, Type } from 'theme/base'
+import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { SERVICE_KEYS } from 'utils/config/keys'
 import { parseExchangeImage } from 'utils/helpers/transform'
@@ -216,7 +217,7 @@ export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boo
   }
 }
 
-export const protocolOptions = Object.values(ProtocolEnum).map((value) => {
+export const protocolOptions = RELEASED_PROTOCOLS.map((value) => {
   return {
     value,
     label: (

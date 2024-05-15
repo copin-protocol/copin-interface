@@ -1,5 +1,7 @@
 import { SystemStyleObject } from '@styled-system/css'
+import { useMemo } from 'react'
 import { GridProps } from 'styled-system'
+import { v4 as uuid } from 'uuid'
 
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
@@ -22,9 +24,9 @@ export default function MarketGroup({
   hasName?: boolean
   sx?: SystemStyleObject & GridProps
 }) {
+  const tooltipId = useMemo(() => uuid(), [])
   const numberOfAddress = indexTokens?.length
   if (!numberOfAddress) return <></>
-  const tooltipId = protocol + indexTokens?.join('_')
   return (
     <Flex sx={{ position: 'relative', height: size, ...sx }}>
       {indexTokens.slice(0, limit).map((indexToken) => {
@@ -36,7 +38,7 @@ export default function MarketGroup({
               height: size,
             }}
           >
-            <Market protocol={protocol} indexToken={indexToken} size={size} />
+            <Market protocol={protocol} indexToken={indexToken} size={size} hasTooltip={numberOfAddress <= limit} />
           </Box>
         )
       })}

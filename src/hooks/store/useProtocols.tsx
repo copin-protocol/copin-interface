@@ -2,7 +2,7 @@ import { cloneElement, createContext, useContext, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { parsedQueryString } from 'hooks/router/useParsedQueryString'
-import { DEFAULT_PROTOCOL } from 'utils/config/constants'
+import { DEFAULT_PROTOCOL, RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 
 interface Context {
@@ -15,7 +15,7 @@ const ProtocolContext = createContext<Context>({} as Context)
 export function ProtocolProvider({ children }: { children: any }) {
   const { search, pathname } = useLocation()
   const parsedProtocolParam = pathname.split('/')?.[1]
-  const protocolParam = Object.values(ProtocolEnum).find((protocol) => parsedProtocolParam === protocol)
+  const protocolParam = RELEASED_PROTOCOLS.find((protocol) => parsedProtocolParam === protocol)
   const searchParams = parsedQueryString(search)
   const protocolSearch = searchParams.protocol
   let protocol = DEFAULT_PROTOCOL

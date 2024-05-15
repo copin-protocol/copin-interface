@@ -40,7 +40,7 @@ const DesktopLayout = (props: LayoutProps) => {
             overflow: 'hidden',
             gridTemplate: `
               "CHARTS STATS POSITIONS" minmax(0px, 1fr) / ${
-                openingPositionFullExpanded || positionFullExpanded ? '0px 0px 1fr' : '400px 1fr 510px'
+                openingPositionFullExpanded || positionFullExpanded ? '0px 0px 1fr' : '400px 1fr 550px'
               }
             `,
           }}
