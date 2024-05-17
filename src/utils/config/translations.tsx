@@ -139,8 +139,10 @@ export const CHANGE_FIELD_TRANS: ObjectTrans = {
 }
 
 export const CHAIN_STATS_TRANS: ObjectTrans = {
-  [ChainStatsEnum.ARB]: 'Arbitrum',
-  [ChainStatsEnum.OP]: 'Optimism',
+  [ChainStatsEnum.ABITRUM]: 'Arbitrum',
+  [ChainStatsEnum.OPTIMISM]: 'Optimism',
+  [ChainStatsEnum.POLYGON]: 'Polygon',
+  [ChainStatsEnum.BNB_CHAIN]: 'BNB Chain',
 }
 
 export const ERRORS: ObjectTrans = {

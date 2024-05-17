@@ -103,3 +103,15 @@ export const PROTOCOL_OPTIONS: ProtocolOptionProps[] = [
   // PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.BLOOM_BLAST],
   // PROTOCOL_OPTIONS_MAPPING[ProtocolEnum.APOLLOX_BNB],
 ]
+
+export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
+  gnsPoly: ProtocolEnum.GNS_POLY,
+  gnsArb: ProtocolEnum.GNS,
+  gmxV1Arb: ProtocolEnum.GMX,
+  gmxV2Arb: ProtocolEnum.GMX_V2,
+  muxArb: ProtocolEnum.MUX_ARB,
+  equationArb: ProtocolEnum.EQUATION_ARB,
+  levelArb: ProtocolEnum.LEVEL_ARB,
+  levelBnb: ProtocolEnum.LEVEL_BNB,
+  synthetixOp: ProtocolEnum.KWENTA,
+}

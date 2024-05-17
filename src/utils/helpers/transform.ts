@@ -4,6 +4,7 @@ import { ApiListResponse, ApiMeta } from 'apis/api'
 import { CopyWalletData } from 'entities/copyWallet'
 import { LINKS, SUPPORTED_LOCALES } from 'utils/config/constants'
 import {
+  ChainStatsEnum,
   CopyPositionCloseTypeEnum,
   CopyTradePlatformEnum,
   OrderTypeEnum,
@@ -20,6 +21,7 @@ import {
   SLTP_TYPE_TRANS,
 } from 'utils/config/translations'
 
+import { ARBITRUM_MAINNET, BNB_MAINNET, CHAINS, OPTIMISM_MAINNET, POLYGON_MAINNET } from '../web3/chains'
 import { addressShorten, formatNumber, shortenText } from './format'
 
 // dayjs.extend(duration)
@@ -313,5 +315,40 @@ export const normalizePriceData = (symbol: string, value?: number) => {
       return value * 1000
     default:
       return value
+  }
+}
+
+export const parseChainFromNetwork = (network: string) => {
+  switch (network) {
+    case ChainStatsEnum.ABITRUM:
+      return {
+        chainId: ARBITRUM_MAINNET,
+        label: CHAINS[ARBITRUM_MAINNET].label,
+        icon: CHAINS[ARBITRUM_MAINNET].icon,
+      }
+    case ChainStatsEnum.OPTIMISM:
+      return {
+        chainId: OPTIMISM_MAINNET,
+        label: CHAINS[OPTIMISM_MAINNET].label,
+        icon: CHAINS[OPTIMISM_MAINNET].icon,
+      }
+    case ChainStatsEnum.POLYGON:
+      return {
+        chainId: POLYGON_MAINNET,
+        label: CHAINS[POLYGON_MAINNET].label,
+        icon: CHAINS[POLYGON_MAINNET].icon,
+      }
+    case ChainStatsEnum.BNB_CHAIN:
+      return {
+        chainId: BNB_MAINNET,
+        label: CHAINS[BNB_MAINNET].label,
+        icon: CHAINS[BNB_MAINNET].icon,
+      }
+    default:
+      return {
+        chainId: ARBITRUM_MAINNET,
+        label: CHAINS[ARBITRUM_MAINNET].label,
+        icon: CHAINS[ARBITRUM_MAINNET].icon,
+      }
   }
 }

@@ -232,6 +232,8 @@ export enum ChangeFieldEnum {
 }
 
 export enum ChainStatsEnum {
-  ARB = 'arb',
-  OP = 'op',
+  ABITRUM = 'arb',
+  OPTIMISM = 'op',
+  POLYGON = 'poly',
+  BNB_CHAIN = 'bnb',
 }
