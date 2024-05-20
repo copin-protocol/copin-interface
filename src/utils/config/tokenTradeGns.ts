@@ -146,6 +146,17 @@ const GNS_PAIRS = {
   'GNS-218': 'RON',
   'GNS-219': 'ENA',
   'GNS-220': 'W',
+  'GNS-221': 'ZEUS',
+  'GNS-222': 'TNSR',
+  'GNS-223': 'TAO',
+  'GNS-224': 'OMNI',
+  'GNS-225': 'PRCL',
+  'GNS-226': 'MERL',
+  'GNS-227': 'SAFE',
+  'GNS-228': 'SAGA',
+  'GNS-229': 'LL',
+  'GNS-230': 'MSN',
+  'GNS-231': 'REZ',
 }
 
 type TokenValues = Record<
