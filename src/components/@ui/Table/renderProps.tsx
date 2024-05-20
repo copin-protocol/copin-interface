@@ -8,6 +8,7 @@ import { CopyPositionData } from 'entities/copyTrade'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
+import CopyButton from 'theme/Buttons/CopyButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
@@ -234,7 +235,7 @@ function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponen
   })
 }
 
-export function renderTrader(address: string, protocol: ProtocolEnum) {
+export function renderTrader(address: string, protocol: ProtocolEnum, hasCopy?: boolean) {
   return (
     <Link to={generateTraderMultiExchangeRoute({ protocol, address })} onClick={(e) => e.stopPropagation()}>
       <Flex sx={{ gap: 2 }} alignItems="center">
@@ -242,6 +243,16 @@ export function renderTrader(address: string, protocol: ProtocolEnum) {
         <Type.Caption color="neutral1" sx={{ ':hover': { textDecoration: 'underline' } }}>
           {addressShorten(address, 3, 5)}
         </Type.Caption>
+        {hasCopy && (
+          <CopyButton
+            type="button"
+            variant="ghost"
+            value={address}
+            size="sm"
+            sx={{ color: 'neutral3', p: 0 }}
+            iconSize={14}
+          ></CopyButton>
+        )}
       </Flex>
     </Link>
   )

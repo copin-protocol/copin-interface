@@ -28,6 +28,8 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     enableTakeProfit,
     takeProfitType,
     takeProfitAmount,
+    skipLowCollateral,
+    lowCollateral,
   } = copyTradeData
   if (account) result.account = account
   if (title) result.title = title
@@ -55,6 +57,10 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   if (!!skipLowLeverage) {
     result.skipLowLeverage = skipLowLeverage
     result.lowLeverage = lowLeverage
+  }
+  if (!!skipLowCollateral) {
+    result.skipLowCollateral = skipLowCollateral
+    result.lowCollateral = lowCollateral
   }
   result.exchange = exchange
   result.copyWalletId = copyWalletId
@@ -91,6 +97,8 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
         : null,
     skipLowLeverage: formData.skipLowLeverage,
     lowLeverage: formData.lowLeverage,
+    skipLowCollateral: formData.skipLowCollateral,
+    lowCollateral: formData.lowCollateral,
     protocol: formData.protocol,
     exchange: formData.exchange,
     copyWalletId: formData.copyWalletId,

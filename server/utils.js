@@ -74,6 +74,10 @@ function generateProtocolName(protocol) {
       return 'GMX'
     case 'GMX_V2':
       return 'GMX (V2)'
+    case 'GNS':
+      return 'gTrade (ARB)'
+    case 'GNS_POLY':
+      return 'gTrade (MATIC)'
     case 'KWENTA':
       return 'Kwenta'
     case 'POLYNOMIAL':

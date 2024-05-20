@@ -117,6 +117,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const excludingTokenAddresses = watch('excludingTokenAddresses')
   const hasExclude = watch('hasExclude')
 
+  const skipLowCollateral = watch('skipLowCollateral')
+  const lowCollateral = watch('lowCollateral')
+
   const [tradedPairs, setTradedPairs] = useState<string[]>([])
   const pairs =
     protocol &&
@@ -230,7 +233,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
       {account && protocol && (
         <Box px={[12, 24]}>
           <Flex mb={1} sx={{ alignItems: 'center', gap: 2 }}>
-            {renderTrader(account, protocol)}
+            {renderTrader(account, protocol, true)}
             <Type.Caption>-</Type.Caption>
             <Flex sx={{ alignItems: 'center', gap: 2 }}>
               <ProtocolLogo protocol={protocol} size={24} />
@@ -623,7 +626,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
         />
         <Divider />
         <Accordion
-          defaultOpen={(isEdit || isClone) && (!!maxMarginPerPosition || !!skipLowLeverage)}
+          defaultOpen={(isEdit || isClone) && (!!maxMarginPerPosition || !!skipLowLeverage || !!skipLowCollateral)}
           header={
             <Type.BodyBold>
               <Trans>Advance Settings</Trans>
@@ -690,6 +693,28 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                 </Box>
                 <Type.Caption mt={1} color="neutral2">
                   <Trans>You will not copy the position has opened with leverage lower than</Trans> {lowLeverage}x.
+                </Type.Caption>
+              </Box>
+              <Box mt={24}>
+                <SwitchInputField
+                  switchLabel="Skip Lower Collateral Position"
+                  // labelColor="orange1"
+                  {...register(fieldName.skipLowCollateral)}
+                  error={errors.skipLowCollateral?.message}
+                />
+                <Box mt={2} sx={{ display: skipLowCollateral ? 'block' : 'none' }}>
+                  <NumberInputField
+                    block
+                    required
+                    label="Low Collateral"
+                    name={fieldName.lowCollateral}
+                    control={control}
+                    error={errors.lowCollateral?.message}
+                    suffix={<InputSuffix>$</InputSuffix>}
+                  />
+                </Box>
+                <Type.Caption mt={1} color="neutral2">
+                  <Trans>You will not copy the position has opened with collateral lower than</Trans> ${lowCollateral}.
                 </Type.Caption>
               </Box>
             </Box>

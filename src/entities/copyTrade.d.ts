@@ -31,6 +31,8 @@ export interface RequestCopyTradeData {
   lookBackOrders?: number | null
   skipLowLeverage?: boolean
   copyAll?: boolean
+  skipLowCollateral?: boolean
+  lowCollateral?: number
   // privateKey?: string
   // bingXApiKey?: string
   // bingXSecretKey?: string
@@ -70,6 +72,8 @@ export interface CopyTradeData {
   exchange: CopyTradePlatformEnum
   copyWalletId: string
   copyAll?: boolean
+  skipLowCollateral?: boolean
+  lowCollateral?: number
   // bingXBalance?: number
   // bingXAvailableMargin?: number
   // displayPrivateKey: string

@@ -179,10 +179,10 @@ export const ELEMENT_CLASSNAMES = {
 
 // TODO: Check when add new protocol
 export const SERVICE_KEYS = {
-  [ProtocolEnum.GMX_V2]: 'GMX_V2_COPY_TRADE',
+  [ProtocolEnum.GMX_V2]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.GMX]: 'GMX_COPY_TRADE',
-  [ProtocolEnum.KWENTA]: 'SYNTHETIX_COPY_TRADE',
-  [ProtocolEnum.POLYNOMIAL]: 'SYNTHETIX_COPY_TRADE',
+  [ProtocolEnum.KWENTA]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.POLYNOMIAL]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.LEVEL_ARB]: '',
   [ProtocolEnum.LEVEL_BNB]: '',
   [ProtocolEnum.GNS]: 'COPY_TRADE_MAIN_STREAM',
@@ -194,10 +194,10 @@ export const SERVICE_KEYS = {
 }
 
 export const INTERNAL_SERVICE_KEYS = {
-  [ProtocolEnum.GMX_V2]: 'GMX_V2_COPY_TRADE',
+  [ProtocolEnum.GMX_V2]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.GMX]: 'GMX_COPY_TRADE',
-  [ProtocolEnum.KWENTA]: 'SYNTHETIX_COPY_TRADE_BITGET',
-  [ProtocolEnum.POLYNOMIAL]: 'SYNTHETIX_COPY_TRADE_BITGET',
+  [ProtocolEnum.KWENTA]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.POLYNOMIAL]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.LEVEL_BNB]: '',
   [ProtocolEnum.LEVEL_ARB]: '',
   [ProtocolEnum.GNS]: 'COPY_TRADE_MAIN_STREAM',

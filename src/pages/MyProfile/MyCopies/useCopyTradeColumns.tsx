@@ -124,6 +124,7 @@ export default function useCopyTradeColumns({
         isRef: item.isRef,
         plan: item.plan,
         hasCopyTradeVolumeIcon: isRunning,
+        hasCopyAddress: true,
       })
     },
     [isRunningFn]

@@ -72,6 +72,7 @@ export function renderTrader(
     isLink = true,
     size = 24,
     dividerColor = 'neutral4',
+    hasCopyAddress = false,
     hasAddressTooltip = false,
     hasCopyCountWarningIcon = false,
     hasCopyVolumeWarningIcon = false,
@@ -85,6 +86,7 @@ export function renderTrader(
     isLink?: boolean
     size?: number
     dividerColor?: string
+    hasCopyAddress?: boolean
     hasAddressTooltip?: boolean
     hasCopyCountWarningIcon?: boolean
     hasCopyVolumeWarningIcon?: boolean
@@ -123,14 +125,16 @@ export function renderTrader(
         >
           {addressShorten(address, 3, 5)}
         </Type.Caption>
-        <CopyButton
-          type="button"
-          variant="ghost"
-          value={address}
-          size="sm"
-          sx={{ color: 'neutral3', p: 0 }}
-          iconSize={14}
-        ></CopyButton>
+        {hasCopyAddress && (
+          <CopyButton
+            type="button"
+            variant="ghost"
+            value={address}
+            size="sm"
+            sx={{ color: 'neutral3', p: 0 }}
+            iconSize={14}
+          ></CopyButton>
+        )}
         {protocol && (
           <>
             <Type.Caption color={dividerColor}>|</Type.Caption>
