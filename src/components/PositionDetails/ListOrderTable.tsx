@@ -187,7 +187,7 @@ export default function ListOrderTable({
         style: { minWidth: '85px', textAlign: 'right', pr: 3 },
         render: (item) => (
           <Type.Caption color="neutral1" width="100%" textAlign="right">
-            {formatNumber(item.feeNumber, 0)}
+            {formatNumber(item.feeNumber, 2, 2)}
           </Type.Caption>
         ),
       },

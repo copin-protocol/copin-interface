@@ -146,6 +146,17 @@ const GNS_POLY_PAIRS = {
   'GNS_POLY-218': 'RON',
   'GNS_POLY-219': 'ENA',
   'GNS_POLY-220': 'W',
+  'GNS_POLY-221': 'ZEUS',
+  'GNS_POLY-222': 'TNSR',
+  'GNS_POLY-223': 'TAO',
+  'GNS_POLY-224': 'OMNI',
+  'GNS_POLY-225': 'PRCL',
+  'GNS_POLY-226': 'MERL',
+  'GNS_POLY-227': 'SAFE',
+  'GNS_POLY-228': 'SAGA',
+  'GNS_POLY-229': 'LL',
+  'GNS_POLY-230': 'MSN',
+  'GNS_POLY-231': 'REZ',
 }
 
 type TokenValues = Record<
