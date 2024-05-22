@@ -1,4 +1,3 @@
-import { useResponsive } from 'ahooks'
 import { memo } from 'react'
 
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
@@ -9,11 +8,9 @@ import { Box, Flex, Type } from 'theme/base'
 import { rankingFieldOptions } from 'utils/config/options'
 
 import CustomizeRankingColumns from './CustomizeRankingColumns'
-import ExpandTraderRankingButton from './ExpandTraderRankingButton'
 import ScoreChart, { ScoreChartData } from './ScoreChart'
 
-export default memo(TraderRanking)
-function TraderRanking({
+const TraderRanking = memo(function TraderRankingMemo({
   data,
   timeOption,
   onChangeTime,
@@ -22,7 +19,6 @@ function TraderRanking({
   timeOption: TimeFilterProps
   onChangeTime: (option: TimeFilterProps) => void
 }) {
-  const { sm } = useResponsive()
   const { customizedRanking } = useRankingCustomizeStore()
 
   const avgScore = !data
@@ -98,4 +94,6 @@ function TraderRanking({
       </Box> */}
     </Flex>
   )
-}
+})
+
+export default TraderRanking

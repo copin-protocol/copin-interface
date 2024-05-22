@@ -194,6 +194,17 @@ export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
       return LINKS.tradeBloom
     case ProtocolEnum.APOLLOX_BNB:
       return LINKS.tradeApolloX
+    case ProtocolEnum.AVANTIS_BASE:
+      return LINKS.tradeAvantis
+    case ProtocolEnum.TIGRIS_ARB:
+      return LINKS.tradeTigris
+    case ProtocolEnum.LOGX_BLAST:
+    case ProtocolEnum.LOGX_MODE:
+      return LINKS.tradeLogX
+    case ProtocolEnum.MYX_ARB:
+      return LINKS.tradeMyx
+    case ProtocolEnum.PINGU_ARB:
+      return LINKS.tradePingu
     default:
       return LINKS.tradeGMX
   }

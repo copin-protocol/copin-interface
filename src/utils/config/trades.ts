@@ -4,9 +4,11 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 import {
   ARBITRUM_MAINNET,
+  BASE_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
   CHAINS,
+  MODE_MAINNET,
   OPTIMISM_GOERLI,
   OPTIMISM_MAINNET,
   OPTIMISM_SEPOLIA,
@@ -15,6 +17,7 @@ import {
 import { rpcProvider } from 'utils/web3/providers'
 
 import { TOKEN_COLLATERAL_APOLLOX_BNB, TOKEN_TRADE_APOLLOX_BNB } from './tokenTradeApolloX'
+import { TOKEN_TRADE_AVANTIS_BASE } from './tokenTradeAvantis'
 import { TOKEN_TRADE_BLOOM_BLAST } from './tokenTradeBloom'
 import { TOKEN_TRADE_EQUATION_ARB } from './tokenTradeEquation'
 import { TOKEN_TRADE_GMX } from './tokenTradeGmx'
@@ -22,8 +25,12 @@ import { TOKEN_TRADE_GMX_V2 } from './tokenTradeGmxV2'
 import { TOKEN_TRADE_GNS } from './tokenTradeGns'
 import { TOKEN_TRADE_GNS_POLY } from './tokenTradeGnsPoly'
 import { TOKEN_TRADE_LEVEL_ARB, TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
+import { TOKEN_TRADE_LOGX_BLAST, TOKEN_TRADE_LOGX_MODE } from './tokenTradeLogX'
 import { TOKEN_COLLATERAL_MUX_ARB, TOKEN_TRADE_MUX_ARB } from './tokenTradeMux'
+import { TOKEN_TRADE_MYX_ARB } from './tokenTradeMyx'
+import { TOKEN_TRADE_PINGU_ARB } from './tokenTradePingu'
 import { TOKEN_TRADE_SYNTHETIX } from './tokenTradeSynthetix'
+import { TOKEN_TRADE_TIGRIS_ARB } from './tokenTradeTigris'
 
 type ProtocolProvider = { [key: string]: { chainId: number; provider: JsonRpcProvider; explorerUrl: string } }
 export const PROTOCOL_PROVIDER: ProtocolProvider = {
@@ -87,6 +94,36 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     provider: rpcProvider(BNB_MAINNET),
     explorerUrl: CHAINS[BNB_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.AVANTIS_BASE]: {
+    chainId: BASE_MAINNET,
+    provider: rpcProvider(BASE_MAINNET),
+    explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.TIGRIS_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    provider: rpcProvider(ARBITRUM_MAINNET),
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.LOGX_BLAST]: {
+    chainId: BLAST_MAINNET,
+    provider: rpcProvider(BLAST_MAINNET),
+    explorerUrl: CHAINS[BLAST_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.LOGX_MODE]: {
+    chainId: MODE_MAINNET,
+    provider: rpcProvider(MODE_MAINNET),
+    explorerUrl: CHAINS[MODE_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.MYX_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    provider: rpcProvider(ARBITRUM_MAINNET),
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.PINGU_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    provider: rpcProvider(ARBITRUM_MAINNET),
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
 }
 
 export interface TokenTrade {
@@ -127,6 +164,12 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.EQUATION_ARB]: TOKEN_TRADE_EQUATION_ARB,
   [ProtocolEnum.BLOOM_BLAST]: TOKEN_TRADE_BLOOM_BLAST,
   [ProtocolEnum.APOLLOX_BNB]: TOKEN_TRADE_APOLLOX_BNB,
+  [ProtocolEnum.AVANTIS_BASE]: TOKEN_TRADE_AVANTIS_BASE,
+  [ProtocolEnum.TIGRIS_ARB]: TOKEN_TRADE_TIGRIS_ARB,
+  [ProtocolEnum.LOGX_BLAST]: TOKEN_TRADE_LOGX_BLAST,
+  [ProtocolEnum.LOGX_MODE]: TOKEN_TRADE_LOGX_MODE,
+  [ProtocolEnum.MYX_ARB]: TOKEN_TRADE_MYX_ARB,
+  [ProtocolEnum.PINGU_ARB]: TOKEN_TRADE_PINGU_ARB,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -139,6 +182,88 @@ export const TOKEN_TRADE_IGNORE: TokenIgnore = {
 }
 
 export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
+  [ProtocolEnum.PINGU_ARB]: {
+    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
+      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+      name: 'USDC',
+      symbol: 'USDC',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
+  [ProtocolEnum.MYX_ARB]: {
+    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
+      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+      name: 'USDC',
+      symbol: 'USDC',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
+  [ProtocolEnum.LOGX_MODE]: {
+    '0xd988097fb8612cc24eeC14542bC03424c656005f': {
+      address: '0xd988097fb8612cc24eeC14542bC03424c656005f',
+      name: 'USDC',
+      symbol: 'USDC',
+      decimals: 18,
+      priceFeedId: '',
+    },
+    '0xf0F161fDA2712DB8b566946122a5af183995e2eD': {
+      address: '0xf0F161fDA2712DB8b566946122a5af183995e2eD',
+      name: 'USDT',
+      symbol: 'USDT',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
+  [ProtocolEnum.LOGX_BLAST]: {
+    '0x4300000000000000000000000000000000000003': {
+      address: '0x4300000000000000000000000000000000000003',
+      name: 'USDB',
+      symbol: 'USDB',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
+  [ProtocolEnum.TIGRIS_ARB]: {
+    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1': {
+      address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+      name: 'ETH',
+      symbol: 'ETH',
+      decimals: 18,
+      priceFeedId: '',
+    },
+    '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9': {
+      address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+      name: 'USDT',
+      symbol: 'USDT',
+      decimals: 18,
+      priceFeedId: '',
+    },
+    '0x7E491F53bF807f836E2dd6C4A4FBd193e1913EFd': {
+      address: '0x7E491F53bF807f836E2dd6C4A4FBd193e1913EFd',
+      name: 'tigUSD',
+      symbol: 'tigUSD',
+      decimals: 18,
+      priceFeedId: '',
+    },
+    '0x763E061856b3e74a6C768a859DC2543A56D299d5': {
+      address: '0x763E061856b3e74a6C768a859DC2543A56D299d5',
+      name: 'tigETH',
+      symbol: 'tigETH',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
+  [ProtocolEnum.AVANTIS_BASE]: {
+    '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
+      address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+      name: 'USDC',
+      symbol: 'USDC',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
   [ProtocolEnum.APOLLOX_BNB]: {
     ...TOKEN_COLLATERAL_APOLLOX_BNB,
   },
@@ -266,6 +391,33 @@ export const TOKEN_ADDRESSES = {
     USDC: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
     BUSD: '0x55d398326f99059fF775485246999027B3197955',
     LUSD: '0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5',
+  },
+  [ProtocolEnum.AVANTIS_BASE]: {
+    ETH: '0x4200000000000000000000000000000000000006',
+    USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+  },
+  [ProtocolEnum.TIGRIS_ARB]: {
+    tigUSD: '0x7E491F53bF807f836E2dd6C4A4FBd193e1913EFd',
+    tigETH: '0x763E061856b3e74a6C768a859DC2543A56D299d5',
+    USDT: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+  },
+  [ProtocolEnum.LOGX_BLAST]: {
+    ETH: '0x4300000000000000000000000000000000000004',
+    USDB: '0x4300000000000000000000000000000000000003',
+  },
+  [ProtocolEnum.LOGX_MODE]: {
+    ETH: '0x4200000000000000000000000000000000000006',
+    USDC: '0xd988097fb8612cc24eeC14542bC03424c656005f',
+    USDT: '0xf0F161fDA2712DB8b566946122a5af183995e2eD',
+  },
+  [ProtocolEnum.MYX_ARB]: {
+    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+  },
+  [ProtocolEnum.PINGU_ARB]: {
+    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
   },
 }
 

@@ -1,6 +1,6 @@
 import { CirclesThreePlus, UniteSquare } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { useEffect, useReducer, useRef } from 'react'
+import { useCallback, useEffect, useReducer, useRef } from 'react'
 import { useMutation } from 'react-query'
 
 import { requestTestMultiOrderApi } from 'apis/backTestApis'
@@ -8,7 +8,7 @@ import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TradeProtocolAction from 'components/@ui/TradeProtocol'
 import SingleBackTestModal from 'components/BacktestModal/SingleBacktestModal'
 import { initBacktestState, initialState, reducer } from 'components/BacktestModal/SingleBacktestModal/config'
-import { parseRequestData } from 'components/BacktestModal/helper'
+import { RESET_BACKTEST_PARAMS, parseRequestData } from 'components/BacktestModal/helper'
 import CopyTraderButton from 'components/CopyTraderButton'
 import { useClickLoginButton } from 'components/LoginAction'
 import { PositionData, TraderData } from 'entities/trader.d'
@@ -161,7 +161,7 @@ function BacktestButton({ account, protocol }: { account: string; protocol: Prot
       dispatch({ type: 'setStatus', payload: 'tested' })
       if (isForceOpenModal) {
         dispatch({ type: 'toggleFocusBacktest', payload: true })
-        setSearchParams({ [URL_PARAM_KEYS.OPEN_BACKTEST_MODAL]: null })
+        setSearchParams({ [URL_PARAM_KEYS.OPEN_BACKTEST_MODAL]: null, ...RESET_BACKTEST_PARAMS })
       }
     },
   })
@@ -189,27 +189,26 @@ function BacktestButton({ account, protocol }: { account: string; protocol: Prot
     }
     dispatch({ type: 'toggleFocusBacktest' })
   }
-  const handleDismissBackTestModal = () => {
+  const handleDismissBackTestModal = useCallback(() => {
     dispatch({ type: 'toggleFocusBacktest' })
-  }
+  }, [])
   const currentBacktestId = backtestState.currentInstanceId
   const currentBacktestInstance = currentBacktestId && backtestState.instancesMapping[currentBacktestId]
   const hadBacktest =
     !!Object.values(requestData).length || (!!currentBacktestInstance && !!currentBacktestInstance.result)
+
   return (
     <>
       <BackTestAction onClick={handleOpenBackTestModal} hadBacktest={hadBacktest} />
-      {backtestState.isFocusBacktest && (
-        <SingleBackTestModal
-          isForceOpen={isForceOpenModal}
-          account={account}
-          protocol={protocol}
-          isOpen={backtestState.isFocusBacktest}
-          onDismiss={handleDismissBackTestModal}
-          state={backtestState}
-          dispatch={dispatch}
-        />
-      )}
+      <SingleBackTestModal
+        isForceOpen={isForceOpenModal}
+        account={account}
+        protocol={protocol}
+        isOpen={backtestState.isFocusBacktest}
+        onDismiss={handleDismissBackTestModal}
+        state={backtestState}
+        dispatch={dispatch}
+      />
     </>
   )
 }

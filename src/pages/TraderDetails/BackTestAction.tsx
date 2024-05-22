@@ -1,18 +1,12 @@
 import { ArrowElbowUpLeft } from '@phosphor-icons/react'
-import React from 'react'
 
-import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
-// import { URL_PARAM_KEYS } from 'utils/config/keys'
-
 const BackTestAction = ({ onClick, hadBacktest }: { onClick: () => void; hadBacktest: boolean }) => {
   const { myProfile } = useMyProfile()
-  const { searchParams } = useSearchParams()
-  // const hadBacktest = searchParams?.[URL_PARAM_KEYS.BACKTEST_DATA]
 
   const logEventBacktest = (action: string) => {
     logEvent({
@@ -35,7 +29,6 @@ const BackTestAction = ({ onClick, hadBacktest }: { onClick: () => void; hadBack
         )
       }}
       sx={{
-        // p: hadBacktest ? 0 : undefined,
         px: 3,
         borderRadius: 0,
         height: '100%',

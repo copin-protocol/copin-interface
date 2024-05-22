@@ -72,7 +72,11 @@ export default function PositionListCard({
             <Flex sx={{ alignItems: 'center', gap: '1ch', flexWrap: 'wrap' }}>
               <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                 {isOpening ? (
-                  <LocalTimeText date={position.openBlockTime} />
+                  hasAccountAddress ? (
+                    <ShortDuration durationInSecond={position.durationInSecond} />
+                  ) : (
+                    <LocalTimeText date={position.openBlockTime} />
+                  )
                 ) : (
                   <LocalTimeText date={position.closeBlockTime} />
                 )}
@@ -85,8 +89,12 @@ export default function PositionListCard({
               )}
               <Type.Caption color="neutral3">-</Type.Caption>
               <Box flex="1">{renderEntry(position)}</Box>
-              <ShortDuration durationInSecond={position.durationInSecond} />
-              <IconBox icon={<CaretRight size={16} />} color="neutral3" />
+              {!hasAccountAddress && (
+                <>
+                  <ShortDuration durationInSecond={position.durationInSecond} />{' '}
+                  <IconBox icon={<CaretRight size={16} />} color="neutral3" />
+                </>
+              )}
             </Flex>
             <Flex mt={3} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
               <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
@@ -124,7 +132,7 @@ export default function PositionListCard({
                   )}
                 </Flex>
               </Flex>
-              {/* {hasAccountAddress && <IconBox icon={<CaretRight size={16} />} color="neutral3" />} */}
+              {isOpening && hasAccountAddress && <IconBox icon={<CaretRight size={16} />} color="neutral3" />}
             </Flex>
           </Box>
         )

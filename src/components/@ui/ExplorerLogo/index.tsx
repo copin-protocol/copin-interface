@@ -20,6 +20,9 @@ const ExplorerLogo = ({
     case ProtocolEnum.LEVEL_ARB:
     case ProtocolEnum.MUX_ARB:
     case ProtocolEnum.EQUATION_ARB:
+    case ProtocolEnum.TIGRIS_ARB:
+    case ProtocolEnum.MYX_ARB:
+    case ProtocolEnum.PINGU_ARB:
       icon = 'ARBITRUM'
       break
     case ProtocolEnum.KWENTA:
@@ -33,7 +36,14 @@ const ExplorerLogo = ({
       icon = 'POLYGON'
       break
     case ProtocolEnum.BLOOM_BLAST:
+    case ProtocolEnum.LOGX_BLAST:
       icon = 'BLAST'
+      break
+    case ProtocolEnum.AVANTIS_BASE:
+      icon = 'BASE'
+      break
+    case ProtocolEnum.LOGX_MODE:
+      icon = 'MODE'
       break
     default:
       icon = 'OPTIMISM'

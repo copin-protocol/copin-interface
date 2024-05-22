@@ -44,6 +44,8 @@ export interface MyCopiesProps {
   copyWallet: CopyWalletData | null
   copyStatus: CopyTradeStatusEnum[]
   selectedProtocol: ProtocolEnum[]
+  toggleAllProtocol: (isToggledAll: boolean) => void
+  isToggleAllProtocol: boolean
 }
 
 export default function MyCopies(props: MyCopiesProps) {

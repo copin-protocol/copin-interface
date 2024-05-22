@@ -167,7 +167,7 @@ const Checkbox = forwardRef(
         </div>
         {children
           ? cloneElement(
-              <Box as="span" sx={{ cursor: 'pointer' }}>
+              <Box as="span" sx={{ cursor: 'pointer', lineHeight: 0 }}>
                 {children}
               </Box>,
               { onClick: onClickTitle }

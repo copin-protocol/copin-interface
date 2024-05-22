@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { Warning } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 import { ReactNode, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -14,7 +15,8 @@ import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { renderSLTPSetting, renderTrader } from 'pages/MyProfile/renderProps'
 import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
-import { Box, Flex, Type } from 'theme/base'
+import Tooltip from 'theme/Tooltip'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getTokenTradeSupport } from 'utils/config/trades'
@@ -222,6 +224,18 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
                   <PercentText percent={latestROI} digit={2} />
                 </Type.H5>
                 <Type.H5 color="neutral3">)</Type.H5>
+                {isOpening && (
+                  <>
+                    <IconBox
+                      icon={<Warning size={20} />}
+                      color="orange"
+                      sx={{ ml: 2 }}
+                      data-tooltip-id="tt_copy_position_pnl"
+                      data-tooltip-delay-show={260}
+                    />
+                    <Tooltip id="tt_copy_position_pnl">Unrealised PnL</Tooltip>
+                  </>
+                )}
               </Flex>
               {data && copyTradeOrders && (
                 <CopyChartProfit

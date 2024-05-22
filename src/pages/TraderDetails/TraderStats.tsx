@@ -95,8 +95,13 @@ const TYPES = {
   },
 }
 
-export default memo(AccountStats)
-function AccountStats({ data, timeOption }: { data: (TraderData | undefined)[]; timeOption: TimeFilterProps }) {
+const AccountStats = memo(function AccountStatsMemo({
+  data,
+  timeOption,
+}: {
+  data: (TraderData | undefined)[]
+  timeOption: TimeFilterProps
+}) {
   const isPremiumUser = useIsPremium()
   const {
     customizeStats,
@@ -405,7 +410,9 @@ function AccountStats({ data, timeOption }: { data: (TraderData | undefined)[]; 
       )}
     </Box>
   )
-}
+})
+
+export default AccountStats
 
 export function generateStats(
   data: TraderData,

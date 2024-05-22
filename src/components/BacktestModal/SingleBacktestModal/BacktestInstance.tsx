@@ -1,4 +1,5 @@
 import { ArrowLeft } from '@phosphor-icons/react'
+import { useMemo } from 'react'
 
 import BacktestForm from 'components/BacktestForm'
 import { getFormValuesFromRequestData } from 'components/BacktestForm/helper'
@@ -49,6 +50,9 @@ export default function BacktestInstance({
     },
     onError: onSimulateError,
   })
+  const backtestResult = useMemo(() => {
+    return instanceData.result && [instanceData.result]
+  }, [instanceData.result])
 
   return (
     <Box sx={{ px: 0, borderRadius: 'sm', height: '100%', bg: 'neutral5' }}>
@@ -99,9 +103,9 @@ export default function BacktestInstance({
           </Box>
         </Box>
       )}
-      {instanceData.status === 'tested' && instanceData.settings && instanceData.result && (
+      {instanceData.status === 'tested' && instanceData.settings && backtestResult && (
         <Box height="calc(100% - 40px)">
-          <SingleBacktestResult protocol={protocol} settings={instanceData.settings} results={[instanceData.result]} />
+          <SingleBacktestResult protocol={protocol} settings={instanceData.settings} results={backtestResult} />
         </Box>
       )}
     </Box>

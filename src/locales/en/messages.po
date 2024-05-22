@@ -457,6 +457,10 @@ msgstr "Bitget Secret Key"
 msgid "Bitget Wallet"
 msgstr "Bitget Wallet"
 
+#: src/pages/@layouts/Footer/index.tsx
+msgid "Blog"
+msgstr "Blog"
+
 #: src/components/MockSmartWallet/BridgeAndSwap/BridgeETH.tsx
 #~ msgid "Bridge ETH to OP (Goerli)"
 #~ msgstr "Bridge ETH to OP (Goerli)"
@@ -1828,6 +1832,10 @@ msgstr "No History Found"
 msgid "No Position Found"
 msgstr "No Position Found"
 
+#: src/components/SwitchProtocols/SearchProtocols.tsx
+msgid "No Protocol Found"
+msgstr "No Protocol Found"
+
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 msgid "No Trader Found"
 msgstr "No Trader Found"
@@ -1857,7 +1865,7 @@ msgstr "No opening positions"
 #~ msgid "No provider was found"
 #~ msgstr "No provider was found"
 
-#: src/components/BacktestResult/SingleBacktestResult.tsx
+#: src/components/BacktestResult/BacktestSummaryAndPositions.tsx
 msgid "No trade history from {0} to {1}"
 msgstr "No trade history from {0} to {1}"
 
@@ -2365,6 +2373,8 @@ msgid "Select Other Trader"
 msgstr "Select Other Trader"
 
 #: src/components/SelectMarketWithSearch/index.tsx
+#: src/pages/MyProfile/MyCopies/FilterSection.tsx
+#: src/pages/MyProfile/MyCopies/FilterSection.tsx
 #: src/pages/MyProfile/SelectCopyTradesDropdown.tsx
 #: src/pages/MyProfile/SelectTradersDropdown.tsx
 #: src/pages/MyProfile/SelectWalletsDropdown.tsx
@@ -2477,7 +2487,6 @@ msgid "Something went wrong, please try later."
 msgstr "Something went wrong, please try later."
 
 #: src/pages/Home/Traders.tsx
-#: src/pages/MyProfile/MyCopies/FilterSection.tsx
 msgid "Source"
 msgstr "Source"
 
@@ -2504,6 +2513,11 @@ msgstr "Source Size Token"
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Source Trader"
 msgstr "Source Trader"
+
+#: src/pages/MyProfile/MyCopies/FilterSection.tsx
+#: src/pages/MyProfile/MyCopies/FilterSection.tsx
+msgid "Source:"
+msgstr "Source:"
 
 #: src/components/TraderCopyCountWarningIcon/index.tsx
 msgid "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
@@ -3398,6 +3412,10 @@ msgstr "You need to upgrade to a premium account to use this feature"
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 #~ msgid "You will extend your plan for an additional"
 #~ msgstr "You will extend your plan for an additional"
+
+#: src/components/CopyTradeForm/index.tsx
+msgid "You will not copy the position has opened with collateral lower than"
+msgstr "You will not copy the position has opened with collateral lower than"
 
 #: src/components/CopyTradeForm/index.tsx
 msgid "You will not copy the position has opened with leverage lower than"

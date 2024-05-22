@@ -26,8 +26,7 @@ export interface PositionSortPros {
   sortBy: keyof PositionData
   sortType: SortTypeEnum
 }
-export default memo(TraderChartPositions)
-function TraderChartPositions({
+const TraderChartPositions = memo(function TraderChartPositionsMemo({
   account,
   protocol,
   isExpanded,
@@ -205,4 +204,6 @@ function TraderChartPositions({
       )}
     </Flex>
   )
-}
+})
+
+export default TraderChartPositions

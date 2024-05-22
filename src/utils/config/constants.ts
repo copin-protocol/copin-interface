@@ -6,6 +6,7 @@ export const SUPPORTED_LOCALES = ['en']
 export const DEFAULT_LOCALE = 'en'
 
 export const NETWORK = import.meta.env.VITE_NETWORK_ENV
+export const BUILD_MODE = import.meta.env.VITE_BUILD_MODE
 export const APP_URL = import.meta.env.VITE_URL
 
 export const TELEGRAM_BOT_ALERT = import.meta.env.VITE_TELEGRAM_BOT_ALERT
@@ -24,6 +25,11 @@ export const LINKS = {
   tradeLevel: 'https://app.level.finance/',
   tradeBloom: 'https://bloom.trading/trade',
   tradeApolloX: 'https://apollox.finance',
+  tradeAvantis: 'https://avantisfi.com/trade',
+  tradeTigris: 'https://app.tigris.trade',
+  tradeLogX: 'https://logx.trade',
+  tradeMyx: 'https://app.myx.finance',
+  tradePingu: 'https://pingu.exchange/trade/ETH-USD',
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
@@ -118,17 +124,18 @@ export const EXCHANGE_COLOR: { [key: string]: string } = {
 
 export const DEFAULT_PROTOCOL = ProtocolEnum.KWENTA
 
-export const RELEASED_PROTOCOLS = [
-  ProtocolEnum.GMX,
-  ProtocolEnum.KWENTA,
-  ProtocolEnum.POLYNOMIAL,
-  ProtocolEnum.GMX_V2,
-  ProtocolEnum.GNS,
-  ProtocolEnum.GNS_POLY,
-  ProtocolEnum.LEVEL_BNB,
-  ProtocolEnum.LEVEL_ARB,
-  // ProtocolEnum.MUX_ARB,
-  // ProtocolEnum.EQUATION_ARB,
-  // ProtocolEnum.BLOOM_BLAST,
-  // ProtocolEnum.APOLLOX_BNB,
-]
+// TODO: Check when add new protocol
+export const RELEASED_PROTOCOLS =
+  BUILD_MODE === 'production'
+    ? [
+        ProtocolEnum.GMX,
+        ProtocolEnum.KWENTA,
+        ProtocolEnum.POLYNOMIAL,
+        ProtocolEnum.GMX_V2,
+        ProtocolEnum.GNS,
+        ProtocolEnum.GNS_POLY,
+        ProtocolEnum.LEVEL_BNB,
+        ProtocolEnum.LEVEL_ARB,
+        ProtocolEnum.MUX_ARB,
+      ]
+    : Object.values(ProtocolEnum)

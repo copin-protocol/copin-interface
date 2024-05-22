@@ -5,7 +5,7 @@ import { parsedQueryString } from 'hooks/router/useParsedQueryString'
 import { TimeFilterByEnum } from 'utils/config/enums'
 import { createUrlWithParams } from 'utils/helpers/generateRoute'
 
-function RemoveTimeFilter() {
+const RemoveTimeFilter = memo(function RemoveTimeFilterMemo() {
   const history = useHistory()
   const searchParams = parsedQueryString(history?.location?.search)
   if (
@@ -17,6 +17,6 @@ function RemoveTimeFilter() {
   const url = createUrlWithParams({ url: history.location.pathname, params: searchParams })
   history.replace(url)
   return null
-}
+})
 
-export default memo(RemoveTimeFilter)
+export default RemoveTimeFilter

@@ -21,8 +21,12 @@ export function getOrderData({
     if (index === 0 || (!isOpening && index === (orders?.length ?? 0) - 1)) return _o
     if (_o.sizeDeltaNumber === 0) {
       if (_o.type === OrderTypeEnum.DECREASE) {
-        _o.collateralDeltaInTokenNumber = -1 * _o.collateralDeltaInTokenNumber
-        _o.collateralDeltaNumber = -1 * _o.collateralDeltaNumber
+        if (_o.collateralDeltaInTokenNumber) {
+          _o.collateralDeltaInTokenNumber = -1 * _o.collateralDeltaInTokenNumber
+        }
+        if (_o.collateralDeltaNumber) {
+          _o.collateralDeltaNumber = -1 * _o.collateralDeltaNumber
+        }
       }
       _o.type = OrderTypeEnum.MARGIN_TRANSFERRED
     }

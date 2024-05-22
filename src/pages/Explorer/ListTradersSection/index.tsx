@@ -25,7 +25,7 @@ import { TradersContextData } from '../useTradersContext'
 import useBacktestTradersActions from './useBacktestTradersActions'
 import useQueryTraders from './useQueryTraders'
 
-function ListTradersSection({
+const ListTradersSection = memo(function ListTradersSectionMemo({
   contextValues,
   notes,
 }: {
@@ -125,9 +125,9 @@ function ListTradersSection({
       )}
     </Flex>
   )
-}
+})
 
-export default memo(ListTradersSection)
+export default ListTradersSection
 
 function TablePagination({
   data,

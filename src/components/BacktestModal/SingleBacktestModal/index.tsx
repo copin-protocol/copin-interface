@@ -1,14 +1,10 @@
-import { Dispatch, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Dispatch } from 'react'
 
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
-import useSearchParams from 'hooks/router/useSearchParams'
 import Drawer from 'theme/Modal/Drawer'
 import { Box, Flex } from 'theme/base'
-import { CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
-import { URL_PARAM_KEYS } from 'utils/config/keys'
+import { ProtocolEnum } from 'utils/config/enums'
 
-import { RESET_BACKTEST_PARAMS, stringifyRequestData } from '../helper'
 import BacktestInstance from './BacktestInstance'
 import TabHeader from './TabHeader'
 import { ActionType, State } from './config'
@@ -30,29 +26,9 @@ export default function SingleBackTestModal({
   state: State
   isForceOpen?: boolean
 }) {
-  const { setSearchParams } = useSearchParams()
   const currentInstanceData = state.instancesMapping[state.currentInstanceId ?? '']
 
-  const { data: tokensTraded } = useGetTokensTraded({ account, protocol })
-
-  useEffect(() => {
-    if (!currentInstanceData || isForceOpen) return
-    if (!!currentInstanceData.settings && !!Object.keys(currentInstanceData.settings).length) {
-      setSearchParams({
-        [URL_PARAM_KEYS.BACKTEST_DATA]: '1',
-        ...stringifyRequestData(
-          {
-            ...currentInstanceData.settings,
-            testingType: CopyTradeTypeEnum.FULL_ORDER,
-          },
-          protocol
-        ),
-      })
-    } else {
-      setSearchParams({ [URL_PARAM_KEYS.BACKTEST_DATA]: null, ...RESET_BACKTEST_PARAMS })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentInstanceData.status, state.currentInstanceId])
+  const { data: tokensTraded } = useGetTokensTraded({ account, protocol }, { enabled: isOpen })
 
   if (!currentInstanceData) return <></>
   return (
@@ -68,9 +44,6 @@ export default function SingleBackTestModal({
             dispatch({ type: 'addNewInstance' })
           }}
           onDeleteItem={(id) => {
-            if (state.instanceIds.length === 1) {
-              setSearchParams({ [URL_PARAM_KEYS.BACKTEST_DATA]: null, ...RESET_BACKTEST_PARAMS })
-            }
             dispatch({ type: 'removeInstance', payload: id })
           }}
           onMinimize={onDismiss}

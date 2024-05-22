@@ -13,8 +13,8 @@ import { Colors } from 'theme/types'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ mode?: ModalProps['mode'] }>`
-  ${({ theme, mode }) => `
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ mode?: ModalProps['mode']; overlayBG?: string }>`
+  ${({ theme, mode, overlayBG }) => `
     &[data-reach-dialog-overlay] {
       z-index: 9998;
       width: 100%;
@@ -28,7 +28,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ mode?: ModalProps['m
       display: flex;
       align-items: ${mode === 'bottom' ? 'end' : 'center'};
       justify-content: ${mode === 'bottom' ? 'center' : 'end'};
-      background-color: ${theme.colors.modalBG1};
+      background-color: ${overlayBG ?? theme.colors.modalBG1};
       // backdrop-filter: blur(5px);
     }
   `}
@@ -38,7 +38,7 @@ const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
 
 // eslint-disable-next-line
-const StyledDialogContent = styled(({ background, size, mode, mobile, ...rest }) => (
+const StyledDialogContent = styled(({ background, size, mode, mobile, contentWidth, contentHeight, ...rest }) => (
   <AnimatedDialogContent {...rest} />
 )).attrs({
   'aria-label': 'dialog',
@@ -48,10 +48,10 @@ const StyledDialogContent = styled(({ background, size, mode, mobile, ...rest })
     background: ${({ theme, background }) => (background ? (theme.colors[background] as string) : 'black')};
     position: relative;
     box-shadow: ${({ theme }) => theme.shadows[4]};
-    width: ${({ mode, size }) => (mode === 'bottom' ? '100vw' : size ?? '50vw')};
-    min-width: ${({ mode, size }) => (mode === 'bottom' ? '100vw' : size ?? '50vw')};
-    height: ${({ mode, size }) => (mode === 'bottom' ? size ?? '50vh' : '100svh')};
-    min-height: ${({ mode, size }) => (mode === 'bottom' ? size ?? '50vh' : '100svh')};
+    width: ${({ mode, size, contentWidth }) => (mode === 'bottom' ? '100vw' : contentWidth ?? size ?? '50vw')};
+    min-width: ${({ mode, size, contentWidth }) => (mode === 'bottom' ? '100vw' : contentWidth ?? size ?? '50vw')};
+    height: ${({ mode, size, contentHeight }) => (mode === 'bottom' ? contentHeight ?? size ?? '50vh' : '100svh')};
+    min-height: ${({ mode, size, contentHeight }) => (mode === 'bottom' ? contentHeight ?? size ?? '50vh' : '100svh')};
   }
 `
 const StyledDialogBody = styled.div`
@@ -75,6 +75,9 @@ export interface ModalProps {
   headSx?: SystemStyleObject & GridProps
   background?: keyof Colors | string
   dangerouslyBypassFocusLock?: boolean
+  contentWidth?: string
+  contentHeight?: string
+  overlayBG?: string
 }
 
 export default function Drawer({
@@ -90,6 +93,9 @@ export default function Drawer({
   footer,
   children,
   headSx,
+  contentWidth,
+  contentHeight,
+  overlayBG,
   dangerouslyBypassFocusLock = false,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
@@ -121,11 +127,14 @@ export default function Drawer({
               initialFocusRef={initialFocusRef}
               dangerouslyBypassFocusLock={dangerouslyBypassFocusLock}
               mode={mode}
+              overlayBG={overlayBG}
             >
               {transformTransition(
                 (props: any, item) =>
                   item && (
                     <StyledDialogContent
+                      contentWidth={contentWidth}
+                      contentHeight={contentHeight}
                       mode={mode}
                       style={props}
                       maxHeight="100svh"

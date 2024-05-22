@@ -171,10 +171,10 @@ export default function ChartProfitComponent({
       const index = tempData.findIndex((e) => e.timestamp === closeTimestamp)
       if (index < 0) {
         tempData.push({
-          open: position.averagePrice,
-          close: position.averagePrice,
-          low: position.averagePrice,
-          high: position.averagePrice,
+          open: closeOrder.priceNumber,
+          close: closeOrder.priceNumber,
+          low: closeOrder.priceNumber,
+          high: closeOrder.priceNumber,
           timestamp: closeTimestamp,
         })
       }
@@ -210,10 +210,10 @@ export default function ChartProfitComponent({
     if (!data || isOpening || ((!nextHours || nextHours < 1) && (!nextHoursParam || nextHoursParam < 1))) return []
     const chartData = data.filter((e) => e.timestamp > to)
     chartData.push({
-      open: position.averagePrice,
-      close: position.averagePrice,
-      low: position.averagePrice,
-      high: position.averagePrice,
+      open: closeOrder.priceNumber,
+      close: closeOrder.priceNumber,
+      low: closeOrder.priceNumber,
+      high: closeOrder.priceNumber,
       timestamp: dayjs(position.closeBlockTime).utc().valueOf(),
     })
 
@@ -258,10 +258,10 @@ export default function ChartProfitComponent({
       }
     } else {
       tempData.push({
-        open: position.averagePrice,
-        close: position.averagePrice,
-        low: position.averagePrice,
-        high: position.averagePrice,
+        open: closeOrder.priceNumber,
+        close: closeOrder.priceNumber,
+        low: closeOrder.priceNumber,
+        high: closeOrder.priceNumber,
         timestamp: dayjs(position.closeBlockTime).utc().valueOf(),
       })
     }

@@ -187,10 +187,16 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.LEVEL_BNB]: '',
   [ProtocolEnum.GNS]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.GNS_POLY]: 'COPY_TRADE_MAIN_STREAM',
-  [ProtocolEnum.MUX_ARB]: '',
+  [ProtocolEnum.MUX_ARB]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.EQUATION_ARB]: '',
   [ProtocolEnum.BLOOM_BLAST]: '',
   [ProtocolEnum.APOLLOX_BNB]: '',
+  [ProtocolEnum.AVANTIS_BASE]: '',
+  [ProtocolEnum.TIGRIS_ARB]: '',
+  [ProtocolEnum.LOGX_BLAST]: '',
+  [ProtocolEnum.LOGX_MODE]: '',
+  [ProtocolEnum.MYX_ARB]: '',
+  [ProtocolEnum.PINGU_ARB]: '',
 }
 
 export const INTERNAL_SERVICE_KEYS = {
@@ -202,8 +208,14 @@ export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.LEVEL_ARB]: '',
   [ProtocolEnum.GNS]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.GNS_POLY]: 'COPY_TRADE_MAIN_STREAM',
-  [ProtocolEnum.MUX_ARB]: '',
+  [ProtocolEnum.MUX_ARB]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.EQUATION_ARB]: '',
   [ProtocolEnum.BLOOM_BLAST]: '',
   [ProtocolEnum.APOLLOX_BNB]: '',
+  [ProtocolEnum.AVANTIS_BASE]: '',
+  [ProtocolEnum.TIGRIS_ARB]: '',
+  [ProtocolEnum.LOGX_BLAST]: '',
+  [ProtocolEnum.LOGX_MODE]: '',
+  [ProtocolEnum.MYX_ARB]: '',
+  [ProtocolEnum.PINGU_ARB]: '',
 }

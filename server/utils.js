@@ -68,7 +68,7 @@ function addressShorten(address, num, numsPrefix) {
 
 function generateProtocolName(protocol) {
   if (!protocol) return ''
-  //TODO: Add more protocols
+  // TODO: Check when add new protocol
   switch (protocol) {
     case 'GMX':
       return 'GMX'
@@ -86,8 +86,28 @@ function generateProtocolName(protocol) {
       return 'Level (BNB)'
     case 'LEVEL_ARB':
       return 'Level (ARB)'
-    case 'MUX':
+    case 'MUX_ARB':
       return 'MUX'
+    case 'EQUATION_ARB':
+      return 'Equation'
+    case 'BLOOM_BLAST':
+      return 'Bloom'
+    case 'APOLLOX_BNB':
+      return 'ApolloX (BNB)'
+    case 'AVANTIS_BASE':
+      return 'Avantis'
+    case 'TIGRIS_ARB':
+      return 'Tigris'
+    case 'LOGX_BLAST':
+      return 'LogX (BLAST)'
+    case 'LOGX_MODE':
+      return 'LogX (MODE)'
+    case 'MYX_ARB':
+      return 'MYX'
+    case 'PINGU_ARB':
+      return 'Pingu'
+    default:
+      return ''
   }
 }
 

@@ -12,7 +12,7 @@ import { TradersContextData } from 'pages/Explorer/useTradersContext'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
 
-function ListTraderFavorites({
+const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
   contextValues,
   notes,
 }: {
@@ -107,9 +107,9 @@ function ListTraderFavorites({
       )}
     </Flex>
   )
-}
+})
 
-export default memo(ListTraderFavorites)
+export default ListTraderFavorites
 
 function CompareTradersButton({ selectedTraders }: { selectedTraders: string[] }) {
   return (

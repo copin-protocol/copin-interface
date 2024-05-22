@@ -43,7 +43,7 @@ export default function BalanceMenu({
   return (
     <Flex
       sx={{
-        flexWrap: ['nowrap', 'nowrap', 'wrap'],
+        flexWrap: 'nowrap',
         gap: [0, 24],
         alignItems: ['start', 'start', 'center'],
         justifyContent: ['start', 'start', 'space-between'],

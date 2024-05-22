@@ -21,6 +21,7 @@ const ALLOWED_LIST = [
   ProtocolEnum.POLYNOMIAL,
   ProtocolEnum.GNS,
   ProtocolEnum.GNS_POLY,
+  ProtocolEnum.MUX_ARB,
 ]
 
 export default function CopyTraderButton({

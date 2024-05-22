@@ -458,6 +458,27 @@ export const generateProtocol = ({
       protocolTextWidth = 141
       protocolText = 'ApolloX'
       break
+    case ProtocolEnum.AVANTIS_BASE:
+      protocolTextWidth = 141
+      protocolText = 'Avantis'
+      break
+    case ProtocolEnum.TIGRIS_ARB:
+      protocolTextWidth = 117
+      protocolText = 'Tigris'
+      break
+    case ProtocolEnum.LOGX_BLAST:
+    case ProtocolEnum.LOGX_MODE:
+      protocolTextWidth = 117
+      protocolText = 'LogX'
+      break
+    case ProtocolEnum.MYX_ARB:
+      protocolTextWidth = 72
+      protocolText = 'MYX'
+      break
+    case ProtocolEnum.PINGU_ARB:
+      protocolTextWidth = 117
+      protocolText = 'Pingu'
+      break
     default:
       break
   }

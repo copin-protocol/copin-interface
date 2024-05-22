@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "vite",
-    "start:stg": "vite --mode staging",
+    "start:staging": "vite --mode staging",
     "start:prod": "vite --mode production",
     "serve": "vite preview",
     "build": "tsc && vite build",
