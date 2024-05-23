@@ -1,6 +1,20 @@
 import { PYTH_IDS_MAPPING } from './pythIds'
 
 const TOKEN_TRADE_GMX_V2 = {
+  '0x7C11F78Ce78768518D743E81Fdfa2F860C6b9A77': {
+    address: '0x7C11F78Ce78768518D743E81Fdfa2F860C6b9A77',
+    name: 'BTC',
+    symbol: 'BTC',
+    decimals: 22,
+    priceFeedId: '',
+  },
+  '0x450bb6774Dd8a756274E0ab4107953259d2ac541': {
+    address: '0x450bb6774Dd8a756274E0ab4107953259d2ac541',
+    name: 'ETH',
+    symbol: 'ETH',
+    decimals: 12,
+    priceFeedId: '',
+  },
   '0x47c031236e19d024b42f8AE6780E44A573170703': {
     address: '0x47c031236e19d024b42f8AE6780E44A573170703',
     name: 'BTC',
