@@ -479,6 +479,18 @@ export const generateProtocol = ({
       protocolTextWidth = 117
       protocolText = 'Pingu'
       break
+    case ProtocolEnum.HMX_ARB:
+      protocolTextWidth = 72
+      protocolText = 'HMX'
+      break
+    case ProtocolEnum.DEXTORO:
+      protocolTextWidth = 141
+      protocolText = 'DexToro'
+      break
+    case ProtocolEnum.VELA_ARB:
+      protocolTextWidth = 117
+      protocolText = 'Vela'
+      break
     default:
       break
   }

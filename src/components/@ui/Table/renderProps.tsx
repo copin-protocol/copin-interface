@@ -16,7 +16,7 @@ import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { getTokenTradeSupport } from 'utils/config/trades'
 import { calcClosedPrice, calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
-import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
+import { addressShorten, compactNumber, formatLeverage, formatNumber, formatPrice } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseMarketImage } from 'utils/helpers/transform'
 
@@ -76,7 +76,7 @@ export function renderSizeShorten(data: PositionData | undefined) {
     <Flex sx={{ gap: 2, alignItems: 'center' }}>
       <Type.Caption>${compactNumber(data.maxSizeNumber ?? data.size, 1)}</Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{formatNumber(data.leverage, 1, 1)}x</Type.Caption>
+      <Type.Caption>{formatLeverage(data.marginMode, data.leverage)}</Type.Caption>
     </Flex>
   )
 }
@@ -92,7 +92,7 @@ export function renderSize(data: PositionData | undefined, hasLiquidate?: boolea
         </Flex>
         <VerticalDivider />
         <Flex minWidth={50} justifyContent="center">
-          <Type.Caption textAlign="right">{formatNumber(data.leverage, 1, 1)}x</Type.Caption>
+          <Type.Caption textAlign="right">{formatLeverage(data.marginMode, data.leverage)}</Type.Caption>
         </Flex>
         <VerticalDivider />
         <Flex flex="55%" justifyContent="flex-end" sx={{ gap: 1, alignItems: 'center', height: 22 }}>
@@ -131,17 +131,17 @@ function SizeOpeningComponent({ data, prices, textProps }: SizeOpeningComponentP
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
       <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '2px' }}>
-        <Flex flex="1">
+        <Flex flex="1.15">
           <Type.Caption {..._textProps}>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
         </Flex>
         <VerticalDivider />
         <Flex minWidth={40} justifyContent="center" flexShrink={0}>
           <Type.Caption {..._textProps} textAlign="center">
-            {formatNumber(data.leverage, 1, 1)}x
+            {formatLeverage(data.marginMode, data.leverage)}
           </Type.Caption>
         </Flex>
         <VerticalDivider />
-        <Flex flex="1.3" justifyContent="flex-end" sx={{ gap: 1, alignItems: 'center', height: 22 }}>
+        <Flex flex="1.15" justifyContent="flex-end" sx={{ gap: 1, alignItems: 'center', height: 22 }}>
           <SkullIcon style={{ flexShrink: 0 }} />
           <Type.Caption
             {..._textProps}

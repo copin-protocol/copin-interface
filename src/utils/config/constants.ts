@@ -29,7 +29,9 @@ export const LINKS = {
   tradeTigris: 'https://app.tigris.trade',
   tradeLogX: 'https://logx.trade',
   tradeMyx: 'https://app.myx.finance',
-  tradePingu: 'https://pingu.exchange/trade/ETH-USD',
+  tradePingu: 'https://pingu.exchange/trade',
+  tradeHmx: 'https://hmx.org/arbitrum/trade',
+  tradeDexToro: 'https://trade.dextoro.com/market',
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
@@ -137,5 +139,6 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.LEVEL_BNB,
         ProtocolEnum.LEVEL_ARB,
         ProtocolEnum.MUX_ARB,
+        ProtocolEnum.APOLLOX_BNB,
       ]
     : Object.values(ProtocolEnum)

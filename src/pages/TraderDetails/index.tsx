@@ -19,6 +19,7 @@ import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import usePageChange from 'hooks/helpers/usePageChange'
+import { getNavProtocol, parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
@@ -49,6 +50,7 @@ export interface PositionSortPros {
 
 export default function TraderDetails() {
   const { address: _address, protocol: _protocol } = useParams<{ address: string; protocol: ProtocolEnum }>()
+  const { setNavProtocol } = useProtocolStore()
   const address = isAddress(_address)
 
   const { data: exchangeStats, isLoading } = useQuery([QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address], () =>
@@ -57,6 +59,23 @@ export default function TraderDetails() {
 
   const orderedStats = getOrderedExchangeStats(exchangeStats)
 
+  let protocol: ProtocolEnum | null = null
+  if (_protocol) {
+    protocol = _protocol.split('-')[0].toUpperCase() as ProtocolEnum
+  } else {
+    protocol = orderedStats?.[0]?.protocol
+  }
+
+  useEffect(() => {
+    if (protocol && address) {
+      setNavProtocol((prev) => {
+        const { distinction } = parseNavProtocol(prev)
+        if (distinction === address || !protocol || !address) return prev
+        return getNavProtocol({ protocol, distinction: address })
+      })
+    }
+  }, [])
+
   if (isLoading)
     return (
       <Box p={4}>
@@ -64,16 +83,7 @@ export default function TraderDetails() {
       </Box>
     )
 
-  if (!isLoading && !orderedStats?.length && !_protocol) return <NotFound message="" title="Trader have no statistic" />
-
-  let protocol = null
-  if (_protocol) {
-    protocol = _protocol.split('-')[0].toUpperCase() as ProtocolEnum
-  } else {
-    protocol = orderedStats[0].protocol
-  }
-
-  if (!protocol) return null
+  if (!isLoading && !orderedStats?.length && !protocol) return <NotFound message="" title="Trader have no statistic" />
 
   return <TraderDetailsComponent address={address} protocol={protocol} exchangeStats={exchangeStats} />
 }

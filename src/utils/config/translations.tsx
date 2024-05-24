@@ -9,6 +9,7 @@ import {
   CopyTradePlatformEnum,
   CopyTradeStatusEnum,
   DataTypeEnum,
+  MarginModeEnum,
   OrderTypeEnum,
   PositionStatusEnum,
   SLTPTypeEnum,
@@ -143,6 +144,11 @@ export const CHAIN_STATS_TRANS: ObjectTrans = {
   [ChainStatsEnum.OPTIMISM]: 'Optimism',
   [ChainStatsEnum.POLYGON]: 'Polygon',
   [ChainStatsEnum.BNB_CHAIN]: 'BNB Chain',
+}
+
+export const MARGIN_MODE_TRANS: ObjectTrans = {
+  [MarginModeEnum.CROSS]: 'Cross',
+  [MarginModeEnum.ISOLATED]: 'Isolated',
 }
 
 export const ERRORS: ObjectTrans = {

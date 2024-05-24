@@ -24,6 +24,7 @@ import { TOKEN_TRADE_GMX } from './tokenTradeGmx'
 import { TOKEN_TRADE_GMX_V2 } from './tokenTradeGmxV2'
 import { TOKEN_TRADE_GNS } from './tokenTradeGns'
 import { TOKEN_TRADE_GNS_POLY } from './tokenTradeGnsPoly'
+import { TOKEN_TRADE_HMX_ARB } from './tokenTradeHmx'
 import { TOKEN_TRADE_LEVEL_ARB, TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
 import { TOKEN_TRADE_LOGX_BLAST, TOKEN_TRADE_LOGX_MODE } from './tokenTradeLogX'
 import { TOKEN_COLLATERAL_MUX_ARB, TOKEN_TRADE_MUX_ARB } from './tokenTradeMux'
@@ -31,6 +32,7 @@ import { TOKEN_TRADE_MYX_ARB } from './tokenTradeMyx'
 import { TOKEN_TRADE_PINGU_ARB } from './tokenTradePingu'
 import { TOKEN_TRADE_SYNTHETIX } from './tokenTradeSynthetix'
 import { TOKEN_TRADE_TIGRIS_ARB } from './tokenTradeTigris'
+import { TOKEN_TRADE_VELA_ARB } from './tokenTradeVela'
 
 type ProtocolProvider = { [key: string]: { chainId: number; provider: JsonRpcProvider; explorerUrl: string } }
 export const PROTOCOL_PROVIDER: ProtocolProvider = {
@@ -124,6 +126,21 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.HMX_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    provider: rpcProvider(ARBITRUM_MAINNET),
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.DEXTORO]: {
+    chainId: OPTIMISM_MAINNET,
+    provider: rpcProvider(OPTIMISM_MAINNET),
+    explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.VELA_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    provider: rpcProvider(ARBITRUM_MAINNET),
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
 }
 
 export interface TokenTrade {
@@ -170,6 +187,9 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.LOGX_MODE]: TOKEN_TRADE_LOGX_MODE,
   [ProtocolEnum.MYX_ARB]: TOKEN_TRADE_MYX_ARB,
   [ProtocolEnum.PINGU_ARB]: TOKEN_TRADE_PINGU_ARB,
+  [ProtocolEnum.HMX_ARB]: TOKEN_TRADE_HMX_ARB,
+  [ProtocolEnum.DEXTORO]: TOKEN_TRADE_SYNTHETIX,
+  [ProtocolEnum.VELA_ARB]: TOKEN_TRADE_VELA_ARB,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -182,6 +202,33 @@ export const TOKEN_TRADE_IGNORE: TokenIgnore = {
 }
 
 export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
+  [ProtocolEnum.VELA_ARB]: {
+    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
+      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+      name: 'USDC',
+      symbol: 'USDC',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
+  [ProtocolEnum.DEXTORO]: {
+    '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
+      address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
+      name: 'SUSD',
+      symbol: 'SUSD',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
+  [ProtocolEnum.HMX_ARB]: {
+    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
+      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+      name: 'USDC',
+      symbol: 'USDC',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
   [ProtocolEnum.PINGU_ARB]: {
     '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
       address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
@@ -416,6 +463,18 @@ export const TOKEN_ADDRESSES = {
     USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
   },
   [ProtocolEnum.PINGU_ARB]: {
+    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+  },
+  [ProtocolEnum.HMX_ARB]: {
+    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+  },
+  [ProtocolEnum.DEXTORO]: {
+    BTC: '0x59b007E9ea8F89b069c43F8f45834d30853e3699',
+    ETH: '0x2B3bb4c683BFc5239B029131EEf3B1d214478d93',
+  },
+  [ProtocolEnum.VELA_ARB]: {
     ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
     USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
   },

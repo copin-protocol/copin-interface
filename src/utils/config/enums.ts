@@ -17,6 +17,9 @@ export enum ProtocolEnum {
   LOGX_MODE = 'LOGX_MODE',
   MYX_ARB = 'MYX_ARB',
   PINGU_ARB = 'PINGU_ARB',
+  HMX_ARB = 'HMX_ARB',
+  DEXTORO = 'DEXTORO',
+  VELA_ARB = 'VELA_ARB',
 }
 
 export enum UserRoleEnum {
@@ -92,6 +95,11 @@ export enum PositionStatusEnum {
 export enum PositionSideEnum {
   LONG = 'LONG',
   SHORT = 'SHORT',
+}
+
+export enum MarginModeEnum {
+  ISOLATED = 'ISOLATED',
+  CROSS = 'CROSS',
 }
 
 export enum OrderTypeEnum {

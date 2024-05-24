@@ -9,6 +9,9 @@ import { ImageData } from 'entities/image.d'
 import { DATE_FORMAT, DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { isAddress } from 'utils/web3/contracts'
 
+import { MarginModeEnum } from '../config/enums'
+import { MARGIN_MODE_TRANS } from '../config/translations'
+
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
@@ -78,6 +81,12 @@ export function formatPrice(num?: number | string, maxDigit = 2, minDigit = 2) {
     minDigit = 4
   }
   return formatNumber(num, maxDigit, minDigit)
+}
+
+export const formatLeverage = (marginMode?: MarginModeEnum, leverage?: number) => {
+  if (marginMode === MarginModeEnum.CROSS) return MARGIN_MODE_TRANS[MarginModeEnum.CROSS]
+  if (!leverage) return '--'
+  return `${formatNumber(leverage, 1, 1)}x`
 }
 
 export function generateImageUrl(image: ImageData | undefined) {

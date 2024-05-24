@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { NavLink as Link, NavLinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import { useProtocolStore } from 'hooks/store/useProtocols'
+import { parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
 import { Box } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
@@ -24,13 +24,23 @@ export function MobileNavLinks({ onClose }: { onClose?: () => void }) {
 }
 
 function NavLinks({ onClose }: { onClose?: () => void }) {
-  const { protocol } = useProtocolStore()
+  const { protocol, navProtocol, setNavProtocol } = useProtocolStore()
+  const _navProtocol = parseNavProtocol(navProtocol)?.protocol
+  const onClickNavItem = () => {
+    setNavProtocol(undefined)
+    onClose?.()
+  }
 
   return (
     <>
       {configs.map((config, index) => {
         return (
-          <NavLink key={index} to={config.routeFactory({ protocol })} onClick={onClose} matchpath={config.matchpath}>
+          <NavLink
+            key={index}
+            to={config.routeFactory({ protocol: _navProtocol ?? protocol })}
+            onClick={onClickNavItem}
+            matchpath={config.matchpath}
+          >
             {config.label}
           </NavLink>
         )

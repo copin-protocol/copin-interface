@@ -14,7 +14,9 @@ import { UsdPrices } from 'hooks/store/useUsdPrices'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
-import { formatDuration, formatNumber } from 'utils/helpers/format'
+import { formatDuration, formatLeverage, formatNumber } from 'utils/helpers/format'
+
+import CollateralWithTooltip from '../CollateralWithTooltip'
 
 export type ExternalSource = {
   prices: UsdPrices
@@ -48,7 +50,16 @@ const collateralColumn: ColumnData<PositionData> = {
   key: 'collateral',
   sortBy: 'collateral',
   style: { minWidth: '90px', textAlign: 'right' },
-  render: (item) => <Type.Caption color="neutral1">${formatNumber(item.collateral, 0)}</Type.Caption>,
+  render: (item) => (
+    <Type.Caption color="neutral1">
+      <CollateralWithTooltip
+        protocol={item.protocol}
+        collateralToken={item.collateralToken}
+        collateral={item.collateral}
+        collateralInToken={item.collateralInToken}
+      />
+    </Type.Caption>
+  ),
 }
 const feeColumn: ColumnData<PositionData> = {
   title: 'Fee',
@@ -165,7 +176,7 @@ const leverageColumn: ColumnData<PositionData> = {
   style: { minWidth: '75px', textAlign: 'right' },
   render: (item) => (
     <Flex justifyContent="end" alignItems="center">
-      <Type.Caption color="neutral1">{formatNumber(item.leverage, 1, 1)}x</Type.Caption>
+      <Type.Caption color="neutral1">{formatLeverage(item.marginMode, item.leverage)}</Type.Caption>
     </Flex>
   ),
 }

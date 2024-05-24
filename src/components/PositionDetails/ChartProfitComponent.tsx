@@ -98,7 +98,7 @@ export default function ChartProfitComponent({
 
   const hasLiquidate = (position.orders.filter((e) => e.type === OrderTypeEnum.LIQUIDATE) ?? []).length > 0
 
-  const useSizeNumber = [ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL].includes(protocol)
+  const useSizeNumber = [ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL, ProtocolEnum.DEXTORO].includes(protocol)
   const tickPositions = useMemo(() => {
     const positions: TickPosition[] = []
     if (!position) return []
@@ -486,7 +486,7 @@ export default function ChartProfitComponent({
             position: 'aboveBar',
             shape: 'arrowUp',
             time: (dayjs(order.blockTime).utc().unix() - timezone) as Time,
-            text: '$' + formatNumber(order.collateralDeltaNumber, 0),
+            text: '$' + formatNumber(order.sizeDeltaNumber, 0),
           }
         })
         const decreaseMarkers = (isOpening ? decreaseList : decreaseList.slice(0, -1)).map(
@@ -497,7 +497,7 @@ export default function ChartProfitComponent({
               position: 'belowBar',
               shape: 'arrowDown',
               time: (dayjs(order.blockTime).utc().unix() - timezone) as Time,
-              text: '$' + formatNumber(order.collateralDeltaNumber, 0),
+              text: '$' + formatNumber(order.sizeDeltaNumber, 0),
             }
           }
         )

@@ -17,7 +17,7 @@ import SkullIcon from 'theme/Icons/SkullIcon'
 import Drawer from 'theme/Modal/Drawer'
 import { Box, Flex, Type } from 'theme/base'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
-import { formatNumber } from 'utils/helpers/format'
+import { formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 export default function PositionLegend({
@@ -97,7 +97,7 @@ export default function PositionLegend({
         <Flex minWidth="110px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
           <Type.Small>Size</Type.Small>
           <Type.Small color="neutral1">
-            ${formatNumber(data.size, 0)} | {formatNumber(data.leverage, 1, 1)}x
+            ${formatNumber(data.size, 0)} | {formatLeverage(data.marginMode, data.leverage)}
           </Type.Small>
         </Flex>
 

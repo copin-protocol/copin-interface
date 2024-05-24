@@ -106,6 +106,12 @@ function generateProtocolName(protocol) {
       return 'MYX'
     case 'PINGU_ARB':
       return 'Pingu'
+    case 'HMX_ARB':
+      return 'HMX'
+    case 'DEXTORO':
+      return 'DexToro'
+    case 'VELA_ARB':
+      return 'Vela'
     default:
       return ''
   }

@@ -143,12 +143,35 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: ARBITRUM_MAINNET,
     isNew: true,
   },
+  [ProtocolEnum.HMX_ARB]: {
+    id: ProtocolEnum.HMX_ARB,
+    text: 'HMX',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+    isNew: true,
+  },
+  [ProtocolEnum.DEXTORO]: {
+    id: ProtocolEnum.DEXTORO,
+    text: 'DexToro',
+    label: 'Optimism',
+    chainId: OPTIMISM_MAINNET,
+    isNew: true,
+  },
+  [ProtocolEnum.VELA_ARB]: {
+    id: ProtocolEnum.VELA_ARB,
+    text: 'Vela',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+    isNew: true,
+  },
 }
 
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
   BUILD_MODE === 'production'
     ? RELEASED_PROTOCOLS.map((e) => PROTOCOL_OPTIONS_MAPPING[e])
     : Object.values(ProtocolEnum).map((e) => PROTOCOL_OPTIONS_MAPPING[e])
+
+export const PROTOCOLS_CROSS_MARGIN = [ProtocolEnum.HMX_ARB]
 
 export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
   gnsPoly: ProtocolEnum.GNS_POLY,

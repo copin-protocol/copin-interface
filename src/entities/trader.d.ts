@@ -1,6 +1,7 @@
 import {
   CopyTradePlatformEnum,
   LeaderboardTypeEnum,
+  MarginModeEnum,
   OrderTypeEnum,
   PositionStatusEnum,
   ProtocolEnum,
@@ -119,6 +120,7 @@ export interface PositionData {
   isLong: boolean
   isWin: boolean
   isLiquidate: boolean
+  marginMode: MarginModeEnum
   status: PositionStatusEnum
   txHashes: string[]
   orderIds: string[]
@@ -162,6 +164,7 @@ export interface OrderData {
   leverage: number
   type: OrderTypeEnum
   protocol: ProtocolEnum
+  marginMode: MarginModeEnum
   logId: number
   blockNumber: number
   blockTime: string

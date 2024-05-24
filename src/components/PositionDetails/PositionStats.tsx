@@ -10,8 +10,9 @@ import { PositionData } from 'entities/trader'
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
 import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
-import { formatDuration, formatNumber } from 'utils/helpers/format'
+import { formatDuration } from 'utils/helpers/format'
 
+import CollateralWithTooltip from '../CollateralWithTooltip'
 import SharePosition from './SharePosition'
 
 interface PositionStatsProps {
@@ -77,7 +78,14 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }:
           <DesktopItemInfo label={<Trans>Duration:</Trans>} value={formatDuration(data.durationInSecond)} />
           <DesktopItemInfo
             label={<Trans>Total Collateral:</Trans>}
-            value={data.collateral ? `$${formatNumber(data.collateral, 0)}` : '--'}
+            value={
+              <CollateralWithTooltip
+                protocol={data.protocol}
+                collateralToken={data.collateralToken}
+                collateral={data.collateral}
+                collateralInToken={data.collateralInToken}
+              />
+            }
           />
           <DesktopItemInfo
             label={<Trans>Paid Fees:</Trans>}
@@ -111,7 +119,14 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }: 
       <Flex width="100%" alignItems="center" sx={{ gap: 3, flexWrap: 'wrap' }}>
         <MobileItemInfo
           label={<Trans>Total Collateral:</Trans>}
-          value={data.collateral ? `$${formatNumber(data.collateral, 0)}` : '--'}
+          value={
+            <CollateralWithTooltip
+              protocol={data.protocol}
+              collateralToken={data.collateralToken}
+              collateral={data.collateral}
+              collateralInToken={data.collateralInToken}
+            />
+          }
         />
         <MobileItemInfo label={<Trans>Duration:</Trans>} value={formatDuration(data.durationInSecond)} />
         <MobileItemInfo

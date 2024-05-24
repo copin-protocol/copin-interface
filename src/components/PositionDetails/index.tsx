@@ -53,6 +53,7 @@ export default function PositionDetails({
           isOpening: data.status === PositionStatusEnum.OPEN,
           protocol: data.protocol,
           orderData: data.orders,
+          marginMode: data.marginMode,
         })
         return { ...data, orders }
       },

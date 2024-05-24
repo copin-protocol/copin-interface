@@ -1,14 +1,16 @@
 import { OrderData } from 'entities/trader'
-import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { MarginModeEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 
 export function getOrderData({
   isOpening,
   orderData,
   protocol,
+  marginMode,
 }: {
   isOpening: boolean
   orderData: OrderData[] | undefined
   protocol: ProtocolEnum
+  marginMode?: MarginModeEnum
 }) {
   let orders = [...(orderData ?? [])].sort((x, y) =>
     x.blockTime < y.blockTime ? -1 : x.blockTime > y.blockTime ? 1 : x.logId < y.logId ? -1 : x.logId > y.logId ? 1 : 0
@@ -18,6 +20,7 @@ export function getOrderData({
   }
 
   orders = orders?.map((_o, index) => {
+    _o.marginMode = marginMode ?? MarginModeEnum.ISOLATED
     if (index === 0 || (!isOpening && index === (orders?.length ?? 0) - 1)) return _o
     if (_o.sizeDeltaNumber === 0) {
       if (_o.type === OrderTypeEnum.DECREASE) {

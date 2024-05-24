@@ -1,5 +1,5 @@
 import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
-import { createContext, useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
@@ -10,7 +10,6 @@ import { NETWORK } from '../config/constants'
 
 const PYTH_PRICE_FEED_URL = NETWORK === 'devnet' ? 'https://hermes.pyth.network' : 'https://hermes.copin.io'
 export const pyth = new EvmPriceServiceConnection(PYTH_PRICE_FEED_URL)
-export const RealtimeContext = createContext({})
 
 const INTERVAL_TIME = 5 // s
 const INCLUDE_PATH = [
@@ -39,12 +38,15 @@ export default function PythConnection() {
   const pythIds = Array.from(new Set(tokenSupports.map((x) => x.priceFeedId)))
   const { pathname } = useLocation()
 
+  const initiated = useRef(false)
   useEffect(() => {
-    let lastUpdate = Math.floor(Date.now() / 1000)
-    let pricesData = {} as UsdPrices
     const acceptConnection =
       pathname === ROUTES.HOME.path || INCLUDE_PATH.some((path) => !!pathname.match(path)?.length)
     if (acceptConnection) {
+      if (initiated.current) return
+      initiated.current = true
+      let lastUpdate = Math.floor(Date.now() / 1000)
+      let pricesData = {} as UsdPrices
       ;(async () => {
         await pyth.startWebSocket()
         const initialCache = await pyth.getLatestPriceFeeds(pythIds)
@@ -83,13 +85,14 @@ export default function PythConnection() {
         })
       })()
     }
-
-    return () => {
-      setIsReady(false)
-      // pyth.unsubscribePriceFeedUpdates(pythIds)
-      pyth.closeWebSocket()
-    }
   }, [pathname])
+
+  useEffect(() => {
+    return () => {
+      pyth.closeWebSocket()
+      setIsReady(false)
+    }
+  }, [])
 
   return null
 }

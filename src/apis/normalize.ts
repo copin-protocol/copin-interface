@@ -5,10 +5,11 @@ import {
   TraderData,
   TraderTokenStatistic,
 } from 'entities/trader'
-import { SortTypeEnum } from 'utils/config/enums'
+import { MarginModeEnum, SortTypeEnum } from 'utils/config/enums'
 import { decodeRealisedData } from 'utils/helpers/handleRealised'
 import { convertDurationInSecond } from 'utils/helpers/transform'
 
+import { PROTOCOLS_CROSS_MARGIN } from '../utils/config/protocols'
 import { ApiListResponse } from './api'
 
 export const normalizeTraderData = (t: ResponseTraderData) => {
@@ -35,6 +36,11 @@ export const normalizePositionData = (p: ResponsePositionData) => {
   if (!p.durationInSecond) {
     p.durationInSecond = convertDurationInSecond(p.openBlockTime)
   }
+  p.marginMode = p.marginMode
+    ? p.marginMode
+    : PROTOCOLS_CROSS_MARGIN.includes(p.protocol)
+    ? MarginModeEnum.CROSS
+    : MarginModeEnum.ISOLATED
   return p as PositionData
 }
 

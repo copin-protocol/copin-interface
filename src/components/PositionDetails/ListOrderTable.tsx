@@ -8,13 +8,13 @@ import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
+import CollateralWithTooltip from 'components/CollateralWithTooltip'
 import { OrderData } from 'entities/trader.d'
-import { Box, Flex, IconBox, Image, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
-import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
-import { PROTOCOL_PROVIDER, TOKEN_COLLATERAL_SUPPORT } from 'utils/config/trades'
-import { formatNumber } from 'utils/helpers/format'
-import { parseCollateralImage } from 'utils/helpers/transform'
+import { MarginModeEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { PROTOCOL_PROVIDER } from 'utils/config/trades'
+import { formatLeverage, formatNumber } from 'utils/helpers/format'
 
 type ExternalSource = {
   totalOrders: number
@@ -122,9 +122,10 @@ export default function ListOrderTable({
         style: { minWidth: '70px', textAlign: 'right' },
         render: (item) => (
           <Type.Caption color="neutral1" textAlign="right">
-            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED || item.leverage == null || item.leverage < 0
+            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED ||
+            (item.marginMode === MarginModeEnum.ISOLATED && (item.leverage == null || item.leverage < 0))
               ? '--'
-              : `${formatNumber(item.leverage, 1, 1)}x`}
+              : formatLeverage(item.marginMode, item.leverage)}
           </Type.Caption>
         ),
       },
@@ -135,19 +136,21 @@ export default function ListOrderTable({
         style: { minWidth: '105px', textAlign: 'right' },
         render: (item) => (
           <Flex justifyContent="flex-end" alignItems="center" sx={{ gap: '2px' }}>
-            <DeltaText
-              color="neutral1"
-              type={item.type}
-              delta={item.collateralToken ? item.collateralDeltaInTokenNumber : item.collateralDeltaNumber}
-              maxDigit={item.collateralToken ? 2 : undefined}
-              minDigit={item.collateralToken ? 2 : undefined}
+            <CollateralWithTooltip
+              protocol={item.protocol}
+              collateralToken={item.collateralToken}
+              collateral={item.collateralDeltaNumber}
+              collateralInToken={item.collateralDeltaInTokenNumber}
+              value={
+                <DeltaText
+                  color="neutral1"
+                  type={item.type}
+                  delta={item.collateralToken ? item.collateralDeltaInTokenNumber : item.collateralDeltaNumber}
+                  maxDigit={item.collateralToken ? 2 : undefined}
+                  minDigit={item.collateralToken ? 2 : undefined}
+                />
+              }
             />
-            {item.collateralToken && item.protocol && (
-              <Image
-                src={parseCollateralImage(TOKEN_COLLATERAL_SUPPORT[item.protocol][item.collateralToken]?.symbol)}
-                sx={{ width: 16, height: 16 }}
-              />
-            )}
           </Flex>
         ),
       },

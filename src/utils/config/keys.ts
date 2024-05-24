@@ -197,6 +197,9 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.LOGX_MODE]: '',
   [ProtocolEnum.MYX_ARB]: '',
   [ProtocolEnum.PINGU_ARB]: '',
+  [ProtocolEnum.HMX_ARB]: '',
+  [ProtocolEnum.DEXTORO]: '',
+  [ProtocolEnum.VELA_ARB]: '',
 }
 
 export const INTERNAL_SERVICE_KEYS = {
@@ -218,4 +221,7 @@ export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.LOGX_MODE]: '',
   [ProtocolEnum.MYX_ARB]: '',
   [ProtocolEnum.PINGU_ARB]: '',
+  [ProtocolEnum.HMX_ARB]: '',
+  [ProtocolEnum.DEXTORO]: '',
+  [ProtocolEnum.VELA_ARB]: '',
 }
