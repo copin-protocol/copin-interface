@@ -145,6 +145,11 @@ export const CHAIN_STATS_TRANS: ObjectTrans = {
   [ChainStatsEnum.POLYGON]: 'Polygon',
   [ChainStatsEnum.BNB_CHAIN]: 'BNB Chain',
 }
+export const MIRROR_TRANS: ObjectTrans = {
+  mirrorSignalSnx: 'Mirror Synthetix',
+  mirrorSignalGns: 'Mirror gTrade',
+  mirrorSignalLevel: 'Mirror Level',
+}
 
 export const MARGIN_MODE_TRANS: ObjectTrans = {
   [MarginModeEnum.CROSS]: 'Cross',

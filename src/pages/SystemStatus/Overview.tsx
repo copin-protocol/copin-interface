@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import { getListenerStatsApi } from 'apis/systemApis'
+import useInternalRole from 'hooks/features/useInternalRole'
 import { Box, Flex } from 'theme/base'
 import { ChainStatsEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -11,9 +12,11 @@ import { capitalizeFirstLetter, lowerFirstLetter } from 'utils/helpers/transform
 import StatusByNetwork from './StatusByNetwork'
 
 export default function Overview() {
+  const isInternal = useInternalRole()
   const { data } = useQuery([QUERY_KEYS.GET_LISTENER_STATS], () => getListenerStatsApi(), {
     retry: 0,
     refetchInterval: 10000,
+    enabled: isInternal,
   })
 
   const formattedData = useMemo(() => {
@@ -24,19 +27,44 @@ export default function Overview() {
       const protocols: any = {}
 
       Object.entries(listenerData).forEach(([key, value]) => {
-        const [protocol, fieldName] = key.split(capitalizeFirstLetter(network))
-        if (protocol && fieldName) {
-          const blockType = lowerFirstLetter(fieldName)
-
-          if (protocol && !protocols[protocol]) {
-            protocols[protocol] = {
-              protocol,
-              latestRawDataBlock: undefined,
-              latestOrderBlock: undefined,
-              latestPositionBlock: undefined,
-            }
+        if (key.includes('mirror')) {
+          let protocol
+          const fieldName = 'latestRawDataBlock'
+          const [mirrorProtocol, mirrorFieldName] = key.split(capitalizeFirstLetter(network))
+          if (!mirrorFieldName) {
+            protocol = key.split('LastBlock')?.[0]
+          } else {
+            protocol = mirrorProtocol
           }
-          protocols[protocol][blockType] = value
+
+          if (protocol) {
+            const blockType = lowerFirstLetter(fieldName)
+
+            if (protocol && !protocols[protocol]) {
+              protocols[protocol] = {
+                protocol,
+                latestRawDataBlock: undefined,
+                latestOrderBlock: undefined,
+                latestPositionBlock: undefined,
+              }
+            }
+            protocols[protocol][blockType] = value
+          }
+        } else {
+          const [protocol, fieldName] = key.split(capitalizeFirstLetter(network))
+          if (protocol && fieldName) {
+            const blockType = lowerFirstLetter(fieldName)
+
+            if (protocol && !protocols[protocol]) {
+              protocols[protocol] = {
+                protocol,
+                latestRawDataBlock: undefined,
+                latestOrderBlock: undefined,
+                latestPositionBlock: undefined,
+              }
+            }
+            protocols[protocol][blockType] = value
+          }
         }
       })
 
@@ -58,24 +86,12 @@ export default function Overview() {
   }, [data])
 
   return (
-    <Box>
+    <Box p={3} sx={{ height: '100%', overflow: 'hidden auto' }}>
       <Flex flexDirection="column" sx={{ gap: 3 }}>
-        <StatusByNetwork
-          network={ChainStatsEnum.ABITRUM}
-          data={formattedData?.[ChainStatsEnum.ABITRUM]}
-        />
-        <StatusByNetwork
-          network={ChainStatsEnum.OPTIMISM}
-          data={formattedData?.[ChainStatsEnum.OPTIMISM]}
-        />
-        <StatusByNetwork
-          network={ChainStatsEnum.POLYGON}
-          data={formattedData?.[ChainStatsEnum.POLYGON]}
-        />
-        <StatusByNetwork
-          network={ChainStatsEnum.BNB_CHAIN}
-          data={formattedData?.[ChainStatsEnum.BNB_CHAIN]}
-        />
+        <StatusByNetwork network={ChainStatsEnum.ABITRUM} data={formattedData?.[ChainStatsEnum.ABITRUM]} />
+        <StatusByNetwork network={ChainStatsEnum.OPTIMISM} data={formattedData?.[ChainStatsEnum.OPTIMISM]} />
+        <StatusByNetwork network={ChainStatsEnum.POLYGON} data={formattedData?.[ChainStatsEnum.POLYGON]} />
+        <StatusByNetwork network={ChainStatsEnum.BNB_CHAIN} data={formattedData?.[ChainStatsEnum.BNB_CHAIN]} />
       </Flex>
     </Box>
   )

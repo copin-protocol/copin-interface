@@ -83,6 +83,12 @@ const ROUTES = {
   SYSTEM_STATUS: {
     path: '/system',
   },
+  NODE_STATUS: {
+    path: '/system/node',
+  },
+  WALLET_WATCHER: {
+    path: '/system/wallet',
+  },
   SHARED_BACKTEST_SINGLE: {
     path: '/:protocol/shared-backtest/single/:id',
     path_prefix: '/shared-backtest/single',

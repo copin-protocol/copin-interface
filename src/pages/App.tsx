@@ -63,7 +63,7 @@ function App() {
             <Route exact path={ROUTES.SHARED_BACKTEST_SINGLE.path} component={SharedBacktestSingle}></Route>
             <Route exact path={ROUTES.SHARED_BACKTEST_MULTIPLE.path} component={SharedBacktestMultiple}></Route>
             <Route exact path={ROUTES.STATS.path} component={Stats}></Route>
-            <Route exact path={ROUTES.SYSTEM_STATUS.path} component={SystemStatus}></Route>
+            <AuthedRoute path={ROUTES.SYSTEM_STATUS.path} component={SystemStatus}></AuthedRoute>
 
             <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>
             <AuthedRoute path={ROUTES.SETTINGS.path} component={Settings}></AuthedRoute>

@@ -183,4 +183,8 @@ export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
   levelArb: ProtocolEnum.LEVEL_ARB,
   levelBnb: ProtocolEnum.LEVEL_BNB,
   synthetixOp: ProtocolEnum.KWENTA,
+  mirrorSignalSnxOp: ProtocolEnum.KWENTA,
+  mirrorSignalGnsArb: ProtocolEnum.GNS,
+  mirrorSignalLevelArb: ProtocolEnum.LEVEL_ARB,
+  mirrorSignalLevelBnb: ProtocolEnum.LEVEL_BNB,
 }

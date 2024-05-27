@@ -8,6 +8,7 @@ import { ColumnData } from 'components/@ui/Table/types'
 import useLatestBlockNumber from 'hooks/features/useLastestBlockNumber'
 import { Box, Flex, Type } from 'theme/base'
 import { PROTOCOL_LISTENER_MAPPING } from 'utils/config/protocols'
+import { MIRROR_TRANS } from 'utils/config/translations'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { capitalizeFirstLetter, parseChainFromNetwork } from 'utils/helpers/transform'
 
@@ -30,13 +31,16 @@ export default function StatusByNetwork({ network, data }: { network: string; da
         key: 'protocol',
         style: { minWidth: '150px' },
         render: (item: any) => {
+          const isMirror = item.protocol?.includes('mirror')
           return (
             <Flex sx={{ alignItems: 'center', gap: 2 }}>
               <ProtocolLogo
                 protocol={PROTOCOL_LISTENER_MAPPING[item.protocol + capitalizeFirstLetter(network)]}
+                hasText={!isMirror}
                 size={24}
                 textSx={{ color: 'neutral1' }}
               />
+              {isMirror && <Type.Caption color="neutral1">{MIRROR_TRANS[item.protocol]}</Type.Caption>}
             </Flex>
           )
         },
