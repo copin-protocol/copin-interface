@@ -140,5 +140,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.LEVEL_ARB,
         ProtocolEnum.MUX_ARB,
         ProtocolEnum.APOLLOX_BNB,
+        ProtocolEnum.AVANTIS_BASE,
+        ProtocolEnum.EQUATION_ARB,
       ]
     : Object.values(ProtocolEnum)

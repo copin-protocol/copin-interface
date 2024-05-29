@@ -156,7 +156,7 @@ function SwitchProtocolsComponent({
                   borderTop: 'small',
                   borderRight: lg && index < uniqueChains.length - 1 ? 'small' : 'none',
                   borderColor: 'neutral4',
-                  width: lg ? 160 : '100%',
+                  width: lg ? 168 : '100%',
                 }}
               >
                 <Flex px={10} pb={2} alignItems="center" sx={{ gap: 2 }}>
@@ -175,14 +175,43 @@ function SwitchProtocolsComponent({
                           sx={{
                             py: 2,
                             pl: 20,
-                            gap: 2,
+                            gap: '6px',
                             cursor: 'pointer',
                             backgroundColor: isActive ? 'neutral5' : 'transparent',
+                            color: 'neutral3',
+                            '.active': {
+                              display: isActive ? 'flex' : 'none !important',
+                            },
+                            '.inactive': {
+                              display: isActive ? 'none !important' : 'flex',
+                            },
+                            '&:hover': {
+                              color: 'neutral1',
+                              '.active': {
+                                display: 'flex !important',
+                              },
+                              '.inactive': {
+                                display: 'none !important',
+                              },
+                            },
                           }}
                           onClick={() => handleSwitchProtocol(option)}
                         >
-                          <ProtocolLogo protocol={option.id} isActive={isActive} hasText={false} size={24} />
-                          <Type.Caption lineHeight="16px" color={isActive ? 'primary1' : 'neutral3'}>
+                          <ProtocolLogo
+                            className="active"
+                            protocol={option.id}
+                            isActive={true}
+                            hasText={false}
+                            size={24}
+                          />
+                          <ProtocolLogo
+                            className="inactive"
+                            protocol={option.id}
+                            isActive={false}
+                            hasText={false}
+                            size={24}
+                          />
+                          <Type.Caption lineHeight="16px" color={isActive ? 'primary1' : undefined}>
                             {option.text}
                           </Type.Caption>
                           {option.isNew && <img src={NewTag} alt="new" />}

@@ -12,11 +12,25 @@ const ProtocolLogo = ({
   sx,
   hasText = true,
   isActive = false,
+  className,
   ...props
-}: { protocol: ProtocolEnum; size?: number; textSx?: TextProps; hasText?: boolean; isActive?: boolean } & BoxProps) => {
+}: {
+  protocol: ProtocolEnum
+  size?: number
+  textSx?: TextProps
+  hasText?: boolean
+  isActive?: boolean
+  className?: string
+} & BoxProps) => {
   const protocolOptionsMapping = useGetProtocolOptionsMapping()
   return (
-    <Flex height={size} alignItems="center" sx={{ gap: 2, flexShrink: 0, ...(sx || {}) }} {...props}>
+    <Flex
+      className={className}
+      height={size}
+      alignItems="center"
+      sx={{ gap: 2, flexShrink: 0, ...(sx || {}) }}
+      {...props}
+    >
       <Image src={getProtocolDropdownImage({ protocol, isActive })} width={size} height={size} />
       {hasText && (
         <Type.Caption

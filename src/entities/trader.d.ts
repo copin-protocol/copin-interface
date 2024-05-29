@@ -98,13 +98,16 @@ export interface PositionData {
   lastCollateral: number
   size: number
   lastSizeNumber: number
+  sizeInToken: number
   averagePrice: number
   lastPriceNumber: number
   maxSizeNumber: number
   fee: number
   feeNumber: number
+  feeInToken: number
   lastFunding: number
   funding: number
+  fundingInToken: number
   totalVolume: number
   pnl: number
   roi: number

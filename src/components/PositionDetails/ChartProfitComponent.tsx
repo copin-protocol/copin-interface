@@ -86,6 +86,8 @@ export default function ChartProfitComponent({
   const openOrder = orders.find((e) => e.isOpen || e.type === OrderTypeEnum.OPEN) ?? position.orders?.[0]
   const closeOrder = orders.find((e) => e.isClose) ?? orders?.[0]
   const increaseList = orders.filter((e) => e.type === OrderTypeEnum.INCREASE || e.type === OrderTypeEnum.OPEN)
+  const openPrice = openOrder?.priceNumber ?? position.averagePrice
+  const closePrice = closeOrder?.priceNumber ?? position.averagePrice
 
   // TODO: Check when add new protocol
   const decreaseList = orders.filter(
@@ -147,10 +149,10 @@ export default function ChartProfitComponent({
 
     if (openOrder) {
       tempData.push({
-        open: openOrder.priceNumber,
-        close: openOrder.priceNumber,
-        low: openOrder.priceNumber,
-        high: openOrder.priceNumber,
+        open: openPrice,
+        close: openPrice,
+        low: openPrice,
+        high: openPrice,
         timestamp: dayjs(openOrder.blockTime).utc().valueOf(),
       })
     }
@@ -171,10 +173,10 @@ export default function ChartProfitComponent({
       const index = tempData.findIndex((e) => e.timestamp === closeTimestamp)
       if (index < 0) {
         tempData.push({
-          open: closeOrder.priceNumber,
-          close: closeOrder.priceNumber,
-          low: closeOrder.priceNumber,
-          high: closeOrder.priceNumber,
+          open: closePrice,
+          close: closePrice,
+          low: closePrice,
+          high: closePrice,
           timestamp: closeTimestamp,
         })
       }
@@ -210,10 +212,10 @@ export default function ChartProfitComponent({
     if (!data || isOpening || ((!nextHours || nextHours < 1) && (!nextHoursParam || nextHoursParam < 1))) return []
     const chartData = data.filter((e) => e.timestamp > to)
     chartData.push({
-      open: closeOrder.priceNumber,
-      close: closeOrder.priceNumber,
-      low: closeOrder.priceNumber,
-      high: closeOrder.priceNumber,
+      open: closePrice,
+      close: closePrice,
+      low: closePrice,
+      high: closePrice,
       timestamp: dayjs(position.closeBlockTime).utc().valueOf(),
     })
 
@@ -238,10 +240,10 @@ export default function ChartProfitComponent({
     // const lastData = isOpening ? data[data.length - 1] : tempData.pop()
     if (openOrder) {
       tempData.push({
-        open: openOrder.priceNumber,
-        close: openOrder.priceNumber,
-        low: openOrder.priceNumber,
-        high: openOrder.priceNumber,
+        open: openPrice,
+        close: openPrice,
+        low: openPrice,
+        high: openPrice,
         timestamp: dayjs(openOrder.blockTime).utc().valueOf(),
       })
     }
@@ -258,10 +260,10 @@ export default function ChartProfitComponent({
       }
     } else {
       tempData.push({
-        open: closeOrder.priceNumber,
-        close: closeOrder.priceNumber,
-        low: closeOrder.priceNumber,
-        high: closeOrder.priceNumber,
+        open: closePrice,
+        close: closePrice,
+        low: closePrice,
+        high: closePrice,
         timestamp: dayjs(position.closeBlockTime).utc().valueOf(),
       })
     }

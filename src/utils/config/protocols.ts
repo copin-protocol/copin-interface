@@ -3,6 +3,7 @@ import {
   BASE_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
+  MANTLE_MAINNET,
   MODE_MAINNET,
   OPTIMISM_MAINNET,
   POLYGON_MAINNET,
@@ -164,6 +165,27 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: ARBITRUM_MAINNET,
     isNew: true,
   },
+  [ProtocolEnum.SYNTHETIX_V3]: {
+    id: ProtocolEnum.SYNTHETIX_V3,
+    text: 'Synthetix V3',
+    label: 'Base',
+    chainId: BASE_MAINNET,
+    isNew: true,
+  },
+  [ProtocolEnum.COPIN]: {
+    id: ProtocolEnum.COPIN,
+    text: 'Copin',
+    label: 'Optimism',
+    chainId: OPTIMISM_MAINNET,
+    isNew: true,
+  },
+  [ProtocolEnum.KTX_MANTLE]: {
+    id: ProtocolEnum.KTX_MANTLE,
+    text: 'KTX',
+    label: 'Mantle',
+    chainId: MANTLE_MAINNET,
+    isNew: true,
+  },
 }
 
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
@@ -171,7 +193,7 @@ export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
     ? RELEASED_PROTOCOLS.map((e) => PROTOCOL_OPTIONS_MAPPING[e])
     : Object.values(ProtocolEnum).map((e) => PROTOCOL_OPTIONS_MAPPING[e])
 
-export const PROTOCOLS_CROSS_MARGIN = [ProtocolEnum.HMX_ARB]
+export const PROTOCOLS_CROSS_MARGIN = [ProtocolEnum.HMX_ARB, ProtocolEnum.SYNTHETIX_V3]
 
 export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
   gnsPoly: ProtocolEnum.GNS_POLY,

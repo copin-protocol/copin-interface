@@ -491,6 +491,18 @@ export const generateProtocol = ({
       protocolTextWidth = 117
       protocolText = 'Vela'
       break
+    case ProtocolEnum.SYNTHETIX_V3:
+      protocolTextWidth = 288
+      protocolText = 'Synthetix V3'
+      break
+    case ProtocolEnum.COPIN:
+      protocolTextWidth = 117
+      protocolText = 'Copin'
+      break
+    case ProtocolEnum.KTX_MANTLE:
+      protocolTextWidth = 72
+      protocolText = 'KTX'
+      break
     default:
       break
   }

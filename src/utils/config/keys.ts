@@ -200,6 +200,9 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.HMX_ARB]: '',
   [ProtocolEnum.DEXTORO]: '',
   [ProtocolEnum.VELA_ARB]: '',
+  [ProtocolEnum.SYNTHETIX_V3]: '',
+  [ProtocolEnum.COPIN]: '',
+  [ProtocolEnum.KTX_MANTLE]: '',
 }
 
 export const INTERNAL_SERVICE_KEYS = {
@@ -224,4 +227,7 @@ export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.HMX_ARB]: '',
   [ProtocolEnum.DEXTORO]: '',
   [ProtocolEnum.VELA_ARB]: '',
+  [ProtocolEnum.SYNTHETIX_V3]: '',
+  [ProtocolEnum.COPIN]: '',
+  [ProtocolEnum.KTX_MANTLE]: '',
 }

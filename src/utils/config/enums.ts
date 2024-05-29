@@ -20,6 +20,9 @@ export enum ProtocolEnum {
   HMX_ARB = 'HMX_ARB',
   DEXTORO = 'DEXTORO',
   VELA_ARB = 'VELA_ARB',
+  SYNTHETIX_V3 = 'SYNTHETIX_V3',
+  COPIN = 'COPIN',
+  KTX_MANTLE = 'KTX_MANTLE',
 }
 
 export enum UserRoleEnum {

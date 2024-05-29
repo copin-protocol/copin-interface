@@ -112,6 +112,12 @@ function generateProtocolName(protocol) {
       return 'DexToro'
     case 'VELA_ARB':
       return 'Vela'
+    case 'SYNTHETIX_V3':
+      return 'Synthetix (V3)'
+    case 'COPIN':
+      return 'Copin'
+    case 'KTX_MANTLE':
+      return 'KTX'
     default:
       return ''
   }

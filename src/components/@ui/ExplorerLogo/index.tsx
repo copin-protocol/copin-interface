@@ -30,6 +30,7 @@ const ExplorerLogo = ({
     case ProtocolEnum.KWENTA:
     case ProtocolEnum.POLYNOMIAL:
     case ProtocolEnum.DEXTORO:
+    case ProtocolEnum.COPIN:
       icon = 'OPTIMISM'
       break
     case ProtocolEnum.LEVEL_BNB:
@@ -44,10 +45,14 @@ const ExplorerLogo = ({
       icon = 'BLAST'
       break
     case ProtocolEnum.AVANTIS_BASE:
+    case ProtocolEnum.SYNTHETIX_V3:
       icon = 'BASE'
       break
     case ProtocolEnum.LOGX_MODE:
       icon = 'MODE'
+      break
+    case ProtocolEnum.KTX_MANTLE:
+      icon = 'MANTLE'
       break
     default:
       icon = 'OPTIMISM'

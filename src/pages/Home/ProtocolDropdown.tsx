@@ -26,7 +26,7 @@ export default function ProtocolDropdown({
   return (
     <Dropdown
       {...getDropdownProps({})}
-      menuSx={{ width: 'max-content' }}
+      menuSx={{ width: 'max-content', maxHeight: '75svh', py: 2, overflowY: 'auto' }}
       menu={
         <>
           {protocolOptions.map((option) => {

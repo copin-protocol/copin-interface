@@ -31,6 +31,11 @@ const VELA_PAIRS = {
   'VELA_ARB-48': 'NEAR',
   'VELA_ARB-49': 'FET',
   'VELA_ARB-50': 'W',
+  'VELA_ARB-51': 'WIF',
+  'VELA_ARB-52': 'TON',
+  'VELA_ARB-53': 'FLOKI',
+  'VELA_ARB-54': 'MEME',
+  'VELA_ARB-55': 'BOME',
 }
 
 type TokenValues = Record<

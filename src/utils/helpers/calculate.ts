@@ -50,6 +50,7 @@ export function calcLiquidatePrice(position: PositionData) {
     case ProtocolEnum.KWENTA:
     case ProtocolEnum.POLYNOMIAL:
     case ProtocolEnum.DEXTORO:
+    case ProtocolEnum.COPIN:
       if (position.status === PositionStatusEnum.OPEN) {
         lastCollateral = position.lastCollateral
         lastSizeInToken = Math.abs(position.lastSizeNumber)

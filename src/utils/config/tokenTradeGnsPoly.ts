@@ -157,6 +157,7 @@ const GNS_POLY_PAIRS = {
   'GNS_POLY-229': 'LL',
   'GNS_POLY-230': 'MSN',
   'GNS_POLY-231': 'REZ',
+  'GNS_POLY-232': 'NOT',
 }
 
 type TokenValues = Record<

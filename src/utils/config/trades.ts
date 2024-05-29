@@ -7,7 +7,7 @@ import {
   BASE_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
-  CHAINS,
+  CHAINS, MANTLE_MAINNET,
   MODE_MAINNET,
   OPTIMISM_GOERLI,
   OPTIMISM_MAINNET,
@@ -25,12 +25,14 @@ import { TOKEN_TRADE_GMX_V2 } from './tokenTradeGmxV2'
 import { TOKEN_TRADE_GNS } from './tokenTradeGns'
 import { TOKEN_TRADE_GNS_POLY } from './tokenTradeGnsPoly'
 import { TOKEN_TRADE_HMX_ARB } from './tokenTradeHmx'
+import { TOKEN_COLLATERAL_KTX_MANTLE, TOKEN_TRADE_KTX_MANTLE } from './tokenTradeKtx'
 import { TOKEN_TRADE_LEVEL_ARB, TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
 import { TOKEN_TRADE_LOGX_BLAST, TOKEN_TRADE_LOGX_MODE } from './tokenTradeLogX'
 import { TOKEN_COLLATERAL_MUX_ARB, TOKEN_TRADE_MUX_ARB } from './tokenTradeMux'
 import { TOKEN_TRADE_MYX_ARB } from './tokenTradeMyx'
 import { TOKEN_TRADE_PINGU_ARB } from './tokenTradePingu'
 import { TOKEN_TRADE_SYNTHETIX } from './tokenTradeSynthetix'
+import { TOKEN_TRADE_SYNTHETIX_V3 } from './tokenTradeSynthetixV3'
 import { TOKEN_TRADE_TIGRIS_ARB } from './tokenTradeTigris'
 import { TOKEN_TRADE_VELA_ARB } from './tokenTradeVela'
 
@@ -141,6 +143,21 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.SYNTHETIX_V3]: {
+    chainId: BASE_MAINNET,
+    provider: rpcProvider(BASE_MAINNET),
+    explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.COPIN]: {
+    chainId: OPTIMISM_MAINNET,
+    provider: rpcProvider(OPTIMISM_MAINNET),
+    explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.KTX_MANTLE]: {
+    chainId: MANTLE_MAINNET,
+    provider: rpcProvider(MANTLE_MAINNET),
+    explorerUrl: CHAINS[MANTLE_MAINNET].blockExplorerUrl,
+  },
 }
 
 export interface TokenTrade {
@@ -190,6 +207,9 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.HMX_ARB]: TOKEN_TRADE_HMX_ARB,
   [ProtocolEnum.DEXTORO]: TOKEN_TRADE_SYNTHETIX,
   [ProtocolEnum.VELA_ARB]: TOKEN_TRADE_VELA_ARB,
+  [ProtocolEnum.SYNTHETIX_V3]: TOKEN_TRADE_SYNTHETIX_V3,
+  [ProtocolEnum.COPIN]: TOKEN_TRADE_SYNTHETIX,
+  [ProtocolEnum.KTX_MANTLE]: TOKEN_TRADE_KTX_MANTLE,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -202,6 +222,27 @@ export const TOKEN_TRADE_IGNORE: TokenIgnore = {
 }
 
 export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
+  [ProtocolEnum.KTX_MANTLE]: {
+    ...TOKEN_COLLATERAL_KTX_MANTLE,
+  },
+  [ProtocolEnum.COPIN]: {
+    '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
+      address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
+      name: 'SUSD',
+      symbol: 'SUSD',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
+  [ProtocolEnum.SYNTHETIX_V3]: {
+    '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
+      address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+      name: 'USDC',
+      symbol: 'USDC',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
   [ProtocolEnum.VELA_ARB]: {
     '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
       address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
@@ -234,6 +275,22 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
       address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
       name: 'USDC',
       symbol: 'USDC',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
+  [ProtocolEnum.PINGU_ARB]: {
+    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
+      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+      name: 'USDC',
+      symbol: 'USDC',
+      decimals: 18,
+      priceFeedId: '',
+    },
+    '0x0000000000000000000000000000000000000000': {
+      address: '0x0000000000000000000000000000000000000000',
+      name: 'ETH',
+      symbol: 'ETH',
       decimals: 18,
       priceFeedId: '',
     },
@@ -463,7 +520,7 @@ export const TOKEN_ADDRESSES = {
     USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
   },
   [ProtocolEnum.PINGU_ARB]: {
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    ETH: '0x0000000000000000000000000000000000000000',
     USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
   },
   [ProtocolEnum.HMX_ARB]: {
@@ -477,6 +534,18 @@ export const TOKEN_ADDRESSES = {
   [ProtocolEnum.VELA_ARB]: {
     ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
     USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+  },
+  [ProtocolEnum.SYNTHETIX_V3]: {
+    ETH: '0x4200000000000000000000000000000000000006',
+    USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+  },
+  [ProtocolEnum.COPIN]: {
+    BTC: '0x59b007E9ea8F89b069c43F8f45834d30853e3699',
+    ETH: '0x2B3bb4c683BFc5239B029131EEf3B1d214478d93',
+  },
+  [ProtocolEnum.KTX_MANTLE]: {
+    BTC: '0xCAbAE6f6Ea1ecaB08Ad02fE02ce9A44F09aebfA2',
+    ETH: '0xdEAddEaDdeadDEadDEADDEAddEADDEAddead1111',
   },
 }
 

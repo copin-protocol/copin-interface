@@ -42,9 +42,9 @@ export const SUPPORTED_CHAIN_IDS: number[] = [
   FANTOM_MAINNET,
   LINEA_MAINNET,
   MODE_MAINNET,
+  MANTLE_MAINNET,
   // ZKSYNC_ERA_MAINNET,
   // MANTA_MAINNET,
-  // MANTLE_MAINNET,
 ]
 
 const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
@@ -261,6 +261,15 @@ const CHAINS: { [key: number]: Chain } = {
     rpcUrl: 'https://mainnet.mode.network',
     blockExplorerUrl: 'https://modescan.io',
     secondaryTokens: SECONDARY_TOKENS[MODE_MAINNET],
+  },
+  [MANTLE_MAINNET]: {
+    id: `0x${MANTLE_MAINNET.toString(16)}`,
+    label: 'Mantle',
+    icon: 'MNT',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://mantle-rpc.publicnode.com',
+    blockExplorerUrl: 'https://explorer.mantle.xyz',
+    secondaryTokens: SECONDARY_TOKENS[MANTLE_MAINNET],
   },
 }
 
