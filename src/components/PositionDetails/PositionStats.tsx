@@ -93,7 +93,7 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }:
           />
           <DesktopItemInfo
             label={<Trans>Funding:</Trans>}
-            value={hasFundingFee ? <SignedText value={-data.funding} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
+            value={hasFundingFee ? <SignedText value={data.funding} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
           />
         </Flex>
       </Flex>
@@ -145,7 +145,7 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }: 
         />
         <MobileItemInfo
           label={<Trans>Funding:</Trans>}
-          value={hasFundingFee ? <SignedText value={-data.funding} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
+          value={hasFundingFee ? <SignedText value={data.funding} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
         />
         <MobileItemInfo label={''} value={''} />
       </Flex>

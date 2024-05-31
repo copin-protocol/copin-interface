@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { BookBookmark, ChartBar, CrownSimple, ThermometerSimple } from '@phosphor-icons/react'
+import { BookBookmark, ChartBar, CrownSimple, PresentationChart, ThermometerSimple } from '@phosphor-icons/react'
 import { ComponentType, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -79,6 +79,11 @@ const configs = [
     route: ROUTES.STATS.path,
   },
   {
+    icon: PresentationChart,
+    text: <Trans>CEX Depth</Trans>,
+    route: ROUTES.STATS_CEX.path,
+  },
+  {
     icon: BookBookmark,
     text: <Trans>Document</Trans>,
     link: LINKS.docs,
@@ -100,6 +105,11 @@ const internalConfigs = [
     icon: ChartBar,
     text: <Trans>Stats</Trans>,
     route: ROUTES.STATS.path,
+  },
+  {
+    icon: PresentationChart,
+    text: <Trans>CEX Depth</Trans>,
+    route: ROUTES.STATS_CEX.path,
   },
   {
     icon: BookBookmark,

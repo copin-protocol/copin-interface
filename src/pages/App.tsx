@@ -35,6 +35,7 @@ const ComparingTraders = lazy(() => import('./ComparingTraders'))
 const Search = lazy(() => import('./SearchTrader'))
 const SearchTxHash = lazy(() => import('./SearchTxHash'))
 const SystemStatus = lazy(() => import('./SystemStatus'))
+const StatsCEX = lazy(() => import('./StatsCEX'))
 
 function App() {
   useEffect(() => {
@@ -63,6 +64,7 @@ function App() {
             <Route exact path={ROUTES.SHARED_BACKTEST_SINGLE.path} component={SharedBacktestSingle}></Route>
             <Route exact path={ROUTES.SHARED_BACKTEST_MULTIPLE.path} component={SharedBacktestMultiple}></Route>
             <Route exact path={ROUTES.STATS.path} component={Stats}></Route>
+            <Route exact path={ROUTES.STATS_CEX.path} component={StatsCEX}></Route>
             <AuthedRoute path={ROUTES.SYSTEM_STATUS.path} component={SystemStatus}></AuthedRoute>
 
             <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>

@@ -180,7 +180,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   lowCollateral: undefined,
 }
 
-interface ExchangeOptions {
+export interface ExchangeOptions {
   value: CopyTradePlatformEnum
   label: ReactNode
   isDisabled?: boolean

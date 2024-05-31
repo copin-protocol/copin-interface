@@ -59,7 +59,7 @@ export function calcLiquidatePrice(position: PositionData) {
       break
   }
   if (position.funding) {
-    totalFee -= position.funding
+    totalFee += position.funding
   }
 
   return position.averagePrice + ((position.isLong ? 1 : -1) * (totalFee - 0.9 * lastCollateral)) / lastSizeInToken

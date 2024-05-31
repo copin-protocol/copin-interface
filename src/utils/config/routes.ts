@@ -80,6 +80,9 @@ const ROUTES = {
   STATS: {
     path: '/stats',
   },
+  STATS_CEX: {
+    path: '/stats-cex',
+  },
   SYSTEM_STATUS: {
     path: '/system',
   },
