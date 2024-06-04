@@ -15,10 +15,11 @@ import useIsMobile from 'hooks/helpers/useIsMobile'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import IconButton from 'theme/Buttons/IconButton'
-import Drawer from 'theme/Modal/Drawer'
 import { PaginationWithLimit } from 'theme/Pagination'
+import RcDrawer from 'theme/RcDrawer'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
@@ -86,7 +87,6 @@ export default function UserActivity() {
   }
   const handleCopyDismiss = () => {
     setOpenCopyDrawer(false)
-    setCurrentCopyPosition(undefined)
   }
 
   const onChangeFilter = () => {
@@ -161,25 +161,22 @@ export default function UserActivity() {
           sx={{ py: 2 }}
         />
       </Flex>
-      {openCopyDrawer && currentCopyPosition && (
-        <Drawer
-          isOpen={openCopyDrawer}
-          onDismiss={handleCopyDismiss}
-          mode="right"
-          size={isMobile ? '100%' : '60%'}
-          background="neutral5"
-        >
-          <Container sx={{ position: 'relative', height: '100%' }}>
-            <IconButton
-              icon={<XCircle size={24} />}
-              variant="ghost"
-              sx={{ position: 'absolute', right: 1, top: 1, zIndex: 1 }}
-              onClick={handleCopyDismiss}
-            />
-            <CopyTradePositionDetails id={currentCopyPosition?.id ?? ''} />
-          </Container>
-        </Drawer>
-      )}
+      <RcDrawer
+        open={openCopyDrawer}
+        onClose={handleCopyDismiss}
+        width={isMobile ? '100%' : '60%'}
+        background={themeColors.neutral5}
+      >
+        <Container sx={{ position: 'relative', height: '100%' }}>
+          <IconButton
+            icon={<XCircle size={24} />}
+            variant="ghost"
+            sx={{ position: 'absolute', right: 1, top: 1, zIndex: 1 }}
+            onClick={handleCopyDismiss}
+          />
+          <CopyTradePositionDetails id={currentCopyPosition?.id ?? ''} />
+        </Container>
+      </RcDrawer>
     </>
   )
 }

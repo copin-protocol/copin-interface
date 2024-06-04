@@ -1,3 +1,4 @@
+import { useResponsive } from 'ahooks'
 import isEqual from 'lodash/isEqual'
 import { useEffect, useRef } from 'react'
 
@@ -54,8 +55,11 @@ export default function SelectedTraders({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listTraderAddresses])
 
+  const { sm } = useResponsive()
+
   return (
     <SelectTradersDropdown
+      menuSx={sm ? undefined : { transform: 'translateX(110px)' }}
       allTraders={allTraders}
       selectedTraders={selectedTraders}
       handleSelectAllTraders={handleSelectAllTraders}

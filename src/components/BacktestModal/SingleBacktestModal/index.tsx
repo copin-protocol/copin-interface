@@ -1,7 +1,7 @@
 import { Dispatch } from 'react'
 
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
-import Drawer from 'theme/Modal/Drawer'
+import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 
@@ -32,8 +32,13 @@ export default function SingleBackTestModal({
 
   if (!currentInstanceData) return <></>
   return (
-    <Drawer size="calc(100vh - 80px)" mode="bottom" isOpen={isOpen} onDismiss={onDismiss} background="neutral7">
-      <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>
+    <RcDrawer
+      open={isOpen}
+      onClose={onDismiss}
+      placement="bottom"
+      styles={{ wrapper: { height: 'calc(100% - 80px)' } }}
+    >
+      <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'auto', bg: 'neutral7' }}>
         {/* Header */}
         <TabHeader
           state={state}
@@ -70,6 +75,6 @@ export default function SingleBackTestModal({
           />
         </Box>
       </Flex>
-    </Drawer>
+    </RcDrawer>
   )
 }

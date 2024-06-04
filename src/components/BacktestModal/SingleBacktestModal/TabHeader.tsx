@@ -20,8 +20,8 @@ export default function TabHeader({
   const currentInstanceId = state.currentInstanceId
   return (
     <Flex sx={{ justifyContent: 'space-between', gap: 3, alignItems: 'center', width: '100%', pt: 1 }}>
-      <Flex sx={{ alignItems: 'center', gap: 3 }}>
-        <Flex sx={{ alignItems: 'center' }}>
+      <Flex flex="1" sx={{ alignItems: 'center', gap: 3 }}>
+        <Flex sx={{ alignItems: 'center', maxWidth: '100%', overflow: 'auto' }}>
           {state.instanceIds.map((id) => {
             const isSelected = id === currentInstanceId
             return (
@@ -34,6 +34,7 @@ export default function TabHeader({
                   px: 3,
                   borderTopLeftRadius: 'sm',
                   borderTopRightRadius: 'sm',
+                  flexShrink: 0,
                 }}
               >
                 <Flex
@@ -57,14 +58,14 @@ export default function TabHeader({
           role="button"
           onClick={onAddNewItem}
           icon={<PlusCircle size={24} />}
-          sx={{ color: 'primary1', '&:hover': { color: 'primary2' } }}
+          sx={{ flexShrink: 0, color: 'primary1', '&:hover': { color: 'primary2' } }}
         />
       </Flex>
       <IconBox
         role="button"
         onClick={onMinimize}
         icon={<MinusSquare size={24} />}
-        sx={{ color: 'neutral3', '&:hover': { color: 'neutral2' }, mr: 3 }}
+        sx={{ color: 'neutral3', flexShrink: 0, '&:hover': { color: 'neutral2' }, mr: 3 }}
       />
     </Flex>
   )

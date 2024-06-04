@@ -226,13 +226,11 @@ export default function MyCopies(props: MyCopiesProps) {
           onSuccess={() => onRefresh()}
         />
       )}
-      {openHistoryDrawer && (
-        <CopyTradeHistoryDrawer
-          isOpen={openHistoryDrawer}
-          onDismiss={handleCloseHistoryDrawer}
-          copyTradeData={copyTradeData.current}
-        />
-      )}
+      <CopyTradeHistoryDrawer
+        isOpen={openHistoryDrawer}
+        onDismiss={handleCloseHistoryDrawer}
+        copyTradeData={copyTradeData.current}
+      />
       {openCloneDrawer && (
         <CopyTradeCloneDrawer
           isOpen={openCloneDrawer}

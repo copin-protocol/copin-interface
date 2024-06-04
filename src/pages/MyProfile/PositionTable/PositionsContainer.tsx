@@ -16,7 +16,8 @@ import useIsMobile from 'hooks/helpers/useIsMobile'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import IconButton from 'theme/Buttons/IconButton'
-import Drawer from 'theme/Modal/Drawer'
+import RcDrawer from 'theme/RcDrawer'
+import { themeColors } from 'theme/colors'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
@@ -107,8 +108,6 @@ export default function PositionsContainer({
   const handleDismiss = () => {
     window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
     setOpenSourceDrawer(false)
-    setSourcePosition(undefined)
-    setCurrentCopyPosition(undefined)
   }
 
   const handleSelectCopyItem = (data: CopyPositionData) => {
@@ -118,7 +117,6 @@ export default function PositionsContainer({
 
   const handleCopyDismiss = () => {
     setOpenCopyDrawer(false)
-    setCurrentCopyPosition(undefined)
   }
 
   return (
@@ -132,44 +130,42 @@ export default function PositionsContainer({
           handleSelectCopyItem,
         },
       })}
-      {openSourceDrawer && sourcePosition && (
-        <Drawer
-          isOpen={openSourceDrawer}
-          onDismiss={handleDismiss}
-          mode="right"
-          size={isMobile ? '100%' : '60%'}
-          background="neutral6"
-        >
-          <Container sx={{ position: 'relative' }}>
-            <IconButton
-              icon={<XCircle size={24} />}
-              variant="ghost"
-              sx={{ position: 'absolute', right: 1, top: 3 }}
-              onClick={handleDismiss}
-            />
-            <PositionDetails protocol={sourcePosition.protocol} id={sourcePosition?.id} isShow={openSourceDrawer} />
-          </Container>
-        </Drawer>
-      )}
-      {openCopyDrawer && currentCopyPosition && (
-        <Drawer
-          isOpen={openCopyDrawer}
-          onDismiss={handleCopyDismiss}
-          mode="right"
-          size={isMobile ? '100%' : '60%'}
-          background="neutral5"
-        >
-          <Container sx={{ position: 'relative', height: '100%' }}>
-            <IconButton
-              icon={<XCircle size={24} />}
-              variant="ghost"
-              sx={{ position: 'absolute', right: 1, top: 2, zIndex: 1 }}
-              onClick={handleCopyDismiss}
-            />
-            <CopyTradePositionDetails id={currentCopyPosition?.id} />
-          </Container>
-        </Drawer>
-      )}
+      <RcDrawer
+        open={openSourceDrawer}
+        onClose={handleDismiss}
+        width={isMobile ? '100%' : '60%'}
+        background={themeColors.neutral6}
+      >
+        <Container sx={{ position: 'relative' }}>
+          <IconButton
+            icon={<XCircle size={24} />}
+            variant="ghost"
+            sx={{ position: 'absolute', right: 1, top: 3 }}
+            onClick={handleDismiss}
+          />
+          <PositionDetails
+            protocol={sourcePosition?.protocol}
+            id={sourcePosition?.id}
+            chartProfitId="my-profile-position"
+          />
+        </Container>
+      </RcDrawer>
+      <RcDrawer
+        open={openCopyDrawer}
+        onClose={handleCopyDismiss}
+        width={isMobile ? '100%' : '60%'}
+        background={themeColors.neutral6}
+      >
+        <Container sx={{ position: 'relative', height: '100%' }}>
+          <IconButton
+            icon={<XCircle size={24} />}
+            variant="ghost"
+            sx={{ position: 'absolute', right: 1, top: 2, zIndex: 1 }}
+            onClick={handleCopyDismiss}
+          />
+          <CopyTradePositionDetails id={currentCopyPosition?.id} />
+        </Container>
+      </RcDrawer>
       {openCloseModal && currentCopyPosition?.id && (
         <ClosePositionModal
           copyId={currentCopyPosition?.id}

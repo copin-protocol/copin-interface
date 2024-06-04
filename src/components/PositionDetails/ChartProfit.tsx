@@ -14,11 +14,11 @@ import WhatIf from './WhatIf'
 export default function ChartProfit({
   data,
   protocol,
-  isShow,
+  chartId,
 }: {
   data: PositionData | undefined
   protocol: ProtocolEnum
-  isShow?: boolean
+  chartId: string
 }) {
   const { prices } = useGetUsdPrices()
 
@@ -90,7 +90,7 @@ export default function ChartProfit({
               openBlockTime={openBlockTimeUnix}
               closeBlockTime={closeBlockTimeUnix}
               setCrossMove={setCrossMove}
-              isShow={isShow}
+              chartId={chartId}
             />
           )}
         </Box>

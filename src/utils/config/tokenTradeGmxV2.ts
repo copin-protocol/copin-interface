@@ -120,6 +120,13 @@ const TOKEN_TRADE_GMX_V2 = {
     decimals: 12,
     priceFeedId: '',
   },
+  '0x55391D178Ce46e7AC8eaAEa50A72D1A5a8A622Da': {
+    address: '0x55391D178Ce46e7AC8eaAEa50A72D1A5a8A622Da',
+    name: 'GMX',
+    symbol: 'GMX',
+    decimals: 18,
+    priceFeedId: '',
+  },
 }
 
 for (const key in TOKEN_TRADE_GMX_V2) {

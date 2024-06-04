@@ -9,8 +9,9 @@ import useUserLogDetails from 'hooks/features/useUserLogDetails'
 import { isMobile } from 'hooks/helpers/useIsMobile'
 import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
-import Drawer from 'theme/Modal/Drawer'
+import RcDrawer from 'theme/RcDrawer'
 import { Flex, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 
 export default function CopyWalletHistoryDrawer({
   isOpen,
@@ -24,7 +25,7 @@ export default function CopyWalletHistoryDrawer({
   const { data, isLoading } = useUserLogDetails({ modelId: copyWallet?.id })
 
   return (
-    <Drawer isOpen={isOpen} onDismiss={onDismiss} mode="right" size={isMobile ? '100%' : '60%'} background="neutral5">
+    <RcDrawer open={isOpen} onClose={onDismiss} width={isMobile ? '100%' : '60%'} background={themeColors.neutral5}>
       <Container p={3} sx={{ position: 'relative', height: '100%' }}>
         <IconButton
           icon={<XCircle size={24} />}
@@ -45,6 +46,6 @@ export default function CopyWalletHistoryDrawer({
             })}
         </Flex>
       </Container>
-    </Drawer>
+    </RcDrawer>
   )
 }

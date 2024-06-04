@@ -25,7 +25,7 @@ import { formatNumber } from 'utils/helpers/format'
 
 import { RISK_LEVERAGE } from '../CopyTradeForm/configs'
 import BacktestGuideTour, { tourConfigs } from './BacktestGuideTour'
-import { fieldName, getDefaultBackTestFormValues } from './constants'
+import { DISABLED_MARGIN_PROTECTION_PROTOCOLS, fieldName, getDefaultBackTestFormValues } from './constants'
 import { BackTestFormValues } from './types'
 import { backTestFormSchema } from './yupSchema'
 
@@ -326,26 +326,28 @@ export default function BacktestForm({
                 as the margin.
               </Type.Caption>
             </Box>
-            <Box mt={24}>
-              <NumberInputField
-                block
-                label="Margin Protection"
-                name={fieldName.lookBackOrders}
-                control={control}
-                error={errors.lookBackOrders?.message}
-                suffix={<InputSuffix>Orders Lookback</InputSuffix>}
-              />
-              <Type.Caption mt={1} color="neutral2">
-                <Trans>
-                  Allocating margin based on trader&#39;s average margin of the last{' '}
-                  {lookBackOrders ? <Type.CaptionBold>{lookBackOrders}</Type.CaptionBold> : '--'}{' '}
-                </Trans>{' '}
-                orders.{' '}
-                <a href={'https://tutorial.copin.io/how-to-use-copy-trading'} target="_blank" rel="noreferrer">
-                  <Trans>Example</Trans>
-                </a>
-              </Type.Caption>
-            </Box>
+            {!DISABLED_MARGIN_PROTECTION_PROTOCOLS.includes(protocol) && (
+              <Box mt={24}>
+                <NumberInputField
+                  block
+                  label="Margin Protection"
+                  name={fieldName.lookBackOrders}
+                  control={control}
+                  error={errors.lookBackOrders?.message}
+                  suffix={<InputSuffix>Orders Lookback</InputSuffix>}
+                />
+                <Type.Caption mt={1} color="neutral2">
+                  <Trans>
+                    Allocating margin based on trader&#39;s average margin of the last{' '}
+                    {lookBackOrders ? <Type.CaptionBold>{lookBackOrders}</Type.CaptionBold> : '--'}{' '}
+                  </Trans>{' '}
+                  orders.{' '}
+                  <a href={'https://tutorial.copin.io/how-to-use-copy-trading'} target="_blank" rel="noreferrer">
+                    <Trans>Example</Trans>
+                  </a>
+                </Type.Caption>
+              </Box>
+            )}
           </>
         }
       />

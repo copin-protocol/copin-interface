@@ -29,13 +29,14 @@ import CopyPositionHistories from './CopyPositionHistories'
 import ListCopyOrderTable from './ListCopyOrderTable'
 import UnlinkPosition from './UnlinkPosition'
 
-export default function CopyTradePositionDetails({ id }: { id: string }) {
+export default function CopyTradePositionDetails({ id }: { id: string | undefined }) {
   const { prices } = useGetUsdPrices()
   const {
     data,
     isLoading,
     refetch: reloadPosition,
-  } = useQuery([QUERY_KEYS.GET_MY_COPY_POSITION_DETAIL, id], () => getMyCopyPositionDetailApi({ copyId: id }), {
+  } = useQuery([QUERY_KEYS.GET_MY_COPY_POSITION_DETAIL, id], () => getMyCopyPositionDetailApi({ copyId: id ?? '' }), {
+    enabled: !!id,
     retry: 0,
   })
   const { data: copyTradeDetails, isLoading: loadingInfo } = useQuery(
@@ -132,7 +133,8 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
             <Flex
               alignItems="center"
               sx={{
-                gap: [2, 3],
+                columnGap: 3,
+                rowGap: 2,
                 flexWrap: 'wrap',
                 px: 2,
                 py: [2, 12],
@@ -169,7 +171,8 @@ export default function CopyTradePositionDetails({ id }: { id: string }) {
             <Flex
               alignItems="center"
               sx={{
-                gap: [2, 3],
+                columnGap: 3,
+                rowGap: 2,
                 mx: 2,
                 py: [2, 12],
                 flexWrap: 'wrap',

@@ -92,7 +92,7 @@ export default function TraderRankingExpanded({
         borderTopColor: 'neutral4',
         ...layoutConfigs.position,
         bg: 'neutral8',
-        zIndex: 10,
+        zIndex: 101,
       }}
     >
       <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>

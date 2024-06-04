@@ -31,7 +31,11 @@ const DesktopLayout = (props: LayoutProps) => {
       <Box sx={{ flexShrink: 0, height: 56, borderBottom: 'small', borderBottomColor: 'neutral4' }}>
         {props.protocolStats}
       </Box>
-      <Box sx={{ flexShrink: 0, borderBottom: 'small', borderBottomColor: 'neutral4' }}>{props.traderInfo}</Box>
+      <Box
+        sx={{ flexShrink: 0, borderBottom: 'small', borderBottomColor: 'neutral4', position: 'relative', zIndex: 10 }}
+      >
+        {props.traderInfo}
+      </Box>
       <Box flex="1 0 0" overflow="hidden">
         <Grid
           sx={{

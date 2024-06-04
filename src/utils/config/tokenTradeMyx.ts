@@ -4,6 +4,7 @@ const MYX_PAIRS = {
   'MYX_ARB-1': 'BTC',
   'MYX_ARB-2': 'ETH',
   'MYX_ARB-3': 'ARB',
+  'MYX_ARB-4': 'SOL',
 }
 
 type TokenValues = Record<

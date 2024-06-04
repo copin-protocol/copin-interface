@@ -39,14 +39,14 @@ export default function ChartProfitComponent({
   openBlockTime,
   closeBlockTime,
   setCrossMove,
-  isShow,
+  chartId,
 }: {
   position: PositionData
   isOpening: boolean
   openBlockTime: number
   closeBlockTime: number
   setCrossMove: (value?: { pnl?: number; time?: number }) => void
-  isShow?: boolean
+  chartId: string
 }) {
   const protocol = position.protocol
 
@@ -286,7 +286,7 @@ export default function ChartProfitComponent({
 
   useEffect(() => {
     if (isOpening) return
-    if (nextHours && isShow) {
+    if (nextHours) {
       // setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: nextHours.toString() })
       window.history.replaceState(
         null,
@@ -300,11 +300,14 @@ export default function ChartProfitComponent({
     }
   }, [])
 
+  const chartContainerId = ELEMENT_IDS.POSITION_CHART_PNL + chartId
+  const legendContainerId = 'legend-profit' + chartId
+
   useEffect(() => {
     if (isLoading || !data) return
 
     const container = document.getElementById(ELEMENT_IDS.POSITION_CHART_PNL)
-    const chart = createChart(container ? container : ELEMENT_IDS.POSITION_CHART_PNL, {
+    const chart = createChart(container ? container : chartContainerId, {
       height: CHART_HEIGHT,
       rightPriceScale: {
         autoScale: true,
@@ -542,8 +545,8 @@ export default function ChartProfitComponent({
       }
     }
 
-    const legend = document.getElementById('legend-profit') ?? document.createElement('div')
-    legend.setAttribute('id', 'legend-profit')
+    const legend = document.getElementById(legendContainerId) ?? document.createElement('div')
+    legend.setAttribute('id', legendContainerId)
     if (container && legend) {
       legend.style.position = 'absolute'
       legend.style.left = '0px'
@@ -619,9 +622,9 @@ export default function ChartProfitComponent({
 
   return (
     <Box mt={24} sx={{ position: 'relative' }} minHeight={CHART_HEIGHT}>
-      <div id="legend-profit" />
+      <div id={legendContainerId} />
       {currentOrder && <OrderTooltip data={currentOrder} />}
-      {isLoading ? <Loading /> : <div id={ELEMENT_IDS.POSITION_CHART_PNL} />}
+      {isLoading ? <Loading /> : <div id={chartContainerId} />}
     </Box>
   )
 }

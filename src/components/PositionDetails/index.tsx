@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
@@ -15,7 +16,7 @@ import CopyButton from 'theme/Buttons/CopyButton'
 import Loading from 'theme/Loading'
 import Tag from 'theme/Tag'
 import { Box, Flex, Type } from 'theme/base'
-import { LINKS } from 'utils/config/constants'
+import { DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum, TraderStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
@@ -27,16 +28,16 @@ import ListOrderTable from './ListOrderTable'
 import PositionStats from './PositionStats'
 import { getOrderData } from './helper'
 
-export default function PositionDetails({
+const PositionDetails = memo(function PositionDetailsMemo({
   protocol,
   id,
-  isShow,
   isDrawer = true,
+  chartProfitId,
 }: {
-  protocol: ProtocolEnum
-  id: string
-  isShow?: boolean
+  protocol: ProtocolEnum | undefined
+  id: string | undefined
   isDrawer?: boolean
+  chartProfitId: string
 }) {
   const { searchParams } = useSearchParams()
   const highlightTxHash = searchParams?.[URL_PARAM_KEYS.HIGHLIGHT_TX_HASH] as string | undefined
@@ -44,9 +45,9 @@ export default function PositionDetails({
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
   const { data, isLoading } = useQuery(
     [QUERY_KEYS.GET_POSITION_DETAIL, id, protocol, myProfile?.id],
-    () => getPositionDetailByIdApi({ protocol, id }),
+    () => getPositionDetailByIdApi({ protocol: protocol || DEFAULT_PROTOCOL, id: id || '' }),
     {
-      enabled: !!id,
+      enabled: !!id && !!protocol,
       retry: 0,
       select(data) {
         const orders = getOrderData({
@@ -57,6 +58,8 @@ export default function PositionDetails({
         })
         return { ...data, orders }
       },
+      staleTime: 0,
+      cacheTime: 0,
     }
   )
 
@@ -108,7 +111,7 @@ export default function PositionDetails({
             }}
           >
             <PositionStats data={data} />
-            {data && <ChartProfit data={data} protocol={protocol} isShow={isShow} />}
+            {data && <ChartProfit data={data} protocol={protocol || DEFAULT_PROTOCOL} chartId={chartProfitId} />}
           </Box>
 
           <Box width="100%" overflow="hidden" sx={{ pt: 12 }}>
@@ -125,4 +128,6 @@ export default function PositionDetails({
       )}
     </>
   )
-}
+})
+
+export default PositionDetails

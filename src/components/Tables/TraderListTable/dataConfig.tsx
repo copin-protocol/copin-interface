@@ -13,6 +13,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { SortTypeEnum } from 'utils/config/enums'
 import { PLATFORM_TRANS } from 'utils/config/translations'
 import { compactNumber, formatDuration, formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
+import { convertUniqueMarkets } from 'utils/helpers/transform'
 import { FilterCondition } from 'utils/types'
 
 export type TableSettings<T, K = unknown> = {
@@ -152,13 +153,15 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
       in: [],
     },
     id: 'indexTokens',
-    render: (item, _, externalSource) => (
-      <MarketGroup
-        protocol={item.protocol}
-        indexTokens={item.indexTokens}
-        sx={{ justifyContent: externalSource?.isMarketsLeft ? 'flex-start' : 'flex-end' }}
-      />
-    ),
+    render: (item, _, externalSource) => {
+      return (
+        <MarketGroup
+          protocol={item.protocol}
+          indexTokens={convertUniqueMarkets(item.protocol, item.indexTokens)}
+          sx={{ justifyContent: externalSource?.isMarketsLeft ? 'flex-start' : 'flex-end' }}
+        />
+      )
+    },
   },
   pnl: {
     style: { minWidth: ['100px', '120px'] },

@@ -18,12 +18,20 @@ export default function FilterMarket({
 }) {
   const { protocol } = useProtocolStore()
   const pairs = protocol && getTokenTradeList(protocol)
-  const pairOptions = pairs
-    ?.sort((x, y) => (x.symbol < y.symbol ? -1 : x.symbol > y.symbol ? 1 : 0))
-    ?.map((e) => {
-      return { value: e.address, label: e.name }
-    })
-  const allPairs = pairs?.map((e) => e.address) ?? []
+  const pairOptions = Object.values(
+    pairs
+      ?.sort((x, y) => (x.symbol < y.symbol ? -1 : x.symbol > y.symbol ? 1 : 0))
+      .reduce((acc: any, market) => {
+        if (!acc[market.symbol]) {
+          acc[market.symbol] = market
+        }
+        return acc
+      }, {})
+  )?.map((e: any) => {
+    return { value: e.symbol, label: e.name }
+  })
+
+  const allPairs = Array.from(new Set(pairs?.map((e) => e.symbol))) ?? []
   const initSelected = filters.find((e) => e.key === 'indexTokens')?.in
   const [keyword, setKeyword] = useState<string | undefined>()
   const [selectedItems, setSelectedItems] = useState<string[]>(() => {
@@ -32,11 +40,12 @@ export default function FilterMarket({
 
   const handleSelect = (item: string) => {
     const newValues = selectedItems.includes(item) ? selectedItems.filter((e) => e !== item) : [...selectedItems, item]
-    setSelectedItems(newValues)
+    const symbols = Array.from(new Set(pairs.filter((e) => newValues.includes(e.symbol)).map((e) => e.symbol)))
+    setSelectedItems(symbols)
     let formValues = [...filters]
     const index = filters.findIndex((e) => e.key === 'indexTokens')
-    const filterValue: RowValues<TraderData> = { key: 'indexTokens', conditionType: 'in', in: newValues }
-    if (newValues.length > 0) {
+    const filterValue: RowValues<TraderData> = { key: 'indexTokens', conditionType: 'in', in: symbols }
+    if (symbols.length > 0) {
       if (index === -1) {
         formValues = [...formValues, filterValue]
       } else {

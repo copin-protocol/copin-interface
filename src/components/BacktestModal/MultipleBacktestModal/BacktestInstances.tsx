@@ -1,10 +1,10 @@
-import { Fragment, useRef } from 'react'
+import { useRef } from 'react'
 
 import { WarningType } from 'components/BacktestModal/WarningModal'
 import useBacktestWarningModal from 'hooks/store/useBacktestWarningModal'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
 import { Button } from 'theme/Buttons'
-import Drawer from 'theme/Modal/Drawer'
+import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex } from 'theme/base'
 
 import HomeSelectedTable from './SelectedTable'
@@ -33,7 +33,7 @@ export default function BacktestInstances() {
   const currentBacktestInstance = currentHomeInstance.backtestInstancesMapping[currentBacktestInstanceId ?? '']
 
   return (
-    <Drawer isOpen={isFocusBacktest} dangerouslyBypassFocusLock mode="bottom" size="calc(100vh - 80px)">
+    <RcDrawer open={isFocusBacktest} placement="bottom" height="calc(100vh - 80px)">
       <Flex bg="neutral7" height="100%" flexDirection="column">
         {/* Header */}
         <Flex
@@ -79,6 +79,6 @@ export default function BacktestInstances() {
           </Box>
         </Box>
       </Flex>
-    </Drawer>
+    </RcDrawer>
   )
 }

@@ -204,7 +204,7 @@ function PickFromFavorites(props: FindAndSelectTraderProps) {
         onClick={() => setOpenFavoriteModal(true)}
       />
       <Box sx={{ width: 0, height: 0, overflow: 'hidden' }}>
-        {openFavoriteModal && <PickFromFavoritesModal {...props} onDismiss={() => setOpenFavoriteModal(false)} />}
+        <PickFromFavoritesModal {...props} isOpen={openFavoriteModal} onDismiss={() => setOpenFavoriteModal(false)} />
       </Box>
     </Box>
   )
@@ -220,7 +220,11 @@ function PickFromCopyTrades(props: FindAndSelectTraderProps) {
         onClick={() => setOpenCopyTradesModal(true)}
       />
       <Box sx={{ width: 0, height: 0, overflow: 'hidden' }}>
-        {openCopyTradesModal && <PickFromCopyTradesModal {...props} onDismiss={() => setOpenCopyTradesModal(false)} />}
+        <PickFromCopyTradesModal
+          {...props}
+          isOpen={openCopyTradesModal}
+          onDismiss={() => setOpenCopyTradesModal(false)}
+        />
       </Box>
     </Box>
   )

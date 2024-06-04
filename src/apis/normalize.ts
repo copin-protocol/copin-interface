@@ -5,7 +5,7 @@ import {
   TraderData,
   TraderTokenStatistic,
 } from 'entities/trader'
-import { MarginModeEnum, SortTypeEnum } from 'utils/config/enums'
+import { MarginModeEnum, PositionStatusEnum, SortTypeEnum } from 'utils/config/enums'
 import { decodeRealisedData } from 'utils/helpers/handleRealised'
 import { convertDurationInSecond } from 'utils/helpers/transform'
 
@@ -33,7 +33,7 @@ export const normalizeTraderData = (t: ResponseTraderData) => {
 export const normalizePositionData = (p: ResponsePositionData) => {
   p.roi = p.realisedRoi
   p.pnl = p.realisedPnl
-  if (!p.durationInSecond) {
+  if (p.status === PositionStatusEnum.OPEN) {
     p.durationInSecond = convertDurationInSecond(p.openBlockTime)
   }
   p.marginMode = p.marginMode

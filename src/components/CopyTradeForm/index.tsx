@@ -252,7 +252,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
       )}
 
       <Box sx={{ pb: 24, px: [12, 24], pt: 3 }}>
-        <InputField block {...register(fieldName.title)} error={errors.title?.message} label="Label" />
+        <InputField block maxLength={40} {...register(fieldName.title)} error={errors.title?.message} label="Label" />
         {(isEdit || isClone) && (
           <>
             {isEdit && (
@@ -357,6 +357,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
         <Box mt={24}>
           <NumberInputField
+            maxLength={40}
             label="Margin"
             block
             name={fieldName.volume}
@@ -551,6 +552,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           body={
             <Box mt={3}>
               <NumberInputField
+                maxLength={40}
                 label="Stop Loss (Recommended)"
                 block
                 name={fieldName.stopLossAmount}
@@ -581,6 +583,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               <NumberInputField
                 label="Take Profit"
                 block
+                maxLength={40}
                 name={fieldName.takeProfitAmount}
                 control={control}
                 error={errors.takeProfitAmount?.message}
@@ -635,6 +638,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           body={
             <Box mt={3}>
               <NumberInputField
+                maxLength={40}
                 block
                 label="Max Margin Per Position"
                 name={fieldName.maxMarginPerPosition}
@@ -655,6 +659,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               </Type.Caption>
               <Box mt={24}>
                 <NumberInputField
+                  maxLength={40}
                   block
                   label="Margin Protection"
                   name={fieldName.lookBackOrders}
@@ -682,6 +687,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                 />
                 <Box mt={2} sx={{ display: skipLowLeverage ? 'block' : 'none' }}>
                   <NumberInputField
+                    maxLength={40}
                     block
                     required
                     label="Low Leverage"
@@ -704,6 +710,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                 />
                 <Box mt={2} sx={{ display: skipLowCollateral ? 'block' : 'none' }}>
                   <NumberInputField
+                    maxLength={40}
                     block
                     required
                     label="Low Collateral"

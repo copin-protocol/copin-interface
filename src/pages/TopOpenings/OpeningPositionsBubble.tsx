@@ -1,6 +1,6 @@
 import { XCircle } from '@phosphor-icons/react'
 import { useSize } from 'ahooks'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import Container from 'components/@ui/Container'
 import BubbleChart, { BubbleChartData } from 'components/Charts/BubbleChart'
@@ -8,7 +8,8 @@ import PositionDetails from 'components/PositionDetails'
 import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import IconButton from 'theme/Buttons/IconButton'
-import Drawer from 'theme/Modal/Drawer'
+import RcDrawer from 'theme/RcDrawer'
+import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { getTokenTradeSupport } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
@@ -21,6 +22,7 @@ import { addressShorten } from 'utils/helpers/format'
 
 const OpeningPositionsBubble = ({ data, protocol }: { data: PositionData[]; protocol: ProtocolEnum }) => {
   const isMobile = useIsMobile()
+  const [openDrawer, setOpenDrawer] = useState(false)
   const [selectedId, setSelectedId] = useState<string>()
   const containerRef = useRef<HTMLDivElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -54,7 +56,10 @@ const OpeningPositionsBubble = ({ data, protocol }: { data: PositionData[]; prot
       const chart = BubbleChart(transformedData, {
         width: size.width,
         height: size.height,
-        onSelect: (data: BubbleChartData) => setSelectedId(data.id),
+        onSelect: (data: BubbleChartData) => {
+          setSelectedId(data.id)
+          setOpenDrawer(true)
+        },
       })
       if (!chart) return
       chartRef.current = chart
@@ -71,25 +76,22 @@ const OpeningPositionsBubble = ({ data, protocol }: { data: PositionData[]; prot
     <div ref={wrapperRef} style={{ width: '100%', height: '100%' }}>
       {size && <div ref={containerRef} style={{ width: size.width, height: size.height }} />}
 
-      {!!selectedId && (
-        <Drawer
-          isOpen={!!selectedId}
-          onDismiss={() => setSelectedId(undefined)}
-          mode="right"
-          size={isMobile ? '100%' : '60%'}
-          background="neutral6"
-        >
-          <Container sx={{ position: 'relative', width: '100%', height: '100%' }}>
-            <IconButton
-              icon={<XCircle size={24} />}
-              variant="ghost"
-              sx={{ position: 'absolute', right: 1, top: 3 }}
-              onClick={() => setSelectedId(undefined)}
-            />
-            <PositionDetails protocol={protocol} id={selectedId} isShow={!!selectedId} />
-          </Container>
-        </Drawer>
-      )}
+      <RcDrawer
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        width={isMobile ? '100%' : '60%'}
+        background={themeColors.neutral6}
+      >
+        <Container sx={{ position: 'relative', width: '100%', height: '100%' }}>
+          <IconButton
+            icon={<XCircle size={24} />}
+            variant="ghost"
+            sx={{ position: 'absolute', right: 1, top: 3 }}
+            onClick={() => setOpenDrawer(false)}
+          />
+          <PositionDetails protocol={protocol} id={selectedId} chartProfitId="top-opening-bubble-chart" />
+        </Container>
+      </RcDrawer>
     </div>
   )
 }

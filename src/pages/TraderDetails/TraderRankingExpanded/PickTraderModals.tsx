@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
+import { XCircle } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
@@ -10,11 +11,14 @@ import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { CopyTradeData } from 'entities/copyTrade'
 import { FavoritedTrader } from 'entities/trader'
 import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 import { renderTrader } from 'pages/MyProfile/renderProps'
 import { Button } from 'theme/Buttons'
+import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
-import Drawer from 'theme/Modal/Drawer'
+import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { DEFAULT_PROTOCOL, RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
 
@@ -27,9 +31,11 @@ export function PickFromFavoritesModal({
   ignoreSelectTraders,
   onDismiss,
   timeOption,
-}: FindAndSelectTraderProps & { onDismiss: () => void }) {
+  isOpen,
+}: FindAndSelectTraderProps & { isOpen: boolean; onDismiss: () => void }) {
+  const myProfile = useMyProfileStore((_s) => _s.myProfile)
   const { data: tradersData, isLoading } = useQuery(
-    [QUERY_KEYS.GET_FAVORITE_TRADERS, ignoreSelectTraders],
+    [QUERY_KEYS.GET_FAVORITE_TRADERS, ignoreSelectTraders, myProfile?.id],
     () => {
       return Promise.all(
         RELEASED_PROTOCOLS.map((protocol) => {
@@ -38,6 +44,7 @@ export function PickFromFavoritesModal({
       )
     },
     {
+      enabled: !!myProfile?.id && !!isOpen,
       retry: 0,
       select: (data) =>
         data.reduce((result, traders) => {
@@ -62,17 +69,15 @@ export function PickFromFavoritesModal({
   })
 
   return (
-    <Drawer
-      mode="right"
-      isOpen
-      size="350px"
-      background="neutral5"
-      hasClose
-      title={<Trans>Favorite List</Trans>}
-      onDismiss={onDismiss}
-    >
+    <RcDrawer open={isOpen} width="350px" background={themeColors.neutral5} onClose={onDismiss}>
       <Box sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
+        <Flex sx={{ height: 60, px: 3, alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+          <Type.Body>
+            <Trans>Favorite List</Trans>
+          </Type.Body>
+          <IconButton icon={<XCircle size={24} />} variant="ghost" onClick={onDismiss} />
+        </Flex>
+        <Box sx={{ width: '100%', height: 'calc(100% - 60px)', overflow: 'auto' }}>
           {isLoading && <Loading />}
           {!isLoading && !tradersData?.length && <NoDataFound />}
           {!isLoading &&
@@ -92,16 +97,17 @@ export function PickFromFavoritesModal({
         </Box>
         <SelectTraderState isLoading={isSelecting} error={error} timeOption={timeOption} setError={setError} />
       </Box>
-    </Drawer>
+    </RcDrawer>
   )
 }
 
 export function PickFromCopyTradesModal({
   onSelect,
   ignoreSelectTraders,
+  isOpen,
   onDismiss,
   timeOption,
-}: FindAndSelectTraderProps & { onDismiss: () => void }) {
+}: FindAndSelectTraderProps & { isOpen: boolean; onDismiss: () => void }) {
   const [selectedCopyTrade, setSelectedCopyTrade] = useState<CopyTradeData>()
   const {
     isLoading: isSelecting,
@@ -127,17 +133,15 @@ export function PickFromCopyTradesModal({
   })
 
   return (
-    <Drawer
-      mode="right"
-      isOpen
-      size="350px"
-      background="neutral5"
-      hasClose
-      title={<Trans>Copytrade List</Trans>}
-      onDismiss={onDismiss}
-    >
+    <RcDrawer open={isOpen} width="350px" background={themeColors.neutral5} onClose={onDismiss}>
       <Box sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
+        <Flex sx={{ height: 60, px: 3, alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+          <Type.Body>
+            <Trans>Copytrade List</Trans>
+          </Type.Body>
+          <IconButton icon={<XCircle size={24} />} variant="ghost" onClick={onDismiss} />
+        </Flex>
+        <Box sx={{ width: '100%', height: 'calc(100% - 60px)', overflow: 'auto' }}>
           {!_allCopyTrades?.length && <NoDataFound />}
           {_allCopyTrades?.map((data) => {
             return (
@@ -150,7 +154,7 @@ export function PickFromCopyTradesModal({
         </Box>
         <SelectTraderState isLoading={isSelecting} error={error} timeOption={timeOption} setError={setError} />
       </Box>
-    </Drawer>
+    </RcDrawer>
   )
 }
 function SelectTraderState({

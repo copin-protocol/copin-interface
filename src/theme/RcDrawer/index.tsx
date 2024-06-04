@@ -2,21 +2,34 @@ import { ArrowLeft, XCircle } from '@phosphor-icons/react'
 import Drawer, { DrawerProps } from 'rc-drawer'
 import 'rc-drawer/assets/index.css'
 import { ReactNode } from 'react'
-import { createGlobalStyle } from 'styled-components/macro'
 
 import { Flex, IconBox } from 'theme/base'
+import { themeColors } from 'theme/colors'
 
 import motionProps from './motion'
 import { levelOneStyles } from './styles'
 
-export default function RcDrawer({ children, styles, ...props }: DrawerProps & { children: ReactNode }) {
+export default function RcDrawer({
+  children,
+  styles,
+  background = themeColors.neutral6,
+  height = '100%',
+  maskColor = themeColors.modalBG1,
+  ...props
+}: DrawerProps & { children: ReactNode; background?: string; height?: string; maskColor?: string }) {
   return (
     <>
-      <RcDrawerStyle />
       <Drawer
         destroyOnClose={false}
         placement="right"
-        styles={{ ...levelOneStyles(), ...styles }}
+        keyboard
+        styles={{
+          ...levelOneStyles(),
+          ...(styles || {}),
+          mask: { background: maskColor, ...(styles?.mask || {}) },
+          wrapper: { height, ...(styles?.wrapper || {}) },
+          content: { background, height, ...(styles?.content || {}) },
+        }}
         {...props}
         {...motionProps}
       >
@@ -57,136 +70,3 @@ export function DrawerTitle({
     </Flex>
   )
 }
-
-export const RcDrawerStyle = createGlobalStyle`
-.drawer {
-  .ant-menu-inline,
-  .ant-menu-vertical {
-    border-right: none;
-  }
-  &-content {
-    padding-top: 40px;
-  }
-  &-left {
-    .ant-menu-inline .ant-menu-item:after,
-    .ant-menu-vertical .ant-menu-item:after {
-      left: 0;
-      right: auto;
-    }
-  }
-}
-
-.drawer-wrapper {
-  .drawer {
-    animation: AlphaTo .3s ease-out .3s;
-    animation-fill-mode: forwards;
-    opacity: 0;
-  }
-}
-
-@keyframes AlphaTo {
-  to {
-    opacity: 1;
-    left: 0;
-  }
-}
-
-.parent-demo {
-  position: relative;
-  overflow: hidden;
-  .drawer {
-    position: absolute;
-  }
-}
-
-.mask-motion {
-  &-enter,
-  &-appear,
-  &-leave {
-    &-active {
-      transition: all 0.3s;
-    }
-  }
-
-  &-enter,
-  &-appear {
-    opacity: 0;
-
-    &-active {
-      opacity: 1;
-    }
-  }
-
-  &-leave {
-    opacity: 1;
-
-    &-active {
-      opacity: 0;
-    }
-  }
-}
-
-.panel-motion {
-  &-left {
-    &-enter,
-    &-appear,
-    &-leave {
-      &-start {
-        transition: none!important;
-      }
-
-      &-active {
-        transition: all 0.3s;
-      }
-    }
-
-    &-enter,
-    &-appear {
-      transform: translateX(-100%);
-
-      &-active {
-        transform: translateX(0);
-      }
-    }
-
-    &-leave {
-      transform: translateX(0);
-
-      &-active {
-        transform: translateX(-100%)!important;
-      }
-    }
-  }
-
-  &-right {
-    &-enter,
-    &-appear,
-    &-leave {
-      &-start {
-        transition: none!important;
-      }
-
-      &-active {
-        transition: all 0.3s;
-      }
-    }
-
-    &-enter,
-    &-appear {
-      transform: translateX(100%);
-
-      &-active {
-        transform: translateX(0);
-      }
-    }
-
-    &-leave {
-      transform: translateX(0);
-
-      &-active {
-        transform: translateX(100%)!important;
-      }
-    }
-  }
-}
-`

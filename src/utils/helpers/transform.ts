@@ -21,6 +21,7 @@ import {
   SLTP_TYPE_TRANS,
 } from 'utils/config/translations'
 
+import { getTokenTradeSupport } from '../config/trades'
 import { ARBITRUM_MAINNET, BNB_MAINNET, CHAINS, OPTIMISM_MAINNET, POLYGON_MAINNET } from '../web3/chains'
 import { addressShorten, formatNumber, shortenText } from './format'
 
@@ -366,4 +367,19 @@ export const parseChainFromNetwork = (network: string) => {
         icon: CHAINS[ARBITRUM_MAINNET].icon,
       }
   }
+}
+
+export function convertUniqueMarkets(protocol: ProtocolEnum, indexTokens: string[]) {
+  const tokenTradeSupport = getTokenTradeSupport(protocol)
+  const markets: { indexToken: string; symbol: string }[] = indexTokens
+    .map((e) => {
+      return { indexToken: e, symbol: tokenTradeSupport[e]?.symbol ?? e }
+    })
+    .reduce((acc: any, market) => {
+      if (!acc[market.symbol]) {
+        acc[market.symbol] = market
+      }
+      return acc
+    }, {})
+  return Object.values(markets).map((market) => market.indexToken)
 }

@@ -7,7 +7,7 @@ import { TraderData } from 'entities/trader'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
 import { HandleSelectTrader, SelectedTrader } from 'pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader'
 import { Button } from 'theme/Buttons'
-import Drawer from 'theme/Modal/Drawer'
+import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, Type } from 'theme/base'
 
 import ComparisonComponent, { ComparisonComponentProps } from './ComparisonComponent'
@@ -69,7 +69,7 @@ export default function ViewComparison({
 
   return (
     <>
-      <Drawer isOpen={isOpen} dangerouslyBypassFocusLock mode="bottom" size="calc(100vh - 80px)">
+      <RcDrawer open={isOpen} placement="bottom" height="calc(100vh - 80px)" onClose={onDismiss}>
         <Flex bg="neutral7" height="100%" flexDirection="column">
           {/* Header */}
           <Flex
@@ -102,7 +102,7 @@ export default function ViewComparison({
             secondComponent={SecondComponent}
           />
         </Flex>
-      </Drawer>
+      </RcDrawer>
     </>
   )
 }

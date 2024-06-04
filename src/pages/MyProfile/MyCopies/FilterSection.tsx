@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Funnel, XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
 import ProtocolGroup from 'components/@ui/ProtocolGroup'
@@ -10,7 +10,7 @@ import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOption
 import { ALLOWED_PROTOCOLS } from 'pages/Home/configs'
 import Checkbox from 'theme/Checkbox'
 import Dropdown from 'theme/Dropdown'
-import Drawer from 'theme/Modal/Drawer'
+import RcDrawer from 'theme/RcDrawer'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -267,14 +267,12 @@ export default function FilterSection({
             {copyStatus.length + selectedProtocol.length}
           </Box>
         </Flex>
-        <Drawer
-          background="neutral7"
-          isOpen={openMobileFilterModal}
-          mode="right"
-          onDismiss={() => setOpenModal(false)}
-          contentWidth="300px"
-          contentHeight="100%"
-          overlayBG="rgba(19, 19, 19, 0.83)"
+        <RcDrawer
+          background={themeColors.neutral7}
+          open={openMobileFilterModal}
+          onClose={() => setOpenModal(false)}
+          width="300px"
+          maskColor="rgba(19, 19, 19, 0.83)"
         >
           <Box p={3} sx={{ position: 'relative' }}>
             <Box sx={{ position: 'fixed', p: 2, top: 0, right: 0, bg: 'neutral7' }}>
@@ -289,7 +287,7 @@ export default function FilterSection({
             <Divider my={3} />
             {filterBySource}
           </Box>
-        </Drawer>
+        </RcDrawer>
         {/* </Dropdown> */}
       </Flex>
     </>

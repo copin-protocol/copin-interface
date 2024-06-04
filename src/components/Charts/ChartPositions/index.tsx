@@ -315,7 +315,7 @@ export default function ChartPositions({
     >
       {/*<div id={legendId} />*/}
       {/*<div id={tooltipId} />*/}
-      <Flex width="100%" alignItems="center" sx={{ position: 'absolute', top: 0, left: 0, zIndex: 100 }}>
+      <Flex width="100%" alignItems="center" sx={{ position: 'absolute', top: 0, left: 0, zIndex: 9 }}>
         {currentPosition && (
           <PositionLegend
             isExpanded={isExpanded}
@@ -328,7 +328,7 @@ export default function ChartPositions({
         <Flex pl={12} alignItems="center" sx={{ gap: 2 }}>
           <Type.Caption color="neutral3">{currencyOption?.label}:</Type.Caption>
           <Type.Small color="neutral1">-</Type.Small>
-          <Flex alignItems="center" sx={{ gap: 2 }}>
+          <Flex alignItems="center" sx={{ gap: 2, '.currency_option': { zIndex: 8 } }}>
             <TimeframeSelection isExpanded={isExpanded} currentOption={timeframe} changeOption={changeTimeframe} />
             {!!currencyOptions?.length && !!changeCurrency && (
               <CurrencyOption

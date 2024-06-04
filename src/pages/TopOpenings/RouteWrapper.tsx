@@ -10,7 +10,7 @@ import Select from 'theme/Select'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
-import { getTokenTradeList } from 'utils/config/trades'
+import { TokenTrade, getTokenTradeList } from 'utils/config/trades'
 import { generateOIOverviewRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
 import { parseMarketImage } from 'utils/helpers/transform'
 
@@ -133,7 +133,14 @@ function TabItem({
 function MarketsDropdown() {
   const { searchParams } = useSearchParams()
   const { protocol, symbol = ALL_TOKEN_PARAM } = useParams<{ protocol: ProtocolEnum; symbol: string }>()
-  const tokenOptions = getTokenTradeList(protocol)
+  const tokenOptions: TokenTrade[] = Object.values(
+    getTokenTradeList(protocol).reduce((acc: any, market) => {
+      if (!acc[market.symbol]) {
+        acc[market.symbol] = market
+      }
+      return acc
+    }, {})
+  )
   const {
     push,
     location: { pathname },

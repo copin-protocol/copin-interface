@@ -28,7 +28,12 @@ export default function SharedPositionDetailsPage() {
       <CustomPageTitle title="Position Details" />
       <Container maxWidth={{ lg: 1000 }}>
         {data?.query?.positionId && (
-          <PositionDetails protocol={protocol} id={data?.query.positionId} isShow isDrawer={false} />
+          <PositionDetails
+            isDrawer={false}
+            protocol={protocol}
+            id={data?.query.positionId}
+            chartProfitId="share-position-details-page"
+          />
         )}
       </Container>
     </>

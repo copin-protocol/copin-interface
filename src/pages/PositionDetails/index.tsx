@@ -46,7 +46,9 @@ export default function PositionDetailsPage() {
         {!isLoading && !account && !data?.length && !!txHash && (
           <NoDataFound message={<Trans>No Position Found</Trans>} />
         )}
-        {!!positionId && <PositionDetails protocol={protocol} id={positionId} isShow isDrawer={false} />}
+        {!!positionId && (
+          <PositionDetails protocol={protocol} id={positionId} isDrawer={false} chartProfitId="position-detail-page" />
+        )}
         {!!txHash && !!account && !positionId && (
           <PositionTxResults
             txHash={txHash}

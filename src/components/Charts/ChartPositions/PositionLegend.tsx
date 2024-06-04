@@ -14,7 +14,7 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
-import Drawer from 'theme/Modal/Drawer'
+import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, Type } from 'theme/base'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatLeverage, formatNumber } from 'utils/helpers/format'
@@ -162,23 +162,17 @@ export default function PositionLegend({
         </Flex>
       </Flex>
       {openDrawer && (
-        <Drawer
-          isOpen={openDrawer}
-          onDismiss={handleDismiss}
-          mode="right"
-          size={isMobile ? '100%' : '60%'}
-          background="neutral6"
-        >
-          <Container sx={{ position: 'relative' }}>
+        <RcDrawer open={openDrawer} onClose={handleDismiss} width={isMobile ? '100%' : '60%'}>
+          <Container sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'auto', bg: 'neutral6' }}>
             <IconButton
               icon={<XCircle size={24} />}
               variant="ghost"
               sx={{ position: 'absolute', right: 1, top: 3 }}
               onClick={handleDismiss}
             />
-            <PositionDetails protocol={data.protocol} id={data.id} isShow={openDrawer} />
+            <PositionDetails protocol={data.protocol} id={data.id} chartProfitId="chart-positions" />
           </Container>
-        </Drawer>
+        </RcDrawer>
       )}
     </Button>
   )

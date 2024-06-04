@@ -2,6 +2,8 @@ import { createGlobalStyle } from 'styled-components/macro'
 
 import { FONT_FAMILY } from 'utils/config/constants'
 
+import { drawerStyles } from './RcDrawer/styles'
+
 const ThemedGlobalStyle = createGlobalStyle`
   html {
     font-family: ${FONT_FAMILY}, sans-serif;
@@ -461,6 +463,7 @@ input[type=number] {
   }
 }
 
+${drawerStyles}
 
 `
 

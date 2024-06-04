@@ -1,3 +1,5 @@
+import { useResponsive } from 'ahooks'
+
 import { CopyTradeData } from 'entities/copyTrade'
 
 import SelectTradersDropdown from '../SelectTradersDropdown'
@@ -19,10 +21,12 @@ function SelectedTraders({
   buttonSx?: any
 }) {
   const tradersByProtocol = getTradersByProtocolFromCopyTrade(allCopyTrades, allTraders)
+  const { sm } = useResponsive()
 
   if (!tradersByProtocol || !allTraders.length) return <></>
   return (
     <SelectTradersDropdown
+      menuSx={sm ? undefined : { transform: 'translateX(10px)' }}
       allTraders={allTraders}
       selectedTraders={selectedTraders}
       handleSelectAllTraders={handleSelectAllTraders}

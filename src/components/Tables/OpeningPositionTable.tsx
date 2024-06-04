@@ -1,26 +1,22 @@
-import { ArrowsIn, ArrowsOutSimple, Pulse, XCircle } from '@phosphor-icons/react'
+import { ArrowsIn, ArrowsOutSimple, Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import emptyBg from 'assets/images/opening_empty_bg.png'
-import Container from 'components/@ui/Container'
 import SectionTitle from 'components/@ui/SectionTitle'
 import Table from 'components/@ui/Table'
 import { TableSortProps } from 'components/@ui/Table/types'
-import PositionDetails from 'components/PositionDetails'
 import PositionListCard from 'components/PositionListCard'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
-import useIsMobile from 'hooks/helpers/useIsMobile'
-import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
-import Drawer from 'theme/Modal/Drawer'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
+import PositionDetailsDrawer from './PositionDetailsDrawer'
 import { ExternalSource, fullOpeningColumns, openingColumns } from './render'
 
 const emptyCss = {
@@ -48,7 +44,6 @@ export default function OpeningPositionTable({
   isExpanded?: boolean
 }) {
   const { prices } = useGetUsdPrices()
-  const isMobile = useIsMobile()
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
@@ -168,23 +163,13 @@ export default function OpeningPositionTable({
         </Box>
       )}
 
-      <Drawer
+      <PositionDetailsDrawer
         isOpen={openDrawer}
         onDismiss={handleDismiss}
-        mode="right"
-        size={isMobile ? '100%' : '60%'}
-        background="neutral6"
-      >
-        <Container pb={3} sx={{ position: 'relative' }}>
-          <IconButton
-            icon={<XCircle size={24} />}
-            variant="ghost"
-            sx={{ position: 'absolute', right: 1, top: 3 }}
-            onClick={handleDismiss}
-          />
-          {!!currentPosition && <PositionDetails protocol={protocol} id={currentPosition.id} isShow={openDrawer} />}
-        </Container>
-      </Drawer>
+        protocol={protocol}
+        id={currentPosition?.id}
+        chartProfitId="opening-position-detail"
+      />
     </Box>
   )
 }

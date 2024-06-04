@@ -4,33 +4,27 @@ import {
   ChartBarHorizontal,
   ChartScatter,
   ClockCounterClockwise,
-  XCircle,
 } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import React, { useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 // eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom'
 
 import { ApiMeta } from 'apis/api'
-import Container from 'components/@ui/Container'
 import NoDataFound from 'components/@ui/NoDataFound'
 import SectionTitle from 'components/@ui/SectionTitle'
 import Table from 'components/@ui/Table'
 import { ColumnData, TableSortProps } from 'components/@ui/Table/types'
 import CurrencyOption from 'components/CurrencyOption'
-import PositionDetails from 'components/PositionDetails'
 import PositionListCard from 'components/PositionListCard'
 import { PositionData } from 'entities/trader'
 import useInfiniteLoadMore from 'hooks/features/useInfiniteLoadMore'
-import useIsMobile from 'hooks/helpers/useIsMobile'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useHeatmapStore } from 'hooks/store/useHeatmap'
 import useMyProfile from 'hooks/store/useMyProfile'
 import ActivityHeatmap from 'pages/TraderDetails/ActivityHeatmap'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
-import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
-import Drawer from 'theme/Modal/Drawer'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
@@ -38,6 +32,8 @@ import { TokenOptionProps } from 'utils/config/trades'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
+
+import PositionDetailsDrawer from './PositionDetailsDrawer'
 
 function getHighestPnl(array: any): number {
   let high = 0
@@ -67,23 +63,9 @@ export interface HistoryTableProps {
   changeCurrentSort?: (sort: TableSortProps<PositionData> | undefined) => void
 }
 
-export default function HistoryTable({
-  data,
-  isLoading,
-  tokenOptions,
-  currencyOption,
-  changeCurrency,
-  hasNextPage,
-  fetchNextPage,
-  toggleExpand,
-  isExpanded,
-  tableSettings,
-  currentSort,
-  changeCurrentSort,
-  dataMeta,
-}: HistoryTableProps) {
+export default function HistoryTable(props: HistoryTableProps) {
+  const { data, isLoading, tokenOptions, currencyOption, changeCurrency, toggleExpand, isExpanded } = props
   const { myProfile } = useMyProfile()
-  const isMobile = useIsMobile()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [showChart, setShowChart] = useState(false)
   const { heatmapVisible, setHeatmapVisible } = useHeatmapStore()
@@ -98,32 +80,31 @@ export default function HistoryTable({
     [searchParams]
   )
 
-  const handleSelectItem = (data: PositionData) => {
-    setCurrentPosition(data)
-    setOpenDrawer(true)
-    window.history.replaceState(
-      null,
-      '',
-      generatePositionDetailsRoute({
-        protocol: data.protocol,
-        txHash: data.txHashes[0],
-        account: data.account,
-        logId: data.logId,
-        nextHours: nextHoursParam,
-      })
-    )
-  }
+  const handleSelectItem = useCallback(
+    (data: PositionData) => {
+      setCurrentPosition(data)
+      setOpenDrawer(true)
+      window.history.replaceState(
+        null,
+        '',
+        generatePositionDetailsRoute({
+          protocol: data.protocol,
+          txHash: data.txHashes[0],
+          account: data.account,
+          logId: data.logId,
+          nextHours: nextHoursParam,
+        })
+      )
+    },
+    [nextHoursParam]
+  )
 
   const handleDismiss = () => {
     window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
     setOpenDrawer(false)
   }
 
-  const highValue: number = data?.length ? getHighestPnl(data) : 0
-
-  const { lg, sm } = useResponsive()
-
-  const { scrollRef } = useInfiniteLoadMore({ isDesktop: lg, hasNextPage, fetchNextPage, isLoading })
+  const { sm } = useResponsive()
 
   const logEventLayout = (action: string) => {
     logEvent({
@@ -240,80 +221,84 @@ export default function HistoryTable({
         </Box>
       )}
       <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
-        {sm ? (
-          <Table
-            scrollRef={scrollRef}
-            wrapperSx={{
-              minWidth: 500,
-            }}
-            isInfiniteLoad
-            dataMeta={dataMeta}
-            currentSort={currentSort}
-            changeCurrentSort={changeCurrentSort}
-            restrictHeight={lg}
-            data={data}
-            columns={tableSettings}
-            isLoading={isLoading}
-            onClickRow={handleSelectItem}
-            renderRowBackground={(dataRow: any, index: number) => {
-              if (!data || !showChart) return '#0B0E18'
-
-              const sumProfit = data.slice(index, data.length).reduce((sum, item) => sum + item.pnl, 0)
-
-              const percent = (Math.abs(sumProfit) * 100) / highValue
-              return `linear-gradient(to right, #0B0E18 ${100 - percent}%, ${
-                sumProfit > 0 ? 'rgba(56, 208, 96, 0.15)' : 'rgba(239, 53, 53, 0.15)'
-              } 0%)`
-            }}
-          />
-        ) : (
-          <>
-            <PositionListCard
-              data={data}
-              isLoading={false}
-              scrollDep={data}
-              onClickItem={handleSelectItem}
-              hasAccountAddress={false}
-              isOpening={false}
-            />
-            {isLoading && <Loading />}
-            {data && !isLoading && (dataMeta?.total ?? 0) === data.length && (
-              <Flex
-                sx={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  bg: 'neutral6',
-                  height: 40,
-                }}
-              >
-                <Type.Caption color="neutral3">End of list</Type.Caption>
-              </Flex>
-            )}
-          </>
-        )}
+        <PositionsList {...props} handleSelectItem={handleSelectItem} showChart={showChart} />
       </Box>
 
-      <Drawer
+      <PositionDetailsDrawer
         isOpen={openDrawer}
         onDismiss={handleDismiss}
-        mode="right"
-        // zIndex={105}
-        size={isMobile ? '100%' : '60%'}
-        background="neutral6"
-        // lockBackgroundScroll={true}
-      >
-        <Container sx={{ position: 'relative', width: '100%', height: '100%' }}>
-          <IconButton
-            icon={<XCircle size={24} />}
-            variant="ghost"
-            sx={{ position: 'absolute', right: 1, top: 3 }}
-            onClick={handleDismiss}
-          />
-          {!!currentPosition && (
-            <PositionDetails protocol={currentPosition.protocol} id={currentPosition.id} isShow={openDrawer} />
-          )}
-        </Container>
-      </Drawer>
+        protocol={currentPosition?.protocol}
+        id={currentPosition?.id}
+        chartProfitId="close-position-detail"
+      />
     </Box>
   )
 }
+
+const PositionsList = memo(function PositionsListMemo({
+  data,
+  isLoading,
+  hasNextPage,
+  fetchNextPage,
+  tableSettings,
+  currentSort,
+  changeCurrentSort,
+  dataMeta,
+  showChart,
+  handleSelectItem,
+}: HistoryTableProps & { showChart: boolean; handleSelectItem: (data: PositionData) => void }) {
+  const { sm, lg } = useResponsive()
+  const { scrollRef } = useInfiniteLoadMore({ isDesktop: lg, hasNextPage, fetchNextPage, isLoading })
+  const highValue: number = data?.length ? getHighestPnl(data) : 0
+  return sm ? (
+    <Table
+      scrollRef={scrollRef}
+      wrapperSx={{
+        minWidth: 500,
+      }}
+      isInfiniteLoad
+      dataMeta={dataMeta}
+      currentSort={currentSort}
+      changeCurrentSort={changeCurrentSort}
+      restrictHeight={lg}
+      data={data}
+      columns={tableSettings}
+      isLoading={isLoading}
+      onClickRow={handleSelectItem}
+      renderRowBackground={(dataRow: any, index: number) => {
+        if (!data || !showChart) return '#0B0E18'
+
+        const sumProfit = data.slice(index, data.length).reduce((sum, item) => sum + item.pnl, 0)
+
+        const percent = (Math.abs(sumProfit) * 100) / highValue
+        return `linear-gradient(to right, #0B0E18 ${100 - percent}%, ${
+          sumProfit > 0 ? 'rgba(56, 208, 96, 0.15)' : 'rgba(239, 53, 53, 0.15)'
+        } 0%)`
+      }}
+    />
+  ) : (
+    <>
+      <PositionListCard
+        data={data}
+        isLoading={false}
+        scrollDep={data}
+        onClickItem={handleSelectItem}
+        hasAccountAddress={false}
+        isOpening={false}
+      />
+      {isLoading && <Loading />}
+      {data && !isLoading && (dataMeta?.total ?? 0) === data.length && (
+        <Flex
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            bg: 'neutral6',
+            height: 40,
+          }}
+        >
+          <Type.Caption color="neutral3">End of list</Type.Caption>
+        </Flex>
+      )}
+    </>
+  )
+})

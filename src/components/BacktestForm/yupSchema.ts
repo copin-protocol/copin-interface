@@ -29,7 +29,7 @@ export const backTestFormSchema = yup.object({
     .required()
     .max(dayjs().set('hour', 23).set('minute', 59).set('second', 59).toDate(), `Maximum end time must be today.`)
     .label('End Time'),
-  lookBackOrders: yup.number().min(1).integer(),
+  lookBackOrders: yup.number().nullable().min(1).integer(),
   stopLossAmount: yup.number().when('enableStopLoss', {
     is: true,
     then: (schema) => schema.required().min(1).label('Stop Loss Amount'),

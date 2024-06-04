@@ -1,5 +1,5 @@
 import { CaretRight, XCircle } from '@phosphor-icons/react'
-import { cloneElement, useState } from 'react'
+import { cloneElement, useCallback, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Container from 'components/@ui/Container'
@@ -19,8 +19,9 @@ import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import IconButton from 'theme/Buttons/IconButton'
-import Drawer from 'theme/Modal/Drawer'
+import RcDrawer from 'theme/RcDrawer'
 import { Box, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 export type ExternalSource = {
@@ -129,26 +130,28 @@ export function OpeningPositionsWrapper({ children }: { children: any }) {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
 
-  const handleSelectItem = (data: PositionData) => {
+  const handleSelectItem = useCallback((data: PositionData) => {
     setCurrentPosition(data)
     setOpenDrawer(true)
     window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes[0] }))
-  }
+  }, [])
 
   const handleDismiss = () => {
     window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
     setOpenDrawer(false)
   }
+  const renderedChildren = useMemo(() => {
+    return cloneElement<OpeningPositionComponentProps>(children, { onClickItem: handleSelectItem })
+  }, [children, handleSelectItem])
 
   return (
     <div style={{ height: '100%' }}>
-      {cloneElement<OpeningPositionComponentProps>(children, { onClickItem: handleSelectItem })}
-      <Drawer
-        isOpen={openDrawer}
-        onDismiss={handleDismiss}
-        mode="right"
-        size={isMobile ? '100%' : '60%'}
-        background="neutral6"
+      {renderedChildren}
+      <RcDrawer
+        open={openDrawer}
+        onClose={handleDismiss}
+        width={isMobile ? '100%' : '60%'}
+        background={themeColors.neutral6}
       >
         <Container pb={3} sx={{ position: 'relative' }}>
           <IconButton
@@ -158,10 +161,14 @@ export function OpeningPositionsWrapper({ children }: { children: any }) {
             onClick={handleDismiss}
           />
           {!!currentPosition && (
-            <PositionDetails protocol={currentPosition.protocol} id={currentPosition.id} isShow={openDrawer} />
+            <PositionDetails
+              protocol={currentPosition.protocol}
+              id={currentPosition.id}
+              chartProfitId="top-opening-position-page"
+            />
           )}
         </Container>
-      </Drawer>
+      </RcDrawer>
     </div>
   )
 }

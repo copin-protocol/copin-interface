@@ -172,14 +172,17 @@ const BacktestSummaryAndPositions = memo(function BacktestSummaryAndPositionsMem
             <TableLabel>Positions</TableLabel>
           </Flex>
 
-          <Box>
+          <Box sx={{ width: '100%', overflow: 'hidden' }}>
             <Table
               data={dataSimulations}
               columns={columns}
               isLoading={false}
+              tableBodyWrapperSx={{
+                overflow: 'auto',
+                flex: 'auto',
+              }}
               wrapperSx={{
                 px: 0,
-                overflowX: 'auto',
                 table: {
                   borderSpacing: '0 !important',
                   'tbody tr:hover': {
@@ -254,7 +257,7 @@ const columns: ColumnData<SimulatorPosition>[] = [
     title: 'Vol Multiplier',
     dataIndex: 'volMultiplier',
     key: 'volMultiplier',
-    style: { minWidth: '70px', textAlign: 'right' },
+    style: { minWidth: '120px', textAlign: 'right' },
     render: (item) => {
       return (
         <Type.Caption textAlign="right" color="neutral1">

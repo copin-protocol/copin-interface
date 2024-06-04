@@ -142,7 +142,7 @@ export const PriceTokenText = ({
     value,
   })
   const tooltipId = `tt_${value}`
-  return zeroPart.length > 3 && Number(decimalPart) > 0 ? (
+  return value < 1 && zeroPart.length > 3 && Number(decimalPart) > 0 ? (
     <>
       <Box as="span" sx={sx} data-tip="React-tooltip" data-tooltip-id={tooltipId}>
         {prefix ? (
@@ -150,7 +150,7 @@ export const PriceTokenText = ({
             {prefix}
           </Box>
         ) : null}
-        {formatNumber(integerPart, 1, 1)}
+        {Number(integerPart).toFixed(1)}
         <Box sx={{ position: 'relative', top: '0.2em', fontSize: '0.8em', display: 'inline-flex' }}>
           {zeroPart.length}
         </Box>

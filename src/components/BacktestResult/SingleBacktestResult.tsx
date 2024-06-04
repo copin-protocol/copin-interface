@@ -124,13 +124,13 @@ export default function SingleBacktestResult({
       <Box flex="1">
         <Box
           minHeight={300}
-          height={['50vh', '50vh', '50vh', '70vh']}
+          height={['auto', '50vh', '50vh', '70vh']}
           sx={{ position: ['relative', 'relative', 'relative', 'sticky'], top: 0 }}
         >
           <Type.BodyBold sx={{ display: 'block', px: 3, py: 3, borderBottom: 'small', borderBottomColor: 'neutral4' }}>
             Positions Chart
           </Type.BodyBold>
-          <Box height="100%" bg="neutral7">
+          <Box height={['auto', '100%']} bg="neutral7">
             <ChartPositions
               protocol={protocol}
               targetPosition={targetPosition}

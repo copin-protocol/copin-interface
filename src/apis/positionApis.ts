@@ -62,6 +62,7 @@ export async function getTopOpeningPositionsApi({
   sortBy,
   sortType,
   indexToken,
+  indexTokens,
   from,
   to,
 }: GetApiParams & {
@@ -69,6 +70,7 @@ export async function getTopOpeningPositionsApi({
   sortBy?: string
   sortType?: SortTypeEnum
   indexToken?: string
+  indexTokens?: string[]
   from?: string
   to?: string
 }) {
@@ -83,6 +85,7 @@ export async function getTopOpeningPositionsApi({
         sortBy,
         sortType,
         indexToken,
+        indexTokens,
         from,
         to,
       })

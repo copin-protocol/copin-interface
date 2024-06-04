@@ -16,7 +16,7 @@ import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { getTokenTradeSupport } from 'utils/config/trades'
 import { calcClosedPrice, calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
-import { addressShorten, compactNumber, formatLeverage, formatNumber, formatPrice } from 'utils/helpers/format'
+import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseMarketImage } from 'utils/helpers/transform'
 
@@ -81,23 +81,33 @@ export function renderSizeShorten(data: PositionData | undefined) {
   )
 }
 
-export function renderSize(data: PositionData | undefined, hasLiquidate?: boolean) {
+export function renderSize(data: PositionData | undefined, hasLiquidate?: boolean, dynamicWidth?: boolean) {
   if (!data) return <></>
   const closedPrice = calcClosedPrice(data)
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
-      <Flex minWidth={190} sx={{ gap: '1px', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-        <Flex flex="50%">
+      <Flex minWidth={190} sx={{ gap: '2px', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+        <Flex flex={dynamicWidth ? undefined : '1.15'} sx={{ flexShrink: 0 }}>
           <Type.Caption>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
         </Flex>
         <VerticalDivider />
-        <Flex minWidth={50} justifyContent="center">
+        <Flex minWidth={50} justifyContent="center" sx={{ flexShrink: 0 }}>
           <Type.Caption textAlign="right">{formatLeverage(data.marginMode, data.leverage)}</Type.Caption>
         </Flex>
         <VerticalDivider />
-        <Flex flex="55%" justifyContent="flex-end" sx={{ gap: 1, alignItems: 'center', height: 22 }}>
-          <Square weight={'fill'} color={hasLiquidate ? themeColors.red2 : themeColors.neutral1} />
-          <Type.Caption>{closedPrice ? formatPrice(closedPrice, 2, 2) : '--'}</Type.Caption>
+        <Flex
+          flex={dynamicWidth ? undefined : '1.15'}
+          justifyContent="flex-end"
+          sx={{ flexShrink: 0, gap: 1, alignItems: 'center', height: 22 }}
+        >
+          <Square
+            weight={'fill'}
+            color={hasLiquidate ? themeColors.red2 : themeColors.neutral1}
+            style={{ flexShrink: 0 }}
+          />
+          <Type.Caption flexShrink={0}>
+            {closedPrice ? PriceTokenText({ value: closedPrice, maxDigit: 2, minDigit: 2 }) : '--'}
+          </Type.Caption>
         </Flex>
       </Flex>
       <ProgressBar percent={0} sx={{ width: '100%' }} />
@@ -105,23 +115,29 @@ export function renderSize(data: PositionData | undefined, hasLiquidate?: boolea
   )
 }
 
-export function renderSizeOpeningWithPrices(data: PositionData | undefined, prices: UsdPrices, textProps?: TextProps) {
-  return <SizeOpeningComponent data={data} prices={prices} textProps={textProps} />
+export function renderSizeOpeningWithPrices(
+  data: PositionData | undefined,
+  prices: UsdPrices,
+  textProps?: TextProps,
+  dynamicWidth?: boolean
+) {
+  return <SizeOpeningComponent data={data} prices={prices} textProps={textProps} dynamicWidth={dynamicWidth} />
 }
-export function renderSizeOpening(data: PositionData | undefined, textProps?: TextProps) {
-  return <SizeOpening data={data} textProps={textProps} />
+export function renderSizeOpening(data: PositionData | undefined, textProps?: TextProps, dynamicWidth?: boolean) {
+  return <SizeOpening data={data} textProps={textProps} dynamicWidth={dynamicWidth} />
 }
 type SizeOpeningComponentProps = {
   data: PositionData | undefined
   prices: UsdPrices | undefined
   textProps?: TextProps
+  dynamicWidth?: boolean
 }
 function SizeOpening(props: Omit<SizeOpeningComponentProps, 'prices'>) {
   const { prices } = useGetUsdPrices()
   if (!prices) return <>--</>
   return <SizeOpeningComponent {...props} prices={prices} />
 }
-function SizeOpeningComponent({ data, prices, textProps }: SizeOpeningComponentProps) {
+function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpeningComponentProps) {
   if (!data || !prices) return <></>
   const marketPrice = prices[data.indexToken] ?? 0
   const liquidatePrice = calcLiquidatePrice(data)
@@ -131,7 +147,7 @@ function SizeOpeningComponent({ data, prices, textProps }: SizeOpeningComponentP
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
       <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '2px' }}>
-        <Flex flex="1.15">
+        <Flex flex={dynamicWidth ? undefined : '1.15'} minWidth={40} sx={{ flexShrink: 0 }}>
           <Type.Caption {..._textProps}>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
         </Flex>
         <VerticalDivider />
@@ -141,7 +157,11 @@ function SizeOpeningComponent({ data, prices, textProps }: SizeOpeningComponentP
           </Type.Caption>
         </Flex>
         <VerticalDivider />
-        <Flex flex="1.15" justifyContent="flex-end" sx={{ gap: 1, alignItems: 'center', height: 22 }}>
+        <Flex
+          flex={dynamicWidth ? undefined : '1.15'}
+          justifyContent="flex-end"
+          sx={{ flexShrink: 0, gap: 1, alignItems: 'center', height: 22 }}
+        >
           <SkullIcon style={{ flexShrink: 0 }} />
           <Type.Caption
             {..._textProps}
@@ -152,7 +172,7 @@ function SizeOpeningComponent({ data, prices, textProps }: SizeOpeningComponentP
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                width: '100%',
+                width: dynamicWidth ? 'max-content' : '100%',
                 maxWidth: 160,
                 display: 'inline-block',
               },
@@ -259,6 +279,7 @@ export function renderTrader(address: string, protocol: ProtocolEnum, hasCopy?: 
 }
 
 export const VerticalDivider = styled(Box)`
+  flex-shrink: 0;
   width: 1px;
   height: 12px;
   background-color: ${({ theme }) => theme.colors.neutral3};

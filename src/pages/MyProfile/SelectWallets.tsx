@@ -1,3 +1,5 @@
+import { useResponsive } from 'ahooks'
+
 import { CopyWalletData } from 'entities/copyWallet'
 
 import SelectWalletsDropdown from './SelectWalletsDropdown'
@@ -28,11 +30,13 @@ export default function SelectWallets({
       onChangeWallets([...selectedWallets, wallet])
     }
   }
+  const { sm } = useResponsive()
 
   if (!allWallets?.length) return <></>
 
   return (
     <SelectWalletsDropdown
+      menuSx={sm ? undefined : { transform: 'translateX(10px)' }}
       allWallets={allWallets}
       selectedWallets={selectedWallets ?? []}
       handleSelectAllWallets={handleSelectAllWallets}

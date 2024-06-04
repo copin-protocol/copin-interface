@@ -47,7 +47,8 @@ export default function useQueryTraders({
         searchParams,
         accounts,
         filterTab,
-      })
+      }),
+      protocol
     )
     request.ranges = ranges
     if (filterTab === FilterTabEnum.RANKING) {

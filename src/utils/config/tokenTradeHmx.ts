@@ -25,7 +25,7 @@ const HMX_ARB_PAIRS = {
   'HMX_ARB-41': 'DOT',
   'HMX_ARB-42': 'SEI',
   'HMX_ARB-43': 'ATOM',
-  'HMX_ARB-44': 'PEPE',
+  'HMX_ARB-44': '1000PEPE',
   'HMX_ARB-45': 'SHIB',
   'HMX_ARB-47': 'ICP',
   'HMX_ARB-48': 'MANTA',

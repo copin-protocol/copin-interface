@@ -22,6 +22,9 @@ export const fieldName: { [key in keyof BackTestFormValues]: keyof BackTestFormV
   copyAll: 'copyAll',
 }
 
+// Todo: Check when add new protocol with cross margin
+export const DISABLED_MARGIN_PROTECTION_PROTOCOLS = [ProtocolEnum.HMX_ARB, ProtocolEnum.SYNTHETIX_V3]
+
 // pairs can be from server response
 // export const pairs: TokenTrade[] = Object.keys(TOKEN_TRADE_SUPPORT).map((key) => TOKEN_TRADE_SUPPORT[key])
 export const getDefaultBackTestFormValues: (protcol: ProtocolEnum) => BackTestFormValues = (
@@ -33,7 +36,7 @@ export const getDefaultBackTestFormValues: (protcol: ProtocolEnum) => BackTestFo
   tokenAddresses: getTokenTradeList(protocol).map((token) => token.address),
   startTime: dayjs().subtract(30, 'days').toDate(),
   endTime: dayjs().subtract(1, 'days').toDate(),
-  lookBackOrders: 10,
+  lookBackOrders: DISABLED_MARGIN_PROTECTION_PROTOCOLS.includes(protocol) ? null : 10,
   stopLossAmount: undefined,
   stopLossType: SLTPTypeEnum.USD,
   takeProfitAmount: undefined,

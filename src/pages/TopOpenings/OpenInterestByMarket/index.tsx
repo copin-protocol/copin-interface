@@ -36,7 +36,7 @@ function OpenInterestByMarketPage() {
 
   const tokenOptions = getTokenTradeList(protocol)
 
-  const tokenInfo = tokenOptions.find((token) => token.symbol === symbol)
+  const tokenInfo = tokenOptions?.filter((token) => token.symbol === symbol)?.map((e) => e.address)
 
   const { sort, onChangeSort, limit, onChangeLimit, time, from, to, onChangeTime } = useFilters()
   const { searchParams } = useSearchParams()
@@ -57,11 +57,10 @@ function OpenInterestByMarketPage() {
         sortType: SortTypeEnum.DESC,
         from,
         to,
-        indexToken: tokenInfo?.address ?? '',
+        indexTokens: tokenInfo,
       }).then((data) => data.data),
     {
       retry: 0,
-      enabled: !!tokenInfo?.address,
     }
   )
 
