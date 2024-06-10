@@ -22,7 +22,15 @@ import {
 } from 'utils/config/translations'
 
 import { getTokenTradeSupport } from '../config/trades'
-import { ARBITRUM_MAINNET, BNB_MAINNET, CHAINS, OPTIMISM_MAINNET, POLYGON_MAINNET } from '../web3/chains'
+import {
+  ARBITRUM_MAINNET,
+  BASE_MAINNET,
+  BNB_MAINNET,
+  CHAINS,
+  MANTLE_MAINNET,
+  OPTIMISM_MAINNET,
+  POLYGON_MAINNET,
+} from '../web3/chains'
 import { addressShorten, formatNumber, shortenText } from './format'
 
 // dayjs.extend(duration)
@@ -334,6 +342,7 @@ export const normalizePriceData = (symbol: string, value?: number) => {
   }
 }
 
+// TODO: Check when add new protocol
 export const parseChainFromNetwork = (network: string) => {
   switch (network) {
     case ChainStatsEnum.ABITRUM:
@@ -359,6 +368,18 @@ export const parseChainFromNetwork = (network: string) => {
         chainId: BNB_MAINNET,
         label: CHAINS[BNB_MAINNET].label,
         icon: CHAINS[BNB_MAINNET].icon,
+      }
+    case ChainStatsEnum.BASE:
+      return {
+        chainId: BASE_MAINNET,
+        label: CHAINS[BASE_MAINNET].label,
+        icon: CHAINS[BASE_MAINNET].icon,
+      }
+    case ChainStatsEnum.MANTLE:
+      return {
+        chainId: MANTLE_MAINNET,
+        label: CHAINS[MANTLE_MAINNET].label,
+        icon: CHAINS[MANTLE_MAINNET].icon,
       }
     default:
       return {

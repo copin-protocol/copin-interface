@@ -92,6 +92,8 @@ export default function Overview() {
         <StatusByNetwork network={ChainStatsEnum.OPTIMISM} data={formattedData?.[ChainStatsEnum.OPTIMISM]} />
         <StatusByNetwork network={ChainStatsEnum.POLYGON} data={formattedData?.[ChainStatsEnum.POLYGON]} />
         <StatusByNetwork network={ChainStatsEnum.BNB_CHAIN} data={formattedData?.[ChainStatsEnum.BNB_CHAIN]} />
+        <StatusByNetwork network={ChainStatsEnum.BASE} data={formattedData?.[ChainStatsEnum.BASE]} />
+        <StatusByNetwork network={ChainStatsEnum.MANTLE} data={formattedData?.[ChainStatsEnum.MANTLE]} />
       </Flex>
     </Box>
   )

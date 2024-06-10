@@ -253,4 +253,6 @@ export enum ChainStatsEnum {
   OPTIMISM = 'op',
   POLYGON = 'poly',
   BNB_CHAIN = 'bnb',
+  BASE = 'base',
+  MANTLE = 'mantle',
 }

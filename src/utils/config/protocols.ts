@@ -195,6 +195,7 @@ export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
 
 export const PROTOCOLS_CROSS_MARGIN = [ProtocolEnum.HMX_ARB, ProtocolEnum.SYNTHETIX_V3]
 
+// TODO: Check when add new protocol
 export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
   gnsPoly: ProtocolEnum.GNS_POLY,
   gnsArb: ProtocolEnum.GNS,
@@ -209,4 +210,7 @@ export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
   mirrorSignalGnsArb: ProtocolEnum.GNS,
   mirrorSignalLevelArb: ProtocolEnum.LEVEL_ARB,
   mirrorSignalLevelBnb: ProtocolEnum.LEVEL_BNB,
+  velaArb: ProtocolEnum.VELA_ARB,
+  avantisBase: ProtocolEnum.AVANTIS_BASE,
+  ktxMantle: ProtocolEnum.KTX_MANTLE,
 }

@@ -31,6 +31,15 @@ export interface ListenerBlockData {
   levelBnbLatestPositionBlock: number
   synthetixOpLatestRawDataBlock: number
   synthetixOpLatestOrderBlock: number
+  velaArbLatestRawDataBlock: number
+  velaArbLatestOrderBlock: number
+  velaArbLatestPositionBlock: number
+  avantisBaseLatestRawDataBlock: number
+  avantisBaseLatestOrderBlock: number
+  avantisBaseLatestPositionBlock: number
+  ktxMantleLatestRawDataBlock: number
+  ktxMantleLatestOrderBlock: number
+  ktxMantleLatestPositionBlock: number
 }
 
 export interface FormattedListenerStatsData {
