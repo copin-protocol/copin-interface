@@ -158,6 +158,11 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     provider: rpcProvider(MANTLE_MAINNET),
     explorerUrl: CHAINS[MANTLE_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.CYBERDEX]: {
+    chainId: OPTIMISM_MAINNET,
+    provider: rpcProvider(OPTIMISM_MAINNET),
+    explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
+  },
 }
 
 export interface TokenTrade {
@@ -206,6 +211,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.PINGU_ARB]: TOKEN_TRADE_PINGU_ARB,
   [ProtocolEnum.HMX_ARB]: TOKEN_TRADE_HMX_ARB,
   [ProtocolEnum.DEXTORO]: TOKEN_TRADE_SYNTHETIX,
+  [ProtocolEnum.CYBERDEX]: TOKEN_TRADE_SYNTHETIX,
   [ProtocolEnum.VELA_ARB]: TOKEN_TRADE_VELA_ARB,
   [ProtocolEnum.SYNTHETIX_V3]: TOKEN_TRADE_SYNTHETIX_V3,
   [ProtocolEnum.COPIN]: TOKEN_TRADE_SYNTHETIX,
@@ -253,6 +259,15 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
     },
   },
   [ProtocolEnum.DEXTORO]: {
+    '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
+      address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
+      name: 'SUSD',
+      symbol: 'SUSD',
+      decimals: 18,
+      priceFeedId: '',
+    },
+  },
+  [ProtocolEnum.CYBERDEX]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
       address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
       name: 'SUSD',
@@ -528,6 +543,10 @@ export const TOKEN_ADDRESSES = {
     USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
   },
   [ProtocolEnum.DEXTORO]: {
+    BTC: '0x59b007E9ea8F89b069c43F8f45834d30853e3699',
+    ETH: '0x2B3bb4c683BFc5239B029131EEf3B1d214478d93',
+  },
+  [ProtocolEnum.CYBERDEX]: {
     BTC: '0x59b007E9ea8F89b069c43F8f45834d30853e3699',
     ETH: '0x2B3bb4c683BFc5239B029131EEf3B1d214478d93',
   },

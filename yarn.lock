@@ -2187,10 +2187,10 @@
   resolved "https://registry.yarnpkg.com/@pythnetwork/price-service-sdk/-/price-service-sdk-1.4.1.tgz#2fc7072883c316013326375024d076878bc092da"
   integrity sha512-ECR5v2WCwYBBWoGyg1wrUc/RgBeemBIT3bJzFUyt3/9cExLuc9pTioAzmlBDTjyMuGy7SBHTgIlUnWeu8BLhVg==
 
-"@pythnetwork/pyth-evm-js@1.29.2":
-  version "1.29.2"
-  resolved "https://registry.yarnpkg.com/@pythnetwork/pyth-evm-js/-/pyth-evm-js-1.29.2.tgz#ed0a48f0119634689b81ae6a214e7d451e19898c"
-  integrity sha512-vZI9oldnSm9nx7Fu1n3V2P67mQeT2NZmhZUVwJ2hUK/i3RqQbhoNPB661dGyAwTqFuOHB9gSJMrcqDivkvcL8w==
+"@pythnetwork/pyth-evm-js@1.52.0":
+  version "1.52.0"
+  resolved "https://registry.yarnpkg.com/@pythnetwork/pyth-evm-js/-/pyth-evm-js-1.52.0.tgz#cc4ca24a45829136f699b01b04f443f30ea60fd8"
+  integrity sha512-c/nzskxUpg/ziimCGDUU79yZbc/4aJ5HqGDpi2ICH+1buxN24Zqr9iyuPIQtX0xUdl8tPNr2ZutV7RFrOT37ew==
   dependencies:
     "@pythnetwork/price-service-client" "*"
     buffer "^6.0.3"
@@ -4287,9 +4287,9 @@ camelize@^1.0.0:
   integrity sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==
 
 caniuse-lite@^1.0.30001449:
-  version "1.0.30001539"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001539.tgz"
-  integrity sha512-hfS5tE8bnNiNvEOEkm8HElUHroYwlqMMENEzELymy77+tJ6m+gA2krtHl5hxJaj71OlpC2cHZbdSMX1/YEqEkA==
+  version "1.0.30001632"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001632.tgz"
+  integrity sha512-udx3o7yHJfUxMLkGohMlVHCvFvWmirKh9JAH/d7WOLPetlH+LTL5cocMZ0t7oZx/mdlOWXti97xLZWc8uURRHg==
 
 chalk@^2.0.0:
   version "2.4.2"

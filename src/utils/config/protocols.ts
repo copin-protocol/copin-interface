@@ -18,6 +18,7 @@ export type ProtocolOptionProps = {
   label: string
   chainId: number
   isNew?: boolean
+  isCross?: boolean
 }
 
 export const PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
@@ -79,14 +80,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'MUX',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.EQUATION_ARB]: {
     id: ProtocolEnum.EQUATION_ARB,
     text: 'Equation',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.BLOOM_BLAST]: {
     id: ProtocolEnum.BLOOM_BLAST,
@@ -100,14 +101,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'ApolloX',
     label: 'BNB Chain',
     chainId: BNB_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.AVANTIS_BASE]: {
     id: ProtocolEnum.AVANTIS_BASE,
     text: 'Avantis',
     label: 'Base',
     chainId: BASE_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.TIGRIS_ARB]: {
     id: ProtocolEnum.TIGRIS_ARB,
@@ -121,21 +122,21 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'LogX',
     label: 'Blast',
     chainId: BLAST_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.LOGX_MODE]: {
     id: ProtocolEnum.LOGX_MODE,
     text: 'LogX',
     label: 'Mode',
     chainId: MODE_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.MYX_ARB]: {
     id: ProtocolEnum.MYX_ARB,
     text: 'MYX',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.PINGU_ARB]: {
     id: ProtocolEnum.PINGU_ARB,
@@ -150,13 +151,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     isNew: true,
+    isCross: true,
   },
   [ProtocolEnum.DEXTORO]: {
     id: ProtocolEnum.DEXTORO,
     text: 'DexToro',
     label: 'Optimism',
     chainId: OPTIMISM_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.VELA_ARB]: {
     id: ProtocolEnum.VELA_ARB,
@@ -171,6 +173,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Base',
     chainId: BASE_MAINNET,
     isNew: true,
+    isCross: true,
   },
   [ProtocolEnum.COPIN]: {
     id: ProtocolEnum.COPIN,
@@ -184,6 +187,13 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'KTX',
     label: 'Mantle',
     chainId: MANTLE_MAINNET,
+    isNew: true,
+  },
+  [ProtocolEnum.CYBERDEX]: {
+    id: ProtocolEnum.CYBERDEX,
+    text: 'CyberDEX',
+    label: 'Optimism',
+    chainId: OPTIMISM_MAINNET,
     isNew: true,
   },
 }

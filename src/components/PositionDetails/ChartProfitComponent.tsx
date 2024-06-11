@@ -100,7 +100,12 @@ export default function ChartProfitComponent({
 
   const hasLiquidate = (position.orders.filter((e) => e.type === OrderTypeEnum.LIQUIDATE) ?? []).length > 0
 
-  const useSizeNumber = [ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL, ProtocolEnum.DEXTORO].includes(protocol)
+  const useSizeNumber = [
+    ProtocolEnum.KWENTA,
+    ProtocolEnum.POLYNOMIAL,
+    ProtocolEnum.DEXTORO,
+    ProtocolEnum.CYBERDEX,
+  ].includes(protocol)
   const tickPositions = useMemo(() => {
     const positions: TickPosition[] = []
     if (!position) return []

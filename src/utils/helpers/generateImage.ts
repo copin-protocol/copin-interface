@@ -487,6 +487,10 @@ export const generateProtocol = ({
       protocolTextWidth = 141
       protocolText = 'DexToro'
       break
+    case ProtocolEnum.CYBERDEX:
+      protocolTextWidth = 156
+      protocolText = 'CyberDEX'
+      break
     case ProtocolEnum.VELA_ARB:
       protocolTextWidth = 117
       protocolText = 'Vela'

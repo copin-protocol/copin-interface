@@ -32,6 +32,7 @@ export const LINKS = {
   tradePingu: 'https://pingu.exchange/trade',
   tradeHmx: 'https://hmx.org/arbitrum/trade',
   tradeDexToro: 'https://trade.dextoro.com/market',
+  tradeCyberDEX: 'https://www.cyberdex.xyz/trade',
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
@@ -147,5 +148,8 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.MYX_ARB,
         ProtocolEnum.DEXTORO,
         ProtocolEnum.VELA_ARB,
+        ProtocolEnum.HMX_ARB,
+        ProtocolEnum.SYNTHETIX_V3,
+        ProtocolEnum.KTX_MANTLE,
       ]
     : Object.values(ProtocolEnum)

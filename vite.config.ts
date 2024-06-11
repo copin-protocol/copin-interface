@@ -42,6 +42,20 @@ export default defineConfig({
     rollupOptions: {
       //@ts-ignore
       plugins: [nodePolyfills({ crypto: true, http: true })],
+      output: {
+        manualChunks: {
+          '@ethersproject': [
+            '@ethersproject/bignumber',
+            '@ethersproject/units',
+            '@ethersproject/contracts',
+            '@ethersproject/abi',
+            '@ethersproject/abstract-provider',
+            '@ethersproject/providers',
+            '@ethersproject/abstract-signer',
+          ],
+          '@web3-onboard': ['@web3-onboard/injected-wallets', '@web3-onboard/react', '@web3-onboard/walletconnect'],
+        },
+      },
     },
     commonjsOptions: {
       transformMixedEsModules: true,

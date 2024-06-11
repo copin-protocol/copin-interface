@@ -23,6 +23,7 @@ export enum ProtocolEnum {
   SYNTHETIX_V3 = 'SYNTHETIX_V3',
   COPIN = 'COPIN',
   KTX_MANTLE = 'KTX_MANTLE',
+  CYBERDEX = 'CYBERDEX',
 }
 
 export enum UserRoleEnum {

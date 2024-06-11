@@ -4,6 +4,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
+import CrossTag from 'assets/images/cross_tag.svg'
 import NewTag from 'assets/images/new_tag.svg'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
@@ -214,7 +215,13 @@ function SwitchProtocolsComponent({
                           <Type.Caption lineHeight="16px" color={isActive ? 'primary1' : undefined}>
                             {option.text}
                           </Type.Caption>
-                          {option.isNew && <img src={NewTag} alt="new" />}
+                          {option.isCross ? (
+                            <img src={CrossTag} alt="cross" />
+                          ) : option.isNew ? (
+                            <img src={NewTag} alt="new" />
+                          ) : (
+                            <></>
+                          )}
                         </Flex>
                       </Box>
                     )

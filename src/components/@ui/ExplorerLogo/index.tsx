@@ -30,6 +30,7 @@ const ExplorerLogo = ({
     case ProtocolEnum.KWENTA:
     case ProtocolEnum.POLYNOMIAL:
     case ProtocolEnum.DEXTORO:
+    case ProtocolEnum.CYBERDEX:
     case ProtocolEnum.COPIN:
       icon = 'OPTIMISM'
       break
