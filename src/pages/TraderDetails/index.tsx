@@ -25,7 +25,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { ALL_OPTION, getDefaultTokenOptions } from 'utils/config/trades'
+import { ALL_OPTION, TOKEN_TRADE_SUPPORT, TokenOptionProps, getTokenOptions } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
 import { isAddress } from 'utils/web3/contracts'
 
@@ -132,13 +132,12 @@ export function TraderDetailsComponent({
 
   const tokenOptions = useMemo(() => {
     if (tokensStatistic?.data?.length) {
-      const indexTokenMapping = tokensStatistic.data.reduce((result, _data) => {
-        return { ...result, [_data.indexToken]: _data.indexToken }
-      }, {} as Record<string, string>)
-      return [ALL_OPTION, ...getDefaultTokenOptions(protocol).filter((option) => !!indexTokenMapping[option.id])]
+      const statisticSymbols = tokensStatistic.data.map((e) => TOKEN_TRADE_SUPPORT[protocol][e.indexToken]?.symbol)
+      return [ALL_OPTION, ...getTokenOptions({ protocol }).filter((option) => statisticSymbols.includes(option.label))]
     }
     return [ALL_OPTION]
   }, [protocol, tokensStatistic])
+
   const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
     optionName: URL_PARAM_KEYS.CURRENCY,
     options: tokenOptions,

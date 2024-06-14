@@ -29,8 +29,43 @@ export function calcOpeningPnL(position: PositionData, marketPrice?: number | un
     marketPrice,
     position.status === PositionStatusEnum.OPEN && !!position.lastSizeNumber
       ? Math.abs(position.lastSizeNumber) * position.averagePrice
+      : position.status === PositionStatusEnum.OPEN && !!position.lastSize
+      ? position.lastSize
       : position.size
   )
+}
+
+export function getOpeningPnl({
+  data,
+  marketPrice,
+  ignoreFee = true,
+}: {
+  data: PositionData
+  marketPrice: number | undefined
+  ignoreFee?: boolean
+}) {
+  const useSizeInToken = data.size == null && data.fee == null
+  let pnl: number | undefined
+  let pnlInToken: number | undefined
+  if (useSizeInToken) {
+    if (!!marketPrice) {
+      const openingPnl = calcPnL(
+        data.isLong,
+        data.averagePrice,
+        marketPrice,
+        data.status === PositionStatusEnum.OPEN && !!data.lastSizeNumber
+          ? Math.abs(data.lastSizeNumber) * data.averagePrice
+          : data.status === PositionStatusEnum.OPEN && !!data.lastSize
+          ? data.lastSize
+          : data.sizeInToken
+      )
+      pnlInToken = ignoreFee ? openingPnl : openingPnl - data.feeInToken
+    }
+  } else {
+    const openingPnl = calcOpeningPnL(data, marketPrice)
+    pnl = ignoreFee ? openingPnl : openingPnl - data.fee
+  }
+  return { pnl, pnlInToken }
 }
 
 export function calcOpeningROI(position: PositionData, realPnL: number) {
@@ -43,9 +78,10 @@ export function calcCopyOpeningROI(position: CopyPositionData, realPnL: number) 
 }
 // TODO: Check when add new protocol
 export function calcLiquidatePrice(position: PositionData) {
-  let lastCollateral = position.size / position.leverage
-  let lastSizeInToken = position.size / position.averagePrice
-  let totalFee = position.fee
+  const useToken = position.sizeInToken != null && position.feeInToken != null && position.fundingInToken != null
+  let lastCollateral = (useToken ? position.sizeInToken : position.size) / position.leverage
+  let lastSizeInToken = useToken ? position.sizeInToken : position.size / position.averagePrice
+  let totalFee = useToken ? position.feeInToken : position.fee
   switch (position.protocol) {
     case ProtocolEnum.KWENTA:
     case ProtocolEnum.POLYNOMIAL:
@@ -60,10 +96,14 @@ export function calcLiquidatePrice(position: PositionData) {
       break
   }
   if (position.funding) {
-    totalFee += position.funding
+    totalFee += useToken ? position.fundingInToken : position.funding
   }
 
-  return position.averagePrice + ((position.isLong ? 1 : -1) * (totalFee - 0.9 * lastCollateral)) / lastSizeInToken
+  return (
+    position.averagePrice +
+    (((position.isLong ? 1 : -1) * (totalFee - 0.9 * lastCollateral)) / lastSizeInToken) *
+      (useToken ? position.averagePrice : 1)
+  )
 }
 
 export function calcCopyLiquidatePrice(position: CopyPositionData) {
@@ -95,17 +135,32 @@ export function calcClosedPrice(position?: PositionData) {
   if (!decreaseList.length) return
   let totalSizeDecrease = 0
   let totalVolumeDecrease = 0
-  const useSizeNumber = [ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL].includes(position.protocol)
+  // Todo: Check when add new protocol
+  const useSizeNumber = [
+    ProtocolEnum.KWENTA,
+    ProtocolEnum.POLYNOMIAL,
+    ProtocolEnum.DEXTORO,
+    ProtocolEnum.CYBERDEX,
+    ProtocolEnum.COPIN,
+  ].includes(position.protocol)
 
   decreaseList.forEach((order) => {
     let sizeNumber = 0
-    if (useSizeNumber && sizeNumber) {
+    let sizeDeltaNumber = 0
+    if (useSizeNumber && order.sizeNumber) {
       sizeNumber = order.sizeNumber
+      sizeDeltaNumber = order.sizeDeltaNumber
+    } else if (order.sizeInTokenNumber || order.sizeDeltaInTokenNumber) {
+      sizeNumber = order.sizeInTokenNumber
+        ? order.sizeInTokenNumber
+        : Math.abs((order.sizeDeltaInTokenNumber ?? 0) / order.priceNumber)
+      sizeDeltaNumber = order.sizeDeltaInTokenNumber ?? 0
     } else {
+      sizeDeltaNumber = order.sizeDeltaNumber
       sizeNumber = Math.abs(order.sizeDeltaNumber / order.priceNumber)
     }
     totalSizeDecrease += sizeNumber
-    totalVolumeDecrease += order.sizeDeltaNumber
+    totalVolumeDecrease += sizeDeltaNumber
   })
 
   return totalSizeDecrease === 0 ? 0 : totalVolumeDecrease / totalSizeDecrease

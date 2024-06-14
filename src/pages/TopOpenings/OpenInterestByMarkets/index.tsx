@@ -14,7 +14,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { getTokenTradeList } from 'utils/config/trades'
+import { TOKEN_TRADE_SUPPORT, getTokenTradeList } from 'utils/config/trades'
 
 import { NoMarketFound } from '../OpenInterestByMarket'
 import RouteWrapper from '../RouteWrapper'
@@ -78,8 +78,13 @@ function OpenInterestByMarketsPage() {
           totalInterest: _data.totalLong + _data.totalShort,
           protocol,
         }))
-        .filter((_data) => (symbolInfo ? _data.indexToken === symbolInfo?.address : true))
-        .filter((_data) => !!tokenTradeList.find((_token) => _token.address === _data.indexToken))
+        .filter((_data) =>
+          symbolInfo ? TOKEN_TRADE_SUPPORT[protocol][_data.indexToken]?.symbol === symbolInfo?.symbol : true
+        )
+        .filter(
+          (_data) =>
+            !!tokenTradeList.find((_token) => _token.symbol === TOKEN_TRADE_SUPPORT[protocol][_data.indexToken]?.symbol)
+        )
     : []
 
   if (currentSort) {

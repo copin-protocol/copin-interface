@@ -1,4 +1,4 @@
-import { PYTH_IDS_MAPPING } from './pythIds'
+import { ProtocolTokenMapping, TokenCollateral } from './trades'
 
 export const KTX_MANTLE_TOKEN = {
   '0xCAbAE6f6Ea1ecaB08Ad02fE02ce9A44F09aebfA2': 'BTC',
@@ -18,41 +18,27 @@ export const KTX_MANTLE_COLLATERAL = {
   '0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34': 'USDE',
 }
 
-type TokenValues = Record<
-  string,
-  {
-    address: string
-    name: string
-    symbol: string
-    decimals: number
-    priceFeedId: string
-  }
->
-
-const TOKEN_TRADE_KTX_MANTLE = Object.entries(KTX_MANTLE_TOKEN).reduce((result, [key, value]) => {
+const TOKEN_TRADE_KTX_MANTLE = Object.entries(KTX_MANTLE_TOKEN).reduce<ProtocolTokenMapping>((result, [key, value]) => {
   return {
     ...result,
     [key]: {
-      address: key,
-      name: value,
       symbol: value,
-      decimals: 18,
-      priceFeedId: PYTH_IDS_MAPPING[value as keyof typeof PYTH_IDS_MAPPING] ?? '',
     },
   }
-}, {} as TokenValues)
+}, {})
 
-const TOKEN_COLLATERAL_KTX_MANTLE = Object.entries(KTX_MANTLE_COLLATERAL).reduce((result, [key, value]) => {
-  return {
-    ...result,
-    [key]: {
-      address: key,
-      name: value,
-      symbol: value,
-      decimals: 18,
-      priceFeedId: PYTH_IDS_MAPPING[value as keyof typeof PYTH_IDS_MAPPING] ?? '',
-    },
-  }
-}, {} as TokenValues)
+const TOKEN_COLLATERAL_KTX_MANTLE = Object.entries(KTX_MANTLE_COLLATERAL).reduce<Record<string, TokenCollateral>>(
+  (result, [key, value]) => {
+    return {
+      ...result,
+      [key]: {
+        address: key,
+        symbol: value,
+        decimals: 18,
+      },
+    }
+  },
+  {}
+)
 
 export { TOKEN_TRADE_KTX_MANTLE, TOKEN_COLLATERAL_KTX_MANTLE }

@@ -123,10 +123,10 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const [tradedPairs, setTradedPairs] = useState<string[]>([])
   const pairs =
     protocol &&
-    getTokenTradeList(protocol).filter((tokenTrade) => !TOKEN_TRADE_IGNORE[platform]?.includes(tokenTrade.name))
+    getTokenTradeList(protocol).filter((tokenTrade) => !TOKEN_TRADE_IGNORE[platform]?.includes(tokenTrade.symbol))
   const addressPairs = pairs?.map((e) => e.address) ?? []
   const pairOptions = pairs?.map((e) => {
-    return { value: e.address, label: e.name }
+    return { value: e.address, label: e.symbol }
   })
   pairOptions?.unshift({ value: 'all', label: 'All Tokens' })
 

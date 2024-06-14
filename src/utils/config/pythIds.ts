@@ -1,4 +1,4 @@
-export const PYTH_IDS_MAPPING = {
+export const PYTH_IDS_MAPPING: Record<string, string> = {
   '1INCH': '0x63f341689d98a12ef60a5cff1d7f85c70a9e17bf1575f0e7c0b2512d48b1c8b3',
   AAVE: '0x2b9ab1e972a281585084148ba1389800799bd4be63b957507db1349314e47445',
   ACM: '0xbd640cddb72063e2ede34c6a0baf6699759b9837fcb06aa0e2fbcecb9b65fde7',
@@ -386,4 +386,4 @@ export const PYTH_IDS_MAPPING = {
   ZIL: '0x609722f3b6dc10fee07907fe86781d55eb9121cd0705b480954c00695d78f0cb',
   ZKF: '0x61198c533c5753f457904edc603b315f1eec0dddb71a8f8ac8ffadb644e7cfd2',
   ZRX: '0x7d17b9fe4ea7103be16b6836984fabbc889386d700ca5e5b3d34b7f92e449268',
-} as const
+}

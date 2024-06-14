@@ -45,10 +45,11 @@ export default function ChartProfitComponent({
   isOpening: boolean
   openBlockTime: number
   closeBlockTime: number
-  setCrossMove: (value?: { pnl?: number; time?: number }) => void
+  setCrossMove: (value?: { pnl?: number; time?: number; pnlInToken?: number }) => void
   chartId: string
 }) {
   const protocol = position.protocol
+  const useTokenValue = [ProtocolEnum.PINGU_ARB].includes(protocol)
 
   const { sm } = useResponsive()
   const CHART_HEIGHT = sm ? 250 : 150
@@ -100,11 +101,13 @@ export default function ChartProfitComponent({
 
   const hasLiquidate = (position.orders.filter((e) => e.type === OrderTypeEnum.LIQUIDATE) ?? []).length > 0
 
+  // Todo: Check when add new protocol
   const useSizeNumber = [
     ProtocolEnum.KWENTA,
     ProtocolEnum.POLYNOMIAL,
     ProtocolEnum.DEXTORO,
     ProtocolEnum.CYBERDEX,
+    ProtocolEnum.COPIN,
   ].includes(protocol)
   const tickPositions = useMemo(() => {
     const positions: TickPosition[] = []
@@ -113,6 +116,7 @@ export default function ChartProfitComponent({
       let totalTokenSize = 0
       let totalSize = 0
       let collateral = 0
+      let collateralInToken = 0
       for (let i = 0; i < orders.length; i++) {
         if (orders[i].type === OrderTypeEnum.MARGIN_TRANSFERRED) {
           continue
@@ -123,24 +127,29 @@ export default function ChartProfitComponent({
           orders[i].type === OrderTypeEnum.LIQUIDATE
         const sign = isDecrease ? -1 : 1
         const sizeDeltaNumber = orders[i]?.sizeDeltaNumber ?? 0
+        const sizeDeltaInToken = orders[i]?.sizeDeltaInTokenNumber ?? 0
         const sizeDelta = sign * Math.abs(sizeDeltaNumber)
         const sizeTokenDelta =
           sign *
           (useSizeNumber
             ? orders[i].sizeNumber ?? sizeDeltaNumber / orders[i].priceNumber
-            : sizeDeltaNumber / orders[i].priceNumber)
+            : sizeDeltaInToken ?? sizeDeltaNumber / orders[i].priceNumber)
         const collateralDeltaNumber = orders[i]?.collateralDeltaNumber ?? 0
+        const collateralDeltaInTokenNumber = orders[i]?.collateralDeltaInTokenNumber ?? 0
         const collateralDelta = sign * collateralDeltaNumber
         const pos = {
           size: totalSize + sizeDelta,
+          sizeInToken: totalTokenSize + sizeTokenDelta,
           time: dayjs(orders[i].blockTime).utc().valueOf(),
           collateral: collateral + collateralDelta,
-          price: (totalSize + sizeDelta) / (totalTokenSize + sizeTokenDelta),
+          collateralInToken: collateralInToken + collateralDeltaInTokenNumber,
+          price: orders[i]?.priceNumber ?? (totalSize + sizeDelta) / (totalTokenSize + sizeTokenDelta),
         }
         positions.push(pos)
         totalSize += sizeDelta
         totalTokenSize += sizeTokenDelta
         collateral += collateralDelta
+        collateralInToken += collateralDeltaInTokenNumber
       }
     }
     return positions
@@ -201,11 +210,26 @@ export default function ChartProfitComponent({
           const avgPrice = pos?.price ?? position.averagePrice
           const realSize =
             pos?.size ??
-            (!!position.lastSizeNumber ? Math.abs(position.lastSizeNumber) * position.averagePrice : position.size)
+            (!!position.lastSize
+              ? position.lastSize
+              : position.lastSizeNumber
+              ? Math.abs(position.lastSizeNumber) * position.averagePrice
+              : position.size)
           const pnl = calcPnL(position.isLong, avgPrice, marketPrice, realSize)
 
+          const realSizeInToken = pos?.sizeInToken ?? position.sizeInToken
+          const pnlInToken = calcPnL(position.isLong, avgPrice, marketPrice, realSizeInToken)
+          // const sizeInToken = pos?.
+          const value = useTokenValue
+            ? !isOpening && index === chartData.length - 1
+              ? position.realisedPnlInToken
+              : pnlInToken
+            : !isOpening && index === chartData.length - 1
+            ? position.pnl
+            : pnl
+
           return {
-            value: !isOpening && index === chartData.length - 1 ? position.pnl : pnl,
+            value,
             time: tickTime.unix() - timezone,
           } as LineData
         })
@@ -519,10 +543,11 @@ export default function ChartProfitComponent({
             position: collateral > 0 ? 'aboveBar' : 'belowBar',
             shape: 'circle',
             time: (dayjs(order.blockTime).utc().unix() - timezone) as Time,
-            text: order.collateralDeltaInTokenNumber
-              ? formatNumber(collateral, 0) +
-                ` ${TOKEN_COLLATERAL_SUPPORT[position.protocol][position.collateralToken].symbol}`
-              : '$' + formatNumber(collateral, 0),
+            text:
+              position.collateralToken && order.collateralDeltaInTokenNumber
+                ? formatNumber(collateral, 0) +
+                  ` ${TOKEN_COLLATERAL_SUPPORT[position.protocol][position.collateralToken]?.symbol}`
+                : '$' + formatNumber(collateral, 0),
           }
         })
 
@@ -573,7 +598,8 @@ export default function ChartProfitComponent({
       const dataFuture = param.seriesData.get(futureSeries) as LineData
       const time = (dataFuture?.time ?? data?.time) as number
       setCrossMove({
-        pnl: dataFuture?.value ?? data?.value,
+        pnlInToken: useTokenValue ? dataFuture?.value ?? data?.value : undefined,
+        pnl: useTokenValue ? undefined : dataFuture?.value ?? data?.value,
         time: time ? time + timezone : undefined,
       })
 

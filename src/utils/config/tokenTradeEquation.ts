@@ -1,4 +1,4 @@
-import { PYTH_IDS_MAPPING } from './pythIds'
+import { ProtocolTokenMapping } from './trades'
 
 export const EQUATION_ARB_TOKEN = {
   '0xDE43a589Bc5b6136C4B7Ec24311D61713Cd5dF37': 'ETH',
@@ -106,26 +106,14 @@ export const EQUATION_ARB_TOKEN = {
   '0x07c3D74Db0363fb35C5bfCC09996162E199D6766': 'ENA',
 }
 
-type TokenValues = Record<
-  string,
-  {
-    address: string
-    name: string
-    symbol: string
-    decimals: number
-    priceFeedId: string
-  }
->
-
-export const TOKEN_TRADE_EQUATION_ARB = Object.entries(EQUATION_ARB_TOKEN).reduce((result, [key, value]) => {
-  return {
-    ...result,
-    [key]: {
-      address: key,
-      name: value,
-      symbol: value,
-      decimals: 18,
-      priceFeedId: PYTH_IDS_MAPPING[value as keyof typeof PYTH_IDS_MAPPING] ?? '',
-    },
-  }
-}, {} as TokenValues)
+export const TOKEN_TRADE_EQUATION_ARB = Object.entries(EQUATION_ARB_TOKEN).reduce<ProtocolTokenMapping>(
+  (result, [key, value]) => {
+    return {
+      ...result,
+      [key]: {
+        symbol: value,
+      },
+    }
+  },
+  {}
+)

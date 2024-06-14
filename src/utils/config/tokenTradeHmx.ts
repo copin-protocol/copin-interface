@@ -1,4 +1,4 @@
-import { PYTH_IDS_MAPPING } from './pythIds'
+import { ProtocolTokenMapping } from './trades'
 
 const HMX_ARB_PAIRS = {
   'HMX_ARB-0': 'ETH',
@@ -36,27 +36,13 @@ const HMX_ARB_PAIRS = {
   'HMX_ARB-53': 'ENA',
 }
 
-type TokenValues = Record<
-  string,
-  {
-    address: string
-    name: string
-    symbol: string
-    decimals: number
-    priceFeedId: string
-  }
->
-const TOKEN_TRADE_HMX_ARB = Object.entries(HMX_ARB_PAIRS).reduce((result, [key, value]) => {
+const TOKEN_TRADE_HMX_ARB = Object.entries(HMX_ARB_PAIRS).reduce<ProtocolTokenMapping>((result, [key, value]) => {
   return {
     ...result,
     [key]: {
-      address: key,
-      name: value,
       symbol: value,
-      decimals: 18,
-      priceFeedId: PYTH_IDS_MAPPING[value as keyof typeof PYTH_IDS_MAPPING] ?? '',
     },
   }
-}, {} as TokenValues)
+}, {})
 
 export { TOKEN_TRADE_HMX_ARB }

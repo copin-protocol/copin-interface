@@ -98,6 +98,7 @@ export interface PositionData {
   lastCollateral: number
   size: number
   lastSizeNumber: number
+  lastSize?: number
   sizeInToken: number
   averagePrice: number
   lastPriceNumber: number
@@ -129,6 +130,7 @@ export interface PositionData {
   orderIds: string[]
   orders: OrderData[]
   createdAt: string
+  realisedPnlInToken?: number
 }
 
 export interface ResponsePositionData extends PositionData {
@@ -153,11 +155,14 @@ export interface OrderData {
   collateralToken: string
   sizeDeltaNumber: number
   sizeNumber: number
+  sizeDeltaInTokenNumber?: number
+  sizeInTokenNumber?: number
   collateralDeltaInTokenNumber: number
   collateralDeltaNumber: number
   collateralNumber: number
   priceNumber: number
   averagePriceNumber: number
+  feeInTokenNumber?: number
   feeNumber: number
   fundingNumber: number
   fundingRateNumber: number
@@ -239,12 +244,16 @@ export interface TopTraderData {
 
 export type TickPosition = {
   size: number
+  sizeInToken: number
   time: number
   collateral: number
+  collateralInToken: number
   price: number
 }
 
 export interface TraderTokenStatistic {
+  symbol: string
+  indexTokens: string[]
   indexToken: string
   totalTrade: number
   totalOrder: number

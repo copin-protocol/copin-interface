@@ -58,7 +58,7 @@ function TokenTrades({
   protocol: ProtocolEnum | undefined
 }) {
   const { data } = useGetTokensTraded({ account, protocol })
-  const tokens = data?.length ? data.map((address) => getTokenTradeSupport(protocol)?.[address]?.name).join(', ') : '--'
+  const tokens = data?.length ? data.map((address) => getTokenTradeSupport(protocol)?.[address]?.symbol).join(', ') : '--'
   return <StatsRow label={<Trans>Markets</Trans>} value={tokens} />
 }
 

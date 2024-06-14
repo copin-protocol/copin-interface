@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
+import ValueOrToken from 'components/ValueOrToken'
 import { CopyPositionData } from 'entities/copyTrade'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
@@ -14,8 +15,9 @@ import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
+import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
 import { getTokenTradeSupport } from 'utils/config/trades'
-import { calcClosedPrice, calcLiquidatePrice, calcOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
+import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } from 'utils/helpers/calculate'
 import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseMarketImage } from 'utils/helpers/transform'
@@ -74,7 +76,20 @@ export function renderSizeShorten(data: PositionData | undefined) {
   if (!data) return <></>
   return (
     <Flex sx={{ gap: 2, alignItems: 'center' }}>
-      <Type.Caption>${compactNumber(data.maxSizeNumber ?? data.size, 1)}</Type.Caption>
+      <Type.Caption>
+        {PROTOCOLS_IN_TOKEN.includes(data.protocol) ? (
+          <ValueOrToken
+            protocol={data.protocol}
+            value={data.maxSizeNumber ?? data.size}
+            valueInToken={data.sizeInToken}
+            indexToken={data.collateralToken}
+            hasCompact={true}
+            hasPrefix={false}
+          />
+        ) : (
+          `$${compactNumber(data.maxSizeNumber ?? data.size, 1)}`
+        )}
+      </Type.Caption>
       <VerticalDivider />
       <Type.Caption>{formatLeverage(data.marginMode, data.leverage)}</Type.Caption>
     </Flex>
@@ -88,7 +103,20 @@ export function renderSize(data: PositionData | undefined, hasLiquidate?: boolea
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
       <Flex minWidth={190} sx={{ gap: '2px', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
         <Flex flex={dynamicWidth ? undefined : '1.15'} sx={{ flexShrink: 0 }}>
-          <Type.Caption>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
+          <Type.Caption>
+            {PROTOCOLS_IN_TOKEN.includes(data.protocol) ? (
+              <ValueOrToken
+                protocol={data.protocol}
+                value={data.maxSizeNumber ?? data.size}
+                valueInToken={data.sizeInToken}
+                indexToken={data.collateralToken}
+                hasCompact={data.sizeInToken >= 100000}
+                hasPrefix={false}
+              />
+            ) : (
+              `${formatNumber(data.maxSizeNumber ?? data.size, 0)}`
+            )}
+          </Type.Caption>
         </Flex>
         <VerticalDivider />
         <Flex minWidth={50} justifyContent="center" sx={{ flexShrink: 0 }}>
@@ -148,7 +176,20 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
       <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '2px' }}>
         <Flex flex={dynamicWidth ? undefined : '1.15'} minWidth={40} sx={{ flexShrink: 0 }}>
-          <Type.Caption {..._textProps}>{formatNumber(data.maxSizeNumber ?? data.size, 0)}</Type.Caption>
+          <Type.Caption {..._textProps}>
+            {PROTOCOLS_IN_TOKEN.includes(data.protocol) ? (
+              <ValueOrToken
+                protocol={data.protocol}
+                value={data.maxSizeNumber ?? data.size}
+                valueInToken={data.sizeInToken}
+                indexToken={data.collateralToken}
+                hasCompact={!!data.sizeInToken && data.sizeInToken >= 100000}
+                hasPrefix={false}
+              />
+            ) : (
+              `${formatNumber(data.maxSizeNumber ?? data.size, 0)}`
+            )}
+          </Type.Caption>
         </Flex>
         <VerticalDivider />
         <Flex minWidth={40} justifyContent="center" flexShrink={0}>
@@ -213,10 +254,25 @@ function OpeningPnL(props: Omit<OpeningPnLComponentProps, 'prices'>) {
 }
 function OpeningPnLComponent({ data, prices, ignoreFee, sx }: OpeningPnLComponentProps) {
   if (!data || !prices) return <></>
+  // Todo: Check calc for value in token
   const marketPrice = prices[data.indexToken]
-  const openingPnl = calcOpeningPnL(data, marketPrice)
-  const pnl = ignoreFee ? openingPnl : openingPnl - data.fee
-  return SignedText({ value: pnl, maxDigit: 1, minDigit: 1, sx: { textAlign: 'right', width: '100%', ...sx } })
+  const { pnl, pnlInToken } = getOpeningPnl({ data, marketPrice, ignoreFee })
+  return (
+    <ValueOrToken
+      protocol={data.protocol}
+      indexToken={data.collateralToken}
+      value={pnl}
+      valueInToken={pnlInToken}
+      component={
+        <SignedText
+          value={pnl ?? pnlInToken}
+          maxDigit={2}
+          minDigit={2}
+          sx={{ textAlign: 'right', width: '100%', ...sx }}
+        />
+      }
+    />
+  )
 }
 
 type OpeningRoiComponentProps = {
@@ -244,10 +300,9 @@ function OpeningRoi(props: Omit<OpeningRoiComponentProps, 'prices'>) {
 function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponentProps) {
   if (!data || !prices) return <></>
   const marketPrice = prices[data.indexToken]
-  const openingPnl = calcOpeningPnL(data, marketPrice)
-  const pnl = ignoreFee ? openingPnl : openingPnl - data.fee
+  const { pnl, pnlInToken } = getOpeningPnl({ data, marketPrice, ignoreFee })
   return SignedText({
-    value: (pnl * 100) / data.collateral,
+    value: ((pnl ?? 0) * 100) / data.collateral,
     minDigit: 2,
     maxDigit: 2,
     suffix: '%',

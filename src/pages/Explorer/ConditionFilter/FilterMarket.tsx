@@ -21,7 +21,7 @@ export default function FilterMarket({
   const pairOptions = Object.values(
     pairs
       ?.sort((x, y) => (x.symbol < y.symbol ? -1 : x.symbol > y.symbol ? 1 : 0))
-      .reduce((acc: any, market) => {
+      ?.reduce((acc: any, market) => {
         if (!acc[market.symbol]) {
           acc[market.symbol] = market
         }

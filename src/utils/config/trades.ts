@@ -1,20 +1,18 @@
 // TODO: Check when add new protocol
-import { JsonRpcProvider } from '@ethersproject/providers'
-
 import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 import {
   ARBITRUM_MAINNET,
   BASE_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
-  CHAINS, MANTLE_MAINNET,
+  CHAINS,
+  MANTLE_MAINNET,
   MODE_MAINNET,
   OPTIMISM_GOERLI,
   OPTIMISM_MAINNET,
   OPTIMISM_SEPOLIA,
   POLYGON_MAINNET,
 } from 'utils/web3/chains'
-import { rpcProvider } from 'utils/web3/providers'
 
 import { TOKEN_COLLATERAL_APOLLOX_BNB, TOKEN_TRADE_APOLLOX_BNB } from './tokenTradeApolloX'
 import { TOKEN_TRADE_AVANTIS_BASE } from './tokenTradeAvantis'
@@ -36,142 +34,123 @@ import { TOKEN_TRADE_SYNTHETIX_V3 } from './tokenTradeSynthetixV3'
 import { TOKEN_TRADE_TIGRIS_ARB } from './tokenTradeTigris'
 import { TOKEN_TRADE_VELA_ARB } from './tokenTradeVela'
 
-type ProtocolProvider = { [key: string]: { chainId: number; provider: JsonRpcProvider; explorerUrl: string } }
+type ProtocolProvider = { [key: string]: { chainId: number; explorerUrl: string } }
 export const PROTOCOL_PROVIDER: ProtocolProvider = {
   [ProtocolEnum.LEVEL_ARB]: {
     chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.LEVEL_BNB]: {
     chainId: BNB_MAINNET,
-    provider: rpcProvider(BNB_MAINNET),
     explorerUrl: CHAINS[BNB_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.MUX_ARB]: {
     chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.GNS]: {
     chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.GNS_POLY]: {
     chainId: POLYGON_MAINNET,
-    provider: rpcProvider(POLYGON_MAINNET),
     explorerUrl: CHAINS[POLYGON_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.GMX_V2]: {
     chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.GMX]: {
     chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.KWENTA]: {
     chainId: OPTIMISM_MAINNET,
-    provider: rpcProvider(OPTIMISM_MAINNET),
     explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.POLYNOMIAL]: {
     chainId: OPTIMISM_MAINNET,
-    provider: rpcProvider(OPTIMISM_MAINNET),
     explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.EQUATION_ARB]: {
     chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.BLOOM_BLAST]: {
     chainId: BLAST_MAINNET,
-    provider: rpcProvider(BLAST_MAINNET),
     explorerUrl: CHAINS[BLAST_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.APOLLOX_BNB]: {
     chainId: BNB_MAINNET,
-    provider: rpcProvider(BNB_MAINNET),
     explorerUrl: CHAINS[BNB_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.AVANTIS_BASE]: {
     chainId: BASE_MAINNET,
-    provider: rpcProvider(BASE_MAINNET),
     explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.TIGRIS_ARB]: {
     chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.LOGX_BLAST]: {
     chainId: BLAST_MAINNET,
-    provider: rpcProvider(BLAST_MAINNET),
     explorerUrl: CHAINS[BLAST_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.LOGX_MODE]: {
     chainId: MODE_MAINNET,
-    provider: rpcProvider(MODE_MAINNET),
     explorerUrl: CHAINS[MODE_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.MYX_ARB]: {
     chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.PINGU_ARB]: {
     chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.HMX_ARB]: {
     chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.DEXTORO]: {
     chainId: OPTIMISM_MAINNET,
-    provider: rpcProvider(OPTIMISM_MAINNET),
     explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.VELA_ARB]: {
     chainId: ARBITRUM_MAINNET,
-    provider: rpcProvider(ARBITRUM_MAINNET),
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.SYNTHETIX_V3]: {
     chainId: BASE_MAINNET,
-    provider: rpcProvider(BASE_MAINNET),
     explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.COPIN]: {
     chainId: OPTIMISM_MAINNET,
-    provider: rpcProvider(OPTIMISM_MAINNET),
     explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.KTX_MANTLE]: {
     chainId: MANTLE_MAINNET,
-    provider: rpcProvider(MANTLE_MAINNET),
     explorerUrl: CHAINS[MANTLE_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.CYBERDEX]: {
     chainId: OPTIMISM_MAINNET,
-    provider: rpcProvider(OPTIMISM_MAINNET),
     explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
   },
 }
 
 export interface TokenTrade {
   address: string
-  name: string
+  // name: string
+  symbol: string
+  // decimals: number
+  // priceFeedId: string
+  // icon: string
+}
+export type ProtocolTokenMapping = { [address: string]: { symbol: string } }
+export interface TokenCollateral {
+  address: string
   symbol: string
   decimals: number
-  priceFeedId: string
-  // icon: string
 }
 
 export type TokenOptionProps = {
@@ -187,7 +166,8 @@ export const ALL_OPTION: TokenOptionProps = {
   value: ALL_TOKENS_ID,
 }
 
-type TokenSupport = { [key: string]: { [key: string]: TokenTrade } }
+type TokenSupport = { [protocol in ProtocolEnum]: ProtocolTokenMapping }
+type TokenCollateralSupport = { [protocol in ProtocolEnum]: { [address: string]: TokenCollateral } }
 type TokenIgnore = { [key in CopyTradePlatformEnum]: string[] }
 
 export const TOKEN_TRADE_SUPPORT: TokenSupport = {
@@ -227,160 +207,150 @@ export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.SYNTHETIX_V2]: [],
 }
 
-export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
+export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.KTX_MANTLE]: {
     ...TOKEN_COLLATERAL_KTX_MANTLE,
   },
   [ProtocolEnum.COPIN]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
       address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      name: 'SUSD',
+      // name: 'SUSD',
       symbol: 'SUSD',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.SYNTHETIX_V3]: {
     '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
       address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      name: 'USDC',
+      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.VELA_ARB]: {
     '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
       address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      name: 'USDC',
+      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.DEXTORO]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
       address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      name: 'SUSD',
+      // name: 'SUSD',
       symbol: 'SUSD',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.CYBERDEX]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
       address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      name: 'SUSD',
+      // name: 'SUSD',
       symbol: 'SUSD',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.HMX_ARB]: {
     '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
       address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      name: 'USDC',
+      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.PINGU_ARB]: {
     '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
       address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      name: 'USDC',
+      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      priceFeedId: '',
-    },
-  },
-  [ProtocolEnum.PINGU_ARB]: {
-    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
-      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      name: 'USDC',
-      symbol: 'USDC',
-      decimals: 18,
-      priceFeedId: '',
     },
     '0x0000000000000000000000000000000000000000': {
       address: '0x0000000000000000000000000000000000000000',
-      name: 'ETH',
+      // name: 'ETH',
       symbol: 'ETH',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.MYX_ARB]: {
     '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
       address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      name: 'USDC',
+      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.LOGX_MODE]: {
     '0xd988097fb8612cc24eeC14542bC03424c656005f': {
       address: '0xd988097fb8612cc24eeC14542bC03424c656005f',
-      name: 'USDC',
+      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
     '0xf0F161fDA2712DB8b566946122a5af183995e2eD': {
       address: '0xf0F161fDA2712DB8b566946122a5af183995e2eD',
-      name: 'USDT',
+      // name: 'USDT',
       symbol: 'USDT',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.LOGX_BLAST]: {
     '0x4300000000000000000000000000000000000003': {
       address: '0x4300000000000000000000000000000000000003',
-      name: 'USDB',
+      // name: 'USDB',
       symbol: 'USDB',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.TIGRIS_ARB]: {
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1': {
       address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-      name: 'ETH',
+      // name: 'ETH',
       symbol: 'ETH',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
     '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9': {
       address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-      name: 'USDT',
+      // name: 'USDT',
       symbol: 'USDT',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
     '0x7E491F53bF807f836E2dd6C4A4FBd193e1913EFd': {
       address: '0x7E491F53bF807f836E2dd6C4A4FBd193e1913EFd',
-      name: 'tigUSD',
+      // name: 'tigUSD',
       symbol: 'tigUSD',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
     '0x763E061856b3e74a6C768a859DC2543A56D299d5': {
       address: '0x763E061856b3e74a6C768a859DC2543A56D299d5',
-      name: 'tigETH',
+      // name: 'tigETH',
       symbol: 'tigETH',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.AVANTIS_BASE]: {
     '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
       address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      name: 'USDC',
+      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
     },
   },
   [ProtocolEnum.APOLLOX_BNB]: {
@@ -389,59 +359,40 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenSupport = {
   [ProtocolEnum.BLOOM_BLAST]: {
     '0x4300000000000000000000000000000000000003': {
       address: '0x4300000000000000000000000000000000000003',
-      name: 'USDB',
+      // name: 'USDB',
       symbol: 'USDB',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
       // icon: IconDAI,
     },
   },
   [ProtocolEnum.EQUATION_ARB]: {},
-  [ProtocolEnum.LEVEL_BNB]: {
-    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.LEVEL_BNB],
-  },
-  [ProtocolEnum.LEVEL_ARB]: {
-    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.LEVEL_ARB],
-  },
-  [ProtocolEnum.LEVEL_ARB]: {
-    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.LEVEL_ARB],
-  },
-  [ProtocolEnum.LEVEL_BNB]: {
-    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.LEVEL_BNB],
-  },
+  [ProtocolEnum.LEVEL_BNB]: {},
+  [ProtocolEnum.LEVEL_ARB]: {},
   [ProtocolEnum.MUX_ARB]: {
     ...TOKEN_COLLATERAL_MUX_ARB,
   },
-  [ProtocolEnum.GNS]: {
-    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX],
-  },
+  [ProtocolEnum.GNS]: {},
   [ProtocolEnum.GNS_POLY]: {},
-  [ProtocolEnum.GMX]: {
-    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX],
-  },
-  [ProtocolEnum.GMX]: {
-    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX],
-  },
-  [ProtocolEnum.GMX_V2]: {
-    ...TOKEN_TRADE_SUPPORT[ProtocolEnum.GMX],
-  },
+  [ProtocolEnum.GMX]: {},
+  [ProtocolEnum.GMX_V2]: {},
   [ProtocolEnum.KWENTA]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
       address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      name: 'SUSD',
+      // name: 'SUSD',
       symbol: 'SUSD',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
       // icon: IconDAI,
     },
   },
   [ProtocolEnum.POLYNOMIAL]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
       address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      name: 'SUSD',
+      // name: 'SUSD',
       symbol: 'SUSD',
       decimals: 18,
-      priceFeedId: '',
+      // priceFeedId: '',
       // icon: IconDAI,
     },
   },
@@ -586,9 +537,15 @@ export const getTokenTradeList = (protocol: ProtocolEnum) => {
 
 export const getDefaultTokenOptions = (protocol: ProtocolEnum) => {
   const tokensSupport = getTokenTradeSupport(protocol)
-  return Object.keys(tokensSupport).map((key) => ({
+  return Array.from(
+    new Set(
+      Object.values(tokensSupport)
+        .map((_v) => _v?.symbol || '')
+        .filter((_v) => !!_v)
+    )
+  ).map((key) => ({
     id: key,
-    label: tokensSupport[key]?.symbol ?? '',
+    label: key,
     value: key,
   }))
 }
@@ -612,8 +569,21 @@ export const TIMEFRAME_NAMES = {
 export function getTokenTradeSupport(protocol: ProtocolEnum): {
   [key: string]: TokenTrade | undefined
 } {
-  const tokens = TOKEN_TRADE_SUPPORT[protocol]
-  return !!tokens ? tokens : {}
+  const tokens = TOKEN_TRADE_SUPPORT[protocol] ?? {}
+  const result = Object.entries(tokens).reduce<Record<string, TokenTrade | undefined>>((_r, [key, value]) => {
+    const tokenTrade: TokenTrade = { symbol: value.symbol, address: key }
+    return { ..._r, [key]: tokenTrade }
+  }, {})
+  return result
+}
+
+export function getSymbolByTokenTrade(protocol: ProtocolEnum): Record<string, string> {
+  const tokenTrades = getTokenTradeSupport(protocol)
+  if (!tokenTrades) return {}
+  return Object.values(tokenTrades).reduce<Record<string, string>>((result, tokenTrade) => {
+    if (!tokenTrade) return result
+    return { ...result, [tokenTrade.address]: tokenTrade.symbol }
+  }, {})
 }
 
 export const GMX_CLOSE_POSITION_TOPIC = '0x73af1d417d82c240fdb6d319b34ad884487c6bf2845d98980cc52ad9171cb455'

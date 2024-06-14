@@ -9,6 +9,7 @@ import { ColumnData, TableSortProps } from 'components/@ui/Table/types'
 import { TraderTokenStatistic } from 'entities/trader'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { SortTypeEnum } from 'utils/config/enums'
 import { ALL_TOKENS_ID, TokenOptionProps } from 'utils/config/trades'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { parseMarketImage } from 'utils/helpers/transform'
@@ -31,7 +32,7 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
   const scrollPositionsRef = useRef<number[]>([])
   const lastScrollPositionRef = useRef<number>(0)
 
-  const currentStats = useMemo(() => data?.find((e) => e.indexToken === currencyOption?.id), [currencyOption?.id, data])
+  const currentStats = useMemo(() => data?.find((e) => e.symbol === currencyOption?.id), [currencyOption?.id, data])
 
   const scroll = useCallback((index: number) => {
     if (!scrollRef.current || !scrollPositionsRef.current.length) return
@@ -158,13 +159,14 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
           }}
         >
           {data.map((stats) => {
-            const indexToken = stats.indexToken
-            const tokenOption = tokenMapping[indexToken]
+            if (!stats.symbol) return <></>
+            const symbol = stats.symbol
+            const tokenOption = tokenMapping[symbol]
             if (!tokenOption) return <></>
-            const icon = parseMarketImage(tokenOption.label)
+            const icon = parseMarketImage(symbol)
             return (
               <Flex
-                key={indexToken}
+                key={symbol}
                 role="button"
                 onClick={() => changeCurrency?.(tokenOption)}
                 sx={{
@@ -172,7 +174,7 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
                   py: '6px',
                   height: '100%',
                   alignItems: 'center',
-                  bg: currencyOption?.id === indexToken ? `${themeColors.primary1}25` : 'transparent',
+                  bg: currencyOption?.id === symbol ? `${themeColors.primary1}25` : 'transparent',
                   '&:hover': {
                     bg: 'neutral5',
                   },
@@ -180,9 +182,9 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
                   '& > *': { flexShrink: 0 },
                 }}
               >
-                <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={tokenOption.label} />
+                <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={stats.symbol} />
                 <Type.Caption>
-                  {tokenOption.label}{' '}
+                  {stats.symbol}{' '}
                   <Box as="span" color="neutral3">
                     ({formatNumber(stats.totalTrade, 0)})
                   </Box>
@@ -235,9 +237,26 @@ export function TableTokenStatistic({
   currencyOption,
   currencyOptions,
   changeCurrency,
-  currentSort,
-  changeCurrentSort,
-}: TokenStatisticProps) {
+}: // currentSort,
+// changeCurrentSort,
+TokenStatisticProps) {
+  const [currentSort, setCurrentSort] = useState<TableSortProps<TraderTokenStatistic> | undefined>(() => {
+    const initSortBy = 'totalTrade'
+    const initSortType = SortTypeEnum.DESC
+    return {
+      sortBy: initSortBy as TableSortProps<TraderTokenStatistic>['sortBy'],
+      sortType: initSortType as SortTypeEnum,
+    }
+  })
+  const displayedData = [...(data || [])].sort((a, b) => {
+    //@ts-ignore
+    const valueA = a[currentSort?.sortBy || '']
+    //@ts-ignore
+    const valueB = b[currentSort?.sortBy || '']
+    if (typeof valueA !== 'number' || typeof valueB !== 'number') return 0
+    return (valueA - valueB) * (currentSort?.sortType === SortTypeEnum.DESC ? -1 : 1)
+  })
+
   const { tokenMapping = {} } = getStatsConfigs({ data, currencyOptions })
   if (!Object.keys(tokenMapping).length || !data?.length) return <></>
 
@@ -248,10 +267,8 @@ export function TableTokenStatistic({
       key: 'indexToken',
       style: { minWidth: '80px' },
       render: (item) => {
-        const indexToken = item.indexToken
-        const tokenOption = tokenMapping[indexToken]
-        if (!tokenOption) return <></>
-        const icon = `/svg/markets/${tokenOption.label}.svg`
+        if (!item.symbol) return <></>
+        const icon = `/svg/markets/${item.symbol}.svg`
         return (
           <Flex
             role="button"
@@ -261,8 +278,8 @@ export function TableTokenStatistic({
               '& > *': { flexShrink: 0 },
             }}
           >
-            <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={tokenOption.label} />
-            <Type.Caption>{tokenOption.label}</Type.Caption>
+            <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={item.symbol} />
+            <Type.Caption>{item.symbol}</Type.Caption>
           </Flex>
         )
       },
@@ -334,14 +351,14 @@ export function TableTokenStatistic({
           },
         },
       }}
-      data={data}
+      data={displayedData}
       columns={tableColumns}
       isLoading={false}
-      renderRowBackground={(data) => (data.indexToken === currencyOption?.id ? themeColors.neutral5 : 'transparent')}
+      renderRowBackground={(data) => (data.symbol === currencyOption?.id ? themeColors.neutral5 : 'transparent')}
       restrictHeight
-      onClickRow={(data) => changeCurrency(tokenMapping[data.indexToken])}
+      onClickRow={(data) => changeCurrency(tokenMapping[data.symbol])}
       currentSort={currentSort}
-      changeCurrentSort={changeCurrentSort}
+      changeCurrentSort={setCurrentSort}
     />
   )
 }

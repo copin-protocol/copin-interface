@@ -21,7 +21,7 @@ import {
   SLTP_TYPE_TRANS,
 } from 'utils/config/translations'
 
-import { getTokenTradeSupport } from '../config/trades'
+import { TokenTrade, getTokenTradeSupport } from '../config/trades'
 import {
   ARBITRUM_MAINNET,
   BASE_MAINNET,
@@ -392,7 +392,8 @@ export const parseChainFromNetwork = (network: string) => {
   }
 }
 
-export function convertUniqueMarkets(protocol: ProtocolEnum, indexTokens: string[]) {
+export function convertUniqueMarkets(protocol: ProtocolEnum, indexTokens?: string[]) {
+  if (!indexTokens) return []
   const tokenTradeSupport = getTokenTradeSupport(protocol)
   const markets: { indexToken: string; symbol: string }[] = indexTokens
     .map((e) => {
@@ -405,4 +406,16 @@ export function convertUniqueMarkets(protocol: ProtocolEnum, indexTokens: string
       return acc
     }, {})
   return Object.values(markets).map((market) => market.indexToken)
+}
+
+export function getUniqueTokenTrade(tokenSupport: { [key: string]: TokenTrade | undefined }): TokenTrade[] {
+  if (!tokenSupport) return []
+  return Object.values(
+    Object.values(tokenSupport).reduce((acc: any, market) => {
+      if (market && !acc[market.symbol]) {
+        acc[market.symbol] = market
+      }
+      return acc
+    }, {})
+  )
 }

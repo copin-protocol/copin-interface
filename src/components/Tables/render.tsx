@@ -9,14 +9,14 @@ import {
   renderSizeOpening,
 } from 'components/@ui/Table/renderProps'
 import { ColumnData } from 'components/@ui/Table/types'
+import ValueOrToken from 'components/ValueOrToken'
 import { PositionData } from 'entities/trader'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
 import { formatDuration, formatLeverage, formatNumber } from 'utils/helpers/format'
-
-import CollateralWithTooltip from '../CollateralWithTooltip'
 
 export type ExternalSource = {
   prices: UsdPrices
@@ -52,11 +52,11 @@ const collateralColumn: ColumnData<PositionData> = {
   style: { minWidth: '90px', textAlign: 'right' },
   render: (item) => (
     <Type.Caption color="neutral1">
-      <CollateralWithTooltip
+      <ValueOrToken
         protocol={item.protocol}
-        collateralToken={item.collateralToken}
-        collateral={item.collateral}
-        collateralInToken={item.collateralInToken}
+        indexToken={item.collateralToken}
+        value={item.collateral}
+        valueInToken={item.collateralInToken}
       />
     </Type.Caption>
   ),
@@ -69,7 +69,20 @@ const feeColumn: ColumnData<PositionData> = {
   style: { minWidth: '100px', textAlign: 'right' },
   render: (item) => (
     <Type.Caption color="neutral1">
-      <SignedText value={-item.fee} maxDigit={1} minDigit={1} />
+      <ValueOrToken
+        protocol={item.protocol}
+        indexToken={item.collateralToken}
+        value={item.fee != null ? item.fee * -1 : undefined}
+        valueInToken={item.feeInToken != null ? item.feeInToken * -1 : undefined}
+        component={
+          <SignedText
+            value={item.fee == null && item.feeInToken == null ? undefined : (item.fee ?? item.feeInToken) * -1}
+            maxDigit={2}
+            minDigit={2}
+            prefix="$"
+          />
+        }
+      />
     </Type.Caption>
   ),
 }
@@ -155,7 +168,18 @@ const sizeColumn: ColumnData<PositionData> = {
   style: { minWidth: '80px', textAlign: 'right' },
   render: (item) => (
     <Flex justifyContent="end" alignItems="center">
-      <Type.Caption color="neutral1">${formatNumber(item.size, 0, 0)}</Type.Caption>
+      <Type.Caption color="neutral1">
+        {PROTOCOLS_IN_TOKEN.includes(item.protocol) ? (
+          <ValueOrToken
+            protocol={item.protocol}
+            indexToken={item.collateralToken}
+            value={item.size}
+            valueInToken={item.sizeInToken}
+          />
+        ) : (
+          `$${formatNumber(item.size, 0, 0)}`
+        )}
+      </Type.Caption>
     </Flex>
   ),
 }
@@ -190,12 +214,13 @@ const pnlColumnFull: ColumnData<PositionData> = {
     return (
       <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
         {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
-        {SignedText({
-          value: item.pnl,
-          maxDigit: 1,
-          minDigit: 1,
-          sx: { textAlign: 'right' },
-        })}
+        <ValueOrToken
+          protocol={item.protocol}
+          indexToken={item.collateralToken}
+          value={item.pnl}
+          valueInToken={item.realisedPnlInToken}
+          component={<SignedText value={item.pnl ?? item.realisedPnlInToken} maxDigit={2} minDigit={2} prefix="$" />}
+        />
       </Flex>
     )
   },
@@ -209,12 +234,13 @@ const pnlColumn: ColumnData<PositionData> = {
     return (
       <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
         {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
-        {SignedText({
-          value: item.pnl,
-          maxDigit: 1,
-          minDigit: 1,
-          sx: { textAlign: 'right' },
-        })}
+        <ValueOrToken
+          protocol={item.protocol}
+          indexToken={item.collateralToken}
+          value={item.pnl}
+          valueInToken={item.realisedPnlInToken}
+          component={<SignedText value={item.pnl ?? item.realisedPnlInToken} maxDigit={2} minDigit={2} prefix="$" />}
+        />
       </Flex>
     )
   },

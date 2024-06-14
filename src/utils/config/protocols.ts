@@ -205,6 +205,8 @@ export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
 
 export const PROTOCOLS_CROSS_MARGIN = [ProtocolEnum.HMX_ARB, ProtocolEnum.SYNTHETIX_V3]
 
+export const PROTOCOLS_IN_TOKEN = [ProtocolEnum.PINGU_ARB]
+
 // TODO: Check when add new protocol
 export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
   gnsPoly: ProtocolEnum.GNS_POLY,

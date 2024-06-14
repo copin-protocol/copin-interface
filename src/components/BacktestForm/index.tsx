@@ -100,7 +100,7 @@ export default function BacktestForm({
   const addressPairs = pairs.map((e) => e.address)
   const isSelectedAll = addressPairs.length === tokenAddresses?.length
   const pairOptions = pairs?.map((e) => {
-    return { value: e.address, label: e.name }
+    return { value: e.address, label: e.symbol }
   })
   pairOptions?.unshift({ value: 'all', label: 'All Tokens' })
 

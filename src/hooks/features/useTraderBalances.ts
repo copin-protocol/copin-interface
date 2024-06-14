@@ -9,6 +9,7 @@ import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER, TOKEN_ADDRESSES, TOKEN_COLLATERAL_SUPPORT } from 'utils/config/trades'
 import { getNativeBalance } from 'utils/web3/balance'
 import { CONTRACT_ABIS } from 'utils/web3/contracts'
+import { rpcProvider } from 'utils/web3/providers'
 
 interface TokenBalance {
   address: string
@@ -27,7 +28,7 @@ const useTraderBalances = ({ account, protocol }: { account?: string; protocol: 
     if (nativeRef.current || !protocol || !protocolProvider) return
     const ethPrice = prices[TOKEN_ADDRESSES[protocol].ETH]
     if (!account || !prices || !ethPrice) return
-    getNativeBalance(protocolProvider.provider, account).then((value: BigNumber) => {
+    getNativeBalance(rpcProvider(protocolProvider.chainId), account).then((value: BigNumber) => {
       nativeRef.current = Number(formatEther(value)) * ethPrice
     })
   }, [account, prices, protocol, protocolProvider])
@@ -61,7 +62,7 @@ const useTraderBalances = ({ account, protocol }: { account?: string; protocol: 
     CONTRACT_ABIS[CONTRACT_QUERY_KEYS.ERC20],
     calls,
     protocolProvider?.chainId,
-    protocolProvider?.provider,
+    rpcProvider(protocolProvider.chainId),
     account,
     {
       enabled: !!protocolProvider?.chainId && !!account && tokens.length > 0,

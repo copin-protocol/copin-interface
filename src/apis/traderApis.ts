@@ -242,12 +242,13 @@ export async function getTraderTokensStatistic(
   { protocol, account }: { protocol: ProtocolEnum; account: string },
   others?: GetApiParams & { sortBy?: string; sortType?: SortTypeEnum }
 ) {
-  const { limit = 100, offset = 0, sortBy: sort_by, sortType: sort_type } = others ?? {}
-  const params = { limit, offset, sort_by, sort_type }
+  // const { limit = 100, offset = 0, sortBy: sort_by, sortType: sort_type } = others ?? {}
+  const { limit = 100, offset = 0 } = others ?? {}
+  const params = { limit, offset }
   return requester
     .get(`${protocol}/${SERVICE}/tokens/${account}/statistic`, { params })
     .then((res: AxiosResponse<ApiListResponse<TraderTokenStatistic>>) =>
-      normalizeTokenStatisticResponse({ res: res.data, sortBy: sort_by, sortType: sort_type })
+      normalizeTokenStatisticResponse({ protocol, res: res.data })
     )
 }
 

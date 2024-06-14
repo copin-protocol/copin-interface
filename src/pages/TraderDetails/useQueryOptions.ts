@@ -9,7 +9,7 @@ import { PositionData } from 'entities/trader'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { ALL_TOKENS_ID, TokenOptionProps } from 'utils/config/trades'
+import { ALL_TOKENS_ID, TokenOptionProps, getTokenTradeList } from 'utils/config/trades'
 import { getNextParam } from 'utils/helpers/transform'
 
 export default function useQueryPositions({
@@ -35,9 +35,14 @@ export default function useQueryPositions({
   if (!!address) {
     queryFilters.push({ fieldName: 'account', value: address })
   }
-  if (currencyOption?.id !== ALL_TOKENS_ID) {
-    queryFilters.push({ fieldName: 'indexToken', value: currencyOption?.id })
+  if (currencyOption?.id && currencyOption?.id !== ALL_TOKENS_ID) {
+    const indexTokens = getTokenTradeList(protocol)
+      .filter((e) => e.symbol === currencyOption?.id)
+      ?.map((e) => e.address)
+    // queryFilters.push({ fieldName: 'indexToken', value: currencyOption?.id })
+    rangeFilters.push({ fieldName: 'indexToken', in: indexTokens })
   }
+
   const { data: openingPositions, isLoading: isLoadingOpening } = useQuery(
     [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol, currentSortOpening],
     () =>
@@ -119,8 +124,12 @@ export function useInfiniteQueryPositions({
   if (!!address) {
     queryFilters.push({ fieldName: 'account', value: address })
   }
-  if (currencyOption?.id !== ALL_TOKENS_ID) {
-    queryFilters.push({ fieldName: 'indexToken', value: currencyOption?.id })
+  if (currencyOption?.id && currencyOption?.id !== ALL_TOKENS_ID) {
+    const indexTokens = getTokenTradeList(protocol)
+      .filter((e) => e.symbol === currencyOption?.id)
+      ?.map((e) => e.address)
+    // queryFilters.push({ fieldName: 'indexToken', value: currencyOption?.id })
+    rangeFilters.push({ fieldName: 'indexToken', in: indexTokens })
   }
   const { data: openingPositions, isLoading: isLoadingOpening } = useQuery(
     [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol],

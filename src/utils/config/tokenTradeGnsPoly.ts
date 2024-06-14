@@ -1,4 +1,4 @@
-import { PYTH_IDS_MAPPING } from './pythIds'
+import { ProtocolTokenMapping } from './trades'
 
 const GNS_POLY_PAIRS = {
   'GNS_POLY-0': 'BTC',
@@ -159,27 +159,14 @@ const GNS_POLY_PAIRS = {
   'GNS_POLY-231': 'REZ',
   'GNS_POLY-232': 'NOT',
 }
-
-type TokenValues = Record<
-  string,
-  {
-    address: string
-    name: string
-    symbol: string
-    decimals: number
-    priceFeedId: string
-  }
->
-
-export const TOKEN_TRADE_GNS_POLY = Object.entries(GNS_POLY_PAIRS).reduce((result, [key, value]) => {
-  return {
-    ...result,
-    [key]: {
-      address: key,
-      name: value,
-      symbol: value,
-      decimals: 18,
-      priceFeedId: PYTH_IDS_MAPPING[value as keyof typeof PYTH_IDS_MAPPING] ?? '',
-    },
-  }
-}, {} as TokenValues)
+export const TOKEN_TRADE_GNS_POLY = Object.entries(GNS_POLY_PAIRS).reduce<ProtocolTokenMapping>(
+  (result, [key, value]) => {
+    return {
+      ...result,
+      [key]: {
+        symbol: value,
+      },
+    }
+  },
+  {}
+)

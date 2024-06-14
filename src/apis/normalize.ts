@@ -5,11 +5,12 @@ import {
   TraderData,
   TraderTokenStatistic,
 } from 'entities/trader'
-import { MarginModeEnum, PositionStatusEnum, SortTypeEnum } from 'utils/config/enums'
+import { MarginModeEnum, PositionStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { decodeRealisedData } from 'utils/helpers/handleRealised'
 import { convertDurationInSecond } from 'utils/helpers/transform'
 
 import { PROTOCOLS_CROSS_MARGIN } from '../utils/config/protocols'
+import { getSymbolByTokenTrade, getTokenTradeSupport } from '../utils/config/trades'
 import { ApiListResponse } from './api'
 
 export const normalizeTraderData = (t: ResponseTraderData) => {
@@ -68,29 +69,52 @@ export const normalizePositionListResponse = (res: ResponsePositionData[]): Posi
 }
 
 export const normalizeTokenStatisticResponse = ({
+  protocol,
   res,
-  sortBy,
-  sortType,
 }: {
+  protocol: ProtocolEnum
   res: ApiListResponse<TraderTokenStatistic>
-  sortBy?: string
-  sortType?: SortTypeEnum
 }): ApiListResponse<TraderTokenStatistic> => {
   if (!res.data) return res
-  const data = res.data.map((item) => {
-    return { ...item, winRate: item.totalTrade ? (item.totalWin / item.totalTrade) * 100 : 0 } as TraderTokenStatistic
-  })
-  if (sortBy === 'winRate') {
-    return {
-      ...res,
-      data: data.sort((a, b) => {
-        return ((a.winRate ?? 0) - (b.winRate ?? 0)) * (sortType === SortTypeEnum.DESC ? -1 : 1)
-      }),
+  const symbolByIndexToken = getSymbolByTokenTrade(protocol)
+  const mappedSymbolData: TraderTokenStatistic[] = res.data.map((_v) => ({
+    ..._v,
+    symbol: symbolByIndexToken[_v.indexToken],
+  }))
+  const checker: Record<string, number> = {}
+  let parsedData: TraderTokenStatistic[] = []
+  mappedSymbolData.forEach((_v) => {
+    if (checker[_v.symbol] == null) {
+      checker[_v.symbol] = parsedData.length
+      parsedData.push({
+        ..._v,
+        indexTokens: Array.from(new Set([...(_v.indexTokens || []), ...(_v.indexTokens || []), _v.indexToken])),
+      })
+    } else {
+      const _data = parsedData[checker[_v.symbol]]
+      Object.entries(_v).forEach(([_key, _value]) => {
+        const key = _key as keyof TraderTokenStatistic
+        if (_data[key] != null && typeof _value === 'number') {
+          //@ts-ignore
+          _data[key] += _value
+        }
+        if (key === 'indexTokens') {
+          _data.indexTokens = Array.from(
+            new Set([...(_data.indexTokens || []), ...(_v.indexTokens || []), _v.indexToken])
+          )
+        }
+      })
     }
-  }
+  })
+  parsedData = parsedData.map((_v) => ({ ..._v, winRate: _v.totalTrade ? (_v.totalWin / _v.totalTrade) * 100 : 0 }))
+
+  parsedData.sort((a, b) => {
+    return (b.totalTrade ?? 0) - (a.totalTrade ?? 0)
+  })
+
   return {
     ...res,
-    data,
+    data: parsedData,
   }
 }
 

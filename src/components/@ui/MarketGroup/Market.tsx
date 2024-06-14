@@ -26,7 +26,6 @@ export default function Market({
 }) {
   const tooltipId = useMemo(() => uuid(), [])
   const symbol = getTokenTradeSupport(protocol)[indexToken]?.symbol
-  const name = getTokenTradeSupport(protocol)[indexToken]?.name
   if (!symbol) return <></>
   return (
     <Flex alignItems="center" sx={{ gap: 1 }}>
@@ -49,12 +48,12 @@ export default function Market({
       >
         <Image src={parseMarketImage(symbol)} sx={{ width: size, height: size }} />
       </Flex>
-      {hasName && !!name && <Type.Small fontSize="10px">{name}</Type.Small>}
+      {hasName && !!symbol && <Type.Small fontSize="10px">{symbol}</Type.Small>}
       {hasTooltip && (
         <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
           <Flex alignItems="center" justifyContent="center" sx={{ gap: 1 }}>
             <Image src={parseMarketImage(symbol)} sx={{ width: size, height: size }} />
-            <Type.Small fontSize="10px">{name}</Type.Small>
+            <Type.Small fontSize="10px">{symbol}</Type.Small>
           </Flex>
         </Tooltip>
       )}

@@ -1,4 +1,4 @@
-import { PYTH_IDS_MAPPING } from './pythIds'
+import { ProtocolTokenMapping } from './trades'
 
 const AVANTIS_PAIRS = {
   'AVANTIS_BASE-0': 'ETH',
@@ -31,28 +31,19 @@ const AVANTIS_PAIRS = {
   'AVANTIS_BASE-38': 'ETHFI',
   'AVANTIS_BASE-39': 'JUP',
   'AVANTIS_BASE-40': 'REZ',
+  'AVANTIS_BASE-41': 'LINK',
+  'AVANTIS_BASE-42': 'LDO',
+  'AVANTIS_BASE-43': 'NEAR',
 }
 
-type TokenValues = Record<
-  string,
-  {
-    address: string
-    name: string
-    symbol: string
-    decimals: number
-    priceFeedId: string
-  }
->
-
-export const TOKEN_TRADE_AVANTIS_BASE = Object.entries(AVANTIS_PAIRS).reduce((result, [key, value]) => {
-  return {
-    ...result,
-    [key]: {
-      address: key,
-      name: value,
-      symbol: value,
-      decimals: 18,
-      priceFeedId: PYTH_IDS_MAPPING[value as keyof typeof PYTH_IDS_MAPPING] ?? '',
-    },
-  }
-}, {} as TokenValues)
+export const TOKEN_TRADE_AVANTIS_BASE = Object.entries(AVANTIS_PAIRS).reduce<ProtocolTokenMapping>(
+  (result, [key, value]) => {
+    return {
+      ...result,
+      [key]: {
+        symbol: value,
+      },
+    }
+  },
+  {}
+)

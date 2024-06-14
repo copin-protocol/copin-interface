@@ -15,7 +15,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { PositionStatusEnum, TimeframeEnum } from 'utils/config/enums'
-import { ALL_TOKENS_ID, getDefaultTokenTrade, getTokenTradeSupport } from 'utils/config/trades'
+import { ALL_TOKENS_ID, getDefaultTokenTrade, getTokenTradeList, getTokenTradeSupport } from 'utils/config/trades'
 
 import useChartPositionData from '../useChartPositionData'
 import BrushChart from './BrushChart'
@@ -61,11 +61,14 @@ export default function ChartPositions({
   const [visibleRange, setVisibleRange] = useState<TimeScaleRange | undefined>()
   const [timeframe, setTimeframe] = useState(TimeframeEnum.H1)
   const hasAllTokens = currencyOption?.id === ALL_TOKENS_ID
+  const indexTokens = getTokenTradeList(protocol)
+    .filter((e) => e.symbol === currencyOption?.id)
+    ?.map((e) => e.address)
   const filterPositions = (positions?: PositionData[]) =>
     (positions &&
       positions.length > 0 &&
       positions.filter((e) =>
-        hasAllTokens ? e.indexToken === positions[0].indexToken : e.indexToken === currencyOption?.id
+        hasAllTokens ? e.indexToken === positions[0].indexToken : indexTokens.includes(e.indexToken)
       )) ||
     []
 
@@ -104,7 +107,7 @@ export default function ChartPositions({
   const tokenTrade = useMemo(
     () =>
       getTokenTradeSupport(protocol)[
-        hasAllTokens ? (mostRecentPos ? mostRecentPos.indexToken : defaultToken) : currencyOption?.id ?? defaultToken
+        hasAllTokens ? (mostRecentPos ? mostRecentPos.indexToken : defaultToken) : indexTokens[0] ?? defaultToken
       ],
     [currencyOption?.id, defaultToken, hasAllTokens, mostRecentPos, protocol]
   )
@@ -119,6 +122,7 @@ export default function ChartPositions({
     protocol,
     indexToken: tokenTrade?.address ?? '',
   })
+
   const openingPos = (openingPositions ?? []).filter(
     (e) => e.indexToken === tokenTrade?.address && dayjs(e.openBlockTime).utc().valueOf() >= from
   )
@@ -326,7 +330,7 @@ export default function ChartPositions({
       </Flex>
       <Flex alignItems="center" justifyContent="space-between" mr={12} mt={2} sx={{ gap: 2 }}>
         <Flex pl={12} alignItems="center" sx={{ gap: 2 }}>
-          <Type.Caption color="neutral3">{currencyOption?.label}:</Type.Caption>
+          <Type.Caption color="neutral3">{currencyOption?.label}</Type.Caption>
           <Type.Small color="neutral1">-</Type.Small>
           <Flex alignItems="center" sx={{ gap: 2, '.currency_option': { zIndex: 8 } }}>
             <TimeframeSelection isExpanded={isExpanded} currentOption={timeframe} changeOption={changeTimeframe} />

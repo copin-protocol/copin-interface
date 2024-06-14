@@ -18,7 +18,7 @@ export default function MarketGroup({
   sx,
 }: {
   protocol: ProtocolEnum
-  indexTokens: string[]
+  indexTokens?: string[]
   size?: number
   limit?: number
   hasName?: boolean

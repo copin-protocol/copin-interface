@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 
 import { DeltaText } from 'components/@ui/DecoratedText/DeltaText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
-import CollateralWithTooltip from 'components/CollateralWithTooltip'
+import ValueOrToken from 'components/ValueOrToken'
 import { OrderData } from 'entities/trader'
 import { Flex, Type } from 'theme/base'
 import { OrderTypeEnum } from 'utils/config/enums'
@@ -33,12 +33,12 @@ export default function OrderTooltip({ data }: { data: OrderData }) {
       <ItemInfo
         label={<Trans>Collateral Delta:</Trans>}
         value={
-          <CollateralWithTooltip
+          <ValueOrToken
             protocol={data.protocol}
-            collateralToken={data.collateralToken}
-            collateral={data.collateralDeltaNumber}
-            collateralInToken={data.collateralDeltaInTokenNumber}
-            value={
+            indexToken={data.collateralToken}
+            value={data.collateralDeltaNumber}
+            valueInToken={data.collateralDeltaInTokenNumber}
+            component={
               <DeltaText
                 color="neutral1"
                 type={data.type}

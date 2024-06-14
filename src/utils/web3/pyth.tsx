@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
+import { PYTH_IDS_MAPPING } from 'utils/config/pythIds'
 import ROUTES from 'utils/config/routes'
 import { TOKEN_TRADE_SUPPORT, TokenTrade } from 'utils/config/trades'
 
@@ -29,13 +30,24 @@ const NORMALIZE_LIST = [
   '0x3d6F251203af12A0b858D250E7ae543B8A1bAD84',
   'HMX_ARB-44',
 ]
+
+const ALL_TOKEN_SUPPORTS = Object.values(TOKEN_TRADE_SUPPORT).reduce<TokenTrade[]>((result, values) => {
+  return [...result, ...Object.entries(values).map(([key, _v]) => ({ address: key, ..._v }))]
+}, [])
+
+const PYTH_IDS = Array.from(new Set(ALL_TOKEN_SUPPORTS.map((x) => PYTH_IDS_MAPPING[x.symbol]))).filter((e) => !!e)
+
+const SYMBOL_BY_PYTH_ID = Object.entries(PYTH_IDS_MAPPING).reduce<Record<string, string>>((result, [key, value]) => {
+  return { ...result, [value]: key }
+}, {})
+
+const TOKENS_BY_SYMBOL = ALL_TOKEN_SUPPORTS.reduce<Record<string, string[]>>((result, { symbol, address }) => {
+  return { ...result, [symbol]: [...(result[symbol] ?? []), address] }
+}, {})
+
 // TODO: Check when add new protocol
 export default function PythConnection() {
   const { setPrices, setIsReady } = useRealtimeUsdPricesStore()
-  const tokenSupports = Object.values(TOKEN_TRADE_SUPPORT).reduce((result, values) => {
-    return [...result, ...Object.values(values).filter((value) => !!value.priceFeedId)]
-  }, [] as TokenTrade[])
-  const pythIds = Array.from(new Set(tokenSupports.map((x) => x.priceFeedId)))
   const { pathname } = useLocation()
 
   const initiated = useRef(false)
@@ -49,9 +61,9 @@ export default function PythConnection() {
       let pricesData = {} as UsdPrices
       ;(async () => {
         await pyth.startWebSocket()
-        const initialCache = await pyth.getLatestPriceFeeds(pythIds)
+        const initialCache = await pyth.getLatestPriceFeeds(PYTH_IDS)
         initialCache?.forEach((price) => {
-          const data = getPriceData({ tokenSupports, price })
+          const data = getPriceData({ price })
           if (!data) return
           for (let i = 0; i < data.tokenAddresses.length; i++) {
             pricesData = {
@@ -66,8 +78,8 @@ export default function PythConnection() {
 
         setIsReady(true)
 
-        await pyth.subscribePriceFeedUpdates(pythIds, (price) => {
-          const data = getPriceData({ tokenSupports, price })
+        await pyth.subscribePriceFeedUpdates(PYTH_IDS, (price) => {
+          const data = getPriceData({ price })
           if (!data) return
           for (let i = 0; i < data.tokenAddresses.length; i++) {
             pricesData = {
@@ -97,11 +109,12 @@ export default function PythConnection() {
   return null
 }
 
-function getPriceData({ tokenSupports, price }: { tokenSupports: TokenTrade[]; price: PriceFeed }) {
+function getPriceData({ price }: { price: PriceFeed }) {
   if (!price) return null
   const id = `0x${price.id}`
   const priceData = price.getPriceNoOlderThan(60)
-  const tokenAddresses = tokenSupports.filter((e) => e.priceFeedId === id)?.map((e) => e.address)
+  const symbol = SYMBOL_BY_PYTH_ID[id]
+  const tokenAddresses = TOKENS_BY_SYMBOL[symbol]
   if (!priceData || !tokenAddresses || tokenAddresses.length === 0) {
     return null
   }

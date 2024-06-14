@@ -1,4 +1,4 @@
-import { PYTH_IDS_MAPPING } from './pythIds'
+import { ProtocolTokenMapping } from './trades'
 
 const TIGRIS_PAIRS = {
   'TIGRIS_ARB-0': 'BTC',
@@ -32,26 +32,14 @@ const TIGRIS_PAIRS = {
   'TIGRIS_ARB-48': 'TON',
 }
 
-type TokenValues = Record<
-  string,
-  {
-    address: string
-    name: string
-    symbol: string
-    decimals: number
-    priceFeedId: string
-  }
->
-
-export const TOKEN_TRADE_TIGRIS_ARB = Object.entries(TIGRIS_PAIRS).reduce((result, [key, value]) => {
-  return {
-    ...result,
-    [key]: {
-      address: key,
-      name: value,
-      symbol: value,
-      decimals: 18,
-      priceFeedId: PYTH_IDS_MAPPING[value as keyof typeof PYTH_IDS_MAPPING] ?? '',
-    },
-  }
-}, {} as TokenValues)
+export const TOKEN_TRADE_TIGRIS_ARB = Object.entries(TIGRIS_PAIRS).reduce<ProtocolTokenMapping>(
+  (result, [key, value]) => {
+    return {
+      ...result,
+      [key]: {
+        symbol: value,
+      },
+    }
+  },
+  {}
+)

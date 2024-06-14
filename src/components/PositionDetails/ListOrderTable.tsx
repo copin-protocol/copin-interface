@@ -8,13 +8,13 @@ import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
-import CollateralWithTooltip from 'components/CollateralWithTooltip'
+import ValueOrToken from 'components/ValueOrToken'
 import { OrderData } from 'entities/trader.d'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { MarginModeEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
-import { formatLeverage, formatNumber } from 'utils/helpers/format'
+import { formatLeverage } from 'utils/helpers/format'
 
 type ExternalSource = {
   totalOrders: number
@@ -135,13 +135,13 @@ export default function ListOrderTable({
         key: 'collateralDeltaNumber',
         style: { minWidth: '105px', textAlign: 'right' },
         render: (item) => (
-          <Flex justifyContent="flex-end" alignItems="center" sx={{ gap: '2px' }}>
-            <CollateralWithTooltip
+          <Flex justifyContent="flex-end" alignItems="center">
+            <ValueOrToken
               protocol={item.protocol}
-              collateralToken={item.collateralToken}
-              collateral={item.collateralDeltaNumber}
-              collateralInToken={item.collateralDeltaInTokenNumber}
-              value={
+              indexToken={item.collateralToken}
+              value={item.collateralDeltaNumber}
+              valueInToken={item.collateralDeltaInTokenNumber}
+              component={
                 <DeltaText
                   color="neutral1"
                   type={item.type}
@@ -163,7 +163,21 @@ export default function ListOrderTable({
           item.type === OrderTypeEnum.MARGIN_TRANSFERRED ? (
             <Type.Caption color="neutral1">--</Type.Caption>
           ) : (
-            <DeltaText color="neutral1" type={item.type} delta={Math.abs(item.sizeDeltaNumber)} />
+            <Flex sx={{ width: '100%', alignItems: 'center', justifyContent: 'end' }}>
+              <ValueOrToken
+                protocol={item.protocol}
+                indexToken={item.collateralToken}
+                value={item.sizeDeltaNumber}
+                valueInToken={item.sizeDeltaInTokenNumber}
+                component={
+                  <DeltaText
+                    color="neutral1"
+                    type={item.type}
+                    delta={Math.abs(item.sizeDeltaNumber ?? item.sizeDeltaInTokenNumber)}
+                  />
+                }
+              />
+            </Flex>
           ),
       },
       {
@@ -189,8 +203,13 @@ export default function ListOrderTable({
         key: 'feeNumber',
         style: { minWidth: '85px', textAlign: 'right', pr: 3 },
         render: (item) => (
-          <Type.Caption color="neutral1" width="100%" textAlign="right">
-            {formatNumber(item.feeNumber, 2, 2)}
+          <Type.Caption color="neutral1" width="100%" textAlign="right" sx={{ display: 'flex', justifyContent: 'end' }}>
+            <ValueOrToken
+              protocol={item.protocol}
+              indexToken={item.collateralToken}
+              value={item.feeNumber}
+              valueInToken={item.feeInTokenNumber}
+            />
           </Type.Caption>
         ),
       },

@@ -151,5 +151,6 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.HMX_ARB,
         ProtocolEnum.SYNTHETIX_V3,
         ProtocolEnum.KTX_MANTLE,
+        ProtocolEnum.CYBERDEX,
       ]
     : Object.values(ProtocolEnum)

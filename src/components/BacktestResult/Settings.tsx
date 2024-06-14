@@ -76,7 +76,7 @@ export default function BacktestSettings({
           data?.copyAll
             ? 'Followed trader'
             : !!data.tokenAddresses?.length
-            ? data.tokenAddresses.map((address) => getTokenTradeSupport(protocol)[address]?.name).join(', ')
+            ? data.tokenAddresses.map((address) => getTokenTradeSupport(protocol)[address]?.symbol).join(', ')
             : ''
         }
       />
