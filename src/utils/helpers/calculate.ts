@@ -90,7 +90,11 @@ export function calcLiquidatePrice(position: PositionData) {
     case ProtocolEnum.COPIN:
       if (position.status === PositionStatusEnum.OPEN) {
         lastCollateral = position.lastCollateral
-        lastSizeInToken = Math.abs(position.lastSizeNumber)
+        lastSizeInToken = position.lastSize
+          ? position.lastSize / position.averagePrice
+          : position.lastSizeNumber
+          ? Math.abs(position.lastSizeNumber)
+          : lastSizeInToken
       }
 
       break

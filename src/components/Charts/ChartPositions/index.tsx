@@ -104,9 +104,10 @@ export default function ChartPositions({
   const oldestPosTime = oldestPosition ? dayjs(oldestPosition.openBlockTime).utc() : undefined
 
   const defaultToken = getDefaultTokenTrade(protocol)?.address ?? ''
+  const tokenTradeSupport = getTokenTradeSupport(protocol)
   const tokenTrade = useMemo(
     () =>
-      getTokenTradeSupport(protocol)[
+      tokenTradeSupport[
         hasAllTokens ? (mostRecentPos ? mostRecentPos.indexToken : defaultToken) : indexTokens[0] ?? defaultToken
       ],
     [currencyOption?.id, defaultToken, hasAllTokens, mostRecentPos, protocol]
@@ -124,10 +125,12 @@ export default function ChartPositions({
   })
 
   const openingPos = (openingPositions ?? []).filter(
-    (e) => e.indexToken === tokenTrade?.address && dayjs(e.openBlockTime).utc().valueOf() >= from
+    (e) =>
+      tokenTradeSupport[e.indexToken]?.symbol === tokenTrade?.symbol && dayjs(e.openBlockTime).utc().valueOf() >= from
   )
   const closedPos = closedPositions.filter(
-    (e) => e.indexToken === tokenTrade?.address && dayjs(e.closeBlockTime).utc().valueOf() >= from
+    (e) =>
+      tokenTradeSupport[e.indexToken]?.symbol === tokenTrade?.symbol && dayjs(e.closeBlockTime).utc().valueOf() >= from
   )
   const listPositions = useMemo(() => [...closedPos, ...openingPos], [closedPos, openingPos])
   const currentPosition = listPositions.find((e) => markerId?.includes(e.id))
