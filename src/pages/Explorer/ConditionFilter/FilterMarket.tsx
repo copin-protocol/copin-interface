@@ -28,7 +28,7 @@ export default function FilterMarket({
         return acc
       }, {})
   )?.map((e: any) => {
-    return { value: e.symbol, label: e.name }
+    return { value: e.symbol, label: e.symbol }
   })
 
   const allPairs = Array.from(new Set(pairs?.map((e) => e.symbol))) ?? []
