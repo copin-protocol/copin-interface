@@ -44,6 +44,7 @@ export function getOpeningPnl({
   marketPrice: number | undefined
   ignoreFee?: boolean
 }) {
+  if (!marketPrice) return { pnl: data?.pnl, pnlInToken: data?.realisedPnlInToken }
   const useSizeInToken = data.size == null && data.fee == null
   let pnl: number | undefined
   let pnlInToken: number | undefined

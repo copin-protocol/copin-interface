@@ -2,12 +2,12 @@ import dayjs from 'dayjs'
 import { useMemo, useState } from 'react'
 
 import { AmountText, PercentText } from 'components/@ui/DecoratedText/ValueText'
-import ValueOrToken from 'components/ValueOrToken'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
-import { getOpeningPnl } from 'utils/helpers/calculate'
+import { calcOpeningPnL } from 'utils/helpers/calculate'
+import { calcOpeningROI } from 'utils/helpers/calculate'
 
 import ChartProfitComponent from './ChartProfitComponent'
 import WhatIf from './WhatIf'
@@ -29,41 +29,24 @@ export default function ChartProfit({
   const closeBlockTimeUnix = useMemo(() => (data ? dayjs(data.closeBlockTime).utc().unix() : 0), [data])
   const to = useMemo(() => (isOpening ? dayjs().utc().unix() : closeBlockTimeUnix), [closeBlockTimeUnix, isOpening])
 
-  const [crossMove, setCrossMove] = useState<{ pnl?: number; time?: number; pnlInToken?: number } | undefined>()
+  const [crossMove, setCrossMove] = useState<{ pnl?: number; time?: number } | undefined>()
   const latestPnL = useMemo(() => {
-    // if (!crossMove || !data) return undefined
-    if (!!crossMove) return crossMove
-    if (!isOpening) return { pnl: data?.pnl, pnlInToken: data?.realisedPnlInToken }
-    return getOpeningPnl({ data, marketPrice: prices[data.indexToken] })
-  }, [crossMove?.pnl, crossMove?.pnlInToken, data, isOpening])
+    if (crossMove?.pnl === 0 || !data) return 0
+    if (crossMove?.pnl) return crossMove?.pnl
+    if (!isOpening) return data.pnl
+    return calcOpeningPnL(data, prices[data.indexToken])
+  }, [crossMove?.pnl, data, isOpening, prices])
 
   const latestROI = useMemo(() => {
-    return latestPnL.pnl && data?.collateral
-      ? (latestPnL.pnl / data.collateral) * 100
-      : latestPnL.pnlInToken && data?.collateralInToken
-      ? (latestPnL.pnlInToken / data.collateralInToken) * 100
-      : data?.roi
-    // if ((crossMove?.pnl === 0 && crossMove?.pnlInToken === 0) || !data) return 0
-    // if (!crossMove || crossMove?.pnl == null || crossMove?.time == null) {
-    //   return isOpening
-    //     ? latestPnL.pnl
-    //       ? latestPnL.pnl / data.collateral
-    //       : latestPnL.pnlInToken
-    //       ? latestPnL.pnlInToken / data.collateralInToken
-    //       : 0
-    //     : data.roi
-    // }
+    if (crossMove?.pnl === 0 || !data) return 0
+    if (!crossMove || crossMove?.pnl == null || crossMove?.time == null) {
+      return isOpening ? calcOpeningROI(data, latestPnL) : data.roi
+    }
 
-    // if ((crossMove.time as number) < to) return undefined
-    // if (!isOpening && (crossMove.time as number) === to) return data.roi
-    // return latestPnL.pnl
-    //   ? latestPnL.pnl / data.collateral
-    //   : latestPnL.pnlInToken
-    //   ? latestPnL.pnlInToken / data.collateralInToken
-    //   : 0
-  }, [data, latestPnL])
-
-  const pnl = latestPnL?.pnl ?? latestPnL?.pnlInToken ?? 0
+    if ((crossMove.time as number) < to) return undefined
+    if (!isOpening && (crossMove.time as number) === to) return data.roi
+    return calcOpeningROI(data, latestPnL)
+  }, [crossMove, data, isOpening, latestPnL, to])
 
   return (
     <>
@@ -78,14 +61,8 @@ export default function ChartProfit({
             sx={{ gap: 2, position: 'relative' }}
           >
             <Flex>
-              <Type.H5 color={pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'inherit'}>
-                <ValueOrToken
-                  protocol={protocol}
-                  indexToken={data.collateralToken}
-                  value={latestPnL?.pnl}
-                  valueInToken={latestPnL?.pnlInToken}
-                />
-                {/* <AmountText amount={latestPnL?.pnl} maxDigit={0} suffix="$" /> */}
+              <Type.H5 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
+                <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
               </Type.H5>
             </Flex>
             {!!latestROI && (

@@ -11,7 +11,7 @@ import {
   Time,
   createChart,
 } from 'lightweight-charts'
-import { useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getChartDataV2 } from 'apis/positionApis'
@@ -33,7 +33,7 @@ import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
 import OrderTooltip from './OrderTooltip'
 
-export default function ChartProfitComponent({
+const ChartProfitComponent = memo(function ChartProfitComponent({
   position,
   isOpening,
   openBlockTime,
@@ -335,7 +335,7 @@ export default function ChartProfitComponent({
   useEffect(() => {
     if (isLoading || !data) return
 
-    const container = document.getElementById(ELEMENT_IDS.POSITION_CHART_PNL)
+    const container = document.getElementById(chartContainerId)
     const chart = createChart(container ? container : chartContainerId, {
       height: CHART_HEIGHT,
       rightPriceScale: {
@@ -658,4 +658,6 @@ export default function ChartProfitComponent({
       {isLoading ? <Loading /> : <div id={chartContainerId} />}
     </Box>
   )
-}
+})
+
+export default ChartProfitComponent
