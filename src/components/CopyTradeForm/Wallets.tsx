@@ -76,6 +76,15 @@ function NoWallet({
     case CopyTradePlatformEnum.BINANCE:
       text = <Trans>Create Binance wallet</Trans>
       break
+    case CopyTradePlatformEnum.BYBIT:
+      text = <Trans>Create Bybit wallet</Trans>
+      break
+    case CopyTradePlatformEnum.OKX:
+      text = <Trans>Create OKX wallet</Trans>
+      break
+    case CopyTradePlatformEnum.GATE:
+      text = <Trans>Create Gate wallet</Trans>
+      break
     case CopyTradePlatformEnum.SYNTHETIX:
       text = <Trans>Create smart wallet</Trans>
       break

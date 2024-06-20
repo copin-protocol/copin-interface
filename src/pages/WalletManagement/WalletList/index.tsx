@@ -23,10 +23,19 @@ import { parseExchangeImage } from 'utils/helpers/transform'
 const EXCHANGES = [
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
+  CopyTradePlatformEnum.BYBIT,
+  CopyTradePlatformEnum.OKX,
+  CopyTradePlatformEnum.GATE,
   CopyTradePlatformEnum.BINANCE,
   CopyTradePlatformEnum.SYNTHETIX,
 ]
-const ALLOW_EXCHANGE = [CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.BITGET]
+const ALLOW_EXCHANGE = [
+  CopyTradePlatformEnum.BINGX,
+  CopyTradePlatformEnum.BITGET,
+  CopyTradePlatformEnum.BYBIT,
+  // CopyTradePlatformEnum.OKX,
+  // CopyTradePlatformEnum.GATE,
+]
 
 export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean }) {
   const allowExchanges = ALLOW_EXCHANGE
@@ -187,6 +196,15 @@ function ExchangeTitle({
     case CopyTradePlatformEnum.BINANCE:
       title = 'Binance Exchange'
       break
+    case CopyTradePlatformEnum.BYBIT:
+      title = 'Bybit Exchange'
+      break
+    case CopyTradePlatformEnum.OKX:
+      title = 'OKX Exchange'
+      break
+    case CopyTradePlatformEnum.GATE:
+      title = 'Gate Exchange'
+      break
     case CopyTradePlatformEnum.SYNTHETIX:
       title = 'Synthetix Exchange'
       break
@@ -247,6 +265,18 @@ function ExternalLink({ exchange }: { exchange: CopyTradePlatformEnum }) {
     case CopyTradePlatformEnum.BINANCE:
       link = LINKS.registerBinance
       text = `Don’t have a Binance account?`
+      break
+    case CopyTradePlatformEnum.BYBIT:
+      link = LINKS.registerBybit
+      text = `Don’t have a Bybit account?`
+      break
+    case CopyTradePlatformEnum.OKX:
+      link = LINKS.registerOKX
+      text = `Don’t have a OKX account?`
+      break
+    case CopyTradePlatformEnum.GATE:
+      link = LINKS.registerGate
+      text = `Don’t have a Gate account?`
       break
   }
   if (!link) return null

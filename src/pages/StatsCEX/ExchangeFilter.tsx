@@ -27,7 +27,7 @@ export default function ExchangeFilter({
         onChange={(newValue: any) => {
           handleFilterChange(newValue as ExchangeFilterProps)
         }}
-        isSearchable={false}
+        isSearchable={true}
       />
     </Flex>
   )

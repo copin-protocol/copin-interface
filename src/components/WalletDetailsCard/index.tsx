@@ -16,6 +16,7 @@ import { getColorFromText } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
 
+import ReferralStatus from './ReferralStatus'
 import WalletActions from './WalletActions'
 
 interface WalletDetailsProps {
@@ -49,7 +50,8 @@ export default function WalletDetailsCard({
   return (
     <Flex p={3} sx={{ flexDirection: 'column', gap: 2 }}>
       <Flex sx={{ width: '100%', gap: 20, justifyContent: 'space-between' }}>
-        <Flex alignItems="center" sx={{ flex: 1, gap: 2 }}>
+        <Flex alignItems="center" sx={{ flex: 1, flexWrap: 'wrap', gap: 2 }}>
+          <ReferralStatus data={data} />
           <Flex width={250} alignItems="center" sx={{ gap: 2 }}>
             <TitleWithIcon
               color={getColorFromText(data.id)}

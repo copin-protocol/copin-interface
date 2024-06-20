@@ -5,6 +5,9 @@ export interface RequestCopyWalletData {
   bingX?: ApiKeyWallet
   bitget?: ApiKeyWallet
   binance?: ApiKeyWallet
+  bybit?: ApiKeyWallet
+  okx?: ApiKeyWallet
+  gate?: ApiKeyWallet
   name?: string
 }
 
@@ -16,6 +19,9 @@ export interface CopyWalletData {
   bingX?: ApiKeyWallet
   bitget?: ApiKeyWallet
   binance?: ApiKeyWallet
+  bybit?: ApiKeyWallet
+  okx?: ApiKeyWallet
+  gate?: ApiKeyWallet
   smartWalletAddress?: string
   balance: number
   availableBalance: number

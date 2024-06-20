@@ -18,7 +18,10 @@ export default function CheckingWalletRenderer({
 
   if (!loadingCopyWallets && !copyWallets?.length)
     return (
-      <Flex mt={[3, 100]} sx={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 3 }}>
+      <Flex
+        mt={[3, 4]}
+        sx={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 3, height: '100%' }}
+      >
         <Type.LargeBold mb={1}>
           <Trans>You don&apos;t have any wallet</Trans>
         </Type.LargeBold>
@@ -27,8 +30,8 @@ export default function CheckingWalletRenderer({
         </Type.Caption>
         <Flex
           sx={{
-            flexWrap: 'wrap',
-            maxWidth: ['100%', '80%'],
+            flexWrap: [undefined, 'wrap'],
+            maxWidth: ['100svw', '80%'],
             flexDirection: ['column', 'row'],
             gap: 3,
             '& > *': {
@@ -39,6 +42,7 @@ export default function CheckingWalletRenderer({
               borderRadius: 'xs',
               '& > *:nth-child(2)': { flex: 1 },
             },
+            overflow: 'auto',
           }}
         >
           <CreateWalletAction />

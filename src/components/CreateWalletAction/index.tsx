@@ -2,8 +2,9 @@ import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
 import React, { ReactNode, useState } from 'react'
 
-import CreateSmartWalletModal from 'components/CreateSmartWalletModal'
 import CreateBingXWalletModal from 'components/Modal/CreateBingXWalletModal'
+import CreateBybitWalletModal from 'components/Modal/CreateBybitWalletModal'
+import CreateGateWalletModal from 'components/Modal/CreateGateWalletModal'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useInternalRole from 'hooks/features/useInternalRole'
 import { Button } from 'theme/Buttons'
@@ -15,6 +16,7 @@ import { parseExchangeImage } from 'utils/helpers/transform'
 
 import CreateBinanceWalletModal from '../Modal/CreateBinanceWalletModal'
 import CreateBitgetWalletModal from '../Modal/CreateBitgetWalletModal'
+import CreateOKXWalletModal from '../Modal/CreateOKXWalletModal'
 
 export default function CreateWalletAction() {
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
@@ -90,6 +92,93 @@ export default function CreateWalletAction() {
         handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BITGET)}
       />
       <WalletItem
+        exchange={CopyTradePlatformEnum.BYBIT}
+        label={<Trans>Bybit Wallet</Trans>}
+        description={
+          <Box>
+            <Trans>
+              Link with your Bybit account through API key. All your assets and your positions management by Bybit.
+              Lowest fee, CEX trading
+            </Trans>
+            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+              <Type.Caption color="neutral2">
+                <Trans>Don’t have a Bybit account?</Trans>
+              </Type.Caption>
+              <ButtonWithIcon
+                type="button"
+                variant="ghostPrimary"
+                as="a"
+                href={LINKS.registerBybit}
+                target="_blank"
+                direction="right"
+                icon={<ArrowSquareOut size={16} />}
+                sx={{ mx: 0, p: 0, fontSize: '14px' }}
+              >
+                <Trans>Register</Trans>
+              </ButtonWithIcon>
+            </Flex>
+          </Box>
+        }
+        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BYBIT)}
+      />
+      <WalletItem
+        exchange={CopyTradePlatformEnum.OKX}
+        label={<Trans>OKX Wallet</Trans>}
+        description={
+          <Box>
+            <Trans>
+              Link with your OKX account through API key. All your assets and your positions management by OKX. Lowest
+              fee, CEX trading
+            </Trans>
+            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+              <Type.Caption color="neutral2">
+                <Trans>Don’t have a OKX account?</Trans>
+              </Type.Caption>
+              <ButtonWithIcon
+                type="button"
+                variant="ghostPrimary"
+                as="a"
+                href={LINKS.registerOKX}
+                target="_blank"
+                direction="right"
+                icon={<ArrowSquareOut size={16} />}
+                sx={{ mx: 0, p: 0, fontSize: '14px' }}
+              >
+                <Trans>Register</Trans>
+              </ButtonWithIcon>
+            </Flex>
+          </Box>
+        }
+        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.OKX)}
+      />
+      <WalletItem
+        exchange={CopyTradePlatformEnum.GATE}
+        label={<Trans>Gate Wallet</Trans>}
+        description={
+          <Box>
+            <Trans>Link with your Gate account through API key</Trans>
+            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+              <Type.Caption color="neutral2">
+                <Trans>Don’t have a Gate account?</Trans>
+              </Type.Caption>
+              <ButtonWithIcon
+                type="button"
+                variant="ghostPrimary"
+                as="a"
+                href={LINKS.registerGate}
+                target="_blank"
+                direction="right"
+                icon={<ArrowSquareOut size={16} />}
+                sx={{ mx: 0, p: 0, fontSize: '14px' }}
+              >
+                <Trans>Register</Trans>
+              </ButtonWithIcon>
+            </Flex>
+          </Box>
+        }
+        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.GATE)}
+      />
+      <WalletItem
         exchange={CopyTradePlatformEnum.BINANCE}
         label={<Trans>Binance Wallet</Trans>}
         description={
@@ -148,6 +237,15 @@ export function CreateWalletModal({
     case CopyTradePlatformEnum.BINANCE:
       Modal = CreateBinanceWalletModal
       break
+    case CopyTradePlatformEnum.BYBIT:
+      Modal = CreateBybitWalletModal
+      break
+    case CopyTradePlatformEnum.OKX:
+      Modal = CreateOKXWalletModal
+      break
+    case CopyTradePlatformEnum.GATE:
+      Modal = CreateGateWalletModal
+      break
     // case CopyTradePlatformEnum.SYNTHETIX:
     //   Modal = CreateSmartWalletModal
     //   break
@@ -166,7 +264,11 @@ interface WalletItemProps {
 function WalletItem({ exchange, label, description, handleClick }: WalletItemProps) {
   const isInternal = useInternalRole()
   const isComingSoon =
-    exchange === CopyTradePlatformEnum.SYNTHETIX || (!isInternal && exchange === CopyTradePlatformEnum.BINANCE)
+    exchange === CopyTradePlatformEnum.SYNTHETIX ||
+    (!isInternal &&
+      (exchange === CopyTradePlatformEnum.BINANCE ||
+        exchange === CopyTradePlatformEnum.OKX ||
+        exchange === CopyTradePlatformEnum.GATE))
   return (
     <Flex minWidth={350} p={24} flexDirection="column" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
       <Flex alignItems="center" sx={{ gap: 3 }}>

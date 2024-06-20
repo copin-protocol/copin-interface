@@ -203,6 +203,9 @@ export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.BINGX]: ['YFI', 'RPL', 'ZEC', 'RPL', 'UMA', 'BAL', 'XTZ', 'AR'],
   [CopyTradePlatformEnum.BITGET]: [],
   [CopyTradePlatformEnum.BINANCE]: [],
+  [CopyTradePlatformEnum.BYBIT]: [],
+  [CopyTradePlatformEnum.OKX]: [],
+  [CopyTradePlatformEnum.GATE]: [],
   [CopyTradePlatformEnum.SYNTHETIX]: [],
   [CopyTradePlatformEnum.SYNTHETIX_V2]: [],
 }

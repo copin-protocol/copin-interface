@@ -8,4 +8,7 @@ export const CURRENCY_PLATFORMS: Record<CopyTradePlatformEnum, CurrencyEnum> = {
   [CopyTradePlatformEnum.BINGX]: CurrencyEnum.USD,
   [CopyTradePlatformEnum.BITGET]: CurrencyEnum.USD,
   [CopyTradePlatformEnum.BINANCE]: CurrencyEnum.USD,
+  [CopyTradePlatformEnum.BYBIT]: CurrencyEnum.USD,
+  [CopyTradePlatformEnum.OKX]: CurrencyEnum.USD,
+  [CopyTradePlatformEnum.GATE]: CurrencyEnum.USD,
 }

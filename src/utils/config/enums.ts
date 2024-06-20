@@ -69,6 +69,9 @@ export enum CopyTradePlatformEnum {
   BINGX = 'BINGX',
   BITGET = 'BITGET',
   BINANCE = 'BINANCE',
+  BYBIT = 'BYBIT',
+  OKX = 'OKX',
+  GATE = 'GATE',
   SYNTHETIX = 'SYNTHETIX',
   SYNTHETIX_V2 = 'SYNTHETIX_V2',
 }

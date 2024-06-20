@@ -78,6 +78,9 @@ export const copyTradeFormSchema = yup.object({
       CopyTradePlatformEnum.BINGX,
       CopyTradePlatformEnum.BITGET,
       CopyTradePlatformEnum.BINANCE,
+      CopyTradePlatformEnum.BYBIT,
+      CopyTradePlatformEnum.OKX,
+      CopyTradePlatformEnum.GATE,
       CopyTradePlatformEnum.SYNTHETIX,
     ])
     .label('Exchange'),
@@ -188,12 +191,18 @@ export interface ExchangeOptions {
 export const exchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BINGX),
   getExchangeOption(CopyTradePlatformEnum.BITGET),
+  getExchangeOption(CopyTradePlatformEnum.BYBIT),
+  getExchangeOption(CopyTradePlatformEnum.OKX),
+  getExchangeOption(CopyTradePlatformEnum.GATE),
   // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
 ]
 export const internalExchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BINGX),
   getExchangeOption(CopyTradePlatformEnum.BITGET),
   getExchangeOption(CopyTradePlatformEnum.BINANCE),
+  getExchangeOption(CopyTradePlatformEnum.BYBIT),
+  getExchangeOption(CopyTradePlatformEnum.OKX),
+  getExchangeOption(CopyTradePlatformEnum.GATE),
   // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
 ]
 export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {
@@ -210,7 +219,19 @@ export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boo
       break
     case CopyTradePlatformEnum.BINANCE:
       label = 'Binance'
-      refCode = ''
+      refCode = '19902233'
+      break
+    case CopyTradePlatformEnum.BYBIT:
+      label = 'Bybit'
+      refCode = 'COPIN'
+      break
+    case CopyTradePlatformEnum.OKX:
+      label = 'OKX'
+      refCode = '75651458'
+      break
+    case CopyTradePlatformEnum.GATE:
+      label = 'Gate'
+      refCode = 'AgBFAApb'
       break
     case CopyTradePlatformEnum.SYNTHETIX:
       label = 'Synthetix'

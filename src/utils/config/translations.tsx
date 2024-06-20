@@ -53,6 +53,8 @@ export const PLATFORM_TRANS: ObjectTrans = {
   [CopyTradePlatformEnum.BINGX]: <Trans>BingX</Trans>,
   [CopyTradePlatformEnum.BITGET]: <Trans>Bitget</Trans>,
   [CopyTradePlatformEnum.BINANCE]: <Trans>Binance</Trans>,
+  [CopyTradePlatformEnum.OKX]: <Trans>OKX</Trans>,
+  [CopyTradePlatformEnum.GATE]: <Trans>Gate</Trans>,
   [CopyTradePlatformEnum.GMX]: <Trans>GMX</Trans>,
   [CopyTradePlatformEnum.SYNTHETIX]: <Trans>Synthetix</Trans>,
   [CopyTradePlatformEnum.SYNTHETIX_V2]: <Trans>Synthetix V2</Trans>,
@@ -63,6 +65,9 @@ export const PLATFORM_TEXT_TRANS: { [key: string]: string } = {
   [CopyTradePlatformEnum.BINGX]: 'BingX',
   [CopyTradePlatformEnum.BITGET]: 'Bitget',
   [CopyTradePlatformEnum.BINANCE]: 'Binance',
+  [CopyTradePlatformEnum.BYBIT]: 'Bybit',
+  [CopyTradePlatformEnum.OKX]: 'OKX',
+  [CopyTradePlatformEnum.GATE]: 'Gate',
   [CopyTradePlatformEnum.GMX]: 'GMX',
   [CopyTradePlatformEnum.SYNTHETIX]: 'Synthetix V3',
   [CopyTradePlatformEnum.SYNTHETIX_V2]: 'Synthetix V2',
@@ -72,6 +77,9 @@ export const COPY_WALLET_TRANS: ObjectTrans = {
   [CopyTradePlatformEnum.BINGX]: 'BingX',
   [CopyTradePlatformEnum.BITGET]: 'Bitget',
   [CopyTradePlatformEnum.BINANCE]: 'Binance',
+  [CopyTradePlatformEnum.BYBIT]: 'Bybit',
+  [CopyTradePlatformEnum.OKX]: 'OKX',
+  [CopyTradePlatformEnum.GATE]: 'Gate',
   [CopyTradePlatformEnum.SYNTHETIX]: 'SW',
 }
 

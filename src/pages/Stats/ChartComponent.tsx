@@ -570,7 +570,13 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
 
           for (const exchange in stats.exchanges) {
             if (
-              [CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.BITGET].includes(exchange as CopyTradePlatformEnum)
+              [
+                CopyTradePlatformEnum.BINGX,
+                CopyTradePlatformEnum.BITGET,
+                CopyTradePlatformEnum.BYBIT,
+                CopyTradePlatformEnum.OKX,
+                CopyTradePlatformEnum.GATE,
+              ].includes(exchange as CopyTradePlatformEnum)
             ) {
               const exchangeStats = stats.exchanges[exchange] || {}
               totalActiveCopyTrade += exchangeStats.totalActiveCopyTrade || 0

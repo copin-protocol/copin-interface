@@ -38,8 +38,11 @@ type ExternalSource = {
 const internalExchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BINGX),
   getExchangeOption(CopyTradePlatformEnum.BITGET),
+  getExchangeOption(CopyTradePlatformEnum.BYBIT),
+  getExchangeOption(CopyTradePlatformEnum.OKX),
+  getExchangeOption(CopyTradePlatformEnum.GATE),
 ]
-const ALLOW_DEPTH_HISTORIES = [CopyTradePlatformEnum.BINANCE]
+const ALLOW_DEPTH_HISTORIES = [CopyTradePlatformEnum.BINANCE, CopyTradePlatformEnum.BYBIT]
 export default function Overview() {
   const { sm } = useResponsive()
   const [openDrawer, setOpenDrawer] = useState(false)
