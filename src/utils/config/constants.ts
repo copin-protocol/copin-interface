@@ -52,7 +52,7 @@ export const LINKS = {
   getBingXAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bingx-api',
   getBitgetAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bitget-api',
   getBybitAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bybit-api',
-  getOKXAPIKey: 'https://tutorial.copin.io/how-to-connecting-your-bingx-account/3.-generate-an-api-key',
+  getOKXAPIKey: 'https://docs.copin.io/features/copy-trading/connect-okx-api',
   getGateAPIKey: 'https://docs.copin.io/features/copy-trading/connect-gate-api',
   notice: 'https://copin.substack.com/p/copin-profile-login-updates-road',
   bingXGuarantee:

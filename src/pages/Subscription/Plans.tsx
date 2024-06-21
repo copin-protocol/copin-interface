@@ -478,7 +478,7 @@ export function usePlanConfigs() {
       <p>
         <Trans>Copy hot trader</Trans> <TooltipIcon id="vip-hot-trader" />
       </p>,
-      <Trans>CEX account connection</Trans>,
+      // <Trans>CEX account connection</Trans>,
       <Trans>VIP support and exclusive signal</Trans>,
       <Trans>License copyright of Copin</Trans>,
       <Trans>Platform</Trans>,
@@ -493,7 +493,7 @@ export function usePlanConfigs() {
       <Trans>Maximum ${formatNumber(volumeLimit?.volumeWoReferral, 0, 0)}</Trans>,
       <Trans>Maximum ${formatNumber(volumeLimit?.volumeReferral, 0, 0)}</Trans>,
       <Trans>No</Trans>,
-      <Trans>2 exchanges (BingX, Bitget)</Trans>,
+      // <Trans>2 exchanges (BingX, Bitget)</Trans>,
       <Trans>No</Trans>,
       <Trans>Personal</Trans>,
       <Trans>https://app.copin.io</Trans>,
@@ -512,7 +512,7 @@ export function usePlanConfigs() {
       <Box as="span" color="orange1">
         <Trans>Yes</Trans>
       </Box>,
-      <Trans>2 exchanges (BingX, Bitget)</Trans>,
+      // <Trans>2 exchanges (BingX, Bitget)</Trans>,
       <Trans>No</Trans>,
       <Trans>Personal</Trans>,
       <Trans>https://app.copin.io</Trans>,
@@ -536,14 +536,14 @@ export function usePlanConfigs() {
       <Box as="span" color="violet">
         <Trans>Yes</Trans>
       </Box>,
-      <p>
-        <p>
-          <Trans>6 exchanges and more... (BingX, Bitget, OKX, Gate, ByBit, Binance)</Trans>
-        </p>
-        <Box as="p" color="primary2">
-          <Trans>(Go live on 1st May)</Trans>
-        </Box>
-      </p>,
+      // <p>
+      //   <p>
+      //     <Trans>6 exchanges and more... (BingX, Bitget, OKX, Gate, ByBit, Binance)</Trans>
+      //   </p>
+      //   <Box as="p" color="primary2">
+      //     <Trans>(Go live on 1st May)</Trans>
+      //   </Box>
+      // </p>,
       <Box as="span" color="violet">
         <Trans>Yes</Trans>
       </Box>,

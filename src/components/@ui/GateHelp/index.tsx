@@ -65,37 +65,41 @@ const GateHelp = ({
         </Box>
       </Wrapper>
 
-      {/*<Wrapper>*/}
-      {/*  <Flex alignItems="center" sx={{ gap: 2 }}>*/}
-      {/*    <Type.Caption>*/}
-      {/*      <Trans>How to get Bitget API Key?</Trans>*/}
-      {/*    </Type.Caption>*/}
-      {/*    <ButtonWithIcon*/}
-      {/*      type="button"*/}
-      {/*      variant="ghostPrimary"*/}
-      {/*      icon={<ArrowSquareOut size={20} />}*/}
-      {/*      size={20}*/}
-      {/*      onClick={() => handleOpenUrl(LINKS.getBitgetAPIKey)}*/}
-      {/*      sx={{ mx: 0, p: 0 }}*/}
-      {/*    />*/}
-      {/*  </Flex>*/}
-      {/*</Wrapper>*/}
+      <Wrapper>
+        <Flex alignItems="center" sx={{ gap: 2 }}>
+          <Type.Caption>
+            <Trans>How to get Gate API Key?</Trans>
+          </Type.Caption>
+          <ButtonWithIcon
+            type="button"
+            variant="ghostPrimary"
+            as="a"
+            href={LINKS.getGateAPIKey}
+            target="_blank"
+            icon={<ArrowSquareOut size={20} />}
+            size={20}
+            sx={{ mx: 0, p: 0 }}
+          />
+        </Flex>
+      </Wrapper>
 
-      {/*<Wrapper>*/}
-      {/*  <Flex alignItems="center" sx={{ gap: 2 }}>*/}
-      {/*    <Type.Caption>*/}
-      {/*      <Trans>How to get Bitget Secret Key?</Trans>*/}
-      {/*    </Type.Caption>*/}
-      {/*    <ButtonWithIcon*/}
-      {/*      type="button"*/}
-      {/*      variant="ghostPrimary"*/}
-      {/*      icon={<ArrowSquareOut size={20} />}*/}
-      {/*      size={20}*/}
-      {/*      onClick={() => handleOpenUrl(LINKS.getBitgetAPIKey)}*/}
-      {/*      sx={{ mx: 0, p: 0 }}*/}
-      {/*    />*/}
-      {/*  </Flex>*/}
-      {/*</Wrapper>*/}
+      <Wrapper>
+        <Flex alignItems="center" sx={{ gap: 2 }}>
+          <Type.Caption>
+            <Trans>How to get Gate Secret Key?</Trans>
+          </Type.Caption>
+          <ButtonWithIcon
+            type="button"
+            variant="ghostPrimary"
+            as="a"
+            href={LINKS.getGateAPIKey}
+            target="_blank"
+            icon={<ArrowSquareOut size={20} />}
+            size={20}
+            sx={{ mx: 0, p: 0 }}
+          />
+        </Flex>
+      </Wrapper>
     </Flex>
   )
 }

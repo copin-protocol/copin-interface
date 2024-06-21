@@ -33,8 +33,8 @@ const ALLOW_EXCHANGE = [
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.BYBIT,
-  // CopyTradePlatformEnum.OKX,
-  // CopyTradePlatformEnum.GATE,
+  CopyTradePlatformEnum.OKX,
+  CopyTradePlatformEnum.GATE,
 ]
 
 export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean }) {
