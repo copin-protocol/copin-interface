@@ -58,7 +58,9 @@ export default function MainSection({
     }
   )
 
-  const listTraderAddresses = useMemo(() => tradersData?.map((trader) => trader.account) ?? [], [tradersData])
+  const listTraderAddresses = useMemo(() => {
+    return tradersData?.flatMap((trader) => [trader.account, ...(trader.accounts || [])]) ?? []
+  }, [tradersData])
 
   const getAllCopiesParams = useMemo(
     () => ({

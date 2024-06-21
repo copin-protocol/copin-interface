@@ -5,6 +5,7 @@ import { useQuery } from 'react-query'
 
 import { getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
+import ReferralStatus from 'components/WalletDetailsCard/ReferralStatus'
 import { CopyWalletData } from 'entities/copyWallet'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
@@ -50,25 +51,38 @@ export default function BalanceMenu({
       }}
       py={[1, 12]}
     >
-      <Dropdown
-        buttonVariant="ghost"
-        buttonSx={{ height: '100%', border: 'none', p: 0 }}
-        sx={{ height: '100%', pl: 3, pr: 2, flexShrink: 0, borderRight: 'small', borderRightColor: 'neutral4' }}
-        menuSx={{ width: ['100%', 200], overflow: 'hidden auto', height: 'max-content', maxHeight: [400, 500], py: 2 }}
-        menu={
-          <>
-            {copyWallets.map((wallet) => {
-              return (
-                <DropdownItem key={wallet.id} onClick={() => onChangeKey(wallet)}>
-                  {parseWalletName(wallet)}
-                </DropdownItem>
-              )
-            })}
-          </>
-        }
+      <Flex
+        flexDirection={['column', 'row']}
+        alignItems={['flex-start', 'center']}
+        sx={{ pl: 3, pr: 2, gap: 1, width: ['75%', 'max-content'], borderRight: 'small', borderRightColor: 'neutral4' }}
       >
-        <Type.CaptionBold>{currentOption.title}</Type.CaptionBold>
-      </Dropdown>
+        <Dropdown
+          buttonVariant="ghost"
+          buttonSx={{ height: '100%', border: 'none', p: 0 }}
+          sx={{ height: '100%', pr: 2, flexShrink: 0 }}
+          menuSx={{
+            width: ['100%', 200],
+            overflow: 'hidden auto',
+            height: 'max-content',
+            maxHeight: [400, 500],
+            py: 2,
+          }}
+          menu={
+            <>
+              {copyWallets.map((wallet) => {
+                return (
+                  <DropdownItem key={wallet.id} onClick={() => onChangeKey(wallet)}>
+                    {parseWalletName(wallet)}
+                  </DropdownItem>
+                )
+              })}
+            </>
+          }
+        >
+          <Type.CaptionBold>{currentOption.title}</Type.CaptionBold>
+        </Dropdown>
+        {activeWallet && <ReferralStatus data={activeWallet} sx={{ minWidth: 80 }} />}
+      </Flex>
       <Flex
         width={{ _: '100%', sm: 'auto' }}
         height="100%"

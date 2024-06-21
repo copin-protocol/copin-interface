@@ -8,6 +8,7 @@ import {
 } from '@phosphor-icons/react'
 import { MutableRefObject, SetStateAction, useCallback, useMemo } from 'react'
 
+import AvatarGroup from 'components/@ui/Avatar/AvatarGroup'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import Divider from 'components/@ui/Divider'
 import MarketGroup from 'components/@ui/MarketGroup'
@@ -22,12 +23,13 @@ import MaxMarginIcon from 'theme/Icons/MaxMarginIcon'
 import SkipLowLeverageIcon from 'theme/Icons/SkipLowLeverageIcon'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
 import { TOOLTIP_KEYS } from 'utils/config/keys'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
+import { getProtocolDropdownImage } from 'utils/helpers/transform'
 
 import { renderSLTPSetting, renderTrader } from '../renderProps'
 import ActionItem from './ActionItem'
@@ -110,22 +112,7 @@ export default function useCopyTradeColumns({
   const renderTraderAccount = useCallback(
     (item: CopyTradeWithCheckingData) => {
       const isRunning = isRunningFn(item.status)
-      return renderTrader(item.account, item.protocol, {
-        textSx: {
-          color: isRunning ? 'neutral1' : 'neutral3',
-        },
-        sx: {
-          filter: isRunning ? 'none' : 'grayscale(1)',
-        },
-        hasCopyCountWarningIcon: isRunning,
-        hasCopyVolumeWarningIcon: isRunning,
-        copyVolume: item.copyVolume,
-        maxCopyVolume: item.maxVolume,
-        isRef: item.isRef,
-        plan: item.plan,
-        hasCopyTradeVolumeIcon: isRunning,
-        hasCopyAddress: true,
-      })
+      return renderCopyTrader(item, isRunning)
     },
     [isRunningFn]
   )
@@ -541,3 +528,56 @@ export default function useCopyTradeColumns({
 }
 
 export type CopyTradeRenderProps = ReturnType<typeof useCopyTradeColumns>['renderProps']
+
+function renderCopyTrader(data: CopyTradeWithCheckingData, isRunning: boolean) {
+  return (
+    <Box
+      sx={{
+        color: isRunning ? 'neutral1' : 'neutral3',
+        filter: isRunning ? 'none' : 'grayscale(1)',
+      }}
+    >
+      {data.multipleCopy
+        ? data.accounts && (
+            <>
+              <Flex data-tooltip-id={data.id} sx={{ alignItems: 'center', gap: 2 }}>
+                <AvatarGroup addresses={data.accounts} size={24} />
+                <Type.Caption color="neutral4">|</Type.Caption>
+                <Image
+                  src={getProtocolDropdownImage({ protocol: data.protocol, isActive: true })}
+                  width={16}
+                  height={16}
+                  sx={{ flexShrink: 0 }}
+                />
+              </Flex>
+              <Tooltip id={data.id} clickable>
+                <Flex sx={{ flexDirection: 'column', gap: 1 }}>
+                  {data.accounts.map((_a) => {
+                    return renderTrader(_a, data.protocol, {
+                      hasCopyCountWarningIcon: isRunning,
+                      hasCopyVolumeWarningIcon: isRunning,
+                      copyVolume: data.copyVolume,
+                      maxCopyVolume: data.maxVolume,
+                      isRef: data.isRef,
+                      plan: data.plan,
+                      hasCopyTradeVolumeIcon: isRunning,
+                      hasCopyAddress: true,
+                    })
+                  })}
+                </Flex>
+              </Tooltip>
+            </>
+          )
+        : renderTrader(data.account, data.protocol, {
+            hasCopyCountWarningIcon: isRunning,
+            hasCopyVolumeWarningIcon: isRunning,
+            copyVolume: data.copyVolume,
+            maxCopyVolume: data.maxVolume,
+            isRef: data.isRef,
+            plan: data.plan,
+            hasCopyTradeVolumeIcon: isRunning,
+            hasCopyAddress: true,
+          })}
+    </Box>
+  )
+}

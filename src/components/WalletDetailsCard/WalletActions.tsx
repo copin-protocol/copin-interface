@@ -59,11 +59,13 @@ const WalletActions = ({ data }: { data: CopyWalletData }) => {
           sx={{ color: 'red2', '&:hover': { color: 'red1' } }}
         />
       </Flex>
-      <CopyWalletHistoryDrawer
-        copyWallet={data}
-        onDismiss={() => setOpenHistoryDrawer(false)}
-        isOpen={openHistoryDrawer}
-      />
+      {openHistoryDrawer && (
+        <CopyWalletHistoryDrawer
+          copyWallet={data}
+          onDismiss={() => setOpenHistoryDrawer(false)}
+          isOpen={openHistoryDrawer}
+        />
+      )}
       {openDeleteModal && (
         <ConfirmDeleteModal
           data={data}

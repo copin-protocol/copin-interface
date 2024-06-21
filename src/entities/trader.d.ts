@@ -208,6 +208,7 @@ export interface PositionStatisticCounter {
 export interface MyCopyTraderData {
   protocol: ProtocolEnum
   account: string
+  accounts?: string[]
   exchange: CopyTradePlatformEnum
   lastTradeAt: string
   pnl: number

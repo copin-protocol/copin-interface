@@ -14,13 +14,15 @@ export function getTradersByProtocolFromCopyTrade(
   if (!copyTrades?.length || !allTraders?.length) return undefined
   const checkerMapping: Record<string, { [protocol: string]: boolean }> = {}
   const tradersByProtocol = copyTrades?.reduce((result, copyTrade) => {
-    if (checkerMapping[copyTrade.account]?.[copyTrade.protocol] || !allTraders.includes(copyTrade.account))
-      return result
-    checkerMapping[copyTrade.account] = { [copyTrade.protocol]: true }
-    result[copyTrade.protocol] = [
-      ...(result[copyTrade.protocol] ?? []),
-      { address: copyTrade.account, status: copyTrade.status === CopyTradeStatusEnum.RUNNING ? 'copying' : 'deleted' },
-    ]
+    const accounts = [copyTrade.account, ...(copyTrade.accounts || [])]
+    accounts.forEach((account) => {
+      if (checkerMapping[account]?.[copyTrade.protocol] || !allTraders.includes(account)) return
+      checkerMapping[account] = { [copyTrade.protocol]: true }
+      result[copyTrade.protocol] = [
+        ...(result[copyTrade.protocol] ?? []),
+        { address: account, status: copyTrade.status === CopyTradeStatusEnum.RUNNING ? 'copying' : 'deleted' },
+      ]
+    })
     return result
   }, {} as TradersByProtocolData)
   return tradersByProtocol
