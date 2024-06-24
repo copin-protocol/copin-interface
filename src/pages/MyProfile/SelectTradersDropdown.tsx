@@ -18,33 +18,25 @@ export type TradersByProtocolData = Record<ProtocolEnum, TradersByProtocolValues
 export default function SelectTradersDropdown({
   allTraders,
   selectedTraders,
+  activeTraderAddresses,
+  deletedTraderAddresses,
   handleToggleTrader,
   handleSelectAllTraders,
-  tradersByProtocol,
   menuSx = {},
   placement = 'bottomLeft',
   buttonSx,
 }: {
   allTraders: string[] | undefined
   selectedTraders: string[]
+  activeTraderAddresses: string[]
+  deletedTraderAddresses: string[]
   handleToggleTrader: (key: string) => void
   handleSelectAllTraders: (isSelectedAll: boolean) => void
-  tradersByProtocol: TradersByProtocolData
   menuSx?: SystemStyleObject & GridProps
   placement?: 'bottom' | 'top' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
   buttonSx?: any
 }) {
   const isSelectedAll = !!allTraders?.length && allTraders.every((address) => selectedTraders.includes(address))
-  let activeTraderAddress: string[] = []
-  let deletedTraderAddresses: string[] = []
-  Object.entries(tradersByProtocol).forEach(([_, traderData]) => {
-    traderData.forEach((data) => {
-      if (data.status === 'copying') activeTraderAddress.push(data.address)
-      if (data.status === 'deleted') deletedTraderAddresses.push(data.address)
-    })
-  })
-  activeTraderAddress = Array.from(new Set(activeTraderAddress))
-  deletedTraderAddresses = Array.from(new Set(deletedTraderAddresses))
 
   return (
     <Dropdown
@@ -77,7 +69,7 @@ export default function SelectTradersDropdown({
           </Flex>
           <Divider mt={2} />
           <ListTraderCheckboxes
-            addresses={activeTraderAddress}
+            addresses={activeTraderAddresses}
             selectedTraders={selectedTraders}
             handleToggleTrader={handleToggleTrader}
           />
@@ -102,7 +94,7 @@ export default function SelectTradersDropdown({
     >
       <Trans>{selectedTraders.length} traders</Trans>{' '}
       <Box as="span" color="neutral3">
-        ({activeTraderAddress.length} <Trans>Active</Trans>)
+        ({activeTraderAddresses.length} <Trans>Active</Trans>)
       </Box>
     </Dropdown>
   )

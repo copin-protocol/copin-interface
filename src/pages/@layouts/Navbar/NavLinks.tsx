@@ -2,11 +2,14 @@ import { Trans } from '@lingui/macro'
 import { NavLink as Link, NavLinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
+import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import { parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
 import { Box } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { generateExplorerRoute, generateLeaderboardRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
+
+import EventButton from './EventButton'
 
 export function DesktopNavLinks() {
   return (
@@ -30,6 +33,7 @@ function NavLinks({ onClose }: { onClose?: () => void }) {
     setNavProtocol(undefined)
     onClose?.()
   }
+  const { eventId } = useSystemConfigContext()
 
   return (
     <>
@@ -45,6 +49,15 @@ function NavLinks({ onClose }: { onClose?: () => void }) {
           </NavLink>
         )
       })}
+      {!!eventId && (
+        <NavLink
+          onClick={onClickNavItem}
+          to={`/${ROUTES.EVENT_DETAILS.path_prefix}/${eventId}`}
+          matchpath={ROUTES.EVENT_DETAILS.path_prefix}
+        >
+          <EventButton />
+        </NavLink>
+      )}
     </>
   )
 }
@@ -102,7 +115,7 @@ function NavLink(props: NavLinkProps & { matchpath?: string }) {
 const DesktopWrapper = styled(Box)`
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 24px;
   position: relative;
   height: 100%;
   .navlink-default {

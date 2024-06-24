@@ -19,7 +19,8 @@ const Home = lazy(() => import('./Home'))
 const Explorer = lazy(() => import('./Explorer'))
 const OpenInterest = lazy(() => import('./TopOpenings'))
 const Leaderboard = lazy(() => import('./Leaderboard'))
-const TraderExchangesStats = lazy(() => import('./TraderDetails/ExchangesStats'))
+const EventDetails = lazy(() => import('./Event/EventDetailsPage'))
+const Events = lazy(() => import('./Event'))
 const TraderDetails = lazy(() => import('./TraderDetails'))
 const PositionDetails = lazy(() => import('./PositionDetails'))
 const SharedPositionDetails = lazy(() => import('./SharedPositionDetails'))
@@ -55,6 +56,8 @@ function App() {
           <ScrollToTop />
           <QSReader />
           <Switch>
+            <Route exact path={ROUTES.EVENTS.path} component={Events}></Route>
+            <Route exact path={ROUTES.EVENT_DETAILS.path} component={EventDetails}></Route>
             <Route exact path={ROUTES.TRADER_DETAILS.path} component={TraderDetails}></Route>
 
             <Route exact path={ROUTES.COMPARING_TRADERS.path} component={ComparingTraders} />

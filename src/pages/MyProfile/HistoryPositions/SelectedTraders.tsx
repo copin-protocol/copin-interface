@@ -21,7 +21,7 @@ export default function SelectedTraders({
   onChangeTraders: () => void
 }) {
   const _copyWalletIds = copyWalletIds == null ? undefined : copyWalletIds.length ? copyWalletIds : ['']
-  const { listTraderAddresses, deletedTraderAddresses, tradersByProtocol } = useCopyTraderAddresses({
+  const { listTraderAddresses, deletedTraderAddresses, activeTraderAddresses } = useCopyTraderAddresses({
     copyWalletIds: _copyWalletIds,
   })
 
@@ -62,9 +62,10 @@ export default function SelectedTraders({
       menuSx={sm ? undefined : { transform: 'translateX(110px)' }}
       allTraders={allTraders}
       selectedTraders={selectedTraders}
+      activeTraderAddresses={activeTraderAddresses}
+      deletedTraderAddresses={deletedTraderAddresses}
       handleSelectAllTraders={handleSelectAllTraders}
       handleToggleTrader={handleToggleTrader}
-      tradersByProtocol={tradersByProtocol}
     />
   )
 }

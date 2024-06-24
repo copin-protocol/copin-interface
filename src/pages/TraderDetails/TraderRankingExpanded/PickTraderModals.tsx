@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
 
-import { getFavoritesApi } from 'apis/favoriteApis'
+import { getAllFavoritesApi } from 'apis/favoriteApis'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { CopyTradeData } from 'entities/copyTrade'
@@ -19,7 +19,7 @@ import Loading from 'theme/Loading'
 import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { DEFAULT_PROTOCOL, RELEASED_PROTOCOLS } from 'utils/config/constants'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 import { FindAndSelectTraderProps } from './FindAndSelectTrader'
@@ -36,20 +36,14 @@ export function PickFromFavoritesModal({
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
   const { data: tradersData, isLoading } = useQuery(
     [QUERY_KEYS.GET_FAVORITE_TRADERS, ignoreSelectTraders, myProfile?.id],
-    () => {
-      return Promise.all(
-        RELEASED_PROTOCOLS.map((protocol) => {
-          return getFavoritesApi(protocol).then((data) => filterFoundData(data, ignoreSelectTraders))
-        })
-      )
-    },
+    () => getAllFavoritesApi().then((data) => filterFoundData(data, ignoreSelectTraders)),
     {
-      enabled: !!myProfile?.id && !!isOpen,
+      enabled: !!myProfile?.id && isOpen,
       retry: 0,
-      select: (data) =>
-        data.reduce((result, traders) => {
-          return [...result, ...traders]
-        }, [] as FavoritedTrader[]),
+      // select: (data) =>
+      //   data.reduce((result, traders) => {
+      //     return [...result, ...traders]
+      //   }, [] as FavoritedTrader[]),
     }
   )
 

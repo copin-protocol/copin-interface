@@ -135,7 +135,8 @@ export const LeaderboardColumns: ColumnData<TopTraderData, ExternalSource>[] = [
   },
 ]
 
-export function RankingInfo({ ranking }: { ranking: number }) {
+export function RankingInfo({ ranking }: { ranking: number | undefined }) {
+  if (ranking == null) return <>--</>
   switch (ranking) {
     case 1:
       return <Image src={IconRanking1} width={34} height={48} />

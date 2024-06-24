@@ -5,7 +5,6 @@ import { Link, useLocation } from 'react-router-dom'
 
 import Logo, { LogoText } from 'components/@ui/Logo'
 import LoginAction from 'components/LoginAction'
-import useSearchParams from 'hooks/router/useSearchParams'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import NavbarUser from 'pages/@layouts/Navbar/NavUser'
@@ -25,7 +24,6 @@ import { LARGE_BREAK_POINT } from './configs'
 import { LogoWrapper, Main, Wrapper } from './styled'
 
 export default function Navbar({ height }: { height: number }): ReactElement {
-  const { setSearchParams } = useSearchParams()
   const { isAuthenticated, disconnect } = useAuthContext()
   const [isSearchOpening, setSearchOpening] = useState<boolean>(false)
 
@@ -79,13 +77,13 @@ export default function Navbar({ height }: { height: number }): ReactElement {
           <Box alignItems="center" display={{ _: isSearchOpening ? 'none' : 'flex', md: 'flex' }} height="100%">
             <Box
               alignItems="center"
-              px={[3, 3, 3, 4]}
+              px={3}
               sx={{
                 display: 'flex',
                 textAlign: 'center',
                 borderRight: 'small',
                 borderColor: 'neutral4',
-                gap: 32,
+                gap: 24,
                 height: '100%',
                 [`@media all and (max-width: ${LARGE_BREAK_POINT}px)`]: { display: 'none' },
               }}

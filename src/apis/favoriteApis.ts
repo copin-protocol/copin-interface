@@ -5,11 +5,22 @@ import { ProtocolEnum } from 'utils/config/enums'
 
 const SERVICE = 'favorites'
 
-export async function getFavoritesApi(protocol: ProtocolEnum): Promise<FavoritedTrader[]> {
+export async function getFavoritesByProtocolApi(protocol: ProtocolEnum): Promise<FavoritedTrader[]> {
   return requester
     .get(`${protocol}/${SERVICE}/page`, {
       params: {
         limit: 100,
+        offset: 0,
+      },
+    })
+    .then((res: any) => res.data?.data as FavoritedTrader[])
+}
+
+export async function getAllFavoritesApi(): Promise<FavoritedTrader[]> {
+  return requester
+    .get(`${SERVICE}/page`, {
+      params: {
+        limit: 1000,
         offset: 0,
       },
     })

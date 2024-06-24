@@ -4,11 +4,10 @@ import { toast } from 'react-toastify'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
-import { deleteFavoritesApi, getFavoritesApi, postFavoritesApi } from 'apis/favoriteApis'
+import { deleteFavoritesApi, getAllFavoritesApi, postFavoritesApi } from 'apis/favoriteApis'
 import ToastBody from 'components/@ui/ToastBody'
 import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
 import { useAuthContext } from 'hooks/web3/useAuth'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 
@@ -65,27 +64,21 @@ export const useInitTraderFavorites = () => {
   const { profile } = useAuthContext()
   const { setTraderFavorites, setNotes, setLoading } = useTraderFavoritesStore()
   const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH, true)
-  const { data, isLoading } = useQuery(
-    ['favorites', profile?.username],
-    () => {
-      return Promise.all(RELEASED_PROTOCOLS.map((_protocol) => getFavoritesApi(_protocol)))
-    },
-    {
-      select(data) {
-        const result = []
-        for (const addresses of data) {
-          if (!addresses?.length) continue
-          for (const address of addresses) {
-            result.push(address)
-          }
-        }
-        return result
-      },
-      retry: 0,
-      enabled: !!profile && enabledQueryByPaths,
-      keepPreviousData: true,
-    }
-  )
+  const { data, isLoading } = useQuery(['favorites', profile?.username], () => getAllFavoritesApi(), {
+    // select(data) {
+    //   const result = []
+    //   for (const addresses of data) {
+    //     if (!addresses?.length) continue
+    //     for (const address of addresses) {
+    //       result.push(address)
+    //     }
+    //   }
+    //   return result
+    // },
+    retry: 0,
+    enabled: !!profile && enabledQueryByPaths,
+    keepPreviousData: true,
+  })
   useEffect(() => {
     if (data) {
       setTraderFavorites(data.map((trader) => `${trader.account}-${trader.protocol}`))

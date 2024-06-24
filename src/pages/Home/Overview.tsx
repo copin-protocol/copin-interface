@@ -3,23 +3,26 @@ import { ArrowSquareOut, BookBookmark, CaretRight, CopySimple, SpeakerSimpleHigh
 import { ReactNode, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components/macro'
 
 import { getLatestActivityLogsApi } from 'apis/activityLogApis'
 import { getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
+import homeEventBanner from 'assets/images/home-event-banner.png'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Divider from 'components/@ui/Divider'
-import Logo from 'components/@ui/Logo'
+// import Logo from 'components/@ui/Logo'
 import TrackingRouteWrapper from 'components/@ui/TrackingRoute'
 import BalanceText from 'components/BalanceText'
-import ConnectButton from 'components/LoginAction/ConnectButton'
+// import ConnectButton from 'components/LoginAction/ConnectButton'
 import { CopyPositionData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
-import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import useMyProfileStore from 'hooks/store/useMyProfile'
+import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+// import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+// import useMyProfileStore from 'hooks/store/useMyProfile'
 import useMyProfile from 'hooks/store/useMyProfile'
 import OpeningPositions from 'pages/MyProfile/OpeningPositions'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -28,6 +31,15 @@ import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/forma
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseWalletName } from 'utils/helpers/transform'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
+
+export const GradientText = styled(Box).attrs({ as: 'span' })`
+  color: ${({ theme }) => theme.colors.neutral1};
+  @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
+    background: linear-gradient(181.63deg, #f9f9f9 15.77%, #75ffee 168.64%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+`
 
 export default function Overview() {
   return (
@@ -42,19 +54,103 @@ export default function Overview() {
       }}
     >
       <UserOverview />
-      <Tutorial />
+      {/* <Tutorial /> */}
+      <Box mb={3} />
       <Activities />
     </Flex>
   )
 }
 
 function UserOverview() {
-  const { copyWallets, loadingCopyWallets } = useCopyWalletContext()
-  const selectedWallet = copyWallets?.[0]
-  const myProfile = useMyProfileStore((state) => state.myProfile)
+  // const { copyWallets, loadingCopyWallets } = useCopyWalletContext()
+  // const selectedWallet = copyWallets?.[0]
+  // const myProfile = useMyProfileStore((state) => state.myProfile)
+  const { eventId } = useSystemConfigContext()
   return (
-    <Box>
-      {!myProfile ? (
+    <Box sx={{ borderBottom: 'small', borderBottomColor: 'neutral4', position: 'relative' }}>
+      <Image src={homeEventBanner} sx={{ objectFit: 'cover', height: '100%', width: '100%' }} />
+      <Box
+        role="button"
+        as={eventId ? Link : 'div'}
+        to={eventId ? `/${ROUTES.EVENT_DETAILS.path_prefix}/${eventId}` : undefined}
+        sx={{
+          position: 'absolute',
+          bottom: 12,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          overflow: 'hidden',
+          borderRadius: '20px',
+          transition: '0.3s',
+          '&:hover': {
+            filter: 'brightness(120%)',
+          },
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            bg: 'neutral7',
+            zIndex: 0,
+            borderRadius: '20px',
+          }}
+        />
+        <Box
+          className="border"
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage:
+              'linear-gradient(184.46deg, rgba(164, 236, 223, 0.5) 38.05%, rgba(255, 255, 255, 0) 142.53%)',
+            zIndex: 1,
+            borderRadius: '20px',
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '1px',
+            left: '1px',
+            right: '1px',
+            bottom: '1px',
+            bg: 'neutral7',
+            zIndex: 2,
+            borderRadius: '20px',
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '1px',
+            left: '1px',
+            right: '1px',
+            bottom: '1px',
+            backgroundImage: 'linear-gradient(180deg, rgba(62, 162, 244, 0.2) -16.38%, rgba(66, 62, 244, 0.2) 96.62%)',
+            zIndex: 3,
+            borderRadius: '20px',
+          }}
+        />
+        <Type.BodyBold
+          sx={{
+            position: 'relative',
+            width: 138,
+            height: 28,
+            textAlign: 'center',
+            zIndex: 3,
+            transform: 'translateY(1px)',
+          }}
+        >
+          <GradientText>Join Now</GradientText>
+        </Type.BodyBold>
+      </Box>
+
+      {/* {!myProfile ? (
         <>
           <Box px={3} pt={3}>
             <Flex mb={24} sx={{ alignItems: 'center', gap: 2 }}>
@@ -72,7 +168,7 @@ function UserOverview() {
           <WalletOverview isLoading={loadingCopyWallets} selectedWallet={selectedWallet} />
           <OpeningSection selectedWallet={selectedWallet} />
         </>
-      )}
+      )} */}
     </Box>
   )
 }

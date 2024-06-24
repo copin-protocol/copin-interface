@@ -193,17 +193,17 @@ export const Type = {
   },
 }
 
-export const Li = styled(Box)`
+export const Li = styled(Box)<{ signcolor?: string; signsize?: string; signradius?: string }>`
   padding-left: 0.875em;
   position: relative;
   &::before {
     content: '';
     display: block;
     position: absolute;
-    width: 0.375em;
-    height: 0.375em;
-    border-radius: 50%;
-    background-color: currentcolor;
+    width: ${({ signsize }) => (signsize ? signsize : '0.375em')};
+    height: ${({ signsize }) => (signsize ? signsize : '0.375em')};
+    border-radius: ${({ signradius }) => (signradius ? signradius : '50%')};
+    background-color: ${({ signcolor }) => (signcolor ? signcolor : 'currentcolor')};
     left: 0;
     top: 0.6em;
   }

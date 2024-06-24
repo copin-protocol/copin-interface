@@ -1,5 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { BookBookmark, ChartBar, CrownSimple, PresentationChart, ThermometerSimple } from '@phosphor-icons/react'
+import {
+  BookBookmark,
+  ChartBar,
+  CrownSimple,
+  PresentationChart,
+  ThermometerSimple,
+  Trophy,
+} from '@phosphor-icons/react'
 import { ComponentType, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 

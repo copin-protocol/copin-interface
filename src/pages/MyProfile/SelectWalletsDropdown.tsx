@@ -83,7 +83,13 @@ export default function SelectWalletsDropdown({
                     label={
                       <Box
                         as="span"
-                        sx={{ display: 'inline-block', width: '100%', maxWidth: 200, ...overflowEllipsis() }}
+                        sx={{
+                          display: 'inline-block',
+                          verticalAlign: 'middle',
+                          width: '100%',
+                          maxWidth: 200,
+                          ...overflowEllipsis(),
+                        }}
                       >
                         {parseWalletName(item)}
                       </Box>

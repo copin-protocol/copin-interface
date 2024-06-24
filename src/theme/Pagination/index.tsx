@@ -244,12 +244,14 @@ export function PaginationWithSelect({
   onPageChange,
   apiMeta,
   sx = {},
+  inputWrapperSx = {},
   disabledInput = false,
 }: {
   currentPage: number
   onPageChange: (page: number) => void
   apiMeta?: ApiMeta
   sx?: any
+  inputWrapperSx?: any
   disabledInput?: boolean
 }) {
   const { totalPages = 0 } = apiMeta ?? {}
@@ -277,6 +279,7 @@ export function PaginationWithSelect({
               px: [1, 1, 2, 2, 2],
               bg: 'neutral6',
               borderColor: 'transparent',
+              ...inputWrapperSx,
             }}
             // value={currentPage}
             disabled={!totalPages || totalPages === 1}

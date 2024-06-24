@@ -1,7 +1,7 @@
 import { cloneElement, useCallback, useReducer } from 'react'
 
 import DirectionButton from 'components/@ui/DirectionButton'
-import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
+// import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Box } from 'theme/base'
 import { STORAGE_KEYS } from 'utils/config/keys'
@@ -19,11 +19,11 @@ export default function AnalyticsLayoutDesktop({
   conditionFilter,
 }: AnalyticsLayoutComponents) {
   const { myProfile } = useMyProfile()
-  const isPremiumUser = useIsPremium()
+  // const isPremiumUser = useIsPremium()
   const [state, dispatch] = useReducer(reducer, initialState, initState)
   const { MAIN, COL_RIGHT, FILTERS, CHART, LIST } = state
   const mainExpanded = MAIN.state === ColumnState.EXPANDED_RIGHT
-  const listExpanded = LIST.state === RowState.EXPANDED_TOP
+  // const listExpanded = LIST.state === RowState.EXPANDED_TOP
 
   const logEventLayout = useCallback(
     (action: string) => {
@@ -59,17 +59,10 @@ export default function AnalyticsLayoutDesktop({
           height: '100%',
           borderRight: 'small',
           borderRightColor: 'neutral4',
-          gridTemplate: isPremiumUser
-            ? `
-      "${GridAreas.CHART}" minmax(${CHART.minHeight}px, ${
-                CHART.maxHeight ? CHART.maxHeight + 'px' : CHART.ratioHeight + 'fr'
-              })
-      "${GridAreas.LIST}" minmax(${LIST.minHeight}px, ${LIST.ratioHeight}fr)
-    `
-            : `
-    "${GridAreas.CHART}" 40px
-    "${GridAreas.LIST}" minmax(${LIST.minHeight}px, ${LIST.ratioHeight}fr)
-  `,
+          gridTemplate: `
+            "${GridAreas.CHART}" 40px
+            "${GridAreas.LIST}" minmax(${LIST.minHeight}px, ${LIST.ratioHeight}fr)
+          `,
         }}
       >
         <DirectionButton
@@ -106,7 +99,7 @@ export default function AnalyticsLayoutDesktop({
           ) : null}
         </Box>
         <Box sx={{ gridArea: GridAreas.LIST, position: 'relative', borderTop: 'small', borderColor: 'neutral4' }}>
-          {isPremiumUser && (
+          {/* {isPremiumUser && (
             <DirectionButton
               onClick={() => {
                 dispatch(ButtonName.LIST)
@@ -119,7 +112,7 @@ export default function AnalyticsLayoutDesktop({
               buttonSx={{ top: listExpanded ? '0px' : '-16px', left: 8 }}
               direction={listExpanded ? 'bottom' : 'top'}
             />
-          )}
+          )} */}
           {listTradersSection}
         </Box>
       </Box>
@@ -202,14 +195,16 @@ function initState(state: LayoutState) {
   let newState = state
   try {
     const storageLayout = JSON.parse(localStorage.getItem(STORAGE_KEYS.HOME_DESKTOP_LAYOUT) ?? '')
-    if (typeof storageLayout === 'object' && Object.keys(storageLayout).length === Object.keys(initialState).length)
-      newState = storageLayout as LayoutState
+    if (typeof storageLayout !== 'object') return newState
+    if ((storageLayout?.version ?? 0) < 1) return newState
+    if (Object.keys(storageLayout?.state ?? {}).length === Object.keys(initialState).length)
+      newState = storageLayout.state as LayoutState
   } catch {}
   return newState
 }
 
 function saveLayout(state: LayoutState) {
-  localStorage.setItem(STORAGE_KEYS.HOME_DESKTOP_LAYOUT, JSON.stringify(state))
+  localStorage.setItem(STORAGE_KEYS.HOME_DESKTOP_LAYOUT, JSON.stringify({ version: 1, state }))
 }
 
 function reducer(state: LayoutState, buttonName: ButtonName): LayoutState {

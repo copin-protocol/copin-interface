@@ -119,6 +119,13 @@ const ROUTES = {
     path: '/trader/stats/:address/:protocol',
     path_prefix: '/trader/stats',
   },
+  EVENT_DETAILS: {
+    path: '/event/:id',
+    path_prefix: 'event',
+  },
+  EVENTS: {
+    path: '/events',
+  },
 }
 
 export default ROUTES
