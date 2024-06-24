@@ -1,7 +1,7 @@
 import { BookBookmark, ChartBar, Icon, PresentationChart, Trophy, Wallet, XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import dayjs from 'dayjs'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -16,29 +16,39 @@ import {
 import banner from 'assets/images/event-banner.png'
 import registerSuccess from 'assets/images/register-event-success.png'
 import logo from 'assets/logo.svg'
+import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
 import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
 import ToastBody from 'components/@ui/ToastBody'
 import { useClickLoginButton } from 'components/LoginAction'
 import { RankingInfo } from 'components/TopLeadboard/ColumnsData'
+import ReferralStatus from 'components/WalletDetailsCard/ReferralStatus'
+import { CopyWalletData } from 'entities/copyWallet'
 import { EventDetailsData, TradingEventStatusEnum, UserEventRankingData } from 'entities/event'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useCountdown from 'hooks/helpers/useCountdown'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
+import Dropdown from 'theme/Dropdown'
 import Modal from 'theme/Modal'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex, IconBox, Image, Li, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { DATE_FORMAT, DEFAULT_PROTOCOL, TIME_FORMAT } from 'utils/config/constants'
+import { DATE_FORMAT, DEFAULT_PROTOCOL, LINKS, TIME_FORMAT } from 'utils/config/constants'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import ROUTES from 'utils/config/routes'
+import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatDate, formatNumber } from 'utils/helpers/format'
 import { generateExplorerRoute } from 'utils/helpers/generateRoute'
 import { getErrorMessage } from 'utils/helpers/handleError'
-import { pageToOffset } from 'utils/helpers/transform'
+import { pageToOffset, parseExchangeImage } from 'utils/helpers/transform'
+
+const ALLOWED_EXCHANGE = [CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.BITGET]
 
 export default function EventDetailsPage() {
   const { sm, xl } = useResponsive()
@@ -49,6 +59,7 @@ export default function EventDetailsPage() {
     () => getEventDetails({ tradingEventId }),
     {
       enabled: !!tradingEventId,
+      keepPreviousData: true,
     }
   )
   const { data: userEventDetails } = useQuery(
@@ -61,15 +72,20 @@ export default function EventDetailsPage() {
   const { data: totalVolume } = useQuery(
     [QUERY_KEYS.GET_EVENT_COMPETITION, 'totalVolume', tradingEventId],
     () => getEventTotalVolume({ tradingEventId: tradingEventId ?? '' }),
-    { enabled: !!tradingEventId }
+    { enabled: !!tradingEventId, keepPreviousData: true }
   )
 
-  return xl ? (
-    <DesktopVersion userEventDetails={userEventDetails} eventDetails={eventDetails} totalVolume={totalVolume} />
-  ) : sm ? (
-    <TabletVersion userEventDetails={userEventDetails} eventDetails={eventDetails} totalVolume={totalVolume} />
-  ) : (
-    <MobileVersion userEventDetails={userEventDetails} eventDetails={eventDetails} totalVolume={totalVolume} />
+  return (
+    <>
+      <CustomPageTitle title="On-chain Copy-Trading to share $50,000 & Merchs rewards" />
+      {xl ? (
+        <DesktopVersion userEventDetails={userEventDetails} eventDetails={eventDetails} totalVolume={totalVolume} />
+      ) : sm ? (
+        <TabletVersion userEventDetails={userEventDetails} eventDetails={eventDetails} totalVolume={totalVolume} />
+      ) : (
+        <MobileVersion userEventDetails={userEventDetails} eventDetails={eventDetails} totalVolume={totalVolume} />
+      )}
+    </>
   )
 }
 
@@ -172,9 +188,13 @@ function RegisterArea({
   const location = useLocation()
   const [showModal, setShowModal] = useState<'notEligible' | 'success' | null>(null)
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
+  const locationRef = useRef(location.pathname)
   useEffect(() => {
-    setShowModal(null)
-  }, [location, myProfile])
+    if (locationRef.current !== location.pathname) {
+      locationRef.current = location.pathname
+      setShowModal(null)
+    }
+  }, [location.pathname])
   const { mutate, isLoading } = useMutation(() => registerEvent({ tradingEventId: eventDetails?.id }), {
     onError: (error: Error) => {
       const errorMsg = getErrorMessage(error)
@@ -191,14 +211,13 @@ function RegisterArea({
   })
   const handleClickLogin = useClickLoginButton()
   const handleDismiss = () => setShowModal(null)
-  if (!eventDetails) return null
   const today = dayjs().utc().valueOf()
-  const registerDate = dayjs(eventDetails.registerDate).utc().valueOf()
-  const startDate = dayjs(eventDetails.startDate).utc().valueOf()
-  const endDate = dayjs(eventDetails.endDate).utc().valueOf()
+  const registerDate = dayjs(eventDetails?.registerDate).utc().valueOf()
+  const startDate = dayjs(eventDetails?.startDate).utc().valueOf()
+  const endDate = dayjs(eventDetails?.endDate).utc().valueOf()
   let text = 'Competition is starting in'
   let countdownTime: number | null = null
-  switch (eventDetails.status) {
+  switch (eventDetails?.status) {
     case TradingEventStatusEnum.ONGOING:
       text = 'Competition ends in'
       break
@@ -224,7 +243,7 @@ function RegisterArea({
         {text}
       </Type.Body>
       <TimeCountdown time={countdownTime} />
-      {eventDetails.status === TradingEventStatusEnum.ENDED && (
+      {eventDetails?.status === TradingEventStatusEnum.ENDED && (
         <Button
           block
           mt={24}
@@ -233,7 +252,7 @@ function RegisterArea({
           Event Ended
         </Button>
       )}
-      {eventDetails.status !== TradingEventStatusEnum.ENDED && (
+      {eventDetails?.status !== TradingEventStatusEnum.ENDED && (
         <>
           {userEventDetails?.tradingEventId ? (
             <>
@@ -268,14 +287,15 @@ function RegisterArea({
               >
                 Register
               </Button>
-              <Modal width="350px" isOpen={!!showModal} onDismiss={handleDismiss}>
-                {showModal === 'notEligible' && <NotEligible onDismiss={handleDismiss} />}
-                {showModal === 'success' && <RegisterSuccess onDismiss={handleDismiss} />}
-              </Modal>
             </>
           )}
         </>
       )}
+
+      <Modal width="350px" isOpen={!!showModal} onDismiss={handleDismiss}>
+        {showModal === 'notEligible' && <NotEligible onDismiss={handleDismiss} />}
+        {showModal === 'success' && <RegisterSuccess onDismiss={handleDismiss} />}
+      </Modal>
     </Box>
   )
 }
@@ -561,7 +581,7 @@ function VolumeProgress({
               {/* <IconBox icon={<Equalizer size={24} />} color="primary1" sx={{ display: 'block', mb: 18 }} />
               <IconBox icon={<CoinVertical size={24} />} color="primary1" /> */}
             </Box>
-            {configs.map((config, index) => {
+            {configs?.map((config, index) => {
               const minVolume = index === 0 ? 0 : configs[index - 1].volume
               const maxVolume = config.volume
               const percent = Math.min(100, (Math.max(0, totalVolume - minVolume) / (maxVolume - minVolume)) * 100)
@@ -726,9 +746,65 @@ function StatusTag({ eventDetails }: { eventDetails: EventDetailsData | undefine
 //=========================
 function UserOverview({ userEventDetails }: { userEventDetails: UserEventRankingData | undefined }) {
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
+  const { copyWallets } = useCopyWalletContext()
+  const eligibleWallets: CopyWalletData[] = []
+  ALLOWED_EXCHANGE.forEach((exchange) => {
+    copyWallets?.forEach((wallet) => {
+      if (wallet.isReferral && wallet.exchange === exchange) {
+        eligibleWallets.push(wallet)
+      }
+    })
+  })
   return (
     <Box sx={{ px: 3, py: 24 }}>
-      <Label icon={Wallet} label={myProfile?.username ? addressShorten(myProfile?.username) : '--'} />
+      <Flex sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Label icon={Wallet} label={myProfile?.username ? addressShorten(myProfile?.username) : '--'} />
+        {!!eligibleWallets?.length && (
+          <Dropdown
+            buttonSx={{ color: 'primary1', p: 0, border: 'none', fontSize: 16 }}
+            placement="bottomRight"
+            menu={
+              <Box py={2}>
+                <Flex px={2} sx={{ flexDirection: 'column', gap: 12, maxHeight: 200, overflow: 'hidden auto' }}>
+                  {eligibleWallets.map((wallet) => {
+                    return (
+                      <Flex key={wallet.id} sx={{ alignItems: 'center', gap: 2, width: '100%' }}>
+                        <Image
+                          src={parseExchangeImage(wallet.exchange)}
+                          width={20}
+                          height={20}
+                          sx={{ flexShrink: 0 }}
+                        />
+                        <Type.CaptionBold sx={{ flex: 1, maxWidth: 120, ...overflowEllipsis() }}>
+                          {wallet.name}
+                        </Type.CaptionBold>
+                        <ReferralStatus data={wallet} hasText={false} sx={{ width: 'auto', p: 1 }} size={16} />
+                      </Flex>
+                    )
+                  })}
+                </Flex>
+                <Box px={2}>
+                  <Divider my={2} />
+                </Box>
+                <Type.Caption px={2} display="block" color="primary1" sx={{ textAlign: 'center' }}>
+                  <Box
+                    as={Link}
+                    to={ROUTES.WALLET_MANAGEMENT.path}
+                    target="_blank"
+                    sx={{ '&:hover': { textDecoration: 'underline' } }}
+                  >
+                    Wallet Management
+                  </Box>
+                </Type.Caption>
+              </Box>
+            }
+          >
+            <Type.Body>
+              {eligibleWallets.length} Account{eligibleWallets.length > 1 && 's'}
+            </Type.Body>
+          </Dropdown>
+        )}
+      </Flex>
       <Box mb={3} />
       <OverviewItem
         label={'Cumulative Copy Trading Volume'}
@@ -884,7 +960,20 @@ function Rules({ eventDetails }: { eventDetails: EventDetailsData | undefined })
   const format = `${DATE_FORMAT} - ${TIME_FORMAT} UTC+0`
   return (
     <Box sx={{ p: 3 }}>
-      <Label icon={BookBookmark} label={'Rules'} />
+      <Flex sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+        <Label icon={BookBookmark} label={'Rules'} />
+        <Type.Caption>
+          <Box
+            as="a"
+            href="https://blog.copin.io/p/join-the-on-chain-copy-trading-event#%C2%A7event-rules"
+            rel="noreferrer"
+            target="_blank"
+            sx={{ '&:hover': { textDecoration: 'underline' } }}
+          >
+            View full
+          </Box>
+        </Type.Caption>
+      </Flex>
       <Box mb={10} />
       <Type.Caption color="neutral3" sx={{ '& > *': { mb: '4px' } }}>
         {eventDetails && (
@@ -918,7 +1007,7 @@ function Rules({ eventDetails }: { eventDetails: EventDetailsData | undefined })
             BingX:{' '}
             <Box
               as="a"
-              href="https://bingx.com/invite/DY5QNN"
+              href={LINKS.registerBingX}
               target="_blank"
               rel="noreferrer"
               sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
@@ -932,7 +1021,7 @@ function Rules({ eventDetails }: { eventDetails: EventDetailsData | undefined })
             Bitget:{' '}
             <Box
               as="a"
-              href="https://partner.bitget.online/bg/HPM3BN"
+              href={LINKS.registerBitget}
               target="_blank"
               rel="noreferrer"
               sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
@@ -950,6 +1039,29 @@ function Rules({ eventDetails }: { eventDetails: EventDetailsData | undefined })
           volume) during the event.
         </Li>
         <Li>
+          Top 10 users will be eligible to receive rewards from Gate; with the condition of registering a Gate account
+          under Copin&apos;s referral link (
+          <Box
+            as="a"
+            href={LINKS.registerGate}
+            target="_blank"
+            rel="noreferrer"
+            sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
+          >
+            https://www.gate.io/signup/AgBFAApb?ref_type=103
+          </Box>
+          , ref code: AgBFAApb) before the event ends:
+        </Li>
+        <Box pl={3}>
+          <Li signradius="0px">Top 1: Badminton Set.</Li>
+          <Li signradius="0px">Top 2, 3: Wireless charging.</Li>
+          <Li signradius="0px">Top 4 - 10: Umbrella.</Li>
+        </Box>
+        <Li>
+          After the event ends, the top winner contacts the Copin team to provide the UID and recipient information.
+          After Gate confirms that the UID is under the Copin ref, the reward will be sent immediately.
+        </Li>
+        <Li>
           The rewards will be distributed in the form of a &quot;USDT&quot; within 7 working days after the conclusion
           event.
         </Li>
@@ -963,6 +1075,13 @@ function Rules({ eventDetails }: { eventDetails: EventDetailsData | undefined })
           competition. Copin reserves the right to not reward all users who violate Copin&apos;s rules and regulations,
           or users who show any signs of fraud.
         </Li>
+        <Divider my={2} />
+        <Type.Caption color="neutral3">
+          Any question? Contact us on{' '}
+          <Box as="a" href={LINKS.telegram} target="_blank" sx={{ '&:hover': { textDecoration: 'underline' } }}>
+            Telegram
+          </Box>
+        </Type.Caption>
       </Type.Caption>
     </Box>
   )

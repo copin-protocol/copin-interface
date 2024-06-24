@@ -4,6 +4,7 @@ import { resolve } from 'path'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { getEventDetails } from './eventDetails.controller.js'
 import { getLeaderboard } from './leaderboard.controller.js'
 import { getPositionDetails } from './positionDetail.controller.js'
 import { getBacktestMultiple } from './sharedBacktestMultiple.controller.js'
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 })
 app.use(express.static(resolve(__dirname, '..', 'build'), { maxAge: '30d' }))
 
+app.get('/event/:id', getEventDetails)
 app.get('/:protocol/shared-backtest/single/:id', getBacktestSingle)
 app.get('/:protocol/shared-backtest/multiple/:id', getBacktestMultiple)
 app.get('/:protocol/trader/:address', getTraderDetail)

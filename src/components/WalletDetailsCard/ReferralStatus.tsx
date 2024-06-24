@@ -16,33 +16,37 @@ interface StatusProps {
   color: string
   icon: ReactNode
 }
-export default function ReferralStatus({ data, sx }: ReferralStatusProps & BoxProps) {
+export default function ReferralStatus({
+  data,
+  sx,
+  hasText = true,
+  size = 13,
+}: ReferralStatusProps & BoxProps & { hasText?: boolean; size?: number }) {
   const status = useMemo(() => {
     switch (data?.isReferral) {
       case true:
         return {
           text: 'Ref',
           color: themeColors.primary1,
-          icon: <Smiley size={13} color={themeColors.primary1} />,
+          icon: <Smiley size={size} color={themeColors.primary1} />,
         } as StatusProps
       case false:
         return {
           text: 'Non-Ref',
           color: themeColors.red2,
-          icon: <SmileySad size={13} color={themeColors.red2} />,
+          icon: <SmileySad size={size} color={themeColors.red2} />,
         } as StatusProps
       default:
         return {
           text: 'Unknown',
           color: themeColors.orange1,
-          icon: <SmileyBlank size={13} color={themeColors.orange1} />,
+          icon: <SmileyBlank size={size} color={themeColors.orange1} />,
         } as StatusProps
     }
-  }, [data?.isReferral])
+  }, [data?.isReferral, size])
 
   return (
     <Flex
-      width={80}
       alignItems="center"
       justifyContent="center"
       sx={{
@@ -50,11 +54,13 @@ export default function ReferralStatus({ data, sx }: ReferralStatusProps & BoxPr
         py: '2px',
         borderRadius: '4px',
         backgroundColor: `${status.color}25`,
+        flexShrink: 0,
+        width: 80,
         ...sx,
       }}
     >
       <IconBox icon={status.icon} />
-      <Type.Caption color="neutral1">{status.text}</Type.Caption>
+      {hasText && <Type.Caption color="neutral1">{status.text}</Type.Caption>}
     </Flex>
   )
 }
