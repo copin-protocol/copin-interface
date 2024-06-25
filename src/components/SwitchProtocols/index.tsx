@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
 import { useResponsive } from 'ahooks'
 import React, { useCallback, useMemo, useState } from 'react'
@@ -6,12 +7,14 @@ import { GridProps } from 'styled-system'
 
 import CrossTag from 'assets/images/cross_tag.svg'
 import NewTag from 'assets/images/new_tag.svg'
+import ActiveDot from 'components/@ui/ActiveDot'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
 import useProtocolRecentSearch from 'hooks/store/useProtocolRecentSearch'
 import { useProtocolStore } from 'hooks/store/useProtocols'
+import { ALLOWED_PROTOCOLS } from 'pages/Home/configs'
 import Dropdown from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -215,6 +218,12 @@ function SwitchProtocolsComponent({
                           <Type.Caption lineHeight="16px" color={isActive ? 'primary1' : undefined}>
                             {option.text}
                           </Type.Caption>
+                          {ALLOWED_PROTOCOLS.includes(option.id) && (
+                            <ActiveDot
+                              tooltipId={`tt_allow_copy_${option.id}`}
+                              tooltipContent={<Trans>Allow Copy</Trans>}
+                            />
+                          )}
                           {option.isCross ? (
                             <img src={CrossTag} alt="cross" />
                           ) : option.isNew ? (

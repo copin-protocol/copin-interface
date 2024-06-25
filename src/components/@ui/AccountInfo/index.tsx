@@ -1,18 +1,21 @@
+import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
+import React from 'react'
 import Highlighter from 'react-highlight-words'
 import { Link } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
-import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 // import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Type } from 'theme/base'
+import { Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { addressShorten, shortenText } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+
+import ActiveDot from '../ActiveDot'
 
 export function AccountInfo({
   isOpenPosition,
@@ -117,21 +120,7 @@ export function AccountInfo({
           </Tooltip> */}
 
           {isOpenPosition && (
-            <Box
-              width={8}
-              height={8}
-              bg="green2"
-              sx={{
-                borderRadius: '50%',
-              }}
-              data-tip="React-tooltip"
-              data-tooltip-id={`tt_opening_${address}`}
-            />
-          )}
-          {isOpenPosition && (
-            <Tooltip id={`tt_opening_${address}`} place="top" type="dark" effect="solid" clickable={false}>
-              <Type.Small sx={{ maxWidth: [300, 400] }}>Having open positions</Type.Small>
-            </Tooltip>
+            <ActiveDot tooltipId={`tt_opening_${address}`} tooltipContent={<Trans>Having open positions</Trans>} />
           )}
         </Flex>
         {smartAccount ? (
