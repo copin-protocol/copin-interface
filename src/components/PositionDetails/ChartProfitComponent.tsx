@@ -49,7 +49,6 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
   chartId: string
 }) {
   const protocol = position.protocol
-  const useTokenValue = [ProtocolEnum.PINGU_ARB].includes(protocol)
 
   const { sm } = useResponsive()
   const CHART_HEIGHT = sm ? 250 : 150
@@ -117,6 +116,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
       let totalSize = 0
       let collateral = 0
       let collateralInToken = 0
+      let averagePrice = 0
       for (let i = 0; i < orders.length; i++) {
         if (orders[i].type === OrderTypeEnum.MARGIN_TRANSFERRED) {
           continue
@@ -129,14 +129,17 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
         const sizeDeltaNumber = orders[i]?.sizeDeltaNumber ?? 0
         const sizeDeltaInToken = orders[i]?.sizeDeltaInTokenNumber ?? 0
         const sizeDelta = sign * Math.abs(sizeDeltaNumber)
-        const sizeTokenDelta =
-          sign *
-          (useSizeNumber
-            ? orders[i].sizeNumber ?? sizeDeltaNumber / orders[i].priceNumber
-            : sizeDeltaInToken ?? sizeDeltaNumber / orders[i].priceNumber)
+        const sizeTokenDelta = sign * (sizeDeltaInToken || sizeDeltaNumber / orders[i].priceNumber)
         const collateralDeltaNumber = orders[i]?.collateralDeltaNumber ?? 0
         const collateralDeltaInTokenNumber = orders[i]?.collateralDeltaInTokenNumber ?? 0
         const collateralDelta = sign * collateralDeltaNumber
+        if (!isDecrease) {
+          averagePrice = (totalTokenSize * averagePrice + sizeDeltaNumber) / (totalTokenSize + sizeTokenDelta)
+        }
+        console.log('sizeDeltaInToken', sizeDeltaInToken, sizeDeltaNumber / orders[i].priceNumber)
+        console.log('sizeTokenDelta', sizeTokenDelta, orders[i].priceNumber)
+        console.log('averagePrice', averagePrice)
+
         const pos = {
           size: totalSize + sizeDelta,
           sizeInToken: totalTokenSize + sizeTokenDelta,
@@ -144,6 +147,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
           collateral: collateral + collateralDelta,
           collateralInToken: collateralInToken + collateralDeltaInTokenNumber,
           price: orders[i]?.priceNumber ?? (totalSize + sizeDelta) / (totalTokenSize + sizeTokenDelta),
+          averagePrice,
         }
         positions.push(pos)
         totalSize += sizeDelta
@@ -207,26 +211,26 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
           const tickTime = dayjs(e.timestamp).utc()
           const posIndex = tickPositions.findIndex((p: TickPosition) => p.time > e.timestamp)
           const pos = tickPositions[posIndex - 1]
-          const avgPrice = pos?.price ?? position.averagePrice
-          const realSize =
-            pos?.size ??
-            (!!position.lastSize
+          const avgPrice = pos?.averagePrice ?? position.averagePrice
+          const size =
+            pos?.sizeInToken != null
+              ? pos.sizeInToken * avgPrice
+              : position.lastSizeInToken != null
+              ? position.lastSizeInToken * avgPrice
+              : position.lastSize != null
               ? position.lastSize
-              : position.lastSizeNumber
-              ? Math.abs(position.lastSizeNumber) * position.averagePrice
-              : position.size)
-          const pnl = calcPnL(position.isLong, avgPrice, marketPrice, realSize)
+              : position.lastSizeNumber != null
+              ? position.lastSizeNumber * avgPrice
+              : position.size
 
-          const realSizeInToken = pos?.sizeInToken ?? position.sizeInToken
-          const pnlInToken = calcPnL(position.isLong, avgPrice, marketPrice, realSizeInToken)
-          // const sizeInToken = pos?.
-          const value = useTokenValue
-            ? !isOpening && index === chartData.length - 1
-              ? position.realisedPnlInToken
-              : pnlInToken
-            : !isOpening && index === chartData.length - 1
-            ? position.pnl
-            : pnl
+          const pnl = calcPnL(position.isLong, avgPrice, marketPrice, size)
+          // const pnlInToken = calcPnLBySizeInToken(position.isLong, avgPrice, marketPrice, realSizeInToken)
+          // const pnl = pnlInToken * pos.price
+          // const value = useTokenValue
+          //   ? !isOpening && index === chartData.length - 1
+          //     ? position.realisedPnlInToken
+          //     : pnlInToken
+          const value = !isOpening && index === chartData.length - 1 ? position.pnl : pnl
 
           return {
             value,
@@ -598,8 +602,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
       const dataFuture = param.seriesData.get(futureSeries) as LineData
       const time = (dataFuture?.time ?? data?.time) as number
       setCrossMove({
-        pnlInToken: useTokenValue ? dataFuture?.value ?? data?.value : undefined,
-        pnl: useTokenValue ? undefined : dataFuture?.value ?? data?.value,
+        pnl: dataFuture?.value ?? data?.value,
         time: time ? time + timezone : undefined,
       })
 

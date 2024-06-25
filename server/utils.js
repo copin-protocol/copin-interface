@@ -104,8 +104,6 @@ function generateProtocolName(protocol) {
       return 'LogX (MODE)'
     case 'MYX_ARB':
       return 'MYX'
-    case 'PINGU_ARB':
-      return 'Pingu'
     case 'HMX_ARB':
       return 'HMX'
     case 'DEXTORO':

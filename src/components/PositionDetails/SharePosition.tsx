@@ -19,7 +19,15 @@ import { generatePositionCanvas } from 'utils/helpers/generateImage'
 import { generateParamsUrl, generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getProtocolDropdownImage } from 'utils/helpers/transform'
 
-export default function SharePosition({ isOpening, stats }: { isOpening: boolean; stats: PositionData }) {
+export default function SharePosition({
+  isOpening,
+  stats,
+  chartId,
+}: {
+  isOpening: boolean
+  stats: PositionData
+  chartId?: string
+}) {
   const { prices } = useGetUsdPrices()
   const [isSocialMediaSharingOpen, setIsSocialMediaSharingOpen] = useState(false)
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
@@ -43,6 +51,7 @@ export default function SharePosition({ isOpening, stats }: { isOpening: boolean
       setIsGeneratingLink(true)
 
       const canvas = generatePositionCanvas({
+        chartId,
         isOpening,
         stats,
         prices,

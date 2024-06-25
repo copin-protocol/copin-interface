@@ -212,8 +212,6 @@ export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
       return LINKS.tradeLogX
     case ProtocolEnum.MYX_ARB:
       return LINKS.tradeMyx
-    case ProtocolEnum.PINGU_ARB:
-      return LINKS.tradePingu
     case ProtocolEnum.HMX_ARB:
       return LINKS.tradeHmx
     case ProtocolEnum.DEXTORO:

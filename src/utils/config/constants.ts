@@ -29,7 +29,6 @@ export const LINKS = {
   tradeTigris: 'https://app.tigris.trade',
   tradeLogX: 'https://logx.trade',
   tradeMyx: 'https://app.myx.finance',
-  tradePingu: 'https://pingu.exchange/trade',
   tradeHmx: 'https://hmx.org/arbitrum/trade',
   tradeDexToro: 'https://trade.dextoro.com/market',
   tradeCyberDEX: 'https://www.cyberdex.xyz/trade',

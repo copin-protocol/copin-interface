@@ -170,6 +170,7 @@ export const generatePositionCanvas = ({
   colors,
   logoImg,
   protocolImg,
+  chartId,
 }: {
   isOpening: boolean
   stats: PositionData
@@ -177,6 +178,7 @@ export const generatePositionCanvas = ({
   colors: Colors
   logoImg: HTMLImageElement
   protocolImg: HTMLImageElement
+  chartId?: string
 }) => {
   const protocol = stats.protocol
   const address = stats.account
@@ -184,7 +186,7 @@ export const generatePositionCanvas = ({
   const canvasHeight = 640
   const rightWidth = 300
   const leftWidth = canvasWidth - rightWidth
-  const chartPnlContainer = document.getElementById(ELEMENT_IDS.POSITION_CHART_PNL)
+  const chartPnlContainer = document.getElementById(ELEMENT_IDS.POSITION_CHART_PNL + chartId)
   const chartComponentContainers = chartPnlContainer?.getElementsByTagName('tr')
   const lineCanvases = chartComponentContainers?.[0]?.getElementsByTagName('canvas')
   const xAxises = chartComponentContainers?.[1]?.getElementsByTagName('canvas')
@@ -474,10 +476,6 @@ export const generateProtocol = ({
     case ProtocolEnum.MYX_ARB:
       protocolTextWidth = 72
       protocolText = 'MYX'
-      break
-    case ProtocolEnum.PINGU_ARB:
-      protocolTextWidth = 117
-      protocolText = 'Pingu'
       break
     case ProtocolEnum.HMX_ARB:
       protocolTextWidth = 72

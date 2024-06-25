@@ -22,7 +22,6 @@ const ExplorerLogo = ({
     case ProtocolEnum.EQUATION_ARB:
     case ProtocolEnum.TIGRIS_ARB:
     case ProtocolEnum.MYX_ARB:
-    case ProtocolEnum.PINGU_ARB:
     case ProtocolEnum.HMX_ARB:
     case ProtocolEnum.VELA_ARB:
       icon = 'ARBITRUM'

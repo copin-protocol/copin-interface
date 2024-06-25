@@ -16,7 +16,6 @@ export enum ProtocolEnum {
   LOGX_BLAST = 'LOGX_BLAST',
   LOGX_MODE = 'LOGX_MODE',
   MYX_ARB = 'MYX_ARB',
-  PINGU_ARB = 'PINGU_ARB',
   HMX_ARB = 'HMX_ARB',
   DEXTORO = 'DEXTORO',
   VELA_ARB = 'VELA_ARB',

@@ -110,7 +110,7 @@ const PositionDetails = memo(function PositionDetailsMemo({
               borderColor: 'neutral4',
             }}
           >
-            <PositionStats data={data} />
+            <PositionStats data={data} chartId={chartProfitId} />
             {data && <ChartProfit data={data} protocol={protocol || DEFAULT_PROTOCOL} chartId={chartProfitId} />}
           </Box>
 

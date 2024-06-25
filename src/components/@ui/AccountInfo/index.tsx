@@ -5,6 +5,7 @@ import Highlighter from 'react-highlight-words'
 import { Link } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
+import ActiveDot from 'components/@ui/ActiveDot'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderCopying from 'hooks/store/useTraderCopying'
@@ -14,8 +15,6 @@ import { Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { addressShorten, shortenText } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-
-import ActiveDot from '../ActiveDot'
 
 export function AccountInfo({
   isOpenPosition,

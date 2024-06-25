@@ -99,6 +99,7 @@ export interface PositionData {
   size: number
   lastSizeNumber: number
   lastSize?: number
+  lastSizeInToken?: number
   sizeInToken: number
   averagePrice: number
   lastPriceNumber: number
@@ -250,6 +251,7 @@ export type TickPosition = {
   collateral: number
   collateralInToken: number
   price: number
+  averagePrice: number
 }
 
 export interface TraderTokenStatistic {

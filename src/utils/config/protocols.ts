@@ -138,13 +138,6 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: ARBITRUM_MAINNET,
     isNew: false,
   },
-  [ProtocolEnum.PINGU_ARB]: {
-    id: ProtocolEnum.PINGU_ARB,
-    text: 'Pingu',
-    label: 'Arbitrum',
-    chainId: ARBITRUM_MAINNET,
-    isNew: true,
-  },
   [ProtocolEnum.HMX_ARB]: {
     id: ProtocolEnum.HMX_ARB,
     text: 'HMX',
@@ -205,7 +198,7 @@ export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
 
 export const PROTOCOLS_CROSS_MARGIN = [ProtocolEnum.HMX_ARB, ProtocolEnum.SYNTHETIX_V3]
 
-export const PROTOCOLS_IN_TOKEN = [ProtocolEnum.PINGU_ARB]
+export const PROTOCOLS_IN_TOKEN: ProtocolEnum[] = []
 
 // TODO: Check when add new protocol
 export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {

@@ -10,8 +10,8 @@ export function calcPnL(isLong: boolean, averagePrice: number, lastPrice: number
   return delta === 0 ? 0 : hasProfit ? delta : -delta
 }
 
-export function calcSynthetixPnL(isLong: boolean, averagePrice: number, marketPrice: number, sizeToken: number) {
-  return sizeToken * (marketPrice - averagePrice) * (isLong ? 1 : -1)
+export function calcPnLBySizeInToken(isLong: boolean, averagePrice: number, lastPrice: number, sizeInToken: number) {
+  return sizeInToken * (lastPrice - averagePrice) * (isLong ? 1 : -1)
 }
 
 export function calcCopyOpeningPnL(position: CopyPositionData, marketPrice?: number | undefined) {
@@ -23,13 +23,17 @@ export function calcCopyOpeningPnL(position: CopyPositionData, marketPrice?: num
 
 export function calcOpeningPnL(position: PositionData, marketPrice?: number | undefined) {
   if (!marketPrice) return 0
+
+  if (position.status === PositionStatusEnum.OPEN && position.lastSizeInToken != null)
+    return calcPnLBySizeInToken(position.isLong, position.averagePrice, marketPrice, position.lastSizeInToken)
+
   return calcPnL(
     position.isLong,
     position.averagePrice,
     marketPrice,
-    position.status === PositionStatusEnum.OPEN && !!position.lastSizeNumber
-      ? Math.abs(position.lastSizeNumber) * position.averagePrice
-      : position.status === PositionStatusEnum.OPEN && !!position.lastSize
+    position.status === PositionStatusEnum.OPEN && position.lastSizeNumber != null
+      ? Math.abs(position.lastSizeNumber) * marketPrice
+      : position.status === PositionStatusEnum.OPEN && position.lastSize != null
       ? position.lastSize
       : position.size
   )
@@ -50,16 +54,13 @@ export function getOpeningPnl({
   let pnlInToken: number | undefined
   if (useSizeInToken) {
     if (!!marketPrice) {
-      const openingPnl = calcPnL(
-        data.isLong,
-        data.averagePrice,
-        marketPrice,
-        data.status === PositionStatusEnum.OPEN && !!data.lastSizeNumber
-          ? Math.abs(data.lastSizeNumber) * data.averagePrice
-          : data.status === PositionStatusEnum.OPEN && !!data.lastSize
-          ? data.lastSize
-          : data.sizeInToken
-      )
+      const openingPnl =
+        calcPnLBySizeInToken(
+          data.isLong,
+          data.averagePrice,
+          marketPrice,
+          data.status === PositionStatusEnum.OPEN && !!data.lastSize ? data.lastSize : data.sizeInToken
+        ) / marketPrice
       pnlInToken = ignoreFee ? openingPnl : openingPnl - data.feeInToken
     }
   } else {
@@ -79,10 +80,13 @@ export function calcCopyOpeningROI(position: CopyPositionData, realPnL: number) 
 }
 // TODO: Check when add new protocol
 export function calcLiquidatePrice(position: PositionData) {
-  const useToken = position.sizeInToken != null && position.feeInToken != null && position.fundingInToken != null
-  let lastCollateral = (useToken ? position.sizeInToken : position.size) / position.leverage
-  let lastSizeInToken = useToken ? position.sizeInToken : position.size / position.averagePrice
-  let totalFee = useToken ? position.feeInToken : position.fee
+  // const useToken = position.sizeInToken != null && position.feeInToken != null && position.fundingInToken != null
+  // let lastCollateral = (useToken ? position.sizeInToken : position.size) / position.leverage
+  // let lastSizeInToken = useToken ? position.sizeInToken : position.size / position.averagePrice
+  // let totalFee = useToken ? position.feeInToken : position.fee
+  let lastCollateral = position.size / position.leverage
+  let lastSizeInToken = position.size / position.averagePrice
+  let totalFee = position.fee
   switch (position.protocol) {
     case ProtocolEnum.KWENTA:
     case ProtocolEnum.POLYNOMIAL:
@@ -91,24 +95,29 @@ export function calcLiquidatePrice(position: PositionData) {
     case ProtocolEnum.COPIN:
       if (position.status === PositionStatusEnum.OPEN) {
         lastCollateral = position.lastCollateral
-        lastSizeInToken = position.lastSize
-          ? position.lastSize / position.averagePrice
-          : position.lastSizeNumber
-          ? Math.abs(position.lastSizeNumber)
-          : lastSizeInToken
+        lastSizeInToken =
+          position.lastSizeInToken != null
+            ? position.lastSizeInToken
+            : position.lastSize != null
+            ? position.lastSize / position.averagePrice
+            : position.lastSizeNumber != null
+            ? Math.abs(position.lastSizeNumber)
+            : lastSizeInToken
       }
 
       break
   }
   if (position.funding) {
-    totalFee += useToken ? position.fundingInToken : position.funding
+    // totalFee += useToken ? position.fundingInToken : position.funding
+    totalFee += position.funding
   }
 
-  return (
-    position.averagePrice +
-    (((position.isLong ? 1 : -1) * (totalFee - 0.9 * lastCollateral)) / lastSizeInToken) *
-      (useToken ? position.averagePrice : 1)
-  )
+  // return (
+  //   position.averagePrice +
+  //   (((position.isLong ? 1 : -1) * (totalFee - 0.9 * lastCollateral)) / lastSizeInToken) *
+  //     (useToken ? position.averagePrice : 1)
+  // )
+  return position.averagePrice + ((position.isLong ? 1 : -1) * (totalFee - 0.9 * lastCollateral)) / lastSizeInToken
 }
 
 export function calcCopyLiquidatePrice(position: CopyPositionData) {

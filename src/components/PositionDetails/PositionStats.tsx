@@ -21,9 +21,10 @@ interface PositionStatsProps {
   hasFundingFee: boolean
   hasLiquidate: boolean
   isOpening: boolean
+  chartId?: string
 }
 
-export default function PositionStats({ data }: { data: PositionData }) {
+export default function PositionStats({ data, chartId }: { data: PositionData; chartId?: string }) {
   const { md } = useResponsive()
   const { prices } = useRealtimeUsdPricesStore()
   const hasFundingFee = !!data?.funding
@@ -39,6 +40,7 @@ export default function PositionStats({ data }: { data: PositionData }) {
           hasFundingFee={hasFundingFee}
           hasLiquidate={hasLiquidate}
           isOpening={isOpening}
+          chartId={chartId}
         />
       ) : (
         <MobileLayout
@@ -47,13 +49,14 @@ export default function PositionStats({ data }: { data: PositionData }) {
           hasFundingFee={hasFundingFee}
           hasLiquidate={hasLiquidate}
           isOpening={isOpening}
+          chartId={chartId}
         />
       )}
     </Box>
   )
 }
 
-const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }: PositionStatsProps) => {
+const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, chartId }: PositionStatsProps) => {
   return (
     <Box>
       <Flex alignItems="center" justifyContent="space-between" flexWrap="wrap" sx={{ gap: 3 }}>
@@ -72,7 +75,7 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }:
           <PositionStatus
             status={hasLiquidate ? PositionStatusEnum.LIQUIDATE : isOpening ? PositionStatusEnum.OPEN : data.status}
           />
-          <SharePosition isOpening={isOpening} stats={data} />
+          <SharePosition isOpening={isOpening} stats={data} chartId={chartId} />
         </Flex>
       </Flex>
       <Flex mt={3} alignItems="center" justifyContent="space-between" sx={{ gap: [2, 24], flexWrap: 'wrap' }}>
@@ -132,7 +135,7 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }:
   )
 }
 
-const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }: PositionStatsProps) => {
+const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, chartId }: PositionStatsProps) => {
   return (
     <Flex flexDirection="column" sx={{ gap: 2 }}>
       <Flex alignItems="center" justifyContent="space-between" flexWrap="wrap" sx={{ gap: 3 }}>
@@ -142,7 +145,7 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }: 
           </Type.Caption>
           {renderEntry(data)}
         </Flex>
-        <SharePosition isOpening={isOpening} stats={data} />
+        <SharePosition isOpening={isOpening} stats={data} chartId={chartId} />
       </Flex>
       <Flex width="100%" mb={1}>
         {isOpening ? renderSizeOpeningWithPrices(data, prices) : renderSize(data)}
