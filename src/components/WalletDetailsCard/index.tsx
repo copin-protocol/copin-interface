@@ -1,5 +1,5 @@
 import { PencilSimpleLine } from '@phosphor-icons/react'
-import { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { EditText } from 'react-edit-text'
 // eslint-disable-next-line no-restricted-imports
 import 'react-edit-text/dist/index.css'
@@ -8,13 +8,14 @@ import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import TitleWithIcon from 'components/@ui/TilleWithIcon'
 import { CopyWalletData } from 'entities/copyWallet'
 import useChain from 'hooks/web3/useChain'
+import CopyButton from 'theme/Buttons/CopyButton'
+import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { getColorFromText } from 'utils/helpers/css'
-import { formatNumber } from 'utils/helpers/format'
-import { parseWalletName } from 'utils/helpers/transform'
+import { addressShorten, formatNumber } from 'utils/helpers/format'
+import { getExchangeKey, parseWalletName } from 'utils/helpers/transform'
 
 import ReferralStatus from './ReferralStatus'
 import WalletActions from './WalletActions'
@@ -38,8 +39,11 @@ export default function WalletDetailsCard({
   reload,
   hiddenBalance,
 }: WalletDetailsProps) {
-  const walletKey = data?.smartWalletAddress ?? data?.bingX?.apiKey ?? ''
-  // const isAPIKey = data.exchange === CopyTradePlatformEnum.BINGX
+  const walletKey = useMemo(
+    () => data?.smartWalletAddress ?? data?.[getExchangeKey(data?.exchange)]?.apiKey ?? '',
+    [data]
+  )
+  const isSmartWallet = !!data?.smartWalletAddress
   const [isEdit, setIsEdit] = useState(false)
   const [walletName, setWalletName] = useState(parseWalletName(data))
   // const [fundingModal, setFundingModal] = useState<FundTab | null>(null)
@@ -98,13 +102,14 @@ export default function WalletDetailsCard({
               }
             />
 
-            {data.exchange === CopyTradePlatformEnum.SYNTHETIX && (
+            {isSmartWallet && (
               <ExplorerLogo
                 protocol={data.exchange}
                 explorerUrl={`${chain.blockExplorerUrl}/address/${data.smartWalletAddress}`}
               />
             )}
           </Flex>
+          <WalletKey walletKey={walletKey} isSmartWallet={isSmartWallet} />
           <BalanceStats sx={{ display: ['none', 'flex'] }} balance={data.balance} hiddenBalance={hiddenBalance} />
         </Flex>
         <WalletActions data={data} />
@@ -130,5 +135,33 @@ function BalanceStats({
         {hiddenBalance ? '*****' : `$${formatNumber(balance, 0, 0)}`}
       </Type.CaptionBold>
     </Box>
+  )
+}
+
+function WalletKey({ walletKey, isSmartWallet, sx }: { walletKey?: string; isSmartWallet?: boolean; sx?: any }) {
+  return (
+    <Flex width={250} sx={{ gap: 2, flexShrink: 0, '& *': { flexShrink: 0 }, ...(sx || {}) }}>
+      <Type.Caption color="neutral3">{isSmartWallet ? 'Smart Wallet' : 'API Key'}:</Type.Caption>
+      <Flex sx={{ gap: 2 }} alignItems="center">
+        <Type.CaptionBold data-tip="React-tooltip" data-tooltip-id={`tt-${walletKey}`} data-tooltip-delay-show={360}>
+          {walletKey ? addressShorten(walletKey, 4) : '--'}
+        </Type.CaptionBold>
+        {!!walletKey && (
+          <CopyButton
+            variant="ghost"
+            size="xs"
+            value={walletKey}
+            iconSize={16}
+            sx={{
+              transition: 'none',
+              p: 0,
+            }}
+          ></CopyButton>
+        )}
+        <Tooltip id={`tt-${walletKey}`} place="top" type="dark" effect="solid" clickable={false}>
+          <Type.Small sx={{ maxWidth: [300, 400] }}>{walletKey}</Type.Small>
+        </Tooltip>
+      </Flex>
+    </Flex>
   )
 }

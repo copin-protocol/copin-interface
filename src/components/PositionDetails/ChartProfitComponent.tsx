@@ -136,9 +136,6 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
         if (!isDecrease) {
           averagePrice = (totalTokenSize * averagePrice + sizeDeltaNumber) / (totalTokenSize + sizeTokenDelta)
         }
-        console.log('sizeDeltaInToken', sizeDeltaInToken, sizeDeltaNumber / orders[i].priceNumber)
-        console.log('sizeTokenDelta', sizeTokenDelta, orders[i].priceNumber)
-        console.log('averagePrice', averagePrice)
 
         const pos = {
           size: totalSize + sizeDelta,

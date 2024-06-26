@@ -407,7 +407,7 @@ function LeaderBoard({ tradingEventId }: { tradingEventId: string | undefined })
   const { data: leaderboard } = useQuery(
     [QUERY_KEYS.GET_EVENT_COMPETITION, 'leaderboard', currentPage, tradingEventId],
     () => getEventLeaderboard({ tradingEventId, limit: LIMIT, offset: pageToOffset(currentPage, LIMIT) }),
-    { enabled: !!tradingEventId }
+    { enabled: !!tradingEventId, keepPreviousData: true, retry: 0 }
   )
 
   const { sm } = useResponsive()

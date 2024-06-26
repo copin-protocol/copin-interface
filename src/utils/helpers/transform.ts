@@ -417,3 +417,22 @@ export function getUniqueTokenTrade(tokenSupport: { [key: string]: TokenTrade | 
     }, {})
   )
 }
+
+export const getExchangeKey = (exchange: CopyTradePlatformEnum) => {
+  switch (exchange) {
+    case CopyTradePlatformEnum.BINGX:
+      return 'bingX'
+    case CopyTradePlatformEnum.BITGET:
+      return 'bitget'
+    case CopyTradePlatformEnum.BINANCE:
+      return 'binance'
+    case CopyTradePlatformEnum.BYBIT:
+      return 'bybit'
+    case CopyTradePlatformEnum.OKX:
+      return 'okx'
+    case CopyTradePlatformEnum.GATE:
+      return 'gate'
+    default:
+      return 'bingX'
+  }
+}
