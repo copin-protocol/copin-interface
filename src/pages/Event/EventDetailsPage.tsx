@@ -959,122 +959,136 @@ function OthersRewardWrapper({ label, value }: { label: ReactNode; value: string
 function Rules({ eventDetails }: { eventDetails: EventDetailsData | undefined }) {
   const format = `${DATE_FORMAT} - ${TIME_FORMAT} UTC+0`
   return (
-    <Box sx={{ p: 3 }}>
-      <Flex sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
-        <Label icon={BookBookmark} label={'Rules'} />
-        <Type.Caption>
-          <Box
-            as="a"
-            href="https://blog.copin.io/p/join-the-on-chain-copy-trading-event#%C2%A7event-rules"
-            rel="noreferrer"
-            target="_blank"
-            sx={{ '&:hover': { textDecoration: 'underline' } }}
-          >
-            View full
+    <Box
+      py={3}
+      sx={{
+        display: ['block', 'block', 'block', 'block', 'flex'],
+        flexDirection: 'column',
+        width: '100%',
+        height: ['auto', 'auto', 'auto', 'auto', '100%'],
+      }}
+    >
+      <Box flex="1 0 1" sx={{ px: 3, overflow: 'hidden auto' }}>
+        <Flex sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+          <Label icon={BookBookmark} label={'Rules'} />
+          <Type.Caption>
+            <Box
+              as="a"
+              href="https://blog.copin.io/p/join-the-on-chain-copy-trading-event#%C2%A7event-rules"
+              rel="noreferrer"
+              target="_blank"
+              sx={{ '&:hover': { textDecoration: 'underline' } }}
+            >
+              View full
+            </Box>
+          </Type.Caption>
+        </Flex>
+        <Box mb={10} />
+        <Type.Caption color="neutral3" sx={{ '& > *': { mb: '4px' } }}>
+          {eventDetails && (
+            <>
+              <Li mb={2}>
+                Register:{' '}
+                <Box as="span" color="neutral2">
+                  {formatDate(eventDetails.registerDate, format)}
+                </Box>
+              </Li>
+              <Li mb={2}>
+                Event begins:{' '}
+                <Box as="span" color="neutral2">
+                  {formatDate(eventDetails.startDate, format)}
+                </Box>
+              </Li>
+              <Li mb={2}>
+                Event ends:{' '}
+                <Box as="span" color="neutral2">
+                  {formatDate(eventDetails.endDate, format)}
+                </Box>
+              </Li>
+            </>
+          )}
+          <Li>
+            This event is exclusively available to users who have registered using Copin&apos;s referral link, those who
+            trade using Copin&apos;s API/Product on BingX, Bitget.
+          </Li>
+          <Box pl={3}>
+            <Li signradius="0px">
+              BingX:{' '}
+              <Box
+                as="a"
+                href={LINKS.registerBingX}
+                target="_blank"
+                rel="noreferrer"
+                sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
+              >
+                https://bingx.com/invite/DY5QNN
+              </Box>
+              <br />
+              (Referral code: DY5QNN)
+            </Li>
+            <Li signradius="0px">
+              Bitget:{' '}
+              <Box
+                as="a"
+                href={LINKS.registerBitget}
+                target="_blank"
+                rel="noreferrer"
+                sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
+              >
+                https://partner.bitget.online/bg/HPM3BN
+              </Box>
+              <br />
+              (Referral code: 1qlg)
+            </Li>
           </Box>
+          <Li>Event for Copin users after clicking the registration button.</Li>
+          <Li>
+            The reward is unlocked when the total copy-trading volume reaches at least 5 million during the event.
+          </Li>
+          <Li>
+            Copy-trading volume is calculated based on the total volume of closed positions (including open and closed
+            volume) during the event.
+          </Li>
+          <Li>
+            Top 10 users will be eligible to receive rewards from Gate; with the condition of registering a Gate account
+            under Copin&apos;s referral link (
+            <Box
+              as="a"
+              href={LINKS.registerGate}
+              target="_blank"
+              rel="noreferrer"
+              sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
+            >
+              https://www.gate.io/signup/AgBFAApb?ref_type=103
+            </Box>
+            , ref code: AgBFAApb) before the event ends:
+          </Li>
+          <Box pl={3}>
+            <Li signradius="0px">Top 1: Badminton Set.</Li>
+            <Li signradius="0px">Top 2, 3: Wireless charging.</Li>
+            <Li signradius="0px">Top 4 - 10: Umbrella.</Li>
+          </Box>
+          <Li>
+            After the event ends, the top winner contacts the Copin team to provide the UID and recipient information.
+            After Gate confirms that the UID is under the Copin ref, the reward will be sent immediately.
+          </Li>
+          <Li>
+            The rewards will be distributed in the form of a &quot;USDT&quot; within 7 working days after the conclusion
+            event.
+          </Li>
+          <Li>
+            Copin reserves the right to change or revise the terms of this event, or cancel it at any time and for any
+            reason without notice in its sole discretion.
+          </Li>
+          <Li>
+            Copin reserves the right to disqualify unsatisfactory users if they engage in any inappropriate, dishonest
+            or abusive activities (such as volume tampering, participating with multiple accounts, etc.) throughout the
+            competition. Copin reserves the right to not reward all users who violate Copin&apos;s rules and
+            regulations, or users who show any signs of fraud.
+          </Li>
         </Type.Caption>
-      </Flex>
-      <Box mb={10} />
-      <Type.Caption color="neutral3" sx={{ '& > *': { mb: '4px' } }}>
-        {eventDetails && (
-          <>
-            <Li mb={2}>
-              Register:{' '}
-              <Box as="span" color="neutral2">
-                {formatDate(eventDetails.registerDate, format)}
-              </Box>
-            </Li>
-            <Li mb={2}>
-              Event begins:{' '}
-              <Box as="span" color="neutral2">
-                {formatDate(eventDetails.startDate, format)}
-              </Box>
-            </Li>
-            <Li mb={2}>
-              Event ends:{' '}
-              <Box as="span" color="neutral2">
-                {formatDate(eventDetails.endDate, format)}
-              </Box>
-            </Li>
-          </>
-        )}
-        <Li>
-          This event is exclusively available to users who have registered using Copin&apos;s referral link, those who
-          trade using Copin&apos;s API/Product on BingX, Bitget.
-        </Li>
-        <Box pl={3}>
-          <Li signradius="0px">
-            BingX:{' '}
-            <Box
-              as="a"
-              href={LINKS.registerBingX}
-              target="_blank"
-              rel="noreferrer"
-              sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
-            >
-              https://bingx.com/invite/DY5QNN
-            </Box>
-            <br />
-            (Referral code: DY5QNN)
-          </Li>
-          <Li signradius="0px">
-            Bitget:{' '}
-            <Box
-              as="a"
-              href={LINKS.registerBitget}
-              target="_blank"
-              rel="noreferrer"
-              sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
-            >
-              https://partner.bitget.online/bg/HPM3BN
-            </Box>
-            <br />
-            (Referral code: 1qlg)
-          </Li>
-        </Box>
-        <Li>Event for Copin users after clicking the registration button.</Li>
-        <Li>The reward is unlocked when the total copy-trading volume reaches at least 5 million during the event.</Li>
-        <Li>
-          Copy-trading volume is calculated based on the total volume of closed positions (including open and closed
-          volume) during the event.
-        </Li>
-        <Li>
-          Top 10 users will be eligible to receive rewards from Gate; with the condition of registering a Gate account
-          under Copin&apos;s referral link (
-          <Box
-            as="a"
-            href={LINKS.registerGate}
-            target="_blank"
-            rel="noreferrer"
-            sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
-          >
-            https://www.gate.io/signup/AgBFAApb?ref_type=103
-          </Box>
-          , ref code: AgBFAApb) before the event ends:
-        </Li>
-        <Box pl={3}>
-          <Li signradius="0px">Top 1: Badminton Set.</Li>
-          <Li signradius="0px">Top 2, 3: Wireless charging.</Li>
-          <Li signradius="0px">Top 4 - 10: Umbrella.</Li>
-        </Box>
-        <Li>
-          After the event ends, the top winner contacts the Copin team to provide the UID and recipient information.
-          After Gate confirms that the UID is under the Copin ref, the reward will be sent immediately.
-        </Li>
-        <Li>
-          The rewards will be distributed in the form of a &quot;USDT&quot; within 7 working days after the conclusion
-          event.
-        </Li>
-        <Li>
-          Copin reserves the right to change or revise the terms of this event, or cancel it at any time and for any
-          reason without notice in its sole discretion.
-        </Li>
-        <Li>
-          Copin reserves the right to disqualify unsatisfactory users if they engage in any inappropriate, dishonest or
-          abusive activities (such as volume tampering, participating with multiple accounts, etc.) throughout the
-          competition. Copin reserves the right to not reward all users who violate Copin&apos;s rules and regulations,
-          or users who show any signs of fraud.
-        </Li>
+      </Box>
+      <Box px={3}>
         <Divider my={2} />
         <Type.Caption color="neutral3">
           Any question? Contact us on{' '}
@@ -1082,7 +1096,7 @@ function Rules({ eventDetails }: { eventDetails: EventDetailsData | undefined })
             Telegram
           </Box>
         </Type.Caption>
-      </Type.Caption>
+      </Box>
     </Box>
   )
 }
