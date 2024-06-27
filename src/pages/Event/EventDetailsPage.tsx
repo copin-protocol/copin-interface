@@ -47,6 +47,8 @@ import { addressShorten, compactNumber, formatDate, formatNumber } from 'utils/h
 import { generateExplorerRoute } from 'utils/helpers/generateRoute'
 import { getErrorMessage } from 'utils/helpers/handleError'
 import { pageToOffset, parseExchangeImage } from 'utils/helpers/transform'
+import { logEventCompetition } from 'utils/tracking/event'
+import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 const ALLOWED_EXCHANGE = [CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.BITGET]
 
@@ -200,13 +202,28 @@ function RegisterArea({
       const errorMsg = getErrorMessage(error)
       if (errorMsg?.match('not eligible')) {
         setShowModal('notEligible')
+
+        logEventCompetition({
+          event: EVENT_ACTIONS[EventCategory.COMPETITION].EVENT_REGISTER_NOT_ELIGIBLE,
+          username: myProfile?.username,
+        })
       } else {
         toast.error(<ToastBody title={'Error'} message={getErrorMessage(error)} />)
+
+        logEventCompetition({
+          event: EVENT_ACTIONS[EventCategory.COMPETITION].EVENT_REGISTER_ERROR,
+          username: myProfile?.username,
+        })
       }
     },
     onSuccess: () => {
       refetchQueries([QUERY_KEYS.GET_EVENT_COMPETITION])
       setShowModal('success')
+
+      logEventCompetition({
+        event: EVENT_ACTIONS[EventCategory.COMPETITION].EVENT_REGISTER_ELIGIBLE,
+        username: myProfile?.username,
+      })
     },
   })
   const handleClickLogin = useClickLoginButton()
@@ -268,6 +285,12 @@ function RegisterArea({
                   mt={24}
                   as={Link}
                   to={generateExplorerRoute({ protocol: DEFAULT_PROTOCOL })}
+                  onClick={() => {
+                    logEventCompetition({
+                      event: EVENT_ACTIONS[EventCategory.COMPETITION].EVENT_CLICK_COPYTRADE,
+                      username: myProfile?.username,
+                    })
+                  }}
                   sx={{ fontWeight: '600', fontSize: '13px', py: 2 }}
                 >
                   Copy Trade
@@ -280,7 +303,23 @@ function RegisterArea({
                 variant="primary"
                 block
                 mt={24}
-                onClick={myProfile?.id ? () => mutate() : handleClickLogin}
+                onClick={() => {
+                  if (myProfile?.id) {
+                    mutate()
+
+                    logEventCompetition({
+                      event: EVENT_ACTIONS[EventCategory.COMPETITION].EVENT_CLICK_REGISTER,
+                      username: myProfile?.username,
+                    })
+                  } else {
+                    handleClickLogin()
+
+                    logEventCompetition({
+                      event: EVENT_ACTIONS[EventCategory.COMPETITION].EVENT_CLICK_CONNECT_WALLET,
+                      username: myProfile?.username,
+                    })
+                  }
+                }}
                 sx={{ height: 40 }}
                 disabled={today < registerDate || isLoading}
                 isLoading={isLoading}
@@ -799,7 +838,14 @@ function UserOverview({ userEventDetails }: { userEventDetails: UserEventRanking
               </Box>
             }
           >
-            <Type.Body>
+            <Type.Body
+              onClick={() => {
+                logEventCompetition({
+                  event: EVENT_ACTIONS[EventCategory.COMPETITION].EVENT_CLICK_VIEW_ACCOUNTS,
+                  username: myProfile?.username,
+                })
+              }}
+            >
               {eligibleWallets.length} Account{eligibleWallets.length > 1 && 's'}
             </Type.Body>
           </Dropdown>

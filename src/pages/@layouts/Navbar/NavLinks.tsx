@@ -3,11 +3,14 @@ import { NavLink as Link, NavLinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+import useMyProfile from 'hooks/store/useMyProfile'
 import { parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
 import { Box } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { generateExplorerRoute, generateLeaderboardRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
+import { logEventCompetition } from 'utils/tracking/event'
+import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import EventButton from './EventButton'
 
@@ -27,6 +30,7 @@ export function MobileNavLinks({ onClose }: { onClose?: () => void }) {
 }
 
 function NavLinks({ onClose }: { onClose?: () => void }) {
+  const { myProfile } = useMyProfile()
   const { protocol, navProtocol, setNavProtocol } = useProtocolStore()
   const _navProtocol = parseNavProtocol(navProtocol)?.protocol
   const onClickNavItem = () => {
@@ -51,7 +55,14 @@ function NavLinks({ onClose }: { onClose?: () => void }) {
       })}
       {!!eventId && (
         <NavLink
-          onClick={onClickNavItem}
+          onClick={() => {
+            onClickNavItem()
+
+            logEventCompetition({
+              event: EVENT_ACTIONS[EventCategory.COMPETITION].HOME_CLICK_NAV,
+              username: myProfile?.username,
+            })
+          }}
           to={`/${ROUTES.EVENT_DETAILS.path_prefix}/${eventId}`}
           matchpath={ROUTES.EVENT_DETAILS.path_prefix}
         >

@@ -2,6 +2,7 @@ import ReactGA from 'react-ga4'
 
 import { TraderData } from 'entities/trader'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { addressShorten } from 'utils/helpers/format'
 
 import { EVENT_ACTIONS, EventCategory, EventGoogleAnalytic } from './types'
 
@@ -23,7 +24,7 @@ export function logEvent(options: EventGoogleAnalytic, params?: any) {
 export const getUserForTracking = (username?: string) => {
   if (!username) return 'guest'
   if (username.includes('@')) return username.split('@')[0]
-  return username
+  return addressShorten(username)
 }
 
 export const logEventSwitchProtocol = ({ protocol, username }: { protocol: ProtocolEnum; username?: string }) => {
@@ -142,6 +143,14 @@ export const logEventCopyTrade = ({ event, username }: { event: string; username
 export const logEventRoute = ({ event, username }: { event: string; username?: string }) => {
   logEvent({
     category: EventCategory.ROUTES,
+    label: getUserForTracking(username),
+    action: event,
+  })
+}
+
+export const logEventCompetition = ({ event, username }: { event: string; username?: string }) => {
+  logEvent({
+    category: EventCategory.COMPETITION,
     label: getUserForTracking(username),
     action: event,
   })

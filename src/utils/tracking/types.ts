@@ -8,6 +8,7 @@ export enum EventSource {
   HOME = 'HOME',
   HOME_BACKTEST = 'HOME_BACKTEST',
   TRADER_PROFILE = 'TRADER_PROFILE',
+  EVENT = 'EVENT',
 }
 
 export enum EventCategory {
@@ -20,6 +21,7 @@ export enum EventCategory {
   SEARCH = 'SEARCH',
   LAYOUT = 'LAYOUT',
   CHART = 'CHART',
+  COMPETITION = 'COMPETITION',
 }
 
 export const EVENT_ACTIONS = {
@@ -144,5 +146,18 @@ export const EVENT_ACTIONS = {
     HIDE_OPENING_POSITION_FULL: 'hide_trader_opening_position_full',
     EXPAND_CHART_POSITION_FULL: 'expand_chart_position_full',
     HIDE_CHART_POSITION_FULL: 'hide_chart_position_full',
+  },
+  [EventCategory.COMPETITION]: {
+    HOME_CLICK_NAV: 'comp_home_click_nav',
+    HOME_CLICK_BANNER: 'comp_home_click_banner',
+    EVENT_CLICK_CONNECT_WALLET: 'comp_event_click_connect_wallet',
+    EVENT_CLICK_REGISTER: 'comp_event_click_register',
+    EVENT_CLICK_COPYTRADE: 'comp_event_click_copytrade',
+    EVENT_CLICK_VIEW_BLOG: 'comp_event_click_blog',
+    EVENT_CLICK_TELEGRAM: 'comp_event_click_telegram',
+    EVENT_CLICK_VIEW_ACCOUNTS: 'comp_event_view_accounts',
+    EVENT_REGISTER_ELIGIBLE: 'comp_event_eligible',
+    EVENT_REGISTER_NOT_ELIGIBLE: 'comp_event_not_eligible',
+    EVENT_REGISTER_ERROR: 'comp_event_register_error',
   },
 }

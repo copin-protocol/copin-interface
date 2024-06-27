@@ -30,6 +30,7 @@ import ROUTES from 'utils/config/routes'
 import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseWalletName } from 'utils/helpers/transform'
+import { logEventCompetition } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 export const GradientText = styled(Box).attrs({ as: 'span' })`
@@ -65,6 +66,7 @@ function UserOverview() {
   // const { copyWallets, loadingCopyWallets } = useCopyWalletContext()
   // const selectedWallet = copyWallets?.[0]
   // const myProfile = useMyProfileStore((state) => state.myProfile)
+  const { myProfile } = useMyProfile()
   const { eventId } = useSystemConfigContext()
   return (
     <Box sx={{ borderBottom: 'small', borderBottomColor: 'neutral4', position: 'relative' }}>
@@ -73,6 +75,12 @@ function UserOverview() {
         role="button"
         as={eventId ? Link : 'div'}
         to={eventId ? `/${ROUTES.EVENT_DETAILS.path_prefix}/${eventId}` : undefined}
+        onClick={() => {
+          logEventCompetition({
+            event: EVENT_ACTIONS[EventCategory.COMPETITION].HOME_CLICK_BANNER,
+            username: myProfile?.username,
+          })
+        }}
         sx={{
           position: 'absolute',
           bottom: 12,
