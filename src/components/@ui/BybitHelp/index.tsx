@@ -43,7 +43,7 @@ const BybitHelp = ({
             </ButtonWithIcon>
           </Flex>
           <Type.Caption color="neutral3">
-            <Trans>Get 10% transaction fee rebate with code:</Trans>{' '}
+            <Trans>Get extra benefits with referral code:</Trans>{' '}
             <CopyButton
               value={'COPIN'}
               sx={{
@@ -59,7 +59,7 @@ const BybitHelp = ({
                 '& .icon_wrapper': { color: 'primary1' },
               }}
             >
-              copin
+              COPIN
             </CopyButton>
           </Type.Caption>
           {/* <Type.CaptionBold>DY5QNN</Type.CaptionBold> */}

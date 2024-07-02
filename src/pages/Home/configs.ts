@@ -51,4 +51,5 @@ export const ALLOWED_PROTOCOLS = [
   ProtocolEnum.GNS_POLY,
   ProtocolEnum.MUX_ARB,
   ProtocolEnum.AVANTIS_BASE,
+  ProtocolEnum.CYBERDEX,
 ]

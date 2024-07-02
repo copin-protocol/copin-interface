@@ -114,7 +114,7 @@ const CHAINS: { [key: number]: Chain } = {
     token: NATIVE_CURRENCIES.ETH.symbol,
     label: 'Ethereum',
     icon: 'ETH',
-    rpcUrl: 'https://eth-mainnet.g.alchemy.com/v2/72fn_owjChR9dmCH-kREoY8pVeXW_GEM',
+    rpcUrl: 'https://ethereum-rpc.publicnode.com',
     blockExplorerUrl: 'https://etherscan.io',
     secondaryTokens: SECONDARY_TOKENS[ETHEREUM_MAINNET],
   },

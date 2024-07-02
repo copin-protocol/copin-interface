@@ -187,7 +187,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'CyberDEX',
     label: 'Optimism',
     chainId: OPTIMISM_MAINNET,
-    isNew: true,
+    isNew: false,
   },
 }
 

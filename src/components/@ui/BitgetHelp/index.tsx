@@ -46,7 +46,7 @@ const BitgetHelp = ({
             </ButtonWithIcon>
           </Flex>
           <Type.Caption color="neutral3">
-            <Trans>Get 10% transaction fee rebate with code:</Trans>{' '}
+            <Trans>Get extra benefits with referral code:</Trans>{' '}
             <CopyButton
               value={'1qlg'}
               sx={{

@@ -23,6 +23,7 @@ const ALLOWED_LIST = [
   ProtocolEnum.GNS_POLY,
   ProtocolEnum.MUX_ARB,
   ProtocolEnum.AVANTIS_BASE,
+  ProtocolEnum.CYBERDEX,
 ]
 
 export default function CopyTraderButton({
