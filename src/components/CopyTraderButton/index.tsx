@@ -24,6 +24,7 @@ const ALLOWED_LIST = [
   ProtocolEnum.MUX_ARB,
   ProtocolEnum.AVANTIS_BASE,
   ProtocolEnum.CYBERDEX,
+  ProtocolEnum.DEXTORO,
 ]
 
 export default function CopyTraderButton({

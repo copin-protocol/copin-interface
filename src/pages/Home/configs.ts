@@ -52,4 +52,5 @@ export const ALLOWED_PROTOCOLS = [
   ProtocolEnum.MUX_ARB,
   ProtocolEnum.AVANTIS_BASE,
   ProtocolEnum.CYBERDEX,
+  ProtocolEnum.DEXTORO,
 ]
