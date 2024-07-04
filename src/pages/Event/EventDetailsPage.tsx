@@ -478,7 +478,7 @@ function LeaderBoard({ tradingEventId }: { tradingEventId: string | undefined })
         style: { minWidth: '200px', textAlign: 'right' },
         render: (item) => (
           <Type.CaptionBold color="neutral1">
-            {item.volume != null ? `$${formatNumber(item.volume)}` : '--'}
+            {item.volume != null ? `$${formatNumber(item.volume, 2, 2)}` : '--'}
           </Type.CaptionBold>
         ),
       },
