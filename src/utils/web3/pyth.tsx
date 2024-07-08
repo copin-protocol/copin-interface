@@ -61,20 +61,21 @@ export default function PythConnection() {
       let pricesData = {} as UsdPrices
       ;(async () => {
         await pyth.startWebSocket()
-        const initialCache = await pyth.getLatestPriceFeeds(PYTH_IDS)
-        initialCache?.forEach((price) => {
-          const data = getPriceData({ price })
-          if (!data) return
-          for (let i = 0; i < data.tokenAddresses.length; i++) {
-            pricesData = {
-              ...pricesData,
-              [data.tokenAddresses[i]]: NORMALIZE_LIST.includes(data.tokenAddresses[i])
-                ? data.value * 1000
-                : data.value,
-            }
+
+        const PYTH_IDS_CHUNKS = chunkArray(PYTH_IDS, 100)
+
+        async function fetchAndProcessPriceFeeds() {
+          let pricesData = {} as UsdPrices
+          for (const pythIds of PYTH_IDS_CHUNKS) {
+            const initialCache = await pyth.getLatestPriceFeeds(pythIds)
+            initialCache?.forEach((price) => {
+              pricesData = processPriceFeed(price, pricesData)
+            })
           }
-        })
-        setPrices(pricesData)
+          setPrices(pricesData)
+        }
+
+        await fetchAndProcessPriceFeeds()
 
         setIsReady(true)
 
@@ -119,4 +120,21 @@ function getPriceData({ price }: { price: PriceFeed }) {
     return null
   }
   return { tokenAddresses, value: Number(priceData.price) * Math.pow(10, priceData.expo) }
+}
+
+const processPriceFeed = (price: PriceFeed, pricesData: UsdPrices) => {
+  const data = getPriceData({ price })
+  if (!data) return pricesData
+  data.tokenAddresses.forEach((address) => {
+    pricesData[address] = NORMALIZE_LIST.includes(address) ? data.value * 1000 : data.value
+  })
+  return pricesData
+}
+
+function chunkArray(array: string[], chunkSize: number) {
+  const chunks = []
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunks.push(array.slice(i, i + chunkSize))
+  }
+  return chunks
 }
