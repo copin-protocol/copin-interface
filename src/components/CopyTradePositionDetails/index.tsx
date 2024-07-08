@@ -51,14 +51,10 @@ export default function CopyTradePositionDetails({ id }: { id: string | undefine
     data: dataOrders,
     isLoading: loadingOrders,
     refetch: reloadOrders,
-  } = useQuery(
-    [QUERY_KEYS.GET_MY_COPY_ORDERS, data?.copyTradeId],
-    () => getMyCopyOrdersApi({ copyId: data?.id ?? '' }),
-    {
-      enabled: !!data?.id,
-      retry: 0,
-    }
-  )
+  } = useQuery([QUERY_KEYS.GET_MY_COPY_ORDERS, data?.id], () => getMyCopyOrdersApi({ copyId: data?.id ?? '' }), {
+    enabled: !!data?.id,
+    retry: 0,
+  })
   const copyTradeOrders = useMemo(
     () =>
       copyTradeDetails && dataOrders
