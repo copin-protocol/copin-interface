@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useResponsive } from 'ahooks'
 
 import useMyProfile from 'hooks/store/useMyProfile'
 import DiscordIcon from 'theme/Icons/DiscordIcon'
@@ -13,6 +14,7 @@ import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 const Footer = ({ height }: { height: number }) => {
   const { myProfile } = useMyProfile()
+
   const logEventRoutes = (action: string) => {
     logEvent({
       label: getUserForTracking(myProfile?.username),
@@ -20,6 +22,8 @@ const Footer = ({ height }: { height: number }) => {
       action,
     })
   }
+
+  const { sm } = useResponsive()
 
   return (
     <Box
@@ -44,20 +48,21 @@ const Footer = ({ height }: { height: number }) => {
           alignItems: 'center',
           gap: 3,
           height: '100%',
-          width: ['fit-content', 'fit-content', '100%'],
+          width: '100%',
+          // width: ['fit-content', 'fit-content', '100%'],
         }}
       >
-        <Type.Caption color="neutral3" display={['none', 'none', 'block']}>
+        <Type.Caption color="neutral3" display={['none', 'none', 'none', 'block']}>
           <Trans>© 2024 Copin. All rights reserved. Data has been updated since Nov 2022</Trans>
         </Type.Caption>
-        <Flex flex="1" sx={{ alignItems: 'center', justifyContent: 'end', gap: [2, 3] }}>
+        <Flex flex="1" sx={{ alignItems: 'center', justifyContent: ['space-between', 'end'], gap: [2, 3] }}>
           <Flex
             sx={{
-              gap: [2, 3],
+              gap: ['12px', 3],
             }}
             color="neutral3"
           >
-            {links.map((_d, index) => {
+            {(sm ? links : linksMobile).map((_d, index) => {
               return (
                 <a
                   key={index}
@@ -74,8 +79,8 @@ const Footer = ({ height }: { height: number }) => {
               )
             })}
           </Flex>
-          <Box sx={{ width: '1px', height: '24px', bg: 'neutral4' }} />
-          <Flex color="neutral3" sx={{ alignItems: ['flex-start', 'center'], gap: [2, 3] }}>
+          <Box display={['none', 'block']} sx={{ width: '1px', height: '24px', bg: 'neutral4' }} />
+          <Flex color="neutral3" sx={{ alignItems: ['flex-start', 'center'], gap: ['12px', 3] }}>
             {channels.map((_d, index) => {
               return (
                 <Box
@@ -104,6 +109,13 @@ const links = [
   { label: <Trans>Blog</Trans>, href: LINKS.blog },
   { label: <Trans>Docs</Trans>, href: LINKS.docs },
   { label: <Trans>Terms & Policy</Trans>, href: LINKS.policy },
+  { label: <Trans>Feedback</Trans>, href: LINKS.feedback },
+]
+const linksMobile = [
+  { label: <Trans>Upgrade</Trans>, href: ROUTES.SUBSCRIPTION.path },
+  { label: <Trans>Docs</Trans>, href: LINKS.docs },
+  { label: <Trans>Policy</Trans>, href: LINKS.policy },
+  { label: <Trans>Feedback</Trans>, href: LINKS.feedback },
 ]
 const channels = [
   { Icon: DiscordIcon, href: LINKS.discord, event: EVENT_ACTIONS[EventCategory.ROUTES].JOIN_DISCORD },

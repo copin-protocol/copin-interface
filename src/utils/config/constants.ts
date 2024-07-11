@@ -60,6 +60,7 @@ export const LINKS = {
   subscriptionDocument: 'https://docs.copin.io/upgrade-to-premium',
   copinEliteClub: 'https://docs.copin.io/welcome/copin-elite-club',
   support: 'https://t.me/leecopin',
+  feedback: 'https://copin.canny.io',
 }
 
 export const NAVBAR_HEIGHT = 60
