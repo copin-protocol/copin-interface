@@ -385,6 +385,8 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                 wrapperSx={{ flexDirection: 'row-reverse', '*': { fontWeight: 400 } }}
                 onChange={(newValue: any) => {
                   clearErrors(fieldName.excludingTokenAddresses)
+                  clearErrors(fieldName.tokenAddresses)
+                  clearErrors(fieldName.hasExclude)
                   setValue(fieldName.copyAll, newValue.target.checked)
                   if (!newValue.target.checked) {
                     setValue(fieldName.excludingTokenAddresses, [])

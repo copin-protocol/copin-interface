@@ -32,6 +32,7 @@ import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+import { normalizePriceData } from 'utils/helpers/transform'
 
 export const renderCopyTitle = (data: CopyPositionData) => (
   <Type.Caption color="neutral1" sx={{ maxWidth: '110px', ...overflowEllipsis(), display: 'block' }}>
@@ -53,9 +54,13 @@ export function renderEntry(data: CopyPositionData) {
   )
 }
 export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {
+  const symbol = data?.protocol ? getTokenTradeSupport(data?.protocol)?.[data?.indexToken]?.symbol : undefined
   const pnl =
     data.status === PositionStatusEnum.OPEN
-      ? calcCopyOpeningPnL(data, prices ? prices[data.indexToken] : undefined)
+      ? calcCopyOpeningPnL(
+          data,
+          prices && symbol ? normalizePriceData(symbol, prices[data.indexToken], data.exchange) : undefined
+        )
       : data.pnl
 
   return (

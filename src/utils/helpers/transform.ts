@@ -331,12 +331,24 @@ export function getProtocolDropdownImage({ protocol, isActive }: { protocol: Pro
   return `/images/protocols_with_status/${protocol}-${isActive ? 'active' : 'inactive_color'}.png`
 }
 
-export const normalizePriceData = (symbol: string, value?: number) => {
+export const normalizePriceData = (
+  symbol: string,
+  value?: number,
+  exchange?: CopyTradePlatformEnum,
+  isRevert?: boolean
+) => {
   if (!value) return 0
   switch (symbol) {
     case '1000BONK':
     case '1000PEPE':
       return value * 1000
+    case 'BONK':
+    case 'PEPE':
+      if (exchange && [CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.BYBIT].includes(exchange)) {
+        return isRevert ? value / 1000 : value * 1000
+      } else {
+        return value
+      }
     default:
       return value
   }

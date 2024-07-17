@@ -21,15 +21,17 @@ import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TIMEFRAME_NAMES, getTokenTradeSupport } from 'utils/config/trades'
 import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcPnL, calcSLTPUsd } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
-import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
+import { getTimeframeFromTimeRange, normalizePriceData } from 'utils/helpers/transform'
 
 import CopyOrderTooltip from './CopyOrderTooltip'
 
 export default function CopyChartProfit({
+  exchange,
   position,
   copyOrders,
   isOpening,
@@ -37,6 +39,7 @@ export default function CopyChartProfit({
   closeBlockTime,
   setCrossMovePnL,
 }: {
+  exchange?: CopyTradePlatformEnum
   position: CopyPositionData
   copyOrders: CopyOrderData[]
   isOpening: boolean
@@ -81,10 +84,10 @@ export default function CopyChartProfit({
 
     if (openOrder) {
       tempData.push({
-        open: openOrder.price,
-        close: openOrder.price,
-        low: openOrder.price,
-        high: openOrder.price,
+        open: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
+        close: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
+        low: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
+        high: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
         timestamp: dayjs(openOrder.createdAt).utc().valueOf(),
       })
     }
@@ -102,10 +105,10 @@ export default function CopyChartProfit({
       }
     } else {
       tempData.push({
-        open: position.closePrice ?? position.entryPrice,
-        close: position.closePrice ?? position.entryPrice,
-        low: position.closePrice ?? position.entryPrice,
-        high: position.closePrice ?? position.entryPrice,
+        open: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
+        close: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
+        low: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
+        high: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
         timestamp: dayjs(position.lastOrderAt).utc().valueOf(),
       })
     }
@@ -120,7 +123,7 @@ export default function CopyChartProfit({
     return (
       chartData
         .map((e, index) => {
-          const marketPrice = e.close
+          const marketPrice = normalizePriceData(tokenSymbol, e.close, exchange)
           const tickTime = dayjs(e.timestamp).utc()
           const realSize =
             index === chartData.length - 1
@@ -147,7 +150,7 @@ export default function CopyChartProfit({
         })
         .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
     )
-  }, [data, openOrder, orders, prices, timezone, to])
+  }, [data, openOrder, orders, prices, timezone, to, exchange])
 
   const priceData: CandlestickData[] = useMemo(() => {
     if (!data) return []
@@ -155,10 +158,10 @@ export default function CopyChartProfit({
     // const lastData = isOpening ? data[data.length - 1] : tempData.pop()
     if (openOrder) {
       tempData.push({
-        open: openOrder.price,
-        close: openOrder.price,
-        low: openOrder.price,
-        high: openOrder.price,
+        open: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
+        close: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
+        low: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
+        high: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
         timestamp: dayjs(openOrder.createdAt).utc().valueOf(),
       })
     }
@@ -175,10 +178,10 @@ export default function CopyChartProfit({
       }
     } else {
       tempData.push({
-        open: position.closePrice ?? position.entryPrice,
-        close: position.closePrice ?? position.entryPrice,
-        low: position.closePrice ?? position.entryPrice,
-        high: position.closePrice ?? position.entryPrice,
+        open: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
+        close: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
+        low: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
+        high: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
         timestamp: dayjs(position.createdAt).utc().valueOf(),
       })
     }

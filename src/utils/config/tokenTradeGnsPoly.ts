@@ -165,6 +165,13 @@ const GNS_POLY_PAIRS = {
   'GNS_POLY-237': 'ZK',
   'GNS_POLY-238': 'LISTA',
   'GNS_POLY-239': 'BLAST',
+  'GNS_POLY-240': 'RATS',
+  'GNS_POLY-241': 'BNX',
+  'GNS_POLY-242': 'PEOPLE',
+  'GNS_POLY-243': 'TURBO',
+  'GNS_POLY-244': 'SATS',
+  'GNS_POLY-245': 'POPCAT',
+  'GNS_POLY-246': 'MOG',
 }
 export const TOKEN_TRADE_GNS_POLY = Object.entries(GNS_POLY_PAIRS).reduce<ProtocolTokenMapping>(
   (result, [key, value]) => {

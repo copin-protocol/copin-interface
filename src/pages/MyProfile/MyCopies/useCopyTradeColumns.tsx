@@ -20,6 +20,7 @@ import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
 import MarginProtectionIcon from 'theme/Icons/MarginProtectionIcon'
 import MaxMarginIcon from 'theme/Icons/MaxMarginIcon'
+import SkipLowCollateralIcon from 'theme/Icons/SkipLowCollateralIcon'
 import SkipLowLeverageIcon from 'theme/Icons/SkipLowLeverageIcon'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import Tooltip from 'theme/Tooltip'
@@ -238,6 +239,31 @@ export default function useCopyTradeColumns({
                   Skip Low Leverage Position:{' '}
                   <Box as="span" color="primary1">
                     On ({item.lowLeverage}x)
+                  </Box>
+                </Type.Caption>
+              </Tooltip>
+            )}
+          </>
+        )}
+        {item.skipLowCollateral && (
+          <>
+            <IconBox
+              icon={<SkipLowCollateralIcon size={20} />}
+              color={themeColors.primary1}
+              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
+              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_COLLATERAL}_${item.id}`}
+            />
+            {isRunningFn(item.status) && (
+              <Tooltip
+                id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_COLLATERAL}_${item.id}`}
+                place="top"
+                type="dark"
+                effect="solid"
+              >
+                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
+                  Skip Low Collateral Position:{' '}
+                  <Box as="span" color="primary1">
+                    {`$${formatNumber(item.lowCollateral, 0, 0)}`}
                   </Box>
                 </Type.Caption>
               </Tooltip>

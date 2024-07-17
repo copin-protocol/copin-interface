@@ -209,6 +209,8 @@ export default function ListOrderTable({
               indexToken={item.collateralToken}
               value={item.feeNumber}
               valueInToken={item.feeInTokenNumber}
+              maxDigit={2}
+              minDigit={2}
             />
           </Type.Caption>
         ),

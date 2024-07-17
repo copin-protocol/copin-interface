@@ -16,6 +16,8 @@ export default function ValueOrToken({
   component,
   hasCompact,
   hasPrefix = true,
+  maxDigit = 0,
+  minDigit,
 }: {
   value: number | undefined
   valueInToken?: number
@@ -24,9 +26,11 @@ export default function ValueOrToken({
   component?: ReactNode
   hasCompact?: boolean
   hasPrefix?: boolean
+  maxDigit?: number
+  minDigit?: number
 }) {
   if (!value && !component && !valueInToken) return <>{'--'}</>
-  if (!protocol && !indexToken && !component) return <>{`${hasPrefix ? '$' : ''}${formatNumber(value, 0)}`}</>
+  if (!protocol && !indexToken && !component) return <>{`${hasPrefix ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`}</>
   const isToken = !!indexToken && !!valueInToken && !!protocol
   const tooltipId = uuid()
   return (
@@ -45,7 +49,7 @@ export default function ValueOrToken({
           ? hasCompact
             ? compactNumber(valueInToken, 2)
             : formatNumber(valueInToken, 2, 2)
-          : `${hasPrefix ? '$' : ''}${formatNumber(value, 0)}`}
+          : `${hasPrefix ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`}
         {isToken && (
           <Image
             src={parseCollateralImage(TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol)}
@@ -55,7 +59,7 @@ export default function ValueOrToken({
         {isToken && (
           <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
             {`${formatNumber(valueInToken, 2, 2)} ${TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol} ${
-              value != null ? `~ ${hasPrefix ? '$' : ''}${formatNumber(value, 0)}` : ''
+              value != null ? `~ ${hasPrefix ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}` : ''
             }`}
           </Tooltip>
         )}

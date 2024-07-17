@@ -23,6 +23,7 @@ import { getTokenTradeSupport } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
+import { normalizePriceData } from 'utils/helpers/transform'
 
 import CopyChartProfit from './CopyChartProfit'
 import CopyPositionHistories from './CopyPositionHistories'
@@ -83,9 +84,15 @@ export default function CopyTradePositionDetails({ id }: { id: string | undefine
         : 0,
     [copyTradeOrders, data]
   )
+  const symbol = data?.protocol ? getTokenTradeSupport(data?.protocol)?.[data?.indexToken]?.symbol : undefined
   const pnl = useMemo(
-    () => (data ? (isOpening ? calcCopyOpeningPnL(data, prices[data.indexToken]) : data.pnl) : 0),
-    [data, isOpening, prices]
+    () =>
+      data && symbol
+        ? isOpening
+          ? calcCopyOpeningPnL(data, normalizePriceData(symbol, prices[data.indexToken], data.exchange))
+          : data.pnl
+        : 0,
+    [data, isOpening, prices, symbol]
   )
   const roi = data ? (pnl / collateral) * 100 : 0
 
@@ -238,6 +245,7 @@ export default function CopyTradePositionDetails({ id }: { id: string | undefine
               </Flex>
               {data && copyTradeOrders && (
                 <CopyChartProfit
+                  exchange={copyTradeDetails?.exchange}
                   position={data}
                   copyOrders={copyTradeOrders}
                   isOpening={isOpening ?? false}
