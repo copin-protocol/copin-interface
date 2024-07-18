@@ -4,6 +4,7 @@ import { ComponentProps, ReactNode, useState } from 'react'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
+import { ALLOWED_PROTOCOLS } from 'pages/Home/configs'
 import { Button } from 'theme/Buttons'
 import Tooltip from 'theme/Tooltip'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -12,20 +13,6 @@ import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 
 import CopyTraderModal from './CopyTraderModal'
 import ModalContactUs from './ModalContactUs'
-
-// TODO: Check when add new protocol
-const ALLOWED_LIST = [
-  ProtocolEnum.GMX,
-  ProtocolEnum.GMX_V2,
-  ProtocolEnum.KWENTA,
-  ProtocolEnum.POLYNOMIAL,
-  ProtocolEnum.GNS,
-  ProtocolEnum.GNS_POLY,
-  ProtocolEnum.MUX_ARB,
-  ProtocolEnum.AVANTIS_BASE,
-  ProtocolEnum.CYBERDEX,
-  ProtocolEnum.DEXTORO,
-]
 
 export default function CopyTraderButton({
   protocol,
@@ -56,8 +43,7 @@ export default function CopyTraderButton({
 
   const hasCopyPermission = useCopyTradePermission()
 
-  const allowList = ALLOWED_LIST
-  const disabledCopy = !allowList.includes(protocol)
+  const disabledCopy = !ALLOWED_PROTOCOLS.includes(protocol)
   const disabledCopyTooltipId = `tt_copy_trade_${account}_${protocol}`
 
   return (
