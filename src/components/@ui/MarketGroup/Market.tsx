@@ -5,27 +5,22 @@ import { v4 as uuid } from 'uuid'
 
 import Tooltip from 'theme/Tooltip'
 import { Flex, Image, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { parseMarketImage } from 'utils/helpers/transform'
 
 export default function Market({
-  protocol,
-  indexToken,
+  symbol,
   size = 20,
   hasName = false,
   hasTooltip = false,
   sx,
 }: {
-  protocol: ProtocolEnum
-  indexToken: string
+  symbol: string
   size?: number
   hasName?: boolean
   hasTooltip?: boolean
   sx?: SystemStyleObject & GridProps
 }) {
   const tooltipId = useMemo(() => uuid(), [])
-  const symbol = getTokenTradeSupport(protocol)[indexToken]?.symbol
   if (!symbol) return <></>
   return (
     <Flex alignItems="center" sx={{ gap: 1 }}>

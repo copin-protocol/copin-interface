@@ -6,6 +6,7 @@ import { v4 as uuid } from 'uuid'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
+import { getSymbolsFromIndexTokens } from 'utils/config/trades'
 
 import Market from './Market'
 
@@ -27,18 +28,19 @@ export default function MarketGroup({
   const tooltipId = useMemo(() => uuid(), [])
   const numberOfAddress = indexTokens?.length
   if (!numberOfAddress) return <></>
+  const symbols = getSymbolsFromIndexTokens(protocol, indexTokens)
   return (
     <Flex sx={{ position: 'relative', height: size, ...sx }}>
-      {indexTokens.slice(0, limit).map((indexToken) => {
+      {symbols.slice(0, limit).map((symbol) => {
         return (
           <Box
-            key={indexToken}
+            key={symbol}
             sx={{
               width: size / 1.5,
               height: size,
             }}
           >
-            <Market protocol={protocol} indexToken={indexToken} size={size} hasTooltip={numberOfAddress <= limit} />
+            <Market symbol={symbol} size={size} hasTooltip={numberOfAddress <= limit} />
           </Box>
         )
       })}
@@ -103,6 +105,7 @@ export function MarketGroupFull({
 }) {
   const numberOfAddress = indexTokens?.length
   if (!numberOfAddress) return <></>
+  const symbols = getSymbolsFromIndexTokens(protocol, indexTokens)
   return (
     <Box
       sx={{
@@ -112,8 +115,8 @@ export function MarketGroupFull({
         ...sx,
       }}
     >
-      {indexTokens.map((indexToken) => {
-        return <Market key={indexToken} protocol={protocol} indexToken={indexToken} size={size} hasName={hasName} />
+      {symbols.map((symbol) => {
+        return <Market key={symbol} symbol={symbol} size={size} hasName={hasName} />
       })}
     </Box>
   )

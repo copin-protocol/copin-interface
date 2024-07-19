@@ -19,7 +19,12 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { getTokenTradeList } from 'utils/config/trades'
+import {
+  getIndexTokensFromSymbols,
+  getSymbolsFromIndexTokens,
+  getTokenOptions,
+  getTokenTradeList,
+} from 'utils/config/trades'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -58,20 +63,20 @@ export default function BacktestForm({
   const isInternal = useInternalRole()
 
   useEffect(() => {
-    const _defaultValues = defaultValues ?? getDefaultBackTestFormValues(protocol)
+    const _defaultValues = defaultValues ? { ...defaultValues } : getDefaultBackTestFormValues(protocol)
+    if (_defaultValues.tokenAddresses?.length) {
+      _defaultValues.tokenAddresses = getIndexTokensFromSymbols(protocol, _defaultValues.tokenAddresses)
+    }
     for (const key in _defaultValues) {
       const _key = key as keyof BackTestFormValues
       setValue(_key, _defaultValues[_key])
     }
     if (!defaultValues?.tokenAddresses.length && !!tokensTraded?.length) {
-      setValue('tokenAddresses', tokensTraded)
+      setValue('tokenAddresses', getSymbolsFromIndexTokens(protocol, tokensTraded))
       return
     }
-    if (!_defaultValues.tokenAddresses.length) {
-      setValue(
-        'tokenAddresses',
-        getTokenTradeList(protocol).map((v) => v.address)
-      )
+    if (!_defaultValues.tokenAddresses?.length) {
+      setValue('tokenAddresses', Array.from(new Set(getTokenTradeList(protocol).map((v) => v.symbol))))
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,13 +101,13 @@ export default function BacktestForm({
     _maxDate.setHours(23, 59, 59, 999)
     return _maxDate
   }, [])
-  const pairs = useMemo(() => getTokenTradeList(protocol), [protocol])
-  const addressPairs = pairs.map((e) => e.address)
-  const isSelectedAll = addressPairs.length === tokenAddresses?.length
-  const pairOptions = pairs?.map((e) => {
-    return { value: e.address, label: e.symbol }
-  })
-  pairOptions?.unshift({ value: 'all', label: 'All Tokens' })
+
+  const pairOptions = getTokenOptions({ protocol, ignoredAll: true })
+  const allPairs = pairOptions.map((p) => p.value)
+
+  pairOptions.unshift({ id: 'all', value: 'all', label: 'All Tokens' })
+
+  const isSelectedAll = allPairs.length === tokenAddresses?.length
 
   const { sm } = useResponsive()
   const [showGuide, setShowGuide] = useState(false)
@@ -113,6 +118,16 @@ export default function BacktestForm({
   useEffect(() => {
     sm ? setTimeout(() => setShowGuide(true), 300) : setShowGuide(false)
   }, [sm])
+
+  const _handleSubmit = () => {
+    handleSubmit((_formValues) => {
+      const formValues = { ..._formValues }
+      if (formValues.tokenAddresses?.length) {
+        formValues.tokenAddresses = getIndexTokensFromSymbols(protocol, formValues.tokenAddresses)
+      }
+      onSubmit?.(formValues)
+    })()
+  }
 
   return (
     <Box px={3}>
@@ -172,7 +187,7 @@ export default function BacktestForm({
               onChange={(newValue: any, actionMeta: any) => {
                 clearErrors(fieldName.tokenAddresses)
                 if (actionMeta?.option?.value === 'all') {
-                  setValue(fieldName.tokenAddresses, addressPairs)
+                  setValue(fieldName.tokenAddresses, allPairs)
                   return
                 }
                 setValue(
@@ -390,7 +405,7 @@ export default function BacktestForm({
           direction="right"
           variant="primary"
           icon={<ArrowRight size={16} weight="bold" />}
-          onClick={() => onSubmit && handleSubmit(onSubmit)()}
+          onClick={_handleSubmit}
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >

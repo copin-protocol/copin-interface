@@ -556,12 +556,37 @@ export function getTokenTradeSupport(protocol: ProtocolEnum): {
 }
 
 export function getSymbolByTokenTrade(protocol: ProtocolEnum): Record<string, string> {
-  const tokenTrades = getTokenTradeSupport(protocol)
-  if (!tokenTrades) return {}
-  return Object.values(tokenTrades).reduce<Record<string, string>>((result, tokenTrade) => {
-    if (!tokenTrade) return result
-    return { ...result, [tokenTrade.address]: tokenTrade.symbol }
+  const tokens = TOKEN_TRADE_SUPPORT[protocol] ?? {}
+  const result = Object.entries(tokens).reduce<Record<string, string>>((_r, [key, value]) => {
+    return { ..._r, [key]: value.symbol }
   }, {})
+  return result
+}
+
+export function getSymbolsFromIndexTokens(protocol: ProtocolEnum, indexTokens: string[]): string[] {
+  const tokens = TOKEN_TRADE_SUPPORT[protocol] ?? {}
+  const symbolByIndexToken = Object.entries(tokens).reduce<Record<string, string>>((_r, [key, value]) => {
+    return { ..._r, [key]: value.symbol }
+  }, {})
+  const symbols = Array.from(new Set(indexTokens.map((indexToken) => symbolByIndexToken[indexToken]))).filter(
+    (v) => !!v
+  )
+  return symbols
+}
+
+export function getIndexTokensFromSymbols(protocol: ProtocolEnum, symbols: string[]): string[] {
+  const tokens = TOKEN_TRADE_SUPPORT[protocol] ?? {}
+  const indexTokensBySymbol = Object.entries(tokens).reduce<Record<string, string[]>>(
+    (_r, [indexToken, { symbol }]) => {
+      return { ..._r, [symbol]: [...(_r[symbol] ?? []), indexToken] }
+    },
+    {}
+  )
+  const indexTokens = symbols
+    .map((symbol) => indexTokensBySymbol[symbol])
+    .flat()
+    .filter((v) => !!v)
+  return indexTokens
 }
 
 export const GMX_CLOSE_POSITION_TOPIC = '0x73af1d417d82c240fdb6d319b34ad884487c6bf2845d98980cc52ad9171cb455'

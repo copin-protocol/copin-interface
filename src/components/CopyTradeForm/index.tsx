@@ -29,11 +29,17 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { LINKS } from 'utils/config/constants'
+import { DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { INTERNAL_SERVICE_KEYS, QUERY_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
-import { TOKEN_TRADE_IGNORE, getTokenTradeList } from 'utils/config/trades'
+import {
+  TOKEN_TRADE_IGNORE,
+  getIndexTokensFromSymbols,
+  getSymbolsFromIndexTokens,
+  getTokenOptions,
+  getTokenTradeList,
+} from 'utils/config/trades'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -73,7 +79,7 @@ type CopyTradeFormComponent = {
 const CopyTraderForm: CopyTradeFormComponent = ({
   onSubmit,
   isSubmitting,
-  defaultFormValues,
+  defaultFormValues: _defaultFormValues,
   submitButtonText = 'Copy Trade',
   isEdit,
   isClone,
@@ -110,7 +116,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const maxMarginPerPosition = watch('maxMarginPerPosition')
   const lookBackOrders = watch('lookBackOrders')
   const tokenAddresses = watch('tokenAddresses') || []
-  const protocol = watch('protocol')
+  const protocol = watch('protocol') || DEFAULT_PROTOCOL
   const copyAll = watch('copyAll')
   const skipLowLeverage = watch('skipLowLeverage')
   const lowLeverage = watch('lowLeverage')
@@ -121,25 +127,27 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const lowCollateral = watch('lowCollateral')
 
   const [tradedPairs, setTradedPairs] = useState<string[]>([])
-  const pairs =
-    protocol &&
-    getTokenTradeList(protocol).filter((tokenTrade) => !TOKEN_TRADE_IGNORE[platform]?.includes(tokenTrade.symbol))
-  const addressPairs = pairs?.map((e) => e.address) ?? []
-  const pairOptions = pairs?.map((e) => {
-    return { value: e.address, label: e.symbol }
-  })
-  pairOptions?.unshift({ value: 'all', label: 'All Tokens' })
+
+  const pairOptions = getTokenOptions({ protocol, ignoredAll: true }).filter(
+    (option) => !TOKEN_TRADE_IGNORE[platform]?.includes(option.value)
+  )
+  const allPairs = pairOptions.map((p) => p.value)
+
+  pairOptions.unshift({ id: 'all', value: 'all', label: 'All Tokens' })
 
   const account = watch('account')
   const duplicateToAddress = watch('duplicateToAddress')
   useGetTokensTraded(
     {
       account: isClone ? duplicateToAddress ?? '' : account ?? '',
-      protocol: protocol ?? ProtocolEnum.GMX,
+      protocol,
     },
     {
       enabled: !isEdit && (isClone ? !!duplicateToAddress : !!account),
-      select: (data) => data.filter((address) => !TOKEN_TRADE_IGNORE[platform]?.includes(address)),
+      select: (data) => {
+        const symbols = getSymbolsFromIndexTokens(protocol, data)
+        return symbols.filter((address) => !TOKEN_TRADE_IGNORE[platform]?.includes(address))
+      },
       onSuccess: (data) => {
         if (!!data?.length) {
           if (!isEdit && (isClone ? !!duplicateToAddress : !!account)) {
@@ -186,12 +194,14 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
   // Todo: uncomment after 20/4
   const _handleSubmit = () =>
-    handleSubmit((formValues) => {
-      // if (formValues.volume * formValues.leverage > maxVolume) {
-      //   const errorMsg = `Maximum volume (include leverage) is ${formatNumber(maxVolume, 0, 0)}`
-      //   setError('totalVolume', { message: errorMsg })
-      //   return
-      // }
+    handleSubmit((_formValues) => {
+      const formValues = { ..._formValues }
+      if (formValues.tokenAddresses?.length) {
+        formValues.tokenAddresses = getIndexTokensFromSymbols(protocol, formValues.tokenAddresses)
+      }
+      if (formValues.excludingTokenAddresses?.length) {
+        formValues.excludingTokenAddresses = getIndexTokensFromSymbols(protocol, formValues.excludingTokenAddresses)
+      }
       delete formValues.totalVolume
       onSubmit(formValues)
     })()
@@ -206,6 +216,19 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   // }, [maxVolume, totalVolume])
 
   useEffect(() => {
+    const defaultFormValues = { ..._defaultFormValues }
+    if (defaultFormValues.tokenAddresses?.length) {
+      defaultFormValues.tokenAddresses = getSymbolsFromIndexTokens(
+        defaultFormValues.protocol ?? DEFAULT_PROTOCOL,
+        defaultFormValues.tokenAddresses
+      )
+    }
+    if (defaultFormValues.excludingTokenAddresses?.length) {
+      defaultFormValues.excludingTokenAddresses = getSymbolsFromIndexTokens(
+        defaultFormValues.protocol ?? DEFAULT_PROTOCOL,
+        defaultFormValues.excludingTokenAddresses
+      )
+    }
     reset(defaultFormValues)
     setTimeout(() => {
       if (isEdit) {
@@ -272,7 +295,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                   <InputField
                     block
                     {...register(fieldName.duplicateToAddress!)}
-                    disabled={!!defaultFormValues.duplicateToAddress}
+                    disabled={!!_defaultFormValues.duplicateToAddress}
                     error={errors.duplicateToAddress?.message}
                     label="Clone To Address"
                     sx={{ flexGrow: 1 }}
@@ -290,7 +313,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                         setValue('serviceKey', serviceCopy[newValue.value as ProtocolEnum])
                       }}
                       isSearchable={false}
-                      isDisabled={!!defaultFormValues.duplicateToAddress}
+                      isDisabled={!!_defaultFormValues.duplicateToAddress}
                     />
                   </Box>
                 )}
@@ -439,7 +462,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               onChange={(newValue: any, actionMeta: any) => {
                 clearErrors(fieldName.tokenAddresses)
                 if (actionMeta?.option?.value === 'all') {
-                  setValue(fieldName.tokenAddresses, addressPairs)
+                  setValue(fieldName.tokenAddresses, allPairs)
                   return
                 }
                 setValue(
@@ -472,7 +495,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             onChange={(newValue: any, actionMeta: any) => {
               clearErrors(fieldName.excludingTokenAddresses)
               if (actionMeta?.option?.value === 'all') {
-                setValue(fieldName.excludingTokenAddresses, addressPairs)
+                setValue(fieldName.excludingTokenAddresses, allPairs)
                 return
               }
               setValue(
