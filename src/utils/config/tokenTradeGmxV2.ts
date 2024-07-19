@@ -55,6 +55,12 @@ const TOKEN_TRADE_GMX_V2: ProtocolTokenMapping = {
   '0x55391D178Ce46e7AC8eaAEa50A72D1A5a8A622Da': {
     symbol: 'GMX',
   },
+  '0x0418643F94Ef14917f1345cE5C460C37dE463ef7': {
+    symbol: 'WIF',
+  },
+  '0x2b477989A149B17073D9C9C82eC9cB03591e20c6': {
+    symbol: 'PEPE',
+  },
 }
 
 export { TOKEN_TRADE_GMX_V2 }
