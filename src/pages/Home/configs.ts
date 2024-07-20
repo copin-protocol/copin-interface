@@ -54,4 +54,6 @@ export const ALLOWED_PROTOCOLS = [
   ProtocolEnum.CYBERDEX,
   ProtocolEnum.DEXTORO,
   ProtocolEnum.VELA_ARB,
+  ProtocolEnum.EQUATION_ARB,
+  ProtocolEnum.HMX_ARB,
 ]
