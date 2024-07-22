@@ -125,6 +125,8 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
   const skipLowCollateral = watch('skipLowCollateral')
   const lowCollateral = watch('lowCollateral')
+  const skipLowSize = watch('skipLowSize')
+  const lowSize = watch('lowSize')
 
   const [tradedPairs, setTradedPairs] = useState<string[]>([])
 
@@ -746,7 +748,32 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                   />
                 </Box>
                 <Type.Caption mt={1} color="neutral2">
-                  <Trans>You will not copy the position has opened with collateral lower than</Trans> ${lowCollateral}.
+                  <Trans>You will not copy the position has opened with collateral lower than</Trans> $
+                  {formatNumber(lowCollateral, 0)}.
+                </Type.Caption>
+              </Box>
+              <Box mt={24}>
+                <SwitchInputField
+                  switchLabel="Skip Lower Size Position"
+                  // labelColor="orange1"
+                  {...register(fieldName.skipLowSize)}
+                  error={errors.skipLowSize?.message}
+                />
+                <Box mt={2} sx={{ display: skipLowSize ? 'block' : 'none' }}>
+                  <NumberInputField
+                    maxLength={40}
+                    block
+                    required
+                    label="Low Size"
+                    name={fieldName.lowSize}
+                    control={control}
+                    error={errors.lowSize?.message}
+                    suffix={<InputSuffix>$</InputSuffix>}
+                  />
+                </Box>
+                <Type.Caption mt={1} color="neutral2">
+                  <Trans>You will not copy the position has opened with size lower than</Trans> $
+                  {formatNumber(lowSize, 0)}.
                 </Type.Caption>
               </Box>
             </Box>

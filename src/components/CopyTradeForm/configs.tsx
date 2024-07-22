@@ -49,6 +49,15 @@ const commonSchema = {
       then: (schema) => schema.required().min(1),
     })
     .label('Low Collateral'),
+  skipLowSize: yup.boolean(),
+  lowSize: yup
+    .number()
+    .positive()
+    .when('skipLowSize', {
+      is: true,
+      then: (schema) => schema.required().min(1),
+    })
+    .label('Low Size'),
   agreement: yup.boolean().isTrue(),
   copyAll: yup.boolean(),
   tokenAddresses: yup
@@ -123,6 +132,8 @@ export interface CopyTradeFormValues {
   lowLeverage: number | undefined
   skipLowCollateral: boolean
   lowCollateral: number | undefined
+  skipLowSize: boolean
+  lowSize: number | undefined
   agreement: boolean
   copyAll: boolean
   hasExclude: boolean
@@ -153,6 +164,8 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   hasExclude: 'hasExclude',
   skipLowCollateral: 'skipLowCollateral',
   lowCollateral: 'lowCollateral',
+  skipLowSize: 'skipLowSize',
+  lowSize: 'lowSize',
 }
 
 export const defaultCopyTradeFormValues: CopyTradeFormValues = {
@@ -181,6 +194,8 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   hasExclude: false,
   skipLowCollateral: false,
   lowCollateral: undefined,
+  skipLowSize: false,
+  lowSize: undefined,
 }
 
 export interface ExchangeOptions {

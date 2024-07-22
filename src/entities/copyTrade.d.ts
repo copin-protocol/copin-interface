@@ -76,6 +76,8 @@ export interface CopyTradeData {
   lowCollateral?: number
   multipleCopy: boolean
   accounts?: string[]
+  skipLowSize?: boolean
+  lowSize?: number
   // bingXBalance?: number
   // bingXAvailableMargin?: number
   // displayPrivateKey: string

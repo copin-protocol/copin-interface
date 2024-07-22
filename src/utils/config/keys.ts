@@ -155,6 +155,7 @@ export const TOOLTIP_KEYS = {
   MY_COPY_ICON_MAX_VOL_MULTIPLIER: 'my_copy_icon_max_vol_multiplier',
   MY_COPY_ICON_SKIP_LOW_LEVERAGE: 'my_copy_icon_skip_low_leverage',
   MY_COPY_ICON_SKIP_LOW_COLLATERAL: 'my_copy_icon_skip_low_collateral',
+  MY_COPY_ICON_SKIP_LOW_SIZE: 'my_copy_icon_skip_low_size',
   MY_COPY_ICON_LOOK_BACK_ORDERS: 'my_copy_icon_look_back_orders',
   TRADER_COPY_COUNT_WARNING: 'data-trader-copy-count',
   TRADER_COPY_COUNT_WARNING_BASIC: 'data-trader-copy-count-basic',
