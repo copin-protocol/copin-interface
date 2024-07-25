@@ -11,6 +11,7 @@ import { MutableRefObject, SetStateAction, useCallback, useMemo } from 'react'
 import AvatarGroup from 'components/@ui/Avatar/AvatarGroup'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import Divider from 'components/@ui/Divider'
+import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import MarketGroup from 'components/@ui/MarketGroup'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { ColumnData } from 'components/@ui/Table/types'
@@ -29,6 +30,7 @@ import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
 import { TOOLTIP_KEYS } from 'utils/config/keys'
+import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getProtocolDropdownImage } from 'utils/helpers/transform'
@@ -523,7 +525,11 @@ export default function useCopyTradeColumns({
       },
       {
         style: { minWidth: '100px', width: 100, textAlign: 'right' },
-        title: <Trans>7D PnL</Trans>,
+        title: (
+          <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
+            7D ePnL
+          </LabelWithTooltip>
+        ),
         key: 'pnl7D',
         dataIndex: 'pnl7D',
         sortBy: 'pnl7D',
@@ -531,7 +537,11 @@ export default function useCopyTradeColumns({
       },
       {
         style: { minWidth: '100px', width: 100, textAlign: 'right' },
-        title: <Trans>Total PnL</Trans>,
+        title: (
+          <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
+            Total ePnL
+          </LabelWithTooltip>
+        ),
         key: 'pnl',
         dataIndex: 'pnl',
         sortBy: 'pnl',

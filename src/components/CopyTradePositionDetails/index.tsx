@@ -19,6 +19,7 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { getTokenTradeSupport } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
@@ -71,9 +72,9 @@ export default function CopyTradePositionDetails({ id }: { id: string | undefine
   const sizeDelta = useMemo(
     () =>
       isOpening
-        ? Number(data?.sizeDelta)
+        ? Number(data?.totalSizeDelta)
         : copyTradeOrders?.filter((e) => e.isIncrease)?.reduce((sum, current) => sum + current.size, 0) ?? 0,
-    [copyTradeOrders, data?.sizeDelta, isOpening]
+    [copyTradeOrders, data?.totalSizeDelta, isOpening]
   )
   const collateral = useMemo(
     () =>
@@ -230,18 +231,14 @@ export default function CopyTradePositionDetails({ id }: { id: string | undefine
                   <PercentText percent={latestROI} digit={2} />
                 </Type.H5>
                 <Type.H5 color="neutral3">)</Type.H5>
-                {isOpening && (
-                  <>
-                    <IconBox
-                      icon={<Warning size={20} />}
-                      color="orange"
-                      sx={{ ml: 2 }}
-                      data-tooltip-id="tt_copy_position_pnl"
-                      data-tooltip-delay-show={260}
-                    />
-                    <Tooltip id="tt_copy_position_pnl">Unrealised PnL</Tooltip>
-                  </>
-                )}
+                <IconBox
+                  icon={<Warning size={20} />}
+                  color="orange"
+                  sx={{ ml: 2 }}
+                  data-tooltip-id={TOOLTIP_CONTENT.COPY_PNL.id + 'copy_position'}
+                  data-tooltip-delay-show={260}
+                />
+                <Tooltip id={TOOLTIP_CONTENT.COPY_PNL.id + 'copy_position'}>{TOOLTIP_CONTENT.COPY_PNL.content}</Tooltip>
               </Flex>
               {data && copyTradeOrders && (
                 <CopyChartProfit

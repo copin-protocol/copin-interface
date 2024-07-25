@@ -18,8 +18,8 @@ msgid "(Coming soon)"
 msgstr "(Coming soon)"
 
 #: src/pages/Subscription/Plans.tsx
-msgid "(Go live on 1st May)"
-msgstr "(Go live on 1st May)"
+#~ msgid "(Go live on 1st May)"
+#~ msgstr "(Go live on 1st May)"
 
 #: src/pages/@helpers/ErrorFallback.tsx
 msgid ". Try to reload the page to fix this issue"
@@ -53,8 +53,8 @@ msgstr "14D"
 
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
-msgid "2 exchanges (BingX, Bitget)"
-msgstr "2 exchanges (BingX, Bitget)"
+#~ msgid "2 exchanges (BingX, Bitget)"
+#~ msgstr "2 exchanges (BingX, Bitget)"
 
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
@@ -88,8 +88,8 @@ msgid "50 traders"
 msgstr "50 traders"
 
 #: src/pages/Subscription/Plans.tsx
-msgid "6 exchanges and more... (BingX, Bitget, OKX, Gate, ByBit, Binance)"
-msgstr "6 exchanges and more... (BingX, Bitget, OKX, Gate, ByBit, Binance)"
+#~ msgid "6 exchanges and more... (BingX, Bitget, OKX, Gate, ByBit, Binance)"
+#~ msgstr "6 exchanges and more... (BingX, Bitget, OKX, Gate, ByBit, Binance)"
 
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
@@ -112,7 +112,6 @@ msgid "7D"
 msgstr "7D"
 
 #: src/components/Tables/TraderListTable/dataConfig.tsx
-#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 msgid "7D PnL"
 msgstr "7D PnL"
 
@@ -215,6 +214,10 @@ msgstr "All Time"
 #: src/components/CopyTradeForm/index.tsx
 msgid "Allocating margin based on trader's average margin of the last {0}"
 msgstr "Allocating margin based on trader's average margin of the last {0}"
+
+#: src/components/SwitchProtocols/index.tsx
+msgid "Allow Copy"
+msgstr "Allow Copy"
 
 #: src/components/CreateWalletAction/index.tsx
 msgid "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
@@ -405,6 +408,18 @@ msgstr "Blog"
 msgid "By continuing, you agree to our"
 msgstr "By continuing, you agree to our"
 
+#: src/components/Modal/CreateBybitWalletModal.tsx
+msgid "Bybit API Key"
+msgstr "Bybit API Key"
+
+#: src/components/Modal/CreateBybitWalletModal.tsx
+msgid "Bybit Secret Key"
+msgstr "Bybit Secret Key"
+
+#: src/components/CreateWalletAction/index.tsx
+msgid "Bybit Wallet"
+msgstr "Bybit Wallet"
+
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/StatsCEX/Overview.tsx
@@ -412,8 +427,8 @@ msgid "CEX Depth"
 msgstr "CEX Depth"
 
 #: src/pages/Subscription/Plans.tsx
-msgid "CEX account connection"
-msgstr "CEX account connection"
+#~ msgid "CEX account connection"
+#~ msgstr "CEX account connection"
 
 #: src/theme/Buttons/CopyButton.tsx
 msgid "Can't copy"
@@ -546,8 +561,8 @@ msgid "Connect Wallet"
 msgstr "Connect Wallet"
 
 #: src/pages/Home/Overview.tsx
-msgid "Connect wallet to start copy-trade"
-msgstr "Connect wallet to start copy-trade"
+#~ msgid "Connect wallet to start copy-trade"
+#~ msgstr "Connect wallet to start copy-trade"
 
 #: src/pages/@layouts/Navbar/index.tsx
 msgid "Connecting Wallet..."
@@ -671,6 +686,30 @@ msgstr "Create Bitget Wallet"
 msgid "Create Bitget wallet"
 msgstr "Create Bitget wallet"
 
+#: src/components/Modal/CreateBybitWalletModal.tsx
+msgid "Create Bybit Wallet"
+msgstr "Create Bybit Wallet"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "Create Bybit wallet"
+msgstr "Create Bybit wallet"
+
+#: src/components/Modal/CreateGateWalletModal.tsx
+msgid "Create Gate Wallet"
+msgstr "Create Gate Wallet"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "Create Gate wallet"
+msgstr "Create Gate wallet"
+
+#: src/components/Modal/CreateOKXWalletModal.tsx
+msgid "Create OKX Wallet"
+msgstr "Create OKX Wallet"
+
+#: src/components/CopyTradeForm/Wallets.tsx
+msgid "Create OKX wallet"
+msgstr "Create OKX wallet"
+
 #: src/components/CreateSmartWalletModal/index.tsx
 msgid "Create Smart Wallet"
 msgstr "Create Smart Wallet"
@@ -686,12 +725,18 @@ msgstr "Create smart wallet"
 #: src/components/Modal/CreateBinanceWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
 #: src/components/Modal/CreateBitgetWalletModal.tsx
+#: src/components/Modal/CreateBybitWalletModal.tsx
+#: src/components/Modal/CreateGateWalletModal.tsx
+#: src/components/Modal/CreateOKXWalletModal.tsx
 msgid "Create wallet successful!"
 msgstr "Create wallet successful!"
 
 #: src/components/Modal/CreateBinanceWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
 #: src/components/Modal/CreateBitgetWalletModal.tsx
+#: src/components/Modal/CreateBybitWalletModal.tsx
+#: src/components/Modal/CreateGateWalletModal.tsx
+#: src/components/Modal/CreateOKXWalletModal.tsx
 msgid "Creating..."
 msgstr "Creating..."
 
@@ -770,6 +815,7 @@ msgid "Discover more than 100,000+ traders on Copin"
 msgstr "Discover more than 100,000+ traders on Copin"
 
 #: src/pages/@layouts/Footer/index.tsx
+#: src/pages/@layouts/Footer/index.tsx
 msgid "Docs"
 msgstr "Docs"
 
@@ -787,6 +833,21 @@ msgstr "Don’t have a BingX account?"
 #: src/components/CreateWalletAction/index.tsx
 msgid "Don’t have a Bitget account?"
 msgstr "Don’t have a Bitget account?"
+
+#: src/components/@ui/BybitHelp/index.tsx
+#: src/components/CreateWalletAction/index.tsx
+msgid "Don’t have a Bybit account?"
+msgstr "Don’t have a Bybit account?"
+
+#: src/components/@ui/GateHelp/index.tsx
+#: src/components/CreateWalletAction/index.tsx
+msgid "Don’t have a Gate account?"
+msgstr "Don’t have a Gate account?"
+
+#: src/components/@ui/OKXHelp/index.tsx
+#: src/components/CreateWalletAction/index.tsx
+msgid "Don’t have a OKX account?"
+msgstr "Don’t have a OKX account?"
 
 #: src/components/PositionDetails/PositionStats.tsx
 #: src/components/PositionDetails/PositionStats.tsx
@@ -919,6 +980,11 @@ msgstr "Favorite List"
 msgid "Features"
 msgstr "Features"
 
+#: src/pages/@layouts/Footer/index.tsx
+#: src/pages/@layouts/Footer/index.tsx
+msgid "Feedback"
+msgstr "Feedback"
+
 #: src/pages/Stats/ChartComponent.tsx
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Fees are not factored into PnL"
@@ -973,10 +1039,34 @@ msgstr "Funding:"
 msgid "GMX"
 msgstr "GMX"
 
+#: src/utils/config/translations.tsx
+msgid "Gate"
+msgstr "Gate"
+
+#: src/components/Modal/CreateGateWalletModal.tsx
+msgid "Gate API Key"
+msgstr "Gate API Key"
+
+#: src/components/Modal/CreateGateWalletModal.tsx
+msgid "Gate Secret Key"
+msgstr "Gate Secret Key"
+
+#: src/components/CreateWalletAction/index.tsx
+msgid "Gate Wallet"
+msgstr "Gate Wallet"
+
 #: src/components/@ui/BingXHelp/index.tsx
 #: src/components/@ui/BitgetHelp/index.tsx
-msgid "Get 10% transaction fee rebate with code:"
-msgstr "Get 10% transaction fee rebate with code:"
+#~ msgid "Get 10% transaction fee rebate with code:"
+#~ msgstr "Get 10% transaction fee rebate with code:"
+
+#: src/components/@ui/BingXHelp/index.tsx
+#: src/components/@ui/BitgetHelp/index.tsx
+#: src/components/@ui/BybitHelp/index.tsx
+#: src/components/@ui/GateHelp/index.tsx
+#: src/components/@ui/OKXHelp/index.tsx
+msgid "Get extra benefits with referral code:"
+msgstr "Get extra benefits with referral code:"
 
 #: src/pages/Home/Overview.tsx
 msgid "Getting started"
@@ -985,6 +1075,10 @@ msgstr "Getting started"
 #: src/pages/MyProfile/index.tsx
 msgid "HISTORY"
 msgstr "HISTORY"
+
+#: src/components/@ui/AccountInfo/index.tsx
+msgid "Having open positions"
+msgstr "Having open positions"
 
 #: src/components/AuthWaitingWallet/index.tsx
 msgid "Hey"
@@ -1041,6 +1135,30 @@ msgstr "How to get BingX API Key?"
 msgid "How to get BingX Secret Key?"
 msgstr "How to get BingX Secret Key?"
 
+#: src/components/@ui/BybitHelp/index.tsx
+msgid "How to get Bybit API Key?"
+msgstr "How to get Bybit API Key?"
+
+#: src/components/@ui/BybitHelp/index.tsx
+msgid "How to get Bybit Secret Key?"
+msgstr "How to get Bybit Secret Key?"
+
+#: src/components/@ui/GateHelp/index.tsx
+msgid "How to get Gate API Key?"
+msgstr "How to get Gate API Key?"
+
+#: src/components/@ui/GateHelp/index.tsx
+msgid "How to get Gate Secret Key?"
+msgstr "How to get Gate Secret Key?"
+
+#: src/components/@ui/OKXHelp/index.tsx
+msgid "How to get OKX API Key?"
+msgstr "How to get OKX API Key?"
+
+#: src/components/@ui/OKXHelp/index.tsx
+msgid "How to get OKX Secret Key?"
+msgstr "How to get OKX Secret Key?"
+
 #: src/components/ConfirmReferralModal/index.tsx
 msgid "If you skip it this time, you will not be able to re-enter the referral code."
 msgstr "If you skip it this time, you will not be able to re-enter the referral code."
@@ -1086,6 +1204,9 @@ msgstr "Input password"
 #: src/components/Modal/CreateBinanceWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
 #: src/components/Modal/CreateBitgetWalletModal.tsx
+#: src/components/Modal/CreateBybitWalletModal.tsx
+#: src/components/Modal/CreateGateWalletModal.tsx
+#: src/components/Modal/CreateOKXWalletModal.tsx
 msgid "Input wallet name"
 msgstr "Input wallet name"
 
@@ -1194,6 +1315,18 @@ msgstr "Link with your BingX account through API key. All your assets and your p
 #: src/components/CreateWalletAction/index.tsx
 msgid "Link with your Bitget account through API key. All your assets and your positions management by Bitget. Lowest fee, CEX trading"
 msgstr "Link with your Bitget account through API key. All your assets and your positions management by Bitget. Lowest fee, CEX trading"
+
+#: src/components/CreateWalletAction/index.tsx
+msgid "Link with your Bybit account through API key. All your assets and your positions management by Bybit. Lowest fee, CEX trading"
+msgstr "Link with your Bybit account through API key. All your assets and your positions management by Bybit. Lowest fee, CEX trading"
+
+#: src/components/CreateWalletAction/index.tsx
+msgid "Link with your Gate account through API key"
+msgstr "Link with your Gate account through API key"
+
+#: src/components/CreateWalletAction/index.tsx
+msgid "Link with your OKX account through API key. All your assets and your positions management by OKX. Lowest fee, CEX trading"
+msgstr "Link with your OKX account through API key. All your assets and your positions management by OKX. Lowest fee, CEX trading"
 
 #: src/components/@ui/PositionStatus/index.tsx
 #: src/theme/Tag/index.tsx
@@ -1565,6 +1698,26 @@ msgstr "Notice"
 msgid "Notice:"
 msgstr "Notice:"
 
+#: src/utils/config/translations.tsx
+msgid "OKX"
+msgstr "OKX"
+
+#: src/components/Modal/CreateOKXWalletModal.tsx
+msgid "OKX API Key"
+msgstr "OKX API Key"
+
+#: src/components/Modal/CreateOKXWalletModal.tsx
+msgid "OKX Pass Phrase"
+msgstr "OKX Pass Phrase"
+
+#: src/components/Modal/CreateOKXWalletModal.tsx
+msgid "OKX Secret Key"
+msgstr "OKX Secret Key"
+
+#: src/components/CreateWalletAction/index.tsx
+msgid "OKX Wallet"
+msgstr "OKX Wallet"
+
 #: src/pages/TopOpenings/RouteWrapper.tsx
 msgid "OPEN INTEREST"
 msgstr "OPEN INTEREST"
@@ -1636,7 +1789,6 @@ msgid "Overwrite"
 msgstr "Overwrite"
 
 #: src/components/TopLeadboard/index.tsx
-#: src/pages/MyProfile/PositionTable/ListPositions.tsx
 msgid "PNL"
 msgstr "PNL"
 
@@ -1736,6 +1888,10 @@ msgstr "PnL"
 #: src/utils/config/options.tsx
 msgid "PnL Ratio"
 msgstr "PnL Ratio"
+
+#: src/pages/@layouts/Footer/index.tsx
+msgid "Policy"
+msgstr "Policy"
 
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 msgid "Position"
@@ -1841,6 +1997,12 @@ msgstr "Refund not accepted."
 
 #: src/components/@ui/BingXHelp/index.tsx
 #: src/components/@ui/BitgetHelp/index.tsx
+#: src/components/@ui/BybitHelp/index.tsx
+#: src/components/@ui/GateHelp/index.tsx
+#: src/components/@ui/OKXHelp/index.tsx
+#: src/components/CreateWalletAction/index.tsx
+#: src/components/CreateWalletAction/index.tsx
+#: src/components/CreateWalletAction/index.tsx
 #: src/components/CreateWalletAction/index.tsx
 #: src/components/CreateWalletAction/index.tsx
 #: src/components/LoginAction/ModalRegister.tsx
@@ -2141,6 +2303,9 @@ msgstr "Subscription"
 #: src/components/Modal/CreateBinanceWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
 #: src/components/Modal/CreateBitgetWalletModal.tsx
+#: src/components/Modal/CreateBybitWalletModal.tsx
+#: src/components/Modal/CreateGateWalletModal.tsx
+#: src/components/Modal/CreateOKXWalletModal.tsx
 #: src/components/WalletDetailsCard/WalletActions.tsx
 #: src/hooks/features/useUpdateCopyTrade.tsx
 #: src/hooks/web3/useContractMutation.tsx
@@ -2409,7 +2574,6 @@ msgstr "Total Paid Fees"
 
 #: src/pages/Home/Overview.tsx
 #: src/pages/Home/Overview.tsx
-#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 msgid "Total PnL"
 msgstr "Total PnL"
 
@@ -2573,6 +2737,7 @@ msgid "Update configs has been succeeded"
 msgstr "Update configs has been succeeded"
 
 #: src/pages/@layouts/Footer/index.tsx
+#: src/pages/@layouts/Footer/index.tsx
 msgid "Upgrade"
 msgstr "Upgrade"
 
@@ -2656,6 +2821,9 @@ msgstr "Wallet Management"
 #: src/components/Modal/CreateBinanceWalletModal.tsx
 #: src/components/Modal/CreateBingXWalletModal.tsx
 #: src/components/Modal/CreateBitgetWalletModal.tsx
+#: src/components/Modal/CreateBybitWalletModal.tsx
+#: src/components/Modal/CreateGateWalletModal.tsx
+#: src/components/Modal/CreateOKXWalletModal.tsx
 msgid "Wallet Name"
 msgstr "Wallet Name"
 
@@ -2786,6 +2954,10 @@ msgstr "You will not copy the position has opened with collateral lower than"
 msgid "You will not copy the position has opened with leverage lower than"
 msgstr "You will not copy the position has opened with leverage lower than"
 
+#: src/components/CopyTradeForm/index.tsx
+msgid "You will not copy the position has opened with size lower than"
+msgstr "You will not copy the position has opened with size lower than"
+
 #: src/pages/Subscription/MintButton.tsx
 msgid "You will receive <0>30 days</0> {0} NFT Plan"
 msgstr "You will receive <0>30 days</0> {0} NFT Plan"
@@ -2834,6 +3006,22 @@ msgstr "Your Bitget Pass Phrase"
 msgid "Your Bitget Secret Key"
 msgstr "Your Bitget Secret Key"
 
+#: src/components/Modal/CreateBybitWalletModal.tsx
+msgid "Your Bybit API Key"
+msgstr "Your Bybit API Key"
+
+#: src/components/Modal/CreateBybitWalletModal.tsx
+msgid "Your Bybit Secret Key"
+msgstr "Your Bybit Secret Key"
+
+#: src/components/Modal/CreateGateWalletModal.tsx
+msgid "Your Gate API Key"
+msgstr "Your Gate API Key"
+
+#: src/components/Modal/CreateGateWalletModal.tsx
+msgid "Your Gate Secret Key"
+msgstr "Your Gate Secret Key"
+
 #: src/components/NFTSubscriptionCard.tsx
 msgid "Your NFT expires in {0} day"
 msgstr "Your NFT expires in {0} day"
@@ -2861,6 +3049,18 @@ msgstr "Your NFT has been successfully minted"
 #: src/components/NFTSubscriptionCard.tsx
 msgid "Your NFT is expired"
 msgstr "Your NFT is expired"
+
+#: src/components/Modal/CreateOKXWalletModal.tsx
+msgid "Your OKX API Key"
+msgstr "Your OKX API Key"
+
+#: src/components/Modal/CreateOKXWalletModal.tsx
+msgid "Your OKX Pass Phrase"
+msgstr "Your OKX Pass Phrase"
+
+#: src/components/Modal/CreateOKXWalletModal.tsx
+msgid "Your OKX Secret Key"
+msgstr "Your OKX Secret Key"
 
 #: src/components/CopyTradeForm/FundChecking.tsx
 msgid "Your copy may failed due to insufficient available margin"
@@ -2960,6 +3160,12 @@ msgstr "slippage"
 #: src/components/Modal/CreateBingXWalletModal.tsx
 #: src/components/Modal/CreateBitgetWalletModal.tsx
 #: src/components/Modal/CreateBitgetWalletModal.tsx
+#: src/components/Modal/CreateBybitWalletModal.tsx
+#: src/components/Modal/CreateBybitWalletModal.tsx
+#: src/components/Modal/CreateGateWalletModal.tsx
+#: src/components/Modal/CreateGateWalletModal.tsx
+#: src/components/Modal/CreateOKXWalletModal.tsx
+#: src/components/Modal/CreateOKXWalletModal.tsx
 #: src/components/WalletDetailsCard/WalletActions.tsx
 #: src/components/WalletDetailsCard/WalletActions.tsx
 #: src/hooks/features/useReferralActions.tsx

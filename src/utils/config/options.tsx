@@ -130,3 +130,10 @@ export const rankingFieldOptions = rankingFieldsBase.map((setting) => {
   }
   return newSetting
 })
+
+export const TOOLTIP_CONTENT = {
+  COPY_PNL: {
+    id: 'tt_copy_pnl',
+    content: 'This is just an approximate PnL, not including slippage and trading fees',
+  },
+}

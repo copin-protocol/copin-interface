@@ -4,11 +4,13 @@ import { ReactNode } from 'react'
 
 import { LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Divider from 'components/@ui/Divider'
+import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import ReverseTag from 'components/@ui/ReverseTag'
 import Table from 'components/@ui/Table'
 import { ColumnData, TableProps } from 'components/@ui/Table/types'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { TOOLTIP_CONTENT } from 'utils/config/options'
 
 import {
   renderCloseTime,
@@ -135,7 +137,7 @@ export function ListForm({
               />
               <ListHistoryRow label={<Trans>Entry</Trans>} value={renderEntry(positionData)} />
               <ListHistoryRow label={<Trans>Size</Trans>} value={renderSizeMobile(positionData)} />
-              <ListHistoryRow label={<Trans>PNL</Trans>} value={renderPnL(positionData, externalSource?.prices)} />
+              <ListHistoryRow label={<LabelPnL />} value={renderPnL(positionData, externalSource?.prices)} />
               <ListHistoryRow label={<Trans>Closed Type</Trans>} value={renderCloseType(positionData)} />
               <ListHistoryRow label={<Trans>Open</Trans>} value={renderOpenTime(positionData)} />
               <ListHistoryRow label={<Trans>Close</Trans>} value={renderCloseTime(positionData)} />
@@ -183,7 +185,7 @@ export const simpleOpeningColumns: ColumnData<CopyPositionData, ExternalSource>[
     render: (item) => renderEntry(item),
   },
   {
-    title: 'PnL',
+    title: <LabelPnL />,
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '80px', textAlign: 'right' },
@@ -224,7 +226,7 @@ export const openingColumns: ColumnData<CopyPositionData, ExternalSource>[] = [
     render: (item) => renderEntry(item),
   },
   {
-    title: 'PnL',
+    title: <LabelPnL />,
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '80px', textAlign: 'right' },
@@ -304,7 +306,7 @@ export const historyColumns: typeof openingColumns = [
     render: renderLeverage,
   },
   {
-    title: 'PnL',
+    title: <LabelPnL />,
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '100px', width: 100, textAlign: 'right' },
@@ -327,3 +329,11 @@ export const historyColumns: typeof openingColumns = [
     render: renderStatus,
   },
 ]
+
+export function LabelPnL() {
+  return (
+    <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
+      ePnL
+    </LabelWithTooltip>
+  )
+}

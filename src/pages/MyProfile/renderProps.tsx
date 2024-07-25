@@ -196,10 +196,10 @@ export const renderValue = (data: CopyPositionData) => (
 export const renderSize = (data: CopyPositionData) => (
   <Type.Caption color="neutral1">
     $
-    {data.status === PositionStatusEnum.OPEN
-      ? formatNumber(Number(data.sizeDelta) * data.entryPrice, 0)
-      : !isNaN(Number(data.totalSizeDelta))
+    {!isNaN(Number(data.totalSizeDelta))
       ? formatNumber(Number(data.totalSizeDelta) * data.entryPrice, 0)
+      : data.status === PositionStatusEnum.OPEN
+      ? formatNumber(Number(data.sizeDelta) * data.entryPrice, 0)
       : '--'}
   </Type.Caption>
 )

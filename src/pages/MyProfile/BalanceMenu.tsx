@@ -5,12 +5,14 @@ import { useQuery } from 'react-query'
 
 import { getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
+import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import ReferralStatus from 'components/WalletDetailsCard/ReferralStatus'
 import { CopyWalletData } from 'entities/copyWallet'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { hideScrollbar } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
@@ -97,7 +99,11 @@ export default function BalanceMenu({
         <ListItem title={'Balance'} value={overview?.balance} prefix="$" withHideAction />
         <ListItem title={'Total Volume'} value={overview?.totalVolume} prefix="$" />
         <ListItem
-          title={'Total PnL'}
+          title={
+            <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
+              Total ePnL
+            </LabelWithTooltip>
+          }
           valueComponent={
             <Type.CaptionBold>
               <SignedText value={overview?.pnl ?? undefined} maxDigit={2} minDigit={2} fontInherit prefix="$" />
