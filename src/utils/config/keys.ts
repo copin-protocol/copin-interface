@@ -211,6 +211,7 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.SYNTHETIX_V3]: '',
   [ProtocolEnum.COPIN]: '',
   [ProtocolEnum.KTX_MANTLE]: '',
+  [ProtocolEnum.YFX_ARB]: '',
 }
 
 export const INTERNAL_SERVICE_KEYS = {
@@ -238,4 +239,5 @@ export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.SYNTHETIX_V3]: '',
   [ProtocolEnum.COPIN]: '',
   [ProtocolEnum.KTX_MANTLE]: '',
+  [ProtocolEnum.YFX_ARB]: '',
 }

@@ -32,6 +32,7 @@ import { TOKEN_TRADE_SYNTHETIX } from './tokenTradeSynthetix'
 import { TOKEN_TRADE_SYNTHETIX_V3 } from './tokenTradeSynthetixV3'
 import { TOKEN_TRADE_TIGRIS_ARB } from './tokenTradeTigris'
 import { TOKEN_TRADE_VELA_ARB } from './tokenTradeVela'
+import { TOKEN_TRADE_YFX_ARB } from './tokenTradeYfx'
 
 type ProtocolProvider = { [key: string]: { chainId: number; explorerUrl: string } }
 export const PROTOCOL_PROVIDER: ProtocolProvider = {
@@ -131,6 +132,10 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: OPTIMISM_MAINNET,
     explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.YFX_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
 }
 
 export interface TokenTrade {
@@ -190,6 +195,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.SYNTHETIX_V3]: TOKEN_TRADE_SYNTHETIX_V3,
   [ProtocolEnum.COPIN]: TOKEN_TRADE_SYNTHETIX,
   [ProtocolEnum.KTX_MANTLE]: TOKEN_TRADE_KTX_MANTLE,
+  [ProtocolEnum.YFX_ARB]: TOKEN_TRADE_YFX_ARB,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -378,6 +384,13 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
       // icon: IconDAI,
     },
   },
+  [ProtocolEnum.YFX_ARB]: {
+    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
+      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+      symbol: 'USDC',
+      decimals: 18,
+    },
+  },
 }
 
 export const TOKEN_ADDRESSES = {
@@ -494,6 +507,10 @@ export const TOKEN_ADDRESSES = {
   [ProtocolEnum.KTX_MANTLE]: {
     BTC: '0xCAbAE6f6Ea1ecaB08Ad02fE02ce9A44F09aebfA2',
     ETH: '0xdEAddEaDdeadDEadDEADDEAddEADDEAddead1111',
+  },
+  [ProtocolEnum.YFX_ARB]: {
+    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
   },
 }
 

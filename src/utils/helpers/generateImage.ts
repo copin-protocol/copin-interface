@@ -505,6 +505,10 @@ export const generateProtocol = ({
       protocolTextWidth = 72
       protocolText = 'KTX'
       break
+    case ProtocolEnum.YFX_ARB:
+      protocolTextWidth = 72
+      protocolText = 'YFX'
+      break
     default:
       break
   }

@@ -116,6 +116,10 @@ function generateProtocolName(protocol) {
       return 'Copin'
     case 'KTX_MANTLE':
       return 'KTX'
+    case 'CYBERDEX':
+      return 'CyberDEX'
+    case 'YFX_ARB':
+      return 'YFX'
     default:
       return ''
   }

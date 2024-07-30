@@ -23,6 +23,7 @@ export enum ProtocolEnum {
   COPIN = 'COPIN',
   KTX_MANTLE = 'KTX_MANTLE',
   CYBERDEX = 'CYBERDEX',
+  YFX_ARB = 'YFX_ARB',
 }
 
 export enum UserRoleEnum {

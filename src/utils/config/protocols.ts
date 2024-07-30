@@ -143,7 +143,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'HMX',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
-    isNew: true,
+    isNew: false,
     isCross: true,
   },
   [ProtocolEnum.DEXTORO]: {
@@ -158,14 +158,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'Vela',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.SYNTHETIX_V3]: {
     id: ProtocolEnum.SYNTHETIX_V3,
     text: 'Synthetix V3',
     label: 'Base',
     chainId: BASE_MAINNET,
-    isNew: true,
+    isNew: false,
     isCross: true,
   },
   [ProtocolEnum.COPIN]: {
@@ -180,7 +180,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'KTX',
     label: 'Mantle',
     chainId: MANTLE_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.CYBERDEX]: {
     id: ProtocolEnum.CYBERDEX,
@@ -188,6 +188,13 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Optimism',
     chainId: OPTIMISM_MAINNET,
     isNew: false,
+  },
+  [ProtocolEnum.YFX_ARB]: {
+    id: ProtocolEnum.YFX_ARB,
+    text: 'YFX',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+    isNew: true,
   },
 }
 
