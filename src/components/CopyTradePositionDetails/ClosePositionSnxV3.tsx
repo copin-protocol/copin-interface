@@ -78,8 +78,6 @@ const ClosePositionHandler = ({
   const accountId = openPosition ? openPosition[0] : null
   const closedSize = openPosition ? openPosition[1].mul(-1) : null
 
-  console.log('closedSize', closedSize?.toString())
-
   const { data: orderFeeInfo } = useContractQuery<BigNumber[]>(
     marketContract,
     'computeOrderFees',
@@ -102,7 +100,6 @@ const ClosePositionHandler = ({
 
   useEffect(() => {
     if (!price || !accountId) return
-    console.log('accountId', accountId.toString())
     const simulate = async () => {
       const result: [BigNumber[], BigNumber] = await smartWalletContract.callStatic.closePosition(
         accountId,

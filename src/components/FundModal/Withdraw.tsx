@@ -70,9 +70,7 @@ const Withdraw = ({
     margins.forEach((margin) => {
       commands.unshift(SmartWalletCommand.PERP_WITHDRAW_ALL_MARGIN)
       inputs.unshift(defaultAbiCoder.encode(['address'], [margin.market]))
-      console.log('market', margin.market)
     })
-    console.log('commands', commands)
 
     smartWalletMutation.mutate(
       {

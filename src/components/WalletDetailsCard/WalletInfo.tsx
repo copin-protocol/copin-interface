@@ -21,7 +21,7 @@ export default function WalletInfo({ data, hiddenBalance, sx }: WalletInfoProps 
     () => data?.smartWalletAddress ?? data?.[getExchangeKey(data?.exchange)]?.apiKey ?? '',
     [data]
   )
-  console.log('data', data)
+
   return (
     <Box alignItems="center" flexWrap="wrap" sx={{ gap: [2, 3], ...sx }}>
       <InfoItem

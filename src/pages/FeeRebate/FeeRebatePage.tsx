@@ -445,7 +445,7 @@ function Overview() {
         </Flex>
         <Flex
           as="a"
-          href="https://copin-io.notion.site/Draft-version-Join-Copin-s-Decentralized-Copy-Trading-Fee-Rebates-and-Competition-to-earn-20-000--de7e58a6cc7c43a3a6d71c9a60ed4eb7"
+          href="https://blog.copin.io/p/join-copins-decentralized-copy-trading?r=2m5jsa&utm_campaign=post&utm_medium=web&triedRedirect=true"
           target="_blank"
           alignItems="center"
           sx={{ gap: 2 }}
@@ -864,7 +864,7 @@ function MobileOverview() {
       <Type.Body>{formatDate(info?.epochEnd, format)}</Type.Body>
       <Flex
         as="a"
-        href="https://copin-io.notion.site/Draft-version-Join-Copin-s-Decentralized-Copy-Trading-Fee-Rebates-and-Competition-to-earn-20-000--de7e58a6cc7c43a3a6d71c9a60ed4eb7"
+        href="https://blog.copin.io/p/join-copins-decentralized-copy-trading?r=2m5jsa&utm_campaign=post&utm_medium=web&triedRedirect=true"
         target="_blank"
         mt={3}
         alignItems="center"

@@ -30,7 +30,7 @@ export default function OnchainPositionsDrawer({
   smartWalletAddress: string
 }) {
   const smartWalletContract = useSmartWalletContract(smartWalletAddress, true)
-  console.log(smartWalletContract.address)
+
   const { data: numOfAccounts } = useContractQuery<BigNumber, any, number | undefined>(
     smartWalletContract,
     'numOfAccounts',
@@ -61,10 +61,7 @@ export default function OnchainPositionsDrawer({
       }))
     )
     .flat()
-  console.log(
-    'CONTRACT_ADDRESSES[BASE_CHAIN][CONTRACT_QUERY_KEYS.SNX_PERPS_MARKET_V3]',
-    CONTRACT_ADDRESSES[BASE_CHAIN][CONTRACT_QUERY_KEYS.SNX_PERPS_MARKET_V3]
-  )
+
   const { data: openPositions } = useMulticallQuery(
     CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SNX_PERPS_MARKET_V3],
     arr.map((e) => ({
@@ -77,7 +74,7 @@ export default function OnchainPositionsDrawer({
       enabled: !!accounts,
     }
   )
-  console.log('openPositions', openPositions)
+
   return (
     <Drawer isOpen={isOpen} onDismiss={onDismiss} mode="right" size={isMobile ? '100%' : '60%'} background="neutral5">
       <Container p={3} sx={{ position: 'relative', height: '100%' }}>
