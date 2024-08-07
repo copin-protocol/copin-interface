@@ -19,8 +19,6 @@ import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
 
-import useInternalRole from './useInternalRole'
-
 const MIN_QUICK_SEARCH_LENGTH = 3
 export default function useSearchAllData(args?: {
   returnRanking?: boolean
@@ -40,6 +38,7 @@ export default function useSearchAllData(args?: {
   const trimmedSearchText = searchText.trim()
   const debounceSearchText = useDebounce<string>(trimmedSearchText, SEARCH_DEBOUNCE_TIME)
   const [isLoading, setIsLoading] = useState(false)
+  const [currentProtocol, setCurrentProtocol] = useState<ProtocolEnum | undefined>()
 
   const isTxHash = useMemo(
     () => allowSearchPositions && EVM_TX_HASH_REGEX.test(debounceSearchText),
@@ -67,12 +66,12 @@ export default function useSearchAllData(args?: {
   }
 
   const { data: searchTraders, isFetching: searchingTraders } = useQuery(
-    [QUERY_KEYS.SEARCH_ALL_TRADERS, debounceSearchText, isPremiumUser, allowAllProtocol, protocol],
+    [QUERY_KEYS.SEARCH_ALL_TRADERS, debounceSearchText, isPremiumUser, allowAllProtocol, protocol, currentProtocol],
     () =>
       searchTradersApi({
         limit: SEARCH_DEFAULT_LIMIT,
         keyword: debounceSearchText,
-        protocol: allowAllProtocol ? undefined : protocol,
+        protocol: !!currentProtocol ? currentProtocol : allowAllProtocol ? undefined : protocol,
         sortBy: 'lastTradeAtTs',
         sortType: SortTypeEnum.DESC,
       }),
@@ -124,8 +123,10 @@ export default function useSearchAllData(args?: {
   const handleSearchFocus = () => {
     if (trimmedSearchText.length) {
       setVisibleSearchResult(true)
+      return
     }
     setVisibleSearchResult(false)
+    setCurrentProtocol(undefined)
   }
 
   const handleClick = useCallback(
@@ -188,10 +189,9 @@ export default function useSearchAllData(args?: {
     if (isTxHash) {
       history.push(`${ROUTES.SEARCH_TX_HASH.path_prefix}/${debounceSearchText}`)
     } else {
-      const matchProtocol =
-        searchTraders?.data && searchTraders.data.length > 0 ? searchTraders.data[0].protocol : protocol
+      const matchProtocol = !!currentProtocol ? `&protocol=${currentProtocol}` : ''
       history.push(
-        `${ROUTES.SEARCH.path}?keyword=${trimmedSearchText}&protocol=${matchProtocol}&sort_by=lastTradeAtTs&sort_type=${SortTypeEnum.DESC}`
+        `${ROUTES.SEARCH.path}?keyword=${trimmedSearchText}${matchProtocol}&sort_by=lastTradeAtTs&sort_type=${SortTypeEnum.DESC}`
       )
     }
     setVisibleSearchResult(false)
@@ -201,6 +201,7 @@ export default function useSearchAllData(args?: {
   const handleClearSearch = () => {
     setSearchText('')
     setVisibleSearchResult(false)
+    setCurrentProtocol(undefined)
   }
 
   useEffect(() => {
@@ -227,5 +228,7 @@ export default function useSearchAllData(args?: {
     allowSearchProtocol,
     allowSearchPositions,
     isTxHash,
+    currentProtocol,
+    setCurrentProtocol,
   }
 }

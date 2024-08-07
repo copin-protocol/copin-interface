@@ -24,6 +24,8 @@ export enum ProtocolEnum {
   KTX_MANTLE = 'KTX_MANTLE',
   CYBERDEX = 'CYBERDEX',
   YFX_ARB = 'YFX_ARB',
+  KILOEX_OPBNB = 'KILOEX_OPBNB',
+  ROLLIE_SCROLL = 'ROLLIE_SCROLL',
 }
 
 export enum UserRoleEnum {
@@ -60,6 +62,11 @@ export enum CopyTradeStatusEnum {
 }
 
 export enum CopyTradeTypeEnum {
+  COPY_TRADER = 'COPY_TRADER',
+  SELF_BOT_CONFIG = 'SELF_BOT_CONFIG',
+}
+
+export enum CopyTradeOrderTypeEnum {
   FULL_ORDER = 'FULL_ORDER',
   NOT_FULL_ORDER = 'NOT_FULL_ORDER',
 }

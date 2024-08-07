@@ -105,7 +105,7 @@ export default function CopyTraderDrawer({
       ...getRequestDataFromForm(formData),
       account,
       protocol,
-      type: CopyTradeTypeEnum.FULL_ORDER,
+      type: CopyTradeTypeEnum.COPY_TRADER,
     }
     requestCopyTrade({ data })
 

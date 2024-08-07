@@ -1,0 +1,92 @@
+import { ProtocolTokenMapping, TokenCollateral } from './trades'
+
+const KILOEX_OPBNB_PAIRS = {
+  'KILOEX_OPBNB-1': 'ETH',
+  'KILOEX_OPBNB-2': 'BTC',
+  'KILOEX_OPBNB-3': 'LTC',
+  'KILOEX_OPBNB-5': 'BNB',
+  'KILOEX_OPBNB-6': 'MATIC',
+  'KILOEX_OPBNB-7': 'DOGE',
+  'KILOEX_OPBNB-9': 'ADA',
+  'KILOEX_OPBNB-10': 'LINK',
+  'KILOEX_OPBNB-11': 'FIL',
+  'KILOEX_OPBNB-12': 'BCH',
+  'KILOEX_OPBNB-13': 'XRP',
+  'KILOEX_OPBNB-14': 'SOL',
+  'KILOEX_OPBNB-16': 'TIA',
+  'KILOEX_OPBNB-17': 'AVAX',
+  'KILOEX_OPBNB-18': 'TRB',
+  'KILOEX_OPBNB-19': 'WLD',
+  'KILOEX_OPBNB-20': 'DYDX',
+  'KILOEX_OPBNB-21': 'MANTA',
+  'KILOEX_OPBNB-22': 'JUP',
+  'KILOEX_OPBNB-23': 'SUI',
+  'KILOEX_OPBNB-24': 'ORDI',
+  'KILOEX_OPBNB-25': 'PYTH',
+  'KILOEX_OPBNB-26': 'INJ',
+  'KILOEX_OPBNB-27': 'DYM',
+  'KILOEX_OPBNB-28': 'PENDLE',
+  'KILOEX_OPBNB-29': 'OP',
+  'KILOEX_OPBNB-30': 'UMA',
+  'KILOEX_OPBNB-31': 'STRK',
+  'KILOEX_OPBNB-32': 'RNDR',
+  'KILOEX_OPBNB-33': 'ALT',
+  'KILOEX_OPBNB-34': 'SEI',
+  'KILOEX_OPBNB-35': 'XAI',
+  'KILOEX_OPBNB-36': 'AXL',
+  'KILOEX_OPBNB-37': 'PEPE',
+  'KILOEX_OPBNB-38': 'SHIB',
+  'KILOEX_OPBNB-39': 'BONK',
+  'KILOEX_OPBNB-40': 'FLOKI',
+  'KILOEX_OPBNB-41': 'WIF',
+  'KILOEX_OPBNB-42': 'NEAR',
+  'KILOEX_OPBNB-43': 'W',
+  'KILOEX_OPBNB-44': 'JTO',
+  'KILOEX_OPBNB-45': 'AEVO',
+  'KILOEX_OPBNB-46': 'ENA',
+  'KILOEX_OPBNB-47': 'MEME',
+  'KILOEX_OPBNB-48': 'ETHFI',
+  'KILOEX_OPBNB-49': 'APT',
+  'KILOEX_OPBNB-50': 'BOME',
+  'KILOEX_OPBNB-51': 'STX',
+  'KILOEX_OPBNB-54': 'ARKM',
+  'KILOEX_OPBNB-55': 'FTM',
+  'KILOEX_OPBNB-56': 'RUNE',
+  'KILOEX_OPBNB-57': 'TNSR',
+  'KILOEX_OPBNB-58': 'ENS',
+  'KILOEX_OPBNB-59': 'UNI',
+  'KILOEX_OPBNB-60': 'CHZ',
+  'KILOEX_OPBNB-61': 'PEOPLE',
+  'KILOEX_OPBNB-62': 'CRV',
+  'KILOEX_OPBNB-63': 'LDO',
+  'KILOEX_OPBNB-64': 'ZRO',
+  'KILOEX_OPBNB-65': 'DOT',
+  'KILOEX_OPBNB-66': 'GALA',
+  'KILOEX_OPBNB-67': 'ZK',
+  'KILOEX_OPBNB-69': 'IO',
+  'KILOEX_OPBNB-70': 'BLUR',
+  'KILOEX_OPBNB-101': 'CAKE',
+  'KILOEX_OPBNB-103': 'ARB',
+}
+
+const TOKEN_COLLATERAL_KILOEX_OPBNB: Record<string, TokenCollateral> = {
+  '0x9e5AAC1Ba1a2e6aEd6b32689DFcF62A509Ca96f3': {
+    address: '0x9e5AAC1Ba1a2e6aEd6b32689DFcF62A509Ca96f3',
+    symbol: 'USDT',
+    decimals: 18,
+  },
+}
+
+const TOKEN_TRADE_KILOEX_OPBNB = Object.entries(KILOEX_OPBNB_PAIRS).reduce<ProtocolTokenMapping>(
+  (result, [key, value]) => {
+    return {
+      ...result,
+      [key]: {
+        symbol: value,
+      },
+    }
+  },
+  {}
+)
+
+export { TOKEN_TRADE_KILOEX_OPBNB, TOKEN_COLLATERAL_KILOEX_OPBNB }

@@ -1,5 +1,5 @@
 import { RequestBackTestData } from 'entities/backTest.d'
-import { CopyTradeTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
+import { CopyTradeOrderTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { getTokenTradeList } from 'utils/config/trades'
 
 const PARAM_MAPPING = {
@@ -25,7 +25,7 @@ export const RESET_BACKTEST_PARAMS = Object.values(PARAM_MAPPING).reduce((result
 }, {})
 
 export function stringifyRequestData(
-  data: RequestBackTestData & { testingType: CopyTradeTypeEnum },
+  data: RequestBackTestData & { testingType: CopyTradeOrderTypeEnum },
   protocol: ProtocolEnum
 ): Record<string, string | undefined> {
   try {
@@ -58,7 +58,7 @@ export function stringifyRequestData(
   }
 }
 export function parseRequestData(params: Record<string, any> | undefined, protocol: ProtocolEnum) {
-  let result = {} as RequestBackTestData & { testingType: CopyTradeTypeEnum }
+  let result = {} as RequestBackTestData & { testingType: CopyTradeOrderTypeEnum }
   if (!params) return result
   const tokenList = getTokenTradeList(protocol).map((value) => value.address)
   const tokenParseMapping: Record<string, string> = tokenList.sort().reduce((result, tokenAddress, index) => {
@@ -98,7 +98,7 @@ export function parseRequestData(params: Record<string, any> | undefined, protoc
       leverage,
       fromTime,
       toTime,
-      testingType: CopyTradeTypeEnum.FULL_ORDER,
+      testingType: CopyTradeOrderTypeEnum.FULL_ORDER,
       tokenAddresses,
       reverseCopy,
       copyAll,

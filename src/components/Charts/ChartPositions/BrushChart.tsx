@@ -63,7 +63,7 @@ const BrushChart = ({
     )
 
   useEffect(() => {
-    if (!size || !data) return
+    if (!size || !data || data.length === 0) return
     // if (statistics === undefined) return;
     const transformedData = transformData(data)
     if (
@@ -72,8 +72,8 @@ const BrushChart = ({
       sizeRef.current.width === size.width &&
       sizeRef.current.height === size.height
     ) {
-      if (from && to) {
-        const maxTimestamp = dayjs(transformedData[transformedData.length - 1].time)
+      if (from && to && transformedData.length > 0) {
+        const maxTimestamp = dayjs(transformedData[transformedData.length - 1]?.time)
           .local()
           .valueOf()
         const fromTimestamp = dayjs(from).local().valueOf()

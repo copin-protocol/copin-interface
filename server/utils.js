@@ -120,6 +120,10 @@ function generateProtocolName(protocol) {
       return 'CyberDEX'
     case 'YFX_ARB':
       return 'YFX'
+    case 'KILOEX_OPBNB':
+      return 'KiloEx (opBNB)'
+    case 'ROLLIE_SCROLL':
+      return 'Rollie Finance'
     default:
       return ''
   }

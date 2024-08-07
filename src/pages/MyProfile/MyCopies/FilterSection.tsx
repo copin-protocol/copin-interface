@@ -304,7 +304,6 @@ function AvailableMargin({ value, sx }: { value: number | undefined; sx?: any })
   )
 }
 
-// TODO: Check when add new protocol
 const protocolFilters = ALLOWED_PROTOCOLS
 
 const statusFilters = [CopyTradeStatusEnum.RUNNING, CopyTradeStatusEnum.STOPPED]

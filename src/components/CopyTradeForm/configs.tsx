@@ -201,7 +201,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   leverage: 2,
   tokenAddresses: [],
   excludingTokenAddresses: [],
-  type: CopyTradeTypeEnum.FULL_ORDER,
+  type: CopyTradeTypeEnum.COPY_TRADER,
   stopLossType: SLTPTypeEnum.USD,
   stopLossAmount: undefined,
   takeProfitType: SLTPTypeEnum.USD,

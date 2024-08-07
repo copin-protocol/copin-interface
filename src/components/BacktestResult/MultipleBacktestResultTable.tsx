@@ -20,7 +20,7 @@ import { PaginationWithSelect } from 'theme/Pagination'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { CopyTradeTypeEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { CopyTradeOrderTypeEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
@@ -449,7 +449,7 @@ export const multipleBacktestResultColumns: ColumnData<TableResultData, RequestB
           {
             ...settings,
             accounts: [item.account],
-            testingType: CopyTradeTypeEnum.FULL_ORDER,
+            testingType: CopyTradeOrderTypeEnum.FULL_ORDER,
           },
           item.protocol
         )

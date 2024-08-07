@@ -89,7 +89,6 @@ export default function MainSection({
     paramKey: URL_PARAM_KEYS.MY_COPIES_STATUS,
     defaultSelected: [CopyTradeStatusEnum.RUNNING, CopyTradeStatusEnum.STOPPED],
   })
-  // TODO: Check when add new protocol
   const {
     selected: selectedProtocol,
     checkIsSelected: checkIsProtocolChecked,

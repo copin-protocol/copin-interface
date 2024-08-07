@@ -5,8 +5,9 @@ import {
   BNB_MAINNET,
   MANTLE_MAINNET,
   MODE_MAINNET,
+  OPBNB_MAINNET,
   OPTIMISM_MAINNET,
-  POLYGON_MAINNET,
+  POLYGON_MAINNET, SCROLL_MAINNET,
 } from 'utils/web3/chains'
 
 import { BUILD_MODE, RELEASED_PROTOCOLS } from './constants'
@@ -94,7 +95,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'Bloom',
     label: 'Blast',
     chainId: BLAST_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.APOLLOX_BNB]: {
     id: ProtocolEnum.APOLLOX_BNB,
@@ -115,7 +116,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'Tigris',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
-    isNew: true,
+    isNew: false,
   },
   [ProtocolEnum.LOGX_BLAST]: {
     id: ProtocolEnum.LOGX_BLAST,
@@ -194,6 +195,20 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'YFX',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
+    isNew: false,
+  },
+  [ProtocolEnum.KILOEX_OPBNB]: {
+    id: ProtocolEnum.KILOEX_OPBNB,
+    text: 'KiloEx',
+    label: 'opBNB',
+    chainId: OPBNB_MAINNET,
+    isNew: true,
+  },
+  [ProtocolEnum.ROLLIE_SCROLL]: {
+    id: ProtocolEnum.ROLLIE_SCROLL,
+    text: 'Rollie',
+    label: 'Scroll',
+    chainId: SCROLL_MAINNET,
     isNew: true,
   },
 }
@@ -225,4 +240,5 @@ export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
   velaArb: ProtocolEnum.VELA_ARB,
   avantisBase: ProtocolEnum.AVANTIS_BASE,
   ktxMantle: ProtocolEnum.KTX_MANTLE,
+  yfxArb: ProtocolEnum.YFX_ARB,
 }

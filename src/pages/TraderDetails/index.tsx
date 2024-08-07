@@ -200,7 +200,7 @@ export function TraderDetailsComponent({
   })
 
   const currentTraderData = useMemo(() => {
-    return traderData?.find((item) => (item?.type as string) === (timeOption.id as unknown as string)) // TODO: remove timeTilter enum
+    return traderData?.find((item) => (item?.type as string) === (timeOption.id as unknown as string))
   }, [timeOption.id, traderData])
 
   const refetchQueries = useRefetchQueries()

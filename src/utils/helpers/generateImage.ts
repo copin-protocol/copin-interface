@@ -509,6 +509,14 @@ export const generateProtocol = ({
       protocolTextWidth = 72
       protocolText = 'YFX'
       break
+    case ProtocolEnum.KILOEX_OPBNB:
+      protocolTextWidth = 310
+      protocolText = 'KiloEx (opBNB)'
+      break
+    case ProtocolEnum.ROLLIE_SCROLL:
+      protocolTextWidth = 328
+      protocolText = 'Rollie (Scroll)'
+      break
     default:
       break
   }

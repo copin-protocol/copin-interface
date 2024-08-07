@@ -45,7 +45,6 @@ const TOKENS_BY_SYMBOL = ALL_TOKEN_SUPPORTS.reduce<Record<string, string[]>>((re
   return { ...result, [symbol]: [...(result[symbol] ?? []), address] }
 }, {})
 
-// TODO: Check when add new protocol
 export default function PythConnection() {
   const { setPrices, setIsReady } = useRealtimeUsdPricesStore()
   const { pathname } = useLocation()

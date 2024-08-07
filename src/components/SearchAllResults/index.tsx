@@ -5,12 +5,15 @@ import { useHistory } from 'react-router-dom'
 import { ApiListResponse } from 'apis/api'
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import Table from 'components/@ui/Table'
 import { TableSortProps } from 'components/@ui/Table/types'
+import FilterProtocol from 'components/FilterProtocol'
 import { TraderData } from 'entities/trader'
 import { PaginationWithLimit } from 'theme/Pagination'
 import { Box, Flex, Type } from 'theme/base'
-import { formatNumber } from 'utils/helpers/format'
+import { ProtocolEnum } from 'utils/config/enums'
+import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import { ExternalSource, searchResultsColumn } from './ColumnsData'
@@ -22,9 +25,11 @@ type ResultsProps = {
   currentLimit: number
   currentPage: number
   currentSort?: TableSortProps<TraderData>
+  currentProtocol?: ProtocolEnum
   changeCurrentLimit: (limit: number) => void
   changeCurrentPage: (page: number) => void
   changeCurrentSort: (data?: TableSortProps<TraderData>) => void
+  changeCurrentProtocol: (data?: ProtocolEnum) => void
 }
 
 const SearchAllResults = ({
@@ -34,9 +39,11 @@ const SearchAllResults = ({
   currentLimit,
   currentPage,
   currentSort,
+  currentProtocol,
   changeCurrentLimit,
   changeCurrentPage,
   changeCurrentSort,
+  changeCurrentProtocol,
 }: ResultsProps) => {
   const { sm } = useResponsive()
 
@@ -52,6 +59,11 @@ const SearchAllResults = ({
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
+      <FilterProtocol
+        currentProtocol={currentProtocol}
+        changeProtocol={changeCurrentProtocol}
+        sx={{ py: 2, border: 'small', borderTop: 'none', borderColor: 'neutral4' }}
+      />
       <Box
         sx={{
           flex: '1 0 0',
@@ -66,6 +78,7 @@ const SearchAllResults = ({
               }),
           border: 'small',
           borderColor: 'neutral4',
+          borderTop: 'none',
           borderLeft: ['none', 'none', 'none', 'small'],
           borderRight: ['none', 'none', 'none', 'small'],
           borderLeftColor: ['none', 'none', 'none', 'neutral4'],
@@ -132,24 +145,27 @@ export default SearchAllResults
 function ResultItemMobile({ data, keyword }: { data: TraderData; keyword: string }) {
   return (
     <Box sx={{ color: 'neutral1', position: 'relative', px: 3, py: '6px' }}>
-      <AccountInfo
-        isOpenPosition={data.isOpenPosition}
-        keyword={keyword}
-        address={data.account}
-        smartAccount={data.smartAccount}
-        protocol={data.protocol}
-        size={40}
-        sx={{
-          width: 168,
-        }}
-      />
-      <Flex sx={{ position: 'absolute', right: 16, top: 12, gap: 1 }}>
-        <Type.Caption color="neutral3">
-          <Trans>Last Trade:</Trans>
-        </Type.Caption>
-        <RelativeTimeText date={data.lastTradeAt} />
+      <Flex alignItems="center" sx={{ width: '100%', justifyContent: 'space-between', gap: 3 }}>
+        <AccountInfo
+          isOpenPosition={data.isOpenPosition}
+          keyword={keyword}
+          address={data.account}
+          smartAccount={data.smartAccount}
+          protocol={data.protocol}
+          size={40}
+          sx={{
+            width: 168,
+          }}
+        />
+        <ProtocolLogo protocol={data.protocol} isActive={true} size={24} />
       </Flex>
-      <Flex mt={3} sx={{ width: '100%', justifyContent: 'space-between' }}>
+      <Flex mt={2} sx={{ width: '100%', justifyContent: 'space-between' }}>
+        <Box>
+          <Type.Caption color="neutral3" display="block">
+            <Trans>Last Trade</Trans>
+          </Type.Caption>
+          <RelativeTimeText date={data.lastTradeAt} />
+        </Box>
         <Box>
           <Type.Caption color="neutral3" display="block">
             <Trans>Win Rate</Trans>
@@ -166,7 +182,9 @@ function ResultItemMobile({ data, keyword }: { data: TraderData; keyword: string
           <Type.Caption color="neutral3" display="block">
             <Trans>Total Volume</Trans>
           </Type.Caption>
-          <Type.Caption>{formatNumber(data.totalVolume, 0, 0)}</Type.Caption>
+          <Type.Caption>
+            ${data.totalVolume < 10000000 ? formatNumber(data.totalVolume, 0, 0) : compactNumber(data.totalVolume, 1)}
+          </Type.Caption>
         </Box>
       </Flex>
     </Box>

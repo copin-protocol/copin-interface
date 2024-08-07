@@ -24,6 +24,17 @@ export const SearchResult = styled<any>(Box)`
   overflow: auto;
 `
 
+export const SearchResultFixed = styled<any>(Box)`
+  position: absolute;
+  top: 48px;
+  left: 0;
+  border-radius: 4px;
+  background-color: ${({ theme }) => theme.colors.neutral7};
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.colors.neutral4};
+  z-index: 4;
+`
+
 export const Wrapper = styled(Box)`
   position: relative;
   width: 100%;

@@ -218,6 +218,10 @@ export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
       return LINKS.tradeDexToro
     case ProtocolEnum.CYBERDEX:
       return LINKS.tradeCyberDEX
+    case ProtocolEnum.YFX_ARB:
+      return LINKS.tradeYfx
+    case ProtocolEnum.KILOEX_OPBNB:
+      return LINKS.tradeKiloEx
     default:
       return LINKS.tradeGMX
   }

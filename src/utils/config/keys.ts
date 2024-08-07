@@ -212,6 +212,8 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.COPIN]: '',
   [ProtocolEnum.KTX_MANTLE]: '',
   [ProtocolEnum.YFX_ARB]: '',
+  [ProtocolEnum.KILOEX_OPBNB]: '',
+  [ProtocolEnum.ROLLIE_SCROLL]: '',
 }
 
 export const INTERNAL_SERVICE_KEYS = {
@@ -240,4 +242,6 @@ export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.COPIN]: '',
   [ProtocolEnum.KTX_MANTLE]: '',
   [ProtocolEnum.YFX_ARB]: '',
+  [ProtocolEnum.KILOEX_OPBNB]: '',
+  [ProtocolEnum.ROLLIE_SCROLL]: '',
 }

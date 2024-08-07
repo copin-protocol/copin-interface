@@ -4,7 +4,6 @@ import { BoxProps } from 'theme/types'
 import { ProtocolEnum } from 'utils/config/enums'
 import { getProtocolDropdownImage } from 'utils/helpers/transform'
 
-// TODO: Check when add new protocol
 const ProtocolLogo = ({
   protocol,
   size = 18,

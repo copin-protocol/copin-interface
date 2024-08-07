@@ -2,7 +2,6 @@ import {
   CopyPositionCloseTypeEnum,
   CopyTradePlatformEnum,
   CopyTradeStatusEnum,
-  CopyTradeTypeEnum,
   PositionStatusEnum,
   ProtocolEnum,
   SLTPTypeEnum,

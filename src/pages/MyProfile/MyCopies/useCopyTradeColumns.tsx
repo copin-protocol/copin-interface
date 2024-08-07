@@ -482,7 +482,6 @@ export default function useCopyTradeColumns({
         key: 'account',
         sortBy: 'account',
         style: { minWidth: '210px', width: 210 },
-        // TODO: 2
         render: renderTraderAccount,
       },
       {

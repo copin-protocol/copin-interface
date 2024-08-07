@@ -32,6 +32,8 @@ export const LINKS = {
   tradeHmx: 'https://hmx.org/arbitrum/trade',
   tradeDexToro: 'https://trade.dextoro.com/market',
   tradeCyberDEX: 'https://www.cyberdex.xyz/trade',
+  tradeYfx: 'https://app.yfx.com/#/en/trade/?chain=arbitrumOne',
+  tradeKiloEx: 'https://app.kiloex.io/trade',
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
@@ -72,7 +74,7 @@ export const TIME_FORMAT = 'HH:mm:ss'
 export const DAYJS_FULL_DATE_FORMAT = 'YYYY/MM/DD HH:mm:ss'
 export const DEFAULT_LIMIT = 20
 export const DEFAULT_LIMIT_VALUES = [20, 50, 100]
-export const SEARCH_DEFAULT_LIMIT = 3
+export const SEARCH_DEFAULT_LIMIT = 30
 
 export const MIN_PARSE_ETHER = 0.00000001
 export const MIN_AMOUNT = 0.01

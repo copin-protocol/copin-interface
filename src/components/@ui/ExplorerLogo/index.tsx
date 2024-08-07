@@ -55,6 +55,12 @@ const ExplorerLogo = ({
     case ProtocolEnum.KTX_MANTLE:
       icon = 'MANTLE'
       break
+    case ProtocolEnum.KILOEX_OPBNB:
+      icon = 'OPBNB'
+      break
+    case ProtocolEnum.ROLLIE_SCROLL:
+      icon = 'SCROLL'
+      break
     default:
       icon = 'OPTIMISM'
   }

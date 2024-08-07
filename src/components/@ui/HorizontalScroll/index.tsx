@@ -1,5 +1,7 @@
 import React from 'react'
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'
+// eslint-disable-next-line no-restricted-imports
+import 'react-horizontal-scrolling-menu/dist/styles.css'
 import styled from 'styled-components/macro'
 
 import useDrag from 'hooks/helpers/useDrag'

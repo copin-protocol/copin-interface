@@ -8,10 +8,12 @@ import {
   CHAINS,
   MANTLE_MAINNET,
   MODE_MAINNET,
+  OPBNB_MAINNET,
   OPTIMISM_GOERLI,
   OPTIMISM_MAINNET,
   OPTIMISM_SEPOLIA,
   POLYGON_MAINNET,
+  SCROLL_MAINNET,
 } from 'utils/web3/chains'
 
 import { TOKEN_COLLATERAL_APOLLOX_BNB, TOKEN_TRADE_APOLLOX_BNB } from './tokenTradeApolloX'
@@ -23,11 +25,13 @@ import { TOKEN_TRADE_GMX_V2 } from './tokenTradeGmxV2'
 import { TOKEN_TRADE_GNS } from './tokenTradeGns'
 import { TOKEN_TRADE_GNS_POLY } from './tokenTradeGnsPoly'
 import { TOKEN_TRADE_HMX_ARB } from './tokenTradeHmx'
+import { TOKEN_COLLATERAL_KILOEX_OPBNB, TOKEN_TRADE_KILOEX_OPBNB } from './tokenTradeKiloEx'
 import { TOKEN_COLLATERAL_KTX_MANTLE, TOKEN_TRADE_KTX_MANTLE } from './tokenTradeKtx'
 import { TOKEN_TRADE_LEVEL_ARB, TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
 import { TOKEN_TRADE_LOGX_BLAST, TOKEN_TRADE_LOGX_MODE } from './tokenTradeLogX'
 import { TOKEN_COLLATERAL_MUX_ARB, TOKEN_TRADE_MUX_ARB } from './tokenTradeMux'
 import { TOKEN_TRADE_MYX_ARB } from './tokenTradeMyx'
+import { TOKEN_COLLATERAL_ROLLIE_SCROLL, TOKEN_TRADE_ROLLIE_SCROLL } from './tokenTradeRollie'
 import { TOKEN_TRADE_SYNTHETIX } from './tokenTradeSynthetix'
 import { TOKEN_TRADE_SYNTHETIX_V3 } from './tokenTradeSynthetixV3'
 import { TOKEN_TRADE_TIGRIS_ARB } from './tokenTradeTigris'
@@ -136,6 +140,14 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: ARBITRUM_MAINNET,
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.KILOEX_OPBNB]: {
+    chainId: OPBNB_MAINNET,
+    explorerUrl: CHAINS[OPBNB_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.ROLLIE_SCROLL]: {
+    chainId: SCROLL_MAINNET,
+    explorerUrl: CHAINS[SCROLL_MAINNET].blockExplorerUrl,
+  },
 }
 
 export interface TokenTrade {
@@ -196,6 +208,8 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.COPIN]: TOKEN_TRADE_SYNTHETIX,
   [ProtocolEnum.KTX_MANTLE]: TOKEN_TRADE_KTX_MANTLE,
   [ProtocolEnum.YFX_ARB]: TOKEN_TRADE_YFX_ARB,
+  [ProtocolEnum.KILOEX_OPBNB]: TOKEN_TRADE_KILOEX_OPBNB,
+  [ProtocolEnum.ROLLIE_SCROLL]: TOKEN_TRADE_ROLLIE_SCROLL,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -217,128 +231,98 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.COPIN]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
       address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      // name: 'SUSD',
       symbol: 'SUSD',
       decimals: 18,
-      // priceFeedId: '',
     },
   },
   [ProtocolEnum.SYNTHETIX_V3]: {
     '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
       address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      // priceFeedId: '',
     },
   },
   [ProtocolEnum.VELA_ARB]: {
     '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
       address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      // priceFeedId: '',
     },
   },
   [ProtocolEnum.DEXTORO]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
       address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      // name: 'SUSD',
       symbol: 'SUSD',
       decimals: 18,
-      // priceFeedId: '',
     },
   },
   [ProtocolEnum.CYBERDEX]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
       address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      // name: 'SUSD',
       symbol: 'SUSD',
       decimals: 18,
-      // priceFeedId: '',
     },
   },
   [ProtocolEnum.HMX_ARB]: {
     '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
       address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      // priceFeedId: '',
     },
   },
   [ProtocolEnum.MYX_ARB]: {
     '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
       address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      // priceFeedId: '',
     },
   },
   [ProtocolEnum.LOGX_MODE]: {
     '0xd988097fb8612cc24eeC14542bC03424c656005f': {
       address: '0xd988097fb8612cc24eeC14542bC03424c656005f',
-      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      // priceFeedId: '',
     },
     '0xf0F161fDA2712DB8b566946122a5af183995e2eD': {
       address: '0xf0F161fDA2712DB8b566946122a5af183995e2eD',
-      // name: 'USDT',
       symbol: 'USDT',
       decimals: 18,
-      // priceFeedId: '',
     },
   },
   [ProtocolEnum.LOGX_BLAST]: {
     '0x4300000000000000000000000000000000000003': {
       address: '0x4300000000000000000000000000000000000003',
-      // name: 'USDB',
       symbol: 'USDB',
       decimals: 18,
-      // priceFeedId: '',
     },
   },
   [ProtocolEnum.TIGRIS_ARB]: {
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1': {
       address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-      // name: 'ETH',
       symbol: 'ETH',
       decimals: 18,
-      // priceFeedId: '',
     },
     '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9': {
       address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-      // name: 'USDT',
       symbol: 'USDT',
       decimals: 18,
-      // priceFeedId: '',
     },
     '0x7E491F53bF807f836E2dd6C4A4FBd193e1913EFd': {
       address: '0x7E491F53bF807f836E2dd6C4A4FBd193e1913EFd',
-      // name: 'tigUSD',
       symbol: 'tigUSD',
       decimals: 18,
-      // priceFeedId: '',
     },
     '0x763E061856b3e74a6C768a859DC2543A56D299d5': {
       address: '0x763E061856b3e74a6C768a859DC2543A56D299d5',
-      // name: 'tigETH',
       symbol: 'tigETH',
       decimals: 18,
-      // priceFeedId: '',
     },
   },
   [ProtocolEnum.AVANTIS_BASE]: {
     '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
       address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      // name: 'USDC',
       symbol: 'USDC',
       decimals: 18,
-      // priceFeedId: '',
     },
   },
   [ProtocolEnum.APOLLOX_BNB]: {
@@ -347,11 +331,8 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.BLOOM_BLAST]: {
     '0x4300000000000000000000000000000000000003': {
       address: '0x4300000000000000000000000000000000000003',
-      // name: 'USDB',
       symbol: 'USDB',
       decimals: 18,
-      // priceFeedId: '',
-      // icon: IconDAI,
     },
   },
   [ProtocolEnum.EQUATION_ARB]: {},
@@ -367,21 +348,15 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.KWENTA]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
       address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      // name: 'SUSD',
       symbol: 'SUSD',
       decimals: 18,
-      // priceFeedId: '',
-      // icon: IconDAI,
     },
   },
   [ProtocolEnum.POLYNOMIAL]: {
     '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
       address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      // name: 'SUSD',
       symbol: 'SUSD',
       decimals: 18,
-      // priceFeedId: '',
-      // icon: IconDAI,
     },
   },
   [ProtocolEnum.YFX_ARB]: {
@@ -391,8 +366,15 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
       decimals: 18,
     },
   },
+  [ProtocolEnum.KILOEX_OPBNB]: {
+    ...TOKEN_COLLATERAL_KILOEX_OPBNB,
+  },
+  [ProtocolEnum.ROLLIE_SCROLL]: {
+    ...TOKEN_COLLATERAL_ROLLIE_SCROLL,
+  },
 }
 
+// Todo: Check when add new protocol
 export const TOKEN_ADDRESSES = {
   [ProtocolEnum.GMX_V2]: {
     BTC: '0x47c031236e19d024b42f8AE6780E44A573170703',
@@ -511,6 +493,16 @@ export const TOKEN_ADDRESSES = {
   [ProtocolEnum.YFX_ARB]: {
     ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
     USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+  },
+  [ProtocolEnum.KILOEX_OPBNB]: {
+    BTC: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+    ETH: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
+    USDT: '0x9e5AAC1Ba1a2e6aEd6b32689DFcF62A509Ca96f3',
+  },
+  [ProtocolEnum.ROLLIE_SCROLL]: {
+    BTC: '0x3C1BCa5a656e69edCD0D4E36BEbb3FcDAcA60Cf1',
+    ETH: '0x5300000000000000000000000000000000000004',
+    USDC: '0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4',
   },
 }
 

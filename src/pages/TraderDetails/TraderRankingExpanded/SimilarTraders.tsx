@@ -88,7 +88,7 @@ export default function SimilarTraders({
     returnRanking: true,
   }
   const [isFetching, setIsFetching] = useState(true)
-  // TODO: Check when add new protocol
+  // TODO: Need new api for this
   const { data: similarTraders } = useQuery(
     [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, similarTradersFilter, retryTime],
     () =>

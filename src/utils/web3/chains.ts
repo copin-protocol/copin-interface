@@ -13,6 +13,7 @@ export const ARBITRUM_MAINNET = 42161
 export const ARBITRUM_GOERLI = 421613
 export const ZKSYNC_ERA_MAINNET = 324
 export const BNB_MAINNET = 56
+export const OPBNB_MAINNET = 204
 export const AVALANCHE_MAINNET = 43114
 export const BASE_MAINNET = 8453
 export const POLYGON_MAINNET = 137
@@ -21,6 +22,7 @@ export const MANTLE_MAINNET = 5000
 export const LINEA_MAINNET = 59144
 export const FANTOM_MAINNET = 250
 export const MODE_MAINNET = 34443
+export const SCROLL_MAINNET = 534352
 export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 export const SUBSCRIPTION_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 
@@ -36,6 +38,7 @@ export const SUPPORTED_CHAIN_IDS: number[] = [
   OPTIMISM_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
+  OPBNB_MAINNET,
   AVALANCHE_MAINNET,
   BASE_MAINNET,
   POLYGON_MAINNET,
@@ -43,8 +46,9 @@ export const SUPPORTED_CHAIN_IDS: number[] = [
   LINEA_MAINNET,
   MODE_MAINNET,
   MANTLE_MAINNET,
-  // ZKSYNC_ERA_MAINNET,
-  // MANTA_MAINNET,
+  ZKSYNC_ERA_MAINNET,
+  MANTA_MAINNET,
+  SCROLL_MAINNET,
 ]
 
 const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
@@ -66,6 +70,11 @@ const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
   BNB: {
     name: 'BNB',
     symbol: 'BNB',
+    decimals: 18,
+  },
+  OPBNB: {
+    name: 'opBNB',
+    symbol: 'OPBNB',
     decimals: 18,
   },
   AVAX: {
@@ -190,6 +199,15 @@ const CHAINS: { [key: number]: Chain } = {
     blockExplorerUrl: 'https://bscscan.com',
     secondaryTokens: SECONDARY_TOKENS[BNB_MAINNET],
   },
+  [OPBNB_MAINNET]: {
+    id: `0x${OPBNB_MAINNET.toString(16)}`,
+    label: 'opBNB',
+    icon: 'OPBNB',
+    token: NATIVE_CURRENCIES.OPBNB.symbol,
+    rpcUrl: 'https://opbnb-rpc.publicnode.com',
+    blockExplorerUrl: 'https://opbnbscan.com',
+    secondaryTokens: SECONDARY_TOKENS[OPBNB_MAINNET],
+  },
   [BLAST_MAINNET]: {
     id: `0x${BLAST_MAINNET.toString(16)}`,
     label: 'Blast',
@@ -270,6 +288,33 @@ const CHAINS: { [key: number]: Chain } = {
     rpcUrl: 'https://mantle-rpc.publicnode.com',
     blockExplorerUrl: 'https://explorer.mantle.xyz',
     secondaryTokens: SECONDARY_TOKENS[MANTLE_MAINNET],
+  },
+  [ZKSYNC_ERA_MAINNET]: {
+    id: `0x${ZKSYNC_ERA_MAINNET.toString(16)}`,
+    label: 'zkSync Era',
+    icon: 'ZK',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://1rpc.io/zksync2-era',
+    blockExplorerUrl: 'https://explorer.zksync.io',
+    secondaryTokens: SECONDARY_TOKENS[ZKSYNC_ERA_MAINNET],
+  },
+  [MANTA_MAINNET]: {
+    id: `0x${MANTA_MAINNET.toString(16)}`,
+    label: 'Manta',
+    icon: 'MANTA',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://r1.pacific.manta.systems/http',
+    blockExplorerUrl: 'https://pacific-explorer.manta.network',
+    secondaryTokens: SECONDARY_TOKENS[MANTA_MAINNET],
+  },
+  [SCROLL_MAINNET]: {
+    id: `0x${SCROLL_MAINNET.toString(16)}`,
+    label: 'Scroll',
+    icon: 'SCROLL',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://scroll.drpc.org',
+    blockExplorerUrl: 'https://scrollscan.com',
+    secondaryTokens: SECONDARY_TOKENS[SCROLL_MAINNET],
   },
 }
 

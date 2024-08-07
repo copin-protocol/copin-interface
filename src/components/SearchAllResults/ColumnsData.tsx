@@ -2,6 +2,7 @@ import React from 'react'
 
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { ColumnData } from 'components/@ui/Table/types'
 import { TraderData } from 'entities/trader'
 import { Flex, Type } from 'theme/base'
@@ -30,6 +31,18 @@ export const searchResultsColumn: ColumnData<TraderData, ExternalSource>[] = [
             width: 168,
           }}
         />
+      </Flex>
+    ),
+  },
+  {
+    title: 'Protocol',
+    dataIndex: 'protocol',
+    key: 'protocol',
+    sortBy: 'protocol',
+    style: { minWidth: '130px' },
+    render: (item) => (
+      <Flex alignItems="center" justifyContent="start" sx={{ color: 'neutral1', gap: 2, position: 'relative' }}>
+        <ProtocolLogo protocol={item.protocol} isActive={true} size={24} />
       </Flex>
     ),
   },
