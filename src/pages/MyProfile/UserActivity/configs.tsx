@@ -13,6 +13,7 @@ import { CopyWalletData } from 'entities/copyWallet'
 import { UserActivityData } from 'entities/user'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { EXPLORER_PLATFORMS } from 'utils/config/platforms'
 import { PROTOCOL_PROVIDER, getTokenTradeSupport } from 'utils/config/trades'
 import { ORDER_TYPE_TRANS } from 'utils/config/translations'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
@@ -136,7 +137,8 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
         : item.errorMsg
 
     const isLong = (item.isLong ? 1 : -1) * (item.isReverse ? -1 : 1) === 1
-    return item.isSuccess ? (
+
+    return item.isSuccess || item.isProcessing ? (
       <Flex
         sx={{
           gap: 1,
@@ -171,18 +173,11 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
           </Type.Caption>
         )}
         {item.targetTxHash && (
-          <>
-            <VerticalDivider />
-            <Type.Caption>
-              <Box
-                as="a"
-                href={`${PROTOCOL_PROVIDER[item.protocol]?.explorerUrl}/tx/${item.sourceTxHash}`}
-                target="_blank"
-              >
-                <Trans>TxHash</Trans>
-              </Box>
-            </Type.Caption>
-          </>
+          <Type.Caption>
+            <Box as="a" href={`${EXPLORER_PLATFORMS[item.exchange]}/tx/${item.targetTxHash}`} target="_blank">
+              <Trans>TxHash</Trans>
+            </Box>
+          </Type.Caption>
         )}
       </Flex>
     ) : (
@@ -193,10 +188,10 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
   },
   status: (item) => (
     <Type.Caption
-      color={item.isSuccess ? 'green2' : 'red2'}
+      color={item.isProcessing ? 'primary1' : item.isSuccess ? 'green2' : 'red2'}
       sx={{ borderRadius: '16px', width: '70px', textAlign: 'center', lineHeight: '24px', bg: 'neutral7' }}
     >
-      {item.isSuccess ? <Trans>Success</Trans> : <Trans>Failed</Trans>}
+      {item.isProcessing ? <Trans>Processing</Trans> : item.isSuccess ? <Trans>Success</Trans> : <Trans>Failed</Trans>}
     </Type.Caption>
   ),
 }

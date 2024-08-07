@@ -1,24 +1,29 @@
+// eslint-disable-next-line no-restricted-imports
+import { Trans } from '@lingui/macro'
 import { PencilSimpleLine } from '@phosphor-icons/react'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { EditText } from 'react-edit-text'
 // eslint-disable-next-line no-restricted-imports
 import 'react-edit-text/dist/index.css'
 
-import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import TitleWithIcon from 'components/@ui/TilleWithIcon'
+import FundModal, { FundTab } from 'components/FundModal'
+// import FundModal, { FundTab } from 'components/FundModal'
 import { CopyWalletData } from 'entities/copyWallet'
-import useChain from 'hooks/web3/useChain'
-import CopyButton from 'theme/Buttons/CopyButton'
-import Tooltip from 'theme/Tooltip'
+import useWalletFund from 'hooks/features/useWalletFundSnxV2'
+import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
+import { SxProps } from 'theme/types'
+import { CEX_EXCHANGES, WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
 import { getColorFromText } from 'utils/helpers/css'
-import { addressShorten, formatNumber } from 'utils/helpers/format'
-import { getExchangeKey, parseWalletName } from 'utils/helpers/transform'
+import { formatNumber } from 'utils/helpers/format'
+import { parseWalletName } from 'utils/helpers/transform'
 
 import ReferralStatus from './ReferralStatus'
+import SmartWalletActions from './SmartWalletActions'
 import WalletActions from './WalletActions'
+import WalletInfo from './WalletInfo'
 
 interface WalletDetailsProps {
   data: CopyWalletData
@@ -32,30 +37,38 @@ interface WalletDetailsProps {
     callback: (value: string) => void
   }) => void
 }
-export default function WalletDetailsCard({
-  data,
-  hasBorderTop,
-  handleUpdate,
-  reload,
-  hiddenBalance,
-}: WalletDetailsProps) {
-  const walletKey = useMemo(
-    () => data?.smartWalletAddress ?? data?.[getExchangeKey(data?.exchange)]?.apiKey ?? '',
-    [data]
+
+const SmartWalletInfo = ({ data, hiddenBalance, sx }: { data: CopyWalletData; hiddenBalance?: boolean } & SxProps) => {
+  const { total, available } = useWalletFund({
+    address: data.smartWalletAddress,
+    platform: data.exchange,
+    totalIncluded: true,
+  })
+  return (
+    <WalletInfo
+      sx={sx}
+      hiddenBalance={hiddenBalance}
+      data={{
+        ...data,
+        balance: total?.num ?? 0,
+        availableBalance: available?.num ?? 0,
+      }}
+    />
   )
-  const isSmartWallet = !!data?.smartWalletAddress
+}
+
+export default function WalletDetailsCard({ data, handleUpdate, reload, hiddenBalance }: WalletDetailsProps) {
   const [isEdit, setIsEdit] = useState(false)
   const [walletName, setWalletName] = useState(parseWalletName(data))
-  // const [fundingModal, setFundingModal] = useState<FundTab | null>(null)
+  const [fundingModal, setFundingModal] = useState<FundTab | null>(null)
 
-  // const { walletAccount } = useWeb3()
-  const { chain } = useChain()
+  const Info = data.smartWalletAddress ? SmartWalletInfo : WalletInfo
 
   return (
     <Flex p={3} sx={{ flexDirection: 'column', gap: 2 }}>
       <Flex sx={{ width: '100%', gap: 20, justifyContent: 'space-between' }}>
         <Flex alignItems="center" sx={{ flex: 1, flexWrap: 'wrap', gap: 2 }}>
-          <ReferralStatus data={data} />
+          {CEX_EXCHANGES.includes(data.exchange) && <ReferralStatus data={data} />}
           <Flex width={250} alignItems="center" sx={{ gap: 2 }}>
             <TitleWithIcon
               color={getColorFromText(data.id)}
@@ -101,20 +114,29 @@ export default function WalletDetailsCard({
                 />
               }
             />
-
-            {isSmartWallet && (
-              <ExplorerLogo
-                protocol={data.exchange}
-                explorerUrl={`${chain.blockExplorerUrl}/address/${data.smartWalletAddress}`}
+          </Flex>
+          {/* <WalletKey walletKey={walletKey} isSmartWallet={isSmartWallet} /> */}
+          <Info sx={{ display: ['none', 'flex'] }} data={data} hiddenBalance={hiddenBalance} />
+        </Flex>
+        {!data.smartWalletAddress ? (
+          <WalletActions data={data} />
+        ) : (
+          <Flex alignItems="center" sx={{ gap: 20 }}>
+            <Button type="button" variant="ghostPrimary" sx={{ p: 0 }} onClick={() => setFundingModal(FundTab.Deposit)}>
+              <Trans>Deposit</Trans>
+            </Button>
+            <SmartWalletActions data={data} setFundingModal={setFundingModal} />
+            {fundingModal && (
+              <FundModal
+                smartWallet={data.smartWalletAddress}
+                platform={data.exchange}
+                onDismiss={() => setFundingModal(null)}
               />
             )}
           </Flex>
-          <WalletKey walletKey={walletKey} isSmartWallet={isSmartWallet} />
-          <BalanceStats sx={{ display: ['none', 'flex'] }} balance={data.balance} hiddenBalance={hiddenBalance} />
-        </Flex>
-        <WalletActions data={data} />
+        )}
       </Flex>
-      <BalanceStats sx={{ display: ['flex', 'none'] }} balance={data.balance} hiddenBalance={hiddenBalance} />
+      <Info sx={{ display: ['flex', 'none'] }} data={data} hiddenBalance={hiddenBalance} />
     </Flex>
   )
 }
@@ -135,33 +157,5 @@ function BalanceStats({
         {hiddenBalance ? '*****' : `$${formatNumber(balance, 0, 0)}`}
       </Type.CaptionBold>
     </Box>
-  )
-}
-
-function WalletKey({ walletKey, isSmartWallet, sx }: { walletKey?: string; isSmartWallet?: boolean; sx?: any }) {
-  return (
-    <Flex width={250} sx={{ gap: 2, flexShrink: 0, '& *': { flexShrink: 0 }, ...(sx || {}) }}>
-      <Type.Caption color="neutral3">{isSmartWallet ? 'Smart Wallet' : 'API Key'}:</Type.Caption>
-      <Flex sx={{ gap: 2 }} alignItems="center">
-        <Type.CaptionBold data-tip="React-tooltip" data-tooltip-id={`tt-${walletKey}`} data-tooltip-delay-show={360}>
-          {walletKey ? addressShorten(walletKey, 4) : '--'}
-        </Type.CaptionBold>
-        {!!walletKey && (
-          <CopyButton
-            variant="ghost"
-            size="xs"
-            value={walletKey}
-            iconSize={16}
-            sx={{
-              transition: 'none',
-              p: 0,
-            }}
-          ></CopyButton>
-        )}
-        <Tooltip id={`tt-${walletKey}`} place="top" type="dark" effect="solid" clickable={false}>
-          <Type.Small sx={{ maxWidth: [300, 400] }}>{walletKey}</Type.Small>
-        </Tooltip>
-      </Flex>
-    </Flex>
   )
 }

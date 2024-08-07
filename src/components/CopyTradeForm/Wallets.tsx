@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Plus } from '@phosphor-icons/react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { CreateWalletModal } from 'components/CreateWalletAction'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
@@ -22,6 +22,7 @@ export default function Wallets({
   onChangeWallet: (walletId: string) => void
   disabledSelect: boolean
 }) {
+  const platformRef = useRef(platform)
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
   const copyWalletsByExchange = useMemo(
     () => copyWallets?.filter((e) => e.exchange === platform),
@@ -29,9 +30,10 @@ export default function Wallets({
   )
 
   useEffect(() => {
-    if (currentWalletId) return
+    if (currentWalletId && platform && (!platformRef.current || platform === platformRef.current)) return
+    platformRef.current = platform
     onChangeWallet(copyWalletsByExchange?.[0]?.id ?? '')
-  }, [copyWalletsByExchange])
+  }, [copyWalletsByExchange, currentWalletId])
 
   if (loadingCopyWallets) return <Loading />
 
@@ -85,8 +87,11 @@ function NoWallet({
     case CopyTradePlatformEnum.GATE:
       text = <Trans>Create Gate wallet</Trans>
       break
-    case CopyTradePlatformEnum.SYNTHETIX:
-      text = <Trans>Create smart wallet</Trans>
+    case CopyTradePlatformEnum.SYNTHETIX_V2:
+      text = <Trans>Create Synthetix v2 wallet</Trans>
+      break
+    case CopyTradePlatformEnum.GNS_V8:
+      text = <Trans>Create gTrade wallet</Trans>
       break
 
     default:

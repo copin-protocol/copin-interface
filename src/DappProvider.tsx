@@ -19,7 +19,7 @@ const theme = themeFn(true)
 
 const walletConnect = walletConnectModule({
   projectId: '4ed591829f849797c6391880fa61d5e4',
-  requiredChains: [DEFAULT_CHAIN_ID],
+  requiredChains: SUPPORTED_CHAIN_IDS,
   optionalChains: SUPPORTED_CHAIN_IDS,
   dappUrl: APP_URL,
 })

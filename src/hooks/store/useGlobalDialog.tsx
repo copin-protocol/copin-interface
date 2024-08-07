@@ -55,12 +55,15 @@ export function DialogContent({ data }: { data: DialogContentData }) {
       <Box
         variant="card"
         width="fit-content"
+        maxWidth="800px"
         height="fit-content"
         textAlign="center"
         sx={{ border: 'normal', borderColor: 'neutral6' }}
       >
         {data.hasLoading && <Loading />}
-        <Type.BodyBold display="block">{data.title}</Type.BodyBold>
+        <Type.BodyBold display="block" mb={2}>
+          {data.title}
+        </Type.BodyBold>
         {!!data.description && <Type.Caption color="neutral3">{data.description}</Type.Caption>}
         <Box>{data.body}</Box>
       </Box>

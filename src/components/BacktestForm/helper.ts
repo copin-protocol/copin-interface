@@ -16,9 +16,9 @@ export function getFormValuesFromRequestData(requestData: RequestBackTestData | 
     endTime: dayjs(requestData.toTime).utc().toDate(),
     lookBackOrders: requestData.lookBackOrders ?? 10,
     stopLossAmount: requestData.enableStopLoss ? requestData.stopLossAmount : undefined,
-    stopLossType: requestData.stopLossType ?? SLTPTypeEnum.USD,
+    stopLossType: requestData.stopLossType ?? SLTPTypeEnum.PERCENT,
     takeProfitAmount: requestData.enableTakeProfit ? requestData.takeProfitAmount : undefined,
-    takeProfitType: requestData.takeProfitType ?? SLTPTypeEnum.USD,
+    takeProfitType: requestData.takeProfitType ?? SLTPTypeEnum.PERCENT,
     copyAll: !!requestData?.copyAll,
     maxMarginPerPosition:
       requestData.maxVolMultiplier && requestData.maxVolMultiplier > 0

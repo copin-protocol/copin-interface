@@ -74,9 +74,9 @@ export function parseRequestData(params: Record<string, any> | undefined, protoc
     const toTime = Number(params[PARAM_MAPPING.TO_TIME] ?? 0)
     const lookBackOrders = Number(params[PARAM_MAPPING.LOOK_BACK_ORDERS] ?? 0)
     const stopLossAmount = Number(params[PARAM_MAPPING.STOP_LOSS_AMOUNT] ?? 0)
-    const stopLossType = params[PARAM_MAPPING.STOP_LOSS_TYPE] ?? SLTPTypeEnum.USD
+    const stopLossType = params[PARAM_MAPPING.STOP_LOSS_TYPE] ?? SLTPTypeEnum.PERCENT
     const takeProfitAmount = Number(params[PARAM_MAPPING.TAKE_PROFIT_AMOUNT] ?? 0)
-    const takeProfitType = params[PARAM_MAPPING.TAKE_PROFIT_TYPE] ?? SLTPTypeEnum.USD
+    const takeProfitType = params[PARAM_MAPPING.TAKE_PROFIT_TYPE] ?? SLTPTypeEnum.PERCENT
     const maxVolMultiplier = Number(params[PARAM_MAPPING.MAX_VOL_MULTIPLIER] ?? 0)
     const reverseCopy = params[PARAM_MAPPING.REVERSE_COPY] === '1' ? true : false
     const copyAll = params[PARAM_MAPPING.COPY_ALL] === '1' ? true : false

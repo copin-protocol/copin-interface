@@ -24,7 +24,7 @@ const useRequiredChain = ({
   const [alert, setAlert] = useState<ReactNode>()
   const { dialog, showDialog, hideDialog } = useGlobalDialog()
   const requiredChain = getChainMetadata(chainId)
-  const title = `This feature only supports on ${requiredChain.label}`
+  const title = <Trans>This feature only supports on {requiredChain.label}</Trans>
 
   const renderComponent = useCallback(() => {
     return (

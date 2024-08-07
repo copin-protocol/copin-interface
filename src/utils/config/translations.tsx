@@ -9,6 +9,7 @@ import {
   CopyTradePlatformEnum,
   CopyTradeStatusEnum,
   DataTypeEnum,
+  EpochStatusEnum,
   MarginModeEnum,
   OrderTypeEnum,
   PositionStatusEnum,
@@ -56,8 +57,9 @@ export const PLATFORM_TRANS: ObjectTrans = {
   [CopyTradePlatformEnum.OKX]: <Trans>OKX</Trans>,
   [CopyTradePlatformEnum.GATE]: <Trans>Gate</Trans>,
   [CopyTradePlatformEnum.GMX]: <Trans>GMX</Trans>,
-  [CopyTradePlatformEnum.SYNTHETIX]: <Trans>Synthetix</Trans>,
-  [CopyTradePlatformEnum.SYNTHETIX_V2]: <Trans>Synthetix V2</Trans>,
+  [CopyTradePlatformEnum.SYNTHETIX_V2]: <Trans>Synthetix v2</Trans>,
+  [CopyTradePlatformEnum.SYNTHETIX_V3]: <Trans>Synthetix v3</Trans>,
+  [CopyTradePlatformEnum.GNS_V8]: <Trans>gTrade</Trans>,
 }
 
 export const PLATFORM_TEXT_TRANS: { [key: string]: string } = {
@@ -69,8 +71,9 @@ export const PLATFORM_TEXT_TRANS: { [key: string]: string } = {
   [CopyTradePlatformEnum.OKX]: 'OKX',
   [CopyTradePlatformEnum.GATE]: 'Gate',
   [CopyTradePlatformEnum.GMX]: 'GMX',
-  [CopyTradePlatformEnum.SYNTHETIX]: 'Synthetix V3',
-  [CopyTradePlatformEnum.SYNTHETIX_V2]: 'Synthetix V2',
+  [CopyTradePlatformEnum.SYNTHETIX_V2]: 'Synthetix v2',
+  [CopyTradePlatformEnum.SYNTHETIX_V3]: 'Synthetix v3',
+  [CopyTradePlatformEnum.GNS_V8]: 'gTrade',
 }
 
 export const COPY_WALLET_TRANS: ObjectTrans = {
@@ -80,7 +83,9 @@ export const COPY_WALLET_TRANS: ObjectTrans = {
   [CopyTradePlatformEnum.BYBIT]: 'Bybit',
   [CopyTradePlatformEnum.OKX]: 'OKX',
   [CopyTradePlatformEnum.GATE]: 'Gate',
-  [CopyTradePlatformEnum.SYNTHETIX]: 'SW',
+  [CopyTradePlatformEnum.SYNTHETIX_V2]: 'SNX v2',
+  [CopyTradePlatformEnum.SYNTHETIX_V3]: 'SNX v3',
+  [CopyTradePlatformEnum.GNS_V8]: 'gTrade',
 }
 
 export const COPY_TRADE_STATUS_TRANS: ObjectTrans = {
@@ -162,6 +167,13 @@ export const MIRROR_TRANS: ObjectTrans = {
 export const MARGIN_MODE_TRANS: ObjectTrans = {
   [MarginModeEnum.CROSS]: 'Cross',
   [MarginModeEnum.ISOLATED]: 'Isolated',
+}
+
+export const FEE_REBATE_EPOCH_STATUS_TRANS: ObjectTrans = {
+  [EpochStatusEnum.NOT_HAPPEN]: <Trans>Upcoming</Trans>,
+  [EpochStatusEnum.ONGOING]: <Trans>Ongoing</Trans>,
+  [EpochStatusEnum.ENDED]: <Trans>Ended</Trans>,
+  [EpochStatusEnum.AWARDED]: <Trans>Ended</Trans>,
 }
 
 export const ERRORS: ObjectTrans = {

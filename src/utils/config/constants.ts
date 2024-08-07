@@ -8,6 +8,7 @@ export const DEFAULT_LOCALE = 'en'
 export const NETWORK = import.meta.env.VITE_NETWORK_ENV
 export const BUILD_MODE = import.meta.env.VITE_BUILD_MODE
 export const APP_URL = import.meta.env.VITE_URL
+export const SOCKET_API_KEY = import.meta.env.VITE_SOCKET_API_KEY
 
 export const TELEGRAM_BOT_ALERT = import.meta.env.VITE_TELEGRAM_BOT_ALERT
 
@@ -65,11 +66,12 @@ export const LINKS = {
   feedback: 'https://copin.canny.io',
 }
 
-export const NAVBAR_HEIGHT = 60
+export const NAVBAR_HEIGHT = 64
 export const FOOTER_HEIGHT = 40
 
 export const FONT_FAMILY = 'Anuphan'
 export const DATE_FORMAT = 'YYYY/MM/DD'
+export const DATE_TEXT_FORMAT = 'DD MMM, YYYY'
 export const TIME_FORMAT = 'HH:mm:ss'
 export const DAYJS_FULL_DATE_FORMAT = 'YYYY/MM/DD HH:mm:ss'
 export const DEFAULT_LIMIT = 20
@@ -120,6 +122,7 @@ export const EXCHANGE_STATS = [
   CopyTradePlatformEnum.BYBIT,
   CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.GATE,
+  CopyTradePlatformEnum.GNS_V8,
   // CopyTradePlatformEnum.OTHERS,
   // CopyTradePlatformEnum.BINANCE,
   // CopyTradePlatformEnum.SYNTHETIX,
@@ -134,12 +137,30 @@ export const EXCHANGE_COLOR: { [key: string]: string } = {
   [CopyTradePlatformEnum.BYBIT]: '#FADFA0',
   [CopyTradePlatformEnum.OKX]: '#FFFFFF',
   [CopyTradePlatformEnum.GATE]: '#5DABEE',
-  [CopyTradePlatformEnum.SYNTHETIX]: '#9573F7',
   [CopyTradePlatformEnum.SYNTHETIX_V2]: '#9573F7',
+  [CopyTradePlatformEnum.SYNTHETIX_V3]: '#9573F7',
+  [CopyTradePlatformEnum.GNS_V8]: '#4AF994',
   [CopyTradePlatformEnum.GMX]: '#E978F3',
 }
 
-export const DEFAULT_PROTOCOL = ProtocolEnum.KWENTA
+export const CEX_EXCHANGES = [
+  CopyTradePlatformEnum.BINANCE,
+  CopyTradePlatformEnum.BINGX,
+  CopyTradePlatformEnum.BITGET,
+  CopyTradePlatformEnum.BYBIT,
+  CopyTradePlatformEnum.OKX,
+  CopyTradePlatformEnum.GATE,
+]
+
+export const DCP_SUPPORTED_PROTOCOLS = [
+  ProtocolEnum.GMX_V2,
+  ProtocolEnum.KWENTA,
+  ProtocolEnum.GNS,
+  ProtocolEnum.GNS_POLY,
+  ProtocolEnum.AVANTIS_BASE,
+]
+
+export const DEFAULT_PROTOCOL = ProtocolEnum.GNS
 
 // TODO: Check when add new protocol
 export const RELEASED_PROTOCOLS =

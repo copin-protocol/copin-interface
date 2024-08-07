@@ -13,14 +13,16 @@ export const transition = (
   `
 }
 
-export const ellipsisLineClamp = (lineClamp = 2): FlattenSimpleInterpolation => {
-  return css`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: ${lineClamp};
-    -webkit-box-orient: vertical;
-  `
+export const ellipsisLineClamp = (lineClamp = 2): any => {
+  return {
+    maxWidth: '100%',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    '-webkit-line-clamp': `${lineClamp}`,
+    '-webkit-box-orient': 'vertical',
+    overflow: 'hidden',
+    wordWrap: 'break-word',
+  }
 }
 
 export function overflowEllipsis() {

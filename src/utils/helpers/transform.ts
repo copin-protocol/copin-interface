@@ -311,6 +311,10 @@ export function parseCollateralImage(symbol: string) {
   return `/images/collaterals/${symbol}.png`
 }
 
+export function parseRewardImage(symbol: string) {
+  return `/images/rewards/${symbol}.png`
+}
+
 export function convertDurationInSecond(openTime: string) {
   return dayjs.duration(dayjs().diff(dayjs(openTime))).asSeconds()
 }

@@ -34,6 +34,7 @@ export default function FilterSection({
   handleToggleStatus,
   copyStatus,
   selectedProtocol,
+  available,
   toggleAllProtocol,
   isToggleAllProtocol,
 }: MyCopiesProps) {
@@ -190,7 +191,7 @@ export default function FilterSection({
             handleToggleTrader={handleToggleTrader}
             handleSelectAllTraders={handleSelectAllTraders}
           />
-          <AvailableMargin value={copyWallet?.availableBalance} />
+          <AvailableMargin value={available ? available.num : copyWallet?.availableBalance} />
         </Flex>
         <Flex
           height={48}
@@ -229,12 +230,9 @@ export default function FilterSection({
           buttonSx={{ py: 0, '& > *:first-child': { display: 'flex', flexDirection: 'column' } }}
         />
         <Box sx={{ width: '1px', height: '100%', bg: 'neutral4' }} />
-
-        <AvailableMargin
-          value={copyWallet?.availableBalance}
-          sx={{ flexDirection: 'column', px: 2, gap: 0, flex: 1 }}
-        />
-
+        <Flex sx={{ flexDirection: 'column', px: 2, gap: 0, flex: 1 }}>
+          <AvailableMargin value={available ? available.num : copyWallet?.availableBalance} />
+        </Flex>
         <Box sx={{ width: '1px', height: '100%', bg: 'neutral4' }} />
         {/* <Dropdown
           hasArrow={false}
@@ -297,7 +295,7 @@ function AvailableMargin({ value, sx }: { value: number | undefined; sx?: any })
   return (
     <Flex sx={{ gap: 2, ...(sx || {}) }}>
       <Type.Caption color="neutral3">
-        <Trans>Available Margin</Trans>:
+        <Trans>Available Fund</Trans>:
       </Type.Caption>
       <Type.CaptionBold color="neutral1">${formatNumber(value)}</Type.CaptionBold>
     </Flex>

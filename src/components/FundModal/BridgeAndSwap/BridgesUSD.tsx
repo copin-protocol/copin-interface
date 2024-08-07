@@ -32,12 +32,12 @@ const ABI = [
 const BridgesUSD = ({
   signer,
   sUSDBalance,
-  sUSDBalanceGoerli,
+  sUSDBalanceSepolia,
   refetch,
 }: {
   signer?: JsonRpcSigner
   sUSDBalance?: number
-  sUSDBalanceGoerli?: number
+  sUSDBalanceSepolia?: number
   refetch: () => void
 }) => {
   const [amount, setAmount] = useState<string>()
@@ -46,7 +46,8 @@ const BridgesUSD = ({
     [signer]
   )
   const bridgeMutation = useContractMutation(bridgeContract)
-  const hasError = !!amount && !!sUSDBalanceGoerli && Number(amount) > sUSDBalanceGoerli
+  const hasError =
+    (!!amount && !!sUSDBalanceSepolia && Number(amount) > sUSDBalanceSepolia) || (!!amount && Number(amount) <= 0)
 
   return (
     <Box variant="card" mb={3}>
@@ -54,7 +55,7 @@ const BridgesUSD = ({
         <Image src={EthIcon} size={24} />
         <Image src={OpIcon} size={24} sx={{ position: 'relative', left: -3 }} />
         <Type.BodyBold sx={{ position: 'relative', left: -3 }}>
-          <Trans>Bridge sUSD to OP (Goerli)</Trans>
+          <Trans>Bridge sUSD to OP (Sepolia)</Trans>
         </Type.BodyBold>
       </Flex>
 
@@ -63,7 +64,7 @@ const BridgesUSD = ({
           <Type.Caption mr="1ch" color="neutral3">
             Bal:
           </Type.Caption>
-          <Type.CaptionBold>{formatNumber(sUSDBalanceGoerli, 2, 2)} sUSD</Type.CaptionBold>
+          <Type.CaptionBold>{formatNumber(sUSDBalanceSepolia, 2, 2)} sUSD</Type.CaptionBold>
         </Box>
         <Box>
           <Type.Caption mr="1ch" color="neutral3">
@@ -78,7 +79,10 @@ const BridgesUSD = ({
           value={amount}
           error={hasError}
           type="number"
-          onChange={(e) => setAmount(e.target.value || '')}
+          onChange={(e) => {
+            const value = e.target.value || ''
+            setAmount(Number(value) > 1_000_000_000 ? '1000000000' : value)
+          }}
           block
           sx={{
             pr: 2,
@@ -106,7 +110,8 @@ const BridgesUSD = ({
         mt={3}
         block
         variant="primary"
-        disabled={hasError || !amount}
+        disabled={hasError || !amount || bridgeMutation.isLoading}
+        isLoading={bridgeMutation.isLoading}
         onClick={async () =>
           bridgeMutation.mutate(
             {
@@ -120,7 +125,7 @@ const BridgesUSD = ({
             {
               onSuccess: () => {
                 refetch()
-                setAmount(undefined)
+                setAmount('')
               },
             }
           )

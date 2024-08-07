@@ -9,6 +9,7 @@ import CopyTradeCloneDrawer from 'components/CopyTradeCloneDrawer'
 import CopyTradeEditDrawer from 'components/CopyTradeEditDrawer'
 import DeleteCopyTradeModal from 'components/CopyTradeForm/DeleteCopyTradeModal'
 import CopyTradeHistoryDrawer from 'components/CopyTradeHistoryDrawer'
+import Num from 'entities/Num'
 import { CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
 import { getMaxVolumeCopy, useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
@@ -44,6 +45,7 @@ export interface MyCopiesProps {
   copyWallet: CopyWalletData | null
   copyStatus: CopyTradeStatusEnum[]
   selectedProtocol: ProtocolEnum[]
+  available: Num | null
   toggleAllProtocol: (isToggledAll: boolean) => void
   isToggleAllProtocol: boolean
 }

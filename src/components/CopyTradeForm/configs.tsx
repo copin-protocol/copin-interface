@@ -28,8 +28,9 @@ const commonSchema = {
     .label('Account'),
   title: yup.string().required().label('Title'),
   volume: yup.number().when('exchange', {
-    is: CopyTradePlatformEnum.SYNTHETIX,
-    then: (schema) => schema.required().min(50).label('Margin'),
+    is: (val: CopyTradePlatformEnum) =>
+      val == CopyTradePlatformEnum.SYNTHETIX_V2 || val == CopyTradePlatformEnum.GNS_V8,
+    then: (schema) => schema.required().min(60).label('Margin'),
     otherwise: (schema) => schema.required().min(0).label('Margin'),
   }),
   leverage: yup.number().required().min(2).label('Leverage'),
@@ -106,7 +107,9 @@ export const copyTradeFormSchema = yup.object({
       CopyTradePlatformEnum.BYBIT,
       CopyTradePlatformEnum.OKX,
       CopyTradePlatformEnum.GATE,
-      CopyTradePlatformEnum.SYNTHETIX,
+      CopyTradePlatformEnum.SYNTHETIX_V2,
+      CopyTradePlatformEnum.GNS_V8,
+      // CopyTradePlatformEnum.SYNTHETIX_V3,
     ])
     .label('Exchange'),
   copyWalletId: yup.string().required().label('Wallet'),
@@ -144,7 +147,7 @@ export interface CopyTradeFormValues {
   stopLossAmount: number | undefined
   takeProfitType: SLTPTypeEnum
   takeProfitAmount: number | undefined
-  lookBackOrders: number | null
+  lookBackOrders: number | null | undefined
   exchange: CopyTradePlatformEnum
   copyWalletId: string
   serviceKey: string
@@ -202,14 +205,14 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   tokenAddresses: [],
   excludingTokenAddresses: [],
   type: CopyTradeTypeEnum.COPY_TRADER,
-  stopLossType: SLTPTypeEnum.USD,
+  stopLossType: SLTPTypeEnum.PERCENT,
   stopLossAmount: undefined,
-  takeProfitType: SLTPTypeEnum.USD,
+  takeProfitType: SLTPTypeEnum.PERCENT,
   takeProfitAmount: undefined,
-  lookBackOrders: 10,
+  lookBackOrders: undefined,
   exchange: CopyTradePlatformEnum.BINGX,
   copyWalletId: '',
-  serviceKey: SERVICE_KEYS[ProtocolEnum.GMX],
+  serviceKey: SERVICE_KEYS[ProtocolEnum.KWENTA],
   title: '',
   reverseCopy: false,
   duplicateToAddress: '',
@@ -230,6 +233,12 @@ export interface ExchangeOptions {
   label: ReactNode
   isDisabled?: boolean
 }
+
+export const dcpExchangeOptions: ExchangeOptions[] = [
+  getExchangeOption(CopyTradePlatformEnum.GNS_V8),
+  getExchangeOption(CopyTradePlatformEnum.SYNTHETIX_V2),
+]
+
 export const exchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BINGX),
   getExchangeOption(CopyTradePlatformEnum.BITGET),
@@ -245,7 +254,6 @@ export const internalExchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BYBIT),
   getExchangeOption(CopyTradePlatformEnum.OKX),
   getExchangeOption(CopyTradePlatformEnum.GATE),
-  // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
 ]
 export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {
   let label = ''
@@ -275,8 +283,11 @@ export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boo
       label = 'Gate'
       refCode = 'AgBFAApb'
       break
-    case CopyTradePlatformEnum.SYNTHETIX:
-      label = 'Synthetix'
+    case CopyTradePlatformEnum.SYNTHETIX_V2:
+      label = 'Synthetix v2'
+      break
+    case CopyTradePlatformEnum.GNS_V8:
+      label = 'gTrade'
       break
     default:
       break

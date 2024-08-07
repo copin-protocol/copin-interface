@@ -21,6 +21,7 @@ import { SearchResultFixed, SearchWrapper } from './styled'
 const SearchBox = ({
   bg,
   width,
+  maxWidth,
   actionTitle = 'View',
   placeholder = 'Search for wallets or transactions',
   onSelect,
@@ -36,6 +37,7 @@ const SearchBox = ({
   returnRanking?: boolean
   allowAllProtocol?: boolean
   allowSearchPositions?: boolean
+  maxWidth?: string | number
 }) => {
   const {
     searchWrapperRef,
@@ -62,7 +64,7 @@ const SearchBox = ({
   const totalResultPositions = searchPositions?.length ?? 0
 
   return (
-    <SearchWrapper ref={searchWrapperRef} width={width ?? ['100%', '100%', 220, 220, 380]}>
+    <SearchWrapper ref={searchWrapperRef} maxWidth={maxWidth} width={width ?? ['100%', '100%', 220, 220, 350]}>
       <InputSearch
         ref={inputSearchRef}
         placeholder={placeholder}

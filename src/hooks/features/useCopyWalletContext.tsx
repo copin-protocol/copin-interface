@@ -10,14 +10,11 @@ import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 
-// import useWalletMargin, { SmartWalletMargin } from './useWalletMargin'
-
 export interface CopyWalletContextData {
   myProfile: UserData | null
   loadingCopyWallets: boolean
   copyWallets: CopyWalletData[] | undefined
-  // smartWallet: CopyWalletData | undefined
-  // smartWalletMargin: SmartWalletMargin
+  smartWallets: CopyWalletData[] | undefined
   bingXWallets: CopyWalletData[] | undefined
   reloadCopyWallets: () => void
   loadTotalSmartWallet: () => void
@@ -52,11 +49,10 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
   })
 
   const bingXWallets = copyWallets?.filter((w) => w.exchange === CopyTradePlatformEnum.BINGX)
-  // const smartWallet = copyWallets?.find((w) => w.exchange === CopyTradePlatformEnum.SYNTHETIX)
-  // const smartWalletMargin = useWalletMargin({
-  //   address: smartWallet?.smartWalletAddress,
-  //   totalIncluded: loadedTotalSmartWallet,
-  // })
+  const smartWallets = copyWallets?.filter(
+    (w) => w.exchange === CopyTradePlatformEnum.SYNTHETIX_V2 || w.exchange === CopyTradePlatformEnum.GNS_V8
+  )
+
   // const normalizedCopyWallets = useMemo(
   //   () =>
   //     copyWallets?.map((wallet) => {
@@ -66,24 +62,23 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
   //         case CopyTradePlatformEnum.SYNTHETIX:
   //           return {
   //             ...wallet,
-  //             balance: smartWalletMargin.total?.num ?? 0,
-  //             availableBalance: smartWalletMargin.available?.num ?? 0,
+  //             // balance: smartWalletFund.total?.num ?? 0,
+  //             // availableBalance: smartWalletFund.available?.num ?? 0,
   //           }
   //         default:
   //           return wallet
   //       }
   //     }),
-  //   [smartWalletMargin.available, copyWallets, smartWalletMargin.total]
+  //   [copyWallets]
   // )
 
   const contextValue: CopyWalletContextData = {
     myProfile,
     loadingCopyWallets,
     copyWallets,
-    // smartWallet,
+    smartWallets,
     bingXWallets,
     reloadCopyWallets,
-    // smartWalletMargin,
     loadTotalSmartWallet: () => setLoadedTotalSmartWallet(true),
   }
 

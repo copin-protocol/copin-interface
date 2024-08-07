@@ -20,7 +20,10 @@ const SERVICE = 'copy-trades'
 
 export async function requestCopyTradeApi({ data, isInternal }: { data: RequestCopyTradeData; isInternal?: boolean }) {
   const service = isInternal ? INTERNAL_SERVICE_KEYS : SERVICE_KEYS
-  const serviceKey = service[data.protocol ?? ProtocolEnum.GMX]
+  const serviceKey =
+    data.exchange == CopyTradePlatformEnum.GNS_V8 || data.exchange == CopyTradePlatformEnum.SYNTHETIX_V2
+      ? 'MIRROR_SIGNAL'
+      : service[data.protocol ?? ProtocolEnum.GMX]
   return requester.post(`${SERVICE}`, { ...data, serviceKey }).then((res: any) => res.data as CopyTradeData)
 }
 
@@ -38,7 +41,10 @@ export async function duplicateCopyTradeApi({
   isInternal?: boolean
 }) {
   const service = isInternal ? INTERNAL_SERVICE_KEYS : SERVICE_KEYS
-  const serviceKey = service[data.protocol ?? ProtocolEnum.GMX]
+  const serviceKey =
+    data.exchange == CopyTradePlatformEnum.GNS_V8 || data.exchange == CopyTradePlatformEnum.SYNTHETIX_V2
+      ? 'MIRROR_SIGNAL'
+      : service[data.protocol ?? ProtocolEnum.GMX]
   return requester
     .post(`${SERVICE}/duplicate/${copyTradeId}`, { ...data, serviceKey })
     .then((res: any) => res.data as CopyTradeData)

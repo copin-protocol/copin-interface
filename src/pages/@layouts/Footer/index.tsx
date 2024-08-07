@@ -52,8 +52,8 @@ const Footer = ({ height }: { height: number }) => {
           // width: ['fit-content', 'fit-content', '100%'],
         }}
       >
-        <Type.Caption color="neutral3" display={['none', 'none', 'none', 'block']}>
-          <Trans>© 2024 Copin. All rights reserved. Data has been updated since Nov 2022</Trans>
+        <Type.Caption color="neutral3" display={['none', 'none', 'block']}>
+          <Trans>© 2024 Copin. All rights reserved. Data since Nov 2022. Smart contract: v0.1.0</Trans>
         </Type.Caption>
         <Flex flex="1" sx={{ alignItems: 'center', justifyContent: ['space-between', 'end'], gap: [2, 3] }}>
           <Flex

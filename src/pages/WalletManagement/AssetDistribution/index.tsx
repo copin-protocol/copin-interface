@@ -37,7 +37,7 @@ export default function AssetDistribution({ hiddenBalance }: { hiddenBalance?: b
     >
       <SectionTitle
         icon={<CoinVertical size={24} />}
-        title={<Trans>Asset Distribution</Trans>}
+        title={<Trans>CEX Asset Distribution</Trans>}
         sx={{ px: 3, pt: 3, pb: 1 }}
       />
       <ResponsiveContainer minHeight={400}>
@@ -77,18 +77,22 @@ export default function AssetDistribution({ hiddenBalance }: { hiddenBalance?: b
 
 function calculatePercentage(wallets?: CopyWalletData[]) {
   if (!wallets || wallets.length === 0) return { totalBalance: 0, chartData: [] }
-  const totalBalance = wallets.reduce((acc, wallet) => acc + (wallet?.balance ?? 0), 0)
+  const totalBalance = wallets
+    .filter((w) => !w.smartWalletAddress)
+    .reduce((acc, wallet) => acc + (wallet?.balance ?? 0), 0)
   return {
     totalBalance,
-    chartData: wallets.map((wallet) => {
-      return {
-        id: wallet.id,
-        name: parseWalletName(wallet),
-        balance: wallet?.balance ?? 0,
-        percentage: totalBalance ? ((wallet?.balance ?? 0) / totalBalance) * 100 : 0,
-        color: getColorFromText(wallet.id),
-      } as ChartData
-    }),
+    chartData: wallets
+      .filter((w) => !w.smartWalletAddress)
+      .map((wallet) => {
+        return {
+          id: wallet.id,
+          name: parseWalletName(wallet),
+          balance: wallet?.balance ?? 0,
+          percentage: totalBalance ? ((wallet?.balance ?? 0) / totalBalance) * 100 : 0,
+          color: getColorFromText(wallet.id),
+        } as ChartData
+      }),
   }
 }
 

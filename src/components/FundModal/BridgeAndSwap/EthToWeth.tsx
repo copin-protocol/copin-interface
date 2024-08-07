@@ -1,13 +1,12 @@
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner } from '@ethersproject/providers'
-import { formatEther, parseEther } from '@ethersproject/units'
+import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { ArrowRight } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 
 import EthIcon from 'assets/icons/ic_eth.svg'
 import useContractMutation from 'hooks/web3/useContractMutation'
-import useContractQuery from 'hooks/web3/useContractQuery'
 import { Button } from 'theme/Buttons'
 import Input from 'theme/Input'
 import { Box, Flex, Image, Type } from 'theme/base'
@@ -17,55 +16,48 @@ const ABI = [
   {
     constant: false,
     inputs: [],
-    name: 'exchangeEtherForSynths',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    name: 'deposit',
+    outputs: [],
     payable: true,
     stateMutability: 'payable',
     type: 'function',
   },
   {
-    constant: true,
-    inputs: [{ internalType: 'uint256', name: 'amount', type: 'uint256' }],
-    name: 'synthsReceivedForEther',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    constant: false,
+    inputs: [
+      { internalType: 'address', name: 'guy', type: 'address' },
+      { internalType: 'uint256', name: 'wad', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     payable: false,
-    stateMutability: 'view',
+    stateMutability: 'nonpayable',
     type: 'function',
   },
 ]
 
-const SwapETHsUSD = ({
+const EthToWeth = ({
   signer,
   ethBalance,
-  sUSDBalance,
+  wethBalance,
   refetch,
 }: {
   signer?: JsonRpcSigner
   ethBalance?: number
-  sUSDBalance?: number
+  wethBalance?: number
   refetch: () => void
 }) => {
-  const [amount, setAmount] = useState<number>()
-  const swapContract = useMemo(() => new Contract('0x9b79d6dfe4650d70f35dbb80f7d1ec0cf7f823fd', ABI, signer), [signer])
-  const { data: swapAmount } = useContractQuery<number>(
-    swapContract,
-    'synthsReceivedForEther',
-    [amount ? parseEther(amount.toString()) : 0],
-    {
-      enabled: !!amount,
-      select(data) {
-        return Number(formatEther(data))
-      },
-    }
-  )
-  const swapMutation = useContractMutation(swapContract)
-  const hasError = !!amount && !!ethBalance && amount > ethBalance
+  const [amount, setAmount] = useState<string>()
+  const wethContract = useMemo(() => new Contract('0x4200000000000000000000000000000000000006', ABI, signer), [signer])
+
+  const wethMutation = useContractMutation(wethContract)
+  const hasError = (!!amount && !!ethBalance && Number(amount) > ethBalance) || (!!amount && Number(amount) <= 0)
   return (
     <Box variant="card" mb={3}>
       <Flex sx={{ gap: 2 }} alignItems="center" mb={3}>
         <Image src={EthIcon} size={24} />
         <Type.BodyBold>
-          <Trans>Swap ETH to sUSD (Goerli)</Trans>
+          <Trans>Swap ETH to wETH</Trans>
         </Type.BodyBold>
       </Flex>
 
@@ -83,7 +75,7 @@ const SwapETHsUSD = ({
           <Type.Caption mr="1ch" color="neutral3">
             Bal:
           </Type.Caption>
-          <Type.CaptionBold>{formatNumber(sUSDBalance, 2, 2)} sUSD</Type.CaptionBold>
+          <Type.CaptionBold>{formatNumber(wethBalance, 4, 4)} wETH</Type.CaptionBold>
         </Box>
       </Flex>
 
@@ -92,7 +84,11 @@ const SwapETHsUSD = ({
           value={amount}
           error={hasError}
           type="number"
-          onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : undefined)}
+          min="1"
+          onChange={(e) => {
+            const value = e.target.value || ''
+            setAmount(Number(value) > 1_000_000_000 ? '1000000000' : value)
+          }}
           block
           sx={{
             pr: 2,
@@ -103,7 +99,7 @@ const SwapETHsUSD = ({
           <ArrowRight size={16} />
         </Box>
         <Input
-          value={swapAmount}
+          value={amount || ''}
           disabled
           type="number"
           block
@@ -113,25 +109,26 @@ const SwapETHsUSD = ({
               color: 'neutral1',
             },
           }}
-          suffix="sUSD"
+          suffix="wETH"
         />
       </Flex>
       <Button
         mt={3}
         block
         variant="primary"
-        disabled={hasError || !amount}
+        disabled={hasError || !amount || wethMutation.isLoading}
+        isLoading={wethMutation.isLoading}
         onClick={async () =>
-          swapMutation.mutate(
+          wethMutation.mutate(
             {
-              method: 'exchangeEtherForSynths',
+              method: 'deposit',
               params: [],
               value: amount ? parseEther(amount.toString()) : undefined,
             },
             {
               onSuccess: () => {
                 refetch()
-                setAmount(undefined)
+                setAmount('')
               },
             }
           )
@@ -143,4 +140,4 @@ const SwapETHsUSD = ({
   )
 }
 
-export default SwapETHsUSD
+export default EthToWeth

@@ -1,71 +1,80 @@
 import { defaultAbiCoder } from '@ethersproject/abi'
-import { parseEther } from '@ethersproject/units'
+import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { useState } from 'react'
-import { FieldValues, useForm, useWatch } from 'react-hook-form'
+import { FieldValues, useForm } from 'react-hook-form'
 
-import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import { SmartWalletFund } from 'hooks/features/useWalletFundSnxV2'
 import { useContract } from 'hooks/web3/useContract'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import { Button } from 'theme/Buttons'
 import NumberInputField from 'theme/InputField/NumberInputField'
-import { Flex, Type } from 'theme/base'
-import { SmartAccountCommand } from 'utils/config/enums'
+import { Box, Flex, Type } from 'theme/base'
+import { CopyTradePlatformEnum, SmartWalletCommand } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
-import { DEFAULT_CHAIN_ID } from 'utils/web3/chains'
+import { USD_ASSET } from 'utils/web3/chains'
 import { CONTRACT_ABIS } from 'utils/web3/contracts'
+import { getCopyTradePlatformChain } from 'utils/web3/dcp'
 
-const Withdraw = ({ smartAccount, onDismiss }: { smartAccount: string; onDismiss: () => void }) => {
+const Withdraw = ({
+  smartWallet,
+  smartWalletFund,
+  platform,
+  onDismiss,
+}: {
+  smartWallet: string
+  smartWalletFund: SmartWalletFund
+  platform: CopyTradePlatformEnum
+  onDismiss: () => void
+}) => {
+  const chainId = getCopyTradePlatformChain(platform)
   const {
     control,
     register,
     handleSubmit,
     setValue,
+    trigger,
     formState: { errors },
   } = useForm({
     mode: 'onChange',
   })
-  const amount = useWatch({
-    control,
-    name: 'amount',
-  })
   const { isValid, alert } = useRequiredChain({
-    chainId: DEFAULT_CHAIN_ID,
+    chainId,
   })
   const [submitting, setSubmitting] = useState(false)
 
-  const smartAccountContract = useContract({
+  const usdAsset = USD_ASSET[chainId]
+
+  const smartWalletContract = useContract({
     contract: {
-      address: smartAccount,
-      abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_ACCOUNT],
+      address: smartWallet,
+      abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_COPYWALLET],
     },
     withSignerIfPossible: true,
   })
-  const {
-    smartWalletMargin: { inWallet, available, accessibleMargins, reloadAvailableMargin },
-  } = useCopyWalletContext()
-  const smartAccountMutation = useContractMutation(smartAccountContract)
 
-  const disabled = !available || submitting || !!errors.amount
+  const smartWalletMutation = useContractMutation(smartWalletContract)
+
+  const disabled = !smartWalletFund.available || submitting || !!errors.amount
 
   const onSubmit = async (values: FieldValues) => {
-    if (disabled) return
+    if (disabled || !smartWalletFund.inWallet) return
     setSubmitting(true)
-    const amount = parseEther(values.amount.toString())
-    const commands = [SmartAccountCommand.ACCOUNT_MODIFY_MARGIN]
+    const amount = parseUnits(values.amount.toString(), usdAsset.decimals)
+    const commands = [SmartWalletCommand.OWNER_MODIFY_FUND]
     const inputs: any[] = [defaultAbiCoder.encode(['int256'], [amount.mul(-1)])]
 
-    if (inWallet && amount.gt(inWallet.bn)) {
-      const margins = (accessibleMargins ?? []).filter((e) => e.value.gt(0))
-      margins.forEach((margin) => {
-        commands.unshift(SmartAccountCommand.PERP_WITHDRAW_ALL_MARGIN)
-        inputs.unshift(defaultAbiCoder.encode(['address'], [margin.market]))
-      })
-    }
+    const margins = (smartWalletFund.accessibleMargins ?? []).filter((e) => e.value.gt(0))
+    margins.forEach((margin) => {
+      commands.unshift(SmartWalletCommand.PERP_WITHDRAW_ALL_MARGIN)
+      inputs.unshift(defaultAbiCoder.encode(['address'], [margin.market]))
+      console.log('market', margin.market)
+    })
+    console.log('commands', commands)
 
-    smartAccountMutation.mutate(
+    smartWalletMutation.mutate(
       {
         method: 'execute',
         params: [commands, inputs],
@@ -73,7 +82,7 @@ const Withdraw = ({ smartAccount, onDismiss }: { smartAccount: string; onDismiss
       {
         onSuccess: async () => {
           // await delay(DELAY_SYNC * 2)
-          reloadAvailableMargin()
+          smartWalletFund.reloadFund()
           setSubmitting(false)
           onDismiss()
         },
@@ -91,7 +100,7 @@ const Withdraw = ({ smartAccount, onDismiss }: { smartAccount: string; onDismiss
           <NumberInputField
             error={errors.amount?.message}
             label={<Trans>Amount</Trans>}
-            annotation={`Bal: ${formatNumber(available?.num, 2, 2)} sUSD`}
+            annotation={`Bal: ${formatNumber(smartWalletFund.available?.num, 2, 2)} ${usdAsset.symbol}`}
             control={control}
             suffix={
               <Flex alignItems="center" sx={{ gap: 2 }}>
@@ -99,12 +108,15 @@ const Withdraw = ({ smartAccount, onDismiss }: { smartAccount: string; onDismiss
                   type="button"
                   variant="ghostPrimary"
                   py={2}
-                  onClick={() => setValue('amount', available?.num)}
+                  onClick={() => {
+                    setValue('amount', smartWalletFund.available?.num)
+                    trigger()
+                  }}
                   disabled={submitting}
                 >
                   Max
                 </Button>
-                <Type.Caption>sUSD</Type.Caption>
+                <Type.Caption>{usdAsset.symbol}</Type.Caption>
               </Flex>
             }
             required
@@ -113,10 +125,14 @@ const Withdraw = ({ smartAccount, onDismiss }: { smartAccount: string; onDismiss
                 value: true,
                 message: 'Please enter the amount',
               },
-              ...(available
+              min: {
+                value: 0.1,
+                message: `Minimum withdrawal amount is 0.1 ${usdAsset.symbol}`,
+              },
+              ...(smartWalletFund.available
                 ? {
                     max: {
-                      value: available.num,
+                      value: smartWalletFund.available.num,
                       message: 'Insufficient funds',
                     },
                   }
@@ -126,16 +142,13 @@ const Withdraw = ({ smartAccount, onDismiss }: { smartAccount: string; onDismiss
             block
           />
           <Flex mt={3} sx={{ gap: 3 }}>
-            <Button type="button" variant="outlineInactive" disabled={submitting} block onClick={() => onDismiss()}>
-              Cancel
-            </Button>
-            <Button type="submit" block variant="primary" disabled={disabled} isLoading={submitting}>
-              Withdraw
+            <Button type="submit" size="lg" block variant="primary" disabled={disabled} isLoading={submitting}>
+              <Trans>Withdraw</Trans>
             </Button>
           </Flex>
         </form>
       ) : (
-        alert
+        <Box my={3}>{alert}</Box>
       )}
     </div>
   )

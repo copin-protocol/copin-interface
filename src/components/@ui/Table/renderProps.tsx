@@ -254,7 +254,7 @@ function OpeningPnL(props: Omit<OpeningPnLComponentProps, 'prices'>) {
 }
 function OpeningPnLComponent({ data, prices, ignoreFee, sx }: OpeningPnLComponentProps) {
   if (!data || !prices) return <></>
-  // Todo: Check calc for value in token
+  // Todo: Check calc for value in rewards
   const marketPrice = prices[data.indexToken]
   const { pnl, pnlInToken } = getOpeningPnl({ data, marketPrice, ignoreFee })
   return (

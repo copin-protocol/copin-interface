@@ -3,10 +3,16 @@ import React, { ReactNode } from 'react'
 
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { Flex, Type } from 'theme/base'
-import { CopyTradeStatusEnum, PositionSideEnum, PositionStatusEnum, TraderStatusEnum } from 'utils/config/enums'
+import {
+  CopyTradeStatusEnum,
+  EpochStatusEnum,
+  PositionSideEnum,
+  PositionStatusEnum,
+  TraderStatusEnum,
+} from 'utils/config/enums'
 
 type StatusProps = {
-  id: PositionStatusEnum | PositionSideEnum | CopyTradeStatusEnum | TraderStatusEnum
+  id: PositionStatusEnum | PositionSideEnum | CopyTradeStatusEnum | TraderStatusEnum | EpochStatusEnum
   text: ReactNode
   color: string
   backgroundColor: string
@@ -61,6 +67,30 @@ const STATUSES: StatusProps[] = [
     color: 'orange1',
     backgroundColor: 'neutral5',
   },
+  {
+    id: EpochStatusEnum.NOT_HAPPEN,
+    text: <Trans>Upcoming</Trans>,
+    color: 'green1',
+    backgroundColor: 'neutral5',
+  },
+  {
+    id: EpochStatusEnum.ONGOING,
+    text: <Trans>Ongoing</Trans>,
+    color: 'primary1',
+    backgroundColor: 'neutral5',
+  },
+  {
+    id: EpochStatusEnum.ENDED,
+    text: <Trans>Ended</Trans>,
+    color: 'neutral3',
+    backgroundColor: 'neutral5',
+  },
+  {
+    id: EpochStatusEnum.AWARDED,
+    text: <Trans>Ended</Trans>,
+    color: 'neutral3',
+    backgroundColor: 'neutral5',
+  },
 ]
 
 const Tag = ({
@@ -68,7 +98,10 @@ const Tag = ({
   status,
   sx,
   ...props
-}: { status: PositionStatusEnum | PositionSideEnum | CopyTradeStatusEnum | TraderStatusEnum; bg?: string } & any) => {
+}: {
+  status: PositionStatusEnum | PositionSideEnum | CopyTradeStatusEnum | TraderStatusEnum | EpochStatusEnum
+  bg?: string
+} & any) => {
   const finder = STATUSES.find((e) => e.id === status)
   if (!finder) return <></>
   return (

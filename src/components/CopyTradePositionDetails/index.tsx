@@ -17,7 +17,7 @@ import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { PositionStatusEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { getTokenTradeSupport } from 'utils/config/trades'
@@ -26,6 +26,8 @@ import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
 import { normalizePriceData } from 'utils/helpers/transform'
 
+import ClosePositionGnsV8 from './ClosePositionGnsV8'
+import ClosePositionSnxV2 from './ClosePositionSnxV2'
 import CopyChartProfit from './CopyChartProfit'
 import CopyPositionHistories from './CopyPositionHistories'
 import ListCopyOrderTable from './ListCopyOrderTable'
@@ -60,9 +62,26 @@ export default function CopyTradePositionDetails({ id }: { id: string | undefine
   const copyTradeOrders = useMemo(
     () =>
       copyTradeDetails && dataOrders
-        ? dataOrders.map((e) => {
+        ? dataOrders.map((e, i) => {
             const sizeUsd = e.size * e.price
-            return { ...e, sizeUsd, collateral: sizeUsd / copyTradeDetails.leverage }
+            let collateral = ((e.size * e.price) / (e.leverage || copyTradeDetails.leverage)) * (e.isIncrease ? 1 : -1)
+            if (e.collateral != null) {
+              collateral = e.collateral * (e.isIncrease ? 1 : -1)
+            } else if (e.totalCollateral != null) {
+              collateral = e.totalCollateral
+                ? e.totalCollateral - (i !== 0 ? dataOrders[i - 1].totalCollateral : 0)
+                : sizeUsd / e.leverage
+            }
+
+            return {
+              ...e,
+              sizeUsd,
+              collateral,
+              leverage:
+                e.totalCollateral && e.totalSize
+                  ? (e.totalSize * e.price) / e.totalCollateral
+                  : e.leverage || copyTradeDetails.leverage,
+            }
           })
         : undefined,
     [copyTradeDetails, dataOrders]
@@ -76,15 +95,10 @@ export default function CopyTradePositionDetails({ id }: { id: string | undefine
         : copyTradeOrders?.filter((e) => e.isIncrease)?.reduce((sum, current) => sum + current.size, 0) ?? 0,
     [copyTradeOrders, data?.totalSizeDelta, isOpening]
   )
-  const collateral = useMemo(
-    () =>
-      data && copyTradeOrders
-        ? copyTradeOrders
-            .filter((e) => e.isIncrease)
-            .reduce((sum, current) => sum + (current.size * current.price) / data.leverage, 0)
-        : 0,
-    [copyTradeOrders, data]
-  )
+  const collateral = useMemo(() => {
+    if (!data || !copyTradeOrders) return 0
+    return copyTradeOrders.filter((e) => e.isIncrease).reduce((sum, current) => sum + current.collateral, 0)
+  }, [copyTradeOrders, data])
   const symbol = data?.protocol ? getTokenTradeSupport(data?.protocol)?.[data?.indexToken]?.symbol : undefined
   const pnl = useMemo(
     () =>
@@ -113,6 +127,7 @@ export default function CopyTradePositionDetails({ id }: { id: string | undefine
   )
 
   const [currentTab, setCurrentTab] = useState<string>(TabKeyEnum.ORDER)
+  // console.log('copyTradeDetails', copyTradeDetails)
 
   const onForceReload = () => {
     reloadPosition()
@@ -129,9 +144,30 @@ export default function CopyTradePositionDetails({ id }: { id: string | undefine
             <Type.BodyBold>
               <Trans>Copy Position Details</Trans>
             </Type.BodyBold>
-            {data.status === PositionStatusEnum.OPEN && (
-              <UnlinkPosition copyPosition={data} onSuccess={onForceReload} mr={40} />
-            )}
+            {data.status === PositionStatusEnum.OPEN &&
+              copyTradeDetails?.exchange !== CopyTradePlatformEnum.SYNTHETIX_V2 &&
+              copyTradeDetails?.exchange !== CopyTradePlatformEnum.GNS_V8 && (
+                <UnlinkPosition copyPosition={data} onSuccess={onForceReload} mr={40} />
+              )}
+
+            {!!copyTradeDetails &&
+              copyTradeDetails.exchange === CopyTradePlatformEnum.SYNTHETIX_V2 &&
+              data.status === PositionStatusEnum.OPEN && (
+                <Box mr={4}>
+                  <ClosePositionSnxV2 copyPosition={data} copyWalletId={copyTradeDetails.copyWalletId} />
+                </Box>
+              )}
+            {!!copyTradeDetails &&
+              copyTradeDetails.exchange === CopyTradePlatformEnum.GNS_V8 &&
+              data.status === PositionStatusEnum.OPEN && (
+                <Box mr={4}>
+                  <ClosePositionGnsV8
+                    copyPosition={data}
+                    copyWalletId={copyTradeDetails.copyWalletId}
+                    onSuccess={onForceReload}
+                  />
+                </Box>
+              )}
           </Flex>
           <Box bg="neutral7" mb={3} mx={3} sx={{ borderRadius: '2px', border: 'small', borderColor: 'neutral4' }}>
             <Flex
@@ -289,6 +325,8 @@ export default function CopyTradePositionDetails({ id }: { id: string | undefine
                     isLoading={loadingOrders}
                     isOpening={isOpening}
                     token={token}
+                    platform={data.exchange}
+                    protocol={data.protocol}
                   />
                 ) : (
                   <></>

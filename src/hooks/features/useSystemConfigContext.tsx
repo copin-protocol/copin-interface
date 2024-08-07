@@ -3,6 +3,7 @@ import { useQuery } from 'react-query'
 
 import { getListEvent } from 'apis/event'
 import { getVolumeLimit } from 'apis/systemApis'
+import { EventDetailsData } from 'entities/event'
 import { VolumeLimitData } from 'entities/system'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -10,6 +11,7 @@ import { QUERY_KEYS } from 'utils/config/keys'
 export interface SystemConfigContext {
   volumeLimit: VolumeLimitData | undefined
   eventId: string | undefined
+  events: EventDetailsData[] | undefined
 }
 
 const SystemConfigContext = createContext<SystemConfigContext>({} as SystemConfigContext)
@@ -22,6 +24,7 @@ export function SystemConfigProvider({ children }: { children: ReactNode }) {
 
   const contextValue: SystemConfigContext = {
     volumeLimit,
+    events,
     eventId: events?.[0]?.id,
   }
 

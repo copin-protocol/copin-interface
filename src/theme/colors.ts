@@ -5,6 +5,8 @@ const black = '#000000'
 
 export const linearGradient3 = 'linear-gradient(180.26deg, #272C43 0.23%, rgba(11, 13, 23, 0) 85.39%)'
 
+export const linearGradient1 = 'linear-gradient(90deg, #ABECA2 -1.42%, #2FB3FE 30.38%, #6A8EEA 65.09%, #A185F4 99.55%)'
+
 function colors(darkMode: boolean): Colors {
   return {
     darkMode,

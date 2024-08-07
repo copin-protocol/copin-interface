@@ -1,13 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
 import { useResponsive } from 'ahooks'
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
 import CrossTag from 'assets/images/cross_tag.svg'
 import NewTag from 'assets/images/new_tag.svg'
 import ActiveDot from 'components/@ui/ActiveDot'
+import { ChainWithLabel } from 'components/@ui/ChainLogo'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -22,9 +23,9 @@ import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { ProtocolOptionProps } from 'utils/config/protocols'
 import { formatNumber } from 'utils/helpers/format'
 import { logEventSwitchProtocol } from 'utils/tracking/event'
-import { CHAINS } from 'utils/web3/chains'
 
 import SearchProtocols from './SearchProtocols'
+import { getProtocolConfigs } from './helpers'
 
 type SwitchProtocolComponentProps = {
   buttonSx?: SystemStyleObject & GridProps
@@ -77,25 +78,7 @@ function SwitchProtocolsComponent({
   const protocolOptions = useGetProtocolOptions()
   const protocols = protocolOptions.map((option) => option.id)
 
-  const uniqueChains = useMemo(() => {
-    const protocolCountMap = protocolOptions.reduce((acc: any, option) => {
-      if (!acc[option.chainId]) {
-        acc[option.chainId] = { name: option.label, count: 0 }
-      }
-      acc[option.chainId].count += 1
-      return acc
-    }, {})
-
-    return Object.keys(protocolCountMap)
-      .map((chainId) => ({
-        chainId: Number(chainId),
-        name: protocolCountMap[chainId].name,
-        count: protocolCountMap[chainId].count,
-      }))
-      .sort((x, y) =>
-        x.name.toLowerCase() < y.name.toLowerCase() ? -1 : x.name.toLowerCase() > y.name.toLowerCase() ? 1 : 0
-      )
-  }, [protocolOptions])
+  const protocolConfigs = getProtocolConfigs(protocolOptions)
 
   const currentProtocolOption = protocolOptions.find((option) => option.id === protocol) ?? protocolOptions[0]
   const handleSwitchProtocol = useCallback(
@@ -145,32 +128,29 @@ function SwitchProtocolsComponent({
           )}
         </Box>
         <Flex flexDirection={lg ? 'row' : 'column'}>
-          {uniqueChains.map((e, index) => {
-            const protocolsByChain = protocolOptions
-              .filter((option) => option.chainId === e.chainId)
-              .sort((x, y) =>
-                x.text.toLowerCase() < y.text.toLowerCase() ? -1 : x.text.toLowerCase() > y.text.toLowerCase() ? 1 : 0
-              )
+          {protocolConfigs.chainOptions.map((chainOption, index, chainOptions) => {
+            const protocolsByChain = protocolConfigs.protocolsByChains[chainOption.chainIdNumber]
+            const protocolCount = protocolsByChain?.length ?? 0
             return (
               <Flex
-                key={e.chainId}
+                key={chainOption.label}
                 flexDirection="column"
                 sx={{
                   pt: 3,
                   borderTop: 'small',
-                  borderRight: lg && index < uniqueChains.length - 1 ? 'small' : 'none',
+                  borderRight: lg && index < chainOptions.length - 1 ? 'small' : 'none',
                   borderColor: 'neutral4',
                   width: lg ? 168 : '100%',
                 }}
               >
-                <Flex px={10} pb={2} alignItems="center" sx={{ gap: 2 }}>
-                  <img width={24} height={24} src={`/images/chains/${CHAINS[e.chainId].icon}.png`} alt={e.name} />
-                  <Type.CaptionBold>
-                    {e.name} ({formatNumber(e.count, 0)})
-                  </Type.CaptionBold>
-                </Flex>
+                <Box px={10} pb={2}>
+                  <ChainWithLabel
+                    label={`${chainOption.label} (${formatNumber(protocolCount, 0)})`}
+                    icon={chainOption.icon}
+                  />
+                </Box>
                 <Flex flexDirection="column">
-                  {protocolsByChain.map((option) => {
+                  {protocolsByChain?.map((option) => {
                     const isActive = currentProtocolOption.id === option.id
                     return (
                       <Box key={option.id}>
@@ -240,27 +220,6 @@ function SwitchProtocolsComponent({
             )
           })}
         </Flex>
-        {/*{protocolOptions.map((option) => {*/}
-        {/*  if (!option) {*/}
-        {/*    return null*/}
-        {/*  }*/}
-        {/*  const isActive = currentProtocolOption.id === option.id*/}
-        {/*  return (*/}
-        {/*    <DropdownItem key={option.id} size="sm" onClick={() => handleSwitchProtocol(option)}>*/}
-        {/*      <Flex py={1} alignItems="center" sx={{ gap: 2 }}>*/}
-        {/*        <ProtocolLogo protocol={option.id} isActive={isActive} hasText={false} size={32} />*/}
-        {/*        <Flex flexDirection="column">*/}
-        {/*          <Type.Caption lineHeight="16px" color={isActive ? 'primary1' : 'neutral1'}>*/}
-        {/*            {option.text}*/}
-        {/*          </Type.Caption>*/}
-        {/*          <Type.Caption lineHeight="16px" color={isActive ? 'primary1' : 'neutral3'}>*/}
-        {/*            {getChainMetadata(option.chainId).label}*/}
-        {/*          </Type.Caption>*/}
-        {/*        </Flex>*/}
-        {/*      </Flex>*/}
-        {/*    </DropdownItem>*/}
-        {/*  )*/}
-        {/*})}*/}
       </Box>
     )
   }
@@ -290,7 +249,7 @@ function SwitchProtocolsComponent({
             }
           : { borderRadius: 0, border: 'none', p: 0, ...(buttonSx ?? {}) }
       }
-      menuSx={{ width: 'max-content', maxWidth: '95svw', maxHeight: '80svh', py: 2, overflowY: 'auto' }}
+      menuSx={{ width: 'max-content', maxWidth: '95svw', maxHeight: '60svh', py: 2, overflowY: 'auto' }}
       sx={{ minWidth: 'fit-content', ...(sx ?? {}) }}
       hasArrow={true}
       dismissible={false}

@@ -79,8 +79,9 @@ export enum CopyTradePlatformEnum {
   BYBIT = 'BYBIT',
   OKX = 'OKX',
   GATE = 'GATE',
-  SYNTHETIX = 'SYNTHETIX',
   SYNTHETIX_V2 = 'SYNTHETIX_V2',
+  SYNTHETIX_V3 = 'SYNTHETIX_V3',
+  GNS_V8 = 'GNS_V8',
 }
 
 export enum CopyTradeConfigTypeEnum {
@@ -171,16 +172,19 @@ export enum KeyNameEnum {
   ENTER = 'Enter',
 }
 
-export enum SmartAccountCommand {
-  ACCOUNT_MODIFY_MARGIN = 0,
-  ACCOUNT_WITHDRAW_ETH = 1,
-  PERP_CANCEL_ORDER = 2,
-  PERP_WITHDRAW_ALL_MARGIN = 3,
-  PERP_MODIFY_MARGIN = 4,
-  PERP_SUBMIT_CREATE_ORDER = 5,
-  PERP_SUBMIT_CLOSE_ORDER = 6,
-  DELEGATE_DEPOSIT_MARGIN = 7,
-  DELEGATE_RELEASE_FEE = 8,
+export enum SmartWalletCommand {
+  OWNER_MODIFY_FUND = 0,
+  OWNER_WITHDRAW_ETH = 1,
+  OWNER_WITHDRAW_TOKEN = 2,
+  PERP_CREATE_ACCOUNT = 3,
+  PERP_MODIFY_COLLATERAL = 4,
+  PERP_PLACE_ORDER = 5,
+  PERP_CLOSE_ORDER = 6,
+  PERP_CANCEL_ORDER = 7,
+  PERP_WITHDRAW_ALL_MARGIN = 8,
+  GELATO_CREATE_TASK = 9,
+  GELATO_UPDATE_TASK = 10,
+  GELETO_CANCEL_TASK = 11,
 }
 
 export enum CurrencyEnum {
@@ -266,4 +270,27 @@ export enum ChainStatsEnum {
   BNB_CHAIN = 'bnb',
   BASE = 'base',
   MANTLE = 'mantle',
+}
+
+export enum RewardSymbolEnum {
+  USD = 'USD',
+  ARB = 'ARB',
+}
+
+export enum EventTypeEnum {
+  CEX = 'CEX',
+  GNS = 'GNS',
+}
+
+export enum EpochStatusEnum {
+  NOT_HAPPEN = 0,
+  ONGOING = 1,
+  ENDED = 2,
+  AWARDED = 3,
+}
+
+export enum FeeRateTraderStatus {
+  CLAIMED,
+  CLAIMABLE,
+  WAITING,
 }

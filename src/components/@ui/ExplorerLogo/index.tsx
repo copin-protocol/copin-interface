@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Box } from 'theme/base'
 import { BoxProps } from 'theme/types'
-import { ProtocolEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 
 // TODO: Check when add new protocol
 const ExplorerLogo = ({
@@ -24,9 +24,11 @@ const ExplorerLogo = ({
     case ProtocolEnum.MYX_ARB:
     case ProtocolEnum.HMX_ARB:
     case ProtocolEnum.VELA_ARB:
+    case CopyTradePlatformEnum.GNS_V8:
     case ProtocolEnum.YFX_ARB:
       icon = 'ARBITRUM'
       break
+
     case ProtocolEnum.KWENTA:
     case ProtocolEnum.POLYNOMIAL:
     case ProtocolEnum.DEXTORO:
@@ -47,6 +49,7 @@ const ExplorerLogo = ({
       break
     case ProtocolEnum.AVANTIS_BASE:
     case ProtocolEnum.SYNTHETIX_V3:
+    case CopyTradePlatformEnum.SYNTHETIX_V3:
       icon = 'BASE'
       break
     case ProtocolEnum.LOGX_MODE:

@@ -31,16 +31,16 @@ const BridgeETH = () => {
         <Image src={EthIcon} size={24} />
         <Image src={OpIcon} size={24} sx={{ position: 'relative', left: -3 }} />
         <Type.BodyBold sx={{ position: 'relative', left: -3 }}>
-          <Trans>Bridge ETH to OP (Goerli)</Trans>
+          <Trans>Bridge ETH to OP (Sepolia)</Trans>
         </Type.BodyBold>
       </Flex>
       <a
-        href="https://goerli.hop.exchange/#/send?sourceNetwork=ethereum&destNetwork=optimism&token=ETH"
+        href="https://sepolia.hop.exchange/#/send?sourceNetwork=ethereum&destNetwork=optimism&token=ETH"
         target="_blank"
         rel="noreferrer"
       >
         <ButtonWithIcon mt={2} icon={<ArrowSquareOut size={16} />} direction="right" variant="primary" block>
-          Bridge on Hop Goerli
+          Bridge on Hop Sepolia
         </ButtonWithIcon>
       </a>
     </Box>

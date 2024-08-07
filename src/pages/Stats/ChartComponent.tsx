@@ -576,6 +576,7 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
                 CopyTradePlatformEnum.BYBIT,
                 CopyTradePlatformEnum.OKX,
                 CopyTradePlatformEnum.GATE,
+                CopyTradePlatformEnum.GNS_V8,
               ].includes(exchange as CopyTradePlatformEnum)
             ) {
               const exchangeStats = stats.exchanges[exchange] || {}

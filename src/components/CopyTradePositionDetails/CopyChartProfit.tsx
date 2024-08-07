@@ -21,6 +21,7 @@ import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
+import { PositionStatusEnum } from 'utils/config/enums'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TIMEFRAME_NAMES, getTokenTradeSupport } from 'utils/config/trades'
@@ -335,7 +336,7 @@ export default function CopyChartProfit({
         lineStyle: LineStyle.Solid,
       })
     }
-    if (low && low.value < 0) {
+    if (low && low.value < 0 && position.status === PositionStatusEnum.OPEN) {
       const liquidationPrice = calcCopyLiquidatePrice(position)
       const posDelta = calcCopyOpeningPnL(position, liquidationPrice)
       if (posDelta) {

@@ -27,7 +27,8 @@ const EXCHANGES = [
   CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.GATE,
   CopyTradePlatformEnum.BINANCE,
-  CopyTradePlatformEnum.SYNTHETIX,
+  CopyTradePlatformEnum.SYNTHETIX_V2,
+  CopyTradePlatformEnum.GNS_V8,
 ]
 const ALLOW_EXCHANGE = [
   CopyTradePlatformEnum.BINGX,
@@ -35,6 +36,8 @@ const ALLOW_EXCHANGE = [
   CopyTradePlatformEnum.BYBIT,
   CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.GATE,
+  CopyTradePlatformEnum.SYNTHETIX_V2,
+  CopyTradePlatformEnum.GNS_V8,
 ]
 
 export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean }) {
@@ -196,6 +199,7 @@ function ExchangeTitle({
     case CopyTradePlatformEnum.BINANCE:
       title = 'Binance Exchange'
       break
+
     case CopyTradePlatformEnum.BYBIT:
       title = 'Bybit Exchange'
       break
@@ -205,8 +209,11 @@ function ExchangeTitle({
     case CopyTradePlatformEnum.GATE:
       title = 'Gate Exchange'
       break
-    case CopyTradePlatformEnum.SYNTHETIX:
-      title = 'Synthetix Exchange'
+    case CopyTradePlatformEnum.SYNTHETIX_V2:
+      title = 'Synthetix v2 Exchange'
+      break
+    case CopyTradePlatformEnum.GNS_V8:
+      title = 'gTrade Exchange'
       break
   }
   if (!title) return null

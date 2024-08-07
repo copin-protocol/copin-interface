@@ -1,3 +1,4 @@
+import { EventDetailsData } from 'entities/event'
 import { LINKS, TELEGRAM_BOT_ALERT } from 'utils/config/constants'
 import { ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
@@ -128,4 +129,8 @@ export function generateTraderExchangesStatsRoute(data: {
     url: `${ROUTES.TRADER_EXCHANGES_STATS.path_prefix}/${data.address}/${data.protocol}`,
     params: data.params,
   })
+}
+
+export function generateEventDetailsRoute(data: EventDetailsData) {
+  return createUrlWithParams({ url: `/${ROUTES.EVENT_DETAILS.path_prefix}/${data.slug ?? data.id}` })
 }

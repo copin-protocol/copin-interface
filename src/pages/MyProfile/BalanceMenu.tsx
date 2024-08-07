@@ -7,9 +7,11 @@ import { getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import ReferralStatus from 'components/WalletDetailsCard/ReferralStatus'
+import Num from 'entities/Num'
 import { CopyWalletData } from 'entities/copyWallet'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
+import { CEX_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
@@ -21,10 +23,12 @@ export default function BalanceMenu({
   copyWallets,
   activeWallet,
   onChangeKey,
+  balance,
 }: {
   copyWallets: CopyWalletData[] | undefined
   activeWallet: CopyWalletData | null
   onChangeKey: (key: CopyWalletData | null) => void
+  balance: Num | null
 }) {
   const currentOption = useMemo(() => {
     const foundItem = copyWallets?.find((e) => e.id === activeWallet?.id)
@@ -83,7 +87,9 @@ export default function BalanceMenu({
         >
           <Type.CaptionBold>{currentOption.title}</Type.CaptionBold>
         </Dropdown>
-        {activeWallet && <ReferralStatus data={activeWallet} sx={{ minWidth: 80 }} />}
+        {activeWallet && CEX_EXCHANGES.includes(activeWallet.exchange) && (
+          <ReferralStatus data={activeWallet} sx={{ minWidth: 80 }} />
+        )}
       </Flex>
       <Flex
         width={{ _: '100%', sm: 'auto' }}
@@ -96,7 +102,7 @@ export default function BalanceMenu({
           ...hideScrollbar(),
         }}
       >
-        <ListItem title={'Balance'} value={overview?.balance} prefix="$" withHideAction />
+        <ListItem title={'Balance'} value={balance ? balance.num : overview?.balance} prefix="$" withHideAction />
         <ListItem title={'Total Volume'} value={overview?.totalVolume} prefix="$" />
         <ListItem
           title={

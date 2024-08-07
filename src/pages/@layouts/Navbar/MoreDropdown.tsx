@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import {
   BookBookmark,
+  CaretDown,
   ChartBar,
   CrownSimple,
   PresentationChart,
   ThermometerSimple,
-  Trophy,
 } from '@phosphor-icons/react'
 import { ComponentType, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
@@ -23,6 +23,8 @@ export default function MoreDropdown() {
       sx={{
         height: '100%',
         position: 'relative',
+        borderBottom: 'small',
+        borderBottomColor: 'transparent',
         '& .dropdown-title': {
           color: 'neutral1',
         },
@@ -38,10 +40,14 @@ export default function MoreDropdown() {
         },
       }}
     >
-      <Flex className="dropdown-title" sx={{ alignItems: 'center', justifyContent: 'center', height: '100%', px: 2 }}>
+      <Flex
+        className="dropdown-title"
+        sx={{ alignItems: 'center', justifyContent: 'center', height: '100%', gap: 1, px: 2 }}
+      >
         <Type.Caption>
           <Trans>More</Trans>
         </Type.Caption>
+        <IconBox icon={<CaretDown size={16} />} color="neutral1" />
       </Flex>
       <Box
         className="dropdown-content"

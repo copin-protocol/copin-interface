@@ -1,13 +1,23 @@
-import { BookBookmark, ChartBar, Icon, PresentationChart, Trophy, Wallet, XCircle } from '@phosphor-icons/react'
+import {
+  ArrowsHorizontal,
+  BookBookmark,
+  ChartBar,
+  Icon,
+  PresentationChart,
+  Trophy,
+  Wallet,
+  XCircle,
+} from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import dayjs from 'dayjs'
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import {
   getEventDetails,
+  getEventDetailsBySlug,
   getEventLeaderboard,
   getEventTotalVolume,
   getUserEventRanking,
@@ -21,7 +31,10 @@ import Divider from 'components/@ui/Divider'
 import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
 import ToastBody from 'components/@ui/ToastBody'
+import CreateSmartWalletAction from 'components/CreateSmartWalletAction'
+import EventTradingProtocols from 'components/EventTradingProtocols'
 import { useClickLoginButton } from 'components/LoginAction'
+import RewardWithSymbol from 'components/RewardWithSymbol'
 import { RankingInfo } from 'components/TopLeadboard/ColumnsData'
 import ReferralStatus from 'components/WalletDetailsCard/ReferralStatus'
 import { CopyWalletData } from 'entities/copyWallet'
@@ -38,32 +51,41 @@ import { PaginationWithSelect } from 'theme/Pagination'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex, IconBox, Image, Li, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { DATE_FORMAT, DEFAULT_PROTOCOL, LINKS, TIME_FORMAT } from 'utils/config/constants'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { CEX_EXCHANGES, DATE_FORMAT, DEFAULT_PROTOCOL, LINKS, TIME_FORMAT } from 'utils/config/constants'
+import { CopyTradePlatformEnum, EventTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { addressShorten, compactNumber, formatDate, formatNumber } from 'utils/helpers/format'
+import { addressShorten, compactNumber, formatDate, formatImageUrl, formatNumber } from 'utils/helpers/format'
 import { generateExplorerRoute } from 'utils/helpers/generateRoute'
 import { getErrorMessage } from 'utils/helpers/handleError'
-import { pageToOffset, parseExchangeImage } from 'utils/helpers/transform'
+import { pageToOffset, parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 import { logEventCompetition } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 const ALLOWED_EXCHANGE = [CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.BITGET]
 
+type EventDetailsProps = {
+  eventDetails: EventDetailsData | undefined
+  userEventDetails: UserEventRankingData | undefined
+  totalVolume: number | undefined
+  isLoading: boolean
+}
+
 export default function EventDetailsPage() {
   const { sm, xl } = useResponsive()
-  const { id: tradingEventId } = useParams<{ id: string }>()
+  const { id } = useParams<{ id: string }>()
+  const isSlug = id?.includes('-')
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
-  const { data: eventDetails } = useQuery(
-    [QUERY_KEYS.GET_EVENT_COMPETITION, 'eventDetails', tradingEventId],
-    () => getEventDetails({ tradingEventId }),
+  const { data: eventDetails, isLoading: isLoadingEventDetails } = useQuery(
+    [QUERY_KEYS.GET_EVENT_COMPETITION, 'eventDetails', id],
+    () => (isSlug ? getEventDetailsBySlug({ slug: id }) : getEventDetails({ tradingEventId: id })),
     {
-      enabled: !!tradingEventId,
+      enabled: !!id,
       keepPreviousData: true,
     }
   )
+  const tradingEventId = eventDetails?.id
   const { data: userEventDetails } = useQuery(
     [QUERY_KEYS.GET_EVENT_COMPETITION, 'user', myProfile?.id, tradingEventId],
     () => getUserEventRanking({ tradingEventId }),
@@ -77,29 +99,22 @@ export default function EventDetailsPage() {
     { enabled: !!tradingEventId, keepPreviousData: true }
   )
 
+  const RenderComponent = xl ? DesktopVersion : sm ? TabletVersion : MobileVersion
+
   return (
     <>
-      <CustomPageTitle title="On-chain Copy-Trading to share $50,000 & Merchs rewards" />
-      {xl ? (
-        <DesktopVersion userEventDetails={userEventDetails} eventDetails={eventDetails} totalVolume={totalVolume} />
-      ) : sm ? (
-        <TabletVersion userEventDetails={userEventDetails} eventDetails={eventDetails} totalVolume={totalVolume} />
-      ) : (
-        <MobileVersion userEventDetails={userEventDetails} eventDetails={eventDetails} totalVolume={totalVolume} />
-      )}
+      <CustomPageTitle title={eventDetails?.title ?? 'On-chain Copy-Trading to share $50,000 & Merchs rewards'} />
+      <RenderComponent
+        userEventDetails={userEventDetails}
+        eventDetails={eventDetails}
+        totalVolume={totalVolume}
+        isLoading={isLoadingEventDetails}
+      />
     </>
   )
 }
 
-function DesktopVersion({
-  userEventDetails,
-  eventDetails,
-  totalVolume,
-}: {
-  eventDetails: EventDetailsData | undefined
-  userEventDetails: UserEventRankingData | undefined
-  totalVolume: number | undefined
-}) {
+function DesktopVersion({ userEventDetails, eventDetails, totalVolume, isLoading }: EventDetailsProps) {
   return (
     <Box
       sx={{
@@ -114,7 +129,8 @@ function DesktopVersion({
       <Box
         sx={{
           height: '100%',
-          flex: '1 0 300px',
+          width: '300px',
+          flexShrink: 0,
           borderLeft: 'small',
           borderRight: 'small',
           borderRightColor: 'neutral4',
@@ -122,7 +138,11 @@ function DesktopVersion({
           overflow: 'auto',
         }}
       >
-        <UserOverview userEventDetails={userEventDetails} />
+        <UserOverview
+          eventDetails={eventDetails}
+          userEventDetails={userEventDetails}
+          rewardSymbol={eventDetails?.rewardSymbol}
+        />
         <Divider />
         <RewardDistribution eventDetails={eventDetails} totalVolume={totalVolume} />
       </Box>
@@ -135,19 +155,20 @@ function DesktopVersion({
           overflow: 'auto',
         }}
       >
-        <Banner />
+        <Banner eventDetails={eventDetails} isLoading={isLoading} />
         <VolumeProgress eventDetails={eventDetails} totalVolume={totalVolume} />
         <Divider mt={2} mb={3} />
         <Box flex="1 0 0">
           <Flex sx={{ height: '100%', flexDirection: 'column' }}>
-            <LeaderBoard tradingEventId={eventDetails?.id} />
+            <LeaderBoard tradingEventId={eventDetails?.id} rewardSymbol={eventDetails?.rewardSymbol} />
           </Flex>
         </Box>
       </Box>
       <Box
         sx={{
           height: '100%',
-          flex: '1 0 400px',
+          width: '400px',
+          flexShrink: 0,
           borderLeft: 'small',
           borderRight: 'small',
           borderRightColor: 'neutral4',
@@ -234,8 +255,10 @@ function RegisterArea({
   const endDate = dayjs(eventDetails?.endDate).utc().valueOf()
   let text = 'Competition is starting in'
   let countdownTime: number | null = null
+  let icon = null
   switch (eventDetails?.status) {
     case TradingEventStatusEnum.ONGOING:
+      icon = <IconBox icon={<ArrowsHorizontal size={24} />} color="primary1" />
       text = 'Competition ends in'
       break
     case TradingEventStatusEnum.ENDED:
@@ -254,11 +277,16 @@ function RegisterArea({
   if (today >= endDate) {
     countdownTime = null
   }
+
+  const isDCP = eventDetails?.type === EventTypeEnum.GNS
+  const isJoined = userEventDetails?.tradingEventId === eventDetails?.id
+
   return (
     <Box sx={{ p: 3, pt: 3, pb: 20, bg: 'neutral5' }}>
-      <Type.Body mb={24} color="neutral3">
-        {text}
-      </Type.Body>
+      <Flex mb={24} sx={{ alignItems: 'center', gap: 2 }}>
+        {icon}
+        <Type.Body color="neutral3">{text}</Type.Body>
+      </Flex>
       <TimeCountdown time={countdownTime} />
       {eventDetails?.status === TradingEventStatusEnum.ENDED && (
         <Button
@@ -271,7 +299,9 @@ function RegisterArea({
       )}
       {eventDetails?.status !== TradingEventStatusEnum.ENDED && (
         <>
-          {userEventDetails?.tradingEventId ? (
+          {isDCP ? (
+            <EventTradingProtocols type={eventDetails?.type} />
+          ) : isJoined ? (
             <>
               {eventDetails?.status === TradingEventStatusEnum.UPCOMING && (
                 <Button variant="primary" block mt={24} sx={{ fontWeight: '600', fontSize: '13px', py: 2 }} disabled>
@@ -342,7 +372,7 @@ function TimeCountdown({ time }: { time: number | null }) {
   const timer = useCountdown(dayjs.utc(time).valueOf())
   if (time == null) {
     return (
-      <Flex sx={{ gap: 4 }}>
+      <Flex sx={{ gap: 4 }} justifyContent="space-between">
         <CountdownItem value={'0'} unit={'Days'} />
         <CountdownItem value={'0'} unit={'Hours'} />
         <CountdownItem value={'0'} unit={'Minutes'} />
@@ -354,7 +384,7 @@ function TimeCountdown({ time }: { time: number | null }) {
     <>
       {!!timer?.hasEnded && <Type.LargeBold>--</Type.LargeBold>}
       {!timer?.hasEnded && (
-        <Flex sx={{ gap: 4 }}>
+        <Flex sx={{ gap: 4 }} justifyContent="space-between">
           <CountdownItem value={timer?.days} unit={'Days'} />
           <CountdownItem value={timer?.hours} unit={'Hours'} />
           <CountdownItem value={timer?.minutes} unit={'Minutes'} />
@@ -366,12 +396,12 @@ function TimeCountdown({ time }: { time: number | null }) {
 }
 function CountdownItem({ value, unit }: { value: string | undefined; unit: string }) {
   return (
-    <Box sx={{ flexShrink: 0 }}>
+    <Flex flexDirection="column" alignItems="center" sx={{ flexShrink: 0 }}>
       <Type.LargeBold mb={1} display="block">
         {value ?? '--'}
       </Type.LargeBold>
       <Type.LargeBold color="neutral3">{unit}</Type.LargeBold>
-    </Box>
+    </Flex>
   )
 }
 function NotEligible({ onDismiss }: { onDismiss: () => void }) {
@@ -431,17 +461,26 @@ function RegisterSuccess({ onDismiss }: { onDismiss: () => void }) {
   )
 }
 //=========================
-function Banner() {
+function Banner({ eventDetails, isLoading }: { eventDetails: EventDetailsData | undefined; isLoading: boolean }) {
   return (
     <Box sx={{ height: [154, 154, 220, 220, 220], flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-      <Image src={banner} sx={{ objectFit: 'cover', height: '100%', width: '100%' }} />
+      {!isLoading && (
+        <Image
+          src={
+            eventDetails?.type === EventTypeEnum.GNS && eventDetails?.bannerUrl
+              ? formatImageUrl(eventDetails?.bannerUrl)
+              : banner
+          }
+          sx={{ objectFit: 'cover', height: '100%', width: '100%' }}
+        />
+      )}
     </Box>
   )
 }
 
 //=========================
 const LIMIT = 10
-function LeaderBoard({ tradingEventId }: { tradingEventId: string | undefined }) {
+function LeaderBoard({ tradingEventId, rewardSymbol }: { tradingEventId: string | undefined; rewardSymbol?: string }) {
   const { currentPage, changeCurrentPage } = usePageChange({ pageName: 'page' })
   const { data: leaderboard } = useQuery(
     [QUERY_KEYS.GET_EVENT_COMPETITION, 'leaderboard', currentPage, tradingEventId],
@@ -489,7 +528,7 @@ function LeaderBoard({ tradingEventId }: { tradingEventId: string | undefined })
         style: { minWidth: '150px', textAlign: 'right', pr: 3 },
         render: (item) => (
           <Type.CaptionBold color="neutral1">
-            {item.estimateReward != null ? `$${formatNumber(item.estimateReward)}` : '--'}
+            <RewardWithSymbol value={item.estimateReward} rewardSymbol={rewardSymbol} />
           </Type.CaptionBold>
         ),
       },
@@ -544,7 +583,9 @@ function LeaderBoard({ tradingEventId }: { tradingEventId: string | undefined })
                 </Flex>
                 <Flex mb={12} sx={{ width: '100%', justifyContent: 'space-between' }}>
                   <Type.Caption color="neutral3">Estimate Rewards</Type.Caption>
-                  <Type.Caption>${formatNumber(_d.estimateReward)}</Type.Caption>
+                  <Type.Caption>
+                    <RewardWithSymbol value={_d.estimateReward} rewardSymbol={rewardSymbol} />
+                  </Type.Caption>
                 </Flex>
                 <Flex sx={{ width: '100%', justifyContent: 'space-between' }}>
                   <Type.Caption color="neutral3">Copy Volume</Type.Caption>
@@ -587,7 +628,10 @@ function VolumeProgress({
         <Flex sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
           <Flex sx={{ alignItems: 'center', gap: 2 }}>
             <IconBox icon={<Trophy size={24} />} color="neutral3" />
-            <Type.H5 color="green1">${formatNumber(eventDetails.maxReward)}</Type.H5>
+            <Type.BodyBold>Rewards:</Type.BodyBold>
+            <Type.H5 color="green1">
+              <RewardWithSymbol value={eventDetails.maxReward} rewardSymbol={eventDetails?.rewardSymbol} size={24} />
+            </Type.H5>
           </Flex>
           <StatusTag eventDetails={eventDetails} />
         </Flex>
@@ -748,7 +792,7 @@ function VolumeProgress({
                         display="block"
                         sx={{ textAlign: isLastItem ? 'right' : 'center' }}
                       >
-                        ${compactNumber(config.reward)}
+                        <RewardWithSymbol isCompact value={config.reward} rewardSymbol={eventDetails?.rewardSymbol} />
                       </Type.CaptionBold>
                     </Box>
                   </Box>
@@ -783,17 +827,37 @@ function StatusTag({ eventDetails }: { eventDetails: EventDetailsData | undefine
   )
 }
 //=========================
-function UserOverview({ userEventDetails }: { userEventDetails: UserEventRankingData | undefined }) {
+function UserOverview({
+  eventDetails,
+  userEventDetails,
+  rewardSymbol,
+}: {
+  eventDetails: EventDetailsData | undefined
+  userEventDetails: UserEventRankingData | undefined
+  rewardSymbol?: string
+}) {
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
-  const { copyWallets } = useCopyWalletContext()
+  const { copyWallets, reloadCopyWallets } = useCopyWalletContext()
+
   const eligibleWallets: CopyWalletData[] = []
-  ALLOWED_EXCHANGE.forEach((exchange) => {
-    copyWallets?.forEach((wallet) => {
-      if (wallet.isReferral && wallet.exchange === exchange) {
+  switch (eventDetails?.type) {
+    case EventTypeEnum.CEX:
+      ALLOWED_EXCHANGE.forEach((exchange) => {
+        copyWallets?.forEach((wallet) => {
+          if (wallet.isReferral && wallet.exchange === exchange) {
+            eligibleWallets.push(wallet)
+          }
+        })
+      })
+      break
+    case EventTypeEnum.GNS:
+      const gnsWallets = copyWallets?.filter((e) => e.exchange === CopyTradePlatformEnum.GNS_V8)
+      gnsWallets?.forEach((wallet) => {
         eligibleWallets.push(wallet)
-      }
-    })
-  })
+      })
+      break
+  }
+
   return (
     <Box sx={{ px: 3, py: 24 }}>
       <Flex sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -815,9 +879,11 @@ function UserOverview({ userEventDetails }: { userEventDetails: UserEventRanking
                           sx={{ flexShrink: 0 }}
                         />
                         <Type.CaptionBold sx={{ flex: 1, maxWidth: 120, ...overflowEllipsis() }}>
-                          {wallet.name}
+                          {parseWalletName(wallet)}
                         </Type.CaptionBold>
-                        <ReferralStatus data={wallet} hasText={false} sx={{ width: 'auto', p: 1 }} size={16} />
+                        {CEX_EXCHANGES.includes(wallet.exchange) && (
+                          <ReferralStatus data={wallet} hasText={false} sx={{ width: 'auto', p: 1 }} size={16} />
+                        )}
                       </Flex>
                     )
                   })}
@@ -851,18 +917,29 @@ function UserOverview({ userEventDetails }: { userEventDetails: UserEventRanking
           </Dropdown>
         )}
       </Flex>
-      <Box mb={3} />
-      <OverviewItem
-        label={'Cumulative Copy Trading Volume'}
-        value={userEventDetails?.volume ? `$${formatNumber(userEventDetails?.volume)}` : '--'}
-      />
-      <Box mb={3} />
-      <OverviewItem label={'Ranking'} value={userEventDetails?.ranking ?? '--'} />
-      <Box mb={3} />
-      <OverviewItem
-        label={'Estimate Rewards'}
-        value={userEventDetails?.estimateReward ? `$${formatNumber(userEventDetails?.estimateReward)}` : '--'}
-      />
+      {eventDetails?.type === EventTypeEnum.GNS && (!eligibleWallets?.length || eligibleWallets.length === 0) ? (
+        <CreateSmartWalletAction exchange={CopyTradePlatformEnum.GNS_V8} onSuccess={reloadCopyWallets} />
+      ) : (
+        <Box my={3}>
+          <OverviewItem
+            label={'Cumulative Copy Trading Volume'}
+            value={userEventDetails?.volume ? `$${formatNumber(userEventDetails?.volume)}` : '--'}
+          />
+          <Box mb={3} />
+          <OverviewItem label={'Ranking'} value={userEventDetails?.ranking ?? '--'} />
+          <Box mb={3} />
+          <OverviewItem
+            label={'Estimate Rewards'}
+            value={
+              <RewardWithSymbol
+                value={userEventDetails?.estimateReward}
+                rewardSymbol={rewardSymbol}
+                sx={{ justifyContent: 'flex-start' }}
+              />
+            }
+          />
+        </Box>
+      )}
     </Box>
   )
 }
@@ -903,21 +980,31 @@ function RewardDistribution({
       <Box mb={3} sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2 }}>
         <TopRewardWrapper
           label={'Top 1'}
-          value={currentReward ? formatNumber(currentReward?.distribution?.[0].reward) : undefined}
+          value={currentReward?.distribution?.[0].reward}
+          rewardSymbol={eventDetails?.rewardSymbol}
         />
         <TopRewardWrapper
           label={'Top 2'}
-          value={currentReward ? formatNumber(currentReward?.distribution?.[1].reward) : undefined}
+          value={currentReward?.distribution?.[1].reward}
+          rewardSymbol={eventDetails?.rewardSymbol}
         />
         <TopRewardWrapper
           label={'Top 3'}
-          value={currentReward ? formatNumber(currentReward?.distribution?.[2].reward) : undefined}
+          value={currentReward?.distribution?.[2].reward}
+          rewardSymbol={eventDetails?.rewardSymbol}
         />
       </Box>
       <Flex sx={{ flexDirection: 'column', gap: 2 }}>
         {currentReward?.distribution?.slice?.(3) ? (
           currentReward?.distribution?.slice?.(3)?.map((_d: any, index: any) => {
-            return <OthersRewardWrapper key={index} label={`Top ${_d?.rank}`} value={formatNumber(_d?.reward)} />
+            return (
+              <OthersRewardWrapper
+                key={index}
+                label={`Top ${_d?.rank}`}
+                value={_d?.reward}
+                rewardSymbol={eventDetails?.rewardSymbol}
+              />
+            )
           })
         ) : (
           <>
@@ -929,7 +1016,7 @@ function RewardDistribution({
     </Box>
   )
 }
-function TopRewardWrapper({ label, value }: { label: ReactNode; value: string | undefined }) {
+function TopRewardWrapper({ label, value, rewardSymbol }: { label: ReactNode; value?: number; rewardSymbol?: string }) {
   return (
     <Box sx={{ position: 'relative', overflow: 'hidden', borderRadius: '4px 4px 0 0' }}>
       <Box
@@ -982,13 +1069,21 @@ function TopRewardWrapper({ label, value }: { label: ReactNode; value: string | 
           {label}
         </Type.Caption>
         <Type.CaptionBold display="block" color="green1" sx={{ textAlign: 'center' }}>
-          {value ? `$${value}` : '--'}
+          <RewardWithSymbol value={value} rewardSymbol={rewardSymbol} />
         </Type.CaptionBold>
       </Box>
     </Box>
   )
 }
-function OthersRewardWrapper({ label, value }: { label: ReactNode; value: string | undefined }) {
+function OthersRewardWrapper({
+  label,
+  value,
+  rewardSymbol,
+}: {
+  label: ReactNode
+  value?: number
+  rewardSymbol?: string
+}) {
   return (
     <Box sx={{ px: 3, py: 2, bg: 'neutral6' }}>
       <Li
@@ -996,14 +1091,16 @@ function OthersRewardWrapper({ label, value }: { label: ReactNode; value: string
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
       >
         <Type.Caption>{label}</Type.Caption>
-        <Type.CaptionBold>{value ? `$${value}` : '--'}</Type.CaptionBold>
+        <Type.CaptionBold>
+          <RewardWithSymbol value={value} rewardSymbol={rewardSymbol} />
+        </Type.CaptionBold>
       </Li>
     </Box>
   )
 }
 //=================
-function Rules({ eventDetails }: { eventDetails: EventDetailsData | undefined }) {
-  const format = `${DATE_FORMAT} - ${TIME_FORMAT} UTC+0`
+export function Rules({ eventDetails }: { eventDetails: EventDetailsData | undefined }) {
+  const isDCP = eventDetails?.type === EventTypeEnum.GNS
   return (
     <Box
       py={3}
@@ -1014,135 +1111,227 @@ function Rules({ eventDetails }: { eventDetails: EventDetailsData | undefined })
         height: ['auto', 'auto', 'auto', 'auto', '100%'],
       }}
     >
-      <Box flex="1 0 1" sx={{ px: 3, overflow: 'hidden auto' }}>
-        <Flex sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
-          <Label icon={BookBookmark} label={'Rules'} />
-          <Type.Caption>
-            <Box
-              as="a"
-              href="https://blog.copin.io/p/join-the-on-chain-copy-trading-event#%C2%A7event-rules"
-              rel="noreferrer"
-              target="_blank"
-              sx={{ '&:hover': { textDecoration: 'underline' } }}
-            >
-              View full
+      {isDCP ? <RulesDCP eventDetails={eventDetails} /> : <RulesNormal eventDetails={eventDetails} />}
+      {!isDCP && (
+        <Box px={3}>
+          <Divider my={2} />
+          <Type.Caption color="neutral3">
+            Any question? Contact us on{' '}
+            <Box as="a" href={LINKS.telegram} target="_blank" sx={{ '&:hover': { textDecoration: 'underline' } }}>
+              Telegram
             </Box>
           </Type.Caption>
-        </Flex>
-        <Box mb={10} />
-        <Type.Caption color="neutral3" sx={{ '& > *': { mb: '4px' } }}>
-          {eventDetails && (
-            <>
-              <Li mb={2}>
-                Register:{' '}
-                <Box as="span" color="neutral2">
-                  {formatDate(eventDetails.registerDate, format)}
-                </Box>
-              </Li>
-              <Li mb={2}>
-                Event begins:{' '}
-                <Box as="span" color="neutral2">
-                  {formatDate(eventDetails.startDate, format)}
-                </Box>
-              </Li>
-              <Li mb={2}>
-                Event ends:{' '}
-                <Box as="span" color="neutral2">
-                  {formatDate(eventDetails.endDate, format)}
-                </Box>
-              </Li>
-            </>
-          )}
-          <Li>
-            This event is exclusively available to users who have registered using Copin&apos;s referral link, those who
-            trade using Copin&apos;s API/Product on BingX, Bitget.
-          </Li>
-          <Box pl={3}>
-            <Li signradius="0px">
-              BingX:{' '}
-              <Box
-                as="a"
-                href={LINKS.registerBingX}
-                target="_blank"
-                rel="noreferrer"
-                sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
-              >
-                https://bingx.com/invite/DY5QNN
-              </Box>
-              <br />
-              (Referral code: DY5QNN)
-            </Li>
-            <Li signradius="0px">
-              Bitget:{' '}
-              <Box
-                as="a"
-                href={LINKS.registerBitget}
-                target="_blank"
-                rel="noreferrer"
-                sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
-              >
-                https://partner.bitget.online/bg/HPM3BN
-              </Box>
-              <br />
-              (Referral code: 1qlg)
-            </Li>
+        </Box>
+      )}
+    </Box>
+  )
+}
+
+function RulesNormal({ eventDetails }: { eventDetails: EventDetailsData | undefined }) {
+  const format = `${DATE_FORMAT} - ${TIME_FORMAT} UTC+0`
+  return (
+    <Box flex="1 0 1" sx={{ px: 3, overflow: 'hidden auto' }}>
+      <Flex sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+        <Label icon={BookBookmark} label={'Rules'} />
+        <Type.Caption>
+          <Box
+            as="a"
+            href={
+              eventDetails?.blogUrl ?? 'https://blog.copin.io/p/join-the-on-chain-copy-trading-event#%C2%A7event-rules'
+            }
+            rel="noreferrer"
+            target="_blank"
+            sx={{ '&:hover': { textDecoration: 'underline' } }}
+          >
+            View full
           </Box>
-          <Li>Event for Copin users after clicking the registration button.</Li>
-          <Li>
-            The reward is unlocked when the total copy-trading volume reaches at least 5 million during the event.
-          </Li>
-          <Li>
-            Copy-trading volume is calculated based on the total volume of closed positions (including open and closed
-            volume) during the event.
-          </Li>
-          <Li>
-            Top 10 users will be eligible to receive rewards from Gate; with the condition of registering a Gate account
-            under Copin&apos;s referral link (
+        </Type.Caption>
+      </Flex>
+      <Box mb={10} />
+      <Type.Caption color="neutral3" sx={{ '& > *': { mb: '4px' } }}>
+        {eventDetails && (
+          <>
+            <Li mb={2}>
+              Register:{' '}
+              <Box as="span" color="neutral2">
+                {formatDate(eventDetails.registerDate, format)}
+              </Box>
+            </Li>
+            <Li mb={2}>
+              Event begins:{' '}
+              <Box as="span" color="neutral2">
+                {formatDate(eventDetails.startDate, format)}
+              </Box>
+            </Li>
+            <Li mb={2}>
+              Event ends:{' '}
+              <Box as="span" color="neutral2">
+                {formatDate(eventDetails.endDate, format)}
+              </Box>
+            </Li>
+          </>
+        )}
+        <Li>
+          This event is exclusively available to users who have registered using Copin&apos;s referral link, those who
+          trade using Copin&apos;s API/Product on BingX, Bitget.
+        </Li>
+        <Box pl={3}>
+          <Li signradius="0px">
+            BingX:{' '}
             <Box
               as="a"
-              href={LINKS.registerGate}
+              href={LINKS.registerBingX}
               target="_blank"
               rel="noreferrer"
               sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
             >
-              https://www.gate.io/signup/AgBFAApb?ref_type=103
+              https://bingx.com/invite/DY5QNN
             </Box>
-            , ref code: AgBFAApb) before the event ends:
+            <br />
+            (Referral code: DY5QNN)
           </Li>
-          <Box pl={3}>
-            <Li signradius="0px">Top 1: Badminton Set.</Li>
-            <Li signradius="0px">Top 2, 3: Wireless charging.</Li>
-            <Li signradius="0px">Top 4 - 10: Umbrella.</Li>
+          <Li signradius="0px">
+            Bitget:{' '}
+            <Box
+              as="a"
+              href={LINKS.registerBitget}
+              target="_blank"
+              rel="noreferrer"
+              sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
+            >
+              https://partner.bitget.online/bg/HPM3BN
+            </Box>
+            <br />
+            (Referral code: 1qlg)
+          </Li>
+        </Box>
+        <Li>Event for Copin users after clicking the registration button.</Li>
+        <Li>The reward is unlocked when the total copy-trading volume reaches at least 5 million during the event.</Li>
+        <Li>
+          Copy-trading volume is calculated based on the total volume of closed positions (including open and closed
+          volume) during the event.
+        </Li>
+        <Li>
+          Top 10 users will be eligible to receive rewards from Gate; with the condition of registering a Gate account
+          under Copin&apos;s referral link (
+          <Box
+            as="a"
+            href={LINKS.registerGate}
+            target="_blank"
+            rel="noreferrer"
+            sx={{ color: 'inherit', '&:hover': { textDecoration: 'underline' } }}
+          >
+            https://www.gate.io/signup/AgBFAApb?ref_type=103
           </Box>
-          <Li>
-            After the event ends, the top winner contacts the Copin team to provide the UID and recipient information.
-            After Gate confirms that the UID is under the Copin ref, the reward will be sent immediately.
+          , ref code: AgBFAApb) before the event ends:
+        </Li>
+        <Box pl={3}>
+          <Li signradius="0px">Top 1: Badminton Set.</Li>
+          <Li signradius="0px">Top 2, 3: Wireless charging.</Li>
+          <Li signradius="0px">Top 4 - 10: Umbrella.</Li>
+        </Box>
+        <Li>
+          After the event ends, the top winner contacts the Copin team to provide the UID and recipient information.
+          After Gate confirms that the UID is under the Copin ref, the reward will be sent immediately.
+        </Li>
+        <Li>
+          The rewards will be distributed in the form of a &quot;USDT&quot; within 7 working days after the conclusion
+          event.
+        </Li>
+        <Li>
+          Copin reserves the right to change or revise the terms of this event, or cancel it at any time and for any
+          reason without notice in its sole discretion.
+        </Li>
+        <Li>
+          Copin reserves the right to disqualify unsatisfactory users if they engage in any inappropriate, dishonest or
+          abusive activities (such as volume tampering, participating with multiple accounts, etc.) throughout the
+          competition. Copin reserves the right to not reward all users who violate Copin&apos;s rules and regulations,
+          or users who show any signs of fraud.
+        </Li>
+      </Type.Caption>
+    </Box>
+  )
+}
+
+function RulesDCP({ eventDetails }: { eventDetails: EventDetailsData | undefined }) {
+  const format = `${DATE_FORMAT} - ${TIME_FORMAT} UTC+0`
+  return (
+    <Box flex="1 0 1" sx={{ px: 3, overflow: 'hidden auto' }}>
+      <Flex sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+        <Label icon={BookBookmark} label={'Rules'} />
+        <Type.Caption>
+          <Box
+            as="a"
+            href={
+              eventDetails?.blogUrl ??
+              'https://copin-io.notion.site/Draft-version-Join-Copin-s-Decentralized-Copy-Trading-Fee-Rebates-and-Competition-to-earn-20-000--de7e58a6cc7c43a3a6d71c9a60ed4eb7'
+            }
+            rel="noreferrer"
+            target="_blank"
+            sx={{ '&:hover': { textDecoration: 'underline' } }}
+          >
+            View full
+          </Box>
+        </Type.Caption>
+      </Flex>
+      <Box mb={10} />
+      <Type.Caption color="neutral3" sx={{ '& > *': { mb: '4px' } }}>
+        {eventDetails && (
+          <>
+            <Li mb={2}>
+              Event begins:{' '}
+              <Box as="span" color="neutral2">
+                {formatDate(eventDetails.startDate, format)}
+              </Box>
+            </Li>
+            <Li mb={2}>
+              Event ends:{' '}
+              <Box as="span" color="neutral2">
+                {formatDate(eventDetails.endDate, format)}
+              </Box>
+            </Li>
+          </>
+        )}
+        <Li>Eligibility:</Li>
+        <Box pl={3}>
+          <Li signradius="0px">Users must utilize Decentralized Copy-Trading through gTrade.</Li>
+          <Li signradius="0px">
+            Only trades executed through the copy-trading feature are eligible for the competition.
           </Li>
-          <Li>
-            The rewards will be distributed in the form of a &quot;USDT&quot; within 7 working days after the conclusion
-            event.
+        </Box>
+        <Li>
+          Reward Distribution: Rewards will be distributed in the form of $ARB within 7 working days after the event
+          ends.
+        </Li>
+        <Li>Ranking Criteria:</Li>
+        <Box pl={3}>
+          <Li signradius="0px">
+            Participants are ranked based on their total copy-trading volumes over the competition period.
           </Li>
-          <Li>
+          <Li signradius="0px">
+            Regular updates on rankings will be provided to keep participants informed of their standings.
+          </Li>
+        </Box>
+        <Li>Disclaimers:</Li>
+        <Box pl={3}>
+          <Li signradius="0px">
             Copin reserves the right to change or revise the terms of this event, or cancel it at any time and for any
             reason without notice in its sole discretion.
           </Li>
-          <Li>
-            Copin reserves the right to disqualify unsatisfactory users if they engage in any inappropriate, dishonest
-            or abusive activities (such as volume tampering, participating with multiple accounts, etc.) throughout the
-            competition. Copin reserves the right to not reward all users who violate Copin&apos;s rules and
-            regulations, or users who show any signs of fraud.
+          <Li signradius="0px">
+            Any form of manipulation or unethical trading practices will result in disqualification.
           </Li>
-        </Type.Caption>
-      </Box>
-      <Box px={3}>
-        <Divider my={2} />
-        <Type.Caption color="neutral3">
-          Any question? Contact us on{' '}
-          <Box as="a" href={LINKS.telegram} target="_blank" sx={{ '&:hover': { textDecoration: 'underline' } }}>
-            Telegram
-          </Box>
-        </Type.Caption>
-      </Box>
+          <Li signradius="0px">
+            Copin reserves the right to disqualify users if they engage in inappropriate, dishonest, or abusive
+            activities (such as volume tampering, participating with multiple accounts, etc.) throughout the
+            competition.
+          </Li>
+          <Li signradius="0px">
+            Copin reserves the right to not reward users who violate Copin&apos;s rules and regulations or who show any
+            signs of fraud.
+          </Li>
+        </Box>
+      </Type.Caption>
     </Box>
   )
 }
@@ -1174,24 +1363,16 @@ const tabConfigs: TabConfig[] = [
   },
 ]
 
-function MobileVersion({
-  userEventDetails,
-  eventDetails,
-  totalVolume,
-}: {
-  eventDetails: EventDetailsData | undefined
-  userEventDetails: UserEventRankingData | undefined
-  totalVolume: number | undefined
-}) {
+function MobileVersion({ userEventDetails, eventDetails, totalVolume, isLoading }: EventDetailsProps) {
   const [currentTab, setTab] = useState(TabKeyEnum.OVERVIEW)
   return (
     <Flex sx={{ flexDirection: 'column', height: '100%' }}>
       <Box flex="1 0 0" sx={{ overflow: 'hidden' }}>
-        <Box sx={{ height: '100%', overflow: 'auto' }}>
+        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
           {currentTab === TabKeyEnum.OVERVIEW && (
             <Box>
+              <Banner eventDetails={eventDetails} isLoading={isLoading} />
               <RegisterArea userEventDetails={userEventDetails} eventDetails={eventDetails} />
-              <Banner />
               <VolumeProgress eventDetails={eventDetails} totalVolume={totalVolume} />
               <Divider mt={2} />
               <RewardDistribution eventDetails={eventDetails} totalVolume={totalVolume} />
@@ -1199,11 +1380,15 @@ function MobileVersion({
           )}
           {currentTab === TabKeyEnum.RANKING && (
             <Flex sx={{ width: '100%', height: '100%', overflow: 'hidden', flexDirection: 'column' }}>
-              <UserOverview userEventDetails={userEventDetails} />
+              <UserOverview
+                eventDetails={eventDetails}
+                userEventDetails={userEventDetails}
+                rewardSymbol={eventDetails?.rewardSymbol}
+              />
               <Divider my={3} />
               <Box flex="1 0 0">
                 <Flex sx={{ height: '100%', flexDirection: 'column' }}>
-                  <LeaderBoard tradingEventId={eventDetails?.id} />
+                  <LeaderBoard tradingEventId={eventDetails?.id} rewardSymbol={eventDetails?.rewardSymbol} />
                 </Flex>
               </Box>
             </Flex>
@@ -1226,15 +1411,7 @@ function MobileVersion({
   )
 }
 
-function TabletVersion({
-  userEventDetails,
-  eventDetails,
-  totalVolume,
-}: {
-  eventDetails: EventDetailsData | undefined
-  userEventDetails: UserEventRankingData | undefined
-  totalVolume: number | undefined
-}) {
+function TabletVersion({ userEventDetails, eventDetails, totalVolume, isLoading }: EventDetailsProps) {
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
       <Flex sx={{ width: '100%', height: '100%', overflow: 'hidden' }}>
@@ -1242,20 +1419,24 @@ function TabletVersion({
           flex="0 0 300px"
           sx={{ height: '100%', overflow: 'auto', borderRight: 'small', borderRightColor: 'neutral4' }}
         >
-          <UserOverview userEventDetails={userEventDetails} />
+          <UserOverview
+            eventDetails={eventDetails}
+            userEventDetails={userEventDetails}
+            rewardSymbol={eventDetails?.rewardSymbol}
+          />
           <Divider />
           <RewardDistribution eventDetails={eventDetails} totalVolume={totalVolume} />
           <Divider />
           <Rules eventDetails={eventDetails} />
         </Box>
         <Flex flex="1" sx={{ height: '100%', overflow: 'auto', flexDirection: 'column' }}>
+          <Banner eventDetails={eventDetails} isLoading={isLoading} />
           <RegisterArea userEventDetails={userEventDetails} eventDetails={eventDetails} />
-          <Banner />
           <VolumeProgress eventDetails={eventDetails} totalVolume={totalVolume} />
           <Divider my={3} />
           <Box flex="1 0 0">
             <Flex sx={{ height: '100%', flexDirection: 'column' }}>
-              <LeaderBoard tradingEventId={eventDetails?.id} />
+              <LeaderBoard tradingEventId={eventDetails?.id} rewardSymbol={eventDetails?.rewardSymbol} />
             </Flex>
           </Box>
         </Flex>

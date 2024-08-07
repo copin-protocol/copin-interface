@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
+import { CaretDown } from '@phosphor-icons/react'
 import { NavLink as Link, NavLinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+import ArbitrumLogo from 'components/@ui/ArbitrumLogo'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
-import { Box } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { generateExplorerRoute, generateLeaderboardRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
@@ -13,74 +14,112 @@ import { logEventCompetition } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import EventButton from './EventButton'
+import SelectProtocolDropdown from './SelectProtocolDropdown'
 
 export function DesktopNavLinks() {
   return (
     <DesktopWrapper>
-      <NavLinks />
+      <BaseNavLinks isMobile={false} />
     </DesktopWrapper>
   )
 }
 export function MobileNavLinks({ onClose }: { onClose?: () => void }) {
   return (
     <MobileWrapper>
-      <NavLinks onClose={onClose} />
+      <BaseNavLinks isMobile onClose={onClose} />
     </MobileWrapper>
   )
 }
 
-function NavLinks({ onClose }: { onClose?: () => void }) {
-  const { myProfile } = useMyProfile()
+export function DesktopEventNavLinks() {
+  return (
+    <DesktopWrapper>
+      <EventNavLinks />
+    </DesktopWrapper>
+  )
+}
+export function MobileEventNavLinks({ onClose }: { onClose?: () => void }) {
+  return (
+    <MobileWrapper>
+      <EventNavLinks onClose={onClose} />
+    </MobileWrapper>
+  )
+}
+
+function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () => void }) {
   const { protocol, navProtocol, setNavProtocol } = useProtocolStore()
   const _navProtocol = parseNavProtocol(navProtocol)?.protocol
   const onClickNavItem = () => {
     setNavProtocol(undefined)
     onClose?.()
   }
-  const { eventId } = useSystemConfigContext()
 
   return (
     <>
-      {configs.map((config, index) => {
-        return (
+      {baseNavConfigs.map((config, index) => {
+        return isMobile ? (
           <NavLink
-            key={index}
             to={config.routeFactory({ protocol: _navProtocol ?? protocol })}
             onClick={onClickNavItem}
             matchpath={config.matchpath}
           >
             {config.label}
           </NavLink>
+        ) : (
+          <SelectProtocolDropdown key={index}>
+            <NavLink
+              to={config.routeFactory({ protocol: _navProtocol ?? protocol })}
+              onClick={onClickNavItem}
+              matchpath={config.matchpath}
+              style={{ display: 'block', height: '100%' }}
+            >
+              <Flex sx={{ alignItems: 'center', gap: 1 }}>
+                <Box>{config.label}</Box>
+                <CaretDown size={16} />
+              </Flex>
+            </NavLink>
+          </SelectProtocolDropdown>
         )
       })}
-      {!!eventId && (
-        <NavLink
-          onClick={() => {
-            onClickNavItem()
-
-            logEventCompetition({
-              event: EVENT_ACTIONS[EventCategory.COMPETITION].HOME_CLICK_NAV,
-              username: myProfile?.username,
-            })
-          }}
-          to={`/${ROUTES.EVENT_DETAILS.path_prefix}/${eventId}`}
-          matchpath={ROUTES.EVENT_DETAILS.path_prefix}
-        >
-          <EventButton />
-        </NavLink>
-      )}
     </>
   )
 }
 
-const configs = [
-  {
-    routeFactory: (configs: { protocol: ProtocolEnum }) => ({
-      pathname: '/',
-      search: configs.protocol === ProtocolEnum.GMX_V2 ? '' : `?protocol=${configs.protocol}`,
-    }),
-    label: <Trans>Home</Trans>,
-  },
+function EventNavLinks({ onClose }: { onClose?: () => void }) {
+  const { myProfile } = useMyProfile()
+  const onClickNavItem = () => {
+    onClose?.()
+  }
+
+  return (
+    <>
+      <NavLink
+        onClick={() => {
+          onClickNavItem()
+
+          logEventCompetition({
+            event: EVENT_ACTIONS[EventCategory.COMPETITION].HOME_CLICK_NAV,
+            username: myProfile?.username,
+          })
+        }}
+        to={ROUTES.EVENTS.path}
+        matchpath={ROUTES.EVENTS.path}
+      >
+        <EventButton />
+      </NavLink>
+      <NavLink to={ROUTES.FEE_REBATE.path} matchpath={ROUTES.FEE_REBATE.path} onClick={onClickNavItem}>
+        <Flex alignItems="center" sx={{ gap: 1 }}>
+          <ArbitrumLogo size={16} />
+          <Type.Caption>
+            <Trans>Fee Rebate</Trans>
+          </Type.Caption>
+        </Flex>
+      </NavLink>
+    </>
+  )
+}
+
+const baseNavConfigs = [
   {
     routeFactory: (configs: { protocol: ProtocolEnum }) => generateExplorerRoute({ protocol: configs.protocol }),
     label: <Trans>Traders Explorer</Trans>,
@@ -118,7 +157,9 @@ function NavLink(props: NavLinkProps & { matchpath?: string }) {
       }}
       {...props}
     >
-      <Box as="span">{props.children}</Box>
+      <Box as="span" sx={{ display: 'inline-flex', height: '100%', alignItems: 'center' }}>
+        {props.children}
+      </Box>
     </Link>
   )
 }
@@ -126,7 +167,7 @@ function NavLink(props: NavLinkProps & { matchpath?: string }) {
 const DesktopWrapper = styled(Box)`
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
   position: relative;
   height: 100%;
   .navlink-default {

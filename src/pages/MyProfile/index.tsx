@@ -6,6 +6,7 @@ import { Redirect, Route, Switch, useLocation } from 'react-router'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
+import useWalletFund from 'hooks/features/useWalletFundSnxV2'
 // import WarningLimitVolume from 'pages/@layouts/WarningLimitVolume'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
@@ -28,6 +29,12 @@ export default function MyProfile() {
   const { lg } = useResponsive()
   const ManagementLayout = lg ? ManagementLayoutDesktop : ManagementLayoutMobile
   const { loadingCopyWallets, copyWallets, myProfile, activeWallet, setActiveWallet } = useProfileState()
+
+  const { available, total: balance } = useWalletFund({
+    address: activeWallet?.smartWalletAddress,
+    enabled: !!activeWallet?.smartWalletAddress,
+    platform: activeWallet?.exchange,
+  })
 
   return (
     <>
@@ -54,6 +61,7 @@ export default function MyProfile() {
                         <BalanceMenu
                           copyWallets={copyWallets}
                           activeWallet={activeWallet}
+                          balance={balance}
                           onChangeKey={setActiveWallet}
                         />
                       }
@@ -64,6 +72,7 @@ export default function MyProfile() {
                               myProfile={myProfile}
                               exchange={activeWallet?.exchange ?? CopyTradePlatformEnum.BINGX}
                               copyWallet={activeWallet}
+                              available={available}
                             />
                           )}
                         </>

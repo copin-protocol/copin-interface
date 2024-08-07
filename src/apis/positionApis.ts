@@ -1,5 +1,5 @@
 import { ChartData, ChartDataV2 } from 'entities/chart.d'
-import { OpenInterestMarketData } from 'entities/statistic'
+import { OpenInterestMarketData, ProtocolsStatisticData } from 'entities/statistic'
 import { PositionStatisticCounter, ResponsePositionData } from 'entities/trader.d'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum, TimeframeEnum } from 'utils/config/enums'
@@ -255,3 +255,7 @@ export const getPositionsCounterApi = ({ protocol, account }: { protocol: Protoc
   requester
     .get(`/public/${protocol}/${SERVICE}/statistic/counter/${account}`)
     .then((res) => res.data?.data as PositionStatisticCounter[])
+
+export function getProtocolsStatistic() {
+  return requester.get(`/public/${SERVICE}/statistic/protocols`).then((res) => res.data as ProtocolsStatisticData)
+}

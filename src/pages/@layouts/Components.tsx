@@ -34,7 +34,7 @@ export function BottomTabItemMobile({
   text,
   fontWeight = 500,
 }: {
-  icon: ReactNode
+  icon?: ReactNode
   text: ReactNode
   color?: string
   onClick?: () => void
@@ -48,7 +48,7 @@ export function BottomTabItemMobile({
       sx={{ alignItems: 'center', justifyContent: 'center', gap: 2 }}
       onClick={onClick}
     >
-      <IconBox icon={icon} color="inherit" />
+      {!!icon && <IconBox icon={icon} color="inherit" />}
       <Type.Body sx={{ fontWeight }}>{text}</Type.Body>
     </Flex>
   )

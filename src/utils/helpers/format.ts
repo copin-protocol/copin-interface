@@ -9,7 +9,7 @@ import { ImageData } from 'entities/image.d'
 import { DATE_FORMAT, DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { isAddress } from 'utils/web3/contracts'
 
-import { MarginModeEnum } from '../config/enums'
+import { MarginModeEnum, RewardSymbolEnum } from '../config/enums'
 import { MARGIN_MODE_TRANS } from '../config/translations'
 
 dayjs.extend(relativeTime)
@@ -62,7 +62,7 @@ export const getUnitDate = (
 export function formatNumber(num?: number | string, maxDigit = 2, minDigit?: number) {
   if (num == null) return '--'
   if (typeof num === 'string') num = Number(num)
-  if ((Math.abs(num) < 1 && maxDigit === 0) || (Math.abs(num) < 0.1 && maxDigit === 1)) {
+  if ((Math.abs(num) !== 0 && Math.abs(num) < 1 && maxDigit === 0) || (Math.abs(num) < 0.1 && maxDigit === 1)) {
     maxDigit = 2
     minDigit = 2
   }
@@ -96,7 +96,7 @@ export function generateImageUrl(image: ImageData | undefined) {
 
 export function formatImageUrl(imageUrl: string | undefined) {
   if (!imageUrl) return `/images/default-thumbnail.png`
-  return imageUrl
+  return `${import.meta.env.VITE_API}/storage${imageUrl}`
 }
 
 export const formatTraderName = (name?: string, length?: number) => {
@@ -143,8 +143,11 @@ export function shortenFileName({
   return `${prefix}...${suffix}`
 }
 
-export function compactNumber(num: number, digits = 1) {
+export function compactNumber(num: number, digits = 1, isInteger?: boolean) {
   if (num === 0) return 0
+
+  if (isInteger && num > 0 && num < 1000) return num
+
   if (Math.abs(num) < 1) return num.toFixed(digits)
   const lookup = [
     { value: 1e18, symbol: 'E' },
@@ -235,4 +238,8 @@ function countConsecutiveZeros(decimalPart: string): number {
   }
 
   return maxConsecutiveZeros
+}
+
+export function formatRewardSymbol(value: string, rewardSymbol?: string) {
+  return !rewardSymbol || rewardSymbol === RewardSymbolEnum.USD ? `$${value}` : `${value} ${rewardSymbol}`
 }

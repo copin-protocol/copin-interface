@@ -7,11 +7,15 @@ import requester from './index'
 import { GetApiParams } from './types'
 
 export async function getListEvent() {
-  return requester.get(`/public/trading-event/list`).then((res: any) => res.data as EventDetailsData[])
+  return requester.get(`/public/trading-event/list?isPublic=true`).then((res: any) => res.data as EventDetailsData[])
 }
 
 export async function getEventDetails({ tradingEventId }: { tradingEventId: string | undefined }) {
   return requester.get(`/public/trading-event/${tradingEventId}`).then((res: any) => res.data as EventDetailsData)
+}
+
+export async function getEventDetailsBySlug({ slug }: { slug: string | undefined }) {
+  return requester.get(`/public/trading-event/slug?slug=${slug}`).then((res: any) => res.data as EventDetailsData)
 }
 
 export async function registerEvent({ tradingEventId }: { tradingEventId: string | undefined }) {

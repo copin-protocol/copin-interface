@@ -11,20 +11,35 @@ import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DELAY_SYNC } from 'utils/config/constants'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
+import { COPY_WALLET_TRANS } from 'utils/config/translations'
 import delay from 'utils/helpers/delay'
-import { DEFAULT_CHAIN_ID } from 'utils/web3/chains'
 import { CONTRACT_ABIS, CONTRACT_ADDRESSES } from 'utils/web3/contracts'
+import { getCopyTradePlatformChain } from 'utils/web3/dcp'
 
-const CreateSmartWalletModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
-  const { isValid, alert } = useRequiredChain()
+const CreateSmartWalletModal = ({
+  isOpen,
+  platform,
+  onDismiss,
+  onSuccess,
+}: {
+  isOpen: boolean
+  platform: CopyTradePlatformEnum
+  onDismiss: () => void
+  onSuccess?: () => void
+}) => {
+  const chainId = getCopyTradePlatformChain(platform)
+  const { isValid, alert } = useRequiredChain({
+    chainId,
+  })
   const { walletProvider, publicProvider, walletAccount } = useWeb3()
   const [submitting, setSubmitting] = useState(false)
   const factory = useMemo(
     () =>
       new Contract(
-        CONTRACT_ADDRESSES[DEFAULT_CHAIN_ID][CONTRACT_QUERY_KEYS.SMART_ACCOUNT_FACTORY],
-        CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_ACCOUNT_FACTORY],
+        CONTRACT_ADDRESSES[chainId][CONTRACT_QUERY_KEYS.SMART_COPYWALLET_FACTORY],
+        CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_COPYWALLET_FACTORY],
         walletProvider ? walletProvider.getSigner(walletAccount?.address).connectUnchecked() : publicProvider
       ),
     [walletAccount, walletProvider, publicProvider]
@@ -35,13 +50,14 @@ const CreateSmartWalletModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDism
     setSubmitting(true)
     await factoryMutation.mutate(
       {
-        method: 'newAccount',
-        params: [CONTRACT_ADDRESSES[DEFAULT_CHAIN_ID][CONTRACT_QUERY_KEYS.DELEGATE]],
+        method: 'newCopyWallet',
+        params: [CONTRACT_ADDRESSES[chainId][CONTRACT_QUERY_KEYS.EXECUTOR]],
       },
       {
         onSuccess: async () => {
           await delay(DELAY_SYNC)
           onDismiss()
+          onSuccess?.()
           setSubmitting(false)
         },
         onError: () => setSubmitting(false),
@@ -78,7 +94,8 @@ const CreateSmartWalletModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDism
         </Flex>
         <Type.Caption mb={20} color="neutral3">
           <Trans>
-            Smart wallets are a unique Copin offering that allows copiers to copytrade at Synthetix platform.
+            Smart wallets are a unique Copin offering that allows copiers to copytrade at {COPY_WALLET_TRANS[platform]}{' '}
+            platform.
           </Trans>
         </Type.Caption>
         {isValid ? (

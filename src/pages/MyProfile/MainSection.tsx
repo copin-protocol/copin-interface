@@ -2,6 +2,7 @@ import { useEffect, useMemo, useReducer, useRef } from 'react'
 import { useQuery } from 'react-query'
 
 import { getCopyTradeSettingsListApi, getMyCopyTradersApi } from 'apis/copyTradeApis'
+import Num from 'entities/Num'
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserData } from 'entities/user'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
@@ -20,10 +21,12 @@ export default function MainSection({
   myProfile,
   exchange,
   copyWallet,
+  available,
 }: {
   myProfile: UserData
   exchange: CopyTradePlatformEnum
   copyWallet: CopyWalletData | null
+  available: Num | null
 }) {
   const storageData = sessionStorage.getItem(STORAGE_KEYS.MY_COPY_DATA)
   const [state, dispatch] = useSelectTraders(storageData)
@@ -177,6 +180,7 @@ export default function MainSection({
         copyWallet={copyWallet}
         copyStatus={copyStatus}
         selectedProtocol={selectedProtocol}
+        available={available}
         toggleAllProtocol={toggleAllProtocol}
         isToggleAllProtocol={isToggleAllProtocol}
       />

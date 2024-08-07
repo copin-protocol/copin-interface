@@ -4,7 +4,7 @@ import { Box } from 'theme/base'
 
 const ARROW_SIZE = 32
 const ARROW_POSITION = -16
-const DOTS_POSITION = 24
+const DOTS_POSITION = -4
 const DOTS_SIZE = 8
 
 const CarouselWrapper = styled(Box)`

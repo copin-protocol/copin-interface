@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
 import React, { ReactNode, useState } from 'react'
 
+import CreateSmartWalletModal from 'components/CreateSmartWalletModal'
 import CreateBingXWalletModal from 'components/Modal/CreateBingXWalletModal'
 import CreateBybitWalletModal from 'components/Modal/CreateBybitWalletModal'
 import CreateGateWalletModal from 'components/Modal/CreateGateWalletModal'
@@ -19,11 +20,9 @@ import CreateBitgetWalletModal from '../Modal/CreateBitgetWalletModal'
 import CreateOKXWalletModal from '../Modal/CreateOKXWalletModal'
 
 export default function CreateWalletAction() {
-  const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
+  const { loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [currentExchange, setCurrentExchange] = useState<CopyTradePlatformEnum | undefined>()
-
-  const hasSynthetixWallet = !!copyWallets?.find((wallet) => wallet.exchange === CopyTradePlatformEnum.SYNTHETIX)
 
   const handleOpenCreateModal = (exchange: CopyTradePlatformEnum) => {
     setCurrentExchange(exchange)
@@ -191,17 +190,27 @@ export default function CreateWalletAction() {
       />
 
       <WalletItem
-        exchange={CopyTradePlatformEnum.SYNTHETIX}
-        label={<Trans>Smart Wallet</Trans>}
+        exchange={CopyTradePlatformEnum.SYNTHETIX_V2}
+        label={<Trans>Synthetix v2 Wallet</Trans>}
         description={
           <Trans>An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading</Trans>
         }
-        // handleClick={
-        //   // () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
-        //   !hasSynthetixWallet && !loadingCopyWallets
-        //     ? () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
-        //     : undefined
-        // }
+        handleClick={
+          // () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
+          !loadingCopyWallets ? () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX_V2) : undefined
+        }
+      />
+
+      <WalletItem
+        exchange={CopyTradePlatformEnum.GNS_V8}
+        label={<Trans>gTrade Wallet</Trans>}
+        description={
+          <Trans>An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading</Trans>
+        }
+        handleClick={
+          // () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
+          !loadingCopyWallets ? () => handleOpenCreateModal(CopyTradePlatformEnum.GNS_V8) : undefined
+        }
       />
 
       <CreateWalletModal
@@ -246,12 +255,13 @@ export function CreateWalletModal({
     case CopyTradePlatformEnum.GATE:
       Modal = CreateGateWalletModal
       break
-    // case CopyTradePlatformEnum.SYNTHETIX:
-    //   Modal = CreateSmartWalletModal
-    //   break
+    case CopyTradePlatformEnum.SYNTHETIX_V2:
+    case CopyTradePlatformEnum.GNS_V8:
+      Modal = CreateSmartWalletModal
+      break
   }
   if (!Modal) return null
-  return <Modal isOpen={isOpen} onDismiss={onDismiss} />
+  return <Modal isOpen={isOpen} onDismiss={onDismiss} platform={exchange} />
 }
 
 interface WalletItemProps {
@@ -263,8 +273,7 @@ interface WalletItemProps {
 
 function WalletItem({ exchange, label, description, handleClick }: WalletItemProps) {
   const isInternal = useInternalRole()
-  const isComingSoon =
-    exchange === CopyTradePlatformEnum.SYNTHETIX || (!isInternal && exchange === CopyTradePlatformEnum.BINANCE)
+  const isComingSoon = !isInternal && exchange === CopyTradePlatformEnum.BINANCE
   return (
     <Flex minWidth={350} p={24} flexDirection="column" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
       <Flex alignItems="center" sx={{ gap: 3 }}>

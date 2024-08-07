@@ -3,6 +3,7 @@ import { ArrowSquareOut, BookBookmark, CaretRight, CopySimple, SpeakerSimpleHigh
 import { ReactNode, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
+import Slider, { Settings } from 'react-slick'
 import styled from 'styled-components/macro'
 
 import { getLatestActivityLogsApi } from 'apis/activityLogApis'
@@ -17,17 +18,20 @@ import BalanceText from 'components/BalanceText'
 // import ConnectButton from 'components/LoginAction/ConnectButton'
 import { CopyPositionData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
+import { EventDetailsData, TradingEventStatusEnum } from 'entities/event'
 import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+import useWalletFund from 'hooks/features/useWalletFundSnxV2'
 // import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 // import useMyProfileStore from 'hooks/store/useMyProfile'
 import useMyProfile from 'hooks/store/useMyProfile'
 import OpeningPositions from 'pages/MyProfile/OpeningPositions'
+import { HorizontalCarouselWrapper } from 'theme/Carousel/Wrapper'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
-import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
+import { addressShorten, compactNumber, formatImageUrl, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseWalletName } from 'utils/helpers/transform'
 import { logEventCompetition } from 'utils/tracking/event'
@@ -63,120 +67,55 @@ export default function Overview() {
 }
 
 function UserOverview() {
-  // const { copyWallets, loadingCopyWallets } = useCopyWalletContext()
-  // const selectedWallet = copyWallets?.[0]
-  // const myProfile = useMyProfileStore((state) => state.myProfile)
-  const { myProfile } = useMyProfile()
-  const { eventId } = useSystemConfigContext()
+  const { events } = useSystemConfigContext()
+  const filterEvents = events?.filter((e) => e.status !== TradingEventStatusEnum.ENDED)
   return (
-    <Box sx={{ borderBottom: 'small', borderBottomColor: 'neutral4', position: 'relative' }}>
-      <Image src={homeEventBanner} sx={{ objectFit: 'cover', height: '100%', width: '100%' }} />
+    <Box sx={{ position: 'relative' }}>
+      <HorizontalCarouselWrapper>
+        <Slider {...settings}>
+          {filterEvents?.map((e) => {
+            return <EventItem key={e.id} eventDetails={e} />
+          })}
+        </Slider>
+      </HorizontalCarouselWrapper>
+    </Box>
+  )
+}
+
+const settings: Settings = {
+  speed: 500,
+  autoplay: true,
+  autoplaySpeed: 8000,
+  pauseOnHover: true,
+  infinite: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  arrows: false,
+  dots: true,
+}
+
+function EventItem({ eventDetails }: { eventDetails: EventDetailsData }) {
+  const { myProfile } = useMyProfile()
+  const eventSlug = eventDetails?.slug ?? eventDetails?.id
+  return (
+    <Box height={165}>
       <Box
         role="button"
-        as={eventId ? Link : 'div'}
-        to={eventId ? `/${ROUTES.EVENT_DETAILS.path_prefix}/${eventId}` : undefined}
+        as={eventSlug ? Link : 'div'}
+        to={eventSlug ? `/${ROUTES.EVENT_DETAILS.path_prefix}/${eventSlug}` : undefined}
         onClick={() => {
           logEventCompetition({
             event: EVENT_ACTIONS[EventCategory.COMPETITION].HOME_CLICK_BANNER,
             username: myProfile?.username,
           })
         }}
-        sx={{
-          position: 'absolute',
-          bottom: 12,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          overflow: 'hidden',
-          borderRadius: '20px',
-          transition: '0.3s',
-          '&:hover': {
-            filter: 'brightness(120%)',
-          },
-        }}
+        sx={{ borderBottom: 'small', borderBottomColor: 'neutral4', position: 'relative' }}
       >
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            bg: 'neutral7',
-            zIndex: 0,
-            borderRadius: '20px',
-          }}
+        <Image
+          src={eventDetails?.bannerUrl ? formatImageUrl(eventDetails?.bannerUrl) : homeEventBanner}
+          sx={{ objectFit: 'cover', height: '100%', width: '100%' }}
         />
-        <Box
-          className="border"
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundImage:
-              'linear-gradient(184.46deg, rgba(164, 236, 223, 0.5) 38.05%, rgba(255, 255, 255, 0) 142.53%)',
-            zIndex: 1,
-            borderRadius: '20px',
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '1px',
-            left: '1px',
-            right: '1px',
-            bottom: '1px',
-            bg: 'neutral7',
-            zIndex: 2,
-            borderRadius: '20px',
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '1px',
-            left: '1px',
-            right: '1px',
-            bottom: '1px',
-            backgroundImage: 'linear-gradient(180deg, rgba(62, 162, 244, 0.2) -16.38%, rgba(66, 62, 244, 0.2) 96.62%)',
-            zIndex: 3,
-            borderRadius: '20px',
-          }}
-        />
-        <Type.BodyBold
-          sx={{
-            position: 'relative',
-            width: 138,
-            height: 28,
-            textAlign: 'center',
-            zIndex: 3,
-            transform: 'translateY(1px)',
-          }}
-        >
-          <GradientText>Join Now</GradientText>
-        </Type.BodyBold>
       </Box>
-
-      {/* {!myProfile ? (
-        <>
-          <Box px={3} pt={3}>
-            <Flex mb={24} sx={{ alignItems: 'center', gap: 2 }}>
-              <Logo size={24} />
-              <Type.BodyBold>
-                <Trans>Connect wallet to start copy-trade</Trans>
-              </Type.BodyBold>
-            </Flex>
-            <ConnectButton variant="primary" block />
-          </Box>
-          <Divider my={3} />
-        </>
-      ) : (
-        <>
-          <WalletOverview isLoading={loadingCopyWallets} selectedWallet={selectedWallet} />
-          <OpeningSection selectedWallet={selectedWallet} />
-        </>
-      )} */}
     </Box>
   )
 }
@@ -200,6 +139,12 @@ function WalletOverview({
     }
   )
 
+  const { total: balance } = useWalletFund({
+    address: selectedWallet?.smartWalletAddress,
+    enabled: !!selectedWallet?.smartWalletAddress,
+    platform: selectedWallet?.exchange,
+  })
+
   return (
     <Box>
       <Box px={3} pt={3}>
@@ -216,7 +161,10 @@ function WalletOverview({
               label={<Trans>Balance</Trans>}
               value={
                 <Flex sx={{ alignItems: 'center', height: 22, width: 60 }}>
-                  <BalanceText value={compactNumber(selectedWallet.balance, 2)} component={Type.Caption} />
+                  <BalanceText
+                    value={compactNumber(balance ? balance.num : selectedWallet.balance, 2)}
+                    component={Type.Caption}
+                  />
                 </Flex>
               }
             />
@@ -376,17 +324,6 @@ function Tutorial() {
     </Box>
   )
 }
-// const settings: Settings = {
-//   speed: 500,
-//   autoplay: true,
-//   autoplaySpeed: 8000,
-//   pauseOnHover: true,
-//   infinite: true,
-//   slidesToShow: 1,
-//   slidesToScroll: 1,
-//   arrows: false,
-//   dots: true,
-// }
 
 function Navigator({ route }: { route: string }) {
   return (

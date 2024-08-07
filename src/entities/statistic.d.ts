@@ -1,3 +1,5 @@
+import { ProtocolEnum } from 'utils/config/enums'
+
 export interface StatisticOverviewData {
   totalVolume: StatisticData
   totalOrder: StatisticData
@@ -60,4 +62,11 @@ export interface MarketStatData {
   totalVolumeLong: number
   totalVolumeShort: number
   totalInterest: number
+}
+
+export type ProtocolsStatisticData = {
+  [key in ProtocolEnum]: {
+    traders: number
+    oi: number
+  }
 }

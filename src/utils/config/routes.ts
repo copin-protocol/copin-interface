@@ -126,6 +126,9 @@ const ROUTES = {
   EVENTS: {
     path: '/events',
   },
+  FEE_REBATE: {
+    path: '/fee-rebate',
+  },
 }
 
 export default ROUTES

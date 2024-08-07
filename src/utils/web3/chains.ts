@@ -11,11 +11,13 @@ export const BLAST_SEPOLIA = 168587773
 export const BLAST_MAINNET = 81457
 export const ARBITRUM_MAINNET = 42161
 export const ARBITRUM_GOERLI = 421613
+export const ARBITRUM_SEPOLIA = 421614
+export const BASE_MAINNET = 8453
+export const BASE_SEPOLIA = 84532
 export const ZKSYNC_ERA_MAINNET = 324
 export const BNB_MAINNET = 56
 export const OPBNB_MAINNET = 204
 export const AVALANCHE_MAINNET = 43114
-export const BASE_MAINNET = 8453
 export const POLYGON_MAINNET = 137
 export const MANTA_MAINNET = 169
 export const MANTLE_MAINNET = 5000
@@ -24,6 +26,9 @@ export const FANTOM_MAINNET = 250
 export const MODE_MAINNET = 34443
 export const SCROLL_MAINNET = 534352
 export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
+export const BASE_CHAIN = NETWORK === 'devnet' ? BASE_SEPOLIA : BASE_MAINNET
+export const OPTIMISM_CHAIN = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
+export const ARBITRUM_CHAIN = NETWORK === 'devnet' ? ARBITRUM_SEPOLIA : ARBITRUM_MAINNET
 export const SUBSCRIPTION_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 
 export const SUPPORTED_CHAIN_IDS: number[] = [
@@ -33,6 +38,7 @@ export const SUPPORTED_CHAIN_IDS: number[] = [
   OPTIMISM_SEPOLIA,
   BLAST_SEPOLIA,
   ARBITRUM_GOERLI,
+  ARBITRUM_SEPOLIA,
   ETHEREUM_MAINNET,
   ARBITRUM_MAINNET,
   OPTIMISM_MAINNET,
@@ -99,20 +105,63 @@ const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
   },
 }
 
+export const USD_ASSET = {
+  [OPTIMISM_MAINNET]: {
+    symbol: 'sUSD',
+    address: '0x8c6f28f2f1a3c87f0f938b96d27520d9751ec8d9',
+    decimals: 18,
+  },
+  [OPTIMISM_SEPOLIA]: {
+    symbol: 'sUSD',
+    address: '0xD7D674d80e79CF3A3b67D6a510AC1B0493dF47cF',
+    decimals: 18,
+  },
+  [ARBITRUM_MAINNET]: {
+    symbol: 'USDC',
+    address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+    decimals: 6,
+  },
+  [ARBITRUM_SEPOLIA]: {
+    symbol: 'GNS_USDC',
+    address: '0x4cC7EbEeD5EA3adf3978F19833d2E1f3e8980cD6',
+    decimals: 6,
+  },
+  [BASE_MAINNET]: {
+    symbol: 'USDC',
+    address: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+    decimals: 6,
+  },
+  [BASE_SEPOLIA]: {
+    symbol: 'fUSDC',
+    address: '0x4967d1987930b2CD183dAB4B6C40B8745DD2eba1',
+    decimals: 18,
+  },
+}
+
 const SECONDARY_TOKENS: {
   [key: number]: {
     address: string
     icon?: string
   }[]
 } = {
-  [OPTIMISM_GOERLI]: [
+  [OPTIMISM_MAINNET]: [
     {
-      address: '0xeBaEAAD9236615542844adC5c149F86C36aD1136',
+      address: USD_ASSET[OPTIMISM_MAINNET].address,
     },
   ],
   [OPTIMISM_SEPOLIA]: [
     {
-      address: '0xD7D674d80e79CF3A3b67D6a510AC1B0493dF47cF',
+      address: USD_ASSET[OPTIMISM_SEPOLIA].address,
+    },
+  ],
+  [ARBITRUM_MAINNET]: [
+    {
+      address: USD_ASSET[ARBITRUM_MAINNET].address,
+    },
+  ],
+  [ARBITRUM_SEPOLIA]: [
+    {
+      address: USD_ASSET[ARBITRUM_SEPOLIA].address,
     },
   ],
 }
@@ -145,6 +194,24 @@ const CHAINS: { [key: number]: Chain } = {
     blockExplorerUrl: 'https://arbiscan.io',
     secondaryTokens: SECONDARY_TOKENS[ARBITRUM_MAINNET],
   },
+  [BASE_MAINNET]: {
+    id: `0x${BASE_MAINNET.toString(16)}`,
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    label: 'Base',
+    icon: 'BASE',
+    rpcUrl: 'https://base.publicnode.com',
+    blockExplorerUrl: 'https://basescan.org',
+    secondaryTokens: SECONDARY_TOKENS[BASE_MAINNET],
+  },
+  [SEPOLIA]: {
+    id: `0x${SEPOLIA.toString(16)}`,
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    label: 'Sepolia',
+    icon: 'ETH',
+    rpcUrl: 'https://ethereum-sepolia.publicnode.com',
+    blockExplorerUrl: 'https://sepolia.etherscan.io',
+    secondaryTokens: SECONDARY_TOKENS[SEPOLIA],
+  },
   [GOERLI]: {
     id: `0x${GOERLI.toString(16)}`,
     token: NATIVE_CURRENCIES.ETH.symbol,
@@ -154,22 +221,13 @@ const CHAINS: { [key: number]: Chain } = {
     blockExplorerUrl: 'https://goerli.etherscan.io',
     secondaryTokens: SECONDARY_TOKENS[GOERLI],
   },
-  [SEPOLIA]: {
-    id: `0x${SEPOLIA.toString(16)}`,
-    token: NATIVE_CURRENCIES.ETH.symbol,
-    label: 'Sepolia',
-    icon: 'ETH',
-    rpcUrl: 'https://ethereum-sepolia-rpc.publicnode.com',
-    blockExplorerUrl: 'https://sepolia.etherscan.io',
-    secondaryTokens: SECONDARY_TOKENS[SEPOLIA],
-  },
   [OPTIMISM_GOERLI]: {
     id: `0x${OPTIMISM_GOERLI.toString(16)}`,
     token: NATIVE_CURRENCIES.ETH.symbol,
-    label: 'Optimism Goerli',
+    label: 'Optimism Sepolia',
     icon: 'OP',
-    rpcUrl: 'https://optimism-goerli.publicnode.com',
-    blockExplorerUrl: 'https://goerli-optimism.etherscan.io',
+    rpcUrl: 'https://optimism-sepolia-rpc.publicnode.com',
+    blockExplorerUrl: 'https://sepolia-optimism.etherscan.io',
     secondaryTokens: SECONDARY_TOKENS[OPTIMISM_GOERLI],
   },
   [OPTIMISM_SEPOLIA]: {
@@ -189,6 +247,24 @@ const CHAINS: { [key: number]: Chain } = {
     rpcUrl: 'https://arbitrum-goerli.publicnode.com',
     blockExplorerUrl: 'https://testnet.arbiscan.io',
     secondaryTokens: SECONDARY_TOKENS[ARBITRUM_GOERLI],
+  },
+  [ARBITRUM_SEPOLIA]: {
+    id: `0x${ARBITRUM_SEPOLIA.toString(16)}`,
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    label: 'Arbitrum Sepolia',
+    icon: 'ARB',
+    rpcUrl: 'https://arbitrum-sepolia.publicnode.com',
+    blockExplorerUrl: 'https://sepolia.arbiscan.io',
+    secondaryTokens: SECONDARY_TOKENS[ARBITRUM_SEPOLIA],
+  },
+  [BASE_SEPOLIA]: {
+    id: `0x${BASE_SEPOLIA.toString(16)}`,
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    label: 'Base Sepolia',
+    icon: 'BASE',
+    rpcUrl: 'https://base-sepolia-rpc.publicnode.com',
+    blockExplorerUrl: 'https://sepolia.basescan.org',
+    secondaryTokens: SECONDARY_TOKENS[BASE_SEPOLIA],
   },
   [BNB_MAINNET]: {
     id: `0x${BNB_MAINNET.toString(16)}`,
@@ -243,15 +319,6 @@ const CHAINS: { [key: number]: Chain } = {
     rpcUrl: 'https://fantom-rpc.publicnode.com',
     blockExplorerUrl: 'https://ftmscan.com',
     secondaryTokens: SECONDARY_TOKENS[FANTOM_MAINNET],
-  },
-  [BASE_MAINNET]: {
-    id: `0x${BASE_MAINNET.toString(16)}`,
-    label: 'Base',
-    icon: 'BASE',
-    token: NATIVE_CURRENCIES.ETH.symbol,
-    rpcUrl: 'https://base-rpc.publicnode.com',
-    blockExplorerUrl: 'https://basescan.org',
-    secondaryTokens: SECONDARY_TOKENS[BASE_MAINNET],
   },
   [POLYGON_MAINNET]: {
     id: `0x${POLYGON_MAINNET.toString(16)}`,
@@ -322,7 +389,15 @@ const chains = SUPPORTED_CHAIN_IDS.map((id) => CHAINS[id])
 
 const getChainMetadata = (chainId: number, rpcUrls?: string[]) => {
   const chain = CHAINS[chainId]
-  if (!chain) throw Error('Unknown chainId')
+  if (!chain)
+    return {
+      id: `0x${chainId.toString(16)}`,
+      label: 'Unknown',
+      icon: 'Unknown',
+      token: NATIVE_CURRENCIES.ETH.symbol,
+      rpcUrl: rpcUrls ? rpcUrls[0] : '',
+      blockExplorerUrl: '',
+    }
   if (rpcUrls) return { ...chain, rpcUrls }
   return chain
 }

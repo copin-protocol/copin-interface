@@ -1,17 +1,20 @@
 import { Trans } from '@lingui/macro'
-import { ArrowFatDown, ArrowFatUp, Square } from '@phosphor-icons/react'
+import { ArrowFatDown, ArrowFatUp, ArrowRight, Square } from '@phosphor-icons/react'
 import { ReactNode, useMemo } from 'react'
 
 import { DeltaText } from 'components/@ui/DecoratedText/DeltaText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyOrderData } from 'entities/copyTrade.d'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
-import { OrderTypeEnum } from 'utils/config/enums'
-import { TokenTrade } from 'utils/config/trades'
+import { CopyTradePlatformEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { EXPLORER_PLATFORMS } from 'utils/config/platforms'
+import { PROTOCOL_PROVIDER, TokenTrade } from 'utils/config/trades'
+import { formatNumber } from 'utils/helpers/format'
 
 type ExternalSource = {
   totalOrders: number
@@ -49,16 +52,22 @@ export const ORDER_TYPES: ObjectTypes = {
   },
 }
 
+const getCopyTradingFee = () => 0.00025
+
 export default function ListCopyOrderTable({
   data,
   isLoading,
   isOpening,
   token,
+  platform,
+  protocol,
 }: {
   data: CopyOrderData[]
   isLoading: boolean
   isOpening?: boolean
   token: TokenTrade
+  platform?: CopyTradePlatformEnum
+  protocol: ProtocolEnum
 }) {
   const orders = data.sort((x, y) => (x.createdAt < y.createdAt ? 1 : x.createdAt > y.createdAt ? -1 : 0))
   const tableData = { data: orders, meta: { limit: orders.length, offset: 0, total: orders.length, totalPages: 1 } }
@@ -66,23 +75,61 @@ export default function ListCopyOrderTable({
   const columns = useMemo(() => {
     const result: ColumnData<CopyOrderData, ExternalSource>[] = [
       {
-        title: 'Timestamp',
+        title: 'Source',
         dataIndex: 'createdAt',
         key: 'createdAt',
-        style: { minWidth: '156px' },
+        style: { minWidth: '200px' },
         render: (item) => (
           <Flex alignItems="center" sx={{ gap: 2 }}>
             <Type.Caption color="neutral1">
               <LocalTimeText date={item.createdAt} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
             </Type.Caption>
+            {!!protocol && (
+              <ExplorerLogo
+                protocol={protocol}
+                explorerUrl={`${PROTOCOL_PROVIDER[protocol].explorerUrl}/tx/${item.txHash}`}
+                size={18}
+              />
+            )}
           </Flex>
         ),
       },
+      ...(platform === CopyTradePlatformEnum.SYNTHETIX_V3 ||
+      platform === CopyTradePlatformEnum.SYNTHETIX_V2 ||
+      platform === CopyTradePlatformEnum.GNS_V8
+        ? ([
+            {
+              title: 'Transaction',
+              dataIndex: 'settleTxHash',
+              key: 'settleTxHash',
+              style: { minWidth: '120px' },
+              render: (item) => (
+                <Flex alignItems="center" sx={{ gap: 2 }}>
+                  {!!item.submitTxHash && (
+                    <ExplorerLogo
+                      protocol={platform}
+                      explorerUrl={`${EXPLORER_PLATFORMS[platform]}/tx/${item.submitTxHash}`}
+                      size={18}
+                    />
+                  )}
+                  {!!item.submitTxHash && !!item.settleTxHash && <ArrowRight size={16} />}
+                  {!!item.settleTxHash && (
+                    <ExplorerLogo
+                      protocol={platform}
+                      explorerUrl={`${EXPLORER_PLATFORMS[platform]}/tx/${item.settleTxHash}`}
+                      size={18}
+                    />
+                  )}
+                </Flex>
+              ),
+            },
+          ] as ColumnData<CopyOrderData, ExternalSource>[])
+        : []),
       {
         title: 'Action',
         dataIndex: 'isIncrease',
         key: 'isIncrease',
-        style: { minWidth: '120px' },
+        style: { minWidth: '100px' },
         render: (item, index, externalSource) => (
           <Flex alignItems="center" sx={{ gap: 2 }}>
             {!externalSource?.isOpening && !item.isIncrease && index === 0
@@ -101,22 +148,20 @@ export default function ListCopyOrderTable({
         ),
       },
       {
-        title: 'Collateral ($)',
-        dataIndex: 'collateral',
-        key: 'collateral',
+        title: 'Size',
+        dataIndex: 'size',
+        key: 'size',
         style: { minWidth: '120px', textAlign: 'right' },
-        render: (item) =>
-          item.collateral ? (
-            <DeltaText
-              color="neutral1"
-              type={item.isIncrease ? OrderTypeEnum.INCREASE : OrderTypeEnum.DECREASE}
-              delta={item.collateral}
-              maxDigit={2}
-              minDigit={2}
-            />
-          ) : (
-            '--'
-          ),
+        render: (item, index, externalSource) => (
+          <DeltaText
+            color="neutral1"
+            type={item.isIncrease ? OrderTypeEnum.INCREASE : OrderTypeEnum.DECREASE}
+            delta={item.size}
+            maxDigit={4}
+            minDigit={4}
+            suffix={` ${externalSource?.symbol}`}
+          />
+        ),
       },
       {
         title: 'Size ($)',
@@ -136,23 +181,111 @@ export default function ListCopyOrderTable({
           ),
       },
       {
-        title: 'Size',
-        dataIndex: 'size',
-        key: 'size',
+        title: 'Leverage',
+        dataIndex: 'leverage',
+        key: 'leverage',
         style: { minWidth: '120px', textAlign: 'right' },
-        render: (item, index, externalSource) => (
-          <DeltaText
-            color="neutral1"
-            type={item.isIncrease ? OrderTypeEnum.INCREASE : OrderTypeEnum.DECREASE}
-            delta={item.size}
-            maxDigit={4}
-            minDigit={4}
-            suffix={` ${externalSource?.symbol}`}
-          />
+        render: (item) => (
+          <Type.Caption color={item.leverage ? 'neutral1' : 'neutral3'}>
+            {item.leverage ? `${formatNumber(item.leverage, 1, 1)}x` : '--'}
+          </Type.Caption>
         ),
       },
       {
-        title: 'Market Price',
+        title: 'Collateral ($)',
+        dataIndex: 'collateral',
+        key: 'collateral',
+        style: { minWidth: '120px', textAlign: 'right' },
+        render: (item) =>
+          item.collateral ? (
+            <DeltaText
+              color="neutral1"
+              type={
+                platform === CopyTradePlatformEnum.SYNTHETIX_V3 ||
+                platform === CopyTradePlatformEnum.SYNTHETIX_V2 ||
+                platform === CopyTradePlatformEnum.GNS_V8
+                  ? item.collateral > 0
+                    ? OrderTypeEnum.INCREASE
+                    : OrderTypeEnum.DECREASE
+                  : item.isIncrease
+                  ? OrderTypeEnum.INCREASE
+                  : OrderTypeEnum.DECREASE
+              }
+              delta={Math.abs(item.collateral)}
+              maxDigit={2}
+              minDigit={2}
+            />
+          ) : (
+            '--'
+          ),
+      },
+
+      ...(platform === CopyTradePlatformEnum.GNS_V8
+        ? ([
+            {
+              title: 'Copy Fee ($)',
+              dataIndex: 'fee',
+              key: 'fee',
+              style: { minWidth: '120px', textAlign: 'right' },
+              render: (item) => (
+                <Type.Caption color={item.sizeUsd ? 'neutral1' : 'neutral3'}>
+                  {item.sizeUsd ? `${formatNumber(item.sizeUsd * getCopyTradingFee(), 2, 2)}` : '--'}
+                </Type.Caption>
+              ),
+            },
+          ] as ColumnData<CopyOrderData, ExternalSource>[])
+        : []),
+
+      ...(platform === CopyTradePlatformEnum.SYNTHETIX_V3
+        ? ([
+            {
+              title: 'Funding ($)',
+              dataIndex: 'funding',
+              key: 'funding',
+              style: { minWidth: '120px', textAlign: 'right' },
+              render: (item) =>
+                item.funding ? (
+                  <DeltaText
+                    color="neutral1"
+                    type={item.funding > 0 ? OrderTypeEnum.INCREASE : OrderTypeEnum.DECREASE}
+                    delta={Math.abs(item.funding)}
+                    maxDigit={2}
+                    minDigit={2}
+                  />
+                ) : (
+                  '--'
+                ),
+            },
+            {
+              title: 'Fee ($)',
+              dataIndex: 'fee',
+              key: 'fee',
+              style: { minWidth: '120px', textAlign: 'right' },
+              render: (item) => (
+                <Type.Caption color={item.fee ? 'neutral1' : 'neutral3'}>
+                  {item.fee ? `${formatNumber(item.fee, 2, 2)}` : '--'}
+                </Type.Caption>
+              ),
+            },
+          ] as ColumnData<CopyOrderData, ExternalSource>[])
+        : []),
+      ...(platform === CopyTradePlatformEnum.SYNTHETIX_V3 || platform === CopyTradePlatformEnum.SYNTHETIX_V2
+        ? ([
+            {
+              title: 'Fee ($)',
+              dataIndex: 'fee',
+              key: 'fee',
+              style: { minWidth: '120px', textAlign: 'right' },
+              render: (item) => (
+                <Type.Caption color={item.fee ? 'neutral1' : 'neutral3'}>
+                  {item.fee ? `${formatNumber(item.fee, 2, 2)}` : '--'}
+                </Type.Caption>
+              ),
+            },
+          ] as ColumnData<CopyOrderData, ExternalSource>[])
+        : []),
+      {
+        title: 'Market Price ($)',
         dataIndex: 'price',
         key: 'price',
         style: { minWidth: '120px', textAlign: 'right', pr: 3 },

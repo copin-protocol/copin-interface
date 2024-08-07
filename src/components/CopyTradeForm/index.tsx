@@ -5,12 +5,14 @@ import { useResponsive } from 'ahooks'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQuery } from 'react-query'
+import { Link } from 'react-router-dom'
 
 import { getTraderVolumeCopy } from 'apis/copyTradeApis'
 import Divider from 'components/@ui/Divider'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { renderTrader } from 'components/@ui/Table/renderProps'
 import { getCopyVolumeColor } from 'components/TraderCopyVolumeWarningIcon/helper'
+import { TradingEventStatusEnum } from 'entities/event'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
@@ -31,10 +33,11 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
-import { CopyTradePlatformEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
+import { DCP_SUPPORTED_PROTOCOLS, DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
+import { CopyTradePlatformEnum, EventTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { INTERNAL_SERVICE_KEYS, QUERY_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
+import ROUTES from 'utils/config/routes'
 import {
   TOKEN_TRADE_IGNORE,
   getIndexTokensFromSymbols,
@@ -43,15 +46,17 @@ import {
 } from 'utils/config/trades'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
+import { generateEventDetailsRoute } from 'utils/helpers/generateRoute'
 
 import LabelWithTooltip from '../@ui/LabelWithTooltip'
-import FundChecking from './FundChecking'
+import FundChecking, { SmartWalletFund } from './FundChecking'
 import Wallets from './Wallets'
 import {
   CopyTradeFormValues,
   RISK_LEVERAGE,
   cloneCopyTradeFormSchema,
   copyTradeFormSchema,
+  dcpExchangeOptions,
   exchangeOptions,
   fieldName,
   getExchangeOption,
@@ -103,9 +108,13 @@ const CopyTraderForm: CopyTradeFormComponent = ({
       isClone ? cloneCopyTradeFormSchema : isEdit ? updateCopyTradeFormSchema : copyTradeFormSchema
     ),
   })
+  const protocol = watch('protocol') || DEFAULT_PROTOCOL
+
   const { checkIsPremium, isPremiumUser } = useIsPremiumAndAction()
   const isInternal = useInternalRole()
-  const options = isInternal ? internalExchangeOptions : exchangeOptions
+  const cexOptions = isInternal ? internalExchangeOptions : exchangeOptions
+  const options =
+    !!protocol && DCP_SUPPORTED_PROTOCOLS.includes(protocol) ? [...dcpExchangeOptions, ...cexOptions] : cexOptions
   const serviceCopy = isInternal ? INTERNAL_SERVICE_KEYS : SERVICE_KEYS
 
   const volume = watch('volume')
@@ -119,7 +128,6 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const maxMarginPerPosition = watch('maxMarginPerPosition')
   const lookBackOrders = watch('lookBackOrders')
   const tokenAddresses = watch('tokenAddresses') || []
-  const protocol = watch('protocol') || DEFAULT_PROTOCOL
   const copyAll = watch('copyAll')
   const skipLowLeverage = watch('skipLowLeverage')
   const lowLeverage = watch('lowLeverage')
@@ -166,7 +174,11 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     }
   )
 
+  const { events } = useSystemConfigContext()
+  const gnsEvent = events?.find((e) => e.type === EventTypeEnum.GNS && e.status !== TradingEventStatusEnum.ENDED)
+
   const { copyWallets } = useCopyWalletContext()
+
   const setDefaultWallet = (currentPlatform: string) => {
     const copyWalletsByExchange = copyWallets?.filter((e) => e.exchange === currentPlatform)
     onChangeWallet(copyWalletsByExchange?.[0]?.id ?? '')
@@ -245,6 +257,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
         return setFocus(fieldName.duplicateToAddress!)
       }
       setFocus(fieldName.title)
+      if (!!gnsEvent && !!defaultFormValues.protocol && DCP_SUPPORTED_PROTOCOLS.includes(defaultFormValues.protocol)) {
+        setValue(fieldName.exchange, CopyTradePlatformEnum.GNS_V8)
+      }
     }, 200)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -475,6 +490,14 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               </Box>
             </Type.Caption>
           )} */}
+          {platform === CopyTradePlatformEnum.GNS_V8 && !!gnsEvent && (
+            <Type.Caption mt={2} display="block">
+              DCP gTrade competition is ongoing.{' '}
+              <Box as={Link} to={generateEventDetailsRoute(gnsEvent)} target="_blank">
+                Join now.
+              </Box>
+            </Type.Caption>
+          )}
         </Box>
 
         <Box mt={24}>
@@ -485,6 +508,15 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             name={fieldName.volume}
             control={control}
             suffix={<Type.Caption color="neutral2">{CURRENCY_PLATFORMS[platform]}</Type.Caption>}
+            annotation={
+              platform === CopyTradePlatformEnum.SYNTHETIX_V2 ||
+              platform === CopyTradePlatformEnum.SYNTHETIX_V3 ||
+              platform === CopyTradePlatformEnum.GNS_V8 ? (
+                <SmartWalletFund walletId={copyWalletId} platform={platform} />
+              ) : (
+                <div></div>
+              )
+            }
             error={volumeError}
           />
           <Type.Caption mt={1} color="neutral2">
@@ -670,87 +702,104 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           </Type.Caption>
         </Box>
         <Divider mt={24} />
-        <Accordion
-          header={<Type.BodyBold>Stop Loss / Take Profit</Type.BodyBold>}
-          defaultOpen={(isEdit || isClone) && (!!stopLossAmount || !!takeProfitAmount)}
-          body={
-            <Box mt={3}>
-              <NumberInputField
-                maxLength={40}
-                label="Stop Loss (Recommended)"
-                block
-                name={fieldName.stopLossAmount}
-                control={control}
-                error={errors.stopLossAmount?.message}
-                suffix={
-                  <InputSuffix>
-                    <SelectSLTPType type={stopLossType} onTypeChange={onChangeSLType} />
-                    {/*<SelectSLTPType name={fieldName.stopLossType} type={stopLossType} onTypeChange={onChangeSLType} />*/}
-                  </InputSuffix>
-                }
-              />
-              <Type.Caption mt={1} color="neutral2">
-                <Trans>
-                  When the position&apos;s loss exceeds{' '}
-                  {stopLossAmount ? (
-                    <Type.CaptionBold color="red2">
-                      {formatNumber(stopLossAmount)} {SLTP_TYPE_TRANS[stopLossType]}
-                    </Type.CaptionBold>
-                  ) : (
-                    '--'
-                  )}
-                  , the Stop Loss will be triggered to close the position.
-                </Trans>
-              </Type.Caption>
 
-              <Box mt={3} />
-              <NumberInputField
-                label="Take Profit"
-                block
-                maxLength={40}
-                name={fieldName.takeProfitAmount}
-                control={control}
-                error={errors.takeProfitAmount?.message}
-                suffix={
-                  <InputSuffix>
-                    <SelectSLTPType type={takeProfitType} onTypeChange={onChangeTPType} />
-                  </InputSuffix>
-                }
-              />
-              <Type.Caption mt={1} color="neutral2">
-                <Trans>
-                  When the position&apos;s profit exceeds{' '}
-                  {takeProfitAmount ? (
-                    <Type.CaptionBold color="green1">
-                      {formatNumber(takeProfitAmount)} {SLTP_TYPE_TRANS[takeProfitType]}
-                    </Type.CaptionBold>
-                  ) : (
-                    '--'
-                  )}
-                  , the Take Profit will be triggered to close the position.
-                </Trans>
-              </Type.Caption>
+        {platform !== CopyTradePlatformEnum.SYNTHETIX_V2 && platform !== CopyTradePlatformEnum.SYNTHETIX_V3 && (
+          <Accordion
+            header={<Type.BodyBold>Stop Loss / Take Profit</Type.BodyBold>}
+            defaultOpen={(isEdit || isClone) && (!!stopLossAmount || !!takeProfitAmount)}
+            body={
+              <Box mt={3}>
+                <NumberInputField
+                  maxLength={40}
+                  label="Stop Loss (Recommended)"
+                  block
+                  name={fieldName.stopLossAmount}
+                  control={control}
+                  error={errors.stopLossAmount?.message}
+                  suffix={
+                    <InputSuffix>
+                      <SelectSLTPType type={stopLossType} onTypeChange={onChangeSLType} />
+                      {/*<SelectSLTPType name={fieldName.stopLossType} type={stopLossType} onTypeChange={onChangeSLType} />*/}
+                    </InputSuffix>
+                  }
+                />
+                <Type.Caption mt={1} color="neutral2">
+                  <Trans>
+                    When the position&apos;s loss exceeds{' '}
+                    {stopLossAmount ? (
+                      <Type.CaptionBold color="red2">
+                        {formatNumber(stopLossAmount)} {SLTP_TYPE_TRANS[stopLossType]}
+                      </Type.CaptionBold>
+                    ) : (
+                      '--'
+                    )}
+                    , the Stop Loss will be triggered to close the position.
+                  </Trans>
+                </Type.Caption>
 
-              {isBingXWallet && (
-                <Box bg="rgba(255, 194, 75, 0.10)" py={2} px={12} mt={20}>
-                  <Flex sx={{ gap: 2 }} color="orange1" alignItems="center">
-                    <ShieldWarning />
-                    <Type.CaptionBold>Warning</Type.CaptionBold>
-                  </Flex>
-                  <Type.Caption mt={2}>
-                    <Trans>
-                      Make sure you have already activated the{' '}
-                      <Box as="a" href={LINKS.bingXGuarantee} target="_blank" rel="noreferrer">
-                        BingX Guaranteed Price
-                      </Box>{' '}
-                      to Prevent Slippage Losses.
-                    </Trans>
-                  </Type.Caption>
-                </Box>
-              )}
-            </Box>
-          }
-        />
+                <Box mt={3} />
+                <NumberInputField
+                  label="Take Profit"
+                  block
+                  maxLength={40}
+                  name={fieldName.takeProfitAmount}
+                  control={control}
+                  error={errors.takeProfitAmount?.message}
+                  suffix={
+                    <InputSuffix>
+                      <SelectSLTPType type={takeProfitType} onTypeChange={onChangeTPType} />
+                    </InputSuffix>
+                  }
+                />
+                <Type.Caption mt={1} color="neutral2">
+                  <Trans>
+                    When the position&apos;s profit exceeds{' '}
+                    {takeProfitAmount ? (
+                      <Type.CaptionBold color="green1">
+                        {formatNumber(takeProfitAmount)} {SLTP_TYPE_TRANS[takeProfitType]}
+                      </Type.CaptionBold>
+                    ) : (
+                      '--'
+                    )}
+                    , the Take Profit will be triggered to close the position.
+                  </Trans>
+                </Type.Caption>
+
+                {isBingXWallet && (
+                  <Box bg="rgba(255, 194, 75, 0.10)" py={2} px={12} mt={20}>
+                    <Flex sx={{ gap: 2 }} color="orange1" alignItems="center">
+                      <ShieldWarning />
+                      <Type.CaptionBold>Warning</Type.CaptionBold>
+                    </Flex>
+                    <Type.Caption mt={2}>
+                      <Trans>
+                        Make sure you have already activated the{' '}
+                        <Box as="a" href={LINKS.bingXGuarantee} target="_blank" rel="noreferrer">
+                          BingX Guaranteed Price
+                        </Box>{' '}
+                        to Prevent Slippage Losses.
+                      </Trans>
+                    </Type.Caption>
+                  </Box>
+                )}
+
+                {platform === CopyTradePlatformEnum.GNS_V8 && (
+                  <Box bg="rgba(255, 194, 75, 0.10)" py={2} px={12} mt={20}>
+                    <Flex sx={{ gap: 2 }} color="orange1" alignItems="center">
+                      <ShieldWarning />
+                      <Type.CaptionBold>Warning</Type.CaptionBold>
+                    </Flex>
+                    <Type.Caption mt={2}>
+                      <Trans>
+                        Due to price slippage prevention, the stop loss price will increase / decrease by 0.1%
+                      </Trans>
+                    </Type.Caption>
+                  </Box>
+                )}
+              </Box>
+            }
+          />
+        )}
         <Divider />
         <Accordion
           defaultOpen={(isEdit || isClone) && (!!maxMarginPerPosition || !!skipLowLeverage || !!skipLowCollateral)}
@@ -761,47 +810,56 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           }
           body={
             <Box mt={3}>
-              <NumberInputField
-                maxLength={40}
-                block
-                label="Max Margin Per Position"
-                name={fieldName.maxMarginPerPosition}
-                control={control}
-                error={errors.maxMarginPerPosition?.message}
-                suffix={<InputSuffix>USD</InputSuffix>}
-              />
-              <Type.Caption mt={1} color="neutral2">
-                <Trans>
-                  When the trader increases the position, you will follow with a maximum of{' '}
-                  {maxMarginPerPosition ? (
-                    <Type.CaptionBold>{formatNumber(maxMarginPerPosition)} USD</Type.CaptionBold>
-                  ) : (
-                    '--'
-                  )}{' '}
-                  as the margin.
-                </Trans>
-              </Type.Caption>
-              <Box mt={24}>
-                <NumberInputField
-                  maxLength={40}
-                  block
-                  label="Margin Protection"
-                  name={fieldName.lookBackOrders}
-                  control={control}
-                  error={errors.lookBackOrders?.message}
-                  suffix={<InputSuffix>Orders Lookback</InputSuffix>}
-                />
-                <Type.Caption mt={1} color="neutral2">
-                  <Trans>
-                    Allocating margin based on trader&#39;s average margin of the last{' '}
-                    {lookBackOrders ? <Type.CaptionBold>{lookBackOrders}</Type.CaptionBold> : '--'}{' '}
-                  </Trans>{' '}
-                  orders.{' '}
-                  <a href={'https://tutorial.copin.io/how-to-use-copy-trading'} target="_blank" rel="noreferrer">
-                    <Trans>Example</Trans>
-                  </a>
-                </Type.Caption>
-              </Box>
+              {platform !== CopyTradePlatformEnum.GNS_V8 && (
+                <>
+                  <NumberInputField
+                    maxLength={40}
+                    block
+                    label="Max Margin Per Position"
+                    name={fieldName.maxMarginPerPosition}
+                    control={control}
+                    error={errors.maxMarginPerPosition?.message}
+                    suffix={<InputSuffix>USD</InputSuffix>}
+                  />
+                  <Type.Caption mt={1} color="neutral2">
+                    <Trans>
+                      When the trader increases the position, you will follow with a maximum of{' '}
+                      {maxMarginPerPosition ? (
+                        <Type.CaptionBold>{formatNumber(maxMarginPerPosition)} USD</Type.CaptionBold>
+                      ) : (
+                        '--'
+                      )}{' '}
+                      as the margin.
+                    </Trans>
+                  </Type.Caption>
+                </>
+              )}
+
+              {platform !== CopyTradePlatformEnum.SYNTHETIX_V2 &&
+                platform !== CopyTradePlatformEnum.SYNTHETIX_V3 &&
+                platform !== CopyTradePlatformEnum.GNS_V8 && (
+                  <Box mt={24}>
+                    <NumberInputField
+                      maxLength={40}
+                      block
+                      label="Margin Protection"
+                      name={fieldName.lookBackOrders}
+                      control={control}
+                      error={errors.lookBackOrders?.message}
+                      suffix={<InputSuffix>Orders Lookback</InputSuffix>}
+                    />
+                    <Type.Caption mt={1} color="neutral2">
+                      <Trans>
+                        Allocating margin based on trader&#39;s average margin of the last{' '}
+                        {lookBackOrders ? <Type.CaptionBold>{lookBackOrders}</Type.CaptionBold> : '--'}{' '}
+                      </Trans>{' '}
+                      orders.{' '}
+                      <a href={'https://tutorial.copin.io/how-to-use-copy-trading'} target="_blank" rel="noreferrer">
+                        <Trans>Example</Trans>
+                      </a>
+                    </Type.Caption>
+                  </Box>
+                )}
               <Box mt={24}>
                 <SwitchInputField
                   switchLabel="Skip Lower Leverage Position"
@@ -825,57 +883,95 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                   <Trans>You will not copy the position has opened with leverage lower than</Trans> {lowLeverage}x.
                 </Type.Caption>
               </Box>
-              <Box mt={24}>
-                <SwitchInputField
-                  switchLabel="Skip Lower Collateral Position"
-                  // labelColor="orange1"
-                  {...register(fieldName.skipLowCollateral)}
-                  error={errors.skipLowCollateral?.message}
-                />
-                <Box mt={2} sx={{ display: skipLowCollateral ? 'block' : 'none' }}>
-                  <NumberInputField
-                    maxLength={40}
-                    block
-                    required
-                    label="Low Collateral"
-                    name={fieldName.lowCollateral}
-                    control={control}
-                    error={errors.lowCollateral?.message}
-                    suffix={<InputSuffix>$</InputSuffix>}
+              {platform !== CopyTradePlatformEnum.SYNTHETIX_V2 && platform !== CopyTradePlatformEnum.SYNTHETIX_V3 && (
+                <Box mt={24}>
+                  <SwitchInputField
+                    switchLabel="Skip Lower Collateral Position"
+                    // labelColor="orange1"
+                    {...register(fieldName.skipLowCollateral)}
+                    error={errors.skipLowCollateral?.message}
                   />
+                  <Box mt={2} sx={{ display: skipLowCollateral ? 'block' : 'none' }}>
+                    <NumberInputField
+                      maxLength={40}
+                      block
+                      required
+                      label="Low Collateral"
+                      name={fieldName.lowCollateral}
+                      control={control}
+                      error={errors.lowCollateral?.message}
+                      suffix={<InputSuffix>$</InputSuffix>}
+                    />
+                  </Box>
+                  <Type.Caption mt={1} color="neutral2">
+                    <Trans>You will not copy the position has opened with collateral lower than</Trans> $
+                    {formatNumber(lowCollateral, 0)}.
+                  </Type.Caption>
                 </Box>
-                <Type.Caption mt={1} color="neutral2">
-                  <Trans>You will not copy the position has opened with collateral lower than</Trans> $
-                  {formatNumber(lowCollateral, 0)}.
-                </Type.Caption>
-              </Box>
-              <Box mt={24}>
-                <SwitchInputField
-                  switchLabel="Skip Lower Size Position"
-                  // labelColor="orange1"
-                  {...register(fieldName.skipLowSize)}
-                  error={errors.skipLowSize?.message}
-                />
-                <Box mt={2} sx={{ display: skipLowSize ? 'block' : 'none' }}>
-                  <NumberInputField
-                    maxLength={40}
-                    block
-                    required
-                    label="Low Size"
-                    name={fieldName.lowSize}
-                    control={control}
-                    error={errors.lowSize?.message}
-                    suffix={<InputSuffix>$</InputSuffix>}
-                  />
-                </Box>
-                <Type.Caption mt={1} color="neutral2">
-                  <Trans>You will not copy the position has opened with size lower than</Trans> $
-                  {formatNumber(lowSize, 0)}.
-                </Type.Caption>
-              </Box>
+              )}
+              {platform !== CopyTradePlatformEnum.GNS_V8 &&
+                platform !== CopyTradePlatformEnum.SYNTHETIX_V2 &&
+                platform !== CopyTradePlatformEnum.SYNTHETIX_V3 && (
+                  <>
+                    <Box mt={24}>
+                      <SwitchInputField
+                        switchLabel="Skip Lower Size Position"
+                        // labelColor="orange1"
+                        {...register(fieldName.skipLowSize)}
+                        error={errors.skipLowSize?.message}
+                      />
+                      <Box mt={2} sx={{ display: skipLowSize ? 'block' : 'none' }}>
+                        <NumberInputField
+                          maxLength={40}
+                          block
+                          required
+                          label="Low Size"
+                          name={fieldName.lowSize}
+                          control={control}
+                          error={errors.lowSize?.message}
+                          suffix={<InputSuffix>$</InputSuffix>}
+                        />
+                      </Box>
+                      <Type.Caption mt={1} color="neutral2">
+                        <Trans>You will not copy the position has opened with size lower than</Trans> $
+                        {formatNumber(lowSize, 0)}.
+                      </Type.Caption>
+                    </Box>
+                  </>
+                )}
             </Box>
           }
         />
+
+        {(platform === CopyTradePlatformEnum.SYNTHETIX_V2 || platform === CopyTradePlatformEnum.GNS_V8) && (
+          <Flex sx={{ gap: 2, borderRadius: 'sm', p: 2 }} bg="neutral6">
+            {platform === CopyTradePlatformEnum.SYNTHETIX_V2 && (
+              <>
+                <Type.Caption color="neutral3">Execution Fee Per Order:</Type.Caption>
+                <Type.Caption>0.001 ETH</Type.Caption>
+              </>
+            )}
+            {platform === CopyTradePlatformEnum.GNS_V8 && (
+              <>
+                <Type.Caption color="neutral3">Max slippage:</Type.Caption>
+                <Type.Caption>0.5%</Type.Caption>
+              </>
+            )}
+
+            <Type.Caption color="neutral2">|</Type.Caption>
+            <Type.Caption color="neutral3">Protocol Fee:</Type.Caption>
+            <Type.Caption>0.025% trading size</Type.Caption>
+          </Flex>
+        )}
+
+        {platform === CopyTradePlatformEnum.GNS_V8 && !!gnsEvent && (
+          <Type.Caption mt={2} display="block">
+            Fee-rebates program is ongoing.{' '}
+            <Box as={Link} to={ROUTES.FEE_REBATE.path} target="_blank">
+              View.
+            </Box>
+          </Type.Caption>
+        )}
 
         <Box mt={3}>
           <Checkbox {...register('agreement')}>
@@ -917,15 +1013,15 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 // }
 
 export const SelectSLTPType = ({
-  type = SLTPTypeEnum.USD,
+  type = SLTPTypeEnum.PERCENT,
   onTypeChange,
 }: {
   type?: SLTPTypeEnum
   onTypeChange: (type: SLTPTypeEnum) => void
 }) => {
   const options = [
-    { label: SLTP_TYPE_TRANS[SLTPTypeEnum.USD], value: SLTPTypeEnum.USD },
     { label: SLTP_TYPE_TRANS[SLTPTypeEnum.PERCENT], value: SLTPTypeEnum.PERCENT },
+    { label: SLTP_TYPE_TRANS[SLTPTypeEnum.USD], value: SLTPTypeEnum.USD },
   ]
   const renderTypes = useCallback(() => {
     return (

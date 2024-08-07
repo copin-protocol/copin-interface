@@ -7,6 +7,7 @@ import useWeb3 from 'hooks/web3/useWeb3'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { WalletProviderError } from 'utils/helpers/handleError'
 import { DEFAULT_CHAIN_ID } from 'utils/web3/chains'
+import { CONTRACT_ADDRESSES } from 'utils/web3/contracts'
 import { CONTRACT_ABIS, getContract, getProviderOrSigner } from 'utils/web3/contracts'
 import { getSimpleRpcProvider } from 'utils/web3/getRpcUrl'
 import { ContractInfo } from 'utils/web3/types'
@@ -57,16 +58,49 @@ export function useERC20Contract(erc20Address: string, withSignerIfPossible?: bo
   })
 }
 
-export function useSmartAccountContract(address: string, withSignerIfPossible?: boolean) {
+export function useSmartWalletContract(address: string, withSignerIfPossible?: boolean) {
   return useContract({
-    contract: { address, abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_ACCOUNT] },
+    contract: { address, abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_COPYWALLET] },
     withSignerIfPossible,
   })
 }
 
-export function useSmartAccountFactoryContract(address: string, withSignerIfPossible?: boolean) {
+export function useSnxV3PerpsMarketContract(chainId: number, withSignerIfPossible?: boolean) {
   return useContract({
-    contract: { address, abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_ACCOUNT_FACTORY] },
+    contract: {
+      address: CONTRACT_ADDRESSES[chainId][CONTRACT_QUERY_KEYS.SNX_PERPS_MARKET_V3],
+      abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SNX_PERPS_MARKET_V3],
+    },
+    withSignerIfPossible,
+  })
+}
+
+export function useSnxV2PerpsMarketContract(address: string, withSignerIfPossible?: boolean) {
+  return useContract({
+    contract: {
+      address,
+      abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SNX_PERPS_MARKET_V2],
+    },
+    withSignerIfPossible,
+  })
+}
+
+export function useSmartWalletFactoryContract(chainId: number, withSignerIfPossible?: boolean) {
+  return useContract({
+    contract: {
+      address: CONTRACT_ADDRESSES[chainId][CONTRACT_QUERY_KEYS.SMART_COPYWALLET_FACTORY],
+      abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_COPYWALLET_FACTORY],
+    },
+    withSignerIfPossible,
+  })
+}
+
+export function useFeeRebateContract(chainId: number, withSignerIfPossible?: boolean) {
+  return useContract({
+    contract: {
+      address: CONTRACT_ADDRESSES[chainId][CONTRACT_QUERY_KEYS.FEE_REBATE],
+      abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.FEE_REBATE],
+    },
     withSignerIfPossible,
   })
 }

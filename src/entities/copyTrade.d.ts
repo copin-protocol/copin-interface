@@ -96,6 +96,7 @@ export interface CopyPositionData {
   userId: string
   copyTradeId: string
   copyAccount: string
+  positionIndex?: number
   copyTradeTitle: string
   name: string
   indexToken: string
@@ -119,6 +120,8 @@ export interface CopyPositionData {
   takeProfitAmount: number
   latestTakeProfitId?: string
   pnl: number
+  protocol: ProtocolEnum
+  exchange: CopyTradePlatformEnum
   closeType: CopyPositionCloseTypeEnum
   status: PositionStatusEnum
   lastOrderAt: string
@@ -132,8 +135,17 @@ export interface CopyOrderData {
   size: number
   sizeUsd: number
   collateral: number
+  totalCollateral: number
+  totalSize: number
+  leverage: number
   isLong: boolean
   isIncrease: boolean
+  txHash: string
+  pnl?: number
+  funding?: number
+  fee?: number
+  submitTxHash: string
+  settleTxHash: string
   createdAt: string
 }
 

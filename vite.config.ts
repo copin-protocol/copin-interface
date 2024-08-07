@@ -35,6 +35,8 @@ export default defineConfig({
       crypto: 'crypto-browserify',
       stream: 'stream-browserify',
       assert: 'assert',
+      '@socket.tech/ll-core': require.resolve('@socket.tech/ll-core'),
+      '@socket.tech/ll-core-v2': require.resolve('@socket.tech/ll-core-v2'),
     },
   },
   build: {

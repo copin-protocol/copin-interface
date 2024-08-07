@@ -1,0 +1,179 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "accountId",
+        "type": "uint128"
+      }
+    ],
+    "name": "getAvailableMargin",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "availableMargin",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "accountId",
+        "type": "uint128"
+      }
+    ],
+    "name": "getWithdrawableMargin",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "withdrawableMargin",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "accountId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      }
+    ],
+    "name": "getOpenPosition",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "totalPnl",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "accruedFunding",
+        "type": "int256"
+      },
+      {
+        "internalType": "int128",
+        "name": "positionSize",
+        "type": "int128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      }
+    ],
+    "name": "indexPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "int128",
+        "name": "orderSize",
+        "type": "int128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "name": "fillPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "marketId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "int128",
+        "name": "sizeDelta",
+        "type": "int128"
+      }
+    ],
+    "name": "computeOrderFees",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "orderFees",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "fillPrice",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getKeeperRewardGuards",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "minKeeperRewardUsd",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minKeeperProfitRatioD18",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxKeeperRewardUsd",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxKeeperScalingRatioD18",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

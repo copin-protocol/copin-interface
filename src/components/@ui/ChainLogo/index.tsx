@@ -1,6 +1,6 @@
-import React from 'react'
+import { ReactNode } from 'react'
 
-import { Flex, Image } from 'theme/base'
+import { Flex, Image, Type } from 'theme/base'
 import { BoxProps } from 'theme/types'
 import { SUPPORTED_CHAIN_IDS } from 'utils/web3/chains'
 import { Chain } from 'utils/web3/types'
@@ -23,3 +23,12 @@ const ChainLogo = ({ chain, active = false, ...props }: { chain: Chain; active?:
 }
 
 export default ChainLogo
+
+export function ChainWithLabel({ label, icon }: { label: ReactNode; icon: string }) {
+  return (
+    <Flex alignItems="center" sx={{ gap: 2 }}>
+      <img width={24} height={24} src={`/images/chains/${icon}.png`} alt={icon} />
+      <Type.CaptionBold>{label}</Type.CaptionBold>
+    </Flex>
+  )
+}
