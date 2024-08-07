@@ -66,7 +66,10 @@ function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () =
             {config.label}
           </NavLink>
         ) : (
-          <SelectProtocolDropdown key={index}>
+          <SelectProtocolDropdown
+            key={index}
+            routeFactory={(protocol) => config.routeFactory({ protocol: _navProtocol ?? protocol })}
+          >
             <NavLink
               to={config.routeFactory({ protocol: _navProtocol ?? protocol })}
               onClick={onClickNavItem}

@@ -13,15 +13,21 @@ import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { ALLOWED_PROTOCOLS } from 'pages/Home/configs'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 import { compactNumber } from 'utils/helpers/format'
-import { generateExplorerRoute } from 'utils/helpers/generateRoute'
 import { DEFAULT_CHAIN_ID } from 'utils/web3/chains'
 
 import { useProtocolsStatisticContext } from '../ProtocolsStatisticContext'
 
 const DELAY = 360
 
-export default function SelectProtocolDropdown({ children }: { children: ReactNode }) {
+export default function SelectProtocolDropdown({
+  children,
+  routeFactory,
+}: {
+  children: ReactNode
+  routeFactory: (protocol: ProtocolEnum) => string
+}) {
   const protocols = useGetProtocolOptions()
   const protocolConfigs = useMemo(() => getProtocolConfigs(protocols), [protocols])
 
@@ -118,12 +124,7 @@ export default function SelectProtocolDropdown({ children }: { children: ReactNo
             const isActiveProtocol = storedProtocol === protocol.id
             const protocolStatistic = protocolsStatistic?.[protocol.id]
             return (
-              <Box
-                key={protocol.id}
-                as={Link}
-                to={generateExplorerRoute({ protocol: protocol.id })}
-                sx={{ color: 'inherit' }}
-              >
+              <Box key={protocol.id} as={Link} to={routeFactory(protocol.id)} sx={{ color: 'inherit' }}>
                 <Flex
                   sx={{
                     width: '100%',
