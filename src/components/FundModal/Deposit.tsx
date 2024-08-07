@@ -115,6 +115,8 @@ const Deposit = ({
     )
   }
 
+  const remainingMaxDeposit = Math.max(10000 - (smartWalletFund.available?.num || 0), 0)
+
   return (
     <div>
       {isValid ? (
@@ -123,7 +125,9 @@ const Deposit = ({
             <Type.CaptionBold mr={1}>
               <Trans>Smart Wallet Available Fund</Trans>:
             </Type.CaptionBold>
-            <Type.Caption>{formatNumber(smartWalletFund.available?.num, 2, 2)} USD</Type.Caption>
+            <Type.Caption>
+              {formatNumber(smartWalletFund.available?.num, 2, 2)} ${usdAsset.symbol}
+            </Type.Caption>
           </Box>
 
           <NumberInputField
@@ -161,8 +165,11 @@ const Deposit = ({
               ...(usdAssetBalance
                 ? {
                     max: {
-                      value: usdAssetBalance,
-                      message: 'Insufficient funds',
+                      value: Math.min(usdAssetBalance, remainingMaxDeposit),
+                      message:
+                        usdAssetBalance > remainingMaxDeposit
+                          ? `The maximum balance is 10,000 ${usdAsset.symbol}`
+                          : 'Insufficient funds',
                     },
                   }
                 : {}),
