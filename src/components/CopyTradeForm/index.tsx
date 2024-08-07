@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Trans } from '@lingui/macro'
-import { ShieldWarning } from '@phosphor-icons/react'
+import { CrownSimple, ShieldWarning } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { ReactNode, useCallback, useEffect, useState } from 'react'
+import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQuery } from 'react-query'
 
@@ -15,19 +15,21 @@ import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import useInternalRole from 'hooks/features/useInternalRole'
+import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { getMaxVolumeCopy, useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
+import Input, { Textarea } from 'theme/Input'
 import InputField from 'theme/InputField'
 import Label from 'theme/InputField/Label'
 import NumberInputField from 'theme/InputField/NumberInputField'
 import Select from 'theme/Select'
 import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
@@ -38,11 +40,11 @@ import {
   getIndexTokensFromSymbols,
   getSymbolsFromIndexTokens,
   getTokenOptions,
-  getTokenTradeList,
 } from 'utils/config/trades'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 
+import LabelWithTooltip from '../@ui/LabelWithTooltip'
 import FundChecking from './FundChecking'
 import Wallets from './Wallets'
 import {
@@ -101,6 +103,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
       isClone ? cloneCopyTradeFormSchema : isEdit ? updateCopyTradeFormSchema : copyTradeFormSchema
     ),
   })
+  const { checkIsPremium, isPremiumUser } = useIsPremiumAndAction()
   const isInternal = useInternalRole()
   const options = isInternal ? internalExchangeOptions : exchangeOptions
   const serviceCopy = isInternal ? INTERNAL_SERVICE_KEYS : SERVICE_KEYS
@@ -137,7 +140,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
   pairOptions.unshift({ id: 'all', value: 'all', label: 'All Tokens' })
 
+  const multipleCopy = watch('multipleCopy')
   const account = watch('account')
+  const accounts = watch('accounts')
   const duplicateToAddress = watch('duplicateToAddress')
   useGetTokensTraded(
     {
@@ -247,6 +252,53 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const permissionToSelectProtocol = useCopyTradePermission(true)
   const { sm } = useResponsive()
 
+  const SwitchMultipleCopy = useCallback(
+    (props: { label: string; switchLabel: string }) => {
+      return (
+        <Flex mb={12} sx={{ alignItems: 'center', gap: 12, '& *': { mb: '0 !important' } }}>
+          <Label label={props.label} />
+          <SwitchInputField
+            switchLabel={
+              <Flex alignItems="center" sx={{ gap: 1 }}>
+                <LabelWithTooltip
+                  id="tt_multiple_address"
+                  tooltip={`The feature for premium users allows copying multiple traders with the same configuration. List of addresses in line break format.`}
+                >
+                  {props.switchLabel}
+                </LabelWithTooltip>
+                <IconBox icon={<CrownSimple size={16} weight="fill" />} color="orange1" />
+              </Flex>
+            }
+            labelColor="neutral1"
+            {...register(fieldName.multipleCopy)}
+            wrapperSx={{ flexDirection: 'row-reverse', '*': { fontWeight: 400 } }}
+            onChange={(newValue: any) => {
+              if (!checkIsPremium()) {
+                setValue(fieldName.multipleCopy, false)
+              } else {
+                setValue(fieldName.multipleCopy, newValue.target.checked)
+              }
+            }}
+          />
+        </Flex>
+      )
+    },
+    [register, isPremiumUser, checkIsPremium]
+  )
+  const SourceTrader = useCallback(() => {
+    if (!account || !protocol) return null
+    return (
+      <Flex mb={1} sx={{ alignItems: 'center', gap: 2 }}>
+        {renderTrader(account, protocol)}
+        <Type.Caption>-</Type.Caption>
+        <Flex sx={{ alignItems: 'center', gap: 2 }}>
+          <ProtocolLogo protocol={protocol} size={16} />
+          <Type.Caption>{protocolOptions?.find((e) => e.value === protocol)?.label}</Type.Caption>
+        </Flex>
+      </Flex>
+    )
+  }, [account, protocol])
+
   const leverageError = errors.leverage?.message || errors.totalVolume?.message
   const volumeError = errors.volume?.message || errors.totalVolume?.message
 
@@ -282,46 +334,91 @@ const CopyTraderForm: CopyTradeFormComponent = ({
           <>
             {isEdit && (
               <Box mt={24}>
-                <InputField
-                  disabled
-                  block
-                  {...register(fieldName.account!)}
-                  error={errors.account?.message}
-                  label="Account"
-                />
+                <SwitchMultipleCopy label="Address" switchLabel="Multiple addresses" />
+                {multipleCopy && (
+                  <Textarea
+                    block
+                    rows={5}
+                    placeholder={`List of addresses in line break format as below:\n0xaddress1\n0xaddress2`}
+                    value={accounts?.join('\n') || account}
+                    defaultValue={_defaultFormValues?.accounts?.join('\n') || _defaultFormValues?.account}
+                    sx={{ textarea: { fontSize: 13 } }}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      setValue('accounts', value.split(/\s+/))
+                    }}
+                  />
+                )}
+                {!multipleCopy && <Input block {...register(fieldName.account!)} error={errors.account?.message} />}
+
+                {(errors.account?.message || errors.accounts?.message) && (
+                  <Type.Caption color="red1">{errors.account?.message || errors.accounts?.message}</Type.Caption>
+                )}
+                {/*{multipleCopy && (*/}
+                {/*  <Box mt={1}>*/}
+                {/*    <Type.Caption color="neutral2">*/}
+                {/*      <Trans>List of addresses in line break format as below:</Trans>*/}
+                {/*    </Type.Caption>*/}
+                {/*    <Type.Caption color="neutral2">*/}
+                {/*      {`0x37EB10AC8A2745C1108fdf6756e52535b00f589c\n0x8D3ddFeB1613094Ef86758CcB6E8bb64C4929E8C`}*/}
+                {/*    </Type.Caption>*/}
+                {/*  </Box>*/}
+                {/*)}*/}
               </Box>
             )}
             {isClone && (
               <>
                 <Box mt={24}>
-                  <InputField
-                    block
-                    {...register(fieldName.duplicateToAddress!)}
-                    disabled={!!_defaultFormValues.duplicateToAddress}
-                    error={errors.duplicateToAddress?.message}
-                    label="Clone To Address"
-                    sx={{ flexGrow: 1 }}
-                  />
-                </Box>
-                {permissionToSelectProtocol && (
-                  <Box mt={24} sx={{ flex: '0 0 max-content' }}>
-                    <Label label="Protocol" />
-                    <Select
-                      options={protocolOptions}
-                      defaultMenuIsOpen={false}
-                      value={protocolOptions.find((option) => option.value === protocol)}
-                      onChange={(newValue: any) => {
-                        setValue('protocol', newValue.value)
-                        setValue('serviceKey', serviceCopy[newValue.value as ProtocolEnum])
+                  <SwitchMultipleCopy label="Clone to address" switchLabel="Multiple addresses" />
+                  {multipleCopy && (
+                    <Textarea
+                      block
+                      rows={5}
+                      value={accounts?.join('\n')}
+                      defaultValue={_defaultFormValues?.accounts?.join('\n')}
+                      sx={{ textarea: { fontSize: 13 } }}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        setValue('accounts', value.split(/\s+/))
                       }}
-                      isSearchable={false}
-                      isDisabled={!!_defaultFormValues.duplicateToAddress}
                     />
-                  </Box>
-                )}
+                  )}
+                  {!multipleCopy && (
+                    <Input
+                      block
+                      {...register(fieldName.duplicateToAddress!)}
+                      disabled={!!_defaultFormValues.duplicateToAddress}
+                      error={errors.duplicateToAddress?.message}
+                      sx={{ flexGrow: 1 }}
+                    />
+                  )}
+
+                  {(errors.duplicateToAddress?.message || errors.accounts?.message) && (
+                    <Type.Caption color="red1">
+                      {errors.duplicateToAddress?.message || errors.accounts?.message}
+                    </Type.Caption>
+                  )}
+                </Box>
               </>
             )}
           </>
+        )}
+
+        {(isEdit || isClone) && permissionToSelectProtocol && (
+          <Box mt={24} sx={{ flex: '0 0 max-content' }}>
+            <Label label="Protocol" />
+            <Select
+              options={protocolOptions}
+              defaultMenuIsOpen={false}
+              value={protocolOptions.find((option) => option.value === protocol)}
+              onChange={(newValue: any) => {
+                setValue('protocol', newValue.value)
+                setValue('serviceKey', serviceCopy[newValue.value as ProtocolEnum])
+              }}
+              isSearchable
+              isDisabled={!!_defaultFormValues.duplicateToAddress}
+            />
+          </Box>
         )}
 
         <Box mt={24}>
@@ -338,7 +435,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                   }
                   setValue(fieldName.exchange, newValue.value)
                 }}
-                isSearchable={false}
+                isSearchable
                 isDisabled={isEdit || isClone}
               />
             </Box>

@@ -1,13 +1,16 @@
 import { useMemo } from 'react'
 
+import AvatarGroup from 'components/@ui/Avatar/AvatarGroup'
 import Table from 'components/@ui/Table'
 import { ColumnData } from 'components/@ui/Table/types'
 import { CopyTradeData } from 'entities/copyTrade.d'
 import { renderTrader } from 'pages/MyProfile/renderProps'
-import { Box, Type } from 'theme/base'
+import Tooltip from 'theme/Tooltip'
+import { Box, Flex, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { CopyTradeStatusEnum } from 'utils/config/enums'
 import { overflowEllipsis } from 'utils/helpers/css'
+import { getProtocolDropdownImage } from 'utils/helpers/transform'
 
 export default function CopyTradeDataTable({
   isLoading,
@@ -37,15 +40,46 @@ export default function CopyTradeDataTable({
         key: 'account',
         style: { minWidth: '150px' },
         render: (item) =>
-          renderTrader(item.account, item.protocol, {
-            isLink: false,
-            textSx: {
-              color: item.status === CopyTradeStatusEnum.RUNNING ? 'neutral1' : 'neutral3',
-            },
-            sx: {
-              filter: item.status === CopyTradeStatusEnum.RUNNING ? 'none' : 'grayscale(1)',
-            },
-          }),
+          item.multipleCopy
+            ? item.accounts && (
+                <>
+                  <Flex data-tooltip-id={item.id} sx={{ alignItems: 'center', gap: 2 }}>
+                    <AvatarGroup addresses={item.accounts} size={24} />
+                    <Type.Caption color="neutral4">|</Type.Caption>
+                    <Image
+                      src={getProtocolDropdownImage({ protocol: item.protocol, isActive: true })}
+                      width={16}
+                      height={16}
+                      sx={{ flexShrink: 0 }}
+                    />
+                  </Flex>
+                  <Tooltip id={item.id} clickable>
+                    <Flex sx={{ flexDirection: 'column', gap: 1 }}>
+                      {item.accounts.map((_a) => {
+                        return renderTrader(_a, item.protocol, {
+                          isLink: false,
+                          textSx: {
+                            color: item.status === CopyTradeStatusEnum.RUNNING ? 'neutral1' : 'neutral3',
+                          },
+                          sx: {
+                            filter: item.status === CopyTradeStatusEnum.RUNNING ? 'none' : 'grayscale(1)',
+                          },
+                          hasCopyAddress: true,
+                        })
+                      })}
+                    </Flex>
+                  </Tooltip>
+                </>
+              )
+            : renderTrader(item.account, item.protocol, {
+                isLink: false,
+                textSx: {
+                  color: item.status === CopyTradeStatusEnum.RUNNING ? 'neutral1' : 'neutral3',
+                },
+                sx: {
+                  filter: item.status === CopyTradeStatusEnum.RUNNING ? 'none' : 'grayscale(1)',
+                },
+              }),
       },
       {
         title: 'Status',

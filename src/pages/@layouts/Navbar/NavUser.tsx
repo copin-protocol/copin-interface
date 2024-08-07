@@ -27,7 +27,7 @@ import WarningExpiredSubscriptionIcon from './WarningExpiredSubscriptionIcon'
 const NavUser = () => {
   const [isShowModalLogout, setIsShowModalLogout] = useState(false)
   const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false)
-  const { logout, profile, account } = useAuthContext()
+  const { logout, profile, isAuthenticated } = useAuthContext()
   const _address = useMemo(() => isAddress(profile?.username), [profile?.username])
   const hasCopyPermission = useCopyTradePermission()
 
@@ -75,7 +75,7 @@ const NavUser = () => {
                 </Flex>
               </DropdownItem>
               {otherRoutes.map((configs, index) =>
-                configs.isWeb3Required && !account ? null : (
+                configs.isWeb3Required && !isAuthenticated ? null : (
                   <NavItem
                     key={index}
                     link={configs.link}
@@ -111,7 +111,7 @@ const NavUser = () => {
               <Box mb={3} />
               <SectionDivider label={<Trans>Settings</Trans>} />
               {userSettings.map((configs, index) =>
-                configs.isWeb3Required && !account ? null : (
+                configs.isWeb3Required && !isAuthenticated ? null : (
                   <NavItem
                     key={index}
                     link={configs.link}
@@ -122,7 +122,7 @@ const NavUser = () => {
                 )
               )}
               <Divider my={2} />
-              {!account && (
+              {!isAuthenticated && (
                 <DropdownItem
                   onClick={() => {
                     onClickNavItem()

@@ -38,7 +38,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
         <Box id={ELEMENT_IDS.APP_MAIN_WRAPPER} width="100%" flex="1" sx={{ position: 'relative', overflowY: 'auto' }}>
           {children}
           <FavoriteNoteTooltip />
-          <ToastContainer theme="dark" limit={3} autoClose={5000} />
+          <ToastContainer theme="dark" limit={3} autoClose={5000} position="bottom-right" />
         </Box>
         <Footer height={FOOTER_HEIGHT} />
       </Flex>

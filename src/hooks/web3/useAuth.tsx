@@ -21,7 +21,7 @@ import { STORAGE_KEYS } from 'utils/config/keys'
 import { Account } from 'utils/web3/types'
 import { signVerifyCode } from 'utils/web3/wallet'
 
-const getAccount = (wallet: WalletState) => wallet.accounts[0] as any as Account
+const getAccount = (wallet: WalletState) => wallet?.accounts[0] as any as Account
 
 interface ContextValues {
   loading: boolean
@@ -73,18 +73,18 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   }, [deactivate, setMyProfile, wallet])
 
   useEffect(() => {
-    if (!wallet) {
-      const { wallet: storedWallet } = getStoredWallet()
-      if (storedWallet && authedRef.current) {
-        setWaitingState(WaitingState.WalletLocked)
-      }
-      return
-    }
-    if (waitingState === WaitingState.WalletLocked) setWaitingState(null)
+    // if (!wallet) {
+    //   const { wallet: storedWallet } = getStoredWallet()
+    //   if (storedWallet && authedRef.current) {
+    //     setWaitingState(WaitingState.WalletLocked)
+    //   }
+    //   return
+    // }
+    // if (waitingState === WaitingState.WalletLocked) setWaitingState(null)
 
-    const account = getAccount(wallet)
+    const account = wallet ? getAccount(wallet) : undefined
     const { account: storedAccount } = getStoredWallet()
-    if (storedAccount && storedAccount !== account.address) {
+    if (storedAccount && account && storedAccount !== account?.address) {
       setWaitingState(WaitingState.SwitchAccount)
     } else {
       if (waitingState === WaitingState.SwitchAccount) setWaitingState(null)
@@ -141,7 +141,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   const connect = useCallback(
     async ({ skipAuth = false }: { skipAuth?: boolean } = {}) => {
       const [_wallet] = await activate()
-      if (!skipAuth) {
+      if (!skipAuth && _wallet) {
         return auth(_wallet)
       }
       return getAccount(_wallet)
@@ -160,7 +160,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
 
     const { account: storedAccount, wallet: storedWallet } = getStoredWallet()
     const jwt = getStoredJwt()
-    if (!storedAccount || !jwt) {
+    if (!jwt) {
       setIsAuthenticated(false)
       return
     }
@@ -172,14 +172,16 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
           disableModals: true,
         },
       })
-      if (!_wallet) {
-        disconnect()
-        return
-      }
-      const _account = getAccount(_wallet)
-      if (_account.address !== storedAccount) {
-        setWaitingState(WaitingState.SwitchAccount)
-        return
+      // if (!_wallet) {
+      //   disconnect()
+      //   return
+      // }
+      if (_wallet) {
+        const _account = getAccount(_wallet)
+        if (_account.address !== storedAccount) {
+          setWaitingState(WaitingState.SwitchAccount)
+          return
+        }
       }
     }
     try {
@@ -190,6 +192,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       setWaitingState(null)
     } catch (error: any) {
       if (error.message.includes('Unauthorized')) {
+        const { wallet: storedWallet } = getStoredWallet()
         if (storedWallet) setWaitingState(WaitingState.TokenExpired)
       } else {
         setWaitingState(null)

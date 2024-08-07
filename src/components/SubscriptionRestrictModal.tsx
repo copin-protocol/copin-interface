@@ -48,7 +48,7 @@ export default function SubscriptionRestrictModal() {
     }
   }, [resetRestrictState, state])
   return (
-    <Modal isOpen={isOpen} onDismiss={resetRestrictState}>
+    <Modal isOpen={isOpen} onDismiss={resetRestrictState} hasClose>
       <Box sx={{ p: 24 }}>{content}</Box>
     </Modal>
   )

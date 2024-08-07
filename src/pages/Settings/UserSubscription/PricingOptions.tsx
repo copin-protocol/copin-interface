@@ -6,9 +6,11 @@ import { ReactNode, useState } from 'react'
 // import { useForm } from 'react-hook-form'
 import Divider from 'components/@ui/Divider'
 import ETHPriceInUSD from 'components/ETHPriceInUSD'
+import { useClickLoginButton } from 'components/LoginAction'
 import Num from 'entities/Num'
 import useSubscriptionContract from 'hooks/features/useSubscriptionContract'
 import useUserSubscription from 'hooks/features/useUserSubscription'
+import { useAuthContext } from 'hooks/web3/useAuth'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import CopinIcon from 'pages/Subscription/CopinIcon'
@@ -69,11 +71,23 @@ export const PricingDropdown: PricingOptionsOverload = ({
   planPrice,
   wrapperSx = {},
 }: PricingOptionsProps) => {
+  const { isAuthenticated, account, connect } = useAuthContext()
+  const handleClickLogin = useClickLoginButton()
   const configs = getPlanPriceConfigs(planPrice)
   const [monthCount, setMonthCount] = useState(MONTHS[0])
 
   const [openModal, setOpenModal] = useState(false)
-  const handleOpenModal = () => setOpenModal(true)
+  const handleOpenModal = () => {
+    if (!isAuthenticated) {
+      handleClickLogin()
+      return
+    }
+    if (!account) {
+      connect?.({})
+      return
+    }
+    setOpenModal(true)
+  }
   const handleDismiss = () => setOpenModal(false)
 
   if (!configs.length) return <></>

@@ -2,14 +2,30 @@ import { ReactNode } from 'react'
 import * as yup from 'yup'
 
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
+import { ALLOWED_PROTOCOLS } from 'pages/Home/configs'
 import { Flex, Image, Type } from 'theme/base'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { SERVICE_KEYS } from 'utils/config/keys'
+import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
 const commonSchema = {
   totalVolume: yup.number(),
+  multipleCopy: yup.boolean(),
+  accounts: yup
+    .array(yup.string())
+    .when('multipleCopy', {
+      is: true,
+      then: (schema) => schema.required(),
+    })
+    .label('Accounts'),
+  account: yup
+    .string()
+    .when('multipleCopy', {
+      is: false,
+      then: (schema) => schema.required(),
+    })
+    .label('Account'),
   title: yup.string().required().label('Title'),
   volume: yup.number().when('exchange', {
     is: CopyTradePlatformEnum.SYNTHETIX,
@@ -98,18 +114,26 @@ export const copyTradeFormSchema = yup.object({
 
 export const updateCopyTradeFormSchema = yup.object({
   ...commonSchema,
-  account: yup.string().required().label('Account'),
+  // account: yup.string().required().label('Account'),
 })
 
 export const cloneCopyTradeFormSchema = yup.object({
   ...commonSchema,
-  account: yup.string().required().label('Account'),
-  duplicateToAddress: yup.string().required().label('Clone To Address'),
+  // account: yup.string().required().label('Account'),
+  duplicateToAddress: yup
+    .string()
+    .when('multipleCopy', {
+      is: false,
+      then: (schema) => schema.required(),
+    })
+    .label('Clone to address'),
 })
 
 export interface CopyTradeFormValues {
   totalVolume?: number
+  multipleCopy: boolean
   account?: string
+  accounts?: string[]
   volume: number
   leverage: number
   tokenAddresses: string[]
@@ -139,8 +163,10 @@ export interface CopyTradeFormValues {
   hasExclude: boolean
 }
 export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFormValues } = {
+  multipleCopy: 'multipleCopy',
   protocol: 'protocol',
   account: 'account',
+  accounts: 'accounts',
   volume: 'volume',
   leverage: 'leverage',
   tokenAddresses: 'tokenAddresses',
@@ -169,6 +195,7 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
 }
 
 export const defaultCopyTradeFormValues: CopyTradeFormValues = {
+  multipleCopy: false,
   protocol: ProtocolEnum.GMX,
   volume: 0,
   leverage: 2,
@@ -268,12 +295,13 @@ export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boo
   }
 }
 
-export const protocolOptions = RELEASED_PROTOCOLS.map((value) => {
+export const protocolOptions = ALLOWED_PROTOCOLS.map((value) => {
   return {
     value,
     label: (
       <Flex sx={{ alignItems: 'center', gap: 1 }}>
-        <Type.Body>{value}</Type.Body> <ProtocolLogo protocol={value} isActive={false} size={16} hasText={false} />
+        <Type.Body>{PROTOCOL_OPTIONS_MAPPING[value].text}</Type.Body>{' '}
+        <ProtocolLogo protocol={value} isActive={false} size={16} hasText={false} />
       </Flex>
     ),
   }

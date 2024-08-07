@@ -6,6 +6,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   const result = {} as CopyTradeFormValues
   if (!copyTradeData) return result
   const {
+    accounts,
     account,
     title,
     volume,
@@ -33,7 +34,14 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     skipLowSize,
     lowSize,
   } = copyTradeData
-  if (account) result.account = account
+  if (accounts && accounts.length > 0) {
+    result.multipleCopy = true
+    result.accounts = accounts
+  }
+  if (account) {
+    result.multipleCopy = false
+    result.account = account
+  }
   if (title) result.title = title
   if (typeof volume === 'number') result.volume = volume
   if (tokenAddresses.length) result.tokenAddresses = tokenAddresses
@@ -81,7 +89,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   return result
 }
 
-export function getRequestDataFromForm(formData: CopyTradeFormValues) {
+export function getRequestDataFromForm(formData: CopyTradeFormValues, isClone?: boolean) {
   return {
     title: formData.title,
     volume: formData.volume,
@@ -112,5 +120,8 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues) {
     copyWalletId: formData.copyWalletId,
     copyAll: formData.copyAll,
     hasExclude: formData.hasExclude,
+    ...(formData.accounts && formData.accounts.length > 0
+      ? { multipleCopy: true, accounts: formData.accounts?.filter((_v) => !!_v) }
+      : { multipleCopy: false, account: isClone ? formData.duplicateToAddress : formData.account }),
   }
 }
