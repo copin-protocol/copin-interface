@@ -172,6 +172,16 @@ const GNS_PAIRS = {
   'GNS-244': 'SATS',
   'GNS-245': 'POPCAT',
   'GNS-246': 'MOG',
+  'GNS-247': 'OM',
+  'GNS-248': 'CORE',
+  'GNS-249': 'JASMY',
+  'GNS-250': 'DAR',
+  'GNS-251': 'MEW',
+  'GNS-252': 'DEGEN',
+  'GNS-253': 'SLERF',
+  'GNS-254': 'UXLINK',
+  'GNS-255': 'AVAIL',
+  'GNS-256': 'BANANA',
 }
 export const TOKEN_TRADE_GNS = Object.entries(GNS_PAIRS).reduce<ProtocolTokenMapping>((result, [key, value]) => {
   return {

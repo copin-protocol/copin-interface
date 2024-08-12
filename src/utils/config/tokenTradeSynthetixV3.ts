@@ -97,6 +97,126 @@ const TOKEN_TRADE_SYNTHETIX_V3: ProtocolTokenMapping = {
   'SYNTHETIX_V3-3200': {
     symbol: 'AXL',
   },
+  'SYNTHETIX_V3-3300': {
+    symbol: 'AAVE',
+  },
+  'SYNTHETIX_V3-3400': {
+    symbol: 'ADA',
+  },
+  'SYNTHETIX_V3-3500': {
+    symbol: 'ALGO',
+  },
+  'SYNTHETIX_V3-3600': {
+    symbol: 'APT',
+  },
+  'SYNTHETIX_V3-3700': {
+    symbol: 'ATOM',
+  },
+  'SYNTHETIX_V3-3800': {
+    symbol: 'AXS',
+  },
+  'SYNTHETIX_V3-3900': {
+    symbol: 'BAL',
+  },
+  'SYNTHETIX_V3-4000': {
+    symbol: 'BCH',
+  },
+  'SYNTHETIX_V3-4100': {
+    symbol: 'BLUR',
+  },
+  'SYNTHETIX_V3-4200': {
+    symbol: 'COMP',
+  },
+  'SYNTHETIX_V3-4300': {
+    symbol: 'CRV',
+  },
+  'SYNTHETIX_V3-4400': {
+    symbol: 'DOT',
+  },
+  'SYNTHETIX_V3-4500': {
+    symbol: 'DYDX',
+  },
+  'SYNTHETIX_V3-4600': {
+    symbol: 'EOS',
+  },
+  'SYNTHETIX_V3-4700': {
+    symbol: 'ETC',
+  },
+  'SYNTHETIX_V3-4800': {
+    symbol: 'ETHBTC',
+  },
+  'SYNTHETIX_V3-4900': {
+    symbol: 'FIL',
+  },
+  'SYNTHETIX_V3-5000': {
+    symbol: 'FLOW',
+  },
+  'SYNTHETIX_V3-5100': {
+    symbol: 'FXS',
+  },
+  'SYNTHETIX_V3-5200': {
+    symbol: 'GRT',
+  },
+  'SYNTHETIX_V3-5300': {
+    symbol: 'ICP',
+  },
+  'SYNTHETIX_V3-5400': {
+    symbol: 'IMX',
+  },
+  'SYNTHETIX_V3-5500': {
+    symbol: 'JTO',
+  },
+  'SYNTHETIX_V3-5600': {
+    symbol: 'JUP',
+  },
+  'SYNTHETIX_V3-5700': {
+    symbol: 'LDO',
+  },
+  'SYNTHETIX_V3-5800': {
+    symbol: 'LTC',
+  },
+  'SYNTHETIX_V3-5900': {
+    symbol: '',
+  },
+  'SYNTHETIX_V3-6000': {
+    symbol: 'MEME',
+  },
+  'SYNTHETIX_V3-6100': {
+    symbol: 'NEAR',
+  },
+  'SYNTHETIX_V3-6200': {
+    symbol: 'PYTH',
+  },
+  'SYNTHETIX_V3-6300': {
+    symbol: 'RNDR',
+  },
+  'SYNTHETIX_V3-6400': {
+    symbol: 'SEI',
+  },
+  'SYNTHETIX_V3-6500': {
+    symbol: 'SHIB',
+  },
+  'SYNTHETIX_V3-6600': {
+    symbol: 'STRK',
+  },
+  'SYNTHETIX_V3-6700': {
+    symbol: 'SUSHI',
+  },
+  'SYNTHETIX_V3-6800': {
+    symbol: 'TRX',
+  },
+  'SYNTHETIX_V3-6900': {
+    symbol: 'UNI',
+  },
+  'SYNTHETIX_V3-7000': {
+    symbol: 'XLM',
+  },
+  'SYNTHETIX_V3-7100': {
+    symbol: 'XRP',
+  },
+  'SYNTHETIX_V3-7200': {
+    symbol: 'YFI',
+  },
 }
 
 export { TOKEN_TRADE_SYNTHETIX_V3 }

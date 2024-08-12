@@ -36,6 +36,10 @@ const VELA_PAIRS = {
   'VELA_ARB-53': 'FLOKI',
   'VELA_ARB-54': 'MEME',
   'VELA_ARB-55': 'BOME',
+  'VELA_ARB-56': 'UNI',
+  'VELA_ARB-57': 'FTM',
+  'VELA_ARB-58': 'AAVE',
+  'VELA_ARB-59': 'GMX',
 }
 
 const TOKEN_TRADE_VELA_ARB = Object.entries(VELA_PAIRS).reduce<ProtocolTokenMapping>((result, [key, value]) => {

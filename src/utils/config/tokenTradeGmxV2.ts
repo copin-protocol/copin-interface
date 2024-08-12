@@ -61,6 +61,9 @@ const TOKEN_TRADE_GMX_V2: ProtocolTokenMapping = {
   '0x2b477989A149B17073D9C9C82eC9cB03591e20c6': {
     symbol: 'PEPE',
   },
+  '0xB62369752D8Ad08392572db6d0cc872127888beD': {
+    symbol: 'SHIB',
+  },
 }
 
 export { TOKEN_TRADE_GMX_V2 }
