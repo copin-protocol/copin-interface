@@ -152,6 +152,12 @@ export const CEX_EXCHANGES = [
   CopyTradePlatformEnum.GATE,
 ]
 
+export const DCP_EXCHANGES: CopyTradePlatformEnum[] = [
+  CopyTradePlatformEnum.GNS_V8,
+  CopyTradePlatformEnum.SYNTHETIX_V2,
+  CopyTradePlatformEnum.SYNTHETIX_V3,
+]
+
 export const DCP_SUPPORTED_PROTOCOLS = [
   ProtocolEnum.GMX_V2,
   ProtocolEnum.KWENTA,

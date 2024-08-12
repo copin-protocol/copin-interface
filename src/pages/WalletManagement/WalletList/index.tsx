@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { ArrowSquareOut, PlusSquare } from '@phosphor-icons/react'
-import { useState } from 'react'
+import { ArrowSquareOut, PlusSquare, Warning } from '@phosphor-icons/react'
+import React, { useState } from 'react'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 
@@ -15,8 +15,10 @@ import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
-import { Box, Flex, Image, Type } from 'theme/base'
-import { LINKS } from 'utils/config/constants'
+import Tooltip from 'theme/Tooltip'
+import { Box, Flex, IconBox, Image, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
+import { DCP_EXCHANGES, LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
@@ -133,7 +135,7 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
                     onCreateWalletSuccess={reloadCopyWallets}
                   />
                   <Box ml={{ _: '-40px', md: 0 }}>
-                    <ExternalLink exchange={exchange} />
+                    {DCP_EXCHANGES.includes(exchange) ? <WalletWarningDCP /> : <ExternalLink exchange={exchange} />}
                   </Box>
                 </Flex>
               }
@@ -305,5 +307,26 @@ function ExternalLink({ exchange }: { exchange: CopyTradePlatformEnum }) {
         <Trans>Register</Trans>
       </ButtonWithIcon>
     </Flex>
+  )
+}
+
+function WalletWarningDCP() {
+  return (
+    <>
+      <IconBox
+        icon={<Warning color={themeColors.orange1} size={24} />}
+        data-tip="React-tooltip"
+        data-tooltip-id={'tt_dcp_wallet_warning'}
+      />
+      <Tooltip id={'tt_dcp_wallet_warning'} place="top" type="dark" effect="solid" clickable>
+        <Type.Small sx={{ maxWidth: [300, 400] }}>
+          DCP is currently in alpha version and experiment phase. Please use caution and test with limited capital. If
+          you encounter any issues, please contact direct support at:{' '}
+          <a href={LINKS.support} target="_blank" rel="noreferrer">
+            https://t.me/leecopin
+          </a>
+        </Type.Small>
+      </Tooltip>
+    </>
   )
 }
