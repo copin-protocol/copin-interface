@@ -1300,7 +1300,7 @@ function RulesDCP({ eventDetails }: { eventDetails: EventDetailsData | undefined
           </Li>
         </Box>
         <Li>
-          Reward Distribution: Rewards will be distributed in the form of $ARB within 7 working days after the event
+          Reward Distribution: Rewards will be distributed in the form of ARB within 7 working days after the event
           ends.
         </Li>
         <Li>Ranking Criteria:</Li>

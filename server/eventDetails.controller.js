@@ -15,7 +15,7 @@ const getEventDetails = async (req, res) => {
 
   const title = `${eventDetails?.title ?? 'Explore Exciting Crypto Events and Competitions on Copin | Copin Analyzer'}`
   const thumbnail = eventDetails?.thumbUrl
-    ? `${configs.apiUrl}/storage${eventDetails?.thumbUrl}`
+    ? `${configs.apiUrl}/storage${eventDetails?.thumbUrl}?${new Date().getTime()}`
     : `${configs.baseUrl}/images/cover/events-cover.png?${new Date().getTime()}`
   const url = `${configs.baseUrl}/event/${id}`
   const description =

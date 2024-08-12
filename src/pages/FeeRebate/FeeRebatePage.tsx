@@ -508,7 +508,7 @@ function Footer() {
 //=========================
 function RewardDistribution() {
   const { xl } = useResponsive()
-  const { info, reload } = useFeeRebateContext()
+  const { totalOngoingRewards, info, reload } = useFeeRebateContext()
   return (
     <Box>
       <Box
@@ -521,6 +521,11 @@ function RewardDistribution() {
           <RewardWrapper
             label={<Type.Body color="primary1">ARB Distribution</Type.Body>}
             value={`${formatNumber(info?.totalDistributedReward, 2)} / ${formatNumber(info?.maxReward, 0)}`}
+            action={
+              <Type.Caption mb={1} color="neutral3">
+                Ongoing Fees: {formatNumber(totalOngoingRewards, 2)}
+              </Type.Caption>
+            }
             hasBorder
           />
         )}
@@ -530,7 +535,7 @@ function RewardDistribution() {
           label={'Unclaim Rebate'}
           value={formatNumber(info?.claimableFees, 2)}
           action={
-            !!info?.claimableFees ? <ClaimButton availableClaim={info?.claimableFees} onSuccess={reload} /> : undefined
+            !info?.claimableFees ? <ClaimButton availableClaim={info?.claimableFees} onSuccess={reload} /> : undefined
           }
           hasGradient
         />
@@ -825,7 +830,7 @@ export function TraderReward({
 }
 
 function MobileOverview() {
-  const { info, format } = useFeeRebateContext()
+  const { totalOngoingRewards, info, format } = useFeeRebateContext()
   return (
     <Box p={3}>
       <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 3 }}>
@@ -848,13 +853,20 @@ function MobileOverview() {
         {/*  <Type.CaptionBold color="primary1">How It Works</Type.CaptionBold>*/}
         {/*</Flex>*/}
       </Flex>
-      <Type.H5 mt={2}>10,000 $ARB Incentives For Decentralized Copy-Trading Fee Rebates</Type.H5>
+      <Type.H5 mt={2}>10,000 ARB Incentives For Decentralized Copy-Trading Fee Rebates</Type.H5>
       <Flex mt={3} alignItems="center" sx={{ gap: 1 }}>
         <ArbitrumLogo size={24} />
-        <Type.Body color="neutral3">$ARB Distribution:</Type.Body>
+        <Type.Body color="neutral3">ARB Distribution:</Type.Body>
       </Flex>
       <Type.Body fontWeight={500} mt={1}>
         {formatNumber(info?.totalDistributedReward, 2)} / {formatNumber(info?.maxReward)}
+      </Type.Body>
+      <Flex mt={3} alignItems="center" sx={{ gap: 1 }}>
+        <ArbitrumLogo size={24} />
+        <Type.Body color="neutral3">ARB Ongoing Fees:</Type.Body>
+      </Flex>
+      <Type.Body fontWeight={500} mt={1}>
+        {formatNumber(totalOngoingRewards, 2)}
       </Type.Body>
       <Flex mt={20} alignItems="center" sx={{ gap: 2 }}>
         <IconBox icon={<ArrowsHorizontal size={24} />} color="primary1" />

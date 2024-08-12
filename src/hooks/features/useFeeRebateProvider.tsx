@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext } from 'react'
+import { ReactNode, createContext, useContext, useMemo } from 'react'
 
 import { EpochHistoryData, FeeRebateData } from 'entities/feeRebate'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -8,6 +8,7 @@ import useFeeRebate from './useFeeRebate'
 import useFeeRebateHistories from './useFeeRebateHistories'
 
 export interface FeeRebateContextValues {
+  totalOngoingRewards?: number
   info?: FeeRebateData
   histories?: EpochHistoryData[]
   isLoadingFeeRebate?: boolean
@@ -30,12 +31,24 @@ export function FeeRebateProvider({ children }: { children: ReactNode }) {
 
   const format = `${DATE_TEXT_FORMAT} ${TIME_FORMAT} UTC`
 
+  const totalOngoingRewards: number = useMemo(() => {
+    if (!histories) return 0
+    return histories.reduce((sum, epoch) => {
+      const epochFee = epoch.rebateData.reduce((epochSum, rebate) => {
+        if (epoch.status === 1) return epochSum + (rebate.fee ?? 0)
+        return epochSum
+      }, 0)
+      return sum + epochFee
+    }, 0)
+  }, [histories])
+
   const reload = () => {
     reloadFeeRebate?.()
     reloadHistories?.()
   }
 
   const contextValue: FeeRebateContextValues = {
+    totalOngoingRewards,
     info,
     histories,
     isLoadingFeeRebate,

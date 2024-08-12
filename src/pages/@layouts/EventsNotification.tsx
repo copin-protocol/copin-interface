@@ -167,7 +167,7 @@ export default function EventsNotification() {
       >
         {!!gnsEvent && (
           <EventNotificationWrapper
-            title={'Join the $10,000 $ARB Decentralized Copy-Trading Competition'}
+            title={'Join the $10,000 ARB Decentralized Copy-Trading Competition'}
             titleIcon={'✨'}
             description={
               <Box as="span">
@@ -188,12 +188,12 @@ export default function EventsNotification() {
           />
         )}
         <EventNotificationWrapper
-          title={'Earn $10,000 $ARB in Fee Rebates'}
+          title={'Earn $10,000 ARB in Fee Rebates'}
           titleIcon={'🎉'}
           description={
             <Box as="span">
               Save on trading fees with Copin&apos;s Decentralized Copy-Trading (DCP) Fee Rebate Program. Earn a share
-              of 10,000 $ARB in rebates by using the DCP feature through gTrade!
+              of 10,000 ARB in rebates by using the DCP feature through gTrade!
             </Box>
           }
           actionButton={
