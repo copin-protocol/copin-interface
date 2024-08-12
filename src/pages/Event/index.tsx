@@ -227,7 +227,7 @@ function EventByStatus({ events, status }: { events?: EventDetailsData[]; status
                 >
                   <Box
                     sx={{
-                      height: 90,
+                      height: 98,
                       flexShrink: 0,
                       position: 'relative',
                       overflow: 'hidden',
@@ -238,10 +238,10 @@ function EventByStatus({ events, status }: { events?: EventDetailsData[]; status
                   >
                     <Image
                       src={
-                        _e?.thumbUrl
-                          ? formatImageUrl(_e.thumbUrl)
-                          : _e?.bannerUrl
-                          ? formatImageUrl(_e?.bannerUrl)
+                        _e?.bannerUrl
+                          ? formatImageUrl(_e.bannerUrl)
+                          : _e?.thumbUrl
+                          ? formatImageUrl(_e?.thumbUrl)
                           : banner
                       }
                       sx={{ objectFit: 'cover', height: '100%', width: '100%' }}
