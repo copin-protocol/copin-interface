@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ArrowCircleUpRight, ClockCounterClockwise, DotsThreeOutlineVertical } from '@phosphor-icons/react'
+import { ArrowCircleUpRight, ClockCounterClockwise, DotsThreeOutlineVertical, UserCircle } from '@phosphor-icons/react'
 import React, { useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
@@ -9,6 +9,8 @@ import { CopyWalletData } from 'entities/copyWallet'
 import ActionItem from 'pages/MyProfile/MyCopies/ActionItem'
 import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
+import { URL_PARAM_KEYS } from 'utils/config/keys'
+import ROUTES from 'utils/config/routes'
 
 // import OnchainPositionsDrawer from './OnchainPositionsDrawer'
 
@@ -28,10 +30,21 @@ const SmartWalletActions = ({
         hasArrow={false}
         menuSx={{
           bg: 'neutral7',
-          width: 150,
+          width: 165,
         }}
         menu={
           <>
+            <ActionItem
+              title={<Trans>Copy Management</Trans>}
+              icon={<UserCircle size={18} />}
+              onSelect={() => {
+                window.open(
+                  `${ROUTES.MY_MANAGEMENT.path}?${URL_PARAM_KEYS.MY_MANAGEMENT_WALLET_ID}=${data.id}`,
+                  '_blank'
+                )
+              }}
+            />
+            <Divider />
             <ActionItem
               title={<Trans>History</Trans>}
               icon={<ClockCounterClockwise size={18} />}

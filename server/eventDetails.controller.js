@@ -1,6 +1,6 @@
+import apiRequest from './apiRequest.js'
 import { configs } from './configs.js'
 import { renderHTML } from './utils.js'
-import apiRequest from "./apiRequest.js";
 
 const getEventDetails = async (req, res) => {
   const { id } = req.params
@@ -8,14 +8,19 @@ const getEventDetails = async (req, res) => {
 
   let eventDetails
   try {
-    const result = await apiRequest.get(isSlug ? `/public/trading-event/slug?slug=${id}` : `/public/trading-event/${id}`)
-    eventDetails = result?.data
+    eventDetails = await apiRequest.get(
+      isSlug ? `/public/trading-event/slug?slug=${id}` : `/public/trading-event/${id}`
+    )
   } catch {}
 
-  const title = `${eventDetails?.title ?? 'On-chain Copy-Trading to share $50,000 & Merchs rewards'} | Copin Analyzer`
-  const thumbnail = eventDetails?.thumbUrl ? `${configs.apiUrl}/storage${eventDetails?.thumbnailUrl}`: `${configs.baseUrl}/images/cover/default-event-details-cover.png?${new Date().getTime()}`
+  const title = `${eventDetails?.title ?? 'Explore Exciting Crypto Events and Competitions on Copin | Copin Analyzer'}`
+  const thumbnail = eventDetails?.thumbUrl
+    ? `${configs.apiUrl}/storage${eventDetails?.thumbUrl}`
+    : `${configs.baseUrl}/images/cover/events-cover.png?${new Date().getTime()}`
   const url = `${configs.baseUrl}/event/${id}`
-  const description = eventDetails?.description ?? 'Participate in the competition to copy trades from 300K+ on-chain traders on 20+ perpetual DEXs for a chance to receive a total prize of up to $50K and merchs. The larger the copy volume, the higher your reward!'
+  const description =
+    eventDetails?.description ??
+    'Discover upcoming events now and join the Copin community to maximize your copy-trading journey!'
 
   try {
     renderHTML({
