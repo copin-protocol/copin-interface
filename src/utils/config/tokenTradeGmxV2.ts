@@ -64,6 +64,9 @@ const TOKEN_TRADE_GMX_V2: ProtocolTokenMapping = {
   '0xB62369752D8Ad08392572db6d0cc872127888beD': {
     symbol: 'SHIB',
   },
+  '0x0Cf1fb4d1FF67A3D8Ca92c9d6643F8F9be8e03E5': {
+    symbol: 'ETH', //wstETH
+  },
 }
 
 export { TOKEN_TRADE_GMX_V2 }

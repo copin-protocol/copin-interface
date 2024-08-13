@@ -1,5 +1,6 @@
 import { CopyTradeData } from 'entities/copyTrade'
 
+import { DCP_EXCHANGES } from '../../utils/config/constants'
 import { CopyTradeFormValues } from './configs'
 
 export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | undefined) {
@@ -120,7 +121,10 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues, isClone?: 
     copyWalletId: formData.copyWalletId,
     copyAll: formData.copyAll,
     hasExclude: formData.hasExclude,
-    ...(formData.accounts && formData.accounts.length > 0
+    ...(!DCP_EXCHANGES.includes(formData.exchange) &&
+    formData.multipleCopy &&
+    formData.accounts &&
+    formData.accounts.length > 0
       ? { multipleCopy: true, accounts: formData.accounts?.filter((_v) => !!_v) }
       : { multipleCopy: false, account: isClone ? formData.duplicateToAddress : formData.account }),
   }

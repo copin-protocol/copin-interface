@@ -60,7 +60,7 @@ export const LINKS = {
   bingXGuarantee:
     'https://support.bingx.com/hc/en-001/articles/21313115553945-Perpetual-Futures-Exclusive-Guaranteed-Price-Launched-to-Prevent-Slippage-Losses',
   agreement: 'https://docs.copin.io/another/agreement',
-  subscriptionDocument: 'https://docs.copin.io/upgrade-to-premium',
+  subscriptionDocument: 'https://docs.copin.io/subscription-plan',
   copinEliteClub: 'https://docs.copin.io/welcome/copin-elite-club',
   support: 'https://t.me/leecopin',
   feedback: 'https://copin.canny.io',

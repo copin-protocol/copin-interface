@@ -460,40 +460,46 @@ export function usePlanConfigs() {
   return {
     features: [
       <Trans>Trader to copy</Trans>,
-      <Trans>Data filter</Trans>,
-      <Trans>Custom trader percentile rank</Trans>,
-      <Trans>Join Copin Elite club</Trans>,
+      <Trans>Data range</Trans>,
+      <p>
+        <Trans>Advanced data & visualization</Trans> <TooltipIcon id="advanced-data-visualization" />
+      </p>,
+      // <Trans>Join Copin Elite club</Trans>,
       <Trans>Alert traders signal</Trans>,
-      <Trans>Trader data source to copy</Trans>,
+      <Trans>On-chain traders for copying</Trans>,
+      <Trans>Copy size</Trans>,
+      // <p>
+      //   <Trans>
+      //     Copy size if non-referral Copin on CEX <TooltipIcon id="vip-referral" />
+      //   </Trans>
+      // </p>,
+      // <p>
+      //   <Trans>
+      //     Copy size if referral Copin on CEX <TooltipIcon id="vip-referral" />
+      //   </Trans>
+      // </p>,
       <p>
-        <Trans>
-          Copy size if non-referral Copin on CEX <TooltipIcon id="vip-referral" />
-        </Trans>
+        <Trans>Copy hot trader</Trans> <TooltipIcon id="hot-trader" />
       </p>,
+      <Trans>CEX account connection</Trans>,
+      // <Trans>VIP support and exclusive signal</Trans>,
       <p>
-        <Trans>
-          Copy size if referral Copin on CEX <TooltipIcon id="vip-referral" />
-        </Trans>
+        <Trans>VIP exclusive signal (group and APIs)</Trans> <TooltipIcon id="feature-alert" />
       </p>,
-      <p>
-        <Trans>Copy hot trader</Trans> <TooltipIcon id="vip-hot-trader" />
-      </p>,
-      // <Trans>CEX account connection</Trans>,
-      <Trans>VIP support and exclusive signal</Trans>,
-      <Trans>License copyright of Copin</Trans>,
+      <Trans>License copyright of Copin&apos;s signal</Trans>,
       <Trans>Platform</Trans>,
     ],
     basic: [
       <Trans>Up to 3 traders</Trans>,
       <Trans>Last 60 days</Trans>,
       <Trans>No</Trans>,
-      <Trans>No</Trans>,
-      <Trans>10 traders</Trans>,
-      <Trans>4 perpetual DEX: GMX, GMXV2, Kwenta, Polynomial</Trans>,
+      // <Trans>No</Trans>,
+      <Trans>20 traders</Trans>,
+      <Trans>All stable PerpDEX</Trans>,
+      // <Trans>Maximum ${formatNumber(volumeLimit?.volumeWoReferral, 0, 0)}</Trans>,
       <Trans>Maximum ${formatNumber(volumeLimit?.volumeWoReferral, 0, 0)}</Trans>,
-      <Trans>Maximum ${formatNumber(volumeLimit?.volumeReferral, 0, 0)}</Trans>,
       <Trans>No</Trans>,
-      // <Trans>2 exchanges (BingX, Bitget)</Trans>,
+      <Trans>All stable CEX</Trans>,
       <Trans>No</Trans>,
       <Trans>Personal</Trans>,
       <Trans>https://app.copin.io</Trans>,
@@ -504,15 +510,15 @@ export function usePlanConfigs() {
       <Box as="span" color="orange1">
         <Trans>Yes</Trans>
       </Box>,
-      <Trans>No</Trans>,
+      // <Trans>No</Trans>,
       <Trans>50 traders</Trans>,
-      <Trans>4 perpetual DEX: GMX, GMXV2, Kwenta, Polynomial</Trans>,
-      <Trans>Maximum ${formatNumber(volumeLimit?.volumePremiumWoReferral, 0, 0)}</Trans>,
+      <Trans>All stable PerpDEX</Trans>,
+      // <Trans>Maximum ${formatNumber(volumeLimit?.volumePremiumWoReferral, 0, 0)}</Trans>,
       <Trans>Maximum ${formatNumber(volumeLimit?.volumePremiumReferral, 0, 0)}</Trans>,
       <Box as="span" color="orange1">
         <Trans>Yes</Trans>
       </Box>,
-      // <Trans>2 exchanges (BingX, Bitget)</Trans>,
+      <Trans>All stable CEX</Trans>,
       <Trans>No</Trans>,
       <Trans>Personal</Trans>,
       <Trans>https://app.copin.io</Trans>,
@@ -523,27 +529,21 @@ export function usePlanConfigs() {
       <Box as="span" color="violet">
         <Trans>Yes</Trans>
       </Box>,
-      <Box as="span" color="violet">
-        <Trans>Yes</Trans>
-      </Box>,
+      // <Box as="span" color="violet">
+      //   <Trans>Yes</Trans>
+      // </Box>,
       <Trans>100 traders</Trans>,
       <p>
-        <Trans>5 perpetual DEX: GMX, GMXv2, Kwenta, Polynomial, gTrade and more...</Trans>{' '}
-        <TooltipIcon id="vip-source-copy" />
+        <Trans>All stable PerpDEX + Early access PerpDEX</Trans> <TooltipIcon id="vip-source-copy" />
       </p>,
-      <Trans>Maximum ${formatNumber(volumeLimit?.volumeVipWoReferral, 0, 0)}</Trans>,
+      // <Trans>Maximum ${formatNumber(volumeLimit?.volumeVipWoReferral, 0, 0)}</Trans>,
       <Trans>Maximum ${formatNumber(volumeLimit?.volumeVipReferral, 0, 0)}</Trans>,
       <Box as="span" color="violet">
         <Trans>Yes</Trans>
       </Box>,
-      // <p>
-      //   <p>
-      //     <Trans>6 exchanges and more... (BingX, Bitget, OKX, Gate, ByBit, Binance)</Trans>
-      //   </p>
-      //   <Box as="p" color="primary2">
-      //     <Trans>(Go live on 1st May)</Trans>
-      //   </Box>
-      // </p>,
+      <p>
+        <Trans>All stable CEX + Exclusive CEX request</Trans> <TooltipIcon id="vip-cex-connection" />
+      </p>,
       <Box as="span" color="violet">
         <Trans>Yes</Trans>
       </Box>,
@@ -562,6 +562,22 @@ function TooltipIcon({ id, sx = {} }: { id: string; sx?: any }) {
 export function Tooltips() {
   return (
     <>
+      <Tooltip id="feature-alert">
+        <Type.Caption color="neutral2" maxWidth={300}>
+          You will receive alerts when MM, insider trader, whale trader... trading
+        </Type.Caption>
+      </Tooltip>
+      <Tooltip id="vip-cex-connection">
+        <Type.Caption color="neutral2" maxWidth={300}>
+          You can actively request additional CEXs that you want. Support is only provided for VIP packages of over 6
+          months
+        </Type.Caption>
+      </Tooltip>
+      <Tooltip id="advanced-data-visualization">
+        <Type.Caption color="neutral2" maxWidth={300}>
+          Ex: Custom trader percentile rank
+        </Type.Caption>
+      </Tooltip>
       <Tooltip id="vip-non-referral">
         <Type.Caption color="neutral2" maxWidth={300}>
           The size is include leverage, Maximum size per exchange.
@@ -572,7 +588,7 @@ export function Tooltips() {
           The size is include leverage, Maximum size per exchange.
         </Type.Caption>
       </Tooltip>
-      <Tooltip id="vip-hot-trader">
+      <Tooltip id="hot-trader">
         <Type.Caption color="neutral2" maxWidth={300}>
           Hot trader is trader has more than 10 copiers are following.
         </Type.Caption>
