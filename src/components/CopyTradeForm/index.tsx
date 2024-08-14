@@ -33,7 +33,7 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { DCP_EXCHANGES, DCP_SUPPORTED_PROTOCOLS, DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
+import { DCP_SUPPORTED_PROTOCOLS, DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum, EventTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { INTERNAL_SERVICE_KEYS, QUERY_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
@@ -345,109 +345,79 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
       <Box sx={{ pb: 24, px: [12, 24], pt: 3 }}>
         <InputField block maxLength={40} {...register(fieldName.title)} error={errors.title?.message} label="Label" />
-        {!DCP_EXCHANGES.includes(platform)
-          ? (isEdit || isClone) && (
-              <>
-                {isEdit && (
-                  <Box mt={24}>
-                    <SwitchMultipleCopy label="Address" switchLabel="Multiple addresses" />
-                    {multipleCopy && (
-                      <Textarea
-                        block
-                        rows={5}
-                        placeholder={`List of addresses in line break format as below:\n0xaddress1\n0xaddress2`}
-                        value={accounts?.join('\n') || account}
-                        defaultValue={_defaultFormValues?.accounts?.join('\n') || _defaultFormValues?.account}
-                        sx={{ textarea: { fontSize: 13 } }}
-                        onChange={(e) => {
-                          const value = e.target.value
-                          setValue('accounts', value.split(/\s+/))
-                        }}
-                      />
-                    )}
-                    {!multipleCopy && <Input block {...register(fieldName.account!)} error={errors.account?.message} />}
-
-                    {(errors.account?.message || errors.accounts?.message) && (
-                      <Type.Caption color="red1">{errors.account?.message || errors.accounts?.message}</Type.Caption>
-                    )}
-                    {/*{multipleCopy && (*/}
-                    {/*  <Box mt={1}>*/}
-                    {/*    <Type.Caption color="neutral2">*/}
-                    {/*      <Trans>List of addresses in line break format as below:</Trans>*/}
-                    {/*    </Type.Caption>*/}
-                    {/*    <Type.Caption color="neutral2">*/}
-                    {/*      {`0x37EB10AC8A2745C1108fdf6756e52535b00f589c\n0x8D3ddFeB1613094Ef86758CcB6E8bb64C4929E8C`}*/}
-                    {/*    </Type.Caption>*/}
-                    {/*  </Box>*/}
-                    {/*)}*/}
-                  </Box>
+        {(isEdit || isClone) && (
+          <>
+            {isEdit && (
+              <Box mt={24}>
+                <SwitchMultipleCopy label="Address" switchLabel="Multiple addresses" />
+                {multipleCopy && (
+                  <Textarea
+                    block
+                    rows={5}
+                    placeholder={`List of addresses in line break format as below:\n0xaddress1\n0xaddress2`}
+                    value={accounts?.join('\n') || account}
+                    defaultValue={_defaultFormValues?.accounts?.join('\n') || _defaultFormValues?.account}
+                    sx={{ textarea: { fontSize: 13 } }}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      setValue('accounts', value.split(/\s+/))
+                    }}
+                  />
                 )}
-                {isClone && (
-                  <>
-                    <Box mt={24}>
-                      <SwitchMultipleCopy label="Clone to address" switchLabel="Multiple addresses" />
-                      {multipleCopy && (
-                        <Textarea
-                          block
-                          rows={5}
-                          value={accounts?.join('\n')}
-                          defaultValue={_defaultFormValues?.accounts?.join('\n')}
-                          sx={{ textarea: { fontSize: 13 } }}
-                          onChange={(e) => {
-                            const value = e.target.value
-                            setValue('accounts', value.split(/\s+/))
-                          }}
-                        />
-                      )}
-                      {!multipleCopy && (
-                        <Input
-                          block
-                          {...register(fieldName.duplicateToAddress!)}
-                          disabled={!!_defaultFormValues.duplicateToAddress}
-                          error={errors.duplicateToAddress?.message}
-                          sx={{ flexGrow: 1 }}
-                        />
-                      )}
+                {!multipleCopy && <Input block {...register(fieldName.account!)} error={errors.account?.message} />}
 
-                      {(errors.duplicateToAddress?.message || errors.accounts?.message) && (
-                        <Type.Caption color="red1">
-                          {errors.duplicateToAddress?.message || errors.accounts?.message}
-                        </Type.Caption>
-                      )}
-                    </Box>
-                  </>
+                {(errors.account?.message || errors.accounts?.message) && (
+                  <Type.Caption color="red1">{errors.account?.message || errors.accounts?.message}</Type.Caption>
                 )}
-              </>
-            )
-          : (isEdit || isClone) && (
+                {/*{multipleCopy && (*/}
+                {/*  <Box mt={1}>*/}
+                {/*    <Type.Caption color="neutral2">*/}
+                {/*      <Trans>List of addresses in line break format as below:</Trans>*/}
+                {/*    </Type.Caption>*/}
+                {/*    <Type.Caption color="neutral2">*/}
+                {/*      {`0x37EB10AC8A2745C1108fdf6756e52535b00f589c\n0x8D3ddFeB1613094Ef86758CcB6E8bb64C4929E8C`}*/}
+                {/*    </Type.Caption>*/}
+                {/*  </Box>*/}
+                {/*)}*/}
+              </Box>
+            )}
+            {isClone && (
               <>
-                {isEdit && (
-                  <Box mt={24}>
-                    <InputField
+                <Box mt={24}>
+                  <SwitchMultipleCopy label="Clone to address" switchLabel="Multiple addresses" />
+                  {multipleCopy && (
+                    <Textarea
                       block
-                      {...register(fieldName.account!)}
-                      error={errors.account?.message}
-                      label="Account"
+                      rows={5}
+                      value={accounts?.join('\n')}
+                      defaultValue={_defaultFormValues?.accounts?.join('\n')}
+                      sx={{ textarea: { fontSize: 13 } }}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        setValue('accounts', value.split(/\s+/))
+                      }}
                     />
-                  </Box>
-                )}
-                {isClone && (
-                  <>
-                    <Box mt={24}>
-                      <InputField
-                        block
-                        {...register(fieldName.duplicateToAddress!)}
-                        disabled={!!_defaultFormValues.duplicateToAddress}
-                        error={errors.duplicateToAddress?.message}
-                        label="Clone To Address"
-                        sx={{ flexGrow: 1 }}
-                      />
-                    </Box>
-                  </>
-                )}
+                  )}
+                  {!multipleCopy && (
+                    <Input
+                      block
+                      {...register(fieldName.duplicateToAddress!)}
+                      disabled={!!_defaultFormValues.duplicateToAddress}
+                      error={errors.duplicateToAddress?.message}
+                      sx={{ flexGrow: 1 }}
+                    />
+                  )}
+
+                  {(errors.duplicateToAddress?.message || errors.accounts?.message) && (
+                    <Type.Caption color="red1">
+                      {errors.duplicateToAddress?.message || errors.accounts?.message}
+                    </Type.Caption>
+                  )}
+                </Box>
               </>
             )}
-        {}
+          </>
+        )}
 
         {(isEdit || isClone) && permissionToSelectProtocol && (
           <Box mt={24} sx={{ flex: '0 0 max-content' }}>

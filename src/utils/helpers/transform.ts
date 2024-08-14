@@ -357,6 +357,18 @@ export const normalizePriceData = (
       } else {
         return value
       }
+    case 'RATS':
+      if (exchange && [CopyTradePlatformEnum.BYBIT].includes(exchange)) {
+        return isRevert ? value / 1000 : value * 1000
+      } else {
+        return value
+      }
+    case 'MOG':
+      if (exchange && [CopyTradePlatformEnum.BYBIT].includes(exchange)) {
+        return isRevert ? value / 1000000 : value * 1000000
+      } else {
+        return value
+      }
     default:
       return value
   }
