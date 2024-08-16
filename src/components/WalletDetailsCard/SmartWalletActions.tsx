@@ -1,5 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { ArrowCircleUpRight, ClockCounterClockwise, DotsThreeOutlineVertical, UserCircle } from '@phosphor-icons/react'
+import {
+  ArrowCircleUpRight,
+  ClockCounterClockwise,
+  DotsThreeOutlineVertical,
+  Gift,
+  UserCircle,
+} from '@phosphor-icons/react'
 import React, { useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
@@ -9,8 +15,11 @@ import { CopyWalletData } from 'entities/copyWallet'
 import ActionItem from 'pages/MyProfile/MyCopies/ActionItem'
 import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
+
+import ClaimGainsRewardModal from './ClaimGainsRewardModal'
 
 // import OnchainPositionsDrawer from './OnchainPositionsDrawer'
 
@@ -22,6 +31,7 @@ const SmartWalletActions = ({
   setFundingModal: (tab: FundTab) => void
 }) => {
   const [openingHistoryDrawer, setOpeningHistoryDrawer] = useState(false)
+  const [openingGainsRewardModal, setOpeningGainsRewardModal] = useState(false)
   // const [openingPositionDrawer, setOpeningPositionDrawer] = useState(false)
 
   return (
@@ -44,13 +54,19 @@ const SmartWalletActions = ({
                 )
               }}
             />
-            <Divider />
             <ActionItem
               title={<Trans>History</Trans>}
               icon={<ClockCounterClockwise size={18} />}
               onSelect={() => setOpeningHistoryDrawer(true)}
             />
             <Divider />
+            {data.exchange === CopyTradePlatformEnum.GNS_V8 && (
+              <ActionItem
+                title={<Trans>Claim Rewards</Trans>}
+                icon={<Gift size={18} />}
+                onSelect={() => setOpeningGainsRewardModal(true)}
+              />
+            )}
             <ActionItem
               title={<Trans>Withdraw</Trans>}
               icon={<ArrowCircleUpRight size={18} />}
@@ -86,6 +102,13 @@ const SmartWalletActions = ({
           copyWallet={data}
           onDismiss={() => setOpeningHistoryDrawer(false)}
           isOpen={openingHistoryDrawer}
+        />
+      )}
+      {openingGainsRewardModal && data.exchange === CopyTradePlatformEnum.GNS_V8 && !!data?.smartWalletAddress && (
+        <ClaimGainsRewardModal
+          smartWallet={data.smartWalletAddress}
+          isOpen={openingGainsRewardModal}
+          onDismiss={() => setOpeningGainsRewardModal(false)}
         />
       )}
       {/* {openingPositionDrawer && !!data.smartWalletAddress && (

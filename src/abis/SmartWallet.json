@@ -13,6 +13,39 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_claimContract",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_epochs",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_rewardAmounts",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "bytes32[][]",
+        "name": "_proofs",
+        "type": "bytes32[][]"
+      }
+    ],
+    "name": "claimRewards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "availableFund",
     "outputs": [
