@@ -42,7 +42,7 @@ const ClaimGainsRewardModal = ({
 
   const { data, isLoading } = useQuery('GAINS_REWARD', () => getGainsRebateRewardsApi(smartWallet, WEEK))
 
-  const { data: claims } = useCustomMulticallQuery<boolean[]>(
+  const { data: claims, isLoading: isClaimsLoading } = useCustomMulticallQuery<boolean[]>(
     [
       {
         inputs: [
@@ -125,11 +125,18 @@ const ClaimGainsRewardModal = ({
           <Type.Caption>
             Arbitrum has launched an 11-week promotional program where users can earn $ARB weekly by trading on gTrade.
             Notably, the rewards in the trading fees category are capped at 75% of the total protocol fees. Rewards are
-            calculated weekly and can be claimed every Friday
+            calculated weekly and can be claimed every Friday.{' '}
+            <a
+              href="https://gains-network.gitbook.io/docs-home/gtrade-leveraged-trading/arbitrum-stip-bridge-incentives/trading-incentives"
+              target="_blank"
+              rel="noreferrer"
+            >
+              More Info
+            </a>
           </Type.Caption>
         </Box>
         {isValid ? (
-          !isLoading ? (
+          !isLoading && !isClaimsLoading ? (
             <Box>
               {!!data && data.length && !!claims ? (
                 <Box mx={2}>
