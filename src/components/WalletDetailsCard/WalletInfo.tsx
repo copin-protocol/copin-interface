@@ -3,14 +3,18 @@ import { Trans } from '@lingui/macro'
 import React, { ReactNode, useMemo } from 'react'
 
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
+import Logo from 'components/@ui/Logo'
 import { CopyWalletData } from 'entities/copyWallet'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { EXPLORER_PLATFORMS } from 'utils/config/platforms'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
+import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { getExchangeKey } from 'utils/helpers/transform'
+import { getCopyTradePlatformProtocol } from 'utils/web3/dcp'
 
 interface WalletInfoProps {
   data: CopyWalletData
@@ -50,8 +54,17 @@ export default function WalletInfo({ data, hiddenBalance, sx }: WalletInfoProps 
             </Tooltip>
             {!!data.smartWalletAddress && (
               <ExplorerLogo
+                size={20}
                 protocol={data.exchange}
                 explorerUrl={`${EXPLORER_PLATFORMS[data.exchange]}/address/${data.smartWalletAddress}`}
+              />
+            )}
+            {!!data.smartWalletAddress && data.exchange === CopyTradePlatformEnum.GNS_V8 && (
+              <IconBox
+                as={'a'}
+                href={generateTraderDetailsRoute(getCopyTradePlatformProtocol(data.exchange), data.smartWalletAddress)}
+                target="_blank"
+                icon={<Logo size={16} />}
               />
             )}
 

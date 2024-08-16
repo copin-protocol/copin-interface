@@ -1,4 +1,4 @@
-import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 
 import { ARBITRUM_CHAIN, BASE_CHAIN, OPTIMISM_CHAIN } from './chains'
 
@@ -10,5 +10,14 @@ export const getCopyTradePlatformChain = (platform: CopyTradePlatformEnum) => {
       return BASE_CHAIN
     default:
       return OPTIMISM_CHAIN
+  }
+}
+
+export const getCopyTradePlatformProtocol = (platform: CopyTradePlatformEnum) => {
+  switch (platform) {
+    case CopyTradePlatformEnum.GNS_V8:
+      return ProtocolEnum.GNS
+    default:
+      return ProtocolEnum.COPIN
   }
 }

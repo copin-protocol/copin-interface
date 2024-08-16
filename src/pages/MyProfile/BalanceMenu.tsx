@@ -1,23 +1,26 @@
 import { Eye, EyeClosed } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { ReactNode, useMemo, useState } from 'react'
+import React, { ReactNode, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
+import Logo from 'components/@ui/Logo'
 import ReferralStatus from 'components/WalletDetailsCard/ReferralStatus'
 import Num from 'entities/Num'
 import { CopyWalletData } from 'entities/copyWallet'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { CEX_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { hideScrollbar } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
+import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseWalletName } from 'utils/helpers/transform'
+import { getCopyTradePlatformProtocol } from 'utils/web3/dcp'
 
 export default function BalanceMenu({
   copyWallets,
@@ -90,6 +93,19 @@ export default function BalanceMenu({
         {activeWallet && CEX_EXCHANGES.includes(activeWallet.exchange) && (
           <ReferralStatus data={activeWallet} sx={{ minWidth: 80 }} />
         )}
+        {activeWallet &&
+          activeWallet.exchange === CopyTradePlatformEnum.GNS_V8 &&
+          !!activeWallet.smartWalletAddress && (
+            <IconBox
+              as={'a'}
+              href={generateTraderDetailsRoute(
+                getCopyTradePlatformProtocol(activeWallet.exchange),
+                activeWallet.smartWalletAddress
+              )}
+              target="_blank"
+              icon={<Logo size={16} />}
+            />
+          )}
       </Flex>
       <Flex
         width={{ _: '100%', sm: 'auto' }}
