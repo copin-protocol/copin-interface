@@ -535,7 +535,7 @@ function RewardDistribution() {
           label={'Unclaim Rebate'}
           value={formatNumber(info?.claimableFees, 2)}
           action={
-            !info?.claimableFees ? <ClaimButton availableClaim={info?.claimableFees} onSuccess={reload} /> : undefined
+            !!info?.claimableFees ? <ClaimButton availableClaim={info?.claimableFees} onSuccess={reload} /> : undefined
           }
           hasGradient
         />
