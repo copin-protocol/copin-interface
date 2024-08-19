@@ -220,15 +220,20 @@ export default function ChartPositions({
   useEffect(() => {
     if (!candleStickChart || chartIsRemoved.current) return
     const { timeScale } = candleStickChart
-    if (visibleRange) {
-      if (
-        timeScale.getVisibleRange()?.from !== visibleRange.from ||
-        timeScale.getVisibleRange()?.to !== visibleRange.to
-      ) {
-        timeScale.setVisibleRange({
-          from: visibleRange.from as UTCTimestamp,
-          to: visibleRange.to as UTCTimestamp,
-        })
+    if (timeScale && visibleRange) {
+      try {
+        if (
+          timeScale.getVisibleRange()?.from !== visibleRange.from ||
+          timeScale.getVisibleRange()?.to !== visibleRange.to
+        ) {
+          timeScale.setVisibleRange({
+            from: visibleRange.from as UTCTimestamp,
+            to: visibleRange.to as UTCTimestamp,
+          })
+        }
+      } catch (error) {
+        // TODO: Need to check this error
+        // console.log(error)
       }
     }
     function onVisibleTimeRangeChanged(value: Range<any> | null) {
