@@ -4,9 +4,9 @@ import { memo, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTraderTokensStatistic } from 'apis/traderApis'
+import ChartPositions from 'components/@charts/ChartPositions'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
-import ChartPositions from 'components/Charts/ChartPositions'
 import { PositionData } from 'entities/trader.d'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -24,6 +24,7 @@ export interface PositionSortPros {
   sortBy: keyof PositionData
   sortType: SortTypeEnum
 }
+
 const TraderChartPositions = memo(function TraderChartPositionsMemo({
   account,
   protocol,

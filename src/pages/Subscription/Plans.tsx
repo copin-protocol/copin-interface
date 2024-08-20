@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { CheckCircle, Info, XCircle } from '@phosphor-icons/react'
 import { ReactNode, useState } from 'react'
 
-import NFTSubscriptionCard from 'components/NFTSubscriptionCard'
+import NFTSubscriptionCard from 'components/@widgets/NFTSubscriptionCard'
 import Num from 'entities/Num'
 import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
 import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'

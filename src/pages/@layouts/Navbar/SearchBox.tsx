@@ -1,12 +1,10 @@
-// eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
-import React from 'react'
 
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
-import SearchPositionResultItem from 'components/@ui/SearchPositionResult'
-import FilterProtocol from 'components/FilterProtocol'
+import FilterProtocol from 'components/@widgets/FilterProtocol'
+import SearchPositionResultItem from 'components/@widgets/SearchPositionResult'
 import { TraderData } from 'entities/trader'
 import useSearchAllData from 'hooks/features/useSearchAllData'
 import { Button } from 'theme/Buttons'

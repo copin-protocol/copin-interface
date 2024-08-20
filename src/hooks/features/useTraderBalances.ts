@@ -1,47 +1,34 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther, formatUnits } from '@ethersproject/units'
-import { useEffect, useMemo, useRef } from 'react'
+import { formatUnits } from '@ethersproject/units'
+import { useMemo } from 'react'
+import { useQuery } from 'react-query'
 
 import useUsdPrices from 'hooks/store/useUsdPrices'
 import { useCustomMulticallQuery } from 'hooks/web3/useMulticallQuery'
 import { ProtocolEnum } from 'utils/config/enums'
-import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
-import { PROTOCOL_PROVIDER, TOKEN_ADDRESSES, TOKEN_COLLATERAL_SUPPORT } from 'utils/config/trades'
+import { CONTRACT_QUERY_KEYS, QUERY_KEYS } from 'utils/config/keys'
+import { PROTOCOL_PROVIDER, TOKEN_COLLATERAL_SUPPORT, getIndexTokensBySymbol } from 'utils/config/trades'
 import { getNativeBalance } from 'utils/web3/balance'
+import { CHAINS } from 'utils/web3/chains'
 import { CONTRACT_ABIS } from 'utils/web3/contracts'
 import { rpcProvider } from 'utils/web3/providers'
 
-interface TokenBalance {
-  address: string
-  decimals: number
-  price: number
-  amount: number
-  amountBN: BigNumber
-}
-
-const useTraderBalances = ({ account, protocol }: { account?: string; protocol: ProtocolEnum }) => {
+const useTraderBalances = ({ account, protocol }: { account: string | undefined; protocol: ProtocolEnum }) => {
   const { prices } = useUsdPrices()
-  const nativeRef = useRef<number>()
   const protocolProvider = PROTOCOL_PROVIDER[protocol]
 
-  useEffect(() => {
-    if (nativeRef.current || !protocol || !protocolProvider) return
-    const ethPrice = prices[TOKEN_ADDRESSES[protocol].ETH]
-    if (!account || !prices || !ethPrice) return
-    getNativeBalance(rpcProvider(protocolProvider.chainId), account).then((value: BigNumber) => {
-      nativeRef.current = Number(formatEther(value)) * ethPrice
-    })
-  }, [account, prices, protocol, protocolProvider])
+  const { data: nativeBalanceData } = useQuery(
+    [QUERY_KEYS.GET_TRADER_NATIVE_BALANCE],
+    () => getNativeBalance(rpcProvider(protocolProvider.chainId), account ?? ''),
+    {
+      enabled: !!account,
+    }
+  )
 
   const calls: { address: string; name: string; params: any[] }[] = []
   const tokens = useMemo(
     () =>
-      protocol && TOKEN_COLLATERAL_SUPPORT[protocol]
-        ? [
-            // ...Object.keys(TOKEN_TRADE_SUPPORT[protocol]).map((key) => TOKEN_TRADE_SUPPORT[protocol][key]),
-            ...Object.keys(TOKEN_COLLATERAL_SUPPORT[protocol]).map((key) => TOKEN_COLLATERAL_SUPPORT[protocol][key]),
-          ]
-        : [],
+      protocol && TOKEN_COLLATERAL_SUPPORT[protocol] ? [...Object.values(TOKEN_COLLATERAL_SUPPORT[protocol])] : [],
     [protocol]
   )
   if (account) {
@@ -55,7 +42,7 @@ const useTraderBalances = ({ account, protocol }: { account?: string; protocol: 
   }
 
   const {
-    data,
+    data: tokenBalancesData,
     isLoading,
     refetch: reloadToken,
   } = useCustomMulticallQuery<any>(
@@ -71,29 +58,45 @@ const useTraderBalances = ({ account, protocol }: { account?: string; protocol: 
     }
   )
 
-  const tokenBalance = useMemo<number | undefined>(() => {
-    if (!data || data.length === 0) return
-    const results: BigNumber[][] = data ?? []
-    const tokenBalances: TokenBalance[] = []
+  const indexTokensBySymbol = useMemo(() => {
+    return getIndexTokensBySymbol(protocol)
+  }, [protocol])
 
-    if (results.length > 0) {
-      for (let i = 0; i < tokens.length; i++) {
-        const decimals = tokens[i].decimals || 18
-        tokenBalances.push({
-          address: tokens[i].address,
-          decimals,
-          amountBN: results[i]?.[0] ?? BigNumber.from(0),
-          amount: Number(formatUnits(results[i]?.[0] ?? BigNumber.from(0), decimals)),
-          price: prices[tokens[i].address] ?? 1,
-        })
+  const nativeBalance = useMemo(() => {
+    if (!nativeBalanceData) return 0
+    const nativeSymbol = CHAINS[protocolProvider.chainId].token
+    const price = prices[nativeSymbol] ?? 0
+    const balance = Number(formatUnits(nativeBalanceData)) * price
+    if (isNaN(balance)) return 0
+    return balance
+  }, [nativeBalanceData, prices])
+
+  const tokenBalances = useMemo(() => {
+    if (!tokenBalancesData?.length) return 0
+    const balances = (tokenBalancesData as BigNumber[][]).reduce((result, balanceData, index) => {
+      const collateralToken = tokens[index]
+      const collateralAmount = Number(formatUnits(balanceData?.[0] ?? BigNumber.from(0), collateralToken.decimals))
+      if (collateralToken.isStableCoin) {
+        return (result += collateralAmount)
       }
-    }
-    return tokenBalances.reduce((sum, next) => sum + next.amount * next.price, 0)
-  }, [data, prices, tokens])
+      const indexTokens = indexTokensBySymbol[collateralToken.symbol]
+      if (!indexTokens?.length) {
+        return result
+      }
+      let collateralTokenPrice = 0
+      for (const indexToken of indexTokens) {
+        const price = prices[indexToken]
+        if (typeof price === 'number') {
+          collateralTokenPrice = price
+          break
+        }
+      }
+      return (result += collateralAmount * collateralTokenPrice)
+    }, 0)
+    return balances
+  }, [tokenBalancesData, prices])
 
-  const balance = (tokenBalance ?? 0) + (nativeRef.current ?? 0)
-
-  return { balance, isLoading, reloadToken }
+  return { balance: tokenBalances + nativeBalance, isLoading, reloadToken }
 }
 
 export default useTraderBalances

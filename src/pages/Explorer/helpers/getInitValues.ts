@@ -1,8 +1,8 @@
 import { ParsedQs } from 'qs'
 
-import { getDefaultFormValues } from 'components/ConditionFilterForm/helpers'
-import { ConditionFormValues } from 'components/ConditionFilterForm/types'
-import { TraderListSortProps } from 'components/Tables/TraderListTable/dataConfig'
+import { TraderListSortProps } from 'components/@trader/TraderExplorerTableView/types'
+import { getDefaultFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
+import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import { SortTypeEnum } from 'utils/config/enums'
 import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'

@@ -82,6 +82,7 @@ export const PercentText = ({
 export const BalanceText = ({
   protocol,
   account,
+  smartAccount,
   maxDigit = 2,
   minDigit = 2,
   suffix,
@@ -91,7 +92,8 @@ export const BalanceText = ({
   prefixSx,
 }: {
   protocol: ProtocolEnum
-  account?: string
+  account: string | undefined
+  smartAccount?: string
   maxDigit?: number
   minDigit?: number
   suffix?: string | ReactElement
@@ -104,9 +106,13 @@ export const BalanceText = ({
     account,
     protocol,
   })
-  return balance > 0 ? (
+  const { balance: smartAccountBalance } = useTraderBalances({ account: smartAccount, protocol })
+
+  const totalBalance = balance + smartAccountBalance
+
+  return totalBalance > 0 ? (
     <ValueText
-      value={formatNumber(balance, maxDigit, minDigit)}
+      value={formatNumber(totalBalance, maxDigit, minDigit)}
       suffix={suffix}
       prefix={prefix}
       sx={sx}

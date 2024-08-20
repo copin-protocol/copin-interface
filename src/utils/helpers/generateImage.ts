@@ -517,6 +517,10 @@ export const generateProtocol = ({
       protocolTextWidth = 328
       protocolText = 'Rollie (Scroll)'
       break
+    case ProtocolEnum.PERENNIAL_ARB:
+      protocolTextWidth = 168
+      protocolText = 'Perennial'
+      break
     default:
       break
   }

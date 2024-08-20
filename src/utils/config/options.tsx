@@ -3,7 +3,7 @@ import { Trans, t } from '@lingui/macro'
 import { ReactNode } from 'react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
-import { RankingFieldOption } from 'components/ConditionFilterForm/types'
+import { RankingFieldOption } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 

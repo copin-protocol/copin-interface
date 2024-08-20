@@ -1,9 +1,9 @@
 import dayjs from 'dayjs'
 import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
 
+import { TraderListSortProps } from 'components/@trader/TraderExplorerTableView/types'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
-import { ConditionFormValues } from 'components/ConditionFilterForm/types'
-import { TraderListSortProps } from 'components/Tables/TraderListTable/dataConfig'
+import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader.d'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'

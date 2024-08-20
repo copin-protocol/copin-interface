@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { ApiListResponse } from 'apis/api'
-import { WarningType } from 'components/BacktestModal/WarningModal'
+import { WarningType } from 'components/@backtest/BacktestWarningModal'
 import { TraderData } from 'entities/trader'
 import useBacktestWarningModal from 'hooks/store/useBacktestWarningModal'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'

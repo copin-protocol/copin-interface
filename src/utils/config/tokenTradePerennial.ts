@@ -1,0 +1,29 @@
+import { ProtocolTokenMapping } from './trades'
+
+const PERENNIAL_ARB_PAIRS = {
+  '0x90A664846960AaFA2c164605Aebb8e9Ac338f9a0': 'ETH',
+  '0xcC83e3cDA48547e3c250a88C8D5E97089Fd28F60': 'BTC',
+  '0x02258bE4ac91982dc1AF7a3D2C4F05bE6079C253': 'SOL',
+  '0x7e34B5cBc6427Bd53ECFAeFc9AC2Cad04e982f78': 'MATIC',
+  '0x2CD8651b0dB6bE605267fdd737C840442A96fAFE': 'TIA',
+  '0x708B750f9f5bD23E074a5a0A64EF542585906e85': 'RLB',
+  '0xD9c296A7Bee1c201B9f3531c7AC9c9310ef3b738': 'LINK',
+  '0x362c6bC2A4EA2033063bf20409A4c5E8C5754056': 'BNB',
+  '0x2402E92f8C58886F716F5554039fA6398d7A1EfB': 'XRP',
+  '0x3D1D603073b3CEAB5974Db5C54568058a9551cCC': 'ARB',
+  '0xbfa99F19a376F25968865983c41535fa368B28da': 'YUP',
+}
+
+const TOKEN_TRADE_PERENNIAL_ARB = Object.entries(PERENNIAL_ARB_PAIRS).reduce<ProtocolTokenMapping>(
+  (result, [key, value]) => {
+    return {
+      ...result,
+      [key]: {
+        symbol: value,
+      },
+    }
+  },
+  {}
+)
+
+export { TOKEN_TRADE_PERENNIAL_ARB }

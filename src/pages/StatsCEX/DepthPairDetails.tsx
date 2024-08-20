@@ -5,8 +5,8 @@ import { CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Toolti
 
 import { getDepthHistoriesApi } from 'apis/cexStatsApis'
 import NoDataFound from 'components/@ui/NoDataFound'
-import { VerticalDivider } from 'components/@ui/Table/renderProps'
 import RangeFilter from 'components/@ui/TimeFilter/RangeFilter'
+import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { FormattedDepthPairData } from 'entities/cexStats'
 import { isMobile } from 'hooks/helpers/useIsMobile'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'

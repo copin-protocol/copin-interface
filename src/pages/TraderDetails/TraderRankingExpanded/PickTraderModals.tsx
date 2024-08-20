@@ -8,11 +8,11 @@ import styled from 'styled-components/macro'
 import { getAllFavoritesApi } from 'apis/favoriteApis'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import TraderAddress from 'components/@ui/TraderAddress'
 import { CopyTradeData } from 'entities/copyTrade'
 import { FavoritedTrader } from 'entities/trader'
 import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
 import useMyProfileStore from 'hooks/store/useMyProfile'
-import { renderTrader } from 'pages/MyProfile/renderProps'
 import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
@@ -79,11 +79,15 @@ export function PickFromFavoritesModal({
             tradersData.map((data) => {
               return (
                 <ModalItemWrapper key={data.id} role="button" onClick={() => setSelectedTrader(data)}>
-                  {renderTrader(data.account, data.protocol ?? DEFAULT_PROTOCOL, {
-                    isLink: false,
-                    size: 32,
-                    textSx: { width: 80 },
-                  })}
+                  <TraderAddress
+                    address={data.account}
+                    protocol={data.protocol ?? DEFAULT_PROTOCOL}
+                    options={{
+                      isLink: false,
+                      size: 32,
+                      textSx: { width: 80 },
+                    }}
+                  />
                   {data.note && <ModalItemTag className="favorite_note">{data.note}</ModalItemTag>}
                 </ModalItemWrapper>
               )
@@ -140,7 +144,11 @@ export function PickFromCopyTradesModal({
           {_allCopyTrades?.map((data) => {
             return (
               <ModalItemWrapper key={data.id} role="button" onClick={() => setSelectedCopyTrade(data)}>
-                {renderTrader(data.account, data.protocol, { isLink: false, size: 32, textSx: { width: 80 } })}
+                <TraderAddress
+                  address={data.account}
+                  protocol={data.protocol}
+                  options={{ isLink: false, size: 32, textSx: { width: 80 } }}
+                />
                 {data.title && <ModalItemTag className="favorite_note">{data.title}</ModalItemTag>}
               </ModalItemWrapper>
             )

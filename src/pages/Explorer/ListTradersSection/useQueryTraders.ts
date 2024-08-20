@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { RequestBodyApiData } from 'apis/types'
-import { getFiltersFromFormValues } from 'components/ConditionFilterForm/helpers'
+import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
 import { TraderData } from 'entities/trader'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { DEFAULT_LIMIT } from 'utils/config/constants'

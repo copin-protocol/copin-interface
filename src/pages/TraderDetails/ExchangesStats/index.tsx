@@ -3,14 +3,14 @@ import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getTraderExchangeStatistic, getTraderMultiExchangeStatistic, getTraderStatisticApi } from 'apis/traderApis'
+import LineChartPnL from 'components/@charts/LineChartPnL'
+import { parsePnLStatsData } from 'components/@charts/LineChartPnL/helpers'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import MarketGroup from 'components/@ui/MarketGroup'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
-import ChartTraderPnL from 'components/Charts/ChartTraderPnL'
-import { parsePnLStatsData } from 'components/Charts/ChartTraderPnL/helpers'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
@@ -163,9 +163,12 @@ export default function ExchangesStats() {
                   </Box>
                   <Box my={12} height={50}>
                     {data?.pnlStatistics ? (
-                      <ChartTraderPnL
+                      <LineChartPnL
                         data={parsePnLStatsData(data.pnlStatistics)}
+                        isCumulativeData={false}
                         dayCount={timeOption.value}
+                        isSimple
+                        hasBalanceText={false}
                         height={50}
                       />
                     ) : (

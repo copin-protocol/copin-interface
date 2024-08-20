@@ -4,9 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
-import Table from 'components/@ui/Table'
-import { ColumnData, TableSortProps } from 'components/@ui/Table/types'
 import { TraderTokenStatistic } from 'entities/trader'
+import Table from 'theme/Table'
+import { ColumnData, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SortTypeEnum } from 'utils/config/enums'
@@ -368,6 +368,6 @@ function getStatsConfigs({ data, currencyOptions }: Pick<TokenStatisticProps, 'd
   const tokenMapping = tokenOptions.reduce((result, option) => {
     return { ...result, [option.id]: option }
   }, {} as Record<string, TokenOptionProps>)
-  const totalTrades = data?.reduce((result, _data) => result + _data.totalTrade ?? 0, 0)
+  const totalTrades = data?.reduce((result, _data) => result + (_data.totalTrade ?? 0), 0)
   return { tokenMapping, totalTrades }
 }

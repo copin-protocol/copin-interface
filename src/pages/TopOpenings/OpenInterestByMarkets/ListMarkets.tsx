@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 
-import Table from 'components/@ui/Table'
-import { TableProps } from 'components/@ui/Table/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { OpenInterestMarketData } from 'entities/statistic'
 import Loading from 'theme/Loading'
+import Table from 'theme/Table'
+import { TableProps } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { getTokenTradeSupport } from 'utils/config/trades'

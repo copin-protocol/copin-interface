@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTraderCopyCount } from 'apis/copyTradeApis'
-import { generateTraderCountWarningStyle } from 'components/TraderCopyCountWarningIcon'
+import { generateTraderCountWarningStyle } from 'components/@copyTrade/TraderCopyCountWarningIcon'
 import { CopyTradeData } from 'entities/copyTrade'
 import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import { Box } from 'theme/base'

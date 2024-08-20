@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { SingleValueProps, components } from 'react-select'
 
-import { RouteSwitchProtocol } from 'components/SwitchProtocols'
+import { RouteSwitchProtocol } from 'components/@widgets/SwitchProtocols'
 import useSearchParams from 'hooks/router/useSearchParams'
 import Select from 'theme/Select'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'

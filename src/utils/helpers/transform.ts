@@ -474,3 +474,19 @@ export const getExchangeKey = (exchange: CopyTradePlatformEnum) => {
       return 'bingX'
   }
 }
+
+export function getTimePeriod(dayCount: number) {
+  const to = dayjs().utc().startOf('day').valueOf()
+  const from = dayjs(to).utc().subtract(dayCount, 'day').valueOf()
+  return [from, to]
+}
+
+export function getCurrentTimezone() {
+  const timezone = dayjs.tz.guess()
+  switch (timezone) {
+    case 'Asia/Saigon':
+      return 'Asia/Ho_Chi_Minh'
+    default:
+      return timezone
+  }
+}

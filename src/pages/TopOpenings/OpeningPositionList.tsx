@@ -1,27 +1,22 @@
-import { CaretRight, XCircle } from '@phosphor-icons/react'
+import { CaretRight } from '@phosphor-icons/react'
 import { cloneElement, useCallback, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import Container from 'components/@ui/Container'
+import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
+import PositionListCard from 'components/@position/TraderPositionsListView'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
-import Table from 'components/@ui/Table'
 import {
   renderEntry,
   renderOpeningPnLWithPrices,
   renderSizeOpening,
   renderTrader,
-} from 'components/@ui/Table/renderProps'
-import { ColumnData } from 'components/@ui/Table/types'
-import PositionDetails from 'components/PositionDetails'
-import PositionListCard from 'components/PositionListCard'
+} from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
-import useIsMobile from 'hooks/helpers/useIsMobile'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
-import IconButton from 'theme/Buttons/IconButton'
-import RcDrawer from 'theme/RcDrawer'
+import Table from 'theme/Table'
+import { ColumnData } from 'theme/Table/types'
 import { Box, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 export type ExternalSource = {
@@ -125,7 +120,6 @@ function OpeningPositionsTable({ isLoading, data, scrollDep, onClickItem }: Open
 }
 
 export function OpeningPositionsWrapper({ children }: { children: any }) {
-  const isMobile = useIsMobile()
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
@@ -147,28 +141,13 @@ export function OpeningPositionsWrapper({ children }: { children: any }) {
   return (
     <div style={{ height: '100%' }}>
       {renderedChildren}
-      <RcDrawer
-        open={openDrawer}
-        onClose={handleDismiss}
-        width={isMobile ? '100%' : '60%'}
-        background={themeColors.neutral6}
-      >
-        <Container pb={3} sx={{ position: 'relative' }}>
-          <IconButton
-            icon={<XCircle size={24} />}
-            variant="ghost"
-            sx={{ position: 'absolute', right: 1, top: 3 }}
-            onClick={handleDismiss}
-          />
-          {!!currentPosition && (
-            <PositionDetails
-              protocol={currentPosition.protocol}
-              id={currentPosition.id}
-              chartProfitId="top-opening-position-page"
-            />
-          )}
-        </Container>
-      </RcDrawer>
+      <TraderPositionDetailsDrawer
+        isOpen={openDrawer}
+        onDismiss={handleDismiss}
+        protocol={currentPosition?.protocol}
+        id={currentPosition?.id}
+        chartProfitId="top-opening-position-page"
+      />
     </div>
   )
 }

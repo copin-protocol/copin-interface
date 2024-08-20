@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import isoWeek from 'dayjs/plugin/isoWeek'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 
@@ -17,6 +18,7 @@ dayjs.extend(utc)
 dayjs.extend(weekOfYear)
 dayjs.extend(isoWeek)
 dayjs.extend(duration)
+dayjs.extend(timezone)
 
 export function formatDuration(durationInSecond: number | undefined) {
   if (!durationInSecond) return '--'

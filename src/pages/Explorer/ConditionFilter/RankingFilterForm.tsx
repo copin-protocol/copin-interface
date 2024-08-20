@@ -1,6 +1,6 @@
 import { useResponsive } from 'ahooks'
 
-import { ConditionFormValues } from 'components/ConditionFilterForm/types'
+import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import { Box, Flex } from 'theme/base'
 import { rankingFieldOptions } from 'utils/config/options'

@@ -9,7 +9,7 @@ import UseRemoveTimeFilter from 'hooks/helpers/useRemoveTimeFilter'
 import { useInitTabsOpen } from 'hooks/helpers/useTabsOpen'
 import { ProtocolProvider } from 'hooks/store/useProtocols'
 import ThemedGlobalStyle from 'theme/styles'
-import GainsTradeConnection from 'utils/web3/gTrade'
+// import GainsTradeConnection from 'utils/web3/gTrade'
 import PythConnection from 'utils/web3/pyth'
 
 import DappProvider from './DappProvider'
@@ -36,7 +36,7 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
             <BrowserRouter>
               <UseRemoveTimeFilter />
               <PythConnection />
-              <GainsTradeConnection />
+              {/*<GainsTradeConnection />*/}
               <DappProvider>
                 <ProtocolProvider>
                   <CopyWalletProvider>{children}</CopyWalletProvider>

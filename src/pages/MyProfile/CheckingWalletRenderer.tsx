@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 
-import CreateWalletAction from 'components/CreateWalletAction'
+import CreateWalletAction from 'components/@wallet/CreateWalletAction'
 import { CopyWalletData } from 'entities/copyWallet'
 import Loading from 'theme/Loading'
 import { Flex, Type } from 'theme/base'

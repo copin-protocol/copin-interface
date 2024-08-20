@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro'
 
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
-import { FilterValues } from 'components/ConditionFilterForm/types'
+import { FilterValues } from 'components/@widgets/ConditionFilterForm/types'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'

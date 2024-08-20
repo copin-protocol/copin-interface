@@ -2,10 +2,10 @@
 import React, { useMemo } from 'react'
 
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
-import Table from 'components/@ui/Table'
-import { VerticalDivider } from 'components/@ui/Table/renderProps'
-import { ColumnData } from 'components/@ui/Table/types'
+import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import useLatestBlockNumber from 'hooks/features/useLastestBlockNumber'
+import Table from 'theme/Table'
+import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { PROTOCOL_LISTENER_MAPPING } from 'utils/config/protocols'
 import { MIRROR_TRANS } from 'utils/config/translations'

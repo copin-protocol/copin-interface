@@ -67,6 +67,12 @@ const TOKEN_TRADE_GMX_V2: ProtocolTokenMapping = {
   '0x0Cf1fb4d1FF67A3D8Ca92c9d6643F8F9be8e03E5': {
     symbol: 'ETH', //wstETH
   },
+  '0xD9377d9B9a2327C7778867203deeA73AB8a68b6B': {
+    symbol: 'STX',
+  },
+  '0x93385F7C646A3048051914BDFaC25F4d620aeDF1': {
+    symbol: 'ORDI',
+  },
 }
 
 export { TOKEN_TRADE_GMX_V2 }

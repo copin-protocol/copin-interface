@@ -2,9 +2,9 @@ import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 
 import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
+import TraderAddress from 'components/@ui/TraderAddress'
 import { TraderData } from 'entities/trader'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
-import { renderTrader } from 'pages/MyProfile/renderProps'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -20,15 +20,22 @@ export default function Stats({
   indicatorColor: string
   isLinkAddress?: boolean
 }) {
-  const { account, protocol, runTimeDays, lastTradeAt } = traderData
+  const { account, protocol, runTimeDays, lastTradeAt, smartAccount } = traderData
   return (
     <Box sx={{ p: 3, width: '100%', height: '100%', overflow: 'auto' }}>
       <Flex sx={{ alignItems: 'center', gap: 2 }}>
         <Box sx={{ width: '4px', height: 24, bg: indicatorColor }} />
-        {renderTrader(account, protocol, { isLink: isLinkAddress, dividerColor: 'neutral2', hasAddressTooltip: true })}
+        <TraderAddress
+          address={account}
+          protocol={protocol}
+          options={{ isLink: isLinkAddress, dividerColor: 'neutral2', hasAddressTooltip: true }}
+        />
       </Flex>
       <Flex mt={3} sx={{ width: '100%', flexDirection: 'column', gap: 12 }}>
-        <StatsRow label={<Trans>Balance</Trans>} value={<BalanceText protocol={protocol} account={account} />} />
+        <StatsRow
+          label={<Trans>Balance</Trans>}
+          value={<BalanceText protocol={protocol} account={account} smartAccount={smartAccount} />}
+        />
         <StatsRow label={<Trans>Last Trade</Trans>} value={lastTradeAt ? formatLocalRelativeDate(lastTradeAt) : '--'} />
         <StatsRow
           label={<Trans>Runtime</Trans>}
@@ -58,7 +65,9 @@ function TokenTrades({
   protocol: ProtocolEnum | undefined
 }) {
   const { data } = useGetTokensTraded({ account, protocol })
-  const tokens = data?.length ? data.map((address) => getTokenTradeSupport(protocol)?.[address]?.symbol).join(', ') : '--'
+  const tokens = data?.length
+    ? data.map((address) => getTokenTradeSupport(protocol)?.[address]?.symbol).join(', ')
+    : '--'
   return <StatsRow label={<Trans>Markets</Trans>} value={tokens} />
 }
 

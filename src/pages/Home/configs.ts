@@ -58,4 +58,6 @@ export const ALLOWED_PROTOCOLS = [
   ProtocolEnum.HMX_ARB,
   ProtocolEnum.LEVEL_ARB,
   ProtocolEnum.LEVEL_BNB,
+  ProtocolEnum.APOLLOX_BNB,
+  ProtocolEnum.KILOEX_OPBNB,
 ]

@@ -1,7 +1,8 @@
 import { ArrowsDownUp } from '@phosphor-icons/react'
 import { useState } from 'react'
 
-import { TraderListSortProps, mobileTableSettings } from 'components/Tables/TraderListTable/dataConfig'
+import { mobileTableSettings } from 'components/@trader/TraderExplorerTableView/configs'
+import { TraderListSortProps } from 'components/@trader/TraderExplorerTableView/types'
 import { TraderData } from 'entities/trader'
 import { Button } from 'theme/Buttons'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'

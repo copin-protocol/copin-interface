@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 
 import { deleteTraderAlertApi, getTraderAlertListApi } from 'apis/alertApis'
 import ToastBody from 'components/@ui/ToastBody'
-import UnsubscribeAlertModal from 'components/Modal/UnsubscribeAlertModal'
+import UnsubscribeAlertModal from 'components/@widgets/UnsubscribeAlertModal'
 import { TraderAlertData } from 'entities/alert'
 import useBotAlertContext, { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
 import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'

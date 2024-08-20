@@ -2,9 +2,8 @@ import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
 import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
-import { useParsedProtocol } from 'hooks/store/useProtocols'
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
-import { GAINS_TRADE_PROTOCOLS, NETWORK } from 'utils/config/constants'
+import { NETWORK } from 'utils/config/constants'
 import { PYTH_IDS_MAPPING } from 'utils/config/pythIds'
 import ROUTES from 'utils/config/routes'
 import { TOKEN_TRADE_SUPPORT, TokenTrade } from 'utils/config/trades'
@@ -46,12 +45,12 @@ const TOKENS_BY_SYMBOL = ALL_TOKEN_SUPPORTS.reduce<Record<string, string[]>>((re
 }, {})
 
 export default function PythConnection() {
-  const { setPrices, setIsReady } = useRealtimeUsdPricesStore()
+  const { setPrices, setIsReady, prices } = useRealtimeUsdPricesStore()
   const { pathname } = useLocation()
-  const protocol = useParsedProtocol()
-  const isGains =
-    GAINS_TRADE_PROTOCOLS.some((protocol) => !!pathname.match(protocol)?.length) ||
-    GAINS_TRADE_PROTOCOLS.includes(protocol)
+  // const protocol = useParsedProtocol()
+  // const isGains =
+  //   GAINS_TRADE_PROTOCOLS.some((protocol) => !!pathname.match(protocol)?.length) ||
+  //   GAINS_TRADE_PROTOCOLS.includes(protocol)
 
   const initiated = useRef(false)
   useEffect(() => {
@@ -66,7 +65,9 @@ export default function PythConnection() {
         await pyth.startWebSocket()
 
         const allPriceFeedIds = await pyth.getPriceFeedIds()
-        const availablePriceFeedIds = PYTH_IDS.filter((id) => allPriceFeedIds?.includes(id.split('0x')?.[1]))
+        const availablePriceFeedIds = PYTH_IDS.filter((id) =>
+          !!allPriceFeedIds?.length ? allPriceFeedIds?.includes(id.split('0x')?.[1]) : true
+        )
 
         const PYTH_IDS_CHUNKS = chunkArray(availablePriceFeedIds, 100)
 
@@ -78,17 +79,17 @@ export default function PythConnection() {
               pricesData = processPriceFeed(price, pricesData)
             })
           }
-          setPrices(pricesData)
+          setPrices({ ...prices, ...pricesData })
         }
 
-        if (!isGains) {
-          await fetchAndProcessPriceFeeds()
-        }
+        // if (!isGains) {
+        await fetchAndProcessPriceFeeds()
+        // }
 
         setIsReady(true)
 
         await pyth.subscribePriceFeedUpdates(availablePriceFeedIds, (price) => {
-          if (isGains) return
+          // if (isGains) return
           const data = getPriceData({ price })
           if (!data) return
           for (let i = 0; i < data.tokenAddresses.length; i++) {
@@ -102,7 +103,7 @@ export default function PythConnection() {
           const publishTime = price?.getPriceNoOlderThan?.(60)?.publishTime ?? 0
           if (publishTime >= lastUpdate + INTERVAL_TIME) {
             lastUpdate = publishTime
-            setPrices(pricesData)
+            setPrices({ ...prices, ...pricesData })
           }
         })
       })()

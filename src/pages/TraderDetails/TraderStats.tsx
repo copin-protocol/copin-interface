@@ -3,14 +3,15 @@ import { ArrowLineUp, GridFour, ListDashes } from '@phosphor-icons/react'
 import { ReactNode, memo } from 'react'
 import styled from 'styled-components/macro'
 
-import CustomizeColumn from 'components/@ui/Table/CustomizeColumn'
+import { tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
+import { ExternalTraderListSource } from 'components/@trader/TraderExplorerTableView/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
-import { ExternalSource, tableSettings } from 'components/Tables/TraderListTable/dataConfig'
 import { TraderData } from 'entities/trader.d'
 import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import { IGNORE_FIELDS, useStatsCustomizeStore } from 'hooks/store/useStatsCustomize'
 import IconButton from 'theme/Buttons/IconButton'
 import Checkbox from 'theme/Checkbox'
+import CustomizeColumn from 'theme/Table/CustomizeColumn'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Grid, Type } from 'theme/base'
 import { TimeFilterByEnum } from 'utils/config/enums'
@@ -49,7 +50,7 @@ const StatsWrapper = styled.div`
 interface StatProps {
   id: string
   label: ReactNode
-  render?: (item: TraderData, index: number, externalSource?: ExternalSource | undefined) => ReactNode
+  render?: (item: TraderData, index: number, externalSource?: ExternalTraderListSource | undefined) => ReactNode
 }
 
 const stats = tableSettings.filter((settings) => !IGNORE_FIELDS.includes(settings.id))
@@ -67,7 +68,7 @@ const statsObj = stats.reduce((prev, cur) => {
   return prev
 }, {} as { [key: string]: StatProps })
 
-const TYPES = {
+const TYPES: { [key in TimeFilterByEnum]?: { index: number; key: string; text: string } } = {
   [TimeFilterByEnum.ALL_TIME]: {
     index: 0,
     key: 'ALL',
@@ -113,7 +114,7 @@ const AccountStats = memo(function AccountStatsMemo({
     currentStatOnly,
   } = useStatsCustomizeStore()
 
-  const externalSource: ExternalSource = {
+  const externalSource: ExternalTraderListSource = {
     isMarketsLeft: customizeView === 'GRID',
   }
 
@@ -202,7 +203,7 @@ const AccountStats = memo(function AccountStatsMemo({
               }}
             >
               <Checkbox checked={currentStatOnly} onChange={(e) => toogleCurrentStatOnly(e.target.checked)}>
-                <Type.Caption>Only show {TYPES[timeOption.id].text}</Type.Caption>
+                <Type.Caption>Only show {TYPES[timeOption.id]?.text}</Type.Caption>
               </Checkbox>
             </Flex>
           )}
@@ -322,9 +323,9 @@ const AccountStats = memo(function AccountStatsMemo({
                 <Type.CaptionBold>{stat.label}</Type.CaptionBold>
                 {currentStatOnly ? (
                   <Box>
-                    {stat.render && data[TYPES[timeOption.id].index - (isPremiumUser ? 0 : 1)]
+                    {stat.render && data[(TYPES[timeOption.id]?.index ?? 0) - (isPremiumUser ? 0 : 1)]
                       ? stat.render(
-                          data[TYPES[timeOption.id].index - (isPremiumUser ? 0 : 1)] as TraderData,
+                          data[(TYPES[timeOption.id]?.index ?? 0) - (isPremiumUser ? 0 : 1)] as TraderData,
                           index,
                           externalSource
                         )
@@ -333,11 +334,11 @@ const AccountStats = memo(function AccountStatsMemo({
                 ) : (
                   <div>
                     {[
-                      ...(isPremiumUser ? [TYPES[TimeFilterByEnum.ALL_TIME].key] : []),
-                      TYPES[TimeFilterByEnum.S60_DAY].key,
-                      TYPES[TimeFilterByEnum.S30_DAY].key,
-                      TYPES[TimeFilterByEnum.S14_DAY].key,
-                      TYPES[TimeFilterByEnum.S7_DAY].key,
+                      ...(isPremiumUser ? [TYPES[TimeFilterByEnum.ALL_TIME]?.key] : []),
+                      TYPES[TimeFilterByEnum.S60_DAY]?.key,
+                      TYPES[TimeFilterByEnum.S30_DAY]?.key,
+                      TYPES[TimeFilterByEnum.S14_DAY]?.key,
+                      TYPES[TimeFilterByEnum.S7_DAY]?.key,
                     ].map((item, i) => (
                       <Flex key={item} justifyContent="space-between" mt={1}>
                         <Type.Caption color="neutral3" width={40}>

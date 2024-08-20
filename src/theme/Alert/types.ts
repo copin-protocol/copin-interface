@@ -21,4 +21,4 @@ export type AlertProps = { block?: boolean } & SxProps &
   VariantProps &
   HTMLAttributes<HTMLDivElement>
 
-export type Variant = typeof variants[keyof typeof variants]
+export type Variant = (typeof variants)[keyof typeof variants]

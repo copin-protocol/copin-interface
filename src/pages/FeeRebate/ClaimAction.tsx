@@ -1,8 +1,8 @@
 import React, { ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
+import { useClickLoginButton } from 'components/@auth/LoginAction'
 import ArbitrumLogo from 'components/@ui/ArbitrumLogo'
-import { useClickLoginButton } from 'components/LoginAction'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { useFeeRebateContract } from 'hooks/web3/useContract'
 import useContractMutation from 'hooks/web3/useContractMutation'

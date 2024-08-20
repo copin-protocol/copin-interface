@@ -1,4 +1,4 @@
-import { ProtocolTokenMapping, TokenCollateral } from './trades'
+import { ProtocolTokenMapping } from './trades'
 
 const ROLLIE_SCROLL_PAIRS = {
   'ROLLIE_SCROLL-0': 'ETH',
@@ -50,14 +50,6 @@ const ROLLIE_SCROLL_PAIRS = {
   'ROLLIE_SCROLL-46': 'TIA',
 }
 
-const TOKEN_COLLATERAL_ROLLIE_SCROLL: Record<string, TokenCollateral> = {
-  '0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4': {
-    address: '0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4',
-    symbol: 'USDC',
-    decimals: 18,
-  },
-}
-
 const TOKEN_TRADE_ROLLIE_SCROLL = Object.entries(ROLLIE_SCROLL_PAIRS).reduce<ProtocolTokenMapping>(
   (result, [key, value]) => {
     return {
@@ -70,4 +62,4 @@ const TOKEN_TRADE_ROLLIE_SCROLL = Object.entries(ROLLIE_SCROLL_PAIRS).reduce<Pro
   {}
 )
 
-export { TOKEN_TRADE_ROLLIE_SCROLL, TOKEN_COLLATERAL_ROLLIE_SCROLL }
+export { TOKEN_TRADE_ROLLIE_SCROLL }

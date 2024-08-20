@@ -5,7 +5,7 @@ import { useLocation } from 'react-router'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoLoginFavorite from 'components/@ui/NoLogin/NoLoginFavorite'
-import { HomeSwitchProtocols } from 'components/SwitchProtocols'
+import { HomeSwitchProtocols } from 'components/@widgets/SwitchProtocols'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderFavorites, { parseTraderFavoriteValue } from 'hooks/store/useTraderFavorites'

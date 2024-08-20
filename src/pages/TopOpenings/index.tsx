@@ -1,6 +1,6 @@
 import { Redirect, Route, Switch } from 'react-router-dom'
 
-import { ProtocolPageWrapper } from 'components/RouteWrapper'
+import { ProtocolPageWrapper } from 'components/@widgets/RouteWrapper'
 import { Box } from 'theme/base'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'

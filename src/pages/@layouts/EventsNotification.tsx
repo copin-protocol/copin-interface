@@ -7,7 +7,7 @@ import Draggable, { DraggableEventHandler } from 'react-draggable'
 import OutsideClickHandler from 'react-outside-click-handler'
 import { Link } from 'react-router-dom'
 
-import { GradientText } from 'components/GradientText'
+import { GradientText } from 'components/@ui/GradientText'
 import { TradingEventStatusEnum } from 'entities/event'
 import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import { Box, Flex, Type } from 'theme/base'

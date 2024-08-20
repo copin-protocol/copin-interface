@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getConfigDetailsByKeyApi } from 'apis/copyTradeConfigApis'
-import { maxPositionsContent } from 'components/TooltipContents'
 import { CopyWalletData } from 'entities/copyWallet'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
@@ -105,7 +104,9 @@ const SettingConfigs = ({
         )}
       </Box>
       <Tooltip id={'tt-max-positions'} place="top" type="dark" effect="solid">
-        <Box maxWidth={300}>{maxPositionsContent}</Box>
+        <Box maxWidth={300}>
+          <Type.Caption>The maximum number of positions that can be opened at the same time per API Key</Type.Caption>
+        </Box>
       </Tooltip>
     </Flex>
   )

@@ -1,6 +1,6 @@
 import { useResponsive } from 'ahooks'
 
-import { RouteSwitchProtocol } from 'components/SwitchProtocols'
+import { RouteSwitchProtocol } from 'components/@widgets/SwitchProtocols'
 import { Box, Flex } from 'theme/base'
 
 import { AnalyticsLayoutComponents } from './types'

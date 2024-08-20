@@ -4,14 +4,13 @@ import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getTraderExchangeStatistic, getTraderStatisticApi, getTraderTokensStatistic } from 'apis/traderApis'
+import TraderHistoryPositions from 'components/@position/TraderHistoryPositions'
+import TraderOpeningPositions from 'components/@position/TraderOpeningPositions'
+import { fullHistoryColumns, historyColumns } from 'components/@position/configs/traderPositionRenderProps'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
 import NotFound from 'components/@ui/NotFound'
-import { TableSortProps } from 'components/@ui/Table/types'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
-import HistoryTable from 'components/Tables/HistoryTable'
-import OpeningPositionTable from 'components/Tables/OpeningPositionTable'
-import { fullHistoryColumns, historyColumns } from 'components/Tables/render'
 import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d'
 import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
@@ -22,6 +21,7 @@ import usePageChange from 'hooks/helpers/usePageChange'
 import { getNavProtocol, parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import Loading from 'theme/Loading'
+import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
@@ -309,7 +309,7 @@ export function TraderDetailsComponent({
         }
         heatmap={<div></div>}
         openingPositions={
-          <OpeningPositionTable
+          <TraderOpeningPositions
             data={openingPositions}
             isLoading={isLoadingOpening}
             protocol={protocol}
@@ -323,7 +323,7 @@ export function TraderDetailsComponent({
           />
         }
         closedPositions={
-          <HistoryTable
+          <TraderHistoryPositions
             tokenOptions={tokenOptions}
             data={closedPositions?.data}
             dataMeta={closedPositions?.meta}

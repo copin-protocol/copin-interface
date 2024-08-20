@@ -1,20 +1,20 @@
 import { useState } from 'react'
 
-import { AccountInfo } from 'components/@ui/AccountInfo'
-import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import Table from 'components/@ui/Table'
-import { ColumnData, TableSortProps } from 'components/@ui/Table/types'
-import SettingTags from 'components/BacktestModal/MultipleBacktestModal/SettingTags'
+import SettingTags from 'components/@backtest/BacktestMultipleModal/SettingTags'
 import {
   TableResultData,
   multipleBacktestResultColumns,
   tableStyles,
-} from 'components/BacktestResult/MultipleBacktestResultTable'
+} from 'components/@backtest/BacktestMultipleResultTable'
+import { AccountInfo } from 'components/@ui/AccountInfo'
+import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { BackTestResultData, RequestBackTestData } from 'entities/backTest'
 import useGetSharedBacktest from 'hooks/features/useGetSharedBacktest'
 import { useBacktestCustomizeColumn } from 'hooks/store/useBacktestCustomizeColumns'
 import Loading from 'theme/Loading'
 import { PaginationWithSelect } from 'theme/Pagination'
+import Table from 'theme/Table'
+import { ColumnData, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'

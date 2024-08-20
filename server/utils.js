@@ -124,6 +124,8 @@ function generateProtocolName(protocol) {
       return 'KiloEx (opBNB)'
     case 'ROLLIE_SCROLL':
       return 'Rollie Finance'
+    case 'PERENNIAL_ARB':
+      return 'Perennial'
     default:
       return ''
   }

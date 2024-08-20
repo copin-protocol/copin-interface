@@ -60,7 +60,11 @@ export default function ManagementLayoutMobile({
         <Box flex="1 0 0" overflow="hidden">
           {tab === TabEnum.SETTINGS && mainSection}
           {tab === TabEnum.POSITIONS && positionsTable}
-          {tab === TabEnum.CHART && stats}
+          {tab === TabEnum.CHART && (
+            <Box maxHeight={300} height="100%">
+              {stats}
+            </Box>
+          )}
         </Box>
       </Flex>
     </Box>

@@ -1,7 +1,5 @@
-import React from 'react'
-
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import SearchAllResults from 'components/SearchAllResults'
+import SearchAllResults from 'components/@widgets/SearchAllResults'
 import useSearchTraders from 'hooks/features/useSearchTraders'
 import { Box, Flex, Type } from 'theme/base'
 

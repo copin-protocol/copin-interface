@@ -60,7 +60,7 @@ export default function GainsTradeConnection() {
               pricesData[`${ProtocolEnum.GNS}-` + index] = price
               pricesData[`${ProtocolEnum.GNS_POLY}-` + index] = price
             })
-            setPrices(pricesData)
+            setPrices({ ...prices, ...pricesData })
           }
         }
 
@@ -73,7 +73,7 @@ export default function GainsTradeConnection() {
 
       setIsReady(true)
     }
-  }, [pathname, isGains])
+  }, [pathname, protocol, isGains])
 
   useEffect(() => {
     return () => {

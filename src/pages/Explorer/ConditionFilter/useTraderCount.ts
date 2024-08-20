@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTradersCounter } from 'apis/traderApis'
-import { getFiltersFromFormValues } from 'components/ConditionFilterForm/helpers'
-import { ConditionFormValues, FilterValues } from 'components/ConditionFilterForm/types'
+import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
+import { ConditionFormValues, FilterValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import { QUERY_KEYS } from 'utils/config/keys'
 

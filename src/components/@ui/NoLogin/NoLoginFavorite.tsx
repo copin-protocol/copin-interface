@@ -1,8 +1,8 @@
 import { PlugsConnected } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 
+import { useClickLoginButton } from 'components/@auth/LoginAction'
 import CenterItemContainer from 'components/@ui/Container/CenterItemContainer'
-import { useClickLoginButton } from 'components/LoginAction'
 import { Button } from 'theme/Buttons'
 import { Type } from 'theme/base'
 import { linearGradient3 } from 'theme/colors'

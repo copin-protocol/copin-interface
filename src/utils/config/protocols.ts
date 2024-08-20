@@ -7,7 +7,8 @@ import {
   MODE_MAINNET,
   OPBNB_MAINNET,
   OPTIMISM_MAINNET,
-  POLYGON_MAINNET, SCROLL_MAINNET,
+  POLYGON_MAINNET,
+  SCROLL_MAINNET,
 } from 'utils/web3/chains'
 
 import { BUILD_MODE, RELEASED_PROTOCOLS } from './constants'
@@ -209,6 +210,13 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'Rollie',
     label: 'Scroll',
     chainId: SCROLL_MAINNET,
+    isNew: true,
+  },
+  [ProtocolEnum.PERENNIAL_ARB]: {
+    id: ProtocolEnum.PERENNIAL_ARB,
+    text: 'Perennial',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
     isNew: true,
   },
 }

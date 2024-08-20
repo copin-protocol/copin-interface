@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { Trophy } from '@phosphor-icons/react'
 
-import PageHeader from 'components/@ui/PageHeader'
-import { RouteSwitchProtocol } from 'components/SwitchProtocols'
-import TopLeaderboard from 'components/TopLeadboard'
+import TopLeaderboard from 'components/@trader/TraderLeaderboardTableView'
+import PageHeader from 'components/@widgets/PageHeader'
+import { RouteSwitchProtocol } from 'components/@widgets/SwitchProtocols'
 import { LeaderboardProvider } from 'hooks/features/useLeaderboardProvider'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { BottomTabItemMobile, BottomTabWrapperMobile } from 'pages/@layouts/Components'

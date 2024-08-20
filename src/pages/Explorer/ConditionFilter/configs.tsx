@@ -1,5 +1,5 @@
-import { getFieldOptionLabels, getFieldOptions } from 'components/ConditionFilterForm/helpers'
-import { tableSettings } from 'components/Tables/TraderListTable/dataConfig'
+import { tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
+import { getFieldOptionLabels, getFieldOptions } from 'components/@widgets/ConditionFilterForm/helpers'
 import { TraderData } from 'entities/trader'
 import { rankingFieldOptions } from 'utils/config/options'
 

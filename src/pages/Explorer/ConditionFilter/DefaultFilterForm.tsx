@@ -2,7 +2,7 @@ import { useResponsive } from 'ahooks'
 import { useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
-import { ConditionFormValues } from 'components/ConditionFilterForm/types'
+import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Box, Flex } from 'theme/base'

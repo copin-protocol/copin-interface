@@ -1,24 +1,21 @@
-import { Trans } from '@lingui/macro'
-import { useResponsive } from 'ahooks'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { GetMyPositionRequestBody, GetMyPositionsParams } from 'apis/types'
 import { getMyCopyPositionsApi } from 'apis/userApis'
-import { TableSortProps } from 'components/@ui/Table/types'
+import CopyHistoryPositions from 'components/@position/CopyHistoryPositions'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { PaginationWithLimit } from 'theme/Pagination'
+import { TableSortProps } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
-import { DATA_ATTRIBUTES, QUERY_KEYS, TOOLTIP_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS, TOOLTIP_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
-import PositionTable, { ListPositionMobile } from '../PositionTable'
-import { historyColumns } from '../PositionTable/ListPositions'
 import SelectWallets from '../SelectWallets'
 import FilterByStatus from './FilterByStatus'
 import SelectedTraders from './SelectedTraders'
@@ -92,8 +89,6 @@ export default function HistoryPositions() {
     changeCurrentPage(1)
   }
 
-  const { sm } = useResponsive()
-
   return (
     <Flex width="100%" height="100%" flexDirection="column" bg="neutral7">
       <Flex
@@ -130,48 +125,14 @@ export default function HistoryPositions() {
         </Box>
       </Flex>
       <Box flex="1 0 0" overflow="hidden">
-        {sm ? (
-          <PositionTable
-            data={data?.data}
-            columns={historyColumns}
-            isLoading={isLoading}
-            currentSort={currentSort}
-            changeCurrentSort={changeCurrentSort}
-            onClosePositionSuccess={refetch}
-            tableHeadSx={{
-              '& th:first-child': {
-                pl: 3,
-              },
-              '& th': {
-                py: 2,
-                pr: '16px !important',
-                border: 'none',
-              },
-            }}
-            tableBodySx={{
-              borderSpacing: ' 0px 4px',
-              'td:first-child': {
-                pl: 3,
-              },
-              '& td': {
-                pr: 3,
-                bg: 'neutral6',
-              },
-              '& tbody tr:hover td': {
-                bg: 'neutral5',
-              },
-              ...generateDeletedTraderStyle(selectionState.deletedTraders),
-            }}
-            noDataMessage={<Trans>No History Found</Trans>}
-          />
-        ) : (
-          <ListPositionMobile
-            data={data?.data}
-            isLoading={isLoading}
-            onClosePositionSuccess={refetch}
-            noDataMessage={<Trans>No History Found</Trans>}
-          />
-        )}
+        <CopyHistoryPositions
+          data={data?.data}
+          isLoading={isLoading}
+          currentSort={currentSort}
+          changeCurrentSort={changeCurrentSort}
+          onClosePositionSuccess={refetch}
+          deletedTraders={selectionState.deletedTraders}
+        />
       </Box>
       <PaginationWithLimit
         currentLimit={currentLimit}
@@ -188,17 +149,4 @@ export default function HistoryPositions() {
       </Tooltip>
     </Flex>
   )
-}
-
-function generateDeletedTraderStyle(addresses: string[]) {
-  const key = addresses
-    .map((address) => {
-      return `[${DATA_ATTRIBUTES.TRADER_COPY_DELETED}="${address}"]`
-    })
-    .join(',')
-  return {
-    '&': {
-      [key]: { color: 'neutral3' },
-    },
-  }
 }

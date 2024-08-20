@@ -106,6 +106,8 @@ export const REFERRAL_CODE_LENGTH = 6
 
 export const WALLET_NAME_MAX_LENGTH = 32
 
+export const RISK_LEVERAGE = 20
+
 export const SUBSCRIPTION_COLLECTION_URL =
   NETWORK === 'devnet'
     ? 'https://testnets.opensea.io/collection/copin-subscription-3'
@@ -196,5 +198,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.KTX_MANTLE,
         ProtocolEnum.CYBERDEX,
         ProtocolEnum.YFX_ARB,
+        ProtocolEnum.KILOEX_OPBNB,
+        ProtocolEnum.ROLLIE_SCROLL,
       ]
     : Object.values(ProtocolEnum)

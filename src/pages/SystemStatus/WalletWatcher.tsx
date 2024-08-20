@@ -1,9 +1,7 @@
-// eslint-disable-next-line no-restricted-imports
 import { useResponsive } from 'ahooks'
-import React from 'react'
 
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
-import { VerticalDivider } from 'components/@ui/Table/renderProps'
+import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import useTraderBalances from 'hooks/features/useTraderBalances'
 import CopyButton from 'theme/Buttons/CopyButton'
 import { Flex, Type } from 'theme/base'

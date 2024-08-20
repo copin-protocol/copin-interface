@@ -1,7 +1,7 @@
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
-import { WarningType } from 'components/BacktestModal/WarningModal'
+import { WarningType } from 'components/@backtest/BacktestWarningModal'
 
 interface Store {
   isOpen: boolean

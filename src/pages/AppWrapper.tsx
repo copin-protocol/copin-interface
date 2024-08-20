@@ -1,8 +1,8 @@
 import { ReactNode } from 'react'
 import { ToastContainer } from 'react-toastify'
 
-import FavoriteNoteTooltip from 'components/FavoriteButton/FavoriteNoteTooltip'
-import SubscriptionRestrictModal from 'components/SubscriptionRestrictModal'
+import FavoriteNoteTooltip from 'components/@widgets/FavoriteButton/FavoriteNoteTooltip'
+import SubscriptionRestrictModal from 'components/@widgets/SubscriptionRestrictModal'
 import useModifyStorage from 'hooks/features/useModifyStorage'
 import useResetSearchParams from 'hooks/helpers/useResetSearchParams'
 import useGlobalDialog, { DialogContent } from 'hooks/store/useGlobalDialog'

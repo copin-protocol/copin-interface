@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ReactNode, useCallback } from 'react'
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer, Tooltip } from 'recharts'
 
-import { renderTrader } from 'pages/MyProfile/renderProps'
+import TraderAddress from 'components/@ui/TraderAddress'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 
@@ -64,12 +64,16 @@ const ScoreChart = ({
         <Flex sx={{ gap: 3, width: 320 }}>
           <Type.Caption sx={{ flex: 1, display: 'flex', flexWrap: 'wrap' }}>
             <Box as="span" sx={{ mr: 2, display: 'inline', borderLeft: '4px solid', borderLeftColor: 'primary1' }} />
-            <Box display="inline">{renderTrader(account)}</Box>
+            <Box display="inline">
+              <TraderAddress address={account} />
+            </Box>
             <TooltipDescription label={label} value={`${value.toFixed(0)}%`} />
           </Type.Caption>
           <Type.Caption sx={{ flex: 1, display: 'flex', flexWrap: 'wrap' }}>
             <Box as="span" sx={{ mr: 2, display: 'inline', borderLeft: '4px solid', borderLeftColor: 'orange1' }} />
-            <Box display="inline">{renderTrader(comparedAccount)}</Box>
+            <Box display="inline">
+              <TraderAddress address={comparedAccount} />
+            </Box>
             <TooltipDescription label={label} value={`${comparedValue.toFixed(0)}%`} />
           </Type.Caption>
         </Flex>

@@ -4,7 +4,7 @@ import { useResponsive } from 'ahooks'
 import { lazy } from 'react'
 import { useLocation } from 'react-router-dom'
 
-import PageHeader from 'components/@ui/PageHeader'
+import PageHeader from 'components/@widgets/PageHeader'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { BottomTabItemMobile, BottomTabWrapperMobile } from 'pages/@layouts/Components'
 import { Box, Flex } from 'theme/base'
@@ -13,7 +13,7 @@ import TradersAnalytics from './Layouts/TradersAnalytics'
 import { TabKeyEnum } from './Layouts/layoutConfigs'
 import { FilterTradersProvider } from './useTradersContext'
 
-const MultipleBackTestModal = lazy(() => import('components/BacktestModal/MultipleBacktestModal'))
+const MultipleBackTestModal = lazy(() => import('components/@backtest/BacktestMultipleModal'))
 
 export default function Explorer() {
   const { protocol } = useProtocolStore()

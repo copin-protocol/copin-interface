@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-import { FilterValues, RowValues } from 'components/ConditionFilterForm/types'
+import { FilterValues, RowValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 
 export function suggestionFactory(data: FilterValues) {

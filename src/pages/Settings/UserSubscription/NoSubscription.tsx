@@ -142,6 +142,7 @@ function DesktopNoSubscription() {
           </Box>
         </RowWrapper> */}
       </Flex>
+      <Tooltips />
     </Box>
   )
 }

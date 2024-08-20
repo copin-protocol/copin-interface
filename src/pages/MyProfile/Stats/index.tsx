@@ -3,18 +3,18 @@ import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getCopyTradePnLApi } from 'apis/copyTradeApis'
+import BarChartCopierRoi from 'components/@charts/BarChartCopierRoi'
+import LineChartPnl from 'components/@charts/LineChartPnL'
+import { parseCopyTraderPnLData } from 'components/@charts/LineChartPnL/helpers'
 import Divider from 'components/@ui/Divider'
 import TimeFilter, { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
-import { Box, Flex } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { CopyTradePlatformEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getDurationFromTimeFilter, getTimeframeFromTimeRange } from 'utils/helpers/transform'
-
-import ChartCopierPnL from './ChartCopierPnL'
-import ChartDailyROI from './ChartDailyROI'
 
 enum ViewEnum {
   Pnl,
@@ -63,7 +63,7 @@ const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; co
   }
 
   return (
-    <>
+    <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>
       <Flex justifyContent="space-between" alignItems="center" py={1} px={12}>
         <Dropdown
           placement="bottomLeft"
@@ -95,14 +95,20 @@ const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; co
         <TimeFilter currentFilter={currentOption} handleFilterChange={handleFilterChange} />
       </Flex>
       <Divider isDashed />
-      <Box
-        height={['auto', 'auto', 'auto', 'auto', '100%']}
-        sx={{ overflow: [undefined, undefined, undefined, undefined, 'auto'] }}
-      >
-        {view === ViewEnum.Pnl && <ChartCopierPnL data={data} isLoading={isLoading} from={from} to={to} />}
-        {view === ViewEnum.DailyRoi && <ChartDailyROI data={data} isLoading={isLoading} from={from} to={to} />}
+      <Box sx={{ flex: '1 0 0', overflow: 'hidden' }}>
+        {view === ViewEnum.Pnl && (
+          <LineChartPnl
+            data={parseCopyTraderPnLData(data)}
+            isLoading={isLoading}
+            from={from}
+            to={to}
+            isCumulativeData
+            balanceTextComponent={Type.H5}
+          />
+        )}
+        {view === ViewEnum.DailyRoi && <BarChartCopierRoi data={data} isLoading={isLoading} from={from} to={to} />}
       </Box>
-    </>
+    </Flex>
   )
 }
 

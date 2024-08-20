@@ -8,13 +8,14 @@ import {
 } from '@phosphor-icons/react'
 import { MutableRefObject, SetStateAction, useCallback, useMemo } from 'react'
 
+import TraderCopyAddress from 'components/@copyTrade/TraderCopyAddress'
+import { renderSLTPSetting } from 'components/@position/configs/copyPositionRenderProps'
 import AvatarGroup from 'components/@ui/Avatar/AvatarGroup'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import Divider from 'components/@ui/Divider'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import MarketGroup from 'components/@ui/MarketGroup'
 import ReverseTag from 'components/@ui/ReverseTag'
-import { ColumnData } from 'components/@ui/Table/types'
 import { CopyTradeData } from 'entities/copyTrade'
 import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
 import IconButton from 'theme/Buttons/IconButton'
@@ -25,6 +26,7 @@ import SkipLowCollateralIcon from 'theme/Icons/SkipLowCollateralIcon'
 import SkipLowLeverageIcon from 'theme/Icons/SkipLowLeverageIcon'
 import SkipLowSizeIcon from 'theme/Icons/SkipLowSizeIcon'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
+import { ColumnData } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -35,7 +37,6 @@ import { overflowEllipsis } from 'utils/helpers/css'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getProtocolDropdownImage } from 'utils/helpers/transform'
 
-import { renderSLTPSetting, renderTrader } from '../renderProps'
 import ActionItem from './ActionItem'
 import { CopyTradeWithCheckingData } from './ListCopyTrade'
 
@@ -598,38 +599,49 @@ function renderCopyTrader(data: CopyTradeWithCheckingData, isRunning: boolean) {
         filter: isRunning ? 'none' : 'grayscale(1)',
       }}
     >
-      {data.multipleCopy
-        ? data.accounts && (
-            <>
-              <Flex data-tooltip-id={data.id} sx={{ alignItems: 'center', gap: 2 }}>
-                <AvatarGroup addresses={data.accounts} size={24} />
-                <Type.Caption color="neutral4">|</Type.Caption>
-                <Image
-                  src={getProtocolDropdownImage({ protocol: data.protocol, isActive: true })}
-                  width={16}
-                  height={16}
-                  sx={{ flexShrink: 0 }}
-                />
+      {data.multipleCopy ? (
+        data.accounts && (
+          <>
+            <Flex data-tooltip-id={data.id} sx={{ alignItems: 'center', gap: 2 }}>
+              <AvatarGroup addresses={data.accounts} size={24} />
+              <Type.Caption color="neutral4">|</Type.Caption>
+              <Image
+                src={getProtocolDropdownImage({ protocol: data.protocol, isActive: true })}
+                width={16}
+                height={16}
+                sx={{ flexShrink: 0 }}
+              />
+            </Flex>
+            <Tooltip id={data.id} clickable>
+              <Flex sx={{ flexDirection: 'column', gap: 1 }}>
+                {data.accounts.map((_a) => {
+                  return (
+                    <TraderCopyAddress
+                      key={_a}
+                      address={_a}
+                      protocol={data.protocol}
+                      options={{
+                        hasCopyCountWarningIcon: isRunning,
+                        hasCopyVolumeWarningIcon: isRunning,
+                        copyVolume: data.copyVolume,
+                        maxCopyVolume: data.maxVolume,
+                        isRef: data.isRef,
+                        plan: data.plan,
+                        hasCopyTradeVolumeIcon: isRunning,
+                        hasCopyAddress: true,
+                      }}
+                    />
+                  )
+                })}
               </Flex>
-              <Tooltip id={data.id} clickable>
-                <Flex sx={{ flexDirection: 'column', gap: 1 }}>
-                  {data.accounts.map((_a) => {
-                    return renderTrader(_a, data.protocol, {
-                      hasCopyCountWarningIcon: isRunning,
-                      hasCopyVolumeWarningIcon: isRunning,
-                      copyVolume: data.copyVolume,
-                      maxCopyVolume: data.maxVolume,
-                      isRef: data.isRef,
-                      plan: data.plan,
-                      hasCopyTradeVolumeIcon: isRunning,
-                      hasCopyAddress: true,
-                    })
-                  })}
-                </Flex>
-              </Tooltip>
-            </>
-          )
-        : renderTrader(data.account, data.protocol, {
+            </Tooltip>
+          </>
+        )
+      ) : (
+        <TraderCopyAddress
+          address={data.account}
+          protocol={data.protocol}
+          options={{
             hasCopyCountWarningIcon: isRunning,
             hasCopyVolumeWarningIcon: isRunning,
             copyVolume: data.copyVolume,
@@ -638,7 +650,9 @@ function renderCopyTrader(data: CopyTradeWithCheckingData, isRunning: boolean) {
             plan: data.plan,
             hasCopyTradeVolumeIcon: isRunning,
             hasCopyAddress: true,
-          })}
+          }}
+        />
+      )}
     </Box>
   )
 }

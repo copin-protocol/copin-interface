@@ -7,11 +7,11 @@ import { getTradersApi } from 'apis/traderApis'
 import defaultImage from 'assets/images/similar-trader.png'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
-import { FilterValues, RankingFieldOption } from 'components/ConditionFilterForm/types'
-import { RestrictPremiumFeature } from 'components/SubscriptionRestrictModal'
+import TraderAddress from 'components/@ui/TraderAddress'
+import { FilterValues, RankingFieldOption } from 'components/@widgets/ConditionFilterForm/types'
+import { RestrictPremiumFeature } from 'components/@widgets/SubscriptionRestrictModal'
 import { TraderData } from 'entities/trader'
 import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
-import { renderTrader } from 'pages/MyProfile/renderProps'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
@@ -187,7 +187,7 @@ export default function SimilarTraders({
                 }
               >
                 <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-                  {renderTrader(traderData.account, traderData.protocol)}
+                  <TraderAddress address={traderData.account} protocol={traderData.protocol} />
                   <Button
                     variant="ghostPrimary"
                     onClick={() => onClickCompareButton(traderData)}

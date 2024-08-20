@@ -3,10 +3,9 @@ import { Trans } from '@lingui/macro'
 import dayjs from 'dayjs'
 import { ReactNode, useState } from 'react'
 
-// import { useForm } from 'react-hook-form'
+import { useClickLoginButton } from 'components/@auth/LoginAction'
 import Divider from 'components/@ui/Divider'
-import ETHPriceInUSD from 'components/ETHPriceInUSD'
-import { useClickLoginButton } from 'components/LoginAction'
+import ETHPriceInUSD from 'components/@ui/ETHPriceInUSD'
 import Num from 'entities/Num'
 import useSubscriptionContract from 'hooks/features/useSubscriptionContract'
 import useUserSubscription from 'hooks/features/useUserSubscription'
@@ -17,7 +16,6 @@ import CopinIcon from 'pages/Subscription/CopinIcon'
 import { ModalPriceFormat, ProcessingState, SuccessState } from 'pages/Subscription/MintButton'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
-// import Radio from 'theme/Radio'
 import Select from 'theme/Select'
 import { Box, Flex, Type } from 'theme/base'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
@@ -368,80 +366,3 @@ export const EXTEND_MODAL_LABELS: ComponentConfigs['modalLabels'] = {
   success: <Trans>Extended</Trans>,
   congrats: <Trans>Your NFT has been extended successfully</Trans>,
 }
-
-// export default function PricingOptions({ tokenId, method, modalLabels, buttonLabel }: PricingOptionsProps) {
-//   const pricePlanData = useSubscriptionPlanPrice()
-//   const configs = getPlanPriceConfigs(pricePlanData?.price)
-//   const { register, watch } = useForm<{ monthCount: string }>({
-//     mode: 'onChange',
-//     defaultValues: { monthCount: MONTHS[0].toString() },
-//   })
-//   const monthCount = watch('monthCount')
-//   const currentSelection = monthCount && configs.find((config) => config.monthCount === Number(monthCount))
-
-//   const [openModal, setOpenModal] = useState(false)
-//   const handleOpenModal = () => setOpenModal(true)
-//   const handleDismiss = () => setOpenModal(false)
-
-//   if (!configs.length) return <></>
-
-//   return (
-//     <>
-//       <Flex sx={{ flexDirection: 'column', gap: 24 }}>
-//         {!!configs.length &&
-//           configs.map((data, index) => {
-//             return (
-//               <Radio
-//                 key={data.monthCount}
-//                 size={20}
-//                 value={data.monthCount}
-//                 defaultChecked={index === 0}
-//                 {...register('monthCount')}
-//                 wrapperSx={{ alignItems: ['start', 'center'], '& > *:first-child': { mt: [2, 0] } }}
-//                 label={
-//                   <Flex ml={3} sx={{ alignItems: ['start', 'center'] }}>
-//                     <Type.Caption
-//                       sx={{
-//                         px: 2,
-//                         py: '2px',
-//                         width: 80,
-//                         mt: [1, 0],
-//                         backgroundImage:
-//                           'linear-gradient(92deg, rgba(151, 207, 253, 0.20) 57.35%, rgba(78, 174, 253, 0.20) 96.57%)',
-//                         borderRadius: '2px',
-//                         flexShrink: 0,
-//                         textAlign: 'center',
-//                       }}
-//                     >
-//                       {data.monthCount} {data.monthCount > 1 ? <Trans>months</Trans> : <Trans>month</Trans>}
-//                     </Type.Caption>
-//                     <PriceText data={data} />
-//                   </Flex>
-//                 }
-//               />
-//             )
-//           })}
-//       </Flex>
-//       <Button
-//         mt={24}
-//         variant="outlinePrimary"
-//         sx={{ width: 234, height: 48 }}
-//         onClick={handleOpenModal}
-//         key={(!currentSelection).toString()}
-//         disabled={!currentSelection}
-//       >
-//         {buttonLabel}
-//       </Button>
-//       {currentSelection && (
-//         <ActionModal
-//           isOpen={openModal}
-//           data={currentSelection}
-//           onDismiss={handleDismiss}
-//           tokenId={tokenId}
-//           method={method}
-//           labels={modalLabels}
-//         />
-//       )}
-//     </>
-//   )
-// }

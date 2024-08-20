@@ -2,8 +2,8 @@ import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { v4 as uuid } from 'uuid'
 
+import TraderAddress from 'components/@ui/TraderAddress'
 import { TraderData } from 'entities/trader'
-import { renderTrader } from 'pages/MyProfile/renderProps'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { rankingFieldOptions } from 'utils/config/options'
@@ -191,12 +191,16 @@ function TooltipContent({
     <Flex sx={{ gap: 3, width: 320 }}>
       <Type.Caption sx={{ flex: 1, display: 'flex', flexWrap: 'wrap' }}>
         <Box as="span" sx={{ mr: 2, display: 'inline', borderLeft: '4px solid', borderLeftColor: 'primary1' }} />
-        <Box display="inline">{renderTrader(account)}</Box>
+        <Box display="inline">
+          <TraderAddress address={account} />
+        </Box>
         <Box as="span">Better than {`${ranking.toFixed(0)}%`} traders</Box>
       </Type.Caption>
       <Type.Caption sx={{ flex: 1, display: 'flex', flexWrap: 'wrap' }}>
         <Box as="span" sx={{ mr: 2, display: 'inline', borderLeft: '4px solid', borderLeftColor: 'orange1' }} />
-        <Box display="inline">{renderTrader(comparedAccount)}</Box>
+        <Box display="inline">
+          <TraderAddress address={comparedAccount} />
+        </Box>
         <Box as="span">Better than {`${comparedRanking.toFixed(0)}%`} traders</Box>
       </Type.Caption>
     </Flex>

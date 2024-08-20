@@ -1,12 +1,10 @@
-/* eslint-disable react/jsx-key */
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import { GradientText } from 'components/GradientText'
-import NFTCollectionLinks from 'components/NFTCollectionLinks'
+import { GradientText } from 'components/@ui/GradientText'
+import NFTCollectionLinks from 'components/@widgets/NFTCollectionLinks'
 import { Box, Flex, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
 
 import Plans, { MobilePlans } from './Plans'
 import TermsAndConditions from './TermsAndConditions'
@@ -88,36 +86,3 @@ export default function Subscription() {
     </>
   )
 }
-
-// function SubscriptionCard() {
-//   const { data } = useUserSubscription()
-//   return (
-//     <Box sx={{ width: ['100%', 'max-content'], maxWidth: 'max-content', mx: 'auto', '& > *': { height: '100%' } }}>
-//       <NFTSubscriptionCard
-//         data={data}
-//         action={
-//           data && (
-//             <Flex
-//               sx={{
-//                 alignItems: 'center',
-//                 gap: 1,
-//                 borderBottom: 'small',
-//                 borderBottomColor: 'primary1',
-//                 color: 'primary1',
-//                 width: 'max-content',
-//                 mx: 'auto',
-//               }}
-//               as={Link}
-//               to={ROUTES.USER_SUBSCRIPTION.path}
-//             >
-//               <Type.Body>
-//                 <Trans>My Subscription</Trans>
-//               </Type.Body>
-//               <ArrowRight size={24} />
-//             </Flex>
-//           )
-//         }
-//       />
-//     </Box>
-//   )
-// }

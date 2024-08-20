@@ -25,6 +25,7 @@ export const LINEA_MAINNET = 59144
 export const FANTOM_MAINNET = 250
 export const MODE_MAINNET = 34443
 export const SCROLL_MAINNET = 534352
+
 export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 export const BASE_CHAIN = NETWORK === 'devnet' ? BASE_SEPOLIA : BASE_MAINNET
 export const OPTIMISM_CHAIN = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
@@ -76,11 +77,6 @@ const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
   BNB: {
     name: 'BNB',
     symbol: 'BNB',
-    decimals: 18,
-  },
-  OPBNB: {
-    name: 'opBNB',
-    symbol: 'OPBNB',
     decimals: 18,
   },
   AVAX: {
@@ -279,7 +275,7 @@ const CHAINS: { [key: number]: Chain } = {
     id: `0x${OPBNB_MAINNET.toString(16)}`,
     label: 'opBNB',
     icon: 'OPBNB',
-    token: NATIVE_CURRENCIES.OPBNB.symbol,
+    token: NATIVE_CURRENCIES.BNB.symbol,
     rpcUrl: 'https://opbnb-rpc.publicnode.com',
     blockExplorerUrl: 'https://opbnbscan.com',
     secondaryTokens: SECONDARY_TOKENS[OPBNB_MAINNET],

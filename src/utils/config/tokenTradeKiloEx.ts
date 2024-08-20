@@ -1,4 +1,4 @@
-import { ProtocolTokenMapping, TokenCollateral } from './trades'
+import { ProtocolTokenMapping } from './trades'
 
 const KILOEX_OPBNB_PAIRS = {
   'KILOEX_OPBNB-1': 'ETH',
@@ -65,16 +65,14 @@ const KILOEX_OPBNB_PAIRS = {
   'KILOEX_OPBNB-67': 'ZK',
   'KILOEX_OPBNB-69': 'IO',
   'KILOEX_OPBNB-70': 'BLUR',
+  'KILOEX_OPBNB-71': 'AAVE',
+  'KILOEX_OPBNB-72': 'STORJ',
+  'KILOEX_OPBNB-73': 'MKR',
+  'KILOEX_OPBNB-74': 'TAO',
+  'KILOEX_OPBNB-75': 'TON',
+  'KILOEX_OPBNB-76': 'NOT',
   'KILOEX_OPBNB-101': 'CAKE',
   'KILOEX_OPBNB-103': 'ARB',
-}
-
-const TOKEN_COLLATERAL_KILOEX_OPBNB: Record<string, TokenCollateral> = {
-  '0x9e5AAC1Ba1a2e6aEd6b32689DFcF62A509Ca96f3': {
-    address: '0x9e5AAC1Ba1a2e6aEd6b32689DFcF62A509Ca96f3',
-    symbol: 'USDT',
-    decimals: 18,
-  },
 }
 
 const TOKEN_TRADE_KILOEX_OPBNB = Object.entries(KILOEX_OPBNB_PAIRS).reduce<ProtocolTokenMapping>(
@@ -89,4 +87,4 @@ const TOKEN_TRADE_KILOEX_OPBNB = Object.entries(KILOEX_OPBNB_PAIRS).reduce<Proto
   {}
 )
 
-export { TOKEN_TRADE_KILOEX_OPBNB, TOKEN_COLLATERAL_KILOEX_OPBNB }
+export { TOKEN_TRADE_KILOEX_OPBNB }

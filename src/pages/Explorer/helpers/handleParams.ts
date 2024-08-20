@@ -1,4 +1,4 @@
-import { ConditionFormValues, RowValues } from 'components/ConditionFilterForm/types'
+import { ConditionFormValues, RowValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData, TraderDataKey } from 'entities/trader'
 import { ConditionType } from 'utils/types'
 

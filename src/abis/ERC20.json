@@ -167,8 +167,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "decimals",
     "outputs": [
       {
@@ -229,8 +228,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "mint",
     "outputs": [
       {
@@ -243,8 +241,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "name",
     "outputs": [
       {
@@ -257,8 +254,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "symbol",
     "outputs": [
       {
@@ -271,8 +267,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "totalSupply",
     "outputs": [
       {

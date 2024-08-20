@@ -3,11 +3,11 @@ import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { searchPositionDetailByTxHashApi } from 'apis/positionApis'
+import PositionTxResults from 'components/@position/PositionTxResults'
+import TraderPositionDetails from 'components/@position/TraderPositionDetails'
 import Container from 'components/@ui/Container'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
-import PositionDetails from 'components/PositionDetails'
-import PositionTxResults from 'components/PositionTxResults'
 import useSearchParams from 'hooks/router/useSearchParams'
 import Loading from 'theme/Loading'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
@@ -47,7 +47,12 @@ export default function PositionDetailsPage() {
           <NoDataFound message={<Trans>No Position Found</Trans>} />
         )}
         {!!positionId && (
-          <PositionDetails protocol={protocol} id={positionId} isDrawer={false} chartProfitId="position-detail-page" />
+          <TraderPositionDetails
+            protocol={protocol}
+            id={positionId}
+            isDrawer={false}
+            chartProfitId="position-detail-page"
+          />
         )}
         {!!txHash && !!account && !positionId && (
           <PositionTxResults

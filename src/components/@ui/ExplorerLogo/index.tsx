@@ -26,6 +26,7 @@ const ExplorerLogo = ({
     case ProtocolEnum.VELA_ARB:
     case CopyTradePlatformEnum.GNS_V8:
     case ProtocolEnum.YFX_ARB:
+    case ProtocolEnum.PERENNIAL_ARB:
       icon = 'ARBITRUM'
       break
 

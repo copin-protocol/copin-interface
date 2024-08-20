@@ -3,7 +3,7 @@ import create from 'zustand'
 import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
-import { tableSettings } from 'components/Tables/TraderListTable/dataConfig'
+import { tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
 
 interface StatsCustomizeState {
   customizeView: 'LIST' | 'GRID'

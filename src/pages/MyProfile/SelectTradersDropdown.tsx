@@ -4,13 +4,12 @@ import { Fragment } from 'react'
 import { GridProps } from 'styled-system'
 
 import Divider from 'components/@ui/Divider'
+import TraderAddress from 'components/@ui/TraderAddress'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-
-import { renderTrader } from './renderProps'
 
 export type TradersByProtocolValuesData = { address: string; status: 'deleted' | 'copying' }
 export type TradersByProtocolData = Record<ProtocolEnum, TradersByProtocolValuesData[]>
@@ -119,18 +118,24 @@ function ListTraderCheckboxes({
         rowGap: 2,
       }}
     >
-      {addresses.map((item) => {
-        const key = item
+      {addresses.map((address) => {
+        const key = address
         if (key == null) return <></>
         const isChecked = selectedTraders.includes(key)
         return (
           <Box py={2} key={key.toString()}>
             <ControlledCheckbox
               checked={isChecked}
-              label={renderTrader(item, undefined, {
-                sx: { gap: [1, 2] },
-                textSx: { minWidth: '71px', color: isDeleted ? 'neutral3' : 'neutral1' },
-              })}
+              label={
+                <TraderAddress
+                  address={address}
+                  options={{
+                    isLink: false,
+                    wrapperSx: { gap: [1, 2] },
+                    textSx: { minWidth: '71px', color: isDeleted ? 'neutral3' : 'neutral1' },
+                  }}
+                />
+              }
               size={16}
               onChange={() => handleToggleTrader(key)}
             />

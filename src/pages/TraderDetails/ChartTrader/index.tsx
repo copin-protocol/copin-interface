@@ -4,6 +4,9 @@ import React, { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTraderPnlStatsApi } from 'apis/statisticApi'
+import BarChartTraderPnL from 'components/@charts/BarChartTraderPnL'
+import LineChartPnL from 'components/@charts/LineChartPnL'
+import { parseTraderPnLStatisticData } from 'components/@charts/LineChartPnL/helpers'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 // import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -13,9 +16,6 @@ import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getDurationFromTimeFilter } from 'utils/helpers/transform'
-
-import ChartTraderDailyPnL from './ChartTraderDailyPnL'
-import ChartTraderPnL from './ChartTraderPnL'
 
 const ChartTrader = ({
   protocol,
@@ -105,9 +105,15 @@ const ChartTrader = ({
           </Flex>
           <Box flex="1 0 0" mt={1} sx={{ position: 'relative' }}>
             {isBarChart ? (
-              <ChartTraderDailyPnL data={stats} isLoading={loadingStats} from={from} to={to} />
+              <BarChartTraderPnL data={stats} isLoading={loadingStats} from={from} to={to} />
             ) : (
-              <ChartTraderPnL data={stats} isLoading={loadingStats} from={from} to={to} />
+              <LineChartPnL
+                data={parseTraderPnLStatisticData(stats)}
+                isCumulativeData={false}
+                isLoading={loadingStats}
+                from={from}
+                to={to}
+              />
             )}
           </Box>
         </>

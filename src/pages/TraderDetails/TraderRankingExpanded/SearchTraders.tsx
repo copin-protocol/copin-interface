@@ -2,8 +2,8 @@
 import { Trans, t } from '@lingui/macro'
 
 import NoDataFound from 'components/@ui/NoDataFound'
+import TraderAddress from 'components/@ui/TraderAddress'
 import useSearchAllData from 'hooks/features/useSearchAllData'
-import { renderTrader } from 'pages/MyProfile/renderProps'
 import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
@@ -75,10 +75,14 @@ export default function SearchTraders({
                     onClick={() => props.onSelect(traderData)}
                     sx={{ py: '6px', px: 1, borderRadius: 'sm', '&:hover': { bg: 'neutral6' } }}
                   >
-                    {renderTrader(traderData.account, traderData.protocol, {
-                      isLink: false,
-                      textSx: { width: 80 },
-                    })}
+                    <TraderAddress
+                      address={traderData.account}
+                      protocol={traderData.protocol}
+                      options={{
+                        isLink: false,
+                        textSx: { width: 80 },
+                      }}
+                    />
                   </Box>
                 )
               })}

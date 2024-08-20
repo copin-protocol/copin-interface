@@ -6,7 +6,7 @@ import { formatRelativeDate } from 'utils/helpers/format'
 
 export default function GeneralStats({ traderData }: { traderData: TraderData | undefined }) {
   if (!traderData) return <></>
-  const { account, protocol, lastTradeAt, runTimeDays } = traderData
+  const { account, protocol, lastTradeAt, runTimeDays, smartAccount } = traderData
   return (
     <Box
       sx={{
@@ -42,7 +42,7 @@ export default function GeneralStats({ traderData }: { traderData: TraderData | 
             Balance:
           </LabelWithTooltip>
           <Type.Caption color="neutral1">
-            <BalanceText protocol={protocol} account={account} />
+            <BalanceText protocol={protocol} account={account} smartAccount={smartAccount} />
           </Type.Caption>
         </Box>
         <Box textAlign="center" flex={['1', 'none']}>

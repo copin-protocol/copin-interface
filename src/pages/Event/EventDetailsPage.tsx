@@ -26,17 +26,15 @@ import {
 import banner from 'assets/images/event-banner.png'
 import registerSuccess from 'assets/images/register-event-success.png'
 import logo from 'assets/logo.svg'
+import { useClickLoginButton } from 'components/@auth/LoginAction'
+import RankingNumber from 'components/@trader/TraderLeaderboardTableView/RankingNumber'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
-import Table from 'components/@ui/Table'
-import { ColumnData } from 'components/@ui/Table/types'
+import RewardWithSymbol from 'components/@ui/RewardWithSymbol'
 import ToastBody from 'components/@ui/ToastBody'
-import CreateSmartWalletAction from 'components/CreateSmartWalletAction'
-import EventTradingProtocols from 'components/EventTradingProtocols'
-import { useClickLoginButton } from 'components/LoginAction'
-import RewardWithSymbol from 'components/RewardWithSymbol'
-import { RankingInfo } from 'components/TopLeadboard/ColumnsData'
-import ReferralStatus from 'components/WalletDetailsCard/ReferralStatus'
+import CreateSmartWalletAction from 'components/@wallet/CreateSmartWalletAction'
+import ReferralStatus from 'components/@wallet/WalletReferralStatus'
+import EventTradingProtocols from 'components/@widgets/EventTradingProtocols'
 import { CopyWalletData } from 'entities/copyWallet'
 import { EventDetailsData, TradingEventStatusEnum, UserEventRankingData } from 'entities/event'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
@@ -49,6 +47,8 @@ import Dropdown from 'theme/Dropdown'
 import Modal from 'theme/Modal'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { TabConfig, TabHeader } from 'theme/Tab'
+import Table from 'theme/Table'
+import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Image, Li, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { CEX_EXCHANGES, DATE_FORMAT, DEFAULT_PROTOCOL, LINKS, TIME_FORMAT } from 'utils/config/constants'
@@ -499,7 +499,7 @@ function LeaderBoard({ tradingEventId, rewardSymbol }: { tradingEventId: string 
         style: { minWidth: '100px', textAlign: 'left' },
         render: (item) => (
           <Box sx={{ display: 'flex', height: '41px', alignItems: 'center' }}>
-            <RankingInfo ranking={item.ranking} />
+            <RankingNumber ranking={item.ranking} />
           </Box>
         ),
       },
@@ -577,7 +577,7 @@ function LeaderBoard({ tradingEventId, rewardSymbol }: { tradingEventId: string 
               <Box key={_d.username} sx={{ mx: 3, py: 12 }}>
                 <Flex mb={12} sx={{ alignItems: 'center', gap: 2 }}>
                   <Box sx={{ width: '40px' }}>
-                    <RankingInfo ranking={_d.ranking} />
+                    <RankingNumber ranking={_d.ranking} />
                   </Box>
                   <Type.CaptionBold>{addressShorten(_d.username)}</Type.CaptionBold>
                 </Flex>

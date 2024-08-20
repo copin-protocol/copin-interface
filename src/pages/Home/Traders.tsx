@@ -6,14 +6,14 @@ import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
 import { getTradersApi } from 'apis/traderApis'
+import BacktestSimpleModal from 'components/@backtest/BacktestSimpleModal'
+import LineChartTraderPnl from 'components/@charts/LineChartPnL'
+import { parsePnLStatsData } from 'components/@charts/LineChartPnL/helpers'
+import CopyTraderButton from 'components/@copyTrade/CopyTraderButton'
+import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
-import SimpleBacktestModal from 'components/BacktestModal/SimpleBacktestModal'
-import ChartTraderPnL from 'components/Charts/ChartTraderPnL'
-import { parsePnLStatsData } from 'components/Charts/ChartTraderPnL/helpers'
-import CopyTraderButton from 'components/CopyTraderButton'
-import FavoriteButton from 'components/FavoriteButton'
-import TraderAddress from 'components/TraderAddress'
+import TraderAddress from 'components/@ui/TraderAddress'
 import { TraderData } from 'entities/trader'
 import useInternalRole from 'hooks/features/useInternalRole'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
@@ -367,7 +367,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
         </Box>
       </Box>
       <Box display="none">
-        <SimpleBacktestModal
+        <BacktestSimpleModal
           key={selectedTrader?.account ?? '' + selectedTrader?.protocol ?? ''}
           isOpen={!!selectedTrader}
           onDismiss={() => {
@@ -486,7 +486,14 @@ function TraderItem({
       </Flex>
 
       <Box mt={3} mb={20} sx={{ height: 60 }}>
-        <ChartTraderPnL data={parsePnLStatsData(traderData.pnlStatistics)} dayCount={timeOption.value} height={30} />
+        <LineChartTraderPnl
+          data={parsePnLStatsData(traderData.pnlStatistics)}
+          isCumulativeData={false}
+          dayCount={timeOption.value}
+          isSimple
+          hasBalanceText={false}
+          height={30}
+        />
       </Box>
 
       <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: '1fr 1.3fr 1fr' }}>

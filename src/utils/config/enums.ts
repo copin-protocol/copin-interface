@@ -26,6 +26,7 @@ export enum ProtocolEnum {
   YFX_ARB = 'YFX_ARB',
   KILOEX_OPBNB = 'KILOEX_OPBNB',
   ROLLIE_SCROLL = 'ROLLIE_SCROLL',
+  PERENNIAL_ARB = 'PERENNIAL_ARB',
 }
 
 export enum UserRoleEnum {

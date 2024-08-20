@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 
 import { generateLinkBotAlertApi, getBotAlertApi } from 'apis/alertApis'
 import ToastBody from 'components/@ui/ToastBody'
-import LinkBotAlertModal from 'components/Modal/LinkBotAlertModal'
+import LinkBotAlertModal from 'components/@widgets/LinkBotAlertModal'
 import { BotAlertData } from 'entities/alert'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { QUERY_KEYS } from 'utils/config/keys'

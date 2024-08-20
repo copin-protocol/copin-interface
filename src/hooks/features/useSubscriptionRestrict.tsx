@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { useClickLoginButton } from 'components/LoginAction'
+import { useClickLoginButton } from 'components/@auth/LoginAction'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import useSubscriptionRestrictStore, { RestrictState } from 'hooks/store/useSubscriptionRestrictStore'
 import { CopyTradeStatusEnum, MaxCopyTradeQuotaEnum, SubscriptionPlanEnum } from 'utils/config/enums'

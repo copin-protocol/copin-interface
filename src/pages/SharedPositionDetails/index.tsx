@@ -2,9 +2,9 @@ import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getSharedPositionSettingApi } from 'apis/shareApis'
+import TraderPositionDetails from 'components/@position/TraderPositionDetails'
 import Container from 'components/@ui/Container'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import PositionDetails from 'components/PositionDetails'
 import Loading from 'theme/Loading'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -28,7 +28,7 @@ export default function SharedPositionDetailsPage() {
       <CustomPageTitle title="Position Details" />
       <Container maxWidth={{ lg: 1000 }}>
         {data?.query?.positionId && (
-          <PositionDetails
+          <TraderPositionDetails
             isDrawer={false}
             protocol={protocol}
             id={data?.query.positionId}

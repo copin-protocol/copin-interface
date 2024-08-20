@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
-import { VerticalDivider } from 'components/@ui/Table/renderProps'
+import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { addressShorten } from 'utils/helpers/format'

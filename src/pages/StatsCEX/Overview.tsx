@@ -1,17 +1,15 @@
-// eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getDepthCEXStatsApi } from 'apis/cexStatsApis'
+import { exchangeOptions as copyTradeExchangeOptions } from 'components/@copyTrade/configs'
 import Container from 'components/@ui/Container'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
-import Table from 'components/@ui/Table'
-import { VerticalDivider } from 'components/@ui/Table/renderProps'
-import { ColumnData, TableSortProps } from 'components/@ui/Table/types'
-import { ExchangeOptions, getExchangeOption } from 'components/CopyTradeForm/configs'
+import TraderAddress from 'components/@ui/TraderAddress'
+import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { FormattedDepthPairData } from 'entities/cexStats'
 import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
@@ -19,6 +17,8 @@ import { ALL_TOKEN_PARAM } from 'pages/TopOpenings/configs'
 import IconButton from 'theme/Buttons/IconButton'
 import Drawer from 'theme/Modal/Drawer'
 import Select from 'theme/Select'
+import Table from 'theme/Table'
+import { ColumnData, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
@@ -27,7 +27,6 @@ import { TokenOptionProps } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
 import { parseMarketImage } from 'utils/helpers/transform'
 
-import { renderTrader } from '../MyProfile/renderProps'
 import DepthPairDetails from './DepthPairDetails'
 import ExchangeFilter, { ExchangeFilterProps } from './ExchangeFilter'
 import TraderFilter, { TraderFilterProps } from './TraderFilter'
@@ -35,13 +34,7 @@ import TraderFilter, { TraderFilterProps } from './TraderFilter'
 type ExternalSource = {
   totalPairs: number
 }
-const internalExchangeOptions: ExchangeOptions[] = [
-  getExchangeOption(CopyTradePlatformEnum.BINGX),
-  getExchangeOption(CopyTradePlatformEnum.BITGET),
-  getExchangeOption(CopyTradePlatformEnum.BYBIT),
-  getExchangeOption(CopyTradePlatformEnum.OKX),
-  getExchangeOption(CopyTradePlatformEnum.GATE),
-]
+
 const ALLOW_DEPTH_HISTORIES = [CopyTradePlatformEnum.BINANCE, CopyTradePlatformEnum.BYBIT]
 export default function Overview() {
   const { sm } = useResponsive()
@@ -61,7 +54,7 @@ export default function Overview() {
     return {
       id: e,
       value: e,
-      label: e === ALL_TOKEN_PARAM ? 'All Traders' : renderTrader(e, undefined, { isLink: false }),
+      label: e === ALL_TOKEN_PARAM ? 'All Traders' : <TraderAddress address={e} />,
     }
   })
   const { currentOption: currentTrader, changeCurrentOption: changeTrader } = useOptionChange({
@@ -69,7 +62,7 @@ export default function Overview() {
     options: traderOptions,
   })
 
-  const exchangeOptions: ExchangeFilterProps[] = internalExchangeOptions.map((e) => {
+  const exchangeOptions: ExchangeFilterProps[] = copyTradeExchangeOptions.map((e) => {
     return {
       id: e.value,
       label: e.label,

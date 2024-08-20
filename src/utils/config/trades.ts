@@ -1,5 +1,6 @@
 // TODO: Check when add new protocol
 import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
+import { TokenCollateral } from 'utils/types'
 import {
   ARBITRUM_MAINNET,
   BASE_MAINNET,
@@ -15,7 +16,17 @@ import {
   SCROLL_MAINNET,
 } from 'utils/web3/chains'
 
-import { TOKEN_COLLATERAL_APOLLOX_BNB, TOKEN_TRADE_APOLLOX_BNB } from './tokenTradeApolloX'
+import { TOKEN_COLLATERAL_ARB } from './tokenCollateralArb'
+import { TOKEN_COLLATERAL_BASE } from './tokenCollateralBase'
+import { TOKEN_COLLATERAL_BLAST } from './tokenCollateralBlast'
+import { TOKEN_COLLATERAL_BNB } from './tokenCollateralBnb'
+import { TOKEN_COLLATERAL_MANTLE } from './tokenCollateralMantle'
+import { TOKEN_COLLATERAL_MODE } from './tokenCollateralMode'
+import { TOKEN_COLLATERAL_OPTIMISTIC } from './tokenCollateralOp'
+import { TOKEN_COLLATERAL_OPBNB } from './tokenCollateralOpBnb'
+import { TOKEN_COLLATERAL_POLYGON } from './tokenCollateralPolygon'
+import { TOKEN_COLLATERAL_SCROLL } from './tokenCollateralScroll'
+import { TOKEN_TRADE_APOLLOX_BNB } from './tokenTradeApolloX'
 import { TOKEN_TRADE_AVANTIS_BASE } from './tokenTradeAvantis'
 import { TOKEN_TRADE_BLOOM_BLAST } from './tokenTradeBloom'
 import { TOKEN_TRADE_EQUATION_ARB } from './tokenTradeEquation'
@@ -24,13 +35,14 @@ import { TOKEN_TRADE_GMX_V2 } from './tokenTradeGmxV2'
 import { TOKEN_TRADE_GNS } from './tokenTradeGns'
 import { TOKEN_TRADE_GNS_POLY } from './tokenTradeGnsPoly'
 import { TOKEN_TRADE_HMX_ARB } from './tokenTradeHmx'
-import { TOKEN_COLLATERAL_KILOEX_OPBNB, TOKEN_TRADE_KILOEX_OPBNB } from './tokenTradeKiloEx'
-import { TOKEN_COLLATERAL_KTX_MANTLE, TOKEN_TRADE_KTX_MANTLE } from './tokenTradeKtx'
+import { TOKEN_TRADE_KILOEX_OPBNB } from './tokenTradeKiloEx'
+import { TOKEN_TRADE_KTX_MANTLE } from './tokenTradeKtx'
 import { TOKEN_TRADE_LEVEL_ARB, TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
 import { TOKEN_TRADE_LOGX_BLAST, TOKEN_TRADE_LOGX_MODE } from './tokenTradeLogX'
-import { TOKEN_COLLATERAL_MUX_ARB, TOKEN_TRADE_MUX_ARB } from './tokenTradeMux'
+import { TOKEN_TRADE_MUX_ARB } from './tokenTradeMux'
 import { TOKEN_TRADE_MYX_ARB } from './tokenTradeMyx'
-import { TOKEN_COLLATERAL_ROLLIE_SCROLL, TOKEN_TRADE_ROLLIE_SCROLL } from './tokenTradeRollie'
+import { TOKEN_TRADE_PERENNIAL_ARB } from './tokenTradePerennial'
+import { TOKEN_TRADE_ROLLIE_SCROLL } from './tokenTradeRollie'
 import { TOKEN_TRADE_SYNTHETIX } from './tokenTradeSynthetix'
 import { TOKEN_TRADE_SYNTHETIX_V3 } from './tokenTradeSynthetixV3'
 import { TOKEN_TRADE_TIGRIS_ARB } from './tokenTradeTigris'
@@ -147,6 +159,10 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: SCROLL_MAINNET,
     explorerUrl: CHAINS[SCROLL_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.PERENNIAL_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
 }
 export interface TokenTrade {
   address: string
@@ -157,13 +173,6 @@ export interface TokenTrade {
   // icon: string
 }
 export type ProtocolTokenMapping = { [address: string]: { symbol: string } }
-export interface TokenCollateral {
-  address: string
-  symbol: string
-  decimals: number
-  copyV3MarketId?: number
-  // icon: string
-}
 
 export type TokenOptionProps = {
   id: string
@@ -214,6 +223,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.YFX_ARB]: TOKEN_TRADE_YFX_ARB,
   [ProtocolEnum.KILOEX_OPBNB]: TOKEN_TRADE_KILOEX_OPBNB,
   [ProtocolEnum.ROLLIE_SCROLL]: TOKEN_TRADE_ROLLIE_SCROLL,
+  [ProtocolEnum.PERENNIAL_ARB]: TOKEN_TRADE_PERENNIAL_ARB,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -230,285 +240,34 @@ export const TOKEN_TRADE_IGNORE: TokenIgnore = {
 }
 
 export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
-  [ProtocolEnum.KTX_MANTLE]: {
-    ...TOKEN_COLLATERAL_KTX_MANTLE,
-  },
-  [ProtocolEnum.COPIN]: {
-    '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
-      address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      symbol: 'SUSD',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.SYNTHETIX_V3]: {
-    '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
-      address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      symbol: 'USDC',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.VELA_ARB]: {
-    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
-      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      symbol: 'USDC',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.DEXTORO]: {
-    '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
-      address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      symbol: 'SUSD',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.CYBERDEX]: {
-    '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
-      address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      symbol: 'SUSD',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.HMX_ARB]: {
-    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
-      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      symbol: 'USDC',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.MYX_ARB]: {
-    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
-      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      symbol: 'USDC',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.LOGX_MODE]: {
-    '0xd988097fb8612cc24eeC14542bC03424c656005f': {
-      address: '0xd988097fb8612cc24eeC14542bC03424c656005f',
-      symbol: 'USDC',
-      decimals: 18,
-    },
-    '0xf0F161fDA2712DB8b566946122a5af183995e2eD': {
-      address: '0xf0F161fDA2712DB8b566946122a5af183995e2eD',
-      symbol: 'USDT',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.LOGX_BLAST]: {
-    '0x4300000000000000000000000000000000000003': {
-      address: '0x4300000000000000000000000000000000000003',
-      symbol: 'USDB',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.TIGRIS_ARB]: {
-    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1': {
-      address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-      symbol: 'ETH',
-      decimals: 18,
-    },
-    '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9': {
-      address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-      symbol: 'USDT',
-      decimals: 18,
-    },
-    '0x7E491F53bF807f836E2dd6C4A4FBd193e1913EFd': {
-      address: '0x7E491F53bF807f836E2dd6C4A4FBd193e1913EFd',
-      symbol: 'tigUSD',
-      decimals: 18,
-    },
-    '0x763E061856b3e74a6C768a859DC2543A56D299d5': {
-      address: '0x763E061856b3e74a6C768a859DC2543A56D299d5',
-      symbol: 'tigETH',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.AVANTIS_BASE]: {
-    '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': {
-      address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-      symbol: 'USDC',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.APOLLOX_BNB]: {
-    ...TOKEN_COLLATERAL_APOLLOX_BNB,
-  },
-  [ProtocolEnum.BLOOM_BLAST]: {
-    '0x4300000000000000000000000000000000000003': {
-      address: '0x4300000000000000000000000000000000000003',
-      symbol: 'USDB',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.EQUATION_ARB]: {},
-  [ProtocolEnum.LEVEL_BNB]: {},
-  [ProtocolEnum.LEVEL_ARB]: {},
-  [ProtocolEnum.MUX_ARB]: {
-    ...TOKEN_COLLATERAL_MUX_ARB,
-  },
-  [ProtocolEnum.GNS]: {},
-  [ProtocolEnum.GNS_POLY]: {},
-  [ProtocolEnum.GMX]: {},
-  [ProtocolEnum.GMX_V2]: {},
-  [ProtocolEnum.KWENTA]: {
-    '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
-      address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      symbol: 'SUSD',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.POLYNOMIAL]: {
-    '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9': {
-      address: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
-      symbol: 'SUSD',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.YFX_ARB]: {
-    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': {
-      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-      symbol: 'USDC',
-      decimals: 18,
-    },
-  },
-  [ProtocolEnum.KILOEX_OPBNB]: {
-    ...TOKEN_COLLATERAL_KILOEX_OPBNB,
-  },
-  [ProtocolEnum.ROLLIE_SCROLL]: {
-    ...TOKEN_COLLATERAL_ROLLIE_SCROLL,
-  },
-}
-
-// Todo: Check when add new protocol
-export const TOKEN_ADDRESSES = {
-  [ProtocolEnum.GMX_V2]: {
-    BTC: '0x47c031236e19d024b42f8AE6780E44A573170703',
-    ETH: '0x70d95587d40A2caf56bd97485aB3Eec10Bee6336',
-  },
-  [ProtocolEnum.GMX]: {
-    BTC: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-  },
-  [ProtocolEnum.KWENTA]: {
-    BTC: '0x59b007E9ea8F89b069c43F8f45834d30853e3699',
-    ETH: '0x2B3bb4c683BFc5239B029131EEf3B1d214478d93',
-  },
-  [ProtocolEnum.POLYNOMIAL]: {
-    BTC: '0x59b007E9ea8F89b069c43F8f45834d30853e3699',
-    ETH: '0x2B3bb4c683BFc5239B029131EEf3B1d214478d93',
-  },
-  [ProtocolEnum.LEVEL_BNB]: {
-    BTC: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
-    ETH: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
-  },
-  [ProtocolEnum.LEVEL_ARB]: {
-    BTC: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-  },
-  [ProtocolEnum.GNS]: {
-    BTC: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    ARB: '0x912CE59144191C1204E64559FE8253a0e49E6548',
-    DAI: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-    USDT: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-  },
-  [ProtocolEnum.GNS_POLY]: {
-    BTC: '0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6',
-    ETH: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
-  },
-  [ProtocolEnum.MUX_ARB]: {
-    BTC: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    ARB: '0x912CE59144191C1204E64559FE8253a0e49E6548',
-    DAI: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-    USDT: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-  },
-  [ProtocolEnum.EQUATION_ARB]: {
-    BTC: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    ARB: '0x912CE59144191C1204E64559FE8253a0e49E6548',
-    DAI: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-    USDT: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-  },
-  [ProtocolEnum.BLOOM_BLAST]: {
-    ETH: '0x4300000000000000000000000000000000000004',
-    USDB: '0x4300000000000000000000000000000000000003',
-  },
-  [ProtocolEnum.APOLLOX_BNB]: {
-    BTC: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
-    ETH: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
-    USDC: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-    BUSD: '0x55d398326f99059fF775485246999027B3197955',
-    LUSD: '0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5',
-  },
-  [ProtocolEnum.AVANTIS_BASE]: {
-    ETH: '0x4200000000000000000000000000000000000006',
-    USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-  },
-  [ProtocolEnum.TIGRIS_ARB]: {
-    tigUSD: '0x7E491F53bF807f836E2dd6C4A4FBd193e1913EFd',
-    tigETH: '0x763E061856b3e74a6C768a859DC2543A56D299d5',
-    USDT: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-  },
-  [ProtocolEnum.LOGX_BLAST]: {
-    ETH: '0x4300000000000000000000000000000000000004',
-    USDB: '0x4300000000000000000000000000000000000003',
-  },
-  [ProtocolEnum.LOGX_MODE]: {
-    ETH: '0x4200000000000000000000000000000000000006',
-    USDC: '0xd988097fb8612cc24eeC14542bC03424c656005f',
-    USDT: '0xf0F161fDA2712DB8b566946122a5af183995e2eD',
-  },
-  [ProtocolEnum.MYX_ARB]: {
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-  },
-  [ProtocolEnum.HMX_ARB]: {
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-  },
-  [ProtocolEnum.DEXTORO]: {
-    BTC: '0x59b007E9ea8F89b069c43F8f45834d30853e3699',
-    ETH: '0x2B3bb4c683BFc5239B029131EEf3B1d214478d93',
-  },
-  [ProtocolEnum.CYBERDEX]: {
-    BTC: '0x59b007E9ea8F89b069c43F8f45834d30853e3699',
-    ETH: '0x2B3bb4c683BFc5239B029131EEf3B1d214478d93',
-  },
-  [ProtocolEnum.VELA_ARB]: {
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-  },
-  [ProtocolEnum.SYNTHETIX_V3]: {
-    ETH: '0x4200000000000000000000000000000000000006',
-    USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-  },
-  [ProtocolEnum.COPIN]: {
-    BTC: '0x59b007E9ea8F89b069c43F8f45834d30853e3699',
-    ETH: '0x2B3bb4c683BFc5239B029131EEf3B1d214478d93',
-  },
-  [ProtocolEnum.KTX_MANTLE]: {
-    BTC: '0xCAbAE6f6Ea1ecaB08Ad02fE02ce9A44F09aebfA2',
-    ETH: '0xdEAddEaDdeadDEadDEADDEAddEADDEAddead1111',
-  },
-  [ProtocolEnum.YFX_ARB]: {
-    ETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-  },
-  [ProtocolEnum.KILOEX_OPBNB]: {
-    BTC: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
-    ETH: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
-    USDT: '0x9e5AAC1Ba1a2e6aEd6b32689DFcF62A509Ca96f3',
-  },
-  [ProtocolEnum.ROLLIE_SCROLL]: {
-    BTC: '0x3C1BCa5a656e69edCD0D4E36BEbb3FcDAcA60Cf1',
-    ETH: '0x5300000000000000000000000000000000000004',
-    USDC: '0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4',
-  },
+  [ProtocolEnum.KTX_MANTLE]: TOKEN_COLLATERAL_MANTLE,
+  [ProtocolEnum.COPIN]: TOKEN_COLLATERAL_OPTIMISTIC,
+  [ProtocolEnum.SYNTHETIX_V3]: TOKEN_COLLATERAL_BASE,
+  [ProtocolEnum.VELA_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.DEXTORO]: TOKEN_COLLATERAL_OPTIMISTIC,
+  [ProtocolEnum.CYBERDEX]: TOKEN_COLLATERAL_OPTIMISTIC,
+  [ProtocolEnum.HMX_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.MYX_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.LOGX_MODE]: TOKEN_COLLATERAL_MODE,
+  [ProtocolEnum.LOGX_BLAST]: TOKEN_COLLATERAL_BLAST,
+  [ProtocolEnum.TIGRIS_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.AVANTIS_BASE]: TOKEN_COLLATERAL_BASE,
+  [ProtocolEnum.APOLLOX_BNB]: TOKEN_COLLATERAL_BNB,
+  [ProtocolEnum.BLOOM_BLAST]: TOKEN_COLLATERAL_BLAST,
+  [ProtocolEnum.EQUATION_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.LEVEL_BNB]: TOKEN_COLLATERAL_BNB,
+  [ProtocolEnum.LEVEL_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.MUX_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.GNS]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.GNS_POLY]: TOKEN_COLLATERAL_POLYGON,
+  [ProtocolEnum.GMX]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.GMX_V2]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.KWENTA]: TOKEN_COLLATERAL_OPTIMISTIC,
+  [ProtocolEnum.POLYNOMIAL]: TOKEN_COLLATERAL_OPTIMISTIC,
+  [ProtocolEnum.YFX_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.KILOEX_OPBNB]: TOKEN_COLLATERAL_OPBNB,
+  [ProtocolEnum.ROLLIE_SCROLL]: TOKEN_COLLATERAL_SCROLL,
+  [ProtocolEnum.PERENNIAL_ARB]: TOKEN_COLLATERAL_ARB,
 }
 
 export const SYNTHETIX_MARKETS: { [key: number]: string[] } = {
@@ -650,6 +409,13 @@ export function getSymbolByTokenTrade(protocol: ProtocolEnum): Record<string, st
   }, {})
   return result
 }
+export function getIndexTokensBySymbol(protocol: ProtocolEnum): Record<string, string[]> {
+  const tokens = TOKEN_TRADE_SUPPORT[protocol] ?? {}
+  const result = Object.entries(tokens).reduce<Record<string, string[]>>((_r, [key, value]) => {
+    return { ..._r, [value.symbol]: [...(_r[value.symbol] ?? []), key] }
+  }, {})
+  return result
+}
 
 export function getSymbolsFromIndexTokens(protocol: ProtocolEnum, indexTokens: string[]): string[] {
   const tokens = TOKEN_TRADE_SUPPORT[protocol] ?? {}
@@ -675,6 +441,27 @@ export function getIndexTokensFromSymbols(protocol: ProtocolEnum, symbols: strin
     .flat()
     .filter((v) => !!v)
   return indexTokens
+}
+
+export function getSymbolTradingView(symbol: string) {
+  switch (symbol) {
+    case '1000PEPE':
+      return 'PEPE'
+    case '1000BONK':
+      return 'BONK'
+    default:
+      return symbol
+  }
+}
+export function getPriceTradingView(symbol: string, price?: number) {
+  if (!price) return
+  switch (symbol) {
+    case '1000PEPE':
+    case '1000BONK':
+      return price / 1000
+    default:
+      return price
+  }
 }
 
 export const GMX_CLOSE_POSITION_TOPIC = '0x73af1d417d82c240fdb6d319b34ad884487c6bf2845d98980cc52ad9171cb455'

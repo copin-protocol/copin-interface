@@ -1,5 +1,5 @@
+import BacktestSingleResult from 'components/@backtest/BacktestSingleResult'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import SingleBacktestResult from 'components/BacktestResult/SingleBacktestResult'
 import useGetSharedBacktest from 'hooks/features/useGetSharedBacktest'
 import Loading from 'theme/Loading'
 import { Box, Type } from 'theme/base'
@@ -34,7 +34,7 @@ export default function SharedBacktestSingle() {
   return sharedBacktestSetting && sharedBacktestResult && sharedBacktestResult.length === 1 ? (
     <>
       <CustomPageTitle title={`Backtesting ${sharedBacktestSetting.query.setting.accounts[0]}`} />
-      <SingleBacktestResult
+      <BacktestSingleResult
         protocol={protocol}
         results={sharedBacktestResult}
         settings={sharedBacktestSetting.query.setting}

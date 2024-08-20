@@ -11,3 +11,13 @@ export type FilterCondition = {
   in?: string[]
   conditionType: ConditionType
 }
+
+export interface TokenCollateral {
+  address: string
+  symbol: string
+  decimals: number
+  copyV3MarketId?: number
+  isStableCoin?: boolean
+}
+
+export type TokenCollateralMapping = Record<string, TokenCollateral>
