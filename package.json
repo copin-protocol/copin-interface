@@ -113,6 +113,7 @@
     "react-spring": "9.6.1",
     "react-toastify": "9.1.1",
     "react-tooltip": "5.8.1",
+    "react-use-websocket": "4.8.1",
     "recharts": "2.7.1",
     "styled-components": "5.3.6",
     "styled-system": "5.1.5",

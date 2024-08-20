@@ -2,17 +2,17 @@ import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
 import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
+import { useParsedProtocol } from 'hooks/store/useProtocols'
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
+import { GAINS_TRADE_PROTOCOLS, NETWORK } from 'utils/config/constants'
 import { PYTH_IDS_MAPPING } from 'utils/config/pythIds'
 import ROUTES from 'utils/config/routes'
 import { TOKEN_TRADE_SUPPORT, TokenTrade } from 'utils/config/trades'
 
-import { NETWORK } from '../config/constants'
-
 const PYTH_PRICE_FEED_URL = NETWORK === 'devnet' ? 'https://hermes.pyth.network' : 'https://hermes.copin.io'
 export const pyth = new EvmPriceServiceConnection(PYTH_PRICE_FEED_URL)
 
-const INTERVAL_TIME = 5 // s
+const INTERVAL_TIME = 3 // s
 const INCLUDE_PATH = [
   ROUTES.OPEN_INTEREST.path_prefix,
   ROUTES.POSITION_DETAILS.path_prefix,
@@ -48,6 +48,10 @@ const TOKENS_BY_SYMBOL = ALL_TOKEN_SUPPORTS.reduce<Record<string, string[]>>((re
 export default function PythConnection() {
   const { setPrices, setIsReady } = useRealtimeUsdPricesStore()
   const { pathname } = useLocation()
+  const protocol = useParsedProtocol()
+  const isGains =
+    GAINS_TRADE_PROTOCOLS.some((protocol) => !!pathname.match(protocol)?.length) ||
+    GAINS_TRADE_PROTOCOLS.includes(protocol)
 
   const initiated = useRef(false)
   useEffect(() => {
@@ -61,7 +65,10 @@ export default function PythConnection() {
       ;(async () => {
         await pyth.startWebSocket()
 
-        const PYTH_IDS_CHUNKS = chunkArray(PYTH_IDS, 100)
+        const allPriceFeedIds = await pyth.getPriceFeedIds()
+        const availablePriceFeedIds = PYTH_IDS.filter((id) => allPriceFeedIds?.includes(id.split('0x')?.[1]))
+
+        const PYTH_IDS_CHUNKS = chunkArray(availablePriceFeedIds, 100)
 
         async function fetchAndProcessPriceFeeds() {
           let pricesData = {} as UsdPrices
@@ -74,11 +81,14 @@ export default function PythConnection() {
           setPrices(pricesData)
         }
 
-        await fetchAndProcessPriceFeeds()
+        if (!isGains) {
+          await fetchAndProcessPriceFeeds()
+        }
 
         setIsReady(true)
 
-        await pyth.subscribePriceFeedUpdates(PYTH_IDS, (price) => {
+        await pyth.subscribePriceFeedUpdates(availablePriceFeedIds, (price) => {
+          if (isGains) return
           const data = getPriceData({ price })
           if (!data) return
           for (let i = 0; i < data.tokenAddresses.length; i++) {

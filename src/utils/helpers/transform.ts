@@ -363,6 +363,12 @@ export const normalizePriceData = (
       } else {
         return value
       }
+    case 'SATS':
+      if (exchange && [CopyTradePlatformEnum.BYBIT].includes(exchange)) {
+        return isRevert ? value / 10000 : value * 10000
+      } else {
+        return value
+      }
     case 'MOG':
       if (exchange && [CopyTradePlatformEnum.BYBIT].includes(exchange)) {
         return isRevert ? value / 1000000 : value * 1000000

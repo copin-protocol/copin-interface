@@ -158,6 +158,8 @@ export const DCP_EXCHANGES: CopyTradePlatformEnum[] = [
   CopyTradePlatformEnum.SYNTHETIX_V3,
 ]
 
+export const GAINS_TRADE_PROTOCOLS = [ProtocolEnum.GNS, ProtocolEnum.GNS_POLY]
+
 export const DCP_SUPPORTED_PROTOCOLS = [
   ProtocolEnum.GMX_V2,
   ProtocolEnum.KWENTA,

@@ -16,23 +16,8 @@ const ProtocolContext = createContext<Context>({} as Context)
 export function ProtocolProvider({ children }: { children: any }) {
   // setNavProtocol to select protocol when click on navigation bar => reset when navigated
   const [navProtocol, setNavProtocol] = useState<string>()
-  const { search, pathname } = useLocation()
-  const searchParams = parsedQueryString(search)
 
-  // Old protocol route: /{protocol}/...
-  const parsedOldProtocolParam = RELEASED_PROTOCOLS.find(
-    (protocol) => pathname.split('/')?.[1]?.toUpperCase() === protocol
-  )
-  // New protocol route: .../{protocol}
-  const parsedProtocolParam = RELEASED_PROTOCOLS.find(
-    (protocol) => pathname.split('/')?.at(-1)?.split('-')?.[0]?.toUpperCase() === protocol
-  )
-  // from search params, use at home page
-  const parsedProtocolSearch = RELEASED_PROTOCOLS.find(
-    (protocol) => (searchParams.protocol as string)?.toUpperCase() === protocol
-  )
-
-  const protocol = parsedOldProtocolParam ?? parsedProtocolParam ?? parsedProtocolSearch ?? DEFAULT_PROTOCOL
+  const protocol = useParsedProtocol()
 
   const values = useMemo(() => ({ protocol, navProtocol, setNavProtocol }), [navProtocol, protocol])
 
@@ -49,6 +34,26 @@ export function useProtocolStore(selector?: (context: Context) => valueof<Contex
     return selector(context)
   }
   return context
+}
+
+export function useParsedProtocol() {
+  const { search, pathname } = useLocation()
+  const searchParams = parsedQueryString(search)
+
+  // Old protocol route: /{protocol}/...
+  const parsedOldProtocolParam = RELEASED_PROTOCOLS.find(
+    (protocol) => pathname.split('/')?.[1]?.toUpperCase() === protocol
+  )
+  // New protocol route: .../{protocol}
+  const parsedProtocolParam = RELEASED_PROTOCOLS.find(
+    (protocol) => pathname.split('/')?.at(-1)?.split('-')?.[0]?.toUpperCase() === protocol
+  )
+  // from search params, use at home page
+  const parsedProtocolSearch = RELEASED_PROTOCOLS.find(
+    (protocol) => (searchParams.protocol as string)?.toUpperCase() === protocol
+  )
+
+  return parsedOldProtocolParam ?? parsedProtocolParam ?? parsedProtocolSearch ?? DEFAULT_PROTOCOL
 }
 
 export function parseNavProtocol(navProtocol: string | undefined) {
