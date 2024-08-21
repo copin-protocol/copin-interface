@@ -26,19 +26,21 @@ export function usePlotPositionInformation({ chart, position }: Props) {
    * BUY ARROW
    */
   React.useEffect(() => {
-    const activeChart = chart?.activeChart()
-    if (!activeChart || !openedAt) {
-      return
-    }
+    try {
+      const activeChart = chart?.activeChart()
+      if (!activeChart || !openedAt || !activeChart.dataReady()) {
+        return
+      }
 
-    activeChart
-      .createExecutionShape()
-      .setText('')
-      .setTime(openedAt)
-      .setArrowHeight(32)
-      .setArrowSpacing(20)
-      .setArrowColor('#E6DAFE')
-      .setDirection('buy')
+      activeChart
+        .createExecutionShape()
+        .setText('')
+        .setTime(openedAt)
+        .setArrowHeight(32)
+        .setArrowSpacing(20)
+        .setArrowColor('#E6DAFE')
+        .setDirection('buy')
+    } catch (e) {}
   }, [chart, openedAt])
   /**
    * Position Line (PNL + SIZE)

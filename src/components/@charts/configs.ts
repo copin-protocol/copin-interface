@@ -40,6 +40,8 @@ const disabledFeatures: ChartingLibraryFeatureset[] = [
   'symbol_info',
   'compare_symbol_search_spread_operators',
   'show_symbol_logo_for_compare_studies',
+  'go_to_date',
+  'timeframes_toolbar',
 ]
 const enabledFeatures: ChartingLibraryFeatureset[] = [
   'show_exchange_logos',
@@ -51,9 +53,10 @@ const enabledFeatures: ChartingLibraryFeatureset[] = [
 ]
 
 const timeFrames = [
-  { text: '6M', resolution: '120', description: '6 Months' },
-  { text: '3M', resolution: '60', description: '3 Months' },
-  { text: '5d', resolution: '5', description: '5 Days' },
+  { text: '3M', resolution: '240', description: '3 Months' },
+  { text: '1M', resolution: '60', description: '1 Month' },
+  { text: '7D', resolution: '30', description: '7 Days' },
+  { text: '1D', resolution: '5', description: '1 Day' },
 ] as TimeFrameItem[]
 
 const supportTimezone = getCurrentTimezone() as Timezone

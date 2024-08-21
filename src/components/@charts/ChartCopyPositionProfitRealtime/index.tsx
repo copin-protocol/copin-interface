@@ -28,6 +28,7 @@ function CopyRealtimeChart({ position, orders }: Props) {
   const from = openBlockTime
   const to = useMemo(() => (isOpening ? dayjs().utc().valueOf() : closeBlockTime), [closeBlockTime, isOpening])
   const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])
+  const durationInSecond = (to - from) / 1000
   const decimals = 4
 
   const chartOpts = React.useMemo(() => {
@@ -36,7 +37,7 @@ function CopyRealtimeChart({ position, orders }: Props) {
       datafeed,
       container: chartContainer,
       symbol: symbol ? `${symbol}USD` : undefined,
-      interval: timeframe.toString() as ResolutionString,
+      interval: (durationInSecond < 1800 ? '1' : timeframe.toString()) as ResolutionString,
       custom_formatters: {
         priceFormatterFactory: (symbol, minTick) => {
           return {
