@@ -278,14 +278,20 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
                   <PercentText percent={latestROI} digit={2} />
                 </Type.H5>
                 <Type.H5 color="neutral3">)</Type.H5>
-                <IconBox
-                  icon={<Warning size={20} />}
-                  color="orange"
-                  sx={{ ml: 2 }}
-                  data-tooltip-id={TOOLTIP_CONTENT.COPY_PNL.id + 'copy_position'}
-                  data-tooltip-delay-show={260}
-                />
-                <Tooltip id={TOOLTIP_CONTENT.COPY_PNL.id + 'copy_position'}>{TOOLTIP_CONTENT.COPY_PNL.content}</Tooltip>
+                {!(!isOpening && data.exchange === CopyTradePlatformEnum.GNS_V8) && (
+                  <>
+                    <IconBox
+                      icon={<Warning size={20} />}
+                      color="orange"
+                      sx={{ ml: 2 }}
+                      data-tooltip-id={TOOLTIP_CONTENT.COPY_PNL.id + 'copy_position'}
+                      data-tooltip-delay-show={260}
+                    />
+                    <Tooltip id={TOOLTIP_CONTENT.COPY_PNL.id + 'copy_position'}>
+                      {TOOLTIP_CONTENT.COPY_PNL.content}
+                    </Tooltip>
+                  </>
+                )}
               </Flex>
               <Flex alignItems="center" sx={{ position: 'absolute', top: 2, left: 2 }}>
                 <ButtonWithIcon
