@@ -377,7 +377,13 @@ export function OrderChartComponent({ data, syncId }: { data: StatisticChartData
 
 export function VolumeChartComponent({ data, syncId }: { data: StatisticChartData[]; syncId?: string }) {
   return (
-    <ChartComponentWrapper colors={themeColors} data={data} syncId={syncId}>
+    <ChartComponentWrapper
+      colors={themeColors}
+      data={data}
+      syncId={syncId}
+      tooltip={DailyVolumeTooltip}
+      legend={DailyVolumeLegend}
+    >
       <YAxis
         width={YAXIS_WIDTH}
         orientation="right"
@@ -716,6 +722,80 @@ const DailyNetPnlLegend = ({ payload }: any) => {
   })
 
   const customPayload = [...exchangePayload, ...payload]
+
+  return (
+    <Flex
+      alignItems="center"
+      justifyContent="center"
+      // @ts-ignore
+      sx={{ '.recharts-legend-wrapper': { position: 'relative !important' } }}
+    >
+      <Legend payload={customPayload} />
+    </Flex>
+  )
+}
+
+const DailyVolumeTooltip = ({ payload }: TooltipProps) => {
+  const totalDailyVolume = payload
+    ?.filter((w) => w.dataKey !== 'volumeCumulative')
+    .reduce((acc, exchange) => acc + (exchange?.value ?? 0), 0)
+  const volumeCumulative = payload?.[payload?.length - 1]
+  const volumeCumulativeValue = volumeCumulative?.value ?? 0
+  const volumePayload = volumeCumulative?.payload
+  if (!volumePayload) {
+    return null
+  }
+
+  return (
+    <Flex flexDirection="column" p={3} backgroundColor="neutral7" sx={{ gap: 2 }}>
+      <Type.Body>{volumePayload?.date}</Type.Body>
+      <Flex alignItems="center" color={themeColors.primary2} sx={{ gap: 2 }}>
+        <Type.Body>Total Volume:</Type.Body>
+        <Type.Body>
+          {formatNumber(totalDailyVolume, totalDailyVolume < 1 && totalDailyVolume > -1 ? 1 : 0)}
+          {volumeCumulative?.unit ?? ''}
+        </Type.Body>
+      </Flex>
+      {EXCHANGE_STATS.map((exchange) => {
+        const volume = volumePayload?.exchanges[exchange]?.totalVolume
+        return !!volume ? (
+          <Flex key={exchange} alignItems="center" color={EXCHANGE_COLOR[exchange]} sx={{ gap: 2 }}>
+            <Type.Body>{PLATFORM_TEXT_TRANS[exchange]} :</Type.Body>
+            <Type.Body>
+              {formatNumber(volume, volume < 1 && volume > -1 ? 1 : 0)}
+              {volumeCumulative?.unit ?? ''}
+            </Type.Body>
+          </Flex>
+        ) : (
+          <></>
+        )
+      })}
+      <Flex alignItems="center" color={volumeCumulative?.color} sx={{ gap: 2 }}>
+        <Type.Body>{volumeCumulative?.name} :</Type.Body>
+        <Type.Body>
+          {formatNumber(volumeCumulativeValue, volumeCumulativeValue < 1 && volumeCumulativeValue > -1 ? 1 : 0)}
+          {volumeCumulative?.unit ?? ''}
+        </Type.Body>
+      </Flex>
+    </Flex>
+  )
+}
+
+const DailyVolumeLegend = ({ payload }: any) => {
+  const volumePayload = payload?.[0]?.payload
+  if (!volumePayload) {
+    return null
+  }
+
+  const customPayload = [
+    {
+      id: 'totalVolume',
+      value: 'Total Volume',
+      color: themeColors.primary2,
+      type: 'rect',
+    },
+    ...payload,
+  ]
 
   return (
     <Flex

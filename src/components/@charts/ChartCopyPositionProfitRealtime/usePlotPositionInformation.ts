@@ -40,19 +40,21 @@ export function usePlotPositionInformation({ chart, position, orders }: Props) {
 
   React.useEffect(() => {
     try {
-      const activeChart = chart?.activeChart()
-      if (!activeChart || !openedAt || !activeChart.dataReady()) {
-        return
-      }
+      chart?.onChartReady(() => {
+        const activeChart = chart?.activeChart()
+        if (!activeChart || !openedAt || !activeChart.dataReady()) {
+          return
+        }
 
-      activeChart
-        .createExecutionShape()
-        .setText('')
-        .setTime(openedAt)
-        .setArrowHeight(32)
-        .setArrowSpacing(20)
-        .setArrowColor('#E6DAFE')
-        .setDirection('buy')
+        activeChart
+          .createExecutionShape()
+          .setText('')
+          .setTime(openedAt)
+          .setArrowHeight(32)
+          .setArrowSpacing(20)
+          .setArrowColor('#E6DAFE')
+          .setDirection('buy')
+      })
     } catch (e) {}
   }, [chart, openedAt])
 
@@ -62,79 +64,81 @@ export function usePlotPositionInformation({ chart, position, orders }: Props) {
     let tpLine = tpLineRef.current
 
     try {
-      const activeChart = chart?.activeChart()
-      if (!activeChart || !entry || !symbol || !sizeDelta) {
-        return
-      }
+      chart?.onChartReady(() => {
+        const activeChart = chart?.activeChart()
+        if (!activeChart || !entry || !symbol || !sizeDelta) {
+          return
+        }
 
-      if (!line) {
-        line = activeChart.createPositionLine()
+        if (!line) {
+          line = activeChart.createPositionLine()
 
-        const color = position?.isLong ? themeColors.green1 : themeColors.red1
+          const color = position?.isLong ? themeColors.green1 : themeColors.red1
 
-        line
-          .setLineStyle(3)
-          .setPrice(entry)
-          .setQuantity(` ${formatNumber(sizeDelta)} ${symbol} `)
-          .setLineWidth(0.5)
-          .setLineColor(color)
-          .setBodyBackgroundColor(color)
-          .setBodyTextColor('#FFFFFF')
-          .setBodyBorderColor(color)
-          .setQuantityBackgroundColor('#E6DAFE')
-          .setQuantityTextColor('#000000')
-          .setQuantityBorderColor(color)
-      }
+          line
+            .setLineStyle(3)
+            .setPrice(entry)
+            .setQuantity(` ${formatNumber(sizeDelta)} ${symbol} `)
+            .setLineWidth(0.5)
+            .setLineColor(color)
+            .setBodyBackgroundColor(color)
+            .setBodyTextColor('#FFFFFF')
+            .setBodyBorderColor(color)
+            .setQuantityBackgroundColor('#E6DAFE')
+            .setQuantityTextColor('#000000')
+            .setQuantityBorderColor(color)
+        }
 
-      line.setText(` ${side} `)
+        line.setText(` ${side} `)
 
-      positionLineRef.current = line
+        positionLineRef.current = line
 
-      if (!slLine && position.latestStopLossId && position.stopLossAmount) {
-        slLine = activeChart?.createOrderLine()
-        const stopLossUsd = calcSLTPUsd(position.stopLossAmount, position.stopLossPrice, position.entryPrice)
+        if (!slLine && position.latestStopLossId && position.stopLossAmount) {
+          slLine = activeChart?.createOrderLine()
+          const stopLossUsd = calcSLTPUsd(position.stopLossAmount, position.stopLossPrice, position.entryPrice)
 
-        slLine
-          .setLineStyle(1)
-          .setLineColor(themeColors.orange1)
-          .setPrice(position?.stopLossPrice)
-          .setText(
-            `SL: -$${formatNumber(stopLossUsd, 2)}${
-              position.stopLossPrice ? ' - Est. Price: ' + formatNumber(position.stopLossPrice) : ''
-            }`
-          )
-          .setQuantity(`${position.stopLossAmount} ${symbol} `)
-          .setQuantityBackgroundColor(themeColors.orange1)
-          .setQuantityTextColor('#FFFFFF')
-          .setQuantityBorderColor(themeColors.orange1)
-          .setBodyBorderColor(themeColors.orange1)
-          .setBodyBackgroundColor('#000000')
-          .setBodyTextColor('#FFFFFF')
-        slLineRef.current = slLine
-      }
+          slLine
+            .setLineStyle(1)
+            .setLineColor(themeColors.orange1)
+            .setPrice(position?.stopLossPrice)
+            .setText(
+              `SL: -$${formatNumber(stopLossUsd, 2)}${
+                position.stopLossPrice ? ' - Est. Price: ' + formatNumber(position.stopLossPrice) : ''
+              }`
+            )
+            .setQuantity(`${formatNumber(position.stopLossAmount)} ${symbol} `)
+            .setQuantityBackgroundColor(themeColors.orange1)
+            .setQuantityTextColor('#FFFFFF')
+            .setQuantityBorderColor(themeColors.orange1)
+            .setBodyBorderColor(themeColors.orange1)
+            .setBodyBackgroundColor('#000000')
+            .setBodyTextColor('#FFFFFF')
+          slLineRef.current = slLine
+        }
 
-      if (!tpLine && position.latestTakeProfitId && position.takeProfitAmount) {
-        tpLine = activeChart?.createOrderLine()
-        const takeProfitUsd = calcSLTPUsd(position.takeProfitAmount, position.takeProfitPrice, position.entryPrice)
+        if (!tpLine && position.latestTakeProfitId && position.takeProfitAmount) {
+          tpLine = activeChart?.createOrderLine()
+          const takeProfitUsd = calcSLTPUsd(position.takeProfitAmount, position.takeProfitPrice, position.entryPrice)
 
-        tpLine
-          .setLineStyle(1)
-          .setLineColor(themeColors.green1)
-          .setPrice(position?.takeProfitPrice)
-          .setText(
-            `TP: $${formatNumber(takeProfitUsd, 2)}${
-              position.takeProfitPrice ? ' - Est. Price: ' + formatNumber(position.takeProfitPrice) : ''
-            }`
-          )
-          .setQuantity(`${position.takeProfitAmount} ${symbol} `)
-          .setQuantityBackgroundColor(themeColors.green1)
-          .setQuantityTextColor('#FFFFFF')
-          .setQuantityBorderColor(themeColors.green1)
-          .setBodyBorderColor(themeColors.green1)
-          .setBodyBackgroundColor('#000000')
-          .setBodyTextColor('#FFFFFF')
-        tpLineRef.current = tpLine
-      }
+          tpLine
+            .setLineStyle(1)
+            .setLineColor(themeColors.green1)
+            .setPrice(position?.takeProfitPrice)
+            .setText(
+              `TP: $${formatNumber(takeProfitUsd, 2)}${
+                position.takeProfitPrice ? ' - Est. Price: ' + formatNumber(position.takeProfitPrice) : ''
+              }`
+            )
+            .setQuantity(`${formatNumber(position.takeProfitAmount)} ${symbol} `)
+            .setQuantityBackgroundColor(themeColors.green1)
+            .setQuantityTextColor('#FFFFFF')
+            .setQuantityBorderColor(themeColors.green1)
+            .setBodyBorderColor(themeColors.green1)
+            .setBodyBackgroundColor('#000000')
+            .setBodyTextColor('#FFFFFF')
+          tpLineRef.current = tpLine
+        }
+      })
     } catch (e) {}
 
     return () => {

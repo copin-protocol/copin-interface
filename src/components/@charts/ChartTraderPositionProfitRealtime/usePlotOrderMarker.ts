@@ -18,63 +18,42 @@ export function usePlotOrderMarker({ chart, orders }: Props) {
   React.useEffect(() => {
     let markers: IExecutionLineAdapter[] = []
     try {
-      const activeChart = chart?.activeChart()
-      if (!activeChart || !orders?.length || !activeChart.dataReady()) {
-        return
-      }
+      chart?.onChartReady(() => {
+        const activeChart = chart?.activeChart()
+        if (!activeChart || !orders?.length || !activeChart.dataReady()) {
+          return
+        }
 
-      markers = orders
-        .map((order) => {
-          return activeChart
-            ?.createExecutionShape()
-            ?.setText(
-              `${
+        markers = orders
+          .map((order) => {
+            const isIncrease = order.type === OrderTypeEnum.INCREASE || order.type === OrderTypeEnum.OPEN
+            return activeChart
+              ?.createExecutionShape()
+              ?.setText(`${order.isLong ? (isIncrease ? 'B' : 'S') : isIncrease ? 'S' : 'B'}`)
+              ?.setTooltip(
+                `${order.isLong ? (isIncrease ? 'Long' : 'Short') : isIncrease ? 'Short' : 'Long'} | ${formatPrice(
+                  order.priceNumber
+                )} | $${formatNumber(order.sizeDeltaNumber)}`
+              )
+              ?.setTextColor(
                 order.isLong
-                  ? order.type === OrderTypeEnum.INCREASE
-                    ? 'B'
-                    : 'S'
-                  : order.type === OrderTypeEnum.INCREASE
-                  ? 'S'
-                  : 'B'
-              }`
-            )
-            ?.setTooltip(
-              `${
-                order.isLong
-                  ? order.type === OrderTypeEnum.INCREASE
-                    ? 'Long'
-                    : 'Short'
-                  : order.type === OrderTypeEnum.INCREASE
-                  ? 'Short'
-                  : 'Long'
-              } | ${formatPrice(order.priceNumber)} | $${formatNumber(order.sizeDeltaNumber)}`
-            )
-            ?.setTextColor(
-              order.isLong
-                ? order.type === OrderTypeEnum.INCREASE
-                  ? themeColors.green1
-                  : themeColors.red1
-                : order.type === OrderTypeEnum.INCREASE
-                ? themeColors.red1
-                : themeColors.green1
-            )
-            .setArrowColor('#0F0')
-            .setArrowHeight(15)
-            .setDirection(
-              order.isLong
-                ? order.type === OrderTypeEnum.INCREASE
-                  ? 'buy'
-                  : 'sell'
-                : order.type === OrderTypeEnum.INCREASE
-                ? 'sell'
-                : 'buy'
-            )
-            .setTime(dayjs(order.blockTime).utc().unix())
-            .setPrice(order.priceNumber)
-        })
-        .filter(Boolean)
+                  ? isIncrease
+                    ? themeColors.green1
+                    : themeColors.red1
+                  : isIncrease
+                  ? themeColors.red1
+                  : themeColors.green1
+              )
+              .setArrowColor('#0F0')
+              .setArrowHeight(15)
+              .setDirection(order.isLong ? (isIncrease ? 'buy' : 'sell') : isIncrease ? 'sell' : 'buy')
+              .setTime(dayjs(order.blockTime).utc().unix())
+              .setPrice(order.priceNumber)
+          })
+          .filter(Boolean)
 
-      orderMarker.current = markers
+        orderMarker.current = markers
+      })
     } catch (e) {}
 
     return () => {
