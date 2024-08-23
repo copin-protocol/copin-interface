@@ -22,9 +22,10 @@ import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { CopyTradePlatformEnum, PositionStatusEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
+import { GNS_PAIRS } from 'utils/config/tokenTradeGns'
 import { getTokenTradeSupport } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
@@ -167,10 +168,20 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
               )}
             {!!copyTradeDetails &&
               copyTradeDetails.exchange === CopyTradePlatformEnum.GNS_V8 &&
-              data.status === PositionStatusEnum.OPEN && (
+              data.status === PositionStatusEnum.OPEN &&
+              data.positionIndex != null && (
                 <Box mr={4}>
                   <ClosePositionGnsV8
-                    copyPosition={data}
+                    position={{
+                      index: data.positionIndex,
+                      indexToken:
+                        Object.entries(GNS_PAIRS).find(
+                          ([, symbol]) => getTokenTradeSupport(data.protocol)?.[data.indexToken]?.symbol === symbol
+                        )?.[0] || '',
+                      isLong: data.isLong,
+                      averagePrice: data.entryPrice,
+                      protocol: ProtocolEnum.GNS,
+                    }}
                     copyWalletId={copyTradeDetails.copyWalletId}
                     onSuccess={onForceReload}
                   />

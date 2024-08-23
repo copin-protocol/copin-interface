@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
 
-import { CopyPositionData } from 'entities/copyTrade'
+import { renderEntry } from 'components/@widgets/renderProps'
+import { PositionData } from 'entities/trader'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { useSmartWalletContract } from 'hooks/web3/useContract'
 import useContractMutation from 'hooks/web3/useContractMutation'
@@ -11,15 +12,24 @@ import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, Type } from 'theme/base'
 import { DELAY_SYNC } from 'utils/config/constants'
+import { ProtocolEnum } from 'utils/config/enums'
 import delay from 'utils/helpers/delay'
 import { ARBITRUM_CHAIN } from 'utils/web3/chains'
 
+interface ClosePositionData {
+  index: number
+  indexToken: string
+  isLong: boolean
+  averagePrice: number
+  protocol: ProtocolEnum
+}
+
 const ClosePositionGnsV8 = ({
-  copyPosition,
+  position,
   copyWalletId,
   onSuccess,
 }: {
-  copyPosition: CopyPositionData
+  position: ClosePositionData
   copyWalletId: string
   onSuccess: () => void
 }) => {
@@ -38,13 +48,13 @@ const ClosePositionGnsV8 = ({
         Close
       </Button>
       {!!walletProvider && !!smartWallet && (
-        <ClosePositionModal
+        <ClosePositionGnsV8Modal
           isOpen={opening}
           onDismiss={(success?: boolean) => {
             setOpening(false)
             if (success) onSuccess()
           }}
-          copyPosition={copyPosition}
+          position={position}
           smartWallet={smartWallet}
         />
       )}
@@ -53,11 +63,11 @@ const ClosePositionGnsV8 = ({
 }
 
 const ClosePositionHandler = ({
-  copyPosition,
+  position,
   smartWallet,
   onDismiss,
 }: {
-  copyPosition: CopyPositionData
+  position: ClosePositionData
   smartWallet: string
   onDismiss: (success?: boolean) => void
 }) => {
@@ -75,7 +85,7 @@ const ClosePositionHandler = ({
     smartWalletMutation.mutate(
       {
         method: 'closePosition',
-        params: [copyPosition.positionIndex],
+        params: [position.index],
         // gasLimit: 2500000,
       },
       {
@@ -93,6 +103,10 @@ const ClosePositionHandler = ({
 
   return (
     <>
+      <Flex alignItems="center" sx={{ gap: 2 }}>
+        <Type.Caption>Position:</Type.Caption>
+        {renderEntry(position as unknown as PositionData)}
+      </Flex>
       <Type.Caption mx="auto" mb={3}>
         Do you want to close this position with market price?
       </Type.Caption>
@@ -109,15 +123,15 @@ const ClosePositionHandler = ({
   )
 }
 
-const ClosePositionModal = ({
+export const ClosePositionGnsV8Modal = ({
   isOpen,
   onDismiss,
-  copyPosition,
+  position,
   smartWallet,
 }: {
   isOpen: boolean
   onDismiss: (success?: boolean) => void
-  copyPosition: CopyPositionData
+  position: ClosePositionData
   smartWallet: string
 }) => {
   const { isValid, alert } = useRequiredChain({
@@ -126,11 +140,7 @@ const ClosePositionModal = ({
   return (
     <Modal isOpen={isOpen} onDismiss={() => onDismiss()} hasClose title={<Trans>Manually Close Position</Trans>}>
       <Box p={3}>
-        {isValid ? (
-          <ClosePositionHandler copyPosition={copyPosition} smartWallet={smartWallet} onDismiss={onDismiss} />
-        ) : (
-          alert
-        )}
+        {isValid ? <ClosePositionHandler position={position} smartWallet={smartWallet} onDismiss={onDismiss} /> : alert}
       </Box>
     </Modal>
   )

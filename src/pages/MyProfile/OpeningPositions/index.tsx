@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Pulse } from '@phosphor-icons/react'
-import { ComponentProps } from 'react'
+import { ComponentProps, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { GetMyPositionRequestBody, GetMyPositionsParams } from 'apis/types'
@@ -9,12 +9,14 @@ import CopyOpeningPositions from 'components/@position/CopyOpeningPositions'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { CopyPositionData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
-import { Box } from 'theme/base'
+import { Button } from 'theme/Buttons'
+import { Box, Flex } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { PositionStatusEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
 
+import OnchainPositions from './OnchainPositions'
 import SettingConfigs from './SettingConfigs'
 
 export default function OpeningPositions({
@@ -63,6 +65,8 @@ export default function OpeningPositions({
   const totalOpening = data?.data?.length ?? 0
   const title = <Trans>Opening Positions</Trans>
 
+  const [isOnchainSelected, setOnchainSelected] = useState(false)
+
   return (
     <Box
       width="100%"
@@ -86,13 +90,46 @@ export default function OpeningPositions({
           />
         </Box>
       )}
-      <CopyOpeningPositions
-        data={data?.data}
-        tableProps={tableProps}
-        isLoading={isLoading}
-        layoutType={layoutType}
-        onClosePositionSuccess={refetch}
-      />
+      {activeWallet?.exchange === CopyTradePlatformEnum.GNS_V8 && activeWallet.smartWalletAddress && (
+        <Flex>
+          <Button
+            onClick={() => setOnchainSelected(false)}
+            variant="ghost"
+            sx={{ color: !isOnchainSelected ? undefined : 'neutral3' }}
+          >
+            Copy Positions
+          </Button>
+          <Button
+            onClick={() => setOnchainSelected(true)}
+            variant="ghost"
+            sx={{ color: isOnchainSelected ? undefined : 'neutral3' }}
+          >
+            Onchain Positions
+          </Button>
+        </Flex>
+      )}
+      <Box
+        height={
+          activeWallet?.exchange === CopyTradePlatformEnum.GNS_V8 && activeWallet.smartWalletAddress
+            ? 'calc(100% - 36px)'
+            : '100%'
+        }
+      >
+        <Box display={isOnchainSelected ? 'none' : 'block'} height="100%">
+          <CopyOpeningPositions
+            data={data?.data}
+            tableProps={tableProps}
+            isLoading={isLoading}
+            layoutType={layoutType}
+            onClosePositionSuccess={refetch}
+          />
+        </Box>
+        {activeWallet?.exchange === CopyTradePlatformEnum.GNS_V8 && activeWallet.smartWalletAddress && (
+          <Box display={isOnchainSelected ? 'block' : 'none'} height="100%" sx={{ overflow: 'auto' }}>
+            <OnchainPositions address={activeWallet.smartWalletAddress} />
+          </Box>
+        )}
+      </Box>
     </Box>
   )
 }

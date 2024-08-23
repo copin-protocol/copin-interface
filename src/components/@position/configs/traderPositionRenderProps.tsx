@@ -341,6 +341,12 @@ export const openingColumns: ColumnData<PositionData, ExternalSource>[] = [
   actionColumn,
 ]
 
+export const minimumOpeningColums: ColumnData<PositionData, ExternalSource>[] = [
+  entryColumn,
+  sizeOpeningColumn,
+  pnlOpeningColumn,
+]
+
 export function ShortDuration({ durationInSecond }: { durationInSecond?: number }) {
   return (
     <Flex alignItems="center" sx={{ gap: 1 }}>
