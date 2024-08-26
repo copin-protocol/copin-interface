@@ -249,4 +249,12 @@ export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
   avantisBase: ProtocolEnum.AVANTIS_BASE,
   ktxMantle: ProtocolEnum.KTX_MANTLE,
   yfxArb: ProtocolEnum.YFX_ARB,
+  hmxArb: ProtocolEnum.HMX_ARB,
+  myxArb: ProtocolEnum.MYX_ARB,
+  apolloxBnb: ProtocolEnum.APOLLOX_BNB,
+  synthetixV3Base: ProtocolEnum.SYNTHETIX_V3,
+  kiloexOpbnb: ProtocolEnum.KILOEX_OPBNB,
+  rollieScroll: ProtocolEnum.ROLLIE_SCROLL,
+  logxBlast: ProtocolEnum.LOGX_BLAST,
+  logxMode: ProtocolEnum.LOGX_MODE,
 }

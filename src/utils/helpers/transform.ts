@@ -25,11 +25,15 @@ import { TokenTrade, getTokenTradeSupport } from '../config/trades'
 import {
   ARBITRUM_MAINNET,
   BASE_MAINNET,
+  BLAST_MAINNET,
   BNB_MAINNET,
   CHAINS,
   MANTLE_MAINNET,
+  MODE_MAINNET,
+  OPBNB_MAINNET,
   OPTIMISM_MAINNET,
   POLYGON_MAINNET,
+  SCROLL_MAINNET,
 } from '../web3/chains'
 import { addressShorten, formatNumber, shortenText } from './format'
 
@@ -380,51 +384,27 @@ export const normalizePriceData = (
   }
 }
 
+const CHAIN_ID_BY_CHAIN_STAT = {
+  [ChainStatsEnum.ABITRUM]: ARBITRUM_MAINNET,
+  [ChainStatsEnum.BASE]: BASE_MAINNET,
+  [ChainStatsEnum.BLAST]: BLAST_MAINNET,
+  [ChainStatsEnum.BNB_CHAIN]: BNB_MAINNET,
+  [ChainStatsEnum.MANTLE]: MANTLE_MAINNET,
+  [ChainStatsEnum.MODE]: MODE_MAINNET,
+  [ChainStatsEnum.OPBNB]: OPBNB_MAINNET,
+  [ChainStatsEnum.OPTIMISM]: OPTIMISM_MAINNET,
+  [ChainStatsEnum.POLYGON]: POLYGON_MAINNET,
+  [ChainStatsEnum.SCROLL]: SCROLL_MAINNET,
+}
+
 // TODO: Check when add new protocol
 export const parseChainFromNetwork = (network: string) => {
-  switch (network) {
-    case ChainStatsEnum.ABITRUM:
-      return {
-        chainId: ARBITRUM_MAINNET,
-        label: CHAINS[ARBITRUM_MAINNET].label,
-        icon: CHAINS[ARBITRUM_MAINNET].icon,
-      }
-    case ChainStatsEnum.OPTIMISM:
-      return {
-        chainId: OPTIMISM_MAINNET,
-        label: CHAINS[OPTIMISM_MAINNET].label,
-        icon: CHAINS[OPTIMISM_MAINNET].icon,
-      }
-    case ChainStatsEnum.POLYGON:
-      return {
-        chainId: POLYGON_MAINNET,
-        label: CHAINS[POLYGON_MAINNET].label,
-        icon: CHAINS[POLYGON_MAINNET].icon,
-      }
-    case ChainStatsEnum.BNB_CHAIN:
-      return {
-        chainId: BNB_MAINNET,
-        label: CHAINS[BNB_MAINNET].label,
-        icon: CHAINS[BNB_MAINNET].icon,
-      }
-    case ChainStatsEnum.BASE:
-      return {
-        chainId: BASE_MAINNET,
-        label: CHAINS[BASE_MAINNET].label,
-        icon: CHAINS[BASE_MAINNET].icon,
-      }
-    case ChainStatsEnum.MANTLE:
-      return {
-        chainId: MANTLE_MAINNET,
-        label: CHAINS[MANTLE_MAINNET].label,
-        icon: CHAINS[MANTLE_MAINNET].icon,
-      }
-    default:
-      return {
-        chainId: ARBITRUM_MAINNET,
-        label: CHAINS[ARBITRUM_MAINNET].label,
-        icon: CHAINS[ARBITRUM_MAINNET].icon,
-      }
+  const chainId = CHAIN_ID_BY_CHAIN_STAT[network as ChainStatsEnum]
+  const chain = CHAINS[chainId]
+  return {
+    chainId,
+    label: chain.label,
+    icon: chain.icon,
   }
 }
 
