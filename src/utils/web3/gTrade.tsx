@@ -32,7 +32,7 @@ export default function GainsTradeConnection() {
   const { readyState, getWebSocket } = useWebSocket(GAINS_TRADE_PRICE_FEED_URL, {
     onOpen: () => console.log('gTrade price feed connection opened.'),
     onClose: () => console.log('gTrade price feed connection closed.'),
-    shouldReconnect: (closeEvent) => true,
+    shouldReconnect: (closeEvent: any) => true,
     onMessage: (event: WebSocketEventMap['message']) => {
       if (!isGains) return
       const currentTime = Date.now()

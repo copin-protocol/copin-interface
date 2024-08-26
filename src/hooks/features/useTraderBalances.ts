@@ -8,6 +8,7 @@ import { useCustomMulticallQuery } from 'hooks/web3/useMulticallQuery'
 import { ProtocolEnum } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS, QUERY_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER, TOKEN_COLLATERAL_SUPPORT, getIndexTokensBySymbol } from 'utils/config/trades'
+import { TokenCollateral } from 'utils/types'
 import { getNativeBalance } from 'utils/web3/balance'
 import { CHAINS } from 'utils/web3/chains'
 import { CONTRACT_ABIS } from 'utils/web3/contracts'
@@ -26,11 +27,13 @@ const useTraderBalances = ({ account, protocol }: { account: string | undefined;
   )
 
   const calls: { address: string; name: string; params: any[] }[] = []
-  const tokens = useMemo(
-    () =>
-      protocol && TOKEN_COLLATERAL_SUPPORT[protocol] ? [...Object.values(TOKEN_COLLATERAL_SUPPORT[protocol])] : [],
-    [protocol]
-  )
+  const tokens = useMemo(() => {
+    if (!protocol || !TOKEN_COLLATERAL_SUPPORT[protocol]) return []
+    const tokenArray = Object.values(TOKEN_COLLATERAL_SUPPORT[protocol])
+    return Array.from(new Set(tokenArray.map((token) => token.address)))
+      .map((address) => tokenArray.find((token) => token.address === address))
+      .filter((token): token is TokenCollateral => token !== undefined)
+  }, [protocol])
   if (account) {
     tokens.forEach((token) => {
       calls.push({

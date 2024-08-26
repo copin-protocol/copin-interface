@@ -26,51 +26,57 @@ export function usePlotPositionInformation({ chart, position }: Props) {
    * BUY ARROW
    */
   React.useEffect(() => {
-    const activeChart = chart?.activeChart()
-    if (!activeChart || !openedAt) {
-      return
-    }
+    try {
+      const activeChart = chart?.activeChart()
+      if (!activeChart || !openedAt || !activeChart.dataReady()) {
+        return
+      }
 
-    activeChart
-      .createExecutionShape()
-      .setText('')
-      .setTime(openedAt)
-      .setArrowHeight(32)
-      .setArrowSpacing(20)
-      .setArrowColor('#E6DAFE')
-      .setDirection('buy')
+      activeChart
+        .createExecutionShape()
+        .setText('')
+        .setTime(openedAt)
+        .setArrowHeight(32)
+        .setArrowSpacing(20)
+        .setArrowColor('#E6DAFE')
+        .setDirection('buy')
+    } catch (e) {}
   }, [chart, openedAt])
   /**
    * Position Line (PNL + SIZE)
    */
   React.useEffect(() => {
-    const activeChart = chart?.activeChart()
-    if (!activeChart || !entry || !symbol || !size) {
-      return
-    }
-
     let line = positionLine.current
-    if (!line) {
-      line = activeChart.createPositionLine()
+    try {
+      chart?.onChartReady(() => {
+        const activeChart = chart?.activeChart()
+        if (!activeChart || !entry || !symbol || !size) {
+          return
+        }
 
-      const color = position?.isLong ? themeColors.green1 : themeColors.red1
+        if (!line) {
+          line = activeChart.createPositionLine()
 
-      line
-        .setPrice(entry)
-        .setQuantity(` $${formatNumber(size, 0)} `)
-        .setLineWidth(1)
-        .setLineColor(color)
-        .setBodyBackgroundColor(color)
-        .setBodyTextColor('#FFFFFF')
-        .setBodyBorderColor(color)
-        .setQuantityBackgroundColor('#E6DAFE')
-        .setQuantityTextColor('#000000')
-        .setQuantityBorderColor(color)
-    }
+          const color = position?.isLong ? themeColors.green1 : themeColors.red1
 
-    line.setText(` ${side} `)
+          line
+            .setPrice(entry)
+            .setQuantity(` $${formatNumber(size, 0)} `)
+            .setLineWidth(0.5)
+            .setLineColor(color)
+            .setBodyBackgroundColor(color)
+            .setBodyTextColor('#FFFFFF')
+            .setBodyBorderColor(color)
+            .setQuantityBackgroundColor('#E6DAFE')
+            .setQuantityTextColor('#000000')
+            .setQuantityBorderColor(color)
+        }
 
-    positionLine.current = line
+        line.setText(` ${side} `)
+
+        positionLine.current = line
+      })
+    } catch (e) {}
 
     return () => {
       line?.remove()

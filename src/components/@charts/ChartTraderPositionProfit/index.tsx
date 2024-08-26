@@ -79,7 +79,7 @@ export default function ChartProfit({
                 <Type.H5 color="neutral3">)</Type.H5>
               </Flex>
             )}
-            {!isOpening && !!data.txHashes?.length && (
+            {!isOpening && !isTradingChart && !!data.txHashes?.length && (
               <WhatIf
                 protocol={protocol}
                 txHash={data.txHashes[0]}

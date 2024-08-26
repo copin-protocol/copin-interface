@@ -26,7 +26,7 @@ import { TOKEN_COLLATERAL_OPTIMISTIC } from './tokenCollateralOp'
 import { TOKEN_COLLATERAL_OPBNB } from './tokenCollateralOpBnb'
 import { TOKEN_COLLATERAL_POLYGON } from './tokenCollateralPolygon'
 import { TOKEN_COLLATERAL_SCROLL } from './tokenCollateralScroll'
-import { TOKEN_TRADE_APOLLOX_BNB } from './tokenTradeApolloX'
+import { TOKEN_COLLATERAL_APOLLOX_BNB, TOKEN_TRADE_APOLLOX_BNB } from './tokenTradeApolloX'
 import { TOKEN_TRADE_AVANTIS_BASE } from './tokenTradeAvantis'
 import { TOKEN_TRADE_BLOOM_BLAST } from './tokenTradeBloom'
 import { TOKEN_TRADE_EQUATION_ARB } from './tokenTradeEquation'
@@ -39,7 +39,7 @@ import { TOKEN_TRADE_KILOEX_OPBNB } from './tokenTradeKiloEx'
 import { TOKEN_TRADE_KTX_MANTLE } from './tokenTradeKtx'
 import { TOKEN_TRADE_LEVEL_ARB, TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
 import { TOKEN_TRADE_LOGX_BLAST, TOKEN_TRADE_LOGX_MODE } from './tokenTradeLogX'
-import { TOKEN_TRADE_MUX_ARB } from './tokenTradeMux'
+import { TOKEN_COLLATERAL_MUX_ARB, TOKEN_TRADE_MUX_ARB } from './tokenTradeMux'
 import { TOKEN_TRADE_MYX_ARB } from './tokenTradeMyx'
 import { TOKEN_TRADE_PERENNIAL_ARB } from './tokenTradePerennial'
 import { TOKEN_TRADE_ROLLIE_SCROLL } from './tokenTradeRollie'
@@ -252,12 +252,12 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.LOGX_BLAST]: TOKEN_COLLATERAL_BLAST,
   [ProtocolEnum.TIGRIS_ARB]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.AVANTIS_BASE]: TOKEN_COLLATERAL_BASE,
-  [ProtocolEnum.APOLLOX_BNB]: TOKEN_COLLATERAL_BNB,
+  [ProtocolEnum.APOLLOX_BNB]: { ...TOKEN_COLLATERAL_BNB, ...TOKEN_COLLATERAL_APOLLOX_BNB },
   [ProtocolEnum.BLOOM_BLAST]: TOKEN_COLLATERAL_BLAST,
   [ProtocolEnum.EQUATION_ARB]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.LEVEL_BNB]: TOKEN_COLLATERAL_BNB,
   [ProtocolEnum.LEVEL_ARB]: TOKEN_COLLATERAL_ARB,
-  [ProtocolEnum.MUX_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.MUX_ARB]: { ...TOKEN_COLLATERAL_ARB, ...TOKEN_COLLATERAL_MUX_ARB },
   [ProtocolEnum.GNS]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.GNS_POLY]: TOKEN_COLLATERAL_POLYGON,
   [ProtocolEnum.GMX]: TOKEN_COLLATERAL_ARB,

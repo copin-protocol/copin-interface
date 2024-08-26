@@ -4,15 +4,21 @@ import { ReactNode } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import Slider, { Settings } from 'react-slick'
-import styled from 'styled-components/macro'
 
 import { getLatestActivityLogsApi } from 'apis/activityLogApis'
 import homeEventBanner from 'assets/images/home-event-banner.png'
+import { useClickLoginButton } from 'components/@auth/LoginAction'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { EventDetailsData, TradingEventStatusEnum } from 'entities/event'
+import { LatestActivityLogData } from 'entities/user'
+import { useIsPremium, useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useMyProfile from 'hooks/store/useMyProfile'
+import { useAuthContext } from 'hooks/web3/useAuth'
+import { GradientText } from 'pages/@layouts/Navbar/EventButton'
+import { Button } from 'theme/Buttons'
 import { HorizontalCarouselWrapper } from 'theme/Carousel/Wrapper'
+import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
@@ -20,15 +26,6 @@ import { addressShorten, formatImageUrl, formatNumber } from 'utils/helpers/form
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { logEventCompetition } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
-
-export const GradientText = styled(Box).attrs({ as: 'span' })`
-  color: ${({ theme }) => theme.colors.neutral1};
-  @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
-    background: linear-gradient(181.63deg, #f9f9f9 15.77%, #75ffee 168.64%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-`
 
 export default function Overview() {
   return (
@@ -105,6 +102,8 @@ function EventItem({ eventDetails }: { eventDetails: EventDetailsData }) {
 }
 
 function Activities() {
+  const { isAuthenticated } = useAuthContext()
+  const isPremium = useIsPremium()
   const { data: activities } = useQuery([QUERY_KEYS.GET_LATEST_ACTIVITY_LOGS], () => getLatestActivityLogsApi({}), {
     refetchInterval: 15_000,
   })
@@ -125,26 +124,20 @@ function Activities() {
       >
         {activities.map((data) => {
           return (
-            <Box
-              key={data.id}
-              sx={{ a: { color: 'neutral1', textDecoration: 'underline', '&:hover': { color: 'neutral2' } } }}
-            >
-              <Type.Caption mb={1} color="neutral3">
-                <RelativeTimeText date={data.createdAt} />
-              </Type.Caption>
-              <Type.Caption color="neutral3">
-                <Box as="span" color="neutral1">
-                  {addressShorten(data.username)}
-                </Box>{' '}
-                <Trans>copied a position from trader</Trans>{' '}
-                <Box
-                  as={Link}
-                  to={generateTraderMultiExchangeRoute({ protocol: data.protocol, address: data.sourceAccount })}
-                >
-                  {addressShorten(data.sourceAccount)}
-                </Box>{' '}
-                with a size of ${formatNumber((data?.volume ?? 0) * (data?.price ?? 0), 2, 2)}
-              </Type.Caption>
+            <Box key={data.id}>
+              <Box sx={{ a: { color: 'neutral1', textDecoration: 'underline', '&:hover': { color: 'neutral2' } } }}>
+                <Type.Caption mb={1} color="neutral3">
+                  <RelativeTimeText date={data.createdAt} />
+                </Type.Caption>
+                <Type.Caption color="neutral3">
+                  <Box as="span" color="neutral1">
+                    {addressShorten(data.username)}
+                  </Box>{' '}
+                  <Trans>copied a position from trader</Trans>{' '}
+                  {isAuthenticated && isPremium ? <RenderTrader data={data} /> : <RenderHiddenTrader data={data} />}{' '}
+                  with a size of ${formatNumber((data?.volume ?? 0) * (data?.price ?? 0), 2, 2)}
+                </Type.Caption>
+              </Box>
             </Box>
           )
         })}
@@ -158,6 +151,59 @@ function SectionLabel({ icon, label }: { icon: ReactNode; label: ReactNode }) {
       <IconBox icon={icon} color="neutral3" size={24} />
       <Type.Body>{label}</Type.Body>
     </Flex>
+  )
+}
+
+function RenderTrader({ data }: { data: LatestActivityLogData }) {
+  return (
+    <Box as={Link} to={generateTraderMultiExchangeRoute({ protocol: data.protocol, address: data.sourceAccount })}>
+      [{addressShorten(data.sourceAccount)}]
+    </Box>
+  )
+}
+
+function RenderHiddenTrader({ data }: { data: LatestActivityLogData }) {
+  const { isAuthenticated } = useAuthContext()
+  const handleClickLogin = useClickLoginButton()
+  const { checkIsPremium } = useIsPremiumAndAction()
+
+  const tooltipId = `tt-activities-${data.id}`
+
+  return (
+    <>
+      <Box display="inline-block" data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
+        <Type.Caption color="neutral1">[0x...***]</Type.Caption>
+      </Box>
+      <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
+        {isAuthenticated ? (
+          <Type.Caption>
+            Please{' '}
+            <Button variant="ghostPrimary" sx={{ p: 0, width: 'fit-content' }} onClick={checkIsPremium}>
+              <GradientText>Upgrade Premium</GradientText>
+            </Button>{' '}
+            to see
+          </Type.Caption>
+        ) : (
+          <Type.Caption>
+            Please{' '}
+            <Button
+              variant="ghostPrimary"
+              sx={{
+                p: 0,
+                width: 'fit-content',
+                '&:hover': {
+                  textDecoration: 'underline',
+                },
+              }}
+              onClick={handleClickLogin}
+            >
+              Login
+            </Button>{' '}
+            and upgrade premium to see
+          </Type.Caption>
+        )}
+      </Tooltip>
+    </>
   )
 }
 

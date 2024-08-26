@@ -6,11 +6,10 @@ import { Box } from 'theme/base'
 import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { getSymbolTradingView, getTokenTradeSupport } from 'utils/config/trades'
 
-import { ChartingLibraryWidgetOptions } from '../../../../public/static/charting_library'
+import { ChartingLibraryWidgetOptions, ResolutionString } from '../../../../public/static/charting_library'
 import { DEFAULT_CHART_REALTIME_PROPS } from '../configs'
 import datafeed from './datafeed'
 import { useChart } from './useChart'
-import { useModifyMarginMarker } from './useModifyMarginMarker'
 import { usePlotOrderMarker } from './usePlotOrderMarker'
 import { usePlotPositionInformation } from './usePlotPositionInformation'
 
@@ -30,6 +29,7 @@ function RealtimeChart({ position, orders }: Props) {
       ...DEFAULT_CHART_REALTIME_PROPS,
       datafeed,
       container: chartContainer,
+      interval: (position.durationInSecond < 1800 ? '1' : '5') as ResolutionString,
       symbol: symbol ? `${getSymbolTradingView(symbol)}USD` : undefined,
       custom_formatters: {
         priceFormatterFactory: (symbol, minTick) => {
@@ -74,7 +74,7 @@ function RealtimeChart({ position, orders }: Props) {
       (position?.protocol !== ProtocolEnum.GMX && e.type === OrderTypeEnum.CLOSE) ||
       e.type === OrderTypeEnum.LIQUIDATE
   )
-  const modifiedMarginList = orders?.filter((e) => e.type === OrderTypeEnum.MARGIN_TRANSFERRED)
+  // const modifiedMarginList = orders?.filter((e) => e.type === OrderTypeEnum.MARGIN_TRANSFERRED)
 
   usePlotPositionInformation({
     chart,
@@ -89,10 +89,10 @@ function RealtimeChart({ position, orders }: Props) {
     chart,
     orders: decreaseList,
   })
-  useModifyMarginMarker({
-    chart,
-    orders: modifiedMarginList,
-  })
+  // useModifyMarginMarker({
+  //   chart,
+  //   orders: modifiedMarginList,
+  // })
 
   return (
     <Box height="45svh">

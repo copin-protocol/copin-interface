@@ -14,7 +14,7 @@ export function useModifyMarginMarker({ chart, orders }: Props) {
 
   React.useEffect(() => {
     const activeChart = chart?.activeChart()
-    if (!activeChart || !orders?.length) {
+    if (!activeChart || !orders?.length || !activeChart.dataReady()) {
       return
     }
 

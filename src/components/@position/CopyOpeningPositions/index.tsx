@@ -41,7 +41,7 @@ export default function CopyOpeningPositions({
         </Flex>
       )}
       {!!data?.length && (
-        <Box flex="1 0 0" overflow="hidden">
+        <Box flex="1 0 0" overflow="hidden" height="100%">
           <CopyPositionsTableView
             {...tableProps}
             data={data}

@@ -1,6 +1,6 @@
 import { ProtocolTokenMapping } from './trades'
 
-const GNS_PAIRS = {
+export const GNS_PAIRS = {
   'GNS-0': 'BTC',
   'GNS-1': 'ETH',
   'GNS-2': 'LINK',
