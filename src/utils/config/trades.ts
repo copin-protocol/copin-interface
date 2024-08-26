@@ -7,6 +7,7 @@ import {
   BLAST_MAINNET,
   BNB_MAINNET,
   CHAINS,
+  FANTOM_MAINNET,
   MANTLE_MAINNET,
   MODE_MAINNET,
   OPBNB_MAINNET,
@@ -20,6 +21,7 @@ import { TOKEN_COLLATERAL_ARB } from './tokenCollateralArb'
 import { TOKEN_COLLATERAL_BASE } from './tokenCollateralBase'
 import { TOKEN_COLLATERAL_BLAST } from './tokenCollateralBlast'
 import { TOKEN_COLLATERAL_BNB } from './tokenCollateralBnb'
+import { TOKEN_COLLATERAL_FTM } from './tokenCollateralFtm'
 import { TOKEN_COLLATERAL_MANTLE } from './tokenCollateralMantle'
 import { TOKEN_COLLATERAL_MODE } from './tokenCollateralMode'
 import { TOKEN_COLLATERAL_OPTIMISTIC } from './tokenCollateralOp'
@@ -39,6 +41,7 @@ import { TOKEN_TRADE_KILOEX_OPBNB } from './tokenTradeKiloEx'
 import { TOKEN_TRADE_KTX_MANTLE } from './tokenTradeKtx'
 import { TOKEN_TRADE_LEVEL_ARB, TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
 import { TOKEN_TRADE_LOGX_BLAST, TOKEN_TRADE_LOGX_MODE } from './tokenTradeLogX'
+import { TOKEN_COLLATERAL_MUMMY_FTM, TOKEN_TRADE_MUMMY_FTM } from './tokenTradeMummy'
 import { TOKEN_COLLATERAL_MUX_ARB, TOKEN_TRADE_MUX_ARB } from './tokenTradeMux'
 import { TOKEN_TRADE_MYX_ARB } from './tokenTradeMyx'
 import { TOKEN_TRADE_PERENNIAL_ARB } from './tokenTradePerennial'
@@ -163,6 +166,10 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: ARBITRUM_MAINNET,
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.MUMMY_FTM]: {
+    chainId: FANTOM_MAINNET,
+    explorerUrl: CHAINS[FANTOM_MAINNET].blockExplorerUrl,
+  },
 }
 export interface TokenTrade {
   address: string
@@ -224,6 +231,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.KILOEX_OPBNB]: TOKEN_TRADE_KILOEX_OPBNB,
   [ProtocolEnum.ROLLIE_SCROLL]: TOKEN_TRADE_ROLLIE_SCROLL,
   [ProtocolEnum.PERENNIAL_ARB]: TOKEN_TRADE_PERENNIAL_ARB,
+  [ProtocolEnum.MUMMY_FTM]: TOKEN_TRADE_MUMMY_FTM,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -268,6 +276,7 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.KILOEX_OPBNB]: TOKEN_COLLATERAL_OPBNB,
   [ProtocolEnum.ROLLIE_SCROLL]: TOKEN_COLLATERAL_SCROLL,
   [ProtocolEnum.PERENNIAL_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.MUMMY_FTM]: { ...TOKEN_COLLATERAL_FTM, ...TOKEN_COLLATERAL_MUMMY_FTM },
 }
 
 export const SYNTHETIX_MARKETS: { [key: number]: string[] } = {

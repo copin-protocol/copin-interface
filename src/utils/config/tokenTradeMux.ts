@@ -1,4 +1,5 @@
 import { TokenCollateral } from 'utils/types'
+
 import { ProtocolTokenMapping } from './trades'
 
 const MUX_PAIRS = {
