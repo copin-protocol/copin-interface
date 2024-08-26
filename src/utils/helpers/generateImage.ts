@@ -521,7 +521,7 @@ export const generateProtocol = ({
       protocolTextWidth = 168
       protocolText = 'Perennial'
       break
-    case ProtocolEnum.MUMMY_FTM:
+    case ProtocolEnum.MUMMY_FANTOM:
       protocolTextWidth = 310
       protocolText = 'Mummy Finance'
       break

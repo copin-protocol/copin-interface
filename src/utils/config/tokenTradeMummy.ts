@@ -8,22 +8,22 @@ const MUMMY_PAIRS = {
   '0x695921034f0387eAc4e11620EE91b1b15A6A09fE': 'ETH',
   '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83': 'FTM',
   //V2
-  'MUMMY_FTM-1': 'BTC',
-  'MUMMY_FTM-2': 'ETH',
-  'MUMMY_FTM-3': 'LINK',
-  'MUMMY_FTM-4': 'FTM',
-  'MUMMY_FTM-5': 'XRP',
-  'MUMMY_FTM-6': 'BNB',
-  'MUMMY_FTM-7': 'OP',
-  'MUMMY_FTM-8': 'SOL',
-  'MUMMY_FTM-9': 'ARB',
-  'MUMMY_FTM-10': 'ORDI',
-  'MUMMY_FTM-11': 'FET',
-  'MUMMY_FTM-12': 'SUI',
-  'MUMMY_FTM-13': 'PEPE',
+  'MUMMY_FANTOM-1': 'BTC',
+  'MUMMY_FANTOM-2': 'ETH',
+  'MUMMY_FANTOM-3': 'LINK',
+  'MUMMY_FANTOM-4': 'FTM',
+  'MUMMY_FANTOM-5': 'XRP',
+  'MUMMY_FANTOM-6': 'BNB',
+  'MUMMY_FANTOM-7': 'OP',
+  'MUMMY_FANTOM-8': 'SOL',
+  'MUMMY_FANTOM-9': 'ARB',
+  'MUMMY_FANTOM-10': 'ORDI',
+  'MUMMY_FANTOM-11': 'FET',
+  'MUMMY_FANTOM-12': 'SUI',
+  'MUMMY_FANTOM-13': 'PEPE',
 }
 
-const TOKEN_COLLATERAL_MUMMY_FTM: Record<string, TokenCollateral> = {
+const TOKEN_COLLATERAL_MUMMY_FANTOM: Record<string, TokenCollateral> = {
   '0x695921034f0387eAc4e11620EE91b1b15A6A09fE': {
     address: '0x695921034f0387eAc4e11620EE91b1b15A6A09fE',
     symbol: 'WETH',
@@ -70,7 +70,7 @@ const TOKEN_COLLATERAL_MUMMY_FTM: Record<string, TokenCollateral> = {
   },
 }
 
-const TOKEN_TRADE_MUMMY_FTM = Object.entries(MUMMY_PAIRS).reduce<ProtocolTokenMapping>((result, [key, value]) => {
+const TOKEN_TRADE_MUMMY_FANTOM = Object.entries(MUMMY_PAIRS).reduce<ProtocolTokenMapping>((result, [key, value]) => {
   return {
     ...result,
     [key]: {
@@ -79,4 +79,4 @@ const TOKEN_TRADE_MUMMY_FTM = Object.entries(MUMMY_PAIRS).reduce<ProtocolTokenMa
   }
 }, {})
 
-export { TOKEN_TRADE_MUMMY_FTM, TOKEN_COLLATERAL_MUMMY_FTM }
+export { TOKEN_TRADE_MUMMY_FANTOM, TOKEN_COLLATERAL_MUMMY_FANTOM }

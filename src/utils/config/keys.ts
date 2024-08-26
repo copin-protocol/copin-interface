@@ -226,7 +226,7 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.KILOEX_OPBNB]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.ROLLIE_SCROLL]: '',
   [ProtocolEnum.PERENNIAL_ARB]: '',
-  [ProtocolEnum.MUMMY_FTM]: '',
+  [ProtocolEnum.MUMMY_FANTOM]: '',
 }
 
 export const INTERNAL_SERVICE_KEYS = {
@@ -258,5 +258,5 @@ export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.KILOEX_OPBNB]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.ROLLIE_SCROLL]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.PERENNIAL_ARB]: 'COPY_TRADE_MAIN_STREAM',
-  [ProtocolEnum.MUMMY_FTM]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.MUMMY_FANTOM]: 'COPY_TRADE_MAIN_STREAM',
 }

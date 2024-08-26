@@ -126,7 +126,7 @@ function generateProtocolName(protocol) {
       return 'Rollie Finance'
     case 'PERENNIAL_ARB':
       return 'Perennial'
-    case 'MUMMY_FTM':
+    case 'MUMMY_FANTOM':
       return 'Mummy Finance'
     default:
       return ''

@@ -219,8 +219,8 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: ARBITRUM_MAINNET,
     isNew: true,
   },
-  [ProtocolEnum.MUMMY_FTM]: {
-    id: ProtocolEnum.MUMMY_FTM,
+  [ProtocolEnum.MUMMY_FANTOM]: {
+    id: ProtocolEnum.MUMMY_FANTOM,
     text: 'Mummy',
     label: 'Fantom',
     chainId: FANTOM_MAINNET,
