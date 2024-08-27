@@ -15,11 +15,11 @@ export default function EventTradingProtocols({ type }: { type?: EventTypeEnum }
       <Type.Caption mt={12} color="primary1">
         Copy trades from traders on the following perpetual DEXs
       </Type.Caption>
-      <Flex mt={2} alignItems="center" sx={{ gap: 3 }}>
+      <Flex mt={2} alignItems="center" flexWrap="wrap" sx={{ gap: 3 }}>
         {DCP_SUPPORTED_PROTOCOLS.map((protocol) => {
           return (
             <Box key={protocol} as={Link} to={generateExplorerRoute({ protocol })} sx={{ cursor: 'pointer' }}>
-              <ProtocolLogo protocol={protocol} isActive={false} hasText={false} size={32} />
+              <ProtocolLogo protocol={protocol} isActive={false} hasText={false} size={24} />
             </Box>
           )
         })}

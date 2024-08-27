@@ -169,6 +169,9 @@ export const DCP_SUPPORTED_PROTOCOLS = [
   ProtocolEnum.GNS_POLY,
   ProtocolEnum.AVANTIS_BASE,
   ProtocolEnum.EQUATION_ARB,
+  ProtocolEnum.POLYNOMIAL,
+  ProtocolEnum.DEXTORO,
+  ProtocolEnum.CYBERDEX,
 ]
 
 export const DEFAULT_PROTOCOL = ProtocolEnum.GNS
