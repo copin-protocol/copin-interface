@@ -3,12 +3,7 @@ import { CaretRight, ClockCounterClockwise } from '@phosphor-icons/react'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ValueOrToken from 'components/@ui/ValueOrToken'
-import {
-  renderEntry,
-  renderOpeningPnLWithPrices,
-  renderOpeningRoiWithPrices,
-  renderSizeOpening,
-} from 'components/@widgets/renderProps'
+import { renderEntry, renderOpeningPnL, renderOpeningRoi, renderSizeOpening } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import SkullIcon from 'theme/Icons/SkullIcon'
@@ -17,10 +12,6 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
 import { formatDuration, formatLeverage, formatNumber } from 'utils/helpers/format'
-
-export type ExternalSource = {
-  prices: UsdPrices
-}
 
 const orderCountColumn: ColumnData<PositionData> = {
   title: 'Total Orders',
@@ -183,14 +174,13 @@ const sizeColumn: ColumnData<PositionData> = {
     </Flex>
   ),
 }
-const sizeOpeningColumn: ColumnData<PositionData, ExternalSource> = {
+const sizeOpeningColumn: ColumnData<PositionData> = {
   title: 'Size',
   dataIndex: 'size',
   key: 'size',
   sortBy: 'size',
   style: { width: '215px' },
-  render: (item, index, externalSource) =>
-    externalSource?.prices ? renderSizeOpening(item, externalSource?.prices) : '--',
+  render: (item) => renderSizeOpening(item),
 }
 const leverageColumn: ColumnData<PositionData> = {
   title: 'Leverage',
@@ -264,23 +254,21 @@ const pnlColumn: ColumnData<PositionData> = {
 //     )
 //   },
 // }
-const pnlOpeningColumn: ColumnData<PositionData, ExternalSource> = {
+const pnlOpeningColumn: ColumnData<PositionData> = {
   title: 'PnL',
   dataIndex: 'pnl',
   key: 'pnl',
   sortBy: 'pnl',
   style: { width: '75px', textAlign: 'right' },
-  render: (item, index, externalSource) =>
-    externalSource?.prices ? renderOpeningPnLWithPrices(item, externalSource?.prices, true) : '--',
+  render: (item) => renderOpeningPnL(item),
 }
-const roiOpeningColumn: ColumnData<PositionData, ExternalSource> = {
+const roiOpeningColumn: ColumnData<PositionData> = {
   title: 'ROI',
   dataIndex: 'roi',
   key: 'roi',
   sortBy: 'roi',
   style: { minWidth: '75px', textAlign: 'right' },
-  render: (item, index, externalSource) =>
-    externalSource?.prices ? renderOpeningRoiWithPrices(item, externalSource?.prices, true) : '--',
+  render: (item) => renderOpeningRoi(item),
 }
 const actionColumn: ColumnData<PositionData> = {
   title: ' ',
@@ -320,7 +308,7 @@ export const fullHistoryColumns: ColumnData<PositionData>[] = [
   actionColumn,
 ]
 
-export const fullOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
+export const fullOpeningColumns: ColumnData<PositionData>[] = [
   openTimeColumn,
   { ...entryColumn, style: { minWidth: 150 } },
   { ...sizeOpeningColumn, style: { minWidth: 200 } },
@@ -333,7 +321,7 @@ export const fullOpeningColumns: ColumnData<PositionData, ExternalSource>[] = [
   actionColumn,
 ]
 
-export const openingColumns: ColumnData<PositionData, ExternalSource>[] = [
+export const openingColumns: ColumnData<PositionData>[] = [
   openTimeShortColumn,
   entryColumn,
   sizeOpeningColumn,
@@ -341,11 +329,7 @@ export const openingColumns: ColumnData<PositionData, ExternalSource>[] = [
   actionColumn,
 ]
 
-export const minimumOpeningColums: ColumnData<PositionData, ExternalSource>[] = [
-  entryColumn,
-  sizeOpeningColumn,
-  pnlOpeningColumn,
-]
+export const minimumOpeningColums: ColumnData<PositionData>[] = [entryColumn, sizeOpeningColumn, pnlOpeningColumn]
 
 export function ShortDuration({ durationInSecond }: { durationInSecond?: number }) {
   return (

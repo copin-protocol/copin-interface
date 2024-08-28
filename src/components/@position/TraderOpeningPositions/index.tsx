@@ -6,11 +6,7 @@ import { useHistory } from 'react-router-dom'
 import emptyBg from 'assets/images/opening_empty_bg.png'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import TraderPositionListView from 'components/@position/TraderPositionsListView'
-import {
-  ExternalSource,
-  fullOpeningColumns,
-  openingColumns,
-} from 'components/@position/configs/traderPositionRenderProps'
+import { fullOpeningColumns, openingColumns } from 'components/@position/configs/traderPositionRenderProps'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
@@ -46,7 +42,6 @@ export default function TraderOpeningPositionsTable({
   toggleExpand?: () => void
   isExpanded?: boolean
 }) {
-  const { prices } = useGetUsdPrices()
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
@@ -83,9 +78,6 @@ export default function TraderOpeningPositionsTable({
   }
 
   const totalOpening = data?.length ?? 0
-  const externalSource: ExternalSource = {
-    prices,
-  }
 
   const { lg, xl, sm } = useResponsive()
 
@@ -147,7 +139,6 @@ export default function TraderOpeningPositionsTable({
               }}
               data={tableData?.data}
               columns={xl && isExpanded ? fullOpeningColumns : openingColumns}
-              externalSource={externalSource}
               currentSort={currentSort}
               changeCurrentSort={changeCurrentSort}
               isLoading={isLoading}

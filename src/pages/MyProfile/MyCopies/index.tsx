@@ -101,10 +101,19 @@ export default function MyCopies(props: MyCopiesProps) {
   }
 
   const toggleStatus = useCallback(
-    ({ id, currentStatus }: { id: string; currentStatus: CopyTradeStatusEnum }) => {
+    ({
+      id,
+      currentStatus,
+      multipleCopy,
+    }: {
+      id: string
+      currentStatus: CopyTradeStatusEnum
+      multipleCopy: boolean
+    }) => {
       updateCopyTrade({
         copyTradeId: id,
         data: {
+          multipleCopy,
           status:
             currentStatus === CopyTradeStatusEnum.RUNNING ? CopyTradeStatusEnum.STOPPED : CopyTradeStatusEnum.RUNNING,
         },
@@ -136,7 +145,11 @@ export default function MyCopies(props: MyCopiesProps) {
       console.debug('cannot select copy trade')
       return
     }
-    toggleStatus({ id: copyTradeData.current.id, currentStatus: copyTradeData.current.status })
+    toggleStatus({
+      id: copyTradeData.current.id,
+      currentStatus: copyTradeData.current.status,
+      multipleCopy: copyTradeData.current.multipleCopy,
+    })
   }
   const handleDismissConfirmStopModal = () => {
     setOpenConfirmStopModal(false)

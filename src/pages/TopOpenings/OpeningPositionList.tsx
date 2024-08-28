@@ -5,24 +5,15 @@ import { useHistory } from 'react-router-dom'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import PositionListCard from 'components/@position/TraderPositionsListView'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
-import {
-  renderEntry,
-  renderOpeningPnLWithPrices,
-  renderSizeOpening,
-  renderTrader,
-} from 'components/@widgets/renderProps'
+import { renderEntry, renderOpeningPnL, renderSizeOpening, renderTrader } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Type } from 'theme/base'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
-export type ExternalSource = {
-  prices: UsdPrices
-}
-const columns: ColumnData<PositionData, ExternalSource>[] = [
+const columns: ColumnData<PositionData>[] = [
   {
     title: 'Time',
     dataIndex: 'openBlockTime',
@@ -53,16 +44,14 @@ const columns: ColumnData<PositionData, ExternalSource>[] = [
     dataIndex: 'size',
     key: 'size',
     style: { width: '205px' },
-    render: (item, index, externalSource) =>
-      externalSource?.prices ? renderSizeOpening(item, externalSource?.prices) : '--',
+    render: (item) => renderSizeOpening(item),
   },
   {
     title: 'PnL',
     dataIndex: 'pnl',
     key: 'pnl',
     style: { width: '75px', textAlign: 'right' },
-    render: (item, index, externalSource) =>
-      externalSource?.prices ? renderOpeningPnLWithPrices(item, externalSource?.prices, true) : '--',
+    render: (item) => renderOpeningPnL(item),
   },
   {
     title: '',
@@ -96,12 +85,6 @@ export default function TopOpeningsWindow(props: OpeningPositionProps) {
   )
 }
 function OpeningPositionsTable({ isLoading, data, scrollDep, onClickItem }: OpeningPositionComponentProps) {
-  const { prices } = useGetUsdPrices()
-
-  const externalSource: ExternalSource = {
-    prices,
-  }
-
   return (
     <Table
       restrictHeight
@@ -111,7 +94,6 @@ function OpeningPositionsTable({ isLoading, data, scrollDep, onClickItem }: Open
       data={data}
       scrollToTopDependencies={[scrollDep]}
       columns={columns}
-      externalSource={externalSource}
       isLoading={isLoading}
       onClickRow={onClickItem}
       renderRowBackground={() => 'rgb(31, 34, 50)'}

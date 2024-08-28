@@ -30,6 +30,9 @@ export default defineConfig({
     viteTsconfigPaths(),
     checker({ typescript: true }),
   ],
+  worker: {
+    plugins: [viteTsconfigPaths()],
+  },
   resolve: {
     alias: {
       crypto: 'crypto-browserify',

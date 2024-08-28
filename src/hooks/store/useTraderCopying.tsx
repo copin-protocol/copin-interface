@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
@@ -38,7 +38,7 @@ const EXCLUDING_PATH = [
   ROUTES.COMPARING_TRADERS.path,
   ROUTES.POSITION_DETAILS.path,
 ]
-export const useInitTraderCopying = () => {
+const useInitTraderCopying = () => {
   const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH)
   const { setTraderCopying, setLoading } = useTraderCopyingStore()
   const { allCopyTrades } = useAllCopyTrades({ enabled: enabledQueryByPaths })
@@ -46,7 +46,7 @@ export const useInitTraderCopying = () => {
   useEffect(() => {
     const copyingTrader: TraderCopying | undefined = allCopyTrades?.reduce((result, copyTrade) => {
       if (copyTrade.status === CopyTradeStatusEnum.RUNNING) {
-        const accounts = [copyTrade.account, ...(copyTrade.accounts || [])].filter((e) => !!e)
+        const accounts = (copyTrade.multipleCopy ? copyTrade.accounts ?? [] : [copyTrade.account]).filter((e) => !!e)
         accounts.forEach((account) => {
           if (!result[account]) {
             result[account] = {}
@@ -67,6 +67,11 @@ export const useInitTraderCopying = () => {
   }, [allCopyTrades])
 }
 
+export const InitTraderCopying = memo(function InitTraderCopyingMemo() {
+  useInitTraderCopying()
+  return null
+})
+
 const useTraderCopying = (account: string | undefined, protocol: ProtocolEnum | undefined) => {
   const { isLoading, traderCopying, setTraderCopying } = useTraderCopyingStore()
   const isCopying = account && protocol ? !!traderCopying[account]?.[protocol]?.length : false
@@ -77,7 +82,7 @@ const useTraderCopying = (account: string | undefined, protocol: ProtocolEnum | 
         ...traderCopying,
         [address]: {
           ...traderCopying[address],
-          [protocol]: Array.from(new Set([...traderCopying[address][protocol], copyWalletId])),
+          [protocol]: Array.from(new Set([...(traderCopying[address]?.[protocol] ?? []), copyWalletId])),
         },
       })
     }

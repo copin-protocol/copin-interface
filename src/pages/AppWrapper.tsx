@@ -7,9 +7,9 @@ import useModifyStorage from 'hooks/features/useModifyStorage'
 import useResetSearchParams from 'hooks/helpers/useResetSearchParams'
 import useGlobalDialog, { DialogContent } from 'hooks/store/useGlobalDialog'
 import useSubscriptionRestrictStore from 'hooks/store/useSubscriptionRestrictStore'
-import { useInitTraderCopying } from 'hooks/store/useTraderCopying'
-import { useInitTraderFavorites } from 'hooks/store/useTraderFavorites'
-import { usePollingUsdPrice } from 'hooks/store/useUsdPrices'
+import { InitTraderCopying } from 'hooks/store/useTraderCopying'
+import { InitTraderFavorites } from 'hooks/store/useTraderFavorites'
+import { PollingUsdPrice } from 'hooks/store/useUsdPrices'
 import useChainRestrict from 'hooks/web3/useChainRestrict'
 import useEagerConnect from 'hooks/web3/useEagerConnect'
 import Footer from 'pages/@layouts/Footer'
@@ -23,10 +23,7 @@ import SubscriptionExpiredWarning from './@layouts/SubscriptionExpiredWarning'
 
 const AppWrapper = ({ children }: { children: ReactNode }) => {
   useChainRestrict()
-  useInitTraderFavorites()
-  useInitTraderCopying()
   useEagerConnect()
-  usePollingUsdPrice()
   useModifyStorage()
   useResetSearchParams()
   const dialog = useGlobalDialog((state) => state.dialog)
@@ -48,6 +45,10 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
       {restrictState && <SubscriptionRestrictModal />}
       {dialog && <DialogContent data={dialog} />}
       <Notification />
+
+      <InitTraderCopying />
+      <InitTraderFavorites />
+      <PollingUsdPrice />
     </>
   )
 }

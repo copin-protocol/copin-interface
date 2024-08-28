@@ -1,3 +1,5 @@
+import { UsdPrices } from 'hooks/store/useUsdPrices'
+
 export type TimeRange = {
   from?: Date
   to?: Date
@@ -21,3 +23,8 @@ export interface TokenCollateral {
 }
 
 export type TokenCollateralMapping = Record<string, TokenCollateral>
+
+export type WorkerMessage = {
+  type: 'pyth_price'
+  data: UsdPrices
+}

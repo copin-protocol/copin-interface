@@ -1,11 +1,13 @@
 import { XCircle } from '@phosphor-icons/react'
+import { Suspense, lazy } from 'react'
 
-import TraderPositionDetails from 'components/@position/TraderPositionDetails'
 import Container from 'components/@ui/Container'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import IconButton from 'theme/Buttons/IconButton'
 import RcDrawer from 'theme/RcDrawer'
 import { ProtocolEnum } from 'utils/config/enums'
+
+const TraderPositionDetails = lazy(() => import('components/@position/TraderPositionDetails'))
 
 export default function TraderPositionDetailsDrawer({
   isOpen,
@@ -30,7 +32,9 @@ export default function TraderPositionDetailsDrawer({
           sx={{ position: 'absolute', right: 1, top: 3, zIndex: 1 }}
           onClick={onDismiss}
         />
-        <TraderPositionDetails protocol={protocol} id={id} chartProfitId={chartProfitId} />
+        <Suspense fallback={null}>
+          {isOpen && <TraderPositionDetails protocol={protocol} id={id} chartProfitId={chartProfitId} />}
+        </Suspense>
       </Container>
     </RcDrawer>
   )

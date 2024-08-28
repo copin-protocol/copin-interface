@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 import create from 'zustand'
@@ -60,7 +60,7 @@ const EXCLUDING_PATH = [
   ROUTES.COMPARING_TRADERS.path,
   ROUTES.POSITION_DETAILS.path_prefix,
 ]
-export const useInitTraderFavorites = () => {
+const useInitTraderFavorites = () => {
   const { profile } = useAuthContext()
   const { setTraderFavorites, setNotes, setLoading } = useTraderFavoritesStore()
   const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH, true)
@@ -95,6 +95,11 @@ export const useInitTraderFavorites = () => {
     setLoading(isLoading)
   }, [isLoading, setLoading])
 }
+
+export const InitTraderFavorites = memo(function InitTraderFavoritesMemo() {
+  useInitTraderFavorites()
+  return null
+})
 
 const useTraderFavorites = () => {
   // const { protocol } = useProtocolStore()
