@@ -33,7 +33,7 @@ const GNS_POLY_PAIRS = {
   'GNS_POLY-39': 'ETC',
   'GNS_POLY-40': 'ICP',
   'GNS_POLY-41': 'MKR',
-  // 'GNS_POLY-42': 'NEO',
+  'GNS_POLY-42': 'NEO',
   'GNS_POLY-43': 'THETA',
   'GNS_POLY-44': 'TRX',
   // 'GNS_POLY-45': 'ZRX',
@@ -182,6 +182,13 @@ const GNS_POLY_PAIRS = {
   // 'GNS_POLY-254': 'UXLINK',
   'GNS_POLY-255': 'AVAIL',
   'GNS_POLY-256': 'BANANA',
+  'GNS_POLY-257': 'RARE',
+  'GNS_POLY-258': 'SYS',
+  'GNS_POLY-259': 'NMR',
+  'GNS_POLY-260': 'RSR',
+  'GNS_POLY-261': 'SYN',
+  'GNS_POLY-262': 'AUCTION',
+  'GNS_POLY-263': 'ALICE',
 }
 export const TOKEN_TRADE_GNS_POLY = Object.entries(GNS_POLY_PAIRS).reduce<ProtocolTokenMapping>(
   (result, [key, value]) => {
