@@ -59,6 +59,7 @@ function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () =
       {baseNavConfigs.map((config, index) => {
         return isMobile ? (
           <NavLink
+            key={index}
             to={config.routeFactory({ protocol: _navProtocol ?? protocol })}
             onClick={onClickNavItem}
             matchpath={config.matchpath}

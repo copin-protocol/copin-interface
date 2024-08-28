@@ -61,6 +61,7 @@ function App() {
             <Route exact path={ROUTES.EVENT_DETAILS.path} component={EventDetails}></Route>
             <Route exact path={ROUTES.EVENT_DETAILS.path} component={EventDetails}></Route>
             <Route exact path={ROUTES.FEE_REBATE.path} component={FeeRebate}></Route>
+            <Route exact path={ROUTES.GNS_FEE_REBATE.path} component={FeeRebate}></Route>
             <Route exact path={ROUTES.TRADER_DETAILS.path} component={TraderDetails}></Route>
 
             <Route exact path={ROUTES.COMPARING_TRADERS.path} component={ComparingTraders} />

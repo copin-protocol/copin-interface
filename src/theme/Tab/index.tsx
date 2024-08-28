@@ -131,6 +131,7 @@ type TabHeadersProps = {
   itemActiveSx?: any
   onClickItem?: (key: string) => void
   inactiveHasLine?: boolean
+  externalWidget?: ReactNode
 }
 export function TabHeader({
   configs,
@@ -141,6 +142,7 @@ export function TabHeader({
   itemActiveSx,
   onClickItem,
   inactiveHasLine,
+  externalWidget,
 }: TabHeadersProps) {
   return (
     <Box sx={{ width: '100%' }}>
@@ -152,26 +154,35 @@ export function TabHeader({
             borderBottomColor: ['none', 'none', 'neutral4'],
             width: '100%',
             display: fullWidth ? 'flex' : ['flex', 'flex', 'block'],
+            justifyContent: 'space-between',
             gap: 28,
             ...sx,
           }}
         >
-          {configs.map((tab) => {
-            const isActive = isActiveFn(tab)
-            return (
-              <TabRouteItem
-                key={tab.key}
-                isActive={isActive}
-                tabConfig={tab}
-                itemOption={{
-                  itemSx,
-                  itemActiveSx,
-                  onClickItem,
-                  inactiveHasLine,
-                }}
-              />
-            )
-          })}
+          <Flex
+            alignItems="center"
+            sx={{ width: '100%', display: fullWidth ? 'flex' : ['flex', 'flex', 'block'], gap: 28 }}
+          >
+            {configs.map((tab) => {
+              const isActive = isActiveFn(tab)
+              return (
+                <TabRouteItem
+                  key={tab.key}
+                  isActive={isActive}
+                  tabConfig={tab}
+                  itemOption={{
+                    itemSx,
+                    itemActiveSx,
+                    onClickItem,
+                    inactiveHasLine,
+                  }}
+                />
+              )
+            })}
+          </Flex>
+          <Flex minWidth="fit-content" alignItems="center">
+            {externalWidget}
+          </Flex>
         </Header>
       </HeaderOverlay>
     </Box>
