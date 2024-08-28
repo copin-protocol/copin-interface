@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useRef } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
 import SkullIcon from 'theme/Icons/SkullIcon'
+import Tooltip from 'theme/Tooltip'
 import { Flex, Type } from 'theme/base'
 import {
   CopyTradeStatusEnum,
@@ -96,14 +98,24 @@ const STATUSES: StatusProps[] = [
 const Tag = ({
   bg,
   status,
+  tooltipContent,
+  clickableTooltip,
   sx,
   ...props
 }: {
   status: PositionStatusEnum | PositionSideEnum | CopyTradeStatusEnum | TraderStatusEnum | EpochStatusEnum
   bg?: string
+  tooltipContent?: ReactNode
+  clickableTooltip?: boolean
 } & any) => {
+  const uuid = useRef(uuidv4()).current
+
   const finder = STATUSES.find((e) => e.id === status)
   if (!finder) return <></>
+
+  const tooltipId = `tt-tag-${uuid}`
+  const hasTooltip = !!tooltipContent
+
   return (
     <Flex
       variant="card"
@@ -120,9 +132,31 @@ const Tag = ({
       {...props}
     >
       {status === PositionStatusEnum.LIQUIDATE && <SkullIcon />}
-      <Type.Caption width="100%" textAlign="center" color={finder?.color} flex={1}>
+      <Type.Caption
+        width="100%"
+        textAlign="center"
+        color={finder?.color}
+        flex={1}
+        sx={
+          hasTooltip
+            ? {
+                textDecoration: 'underline',
+                textDecorationStyle: 'dotted',
+                textDecorationColor: 'rgba(119, 126, 144, 0.5)',
+              }
+            : undefined
+        }
+        data-tip="React-tooltip"
+        data-tooltip-id={tooltipId}
+        data-tooltip-delay-show={360}
+      >
         {finder?.text}
       </Type.Caption>
+      {!!tooltipContent && (
+        <Tooltip id={tooltipId} place="bottom" type="dark" effect="solid" clickable={clickableTooltip}>
+          {tooltipContent}
+        </Tooltip>
+      )}
     </Flex>
   )
 }

@@ -20,9 +20,9 @@ export default function useUpdateCopyTrade({ onSuccess }: { onSuccess?: () => vo
       )
       refetchQueries([QUERY_KEYS.GET_TRADER_VOLUME_COPY])
       if (data.status === CopyTradeStatusEnum.RUNNING) {
-        saveTraderCopying(data.account, data.protocol)
+        saveTraderCopying(data.account, data.protocol, data.copyWalletId)
       } else {
-        removeTraderCopying(data.account, data.protocol)
+        removeTraderCopying(data.account, data.protocol, data.copyWalletId)
       }
       onSuccess && onSuccess()
     },

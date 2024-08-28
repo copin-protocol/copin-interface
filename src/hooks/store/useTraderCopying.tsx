@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
@@ -7,7 +7,7 @@ import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 
-type TraderCopying = Record<string, ProtocolEnum[]>
+type TraderCopying = Record<string, Record<string, string[]>>
 
 interface TraderCopyingState {
   isLoading: boolean
@@ -45,11 +45,20 @@ export const useInitTraderCopying = () => {
 
   useEffect(() => {
     const copyingTrader: TraderCopying | undefined = allCopyTrades?.reduce((result, copyTrade) => {
-      if (copyTrade.status === CopyTradeStatusEnum.RUNNING)
-        return {
-          ...result,
-          [copyTrade.account]: Array.from(new Set([...(result[copyTrade.account] ?? []), copyTrade.protocol])),
-        }
+      if (copyTrade.status === CopyTradeStatusEnum.RUNNING) {
+        const accounts = [copyTrade.account, ...(copyTrade.accounts || [])].filter((e) => !!e)
+        accounts.forEach((account) => {
+          if (!result[account]) {
+            result[account] = {}
+          }
+          if (!result[account][copyTrade.protocol]) {
+            result[account][copyTrade.protocol] = []
+          }
+          result[account][copyTrade.protocol] = Array.from(
+            new Set([...result[account][copyTrade.protocol], copyTrade.copyWalletId])
+          )
+        })
+      }
       return result
     }, {} as TraderCopying)
     if (!copyingTrader) return
@@ -60,19 +69,37 @@ export const useInitTraderCopying = () => {
 
 const useTraderCopying = (account: string | undefined, protocol: ProtocolEnum | undefined) => {
   const { isLoading, traderCopying, setTraderCopying } = useTraderCopyingStore()
-  const isCopying = account && protocol ? traderCopying[account]?.includes(protocol) : false
+  const isCopying = account && protocol ? !!traderCopying[account]?.[protocol]?.length : false
 
-  const saveTraderCopying = (address: string, protocol: ProtocolEnum) => {
-    if (!traderCopying[address]?.includes(protocol)) {
-      setTraderCopying({ ...traderCopying, [address]: [...(traderCopying[address] || []), protocol] })
-    }
-  }
-  const removeTraderCopying = (address: string, protocol: ProtocolEnum) => {
-    if (traderCopying[address]?.includes(protocol)) {
+  const saveTraderCopying = (address: string, protocol: ProtocolEnum, copyWalletId: string) => {
+    if (!traderCopying[address]?.[protocol]?.length) {
       setTraderCopying({
         ...traderCopying,
-        [address]: traderCopying[address].filter((_protocol) => _protocol !== protocol),
+        [address]: {
+          ...traderCopying[address],
+          [protocol]: Array.from(new Set([...traderCopying[address][protocol], copyWalletId])),
+        },
       })
+    }
+  }
+  const removeTraderCopying = (address: string, protocol: ProtocolEnum, copyWalletId: string) => {
+    if (!!traderCopying[address]?.[protocol]?.length) {
+      const updatedProtocols = traderCopying[address]?.[protocol]?.filter((id) => id !== copyWalletId) ?? []
+      if (updatedProtocols.length === 0) {
+        const { [protocol]: _, ...restProtocols } = traderCopying[address] || {}
+        setTraderCopying({
+          ...traderCopying,
+          [address]: restProtocols,
+        })
+      } else {
+        setTraderCopying({
+          ...traderCopying,
+          [address]: {
+            ...traderCopying[address],
+            [protocol]: updatedProtocols,
+          },
+        })
+      }
     }
   }
   return {

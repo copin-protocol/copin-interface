@@ -1,17 +1,23 @@
-import { useResponsive } from 'ahooks'
+import { Link } from 'react-router-dom'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { TraderData } from 'entities/trader'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tag from 'theme/Tag'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum, TimeFrameEnum, TraderStatusEnum } from 'utils/config/enums'
+import { URL_PARAM_KEYS } from 'utils/config/keys'
+import ROUTES from 'utils/config/routes'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
+import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten } from 'utils/helpers/format'
+import { parseExchangeImage } from 'utils/helpers/transform'
+import { parseWalletName } from 'utils/helpers/transform'
 
 import ShareProfile from './ShareProfile'
 
@@ -26,10 +32,11 @@ const TraderInfo = ({
   timeOption: TimeFilterProps
   traderStats: (TraderData | undefined)[] | undefined
 }) => {
-  const { isCopying } = useTraderCopying(address, protocol)
+  const { copyWallets } = useCopyWalletContext()
+  const { isCopying, traderCopying } = useTraderCopying(address, protocol)
   const explorerUrl = PROTOCOL_PROVIDER[protocol]?.explorerUrl
   const shareStats = traderStats?.find((data) => data && data.type === (timeOption.id as unknown as TimeFrameEnum))
-  const { sm } = useResponsive()
+  const copyingWallets = copyWallets?.filter((wallet) => traderCopying?.[address]?.[protocol]?.includes(wallet.id))
 
   return (
     <Box px={3} py={2}>
@@ -41,7 +48,51 @@ const TraderInfo = ({
               {addressShorten(address, 3, 5)}
             </Type.LargeBold>
             <FavoriteButton address={address} protocol={protocol} size={16} />
-            {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
+            {isCopying && (
+              <Box>
+                <Tag
+                  width={70}
+                  status={TraderStatusEnum.COPYING}
+                  clickableTooltip
+                  tooltipContent={
+                    <Flex flexDirection="column" sx={{ gap: 1 }}>
+                      {copyingWallets &&
+                        copyingWallets.length > 0 &&
+                        copyingWallets.map((wallet) => {
+                          return (
+                            <Flex
+                              key={wallet.id}
+                              as={Link}
+                              to={`${ROUTES.MY_MANAGEMENT.path}?${URL_PARAM_KEYS.MY_MANAGEMENT_WALLET_ID}=${wallet.id}`}
+                              target="_blank"
+                              sx={{ alignItems: 'center', gap: 2, color: 'neutral1', '&:hover': { color: 'primary1' } }}
+                            >
+                              <Image
+                                src={parseExchangeImage(wallet.exchange)}
+                                width={20}
+                                height={20}
+                                sx={{ flexShrink: 0 }}
+                              />
+                              <Box
+                                as="span"
+                                sx={{
+                                  display: 'inline-block',
+                                  verticalAlign: 'middle',
+                                  width: '100%',
+                                  maxWidth: 200,
+                                  ...overflowEllipsis(),
+                                }}
+                              >
+                                {parseWalletName(wallet)}
+                              </Box>
+                            </Flex>
+                          )
+                        })}
+                    </Flex>
+                  }
+                />
+              </Box>
+            )}
           </Flex>
           <Flex sx={{ alignItems: 'center', gap: 2 }}>
             <CopyButton type="button" variant="ghost" value={address} size="sm" iconSize={16} sx={{ p: 0 }} />
