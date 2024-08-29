@@ -3,6 +3,7 @@ import {
   BookBookmark,
   CaretDown,
   ChartBar,
+  CircleHalfTilt,
   CrownSimple,
   PresentationChart,
   ThermometerSimple,
@@ -106,6 +107,11 @@ const configs = [
     text: <Trans>Subscription</Trans>,
     route: ROUTES.SUBSCRIPTION.path,
   },
+  {
+    icon: CircleHalfTilt,
+    text: <Trans>Dune Dashboard</Trans>,
+    link: LINKS.duneUrl,
+  },
 ]
 
 const internalConfigs = [
@@ -133,6 +139,11 @@ const internalConfigs = [
     icon: CrownSimple,
     text: <Trans>Subscription</Trans>,
     route: ROUTES.SUBSCRIPTION.path,
+  },
+  {
+    icon: CircleHalfTilt,
+    text: <Trans>Dune Dashboard</Trans>,
+    link: LINKS.duneUrl,
   },
 ]
 

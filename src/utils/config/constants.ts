@@ -64,6 +64,7 @@ export const LINKS = {
   copinEliteClub: 'https://docs.copin.io/welcome/copin-elite-club',
   support: 'https://t.me/leecopin',
   feedback: 'https://copin.canny.io',
+  duneUrl: 'https://dune.com/copin',
 }
 
 export const NAVBAR_HEIGHT = 64
