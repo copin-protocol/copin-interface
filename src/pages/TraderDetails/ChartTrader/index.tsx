@@ -7,6 +7,7 @@ import { getTraderPnlStatsApi } from 'apis/statisticApi'
 import BarChartTraderPnL from 'components/@charts/BarChartTraderPnL'
 import LineChartPnL from 'components/@charts/LineChartPnL'
 import { parseTraderPnLStatisticData } from 'components/@charts/LineChartPnL/helpers'
+import ActiveDot from 'components/@ui/ActiveDot'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 // import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -15,6 +16,7 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { formatNumber } from 'utils/helpers/format'
 import { getDurationFromTimeFilter } from 'utils/helpers/transform'
 
 const ChartTrader = ({
@@ -46,6 +48,13 @@ const ChartTrader = ({
       retry: 0,
     }
   )
+  const cumulativePnL = useMemo(() => {
+    let cumulativePnL = 0
+    if (stats) {
+      cumulativePnL = stats.reduce((acc, item) => acc + item.pnl, 0)
+    }
+    return cumulativePnL
+  }, [stats])
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', px: 12, pt: 12, pb: 1 }}>
@@ -55,7 +64,27 @@ const ChartTrader = ({
           <Flex width="100%" alignItems="center" justifyContent="space-between">
             <Box width={56} />
             <Flex alignItems="center" sx={{ gap: 2 }} mb={1}>
-              <Type.Caption color="neutral3">PnL</Type.Caption>
+              {isBarChart ? (
+                <Flex flexWrap="wrap" alignItems="center" color="neutral3" sx={{ gap: 2 }}>
+                  <Flex alignItems="center" sx={{ gap: 1 }}>
+                    <ActiveDot color="green1" />
+                    <Type.Caption>Daily Profit</Type.Caption>
+                  </Flex>
+                  <Flex alignItems="center" sx={{ gap: 1 }}>
+                    <ActiveDot color="red2" />
+                    <Type.Caption>Daily Loss</Type.Caption>
+                  </Flex>
+                  <Flex alignItems="center" sx={{ gap: 1 }}>
+                    <ActiveDot color="orange1" />
+                    <Type.Caption>Cumulative PnL: </Type.Caption>
+                    <Type.Caption color={cumulativePnL > 0 ? 'green1' : cumulativePnL < 0 ? 'red2' : 'neutral1'}>{`${
+                      cumulativePnL < 0 ? '-' : ''
+                    }$${formatNumber(Math.abs(cumulativePnL), 2)}`}</Type.Caption>
+                  </Flex>
+                </Flex>
+              ) : (
+                <Type.Caption color="neutral3">PnL</Type.Caption>
+              )}
               {/* <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} /> */}
             </Flex>
             <Flex alignItems="center">

@@ -41,6 +41,7 @@ export interface ExchangeStatsData {
 }
 
 export interface TraderPnlStatisticData {
+  cumulativePnl: number
   pnl: number
   fee: number
   percentage?: number
