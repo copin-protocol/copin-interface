@@ -123,4 +123,20 @@ export const cloneCopyTradeFormSchema = yup.object({
       then: (schema) => schema.required(),
     })
     .label('Clone to address'),
+  serviceKey: yup.string().required().label('Service Key'),
+  exchange: yup
+    .mixed()
+    .oneOf([
+      CopyTradePlatformEnum.GMX,
+      CopyTradePlatformEnum.BINGX,
+      CopyTradePlatformEnum.BITGET,
+      CopyTradePlatformEnum.BINANCE,
+      CopyTradePlatformEnum.BYBIT,
+      CopyTradePlatformEnum.OKX,
+      CopyTradePlatformEnum.GATE,
+      CopyTradePlatformEnum.SYNTHETIX_V2,
+      CopyTradePlatformEnum.GNS_V8,
+      // CopyTradePlatformEnum.SYNTHETIX_V3,
+    ])
+    .label('Exchange'),
 })

@@ -65,6 +65,9 @@ const ExplorerLogo = ({
     case ProtocolEnum.ROLLIE_SCROLL:
       icon = 'SCROLL'
       break
+    case ProtocolEnum.MUMMY_FANTOM:
+      icon = 'FANTOM'
+      break
     default:
       icon = 'OPTIMISM'
   }

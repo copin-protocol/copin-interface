@@ -1,3 +1,4 @@
+import { ArrowSquareOut } from '@phosphor-icons/react'
 import { Link } from 'react-router-dom'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
@@ -55,7 +56,8 @@ const TraderInfo = ({
                   status={TraderStatusEnum.COPYING}
                   clickableTooltip
                   tooltipContent={
-                    <Flex flexDirection="column" sx={{ gap: 1 }}>
+                    <Flex flexDirection="column" sx={{ gap: 1, maxHeight: '80svh', overflow: 'auto' }}>
+                      <Type.Caption color="neutral3">Copy Wallet:</Type.Caption>
                       {copyingWallets &&
                         copyingWallets.length > 0 &&
                         copyingWallets.map((wallet) => {
@@ -65,7 +67,12 @@ const TraderInfo = ({
                               as={Link}
                               to={`${ROUTES.MY_MANAGEMENT.path}?${URL_PARAM_KEYS.MY_MANAGEMENT_WALLET_ID}=${wallet.id}`}
                               target="_blank"
-                              sx={{ alignItems: 'center', gap: 2, color: 'neutral1', '&:hover': { color: 'primary1' } }}
+                              sx={{
+                                alignItems: 'center',
+                                gap: '6px',
+                                color: 'neutral3',
+                                '&:hover': { color: 'primary1' },
+                              }}
                             >
                               <Image
                                 src={parseExchangeImage(wallet.exchange)}
@@ -85,6 +92,7 @@ const TraderInfo = ({
                               >
                                 {parseWalletName(wallet)}
                               </Box>
+                              <ArrowSquareOut size={16} />
                             </Flex>
                           )
                         })}

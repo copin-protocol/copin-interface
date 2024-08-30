@@ -249,7 +249,7 @@ function SwitchProtocolsComponent({
             }
           : { borderRadius: 0, border: 'none', p: 0, ...(buttonSx ?? {}) }
       }
-      menuSx={{ width: 'max-content', maxWidth: '95svw', maxHeight: '60svh', py: 2, overflowY: 'auto' }}
+      menuSx={{ width: 'max-content', maxWidth: '95svw', maxHeight: '80svh', py: 2, overflowY: 'auto' }}
       sx={{ minWidth: 'fit-content', ...(sx ?? {}) }}
       hasArrow={true}
       dismissible={false}
