@@ -117,6 +117,7 @@ const OnchainPositionContainer = ({ address }: { address: string }) => {
   const onClose = (item: OnchainPositionData) => {
     openCloseData(item)
   }
+
   return (
     <>
       {!data?.length && !isLoading && (

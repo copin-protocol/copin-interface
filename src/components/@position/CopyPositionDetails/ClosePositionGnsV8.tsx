@@ -1,9 +1,13 @@
+import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 
+import ToastBody from 'components/@ui/ToastBody'
 import { renderEntry } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { useSmartWalletContract } from 'hooks/web3/useContract'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
@@ -15,6 +19,7 @@ import { DELAY_SYNC } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import delay from 'utils/helpers/delay'
 import { ARBITRUM_CHAIN } from 'utils/web3/chains'
+import { calculateAcceptablePrice } from 'utils/web3/perps'
 
 interface ClosePositionData {
   index: number
@@ -75,17 +80,23 @@ const ClosePositionHandler = ({
   const [submitting, setSubmitting] = useState(false)
   const smartWalletContract = useSmartWalletContract(smartWallet, true)
   const smartWalletMutation = useContractMutation(smartWalletContract)
+  const { prices } = useGetUsdPrices()
 
   // console.log('positions', positions)
 
   const onConfirm = async () => {
     if (submitting) return
+    const price = prices[position.indexToken]
+    if (price == null) {
+      toast.error(<ToastBody title="Fetch price error" message="Can't find the price of this token" />)
+      return
+    }
     setSubmitting(true)
 
     smartWalletMutation.mutate(
       {
         method: 'closePosition',
-        params: [position.index],
+        params: [position.index, calculateAcceptablePrice(parseUnits(price.toString(), 10), !position.isLong)],
         // gasLimit: 2500000,
       },
       {
