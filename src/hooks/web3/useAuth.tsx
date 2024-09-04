@@ -7,7 +7,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { toast } from 'react-toastify'
 
 import { loginWeb3Api, logoutApi, verifyLoginWeb3Api } from 'apis/authApis'
-import { clearAuth, getStoredJwt, getStoredWallet, setJwt, storeAuth } from 'apis/helpers'
+import { clearAuth, clearWeb3Auth, getStoredJwt, getStoredWallet, setJwt, storeAuth } from 'apis/helpers'
 import { getMyProfileApi } from 'apis/userApis'
 import WaitingWallet, { WaitingState } from 'components/@auth/AuthWaitingWallet'
 import ConfirmReferralModal from 'components/@auth/ConfirmReferralModal'
@@ -60,17 +60,22 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   }
   const { addReferral } = useReferralActions({ onSuccess })
 
-  const disconnect = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEYS.BINGX_NOTE)
-    clearAuth()
+  const disconnectWeb3 = useCallback(() => {
+    clearWeb3Auth()
     setWaitingState(null)
-    setMyProfile(null)
-    setIsAuthenticated(false)
     if (!wallet) return
     deactivate({
       label: wallet.label,
     })
-  }, [deactivate, setMyProfile, wallet])
+  }, [deactivate, wallet])
+
+  const disconnect = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEYS.BINGX_NOTE)
+    clearAuth()
+    setMyProfile(null)
+    setIsAuthenticated(false)
+    disconnectWeb3()
+  }, [disconnectWeb3, setMyProfile])
 
   useEffect(() => {
     // if (!wallet) {
@@ -166,23 +171,35 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     }
     if (storedWallet) {
       // setWaitingState(WaitingState.Connecting)
-      const [_wallet] = await activate({
+      activate({
         autoSelect: {
           label: storedWallet,
           disableModals: true,
         },
+      }).then(([_wallet]) => {
+        if (!_wallet) {
+          disconnectWeb3()
+          return
+        }
+        if (_wallet) {
+          const _account = getAccount(_wallet)
+          if (_account.address !== storedAccount) {
+            setWaitingState(WaitingState.SwitchAccount)
+            return
+          }
+        }
       })
       // if (!_wallet) {
       //   disconnect()
       //   return
       // }
-      if (_wallet) {
-        const _account = getAccount(_wallet)
-        if (_account.address !== storedAccount) {
-          setWaitingState(WaitingState.SwitchAccount)
-          return
-        }
-      }
+      // if (_wallet) {
+      //   const _account = getAccount(_wallet)
+      //   if (_account.address !== storedAccount) {
+      //     setWaitingState(WaitingState.SwitchAccount)
+      //     return
+      //   }
+      // }
     }
     try {
       setJwt(jwt)
