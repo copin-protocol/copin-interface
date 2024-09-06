@@ -60,4 +60,5 @@ export const ALLOWED_PROTOCOLS = [
   ProtocolEnum.LEVEL_BNB,
   ProtocolEnum.APOLLOX_BNB,
   ProtocolEnum.KILOEX_OPBNB,
+  ProtocolEnum.ROLLIE_SCROLL,
 ]

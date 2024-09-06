@@ -7,7 +7,7 @@ import useInternalRole from 'hooks/features/useInternalRole'
 import { Box, Flex } from 'theme/base'
 import { ChainStatsEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { capitalizeFirstLetter, lowerFirstLetter } from 'utils/helpers/transform'
+import { lowerFirstLetter } from 'utils/helpers/transform'
 
 import StatusByNetwork from './StatusByNetwork'
 
@@ -27,45 +27,29 @@ export default function Overview() {
       const protocols: any = {}
 
       Object.entries(listenerData).forEach(([key, value]) => {
-        if (key.includes('mirror')) {
-          let protocol
-          const fieldName = 'latestRawDataBlock'
-          const [mirrorProtocol, mirrorFieldName] = key.split(capitalizeFirstLetter(network))
-          if (!mirrorFieldName) {
+        let protocol = ''
+        let blockType = ''
+        if (key.match('synthetixV3')?.length) {
+          protocol = 'synthetixV3'
+          blockType = lowerFirstLetter(key.split(/synthetixV3/i)?.[1])
+        } else if (key.includes('mirror')) {
+          blockType = 'latestRawDataBlock'
+          const [mirrorProtocol, mirrorBlockType] = key.split(new RegExp(network, 'i'))
+          if (!mirrorBlockType) {
             protocol = key.split('LastBlock')?.[0]
           } else {
             protocol = mirrorProtocol
           }
-
-          if (protocol) {
-            const blockType = lowerFirstLetter(fieldName)
-
-            if (protocol && !protocols[protocol]) {
-              protocols[protocol] = {
-                protocol,
-                latestRawDataBlock: undefined,
-                latestOrderBlock: undefined,
-                latestPositionBlock: undefined,
-              }
-            }
-            protocols[protocol][blockType] = value
-          }
         } else {
-          const [protocol, fieldName] = key.split(capitalizeFirstLetter(network))
-          if (protocol && fieldName) {
-            const blockType = lowerFirstLetter(fieldName)
-
-            if (protocol && !protocols[protocol]) {
-              protocols[protocol] = {
-                protocol,
-                latestRawDataBlock: undefined,
-                latestOrderBlock: undefined,
-                latestPositionBlock: undefined,
-              }
-            }
-            protocols[protocol][blockType] = value
+          const [_protocol, _blockType] = key.split(new RegExp(network, 'i'))
+          if (_protocol && _blockType) {
+            blockType = lowerFirstLetter(_blockType)
+            protocol = _protocol
           }
         }
+        protocols[protocol] = { ...(protocols[protocol] ?? {}), protocol, [blockType]: value }
+        protocol = ''
+        blockType = ''
       })
 
       result[network] = Object.values(protocols).map((e: any) => {
@@ -88,12 +72,9 @@ export default function Overview() {
   return (
     <Box p={3} sx={{ height: '100%', overflow: 'hidden auto' }}>
       <Flex flexDirection="column" sx={{ gap: 3 }}>
-        <StatusByNetwork network={ChainStatsEnum.ABITRUM} data={formattedData?.[ChainStatsEnum.ABITRUM]} />
-        <StatusByNetwork network={ChainStatsEnum.OPTIMISM} data={formattedData?.[ChainStatsEnum.OPTIMISM]} />
-        <StatusByNetwork network={ChainStatsEnum.POLYGON} data={formattedData?.[ChainStatsEnum.POLYGON]} />
-        <StatusByNetwork network={ChainStatsEnum.BNB_CHAIN} data={formattedData?.[ChainStatsEnum.BNB_CHAIN]} />
-        <StatusByNetwork network={ChainStatsEnum.BASE} data={formattedData?.[ChainStatsEnum.BASE]} />
-        <StatusByNetwork network={ChainStatsEnum.MANTLE} data={formattedData?.[ChainStatsEnum.MANTLE]} />
+        {Object.values(ChainStatsEnum).map((chainStats) => {
+          return <StatusByNetwork key={chainStats} network={chainStats} data={formattedData?.[chainStats]} />
+        })}
       </Flex>
     </Box>
   )

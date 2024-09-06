@@ -1,4 +1,5 @@
 import { LanguageProvider } from 'i18n'
+import PythConnection from 'pythConnection'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 import ThemeProvider from 'theme'
@@ -9,8 +10,6 @@ import UseRemoveTimeFilter from 'hooks/helpers/useRemoveTimeFilter'
 import { useInitTabsOpen } from 'hooks/helpers/useTabsOpen'
 import { ProtocolProvider } from 'hooks/store/useProtocols'
 import ThemedGlobalStyle from 'theme/styles'
-// import GainsTradeConnection from 'utils/web3/gTrade'
-import PythConnection from 'utils/web3/pyth'
 
 import DappProvider from './DappProvider'
 

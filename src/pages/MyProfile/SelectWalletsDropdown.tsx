@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
+import React from 'react'
 import { GridProps } from 'styled-system'
 
 import Divider from 'components/@ui/Divider'
@@ -7,9 +8,9 @@ import { CopyWalletData } from 'entities/copyWallet'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
-import { Box, Flex, Grid, Type } from 'theme/base'
+import { Box, Flex, Grid, Image, Type } from 'theme/base'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { parseWalletName } from 'utils/helpers/transform'
+import { parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 
 export default function SelectWalletsDropdown({
   allWallets,
@@ -81,18 +82,21 @@ export default function SelectWalletsDropdown({
                   <ControlledCheckbox
                     checked={isChecked}
                     label={
-                      <Box
-                        as="span"
-                        sx={{
-                          display: 'inline-block',
-                          verticalAlign: 'middle',
-                          width: '100%',
-                          maxWidth: 200,
-                          ...overflowEllipsis(),
-                        }}
-                      >
-                        {parseWalletName(item)}
-                      </Box>
+                      <Flex key={item.id} sx={{ alignItems: 'center', gap: 2, width: '100%' }}>
+                        <Image src={parseExchangeImage(item.exchange)} width={20} height={20} sx={{ flexShrink: 0 }} />
+                        <Box
+                          as="span"
+                          sx={{
+                            display: 'inline-block',
+                            verticalAlign: 'middle',
+                            width: '100%',
+                            maxWidth: 200,
+                            ...overflowEllipsis(),
+                          }}
+                        >
+                          {parseWalletName(item)}
+                        </Box>
+                      </Flex>
                     }
                     size={16}
                     onChange={() => handleToggleWallet(item)}

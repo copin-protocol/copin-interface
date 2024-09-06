@@ -224,7 +224,7 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.KTX_MANTLE]: '',
   [ProtocolEnum.YFX_ARB]: '',
   [ProtocolEnum.KILOEX_OPBNB]: 'COPY_TRADE_MAIN_STREAM',
-  [ProtocolEnum.ROLLIE_SCROLL]: '',
+  [ProtocolEnum.ROLLIE_SCROLL]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.PERENNIAL_ARB]: '',
   [ProtocolEnum.MUMMY_FANTOM]: '',
 }

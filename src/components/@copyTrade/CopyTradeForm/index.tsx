@@ -252,6 +252,12 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  useEffect(() => {
+    if (copyWalletId) {
+      clearErrors('copyWalletId')
+    }
+  }, [clearErrors, copyWalletId])
+
   const permissionToSelectProtocol = useCopyTradePermission(true)
   const { sm } = useResponsive()
 
@@ -426,7 +432,20 @@ const CopyTraderForm: CopyTradeFormComponent = ({
         )}
 
         <Box mt={24}>
-          <Label label="Copy Wallet" />
+          {isClone ? (
+            <Flex mb={3} alignItems="center" sx={{ gap: 1 }}>
+              <LabelWithTooltip
+                id="tt_copy_wallet"
+                tooltip={`The feature for premium users allows cloning a copy-trade settings to other wallet.`}
+                sx={{ borderBottom: '1px dashed', mb: '-1px', borderBottomColor: 'neutral3', textDecoration: 'none' }}
+              >
+                Copy Wallet
+              </LabelWithTooltip>
+              <IconBox icon={<CrownSimple size={16} weight="fill" />} color="orange1" />
+            </Flex>
+          ) : (
+            <Label label="Copy Wallet" />
+          )}
           <Flex sx={{ gap: 2, alignItems: ['start', 'end'] }}>
             <Box flex={1}>
               <Select
@@ -440,13 +459,13 @@ const CopyTraderForm: CopyTradeFormComponent = ({
                   setValue(fieldName.exchange, newValue.value)
                 }}
                 isSearchable
-                isDisabled={isEdit || isClone}
+                isDisabled={isEdit || (isClone && !isPremiumUser)}
               />
             </Box>
 
             <Box flex={[1, 2]}>
               <Wallets
-                disabledSelect={!!isEdit || !!isClone}
+                disabledSelect={!!isEdit || (!!isClone && !isPremiumUser)}
                 platform={platform}
                 currentWalletId={copyWalletId}
                 onChangeWallet={onChangeWallet}
@@ -649,9 +668,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
               control={control}
               error=""
               minValue={2}
-              maxValue={isInternal ? 50 : 30}
+              maxValue={50}
               stepValue={1}
-              marksStep={sm ? (isInternal ? 5 : 2) : 5}
+              marksStep={5}
               marksUnit={'x'}
             />
           </Box>

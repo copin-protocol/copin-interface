@@ -272,6 +272,10 @@ export enum ChainStatsEnum {
   BNB_CHAIN = 'bnb',
   BASE = 'base',
   MANTLE = 'mantle',
+  OPBNB = 'opbnb',
+  SCROLL = 'scroll',
+  BLAST = 'blast',
+  MODE = 'mode',
 }
 
 export enum RewardSymbolEnum {

@@ -58,7 +58,15 @@ export default function useCopyTradeColumns({
   setOpenCloneDrawer: (value: SetStateAction<boolean>) => void
   setOpenDeleteModal: (value: SetStateAction<boolean>) => void
   setOpenConfirmStopModal: (value: SetStateAction<boolean>) => void
-  toggleStatus: ({ id, currentStatus }: { id: string; currentStatus: CopyTradeStatusEnum }) => void
+  toggleStatus: ({
+    id,
+    currentStatus,
+    multipleCopy,
+  }: {
+    id: string
+    currentStatus: CopyTradeStatusEnum
+    multipleCopy: boolean
+  }) => void
   copyTradeData: MutableRefObject<CopyTradeWithCheckingData | undefined>
 }) {
   const { checkIsEligible } = useCheckCopyTradeAction()
@@ -70,7 +78,7 @@ export default function useCopyTradeColumns({
         if (!checkIsEligible()) {
           return
         }
-        toggleStatus({ id: item.id, currentStatus: item.status })
+        toggleStatus({ id: item.id, currentStatus: item.status, multipleCopy: item.multipleCopy })
         return
       }
       if (item.status === CopyTradeStatusEnum.RUNNING) {
@@ -602,7 +610,7 @@ function renderCopyTrader(data: CopyTradeWithCheckingData, isRunning: boolean) {
       {data.multipleCopy ? (
         data.accounts && (
           <>
-            <Flex data-tooltip-id={data.id} sx={{ alignItems: 'center', gap: 2 }}>
+            <Flex data-tooltip-id={data.id} sx={{ alignItems: 'center', gap: 2, width: 'max-content' }}>
               <AvatarGroup addresses={data.accounts} size={24} />
               <Type.Caption color="neutral4">|</Type.Caption>
               <Image
@@ -612,29 +620,31 @@ function renderCopyTrader(data: CopyTradeWithCheckingData, isRunning: boolean) {
                 sx={{ flexShrink: 0 }}
               />
             </Flex>
-            <Tooltip id={data.id} clickable>
-              <Flex sx={{ flexDirection: 'column', gap: 1 }}>
-                {data.accounts.map((_a) => {
-                  return (
-                    <TraderCopyAddress
-                      key={_a}
-                      address={_a}
-                      protocol={data.protocol}
-                      options={{
-                        hasCopyCountWarningIcon: isRunning,
-                        hasCopyVolumeWarningIcon: isRunning,
-                        copyVolume: data.copyVolume,
-                        maxCopyVolume: data.maxVolume,
-                        isRef: data.isRef,
-                        plan: data.plan,
-                        hasCopyTradeVolumeIcon: isRunning,
-                        hasCopyAddress: true,
-                      }}
-                    />
-                  )
-                })}
-              </Flex>
-            </Tooltip>
+            {isRunning && (
+              <Tooltip id={data.id} clickable>
+                <Flex sx={{ flexDirection: 'column', gap: 1 }}>
+                  {data.accounts.map((_a) => {
+                    return (
+                      <TraderCopyAddress
+                        key={_a}
+                        address={_a}
+                        protocol={data.protocol}
+                        options={{
+                          hasCopyCountWarningIcon: isRunning,
+                          hasCopyVolumeWarningIcon: isRunning,
+                          copyVolume: data.copyVolume,
+                          maxCopyVolume: data.maxVolume,
+                          isRef: data.isRef,
+                          plan: data.plan,
+                          hasCopyTradeVolumeIcon: isRunning,
+                          hasCopyAddress: true,
+                        }}
+                      />
+                    )
+                  })}
+                </Flex>
+              </Tooltip>
+            )}
           </>
         )
       ) : (

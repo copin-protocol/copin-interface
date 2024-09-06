@@ -129,6 +129,9 @@ const ROUTES = {
   FEE_REBATE: {
     path: '/fee-rebate',
   },
+  GNS_FEE_REBATE: {
+    path: '/fee-rebate/gns',
+  },
 }
 
 export default ROUTES

@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 import maxBy from 'lodash/maxBy'
 import minBy from 'lodash/minBy'
-import { useMemo } from 'react'
-import { Bar, CartesianGrid, Cell, ComposedChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import React, { useMemo } from 'react'
+import { Bar, Cell, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 import { TraderPnlStatisticData } from 'entities/statistic'
 import Loading from 'theme/Loading'
@@ -32,12 +32,17 @@ export default function BarChartTraderPnL({
       const minRoi = minBy(chartData, (item) => item.roi)?.roi ?? 0
       const maxPnl = maxBy(chartData, (item) => item.pnl)?.pnl ?? 0
       const minPnl = minBy(chartData, (item) => item.pnl)?.pnl ?? 0
+      const maxCumulativePnl = maxBy(chartData, (item) => item.cumulativePnl)?.cumulativePnl ?? 0
+      const minCumulativePnl = minBy(chartData, (item) => item.cumulativePnl)?.cumulativePnl ?? 0
 
       stats = {
         maxRoi,
         minRoi,
         maxPnl,
         minPnl,
+        maxCumulativePnl,
+        minCumulativePnl,
+        maxAbsCumulativePnl: Math.max(Math.abs(maxCumulativePnl), Math.abs(minCumulativePnl)),
         maxAbsPnl: Math.max(Math.abs(maxPnl), Math.abs(minPnl)),
         maxAbsRoi: Math.max(Math.abs(maxRoi), Math.abs(minRoi)),
       } as TraderPnlStatsData
@@ -45,6 +50,7 @@ export default function BarChartTraderPnL({
 
     return stats
   }, [data, chartData])
+
   return (
     <>
       {isLoading && <Loading />}
@@ -62,35 +68,69 @@ export default function BarChartTraderPnL({
             '.recharts-cartesian-axis-tick': {
               text: {
                 fill: 'neutral3',
-                fontSize: '13px',
+                fontSize: '10px',
               },
             },
           }}
         >
           <ResponsiveContainer height="100%" width="100%">
-            <ComposedChart data={chartData} margin={{ top: 0, left: 4, right: 4, bottom: 0 }}>
-              <CartesianGrid stroke={themeColors.neutral4} strokeDasharray="3 3" opacity={0.5} />
-              <XAxis dataKey="label" stroke={themeColors.neutral4} />
+            <ComposedChart data={chartData} barGap={0}>
+              {/*<CartesianGrid stroke={themeColors.neutral4} strokeDasharray="3 3" opacity={0.5} />*/}
+              <XAxis
+                dataKey="label"
+                stroke={themeColors.neutral4}
+                // axisLine={false}
+                // tickLine={false}
+                // angle={-90}
+                fontSize={10}
+                tickMargin={12}
+                minTickGap={10}
+              />
               <YAxis
                 domain={[-stats.maxAbsPnl * 1.2, stats.maxAbsPnl * 1.2]}
                 stroke={themeColors.neutral4}
                 tickFormatter={(value) => `$${compactNumber(value, 1)}`}
                 ticks={[-stats.maxAbsPnl * 1.2, 0, stats.maxAbsPnl * 1.2]}
               />
-              <Bar type="monotone" name="PnL" unit="$" dataKey="pnl" fill={themeColors.neutral1}>
+              <YAxis
+                domain={[-stats.maxAbsCumulativePnl * 1.2, stats.maxAbsCumulativePnl * 1.2]}
+                orientation="right"
+                yAxisId="right"
+                stroke={themeColors.neutral4}
+                ticks={[-stats.maxAbsCumulativePnl * 1.2, 0, stats.maxAbsCumulativePnl * 1.2]}
+                tickFormatter={(value) => `$${compactNumber(value, 1)}`}
+                mirror
+                type="number"
+                allowDecimals={false}
+                markerWidth={0}
+                tickMargin={-6}
+                axisLine={false}
+                tickLine={false}
+              />
+              <Bar type="monotone" minPointSize={1} name="PnL" unit="$" dataKey="pnl" fill={themeColors.neutral1}>
                 {chartData.map((item, i) => {
                   return (
                     <Cell
                       key={`cell-${i}`}
-                      fill={item.pnl > 0 ? themeColors.green1 : item.pnl < 0 ? themeColors.red2 : themeColors.neutral1}
+                      fill={item.pnl > 0 ? themeColors.green1 : item.pnl < 0 ? themeColors.red2 : themeColors.neutral4}
                     />
                   )
                 })}
               </Bar>
+              <Line
+                type="monotone"
+                name="Cumulative PnL"
+                unit="$"
+                dataKey="cumulativePnl"
+                yAxisId="right"
+                dot={false}
+                stroke={themeColors.orange1}
+                strokeWidth={1.5}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: themeColors.neutral5,
-                  borderColor: 'transparent',
+                  borderColor: themeColors.neutral4,
                   fontSize: '13px',
                   fontFamily: FONT_FAMILY,
                 }}
@@ -107,27 +147,40 @@ export default function BarChartTraderPnL({
 interface TraderPnlChartData {
   label: string
   date: string
+  cumulativePnl: number
+  cumulativePnlProfit?: number | null
+  cumulativePnlLoss?: number | null
   pnl: number
   fee: number
   roi: number
 }
 
 type TraderPnlStatsData = {
+  maxCumulativePnl: number
   maxPnl: number
   maxRoi: number
+  minCumulativePnl: number
   minPnl: number
   minRoi: number
+  maxAbsCumulativePnl: number
   maxAbsPnl: number
   maxAbsRoi: number
 }
 
 function CustomTooltip({ item }: { item: any }) {
+  const cumulativePnl = item?.[0]?.payload?.cumulativePnl ?? 0
   const pnl = item?.[0]?.payload?.pnl ?? 0
   const fee = item?.[0]?.payload?.fee ?? 0
   const color = pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'
   return (
-    <Flex p={2} bg="neutral5" flexDirection="column" sx={{ gap: 1 }}>
+    <Flex p={2} bg="neutral6" flexDirection="column" sx={{ gap: 1 }}>
       <Type.Small mb={1}>{formatLocalDate(item?.[0]?.payload?.date, DAYJS_FULL_DATE_FORMAT)}</Type.Small>
+      <Type.Small color="orange1">
+        Cumulative PnL:{' '}
+        <Type.Small color="orange1">
+          {cumulativePnl < 0 && '-'}${formatNumber(Math.abs(cumulativePnl), 2)}
+        </Type.Small>
+      </Type.Small>
       <Type.Small>
         PnL:{' '}
         <Type.Small color={color}>
@@ -151,6 +204,9 @@ function getChartData({ data }: { data: TraderPnlStatisticData[] | undefined }) 
         return {
           label: formatLocalDate(stats.date, 'MM/DD'),
           date: stats.date,
+          cumulativePnl: stats.cumulativePnl,
+          cumulativePnlProfit: stats.cumulativePnl >= 0 ? stats.cumulativePnl : null,
+          cumulativePnlLoss: stats.cumulativePnl < 0 ? stats.cumulativePnl : null,
           pnl: stats.pnl,
           fee: stats.fee,
           roi: stats.percentage,
@@ -175,7 +231,7 @@ export function generateChartDailyPnL(fromDate: number, toDate: number, cumulati
       }
     })
 
-    dateArray.push({ date: currentDate.toISOString(), pnl, fee })
+    dateArray.push({ date: currentDate.toISOString(), cumulativePnl: 0, pnl, fee })
     currentDate = currentDate.add(1, 'day')
   }
 
@@ -183,8 +239,11 @@ export function generateChartDailyPnL(fromDate: number, toDate: number, cumulati
     .filter((e) => dayjs(e.date).utc().isSame(fromDate) || dayjs(e.date).utc().isAfter(fromDate))
     .sort((x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : 0))
   const result: TraderPnlStatisticData[] = []
+  let cumulativePnl = 0
   for (let i = 0; i < data.length - 1; i++) {
+    cumulativePnl += data[i + 1].pnl
     result.push({
+      cumulativePnl,
       date: data[i + 1].date,
       pnl: data[i + 1].pnl,
       fee: data[i + 1].fee,

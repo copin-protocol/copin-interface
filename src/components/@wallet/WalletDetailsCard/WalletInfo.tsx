@@ -19,8 +19,9 @@ import { getCopyTradePlatformProtocol } from 'utils/web3/dcp'
 interface WalletInfoProps {
   data: CopyWalletData
   hiddenBalance?: boolean
+  showFund?: boolean
 }
-export default function WalletInfo({ data, hiddenBalance, sx }: WalletInfoProps & SxProps) {
+export default function WalletInfo({ data, hiddenBalance, showFund = true, sx }: WalletInfoProps & SxProps) {
   const walletKey = useMemo(
     () => data?.smartWalletAddress ?? data?.[getExchangeKey(data?.exchange)]?.apiKey ?? '',
     [data]
@@ -75,16 +76,18 @@ export default function WalletInfo({ data, hiddenBalance, sx }: WalletInfoProps 
           </Flex>
         }
       />
-      <InfoItem
-        label={<Trans>Available / Total Fund</Trans>}
-        value={
-          hiddenBalance
-            ? '*****'
-            : `${data.availableBalance ? `$${formatNumber(data.availableBalance)}` : '--'} / ${
-                data.balance ? `$${formatNumber(data.balance)}` : '--'
-              }`
-        }
-      />
+      {showFund && (
+        <InfoItem
+          label={<Trans>Available / Total Fund</Trans>}
+          value={
+            hiddenBalance
+              ? '*****'
+              : `${data.availableBalance ? `$${formatNumber(data.availableBalance)}` : '--'} / ${
+                  data.balance ? `$${formatNumber(data.balance)}` : '--'
+                }`
+          }
+        />
+      )}
     </Box>
   )
 }

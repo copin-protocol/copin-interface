@@ -1,6 +1,7 @@
 import { CopyTradeData } from 'entities/copyTrade'
 import { Flex, Image, Type } from 'theme/base'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { DCP_EXCHANGES } from 'utils/config/constants'
+import { CopyTradePlatformEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
 import { CopyTradeFormValues } from './types'
@@ -26,6 +27,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     skipLowLeverage,
     lowLeverage,
     protocol,
+    serviceKey,
     exchange,
     copyWalletId,
     copyAll,
@@ -54,6 +56,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     result.lookBackOrders = lookBackOrders
   }
   if (protocol) result.protocol = protocol
+  if (serviceKey) result.serviceKey = serviceKey
   if (enableStopLoss) {
     result.stopLossType = stopLossType
     result.stopLossAmount = stopLossAmount
@@ -61,6 +64,12 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
   if (enableTakeProfit) {
     result.takeProfitType = takeProfitType
     result.takeProfitAmount = takeProfitAmount
+  }
+  if (!result.takeProfitType) {
+    result.takeProfitType = SLTPTypeEnum.PERCENT
+  }
+  if (!result.stopLossType) {
+    result.stopLossType = SLTPTypeEnum.PERCENT
   }
   if (typeof maxVolMultiplier === 'number' && maxVolMultiplier > 0) {
     result.maxMarginPerPosition = maxVolMultiplier * volume
@@ -93,6 +102,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
 }
 
 export function getRequestDataFromForm(formData: CopyTradeFormValues, isClone?: boolean) {
+  const isDCP = DCP_EXCHANGES.includes(formData.exchange)
   return {
     title: formData.title,
     volume: formData.volume,
@@ -103,22 +113,23 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues, isClone?: 
     enableStopLoss: !!formData?.stopLossAmount,
     stopLossType: formData.stopLossType,
     stopLossAmount: formData.stopLossAmount,
-    volumeProtection: !!formData.lookBackOrders,
-    lookBackOrders: formData.lookBackOrders ? formData.lookBackOrders : null,
+    volumeProtection: isDCP ? false : !!formData.lookBackOrders,
+    lookBackOrders: !isDCP && formData.lookBackOrders ? formData.lookBackOrders : null,
     enableTakeProfit: !!formData?.takeProfitAmount,
     takeProfitType: formData.takeProfitType,
     takeProfitAmount: formData.takeProfitAmount,
     maxVolMultiplier:
-      formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0
+      !isDCP && formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0
         ? Number(formData.maxMarginPerPosition / formData.volume)
         : null,
     skipLowLeverage: formData.skipLowLeverage,
     lowLeverage: formData.lowLeverage,
     skipLowCollateral: formData.skipLowCollateral,
     lowCollateral: formData.lowCollateral,
-    skipLowSize: formData.skipLowSize,
-    lowSize: formData.lowSize,
+    skipLowSize: isDCP ? undefined : formData.skipLowSize,
+    lowSize: isDCP ? undefined : formData.lowSize,
     protocol: formData.protocol,
+    serviceKey: formData.serviceKey,
     exchange: formData.exchange,
     copyWalletId: formData.copyWalletId,
     copyAll: formData.copyAll,

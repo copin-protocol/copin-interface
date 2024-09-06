@@ -29,7 +29,7 @@ export default function EventButton() {
   )
 }
 
-const ButtonWrapper = styled(Box)`
+export const ButtonWrapper = styled(Box)`
   position: relative;
   @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
     & .background {

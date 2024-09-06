@@ -35,7 +35,7 @@ export default function DeleteCopyTradeModal({
   const { mutate: deleteCopyTrade } = useMutation(() => deleteCopyTradeApi({ copyTradeId }), {
     onSuccess() {
       if (account && protocol) {
-        removeTraderCopying(account, protocol)
+        removeTraderCopying(account, protocol, copyTradeId)
       }
       onSuccess()
       onDismiss()

@@ -458,6 +458,8 @@ export function getSymbolTradingView(symbol: string) {
       return 'PEPE'
     case '1000BONK':
       return 'BONK'
+    case 'RNDR':
+      return 'RENDER'
     default:
       return symbol
   }

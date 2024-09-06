@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
 import { PencilSimpleLine } from '@phosphor-icons/react'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { EditText } from 'react-edit-text'
 // eslint-disable-next-line no-restricted-imports
 import 'react-edit-text/dist/index.css'
@@ -37,7 +37,12 @@ interface WalletDetailsProps {
   }) => void
 }
 
-const SmartWalletInfo = ({ data, hiddenBalance, sx }: { data: CopyWalletData; hiddenBalance?: boolean } & SxProps) => {
+export const SmartWalletInfo = ({
+  data,
+  hiddenBalance,
+  showFund = true,
+  sx,
+}: { data: CopyWalletData; hiddenBalance?: boolean; showFund?: boolean } & SxProps) => {
   const { total, available } = useWalletFund({
     address: data.smartWalletAddress,
     platform: data.exchange,
@@ -47,6 +52,7 @@ const SmartWalletInfo = ({ data, hiddenBalance, sx }: { data: CopyWalletData; hi
     <WalletInfo
       sx={sx}
       hiddenBalance={hiddenBalance}
+      showFund={showFund}
       data={{
         ...data,
         balance: total?.num ?? 0,

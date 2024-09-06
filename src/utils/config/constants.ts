@@ -64,6 +64,7 @@ export const LINKS = {
   copinEliteClub: 'https://docs.copin.io/welcome/copin-elite-club',
   support: 'https://t.me/leecopin',
   feedback: 'https://copin.canny.io',
+  duneUrl: 'https://dune.com/copin',
 }
 
 export const NAVBAR_HEIGHT = 64
@@ -169,6 +170,9 @@ export const DCP_SUPPORTED_PROTOCOLS = [
   ProtocolEnum.GNS_POLY,
   ProtocolEnum.AVANTIS_BASE,
   ProtocolEnum.EQUATION_ARB,
+  ProtocolEnum.POLYNOMIAL,
+  ProtocolEnum.DEXTORO,
+  ProtocolEnum.CYBERDEX,
 ]
 
 export const DEFAULT_PROTOCOL = ProtocolEnum.GNS

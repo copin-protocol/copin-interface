@@ -11,15 +11,15 @@ import ReferralStatus from 'components/@wallet/WalletReferralStatus'
 import Num from 'entities/Num'
 import { CopyWalletData } from 'entities/copyWallet'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { CEX_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
-import { hideScrollbar } from 'utils/helpers/css'
+import { hideScrollbar, overflowEllipsis } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
-import { parseWalletName } from 'utils/helpers/transform'
+import { parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 import { getCopyTradePlatformProtocol } from 'utils/web3/dcp'
 
 export default function BalanceMenu({
@@ -81,7 +81,21 @@ export default function BalanceMenu({
               {copyWallets.map((wallet) => {
                 return (
                   <DropdownItem key={wallet.id} onClick={() => onChangeKey(wallet)}>
-                    {parseWalletName(wallet)}
+                    <Flex key={wallet.id} sx={{ alignItems: 'center', gap: 2, width: '100%' }}>
+                      <Image src={parseExchangeImage(wallet.exchange)} width={20} height={20} sx={{ flexShrink: 0 }} />
+                      <Box
+                        as="span"
+                        sx={{
+                          display: 'inline-block',
+                          verticalAlign: 'middle',
+                          width: '100%',
+                          maxWidth: 200,
+                          ...overflowEllipsis(),
+                        }}
+                      >
+                        {parseWalletName(wallet)}
+                      </Box>
+                    </Flex>
                   </DropdownItem>
                 )
               })}

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
@@ -39,7 +39,7 @@ export const useRealtimeUsdPricesStore = create<
       }),
     setPrices: (prices) =>
       set((state) => {
-        state.prices = prices
+        state.prices = { ...state.prices, ...prices }
       }),
     setPrice: ({ address, price }: { address: string; price: number }) =>
       set((state) => {
@@ -47,7 +47,7 @@ export const useRealtimeUsdPricesStore = create<
       }),
   }))
 )
-export const usePollingUsdPrice = () => {
+const usePollingUsdPrice = () => {
   const { setPrices } = useUsdPricesStore()
   useEffect(() => {
     let cancel = false
@@ -73,5 +73,10 @@ export const usePollingUsdPrice = () => {
     }
   }, [setPrices])
 }
+
+export const PollingUsdPrice = memo(function PollingUsdPriceMemo() {
+  usePollingUsdPrice()
+  return null
+})
 
 export default useUsdPricesStore
