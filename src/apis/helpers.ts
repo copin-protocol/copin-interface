@@ -11,11 +11,14 @@ export const storeAuth = ({ jwt, wallet, account }: { jwt: string; wallet?: stri
   if (wallet) localStorage.setItem(STORAGE_KEYS.WALLET, wallet)
   localStorage.setItem(STORAGE_KEYS.ACCOUNT, account)
 }
+export const clearWeb3Auth = () => {
+  localStorage.removeItem(STORAGE_KEYS.WALLET)
+  localStorage.removeItem(STORAGE_KEYS.ACCOUNT)
+}
 export const clearAuth = () => {
   requester.defaults.headers.common['Authorization'] = ''
   localStorage.removeItem(STORAGE_KEYS.JWT)
-  localStorage.removeItem(STORAGE_KEYS.WALLET)
-  localStorage.removeItem(STORAGE_KEYS.ACCOUNT)
+  clearWeb3Auth()
 }
 export const getStoredJwt = (): string | null => {
   const storedJwt = localStorage.getItem(STORAGE_KEYS.JWT)
