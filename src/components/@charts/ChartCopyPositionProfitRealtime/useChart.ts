@@ -39,6 +39,8 @@ export function useChart(opts: ChartingLibraryWidgetOptions) {
       })
 
       chart.applyOverrides({
+        'paneProperties.background': themeColors.neutral8,
+        'paneProperties.backgroundType': 'solid',
         'paneProperties.horzGridProperties.color': 'rgba(0,0,0,0)',
         'paneProperties.vertGridProperties.color': 'rgba(0,0,0,0)',
       })

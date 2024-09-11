@@ -1,3 +1,4 @@
+import { themeColors } from 'theme/colors'
 import { getCurrentTimezone } from 'utils/helpers/transform'
 
 import {
@@ -73,5 +74,8 @@ export const DEFAULT_CHART_REALTIME_PROPS: Partial<ChartingLibraryWidgetOptions>
   disabled_features: disabledFeatures,
   theme: 'dark',
   time_frames: timeFrames,
-  overrides: {},
+  overrides: {
+    'paneProperties.background': themeColors.neutral8,
+    'paneProperties.backgroundType': 'solid',
+  },
 }

@@ -7,17 +7,23 @@ import {
   Trash,
 } from '@phosphor-icons/react'
 import { MutableRefObject, SetStateAction, useCallback, useMemo } from 'react'
+import { useMutation } from 'react-query'
+import { toast } from 'react-toastify'
 
+import { updateCopyTradeApi } from 'apis/copyTradeApis'
 import TraderCopyAddress from 'components/@copyTrade/TraderCopyAddress'
 import { renderSLTPSetting } from 'components/@position/configs/copyPositionRenderProps'
 import AvatarGroup from 'components/@ui/Avatar/AvatarGroup'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import Divider from 'components/@ui/Divider'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
-import MarketGroup from 'components/@ui/MarketGroup'
+import MarketGroup, { MarketGroupFull } from 'components/@ui/MarketGroup'
 import ReverseTag from 'components/@ui/ReverseTag'
+import TextWithEdit, { parseInputValue } from 'components/@ui/TextWithEdit'
+import ToastBody from 'components/@ui/ToastBody'
 import { CopyTradeData } from 'entities/copyTrade'
 import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
 import MarginProtectionIcon from 'theme/Icons/MarginProtectionIcon'
@@ -30,11 +36,13 @@ import { ColumnData } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { DCP_EXCHANGES } from 'utils/config/constants'
 import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
-import { TOOLTIP_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { compactNumber, formatNumber } from 'utils/helpers/format'
+import { formatNumber } from 'utils/helpers/format'
+import { getErrorMessage } from 'utils/helpers/handleError'
 import { getProtocolDropdownImage } from 'utils/helpers/transform'
 
 import ActionItem from './ActionItem'
@@ -69,6 +77,16 @@ export default function useCopyTradeColumns({
   }) => void
   copyTradeData: MutableRefObject<CopyTradeWithCheckingData | undefined>
 }) {
+  const refetchQueries = useRefetchQueries()
+  const { mutate: updateCopyTrade } = useMutation(updateCopyTradeApi, {
+    onSuccess: async (data) => {
+      toast.success(<ToastBody title="Success" message="Your update has been succeeded" />)
+      refetchQueries([QUERY_KEYS.GET_COPY_TRADE_SETTINGS])
+    },
+    onError: (err) => {
+      toast.error(<ToastBody title="Error" message={getErrorMessage(err)} />)
+    },
+  })
   const { checkIsEligible } = useCheckCopyTradeAction()
   const toggleStatusCopyTrade = useCallback(
     (item: CopyTradeWithCheckingData) => {
@@ -88,6 +106,65 @@ export default function useCopyTradeColumns({
     },
     [checkIsEligible, isMutating, onSelect, setOpenConfirmStopModal, toggleStatus]
   )
+  const updateNumberValue = ({
+    copyTradeId,
+    oldData,
+    value,
+    field,
+  }: {
+    copyTradeId: string
+    oldData: CopyTradeData
+    value: string
+    field: keyof CopyTradeData
+  }) => {
+    if (typeof value !== 'string') return
+    const numberValue = parseInputValue(value)
+    updateCopyTrade({
+      copyTradeId,
+      data: {
+        account: oldData.account,
+        accounts: oldData.accounts,
+        multipleCopy: oldData.multipleCopy,
+        [field]: numberValue,
+      },
+    })
+  }
+  const validateNumberValue = ({
+    oldData,
+    value,
+    field,
+  }: {
+    oldData: CopyTradeData
+    value: string
+    field: keyof CopyTradeData
+  }) => {
+    if (typeof value !== 'string') return
+    const numberValue = parseInputValue(value)
+    switch (field) {
+      case 'volume':
+        if (DCP_EXCHANGES.includes(oldData.exchange) && numberValue < 60) {
+          toast.error(<ToastBody title="Error" message="DCP Volume must be greater than or equal to $60" />)
+          return
+        }
+        if (numberValue > 100000) {
+          toast.error(<ToastBody title="Error" message="Volume must be less than $100,000" />)
+          return
+        }
+        return true
+      case 'leverage':
+        if (numberValue < 2) {
+          toast.error(<ToastBody title="Error" message="Leverage must be greater than or equal to 2" />)
+          return
+        }
+        if (numberValue > 50) {
+          toast.error(<ToastBody title="Error" message="Leverage must be less than 50x" />)
+          return
+        }
+        return true
+    }
+    return numberValue >= 0
+  }
+
   const isRunningFn = useCallback((status: CopyTradeStatusEnum) => status === CopyTradeStatusEnum.RUNNING, [])
   const renderToggleRunning = useCallback(
     (item: CopyTradeWithCheckingData) => (
@@ -131,32 +208,91 @@ export default function useCopyTradeColumns({
   )
   const renderVolume = useCallback(
     (item: CopyTradeWithCheckingData) => (
-      <Type.Caption color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}>
-        ${item.volume >= 10000 ? compactNumber(item.volume, 2) : formatNumber(item.volume)}
-      </Type.Caption>
+      <Flex
+        color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}
+        sx={{
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          width: '100%',
+        }}
+      >
+        <Type.Caption>$</Type.Caption>
+        <TextWithEdit
+          defaultValue={item.volume}
+          onSave={(value) => updateNumberValue({ copyTradeId: item.id, oldData: item, value, field: 'volume' })}
+          onValidate={(value) => validateNumberValue({ oldData: item, value, field: 'volume' })}
+          disabled={!isRunningFn(item.status)}
+        />
+        {/*<Type.Caption color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}>*/}
+        {/*  ${item.volume >= 10000 ? compactNumber(item.volume, 2) : formatNumber(item.volume)}*/}
+        {/*</Type.Caption>*/}
+      </Flex>
     ),
     [isRunningFn]
   )
   const renderLeverage = useCallback(
     (item: CopyTradeWithCheckingData) => (
-      <Type.Caption color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}>
-        x{formatNumber(item.leverage)}
-      </Type.Caption>
+      <Flex
+        color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}
+        sx={{ alignItems: 'center', justifyContent: 'flex-end', width: '100%' }}
+      >
+        <Type.Caption>x</Type.Caption>
+        <TextWithEdit
+          defaultValue={item.leverage}
+          onSave={(value) => updateNumberValue({ copyTradeId: item.id, oldData: item, value, field: 'leverage' })}
+          onValidate={(value) => validateNumberValue({ oldData: item, value, field: 'leverage' })}
+          disabled={!isRunningFn(item.status)}
+        />
+      </Flex>
     ),
     [isRunningFn]
   )
   const renderMarkets = useCallback(
-    (item: CopyTradeWithCheckingData) => (
-      <Type.Caption color="neutral1">
-        {item.copyAll ? (
-          'Follow Trader'
-        ) : item?.protocol && item?.tokenAddresses ? (
-          <MarketGroup protocol={item.protocol} indexTokens={item.tokenAddresses} />
-        ) : (
-          '--'
-        )}
-      </Type.Caption>
-    ),
+    (item: CopyTradeWithCheckingData) => {
+      const tooltipId = `tt_excluding_pairs_${item.id}`
+      const hasExcludingPairs = item.copyAll && item.protocol && !!item.excludingTokenAddresses?.length
+      return (
+        <>
+          <Type.Caption
+            color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}
+            data-tooltip-id={hasExcludingPairs ? tooltipId : undefined}
+            sx={
+              hasExcludingPairs
+                ? { borderBottom: '1px dashed', mb: '-1px', borderBottomColor: 'neutral3', textDecoration: 'none' }
+                : undefined
+            }
+          >
+            {item.copyAll ? (
+              'Follow Trader'
+            ) : item?.protocol && item?.tokenAddresses ? (
+              <MarketGroup protocol={item.protocol} indexTokens={item.tokenAddresses} />
+            ) : (
+              '--'
+            )}
+            {hasExcludingPairs && (
+              <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
+                <Box>
+                  <Type.Caption mb={1} width="100%" color="neutral3" textAlign="left">
+                    Excluding pairs:
+                  </Type.Caption>
+                  <MarketGroupFull
+                    protocol={item.protocol}
+                    indexTokens={item.excludingTokenAddresses}
+                    hasName
+                    sx={{
+                      maxWidth: 400,
+                      maxHeight: 350,
+                      overflowY: 'auto',
+                      justifyContent: 'flex-start',
+                    }}
+                  />
+                </Box>
+              </Tooltip>
+            )}
+          </Type.Caption>
+        </>
+      )
+    },
     [isRunningFn]
   )
   const renderSLTP = useCallback(
@@ -498,7 +634,7 @@ export default function useCopyTradeColumns({
         dataIndex: 'volume',
         key: 'volume',
         sortBy: 'volume',
-        style: { minWidth: '70px', width: 70, textAlign: 'right' },
+        style: { minWidth: '100px', textAlign: 'right' },
         render: renderVolume,
       },
       {
@@ -506,7 +642,7 @@ export default function useCopyTradeColumns({
         dataIndex: 'leverage',
         key: 'leverage',
         sortBy: 'leverage',
-        style: { minWidth: '70px', width: 70, textAlign: 'right' },
+        style: { minWidth: '100px', textAlign: 'right' },
         render: renderLeverage,
       },
       {
@@ -514,25 +650,25 @@ export default function useCopyTradeColumns({
         dataIndex: 'tokenAddresses',
         key: 'tokenAddresses',
         sortBy: 'tokenAddresses',
-        style: { minWidth: '100px', width: 100, textAlign: 'right' },
+        style: { minWidth: '120px', textAlign: 'right' },
         render: renderMarkets,
       },
       {
         title: 'SL/TP',
         dataIndex: undefined,
         key: undefined,
-        style: { minWidth: '100px', width: 100, textAlign: 'right' },
+        style: { minWidth: '100px', textAlign: 'right' },
         render: renderSLTP,
       },
       {
         title: 'Advance',
         dataIndex: undefined,
         key: undefined,
-        style: { minWidth: '110px', width: 110, textAlign: 'left', pl: 3 },
+        style: { minWidth: '168px', textAlign: 'left', pl: 3 },
         render: renderRiskControl,
       },
       {
-        style: { minWidth: '100px', width: 100, textAlign: 'right' },
+        style: { minWidth: '100px', textAlign: 'right' },
         title: (
           <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
             7D ePnL
@@ -544,7 +680,7 @@ export default function useCopyTradeColumns({
         render: render7DPNL,
       },
       {
-        style: { minWidth: '100px', width: 100, textAlign: 'right' },
+        style: { minWidth: '100px', textAlign: 'right' },
         title: (
           <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
             Total ePnL
@@ -559,7 +695,7 @@ export default function useCopyTradeColumns({
         title: '',
         dataIndex: 'id',
         key: 'id',
-        style: { minWidth: '40px', width: 40, textAlign: 'right', pr: 2 },
+        style: { minWidth: '40px', textAlign: 'right', pr: 2 },
         render: (item) => renderOptions(item),
       },
     ]
