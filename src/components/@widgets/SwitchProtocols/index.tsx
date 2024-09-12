@@ -71,7 +71,7 @@ function SwitchProtocolsComponent({
   onSwitch,
   showIcon = false,
 }: SwitchProtocolComponentProps & { onSwitch: (() => void) | ((protocol: ProtocolEnum) => void) }) {
-  const { md, lg } = useResponsive()
+  const { md, xl } = useResponsive()
   const { myProfile } = useMyProfile()
   const { protocolRecentSearch, addProtocolRecentSearch } = useProtocolRecentSearch()
   const { protocol } = useProtocolStore()
@@ -102,7 +102,7 @@ function SwitchProtocolsComponent({
   const renderProtocols = () => {
     return (
       <Box>
-        <Box sx={{ px: 3, pb: 3, pt: 3 }}>
+        <Box sx={{ px: 3, pb: 3, pt: 3, position: 'sticky', top: 0, left: 0, bg: 'neutral7' }}>
           <SearchProtocols
             protocols={protocols}
             onSelect={(data) => {
@@ -120,14 +120,14 @@ function SwitchProtocolsComponent({
                     onClick={() => handleSelectProtocol(data.protocol)}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <ProtocolLogo protocol={data.protocol} isActive={false} hasText={false} size={lg ? 32 : 24} />
+                    <ProtocolLogo protocol={data.protocol} isActive={false} hasText={false} size={md ? 32 : 24} />
                   </Box>
                 )
               })}
             </Flex>
           )}
         </Box>
-        <Flex flexDirection={lg ? 'row' : 'column'}>
+        <Flex flexDirection={xl ? 'row' : 'column'}>
           {protocolConfigs.chainOptions.map((chainOption, index, chainOptions) => {
             const protocolsByChain = protocolConfigs.protocolsByChains[chainOption.chainIdNumber]
             const protocolCount = protocolsByChain?.length ?? 0
@@ -138,9 +138,9 @@ function SwitchProtocolsComponent({
                 sx={{
                   pt: 3,
                   borderTop: 'small',
-                  borderRight: lg && index < chainOptions.length - 1 ? 'small' : 'none',
+                  borderRight: xl && index < chainOptions.length - 1 ? 'small' : 'none',
                   borderColor: 'neutral4',
-                  width: lg ? 168 : '100%',
+                  width: xl ? 168 : '100%',
                 }}
               >
                 <Box px={10} pb={2}>

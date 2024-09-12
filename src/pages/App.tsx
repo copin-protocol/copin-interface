@@ -38,6 +38,7 @@ const Search = lazy(() => import('./SearchTrader'))
 const SearchTxHash = lazy(() => import('./SearchTxHash'))
 const SystemStatus = lazy(() => import('./SystemStatus'))
 const StatsCEX = lazy(() => import('./StatsCEX'))
+const CopierLeaderboard = lazy(() => import('./Leaderboard/CopierLeaderboard'))
 
 function App() {
   useEffect(() => {
@@ -82,6 +83,7 @@ function App() {
             <Route exact path={ROUTES.SEARCH.path} component={Search}></Route>
             <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHash}></Route>
             <Route path={ROUTES.LEADERBOARD.path} component={Leaderboard}></Route>
+            <Route path={ROUTES.COPIER_LEADERBOARD.path} component={CopierLeaderboard}></Route>
             <Route path={ROUTES.TRADERS_EXPLORER.path} component={Explorer}></Route>
             <Route path={ROUTES.OPEN_INTEREST.path} component={OpenInterest}></Route>
 

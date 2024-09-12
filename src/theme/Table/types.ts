@@ -56,8 +56,7 @@ export interface TableProps<T, K> {
   checkIsTop?: (data: T) => boolean
   scrollToTopDependencies?: any[]
   noDataMessage?: ReactNode
-  // topIndex?: number
-  // title?: ReactNode
-  // subTitle?: ReactNode
+  footerData?: T[]
+  footerRowSx?: any
 }
 export type InfiniteTableProps<T, K> = Omit<TableProps<T, K>, 'data'> & { data: T[] | undefined }

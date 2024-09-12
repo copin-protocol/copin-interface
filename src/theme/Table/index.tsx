@@ -41,6 +41,8 @@ export default function Table<T, K>({
   checkIsTop,
   scrollToTopDependencies,
   noDataMessage,
+  footerData,
+  footerRowSx = {},
 }: // title,
 // subTitle,
 TableProps<T, K>) {
@@ -65,6 +67,7 @@ TableProps<T, K>) {
     },
     scrollToTopDependencies ? scrollToTopDependencies : [data]
   )
+  const footerRowContainerSx = { ...tableBodySx, ...footerRowSx }
   return (
     <Flex
       className="table_container"
@@ -135,6 +138,23 @@ TableProps<T, K>) {
                 </Flex>
               )}
             </Box>
+            {footerData && (
+              <TableContainer sx={footerRowContainerSx} hasHoverBg={!checkIsTop}>
+                <TableBody
+                  data={footerData}
+                  columns={columns}
+                  sx={rowSx}
+                  onClickRow={onClickRow}
+                  renderRowBackground={renderRowBackground}
+                  externalSource={externalSource}
+                  handleSelect={handleSelect}
+                  checkIsSelected={checkIsSelected}
+                  checkIsTop={checkIsTop}
+                  // title={title}
+                  // subTitle={subTitle}
+                />
+              </TableContainer>
+            )}
           </>
         )}
 

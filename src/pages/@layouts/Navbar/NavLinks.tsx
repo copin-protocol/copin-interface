@@ -46,6 +46,25 @@ export function MobileEventNavLinks({ onClose }: { onClose?: () => void }) {
   )
 }
 
+export function DesktopCopierLeaderboardLink() {
+  return (
+    <DesktopWrapper>
+      <NavLink to={ROUTES.COPIER_LEADERBOARD.path} matchpath={ROUTES.COPIER_LEADERBOARD.path}>
+        Copier Ranking
+      </NavLink>
+    </DesktopWrapper>
+  )
+}
+export function MobileCopierLeaderboardLink({ onClose }: { onClose?: () => void }) {
+  return (
+    <MobileWrapper>
+      <NavLink to={ROUTES.COPIER_LEADERBOARD.path} matchpath={ROUTES.COPIER_LEADERBOARD.path} onClick={onClose}>
+        Copier Ranking
+      </NavLink>
+    </MobileWrapper>
+  )
+}
+
 function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () => void }) {
   const { protocol, navProtocol, setNavProtocol } = useProtocolStore()
   const _navProtocol = parseNavProtocol(navProtocol)?.protocol

@@ -24,6 +24,9 @@ const ROUTES = {
     path: '/:protocol/leaderboard',
     path_prefix: '/leaderboard',
   },
+  COPIER_LEADERBOARD: {
+    path: '/copier-leaderboard',
+  },
   FAVORITES: {
     path: '/favorites',
   },
