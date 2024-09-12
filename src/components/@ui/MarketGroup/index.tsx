@@ -110,7 +110,7 @@ export function MarketGroupFull({
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: ['1fr 1fr 1fr 1fr', '1fr 1fr 1fr 1fr'],
+        gridTemplateColumns: 'repeat(4, auto)',
         gap: '6px',
         ...sx,
       }}

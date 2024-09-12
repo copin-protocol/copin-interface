@@ -21,10 +21,10 @@ interface PositionStatsProps {
   hasFundingFee: boolean
   hasLiquidate: boolean
   isOpening: boolean
-  chartId?: string
+  chartId: string
 }
 
-export default function PositionStats({ data, chartId }: { data: PositionData; chartId?: string }) {
+export default function PositionStats({ data, chartId }: { data: PositionData; chartId: string }) {
   const { md } = useResponsive()
   const { prices } = useRealtimeUsdPricesStore()
   const hasFundingFee = !!data?.funding

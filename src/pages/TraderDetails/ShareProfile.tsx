@@ -71,7 +71,7 @@ export default function ShareProfile({
           share()
         })
       }
-    } catch {
+    } catch (e) {
       toast.error(<ToastBody title="Error" message="Something went wrong" />)
       setIsGeneratingLink(false)
     }

@@ -43,13 +43,13 @@ export function getMaxVolumeCopy({
   volumeLimitData: VolumeLimitData | undefined
 }) {
   if (!volumeLimitData || plan == null) return 0
-  if (isRef) {
-    if (plan === SubscriptionPlanEnum.VIP) return volumeLimitData.volumeVipReferral
-    if (plan === SubscriptionPlanEnum.PREMIUM) return volumeLimitData.volumePremiumReferral
-    return volumeLimitData.volumeReferral
-  } else {
-    if (plan === SubscriptionPlanEnum.VIP) return volumeLimitData.volumeVipWoReferral
-    if (plan === SubscriptionPlanEnum.PREMIUM) return volumeLimitData.volumePremiumWoReferral
-    return volumeLimitData.volumeWoReferral
-  }
+  // if (isRef) {
+  //   if (plan === SubscriptionPlanEnum.VIP) return volumeLimitData.volumeVipReferral
+  //   if (plan === SubscriptionPlanEnum.PREMIUM) return volumeLimitData.volumePremiumReferral
+  //   return volumeLimitData.volumeReferral
+  // } else {
+  if (plan === SubscriptionPlanEnum.VIP) return volumeLimitData.volumeVipReferral
+  if (plan === SubscriptionPlanEnum.PREMIUM) return volumeLimitData.volumePremiumReferral
+  return volumeLimitData.volumeWoReferral
+  // }
 }

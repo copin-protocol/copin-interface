@@ -26,7 +26,7 @@ export default function SharePosition({
 }: {
   isOpening: boolean
   stats: PositionData
-  chartId?: string
+  chartId: string
 }) {
   const { prices } = useGetUsdPrices()
   const [isSocialMediaSharingOpen, setIsSocialMediaSharingOpen] = useState(false)

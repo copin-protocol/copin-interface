@@ -100,9 +100,9 @@ export interface FormattedListenerBlockData {
 
 export interface VolumeLimitData {
   volumeWoReferral: number
-  volumeReferral: number
-  volumePremiumWoReferral: number
+  // volumeReferral: number
+  // volumePremiumWoReferral: number
   volumePremiumReferral: number
-  volumeVipWoReferral: number
+  // volumeVipWoReferral: number
   volumeVipReferral: number
 }

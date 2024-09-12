@@ -15,7 +15,7 @@ import Loading from 'theme/Loading'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { ELEMENT_IDS, QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
 import { getDurationFromTimeFilter } from 'utils/helpers/transform'
 
@@ -132,18 +132,39 @@ const ChartTrader = ({
               </Tooltip>
             </Flex>
           </Flex>
-          <Box flex="1 0 0" mt={1} sx={{ position: 'relative' }}>
-            {isBarChart ? (
-              <BarChartTraderPnL data={stats} isLoading={loadingStats} from={from} to={to} />
-            ) : (
-              <LineChartPnL
-                data={parseTraderPnLStatisticData(stats)}
-                isCumulativeData={false}
-                isLoading={loadingStats}
-                from={from}
-                to={to}
-              />
-            )}
+          <Box flex="1 0 0" mt={1} sx={{ position: 'relative' }} id={ELEMENT_IDS.TRADER_CHART_PNL}>
+            <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  visibility: isBarChart ? 'visible' : 'hidden',
+                }}
+              >
+                <BarChartTraderPnL data={stats} isLoading={loadingStats} from={from} to={to} />
+              </Box>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  visibility: isBarChart ? 'hidden' : 'visible',
+                }}
+              >
+                <LineChartPnL
+                  data={parseTraderPnLStatisticData(stats)}
+                  isCumulativeData={false}
+                  isLoading={loadingStats}
+                  from={from}
+                  to={to}
+                />
+              </Box>
+            </Box>
           </Box>
         </>
       )}

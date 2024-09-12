@@ -39,13 +39,14 @@ export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSou
   return (
     <tbody>
       {data?.map((data: any, index: number) => {
+        const uuid = uuidv4()
         const bg = renderRowBackground ? renderRowBackground(data, index) : undefined
         return (
           <>
             {/* {topIndex && index === 0 && title}
             {topIndex && index === topIndex && subTitle} */}
             <Row
-              key={index}
+              key={data?.id ?? uuid}
               data={data}
               index={index}
               columnsData={columns}
