@@ -6,7 +6,6 @@ import ThemeProvider from 'theme'
 
 import { CopyWalletProvider } from 'hooks/features/useCopyWalletContext'
 import { SystemConfigProvider } from 'hooks/features/useSystemConfigContext'
-import UseRemoveTimeFilter from 'hooks/helpers/useRemoveTimeFilter'
 import { useInitTabsOpen } from 'hooks/helpers/useTabsOpen'
 import { ProtocolProvider } from 'hooks/store/useProtocols'
 import ThemedGlobalStyle from 'theme/styles'
@@ -33,7 +32,6 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
           <SystemConfigProvider>
             {/* <Updaters /> */}
             <BrowserRouter>
-              <UseRemoveTimeFilter />
               <PythConnection />
               {/*<GainsTradeConnection />*/}
               <DappProvider>

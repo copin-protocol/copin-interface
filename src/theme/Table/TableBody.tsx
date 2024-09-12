@@ -94,6 +94,8 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
   return (
     <Wrapper
       onClick={onClickRow ? () => onClickRow(data) : undefined}
+      // @ts-ignore
+      data-ranking={data.ranking}
       style={{
         cursor: !!onClickRow ? 'pointer' : 'default',
         background: bg,

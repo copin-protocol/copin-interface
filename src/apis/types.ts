@@ -1,3 +1,4 @@
+import { CopierLeaderboardData } from 'entities/copier'
 import {
   CopyTradeStatusEnum,
   LeaderboardTypeEnum,
@@ -82,6 +83,15 @@ export type GetLeaderboardParams = GetApiParams & {
   keyword?: string
   protocol?: ProtocolEnum
   statisticType?: LeaderboardTypeEnum
+  sortBy?: string
+  sortType?: SortTypeEnum
+}
+
+export type GetCopierLeaderboardParams = PaginationParams & {
+  exchangeType?: CopierLeaderboardData['exchangeType']
+  exchange?: CopierLeaderboardData['exchange']
+  type?: CopierLeaderboardData['type']
+  keyword?: string
   sortBy?: string
   sortType?: SortTypeEnum
 }

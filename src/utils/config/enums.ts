@@ -300,3 +300,17 @@ export enum FeeRateTraderStatus {
   CLAIMABLE,
   WAITING,
 }
+
+export enum CopierLeaderBoardExchangeType {
+  ALL_CEX = 'ALL_CEX',
+  ALL_DEX = 'ALL_DEX',
+  TOTAL = 'TOTAL',
+}
+
+export enum CopierLeaderboardTimeFilterEnum {
+  DAILY = 'DAILY',
+  D7 = 'D7',
+  D30 = 'D30',
+  D60 = 'D60',
+  FULL = 'FULL',
+}

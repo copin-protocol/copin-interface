@@ -46,7 +46,10 @@ export default function Overview() {
     ALL_TOKEN_PARAM,
     ...Array.from(
       new Set(
-        allCopyTrades?.filter((e) => !!e.account && e.status === CopyTradeStatusEnum.RUNNING)?.map((_c) => _c.account)
+        allCopyTrades
+          ?.filter((e) => e.status === CopyTradeStatusEnum.RUNNING)
+          ?.flatMap((_c) => [_c.account, ...(_c.accounts || [])])
+          ?.filter((e) => !!e)
       )
     ),
   ]

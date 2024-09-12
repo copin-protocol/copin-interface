@@ -1,19 +1,24 @@
+import { ReactNode } from 'react'
+
 import { Button } from 'theme/Buttons'
 import { Flex } from 'theme/base'
 
 import { TIME_FILTER_OPTIONS } from './constants'
-import { TimeFilterProps } from './type'
 
-export default function TimeFilter({
+export default function TimeFilter<T extends { id: unknown; text: ReactNode }>({
   currentFilter,
   handleFilterChange,
+  options = TIME_FILTER_OPTIONS as unknown as T[],
+  sx = {},
 }: {
-  currentFilter: TimeFilterProps | null
-  handleFilterChange: (sort: TimeFilterProps) => void
+  currentFilter: T | null
+  handleFilterChange: (sort: T) => void
+  options?: T[]
+  sx?: any
 }) {
   return (
-    <Flex alignItems="center" sx={{ gap: ['2px', '2px', '2px', 2] }}>
-      {TIME_FILTER_OPTIONS.map((option, index: number) => (
+    <Flex alignItems="center" sx={{ gap: ['2px', '2px', '2px', 2], ...sx }}>
+      {options.map((option, index: number) => (
         <Button
           type="button"
           variant="ghost"

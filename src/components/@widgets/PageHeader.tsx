@@ -12,6 +12,7 @@ export default function PageHeader({
   icon: Icon,
   routeSwitchProtocol = false,
   keepSearchOnSwitchProtocol = true,
+  showSelectProtocol = true,
 }: {
   pageTitle: string
   headerText: ReactNode
@@ -19,6 +20,7 @@ export default function PageHeader({
   icon: ComponentType<any>
   keepSearchOnSwitchProtocol?: boolean
   routeSwitchProtocol?: boolean
+  showSelectProtocol?: boolean
 }) {
   const { md } = useResponsive()
   return (
@@ -51,10 +53,14 @@ export default function PageHeader({
           <IconBox icon={<Icon size={24} weight="fill" />} />
           <Type.Body sx={{ flex: 1, flexShrink: 0, fontWeight: 500 }}>{headerText}</Type.Body>
         </Flex>
-        {routeSwitchProtocol ? (
-          <RouteSwitchProtocol keepSearch={keepSearchOnSwitchProtocol} />
-        ) : (
-          <HomeSwitchProtocols buttonSx={{ border: 'none', borderLeft: 'small', borderLeftColor: 'neutral4' }} />
+        {showSelectProtocol && (
+          <>
+            {routeSwitchProtocol ? (
+              <RouteSwitchProtocol keepSearch={keepSearchOnSwitchProtocol} />
+            ) : (
+              <HomeSwitchProtocols buttonSx={{ border: 'none', borderLeft: 'small', borderLeftColor: 'neutral4' }} />
+            )}
+          </>
         )}
       </Box>
     </>

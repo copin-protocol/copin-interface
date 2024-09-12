@@ -205,5 +205,6 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.YFX_ARB,
         ProtocolEnum.KILOEX_OPBNB,
         ProtocolEnum.ROLLIE_SCROLL,
+        ProtocolEnum.MUMMY_FANTOM,
       ]
     : Object.values(ProtocolEnum)

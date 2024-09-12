@@ -2,9 +2,9 @@ import { Trans } from '@lingui/macro'
 import { CrownSimple } from '@phosphor-icons/react'
 
 import { Flex, IconBox } from 'theme/base'
-import { TimeFilterByEnum } from 'utils/config/enums'
+import { CopierLeaderboardTimeFilterEnum, TimeFilterByEnum } from 'utils/config/enums'
 
-import { TimeFilterProps, TimeWithRangeFilterProps } from './type'
+import { CopierLeaderboardTimeFilterProps, TimeFilterProps, TimeWithRangeFilterProps } from './type'
 
 export const TIME_FILTER_OPTIONS: TimeFilterProps[] = [
   {
@@ -110,4 +110,12 @@ export const ALL_TIME_FILTER_OPTIONS: TimeFilterProps[] = [
     sort_by: TimeFilterByEnum.ALL_TIME,
     value: 1000,
   },
+]
+
+export const COPIER_LEADERBOARD_TIME_FILTER_OPTIONS: CopierLeaderboardTimeFilterProps[] = [
+  { id: CopierLeaderboardTimeFilterEnum.DAILY, text: 'Today' },
+  { id: CopierLeaderboardTimeFilterEnum.D7, text: '7 Days' },
+  { id: CopierLeaderboardTimeFilterEnum.D30, text: '30 Days' },
+  { id: CopierLeaderboardTimeFilterEnum.D60, text: '60 Days' },
+  { id: CopierLeaderboardTimeFilterEnum.FULL, text: 'All Time' },
 ]
