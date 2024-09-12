@@ -138,7 +138,15 @@ export const generateTraderCanvas = ({
 
   // chart line
   const chartAxisOffsetY = chartAreaOffsetY + chartAreaHeight - chartFooterHeight
-  generateChartLine({ lineCanvases, xAxises, chartAxisOffsetY, canvas: leftCtx, width: leftWidth })
+  generateChartLine({
+    lineCanvases,
+    xAxises,
+    chartAxisOffsetY,
+    canvas: leftCtx,
+    width: leftWidth,
+    height: chartAreaHeight,
+    isChartPnL: true,
+  })
 
   // draw footer
   const footerContentMiddleOffset = canvasHeight - (canvasHeight - chartAreaOffsetY - chartAreaHeight) / 2
@@ -334,7 +342,14 @@ export const generatePositionCanvas = ({
 
   // chart line
   const chartAxisOffsetY = chartAreaOffsetY + chartAreaHeight - chartFooterHeight
-  generateChartLine({ lineCanvases, xAxises, chartAxisOffsetY, canvas: leftCtx, width: leftWidth })
+  generateChartLine({
+    lineCanvases,
+    xAxises,
+    chartAxisOffsetY,
+    canvas: leftCtx,
+    width: leftWidth,
+    height: chartAreaHeight,
+  })
 
   // draw footer
   const footerContentMiddleOffset = canvasHeight - (canvasHeight - chartAreaOffsetY - chartAreaHeight) / 2
@@ -558,19 +573,28 @@ export const generateChartLine = ({
   xAxises,
   canvas,
   width,
+  height,
   chartAxisOffsetY,
+  isChartPnL,
 }: {
-  lineCanvases?: HTMLCollectionOf<HTMLCanvasElement>
-  xAxises?: HTMLCollectionOf<HTMLCanvasElement>
+  lineCanvases: HTMLCollectionOf<HTMLCanvasElement> | undefined
+  xAxises: HTMLCollectionOf<HTMLCanvasElement> | undefined
   canvas: CanvasRenderingContext2D
   width: number
+  height: number
   chartAxisOffsetY: number
+  isChartPnL?: boolean
 }) => {
   if (lineCanvases) {
     for (const _canvas of lineCanvases) {
-      const widthHeightRatio = _canvas.width / _canvas.height
       const desWidth = width - 32
-      const desHeight = desWidth / widthHeightRatio
+      let desHeight = 0
+      if (isChartPnL) {
+        desHeight = height - 150
+      } else {
+        const widthHeightRatio = _canvas.width / _canvas.height
+        desHeight = desWidth / widthHeightRatio
+      }
       const chartLineOffsetY = chartAxisOffsetY - desHeight
       canvas.drawImage(_canvas, 0, 0, _canvas.width, _canvas.height, 16, chartLineOffsetY, desWidth, desHeight)
     }
