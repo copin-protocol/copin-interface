@@ -218,6 +218,7 @@ export default function useCopyTradeColumns({
       >
         <Type.Caption>$</Type.Caption>
         <TextWithEdit
+          key={`volume_${item.id}_${item.volume}`}
           defaultValue={item.volume}
           onSave={(value) => updateNumberValue({ copyTradeId: item.id, oldData: item, value, field: 'volume' })}
           onValidate={(value) => validateNumberValue({ oldData: item, value, field: 'volume' })}
@@ -238,6 +239,7 @@ export default function useCopyTradeColumns({
       >
         <Type.Caption>x</Type.Caption>
         <TextWithEdit
+          key={`leverage_${item.id}_${item.leverage}`}
           defaultValue={item.leverage}
           onSave={(value) => updateNumberValue({ copyTradeId: item.id, oldData: item, value, field: 'leverage' })}
           onValidate={(value) => validateNumberValue({ oldData: item, value, field: 'leverage' })}
