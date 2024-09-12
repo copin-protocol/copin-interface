@@ -139,7 +139,7 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: CopierLeaderb
 function TopLeaderboardMobile({ contextValues }: { contextValues: CopierLeaderboardContextValues }) {
   const { data, isLoading, currentPage, changeCurrentPage, lastTimeUpdated, myRankingData } = contextValues
   return (
-    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
+    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
       <Flex
         sx={{
           flex: '1 0 0',
@@ -228,7 +228,9 @@ function LeaderboardMobileItem({ data }: { data: CopierLeaderboardData }) {
               </Type.CaptionBold>
               {!!data.plan && <SubscriptionIcon plan={data.plan} />}
             </Flex>
-            <CopierRankingNumber ranking={data.ranking} />
+            <Box sx={{ mr: '-12px' }}>
+              <CopierRankingNumber ranking={data.ranking} />
+            </Box>
           </Flex>
           <RowWrapper>
             <RowItem label={<Trans>Win Rate</Trans>} value={formatNumber(data.winRate, 2, 2)} />

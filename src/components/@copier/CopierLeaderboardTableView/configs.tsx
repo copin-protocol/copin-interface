@@ -20,7 +20,7 @@ export const leaderboardColumns: ColumnData<CopierLeaderboardData, ExternalLeade
     key: 'id',
     style: { minWidth: 80, textAlign: 'left' },
     render: (item) => (
-      <Flex sx={{ ml: 3, alignItems: 'center', justifyContent: 'start', width: '100%', height: 42, flexShrink: 0 }}>
+      <Flex sx={{ alignItems: 'center', justifyContent: 'start', width: 'max-content', height: 42, flexShrink: 0 }}>
         <CopierRankingNumber ranking={item.ranking} />
       </Flex>
     ),
