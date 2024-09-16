@@ -41,6 +41,7 @@ import { TOKEN_TRADE_KILOEX_OPBNB } from './tokenTradeKiloEx'
 import { TOKEN_TRADE_KTX_MANTLE } from './tokenTradeKtx'
 import { TOKEN_TRADE_LEVEL_ARB, TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
 import { TOKEN_TRADE_LOGX_BLAST, TOKEN_TRADE_LOGX_MODE } from './tokenTradeLogX'
+import { TOKEN_COLLATERAL_MORPHEX_FANTOM, TOKEN_TRADE_MORPHEX_FANTOM } from './tokenTradeMorphex'
 import { TOKEN_COLLATERAL_MUMMY_FANTOM, TOKEN_TRADE_MUMMY_FANTOM } from './tokenTradeMummy'
 import { TOKEN_COLLATERAL_MUX_ARB, TOKEN_TRADE_MUX_ARB } from './tokenTradeMux'
 import { TOKEN_TRADE_MYX_ARB } from './tokenTradeMyx'
@@ -170,6 +171,10 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: FANTOM_MAINNET,
     explorerUrl: CHAINS[FANTOM_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.MORPHEX_FANTOM]: {
+    chainId: FANTOM_MAINNET,
+    explorerUrl: CHAINS[FANTOM_MAINNET].blockExplorerUrl,
+  },
 }
 export interface TokenTrade {
   address: string
@@ -232,6 +237,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.ROLLIE_SCROLL]: TOKEN_TRADE_ROLLIE_SCROLL,
   [ProtocolEnum.PERENNIAL_ARB]: TOKEN_TRADE_PERENNIAL_ARB,
   [ProtocolEnum.MUMMY_FANTOM]: TOKEN_TRADE_MUMMY_FANTOM,
+  [ProtocolEnum.MORPHEX_FANTOM]: TOKEN_TRADE_MORPHEX_FANTOM,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -277,6 +283,7 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.ROLLIE_SCROLL]: TOKEN_COLLATERAL_SCROLL,
   [ProtocolEnum.PERENNIAL_ARB]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.MUMMY_FANTOM]: { ...TOKEN_COLLATERAL_FTM, ...TOKEN_COLLATERAL_MUMMY_FANTOM },
+  [ProtocolEnum.MORPHEX_FANTOM]: { ...TOKEN_COLLATERAL_FTM, ...TOKEN_COLLATERAL_MORPHEX_FANTOM },
 }
 
 export const SYNTHETIX_MARKETS: { [key: number]: string[] } = {

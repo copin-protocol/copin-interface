@@ -540,6 +540,10 @@ export const generateProtocol = ({
       protocolTextWidth = 310
       protocolText = 'Mummy Finance'
       break
+    case ProtocolEnum.MORPHEX_FANTOM:
+      protocolTextWidth = 156
+      protocolText = 'Morphex'
+      break
     default:
       break
   }

@@ -226,6 +226,13 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: FANTOM_MAINNET,
     isNew: true,
   },
+  [ProtocolEnum.MORPHEX_FANTOM]: {
+    id: ProtocolEnum.MORPHEX_FANTOM,
+    text: 'Morphex',
+    label: 'Fantom',
+    chainId: FANTOM_MAINNET,
+    isNew: true,
+  },
 }
 
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =

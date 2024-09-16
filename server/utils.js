@@ -128,6 +128,8 @@ function generateProtocolName(protocol) {
       return 'Perennial'
     case 'MUMMY_FANTOM':
       return 'Mummy Finance'
+    case 'MORPHEX_FANTOM':
+      return 'Morphex'
     default:
       return ''
   }

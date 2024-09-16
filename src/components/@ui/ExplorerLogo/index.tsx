@@ -66,6 +66,7 @@ const ExplorerLogo = ({
       icon = 'SCROLL'
       break
     case ProtocolEnum.MUMMY_FANTOM:
+    case ProtocolEnum.MORPHEX_FANTOM:
       icon = 'FANTOM'
       break
     default:

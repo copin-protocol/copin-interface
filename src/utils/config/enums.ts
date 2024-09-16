@@ -28,6 +28,7 @@ export enum ProtocolEnum {
   ROLLIE_SCROLL = 'ROLLIE_SCROLL',
   PERENNIAL_ARB = 'PERENNIAL_ARB',
   MUMMY_FANTOM = 'MUMMY_FANTOM',
+  MORPHEX_FANTOM = 'MORPHEX_FANTOM',
 }
 
 export enum UserRoleEnum {
