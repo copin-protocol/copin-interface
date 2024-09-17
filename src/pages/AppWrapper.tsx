@@ -3,7 +3,9 @@ import { ToastContainer } from 'react-toastify'
 
 import FavoriteNoteTooltip from 'components/@widgets/FavoriteButton/FavoriteNoteTooltip'
 import SubscriptionRestrictModal from 'components/@widgets/SubscriptionRestrictModal'
+import { TradingEventStatusEnum } from 'entities/event'
 import useModifyStorage from 'hooks/features/useModifyStorage'
+import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useResetSearchParams from 'hooks/helpers/useResetSearchParams'
 import useGlobalDialog, { DialogContent } from 'hooks/store/useGlobalDialog'
 import useSubscriptionRestrictStore from 'hooks/store/useSubscriptionRestrictStore'
@@ -29,6 +31,9 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
   const dialog = useGlobalDialog((state) => state.dialog)
   const restrictState = useSubscriptionRestrictStore((state) => state.state)
 
+  const { events } = useSystemConfigContext()
+  const availableEvents = events?.filter((event) => event.status !== TradingEventStatusEnum.ENDED)
+
   return (
     <>
       <Flex flexDirection="column" width="100vw" height="100vh" margin="0px auto" maxHeight="100%">
@@ -44,7 +49,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
       <SubscriptionExpiredWarning />
       {restrictState && <SubscriptionRestrictModal />}
       {dialog && <DialogContent data={dialog} />}
-      <Notification />
+      {!!availableEvents?.length && <Notification />}
 
       <InitTraderCopying />
       <InitTraderFavorites />

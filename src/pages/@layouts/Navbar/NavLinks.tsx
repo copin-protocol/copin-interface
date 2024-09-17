@@ -31,17 +31,17 @@ export function MobileNavLinks({ onClose }: { onClose?: () => void }) {
   )
 }
 
-export function DesktopEventNavLinks() {
+export function DesktopEventNavLinks({ hasEvents }: { hasEvents?: boolean }) {
   return (
     <DesktopWrapper>
-      <EventNavLinks />
+      <EventNavLinks hasEvents={hasEvents} />
     </DesktopWrapper>
   )
 }
-export function MobileEventNavLinks({ onClose }: { onClose?: () => void }) {
+export function MobileEventNavLinks({ onClose, hasEvents }: { onClose?: () => void; hasEvents?: boolean }) {
   return (
     <MobileWrapper>
-      <EventNavLinks onClose={onClose} />
+      <EventNavLinks onClose={onClose} hasEvents={hasEvents} />
     </MobileWrapper>
   )
 }
@@ -108,7 +108,7 @@ function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () =
   )
 }
 
-function EventNavLinks({ onClose }: { onClose?: () => void }) {
+function EventNavLinks({ onClose, hasEvents }: { onClose?: () => void; hasEvents?: boolean }) {
   const { myProfile } = useMyProfile()
   const onClickNavItem = () => {
     onClose?.()
@@ -116,20 +116,22 @@ function EventNavLinks({ onClose }: { onClose?: () => void }) {
 
   return (
     <>
-      <NavLink
-        onClick={() => {
-          onClickNavItem()
+      {hasEvents && (
+        <NavLink
+          onClick={() => {
+            onClickNavItem()
 
-          logEventCompetition({
-            event: EVENT_ACTIONS[EventCategory.COMPETITION].HOME_CLICK_NAV,
-            username: myProfile?.username,
-          })
-        }}
-        to={ROUTES.EVENTS.path}
-        matchpath={ROUTES.EVENTS.path}
-      >
-        <EventButton />
-      </NavLink>
+            logEventCompetition({
+              event: EVENT_ACTIONS[EventCategory.COMPETITION].HOME_CLICK_NAV,
+              username: myProfile?.username,
+            })
+          }}
+          to={ROUTES.EVENTS.path}
+          matchpath={ROUTES.EVENTS.path}
+        >
+          <EventButton />
+        </NavLink>
+      )}
       <NavLink to={ROUTES.FEE_REBATE.path} matchpath={ROUTES.FEE_REBATE.path} onClick={onClickNavItem}>
         <Flex alignItems="center" sx={{ gap: 1 }}>
           <ArbitrumLogo size={16} />

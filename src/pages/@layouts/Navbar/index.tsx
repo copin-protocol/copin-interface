@@ -5,6 +5,8 @@ import { Link, useLocation } from 'react-router-dom'
 
 import LoginAction from 'components/@auth/LoginAction'
 import Logo, { LogoText } from 'components/@ui/Logo'
+import { TradingEventStatusEnum } from 'entities/event'
+import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import NavbarUser from 'pages/@layouts/Navbar/NavUser'
@@ -38,11 +40,14 @@ export default function Navbar({ height }: { height: number }): ReactElement {
   const [activeMobileMenu, setActiveMobileMenu] = useState(false)
   const protocol = useProtocolStore((state) => state.protocol)
 
+  const { events } = useSystemConfigContext()
+  const hasEvents = !!events?.filter((event) => event.status !== TradingEventStatusEnum.ENDED)?.length
+
   return (
     <ProtocolsStatisticProvider>
       <Box as="header" sx={{ zIndex: [101, 101, 101, 11] }}>
         <Wrapper height={height}>
-          <Menu visible={activeMobileMenu} onClose={() => setActiveMobileMenu(false)} />
+          <Menu visible={activeMobileMenu} onClose={() => setActiveMobileMenu(false)} hasEvents={hasEvents} />
           <Main>
             {!isSearchOpening ? (
               <Flex height="100%" alignItems="center" sx={{ gap: 2 }}>
@@ -66,7 +71,7 @@ export default function Navbar({ height }: { height: number }): ReactElement {
                 >
                   <DesktopNavLinks />
                   <DesktopCopierLeaderboardLink />
-                  <MoreDropdown />
+                  <MoreDropdown hasEvents={hasEvents} />
                 </Box>
                 <IconButton
                   variant="ghost"
@@ -108,8 +113,9 @@ export default function Navbar({ height }: { height: number }): ReactElement {
                   [`@media all and (max-width: ${LARGE_BREAK_POINT}px)`]: { display: 'none' },
                 }}
               >
-                <DesktopEventNavLinks />
+                <DesktopEventNavLinks hasEvents={hasEvents} />
               </Box>
+
               <Box flex="0 0 fit-content" sx={{ alignItems: 'center' }}>
                 {isAuthenticated === true && <NavbarUser />}
                 {isAuthenticated === false && <LoginAction />}

@@ -223,9 +223,13 @@ export enum DataTypeEnum {
 }
 
 export enum ChangeFieldEnum {
+  ACCOUNT = 'account',
+  ACCOUNTS = 'accounts',
+  MULTIPLE_COPY = 'multipleCopy',
   VOLUME = 'volume',
   LEVERAGE = 'leverage',
   TOKEN_ADDRESSES = 'tokenAddresses',
+  EXCLUDING_TOKEN_ADDRESSES = 'excludingTokenAddresses',
   ENABLE_STOP_LOSS = 'enableStopLoss',
   STOP_LOSS_TYPE = 'stopLossType',
   STOP_LOSS_AMOUNT = 'stopLossAmount',
@@ -240,6 +244,8 @@ export enum ChangeFieldEnum {
   REVERSE_COPY = 'reverseCopy',
   MAX_VOL_MULTIPLIER = 'maxVolMultiplier',
   SKIP_LOW_LEVERAGE = 'skipLowLeverage',
+  SKIP_LOW_COLLATERAL = 'skipLowCollateral',
+  SKIP_LOW_SIZE = 'skipLowSize',
   TITLE = 'title',
   STATUS = 'status',
   CLOSE_TYPE = 'closeType',
@@ -258,11 +264,12 @@ export enum ChangeFieldEnum {
   BALANCE = 'balance',
   AVAILABLE_BALANCE = 'availableBalance',
   NAME = 'name',
-  exchange = 'exchange',
-  bingX = 'bingX',
-  smartWalletAddress = 'smartWalletAddress',
-  copyVolume = 'copyVolume',
-  activeCopy = 'activeCopy',
+  EXCHANGE = 'EXCHANGE',
+  BINGX = 'BINGX',
+  SMART_WALLET_ADDRESS = 'SMART_WALLET_ADDRESS',
+  COPY_VOLUME = 'COPY_VOLUME',
+  ACTIVE_COPY = 'ACTIVE_COPY',
+  TYPE = 'type',
 }
 
 export enum ChainStatsEnum {

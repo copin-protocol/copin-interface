@@ -13,9 +13,10 @@ import { MenuWrapper } from './styled'
 interface Props {
   visible: boolean
   onClose?: () => void
+  hasEvents?: boolean
 }
 
-export default function Menu({ visible, onClose }: Props) {
+export default function Menu({ visible, onClose, hasEvents }: Props) {
   const handleOutsideClick = (e: any) => {
     const target = e?.target as HTMLDivElement
     if (!target?.classList?.length) return
@@ -44,8 +45,8 @@ export default function Menu({ visible, onClose }: Props) {
           <Box mt={3} />
           <MobileCopierLeaderboardLink onClose={onClose} />
           <Box mt={3} />
-          <MobileEventNavLinks onClose={onClose} />
-          <MoreDropdownMobile onClickItem={onClose} />
+          <MobileEventNavLinks onClose={onClose} hasEvents={hasEvents} />
+          <MoreDropdownMobile onClickItem={onClose} hasEvents={hasEvents} />
         </Box>
       </MenuWrapper>
     </OutsideClickHandler>,
