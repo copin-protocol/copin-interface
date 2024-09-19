@@ -7,6 +7,7 @@ import { getTradersCounter } from 'apis/traderApis'
 import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
 import { ConditionFormValues, FilterValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
+import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 import { formatRankingRanges } from '../helpers/formatRankingRanges'
@@ -51,11 +52,20 @@ export default function useTradersCount({
   return { data, isLoading: isFetching }
 }
 
-export function useTraderCountState({ defaultFormValues }: { defaultFormValues: ConditionFormValues<TraderData> }) {
-  const [ranges, setRanges] = useState<FilterValues[]>(getFiltersFromFormValues(defaultFormValues))
-  const handleChangeRanges = useCallback((formValues: ConditionFormValues<TraderData>) => {
-    const _ranges = getFiltersFromFormValues(formValues)
-    setRanges(_ranges)
-  }, [])
+export function useTraderCountState({
+  defaultFormValues,
+  protocol,
+}: {
+  defaultFormValues: ConditionFormValues<TraderData>
+  protocol: ProtocolEnum
+}) {
+  const [ranges, setRanges] = useState<FilterValues[]>(getFiltersFromFormValues(defaultFormValues, protocol))
+  const handleChangeRanges = useCallback(
+    (formValues: ConditionFormValues<TraderData>) => {
+      const _ranges = getFiltersFromFormValues(formValues, protocol)
+      setRanges(_ranges)
+    },
+    [protocol]
+  )
   return { ranges, handleChangeRanges }
 }

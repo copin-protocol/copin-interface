@@ -32,7 +32,7 @@ export default function DefaultFilterForm({
   const [formValues, setFormValues] = useState(defaultFormValues)
   const { myProfile } = useMyProfile()
   const { timeOption, protocol, setCurrentSuggestion } = useTradersContext()
-  const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues })
+  const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues, protocol })
   const [enableApply, setEnableApply] = useState(false)
 
   const onChangeFormValues: FilterFormProps['onValuesChange'] = (values) => {
