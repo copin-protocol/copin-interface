@@ -7,6 +7,7 @@ import {
   CrownSimple,
   PresentationChart,
   ThermometerSimple,
+  Trophy,
 } from '@phosphor-icons/react'
 import { ComponentType, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
@@ -17,7 +18,7 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
 
-export default function MoreDropdown() {
+export default function MoreDropdown({ hasEvents }: { hasEvents?: boolean }) {
   const isInternal = useInternalRole()
   return (
     <Box
@@ -56,7 +57,18 @@ export default function MoreDropdown() {
       >
         <Box sx={{ p: 2, width: 140, bg: 'neutral8', border: 'small', borderColor: 'neutral4' }}>
           <Flex sx={{ flexDirection: 'column', gap: 12 }}>
-            {(isInternal ? internalConfigs : configs).map((config, index) => {
+            {[
+              ...(isInternal ? internalConfigs : configs),
+              ...(!hasEvents
+                ? [
+                    {
+                      icon: Trophy,
+                      text: <Trans>Events</Trans>,
+                      route: ROUTES.EVENTS.path,
+                    },
+                  ]
+                : []),
+            ].map((config, index) => {
               return <MoreItem key={index} {...config} />
             })}
           </Flex>
@@ -65,7 +77,13 @@ export default function MoreDropdown() {
     </Box>
   )
 }
-export function MoreDropdownMobile({ onClickItem }: { onClickItem: (() => void) | undefined }) {
+export function MoreDropdownMobile({
+  onClickItem,
+  hasEvents,
+}: {
+  onClickItem: (() => void) | undefined
+  hasEvents?: boolean
+}) {
   const isInternal = useInternalRole()
   return (
     <Accordion
@@ -77,7 +95,18 @@ export function MoreDropdownMobile({ onClickItem }: { onClickItem: (() => void) 
       }
       body={
         <Flex py={3} sx={{ flexDirection: 'column', gap: 3, '& *': { fontWeight: 'bold' } }} onClick={onClickItem}>
-          {(isInternal ? internalConfigs : configs).map((config, index) => {
+          {[
+            ...(isInternal ? internalConfigs : configs),
+            ...(!hasEvents
+              ? [
+                  {
+                    icon: Trophy,
+                    text: <Trans>Events</Trans>,
+                    route: ROUTES.EVENTS.path,
+                  },
+                ]
+              : []),
+          ].map((config, index) => {
             return <MoreItem key={index} {...config} />
           })}
         </Flex>

@@ -194,6 +194,10 @@ export const GNS_PAIRS = {
   'GNS-266': 'DOGS',
   'GNS-267': 'SSV',
   'GNS-268': 'PONKE',
+  'GNS-269': 'POL',
+  'GNS-270': 'RDNT',
+  'GNS-271': 'FLUX',
+  'GNS-272': 'NEIRO',
 }
 
 export const TOKEN_TRADE_GNS = Object.entries(GNS_PAIRS).reduce<ProtocolTokenMapping>((result, [key, value]) => {

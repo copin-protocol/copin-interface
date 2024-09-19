@@ -19,6 +19,7 @@ const UserLogChanges = ({ data, ...props }: { data: UserLogData } & LayoutProps 
         let parsedNewData = newData
         switch (fieldName) {
           case ChangeFieldEnum.TOKEN_ADDRESSES:
+          case ChangeFieldEnum.EXCLUDING_TOKEN_ADDRESSES:
             if (data.oldData?.protocol) {
               parsedOldData = data.oldData?.[fieldName]?.map(
                 (e: string) => getTokenTradeSupport(data.oldData?.protocol)[e]?.symbol

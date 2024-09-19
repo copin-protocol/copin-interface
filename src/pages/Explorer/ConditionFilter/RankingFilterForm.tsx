@@ -25,7 +25,7 @@ export default function RankingFilterForm({
   lastFilterTab: FilterTabEnum
 }) {
   const { timeOption, protocol } = useTradersContext()
-  const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues })
+  const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues, protocol })
 
   const onChangeFormValues: FilterFormProps['onValuesChange'] = (values) => {
     handleChangeRanges(values)
