@@ -15,9 +15,9 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
 import useProtocolRecentSearch from 'hooks/store/useProtocolRecentSearch'
 import { useProtocolStore } from 'hooks/store/useProtocols'
-import { ALLOWED_PROTOCOLS } from 'pages/Home/configs'
 import Dropdown from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
+import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { ProtocolOptionProps } from 'utils/config/protocols'
@@ -198,7 +198,7 @@ function SwitchProtocolsComponent({
                           <Type.Caption lineHeight="16px" color={isActive ? 'primary1' : undefined}>
                             {option.text}
                           </Type.Caption>
-                          {ALLOWED_PROTOCOLS.includes(option.id) && (
+                          {ALLOWED_COPYTRADE_PROTOCOLS.includes(option.id) && (
                             <ActiveDot
                               tooltipId={`tt_allow_copy_${option.id}`}
                               tooltipContent={<Trans>Allow Copy</Trans>}

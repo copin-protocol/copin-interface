@@ -59,13 +59,13 @@ export default function TraderExplorerListview({
         {data?.map((_data) => {
           return (
             <Accordion
-              key={_data.account}
+              key={_data.account + _data.protocol}
               header={_tableSettings[0].render?.(_data)}
               subHeader={
                 <Box sx={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr 1fr' }}>
                   {_tableSettings.slice(1, 4).map((setting) => {
                     return (
-                      <Fragment key={_data.id}>
+                      <Fragment key={setting.id}>
                         <StatsItem label={setting.text} value={setting.render?.(_data)} />
                       </Fragment>
                     )
@@ -76,7 +76,7 @@ export default function TraderExplorerListview({
                 <Box pt={2} sx={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr 1fr' }}>
                   {_tableSettings.slice(4).map((setting, index) => {
                     return (
-                      <Fragment key={_data.id}>
+                      <Fragment key={setting.id}>
                         <StatsItem label={setting.text} value={setting.render?.(_data, index, externalSource)} />
                       </Fragment>
                     )

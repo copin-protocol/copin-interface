@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, cloneElement, createContext, useContext, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { parsedQueryString } from 'hooks/router/useParsedQueryString'
@@ -21,7 +21,7 @@ export function ProtocolProvider({ children }: { children: any }) {
 
   const values = useMemo(() => ({ protocol, navProtocol, setNavProtocol }), [navProtocol, protocol])
 
-  return <ProtocolContext.Provider value={values}>{cloneElement(children, { key: protocol })}</ProtocolContext.Provider>
+  return <ProtocolContext.Provider value={values}>{children}</ProtocolContext.Provider>
 }
 
 type valueof<T> = T[keyof T]

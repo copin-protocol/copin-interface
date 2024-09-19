@@ -11,8 +11,8 @@ import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { getProtocolConfigs } from 'components/@widgets/SwitchProtocols/helpers'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { useProtocolStore } from 'hooks/store/useProtocols'
-import { ALLOWED_PROTOCOLS } from 'pages/Home/configs'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { compactNumber } from 'utils/helpers/format'
 import { DEFAULT_CHAIN_ID } from 'utils/web3/chains'
@@ -149,7 +149,7 @@ export default function SelectProtocolDropdown({
                       >
                         {protocol.text}
                       </Type.Caption>
-                      {ALLOWED_PROTOCOLS.includes(protocol.id) && (
+                      {ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol.id) && (
                         <ActiveDot
                           tooltipId={`tt_allow_copy_${protocol.id}`}
                           tooltipContent={<Trans>Allow Copy</Trans>}

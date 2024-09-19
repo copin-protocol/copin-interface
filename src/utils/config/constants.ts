@@ -208,3 +208,24 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.MUMMY_FANTOM,
       ]
     : Object.values(ProtocolEnum)
+
+// TODO: Check when add new protocol
+export const ALLOWED_COPYTRADE_PROTOCOLS = [
+  ProtocolEnum.GMX,
+  ProtocolEnum.GMX_V2,
+  ProtocolEnum.KWENTA,
+  ProtocolEnum.POLYNOMIAL,
+  ProtocolEnum.GNS,
+  ProtocolEnum.GNS_POLY,
+  ProtocolEnum.MUX_ARB,
+  ProtocolEnum.AVANTIS_BASE,
+  ProtocolEnum.CYBERDEX,
+  ProtocolEnum.DEXTORO,
+  ProtocolEnum.VELA_ARB,
+  ProtocolEnum.EQUATION_ARB,
+  ProtocolEnum.HMX_ARB,
+  ProtocolEnum.LEVEL_ARB,
+  ProtocolEnum.LEVEL_BNB,
+  ProtocolEnum.APOLLOX_BNB,
+  ProtocolEnum.KILOEX_OPBNB,
+]

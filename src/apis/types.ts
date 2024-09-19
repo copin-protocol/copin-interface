@@ -33,7 +33,7 @@ export interface QueryFilter {
   value?: string | TimeFilterByEnum
 }
 
-type PaginationParams = {
+export type PaginationParams = {
   limit?: number
   offset?: number
 }
@@ -48,21 +48,29 @@ export type RequestBodyApiData = {
   returnPnlStatistic?: boolean
 } & Partial<Record<string, any>>
 
-export type SearchTradersParams = GetApiParams & {
+export type SearchTradersParams = PaginationParams & {
   keyword?: string
   protocol?: ProtocolEnum
+  protocols?: ProtocolEnum[]
+  sortBy?: string
+  sortType?: SortTypeEnum
+}
+export type SearchPositionByTxHashParams = PaginationParams & {
+  txHash: string
+  protocol?: ProtocolEnum
+  protocols?: ProtocolEnum[]
   sortBy?: string
   sortType?: SortTypeEnum
 }
 
-export type GetCopyTradeSettingsParams = GetApiParams & {
+export type GetCopyTradeSettingsParams = PaginationParams & {
   accounts?: string[]
   userId?: string
   status?: CopyTradeStatusEnum
   protocol?: ProtocolEnum
 }
 
-export type GetMyPositionsParams = GetApiParams & {
+export type GetMyPositionsParams = PaginationParams & {
   status?: string[]
   isLong?: boolean
   identifyKey?: string
@@ -78,7 +86,7 @@ export type GetMyPositionRequestBody = {
   copyWalletIds?: string[]
 }
 
-export type GetLeaderboardParams = GetApiParams & {
+export type GetLeaderboardParams = PaginationParams & {
   queryDate?: number
   keyword?: string
   protocol?: ProtocolEnum

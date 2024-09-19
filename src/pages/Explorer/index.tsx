@@ -22,21 +22,22 @@ export default function Explorer() {
   return (
     <>
       <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-        <PageHeader
-          pageTitle={`Traders Explorer on ${protocol}`}
-          headerText={<Trans>TRADER EXPLORER</Trans>}
-          icon={BookBookmark}
-          keepSearchOnSwitchProtocol={false}
-          routeSwitchProtocol
-        />
-        <Box sx={{ overflow: 'hidden', flex: '1 0 0' }}>
-          <FilterTradersProvider key={pathname} tab={TabKeyEnum.Explorer}>
+        <FilterTradersProvider key={pathname} tab={TabKeyEnum.Explorer}>
+          <PageHeader
+            pageTitle={`Traders Explorer on ${protocol}`}
+            headerText={<Trans>TRADER EXPLORER</Trans>}
+            icon={BookBookmark}
+            keepSearchOnSwitchProtocol={false}
+            routeSwitchProtocol
+            useNewCode={true}
+          />
+          <Box sx={{ overflow: 'hidden', flex: '1 0 0' }}>
             <TradersAnalytics />
-          </FilterTradersProvider>
-        </Box>
-        <BottomTabWrapperMobile>
-          <BottomTabItemMobile icon={<Bookmarks size={24} weight="fill" />} text={<Trans>Traders explorer</Trans>} />
-        </BottomTabWrapperMobile>
+          </Box>
+          <BottomTabWrapperMobile>
+            <BottomTabItemMobile icon={<Bookmarks size={24} weight="fill" />} text={<Trans>Traders explorer</Trans>} />
+          </BottomTabWrapperMobile>
+        </FilterTradersProvider>
       </Flex>
       {sm && <MultipleBackTestModal />}
     </>

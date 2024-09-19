@@ -1,20 +1,23 @@
 import dayjs from 'dayjs'
-import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
+import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 import { TraderListSortProps } from 'components/@trader/TraderExplorerTableView/types'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader.d'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
+import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
+import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { RANKING_FIELD_NAMES } from 'hooks/store/useRankingCustomize'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { getProtocolFromUrl } from 'utils/helpers/graphql'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { TimeRange } from 'utils/types'
@@ -48,6 +51,12 @@ export interface TradersContextData {
   currentSort: TraderListSortProps<TraderData> | undefined
   changeCurrentSort: (sort: TraderListSortProps<TraderData> | undefined) => void
   filterTab: FilterTabEnum
+  selectedProtocols: ProtocolEnum[]
+  checkIsProtocolChecked: (status: ProtocolEnum) => boolean
+  handleToggleProtocol: (option: ProtocolEnum) => void
+  setSelectedProtocols: (protocols: ProtocolEnum[]) => void
+  urlProtocol: ProtocolEnum | undefined
+  setUrlProtocol: (protocol: ProtocolEnum | undefined) => void
 }
 
 const TradersContext = createContext<TradersContextData>({} as TradersContextData)
@@ -63,7 +72,26 @@ export function FilterTradersProvider({
 }) {
   const { myProfile } = useMyProfile()
   const { searchParams, setSearchParams } = useSearchParams()
+  const currentPageParam = Number(searchParams[URL_PARAM_KEYS.HOME_PAGE])
   const { protocol } = useProtocolStore()
+  const protocolOptions = useGetProtocolOptions()
+
+  const {
+    selectedProtocols,
+    checkIsSelected: checkIsProtocolChecked,
+    handleToggle: handleToggleProtocol,
+    setSelectedProtocols,
+    urlProtocol,
+    setUrlProtocol,
+  } = useProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
+
+  const protocolInUrl = getProtocolFromUrl()
+
+  useEffect(() => {
+    if (protocolInUrl) {
+      setSelectedProtocols([protocolInUrl])
+    }
+  }, [protocolInUrl])
 
   const [currentSuggestion, setCurrentSuggestion] = useState<string | undefined>()
 
@@ -221,7 +249,7 @@ export function FilterTradersProvider({
   const filterTab = getInitFilterTab({ searchParams })
 
   const contextValue: TradersContextData = {
-    protocol,
+    protocol, // TODO: remove later
     tab,
     accounts,
     isRangeSelection,
@@ -231,7 +259,7 @@ export function FilterTradersProvider({
     changeTimeRange: handleSetTimeRange,
     timeOption,
     changeTimeOption: handleSetTimeOption,
-    currentPage,
+    currentPage: !isNaN(currentPageParam) ? currentPageParam : 1,
     changeCurrentPage,
     currentSuggestion,
     setCurrentSuggestion,
@@ -244,6 +272,12 @@ export function FilterTradersProvider({
     currentSort,
     changeCurrentSort,
     filterTab,
+    selectedProtocols,
+    checkIsProtocolChecked,
+    handleToggleProtocol,
+    setSelectedProtocols,
+    urlProtocol,
+    setUrlProtocol,
   }
 
   return <TradersContext.Provider value={contextValue}>{children}</TradersContext.Provider>

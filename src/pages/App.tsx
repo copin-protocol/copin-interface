@@ -84,7 +84,15 @@ function App() {
             <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHash}></Route>
             <Route path={ROUTES.LEADERBOARD.path} component={Leaderboard}></Route>
             <Route path={ROUTES.COPIER_LEADERBOARD.path} component={CopierLeaderboard}></Route>
+            {/* OLD ROUTE */}
             <Route path={ROUTES.TRADERS_EXPLORER.path} component={Explorer}></Route>
+            {/* NEW ROUTE */}
+            <Route path={ROUTES.ALL_TRADERS_EXPLORER.path} component={Explorer}></Route>
+
+            {/* NEW ROUTE */}
+            <Route path={ROUTES.ALL_OPEN_INTEREST_POSITIONS.path} component={OpenInterest}></Route>
+
+            {/* OLD ROUTE */}
             <Route path={ROUTES.OPEN_INTEREST.path} component={OpenInterest}></Route>
 
             {/* <Route exact path={ROUTES.TRADER_EXCHANGES_STATS.path} component={TraderExchangesStats}></Route> */}

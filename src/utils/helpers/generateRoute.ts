@@ -76,18 +76,34 @@ export function generateOIOverviewRoute(data: { protocol: string; symbol?: strin
     params: data.params,
   })
 }
-export function generateOIPositionsRoute(data: { protocol: string; symbol?: string; params?: Record<string, any> }) {
+export function generateOIPositionsRoute(data: { protocol?: string; symbol?: string; params?: Record<string, any> }) {
+  if (data.protocol) {
+    return createUrlWithParams({
+      url: data.symbol
+        ? `/${data.protocol}${ROUTES.OPEN_INTEREST_POSITIONS.path_prefix}/${data.symbol}`
+        : `/${data.protocol}${ROUTES.OPEN_INTEREST_POSITIONS.path_prefix}`,
+      params: data.params,
+    })
+  }
+
   return createUrlWithParams({
     url: data.symbol
-      ? `/${data.protocol}${ROUTES.OPEN_INTEREST_POSITIONS.path_prefix}/${data.symbol}`
-      : `/${data.protocol}${ROUTES.OPEN_INTEREST_POSITIONS.path_prefix}`,
+      ? `${ROUTES.ALL_OPEN_INTEREST_POSITIONS.path}/${data.symbol}`
+      : `${ROUTES.ALL_OPEN_INTEREST_POSITIONS.path}`,
     params: data.params,
   })
 }
 
-export function generateExplorerRoute(data: { protocol: string; params?: Record<string, any> }) {
+export function generateExplorerRoute(data: { protocol?: string; params?: Record<string, any> }) {
+  if (data.protocol) {
+    return createUrlWithParams({
+      url: `/${data.protocol}${ROUTES.TRADERS_EXPLORER.path_prefix}`,
+      params: data.params,
+    })
+  }
+
   return createUrlWithParams({
-    url: `/${data.protocol}${ROUTES.TRADERS_EXPLORER.path_prefix}`,
+    url: ROUTES.ALL_TRADERS_EXPLORER.path_prefix,
     params: data.params,
   })
 }

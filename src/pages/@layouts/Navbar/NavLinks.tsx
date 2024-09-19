@@ -86,22 +86,34 @@ function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () =
             {config.label}
           </NavLink>
         ) : (
-          <SelectProtocolDropdown
-            key={index}
-            routeFactory={(protocol) => config.routeFactory({ protocol: _navProtocol ?? protocol })}
+          // OLD CODE
+          // <SelectProtocolDropdown
+          //   key={index}
+          //   routeFactory={(protocol) => config.routeFactory({ protocol: _navProtocol ?? protocol })}
+          // >
+          //   <NavLink
+          //     to={config.routeFactory({ protocol: _navProtocol ?? protocol })}
+          //     onClick={onClickNavItem}
+          //     matchpath={config.matchpath}
+          //     style={{ display: 'block', height: '100%' }}
+          //   >
+          //     <Flex sx={{ alignItems: 'center', gap: 1 }}>
+          //       <Box>{config.label}</Box>
+          //       <CaretDown size={16} />
+          //     </Flex>
+          //   </NavLink>
+          // </SelectProtocolDropdown>
+
+          <NavLink
+            to={config.routeFactory({ protocol: _navProtocol ?? protocol })}
+            onClick={onClickNavItem}
+            matchpath={config.matchpath}
+            style={{ display: 'block', height: '100%' }}
           >
-            <NavLink
-              to={config.routeFactory({ protocol: _navProtocol ?? protocol })}
-              onClick={onClickNavItem}
-              matchpath={config.matchpath}
-              style={{ display: 'block', height: '100%' }}
-            >
-              <Flex sx={{ alignItems: 'center', gap: 1 }}>
-                <Box>{config.label}</Box>
-                <CaretDown size={16} />
-              </Flex>
-            </NavLink>
-          </SelectProtocolDropdown>
+            <Flex sx={{ alignItems: 'center', gap: 1 }}>
+              <Box>{config.label}</Box>
+            </Flex>
+          </NavLink>
         )
       })}
     </>
@@ -146,15 +158,14 @@ function EventNavLinks({ onClose, hasEvents }: { onClose?: () => void; hasEvents
 
 const baseNavConfigs = [
   {
-    routeFactory: (configs: { protocol: ProtocolEnum }) => generateExplorerRoute({ protocol: configs.protocol }),
+    routeFactory: (configs: { protocol: ProtocolEnum }) => generateExplorerRoute({}),
     label: <Trans>Traders Explorer</Trans>,
-    matchpath: ROUTES.TRADERS_EXPLORER.path_prefix,
+    matchpath: ROUTES.ALL_TRADERS_EXPLORER.path,
   },
   {
-    routeFactory: (configs: { protocol: ProtocolEnum }) => generateOIPositionsRoute({ protocol: configs.protocol }),
-
-    matchpath: ROUTES.OPEN_INTEREST.path_prefix,
+    routeFactory: (configs: { protocol: ProtocolEnum }) => generateOIPositionsRoute({}),
     label: <Trans>Open Interest</Trans>,
+    matchpath: ROUTES.ALL_OPEN_INTEREST_POSITIONS.path,
   },
   {
     routeFactory: (configs: { protocol: ProtocolEnum }) => generateLeaderboardRoute({ protocol: configs.protocol }),

@@ -9,12 +9,11 @@ import { formatNumber } from 'utils/helpers/format'
 import OpeningPositionsBubble from './OpeningPositionsBubble'
 
 type VisualizeSectionProps = {
-  protocol: ProtocolEnum
   data: PositionData[] | undefined
   isLoading: boolean
 }
 
-export default function VisualizeSection({ protocol, data, isLoading }: VisualizeSectionProps) {
+export default function VisualizeSection({ data, isLoading }: VisualizeSectionProps) {
   const longShortData = getLongShortData(data)
   return (
     <>
@@ -35,7 +34,7 @@ export default function VisualizeSection({ protocol, data, isLoading }: Visualiz
           }}
         >
           {!data && isLoading && <Loading />}
-          {data && <OpeningPositionsBubble data={data} protocol={protocol} />}
+          {data && <OpeningPositionsBubble data={data} />}
         </Flex>
         <Box height="136px" p={12}>
           <LongShortRate {...longShortData} />
@@ -81,12 +80,18 @@ function LongShortRate({ longRate, shortRate, longTraders, shortTraders, longVol
 }
 
 function getLongShortData(data: PositionData[] | undefined): LongShortRateProps {
+  // Calculate long and short volume
   const longVol = data ? data.filter((item) => item.isLong).reduce((prev, cur) => (prev += cur.size), 0) : undefined
+  const shortVol = data ? data.filter((item) => !item.isLong).reduce((prev, cur) => (prev += cur.size), 0) : undefined
+
+  // Get unique long and short traders
   const longTraders = data ? new Set(data.filter((item) => item.isLong).map((item) => item.account)) : undefined
   const shortTraders = data ? new Set(data.filter((item) => !item.isLong).map((item) => item.account)) : undefined
-  const shortVol = data ? data.filter((item) => !item.isLong).reduce((prev, cur) => (prev += cur.size), 0) : undefined
+
+  // Calculate long and short rate
   const longRate = longVol != null && shortVol != null ? (longVol * 100) / (longVol + shortVol) : undefined
   const shortRate = longRate != null ? 100 - longRate : undefined
+
   return {
     longRate,
     shortRate,

@@ -1,12 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
-import React from 'react'
 import Highlighter from 'react-highlight-words'
 import { Link } from 'react-router-dom'
 import { GridProps } from 'styled-system'
+import { v4 as uuid } from 'uuid'
 
 import ActiveDot from 'components/@ui/ActiveDot'
 import AddressAvatar from 'components/@ui/AddressAvatar'
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 // import CopyButton from 'theme/Buttons/CopyButton'
@@ -15,6 +16,8 @@ import { Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { addressShorten, shortenText } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+
+// import ProtocolLogo from '../ProtocolLogo'
 
 export function AccountInfo({
   isOpenPosition,
@@ -39,6 +42,7 @@ export function AccountInfo({
   sx?: SystemStyleObject & GridProps
   wrapperSx?: any
 }) {
+  const protocolTooltipId = uuid()
   const { protocol: defaultProtocol } = useProtocolStore()
   protocol = protocol ?? defaultProtocol
   const { isCopying } = useTraderCopying(address, protocol)
@@ -60,9 +64,10 @@ export function AccountInfo({
     >
       <AddressAvatar address={address} size={size} />
       <Flex
+        flex="1"
         flexDirection="column"
         sx={{
-          width: 90,
+          width: 100,
           textAlign: 'left',
           ...sx,
         }}
@@ -85,42 +90,21 @@ export function AccountInfo({
           >
             <HighlightKeyword text={address} keyword={keyword} />
           </Type.Caption>
-          {/* <Tooltip
-            id={`account-${address}-tt`}
-            place="top"
-            type="dark"
-            effect="solid"
-            noArrow={true}
-            clickable={true}
-            style={{
-              padding: 0,
-            }}
-            delayShow={360}
-            delayHide={0}
-          >
-            <div
-              onClick={(e) => {
-                e.stopPropagation()
-                e.preventDefault()
-              }}
-            >
-              <CopyButton
-                variant="ghost"
-                size="xs"
-                value={address}
-                iconSize={16}
-                sx={{
-                  transition: 'none',
-                }}
-              >
-                Copy
-              </CopyButton>
-            </div>
-          </Tooltip> */}
 
           {isOpenPosition && (
             <ActiveDot tooltipId={`tt_opening_${address}`} tooltipContent={<Trans>Having open positions</Trans>} />
           )}
+          <ProtocolLogo
+            protocol={protocol}
+            size={24}
+            hasText={false}
+            data-tip="React-tooltip"
+            data-tooltip-id={`tt_protocol_${protocolTooltipId}`}
+            data-tooltip-offset={0}
+          />
+          <Tooltip id={`tt_protocol_${protocolTooltipId}`} place="top" type="dark" effect="solid" clickable={false}>
+            <ProtocolLogo protocol={protocol} />
+          </Tooltip>
         </Flex>
         {smartAccount ? (
           <Type.Small

@@ -1,9 +1,14 @@
 import { useResponsive } from 'ahooks'
-import { ComponentType, ReactNode } from 'react'
+import { ComponentType, ReactNode, useEffect } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import { ProtocolFilter } from 'components/@ui/ProtocolFilter'
 import { HomeSwitchProtocols, RouteSwitchProtocol } from 'components/@widgets/SwitchProtocols'
+import useInternalRole from 'hooks/features/useInternalRole'
+import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
+import useTradersContext from 'pages/Explorer/useTradersContext'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 
 export default function PageHeader({
   pageTitle,
@@ -13,6 +18,7 @@ export default function PageHeader({
   routeSwitchProtocol = false,
   keepSearchOnSwitchProtocol = true,
   showSelectProtocol = true,
+  useNewCode = false,
 }: {
   pageTitle: string
   headerText: ReactNode
@@ -21,8 +27,39 @@ export default function PageHeader({
   keepSearchOnSwitchProtocol?: boolean
   routeSwitchProtocol?: boolean
   showSelectProtocol?: boolean
+  useNewCode?: boolean
 }) {
+  const { selectedProtocols, checkIsProtocolChecked, handleToggleProtocol, setSelectedProtocols, urlProtocol } =
+    useTradersContext()
   const { md } = useResponsive()
+
+  const isInternal = useInternalRole()
+  const protocolOptions = useGetProtocolOptions()
+  const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
+
+  const renderProtocolSelection = () => {
+    if (useNewCode) {
+      return (
+        <ProtocolFilter
+          selectedProtocols={urlProtocol ? [urlProtocol] : selectedProtocols}
+          checkIsProtocolChecked={checkIsProtocolChecked}
+          handleToggleProtocol={handleToggleProtocol}
+          setSelectedProtocols={setSelectedProtocols}
+          allowList={allowList}
+        />
+      )
+    }
+
+    {
+      /*TODO: REMOVE OLD CODE LATER */
+    }
+    return routeSwitchProtocol ? (
+      <RouteSwitchProtocol keepSearch={keepSearchOnSwitchProtocol} />
+    ) : (
+      <HomeSwitchProtocols buttonSx={{ border: 'none', borderLeft: 'small', borderLeftColor: 'neutral4' }} />
+    )
+  }
+
   return (
     <>
       <CustomPageTitle title={pageTitle} />
@@ -53,7 +90,7 @@ export default function PageHeader({
           <IconBox icon={<Icon size={24} weight="fill" />} />
           <Type.Body sx={{ flex: 1, flexShrink: 0, fontWeight: 500 }}>{headerText}</Type.Body>
         </Flex>
-        {showSelectProtocol && (
+        {/* {showSelectProtocol && (
           <>
             {routeSwitchProtocol ? (
               <RouteSwitchProtocol keepSearch={keepSearchOnSwitchProtocol} />
@@ -61,7 +98,9 @@ export default function PageHeader({
               <HomeSwitchProtocols buttonSx={{ border: 'none', borderLeft: 'small', borderLeftColor: 'neutral4' }} />
             )}
           </>
-        )}
+        )} */}
+
+        {renderProtocolSelection()}
       </Box>
     </>
   )

@@ -22,20 +22,12 @@ import HamburgerMenu from './HamburgetMenu'
 import Menu from './Menu'
 import MoreDropdown from './MoreDropdown'
 import { DesktopCopierLeaderboardLink, DesktopEventNavLinks, DesktopNavLinks } from './NavLinks'
-import SearchBox from './SearchBox'
+import QuickSearchBox from './QuickSearchBox'
 import { LARGE_BREAK_POINT } from './configs'
 import { LogoWrapper, Main, Wrapper } from './styled'
 
 export default function Navbar({ height }: { height: number }): ReactElement {
   const { isAuthenticated, disconnect } = useAuthContext()
-  const [isSearchOpening, setSearchOpening] = useState<boolean>(false)
-
-  const location = useLocation()
-
-  useEffect(() => {
-    if (location.pathname === routes.SEARCH.path) return
-    setSearchOpening(false)
-  }, [location.pathname])
 
   const [activeMobileMenu, setActiveMobileMenu] = useState(false)
   const protocol = useProtocolStore((state) => state.protocol)
@@ -49,56 +41,34 @@ export default function Navbar({ height }: { height: number }): ReactElement {
         <Wrapper height={height}>
           <Menu visible={activeMobileMenu} onClose={() => setActiveMobileMenu(false)} hasEvents={hasEvents} />
           <Main>
-            {!isSearchOpening ? (
-              <Flex height="100%" alignItems="center" sx={{ gap: 2 }}>
-                <Link to={generateHomeRoute({ params: { protocol } })}>
-                  <LogoWrapper>
-                    <Logo />
-                    <LogoText size={20} />
-                  </LogoWrapper>
-                </Link>
-                <Box
-                  alignItems="center"
-                  px={3}
-                  sx={{
-                    display: 'flex',
-                    textAlign: 'center',
-                    gap: 24,
-                    height: '100%',
-                    '& > *': { flexShrink: 0 },
-                    [`@media all and (max-width: ${LARGE_BREAK_POINT}px)`]: { display: 'none' },
-                  }}
-                >
-                  <DesktopNavLinks />
-                  <DesktopCopierLeaderboardLink />
-                  <MoreDropdown hasEvents={hasEvents} />
-                </Box>
-                <IconButton
-                  variant="ghost"
-                  icon={<MagnifyingGlass size={24} />}
-                  display={{ _: 'block', md: 'none' }}
-                  onClick={() => setSearchOpening(true)}
-                />
-              </Flex>
-            ) : (
-              <IconButton
-                mr={3}
-                variant="ghost"
-                icon={<XCircle size={24} />}
-                display={{ _: 'block', md: 'none' }}
-                onClick={() => setSearchOpening(false)}
-              />
-            )}
-            <Box
-              display={{ _: isSearchOpening ? 'block' : 'none', md: 'block' }}
-              flex={'1 1 auto'}
-              pr={isSearchOpening ? 3 : undefined}
-              maxWidth={600}
-            >
-              <SearchBox width="100%" />
-            </Box>
+            <Flex height="100%" alignItems="center" sx={{ gap: 2 }}>
+              <Link to={generateHomeRoute({ params: { protocol } })}>
+                <LogoWrapper>
+                  <Logo />
+                  <LogoText size={20} />
+                </LogoWrapper>
+              </Link>
+              <Box
+                alignItems="center"
+                px={3}
+                sx={{
+                  display: 'flex',
+                  textAlign: 'center',
+                  gap: 24,
+                  height: '100%',
+                  '& > *': { flexShrink: 0 },
+                  [`@media all and (max-width: ${LARGE_BREAK_POINT}px)`]: { display: 'none' },
+                }}
+              >
+                <DesktopNavLinks />
+                <DesktopCopierLeaderboardLink />
+                <MoreDropdown />
+              </Box>
+            </Flex>
 
-            <Box alignItems="center" display={{ _: isSearchOpening ? 'none' : 'flex', md: 'flex' }} height="100%">
+            <Flex alignItems="center" height="100%">
+              <QuickSearchBox />
+
               <Box
                 alignItems="center"
                 px={3}
@@ -147,7 +117,7 @@ export default function Navbar({ height }: { height: number }): ReactElement {
               >
                 <HamburgerMenu active={activeMobileMenu} onClick={() => setActiveMobileMenu((prev) => !prev)} />
               </Box>
-            </Box>
+            </Flex>
           </Main>
         </Wrapper>
       </Box>

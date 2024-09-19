@@ -1,11 +1,13 @@
+import { BaseGraphQLResponse } from 'graphql/entities/base.graph'
 import { useMemo } from 'react'
 
+import { normalizeTraderData } from 'apis/normalize'
 import { RequestBodyApiData } from 'apis/types'
 import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
-import { TraderData } from 'entities/trader'
+import { ResponseTraderData, TraderData } from 'entities/trader'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { CheckAvailableStatus } from 'utils/config/enums'
+import { CheckAvailableStatus, ProtocolEnum } from 'utils/config/enums'
 import { getInitNumberValue } from 'utils/helpers/geInitialValue'
 import { pageToOffset } from 'utils/helpers/transform'
 
@@ -24,15 +26,30 @@ export default function useQueryTraders({
   isRangeSelection,
   accounts,
   filterTab,
+  selectedProtocols,
+  setSelectedProtocols,
+  urlProtocol,
+  setUrlProtocol,
+  isFavTraders = false,
+  traderFavorites,
 }: Pick<
   TradersContextData,
   'protocol' | 'tab' | 'timeRange' | 'timeOption' | 'isRangeSelection' | 'accounts' | 'filterTab'
->) {
+> & {
+  selectedProtocols: ProtocolEnum[]
+  setSelectedProtocols: (protocols: ProtocolEnum[]) => void
+  urlProtocol: ProtocolEnum | undefined
+  setUrlProtocol: (protocol: ProtocolEnum | undefined) => void
+  isFavTraders?: boolean
+  traderFavorites?: string[]
+}) {
   const { searchParams } = useSearchParams()
+
   const requestData = useMemo<RequestBodyApiData>(() => {
     const page = getInitNumberValue(searchParams, 'page', 1)
     const limit = getInitNumberValue(searchParams, 'limit', DEFAULT_LIMIT)
     const { sortBy, sortType } = getInitSort(searchParams)
+
     const request: Record<string, any> = {
       sortBy,
       sortType,
@@ -54,7 +71,7 @@ export default function useQueryTraders({
     if (filterTab === FilterTabEnum.RANKING) {
       request.ranges = formatRankingRanges(ranges)
     }
-    if (accounts) transformRequestWithAccounts(request, accounts)
+    if (accounts) transformRequestWithAccounts(request, accounts, isFavTraders)
     return request
   }, [accounts, filterTab, searchParams])
 
@@ -66,36 +83,49 @@ export default function useQueryTraders({
     isRangeSelection,
   })
 
-  const { timeTraders, loadingTimeTraders } = useTimeFilterData({
-    protocol,
-    tab,
+  const { traders: timeTraders, loading: loadingTimeTraders } = useTimeFilterData({
     requestData,
     timeOption,
-    isRangeSelection,
+    selectedProtocols,
+    setSelectedProtocols,
+    urlProtocol,
+    setUrlProtocol,
   })
 
-  let data = isRangeSelection ? rangeTraders : timeTraders
+  let timeTradersData = timeTraders
+
+  if (!loadingTimeTraders && timeTraders) {
+    const formattedTimeTraders = timeTraders.data.map((trader) => normalizeTraderData(trader))
+    const data = { ...timeTraders, data: formattedTimeTraders } as BaseGraphQLResponse<ResponseTraderData>
+    timeTradersData = data
+  }
+
+  let data = isRangeSelection ? rangeTraders : timeTradersData
+
   if (accounts && data) {
-    const accountsWithInfo: string[] = []
-    data.data.forEach((trader) => {
-      accountsWithInfo.push(trader.account)
-    })
+    const protocolAccounts = traderFavorites ?? accounts
+
+    const accountsWithInfo = data.data.map((trader) => trader.account)
+
+    const extraAccounts = protocolAccounts
+      .filter((account) => {
+        const [address, protocol] = account.split('-')
+        return !accountsWithInfo.includes(address) && selectedProtocols.includes(protocol as ProtocolEnum)
+      })
+      .map((account) => {
+        const [address, protocol] = account.split('-')
+        return {
+          account: address,
+          protocol: protocol as ProtocolEnum,
+        } as TraderData
+      })
+
     data = {
-      data: [
-        ...data.data,
-        ...accounts
-          .filter((account) => !accountsWithInfo.includes(account))
-          .map(
-            (account) =>
-              ({
-                account,
-              } as TraderData)
-          ),
-      ],
+      data: [...data.data, ...extraAccounts],
       meta: {
-        limit: accounts.length,
+        limit: isFavTraders ? 0 : accounts.length,
         offset: 0,
-        total: accounts.length,
+        total: isFavTraders ? data.data.length + extraAccounts.length : accounts.length,
         totalPages: 1,
       },
     }
@@ -107,7 +137,7 @@ export default function useQueryTraders({
   return { data, isLoading, isRangeProgressing, loadingRangeProgress }
 }
 
-function transformRequestWithAccounts(request: RequestBodyApiData, accounts: string[]) {
+function transformRequestWithAccounts(request: RequestBodyApiData, accounts: string[], isFavTrader: boolean) {
   request.ranges = [
     {
       fieldName: 'account',
@@ -115,7 +145,7 @@ function transformRequestWithAccounts(request: RequestBodyApiData, accounts: str
     },
   ]
   request.pagination = {
-    limit: accounts.length,
+    limit: isFavTrader ? 0 : accounts.length,
     offset: 0,
   }
   return request

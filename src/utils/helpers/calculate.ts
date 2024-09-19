@@ -84,7 +84,7 @@ export function calcLiquidatePrice(position: PositionData) {
   // let lastCollateral = (useToken ? position.sizeInToken : position.size) / position.leverage
   // let lastSizeInToken = useToken ? position.sizeInToken : position.size / position.averagePrice
   // let totalFee = useToken ? position.feeInToken : position.fee
-  let lastCollateral = position.size / position.leverage
+  let lastCollateral = position.size / (position.leverage ?? undefined)
   let lastSizeInToken = position.size / position.averagePrice
   let totalFee = position.fee
   switch (position.protocol) {

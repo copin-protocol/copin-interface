@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { searchTradersApi } from 'apis/traderApis'
+import { SearchTradersParams } from 'apis/types'
 import { TraderData } from 'entities/trader'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -11,7 +12,7 @@ import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
-export default function useSearchTraders() {
+export default function useSearchTraders({ protocols }: { protocols: ProtocolEnum[] }) {
   const { searchParams, setSearchParams } = useSearchParams()
   const keyword = searchParams?.[URL_PARAM_KEYS.SEARCH_KEYWORD] as string
   const protocol = searchParams?.[URL_PARAM_KEYS.PROTOCOL] as ProtocolEnum
@@ -30,18 +31,23 @@ export default function useSearchTraders() {
     limitName: URL_PARAM_KEYS.EXPLORER_LIMIT,
     defaultLimit: DEFAULT_LIMIT,
   })
+  const queryTraderData: SearchTradersParams = {
+    limit: currentLimit,
+    offset: pageToOffset(currentPage, currentLimit),
+    sortBy: currentSort?.sortBy,
+    sortType: currentSort?.sortType,
+    keyword,
+  }
+  if (protocols) {
+    queryTraderData.protocols = protocols
+  } else {
+    const _protocol = !!currentProtocol ? currentProtocol : undefined
+    queryTraderData.protocol = _protocol
+  }
 
   const { data: searchTraders, isFetching: isLoading } = useQuery(
-    [QUERY_KEYS.SEARCH_ALL_TRADERS, currentLimit, currentPage, currentSort, currentProtocol, keyword],
-    () =>
-      searchTradersApi({
-        limit: currentLimit,
-        offset: pageToOffset(currentPage, currentLimit),
-        protocol: currentProtocol,
-        sortBy: currentSort?.sortBy,
-        sortType: currentSort?.sortType,
-        keyword,
-      }),
+    [QUERY_KEYS.SEARCH_ALL_TRADERS, queryTraderData],
+    () => searchTradersApi(queryTraderData),
     {
       enabled: !!keyword,
       keepPreviousData: true,

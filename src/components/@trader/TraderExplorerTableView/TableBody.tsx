@@ -14,6 +14,8 @@ export default function TableBody<T>({
   visibleColumns,
   checkIsSelected,
   handleSelect,
+  hiddenSelectBox = false,
+  lefts: _lefts = [36, 48],
 }: {
   data: T[] | undefined
   isLoading: boolean
@@ -21,10 +23,15 @@ export default function TableBody<T>({
   visibleColumns: string[]
   checkIsSelected?: (data: T) => boolean
   handleSelect?: (args: { isSelected: boolean; data: T }) => void
+  hiddenSelectBox?: boolean
+  lefts?: [number, number]
 }) {
   const lefts = useMemo(
-    () => tableSettings.map((col, i) => (col.freezeLeft ? getFreezeLeftPos(i, visibleColumns) : undefined)),
-    [tableSettings, visibleColumns]
+    () =>
+      _lefts
+        ? _lefts
+        : tableSettings.map((col, i) => (col.freezeLeft ? getFreezeLeftPos(i, visibleColumns) : undefined)),
+    [tableSettings, visibleColumns, _lefts]
   )
   return (
     <tbody>
@@ -50,13 +57,14 @@ export default function TableBody<T>({
         const isSelected = !!checkIsSelected && checkIsSelected(data)
         return (
           <tr key={index}>
-            {handleSelect && (
+            {!hiddenSelectBox && handleSelect && (
               <Box
                 as="td"
                 className="column-freeze"
                 sx={{ pl: [12, 3], pr: [0, 2], position: 'sticky', left: 0, width: [36, 48], zIndex: 4 }}
               >
                 <Checkbox
+                  wrapperSx={{ visibility: hiddenSelectBox ? 'hidden' : 'visible' }}
                   checked={isSelected}
                   defaultChecked={isSelected}
                   onChange={() => handleSelect && handleSelect({ isSelected, data })}

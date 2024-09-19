@@ -79,6 +79,7 @@ const useInitTraderFavorites = () => {
     enabled: !!profile && enabledQueryByPaths,
     keepPreviousData: true,
   })
+
   useEffect(() => {
     if (data) {
       setTraderFavorites(data.map((trader) => `${trader.account}-${trader.protocol}`))
@@ -145,6 +146,7 @@ const useTraderFavorites = () => {
     }
     setSubmitting(false)
   }
+
   const unsetTraderFavorite = async ({ address, protocol }: { address: string; protocol: ProtocolEnum }) => {
     setSubmitting(true)
     const oldData = traderFavorites
@@ -166,6 +168,7 @@ const useTraderFavorites = () => {
     }
     setSubmitting(false)
   }
+
   return {
     traderFavorites,
     notes,

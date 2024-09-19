@@ -14,9 +14,10 @@ export default function FavoriteButton({
   address,
   protocol,
   size = 24,
-  color = 'primary1',
-  hoverColor = 'primary2',
+  color = 'neutral3',
+  hoverColor = 'primary1',
   activeColor = 'primary1',
+  sx = {},
 }: {
   address: string
   protocol: ProtocolEnum
@@ -25,6 +26,7 @@ export default function FavoriteButton({
   hoverColor?: string
   activeColor?: string
   source?: EventSource
+  sx?: any
 }) {
   const {
     traderFavorites,
@@ -107,6 +109,7 @@ export default function FavoriteButton({
           '&:hover:not([disabled])': {
             color: hoverColor,
           },
+          ...sx,
         }}
         // onClick={handleAddFavorite}
       />

@@ -7,13 +7,13 @@ import Divider from 'components/@ui/Divider'
 import ProtocolGroup from 'components/@ui/ProtocolGroup'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
-import { ALLOWED_PROTOCOLS } from 'pages/Home/configs'
 import Checkbox from 'theme/Checkbox'
 import Dropdown from 'theme/Dropdown'
 import RcDrawer from 'theme/RcDrawer'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { CopyTradeStatusEnum } from 'utils/config/enums'
 import { COPY_TRADE_STATUS_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
@@ -302,6 +302,6 @@ function AvailableMargin({ value, sx }: { value: number | undefined; sx?: any })
   )
 }
 
-const protocolFilters = ALLOWED_PROTOCOLS
+const protocolFilters = ALLOWED_COPYTRADE_PROTOCOLS
 
 const statusFilters = [CopyTradeStatusEnum.RUNNING, CopyTradeStatusEnum.STOPPED]

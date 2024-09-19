@@ -6,6 +6,10 @@ const ROUTES = {
     path: '/:protocol/explorer',
     path_prefix: '/explorer',
   },
+  ALL_TRADERS_EXPLORER: {
+    path: '/explorer',
+    path_prefix: '/explorer',
+  },
   OPEN_INTEREST: {
     path: '/:protocol/open-interest',
     path_prefix: '/open-interest',
@@ -20,6 +24,12 @@ const ROUTES = {
     alter_path: '/:protocol/open-interest/positions',
     path_prefix: '/open-interest/positions',
   },
+  ALL_OPEN_INTEREST_POSITIONS: {
+    path: '/open-interest/positions',
+    alter_path: '/open-interest/positions/:symbol',
+    path_prefix: '/open-interest/positions',
+  },
+
   LEADERBOARD: {
     path: '/:protocol/leaderboard',
     path_prefix: '/leaderboard',

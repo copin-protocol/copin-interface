@@ -2,15 +2,17 @@ import { AxiosResponse } from 'axios'
 
 import {
   CheckAvailableResultData,
+  PnlStatisticsResponse,
   ResponsePositionData,
   ResponseTraderData,
   ResponseTraderExchangeStatistic,
+  StatisticData,
   TraderCounter,
   TraderData,
 } from 'entities/trader.d'
 import { TraderTokenStatistic } from 'entities/trader.d'
 import { PositionSortPros } from 'pages/TraderDetails'
-import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
 import { capitalizeFirstLetter } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
@@ -45,7 +47,7 @@ function transformRealisedField(fieldName: string) {
   }
 }
 
-const normalizePayload = (body: RequestBodyApiData) => {
+export const normalizeTraderPayload = (body: RequestBodyApiData) => {
   let sortBy = body.sortBy
   if (!!sortBy) {
     sortBy = transformRealisedField(sortBy)
@@ -116,7 +118,7 @@ export async function getTradersApi({ protocol, body }: { protocol: ProtocolEnum
     params.keyword = body.keyword
   }
   return requester
-    .post(apiWrapper(`${protocol}/${SERVICE}/statistic/filter`), normalizePayload(params))
+    .post(apiWrapper(`${protocol}/${SERVICE}/statistic/filter`), normalizeTraderPayload(params))
     .then((res: any) => normalizeTraderResponse(res.data as ApiListResponse<ResponseTraderData>))
 }
 
@@ -190,7 +192,7 @@ export async function getTradersCounter(
   payload: RequestBodyApiData,
   timeframe: TimeFilterByEnum
 ) {
-  const body = normalizePayload(payload)
+  const body = normalizeTraderPayload(payload)
   const params: Record<string, any> = { pagination: body.pagination }
   if (!!body.ranges && body.ranges.length > 0) params.ranges = body.ranges
 
@@ -222,7 +224,7 @@ export async function getTradersByTimeRangeApi({
   body: RequestBodyApiData
 }) {
   return requester
-    .post(`${protocol}/${SERVICE}/custom/filter`, normalizePayload(body), { params })
+    .post(`${protocol}/${SERVICE}/custom/filter`, normalizeTraderPayload(body), { params })
     .then((res: any) => normalizeTraderResponse(res.data as ApiListResponse<ResponseTraderData>))
 }
 
@@ -268,4 +270,10 @@ export async function getTraderMultiExchangeStatistic({
   return requester.get(`public/${SERVICE}/statistic/trader/${account}`, { params }).then((res: any) => {
     return res.data as { [protocol in ProtocolEnum]: ResponseTraderData }
   })
+}
+
+export async function getPnlStatisticsApi(payload: StatisticData) {
+  return requester
+    .post(`public/${SERVICE}/statistic/pnl-statistics`, payload)
+    .then((res: any) => res.data as PnlStatisticsResponse)
 }

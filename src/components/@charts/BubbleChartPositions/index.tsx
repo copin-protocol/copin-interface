@@ -1,6 +1,7 @@
 import * as d3 from 'd3'
 
 import { themeColors } from 'theme/colors'
+import { ProtocolEnum } from 'utils/config/enums'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 
 export type BubbleChartData = {
@@ -10,6 +11,7 @@ export type BubbleChartData = {
   leverage: number
   title: string
   isLong: boolean
+  protocol: ProtocolEnum
 }
 
 function shuffle(array: BubbleChartData[]) {

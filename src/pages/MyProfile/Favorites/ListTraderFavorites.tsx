@@ -7,6 +7,7 @@ import TraderListCard from 'components/@trader/TraderExplorerListView'
 import TraderListTable from 'components/@trader/TraderExplorerTableView'
 import { mobileTableSettings, tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
 import { TraderData } from 'entities/trader.d'
+import useTraderFavorites, { getTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
 import useQueryTraders from 'pages/Explorer/ListTradersSection/useQueryTraders'
 import { TradersContextData } from 'pages/Explorer/useTradersContext'
 import ProgressBar from 'theme/ProgressBar'
@@ -19,6 +20,7 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
   contextValues: TradersContextData
   notes: { [key: string]: string }
 }) {
+  const { traderFavorites } = useTraderFavorites()
   const { sm } = useResponsive()
   const settings = sm ? tableSettings : mobileTableSettings
   const {
@@ -31,6 +33,10 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     currentSort,
     changeCurrentSort,
     filterTab,
+    selectedProtocols,
+    setSelectedProtocols,
+    urlProtocol,
+    setUrlProtocol,
   } = contextValues
 
   const { data, isLoading, isRangeProgressing, loadingRangeProgress } = useQueryTraders({
@@ -41,6 +47,12 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     isRangeSelection,
     accounts,
     filterTab,
+    selectedProtocols,
+    setSelectedProtocols,
+    urlProtocol,
+    setUrlProtocol,
+    isFavTraders: true,
+    traderFavorites,
   })
 
   const [selectedTraders, setSelectedTraders] = useState<string[]>([])
@@ -53,7 +65,12 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     })
   }
   const checkIsSelected = (data: TraderData) => selectedTraders.includes(data.account)
-  const formatedData = data?.data.map((item) => ({ ...item, note: notes ? notes[item.account] : undefined, protocol }))
+  const formatedData = data?.data
+    .map((item) => ({ ...item, note: notes ? notes[item.account] : undefined }))
+    .filter(({ account, protocol }) => {
+      const traderFavorite = getTraderFavoriteValue({ address: account, protocol })
+      return traderFavorites.includes(traderFavorite)
+    })
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
@@ -96,13 +113,16 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
                 tableSettings={settings}
                 checkIsSelected={checkIsSelected}
                 handleSelect={handleSelect}
+                hiddenSelectAllBox
+                hiddenSelectItemBox
+                lefts={[0, 0]}
               />
             ) : (
               <TraderListCard data={formatedData} isLoading={isLoading} />
             )}
           </Box>
 
-          <CompareTradersButton selectedTraders={selectedTraders} />
+          {/* <CompareTradersButton selectedTraders={selectedTraders} /> */}
         </>
       )}
     </Flex>

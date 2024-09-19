@@ -61,7 +61,7 @@ export interface TraderData {
   createdAt: string
   updatedAt: string
   ranking: { [key: string]: number }
-  pnlStatistics?: TraderPnlStatisticData[]
+  pnlStatistics?: TraderPnlStatisticData
 }
 
 export interface ResponseTraderData extends TraderData {
@@ -303,3 +303,17 @@ export interface TraderExchangeStatistic {
 }
 
 export type ResponseTraderExchangeStatistic = Record<ProtocolEnum, TraderExchangeStatistic> | undefined
+
+export interface Account {
+  account: string
+  protocol: string
+}
+
+export interface StatisticData {
+  accounts: Account[]
+  statisticType: TimeFilterByEnum
+}
+
+export type PnlStatisticsResponse = {
+  [account: string]: TraderPnlStatisticData
+}

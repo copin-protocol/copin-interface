@@ -6,7 +6,6 @@ import { ApiListResponse } from 'apis/api'
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
-import FilterProtocol from 'components/@widgets/FilterProtocol'
 import { TraderData } from 'entities/trader'
 import { PaginationWithLimit } from 'theme/Pagination'
 import Table from 'theme/Table'
@@ -25,11 +24,9 @@ type ResultsProps = {
   currentLimit: number
   currentPage: number
   currentSort?: TableSortProps<TraderData>
-  currentProtocol?: ProtocolEnum
   changeCurrentLimit: (limit: number) => void
   changeCurrentPage: (page: number) => void
   changeCurrentSort: (data?: TableSortProps<TraderData>) => void
-  changeCurrentProtocol: (data?: ProtocolEnum) => void
 }
 
 const SearchAllResults = ({
@@ -39,11 +36,9 @@ const SearchAllResults = ({
   currentLimit,
   currentPage,
   currentSort,
-  currentProtocol,
   changeCurrentLimit,
   changeCurrentPage,
   changeCurrentSort,
-  changeCurrentProtocol,
 }: ResultsProps) => {
   const { sm } = useResponsive()
 
@@ -59,11 +54,6 @@ const SearchAllResults = ({
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-      <FilterProtocol
-        currentProtocol={currentProtocol}
-        changeProtocol={changeCurrentProtocol}
-        sx={{ py: 2, border: 'small', borderTop: 'none', borderColor: 'neutral4' }}
-      />
       <Box
         sx={{
           flex: '1 0 0',

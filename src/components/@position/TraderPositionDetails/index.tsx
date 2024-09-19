@@ -16,6 +16,7 @@ import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Loading from 'theme/Loading'
 import Tag from 'theme/Tag'
+import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum, TraderStatusEnum } from 'utils/config/enums'
@@ -79,21 +80,42 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
               <Link to={generateTraderMultiExchangeRoute({ protocol, address: data.account })}>
                 <Button type="button" variant="ghost" sx={{ p: 0 }}>
                   <Flex flexDirection="column" textAlign="left">
-                    <Type.BodyBold>{addressShorten(data.account)}</Type.BodyBold>
+                    <Flex sx={{ gap: 2 }}>
+                      <Type.BodyBold>{addressShorten(data.account)}</Type.BodyBold>
+                      <ProtocolLogo
+                        protocol={data.protocol}
+                        size={24}
+                        hasText={false}
+                        data-tip="React-tooltip"
+                        data-tooltip-id={`tt_protocol_${data.protocol}`}
+                        data-tooltip-offset={0}
+                      />
+                      <Tooltip
+                        id={`tt_protocol_${data.protocol}`}
+                        place="top"
+                        type="dark"
+                        effect="solid"
+                        clickable={false}
+                      >
+                        <ProtocolLogo protocol={data.protocol} />
+                      </Tooltip>
+
+                      <CopyButton
+                        type="button"
+                        variant="ghost"
+                        value={data.account}
+                        size="sm"
+                        sx={{ color: 'neutral3', p: 0 }}
+                      />
+                      <ExplorerLogo protocol={data.protocol} explorerUrl={`${explorerUrl}/address/${data.account}`} />
+                    </Flex>
                     <Type.Caption color="neutral3">
                       <BalanceText protocol={data.protocol} account={data.account} smartAccount={data.smartAccount} />
                     </Type.Caption>
                   </Flex>
                 </Button>
               </Link>
-              <CopyButton
-                type="button"
-                variant="ghost"
-                value={data.account}
-                size="sm"
-                sx={{ color: 'neutral3', p: 0 }}
-              ></CopyButton>
-              <ExplorerLogo protocol={data.protocol} explorerUrl={`${explorerUrl}/address/${data.account}`} />
+
               {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
             </Flex>
             {!isDrawer && <ProtocolLogo size={24} protocol={data.protocol} textSx={{ fontSize: '14px' }} />}

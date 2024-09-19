@@ -20,6 +20,7 @@ export default function useBacktestTradersActions({
     removeTraderFromHomeInstance,
     updateHomeInstance,
   } = useSelectBacktestTraders()
+
   const { openModal, dismissModal } = useBacktestWarningModal()
   const listTraderData = tradersData?.data ?? []
   const listAddress = listTraderData.map((trader) => trader.account)

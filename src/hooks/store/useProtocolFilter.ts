@@ -1,0 +1,88 @@
+import create from 'zustand'
+import { persist } from 'zustand/middleware'
+import { immer } from 'zustand/middleware/immer'
+
+import useSearchParams from 'hooks/router/useSearchParams'
+import { ProtocolEnum } from 'utils/config/enums'
+import { URL_PARAM_KEYS } from 'utils/config/keys'
+
+interface ProtocolFilterState {
+  selectedProtocols: ProtocolEnum[]
+  setProtocols: (protocols: ProtocolEnum[]) => void
+  urlProtocol: ProtocolEnum | undefined
+  setUrlProtocol: (protocol: ProtocolEnum | undefined) => void
+}
+
+const INIT_PAGE = 1
+
+const compareTwoArrays = (arr1: ProtocolEnum[], arr2: ProtocolEnum[]) => {
+  if (arr1.length !== arr2.length) return false
+
+  const set1 = new Set(arr1)
+  const set2 = new Set(arr2)
+
+  if (set1.size !== set2.size) return false
+
+  return [...set1].every((item) => set2.has(item))
+}
+
+const createProtocolFilterStore = (defaultSelects: ProtocolEnum[] = [], changeCurrentPage: (page: number) => void) =>
+  create<ProtocolFilterState>()(
+    persist(
+      immer((set) => ({
+        selectedProtocols: defaultSelects || [],
+        urlProtocol: undefined,
+        setProtocols: (protocols) =>
+          set((state) => {
+            state.selectedProtocols = protocols
+          }),
+        setUrlProtocol: (protocol) =>
+          set((state) => {
+            state.urlProtocol = protocol
+          }),
+      })),
+      {
+        name: 'protocol-filter',
+        getStorage: () => localStorage,
+      }
+    )
+  )
+
+export const useProtocolFilter = ({ defaultSelects }: { defaultSelects?: ProtocolEnum[] } = {}) => {
+  const { setSearchParams } = useSearchParams()
+  const changeCurrentPage = (page: number) => setSearchParams({ [URL_PARAM_KEYS.HOME_PAGE]: page.toString() })
+  const useProtocolFilterStore = createProtocolFilterStore(defaultSelects, changeCurrentPage)
+
+  const { selectedProtocols, setProtocols, urlProtocol, setUrlProtocol } = useProtocolFilterStore()
+
+  const checkIsSelected = (protocol: ProtocolEnum): boolean => {
+    return selectedProtocols.includes(protocol)
+  }
+
+  const setSelectedProtocols = (protocols: ProtocolEnum[]): void => {
+    // Reset page to 1 when changing protocols
+    setProtocols(protocols)
+    if (!compareTwoArrays(protocols, selectedProtocols)) {
+      changeCurrentPage(INIT_PAGE)
+    }
+  }
+
+  const handleToggle = (protocol: ProtocolEnum): void => {
+    if (selectedProtocols.includes(protocol)) {
+      const filtered = selectedProtocols.filter((selected) => selected !== protocol)
+      setSelectedProtocols(filtered)
+      return
+    }
+
+    setSelectedProtocols([...selectedProtocols, protocol])
+  }
+
+  return {
+    selectedProtocols,
+    checkIsSelected,
+    handleToggle,
+    setSelectedProtocols,
+    urlProtocol,
+    setUrlProtocol,
+  }
+}

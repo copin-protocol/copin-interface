@@ -83,7 +83,7 @@ export default function TraderPositionListView({
               {hasAccountAddress && (
                 <>
                   <Type.Caption color="neutral3">-</Type.Caption>
-                  <Box>{renderTrader(position.account, position.protocol)}</Box>
+                  <Box>{renderTrader(position.account, position.protocol, false, true)}</Box>
                 </>
               )}
               <Type.Caption color="neutral3">-</Type.Caption>

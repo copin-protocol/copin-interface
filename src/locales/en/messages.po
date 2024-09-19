@@ -211,6 +211,7 @@ msgstr "All stable PerpDEX + Early access PerpDEX"
 msgid "Allocating margin based on trader's average margin of the last {0}"
 msgstr "Allocating margin based on trader's average margin of the last {0}"
 
+#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
 #: src/components/@widgets/SwitchProtocols/index.tsx
 #: src/pages/@layouts/Navbar/SelectProtocolDropdown.tsx
 msgid "Allow Copy"
@@ -492,6 +493,10 @@ msgstr "Change password successful!"
 msgid "Charts"
 msgstr "Charts"
 
+#: src/pages/Home/Traders.tsx
+msgid "Choose <0>Perp DEXs source </0> to view traders list."
+msgstr "Choose <0>Perp DEXs source </0> to view traders list."
+
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 msgid "Choose A Trader To Compare"
@@ -546,10 +551,6 @@ msgstr "Collateral:"
 #: src/components/@wallet/CreateWalletAction/index.tsx
 msgid "Coming Soon"
 msgstr "Coming Soon"
-
-#: src/pages/Home/Traders.tsx
-msgid "Coming Soon!"
-msgstr "Coming Soon!"
 
 #: src/components/@copyTrade/CopyTraderButton/index.tsx
 msgid "Coming soon!"
@@ -961,11 +962,6 @@ msgstr "Exchange"
 msgid "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
 msgstr "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
 
-#: src/pages/Home/Traders.tsx
-#: src/pages/Home/Traders.tsx
-msgid "Explore More"
-msgstr "Explore More"
-
 #: src/pages/Settings/AlertList/NoAlertList.tsx
 msgid "Explorer Traders"
 msgstr "Explorer Traders"
@@ -1115,6 +1111,8 @@ msgid "HISTORY"
 msgstr "HISTORY"
 
 #: src/components/@ui/AccountInfo/index.tsx
+#: src/components/@widgets/SearchAllResults/configs.tsx
+#: src/components/@widgets/SearchTraderResultItem/index.tsx
 msgid "Having open positions"
 msgstr "Having open positions"
 
@@ -1673,6 +1671,7 @@ msgstr "No History Found"
 msgid "No Position Found"
 msgstr "No Position Found"
 
+#: src/components/@ui/ProtocolFilter/SearchProtocols.tsx
 #: src/components/@widgets/SwitchProtocols/SearchProtocols.tsx
 msgid "No Protocol Found"
 msgstr "No Protocol Found"
@@ -1681,6 +1680,8 @@ msgstr "No Protocol Found"
 msgid "No Rewards Found"
 msgstr "No Rewards Found"
 
+#: src/pages/@layouts/Navbar/QuickSearchBox.tsx
+#: src/pages/@layouts/Navbar/QuickSearchBox.tsx
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 #: src/pages/StatsCEX/SearchTrader.tsx
 msgid "No Trader Found"
@@ -1690,6 +1691,8 @@ msgstr "No Trader Found"
 msgid "No Trader Found In The Past 60 Days"
 msgstr "No Trader Found In The Past 60 Days"
 
+#: src/pages/@layouts/Navbar/QuickSearchBox.tsx
+#: src/pages/@layouts/Navbar/QuickSearchBox.tsx
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 msgid "No Transaction Found"
 msgstr "No Transaction Found"
@@ -1781,6 +1784,11 @@ msgstr "Ongoing"
 #: src/pages/Settings/UserSubscription/PlanPrice.tsx
 msgid "Only"
 msgstr "Only"
+
+#: src/components/@ui/ProtocolFilter/AllowListOption.tsx
+#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
+msgid "Only Allowed CopyTrade Perp DEXs"
+msgstr "Only Allowed CopyTrade Perp DEXs"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/PositionStatus/index.tsx
@@ -2181,6 +2189,10 @@ msgstr "Select the copy you want to clone:"
 #: src/pages/TraderDetails/CustomizeRankingColumns.tsx
 msgid "Selected:"
 msgstr "Selected:"
+
+#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
+msgid "Selected: {0} Perp DEXs"
+msgstr "Selected: {0} Perp DEXs"
 
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Session Expired"
@@ -3260,6 +3272,8 @@ msgstr "slippage"
 #: src/hooks/features/useReferralActions.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/Home/Traders.tsx
+#: src/pages/Home/Traders.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
 msgid "{0}"
@@ -3284,6 +3298,10 @@ msgstr "{0} months"
 #: src/pages/MyProfile/SelectTradersDropdown.tsx
 msgid "{0} traders"
 msgstr "{0} traders"
+
+#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
+msgid "{getSelectedChainName} Perp DEXs"
+msgstr "{getSelectedChainName} Perp DEXs"
 
 #: src/pages/TraderDetails/ScoreChart.tsx
 msgid "{label} is better than {value} traders"

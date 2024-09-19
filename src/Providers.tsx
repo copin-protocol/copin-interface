@@ -1,3 +1,4 @@
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { LanguageProvider } from 'i18n'
 import PythConnection from 'pythConnection'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -21,6 +22,18 @@ const queryClient = new QueryClient({
   },
 })
 
+const apolloClient = new ApolloClient({
+  uri: `${import.meta.env.VITE_API}/graphql`,
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-and-network',
+      errorPolicy: 'all',
+      notifyOnNetworkStatusChange: true,
+    },
+  },
+})
+
 const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
   useInitTabsOpen()
 
@@ -29,18 +42,20 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
       <ThemedGlobalStyle />
       <LanguageProvider>
         <QueryClientProvider client={queryClient}>
-          <SystemConfigProvider>
-            {/* <Updaters /> */}
-            <BrowserRouter>
-              <PythConnection />
-              {/*<GainsTradeConnection />*/}
-              <DappProvider>
-                <ProtocolProvider>
-                  <CopyWalletProvider>{children}</CopyWalletProvider>
-                </ProtocolProvider>
-              </DappProvider>
-            </BrowserRouter>
-          </SystemConfigProvider>
+          <ApolloProvider client={apolloClient}>
+            <SystemConfigProvider>
+              {/* <Updaters /> */}
+              <BrowserRouter>
+                {/* <UseRemoveTimeFilter /> */}
+                <PythConnection />
+                <DappProvider>
+                  <ProtocolProvider>
+                    <CopyWalletProvider>{children}</CopyWalletProvider>
+                  </ProtocolProvider>
+                </DappProvider>
+              </BrowserRouter>
+            </SystemConfigProvider>
+          </ApolloProvider>
         </QueryClientProvider>
       </LanguageProvider>
     </ThemeProvider>
