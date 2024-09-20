@@ -13,8 +13,12 @@ pipelines:
   branches:
     main:
       - step:
+          runs-on:
+            - self.hosted
+            - linux
           name: Sync GitHub Mirror
           image: alpine/git:latest
+          size: 2x
           clone:
             enabled: false
           script:
