@@ -126,8 +126,9 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
           orders[i].type === OrderTypeEnum.CLOSE ||
           orders[i].type === OrderTypeEnum.LIQUIDATE
         const sign = isDecrease ? -1 : 1
-        const sizeDeltaNumber = orders[i]?.sizeDeltaNumber ?? 0
         const sizeDeltaInToken = orders[i]?.sizeDeltaInTokenNumber ?? 0
+        const sizeDeltaNumber =
+          orders[i]?.sizeDeltaNumber ?? (sizeDeltaInToken ? sizeDeltaInToken * orders[i].priceNumber : 0)
         const sizeDelta = sign * Math.abs(sizeDeltaNumber)
         const sizeTokenDelta = sign * (sizeDeltaInToken || sizeDeltaNumber / orders[i].priceNumber)
         const collateralDeltaNumber = orders[i]?.collateralDeltaNumber ?? 0
@@ -316,14 +317,14 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
 
   useEffect(() => {
     if (isOpening) return
-    if (nextHours) {
+    if (nextHours && !!position.txHashes?.length) {
       // setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: nextHours.toString() })
       window.history.replaceState(
         null,
         '',
         generatePositionDetailsRoute({
           ...position,
-          txHash: position.txHashes[0],
+          txHash: position.txHashes?.[0],
           nextHours,
         })
       )
@@ -521,7 +522,13 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
             position: 'aboveBar',
             shape: 'arrowUp',
             time: (dayjs(order.blockTime).utc().unix() - timezone) as Time,
-            text: '$' + formatNumber(order.sizeDeltaNumber, 0),
+            text:
+              '$' +
+              formatNumber(
+                order.sizeDeltaNumber ??
+                  (order.sizeDeltaInTokenNumber ? order.sizeDeltaInTokenNumber * order.priceNumber : undefined),
+                0
+              ),
           }
         })
         const decreaseMarkers = (isOpening ? decreaseList : decreaseList.slice(0, -1)).map(
@@ -532,7 +539,13 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
               position: 'belowBar',
               shape: 'arrowDown',
               time: (dayjs(order.blockTime).utc().unix() - timezone) as Time,
-              text: '$' + formatNumber(order.sizeDeltaNumber, 0),
+              text:
+                '$' +
+                formatNumber(
+                  order.sizeDeltaNumber ??
+                    (order.sizeDeltaInTokenNumber ? order.sizeDeltaInTokenNumber * order.priceNumber : undefined),
+                  0
+                ),
             }
           }
         )

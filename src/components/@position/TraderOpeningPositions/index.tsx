@@ -9,7 +9,6 @@ import TraderPositionListView from 'components/@position/TraderPositionsListView
 import { fullOpeningColumns, openingColumns } from 'components/@position/configs/traderPositionRenderProps'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { PositionData } from 'entities/trader'
-import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import Loading from 'theme/Loading'
 import Table from 'theme/Table'
 import { TableSortProps } from 'theme/Table/types'
@@ -69,7 +68,9 @@ export default function TraderOpeningPositionsTable({
   const handleSelectItem = (data: PositionData) => {
     setCurrentPosition(data)
     setOpenDrawer(true)
-    window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes[0] }))
+    if (!!data.txHashes?.length) {
+      window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes?.[0] }))
+    }
   }
 
   const handleDismiss = () => {

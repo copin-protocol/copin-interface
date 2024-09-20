@@ -35,17 +35,19 @@ export default function PositionLegend({
 
   const handleSelectItem = (data: PositionData) => {
     setOpenDrawer(true)
-    window.history.replaceState(
-      null,
-      '',
-      generatePositionDetailsRoute({
-        txHash: data.txHashes[0],
-        account: data.account,
-        logId: data.logId,
-        protocol: data.protocol,
-        nextHours: nextHoursParam,
-      })
-    )
+    if (!!data.txHashes?.length) {
+      window.history.replaceState(
+        null,
+        '',
+        generatePositionDetailsRoute({
+          txHash: data.txHashes?.[0],
+          account: data.account,
+          logId: data.logId,
+          protocol: data.protocol,
+          nextHours: nextHoursParam,
+        })
+      )
+    }
   }
 
   const handleDismiss = useCallback(() => {

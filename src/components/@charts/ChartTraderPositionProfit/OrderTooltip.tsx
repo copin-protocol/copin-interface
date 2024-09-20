@@ -55,7 +55,13 @@ export default function OrderTooltip({ data }: { data: OrderData }) {
           data.type === OrderTypeEnum.MARGIN_TRANSFERRED ? (
             '--'
           ) : (
-            <DeltaText type={data.type} delta={Math.abs(data.sizeDeltaNumber)} />
+            <DeltaText
+              type={data.type}
+              delta={Math.abs(
+                data.sizeDeltaNumber ??
+                  (data.sizeDeltaInTokenNumber ? data.sizeDeltaInTokenNumber * data.priceNumber : undefined)
+              )}
+            />
           )
         }
       />

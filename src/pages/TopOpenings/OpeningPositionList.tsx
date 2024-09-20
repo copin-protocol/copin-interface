@@ -7,7 +7,6 @@ import PositionListCard from 'components/@position/TraderPositionsListView'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { renderEntry, renderOpeningPnL, renderSizeOpening, renderTrader } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
-import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Type } from 'theme/base'
@@ -109,7 +108,9 @@ export function OpeningPositionsWrapper({ children }: { children: any }) {
   const handleSelectItem = useCallback((data: PositionData) => {
     setCurrentPosition(data)
     setOpenDrawer(true)
-    window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes[0] }))
+    if (!!data.txHashes?.length) {
+      window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes?.[0] }))
+    }
   }, [])
 
   const handleDismiss = () => {

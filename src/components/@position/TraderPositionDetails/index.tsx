@@ -80,7 +80,7 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
               <Link to={generateTraderMultiExchangeRoute({ protocol, address: data.account })}>
                 <Button type="button" variant="ghost" sx={{ p: 0 }}>
                   <Flex flexDirection="column" textAlign="left">
-                    <Flex sx={{ gap: 2 }}>
+                    <Flex alignItems="center" sx={{ gap: 2 }}>
                       <Type.BodyBold>{addressShorten(data.account)}</Type.BodyBold>
                       <ProtocolLogo
                         protocol={data.protocol}
