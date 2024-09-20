@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import { searchPositionsApi } from 'apis/positionApis'
 import { searchTradersApi } from 'apis/traderApis'
+import { SearchPositionByTxHashParams, SearchTradersParams } from 'apis/types'
 import { PositionData, TraderData } from 'entities/trader'
 import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import useDebounce from 'hooks/helpers/useDebounce'
@@ -21,12 +22,13 @@ import { isAddress } from 'utils/web3/contracts'
 
 const MIN_QUICK_SEARCH_LENGTH = 3
 export default function useSearchAllData(args?: {
+  protocols?: ProtocolEnum[]
   returnRanking?: boolean
   onSelect?: (data: TraderData) => void
   allowAllProtocol?: boolean
   allowSearchPositions?: boolean
 }) {
-  const { onSelect, allowAllProtocol = false, allowSearchPositions = false } = args ?? {}
+  const { onSelect, allowAllProtocol = false, allowSearchPositions = false, protocols } = args ?? {}
   const { protocol } = useProtocolStore()
   const { myProfile } = useMyProfileStore()
   const isPremiumUser = useIsPremium()
@@ -65,16 +67,37 @@ export default function useSearchAllData(args?: {
     return onSelect ? protocol === _protocol : true
   }
 
+  const queryTraderData: SearchTradersParams = {
+    limit: SEARCH_DEFAULT_LIMIT,
+    keyword: debounceSearchText,
+    sortBy: 'lastTradeAtTs',
+    sortType: SortTypeEnum.DESC,
+  }
+  const queryTxData: SearchPositionByTxHashParams = {
+    limit: SEARCH_DEFAULT_LIMIT,
+    txHash: debounceSearchText,
+    protocol: allowAllProtocol ? undefined : protocol,
+  }
+  if (protocols) {
+    queryTraderData.protocols = protocols
+    queryTxData.protocols = protocols
+  } else {
+    const _protocol = !!currentProtocol ? currentProtocol : allowAllProtocol ? undefined : protocol
+    queryTraderData.protocol = _protocol
+    queryTxData.protocol = _protocol
+  }
+
   const { data: searchTraders, isFetching: searchingTraders } = useQuery(
-    [QUERY_KEYS.SEARCH_ALL_TRADERS, debounceSearchText, isPremiumUser, allowAllProtocol, protocol, currentProtocol],
-    () =>
-      searchTradersApi({
-        limit: SEARCH_DEFAULT_LIMIT,
-        keyword: debounceSearchText,
-        protocol: !!currentProtocol ? currentProtocol : allowAllProtocol ? undefined : protocol,
-        sortBy: 'lastTradeAtTs',
-        sortType: SortTypeEnum.DESC,
-      }),
+    [
+      QUERY_KEYS.SEARCH_ALL_TRADERS,
+      debounceSearchText,
+      isPremiumUser,
+      allowAllProtocol,
+      protocol,
+      protocols,
+      currentProtocol,
+    ],
+    () => searchTradersApi(queryTraderData),
     {
       enabled:
         Boolean(debounceSearchText.length >= MIN_QUICK_SEARCH_LENGTH && debounceSearchText === trimmedSearchText) &&
@@ -83,13 +106,8 @@ export default function useSearchAllData(args?: {
   )
 
   const { data: searchPositions, isFetching: searchingPositions } = useQuery(
-    [QUERY_KEYS.SEARCH_TX_HASH, debounceSearchText, isPremiumUser, allowAllProtocol, protocol],
-    () =>
-      searchPositionsApi({
-        limit: SEARCH_DEFAULT_LIMIT,
-        txHash: debounceSearchText,
-        protocol: allowAllProtocol ? undefined : protocol,
-      }),
+    [QUERY_KEYS.SEARCH_TX_HASH, debounceSearchText, isPremiumUser, allowAllProtocol, protocol, protocols],
+    () => searchPositionsApi(queryTxData),
     {
       enabled: isTxHash,
     }
@@ -179,9 +197,9 @@ export default function useSearchAllData(args?: {
     logEventSearch(EVENT_ACTIONS[EventCategory.SEARCH].SEARCH_ENTER_POSITION)
   }
 
-  const handleClickViewAll = () => {
+  const handleClickViewAll = (forceToSearchAllPage?: boolean) => {
     if (trimmedSearchText.length === 0) return
-    if (isAddress(debounceSearchText)) {
+    if (isAddress(debounceSearchText) && !forceToSearchAllPage) {
       history.push(generateTraderMultiExchangeRoute({ address: debounceSearchText }))
       setVisibleSearchResult(false)
       return

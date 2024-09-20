@@ -4,7 +4,7 @@ import { AccountInfo } from 'components/@ui/AccountInfo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import FilterProtocol from 'components/@widgets/FilterProtocol'
-import SearchPositionResultItem from 'components/@widgets/SearchPositionResult'
+import SearchPositionResultItem from 'components/@widgets/SearchPositionResultItem'
 import { TraderData } from 'entities/trader'
 import useSearchAllData from 'hooks/features/useSearchAllData'
 import { Button } from 'theme/Buttons'
@@ -94,7 +94,12 @@ const SearchBox = ({
                   <Type.CaptionBold color="neutral3">
                     {isTxHash ? <Trans>Position</Trans> : <Trans>Trader</Trans>} <Trans>Results</Trans>
                   </Type.CaptionBold>
-                  <Button variant="ghostPrimary" type="button" onClick={handleClickViewAll} sx={{ p: 0, mx: 0 }}>
+                  <Button
+                    variant="ghostPrimary"
+                    type="button"
+                    onClick={() => handleClickViewAll()}
+                    sx={{ p: 0, mx: 0 }}
+                  >
                     <Type.Caption sx={{ ':hover': { textDecoration: 'underline' } }}>
                       <Trans>View All</Trans> ({formatNumber(isTxHash ? totalResultPositions : totalResultTraders)})
                     </Type.Caption>

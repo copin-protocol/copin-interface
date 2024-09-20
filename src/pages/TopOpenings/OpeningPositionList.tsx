@@ -7,7 +7,6 @@ import PositionListCard from 'components/@position/TraderPositionsListView'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { renderEntry, renderOpeningPnL, renderSizeOpening, renderTrader } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
-import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Type } from 'theme/base'
@@ -29,28 +28,28 @@ const columns: ColumnData<PositionData>[] = [
     title: 'Trader',
     dataIndex: 'account',
     key: 'account',
-    style: { width: '115px' },
-    render: (item) => renderTrader(item.account, item.protocol),
+    style: { width: '135px' },
+    render: (item) => renderTrader(item.account, item.protocol, false, true),
   },
   {
     title: 'Entry',
     dataIndex: 'indexToken',
     key: 'indexToken',
-    style: { width: '175px' },
+    style: { width: '185px' },
     render: (item) => renderEntry(item, undefined, true),
   },
   {
     title: 'Size',
     dataIndex: 'size',
     key: 'size',
-    style: { width: '205px' },
-    render: (item) => renderSizeOpening(item),
+    style: { width: '218px' },
+    render: (item, index, externalSource) => renderSizeOpening(item),
   },
   {
     title: 'PnL',
     dataIndex: 'pnl',
     key: 'pnl',
-    style: { width: '75px', textAlign: 'right' },
+    style: { width: '68px', textAlign: 'right' },
     render: (item) => renderOpeningPnL(item),
   },
   {
@@ -109,7 +108,9 @@ export function OpeningPositionsWrapper({ children }: { children: any }) {
   const handleSelectItem = useCallback((data: PositionData) => {
     setCurrentPosition(data)
     setOpenDrawer(true)
-    window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes[0] }))
+    if (!!data.txHashes?.length) {
+      window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes?.[0] }))
+    }
   }, [])
 
   const handleDismiss = () => {

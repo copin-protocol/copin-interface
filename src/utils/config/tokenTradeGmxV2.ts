@@ -73,6 +73,9 @@ const TOKEN_TRADE_GMX_V2: ProtocolTokenMapping = {
   '0x93385F7C646A3048051914BDFaC25F4d620aeDF1': {
     symbol: 'ORDI',
   },
+  '0xd62068697bCc92AF253225676D618B0C9f17C663': {
+    symbol: 'BTC', //tBTC
+  },
 }
 
 export { TOKEN_TRADE_GMX_V2 }

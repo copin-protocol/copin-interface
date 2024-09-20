@@ -240,7 +240,7 @@ export default function EventsNotification() {
             left: 0,
             // top: state.y,
             // left: state.x,
-            zIndex: 9999,
+            zIndex: 9997,
           }}
         >
           <Flex

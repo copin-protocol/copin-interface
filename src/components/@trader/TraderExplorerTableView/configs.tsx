@@ -30,24 +30,26 @@ export const emptyColumn = {
 const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, ExternalTraderListSource> } = {
   account: {
     style: {
-      minWidth: '180px',
+      minWidth: '220px',
     },
     text: 'Account',
     searchText: 'Account',
     label: (
-      <Box textAlign="left">
+      <Box textAlign="left" pl={3}>
         <Trans>Account</Trans>
       </Box>
     ),
     visible: true,
     id: 'account',
-    freezeLeft: 180,
+    freezeLeft: 220,
     freezeIndex: 3,
     render: (item) => (
-      <AccountCell
-        data={item}
-        additionalComponent={<FavoriteButton address={item.account} protocol={item.protocol} size={16} />}
-      />
+      <Box pl={3}>
+        <AccountCell
+          data={item}
+          additionalComponent={<FavoriteButton address={item.account} protocol={item.protocol} size={16} />}
+        />
+      </Box>
     ),
   },
   runTimeDays: {

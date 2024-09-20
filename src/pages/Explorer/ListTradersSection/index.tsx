@@ -47,6 +47,10 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
     currentLimit,
     changeCurrentLimit,
     filterTab,
+    selectedProtocols,
+    setSelectedProtocols,
+    urlProtocol,
+    setUrlProtocol,
   } = contextValues
 
   const { data, isLoading, isRangeProgressing, loadingRangeProgress } = useQueryTraders({
@@ -57,6 +61,10 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
     isRangeSelection,
     accounts,
     filterTab,
+    selectedProtocols,
+    setSelectedProtocols,
+    urlProtocol,
+    setUrlProtocol,
   })
 
   const { isSelectedAll, handleSelectAll, checkIsSelected, handleSelect } = useBacktestTradersActions({
@@ -108,6 +116,9 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
                 tableSettings={tableSettings}
                 checkIsSelected={checkIsSelected}
                 handleSelect={handleSelect}
+                hiddenSelectAllBox
+                hiddenSelectItemBox
+                lefts={[0, 0]}
               />
             ) : (
               <TraderListCard data={formatedData} isLoading={isLoading} />
@@ -263,7 +274,7 @@ function MultipleBacktestButton() {
 
   return (
     <Box sx={{ height: 40, width: ['100%', 228], flexShrink: 0 }}>
-      <PickTradersButton enableCompare listAddress={listAddress} handleClick={handleClickBacktestButton} />
+      {/* <PickTradersButton enableCompare listAddress={listAddress} handleClick={handleClickBacktestButton} /> */}
     </Box>
   )
 }
@@ -272,6 +283,7 @@ function CompareTradersButton() {
   const { currentHomeInstanceId, getCommonData } = useSelectBacktestTraders()
 
   const { homeInstance: currentHomeInstance } = getCommonData({ homeId: currentHomeInstanceId })
+
   const listAddress = currentHomeInstance?.tradersByIds ?? []
   return (
     <Flex

@@ -10,7 +10,7 @@ import { renderEntry, renderSize, renderSizeOpeningWithPrices } from 'components
 import { PositionData } from 'entities/trader'
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
-import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
+import { OrderTypeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { formatDuration } from 'utils/helpers/format'
 
 import SharePosition from './SharePosition'
@@ -75,7 +75,9 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, c
           <PositionStatus
             status={hasLiquidate ? PositionStatusEnum.LIQUIDATE : isOpening ? PositionStatusEnum.OPEN : data.status}
           />
-          <SharePosition isOpening={isOpening} stats={data} chartId={chartId} />
+          {data.protocol !== ProtocolEnum.HYPERLIQUID && (
+            <SharePosition isOpening={isOpening} stats={data} chartId={chartId} />
+          )}
         </Flex>
       </Flex>
       <Flex mt={3} alignItems="center" justifyContent="space-between" sx={{ gap: [2, 24], flexWrap: 'wrap' }}>
@@ -92,43 +94,66 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, c
               />
             }
           />
-          <DesktopItemInfo
-            label={<Trans>Paid Fees:</Trans>}
-            value={
-              <ValueOrToken
-                protocol={data.protocol}
-                indexToken={data.collateralToken}
-                value={data.fee != null ? data.fee * -1 : undefined}
-                valueInToken={data.feeInToken != null ? data.feeInToken * -1 : undefined}
-                component={
-                  <SignedText
-                    value={data.fee == null && data.feeInToken == null ? undefined : (data.fee ?? data.feeInToken) * -1}
-                    maxDigit={2}
-                    minDigit={2}
-                    prefix="$"
+          {data.protocol === ProtocolEnum.HYPERLIQUID ? (
+            <DesktopItemInfo
+              label={<Trans>Fees & Funding:</Trans>}
+              value={
+                <ValueOrToken
+                  value={undefined}
+                  component={
+                    <SignedText
+                      value={data.fee != null ? data.fee * -1 : undefined}
+                      maxDigit={2}
+                      minDigit={2}
+                      prefix="$"
+                    />
+                  }
+                />
+              }
+            />
+          ) : (
+            <>
+              <DesktopItemInfo
+                label={<Trans>Paid Fees:</Trans>}
+                value={
+                  <ValueOrToken
+                    protocol={data.protocol}
+                    indexToken={data.collateralToken}
+                    value={data.fee != null ? data.fee * -1 : undefined}
+                    valueInToken={data.feeInToken != null ? data.feeInToken * -1 : undefined}
+                    component={
+                      <SignedText
+                        value={
+                          data.fee == null && data.feeInToken == null ? undefined : (data.fee ?? data.feeInToken) * -1
+                        }
+                        maxDigit={2}
+                        minDigit={2}
+                        prefix="$"
+                      />
+                    }
                   />
                 }
               />
-            }
-          />
-          <DesktopItemInfo
-            label={<Trans>Funding:</Trans>}
-            value={
-              hasFundingFee ? (
-                <ValueOrToken
-                  protocol={data.protocol}
-                  indexToken={data.collateralToken}
-                  value={data.funding}
-                  valueInToken={data.fundingInToken}
-                  component={
-                    <SignedText value={data.funding ?? data.fundingInToken} maxDigit={2} minDigit={2} prefix="$" />
-                  }
-                />
-              ) : (
-                '--'
-              )
-            }
-          />
+              <DesktopItemInfo
+                label={<Trans>Funding:</Trans>}
+                value={
+                  hasFundingFee ? (
+                    <ValueOrToken
+                      protocol={data.protocol}
+                      indexToken={data.collateralToken}
+                      value={data.funding}
+                      valueInToken={data.fundingInToken}
+                      component={
+                        <SignedText value={data.funding ?? data.fundingInToken} maxDigit={2} minDigit={2} prefix="$" />
+                      }
+                    />
+                  ) : (
+                    '--'
+                  )
+                }
+              />
+            </>
+          )}
         </Flex>
       </Flex>
     </Box>
@@ -145,7 +170,9 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, ch
           </Type.Caption>
           {renderEntry(data)}
         </Flex>
-        <SharePosition isOpening={isOpening} stats={data} chartId={chartId} />
+        {data.protocol !== ProtocolEnum.HYPERLIQUID && (
+          <SharePosition isOpening={isOpening} stats={data} chartId={chartId} />
+        )}
       </Flex>
       <Flex width="100%" mb={1}>
         {isOpening ? renderSizeOpeningWithPrices(data, prices) : renderSize(data)}

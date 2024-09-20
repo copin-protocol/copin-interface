@@ -26,6 +26,8 @@ export const FANTOM_MAINNET = 250
 export const MODE_MAINNET = 34443
 export const SCROLL_MAINNET = 534352
 
+export const HYPERLIQUID_TESTNET = 998
+
 export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 export const BASE_CHAIN = NETWORK === 'devnet' ? BASE_SEPOLIA : BASE_MAINNET
 export const OPTIMISM_CHAIN = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
@@ -378,6 +380,14 @@ const CHAINS: { [key: number]: Chain } = {
     rpcUrl: 'https://scroll.drpc.org',
     blockExplorerUrl: 'https://scrollscan.com',
     secondaryTokens: SECONDARY_TOKENS[SCROLL_MAINNET],
+  },
+  [HYPERLIQUID_TESTNET]: {
+    id: '',
+    label: 'Hyperliquid',
+    icon: 'HYPERLIQUID',
+    token: '',
+    rpcUrl: '',
+    blockExplorerUrl: 'https://app.hyperliquid.xyz/explorer',
   },
 }
 

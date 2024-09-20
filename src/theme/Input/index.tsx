@@ -214,6 +214,7 @@ export const InputSearch = forwardRef(
           color="neutral3"
           sx={{
             display: 'flex',
+            flexShrink: 0,
           }}
         >
           <MagnifyingGlass size={20} />
@@ -225,7 +226,9 @@ export const InputSearch = forwardRef(
           color="neutral3"
           className="search-btn--clear"
           p={0}
+          pl={3}
           sx={{
+            flexShrink: 0,
             minWidth: '20px',
             height: '20px',
             '&>svg': {
@@ -240,6 +243,7 @@ export const InputSearch = forwardRef(
         >
           <X size={16} />
         </Button>
+        {props.suffix ? props.suffix : null}
       </InputWrapper>
     )
   }

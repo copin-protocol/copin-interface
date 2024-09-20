@@ -1,17 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import React, { ReactNode, useCallback, useMemo } from 'react'
+import { Fragment, ReactNode, useCallback, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 
 import { searchPositionsApi } from 'apis/positionApis'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import NoDataFound from 'components/@ui/NoDataFound'
-import SearchPositionResultItem from 'components/@widgets/SearchPositionResult'
+import SearchPositionResultItem from 'components/@widgets/SearchPositionResultItem'
 import { PositionData } from 'entities/trader'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import { DEFAULT_LIMIT } from 'utils/config/constants'
+import { DEFAULT_LIMIT, NO_TX_HASH_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
@@ -85,11 +85,12 @@ const PositionTxResults = ({
           {protocols &&
             protocols.length > 0 &&
             protocols.map((protocol) => {
+              if (NO_TX_HASH_PROTOCOLS.includes(protocol)) return <Fragment key={protocol} />
               return (
                 <ExplorerLogo
                   key={protocol}
                   protocol={protocol}
-                  explorerUrl={`${PROTOCOL_PROVIDER[protocol].explorerUrl}/tx/${txHash}`}
+                  explorerUrl={`${PROTOCOL_PROVIDER[protocol]?.explorerUrl}/tx/${txHash}`}
                   size={18}
                 />
               )

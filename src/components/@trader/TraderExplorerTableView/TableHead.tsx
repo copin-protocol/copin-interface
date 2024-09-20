@@ -20,6 +20,8 @@ export default function TableHead<T>({
   isSelectedAll,
   handleSelectedAll,
   hideCustomColumns,
+  hiddenSelectBox = false,
+  lefts: _lefts = [36, 48],
 }: {
   hasData: boolean
   currentSort?: TraderListSortProps<T>
@@ -30,6 +32,8 @@ export default function TableHead<T>({
   visibleColumns: string[]
   isSelectedAll?: boolean
   handleSelectedAll?: ((isSelectedAll: boolean) => void) | null
+  hiddenSelectBox?: boolean
+  lefts?: [number, number]
 }) {
   const handleChangeSort = (columnSortBy: TraderListSortProps<T>['sortBy'] | undefined) => {
     if (!changeCurrentSort) return
@@ -52,8 +56,11 @@ export default function TableHead<T>({
     }
   }
   const lefts = useMemo(
-    () => tableSettings.map((col, i) => (col.freezeLeft ? getFreezeLeftPos(i, visibleColumns) : undefined)),
-    [tableSettings, visibleColumns]
+    () =>
+      _lefts
+        ? _lefts
+        : tableSettings.map((col, i) => (col.freezeLeft ? getFreezeLeftPos(i, visibleColumns) : undefined)),
+    [tableSettings, visibleColumns, _lefts]
   )
   return (
     <>
@@ -65,7 +72,7 @@ export default function TableHead<T>({
       </colgroup> */}
       <thead>
         <tr style={style}>
-          {handleSelectedAll !== undefined && (
+          {!hiddenSelectBox && handleSelectedAll !== undefined && (
             <Box
               as="th"
               className={hasData ? 'column-freeze' : undefined}
@@ -81,7 +88,7 @@ export default function TableHead<T>({
                 left: 0,
               }}
             >
-              {handleSelectedAll == null ? (
+              {hiddenSelectBox || handleSelectedAll == null ? (
                 <Box sx={{ visibility: 'hidden' }}>
                   <Checkbox />
                 </Box>

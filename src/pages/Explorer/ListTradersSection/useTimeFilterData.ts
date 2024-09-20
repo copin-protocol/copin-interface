@@ -1,46 +1,71 @@
-import { useQuery } from 'react-query'
+import { useQuery as useApolloQuery } from '@apollo/client'
+import { TraderGraphQLResponse } from 'graphql/entities/traders.graph'
+import { SEARCH_TRADERS_QUERY } from 'graphql/traders.graph'
+import { useMemo } from 'react'
 
-import { getTradersApi } from 'apis/traderApis'
+import { normalizeTraderPayload } from 'apis/traderApis'
 import { RequestBodyApiData } from 'apis/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import { ResponseTraderData } from 'entities/trader'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { ProtocolEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { transformGraphqlFilters } from 'utils/helpers/graphql'
 
 const useTimeFilterData = ({
-  protocol,
-  tab,
   requestData,
   timeOption,
-  isRangeSelection,
+  selectedProtocols,
+  isRangeSelection = false,
 }: {
-  protocol: ProtocolEnum
-  tab: string
   requestData: RequestBodyApiData
   timeOption: TimeFilterProps
-  isRangeSelection: boolean
+  selectedProtocols: ProtocolEnum[]
+  setSelectedProtocols: (protocols: ProtocolEnum[]) => void
+  urlProtocol?: ProtocolEnum | undefined
+  setUrlProtocol?: (protocol: ProtocolEnum | undefined) => void
+  isRangeSelection?: boolean
 }) => {
   const { myProfile } = useMyProfileStore()
-  const { data: timeTraders, isFetching: loadingTimeTraders } = useQuery(
-    [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, requestData, tab, protocol],
-    () =>
-      getTradersApi({
-        protocol,
-        body: {
-          ...requestData,
-          queries: [...(requestData.queries ?? []), { fieldName: 'type', value: timeOption.id }],
-        },
-      }),
-    {
-      keepPreviousData: true,
-      retry: 0,
-      enabled:
-        !!timeOption &&
-        !isRangeSelection &&
-        (timeOption.id !== TimeFilterByEnum.ALL_TIME || myProfile?.plan === SubscriptionPlanEnum.PREMIUM),
+  const isAllowFetchData =
+    !!timeOption &&
+    !isRangeSelection &&
+    (timeOption.id !== TimeFilterByEnum.ALL_TIME || myProfile?.plan === SubscriptionPlanEnum.PREMIUM)
+
+  // FETCH DATA
+  const queryVariables = useMemo(() => {
+    const index = 'copin.position_statistics'
+
+    const { sortBy, ranges, pagination } = normalizeTraderPayload(requestData)
+
+    const rangeFilters = transformGraphqlFilters(ranges ?? [])
+
+    const query = [
+      ...rangeFilters,
+      { field: 'protocol', in: selectedProtocols },
+      { field: 'type', match: timeOption.id },
+    ]
+
+    const body = {
+      filter: {
+        and: query,
+      },
+      sorts: [{ field: sortBy, direction: requestData.sortType }],
+      paging: { size: pagination?.limit, from: pagination?.offset },
     }
-  )
-  return { timeTraders, loadingTimeTraders }
+
+    return { index, body }
+  }, [requestData, selectedProtocols, timeOption])
+
+  const {
+    data: traders,
+    loading,
+    previousData,
+  } = useApolloQuery<TraderGraphQLResponse<ResponseTraderData>>(SEARCH_TRADERS_QUERY, {
+    variables: queryVariables,
+    skip: !isAllowFetchData,
+  })
+
+  return { traders: traders?.searchPositionStatistic || previousData?.searchPositionStatistic, loading }
 }
 
 export default useTimeFilterData

@@ -1,3 +1,5 @@
+import { BaseGraphQLResponse } from 'graphql/entities/base.graph'
+
 import {
   PositionData,
   ResponsePositionData,
@@ -14,35 +16,37 @@ import { getSymbolByTokenTrade, getTokenTradeSupport } from '../utils/config/tra
 import { ApiListResponse } from './api'
 
 export const normalizeTraderData = (t: ResponseTraderData) => {
-  t.totalGain = t.realisedTotalGain
-  t.totalLoss = t.realisedTotalLoss
-  t.avgRoi = t.realisedAvgRoi
-  t.maxRoi = t.realisedMaxRoi
-  t.pnl = t.realisedPnl
-  t.maxPnl = t.realisedMaxPnl
-  t.maxDrawdown = t.realisedMaxDrawdown
-  t.maxDrawdownPnl = t.realisedMaxDrawdownPnl
-  t.profitRate = t.realisedProfitRate
-  t.gainLossRatio = t.realisedGainLossRatio
-  t.profitLossRatio = t.realisedProfitLossRatio
-  if (t.ranking) {
-    t.ranking = decodeRealisedData(t.ranking)
+  const normalizedData: TraderData = {
+    ...t,
+    totalGain: t.realisedTotalGain,
+    totalLoss: t.realisedTotalLoss,
+    avgRoi: t.realisedAvgRoi,
+    maxRoi: t.realisedMaxRoi,
+    pnl: t.realisedPnl,
+    maxPnl: t.realisedMaxPnl,
+    maxDrawdown: t.realisedMaxDrawdown,
+    maxDrawdownPnl: t.realisedMaxDrawdownPnl,
+    profitRate: t.realisedProfitRate,
+    gainLossRatio: t.realisedGainLossRatio,
+    profitLossRatio: t.realisedProfitLossRatio,
+    ranking: t.ranking ? decodeRealisedData(t.ranking) : {},
   }
-  return t as TraderData
+  return normalizedData
 }
 
-export const normalizePositionData = (p: ResponsePositionData) => {
-  p.roi = p.realisedRoi
-  p.pnl = p.realisedPnl
-  if (p.status === PositionStatusEnum.OPEN) {
-    p.durationInSecond = convertDurationInSecond(p.openBlockTime)
+export const normalizePositionData = (p: ResponsePositionData): PositionData => {
+  return {
+    ...p,
+    roi: p.realisedRoi,
+    pnl: p.realisedPnl,
+    durationInSecond:
+      p.status === PositionStatusEnum.OPEN ? convertDurationInSecond(p.openBlockTime) : p.durationInSecond,
+    marginMode: p.marginMode
+      ? p.marginMode
+      : PROTOCOLS_CROSS_MARGIN.includes(p.protocol)
+      ? MarginModeEnum.CROSS
+      : MarginModeEnum.ISOLATED,
   }
-  p.marginMode = p.marginMode
-    ? p.marginMode
-    : PROTOCOLS_CROSS_MARGIN.includes(p.protocol)
-    ? MarginModeEnum.CROSS
-    : MarginModeEnum.ISOLATED
-  return p as PositionData
 }
 
 export const normalizeTraderResponse = (res: ApiListResponse<ResponseTraderData>): ApiListResponse<TraderData> => {
@@ -54,7 +58,7 @@ export const normalizeTraderResponse = (res: ApiListResponse<ResponseTraderData>
 }
 
 export const normalizePositionResponse = (
-  res: ApiListResponse<ResponsePositionData>
+  res: ApiListResponse<ResponsePositionData> | BaseGraphQLResponse<ResponsePositionData>
 ): ApiListResponse<PositionData> => {
   if (!res.data) return res
   return {

@@ -226,6 +226,8 @@ export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
       return LINKS.tradeYfx
     case ProtocolEnum.KILOEX_OPBNB:
       return LINKS.tradeKiloEx
+    case ProtocolEnum.SYNFUTURE_BASE:
+      return LINKS.tradeSynfutures
     default:
       return LINKS.tradeGMX
   }
@@ -339,8 +341,18 @@ export function getSubscriptionPlanConfigs(plan: SubscriptionPlanEnum | undefine
   return { label, color }
 }
 
-export function getProtocolDropdownImage({ protocol, isActive }: { protocol: ProtocolEnum; isActive: boolean }) {
-  return `/images/protocols_with_status/${protocol}-${isActive ? 'active' : 'inactive_color'}.png`
+export function getProtocolDropdownImage({
+  protocol,
+  isActive,
+  disabled,
+}: {
+  protocol: ProtocolEnum
+  isActive: boolean
+  disabled?: boolean
+}) {
+  return `/images/protocols_with_status/${protocol}-${
+    disabled ? 'inactive' : isActive ? 'active' : 'inactive_color'
+  }.png`
 }
 
 export const normalizePriceData = (

@@ -1,10 +1,24 @@
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import { ProtocolFilter } from 'components/@ui/ProtocolFilter'
 import SearchAllResults from 'components/@widgets/SearchAllResults'
+import useInternalRole from 'hooks/features/useInternalRole'
 import useSearchTraders from 'hooks/features/useSearchTraders'
+import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
+import { useSearchProtocolFilter } from 'hooks/store/useSearchProtocolFilter'
 import { Box, Flex, Type } from 'theme/base'
+import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 
 const SearchTrader = () => {
-  // const { lg } = useResponsive()
+  const isInternal = useInternalRole()
+  const protocolOptions = useGetProtocolOptions()
+  const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
+
+  const {
+    selectedProtocols,
+    checkIsSelected: checkIsProtocolChecked,
+    handleToggle: handleToggleProtocol,
+    setSelectedProtocols,
+  } = useSearchProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
   const {
     keyword,
     searchTraders,
@@ -17,7 +31,7 @@ const SearchTrader = () => {
     changeCurrentLimit,
     changeCurrentSort,
     changeCurrentProtocol,
-  } = useSearchTraders()
+  } = useSearchTraders({ protocols: selectedProtocols })
 
   return (
     <>
@@ -30,28 +44,28 @@ const SearchTrader = () => {
           alignItems: 'center',
         }}
       >
-        <Flex
-          width="100%"
-          p={3}
-          sx={{ gap: 2, borderBottom: 'small', borderBottomColor: 'neutral4' }}
-          alignItems="center"
-          flexWrap="wrap"
-        >
-          <Type.LargeBold>
-            All results for <Type.LargeBold color="primary1">{keyword}</Type.LargeBold>
-          </Type.LargeBold>
-        </Flex>
-        <Flex
-          width="100%"
-          height="100%"
-          flexDirection={['column', 'column', 'column', 'row', 'row']}
-          maxWidth={['100%', '100%', '100%', 800, 800]}
-        >
-          {/*{lg ? (*/}
-          {/*  <SwitchProtocolsDesktop currentProtocol={currentProtocol} changeCurrentProtocol={changeCurrentProtocol} />*/}
-          {/*) : (*/}
-          {/*  <SwitchProtocolsMobile currentProtocol={currentProtocol} changeCurrentProtocol={changeCurrentProtocol} />*/}
-          {/*)}*/}
+        <Flex width="100%" height="100%" flexDirection="column" maxWidth={['100%', '100%', '100%', 1000, 1000]}>
+          <Flex
+            width="100%"
+            height="56px"
+            px={3}
+            sx={{ gap: 2, border: 'small', borderColor: 'neutral4', borderTop: 'none' }}
+            alignItems="center"
+            justifyContent="space-between"
+            flexWrap="wrap"
+          >
+            <Type.BodyBold flex={1}>
+              All results for <Type.BodyBold color="primary1">{keyword}</Type.BodyBold>
+            </Type.BodyBold>
+            <Box sx={{ width: '1px', height: '48px', bg: 'neutral4' }} />
+            <ProtocolFilter
+              selectedProtocols={selectedProtocols}
+              setSelectedProtocols={setSelectedProtocols}
+              checkIsProtocolChecked={checkIsProtocolChecked}
+              handleToggleProtocol={handleToggleProtocol}
+              allowList={allowList}
+            />
+          </Flex>
           <Box sx={{ flex: '1' }}>
             <SearchAllResults
               keyword={keyword}
@@ -60,11 +74,9 @@ const SearchTrader = () => {
               currentPage={currentPage}
               currentLimit={currentLimit}
               currentSort={currentSort}
-              currentProtocol={currentProtocol}
               changeCurrentLimit={changeCurrentLimit}
               changeCurrentPage={changeCurrentPage}
               changeCurrentSort={changeCurrentSort}
-              changeCurrentProtocol={changeCurrentProtocol}
             />
           </Box>
         </Flex>

@@ -1,4 +1,5 @@
 import { useSize } from 'ahooks'
+import { set } from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 
 import BubbleChart, { BubbleChartData } from 'components/@charts/BubbleChartPositions'
@@ -8,9 +9,10 @@ import { ProtocolEnum } from 'utils/config/enums'
 import { getTokenTradeSupport } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
 
-const OpeningPositionsBubble = ({ data, protocol }: { data: PositionData[]; protocol: ProtocolEnum }) => {
+const OpeningPositionsBubble = ({ data }: { data: PositionData[] }) => {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [selectedId, setSelectedId] = useState<string>()
+  const [selectedProtocol, setSelectedProtocol] = useState<string>()
   const containerRef = useRef<HTMLDivElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const size = useSize(wrapperRef)
@@ -25,6 +27,7 @@ const OpeningPositionsBubble = ({ data, protocol }: { data: PositionData[]; prot
       token: getTokenTradeSupport(item.protocol)?.[item.indexToken]?.symbol ?? '',
       leverage: item.leverage,
       isLong: item.isLong,
+      protocol: item.protocol,
     }))
 
   useEffect(() => {
@@ -45,6 +48,7 @@ const OpeningPositionsBubble = ({ data, protocol }: { data: PositionData[]; prot
         height: size.height,
         onSelect: (data: BubbleChartData) => {
           setSelectedId(data.id)
+          setSelectedProtocol(data.protocol)
           setOpenDrawer(true)
         },
       })
@@ -62,11 +66,10 @@ const OpeningPositionsBubble = ({ data, protocol }: { data: PositionData[]; prot
   return (
     <div ref={wrapperRef} style={{ width: '100%', height: '100%' }}>
       {size && <div ref={containerRef} style={{ width: size.width, height: size.height }} />}
-
       <TraderPositionDetailsDrawer
         isOpen={openDrawer}
         onDismiss={() => setOpenDrawer(false)}
-        protocol={protocol}
+        protocol={selectedProtocol as ProtocolEnum}
         id={selectedId}
         chartProfitId="top-opening-bubble-chart"
       />

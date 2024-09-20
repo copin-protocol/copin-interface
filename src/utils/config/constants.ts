@@ -35,6 +35,7 @@ export const LINKS = {
   tradeCyberDEX: 'https://www.cyberdex.xyz/trade',
   tradeYfx: 'https://app.yfx.com/#/en/trade/?chain=arbitrumOne',
   tradeKiloEx: 'https://app.kiloex.io/trade',
+  tradeSynfutures: 'https://oyster.synfutures.com/#/market',
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
@@ -173,6 +174,12 @@ export const DCP_SUPPORTED_PROTOCOLS = [
   ProtocolEnum.POLYNOMIAL,
   ProtocolEnum.DEXTORO,
   ProtocolEnum.CYBERDEX,
+  ProtocolEnum.APOLLOX_BNB,
+  ProtocolEnum.KILOEX_OPBNB,
+  ProtocolEnum.HMX_ARB,
+  ProtocolEnum.VELA_ARB,
+  ProtocolEnum.ROLLIE_SCROLL,
+  ProtocolEnum.MUMMY_FANTOM,
 ]
 
 export const DEFAULT_PROTOCOL = ProtocolEnum.GNS
@@ -206,5 +213,33 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.KILOEX_OPBNB,
         ProtocolEnum.ROLLIE_SCROLL,
         ProtocolEnum.MUMMY_FANTOM,
+        ProtocolEnum.HYPERLIQUID,
+        ProtocolEnum.SYNFUTURE_BASE,
       ]
     : Object.values(ProtocolEnum)
+
+// TODO: Check when add new protocol copy-trade
+export const ALLOWED_COPYTRADE_PROTOCOLS = [
+  ProtocolEnum.GMX,
+  ProtocolEnum.GMX_V2,
+  ProtocolEnum.KWENTA,
+  ProtocolEnum.POLYNOMIAL,
+  ProtocolEnum.GNS,
+  ProtocolEnum.GNS_POLY,
+  ProtocolEnum.MUX_ARB,
+  ProtocolEnum.AVANTIS_BASE,
+  ProtocolEnum.CYBERDEX,
+  ProtocolEnum.DEXTORO,
+  ProtocolEnum.VELA_ARB,
+  ProtocolEnum.EQUATION_ARB,
+  ProtocolEnum.HMX_ARB,
+  ProtocolEnum.LEVEL_ARB,
+  ProtocolEnum.LEVEL_BNB,
+  ProtocolEnum.APOLLOX_BNB,
+  ProtocolEnum.KILOEX_OPBNB,
+  ProtocolEnum.ROLLIE_SCROLL,
+  ProtocolEnum.MUMMY_FANTOM,
+]
+export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
+
+export const MAX_LIMIT = 500

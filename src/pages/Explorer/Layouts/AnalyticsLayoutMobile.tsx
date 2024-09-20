@@ -1,8 +1,13 @@
 import { useResponsive } from 'ahooks'
 
+import { ProtocolFilter } from 'components/@ui/ProtocolFilter'
 import { RouteSwitchProtocol } from 'components/@widgets/SwitchProtocols'
+import useInternalRole from 'hooks/features/useInternalRole'
+import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { Box, Flex } from 'theme/base'
+import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 
+import useTradersContext from '../useTradersContext'
 import { AnalyticsLayoutComponents } from './types'
 
 export default function AnalyticsLayoutMobile({
@@ -11,7 +16,12 @@ export default function AnalyticsLayoutMobile({
   conditionFilter,
   sortSection,
 }: AnalyticsLayoutComponents) {
+  const { selectedProtocols, checkIsProtocolChecked, handleToggleProtocol, setSelectedProtocols, urlProtocol } =
+    useTradersContext()
   const { md } = useResponsive()
+  const isInternal = useInternalRole()
+  const protocolOptions = useGetProtocolOptions()
+  const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
   return (
     <Flex
       sx={{
@@ -30,12 +40,12 @@ export default function AnalyticsLayoutMobile({
           </Flex>
         </Flex>
         {!md && (
-          <RouteSwitchProtocol
-            componentProps={{
-              buttonSx: { height: 40, px: '8px !important', borderLeft: 'small', borderLeftColor: 'neutral4' },
-              showIcon: true,
-            }}
-            keepSearch={false}
+          <ProtocolFilter
+            selectedProtocols={urlProtocol ? [urlProtocol] : selectedProtocols}
+            checkIsProtocolChecked={checkIsProtocolChecked}
+            handleToggleProtocol={handleToggleProtocol}
+            setSelectedProtocols={setSelectedProtocols}
+            allowList={allowList}
           />
         )}
       </Flex>

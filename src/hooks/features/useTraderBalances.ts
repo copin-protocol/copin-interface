@@ -5,6 +5,7 @@ import { useQuery } from 'react-query'
 
 import useUsdPrices from 'hooks/store/useUsdPrices'
 import { useCustomMulticallQuery } from 'hooks/web3/useMulticallQuery'
+import { NO_TX_HASH_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS, QUERY_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER, TOKEN_COLLATERAL_SUPPORT, getIndexTokensBySymbol } from 'utils/config/trades'
@@ -15,14 +16,15 @@ import { CONTRACT_ABIS } from 'utils/web3/contracts'
 import { rpcProvider } from 'utils/web3/providers'
 
 const useTraderBalances = ({ account, protocol }: { account: string | undefined; protocol: ProtocolEnum }) => {
+  const isExcludedProtocol = NO_TX_HASH_PROTOCOLS.includes(protocol)
   const { prices } = useUsdPrices()
   const protocolProvider = PROTOCOL_PROVIDER[protocol]
 
   const { data: nativeBalanceData } = useQuery(
     [QUERY_KEYS.GET_TRADER_NATIVE_BALANCE],
-    () => getNativeBalance(rpcProvider(protocolProvider.chainId), account ?? ''),
+    () => getNativeBalance(rpcProvider(protocolProvider?.chainId ?? 0), account ?? ''),
     {
-      enabled: !!account,
+      enabled: !!account && !!protocolProvider?.chainId && !isExcludedProtocol,
     }
   )
 
@@ -51,11 +53,11 @@ const useTraderBalances = ({ account, protocol }: { account: string | undefined;
   } = useCustomMulticallQuery<any>(
     CONTRACT_ABIS[CONTRACT_QUERY_KEYS.ERC20],
     calls,
-    protocolProvider?.chainId,
-    rpcProvider(protocolProvider.chainId),
+    protocolProvider?.chainId ?? 0,
+    rpcProvider(protocolProvider?.chainId ?? 0),
     account,
     {
-      enabled: !!protocolProvider?.chainId && !!account && tokens.length > 0,
+      enabled: !!protocolProvider?.chainId && !!account && tokens.length > 0 && !isExcludedProtocol,
       keepPreviousData: true,
       retry: 0,
     }
@@ -66,7 +68,7 @@ const useTraderBalances = ({ account, protocol }: { account: string | undefined;
   }, [protocol])
 
   const nativeBalance = useMemo(() => {
-    if (!nativeBalanceData) return 0
+    if (!nativeBalanceData || !protocolProvider?.chainId) return 0
     const nativeSymbol = CHAINS[protocolProvider.chainId].token
     const price = prices[nativeSymbol] ?? 0
     const balance = Number(formatUnits(nativeBalanceData)) * price

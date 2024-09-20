@@ -5,6 +5,7 @@ import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getOpenInterestMarketApi } from 'apis/positionApis'
+import { ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
 import PythWatermark from 'components/@ui/PythWatermark'
 import { OpenInterestMarketData } from 'entities/statistic'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
@@ -22,9 +23,9 @@ import { TimeDropdown, useTimeFilter } from '../TopOpenIntrest/Filters'
 import useSearchParamsState from '../useSearchParamsState'
 import { ListForm, TableForm } from './ListMarkets'
 
-export default function OpenInterestByMarkets() {
+export default function OpenInterestByMarkets({ protocolFilter }: { protocolFilter: ProtocolFilterProps }) {
   return (
-    <RouteWrapper>
+    <RouteWrapper protocolFilter={protocolFilter}>
       <OpenInterestByMarketsPage />
     </RouteWrapper>
   )

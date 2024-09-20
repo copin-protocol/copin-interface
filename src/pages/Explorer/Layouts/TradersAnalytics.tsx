@@ -14,9 +14,9 @@ import SortTradersDropdown from './SortTradersDropdown'
 
 export default function TradersAnalytics() {
   const contextValues = useTradersContext()
+
   const { filters, changeFilters, rankingFilters, changeRankingFilters, filterTab } = contextValues
   const _filters = filterTab === FilterTabEnum.RANKING ? rankingFilters : filters
-
   const { lg } = useResponsive()
 
   return (

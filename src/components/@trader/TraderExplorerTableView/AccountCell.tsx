@@ -17,6 +17,7 @@ export function AccountCell({ data, additionalComponent }: { data: TraderData; a
         type={data.type}
         note={data.note}
         size={sm ? 40 : 28}
+        wrapperSx={{ width: '100%' }}
       />
       {additionalComponent ? additionalComponent : null}
     </Flex>

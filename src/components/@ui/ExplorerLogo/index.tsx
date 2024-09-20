@@ -51,6 +51,7 @@ const ExplorerLogo = ({
     case ProtocolEnum.AVANTIS_BASE:
     case ProtocolEnum.SYNTHETIX_V3:
     case CopyTradePlatformEnum.SYNTHETIX_V3:
+    case ProtocolEnum.SYNFUTURE_BASE:
       icon = 'BASE'
       break
     case ProtocolEnum.LOGX_MODE:
@@ -66,7 +67,11 @@ const ExplorerLogo = ({
       icon = 'SCROLL'
       break
     case ProtocolEnum.MUMMY_FANTOM:
+    case ProtocolEnum.MORPHEX_FANTOM:
       icon = 'FANTOM'
+      break
+    case ProtocolEnum.HYPERLIQUID:
+      icon = 'HYPERLIQUID'
       break
     default:
       icon = 'OPTIMISM'

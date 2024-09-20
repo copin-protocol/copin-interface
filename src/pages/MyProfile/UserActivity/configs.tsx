@@ -260,7 +260,7 @@ export const userActivityColumns: ColumnData<UserActivityData, ExternalSource>[]
     dataIndex: 'price',
     key: 'price',
     sortBy: 'price',
-    style: { minWidth: 300, width: 300 },
+    style: { minWidth: 400, width: 400 },
     render: renderProps.targetAction,
   },
   {

@@ -25,6 +25,9 @@ export default function TraderListTable<T>({
   handleSelect,
   hasCustomize = true,
   freezeBg = 'neutral6',
+  hiddenSelectAllBox,
+  hiddenSelectItemBox,
+  lefts = [36, 48],
 }: {
   data: T[] | undefined
   isLoading: boolean
@@ -39,6 +42,9 @@ export default function TraderListTable<T>({
   scrollRef?: RefObject<HTMLDivElement | null>
   hasCustomize?: boolean
   freezeBg?: keyof Omit<Colors, 'darkMode'>
+  hiddenSelectAllBox?: boolean
+  hiddenSelectItemBox?: boolean
+  lefts?: [number, number]
 }) {
   const { visibleColumns } = useCustomizeColumns()
 
@@ -92,6 +98,8 @@ export default function TraderListTable<T>({
                 visibleColumns={hasCustomize ? visibleColumns : _tableSettings.map((setting) => setting.id as string)}
                 isSelectedAll={isSelectedAll}
                 handleSelectedAll={handleSelectAll}
+                hiddenSelectBox={hiddenSelectAllBox}
+                lefts={lefts}
               />
             </TableContainer>
           </Box>
@@ -104,6 +112,8 @@ export default function TraderListTable<T>({
                 visibleColumns={hasCustomize ? visibleColumns : _tableSettings.map((setting) => setting.id as string)}
                 checkIsSelected={checkIsSelected}
                 handleSelect={handleSelect}
+                hiddenSelectBox={hiddenSelectItemBox}
+                lefts={lefts}
               />
             </TableContainer>
             {!isLoading && !data?.length && <NoDataFound />}

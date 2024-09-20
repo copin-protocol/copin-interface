@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { CaretDown, Icon, ListBullets, Pulse } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { ReactNode } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { SingleValueProps, components } from 'react-select'
 
-import { RouteSwitchProtocol } from 'components/@widgets/SwitchProtocols'
+import { ProtocolFilter, ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
 import useSearchParams from 'hooks/router/useSearchParams'
 import Select from 'theme/Select'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
@@ -16,13 +17,19 @@ import { parseMarketImage } from 'utils/helpers/transform'
 
 import { ALL_TOKEN_PARAM } from './configs'
 
-export default function RouteWrapper({ children }: { children: any }) {
+export default function RouteWrapper({
+  children,
+  protocolFilter,
+}: {
+  children: any
+  protocolFilter: ProtocolFilterProps
+}) {
   // const { symbol } = useParams<{ symbol: string | undefined }>()
   // const { pathname } = useLocation()
   // if (!symbol) return <Redirect to={`${pathname}/${ALL_TOKEN_PARAM}`} />
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-      <RouteHeader />
+      <RouteHeader protocolFilter={protocolFilter} />
       <Box flex="1 0 0">{children}</Box>
       <RouteFooter />
     </Flex>
@@ -46,7 +53,8 @@ function RouteFooter() {
     </Box>
   )
 }
-function RouteHeader() {
+function RouteHeader({ protocolFilter }: { protocolFilter: ProtocolFilterProps }) {
+  const { sm } = useResponsive()
   return (
     <Flex
       sx={{
@@ -63,14 +71,20 @@ function RouteHeader() {
       }}
     >
       <Flex flex={{ _: '1', md: 'auto' }} sx={{ alignItems: 'center', height: '100%' }}>
-        <MarketsDropdown />
-        <Box display={{ _: 'none', md: 'block' }} height="100%" width="1px" bg="neutral4" />
-        <Box width="100%" display={{ _: 'none', md: 'flex' }} sx={{ px: 3, gap: 30 }}>
+        {/* <MarketsDropdown /> */}
+        {/* <Box display={{ _: 'none', md: 'block' }} height="100%" width="1px" bg="neutral4" /> */}
+        <Box width="100%" display={{ _: 'none', md: 'flex' }} sx={{ px: 0, gap: 30 }}>
           <Tabs />
         </Box>
       </Flex>
       <Box display={{ _: 'block', md: 'none' }} sx={{ height: '100%', width: '1px', bg: 'neutral4' }} />
-      <RouteSwitchProtocol keepSearch={false} componentProps={{ showIcon: true }} />
+      <ProtocolFilter
+        {...protocolFilter}
+        // checkIsProtocolChecked={protocolFilter.checkIsSelected}
+        // handleToggleProtocol={protocolFilter.handleToggle}
+        placement={sm ? 'bottom' : 'bottomRight'}
+        menuSx={{ width: ['300px', '400px', '50vw', '50vw'] }}
+      />
     </Flex>
   )
 }
@@ -81,7 +95,6 @@ function Tabs() {
     push,
     location: { pathname },
   } = useHistory()
-  if (!protocol) return <></>
   const onChangeTab = (key: 'positions' | 'overview') => {
     if (key === 'positions') {
       push(generateOIPositionsRoute({ protocol, symbol }))
@@ -100,12 +113,12 @@ function Tabs() {
         isActive={!!pathname.match(ROUTES.OPEN_INTEREST_POSITIONS.path_prefix)?.length}
         onClick={() => onChangeTab('positions')}
       />
-      <TabItem
+      {/* <TabItem
         label={<Trans>MARKET</Trans>}
         icon={ListBullets}
         isActive={!!pathname.match(ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix)?.length}
         onClick={() => onChangeTab('overview')}
-      />
+      /> */}
     </>
   )
 }
@@ -133,6 +146,7 @@ function TabItem({
 function MarketsDropdown() {
   const { searchParams } = useSearchParams()
   const { protocol, symbol = ALL_TOKEN_PARAM } = useParams<{ protocol: ProtocolEnum; symbol: string }>()
+
   const tokenOptions: TokenTrade[] = Object.values(
     getTokenTradeList(protocol).reduce((acc: any, market) => {
       if (!acc[market.symbol]) {
@@ -141,6 +155,7 @@ function MarketsDropdown() {
       return acc
     }, {})
   )
+
   const {
     push,
     location: { pathname },
@@ -151,6 +166,7 @@ function MarketsDropdown() {
     ...tokenOptions.map((option) => ({ value: option.symbol, label: <MarketItem symbol={option.symbol} /> })),
   ]
   const selectOption = tokenSelectOptions.find((option) => option.value === symbol)
+
   const onChangeToken = (newValue: any) => {
     const symbol = newValue.value === ALL_TOKEN_PARAM ? undefined : newValue.value
     if (pathname.match(ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix)) {
@@ -163,7 +179,6 @@ function MarketsDropdown() {
     }
   }
 
-  if (!protocol) return <></>
   return (
     <Box
       sx={{

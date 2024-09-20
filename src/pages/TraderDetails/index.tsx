@@ -36,6 +36,7 @@ import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
 import useHandleLayout from './Layouts/useHandleLayout'
+import ProtocolBetaWarning from './ProtocolBetaWarning'
 import ProtocolStats from './ProtocolStats'
 import TraderActionButtons from './TraderActionButtons'
 import TraderInfo from './TraderInfo'
@@ -254,10 +255,10 @@ export function TraderDetailsComponent({
         }
         traderInfo={
           <BotAlertProvider>
+            <ProtocolBetaWarning protocol={protocol} />
             <Flex
               sx={{
                 width: '100%',
-                height: '100%',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 flexWrap: 'wrap',

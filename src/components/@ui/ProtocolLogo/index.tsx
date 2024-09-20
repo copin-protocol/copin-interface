@@ -12,6 +12,7 @@ const ProtocolLogo = ({
   hasText = true,
   isActive = false,
   className,
+  disabled = false,
   ...props
 }: {
   protocol: ProtocolEnum
@@ -20,6 +21,7 @@ const ProtocolLogo = ({
   hasText?: boolean
   isActive?: boolean
   className?: string
+  disabled?: boolean
 } & BoxProps) => {
   const protocolOptionsMapping = useGetProtocolOptionsMapping()
   return (
@@ -30,7 +32,12 @@ const ProtocolLogo = ({
       sx={{ gap: 2, flexShrink: 0, ...(sx || {}) }}
       {...props}
     >
-      <Image src={getProtocolDropdownImage({ protocol, isActive })} width={size} height={size} />
+      <Image
+        src={getProtocolDropdownImage({ protocol, isActive, disabled })}
+        width={size}
+        height={size}
+        sx={{ flexShrink: '0' }}
+      />
       {hasText && (
         <Type.Caption
           // sx={{

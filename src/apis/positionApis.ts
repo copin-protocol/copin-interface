@@ -17,17 +17,26 @@ import { GetApiParams, RequestBodyApiData } from './types'
 
 const SERVICE = 'position'
 
-const normalizePayload = (body: RequestBodyApiData) => {
+export const normalizePositionPayload = (body: RequestBodyApiData) => {
   let sortBy = body.sortBy
   if (sortBy === 'pnl') {
     sortBy = 'realised' + capitalizeFirstLetter(sortBy)
   }
+
+  if (sortBy === 'avgRoi') {
+    sortBy = 'realised' + capitalizeFirstLetter(sortBy)
+  }
+
   if (!body.ranges) return { ...body, sortBy }
   const ranges = body.ranges.map((range) => ({
     ...range,
   }))
   ranges.forEach((range) => {
     if (range.fieldName === 'pnl') {
+      range.fieldName = 'realised' + capitalizeFirstLetter(range.fieldName)
+    }
+
+    if (range.fieldName === 'avgRoi') {
       range.fieldName = 'realised' + capitalizeFirstLetter(range.fieldName)
     }
   })
@@ -77,7 +86,7 @@ export async function getTopOpeningPositionsApi({
   return requester
     .post(
       `${protocol}/top-positions/opening`,
-      normalizePayload({
+      normalizePositionPayload({
         pagination: {
           limit,
           offset,

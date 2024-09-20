@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { Square } from '@phosphor-icons/react'
 import { Link } from 'react-router-dom'
+import { v4 as uuid } from 'uuid'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { CopyPositionData } from 'entities/copyTrade'
@@ -14,6 +16,7 @@ import { UsdPrices } from 'hooks/store/useUsdPrices'
 import CopyButton from 'theme/Buttons/CopyButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
+import Tooltip from 'theme/Tooltip'
 import { Flex, Image, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -309,14 +312,32 @@ function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponen
   })
 }
 
-export function renderTrader(address: string, protocol: ProtocolEnum, hasCopy?: boolean) {
+export function renderTrader(address: string, protocol: ProtocolEnum, hasCopy?: boolean, enableProtocolLogo?: boolean) {
+  const protocolTooltipId = uuid()
+
   return (
     <Link to={generateTraderMultiExchangeRoute({ protocol, address })} onClick={(e) => e.stopPropagation()}>
-      <Flex sx={{ gap: 2 }} alignItems="center">
+      <Flex sx={{ gap: 1, px: 1 }} alignItems="center">
         <AddressAvatar address={address} size={24} />
         <Type.Caption color="neutral1" sx={{ ':hover': { textDecoration: 'underline' } }}>
           {addressShorten(address, 3, 5)}
         </Type.Caption>
+        {enableProtocolLogo && (
+          <>
+            <ProtocolLogo
+              protocol={protocol}
+              size={22}
+              hasText={false}
+              data-tip="React-tooltip"
+              data-tooltip-id={`tt_protocol_${protocolTooltipId}`}
+              data-tooltip-offset={0}
+            />
+            <Tooltip id={`tt_protocol_${protocolTooltipId}`} place="top" type="dark" effect="solid" clickable={false}>
+              <ProtocolLogo protocol={protocol} />
+            </Tooltip>
+          </>
+        )}
+
         {hasCopy && (
           <CopyButton
             type="button"

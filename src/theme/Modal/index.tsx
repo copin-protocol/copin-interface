@@ -39,9 +39,10 @@ const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
 
 // eslint-disable-next-line
-const StyledDialogContent = styled(({ background, minHeight, maxHeight, maxWidth, mobile, isOpen, mode, ...rest }) => (
-  <AnimatedDialogContent {...rest} />
-)).attrs({
+const StyledDialogContent = styled(({ background, height, minHeight, maxHeight, maxWidth, mobile, isOpen, mode, ...rest }) => (
+    <AnimatedDialogContent {...rest} />
+  )
+).attrs({
   'aria-label': 'dialog',
 })`
   overflow-y: visible;
@@ -59,6 +60,11 @@ const StyledDialogContent = styled(({ background, minHeight, maxHeight, maxWidth
     ${({ maxWidth }) => css`
       max-width: ${maxWidth || '420px'};
     `}
+    ${({ height }) =>
+      height &&
+      css`
+        height: ${height};
+      `}
     ${({ maxHeight }) =>
       maxHeight &&
       css`
@@ -118,6 +124,7 @@ export interface ModalProps {
   modalContentStyle?: any
   backdropFilter?: string
   overlayBackground?: string
+  height?: string
 }
 
 export default function Modal({
@@ -127,6 +134,7 @@ export default function Modal({
   maxWidth,
   minHeight = false,
   dismissable = true,
+  height,
   maxHeight = '90vh',
   title,
   hasClose,
@@ -196,6 +204,7 @@ export default function Modal({
                 aria-label="dialog content"
                 mobile={isMobile}
                 width={width}
+                height={height}
                 background={background}
                 style={modalContentStyle}
               >
