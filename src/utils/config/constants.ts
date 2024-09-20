@@ -174,6 +174,12 @@ export const DCP_SUPPORTED_PROTOCOLS = [
   ProtocolEnum.POLYNOMIAL,
   ProtocolEnum.DEXTORO,
   ProtocolEnum.CYBERDEX,
+  ProtocolEnum.APOLLOX_BNB,
+  ProtocolEnum.KILOEX_OPBNB,
+  ProtocolEnum.HMX_ARB,
+  ProtocolEnum.VELA_ARB,
+  ProtocolEnum.ROLLIE_SCROLL,
+  ProtocolEnum.MUMMY_FANTOM,
 ]
 
 export const DEFAULT_PROTOCOL = ProtocolEnum.GNS
@@ -212,7 +218,7 @@ export const RELEASED_PROTOCOLS =
       ]
     : Object.values(ProtocolEnum)
 
-// TODO: Check when add new protocol
+// TODO: Check when add new protocol copy-trade
 export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.GMX,
   ProtocolEnum.GMX_V2,
@@ -231,5 +237,7 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.LEVEL_BNB,
   ProtocolEnum.APOLLOX_BNB,
   ProtocolEnum.KILOEX_OPBNB,
+  ProtocolEnum.ROLLIE_SCROLL,
+  ProtocolEnum.MUMMY_FANTOM,
 ]
-export const ORDERBOOK_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
+export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]

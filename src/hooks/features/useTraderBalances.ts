@@ -5,7 +5,7 @@ import { useQuery } from 'react-query'
 
 import useUsdPrices from 'hooks/store/useUsdPrices'
 import { useCustomMulticallQuery } from 'hooks/web3/useMulticallQuery'
-import { ORDERBOOK_PROTOCOLS } from 'utils/config/constants'
+import { NO_TX_HASH_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS, QUERY_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER, TOKEN_COLLATERAL_SUPPORT, getIndexTokensBySymbol } from 'utils/config/trades'
@@ -16,7 +16,7 @@ import { CONTRACT_ABIS } from 'utils/web3/contracts'
 import { rpcProvider } from 'utils/web3/providers'
 
 const useTraderBalances = ({ account, protocol }: { account: string | undefined; protocol: ProtocolEnum }) => {
-  const isExcludedProtocol = ORDERBOOK_PROTOCOLS.includes(protocol)
+  const isExcludedProtocol = NO_TX_HASH_PROTOCOLS.includes(protocol)
   const { prices } = useUsdPrices()
   const protocolProvider = PROTOCOL_PROVIDER[protocol]
 

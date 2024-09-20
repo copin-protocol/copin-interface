@@ -11,7 +11,7 @@ import { OrderData } from 'entities/trader.d'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT, ORDERBOOK_PROTOCOLS } from 'utils/config/constants'
+import { DAYJS_FULL_DATE_FORMAT, NO_TX_HASH_PROTOCOLS } from 'utils/config/constants'
 import { MarginModeEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { formatLeverage } from 'utils/helpers/format'
@@ -88,7 +88,7 @@ export default function ListOrderTable({
             </Type.Caption>
 
             {/* TODO: Check when add new protocol like Hyperliquid */}
-            {!ORDERBOOK_PROTOCOLS.includes(protocol) && (
+            {!NO_TX_HASH_PROTOCOLS.includes(protocol) && (
               <ExplorerLogo
                 protocol={protocol}
                 explorerUrl={`${PROTOCOL_PROVIDER[protocol]?.explorerUrl}/tx/${item.txHash}`}

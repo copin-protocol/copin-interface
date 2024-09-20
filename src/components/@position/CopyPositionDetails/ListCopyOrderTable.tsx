@@ -9,7 +9,7 @@ import { CopyOrderData } from 'entities/copyTrade.d'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT, ORDERBOOK_PROTOCOLS } from 'utils/config/constants'
+import { DAYJS_FULL_DATE_FORMAT, NO_TX_HASH_PROTOCOLS } from 'utils/config/constants'
 import { CopyTradePlatformEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { EXPLORER_PLATFORMS } from 'utils/config/platforms'
 import { PROTOCOL_PROVIDER, TokenTrade } from 'utils/config/trades'
@@ -55,7 +55,7 @@ export default function ListCopyOrderTable({
             <Type.Caption color="neutral1">
               <LocalTimeText date={item.createdAt} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
             </Type.Caption>
-            {!!protocol && !ORDERBOOK_PROTOCOLS.includes(protocol) && (
+            {!!protocol && !NO_TX_HASH_PROTOCOLS.includes(protocol) && (
               <ExplorerLogo
                 protocol={protocol}
                 explorerUrl={`${PROTOCOL_PROVIDER[protocol]?.explorerUrl}/tx/${item.txHash}`}
