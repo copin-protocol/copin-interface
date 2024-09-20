@@ -130,6 +130,10 @@ function generateProtocolName(protocol) {
       return 'Mummy Finance'
     case 'MORPHEX_FANTOM':
       return 'Morphex'
+    case 'HYPERLIQUID':
+      return 'Hyperliquid'
+    case 'SYNFUTURE_BASE':
+      return 'Synfutures'
     default:
       return ''
   }

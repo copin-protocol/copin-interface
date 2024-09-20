@@ -84,13 +84,6 @@ export async function getCopyTradeDetailsApi({ id }: { id: string }) {
   return requester.get(`${SERVICE}/${id}`).then((res: any) => res.data as CopyTradeData)
 }
 
-//TODO: delete
-export async function getCopyTradeBalancesApi(): Promise<CopyTradeBalanceDataResponse> {
-  return requester
-    .get(`${SERVICE}/statistic/balances/BINGX`)
-    .then((res: any) => res.data as CopyTradeBalanceDataResponse)
-}
-
 export const getCopyTradePnLApi = ({
   exchange,
   from,

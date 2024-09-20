@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import React, { ReactNode, useCallback, useMemo } from 'react'
+import { Fragment, ReactNode, useCallback, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 
@@ -11,7 +11,7 @@ import SearchPositionResultItem from 'components/@widgets/SearchPositionResultIt
 import { PositionData } from 'entities/trader'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import { DEFAULT_LIMIT } from 'utils/config/constants'
+import { DEFAULT_LIMIT, ORDERBOOK_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
@@ -85,11 +85,12 @@ const PositionTxResults = ({
           {protocols &&
             protocols.length > 0 &&
             protocols.map((protocol) => {
+              if (ORDERBOOK_PROTOCOLS.includes(protocol)) return <Fragment key={protocol} />
               return (
                 <ExplorerLogo
                   key={protocol}
                   protocol={protocol}
-                  explorerUrl={`${PROTOCOL_PROVIDER[protocol].explorerUrl}/tx/${txHash}`}
+                  explorerUrl={`${PROTOCOL_PROVIDER[protocol]?.explorerUrl}/tx/${txHash}`}
                   size={18}
                 />
               )

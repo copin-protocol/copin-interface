@@ -230,6 +230,8 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.PERENNIAL_ARB]: '',
   [ProtocolEnum.MUMMY_FANTOM]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.MORPHEX_FANTOM]: '',
+  [ProtocolEnum.HYPERLIQUID]: '',
+  [ProtocolEnum.SYNFUTURE_BASE]: '',
 }
 
 export const INTERNAL_SERVICE_KEYS = {
@@ -263,4 +265,6 @@ export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.PERENNIAL_ARB]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.MUMMY_FANTOM]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.MORPHEX_FANTOM]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.HYPERLIQUID]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.SYNFUTURE_BASE]: 'COPY_TRADE_MAIN_STREAM',
 }

@@ -226,6 +226,8 @@ export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
       return LINKS.tradeYfx
     case ProtocolEnum.KILOEX_OPBNB:
       return LINKS.tradeKiloEx
+    case ProtocolEnum.SYNFUTURE_BASE:
+      return LINKS.tradeSynfutures
     default:
       return LINKS.tradeGMX
   }

@@ -2,7 +2,9 @@ import {
   ARBITRUM_MAINNET,
   BASE_MAINNET,
   BLAST_MAINNET,
-  BNB_MAINNET, FANTOM_MAINNET,
+  BNB_MAINNET,
+  FANTOM_MAINNET,
+  HYPERLIQUID_TESTNET,
   MANTLE_MAINNET,
   MODE_MAINNET,
   OPBNB_MAINNET,
@@ -233,6 +235,20 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: FANTOM_MAINNET,
     isNew: true,
   },
+  [ProtocolEnum.HYPERLIQUID]: {
+    id: ProtocolEnum.HYPERLIQUID,
+    text: 'Hyperliquid',
+    label: 'Hyperliquid',
+    isNew: true,
+    chainId: HYPERLIQUID_TESTNET,
+  },
+  [ProtocolEnum.SYNFUTURE_BASE]: {
+    id: ProtocolEnum.SYNFUTURE_BASE,
+    text: 'Synfutures',
+    label: 'BASE',
+    chainId: BASE_MAINNET,
+    isNew: true,
+  },
 }
 
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
@@ -240,7 +256,7 @@ export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
     ? RELEASED_PROTOCOLS.map((e) => PROTOCOL_OPTIONS_MAPPING[e])
     : Object.values(ProtocolEnum).map((e) => PROTOCOL_OPTIONS_MAPPING[e])
 
-export const PROTOCOLS_CROSS_MARGIN = [ProtocolEnum.HMX_ARB, ProtocolEnum.SYNTHETIX_V3]
+export const PROTOCOLS_CROSS_MARGIN = [ProtocolEnum.HMX_ARB, ProtocolEnum.SYNTHETIX_V3, ProtocolEnum.HYPERLIQUID]
 
 export const PROTOCOLS_IN_TOKEN: ProtocolEnum[] = []
 

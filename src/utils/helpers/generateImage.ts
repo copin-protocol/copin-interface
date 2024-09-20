@@ -544,6 +544,14 @@ export const generateProtocol = ({
       protocolTextWidth = 156
       protocolText = 'Morphex'
       break
+    case ProtocolEnum.HYPERLIQUID:
+      protocolTextWidth = 268
+      protocolText = 'Hyperliquid'
+      break
+    case ProtocolEnum.SYNFUTURE_BASE:
+      protocolTextWidth = 288
+      protocolText = 'Synfutures'
+      break
     default:
       break
   }

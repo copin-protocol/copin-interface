@@ -11,7 +11,7 @@ import { OrderData } from 'entities/trader.d'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { DAYJS_FULL_DATE_FORMAT, ORDERBOOK_PROTOCOLS } from 'utils/config/constants'
 import { MarginModeEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { formatLeverage } from 'utils/helpers/format'
@@ -72,6 +72,8 @@ export default function ListOrderTable({
     return { data: orders, meta: { limit: orders.length, offset: 0, total: orders.length, totalPages: 1 } }
   }, [orders])
 
+  const isFeeWithFunding = protocol === ProtocolEnum.HYPERLIQUID
+
   const columns = useMemo(() => {
     const result: ColumnData<OrderData, ExternalSource>[] = [
       {
@@ -85,11 +87,14 @@ export default function ListOrderTable({
               <LocalTimeText date={item.blockTime} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
             </Type.Caption>
 
-            <ExplorerLogo
-              protocol={protocol}
-              explorerUrl={`${PROTOCOL_PROVIDER[protocol]?.explorerUrl}/tx/${item.txHash}`}
-              size={18}
-            />
+            {/* TODO: Check when add new protocol like Hyperliquid */}
+            {!ORDERBOOK_PROTOCOLS.includes(protocol) && (
+              <ExplorerLogo
+                protocol={protocol}
+                explorerUrl={`${PROTOCOL_PROVIDER[protocol]?.explorerUrl}/tx/${item.txHash}`}
+                size={18}
+              />
+            )}
           </Flex>
         ),
       },
@@ -198,19 +203,20 @@ export default function ListOrderTable({
         ),
       },
       {
-        title: 'Paid Fee',
+        title: isFeeWithFunding ? 'Fee & Funding' : 'Paid Fee',
         dataIndex: 'feeNumber',
         key: 'feeNumber',
-        style: { minWidth: '85px', textAlign: 'right', pr: 3 },
+        style: { minWidth: isFeeWithFunding ? '120px' : '85px', textAlign: 'right', pr: 3 },
         render: (item) => (
           <Type.Caption color="neutral1" width="100%" textAlign="right" sx={{ display: 'flex', justifyContent: 'end' }}>
             <ValueOrToken
-              protocol={item.protocol}
-              indexToken={item.collateralToken}
-              value={item.feeNumber}
-              valueInToken={item.feeInTokenNumber}
+              protocol={isFeeWithFunding ? undefined : item.protocol}
+              indexToken={isFeeWithFunding ? undefined : item.collateralToken}
+              value={isFeeWithFunding ? (item.feeNumber ?? 0) * -1 : item.feeNumber}
+              valueInToken={isFeeWithFunding ? undefined : item.feeInTokenNumber}
               maxDigit={2}
               minDigit={2}
+              hasPrefix={false}
             />
           </Type.Caption>
         ),
@@ -239,7 +245,11 @@ export default function ListOrderTable({
         isLoading={isLoading}
         externalSource={externalSource}
         tableBodyWrapperSx={{ overflow: 'auto' }}
-        renderRowBackground={(data, _) => (data.txHash === highlightTxHash ? 'rgba(78, 174, 253, 0.2)' : 'transparent')}
+        renderRowBackground={(data, _) =>
+          !!data.txHash && !!highlightTxHash && data.txHash === highlightTxHash
+            ? 'rgba(78, 174, 253, 0.2)'
+            : 'transparent'
+        }
       />
     </Box>
   )

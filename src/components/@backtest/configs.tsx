@@ -20,7 +20,11 @@ export const fieldName: { [key in keyof BackTestFormValues]: keyof BackTestFormV
 }
 
 // Todo: Check when add new protocol with cross margin
-export const DISABLED_MARGIN_PROTECTION_PROTOCOLS = [ProtocolEnum.HMX_ARB, ProtocolEnum.SYNTHETIX_V3]
+export const DISABLED_MARGIN_PROTECTION_PROTOCOLS = [
+  ProtocolEnum.HMX_ARB,
+  ProtocolEnum.SYNTHETIX_V3,
+  ProtocolEnum.HYPERLIQUID,
+]
 
 export const PARAM_MAPPING = {
   ACCOUNT: 'acc',

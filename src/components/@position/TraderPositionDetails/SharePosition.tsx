@@ -90,7 +90,7 @@ export default function SharePosition({
   const shareLink = generateParamsUrl({
     url: `${import.meta.env.VITE_URL}${generatePositionDetailsRoute({
       protocol: stats?.protocol,
-      txHash: stats?.txHashes[0],
+      txHash: stats?.txHashes?.[0],
       account: stats?.account,
       logId: stats?.logId,
     })}`,

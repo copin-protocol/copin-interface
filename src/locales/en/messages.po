@@ -21,6 +21,10 @@ msgstr "(Coming soon)"
 msgid ". Try to reload the page to fix this issue"
 msgstr ". Try to reload the page to fix this issue"
 
+#: src/components/@ui/ProtocolFilter/index.tsx
+msgid "0 selected"
+msgstr "0 selected"
+
 #: src/components/@ui/TimeFilter/constants.tsx
 msgid "1 day"
 msgstr "1 day"
@@ -116,8 +120,13 @@ msgstr "ALERT LIST"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
+#: src/utils/config/translations.tsx
 msgid "Account"
 msgstr "Account"
+
+#: src/utils/config/translations.tsx
+msgid "Accounts"
+msgstr "Accounts"
 
 #: src/components/@charts/ChartCopyPositionProfit/CopyOrderTooltip.tsx
 #: src/components/@charts/ChartTraderPositionProfit/OrderTooltip.tsx
@@ -454,6 +463,10 @@ msgstr "CEX Depth"
 #: src/pages/Subscription/Plans.tsx
 msgid "CEX account connection"
 msgstr "CEX account connection"
+
+#: src/pages/FeeRebate/Layout.tsx
+msgid "COPIN FEE REBATE"
+msgstr "COPIN FEE REBATE"
 
 #: src/theme/Buttons/CopyButton.tsx
 msgid "Can't copy"
@@ -882,6 +895,11 @@ msgstr "Don’t have a OKX account?"
 msgid "Due to price slippage prevention, the stop loss price will increase / decrease by 0.1%"
 msgstr "Due to price slippage prevention, the stop loss price will increase / decrease by 0.1%"
 
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+msgid "Dune Dashboard"
+msgstr "Dune Dashboard"
+
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Duration:"
@@ -943,6 +961,11 @@ msgstr "Est. Stop Price"
 #: src/utils/config/translations.tsx
 msgid "Est. Take Profit Price"
 msgstr "Est. Take Profit Price"
+
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+msgid "Events"
+msgstr "Events"
 
 #: src/components/@backtest/BacktestForm/index.tsx
 #: src/components/@copyTrade/CopyTradeForm/index.tsx
@@ -1024,6 +1047,10 @@ msgstr "Fee Rebate"
 msgid "Feedback"
 msgstr "Feedback"
 
+#: src/components/@position/TraderPositionDetails/PositionStats.tsx
+msgid "Fees & Funding:"
+msgstr "Fees & Funding:"
+
 #: src/pages/Stats/ChartComponent.tsx
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Fees are not factored into PnL"
@@ -1081,6 +1108,10 @@ msgstr "Funding:"
 #: src/utils/config/translations.tsx
 msgid "GMX"
 msgstr "GMX"
+
+#: src/pages/FeeRebate/Layout.tsx
+msgid "GTRADE REWARDS"
+msgstr "GTRADE REWARDS"
 
 #: src/utils/config/translations.tsx
 msgid "Gate"
@@ -1295,6 +1326,7 @@ msgstr "Last Trade"
 msgid "Last Trade (All)"
 msgstr "Last Trade (All)"
 
+#: src/components/@copier/CopierLeaderboardTableView/index.tsx
 #: src/components/@trader/TraderLeaderboardTableView/index.tsx
 msgid "Last Updated:"
 msgstr "Last Updated:"
@@ -1303,6 +1335,14 @@ msgstr "Last Updated:"
 #: src/pages/Home/Traders.tsx
 msgid "Last update:"
 msgstr "Last update:"
+
+#: src/utils/config/translations.tsx
+msgid "Latest Stop Loss ID"
+msgstr "Latest Stop Loss ID"
+
+#: src/utils/config/translations.tsx
+msgid "Latest Take Profit ID"
+msgstr "Latest Take Profit ID"
 
 #: src/pages/Home/Overview.tsx
 msgid "Latest activities"
@@ -1424,10 +1464,6 @@ msgstr "Low Overtrading"
 #: src/pages/MyProfile/index.tsx
 msgid "MANAGEMENT"
 msgstr "MANAGEMENT"
-
-#: src/pages/TopOpenings/RouteWrapper.tsx
-msgid "MARKET"
-msgstr "MARKET"
 
 #: src/utils/config/options.tsx
 msgid "MDD"
@@ -1609,6 +1645,10 @@ msgstr "More"
 msgid "More."
 msgstr "More."
 
+#: src/utils/config/translations.tsx
+msgid "Multiple Copy"
+msgstr "Multiple Copy"
+
 #: src/pages/MyProfile/index.tsx
 msgid "My Profile"
 msgstr "My Profile"
@@ -1677,6 +1717,7 @@ msgid "No Protocol Found"
 msgstr "No Protocol Found"
 
 #: src/components/@wallet/WalletDetailsCard/ClaimGainsRewardModal.tsx
+#: src/pages/FeeRebate/WalletItem.tsx
 msgid "No Rewards Found"
 msgstr "No Rewards Found"
 
@@ -1726,6 +1767,10 @@ msgstr "No, thanks"
 #: src/pages/SystemStatus/Layouts/Layout.tsx
 msgid "Node Status"
 msgstr "Node Status"
+
+#: src/pages/Home/Traders.tsx
+msgid "Not found any trending traders at this moment"
+msgstr "Not found any trending traders at this moment"
 
 #: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
 msgid "Note:"
@@ -1785,7 +1830,6 @@ msgstr "Ongoing"
 msgid "Only"
 msgstr "Only"
 
-#: src/components/@ui/ProtocolFilter/AllowListOption.tsx
 #: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
 msgid "Only Allowed CopyTrade Perp DEXs"
 msgstr "Only Allowed CopyTrade Perp DEXs"
@@ -2259,8 +2303,16 @@ msgid "Size Token"
 msgstr "Size Token"
 
 #: src/utils/config/translations.tsx
+msgid "Skip Lower Collateral Position"
+msgstr "Skip Lower Collateral Position"
+
+#: src/utils/config/translations.tsx
 msgid "Skip Lower Leverage Position"
 msgstr "Skip Lower Leverage Position"
+
+#: src/utils/config/translations.tsx
+msgid "Skip Lower Size Position"
+msgstr "Skip Lower Size Position"
 
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "Skipping..."
@@ -2690,6 +2742,7 @@ msgstr "Total Trades"
 msgid "Total Users"
 msgstr "Total Users"
 
+#: src/components/@copier/CopierLeaderboardTableView/index.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@trader/TraderLeaderboardTableView/index.tsx
 #: src/components/@widgets/SearchAllResults/index.tsx
@@ -2727,6 +2780,10 @@ msgstr "Trader Favorites"
 #: src/pages/MyProfile/Favorites/index.tsx
 msgid "Trader Favorites Statistics"
 msgstr "Trader Favorites Statistics"
+
+#: src/pages/TraderDetails/ProtocolBetaWarning.tsx
+msgid "Trader data from Hyperliquid has been extracted from 2024/8/27 to 2024/9/10. It is currently in testing and may be unstable. Please use it for reference purposes only!"
+msgstr "Trader data from Hyperliquid has been extracted from 2024/8/27 to 2024/9/10. It is currently in testing and may be unstable. Please use it for reference purposes only!"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "Trader don't have statistic in {0}"
@@ -2779,6 +2836,10 @@ msgstr "Try Again"
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "TxHash"
 msgstr "TxHash"
+
+#: src/utils/config/translations.tsx
+msgid "Type"
+msgstr "Type"
 
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Unique traders are copied in the system"
@@ -2965,6 +3026,7 @@ msgstr "When the trader increases the position, you will follow with a maximum o
 msgid "When the trader opens a trade, the maximum margin per order is {0}."
 msgstr "When the trader opens a trade, the maximum margin per order is {0}."
 
+#: src/components/@copier/CopierLeaderboardTableView/index.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@widgets/SearchAllResults/index.tsx
 #: src/pages/Home/SortDropdown.tsx
@@ -2975,6 +3037,10 @@ msgstr "Win Rate"
 #: src/components/@backtest/BacktestSimpleResult/index.tsx
 msgid "Win rate"
 msgstr "Win rate"
+
+#: src/components/@copier/CopierLeaderboardTableView/index.tsx
+msgid "Win/Lose"
+msgstr "Win/Lose"
 
 #: src/pages/Home/Traders.tsx
 msgid "Win/Trades"
@@ -3209,6 +3275,10 @@ msgstr "days"
 msgid "deleted"
 msgstr "deleted"
 
+#: src/components/@copier/CopierLeaderboardTableView/index.tsx
+msgid "ePNL"
+msgstr "ePNL"
+
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "extend"
 msgstr "extend"
@@ -3274,6 +3344,10 @@ msgstr "slippage"
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/Home/Traders.tsx
 #: src/pages/Home/Traders.tsx
+#: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
+#: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
+#: src/pages/TopOpenings/TopOpenIntrest/index.tsx
+#: src/pages/TopOpenings/TopOpenIntrest/index.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
 msgid "{0}"

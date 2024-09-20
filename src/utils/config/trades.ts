@@ -8,6 +8,7 @@ import {
   BNB_MAINNET,
   CHAINS,
   FANTOM_MAINNET,
+  HYPERLIQUID_TESTNET,
   MANTLE_MAINNET,
   MODE_MAINNET,
   OPBNB_MAINNET,
@@ -37,6 +38,7 @@ import { TOKEN_TRADE_GMX_V2 } from './tokenTradeGmxV2'
 import { TOKEN_TRADE_GNS } from './tokenTradeGns'
 import { TOKEN_TRADE_GNS_POLY } from './tokenTradeGnsPoly'
 import { TOKEN_TRADE_HMX_ARB } from './tokenTradeHmx'
+import { TOKEN_TRADE_HYPERLIQUID } from './tokenTradeHyperliquid'
 import { TOKEN_TRADE_KILOEX_OPBNB } from './tokenTradeKiloEx'
 import { TOKEN_TRADE_KTX_MANTLE } from './tokenTradeKtx'
 import { TOKEN_TRADE_LEVEL_ARB, TOKEN_TRADE_LEVEL_BNB } from './tokenTradeLevel'
@@ -47,13 +49,14 @@ import { TOKEN_COLLATERAL_MUX_ARB, TOKEN_TRADE_MUX_ARB } from './tokenTradeMux'
 import { TOKEN_TRADE_MYX_ARB } from './tokenTradeMyx'
 import { TOKEN_TRADE_PERENNIAL_ARB } from './tokenTradePerennial'
 import { TOKEN_TRADE_ROLLIE_SCROLL } from './tokenTradeRollie'
+import { TOKEN_TRADE_SYNFUTURES_BASE } from './tokenTradeSynfutureBase'
 import { TOKEN_TRADE_SYNTHETIX } from './tokenTradeSynthetix'
 import { TOKEN_TRADE_SYNTHETIX_V3 } from './tokenTradeSynthetixV3'
 import { TOKEN_TRADE_TIGRIS_ARB } from './tokenTradeTigris'
 import { TOKEN_TRADE_VELA_ARB } from './tokenTradeVela'
 import { TOKEN_TRADE_YFX_ARB } from './tokenTradeYfx'
 
-type ProtocolProvider = { [key: string]: { chainId: number; explorerUrl: string } }
+type ProtocolProvider = { [key: string]: { chainId: number | null; explorerUrl: string } | null }
 export const PROTOCOL_PROVIDER: ProtocolProvider = {
   [ProtocolEnum.LEVEL_ARB]: {
     chainId: ARBITRUM_MAINNET,
@@ -175,6 +178,14 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: FANTOM_MAINNET,
     explorerUrl: CHAINS[FANTOM_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.HYPERLIQUID]: {
+    chainId: HYPERLIQUID_TESTNET,
+    explorerUrl: CHAINS[HYPERLIQUID_TESTNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.SYNFUTURE_BASE]: {
+    chainId: BASE_MAINNET,
+    explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
+  },
 }
 export interface TokenTrade {
   address: string
@@ -238,6 +249,8 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.PERENNIAL_ARB]: TOKEN_TRADE_PERENNIAL_ARB,
   [ProtocolEnum.MUMMY_FANTOM]: TOKEN_TRADE_MUMMY_FANTOM,
   [ProtocolEnum.MORPHEX_FANTOM]: TOKEN_TRADE_MORPHEX_FANTOM,
+  [ProtocolEnum.HYPERLIQUID]: TOKEN_TRADE_HYPERLIQUID,
+  [ProtocolEnum.SYNFUTURE_BASE]: TOKEN_TRADE_SYNFUTURES_BASE,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -284,6 +297,8 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.PERENNIAL_ARB]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.MUMMY_FANTOM]: { ...TOKEN_COLLATERAL_FTM, ...TOKEN_COLLATERAL_MUMMY_FANTOM },
   [ProtocolEnum.MORPHEX_FANTOM]: { ...TOKEN_COLLATERAL_FTM, ...TOKEN_COLLATERAL_MORPHEX_FANTOM },
+  [ProtocolEnum.HYPERLIQUID]: {},
+  [ProtocolEnum.SYNFUTURE_BASE]: TOKEN_COLLATERAL_BASE,
 }
 
 export const SYNTHETIX_MARKETS: { [key: number]: string[] } = {

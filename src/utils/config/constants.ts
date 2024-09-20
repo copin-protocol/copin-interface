@@ -35,6 +35,7 @@ export const LINKS = {
   tradeCyberDEX: 'https://www.cyberdex.xyz/trade',
   tradeYfx: 'https://app.yfx.com/#/en/trade/?chain=arbitrumOne',
   tradeKiloEx: 'https://app.kiloex.io/trade',
+  tradeSynfutures: 'https://oyster.synfutures.com/#/market',
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
@@ -206,6 +207,8 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.KILOEX_OPBNB,
         ProtocolEnum.ROLLIE_SCROLL,
         ProtocolEnum.MUMMY_FANTOM,
+        ProtocolEnum.HYPERLIQUID,
+        ProtocolEnum.SYNFUTURE_BASE,
       ]
     : Object.values(ProtocolEnum)
 
@@ -229,3 +232,4 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.APOLLOX_BNB,
   ProtocolEnum.KILOEX_OPBNB,
 ]
+export const ORDERBOOK_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
