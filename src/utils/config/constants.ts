@@ -241,3 +241,5 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.MUMMY_FANTOM,
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
+
+export const MAX_LIMIT = 500

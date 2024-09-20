@@ -9,6 +9,7 @@ import {
   UpdateCopyTradeData,
 } from 'entities/copyTrade.d'
 import { MyAllCopyTradersData, MyCopyTraderData } from 'entities/trader'
+import { MAX_LIMIT } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { INTERNAL_SERVICE_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 
@@ -103,7 +104,7 @@ export async function getTradersCopyingApi(protocol?: ProtocolEnum): Promise<str
   return requester
     .get(`${SERVICE}/traders`, {
       params: {
-        limit: 1000,
+        limit: MAX_LIMIT,
         offset: 0,
         protocol,
       },

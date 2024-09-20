@@ -6,7 +6,7 @@ import { RequestBodyApiData } from 'apis/types'
 import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
 import { ResponseTraderData, TraderData } from 'entities/trader'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { DEFAULT_LIMIT } from 'utils/config/constants'
+import { DEFAULT_LIMIT, MAX_LIMIT } from 'utils/config/constants'
 import { CheckAvailableStatus, ProtocolEnum } from 'utils/config/enums'
 import { getInitNumberValue } from 'utils/helpers/geInitialValue'
 import { pageToOffset } from 'utils/helpers/transform'
@@ -123,7 +123,7 @@ export default function useQueryTraders({
     data = {
       data: [...data.data, ...extraAccounts],
       meta: {
-        limit: isFavTraders ? 0 : accounts.length,
+        limit: isFavTraders ? MAX_LIMIT : accounts.length,
         offset: 0,
         total: isFavTraders ? data.data.length + extraAccounts.length : accounts.length,
         totalPages: 1,
@@ -145,7 +145,7 @@ function transformRequestWithAccounts(request: RequestBodyApiData, accounts: str
     },
   ]
   request.pagination = {
-    limit: isFavTrader ? 0 : accounts.length,
+    limit: isFavTrader ? MAX_LIMIT : accounts.length,
     offset: 0,
   }
   return request

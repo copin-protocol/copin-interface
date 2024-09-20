@@ -1,6 +1,7 @@
 import requester from 'apis'
 
 import { FavoritedTrader } from 'entities/trader'
+import { MAX_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 
 const SERVICE = 'favorites'
@@ -20,7 +21,7 @@ export async function getAllFavoritesApi(): Promise<FavoritedTrader[]> {
   return requester
     .get(`${SERVICE}/page`, {
       params: {
-        limit: 1000,
+        limit: MAX_LIMIT,
         offset: 0,
       },
     })
