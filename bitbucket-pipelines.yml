@@ -7,7 +7,7 @@ options:
 definitions:
   services:
     docker:
-      memory: 4096
+      memory: 8192
 
 pipelines:
   branches:
