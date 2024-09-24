@@ -3,6 +3,7 @@ import {
   ClockCounterClockwise,
   CopySimple,
   DotsThreeOutlineVertical,
+  Exclude,
   PencilSimpleLine,
   Trash,
 } from '@phosphor-icons/react'
@@ -36,7 +37,6 @@ import { ColumnData } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { DCP_EXCHANGES } from 'utils/config/constants'
 import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
@@ -142,10 +142,10 @@ export default function useCopyTradeColumns({
     const numberValue = parseInputValue(value)
     switch (field) {
       case 'volume':
-        if (DCP_EXCHANGES.includes(oldData.exchange) && numberValue < 60) {
-          toast.error(<ToastBody title="Error" message="DCP Volume must be greater than or equal to $60" />)
-          return
-        }
+        // if (DCP_EXCHANGES.includes(oldData.exchange) && numberValue < 60) {
+        //   toast.error(<ToastBody title="Error" message="DCP Volume must be greater than or equal to $60" />)
+        //   return
+        // }
         if (numberValue > 100000) {
           toast.error(<ToastBody title="Error" message="Volume must be less than $100,000" />)
           return
@@ -265,7 +265,10 @@ export default function useCopyTradeColumns({
             }
           >
             {item.copyAll ? (
-              'Follow Trader'
+              <Flex width="100%" justifyContent="flex-start" alignItems="center" sx={{ gap: 1 }}>
+                {hasExcludingPairs && <Exclude color={`${themeColors.red1}80`} />}
+                <Trans>Follow Trader</Trans>
+              </Flex>
             ) : item?.protocol && item?.tokenAddresses ? (
               <MarketGroup protocol={item.protocol} indexTokens={item.tokenAddresses} />
             ) : (

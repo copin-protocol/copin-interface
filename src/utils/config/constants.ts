@@ -215,6 +215,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.MUMMY_FANTOM,
         ProtocolEnum.HYPERLIQUID,
         ProtocolEnum.SYNFUTURE_BASE,
+        ProtocolEnum.MORPHEX_FANTOM,
       ]
     : Object.values(ProtocolEnum)
 
