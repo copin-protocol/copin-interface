@@ -1,32 +1,29 @@
-import { Trans } from '@lingui/macro'
-import { CaretRight } from '@phosphor-icons/react'
 import { SystemStyleObject } from '@styled-system/css'
-import React from 'react'
+import { Link } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
-import { AccountWithProtocol } from 'components/@ui/AccountWithProtocol'
-import ActiveDot from 'components/@ui/ActiveDot'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
-import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { renderEntry, renderOpeningPnL, renderSizeShorten } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useTraderCopying from 'hooks/store/useTraderCopying'
-import { Button } from 'theme/Buttons'
 import Tag from 'theme/Tag'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
+import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 const SearchPositionResultItem = ({
   data,
   isShowPnl,
   hasArrow,
+  keyword = '',
   handleClick,
   sx,
   ...props
 }: {
   data: PositionData
+  keyword?: string
   isShowPnl?: boolean
   hasArrow?: boolean
   handleClick?: (data: PositionData) => void
@@ -37,11 +34,16 @@ const SearchPositionResultItem = ({
 
   return (
     <Box
+      as={Link}
+      to={generatePositionDetailsRoute({ ...data, txHash: data.txHashes[0] }, { highlightTxHash: keyword })}
+      onClick={() => (handleClick ? handleClick(data) : undefined)}
       width="100%"
       {...props}
       px={3}
       py={2}
       sx={{
+        display: 'block',
+        color: 'inherit',
         borderTop: 'small',
         borderColor: 'neutral4',
         '&:hover': {
@@ -50,13 +52,7 @@ const SearchPositionResultItem = ({
         ...sx,
       }}
     >
-      <Button
-        variant="ghost"
-        type="button"
-        onClick={() => (handleClick ? handleClick(data) : undefined)}
-        sx={{ color: 'inherit', p: 0, mx: 0, display: 'flex', gap: 12 }}
-        width="100%"
-      >
+      <Box sx={{ color: 'inherit', p: 0, mx: 0, display: 'flex', gap: 12 }} width="100%">
         <Flex sx={{ flexDirection: 'column', alignItems: 'center', gap: 1, flexShrink: 0 }}>
           <AddressAvatar address={data.account} size={40} />
           <ProtocolLogo protocol={data.protocol} size={24} hasText={false} />
@@ -122,7 +118,7 @@ const SearchPositionResultItem = ({
             </Flex>
           </Flex>
         </Flex> */}
-      </Button>
+      </Box>
     </Box>
   )
 }
