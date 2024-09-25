@@ -167,6 +167,10 @@ export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boo
       label = 'Gate'
       refCode = 'AgBFAApb'
       break
+    case CopyTradePlatformEnum.HYPERLIQUID:
+      label = 'Hyperliquid'
+      refCode = 'COPIN'
+      break
     case CopyTradePlatformEnum.SYNTHETIX_V2:
       label = 'Synthetix v2'
       break

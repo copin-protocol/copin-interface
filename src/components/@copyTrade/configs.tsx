@@ -86,10 +86,11 @@ export const exchangeOptions: ExchangeOptions[] = [
 export const internalExchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BINGX),
   getExchangeOption(CopyTradePlatformEnum.BITGET),
-  getExchangeOption(CopyTradePlatformEnum.BINANCE),
   getExchangeOption(CopyTradePlatformEnum.BYBIT),
   getExchangeOption(CopyTradePlatformEnum.OKX),
   getExchangeOption(CopyTradePlatformEnum.GATE),
+  getExchangeOption(CopyTradePlatformEnum.HYPERLIQUID),
+  getExchangeOption(CopyTradePlatformEnum.BINANCE),
 ]
 export const protocolOptions = RELEASED_PROTOCOLS.map((value) => {
   return {
