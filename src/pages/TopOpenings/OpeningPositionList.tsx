@@ -49,7 +49,7 @@ const columns: ColumnData<PositionData>[] = [
     title: 'PnL',
     dataIndex: 'pnl',
     key: 'pnl',
-    style: { width: '68px', textAlign: 'right' },
+    style: { width: '70px', textAlign: 'right' },
     render: (item) => renderOpeningPnL(item),
   },
   {

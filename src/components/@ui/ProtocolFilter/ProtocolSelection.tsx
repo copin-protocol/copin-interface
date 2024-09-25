@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { User } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
-import { is } from 'immer/dist/internal'
-import { useMemo, useState } from 'react'
+import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getProtocolsStatistic } from 'apis/positionApis'
@@ -19,7 +17,7 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Grid, IconBox, Image, Type } from 'theme/base'
 import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
-import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS } from 'utils/config/keys'
 import { ProtocolOptionProps } from 'utils/config/protocols'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 
@@ -31,7 +29,7 @@ interface ProtocolSelectionProps {
   checkIsProtocolChecked: (status: ProtocolEnum) => boolean
   handleToggleProtocol: (option: ProtocolEnum) => void
   allowList: ProtocolEnum[]
-  setSelectedProtocols: (options: ProtocolEnum[]) => void
+  setSelectedProtocols: (options: ProtocolEnum[], isClearAll?: boolean) => void
   hasSearch?: boolean
 }
 const DEFAULT_ALL_CHAINS = 0
@@ -48,7 +46,15 @@ export default function ProtocolSelection({
   const { data: protocolsStatistic } = useQuery([QUERY_KEYS.GET_PROTOCOLS_STATISTIC], getProtocolsStatistic)
 
   const [selectedChainId, setSelectedChainId] = useState(DEFAULT_ALL_CHAINS)
-  const [isUseAllowList, setIsUseAllowList] = useState(false)
+  const [isUseAllowList, setIsUseAllowList] = useState(
+    selectedProtocols.every((protocol) => ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol))
+  )
+
+  useEffect(() => {
+    if (selectedProtocols.some((protocol) => !ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol))) {
+      setIsUseAllowList(false)
+    }
+  }, [selectedProtocols])
 
   // ==========================> Protocol options <==============================
   const protocolOptions = useGetProtocolOptions()
@@ -77,6 +83,24 @@ export default function ProtocolSelection({
   const setSelectedProtocolsByAllowList = (protocols: ProtocolEnum[]) => {
     const filteredProtocols = protocols.filter((protocol) => allowList.includes(protocol))
     setSelectedProtocols(filteredProtocols)
+  }
+
+  const handleSelectAll = (event: ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation()
+
+    const isSelectAll = event.target.checked
+    const options = generatedProtocolOpts.map((p) => p.id)
+
+    if (isSelectAll) {
+      let fullOptions = Array.from(new Set([...selectedProtocols, ...options]))
+      if (isUseAllowList) {
+        fullOptions = fullOptions.filter((protocol) => allowList.includes(protocol))
+      }
+      setSelectedProtocols(fullOptions)
+    } else {
+      const uniqueItems = selectedProtocols.filter((element) => !options.includes(element))
+      setSelectedProtocols(uniqueItems, true)
+    }
   }
 
   const generatedProtocolOpts = useMemo((): ProtocolOptionProps[] => {
@@ -180,31 +204,16 @@ export default function ProtocolSelection({
           <Flex alignItems={'center'} sx={{ gap: 2, width: ['29svw', '20svw', '15svw', '10svw'] }}>
             <Checkbox
               checked={checkIsCheckedAll()}
-              onChange={(event) => {
-                event.stopPropagation()
-
-                const isSelectAll = event.target.checked
-                const options = generatedProtocolOpts.map((p) => p.id)
-
-                if (isSelectAll) {
-                  let fullOptions = Array.from(new Set([...selectedProtocols, ...options]))
-                  if (isUseAllowList) {
-                    fullOptions = fullOptions.filter((protocol) => allowList.includes(protocol))
-                  }
-                  setSelectedProtocols(fullOptions)
-                } else {
-                  const uniqueItems = selectedProtocols.filter((element) => !options.includes(element))
-                  setSelectedProtocols(uniqueItems)
-                }
-              }}
+              onChange={(event) => handleSelectAll(event)}
               wrapperSx={{ height: 'auto' }}
-            />
-            <Type.CaptionBold color="neutral1">
-              <Trans>{`${getSelectedChainName} Perp DEXs`}</Trans>
-            </Type.CaptionBold>
+            >
+              <Type.CaptionBold ml={2} color="neutral1">
+                <Trans>{`${getSelectedChainName} Perp DEXs`}</Trans>
+              </Type.CaptionBold>
+            </Checkbox>
           </Flex>
 
-          <Type.CaptionBold color="neutral1" data-tip="React-tooltip" data-tooltip-id={TOOLTIP_ID}>
+          <Type.CaptionBold color="neutral1">
             <Trans>Selected: {`${selectedProtocols.length}`} Perp DEXs</Trans>
           </Type.CaptionBold>
 

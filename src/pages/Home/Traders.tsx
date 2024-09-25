@@ -36,12 +36,12 @@ import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
-import { ALLOWED_COPYTRADE_PROTOCOLS, DATE_FORMAT } from 'utils/config/constants'
+import { ALLOWED_COPYTRADE_PROTOCOLS, DATE_FORMAT, RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatDate } from 'utils/helpers/format'
-import { generateExplorerRoute, generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { transformGraphqlFilters } from 'utils/helpers/graphql'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+import { getProtocolFromUrl, transformGraphqlFilters } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
 import { getUserForTracking, logEvent, logEventBacktest, logEventHomeFilter } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
@@ -55,7 +55,7 @@ const graphqlBaseFilters = transformGraphqlFilters(BASE_RANGE_FILTER)
 
 export default function Traders() {
   const { myProfile } = useMyProfile()
-  const { searchParams, setSearchParams } = useSearchParams()
+  const { searchParams, setSearchParams, pathname } = useSearchParams()
   const isInternal = useInternalRole()
   const protocolOptions = useGetProtocolOptions()
   const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
@@ -66,6 +66,14 @@ export default function Traders() {
     handleToggle: handleToggleProtocol,
     setSelectedProtocols,
   } = useProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
+
+  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
+
+  useEffect(() => {
+    if (foundProtocolInUrl) {
+      setSelectedProtocols(foundProtocolInUrl)
+    }
+  }, [])
 
   const filters: FiltersState = useMemo(() => {
     const sortBy = (searchParams[URL_PARAM_KEYS.HOME_SORT_BY] as unknown as keyof TraderData | undefined) ?? 'pnl'
@@ -126,7 +134,7 @@ export default function Traders() {
           sx={{
             flexDirection: ['column', 'column', 'row'],
             width: '100%',
-            gap: 3,
+            gap: 1,
             alignItems: ['start', 'start', 'end'],
             justifyContent: 'space-between',
           }}
@@ -195,7 +203,7 @@ function Filters({ filters, protocolFilter }: { filters: FiltersState; protocolF
   const { sm } = useResponsive()
 
   return (
-    <Flex sx={{ gap: 3, flexWrap: 'wrap' }}>
+    <Flex sx={{ gap: [2, 3], flexWrap: 'wrap' }}>
       <Flex sx={{ alignItems: 'center', gap: '0.5ch' }}>
         <Type.CaptionBold>
           <Trans>Top</Trans>
@@ -242,9 +250,12 @@ function ListTraders({ filters }: { filters: FiltersState }) {
 
     const query = [
       ...graphqlBaseFilters,
-      { field: 'protocol', in: filters.protocols },
+      // { field: 'protocol', in: filters.protocols },
       { field: 'type', match: filters.time.id },
     ]
+    if (!!filters.protocols?.length && filters.protocols.length !== RELEASED_PROTOCOLS.length) {
+      query.push({ field: 'protocol', in: filters.protocols })
+    }
 
     const body = {
       filter: {

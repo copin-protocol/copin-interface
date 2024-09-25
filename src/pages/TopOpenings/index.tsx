@@ -1,10 +1,9 @@
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
-import { ProtocolPageWrapper } from 'components/@widgets/RouteWrapper'
+// import { ProtocolPageWrapper } from 'components/@widgets/RouteWrapper'
 import { Box } from 'theme/base'
-import { DEFAULT_PROTOCOL } from 'utils/config/constants'
+// import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
-import { generateOIPositionsRoute } from 'utils/helpers/generateRoute'
 
 // import OpenInterestOverview from './OpenInterestOverview'
 import OpenInterestPositions from './OpenInterestPositions'
@@ -40,8 +39,6 @@ function TopOpeningsPage() {
         <Route exact path={ROUTES.OPEN_INTEREST_POSITIONS.alter_path}>
           <OpenInterestPositions />
         </Route>
-
-        <Redirect to={generateOIPositionsRoute({})} />
       </Switch>
     </Box>
   )

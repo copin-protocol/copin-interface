@@ -23,6 +23,7 @@ export type ProtocolOptionProps = {
   chainId: number
   isNew?: boolean
   isCross?: boolean
+  key: number
 }
 
 export const PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
@@ -36,48 +37,56 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'GMX V2',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
+    key: 1,
   },
   [ProtocolEnum.GMX]: {
     id: ProtocolEnum.GMX,
     text: 'GMX',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
+    key: 2,
   },
   [ProtocolEnum.KWENTA]: {
     id: ProtocolEnum.KWENTA,
     text: 'Kwenta',
     label: 'Optimism',
     chainId: OPTIMISM_MAINNET,
+    key: 3,
   },
   [ProtocolEnum.POLYNOMIAL]: {
     id: ProtocolEnum.POLYNOMIAL,
     text: 'Polynomial',
     label: 'Optimism',
     chainId: OPTIMISM_MAINNET,
+    key: 4,
   },
   [ProtocolEnum.GNS]: {
     id: ProtocolEnum.GNS,
     text: 'gTrade',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
+    key: 5,
   },
   [ProtocolEnum.GNS_POLY]: {
     id: ProtocolEnum.GNS_POLY,
     text: 'gTrade',
     label: 'Polygon',
     chainId: POLYGON_MAINNET,
+    key: 6,
   },
   [ProtocolEnum.LEVEL_BNB]: {
     id: ProtocolEnum.LEVEL_BNB,
     text: 'Level',
     label: 'BNB Chain',
     chainId: BNB_MAINNET,
+    key: 7,
   },
   [ProtocolEnum.LEVEL_ARB]: {
     id: ProtocolEnum.LEVEL_ARB,
     text: 'Level',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
+    key: 8,
   },
   [ProtocolEnum.MUX_ARB]: {
     id: ProtocolEnum.MUX_ARB,
@@ -85,6 +94,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     isNew: false,
+    key: 9,
   },
   [ProtocolEnum.EQUATION_ARB]: {
     id: ProtocolEnum.EQUATION_ARB,
@@ -92,6 +102,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     isNew: false,
+    key: 10,
   },
   [ProtocolEnum.BLOOM_BLAST]: {
     id: ProtocolEnum.BLOOM_BLAST,
@@ -99,6 +110,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Blast',
     chainId: BLAST_MAINNET,
     isNew: false,
+    key: 11,
   },
   [ProtocolEnum.APOLLOX_BNB]: {
     id: ProtocolEnum.APOLLOX_BNB,
@@ -106,6 +118,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'BNB Chain',
     chainId: BNB_MAINNET,
     isNew: false,
+    key: 12,
   },
   [ProtocolEnum.AVANTIS_BASE]: {
     id: ProtocolEnum.AVANTIS_BASE,
@@ -113,6 +126,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Base',
     chainId: BASE_MAINNET,
     isNew: false,
+    key: 13,
   },
   [ProtocolEnum.TIGRIS_ARB]: {
     id: ProtocolEnum.TIGRIS_ARB,
@@ -120,6 +134,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     isNew: false,
+    key: 14,
   },
   [ProtocolEnum.LOGX_BLAST]: {
     id: ProtocolEnum.LOGX_BLAST,
@@ -127,6 +142,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Blast',
     chainId: BLAST_MAINNET,
     isNew: false,
+    key: 15,
   },
   [ProtocolEnum.LOGX_MODE]: {
     id: ProtocolEnum.LOGX_MODE,
@@ -134,6 +150,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Mode',
     chainId: MODE_MAINNET,
     isNew: false,
+    key: 16,
   },
   [ProtocolEnum.MYX_ARB]: {
     id: ProtocolEnum.MYX_ARB,
@@ -141,6 +158,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     isNew: false,
+    key: 17,
   },
   [ProtocolEnum.HMX_ARB]: {
     id: ProtocolEnum.HMX_ARB,
@@ -149,6 +167,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: ARBITRUM_MAINNET,
     isNew: false,
     isCross: true,
+    key: 18,
   },
   [ProtocolEnum.DEXTORO]: {
     id: ProtocolEnum.DEXTORO,
@@ -156,6 +175,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Optimism',
     chainId: OPTIMISM_MAINNET,
     isNew: false,
+    key: 19,
   },
   [ProtocolEnum.VELA_ARB]: {
     id: ProtocolEnum.VELA_ARB,
@@ -163,6 +183,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     isNew: false,
+    key: 20,
   },
   [ProtocolEnum.SYNTHETIX_V3]: {
     id: ProtocolEnum.SYNTHETIX_V3,
@@ -171,6 +192,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: BASE_MAINNET,
     isNew: false,
     isCross: true,
+    key: 21,
   },
   [ProtocolEnum.COPIN]: {
     id: ProtocolEnum.COPIN,
@@ -178,6 +200,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Optimism',
     chainId: OPTIMISM_MAINNET,
     isNew: true,
+    key: 22,
   },
   [ProtocolEnum.KTX_MANTLE]: {
     id: ProtocolEnum.KTX_MANTLE,
@@ -185,6 +208,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Mantle',
     chainId: MANTLE_MAINNET,
     isNew: false,
+    key: 23,
   },
   [ProtocolEnum.CYBERDEX]: {
     id: ProtocolEnum.CYBERDEX,
@@ -192,6 +216,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Optimism',
     chainId: OPTIMISM_MAINNET,
     isNew: false,
+    key: 24,
   },
   [ProtocolEnum.YFX_ARB]: {
     id: ProtocolEnum.YFX_ARB,
@@ -199,6 +224,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     isNew: false,
+    key: 25,
   },
   [ProtocolEnum.KILOEX_OPBNB]: {
     id: ProtocolEnum.KILOEX_OPBNB,
@@ -206,6 +232,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'opBNB',
     chainId: OPBNB_MAINNET,
     isNew: false,
+    key: 26,
   },
   [ProtocolEnum.ROLLIE_SCROLL]: {
     id: ProtocolEnum.ROLLIE_SCROLL,
@@ -213,6 +240,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Scroll',
     chainId: SCROLL_MAINNET,
     isNew: false,
+    key: 27,
   },
   [ProtocolEnum.PERENNIAL_ARB]: {
     id: ProtocolEnum.PERENNIAL_ARB,
@@ -220,6 +248,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     isNew: true,
+    key: 28,
   },
   [ProtocolEnum.MUMMY_FANTOM]: {
     id: ProtocolEnum.MUMMY_FANTOM,
@@ -227,6 +256,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Fantom',
     chainId: FANTOM_MAINNET,
     isNew: true,
+    key: 29,
   },
   [ProtocolEnum.MORPHEX_FANTOM]: {
     id: ProtocolEnum.MORPHEX_FANTOM,
@@ -234,6 +264,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Fantom',
     chainId: FANTOM_MAINNET,
     isNew: true,
+    key: 30,
   },
   [ProtocolEnum.HYPERLIQUID]: {
     id: ProtocolEnum.HYPERLIQUID,
@@ -241,6 +272,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Hyperliquid',
     isNew: true,
     chainId: HYPERLIQUID_TESTNET,
+    key: 31,
   },
   [ProtocolEnum.SYNFUTURE_BASE]: {
     id: ProtocolEnum.SYNFUTURE_BASE,
@@ -248,8 +280,11 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'BASE',
     chainId: BASE_MAINNET,
     isNew: true,
+    key: 32,
   },
 }
+
+export const SELECTED_PROTOCOLS_ALL = 'all'
 
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
   BUILD_MODE === 'production'

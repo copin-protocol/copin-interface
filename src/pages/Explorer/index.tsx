@@ -19,6 +19,7 @@ export default function Explorer() {
   const { protocol } = useProtocolStore()
   const { sm } = useResponsive()
   const { pathname } = useLocation()
+
   return (
     <>
       <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>

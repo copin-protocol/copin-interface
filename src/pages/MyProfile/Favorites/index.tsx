@@ -2,13 +2,14 @@ import { Trans } from '@lingui/macro'
 import { Star } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useEffect } from 'react'
-import { useLocation } from 'react-router'
+import { Redirect } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoLoginFavorite from 'components/@ui/NoLogin/NoLoginFavorite'
 import { ProtocolFilter, ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
 import useInternalRole from 'hooks/features/useInternalRole'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
+import useSearchParams from 'hooks/router/useSearchParams'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import useTraderFavorites, { parseTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -20,29 +21,31 @@ import useTradersContext, { FilterTradersProvider } from 'pages/Explorer/useTrad
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
-import { getProtocolFromUrl } from 'utils/helpers/graphql'
+import { generateFavoriteTradersRoute } from 'utils/helpers/generateRoute'
+import { convertProtocolToParams, getProtocolFromUrl } from 'utils/helpers/graphql'
 
 import ListTraderFavorites from './ListTraderFavorites'
 
 const Favorites = () => {
+  const { searchParams, pathname } = useSearchParams()
   const { traderFavorites, notes, isLoading } = useTraderFavorites()
   const { isAuthenticated } = useAuthContext()
-  const { pathname } = useLocation()
   const { sm } = useResponsive()
   const isInternal = useInternalRole()
   const protocolOptions = useGetProtocolOptions()
   const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
-  const protocol = getProtocolFromUrl()
 
   const { selectedProtocols, checkIsSelected, handleToggle, setSelectedProtocols } = useProtocolFilter({
     defaultSelects: protocolOptions.map((_p) => _p.id),
   })
+  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
+  const protocolParams = convertProtocolToParams(foundProtocolInUrl)
 
   useEffect(() => {
-    if (protocol) {
-      setSelectedProtocols([protocol])
+    if (foundProtocolInUrl) {
+      setSelectedProtocols(foundProtocolInUrl)
     }
-  }, [protocol])
+  }, [])
 
   if (!isAuthenticated) return <NoLoginFavorite />
   if (isLoading)
@@ -53,6 +56,7 @@ const Favorites = () => {
     )
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
+      <Redirect to={generateFavoriteTradersRoute({ params: { ...searchParams, protocol: protocolParams } })} />
       <CustomPageTitle title="Trader Favorites" />
       <Flex flexDirection="column" height="100%">
         {sm && (

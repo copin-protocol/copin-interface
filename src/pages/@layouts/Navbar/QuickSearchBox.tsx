@@ -244,6 +244,7 @@ function QuickSearchContainer({
                 searchPositions={searchPositions}
                 onClickTraderItem={handleClickSearchItem}
                 onClickPositionItem={handleClickSearchPositionItem}
+                handleHideResult={onDismiss}
               />
             </Box>
             {!isLoading && !selectedProtocols?.length && isTxHash && (
@@ -322,6 +323,7 @@ function SearchResult({
   searchPositions,
   onClickTraderItem,
   onClickPositionItem,
+  handleHideResult,
 }: {
   keyword: string
   isTxHash: boolean
@@ -329,6 +331,7 @@ function SearchResult({
   searchPositions: PositionData[] | undefined
   onClickTraderItem: (data: TraderData) => void
   onClickPositionItem: (data: PositionData) => void
+  handleHideResult?: () => void
 }) {
   const [selectedItem, setSelectedItem] = useState(-1)
   const searchResultRef = useRef<{ data: any[]; isTxHash: boolean; selectedIndex: number }>({
@@ -383,8 +386,8 @@ function SearchResult({
                 <SearchTraderResultItems
                   keyword={keyword}
                   data={userData}
-                  handleClick={onClickTraderItem}
                   hasBorder={index !== 0}
+                  handleClick={handleHideResult}
                 />
               </Box>
             )
@@ -401,7 +404,7 @@ function SearchResult({
                 key={positionData.id}
                 sx={{ bg: isActive ? 'neutral4' : 'transparent' }}
               >
-                <SearchPositionResultItem data={positionData} handleClick={onClickPositionItem} />
+                <SearchPositionResultItem data={positionData} handleClick={handleHideResult} keyword={keyword} />
               </Box>
             )
           })}

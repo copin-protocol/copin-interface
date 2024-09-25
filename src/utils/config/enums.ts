@@ -33,6 +33,11 @@ export enum ProtocolEnum {
   SYNFUTURE_BASE = 'SYNFUTURE_BASE',
 }
 
+export enum ProtocolFilterEnum {
+  ALL = 'all',
+  ALL_COPYABLE = 'copyable',
+}
+
 export enum UserRoleEnum {
   GUEST = 'guest',
   ADMIN = 'admin',

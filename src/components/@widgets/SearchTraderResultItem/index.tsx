@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import Highlighter from 'react-highlight-words'
-import styled from 'styled-components/macro'
+import { Link } from 'react-router-dom'
 
 import ActiveDot from 'components/@ui/ActiveDot'
 import AddressAvatar from 'components/@ui/AddressAvatar'
@@ -9,11 +9,10 @@ import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { TraderData } from 'entities/trader'
-import useIsMobile from 'hooks/helpers/useIsMobile'
 import useTraderCopying from 'hooks/store/useTraderCopying'
-import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
 import { addressShorten, compactNumber, shortenText } from 'utils/helpers/format'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import FavoriteButton from '../FavoriteButton'
 
@@ -33,9 +32,14 @@ export default function SearchTraderResultItems({
   const { md } = useResponsive()
   return (
     <Box
+      as={Link}
+      to={generateTraderMultiExchangeRoute({ address: data.account, protocol: data.protocol })}
+      onClick={() => handleClick?.(data)}
       px={3}
       py="12px"
       sx={{
+        color: 'inherit',
+        display: 'block',
         borderTop: hasBorder ? 'small' : 'none',
         borderColor: 'neutral4',
         '&:hover': {
@@ -43,13 +47,7 @@ export default function SearchTraderResultItems({
         },
       }}
     >
-      <Button
-        variant="ghost"
-        type="button"
-        onClick={() => (handleClick ? handleClick(data) : undefined)}
-        sx={{ color: 'inherit', p: 0, mx: 0, display: 'flex', gap: 12 }}
-        width="100%"
-      >
+      <Flex sx={{ color: 'inherit', p: 0, mx: 0, gap: 12 }} width="100%">
         <Flex sx={{ flexDirection: 'column', alignItems: 'center', gap: 1, flexShrink: 0 }}>
           <AddressAvatar address={data.account} size={40} />
           <ProtocolLogo protocol={data.protocol} size={24} hasText={false} />
@@ -82,14 +80,13 @@ export default function SearchTraderResultItems({
               sx={{ display: ['block', 'block', 'none'], flexShrink: 0 }}
             />
           </Flex>
-          <Flex
-            mb={[1, '2px']}
-            color="neutral3"
-            sx={{ width: '100%', gap: 24, justifyContent: ['space-between', 'space-between', 'start'] }}
-          >
-            <TotalPnL value={data.pnl} />
-            <TotalVolume value={data.totalVolume} />
-            <LastTrade value={data.lastTradeAt} sx={{ display: ['none', 'none', 'flex'] }} />
+          <Flex mb={[1, '2px']} color="neutral3" sx={{ width: '100%', gap: 1 }}>
+            <TotalPnL value={data.pnl} sx={{ flex: ['0 0 130px', '0 0 170px'], flexDirection: ['column', 'row'] }} />
+            <TotalVolume
+              value={data.totalVolume}
+              sx={{ flex: ['0 0 130px', '0 0 180px'], flexDirection: ['column', 'row'] }}
+            />
+            <LastTrade value={data.lastTradeAt} sx={{ display: ['none', 'none', 'flex'], flex: '0 0 180px' }} />
           </Flex>
           <Type.Caption color="neutral3" sx={{ lineHeight: '24px' }}>
             {data.smartAccount ? `Smart Wallet: ${addressShorten(data.smartAccount)}` : 'EOA Account'}
@@ -101,17 +98,19 @@ export default function SearchTraderResultItems({
           size={20}
           sx={{ display: ['none', 'none', 'block'], flexShrink: 0 }}
         />
-      </Button>
+      </Flex>
     </Box>
   )
 }
 
 function LastTrade({ value, hasLabel = true, sx = {} }: { value: string | undefined; hasLabel?: boolean; sx?: any }) {
   return (
-    <Type.Caption sx={{ display: 'flex', alignItems: 'center', flexWrap: 'nowrap', lineHeight: '24px', ...sx }}>
+    <Type.Caption
+      sx={{ display: 'flex', gap: [1, 2], alignItems: 'center', flexWrap: 'nowrap', lineHeight: '24px', ...sx }}
+    >
       {!!hasLabel && (
         <>
-          <Box as="span">Last Trade</Box> <TextSpacer />
+          <Box as="span">Last Trade</Box>
         </>
       )}
       <Box as="span" color="neutral1">
@@ -121,10 +120,10 @@ function LastTrade({ value, hasLabel = true, sx = {} }: { value: string | undefi
   )
 }
 
-function TotalVolume({ value }: { value: number | undefined }) {
+function TotalVolume({ value, sx = {} }: { value: number | undefined; sx?: any }) {
   return (
-    <Type.Caption sx={{ lineHeight: '24px' }}>
-      Total Volume ($) <TextSpacer />
+    <Type.Caption sx={{ display: 'flex', gap: [0, 2], lineHeight: '24px', ...sx }}>
+      <Box as="span">Total Volume ($)</Box>
       <Box as="span" color="neutral1">
         {value ? compactNumber(value, 2) : '--'}
       </Box>
@@ -132,19 +131,14 @@ function TotalVolume({ value }: { value: number | undefined }) {
   )
 }
 
-function TotalPnL({ value }: { value: number | undefined }) {
+function TotalPnL({ value, sx = {} }: { value: number | undefined; sx?: any }) {
   return (
-    <Type.Caption sx={{ lineHeight: '24px' }}>
-      Total PnL ($) <TextSpacer />
-      <SignedText fontInherit value={value} maxDigit={2} minDigit={2} prefix="$" />
+    <Type.Caption sx={{ display: 'flex', gap: [0, 2], lineHeight: '24px', ...sx }}>
+      <Box as="span">Total PnL ($)</Box>
+      <SignedText isCompactNumber fontInherit value={value} maxDigit={2} minDigit={2} prefix="$" />
     </Type.Caption>
   )
 }
-
-const TextSpacer = styled(Box).attrs({ as: 'span' })`
-  display: inline-block;
-  width: 8px;
-`
 
 export function HighlightKeyword({ text, keyword }: { text: string; keyword?: string }) {
   return keyword ? (

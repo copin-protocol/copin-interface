@@ -71,7 +71,7 @@ export function FilterTradersProvider({
   children: ReactNode
 }) {
   const { myProfile } = useMyProfile()
-  const { searchParams, setSearchParams } = useSearchParams()
+  const { searchParams, setSearchParams, pathname } = useSearchParams()
   const currentPageParam = Number(searchParams[URL_PARAM_KEYS.HOME_PAGE])
   const { protocol } = useProtocolStore()
   const protocolOptions = useGetProtocolOptions()
@@ -85,13 +85,13 @@ export function FilterTradersProvider({
     setUrlProtocol,
   } = useProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
 
-  const protocolInUrl = getProtocolFromUrl()
+  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
 
   useEffect(() => {
-    if (protocolInUrl) {
-      setSelectedProtocols([protocolInUrl])
+    if (foundProtocolInUrl) {
+      setSelectedProtocols(foundProtocolInUrl)
     }
-  }, [protocolInUrl])
+  }, [])
 
   const [currentSuggestion, setCurrentSuggestion] = useState<string | undefined>()
 

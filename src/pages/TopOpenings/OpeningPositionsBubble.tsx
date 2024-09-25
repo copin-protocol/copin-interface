@@ -1,5 +1,4 @@
 import { useSize } from 'ahooks'
-import { set } from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 
 import BubbleChart, { BubbleChartData } from 'components/@charts/BubbleChartPositions'

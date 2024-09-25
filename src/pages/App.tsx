@@ -39,6 +39,8 @@ const SearchTxHash = lazy(() => import('./SearchTxHash'))
 const SystemStatus = lazy(() => import('./SystemStatus'))
 const StatsCEX = lazy(() => import('./StatsCEX'))
 const CopierLeaderboard = lazy(() => import('./Leaderboard/CopierLeaderboard'))
+const OldExplorer = lazy(() => import('./Explorer/OldExplorer'))
+const OldTopOpeningInterest = lazy(() => import('./TopOpenings/OldTopOpeningInterest'))
 
 function App() {
   useEffect(() => {
@@ -84,16 +86,16 @@ function App() {
             <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHash}></Route>
             <Route path={ROUTES.LEADERBOARD.path} component={Leaderboard}></Route>
             <Route path={ROUTES.COPIER_LEADERBOARD.path} component={CopierLeaderboard}></Route>
+
             {/* OLD ROUTE */}
-            <Route path={ROUTES.TRADERS_EXPLORER.path} component={Explorer}></Route>
+            <Route path={ROUTES.TRADERS_EXPLORER.path} component={OldExplorer}></Route>
             {/* NEW ROUTE */}
             <Route path={ROUTES.ALL_TRADERS_EXPLORER.path} component={Explorer}></Route>
 
             {/* NEW ROUTE */}
             <Route path={ROUTES.ALL_OPEN_INTEREST_POSITIONS.path} component={OpenInterest}></Route>
-
             {/* OLD ROUTE */}
-            <Route path={ROUTES.OPEN_INTEREST.path} component={OpenInterest}></Route>
+            <Route path={ROUTES.OPEN_INTEREST.path} component={OldTopOpeningInterest}></Route>
 
             {/* <Route exact path={ROUTES.TRADER_EXCHANGES_STATS.path} component={TraderExchangesStats}></Route> */}
             <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.path} component={TraderDetails}></Route>
