@@ -8,10 +8,9 @@ import { RequestBodyApiData } from 'apis/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ResponseTraderData } from 'entities/trader'
 import useMyProfileStore from 'hooks/store/useMyProfile'
+import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { transformGraphqlFilters } from 'utils/helpers/graphql'
-
-import { RELEASED_PROTOCOLS } from '../../../utils/config/constants'
 
 const useTimeFilterData = ({
   requestData,
