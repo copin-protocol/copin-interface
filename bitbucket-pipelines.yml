@@ -2,17 +2,20 @@ image: node:16.18.0
 
 options:
   docker: true
-  size: 2x
+  size: 4x
 
 definitions:
   services:
     docker:
-      memory: 4096
+      memory: 7168
 
 pipelines:
   branches:
     main:
       - step:
+          runs-on:
+            - self.hosted
+            - linux
           name: Sync GitHub Mirror
           image: alpine/git:latest
           clone:
