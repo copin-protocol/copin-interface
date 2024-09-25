@@ -60,13 +60,21 @@ const QuickSearchBox = memo(function QuickSearchBoxMemo() {
             borderRadius: '4px',
             '& *': { transition: '0.3s' },
             '&:hover': { bg: 'neutral4', '.glass': { color: 'neutral1' }, '.text': { color: 'neutral2' } },
+            gap: 1,
           }}
         >
-          <IconBox icon={<MagnifyingGlass size={24} className="glass" />} color="neutral2 " />
-          <IconBox icon={<CommandIcon className="text" ml={2} />} color="neutral3" />
+          <IconBox icon={<MagnifyingGlass size={20} className="glass" />} color="neutral2 " />
           <Type.Caption className="text" color="neutral3">
-            +K
+            Search
           </Type.Caption>
+          <Box className="text" color="neutral3">
+            (
+            <IconBox icon={<CommandIcon className="text" />} color="neutral3" />
+            <Type.Caption className="text" color="neutral3">
+              +K
+            </Type.Caption>
+            )
+          </Box>
         </Flex>
       )}
       <QuickSearchContainer isOpen={openModal} onDismiss={handleDismissModal} />

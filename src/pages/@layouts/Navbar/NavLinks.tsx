@@ -149,14 +149,14 @@ function EventNavLinks({ onClose, hasEvents }: { onClose?: () => void; hasEvents
           <EventButton />
         </NavLink>
       )}
-      <NavLink to={ROUTES.FEE_REBATE.path} matchpath={ROUTES.FEE_REBATE.path} onClick={onClickNavItem}>
-        <Flex alignItems="center" sx={{ gap: 1 }}>
-          <ArbitrumLogo size={16} />
-          <Type.Caption>
-            <Trans>Fee Rebate</Trans>
-          </Type.Caption>
-        </Flex>
-      </NavLink>
+      {/*<NavLink to={ROUTES.FEE_REBATE.path} matchpath={ROUTES.FEE_REBATE.path} onClick={onClickNavItem}>*/}
+      {/*  <Flex alignItems="center" sx={{ gap: 1 }}>*/}
+      {/*    <ArbitrumLogo size={16} />*/}
+      {/*    <Type.Caption>*/}
+      {/*      <Trans>Fee Rebate</Trans>*/}
+      {/*    </Type.Caption>*/}
+      {/*  </Flex>*/}
+      {/*</NavLink>*/}
     </>
   )
 }
