@@ -1,7 +1,8 @@
-import { useLocation } from 'react-router-dom'
+import QueryString from 'qs'
 
-import { parsedQueryString } from 'hooks/router/useParsedQueryString'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
+import { ALLOWED_COPYTRADE_PROTOCOLS, RELEASED_PROTOCOLS } from 'utils/config/constants'
+import { ProtocolEnum, ProtocolFilterEnum } from 'utils/config/enums'
+import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 
 export const transformGraphqlFilters = (filters: { fieldName: string; [key: string]: any }[]) => {
   return filters.map(({ fieldName, ...rest }) => {
@@ -26,22 +27,58 @@ export const transformGraphqlFilters = (filters: { fieldName: string; [key: stri
   })
 }
 
-export const getProtocolFromUrl = () => {
-  const { search, pathname } = useLocation()
-  const searchParams = parsedQueryString(search)
-
+export const getProtocolFromUrl = (searchParams: QueryString.ParsedQs, pathname: string) => {
   // Old protocol route: /{protocol}/...
-  const parsedOldProtocolParam = RELEASED_PROTOCOLS.find(
+  const parsedOldPreProtocolParam = RELEASED_PROTOCOLS.find(
     (protocol) => pathname.split('/')?.[1]?.toUpperCase() === protocol
   )
   // New protocol route: .../{protocol}
-  const parsedProtocolParam = RELEASED_PROTOCOLS.find(
+  const parsedOldLastProtocolParam = RELEASED_PROTOCOLS.find(
     (protocol) => pathname.split('/')?.at(-1)?.split('-')?.[0]?.toUpperCase() === protocol
   )
   // from search params, use at home page
-  const parsedProtocolSearch = RELEASED_PROTOCOLS.find(
+  const parsedOldProtocolSearch = RELEASED_PROTOCOLS.find(
     (protocol) => (searchParams.protocol as string)?.toUpperCase() === protocol
   )
 
-  return parsedOldProtocolParam ?? parsedProtocolParam ?? parsedProtocolSearch
+  // Get all protocols from query params
+  const protocolFromQuery = searchParams.protocol as string | undefined
+
+  const parsedNewProtocolOptions = protocolFromQuery
+    ? protocolFromQuery === ProtocolFilterEnum.ALL
+      ? RELEASED_PROTOCOLS
+      : protocolFromQuery === ProtocolFilterEnum.ALL_COPYABLE
+      ? ALLOWED_COPYTRADE_PROTOCOLS
+      : RELEASED_PROTOCOLS.includes(protocolFromQuery as ProtocolEnum)
+      ? [protocolFromQuery as ProtocolEnum]
+      : Object.values(PROTOCOL_OPTIONS_MAPPING)
+          .filter(({ key }) => protocolFromQuery.split('-').includes(key.toString()))
+          .map(({ id }) => id)
+    : RELEASED_PROTOCOLS
+
+  // Get unique protocols
+  const uniqueProtocols = new Set<ProtocolEnum>(
+    [
+      parsedOldPreProtocolParam,
+      parsedOldLastProtocolParam,
+      parsedOldProtocolSearch,
+      ...parsedNewProtocolOptions,
+    ].filter(Boolean) as ProtocolEnum[]
+  )
+
+  // If no protocol found, use default protocol
+  const foundProtocolInUrl = Array.from(uniqueProtocols).length ? Array.from(uniqueProtocols) : RELEASED_PROTOCOLS
+
+  return foundProtocolInUrl
+}
+
+export const convertProtocolToParams = (protocols: ProtocolEnum[]) => {
+  if (protocols.length === 1) return PROTOCOL_OPTIONS_MAPPING[protocols[0]].id
+  if (RELEASED_PROTOCOLS.length === protocols.length) return ProtocolFilterEnum.ALL
+  if (
+    protocols.length === ALLOWED_COPYTRADE_PROTOCOLS.length &&
+    protocols.every((protocol) => ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol))
+  )
+    return ProtocolFilterEnum.ALL_COPYABLE
+  return protocols.map((protocol) => PROTOCOL_OPTIONS_MAPPING[protocol].key).join('-')
 }

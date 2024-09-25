@@ -1,10 +1,9 @@
-import { url } from 'inspector'
-import { set } from 'lodash'
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 import useInternalRole from 'hooks/features/useInternalRole'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
+import useSearchParams from 'hooks/router/useSearchParams'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -14,6 +13,7 @@ import OpenInterestByMarket from './OpenInterestByMarket'
 import TopOpenings from './TopOpenIntrest'
 
 export default function OpenInterestPositions() {
+  const { searchParams, pathname } = useSearchParams()
   const isInternal = useInternalRole()
 
   const { symbol } = useParams<{
@@ -23,7 +23,7 @@ export default function OpenInterestPositions() {
 
   const protocolOptions = useGetProtocolOptions()
   const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
-  const protocol = getProtocolFromUrl()
+  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
 
   const { selectedProtocols, checkIsSelected, handleToggle, setSelectedProtocols, urlProtocol, setUrlProtocol } =
     useProtocolFilter({
@@ -31,10 +31,10 @@ export default function OpenInterestPositions() {
     })
 
   useEffect(() => {
-    if (protocol) {
-      setSelectedProtocols([protocol])
+    if (foundProtocolInUrl) {
+      setSelectedProtocols(foundProtocolInUrl)
     }
-  }, [protocol])
+  }, [])
 
   const protocolFilter = {
     allowList,

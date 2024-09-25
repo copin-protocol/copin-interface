@@ -11,7 +11,7 @@ import ProtocolSelection from './ProtocolSelection'
 
 export interface ProtocolFilterProps {
   selectedProtocols: ProtocolEnum[]
-  setSelectedProtocols: (options: ProtocolEnum[]) => void
+  setSelectedProtocols: (options: ProtocolEnum[], isClearAll?: boolean) => void
   checkIsProtocolChecked: (status: ProtocolEnum) => boolean
   handleToggleProtocol: (option: ProtocolEnum) => void
   allowList: ProtocolEnum[]

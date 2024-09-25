@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { parsedQueryString } from './useParsedQueryString'
 
 export default function useSearchParams() {
-  const { search } = useLocation()
+  const { search, pathname } = useLocation()
   const history = useHistory()
   const searchParams = useMemo(() => parsedQueryString(search), [search])
 
@@ -35,5 +35,5 @@ export default function useSearchParams() {
     history.replace({ search: urlSearchParams.toString() })
   }
 
-  return { searchParams, setSearchParams, setSearchParamsOnly }
+  return { searchParams, setSearchParams, setSearchParamsOnly, pathname }
 }

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 
 import Divider from 'components/@ui/Divider'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
+import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
@@ -16,6 +17,8 @@ import { NAVBAR_HEIGHT } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten } from 'utils/helpers/format'
+import { generateFavoriteTradersRoute } from 'utils/helpers/generateRoute'
+import { convertProtocolToParams } from 'utils/helpers/graphql'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
@@ -25,6 +28,9 @@ import PremiumTag from './PremiumTag'
 import WarningExpiredSubscriptionIcon from './WarningExpiredSubscriptionIcon'
 
 const NavUser = () => {
+  const { selectedProtocols } = useProtocolFilter()
+  const protocolParams = convertProtocolToParams(selectedProtocols)
+
   const [isShowModalLogout, setIsShowModalLogout] = useState(false)
   const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false)
   const { logout, profile, isAuthenticated } = useAuthContext()
@@ -41,6 +47,23 @@ const NavUser = () => {
         action,
       })
   }
+
+  const otherRoutes = [
+    // {
+    //   link: ROUTES.SUBSCRIPTION.path,
+    //   event: EVENT_ACTIONS[EventCategory.ROUTES].SUBSCRIPTION,
+    //   icon: <CrownSimple size={20} />,
+    //   label: <Trans>Subscription Plans</Trans>,
+    //   isWeb3Required: true,
+    // },
+    {
+      link: generateFavoriteTradersRoute({ params: { protocol: protocolParams } }),
+      event: EVENT_ACTIONS[EventCategory.ROUTES].FAVORITES,
+      icon: <Star size={20} />,
+      label: <Trans>Trader Favorites</Trans>,
+      isWeb3Required: false,
+    },
+  ]
 
   return (
     <Flex alignItems="center" sx={{ height: NAVBAR_HEIGHT - 1 }}>
@@ -277,21 +300,5 @@ const userSettings = [
     event: EVENT_ACTIONS[EventCategory.ROUTES].MY_REFERRAL,
     icon: <Users size={20} />,
     label: <Trans>Referral</Trans>,
-  },
-]
-const otherRoutes = [
-  // {
-  //   link: ROUTES.SUBSCRIPTION.path,
-  //   event: EVENT_ACTIONS[EventCategory.ROUTES].SUBSCRIPTION,
-  //   icon: <CrownSimple size={20} />,
-  //   label: <Trans>Subscription Plans</Trans>,
-  //   isWeb3Required: true,
-  // },
-  {
-    link: ROUTES.FAVORITES.path,
-    event: EVENT_ACTIONS[EventCategory.ROUTES].FAVORITES,
-    icon: <Star size={20} />,
-    label: <Trans>Trader Favorites</Trans>,
-    isWeb3Required: false,
   },
 ]

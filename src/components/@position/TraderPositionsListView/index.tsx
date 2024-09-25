@@ -67,7 +67,7 @@ export default function TraderPositionListView({
       )}
       {data?.map((position) => {
         return (
-          <Box role="button" sx={{ p: 3 }} key={position.id} onClick={() => onClickItem?.(position)}>
+          <Box role="button" sx={{ p: [2, 3] }} key={position.id} onClick={() => onClickItem?.(position)}>
             <Flex sx={{ alignItems: 'center', gap: '1ch', flexWrap: 'wrap' }}>
               <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                 {isOpening ? (

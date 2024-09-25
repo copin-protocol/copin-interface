@@ -86,15 +86,20 @@ export function generateOIPositionsRoute(data: { protocol?: string; symbol?: str
     })
   }
 
+  if (data.symbol) {
+    return createUrlWithParams({
+      url: `${ROUTES.ALL_OPEN_INTEREST_POSITIONS.path}/${data.symbol}`,
+      params: data.params,
+    })
+  }
+
   return createUrlWithParams({
-    url: data.symbol
-      ? `${ROUTES.ALL_OPEN_INTEREST_POSITIONS.path}/${data.symbol}`
-      : `${ROUTES.ALL_OPEN_INTEREST_POSITIONS.path}`,
+    url: ROUTES.ALL_OPEN_INTEREST_POSITIONS.path,
     params: data.params,
   })
 }
 
-export function generateExplorerRoute(data: { protocol?: string; params?: Record<string, any> }) {
+export function generateExplorerRoute(data: { protocols?: string[]; protocol?: string; params?: Record<string, any> }) {
   if (data.protocol) {
     return createUrlWithParams({
       url: `/${data.protocol}${ROUTES.TRADERS_EXPLORER.path_prefix}`,
@@ -104,6 +109,17 @@ export function generateExplorerRoute(data: { protocol?: string; params?: Record
 
   return createUrlWithParams({
     url: ROUTES.ALL_TRADERS_EXPLORER.path_prefix,
+    params: data.params,
+  })
+}
+
+export function generateFavoriteTradersRoute(data: {
+  protocols?: string[]
+  protocol?: string
+  params?: Record<string, any>
+}) {
+  return createUrlWithParams({
+    url: ROUTES.FAVORITES.path,
     params: data.params,
   })
 }

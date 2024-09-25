@@ -36,7 +36,8 @@ export const getDropdownProps = ({
 export const BASE_RANGE_FILTER: RangeFilter<keyof TraderData>[] = [
   { fieldName: 'totalTrade', gte: 2 },
   { fieldName: 'profitRate', gte: 60 },
-  { fieldName: 'avgRoi', gte: 1 },
+  { fieldName: 'pnl', gte: 100 },
+  // { fieldName: 'avgRoi', gte: 1 },
   { fieldName: 'winRate', gte: 51 },
   { fieldName: 'runTimeDays', gte: 30 },
 ]

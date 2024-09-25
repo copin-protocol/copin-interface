@@ -11,6 +11,8 @@ import useMyProfileStore from 'hooks/store/useMyProfile'
 import { ProtocolEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { transformGraphqlFilters } from 'utils/helpers/graphql'
 
+import { RELEASED_PROTOCOLS } from '../../../utils/config/constants'
+
 const useTimeFilterData = ({
   requestData,
   timeOption,
@@ -41,9 +43,12 @@ const useTimeFilterData = ({
 
     const query = [
       ...rangeFilters,
-      { field: 'protocol', in: selectedProtocols },
+      // { field: 'protocol', in: selectedProtocols },
       { field: 'type', match: timeOption.id },
     ]
+    if (!!selectedProtocols?.length && selectedProtocols.length !== RELEASED_PROTOCOLS.length) {
+      query.push({ field: 'protocol', in: selectedProtocols })
+    }
 
     const body = {
       filter: {
