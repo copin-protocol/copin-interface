@@ -23,6 +23,7 @@ import { Box, Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 // import { QUERY_KEYS } from 'utils/config/keys'
 import { getTokenTradeList } from 'utils/config/trades'
+import { getProtocolFromUrl } from 'utils/helpers/graphql'
 
 import PositionsSection from '../PositionsSection'
 import RouteWrapper from '../RouteWrapper'
@@ -33,28 +34,28 @@ import useSearchParamsState from '../useSearchParamsState'
 export default function OpenInterestByMarket({ protocolFilter }: { protocolFilter: ProtocolFilterProps }) {
   return (
     <RouteWrapper protocolFilter={protocolFilter}>
-      <OpenInterestByMarketPage selectedProtocols={protocolFilter.selectedProtocols} />
+      <OpenInterestByMarketPage />
     </RouteWrapper>
   )
 }
 
-function OpenInterestByMarketPage({ selectedProtocols }: { selectedProtocols: ProtocolEnum[] }) {
+function OpenInterestByMarketPage() {
   const { lg } = useResponsive()
+  const { searchParams, pathname } = useSearchParams()
+  const { setMarketPageParams } = useSearchParamsState()
+  const { sort, onChangeSort, limit, onChangeLimit, time, from, to, onChangeTime } = useFilters()
   const { symbol, protocol } = useParams<{ symbol: string | undefined; protocol: ProtocolEnum }>()
 
-  const tokenOptions = getTokenTradeList(protocol)
+  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
 
-  const tokenInfo = tokenOptions?.filter((token) => token.symbol === symbol)?.map((e) => e.address)
+  const tokenOptions = foundProtocolInUrl
+    .map((protocol) => {
+      return getTokenTradeList(protocol).map((token) => ({ ...token, protocol }))
+    })
+    .flat()
 
-  const { sort, onChangeSort, limit, onChangeLimit, time, from, to, onChangeTime } = useFilters()
-  const { searchParams } = useSearchParams()
+  const tokenInfo = tokenOptions?.filter((token) => token.symbol === symbol)
 
-  const { setMarketPageParams } = useSearchParamsState()
-  useEffect(() => {
-    setMarketPageParams(searchParams as any)
-  }, [searchParams])
-
-  // FETCH DATA
   const queryVariables = useMemo(() => {
     const index = 'copin.positions'
     const { sortBy } = normalizePositionPayload({ sortBy: sort.key })
@@ -62,7 +63,8 @@ function OpenInterestByMarketPage({ selectedProtocols }: { selectedProtocols: Pr
     const query = [
       { field: 'status', match: 'OPEN' },
       { field: 'openBlockTime', gte: from, lte: to },
-      { field: 'indexTokens', in: tokenInfo },
+      { field: 'pair', match: `${symbol}-USDT` },
+      { field: 'protocol', in: foundProtocolInUrl },
     ]
 
     const body = {
@@ -73,8 +75,8 @@ function OpenInterestByMarketPage({ selectedProtocols }: { selectedProtocols: Pr
       paging: { size: limit, from: 0 },
     }
 
-    return { index, protocols: selectedProtocols, body }
-  }, [sort, limit, from, to, tokenInfo])
+    return { index, body, protocols: foundProtocolInUrl }
+  }, [sort.key, from, to, symbol, foundProtocolInUrl, limit])
 
   const {
     data: topOpeningPositionsData,
@@ -86,6 +88,10 @@ function OpenInterestByMarketPage({ selectedProtocols }: { selectedProtocols: Pr
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
     },
   })
+
+  useEffect(() => {
+    setMarketPageParams(searchParams as any)
+  }, [searchParams])
 
   const rawPositionData =
     topOpeningPositionsData?.searchTopOpeningPosition.data || previousData?.searchTopOpeningPosition.data
@@ -118,7 +124,6 @@ function OpenInterestByMarketPage({ selectedProtocols }: { selectedProtocols: Pr
         />
         <PythWatermark />
       </Flex>
-
       {tokenInfo ? (
         <>
           {isLoading && (

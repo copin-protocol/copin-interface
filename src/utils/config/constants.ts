@@ -219,7 +219,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.SYNFUTURE_BASE,
         ProtocolEnum.MORPHEX_FANTOM,
       ]
-    : Object.values(ProtocolEnum)
+    : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 
 // TODO: Check when add new protocol copy-trade
 export const ALLOWED_COPYTRADE_PROTOCOLS = [
