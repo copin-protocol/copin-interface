@@ -8,6 +8,7 @@ export interface RequestCopyWalletData {
   bybit?: ApiKeyWallet
   okx?: ApiKeyWallet
   gate?: ApiKeyWallet
+  hyperliquid?: ApiKeyWallet
   name?: string
 }
 
@@ -22,6 +23,7 @@ export interface CopyWalletData {
   bybit?: ApiKeyWallet
   okx?: ApiKeyWallet
   gate?: ApiKeyWallet
+  hyperliquid?: ApiKeyWallet
   smartWalletAddress?: string
   balance: number
   availableBalance: number

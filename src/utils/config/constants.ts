@@ -52,6 +52,7 @@ export const LINKS = {
   registerBybit: 'https://partner.bybitglobal.com/b/COPIN',
   registerOKX: 'https://www.okx.com/join/75651458',
   registerGate: 'https://www.gate.io/signup/AgBFAApb?ref_type=103',
+  registerHyperliquid: 'https://app.hyperliquid.xyz/join/COPIN',
   getBingXAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bingx-api',
   getBitgetAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bitget-api',
   getBybitAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bybit-api',
@@ -154,6 +155,7 @@ export const CEX_EXCHANGES = [
   CopyTradePlatformEnum.BYBIT,
   CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.GATE,
+  CopyTradePlatformEnum.HYPERLIQUID,
 ]
 
 export const DCP_EXCHANGES: CopyTradePlatformEnum[] = [

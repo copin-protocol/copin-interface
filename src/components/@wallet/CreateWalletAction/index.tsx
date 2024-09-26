@@ -16,6 +16,7 @@ import CreateBingXWalletModal from '../CreateWalletModals/CreateBingXWalletModal
 import CreateBitgetWalletModal from '../CreateWalletModals/CreateBitgetWalletModal'
 import CreateBybitWalletModal from '../CreateWalletModals/CreateBybitWalletModal'
 import CreateGateWalletModal from '../CreateWalletModals/CreateGateWalletModal'
+import CreateHyperliquidWalletModal from '../CreateWalletModals/CreateHyperliquidWalletModal'
 import CreateOKXWalletModal from '../CreateWalletModals/CreateOKXWalletModal'
 import CreateSmartWalletModal from '../CreateWalletModals/CreateSmartWalletModal'
 
@@ -259,6 +260,9 @@ export function CreateWalletModal({
     case CopyTradePlatformEnum.GNS_V8:
       Modal = CreateSmartWalletModal
       break
+    case CopyTradePlatformEnum.HYPERLIQUID:
+      Modal = CreateHyperliquidWalletModal
+      break
   }
   if (!Modal) return null
   return <Modal isOpen={isOpen} onDismiss={onDismiss} platform={exchange} />
@@ -289,7 +293,7 @@ function WalletItem({ exchange, label, description, handleClick }: WalletItemPro
         onClick={() => handleClick && handleClick(exchange)}
         disabled={!handleClick || isComingSoon}
       >
-        {isComingSoon ? <Trans>Coming Soon</Trans> : <Trans>Create</Trans>}
+        {isComingSoon ? <Trans>Coming Soon</Trans> : <Trans>Connect</Trans>}
       </Button>
     </Flex>
   )

@@ -10,6 +10,7 @@ import { CreateWalletModal } from 'components/@wallet/CreateWalletAction'
 import WalletDetailsCard from 'components/@wallet/WalletDetailsCard'
 import { CopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useInternalRole from 'hooks/features/useInternalRole'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -37,6 +38,18 @@ const ALLOW_EXCHANGE = [
   CopyTradePlatformEnum.BYBIT,
   CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.GATE,
+  CopyTradePlatformEnum.HYPERLIQUID,
+  CopyTradePlatformEnum.SYNTHETIX_V2,
+  CopyTradePlatformEnum.GNS_V8,
+]
+const INTERNAL_EXCHANGES = [
+  CopyTradePlatformEnum.BINGX,
+  CopyTradePlatformEnum.BITGET,
+  CopyTradePlatformEnum.BYBIT,
+  CopyTradePlatformEnum.OKX,
+  CopyTradePlatformEnum.GATE,
+  CopyTradePlatformEnum.BINANCE,
+  CopyTradePlatformEnum.HYPERLIQUID,
   CopyTradePlatformEnum.SYNTHETIX_V2,
   CopyTradePlatformEnum.GNS_V8,
 ]
@@ -44,6 +57,8 @@ const ALLOW_EXCHANGE = [
 export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean }) {
   const allowExchanges = ALLOW_EXCHANGE
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
+  const isInternal = useInternalRole()
+  const exchangeOptions = isInternal ? INTERNAL_EXCHANGES : EXCHANGES
 
   const updateCopyWallet = useMutation(updateCopyWalletApi, {
     onSuccess: () => {
@@ -80,7 +95,7 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
   }
   const walletMapping = copyWallets?.length
     ? copyWallets
-        .filter((wallet) => EXCHANGES.includes(wallet.exchange))
+        .filter((wallet) => exchangeOptions.includes(wallet.exchange))
         .reduce((result, wallet) => {
           return { ...result, [wallet.exchange]: [...(result[wallet.exchange] || []), wallet] }
         }, {} as Record<CopyTradePlatformEnum, CopyWalletData[]>)
@@ -100,7 +115,7 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
           '& > *:first-child': { borderTop: 'none' },
         }}
       >
-        {EXCHANGES.map((exchange) => {
+        {exchangeOptions.map((exchange) => {
           const isAllowed = allowExchanges.includes(exchange)
           const wallets = walletMapping[exchange] ?? []
           return (
@@ -200,7 +215,6 @@ function ExchangeTitle({
     case CopyTradePlatformEnum.BINANCE:
       title = 'Binance Exchange'
       break
-
     case CopyTradePlatformEnum.BYBIT:
       title = 'Bybit Exchange'
       break
@@ -209,6 +223,9 @@ function ExchangeTitle({
       break
     case CopyTradePlatformEnum.GATE:
       title = 'Gate Exchange'
+      break
+    case CopyTradePlatformEnum.HYPERLIQUID:
+      title = 'Hyperliquid Exchange'
       break
     case CopyTradePlatformEnum.SYNTHETIX_V2:
       title = 'Synthetix v2 Exchange'
@@ -238,7 +255,7 @@ function ExchangeTitle({
             }}
           >
             <PlusSquare size={16} style={{ color: 'inherit' }} />
-            <Box as="span">Create</Box>
+            <Box as="span">Connect</Box>
           </Button>
         ) : (
           <Type.Caption sx={{ py: 1, px: 2, bg: 'neutral6', borderRadius: '2px' }} color="neutral3">

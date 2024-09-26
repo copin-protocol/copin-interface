@@ -14,6 +14,7 @@ export const CURRENCY_PLATFORMS: Record<CopyTradePlatformEnum, CurrencyEnum> = {
   [CopyTradePlatformEnum.BYBIT]: CurrencyEnum.USD,
   [CopyTradePlatformEnum.OKX]: CurrencyEnum.USD,
   [CopyTradePlatformEnum.GATE]: CurrencyEnum.USD,
+  [CopyTradePlatformEnum.HYPERLIQUID]: CurrencyEnum.USD,
 }
 
 export const WATCHER_PLATFORMS = {
@@ -31,6 +32,7 @@ export const EXPLORER_PLATFORMS = {
   [CopyTradePlatformEnum.BYBIT]: '',
   [CopyTradePlatformEnum.OKX]: '',
   [CopyTradePlatformEnum.GATE]: '',
+  [CopyTradePlatformEnum.HYPERLIQUID]: '',
   [CopyTradePlatformEnum.OTHERS]: '',
   [CopyTradePlatformEnum.SYNTHETIX_V2]: CHAINS[DEFAULT_CHAIN_ID].blockExplorerUrl,
   [CopyTradePlatformEnum.SYNTHETIX_V3]: CHAINS[DEFAULT_CHAIN_ID].blockExplorerUrl,

@@ -250,13 +250,15 @@ export function parseWalletName(wallet: CopyWalletData, returnExchange?: boolean
           : wallet.name
         : wallet?.smartWalletAddress
         ? addressShorten(wallet?.smartWalletAddress)
-        : wallet.bingX?.apiKey?.slice(0, 5)
+        : wallet?.[getExchangeKey(wallet?.exchange)]?.apiKey?.slice(0, 5) ?? '--'
     }`
 
   return wallet.name
     ? wallet.name
     : `${COPY_WALLET_TRANS[wallet.exchange]}: ${
-        wallet?.smartWalletAddress ? addressShorten(wallet?.smartWalletAddress) : wallet.bingX?.apiKey?.slice(0, 5)
+        wallet?.smartWalletAddress
+          ? addressShorten(wallet?.smartWalletAddress)
+          : wallet?.[getExchangeKey(wallet?.exchange)]?.apiKey?.slice(0, 5) ?? '--'
       }`
 }
 
@@ -462,6 +464,8 @@ export const getExchangeKey = (exchange: CopyTradePlatformEnum) => {
       return 'okx'
     case CopyTradePlatformEnum.GATE:
       return 'gate'
+    case CopyTradePlatformEnum.HYPERLIQUID:
+      return 'hyperliquid'
     default:
       return 'bingX'
   }

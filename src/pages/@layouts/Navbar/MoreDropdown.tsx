@@ -6,6 +6,7 @@ import {
   CircleHalfTilt,
   CrownSimple,
   PresentationChart,
+  Swap,
   ThermometerSimple,
   Trophy,
 } from '@phosphor-icons/react'
@@ -141,6 +142,11 @@ const configs = [
     text: <Trans>Dune Dashboard</Trans>,
     link: LINKS.duneUrl,
   },
+  {
+    icon: Swap,
+    text: <Trans>Fee Rebate</Trans>,
+    route: ROUTES.FEE_REBATE.path,
+  },
 ]
 
 const internalConfigs = [
@@ -173,6 +179,11 @@ const internalConfigs = [
     icon: CircleHalfTilt,
     text: <Trans>Dune Dashboard</Trans>,
     link: LINKS.duneUrl,
+  },
+  {
+    icon: Swap,
+    text: <Trans>Fee Rebate</Trans>,
+    route: ROUTES.FEE_REBATE.path,
   },
 ]
 
