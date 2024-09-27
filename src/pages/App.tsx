@@ -38,7 +38,8 @@ const Search = lazy(() => import('./SearchTrader'))
 const SearchTxHash = lazy(() => import('./SearchTxHash'))
 const SystemStatus = lazy(() => import('./SystemStatus'))
 const StatsCEX = lazy(() => import('./StatsCEX'))
-const CopierLeaderboard = lazy(() => import('./Leaderboard/CopierLeaderboard'))
+const CopierRanking = lazy(() => import('./Leaderboard/CopierLeaderboard'))
+const RedirectToCopierRanking = lazy(() => import('./Leaderboard/CopierLeaderboard/RedirectToCopierRanking'))
 const OldExplorer = lazy(() => import('./Explorer/OldExplorer'))
 const OldTopOpeningInterest = lazy(() => import('./TopOpenings/OldTopOpeningInterest'))
 
@@ -85,7 +86,8 @@ function App() {
             <Route exact path={ROUTES.SEARCH.path} component={Search}></Route>
             <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHash}></Route>
             <Route path={ROUTES.LEADERBOARD.path} component={Leaderboard}></Route>
-            <Route path={ROUTES.COPIER_LEADERBOARD.path} component={CopierLeaderboard}></Route>
+            <Route path={ROUTES.COPIER_LEADERBOARD.path} component={RedirectToCopierRanking}></Route>
+            <Route path={ROUTES.COPIER_RANKING.path} component={CopierRanking}></Route>
 
             {/* OLD ROUTE */}
             <Route path={ROUTES.TRADERS_EXPLORER.path} component={OldExplorer}></Route>

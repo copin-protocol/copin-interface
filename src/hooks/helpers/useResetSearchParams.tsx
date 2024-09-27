@@ -7,7 +7,7 @@ import { TimeFilterByEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 
-const EXCLUDING_PATH = [ROUTES.COPIER_LEADERBOARD.path]
+const EXCLUDING_PATH = [ROUTES.COPIER_RANKING.path]
 
 export default function useResetSearchParams() {
   const { searchParams, setSearchParams } = useSearchParams()

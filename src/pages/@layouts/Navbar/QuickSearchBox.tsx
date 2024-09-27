@@ -30,6 +30,7 @@ import { formatNumber } from 'utils/helpers/format'
 
 const QuickSearchBox = memo(function QuickSearchBoxMemo() {
   const [openModal, setOpenModal] = useState(false)
+  const [searchTextRef, setSearchTextRef] = useState('')
   const handleOpenModal = () => setOpenModal(true)
   const handleDismissModal = () => setOpenModal(false)
 
@@ -65,7 +66,13 @@ const QuickSearchBox = memo(function QuickSearchBoxMemo() {
         >
           <IconBox icon={<MagnifyingGlass size={20} className="glass" />} color="neutral2 " />
           <Type.Caption className="text" color="neutral3">
-            Search
+            {searchTextRef ? (
+              <Box as="span" color="neutral1">
+                {searchTextRef.length > 3 ? `${searchTextRef.substring(0, 3)}...` : searchTextRef}
+              </Box>
+            ) : (
+              'Search'
+            )}
           </Type.Caption>
           <Box className="text" color="neutral3">
             (
@@ -77,7 +84,7 @@ const QuickSearchBox = memo(function QuickSearchBoxMemo() {
           </Box>
         </Flex>
       )}
-      <QuickSearchContainer isOpen={openModal} onDismiss={handleDismissModal} />
+      <QuickSearchContainer isOpen={openModal} onDismiss={handleDismissModal} setSearchTextRef={setSearchTextRef} />
     </>
   )
 })
@@ -92,6 +99,7 @@ function QuickSearchContainer({
   returnRanking = false,
   allowAllProtocol = true,
   allowSearchPositions = true,
+  setSearchTextRef,
 }: {
   isOpen: boolean
   onDismiss: () => void
@@ -101,6 +109,7 @@ function QuickSearchContainer({
   allowAllProtocol?: boolean
   allowSearchPositions?: boolean
   maxWidth?: string | number
+  setSearchTextRef?: (keyword: string) => void
 }) {
   const isMobile = useIsMobile()
   const [openSelectProtocols, setOpenSelectProtocols] = useState(false)
@@ -170,6 +179,9 @@ function QuickSearchContainer({
   useEffect(() => {
     if (isOpen) {
       inputSearchRef.current?.focus?.()
+    }
+    if (!isOpen) {
+      setSearchTextRef?.(searchText)
     }
   }, [isOpen])
 
