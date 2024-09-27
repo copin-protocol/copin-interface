@@ -9,7 +9,7 @@ export const transformGraphqlFilters = (filters: { fieldName: string; [key: stri
     // Convert all values in rest to strings
     const convertedRest = Object.fromEntries(
       Object.entries(rest)
-        .filter(([_, value]) => Boolean(value))
+        .filter(([_, value]) => value !== null && value !== undefined)
         .map(([key, value]) => {
           // check if value is an array, keep it as an array
           if (Array.isArray(value)) {
