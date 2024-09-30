@@ -4,19 +4,16 @@ import { useCallback, useMemo, useState } from 'react'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import { TraderData } from 'entities/trader'
-import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import FindAndSelectTrader, { HandleSelectTrader } from 'pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader'
 import { Type } from 'theme/base'
-import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 
 import ComparisonComponent, { ComparisonComponentProps } from './ComparisonComponent'
 
 export default function ComparingTraders() {
-  const { checkIsPremium } = useIsPremiumAndAction()
-
   const { searchParams, setSearchParams } = useSearchParams()
   const traders = useMemo(() => {
     return (searchParams[URL_PARAM_KEYS.COMPARE_TRADERS] as string)?.split?.('_') ?? []
@@ -46,9 +43,6 @@ export default function ComparingTraders() {
     defaultOption: TIME_FILTER_OPTIONS[0].id as unknown as string,
   })
   const handleChangeTime = (option: TimeFilterProps) => {
-    if (option.id === TimeFilterByEnum.ALL_TIME) {
-      if (!checkIsPremium()) return
-    }
     changeCurrentTime(option)
   }
 

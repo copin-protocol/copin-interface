@@ -120,6 +120,8 @@ function QuickSearchContainer({
   const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
 
   const {
+    protocolSortBy,
+    setProtocolSortBy,
     selectedProtocols,
     checkIsSelected: checkIsProtocolChecked,
     handleToggle: handleToggleProtocol,
@@ -170,11 +172,7 @@ function QuickSearchContainer({
   const totalResultPositions = searchPositions?.length ?? 0
 
   const totalResult = isTxHash ? totalResultPositions : totalResultTraders
-  const showViewAllResultText = isTxHash
-    ? false
-    : totalResultTraders > (searchTraders?.data?.length ?? 0)
-    ? true
-    : false
+  const showViewAllResultText = isTxHash ? false : totalResultTraders > (searchTraders?.data?.length ?? 0)
 
   useEffect(() => {
     if (isOpen) {
@@ -186,7 +184,12 @@ function QuickSearchContainer({
   }, [isOpen])
 
   return (
-    <RcDialog isOpen={isOpen} onDismiss={onDismiss} offsetBottom={isMobile ? '48px' : '100px'}>
+    <RcDialog
+      isOpen={isOpen}
+      onDismiss={onDismiss}
+      offsetTop={isMobile ? '48px' : '75px'}
+      offsetBottom={isMobile ? '48px' : '75px'}
+    >
       <Box
         sx={{
           bg: 'neutral7',

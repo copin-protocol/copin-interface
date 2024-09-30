@@ -31,7 +31,7 @@ export function ProtocolFilter({ menuSx = {}, placement = 'bottomRight', ...prop
         menuSx={{
           width: menuSx.width ? menuSx.width : ['90vw', '95vw', '95vw'],
           maxWidth: menuSx.maxWidth ? menuSx.maxWidth : '900px',
-          maxHeight: '80svh',
+          maxHeight: '75svh',
           py: 2,
           ...menuSx,
         }}

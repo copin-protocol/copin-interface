@@ -7,7 +7,7 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
-import { getProtocolFromUrl } from 'utils/helpers/graphql'
+import { useProtocolFromUrl } from 'utils/helpers/graphql'
 
 import OpenInterestByMarket from './OpenInterestByMarket'
 import TopOpenings from './TopOpenIntrest'
@@ -23,7 +23,7 @@ export default function OpenInterestPositions() {
 
   const protocolOptions = useGetProtocolOptions()
   const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
-  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
 
   const { selectedProtocols, checkIsSelected, handleToggle, setSelectedProtocols, urlProtocol, setUrlProtocol } =
     useProtocolFilter({

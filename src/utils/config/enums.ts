@@ -330,3 +330,8 @@ export enum CopierLeaderboardTimeFilterEnum {
   D60 = 'D60',
   FULL = 'FULL',
 }
+
+export enum ProtocolSortByEnum {
+  ALPHABET = 'ALPHABET',
+  TRADERS = 'TRADERS',
+}

@@ -13,7 +13,6 @@ import NotFound from 'components/@ui/NotFound'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d'
 import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
-import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
@@ -23,9 +22,9 @@ import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import Loading from 'theme/Loading'
 import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex } from 'theme/base'
-import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { ALL_OPTION, TOKEN_TRADE_SUPPORT, TokenOptionProps, getTokenOptions } from 'utils/config/trades'
+import { ALL_OPTION, TOKEN_TRADE_SUPPORT, getTokenOptions } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
 import { isAddress } from 'utils/web3/contracts'
 
@@ -105,14 +104,10 @@ export function TraderDetailsComponent({
   protocol: ProtocolEnum
   exchangeStats: ResponseTraderExchangeStatistic
 }) {
-  const { isPremiumUser, checkIsPremium } = useIsPremiumAndAction()
-  const timeFilterOptions = useMemo(
-    () => (isPremiumUser ? TIME_FILTER_OPTIONS : TIME_FILTER_OPTIONS.filter((e) => e.id !== TimeFilterByEnum.ALL_TIME)),
-    [isPremiumUser]
-  )
+  const timeFilterOptions = TIME_FILTER_OPTIONS
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
-    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol, isPremiumUser],
+    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol],
     () => getTraderStatisticApi({ protocol, account: address }),
     {
       enabled: !!address,
@@ -125,6 +120,7 @@ export function TraderDetailsComponent({
           .reverse(),
     }
   )
+
   const { data: tokensStatistic } = useQuery(
     [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, address],
     () => getTraderTokensStatistic({ protocol, account: address }),
@@ -149,7 +145,7 @@ export function TraderDetailsComponent({
   const { currentOption: timeOption, changeCurrentOption } = useOptionChange({
     optionName: URL_PARAM_KEYS.EXPLORER_TIME_FILTER,
     options: timeFilterOptions,
-    defaultOption: timeFilterOptions[2].id as unknown as string,
+    defaultOption: timeFilterOptions[0].id as unknown as string,
   })
   const { currentPage, changeCurrentPage } = usePageChange({ pageName: URL_PARAM_KEYS.TRADER_HISTORY_PAGE })
   const [currentSort, setCurrentSort] = useState<TableSortProps<PositionData> | undefined>({
@@ -162,7 +158,6 @@ export function TraderDetailsComponent({
   })
 
   const setTimeOption = (option: TimeFilterProps) => {
-    if (option.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) return
     changeCurrentOption(option)
   }
   const resetSort = () =>

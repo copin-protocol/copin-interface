@@ -23,7 +23,7 @@ import { Box, Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 // import { QUERY_KEYS } from 'utils/config/keys'
 import { getTokenTradeList } from 'utils/config/trades'
-import { getProtocolFromUrl } from 'utils/helpers/graphql'
+import { useProtocolFromUrl } from 'utils/helpers/graphql'
 
 import PositionsSection from '../PositionsSection'
 import RouteWrapper from '../RouteWrapper'
@@ -46,7 +46,7 @@ function OpenInterestByMarketPage() {
   const { sort, onChangeSort, limit, onChangeLimit, time, from, to, onChangeTime } = useFilters()
   const { symbol, protocol } = useParams<{ symbol: string | undefined; protocol: ProtocolEnum }>()
 
-  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
 
   const tokenOptions = foundProtocolInUrl
     .map((protocol) => {

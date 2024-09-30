@@ -15,7 +15,7 @@ import { ResponsePositionData } from 'entities/trader'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Box, Flex } from 'theme/base'
 import { SortTypeEnum } from 'utils/config/enums'
-import { getProtocolFromUrl } from 'utils/helpers/graphql'
+import { useProtocolFromUrl } from 'utils/helpers/graphql'
 
 import PositionsSection from '../PositionsSection'
 import RouteWrapper from '../RouteWrapper'
@@ -43,7 +43,7 @@ function TopOpeningsPage() {
   const { sort, onChangeSort, limit, onChangeLimit, time, from, to, onChangeTime } = useFilters()
   const { searchParams, pathname } = useSearchParams()
 
-  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
 
   // FETCH DATA
   const queryVariables = useMemo(() => {

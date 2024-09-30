@@ -180,7 +180,7 @@ export const getDurationFromTimeFilter = (timeFilter?: TimeFilterByEnum) => {
     case TimeFilterByEnum.S60_DAY:
       return 60
     case TimeFilterByEnum.ALL_TIME:
-      return 365
+      return 365 * 10
     default:
       return 7
   }

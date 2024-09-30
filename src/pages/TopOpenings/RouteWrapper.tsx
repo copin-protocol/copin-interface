@@ -13,7 +13,7 @@ import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { TokenTrade, getTokenTradeList } from 'utils/config/trades'
 import { generateOIOverviewRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
-import { convertProtocolToParams, getProtocolFromUrl } from 'utils/helpers/graphql'
+import { convertProtocolToParams, useProtocolFromUrl } from 'utils/helpers/graphql'
 import { parseMarketImage } from 'utils/helpers/transform'
 
 import { ALL_TOKEN_PARAM } from './configs'
@@ -147,7 +147,7 @@ function TabItem({
 function MarketsDropdown() {
   const { push } = useHistory()
   const { searchParams, pathname } = useSearchParams()
-  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
   const protocolParams = convertProtocolToParams(foundProtocolInUrl)
 
   const { symbol = ALL_TOKEN_PARAM } = useParams<{ protocol: ProtocolEnum; symbol: string }>()

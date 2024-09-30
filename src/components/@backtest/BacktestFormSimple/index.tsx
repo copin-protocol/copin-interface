@@ -77,7 +77,6 @@ export default function BacktestFormSimple({
     setValue('endTime', endTime.toDate())
   }, [setValue, _timeOption])
 
-  const { checkIsPremium } = useIsPremiumAndAction()
   const selectOptions = TIME_FILTER_OPTIONS.filter((option) => option.id !== TimeFilterByEnum.ALL_TIME).map(
     (option) => ({
       value: option.id,
@@ -86,7 +85,6 @@ export default function BacktestFormSimple({
   )
   const selectValue = selectOptions.find((option) => option.value === _timeOption.id)
   const handleChangeTime = (_selectValue: any) => {
-    if (_selectValue.value === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) return
     onChangeTimeOption(
       TIME_FILTER_OPTIONS.find((option) => option.id === _selectValue?.value) ?? TIME_FILTER_OPTIONS[0]
     )

@@ -1,5 +1,6 @@
 import QueryString from 'qs'
 
+import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { ALLOWED_COPYTRADE_PROTOCOLS, RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum, ProtocolFilterEnum } from 'utils/config/enums'
 import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
@@ -27,7 +28,10 @@ export const transformGraphqlFilters = (filters: { fieldName: string; [key: stri
   })
 }
 
-export const getProtocolFromUrl = (searchParams: QueryString.ParsedQs, pathname: string) => {
+export const useProtocolFromUrl = (searchParams: QueryString.ParsedQs, pathname: string) => {
+  const { selectedProtocols } = useProtocolFilter()
+  console.log('🚀 ~ useProtocolFromUrl ~ selectedProtocols:', selectedProtocols)
+
   // Old protocol route: /{protocol}/...
   const parsedOldPreProtocolParam = RELEASED_PROTOCOLS.find(
     (protocol) => pathname.split('/')?.[1]?.toUpperCase() === protocol
@@ -54,20 +58,26 @@ export const getProtocolFromUrl = (searchParams: QueryString.ParsedQs, pathname:
       : Object.values(PROTOCOL_OPTIONS_MAPPING)
           .filter(({ key }) => protocolFromQuery.split('-').includes(key.toString()))
           .map(({ id }) => id)
-    : RELEASED_PROTOCOLS
+    : []
 
   // Get unique protocols
-  const uniqueProtocols = new Set<ProtocolEnum>(
-    [
-      parsedOldPreProtocolParam,
-      parsedOldLastProtocolParam,
-      parsedOldProtocolSearch,
-      ...parsedNewProtocolOptions,
-    ].filter(Boolean) as ProtocolEnum[]
+  const uniqueProtocols = Array.from(
+    new Set<ProtocolEnum>(
+      [
+        parsedOldPreProtocolParam,
+        parsedOldLastProtocolParam,
+        parsedOldProtocolSearch,
+        ...parsedNewProtocolOptions,
+      ].filter(Boolean) as ProtocolEnum[]
+    )
   )
 
   // If no protocol found, use default protocol
-  const foundProtocolInUrl = Array.from(uniqueProtocols).length ? Array.from(uniqueProtocols) : RELEASED_PROTOCOLS
+  const foundProtocolInUrl: ProtocolEnum[] = uniqueProtocols.length
+    ? uniqueProtocols
+    : selectedProtocols.length
+    ? selectedProtocols
+    : RELEASED_PROTOCOLS
 
   return foundProtocolInUrl
 }

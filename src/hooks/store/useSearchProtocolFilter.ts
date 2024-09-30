@@ -2,11 +2,13 @@ import create from 'zustand'
 import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, ProtocolSortByEnum } from 'utils/config/enums'
 
 interface ProtocolFilterState {
   selectedProtocols: ProtocolEnum[]
   setSelectedProtocols: (protocols: ProtocolEnum[]) => void
+  protocolSortBy: ProtocolSortByEnum | undefined
+  setProtocolSortBy: (data: ProtocolSortByEnum | undefined) => void
 }
 
 const createProtocolFilterStore = (initialProtocols: ProtocolEnum[] = []) =>
@@ -18,6 +20,11 @@ const createProtocolFilterStore = (initialProtocols: ProtocolEnum[] = []) =>
           set((state) => {
             state.selectedProtocols = protocols
           }),
+        protocolSortBy: ProtocolSortByEnum.ALPHABET,
+        setProtocolSortBy: (data) =>
+          set((state) => {
+            state.protocolSortBy = data
+          }),
       })),
       {
         name: 'search-protocol-filter',
@@ -28,7 +35,7 @@ const createProtocolFilterStore = (initialProtocols: ProtocolEnum[] = []) =>
 
 export const useSearchProtocolFilter = ({ defaultSelects }: { defaultSelects: ProtocolEnum[] }) => {
   const useProtocolFilterStore = createProtocolFilterStore(defaultSelects)
-  const { selectedProtocols, setSelectedProtocols } = useProtocolFilterStore()
+  const { selectedProtocols, setSelectedProtocols, protocolSortBy, setProtocolSortBy } = useProtocolFilterStore()
 
   // const isToggledAll = selectedProtocols.length === defaultSelects.length
 
@@ -55,5 +62,7 @@ export const useSearchProtocolFilter = ({ defaultSelects }: { defaultSelects: Pr
     checkIsSelected,
     handleToggle,
     setSelectedProtocols,
+    protocolSortBy,
+    setProtocolSortBy,
   }
 }

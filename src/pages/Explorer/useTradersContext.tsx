@@ -15,9 +15,9 @@ import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { RANKING_FIELD_NAMES } from 'hooks/store/useRankingCustomize'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { ProtocolEnum, ProtocolSortByEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { getProtocolFromUrl } from 'utils/helpers/graphql'
+import { useProtocolFromUrl } from 'utils/helpers/graphql'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { TimeRange } from 'utils/types'
@@ -57,6 +57,8 @@ export interface TradersContextData {
   setSelectedProtocols: (protocols: ProtocolEnum[]) => void
   urlProtocol: ProtocolEnum | undefined
   setUrlProtocol: (protocol: ProtocolEnum | undefined) => void
+  protocolSortBy: ProtocolSortByEnum | undefined
+  setProtocolSortBy: (option: ProtocolSortByEnum | undefined) => void
 }
 
 const TradersContext = createContext<TradersContextData>({} as TradersContextData)
@@ -83,9 +85,11 @@ export function FilterTradersProvider({
     setSelectedProtocols,
     urlProtocol,
     setUrlProtocol,
+    protocolSortBy,
+    setProtocolSortBy,
   } = useProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
 
-  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
 
   useEffect(() => {
     if (foundProtocolInUrl) {
@@ -109,7 +113,7 @@ export function FilterTradersProvider({
     tab === TabKeyEnum.Explorer ? URL_PARAM_KEYS.EXPLORER_TIME_RANGE_FILTER : URL_PARAM_KEYS.FAVORITE_TIME_RANGE_FILTER
 
   // START TIME FILTER
-  const { isPremiumUser, checkIsPremium } = useIsPremiumAndAction()
+  const { isPremiumUser } = useIsPremiumAndAction()
   const [isRangeSelection, setRangeSelection] = useState(() => {
     if (!isPremiumUser) return false
     if (searchParams[rangeFilterKey]) return true
@@ -152,10 +156,6 @@ export function FilterTradersProvider({
   }
 
   const handleSetTimeOption = (timeOption: TimeFilterProps) => {
-    if (timeOption.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) {
-      return
-    }
-
     setSearchParams({
       [rangeFilterKey]: null,
       [URL_PARAM_KEYS.EXPLORER_PAGE]: '1',
@@ -278,6 +278,8 @@ export function FilterTradersProvider({
     setSelectedProtocols,
     urlProtocol,
     setUrlProtocol,
+    protocolSortBy,
+    setProtocolSortBy,
   }
 
   return <TradersContext.Provider value={contextValue}>{children}</TradersContext.Provider>

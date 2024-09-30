@@ -109,7 +109,7 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
           overflow: 'hidden scroll',
           '& .select__option': {
             borderRadius: 0,
-            py: 1,
+            py: 2,
             px: 2,
             cursor: 'pointer',
             '&--is-focused:not([disabled])': {

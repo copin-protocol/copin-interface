@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { ChainWithLabel } from 'components/@ui/ChainLogo'
 import { Box } from 'theme/base'
 

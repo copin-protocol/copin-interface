@@ -3,16 +3,17 @@ import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
 import useSearchParams from 'hooks/router/useSearchParams'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, ProtocolSortByEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
-import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
-import { convertProtocolToParams, getProtocolFromUrl } from 'utils/helpers/graphql'
+import { convertProtocolToParams } from 'utils/helpers/graphql'
 
 interface ProtocolFilterState {
   selectedProtocols: ProtocolEnum[]
   setProtocols: (protocols: ProtocolEnum[]) => void
   urlProtocol: ProtocolEnum | undefined
   setUrlProtocol: (protocol: ProtocolEnum | undefined) => void
+  protocolSortBy: ProtocolSortByEnum | undefined
+  setProtocolSortBy: (data: ProtocolSortByEnum | undefined) => void
 }
 
 const INIT_PAGE = 1
@@ -34,6 +35,7 @@ const createProtocolFilterStore = (defaultSelects: ProtocolEnum[] = []) => {
       immer((set) => ({
         selectedProtocols: defaultSelects,
         urlProtocol: undefined,
+        protocolSortBy: ProtocolSortByEnum.ALPHABET,
         setProtocols: (protocols) =>
           set((state) => {
             state.selectedProtocols = protocols
@@ -41,6 +43,11 @@ const createProtocolFilterStore = (defaultSelects: ProtocolEnum[] = []) => {
         setUrlProtocol: (protocol) =>
           set((state) => {
             state.urlProtocol = protocol
+          }),
+
+        setProtocolSortBy: (data) =>
+          set((state) => {
+            state.protocolSortBy = data
           }),
       })),
       {
@@ -55,7 +62,8 @@ export const useProtocolFilter = ({ defaultSelects }: { defaultSelects?: Protoco
   const { setSearchParams } = useSearchParams()
   const changeCurrentPage = (page: number) => setSearchParams({ [URL_PARAM_KEYS.HOME_PAGE]: page.toString() })
 
-  const { selectedProtocols, setProtocols, urlProtocol, setUrlProtocol } = createProtocolFilterStore(defaultSelects)()
+  const { selectedProtocols, setProtocols, urlProtocol, setUrlProtocol, protocolSortBy, setProtocolSortBy } =
+    createProtocolFilterStore(defaultSelects)()
 
   const checkIsSelected = (protocol: ProtocolEnum): boolean => {
     return selectedProtocols.includes(protocol)
@@ -97,5 +105,7 @@ export const useProtocolFilter = ({ defaultSelects }: { defaultSelects?: Protoco
     setSelectedProtocols,
     urlProtocol,
     setUrlProtocol,
+    protocolSortBy,
+    setProtocolSortBy,
   }
 }

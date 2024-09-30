@@ -7,7 +7,10 @@ import { v4 as uuid } from 'uuid'
 import CheckIcon from 'theme/Icons/CheckIcon'
 import { Box } from 'theme/base'
 
+import CheckWithRemoveIcon from '../Icons/CheckWithRemoveIcon'
+
 export interface CheckboxProps {
+  hasClear?: boolean
   disabled?: boolean
   children?: ReactElement | ReactElement[] | string
   wrapperSx?: GridProps & SystemStyleObject
@@ -144,6 +147,7 @@ export const CheckboxCircleWrapper = styled(Box)<{ disabled?: boolean; hasError:
 const Checkbox = forwardRef(
   (
     {
+      hasClear = false,
       defaultChecked = false,
       disabled,
       children,
@@ -162,9 +166,7 @@ const Checkbox = forwardRef(
     return (
       <CheckboxWrapper alignItems="center" disabled={disabled} hasError={hasError} sx={wrapperSx} size={size}>
         <input id={id} disabled={disabled} type="checkbox" {...rest} defaultChecked={defaultChecked} ref={ref} />
-        <div className="checkbox">
-          <CheckIcon size={size} />
-        </div>
+        <div className="checkbox">{hasClear ? <CheckWithRemoveIcon size={size} /> : <CheckIcon size={size} />}</div>
         {children
           ? cloneElement(
               <Box as="span" sx={{ cursor: 'pointer', lineHeight: 0 }}>
