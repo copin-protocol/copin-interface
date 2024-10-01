@@ -28,6 +28,8 @@ export const SCROLL_MAINNET = 534352
 
 export const HYPERLIQUID_TESTNET = 998
 
+export const DYDX_MAINNET = 'dydx-mainnet-1'
+
 export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 export const BASE_CHAIN = NETWORK === 'devnet' ? BASE_SEPOLIA : BASE_MAINNET
 export const OPTIMISM_CHAIN = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
@@ -164,7 +166,7 @@ const SECONDARY_TOKENS: {
   ],
 }
 
-const CHAINS: { [key: number]: Chain } = {
+const CHAINS: { [key: number | string]: Chain } = {
   [ETHEREUM_MAINNET]: {
     id: `0x${ETHEREUM_MAINNET.toString(16)}`,
     token: NATIVE_CURRENCIES.ETH.symbol,
@@ -389,11 +391,19 @@ const CHAINS: { [key: number]: Chain } = {
     rpcUrl: '',
     blockExplorerUrl: 'https://app.hyperliquid.xyz/explorer',
   },
+  [DYDX_MAINNET]: {
+    id: '',
+    label: 'dYdX',
+    icon: 'DYDX',
+    token: '',
+    rpcUrl: 'https://dydx-rpc.publicnode.com:443',
+    blockExplorerUrl: 'https://www.mintscan.io/dydx',
+  },
 }
 
 const chains = SUPPORTED_CHAIN_IDS.map((id) => CHAINS[id])
 
-const getChainMetadata = (chainId: number, rpcUrls?: string[]) => {
+const getChainMetadata = (chainId: number | string, rpcUrls?: string[]) => {
   const chain = CHAINS[chainId]
   if (!chain)
     return {

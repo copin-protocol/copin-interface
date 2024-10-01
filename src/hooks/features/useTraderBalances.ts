@@ -11,7 +11,7 @@ import { CONTRACT_QUERY_KEYS, QUERY_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER, TOKEN_COLLATERAL_SUPPORT, getIndexTokensBySymbol } from 'utils/config/trades'
 import { TokenCollateral } from 'utils/types'
 import { getNativeBalance } from 'utils/web3/balance'
-import { CHAINS } from 'utils/web3/chains'
+import { CHAINS, DEFAULT_CHAIN_ID } from 'utils/web3/chains'
 import { CONTRACT_ABIS } from 'utils/web3/contracts'
 import { rpcProvider } from 'utils/web3/providers'
 
@@ -19,12 +19,17 @@ const useTraderBalances = ({ account, protocol }: { account: string | undefined;
   const isExcludedProtocol = NO_TX_HASH_PROTOCOLS.includes(protocol)
   const { prices } = useUsdPrices()
   const protocolProvider = PROTOCOL_PROVIDER[protocol]
+  const isEVM = typeof protocolProvider?.chainId === 'number'
 
   const { data: nativeBalanceData } = useQuery(
     [QUERY_KEYS.GET_TRADER_NATIVE_BALANCE],
-    () => getNativeBalance(rpcProvider(protocolProvider?.chainId ?? 0), account ?? ''),
+    () =>
+      getNativeBalance(
+        rpcProvider(protocolProvider?.chainId && isEVM ? Number(protocolProvider?.chainId) : DEFAULT_CHAIN_ID),
+        account ?? ''
+      ),
     {
-      enabled: !!account && !!protocolProvider?.chainId && !isExcludedProtocol,
+      enabled: !!account && !!protocolProvider?.chainId && isEVM && !isExcludedProtocol,
     }
   )
 
@@ -53,11 +58,11 @@ const useTraderBalances = ({ account, protocol }: { account: string | undefined;
   } = useCustomMulticallQuery<any>(
     CONTRACT_ABIS[CONTRACT_QUERY_KEYS.ERC20],
     calls,
-    protocolProvider?.chainId ?? 0,
-    rpcProvider(protocolProvider?.chainId ?? 0),
+    Number(protocolProvider?.chainId),
+    rpcProvider(protocolProvider?.chainId && isEVM ? Number(protocolProvider?.chainId) : DEFAULT_CHAIN_ID),
     account,
     {
-      enabled: !!protocolProvider?.chainId && !!account && tokens.length > 0 && !isExcludedProtocol,
+      enabled: !!protocolProvider?.chainId && isEVM && !!account && tokens.length > 0 && !isExcludedProtocol,
       keepPreviousData: true,
       retry: 0,
     }

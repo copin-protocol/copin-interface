@@ -141,6 +141,7 @@ export const CONTRACT_ADDRESSES: {
 
 export function isAddress(value: any): string {
   try {
+    if (value?.startsWith('dydx')) return value
     return getAddress(value)
   } catch {
     return ''

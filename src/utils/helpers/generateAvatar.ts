@@ -32,9 +32,9 @@ function lighten(col: string, amt: number) {
 }
 
 export const generateAvatar = (address: string) => {
-  const emojiHex = address.slice(2, 4)
+  const emojiHex = address?.startsWith('dydx') ? address.slice(5, 7) : address.slice(2, 4)
   const emoji = emojiList[parseInt(emojiHex, 16)]
-  const bg = `#${address.slice(5, 11)}`
+  const bg = `#${address.slice(8, 14)}`
   return {
     emoji,
     bg,

@@ -3,6 +3,7 @@ import {
   BASE_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
+  DYDX_MAINNET,
   FANTOM_MAINNET,
   HYPERLIQUID_TESTNET,
   MANTLE_MAINNET,
@@ -20,7 +21,7 @@ export type ProtocolOptionProps = {
   id: ProtocolEnum
   text: string
   label: string
-  chainId: number
+  chainId: number | string
   isNew?: boolean
   isCross?: boolean
   key: string
@@ -277,10 +278,18 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
   [ProtocolEnum.SYNFUTURE_BASE]: {
     id: ProtocolEnum.SYNFUTURE_BASE,
     text: 'Synfutures',
-    label: 'BASE',
+    label: 'Base',
     chainId: BASE_MAINNET,
     isNew: true,
     key: 'SYB',
+  },
+  [ProtocolEnum.DYDX]: {
+    id: ProtocolEnum.DYDX,
+    text: 'dYdX',
+    label: 'dydX Chain',
+    chainId: DYDX_MAINNET,
+    isNew: true,
+    key: 'DYD',
   },
 }
 
@@ -291,7 +300,13 @@ export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
     ? RELEASED_PROTOCOLS.map((e) => PROTOCOL_OPTIONS_MAPPING[e])
     : Object.values(ProtocolEnum).map((e) => PROTOCOL_OPTIONS_MAPPING[e])
 
-export const PROTOCOLS_CROSS_MARGIN = [ProtocolEnum.HMX_ARB, ProtocolEnum.SYNTHETIX_V3, ProtocolEnum.HYPERLIQUID]
+// TODO: Check when add new protocol
+export const PROTOCOLS_CROSS_MARGIN = [
+  ProtocolEnum.HMX_ARB,
+  ProtocolEnum.SYNTHETIX_V3,
+  ProtocolEnum.HYPERLIQUID,
+  ProtocolEnum.DYDX,
+]
 
 export const PROTOCOLS_IN_TOKEN: ProtocolEnum[] = []
 

@@ -30,7 +30,6 @@ export const transformGraphqlFilters = (filters: { fieldName: string; [key: stri
 
 export const useProtocolFromUrl = (searchParams: QueryString.ParsedQs, pathname: string) => {
   const { selectedProtocols } = useProtocolFilter()
-  console.log('🚀 ~ useProtocolFromUrl ~ selectedProtocols:', selectedProtocols)
 
   // Old protocol route: /{protocol}/...
   const parsedOldPreProtocolParam = RELEASED_PROTOCOLS.find(

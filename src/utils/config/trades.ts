@@ -7,6 +7,7 @@ import {
   BLAST_MAINNET,
   BNB_MAINNET,
   CHAINS,
+  DYDX_MAINNET,
   FANTOM_MAINNET,
   HYPERLIQUID_TESTNET,
   MANTLE_MAINNET,
@@ -32,6 +33,7 @@ import { TOKEN_COLLATERAL_SCROLL } from './tokenCollateralScroll'
 import { TOKEN_COLLATERAL_APOLLOX_BNB, TOKEN_TRADE_APOLLOX_BNB } from './tokenTradeApolloX'
 import { TOKEN_TRADE_AVANTIS_BASE } from './tokenTradeAvantis'
 import { TOKEN_TRADE_BLOOM_BLAST } from './tokenTradeBloom'
+import { TOKEN_TRADE_DYDX } from './tokenTradeDyDx'
 import { TOKEN_TRADE_EQUATION_ARB } from './tokenTradeEquation'
 import { TOKEN_TRADE_GMX } from './tokenTradeGmx'
 import { TOKEN_TRADE_GMX_V2 } from './tokenTradeGmxV2'
@@ -56,7 +58,7 @@ import { TOKEN_TRADE_TIGRIS_ARB } from './tokenTradeTigris'
 import { TOKEN_TRADE_VELA_ARB } from './tokenTradeVela'
 import { TOKEN_TRADE_YFX_ARB } from './tokenTradeYfx'
 
-type ProtocolProvider = { [key: string]: { chainId: number | null; explorerUrl: string } | null }
+type ProtocolProvider = { [key: string]: { chainId: number | 'dydx-mainnet-1' | null; explorerUrl: string } | null }
 export const PROTOCOL_PROVIDER: ProtocolProvider = {
   [ProtocolEnum.LEVEL_ARB]: {
     chainId: ARBITRUM_MAINNET,
@@ -186,6 +188,10 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: BASE_MAINNET,
     explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.DYDX]: {
+    chainId: DYDX_MAINNET,
+    explorerUrl: CHAINS[DYDX_MAINNET].blockExplorerUrl,
+  },
 }
 export interface TokenTrade {
   address: string
@@ -251,6 +257,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.MORPHEX_FANTOM]: TOKEN_TRADE_MORPHEX_FANTOM,
   [ProtocolEnum.HYPERLIQUID]: TOKEN_TRADE_HYPERLIQUID,
   [ProtocolEnum.SYNFUTURE_BASE]: TOKEN_TRADE_SYNFUTURES_BASE,
+  [ProtocolEnum.DYDX]: TOKEN_TRADE_DYDX,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -300,6 +307,7 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.MORPHEX_FANTOM]: { ...TOKEN_COLLATERAL_FTM, ...TOKEN_COLLATERAL_MORPHEX_FANTOM },
   [ProtocolEnum.HYPERLIQUID]: {},
   [ProtocolEnum.SYNFUTURE_BASE]: TOKEN_COLLATERAL_BASE,
+  [ProtocolEnum.DYDX]: {},
 }
 
 export const SYNTHETIX_MARKETS: { [key: number]: string[] } = {

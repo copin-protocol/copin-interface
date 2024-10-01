@@ -24,6 +24,7 @@ export const DISABLED_MARGIN_PROTECTION_PROTOCOLS = [
   ProtocolEnum.HMX_ARB,
   ProtocolEnum.SYNTHETIX_V3,
   ProtocolEnum.HYPERLIQUID,
+  ProtocolEnum.DYDX,
 ]
 
 export const PARAM_MAPPING = {

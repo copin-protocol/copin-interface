@@ -31,6 +31,7 @@ export enum ProtocolEnum {
   MORPHEX_FANTOM = 'MORPHEX_FANTOM',
   HYPERLIQUID = 'HYPERLIQUID',
   SYNFUTURE_BASE = 'SYNFUTURE_BASE',
+  DYDX = 'DYDX',
 }
 
 export enum ProtocolFilterEnum {
