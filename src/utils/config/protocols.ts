@@ -193,7 +193,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: BASE_MAINNET,
     isNew: false,
     isCross: true,
-    key: 'SYB',
+    key: 'SYB3',
   },
   [ProtocolEnum.COPIN]: {
     id: ProtocolEnum.COPIN,

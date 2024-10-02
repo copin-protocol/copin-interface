@@ -15,7 +15,7 @@ import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import { RANKING_FIELD_NAMES } from 'hooks/store/useRankingCustomize'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum, ProtocolSortByEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { useProtocolFromUrl } from 'utils/helpers/graphql'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
@@ -57,8 +57,6 @@ export interface TradersContextData {
   setSelectedProtocols: (protocols: ProtocolEnum[]) => void
   urlProtocol: ProtocolEnum | undefined
   setUrlProtocol: (protocol: ProtocolEnum | undefined) => void
-  protocolSortBy: ProtocolSortByEnum | undefined
-  setProtocolSortBy: (option: ProtocolSortByEnum | undefined) => void
 }
 
 const TradersContext = createContext<TradersContextData>({} as TradersContextData)
@@ -85,8 +83,6 @@ export function FilterTradersProvider({
     setSelectedProtocols,
     urlProtocol,
     setUrlProtocol,
-    protocolSortBy,
-    setProtocolSortBy,
   } = useProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
 
   const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
@@ -278,8 +274,6 @@ export function FilterTradersProvider({
     setSelectedProtocols,
     urlProtocol,
     setUrlProtocol,
-    protocolSortBy,
-    setProtocolSortBy,
   }
 
   return <TradersContext.Provider value={contextValue}>{children}</TradersContext.Provider>

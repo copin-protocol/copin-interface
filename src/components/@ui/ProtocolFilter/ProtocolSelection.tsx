@@ -9,7 +9,7 @@ import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { getProtocolConfigs } from 'components/@widgets/SwitchProtocols/helpers'
 import useDebounce from 'hooks/helpers/useDebounce'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
-import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
+import { useProtocolSortByStore } from 'hooks/store/useProtocolSortBy'
 import ProtocolBetaWarning from 'pages/TraderDetails/ProtocolBetaWarning'
 import { Button } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
@@ -43,7 +43,7 @@ export default function ProtocolSelection({
   allowList,
   hasSearch = true,
 }: ProtocolSelectionProps) {
-  const { protocolSortBy, setProtocolSortBy } = useProtocolFilter()
+  const { protocolSortBy, setProtocolSortBy } = useProtocolSortByStore()
   const { data: protocolsStatistic } = useQuery([QUERY_KEYS.GET_PROTOCOLS_STATISTIC], getProtocolsStatistic)
 
   const [searchText, setSearchText] = useState<string>('')
@@ -216,7 +216,7 @@ export default function ProtocolSelection({
           onClick={() => {
             setSelectedProtocols(RELEASED_PROTOCOLS)
           }}
-          px={[2, 3]}
+          px={[1, 3]}
           sx={{ color: 'neutral1', border: 'none' }}
         >
           All Perps
@@ -226,7 +226,7 @@ export default function ProtocolSelection({
           onClick={() => {
             setSelectedProtocolsByAllowList(RELEASED_PROTOCOLS)
           }}
-          px={[2, 3]}
+          px={[1, 3]}
           sx={{ color: 'neutral1', border: 'none' }}
         >
           All Copyable Perps
@@ -235,8 +235,8 @@ export default function ProtocolSelection({
 
       {/* RENDER TOGGLE BUTTON */}
       <Box my={2}>
-        <Flex sx={{ gap: 2, alignItems: ['start', 'center'], justifyContent: 'space-between' }} flexWrap={'wrap'}>
-          <Flex alignItems={'center'} sx={{ gap: 2 }}>
+        <Flex sx={{ gap: [1, 2], alignItems: 'center', justifyContent: 'space-between' }} flexWrap={'wrap'}>
+          <Flex alignItems={'center'} sx={{ gap: [1, 2] }}>
             <Checkbox
               hasClear={selectedProtocols.length > 0}
               checked={checkIsCheckedAll()}
