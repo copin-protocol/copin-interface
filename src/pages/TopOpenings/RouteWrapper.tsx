@@ -91,18 +91,22 @@ function RouteHeader({ protocolFilter }: { protocolFilter: ProtocolFilterProps }
 }
 
 function Tabs() {
-  const { protocol, symbol } = useParams<{ protocol: ProtocolEnum; symbol: string }>()
-  const {
-    push,
-    location: { pathname },
-  } = useHistory()
+  const { searchParams, pathname } = useSearchParams()
+  const { symbol } = useParams<{ protocol: ProtocolEnum; symbol: string }>()
+  const { push } = useHistory()
+
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
+  const protocolParams = convertProtocolToParams(foundProtocolInUrl)
+
   const onChangeTab = (key: 'positions' | 'overview') => {
     if (key === 'positions') {
-      push(generateOIPositionsRoute({ protocol, symbol }))
+      push(generateOIPositionsRoute({ symbol, params: { ...searchParams, protocol: protocolParams, page: 1 } }))
+
       return
     }
     if (key === 'overview') {
-      push(generateOIOverviewRoute({ protocol, symbol }))
+      push(generateOIOverviewRoute({ symbol, params: { ...searchParams, protocol: protocolParams, page: 1 } }))
+
       return
     }
   }

@@ -20,8 +20,6 @@ const useTimeFilterData = ({
   timeOption: TimeFilterProps
   selectedProtocols: ProtocolEnum[]
   setSelectedProtocols: (protocols: ProtocolEnum[]) => void
-  urlProtocol?: ProtocolEnum | undefined
-  setUrlProtocol?: (protocol: ProtocolEnum | undefined) => void
   isRangeSelection?: boolean
 }) => {
   const isAllowFetchData = !!timeOption && !isRangeSelection

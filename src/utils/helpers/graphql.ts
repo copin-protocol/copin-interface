@@ -1,5 +1,6 @@
 import QueryString from 'qs'
 
+import { ConditionFormValues, FilterValues } from 'components/@widgets/ConditionFilterForm/types'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { ALLOWED_COPYTRADE_PROTOCOLS, RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum, ProtocolFilterEnum } from 'utils/config/enums'
@@ -10,7 +11,7 @@ export const transformGraphqlFilters = (filters: { fieldName: string; [key: stri
     // Convert all values in rest to strings
     const convertedRest = Object.fromEntries(
       Object.entries(rest)
-        .filter(([_, value]) => Boolean(value))
+        .filter(([_, value]) => value !== null && value !== undefined)
         .map(([key, value]) => {
           // check if value is an array, keep it as an array
           if (Array.isArray(value)) {
@@ -90,4 +91,23 @@ export const convertProtocolToParams = (protocols: ProtocolEnum[]) => {
   )
     return ProtocolFilterEnum.ALL_COPYABLE
   return protocols.map((protocol) => PROTOCOL_OPTIONS_MAPPING[protocol].key).join('-')
+}
+
+export const extractFiltersFromFormValues = <T>(data: ConditionFormValues<T>) => {
+  return Object.values(data).reduce<FilterValues[]>((result, values) => {
+    if (typeof values?.in === 'object' && values.conditionType === 'in') {
+      if (values?.key === 'indexTokens') {
+        return [...result, { fieldName: 'pairs', in: values.in.map((symbol) => `${symbol}-USDT`) } as FilterValues]
+      }
+      return [...result, { fieldName: values.key, in: values.in } as FilterValues]
+    }
+    if (typeof values?.gte !== 'number' && typeof values?.lte !== 'number') return result
+    const currFilter = {} as FilterValues
+    if (values?.key) currFilter['fieldName'] = values.key as string
+    if (typeof values?.gte === 'number' && (values.conditionType === 'between' || values?.conditionType === 'gte'))
+      currFilter['gte'] = values.gte
+    if (typeof values?.lte === 'number' && (values.conditionType === 'between' || values?.conditionType === 'lte'))
+      currFilter['lte'] = values.lte
+    return [...result, currFilter]
+  }, [])
 }

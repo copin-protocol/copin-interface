@@ -55,8 +55,6 @@ export interface TradersContextData {
   checkIsProtocolChecked: (status: ProtocolEnum) => boolean
   handleToggleProtocol: (option: ProtocolEnum) => void
   setSelectedProtocols: (protocols: ProtocolEnum[]) => void
-  urlProtocol: ProtocolEnum | undefined
-  setUrlProtocol: (protocol: ProtocolEnum | undefined) => void
 }
 
 const TradersContext = createContext<TradersContextData>({} as TradersContextData)
@@ -272,8 +270,6 @@ export function FilterTradersProvider({
     checkIsProtocolChecked,
     handleToggleProtocol,
     setSelectedProtocols,
-    urlProtocol,
-    setUrlProtocol,
   }
 
   return <TradersContext.Provider value={contextValue}>{children}</TradersContext.Provider>

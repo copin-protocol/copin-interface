@@ -29,8 +29,7 @@ export default function PageHeader({
   showSelectProtocol?: boolean
   useNewCode?: boolean
 }) {
-  const { selectedProtocols, checkIsProtocolChecked, handleToggleProtocol, setSelectedProtocols, urlProtocol } =
-    useTradersContext()
+  const { selectedProtocols, checkIsProtocolChecked, handleToggleProtocol, setSelectedProtocols } = useTradersContext()
   const { md } = useResponsive()
 
   const isInternal = useInternalRole()
@@ -41,7 +40,7 @@ export default function PageHeader({
     if (useNewCode) {
       return (
         <ProtocolFilter
-          selectedProtocols={urlProtocol ? [urlProtocol] : selectedProtocols}
+          selectedProtocols={selectedProtocols}
           checkIsProtocolChecked={checkIsProtocolChecked}
           handleToggleProtocol={handleToggleProtocol}
           setSelectedProtocols={setSelectedProtocols}

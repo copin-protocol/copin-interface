@@ -188,16 +188,17 @@ export async function getTraderHistoryApi({
 }
 
 export async function getTradersCounter(
-  protocol: ProtocolEnum,
+  protocols: ProtocolEnum[],
   payload: RequestBodyApiData,
   timeframe: TimeFilterByEnum
 ) {
   const body = normalizeTraderPayload(payload)
   const params: Record<string, any> = { pagination: body.pagination }
   if (!!body.ranges && body.ranges.length > 0) params.ranges = body.ranges
+  params.protocols = protocols
 
   return requester
-    .post(apiWrapper(`${protocol}/${SERVICE}/statistic/counter/level?type=${timeframe}`), params)
+    .post(`public/${SERVICE}/statistic/counter/level?type=${timeframe}`, params)
     .then((res: any) => res.data as TraderCounter[])
 }
 
@@ -244,7 +245,6 @@ export async function getTraderTokensStatistic(
   { protocol, account }: { protocol: ProtocolEnum; account: string },
   others?: GetApiParams & { sortBy?: string; sortType?: SortTypeEnum }
 ) {
-  // const { limit = 100, offset = 0, sortBy: sort_by, sortType: sort_type } = others ?? {}
   const { limit = 100, offset = 0 } = others ?? {}
   const params = { limit, offset }
   return requester
