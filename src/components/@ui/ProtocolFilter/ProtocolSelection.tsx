@@ -207,34 +207,44 @@ export default function ProtocolSelection({
       {/*  })}*/}
       {/*</Grid>*/}
 
-      <Flex mt={3} alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
+      <Flex
+        mt={3}
+        alignItems="center"
+        justifyContent={['space-between', 'flex-start']}
+        flexWrap="wrap"
+        sx={{ gap: ['6px', 2] }}
+      >
         <Type.CaptionBold color="neutral3">
           <Trans>Quick Search</Trans>:
         </Type.CaptionBold>
-        <Button
-          variant="info"
-          onClick={() => {
-            setSelectedProtocols(RELEASED_PROTOCOLS)
-          }}
-          px={[1, 3]}
-          sx={{ color: 'neutral1', border: 'none' }}
-        >
-          All Perps
-        </Button>
-        <Button
-          variant="info"
-          onClick={() => {
-            setSelectedProtocolsByAllowList(RELEASED_PROTOCOLS)
-          }}
-          px={[1, 3]}
-          sx={{ color: 'neutral1', border: 'none' }}
-        >
-          All Copyable Perps
-        </Button>
+        <Flex alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
+          <Button
+            size="xs"
+            variant="info"
+            onClick={() => {
+              setSelectedProtocols(RELEASED_PROTOCOLS)
+            }}
+            px={2}
+            sx={{ color: 'neutral1', border: 'none' }}
+          >
+            <Type.Caption>All Perps</Type.Caption>
+          </Button>
+          <Button
+            size="xs"
+            variant="info"
+            onClick={() => {
+              setSelectedProtocolsByAllowList(RELEASED_PROTOCOLS)
+            }}
+            px={2}
+            sx={{ color: 'neutral1', border: 'none' }}
+          >
+            <Type.Caption>All Copyable Perps</Type.Caption>
+          </Button>
+        </Flex>
       </Flex>
 
       {/* RENDER TOGGLE BUTTON */}
-      <Box my={2}>
+      <Box my="12px">
         <Flex sx={{ gap: [1, 2], alignItems: 'center', justifyContent: 'space-between' }} flexWrap={'wrap'}>
           <Flex alignItems={'center'} sx={{ gap: [1, 2] }}>
             <Checkbox

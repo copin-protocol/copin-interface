@@ -22,7 +22,7 @@ import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import Loading from 'theme/Loading'
 import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex } from 'theme/base'
-import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { ALL_OPTION, TOKEN_TRADE_SUPPORT, getTokenOptions } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
@@ -145,7 +145,7 @@ export function TraderDetailsComponent({
   const { currentOption: timeOption, changeCurrentOption } = useOptionChange({
     optionName: URL_PARAM_KEYS.EXPLORER_TIME_FILTER,
     options: timeFilterOptions,
-    defaultOption: timeFilterOptions[0].id as unknown as string,
+    defaultOption: TimeFilterByEnum.ALL_TIME.toString(),
   })
   const { currentPage, changeCurrentPage } = usePageChange({ pageName: URL_PARAM_KEYS.TRADER_HISTORY_PAGE })
   const [currentSort, setCurrentSort] = useState<TableSortProps<PositionData> | undefined>({
