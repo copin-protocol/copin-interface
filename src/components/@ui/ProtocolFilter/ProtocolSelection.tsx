@@ -31,6 +31,7 @@ interface ProtocolSelectionProps {
   allowList: ProtocolEnum[]
   setSelectedProtocols: (options: ProtocolEnum[], isClearAll?: boolean) => void
   hasSearch?: boolean
+  handleToggleDropdown?: () => void
 }
 const DEFAULT_ALL_CHAINS = 0
 const TOOLTIP_ID = `tt_1`
@@ -42,6 +43,7 @@ export default function ProtocolSelection({
   handleToggleProtocol,
   allowList,
   hasSearch = true,
+  handleToggleDropdown,
 }: ProtocolSelectionProps) {
   const { protocolSortBy, setProtocolSortBy } = useProtocolSortByStore()
   const { data: protocolsStatistic } = useQuery([QUERY_KEYS.GET_PROTOCOLS_STATISTIC], getProtocolsStatistic)
@@ -380,6 +382,7 @@ export default function ProtocolSelection({
           variant="ghostPrimary"
           onClick={() => {
             setSavedProtocols(selectedProtocols)
+            handleToggleDropdown?.()
           }}
           sx={{ fontWeight: 400, p: 0 }}
         >

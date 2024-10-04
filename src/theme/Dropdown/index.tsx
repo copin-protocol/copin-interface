@@ -10,7 +10,7 @@ import { GridProps, LayoutProps } from 'styled-system'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { BoxProps, Colors } from 'theme/types'
-import {FONT_FAMILY} from "../../utils/config/constants";
+import { FONT_FAMILY } from 'utils/config/constants'
 
 type Direction = 'left' | 'right'
 
@@ -75,7 +75,7 @@ const Menu = styled(Box)<BoxProps>(({ sx }: BoxProps) =>
     boxShadow: 3,
     border: 'small',
     borderColor: 'neutral4',
-      fontFamily: FONT_FAMILY,
+    fontFamily: FONT_FAMILY,
     ...sx,
   })
 )
