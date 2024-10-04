@@ -11,12 +11,11 @@ import Tag from 'theme/Tag'
 import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
-import { normalizePriceData } from 'utils/helpers/transform'
+import { getSymbolFromPair, normalizePriceData } from 'utils/helpers/transform'
 
 export const renderCopyTitle = (data: CopyPositionData) => (
   <Type.Caption color="neutral1" sx={{ maxWidth: '110px', ...overflowEllipsis(), display: 'block' }}>
@@ -31,14 +30,14 @@ export function renderEntry(data: CopyPositionData) {
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{getTokenTradeSupport(data.protocol)?.[data.indexToken]?.symbol}</Type.Caption>
+      <Type.Caption>{getSymbolFromPair(data.pair)}</Type.Caption>
       <VerticalDivider />
       <Type.Caption>{formatPrice(data.entryPrice)}</Type.Caption>
     </Flex>
   )
 }
 export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {
-  const symbol = data?.protocol ? getTokenTradeSupport(data?.protocol)?.[data?.indexToken]?.symbol : undefined
+  const symbol = getSymbolFromPair(data.pair)
   const pnl =
     data.status === PositionStatusEnum.OPEN
       ? calcCopyOpeningPnL(
@@ -79,7 +78,7 @@ export const renderValue = (data: CopyPositionData) => (
       : !isNaN(Number(data.totalSizeDelta))
       ? formatNumber(Number(data.totalSizeDelta), 4, 4)
       : '--'}{' '}
-    {getTokenTradeSupport(data.protocol)?.[data.indexToken]?.symbol}
+    {getSymbolFromPair(data.pair)}
   </Type.Caption>
 )
 export const renderSize = (data: CopyPositionData) => (

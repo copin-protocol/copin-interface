@@ -5,7 +5,6 @@ import { LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedTe
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { renderEntry, renderOpeningPnL, renderOpeningRoi, renderSizeOpening } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -89,7 +88,7 @@ const roiColumn: ColumnData<PositionData> = {
   title: 'ROI',
   dataIndex: 'roi',
   key: 'roi',
-  sortBy: 'roi',
+  sortBy: 'realisedRoi',
   style: { minWidth: '90px', textAlign: 'right' },
   render: (item) => (
     <Type.Caption color="neutral1">
@@ -198,7 +197,7 @@ const pnlColumnFull: ColumnData<PositionData> = {
   title: 'PnL',
   dataIndex: 'pnl',
   key: 'pnl',
-  sortBy: 'pnl',
+  sortBy: 'realisedPnl',
   style: { minWidth: '100px', textAlign: 'right' },
   render: (item) => {
     return (
@@ -258,7 +257,7 @@ const pnlOpeningColumn: ColumnData<PositionData> = {
   title: 'PnL',
   dataIndex: 'pnl',
   key: 'pnl',
-  sortBy: 'pnl',
+  sortBy: 'realisedPnl',
   style: { width: '75px', textAlign: 'right' },
   render: (item) => renderOpeningPnL(item),
 }
@@ -266,7 +265,7 @@ const roiOpeningColumn: ColumnData<PositionData> = {
   title: 'ROI',
   dataIndex: 'roi',
   key: 'roi',
-  sortBy: 'roi',
+  sortBy: 'realisedRoi',
   style: { minWidth: '75px', textAlign: 'right' },
   render: (item) => renderOpeningRoi(item),
 }

@@ -6,7 +6,7 @@ export interface RequestBackTestData {
   accounts: string[]
   balance: number
   orderVolume: number
-  tokenAddresses?: string[]
+  pairs?: string[]
   leverage: number
   fromTime: number
   toTime: number

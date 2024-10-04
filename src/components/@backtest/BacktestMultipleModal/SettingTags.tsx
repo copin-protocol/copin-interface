@@ -2,7 +2,6 @@ import { TestInstanceData } from 'hooks/store/useSelectBacktestTraders'
 import { Box, Flex, Type } from 'theme/base'
 import { DATE_FORMAT } from 'utils/config/constants'
 import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { formatLocalDate } from 'utils/helpers/format'
 
 export default function SettingTags({
@@ -52,14 +51,8 @@ export default function SettingTags({
           )}`}
         />
         <SettingItem
-          titleKey={'tokenAddresses'}
-          value={
-            settings.copyAll
-              ? 'FOLLOW TRADER'
-              : !!settings.tokenAddresses?.length
-              ? settings.tokenAddresses.map((address) => getTokenTradeSupport(protocol)[address]?.symbol).join(', ')
-              : ''
-          }
+          titleKey={'pairs'}
+          value={settings.copyAll ? 'FOLLOW TRADER' : !!settings.pairs?.length ? settings.pairs.join(', ') : ''}
         />
       </Flex>
     </Box>
@@ -109,8 +102,8 @@ function getTitle({ key }: { key: keyof NonNullable<TestInstanceData['settings']
     case 'volumeProtection':
       title = 'VOLUME PROTECTION:'
       break
-    case 'tokenAddresses':
-      title = 'TOKENS:'
+    case 'pairs':
+      title = 'PAIRS:'
       break
     case 'reverseCopy':
       title = 'REVERSE:'

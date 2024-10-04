@@ -16,7 +16,7 @@ import NumberInputField from 'theme/InputField/NumberInputField'
 import Select from 'theme/Select'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
-import { getTokenTradeList } from 'utils/config/trades'
+import { getSymbolsFromIndexTokens, getTokenTradeList } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
 
 import { fieldName } from '../configs'
@@ -59,10 +59,13 @@ export default function BacktestFormSimple({
       const _key = key as keyof BackTestFormValues
       setValue(_key, _defaultValues[_key])
     }
-    if (!_defaultValues.tokenAddresses.length) {
+    if (!_defaultValues.pairs.length) {
       setValue(
-        'tokenAddresses',
-        getTokenTradeList(protocol).map((v) => v.address)
+        'pairs',
+        getSymbolsFromIndexTokens(
+          protocol,
+          getTokenTradeList(protocol).map((v) => v.address)
+        )
       )
     }
 

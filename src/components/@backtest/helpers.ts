@@ -2,29 +2,33 @@ import dayjs from 'dayjs'
 
 import { RequestBackTestData } from 'entities/backTest'
 import { CopyTradeOrderTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { getTokenTradeList } from 'utils/config/trades'
+import { getSymbolsFromIndexTokens, getTokenTradeList } from 'utils/config/trades'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import { DISABLED_MARGIN_PROTECTION_PROTOCOLS, PARAM_MAPPING } from './configs'
 import { BackTestFormValues } from './types'
 
-export const getDefaultBackTestFormValues: (protcol: ProtocolEnum) => BackTestFormValues = (
-  protocol: ProtocolEnum
-) => ({
-  balance: 1000,
-  orderVolume: 100,
-  leverage: 5,
-  tokenAddresses: getTokenTradeList(protocol).map((token) => token.address),
-  startTime: dayjs().subtract(30, 'days').toDate(),
-  endTime: dayjs().subtract(1, 'days').toDate(),
-  lookBackOrders: DISABLED_MARGIN_PROTECTION_PROTOCOLS.includes(protocol) ? null : 10,
-  stopLossAmount: undefined,
-  stopLossType: SLTPTypeEnum.USD,
-  takeProfitAmount: undefined,
-  takeProfitType: SLTPTypeEnum.USD,
-  maxMarginPerPosition: null,
-  reverseCopy: false,
-  copyAll: false,
-})
+export const getDefaultBackTestFormValues: (protcol: ProtocolEnum) => BackTestFormValues = (protocol: ProtocolEnum) => {
+  const tokenAddresses = getTokenTradeList(protocol).map((token) => token.address)
+  const result: BackTestFormValues = {
+    balance: 1000,
+    orderVolume: 100,
+    leverage: 5,
+    // tokenAddresses,
+    pairs: getSymbolsFromIndexTokens(protocol, tokenAddresses),
+    startTime: dayjs().subtract(30, 'days').toDate(),
+    endTime: dayjs().subtract(1, 'days').toDate(),
+    lookBackOrders: DISABLED_MARGIN_PROTECTION_PROTOCOLS.includes(protocol) ? null : 10,
+    stopLossAmount: undefined,
+    stopLossType: SLTPTypeEnum.USD,
+    takeProfitAmount: undefined,
+    takeProfitType: SLTPTypeEnum.USD,
+    maxMarginPerPosition: null,
+    reverseCopy: false,
+    copyAll: false,
+  }
+  return result
+}
 
 export function getFormValuesFromRequestData(requestData: RequestBackTestData | undefined | null) {
   if (requestData == null) return
@@ -32,7 +36,8 @@ export function getFormValuesFromRequestData(requestData: RequestBackTestData | 
     balance: requestData.balance,
     orderVolume: requestData.orderVolume,
     leverage: requestData.leverage,
-    tokenAddresses: requestData.tokenAddresses ?? [],
+    // tokenAddresses: requestData.tokenAddresses ?? [],
+    pairs: requestData.pairs?.map((_v) => getSymbolFromPair(_v)) ?? [],
     startTime: dayjs(requestData.fromTime).utc().toDate(),
     endTime: dayjs(requestData.toTime).utc().toDate(),
     lookBackOrders: requestData.lookBackOrders ?? 10,
@@ -55,11 +60,6 @@ export function stringifyRequestData(
   protocol: ProtocolEnum
 ): Record<string, string | undefined> {
   try {
-    const tokenList = getTokenTradeList(protocol).map((value) => value.address)
-    const tokenStringifyMapping: Record<string, string> = tokenList.sort().reduce((result, tokenAddress, index) => {
-      return { ...result, [tokenAddress]: index }
-    }, {})
-
     return {
       [PARAM_MAPPING.ACCOUNT]: data.accounts?.[0],
       [PARAM_MAPPING.BALANCE]: data.balance?.toString(),
@@ -75,9 +75,7 @@ export function stringifyRequestData(
       [PARAM_MAPPING.MAX_VOL_MULTIPLIER]: data.maxVolMultiplier?.toString(),
       [PARAM_MAPPING.REVERSE_COPY]: data.reverseCopy ? '1' : undefined,
       [PARAM_MAPPING.COPY_ALL]: data.copyAll ? '1' : undefined,
-      [PARAM_MAPPING.TOKEN_ADDRESSES]: data.copyAll
-        ? undefined
-        : data.tokenAddresses?.map?.((address) => tokenStringifyMapping[address]).join('_'),
+      [PARAM_MAPPING.TOKEN_ADDRESSES]: data.copyAll ? undefined : data.pairs?.join?.('_')?.toLowerCase?.(),
     }
   } catch {
     return {}
@@ -87,9 +85,6 @@ export function parseRequestData(params: Record<string, any> | undefined, protoc
   let result = {} as RequestBackTestData & { testingType: CopyTradeOrderTypeEnum }
   if (!params) return result
   const tokenList = getTokenTradeList(protocol).map((value) => value.address)
-  const tokenParseMapping: Record<string, string> = tokenList.sort().reduce((result, tokenAddress, index) => {
-    return { ...result, [index]: tokenAddress }
-  }, {})
 
   try {
     const account = params[PARAM_MAPPING.ACCOUNT] ?? ''
@@ -106,16 +101,15 @@ export function parseRequestData(params: Record<string, any> | undefined, protoc
     const maxVolMultiplier = Number(params[PARAM_MAPPING.MAX_VOL_MULTIPLIER] ?? 0)
     const reverseCopy = params[PARAM_MAPPING.REVERSE_COPY] === '1' ? true : false
     const copyAll = params[PARAM_MAPPING.COPY_ALL] === '1' ? true : false
-    const tokenAddresses = copyAll
-      ? tokenList
+    const pairs = copyAll
+      ? getSymbolsFromIndexTokens(protocol, tokenList)
       : params[PARAM_MAPPING.TOKEN_ADDRESSES]
-      ? params[PARAM_MAPPING.TOKEN_ADDRESSES].split('_').map((index: string) => tokenParseMapping[index])
+      ? params[PARAM_MAPPING.TOKEN_ADDRESSES].split('_').map((symbol: string) => symbol.toUpperCase())
       : []
 
     const requiredData = [account, balance, orderVolume, leverage, fromTime, toTime]
 
-    if (requiredData.some((data) => !data || isNaN(data as number)) || (!copyAll && !tokenAddresses?.length))
-      return result
+    if (requiredData.some((data) => !data || isNaN(data as number)) || (!copyAll && !pairs?.length)) return result
 
     result = {
       accounts: [account],
@@ -125,7 +119,7 @@ export function parseRequestData(params: Record<string, any> | undefined, protoc
       fromTime,
       toTime,
       testingType: CopyTradeOrderTypeEnum.FULL_ORDER,
-      tokenAddresses,
+      pairs,
       reverseCopy,
       copyAll,
     }

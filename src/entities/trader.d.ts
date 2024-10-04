@@ -133,6 +133,9 @@ export interface PositionData {
   orders: OrderData[]
   createdAt: string
   realisedPnlInToken?: number
+  realisedPnl: number
+  realisedRoi: number
+  pair: string
 }
 
 export interface ResponsePositionData extends PositionData {
@@ -257,6 +260,7 @@ export type TickPosition = {
 
 export interface TraderTokenStatistic {
   symbol: string
+  pair: string
   indexTokens: string[]
   indexToken: string
   totalTrade: number

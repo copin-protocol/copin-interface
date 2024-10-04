@@ -17,12 +17,12 @@ const TOKEN_COLLATERAL_MORPHEX_FANTOM: Record<string, TokenCollateral> = {
     decimals: 6,
     isStableCoin: true,
   },
-  '0xf1648C50d2863f780c57849D812b4B7686031A3D-2': {
+  '0xf1648C50d2863f780c57849D812b4B7686031A3D': {
     address: '0xf1648C50d2863f780c57849D812b4B7686031A3D',
     symbol: 'WBTC',
     decimals: 8,
   },
-  '0x695921034f0387eAc4e11620EE91b1b15A6A09fE-2': {
+  '0x695921034f0387eAc4e11620EE91b1b15A6A09fE': {
     address: '0x695921034f0387eAc4e11620EE91b1b15A6A09fE',
     symbol: 'WETH',
     decimals: 8,

@@ -25,11 +25,13 @@ import { getTokenTradeSupport } from 'utils/config/trades'
 import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } from 'utils/helpers/calculate'
 import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { parseMarketImage } from 'utils/helpers/transform'
+import { getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps, showMarketIcon?: boolean) {
   if (!data || !data.protocol) return <></>
-  const symbol = getTokenTradeSupport(data.protocol)[data.indexToken]?.symbol ?? ''
+  const symbol = data.pair
+    ? getSymbolFromPair(data.pair) || ''
+    : getTokenTradeSupport(data.protocol)[data.indexToken]?.symbol || ''
 
   return (
     <Flex
@@ -44,7 +46,7 @@ export function renderEntry(data: PositionData | undefined, textSx?: TextProps, 
       </Type.Caption>
       <VerticalDivider />
       {showMarketIcon && <Image width={24} height={24} src={parseMarketImage(symbol)} />}
-      <Type.Caption {...textSx}>{getTokenTradeSupport(data.protocol)[data.indexToken]?.symbol}</Type.Caption>
+      <Type.Caption {...textSx}>{symbol}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>
         {data.averagePrice ? PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2 }) : '--'}

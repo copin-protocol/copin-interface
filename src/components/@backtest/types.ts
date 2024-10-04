@@ -5,7 +5,8 @@ export interface BackTestFormValues {
   balance: number
   orderVolume: number
   leverage: number
-  tokenAddresses: string[]
+  // tokenAddresses: string[]
+  pairs: string[]
   // tradingMethod: boolean
   startTime: Date
   endTime: Date

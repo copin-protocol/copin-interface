@@ -486,3 +486,10 @@ export function getCurrentTimezone() {
       return timezone
   }
 }
+
+export function getSymbolFromPair(pair: string | undefined) {
+  return pair?.split('-')?.[0] ?? ''
+}
+export function getPairFromSymbol(symbol: string) {
+  return `${symbol}-USDT`
+}

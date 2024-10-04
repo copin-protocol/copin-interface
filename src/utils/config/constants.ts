@@ -111,6 +111,8 @@ export const WALLET_NAME_MAX_LENGTH = 32
 
 export const RISK_LEVERAGE = 20
 
+export const MAX_PAGE_LIMIT = 500
+
 export const SUBSCRIPTION_COLLECTION_URL =
   NETWORK === 'devnet'
     ? 'https://testnets.opensea.io/collection/copin-subscription-3'

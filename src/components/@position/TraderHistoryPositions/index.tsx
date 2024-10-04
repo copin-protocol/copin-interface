@@ -27,11 +27,14 @@ import Table from 'theme/Table'
 import { ColumnData, TableSortProps } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
-import { TokenOptionProps } from 'utils/config/trades'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
+
+import { fullHistoryColumns, historyColumns } from '../configs/traderPositionRenderProps'
+import useQueryClosedPositions from './useQueryClosedPositions'
 
 function getHighestPnl(array: any): number {
   let high = 0
@@ -46,28 +49,44 @@ function getHighestPnl(array: any): number {
 }
 
 export interface HistoryTableProps {
-  data: PositionData[] | undefined
-  dataMeta?: ApiMeta
-  isLoading: boolean
-  tokenOptions: TokenOptionProps[]
-  currencyOption: TokenOptionProps
-  changeCurrency: (option: TokenOptionProps) => void
-  fetchNextPage?: () => void
-  hasNextPage?: boolean | undefined
-  toggleExpand?: () => void
-  isExpanded?: boolean
-  tableSettings: ColumnData<PositionData>[]
-  currentSort?: TableSortProps<PositionData> | undefined
-  changeCurrentSort?: (sort: TableSortProps<PositionData> | undefined) => void
+  address: string
+  protocol: ProtocolEnum
+  isExpanded: boolean
+  toggleExpand: () => void
 }
 
 export default function TraderHistoryPositions(props: HistoryTableProps) {
-  const { data, isLoading, tokenOptions, currencyOption, changeCurrency, toggleExpand, isExpanded } = props
+  const { address, protocol, isExpanded, toggleExpand } = props
   const { myProfile } = useMyProfile()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [showChart, setShowChart] = useState(false)
   const { heatmapVisible, setHeatmapVisible } = useHeatmapStore()
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
+  const { sm, xl } = useResponsive()
+
+  //
+  const {
+    tokenOptions,
+    currencyOption,
+    changeCurrency,
+    currentSort,
+    changeCurrentSort,
+    resetSort,
+    closedPositions,
+    isLoadingClosed: isLoadingClosedPositions,
+    hasNextClosedPositions,
+    handleFetchClosedPositions,
+  } = useQueryClosedPositions({ address, protocol, isExpanded })
+
+  const tableSettings = xl && isExpanded ? fullHistoryColumns : historyColumns
+  const data = closedPositions?.data
+  const dataMeta = closedPositions?.meta
+  const handleToggleExpand = () => {
+    resetSort()
+    toggleExpand()
+  }
+  //
+
   const history = useHistory()
   const { searchParams } = useSearchParams()
   const nextHoursParam = useMemo(
@@ -103,8 +122,6 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
     window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
     setOpenDrawer(false)
   }
-
-  const { sm } = useResponsive()
 
   const logEventLayout = (action: string) => {
     logEvent({
@@ -193,7 +210,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
           <Tooltip id="history_table_heatmap" place="bottom" type="dark" effect="solid">
             <Type.Caption>Show/Hide Heatmap Activity</Type.Caption>
           </Tooltip>
-          {toggleExpand && (
+          {!!toggleExpand && (
             <IconBox
               icon={isExpanded ? <ArrowsIn size={20} /> : <ArrowsOutSimple size={20} />}
               role="button"
@@ -209,19 +226,30 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
                 color: 'neutral2',
                 '&:hover': { color: 'neutral1' },
               }}
-              onClick={toggleExpand}
+              onClick={handleToggleExpand}
             />
           )}
         </Flex>
       </Flex>
-      {!isLoading && !data?.length && !sm && <NoDataFound message="No positions history" />}
+      {!isLoadingClosedPositions && !data?.length && !sm && <NoDataFound message="No positions history" />}
       {!!data && data.length > 0 && !!data[0].account && heatmapVisible && (
         <Box height={130} px={12}>
           <ActivityHeatmap account={data[0].account} protocol={data[0].protocol} />
         </Box>
       )}
       <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
-        <PositionsList {...props} handleSelectItem={handleSelectItem} showChart={showChart} />
+        <PositionsList
+          data={data}
+          dataMeta={dataMeta}
+          isLoading={isLoadingClosedPositions}
+          hasNextPage={hasNextClosedPositions}
+          fetchNextPage={handleFetchClosedPositions}
+          tableSettings={tableSettings}
+          currentSort={currentSort}
+          changeCurrentSort={changeCurrentSort}
+          handleSelectItem={handleSelectItem}
+          showChart={showChart}
+        />
       </Box>
 
       <TraderPositionDetailsDrawer
@@ -246,7 +274,16 @@ const PositionsList = memo(function PositionsListMemo({
   dataMeta,
   showChart,
   handleSelectItem,
-}: HistoryTableProps & { showChart: boolean; handleSelectItem: (data: PositionData) => void }) {
+}: {
+  data: PositionData[] | undefined
+  dataMeta: ApiMeta | undefined
+  isLoading: boolean
+  fetchNextPage: () => void
+  hasNextPage: boolean | undefined
+  tableSettings: ColumnData<PositionData>[]
+  currentSort: TableSortProps<PositionData> | undefined
+  changeCurrentSort: ((sort: TableSortProps<PositionData> | undefined) => void) | undefined
+} & { showChart: boolean; handleSelectItem: (data: PositionData) => void }) {
   const { sm, lg } = useResponsive()
   const { scrollRef } = useInfiniteLoadMore({ isDesktop: lg, hasNextPage, fetchNextPage, isLoading })
   const highValue: number = data?.length ? getHighestPnl(data) : 0

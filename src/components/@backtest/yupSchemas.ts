@@ -15,7 +15,13 @@ export const backTestFormSchema = yup.object({
     })
     .label('Balance'),
   orderVolume: yup.number().required().min(1).label('Order Volume'),
-  tokenAddresses: yup.array(yup.string()).required().min(1).label('Pairs'),
+  pairs: yup
+    .array(yup.string())
+    .when('copyAll', {
+      is: false,
+      then: (schema) => schema.required().min(1),
+    })
+    .label('Pairs'),
   startTime: yup
     .date()
     .required()

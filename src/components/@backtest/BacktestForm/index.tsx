@@ -20,12 +20,7 @@ import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
 import { RISK_LEVERAGE } from 'utils/config/constants'
 import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import {
-  getIndexTokensFromSymbols,
-  getSymbolsFromIndexTokens,
-  getTokenOptions,
-  getTokenTradeList,
-} from 'utils/config/trades'
+import { getSymbolsFromIndexTokens, getTokenOptions, getTokenTradeList } from 'utils/config/trades'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -65,19 +60,19 @@ export default function BacktestForm({
 
   useEffect(() => {
     const _defaultValues = defaultValues ? { ...defaultValues } : getDefaultBackTestFormValues(protocol)
-    if (_defaultValues.tokenAddresses?.length) {
-      _defaultValues.tokenAddresses = getSymbolsFromIndexTokens(protocol, _defaultValues.tokenAddresses)
+    if (_defaultValues.pairs?.length) {
+      _defaultValues.pairs = _defaultValues.pairs
     }
     for (const key in _defaultValues) {
       const _key = key as keyof BackTestFormValues
       setValue(_key, _defaultValues[_key])
     }
-    if (!defaultValues?.tokenAddresses.length && !!tokensTraded?.length) {
-      setValue('tokenAddresses', getSymbolsFromIndexTokens(protocol, tokensTraded))
+    if (!defaultValues?.pairs.length && !!tokensTraded?.length) {
+      setValue('pairs', getSymbolsFromIndexTokens(protocol, tokensTraded))
       return
     }
-    if (!_defaultValues.tokenAddresses?.length) {
-      setValue('tokenAddresses', Array.from(new Set(getTokenTradeList(protocol).map((v) => v.symbol))))
+    if (!_defaultValues.pairs?.length) {
+      setValue('pairs', Array.from(new Set(getTokenTradeList(protocol).map((v) => v.symbol))))
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,7 +80,7 @@ export default function BacktestForm({
 
   const copyAll = watch('copyAll')
   const orderVolume = watch('orderVolume')
-  const tokenAddresses = watch('tokenAddresses')
+  const pairs = watch('pairs')
   const leverage = watch('leverage')
   const stopLossAmount = watch('stopLossAmount')
   const stopLossType = watch('stopLossType')
@@ -108,7 +103,7 @@ export default function BacktestForm({
 
   pairOptions.unshift({ id: 'all', value: 'all', label: 'All Tokens' })
 
-  const isSelectedAll = allPairs.length === tokenAddresses?.length
+  const isSelectedAll = allPairs.length === pairs?.length
 
   const { sm } = useResponsive()
   const [showGuide, setShowGuide] = useState(false)
@@ -123,8 +118,8 @@ export default function BacktestForm({
   const _handleSubmit = () => {
     handleSubmit((_formValues) => {
       const formValues = { ..._formValues }
-      if (formValues.tokenAddresses?.length) {
-        formValues.tokenAddresses = getIndexTokensFromSymbols(protocol, formValues.tokenAddresses)
+      if (formValues.pairs?.length) {
+        formValues.pairs = formValues.pairs.map((v) => `${v}-USDT`)
       }
       onSubmit?.(formValues)
     })()
@@ -166,11 +161,11 @@ export default function BacktestForm({
       <Box mt={24} id={tourConfigs.tradingPairs.id}>
         <Box mb={3}>
           <Flex mb={2} sx={{ alignItems: 'center', gap: 12, '& *': { mb: '0 !important' } }}>
-            <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
+            <Label label="Trading Pairs" error={errors.pairs?.message} />
             <SwitchInputField
               switchLabel="Follow the trader"
               labelColor="neutral1"
-              {...register(fieldName.copyAll)}
+              {...register(fieldName.copyAll, { onChange: () => clearErrors('pairs') })}
               error={errors.copyAll?.message}
               wrapperSx={{ flexDirection: 'row-reverse', '*': { fontWeight: 400 } }}
             />
@@ -184,15 +179,15 @@ export default function BacktestForm({
               closeMenuOnSelect={false}
               className="select-container pad-right-0"
               options={pairOptions}
-              value={pairOptions?.filter?.((option) => tokenAddresses?.includes(option.value))}
+              value={pairOptions?.filter?.((option) => pairs?.includes(option.value))}
               onChange={(newValue: any, actionMeta: any) => {
-                clearErrors(fieldName.tokenAddresses)
+                clearErrors(fieldName.pairs)
                 if (actionMeta?.option?.value === 'all') {
-                  setValue(fieldName.tokenAddresses, allPairs)
+                  setValue(fieldName.pairs, allPairs)
                   return
                 }
                 setValue(
-                  fieldName.tokenAddresses,
+                  fieldName.pairs,
                   newValue?.map((data: any) => data.value)
                 )
               }}
@@ -203,9 +198,9 @@ export default function BacktestForm({
               isMulti
             />
           </Box>
-          {!!errors?.tokenAddresses?.message && (
+          {!!errors?.pairs?.message && (
             <Type.Caption color="red1" mt={1} display="block">
-              {errors?.tokenAddresses?.message}
+              {errors?.pairs?.message}
             </Type.Caption>
           )}
         </Box>
