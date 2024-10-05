@@ -61,14 +61,7 @@ export default function CreateOKXWalletModal({ isOpen, onDismiss }: { isOpen: bo
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      hasClose
-      title={'Create Your OKX Wallet'}
-      onDismiss={onDismiss}
-      width="90vw"
-      maxWidth="450px"
-    >
+    <Modal isOpen={isOpen} hasClose title={'Connect Your OKX API'} onDismiss={onDismiss} width="90vw" maxWidth="450px">
       <Box variant="card" sx={{ backgroundColor: 'modalBG' }}>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -127,7 +120,7 @@ export default function CreateOKXWalletModal({ isOpen, onDismiss }: { isOpen: bo
 
           <Divider />
 
-          <OKXHelp hasBorder />
+          <OKXHelp />
 
           <Button
             size="xl"
@@ -136,7 +129,7 @@ export default function CreateOKXWalletModal({ isOpen, onDismiss }: { isOpen: bo
             isLoading={submitting}
             disabled={Object.keys(errors).length > 0 || submitting}
           >
-            {submitting ? <Trans>Creating...</Trans> : <Trans>Create OKX Wallet</Trans>}
+            {submitting ? <Trans>Connecting...</Trans> : <Trans>Connect</Trans>}
           </Button>
         </form>
       </Box>

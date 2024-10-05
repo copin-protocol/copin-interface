@@ -255,7 +255,7 @@ function ExchangeTitle({
             }}
           >
             <PlusSquare size={16} style={{ color: 'inherit' }} />
-            <Box as="span">Connect</Box>
+            <Box as="span">{DCP_EXCHANGES.includes(exchange) ? <Trans>Create</Trans> : <Trans>Connect</Trans>}</Box>
           </Button>
         ) : (
           <Type.Caption sx={{ py: 1, px: 2, bg: 'neutral6', borderRadius: '2px' }} color="neutral3">

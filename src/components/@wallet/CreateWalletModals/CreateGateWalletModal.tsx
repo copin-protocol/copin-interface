@@ -60,14 +60,7 @@ export default function CreateGateWalletModal({ isOpen, onDismiss }: { isOpen: b
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      hasClose
-      title={'Create Your Gate Wallet'}
-      onDismiss={onDismiss}
-      width="90vw"
-      maxWidth="450px"
-    >
+    <Modal isOpen={isOpen} hasClose title={'Connect Your Gate API'} onDismiss={onDismiss} width="90vw" maxWidth="450px">
       <Box variant="card" sx={{ backgroundColor: 'modalBG' }}>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -112,7 +105,7 @@ export default function CreateGateWalletModal({ isOpen, onDismiss }: { isOpen: b
 
           <Divider />
 
-          <GateHelp hasBorder />
+          <GateHelp />
 
           <Button
             size="xl"
@@ -121,7 +114,7 @@ export default function CreateGateWalletModal({ isOpen, onDismiss }: { isOpen: b
             isLoading={submitting}
             disabled={Object.keys(errors).length > 0 || submitting}
           >
-            {submitting ? <Trans>Creating...</Trans> : <Trans>Create Gate Wallet</Trans>}
+            {submitting ? <Trans>Connecting...</Trans> : <Trans>Connect</Trans>}
           </Button>
         </form>
       </Box>
