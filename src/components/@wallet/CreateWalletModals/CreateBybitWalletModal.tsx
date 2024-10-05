@@ -63,7 +63,7 @@ export default function CreateBybitWalletModal({ isOpen, onDismiss }: { isOpen: 
     <Modal
       isOpen={isOpen}
       hasClose
-      title={'Create Your Bybit Wallet'}
+      title={'Connect Your Bybit API'}
       onDismiss={onDismiss}
       width="90vw"
       maxWidth="450px"
@@ -112,7 +112,7 @@ export default function CreateBybitWalletModal({ isOpen, onDismiss }: { isOpen: 
 
           <Divider />
 
-          <BybitHelp hasBorder />
+          <BybitHelp />
 
           <Button
             size="xl"
@@ -121,7 +121,7 @@ export default function CreateBybitWalletModal({ isOpen, onDismiss }: { isOpen: 
             isLoading={submitting}
             disabled={Object.keys(errors).length > 0 || submitting}
           >
-            {submitting ? <Trans>Creating...</Trans> : <Trans>Create Bybit Wallet</Trans>}
+            {submitting ? <Trans>Connecting...</Trans> : <Trans>Connect</Trans>}
           </Button>
         </form>
       </Box>

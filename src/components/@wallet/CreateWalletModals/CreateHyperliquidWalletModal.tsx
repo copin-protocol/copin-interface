@@ -17,7 +17,7 @@ import { Box } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 
 import HyperliquidHelp from './WalletHelpHyperliquid'
-import { ApiWalletFormValues, apiWalletFormSchema, defaultFormValues } from './schema'
+import { HyperliquidWalletFormValues, defaultFormValues, hyperliquidWalletFormSchema } from './hyperliquidSchema'
 
 export default function CreateHyperliquidWalletModal({
   isOpen,
@@ -30,11 +30,11 @@ export default function CreateHyperliquidWalletModal({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ApiWalletFormValues>({
+  } = useForm<HyperliquidWalletFormValues>({
     mode: 'onChange',
     shouldFocusError: true,
     defaultValues: defaultFormValues,
-    resolver: yupResolver(apiWalletFormSchema),
+    resolver: yupResolver(hyperliquidWalletFormSchema),
   })
 
   const { reloadCopyWallets } = useCopyWalletContext()
@@ -53,7 +53,7 @@ export default function CreateHyperliquidWalletModal({
     },
   })
 
-  const onSubmit: SubmitHandler<ApiWalletFormValues> = (data) => {
+  const onSubmit: SubmitHandler<HyperliquidWalletFormValues> = (data) => {
     if (submitting) return
     createWallet.mutate({
       exchange: CopyTradePlatformEnum.HYPERLIQUID,
@@ -61,6 +61,7 @@ export default function CreateHyperliquidWalletModal({
       hyperliquid: {
         apiKey: data.apiKey,
         secretKey: data.secretKey,
+        passPhrase: data.passPhrase,
       },
     })
   }
@@ -108,6 +109,18 @@ export default function CreateHyperliquidWalletModal({
             })}
           />
 
+          <InputPasswordField
+            placeholder={t`Your Hyperliquid Vault Address`}
+            label={<Trans>Hyperliquid Vault Address</Trans>}
+            block
+            error={errors?.passPhrase?.message}
+            {...register('passPhrase', {
+              onChange: (e) => {
+                e.target.value = e.target.value.trim().replace(/\s/g, '')
+              },
+            })}
+          />
+
           <InputField
             block
             label={<Trans>Wallet Name</Trans>}
@@ -118,7 +131,7 @@ export default function CreateHyperliquidWalletModal({
 
           <Divider />
 
-          <HyperliquidHelp hasBorder />
+          <HyperliquidHelp />
 
           <Button
             size="xl"

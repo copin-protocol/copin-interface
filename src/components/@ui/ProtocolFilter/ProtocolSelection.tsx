@@ -116,7 +116,6 @@ export default function ProtocolSelection({
 
     for (let i = 0; i < selectedProtocols.length; i++) {
       const selectedProtocol = selectedProtocols[i]
-
       const { label, text } = protocolsMapping[selectedProtocol]
 
       if (!protocolCounter[label]) {
