@@ -2,11 +2,19 @@ import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import { TraderData } from 'entities/trader'
 import { Box, Flex, Type } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 import { formatRelativeDate } from 'utils/helpers/format'
 
-export default function GeneralStats({ traderData }: { traderData: TraderData | undefined }) {
-  if (!traderData) return <></>
-  const { account, protocol, lastTradeAt, runTimeDays, smartAccount } = traderData
+export default function GeneralStats({
+  traderData,
+  account,
+  protocol,
+}: {
+  traderData: TraderData | undefined
+  account: string
+  protocol: ProtocolEnum
+}) {
+  const { lastTradeAt, runTimeDays, smartAccount } = traderData ?? {}
   return (
     <Box
       sx={{
@@ -45,18 +53,22 @@ export default function GeneralStats({ traderData }: { traderData: TraderData | 
             <BalanceText protocol={protocol} account={account} smartAccount={smartAccount} />
           </Type.Caption>
         </Box>
-        <Box textAlign="center" flex={['1', 'none']}>
-          <Type.Caption mr={[0, 2]} color="neutral3" display={['block', 'inline-block']}>
-            Last Trade:
-          </Type.Caption>
-          <Type.Caption>{formatRelativeDate(lastTradeAt)}</Type.Caption>
-        </Box>
-        <Box textAlign="center" flex={['1', 'none']}>
-          <Type.Caption mr={[0, 2]} color="neutral3" display={['block', 'inline-block']}>
-            Runtime:
-          </Type.Caption>
-          <Type.Caption>{runTimeDays} days</Type.Caption>
-        </Box>
+        {lastTradeAt && (
+          <Box textAlign="center" flex={['1', 'none']}>
+            <Type.Caption mr={[0, 2]} color="neutral3" display={['block', 'inline-block']}>
+              Last Trade:
+            </Type.Caption>
+            <Type.Caption>{formatRelativeDate(lastTradeAt)}</Type.Caption>
+          </Box>
+        )}
+        {runTimeDays && (
+          <Box textAlign="center" flex={['1', 'none']}>
+            <Type.Caption mr={[0, 2]} color="neutral3" display={['block', 'inline-block']}>
+              Runtime:
+            </Type.Caption>
+            <Type.Caption>{runTimeDays} days</Type.Caption>
+          </Box>
+        )}
       </Flex>
     </Box>
   )

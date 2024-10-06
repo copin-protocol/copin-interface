@@ -56,6 +56,8 @@ const ChartTrader = ({
     return cumulativePnL
   }, [stats])
 
+  const filteredFrom = stats && stats.length > 0 ? Math.max(from, dayjs(stats[0].date).utc().valueOf()) : from
+
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', px: 12, pt: 12, pb: 1 }}>
       {loadingStats && <Loading />}
@@ -144,7 +146,7 @@ const ChartTrader = ({
                   visibility: isBarChart ? 'visible' : 'hidden',
                 }}
               >
-                <BarChartTraderPnL data={stats} isLoading={loadingStats} from={from} to={to} />
+                <BarChartTraderPnL data={stats} isLoading={loadingStats} from={filteredFrom} to={to} />
               </Box>
               <Box
                 sx={{
@@ -160,7 +162,7 @@ const ChartTrader = ({
                   data={parseTraderPnLStatisticData(stats)}
                   isCumulativeData={false}
                   isLoading={loadingStats}
-                  from={from}
+                  from={filteredFrom}
                   to={to}
                 />
               </Box>

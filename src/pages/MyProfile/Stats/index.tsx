@@ -8,7 +8,6 @@ import LineChartPnl from 'components/@charts/LineChartPnL'
 import { parseCopyTraderPnLData } from 'components/@charts/LineChartPnL/helpers'
 import Divider from 'components/@ui/Divider'
 import TimeFilter, { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
-import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
@@ -27,8 +26,11 @@ const ViewEnumLabel = {
 }
 
 const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; copyWalletId: string | undefined }) => {
-  const { checkIsPremium } = useIsPremiumAndAction()
-  const { currentOption, changeCurrentOption } = useOptionChange({ optionName: 'filter', options: TIME_FILTER_OPTIONS })
+  const { currentOption, changeCurrentOption } = useOptionChange({
+    optionName: 'filter',
+    options: TIME_FILTER_OPTIONS,
+    defaultOption: TimeFilterByEnum.S7_DAY.toString(),
+  })
   const [view, setView] = useState<ViewEnum>(ViewEnum.DailyRoi)
   const to = useMemo(() => dayjs().utc().valueOf(), [])
   const timeframeDuration = getDurationFromTimeFilter(currentOption?.id)
@@ -55,10 +57,9 @@ const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; co
     }
   )
 
+  const filteredFrom = data && data.length > 0 ? Math.max(from, dayjs(data[0].date).utc().valueOf()) : from
+
   const handleFilterChange = (timeOption: TimeFilterProps) => {
-    if (timeOption.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) {
-      return
-    }
     changeCurrentOption(timeOption)
   }
 
@@ -100,13 +101,15 @@ const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; co
           <LineChartPnl
             data={parseCopyTraderPnLData(data)}
             isLoading={isLoading}
-            from={from}
+            from={filteredFrom}
             to={to}
             isCumulativeData
             balanceTextComponent={Type.H5}
           />
         )}
-        {view === ViewEnum.DailyRoi && <BarChartCopierRoi data={data} isLoading={isLoading} from={from} to={to} />}
+        {view === ViewEnum.DailyRoi && (
+          <BarChartCopierRoi data={data} isLoading={isLoading} from={filteredFrom} to={to} />
+        )}
       </Box>
     </Flex>
   )

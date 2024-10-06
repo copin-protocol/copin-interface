@@ -16,7 +16,7 @@ import NumberInputField from 'theme/InputField/NumberInputField'
 import Select from 'theme/Select'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
-import { getTokenTradeList } from 'utils/config/trades'
+import { getSymbolsFromIndexTokens, getTokenTradeList } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
 
 import { fieldName } from '../configs'
@@ -59,10 +59,13 @@ export default function BacktestFormSimple({
       const _key = key as keyof BackTestFormValues
       setValue(_key, _defaultValues[_key])
     }
-    if (!_defaultValues.tokenAddresses.length) {
+    if (!_defaultValues.pairs.length) {
       setValue(
-        'tokenAddresses',
-        getTokenTradeList(protocol).map((v) => v.address)
+        'pairs',
+        getSymbolsFromIndexTokens(
+          protocol,
+          getTokenTradeList(protocol).map((v) => v.address)
+        )
       )
     }
 
@@ -77,7 +80,6 @@ export default function BacktestFormSimple({
     setValue('endTime', endTime.toDate())
   }, [setValue, _timeOption])
 
-  const { checkIsPremium } = useIsPremiumAndAction()
   const selectOptions = TIME_FILTER_OPTIONS.filter((option) => option.id !== TimeFilterByEnum.ALL_TIME).map(
     (option) => ({
       value: option.id,
@@ -86,7 +88,6 @@ export default function BacktestFormSimple({
   )
   const selectValue = selectOptions.find((option) => option.value === _timeOption.id)
   const handleChangeTime = (_selectValue: any) => {
-    if (_selectValue.value === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) return
     onChangeTimeOption(
       TIME_FILTER_OPTIONS.find((option) => option.id === _selectValue?.value) ?? TIME_FILTER_OPTIONS[0]
     )

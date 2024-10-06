@@ -24,7 +24,6 @@ import TraderAddress from 'components/@ui/TraderAddress'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { Account, PnlStatisticsResponse, ResponseTraderData, StatisticData, TraderData } from 'entities/trader'
 import useInternalRole from 'hooks/features/useInternalRole'
-import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 // import useIsMobile from 'hooks/helpers/useIsMobile'
 // import useIsSafari from 'hooks/helpers/useIsSafari'
@@ -36,12 +35,12 @@ import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
-import { ALLOWED_COPYTRADE_PROTOCOLS, DATE_FORMAT, RELEASED_PROTOCOLS } from 'utils/config/constants'
-import { ProtocolEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { ALLOWED_COPYTRADE_PROTOCOLS, DATE_FORMAT } from 'utils/config/constants'
+import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatDate } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { getProtocolFromUrl, transformGraphqlFilters } from 'utils/helpers/graphql'
+import { transformGraphqlFilters, useProtocolFromUrl } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
 import { getUserForTracking, logEvent, logEventBacktest, logEventHomeFilter } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
@@ -67,7 +66,7 @@ export default function Traders() {
     setSelectedProtocols,
   } = useProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
 
-  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
 
   useEffect(() => {
     if (foundProtocolInUrl) {
@@ -185,7 +184,6 @@ type ProtocolFilter = {
 function Filters({ filters, protocolFilter }: { filters: FiltersState; protocolFilter: ProtocolFilter }) {
   const { myProfile } = useMyProfile()
   const { setSearchParams } = useSearchParams()
-  const { checkIsPremium } = useIsPremiumAndAction()
 
   const handleChangeSort = (sortBy: keyof TraderData) => {
     setSearchParams({ [URL_PARAM_KEYS.HOME_SORT_BY]: sortBy as unknown as string, [URL_PARAM_KEYS.HOME_PAGE]: '1' })
@@ -194,7 +192,6 @@ function Filters({ filters, protocolFilter }: { filters: FiltersState; protocolF
   }
 
   const handleChangeTime = (option: TimeFilterProps) => {
-    if (option.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) return
     setSearchParams({ [URL_PARAM_KEYS.HOME_TIME]: option.id as unknown as string, [URL_PARAM_KEYS.HOME_PAGE]: '1' })
 
     logEventHomeFilter({ filter: option.id, username: myProfile?.username })
@@ -250,12 +247,12 @@ function ListTraders({ filters }: { filters: FiltersState }) {
 
     const query = [
       ...graphqlBaseFilters,
-      // { field: 'protocol', in: filters.protocols },
+      { field: 'protocol', in: filters.protocols },
       { field: 'type', match: filters.time.id },
     ]
-    if (!!filters.protocols?.length && filters.protocols.length !== RELEASED_PROTOCOLS.length) {
-      query.push({ field: 'protocol', in: filters.protocols })
-    }
+    // if (!!filters.protocols?.length && filters.protocols.length !== RELEASED_PROTOCOLS.length) {
+    //   query.push({ field: 'protocol', in: filters.protocols })
+    // }
 
     const body = {
       filter: {
@@ -304,9 +301,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     [QUERY_KEYS.GET_PNL_STATISTICS, traderData],
     () => getPnlStatisticsApi(getPnlStatisticsPayload(traderData)),
     {
-      enabled:
-        !!traderData &&
-        (filters.time.id !== TimeFilterByEnum.ALL_TIME || profile?.plan === SubscriptionPlanEnum.PREMIUM),
+      enabled: !!traderData,
     }
   )
 

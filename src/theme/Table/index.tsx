@@ -134,7 +134,9 @@ TableProps<T, K>) {
                     height: 40,
                   }}
                 >
-                  <Type.Caption color="neutral3">End of list</Type.Caption>
+                  <Type.Caption color="neutral3">
+                    End of list ({data.length}/{dataMeta?.total ?? 0})
+                  </Type.Caption>
                 </Flex>
               )}
             </Box>

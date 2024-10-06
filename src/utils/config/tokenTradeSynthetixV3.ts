@@ -175,9 +175,6 @@ const TOKEN_TRADE_SYNTHETIX_V3: ProtocolTokenMapping = {
   'SYNTHETIX_V3-5800': {
     symbol: 'LTC',
   },
-  'SYNTHETIX_V3-5900': {
-    symbol: '',
-  },
   'SYNTHETIX_V3-6000': {
     symbol: 'MEME',
   },

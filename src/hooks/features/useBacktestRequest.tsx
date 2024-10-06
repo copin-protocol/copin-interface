@@ -9,7 +9,7 @@ import { BackTestFormValues } from 'components/@backtest/types'
 import ToastBody from 'components/@ui/ToastBody'
 import { BackTestResultData, RequestBackTestData } from 'entities/backTest.d'
 import { ProtocolEnum } from 'utils/config/enums'
-import { getTokenTradeList } from 'utils/config/trades'
+import { getSymbolsFromIndexTokens, getTokenTradeList } from 'utils/config/trades'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
 export default function useBacktestRequest(
@@ -90,9 +90,6 @@ export default function useBacktestRequest(
         leverage: formData.leverage,
         fromTime,
         toTime,
-        tokenAddresses: formData.copyAll
-          ? getTokenTradeList(_protocol).map((token) => token.address)
-          : formData.tokenAddresses,
         reverseCopy: formData.reverseCopy,
         copyAll: formData.copyAll,
         maxVolMultiplier:
@@ -113,6 +110,9 @@ export default function useBacktestRequest(
         requestData.enableTakeProfit = true
         requestData.takeProfitAmount = formData.takeProfitAmount
         requestData.takeProfitType = formData.takeProfitType
+      }
+      if (!formData.copyAll) {
+        requestData.pairs = formData.pairs
       }
       if (isReturnPositions) requestData.isReturnPositions = true
       setBacktestSettings(requestData)

@@ -128,6 +128,7 @@ export interface CopyPositionData {
   createdAt: string
   updatedAt: string
   totalSizeDelta?: number
+  pair: string
 }
 
 export interface CopyOrderData {

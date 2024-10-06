@@ -3,29 +3,24 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
-import { getTraderExchangeStatistic, getTraderStatisticApi, getTraderTokensStatistic } from 'apis/traderApis'
+import { getTraderExchangeStatistic, getTraderStatisticApi } from 'apis/traderApis'
 import TraderHistoryPositions from 'components/@position/TraderHistoryPositions'
 import TraderOpeningPositions from 'components/@position/TraderOpeningPositions'
-import { fullHistoryColumns, historyColumns } from 'components/@position/configs/traderPositionRenderProps'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
 import NotFound from 'components/@ui/NotFound'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d'
 import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
-import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
-import usePageChange from 'hooks/helpers/usePageChange'
 import { getNavProtocol, parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import Loading from 'theme/Loading'
-import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { ALL_OPTION, TOKEN_TRADE_SUPPORT, TokenOptionProps, getTokenOptions } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
 import { isAddress } from 'utils/web3/contracts'
 
@@ -42,7 +37,6 @@ import TraderActionButtons from './TraderActionButtons'
 import TraderInfo from './TraderInfo'
 import TraderRanking from './TraderRanking'
 import TraderStats from './TraderStats'
-import useQueryPositions from './useQueryOptions'
 
 export interface PositionSortPros {
   sortBy: keyof PositionData
@@ -105,14 +99,10 @@ export function TraderDetailsComponent({
   protocol: ProtocolEnum
   exchangeStats: ResponseTraderExchangeStatistic
 }) {
-  const { isPremiumUser, checkIsPremium } = useIsPremiumAndAction()
-  const timeFilterOptions = useMemo(
-    () => (isPremiumUser ? TIME_FILTER_OPTIONS : TIME_FILTER_OPTIONS.filter((e) => e.id !== TimeFilterByEnum.ALL_TIME)),
-    [isPremiumUser]
-  )
+  const timeFilterOptions = TIME_FILTER_OPTIONS
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
-    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol, isPremiumUser],
+    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol],
     () => getTraderStatisticApi({ protocol, account: address }),
     {
       enabled: !!address,
@@ -125,81 +115,16 @@ export function TraderDetailsComponent({
           .reverse(),
     }
   )
-  const { data: tokensStatistic } = useQuery(
-    [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, address],
-    () => getTraderTokensStatistic({ protocol, account: address }),
-    { enabled: !!address && !!protocol }
-  )
 
-  const tokenOptions = useMemo(() => {
-    if (tokensStatistic?.data?.length) {
-      const statisticSymbols = tokensStatistic.data.map((e) => TOKEN_TRADE_SUPPORT[protocol][e.indexToken]?.symbol)
-      return [ALL_OPTION, ...getTokenOptions({ protocol }).filter((option) => statisticSymbols.includes(option.label))]
-    }
-    return [ALL_OPTION]
-  }, [protocol, tokensStatistic])
-
-  const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
-    optionName: URL_PARAM_KEYS.CURRENCY,
-    options: tokenOptions,
-    callback: () => {
-      changeCurrentPage(1)
-    },
-  })
   const { currentOption: timeOption, changeCurrentOption } = useOptionChange({
     optionName: URL_PARAM_KEYS.EXPLORER_TIME_FILTER,
     options: timeFilterOptions,
-    defaultOption: timeFilterOptions[2].id as unknown as string,
-  })
-  const { currentPage, changeCurrentPage } = usePageChange({ pageName: URL_PARAM_KEYS.TRADER_HISTORY_PAGE })
-  const [currentSort, setCurrentSort] = useState<TableSortProps<PositionData> | undefined>({
-    sortBy: 'closeBlockTime',
-    sortType: SortTypeEnum.DESC,
-  })
-  const [currentSortOpening, setCurrentSortOpening] = useState<TableSortProps<PositionData> | undefined>({
-    sortBy: 'openBlockTime',
-    sortType: SortTypeEnum.DESC,
+    defaultOption: TimeFilterByEnum.ALL_TIME.toString(),
   })
 
   const setTimeOption = (option: TimeFilterProps) => {
-    if (option.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) return
     changeCurrentOption(option)
   }
-  const resetSort = () =>
-    setCurrentSort({
-      sortBy: 'closeBlockTime',
-      sortType: SortTypeEnum.DESC,
-    })
-  const resetSortOpening = () =>
-    setCurrentSort({
-      sortBy: 'openBlockTime',
-      sortType: SortTypeEnum.DESC,
-    })
-  const changeCurrentSort = (sort: TableSortProps<PositionData> | undefined) => {
-    setCurrentSort(sort)
-  }
-
-  const changeCurrentSortOpening = (sort: TableSortProps<PositionData> | undefined) => {
-    setCurrentSortOpening(sort)
-  }
-
-  const {
-    openingPositions,
-    isLoadingOpening,
-    closedPositions,
-    isLoadingClosed,
-    handleFetchClosedPositions,
-    hasNextClosedPositions,
-  } = useQueryPositions({
-    address,
-    protocol,
-    currencyOption,
-    currentSort,
-    currentSortOpening,
-    currentPage,
-    changeCurrentPage,
-  })
-
   const currentTraderData = useMemo(() => {
     return traderData?.find((item) => (item?.type as string) === (timeOption.id as unknown as string))
   }, [timeOption.id, traderData])
@@ -285,7 +210,13 @@ export function TraderDetailsComponent({
             // onChangeTime={setTimeOption}
           />
         }
-        traderStatsSummary={!!currentTraderData ? <GeneralStats traderData={currentTraderData} /> : <></>}
+        traderStatsSummary={
+          !!currentTraderData ? (
+            <GeneralStats traderData={currentTraderData} account={address} protocol={protocol} />
+          ) : (
+            <></>
+          )
+        }
         traderStats={
           isLoadingTraderData ? (
             <Loading />
@@ -311,36 +242,18 @@ export function TraderDetailsComponent({
         heatmap={<div></div>}
         openingPositions={
           <TraderOpeningPositions
-            data={openingPositions}
-            isLoading={isLoadingOpening}
+            address={address}
             protocol={protocol}
-            currentSort={xl && openingPositionFullExpanded ? currentSortOpening : undefined}
-            changeCurrentSort={xl && openingPositionFullExpanded ? changeCurrentSortOpening : undefined}
             isExpanded={openingPositionFullExpanded}
-            toggleExpand={() => {
-              resetSortOpening()
-              handleOpeningPositionsExpand()
-            }}
+            toggleExpand={handleOpeningPositionsExpand}
           />
         }
         closedPositions={
           <TraderHistoryPositions
-            tokenOptions={tokenOptions}
-            data={closedPositions?.data}
-            dataMeta={closedPositions?.meta}
-            isLoading={isLoadingClosed}
-            currencyOption={currencyOption}
-            changeCurrency={changeCurrency}
-            fetchNextPage={handleFetchClosedPositions}
-            hasNextPage={hasNextClosedPositions}
-            tableSettings={xl && positionFullExpanded ? fullHistoryColumns : historyColumns}
-            currentSort={xl && positionFullExpanded ? currentSort : undefined}
-            changeCurrentSort={xl && positionFullExpanded ? changeCurrentSort : undefined}
+            address={address}
+            protocol={protocol}
             isExpanded={positionFullExpanded}
-            toggleExpand={() => {
-              resetSort()
-              handlePositionsExpand()
-            }}
+            toggleExpand={handlePositionsExpand}
           />
         }
         openingPositionFullExpanded={openingPositionFullExpanded}

@@ -5,9 +5,10 @@ import { useState } from 'react'
 import { ConditionFormValues, RowValues } from 'components/@widgets/ConditionFilterForm/types'
 import SelectMarketWithSearch from 'components/@widgets/SelectMarketWithSearch'
 import { TraderData } from 'entities/trader'
-import { useProtocolStore } from 'hooks/store/useProtocols'
+import useSearchParams from 'hooks/router/useSearchParams'
 import { Flex, Type } from 'theme/base'
 import { getTokenTradeList } from 'utils/config/trades'
+import { useProtocolFromUrl } from 'utils/helpers/graphql'
 
 export default function FilterMarket({
   filters,
@@ -16,11 +17,18 @@ export default function FilterMarket({
   filters: ConditionFormValues<TraderData>
   changeFilters: (options: ConditionFormValues<TraderData>) => void
 }) {
-  const { protocol } = useProtocolStore()
-  const pairs = protocol && getTokenTradeList(protocol)
+  const { searchParams, pathname } = useSearchParams()
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
+
+  const pairs = foundProtocolInUrl
+    .map((protocol) => {
+      return getTokenTradeList(protocol).map((token) => ({ ...token, protocol }))
+    })
+    .flat()
+
   const pairOptions = Object.values(
     pairs
-      ?.sort((x, y) => (x.symbol < y.symbol ? -1 : x.symbol > y.symbol ? 1 : 0))
+      ?.sort((x, y) => x.symbol.localeCompare(y.symbol))
       ?.reduce((acc: any, market) => {
         if (!acc[market.symbol]) {
           acc[market.symbol] = market
@@ -33,6 +41,7 @@ export default function FilterMarket({
 
   const allPairs = Array.from(new Set(pairs?.map((e) => e.symbol))) ?? []
   const initSelected = filters.find((e) => e.key === 'indexTokens')?.in
+
   const [keyword, setKeyword] = useState<string | undefined>()
   const [selectedItems, setSelectedItems] = useState<string[]>(() => {
     return initSelected ?? allPairs ?? []
@@ -42,6 +51,7 @@ export default function FilterMarket({
     const newValues = selectedItems.includes(item) ? selectedItems.filter((e) => e !== item) : [...selectedItems, item]
     const symbols = Array.from(new Set(pairs.filter((e) => newValues.includes(e.symbol)).map((e) => e.symbol)))
     setSelectedItems(symbols)
+
     let formValues = [...filters]
     const index = filters.findIndex((e) => e.key === 'indexTokens')
     const filterValue: RowValues<TraderData> = { key: 'indexTokens', conditionType: 'in', in: symbols }
@@ -80,7 +90,7 @@ export default function FilterMarket({
         handleToggleItem={handleSelect}
         handleSelectAllItems={handleSelectAll}
         handleChangeKeyword={setKeyword}
-        limit={sm ? 4 : 2}
+        limit={sm ? (selectedItems.join('').length > 30 ? 3 : 4) : undefined}
       />
     </Flex>
   )

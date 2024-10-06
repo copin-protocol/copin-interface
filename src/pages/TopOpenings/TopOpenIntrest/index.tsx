@@ -6,7 +6,7 @@ import { SEARCH_TOP_OPENING_POSITIONS_QUERY } from 'graphql/topOpeningPositions'
 import { useEffect, useMemo } from 'react'
 import { toast } from 'react-toastify'
 
-import { normalizePositionData, normalizePositionResponse, normalizeTraderData } from 'apis/normalize'
+import { normalizePositionData, normalizePositionResponse } from 'apis/normalize'
 import { normalizePositionPayload } from 'apis/positionApis'
 import { ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
 import PythWatermark from 'components/@ui/PythWatermark'
@@ -14,7 +14,8 @@ import ToastBody from 'components/@ui/ToastBody'
 import { ResponsePositionData } from 'entities/trader'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Box, Flex } from 'theme/base'
-import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { SortTypeEnum } from 'utils/config/enums'
+import { useProtocolFromUrl } from 'utils/helpers/graphql'
 
 import PositionsSection from '../PositionsSection'
 import RouteWrapper from '../RouteWrapper'
@@ -29,17 +30,20 @@ export default function TopOpenings({ protocolFilter }: { protocolFilter: Protoc
   useEffect(() => {
     setOverallPageParams(searchParams as any)
   }, [searchParams])
+
   return (
     <RouteWrapper protocolFilter={protocolFilter}>
-      <TopOpeningsPage selectedProtocols={protocolFilter.selectedProtocols} />
+      <TopOpeningsPage />
     </RouteWrapper>
   )
 }
 
-function TopOpeningsPage({ selectedProtocols }: { selectedProtocols: ProtocolEnum[] }) {
+function TopOpeningsPage() {
   const { lg } = useResponsive()
-
   const { sort, onChangeSort, limit, onChangeLimit, time, from, to, onChangeTime } = useFilters()
+  const { searchParams, pathname } = useSearchParams()
+
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
 
   // FETCH DATA
   const queryVariables = useMemo(() => {
@@ -59,8 +63,8 @@ function TopOpeningsPage({ selectedProtocols }: { selectedProtocols: ProtocolEnu
       paging: { size: limit, from: 0 },
     }
 
-    return { index, protocols: selectedProtocols, body }
-  }, [sort, limit, from, to, selectedProtocols])
+    return { index, body, protocols: foundProtocolInUrl }
+  }, [sort, limit, from, to, foundProtocolInUrl])
 
   const {
     data: topOpeningPositionsData,

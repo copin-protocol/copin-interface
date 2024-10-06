@@ -49,8 +49,6 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
     filterTab,
     selectedProtocols,
     setSelectedProtocols,
-    urlProtocol,
-    setUrlProtocol,
   } = contextValues
 
   const { data, isLoading, isRangeProgressing, loadingRangeProgress } = useQueryTraders({
@@ -63,8 +61,6 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
     filterTab,
     selectedProtocols,
     setSelectedProtocols,
-    urlProtocol,
-    setUrlProtocol,
   })
 
   const { isSelectedAll, handleSelectAll, checkIsSelected, handleSelect } = useBacktestTradersActions({

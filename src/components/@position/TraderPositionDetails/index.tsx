@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { getPositionDetailByIdApi } from 'apis/positionApis'
 import ChartTraderPositionProfit from 'components/@charts/ChartTraderPositionProfit'
 import AddressAvatar from 'components/@ui/AddressAvatar'
-import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
@@ -109,9 +108,6 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
                       />
                       <ExplorerLogo protocol={data.protocol} explorerUrl={`${explorerUrl}/address/${data.account}`} />
                     </Flex>
-                    <Type.Caption color="neutral3">
-                      <BalanceText protocol={data.protocol} account={data.account} smartAccount={data.smartAccount} />
-                    </Type.Caption>
                   </Flex>
                 </Button>
               </Link>

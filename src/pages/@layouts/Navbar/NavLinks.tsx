@@ -51,7 +51,7 @@ export function MobileEventNavLinks({ onClose, hasEvents }: { onClose?: () => vo
 export function DesktopCopierLeaderboardLink() {
   return (
     <DesktopWrapper>
-      <NavLink to={ROUTES.COPIER_LEADERBOARD.path} matchpath={ROUTES.COPIER_LEADERBOARD.path}>
+      <NavLink to={ROUTES.COPIER_RANKING.path} matchpath={ROUTES.COPIER_RANKING.path}>
         Copier Ranking
       </NavLink>
     </DesktopWrapper>
@@ -60,7 +60,7 @@ export function DesktopCopierLeaderboardLink() {
 export function MobileCopierLeaderboardLink({ onClose }: { onClose?: () => void }) {
   return (
     <MobileWrapper>
-      <NavLink to={ROUTES.COPIER_LEADERBOARD.path} matchpath={ROUTES.COPIER_LEADERBOARD.path} onClick={onClose}>
+      <NavLink to={ROUTES.COPIER_RANKING.path} matchpath={ROUTES.COPIER_RANKING.path} onClick={onClose}>
         Copier Ranking
       </NavLink>
     </MobileWrapper>
@@ -110,6 +110,7 @@ function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () =
           // </SelectProtocolDropdown>
 
           <NavLink
+            key={index}
             to={config.routeFactory({ protocol: _navProtocol ?? protocol, params: { protocol: protocolParams } })}
             onClick={onClickNavItem}
             matchpath={config.matchpath}

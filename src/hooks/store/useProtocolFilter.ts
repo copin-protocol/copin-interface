@@ -5,8 +5,8 @@ import { immer } from 'zustand/middleware/immer'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
-import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
-import { convertProtocolToParams, getProtocolFromUrl } from 'utils/helpers/graphql'
+import { compareTwoArrays } from 'utils/helpers/common'
+import { convertProtocolToParams } from 'utils/helpers/graphql'
 
 interface ProtocolFilterState {
   selectedProtocols: ProtocolEnum[]
@@ -16,17 +16,6 @@ interface ProtocolFilterState {
 }
 
 const INIT_PAGE = 1
-
-const compareTwoArrays = (arr1: ProtocolEnum[], arr2: ProtocolEnum[]) => {
-  if (arr1.length !== arr2.length) return false
-
-  const set1 = new Set(arr1)
-  const set2 = new Set(arr2)
-
-  if (set1.size !== set2.size) return false
-
-  return [...set1].every((item) => set2.has(item))
-}
 
 const createProtocolFilterStore = (defaultSelects: ProtocolEnum[] = []) => {
   return create<ProtocolFilterState>()(

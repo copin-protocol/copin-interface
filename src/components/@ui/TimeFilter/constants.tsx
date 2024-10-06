@@ -1,7 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { CrownSimple } from '@phosphor-icons/react'
 
-import { Flex, IconBox } from 'theme/base'
 import { CopierLeaderboardTimeFilterEnum, TimeFilterByEnum } from 'utils/config/enums'
 
 import { CopierLeaderboardTimeFilterProps, TimeFilterProps, TimeWithRangeFilterProps } from './type'
@@ -33,14 +31,9 @@ export const TIME_FILTER_OPTIONS: TimeFilterProps[] = [
   },
   {
     id: TimeFilterByEnum.ALL_TIME,
-    text: (
-      <Flex alignItems="center" sx={{ gap: 1 }}>
-        <Trans>All Time</Trans>
-        <IconBox icon={<CrownSimple size={16} weight="fill" />} color="orange1" />
-      </Flex>
-    ),
+    text: <Trans>All Time</Trans>,
     sort_by: TimeFilterByEnum.ALL_TIME,
-    value: 365,
+    value: 365 * 10, // 10 years
   },
 ]
 
@@ -108,7 +101,7 @@ export const ALL_TIME_FILTER_OPTIONS: TimeFilterProps[] = [
     id: TimeFilterByEnum.ALL_TIME,
     text: <Trans>All Time</Trans>,
     sort_by: TimeFilterByEnum.ALL_TIME,
-    value: 1000,
+    value: 365 * 10,
   },
 ]
 

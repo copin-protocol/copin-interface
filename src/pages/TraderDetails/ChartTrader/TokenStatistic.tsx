@@ -10,29 +10,24 @@ import { ColumnData, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SortTypeEnum } from 'utils/config/enums'
-import { ALL_TOKENS_ID, TokenOptionProps } from 'utils/config/trades'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
-import { parseMarketImage } from 'utils/helpers/transform'
+import { getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
 
 type TokenStatisticProps = {
   data: TraderTokenStatistic[] | undefined
-  currencyOption: TokenOptionProps
-  currencyOptions: TokenOptionProps[]
-  changeCurrency: (tokenOption: TokenOptionProps) => void
-  currentSort?: TableSortProps<TraderTokenStatistic> | undefined
-  changeCurrentSort?: (sort: TableSortProps<TraderTokenStatistic> | undefined) => void
+  currentPair: string | undefined
+  changePair: (symbol: string) => void
 }
 
 const SLIDES_TO_SCROLL = 3
 const PIXEL_TOLERANCE = 20
 
-export function ListTokenStatistic({ data, currencyOption, currencyOptions, changeCurrency }: TokenStatisticProps) {
-  const { tokenMapping = {} } = getStatsConfigs({ data, currencyOptions })
+export function ListTokenStatistic({ data, currentPair, changePair }: TokenStatisticProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const scrollPositionsRef = useRef<number[]>([])
   const lastScrollPositionRef = useRef<number>(0)
 
-  const currentStats = useMemo(() => data?.find((e) => e.symbol === currencyOption?.id), [currencyOption?.id, data])
+  const currentStats = useMemo(() => data?.find((e) => e.pair === currentPair), [currentPair, data])
 
   const scroll = useCallback((index: number) => {
     if (!scrollRef.current || !scrollPositionsRef.current.length) return
@@ -111,7 +106,7 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
     }
   }, [data, scrollHandler, wheelHandler])
 
-  if (!Object.keys(tokenMapping).length || !data?.length) return <></>
+  if (!data?.length) return <></>
 
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
@@ -159,22 +154,20 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
           }}
         >
           {data.map((stats) => {
-            if (!stats.symbol) return <></>
-            const symbol = stats.symbol
-            const tokenOption = tokenMapping[symbol]
-            if (!tokenOption) return <></>
+            if (!stats.pair) return <></>
+            const symbol = getSymbolFromPair(stats.pair)
             const icon = parseMarketImage(symbol)
             return (
               <Flex
                 key={symbol}
                 role="button"
-                onClick={() => changeCurrency?.(tokenOption)}
+                onClick={() => changePair(stats.pair)}
                 sx={{
                   px: 2,
                   py: '6px',
                   height: '100%',
                   alignItems: 'center',
-                  bg: currencyOption?.id === symbol ? `${themeColors.primary1}25` : 'transparent',
+                  bg: currentPair === stats.pair ? `${themeColors.primary1}25` : 'transparent',
                   '&:hover': {
                     bg: 'neutral5',
                   },
@@ -182,7 +175,7 @@ export function ListTokenStatistic({ data, currencyOption, currencyOptions, chan
                   '& > *': { flexShrink: 0 },
                 }}
               >
-                <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={stats.symbol} />
+                <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={symbol} />
                 <Type.Caption>
                   {stats.symbol}{' '}
                   <Box as="span" color="neutral3">
@@ -232,14 +225,7 @@ const ScrollNavigator = styled(IconBox)({
   cursor: 'pointer',
   transition: '0.3s',
 })
-export function TableTokenStatistic({
-  data,
-  currencyOption,
-  currencyOptions,
-  changeCurrency,
-}: // currentSort,
-// changeCurrentSort,
-TokenStatisticProps) {
+export function TableTokenStatistic({ data, currentPair, changePair }: TokenStatisticProps) {
   const [currentSort, setCurrentSort] = useState<TableSortProps<TraderTokenStatistic> | undefined>(() => {
     const initSortBy = 'totalTrade'
     const initSortType = SortTypeEnum.DESC
@@ -257,8 +243,7 @@ TokenStatisticProps) {
     return (valueA - valueB) * (currentSort?.sortType === SortTypeEnum.DESC ? -1 : 1)
   })
 
-  const { tokenMapping = {} } = getStatsConfigs({ data, currencyOptions })
-  if (!Object.keys(tokenMapping).length || !data?.length) return <></>
+  if (!data?.length) return <></>
 
   const tableColumns: ColumnData<TraderTokenStatistic>[] = [
     {
@@ -354,20 +339,11 @@ TokenStatisticProps) {
       data={displayedData}
       columns={tableColumns}
       isLoading={false}
-      renderRowBackground={(data) => (data.symbol === currencyOption?.id ? themeColors.neutral5 : 'transparent')}
+      renderRowBackground={(data) => (currentPair && data.pair === currentPair ? themeColors.neutral5 : 'transparent')}
       restrictHeight
-      onClickRow={(data) => changeCurrency(tokenMapping[data.symbol])}
+      onClickRow={(data) => changePair(data.pair)}
       currentSort={currentSort}
       changeCurrentSort={setCurrentSort}
     />
   )
-}
-
-function getStatsConfigs({ data, currencyOptions }: Pick<TokenStatisticProps, 'data' | 'currencyOptions'>) {
-  const tokenOptions = currencyOptions?.filter((option) => option.id !== ALL_TOKENS_ID)
-  const tokenMapping = tokenOptions.reduce((result, option) => {
-    return { ...result, [option.id]: option }
-  }, {} as Record<string, TokenOptionProps>)
-  const totalTrades = data?.reduce((result, _data) => result + (_data.totalTrade ?? 0), 0)
-  return { tokenMapping, totalTrades }
 }

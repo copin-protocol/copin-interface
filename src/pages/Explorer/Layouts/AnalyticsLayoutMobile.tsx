@@ -16,8 +16,7 @@ export default function AnalyticsLayoutMobile({
   conditionFilter,
   sortSection,
 }: AnalyticsLayoutComponents) {
-  const { selectedProtocols, checkIsProtocolChecked, handleToggleProtocol, setSelectedProtocols, urlProtocol } =
-    useTradersContext()
+  const { selectedProtocols, checkIsProtocolChecked, handleToggleProtocol, setSelectedProtocols } = useTradersContext()
   const { md } = useResponsive()
   const isInternal = useInternalRole()
   const protocolOptions = useGetProtocolOptions()
@@ -41,7 +40,7 @@ export default function AnalyticsLayoutMobile({
         </Flex>
         {!md && (
           <ProtocolFilter
-            selectedProtocols={urlProtocol ? [urlProtocol] : selectedProtocols}
+            selectedProtocols={selectedProtocols}
             checkIsProtocolChecked={checkIsProtocolChecked}
             handleToggleProtocol={handleToggleProtocol}
             setSelectedProtocols={setSelectedProtocols}

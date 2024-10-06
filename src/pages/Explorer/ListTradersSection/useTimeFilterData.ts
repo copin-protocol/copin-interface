@@ -7,9 +7,7 @@ import { normalizeTraderPayload } from 'apis/traderApis'
 import { RequestBodyApiData } from 'apis/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ResponseTraderData } from 'entities/trader'
-import useMyProfileStore from 'hooks/store/useMyProfile'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
-import { ProtocolEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { ProtocolEnum } from 'utils/config/enums'
 import { transformGraphqlFilters } from 'utils/helpers/graphql'
 
 const useTimeFilterData = ({
@@ -22,15 +20,9 @@ const useTimeFilterData = ({
   timeOption: TimeFilterProps
   selectedProtocols: ProtocolEnum[]
   setSelectedProtocols: (protocols: ProtocolEnum[]) => void
-  urlProtocol?: ProtocolEnum | undefined
-  setUrlProtocol?: (protocol: ProtocolEnum | undefined) => void
   isRangeSelection?: boolean
 }) => {
-  const { myProfile } = useMyProfileStore()
-  const isAllowFetchData =
-    !!timeOption &&
-    !isRangeSelection &&
-    (timeOption.id !== TimeFilterByEnum.ALL_TIME || myProfile?.plan === SubscriptionPlanEnum.PREMIUM)
+  const isAllowFetchData = !!timeOption && !isRangeSelection
 
   // FETCH DATA
   const queryVariables = useMemo(() => {
@@ -42,12 +34,12 @@ const useTimeFilterData = ({
 
     const query = [
       ...rangeFilters,
-      // { field: 'protocol', in: selectedProtocols },
+      { field: 'protocol', in: selectedProtocols },
       { field: 'type', match: timeOption.id },
     ]
-    if (!!selectedProtocols?.length && selectedProtocols.length !== RELEASED_PROTOCOLS.length) {
-      query.push({ field: 'protocol', in: selectedProtocols })
-    }
+    // if (!!selectedProtocols?.length && selectedProtocols.length !== RELEASED_PROTOCOLS.length) {
+    //   query.push({ field: 'protocol', in: selectedProtocols })
+    // }
 
     const body = {
       filter: {

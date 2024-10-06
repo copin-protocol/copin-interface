@@ -22,7 +22,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { generateFavoriteTradersRoute } from 'utils/helpers/generateRoute'
-import { convertProtocolToParams, getProtocolFromUrl } from 'utils/helpers/graphql'
+import { convertProtocolToParams, useProtocolFromUrl } from 'utils/helpers/graphql'
 
 import ListTraderFavorites from './ListTraderFavorites'
 
@@ -38,7 +38,7 @@ const Favorites = () => {
   const { selectedProtocols, checkIsSelected, handleToggle, setSelectedProtocols } = useProtocolFilter({
     defaultSelects: protocolOptions.map((_p) => _p.id),
   })
-  const foundProtocolInUrl = getProtocolFromUrl(searchParams, pathname)
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
   const protocolParams = convertProtocolToParams(foundProtocolInUrl)
 
   useEffect(() => {

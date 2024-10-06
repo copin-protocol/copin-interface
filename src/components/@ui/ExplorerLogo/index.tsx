@@ -73,6 +73,9 @@ const ExplorerLogo = ({
     case ProtocolEnum.HYPERLIQUID:
       icon = 'HYPERLIQUID'
       break
+    case ProtocolEnum.DYDX:
+      icon = 'DYDX'
+      break
     default:
       icon = 'OPTIMISM'
   }

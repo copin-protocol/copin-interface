@@ -20,7 +20,7 @@ export function parseParams(string: string | undefined) {
       rowData.gte = Number(field[2])
       rowData.lte = Number(field[3])
     }
-    if (field[1] === 'in') rowData.in = field[2]?.split(',')
+    if (field[1] === 'in') rowData.in = field[2]?.split('-')
     keys.push(rowData.key)
     result.push(rowData)
   }
@@ -60,7 +60,7 @@ export function stringifyParams(option: ConditionFormValues<TraderData>) {
       }
       if (values.conditionType === 'in') {
         params += '_'
-        params += inList.join(',')
+        params += inList.join('-')
       }
     }
   })

@@ -11,7 +11,6 @@ import MarketGroup from 'components/@ui/MarketGroup'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
-import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useMyProfileStore from 'hooks/store/useMyProfile'
@@ -19,7 +18,7 @@ import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import Loading from 'theme/Loading'
 import { Box, Flex, Grid, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { isAddress } from 'utils/web3/contracts'
 
@@ -34,21 +33,19 @@ export default function ExchangesStats() {
   const protocol = _protocol.split('-')[0].toUpperCase() as ProtocolEnum
   const myProfile = useMyProfileStore((state) => state.myProfile)
 
-  const { isPremiumUser, checkIsPremium } = useIsPremiumAndAction()
-  const timeFilterOptions = TIME_FILTER_OPTIONS.filter((e) => e.id !== TimeFilterByEnum.ALL_TIME)
+  const timeFilterOptions = TIME_FILTER_OPTIONS
   const { currentOption: timeOption, changeCurrentOption } = useOptionChange({
     optionName: URL_PARAM_KEYS.EXPLORER_TIME_FILTER,
     options: timeFilterOptions,
-    defaultOption: timeFilterOptions[1].id as unknown as string,
+    defaultOption: timeFilterOptions[0].id as unknown as string,
   })
 
   const setTimeOption = (option: TimeFilterProps) => {
-    if (option.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) return
     changeCurrentOption(option)
   }
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
-    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol, isPremiumUser],
+    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol],
     () => getTraderStatisticApi({ protocol, account: address }),
     {
       keepPreviousData: true,

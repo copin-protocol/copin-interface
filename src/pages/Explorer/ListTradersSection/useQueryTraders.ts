@@ -3,12 +3,12 @@ import { useMemo } from 'react'
 
 import { normalizeTraderData } from 'apis/normalize'
 import { RequestBodyApiData } from 'apis/types'
-import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
 import { ResponseTraderData, TraderData } from 'entities/trader'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { DEFAULT_LIMIT, MAX_LIMIT } from 'utils/config/constants'
 import { CheckAvailableStatus, ProtocolEnum } from 'utils/config/enums'
 import { getInitNumberValue } from 'utils/helpers/geInitialValue'
+import { extractFiltersFromFormValues } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import { FilterTabEnum } from '../ConditionFilter/configs'
@@ -28,8 +28,6 @@ export default function useQueryTraders({
   filterTab,
   selectedProtocols,
   setSelectedProtocols,
-  urlProtocol,
-  setUrlProtocol,
   isFavTraders = false,
   traderFavorites,
 }: Pick<
@@ -38,8 +36,6 @@ export default function useQueryTraders({
 > & {
   selectedProtocols: ProtocolEnum[]
   setSelectedProtocols: (protocols: ProtocolEnum[]) => void
-  urlProtocol: ProtocolEnum | undefined
-  setUrlProtocol: (protocol: ProtocolEnum | undefined) => void
   isFavTraders?: boolean
   traderFavorites?: string[]
 }) {
@@ -59,13 +55,12 @@ export default function useQueryTraders({
       },
     }
 
-    const ranges = getFiltersFromFormValues(
+    const ranges = extractFiltersFromFormValues(
       getInitFilters({
         searchParams,
         accounts,
         filterTab,
-      }),
-      protocol
+      })
     )
     request.ranges = ranges
     if (filterTab === FilterTabEnum.RANKING) {
@@ -88,8 +83,6 @@ export default function useQueryTraders({
     timeOption,
     selectedProtocols,
     setSelectedProtocols,
-    urlProtocol,
-    setUrlProtocol,
   })
 
   let timeTradersData = timeTraders

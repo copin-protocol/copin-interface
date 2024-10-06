@@ -35,8 +35,6 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     filterTab,
     selectedProtocols,
     setSelectedProtocols,
-    urlProtocol,
-    setUrlProtocol,
   } = contextValues
 
   const { data, isLoading, isRangeProgressing, loadingRangeProgress } = useQueryTraders({
@@ -49,8 +47,6 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     filterTab,
     selectedProtocols,
     setSelectedProtocols,
-    urlProtocol,
-    setUrlProtocol,
     isFavTraders: true,
     traderFavorites,
   })

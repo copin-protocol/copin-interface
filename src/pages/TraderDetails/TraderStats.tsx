@@ -7,7 +7,6 @@ import { tableSettings } from 'components/@trader/TraderExplorerTableView/config
 import { ExternalTraderListSource } from 'components/@trader/TraderExplorerTableView/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { TraderData } from 'entities/trader.d'
-import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import { IGNORE_FIELDS, useStatsCustomizeStore } from 'hooks/store/useStatsCustomize'
 import IconButton from 'theme/Buttons/IconButton'
 import Checkbox from 'theme/Checkbox'
@@ -103,7 +102,6 @@ const AccountStats = memo(function AccountStatsMemo({
   data: (TraderData | undefined)[]
   timeOption: TimeFilterProps
 }) {
-  const isPremiumUser = useIsPremium()
   const {
     customizeStats,
     toggleVisibleStat,
@@ -209,19 +207,17 @@ const AccountStats = memo(function AccountStatsMemo({
           )}
           {customizeView === 'LIST' && (
             <>
-              {isPremiumUser && (
-                <Type.Caption
-                  textAlign="right"
-                  sx={{
-                    flex: 1,
-                    py: 2,
-                    borderBottom: 'small',
-                    borderColor: 'neutral4',
-                  }}
-                >
-                  ALL TIME
-                </Type.Caption>
-              )}
+              <Type.Caption
+                textAlign="right"
+                sx={{
+                  flex: 1,
+                  py: 2,
+                  borderBottom: 'small',
+                  borderColor: 'neutral4',
+                }}
+              >
+                ALL TIME
+              </Type.Caption>
               <Type.Caption
                 textAlign="right"
                 sx={{
@@ -323,18 +319,14 @@ const AccountStats = memo(function AccountStatsMemo({
                 <Type.CaptionBold>{stat.label}</Type.CaptionBold>
                 {currentStatOnly ? (
                   <Box>
-                    {stat.render && data[(TYPES[timeOption.id]?.index ?? 0) - (isPremiumUser ? 0 : 1)]
-                      ? stat.render(
-                          data[(TYPES[timeOption.id]?.index ?? 0) - (isPremiumUser ? 0 : 1)] as TraderData,
-                          index,
-                          externalSource
-                        )
+                    {stat.render && data[TYPES[timeOption.id]?.index ?? 0]
+                      ? stat.render(data[TYPES[timeOption.id]?.index ?? 0] as TraderData, index, externalSource)
                       : '--'}
                   </Box>
                 ) : (
                   <div>
                     {[
-                      ...(isPremiumUser ? [TYPES[TimeFilterByEnum.ALL_TIME]?.key] : []),
+                      TYPES[TimeFilterByEnum.ALL_TIME]?.key,
                       TYPES[TimeFilterByEnum.S60_DAY]?.key,
                       TYPES[TimeFilterByEnum.S30_DAY]?.key,
                       TYPES[TimeFilterByEnum.S14_DAY]?.key,

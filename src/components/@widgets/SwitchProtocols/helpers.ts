@@ -3,9 +3,9 @@ import { CHAINS } from 'utils/web3/chains'
 
 export function getProtocolConfigs(protocols: ProtocolOptionProps[]) {
   const protocolsByChains = protocols.reduce((result, protocol) => {
-    if (protocol.chainId == 0) return result
+    if (protocol.chainId == 0 || typeof protocol.chainId === 'string') return result
     return { ...result, [protocol.chainId]: [...(result[protocol.chainId] ?? []), protocol] }
-  }, {} as Record<number, ProtocolOptionProps[]>)
+  }, {} as Record<number | string, ProtocolOptionProps[]>)
   Object.values(protocolsByChains).forEach((protocols) => {
     protocols.sort((a, b) => {
       return a.text.toLowerCase() < b.text.toLowerCase() ? -1 : a.text.toLowerCase() > b.text.toLowerCase() ? 1 : 0

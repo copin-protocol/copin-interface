@@ -134,6 +134,8 @@ function generateProtocolName(protocol) {
       return 'Hyperliquid'
     case 'SYNFUTURE_BASE':
       return 'Synfutures'
+    case 'DYDX':
+      return 'dYdX'
     default:
       return ''
   }

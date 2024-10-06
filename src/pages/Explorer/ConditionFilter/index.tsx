@@ -7,7 +7,7 @@ import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 
 import DefaultFilterForm from './DefaultFilterForm'
-import FilterSuggestion from './FilterSuggestion'
+// import FilterSuggestion from './FilterSuggestion'
 import RankingFilterForm from './RankingFilterForm'
 import { FilterTabEnum } from './configs'
 import { ConditionFilterProps } from './types'
@@ -98,11 +98,11 @@ export default function ConditionFilter({
         </Box>
       </Flex>
 
-      {filterTab === FilterTabEnum.DEFAULT ? (
+      {/* {filterTab === FilterTabEnum.DEFAULT ? (
         <Box px={3}>
           <FilterSuggestion changeFilters={changeFilters} />
         </Box>
-      ) : null}
+      ) : null} */}
       <Box flex="1 0 0">
         <Box display={filterTab === FilterTabEnum.DEFAULT ? 'block' : 'none'} width="100%" height="100%">
           <DefaultFilterForm

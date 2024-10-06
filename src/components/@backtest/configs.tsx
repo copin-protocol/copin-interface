@@ -6,7 +6,8 @@ export const fieldName: { [key in keyof BackTestFormValues]: keyof BackTestFormV
   balance: 'balance',
   orderVolume: 'orderVolume',
   leverage: 'leverage',
-  tokenAddresses: 'tokenAddresses',
+  // tokenAddresses: 'tokenAddresses',
+  pairs: 'pairs',
   startTime: 'startTime',
   endTime: 'endTime',
   lookBackOrders: 'lookBackOrders',
@@ -24,6 +25,7 @@ export const DISABLED_MARGIN_PROTECTION_PROTOCOLS = [
   ProtocolEnum.HMX_ARB,
   ProtocolEnum.SYNTHETIX_V3,
   ProtocolEnum.HYPERLIQUID,
+  ProtocolEnum.DYDX,
 ]
 
 export const PARAM_MAPPING = {

@@ -53,6 +53,7 @@ export const SEARCH_TRADERS_QUERY = gql`
         realisedGainLossRatio
         realisedProfitLossRatio
         totalGain
+        pairs
       }
       meta {
         total

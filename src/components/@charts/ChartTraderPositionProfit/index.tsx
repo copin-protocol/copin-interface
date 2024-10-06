@@ -1,4 +1,4 @@
-import { ChartBar, ChartLine } from '@phosphor-icons/react'
+import { ChartBar, ChartLine, Warning } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 import React, { useMemo, useState } from 'react'
 
@@ -7,10 +7,11 @@ import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
-import { calcOpeningPnL } from 'utils/helpers/calculate'
-import { calcOpeningROI } from 'utils/helpers/calculate'
+import { TOOLTIP_CONTENT } from 'utils/config/options'
+import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
+import { calcOpeningPnL, calcOpeningROI } from 'utils/helpers/calculate'
 
 import RealtimeChart from '../ChartTraderPositionProfitRealtime'
 import ChartProfitComponent from './ChartProfitComponent'
@@ -78,6 +79,20 @@ export default function ChartProfit({
                 </Type.H5>
                 <Type.H5 color="neutral3">)</Type.H5>
               </Flex>
+            )}
+            {!isOpening && PROTOCOLS_CROSS_MARGIN.includes(data.protocol) && (
+              <>
+                <IconBox
+                  icon={<Warning size={20} />}
+                  color="orange"
+                  sx={{ ml: 1 }}
+                  data-tooltip-id={TOOLTIP_CONTENT.POSITION_CROSS_ROI.id + 'trader_position'}
+                  data-tooltip-delay-show={260}
+                />
+                <Tooltip id={TOOLTIP_CONTENT.POSITION_CROSS_ROI.id + 'trader_position'}>
+                  {TOOLTIP_CONTENT.POSITION_CROSS_ROI.content}
+                </Tooltip>
+              </>
             )}
             {!isOpening && !isTradingChart && !!data.txHashes?.length && (
               <WhatIf

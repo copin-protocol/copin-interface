@@ -112,6 +112,8 @@ export const WALLET_NAME_MAX_LENGTH = 32
 
 export const RISK_LEVERAGE = 20
 
+export const MAX_PAGE_LIMIT = 500
+
 export const SUBSCRIPTION_COLLECTION_URL =
   NETWORK === 'devnet'
     ? 'https://testnets.opensea.io/collection/copin-subscription-3'
@@ -221,7 +223,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.MORPHEX_FANTOM,
         ProtocolEnum.PERENNIAL_ARB,
       ]
-    : Object.values(ProtocolEnum)
+    : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 
 // TODO: Check when add new protocol copy-trade
 export const ALLOWED_COPYTRADE_PROTOCOLS = [
@@ -245,6 +247,6 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.ROLLIE_SCROLL,
   ProtocolEnum.MUMMY_FANTOM,
 ]
-export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
+export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID, ProtocolEnum.DYDX]
 
 export const MAX_LIMIT = 500

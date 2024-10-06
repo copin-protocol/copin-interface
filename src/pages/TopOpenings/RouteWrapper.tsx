@@ -13,6 +13,7 @@ import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { TokenTrade, getTokenTradeList } from 'utils/config/trades'
 import { generateOIOverviewRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
+import { convertProtocolToParams, useProtocolFromUrl } from 'utils/helpers/graphql'
 import { parseMarketImage } from 'utils/helpers/transform'
 
 import { ALL_TOKEN_PARAM } from './configs'
@@ -71,9 +72,9 @@ function RouteHeader({ protocolFilter }: { protocolFilter: ProtocolFilterProps }
       }}
     >
       <Flex flex={{ _: '1', md: 'auto' }} sx={{ alignItems: 'center', height: '100%' }}>
-        {/* <MarketsDropdown /> */}
-        {/* <Box display={{ _: 'none', md: 'block' }} height="100%" width="1px" bg="neutral4" /> */}
-        <Box width="100%" display={{ _: 'none', md: 'flex' }} sx={{ px: 0, gap: 30 }}>
+        <MarketsDropdown />
+        <Box display={{ _: 'none', md: 'block' }} height="100%" width="1px" bg="neutral4" />
+        <Box width="100%" display={{ _: 'none', md: 'flex' }} sx={{ px: 3, gap: 30 }}>
           <Tabs />
         </Box>
       </Flex>
@@ -90,18 +91,22 @@ function RouteHeader({ protocolFilter }: { protocolFilter: ProtocolFilterProps }
 }
 
 function Tabs() {
-  const { protocol, symbol } = useParams<{ protocol: ProtocolEnum; symbol: string }>()
-  const {
-    push,
-    location: { pathname },
-  } = useHistory()
+  const { searchParams, pathname } = useSearchParams()
+  const { symbol } = useParams<{ protocol: ProtocolEnum; symbol: string }>()
+  const { push } = useHistory()
+
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
+  const protocolParams = convertProtocolToParams(foundProtocolInUrl)
+
   const onChangeTab = (key: 'positions' | 'overview') => {
     if (key === 'positions') {
-      push(generateOIPositionsRoute({ protocol, symbol }))
+      push(generateOIPositionsRoute({ symbol, params: { ...searchParams, protocol: protocolParams, page: 1 } }))
+
       return
     }
     if (key === 'overview') {
-      push(generateOIOverviewRoute({ protocol, symbol }))
+      push(generateOIOverviewRoute({ symbol, params: { ...searchParams, protocol: protocolParams, page: 1 } }))
+
       return
     }
   }
@@ -144,22 +149,24 @@ function TabItem({
 }
 
 function MarketsDropdown() {
-  const { searchParams } = useSearchParams()
-  const { protocol, symbol = ALL_TOKEN_PARAM } = useParams<{ protocol: ProtocolEnum; symbol: string }>()
+  const { push } = useHistory()
+  const { searchParams, pathname } = useSearchParams()
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
+  const protocolParams = convertProtocolToParams(foundProtocolInUrl)
 
-  const tokenOptions: TokenTrade[] = Object.values(
-    getTokenTradeList(protocol).reduce((acc: any, market) => {
+  const { symbol = ALL_TOKEN_PARAM } = useParams<{ protocol: ProtocolEnum; symbol: string }>()
+
+  const protocolTokens = foundProtocolInUrl
+    .map((protocol) => getTokenTradeList(protocol))
+    .flat()
+    .reduce((acc: any, market) => {
       if (!acc[market.symbol]) {
         acc[market.symbol] = market
       }
       return acc
     }, {})
-  )
 
-  const {
-    push,
-    location: { pathname },
-  } = useHistory()
+  const tokenOptions: TokenTrade[] = Object.values(protocolTokens)
 
   const tokenSelectOptions = [
     { value: ALL_TOKEN_PARAM, label: 'ALL' },
@@ -170,11 +177,11 @@ function MarketsDropdown() {
   const onChangeToken = (newValue: any) => {
     const symbol = newValue.value === ALL_TOKEN_PARAM ? undefined : newValue.value
     if (pathname.match(ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix)) {
-      push(generateOIOverviewRoute({ protocol, symbol, params: searchParams }))
+      push(generateOIOverviewRoute({ symbol, params: { ...searchParams, protocol: protocolParams, page: 1 } }))
       return
     }
     if (pathname.match(ROUTES.OPEN_INTEREST_POSITIONS.path_prefix)) {
-      push(generateOIPositionsRoute({ protocol, symbol, params: searchParams }))
+      push(generateOIPositionsRoute({ symbol, params: { ...searchParams, protocol: protocolParams, page: 1 } }))
       return
     }
   }

@@ -31,8 +31,8 @@ export default function DefaultFilterForm({
 }) {
   const [formValues, setFormValues] = useState(defaultFormValues)
   const { myProfile } = useMyProfile()
-  const { timeOption, protocol, setCurrentSuggestion } = useTradersContext()
-  const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues, protocol })
+  const { timeOption, protocol, setCurrentSuggestion, selectedProtocols } = useTradersContext()
+  const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues })
   const [enableApply, setEnableApply] = useState(false)
 
   const onChangeFormValues: FilterFormProps['onValuesChange'] = (values) => {
@@ -87,16 +87,16 @@ export default function DefaultFilterForm({
 
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
-      {/* <Box sx={sm ? {} : { position: 'sticky', top: 0, bg: 'neutral7', zIndex: 2 }}>
+      <Box sx={sm ? {} : { position: 'sticky', top: 0, bg: 'neutral7', zIndex: 2 }}>
         <ResultEstimated
           ranges={ranges}
-          protocol={protocol}
+          protocols={selectedProtocols}
           timeOption={timeOption}
           filterTab={FilterTabEnum.DEFAULT}
         />
-      </Box> */}
+      </Box>
 
-      {/* <FilterMarket filters={formValues} changeFilters={onChangeMarketFormValues} /> */}
+      <FilterMarket filters={formValues} changeFilters={onChangeMarketFormValues} />
       <Divider my={1} color="neutral5" />
       <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
         <FilterForm

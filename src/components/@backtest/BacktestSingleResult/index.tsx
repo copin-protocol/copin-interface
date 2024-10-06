@@ -60,10 +60,10 @@ export default function BacktestSingleResult({
   }, [simulatorPositions, settings?.leverage, settings?.orderVolume, settings?.reverseCopy])
 
   const tokenOptions = useMemo(() => {
-    return settings?.tokenAddresses && settings.tokenAddresses.length > 0
-      ? getDefaultTokenOptions(protocol).filter((e) => settings?.tokenAddresses?.find((i) => i === e.id), [protocol])
+    return settings?.pairs && settings.pairs.length > 0
+      ? getDefaultTokenOptions(protocol).filter((e) => settings?.pairs?.find((i) => i === e.id), [protocol])
       : getDefaultTokenOptions(protocol)
-  }, [settings?.tokenAddresses, protocol])
+  }, [settings?.pairs, protocol])
 
   const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
     optionName: 'currency',

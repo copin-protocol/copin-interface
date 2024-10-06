@@ -1,6 +1,6 @@
 import { ArrowsIn, ArrowsOutSimple, Coins } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { memo, useEffect, useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTraderTokensStatistic } from 'apis/traderApis'
@@ -10,15 +10,14 @@ import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import { PositionData } from 'entities/trader.d'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { DEFAULT_PROTOCOL } from 'utils/config/constants'
+import { DEFAULT_PROTOCOL, MAX_PAGE_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { TOKEN_TRADE_SUPPORT, TokenOptionProps, getTokenOptions } from 'utils/config/trades'
+import { TokenOptionProps } from 'utils/config/trades'
+import { getPairFromSymbol, getSymbolFromPair } from 'utils/helpers/transform'
 
-import { useInfiniteQueryPositions } from '../useQueryOptions'
 import { ListTokenStatistic, TableTokenStatistic } from './TokenStatistic'
-
-const CLOSED_POSITION_LIMIT = 50
+import { useQueryInfinitePositions } from './useQueryInfinitePositions'
 
 export interface PositionSortPros {
   sortBy: keyof PositionData
@@ -36,62 +35,38 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
   isExpanded: boolean
   handleExpand: () => void
 }) {
-  // Sort local
-  // const { searchParams } = useSearchParams()
-  // const [currentSort, setCurrentSort] = useState<TableSortProps<TraderTokenStatistic> | undefined>(() => {
-  //   const initSortBy = searchParams?.sort_by ?? 'totalTrade'
-  //   const initSortType = searchParams?.sort_type ?? SortTypeEnum.DESC
-  //   if (!initSortBy) return undefined
-  //   return {
-  //     sortBy: initSortBy as TableSortProps<TraderTokenStatistic>['sortBy'],
-  //     sortType: initSortType as SortTypeEnum,
-  //   }
-  // })
+  const [currentPair, setCurrentPair] = useState<string | undefined>()
+  const currencyOption = useMemo(() => {
+    if (!currentPair) return undefined
+    const symbol = getSymbolFromPair(currentPair)
+    const result: TokenOptionProps = {
+      id: symbol,
+      label: symbol,
+      value: symbol,
+    }
+    return result
+  }, [currentPair])
   const { data: tokensStatistic, isLoading: loadingTokenStatistic } = useQuery(
     [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, account],
     () => getTraderTokensStatistic({ protocol, account }),
-    { enabled: !!account && !!protocol, retry: 0, keepPreviousData: true }
+    {
+      enabled: !!account && !!protocol,
+      retry: 0,
+      keepPreviousData: true,
+      onSuccess(data) {
+        if (!data.data.length) return
+        const firstData = data.data[0]
+        setCurrentPair(firstData?.pair ? firstData.pair : getPairFromSymbol(firstData.symbol))
+      },
+    }
   )
 
-  const currencyOptions: TokenOptionProps[] = useMemo(() => {
-    if (tokensStatistic?.data?.length) {
-      const statisticSymbols = tokensStatistic.data.map((e) => TOKEN_TRADE_SUPPORT[protocol][e.indexToken]?.symbol)
-      return getTokenOptions({ protocol }).filter((option) => statisticSymbols.includes(option.label))
-    }
-    return []
-  }, [protocol, tokensStatistic])
-
-  const [currentPage, changeCurrentPage] = useState(1)
-  const [currencyOption, changeCurrency] = useState(currencyOptions[0])
-  useEffect(() => {
-    if (!tokensStatistic) return
-    if (tokensStatistic?.data?.length) {
-      changeCurrency(
-        currencyOptions.find((option) => option.id === tokensStatistic.data[0].indexToken) ?? currencyOptions[0]
-      )
-    } else {
-      changeCurrency(currencyOptions[0])
-    }
-  }, [tokensStatistic])
-
-  // const { openingPositions, closedPositions, isLoadingClosed, handleFetchClosedPositions, hasNextClosedPositions } =
-  //   useQueryPositions({
-  //     address: account,
-  //     protocol,
-  //     currencyOption,
-  //     currentSort: undefined,
-  //     currentPage,
-  //     changeCurrentPage,
-  //   })
   const { openingPositions, closedPositions, isLoadingClosed, handleFetchClosedPositions, hasNextClosedPositions } =
-    useInfiniteQueryPositions({
+    useQueryInfinitePositions({
       address: account,
       protocol,
-      currencyOption,
-      currentSort: undefined,
-      currentPage,
-      changeCurrentPage,
-      limit: CLOSED_POSITION_LIMIT,
+      currentPair,
+      limit: MAX_PAGE_LIMIT,
     })
 
   const { xl } = useResponsive()
@@ -124,8 +99,6 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
               justifyContent: 'center',
               alignItems: 'center',
               borderRadius: 'sm',
-              // border: 'small',
-              // borderColor: 'neutral4',
               color: 'neutral2',
               '&:hover': { color: 'neutral1' },
             }}
@@ -181,21 +154,9 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
             }}
           >
             {isExpanded ? (
-              <TableTokenStatistic
-                data={tokensStatistic?.data}
-                currencyOption={currencyOption}
-                currencyOptions={currencyOptions}
-                changeCurrency={changeCurrency}
-                // currentSort={currentSort}
-                // changeCurrentSort={setCurrentSort}
-              />
+              <TableTokenStatistic data={tokensStatistic?.data} currentPair={currentPair} changePair={setCurrentPair} />
             ) : (
-              <ListTokenStatistic
-                data={tokensStatistic?.data}
-                currencyOption={currencyOption}
-                currencyOptions={currencyOptions}
-                changeCurrency={changeCurrency}
-              />
+              <ListTokenStatistic data={tokensStatistic?.data} currentPair={currentPair} changePair={setCurrentPair} />
             )}
           </Box>
         </Flex>

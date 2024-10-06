@@ -5,7 +5,6 @@ import { ReactNode, useMemo } from 'react'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ALL_TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
 import { PositionData } from 'entities/trader'
-import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { getDropdownProps } from 'pages/Home/configs'
 import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
@@ -79,7 +78,6 @@ type TimeDropdownProps = {
 }
 
 export function TimeDropdown({ currentTimeOption, onChangeTime }: TimeDropdownProps) {
-  const { checkIsPremium } = useIsPremiumAndAction()
   return (
     <Dropdown
       {...getDropdownProps({})}
@@ -89,18 +87,8 @@ export function TimeDropdown({ currentTimeOption, onChangeTime }: TimeDropdownPr
             <CheckableDropdownItem
               key={option.id}
               selected={option.id === currentTimeOption.id}
-              text={
-                <Flex sx={{ alignItems: 'center', gap: 1, '& *': { flexShrink: 0 } }}>
-                  <Box as="span">{option.text}</Box>
-                  {option.premiumFilter ? (
-                    <IconBox icon={<CrownSimple size={16} weight="fill" />} color="orange1" />
-                  ) : (
-                    ''
-                  )}
-                </Flex>
-              }
+              text={<Box as="span">{option.text}</Box>}
               onClick={() => {
-                if (option.premiumFilter && !checkIsPremium()) return
                 onChangeTime(option.id)
               }}
             />
@@ -187,7 +175,7 @@ const SORTS: SortOption[] = [
 ]
 const DEFAULT_SORT = SORTS[0]
 const DEFAULT_LIMIT = LIMITS[0]
-const DEFAULT_TIME = ALL_TIME_FILTER_OPTIONS[1]
+const DEFAULT_TIME = ALL_TIME_FILTER_OPTIONS[0]
 
 function getTimePeriod(timeValue: number | undefined) {
   if (!timeValue) return { from: undefined, to: undefined }

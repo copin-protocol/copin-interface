@@ -37,6 +37,9 @@ const ROUTES = {
   COPIER_LEADERBOARD: {
     path: '/copier-leaderboard',
   },
+  COPIER_RANKING: {
+    path: '/copier-ranking',
+  },
   FAVORITES: {
     path: '/favorites',
   },

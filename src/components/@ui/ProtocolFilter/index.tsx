@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { DropdownProps } from 'rc-dropdown/lib/Dropdown'
+import { useState } from 'react'
 
 import ProtocolGroup from 'components/@ui/ProtocolGroup'
 import Dropdown from 'theme/Dropdown'
@@ -21,23 +22,26 @@ export interface ProtocolFilterProps {
 
 export function ProtocolFilter({ menuSx = {}, placement = 'bottomRight', ...props }: ProtocolFilterProps) {
   const { xl } = useResponsive()
+  const [visible, setVisible] = useState(false)
   return (
     <Flex alignItems="start" sx={{ gap: 1, pr: 3 }}>
       <Dropdown
-        menu={<ProtocolSelection {...props} />}
+        menu={<ProtocolSelection {...props} handleToggleDropdown={() => setVisible(!visible)} />}
         placement={xl ? undefined : placement}
         buttonVariant="ghost"
         buttonSx={{ borderRadius: 0, border: 'none', p: 0, color: 'primary1' }}
         menuSx={{
           width: menuSx.width ? menuSx.width : ['90vw', '95vw', '95vw'],
           maxWidth: menuSx.maxWidth ? menuSx.maxWidth : '900px',
-          maxHeight: '80svh',
+          maxHeight: '75svh',
           py: 2,
           ...menuSx,
         }}
         sx={{ minWidth: 'fit-content' }}
         hasArrow={true}
         dismissible={false}
+        visible={visible}
+        setVisible={setVisible}
         menuDismissible
       >
         {props.selectedProtocols.length === 0 ? (

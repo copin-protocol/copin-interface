@@ -1,8 +1,10 @@
 import { ArrowsIn, ArrowsOutSimple, Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useMemo, useState } from 'react'
+import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 
+import { getOpeningPositionsApi } from 'apis/positionApis'
 import emptyBg from 'assets/images/opening_empty_bg.png'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import TraderPositionListView from 'components/@position/TraderPositionsListView'
@@ -14,6 +16,7 @@ import Table from 'theme/Table'
 import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
@@ -25,25 +28,51 @@ const emptyCss = {
 }
 
 export default function TraderOpeningPositionsTable({
-  data,
-  isLoading,
   protocol,
-  currentSort,
-  changeCurrentSort,
+  address,
   toggleExpand,
   isExpanded,
 }: {
-  data: PositionData[] | undefined
-  isLoading: boolean
+  address: string
   protocol: ProtocolEnum
-  currentSort?: TableSortProps<PositionData> | undefined
-  changeCurrentSort?: (sort: TableSortProps<PositionData> | undefined) => void
   toggleExpand?: () => void
   isExpanded?: boolean
 }) {
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
+  const { lg, xl, sm } = useResponsive()
+
+  //
+  const [currentSortExpanded, setCurrentSortExpanded] = useState<TableSortProps<PositionData> | undefined>({
+    sortBy: 'openBlockTime',
+    sortType: SortTypeEnum.DESC,
+  })
+  const currentSort = xl && isExpanded ? currentSortExpanded : undefined
+  const changeCurrentSortExpanded = (sort: TableSortProps<PositionData> | undefined) => {
+    setCurrentSortExpanded(sort)
+  }
+  const resetSortOpening = () =>
+    setCurrentSortExpanded({
+      sortBy: 'openBlockTime',
+      sortType: SortTypeEnum.DESC,
+    })
+  const handleToggleExpand = () => {
+    resetSortOpening()
+    toggleExpand?.()
+  }
+  const { data, isLoading } = useQuery(
+    [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol, currentSort],
+    () =>
+      getOpeningPositionsApi({
+        protocol,
+        account: address,
+        sortBy: currentSort?.sortBy,
+        sortType: currentSort?.sortType,
+      }),
+    { enabled: !!address, retry: 0, refetchInterval: 10_000 }
+  )
+  //
 
   const tableData = useMemo(() => {
     if (!data) return undefined
@@ -80,8 +109,6 @@ export default function TraderOpeningPositionsTable({
 
   const totalOpening = data?.length ?? 0
 
-  const { lg, xl, sm } = useResponsive()
-
   return (
     <Box
       className="opening"
@@ -115,7 +142,7 @@ export default function TraderOpeningPositionsTable({
                   color: 'neutral2',
                   '&:hover': { color: 'neutral1' },
                 }}
-                onClick={toggleExpand}
+                onClick={handleToggleExpand}
               />
             )
           }
@@ -141,7 +168,7 @@ export default function TraderOpeningPositionsTable({
               data={tableData?.data}
               columns={xl && isExpanded ? fullOpeningColumns : openingColumns}
               currentSort={currentSort}
-              changeCurrentSort={changeCurrentSort}
+              changeCurrentSort={changeCurrentSortExpanded}
               isLoading={isLoading}
               onClickRow={handleSelectItem}
               renderRowBackground={() => 'rgb(31, 34, 50)'}

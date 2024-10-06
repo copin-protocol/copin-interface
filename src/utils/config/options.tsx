@@ -136,4 +136,8 @@ export const TOOLTIP_CONTENT = {
     id: 'tt_copy_pnl',
     content: 'This is just an approximate PnL, not including slippage and trading fees',
   },
+  POSITION_CROSS_ROI: {
+    id: 'tt_position_cross_roi',
+    content: 'The return on investment is calculated based on the PnL and size, not including collateral and leverage',
+  },
 }

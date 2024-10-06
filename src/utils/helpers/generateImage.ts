@@ -552,6 +552,10 @@ export const generateProtocol = ({
       protocolTextWidth = 288
       protocolText = 'Synfutures'
       break
+    case ProtocolEnum.DYDX:
+      protocolTextWidth = 117
+      protocolText = 'dYdX'
+      break
     default:
       break
   }

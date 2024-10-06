@@ -31,6 +31,7 @@ export enum ProtocolEnum {
   MORPHEX_FANTOM = 'MORPHEX_FANTOM',
   HYPERLIQUID = 'HYPERLIQUID',
   SYNFUTURE_BASE = 'SYNFUTURE_BASE',
+  DYDX = 'DYDX',
 }
 
 export enum ProtocolFilterEnum {
@@ -329,4 +330,9 @@ export enum CopierLeaderboardTimeFilterEnum {
   D30 = 'D30',
   D60 = 'D60',
   FULL = 'FULL',
+}
+
+export enum ProtocolSortByEnum {
+  ALPHABET = 'ALPHABET',
+  TRADERS = 'TRADERS',
 }

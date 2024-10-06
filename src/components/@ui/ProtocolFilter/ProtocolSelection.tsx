@@ -1,28 +1,28 @@
 import { Trans } from '@lingui/macro'
 import { User } from '@phosphor-icons/react'
-import { ChangeEvent, useEffect, useMemo, useState } from 'react'
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getProtocolsStatistic } from 'apis/positionApis'
-import allProtocolsIcon from 'assets/icons/ic_protocols.svg'
-import CrossTag from 'assets/images/cross_tag.svg'
-import NewTag from 'assets/images/new_tag.svg'
 import ActiveDot from 'components/@ui/ActiveDot'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { getProtocolConfigs } from 'components/@widgets/SwitchProtocols/helpers'
-import useGetProtocolOptions, { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
+import useDebounce from 'hooks/helpers/useDebounce'
+import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
+import { useProtocolSortByStore } from 'hooks/store/useProtocolSortBy'
+import ProtocolBetaWarning from 'pages/TraderDetails/ProtocolBetaWarning'
+import { Button } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
-import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
-import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Grid, IconBox, Image, Type } from 'theme/base'
-import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
+import { Box, Flex, Grid, IconBox, Type } from 'theme/base'
+import { ALLOWED_COPYTRADE_PROTOCOLS, RELEASED_PROTOCOLS, SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
+import { ProtocolEnum, ProtocolSortByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { ProtocolOptionProps } from 'utils/config/protocols'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 
-import ChainOptionBox from './ChainOption'
-import SearchProtocols from './SearchProtocols'
+import NoDataFound from '../NoDataFound'
+import InputSearchProtocols from './InputSearchProtocols'
+import ProtocolSortOptions from './ProtocolSortOptions'
 
 interface ProtocolSelectionProps {
   selectedProtocols: ProtocolEnum[]
@@ -31,20 +31,27 @@ interface ProtocolSelectionProps {
   allowList: ProtocolEnum[]
   setSelectedProtocols: (options: ProtocolEnum[], isClearAll?: boolean) => void
   hasSearch?: boolean
+  handleToggleDropdown?: () => void
 }
 const DEFAULT_ALL_CHAINS = 0
 const TOOLTIP_ID = `tt_1`
 
 export default function ProtocolSelection({
-  setSelectedProtocols,
-  selectedProtocols,
+  setSelectedProtocols: setSavedProtocols,
+  selectedProtocols: savedProtocols,
   checkIsProtocolChecked,
   handleToggleProtocol,
   allowList,
   hasSearch = true,
+  handleToggleDropdown,
 }: ProtocolSelectionProps) {
+  const { protocolSortBy, setProtocolSortBy } = useProtocolSortByStore()
   const { data: protocolsStatistic } = useQuery([QUERY_KEYS.GET_PROTOCOLS_STATISTIC], getProtocolsStatistic)
 
+  const [searchText, setSearchText] = useState<string>('')
+  const trimmedSearchText = searchText.trim()
+  const debounceSearchText = useDebounce<string>(trimmedSearchText, SEARCH_DEBOUNCE_TIME)
+  const [selectedProtocols, setSelectedProtocols] = useState(savedProtocols)
   const [selectedChainId, setSelectedChainId] = useState(DEFAULT_ALL_CHAINS)
   const [isUseAllowList, setIsUseAllowList] = useState(
     selectedProtocols.every((protocol) => ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol))
@@ -56,18 +63,23 @@ export default function ProtocolSelection({
     }
   }, [selectedProtocols])
 
+  const checkIsSelected = (protocol: ProtocolEnum): boolean => {
+    return selectedProtocols.includes(protocol)
+  }
+
+  const handleToggle = (protocol: ProtocolEnum): void => {
+    if (selectedProtocols.includes(protocol)) {
+      const filtered = selectedProtocols.filter((selected) => selected !== protocol)
+      setSelectedProtocols(filtered)
+      return
+    }
+
+    setSelectedProtocols([...selectedProtocols, protocol])
+  }
+
   // ==========================> Protocol options <==============================
   const protocolOptions = useGetProtocolOptions()
-  const protocolsMapping = useGetProtocolOptionsMapping()
   const protocolConfigs = getProtocolConfigs(protocolOptions)
-
-  // ==========================> Protocol options <==============================
-
-  const getSelectedChainName = (): string => {
-    if (selectedChainId == DEFAULT_ALL_CHAINS) return 'All'
-
-    return protocolOptions.find((item) => item.chainId == selectedChainId)?.label ?? 'N/A'
-  }
 
   const checkIsCheckedAll = (): boolean => {
     if (isUseAllowList) {
@@ -88,18 +100,10 @@ export default function ProtocolSelection({
   const handleSelectAll = (event: ChangeEvent<HTMLInputElement>) => {
     event.stopPropagation()
 
-    const isSelectAll = event.target.checked
-    const options = generatedProtocolOpts.map((p) => p.id)
-
-    if (isSelectAll) {
-      let fullOptions = Array.from(new Set([...selectedProtocols, ...options]))
-      if (isUseAllowList) {
-        fullOptions = fullOptions.filter((protocol) => allowList.includes(protocol))
-      }
-      setSelectedProtocols(fullOptions)
+    if (selectedProtocols.length > 0) {
+      setSelectedProtocols([])
     } else {
-      const uniqueItems = selectedProtocols.filter((element) => !options.includes(element))
-      setSelectedProtocols(uniqueItems, true)
+      setSelectedProtocols(RELEASED_PROTOCOLS)
     }
   }
 
@@ -111,152 +115,176 @@ export default function ProtocolSelection({
     return protocolConfigs.protocolsByChains[selectedChainId]
   }, [selectedChainId])
 
-  const renderTooltipBody = useMemo(() => {
-    const protocolCounter: { [key: string]: string[] } = {}
+  const options = useMemo(() => {
+    const filteredOptions = generatedProtocolOpts.filter(
+      (option) =>
+        option.text.toLowerCase().includes(debounceSearchText.toLowerCase()) ||
+        option.id.toLowerCase().includes(debounceSearchText.toLowerCase()) ||
+        option.label.toLowerCase().includes(debounceSearchText.toLowerCase()) ||
+        option.key.toLowerCase().includes(debounceSearchText.toLowerCase())
+    )
 
-    for (let i = 0; i < selectedProtocols.length; i++) {
-      const selectedProtocol = selectedProtocols[i]
-      const { label, text } = protocolsMapping[selectedProtocol]
+    const sortedOptions = [...filteredOptions]
 
-      if (!protocolCounter[label]) {
-        protocolCounter[label] = [text]
-        continue
-      }
-
-      protocolCounter[label] = [...protocolCounter[label], text]
+    if (protocolSortBy === ProtocolSortByEnum.ALPHABET) {
+      sortedOptions.sort((a, b) => a.text.localeCompare(b.text))
+    } else if (protocolSortBy === ProtocolSortByEnum.TRADERS) {
+      sortedOptions.sort(
+        (a, b) => (protocolsStatistic?.[b.id]?.traders ?? 0) - (protocolsStatistic?.[a.id]?.traders ?? 0)
+      )
     }
 
-    return Object.keys(protocolCounter).map((chain) => (
-      <Box p={2} key={chain}>
-        <Type.BodyBold>{chain}</Type.BodyBold>
-        <Type.Body color={'neutral2'}>{`: ${protocolCounter[chain].join(', ')}`}</Type.Body>
-      </Box>
-    ))
-  }, [selectedProtocols])
+    return sortedOptions
+  }, [generatedProtocolOpts, protocolSortBy, protocolsStatistic, debounceSearchText])
 
-  const options = generatedProtocolOpts
+  const isEqual = useMemo(() => {
+    const compareProtocols = (arr1: ProtocolEnum[], arr2: ProtocolEnum[]): boolean => {
+      if (arr1.length !== arr2.length) return false
+      const sortedArr1 = [...arr1].sort()
+      const sortedArr2 = [...arr2].sort()
+      return sortedArr1.every((value, index) => value === sortedArr2[index])
+    }
+    return compareProtocols(savedProtocols, selectedProtocols)
+  }, [savedProtocols, selectedProtocols])
 
   return (
-    <Box sx={{ px: 3, pb: 3, pt: 3, '.checkbox': { marginRight: '0px !important' } }}>
+    <Box sx={{ px: 3, position: 'relative', '.checkbox': { marginRight: '0px !important' } }}>
       {/* RENDER SEARCH BAR */}
       {hasSearch && (
-        <Box>
-          <SearchProtocols
-            protocols={protocolOptions.map((p) => p.id)}
-            checkIsProtocolChecked={checkIsProtocolChecked}
-            onSelect={(data) => {
-              handleToggleProtocol(data)
-            }}
-            checkIsAllowedProtocol={checkIsAllowedProtocol}
-          />
+        <Box mt={3}>
+          <InputSearchProtocols searchText={searchText} setSearchText={setSearchText} />
+          {/*<SearchProtocols*/}
+          {/*  protocols={protocolOptions.map((p) => p.id)}*/}
+          {/*  checkIsProtocolChecked={checkIsSelected}*/}
+          {/*  onSelect={(data) => {*/}
+          {/*    handleToggle(data)*/}
+          {/*  }}*/}
+          {/*  checkIsAllowedProtocol={checkIsAllowedProtocol}*/}
+          {/*/>*/}
         </Box>
       )}
 
       {/* RENDER CHAINS */}
-      <Grid
-        sx={{
-          gridTemplateColumns: ['repeat(auto-fill, minmax(180px, 1fr))', 'repeat(auto-fill, minmax(200px, 1fr))'],
-          gap: 1,
-        }}
-        my={3}
+      {/*<Grid*/}
+      {/*  sx={{*/}
+      {/*    gridTemplateColumns: ['repeat(auto-fill, minmax(180px, 1fr))', 'repeat(auto-fill, minmax(200px, 1fr))'],*/}
+      {/*    gap: 1,*/}
+      {/*  }}*/}
+      {/*  my={3}*/}
+      {/*>*/}
+      {/*  <Box*/}
+      {/*    px={2}*/}
+      {/*    py={10}*/}
+      {/*    sx={{*/}
+      {/*      backgroundColor: selectedChainId == DEFAULT_ALL_CHAINS ? 'neutral5' : 'neutral6',*/}
+      {/*      borderRadius: 'sm',*/}
+      {/*      cursor: 'pointer',*/}
+      {/*      '&:hover': {*/}
+      {/*        backgroundColor: 'neutral4',*/}
+      {/*      },*/}
+      {/*    }}*/}
+      {/*    onClick={() => setSelectedChainId(DEFAULT_ALL_CHAINS)}*/}
+      {/*  >*/}
+      {/*    <Flex alignItems="center" sx={{ gap: 2 }}>*/}
+      {/*      <Image src={allProtocolsIcon} size={24} />*/}
+
+      {/*      <Type.CaptionBold>{`All chains (${formatNumber(protocolOptions.length, 0)})`}</Type.CaptionBold>*/}
+      {/*    </Flex>*/}
+      {/*  </Box>*/}
+
+      {/*  {protocolConfigs.chainOptions.map((chainOption, index) => {*/}
+      {/*    const protocolsByChain = protocolConfigs.protocolsByChains[chainOption.chainIdNumber]*/}
+      {/*    const protocolCount = protocolsByChain?.length ?? 0*/}
+
+      {/*    return (*/}
+      {/*      <ChainOptionBox*/}
+      {/*        key={index}*/}
+      {/*        index={index}*/}
+      {/*        chainOption={chainOption}*/}
+      {/*        selectedChainId={selectedChainId}*/}
+      {/*        setSelectedChainId={setSelectedChainId}*/}
+      {/*        protocolCount={protocolCount}*/}
+      {/*      />*/}
+      {/*    )*/}
+      {/*  })}*/}
+      {/*</Grid>*/}
+
+      <Flex
+        mt={3}
+        alignItems="center"
+        justifyContent={['space-between', 'flex-start']}
+        flexWrap="wrap"
+        sx={{ gap: ['6px', 2] }}
       >
-        <Box
-          px={2}
-          py={10}
-          sx={{
-            backgroundColor: selectedChainId == DEFAULT_ALL_CHAINS ? 'neutral5' : 'neutral6',
-            borderRadius: 'sm',
-            cursor: 'pointer',
-            '&:hover': {
-              backgroundColor: 'neutral4',
-            },
-          }}
-          onClick={() => setSelectedChainId(DEFAULT_ALL_CHAINS)}
-        >
-          <Flex alignItems="center" sx={{ gap: 2 }}>
-            <Image src={allProtocolsIcon} size={24} />
-
-            <Type.CaptionBold>{`All chains (${formatNumber(protocolOptions.length, 0)})`}</Type.CaptionBold>
-          </Flex>
-        </Box>
-
-        {protocolConfigs.chainOptions.map((chainOption, index) => {
-          const protocolsByChain = protocolConfigs.protocolsByChains[chainOption.chainIdNumber]
-          const protocolCount = protocolsByChain?.length ?? 0
-
-          return (
-            <ChainOptionBox
-              key={index}
-              index={index}
-              chainOption={chainOption}
-              selectedChainId={selectedChainId}
-              setSelectedChainId={setSelectedChainId}
-              protocolCount={protocolCount}
-            />
-          )
-        })}
-      </Grid>
+        <Type.CaptionBold color="neutral3">
+          <Trans>Quick Search</Trans>:
+        </Type.CaptionBold>
+        <Flex alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
+          <Button
+            size="xs"
+            variant="info"
+            onClick={() => {
+              setSelectedProtocols(RELEASED_PROTOCOLS)
+            }}
+            px={2}
+            sx={{ color: 'neutral1', border: 'none' }}
+          >
+            <Type.Caption>All Perps</Type.Caption>
+          </Button>
+          <Button
+            size="xs"
+            variant="info"
+            onClick={() => {
+              setSelectedProtocolsByAllowList(RELEASED_PROTOCOLS)
+            }}
+            px={2}
+            sx={{ color: 'neutral1', border: 'none' }}
+          >
+            <Type.Caption>All Copyable Perps</Type.Caption>
+          </Button>
+        </Flex>
+      </Flex>
 
       {/* RENDER TOGGLE BUTTON */}
-      <Box my={3}>
-        <Flex sx={{ gap: 2, alignItems: ['start', 'center'], justifyContent: 'space-between' }} flexWrap={'wrap'}>
-          <Flex alignItems={'center'} sx={{ gap: 2, width: ['29svw', '20svw', '15svw', '10svw'] }}>
+      <Box my="12px">
+        <Flex sx={{ gap: [1, 2], alignItems: 'center', justifyContent: 'space-between' }} flexWrap={'wrap'}>
+          <Flex alignItems={'center'} sx={{ gap: [1, 2] }}>
             <Checkbox
+              hasClear={selectedProtocols.length > 0}
               checked={checkIsCheckedAll()}
               onChange={(event) => handleSelectAll(event)}
               wrapperSx={{ height: 'auto' }}
             >
-              <Type.CaptionBold ml={2} color="neutral1">
-                <Trans>{`${getSelectedChainName} Perp DEXs`}</Trans>
+              <Type.CaptionBold mx={2} color="neutral1">
+                <Trans>Selected</Trans>:
+              </Type.CaptionBold>
+              <Type.CaptionBold color="neutral3">
+                {`${formatNumber(selectedProtocols.length)}`}/{formatNumber(RELEASED_PROTOCOLS.length)}
               </Type.CaptionBold>
             </Checkbox>
           </Flex>
-
-          <Type.CaptionBold color="neutral1">
-            <Trans>Selected: {`${selectedProtocols.length}`} Perp DEXs</Trans>
-          </Type.CaptionBold>
-
-          <Flex sx={{ gap: 2, alignItems: 'center' }}>
-            {/* {xl && <Box sx={{ backgroundColor: 'neutral5', height: 12, width: 2 }} />} */}
-
-            <SwitchInput
-              checked={isUseAllowList}
-              onChange={(event) => {
-                const value = event.target.checked
-                setIsUseAllowList(value)
-
-                if (value) {
-                  setSelectedProtocolsByAllowList(selectedProtocols)
-                }
-              }}
-            />
-            <Type.CaptionBold color="neutral1">
-              <Trans>Only Allowed CopyTrade Perp DEXs</Trans>
-            </Type.CaptionBold>
-          </Flex>
+          <Box>
+            <ProtocolSortOptions currentSort={protocolSortBy} changeCurrentSort={setProtocolSortBy} />
+          </Box>
         </Flex>
       </Box>
 
-      {selectedProtocols.length > 0 && (
-        <Tooltip id={TOOLTIP_ID} place="bottom" type="dark" effect="solid" clickable={true}>
-          <Type.CaptionBold maxHeight={300} maxWidth={['45svw']} overflow={'auto'} color="neutral1">
-            {renderTooltipBody}
-          </Type.CaptionBold>
-        </Tooltip>
-      )}
-
       {/* RENDER PROTOCOLS */}
+      {!options?.length && (
+        <Box mt={3}>
+          <NoDataFound />
+        </Box>
+      )}
       <Grid
         sx={{
-          gridTemplateColumns: ['repeat(auto-fill, minmax(180px, 1fr))', 'repeat(auto-fill, minmax(200px, 1fr))'],
+          gridTemplateColumns: ['repeat(auto-fill, minmax(150px, 1fr))', 'repeat(auto-fill, minmax(150px, 1fr))'],
           gap: 1,
         }}
-        my={3}
+        mt={3}
       >
         {options.map((option) => {
           const protocol = option.id
-          const isActive = checkIsProtocolChecked(protocol)
-          const isAllowedProtocol = checkIsAllowedProtocol(protocol)
+          const isActive = checkIsSelected(protocol)
           const protocolStatistic = protocolsStatistic?.[protocol]
 
           return (
@@ -267,10 +295,10 @@ export default function ProtocolSelection({
                 borderRadius: 'sm',
                 '&:hover': {
                   backgroundColor: 'neutral5',
-                  cursor: isAllowedProtocol ? 'pointer' : 'not-allowed',
+                  cursor: 'pointer',
                 },
               }}
-              onClick={() => isAllowedProtocol && handleToggleProtocol(protocol)}
+              onClick={() => handleToggle(protocol)}
             >
               <Flex
                 alignItems="center"
@@ -282,54 +310,85 @@ export default function ProtocolSelection({
                   color: 'neutral5',
                 }}
               >
-                <Checkbox
-                  key={protocol}
-                  checked={isActive}
-                  wrapperSx={{ height: 'auto' }}
-                  disabled={!isAllowedProtocol}
-                />
+                <Checkbox key={protocol} checked={isActive} wrapperSx={{ height: 'auto' }} />
 
-                <ProtocolLogo
-                  className="active"
-                  protocol={protocol}
-                  isActive={isActive}
-                  hasText={false}
-                  size={40}
-                  disabled={!isAllowedProtocol}
-                />
+                <ProtocolLogo className="active" protocol={protocol} isActive={false} hasText={false} size={32} />
 
-                <Flex sx={{ gap: '5px', alignItems: 'flex-start' }}>
+                <Flex width="100%" sx={{ gap: '5px', alignItems: 'center', position: 'relative' }}>
                   <Flex flexDirection={'column'} sx={{ justifyContent: 'space-between' }} mx={1}>
-                    <Type.Caption lineHeight="16px" color={isAllowedProtocol ? 'neutral1' : 'neutral3'}>
-                      {option.text}
-                    </Type.Caption>
+                    <Type.Caption color={'neutral1'}>{option.text}</Type.Caption>
                     <Flex alignItems={'center'}>
-                      <Type.Caption lineHeight="16px" color={'neutral3'} mr={1}>
+                      <Type.Small color={'neutral3'} mr={1}>
                         {compactNumber(protocolStatistic?.traders ?? 0, 2, true)}
-                      </Type.Caption>
+                      </Type.Small>
                       <IconBox color="neutral3" icon={<User size={12} />} />
                     </Flex>
                   </Flex>
 
-                  {ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol) && (
-                    <Box py={1} mx={1}>
-                      <ActiveDot tooltipId={`tt_allow_copy_${protocol}`} tooltipContent={<Trans>Allow Copy</Trans>} />
+                  {/*{ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol) && (*/}
+                  {/*  <Box sx={{ position: 'absolute', top: 0, right: 0 }}>*/}
+                  {/*    <ActiveDot tooltipId={`tt_allow_copy_${protocol}`} tooltipContent={<Trans>Allow Copy</Trans>} />*/}
+                  {/*  </Box>*/}
+                  {/*)}*/}
+                  {protocol === ProtocolEnum.HYPERLIQUID && (
+                    <Box sx={{ position: 'absolute', top: 0, right: 0 }}>
+                      <ActiveDot
+                        color="orange1"
+                        tooltipId={`tt_warning_${protocol}`}
+                        tooltipContent={<ProtocolBetaWarning protocol={protocol} />}
+                      />
                     </Box>
                   )}
 
-                  {option.isCross ? (
-                    <img src={CrossTag} alt="cross" />
-                  ) : option.isNew ? (
-                    <img src={NewTag} alt="new" />
-                  ) : (
-                    <></>
-                  )}
+                  {/*{option.isCross ? (*/}
+                  {/*  <img src={CrossTag} alt="cross" />*/}
+                  {/*) : option.isNew ? (*/}
+                  {/*  <img src={NewTag} alt="new" />*/}
+                  {/*) : (*/}
+                  {/*  <></>*/}
+                  {/*)}*/}
                 </Flex>
               </Flex>
             </Box>
           )
         })}
       </Grid>
+
+      <Flex
+        sx={{
+          bottom: 0,
+          width: '100%',
+          position: 'sticky',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          backgroundColor: 'neutral7',
+          gap: [3, 24],
+          py: 3,
+          px: 2,
+          zIndex: 1000,
+        }}
+      >
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setSelectedProtocols(savedProtocols)
+          }}
+          sx={{ fontWeight: 400, p: 0 }}
+          disabled={isEqual}
+        >
+          Reset
+        </Button>
+        <Button
+          variant="ghostPrimary"
+          onClick={() => {
+            setSavedProtocols(selectedProtocols)
+            handleToggleDropdown?.()
+          }}
+          sx={{ fontWeight: 400, p: 0 }}
+        >
+          Apply & Save
+        </Button>
+      </Flex>
     </Box>
   )
 }

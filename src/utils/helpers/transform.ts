@@ -180,7 +180,7 @@ export const getDurationFromTimeFilter = (timeFilter?: TimeFilterByEnum) => {
     case TimeFilterByEnum.S60_DAY:
       return 60
     case TimeFilterByEnum.ALL_TIME:
-      return 365
+      return 365 * 10
     default:
       return 7
   }
@@ -485,4 +485,11 @@ export function getCurrentTimezone() {
     default:
       return timezone
   }
+}
+
+export function getSymbolFromPair(pair: string | undefined) {
+  return pair?.split('-')?.[0] ?? ''
+}
+export function getPairFromSymbol(symbol: string) {
+  return `${symbol}-USDT`
 }

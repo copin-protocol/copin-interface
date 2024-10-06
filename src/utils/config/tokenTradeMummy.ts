@@ -21,6 +21,8 @@ const MUMMY_PAIRS = {
   'MUMMY_FANTOM-11': 'FET',
   'MUMMY_FANTOM-12': 'SUI',
   'MUMMY_FANTOM-13': 'PEPE',
+  'MUMMY_FANTOM-14': 'TON',
+  'MUMMY_FANTOM-15': 'NOT',
 }
 
 const TOKEN_COLLATERAL_MUMMY_FANTOM: Record<string, TokenCollateral> = {
@@ -29,7 +31,7 @@ const TOKEN_COLLATERAL_MUMMY_FANTOM: Record<string, TokenCollateral> = {
     symbol: 'WETH',
     decimals: 18,
   },
-  '0xf1648C50d2863f780c57849D812b4B7686031A3D-2': {
+  '0xf1648C50d2863f780c57849D812b4B7686031A3D': {
     address: '0xf1648C50d2863f780c57849D812b4B7686031A3D',
     symbol: 'WBTC',
     decimals: 8,

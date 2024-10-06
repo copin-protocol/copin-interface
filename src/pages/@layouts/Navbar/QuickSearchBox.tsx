@@ -30,6 +30,7 @@ import { formatNumber } from 'utils/helpers/format'
 
 const QuickSearchBox = memo(function QuickSearchBoxMemo() {
   const [openModal, setOpenModal] = useState(false)
+  const [searchTextRef, setSearchTextRef] = useState('')
   const handleOpenModal = () => setOpenModal(true)
   const handleDismissModal = () => setOpenModal(false)
 
@@ -65,7 +66,13 @@ const QuickSearchBox = memo(function QuickSearchBoxMemo() {
         >
           <IconBox icon={<MagnifyingGlass size={20} className="glass" />} color="neutral2 " />
           <Type.Caption className="text" color="neutral3">
-            Search
+            {searchTextRef ? (
+              <Box as="span" color="neutral1">
+                {searchTextRef.length > 3 ? `${searchTextRef.substring(0, 3)}...` : searchTextRef}
+              </Box>
+            ) : (
+              'Search'
+            )}
           </Type.Caption>
           <Box className="text" color="neutral3">
             (
@@ -77,7 +84,7 @@ const QuickSearchBox = memo(function QuickSearchBoxMemo() {
           </Box>
         </Flex>
       )}
-      <QuickSearchContainer isOpen={openModal} onDismiss={handleDismissModal} />
+      <QuickSearchContainer isOpen={openModal} onDismiss={handleDismissModal} setSearchTextRef={setSearchTextRef} />
     </>
   )
 })
@@ -92,6 +99,7 @@ function QuickSearchContainer({
   returnRanking = false,
   allowAllProtocol = true,
   allowSearchPositions = true,
+  setSearchTextRef,
 }: {
   isOpen: boolean
   onDismiss: () => void
@@ -101,6 +109,7 @@ function QuickSearchContainer({
   allowAllProtocol?: boolean
   allowSearchPositions?: boolean
   maxWidth?: string | number
+  setSearchTextRef?: (keyword: string) => void
 }) {
   const isMobile = useIsMobile()
   const [openSelectProtocols, setOpenSelectProtocols] = useState(false)
@@ -111,6 +120,8 @@ function QuickSearchContainer({
   const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
 
   const {
+    protocolSortBy,
+    setProtocolSortBy,
     selectedProtocols,
     checkIsSelected: checkIsProtocolChecked,
     handleToggle: handleToggleProtocol,
@@ -161,20 +172,24 @@ function QuickSearchContainer({
   const totalResultPositions = searchPositions?.length ?? 0
 
   const totalResult = isTxHash ? totalResultPositions : totalResultTraders
-  const showViewAllResultText = isTxHash
-    ? false
-    : totalResultTraders > (searchTraders?.data?.length ?? 0)
-    ? true
-    : false
+  const showViewAllResultText = isTxHash ? false : totalResultTraders > (searchTraders?.data?.length ?? 0)
 
   useEffect(() => {
     if (isOpen) {
       inputSearchRef.current?.focus?.()
     }
+    if (!isOpen) {
+      setSearchTextRef?.(searchText)
+    }
   }, [isOpen])
 
   return (
-    <RcDialog isOpen={isOpen} onDismiss={onDismiss} offsetBottom={isMobile ? '48px' : '100px'}>
+    <RcDialog
+      isOpen={isOpen}
+      onDismiss={onDismiss}
+      offsetTop={isMobile ? '48px' : '75px'}
+      offsetBottom={isMobile ? '48px' : '75px'}
+    >
       <Box
         sx={{
           bg: 'neutral7',

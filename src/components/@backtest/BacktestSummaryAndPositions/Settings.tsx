@@ -4,7 +4,6 @@ import { RequestBackTestData } from 'entities/backTest.d'
 import TableLabel from 'theme/Table/TableLabel'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
 
 export default function BacktestSettings({
@@ -72,13 +71,7 @@ export default function BacktestSettings({
       <Box mt={3} />
       <SettingItem
         label={'Trading Pair'}
-        value={
-          data?.copyAll
-            ? 'Followed trader'
-            : !!data.tokenAddresses?.length
-            ? data.tokenAddresses.map((address) => getTokenTradeSupport(protocol)[address]?.symbol).join(', ')
-            : ''
-        }
+        value={data?.copyAll ? 'Followed trader' : !!data.pairs?.length ? data.pairs.join(', ') : ''}
       />
     </>
   )
