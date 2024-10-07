@@ -62,7 +62,7 @@ export default function CreateBinanceWalletModal({ isOpen, onDismiss }: { isOpen
     <Modal
       isOpen={isOpen}
       hasClose
-      title={'Create Your Binance Wallet'}
+      title={'Connect Your Binance API'}
       onDismiss={onDismiss}
       width="90vw"
       maxWidth="450px"
@@ -118,7 +118,7 @@ export default function CreateBinanceWalletModal({ isOpen, onDismiss }: { isOpen
             isLoading={submitting}
             disabled={Object.keys(errors).length > 0 || submitting}
           >
-            {submitting ? <Trans>Creating...</Trans> : <Trans>Create Binance Wallet</Trans>}
+            {submitting ? <Trans>Connecting...</Trans> : <Trans>Connect Binance API</Trans>}
           </Button>
         </form>
       </Box>

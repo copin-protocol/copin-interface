@@ -63,7 +63,7 @@ export default function CreateBingXWalletModal({ isOpen, onDismiss }: { isOpen: 
     <Modal
       isOpen={isOpen}
       hasClose
-      title={'Create Your BingX Wallet'}
+      title={'Connect Your BingX API'}
       onDismiss={onDismiss}
       width="90vw"
       maxWidth="450px"
@@ -112,7 +112,7 @@ export default function CreateBingXWalletModal({ isOpen, onDismiss }: { isOpen: 
 
           <Divider />
 
-          <BingXHelp hasBorder />
+          <BingXHelp />
 
           <Button
             size="xl"
@@ -121,7 +121,7 @@ export default function CreateBingXWalletModal({ isOpen, onDismiss }: { isOpen: 
             isLoading={submitting}
             disabled={Object.keys(errors).length > 0 || submitting}
           >
-            {submitting ? <Trans>Creating...</Trans> : <Trans>Create BingX Wallet</Trans>}
+            {submitting ? <Trans>Connecting...</Trans> : <Trans>Connect</Trans>}
           </Button>
         </form>
       </Box>

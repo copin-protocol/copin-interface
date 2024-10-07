@@ -64,7 +64,7 @@ export default function CreateBitgetWalletModal({ isOpen, onDismiss }: { isOpen:
     <Modal
       isOpen={isOpen}
       hasClose
-      title={'Create Your Bitget Wallet'}
+      title={'Connect Your Bitget API'}
       onDismiss={onDismiss}
       width="90vw"
       maxWidth="450px"
@@ -127,7 +127,7 @@ export default function CreateBitgetWalletModal({ isOpen, onDismiss }: { isOpen:
 
           <Divider />
 
-          <BitgetHelp hasBorder />
+          <BitgetHelp />
 
           <Button
             size="xl"
@@ -136,7 +136,7 @@ export default function CreateBitgetWalletModal({ isOpen, onDismiss }: { isOpen:
             isLoading={submitting}
             disabled={Object.keys(errors).length > 0 || submitting}
           >
-            {submitting ? <Trans>Creating...</Trans> : <Trans>Create Bitget Wallet</Trans>}
+            {submitting ? <Trans>Connecting...</Trans> : <Trans>Connect</Trans>}
           </Button>
         </form>
       </Box>
