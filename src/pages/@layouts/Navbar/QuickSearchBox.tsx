@@ -224,6 +224,7 @@ function QuickSearchContainer({
             handleToggleProtocol={handleToggleProtocol}
             allowList={allowList}
             hasSearch={false}
+            handleToggleDropdown={handleToggleSelectProtocols}
           />
         </Box>
 

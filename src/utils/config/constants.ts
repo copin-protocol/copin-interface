@@ -44,6 +44,7 @@ export const LINKS = {
   docs: 'https://docs.copin.io/',
   policy: 'https://docs.copin.io/another/privacy-policy',
   termOfUse: 'https://docs.copin.io/another/terms-of-service',
+  riskDisclaimer: 'https://docs.copin.io/another/risk-disclaimer',
   upgradePremium: 'https://docs.copin.io/upgrade-to-premium',
   referralProgram: 'https://docs.copin.io/features/referral-program',
   registerBingX: 'https://bingx.com/en-us/invite/DY5QNN',
@@ -246,6 +247,7 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.KILOEX_OPBNB,
   ProtocolEnum.ROLLIE_SCROLL,
   ProtocolEnum.MUMMY_FANTOM,
+  ProtocolEnum.MORPHEX_FANTOM,
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID, ProtocolEnum.DYDX]
 
