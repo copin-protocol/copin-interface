@@ -1,16 +1,17 @@
 import { Contract } from '@ethersproject/contracts'
 import { Trans } from '@lingui/macro'
 import { ArrowSquareOut, HandWaving } from '@phosphor-icons/react'
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import useWeb3 from 'hooks/web3/useWeb3'
 import { Button } from 'theme/Buttons'
+import Checkbox from 'theme/Checkbox'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { DELAY_SYNC } from 'utils/config/constants'
+import { DELAY_SYNC, LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { COPY_WALLET_TRANS } from 'utils/config/translations'
@@ -35,6 +36,9 @@ const CreateSmartWalletModal = ({
   })
   const { walletProvider, publicProvider, walletAccount } = useWeb3()
   const [submitting, setSubmitting] = useState(false)
+  const [agreement, setAgreement] = useState(false)
+  const [trigger, setTrigger] = useState(false)
+
   const factory = useMemo(
     () =>
       new Contract(
@@ -47,6 +51,7 @@ const CreateSmartWalletModal = ({
   const factoryMutation = useContractMutation(factory)
 
   const createAccount = async () => {
+    setTrigger(true)
     setSubmitting(true)
     await factoryMutation.mutate(
       {
@@ -98,8 +103,39 @@ const CreateSmartWalletModal = ({
             platform.
           </Trans>
         </Type.Caption>
+
+        <Box mb={3}>
+          <Checkbox
+            onChange={(e) => {
+              setAgreement(e.target.checked)
+              setTrigger(true)
+            }}
+          >
+            <Type.Caption>
+              I have read and I agree to the{' '}
+              <a href={LINKS.termOfUse} target="_blank" rel="noreferrer">
+                Terms
+              </a>{' '}
+              &{' '}
+              <a href={LINKS.riskDisclaimer} target="_blank" rel="noreferrer">
+                Risk Disclaimer
+              </a>
+            </Type.Caption>
+          </Checkbox>
+          {trigger && !agreement && (
+            <Type.Caption color="red1" display="block" mt={1}>
+              You must agree to the agreement before continuing
+            </Type.Caption>
+          )}
+        </Box>
         {isValid ? (
-          <Button variant="primary" block onClick={createAccount} isLoading={submitting} disabled={submitting}>
+          <Button
+            variant="primary"
+            block
+            onClick={createAccount}
+            isLoading={submitting}
+            disabled={submitting || !agreement}
+          >
             <Trans>Create Smart Wallet</Trans>
           </Button>
         ) : (

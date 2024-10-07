@@ -78,6 +78,7 @@ export default function useQueryClosedPositions({
   const forceSetPositions = prevFilterKeyRef.current !== currentFilterKey
 
   const latestBlockNumber = useRef(0)
+  if (forceSetPositions) latestBlockNumber.current = 0
   const rangeFilters: RangeFilter<keyof PositionData>[] = []
   const rangeFiltersReload: RangeFilter<keyof PositionData>[] = []
   const queryFilters: QueryFilter[] = []

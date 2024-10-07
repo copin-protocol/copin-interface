@@ -88,15 +88,6 @@ export default function ProtocolSelection({
     return generatedProtocolOpts.every((item) => selectedProtocols.includes(item.id))
   }
 
-  const checkIsAllowedProtocol = (protocol: ProtocolEnum) => {
-    return isUseAllowList ? allowList.includes(protocol) : true
-  }
-
-  const setSelectedProtocolsByAllowList = (protocols: ProtocolEnum[]) => {
-    const filteredProtocols = protocols.filter((protocol) => allowList.includes(protocol))
-    setSelectedProtocols(filteredProtocols)
-  }
-
   const handleSelectAll = (event: ChangeEvent<HTMLInputElement>) => {
     event.stopPropagation()
 
@@ -235,7 +226,7 @@ export default function ProtocolSelection({
             size="xs"
             variant="info"
             onClick={() => {
-              setSelectedProtocolsByAllowList(RELEASED_PROTOCOLS)
+              setSelectedProtocols(ALLOWED_COPYTRADE_PROTOCOLS)
             }}
             px={2}
             sx={{ color: 'neutral1', border: 'none' }}
