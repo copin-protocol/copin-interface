@@ -74,7 +74,7 @@ export default function BarChartTraderPnL({
           }}
         >
           <ResponsiveContainer height="100%" width="100%">
-            <ComposedChart data={chartData} barGap={0}>
+            <ComposedChart data={chartData} barGap={0} stackOffset="sign">
               {/*<CartesianGrid stroke={themeColors.neutral4} strokeDasharray="3 3" opacity={0.5} />*/}
               <XAxis
                 dataKey="label"
@@ -107,7 +107,15 @@ export default function BarChartTraderPnL({
                 axisLine={false}
                 tickLine={false}
               />
-              <Bar type="monotone" minPointSize={1} name="PnL" unit="$" dataKey="pnl" fill={themeColors.neutral1}>
+              <Bar
+                type="monotone"
+                minPointSize={1}
+                name="PnL"
+                stackId="bar"
+                unit="$"
+                dataKey="pnl"
+                fill={themeColors.neutral1}
+              >
                 {chartData.map((item, i) => {
                   return (
                     <Cell
@@ -115,6 +123,19 @@ export default function BarChartTraderPnL({
                       fill={item.pnl > 0 ? themeColors.green1 : item.pnl < 0 ? themeColors.red2 : themeColors.neutral4}
                     />
                   )
+                })}
+              </Bar>
+              <Bar
+                type="monotone"
+                minPointSize={1}
+                name="Fees"
+                stackId="bar"
+                unit="$"
+                dataKey="fee"
+                fill={`${themeColors.red1}80`}
+              >
+                {chartData.map((item, i) => {
+                  return <Cell key={`cell-${i}`} fill={item.fee < 0 ? `${themeColors.red1}80` : themeColors.neutral4} />
                 })}
               </Bar>
               <Line
@@ -188,7 +209,7 @@ function CustomTooltip({ item }: { item: any }) {
         </Type.Small>
       </Type.Small>
       <Type.Small>
-        Fees: <Type.Small>${formatNumber(fee)}</Type.Small>
+        Fees: <Type.Small>${formatNumber(Math.abs(fee))}</Type.Small>
       </Type.Small>
     </Flex>
   )
@@ -208,7 +229,7 @@ function getChartData({ data }: { data: TraderPnlStatisticData[] | undefined }) 
           cumulativePnlProfit: stats.cumulativePnl >= 0 ? stats.cumulativePnl : null,
           cumulativePnlLoss: stats.cumulativePnl < 0 ? stats.cumulativePnl : null,
           pnl: stats.pnl,
-          fee: stats.fee,
+          fee: -stats.fee,
           roi: stats.percentage,
         } as TraderPnlChartData
       })
@@ -240,14 +261,14 @@ export function generateChartDailyPnL(fromDate: number, toDate: number, cumulati
     .sort((x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : 0))
   const result: TraderPnlStatisticData[] = []
   let cumulativePnl = 0
-  for (let i = 0; i < data.length - 1; i++) {
-    cumulativePnl += data[i + 1].pnl
+  for (let i = 0; i < data.length; i++) {
+    cumulativePnl += data[i].pnl ? data[i].pnl : 0
     result.push({
       cumulativePnl,
-      date: data[i + 1].date,
-      pnl: data[i + 1].pnl,
-      fee: data[i + 1].fee,
-      percentage: data[i].pnl ? ((data[i + 1].pnl - data[i].pnl) / data[i].pnl) * 100 : 0,
+      date: data[i].date,
+      pnl: data[i].pnl,
+      fee: data[i].fee,
+      percentage: i > 0 && data[i - 1].pnl ? ((data[i].pnl - data[i - 1].pnl) / data[i - 1].pnl) * 100 : 0,
     })
   }
 

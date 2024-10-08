@@ -9,7 +9,6 @@ import { BackTestFormValues } from 'components/@backtest/types'
 import ToastBody from 'components/@ui/ToastBody'
 import { BackTestResultData, RequestBackTestData } from 'entities/backTest.d'
 import { ProtocolEnum } from 'utils/config/enums'
-import { getSymbolsFromIndexTokens, getTokenTradeList } from 'utils/config/trades'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
 export default function useBacktestRequest(

@@ -400,12 +400,29 @@ export const getTokenTradeList = (protocol: ProtocolEnum) => {
   return (tokensSupport ? Object.values(tokensSupport) : []) as TokenTrade[]
 }
 
+const normalizeSymbolOption = (symbol: string) => {
+  switch (symbol) {
+    case '1000BONK':
+      return 'BONK'
+    case '1000PEPE':
+      return 'PEPE'
+    case '1000FLOKI':
+      return 'FLOKI'
+    case '1000SHIB':
+      return 'SHIB'
+    case '1000LUNC':
+      return 'LUNC'
+    default:
+      return symbol
+  }
+}
+
 export const getDefaultTokenOptions = (protocol: ProtocolEnum) => {
   const tokensSupport = getTokenTradeSupport(protocol)
   return Array.from(
     new Set(
       Object.values(tokensSupport)
-        .map((_v) => _v?.symbol || '')
+        .map((_v) => (_v?.symbol ? normalizeSymbolOption(_v.symbol) : ''))
         .filter((_v) => !!_v)
     )
   ).map((key) => ({
@@ -470,25 +487,32 @@ export function getSymbolsFromIndexTokens(protocol: ProtocolEnum, indexTokens: s
 
 export function getIndexTokensFromSymbols(protocol: ProtocolEnum, symbols: string[]): string[] {
   const tokens = TOKEN_TRADE_SUPPORT[protocol] ?? {}
-  const indexTokensBySymbol = Object.entries(tokens).reduce<Record<string, string[]>>(
-    (_r, [indexToken, { symbol }]) => {
-      return { ..._r, [symbol]: [...(_r[symbol] ?? []), indexToken] }
-    },
-    {}
-  )
-  const indexTokens = symbols
-    .map((symbol) => indexTokensBySymbol[symbol])
-    .flat()
-    .filter((v) => !!v)
+  const indexTokens: string[] = []
+  Object.entries(tokens).forEach(([indexToken, tokenSymbol]) => {
+    symbols.forEach((symbol) => {
+      if (tokenSymbol.symbol.match(symbol)) indexTokens.push(indexToken)
+    })
+  })
   return indexTokens
 }
 
 export function getSymbolTradingView(symbol: string) {
   switch (symbol) {
-    case '1000PEPE':
-      return 'PEPE'
     case '1000BONK':
+    case 'kBONK':
       return 'BONK'
+    case '1000PEPE':
+    case 'kPEPE':
+      return 'PEPE'
+    case '1000FLOKI':
+    case 'kFLOKI':
+      return 'FLOKI'
+    case '1000SHIB':
+    case 'kSHIB':
+      return 'SHIB'
+    case '1000LUNC':
+    case 'kLUNC':
+      return 'LUNC'
     case 'RNDR':
       return 'RENDER'
     default:
@@ -498,8 +522,16 @@ export function getSymbolTradingView(symbol: string) {
 export function getPriceTradingView(symbol: string, price?: number) {
   if (!price) return
   switch (symbol) {
-    case '1000PEPE':
     case '1000BONK':
+    case 'kBONK':
+    case '1000PEPE':
+    case 'kPEPE':
+    case '1000FLOKI':
+    case 'kFLOKI':
+    case '1000SHIB':
+    case 'kSHIB':
+    case '1000LUNC':
+    case 'kLUNC':
       return price / 1000
     default:
       return price

@@ -367,6 +367,13 @@ export const normalizePriceData = (
   switch (symbol) {
     case '1000BONK':
     case '1000PEPE':
+    case '1000FLOKI':
+    case '1000SHIB':
+    case 'kPEPE':
+    case 'kBONK':
+    case 'kFLOKI':
+    case 'kLUNC':
+    case 'kSHIB':
       return value * 1000
     case 'BONK':
     case 'PEPE':

@@ -7,7 +7,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import NoDataFound from 'components/@ui/NoDataFound'
 import PythWatermark from 'components/@ui/PythWatermark'
 import CurrencyOption from 'components/@widgets/CurrencyOption'
-// import CurrencyOption from 'components/CurrencyOption'
 import { PositionData } from 'entities/trader.d'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
@@ -15,7 +14,8 @@ import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { PositionStatusEnum, TimeframeEnum } from 'utils/config/enums'
-import { ALL_TOKENS_ID, getDefaultTokenTrade, getTokenTradeList, getTokenTradeSupport } from 'utils/config/trades'
+import { ALL_TOKENS_ID, getTokenTradeList } from 'utils/config/trades'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import BrushChart from './BrushChart'
 import PositionLegend from './PositionLegend'
@@ -63,7 +63,7 @@ export default function ChartPositions({
   const [timeframe, setTimeframe] = useState(TimeframeEnum.H1)
   const hasAllTokens = currencyOption?.id === ALL_TOKENS_ID
   const indexTokens = getTokenTradeList(protocol)
-    .filter((e) => e.symbol === currencyOption?.id)
+    .filter((e) => currencyOption?.id && e.symbol.match(currencyOption.id))
     ?.map((e) => e.address)
   const filterPositions = (positions?: PositionData[]) =>
     (positions &&
@@ -104,15 +104,15 @@ export default function ChartPositions({
       : undefined
   const oldestPosTime = oldestPosition ? dayjs(oldestPosition.openBlockTime).utc() : undefined
 
-  const defaultToken = getDefaultTokenTrade(protocol)?.address ?? ''
-  const tokenTradeSupport = getTokenTradeSupport(protocol)
-  const tokenTrade = useMemo(
-    () =>
-      tokenTradeSupport[
-        hasAllTokens ? (mostRecentPos ? mostRecentPos.indexToken : defaultToken) : indexTokens[0] ?? defaultToken
-      ],
-    [currencyOption?.id, defaultToken, hasAllTokens, mostRecentPos, protocol]
-  )
+  // const defaultToken = getDefaultTokenTrade(protocol)?.address ?? ''
+  // const tokenTradeSupport = getTokenTradeSupport(protocol)
+  // const tokenTrade = useMemo(
+  //   () =>
+  //     tokenTradeSupport[
+  //       hasAllTokens ? (mostRecentPos ? mostRecentPos.indexToken : defaultToken) : indexTokens[0] ?? defaultToken
+  //     ],
+  //   [currencyOption?.id, defaultToken, hasAllTokens, mostRecentPos, protocol]
+  // )
 
   const { chartData, isLoading, from, timezone } = useChartPositionData({
     timeRange: isExpanded
@@ -122,16 +122,14 @@ export default function ChartPositions({
       : _timeRange,
     timeframe,
     protocol,
-    indexToken: tokenTrade?.address ?? '',
+    symbol: getSymbolFromPair(currencyOption?.id),
   })
 
   const openingPos = (openingPositions ?? []).filter(
-    (e) =>
-      tokenTradeSupport[e.indexToken]?.symbol === tokenTrade?.symbol && dayjs(e.openBlockTime).utc().valueOf() >= from
+    (e) => getSymbolFromPair(e.pair) === currencyOption?.id && dayjs(e.openBlockTime).utc().valueOf() >= from
   )
   const closedPos = closedPositions.filter(
-    (e) =>
-      tokenTradeSupport[e.indexToken]?.symbol === tokenTrade?.symbol && dayjs(e.closeBlockTime).utc().valueOf() >= from
+    (e) => getSymbolFromPair(e.pair) === currencyOption?.id && dayjs(e.closeBlockTime).utc().valueOf() >= from
   )
   const listPositions = useMemo(() => [...closedPos, ...openingPos], [closedPos, openingPos])
   const currentPosition = listPositions.find((e) => markerId?.includes(e.id))
@@ -421,9 +419,9 @@ export default function ChartPositions({
             Use desktop to experience more
           </Type.Caption>
         ))}
-      {isExpanded && tokenTrade?.symbol && size && (
+      {isExpanded && currencyOption?.id && size && (
         <BrushChart
-          symbol={tokenTrade?.symbol}
+          symbol={currencyOption.id}
           key={chartId}
           chartDimensions={{ width: size?.width, height: 100 }}
           onBrush={handleBrush}

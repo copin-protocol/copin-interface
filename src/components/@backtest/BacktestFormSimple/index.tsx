@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form'
 
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
-import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -16,7 +15,6 @@ import NumberInputField from 'theme/InputField/NumberInputField'
 import Select from 'theme/Select'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
-import { getSymbolsFromIndexTokens, getTokenTradeList } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
 
 import { fieldName } from '../configs'
@@ -54,21 +52,11 @@ export default function BacktestFormSimple({
   const _timeOption = timeOption.id === TimeFilterByEnum.ALL_TIME ? TIME_FILTER_OPTIONS[3] : timeOption
 
   useEffect(() => {
-    const _defaultValues = defaultValues ?? getDefaultBackTestFormValues(protocol)
+    const _defaultValues = defaultValues ?? { ...getDefaultBackTestFormValues(protocol), copyAll: true }
     for (const key in _defaultValues) {
       const _key = key as keyof BackTestFormValues
       setValue(_key, _defaultValues[_key])
     }
-    if (!_defaultValues.pairs.length) {
-      setValue(
-        'pairs',
-        getSymbolsFromIndexTokens(
-          protocol,
-          getTokenTradeList(protocol).map((v) => v.address)
-        )
-      )
-    }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultValues, protocol])
 
