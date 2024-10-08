@@ -12,8 +12,8 @@ import { TableSortProps } from 'theme/Table/types'
 import { DEFAULT_LIMIT, MAX_PAGE_LIMIT } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { ALL_OPTION, ALL_TOKENS_ID, TOKEN_TRADE_SUPPORT, TokenOptionProps, getTokenOptions } from 'utils/config/trades'
-import { pageToOffset } from 'utils/helpers/transform'
+import { ALL_OPTION, ALL_TOKENS_ID, TokenOptionProps } from 'utils/config/trades'
+import { getSymbolFromPair, pageToOffset } from 'utils/helpers/transform'
 
 const MAX_FIRST_LOAD_PAGE = 100
 
@@ -43,11 +43,18 @@ export default function useQueryClosedPositions({
   )
   const tokenOptions = useMemo(() => {
     if (tokensStatistic?.data?.length) {
-      const statisticSymbols = tokensStatistic.data.map((e) => TOKEN_TRADE_SUPPORT[protocol][e.indexToken]?.symbol)
-      return [ALL_OPTION, ...getTokenOptions({ protocol }).filter((option) => statisticSymbols.includes(option.label))]
+      const statisticSymbolOptions = tokensStatistic.data.map((e) => {
+        const symbol = getSymbolFromPair(e.pair)
+        return {
+          id: symbol,
+          label: symbol,
+          value: symbol,
+        }
+      })
+      return [ALL_OPTION, ...statisticSymbolOptions]
     }
     return [ALL_OPTION]
-  }, [protocol, tokensStatistic])
+  }, [tokensStatistic])
   const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
     optionName: URL_PARAM_KEYS.CURRENCY,
     options: tokenOptions,

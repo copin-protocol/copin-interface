@@ -259,7 +259,7 @@ export type TickPosition = {
 }
 
 export interface TraderTokenStatistic {
-  symbol: string
+  // symbol: string
   pair: string
   indexTokens: string[]
   indexToken: string

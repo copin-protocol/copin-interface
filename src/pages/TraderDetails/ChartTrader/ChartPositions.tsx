@@ -14,7 +14,7 @@ import { DEFAULT_PROTOCOL, MAX_PAGE_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TokenOptionProps } from 'utils/config/trades'
-import { getPairFromSymbol, getSymbolFromPair } from 'utils/helpers/transform'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import { ListTokenStatistic, TableTokenStatistic } from './TokenStatistic'
 import { useQueryInfinitePositions } from './useQueryInfinitePositions'
@@ -56,7 +56,7 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
       onSuccess(data) {
         if (!data.data.length) return
         const firstData = data.data[0]
-        setCurrentPair(firstData?.pair ? firstData.pair : getPairFromSymbol(firstData.symbol))
+        setCurrentPair(firstData?.pair)
       },
     }
   )

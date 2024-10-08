@@ -261,14 +261,14 @@ export function generateChartDailyPnL(fromDate: number, toDate: number, cumulati
     .sort((x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : 0))
   const result: TraderPnlStatisticData[] = []
   let cumulativePnl = 0
-  for (let i = 0; i < data.length - 1; i++) {
-    cumulativePnl += data[i + 1].pnl
+  for (let i = 0; i < data.length; i++) {
+    cumulativePnl += data[i].pnl ? data[i].pnl : 0
     result.push({
       cumulativePnl,
-      date: data[i + 1].date,
-      pnl: data[i + 1].pnl,
-      fee: data[i + 1].fee,
-      percentage: data[i].pnl ? ((data[i + 1].pnl - data[i].pnl) / data[i].pnl) * 100 : 0,
+      date: data[i].date,
+      pnl: data[i].pnl,
+      fee: data[i].fee,
+      percentage: i > 0 && data[i - 1].pnl ? ((data[i].pnl - data[i - 1].pnl) / data[i - 1].pnl) * 100 : 0,
     })
   }
 

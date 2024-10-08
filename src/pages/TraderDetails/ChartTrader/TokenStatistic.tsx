@@ -177,7 +177,7 @@ export function ListTokenStatistic({ data, currentPair, changePair }: TokenStati
               >
                 <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={symbol} />
                 <Type.Caption>
-                  {stats.symbol}{' '}
+                  {getSymbolFromPair(stats.pair)}{' '}
                   <Box as="span" color="neutral3">
                     ({formatNumber(stats.totalTrade, 0)})
                   </Box>
@@ -252,8 +252,9 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
       key: 'indexToken',
       style: { minWidth: '80px' },
       render: (item) => {
-        if (!item.symbol) return <></>
-        const icon = `/svg/markets/${item.symbol}.svg`
+        if (!item.pair) return <></>
+        const symbol = getSymbolFromPair(item.pair)
+        const icon = `/svg/markets/${symbol}.svg`
         return (
           <Flex
             role="button"
@@ -263,8 +264,8 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
               '& > *': { flexShrink: 0 },
             }}
           >
-            <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={item.symbol} />
-            <Type.Caption>{item.symbol}</Type.Caption>
+            <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={symbol} />
+            <Type.Caption>{symbol}</Type.Caption>
           </Flex>
         )
       },
