@@ -14,6 +14,7 @@ import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
@@ -75,6 +76,10 @@ const ChartTrader = ({
                   <Flex alignItems="center" sx={{ gap: 1 }}>
                     <ActiveDot color="red2" />
                     <Type.Caption>Daily Loss</Type.Caption>
+                  </Flex>
+                  <Flex alignItems="center" sx={{ gap: 1 }}>
+                    <ActiveDot color={`${themeColors.red1}80`} />
+                    <Type.Caption>Daily Fees</Type.Caption>
                   </Flex>
                   <Flex alignItems="center" sx={{ gap: 1 }}>
                     <ActiveDot color="orange1" />
