@@ -10,7 +10,7 @@ const useChain = () => {
     [connectedChain]
   )
 
-  return { chain: currentChain, setChain, settingChain }
+  return { chain: currentChain, setChain, settingChain, connectedChain }
 }
 
 export default useChain

@@ -42,6 +42,7 @@ const Withdraw = ({
   })
   const { isValid, alert } = useRequiredChain({
     chainId,
+    onDismiss,
   })
   const [submitting, setSubmitting] = useState(false)
 

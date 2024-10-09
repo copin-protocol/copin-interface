@@ -92,7 +92,7 @@ export function ListCopy({
             <Divider my={2} color="neutral5" />
             <Flex sx={{ flexDirection: 'column', gap: 2 }}>
               <ListCopyRowItem label={<Trans>Trader</Trans>} value={renderProps.renderTraderAccount(data)} />
-              <ListCopyRowItem label={<Trans>Vol/Order</Trans>} value={renderProps.renderVolume(data)} />
+              <ListCopyRowItem label={<Trans>Max Margin/Order</Trans>} value={renderProps.renderVolume(data)} />
               <ListCopyRowItem label={<Trans>Leverage</Trans>} value={renderProps.renderLeverage(data)} />
               <ListCopyRowItem label={<Trans>Trading Pairs</Trans>} value={renderProps.renderMarkets(data)} />
               <ListCopyRowItem label={<Trans>Advance</Trans>} value={renderProps.renderRiskControl(data)} />

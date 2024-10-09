@@ -9,7 +9,7 @@ import Container from 'components/@ui/Container'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
 import useSearchParams from 'hooks/router/useSearchParams'
-import Loading from 'theme/Loading'
+// import Loading from 'theme/Loading'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
@@ -42,11 +42,11 @@ export default function PositionDetailsPage() {
     <>
       <CustomPageTitle title="Position Details" />
       <Container maxWidth={{ lg: 1000 }} height="100%">
-        {isLoading && <Loading />}
+        {/*{isLoading && <Loading />}*/}
         {!isLoading && !account && !data?.length && !!txHash && (
           <NoDataFound message={<Trans>No Position Found</Trans>} />
         )}
-        {!!positionId && (
+        {!isLoading && !!positionId && (
           <TraderPositionDetails
             protocol={protocol}
             id={positionId}
@@ -54,7 +54,7 @@ export default function PositionDetailsPage() {
             chartProfitId="position-detail-page"
           />
         )}
-        {!!txHash && !!account && !positionId && (
+        {!isLoading && !!txHash && !!account && !positionId && (
           <PositionTxResults
             txHash={txHash}
             protocol={protocol}
