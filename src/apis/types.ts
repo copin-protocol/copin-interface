@@ -102,4 +102,5 @@ export type GetCopierLeaderboardParams = PaginationParams & {
   keyword?: string
   sortBy?: string
   sortType?: SortTypeEnum
+  statisticAt?: string
 }

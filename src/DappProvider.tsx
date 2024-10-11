@@ -1,4 +1,7 @@
+import bitgetModule from '@web3-onboard/bitget'
 import injectedModule, { ProviderLabel } from '@web3-onboard/injected-wallets'
+import metamaskModule from '@web3-onboard/metamask'
+import okxModule from '@web3-onboard/okx'
 // import ledgerModule from '@web3-onboard/ledger'
 import { Web3OnboardProvider, init } from '@web3-onboard/react'
 import walletConnectModule from '@web3-onboard/walletconnect'
@@ -7,7 +10,7 @@ import React from 'react'
 import { AuthProvider } from 'hooks/web3/useAuth'
 import themeFn from 'theme/theme'
 import { APP_URL, FONT_FAMILY } from 'utils/config/constants'
-import { DEFAULT_CHAIN_ID, SUPPORTED_CHAIN_IDS, chains } from 'utils/web3/chains'
+import { SUPPORTED_CHAIN_IDS, chains } from 'utils/web3/chains'
 
 const theme = themeFn(true)
 
@@ -24,6 +27,20 @@ const walletConnect = walletConnectModule({
   dappUrl: APP_URL,
 })
 
+const metamask = metamaskModule({
+  options: {
+    extensionOnly: false,
+    logging: {
+      developerMode: true,
+    },
+    dappMetadata: {
+      name: 'Copin Analyzer',
+    },
+  },
+})
+const okx = okxModule()
+const bitget = bitgetModule()
+
 const injected = injectedModule({
   filter: {
     [ProviderLabel.Detected]: false,
@@ -36,14 +53,14 @@ const injected = injectedModule({
     ProviderLabel.Trust,
     ProviderLabel.Coin98Wallet,
   ],
-  sort(wallets) {
-    const metaMask = wallets.find(({ label }) => label === ProviderLabel.MetaMask)
-    return (
-      [metaMask, ...wallets.filter(({ label }) => label !== ProviderLabel.MetaMask)]
-        // remove undefined values
-        .filter((wallet) => wallet) as any
-    )
-  },
+  // sort(wallets) {
+  //   const metaMask = wallets.find(({ label }) => label === ProviderLabel.MetaMask)
+  //   return (
+  //     [metaMask, ...wallets.filter(({ label }) => label !== ProviderLabel.MetaMask)]
+  //       // remove undefined values
+  //       .filter((wallet) => wallet) as any
+  //   )
+  // },
 })
 
 const web3Onboard = init({
@@ -56,7 +73,7 @@ const web3Onboard = init({
     '--w3o-border-radius': theme.borderRadius.xs,
     '--w3o-font-family': FONT_FAMILY,
   },
-  wallets: [walletConnect, injected],
+  wallets: [metamask, walletConnect, injected, okx, bitget],
   chains,
   appMetadata: {
     name: 'Copin',
@@ -82,8 +99,8 @@ const web3Onboard = init({
     `,
     description: 'A leading tool to analyze and copy the best on-chain traders',
     recommendedInjectedWallets: [
-      { name: 'Coinbase', url: 'https://wallet.coinbase.com/' },
       { name: 'MetaMask', url: 'https://metamask.io' },
+      { name: 'Coinbase', url: 'https://wallet.coinbase.com/' },
     ],
   },
   disableFontDownload: true,

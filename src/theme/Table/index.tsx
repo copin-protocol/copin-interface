@@ -43,6 +43,8 @@ export default function Table<T, K>({
   noDataMessage,
   footerData,
   footerRowSx = {},
+  noDataComponent,
+  noDataWrapperSx = {},
 }: // title,
 // subTitle,
 TableProps<T, K>) {
@@ -59,7 +61,7 @@ TableProps<T, K>) {
     }
     sourceRef?.current?.addEventListener('scroll', handleScrollHorizontal)
     return () => sourceRef?.current?.removeEventListener('scroll', handleScrollHorizontal)
-  }, [isLoading])
+  }, [isInfiniteLoad, isLoading, scrollRef, data])
   useEffect(
     () => {
       if (!data || isInfiniteLoad) return
@@ -91,73 +93,71 @@ TableProps<T, K>) {
           ...wrapperSx,
         }}
       >
+        <Box sx={{ width: '100%', overflow: 'hidden', flexShrink: 0 }} ref={headRef}>
+          <TableContainer sx={tableHeadSx}>
+            <TableHead
+              columns={columns}
+              currentSort={currentSort}
+              changeCurrentSort={changeCurrentSort}
+              isSelectedAll={isSelectedAll}
+              handleSelectedAll={handleSelectAll}
+            />
+          </TableContainer>
+        </Box>
         {!!data?.length && (
-          <>
-            <Box sx={{ width: '100%', overflow: 'hidden', flexShrink: 0 }} ref={headRef}>
-              <TableContainer sx={tableHeadSx}>
-                <TableHead
-                  columns={columns}
-                  currentSort={currentSort}
-                  changeCurrentSort={changeCurrentSort}
-                  isSelectedAll={isSelectedAll}
-                  handleSelectedAll={handleSelectAll}
-                />
-              </TableContainer>
-            </Box>
-            <Box
-              flex="1 0 0"
-              sx={{ overflow: restrictHeight ? 'auto' : 'unset', ...(tableBodyWrapperSx ?? {}) }}
-              ref={isInfiniteLoad ? scrollRef : bodyRef}
-            >
-              <TableContainer sx={tableBodySx} hasHoverBg={!checkIsTop}>
-                <TableBody
-                  data={data}
-                  columns={columns}
-                  sx={rowSx}
-                  onClickRow={onClickRow}
-                  renderRowBackground={renderRowBackground}
-                  externalSource={externalSource}
-                  handleSelect={handleSelect}
-                  checkIsSelected={checkIsSelected}
-                  checkIsTop={checkIsTop}
-                  // title={title}
-                  // subTitle={subTitle}
-                />
-              </TableContainer>
+          <Box
+            flex="1 0 0"
+            sx={{ overflow: restrictHeight ? 'auto' : 'unset', ...(tableBodyWrapperSx ?? {}) }}
+            ref={isInfiniteLoad ? scrollRef : bodyRef}
+          >
+            <TableContainer sx={tableBodySx} hasHoverBg={!checkIsTop}>
+              <TableBody
+                data={data}
+                columns={columns}
+                sx={rowSx}
+                onClickRow={onClickRow}
+                renderRowBackground={renderRowBackground}
+                externalSource={externalSource}
+                handleSelect={handleSelect}
+                checkIsSelected={checkIsSelected}
+                checkIsTop={checkIsTop}
+                // title={title}
+                // subTitle={subTitle}
+              />
+            </TableContainer>
 
-              {isInfiniteLoad && !isLoading && (dataMeta?.total ?? 0) === data.length && (
-                <Flex
-                  sx={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    bg: 'neutral6',
-                    height: 40,
-                  }}
-                >
-                  <Type.Caption color="neutral3">
-                    End of list ({data.length}/{dataMeta?.total ?? 0})
-                  </Type.Caption>
-                </Flex>
-              )}
-            </Box>
-            {footerData && (
-              <TableContainer sx={footerRowContainerSx} hasHoverBg={!checkIsTop}>
-                <TableBody
-                  data={footerData}
-                  columns={columns}
-                  sx={rowSx}
-                  onClickRow={onClickRow}
-                  renderRowBackground={renderRowBackground}
-                  externalSource={externalSource}
-                  handleSelect={handleSelect}
-                  checkIsSelected={checkIsSelected}
-                  checkIsTop={checkIsTop}
-                  // title={title}
-                  // subTitle={subTitle}
-                />
-              </TableContainer>
+            {isInfiniteLoad && !isLoading && (dataMeta?.total ?? 0) === (data?.length ?? 0) && (
+              <Flex
+                sx={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  bg: 'neutral6',
+                  height: 40,
+                }}
+              >
+                <Type.Caption color="neutral3">
+                  End of list ({data.length}/{dataMeta?.total ?? 0})
+                </Type.Caption>
+              </Flex>
             )}
-          </>
+          </Box>
+        )}
+        {footerData && (
+          <TableContainer sx={footerRowContainerSx} hasHoverBg={!checkIsTop}>
+            <TableBody
+              data={footerData}
+              columns={columns}
+              sx={rowSx}
+              onClickRow={onClickRow}
+              renderRowBackground={renderRowBackground}
+              externalSource={externalSource}
+              handleSelect={handleSelect}
+              checkIsSelected={checkIsSelected}
+              checkIsTop={checkIsTop}
+              // title={title}
+              // subTitle={subTitle}
+            />
+          </TableContainer>
         )}
 
         {!isInfiniteLoad && isLoading && (
@@ -180,11 +180,16 @@ TableProps<T, K>) {
           </Box>
         )}
 
-        {!isLoading && !!data && data.length === 0 && (
-          <Box mb={24} sx={{ bg: 'neutral8', borderRadius: 'sm' }}>
-            <NoDataFound message={noDataMessage} />
-          </Box>
-        )}
+        {!isLoading &&
+          !!data &&
+          data.length === 0 &&
+          (noDataComponent ? (
+            noDataComponent
+          ) : (
+            <Box mb={24} sx={{ bg: 'neutral8', borderRadius: 'sm', ...noDataWrapperSx }}>
+              <NoDataFound message={noDataMessage} />
+            </Box>
+          ))}
 
         {isInfiniteLoad && isLoading && (
           <Flex

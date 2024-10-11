@@ -11,7 +11,6 @@ import { useHistory } from 'react-router-dom'
 
 import { ApiMeta } from 'apis/api'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
-import TraderPositionListView from 'components/@position/TraderPositionsListView'
 import NoDataFound from 'components/@ui/NoDataFound'
 import SectionTitle from 'components/@ui/SectionTitle'
 import CurrencyOption from 'components/@widgets/CurrencyOption'
@@ -23,9 +22,9 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import ActivityHeatmap from 'pages/TraderDetails/ActivityHeatmap'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
-import Table from 'theme/Table'
 import { ColumnData, TableSortProps } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
+import VirtualList from 'theme/VirtualList'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
@@ -33,6 +32,7 @@ import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
+import TraderPositionListView from '../TraderPositionsListView'
 import { fullHistoryColumns, historyColumns } from '../configs/traderPositionRenderProps'
 import useQueryClosedPositions from './useQueryClosedPositions'
 
@@ -237,7 +237,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
           <ActivityHeatmap account={data[0].account} protocol={data[0].protocol} />
         </Box>
       )}
-      <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
+      <Box flex="1 0 0" overflowX="auto" overflowY="hidden" className="test">
         <PositionsList
           data={data}
           dataMeta={dataMeta}
@@ -249,6 +249,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
           changeCurrentSort={changeCurrentSort}
           handleSelectItem={handleSelectItem}
           showChart={showChart}
+          isExpanded={isExpanded}
         />
       </Box>
 
@@ -274,6 +275,7 @@ const PositionsList = memo(function PositionsListMemo({
   dataMeta,
   showChart,
   handleSelectItem,
+  isExpanded,
 }: {
   data: PositionData[] | undefined
   dataMeta: ApiMeta | undefined
@@ -283,35 +285,40 @@ const PositionsList = memo(function PositionsListMemo({
   tableSettings: ColumnData<PositionData>[]
   currentSort: TableSortProps<PositionData> | undefined
   changeCurrentSort: ((sort: TableSortProps<PositionData> | undefined) => void) | undefined
+  isExpanded: boolean
 } & { showChart: boolean; handleSelectItem: (data: PositionData) => void }) {
   const { sm, lg } = useResponsive()
-  const { scrollRef } = useInfiniteLoadMore({ isDesktop: lg, hasNextPage, fetchNextPage, isLoading })
   const highValue: number = data?.length ? getHighestPnl(data) : 0
+
+  const renderRowBackground = useCallback(
+    (index: number) => {
+      if (!data || !showChart) return undefined
+
+      const sumProfit = data.slice(index, data.length).reduce((sum, item) => sum + item.pnl, 0)
+
+      const percent = (Math.abs(sumProfit) * 100) / highValue
+      return `linear-gradient(to right, #0B0E18 ${100 - percent}%, ${
+        sumProfit > 0 ? 'rgba(56, 208, 96, 0.15)' : 'rgba(239, 53, 53, 0.15)'
+      } 0%)`
+    },
+    [data, highValue, showChart]
+  )
+  const resizeDeps = useMemo(() => [isExpanded], [isExpanded])
+
+  useInfiniteLoadMore({ isDesktop: lg, hasNextPage, fetchNextPage, isLoading })
   return sm ? (
-    <Table
-      scrollRef={scrollRef}
-      wrapperSx={{
-        minWidth: 500,
-      }}
-      isInfiniteLoad
-      dataMeta={dataMeta}
+    <VirtualList
+      data={data}
+      isLoading={isLoading}
+      hasNextPage={hasNextPage}
+      fetchNextPage={fetchNextPage}
+      columns={tableSettings}
       currentSort={currentSort}
       changeCurrentSort={changeCurrentSort}
-      restrictHeight={lg}
-      data={data}
-      columns={tableSettings}
-      isLoading={isLoading}
-      onClickRow={handleSelectItem}
-      renderRowBackground={(dataRow: any, index: number) => {
-        if (!data || !showChart) return '#0B0E18'
-
-        const sumProfit = data.slice(index, data.length).reduce((sum, item) => sum + item.pnl, 0)
-
-        const percent = (Math.abs(sumProfit) * 100) / highValue
-        return `linear-gradient(to right, #0B0E18 ${100 - percent}%, ${
-          sumProfit > 0 ? 'rgba(56, 208, 96, 0.15)' : 'rgba(239, 53, 53, 0.15)'
-        } 0%)`
-      }}
+      dataMeta={dataMeta}
+      handleSelectItem={handleSelectItem}
+      resizeDeps={resizeDeps}
+      rowBgFactory={renderRowBackground}
     />
   ) : (
     <>
@@ -323,7 +330,11 @@ const PositionsList = memo(function PositionsListMemo({
         hasAccountAddress={false}
         isOpening={false}
       />
-      {isLoading && <Loading />}
+      {isLoading && (
+        <Box sx={{ position: 'absolute', bottom: 0, left: 0, right: 0, bg: 'modalBG' }}>
+          <Loading />
+        </Box>
+      )}
       {data && !isLoading && (dataMeta?.total ?? 0) === data.length && (
         <Flex
           sx={{

@@ -15,6 +15,7 @@ import reportWebVitals from './reportWebVitals'
 
 declare global {
   interface Window {
+    // @ts-ignore
     ethereum: any
     gtag: any
   }

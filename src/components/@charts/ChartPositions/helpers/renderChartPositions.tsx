@@ -88,6 +88,7 @@ export default function renderChartPositions({
       background: { type: ColorType.Solid, color: 'transparent' },
       fontFamily: FONT_FAMILY,
       fontSize: 13,
+      attributionLogo: false,
     },
     crosshair: {
       mode: CrosshairMode.Normal,

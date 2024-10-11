@@ -148,6 +148,9 @@ const ROUTES = {
   GNS_FEE_REBATE: {
     path: '/fee-rebate/gns',
   },
+  REFERRAL_MANAGEMENT: {
+    path: '/referral',
+  },
 }
 
 export default ROUTES

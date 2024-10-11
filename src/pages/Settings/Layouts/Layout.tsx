@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans, t } from '@lingui/macro'
-import { Crown, Users } from '@phosphor-icons/react'
+import { Crown } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
@@ -34,18 +34,10 @@ const tabConfigs: TabConfig[] = [
     key: TabKeyEnum.BOT_ALERT,
     route: ROUTES.ALERT_LIST.path,
   },
-  {
-    name: <Trans>REFERRAL</Trans>,
-    activeIcon: <Users size={24} weight="fill" />,
-    inactiveIcon: <Users size={24} />,
-    key: TabKeyEnum.REFERRAL,
-    route: ROUTES.REFERRAL.path,
-  },
 ]
 
 const pageTitleMapping = {
   [ROUTES.USER_SUBSCRIPTION.path]: t`My Subscription`,
-  [ROUTES.REFERRAL.path]: t`Referral`,
   [ROUTES.ALERT_LIST.path]: t`Alert List`,
 }
 
@@ -62,9 +54,6 @@ export default function Layout(components: LayoutComponents) {
           <Switch>
             <Route exact path={ROUTES.ALERT_LIST.path}>
               {components.botAlert}
-            </Route>
-            <Route exact path={ROUTES.REFERRAL.path}>
-              {components.referral}
             </Route>
             <Route exact path={ROUTES.USER_SUBSCRIPTION.path}>
               {components.userSubscription}

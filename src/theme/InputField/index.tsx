@@ -31,8 +31,14 @@ const InputField = forwardRef(
       sx,
       inputSx,
       onChange,
+      warning,
       ...props
-    }: { label?: ReactNode; annotation?: boolean | ReactNode; inputSx?: SystemStyleObject & GridProps } & SxProps &
+    }: {
+      label?: ReactNode
+      annotation?: boolean | ReactNode
+      warning?: ReactNode
+      inputSx?: SystemStyleObject & GridProps
+    } & SxProps &
       BoxProps &
       InputProps,
     ref: ForwardedRef<HTMLInputElement>
@@ -44,7 +50,7 @@ const InputField = forwardRef(
           <Label
             label={label}
             annotation={annotation === true && maxLength ? `${count}/${maxLength}` : annotation}
-            error={error}
+            error={!!error && !warning}
             required={required}
           />
         )}
@@ -54,14 +60,18 @@ const InputField = forwardRef(
           sx={inputSx}
           block={block}
           ref={ref}
-          variant={error ? 'error' : ''}
+          variant={!!error && !warning ? 'error' : ''}
           onChange={annotation === true && maxLength ? (e) => handleCountText(e, onChange) : onChange}
         />
-        {!!error && (
+        {!!warning ? (
+          <Type.Caption color="orange1" mt={1} display="block">
+            {warning}
+          </Type.Caption>
+        ) : !!error ? (
           <Type.Caption color="red1" mt={1} display="block">
             {error}
           </Type.Caption>
-        )}
+        ) : null}
       </Flex>
     )
   }

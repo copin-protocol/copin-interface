@@ -1,4 +1,5 @@
-import { ReactNode, createContext, useContext, useState } from 'react'
+import dayjs from 'dayjs'
+import { ReactNode, createContext, useContext, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { ApiListResponse } from 'apis/api'
@@ -121,11 +122,17 @@ export function CopierLeaderboardProvider({ children }: { children: ReactNode })
   const queryData: GetCopierLeaderboardParams = {
     limit: currentLimit,
     offset: pageToOffset(currentPage, currentLimit),
-    type: currentTime.id,
+    // type: currentTime.id,
     sortBy: 'ranking',
     sortType: SortTypeEnum.ASC,
   }
+  const yesterday = useRef(dayjs().utc().set('hour', 12).subtract(1, 'day').toISOString())
   {
+    if (currentTime.id === CopierLeaderboardTimeFilterEnum.YESTERDAY) {
+      queryData.statisticAt = yesterday.current
+    } else {
+      queryData.type = currentTime.id
+    }
     if (currentExchange) {
       queryData.exchange = currentExchange
     } else if (currentExchangeType) {

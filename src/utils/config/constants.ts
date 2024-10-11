@@ -108,6 +108,8 @@ export const MAX_IMAGE_SIZE = 10 * 1024 * 1024 //mb
 export const DEFAULT_COVER_IMAGE_URL = '/images/cover.png'
 
 export const REFERRAL_CODE_LENGTH = 6
+export const MIN_REFERRAL_CODE_LENGTH = 6
+export const MAX_REFERRAL_CODE_LENGTH = 20
 
 export const WALLET_NAME_MAX_LENGTH = 32
 

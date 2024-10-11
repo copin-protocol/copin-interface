@@ -50,3 +50,11 @@ export async function addReferralCodeApi(referralCode: string) {
 export async function skipReferralApi() {
   return requester.post(`${USER_SERVICE}/skip-referral`).then((res: any) => res.data as UserData)
 }
+
+export async function customRefCodeApi({ data }: { data: { referralCode: string } }) {
+  return requester.put(`${USER_SERVICE}/custom-referral-code`, data).then((res: any) => res.data as UserData)
+}
+
+export async function checkBeforeAddRefApi() {
+  return requester.get(`${USER_SERVICE}/add-referral/eligible`).then((res: any) => res.data as boolean)
+}

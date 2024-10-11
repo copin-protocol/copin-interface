@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Clock, Crown, Key, Notebook, SignOut, Star, UserCircle, Users, Wallet } from '@phosphor-icons/react'
+import { Clock, Crown, Key, Notebook, SignOut, Star, UserCircle, Wallet } from '@phosphor-icons/react'
 import { ReactNode, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -295,10 +295,10 @@ const userSettings = [
     icon: <AlertIcon size={20} />,
     label: <Trans>Alert List</Trans>,
   },
-  {
-    link: ROUTES.REFERRAL.path,
-    event: EVENT_ACTIONS[EventCategory.ROUTES].MY_REFERRAL,
-    icon: <Users size={20} />,
-    label: <Trans>Referral</Trans>,
-  },
+  // {
+  //   link: ROUTES.REFERRAL_MANAGEMENT.path,
+  //   event: EVENT_ACTIONS[EventCategory.ROUTES].MY_REFERRAL,
+  //   icon: <Users size={20} />,
+  //   label: <Trans>Referral</Trans>,
+  // },
 ]

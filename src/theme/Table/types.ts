@@ -58,5 +58,7 @@ export interface TableProps<T, K> {
   noDataMessage?: ReactNode
   footerData?: T[]
   footerRowSx?: any
+  noDataComponent?: ReactNode
+  noDataWrapperSx?: any
 }
 export type InfiniteTableProps<T, K> = Omit<TableProps<T, K>, 'data'> & { data: T[] | undefined }

@@ -16,6 +16,10 @@ import { ALL_OPTION, ALL_TOKENS_ID, TokenOptionProps } from 'utils/config/trades
 import { getSymbolFromPair, pageToOffset } from 'utils/helpers/transform'
 
 const MAX_FIRST_LOAD_PAGE = 100
+const defaultSort: TableSortProps<PositionData> = {
+  sortBy: 'closeBlockTime',
+  sortType: SortTypeEnum.DESC,
+}
 
 export default function useQueryClosedPositions({
   address,
@@ -63,19 +67,9 @@ export default function useQueryClosedPositions({
     },
   })
 
-  const [currentSortPositions, setCurrentSort] = useState<TableSortProps<PositionData> | undefined>({
-    sortBy: 'closeBlockTime',
-    sortType: SortTypeEnum.DESC,
-  })
-  const currentSort = xl && isExpanded ? currentSortPositions : undefined
-  const resetSort = useCallback(
-    () =>
-      setCurrentSort({
-        sortBy: 'closeBlockTime',
-        sortType: SortTypeEnum.DESC,
-      }),
-    []
-  )
+  const [currentSortPositions, setCurrentSort] = useState<TableSortProps<PositionData> | undefined>(defaultSort)
+  const currentSort = xl && isExpanded ? currentSortPositions : defaultSort
+  const resetSort = useCallback(() => setCurrentSort(defaultSort), [])
   const changeCurrentSort = useCallback((sort: TableSortProps<PositionData> | undefined) => {
     setCurrentSort(sort)
   }, [])
