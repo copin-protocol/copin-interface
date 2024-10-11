@@ -206,6 +206,10 @@ const GNS_POLY_PAIRS = {
   'GNS_POLY-279': 'LOOM',
   'GNS_POLY-280': 'ZETA',
   'GNS_POLY-281': 'HMSTR',
+  'GNS_POLY-282': 'EIGEN',
+  'GNS_POLY-283': 'POLYX',
+  'GNS_POLY-284': 'MOODENG',
+  'GNS_POLY-285': 'MOTHER',
 }
 export const TOKEN_TRADE_GNS_POLY = Object.entries(GNS_POLY_PAIRS).reduce<ProtocolTokenMapping>(
   (result, [key, value]) => {

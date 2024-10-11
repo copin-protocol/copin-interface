@@ -141,6 +141,8 @@ export const normalizeSymbolData = (symbol: string) => {
     case '1000LUNC':
     case 'kLUNC':
       return 'LUNC'
+    case '1000DOGS':
+      return 'DOGS'
     default:
       return symbol
   }

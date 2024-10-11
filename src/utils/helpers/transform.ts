@@ -369,6 +369,7 @@ export const normalizePriceData = (
     case '1000PEPE':
     case '1000FLOKI':
     case '1000SHIB':
+    case '1000DOGS':
     case 'kPEPE':
     case 'kBONK':
     case 'kFLOKI':
