@@ -2,12 +2,15 @@ import { Trans } from '@lingui/macro'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 
 import switchChain from 'assets/images/switch-chain.png'
+import { useClickLoginButton } from 'components/@auth/LoginAction'
 import useGlobalDialog from 'hooks/store/useGlobalDialog'
 import useChain from 'hooks/web3/useChain'
-import Alert from 'theme/Alert'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { DEFAULT_CHAIN_ID, getChainMetadata } from 'utils/web3/chains'
+
+import { useAuthContext } from './useAuth'
+import useWeb3 from './useWeb3'
 
 const useRequiredChain = ({
   chainId = DEFAULT_CHAIN_ID,
@@ -20,11 +23,30 @@ const useRequiredChain = ({
   dialogMode?: boolean
   onDismiss?: () => void
 } = {}) => {
+  const { isAuthenticated, connect } = useAuthContext()
+  const handleClickLogin = useClickLoginButton()
+  const { walletAccount } = useWeb3()
   const { chain, setChain } = useChain()
   const [alert, setAlert] = useState<ReactNode>()
   const { dialog, showDialog, hideDialog } = useGlobalDialog()
   const requiredChain = getChainMetadata(chainId)
   const title = <Trans>This feature only supports on {requiredChain.label}</Trans>
+
+  const handleSubmit = () => {
+    if (!isAuthenticated) {
+      handleClickLogin()
+      return
+    }
+    if (!walletAccount) {
+      connect?.({})
+      // onDismiss?.()
+      return
+    }
+    setChain({ chainId: requiredChain.id }).catch((error) => {
+      console.error('Failed to switch chain', error)
+      connect?.({})
+    })
+  }
 
   const renderComponent = useCallback(() => {
     return (
@@ -34,7 +56,7 @@ const useRequiredChain = ({
           <Type.Caption mb={3} color="neutral2">
             {title}
           </Type.Caption>
-          <Button variant="primary" width={200} onClick={() => setChain({ chainId: requiredChain.id })}>
+          <Button variant="primary" width={200} onClick={handleSubmit}>
             Switch Chain
           </Button>
         </Flex>
@@ -82,14 +104,7 @@ const useRequiredChain = ({
                 >
                   Cancel
                 </Button>
-                <Button
-                  variant="primary"
-                  onClick={() =>
-                    setChain({
-                      chainId: requiredChain.id,
-                    })
-                  }
-                >
+                <Button variant="primary" onClick={handleSubmit}>
                   Switch Chain
                 </Button>
               </Flex>
