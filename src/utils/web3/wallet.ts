@@ -47,11 +47,7 @@ export const signVerifyCode = async (
   // return
 }
 
-export const signTypedData = async (
-  from: string,
-  data: SignTypeData,
-  web3Provider: Web3Provider
-): Promise<string | undefined> => {
+export const signTypedData = async (from: string, data: SignTypeData, web3Provider: Web3Provider): Promise<string> => {
   const signer = web3Provider.getSigner(from)
   return await signer._signTypedData(data.domain, data.types, data.value)
 }
