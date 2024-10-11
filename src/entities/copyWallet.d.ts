@@ -9,6 +9,10 @@ export interface RequestCopyWalletData {
   okx?: ApiKeyWallet
   gate?: ApiKeyWallet
   hyperliquid?: ApiKeyWallet
+  hyperliquidSignature?: {
+    signature: string
+    nonce: number
+  }
   name?: string
 }
 
