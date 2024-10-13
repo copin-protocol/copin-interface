@@ -1,7 +1,7 @@
 import { Suspense, lazy, useEffect } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import ReactGA from 'react-ga4'
-import { Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import NotFound from 'components/@ui/NotFound'
 import Loading from 'theme/Loading'
@@ -61,54 +61,56 @@ function App() {
         >
           <ScrollToTop />
           <QSReader />
-          <Switch>
-            <Route exact path={ROUTES.EVENTS.path} component={Events}></Route>
-            <Route exact path={ROUTES.EVENT_DETAILS.path} component={EventDetails}></Route>
-            <Route exact path={ROUTES.EVENT_DETAILS.path} component={EventDetails}></Route>
-            <Route exact path={ROUTES.FEE_REBATE.path} component={FeeRebate}></Route>
-            <Route exact path={ROUTES.GNS_FEE_REBATE.path} component={FeeRebate}></Route>
-            <Route exact path={ROUTES.TRADER_DETAILS.path} component={TraderDetails}></Route>
+          <BrowserRouter>
+            <Switch>
+              <Route exact path={ROUTES.EVENTS.path} component={Events}></Route>
+              <Route exact path={ROUTES.EVENT_DETAILS.path} component={EventDetails}></Route>
+              <Route exact path={ROUTES.EVENT_DETAILS.path} component={EventDetails}></Route>
+              <Route exact path={ROUTES.FEE_REBATE.path} component={FeeRebate}></Route>
+              <Route exact path={ROUTES.GNS_FEE_REBATE.path} component={FeeRebate}></Route>
+              <Route exact path={ROUTES.TRADER_DETAILS.path} component={TraderDetails}></Route>
 
-            <Route exact path={ROUTES.COMPARING_TRADERS.path} component={ComparingTraders} />
-            <Route exact path={ROUTES.SUBSCRIPTION.path} component={Subscription} />
-            <Route exact path={ROUTES.SHARED_POSITION_DETAILS.path} component={SharedPositionDetails}></Route>
-            <Route exact path={ROUTES.POSITION_DETAILS.path} component={PositionDetails}></Route>
-            <Route exact path={ROUTES.SHARED_BACKTEST_SINGLE.path} component={SharedBacktestSingle}></Route>
-            <Route exact path={ROUTES.SHARED_BACKTEST_MULTIPLE.path} component={SharedBacktestMultiple}></Route>
-            <Route exact path={ROUTES.STATS.path} component={Stats}></Route>
-            <Route exact path={ROUTES.STATS_CEX.path} component={StatsCEX}></Route>
-            <AuthedRoute path={ROUTES.SYSTEM_STATUS.path} component={SystemStatus}></AuthedRoute>
+              <Route exact path={ROUTES.COMPARING_TRADERS.path} component={ComparingTraders} />
+              <Route exact path={ROUTES.SUBSCRIPTION.path} component={Subscription} />
+              <Route exact path={ROUTES.SHARED_POSITION_DETAILS.path} component={SharedPositionDetails}></Route>
+              <Route exact path={ROUTES.POSITION_DETAILS.path} component={PositionDetails}></Route>
+              <Route exact path={ROUTES.SHARED_BACKTEST_SINGLE.path} component={SharedBacktestSingle}></Route>
+              <Route exact path={ROUTES.SHARED_BACKTEST_MULTIPLE.path} component={SharedBacktestMultiple}></Route>
+              <Route exact path={ROUTES.STATS.path} component={Stats}></Route>
+              <Route exact path={ROUTES.STATS_CEX.path} component={StatsCEX}></Route>
+              <AuthedRoute path={ROUTES.SYSTEM_STATUS.path} component={SystemStatus}></AuthedRoute>
 
-            <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>
-            <AuthedRoute path={ROUTES.SETTINGS.path} component={Settings}></AuthedRoute>
-            <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagement}></AuthedRoute>
-            <Route path={ROUTES.LINK_BOT_ALERT.path} component={LinkBotTelegram}></Route>
-            <AuthedRoute path={ROUTES.FAVORITES.path} component={Favorites}></AuthedRoute>
-            <Route exact path={ROUTES.SEARCH.path} component={Search}></Route>
-            <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHash}></Route>
-            <Route path={ROUTES.LEADERBOARD.path} component={Leaderboard}></Route>
-            <Route path={ROUTES.COPIER_LEADERBOARD.path} component={RedirectToCopierRanking}></Route>
-            <Route path={ROUTES.COPIER_RANKING.path} component={CopierRanking}></Route>
-            <Route path={ROUTES.REFERRAL_MANAGEMENT.path} component={ReferralManagement}></Route>
+              <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfile}></AuthedRoute>
+              <AuthedRoute path={ROUTES.SETTINGS.path} component={Settings}></AuthedRoute>
+              <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagement}></AuthedRoute>
+              <Route path={ROUTES.LINK_BOT_ALERT.path} component={LinkBotTelegram}></Route>
+              <AuthedRoute path={ROUTES.FAVORITES.path} component={Favorites}></AuthedRoute>
+              <Route exact path={ROUTES.SEARCH.path} component={Search}></Route>
+              <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHash}></Route>
+              <Route path={ROUTES.LEADERBOARD.path} component={Leaderboard}></Route>
+              <Route path={ROUTES.COPIER_LEADERBOARD.path} component={RedirectToCopierRanking}></Route>
+              <Route path={ROUTES.COPIER_RANKING.path} component={CopierRanking}></Route>
+              <Route path={ROUTES.REFERRAL_MANAGEMENT.path} component={ReferralManagement}></Route>
 
-            {/* OLD ROUTE */}
-            <Route path={ROUTES.TRADERS_EXPLORER.path} component={OldExplorer}></Route>
-            {/* NEW ROUTE */}
-            <Route path={ROUTES.ALL_TRADERS_EXPLORER.path} component={Explorer}></Route>
+              {/* OLD ROUTE */}
+              <Route path={ROUTES.TRADERS_EXPLORER.path} component={OldExplorer}></Route>
+              {/* NEW ROUTE */}
+              <Route path={ROUTES.ALL_TRADERS_EXPLORER.path} component={Explorer}></Route>
 
-            {/* NEW ROUTE */}
-            <Route path={ROUTES.ALL_OPEN_INTEREST_POSITIONS.path} component={OpenInterest}></Route>
-            {/* OLD ROUTE */}
-            <Route path={ROUTES.OPEN_INTEREST.path} component={OldTopOpeningInterest}></Route>
+              {/* NEW ROUTE */}
+              <Route path={ROUTES.ALL_OPEN_INTEREST_POSITIONS.path} component={OpenInterest}></Route>
+              {/* OLD ROUTE */}
+              <Route path={ROUTES.OPEN_INTEREST.path} component={OldTopOpeningInterest}></Route>
 
-            {/* <Route exact path={ROUTES.TRADER_EXCHANGES_STATS.path} component={TraderExchangesStats}></Route> */}
-            <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.path} component={TraderDetails}></Route>
-            <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.alter_ath} component={TraderDetails}></Route>
+              {/* <Route exact path={ROUTES.TRADER_EXCHANGES_STATS.path} component={TraderExchangesStats}></Route> */}
+              <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.path} component={TraderDetails}></Route>
+              <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.alter_ath} component={TraderDetails}></Route>
 
-            <Route path={ROUTES.HOME.path} exact component={Home}></Route>
+              <Route path={ROUTES.HOME.path} exact component={Home}></Route>
 
-            <Route path="*" component={NotFound}></Route>
-          </Switch>
+              <Route path="*" component={NotFound}></Route>
+            </Switch>
+          </BrowserRouter>
         </Suspense>
       </AppWrapper>
     </ErrorBoundary>
