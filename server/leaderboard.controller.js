@@ -2,7 +2,7 @@ import { configs } from './configs.js'
 import { generateProtocolName, renderHTML } from './utils.js'
 
 const getLeaderboard = async (req, res) => {
-  const { protocol } = req.query
+  const { protocol } = req.params
   const thumbnail = `${configs.baseUrl}/images/cover/leaderboard-cover.png`
 
   try {
@@ -12,7 +12,7 @@ const getLeaderboard = async (req, res) => {
       params: {
         title: `Leaderboard on ${generateProtocolName(protocol)} | Copin Analyzer`,
         thumbnail,
-        url: `${configs.baseUrl}/leaderboard?protocol=${protocol}`,
+        url: `${configs.baseUrl}/${protocol}/leaderboard`,
       },
     })
   } catch {
