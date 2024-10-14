@@ -30,9 +30,6 @@ const PORT = process.env.PORT || 3000
 app.get('/', (req, res) => {
   renderHTML(req, res)
 })
-app.get('*', (req, res) => {
-  renderHTML(req, res)
-})
 app.use(express.static(resolve(__dirname, '..', 'build'), { maxAge: '30d' }))
 
 app.get('/fee-rebate', getFeeRebate)
@@ -48,6 +45,10 @@ app.get('/:protocol/top-openings', getTopOpenings)
 app.get('/subscription', getSubscription)
 app.get('/stats', getStats)
 app.get('/:protocol/leaderboard', getLeaderboard)
+
+app.get('*', (req, res) => {
+  renderHTML(req, res)
+})
 
 app.listen(PORT, (error) => {
   if (error) {
