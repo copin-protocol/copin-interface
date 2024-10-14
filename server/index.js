@@ -27,10 +27,10 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 3000
 
-app.get('/', (req, res) => {
-  renderHTML(req, res)
-})
-app.use(express.static(resolve(__dirname, '..', 'build'), { maxAge: '30d' }))
+// app.get('/', (req, res) => {
+//   renderHTML(req, res)
+// })
+// app.use(express.static(resolve(__dirname, '..', 'build'), { maxAge: '30d' }))
 
 app.get('/fee-rebate', getFeeRebate)
 app.get('/events', getEvents)
