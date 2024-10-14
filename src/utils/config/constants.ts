@@ -46,7 +46,7 @@ export const LINKS = {
   termOfUse: 'https://docs.copin.io/another/terms-of-service',
   riskDisclaimer: 'https://docs.copin.io/another/risk-disclaimer',
   upgradePremium: 'https://docs.copin.io/upgrade-to-premium',
-  referralProgram: 'https://docs.copin.io/features/referral/referral-program',
+  referralProgram: 'https://docs.copin.io/features/referral-program',
   registerBingX: 'https://bingx.com/en-us/invite/DY5QNN',
   registerBitget: 'https://partner.bitget.online/bg/HPM3BN',
   registerBinance: 'https://accounts.binance.com/register?ref=19902233',
