@@ -48,7 +48,7 @@ const VirtualList = memo<any>(function VirtualListMemo<T = any>({
       return (
         <Flex
           role="button"
-          key={index}
+          key={cellData.id}
           style={style}
           width="100%"
           sx={{
@@ -63,7 +63,7 @@ const VirtualList = memo<any>(function VirtualListMemo<T = any>({
         >
           {columns.map((cellSetting, _index) =>
             cellData ? (
-              <Type.Caption key={_index} sx={cellSetting.style}>
+              <Type.Caption key={cellData.id + _index} sx={cellSetting.style}>
                 {cellSetting.render?.(cellData)}
               </Type.Caption>
             ) : (
@@ -74,6 +74,37 @@ const VirtualList = memo<any>(function VirtualListMemo<T = any>({
       )
     },
     [columns, handleSelectItem, rowBgFactory, rowSx]
+  )
+
+  const handleChangeSort = useCallback(
+    (
+      columnSortBy: TableSortProps<T>['sortBy'] | undefined,
+      columnSortType: TableSortProps<T>['sortType'] | undefined,
+      currentSortBy: TableSortProps<T>['sortBy'] | undefined,
+      currentSortType: TableSortProps<T>['sortType'] | undefined
+    ) => {
+      if (!changeCurrentSort) return
+      const isCurrentSort = !!currentSortBy && currentSortBy === columnSortBy
+      if (!columnSortBy) return
+      const theFirstSort = columnSortType ?? SortTypeEnum.DESC
+      const theSecondSort = theFirstSort === SortTypeEnum.DESC ? SortTypeEnum.ASC : SortTypeEnum.DESC
+      if (!isCurrentSort) {
+        changeCurrentSort({
+          sortBy: columnSortBy,
+          sortType: theFirstSort,
+        })
+      }
+      if (isCurrentSort && currentSortType === theFirstSort) {
+        changeCurrentSort({
+          sortBy: columnSortBy,
+          sortType: theSecondSort,
+        })
+      }
+      if (isCurrentSort && currentSortType === theSecondSort) {
+        changeCurrentSort(undefined)
+      }
+    },
+    [changeCurrentSort]
   )
   const Header = useCallback(() => {
     return (
@@ -93,20 +124,29 @@ const VirtualList = memo<any>(function VirtualListMemo<T = any>({
       >
         {columns.map((cellSetting, _index) => {
           const isCurrentSort = currentSort?.sortBy === cellSetting.sortBy
+          const onClickSort = () => {
+            handleChangeSort(cellSetting?.sortBy, cellSetting?.sortType, currentSort?.sortBy, currentSort?.sortType)
+          }
+          const hasFilter = !!cellSetting.hasFilter
           return (
             <Fragment key={_index}>
               {cellSetting.sortBy && changeCurrentSort ? (
-                <Type.Caption fontWeight={isCurrentSort ? 'bold' : 'normal'} sx={cellSetting.style}>
+                <Type.Caption
+                  role={hasFilter ? undefined : 'button'}
+                  fontWeight={isCurrentSort ? 'bold' : 'normal'}
+                  sx={cellSetting.style}
+                  onClick={hasFilter ? undefined : onClickSort}
+                >
                   <Flex alignItems="center" as="span" sx={{ justifyContent: cellSetting.style?.textAlign }}>
                     {cellSetting.title}
                     {isCurrentSort ? (
                       currentSort?.sortType === SortTypeEnum.DESC ? (
-                        <SortDescIcon />
+                        <SortDescIcon role="button" onClick={hasFilter ? onClickSort : undefined} />
                       ) : (
-                        <SortAscIcon />
+                        <SortAscIcon role="button" onClick={hasFilter ? onClickSort : undefined} />
                       )
                     ) : (
-                      <SortDefaultIcon />
+                      <SortDefaultIcon role="button" onClick={hasFilter ? onClickSort : undefined} />
                     )}
                   </Flex>
                 </Type.Caption>
@@ -118,7 +158,7 @@ const VirtualList = memo<any>(function VirtualListMemo<T = any>({
         })}
       </Flex>
     )
-  }, [headerSx, columns, currentSort?.sortBy, currentSort?.sortType, changeCurrentSort])
+  }, [headerSx, columns, currentSort?.sortBy, currentSort?.sortType, changeCurrentSort, handleChangeSort])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const listRef = useRef<InfiniteLoader>(null)
@@ -186,6 +226,23 @@ const VirtualList = memo<any>(function VirtualListMemo<T = any>({
             </List>
           )}
         </InfiniteLoader>
+        {isLoading && (
+          <Flex
+            sx={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              right: 0,
+              left: 0,
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1,
+              bg: 'modalBG',
+            }}
+          >
+            <Loading />
+          </Flex>
+        )}
       </Box>
       <Flex
         sx={{
@@ -197,11 +254,11 @@ const VirtualList = memo<any>(function VirtualListMemo<T = any>({
           visibility: data?.length ? 'visible' : 'hidden',
         }}
       >
-        {isLoading && (
+        {/* {isLoading && (
           <Box width="max-content">
             <Loading size={16} m="0 !important" />
           </Box>
-        )}
+        )} */}
         <Type.Caption color="neutral3" display="block" textAlign="center" lineHeight="30px">
           {itemCount} / {totalItem}
         </Type.Caption>

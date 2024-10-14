@@ -88,23 +88,23 @@ function ListActivity({ activities }: { activities: ReferralActivityData[] | und
                 {data.type === ReferralActivityTypeEnum.COMMISSION && (
                   <Trans>
                     <Box as="span" color="neutral1">
-                      {data.referralUser}{' '}
+                      {data.referralFromUser}{' '}
                     </Box>
                     earned{' '}
                     <Box as="span" color="neutral1">
                       {formatNumber(data.commission)} USDT
                     </Box>{' '}
-                    in commission from {data.referralFromUser}
+                    in commission from {data.referralUser}
                   </Trans>
                 )}
                 {data.type === ReferralActivityTypeEnum.INVITE && (
                   <Trans>
                     <Box as="span" color="neutral1">
-                      {data.referralFromUser}{' '}
+                      {data.referralUser}{' '}
                     </Box>
                     invited by{' '}
                     <Box as="span" color="neutral1">
-                      {data.referralUser}
+                      {data.referralFromUser}
                     </Box>
                   </Trans>
                 )}

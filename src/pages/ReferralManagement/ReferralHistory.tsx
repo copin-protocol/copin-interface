@@ -478,7 +478,7 @@ const referralListColumns: ColumnData<ReferralListData>[] = [
     dataIndex: 'joinTime',
     key: 'joinTime',
     sortBy: 'joinTime',
-    style: { minWidth: '150px' },
+    style: { minWidth: '200px' },
     render: (item) => {
       return (
         <Box as="span">
@@ -521,7 +521,7 @@ const referralListColumns: ColumnData<ReferralListData>[] = [
     dataIndex: 'totalCommission',
     key: 'totalCommission',
     sortBy: 'totalCommission',
-    style: { minWidth: '150px', textAlign: 'right' },
+    style: { minWidth: '260px', width: 260, maxWidth: 260, textAlign: 'right' },
     render: (item) => {
       return (
         <Flex sx={{ justifyContent: 'end', width: '100%' }}>
@@ -550,7 +550,7 @@ function useReferralRebateColumns({
         dataIndex: 'time',
         key: 'time',
         sortBy: 'time',
-        style: { minWidth: '150px' },
+        style: { minWidth: 200, width: 200, maxWidth: 200 },
         render: (item) => {
           return <Time time={item.time} />
         },
@@ -594,7 +594,7 @@ function useReferralRebateColumns({
         dataIndex: 'commission',
         key: 'commission',
         sortBy: 'commission',
-        style: { minWidth: '150px', textAlign: 'right' },
+        style: { minWidth: '200px', width: 200, maxWidth: 200, textAlign: 'right' },
         render: (item) => {
           return (
             <Flex sx={{ justifyContent: 'end', width: '100%' }}>

@@ -1,8 +1,8 @@
 import { useResponsive } from 'ahooks'
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
-import { ApiListResponse, ApiMeta } from 'apis/api'
+import { ApiListResponse } from 'apis/api'
 import { getTraderHistoryApi, getTraderTokensStatistic } from 'apis/traderApis'
 import { QueryFilter, RangeFilter } from 'apis/types'
 import { PositionData } from 'entities/trader'
@@ -120,11 +120,12 @@ export default function useQueryClosedPositions({
   const [closedPositions, setClosedPositions] = useState<ApiListResponse<PositionData>>()
   const [isLoadingClosedPositions, setIsLoadingClosedPositions] = useState(false)
 
-  const [enabledReload, setEnabledReload] = useState(false)
-  useEffect(() => {
-    const timeout = setTimeout(() => setEnabledReload(true), 15_000)
-    return () => clearTimeout(timeout)
-  }, [])
+  // Disable because bug, fix later
+  // const [enabledReload, setEnabledReload] = useState(false)
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => setEnabledReload(true), 15_000)
+  //   return () => clearTimeout(timeout)
+  // }, [])
   useQuery(
     [QUERY_KEYS.GET_POSITIONS_HISTORY, address, protocol, 'reload'],
     () => {
@@ -138,31 +139,32 @@ export default function useQueryClosedPositions({
       })
     },
     {
-      enabled: enabledReload,
-      refetchInterval: 15_000,
+      enabled: false,
+      // enabled: enabledReload,
+      // refetchInterval: isExpanded ? undefined : 15_000,
       retry: 0,
-      onSuccess: (data) => {
-        // Bug useQuery, not enable but onSuccess is called
-        if (!enabledReload) return
-        setClosedPositions((prev) => {
-          const oldData = prev?.data ?? []
-          const parsedData: PositionData[] = []
-          // remove duplicate
-          if (data.data.length) {
-            const checker = data.data.reduce<Record<string, boolean>>((result, _p) => {
-              return { ...result, [_p.id]: true }
-            }, {})
-            oldData.forEach((_p) => {
-              if (checker[_p.id]) delete checker[_p.id]
-            })
-            data.data.forEach((_p) => {
-              if (checker[_p.id]) parsedData.push(_p)
-            })
-          }
-          const newData = [...parsedData, ...(prev?.data ?? [])]
-          return { ...(prev ?? {}), meta: prev?.meta ?? ({} as ApiMeta), data: newData }
-        })
-      },
+      // onSuccess: (data) => {
+      // Bug useQuery, not enable but onSuccess is called
+      // if (!enabledReload) return
+      // setClosedPositions((prev) => {
+      //   const oldData = prev?.data ?? []
+      //   const parsedData: PositionData[] = []
+      //   // remove duplicate
+      //   if (data.data.length) {
+      //     const checker = data.data.reduce<Record<string, boolean>>((result, _p) => {
+      //       return { ...result, [_p.id]: true }
+      //     }, {})
+      //     oldData.forEach((_p) => {
+      //       if (checker[_p.id]) delete checker[_p.id]
+      //     })
+      //     data.data.forEach((_p) => {
+      //       if (checker[_p.id]) parsedData.push(_p)
+      //     })
+      //   }
+      //   const newData = [...parsedData, ...(prev?.data ?? [])]
+      //   return { ...(prev ?? {}), meta: prev?.meta ?? ({} as ApiMeta), data: newData }
+      // })
+      // },
     }
   )
 
@@ -183,7 +185,7 @@ export default function useQueryClosedPositions({
           limits.map((limit, index) => {
             return getTraderHistoryApi({
               limit,
-              offset: pageToOffset(index + 1, limit),
+              offset: pageToOffset(index + 1, MAX_PAGE_LIMIT),
               sort: currentSort,
               protocol,
               queryFilters,
@@ -218,13 +220,20 @@ export default function useQueryClosedPositions({
             return [...result, ...(response?.data ?? [])]
           }, [] as PositionData[])
           let maxCloseBlockNumber = 0
+          const checker: Record<string, boolean> = {}
+          const dataResult: PositionData[] = []
           parsedData.forEach((_p) => {
+            if (checker[_p.id]) {
+              return
+            }
+            checker[_p.id] = true
+            dataResult.push(_p)
             maxCloseBlockNumber = maxCloseBlockNumber > _p.closeBlockNumber ? maxCloseBlockNumber : _p.closeBlockNumber
           })
           latestBlockNumber.current = maxCloseBlockNumber
           setInitiated(true)
           setClosedPositions({
-            data: parsedData,
+            data: dataResult,
             meta: _data[0]?.meta,
           })
         } else {
