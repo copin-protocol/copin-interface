@@ -62,18 +62,10 @@ const SocialMediaSharingModal = ({ title, link, isOpen, onDismiss, isGeneratingL
                 </Box>
               </Box>
             )}
-            <Flex justifyContent="center" mb={4}>
-              {/* need a quote */}
-              <a href={`${FACEBOOK_SHARE_URL}?u=${encodeURIComponent(link)}&quote=`} target="_blank" rel="noreferrer">
-                <IconButton variant="white" size={32} icon={<FacebookLogo size={20} weight="fill" />} />
-              </a>
-              <a href={`${TWITTER_SHARE_URL}?url=${encodeURIComponent(link)}&text=`} target="_blank" rel="noreferrer">
-                <IconButton mx={32} size={32} variant="white" icon={<TwitterLogo size={20} weight="fill" />} />
-              </a>
-              <a href={`${TELEGRAM_SHARE_URL}?url=${encodeURIComponent(link)}&text=`} target="_blank" rel="noreferrer">
-                <IconButton size={32} variant="white" icon={<TelegramLogo size={20} weight="fill" />} />
-              </a>
-            </Flex>
+            <SocialLinksToShare link={link} />
+
+            <Box mb={4} />
+
             <CopyButton
               type="button"
               value={link}
@@ -105,3 +97,30 @@ const IconButton = styled(IconButtonTheme)`
     }
   `}
 `
+
+export function SocialLinksToShare({
+  link,
+  iconSize = 20,
+  buttonSize = 32,
+  sx = {},
+}: {
+  link: string
+  iconSize?: number
+  buttonSize?: number
+  sx?: any
+}) {
+  return (
+    <Flex justifyContent="center" sx={{ gap: 32, ...sx }}>
+      {/* need a quote */}
+      <a href={`${FACEBOOK_SHARE_URL}?u=${encodeURIComponent(link)}&quote=`} target="_blank" rel="noreferrer">
+        <IconButton variant="white" size={buttonSize} icon={<FacebookLogo size={iconSize} weight="fill" />} />
+      </a>
+      <a href={`${TWITTER_SHARE_URL}?url=${encodeURIComponent(link)}&text=`} target="_blank" rel="noreferrer">
+        <IconButton size={buttonSize} variant="white" icon={<TwitterLogo size={iconSize} weight="fill" />} />
+      </a>
+      <a href={`${TELEGRAM_SHARE_URL}?url=${encodeURIComponent(link)}&text=`} target="_blank" rel="noreferrer">
+        <IconButton size={buttonSize} variant="white" icon={<TelegramLogo size={iconSize} weight="fill" />} />
+      </a>
+    </Flex>
+  )
+}

@@ -32,20 +32,20 @@ const CopierLeaderboard = () => {
             sx={{
               position: 'relative',
               zIndex: 9,
-              height: ['auto', 'auto', 62],
+              height: ['auto', 'auto', 'auto', 62],
               px: 3,
-              py: [12, 12, 0],
+              py: [12, 12, 12, 0],
               width: '100%',
-              flexDirection: ['column', 'column', 'row'],
-              alignItems: ['start', 'start', 'center'],
-              justifyContent: ['start', 'start', 'center'],
+              flexDirection: ['column', 'column', 'column', 'row'],
+              alignItems: ['start', 'start', 'start', 'center'],
+              justifyContent: ['start', 'start', 'start', 'center'],
               gap: 3,
-              borderBottom: ['small', 'small', 'small'],
+              borderBottom: ['small', 'small', 'start', 'small'],
               maxWidth: 1000,
               mx: 'auto',
-              borderLeft: ['none', 'none', 'small'],
-              borderRight: ['none', 'none', 'small'],
-              borderColor: ['neutral4', 'neutral4', 'neutral4'],
+              borderLeft: ['none', 'none', 'none', 'small'],
+              borderRight: ['none', 'none', 'none', 'small'],
+              borderColor: ['neutral4', 'neutral4', 'neutral4', 'neutral4'],
             }}
           >
             <Box flex={['auto', 'auto', 1]}>
@@ -60,9 +60,9 @@ const CopierLeaderboard = () => {
                   width: 'max-content',
                   borderLeft: 'small',
                   borderRight: 'small',
-                  borderTop: ['small', 'small', 'none'],
-                  borderBottom: ['small', 'small', 'none'],
-                  borderColor: ['neutral4', 'neutral4', 'none'],
+                  borderTop: ['small', 'small', 'small', 'none'],
+                  borderBottom: ['small', 'small', 'small', 'none'],
+                  borderColor: ['neutral4', 'neutral4', 'neutral4', 'none'],
                   borderRadius: ['4px', '4px', 0],
                 }}
               >
@@ -78,9 +78,9 @@ const CopierLeaderboard = () => {
                 height: '100%',
                 maxWidth: 1000,
                 mx: 'auto',
-                borderLeft: ['none', 'none', 'small'],
-                borderRight: ['none', 'none', 'small'],
-                borderColor: ['none', 'none', 'neutral4'],
+                borderLeft: ['none', 'none', 'none', 'small'],
+                borderRight: ['none', 'none', 'none', 'small'],
+                borderColor: ['none', 'none', 'none', 'neutral4'],
                 py: [3, 3, 0],
               }}
             >

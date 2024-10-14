@@ -1,48 +1,52 @@
 // eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 // eslint-disable-next-line no-restricted-imports
-import { UseFormClearErrors, UseFormRegister } from 'react-hook-form/dist/types/form'
+import { UseFormRegister } from 'react-hook-form/dist/types/form'
 
 import InputField from 'theme/InputField'
-import { REFERRAL_CODE_LENGTH } from 'utils/config/constants'
+import { MAX_REFERRAL_CODE_LENGTH, MIN_REFERRAL_CODE_LENGTH } from 'utils/config/constants'
 
 const InputReferral = ({
   label,
-  hasUrlRef,
+  value,
+  placeholder,
+  disabled,
   register,
   error,
-  clearErrors,
-}: {
-  label?: ReactNode
-  hasUrlRef: boolean
+  sx = {},
+}: // clearErrors,
+{
+  value: string
   register: UseFormRegister<any>
+  label?: ReactNode
+  placeholder?: string
+  disabled?: boolean
   error?: string
-  clearErrors: UseFormClearErrors<any>
+  sx?: any
 }) => {
   return (
     <InputField
       label={label}
-      placeholder={t`Enter referral code`}
+      placeholder={placeholder}
       block
       error={error}
+      warning={
+        value?.match(/^[a-zA-Z0-9]{1,5}$/)
+          ? `The referral code need to be ${MIN_REFERRAL_CODE_LENGTH} - ${MAX_REFERRAL_CODE_LENGTH} character (letters and numbers)`
+          : undefined
+      }
       {...register('referralCode', {
-        minLength: {
-          value: REFERRAL_CODE_LENGTH,
-          message: t`The referral code has ${REFERRAL_CODE_LENGTH} characters.`,
-        },
-        maxLength: {
-          value: REFERRAL_CODE_LENGTH,
-          message: t`The referral code has ${REFERRAL_CODE_LENGTH} characters.`,
+        pattern: {
+          value: /^[a-zA-Z0-9]{6,20}$/,
+          message: `The referral code need to be ${MIN_REFERRAL_CODE_LENGTH} - ${MAX_REFERRAL_CODE_LENGTH} character (letters and numbers)`,
         },
         onChange: (event) => {
           event.target.value = event.target.value.trim().toUpperCase()
-          if (!event.target.value || event.target.value === REFERRAL_CODE_LENGTH) clearErrors('referralCode')
         },
       })}
-      maxLength={REFERRAL_CODE_LENGTH}
-      sx={{ marginTop: 8, marginBottom: 10 }}
-      disabled={hasUrlRef}
+      maxLength={MAX_REFERRAL_CODE_LENGTH}
+      sx={sx}
+      disabled={disabled}
     />
   )
 }

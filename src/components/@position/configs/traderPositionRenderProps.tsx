@@ -17,23 +17,10 @@ const orderCountColumn: ColumnData<PositionData> = {
   dataIndex: 'orderCount',
   key: 'orderCount',
   sortBy: 'orderCount',
-  style: { minWidth: '100px', textAlign: 'right' },
+  style: { minWidth: '100px', textAlign: 'right', flex: 1 },
   render: (item) => <Type.Caption color="neutral1">{item.orderCount}</Type.Caption>,
 }
-// const orderIncreaseCountColumn: ColumnData<PositionData> = {
-//   title: 'Increase Order',
-//   dataIndex: 'orderIncreaseCount',
-//   key: 'orderIncreaseCount',
-//   style: { minWidth: '100px', textAlign: 'right' },
-//   render: (item) => <Type.Caption color="neutral1">{formatNumber(item.orderIncreaseCount, 0)}</Type.Caption>,
-// }
-// const orderDecreaseCountColumn: ColumnData<PositionData> = {
-//   title: 'Decrease Order',
-//   dataIndex: 'orderDecreaseCount',
-//   key: 'orderDecreaseCount',
-//   style: { minWidth: '100px', textAlign: 'right' },
-//   render: (item) => <Type.Caption color="neutral1">{formatNumber(item.orderDecreaseCount, 0)}</Type.Caption>,
-// }
+
 const collateralColumn: ColumnData<PositionData> = {
   title: 'Collateral',
   dataIndex: 'collateral',
@@ -234,25 +221,7 @@ const pnlColumn: ColumnData<PositionData> = {
     )
   },
 }
-// const pnlWFeeColumn: ColumnData<PositionData> = {
-//   title: 'Closed PnL',
-//   dataIndex: undefined,
-//   key: undefined,
-//   style: { minWidth: '100px', textAlign: 'right' },
-//   render: (item) => {
-//     return (
-//       <Flex alignItems="center" sx={{ gap: '1px' }}>
-//         {(item.isLiquidate || item.roi <= -100) && <IconBox sx={{ pl: '2px' }} icon={<SkullIcon />} />}
-//         {SignedText({
-//           value: item.realisedPnl - item.fee,
-//           maxDigit: 1,
-//           minDigit: 1,
-//           sx: { textAlign: 'right', width: '100%' },
-//         })}
-//       </Flex>
-//     )
-//   },
-// }
+
 const pnlOpeningColumn: ColumnData<PositionData> = {
   title: 'PnL',
   dataIndex: 'pnl',
@@ -273,7 +242,7 @@ const actionColumn: ColumnData<PositionData> = {
   title: ' ',
   dataIndex: 'id',
   key: 'id',
-  style: { minWidth: '20px', textAlign: 'right' },
+  style: { width: '40px', textAlign: 'right', flex: '0 0 40px' },
   render: () => (
     <Box sx={{ position: 'relative', top: '2px' }}>
       <CaretRight />
@@ -282,29 +251,26 @@ const actionColumn: ColumnData<PositionData> = {
 }
 
 export const historyColumns: ColumnData<PositionData>[] = [
-  timeColumn,
-  entryColumn,
-  sizeColumn,
-  leverageColumn,
-  pnlColumn,
-  actionColumn,
+  { ...timeColumn, style: { flex: 1 } },
+  { ...entryColumn, style: { flex: 1.8 } },
+  { ...sizeColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...leverageColumn, style: { flex: 0.8, textAlign: 'right' } },
+  { ...pnlColumn, style: { flex: 1.4, textAlign: 'right' } },
+  { ...actionColumn, style: { width: 24, pr: 1, textAlign: 'right', flex: '0 0 24px' } },
 ]
 export const fullHistoryColumns: ColumnData<PositionData>[] = [
-  openTimeColumn,
-  closeTimeColumn,
-  { ...entryColumn, style: { minWidth: 150 } },
-  sizeColumn,
-  leverageColumn,
-  collateralColumn,
-  avgDurationColumn,
-  orderCountColumn,
-  feeColumn,
-  roiColumn,
-  pnlColumnFull,
-  // pnlWFeeColumn,
-  // orderIncreaseCountColumn,
-  // orderDecreaseCountColumn,
-  actionColumn,
+  { ...openTimeColumn, style: { flex: 1.5 } },
+  { ...closeTimeColumn, style: { flex: 1.5, pl: 2 } },
+  { ...entryColumn, style: { flex: 1.5, pl: 2 } },
+  { ...sizeColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...leverageColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...collateralColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...avgDurationColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...orderCountColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...feeColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...roiColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...pnlColumnFull, style: { flex: 1.3, textAlign: 'right' } },
+  { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', flex: '0 0 40px' } },
 ]
 
 export const fullOpeningColumns: ColumnData<PositionData>[] = [

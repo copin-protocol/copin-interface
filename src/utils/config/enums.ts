@@ -326,6 +326,7 @@ export enum CopierLeaderBoardExchangeType {
 
 export enum CopierLeaderboardTimeFilterEnum {
   DAILY = 'DAILY',
+  YESTERDAY = 'YESTERDAY',
   D7 = 'D7',
   D30 = 'D30',
   D60 = 'D60',
@@ -335,4 +336,30 @@ export enum CopierLeaderboardTimeFilterEnum {
 export enum ProtocolSortByEnum {
   ALPHABET = 'ALPHABET',
   TRADERS = 'TRADERS',
+}
+
+export enum ReferralTierEnum {
+  TIER_1 = 'TIER_1',
+  TIER_2 = 'TIER_2',
+  TIER_3 = 'TIER_3',
+  TIER_4 = 'TIER_4',
+  TIER_5 = 'TIER_5',
+  TIER_6 = 'TIER_6',
+}
+
+export enum ReferralTypeEnum {
+  F0 = 'F0',
+  F1 = 'F1',
+  F2 = 'F2',
+}
+
+export enum ReferralHistoryStatusEnum {
+  PENDING = 'PENDING',
+  CLAIMABLE = 'CLAIMABLE',
+  CLAIMED = 'CLAIMED',
+}
+
+export enum ReferralActivityTypeEnum {
+  COMMISSION = 'COMMISSION',
+  INVITE = 'INVITE',
 }

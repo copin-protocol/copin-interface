@@ -20,6 +20,7 @@ export type ColumnData<T = Record<string, any>, K = unknown> = {
   numDigit?: number
   sortBy?: keyof T
   sortType?: SortTypeEnum
+  hasFilter?: boolean
 }
 type ExtractDataType<Type> = Type extends ColumnData<infer T> ? T : never
 type ExtractExternalSourceType<Type> = Type extends ColumnData<any, infer K> ? K : never
@@ -58,5 +59,7 @@ export interface TableProps<T, K> {
   noDataMessage?: ReactNode
   footerData?: T[]
   footerRowSx?: any
+  noDataComponent?: ReactNode
+  noDataWrapperSx?: any
 }
 export type InfiniteTableProps<T, K> = Omit<TableProps<T, K>, 'data'> & { data: T[] | undefined }

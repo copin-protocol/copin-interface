@@ -101,6 +101,14 @@ msgstr "7D PnL"
 msgid "7D Pnl"
 msgstr "7D Pnl"
 
+#: src/pages/ReferralManagement/ReferralActivities.tsx
+msgid "<0>{0} </0>earned <1>{1} USDT</1> in commission from {2}"
+msgstr "<0>{0} </0>earned <1>{1} USDT</1> in commission from {2}"
+
+#: src/pages/ReferralManagement/ReferralActivities.tsx
+msgid "<0>{0} </0>invited by <1>{1}</1>"
+msgstr "<0>{0} </0>invited by <1>{1}</1>"
+
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "A 10% loyalty fee applies when trading the NFT."
 msgstr "A 10% loyalty fee applies when trading the NFT."
@@ -156,6 +164,10 @@ msgstr "Add Alert"
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "Add referral successful!"
 msgstr "Add referral successful!"
+
+#: src/pages/ReferralManagement/ReferralStats.tsx
+msgid "Add referrer successful!"
+msgstr "Add referrer successful!"
 
 #: src/pages/Settings/AlertList/DesktopItem.tsx
 msgid "Added"
@@ -220,7 +232,6 @@ msgstr "All stable PerpDEX + Early access PerpDEX"
 msgid "Allocating margin based on trader's average margin of the last {0}"
 msgstr "Allocating margin based on trader's average margin of the last {0}"
 
-#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
 #: src/components/@widgets/SwitchProtocols/index.tsx
 #: src/pages/@layouts/Navbar/SelectProtocolDropdown.tsx
 msgid "Allow Copy"
@@ -232,6 +243,7 @@ msgstr "Allow the smart wallet to use your {0}"
 
 #: src/components/@wallet/SmartWalletFundModal/Deposit.tsx
 #: src/components/@wallet/SmartWalletFundModal/Withdraw.tsx
+#: src/pages/ReferralManagement/ReferralHistory.tsx
 msgid "Amount"
 msgstr "Amount"
 
@@ -494,6 +506,10 @@ msgstr "Cannot unlock your wallet"
 msgid "Change Password"
 msgstr "Change Password"
 
+#: src/pages/ReferralManagement/UserReferralTier.tsx
+msgid "Change Referral Code"
+msgstr "Change Referral Code"
+
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 msgid "Change Trader"
 msgstr "Change Trader"
@@ -569,6 +585,10 @@ msgstr "Coming Soon"
 msgid "Coming soon!"
 msgstr "Coming soon!"
 
+#: src/pages/ReferralManagement/ReferralHistory.tsx
+msgid "Commission"
+msgstr "Commission"
+
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Communicating with wallet. Sign message with your wallet"
 msgstr "Communicating with wallet. Sign message with your wallet"
@@ -590,17 +610,38 @@ msgstr "Condition"
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/ReferralManagement/ReferralStats.tsx
 msgid "Confirm"
 msgstr "Confirm"
 
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/ReferralManagement/ReferralStats.tsx
+#: src/pages/ReferralManagement/UserReferralTier.tsx
 msgid "Confirming..."
 msgstr "Confirming..."
 
 #: src/pages/Subscription/MintButton.tsx
 msgid "Congratulations!"
 msgstr "Congratulations!"
+
+#: src/components/@wallet/CreateWalletAction/index.tsx
+#: src/components/@wallet/CreateWalletModals/CreateBingXWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateBitgetWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
+#: src/pages/WalletManagement/WalletList/index.tsx
+msgid "Connect"
+msgstr "Connect"
+
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
+msgid "Connect API"
+msgstr "Connect API"
+
+#: src/components/@wallet/CreateWalletModals/CreateBinanceWalletModal.tsx
+msgid "Connect Binance API"
+msgstr "Connect Binance API"
 
 #: src/components/@auth/LoginAction/ConnectButton.tsx
 msgid "Connect Wallet"
@@ -614,10 +655,24 @@ msgstr "Connecting Wallet..."
 msgid "Connecting with your wallet..."
 msgstr "Connecting with your wallet..."
 
+#: src/components/@wallet/CreateWalletModals/CreateBinanceWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateBingXWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateBitgetWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
+msgid "Connecting..."
+msgstr "Connecting..."
+
 #: src/pages/Stats/ChartComponent.tsx
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Considers settled (closed) positions"
 msgstr "Considers settled (closed) positions"
+
+#: src/pages/@layouts/Navbar/NavLinks.tsx
+msgid "Copier Ranking"
+msgstr "Copier Ranking"
 
 #: src/pages/MyProfile/Layouts/ManagementLayoutMobile.tsx
 msgid "Copies"
@@ -694,53 +749,29 @@ msgstr "Copytrade List"
 msgid "Copytrade Settings History"
 msgstr "Copytrade Settings History"
 
-#: src/components/@wallet/CreateWalletAction/index.tsx
+#: src/pages/WalletManagement/WalletList/index.tsx
 msgid "Create"
 msgstr "Create"
-
-#: src/components/@wallet/CreateWalletModals/CreateBinanceWalletModal.tsx
-msgid "Create Binance Wallet"
-msgstr "Create Binance Wallet"
 
 #: src/components/@copyTrade/CopyTradeForm/Wallets.tsx
 msgid "Create Binance wallet"
 msgstr "Create Binance wallet"
 
-#: src/components/@wallet/CreateWalletModals/CreateBingXWalletModal.tsx
-msgid "Create BingX Wallet"
-msgstr "Create BingX Wallet"
-
 #: src/components/@copyTrade/CopyTradeForm/Wallets.tsx
 msgid "Create BingX wallet"
 msgstr "Create BingX wallet"
-
-#: src/components/@wallet/CreateWalletModals/CreateBitgetWalletModal.tsx
-msgid "Create Bitget Wallet"
-msgstr "Create Bitget Wallet"
 
 #: src/components/@copyTrade/CopyTradeForm/Wallets.tsx
 msgid "Create Bitget wallet"
 msgstr "Create Bitget wallet"
 
-#: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
-msgid "Create Bybit Wallet"
-msgstr "Create Bybit Wallet"
-
 #: src/components/@copyTrade/CopyTradeForm/Wallets.tsx
 msgid "Create Bybit wallet"
 msgstr "Create Bybit wallet"
 
-#: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
-msgid "Create Gate Wallet"
-msgstr "Create Gate Wallet"
-
 #: src/components/@copyTrade/CopyTradeForm/Wallets.tsx
 msgid "Create Gate wallet"
 msgstr "Create Gate wallet"
-
-#: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
-msgid "Create OKX Wallet"
-msgstr "Create OKX Wallet"
 
 #: src/components/@copyTrade/CopyTradeForm/Wallets.tsx
 msgid "Create OKX wallet"
@@ -767,18 +798,10 @@ msgstr "Create gTrade wallet"
 #: src/components/@wallet/CreateWalletModals/CreateBitgetWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
 msgid "Create wallet successful!"
 msgstr "Create wallet successful!"
-
-#: src/components/@wallet/CreateWalletModals/CreateBinanceWalletModal.tsx
-#: src/components/@wallet/CreateWalletModals/CreateBingXWalletModal.tsx
-#: src/components/@wallet/CreateWalletModals/CreateBitgetWalletModal.tsx
-#: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
-#: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
-#: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
-msgid "Creating..."
-msgstr "Creating..."
 
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 msgid "Current Password"
@@ -791,6 +814,14 @@ msgstr "Current Plan"
 #: src/components/@ui/TimeFilter/constants.tsx
 msgid "Custom"
 msgstr "Custom"
+
+#: src/pages/ReferralManagement/UserReferralTier.tsx
+msgid "Custom referral code successful!"
+msgstr "Custom referral code successful!"
+
+#: src/pages/ReferralManagement/ReferralHistory.tsx
+msgid "DCP Volume"
+msgstr "DCP Volume"
 
 #: src/pages/Stats/index.tsx
 msgid "Daily Active Users (DAU)"
@@ -886,6 +917,10 @@ msgstr "Don’t have a Bybit account?"
 msgid "Don’t have a Gate account?"
 msgstr "Don’t have a Gate account?"
 
+#: src/components/@wallet/CreateWalletModals/WalletHelpHyperliquid.tsx
+msgid "Don’t have a Hyperliquid account?"
+msgstr "Don’t have a Hyperliquid account?"
+
 #: src/components/@wallet/CreateWalletAction/index.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpOkx.tsx
 msgid "Don’t have a OKX account?"
@@ -905,6 +940,10 @@ msgstr "Dune Dashboard"
 msgid "Duration:"
 msgstr "Duration:"
 
+#: src/pages/ReferralManagement/ReferralHistory.tsx
+msgid "Earning (USDT)"
+msgstr "Earning (USDT)"
+
 #: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 msgid "Edit"
 msgstr "Edit"
@@ -921,10 +960,6 @@ msgstr "Email"
 #: src/utils/config/translations.tsx
 msgid "Ended"
 msgstr "Ended"
-
-#: src/components/@auth/InputReferral.tsx
-msgid "Enter referral code"
-msgstr "Enter referral code"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Entry"
@@ -1038,7 +1073,8 @@ msgstr "Favorite List"
 msgid "Features"
 msgstr "Features"
 
-#: src/pages/@layouts/Navbar/NavLinks.tsx
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
 msgid "Fee Rebate"
 msgstr "Fee Rebate"
 
@@ -1046,6 +1082,10 @@ msgstr "Fee Rebate"
 #: src/pages/@layouts/Footer/index.tsx
 msgid "Feedback"
 msgstr "Feedback"
+
+#: src/pages/ReferralManagement/ReferralHistory.tsx
+msgid "Fees"
+msgstr "Fees"
 
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Fees & Funding:"
@@ -1080,6 +1120,7 @@ msgstr "Follow 200,000+ on-chain traders"
 msgid "Follow The Trader"
 msgstr "Follow The Trader"
 
+#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 #: src/utils/config/translations.tsx
 msgid "Follow Trader"
 msgstr "Follow Trader"
@@ -1129,13 +1170,9 @@ msgstr "Gate Secret Key"
 msgid "Gate Wallet"
 msgstr "Gate Wallet"
 
-#: src/components/@wallet/CreateWalletModals/WalletHelpBingX.tsx
-#: src/components/@wallet/CreateWalletModals/WalletHelpBitget.tsx
-#: src/components/@wallet/CreateWalletModals/WalletHelpBybit.tsx
-#: src/components/@wallet/CreateWalletModals/WalletHelpGate.tsx
-#: src/components/@wallet/CreateWalletModals/WalletHelpOkx.tsx
-msgid "Get extra benefits with referral code:"
-msgstr "Get extra benefits with referral code:"
+#: src/pages/ReferralManagement/ReferralActivities.tsx
+msgid "Global Referral Activities"
+msgstr "Global Referral Activities"
 
 #: src/pages/MyProfile/index.tsx
 msgid "HISTORY"
@@ -1195,40 +1232,40 @@ msgid "Home"
 msgstr "Home"
 
 #: src/components/@wallet/CreateWalletModals/WalletHelpBingX.tsx
-msgid "How to get BingX API Key?"
-msgstr "How to get BingX API Key?"
+msgid "How to connect your BingX API to Copin?"
+msgstr "How to connect your BingX API to Copin?"
 
-#: src/components/@wallet/CreateWalletModals/WalletHelpBingX.tsx
-msgid "How to get BingX Secret Key?"
-msgstr "How to get BingX Secret Key?"
-
-#: src/components/@wallet/CreateWalletModals/WalletHelpBybit.tsx
-msgid "How to get Bybit API Key?"
-msgstr "How to get Bybit API Key?"
+#: src/components/@wallet/CreateWalletModals/WalletHelpBitget.tsx
+msgid "How to connect your Bitget API to Copin?"
+msgstr "How to connect your Bitget API to Copin?"
 
 #: src/components/@wallet/CreateWalletModals/WalletHelpBybit.tsx
-msgid "How to get Bybit Secret Key?"
-msgstr "How to get Bybit Secret Key?"
+msgid "How to connect your Bybit API to Copin?"
+msgstr "How to connect your Bybit API to Copin?"
 
 #: src/components/@wallet/CreateWalletModals/WalletHelpGate.tsx
-msgid "How to get Gate API Key?"
-msgstr "How to get Gate API Key?"
-
-#: src/components/@wallet/CreateWalletModals/WalletHelpGate.tsx
-msgid "How to get Gate Secret Key?"
-msgstr "How to get Gate Secret Key?"
+msgid "How to connect your Gate API to Copin?"
+msgstr "How to connect your Gate API to Copin?"
 
 #: src/components/@wallet/CreateWalletModals/WalletHelpOkx.tsx
-msgid "How to get OKX API Key?"
-msgstr "How to get OKX API Key?"
+msgid "How to connect your OKX API to Copin?"
+msgstr "How to connect your OKX API to Copin?"
 
-#: src/components/@wallet/CreateWalletModals/WalletHelpOkx.tsx
-msgid "How to get OKX Secret Key?"
-msgstr "How to get OKX Secret Key?"
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
+msgid "Hyperliquid API Wallet Private Key"
+msgstr "Hyperliquid API Wallet Private Key"
+
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
+msgid "Hyperliquid Account Address"
+msgstr "Hyperliquid Account Address"
+
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
+msgid "Hyperliquid Vault Address"
+msgstr "Hyperliquid Vault Address"
 
 #: src/components/@auth/ConfirmReferralModal/index.tsx
-msgid "If you skip it this time, you will not be able to re-enter the referral code."
-msgstr "If you skip it this time, you will not be able to re-enter the referral code."
+msgid "If you skip it this time, you will be able to re-enter the referral code later."
+msgstr "If you skip it this time, you will be able to re-enter the referral code later."
 
 #: src/pages/Home/Traders.tsx
 msgid "In"
@@ -1273,6 +1310,7 @@ msgstr "Input password"
 #: src/components/@wallet/CreateWalletModals/CreateBitgetWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
 msgid "Input wallet name"
 msgstr "Input wallet name"
@@ -1306,10 +1344,6 @@ msgstr "LEADERBOARD"
 #: src/utils/config/translations.tsx
 msgid "Label"
 msgstr "Label"
-
-#: src/pages/Settings/Referral/ReferralOverview.tsx
-msgid "Last 30 Days"
-msgstr "Last 30 Days"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "Last 60 days"
@@ -1351,6 +1385,14 @@ msgstr "Latest activities"
 #: src/pages/@layouts/Navbar/NavLinks.tsx
 msgid "Leaderboard"
 msgstr "Leaderboard"
+
+#: src/components/@wallet/CreateWalletModals/WalletHelpBingX.tsx
+#: src/components/@wallet/CreateWalletModals/WalletHelpBitget.tsx
+#: src/components/@wallet/CreateWalletModals/WalletHelpBybit.tsx
+#: src/components/@wallet/CreateWalletModals/WalletHelpGate.tsx
+#: src/components/@wallet/CreateWalletModals/WalletHelpOkx.tsx
+msgid "Learn how?"
+msgstr "Learn how?"
 
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Let copy a trader and make profit!"
@@ -1546,6 +1588,10 @@ msgstr "Max Leverage"
 msgid "Max Margin Per Position"
 msgstr "Max Margin Per Position"
 
+#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+msgid "Max Margin/Order"
+msgstr "Max Margin/Order"
+
 #: src/pages/MyProfile/OpeningPositions/SettingConfigs.tsx
 msgid "Max Positions"
 msgstr "Max Positions"
@@ -1652,6 +1698,10 @@ msgstr "Multiple Copy"
 #: src/pages/MyProfile/index.tsx
 msgid "My Profile"
 msgstr "My Profile"
+
+#: src/pages/ReferralManagement/index.tsx
+msgid "My Referral"
+msgstr "My Referral"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/Settings/Layouts/Layout.tsx
@@ -1829,10 +1879,6 @@ msgstr "Ongoing"
 #: src/pages/Settings/UserSubscription/PlanPrice.tsx
 msgid "Only"
 msgstr "Only"
-
-#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
-msgid "Only Allowed CopyTrade Perp DEXs"
-msgstr "Only Allowed CopyTrade Perp DEXs"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/PositionStatus/index.tsx
@@ -2054,13 +2100,13 @@ msgstr "Protocols:"
 msgid "Quantity"
 msgstr "Quantity"
 
+#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
+msgid "Quick Search"
+msgstr "Quick Search"
+
 #: src/utils/config/options.tsx
 msgid "Quickly Settled"
 msgstr "Quickly Settled"
-
-#: src/pages/Settings/Layouts/Layout.tsx
-msgid "REFERRAL"
-msgstr "REFERRAL"
 
 #: src/components/@backtest/BacktestSimpleResult/index.tsx
 msgid "ROI"
@@ -2082,26 +2128,13 @@ msgstr "Recommend"
 msgid "Recommend Results"
 msgstr "Recommend Results"
 
-#: src/pages/@layouts/Navbar/NavUser.tsx
-#: src/pages/Settings/Layouts/Layout.tsx
+#: src/pages/@layouts/Navbar/NavLinks.tsx
 msgid "Referral"
 msgstr "Referral"
-
-#: src/pages/Settings/Referral/ReferralOverview.tsx
-msgid "Referral Code"
-msgstr "Referral Code"
 
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 msgid "Referral Code (optional)"
 msgstr "Referral Code (optional)"
-
-#: src/pages/Settings/Referral/ReferralList.tsx
-msgid "Referral List"
-msgstr "Referral List"
-
-#: src/pages/Settings/Referral/ReferralOverview.tsx
-msgid "Referrals"
-msgstr "Referrals"
 
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "Refund not accepted."
@@ -2117,6 +2150,7 @@ msgstr "Refund not accepted."
 #: src/components/@wallet/CreateWalletModals/WalletHelpBitget.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpBybit.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpGate.tsx
+#: src/components/@wallet/CreateWalletModals/WalletHelpHyperliquid.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpOkx.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
 msgid "Register"
@@ -2230,13 +2264,13 @@ msgstr "Select all"
 msgid "Select the copy you want to clone:"
 msgstr "Select the copy you want to clone:"
 
+#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
+msgid "Selected"
+msgstr "Selected"
+
 #: src/pages/TraderDetails/CustomizeRankingColumns.tsx
 msgid "Selected:"
 msgstr "Selected:"
-
-#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
-msgid "Selected: {0} Perp DEXs"
-msgstr "Selected: {0} Perp DEXs"
 
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Session Expired"
@@ -2253,14 +2287,6 @@ msgstr "Settings"
 #: src/components/@position/TraderPositionDetails/SharePosition.tsx
 msgid "Share"
 msgstr "Share"
-
-#: src/pages/Settings/Referral/ReferralOverview.tsx
-msgid "Share DApp"
-msgstr "Share DApp"
-
-#: src/pages/Settings/Referral/ReferralOverview.tsx
-msgid "Share Landing Page"
-msgstr "Share Landing Page"
 
 #: src/pages/Subscription/MintButton.tsx
 msgid "Share On:"
@@ -2342,6 +2368,14 @@ msgstr "Something went wrong, please try later"
 msgid "Something went wrong, please try later."
 msgstr "Something went wrong, please try later."
 
+#: src/components/@ui/ProtocolFilter/ProtocolSortOptions.tsx
+msgid "Sort by A-Z"
+msgstr "Sort by A-Z"
+
+#: src/components/@ui/ProtocolFilter/ProtocolSortOptions.tsx
+msgid "Sort by traders"
+msgstr "Sort by traders"
+
 #: src/pages/Home/Traders.tsx
 msgid "Source"
 msgstr "Source"
@@ -2374,6 +2408,10 @@ msgstr "Source:"
 #: src/components/@copyTrade/TraderCopyCountWarningIcon/index.tsx
 msgid "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
 msgstr "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
+
+#: src/pages/ReferralManagement/index.tsx
+msgid "Statistic"
+msgstr "Statistic"
 
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
@@ -2435,6 +2473,7 @@ msgstr "Subscription"
 #: src/components/@wallet/CreateWalletModals/CreateBitgetWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
 #: src/components/@wallet/WalletDetailsCard/WalletActions.tsx
 #: src/hooks/features/useUpdateCopyTrade.tsx
@@ -2444,6 +2483,8 @@ msgstr "Subscription"
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/UserActivity/configs.tsx
+#: src/pages/ReferralManagement/ReferralStats.tsx
+#: src/pages/ReferralManagement/UserReferralTier.tsx
 #: src/pages/Settings/AlertList/TraderLastViewed.tsx
 #: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
 #: src/pages/Settings/AlertList/index.tsx
@@ -2603,11 +2644,6 @@ msgstr "The percentile ranking of traders with the lowest maximum drawdown"
 msgid "The process of creating a wallet is quick and only costs a small amount in gas fees."
 msgstr "The process of creating a wallet is quick and only costs a small amount in gas fees."
 
-#: src/components/@auth/InputReferral.tsx
-#: src/components/@auth/InputReferral.tsx
-msgid "The referral code has {REFERRAL_CODE_LENGTH} characters."
-msgstr "The referral code has {REFERRAL_CODE_LENGTH} characters."
-
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
 msgid "The server is not responding, please try again later!"
@@ -2675,17 +2711,9 @@ msgstr "To start, you need to create a smart wallet."
 msgid "To unlock premium and VIP features, mint a Copin NFT."
 msgstr "To unlock premium and VIP features, mint a Copin NFT."
 
-#: src/pages/Settings/Referral/ReferralOverview.tsx
-msgid "Today"
-msgstr "Today"
-
 #: src/pages/Home/Traders.tsx
 msgid "Top"
 msgstr "Top"
-
-#: src/pages/Settings/Referral/ReferralOverview.tsx
-msgid "Total"
-msgstr "Total"
 
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
@@ -2782,8 +2810,8 @@ msgid "Trader Favorites Statistics"
 msgstr "Trader Favorites Statistics"
 
 #: src/pages/TraderDetails/ProtocolBetaWarning.tsx
-msgid "Trader data from Hyperliquid has been extracted from 2024/8/27 to 2024/9/10. It is currently in testing and may be unstable. Please use it for reference purposes only!"
-msgstr "Trader data from Hyperliquid has been extracted from 2024/8/27 to 2024/9/10. It is currently in testing and may be unstable. Please use it for reference purposes only!"
+msgid "Trader data from Hyperliquid has been extracted from 2024/8/27. It is currently in testing and may be unstable. Please use it for reference purposes only!"
+msgstr "Trader data from Hyperliquid has been extracted from 2024/8/27. It is currently in testing and may be unstable. Please use it for reference purposes only!"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "Trader don't have statistic in {0}"
@@ -2837,6 +2865,7 @@ msgstr "Try Again"
 msgid "TxHash"
 msgstr "TxHash"
 
+#: src/pages/ReferralManagement/ReferralHistory.tsx
 #: src/utils/config/translations.tsx
 msgid "Type"
 msgstr "Type"
@@ -2937,10 +2966,6 @@ msgstr "View All"
 msgid "View more"
 msgstr "View more"
 
-#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
-msgid "Vol/Order"
-msgstr "Vol/Order"
-
 #: src/pages/Stats/index.tsx
 msgid "Volume"
 msgstr "Volume"
@@ -2977,6 +3002,7 @@ msgstr "Wallet Management"
 #: src/components/@wallet/CreateWalletModals/CreateBitgetWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
 msgid "Wallet Name"
 msgstr "Wallet Name"
@@ -3078,10 +3104,6 @@ msgstr "Would you like to use a referral code?"
 msgid "Yes"
 msgstr "Yes"
 
-#: src/pages/Settings/Referral/ReferralOverview.tsx
-msgid "Yesterday"
-msgstr "Yesterday"
-
 #: src/utils/config/translations.tsx
 msgid "You are not authorized to perform this action"
 msgstr "You are not authorized to perform this action"
@@ -3089,10 +3111,6 @@ msgstr "You are not authorized to perform this action"
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "You can extend your usage, with a discounted fee compared to the original price"
 msgstr "You can extend your usage, with a discounted fee compared to the original price"
-
-#: src/pages/Settings/Referral/ReferralList.tsx
-msgid "You do not have any referral"
-msgstr "You do not have any referral"
 
 #: src/pages/SystemStatus/index.tsx
 msgid "You do not have permission to access this data"
@@ -3185,6 +3203,18 @@ msgstr "Your Gate API Key"
 #: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
 msgid "Your Gate Secret Key"
 msgstr "Your Gate Secret Key"
+
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
+msgid "Your Hyperliquid API Wallet Private Key"
+msgstr "Your Hyperliquid API Wallet Private Key"
+
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
+msgid "Your Hyperliquid Account Address"
+msgstr "Your Hyperliquid Account Address"
+
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
+msgid "Your Hyperliquid Vault Address"
+msgstr "Your Hyperliquid Vault Address"
 
 #: src/components/@widgets/NFTSubscriptionCard.tsx
 msgid "Your NFT expires in {0} day"
@@ -3332,6 +3362,8 @@ msgstr "slippage"
 #: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
 #: src/components/@wallet/WalletDetailsCard/WalletActions.tsx
@@ -3372,10 +3404,6 @@ msgstr "{0} months"
 #: src/pages/MyProfile/SelectTradersDropdown.tsx
 msgid "{0} traders"
 msgstr "{0} traders"
-
-#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
-msgid "{getSelectedChainName} Perp DEXs"
-msgstr "{getSelectedChainName} Perp DEXs"
 
 #: src/pages/TraderDetails/ScoreChart.tsx
 msgid "{label} is better than {value} traders"

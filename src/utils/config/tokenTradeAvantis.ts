@@ -38,6 +38,10 @@ const AVANTIS_PAIRS = {
   'AVANTIS_BASE-45': 'ZK',
   'AVANTIS_BASE-46': 'ZRO',
   'AVANTIS_BASE-47': 'BLAST',
+  'AVANTIS_BASE-48': 'AAVE',
+  'AVANTIS_BASE-49': 'SUI',
+  'AVANTIS_BASE-50': 'TAO',
+  'AVANTIS_BASE-51': 'EIGEN',
 }
 
 export const TOKEN_TRADE_AVANTIS_BASE = Object.entries(AVANTIS_PAIRS).reduce<ProtocolTokenMapping>(

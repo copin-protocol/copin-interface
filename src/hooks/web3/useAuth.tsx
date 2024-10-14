@@ -4,6 +4,7 @@ import { WalletState } from '@web3-onboard/core'
 import { useConnectWallet } from '@web3-onboard/react'
 import dayjs from 'dayjs'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
 import { loginWeb3Api, logoutApi, verifyLoginWeb3Api } from 'apis/authApis'
@@ -34,6 +35,7 @@ interface ContextValues {
   disconnect: () => void
   logout: () => void
   eagerAuth: () => Promise<void>
+  setProfile: (myProfile: UserData | null) => void
 }
 
 export const AuthContext = createContext({} as ContextValues)
@@ -48,6 +50,13 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   const accountRef = useRef<string | null | undefined>(wallet?.accounts[0].address)
   const verifyCodeRef = useRef<string>()
   const { myProfile, setMyProfile } = useMyProfile()
+  const { refetch: refetchProfile } = useQuery('get_user_profile_after_change_referrer', getMyProfileApi, {
+    enabled: false,
+    onSuccess: (data) => {
+      if (!data) return
+      setMyProfile(data)
+    },
+  })
   const { setUserReferral } = useUserReferral()
   const [waitingState, setWaitingState] = useState<WaitingState | null>(null)
 
@@ -246,8 +255,20 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       disconnect,
       logout,
       eagerAuth,
+      setProfile: setMyProfile,
     }
-  }, [waitingState, isAuthenticated, wallet, myProfile, connect, disconnect, logout, eagerAuth])
+  }, [
+    waitingState,
+    isAuthenticated,
+    wallet,
+    updateBalances,
+    myProfile,
+    connect,
+    disconnect,
+    logout,
+    eagerAuth,
+    setMyProfile,
+  ])
 
   return (
     <AuthContext.Provider value={contextValue}>
@@ -285,7 +306,11 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
           handleAuth={handleAuth}
         />
       )}
-      {openingRefModal && <ConfirmReferralModal onDismiss={() => setOpeningRefModal(false)} />}
+      <ConfirmReferralModal
+        isOpen={openingRefModal}
+        onDismiss={() => setOpeningRefModal(false)}
+        onSuccess={() => refetchProfile()}
+      />
     </AuthContext.Provider>
   )
 }

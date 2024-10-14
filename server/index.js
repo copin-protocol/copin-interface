@@ -44,7 +44,8 @@ app.get('/:protocol/position/:id', getPositionDetails)
 app.get('/:protocol/top-openings', getTopOpenings)
 app.get('/subscription', getSubscription)
 app.get('/stats', getStats)
-app.get('/leaderboard', getLeaderboard)
+app.get('/:protocol/leaderboard', getLeaderboard)
+
 app.get('*', (req, res) => {
   renderHTML(req, res)
 })

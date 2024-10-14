@@ -159,6 +159,7 @@ export function PaginationWithLimit({
   defaultLimit,
   apiMeta,
   menuPosition,
+  dividerSx = {},
   ...props
 }: {
   currentPage: number
@@ -168,6 +169,7 @@ export function PaginationWithLimit({
   onLimitChange: (limit: number) => void
   apiMeta?: ApiMeta
   menuPosition?: 'top' | 'bottom'
+  dividerSx?: any
 } & BoxProps) {
   const { lg } = useResponsive()
   const { total = 0, totalPages = 0 } = apiMeta ?? {}
@@ -228,7 +230,10 @@ export function PaginationWithLimit({
         </Dropdown>
         <Type.Caption>of {total} records</Type.Caption>
       </Flex>
-      <Box display={['none', 'none', 'block']} sx={{ flexShrink: 0, width: '1px', height: 32, bg: 'neutral6' }} />
+      <Box
+        display={['none', 'none', 'block']}
+        sx={{ flexShrink: 0, width: '1px', height: 32, bg: 'neutral6', ...dividerSx }}
+      />
       <PaginationWithSelect
         currentPage={currentPage}
         apiMeta={apiMeta}

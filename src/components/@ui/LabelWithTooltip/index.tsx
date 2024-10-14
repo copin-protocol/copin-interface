@@ -11,11 +11,15 @@ const LabelWithTooltip = ({
   sx = {},
   children,
   tooltip,
+  dashed = false,
+  tooltipSx = {},
 }: {
   id: string
   sx?: SystemStyleObject & GridProps
   children: ReactNode
   tooltip: ReactNode
+  dashed?: boolean
+  tooltipSx?: any
 }) => {
   const uuid = useMemo(() => id + uuidv4(), [])
   return (
@@ -23,12 +27,20 @@ const LabelWithTooltip = ({
       <Type.Caption
         data-tip="React-tooltip"
         data-tooltip-id={uuid}
-        sx={{
-          textDecoration: 'underline',
-          textDecorationStyle: 'dotted',
-          textDecorationColor: 'rgba(119, 126, 144, 0.5)',
-          ...sx,
-        }}
+        sx={
+          dashed
+            ? {
+                borderBottom: '1px dashed',
+                borderBottomColor: 'neutral3',
+                ...sx,
+              }
+            : {
+                textDecoration: 'underline',
+                textDecorationStyle: 'dotted',
+                textDecorationColor: 'rgba(119, 126, 144, 0.5)',
+                ...sx,
+              }
+        }
       >
         {children}
       </Type.Caption>
@@ -38,6 +50,7 @@ const LabelWithTooltip = ({
           textAlign="center"
           style={{
             textTransform: 'none',
+            ...tooltipSx,
           }}
         >
           {tooltip}

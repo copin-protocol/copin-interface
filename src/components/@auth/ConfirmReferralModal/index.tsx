@@ -14,14 +14,21 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 
 import InputReferral from '../InputReferral'
 
-const ConfirmReferralModal = ({ onDismiss }: { onDismiss: () => void }) => {
+const ConfirmReferralModal = ({
+  isOpen,
+  onDismiss,
+  onSuccess,
+}: {
+  isOpen: boolean
+  onDismiss: () => void
+  onSuccess: () => void
+}) => {
   const { userReferral, setUserReferral } = useUserReferral()
   const { myProfile } = useMyProfile()
 
   const {
     register,
     handleSubmit,
-    clearErrors,
     watch,
     formState: { errors },
   } = useForm<{ referralCode: string }>({
@@ -37,11 +44,12 @@ const ConfirmReferralModal = ({ onDismiss }: { onDismiss: () => void }) => {
     setUserReferral(null)
     onDismiss()
   }
-  const onSuccess = () => {
+  const _onSuccess = () => {
     toast.success(<ToastBody title={<Trans>Success</Trans>} message={<Trans>Add referral successful!</Trans>} />)
+    onSuccess()
     onReset()
   }
-  const { addReferral, skipReferral, submitting, skipping } = useReferralActions({ onSuccess })
+  const { addReferral, skipReferral, submitting, skipping } = useReferralActions({ onSuccess: _onSuccess })
 
   const onSubmit: SubmitHandler<{ referralCode: string }> = (data) => {
     if (submitting || skipping) return
@@ -55,15 +63,17 @@ const ConfirmReferralModal = ({ onDismiss }: { onDismiss: () => void }) => {
   }
 
   return (
-    <Modal isOpen title="Referral" onDismiss={onDismiss} dismissable={false}>
+    <Modal isOpen={isOpen} title="Referral" onDismiss={onDismiss} dismissable={false}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box px={24} pb={24}>
           <InputReferral
             label={<Trans>Would you like to use a referral code?</Trans>}
-            hasUrlRef={false}
+            value={referralCode}
+            placeholder={`Enter referral code`}
+            disabled={false}
             register={register}
             error={errors?.referralCode?.message}
-            clearErrors={clearErrors}
+            sx={{ marginTop: 8, marginBottom: 10 }}
           />
 
           <Alert
@@ -77,7 +87,7 @@ const ConfirmReferralModal = ({ onDismiss }: { onDismiss: () => void }) => {
                 </Type.CaptionBold>
               </Flex>
             }
-            description={<Trans>If you skip it this time, you will not be able to re-enter the referral code.</Trans>}
+            description={<Trans>If you skip it this time, you will be able to re-enter the referral code later.</Trans>}
             sx={{ textAlign: 'left' }}
           />
 

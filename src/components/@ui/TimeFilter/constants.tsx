@@ -107,6 +107,7 @@ export const ALL_TIME_FILTER_OPTIONS: TimeFilterProps[] = [
 
 export const COPIER_LEADERBOARD_TIME_FILTER_OPTIONS: CopierLeaderboardTimeFilterProps[] = [
   { id: CopierLeaderboardTimeFilterEnum.DAILY, text: 'Today' },
+  { id: CopierLeaderboardTimeFilterEnum.YESTERDAY, text: 'Yesterday' },
   { id: CopierLeaderboardTimeFilterEnum.D7, text: '7 Days' },
   { id: CopierLeaderboardTimeFilterEnum.D30, text: '30 Days' },
   { id: CopierLeaderboardTimeFilterEnum.D60, text: '60 Days' },

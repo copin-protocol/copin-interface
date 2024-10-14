@@ -1,13 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { CaretDown } from '@phosphor-icons/react'
 import { NavLink as Link, NavLinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import ArbitrumLogo from 'components/@ui/ArbitrumLogo'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { generateExplorerRoute, generateLeaderboardRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
@@ -16,7 +14,6 @@ import { logEventCompetition } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import EventButton from './EventButton'
-import SelectProtocolDropdown from './SelectProtocolDropdown'
 
 export function DesktopNavLinks() {
   return (
@@ -48,25 +45,6 @@ export function MobileEventNavLinks({ onClose, hasEvents }: { onClose?: () => vo
   )
 }
 
-export function DesktopCopierLeaderboardLink() {
-  return (
-    <DesktopWrapper>
-      <NavLink to={ROUTES.COPIER_RANKING.path} matchpath={ROUTES.COPIER_RANKING.path}>
-        Copier Ranking
-      </NavLink>
-    </DesktopWrapper>
-  )
-}
-export function MobileCopierLeaderboardLink({ onClose }: { onClose?: () => void }) {
-  return (
-    <MobileWrapper>
-      <NavLink to={ROUTES.COPIER_RANKING.path} matchpath={ROUTES.COPIER_RANKING.path} onClick={onClose}>
-        Copier Ranking
-      </NavLink>
-    </MobileWrapper>
-  )
-}
-
 function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () => void }) {
   const { selectedProtocols } = useProtocolFilter()
   const protocolParams = convertProtocolToParams(selectedProtocols)
@@ -91,24 +69,6 @@ function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () =
             {config.label}
           </NavLink>
         ) : (
-          // OLD CODE
-          // <SelectProtocolDropdown
-          //   key={index}
-          //   routeFactory={(protocol) => config.routeFactory({ protocol: _navProtocol ?? protocol })}
-          // >
-          //   <NavLink
-          //     to={config.routeFactory({ protocol: _navProtocol ?? protocol })}
-          //     onClick={onClickNavItem}
-          //     matchpath={config.matchpath}
-          //     style={{ display: 'block', height: '100%' }}
-          //   >
-          //     <Flex sx={{ alignItems: 'center', gap: 1 }}>
-          //       <Box>{config.label}</Box>
-          //       <CaretDown size={16} />
-          //     </Flex>
-          //   </NavLink>
-          // </SelectProtocolDropdown>
-
           <NavLink
             key={index}
             to={config.routeFactory({ protocol: _navProtocol ?? protocol, params: { protocol: protocolParams } })}
@@ -150,14 +110,6 @@ function EventNavLinks({ onClose, hasEvents }: { onClose?: () => void; hasEvents
           <EventButton />
         </NavLink>
       )}
-      {/*<NavLink to={ROUTES.FEE_REBATE.path} matchpath={ROUTES.FEE_REBATE.path} onClick={onClickNavItem}>*/}
-      {/*  <Flex alignItems="center" sx={{ gap: 1 }}>*/}
-      {/*    <ArbitrumLogo size={16} />*/}
-      {/*    <Type.Caption>*/}
-      {/*      <Trans>Fee Rebate</Trans>*/}
-      {/*    </Type.Caption>*/}
-      {/*  </Flex>*/}
-      {/*</NavLink>*/}
     </>
   )
 }
@@ -179,6 +131,16 @@ const baseNavConfigs = [
     routeFactory: (configs: { protocol: ProtocolEnum }) => generateLeaderboardRoute({ protocol: configs.protocol }),
     matchpath: ROUTES.LEADERBOARD.path_prefix,
     label: <Trans>Leaderboard</Trans>,
+  },
+  {
+    routeFactory: () => ROUTES.COPIER_RANKING.path,
+    matchpath: ROUTES.COPIER_RANKING.path,
+    label: <Trans>Copier Ranking</Trans>,
+  },
+  {
+    routeFactory: () => ROUTES.REFERRAL_MANAGEMENT.path,
+    matchpath: ROUTES.REFERRAL_MANAGEMENT.path,
+    label: <Trans>Referral</Trans>,
   },
 ]
 

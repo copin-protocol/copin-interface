@@ -56,6 +56,7 @@ const ModalRegister = ({
   const [resendCountdown, setResendCountdown] = useState<number>(COUNTDOWN_TIME)
   const [startCountdown, setStartCountdown] = useState(true)
   const email = watch('email') ?? ''
+  const referralCode = watch('referralCode') ?? ''
 
   const onResendOTP = async () => {
     if (startCountdown) return
@@ -195,10 +196,13 @@ const ModalRegister = ({
           </Box>
           {showReferralInput && (
             <InputReferral
-              hasUrlRef={hasUrlRef}
+              placeholder={`Enter referral code`}
+              disabled={hasUrlRef}
               register={register}
               error={errors?.referralCode?.message}
-              clearErrors={clearErrors}
+              value={referralCode}
+              sx={{ marginTop: 8, marginBottom: 10 }}
+              // clearErrors={clearErrors}
             />
           )}
 

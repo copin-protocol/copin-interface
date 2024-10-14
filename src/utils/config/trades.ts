@@ -412,6 +412,8 @@ const normalizeSymbolOption = (symbol: string) => {
       return 'SHIB'
     case '1000LUNC':
       return 'LUNC'
+    case '1000DOGS':
+      return 'DOGS'
     default:
       return symbol
   }
@@ -513,6 +515,8 @@ export function getSymbolTradingView(symbol: string) {
     case '1000LUNC':
     case 'kLUNC':
       return 'LUNC'
+    case '1000DOGS':
+      return 'DOGS'
     case 'RNDR':
       return 'RENDER'
     default:
@@ -532,6 +536,7 @@ export function getPriceTradingView(symbol: string, price?: number) {
     case 'kSHIB':
     case '1000LUNC':
     case 'kLUNC':
+    case '1000DOGS':
       return price / 1000
     default:
       return price

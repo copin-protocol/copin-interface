@@ -206,6 +206,10 @@ export const GNS_PAIRS = {
   'GNS-279': 'LOOM',
   'GNS-280': 'ZETA',
   'GNS-281': 'HMSTR',
+  'GNS-282': 'EIGEN',
+  'GNS-283': 'POLYX',
+  'GNS-284': 'MOODENG',
+  'GNS-285': 'MOTHER',
 }
 
 export const TOKEN_TRADE_GNS = Object.entries(GNS_PAIRS).reduce<ProtocolTokenMapping>((result, [key, value]) => {

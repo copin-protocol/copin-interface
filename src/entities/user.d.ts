@@ -2,6 +2,7 @@ import {
   CopyTradePlatformEnum,
   OrderTypeEnum,
   ProtocolEnum,
+  ReferralTierEnum,
   SubscriptionPlanEnum,
   UserRoleEnum,
 } from 'utils/config/enums'
@@ -19,7 +20,6 @@ export interface UserStatisticsData {
 export interface UserData {
   id: string
   username: string
-  account: string
   role: UserRoleEnum
   copyTradeQuota: number
   isActivated: boolean
@@ -31,6 +31,10 @@ export interface UserData {
   createdAt: string
   updatedAt: string
   plan?: SubscriptionPlanEnum
+  referralFromUserAddress?: string
+  referralTier?: ReferralTierEnum
+  lastCustomRefCode?: string
+  totalFeeLast30Days?: number
 }
 
 export interface ReferralData {

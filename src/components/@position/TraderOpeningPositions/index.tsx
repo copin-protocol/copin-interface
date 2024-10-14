@@ -70,7 +70,12 @@ export default function TraderOpeningPositionsTable({
         sortBy: currentSort?.sortBy,
         sortType: currentSort?.sortType,
       }),
-    { enabled: !!address, retry: 0, refetchInterval: 10_000 }
+    {
+      enabled: !!address,
+      retry: 0,
+      refetchInterval: 15_000,
+      keepPreviousData: true,
+    }
   )
   //
 
@@ -106,6 +111,9 @@ export default function TraderOpeningPositionsTable({
     window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
     setOpenDrawer(false)
   }
+  const scrollToTopDependencies = useMemo(() => {
+    return isExpanded ? [currentSort?.sortBy, currentSort?.sortType, address, protocol] : [address, protocol]
+  }, [isExpanded, currentSort?.sortBy, currentSort?.sortType, address, protocol])
 
   const totalOpening = data?.length ?? 0
 
@@ -172,6 +180,7 @@ export default function TraderOpeningPositionsTable({
               isLoading={isLoading}
               onClickRow={handleSelectItem}
               renderRowBackground={() => 'rgb(31, 34, 50)'}
+              scrollToTopDependencies={scrollToTopDependencies}
             />
           ) : (
             <TraderPositionListView

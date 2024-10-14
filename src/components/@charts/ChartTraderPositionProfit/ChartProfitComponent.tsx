@@ -370,6 +370,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
         background: { type: ColorType.Solid, color: 'transparent' },
         fontFamily: FONT_FAMILY,
         fontSize: 13,
+        attributionLogo: false,
       },
       timeScale: {
         rightOffset: 0,
