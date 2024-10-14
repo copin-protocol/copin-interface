@@ -42,6 +42,10 @@ const NORMALIZE_LIST = [
   'HYPERLIQUID-kLUNC',
   'HYPERLIQUID-kPEPE',
   'HYPERLIQUID-kSHIB',
+  'KILOEX_OPBNB-81',
+  'KILOEX_OPBNB-82',
+  'KILOEX_OPBNB-84',
+  'KILOEX_OPBNB-90',
 ]
 
 function getPriceData({ priceFeed }: { priceFeed: PriceFeed }) {
