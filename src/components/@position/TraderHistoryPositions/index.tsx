@@ -287,7 +287,7 @@ const PositionsList = memo(function PositionsListMemo({
   changeCurrentSort: ((sort: TableSortProps<PositionData> | undefined) => void) | undefined
   isExpanded: boolean
 } & { showChart: boolean; handleSelectItem: (data: PositionData) => void }) {
-  const { sm, lg } = useResponsive()
+  const { lg } = useResponsive()
   const highValue: number = data?.length ? getHighestPnl(data) : 0
 
   const renderRowBackground = useCallback(
@@ -306,7 +306,7 @@ const PositionsList = memo(function PositionsListMemo({
   const resizeDeps = useMemo(() => [isExpanded], [isExpanded])
 
   useInfiniteLoadMore({ isDesktop: lg, hasNextPage, fetchNextPage, isLoading })
-  return sm ? (
+  return lg ? (
     <VirtualList
       data={data}
       isLoading={isLoading}

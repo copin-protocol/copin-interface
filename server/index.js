@@ -17,6 +17,7 @@ import { getSubscription } from './subscription.controller.js'
 import { getTopOpenings } from './topOpening.controller.js'
 import { getTraderDetail } from './traderDetail.controller.js'
 import { renderHTML } from './utils.js'
+import { getReferralProgram } from './referralProgram.controller.js'
 
 const __filename = fileURLToPath(import.meta.url)
 
@@ -44,6 +45,7 @@ app.get('/:protocol/position/:id', getPositionDetails)
 app.get('/:protocol/top-openings', getTopOpenings)
 app.get('/subscription', getSubscription)
 app.get('/stats', getStats)
+app.get('/referral', getReferralProgram)
 app.get('/:protocol/leaderboard', getLeaderboard)
 
 app.get('*', (req, res) => {
