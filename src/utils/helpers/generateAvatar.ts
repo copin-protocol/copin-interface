@@ -31,10 +31,23 @@ function lighten(col: string, amt: number) {
   return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16)
 }
 
+const mapCharToNumber = (char: string) => {
+  const code = char.charCodeAt(0)
+  if (code >= 'g'.charCodeAt(0) && code <= 'z'.charCodeAt(0)) {
+    return (code - 'g'.charCodeAt(0)) % 10
+  }
+  return char
+}
+
 export const generateAvatar = (address: string) => {
-  const emojiHex = address?.startsWith('dydx') ? address.slice(5, 7) : address.slice(2, 4)
+  let renderAddress
+  if (address?.startsWith('dydx')) {
+    const addressWithoutPrefix = address.slice(5)
+    renderAddress = Array.from(addressWithoutPrefix, mapCharToNumber).join('')
+  }
+  const emojiHex = renderAddress ? renderAddress.slice(0, 2) : address.slice(2, 4)
   const emoji = emojiList[parseInt(emojiHex, 16)]
-  const bg = `#${address?.startsWith('dydx') ? address.slice(8, 14) : address.slice(5, 11)}`
+  const bg = `#${renderAddress ? renderAddress.slice(3, 9) : address.slice(5, 11)}`
   return {
     emoji,
     bg,
