@@ -1,4 +1,5 @@
-import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react'
+import debounce from 'lodash/debounce'
+import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { VariableSizeList as List } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 
@@ -56,7 +57,7 @@ const VirtualList = memo<any>(function VirtualListMemo<T = any>({
             alignItems: 'center',
             '&:hover': { background: themeColors.neutral5 },
             pl: 2,
-            bg: rowBgFactory?.(index),
+            background: rowBgFactory?.(index),
             ...(rowSx ?? {}),
           }}
           onClick={() => handleSelectItem(cellData)}
@@ -182,16 +183,29 @@ const VirtualList = memo<any>(function VirtualListMemo<T = any>({
 
   // set width height for virtual list
   const [{ width, height }, setRect] = useState({ width: 0, height: 0 })
-  const handleResize = useCallback(() => {
-    if (!wrapperRef.current) return
-    setRect({ width: wrapperRef.current.clientWidth, height: wrapperRef.current.clientHeight })
+  const handleResize = useMemo(() => {
+    return debounce(({ width, height }: { width: number; height: number }) => {
+      if (!wrapperRef.current) return
+      setRect({ width, height })
+    }, 200)
   }, [])
   useEffect(() => {
-    handleResize()
-  }, [...(resizeDeps ?? [])])
-  useEffect(() => {
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    if (wrapperRef.current) {
+      const observer = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          handleResize({
+            width: entry.contentRect.width,
+            height: entry.contentRect.height,
+          })
+        }
+      })
+      observer.observe(wrapperRef.current)
+      return () => {
+        observer.disconnect()
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    return () => {}
   }, [])
 
   const itemCount = data?.length ?? 0
@@ -202,7 +216,6 @@ const VirtualList = memo<any>(function VirtualListMemo<T = any>({
     <Flex sx={{ flexDirection: 'column', height: '100%', width: '100%', overflow: 'hidden' }}>
       <Header />
       <Box flex="1 0 0" ref={wrapperRef} sx={{ position: 'relative', overflow: 'hidden' }}>
-        {isLoading && !data?.length && <Loading />}
         {!isLoading && !data?.length && <NoDataFound />}
         <InfiniteLoader
           ref={listRef}
