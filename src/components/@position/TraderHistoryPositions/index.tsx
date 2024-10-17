@@ -101,19 +101,18 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
     (data: PositionData) => {
       setCurrentPosition(data)
       setOpenDrawer(true)
-      if (!!data.txHashes?.length) {
-        window.history.replaceState(
-          null,
-          '',
-          generatePositionDetailsRoute({
-            protocol: data.protocol,
-            txHash: data.txHashes?.[0],
-            account: data.account,
-            logId: data.logId,
-            nextHours: nextHoursParam,
-          })
-        )
-      }
+      window.history.replaceState(
+        null,
+        '',
+        generatePositionDetailsRoute({
+          id: data.id,
+          protocol: data.protocol,
+          txHash: data.txHashes?.[0],
+          account: data.account,
+          logId: data.logId,
+          nextHours: nextHoursParam,
+        })
+      )
     },
     [nextHoursParam]
   )

@@ -108,9 +108,7 @@ export function OpeningPositionsWrapper({ children }: { children: any }) {
   const handleSelectItem = useCallback((data: PositionData) => {
     setCurrentPosition(data)
     setOpenDrawer(true)
-    if (!!data.txHashes?.length) {
-      window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes?.[0] }))
-    }
+    window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes?.[0] }))
   }, [])
 
   const handleDismiss = () => {

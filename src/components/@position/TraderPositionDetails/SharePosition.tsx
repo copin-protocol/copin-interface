@@ -3,7 +3,6 @@ import { ShareFat } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { sharePositionApi } from 'apis/shareApis'
 import logoWithText from 'assets/images/logo.png'
 import ToastBody from 'components/@ui/ToastBody'
 import { ImageData } from 'entities/image'
@@ -61,22 +60,28 @@ export default function SharePosition({
       })
       if (canvas) {
         canvas.toBlob((blob) => {
-          async function share() {
-            if (!stats || !blob) return
-            const res = await sharePositionApi({
-              position: stats,
-              imageBlob: blob,
-            })
-            if (!res) {
-              toast.error(<ToastBody title="Error" message="Something went wrong" />)
-              setIsGeneratingLink(false)
-              setIsSocialMediaSharingOpen(false)
-              return
-            }
-            setImage(res)
-            setIsGeneratingLink(false)
+          // async function share() {
+          //   if (!stats || !blob) return
+          //   const res = await sharePositionApi({
+          //     position: stats,
+          //     imageBlob: blob,
+          //   })
+          //   if (!res) {
+          //     toast.error(<ToastBody title="Error" message="Something went wrong" />)
+          //     setIsGeneratingLink(false)
+          //     setIsSocialMediaSharingOpen(false)
+          //     return
+          //   }
+          //   setImage(res)
+          //   setIsGeneratingLink(false)
+          // }
+          // share()
+          if (blob) {
+            setImage({ url: URL.createObjectURL(blob), width: 0, height: 0 })
+          } else {
+            toast.error(<ToastBody title="Error" message="Something went wrong" />)
           }
-          share()
+          setIsGeneratingLink(false)
         })
       }
     } catch {
@@ -89,6 +94,7 @@ export default function SharePosition({
   const referralCode = myProfile?.referralCode ?? null
   const shareLink = generateParamsUrl({
     url: `${import.meta.env.VITE_URL}${generatePositionDetailsRoute({
+      id: stats?.id,
       protocol: stats?.protocol,
       txHash: stats?.txHashes?.[0],
       account: stats?.account,

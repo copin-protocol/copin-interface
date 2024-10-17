@@ -317,7 +317,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
 
   useEffect(() => {
     if (isOpening) return
-    if (nextHours && !!position.txHashes?.length) {
+    if (nextHours) {
       // setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: nextHours.toString() })
       window.history.replaceState(
         null,

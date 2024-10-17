@@ -2,7 +2,6 @@ import { ShareFat } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { shareTraderApi } from 'apis/storage'
 import logoWithText from 'assets/images/logo.png'
 import ToastBody from 'components/@ui/ToastBody'
 import { ImageData } from 'entities/image'
@@ -51,24 +50,30 @@ export default function ShareProfile({
       const canvas = generateTraderCanvas({ address, protocol, type, stats, colors: themeColors, logoImg, protocolImg })
       if (canvas) {
         canvas.toBlob((blob) => {
-          async function share() {
-            if (!blob) return
-            const res = await shareTraderApi({
-              protocol,
-              traderAddress: address,
-              time: type,
-              imageBlob: blob,
-            })
-            if (!res) {
-              toast.error(<ToastBody title="Error" message="Something went wrong" />)
-              setIsGeneratingLink(false)
-              setIsSocialMediaSharingOpen(false)
-              return
-            }
-            setImage(res)
-            setIsGeneratingLink(false)
+          // async function share() {
+          //   if (!blob) return
+          //   const res = await shareTraderApi({
+          //     protocol,
+          //     traderAddress: address,
+          //     time: type,
+          //     imageBlob: blob,
+          //   })
+          //   if (!res) {
+          //     toast.error(<ToastBody title="Error" message="Something went wrong" />)
+          //     setIsGeneratingLink(false)
+          //     setIsSocialMediaSharingOpen(false)
+          //     return
+          //   }
+          //   setImage(res)
+          //   setIsGeneratingLink(false)
+          // }
+          // share()
+          if (blob) {
+            setImage({ url: URL.createObjectURL(blob), width: 0, height: 0 })
+          } else {
+            toast.error(<ToastBody title="Error" message="Something went wrong" />)
           }
-          share()
+          setIsGeneratingLink(false)
         })
       }
     } catch (e) {

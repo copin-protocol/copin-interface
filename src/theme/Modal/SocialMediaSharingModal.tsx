@@ -52,7 +52,7 @@ const SocialMediaSharingModal = ({ title, link, isOpen, onDismiss, isGeneratingL
                 {loading && !error && <Box sx={{ width: '100%', aspectRatio: '1220/640' }}></Box>}
                 <Box display={loading && !error ? 'none' : 'block'}>
                   <Image
-                    src={generateImageUrl(image)}
+                    src={image.url?.includes('blob:') ? image.url : generateImageUrl(image)}
                     onLoad={() => setLoading(false)}
                     onError={() => {
                       setLoading(false)
