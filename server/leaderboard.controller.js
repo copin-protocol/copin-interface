@@ -3,7 +3,7 @@ import { generateProtocolName, renderHTML } from './utils.js'
 
 const getLeaderboard = async (req, res) => {
   const { protocol } = req.params
-  const thumbnail = `${configs.baseUrl}/images/cover/leaderboard-cover.png`
+  const thumbnail = `${configs.baseUrl}/images/cover/leaderboard-cover.png?time=${new Date().getTime()}`
 
   try {
     renderHTML({

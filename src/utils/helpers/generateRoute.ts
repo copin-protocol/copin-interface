@@ -25,13 +25,20 @@ export const generateMyOpeningPositionRoute = (data: {
   `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}?account=${data.copyAccount}&indexToken=${data.indexToken}&key=${data.key}`
 
 export const generatePositionDetailsRoute = (
-  data: Partial<{ protocol: ProtocolEnum; txHash: string; account: string; logId: number; nextHours?: number }>,
+  data: Partial<{
+    protocol: ProtocolEnum
+    txHash: string
+    account: string
+    logId: number
+    nextHours?: number
+    id?: string
+  }>,
   others?: {
     highlightTxHash?: string
   }
 ) =>
   createUrlWithParams({
-    url: `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}/${data.txHash}`,
+    url: `/${data.protocol}${ROUTES.POSITION_DETAILS.path_prefix}/${!!data.txHash ? data.txHash : data.id}`,
     params: {
       [URL_PARAM_KEYS.ACCOUNT]: data.account,
       [URL_PARAM_KEYS.LOG_ID]: data.logId,

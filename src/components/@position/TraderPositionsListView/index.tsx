@@ -45,7 +45,7 @@ export default function TraderPositionListView({
         '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4', '& > *:last-child': { borderBottom: 'none' } },
       }}
     >
-      {!isLoading && !data?.length && <NoDataFound message={<Trans>No opening positions</Trans>} />}
+      {!isLoading && data?.length === 0 && <NoDataFound message={<Trans>No position was found</Trans>} />}
       {isLoading && (
         <Flex
           sx={{

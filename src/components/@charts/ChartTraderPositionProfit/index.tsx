@@ -94,12 +94,13 @@ export default function ChartProfit({
                 </Tooltip>
               </>
             )}
-            {!isOpening && !isTradingChart && !!data.txHashes?.length && (
+            {!isOpening && !isTradingChart && (
               <WhatIf
                 protocol={protocol}
-                txHash={data.txHashes[0]}
+                txHash={data.txHashes?.[0]}
                 account={data.account}
                 logId={data.logId}
+                id={data.id}
                 sx={{ position: 'absolute', top: [-3, -24], right: 0 }}
               />
             )}

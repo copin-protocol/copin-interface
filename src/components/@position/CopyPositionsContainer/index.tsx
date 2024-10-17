@@ -57,7 +57,7 @@ export default function CopyPositionsContainer({
           window.history.replaceState(
             null,
             '',
-            generatePositionDetailsRoute({ ...positionDetail, txHash: positionDetail.txHashes[0] })
+            generatePositionDetailsRoute({ ...positionDetail, txHash: positionDetail.txHashes?.[0] })
           )
         } else {
           setOpenSourceDrawer(true)
@@ -66,7 +66,7 @@ export default function CopyPositionsContainer({
             '',
             generatePositionDetailsRoute({
               ...positionDetail,
-              txHash: positionDetail.txHashes[0],
+              txHash: positionDetail.txHashes?.[0],
               nextHours: nextHoursParam,
             })
           )

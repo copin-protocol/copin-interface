@@ -61,7 +61,13 @@ const PositionTxResults = ({
     (data: PositionData) => {
       history.push(
         generatePositionDetailsRoute(
-          { protocol: data.protocol, txHash: data.txHashes[0], account: data.account, logId: data.logId },
+          {
+            protocol: data.protocol,
+            txHash: data.txHashes?.[0],
+            account: data.account,
+            logId: data.logId,
+            id: data.id,
+          },
           { highlightTxHash: txHash }
         )
       )

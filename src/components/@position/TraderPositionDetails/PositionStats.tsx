@@ -75,9 +75,7 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, c
           <PositionStatus
             status={hasLiquidate ? PositionStatusEnum.LIQUIDATE : isOpening ? PositionStatusEnum.OPEN : data.status}
           />
-          {data.protocol !== ProtocolEnum.HYPERLIQUID && (
-            <SharePosition isOpening={isOpening} stats={data} chartId={chartId} />
-          )}
+          <SharePosition isOpening={isOpening} stats={data} chartId={chartId} />
         </Flex>
       </Flex>
       <Flex mt={3} alignItems="center" justifyContent="space-between" sx={{ gap: [2, 24], flexWrap: 'wrap' }}>
@@ -170,9 +168,7 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, ch
           </Type.Caption>
           {renderEntry(data)}
         </Flex>
-        {data.protocol !== ProtocolEnum.HYPERLIQUID && (
-          <SharePosition isOpening={isOpening} stats={data} chartId={chartId} />
-        )}
+        <SharePosition isOpening={isOpening} stats={data} chartId={chartId} />
       </Flex>
       <Flex width="100%" mb={1}>
         {isOpening ? renderSizeOpeningWithPrices(data, prices) : renderSize(data)}
