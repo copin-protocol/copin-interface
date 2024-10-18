@@ -337,6 +337,7 @@ export function PaginationWithSelect({
           {currentPage}/{totalPages}
         </Type.Caption>
         <IconButton
+          className="next-btn"
           icon={<CaretCircleRight size={20} weight="thin" />}
           borderRadius="md"
           size={20}

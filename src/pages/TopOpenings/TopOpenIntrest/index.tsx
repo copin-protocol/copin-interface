@@ -39,11 +39,22 @@ export default function TopOpenings({ protocolFilter }: { protocolFilter: Protoc
 }
 
 function TopOpeningsPage() {
-  const { lg } = useResponsive()
-  const { sort, onChangeSort, limit, onChangeLimit, time, from, to, onChangeTime } = useFilters()
+  const { lg, sm } = useResponsive()
   const { searchParams, pathname } = useSearchParams()
-
   const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
+  const {
+    sort,
+    onChangeSort,
+    limit,
+    onChangeLimit,
+    time,
+    from,
+    to,
+    onChangeTime,
+    pairs,
+    onChangePairs,
+    excludedPairs,
+  } = useFilters()
 
   // FETCH DATA
   const queryVariables = useMemo(() => {
@@ -53,6 +64,7 @@ function TopOpeningsPage() {
     const query = [
       { field: 'status', match: 'OPEN' },
       { field: 'openBlockTime', gte: from, lte: to },
+      { field: 'pair', in: pairs.filter((pair) => !excludedPairs.includes(pair)).map((pair) => `${pair}-USDT`) },
     ]
 
     const body = {
@@ -64,7 +76,7 @@ function TopOpeningsPage() {
     }
 
     return { index, body, protocols: foundProtocolInUrl }
-  }, [sort, limit, from, to, foundProtocolInUrl])
+  }, [sort.key, from, to, pairs, limit, foundProtocolInUrl, excludedPairs])
 
   const {
     data: topOpeningPositionsData,
@@ -101,8 +113,12 @@ function TopOpeningsPage() {
           onChangeLimit={onChangeLimit}
           currentTimeOption={time}
           onChangeTime={onChangeTime}
+          protocols={foundProtocolInUrl}
+          pairs={pairs}
+          onChangePairs={onChangePairs}
+          excludedPairs={excludedPairs}
         />
-        <PythWatermark />
+        {sm && <PythWatermark />}
       </Flex>
       <Box sx={{ flex: '1 0 0' }}>
         <Flex height="100%" flexDirection={lg ? 'row' : 'column'}>

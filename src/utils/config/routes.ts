@@ -25,7 +25,7 @@ const ROUTES = {
     path_prefix: '/open-interest/positions',
   },
   ALL_OPEN_INTEREST_POSITIONS: {
-    path: '/open-interest/positions',
+    path: '/open-interest',
     alter_path: '/open-interest/positions/:symbol',
     path_prefix: '/open-interest/positions',
   },

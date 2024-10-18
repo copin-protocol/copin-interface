@@ -109,6 +109,10 @@ msgstr "<0>{0} </0>earned <1>{1} USDT</1> in commission from {2}"
 msgid "<0>{0} </0>invited by <1>{1}</1>"
 msgstr "<0>{0} </0>invited by <1>{1}</1>"
 
+#: src/pages/TopOpenings/RouteWrapper.tsx
+msgid "<0>{0}</0>"
+msgstr "<0>{0}</0>"
+
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "A 10% loyalty fee applies when trading the NFT."
 msgstr "A 10% loyalty fee applies when trading the NFT."
@@ -208,6 +212,10 @@ msgstr "All"
 #: src/components/@ui/TimeFilter/constants.tsx
 msgid "All Time"
 msgstr "All Time"
+
+#: src/components/@ui/MarketFilter/index.tsx
+msgid "All pairs"
+msgstr "All pairs"
 
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
@@ -2304,6 +2312,10 @@ msgstr "Show more"
 msgid "Side"
 msgstr "Side"
 
+#: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
+msgid "Sign Message Error"
+msgstr "Sign Message Error"
+
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Sign message"
 msgstr "Sign message"
@@ -2847,6 +2859,7 @@ msgstr "Traders explorer"
 msgid "Trades"
 msgstr "Trades"
 
+#: src/components/@ui/MarketFilter/MarketSelection.tsx
 #: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
 #: src/utils/config/translations.tsx
 msgid "Trading Pairs"

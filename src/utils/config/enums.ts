@@ -39,6 +39,10 @@ export enum ProtocolFilterEnum {
   ALL_COPYABLE = 'copyable',
 }
 
+export enum PairFilterEnum {
+  ALL = 'all',
+}
+
 export enum UserRoleEnum {
   GUEST = 'guest',
   ADMIN = 'admin',

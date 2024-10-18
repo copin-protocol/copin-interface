@@ -5,7 +5,7 @@ import css from '@styled-system/css'
 import { CSSProperties } from 'react'
 import ReactSelect, { ClearIndicatorProps, MultiValueRemoveProps, Props } from 'react-select'
 import styled from 'styled-components/macro'
-import { variant } from 'styled-system'
+import { maxHeight, variant } from 'styled-system'
 
 import { IconBox } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -14,10 +14,17 @@ import { FONT_FAMILY } from 'utils/config/constants'
 
 import { styleVariants } from './theme'
 
-export type SelectProps = { error?: any; sx?: any; width?: number | string; height?: number } & VariantProps & SxProps
+export type SelectProps = {
+  error?: any
+  sx?: any
+  width?: number | string
+  height?: number
+  maxHeightSelectContainer?: string
+} & VariantProps &
+  SxProps
 
 const StyledSelect = styled(ReactSelect)<SelectProps>(
-  ({ error, width, height }) =>
+  ({ error, width, height, maxHeightSelectContainer }) =>
     css({
       input: {
         fontSize: '16px !important',
@@ -26,6 +33,7 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
       width: width ?? '100%',
 
       '& .select__control': {
+        // paddingLeft: '5px',
         minHeight: height ? 'auto' : 42,
         height: height ?? 'auto',
         alignItems: 'center',
@@ -34,6 +42,8 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
         borderColor: error ? 'red1' : 'neutral3',
         borderRadius: 'sm',
         bg: 'neutral5',
+        maxHeight: maxHeightSelectContainer ?? 'none',
+        overflow: 'auto',
         '&:hover:not([disabled]), &--is-hovered': {
           bg: 'neutral7',
           borderColor: error ? 'red1' : 'neutral3',
@@ -44,13 +54,14 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
           boxShadow: 'none',
         },
         '& .select__value-container': {
-          pl: 12,
-          pr: 12,
+          pl: '5px',
+          pr: '5px',
           py: '5px',
           color: 'inherit',
           cursor: 'pointer',
           fontFamily: `${FONT_FAMILY}`,
           fontSize: '13px',
+
           lineHeight: '20px !important',
           '& .select__input-container': {
             margin: '0',
@@ -184,7 +195,11 @@ const SelectStyles = {
   multiValue: (providedStyled: any) => ({ ...providedStyled, fontWeight: 400, fontSize: '15px' }),
 }
 
-const Select = ({ components, ...props }: Omit<Props, 'theme'> & SelectProps) => {
+const Select = ({
+  components,
+  maxHeightSelectContainer,
+  ...props
+}: Omit<Props, 'theme'> & SelectProps & { maxHeightSelectContainer?: string }) => {
   return (
     <StyledSelect
       isSearchable
@@ -195,6 +210,7 @@ const Select = ({ components, ...props }: Omit<Props, 'theme'> & SelectProps) =>
       styles={SelectStyles}
       components={{ DropdownIndicator, ClearIndicator, MultiValueRemove, ...(components || {}) }}
       {...props}
+      maxHeightSelectContainer={maxHeightSelectContainer}
       // menuIsOpen
     />
   )

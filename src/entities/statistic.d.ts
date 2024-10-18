@@ -50,6 +50,7 @@ export interface TraderPnlStatisticData {
 
 export interface OpenInterestMarketData extends MarketStatData {
   indexToken: string
+  pair: string
   latestStat: MarketStatData
 }
 
@@ -63,6 +64,7 @@ export interface MarketStatData {
   totalVolumeLong: number
   totalVolumeShort: number
   totalInterest: number
+  pair: string
 }
 
 export type ProtocolsStatisticData = {

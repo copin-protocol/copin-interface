@@ -102,7 +102,7 @@ export async function getTopOpeningPositionsApi({
     .then((res: any) => normalizePositionResponse(res.data as ApiListResponse<ResponsePositionData>))
 }
 export async function getOpenInterestMarketApi({
-  protocol,
+  protocols,
   sortBy,
   sortType,
   indexToken,
@@ -110,7 +110,7 @@ export async function getOpenInterestMarketApi({
   to,
   timeframe,
 }: GetApiParams & {
-  protocol: ProtocolEnum
+  protocols: ProtocolEnum[]
   sortBy?: string
   sortType?: SortTypeEnum
   indexToken?: string
@@ -119,8 +119,9 @@ export async function getOpenInterestMarketApi({
   timeframe?: number
 }) {
   return requester
-    .get(`${protocol}/top-positions/open-interest`, {
+    .get(`public/position/open-interest`, {
       params: {
+        protocols: protocols.join('-'),
         sortBy,
         sortType,
         indexToken,
