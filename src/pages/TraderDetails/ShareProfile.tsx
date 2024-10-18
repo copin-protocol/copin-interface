@@ -2,6 +2,7 @@ import { ShareFat } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 
+import { shareTraderApi } from 'apis/storage'
 import logoWithText from 'assets/images/logo.png'
 import ToastBody from 'components/@ui/ToastBody'
 import { ImageData } from 'entities/image'
@@ -69,6 +70,12 @@ export default function ShareProfile({
           // }
           // share()
           if (blob) {
+            shareTraderApi({
+              protocol,
+              traderAddress: address,
+              time: type,
+              imageBlob: blob,
+            })
             setImage({ url: URL.createObjectURL(blob), width: 0, height: 0 })
           } else {
             toast.error(<ToastBody title="Error" message="Something went wrong" />)

@@ -3,6 +3,7 @@ import { ShareFat } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 
+import { sharePositionApi } from 'apis/shareApis'
 import logoWithText from 'assets/images/logo.png'
 import ToastBody from 'components/@ui/ToastBody'
 import { ImageData } from 'entities/image'
@@ -73,10 +74,13 @@ export default function SharePosition({
           //     return
           //   }
           //   setImage(res)
-          //   setIsGeneratingLink(false)
           // }
           // share()
           if (blob) {
+            sharePositionApi({
+              position: stats,
+              imageBlob: blob,
+            })
             setImage({ url: URL.createObjectURL(blob), width: 0, height: 0 })
           } else {
             toast.error(<ToastBody title="Error" message="Something went wrong" />)
