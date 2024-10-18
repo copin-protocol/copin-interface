@@ -82,10 +82,12 @@ export default function SharePosition({
               imageBlob: blob,
             })
             setImage({ url: URL.createObjectURL(blob), width: 0, height: 0 })
+            setIsGeneratingLink(false)
           } else {
             toast.error(<ToastBody title="Error" message="Something went wrong" />)
+            setIsGeneratingLink(false)
+            setIsSocialMediaSharingOpen(false)
           }
-          setIsGeneratingLink(false)
         })
       }
     } catch {
