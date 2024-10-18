@@ -10,10 +10,11 @@ const getPositionDetails = async (req, res) => {
     ? `${configs.baseUrl}/${protocol}/position/${id}?account=${account}&log_id=${log_id}${
         next_hours ? `?next_hours=${next_hours}` : ''
       }`
-    : `${configs.baseUrl}/${protocol}/position/${id}${next_hours ? `?next_hours=${next_hours}` : ''}`
+    : `${configs.baseUrl}/${protocol}/position/${id}${
+        next_hours ? `?next_hours=${next_hours}&${new Date().getTime()}` : `?${new Date().getTime()}`
+      }`
   const encodedUrl = encodeURIComponent(url)
-  const imageUrl = `http://image.copin.io/thumb.php?profile=${encodedUrl}`
-  const thumbnail = imageUrl + `?${new Date().getTime()}`
+  const thumbnail = `http://image.copin.io/thumb.php?profile=${encodedUrl}`
 
   const protocolName = generateProtocolName(protocol)
 

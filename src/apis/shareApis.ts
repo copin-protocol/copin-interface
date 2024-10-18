@@ -25,11 +25,11 @@ export async function sharePositionApi({ position, imageBlob }: { position: Posi
   const formData = new FormData()
   let endPoint = ''
   let params: Record<string, any> = {}
-  endPoint = `/storage/share-position/${position.protocol}/${position.txHashes[0]}`
+  endPoint = `/storage/share-position/${position.protocol}/${position.txHashes?.[0] ?? position.id}`
   formData.append(
     'image',
     imageBlob,
-    `share_${position.protocol}_${position.txHashes[0]}_${position.account}_${position.logId}.png`
+    `share_${position.protocol}_${position.txHashes?.[0] ?? position.id}_${position.account}_${position.logId}.png`
   )
   params = {
     account: position.account,

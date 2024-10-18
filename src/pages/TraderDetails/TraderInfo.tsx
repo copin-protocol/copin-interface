@@ -17,8 +17,7 @@ import ROUTES from 'utils/config/routes'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten } from 'utils/helpers/format'
-import { parseExchangeImage } from 'utils/helpers/transform'
-import { parseWalletName } from 'utils/helpers/transform'
+import { parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 
 import ShareProfile from './ShareProfile'
 
@@ -36,7 +35,8 @@ const TraderInfo = ({
   const { copyWallets } = useCopyWalletContext()
   const { isCopying, traderCopying } = useTraderCopying(address, protocol)
   const explorerUrl = PROTOCOL_PROVIDER[protocol]?.explorerUrl
-  const shareStats = traderStats?.find((data) => data && data.type === (timeOption.id as unknown as TimeFrameEnum))
+  // const shareStats = traderStats?.find((data) => data && data.type === (timeOption.id as unknown as TimeFrameEnum))
+  const shareStats = traderStats?.find((data) => data && data.type === TimeFrameEnum.ALL_TIME)
   const copyingWallets = copyWallets?.filter((wallet) => traderCopying?.[address]?.[protocol]?.includes(wallet.id))
 
   return (
@@ -108,7 +108,8 @@ const TraderInfo = ({
             <ShareProfile
               address={address}
               protocol={protocol}
-              type={timeOption.id as unknown as TimeFrameEnum}
+              // type={timeOption.id as unknown as TimeFrameEnum}
+              type={TimeFrameEnum.ALL_TIME}
               stats={shareStats}
               iconSize={16}
             />
