@@ -4,11 +4,15 @@ import { resolve } from 'path'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { getCopierRanking } from './copierRanking.controller.js'
 import { getEventDetails } from './eventDetails.controller.js'
 import { getEvents } from './events.controller.js'
 import { getFeeRebate } from './feeRebate.controller.js'
 import { getLeaderboard } from './leaderboard.controller.js'
+import { getOpenInterestMarket } from './oiMarket.controller.js'
+import { getOpenInterestPositions } from './oiPositions.controller.js'
 import { getPositionDetails } from './positionDetail.controller.js'
+import { getReferralProgram } from './referralProgram.controller.js'
 import { getBacktestMultiple } from './sharedBacktestMultiple.controller.js'
 import { getBacktestSingle } from './sharedBacktestSingle.controller.js'
 import { getSharedPositionDetails } from './sharedPositionDetail.controller.js'
@@ -16,8 +20,8 @@ import { getStats } from './stats.controller.js'
 import { getSubscription } from './subscription.controller.js'
 import { getTopOpenings } from './topOpening.controller.js'
 import { getTraderDetail } from './traderDetail.controller.js'
+import { getDailyTrades } from './dailyTrades.controller.js'
 import { renderHTML } from './utils.js'
-import { getReferralProgram } from './referralProgram.controller.js'
 
 const __filename = fileURLToPath(import.meta.url)
 
@@ -42,11 +46,15 @@ app.get('/:protocol/trader/:address', getTraderDetail)
 app.get('/trader/:address/:protocol', getTraderDetail)
 app.get('/:protocol/position/share/:sharedId', getSharedPositionDetails)
 app.get('/:protocol/position/:id', getPositionDetails)
+app.get('/open-interest/positions', getOpenInterestPositions)
+app.get('/open-interest/market', getOpenInterestMarket)
 app.get('/:protocol/top-openings', getTopOpenings)
 app.get('/subscription', getSubscription)
 app.get('/stats', getStats)
 app.get('/referral', getReferralProgram)
+app.get('/daily-trades', getDailyTrades)
 app.get('/:protocol/leaderboard', getLeaderboard)
+app.get('/copier-ranking', getCopierRanking)
 
 app.get('*', (req, res) => {
   renderHTML(req, res)

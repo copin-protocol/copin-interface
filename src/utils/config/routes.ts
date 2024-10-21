@@ -151,6 +151,15 @@ const ROUTES = {
   REFERRAL_MANAGEMENT: {
     path: '/referral',
   },
+  DAILY_TRADES: {
+    path: '/daily-trades',
+  },
+  DAILY_TRADES_ORDERS: {
+    path: '/daily-trades/orders',
+  },
+  DAILY_TRADES_POSITIONS: {
+    path: '/daily-trades/positions',
+  },
 }
 
 export default ROUTES

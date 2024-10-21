@@ -8,6 +8,7 @@ import {
   renderCloseTime,
   renderCloseType,
   renderCopyTitle,
+  renderCopyWallet,
   renderEntry,
   renderLeverage,
   renderOpenTime,
@@ -54,6 +55,13 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     key: 'copyTradeTitle',
     style: { minWidth: '130px', width: 130 },
     render: renderCopyTitle,
+  },
+  {
+    title: 'Copy Wallet',
+    dataIndex: 'copyTradeId',
+    key: 'copyTradeId',
+    style: { minWidth: '150px', width: 150 },
+    render: renderCopyWallet,
   },
   {
     title: 'Source',

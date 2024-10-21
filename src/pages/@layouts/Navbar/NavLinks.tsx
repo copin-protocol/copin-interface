@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { NavLink as Link, NavLinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
+import useInternalRole from 'hooks/features/useInternalRole'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
@@ -38,6 +39,7 @@ export function DesktopEventNavLinks({ hasEvents }: { hasEvents?: boolean }) {
   )
 }
 export function MobileEventNavLinks({ onClose, hasEvents }: { onClose?: () => void; hasEvents?: boolean }) {
+  if (!hasEvents) return null
   return (
     <MobileWrapper>
       <EventNavLinks onClose={onClose} hasEvents={hasEvents} />
@@ -114,6 +116,37 @@ function EventNavLinks({ onClose, hasEvents }: { onClose?: () => void; hasEvents
   )
 }
 
+//============= Delete when official release =========
+function DailyTradesNavLinks({ onClose }: { onClose?: () => void }) {
+  const onClickNavItem = () => {
+    onClose?.()
+  }
+  return (
+    <NavLink to={ROUTES.DAILY_TRADES.path} onClick={onClickNavItem} matchpath={ROUTES.DAILY_TRADES.path}>
+      <Trans>Daily Trades</Trans>
+    </NavLink>
+  )
+}
+export function DesktopDailyTradesNavLinks() {
+  const isInternal = useInternalRole()
+  if (!isInternal) return null
+  return (
+    <DesktopWrapper>
+      <DailyTradesNavLinks />
+    </DesktopWrapper>
+  )
+}
+export function MobileDailyTradesNavLinks({ onClose }: { onClose?: () => void }) {
+  const isInternal = useInternalRole()
+  if (!isInternal) return null
+  return (
+    <MobileWrapper>
+      <DailyTradesNavLinks onClose={onClose} />
+    </MobileWrapper>
+  )
+}
+//=======================================================
+
 const baseNavConfigs = [
   {
     routeFactory: (configs: { protocol: ProtocolEnum; params?: any }) =>
@@ -142,6 +175,11 @@ const baseNavConfigs = [
     matchpath: ROUTES.REFERRAL_MANAGEMENT.path,
     label: <Trans>Referral</Trans>,
   },
+  // {
+  //   routeFactory: () => ROUTES.DAILY_TRADES.path,
+  //   matchpath: ROUTES.DAILY_TRADES.path,
+  //   label: <Trans>Daily Trades</Trans>,
+  // },
 ]
 
 function NavLink(props: NavLinkProps & { matchpath?: string }) {

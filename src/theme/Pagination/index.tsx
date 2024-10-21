@@ -13,6 +13,7 @@ import { DOTS, usePagination } from 'theme/Pagination/usePagination'
 import { Box, Flex, Type } from 'theme/base'
 import { BoxProps } from 'theme/types'
 import { DEFAULT_LIMIT_VALUES } from 'utils/config/constants'
+import { formatNumber } from 'utils/helpers/format'
 
 export type PaginationProps = {
   currentPage: number
@@ -228,7 +229,7 @@ export function PaginationWithLimit({
         >
           <Type.Caption>{currentLimit}</Type.Caption>
         </Dropdown>
-        <Type.Caption>of {total} records</Type.Caption>
+        <Type.Caption>of {formatNumber(total, 0, 0)} records</Type.Caption>
       </Flex>
       <Box
         display={['none', 'none', 'block']}

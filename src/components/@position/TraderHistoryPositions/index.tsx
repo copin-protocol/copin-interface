@@ -6,7 +6,7 @@ import {
   ClockCounterClockwise,
 } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import { ApiMeta } from 'apis/api'
@@ -129,6 +129,18 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
       action,
     })
   }
+
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'F5') {
+        e.preventDefault()
+        window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
+        window.location.reload()
+      }
+    }
+    window.addEventListener('keydown', handleKeydown)
+    return () => window.removeEventListener('keydown', handleKeydown)
+  }, [history])
 
   return (
     <Box display={['block', 'block', 'block', 'flex']} flexDirection="column" height={['auto', 'auto', 'auto', '100%']}>

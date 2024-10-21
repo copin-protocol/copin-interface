@@ -14,6 +14,7 @@ import {
   renderCloseTime,
   renderCloseType,
   renderCopyTitle,
+  renderCopyWallet,
   renderEntry,
   renderOpenTime,
   renderPnL,
@@ -76,6 +77,10 @@ export function ListForm({
               <ListHistoryRow
                 label={<Trans>Trader</Trans>}
                 value={renderTrader(positionData.copyAccount, positionData.protocol)}
+              />
+              <ListHistoryRow
+                label={<Trans>Copy Wallet</Trans>}
+                value={renderCopyWallet(positionData, undefined, externalSource)}
               />
               <ListHistoryRow
                 label={<Trans>Source Position</Trans>}

@@ -190,7 +190,7 @@ const CHAINS: { [key: number | string]: Chain } = {
     label: 'Arbitrum',
     icon: 'ARB',
     token: NATIVE_CURRENCIES.ETH.symbol,
-    rpcUrl: 'https://arbitrum-one.publicnode.com',
+    rpcUrl: 'https://arbitrum.copin.io',
     blockExplorerUrl: 'https://arbiscan.io',
     secondaryTokens: SECONDARY_TOKENS[ARBITRUM_MAINNET],
   },

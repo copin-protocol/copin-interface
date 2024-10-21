@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-08-19 17:23+0700\n"
+"POT-Creation-Date: 2024-10-18 14:22+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -121,6 +121,15 @@ msgstr "A 10% loyalty fee applies when trading the NFT."
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
 msgid "A message with a verification code has been sent to your email. Enter the code to continue."
 msgstr "A message with a verification code has been sent to your email. Enter the code to continue."
+
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+#: src/pages/DailyTrades/Orders/config.tsx
+msgid "ACCOUNT"
+msgstr "ACCOUNT"
+
+#: src/components/@dailyTrades/OrderActionFilterTitle.tsx
+msgid "ACTION"
+msgstr "ACTION"
 
 #: src/pages/MyProfile/index.tsx
 msgid "ACTIVITIES"
@@ -484,6 +493,18 @@ msgstr "CEX Depth"
 msgid "CEX account connection"
 msgstr "CEX account connection"
 
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+msgid "CLOSE TIME"
+msgstr "CLOSE TIME"
+
+#: src/pages/DailyTrades/Orders/config.tsx
+msgid "COLLATERAL"
+msgstr "COLLATERAL"
+
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+msgid "COLLATERAL ($)"
+msgstr "COLLATERAL ($)"
+
 #: src/pages/FeeRebate/Layout.tsx
 msgid "COPIN FEE REBATE"
 msgstr "COPIN FEE REBATE"
@@ -560,7 +581,6 @@ msgid "Clone copy trade has been succeeded"
 msgstr "Clone copy trade has been succeeded"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
-#: src/components/@position/TraderPositionDetails/ListOrderTable.tsx
 #: src/components/@position/configs/order.tsx
 #: src/utils/config/translations.tsx
 msgid "Close"
@@ -728,6 +748,10 @@ msgstr "Copy Trader"
 msgid "Copy Volume"
 msgstr "Copy Volume"
 
+#: src/components/@position/CopyPositionsListView/index.tsx
+msgid "Copy Wallet"
+msgstr "Copy Wallet"
+
 #: src/components/@wallet/WalletDetailsCard/OnchainPositionsDrawer.tsx
 #: src/components/@wallet/WalletDetailsCard/WalletHistoryDrawer.tsx
 msgid "Copy Wallet History"
@@ -827,9 +851,21 @@ msgstr "Custom"
 msgid "Custom referral code successful!"
 msgstr "Custom referral code successful!"
 
+#: src/pages/DailyTrades/index.tsx
+msgid "DAILY ORDERS"
+msgstr "DAILY ORDERS"
+
+#: src/pages/DailyTrades/index.tsx
+msgid "DAILY POSITIONS"
+msgstr "DAILY POSITIONS"
+
 #: src/pages/ReferralManagement/ReferralHistory.tsx
 msgid "DCP Volume"
 msgstr "DCP Volume"
+
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+msgid "DURATION"
+msgstr "DURATION"
 
 #: src/pages/Stats/index.tsx
 msgid "Daily Active Users (DAU)"
@@ -851,6 +887,10 @@ msgstr "Daily Orders"
 msgid "Daily Profit vs Loss"
 msgstr "Daily Profit vs Loss"
 
+#: src/pages/@layouts/Navbar/NavLinks.tsx
+msgid "Daily Trades"
+msgstr "Daily Trades"
+
 #: src/pages/Stats/index.tsx
 msgid "Daily Unique Traders"
 msgstr "Daily Unique Traders"
@@ -859,11 +899,18 @@ msgstr "Daily Unique Traders"
 msgid "Daily Volume"
 msgstr "Daily Volume"
 
+#: src/pages/DailyTrades/index.tsx
+msgid "Daily orders"
+msgstr "Daily orders"
+
+#: src/pages/DailyTrades/index.tsx
+msgid "Daily positions"
+msgstr "Daily positions"
+
 #: src/pages/Subscription/Plans.tsx
 msgid "Data range"
 msgstr "Data range"
 
-#: src/components/@position/TraderPositionDetails/ListOrderTable.tsx
 #: src/components/@position/configs/order.tsx
 #: src/utils/config/translations.tsx
 msgid "Decrease"
@@ -1060,6 +1107,10 @@ msgstr "Extended"
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Extending"
 msgstr "Extending"
+
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+msgid "FEE ($)"
+msgstr "FEE ($)"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "FREE"
@@ -1284,7 +1335,6 @@ msgstr "In"
 msgid "Includes deleted data"
 msgstr "Includes deleted data"
 
-#: src/components/@position/TraderPositionDetails/ListOrderTable.tsx
 #: src/components/@position/configs/order.tsx
 #: src/utils/config/translations.tsx
 msgid "Increase"
@@ -1348,6 +1398,11 @@ msgstr "L/S Rate"
 #: src/pages/Leaderboard/index.tsx
 msgid "LEADERBOARD"
 msgstr "LEADERBOARD"
+
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+#: src/pages/DailyTrades/Orders/config.tsx
+msgid "LEVERAGE"
+msgstr "LEVERAGE"
 
 #: src/utils/config/translations.tsx
 msgid "Label"
@@ -1455,7 +1510,6 @@ msgstr "Link with your OKX account through API key. All your assets and your pos
 msgid "Liquidated"
 msgstr "Liquidated"
 
-#: src/components/@position/TraderPositionDetails/ListOrderTable.tsx
 #: src/components/@position/configs/order.tsx
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
@@ -1515,6 +1569,15 @@ msgstr "Low Overtrading"
 msgid "MANAGEMENT"
 msgstr "MANAGEMENT"
 
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+#: src/pages/TopOpenings/RouteWrapper.tsx
+msgid "MARKET"
+msgstr "MARKET"
+
+#: src/pages/DailyTrades/Orders/config.tsx
+msgid "MARKET PRICE ($)"
+msgstr "MARKET PRICE ($)"
+
 #: src/utils/config/options.tsx
 msgid "MDD"
 msgstr "MDD"
@@ -1562,6 +1625,10 @@ msgstr "Margin Transferred"
 #: src/components/@charts/ChartTraderPositionProfit/OrderTooltip.tsx
 msgid "Market Price:"
 msgstr "Market Price:"
+
+#: src/pages/TopOpenings/OpenInterestByMarkets/ListMarkets.tsx
+msgid "Market data was not found"
+msgstr "Market data was not found"
 
 #: src/pages/Explorer/ConditionFilter/FilterMarket.tsx
 msgid "Market:"
@@ -1681,7 +1748,6 @@ msgstr "Minting"
 msgid "Minting NFT"
 msgstr "Minting NFT"
 
-#: src/components/@position/TraderPositionDetails/ListOrderTable.tsx
 #: src/components/@position/configs/order.tsx
 msgid "Modified Margin"
 msgstr "Modified Margin"
@@ -1703,6 +1769,7 @@ msgstr "More."
 msgid "Multiple Copy"
 msgstr "Multiple Copy"
 
+#: src/pages/DailyTrades/index.tsx
 #: src/pages/MyProfile/index.tsx
 msgid "My Profile"
 msgstr "My Profile"
@@ -1801,13 +1868,25 @@ msgstr "No Transaction Found"
 msgid "No Transactions Found"
 msgstr "No Transactions Found"
 
+#: src/pages/MyProfile/SelectWalletsDropdown.tsx
+msgid "No Wallet Found"
+msgstr "No Wallet Found"
+
 #: src/components/@position/CopyPositionsContainer/index.tsx
 msgid "No link to the trader’s original position was found."
 msgstr "No link to the trader’s original position was found."
 
+#: src/components/@dailyTrades/OrderListView.tsx
+msgid "No order found"
+msgstr "No order found"
+
+#: src/components/@dailyTrades/PositionListView.tsx
+msgid "No position found"
+msgstr "No position found"
+
 #: src/components/@position/TraderPositionsListView/index.tsx
-msgid "No opening positions"
-msgstr "No opening positions"
+msgid "No position was found"
+msgstr "No position was found"
 
 #: src/components/@backtest/BacktestSummaryAndPositions/index.tsx
 msgid "No trade history from {0} to {1}"
@@ -1871,6 +1950,10 @@ msgstr "OKX Wallet"
 msgid "OPEN INTEREST"
 msgstr "OPEN INTEREST"
 
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+msgid "OPEN TIME"
+msgstr "OPEN TIME"
+
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 msgid "OR LOGIN WITH"
 msgstr "OR LOGIN WITH"
@@ -1890,7 +1973,6 @@ msgstr "Only"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/PositionStatus/index.tsx
-#: src/components/@position/TraderPositionDetails/ListOrderTable.tsx
 #: src/components/@position/configs/order.tsx
 #: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
@@ -1947,9 +2029,21 @@ msgstr "Overview"
 msgid "Overwrite"
 msgstr "Overwrite"
 
+#: src/pages/DailyTrades/Orders/config.tsx
+msgid "PAID FEE ($)"
+msgstr "PAID FEE ($)"
+
+#: src/components/@dailyTrades/PairFilterTitle.tsx
+msgid "PAIRS"
+msgstr "PAIRS"
+
 #: src/components/@trader/TraderLeaderboardTableView/index.tsx
 msgid "PNL"
 msgstr "PNL"
+
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+msgid "PNL ($)"
+msgstr "PNL ($)"
 
 #: src/pages/TraderDetails/TraderStats.tsx
 msgid "PNL Ratio"
@@ -2117,6 +2211,7 @@ msgid "Quickly Settled"
 msgstr "Quickly Settled"
 
 #: src/components/@backtest/BacktestSimpleResult/index.tsx
+#: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "ROI"
 msgstr "ROI"
 
@@ -2235,9 +2330,18 @@ msgstr "Runtime (All)"
 msgid "S"
 msgstr "S"
 
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+#: src/pages/DailyTrades/Orders/config.tsx
+msgid "SIZE ($)"
+msgstr "SIZE ($)"
+
 #: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
 msgid "SL/TP"
 msgstr "SL/TP"
+
+#: src/components/@dailyTrades/PositionStatusFilterTitle.tsx
+msgid "STATUS"
+msgstr "STATUS"
 
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Save {0}%"
@@ -2549,6 +2653,18 @@ msgstr "Synthetix v3"
 msgid "System Status"
 msgstr "System Status"
 
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+msgid "TIME"
+msgstr "TIME"
+
+#: src/pages/DailyTrades/Orders/config.tsx
+msgid "TIMESTAMP"
+msgstr "TIMESTAMP"
+
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+msgid "TOTAL ORDER"
+msgstr "TOTAL ORDER"
+
 #: src/pages/Explorer/index.tsx
 msgid "TRADER EXPLORER"
 msgstr "TRADER EXPLORER"
@@ -2723,6 +2839,10 @@ msgstr "To start, you need to create a smart wallet."
 msgid "To unlock premium and VIP features, mint a Copin NFT."
 msgstr "To unlock premium and VIP features, mint a Copin NFT."
 
+#: src/components/@dailyTrades/PairFilterTitle.tsx
+msgid "Toggle to select specific pairs"
+msgstr "Toggle to select specific pairs"
+
 #: src/pages/Home/Traders.tsx
 msgid "Top"
 msgstr "Top"
@@ -2859,6 +2979,8 @@ msgstr "Traders explorer"
 msgid "Trades"
 msgstr "Trades"
 
+#: src/components/@dailyTrades/PairFilterTitle.tsx
+#: src/components/@dailyTrades/PairFilterTitle.tsx
 #: src/components/@ui/MarketFilter/MarketSelection.tsx
 #: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
 #: src/utils/config/translations.tsx
@@ -3387,6 +3509,10 @@ msgstr "slippage"
 #: src/hooks/features/useReferralActions.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/DailyTrades/Orders/index.tsx
+#: src/pages/DailyTrades/Orders/index.tsx
+#: src/pages/DailyTrades/Positions/index.tsx
+#: src/pages/DailyTrades/Positions/index.tsx
 #: src/pages/Home/Traders.tsx
 #: src/pages/Home/Traders.tsx
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
@@ -3423,13 +3549,10 @@ msgid "{label} is better than {value} traders"
 msgstr "{label} is better than {value} traders"
 
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
-#: src/pages/TopOpenings/OpenInterestByMarkets/ListMarkets.tsx
-#: src/pages/TopOpenings/OpenInterestByMarkets/index.tsx
 msgid "{symbol} market data was not found"
 msgstr "{symbol} market data was not found"
 
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
-#: src/pages/TopOpenings/OpenInterestByMarkets/index.tsx
 msgid "{symbol} market does not exist on {0}"
 msgstr "{symbol} market does not exist on {0}"
 

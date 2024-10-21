@@ -43,6 +43,7 @@ const RedirectToCopierRanking = lazy(() => import('./Leaderboard/CopierLeaderboa
 const OldExplorer = lazy(() => import('./Explorer/OldExplorer'))
 const OldTopOpeningInterest = lazy(() => import('./TopOpenings/OldTopOpeningInterest'))
 const ReferralManagement = lazy(() => import('./ReferralManagement'))
+const DailyTrades = lazy(() => import('./DailyTrades'))
 
 function App() {
   useEffect(() => {
@@ -90,6 +91,7 @@ function App() {
             <Route path={ROUTES.COPIER_LEADERBOARD.path} component={RedirectToCopierRanking}></Route>
             <Route path={ROUTES.COPIER_RANKING.path} component={CopierRanking}></Route>
             <Route path={ROUTES.REFERRAL_MANAGEMENT.path} component={ReferralManagement}></Route>
+            <Route path={ROUTES.DAILY_TRADES.path} component={DailyTrades}></Route>
 
             {/* OLD ROUTE */}
             <Route path={ROUTES.TRADERS_EXPLORER.path} component={OldExplorer}></Route>

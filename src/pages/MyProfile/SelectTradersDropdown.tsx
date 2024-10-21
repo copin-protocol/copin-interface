@@ -1,14 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
-import { Fragment } from 'react'
+import React, { Fragment, useMemo, useState } from 'react'
 import { GridProps } from 'styled-system'
 
 import Divider from 'components/@ui/Divider'
+import InputSearchText from 'components/@ui/InputSearchText'
 import TraderAddress from 'components/@ui/TraderAddress'
+import useDebounce from 'hooks/helpers/useDebounce'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
+import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Grid, Type } from 'theme/base'
+import { SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 
 export type TradersByProtocolValuesData = { address: string; status: 'deleted' | 'copying' }
@@ -35,6 +39,28 @@ export default function SelectTradersDropdown({
   placement?: 'bottom' | 'top' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
   buttonSx?: any
 }) {
+  const [searchText, setSearchText] = useState<string>('')
+  const trimmedSearchText = searchText.trim()
+  const debounceSearchText = useDebounce<string>(trimmedSearchText, SEARCH_DEBOUNCE_TIME)
+
+  const options = useMemo(() => {
+    return allTraders?.filter((option) => {
+      return option?.toLowerCase()?.includes(debounceSearchText.toLowerCase())
+    })
+  }, [allTraders, debounceSearchText])
+
+  const activeTraderOptions = useMemo(() => {
+    return activeTraderAddresses?.filter((option) => {
+      return option?.toLowerCase()?.includes(debounceSearchText.toLowerCase())
+    })
+  }, [activeTraderAddresses, debounceSearchText])
+
+  const deletedTraderOptions = useMemo(() => {
+    return deletedTraderAddresses?.filter((option) => {
+      return option?.toLowerCase()?.includes(debounceSearchText.toLowerCase())
+    })
+  }, [deletedTraderAddresses, debounceSearchText])
+
   const isSelectedAll = !!allTraders?.length && allTraders.every((address) => selectedTraders.includes(address))
 
   return (
@@ -66,15 +92,17 @@ export default function SelectTradersDropdown({
               <Trans>Select all</Trans>
             </Type.CaptionBold>
           </Flex>
+          <Divider my={2} />
+          <InputSearchText placeholder="Search traders..." searchText={searchText} setSearchText={setSearchText} />
           <Divider mt={2} />
           <ListTraderCheckboxes
-            addresses={activeTraderAddresses}
+            addresses={activeTraderOptions}
             selectedTraders={selectedTraders}
             handleToggleTrader={handleToggleTrader}
           />
           <Box mb={2} />
           <ListTraderCheckboxes
-            addresses={deletedTraderAddresses}
+            addresses={deletedTraderOptions}
             selectedTraders={selectedTraders}
             handleToggleTrader={handleToggleTrader}
             isDeleted
@@ -122,19 +150,27 @@ function ListTraderCheckboxes({
         const key = address
         if (key == null) return <></>
         const isChecked = selectedTraders.includes(key)
+        const tooltipId = `tt_${key}`
         return (
           <Box py={2} key={key.toString()}>
             <ControlledCheckbox
               checked={isChecked}
               label={
-                <TraderAddress
-                  address={address}
-                  options={{
-                    isLink: false,
-                    wrapperSx: { gap: [1, 2] },
-                    textSx: { minWidth: '71px', color: isDeleted ? 'neutral3' : 'neutral1' },
-                  }}
-                />
+                <>
+                  <Box data-tip="React-tooltip" data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
+                    <TraderAddress
+                      address={address}
+                      options={{
+                        isLink: false,
+                        wrapperSx: { gap: [1, 2] },
+                        textSx: { minWidth: '71px', color: isDeleted ? 'neutral3' : 'neutral1' },
+                      }}
+                    />
+                  </Box>
+                  <Tooltip id={tooltipId} place="top" type="dark" effect="solid">
+                    <Type.Caption>{address}</Type.Caption>
+                  </Tooltip>
+                </>
               }
               size={16}
               onChange={() => handleToggleTrader(key)}

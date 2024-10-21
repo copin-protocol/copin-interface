@@ -182,6 +182,7 @@ export interface OrderData {
   blockNumber: number
   blockTime: string
   createdAt: string
+  pair: string
 }
 
 export interface CheckAvailableResultData {

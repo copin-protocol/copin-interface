@@ -1,6 +1,4 @@
-import { Trans } from '@lingui/macro'
-import { ArrowFatDown, ArrowFatUp, Circle, Square } from '@phosphor-icons/react'
-import { ReactNode, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { DeltaText } from 'components/@ui/DecoratedText/DeltaText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
@@ -10,49 +8,17 @@ import ValueOrToken from 'components/@ui/ValueOrToken'
 import { OrderData } from 'entities/trader.d'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT, NO_TX_HASH_PROTOCOLS } from 'utils/config/constants'
 import { MarginModeEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { formatLeverage } from 'utils/helpers/format'
 
+import { ORDER_TYPES } from '../configs/order'
+
 type ExternalSource = {
   totalOrders: number
   highlightTxHash?: string
-}
-
-type ObjectTypes = {
-  [key: string]: {
-    text: ReactNode
-    icon: ReactNode
-  }
-}
-
-export const ORDER_TYPES: ObjectTypes = {
-  [OrderTypeEnum.OPEN]: {
-    text: <Trans>Open</Trans>,
-    icon: <IconBox icon={<ArrowFatUp weight={'fill'} />} />,
-  },
-  [OrderTypeEnum.CLOSE]: {
-    text: <Trans>Close</Trans>,
-    icon: <IconBox icon={<Square weight={'fill'} />} />,
-  },
-  [OrderTypeEnum.INCREASE]: {
-    text: <Trans>Increase</Trans>,
-    icon: <IconBox icon={<ArrowFatUp weight={'fill'} />} />,
-  },
-  [OrderTypeEnum.DECREASE]: {
-    text: <Trans>Decrease</Trans>,
-    icon: <IconBox icon={<ArrowFatDown weight={'fill'} />} />,
-  },
-  [OrderTypeEnum.LIQUIDATE]: {
-    text: <Trans>Liquidation</Trans>,
-    icon: <IconBox color={'red2'} icon={<Square weight={'fill'} />} />,
-  },
-  [OrderTypeEnum.MARGIN_TRANSFERRED]: {
-    text: <Trans>Modified Margin</Trans>,
-    icon: <IconBox color={'orange1'} icon={<Circle weight={'fill'} />} />,
-  },
 }
 
 export default function ListOrderTable({
@@ -81,22 +47,7 @@ export default function ListOrderTable({
         dataIndex: 'blockTime',
         key: 'blockTime',
         style: { minWidth: '182px' },
-        render: (item) => (
-          <Flex alignItems="center" sx={{ gap: 2 }}>
-            <Type.Caption color="neutral1">
-              <LocalTimeText date={item.blockTime} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
-            </Type.Caption>
-
-            {/* TODO: Check when add new protocol like Hyperliquid */}
-            {!NO_TX_HASH_PROTOCOLS.includes(protocol) && (
-              <ExplorerLogo
-                protocol={protocol}
-                explorerUrl={`${PROTOCOL_PROVIDER[protocol]?.explorerUrl}/tx/${item.txHash}`}
-                size={18}
-              />
-            )}
-          </Flex>
-        ),
+        render: (item) => renderOrderBlockTime(item),
       },
       {
         title: 'Action',
@@ -125,101 +76,35 @@ export default function ListOrderTable({
         dataIndex: 'leverage',
         key: 'leverage',
         style: { minWidth: '70px', textAlign: 'right' },
-        render: (item) => (
-          <Type.Caption color="neutral1" textAlign="right">
-            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED ||
-            (item.marginMode === MarginModeEnum.ISOLATED && (item.leverage == null || item.leverage < 0))
-              ? '--'
-              : formatLeverage(item.marginMode, item.leverage)}
-          </Type.Caption>
-        ),
+        render: renderOrderLeverage,
       },
       {
         title: 'Collateral Delta',
         dataIndex: 'collateralDeltaNumber',
         key: 'collateralDeltaNumber',
         style: { minWidth: '105px', textAlign: 'right' },
-        render: (item) => (
-          <Flex justifyContent="flex-end" alignItems="center">
-            <ValueOrToken
-              protocol={item.protocol}
-              indexToken={item.collateralToken}
-              value={item.collateralDeltaNumber}
-              valueInToken={item.collateralDeltaInTokenNumber}
-              component={
-                <DeltaText
-                  color="neutral1"
-                  type={item.type}
-                  delta={item.collateralToken ? item.collateralDeltaInTokenNumber : item.collateralDeltaNumber}
-                  maxDigit={item.collateralToken ? 2 : undefined}
-                  minDigit={item.collateralToken ? 2 : undefined}
-                />
-              }
-            />
-          </Flex>
-        ),
+        render: (item) => renderOrderCollateral(item),
       },
       {
         title: 'Size Delta',
         dataIndex: 'sizeDeltaNumber',
         key: 'sizeDeltaNumber',
         style: { minWidth: '100px', textAlign: 'right' },
-        render: (item) =>
-          item.type === OrderTypeEnum.MARGIN_TRANSFERRED ? (
-            <Type.Caption color="neutral1">--</Type.Caption>
-          ) : (
-            <Flex sx={{ width: '100%', alignItems: 'center', justifyContent: 'end' }}>
-              <ValueOrToken
-                protocol={item.protocol}
-                indexToken={item.collateralToken}
-                value={item.sizeDeltaNumber}
-                valueInToken={item.sizeDeltaInTokenNumber}
-                component={
-                  <DeltaText
-                    color="neutral1"
-                    type={item.type}
-                    delta={Math.abs(item.sizeDeltaNumber ?? item.sizeDeltaInTokenNumber)}
-                  />
-                }
-              />
-            </Flex>
-          ),
+        render: (item) => renderOrderSize(item),
       },
       {
         title: 'Market Price',
         dataIndex: 'priceNumber',
         key: 'priceNumber',
         style: { minWidth: '100px', textAlign: 'right' },
-        render: (item) => (
-          <Type.Caption color="neutral1" width="100%" textAlign="right">
-            {item.type === OrderTypeEnum.MARGIN_TRANSFERRED
-              ? '--'
-              : PriceTokenText({
-                  value: item.priceNumber,
-                  maxDigit: 2,
-                  minDigit: 2,
-                })}
-          </Type.Caption>
-        ),
+        render: renderOrderPrice,
       },
       {
         title: isFeeWithFunding ? 'Fee & Funding' : 'Paid Fee',
         dataIndex: 'feeNumber',
         key: 'feeNumber',
         style: { minWidth: isFeeWithFunding ? '120px' : '85px', textAlign: 'right', pr: 3 },
-        render: (item) => (
-          <Type.Caption color="neutral1" width="100%" textAlign="right" sx={{ display: 'flex', justifyContent: 'end' }}>
-            <ValueOrToken
-              protocol={isFeeWithFunding ? undefined : item.protocol}
-              indexToken={isFeeWithFunding ? undefined : item.collateralToken}
-              value={isFeeWithFunding ? (item.feeNumber ?? 0) * -1 : item.feeNumber}
-              valueInToken={isFeeWithFunding ? undefined : item.feeInTokenNumber}
-              maxDigit={2}
-              minDigit={2}
-              hasPrefix={false}
-            />
-          </Type.Caption>
-        ),
+        render: renderOrderFee,
       },
     ]
     return result
@@ -252,5 +137,99 @@ export default function ListOrderTable({
         }
       />
     </Box>
+  )
+}
+
+export const renderOrderBlockTime = (item: OrderData, format = DAYJS_FULL_DATE_FORMAT) => (
+  <Flex alignItems="center" sx={{ gap: 2 }}>
+    <Type.Caption color="neutral1">
+      <LocalTimeText date={item.blockTime} format={format} hasTooltip={false} />
+    </Type.Caption>
+    {/* TODO: Check when add new protocol like Hyperliquid */}
+    {!NO_TX_HASH_PROTOCOLS.includes(item.protocol) && (
+      <ExplorerLogo
+        protocol={item.protocol}
+        explorerUrl={`${PROTOCOL_PROVIDER[item.protocol]?.explorerUrl}/tx/${item.txHash}`}
+        size={18}
+      />
+    )}
+  </Flex>
+)
+
+export const renderOrderLeverage = (item: OrderData) => (
+  <Type.Caption color="neutral1" textAlign="right">
+    {item.type === OrderTypeEnum.MARGIN_TRANSFERRED ||
+    (item.marginMode === MarginModeEnum.ISOLATED && (item.leverage == null || item.leverage < 0))
+      ? '--'
+      : formatLeverage(item.marginMode, item.leverage)}
+  </Type.Caption>
+)
+export const renderOrderCollateral = (item: OrderData, defaultToken?: string) => (
+  <Flex justifyContent="flex-end" alignItems="center">
+    <ValueOrToken
+      protocol={item.protocol}
+      indexToken={item.collateralToken}
+      value={item.collateralDeltaNumber}
+      valueInToken={item.collateralDeltaInTokenNumber}
+      defaultToken={defaultToken}
+      component={
+        <DeltaText
+          color="neutral1"
+          type={item.type}
+          delta={item.collateralToken ? item.collateralDeltaInTokenNumber : item.collateralDeltaNumber}
+          maxDigit={item.collateralToken ? 2 : undefined}
+          minDigit={item.collateralToken ? 2 : undefined}
+        />
+      }
+    />
+  </Flex>
+)
+export const renderOrderSize = (item: OrderData, defaultToken?: string) =>
+  item.type === OrderTypeEnum.MARGIN_TRANSFERRED ? (
+    <Type.Caption color="neutral1">--</Type.Caption>
+  ) : (
+    <Flex sx={{ width: '100%', alignItems: 'center', justifyContent: 'end' }}>
+      <ValueOrToken
+        protocol={item.protocol}
+        indexToken={item.collateralToken}
+        value={item.sizeDeltaNumber}
+        valueInToken={item.sizeDeltaInTokenNumber}
+        defaultToken={defaultToken}
+        component={
+          <DeltaText
+            color="neutral1"
+            type={item.type}
+            delta={Math.abs(item.sizeDeltaNumber ?? item.sizeDeltaInTokenNumber)}
+          />
+        }
+      />
+    </Flex>
+  )
+
+export const renderOrderPrice = (item: OrderData) => (
+  <Type.Caption color="neutral1" width="100%" textAlign="right">
+    {item.type === OrderTypeEnum.MARGIN_TRANSFERRED ? (
+      <>--</>
+    ) : (
+      <PriceTokenText value={item.priceNumber} maxDigit={2} minDigit={2} />
+    )}
+  </Type.Caption>
+)
+
+export const renderOrderFee = (item: OrderData) => {
+  const isFeeWithFunding = [ProtocolEnum.HYPERLIQUID].includes(item.protocol)
+
+  return (
+    <Type.Caption color="neutral1" width="100%" textAlign="right" sx={{ display: 'flex', justifyContent: 'end' }}>
+      <ValueOrToken
+        protocol={isFeeWithFunding ? undefined : item.protocol}
+        indexToken={isFeeWithFunding ? undefined : item.collateralToken}
+        value={isFeeWithFunding ? (item.feeNumber ?? 0) * -1 : item.feeNumber}
+        valueInToken={isFeeWithFunding ? undefined : item.feeInTokenNumber}
+        maxDigit={2}
+        minDigit={2}
+        hasPrefix={false}
+      />
+    </Type.Caption>
   )
 }

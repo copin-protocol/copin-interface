@@ -44,6 +44,7 @@ export default function TraderAddress({
       to={isLink && protocol ? generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeType } }) : ''}
       sx={{ gap: 2, ...wrapperSx }}
       alignItems="center"
+      onClick={(e) => e.stopPropagation()}
     >
       <AddressAvatar address={address} size={size} />
       <Type.Caption

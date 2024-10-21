@@ -1,7 +1,10 @@
-import { CopyPositionData } from 'entities/copyTrade'
+import { CopyPositionData, CopyTradeData } from 'entities/copyTrade'
+import { CopyWalletData } from 'entities/copyWallet'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 
 export type ExternalSourceCopyPositions = {
+  copyTrades?: CopyTradeData[]
+  copyWallets?: CopyWalletData[]
   prices?: UsdPrices
   submitting?: boolean
   currentId?: string

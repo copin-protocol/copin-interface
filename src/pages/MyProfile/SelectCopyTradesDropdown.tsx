@@ -1,13 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
+import React, { useMemo, useState } from 'react'
 import { GridProps } from 'styled-system'
 
 import Divider from 'components/@ui/Divider'
+import InputSearchText from 'components/@ui/InputSearchText'
 import { CopyTradeData } from 'entities/copyTrade'
+import useDebounce from 'hooks/helpers/useDebounce'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
+import { SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
 
 export default function SelectCopyTradesDropdown({
   allCopyTrades,
@@ -24,7 +28,16 @@ export default function SelectCopyTradesDropdown({
   menuSx?: SystemStyleObject & GridProps
   placement?: 'bottom' | 'top' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
 }) {
-  if (!allCopyTrades.length) return <></>
+  const [searchText, setSearchText] = useState<string>('')
+  const trimmedSearchText = searchText.trim()
+  const debounceSearchText = useDebounce<string>(trimmedSearchText, SEARCH_DEBOUNCE_TIME)
+
+  const options = useMemo(() => {
+    return allCopyTrades?.filter((option) => {
+      return option?.title?.toLowerCase().includes(debounceSearchText.toLowerCase())
+    })
+  }, [allCopyTrades, debounceSearchText])
+
   const isSelectedAll =
     !!allCopyTrades.length &&
     allCopyTrades.every((copyTrade) => selectedCopyTrades?.map((e) => e.id).includes(copyTrade.id))
@@ -62,6 +75,8 @@ export default function SelectCopyTradesDropdown({
               )
             </Type.CaptionBold>
           </Flex>
+          <Divider my={2} />
+          <InputSearchText placeholder="Search copytrades..." searchText={searchText} setSearchText={setSearchText} />
           <Divider mt={2} />
           <Grid
             sx={{
@@ -70,7 +85,7 @@ export default function SelectCopyTradesDropdown({
               rowGap: 2,
             }}
           >
-            {allCopyTrades.map((item) => {
+            {options.map((item) => {
               const key = item.id
               if (key == null) return <></>
               const isChecked = selectedCopyTrades.findIndex((e) => e.id === item.id) !== -1
