@@ -11,7 +11,12 @@ import useDebounce from 'hooks/helpers/useDebounce'
 import useOnClickOutside from 'hooks/helpers/useOnClickOutside'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { useProtocolStore } from 'hooks/store/useProtocols'
-import { EVM_TX_HASH_REGEX, SEARCH_DEBOUNCE_TIME, SEARCH_DEFAULT_LIMIT } from 'utils/config/constants'
+import {
+  DYDX_TX_HASH_REGEX,
+  EVM_TX_HASH_REGEX,
+  SEARCH_DEBOUNCE_TIME,
+  SEARCH_DEFAULT_LIMIT,
+} from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
@@ -43,7 +48,9 @@ export default function useSearchAllData(args?: {
   const [currentProtocol, setCurrentProtocol] = useState<ProtocolEnum | undefined>()
 
   const isTxHash = useMemo(
-    () => allowSearchPositions && EVM_TX_HASH_REGEX.test(debounceSearchText),
+    () =>
+      allowSearchPositions &&
+      (EVM_TX_HASH_REGEX.test(debounceSearchText) || DYDX_TX_HASH_REGEX.test(debounceSearchText)),
     [allowSearchPositions, debounceSearchText]
   )
 
