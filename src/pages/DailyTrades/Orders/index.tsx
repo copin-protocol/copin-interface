@@ -12,7 +12,8 @@ import { OrderData } from 'entities/trader'
 import { PaginationWithLimit } from 'theme/Pagination'
 import VirtualList from 'theme/VirtualList'
 import { Box, Flex, Type } from 'theme/base'
-import { OrderTypeEnum, SortTypeEnum } from 'utils/config/enums'
+import { MarginModeEnum, OrderTypeEnum, SortTypeEnum } from 'utils/config/enums'
+import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import FilterProtocols from '../FilterProtocols'
@@ -188,7 +189,10 @@ function DailyOrdersComponent() {
       <Box flex="1 0 0" overflow="hidden" sx={{ '.row_wrapper, .row_header_wrapper': { pl: '16px !important' } }}>
         {md ? (
           <VirtualList
-            data={data?.data}
+            data={data?.data?.map((v) => ({
+              ...v,
+              marginMode: PROTOCOLS_CROSS_MARGIN.includes(v.protocol) ? MarginModeEnum.CROSS : MarginModeEnum.ISOLATED, // Todo: need to improve
+            }))}
             columns={orderColumns}
             isLoading={isLoadingOrders}
             dataMeta={data?.meta}

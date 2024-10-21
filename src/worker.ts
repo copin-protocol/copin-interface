@@ -46,6 +46,7 @@ const NORMALIZE_LIST = [
   'KILOEX_OPBNB-82',
   'KILOEX_OPBNB-84',
   'KILOEX_OPBNB-90',
+  'BSX_BASE-5',
 ]
 
 function getPriceData({ priceFeed }: { priceFeed: PriceFeed }) {
