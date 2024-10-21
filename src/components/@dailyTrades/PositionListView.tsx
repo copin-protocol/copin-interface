@@ -13,7 +13,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { TIME_FORMAT } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
-import { compactNumber, formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 type Props = {
@@ -97,7 +97,7 @@ export default function DailyPositionListView({ data, isLoading, scrollDep, onCl
                   <Box as="span" color="neutral3" sx={{ mx: '1ch' }}>
                     |
                   </Box>
-                  {formatNumber(position.leverage, 1, 1)}x
+                  {formatLeverage(position.marginMode, position.leverage)}
                 </Type.Caption>
                 <Flex sx={{ alignItems: 'center', gap: '1ch' }}>
                   <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
