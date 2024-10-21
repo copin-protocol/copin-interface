@@ -665,10 +665,10 @@ export const generateTokenPrice = ({
   const { formattedNumber, integerPart, zeroPart, decimalPart } = formatTokenPrices({
     value,
   })
-  if (zeroPart.length > 3 && Number(decimalPart) > 0) {
-    canvas.fillText(formatNumber(integerPart, 1, 1), x, y)
+  if (value < 1 && zeroPart.length > 3 && Number(decimalPart) > 0) {
+    canvas.fillText(Number(integerPart).toFixed(1), x, y)
     canvas.font = '700 24px Anuphan'
-    canvas.fillText(formatNumber(zeroPart.length, 0), x + 48, y + 16)
+    canvas.fillText(`${zeroPart.length}`, x + 48, y + 16)
     canvas.font = '700 32px Anuphan'
     canvas.fillText(formatNumber(decimalPart, 2), x + 48 + 12, y)
   } else {
