@@ -4,18 +4,55 @@ import styled from 'styled-components/macro'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
+import { CopyWalletData } from 'entities/copyWallet'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import Tag from 'theme/Tag'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
-import { getSymbolFromPair, normalizePriceData } from 'utils/helpers/transform'
+import { getSymbolFromPair, normalizePriceData, parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
+
+export const renderCopyWallet = (data: CopyPositionData, _: number | undefined, externalSource: any) => {
+  let walletName = '--'
+  if (data.copyWalletName) {
+    walletName = data.copyWalletName
+  } else if (data.copyWalletId) {
+    const walletFromContext = externalSource?.copyWallets?.find(
+      (wallet: CopyWalletData) => wallet.id === data.copyWalletId
+    )
+    if (walletFromContext) {
+      walletName = parseWalletName(walletFromContext)
+    }
+  } else if (data.copyTradeId) {
+    const copyTrade = externalSource?.copyTrades?.find((trade: CopyTradeData) => trade.id === data.copyTradeId)
+    if (copyTrade) {
+      const walletFromContext = externalSource?.copyWallets?.find(
+        (wallet: CopyWalletData) => wallet.id === copyTrade.copyWalletId
+      )
+      if (walletFromContext) {
+        walletName = parseWalletName(walletFromContext)
+      }
+    }
+  }
+  return (
+    <Flex sx={{ alignItems: 'center', gap: 2 }}>
+      <Type.Caption
+        color="neutral1"
+        sx={{ maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+      >
+        {walletName}
+      </Type.Caption>
+      <VerticalDivider />
+      {data.exchange && <Image src={parseExchangeImage(data.exchange)} width={20} height={20} />}
+    </Flex>
+  )
+}
 
 export const renderCopyTitle = (data: CopyPositionData) => (
   <Type.Caption color="neutral1" sx={{ maxWidth: '110px', ...overflowEllipsis(), display: 'block' }}>
@@ -173,6 +210,25 @@ export function renderSLTPSetting(item: CopyTradeData, ignoreDisable?: boolean) 
   )
 }
 
+// export const renderWalletName = (item: CopyPositionData, externalSource: any) => {
+//     let walletName = '--'
+//     const walletFromContext = externalSource?.copyWallets?.find((wallet) => wallet.id === item.)
+//     if (walletFromContext) {
+//         walletName = parseWalletName(walletFromContext)
+//     }
+//     return (
+//         <Flex sx={{ alignItems: 'center', gap: 2 }}>
+//             <Type.Caption
+//                 color="neutral1"
+//                 sx={{ maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+//             >
+//                 {walletName}
+//             </Type.Caption>
+//             <VerticalDivider />
+//             <Image src={parseExchangeImage(item.exchange)} width={20} height={20} />
+//         </Flex>
+//     )
+// }
 // export function OrderTxHashes({ data }: { data: CopyPositionData }) {
 //   const [isExpand, setIsExpand] = useState(false)
 //   const tokenTrade = useMemo(() => TOKEN_TRADE_SUPPORT[data.indexToken], [data.indexToken])

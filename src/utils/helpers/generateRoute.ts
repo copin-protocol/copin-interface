@@ -76,10 +76,17 @@ export function createUrlWithParams({ url, params = {} }: { url: string; params?
 }
 
 export function generateOIOverviewRoute(data: { protocol?: string; symbol?: string; params?: Record<string, any> }) {
+  if (data.protocol) {
+    return createUrlWithParams({
+      url: data.symbol
+        ? `/${data.protocol}${ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix}/${data.symbol}`
+        : `/${data.protocol}${ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix}`,
+      params: data.params,
+    })
+  }
+
   return createUrlWithParams({
-    url: data.symbol
-      ? `/${data.protocol}${ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix}/${data.symbol}`
-      : `/${data.protocol}${ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix}`,
+    url: ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix,
     params: data.params,
   })
 }
@@ -95,13 +102,13 @@ export function generateOIPositionsRoute(data: { protocol?: string; symbol?: str
 
   if (data.symbol) {
     return createUrlWithParams({
-      url: `${ROUTES.ALL_OPEN_INTEREST_POSITIONS.path}/${data.symbol}`,
+      url: `${ROUTES.ALL_OPEN_INTEREST_POSITIONS.path_prefix}/${data.symbol}`,
       params: data.params,
     })
   }
 
   return createUrlWithParams({
-    url: ROUTES.ALL_OPEN_INTEREST_POSITIONS.path,
+    url: ROUTES.ALL_OPEN_INTEREST_POSITIONS.path_prefix,
     params: data.params,
   })
 }

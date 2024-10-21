@@ -535,7 +535,6 @@ function TraderItem({
           />
         </Flex>
       </Flex>
-
       <Box mt={3} mb={20} sx={{ height: 60 }}>
         <LineChartTraderPnl
           data={parsePnLStatsData(traderPnlData)}
@@ -546,13 +545,12 @@ function TraderItem({
           height={30}
         />
       </Box>
-
       <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: '1fr 1.3fr 1fr' }}>
         <Box>
           <Type.Caption display="block">
             <Trans>{TIME_TRANSLATION[type]} PnL ($)</Trans>
           </Type.Caption>
-          <Type.Caption sx={{ fontWeight: 600 }}>
+          <Type.Caption sx={{ fontWeight: 600 }} className="trader-pnl">
             <SignedText value={realisedPnl} minDigit={0} maxDigit={0} fontInherit prefix="$" />
           </Type.Caption>
         </Box>

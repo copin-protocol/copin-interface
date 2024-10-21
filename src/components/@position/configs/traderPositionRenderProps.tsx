@@ -1,16 +1,26 @@
+import { Trans } from '@lingui/macro'
 import { CaretRight, ClockCounterClockwise } from '@phosphor-icons/react'
+import { justifyContent } from 'styled-system'
 
+import { PositionPairFilterTitle } from 'components/@dailyTrades/PositionPairFilterTitle'
+import { PositionRangeFilterIcon } from 'components/@dailyTrades/PositionRangeFilterIcon'
+import { PositionStatusFilterTitle } from 'components/@dailyTrades/PositionStatusFilterTitle'
+import { POSITION_RANGE_KEYS } from 'components/@dailyTrades/configs'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
+import Market from 'components/@ui/MarketGroup/Market'
+import TraderAddress from 'components/@ui/TraderAddress'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { renderEntry, renderOpeningPnL, renderOpeningRoi, renderSizeOpening } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { DAYJS_FULL_DATE_FORMAT, TIME_FORMAT } from 'utils/config/constants'
+import { PositionStatusEnum } from 'utils/config/enums'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
 import { formatDuration, formatLeverage, formatNumber } from 'utils/helpers/format'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 const orderCountColumn: ColumnData<PositionData> = {
   title: 'Total Orders',
@@ -27,42 +37,45 @@ const collateralColumn: ColumnData<PositionData> = {
   key: 'collateral',
   sortBy: 'collateral',
   style: { minWidth: '90px', textAlign: 'right' },
-  render: (item) => (
-    <Type.Caption color="neutral1">
-      <ValueOrToken
-        protocol={item.protocol}
-        indexToken={item.collateralToken}
-        value={item.collateral}
-        valueInToken={item.collateralInToken}
-      />
-    </Type.Caption>
-  ),
+  render: (item) => renderPositionCollateral(item),
 }
+const renderPositionCollateral = (item: PositionData, defaultToken?: string) => (
+  <Type.Caption color="neutral1">
+    <ValueOrToken
+      protocol={item.protocol}
+      indexToken={item.collateralToken}
+      value={item.collateral}
+      valueInToken={item.collateralInToken}
+      defaultToken={defaultToken}
+    />
+  </Type.Caption>
+)
 const feeColumn: ColumnData<PositionData> = {
   title: 'Fee',
   dataIndex: 'fee',
   key: 'fee',
   sortBy: 'fee',
   style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => (
-    <Type.Caption color="neutral1">
-      <ValueOrToken
-        protocol={item.protocol}
-        indexToken={item.collateralToken}
-        value={item.fee != null ? item.fee * -1 : undefined}
-        valueInToken={item.feeInToken != null ? item.feeInToken * -1 : undefined}
-        component={
-          <SignedText
-            value={item.fee == null && item.feeInToken == null ? undefined : (item.fee ?? item.feeInToken) * -1}
-            maxDigit={2}
-            minDigit={2}
-            prefix="$"
-          />
-        }
-      />
-    </Type.Caption>
-  ),
+  render: (item) => renderPositionFee(item),
 }
+const renderPositionFee = (item: PositionData, prefix = '$') => (
+  <Type.Caption color="neutral1">
+    <ValueOrToken
+      protocol={item.protocol}
+      indexToken={item.collateralToken}
+      value={item.fee != null ? item.fee * -1 : undefined}
+      valueInToken={item.feeInToken != null ? item.feeInToken * -1 : undefined}
+      component={
+        <SignedText
+          value={item.fee == null && item.feeInToken == null ? undefined : (item.fee ?? item.feeInToken) * -1}
+          maxDigit={2}
+          minDigit={2}
+          prefix={prefix}
+        />
+      }
+    />
+  </Type.Caption>
+)
 const avgDurationColumn: ColumnData<PositionData> = {
   title: 'Duration',
   dataIndex: 'durationInSecond',
@@ -79,7 +92,7 @@ const roiColumn: ColumnData<PositionData> = {
   style: { minWidth: '90px', textAlign: 'right' },
   render: (item) => (
     <Type.Caption color="neutral1">
-      <SignedText value={item.roi} maxDigit={2} minDigit={2} suffix="%" />
+      <SignedText value={item.realisedRoi} maxDigit={2} minDigit={2} suffix="%" />
     </Type.Caption>
   ),
 }
@@ -114,7 +127,11 @@ const closeTimeColumn: ColumnData<PositionData> = {
   style: { minWidth: '156px' },
   render: (item) => (
     <Type.Caption color="neutral1">
-      <LocalTimeText date={item.closeBlockTime} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
+      {item.closeBlockTime ? (
+        <LocalTimeText date={item.closeBlockTime} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
+      ) : (
+        '--'
+      )}
     </Type.Caption>
   ),
 }
@@ -143,23 +160,24 @@ const sizeColumn: ColumnData<PositionData> = {
   key: 'size',
   sortBy: 'size',
   style: { minWidth: '80px', textAlign: 'right' },
-  render: (item) => (
-    <Flex justifyContent="end" alignItems="center">
-      <Type.Caption color="neutral1">
-        {PROTOCOLS_IN_TOKEN.includes(item.protocol) ? (
-          <ValueOrToken
-            protocol={item.protocol}
-            indexToken={item.collateralToken}
-            value={item.size}
-            valueInToken={item.sizeInToken}
-          />
-        ) : (
-          `$${formatNumber(item.size, 0, 0)}`
-        )}
-      </Type.Caption>
-    </Flex>
-  ),
+  render: (item) => renderPositionSize(item),
 }
+const renderPositionSize = (item: PositionData, hasPrefix = true) => (
+  <Flex justifyContent="end" alignItems="center">
+    <Type.Caption color="neutral1">
+      {PROTOCOLS_IN_TOKEN.includes(item.protocol) ? (
+        <ValueOrToken
+          protocol={item.protocol}
+          indexToken={item.collateralToken}
+          value={item.size}
+          valueInToken={item.sizeInToken}
+        />
+      ) : (
+        `${hasPrefix ? '$' : ''}${formatNumber(item.size, 0, 0)}`
+      )}
+    </Type.Caption>
+  </Flex>
+)
 const sizeOpeningColumn: ColumnData<PositionData> = {
   title: 'Size',
   dataIndex: 'size',
@@ -193,9 +211,11 @@ const pnlColumnFull: ColumnData<PositionData> = {
         <ValueOrToken
           protocol={item.protocol}
           indexToken={item.collateralToken}
-          value={item.pnl}
+          value={item.realisedPnl}
           valueInToken={item.realisedPnlInToken}
-          component={<SignedText value={item.pnl ?? item.realisedPnlInToken} maxDigit={2} minDigit={2} prefix="$" />}
+          component={
+            <SignedText value={item.realisedPnl ?? item.realisedPnlInToken} maxDigit={2} minDigit={2} prefix="$" />
+          }
         />
       </Flex>
     )
@@ -206,20 +226,23 @@ const pnlColumn: ColumnData<PositionData> = {
   dataIndex: 'pnl',
   key: 'pnl',
   style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => {
-    return (
-      <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
-        {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
-        <ValueOrToken
-          protocol={item.protocol}
-          indexToken={item.collateralToken}
-          value={item.pnl}
-          valueInToken={item.realisedPnlInToken}
-          component={<SignedText value={item.pnl ?? item.realisedPnlInToken} maxDigit={2} minDigit={2} prefix="$" />}
-        />
-      </Flex>
-    )
-  },
+  render: (item) => renderPositionPnL(item),
+}
+const renderPositionPnL = (item: PositionData, prefix = '$') => {
+  return (
+    <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
+      {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
+      <ValueOrToken
+        protocol={item.protocol}
+        indexToken={item.collateralToken}
+        value={item.realisedPnl}
+        valueInToken={item.realisedPnlInToken}
+        component={
+          <SignedText value={item.realisedPnl ?? item.realisedPnlInToken} maxDigit={2} minDigit={2} prefix={prefix} />
+        }
+      />
+    </Flex>
+  )
 }
 
 const pnlOpeningColumn: ColumnData<PositionData> = {
@@ -250,6 +273,82 @@ const actionColumn: ColumnData<PositionData> = {
   ),
 }
 
+const positionStatusColumn: ColumnData<PositionData> = {
+  title: 'Status',
+  dataIndex: 'status',
+  key: 'status',
+  style: { minWidth: '75px', textAlign: 'right' },
+  render: (item) => {
+    const isOpen = item.status === PositionStatusEnum.OPEN
+    const isLong = item.isLong
+    return (
+      <Box
+        sx={{
+          color: isOpen ? 'green1' : 'neutral2',
+        }}
+      >
+        <Type.Caption color="inherit">{isOpen ? `Open` : 'Close'}</Type.Caption>
+      </Box>
+    )
+  },
+}
+const accountColumn: ColumnData<PositionData> = {
+  title: 'Account',
+  dataIndex: 'account',
+  key: 'account',
+  style: { minWidth: '75px' },
+  render: (item) => {
+    return (
+      <Flex sx={{ width: '100%', '& > *': { width: 'max-content' } }}>
+        <TraderAddress address={item.account} protocol={item.protocol} />
+      </Flex>
+    )
+  },
+}
+const pairColumn: ColumnData<PositionData> = {
+  title: 'Pair',
+  dataIndex: 'pair',
+  key: 'pair',
+  style: { minWidth: '75px', textAlign: 'right' },
+  render: (item) => {
+    return <Market symbol={getSymbolFromPair(item.pair)} hasName sx={{ '& *': { fontSize: '12px !important' } }} />
+  },
+}
+const positionTimeColumn: ColumnData<PositionData> = {
+  title: 'Time',
+  dataIndex: undefined,
+  key: undefined,
+  style: {},
+  render: (item) => {
+    return (
+      <Type.Caption sx={{ display: 'flex', flexDirection: 'column' }}>
+        {item.closeBlockTime ? <LocalTimeText date={item.closeBlockTime} format={TIME_FORMAT} /> : '--'}
+        <Box as="span" color="neutral3">
+          <LocalTimeText date={item.openBlockTime} format={TIME_FORMAT} />
+        </Box>
+      </Type.Caption>
+    )
+  },
+}
+const mixPnLColumn: ColumnData<PositionData> = {
+  title: 'PnL',
+  dataIndex: undefined,
+  key: undefined,
+  style: { textAlign: 'right' },
+  render: (item) => {
+    return (
+      <Type.Caption sx={{ display: 'flex', flexDirection: 'column' }}>
+        <>
+          {pnlColumn.render?.(item)}
+          <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
+            {roiColumn.render?.(item)}
+          </Flex>
+        </>
+      </Type.Caption>
+    )
+  },
+}
+
 export const historyColumns: ColumnData<PositionData>[] = [
   { ...timeColumn, style: { flex: 1 } },
   { ...entryColumn, style: { flex: 1.8 } },
@@ -270,6 +369,144 @@ export const fullHistoryColumns: ColumnData<PositionData>[] = [
   { ...feeColumn, style: { flex: 1, textAlign: 'right' } },
   { ...roiColumn, style: { flex: 1, textAlign: 'right' } },
   { ...pnlColumnFull, style: { flex: 1.3, textAlign: 'right' } },
+  { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', flex: '0 0 40px' } },
+]
+
+export const dailyPositionColumns: ColumnData<PositionData>[] = [
+  {
+    ...positionTimeColumn,
+    title: <Trans>TIME</Trans>,
+    style: { flex: 1, display: ['block', 'block', 'block', 'none'] },
+  },
+  {
+    ...openTimeColumn,
+    title: <Trans>OPEN TIME</Trans>,
+    style: { flex: 1.5, display: ['none', 'none', 'none', 'block'] },
+    text: 'Open Time',
+  },
+  {
+    ...closeTimeColumn,
+    title: <Trans>CLOSE TIME</Trans>,
+    style: { flex: 1.5, pl: 2, display: ['none', 'none', 'none', 'block'], text: 'Close Time' },
+  },
+  // {
+  //   ...pairColumn,
+  //   style: { flex: 1, pl: 1, '@media all and (min-width: 1400px)': { display: 'none' } },
+  //   title: <PositionPairFilterTitle />,
+  //   sortBy: undefined,
+  //   hasFilter: true,
+  // },
+  { ...positionStatusColumn, style: { flex: 0.8 }, title: <PositionStatusFilterTitle /> },
+  { ...accountColumn, title: <Trans>ACCOUNT</Trans>, style: { flex: [2, 2, 2, 2, 1.7] } },
+  {
+    ...entryColumn,
+    style: { flex: 1.3, pl: 1 },
+    title: <PositionPairFilterTitle title={<Trans>MARKET</Trans>} />,
+    sortBy: undefined,
+  },
+  {
+    ...sizeColumn,
+    style: { flex: 1, textAlign: 'right', justifyContent: 'end' },
+    title: <Trans>SIZE ($)</Trans>,
+    filterComponent: (
+      // @ts-ignore
+      <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.size} />
+    ),
+    text: 'Size',
+    render: (item) => renderPositionSize(item, false),
+  },
+  {
+    ...leverageColumn,
+    style: {
+      flex: 1,
+      textAlign: 'right',
+      display: 'none',
+      '@media all and (min-width: 1400px)': { display: 'flex' },
+      justifyContent: 'end',
+    },
+    title: <Trans>LEVERAGE</Trans>,
+    filterComponent: (
+      //@ts-ignore
+      <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.leverage} />
+    ),
+    text: 'Leverage',
+  },
+  {
+    ...collateralColumn,
+    style: {
+      flex: 1.3,
+      textAlign: 'right',
+      display: 'none',
+      '@media all and (min-width: 1400px)': { display: 'flex' },
+      justifyContent: 'end',
+    },
+    title: <Trans>COLLATERAL ($)</Trans>,
+    filterComponent: (
+      <PositionRangeFilterIcon
+        //@ts-ignore
+        valueKey={POSITION_RANGE_KEYS.collateral}
+      />
+    ),
+    text: 'Collateral',
+    render: (item) => renderPositionCollateral(item, 'USDT'),
+  },
+  {
+    ...avgDurationColumn,
+    style: {
+      flex: 1,
+      textAlign: 'right',
+      display: 'none',
+      '@media all and (min-width: 1400px)': { display: 'flex' },
+      justifyContent: 'end',
+    },
+    title: <Trans>DURATION</Trans>,
+    filterComponent: (
+      //@ts-ignore
+      <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.durationInSecond} />
+    ),
+    text: 'Duration',
+  },
+  {
+    ...orderCountColumn,
+    title: <Trans>TOTAL ORDER</Trans>,
+    style: { flex: 1, textAlign: 'right', display: 'none', '@media all and (min-width: 1800px)': { display: 'block' } },
+    sortBy: undefined,
+  },
+  {
+    ...feeColumn,
+    title: <Trans>FEE ($)</Trans>,
+    style: { flex: 1, textAlign: 'right', display: 'none', '@media all and (min-width: 1800px)': { display: 'block' } },
+    sortBy: undefined,
+    render: (item) => renderPositionFee(item, ''),
+  },
+  {
+    ...roiColumn,
+    style: {
+      flex: 0.8,
+      textAlign: 'right',
+      display: 'none',
+      '@media all and (min-width: 1800px)': { display: 'flex', width: '100%', justifyContent: 'end' },
+    },
+    title: <Trans>ROI</Trans>,
+    filterComponent: (
+      //@ts-ignore
+      <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.realisedRoi} />
+    ),
+    text: 'ROI',
+  },
+  {
+    dataIndex: 'pnl',
+    key: 'pnl',
+    style: { flex: 1.1, textAlign: 'right', justifyContent: 'end' },
+    title: <Trans>PNL ($)</Trans>,
+    filterComponent: (
+      //@ts-ignore
+      <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.realisedPnl} />
+    ),
+    text: 'PnL',
+    render: (item) => renderPositionPnL(item, ''),
+  },
+  // { ...mixPnLColumn, style: { flex: 1, display: ['block', 'block', 'none', 'none'] } },
   { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', flex: '0 0 40px' } },
 ]
 

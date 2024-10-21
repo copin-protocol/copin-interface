@@ -18,6 +18,7 @@ export default function ValueOrToken({
   hasPrefix = true,
   maxDigit = 0,
   minDigit,
+  defaultToken,
 }: {
   value: number | undefined
   valueInToken?: number
@@ -28,10 +29,10 @@ export default function ValueOrToken({
   hasPrefix?: boolean
   maxDigit?: number
   minDigit?: number
+  defaultToken?: string
 }) {
   if (!value && !component && !valueInToken) return <>{'--'}</>
-  if (!protocol && !indexToken && !component)
-    return <>{`${hasPrefix ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`}</>
+  if (value != null && !component) return <>{`${hasPrefix ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`}</>
   const isToken = !!indexToken && !!valueInToken && !!protocol
   const tooltipId = uuid()
   return (
@@ -50,17 +51,23 @@ export default function ValueOrToken({
           ? hasCompact
             ? compactNumber(valueInToken, 2)
             : formatNumber(valueInToken, 2, 2)
-          : `${hasPrefix ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`}
-        {isToken && (
+          : `${hasPrefix && !defaultToken ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`}
+        {isToken ? (
           <Image
             src={parseCollateralImage(TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol)}
             sx={{ width: 16, height: 16, flexShrink: 0 }}
           />
+        ) : (
+          !!defaultToken && (
+            <Image src={parseCollateralImage(defaultToken)} sx={{ width: 16, height: 16, flexShrink: 0 }} />
+          )
         )}
         {isToken && (
           <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
             {`${formatNumber(valueInToken, 2, 2)} ${TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol} ${
-              value != null ? `~ ${hasPrefix ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}` : ''
+              value != null
+                ? `~ ${hasPrefix && !defaultToken ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`
+                : ''
             }`}
           </Tooltip>
         )}

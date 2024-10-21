@@ -29,6 +29,7 @@ const NumberInput = ({
   }, [props.maxLength])
   return (
     <InputWrapper
+      className="input_wrapper"
       disabled={props.disabled}
       variant={error ? 'error' : variant}
       block={block}

@@ -1,11 +1,8 @@
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import { DifferentialBar } from 'components/@ui/DifferentialBar'
-import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { OpenInterestMarketData } from 'entities/statistic'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { parseMarketImage } from 'utils/helpers/transform'
 
@@ -247,23 +244,23 @@ export const titlesMapping = {
   longShortRate: 'Skew',
 }
 
-export function getColumns({ protocol, timeOption }: { protocol: ProtocolEnum; timeOption: TimeFilterProps }) {
-  const tokenTradeSupport = getTokenTradeSupport(protocol)
+export function getColumns() {
   const columns: ColumnData<OpenInterestMarketData>[] = [
     {
       title: <Box pl={2}>{titlesMapping.market}</Box>,
-      dataIndex: 'indexToken',
-      key: 'indexToken',
+      dataIndex: 'pair',
+      key: 'pair',
       style: { minWidth: '120px' },
       render: (item) => {
-        const { symbol } = tokenTradeSupport?.[item.indexToken] ?? {}
+        const symbol = item.pair.split('-')[0]
+
         if (!symbol) return <></>
         return <Box pl={2}>{renderMarket(symbol)}</Box>
       },
     },
     {
       title: (
-        <Flex as="span" justifyContent="flex-end" pr={2}>
+        <Flex as="span" justifyContent="flex-end" pr={1}>
           <Box as="span" textAlign="right">
             Price
           </Box>
@@ -271,13 +268,13 @@ export function getColumns({ protocol, timeOption }: { protocol: ProtocolEnum; t
       ),
       dataIndex: 'price',
       key: 'price',
-      style: { minWidth: '120px', textAlign: 'right' },
+      style: { minWidth: '110px', textAlign: 'right' },
       render: renderPrice,
     },
     {
       title: titlesMapping.total,
-      dataIndex: undefined,
-      key: undefined,
+      dataIndex: 'totalInterest',
+      key: 'totalInterest',
       sortBy: 'totalInterest',
       style: { minWidth: '120px', textAlign: 'right' },
       render: renderTotalInterest,

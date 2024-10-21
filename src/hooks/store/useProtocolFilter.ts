@@ -17,7 +17,7 @@ interface ProtocolFilterState {
 
 const INIT_PAGE = 1
 
-const createProtocolFilterStore = (defaultSelects: ProtocolEnum[] = []) => {
+const createProtocolFilterStore = (defaultSelects: ProtocolEnum[] = [], storageKey = 'protocol-filter') => {
   return create<ProtocolFilterState>()(
     persist(
       immer((set) => ({
@@ -33,18 +33,23 @@ const createProtocolFilterStore = (defaultSelects: ProtocolEnum[] = []) => {
           }),
       })),
       {
-        name: 'protocol-filter',
+        name: storageKey,
         getStorage: () => localStorage,
       }
     )
   )
 }
 
-export const useProtocolFilter = ({ defaultSelects }: { defaultSelects?: ProtocolEnum[] } = {}) => {
+export const useProtocolFilter = ({
+  defaultSelects,
+  storageKey,
+}: { defaultSelects?: ProtocolEnum[]; storageKey?: string } = {}) => {
   const { setSearchParams } = useSearchParams()
-  const changeCurrentPage = (page: number) => setSearchParams({ [URL_PARAM_KEYS.HOME_PAGE]: page.toString() })
 
-  const { selectedProtocols, setProtocols, urlProtocol, setUrlProtocol } = createProtocolFilterStore(defaultSelects)()
+  const { selectedProtocols, setProtocols, urlProtocol, setUrlProtocol } = createProtocolFilterStore(
+    defaultSelects,
+    storageKey
+  )()
 
   const checkIsSelected = (protocol: ProtocolEnum): boolean => {
     return selectedProtocols.includes(protocol)
@@ -53,17 +58,18 @@ export const useProtocolFilter = ({ defaultSelects }: { defaultSelects?: Protoco
   const setSelectedProtocols = (protocols: ProtocolEnum[], isClearAll?: boolean): void => {
     // if (!protocols.length) return
 
+    const resetParams: Record<string, string | null> = {}
     if (!compareTwoArrays(protocols, selectedProtocols)) {
       // Reset page to 1 when changing protocols
-      changeCurrentPage(INIT_PAGE)
+      resetParams[URL_PARAM_KEYS.HOME_PAGE] = null
     }
 
     const protocolParams = convertProtocolToParams(protocols)
 
     if (!isClearAll) {
-      setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: protocolParams })
+      setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: protocolParams, ...resetParams })
     } else {
-      setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: null })
+      setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: null, ...resetParams })
     }
 
     setProtocols(protocols)

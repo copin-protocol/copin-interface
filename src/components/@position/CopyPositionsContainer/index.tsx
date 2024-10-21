@@ -7,6 +7,8 @@ import { getMyCopySourcePositionDetailApi } from 'apis/copyPositionApis'
 import ToastBody from 'components/@ui/ToastBody'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { PositionData } from 'entities/trader'
+import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { PositionStatusEnum } from 'utils/config/enums'
@@ -24,6 +26,8 @@ export default function CopyPositionsContainer({
   onClosePositionSuccess: () => void
   children: any
 }) {
+  const { copyWallets } = useCopyWalletContext()
+  const { allCopyTrades: copyTrades } = useAllCopyTrades()
   const { prices } = useGetUsdPrices()
   const [openSourceDrawer, setOpenSourceDrawer] = useState(false)
   const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
@@ -108,6 +112,8 @@ export default function CopyPositionsContainer({
     <>
       {cloneElement(children, {
         externalSource: {
+          copyWallets,
+          copyTrades,
           prices,
           submitting,
           currentId: currentCopyPosition?.id,

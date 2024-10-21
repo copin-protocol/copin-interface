@@ -1,6 +1,6 @@
 import { ArrowsIn, ArrowsOutSimple, Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 
@@ -103,12 +103,12 @@ export default function TraderOpeningPositionsTable({
     setCurrentPosition(data)
     setOpenDrawer(true)
     if (!!data.txHashes?.length) {
-      window.history.replaceState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes?.[0] }))
+      window.history.pushState(null, '', generatePositionDetailsRoute({ ...data, txHash: data.txHashes?.[0] }))
     }
   }
 
   const handleDismiss = () => {
-    window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
+    window.history.pushState({}, '', `${history.location.pathname}${history.location.search}`)
     setOpenDrawer(false)
   }
   const scrollToTopDependencies = useMemo(() => {

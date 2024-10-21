@@ -8,7 +8,7 @@ const getPositionDetails = async (req, res) => {
   // let thumbnail = `${configs.baseUrl}/images/cover/default-position-cover.png`
   const url = id?.startsWith('0x')
     ? `${configs.baseUrl}/${protocol}/position/${id}?account=${account}&log_id=${log_id}${
-        next_hours ? `?next_hours=${next_hours}` : ''
+        next_hours ? `&next_hours=${next_hours}&${new Date().getTime()}` : `&${new Date().getTime()}`
       }`
     : `${configs.baseUrl}/${protocol}/position/${id}${
         next_hours ? `?next_hours=${next_hours}&${new Date().getTime()}` : `?${new Date().getTime()}`

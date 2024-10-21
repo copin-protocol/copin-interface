@@ -98,6 +98,8 @@ export interface CopyPositionData {
   copyAccount: string
   positionIndex?: number
   copyTradeTitle: string
+  copyWalletName?: string
+  copyWalletId?: string
   name: string
   indexToken: string
   key: string
@@ -120,8 +122,6 @@ export interface CopyPositionData {
   takeProfitAmount: number
   latestTakeProfitId?: string
   pnl: number
-  protocol: ProtocolEnum
-  exchange: CopyTradePlatformEnum
   closeType: CopyPositionCloseTypeEnum
   status: PositionStatusEnum
   lastOrderAt: string

@@ -56,6 +56,20 @@ function RouteFooter() {
 }
 function RouteHeader({ protocolFilter }: { protocolFilter: ProtocolFilterProps }) {
   const { sm } = useResponsive()
+  const { pathname } = useSearchParams()
+  const tabName = pathname.split('/')[2] as 'positions' | 'overview'
+
+  const renderTabName = (key: 'positions' | 'overview') => {
+    switch (key) {
+      case 'positions':
+        return 'OPEN INTEREST'
+      case 'overview':
+        return 'MARKET'
+      default:
+        return 'OPEN INTEREST'
+    }
+  }
+
   return (
     <Flex
       sx={{
@@ -72,9 +86,15 @@ function RouteHeader({ protocolFilter }: { protocolFilter: ProtocolFilterProps }
       }}
     >
       <Flex flex={{ _: '1', md: 'auto' }} sx={{ alignItems: 'center', height: '100%' }}>
-        <MarketsDropdown />
-        <Box display={{ _: 'none', md: 'block' }} height="100%" width="1px" bg="neutral4" />
-        <Box width="100%" display={{ _: 'none', md: 'flex' }} sx={{ px: 3, gap: 30 }}>
+        {/* <MarketsDropdown /> */}
+        {!sm && (
+          <Trans>
+            <Type.BodyBold>{renderTabName(tabName as 'positions' | 'overview')}</Type.BodyBold>
+          </Trans>
+        )}
+
+        {/* <Box display={{ _: 'none', md: 'block' }} height="100%" width="1px" bg="neutral4" /> */}
+        <Box width="100%" display={{ _: 'none', md: 'flex' }} sx={{ px: 0, gap: 30 }}>
           <Tabs />
         </Box>
       </Flex>
@@ -118,12 +138,12 @@ function Tabs() {
         isActive={!!pathname.match(ROUTES.OPEN_INTEREST_POSITIONS.path_prefix)?.length}
         onClick={() => onChangeTab('positions')}
       />
-      {/* <TabItem
+      <TabItem
         label={<Trans>MARKET</Trans>}
         icon={ListBullets}
         isActive={!!pathname.match(ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix)?.length}
         onClick={() => onChangeTab('overview')}
-      /> */}
+      />
     </>
   )
 }

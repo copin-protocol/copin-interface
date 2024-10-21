@@ -57,6 +57,7 @@ export const SEARCH_TOP_OPENING_POSITIONS_QUERY = gql`
         realisedPnlInToken
         realisedPnl
         realisedRoi
+        pair
       }
       meta {
         total

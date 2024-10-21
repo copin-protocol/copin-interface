@@ -1,14 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { GridProps } from 'styled-system'
 
 import Divider from 'components/@ui/Divider'
+import InputSearchText from 'components/@ui/InputSearchText'
+import NoDataFound from 'components/@ui/NoDataFound'
 import { CopyWalletData } from 'entities/copyWallet'
+import useDebounce from 'hooks/helpers/useDebounce'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Image, Type } from 'theme/base'
+import { SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 
@@ -27,6 +31,17 @@ export default function SelectWalletsDropdown({
   menuSx?: SystemStyleObject & GridProps
   placement?: 'bottom' | 'top' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
 }) {
+  const [searchText, setSearchText] = useState<string>('')
+  const trimmedSearchText = searchText.trim()
+  const debounceSearchText = useDebounce<string>(trimmedSearchText, SEARCH_DEBOUNCE_TIME)
+
+  const options = useMemo(() => {
+    return allWallets?.filter((option) => {
+      const walletName = parseWalletName(option)
+      return walletName?.toLowerCase()?.includes(debounceSearchText.toLowerCase())
+    })
+  }, [allWallets, debounceSearchText])
+
   if (!allWallets.length) return <></>
   const isSelectedAll =
     !!allWallets.length &&
@@ -35,8 +50,8 @@ export default function SelectWalletsDropdown({
   return (
     <Dropdown
       menuSx={{
-        width: ['100%', 400],
-        height: 200,
+        width: ['100%', 450],
+        height: 350,
         overflow: 'auto',
         p: 2,
         ...menuSx,
@@ -65,7 +80,10 @@ export default function SelectWalletsDropdown({
               )
             </Type.CaptionBold>
           </Flex>
+          <Divider my={2} />
+          <InputSearchText placeholder="Search wallets..." searchText={searchText} setSearchText={setSearchText} />
           <Divider mt={2} />
+          {!options.length && <NoDataFound message={<Trans>No Wallet Found</Trans>} />}
           <Grid
             sx={{
               gridTemplateColumns: ['1fr', '1fr 1fr'],
@@ -73,7 +91,7 @@ export default function SelectWalletsDropdown({
               rowGap: 2,
             }}
           >
-            {allWallets.map((item) => {
+            {options.map((item) => {
               const key = item.id
               if (key == null) return <></>
               const isChecked = selectedWallets.findIndex((e) => e.id === item.id) !== -1

@@ -7,15 +7,13 @@ import Loading from 'theme/Loading'
 import Table from 'theme/Table'
 import { TableProps } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
 
 import { NoMarketFound } from '../OpenInterestByMarket'
 import { getColumns, getRenderProps, titlesMapping } from './configs'
 
 type ListMarketsProps = {
-  protocol: ProtocolEnum
-  symbol: string | undefined
+  // protocol: ProtocolEnum
+  // symbol: string | undefined
   timeOption: TimeFilterProps
   isFetching: boolean
   data: OpenInterestMarketData[] | undefined
@@ -26,12 +24,11 @@ type ListMarketsProps = {
 export function TableForm({
   data,
   isFetching,
-  protocol,
-  timeOption,
+  // timeOption,
   currentSort,
   changeCurrentSort,
 }: ListMarketsProps) {
-  const columns = getColumns({ protocol, timeOption })
+  const columns = getColumns()
   // const tokensMapping = TOKEN_TRADE_SUPPORT[protocol]
   // const history = useHistory()
   return (
@@ -56,9 +53,8 @@ export function TableForm({
   )
 }
 
-export function ListForm({ data, isFetching, protocol, timeOption, symbol }: ListMarketsProps) {
+export function ListForm({ data, isFetching }: ListMarketsProps) {
   const renders = getRenderProps()
-  const tokensMapping = getTokenTradeSupport(protocol)
   return (
     <Flex
       sx={{
@@ -70,9 +66,7 @@ export function ListForm({ data, isFetching, protocol, timeOption, symbol }: Lis
         '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4', '& > *:last-child': { borderBottom: 'none' } },
       }}
     >
-      {!isFetching && !data?.length && (
-        <NoMarketFound message={symbol && <Trans>{symbol} market data was not found</Trans>} />
-      )}
+      {!isFetching && !data?.length && <NoMarketFound message={<Trans>Market data was not found</Trans>} />}
       {isFetching && (
         <Flex
           sx={{
@@ -93,9 +87,7 @@ export function ListForm({ data, isFetching, protocol, timeOption, symbol }: Lis
         </Flex>
       )}
       {data?.map((marketData) => {
-        const token = tokensMapping[marketData.indexToken]
-        if (!token) return null
-        const symbol = token.symbol
+        const symbol = marketData.pair.split('-')[0]
         return (
           <Box sx={{ p: 3 }} key={marketData.indexToken}>
             <Flex mb={2} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>

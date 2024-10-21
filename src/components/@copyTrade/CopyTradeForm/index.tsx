@@ -135,6 +135,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const pairOptions = getTokenOptions({ protocol, ignoredAll: true }).filter(
     (option) => !TOKEN_TRADE_IGNORE[platform]?.includes(option.value)
   )
+
   const allPairs = pairOptions.map((p) => p.value)
 
   pairOptions.unshift({ id: 'all', value: 'all', label: 'All Tokens' })

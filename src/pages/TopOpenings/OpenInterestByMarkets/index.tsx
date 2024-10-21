@@ -1,25 +1,22 @@
-import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { ComponentProps, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useParams } from 'react-router-dom'
 
 import { getOpenInterestMarketApi } from 'apis/positionApis'
+import { MarketFilter } from 'components/@ui/MarketFilter'
 import { ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
 import PythWatermark from 'components/@ui/PythWatermark'
 import { OpenInterestMarketData } from 'entities/statistic'
-import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { TableProps, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
-import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { TOKEN_TRADE_SUPPORT, getTokenTradeList } from 'utils/config/trades'
+import { useProtocolFromUrl } from 'utils/helpers/graphql'
 
 import { NoMarketFound } from '../OpenInterestByMarket'
 import RouteWrapper from '../RouteWrapper'
-import { TimeDropdown, useTimeFilter } from '../TopOpenIntrest/Filters'
+import { TimeDropdown, useFilters, useTimeFilter } from '../TopOpenIntrest/Filters'
 import useSearchParamsState from '../useSearchParamsState'
 import { ListForm, TableForm } from './ListMarkets'
 
@@ -31,18 +28,13 @@ export default function OpenInterestByMarkets({ protocolFilter }: { protocolFilt
   )
 }
 function OpenInterestByMarketsPage() {
-  const protocolOptionsMapping = useGetProtocolOptionsMapping()
-
   const { sm } = useResponsive()
-
-  const { searchParams, setSearchParams } = useSearchParams()
-
+  const { setSearchParams, searchParams, pathname } = useSearchParams()
+  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
+  const { pairs, onChangePairs, excludedPairs } = useFilters()
   const { setMarketsPageParams } = useSearchParamsState()
-  useEffect(() => {
-    setMarketsPageParams(searchParams as any)
-  }, [searchParams])
-
   const { from, to, time, onChangeTime } = useTimeFilter()
+
   const [currentSort, setCurrentShort] = useState<TableSortProps<OpenInterestMarketData> | undefined>(() => {
     if (searchParams.sort_by) {
       return {
@@ -52,40 +44,34 @@ function OpenInterestByMarketsPage() {
     }
     return { sortBy: 'totalInterest', sortType: SortTypeEnum.DESC }
   })
+
   const onChangeSort: TableProps<OpenInterestMarketData, any>['changeCurrentSort'] = (sort) => {
     setSearchParams({ sort_by: sort?.sortBy ?? null, sort_type: sort?.sortType ?? null })
     setCurrentShort(sort)
   }
 
-  const { symbol, protocol = DEFAULT_PROTOCOL } = useParams<{
-    symbol: string | undefined
-    protocol: ProtocolEnum | undefined
-  }>()
+  useEffect(() => {
+    setMarketsPageParams(searchParams as any)
+  }, [searchParams])
 
   const { data, isFetching } = useQuery(
-    [QUERY_KEYS.GET_OPEN_INTEREST_BY_MARKET, protocol, from, to, time],
-    () => getOpenInterestMarketApi({ protocol, from, to, timeframe: time.value }),
+    [QUERY_KEYS.GET_OPEN_INTEREST_BY_MARKET, foundProtocolInUrl, from, to, time],
+    () => getOpenInterestMarketApi({ protocols: foundProtocolInUrl, from, to, timeframe: time.value }),
     {
       keepPreviousData: true,
     }
   )
 
-  const tokenTradeList = getTokenTradeList(protocol)
-  const symbolInfo = symbol && tokenTradeList.find((token) => token.symbol === symbol)
   const sortedData = data?.length
     ? [...data]
         .map((_data) => ({
           ..._data,
-          totalInterest: _data.totalLong + _data.totalShort,
-          protocol,
+          totalInterest: _data.totalVolumeLong + _data.totalVolumeShort,
         }))
-        .filter((_data) =>
-          symbolInfo ? TOKEN_TRADE_SUPPORT[protocol][_data.indexToken]?.symbol === symbolInfo?.symbol : true
-        )
-        .filter(
-          (_data) =>
-            !!tokenTradeList.find((_token) => _token.symbol === TOKEN_TRADE_SUPPORT[protocol][_data.indexToken]?.symbol)
-        )
+        .filter((_data) => {
+          const symbol = _data.pair.split('-')[0]
+          return pairs.includes(symbol) && !excludedPairs.includes(symbol)
+        })
     : []
 
   if (currentSort) {
@@ -108,10 +94,17 @@ function OpenInterestByMarketsPage() {
           borderBottomColor: 'neutral4',
         }}
       >
-        <Filter currentTimeOption={time} onChangeTime={onChangeTime} />
-        <PythWatermark />
+        <Filter
+          currentTimeOption={time}
+          onChangeTime={onChangeTime}
+          protocols={foundProtocolInUrl}
+          pairs={pairs}
+          excludedPairs={excludedPairs}
+          onChangePairs={onChangePairs}
+        />
+        {sm && <PythWatermark />}
       </Flex>
-      {symbol && !symbolInfo ? (
+      {/* {symbol && !symbolInfo ? (
         <NoMarketFound
           message={
             <Trans>
@@ -123,43 +116,56 @@ function OpenInterestByMarketsPage() {
         <Box>
           <NoMarketFound message={symbol && <Trans>{symbol} market data was not found</Trans>} />
         </Box>
-      ) : (
-        <>
-          {sm ? (
-            <Box flex="1 0 0">
-              <TableForm
-                symbol={symbol}
-                isFetching={isFetching}
-                data={sortedData}
-                timeOption={time}
-                protocol={protocol}
-                currentSort={symbolInfo ? undefined : currentSort}
-                changeCurrentSort={symbolInfo ? undefined : onChangeSort}
-              />
-            </Box>
-          ) : (
-            <Box flex="1 0 0" overflow="hidden">
-              <ListForm
-                symbol={symbol}
-                isFetching={isFetching}
-                data={sortedData}
-                timeOption={time}
-                protocol={protocol}
-                currentSort={currentSort}
-                changeCurrentSort={onChangeSort}
-              />
-            </Box>
-          )}
-        </>
-      )}
+      ) : ( */}
+      <>
+        {sm ? (
+          <Box flex="1 0 0">
+            <TableForm
+              isFetching={isFetching}
+              data={sortedData}
+              timeOption={time}
+              currentSort={currentSort}
+              changeCurrentSort={onChangeSort}
+            />
+          </Box>
+        ) : (
+          <Box flex="1 0 0" overflow="hidden">
+            <ListForm
+              isFetching={isFetching}
+              data={sortedData}
+              timeOption={time}
+              currentSort={currentSort}
+              changeCurrentSort={onChangeSort}
+            />
+          </Box>
+        )}
+      </>
+      {/* )} */}
     </Flex>
   )
 }
-function Filter({ currentTimeOption, onChangeTime }: ComponentProps<typeof TimeDropdown>) {
+function Filter({
+  currentTimeOption,
+  onChangeTime,
+  protocols,
+  pairs,
+  excludedPairs,
+  onChangePairs,
+}: ComponentProps<typeof TimeDropdown> & {
+  protocols: ProtocolEnum[]
+  pairs: string[]
+  excludedPairs: string[]
+  onChangePairs: (pairs: string[], excludePairs: string[]) => void
+}) {
+  const { lg, sm } = useResponsive()
   return (
-    <Flex sx={{ gap: '6px' }}>
-      <Type.CaptionBold>In</Type.CaptionBold>
-      <TimeDropdown currentTimeOption={currentTimeOption} onChangeTime={onChangeTime} />
+    <Flex sx={{ gap: '6px', justifyContent: !lg ? 'space-between' : 'flex-start', width: !lg ? '100%' : 'auto' }}>
+      {sm && <Type.CaptionBold sx={{ mt: '-1px' }}>Selected</Type.CaptionBold>}
+      <MarketFilter protocols={protocols} pairs={pairs} onChangePairs={onChangePairs} excludedPairs={excludedPairs} />
+      <Flex sx={{ gap: '6px' }}>
+        <Type.CaptionBold>In</Type.CaptionBold>
+        <TimeDropdown currentTimeOption={currentTimeOption} onChangeTime={onChangeTime} />
+      </Flex>
     </Flex>
   )
 }

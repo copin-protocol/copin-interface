@@ -12,13 +12,15 @@ export default function Market({
   size = 20,
   hasName = false,
   hasTooltip = false,
-  sx,
+  sx = {},
+  symbolNameSx = {},
 }: {
   symbol: string
   size?: number
   hasName?: boolean
   hasTooltip?: boolean
   sx?: SystemStyleObject & GridProps
+  symbolNameSx?: any
 }) {
   const tooltipId = useMemo(() => uuid(), [])
   if (!symbol) return <></>
@@ -43,7 +45,11 @@ export default function Market({
       >
         <Image src={parseMarketImage(symbol)} sx={{ width: size, height: size }} />
       </Flex>
-      {hasName && !!symbol && <Type.Small fontSize="10px">{symbol}</Type.Small>}
+      {hasName && !!symbol && (
+        <Type.Small fontSize="10px" sx={symbolNameSx}>
+          {symbol}
+        </Type.Small>
+      )}
       {hasTooltip && (
         <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
           <Flex alignItems="center" justifyContent="center" sx={{ gap: 1 }}>

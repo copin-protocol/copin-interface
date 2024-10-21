@@ -13,6 +13,7 @@ export interface TableSortProps<T> {
 
 export type ColumnData<T = Record<string, any>, K = unknown> = {
   title: ReactNode
+  text?: ReactNode
   dataIndex: keyof T | undefined
   key: keyof T | undefined
   style: Record<string, any>
@@ -20,7 +21,7 @@ export type ColumnData<T = Record<string, any>, K = unknown> = {
   numDigit?: number
   sortBy?: keyof T
   sortType?: SortTypeEnum
-  hasFilter?: boolean
+  filterComponent?: ReactNode
 }
 type ExtractDataType<Type> = Type extends ColumnData<infer T> ? T : never
 type ExtractExternalSourceType<Type> = Type extends ColumnData<any, infer K> ? K : never

@@ -47,10 +47,13 @@ export const LocalTimeText = ({
   return (
     <Box as="span" sx={{ display: 'block' }} data-tip="React-tooltip" data-tooltip-id={tooltipId}>
       {format === DAYJS_FULL_DATE_FORMAT ? (
-        <Flex alignItems="center" sx={{ gap: 1 }}>
-          <span>{`${formatLocalDate(date ?? '', DATE_FORMAT)}`}</span>
+        <span>
+          <span style={{ display: 'inline-block', marginRight: '4px' }}>{`${formatLocalDate(
+            date ?? '',
+            DATE_FORMAT
+          )}`}</span>
           <span style={{ color: themeColors.neutral3 }}>{`${formatLocalDate(date ?? '', TIME_FORMAT)}`}</span>
-        </Flex>
+        </span>
       ) : (
         <span>{`${formatLocalDate(date ?? '', format)}`}</span>
       )}

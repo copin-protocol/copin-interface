@@ -25,7 +25,7 @@ const ROUTES = {
     path_prefix: '/open-interest/positions',
   },
   ALL_OPEN_INTEREST_POSITIONS: {
-    path: '/open-interest/positions',
+    path: '/open-interest',
     alter_path: '/open-interest/positions/:symbol',
     path_prefix: '/open-interest/positions',
   },
@@ -150,6 +150,15 @@ const ROUTES = {
   },
   REFERRAL_MANAGEMENT: {
     path: '/referral',
+  },
+  DAILY_TRADES: {
+    path: '/daily-trades',
+  },
+  DAILY_TRADES_ORDERS: {
+    path: '/daily-trades/orders',
+  },
+  DAILY_TRADES_POSITIONS: {
+    path: '/daily-trades/positions',
   },
 }
 

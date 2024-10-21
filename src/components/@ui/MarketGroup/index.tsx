@@ -13,25 +13,27 @@ import Market from './Market'
 export default function MarketGroup({
   protocol,
   indexTokens,
+  symbols,
   size = 20,
   limit = 3,
   hasName = true,
   sx,
 }: {
-  protocol: ProtocolEnum
+  protocol?: ProtocolEnum
   indexTokens?: string[]
+  symbols?: string[]
   size?: number
   limit?: number
   hasName?: boolean
   sx?: SystemStyleObject & GridProps
 }) {
   const tooltipId = useMemo(() => uuid(), [])
-  const numberOfAddress = indexTokens?.length
+  const numberOfAddress = symbols ? symbols.length : indexTokens?.length
   if (!numberOfAddress) return <></>
-  const symbols = getSymbolsFromIndexTokens(protocol, indexTokens)
+  const _symbols = symbols ? symbols : indexTokens && protocol ? getSymbolsFromIndexTokens(protocol, indexTokens) : []
   return (
     <Flex sx={{ position: 'relative', height: size, ...sx }}>
-      {symbols.slice(0, limit).map((symbol) => {
+      {_symbols.slice(0, limit).map((symbol) => {
         return (
           <Box
             key={symbol}
@@ -80,6 +82,7 @@ export default function MarketGroup({
             <MarketGroupFull
               protocol={protocol}
               indexTokens={indexTokens}
+              symbols={symbols}
               hasName={hasName}
               sx={{ maxWidth: 400, maxHeight: 350, overflowY: 'auto' }}
             />
@@ -93,19 +96,21 @@ export default function MarketGroup({
 export function MarketGroupFull({
   protocol,
   indexTokens,
+  symbols,
   size = 20,
   hasName = true,
   sx,
 }: {
-  protocol: ProtocolEnum
-  indexTokens: string[]
+  protocol?: ProtocolEnum
+  indexTokens?: string[]
+  symbols?: string[]
   size?: number
   hasName?: boolean
   sx?: SystemStyleObject & GridProps
 }) {
-  const numberOfAddress = indexTokens?.length
+  const numberOfAddress = symbols ? symbols.length : indexTokens?.length
   if (!numberOfAddress) return <></>
-  const symbols = getSymbolsFromIndexTokens(protocol, indexTokens)
+  const _symbols = symbols ? symbols : indexTokens && protocol ? getSymbolsFromIndexTokens(protocol, indexTokens) : []
   return (
     <Box
       sx={{
@@ -115,7 +120,7 @@ export function MarketGroupFull({
         ...sx,
       }}
     >
-      {symbols.map((symbol) => {
+      {_symbols.map((symbol) => {
         return <Market key={symbol} symbol={symbol} size={size} hasName={hasName} />
       })}
     </Box>

@@ -40,20 +40,34 @@ export default function OpenInterestByMarket({ protocolFilter }: { protocolFilte
 }
 
 function OpenInterestByMarketPage() {
-  const { lg } = useResponsive()
+  const { lg, sm } = useResponsive()
   const { searchParams, pathname } = useSearchParams()
   const { setMarketPageParams } = useSearchParamsState()
-  const { sort, onChangeSort, limit, onChangeLimit, time, from, to, onChangeTime } = useFilters()
-  const { symbol, protocol } = useParams<{ symbol: string | undefined; protocol: ProtocolEnum }>()
-
   const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
 
+  const {
+    sort,
+    onChangeSort,
+    limit,
+    onChangeLimit,
+    time,
+    from,
+    to,
+    onChangeTime,
+    pairs,
+    onChangePairs,
+    excludedPairs,
+  } = useFilters()
+  const { symbol, protocol } = useParams<{ symbol: string | undefined; protocol: ProtocolEnum }>()
+
+  // TODO: remove later
   const tokenOptions = foundProtocolInUrl
     .map((protocol) => {
       return getTokenTradeList(protocol).map((token) => ({ ...token, protocol }))
     })
     .flat()
 
+  // TODO: remove later
   const tokenInfo = tokenOptions?.filter((token) => token.symbol === symbol)
 
   const queryVariables = useMemo(() => {
@@ -63,7 +77,7 @@ function OpenInterestByMarketPage() {
     const query = [
       { field: 'status', match: 'OPEN' },
       { field: 'openBlockTime', gte: from, lte: to },
-      { field: 'pair', match: `${symbol}-USDT` },
+      { field: 'pair', in: pairs.filter((pair) => !excludedPairs.includes(pair)).map((pair) => `${pair}-USDT`) },
       { field: 'protocol', in: foundProtocolInUrl },
     ]
 
@@ -76,7 +90,7 @@ function OpenInterestByMarketPage() {
     }
 
     return { index, body, protocols: foundProtocolInUrl }
-  }, [sort.key, from, to, symbol, foundProtocolInUrl, limit])
+  }, [sort.key, from, to, foundProtocolInUrl, limit, pairs, excludedPairs])
 
   const {
     data: topOpeningPositionsData,
@@ -121,8 +135,12 @@ function OpenInterestByMarketPage() {
           onChangeLimit={onChangeLimit}
           currentTimeOption={time}
           onChangeTime={onChangeTime}
+          protocols={foundProtocolInUrl}
+          pairs={pairs}
+          onChangePairs={onChangePairs}
+          excludedPairs={excludedPairs}
         />
-        <PythWatermark />
+        {sm && <PythWatermark />}
       </Flex>
       {tokenInfo ? (
         <>
