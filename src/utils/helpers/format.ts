@@ -24,7 +24,8 @@ export function formatDuration(durationInSecond: number | undefined) {
   if (!durationInSecond) return '--'
   if (durationInSecond < 60) return `${formatNumber(durationInSecond, 0, 0)}s`
   if (durationInSecond < 3600) return `${formatNumber(durationInSecond / 60, 1, 1)}m`
-  return `${formatNumber(durationInSecond / (60 * 60), 1, 1)}h`
+  if (durationInSecond < 86400) return `${formatNumber(durationInSecond / (60 * 60), 1, 1)}h`
+  return `${formatNumber(durationInSecond / (60 * 60 * 24), 0, 0)}d`
 }
 
 export const formatLocalRelativeDate = (date: string | number) => dayjs.utc(date).local().fromNow()
