@@ -9,7 +9,7 @@ import { OrderData } from 'entities/trader.d'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT, NO_TX_HASH_PROTOCOLS } from 'utils/config/constants'
+import { DAYJS_FULL_DATE_FORMAT, FEE_WITH_FUNDING_PROTOCOLS, NO_TX_HASH_PROTOCOLS } from 'utils/config/constants'
 import { MarginModeEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { formatLeverage } from 'utils/helpers/format'
@@ -38,7 +38,7 @@ export default function ListOrderTable({
     return { data: orders, meta: { limit: orders.length, offset: 0, total: orders.length, totalPages: 1 } }
   }, [orders])
 
-  const isFeeWithFunding = protocol === ProtocolEnum.HYPERLIQUID
+  const isFeeWithFunding = FEE_WITH_FUNDING_PROTOCOLS.includes(protocol)
 
   const columns = useMemo(() => {
     const result: ColumnData<OrderData, ExternalSource>[] = [
@@ -217,7 +217,7 @@ export const renderOrderPrice = (item: OrderData) => (
 )
 
 export const renderOrderFee = (item: OrderData) => {
-  const isFeeWithFunding = [ProtocolEnum.HYPERLIQUID].includes(item.protocol)
+  const isFeeWithFunding = FEE_WITH_FUNDING_PROTOCOLS.includes(item.protocol)
 
   return (
     <Type.Caption color="neutral1" width="100%" textAlign="right" sx={{ display: 'flex', justifyContent: 'end' }}>

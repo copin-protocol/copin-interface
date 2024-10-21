@@ -252,5 +252,6 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.MORPHEX_FANTOM,
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
+export const FEE_WITH_FUNDING_PROTOCOLS = [ProtocolEnum.HYPERLIQUID, ProtocolEnum.BSX_BASE, ProtocolEnum.DYDX]
 
 export const MAX_LIMIT = 500

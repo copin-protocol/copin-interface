@@ -136,6 +136,8 @@ function generateProtocolName(protocol) {
       return 'Synfutures'
     case 'DYDX':
       return 'dYdX'
+    case 'BSX':
+      return 'BSX'
     default:
       return ''
   }

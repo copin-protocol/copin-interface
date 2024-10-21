@@ -52,6 +52,7 @@ const ExplorerLogo = ({
     case ProtocolEnum.SYNTHETIX_V3:
     case CopyTradePlatformEnum.SYNTHETIX_V3:
     case ProtocolEnum.SYNFUTURE_BASE:
+    case ProtocolEnum.BSX_BASE:
       icon = 'BASE'
       break
     case ProtocolEnum.LOGX_MODE:
