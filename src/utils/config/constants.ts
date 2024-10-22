@@ -227,6 +227,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.MORPHEX_FANTOM,
         ProtocolEnum.PERENNIAL_ARB,
         ProtocolEnum.BSX_BASE,
+        ProtocolEnum.DYDX,
       ]
     : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 
