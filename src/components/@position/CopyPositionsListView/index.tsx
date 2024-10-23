@@ -8,6 +8,7 @@ import ReverseTag from 'components/@ui/ReverseTag'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
+import { PositionStatusEnum } from 'utils/config/enums'
 
 import CopyPositionsContainer from '../CopyPositionsContainer'
 import {
@@ -22,6 +23,7 @@ import {
   renderSource,
   renderStatus,
   renderTrader,
+  renderValueWithColor,
 } from '../configs/copyPositionRenderProps'
 import { ExternalSourceCopyPositions } from '../types'
 
@@ -88,7 +90,21 @@ export function ListForm({
               />
               <ListHistoryRow label={<Trans>Entry</Trans>} value={renderEntry(positionData)} />
               <ListHistoryRow label={<Trans>Size</Trans>} value={renderSizeMobile(positionData)} />
-              <ListHistoryRow label={<LabelEPnL />} value={renderPnL(positionData, externalSource?.prices)} />
+              {positionData.status === PositionStatusEnum.OPEN ? (
+                <ListHistoryRow label={<LabelEPnL />} value={renderPnL(positionData, externalSource?.prices)} />
+              ) : (
+                <Flex sx={{ flexDirection: 'column', gap: 2 }}>
+                  <ListHistoryRow label={<Trans>PnL w. Fees</Trans>} value={renderValueWithColor(positionData.pnl)} />
+                  <ListHistoryRow
+                    label={<Trans>Realized PnL</Trans>}
+                    value={renderValueWithColor(positionData.realisedPnl)}
+                  />
+                  <ListHistoryRow label={<Trans>Fees</Trans>} value={renderValueWithColor(positionData.fee)} />
+                  {!!positionData.funding && (
+                    <ListHistoryRow label={<Trans>Funding</Trans>} value={renderValueWithColor(positionData.funding)} />
+                  )}
+                </Flex>
+              )}
               <ListHistoryRow label={<Trans>Closed Type</Trans>} value={renderCloseType(positionData)} />
               <ListHistoryRow label={<Trans>Open</Trans>} value={renderOpenTime(positionData)} />
               <ListHistoryRow label={<Trans>Close</Trans>} value={renderCloseTime(positionData)} />

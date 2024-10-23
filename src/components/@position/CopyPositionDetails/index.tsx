@@ -9,7 +9,7 @@ import { getCopyTradeDetailsApi } from 'apis/copyTradeApis'
 import CopyChartProfit from 'components/@charts/ChartCopyPositionProfit'
 import CopyRealtimeChart from 'components/@charts/ChartCopyPositionProfitRealtime'
 import PositionStatus from 'components/@position/PositionStatus'
-import { renderSLTPSetting } from 'components/@position/configs/copyPositionRenderProps'
+import { renderPnL, renderSLTPSetting } from 'components/@position/configs/copyPositionRenderProps'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { AmountText, PercentText, PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import NoDataFound from 'components/@ui/NoDataFound'
@@ -279,9 +279,18 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
             </Flex>
             <Box px={2} py={[2, 12]} sx={{ position: 'relative' }}>
               <Flex mb={[1, 3]} width="100%" alignItems="center" justifyContent="center">
-                <Type.H5 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
-                  <AmountText amount={latestPnL} maxDigit={2} minDigit={2} suffix="$" />
-                </Type.H5>
+                {isOpening ? (
+                  <Type.H5 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
+                    <AmountText amount={latestPnL} maxDigit={2} minDigit={2} suffix="$" />
+                  </Type.H5>
+                ) : (
+                  <Flex alignItems="center">
+                    {renderPnL(data, undefined, { fontWeight: 'bold', fontSize: '24px' })}
+                    <Type.H5 mb="4px" color="neutral3">
+                      $
+                    </Type.H5>
+                  </Flex>
+                )}
                 <Type.H5 ml={2} color="neutral3">
                   (
                 </Type.H5>
@@ -289,7 +298,7 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
                   <PercentText percent={latestROI} digit={2} />
                 </Type.H5>
                 <Type.H5 color="neutral3">)</Type.H5>
-                {(isOpening || data.exchange !== CopyTradePlatformEnum.GNS_V8) && (
+                {(isOpening || data.exchange === CopyTradePlatformEnum.GNS_V8) && (
                   <>
                     <IconBox
                       icon={<Warning size={20} />}

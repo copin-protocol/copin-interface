@@ -536,6 +536,11 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
     let profitCumulative = 0
     let lossCumulative = 0
 
+    // Data for Realised Profit & Loss Chart
+    let realisedPnlCumulative = 0
+    let realisedProfitCumulative = 0
+    let realisedLossCumulative = 0
+
     // Data for Copy Statistic Chart
     let copierCumulative = 0
     let copierActiveCumulative = 0
@@ -556,6 +561,13 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
         lossCumulative += stats.totalLoss
         pnlCumulative += pnl
 
+        // Realised Profit & Loss Chart
+        const realisedPnl = stats.totalRealisedProfit + stats.totalRealisedLoss
+        const absRealisedPnl = Math.abs(stats.totalRealisedProfit) + Math.abs(stats.totalRealisedLoss)
+        realisedProfitCumulative += stats.totalRealisedProfit
+        realisedLossCumulative += stats.totalRealisedLoss
+        realisedPnlCumulative += realisedPnl
+
         // Copy Statistic Chart
         const totalCopier = stats.totalActiveCopier + stats.totalInactiveCopier
         const totalCopyTrade = stats.totalActiveCopyTrade + stats.totalInactiveCopyTrade
@@ -573,6 +585,9 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
           let totalPnl = 0
           let totalProfit = 0
           let totalLoss = 0
+          let totalRealisedPnl = 0
+          let totalRealisedProfit = 0
+          let totalRealisedLoss = 0
 
           for (const exchange in stats.exchanges) {
             if (
@@ -593,6 +608,9 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
               totalPnl += exchangeStats.totalPnl || 0
               totalProfit += exchangeStats.totalProfit || 0
               totalLoss += exchangeStats.totalLoss || 0
+              totalRealisedPnl += exchangeStats.totalRealisedPnl || 0
+              totalRealisedProfit += exchangeStats.totalRealisedProfit || 0
+              totalRealisedLoss += exchangeStats.totalRealisedLoss || 0
             }
           }
 
@@ -604,6 +622,9 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
             totalPnl: pnl - totalPnl,
             totalProfit: stats.totalProfit - totalProfit,
             totalLoss: stats.totalLoss - totalLoss,
+            totalRealisedPnl: realisedPnl - totalRealisedPnl,
+            totalRealisedProfit: stats.totalRealisedProfit - totalRealisedProfit,
+            totalRealisedLoss: stats.totalRealisedLoss - totalRealisedLoss,
           }
         }
 
@@ -629,6 +650,15 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
           totalLoss: stats.totalLoss,
           profitPercent: absPnl > 0 ? (stats.totalProfit / absPnl) * 100 : 0,
           lossPercent: absPnl > 0 ? (Math.abs(stats.totalLoss) / absPnl) * 100 : 0,
+          // Realised Profit & Loss Chart
+          realisedPnl,
+          realisedPnlCumulative,
+          realisedProfitCumulative,
+          realisedLossCumulative,
+          totalRealisedProfit: stats.totalRealisedProfit,
+          totalRealisedLoss: stats.totalRealisedLoss,
+          realisedProfitPercent: absRealisedPnl > 0 ? (stats.totalRealisedProfit / absRealisedPnl) * 100 : 0,
+          realisedLossPercent: absRealisedPnl > 0 ? (Math.abs(stats.totalRealisedLoss) / absRealisedPnl) * 100 : 0,
           // Copy Statistic Chart
           copierCumulative,
           copierActiveCumulative,

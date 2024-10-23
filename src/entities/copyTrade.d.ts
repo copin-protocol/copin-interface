@@ -122,6 +122,9 @@ export interface CopyPositionData {
   takeProfitAmount: number
   latestTakeProfitId?: string
   pnl: number
+  realisedPnl: number
+  fee: number
+  funding: number
   closeType: CopyPositionCloseTypeEnum
   status: PositionStatusEnum
   lastOrderAt: string

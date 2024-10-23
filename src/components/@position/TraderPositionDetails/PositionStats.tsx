@@ -10,10 +10,10 @@ import { renderEntry, renderSize, renderSizeOpeningWithPrices } from 'components
 import { PositionData } from 'entities/trader'
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
+import { FEE_WITH_FUNDING_PROTOCOLS } from 'utils/config/constants'
 import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
 import { formatDuration } from 'utils/helpers/format'
 
-import { FEE_WITH_FUNDING_PROTOCOLS } from '../../../utils/config/constants'
 import SharePosition from './SharePosition'
 
 interface PositionStatsProps {

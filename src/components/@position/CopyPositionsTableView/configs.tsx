@@ -170,7 +170,7 @@ export const historyColumns: typeof openingColumns = [
     render: renderLeverage,
   },
   {
-    title: <LabelEPnL />,
+    title: 'ePnL',
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '100px', width: 100, textAlign: 'right' },

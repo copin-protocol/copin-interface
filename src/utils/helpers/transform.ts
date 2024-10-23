@@ -543,3 +543,8 @@ export function convertMiniNumber(value: number | string) {
   }
   return value
 }
+
+export function parseColorByValue(value?: number) {
+  if (!value) return 'neutral1'
+  return value > 0 ? 'green1' : value < 0 ? 'red2' : 'neutral1'
+}

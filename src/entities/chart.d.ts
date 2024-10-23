@@ -32,6 +32,14 @@ export type StatisticChartData = {
   pnlCumulative: number
   profitPercent: number
   lossPercent: number
+  totalRealisedProfit: number
+  totalRealisedLoss: number
+  realisedProfitCumulative: number
+  realisedLossCumulative: number
+  realisedPnl: number
+  realisedPnlCumulative: number
+  realisedProfitPercent: number
+  realisedLossPercent: number
   totalCopier: number
   totalActiveCopier: number
   totalInactiveCopier: number
