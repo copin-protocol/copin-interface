@@ -214,6 +214,42 @@ const TOKEN_TRADE_SYNTHETIX_V3: ProtocolTokenMapping = {
   'SYNTHETIX_V3-7200': {
     symbol: 'YFI',
   },
+  //22-10-2024
+  'SYNTHETIX_V3-7300': {
+    symbol: 'EIGEN',
+  },
+  'SYNTHETIX_V3-7400': {
+    symbol: 'IO',
+  },
+  'SYNTHETIX_V3-7500': {
+    symbol: 'MEW',
+  },
+  'SYNTHETIX_V3-7600': {
+    symbol: 'MKR',
+  },
+  'SYNTHETIX_V3-7700': {
+    symbol: 'NOT',
+  },
+  'SYNTHETIX_V3-7800': {
+    symbol: 'PEOPLE',
+  },
+  'SYNTHETIX_V3-7900': {
+    symbol: 'POL',
+  },
+  'SYNTHETIX_V3-8000': {
+    symbol: 'POPCAT',
+  },
+  'SYNTHETIX_V3-8100': {
+    symbol: 'RENDER',
+  },
+  'SYNTHETIX_V3-8200': {
+    symbol: 'SATS',
+  },
+  'SYNTHETIX_V3-8300': {
+    symbol: 'WLD',
+  },
+  'SYNTHETIX_V3-8400': {
+    symbol: 'ZRO',
+  },
 }
-
 export { TOKEN_TRADE_SYNTHETIX_V3 }
