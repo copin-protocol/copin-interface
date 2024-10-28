@@ -76,6 +76,33 @@ const TOKEN_TRADE_GMX_V2: ProtocolTokenMapping = {
   '0xd62068697bCc92AF253225676D618B0C9f17C663': {
     symbol: 'BTC', //tBTC
   },
+  '0x8ea4Fb801493DaD8724F90Fb2e279534fa591366': {
+    symbol: 'SATS',
+  },
+  '0xD8471b9Ea126272E6d32B5e4782Ed76DB7E554a4 ': {
+    symbol: 'UNI',
+  },
+  '0x77B2eC357b56c7d05a87971dB0188DBb0C7836a5': {
+    symbol: 'AAVE',
+  },
+  '0xdAB21c4d1F569486334C93685Da2b3F9b0A078e8': {
+    symbol: 'APE',
+  },
+  '0x6Ecf2133E2C9751cAAdCb6958b9654baE198a797': {
+    symbol: 'SUI',
+  },
+  '0xD4b737892baB8446Ea1e8Bb901db092fb1EC1791': {
+    symbol: 'EIGEN',
+  },
+  '0xD0a1AFDDE31Eb51e8b53bdCE989EB8C2404828a4': {
+    symbol: 'POL',
+  },
+  '0x0Bb2a83F995E1E1eae9D7fDCE68Ab1ac55b2cc85': {
+    symbol: 'PEPE',
+  },
+  '0xB489711B1cB86afDA48924730084e23310EB4883': {
+    symbol: 'SEI',
+  },
 }
 
 export { TOKEN_TRADE_GMX_V2 }

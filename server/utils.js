@@ -1,4 +1,11 @@
 // import { getAddress } from 'ethers/lib/utils.js'
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration.js'
+import isoWeek from 'dayjs/plugin/isoWeek.js'
+import relativeTime from 'dayjs/plugin/relativeTime.js'
+import timezone from 'dayjs/plugin/timezone.js'
+import utc from 'dayjs/plugin/utc.js'
+import weekOfYear from 'dayjs/plugin/weekOfYear.js'
 import { readFile } from 'fs'
 import { resolve } from 'path'
 import path from 'path'
@@ -11,6 +18,18 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const indexPath = resolve(__dirname, '..', 'build', 'index.html')
+
+dayjs.extend(relativeTime)
+dayjs.extend(utc)
+dayjs.extend(weekOfYear)
+dayjs.extend(isoWeek)
+dayjs.extend(duration)
+dayjs.extend(timezone)
+
+export const DATE_FORMAT = 'YYYY/MM/DD'
+export const DATE_TEXT_FORMAT = 'DD MMM, YYYY'
+export const TIME_FORMAT = 'HH:mm:ss'
+export const DAYJS_FULL_DATE_FORMAT = 'YYYY/MM/DD HH:mm:ss'
 
 const renderHTML = ({ req, res, params = {} }) => {
   const {
@@ -143,4 +162,67 @@ function generateProtocolName(protocol) {
   }
 }
 
-export { renderHTML, normalizeText, shortenText, addressShorten, generateProtocolName }
+function formatNumber(num, maxDigit = 2, minDigit) {
+  if (num == null) return '--'
+  if (typeof num === 'string') num = Number(num)
+  if ((Math.abs(num) !== 0 && Math.abs(num) < 1 && maxDigit === 0) || (Math.abs(num) < 0.1 && maxDigit === 1)) {
+    maxDigit = 2
+    minDigit = 2
+  }
+  if (Math.abs(num) < 0.01 && (maxDigit === 2 || maxDigit === 1)) {
+    maxDigit = 5
+  }
+  // if (num > 1000000000) return t`${(num / 1000000000).toFixed(0)} tỷ`
+  return `${num.toLocaleString('en-US', { minimumFractionDigits: minDigit, maximumFractionDigits: maxDigit })}`
+}
+
+function formatDuration(durationInSecond) {
+  if (!durationInSecond) return '--'
+  if (durationInSecond < 60) return `${formatNumber(durationInSecond, 0, 0)}s`
+  if (durationInSecond < 3600) return `${formatNumber(durationInSecond / 60, 1, 1)}m`
+  if (durationInSecond < 86400) return `${formatNumber(durationInSecond / (60 * 60), 1, 1)}h`
+  return `${formatNumber(durationInSecond / (60 * 60 * 24), 0, 0)}d`
+}
+
+const formatLocalRelativeDate = (date) => dayjs.utc(date).local().fromNow()
+const formatLocalRelativeShortDate = (date) => {
+  const arr = dayjs.utc(date).local().fromNow(true).split(' ')
+  return `${arr[0] === 'a' || arr[0] === 'an' ? '1' : arr[0]}${arr[1].includes('month') ? 'mo' : arr[1]?.charAt(0)}`
+}
+
+const formatRelativeDate = (date) => dayjs.utc(date).fromNow()
+const formatRelativeShortDate = (date) => {
+  const arr = dayjs.utc(date).fromNow(true).split(' ')
+  return `${arr[0]}${arr[1]?.charAt(0)}`
+}
+
+const formatLocalDate = (date, format) => {
+  if (!date) return ''
+
+  return dayjs
+    .utc(date)
+    .local()
+    .format(format ?? DATE_FORMAT)
+}
+
+const formatDate = (date, format) => {
+  if (!date) return ''
+
+  return dayjs.utc(date).format(format ?? DAYJS_FULL_DATE_FORMAT)
+}
+
+export {
+  renderHTML,
+  normalizeText,
+  shortenText,
+  addressShorten,
+  generateProtocolName,
+  formatNumber,
+  formatDuration,
+  formatLocalDate,
+  formatLocalRelativeDate,
+  formatDate,
+  formatRelativeShortDate,
+  formatLocalRelativeShortDate,
+  formatRelativeDate,
+}

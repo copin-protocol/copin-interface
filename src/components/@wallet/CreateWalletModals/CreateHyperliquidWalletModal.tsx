@@ -96,7 +96,7 @@ export default function CreateHyperliquidWalletModal({
     const value = {
       hyperliquidChain: 'Mainnet',
       maxFeeRate: '0.025%',
-      builder: '0x055BA87Dbff972e23bCF26ea4728C31e05240e66',
+      builder: '0x055ba87dbff972e23bcf26ea4728c31e05240e66',
       nonce: Date.now(),
     }
     try {
