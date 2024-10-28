@@ -228,6 +228,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.PERENNIAL_ARB,
         ProtocolEnum.BSX_BASE,
         ProtocolEnum.DYDX,
+        ProtocolEnum.UNIDEX_ARB,
       ]
     : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 

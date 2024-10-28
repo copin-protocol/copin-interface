@@ -56,6 +56,7 @@ import { TOKEN_TRADE_SYNFUTURES_BASE } from './tokenTradeSynfutureBase'
 import { TOKEN_TRADE_SYNTHETIX } from './tokenTradeSynthetix'
 import { TOKEN_TRADE_SYNTHETIX_V3 } from './tokenTradeSynthetixV3'
 import { TOKEN_TRADE_TIGRIS_ARB } from './tokenTradeTigris'
+import { TOKEN_COLLATERAL_UNIDEX_ARB, TOKEN_TRADE_UNIDEX_ARB } from './tokenTradeUniDex'
 import { TOKEN_TRADE_VELA_ARB } from './tokenTradeVela'
 import { TOKEN_TRADE_YFX_ARB } from './tokenTradeYfx'
 
@@ -197,6 +198,10 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: BASE_MAINNET,
     explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.UNIDEX_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
 }
 export interface TokenTrade {
   address: string
@@ -264,6 +269,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.SYNFUTURE_BASE]: TOKEN_TRADE_SYNFUTURES_BASE,
   [ProtocolEnum.DYDX]: TOKEN_TRADE_DYDX,
   [ProtocolEnum.BSX_BASE]: TOKEN_TRADE_BSX_BASE,
+  [ProtocolEnum.UNIDEX_ARB]: TOKEN_TRADE_UNIDEX_ARB,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -315,6 +321,7 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.SYNFUTURE_BASE]: TOKEN_COLLATERAL_BASE,
   [ProtocolEnum.DYDX]: {},
   [ProtocolEnum.BSX_BASE]: TOKEN_COLLATERAL_BASE,
+  [ProtocolEnum.UNIDEX_ARB]: { ...TOKEN_COLLATERAL_ARB, ...TOKEN_COLLATERAL_UNIDEX_ARB },
 }
 
 export const SYNTHETIX_MARKETS: { [key: number]: string[] } = {

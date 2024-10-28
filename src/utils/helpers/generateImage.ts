@@ -560,6 +560,10 @@ export const generateProtocol = ({
       protocolTextWidth = 117
       protocolText = 'BSX'
       break
+    case ProtocolEnum.UNIDEX_ARB:
+      protocolTextWidth = 156
+      protocolText = 'UniDex'
+      break
     default:
       break
   }

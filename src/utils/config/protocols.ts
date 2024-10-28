@@ -299,6 +299,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     isNew: true,
     key: 'BSB',
   },
+  [ProtocolEnum.UNIDEX_ARB]: {
+    id: ProtocolEnum.UNIDEX_ARB,
+    text: 'UniDex',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+    isNew: true,
+    key: 'UNA',
+  },
 }
 
 export const SELECTED_PROTOCOLS_ALL = 'all'

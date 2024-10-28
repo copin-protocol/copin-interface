@@ -157,6 +157,8 @@ function generateProtocolName(protocol) {
       return 'dYdX'
     case 'BSX':
       return 'BSX'
+    case 'UNIDEX_ARB':
+      return 'UniDex'
     default:
       return ''
   }
