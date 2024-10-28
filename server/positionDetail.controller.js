@@ -1,7 +1,14 @@
 import axios from 'axios'
 
 import { configs } from './configs.js'
-import { addressShorten, formatLocalRelativeDate, formatNumber, generateProtocolName, renderHTML } from './utils.js'
+import {
+  addressShorten,
+  formatLocalRelativeDate,
+  formatNumber,
+  generateAvatar,
+  generateProtocolName,
+  renderHTML
+} from './utils.js'
 
 const getPositionDetails = async (req, res) => {
   const { account, log_id, next_hours } = req.query
@@ -40,15 +47,14 @@ const getPositionDetails = async (req, res) => {
         })
 
       if (traderStats) {
-        description = `🐱 PnL: ${formatNumber(traderStats.realisedPnl)}$ | Trades: ${formatNumber(
+        const { emoji } = generateAvatar(account)
+        description = `${emoji} PnL: ${formatNumber(traderStats.realisedPnl)}$ | Trades: ${formatNumber(
           traderStats.totalTrade
         )} | WinRate: ${formatNumber(traderStats.winRate, 2, 2)}% | Profit Rate: ${formatNumber(
           traderStats.profitRate,
           2,
           2
-        )}% | Protocol: ${protocolName} | Last Trade: ${
-          traderStats.lastTradeAt ? formatLocalRelativeDate(traderStats.lastTradeAt) : '--'
-        }.`
+        )}% | Last Trade: ${traderStats.lastTradeAt ? formatLocalRelativeDate(traderStats.lastTradeAt) : '--'}.`
       }
     }
   } catch {}
@@ -56,7 +62,7 @@ const getPositionDetails = async (req, res) => {
   try {
     const params = !!description
       ? {
-          title: `Trader ${addressShorten(account)} via ${protocolName} - Explore. Copy. Win on Copin`,
+          title: `Trader ${addressShorten(account)} has position via ${protocolName} - Explore. Copy. Win on Copin`,
           description,
           thumbnail,
           url,
