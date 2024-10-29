@@ -501,3 +501,50 @@ export function getSymbolFromPair(pair: string | undefined) {
 export function getPairFromSymbol(symbol: string) {
   return `${symbol}-USDT`
 }
+
+export function convertMiniNumber(value: number | string) {
+  switch (value) {
+    case 1:
+    case '1':
+      return '\u2081'
+    case 2:
+    case '2':
+      return '\u2082'
+    case 3:
+    case '3':
+      return '\u2083'
+    case 4:
+    case '4':
+      return '\u2084'
+    case 5:
+    case '5':
+      return '\u2085'
+    case 6:
+    case '6':
+      return '\u2086'
+    case 7:
+    case '7':
+      return '\u2087'
+    case 8:
+    case '8':
+      return '\u2088'
+    case 9:
+    case '9':
+      return '\u2089'
+    case 10:
+    case '10':
+      return '\u2081\u2080'
+    case 11:
+    case '11':
+      return '\u2081\u2081'
+    case 12:
+    case '12':
+      return '\u2081\u2082'
+  }
+  return value
+}
+
+export function parseColorByValue(value?: number) {
+  if (!value) return 'neutral1'
+  return value > 0 ? 'green1' : value < 0 ? 'red2' : 'neutral1'
+}

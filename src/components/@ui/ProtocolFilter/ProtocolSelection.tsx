@@ -376,6 +376,7 @@ export default function ProtocolSelection({
             handleToggleDropdown?.()
           }}
           sx={{ fontWeight: 400, p: 0 }}
+          disabled={isEqual}
         >
           Apply & Save
         </Button>

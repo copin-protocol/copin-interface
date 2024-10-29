@@ -6,8 +6,8 @@ import { TopOpeningPositionsGraphQLResponse } from 'graphql/entities/topOpeningP
 import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 
+import { normalizePositionData } from 'apis/normalize'
 import DailyPositionListView from 'components/@dailyTrades/PositionListView'
-import { PositionRangeFields } from 'components/@dailyTrades/configs'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import { dailyPositionColumns } from 'components/@position/configs/traderPositionRenderProps'
 import ToastBody from 'components/@ui/ToastBody'
@@ -233,7 +233,7 @@ function DailyPositionsComponent() {
         {md ? (
           <VirtualList
             columns={dailyPositionColumns}
-            data={data?.data}
+            data={data?.data?.map((v) => normalizePositionData(v))} // Todo: improve here
             isLoading={isLoadingPositions}
             hiddenFooter
             handleSelectItem={handleSelectItem}

@@ -19,6 +19,8 @@ export interface CopyStatisticData {
   totalOrder: number
   totalProfit: number
   totalLoss: number
+  totalRealisedProfit: number
+  totalRealisedLoss: number
   totalActiveCopier: number
   totalInactiveCopier: number
   totalActiveCopyTrade: number
@@ -37,6 +39,9 @@ export interface ExchangeStatsData {
     totalPnl: number
     totalProfit: number
     totalLoss: number
+    totalRealisedPnl: number
+    totalRealisedProfit: number
+    totalRealisedLoss: number
   }
 }
 

@@ -39,18 +39,18 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
         alignItems: 'center',
         position: 'relative',
         border: 'small',
-        borderColor: error ? 'red1' : 'neutral3',
+        borderColor: error ? 'red1' : 'neutral4',
         borderRadius: 'sm',
         bg: 'neutral5',
         maxHeight: maxHeightSelectContainer ?? 'none',
         overflow: 'auto',
         '&:hover:not([disabled]), &--is-hovered': {
           bg: 'neutral7',
-          borderColor: error ? 'red1' : 'neutral3',
+          borderColor: error ? 'red1' : 'neutral4',
           boxShadow: 'none',
         },
         '&:focus-within:not([disabled]), &--is-focused': {
-          borderColor: 'neutral2',
+          borderColor: 'neutral4',
           boxShadow: 'none',
         },
         '& .select__value-container': {

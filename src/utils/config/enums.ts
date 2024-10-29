@@ -32,6 +32,8 @@ export enum ProtocolEnum {
   HYPERLIQUID = 'HYPERLIQUID',
   SYNFUTURE_BASE = 'SYNFUTURE_BASE',
   DYDX = 'DYDX',
+  BSX_BASE = 'BSX_BASE',
+  UNIDEX_ARB = 'UNIDEX_ARB',
 }
 
 export enum ProtocolFilterEnum {

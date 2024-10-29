@@ -1,4 +1,3 @@
-import LabelEPnL from 'components/@ui/LabelEPnL'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { ColumnData } from 'theme/Table/types'
@@ -92,7 +91,7 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     render: renderLeverage,
   },
   {
-    title: <LabelEPnL />,
+    title: 'PnL',
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '100px', width: 100, textAlign: 'right' },

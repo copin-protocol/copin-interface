@@ -27,6 +27,7 @@ const ExplorerLogo = ({
     case CopyTradePlatformEnum.GNS_V8:
     case ProtocolEnum.YFX_ARB:
     case ProtocolEnum.PERENNIAL_ARB:
+    case ProtocolEnum.UNIDEX_ARB:
       icon = 'ARBITRUM'
       break
 
@@ -52,6 +53,7 @@ const ExplorerLogo = ({
     case ProtocolEnum.SYNTHETIX_V3:
     case CopyTradePlatformEnum.SYNTHETIX_V3:
     case ProtocolEnum.SYNFUTURE_BASE:
+    case ProtocolEnum.BSX_BASE:
       icon = 'BASE'
       break
     case ProtocolEnum.LOGX_MODE:

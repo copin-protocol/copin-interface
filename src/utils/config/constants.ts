@@ -92,6 +92,7 @@ export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/
 export const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/
 
 export const EVM_TX_HASH_REGEX = /^0x?([a-fA-F0-9]{64})$/
+export const DYDX_TX_HASH_REGEX = /^([a-fA-F0-9]{64})$/
 
 export const CHART_DAYS_DURATION = 30
 export const CHART_DATE_FORMAT = 'DD.MM'
@@ -225,6 +226,9 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.SYNFUTURE_BASE,
         ProtocolEnum.MORPHEX_FANTOM,
         ProtocolEnum.PERENNIAL_ARB,
+        ProtocolEnum.BSX_BASE,
+        ProtocolEnum.DYDX,
+        ProtocolEnum.UNIDEX_ARB,
       ]
     : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 
@@ -252,5 +256,6 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.MORPHEX_FANTOM,
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
+export const FEE_WITH_FUNDING_PROTOCOLS = [ProtocolEnum.HYPERLIQUID, ProtocolEnum.BSX_BASE, ProtocolEnum.DYDX]
 
 export const MAX_LIMIT = 500

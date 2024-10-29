@@ -12,6 +12,7 @@ import { isAddress } from 'utils/web3/contracts'
 
 import { MarginModeEnum, RewardSymbolEnum } from '../config/enums'
 import { MARGIN_MODE_TRANS } from '../config/translations'
+import { convertMiniNumber } from './transform'
 
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
@@ -24,7 +25,7 @@ export function formatDuration(durationInSecond: number | undefined) {
   if (!durationInSecond) return '--'
   if (durationInSecond < 60) return `${formatNumber(durationInSecond, 0, 0)}s`
   if (durationInSecond < 3600) return `${formatNumber(durationInSecond / 60, 1, 1)}m`
-  if (durationInSecond < 86400) return `${formatNumber(durationInSecond / (60 * 60), 1, 1)}h`
+  if (durationInSecond < 360000) return `${formatNumber(durationInSecond / (60 * 60), 1, 1)}h`
   return `${formatNumber(durationInSecond / (60 * 60 * 24), 0, 0)}d`
 }
 
@@ -82,6 +83,15 @@ export function formatPrice(num?: number | string, maxDigit = 2, minDigit = 2) {
   if (Math.abs(num) < 100) {
     maxDigit = 4
     minDigit = 4
+  }
+  const { integerPart, zeroPart, decimalPart } = formatTokenPrices({
+    value: num,
+  })
+  if (num < 1 && zeroPart.length >= 3 && Number(decimalPart) > 0) {
+    return `${Number(integerPart).toFixed(1)}${convertMiniNumber(zeroPart.length)}${formatNumber(
+      decimalPart,
+      maxDigit
+    )}`
   }
   return formatNumber(num, maxDigit, minDigit)
 }

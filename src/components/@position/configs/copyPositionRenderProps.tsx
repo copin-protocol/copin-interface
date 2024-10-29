@@ -2,6 +2,8 @@ import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
+import Divider from 'components/@ui/Divider'
+import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
@@ -16,7 +18,13 @@ import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
-import { getSymbolFromPair, normalizePriceData, parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
+import {
+  getSymbolFromPair,
+  normalizePriceData,
+  parseColorByValue,
+  parseExchangeImage,
+  parseWalletName,
+} from 'utils/helpers/transform'
 
 export const renderCopyWallet = (data: CopyPositionData, _: number | undefined, externalSource: any) => {
   let walletName = '--'
@@ -73,18 +81,60 @@ export function renderEntry(data: CopyPositionData) {
     </Flex>
   )
 }
-export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {
-  const symbol = getSymbolFromPair(data.pair)
-  const pnl =
-    data.status === PositionStatusEnum.OPEN
-      ? calcCopyOpeningPnL(
-          data,
-          prices && symbol ? normalizePriceData(symbol, prices[data.indexToken], data.exchange) : undefined
-        )
-      : data.pnl
 
+export function renderPnL(data: CopyPositionData, prices?: UsdPrices, textSx?: any) {
+  const symbol = getSymbolFromPair(data.pair)
+  const isOpening = data.status === PositionStatusEnum.OPEN
+  const pnl = isOpening
+    ? calcCopyOpeningPnL(
+        data,
+        prices && symbol ? normalizePriceData(symbol, prices[data.indexToken], data.exchange) : undefined
+      )
+    : data.realisedPnl ?? data.pnl
+
+  return isOpening ? (
+    renderValueWithColor(pnl)
+  ) : (
+    <LabelWithTooltip
+      id={`tt_copy_pnl_${data.id}_${data.status}`}
+      tooltipSx={{ textAlign: 'left' }}
+      tooltip={
+        <Flex flexDirection="column" sx={{ gap: 2 }}>
+          <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+            <Type.Caption>PnL w. Fees:</Type.Caption>
+            {renderValueWithColor(data.pnl)}
+          </Flex>
+          <Divider />
+          <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+            <Type.Caption>Realized PnL:</Type.Caption>
+            {renderValueWithColor(data.realisedPnl)}
+          </Flex>
+          {!!data.fee && (
+            <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+              <Type.Caption>Fees:</Type.Caption>
+              {renderValueWithColor(data.fee)}
+            </Flex>
+          )}
+          {!!data.funding && (
+            <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+              <Type.Caption>Funding:</Type.Caption>
+              {renderValueWithColor(data.funding)}
+            </Flex>
+          )}
+        </Flex>
+      }
+      dashed
+    >
+      {renderValueWithColor(data.pnl, textSx)}
+    </LabelWithTooltip>
+  )
+}
+
+export function renderValueWithColor(value: number, textSx?: any) {
   return (
-    <Type.Caption color={pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'}>{formatNumber(pnl, 2, 2)}</Type.Caption>
+    <Type.Caption color={parseColorByValue(value)} sx={{ ...textSx }}>
+      {formatNumber(value, 2, 2)}
+    </Type.Caption>
   )
 }
 

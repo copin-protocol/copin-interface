@@ -31,7 +31,7 @@ const LabelWithTooltip = ({
           dashed
             ? {
                 borderBottom: '1px dashed',
-                borderBottomColor: 'neutral3',
+                borderBottomColor: 'neutral4',
                 ...sx,
               }
             : {

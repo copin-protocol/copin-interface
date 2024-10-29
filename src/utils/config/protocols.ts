@@ -248,7 +248,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'Perennial',
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
-    isNew: true,
+    isNew: false,
     key: 'PEA',
   },
   [ProtocolEnum.MUMMY_FANTOM]: {
@@ -256,7 +256,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'Mummy',
     label: 'Fantom',
     chainId: FANTOM_MAINNET,
-    isNew: true,
+    isNew: false,
     key: 'MUF',
   },
   [ProtocolEnum.MORPHEX_FANTOM]: {
@@ -264,14 +264,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'Morphex',
     label: 'Fantom',
     chainId: FANTOM_MAINNET,
-    isNew: true,
+    isNew: false,
     key: 'MOF',
   },
   [ProtocolEnum.HYPERLIQUID]: {
     id: ProtocolEnum.HYPERLIQUID,
     text: 'Hyperliquid',
     label: 'Hyperliquid',
-    isNew: true,
+    isNew: false,
     chainId: HYPERLIQUID_TESTNET,
     key: 'HLP',
   },
@@ -280,7 +280,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     text: 'Synfutures',
     label: 'Base',
     chainId: BASE_MAINNET,
-    isNew: true,
+    isNew: false,
     key: 'SYB',
   },
   [ProtocolEnum.DYDX]: {
@@ -290,6 +290,22 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: DYDX_MAINNET,
     isNew: true,
     key: 'DYD',
+  },
+  [ProtocolEnum.BSX_BASE]: {
+    id: ProtocolEnum.BSX_BASE,
+    text: 'BSX',
+    label: 'Base',
+    chainId: BASE_MAINNET,
+    isNew: true,
+    key: 'BSB',
+  },
+  [ProtocolEnum.UNIDEX_ARB]: {
+    id: ProtocolEnum.UNIDEX_ARB,
+    text: 'UniDex',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+    isNew: true,
+    key: 'UNA',
   },
 }
 
@@ -306,6 +322,7 @@ export const PROTOCOLS_CROSS_MARGIN = [
   ProtocolEnum.SYNTHETIX_V3,
   ProtocolEnum.HYPERLIQUID,
   ProtocolEnum.DYDX,
+  ProtocolEnum.BSX_BASE,
 ]
 
 export const PROTOCOLS_IN_TOKEN: ProtocolEnum[] = []

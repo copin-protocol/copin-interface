@@ -1,7 +1,14 @@
 import axios from 'axios'
 
 import { configs } from './configs.js'
-import { addressShorten, formatLocalRelativeDate, formatNumber, generateProtocolName, renderHTML } from './utils.js'
+import {
+  addressShorten,
+  formatLocalRelativeDate,
+  formatNumber,
+  generateAvatar,
+  generateProtocolName,
+  renderHTML,
+} from './utils.js'
 
 const getTraderDetail = async (req, res) => {
   const { time = 'FULL' } = req.query
@@ -25,15 +32,14 @@ const getTraderDetail = async (req, res) => {
         return res.data?.['FULL']
       })
     if (traderStats) {
-      description = `🐱 PnL: ${formatNumber(traderStats.realisedPnl)}$ | Trades: ${formatNumber(
+      const { emoji } = generateAvatar(address)
+      description = `${emoji} PnL: ${formatNumber(traderStats.realisedPnl)}$ | Trades: ${formatNumber(
         traderStats.totalTrade
       )} | WinRate: ${formatNumber(traderStats.winRate, 2, 2)}% | Profit Rate: ${formatNumber(
         traderStats.profitRate,
         2,
         2
-      )}% | Protocol: ${protocolName} | Last Trade: ${
-        traderStats.lastTradeAt ? formatLocalRelativeDate(traderStats.lastTradeAt) : '--'
-      }.`
+      )}% | Last Trade: ${traderStats.lastTradeAt ? formatLocalRelativeDate(traderStats.lastTradeAt) : '--'}.`
     }
   } catch {}
 

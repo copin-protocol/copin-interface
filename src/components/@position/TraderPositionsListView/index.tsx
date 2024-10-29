@@ -10,7 +10,7 @@ import { renderEntry, renderOpeningPnL, renderSizeOpening, renderTrader } from '
 import { PositionData } from 'entities/trader'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { formatNumber } from 'utils/helpers/format'
+import { formatLeverage, formatNumber } from 'utils/helpers/format'
 
 type Props = {
   isLoading: boolean
@@ -114,7 +114,7 @@ export default function TraderPositionListView({
                       <Box as="span" color="neutral3" sx={{ mx: '1ch' }}>
                         |
                       </Box>
-                      {formatNumber(position.leverage, 1, 1)}x
+                      {formatLeverage(position.marginMode, position.leverage)}
                     </Type.Caption>
                   )}
                 </Flex>

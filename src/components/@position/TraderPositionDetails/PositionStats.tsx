@@ -10,7 +10,8 @@ import { renderEntry, renderSize, renderSizeOpeningWithPrices } from 'components
 import { PositionData } from 'entities/trader'
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
-import { OrderTypeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { FEE_WITH_FUNDING_PROTOCOLS } from 'utils/config/constants'
+import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
 import { formatDuration } from 'utils/helpers/format'
 
 import SharePosition from './SharePosition'
@@ -92,7 +93,7 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, c
               />
             }
           />
-          {data.protocol === ProtocolEnum.HYPERLIQUID ? (
+          {FEE_WITH_FUNDING_PROTOCOLS.includes(data.protocol) ? (
             <DesktopItemInfo
               label={<Trans>Fees & Funding:</Trans>}
               value={
