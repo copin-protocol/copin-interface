@@ -203,6 +203,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.GMX_V2,
         ProtocolEnum.GNS,
         ProtocolEnum.GNS_POLY,
+        ProtocolEnum.GNS_BASE,
         ProtocolEnum.LEVEL_BNB,
         ProtocolEnum.LEVEL_ARB,
         ProtocolEnum.MUX_ARB,

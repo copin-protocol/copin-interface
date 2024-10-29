@@ -39,6 +39,7 @@ import { TOKEN_TRADE_EQUATION_ARB } from './tokenTradeEquation'
 import { TOKEN_TRADE_GMX } from './tokenTradeGmx'
 import { TOKEN_TRADE_GMX_V2 } from './tokenTradeGmxV2'
 import { TOKEN_TRADE_GNS } from './tokenTradeGns'
+import { TOKEN_TRADE_GNS_BASE } from './tokenTradeGnsBase'
 import { TOKEN_TRADE_GNS_POLY } from './tokenTradeGnsPoly'
 import { TOKEN_TRADE_HMX_ARB } from './tokenTradeHmx'
 import { TOKEN_TRADE_HYPERLIQUID } from './tokenTradeHyperliquid'
@@ -81,6 +82,10 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
   [ProtocolEnum.GNS_POLY]: {
     chainId: POLYGON_MAINNET,
     explorerUrl: CHAINS[POLYGON_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.GNS_BASE]: {
+    chainId: BASE_MAINNET,
+    explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.GMX_V2]: {
     chainId: ARBITRUM_MAINNET,
@@ -237,6 +242,7 @@ export const SYNTHETIX_V3_MARKET_IDS = {
 export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.GNS]: TOKEN_TRADE_GNS,
   [ProtocolEnum.GNS_POLY]: TOKEN_TRADE_GNS_POLY,
+  [ProtocolEnum.GNS_BASE]: TOKEN_TRADE_GNS_BASE,
   [ProtocolEnum.GMX]: TOKEN_TRADE_GMX,
   [ProtocolEnum.GMX_V2]: TOKEN_TRADE_GMX_V2,
   [ProtocolEnum.KWENTA]: TOKEN_TRADE_SYNTHETIX,
@@ -307,6 +313,7 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.MUX_ARB]: { ...TOKEN_COLLATERAL_ARB, ...TOKEN_COLLATERAL_MUX_ARB },
   [ProtocolEnum.GNS]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.GNS_POLY]: TOKEN_COLLATERAL_POLYGON,
+  [ProtocolEnum.GNS_BASE]: TOKEN_COLLATERAL_BASE,
   [ProtocolEnum.GMX]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.GMX_V2]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.KWENTA]: TOKEN_COLLATERAL_OPTIMISTIC,

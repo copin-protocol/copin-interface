@@ -5,6 +5,7 @@ export enum ProtocolEnum {
   GMX_V2 = 'GMX_V2',
   GNS = 'GNS',
   GNS_POLY = 'GNS_POLY',
+  GNS_BASE = 'GNS_BASE',
   LEVEL_BNB = 'LEVEL_BNB',
   LEVEL_ARB = 'LEVEL_ARB',
   MUX_ARB = 'MUX_ARB',

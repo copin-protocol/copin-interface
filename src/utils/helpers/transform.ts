@@ -191,6 +191,7 @@ export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
   switch (protocol) {
     case ProtocolEnum.GNS:
     case ProtocolEnum.GNS_POLY:
+    case ProtocolEnum.GNS_BASE:
       return LINKS.tradeGains
     case ProtocolEnum.GMX:
       return LINKS.tradeGMX
