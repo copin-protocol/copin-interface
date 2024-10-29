@@ -22,6 +22,7 @@ export default function StatusByNetwork({ network, data }: { network: string; da
   const externalSource: ExternalSource = {
     latestBlockNumber,
   }
+  const _data = data?.filter((v) => !!PROTOCOL_LISTENER_MAPPING[v.protocol + capitalizeFirstLetter(network)])
 
   const columns = useMemo(() => {
     const result: ColumnData<any, ExternalSource>[] = [
@@ -121,7 +122,7 @@ export default function StatusByNetwork({ network, data }: { network: string; da
           restrictHeight={false}
           isLoading={false}
           columns={columns}
-          data={data}
+          data={_data}
           externalSource={externalSource}
           tableBodySx={{ 'tr:hover': { '.table_icon': { color: 'neutral1' } } }}
           tableHeadSx={{

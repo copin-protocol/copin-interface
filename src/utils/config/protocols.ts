@@ -362,4 +362,5 @@ export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
   rollieScroll: ProtocolEnum.ROLLIE_SCROLL,
   logxBlast: ProtocolEnum.LOGX_BLAST,
   logxMode: ProtocolEnum.LOGX_MODE,
+  bsxBase: ProtocolEnum.BSX_BASE,
 }

@@ -114,7 +114,7 @@ export default function UserReferralTier() {
                     borderBottom: 'none',
                   }}
                 >
-                  {formatNumber(totalFeeLast30Days, 2, 2)} USDT
+                  {formatNumber(totalFeeLast30Days, 2, 2)} USDC
                 </LabelWithTooltip>
                 <LabelWithTooltip
                   id="referral_next_paid_fees"
@@ -145,7 +145,7 @@ export default function UserReferralTier() {
                     borderBottom: 'none',
                   }}
                 >
-                  {formatNumber(nextTierTotalFee, 2, 2)} USDT
+                  {formatNumber(nextTierTotalFee, 2, 2)} USDC
                 </LabelWithTooltip>
               </Flex>
               <DifferentialBar

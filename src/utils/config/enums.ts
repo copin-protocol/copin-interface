@@ -363,7 +363,14 @@ export enum ReferralTypeEnum {
 export enum ReferralHistoryStatusEnum {
   PENDING = 'PENDING',
   CLAIMABLE = 'CLAIMABLE',
+  IN_PROGRESS = 'IN_PROGRESS',
   CLAIMED = 'CLAIMED',
+}
+export enum ClaimRewardStatusEnum {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  CLAIMED = 'CLAIMED',
+  FAILURE = 'FAILURE',
 }
 
 export enum ReferralActivityTypeEnum {

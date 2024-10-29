@@ -5,6 +5,7 @@ import {
   ReferralRebateHistoryData,
   ReferralRewardData,
   ReferralStatisticData,
+  RequestClaimRewardData,
 } from 'entities/referralManagement'
 import { ReferralHistoryStatusEnum, ReferralTypeEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 
@@ -37,7 +38,7 @@ export async function getRebateHistoryListApi(
 
 export async function getClaimHistoryListApi(params?: any) {
   return requester
-    .get(`${SERVICE}/history/page`, { params })
+    .get(`${SERVICE}/claim/history/page`, { params })
     .then((res: any) => res.data as ApiListResponse<ReferralClaimHistoryData>)
 }
 
@@ -55,4 +56,8 @@ export async function getReferralActivitiesApi() {
 
 export async function getReferralRewardApi() {
   return requester.get(`${SERVICE}/reward`).then((res: any) => res.data as ReferralRewardData)
+}
+
+export async function requestClaimRewardApi() {
+  return requester.post(`${SERVICE}/claim/reward`).then((res: any) => res.data as RequestClaimRewardData)
 }

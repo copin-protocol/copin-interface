@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ArrowSquareOut, Funnel } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { ReactNode, useEffect, useMemo, useRef } from 'react'
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { ApiListResponse } from 'apis/api'
@@ -24,6 +24,7 @@ import { ColumnData, TableProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT, DEFAULT_LIMIT } from 'utils/config/constants'
 import {
+  ClaimRewardStatusEnum,
   ReferralHistoryStatusEnum,
   ReferralTierEnum,
   ReferralTypeEnum,
@@ -33,7 +34,9 @@ import {
 import { QUERY_KEYS } from 'utils/config/keys'
 import { addressShorten, compactNumber, formatDate, formatNumber } from 'utils/helpers/format'
 import { pageToOffset } from 'utils/helpers/transform'
+import { ARBITRUM_CHAIN, CHAINS } from 'utils/web3/chains'
 
+import { ClaimRewardModal } from './ReferralStats'
 // import IconUsdt from './IconUsdt'
 import { TIER_SYSTEM } from './configs'
 
@@ -177,8 +180,7 @@ export default function ReferralHistory() {
   )
   const { data: referralClaimHistoryData, isFetching: isLoadingClaimHistory } = useQuery(
     [
-      QUERY_KEYS.GET_REFERRAL_DATA,
-      'claim',
+      QUERY_KEYS.GET_CLAIM_REWARD_HISTORY,
       currentSortBy,
       currentSortType,
       currentPage,
@@ -274,9 +276,9 @@ export default function ReferralHistory() {
         <TabPane tab={'Commission & Rebate History'} key={tabKeys.REBATE_HISTORY}>
           <></>
         </TabPane>
-        {/* <TabPane tab={'Claim History'} key={TabKeys.CLAIM_HISTORY}>
+        <TabPane tab={'Claim History'} key={tabKeys.CLAIM_HISTORY}>
           <></>
-        </TabPane> */}
+        </TabPane>
       </Tabs>
       {!isAuthenticated ? (
         <NoData
@@ -517,7 +519,7 @@ const referralListColumns: ColumnData<ReferralListData>[] = [
     },
   },
   {
-    title: 'Total Commission (USDT)',
+    title: 'Total Commission (USDC)',
     dataIndex: 'totalCommission',
     key: 'totalCommission',
     sortBy: 'totalCommission',
@@ -590,7 +592,7 @@ function useReferralRebateColumns({
         },
       },
       {
-        title: 'Earning (USDT)',
+        title: 'Earning (USDC)',
         dataIndex: 'commission',
         key: 'commission',
         sortBy: 'commission',
@@ -620,7 +622,7 @@ const referralClaimColumns: ColumnData<ReferralClaimHistoryData>[] = [
     },
   },
   {
-    title: 'Amount (USDT)',
+    title: 'Amount (USDC)',
     dataIndex: 'amount',
     key: 'amount',
     style: { minWidth: '150px', textAlign: 'right' },
@@ -632,10 +634,9 @@ const referralClaimColumns: ColumnData<ReferralClaimHistoryData>[] = [
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
-    sortBy: 'status',
     style: { minWidth: '150px', textAlign: 'right' },
     render: (item) => {
-      return <ClaimRebateStatus />
+      return <ClaimRebateStatus data={item} />
     },
   },
 ]
@@ -686,7 +687,7 @@ function MobileRebateListItem({ data }: { data: ReferralRebateHistoryData }) {
         />
         <MobileStatsItemRow
           sx={{ width: '100px', textAlign: 'right' }}
-          label={<Trans>Earning (USDT)</Trans>}
+          label={<Trans>Earning (USDC)</Trans>}
           value={<SignedAmount amount={data.commission} isCompactNumber />}
         />
       </Flex>
@@ -702,7 +703,7 @@ function MobileClaimListItem({ data }: { data: ReferralClaimHistoryData }) {
       <Box mb={12} />
       <Flex sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
         <MobileStatsItemRow label={<Trans>Amount</Trans>} value={<Amount amount={data.amount} isCompactNumber />} />
-        <ClaimRebateStatus />
+        <ClaimRebateStatus data={data} />
       </Flex>
     </>
   )
@@ -813,16 +814,88 @@ function RebateStatus({ status }: { status: ReferralHistoryStatusEnum }) {
       text = 'Claimed'
       color = 'neutral1'
       break
+    case ReferralHistoryStatusEnum.IN_PROGRESS:
+      text = 'In progress'
+      color = 'primary2'
+      break
   }
   return <Type.Small color={color}>{text}</Type.Small>
 }
 
-function ClaimRebateStatus() {
+function ClaimRebateStatus({ data }: { data: ReferralClaimHistoryData }) {
   // need type, and user tier at that moment
+  let text = ''
+  let color = ''
+  switch (data.status) {
+    case ClaimRewardStatusEnum.PENDING:
+      text = 'Pending'
+      color = 'orange1'
+      break
+    case ClaimRewardStatusEnum.FAILURE:
+      text = 'Claimable'
+      color = 'red1'
+      break
+    case ClaimRewardStatusEnum.CLAIMED:
+      text = 'Claimed'
+      color = 'neutral1'
+      break
+    case ClaimRewardStatusEnum.IN_PROGRESS:
+      text = 'In progress'
+      color = 'neutral1'
+      break
+  }
+  const profile = useMyProfileStore((s) => s.myProfile)
+  const [openModal, setOpenModal] = useState(false)
+  const enabledRetry = data.nonce && data.signature && data.status !== ClaimRewardStatusEnum.CLAIMED
   return (
-    <Type.Small>
-      Claimed <ArrowSquareOut size={16} style={{ verticalAlign: 'middle' }} />
-    </Type.Small>
+    <Box
+      sx={{
+        color,
+        svg: { color: 'neutral3' },
+        'svg:hover': { color: 'neutral2' },
+      }}
+    >
+      <Type.Small
+        color="inherit"
+        sx={{
+          fontWeight: '500',
+        }}
+      >
+        {text}
+        {data.status === ClaimRewardStatusEnum.CLAIMED && !!data.txHash && (
+          <>
+            {' '}
+            <a target="_blank" href={`${CHAINS[ARBITRUM_CHAIN].blockExplorerUrl}/tx/${data.txHash}`} rel="noreferrer">
+              <ArrowSquareOut size={16} style={{ verticalAlign: 'top' }} />
+            </a>
+          </>
+        )}
+        {enabledRetry && (
+          <>
+            {' '}
+            <Box
+              as="span"
+              sx={{ color: 'primary1', '&:hover': { color: 'primary2' }, cursor: 'pointer' }}
+              onClick={enabledRetry ? () => setOpenModal(true) : undefined}
+            >
+              (Claim)
+            </Box>
+          </>
+        )}
+      </Type.Small>
+      <ClaimRewardModal
+        key={openModal.toString()}
+        amount={data.amount}
+        isOpen={openModal}
+        onDismiss={() => setOpenModal(false)}
+        retryClaimData={{
+          user: profile?.username ?? '',
+          amount: data.amount,
+          nonce: data.nonce ?? '',
+          signature: data.signature ?? '',
+        }}
+      />
+    </Box>
   )
 }
 
@@ -949,6 +1022,10 @@ const rebateStatusFilter = [
   {
     title: 'Claimable',
     filter: ReferralHistoryStatusEnum.CLAIMABLE,
+  },
+  {
+    title: 'Inprogress',
+    filter: ReferralHistoryStatusEnum.IN_PROGRESS,
   },
   {
     title: 'Claimed',
