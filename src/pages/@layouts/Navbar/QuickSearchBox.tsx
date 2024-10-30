@@ -65,7 +65,7 @@ const QuickSearchBox = memo(function QuickSearchBoxMemo() {
           }}
         >
           <IconBox icon={<MagnifyingGlass size={20} className="glass" />} color="neutral2 " />
-          <Type.Caption className="text" color="neutral3">
+          <Type.Caption className="text" color="neutral3" ml="4px" display={['none', 'inline-block']}>
             {searchTextRef ? (
               <Box as="span" color="neutral1">
                 {searchTextRef.length > 3 ? `${searchTextRef.substring(0, 3)}...` : searchTextRef}
@@ -74,9 +74,19 @@ const QuickSearchBox = memo(function QuickSearchBoxMemo() {
               'Search'
             )}
           </Type.Caption>
-          <Box className="text" color="neutral3">
+          <Box
+            className="text"
+            color="neutral3"
+            sx={{
+              '* > svg': {
+                position: 'relative',
+                top: '-0.5px',
+                transition: '0s',
+              },
+            }}
+          >
             (
-            <IconBox icon={<CommandIcon className="text" />} color="neutral3" />
+            <IconBox icon={<CommandIcon className="text" size={14} />} color="neutral3" />
             <Type.Caption className="text" color="neutral3">
               +K
             </Type.Caption>
@@ -518,6 +528,6 @@ const TagContainer = styled(Flex)`
   align-items: center;
   justify-content: center;
   padding: 0px 4px;
-  background: ${({ theme }) => theme.colors.neutral3};
+  background: ${({ theme }) => theme.colors.neutral4};
   border-radius: 2px;
 `

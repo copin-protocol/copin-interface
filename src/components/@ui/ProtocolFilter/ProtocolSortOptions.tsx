@@ -36,7 +36,11 @@ const ProtocolSortOptions: React.FC<ProtocolSortOptionProps> = ({ currentSort, c
     <Box
       width={135}
       sx={{
-        '.select__control': { minHeight: 'auto !important', py: '2px !important', width: '134px !important' },
+        '.select__control': {
+          minHeight: 'auto !important',
+          py: '0px !important',
+          width: '134px !important',
+        },
         '.select__value-container': { px: '8px !important' },
         '.select__indicators': { pr: '8px !important' },
       }}

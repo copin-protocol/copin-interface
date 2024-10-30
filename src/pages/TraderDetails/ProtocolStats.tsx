@@ -1,6 +1,7 @@
 import { useHistory } from 'react-router-dom'
 
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
+import HorizontalScroll from 'components/@ui/HorizontalScroll'
 import { ResponseTraderExchangeStatistic, TraderExchangeStatistic } from 'entities/trader'
 import useGetProtocolOptions, { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { Box, Flex, Image, Type } from 'theme/base'
@@ -53,20 +54,18 @@ export default function ProtocolStats({
     ? Object.values(exchangeStats)?.filter((e) => protocolOptions.map((e) => e.id)?.includes(e.protocol))
     : []
   orderedStats.sort((x, y) => (y?.lastTradeAtTs ?? 0) - (x?.lastTradeAtTs ?? 0))
+  const currentPage = orderedStats.findIndex((s) => s.protocol === currentProtocol)
+
   return (
-    <Flex
+    <Box
       sx={{
-        height: '100%',
-        width: '100%',
-        overflow: 'hidden',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        '& > *': { flexShrink: 0 },
+        '.no-scroll': {
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+        },
       }}
     >
-      <Flex
-        sx={{ height: '100%', flex: '1', overflow: 'auto hidden', alignItems: 'center', '& > *': { flexShrink: 0 } }}
-      >
+      <HorizontalScroll defaultItem={currentPage}>
         {orderedStats.map((values) => {
           return (
             <StatsItem
@@ -77,27 +76,8 @@ export default function ProtocolStats({
             />
           )
         })}
-      </Flex>
-      {/* <IconBox
-        role="button"
-        color="neutral3"
-        icon={<Icon size={20} />}
-        onClick={onClickChangePage}
-        sx={{
-          px: 3,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          borderLeft: 'small',
-          borderLeftColor: 'neutral4',
-        }}
-        data-tooltip-id={tooltipId}
-      />
-      <Tooltip id={tooltipId} place="bottom">
-        {tooltipContent}
-      </Tooltip> */}
-    </Flex>
+      </HorizontalScroll>
+    </Box>
   )
 }
 
@@ -115,7 +95,7 @@ function StatsItem({
   return (
     <Flex
       role="button"
-      sx={{ position: 'relative', width: 'max-content', height: '100%', px: 3, alignItems: 'center', gap: 12 }}
+      sx={{ position: 'relative', width: 'max-content', height: '100%', px: 3, py: 2, alignItems: 'center', gap: 12 }}
       onClick={() => onChangeSelection(data.protocol)}
     >
       <Box>

@@ -195,13 +195,13 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
             )}
           </Type.Caption>
         </Flex>
-        <VerticalDivider />
+        <VerticalDivider sx={{ opacity: 0.2 }} />
         <Flex minWidth={40} justifyContent="center" flexShrink={0}>
           <Type.Caption {..._textProps} textAlign="center">
             {formatLeverage(data.marginMode, data.leverage)}
           </Type.Caption>
         </Flex>
-        <VerticalDivider />
+        <VerticalDivider sx={{ opacity: 0.2 }} />
         <Flex
           flex={dynamicWidth ? undefined : '1.15'}
           justifyContent="flex-end"
@@ -229,7 +229,12 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
           </Type.Caption>
         </Flex>
       </Flex>
-      <ProgressBar percent={Math.abs(riskPercent)} color={riskPercent < 0 ? 'green2' : 'red2'} sx={{ width: '100%' }} />
+      <ProgressBar
+        percent={Math.abs(riskPercent)}
+        color={riskPercent < 0 ? 'green2' : 'red2'}
+        bg="neutral3"
+        sx={{ width: '100%', height: '2px', mt: '2px' }}
+      />
     </Flex>
   )
 }
