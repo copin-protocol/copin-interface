@@ -26,6 +26,7 @@ import { isAddress } from 'utils/web3/contracts'
 import ChangePasswordModal from './ChangePasswordModal'
 import PremiumTag from './PremiumTag'
 import WarningExpiredSubscriptionIcon from './WarningExpiredSubscriptionIcon'
+import WarningSwitchAccountIcon from './WarningSwithcAccountIcon'
 
 const NavUser = () => {
   const { selectedProtocols } = useProtocolFilter()
@@ -68,51 +69,38 @@ const NavUser = () => {
   return (
     <Flex alignItems="center" sx={{ height: NAVBAR_HEIGHT - 1 }}>
       <Flex flexDirection="column" alignItems="flex-start">
-        <Dropdown
-          menuSx={{
-            width: 200,
-          }}
-          dismissible={false}
-          menuDismissible
-          visible={showMenu}
-          setVisible={setShowMenu}
-          menu={
-            <>
-              <Box mt={2} />
-              <DropdownItem>
-                <Flex alignItems="center" sx={{ gap: 2 }}>
-                  <CopyButton
-                    type="button"
-                    variant="ghost"
-                    iconDirection="left"
-                    value={_address}
-                    size="sm"
-                    iconSize={20}
-                    sx={{ p: 0, width: '100%', justifyContent: 'flex-start' }}
-                    iconSx={{ color: 'neutral1' }}
-                  >
-                    <Box>
-                      <Trans>Copy Your Address</Trans>
-                    </Box>
-                  </CopyButton>
-                </Flex>
-              </DropdownItem>
-              {otherRoutes.map((configs, index) =>
-                configs.isWeb3Required && !isAuthenticated ? null : (
-                  <NavItem
-                    key={index}
-                    link={configs.link}
-                    onClick={() => onClickNavItem(configs.event)}
-                    icon={configs.icon}
-                    label={configs.label}
-                  />
-                )
-              )}
-              <Box mt={2} />
-              {hasCopyPermission && (
-                <>
-                  <SectionDivider label={<Trans>Copy</Trans>} />
-                  {userCopy.map((configs, index) => (
+        <Flex alignItems="center" sx={{ gap: 1, px: 3 }}>
+          <Dropdown
+            menuSx={{
+              width: 200,
+            }}
+            dismissible={false}
+            menuDismissible
+            visible={showMenu}
+            setVisible={setShowMenu}
+            menu={
+              <>
+                <Box mt={2} />
+                <DropdownItem>
+                  <Flex alignItems="center" sx={{ gap: 2 }}>
+                    <CopyButton
+                      type="button"
+                      variant="ghost"
+                      iconDirection="left"
+                      value={_address}
+                      size="sm"
+                      iconSize={20}
+                      sx={{ p: 0, width: '100%', justifyContent: 'flex-start' }}
+                      iconSx={{ color: 'neutral1' }}
+                    >
+                      <Box>
+                        <Trans>Copy Your Address</Trans>
+                      </Box>
+                    </CopyButton>
+                  </Flex>
+                </DropdownItem>
+                {otherRoutes.map((configs, index) =>
+                  configs.isWeb3Required && !isAuthenticated ? null : (
                     <NavItem
                       key={index}
                       link={configs.link}
@@ -120,80 +108,95 @@ const NavUser = () => {
                       icon={configs.icon}
                       label={configs.label}
                     />
-                  ))}
-                </>
-              )}
-              <Box mb={3} />
-              <SectionDivider label={<Trans>Wallet</Trans>} />
-              <NavItem
-                link={ROUTES.WALLET_MANAGEMENT.path}
-                onClick={() => onClickNavItem(EVENT_ACTIONS[EventCategory.ROUTES].WALLET_MANAGEMENT)}
-                icon={<Wallet size={20} />}
-                label={<Trans>Wallet Management</Trans>}
-              />
-              <Box mb={3} />
-              <SectionDivider label={<Trans>Settings</Trans>} />
-              {userSettings.map((configs, index) =>
-                configs.isWeb3Required && !isAuthenticated ? null : (
-                  <NavItem
-                    key={index}
-                    link={configs.link}
-                    onClick={() => onClickNavItem(configs.event)}
-                    icon={configs.icon}
-                    label={configs.label}
-                  />
-                )
-              )}
-              <Divider my={2} />
-              {!isAuthenticated && (
-                <DropdownItem
-                  onClick={() => {
-                    onClickNavItem()
-                    setIsShowModalChangePassword(true)
-                  }}
-                >
-                  <Flex alignItems="center" sx={{ gap: 2 }}>
-                    <Key size={20} />
-                    <Box>
-                      <Trans>Change Password</Trans>
-                    </Box>
-                  </Flex>
-                </DropdownItem>
-              )}
-              <div>
-                <DropdownItem
-                  onClick={() => {
-                    sessionStorage.clear()
-                    onClickNavItem()
-                    setIsShowModalLogout(true)
-                  }}
-                >
-                  <Flex alignItems="center" color="red2" sx={{ gap: 2 }}>
-                    <SignOut size={20} />
-                    <Box>
-                      <Trans>Logout</Trans>
-                    </Box>
-                  </Flex>
-                </DropdownItem>
-              </div>
-            </>
-          }
-          sx={{
-            height: '100%',
-            justifyContent: 'center',
-            backgroundColor: 'neutral7',
-            px: 3,
-          }}
-          buttonSx={{
-            border: 'none',
-            p: 0,
-          }}
-          placement="bottomRight"
-        >
-          <Type.CaptionBold maxWidth={['120px', 'max-content']} sx={{ ...overflowEllipsis(), display: 'flex' }}>
-            {_address ? addressShorten(_address) : profile?.username}
-          </Type.CaptionBold>
-        </Dropdown>
+                  )
+                )}
+                <Box mt={2} />
+                {hasCopyPermission && (
+                  <>
+                    <SectionDivider label={<Trans>Copy</Trans>} />
+                    {userCopy.map((configs, index) => (
+                      <NavItem
+                        key={index}
+                        link={configs.link}
+                        onClick={() => onClickNavItem(configs.event)}
+                        icon={configs.icon}
+                        label={configs.label}
+                      />
+                    ))}
+                  </>
+                )}
+                <Box mb={3} />
+                <SectionDivider label={<Trans>Wallet</Trans>} />
+                <NavItem
+                  link={ROUTES.WALLET_MANAGEMENT.path}
+                  onClick={() => onClickNavItem(EVENT_ACTIONS[EventCategory.ROUTES].WALLET_MANAGEMENT)}
+                  icon={<Wallet size={20} />}
+                  label={<Trans>Wallet Management</Trans>}
+                />
+                <Box mb={3} />
+                <SectionDivider label={<Trans>Settings</Trans>} />
+                {userSettings.map((configs, index) =>
+                  configs.isWeb3Required && !isAuthenticated ? null : (
+                    <NavItem
+                      key={index}
+                      link={configs.link}
+                      onClick={() => onClickNavItem(configs.event)}
+                      icon={configs.icon}
+                      label={configs.label}
+                    />
+                  )
+                )}
+                <Divider my={2} />
+                {!isAuthenticated && (
+                  <DropdownItem
+                    onClick={() => {
+                      onClickNavItem()
+                      setIsShowModalChangePassword(true)
+                    }}
+                  >
+                    <Flex alignItems="center" sx={{ gap: 2 }}>
+                      <Key size={20} />
+                      <Box>
+                        <Trans>Change Password</Trans>
+                      </Box>
+                    </Flex>
+                  </DropdownItem>
+                )}
+                <div>
+                  <DropdownItem
+                    onClick={() => {
+                      sessionStorage.clear()
+                      onClickNavItem()
+                      setIsShowModalLogout(true)
+                    }}
+                  >
+                    <Flex alignItems="center" color="red2" sx={{ gap: 2 }}>
+                      <SignOut size={20} />
+                      <Box>
+                        <Trans>Logout</Trans>
+                      </Box>
+                    </Flex>
+                  </DropdownItem>
+                </div>
+              </>
+            }
+            sx={{
+              height: '100%',
+              justifyContent: 'center',
+              backgroundColor: 'neutral7',
+            }}
+            buttonSx={{
+              border: 'none',
+              p: 0,
+            }}
+            placement="bottomRight"
+          >
+            <Type.CaptionBold maxWidth={['120px', 'max-content']} sx={{ ...overflowEllipsis(), display: 'flex' }}>
+              {_address ? addressShorten(_address) : profile?.username}
+            </Type.CaptionBold>
+          </Dropdown>
+          <WarningSwitchAccountIcon />
+        </Flex>
         <Flex sx={{ alignItems: 'center', gap: 1, px: 3 }}>
           <PremiumTag />
           <WarningExpiredSubscriptionIcon />
