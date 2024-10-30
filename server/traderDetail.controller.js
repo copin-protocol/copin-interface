@@ -27,7 +27,7 @@ const getTraderDetail = async (req, res) => {
 
   try {
     traderStats = await axios
-      .get(`${configs.apiUrl}/public/${protocol}/position/statistic/trader/${account}`)
+      .get(`${configs.apiUrl}/public/${protocol}/position/statistic/trader/${address}`)
       .then((res) => {
         return res.data?.['FULL']
       })

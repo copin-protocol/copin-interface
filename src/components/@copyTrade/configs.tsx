@@ -81,6 +81,7 @@ export const exchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.BYBIT),
   getExchangeOption(CopyTradePlatformEnum.OKX),
   getExchangeOption(CopyTradePlatformEnum.GATE),
+  getExchangeOption(CopyTradePlatformEnum.HYPERLIQUID),
   // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
 ]
 export const internalExchangeOptions: ExchangeOptions[] = [

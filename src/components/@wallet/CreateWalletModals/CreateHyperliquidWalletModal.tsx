@@ -10,12 +10,14 @@ import { requestCopyWalletApi } from 'apis/copyWalletApis'
 import Divider from 'components/@ui/Divider'
 import ToastBody from 'components/@ui/ToastBody'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useInternalRole from 'hooks/features/useInternalRole'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import useWeb3 from 'hooks/web3/useWeb3'
 import { Button } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
 import InputField, { InputPasswordField } from 'theme/InputField'
 import Modal from 'theme/Modal'
+import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { ARBITRUM_MAINNET } from 'utils/web3/chains'
@@ -32,6 +34,7 @@ export default function CreateHyperliquidWalletModal({
   onDismiss: () => void
 }) {
   const {
+    watch,
     register,
     handleSubmit,
     formState: { errors },
@@ -41,7 +44,9 @@ export default function CreateHyperliquidWalletModal({
     defaultValues: defaultFormValues,
     resolver: yupResolver(hyperliquidWalletFormSchema),
   })
+  const enableVault = watch('enableVault')
 
+  const isInternal = useInternalRole()
   const { reloadCopyWallets } = useCopyWalletContext()
   const { isValid, alert } = useRequiredChain({ chainId: ARBITRUM_MAINNET })
   const { walletProvider, walletAccount } = useWeb3()
@@ -69,9 +74,9 @@ export default function CreateHyperliquidWalletModal({
       hyperliquid: {
         apiKey: data.apiKey,
         secretKey: data.secretKey,
-        passPhrase: !data.passPhrase ? undefined : data.passPhrase,
+        passPhrase: !data.enableVault && !data.passPhrase ? undefined : data.passPhrase,
       },
-      hyperliquidSignature: signatureData,
+      hyperliquidSignature: !data.enableVault && !data.passPhrase ? signatureData : undefined,
     })
   }
 
@@ -164,17 +169,30 @@ export default function CreateHyperliquidWalletModal({
               })}
             />
 
-            <InputPasswordField
-              placeholder={t`Your Hyperliquid Vault Address`}
-              label={<Trans>Hyperliquid Vault Address</Trans>}
-              block
-              error={errors?.passPhrase?.message}
-              {...register('passPhrase', {
-                onChange: (e) => {
-                  e.target.value = e.target.value.trim().replace(/\s/g, '')
-                },
-              })}
-            />
+            {isInternal && (
+              <Box>
+                <SwitchInputField
+                  switchLabel="Enable Vault"
+                  // labelColor="orange1"
+                  {...register('enableVault')}
+                  error={errors.enableVault?.message}
+                />
+                <Box mt={2} sx={{ display: enableVault ? 'block' : 'none' }}>
+                  <InputPasswordField
+                    required={enableVault}
+                    placeholder={t`Your Hyperliquid Vault Address`}
+                    label={<Trans>Hyperliquid Vault Address</Trans>}
+                    block
+                    error={errors?.passPhrase?.message}
+                    {...register('passPhrase', {
+                      onChange: (e) => {
+                        e.target.value = e.target.value.trim().replace(/\s/g, '')
+                      },
+                    })}
+                  />
+                </Box>
+              </Box>
+            )}
 
             <InputField
               block
@@ -188,16 +206,18 @@ export default function CreateHyperliquidWalletModal({
 
             <HyperliquidHelp />
 
-            <Checkbox checked={!!signatureData} onClick={handleAccept}>
-              <Type.Caption>I agree to let Copin use the API to place orders</Type.Caption>
-            </Checkbox>
+            {!enableVault && (
+              <Checkbox checked={!!signatureData} onClick={handleAccept}>
+                <Type.Caption>I agree to let Copin use the API to place orders</Type.Caption>
+              </Checkbox>
+            )}
 
             <Button
               size="xl"
               variant="primary"
               type="submit"
               isLoading={submitting}
-              disabled={Object.keys(errors).length > 0 || submitting || !signatureData}
+              disabled={Object.keys(errors).length > 0 || submitting || (!enableVault && !signatureData)}
             >
               {submitting ? <Trans>Connecting...</Trans> : <Trans>Connect API</Trans>}
             </Button>

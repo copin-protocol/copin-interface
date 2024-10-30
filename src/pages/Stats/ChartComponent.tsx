@@ -598,6 +598,7 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
                 CopyTradePlatformEnum.OKX,
                 CopyTradePlatformEnum.GATE,
                 CopyTradePlatformEnum.GNS_V8,
+                CopyTradePlatformEnum.HYPERLIQUID,
               ].includes(exchange as CopyTradePlatformEnum)
             ) {
               const exchangeStats = stats.exchanges[exchange] || {}
@@ -706,7 +707,12 @@ const DailyNetPnlTooltip = ({ payload }: TooltipProps) => {
       {EXCHANGE_STATS.map((exchange) => {
         const pnl = pnlPayload?.exchanges[exchange]?.totalPnl
         return !!pnl ? (
-          <Flex key={exchange} alignItems="center" color={EXCHANGE_COLOR[exchange]} sx={{ gap: 2 }}>
+          <Flex
+            key={`${pnlPayload?.date}-${exchange}`}
+            alignItems="center"
+            color={EXCHANGE_COLOR[exchange]}
+            sx={{ gap: 2 }}
+          >
             <Type.Body>{PLATFORM_TEXT_TRANS[exchange]} :</Type.Body>
             <Type.Body>
               {formatNumber(pnl, pnl < 1 && pnl > -1 ? 1 : 0)}
@@ -789,7 +795,12 @@ const DailyVolumeTooltip = ({ payload }: TooltipProps) => {
       {EXCHANGE_STATS.map((exchange) => {
         const volume = volumePayload?.exchanges[exchange]?.totalVolume
         return !!volume ? (
-          <Flex key={exchange} alignItems="center" color={EXCHANGE_COLOR[exchange]} sx={{ gap: 2 }}>
+          <Flex
+            key={`${volumePayload?.date}-${exchange}-${volume}`}
+            alignItems="center"
+            color={EXCHANGE_COLOR[exchange]}
+            sx={{ gap: 2 }}
+          >
             <Type.Body>{PLATFORM_TEXT_TRANS[exchange]} :</Type.Body>
             <Type.Body>
               {formatNumber(volume, volume < 1 && volume > -1 ? 1 : 0)}
