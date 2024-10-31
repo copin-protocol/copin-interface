@@ -503,12 +503,16 @@ function TraderItem({
         color: 'inherit',
         width: '100%',
         height: '100%',
-        bg: 'neutral5',
+        bg: 'rgba(49, 56, 86, 0.2)',
         px: 3,
         py: 12,
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+        border: '1px solid rgba(49, 56, 86, 0.3)',
+        // backdropFilter: 'blur(5px)',
         transition: '0.3s',
         '&:hover': {
-          bg: 'neutral4',
+          bg: 'rgba(49, 56, 86, 0.3)',
+          transform: 'scale(1.01)',
         },
       }}
       onClick={(e) => {
@@ -518,7 +522,15 @@ function TraderItem({
       <Flex sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between', '& *': { fontWeight: 600 } }}>
         <TraderAddress address={account} protocol={protocol} options={{ timeType: type }} />
         <Flex sx={{ alignItems: 'center', gap: 3 }}>
-          <FavoriteButton address={account} protocol={protocol} size={20} />
+          <FavoriteButton
+            address={account}
+            protocol={protocol}
+            size={20}
+            sx={{
+              position: 'relative',
+              top: '-2px',
+            }}
+          />
           <IconBox
             role="button"
             as={Link}
@@ -530,12 +542,12 @@ function TraderItem({
               },
             })}
             icon={<CaretRight size={20} />}
-            color="neutral2"
-            sx={{ '&:hover': { color: 'neutral1' } }}
+            color="neutral3"
+            sx={{ '&:hover': { color: 'neutral2' } }}
           />
         </Flex>
       </Flex>
-      <Box mt={3} mb={20} sx={{ height: 60 }}>
+      <Box my={12} sx={{ height: 60 }}>
         <LineChartTraderPnl
           data={parsePnLStatsData(traderPnlData)}
           isCumulativeData={false}
@@ -571,13 +583,15 @@ function TraderItem({
           </Type.Caption>
         </Box>
       </Box>
-      <Flex mt={20} sx={{ alignItems: 'center', gap: 2 }}>
+      <Flex mt={12} sx={{ alignItems: 'center', gap: 2 }}>
         <CopyTraderButton
           source={EventSource.HOME}
           account={account}
           protocol={protocol}
           buttonText={<Trans>Copy</Trans>}
-          buttonSx={{ width: 100, borderRadius: '4px' }}
+          buttonSx={{
+            width: 100,
+          }}
           modalStyles={{ backdropFilter: 'none', overlayBackground: 'rgba(0, 0, 0, 0.85)' }}
         />
         <BacktestButton onClick={() => onClickBacktest(traderData)} />

@@ -19,7 +19,7 @@ export const LogoText = ({ size = 32 }: { size?: number | number[] }) => {
   // const isDarkMode = useIsDarkMode()
   return (
     // <Image src={`/images/logo${responsive.md ? '' : '-mobile'}-${isDarkMode ? 'dark' : 'light'}.svg`} height="36px" />
-    <Box height={size} display={['none', 'block']}>
+    <Box height={size} display={['none', 'block']} sx={{ position: 'relative', top: '-4px' }}>
       <Image src={logoText} />
     </Box>
   )

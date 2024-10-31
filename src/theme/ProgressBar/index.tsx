@@ -108,6 +108,7 @@ const ProgressBar = ({
         sx={{
           bg: color ?? undefined,
           background: !color ? 'linear-gradient(180deg, #FE5821 -20%, #FE9608 100%)' : undefined,
+          transition: '240ms',
         }}
       />
     </Bar>

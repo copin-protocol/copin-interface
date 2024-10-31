@@ -5,7 +5,7 @@ import css from '@styled-system/css'
 import { CSSProperties } from 'react'
 import ReactSelect, { ClearIndicatorProps, MultiValueRemoveProps, Props } from 'react-select'
 import styled from 'styled-components/macro'
-import { maxHeight, variant } from 'styled-system'
+import { variant } from 'styled-system'
 
 import { IconBox } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -161,7 +161,7 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
 )
 
 const DropdownIndicator = () => {
-  return <CaretDown weight="bold" size={16} />
+  return <CaretDown size={16} />
 }
 // const ClearIndicator = () =>
 const ClearIndicator = (props: ClearIndicatorProps<any>) => {

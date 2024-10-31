@@ -1,15 +1,16 @@
 import { BookOpenText, ChartLine, Icon, Pulse } from '@phosphor-icons/react'
-import React, { useState } from 'react'
+import React from 'react'
 
+import useTabHandler from 'hooks/router/useTabHandler'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { FOOTER_HEIGHT } from 'utils/config/constants'
 
 import { LayoutProps } from './types'
 
 enum TabEnum {
-  STATS,
-  CHARTS,
-  POSITIONS,
+  STATS = 'stats',
+  CHARTS = 'charts',
+  POSITIONS = 'positions',
 }
 
 const TabButton = ({
@@ -30,7 +31,7 @@ const TabButton = ({
 )
 
 const MobileLayout = (props: LayoutProps) => {
-  const [tab, setTab] = useState(TabEnum.STATS)
+  const { tab, handleTab: setTab } = useTabHandler(TabEnum.POSITIONS)
   return (
     <Box sx={{ position: 'relative', pb: 56 }}>
       <Box
@@ -69,7 +70,7 @@ const MobileLayout = (props: LayoutProps) => {
               bg: 'neutral5',
             }}
           >
-            {props.traderChartPositions}
+            {props.traderChartPnl}
           </Box>
           <Box overflow="auto" flex="1 0 0" sx={{ position: 'relative' }}>
             <Box height="100%">{props.traderStats}</Box>
@@ -88,7 +89,7 @@ const MobileLayout = (props: LayoutProps) => {
             {props.traderRanking}
           </Box>
           <Box mt={1} height="max(calc(100vh - 545px), 330px)" bg="neutral5">
-            {props.traderChartPnl}
+            {props.traderChartPositions}
           </Box>
         </>
       )}
@@ -122,16 +123,16 @@ const MobileLayout = (props: LayoutProps) => {
         }}
       >
         <TabButton
-          icon={ChartLine}
-          title="Charts"
-          isActive={tab === TabEnum.CHARTS}
-          onClick={() => setTab(TabEnum.CHARTS)}
-        />
-        <TabButton
           icon={BookOpenText}
           title="Stats"
           isActive={tab === TabEnum.STATS}
           onClick={() => setTab(TabEnum.STATS)}
+        />
+        <TabButton
+          icon={ChartLine}
+          title="Charts"
+          isActive={tab === TabEnum.CHARTS}
+          onClick={() => setTab(TabEnum.CHARTS)}
         />
         <TabButton
           icon={Pulse}
