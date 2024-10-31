@@ -75,6 +75,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: POLYGON_MAINNET,
     key: 'GNP',
   },
+  [ProtocolEnum.GNS_BASE]: {
+    id: ProtocolEnum.GNS_BASE,
+    text: 'gTrade',
+    label: 'Base',
+    chainId: BASE_MAINNET,
+    key: 'GNB',
+    isNew: true,
+  },
   [ProtocolEnum.LEVEL_BNB]: {
     id: ProtocolEnum.LEVEL_BNB,
     text: 'Level',
@@ -354,4 +362,5 @@ export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
   rollieScroll: ProtocolEnum.ROLLIE_SCROLL,
   logxBlast: ProtocolEnum.LOGX_BLAST,
   logxMode: ProtocolEnum.LOGX_MODE,
+  bsxBase: ProtocolEnum.BSX_BASE,
 }

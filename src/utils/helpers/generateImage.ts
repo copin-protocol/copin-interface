@@ -447,6 +447,7 @@ export const generateProtocol = ({
       break
     case ProtocolEnum.GNS:
     case ProtocolEnum.GNS_POLY:
+    case ProtocolEnum.GNS_BASE:
       protocolTextWidth = 117
       protocolText = 'gTrade'
       break

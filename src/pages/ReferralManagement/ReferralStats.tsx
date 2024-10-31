@@ -1,38 +1,43 @@
+import { formatUnits, parseEther, parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { CheckCircle, Warning, WarningOctagon, XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
-import { getReferralRewardApi, getReferralStatisticApi } from 'apis/referralManagement'
+import { getReferralRewardApi, getReferralStatisticApi, requestClaimRewardApi } from 'apis/referralManagement'
 import { checkBeforeAddRefApi, getMyProfileApi } from 'apis/userApis'
+import moneyImage from 'assets/images/money.png'
+import successImage from 'assets/images/register-event-success.png'
 import InputReferral from 'components/@auth/InputReferral'
 import { GradientText } from 'components/@ui/GradientText'
 import ToastBody from 'components/@ui/ToastBody'
+import { RequestClaimRewardData } from 'entities/referralManagement'
+import { ReferralStatisticData } from 'entities/referralManagement'
 import { UserData } from 'entities/user'
 import useReferralActions from 'hooks/features/useReferralActions'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { useAuthContext } from 'hooks/web3/useAuth'
+import { useReferralRebateContract } from 'hooks/web3/useContract'
+import useContractMutation from 'hooks/web3/useContractMutation'
+import useRequiredChain from 'hooks/web3/useRequiredChain'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { linearGradient1 } from 'theme/colors'
-import { TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
+import { getErrorMessage } from 'utils/helpers/handleError'
+import { ARBITRUM_CHAIN } from 'utils/web3/chains'
 
-export default function ReferralStats() {
-  const { isAuthenticated, profile } = useAuthContext()
+export default function ReferralStats({ data }: { data: ReferralStatisticData | undefined }) {
   const { sm } = useResponsive()
-  const { data: statistic } = useQuery(
-    [QUERY_KEYS.GET_REFERRAL_DATA, 'statistic', isAuthenticated, profile?.username],
-    () => getReferralStatisticApi(),
-    { enabled: !!isAuthenticated }
-  )
-  const data = statistic?.[TimeFilterByEnum.ALL_TIME]
+  const { profile } = useAuthContext()
+
   return (
     <Box
       sx={{
@@ -77,7 +82,7 @@ export default function ReferralStats() {
       </Box>
       <Box sx={{ gridArea: 'item-3' }}>
         <NormalStatsItemContainer
-          label="Total Earned (USDT)"
+          label="Total Earned (USDC)"
           value={
             <ValueWithCurrency
               value={
@@ -91,7 +96,7 @@ export default function ReferralStats() {
       </Box>
       <Box sx={{ gridArea: 'item-4' }}>
         <NormalStatsItemContainer
-          label="F1 Commission (USDT)"
+          label="F1 Commission (USDC)"
           value={
             <ValueWithCurrency
               value={sm ? formatNumber(data?.f1Commissions ?? 0, 2, 2) : compactNumber(data?.f1Commissions ?? 0, 2)}
@@ -101,7 +106,7 @@ export default function ReferralStats() {
       </Box>
       <Box sx={{ gridArea: 'item-5' }}>
         <NormalStatsItemContainer
-          label="F2 Commission (USDT)"
+          label="F2 Commission (USDC)"
           value={
             <ValueWithCurrency
               value={sm ? formatNumber(data?.f2Commissions ?? 0, 2, 2) : compactNumber(data?.f2Commissions ?? 0, 2)}
@@ -179,9 +184,14 @@ function NormalStatsItemContainer({ label, value, sx = {} }: { label: ReactNode;
   )
 }
 function ClaimableStatsItem({ profile }: { profile: UserData | null }) {
-  const { data } = useQuery([QUERY_KEYS.GET_REFERRAL_DATA, 'reward', profile?.username], getReferralRewardApi, {
+  const [showClaimModal, setShowModal] = useState(false)
+  const { data } = useQuery([QUERY_KEYS.GET_REFERRAL_REWARD_DATA, profile?.username], getReferralRewardApi, {
     enabled: !!profile?.username,
   })
+
+  const handleOpenModal = () => setShowModal(true)
+  const handleDismissModal = () => setShowModal(false)
+  const enabledClaim = !!data?.claimable
   return (
     <Flex
       width="100%"
@@ -195,7 +205,7 @@ function ClaimableStatsItem({ profile }: { profile: UserData | null }) {
         bg: 'neutral6',
       }}
     >
-      <Type.Body color="neutral3">Total Unclaim (USDT)</Type.Body>
+      <Type.Body color="neutral3">Total Unclaim (USDC)</Type.Body>
       <Box mt={2} />
       <StatsValue sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         {formatNumber(data?.totalUnclaim ?? 0, 2, 2)}
@@ -209,7 +219,8 @@ function ClaimableStatsItem({ profile }: { profile: UserData | null }) {
           overflow: 'hidden',
           fontWeight: 'normal',
           position: 'relative',
-          cursor: 'not-allowed',
+          cursor: enabledClaim ? 'pointer' : 'not-allowed', //
+          // cursor: 'pointer',
           '.gradient': {
             rotate: '0deg',
             transition: '0.5s',
@@ -219,6 +230,8 @@ function ClaimableStatsItem({ profile }: { profile: UserData | null }) {
             rotate: '180deg',
           },
         }}
+        onClick={enabledClaim ? handleOpenModal : undefined}
+        // onClick={handleOpenModal}
       >
         <Box
           className="gradient"
@@ -246,14 +259,175 @@ function ClaimableStatsItem({ profile }: { profile: UserData | null }) {
             zIndex: 2,
           }}
         />
-        <Type.Caption sx={{ display: 'block', position: 'relative', zIndex: 3, fontWeight: 600 }} color="neutral3">
-          Claim {formatNumber(data?.claimable ?? 0, 2, 2)} USDT
+        <Type.Caption
+          sx={{ display: 'block', position: 'relative', zIndex: 3, fontWeight: 600, textAlign: 'center' }}
+          color={data?.claimable ? 'neutral1' : 'neutral3'}
+        >
+          Claim {formatNumber(data?.claimable ?? 0, 2, 2)} USDC
         </Type.Caption>
       </Box>
       <Type.Small mt={2} color="neutral3">
-        Pending: {formatNumber(data?.pending ?? 0, 2, 2)} USDT
+        Pending: {formatNumber(data?.pending ?? 0, 2, 2)} USDC
       </Type.Small>
+
+      <ClaimRewardModal
+        key={showClaimModal.toString()}
+        isOpen={showClaimModal}
+        onDismiss={handleDismissModal}
+        amount={data?.claimable ?? 0}
+      />
     </Flex>
+  )
+}
+
+type ActionState = 'preparing' | 'processing' | 'success'
+
+const GAS_LIMIT = 200000
+
+export function ClaimRewardModal({
+  amount,
+  isOpen,
+  onDismiss,
+  retryClaimData,
+}: {
+  amount: number
+  isOpen: boolean
+  onDismiss: () => void
+  retryClaimData?: RequestClaimRewardData
+}) {
+  const amountRef = useRef(amount)
+  const amountToClaim = retryClaimData?.amount ?? amountRef.current
+  const refetchQueries = useRefetchQueries()
+  const [state, setState] = useState<ActionState>('preparing')
+  const referralRebateContract = useReferralRebateContract(ARBITRUM_CHAIN)
+  const referralRebateMutation = useContractMutation(referralRebateContract, {
+    onMutate: () => {
+      setState('processing')
+    },
+    onSuccess: () => {
+      refetchQueries([QUERY_KEYS.GET_CLAIM_REWARD_HISTORY, QUERY_KEYS.GET_REFERRAL_REWARD_DATA])
+      setState('success')
+    },
+    onError: () => {
+      setState('preparing')
+      refetchQueries([QUERY_KEYS.GET_CLAIM_REWARD_HISTORY, QUERY_KEYS.GET_REFERRAL_REWARD_DATA])
+    },
+  } as any)
+  const { isValid, alert } = useRequiredChain({ chainId: ARBITRUM_CHAIN })
+
+  const [requestError, setError] = useState('')
+  const [claimRewardData, setData] = useState<RequestClaimRewardData>()
+
+  const claimReward = async (data: RequestClaimRewardData) => {
+    try {
+      const { amount, user, nonce, signature } = data
+      const params = [user, parseUnits(`${amount}`, 6), nonce, signature]
+      const gas = await referralRebateContract.estimateGas.claimRebateFee?.(...params)
+      const estimateGas = Math.round(gas.mul(12).div(10).toNumber())
+      referralRebateMutation.mutate({
+        method: 'claimRebateFee',
+        params,
+        gasLimit: estimateGas < GAS_LIMIT ? GAS_LIMIT : estimateGas,
+      })
+    } catch (error) {
+      throw error
+    }
+  }
+  const onClaim = async () => {
+    setError('')
+    setState('processing')
+    try {
+      const _claimRewardData = await requestClaimRewardApi()
+      setData(_claimRewardData)
+      await claimReward(_claimRewardData)
+      refetchQueries([QUERY_KEYS.GET_CLAIM_REWARD_HISTORY, QUERY_KEYS.GET_REFERRAL_REWARD_DATA])
+    } catch (error) {
+      setState('preparing')
+      setError(getErrorMessage(error))
+      refetchQueries([QUERY_KEYS.GET_CLAIM_REWARD_HISTORY, QUERY_KEYS.GET_REFERRAL_REWARD_DATA])
+    }
+  }
+
+  // retry on claim error and when claim in history
+  const retryClaim = () => {
+    setError('')
+    setState('processing')
+    if (retryClaimData) {
+      claimReward(retryClaimData)
+      return
+    }
+    if (claimRewardData) {
+      claimReward(claimRewardData)
+      return
+    }
+    setState('preparing')
+    setError('No reward to claim')
+  }
+  const hasError = !!referralRebateMutation.error || !!requestError
+  const _onDismiss = () => {
+    refetchQueries([QUERY_KEYS.GET_CLAIM_REWARD_HISTORY, QUERY_KEYS.GET_REFERRAL_REWARD_DATA])
+    onDismiss()
+  }
+  return (
+    <Modal isOpen={isOpen} onDismiss={_onDismiss} maxWidth={'400px'}>
+      <Flex bg="neutral5" p={3} sx={{ flexDirection: 'column', width: '100%', alignItems: 'center' }}>
+        {!isValid && alert}
+        {isValid && (
+          <>
+            <Flex mb={24} sx={{ width: '100%', justifyContent: 'end' }}>
+              <IconBox
+                role="button"
+                icon={<XCircle size={20} />}
+                sx={{ color: 'neutral3', '&:hover': { color: 'neutral1' } }}
+                onClick={onDismiss}
+              />
+            </Flex>
+
+            {state !== 'success' && (
+              <>
+                <Image mb={24} src={moneyImage} height={160} />
+                <Type.Body mb={1} fontWeight={500} sx={{ display: 'block', textAlign: 'center' }}>
+                  Are you sure you want to claim
+                </Type.Body>
+                <Type.Body mb={24} color="primary1" fontWeight={700} sx={{ display: 'block', textAlign: 'center' }}>
+                  {formatNumber(amountToClaim, 2, 2)} USDC
+                </Type.Body>
+                {!!referralRebateMutation.error && (
+                  <Type.Caption color="red1" mb={2}>
+                    {getErrorMessage(referralRebateMutation.error)}
+                  </Type.Caption>
+                )}
+                {!!requestError && (
+                  <Type.Caption color="red1" mb={2}>
+                    {requestError}
+                  </Type.Caption>
+                )}
+                <Button
+                  block
+                  variant="primary"
+                  onClick={retryClaimData || hasError ? retryClaim : onClaim}
+                  isLoading={state === 'processing'}
+                  disabled={state === 'processing'}
+                >
+                  {hasError ? <Trans>Try again</Trans> : <Trans>Confirm</Trans>}
+                </Button>
+              </>
+            )}
+            {state === 'success' && (
+              <>
+                <Image mb={24} src={successImage} height={160} />
+                <Type.Body mb={24} fontWeight={500} sx={{ display: 'block', textAlign: 'center' }}>
+                  Your claim is success
+                </Type.Body>
+                <Button block variant="primary" onClick={onDismiss}>
+                  <Trans>Done</Trans>
+                </Button>
+              </>
+            )}
+          </>
+        )}
+      </Flex>
+    </Modal>
   )
 }
 
@@ -286,7 +460,7 @@ function RebateTitle() {
             : {}
         }
       >
-        Fee Rebates (USDT)
+        Fee Rebates (USDC)
       </Box>
       {myProfile?.username && (
         <>

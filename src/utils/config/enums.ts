@@ -5,6 +5,7 @@ export enum ProtocolEnum {
   GMX_V2 = 'GMX_V2',
   GNS = 'GNS',
   GNS_POLY = 'GNS_POLY',
+  GNS_BASE = 'GNS_BASE',
   LEVEL_BNB = 'LEVEL_BNB',
   LEVEL_ARB = 'LEVEL_ARB',
   MUX_ARB = 'MUX_ARB',
@@ -362,7 +363,14 @@ export enum ReferralTypeEnum {
 export enum ReferralHistoryStatusEnum {
   PENDING = 'PENDING',
   CLAIMABLE = 'CLAIMABLE',
+  IN_PROGRESS = 'IN_PROGRESS',
   CLAIMED = 'CLAIMED',
+}
+export enum ClaimRewardStatusEnum {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  CLAIMED = 'CLAIMED',
+  FAILURE = 'FAILURE',
 }
 
 export enum ReferralActivityTypeEnum {

@@ -97,6 +97,8 @@ function generateProtocolName(protocol) {
       return 'gTrade (ARB)'
     case 'GNS_POLY':
       return 'gTrade (MATIC)'
+    case 'GNS_BASE':
+      return 'gTrade (Base)'
     case 'KWENTA':
       return 'Kwenta'
     case 'POLYNOMIAL':

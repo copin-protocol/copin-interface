@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { WalletState } from '@web3-onboard/core'
 import { useConnectWallet } from '@web3-onboard/react'
 import dayjs from 'dayjs'
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
@@ -35,6 +35,7 @@ interface ContextValues {
   disconnect: () => void
   logout: () => void
   eagerAuth: () => Promise<void>
+  handleSwitchAccount: () => void
   setProfile: (myProfile: UserData | null) => void
 }
 
@@ -86,24 +87,24 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     disconnectWeb3()
   }, [disconnectWeb3, setMyProfile])
 
-  useEffect(() => {
-    // if (!wallet) {
-    //   const { wallet: storedWallet } = getStoredWallet()
-    //   if (storedWallet && authedRef.current) {
-    //     setWaitingState(WaitingState.WalletLocked)
-    //   }
-    //   return
-    // }
-    // if (waitingState === WaitingState.WalletLocked) setWaitingState(null)
-
-    const account = wallet ? getAccount(wallet) : undefined
-    const { account: storedAccount } = getStoredWallet()
-    if (storedAccount && account && storedAccount !== account?.address) {
-      setWaitingState(WaitingState.SwitchAccount)
-    } else {
-      if (waitingState === WaitingState.SwitchAccount) setWaitingState(null)
-    }
-  }, [waitingState, wallet])
+  // useEffect(() => {
+  //   // if (!wallet) {
+  //   //   const { wallet: storedWallet } = getStoredWallet()
+  //   //   if (storedWallet && authedRef.current) {
+  //   //     setWaitingState(WaitingState.WalletLocked)
+  //   //   }
+  //   //   return
+  //   // }
+  //   // if (waitingState === WaitingState.WalletLocked) setWaitingState(null)
+  //
+  //   const account = wallet ? getAccount(wallet) : undefined
+  //   const { account: storedAccount } = getStoredWallet()
+  //   if (storedAccount && account && storedAccount !== account?.address) {
+  //     setWaitingState(WaitingState.SwitchAccount)
+  //   } else {
+  //     if (waitingState === WaitingState.SwitchAccount) setWaitingState(null)
+  //   }
+  // }, [waitingState, wallet])
 
   const auth = useCallback(
     async (wallet: WalletState): Promise<Account | null> => {
@@ -190,13 +191,13 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
           disconnectWeb3()
           return
         }
-        if (_wallet) {
-          const _account = getAccount(_wallet)
-          if (_account.address !== storedAccount) {
-            setWaitingState(WaitingState.SwitchAccount)
-            return
-          }
-        }
+        // if (_wallet) {
+        //   const _account = getAccount(_wallet)
+        //   if (_account.address !== storedAccount) {
+        //     setWaitingState(WaitingState.SwitchAccount)
+        //     return
+        //   }
+        // }
       })
       // if (!_wallet) {
       //   disconnect()
@@ -231,6 +232,21 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     authedRef.current = true
   }, [myProfile])
 
+  const handleSwitchAccount = useCallback(async () => {
+    const account = wallet ? getAccount(wallet) : undefined
+    const { account: storedAccount } = getStoredWallet()
+
+    if (!account) {
+      connect({})
+      return
+    }
+    if (storedAccount && account && storedAccount !== account?.address) {
+      setWaitingState(WaitingState.SwitchAccount)
+    } else {
+      if (waitingState === WaitingState.SwitchAccount) setWaitingState(null)
+    }
+  }, [connect, waitingState, wallet])
+
   const logout = useCallback(() => {
     logoutApi()
       .then(() => {
@@ -255,6 +271,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       disconnect,
       logout,
       eagerAuth,
+      handleSwitchAccount,
       setProfile: setMyProfile,
     }
   }, [

@@ -94,7 +94,7 @@ const MobileLayout = (props: LayoutProps) => {
         </>
       )}
       {tab === TabEnum.POSITIONS && (
-        <Flex flexDirection="column" height="100%">
+        <Box>
           <Box
             minHeight={120}
             sx={{
@@ -107,7 +107,7 @@ const MobileLayout = (props: LayoutProps) => {
           <Box sx={{ position: 'relative' }} flex="1">
             {props.closedPositions}
           </Box>
-        </Flex>
+        </Box>
       )}
       <Flex
         sx={{

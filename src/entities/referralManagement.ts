@@ -1,4 +1,5 @@
 import {
+  ClaimRewardStatusEnum,
   ReferralActivityTypeEnum,
   ReferralHistoryStatusEnum,
   ReferralTierEnum,
@@ -38,9 +39,15 @@ export interface ReferralRebateHistoryData {
 }
 
 export interface ReferralClaimHistoryData {
-  time: string
-  status: string
+  id: string
+  // userId: string
+  txHash: string
   amount: number
+  time: string
+  status: ClaimRewardStatusEnum
+  createdAt: string
+  nonce?: string
+  signature?: string
 }
 
 export interface ReferralStatisticData {
@@ -67,4 +74,11 @@ export interface ReferralRewardData {
   claimable: number
   pending: number
   totalUnclaim: number
+}
+
+export interface RequestClaimRewardData {
+  user: string
+  amount: number
+  nonce: string
+  signature: string
 }

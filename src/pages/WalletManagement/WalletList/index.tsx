@@ -29,6 +29,7 @@ const EXCHANGES = [
   CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.GATE,
   CopyTradePlatformEnum.BINANCE,
+  CopyTradePlatformEnum.HYPERLIQUID,
   CopyTradePlatformEnum.SYNTHETIX_V2,
   CopyTradePlatformEnum.GNS_V8,
 ]

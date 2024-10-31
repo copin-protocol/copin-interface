@@ -92,7 +92,7 @@ function ListActivity({ activities }: { activities: ReferralActivityData[] | und
                     </Box>
                     earned{' '}
                     <Box as="span" color="neutral1">
-                      {formatNumber(data.commission)} USDT
+                      {formatNumber(data.commission)} USDC
                     </Box>{' '}
                     in commission from {data.referralUser}
                   </Trans>

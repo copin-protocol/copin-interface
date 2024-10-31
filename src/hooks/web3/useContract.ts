@@ -104,3 +104,13 @@ export function useFeeRebateContract(chainId: number, withSignerIfPossible?: boo
     withSignerIfPossible,
   })
 }
+
+export function useReferralRebateContract(chainId: number, withSignerIfPossible?: boolean) {
+  return useContract({
+    contract: {
+      address: CONTRACT_ADDRESSES[chainId][CONTRACT_QUERY_KEYS.REFERRAL_REBATE],
+      abi: CONTRACT_ABIS[CONTRACT_QUERY_KEYS.REFERRAL_REBATE],
+    },
+    withSignerIfPossible,
+  })
+}

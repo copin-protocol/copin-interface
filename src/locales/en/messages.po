@@ -1,17 +1,11 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-10-18 14:22+0700\n"
+"POT-Creation-Date: 2024-10-21 15:36+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
 
 #: src/pages/Home/ProtocolDropdown.tsx
 msgid "(Coming soon)"
@@ -102,8 +96,8 @@ msgid "7D Pnl"
 msgstr "7D Pnl"
 
 #: src/pages/ReferralManagement/ReferralActivities.tsx
-msgid "<0>{0} </0>earned <1>{1} USDT</1> in commission from {2}"
-msgstr "<0>{0} </0>earned <1>{1} USDT</1> in commission from {2}"
+msgid "<0>{0} </0>earned <1>{1} USDC</1> in commission from {2}"
+msgstr "<0>{0} </0>earned <1>{1} USDC</1> in commission from {2}"
 
 #: src/pages/ReferralManagement/ReferralActivities.tsx
 msgid "<0>{0} </0>invited by <1>{1}</1>"
@@ -639,6 +633,7 @@ msgstr "Condition"
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
+#: src/pages/ReferralManagement/ReferralStats.tsx
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -952,6 +947,10 @@ msgstr "Docs"
 msgid "Document"
 msgstr "Document"
 
+#: src/pages/ReferralManagement/ReferralStats.tsx
+msgid "Done"
+msgstr "Done"
+
 #: src/components/@wallet/CreateWalletAction/index.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpBingX.tsx
 msgid "Don’t have a BingX account?"
@@ -996,8 +995,8 @@ msgid "Duration:"
 msgstr "Duration:"
 
 #: src/pages/ReferralManagement/ReferralHistory.tsx
-msgid "Earning (USDT)"
-msgstr "Earning (USDT)"
+msgid "Earning (USDC)"
+msgstr "Earning (USDC)"
 
 #: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
 msgid "Edit"
@@ -2994,6 +2993,10 @@ msgstr "Transaction has been executed successfully"
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Try Again"
 msgstr "Try Again"
+
+#: src/pages/ReferralManagement/ReferralStats.tsx
+msgid "Try again"
+msgstr "Try again"
 
 #: src/pages/MyProfile/UserActivity/configs.tsx
 #: src/pages/MyProfile/UserActivity/configs.tsx
