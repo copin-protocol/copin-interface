@@ -42,7 +42,6 @@ const CopyButton = ({
       let result
 
       try {
-        debugger
         textarea = document.createElement('textarea')
         textarea.setAttribute('readonly', 'true')
         textarea.setAttribute('contenteditable', 'true')

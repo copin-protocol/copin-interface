@@ -84,7 +84,6 @@ export default function CopyChartProfit({
   const currentOrder = orders.find((e) => e.createdAt === markerId)
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
   const chartData: LineData[] = useMemo(() => {
-    debugger
     if (!data) return []
     const tempData = [...data]
 
