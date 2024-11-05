@@ -6,6 +6,7 @@ import { useQuery } from 'react-query'
 import { getChartDataV2 } from 'apis/positionApis'
 import { ProtocolEnum, TimeframeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { formatPositionChartData } from 'utils/helpers/transform'
 
 import { TimeRangeProps } from './types'
 
@@ -30,6 +31,9 @@ const useChartPositionData = ({ symbol, timeframe = TimeframeEnum.H1, timeRange 
     {
       retry: 0,
       enabled: !!symbol,
+      select(data) {
+        return formatPositionChartData({ data, symbol })
+      },
     }
   )
   const chartData = useMemo(

@@ -21,7 +21,8 @@ export type InputProps = {
 } & InputHTMLAttributes<HTMLInputElement>
 
 export interface InputSearchProps extends InputProps {
-  onClear: () => void
+  onClear?: () => void
+  iconSize?: number
 }
 
 export type TextareaProps = {

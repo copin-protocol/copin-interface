@@ -49,6 +49,7 @@ MarketFilterProps) {
       <Dropdown
         menu={
           <MarketSelection
+            key={visible.toString()}
             // protocols={protocols}
             isAllPairs={isCopyAll}
             selectedPairs={pairs}
@@ -62,7 +63,9 @@ MarketFilterProps) {
         buttonVariant="ghost"
         buttonSx={{ borderRadius: 0, border: 'none', p: 0, color: 'primary1' }}
         menuSx={{
-          width: '360px',
+          width: '250px',
+          bg: '#0B0E18CC',
+          backdropFilter: 'blur(10px)',
           // maxWidth: menuSx.maxWidth ? menuSx.maxWidth : '330px',
           // maxHeight: '50svh',
           // py: 2,

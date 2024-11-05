@@ -29,7 +29,7 @@ import { TIMEFRAME_NAMES, TOKEN_COLLATERAL_SUPPORT, TOKEN_TRADE_SUPPORT } from '
 import { calcLiquidatePrice, calcOpeningPnL, calcPnL } from 'utils/helpers/calculate'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
-import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
+import { formatPositionChartData, getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
 import OrderTooltip from './OrderTooltip'
 
@@ -78,6 +78,9 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
     {
       enabled: !!tokenSymbol && ((isOpening && openBlockTime > 0) || (!isOpening && closeBlockTime > 0)),
       retry: 0,
+      select(data) {
+        return formatPositionChartData({ data, symbol: tokenSymbol })
+      },
     }
   )
 

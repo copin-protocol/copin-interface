@@ -490,7 +490,7 @@ export function usePlanConfigs() {
       <Trans>Platform</Trans>,
     ],
     basic: [
-      <Trans>Up to 3 traders</Trans>,
+      <Trans>Unlimited</Trans>,
       <Trans>Last 60 days</Trans>,
       <Trans>No</Trans>,
       // <Trans>No</Trans>,

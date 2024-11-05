@@ -3,7 +3,7 @@ import { OpenInterestMarketData, ProtocolsStatisticData } from 'entities/statist
 import { PositionStatisticCounter, ResponsePositionData } from 'entities/trader.d'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum, TimeframeEnum } from 'utils/config/enums'
-import { capitalizeFirstLetter, normalizePriceData } from 'utils/helpers/transform'
+import { capitalizeFirstLetter } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
 import requester from './index'
@@ -223,6 +223,11 @@ export const getChartData = ({
   to: number
 }) => requester.get(`prices`, { params: { symbol, timeframe, from, to } }).then((res) => res.data as ChartData[])
 
+/**
+ * `getChartDataV2` need to be used with:
+ *
+ *  `formatPositionChartData`: use for trader chart position.
+ */
 export const getChartDataV2 = ({
   symbol,
   timeframe,
@@ -250,10 +255,10 @@ export const getChartDataV2 = ({
       for (let i = 0; i < data.o.length - 1; i++) {
         if (tempTime === data.t[i]) continue
         tempData.push({
-          open: normalizePriceData(symbol, data.o[i]),
-          close: normalizePriceData(symbol, data.c[i]),
-          low: normalizePriceData(symbol, data.l[i]),
-          high: normalizePriceData(symbol, data.h[i]),
+          open: data.o[i],
+          close: data.c[i],
+          low: data.l[i],
+          high: data.h[i],
           timestamp: data.t[i],
         })
         tempTime = data.t[i]
