@@ -34,7 +34,7 @@ import SliderInput from 'theme/SliderInput'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { DCP_SUPPORTED_PROTOCOLS, DEFAULT_PROTOCOL, LINKS, RISK_LEVERAGE } from 'utils/config/constants'
+import { DCP_EXCHANGES, DCP_SUPPORTED_PROTOCOLS, DEFAULT_PROTOCOL, LINKS, RISK_LEVERAGE } from 'utils/config/constants'
 import { CopyTradePlatformEnum, EventTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { INTERNAL_SERVICE_KEYS, QUERY_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
@@ -310,8 +310,9 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     )
   }, [account, protocol])
 
-  const leverageError = errors.leverage?.message || errors.totalVolume?.message
-  const volumeError = errors.volume?.message || errors.totalVolume?.message
+  const leverageError = errors.leverage?.message
+  const volumeError = errors.volume?.message
+  const isCEXWallet = !DCP_EXCHANGES.includes(platform)
 
   return (
     <>
@@ -328,13 +329,15 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             </Flex>
           </Flex>
           <Type.Caption mt={12} display="inline-block" color="neutral3">
-            Your copy size:{' '}
+            Your current copy size:{' '}
             <Box as="span" color={getCopyVolumeColor({ copyVolume: currentCopyVolume ?? 0, maxVolume })}>
               {currentCopyVolume == null ? '--' : `$${formatNumber(currentCopyVolume, 0, 0)}`}
             </Box>{' '}
-            <Box as="span" sx={{ fontWeight: 600, color: 'neutral1' }}>
-              / ${formatNumber(maxVolume, 0, 0)}
-            </Box>
+            {isCEXWallet && (
+              <Box as="span" sx={{ fontWeight: 600, color: 'neutral1' }}>
+                / ${formatNumber(maxVolume, 0, 0)}
+              </Box>
+            )}
           </Type.Caption>
         </Box>
       )}

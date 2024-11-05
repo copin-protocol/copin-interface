@@ -1,12 +1,18 @@
 import { Trans } from '@lingui/macro'
-import { useState } from 'react'
+import { CaretLeft, Check, CheckCircle, Gear, Trash } from '@phosphor-icons/react'
+import debounce from 'lodash/debounce'
+import { ChangeEvent, Fragment, ReactNode, useMemo, useRef, useState } from 'react'
+import { v4 as uuid } from 'uuid'
 
-import { ALL_TOKEN_PARAM } from 'pages/TopOpenings/configs'
 import { Button } from 'theme/Buttons'
-import Select from 'theme/Select'
+import { InputSearch } from 'theme/Input'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { overflowEllipsis } from 'utils/helpers/css'
+
+import Divider from '../Divider'
+import Market from '../MarketGroup/Market'
 
 export interface MarketSelectionProps {
   selectedPairs: string[]
@@ -17,6 +23,12 @@ export interface MarketSelectionProps {
   handleToggleDropdown?: () => void
 }
 
+type State = {
+  id: string
+  isExcluded: boolean
+  selectedPairs: Record<string, string>
+  excludedPairs: Record<string, string>
+}
 const MarketSelection = ({
   selectedPairs,
   onChangePairs,
@@ -25,185 +37,426 @@ const MarketSelection = ({
   excludedPairs,
   handleToggleDropdown,
 }: MarketSelectionProps) => {
+  // TODO: condition to disable btn save
   const fullOptions = allPairs.map((pair) => ({ value: pair, label: pair }))
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [copyAll, setCopyAll] = useState(isAllPairs)
-  const [isExcluded, setIsExcluded] = useState(!!excludedPairs.length)
-  const [chosenPairs, setChosenPairs] = useState(isAllPairs ? [] : selectedPairs)
-  const [chosenExcludedPairs, setChosenExcludedPairs] = useState(excludedPairs)
+  const [state, setState] = useState<State>({
+    id: '',
+    isExcluded: !!excludedPairs?.length,
+    selectedPairs: isAllPairs
+      ? {}
+      : selectedPairs.reduce((result, pair) => {
+          return { ...result, [pair]: pair }
+        }, {}),
+    excludedPairs: excludedPairs.reduce((result, pair) => {
+      return { ...result, [pair]: pair }
+    }, {}),
+  })
+  const [savedFilter, setSavedFilter] = useState<State[]>(() => {
+    const savedDataString = localStorage.getItem('open_interest_pair_filter')
+    if (!savedDataString) return []
+    const savedData = JSON.parse(savedDataString) as State[]
+    if (!savedData?.length) return []
+    return savedData
+  })
 
-  const disabledResetBtn = copyAll && chosenPairs.length == 0 && chosenExcludedPairs.length == 0
-  const emptyExcludedPair = isExcluded && chosenExcludedPairs.length === 0
-  const emptySelectedPairs = !copyAll && chosenPairs.length === 0
+  const _selectedPairs = Object.values(state.selectedPairs)
+  const _excludedPairs = Object.values(state.excludedPairs)
 
-  const resizePosition = () => {
-    if (isDropdownOpen && (chosenPairs.length > 0 || chosenExcludedPairs.length > 0)) return 270
-
-    if (isDropdownOpen) return 245
-
-    return 3
-  }
-
+  const inputRef = useRef<HTMLInputElement>(null)
   const handleSubmit = () => {
-    if (emptyExcludedPair || emptySelectedPairs) return
-    if (copyAll) {
-      onChangePairs(allPairs, chosenExcludedPairs)
+    const isExcluded = state.isExcluded
+    const submitPairs = isExcluded ? allPairs : _selectedPairs.length ? _selectedPairs : allPairs
+    const submitExcludedPairs = state.isExcluded ? _excludedPairs : []
+    onChangePairs(submitPairs, submitExcludedPairs)
+    const _statePairs = state.isExcluded ? _excludedPairs : _selectedPairs
+    if (!_statePairs.length) {
       handleToggleDropdown?.()
       return
     }
-    onChangePairs(chosenPairs, chosenExcludedPairs)
+    const isSavedFilter = savedFilter.some((filter) => {
+      const _filterIsExcluded = filter.isExcluded
+      const _filterPairsMapping = _filterIsExcluded ? filter.excludedPairs : filter.selectedPairs
+      return (
+        Object.keys(_filterPairsMapping).length === _statePairs.length &&
+        _statePairs.every((pair) => !!_filterPairsMapping[pair])
+      )
+    })
+    if (!isSavedFilter && _statePairs.length && _statePairs.length !== allPairs.length) {
+      // !!(Object.keys(state.selectedPairs).length || !!(isExcluded && Object.keys(state.excludedPairs).length))
+      setSavedFilter((prev) => {
+        const newSavedData = [...prev, { ...state, id: uuid() }]
+        localStorage.setItem('open_interest_pair_filter', JSON.stringify(newSavedData))
+        return newSavedData
+      })
+    }
     handleToggleDropdown?.()
   }
 
-  const handleSelectAll = (isSelectAll: boolean) => {
-    setCopyAll(isSelectAll)
-    setIsExcluded(false)
-    setChosenPairs([])
-    setChosenExcludedPairs([])
+  const _handleSelectPair = (pair: string) => {
+    setState((prev) => {
+      const newState = { ...prev }
+      if (newState.isExcluded) {
+        const newPairs = { ...newState.excludedPairs }
+        if (newPairs[pair]) {
+          delete newPairs[pair]
+        } else {
+          newPairs[pair] = pair
+        }
+        newState.excludedPairs = newPairs
+      } else {
+        const newPairs = { ...newState.selectedPairs }
+        if (newPairs[pair]) {
+          delete newPairs[pair]
+        } else {
+          newPairs[pair] = pair
+        }
+        newState.selectedPairs = newPairs
+      }
+      return newState
+    })
+  }
+  const _handleToggleExcluded = () => {
+    setState((prev) => {
+      const newState = { ...prev }
+      newState.isExcluded = !newState.isExcluded
+      return newState
+    })
+  }
+  const _handleSelectSavedFilter = (filter: State) => {
+    setState(filter)
+    setShowPreference(false)
+    const _selectedPairs = Object.values(filter.selectedPairs)
+    const _excludedPairs = Object.values(filter.excludedPairs)
+    const submitPairs = filter.isExcluded ? allPairs : _selectedPairs.length ? _selectedPairs : allPairs
+    const submitExcludedPairs = filter.isExcluded ? _excludedPairs : []
+    onChangePairs(submitPairs, submitExcludedPairs)
+    handleToggleDropdown?.()
+  }
+  const _handleDeleteSavedFilter = (id: string) => {
+    setSavedFilter((prev) => {
+      const newSavedData = prev.filter((v) => v.id !== id)
+      localStorage.setItem('open_interest_pair_filter', JSON.stringify(newSavedData))
+      return newSavedData
+    })
+  }
+  const _selectedPairsText = _selectedPairs.join(', ')
+  const _excludedPairsText = _excludedPairs.join(', ')
+  const _disabledResetBtn = state.isExcluded ? !_excludedPairs.length : !_selectedPairs.length
+  // const _disableApplyBtn // TODO
+
+  const [showPreference, setShowPreference] = useState(false)
+
+  const [filterOptions, setFilterOptions] = useState(fullOptions)
+  const showClearSearchButtonRef = useRef(false)
+  const handleChangeSearch = useMemo(() => {
+    return debounce((e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.value) {
+        showClearSearchButtonRef.current = true
+      } else {
+        showClearSearchButtonRef.current = false
+      }
+      setFilterOptions(fullOptions.filter((v) => !!v.value.toUpperCase().includes(e.target.value.toUpperCase())))
+    }, 200)
+  }, [fullOptions])
+  const handleClearSearch = () => {
+    if (inputRef.current) {
+      inputRef.current.value = ''
+    }
+    showClearSearchButtonRef.current = false
+    setFilterOptions(fullOptions)
   }
 
-  const handleReset = () => {
-    handleSelectAll(true)
-    onChangePairs(allPairs, [])
+  const _handleReset = () => {
+    setState((prev) => {
+      const newState = { ...prev }
+      if (newState.isExcluded) {
+        newState.excludedPairs = {}
+      } else {
+        newState.selectedPairs = {}
+      }
+      return newState
+    })
+    handleClearSearch()
   }
 
   return (
-    <Box p={3} height={'fit-content'} sx={{ transition: 'height 500ms' }}>
-      <Type.BodyBold mb={2}>
-        <Trans>Trading Pairs</Trans>
-      </Type.BodyBold>
-      <Flex alignItems={'center'} justifyContent={'space-between'}>
-        <SwitchInputField
-          switchLabel={`All pairs ${!copyAll ? `(${chosenPairs.length})` : ''}`}
-          labelColor="neutral1"
-          checked={copyAll}
-          wrapperSx={{ flexDirection: 'row-reverse', '*': { fontWeight: 400 } }}
-          onChange={(newValue: any) => handleSelectAll(newValue.target.checked)}
-        />
-        {copyAll && (
+    <Flex sx={{ p: 2, width: '100%', height: 330 }}>
+      <Box display={showPreference ? 'flex' : 'none'} width="100%" height="100%" sx={{ flexDirection: 'column' }}>
+        <Flex sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+          <Type.BodyBold sx={{ lineHeight: '32px' }}>Preferences</Type.BodyBold>
+          <IconBox
+            icon={<Gear size={20} />}
+            sx={{
+              zIndex: 2,
+              cursor: 'pointer',
+              color: showPreference ? 'neutral1' : 'neutral3',
+              '&:hover': { color: 'neutral2' },
+              flexShrink: 0,
+            }}
+            onClick={() => setShowPreference((prev) => !prev)}
+          />
+        </Flex>
+        <Divider mt={1} mb={10} />
+        <Type.Caption mb={2} sx={{ lineHeight: '24px', fontWeight: 600 }} color="neutral2">
+          Saved filters
+        </Type.Caption>
+        {!savedFilter.length && (
+          <Box flex="1 0 0">
+            {' '}
+            <Type.Caption color="neutral2">No saved filters</Type.Caption>
+          </Box>
+        )}
+        {!!savedFilter.length && (
+          <ScrollWrapper>
+            {savedFilter.map((filter) => {
+              const _isExcluded = filter.isExcluded
+              const _filter = _isExcluded ? filter.excludedPairs : filter.selectedPairs
+              const _filterPairs = Object.values(_filter)
+              const _selectedPairs = _isExcluded ? excludedPairs : isAllPairs ? [] : selectedPairs
+              const _isSelected =
+                !!_selectedPairs.length &&
+                _selectedPairs.length === _filterPairs.length &&
+                _selectedPairs.every((pair) => !!_filter[pair])
+              return (
+                <ItemWrapper
+                  key={filter.id}
+                  onClick={_isSelected ? undefined : () => _handleSelectSavedFilter(filter)}
+                  sx={{
+                    bg: _isSelected ? '#777E9033' : '',
+                    cursor: _isSelected ? '' : 'pointer',
+                    gap: 2,
+                    '&:hover': {
+                      bg: '#777E9033',
+                      '.icon_delete, .icon_apply': { display: 'block' },
+                    },
+                  }}
+                >
+                  <Flex flex={1} key={filter.id} sx={{ alignItems: 'center', gap: 2, width: '100%' }}>
+                    <Type.Caption
+                      color={_isSelected ? 'neutral1' : 'neutral2'}
+                      sx={{ flex: '1 0 0', ...overflowEllipsis() }}
+                    >
+                      {_isExcluded
+                        ? _filterPairs.map((v, index) => (
+                            <Fragment key={v}>
+                              <Box as="span" sx={{ textDecoration: 'line-through' }}>
+                                {v}
+                              </Box>
+                              {index + 1 === _excludedPairs.length || _filterPairs.length === 1 ? '' : ', '}
+                            </Fragment>
+                          ))
+                        : _filterPairs.join(', ')}
+                    </Type.Caption>
+                  </Flex>
+                  {!_isSelected && (
+                    <IconBox
+                      className="icon_apply"
+                      icon={<CheckCircle size={16} />}
+                      color="neutral1"
+                      sx={{ display: 'none', '&:hover': { color: 'neutral2' } }}
+                      // sx={{ color: _isSelected ? 'neutral1' : 'neutral2', '&:hover': { color: 'neutral2' } }}
+                    />
+                  )}
+                  <IconBox
+                    className="icon_delete"
+                    icon={<Trash size={16} />}
+                    sx={{ display: 'none', color: 'red1', '&:hover': { color: 'red2' }, cursor: 'pointer' }}
+                    onClick={(e: any) => {
+                      e?.stopPropagation()
+                      _handleDeleteSavedFilter(filter.id)
+                    }}
+                  />
+                </ItemWrapper>
+              )
+            })}
+          </ScrollWrapper>
+        )}
+        <Flex mt={2} mb={1} sx={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+          <Flex
+            sx={{ alignItems: 'center', gap: 1, cursor: 'pointer', '&:hover': { color: 'neutral2' } }}
+            onClick={() => setShowPreference(false)}
+          >
+            <CaretLeft size={16} />
+            <Type.Caption sx={{ lineHeight: '24px', fontWeight: 600 }}>
+              <Trans>Back To Select</Trans>
+            </Type.Caption>
+          </Flex>
+        </Flex>
+      </Box>
+
+      <Box
+        display={showPreference ? 'none' : 'flex'}
+        flex="1 0 0"
+        sx={{ '& *': { fontSize: '13px !important' }, width: '100%', flexDirection: 'column' }}
+      >
+        <Flex
+          mb={10}
+          sx={{
+            width: '100%',
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
+          <InputSearch
+            ref={inputRef}
+            onChange={handleChangeSearch}
+            onClear={handleClearSearch}
+            placeholder="Search Pair"
+            iconSize={16}
+            sx={{
+              p: '4px 8px',
+              flex: 1,
+              border: 'none',
+              bg: 'neutral5',
+              '& input': { fontSize: '16px !important' },
+              '&:hover:not([disabled]), &:focus:not([disabled]), &:focus-within:not([disabled])': { bg: 'neutral5' },
+              ...(showClearSearchButtonRef.current
+                ? {
+                    '& button.search-btn--clear': {
+                      visibility: 'visible',
+                    },
+                  }
+                : {}),
+            }}
+          />
+          <IconBox
+            icon={<Gear size={20} />}
+            sx={{
+              zIndex: 2,
+              cursor: 'pointer',
+              color: showPreference ? 'neutral1' : 'neutral3',
+              '&:hover': { color: 'neutral2' },
+              flexShrink: 0,
+            }}
+            onClick={() => setShowPreference((prev) => !prev)}
+          />
+        </Flex>
+        <ScrollWrapper>
+          {filterOptions.map((option) => {
+            const _checkIconColor = state.isExcluded ? 'red1' : 'green2'
+            const _isSelected = state.isExcluded
+              ? !!state.excludedPairs[option.value]
+              : !!state.selectedPairs[option.value]
+            return (
+              <ItemWrapper key={option.value} onClick={() => _handleSelectPair(option.value)}>
+                <Flex
+                  sx={{
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Market symbol={option.value} size={20} hasName />
+                  <IconBox
+                    icon={<Check size={16} />}
+                    color={_checkIconColor}
+                    sx={{ visibility: _isSelected ? 'visible' : 'hidden' }}
+                  />
+                </Flex>
+              </ItemWrapper>
+            )
+          })}
+        </ScrollWrapper>
+        <Divider my={10} />
+        <Type.Caption color="neutral2" mb={'4px'} sx={{ width: '100%', lineHeight: '24px', ...overflowEllipsis() }}>
+          {state.isExcluded
+            ? _excludedPairsText
+              ? `All Pairs & Excluded: ${_excludedPairsText}`
+              : 'All Pairs & Not Excluded'
+            : !!_selectedPairsText
+            ? `Selected: ${_selectedPairsText}`
+            : 'Selected All Pairs'}
+        </Type.Caption>
+        <Flex mb={1} sx={{ width: '100%', alignItems: 'center', height: '24px', justifyContent: 'space-between' }}>
+          <SwitchInputField
+            switchLabel={'Exclude Mode'}
+            labelColor="neutral2"
+            checked={state.isExcluded}
+            wrapperSx={{
+              width: 'max-content',
+              flexDirection: 'row-reverse',
+              '*': { fontWeight: '400 !important' },
+              '& .slider': { bg: state.isExcluded ? `${themeColors.red1} !important` : '' },
+            }}
+            onChange={_handleToggleExcluded}
+          />
+          <Box sx={{ height: '16px', width: '1px', flexShrink: 0, bg: 'neutral4' }} />
+
           <Flex
             sx={{
               alignItems: 'center',
-              '& input:checked + .slider': {
-                backgroundColor: `${themeColors.red1}50 !important`,
-              },
+              gap: 12,
             }}
+            pr={8}
           >
-            <SwitchInputField
-              switchLabel={`Exclude (${chosenExcludedPairs.length})`}
-              labelColor="neutral3"
-              checked={isExcluded}
-              wrapperSx={{
-                flexDirection: 'row-reverse',
-                '*': { fontWeight: 400 },
-              }}
-              onChange={(newValue: any) => {
-                const isExcluded = newValue.target.checked
-                setIsExcluded(isExcluded)
-                if (!isExcluded) {
-                  setChosenExcludedPairs([])
-                }
-              }}
-            />
+            <Button variant="ghost" disabled={_disabledResetBtn} onClick={_handleReset} sx={{ fontWeight: 400, p: 0 }}>
+              Clear
+            </Button>
+            <Button
+              variant="ghostPrimary"
+              onMouseDown={handleSubmit}
+              onClick={handleSubmit}
+              sx={{ fontWeight: 400, p: 0 }}
+            >
+              Save
+            </Button>
           </Flex>
-        )}
-      </Flex>
-      <Box display={copyAll ? 'none' : 'flex'} sx={{ alignItems: 'center', gap: 3, mt: 3 }}>
-        <Select
-          closeMenuOnSelect={false}
-          className="select-container pad-right-0"
-          options={fullOptions}
-          value={chosenPairs.map((option) => ({ value: option, label: option }))}
-          onMenuOpen={() => setIsDropdownOpen(true)}
-          onMenuClose={() => setIsDropdownOpen(false)}
-          error={emptySelectedPairs}
-          maxHeightSelectContainer={'70px'}
-          blurInputOnSelect={false}
-          onChange={(newValue: any, actionMeta: any) => {
-            if (actionMeta?.option?.value === ALL_TOKEN_PARAM) {
-              setChosenPairs(fullOptions.map((data: any) => data.value))
-              return
-            }
-            setChosenPairs(newValue?.map((data: any) => data.value))
-          }}
-          components={{
-            DropdownIndicator: () => <div></div>,
-          }}
-          isSearchable
-          isMulti
-        />
+        </Flex>
       </Box>
-      {emptySelectedPairs && (
-        <Type.Caption color="red1" mt={1} display="block">
-          {'Please select at least one pair'}
-        </Type.Caption>
-      )}
-
-      <Box
-        display={isExcluded && copyAll ? 'flex' : 'none'}
-        sx={{ alignItems: 'center', gap: 3, mt: 3 }}
-        // onClick={() => setScalingDropdown(!toggleValue)}
-      >
-        <Select
-          closeMenuOnSelect={false}
-          className="select-container pad-right-0"
-          options={fullOptions}
-          value={chosenExcludedPairs.map((option) => ({ value: option, label: option }))}
-          onMenuOpen={() => setIsDropdownOpen(true)}
-          onMenuClose={() => setIsDropdownOpen(false)}
-          maxHeightSelectContainer={'70px'}
-          error={emptyExcludedPair}
-          blurInputOnSelect={false}
-          onChange={(newValue: any, actionMeta: any) => {
-            setChosenExcludedPairs(newValue?.map((data: any) => data.value))
-          }}
-          components={{
-            DropdownIndicator: () => <div></div>,
-          }}
-          isSearchable
-          isMulti
-        />
-      </Box>
-      {emptyExcludedPair && (
-        <Type.Caption color="red1" mt={1} display="block">
-          {'Please select at least one pair to exclude'}
-        </Type.Caption>
-      )}
-
-      {/* <Box display={isScaling ? 'block' : 'none'} sx={{ height: '600px' }} /> */}
-
-      <Flex
-        sx={{
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          backgroundColor: 'neutral7',
-          gap: [3, 24],
-          mt: resizePosition(),
-        }}
-      >
-        <Button
-          variant="ghost"
-          disabled={disabledResetBtn}
-          onMouseDown={handleReset}
-          onClick={handleReset}
-          sx={{ fontWeight: 400, p: 0 }}
-        >
-          Reset
-        </Button>
-        <Button
-          variant="ghostPrimary"
-          disabled={emptyExcludedPair || emptySelectedPairs}
-          onMouseDown={handleSubmit}
-          onClick={handleSubmit}
-          sx={{ fontWeight: 400, p: 0 }}
-        >
-          Apply & Save
-        </Button>
-      </Flex>
-    </Box>
+    </Flex>
   )
 }
 
 export default MarketSelection
+
+function ItemWrapper({
+  children,
+  onClick,
+  sx = {},
+}: {
+  children: ReactNode
+  onClick: (() => void) | undefined
+  sx?: any
+}) {
+  return (
+    <Flex
+      onClick={onClick}
+      sx={{
+        width: '100%',
+        px: 2,
+        height: 28,
+        flexShrink: 0,
+        alignItems: 'center',
+        borderRadius: '2px',
+        cursor: 'pointer',
+        '&:hover': { bg: '#777E9033' },
+        ...sx,
+      }}
+    >
+      {children}
+    </Flex>
+  )
+}
+
+function ScrollWrapper({ children }: { children: ReactNode }) {
+  return (
+    <Flex
+      sx={{
+        flex: '1 0 0',
+        overflow: 'auto',
+        flexDirection: 'column',
+        gap: 1,
+        width: '100%',
+        '::-webkit-scrollbar': {
+          border: 'none',
+        },
+        '::-webkit-scrollbar-thumb': {
+          borderRadius: '4px',
+        },
+      }}
+    >
+      {children}
+    </Flex>
+  )
+}

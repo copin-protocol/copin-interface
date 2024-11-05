@@ -30,7 +30,7 @@ import { getTokenTradeSupport } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
-import { normalizePriceData } from 'utils/helpers/transform'
+import { normalizeExchangePrice } from 'utils/helpers/transform'
 
 import ClosePositionGnsV8 from './ClosePositionGnsV8'
 import ClosePositionSnxV2 from './ClosePositionSnxV2'
@@ -113,7 +113,14 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
     () =>
       data && symbol
         ? isOpening
-          ? calcCopyOpeningPnL(data, normalizePriceData(symbol, prices[data.indexToken], data.exchange))
+          ? calcCopyOpeningPnL(
+              data,
+              normalizeExchangePrice({
+                protocolSymbol: symbol,
+                protocolSymbolPrice: prices[data.indexToken],
+                exchange: data.exchange,
+              })
+            )
           : data.pnl
         : 0,
     [data, isOpening, prices, symbol]

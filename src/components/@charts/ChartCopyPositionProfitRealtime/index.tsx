@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react'
 import { CopyOrderData, CopyPositionData } from 'entities/copyTrade'
 import { Box } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
+import { getSymbolTradingView, getTokenTradeSupport } from 'utils/config/trades'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
 import { ChartingLibraryWidgetOptions, ResolutionString } from '../../../../public/static/charting_library'
@@ -36,7 +36,7 @@ function CopyRealtimeChart({ position, orders }: Props) {
       ...DEFAULT_CHART_REALTIME_PROPS,
       datafeed,
       container: chartContainer,
-      symbol: symbol ? `${symbol}USD` : undefined,
+      symbol: symbol ? `${getSymbolTradingView(symbol)}USD` : undefined,
       interval: (durationInSecond < 1800 ? '1' : timeframe.toString()) as ResolutionString,
       custom_formatters: {
         priceFormatterFactory: (symbol, minTick) => {

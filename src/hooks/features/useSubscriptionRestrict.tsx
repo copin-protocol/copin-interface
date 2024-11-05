@@ -3,34 +3,34 @@ import { useCallback } from 'react'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import useSubscriptionRestrictStore, { RestrictState } from 'hooks/store/useSubscriptionRestrictStore'
-import { CopyTradeStatusEnum, MaxCopyTradeQuotaEnum, SubscriptionPlanEnum } from 'utils/config/enums'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 
-import useAllCopyTrades from './useAllCopyTrades'
+// import useAllCopyTrades from './useAllCopyTrades'
 
 export function useCheckCopyTradeAction() {
-  const setRestrictState = useSubscriptionRestrictStore((state) => state.setRestrictState)
+  // const setRestrictState = useSubscriptionRestrictStore((state) => state.setRestrictState)
   const { myProfile } = useMyProfileStore()
   const isLoggedIn = !!myProfile
   const handleClickLogin = useClickLoginButton()
 
-  const { allCopyTrades } = useAllCopyTrades()
-  const isQuotaExceed =
-    isLoggedIn &&
-    myProfile.plan === SubscriptionPlanEnum.BASIC &&
-    (allCopyTrades?.filter?.((data) => data.status === CopyTradeStatusEnum.RUNNING)?.length ?? 0) >=
-      MaxCopyTradeQuotaEnum.BASIC
+  // const { allCopyTrades } = useAllCopyTrades()
+  // const isQuotaExceed =
+  //   isLoggedIn &&
+  //   myProfile.plan === SubscriptionPlanEnum.BASIC &&
+  //   (allCopyTrades?.filter?.((data) => data.status === CopyTradeStatusEnum.RUNNING)?.length ?? 0) >=
+  //     MaxCopyTradeQuotaEnum.BASIC
 
   const checkIsEligible = useCallback(() => {
     if (!isLoggedIn) {
       handleClickLogin()
       return false
     }
-    if (isQuotaExceed) {
-      setRestrictState(RestrictState.EXCEED_QUOTA)
-      return false
-    }
+    // if (isQuotaExceed) {
+    //   setRestrictState(RestrictState.EXCEED_QUOTA)
+    //   return false
+    // }
     return true
-  }, [isLoggedIn, isQuotaExceed])
+  }, [handleClickLogin, isLoggedIn])
 
   return {
     // isEligible: !isQuotaExceed,

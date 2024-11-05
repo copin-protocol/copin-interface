@@ -7,6 +7,7 @@ import { getChartDataV2 } from 'apis/positionApis'
 import { ChartData, DrawChartData } from 'entities/chart'
 import { TimeframeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { formatPositionChartData } from 'utils/helpers/transform'
 
 import renderBrushBar from './helpers/renderBrushBar'
 
@@ -47,6 +48,9 @@ const BrushChart = ({
     {
       retry: 0,
       keepPreviousData: true,
+      select(data) {
+        return formatPositionChartData({ data, symbol })
+      },
     }
   )
 

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 
 import { ApiListResponse, ApiMeta } from 'apis/api'
+import { ChartData } from 'entities/chart'
 import { CopyWalletData } from 'entities/copyWallet'
 import { LINKS, SUPPORTED_LOCALES } from 'utils/config/constants'
 import {
@@ -405,6 +406,136 @@ export const normalizePriceData = (
     default:
       return value
   }
+}
+
+const PROTOCOL_PRICE_MULTIPLE_MAPPING: Record<string, { originalSymbol: string; multiple: number }> = {
+  '1000PEPE': { originalSymbol: 'PEPE', multiple: 1_000 },
+  kPEPE: { originalSymbol: 'PEPE', multiple: 1_000 },
+  '1000BONK': { originalSymbol: 'BONK', multiple: 1_000 },
+  kBONK: { originalSymbol: 'BONK', multiple: 1_000 },
+  '1000SHIB': { originalSymbol: 'SHIB', multiple: 1_000 },
+  kSHIB: { originalSymbol: 'SHIB', multiple: 1_000 },
+  '1000DOGS': { originalSymbol: 'DOGS', multiple: 1_000 },
+  kDOGS: { originalSymbol: 'DOGS', multiple: 1_000 },
+  '1000LUNC': { originalSymbol: 'LUNC', multiple: 1_000 },
+  kLUNC: { originalSymbol: 'LUNC', multiple: 1_000 },
+  '1MBABYDOGE': { originalSymbol: 'BABYDOGE', multiple: 1_000_000 },
+}
+export function normalizeProtocolPrice({ symbol, price }: { symbol: string | undefined; price: number | undefined }): {
+  originalSymbol: string
+  originalPrice: number
+} {
+  if (!symbol || !price) return { originalSymbol: symbol || '', originalPrice: price || 0 }
+  const { originalSymbol, multiple } = PROTOCOL_PRICE_MULTIPLE_MAPPING[symbol] ?? {}
+  return { originalSymbol: originalSymbol || symbol, originalPrice: price / (multiple ?? 1) }
+}
+
+/**
+ * `formatPositionChartData` only use with `getChartDataV2`
+ */
+export function formatPositionChartData({
+  data,
+  symbol,
+}: {
+  data: ChartData[] | undefined
+  symbol: string | undefined
+}) {
+  if (!data?.length || !symbol) return [] as ChartData[]
+  return data.map((v) => {
+    const _chartData: ChartData = {
+      open: normalizePriceData(symbol, v.open),
+      close: normalizePriceData(symbol, v.close),
+      low: normalizePriceData(symbol, v.low),
+      high: normalizePriceData(symbol, v.high),
+      timestamp: v.timestamp,
+    }
+    return _chartData
+  })
+}
+
+/**
+ * `formatCopyPositionChartData` only use with `getChartDataV2`
+ */
+export function formatCopyPositionChartData({
+  data,
+  symbol,
+  exchange,
+}: {
+  data: ChartData[] | undefined
+  symbol: string | undefined
+  exchange: CopyTradePlatformEnum | undefined
+}) {
+  if (!data?.length || !symbol || !exchange) return [] as ChartData[]
+  const { originalSymbol: _symbol } = normalizeProtocolPrice({ symbol, price: 1 }) // only get symbol
+  return data.map((v) => {
+    const _chartData: ChartData = {
+      open: normalizeExchangePrice({ protocolSymbol: _symbol, protocolSymbolPrice: v.open, exchange }),
+      close: normalizeExchangePrice({ protocolSymbol: _symbol, protocolSymbolPrice: v.close, exchange }),
+      low: normalizeExchangePrice({ protocolSymbol: _symbol, protocolSymbolPrice: v.low, exchange }),
+      high: normalizeExchangePrice({ protocolSymbol: _symbol, protocolSymbolPrice: v.high, exchange }),
+      timestamp: v.timestamp,
+    }
+    return _chartData
+  })
+}
+
+const EXCHANGE_PRICE_MULTIPLE_MAPPING: Partial<Record<CopyTradePlatformEnum, Record<string, number>>> = {
+  [CopyTradePlatformEnum.BINGX]: {
+    PEPE: 1_000,
+    BONK: 1_000,
+    SATS: 10_000,
+    BABYDOGE: 1_000_000,
+    CAT: 1_000,
+    WHY: 10_000,
+    AIDOGE: 10_000_000,
+  },
+  [CopyTradePlatformEnum.BITGET]: {
+    BONK: 1_000,
+    XEC: 1_000,
+    RATS: 1_000,
+    SATS: 1_000,
+    MOG: 1_000_000,
+    CAT: 1_000,
+    WHY: 10_000,
+  },
+  [CopyTradePlatformEnum.BYBIT]: {
+    BONK: 1_000,
+    PEPE: 1_000,
+    FLOKI: 1_000,
+    SHIB: 1_000,
+    LUNC: 1_000,
+    MOG: 1_000_000,
+    NEIROCTO: 1_000,
+    BABYDOGE: 1_000_000,
+    TURBO: 1_000,
+    MUMU: 1_000,
+    X: 1_000,
+    WEN: 10_000,
+    CAT: 1_000,
+    LADYS: 10_000,
+  },
+  [CopyTradePlatformEnum.OKX]: {},
+  [CopyTradePlatformEnum.GATE]: {},
+}
+
+/**
+ * `normalizeExchangePrice` use to parse price from protocol price, ex: 1000PEPE on Equation change to PEPE on OKX
+ */
+export function normalizeExchangePrice({
+  protocolSymbol,
+  protocolSymbolPrice,
+  exchange,
+}: {
+  protocolSymbol: string | undefined
+  protocolSymbolPrice: number | undefined
+  exchange: CopyTradePlatformEnum | undefined
+}) {
+  if (!protocolSymbol || !protocolSymbolPrice || !exchange) return 0
+  const { originalSymbol, originalPrice } = normalizeProtocolPrice({
+    symbol: protocolSymbol,
+    price: protocolSymbolPrice,
+  })
+  return (EXCHANGE_PRICE_MULTIPLE_MAPPING[exchange]?.[originalSymbol] ?? 1) * originalPrice
 }
 
 const CHAIN_ID_BY_CHAIN_STAT = {

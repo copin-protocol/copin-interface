@@ -184,7 +184,10 @@ export const InputPassword = forwardRef(
 )
 
 export const InputSearch = forwardRef(
-  ({ sx, block, variant, onClear, ...props }: InputSearchProps & SxProps, ref: ForwardedRef<HTMLInputElement>) => {
+  (
+    { sx, block, variant, iconSize = 20, onClear, ...props }: InputSearchProps & SxProps,
+    ref: ForwardedRef<HTMLInputElement>
+  ) => {
     return (
       <InputWrapper
         variant={variant}
@@ -217,7 +220,7 @@ export const InputSearch = forwardRef(
             flexShrink: 0,
           }}
         >
-          <MagnifyingGlass size={20} />
+          <MagnifyingGlass size={iconSize} />
         </Box>
         <StyledInput {...props} ref={ref} style={{ marginLeft: 8 }} />
         <Button

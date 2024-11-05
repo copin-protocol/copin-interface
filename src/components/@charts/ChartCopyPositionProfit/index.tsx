@@ -27,7 +27,7 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import { TIMEFRAME_NAMES, getTokenTradeSupport } from 'utils/config/trades'
 import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcPnL, calcSLTPUsd } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
-import { getTimeframeFromTimeRange, normalizePriceData } from 'utils/helpers/transform'
+import { formatCopyPositionChartData, getTimeframeFromTimeRange, normalizeExchangePrice } from 'utils/helpers/transform'
 
 import CopyOrderTooltip from './CopyOrderTooltip'
 
@@ -71,8 +71,12 @@ export default function CopyChartProfit({
     {
       enabled: !!tokenSymbol && ((isOpening && openBlockTime > 0) || (!isOpening && closeBlockTime > 0)),
       retry: 0,
+      select(data) {
+        return formatCopyPositionChartData({ symbol: tokenSymbol, data, exchange })
+      },
     }
   )
+
   const orders = copyOrders.sort((x, y) => (x.createdAt < y.createdAt ? -1 : x.createdAt > y.createdAt ? 1 : 0))
   const openOrder = orders && orders.length > 0 ? orders[0] : undefined
   const increaseList = orders.filter((e) => e.isIncrease)
@@ -80,15 +84,16 @@ export default function CopyChartProfit({
   const currentOrder = orders.find((e) => e.createdAt === markerId)
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
   const chartData: LineData[] = useMemo(() => {
+    debugger
     if (!data) return []
     const tempData = [...data]
 
     if (openOrder) {
       tempData.push({
-        open: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
-        close: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
-        low: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
-        high: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
+        open: openOrder.price,
+        close: openOrder.price,
+        high: openOrder.price,
+        low: openOrder.price,
         timestamp: dayjs(openOrder.createdAt).utc().valueOf(),
       })
     }
@@ -97,19 +102,19 @@ export default function CopyChartProfit({
       const currentPrice = prices[position.indexToken]
       if (currentPrice) {
         tempData.push({
-          open: currentPrice,
-          close: currentPrice,
-          low: currentPrice,
-          high: currentPrice,
+          open: normalizeExchangePrice({ protocolSymbol: tokenSymbol, protocolSymbolPrice: currentPrice, exchange }),
+          close: normalizeExchangePrice({ protocolSymbol: tokenSymbol, protocolSymbolPrice: currentPrice, exchange }),
+          high: normalizeExchangePrice({ protocolSymbol: tokenSymbol, protocolSymbolPrice: currentPrice, exchange }),
+          low: normalizeExchangePrice({ protocolSymbol: tokenSymbol, protocolSymbolPrice: currentPrice, exchange }),
           timestamp: to,
         })
       }
     } else {
       tempData.push({
-        open: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
-        close: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
-        low: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
-        high: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
+        open: position.closePrice ?? position.entryPrice,
+        close: position.closePrice ?? position.entryPrice,
+        high: position.closePrice ?? position.entryPrice,
+        low: position.closePrice ?? position.entryPrice,
         timestamp: dayjs(position.lastOrderAt).utc().valueOf(),
       })
     }
@@ -124,7 +129,7 @@ export default function CopyChartProfit({
     return (
       chartData
         .map((e, index) => {
-          const marketPrice = normalizePriceData(tokenSymbol, e.close, exchange)
+          const marketPrice = e.close
           const tickTime = dayjs(e.timestamp).utc()
           const realSize =
             index === chartData.length - 1
@@ -159,10 +164,10 @@ export default function CopyChartProfit({
     // const lastData = isOpening ? data[data.length - 1] : tempData.pop()
     if (openOrder) {
       tempData.push({
-        open: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
-        close: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
-        low: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
-        high: normalizePriceData(tokenSymbol, openOrder.price, exchange, true),
+        open: openOrder.price,
+        close: openOrder.price,
+        high: openOrder.price,
+        low: openOrder.price,
         timestamp: dayjs(openOrder.createdAt).utc().valueOf(),
       })
     }
@@ -179,10 +184,10 @@ export default function CopyChartProfit({
       }
     } else {
       tempData.push({
-        open: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
-        close: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
-        low: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
-        high: normalizePriceData(tokenSymbol, position.closePrice ?? position.entryPrice, exchange, true),
+        open: position.closePrice ?? position.entryPrice,
+        close: position.closePrice ?? position.entryPrice,
+        high: position.closePrice ?? position.entryPrice,
+        low: position.closePrice ?? position.entryPrice,
         timestamp: dayjs(position.createdAt).utc().valueOf(),
       })
     }
