@@ -59,7 +59,8 @@ export const LINKS = {
   getBybitAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bybit-api',
   getOKXAPIKey: 'https://docs.copin.io/features/copy-trading/connect-okx-api',
   getGateAPIKey: 'https://docs.copin.io/features/copy-trading/connect-gate-api',
-  getHyperliquidAPIKey: 'https://docs.copin.io/features/centralized-copy-trading-ccp',
+  getHyperliquidAPIKey: 'https://docs.copin.io/features/decentralized-copy-trading-dcp/connect-hyperliquid-api',
+  feeStructureDocs: 'https://docs.copin.io/features/decentralized-copy-trading-dcp/fees-structure',
   notice: 'https://copin.substack.com/p/copin-profile-login-updates-road',
   bingXGuarantee:
     'https://support.bingx.com/hc/en-001/articles/21313115553945-Perpetual-Futures-Exclusive-Guaranteed-Price-Launched-to-Prevent-Slippage-Losses',

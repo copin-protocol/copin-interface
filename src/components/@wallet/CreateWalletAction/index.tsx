@@ -264,7 +264,7 @@ export function CreateWalletModal({
       Modal = CreateHyperliquidWalletModal
       break
   }
-  if (!Modal) return null
+  if (!Modal || !isOpen) return null
   return <Modal isOpen={isOpen} onDismiss={onDismiss} platform={exchange} />
 }
 

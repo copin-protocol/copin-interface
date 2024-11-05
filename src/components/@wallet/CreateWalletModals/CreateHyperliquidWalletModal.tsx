@@ -19,7 +19,9 @@ import InputField, { InputPasswordField } from 'theme/InputField'
 import Modal from 'theme/Modal'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Type } from 'theme/base'
+import { LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { addressShorten } from 'utils/helpers/format'
 import { ARBITRUM_MAINNET } from 'utils/web3/chains'
 import { signTypedData } from 'utils/web3/wallet'
 
@@ -45,6 +47,7 @@ export default function CreateHyperliquidWalletModal({
     resolver: yupResolver(hyperliquidWalletFormSchema),
   })
   const enableVault = watch('enableVault')
+  const apiKey = watch('apiKey')
 
   const isInternal = useInternalRole()
   const { reloadCopyWallets } = useCopyWalletContext()
@@ -83,6 +86,17 @@ export default function CreateHyperliquidWalletModal({
   const handleAccept = async () => {
     if (!!signatureData) return setSignatureData(undefined)
     if (!walletAccount || !walletProvider) return
+    if (walletAccount.address?.toLowerCase() !== apiKey?.toLowerCase()) {
+      toast.error(
+        <ToastBody
+          title="Can not approve Hyperliquid Builder Fee"
+          message={`The Hyperliquid Account Address does not match your web3 wallet account. Please switch account to [${addressShorten(
+            apiKey
+          )}] and try again`}
+        />
+      )
+      return
+    }
     const domain = {
       name: 'HyperliquidSignTransaction',
       version: '1',
@@ -207,9 +221,32 @@ export default function CreateHyperliquidWalletModal({
             <HyperliquidHelp />
 
             {!enableVault && (
-              <Checkbox checked={!!signatureData} onClick={handleAccept}>
-                <Type.Caption>I agree to let Copin use the API to place orders</Type.Caption>
-              </Checkbox>
+              <Box>
+                <Checkbox checked={!!signatureData} onClick={handleAccept}>
+                  <Type.Caption>I agree to let Copin use the API to place orders.</Type.Caption>
+                </Checkbox>
+                <Type.Caption>
+                  <Box
+                    as="a"
+                    href={LINKS.termOfUse}
+                    target="_blank"
+                    color="primary1"
+                    sx={{ textDecoration: 'underline', '&:hover': { color: 'primary2' } }}
+                  >
+                    Terms of Service
+                  </Box>
+                  &nbsp;&&nbsp;
+                  <Box
+                    sx={{ textDecoration: 'underline', '&:hover': { color: 'primary2' } }}
+                    as="a"
+                    href={LINKS.riskDisclaimer}
+                    target="_blank"
+                    color="primary1"
+                  >
+                    Risk Disclaimer
+                  </Box>
+                </Type.Caption>
+              </Box>
             )}
 
             <Button

@@ -66,6 +66,27 @@ const WalletHelpHyperliquid = ({
           {/* <Type.CaptionBold>DY5QNN</Type.CaptionBold> */}
         </Box>
       </Wrapper>
+
+      <Wrapper>
+        <Flex alignItems="center" sx={{ gap: 2 }}>
+          <Type.Caption>
+            <Trans>How to connect your Hyperliquid API to Copin?</Trans>
+          </Type.Caption>
+          <Type.Caption>-</Type.Caption>
+          <ButtonWithIcon
+            type="button"
+            variant="ghostPrimary"
+            as="a"
+            href={LINKS.getHyperliquidAPIKey}
+            target="_blank"
+            direction="right"
+            icon={<ArrowSquareOut size={16} />}
+            sx={{ mx: 0, p: 0, fontSize: '14px' }}
+          >
+            <Trans> Learn how?</Trans>
+          </ButtonWithIcon>
+        </Flex>
+      </Wrapper>
     </Flex>
   )
 }
