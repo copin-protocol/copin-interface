@@ -2,6 +2,7 @@ import { XCircle } from '@phosphor-icons/react'
 import { ReactNode } from 'react'
 
 import { Flex, IconBox } from 'theme/base'
+import { themeColors } from 'theme/colors'
 
 export default function TagWrapper({
   children,
@@ -22,7 +23,10 @@ export default function TagWrapper({
         bg: 'neutral5',
         alignItems: 'center',
         color: 'neutral2',
-        '& > *:first-child': { color: 'neutral3' },
+        flexShrink: 0,
+        textTransform: 'uppercase',
+        '& > *:nth-child(1)': { color: `${themeColors.neutral3} !important` },
+        '& > *:nth-child(2)': { color: `${themeColors.primary1} !important` },
         ...sx,
       }}
     >

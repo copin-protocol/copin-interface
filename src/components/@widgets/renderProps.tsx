@@ -20,6 +20,7 @@ import Tooltip from 'theme/Tooltip'
 import { Flex, Image, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
+import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
 import { getTokenTradeSupport } from 'utils/config/trades'
 import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } from 'utils/helpers/calculate'
@@ -307,7 +308,7 @@ function OpeningRoi(props: Omit<OpeningRoiComponentProps, 'prices'>) {
   return <OpeningRoiComponent {...props} prices={prices} />
 }
 function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponentProps) {
-  if (!data || !prices) return <></>
+  if (!data || !prices || !data?.protocol || PROTOCOLS_CROSS_MARGIN.includes(data.protocol)) return <>--</>
   const marketPrice = prices[data.indexToken]
   const { pnl, pnlInToken } = getOpeningPnl({ data, marketPrice, ignoreFee })
   return SignedText({

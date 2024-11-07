@@ -84,17 +84,20 @@ const avgDurationColumn: ColumnData<PositionData> = {
   style: { minWidth: '100px', textAlign: 'right' },
   render: (item) => <Type.Caption color="neutral1">{formatDuration(item.durationInSecond)}</Type.Caption>,
 }
+
+const renderPositionRoi = (item: PositionData) => (
+  <Type.Caption color="neutral1">
+    <SignedText value={item.realisedRoi} maxDigit={2} minDigit={2} suffix="%" />
+  </Type.Caption>
+)
+
 const roiColumn: ColumnData<PositionData> = {
   title: 'ROI',
   dataIndex: 'roi',
   key: 'roi',
   sortBy: 'realisedRoi',
   style: { minWidth: '90px', textAlign: 'right' },
-  render: (item) => (
-    <Type.Caption color="neutral1">
-      <SignedText value={item.realisedRoi} maxDigit={2} minDigit={2} suffix="%" />
-    </Type.Caption>
-  ),
+  render: renderPositionRoi,
 }
 const openTimeColumn: ColumnData<PositionData> = {
   title: 'Open Time',
@@ -127,7 +130,7 @@ const closeTimeColumn: ColumnData<PositionData> = {
   style: { minWidth: '156px' },
   render: (item) => (
     <Type.Caption color="neutral1">
-      {item.closeBlockTime ? (
+      {item.status !== PositionStatusEnum.OPEN && item.closeBlockTime ? (
         <LocalTimeText date={item.closeBlockTime} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
       ) : (
         '--'
@@ -322,7 +325,11 @@ const positionTimeColumn: ColumnData<PositionData> = {
   render: (item) => {
     return (
       <Type.Caption sx={{ display: 'flex', flexDirection: 'column' }}>
-        {item.closeBlockTime ? <LocalTimeText date={item.closeBlockTime} format={TIME_FORMAT} /> : '--'}
+        {item.status !== PositionStatusEnum.OPEN && item.closeBlockTime ? (
+          <LocalTimeText date={item.closeBlockTime} format={TIME_FORMAT} />
+        ) : (
+          '--'
+        )}
         <Box as="span" color="neutral3">
           <LocalTimeText date={item.openBlockTime} format={TIME_FORMAT} />
         </Box>
@@ -400,7 +407,7 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
   { ...accountColumn, title: <Trans>ACCOUNT</Trans>, style: { flex: [2, 2, 2, 2, 1.7] } },
   {
     ...entryColumn,
-    style: { flex: 1.3, pl: 1 },
+    style: { flex: [1.3, 1.3, 1.8, 1.3], pl: 1 },
     title: <PositionPairFilterTitle title={<Trans>MARKET</Trans>} />,
     sortBy: undefined,
   },
@@ -493,6 +500,7 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
       <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.realisedRoi} />
     ),
     text: 'ROI',
+    render: (item) => (item.status === PositionStatusEnum.OPEN ? renderOpeningRoi(item) : renderPositionRoi(item)),
   },
   {
     dataIndex: 'pnl',
@@ -504,7 +512,9 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
       <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.realisedPnl} />
     ),
     text: 'PnL',
-    render: (item) => renderPositionPnL(item, ''),
+    render: (item) => {
+      return item.status === PositionStatusEnum.OPEN ? renderOpeningPnL(item) : renderPositionPnL(item, '')
+    },
   },
   // { ...mixPnLColumn, style: { flex: 1, display: ['block', 'block', 'none', 'none'] } },
   { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', flex: '0 0 40px' } },

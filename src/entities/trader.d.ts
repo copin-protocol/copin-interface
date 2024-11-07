@@ -136,6 +136,7 @@ export interface PositionData {
   realisedPnl: number
   realisedRoi: number
   pair: string
+  updatedAt: string
 }
 
 export interface ResponsePositionData extends PositionData {

@@ -1,6 +1,11 @@
-import { createContext, useCallback, useContext, useMemo } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
-import { ORDER_RANGE_KEYS, OrderRangeFields, RangeValuesType } from 'components/@dailyTrades/configs'
+import {
+  DirectionFilterEnum,
+  ORDER_RANGE_KEYS,
+  OrderRangeFields,
+  RangeValuesType,
+} from 'components/@dailyTrades/configs'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
@@ -18,7 +23,9 @@ type ChangeFilterVariables = {
   ranges?: DailyOrderRangeFilter[]
   pairs?: string[]
   action?: OrderTypeEnum
+  direction?: DirectionFilterEnum
 }
+type TimeType = 'relative' | 'absolute'
 export interface DailyOrderContextValues {
   pairs: string[] | undefined
   changePairs: (pairs: string[] | undefined) => void
@@ -28,6 +35,8 @@ export interface DailyOrderContextValues {
   changeAddress: (address: string) => void
   action: OrderTypeEnum | undefined
   changeAction: (status: OrderTypeEnum | undefined) => void
+  direction: DirectionFilterEnum | undefined
+  changeDirection: (direction: DirectionFilterEnum | undefined) => void
   currentPage: number
   changeCurrentPage: (page: number) => void
   currentLimit: number
@@ -37,6 +46,10 @@ export interface DailyOrderContextValues {
   resetFilterRange: ({ valueKey }: { valueKey: OrderRangeFields }) => void
   ranges: DailyOrderRangeFilter[]
   changeFilters: (vars: ChangeFilterVariables) => void
+  enabledLiveTrade: boolean
+  toggleLiveTrade: (enabled?: boolean) => void
+  timeType: TimeType
+  changeTimeType: (type?: TimeType) => void
 }
 export const DailyOrdersContext = createContext({} as DailyOrderContextValues)
 
@@ -79,6 +92,12 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
   const changeAction = useCallback(
     (action: OrderTypeEnum | undefined) =>
       setSearchParams({ ['action']: action?.toLocaleLowerCase(), ['page']: undefined }),
+    [setSearchParams]
+  )
+
+  const direction = searchParams['direction'] as DirectionFilterEnum
+  const changeDirection = useCallback(
+    (direction: DirectionFilterEnum | undefined) => setSearchParams({ ['direction']: direction, ['page']: undefined }),
     [setSearchParams]
   )
 
@@ -157,8 +176,8 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
           const _values = values as DailyOrderRangeFilter[] | undefined
           _values?.length
             ? _values.forEach((v) => {
-                let gte = v?.gte
-                let lte = v?.lte
+                const gte = v?.gte
+                const lte = v?.lte
                 params[`${v.field}g`] = gte ? gte.toString() : undefined
                 params[`${v.field}l`] = lte ? lte.toString() : undefined
               })
@@ -177,11 +196,47 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
           const _values = values as OrderTypeEnum | undefined
           params['action'] = _values
         }
+        if (key === 'direction') {
+          const _values = values as unknown as DirectionFilterEnum | undefined
+          params['direction'] = _values
+        }
       })
       setSearchParams(params)
     },
     [setSearchParams]
   )
+
+  const [enabledLiveTrade, setEnabledLiveTrade] = useState(() => {
+    return localStorage.getItem('live_trade_orders_enabled') === '1' ? true : false
+  })
+  const [timeType, setTimeType] = useState<TimeType>(() => {
+    const storedData = localStorage.getItem('live_trade_orders_time_type')
+    return (storedData ? storedData : 'absolute') as TimeType
+  })
+  const handleChangeTimeType = useCallback((type?: TimeType) => {
+    if (type != null) {
+      setTimeType(type)
+      return
+    }
+    setTimeType((prev) => (prev === 'absolute' ? 'relative' : 'absolute'))
+  }, [])
+  const toggleLiveTrade = useCallback(
+    (enabled?: boolean) => {
+      setSearchParams({ ['page']: null })
+      if (enabled == null) {
+        setEnabledLiveTrade((prev) => !prev)
+        return
+      }
+      setEnabledLiveTrade(enabled)
+    },
+    [setSearchParams]
+  )
+  useEffect(() => {
+    localStorage.setItem('live_trade_orders_enabled', enabledLiveTrade ? '1' : '0')
+  }, [enabledLiveTrade])
+  useEffect(() => {
+    localStorage.setItem('live_trade_orders_time_type', timeType)
+  }, [timeType])
 
   const contextValue: DailyOrderContextValues = useMemo(() => {
     return {
@@ -193,6 +248,8 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
       changeAddress,
       action,
       changeAction,
+      direction,
+      changeDirection,
       currentPage,
       changeCurrentPage,
       currentLimit,
@@ -202,6 +259,10 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
       changeFilterRange,
       resetFilterRange,
       changeFilters,
+      enabledLiveTrade,
+      toggleLiveTrade,
+      timeType,
+      changeTimeType: handleChangeTimeType,
     }
   }, [
     symbols,
@@ -212,6 +273,8 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
     changeAddress,
     action,
     changeAction,
+    direction,
+    changeDirection,
     currentPage,
     changeCurrentPage,
     currentLimit,
@@ -221,6 +284,10 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
     changeFilterRange,
     resetFilterRange,
     changeFilters,
+    enabledLiveTrade,
+    toggleLiveTrade,
+    timeType,
+    handleChangeTimeType,
   ])
 
   return <DailyOrdersContext.Provider value={contextValue}>{children}</DailyOrdersContext.Provider>

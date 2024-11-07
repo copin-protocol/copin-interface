@@ -1,9 +1,11 @@
 import { gql } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 
+import { OrderDirectionFilterTitle } from 'components/@dailyTrades/DirectionFilterTitle'
 import { OrderActionFilterTitle } from 'components/@dailyTrades/OrderActionFilterTitle'
 import { OrderPairFilterTitle } from 'components/@dailyTrades/OrderPairFilterTitle'
 import OrderRangeFilterIcon from 'components/@dailyTrades/OrderRangeFilterIcon'
+import OrderTimeTitle from 'components/@dailyTrades/OrderTimeTitle'
 import { ORDER_RANGE_KEYS } from 'components/@dailyTrades/configs'
 import {
   renderOrderBlockTime,
@@ -13,13 +15,20 @@ import {
   renderOrderPrice,
 } from 'components/@position/TraderPositionDetails/ListOrderTable'
 import { ORDER_TYPES } from 'components/@position/configs/order'
+import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
+import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import Market from 'components/@ui/MarketGroup/Market'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { OrderData } from 'entities/trader'
 import { ColumnData } from 'theme/Table/types'
-import { Flex, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
+import { COLLATERAL_TOKEN_PROTOCOLS, NO_TX_HASH_PROTOCOLS, TIME_FORMAT } from 'utils/config/constants'
+import { OrderTypeEnum } from 'utils/config/enums'
+import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
+
+import { useDailyOrdersContext } from './useOrdersProvider'
 
 export const SEARCH_ORDERS_INDEX = 'copin.orders'
 export const SEARCH_FUNCTION_NAME = 'searchOrders'
@@ -70,20 +79,47 @@ export const SEARCH_DAILY_ORDERS_QUERY = gql`
   }
 `
 
+function OrderTime({ data }: { data: OrderData }) {
+  const { timeType } = useDailyOrdersContext()
+  return timeType === 'absolute' ? (
+    <Box>
+      <Box display={['none', 'none', 'none', 'block']}>{renderOrderBlockTime(data)}</Box>
+      <Box display={['block', 'block', 'block', 'none']}>{renderOrderBlockTime(data, TIME_FORMAT)}</Box>
+    </Box>
+  ) : (
+    <Flex color="neutral2" sx={{ alignItems: 'center', gap: 2 }}>
+      <RelativeTimeText date={data.blockTime} />
+      {!NO_TX_HASH_PROTOCOLS.includes(data.protocol) && (
+        <ExplorerLogo
+          protocol={data.protocol}
+          explorerUrl={`${PROTOCOL_PROVIDER[data.protocol]?.explorerUrl}/tx/${data.txHash}`}
+          size={18}
+        />
+      )}
+    </Flex>
+  )
+}
+
 export const orderColumns: ColumnData<OrderData>[] = [
   {
-    title: <Trans>TIMESTAMP</Trans>,
+    title: <OrderTimeTitle />,
     dataIndex: 'blockTime',
     key: 'blockTime',
-    style: { flex: 2 },
-    render: (item) => renderOrderBlockTime(item),
+    style: { flex: [1, 1, 1, 2] },
+    render: (item) => <OrderTime data={item} />,
   },
   {
     title: <Trans>ACCOUNT</Trans>,
     dataIndex: 'account',
     key: 'account',
-    style: { flex: 2 },
-    render: (item) => <TraderAddress address={item.account} protocol={item.protocol} />,
+    style: { flex: [2, 2, 1.8, 2] },
+    render: (item) => (
+      <TraderAddress
+        address={item.account}
+        protocol={item.protocol}
+        options={{ wrapperSx: { width: 'max-content' } }}
+      />
+    ),
   },
   {
     title: <OrderPairFilterTitle />,
@@ -96,11 +132,27 @@ export const orderColumns: ColumnData<OrderData>[] = [
     title: <OrderActionFilterTitle />,
     dataIndex: 'type',
     key: 'type',
-    style: { flex: 1 },
+    style: { flex: 1.5 },
+    render: (item) => {
+      let orderType = item.type
+      if (orderType === OrderTypeEnum.INCREASE && item.isOpen) orderType = OrderTypeEnum.OPEN
+      if (orderType === OrderTypeEnum.DECREASE && item.isClose) orderType = OrderTypeEnum.CLOSE
+      return (
+        <Flex alignItems="center" sx={{ gap: 2 }}>
+          {ORDER_TYPES[orderType]?.icon}
+          <Type.Caption color="neutral1">{ORDER_TYPES[orderType]?.text}</Type.Caption>
+        </Flex>
+      )
+    },
+  },
+  {
+    title: <OrderDirectionFilterTitle />,
+    dataIndex: 'isLong',
+    key: 'isLong',
+    style: { flex: [1, 1, 1.2, 1, 1.2] },
     render: (item) => (
       <Flex alignItems="center" sx={{ gap: 2 }}>
-        {ORDER_TYPES[item.type]?.icon}
-        <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{ORDER_TYPES[item.type]?.text}</Type.Caption>
+        <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{item.isLong ? 'Long' : 'Short'}</Type.Caption>
       </Flex>
     ),
   },
@@ -109,15 +161,26 @@ export const orderColumns: ColumnData<OrderData>[] = [
     title: <Trans>LEVERAGE</Trans>,
     dataIndex: 'leverage',
     key: 'leverage',
-    style: { textAlign: 'right', flex: 1, justifyContent: 'end', gap: 1 },
+    style: {
+      textAlign: 'right',
+      flex: 1,
+      justifyContent: 'end',
+      gap: 1,
+      display: ['none', 'none', 'none', 'none', 'flex'],
+    },
     render: renderOrderLeverage,
   },
   {
-    title: <Trans>COLLATERAL</Trans>,
+    filterComponent: <OrderRangeFilterIcon valueKey={ORDER_RANGE_KEYS.collateralDeltaNumber as any} />,
+    title: <Trans>COLLATERAL ($)</Trans>,
     dataIndex: 'collateralDeltaNumber',
     key: 'collateralDeltaNumber',
-    style: { textAlign: 'right', flex: 1, display: ['none', 'none', 'none', 'none', 'block'] },
-    render: (item) => renderOrderCollateral(item, 'USDT'),
+    style: { textAlign: 'right', flex: 1.5, display: ['none', 'none', 'none', 'none', 'flex'], justifyContent: 'end' },
+    render: (item) => {
+      return COLLATERAL_TOKEN_PROTOCOLS.includes(item.protocol)
+        ? renderOrderCollateral(item, 'USDT')
+        : formatNumber(item.collateralDeltaNumber, 2, 2)
+    },
   },
   {
     filterComponent: <OrderRangeFilterIcon valueKey={ORDER_RANGE_KEYS.sizeDeltaNumber as any} />,
@@ -131,7 +194,7 @@ export const orderColumns: ColumnData<OrderData>[] = [
     title: <Trans>MARKET PRICE ($)</Trans>,
     dataIndex: 'priceNumber',
     key: 'priceNumber',
-    style: { textAlign: 'right', flex: 1, pr: 3 },
+    style: { textAlign: 'right', flex: 1.3, pr: 3 },
     render: renderOrderPrice,
   },
   {
@@ -142,3 +205,50 @@ export const orderColumns: ColumnData<OrderData>[] = [
     render: renderOrderFee,
   },
 ]
+
+export const ORDER_FILTER_TYPE_MAPPING: { [key in OrderTypeEnum]?: any } = {
+  [OrderTypeEnum.OPEN]: {
+    or: [
+      { field: 'type', match: OrderTypeEnum.OPEN },
+      {
+        and: [
+          { field: 'type', match: OrderTypeEnum.INCREASE },
+          { field: 'isOpen', match: 'true' },
+        ],
+      },
+    ],
+  },
+  [OrderTypeEnum.INCREASE]: {
+    and: [
+      { field: 'type', match: OrderTypeEnum.INCREASE },
+      { field: 'isOpen', ne: 'true' },
+      { field: 'sizeDeltaNumber', gt: '0' },
+    ],
+  },
+  [OrderTypeEnum.DECREASE]: {
+    and: [
+      { field: 'type', match: OrderTypeEnum.DECREASE },
+      { field: 'isClose', ne: 'true' },
+      { field: 'sizeDeltaNumber', gt: '0' },
+    ],
+  },
+  [OrderTypeEnum.CLOSE]: {
+    or: [
+      { field: 'type', match: OrderTypeEnum.CLOSE },
+      {
+        and: [
+          { field: 'type', match: OrderTypeEnum.DECREASE },
+          { field: 'isClose', match: 'true' },
+        ],
+      },
+    ],
+  },
+  [OrderTypeEnum.LIQUIDATE]: {
+    field: 'type',
+    match: OrderTypeEnum.LIQUIDATE,
+  },
+  [OrderTypeEnum.MARGIN_TRANSFERRED]: {
+    field: 'type',
+    match: OrderTypeEnum.MARGIN_TRANSFERRED,
+  },
+}

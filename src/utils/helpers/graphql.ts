@@ -91,7 +91,10 @@ export const convertProtocolToParams = (protocols: ProtocolEnum[]) => {
     protocols.every((protocol) => ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol))
   )
     return ProtocolFilterEnum.ALL_COPYABLE
-  return protocols.map((protocol) => PROTOCOL_OPTIONS_MAPPING[protocol].key).join('-')
+  return protocols
+    .map((protocol) => PROTOCOL_OPTIONS_MAPPING[protocol]?.key)
+    .filter((v) => !!v)
+    .join('-')
 }
 
 export const extractFiltersFromFormValues = <T>(data: ConditionFormValues<T>) => {
