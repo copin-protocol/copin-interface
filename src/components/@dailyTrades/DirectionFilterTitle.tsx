@@ -5,23 +5,33 @@ import { useDailyOrdersContext } from 'pages/DailyTrades/Orders/useOrdersProvide
 import Dropdown from 'theme/Dropdown'
 import Select from 'theme/Select'
 import { Box, Flex, IconBox } from 'theme/base'
-import { OrderTypeEnum } from 'utils/config/enums'
 
-export function OrderActionFilterTitle() {
-  const { action, changeAction } = useDailyOrdersContext()
+import { DirectionFilterEnum } from './configs'
 
+export function OrderDirectionFilterTitle() {
+  const { direction, changeDirection } = useDailyOrdersContext()
+  return <DirectionFilterTitle direction={direction} changeDirection={changeDirection} />
+}
+
+export function DirectionFilterTitle({
+  direction,
+  changeDirection,
+}: {
+  direction: DirectionFilterEnum | undefined
+  changeDirection: (direction: DirectionFilterEnum | undefined) => void
+}) {
   return (
     <Flex sx={{ width: '100%', justifyContent: 'start', alignItems: 'center', gap: 1, position: 'relative' }}>
       <Box as="span">
-        <Trans>ACTION</Trans>
+        <Trans>DIRECTION</Trans>
       </Box>
       <Dropdown
         buttonSx={{ p: '0 4px', border: 'none' }}
         hasArrow={false}
         menu={
           <Flex sx={{ flexDirection: 'column', bg: 'neutral7' }}>
-            {ORDER_ACTION_OPTIONS.map((config) => {
-              const isActive = config.value == action
+            {DIRECTION_OPTIONS.map((config) => {
+              const isActive = config.value == direction
               return (
                 <Box
                   role="button"
@@ -33,7 +43,7 @@ export function OrderActionFilterTitle() {
                     bg: isActive ? 'neutral4' : 'transparent',
                     '&:hover': { bg: 'neutral5' },
                   }}
-                  onClick={() => changeAction(config.value)}
+                  onClick={() => changeDirection(config.value)}
                 >
                   {config.label}
                 </Box>
@@ -44,10 +54,10 @@ export function OrderActionFilterTitle() {
       >
         <IconBox
           role="button"
-          icon={<Funnel size={16} weight={!!action ? 'fill' : 'regular'} />}
+          icon={<Funnel size={16} weight={!!direction ? 'fill' : 'regular'} />}
           sx={{
             transform: 'translateY(-1.5px)',
-            color: !!action ? 'neutral2' : 'neutral3',
+            color: !!direction ? 'neutral2' : 'neutral3',
             '&:hover:': { color: 'neutral1' },
           }}
         />
@@ -55,30 +65,26 @@ export function OrderActionFilterTitle() {
     </Flex>
   )
 }
-export const ORDER_ACTION_OPTIONS = [
+export const DIRECTION_OPTIONS = [
   { value: undefined, label: 'All' },
-  { value: OrderTypeEnum.OPEN, label: 'Open' },
-  { value: OrderTypeEnum.INCREASE, label: 'Increase' },
-  { value: OrderTypeEnum.DECREASE, label: 'Decrease' },
-  { value: OrderTypeEnum.CLOSE, label: 'Close' },
-  { value: OrderTypeEnum.LIQUIDATE, label: 'Liquidate' },
-  // { value: OrderTypeEnum.MARGIN_TRANSFERRED, label: 'Modified Margin' },
+  { value: DirectionFilterEnum.LONG, label: 'Long' },
+  { value: DirectionFilterEnum.SHORT, label: 'Short' },
 ]
 
-export function OrderActionSelect({
-  currentFilter,
-  changeFilter,
+export function DirectionSelect({
+  direction,
+  changeDirection,
 }: {
-  currentFilter: OrderTypeEnum | undefined
-  changeFilter: (filter: OrderTypeEnum | undefined) => void
+  direction: DirectionFilterEnum | undefined
+  changeDirection: (filter: DirectionFilterEnum | undefined) => void
 }) {
   return (
     <>
       <Select
-        options={ORDER_ACTION_OPTIONS}
-        value={ORDER_ACTION_OPTIONS.filter((o) => currentFilter === o.value)}
+        options={DIRECTION_OPTIONS}
+        value={DIRECTION_OPTIONS.filter((o) => direction === o.value)}
         onChange={(newValue: any) => {
-          changeFilter(newValue.value)
+          changeDirection(newValue.value)
         }}
         components={{
           DropdownIndicator: () => <div></div>,

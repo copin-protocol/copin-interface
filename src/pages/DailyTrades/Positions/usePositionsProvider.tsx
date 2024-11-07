@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 import { POSITION_RANGE_KEYS, PositionRangeFields, RangeValuesType } from 'components/@dailyTrades/configs'
 import { PositionData } from 'entities/trader'
@@ -42,6 +42,8 @@ export interface DaliPositionsContextValues {
   resetFilterRange: ({ valueKey }: { valueKey: PositionRangeFields }) => void
   ranges: DailyPositionRangeFilter[]
   changeFilters: (vars: ChangeFilterVariables) => void
+  enabledLiveTrade: boolean
+  toggleLiveTrade: (enabled?: boolean) => void
 }
 
 export const DailyPositionsContext = createContext({} as DaliPositionsContextValues)
@@ -169,8 +171,8 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
         if (key === 'ranges') {
           const _values = values as DailyPositionRangeFilter[]
           _values.forEach((v) => {
-            let gte = v?.gte
-            let lte = v?.lte
+            const gte = v?.gte
+            const lte = v?.lte
             params[`${v.field}g`] = gte ? gte.toString() : undefined
             params[`${v.field}l`] = lte ? lte.toString() : undefined
           })
@@ -194,6 +196,20 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
     [setSearchParams]
   )
 
+  const [enabledLiveTrade, setEnabledLiveTrade] = useState(() => {
+    return localStorage.getItem('live_trade_positions_enabled') === '1' ? true : false
+  })
+  const toggleLiveTrade = useCallback((enabled?: boolean) => {
+    if (enabled == null) {
+      setEnabledLiveTrade((prev) => !prev)
+      return
+    }
+    setEnabledLiveTrade(enabled)
+  }, [])
+  useEffect(() => {
+    localStorage.setItem('live_trade_positions_enabled', enabledLiveTrade ? '1' : '0')
+  }, [enabledLiveTrade])
+
   const contextValue: DaliPositionsContextValues = useMemo(() => {
     return {
       ranges,
@@ -216,6 +232,8 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
       changeFilterRange,
       resetFilterRange,
       changeFilters,
+      enabledLiveTrade,
+      toggleLiveTrade,
     }
   }, [
     ranges,
@@ -238,6 +256,8 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
     changeFilterRange,
     resetFilterRange,
     changeFilters,
+    enabledLiveTrade,
+    toggleLiveTrade,
   ])
 
   return <DailyPositionsContext.Provider value={contextValue}>{children}</DailyPositionsContext.Provider>

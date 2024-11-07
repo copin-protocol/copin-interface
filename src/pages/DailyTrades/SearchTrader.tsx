@@ -46,7 +46,7 @@ export default function SearchTrader({
   }, [debounceSearchText])
 
   return (
-    <Box sx={{ position: 'relative', width: 'max-content' }}>
+    <Box sx={{ position: 'relative', width: 'max-content', maxWidth: '220px' }}>
       <InputSearch
         placeholder="Search Trader"
         sx={{

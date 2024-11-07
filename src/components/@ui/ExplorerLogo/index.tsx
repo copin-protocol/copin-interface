@@ -90,6 +90,7 @@ const ExplorerLogo = ({
         target="_blank"
         rel="noreferrer"
         sx={{ height: size, display: 'block', lineHeight: `${size}px` }}
+        onClick={(e) => e.stopPropagation()}
       >
         <img width="100%" src={`/images/protocols/ic-${icon}-explorer.png`} alt={protocol} />
       </Box>

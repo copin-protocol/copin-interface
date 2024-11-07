@@ -118,6 +118,7 @@ export const WALLET_NAME_MAX_LENGTH = 32
 export const RISK_LEVERAGE = 20
 
 export const MAX_PAGE_LIMIT = 500
+export const MAX_LIST_DATA_LIMIT = 10_000
 
 export const SUBSCRIPTION_COLLECTION_URL =
   NETWORK === 'devnet'
@@ -261,5 +262,6 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
 export const FEE_WITH_FUNDING_PROTOCOLS = [ProtocolEnum.HYPERLIQUID, ProtocolEnum.BSX_BASE, ProtocolEnum.DYDX]
+export const COLLATERAL_TOKEN_PROTOCOLS: ProtocolEnum[] = []
 
 export const MAX_LIMIT = 500

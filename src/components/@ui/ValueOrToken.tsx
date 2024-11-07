@@ -52,23 +52,19 @@ export default function ValueOrToken({
             ? compactNumber(valueInToken, 2)
             : formatNumber(valueInToken, 2, 2)
           : `${hasPrefix && !defaultToken ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`}
-        {isToken ? (
+        {(isToken || defaultToken) && (
           <Image
-            src={parseCollateralImage(TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol)}
+            src={parseCollateralImage(
+              isToken ? TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol : defaultToken ?? ''
+            )}
             sx={{ width: 16, height: 16, flexShrink: 0 }}
           />
-        ) : (
-          !!defaultToken && (
-            <Image src={parseCollateralImage(defaultToken)} sx={{ width: 16, height: 16, flexShrink: 0 }} />
-          )
         )}
-        {isToken && (
+        {(isToken || defaultToken) && (
           <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
-            {`${formatNumber(valueInToken, 2, 2)} ${TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol} ${
-              value != null
-                ? `~ ${hasPrefix && !defaultToken ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`
-                : ''
-            }`}
+            {`${formatNumber(isToken ? valueInToken : defaultToken ? value : undefined, 2, 2)} ${
+              isToken ? TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol : defaultToken ?? ''
+            } ${value != null ? `~ ${hasPrefix && '$'}${formatNumber(value, maxDigit, minDigit)}` : ''}`}
           </Tooltip>
         )}
       </Flex>

@@ -1,6 +1,7 @@
+import { ArrowLineUp } from '@phosphor-icons/react'
 import debounce from 'lodash/debounce'
 import { Fragment, cloneElement, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { VariableSizeList as List } from 'react-window'
+import { VariableSizeList as List, ListOnScrollProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 
 import { ApiMeta } from 'apis/api'
@@ -10,7 +11,7 @@ import SortDefaultIcon from 'theme/Icons/SortDefaultIcon'
 import SortDescIcon from 'theme/Icons/SortDescIcon'
 import Loading from 'theme/Loading'
 import { ColumnData, TableSortProps } from 'theme/Table/types'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SortTypeEnum } from 'utils/config/enums'
 
@@ -29,9 +30,14 @@ type Props<T> = {
   headerSx?: any
   resizeDeps?: any[]
   hiddenFooter?: boolean
+  isLoadingFooter?: boolean
+  onScroll?: (props: { scrollOffset: number }) => void
+  hiddenScrollToTopButton?: boolean
+  scrollWhenDataChange?: boolean
 }
 
 const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
+  scrollWhenDataChange = false,
   data,
   isLoading,
   hasNextPage,
@@ -46,6 +52,9 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
   rowBgFactory,
   resizeDeps,
   hiddenFooter = false,
+  isLoadingFooter,
+  onScroll,
+  hiddenScrollToTopButton = true,
 }: Props<T>) {
   const Row = useCallback(
     ({ data, index, style }: { data: T[]; index: number; style: any }) => {
@@ -53,7 +62,8 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
       return (
         <Flex
           className="row_wrapper"
-          key={cellData.id}
+          data-virtual-list-id={cellData?.id}
+          key={cellData?.id}
           role={handleSelectItem ? 'button' : 'none'}
           style={style}
           width="100%"
@@ -228,6 +238,30 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
   const totalItem = dataMeta?.total ?? 0
   const isEndOfList = itemCount - totalItem === 0
 
+  const [showScrollButton, setShowScrollButton] = useState(false)
+  const debounceShowScrollButton = useMemo(() => {
+    return debounce((show: boolean) => setShowScrollButton(show))
+  }, [])
+  const _onScroll = (props: ListOnScrollProps) => {
+    if (!hiddenScrollToTopButton) {
+      // eslint-disable-next-line react/prop-types
+      if (props.scrollOffset > 900) {
+        debounceShowScrollButton(true)
+      } else {
+        debounceShowScrollButton(false)
+      }
+    }
+    onScroll?.(props)
+  }
+  const innerListRef = useRef<List | null>()
+  const handleClickScrollButton = () => {
+    innerListRef.current?.scrollTo(0)
+  }
+  useEffect(() => {
+    if (scrollWhenDataChange) {
+      innerListRef.current?.scrollTo(0)
+    }
+  }, [scrollWhenDataChange, data])
   return (
     <Flex sx={{ flexDirection: 'column', height: '100%', width: '100%', overflow: 'hidden' }}>
       <Header />
@@ -243,7 +277,10 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
           {({ onItemsRendered, ref }) => (
             <List
               // outerRef={virtualListScrollRef} // old logic not work
-              ref={ref}
+              ref={(_ref) => {
+                innerListRef.current = _ref
+                ref(_ref)
+              }}
               width={width}
               height={height}
               itemCount={data?.length ?? 0}
@@ -251,6 +288,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
               itemData={data ?? ([] as T[])}
               overscanCount={20}
               onItemsRendered={onItemsRendered}
+              onScroll={_onScroll}
             >
               {Row}
             </List>
@@ -273,6 +311,23 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
             <Loading />
           </Flex>
         )}
+        {!hiddenScrollToTopButton && showScrollButton && (
+          <IconBox
+            onClick={handleClickScrollButton}
+            icon={<ArrowLineUp size={20} />}
+            sx={{
+              cursor: 'pointer',
+              color: 'neutral2',
+              '&:hover': { color: 'neutral1' },
+              p: 1,
+              bg: 'neutral4',
+              borderRadius: '50%',
+              position: 'absolute',
+              bottom: 1,
+              right: 3,
+            }}
+          />
+        )}
       </Box>
       <Flex
         sx={{
@@ -290,8 +345,22 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
           </Box>
         )} */}
         {hiddenFooter ? null : (
-          <Type.Caption color="neutral3" display="block" textAlign="center" lineHeight="30px">
-            {itemCount} / {totalItem}
+          <Type.Caption color="neutral3" display="block" lineHeight="30px">
+            <Box as="span" sx={{ position: 'relative' }}>
+              {itemCount} / {totalItem}
+              <Box
+                as="span"
+                sx={{
+                  visibility: isLoadingFooter ? 'visible' : 'hidden',
+                  position: 'absolute',
+                  top: '50%',
+                  right: '-24px',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                <Loading size={16} />
+              </Box>
+            </Box>
           </Type.Caption>
         )}
       </Flex>
@@ -360,7 +429,7 @@ export const SimpleVirtualList = memo<any>(function SimpleVirtualListMemo<T = an
     <Flex sx={{ flexDirection: 'column', height: '100%', width: '100%', overflow: 'hidden' }}>
       <Box flex="1 0 0" ref={wrapperRef} sx={{ position: 'relative', overflow: 'hidden' }}>
         {isLoading && !data?.length && <Loading />}
-        {!isLoading && !data?.length && <NoDataFound />}
+        {!isLoading && data?.length === 0 && <NoDataFound />}
         <InfiniteLoader
           ref={listRef}
           isItemLoaded={isItemLoaded}

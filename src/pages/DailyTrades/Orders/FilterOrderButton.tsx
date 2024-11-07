@@ -1,6 +1,7 @@
 import { Funnel, XCircle } from '@phosphor-icons/react'
 import { useState } from 'react'
 
+import { DirectionSelect } from 'components/@dailyTrades/DirectionFilterTitle'
 import { OrderActionSelect } from 'components/@dailyTrades/OrderActionFilterTitle'
 import { MarketSelect } from 'components/@dailyTrades/PairFilterTitle'
 import { ORDER_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
@@ -14,11 +15,10 @@ import { DailyOrderContextValues, useDailyOrdersContext } from './useOrdersProvi
 
 export default function FilterOrderButton() {
   const [openModal, setOpenModal] = useState(false)
-  const { ranges, pairs, action, changeFilters } = useDailyOrdersContext()
+  const { ranges, pairs, action, changeFilters, direction } = useDailyOrdersContext()
   const [_rangesFilter, _setRangesFilter] = useState<Record<string, DailyOrderContextValues['ranges'][0]>>(() => {
     if (ranges.length) {
       return ranges.reduce((result, values) => {
-        const newValues = { ...values }
         return { ...result, [values.field as any]: values }
       }, {})
     }
@@ -46,9 +46,10 @@ export default function FilterOrderButton() {
   }
   const [_pairs, _setPairs] = useState(pairs)
   const [_action, _setAction] = useState(action)
+  const [_direction, _setDirection] = useState(direction)
 
   const _onApply = () => {
-    changeFilters({ action: _action, pairs: _pairs, ranges: Object.values(_rangesFilter) })
+    changeFilters({ action: _action, pairs: _pairs, ranges: Object.values(_rangesFilter), direction: _direction })
     setOpenModal(false)
   }
 
@@ -72,6 +73,9 @@ export default function FilterOrderButton() {
           <Box flex="1 0 0" overflow="auto">
             <Label label="Status" labelColor="neutral1" />
             <OrderActionSelect currentFilter={_action} changeFilter={_setAction} />
+            <Box mb={3} />
+            <Label label="Direction" labelColor="neutral1" />
+            <DirectionSelect direction={_direction} changeDirection={_setDirection} />
             <Box mb={3} />
             <MarketSelect pairs={_pairs} onChange={_setPairs} />
             <Box mb={3} />

@@ -54,13 +54,35 @@ export const SEARCH_DAILY_POSITIONS_QUERY = gql`
         # marginMode
         status
         txHashes
-        orderIds
+        # orderIds
         # orders
         pair
         createdAt
         realisedPnlInToken
         realisedPnl
         realisedRoi
+        updatedAt
+        createdAt
+      }
+      meta {
+        total
+        limit
+        offset
+        totalPages
+      }
+    }
+  }
+`
+
+export const SEARCH_DAILY_POSITION_ID_QUERY = gql`
+  query Search($index: String!, $protocols: [String!]!, $body: SearchPayload!) {
+    ${SEARCH_POSITIONS_FUNCTION_NAME}(index: $index, protocols: $protocols, body: $body) {
+      data {
+        id
+        synthetixPositionId
+        account
+        smartAccount
+        protocol
       }
       meta {
         total

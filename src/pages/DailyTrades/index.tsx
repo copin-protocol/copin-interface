@@ -2,10 +2,12 @@
 import { Trans, t } from '@lingui/macro'
 import { Note, Notebook } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
+import { useLayoutEffect } from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import useInternalRole from 'hooks/features/useInternalRole'
+import useSearchParams from 'hooks/router/useSearchParams'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 import ROUTES from 'utils/config/routes'
@@ -18,6 +20,10 @@ import { ProtocolsProvider } from './useProtocolsProvider'
 export default function DailyTrades() {
   const isInternal = useInternalRole()
   const { pathname } = useLocation()
+  const { setSearchParams } = useSearchParams()
+  useLayoutEffect(() => {
+    setSearchParams({ protocol: null })
+  }, [pathname]) // TODO: temp fix
   const { md } = useResponsive()
   if (!isInternal) return null
   return (
@@ -107,6 +113,7 @@ const pageTitleMapping = {
 
 function MainTab({ pathname }: { pathname: string }) {
   const { md } = useResponsive()
+
   return (
     <TabHeader
       configs={tabConfigs}

@@ -466,6 +466,29 @@ input[type=number] {
   }
 }
 
+  @keyframes daily_trades_update_list_long {
+    0% {
+      background: transparent;
+    }
+    50% {
+      background: ${({ theme }) => `${theme.colors.green1}32`};
+    }
+    100% {
+      background: transparent;
+    }
+  }
+  @keyframes daily_trades_update_list_short {
+    0% {
+      background: transparent;
+    }
+    50% {
+      background: ${({ theme }) => `${theme.colors.red2}32`};
+    }
+    100% {
+      background: transparent;
+    }
+  }
+
 ${drawerStyles}
 
 `

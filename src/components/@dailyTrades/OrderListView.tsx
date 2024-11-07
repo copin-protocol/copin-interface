@@ -11,7 +11,7 @@ import { OrderData } from 'entities/trader'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { TIME_FORMAT } from 'utils/config/constants'
-import { formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 type Props = {
@@ -34,7 +34,9 @@ export default function DailyOrderListView({ data, isLoading, scrollDep }: Props
         height: '100%',
         overflow: 'auto',
         position: 'relative',
-        '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4', '& > *:last-child': { borderBottom: 'none' } },
+        '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4' },
+        '& > *:last-child': { borderBottom: 'none' },
+        '& *': { fontSize: '12px !important' },
       }}
     >
       {!isLoading && data?.length === 0 && <NoDataFound message={<Trans>No order found</Trans>} />}
@@ -76,13 +78,13 @@ export default function DailyOrderListView({ data, isLoading, scrollDep }: Props
                 }}
               >
                 {ORDER_TYPES[order.type].icon}{' '}
-                <Box as="span" color={order.isLong ? 'green1' : 'red2'}>
+                <Box as="span" color={'neutral1'}>
                   {ORDER_TYPES[order.type].text}
                 </Box>
                 {/* {order.isLong ? 'Long' : 'Short'} */}
               </Type.Caption>
             </Flex>
-            <Flex mt={2} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
+            <Flex mt={2} sx={{ alignItems: 'center', gap: 1, justifyContent: 'space-between' }}>
               <Flex sx={{ alignItems: 'center', gap: 1 }}>
                 <Flex sx={{ alignItems: 'center', gap: 2, width: '92px', flexShrink: 0 }}>
                   <Market symbol={getSymbolFromPair(order.pair)} hasName symbolNameSx={{ fontSize: '13px' }} />
@@ -91,7 +93,9 @@ export default function DailyOrderListView({ data, isLoading, scrollDep }: Props
                 <Type.Caption color="neutral1" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Box as="span" sx={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                     <Box as="span">$</Box>
-                    {formatNumber(order.sizeDeltaNumber)}
+                    {order.sizeDeltaNumber > 10000
+                      ? compactNumber(order.sizeDeltaNumber, 1)
+                      : formatNumber(order.sizeDeltaNumber, 0, 0)}
                   </Box>
                   <Box as="span" color="neutral3" sx={{ mx: '1ch' }}>
                     |
@@ -103,6 +107,9 @@ export default function DailyOrderListView({ data, isLoading, scrollDep }: Props
                   <Box as="span">{renderOrderPrice(order)}</Box>
                 </Type.Caption>
               </Flex>
+              <Type.Caption color={order.isLong ? 'green1' : 'red2'} sx={{ flexShrink: 0 }}>
+                {order.isLong ? 'Long' : 'Short'}
+              </Type.Caption>
             </Flex>
           </Box>
         )
