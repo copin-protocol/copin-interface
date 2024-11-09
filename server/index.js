@@ -20,7 +20,7 @@ import { getStats } from './stats.controller.js'
 import { getSubscription } from './subscription.controller.js'
 import { getTopOpenings } from './topOpening.controller.js'
 import { getTraderDetail } from './traderDetail.controller.js'
-import { getDailyTrades } from './dailyTrades.controller.js'
+import { getLiveTrades } from './liveTrades.controller.js'
 import { renderHTML } from './utils.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -52,7 +52,7 @@ app.get('/:protocol/top-openings', getTopOpenings)
 app.get('/subscription', getSubscription)
 app.get('/stats', getStats)
 app.get('/referral', getReferralProgram)
-app.get('/daily-trades', getDailyTrades)
+app.get('/live-trades', getLiveTrades)
 app.get('/:protocol/leaderboard', getLeaderboard)
 app.get('/copier-ranking', getCopierRanking)
 

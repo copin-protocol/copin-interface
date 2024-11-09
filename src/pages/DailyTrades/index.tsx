@@ -6,7 +6,6 @@ import { useLayoutEffect } from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import useInternalRole from 'hooks/features/useInternalRole'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
@@ -18,14 +17,12 @@ import DailyPositions from './Positions'
 import { ProtocolsProvider } from './useProtocolsProvider'
 
 export default function DailyTrades() {
-  const isInternal = useInternalRole()
   const { pathname } = useLocation()
   const { setSearchParams } = useSearchParams()
   useLayoutEffect(() => {
     setSearchParams({ protocol: null })
   }, [pathname]) // TODO: temp fix
   const { md } = useResponsive()
-  if (!isInternal) return null
   return (
     <ProtocolsProvider>
       <Flex
@@ -55,13 +52,13 @@ export default function DailyTrades() {
         )}
         <Box sx={{ overflow: 'hidden', flex: '1 0 0' }}>
           <Switch>
-            <Route exact path={ROUTES.DAILY_TRADES_ORDERS.path}>
+            <Route exact path={ROUTES.LIVE_TRADES_ORDERS.path}>
               <DailyOrders />
             </Route>
-            <Route exact path={ROUTES.DAILY_TRADES_POSITIONS.path}>
+            <Route exact path={ROUTES.LIVE_TRADES_POSITIONS.path}>
               <DailyPositions />
             </Route>
-            <Redirect to={ROUTES.DAILY_TRADES_ORDERS.path} />
+            <Redirect to={ROUTES.LIVE_TRADES_ORDERS.path} />
           </Switch>
         </Box>
         {!md && (
@@ -91,24 +88,24 @@ enum TabKeyEnum {
 
 const tabConfigs: TabConfig[] = [
   {
-    name: <Trans>DAILY ORDERS</Trans>,
+    name: <Trans>LIVE ORDERS</Trans>,
     activeIcon: <Note size={24} weight="fill" />,
     inactiveIcon: <Note size={24} />,
     key: TabKeyEnum.ORDERS,
-    route: ROUTES.DAILY_TRADES_ORDERS.path,
+    route: ROUTES.LIVE_TRADES_ORDERS.path,
   },
   {
-    name: <Trans>DAILY POSITIONS</Trans>,
+    name: <Trans>LIVE POSITIONS</Trans>,
     inactiveIcon: <Notebook size={24} />,
     activeIcon: <Notebook size={24} weight="fill" />,
     key: TabKeyEnum.POSITIONS,
-    route: ROUTES.DAILY_TRADES_POSITIONS.path,
+    route: ROUTES.LIVE_TRADES_POSITIONS.path,
   },
 ]
 
 const pageTitleMapping = {
-  [ROUTES.DAILY_TRADES_ORDERS.path]: t`Daily orders`,
-  [ROUTES.DAILY_TRADES_POSITIONS.path]: t`Daily positions`,
+  [ROUTES.LIVE_TRADES_ORDERS.path]: t`Live orders`,
+  [ROUTES.LIVE_TRADES_POSITIONS.path]: t`Live positions`,
 }
 
 function MainTab({ pathname }: { pathname: string }) {

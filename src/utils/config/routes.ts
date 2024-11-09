@@ -151,14 +151,14 @@ const ROUTES = {
   REFERRAL_MANAGEMENT: {
     path: '/referral',
   },
-  DAILY_TRADES: {
-    path: '/daily-trades',
+  LIVE_TRADES: {
+    path: '/live-trades',
   },
-  DAILY_TRADES_ORDERS: {
-    path: '/daily-trades/orders',
+  LIVE_TRADES_ORDERS: {
+    path: '/live-trades/orders',
   },
-  DAILY_TRADES_POSITIONS: {
-    path: '/daily-trades/positions',
+  LIVE_TRADES_POSITIONS: {
+    path: '/live-trades/positions',
   },
 }
 
