@@ -19,7 +19,7 @@ import { ProtocolsStatisticProvider } from '../ProtocolsStatisticContext'
 import HamburgerMenu from './HamburgetMenu'
 import Menu from './Menu'
 import MoreDropdown from './MoreDropdown'
-import { DesktopDailyTradesNavLinks, DesktopEventNavLinks, DesktopNavLinks } from './NavLinks'
+import { DesktopEventNavLinks, DesktopNavLinks } from './NavLinks'
 import QuickSearchBox from './QuickSearchBox'
 import { LARGE_BREAK_POINT } from './configs'
 import { LogoWrapper, Main, Wrapper } from './styled'
@@ -60,8 +60,6 @@ export default function Navbar({ height }: { height: number }): ReactElement {
                 }}
               >
                 <DesktopNavLinks />
-                {/* <DesktopCopierLeaderboardLink /> */}
-                <DesktopDailyTradesNavLinks />
                 <MoreDropdown />
               </Box>
             </Flex>

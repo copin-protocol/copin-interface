@@ -77,7 +77,7 @@ function DailyOrdersComponent() {
     if (pairs?.length) {
       result.push({ field: 'pair', in: pairs })
     } else {
-      result.push({ field: 'pair', ne: 'null' })
+      result.push({ field: 'pair', exists: true })
     }
     if (direction === DirectionFilterEnum.LONG) {
       result.push({ field: 'isLong', match: true })
@@ -105,7 +105,7 @@ function DailyOrdersComponent() {
             Object.entries(rest)
               .filter(([_, value]) => value !== null && value !== undefined)
               .map(([key, value]) => {
-                if (Array.isArray(value)) {
+                if (Array.isArray(value) || key === 'exists') {
                   return [key, value]
                 }
                 return [key, String(value)]
@@ -139,7 +139,7 @@ function DailyOrdersComponent() {
         Object.entries(rest)
           .filter(([_, value]) => value !== null && value !== undefined)
           .map(([key, value]) => {
-            if (Array.isArray(value)) {
+            if (Array.isArray(value) || key === 'exists') {
               return [key, value]
             }
             return [key, String(value)]

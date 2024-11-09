@@ -91,7 +91,7 @@ function App() {
             <Route path={ROUTES.COPIER_LEADERBOARD.path} component={RedirectToCopierRanking}></Route>
             <Route path={ROUTES.COPIER_RANKING.path} component={CopierRanking}></Route>
             <Route path={ROUTES.REFERRAL_MANAGEMENT.path} component={ReferralManagement}></Route>
-            <Route path={ROUTES.DAILY_TRADES.path} component={DailyTrades}></Route>
+            <Route path={ROUTES.LIVE_TRADES.path} component={DailyTrades}></Route>
 
             {/* OLD ROUTE */}
             <Route path={ROUTES.TRADERS_EXPLORER.path} component={OldExplorer}></Route>

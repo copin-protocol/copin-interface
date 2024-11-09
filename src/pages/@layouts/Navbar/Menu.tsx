@@ -7,7 +7,7 @@ import { NAVBAR_HEIGHT } from 'utils/config/constants'
 import { ELEMENT_IDS } from 'utils/config/keys'
 
 import { MoreDropdownMobile } from './MoreDropdown'
-import { MobileDailyTradesNavLinks, MobileEventNavLinks, MobileNavLinks } from './NavLinks'
+import { MobileEventNavLinks, MobileNavLinks } from './NavLinks'
 import { MenuWrapper } from './styled'
 
 interface Props {
@@ -42,8 +42,6 @@ export default function Menu({ visible, onClose, hasEvents }: Props) {
       <MenuWrapper visible={visible} top={menuTop}>
         <Box sx={{ bg: 'neutral8', p: 3 }}>
           <MobileNavLinks onClose={onClose} />
-          <Box mt={3} />
-          <MobileDailyTradesNavLinks onClose={onClose} />
           <MobileEventNavLinks onClose={onClose} hasEvents={hasEvents} />
           <MoreDropdownMobile onClickItem={onClose} hasEvents={hasEvents} />
         </Box>

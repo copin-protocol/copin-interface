@@ -6,6 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
 #: src/pages/Home/ProtocolDropdown.tsx
 msgid "(Coming soon)"
@@ -337,6 +343,10 @@ msgstr "Back"
 msgid "Back To Home"
 msgstr "Back To Home"
 
+#: src/components/@ui/MarketFilter/MarketSelection.tsx
+msgid "Back To Select"
+msgstr "Back To Select"
+
 #: src/components/@ui/NotFound/index.tsx
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
 msgid "Back to home"
@@ -491,11 +501,8 @@ msgstr "CEX account connection"
 msgid "CLOSE TIME"
 msgstr "CLOSE TIME"
 
-#: src/pages/DailyTrades/Orders/config.tsx
-msgid "COLLATERAL"
-msgstr "COLLATERAL"
-
 #: src/components/@position/configs/traderPositionRenderProps.tsx
+#: src/pages/DailyTrades/Orders/config.tsx
 msgid "COLLATERAL ($)"
 msgstr "COLLATERAL ($)"
 
@@ -846,17 +853,13 @@ msgstr "Custom"
 msgid "Custom referral code successful!"
 msgstr "Custom referral code successful!"
 
-#: src/pages/DailyTrades/index.tsx
-msgid "DAILY ORDERS"
-msgstr "DAILY ORDERS"
-
-#: src/pages/DailyTrades/index.tsx
-msgid "DAILY POSITIONS"
-msgstr "DAILY POSITIONS"
-
 #: src/pages/ReferralManagement/ReferralHistory.tsx
 msgid "DCP Volume"
 msgstr "DCP Volume"
+
+#: src/components/@dailyTrades/DirectionFilterTitle.tsx
+msgid "DIRECTION"
+msgstr "DIRECTION"
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "DURATION"
@@ -882,10 +885,6 @@ msgstr "Daily Orders"
 msgid "Daily Profit vs Loss"
 msgstr "Daily Profit vs Loss"
 
-#: src/pages/@layouts/Navbar/NavLinks.tsx
-msgid "Daily Trades"
-msgstr "Daily Trades"
-
 #: src/pages/Stats/index.tsx
 msgid "Daily Unique Traders"
 msgstr "Daily Unique Traders"
@@ -893,14 +892,6 @@ msgstr "Daily Unique Traders"
 #: src/pages/Stats/index.tsx
 msgid "Daily Volume"
 msgstr "Daily Volume"
-
-#: src/pages/DailyTrades/index.tsx
-msgid "Daily orders"
-msgstr "Daily orders"
-
-#: src/pages/DailyTrades/index.tsx
-msgid "Daily positions"
-msgstr "Daily positions"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "Data range"
@@ -1141,6 +1132,7 @@ msgstr "Fee Rebate"
 msgid "Feedback"
 msgstr "Feedback"
 
+#: src/components/@position/CopyPositionsListView/index.tsx
 #: src/pages/ReferralManagement/ReferralHistory.tsx
 msgid "Fees"
 msgstr "Fees"
@@ -1198,6 +1190,10 @@ msgstr "Frequently Trade"
 #: src/components/@copyTrade/CopyTradeForm/FundChecking.tsx
 msgid "Fund"
 msgstr "Fund"
+
+#: src/components/@position/CopyPositionsListView/index.tsx
+msgid "Funding"
+msgstr "Funding"
 
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
@@ -1305,9 +1301,17 @@ msgstr "How to connect your Bybit API to Copin?"
 msgid "How to connect your Gate API to Copin?"
 msgstr "How to connect your Gate API to Copin?"
 
+#: src/components/@wallet/CreateWalletModals/WalletHelpHyperliquid.tsx
+msgid "How to connect your Hyperliquid API to Copin?"
+msgstr "How to connect your Hyperliquid API to Copin?"
+
 #: src/components/@wallet/CreateWalletModals/WalletHelpOkx.tsx
 msgid "How to connect your OKX API to Copin?"
 msgstr "How to connect your OKX API to Copin?"
+
+#: src/utils/config/translations.tsx
+msgid "Hyperliquid"
+msgstr "Hyperliquid"
 
 #: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
 msgid "Hyperliquid API Wallet Private Key"
@@ -1403,6 +1407,14 @@ msgstr "LEADERBOARD"
 msgid "LEVERAGE"
 msgstr "LEVERAGE"
 
+#: src/pages/DailyTrades/index.tsx
+msgid "LIVE ORDERS"
+msgstr "LIVE ORDERS"
+
+#: src/pages/DailyTrades/index.tsx
+msgid "LIVE POSITIONS"
+msgstr "LIVE POSITIONS"
+
 #: src/utils/config/translations.tsx
 msgid "Label"
 msgstr "Label"
@@ -1452,6 +1464,7 @@ msgstr "Leaderboard"
 #: src/components/@wallet/CreateWalletModals/WalletHelpBitget.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpBybit.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpGate.tsx
+#: src/components/@wallet/CreateWalletModals/WalletHelpHyperliquid.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpOkx.tsx
 msgid "Learn how?"
 msgstr "Learn how?"
@@ -1518,6 +1531,18 @@ msgstr "Liquidation"
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Liquidations"
 msgstr "Liquidations"
+
+#: src/pages/@layouts/Navbar/NavLinks.tsx
+msgid "Live Trades"
+msgstr "Live Trades"
+
+#: src/pages/DailyTrades/index.tsx
+msgid "Live orders"
+msgstr "Live orders"
+
+#: src/pages/DailyTrades/index.tsx
+msgid "Live positions"
+msgstr "Live positions"
 
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
@@ -2140,6 +2165,10 @@ msgstr "PnL"
 msgid "PnL Ratio"
 msgstr "PnL Ratio"
 
+#: src/components/@position/CopyPositionsListView/index.tsx
+msgid "PnL w. Fees"
+msgstr "PnL w. Fees"
+
 #: src/pages/@layouts/Footer/index.tsx
 msgid "Policy"
 msgstr "Policy"
@@ -2221,6 +2250,10 @@ msgstr "Read More"
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 msgid "Read more"
 msgstr "Read more"
+
+#: src/components/@position/CopyPositionsListView/index.tsx
+msgid "Realized PnL"
+msgstr "Realized PnL"
 
 #: src/pages/Settings/AlertList/TraderLastViewed.tsx
 msgid "Recommend"
@@ -2656,10 +2689,6 @@ msgstr "System Status"
 msgid "TIME"
 msgstr "TIME"
 
-#: src/pages/DailyTrades/Orders/config.tsx
-msgid "TIMESTAMP"
-msgstr "TIMESTAMP"
-
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "TOTAL ORDER"
 msgstr "TOTAL ORDER"
@@ -2980,7 +3009,6 @@ msgstr "Trades"
 
 #: src/components/@dailyTrades/PairFilterTitle.tsx
 #: src/components/@dailyTrades/PairFilterTitle.tsx
-#: src/components/@ui/MarketFilter/MarketSelection.tsx
 #: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
 #: src/utils/config/translations.tsx
 msgid "Trading Pairs"
@@ -3017,6 +3045,7 @@ msgstr "Unique traders are copied in the system"
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
 msgid "Unlimited"
 msgstr "Unlimited"
 
@@ -3043,10 +3072,6 @@ msgstr "Unsupported Network"
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 msgid "Unverified User"
 msgstr "Unverified User"
-
-#: src/pages/Subscription/Plans.tsx
-msgid "Up to 3 traders"
-msgstr "Up to 3 traders"
 
 #: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
@@ -3514,6 +3539,18 @@ msgstr "slippage"
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/DailyTrades/Orders/index.tsx
 #: src/pages/DailyTrades/Orders/index.tsx
+#: src/pages/DailyTrades/Orders/index.tsx
+#: src/pages/DailyTrades/Orders/index.tsx
+#: src/pages/DailyTrades/Orders/index.tsx
+#: src/pages/DailyTrades/Orders/index.tsx
+#: src/pages/DailyTrades/Orders/index.tsx
+#: src/pages/DailyTrades/Orders/index.tsx
+#: src/pages/DailyTrades/Positions/index.tsx
+#: src/pages/DailyTrades/Positions/index.tsx
+#: src/pages/DailyTrades/Positions/index.tsx
+#: src/pages/DailyTrades/Positions/index.tsx
+#: src/pages/DailyTrades/Positions/index.tsx
+#: src/pages/DailyTrades/Positions/index.tsx
 #: src/pages/DailyTrades/Positions/index.tsx
 #: src/pages/DailyTrades/Positions/index.tsx
 #: src/pages/Home/Traders.tsx
