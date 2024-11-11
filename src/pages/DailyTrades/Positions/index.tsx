@@ -209,7 +209,7 @@ function DailyPositionsComponent() {
       onError: (error) => {
         setLoadingLiveData(false)
         setFetchingLiveData(false)
-        toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
+        // toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
       },
     }
   )
@@ -501,6 +501,7 @@ function DailyPositionsComponent() {
                 [styleLongKey]: {
                   background: 'transparent',
                   animationName: 'daily_trades_update_list_long',
+                  animationTimingFunction: 'ease-in-out',
                   animationDuration: '2s',
                 },
               }
@@ -511,6 +512,7 @@ function DailyPositionsComponent() {
                   background: 'transparent',
                   animationName: 'daily_trades_update_list_short',
                   animationDuration: '2s',
+                  animationTimingFunction: 'ease-in-out',
                 },
               }
             : {}),

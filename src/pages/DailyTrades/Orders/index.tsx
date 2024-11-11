@@ -298,7 +298,7 @@ function DailyOrdersComponent() {
           })
         })
         .catch((error) => {
-          toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
+          // toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
         })
     },
     [fetchMore]
@@ -456,6 +456,7 @@ function DailyOrdersComponent() {
                   background: 'transparent',
                   animationName: 'daily_trades_update_list_long',
                   animationDuration: '2s',
+                  animationTimingFunction: 'ease-in-out',
                 },
               }
             : {}),
@@ -465,6 +466,7 @@ function DailyOrdersComponent() {
                   background: 'transparent',
                   animationName: 'daily_trades_update_list_short',
                   animationDuration: '2s',
+                  animationTimingFunction: 'ease-in-out',
                 },
               }
             : {}),

@@ -52,7 +52,7 @@ app.get('/:protocol/top-openings', getTopOpenings)
 app.get('/subscription', getSubscription)
 app.get('/stats', getStats)
 app.get('/referral', getReferralProgram)
-app.get('/live-trades', getLiveTrades)
+app.get('/live-trades*', getLiveTrades)
 app.get('/:protocol/leaderboard', getLeaderboard)
 app.get('/copier-ranking', getCopierRanking)
 
