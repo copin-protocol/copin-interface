@@ -134,13 +134,11 @@ export default function Tiers() {
   }
   const wrapperRef = useRef(null)
   const handleMouseEnter = () => {
-    console.log('ljadfljalkdjs')
     if (!wrapperRef.current) return
     //@ts-ignore
     wrapperRef.current?.classList?.add('pause_referral_ani')
   }
   const handleMouseLeave = () => {
-    console.log('ljadfljalkdjs')
     if (!wrapperRef.current) return
     //@ts-ignore
     wrapperRef.current?.classList?.remove('pause_referral_ani')

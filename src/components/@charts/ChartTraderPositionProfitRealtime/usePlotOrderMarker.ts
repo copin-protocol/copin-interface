@@ -57,9 +57,11 @@ export function usePlotOrderMarker({ chart, orders }: Props) {
     } catch (e) {}
 
     return () => {
-      chart?.onChartReady(() => {
-        markers.forEach((marker) => marker?.remove())
-      })
+      try {
+        chart?.onChartReady(() => {
+          markers.forEach((marker) => marker?.remove())
+        })
+      } catch {}
     }
   }, [chart, orders])
 }

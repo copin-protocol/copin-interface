@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import { OrderData, PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { Box } from 'theme/base'
+import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { getSymbolTradingView, getTokenTradeSupport } from 'utils/config/trades'
 
@@ -18,7 +19,8 @@ interface Props {
   orders: OrderData[]
 }
 function RealtimeChart({ position, orders }: Props) {
-  const { prices } = useGetUsdPrices()
+  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
+  const prices = GAINS_TRADE_PROTOCOLS.includes(position.protocol) ? gainsPrices : pythPrices
   const [chartContainer, setChartContainer] = React.useState<HTMLDivElement | null>(null)
   const tokensSupport = getTokenTradeSupport(position.protocol)
   const symbol = tokensSupport[position.indexToken]?.symbol ?? ''

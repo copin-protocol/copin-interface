@@ -55,8 +55,8 @@ const NumberInput = ({
               customInput={StyledInput}
               onBlur={onBlur}
               onValueChange={(v: any) => {
-                onChange(v.floatValue)
-                onInputChange && onInputChange(value)
+                onChange(v?.floatValue)
+                onInputChange && onInputChange(v?.floatValue)
               }}
             />
           )

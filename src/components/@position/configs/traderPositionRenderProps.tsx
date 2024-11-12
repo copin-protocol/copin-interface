@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { CaretRight, ClockCounterClockwise } from '@phosphor-icons/react'
-import { justifyContent } from 'styled-system'
 
 import { PositionPairFilterTitle } from 'components/@dailyTrades/PositionPairFilterTitle'
 import { PositionRangeFilterIcon } from 'components/@dailyTrades/PositionRangeFilterIcon'
@@ -58,6 +57,7 @@ const feeColumn: ColumnData<PositionData> = {
   style: { minWidth: '100px', textAlign: 'right' },
   render: (item) => renderPositionFee(item),
 }
+
 const renderPositionFee = (item: PositionData, prefix = '$') => (
   <Type.Caption color="neutral1">
     <ValueOrToken
@@ -540,8 +540,6 @@ export const openingColumns: ColumnData<PositionData>[] = [
   pnlOpeningColumn,
   actionColumn,
 ]
-
-export const minimumOpeningColums: ColumnData<PositionData>[] = [entryColumn, sizeOpeningColumn, pnlOpeningColumn]
 
 export function ShortDuration({ durationInSecond }: { durationInSecond?: number }) {
   return (

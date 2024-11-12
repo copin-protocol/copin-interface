@@ -5,9 +5,9 @@ body {
 }
 
 .theme-dark:root {
-  --tv-color-platform-background: #10131b;
-  --tv-color-pane-background: #10131b;
-  --tv-color-toolbar-divider-background: rgba(255, 255, 255, 0.1);
+  --tv-color-platform-background: #0B0E18;
+  --tv-color-pane-background: #0B0E18;
+  --tv-color-toolbar-divider-background: #0B0E18;
   /* --tv-color-toolbar-button-background-hover: rgb(244, 143, 177);
   --tv-color-toolbar-button-background-expanded: rgb(244, 143, 177);
   --tv-color-toolbar-button-background-active: rgb(249, 185, 233);

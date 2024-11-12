@@ -12,6 +12,7 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import { Button } from 'theme/Buttons'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { Box, Flex, Type } from 'theme/base'
+import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
@@ -25,7 +26,8 @@ export default function PositionLegend({
   isOpening: boolean
   data: PositionData
 }) {
-  const { prices } = useGetUsdPrices()
+  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
+  const prices = GAINS_TRADE_PROTOCOLS.includes(data.protocol) ? gainsPrices : pythPrices
   const [openDrawer, setOpenDrawer] = useState(false)
   const history = useHistory()
   const { searchParams } = useSearchParams()

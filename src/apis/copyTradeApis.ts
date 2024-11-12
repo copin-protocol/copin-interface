@@ -114,7 +114,7 @@ export async function getTradersCopyingApi(protocol?: ProtocolEnum): Promise<str
 
 // exclude deleted traders
 export async function getMyCopyTradersApi(params: {
-  exchange: CopyTradePlatformEnum
+  exchange?: CopyTradePlatformEnum
   copyWalletId?: string
   protocol?: ProtocolEnum
 }) {

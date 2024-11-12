@@ -69,12 +69,13 @@ export const PricingDropdown: PricingOptionsOverload = ({
   planPrice,
   wrapperSx = {},
 }: PricingOptionsProps) => {
-  const { isAuthenticated, account, connect } = useAuthContext()
+  const { isAuthenticated, account, connect, profile, handleSwitchAccount } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
   const configs = getPlanPriceConfigs(planPrice)
   const [monthCount, setMonthCount] = useState(MONTHS[0])
 
   const [openModal, setOpenModal] = useState(false)
+  const isInvalidAccount = profile?.username?.toLowerCase() !== account?.address?.toLowerCase()
   const handleOpenModal = () => {
     if (!isAuthenticated) {
       handleClickLogin()
@@ -82,6 +83,10 @@ export const PricingDropdown: PricingOptionsOverload = ({
     }
     if (!account) {
       connect?.({})
+      return
+    }
+    if (isInvalidAccount) {
+      handleSwitchAccount()
       return
     }
     setOpenModal(true)

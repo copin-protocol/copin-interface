@@ -71,6 +71,9 @@ const ROUTES = {
   MY_HISTORY: {
     path: '/me/history',
   },
+  USER_DCP_MANAGEMENT: {
+    path: '/me/dcp-management',
+  },
   USER_ACTIVITY: {
     path: '/me/activity',
     path_prefix: '/me/activity',

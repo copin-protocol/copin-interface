@@ -1,114 +1,171 @@
-import { X } from '@phosphor-icons/react'
-import { formatUnits } from 'ethers/lib/utils'
-import { memo, useState } from 'react'
+import { Pencil, X } from '@phosphor-icons/react'
+import React, { memo, useCallback, useState } from 'react'
 
-import { ClosePositionGnsV8Modal } from 'components/@position/CopyPositionDetails/ClosePositionGnsV8'
-import { minimumOpeningColums } from 'components/@position/configs/traderPositionRenderProps'
+import { CloseOnchainPositionModal } from 'components/@position/CopyPositionDetails/CloseOnchainPosition'
+import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
+import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import LabelEPnL from 'components/@ui/LabelEPnL'
+import TraderAddress from 'components/@ui/TraderAddress'
+import { renderEntry, renderOpeningPnL, renderOpeningRoi, renderSizeOpening } from 'components/@widgets/renderProps'
+import { CopyWalletData } from 'entities/copyWallet'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
-import { useContract } from 'hooks/web3/useContract'
-import useContractQuery from 'hooks/web3/useContractQuery'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import IconButton from 'theme/Buttons/IconButton'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
-import { ARBITRUM_CHAIN } from 'utils/web3/chains'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { ARBITRUM_CHAIN, OPTIMISM_CHAIN } from 'utils/web3/chains'
 
-interface OnchainPositionData {
-  index: number
-  indexToken: string
-  leverage: number
-  collateral: number
-  size: number
-  averagePrice: number
-  fee: number
-  isLong: boolean
-  protocol: ProtocolEnum
-}
+import ModifyTPSLModal from '../DCPManagement/ModifyTPSLModal'
+import useDCPManagementContext from '../DCPManagement/useDCPManagementContext'
+import { OnchainPositionData } from './schema'
 
 type ExternalSource = {
   prices: UsdPrices
+  gainsPrices: UsdPrices
   onClose: (item: OnchainPositionData) => void
+  onSetSltp: (item: OnchainPositionData) => void
+}
+const sourceColumn: ColumnData<OnchainPositionData> = {
+  title: 'Source Trader',
+  dataIndex: 'source',
+  key: 'source',
+  sortBy: 'source',
+  style: { width: '160px' },
+  render: (item) =>
+    !!(item.source && item.sourceProtocol) ? (
+      <TraderAddress
+        address={item.source}
+        protocol={item.protocol}
+        options={{
+          wrapperSx: {
+            width: '160px',
+          },
+        }}
+      />
+    ) : (
+      <Type.Caption>--</Type.Caption>
+    ),
+}
+const entryColumn: ColumnData<OnchainPositionData> = {
+  title: 'Entry',
+  dataIndex: 'averagePrice',
+  key: 'averagePrice',
+  sortBy: 'averagePrice',
+  style: { width: '150px' },
+  render: (item) => renderEntry(item as unknown as PositionData),
+}
+const sizeOpeningColumn: ColumnData<OnchainPositionData> = {
+  title: 'Size',
+  dataIndex: 'size',
+  key: 'size',
+  sortBy: 'size',
+  style: { width: '215px' },
+  render: (item) => renderSizeOpening(item as unknown as PositionData),
 }
 
-const OnchainPositionContainer = ({ address }: { address: string }) => {
+const pnlOpeningColumn: ColumnData<OnchainPositionData> = {
+  title: <LabelEPnL />,
+  dataIndex: 'pnl',
+  key: 'pnl',
+  sortBy: 'pnl',
+  style: { width: '90px', textAlign: 'right' },
+  render: (item) => renderOpeningPnL(item as unknown as PositionData),
+}
+
+const roiOpeningColumn: ColumnData<OnchainPositionData> = {
+  title: 'ROI',
+  dataIndex: 'roi',
+  key: 'roi',
+  sortBy: 'roi',
+  style: { width: '90px', textAlign: 'right' },
+  render: (item) => renderOpeningRoi(item as unknown as PositionData),
+}
+
+const durationColumn: ColumnData<OnchainPositionData> = {
+  title: 'Time',
+  dataIndex: 'createdAt',
+  key: 'createdAt',
+  style: { width: '50px' },
+  render: (item) => (
+    <Type.Caption color="neutral3">
+      {item.createdAt ? <RelativeShortTimeText date={item.createdAt} /> : '--'}
+    </Type.Caption>
+  ),
+}
+
+const sltpColumn: ColumnData<OnchainPositionData> = {
+  title: 'SL / TP',
+  dataIndex: 'sl',
+  key: 'sl',
+  sortBy: 'sl',
+  style: { minWidth: '200px', textAlign: 'right' },
+  render: (item, index, { onSetSltp }: any) => (
+    <Flex justifyContent="end" sx={{ gap: 2 }} alignItems="center">
+      <Type.Caption>
+        {item.sl ? PriceTokenText({ value: item.sl, maxDigit: 2, minDigit: 2, sx: { color: 'neutral1' } }) : '--'}
+      </Type.Caption>
+      <Type.Caption>/</Type.Caption>
+      <Type.Caption>
+        {item.tp ? PriceTokenText({ value: item.tp, maxDigit: 2, minDigit: 2, sx: { color: 'neutral1' } }) : '--'}
+      </Type.Caption>
+      <IconButton
+        onClick={(e: any) => {
+          e.stopPropagation()
+          onSetSltp(item)
+        }}
+        variant="outline"
+        size={24}
+        icon={<Pencil size={14} />}
+        sx={{ borderColor: 'neutral4', '&:hover': { borderColor: 'neutral3' } }}
+      />
+    </Flex>
+  ),
+}
+
+const OnchainPositionContainer = ({ activeWallet }: { activeWallet: CopyWalletData }) => {
+  const {
+    onchainPositions,
+    positionsMapping,
+    loadingOnchainPositions,
+    reloadOnchainPositions,
+    setCurrentOnchainPosition,
+  } = useDCPManagementContext()
+
   const [openingCloseData, openCloseData] = useState<OnchainPositionData>()
-  const { prices } = useGetUsdPrices()
+  const [openingSltpData, openSltpData] = useState<OnchainPositionData>()
+  const { prices, gainsPrices } = useGetUsdPrices()
 
-  const gainsContract = useContract({
-    contract: {
-      address: '0xFF162c694eAA571f685030649814282eA457f169',
-      abi: [
-        {
-          inputs: [{ internalType: 'address', name: '_trader', type: 'address' }],
-          name: 'getTrades',
-          outputs: [
-            {
-              components: [
-                { internalType: 'address', name: 'user', type: 'address' },
-                { internalType: 'uint32', name: 'index', type: 'uint32' },
-                { internalType: 'uint16', name: 'pairIndex', type: 'uint16' },
-                { internalType: 'uint24', name: 'leverage', type: 'uint24' },
-                { internalType: 'bool', name: 'long', type: 'bool' },
-                { internalType: 'bool', name: 'isOpen', type: 'bool' },
-                { internalType: 'uint8', name: 'collateralIndex', type: 'uint8' },
-                { internalType: 'enum ITradingStorage.TradeType', name: 'tradeType', type: 'uint8' },
-                { internalType: 'uint120', name: 'collateralAmount', type: 'uint120' },
-                { internalType: 'uint64', name: 'openPrice', type: 'uint64' },
-                { internalType: 'uint64', name: 'tp', type: 'uint64' },
-                { internalType: 'uint64', name: 'sl', type: 'uint64' },
-                { internalType: 'uint192', name: '__placeholder', type: 'uint192' },
-              ],
-              internalType: 'struct ITradingStorage.Trade[]',
-              name: '',
-              type: 'tuple[]',
-            },
-          ],
-          stateMutability: 'view',
-          type: 'function',
-        },
-      ],
-    },
-  })
-  const { data, isLoading, refetch } = useContractQuery<OnchainPositionData[]>(gainsContract, 'getTrades', [address], {
-    refetchInterval: 10000,
-    select: (data: any[]) => {
-      return data.map((item) => {
-        const collateral = Number(formatUnits(item[8], 6))
-        const leverage = item[3] / 1000
-        return {
-          index: item[1],
-          indexToken: `GNS-${item[2]}`,
-          leverage,
-          collateral,
-          size: collateral * leverage,
-          averagePrice: Number(formatUnits(item[9], 10)),
-          fee: 0,
-          isLong: item[4],
-          protocol: ProtocolEnum.GNS,
-        }
-      })
-    },
-  })
-
-  const openingColumns: ColumnData<PositionData, ExternalSource>[] = [
-    ...minimumOpeningColums,
+  const openingColumns: ColumnData<OnchainPositionData, ExternalSource>[] = [
+    durationColumn,
+    sourceColumn,
+    entryColumn,
+    sizeOpeningColumn,
+    sltpColumn,
+    pnlOpeningColumn,
+    roiOpeningColumn,
     {
       title: '',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'index',
+      key: 'index',
       style: { minWidth: '30px', textAlign: 'right' },
       render: (item, index, { onClose }: any) => (
-        <Flex sx={{ position: 'relative', top: '2px' }} justifyContent="right">
+        <Flex sx={{ position: 'relative' }} justifyContent="right" alignItems="center">
           <IconButton
-            onClick={() => onClose(item as unknown as PositionData)}
+            onClick={(e: any) => {
+              e.stopPropagation()
+              onClose(item)
+            }}
             variant="outline"
             size={24}
             icon={<X size={14} />}
-            sx={{ borderColor: 'neutral4', '&:hover': { borderColor: 'neutral3' } }}
+            sx={{
+              borderColor: 'neutral4',
+              '&:hover': { borderColor: 'neutral3', color: 'red1' },
+            }}
           />
         </Flex>
       ),
@@ -118,9 +175,19 @@ const OnchainPositionContainer = ({ address }: { address: string }) => {
     openCloseData(item)
   }
 
+  const onSetSltp = (item: OnchainPositionData) => {
+    openSltpData(item)
+  }
+
+  const handleSelectItem = (item?: OnchainPositionData) => {
+    setCurrentOnchainPosition(item)
+  }
+
+  const handleModifySltp = useCallback(() => openSltpData(undefined), [])
+
   return (
-    <>
-      {!data?.length && !isLoading && (
+    <Box width="100%" height="100%">
+      {!onchainPositions?.length && !loadingOnchainPositions && (
         <Flex p={3} flexDirection="column" width="100%" height={180} justifyContent="center" alignItems="center">
           <Type.CaptionBold display="block">Your Onchain Positions Is Empty</Type.CaptionBold>
           <Type.Caption mt={1} color="neutral3" display="block">
@@ -128,13 +195,21 @@ const OnchainPositionContainer = ({ address }: { address: string }) => {
           </Type.Caption>
         </Flex>
       )}
-      {!!data?.length && (
-        <Box overflow="hidden" height="100%" minWidth="500px">
+      {!!onchainPositions?.length && (
+        <Box overflow="hidden" height="100%" minWidth="950px">
           <Table
-            isLoading={isLoading}
-            data={data as unknown as PositionData[]}
+            isLoading={loadingOnchainPositions}
+            data={onchainPositions.map((onchainPosition) => ({
+              ...onchainPosition,
+              source: positionsMapping?.[onchainPosition.index]?.copyAccount,
+              sourceProtocol: positionsMapping?.[onchainPosition.index]?.protocol,
+              fee: positionsMapping?.[onchainPosition.index]?.fee,
+              createdAt: positionsMapping?.[onchainPosition.index]?.createdAt,
+              copyPositionId: positionsMapping?.[onchainPosition.index]?.id,
+            }))}
             columns={openingColumns}
-            externalSource={{ prices, onClose }}
+            externalSource={{ prices, gainsPrices, onClose, onSetSltp }}
+            onClickRow={handleSelectItem}
             wrapperSx={{
               table: {
                 '& th:last-child, td:last-child': {
@@ -149,28 +224,59 @@ const OnchainPositionContainer = ({ address }: { address: string }) => {
           />
         </Box>
       )}
+      {/*{!!openingCloseData && (*/}
+      {/*  <ClosePositionGnsV8Modal*/}
+      {/*    isOpen={!!openingCloseData}*/}
+      {/*    position={openingCloseData}*/}
+      {/*    smartWallet={activeWallet.smartWalletAddress as string}*/}
+      {/*    onDismiss={(isSuccess) => {*/}
+      {/*      if (isSuccess) {*/}
+      {/*        reloadOnchainPositions()*/}
+      {/*      }*/}
+      {/*      openCloseData(undefined)*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*)}*/}
       {!!openingCloseData && (
-        <ClosePositionGnsV8Modal
-          isOpen={!!openingCloseData}
-          position={openingCloseData}
-          smartWallet={address}
-          onDismiss={(isSuccess) => {
-            if (isSuccess) {
-              refetch()
+        <CloseOnchainPositionModal
+          isOpen
+          onDismiss={(success?: boolean) => {
+            if (success) {
+              reloadOnchainPositions()
             }
             openCloseData(undefined)
           }}
+          position={{
+            copyPositionId: openingCloseData.copyPositionId ?? '',
+            indexToken: openingCloseData.indexToken,
+            isLong: openingCloseData.isLong,
+            averagePrice: openingCloseData.averagePrice,
+            protocol: openingCloseData.protocol,
+            address: openingCloseData?.address,
+            index: openingCloseData?.index,
+          }}
         />
       )}
-    </>
+      {!!openingSltpData && (
+        <ModifyTPSLModal isOpen={!!openingSltpData} onDismiss={handleModifySltp} positionData={openingSltpData} />
+      )}
+    </Box>
   )
 }
 
-const OnchainPositions = memo(function OnchainPositionsRenderer({ address }: { address: string }) {
+const OnchainPositions = memo(function OnchainPositionsRenderer({ activeWallet }: { activeWallet: CopyWalletData }) {
   const { isValid, alert } = useRequiredChain({
-    chainId: ARBITRUM_CHAIN,
+    chainId: activeWallet.exchange === CopyTradePlatformEnum.GNS_V8 ? ARBITRUM_CHAIN : OPTIMISM_CHAIN,
   })
-  return isValid ? <OnchainPositionContainer address={address} /> : <Box>{alert}</Box>
+  return isValid ? (
+    !!activeWallet.smartWalletAddress ? (
+      <OnchainPositionContainer activeWallet={activeWallet} />
+    ) : (
+      <></>
+    )
+  ) : (
+    <Box>{alert}</Box>
+  )
 })
 
 export default OnchainPositions

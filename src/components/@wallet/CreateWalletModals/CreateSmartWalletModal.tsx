@@ -4,6 +4,7 @@ import { ArrowSquareOut, HandWaving } from '@phosphor-icons/react'
 import React, { useMemo, useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
+import { useAuthContext } from 'hooks/web3/useAuth'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import useWeb3 from 'hooks/web3/useWeb3'
@@ -35,6 +36,7 @@ const CreateSmartWalletModal = ({
     chainId,
   })
   const { walletProvider, publicProvider, walletAccount } = useWeb3()
+  const { profile, handleSwitchAccount } = useAuthContext()
   const [submitting, setSubmitting] = useState(false)
   const [agreement, setAgreement] = useState(false)
   const [trigger, setTrigger] = useState(false)
@@ -49,6 +51,8 @@ const CreateSmartWalletModal = ({
     [walletAccount, walletProvider, publicProvider]
   )
   const factoryMutation = useContractMutation(factory)
+
+  const isInvalidAccount = profile?.username?.toLowerCase() !== walletAccount?.address?.toLowerCase()
 
   const createAccount = async () => {
     setTrigger(true)
@@ -129,15 +133,21 @@ const CreateSmartWalletModal = ({
           )}
         </Box>
         {isValid ? (
-          <Button
-            variant="primary"
-            block
-            onClick={createAccount}
-            isLoading={submitting}
-            disabled={submitting || !agreement}
-          >
-            <Trans>Create Smart Wallet</Trans>
-          </Button>
+          isInvalidAccount ? (
+            <Button variant="primary" block onClick={handleSwitchAccount}>
+              <Trans>Switch Account</Trans>
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              block
+              onClick={createAccount}
+              isLoading={submitting}
+              disabled={submitting || !agreement}
+            >
+              <Trans>Create Smart Wallet</Trans>
+            </Button>
+          )
         ) : (
           alert
         )}

@@ -22,7 +22,7 @@ import { useWhatIfStore } from 'hooks/store/useWhatIf'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { FONT_FAMILY } from 'utils/config/constants'
+import { FONT_FAMILY, GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { TIMEFRAME_NAMES, TOKEN_COLLATERAL_SUPPORT, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
@@ -52,7 +52,8 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
 
   const { sm } = useResponsive()
   const CHART_HEIGHT = sm ? 250 : 150
-  const { prices } = useGetUsdPrices()
+  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
+  const prices = GAINS_TRADE_PROTOCOLS.includes(position.protocol) ? gainsPrices : pythPrices
   const { nextHours } = useWhatIfStore()
   const { searchParams } = useSearchParams()
   const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]

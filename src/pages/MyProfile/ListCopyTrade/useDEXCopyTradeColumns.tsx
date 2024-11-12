@@ -22,6 +22,7 @@ import MarketGroup, { MarketGroupFull } from 'components/@ui/MarketGroup'
 import ReverseTag from 'components/@ui/ReverseTag'
 import TextWithEdit, { parseInputValue } from 'components/@ui/TextWithEdit'
 import ToastBody from 'components/@ui/ToastBody'
+import ActionItem from 'components/@widgets/ActionItem'
 import { CopyTradeData } from 'entities/copyTrade'
 import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
@@ -45,10 +46,9 @@ import { formatNumber } from 'utils/helpers/format'
 import { getErrorMessage } from 'utils/helpers/handleError'
 import { getProtocolDropdownImage } from 'utils/helpers/transform'
 
-import ActionItem from './ActionItem'
-import { CopyTradeWithCheckingData } from './ListCopyTrade'
+import { CopyTradeWithCheckingData } from '.'
 
-export default function useCopyTradeColumns({
+export default function useDEXCopyTradeColumns({
   onSelect,
   isMutating,
   setOpenHistoryDrawer,
@@ -58,6 +58,7 @@ export default function useCopyTradeColumns({
   setOpenConfirmStopModal,
   toggleStatus,
   copyTradeData,
+  expanded,
 }: {
   onSelect: (data?: CopyTradeWithCheckingData) => void
   isMutating: boolean
@@ -76,6 +77,7 @@ export default function useCopyTradeColumns({
     multipleCopy: boolean
   }) => void
   copyTradeData: MutableRefObject<CopyTradeWithCheckingData | undefined>
+  expanded: boolean
 }) {
   const refetchQueries = useRefetchQueries()
   const { mutate: updateCopyTrade } = useMutation(updateCopyTradeApi, {
@@ -596,132 +598,175 @@ export default function useCopyTradeColumns({
         </Dropdown>
       </Flex>
     ),
-    [handleOpenCloneDrawer, handleOpenDeleteModal, handleOpenDrawer]
+    [handleOpenCloneDrawer, handleOpenDeleteModal, handleOpenDrawer, handleOpenHistoryDrawer]
   )
-  const columns = useMemo(() => {
-    const result: ColumnData<CopyTradeWithCheckingData>[] = [
-      {
-        title: (
-          <Box as="span" pl={3}>
-            Run
-          </Box>
-        ),
-        dataIndex: 'status',
-        key: 'status',
-        sortBy: 'status',
-        sortType: SortTypeEnum.ASC,
-        style: { minWidth: '80px', width: 80 },
-        render: (item) => (
-          <Box pl={3} sx={{ position: 'relative' }}>
-            {item.reverseCopy && <ReverseTag />}
-            {renderToggleRunning(item)}
-          </Box>
-        ),
-      },
-      {
-        title: 'Label',
-        dataIndex: 'title',
-        key: 'title',
-        sortBy: 'title',
-        style: { minWidth: '120px', width: 120, pr: 3 },
-        render: renderTitle,
-      },
-      {
-        title: 'Trader',
-        dataIndex: 'account',
-        key: 'account',
-        sortBy: 'account',
-        style: { minWidth: '210px', width: 210 },
-        render: renderTraderAccount,
-      },
-      {
-        title: 'Margin',
-        dataIndex: 'volume',
-        key: 'volume',
-        sortBy: 'volume',
-        style: { minWidth: '100px', textAlign: 'right' },
-        render: renderVolume,
-      },
-      {
-        title: 'Leverage',
-        dataIndex: 'leverage',
-        key: 'leverage',
-        sortBy: 'leverage',
-        style: { minWidth: '100px', textAlign: 'right' },
-        render: renderLeverage,
-      },
-      {
-        title: 'Trading Pairs',
-        dataIndex: 'tokenAddresses',
-        key: 'tokenAddresses',
-        sortBy: 'tokenAddresses',
-        style: { minWidth: '120px', textAlign: 'right' },
-        render: renderMarkets,
-      },
-      {
-        title: 'SL/TP',
-        dataIndex: undefined,
-        key: undefined,
-        style: { minWidth: '100px', textAlign: 'right' },
-        render: renderSLTP,
-      },
-      {
-        title: 'Advance',
-        dataIndex: undefined,
-        key: undefined,
-        style: { minWidth: '168px', textAlign: 'left', pl: 3 },
-        render: renderRiskControl,
-      },
-      {
-        style: { minWidth: '100px', textAlign: 'right' },
-        title: (
-          <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
-            7D ePnL
-          </LabelWithTooltip>
-        ),
-        key: 'pnl7D',
-        dataIndex: 'pnl7D',
-        sortBy: 'pnl7D',
-        render: render7DPNL,
-      },
-      {
-        style: { minWidth: '100px', textAlign: 'right' },
-        title: (
-          <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
-            Total ePnL
-          </LabelWithTooltip>
-        ),
-        key: 'pnl',
-        dataIndex: 'pnl',
-        sortBy: 'pnl',
-        render: renderTotalPNL,
-      },
-      {
-        title: '',
-        dataIndex: 'id',
-        key: 'id',
-        style: { minWidth: '40px', textAlign: 'right', pr: 2 },
-        render: (item) => renderOptions(item),
-      },
-    ]
-    return result
-  }, [
-    render30DPNL,
-    render7DPNL,
-    renderLeverage,
-    renderMarkets,
-    renderOptions,
-    renderRiskControl,
-    renderSLTP,
-    renderTitle,
-    renderToggleRunning,
-    renderTotalPNL,
-    renderTraderAccount,
-    renderVolume,
-  ])
-  return {
-    columns,
-    renderProps: {
+  const returnValues = useMemo(() => {
+    const columns: ColumnData<CopyTradeWithCheckingData>[] = expanded
+      ? [
+          {
+            title: (
+              <Box as="span" pl={3}>
+                Run
+              </Box>
+            ),
+            dataIndex: 'status',
+            key: 'status',
+            sortBy: 'status',
+            sortType: SortTypeEnum.ASC,
+            style: { minWidth: '80px', width: 80 },
+            render: (item) => (
+              <Box pl={3} sx={{ position: 'relative' }}>
+                {item.reverseCopy && <ReverseTag />}
+                {renderToggleRunning(item)}
+              </Box>
+            ),
+          },
+          {
+            title: 'Label',
+            dataIndex: 'title',
+            key: 'title',
+            sortBy: 'title',
+            style: { minWidth: '100px', width: 100, pr: 3 },
+            render: renderTitle,
+          },
+          {
+            title: 'Trader',
+            dataIndex: 'account',
+            key: 'account',
+            sortBy: 'account',
+            style: { minWidth: '210px', width: 210 },
+            render: renderTraderAccount,
+          },
+          {
+            title: 'Margin',
+            dataIndex: 'volume',
+            key: 'volume',
+            sortBy: 'volume',
+            style: { minWidth: '80px', textAlign: 'right' },
+            render: renderVolume,
+          },
+          {
+            title: 'Leverage',
+            dataIndex: 'leverage',
+            key: 'leverage',
+            sortBy: 'leverage',
+            style: { minWidth: '80px', textAlign: 'right' },
+            render: renderLeverage,
+          },
+          {
+            title: 'Trading Pairs',
+            dataIndex: 'tokenAddresses',
+            key: 'tokenAddresses',
+            sortBy: 'tokenAddresses',
+            style: { minWidth: '120px', textAlign: 'right' },
+            render: renderMarkets,
+          },
+          {
+            title: 'SL/TP',
+            dataIndex: undefined,
+            key: undefined,
+            style: { minWidth: '100px', textAlign: 'right' },
+            render: renderSLTP,
+          },
+          {
+            title: 'Advance',
+            dataIndex: undefined,
+            key: undefined,
+            style: { minWidth: '168px', textAlign: 'left', pl: 3 },
+            render: renderRiskControl,
+          },
+          {
+            style: { minWidth: '100px', textAlign: 'right' },
+            title: (
+              <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
+                7D ePnL
+              </LabelWithTooltip>
+            ),
+            key: 'pnl7D',
+            dataIndex: 'pnl7D',
+            sortBy: 'pnl7D',
+            render: render7DPNL,
+          },
+          {
+            style: { minWidth: '100px', textAlign: 'right' },
+            title: (
+              <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
+                Total ePnL
+              </LabelWithTooltip>
+            ),
+            key: 'pnl',
+            dataIndex: 'pnl',
+            sortBy: 'pnl',
+            render: renderTotalPNL,
+          },
+          {
+            title: '',
+            dataIndex: 'id',
+            key: 'id',
+            style: { minWidth: '40px', textAlign: 'right', pr: 2 },
+            render: (item) => renderOptions(item),
+          },
+        ]
+      : [
+          {
+            title: (
+              <Box as="span" pl={2}>
+                Run
+              </Box>
+            ),
+            dataIndex: 'status',
+            key: 'status',
+            sortBy: 'status',
+            sortType: SortTypeEnum.ASC,
+            style: { minWidth: '80px', width: 80 },
+            render: (item) => (
+              <Box pl={2} sx={{ position: 'relative' }}>
+                {item.reverseCopy && <ReverseTag />}
+                {renderToggleRunning(item)}
+              </Box>
+            ),
+          },
+          {
+            title: 'Label',
+            dataIndex: 'title',
+            key: 'title',
+            sortBy: 'title',
+            style: { minWidth: '100px', width: 100, pr: 2 },
+            render: renderTitle,
+          },
+          {
+            title: 'Trader',
+            dataIndex: 'account',
+            key: 'account',
+            sortBy: 'account',
+            style: { minWidth: '180px', width: 180 },
+            render: renderTraderAccount,
+          },
+          {
+            title: 'Margin',
+            dataIndex: 'volume',
+            key: 'volume',
+            sortBy: 'volume',
+            style: { minWidth: '80px', textAlign: 'right' },
+            render: renderVolume,
+          },
+          {
+            title: 'Leverage',
+            dataIndex: 'leverage',
+            key: 'leverage',
+            sortBy: 'leverage',
+            style: { minWidth: '80px', textAlign: 'right' },
+            render: renderLeverage,
+          },
+          {
+            title: '',
+            dataIndex: 'id',
+            key: 'id',
+            style: { minWidth: '40px', textAlign: 'right', pr: 2 },
+            render: (item) => renderOptions(item),
+          },
+        ]
+    const renderProps = {
       render30DPNL,
       render7DPNL,
       renderLeverage,
@@ -734,11 +779,27 @@ export default function useCopyTradeColumns({
       renderTraderAccount,
       renderVolume,
       renderSLTP,
-    },
-  }
+    }
+    return { columns, renderProps }
+  }, [
+    render7DPNL,
+    render30DPNL,
+    renderLeverage,
+    renderMarkets,
+    renderOptions,
+    renderRiskControl,
+    renderSLTP,
+    renderTitle,
+    renderToggleRunning,
+    renderTotalPNL,
+    renderTraderAccount,
+    renderVolume,
+    expanded,
+  ])
+  return returnValues
 }
 
-export type CopyTradeRenderProps = ReturnType<typeof useCopyTradeColumns>['renderProps']
+export type DEXCopyTradeRenderProps = ReturnType<typeof useDEXCopyTradeColumns>['renderProps']
 
 function renderCopyTrader(data: CopyTradeWithCheckingData, isRunning: boolean) {
   return (

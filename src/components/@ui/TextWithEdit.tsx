@@ -5,10 +5,10 @@ import { EditText } from 'react-edit-text'
 import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
 
-function escapeSpecialRegExpChars(string: string): string {
+export function escapeSpecialRegExpChars(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
-const inputRegex = RegExp(`^(0|[1-9]\\d*)(?:\\\\[.])?\\d*$`)
+export const inputRegex = RegExp(`^(0|[1-9]\\d*)(?:\\\\[.])?\\d*$`)
 
 export function parseInputValue(value: number | string | undefined) {
   try {

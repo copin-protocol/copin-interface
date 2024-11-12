@@ -13,9 +13,9 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { TOOLTIP_KEYS } from 'utils/config/keys'
 
-import { CopyTradeRenderProps } from './useCopyTradeColumns'
+import { DEXCopyTradeRenderProps } from './useDEXCopyTradeColumns'
 
-export type CopyTradeWithCheckingData = CopyTradeData & TraderCopyVolumeCheckingData
+export type CopyTradeWithCheckingData = CopyTradeData & Partial<TraderCopyVolumeCheckingData>
 
 export function CopyTable({
   sortedData,
@@ -63,14 +63,64 @@ export function CopyTable({
   )
 }
 
-export function ListCopy({
+export function ListCopyCEX({
   sortedData,
   isLoading,
   renderProps,
 }: {
   sortedData: CopyTradeWithCheckingData[] | undefined
   isLoading: boolean
-  renderProps: CopyTradeRenderProps
+  renderProps: DEXCopyTradeRenderProps
+}) {
+  if (isLoading) return <Loading />
+  if (!isLoading && !sortedData?.length) return <NoDataFound />
+  return (
+    <Flex py={2} sx={{ flexDirection: 'column', gap: 2, width: '100%', height: '100%', overflow: 'hidden auto' }}>
+      {sortedData?.map((data) => {
+        return (
+          <Box key={data.id} sx={{ bg: 'neutral6', px: 3, py: 2, position: 'relative' }}>
+            <Box sx={{ position: 'absolute', top: 16, left: 8 }}>{data.reverseCopy && <ReverseTag />}</Box>
+            <Flex sx={{ gap: 1, alignItems: 'center', width: '100%' }}>
+              <Box flex="1" sx={data.reverseCopy ? { pl: 2 } : {}}>
+                {renderProps.renderTitle(data)}
+              </Box>
+              <Flex sx={{ alignItems: 'center', gap: 3 }}>
+                {renderProps.renderToggleRunning(data)}
+                {renderProps.renderOptions(data, { placement: 'bottomRight' })}
+              </Flex>
+            </Flex>
+            <Divider my={2} color="neutral5" />
+            <Flex sx={{ flexDirection: 'column', gap: 2 }}>
+              <ListCopyRowItem label={<Trans>Trader</Trans>} value={renderProps.renderTraderAccount(data)} />
+              <ListCopyRowItem label={<Trans>Max Margin/Order</Trans>} value={renderProps.renderVolume(data)} />
+              <ListCopyRowItem label={<Trans>Leverage</Trans>} value={renderProps.renderLeverage(data)} />
+              <ListCopyRowItem label={<Trans>Trading Pairs</Trans>} value={renderProps.renderMarkets(data)} />
+              <ListCopyRowItem label={<Trans>Advance</Trans>} value={renderProps.renderRiskControl(data)} />
+              <ListCopyRowItem label={<Trans>SL/TP</Trans>} value={renderProps.renderSLTP(data)} />
+            </Flex>
+            <Flex
+              mt={2}
+              sx={{ alignItems: 'center', justifyContent: 'space-between', columnGap: 12, rowGap: 2, flexWrap: 'wrap' }}
+            >
+              <ListPNLItem label={<Trans>7D Pnl</Trans>} value={renderProps.render7DPNL(data)} />
+              <ListPNLItem label={<Trans>30D Pnl</Trans>} value={renderProps.render30DPNL(data)} />
+              <ListPNLItem label={<Trans>Total Pnl</Trans>} value={renderProps.renderTotalPNL(data)} />
+            </Flex>
+          </Box>
+        )
+      })}
+    </Flex>
+  )
+}
+
+export function ListCopyDEX({
+  sortedData,
+  isLoading,
+  renderProps,
+}: {
+  sortedData: CopyTradeWithCheckingData[] | undefined
+  isLoading: boolean
+  renderProps: DEXCopyTradeRenderProps
 }) {
   if (isLoading) return <Loading />
   if (!isLoading && !sortedData?.length) return <NoDataFound />

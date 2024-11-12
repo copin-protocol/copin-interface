@@ -19,6 +19,7 @@ import ProgressBar from 'theme/ProgressBar'
 import Tooltip from 'theme/Tooltip'
 import { Flex, Image, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
@@ -166,7 +167,8 @@ type SizeOpeningComponentProps = {
   dynamicWidth?: boolean
 }
 function SizeOpening(props: Omit<SizeOpeningComponentProps, 'prices'>) {
-  const { prices } = useGetUsdPrices()
+  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
+  const prices = props?.data?.protocol && GAINS_TRADE_PROTOCOLS.includes(props.data.protocol) ? gainsPrices : pythPrices
   if (!prices) return <>--</>
   return <SizeOpeningComponent {...props} prices={prices} />
 }
@@ -258,7 +260,8 @@ export function renderOpeningPnLWithPrices(
   return <OpeningPnLComponent data={data} prices={prices} ignoreFee={ignoreFee} sx={sx} />
 }
 function OpeningPnL(props: Omit<OpeningPnLComponentProps, 'prices'>) {
-  const { prices } = useGetUsdPrices()
+  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
+  const prices = props?.data?.protocol && GAINS_TRADE_PROTOCOLS.includes(props.data.protocol) ? gainsPrices : pythPrices
   if (!prices) return <>--</>
   return <OpeningPnLComponent {...props} prices={prices} />
 }
@@ -303,7 +306,8 @@ export function renderOpeningRoi(data: PositionData | undefined, ignoreFee?: boo
   return <OpeningRoi data={data} ignoreFee={ignoreFee} sx={sx} />
 }
 function OpeningRoi(props: Omit<OpeningRoiComponentProps, 'prices'>) {
-  const { prices } = useGetUsdPrices()
+  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
+  const prices = props?.data?.protocol && GAINS_TRADE_PROTOCOLS.includes(props.data.protocol) ? gainsPrices : pythPrices
   if (!prices) return <>--</>
   return <OpeningRoiComponent {...props} prices={prices} />
 }

@@ -18,6 +18,7 @@ export default function SliderInput({
   marksUnit,
   disabled,
   railBg,
+  onChangeValue,
 }: {
   name: string
   control: any
@@ -29,6 +30,7 @@ export default function SliderInput({
   marksUnit: string
   disabled?: boolean
   railBg?: string
+  onChangeValue?: (value?: number) => void
 }) {
   return (
     <Controller
@@ -39,12 +41,15 @@ export default function SliderInput({
           <SliderWrapper railbg={railBg}>
             <Slider
               value={value}
-              onChange={onChange}
+              onChange={(v) => {
+                onChange(v)
+                onChangeValue?.(v)
+              }}
               min={minValue}
               max={maxValue}
               step={stepValue}
               marks={createMarks({ maxValue, marksStep, marksUnit })}
-              tipFormatter={(v) => `${v}${marksUnit}`}
+              tipFormatter={(v) => `${v ?? minValue}${marksUnit}`}
               disabled={disabled}
               draggableTrack={false}
             />

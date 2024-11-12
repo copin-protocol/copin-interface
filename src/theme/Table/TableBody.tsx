@@ -93,7 +93,10 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
   const Wrapper = checkIsTop == null ? NormalRowWrapper : checkIsTop(data) ? AnimatedRowWrapper : RowWrapper
   return (
     <Wrapper
-      onClick={onClickRow ? () => onClickRow(data) : undefined}
+      onClick={(e) => {
+        e.stopPropagation()
+        onClickRow && onClickRow(data)
+      }}
       // @ts-ignore
       data-ranking={data.ranking}
       style={{

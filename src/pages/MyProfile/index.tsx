@@ -1,45 +1,30 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans, t } from '@lingui/macro'
-import { ClockCounterClockwise, Notebook, SubtractSquare } from '@phosphor-icons/react'
+import { ClockCounterClockwise, Notebook, SquareHalf, SubtractSquare } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { Redirect, Route, Switch, useLocation } from 'react-router'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
-import useWalletFund from 'hooks/features/useWalletFundSnxV2'
-// import WarningLimitVolume from 'pages/@layouts/WarningLimitVolume'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 
-import BalanceMenu from './BalanceMenu'
-import CheckingWalletRenderer from './CheckingWalletRenderer'
+import CEXManagement from './CEXManagement'
+import DCPManagement from './DCPManagement'
 import HistoryPositions from './HistoryPositions'
-import ManagementLayoutDesktop from './Layouts/ManagementLayoutDesktop'
-import ManagementLayoutMobile from './Layouts/ManagementLayoutMobile'
-import MainSection from './MainSection'
-import OpeningPosition from './OpeningPositions'
-import Stats from './Stats'
 import UserActivity from './UserActivity'
-import useProfileState from './useProfileState'
 
 export default function MyProfile() {
   const { pathname } = useLocation()
   const { lg } = useResponsive()
-  const ManagementLayout = lg ? ManagementLayoutDesktop : ManagementLayoutMobile
-  const { loadingCopyWallets, copyWallets, myProfile, activeWallet, setActiveWallet } = useProfileState()
-
-  const { available, total: balance } = useWalletFund({
-    address: activeWallet?.smartWalletAddress,
-    enabled: !!activeWallet?.smartWalletAddress,
-    platform: activeWallet?.exchange,
-  })
+  const myProfile = useMyProfileStore((s) => s.myProfile)
+  if (!myProfile) return null
 
   return (
     <>
       <CustomPageTitle title={pageTitleMapping[pathname] ?? t`My Profile`} />
-      {/* <WarningLimitVolume /> */}
       <Flex
         sx={{
           flexDirection: 'column',
@@ -55,47 +40,16 @@ export default function MyProfile() {
             <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
               <Switch>
                 <Route exact path={ROUTES.MY_MANAGEMENT.path}>
-                  <CheckingWalletRenderer loadingCopyWallets={loadingCopyWallets} copyWallets={copyWallets}>
-                    <ManagementLayout
-                      balanceMenu={
-                        <BalanceMenu
-                          copyWallets={copyWallets}
-                          activeWallet={activeWallet}
-                          balance={balance}
-                          onChangeKey={setActiveWallet}
-                        />
-                      }
-                      mainSection={
-                        <>
-                          {!!myProfile && (
-                            <MainSection
-                              myProfile={myProfile}
-                              exchange={activeWallet?.exchange ?? CopyTradePlatformEnum.BINGX}
-                              copyWallet={activeWallet}
-                              available={available}
-                            />
-                          )}
-                        </>
-                      }
-                      positionsTable={
-                        <>
-                          {!!myProfile?.id && <OpeningPosition activeWallet={activeWallet} copyWallets={copyWallets} />}
-                        </>
-                      }
-                      stats={
-                        <Stats
-                          exchange={activeWallet?.exchange ?? CopyTradePlatformEnum.BINGX}
-                          copyWalletId={activeWallet?.id}
-                        />
-                      }
-                    />
-                  </CheckingWalletRenderer>
+                  <CEXManagement />
+                </Route>
+                <Route exact path={ROUTES.USER_DCP_MANAGEMENT.path}>
+                  <DCPManagement />
                 </Route>
                 <Route exact path={ROUTES.MY_HISTORY.path}>
-                  <>{!!myProfile?.id && <HistoryPositions />}</>
+                  <HistoryPositions />
                 </Route>
                 <Route exact path={ROUTES.USER_ACTIVITY.path}>
-                  <>{!!myProfile?.id && <UserActivity />}</>
+                  <UserActivity />
                 </Route>
                 <Redirect to={ROUTES.MY_MANAGEMENT.path} />
               </Switch>
@@ -116,17 +70,25 @@ export default function MyProfile() {
 
 enum TabKeyEnum {
   MANAGEMENT = 'management',
+  DCP_MANAGEMENT = 'dcp-management',
   HISTORY = 'history',
   ACTIVITIES = 'activities',
 }
 
 const tabConfigs: TabConfig[] = [
   {
-    name: <Trans>MANAGEMENT</Trans>,
-    activeIcon: <SubtractSquare size={24} weight="fill" />,
-    inactiveIcon: <SubtractSquare size={24} />,
+    name: <Trans>CEX MANAGEMENT</Trans>,
+    activeIcon: <SquareHalf size={24} weight="fill" />,
+    inactiveIcon: <SquareHalf size={24} />,
     key: TabKeyEnum.MANAGEMENT,
     route: ROUTES.MY_MANAGEMENT.path,
+  },
+  {
+    name: <Trans>DCP MANAGEMENT</Trans>,
+    activeIcon: <SubtractSquare size={24} weight="fill" />,
+    inactiveIcon: <SubtractSquare size={24} />,
+    key: TabKeyEnum.DCP_MANAGEMENT,
+    route: ROUTES.USER_DCP_MANAGEMENT.path,
   },
   {
     name: <Trans>HISTORY</Trans>,
@@ -145,7 +107,8 @@ const tabConfigs: TabConfig[] = [
 ]
 
 const pageTitleMapping = {
-  [ROUTES.MY_MANAGEMENT.path]: t`Copy Management`,
+  [ROUTES.MY_MANAGEMENT.path]: t`CEX Management`,
+  [ROUTES.USER_DCP_MANAGEMENT.path]: t`DCP Management`,
   [ROUTES.MY_HISTORY.path]: t`History`,
   [ROUTES.USER_ACTIVITY.path]: t`Activities`,
 }

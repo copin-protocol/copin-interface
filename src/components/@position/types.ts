@@ -6,6 +6,7 @@ export type ExternalSourceCopyPositions = {
   copyTrades?: CopyTradeData[]
   copyWallets?: CopyWalletData[]
   prices?: UsdPrices
+  gainsPrices?: UsdPrices
   submitting?: boolean
   currentId?: string
   onViewSource?: (data: CopyPositionData, event?: any) => void

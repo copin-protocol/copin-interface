@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useState } from 'react'
+import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getAllCopyWalletsApi } from 'apis/copyWalletApis'
@@ -6,6 +6,7 @@ import { CopyWalletData } from 'entities/copyWallet'
 import { UserData } from 'entities/user'
 import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
 import useMyProfile from 'hooks/store/useMyProfile'
+import { DCP_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
@@ -16,6 +17,8 @@ export interface CopyWalletContextData {
   copyWallets: CopyWalletData[] | undefined
   smartWallets: CopyWalletData[] | undefined
   bingXWallets: CopyWalletData[] | undefined
+  dcpWallets: CopyWalletData[] | undefined
+  cexWallets: CopyWalletData[] | undefined
   reloadCopyWallets: () => void
   loadTotalSmartWallet: () => void
 }
@@ -48,10 +51,19 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
     retry: 0,
   })
 
-  const bingXWallets = copyWallets?.filter((w) => w.exchange === CopyTradePlatformEnum.BINGX)
-  const smartWallets = copyWallets?.filter(
-    (w) => w.exchange === CopyTradePlatformEnum.SYNTHETIX_V2 || w.exchange === CopyTradePlatformEnum.GNS_V8
+  const bingXWallets = useMemo(
+    () => copyWallets?.filter((w) => w.exchange === CopyTradePlatformEnum.BINGX),
+    [copyWallets]
   )
+  const smartWallets = useMemo(
+    () =>
+      copyWallets?.filter(
+        (w) => w.exchange === CopyTradePlatformEnum.SYNTHETIX_V2 || w.exchange === CopyTradePlatformEnum.GNS_V8
+      ),
+    [copyWallets]
+  )
+  const dcpWallets = useMemo(() => copyWallets?.filter((w) => DCP_EXCHANGES.includes(w.exchange)), [copyWallets])
+  const cexWallets = useMemo(() => copyWallets?.filter((w) => !DCP_EXCHANGES.includes(w.exchange)), [copyWallets])
 
   // const normalizedCopyWallets = useMemo(
   //   () =>
@@ -72,15 +84,20 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
   //   [copyWallets]
   // )
 
-  const contextValue: CopyWalletContextData = {
-    myProfile,
-    loadingCopyWallets,
-    copyWallets,
-    smartWallets,
-    bingXWallets,
-    reloadCopyWallets,
-    loadTotalSmartWallet: () => setLoadedTotalSmartWallet(true),
-  }
+  const contextValue: CopyWalletContextData = useMemo(
+    () => ({
+      dcpWallets,
+      cexWallets,
+      myProfile,
+      loadingCopyWallets,
+      copyWallets,
+      smartWallets,
+      bingXWallets,
+      reloadCopyWallets,
+      loadTotalSmartWallet: () => setLoadedTotalSmartWallet(true),
+    }),
+    [bingXWallets, cexWallets, copyWallets, dcpWallets, loadingCopyWallets, myProfile, reloadCopyWallets, smartWallets]
+  )
 
   return <CopyWalletContext.Provider value={contextValue}>{children}</CopyWalletContext.Provider>
 }

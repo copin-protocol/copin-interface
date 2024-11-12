@@ -3,6 +3,7 @@ import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
 import { getLatestPrices } from 'apis/positionApis'
+import { ProtocolEnum } from 'utils/config/enums'
 import { pollEvery } from 'utils/helpers/pollEvery'
 
 export interface UsdPrices {
@@ -12,6 +13,9 @@ interface BalancesState {
   prices: UsdPrices
   setPrices: (prices: UsdPrices) => void
   setPrice: ({ address, price }: { address: string; price: number }) => void
+  gainsPrices: UsdPrices
+  setGainsPrices: (prices: UsdPrices) => void
+  setGainsPrice: ({ address, price }: { address: string; price: number }) => void
 }
 
 const useUsdPricesStore = create<BalancesState>()(
@@ -25,6 +29,15 @@ const useUsdPricesStore = create<BalancesState>()(
       set((state) => {
         state.prices[address] = price
       }),
+    gainsPrices: {},
+    setGainsPrices: (prices) =>
+      set((state) => {
+        state.gainsPrices = prices
+      }),
+    setGainsPrice: ({ address, price }: { address: string; price: number }) =>
+      set((state) => {
+        state.gainsPrices[address] = price
+      }),
   }))
 )
 export const useRealtimeUsdPricesStore = create<
@@ -32,6 +45,7 @@ export const useRealtimeUsdPricesStore = create<
 >()(
   immer((set) => ({
     prices: {},
+    gainsPrices: {},
     isReady: false,
     setIsReady: (isReady) =>
       set((state) => {
@@ -44,6 +58,14 @@ export const useRealtimeUsdPricesStore = create<
     setPrice: ({ address, price }: { address: string; price: number }) =>
       set((state) => {
         state.prices[address] = price
+      }),
+    setGainsPrices: (prices) =>
+      set((state) => {
+        state.gainsPrices = { ...state.gainsPrices, ...prices }
+      }),
+    setGainsPrice: ({ address, price }: { address: string; price: number }) =>
+      set((state) => {
+        state.gainsPrices[address] = price
       }),
   }))
 )
@@ -74,8 +96,47 @@ const usePollingUsdPrice = () => {
   }, [setPrices])
 }
 
+const usePollingGainsUsdPrice = () => {
+  const { setGainsPrices } = useUsdPricesStore()
+  useEffect(() => {
+    let cancel = false
+    const pollBalance = pollEvery((onUpdate: (prices: UsdPrices) => void) => {
+      return {
+        async request() {
+          return async function fetchAndProcessPriceFeeds() {
+            const pricesData = {} as UsdPrices
+            const initialCache = await fetch('https://backend-pricing.eu.gains.trade/charts').then((res) => res.json())
+            if (initialCache && initialCache.closes) {
+              initialCache.closes.map((price: number, index: number) => {
+                pricesData[`${ProtocolEnum.GNS}-` + index] = price
+                pricesData[`${ProtocolEnum.GNS_POLY}-` + index] = price
+                pricesData[`${ProtocolEnum.GNS_BASE}-` + index] = price
+              })
+              setGainsPrices(pricesData)
+            }
+          }
+        },
+        onResult(result: any) {
+          if (cancel || !result) return
+          onUpdate(result as UsdPrices)
+        },
+      }
+    }, 30_000)
+
+    // start polling balance every x time
+    const stopPollingBalance = pollBalance(setGainsPrices)
+
+    return () => {
+      cancel = true
+      stopPollingBalance()
+      setGainsPrices({})
+    }
+  }, [setGainsPrices])
+}
+
 export const PollingUsdPrice = memo(function PollingUsdPriceMemo() {
   usePollingUsdPrice()
+  usePollingGainsUsdPrice()
   return null
 })
 

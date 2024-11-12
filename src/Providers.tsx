@@ -12,6 +12,7 @@ import { ProtocolProvider } from 'hooks/store/useProtocols'
 import ThemedGlobalStyle from 'theme/styles'
 
 import DappProvider from './DappProvider'
+import GainsTradeConnection from './utils/web3/gTrade'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,6 +49,7 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
               <BrowserRouter>
                 {/* <UseRemoveTimeFilter /> */}
                 <PythConnection />
+                <GainsTradeConnection />
                 <DappProvider>
                   <ProtocolProvider>
                     <CopyWalletProvider>{children}</CopyWalletProvider>
