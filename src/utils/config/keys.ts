@@ -240,6 +240,7 @@ export const SERVICE_KEYS = {
   [ProtocolEnum.DYDX]: '',
   [ProtocolEnum.BSX_BASE]: '',
   [ProtocolEnum.UNIDEX_ARB]: '',
+  [ProtocolEnum.VERTEX_ARB]: '',
 }
 
 export const INTERNAL_SERVICE_KEYS = {
@@ -279,4 +280,5 @@ export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.DYDX]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.BSX_BASE]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.UNIDEX_ARB]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.VERTEX_ARB]: 'COPY_TRADE_MAIN_STREAM',
 }

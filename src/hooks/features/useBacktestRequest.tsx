@@ -9,6 +9,7 @@ import { BackTestFormValues } from 'components/@backtest/types'
 import ToastBody from 'components/@ui/ToastBody'
 import { BackTestResultData, RequestBackTestData } from 'entities/backTest.d'
 import { ProtocolEnum } from 'utils/config/enums'
+import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
 export default function useBacktestRequest(
@@ -61,9 +62,10 @@ export default function useBacktestRequest(
   })
 
   const onSubmitByRequestData = (requestData: RequestBackTestData, reqProtocol?: ProtocolEnum) => {
+    const _reqProtocol = protocol ?? reqProtocol ?? ProtocolEnum.GMX
     setIsSubmitting(true)
     setBacktestSettings(requestData)
-    requestTestMultiOrder({ protocol: protocol ?? reqProtocol ?? ProtocolEnum.GMX, data: requestData })
+    requestTestMultiOrder({ protocol: _reqProtocol, data: requestData })
   }
   const onSubmit = ({
     accounts,
@@ -96,7 +98,7 @@ export default function useBacktestRequest(
             ? formData.maxMarginPerPosition / formData.orderVolume
             : null,
       }
-      if (formData.lookBackOrders) {
+      if (formData.lookBackOrders && !PROTOCOLS_CROSS_MARGIN.includes(_protocol)) {
         requestData.volumeProtection = true
         requestData.lookBackOrders = formData.lookBackOrders
       }

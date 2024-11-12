@@ -315,6 +315,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     isNew: true,
     key: 'UNA',
   },
+  [ProtocolEnum.VERTEX_ARB]: {
+    id: ProtocolEnum.VERTEX_ARB,
+    text: 'Vertex',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+    isNew: true,
+    key: 'VEA',
+  },
 }
 
 export const SELECTED_PROTOCOLS_ALL = 'all'
@@ -331,6 +339,7 @@ export const PROTOCOLS_CROSS_MARGIN = [
   ProtocolEnum.HYPERLIQUID,
   ProtocolEnum.DYDX,
   ProtocolEnum.BSX_BASE,
+  ProtocolEnum.VERTEX_ARB,
 ]
 
 export const PROTOCOLS_IN_TOKEN: ProtocolEnum[] = []

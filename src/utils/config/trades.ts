@@ -59,6 +59,7 @@ import { TOKEN_TRADE_SYNTHETIX_V3 } from './tokenTradeSynthetixV3'
 import { TOKEN_TRADE_TIGRIS_ARB } from './tokenTradeTigris'
 import { TOKEN_COLLATERAL_UNIDEX_ARB, TOKEN_TRADE_UNIDEX_ARB } from './tokenTradeUniDex'
 import { TOKEN_TRADE_VELA_ARB } from './tokenTradeVela'
+import { TOKEN_TRADE_VERTEX_ARB } from './tokenTradeVertex'
 import { TOKEN_TRADE_YFX_ARB } from './tokenTradeYfx'
 
 type ProtocolProvider = { [key: string]: { chainId: number | 'dydx-mainnet-1' | null; explorerUrl: string } | null }
@@ -207,6 +208,10 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: ARBITRUM_MAINNET,
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.VERTEX_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
 }
 export interface TokenTrade {
   address: string
@@ -276,6 +281,7 @@ export const TOKEN_TRADE_SUPPORT: TokenSupport = {
   [ProtocolEnum.DYDX]: TOKEN_TRADE_DYDX,
   [ProtocolEnum.BSX_BASE]: TOKEN_TRADE_BSX_BASE,
   [ProtocolEnum.UNIDEX_ARB]: TOKEN_TRADE_UNIDEX_ARB,
+  [ProtocolEnum.VERTEX_ARB]: TOKEN_TRADE_VERTEX_ARB,
 }
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
@@ -329,6 +335,7 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.DYDX]: {},
   [ProtocolEnum.BSX_BASE]: TOKEN_COLLATERAL_BASE,
   [ProtocolEnum.UNIDEX_ARB]: { ...TOKEN_COLLATERAL_ARB, ...TOKEN_COLLATERAL_UNIDEX_ARB },
+  [ProtocolEnum.VERTEX_ARB]: TOKEN_COLLATERAL_ARB,
 }
 
 export const SYNTHETIX_MARKETS: { [key: number]: string[] } = {
@@ -526,6 +533,7 @@ export function getSymbolTradingView(symbol: string) {
       return 'BONK'
     case '1000PEPE':
     case 'kPEPE':
+    case 'MPEPE':
       return 'PEPE'
     case '1000FLOKI':
     case 'kFLOKI':
@@ -547,6 +555,8 @@ export function getSymbolTradingView(symbol: string) {
 export function getPriceTradingView(symbol: string, price?: number) {
   if (!price) return
   switch (symbol) {
+    case 'MPEPE':
+      return price / 1000000
     case '1000BONK':
     case 'kBONK':
     case '1000PEPE':
