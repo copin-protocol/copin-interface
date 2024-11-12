@@ -161,6 +161,8 @@ function generateProtocolName(protocol) {
       return 'BSX'
     case 'UNIDEX_ARB':
       return 'UniDex'
+    case 'VERTEX_ARB':
+      return 'Vertex (ARB)'
     default:
       return ''
   }

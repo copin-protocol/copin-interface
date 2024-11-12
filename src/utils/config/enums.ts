@@ -35,6 +35,7 @@ export enum ProtocolEnum {
   DYDX = 'DYDX',
   BSX_BASE = 'BSX_BASE',
   UNIDEX_ARB = 'UNIDEX_ARB',
+  VERTEX_ARB = 'VERTEX_ARB',
 }
 
 export enum ProtocolFilterEnum {

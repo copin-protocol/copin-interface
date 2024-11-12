@@ -234,6 +234,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.BSX_BASE,
         ProtocolEnum.DYDX,
         ProtocolEnum.UNIDEX_ARB,
+        ProtocolEnum.VERTEX_ARB,
       ]
     : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 
@@ -261,7 +262,12 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.MORPHEX_FANTOM,
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
-export const FEE_WITH_FUNDING_PROTOCOLS = [ProtocolEnum.HYPERLIQUID, ProtocolEnum.BSX_BASE, ProtocolEnum.DYDX]
+export const FEE_WITH_FUNDING_PROTOCOLS = [
+  ProtocolEnum.HYPERLIQUID,
+  ProtocolEnum.BSX_BASE,
+  ProtocolEnum.DYDX,
+  ProtocolEnum.VERTEX_ARB,
+]
 export const COLLATERAL_TOKEN_PROTOCOLS: ProtocolEnum[] = []
 
 export const MAX_LIMIT = 500

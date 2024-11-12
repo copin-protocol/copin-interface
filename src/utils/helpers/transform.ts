@@ -378,6 +378,8 @@ export const normalizePriceData = (
     case 'kLUNC':
     case 'kSHIB':
       return value * 1000
+    case 'MPEPE':
+      return value * 1000000
     case 'BONK':
     case 'PEPE':
       if (exchange && [CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.BYBIT].includes(exchange)) {

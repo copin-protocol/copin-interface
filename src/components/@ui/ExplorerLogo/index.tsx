@@ -28,6 +28,7 @@ const ExplorerLogo = ({
     case ProtocolEnum.YFX_ARB:
     case ProtocolEnum.PERENNIAL_ARB:
     case ProtocolEnum.UNIDEX_ARB:
+    case ProtocolEnum.VERTEX_ARB:
       icon = 'ARBITRUM'
       break
 

@@ -565,6 +565,10 @@ export const generateProtocol = ({
       protocolTextWidth = 156
       protocolText = 'UniDex'
       break
+    case ProtocolEnum.VERTEX_ARB:
+      protocolTextWidth = 156
+      protocolText = 'Vertex'
+      break
     default:
       break
   }
