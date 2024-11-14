@@ -177,6 +177,8 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
   const riskPercent = calcRiskPercent(data.isLong, data.averagePrice, marketPrice, liquidatePrice ?? 0)
   const { sx, ..._textProps } = textProps ?? {}
 
+  const sizeNumber = data.maxSizeNumber ?? data.size
+
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
       <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '2px' }}>
@@ -185,14 +187,15 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
             {PROTOCOLS_IN_TOKEN.includes(data.protocol) ? (
               <ValueOrToken
                 protocol={data.protocol}
-                value={data.maxSizeNumber ?? data.size}
+                value={sizeNumber}
                 valueInToken={data.sizeInToken}
                 indexToken={data.collateralToken}
-                hasCompact={!!data.sizeInToken && data.sizeInToken >= 100000}
+                hasCompact={sizeNumber >= 100_100 || (data.sizeInToken ?? 0) >= 100_000}
                 hasPrefix={false}
               />
             ) : (
-              `${formatNumber(data.maxSizeNumber ?? data.size, 0)}`
+              // `${sizeNumber >= 100_000 ? compactNumber(sizeNumber, 2) : formatNumber(sizeNumber, 0)}`
+              `${compactNumber(sizeNumber, 2)}`
             )}
           </Type.Caption>
         </Flex>
@@ -278,6 +281,8 @@ function OpeningPnLComponent({ data, prices, ignoreFee, sx }: OpeningPnLComponen
           value={pnl ?? pnlInToken}
           maxDigit={2}
           minDigit={2}
+          // isCompactNumber={Math.abs(pnl ?? pnlInToken ?? 0) >= 100_000}
+          isCompactNumber
           sx={{ textAlign: 'right', width: '100%', ...sx }}
         />
       }
