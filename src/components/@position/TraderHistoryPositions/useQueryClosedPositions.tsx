@@ -1,8 +1,8 @@
 import { useResponsive } from 'ahooks'
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
-import { ApiListResponse } from 'apis/api'
+import { ApiListResponse, ApiMeta } from 'apis/api'
 import { getTraderHistoryApi, getTraderTokensStatistic } from 'apis/traderApis'
 import { QueryFilter, RangeFilter } from 'apis/types'
 import { PositionData } from 'entities/trader'
@@ -120,51 +120,49 @@ export default function useQueryClosedPositions({
   const [closedPositions, setClosedPositions] = useState<ApiListResponse<PositionData>>()
   const [isLoadingClosedPositions, setIsLoadingClosedPositions] = useState(false)
 
-  // Disable because bug, fix later
-  // const [enabledReload, setEnabledReload] = useState(false)
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => setEnabledReload(true), 15_000)
-  //   return () => clearTimeout(timeout)
-  // }, [])
+  const [enabledReload, setEnabledReload] = useState(false)
+  useEffect(() => {
+    if (isExpanded) return
+    const timeout = setTimeout(() => setEnabledReload(true), 15_000)
+    return () => clearTimeout(timeout)
+  }, [isExpanded])
   useQuery(
     [QUERY_KEYS.GET_POSITIONS_HISTORY, address, protocol, 'reload'],
     () => {
       return getTraderHistoryApi({
         limit: DEFAULT_LIMIT,
         offset: 0,
-        sort: currentSort,
+        sort: defaultSort,
         protocol,
         queryFilters,
         rangeFilters: rangeFiltersReload,
       })
     },
     {
-      enabled: false,
-      // enabled: enabledReload,
-      // refetchInterval: isExpanded ? undefined : 15_000,
+      enabled: enabledReload && !isExpanded,
+      refetchInterval: isExpanded ? undefined : 15_000,
       retry: 0,
-      // onSuccess: (data) => {
-      // Bug useQuery, not enable but onSuccess is called
-      // if (!enabledReload) return
-      // setClosedPositions((prev) => {
-      //   const oldData = prev?.data ?? []
-      //   const parsedData: PositionData[] = []
-      //   // remove duplicate
-      //   if (data.data.length) {
-      //     const checker = data.data.reduce<Record<string, boolean>>((result, _p) => {
-      //       return { ...result, [_p.id]: true }
-      //     }, {})
-      //     oldData.forEach((_p) => {
-      //       if (checker[_p.id]) delete checker[_p.id]
-      //     })
-      //     data.data.forEach((_p) => {
-      //       if (checker[_p.id]) parsedData.push(_p)
-      //     })
-      //   }
-      //   const newData = [...parsedData, ...(prev?.data ?? [])]
-      //   return { ...(prev ?? {}), meta: prev?.meta ?? ({} as ApiMeta), data: newData }
-      // })
-      // },
+      onSuccess: (data) => {
+        if (!enabledReload || isExpanded) return
+        setClosedPositions((prev) => {
+          const oldData = prev?.data ?? []
+          const parsedData: PositionData[] = []
+          // remove duplicate
+          if (data.data.length) {
+            const checker = data.data.reduce<Record<string, boolean>>((result, _p) => {
+              return { ...result, [_p.id]: true }
+            }, {})
+            oldData.forEach((_p) => {
+              if (checker[_p.id]) delete checker[_p.id]
+            })
+            data.data.forEach((_p) => {
+              if (checker[_p.id]) parsedData.push(_p)
+            })
+          }
+          const newData = [...parsedData, ...(prev?.data ?? [])]
+          return { ...(prev ?? {}), meta: prev?.meta ?? ({} as ApiMeta), data: newData }
+        })
+      },
     }
   )
 

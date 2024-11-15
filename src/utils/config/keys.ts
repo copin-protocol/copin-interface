@@ -144,6 +144,7 @@ export const URL_PARAM_KEYS = {
   RANKING_FILTERS: 'ranking_filters',
   FILTER_TAB: 'filter_tab',
   TRADER_HISTORY_PAGE: 'history_page',
+  TRADER_HISTORY_LIMIT: 'history_limit',
   MY_PROFILE_HISTORY_PAGE: 'my_history_page',
   MY_PROFILE_HISTORY_LIMIT: 'my_history_limit',
   MY_PROFILE_OPENINGS_PAGE: 'my_openings_page',

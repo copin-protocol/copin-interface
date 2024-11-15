@@ -176,7 +176,7 @@ export const renderOrderCollateral = (item: OrderData, defaultToken?: string) =>
         <DeltaText
           color="neutral1"
           type={item.type}
-          delta={item.collateralToken ? item.collateralDeltaInTokenNumber : item.collateralDeltaNumber}
+          delta={item.collateralDeltaNumber ? item.collateralDeltaNumber : item.collateralDeltaInTokenNumber}
           maxDigit={item.collateralToken ? 2 : undefined}
           minDigit={item.collateralToken ? 2 : undefined}
         />

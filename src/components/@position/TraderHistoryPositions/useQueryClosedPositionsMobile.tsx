@@ -1,0 +1,102 @@
+import { useMemo } from 'react'
+import { useQuery } from 'react-query'
+
+import { ApiListResponse } from 'apis/api'
+import { getTraderHistoryApi, getTraderTokensStatistic } from 'apis/traderApis'
+import { PositionData } from 'entities/trader'
+import { useOptionChange } from 'hooks/helpers/useOptionChange'
+import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
+import { TableSortProps } from 'theme/Table/types'
+import { DEFAULT_LIMIT } from 'utils/config/constants'
+import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { ALL_OPTION } from 'utils/config/trades'
+import { getSymbolFromPair, pageToOffset } from 'utils/helpers/transform'
+
+const defaultSort: TableSortProps<PositionData> = {
+  sortBy: 'closeBlockTime',
+  sortType: SortTypeEnum.DESC,
+}
+
+export default function useQueryClosedPositionsMobile({
+  address,
+  protocol,
+}: {
+  address: string
+  protocol: ProtocolEnum
+}) {
+  const { currentPage, changeCurrentPage, currentLimit, changeCurrentLimit } = usePageChangeWithLimit({
+    pageName: URL_PARAM_KEYS.TRADER_HISTORY_PAGE,
+    limitName: URL_PARAM_KEYS.TRADER_HISTORY_LIMIT,
+    defaultLimit: DEFAULT_LIMIT,
+  })
+
+  const { data: tokensStatistic } = useQuery(
+    [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, address],
+    () => getTraderTokensStatistic({ protocol, account: address }),
+    { enabled: !!address && !!protocol }
+  )
+  const tokenOptions = useMemo(() => {
+    if (tokensStatistic?.data?.length) {
+      const statisticSymbolOptions = tokensStatistic.data.map((e) => {
+        const symbol = getSymbolFromPair(e.pair)
+        return {
+          id: symbol,
+          label: symbol,
+          value: symbol,
+        }
+      })
+      return [ALL_OPTION, ...statisticSymbolOptions]
+    }
+    return [ALL_OPTION]
+  }, [tokensStatistic])
+  const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
+    optionName: URL_PARAM_KEYS.CURRENCY,
+    options: tokenOptions,
+    callback: () => {
+      changeCurrentPage(1)
+    },
+  })
+
+  const { data, isFetching: isLoading } = useQuery<ApiListResponse<PositionData>>(
+    [QUERY_KEYS.GET_POSITIONS_HISTORY, address, currentPage, currentLimit, currencyOption?.id, protocol],
+    () => {
+      return getTraderHistoryApi({
+        limit: DEFAULT_LIMIT,
+        offset: pageToOffset(currentPage, DEFAULT_LIMIT),
+        sort: defaultSort,
+        protocol,
+      })
+    },
+    {
+      enabled: !!address,
+      retry: 0,
+      keepPreviousData: true,
+    }
+  )
+
+  return useMemo(
+    () => ({
+      tokenOptions,
+      currencyOption,
+      changeCurrency,
+      currentPage,
+      changeCurrentPage,
+      currentLimit,
+      changeCurrentLimit,
+      closedPositions: data,
+      isLoadingClosed: isLoading,
+    }),
+    [
+      tokenOptions,
+      currencyOption,
+      changeCurrency,
+      currentPage,
+      changeCurrentPage,
+      currentLimit,
+      changeCurrentLimit,
+      data,
+      isLoading,
+    ]
+  )
+}
