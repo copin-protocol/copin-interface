@@ -4,7 +4,6 @@ import { useResponsive } from 'ahooks'
 import BacktestSingleButton from 'components/@backtest/BacktestSingleButton'
 import CopyTraderButton from 'components/@copyTrade/CopyTraderButton'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
-import TradeProtocolAction from 'components/@ui/TradeProtocol'
 import { PositionData, TraderData } from 'entities/trader.d'
 import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
@@ -95,9 +94,9 @@ export default function TraderActionButtons({
             }}
             menu={
               <>
-                <Box height="40px">
-                  <TradeProtocolAction protocol={protocol} />
-                </Box>
+                {/*<Box height="40px">*/}
+                {/*  <TradeProtocolAction protocol={protocol} />*/}
+                {/*</Box>*/}
                 <Box height="40px">
                   <AlertAction account={account} protocol={protocol} />
                 </Box>
