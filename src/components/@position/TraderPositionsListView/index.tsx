@@ -19,6 +19,7 @@ type Props = {
   onClickItem?: (data: PositionData) => void
   hasAccountAddress?: boolean
   isOpening?: boolean
+  sx?: any
 }
 
 export default function TraderPositionListView({

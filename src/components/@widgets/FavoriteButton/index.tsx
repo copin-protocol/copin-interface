@@ -105,6 +105,7 @@ export default function FavoriteButton({
         className={hasFavorite ? '' : 'hiding-btn'}
         icon={<Star weight={hasFavorite ? 'fill' : 'regular'} size={size} />}
         sx={{
+          mb: '4px',
           color: hasFavorite ? activeColor : color,
           '&:hover:not([disabled])': {
             color: hoverColor,

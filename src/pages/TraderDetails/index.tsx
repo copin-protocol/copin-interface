@@ -210,13 +210,7 @@ export function TraderDetailsComponent({
             // onChangeTime={setTimeOption}
           />
         }
-        traderStatsSummary={
-          !!currentTraderData ? (
-            <GeneralStats traderData={currentTraderData} account={address} protocol={protocol} />
-          ) : (
-            <></>
-          )
-        }
+        traderStatsSummary={<GeneralStats traderData={currentTraderData} account={address} protocol={protocol} />}
         traderStats={
           isLoadingTraderData ? (
             <Loading />

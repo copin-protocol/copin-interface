@@ -12,6 +12,7 @@ import { TraderData } from 'entities/trader'
 import { useBacktestCustomizeColumn } from 'hooks/store/useBacktestCustomizeColumns'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { TestInstanceData, useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
+import CopyButton from 'theme/Buttons/CopyButton'
 import ArrowUpRightIcon from 'theme/Icons/ArrowUpRightIcon'
 import { PaginationWithSelect } from 'theme/Pagination'
 import Table from 'theme/Table'
@@ -264,7 +265,19 @@ export const multipleBacktestResultColumns: ColumnData<TableResultData, RequestB
         <Box color="neutral1">
           <AccountCell
             data={item.traderData}
-            additionalComponent={<FavoriteButton address={account} protocol={protocol} size={16} />}
+            additionalComponent={
+              <Flex alignItems="center" sx={{ gap: 2 }}>
+                <CopyButton
+                  type="button"
+                  variant="ghost"
+                  value={account}
+                  size="sm"
+                  sx={{ color: 'neutral3', p: 0 }}
+                  iconSize={14}
+                ></CopyButton>
+                <FavoriteButton address={account} protocol={protocol} size={16} />
+              </Flex>
+            }
           />
         </Box>
       )

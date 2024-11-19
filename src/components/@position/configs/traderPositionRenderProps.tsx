@@ -6,7 +6,7 @@ import { PositionRangeFilterIcon } from 'components/@dailyTrades/PositionRangeFi
 import { PositionStatusFilterTitle } from 'components/@dailyTrades/PositionStatusFilterTitle'
 import { POSITION_RANGE_KEYS } from 'components/@dailyTrades/configs'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
-import { LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
+import { DualTimeText, LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Market from 'components/@ui/MarketGroup/Market'
 import TraderAddress from 'components/@ui/TraderAddress'
 import ValueOrToken from 'components/@ui/ValueOrToken'
@@ -119,6 +119,30 @@ const openTimeShortColumn: ColumnData<PositionData> = {
   render: (item) => (
     <Type.Caption color="neutral3">
       <RelativeShortTimeText date={item.openBlockTime} />
+    </Type.Caption>
+  ),
+}
+const openDualTimeColumn: ColumnData<PositionData> = {
+  title: 'Open Time',
+  dataIndex: 'openBlockTime',
+  key: 'openBlockTime',
+  sortBy: 'openBlockTime',
+  style: { minWidth: '100px' },
+  render: (item) => (
+    <Type.Caption color="neutral1">
+      <DualTimeText date={item.openBlockTime} />
+    </Type.Caption>
+  ),
+}
+const closeDualTimeColumn: ColumnData<PositionData> = {
+  title: 'Close Time',
+  dataIndex: 'closeBlockTime',
+  key: 'closeBlockTime',
+  sortBy: 'closeBlockTime',
+  style: { minWidth: '100px' },
+  render: (item) => (
+    <Type.Caption color="neutral1">
+      <DualTimeText date={item.closeBlockTime} />
     </Type.Caption>
   ),
 }
@@ -538,6 +562,30 @@ export const openingColumns: ColumnData<PositionData>[] = [
   entryColumn,
   sizeOpeningColumn,
   pnlOpeningColumn,
+  actionColumn,
+]
+
+export const minimumOpeningColums: ColumnData<PositionData>[] = [entryColumn, sizeOpeningColumn, pnlOpeningColumn]
+
+export const drawerHistoryColumns: ColumnData<PositionData>[] = [
+  { ...openTimeColumn, style: { flex: 1.5 } },
+  { ...closeTimeColumn, style: { flex: 1.5, pl: 2 } },
+  { ...entryColumn, style: { flex: 1.5, pl: 2 } },
+  { ...sizeColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...leverageColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...collateralColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...avgDurationColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...pnlColumnFull, style: { flex: 1.3, textAlign: 'right' } },
+  { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', flex: '0 0 40px' } },
+]
+
+export const drawerOpeningColumns: ColumnData<PositionData>[] = [
+  openTimeColumn,
+  { ...entryColumn, style: { minWidth: 150 } },
+  { ...sizeOpeningColumn, style: { minWidth: 200 } },
+  collateralColumn,
+  avgDurationColumn,
+  { ...pnlOpeningColumn, style: { minWidth: 100, textAlign: 'right' } },
   actionColumn,
 ]
 

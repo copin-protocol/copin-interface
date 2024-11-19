@@ -1,6 +1,6 @@
 import { ArrowsIn, ArrowsOutSimple, Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 
@@ -8,7 +8,11 @@ import { getOpeningPositionsApi } from 'apis/positionApis'
 import emptyBg from 'assets/images/opening_empty_bg.png'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import TraderPositionListView from 'components/@position/TraderPositionsListView'
-import { fullOpeningColumns, openingColumns } from 'components/@position/configs/traderPositionRenderProps'
+import {
+  drawerOpeningColumns,
+  fullOpeningColumns,
+  openingColumns,
+} from 'components/@position/configs/traderPositionRenderProps'
 import Divider from 'components/@ui/Divider'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { PositionData } from 'entities/trader'
@@ -37,11 +41,13 @@ export default function TraderOpeningPositionsTable({
   address,
   toggleExpand,
   isExpanded,
+  isDrawer,
 }: {
   address: string
   protocol: ProtocolEnum
   toggleExpand?: () => void
   isExpanded?: boolean
+  isDrawer?: boolean
 }) {
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -125,11 +131,11 @@ export default function TraderOpeningPositionsTable({
   return (
     <Box
       className="opening"
-      display={['block', 'block', 'block', 'flex']}
+      display={['block', 'block', 'block', isDrawer ? 'block' : 'flex']}
       flexDirection="column"
       height="100%"
       sx={{
-        backgroundColor: totalOpening ? 'neutral5' : 'neutral7',
+        backgroundColor: !isDrawer && totalOpening ? 'neutral5' : 'neutral7',
         ...(totalOpening || isLoading ? {} : emptyCss),
         pb: [0, 12],
       }}
@@ -163,9 +169,16 @@ export default function TraderOpeningPositionsTable({
       </Flex>
       {isLoading && <Loading />}
       {!data?.length && !isLoading && (
-        <Flex p={3} flexDirection="column" width="100%" height={180} justifyContent="center" alignItems="center">
+        <Flex
+          p={3}
+          flexDirection="column"
+          width="100%"
+          height={isDrawer ? 60 : 180}
+          justifyContent="center"
+          alignItems="center"
+        >
           <Type.CaptionBold display="block">This trader’s opening position is empty</Type.CaptionBold>
-          <Type.Caption mt={1} color="neutral3" display="block">
+          <Type.Caption mt={1} color="neutral3" textAlign="center" display="block">
             Once the trader starts a new position, you’ll see it listed here
           </Type.Caption>
         </Flex>
@@ -174,12 +187,12 @@ export default function TraderOpeningPositionsTable({
         <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
           {sm ? (
             <Table
-              restrictHeight={lg}
+              restrictHeight={!isDrawer && lg}
               wrapperSx={{
                 minWidth: 500,
               }}
               data={tableData?.data}
-              columns={xl && isExpanded ? fullOpeningColumns : openingColumns}
+              columns={isDrawer ? drawerOpeningColumns : xl && isExpanded ? fullOpeningColumns : openingColumns}
               currentSort={currentSort}
               changeCurrentSort={changeCurrentSortExpanded}
               isLoading={isLoading}

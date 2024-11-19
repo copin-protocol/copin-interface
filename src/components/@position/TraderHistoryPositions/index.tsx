@@ -33,7 +33,7 @@ import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import TraderPositionListView from '../TraderPositionsListView'
-import { fullHistoryColumns, historyColumns } from '../configs/traderPositionRenderProps'
+import { drawerHistoryColumns, fullHistoryColumns, historyColumns } from '../configs/traderPositionRenderProps'
 import useQueryClosedPositions from './useQueryClosedPositions'
 import useQueryClosedPositionsMobile from './useQueryClosedPositionsMobile'
 
@@ -53,11 +53,14 @@ export interface HistoryTableProps {
   address: string
   protocol: ProtocolEnum
   isExpanded: boolean
-  toggleExpand: () => void
+  isDrawer?: boolean
+  hasTitle?: boolean
+  toggleExpand?: () => void
+  backgroundColor?: string
 }
 
 export default function TraderHistoryPositions(props: HistoryTableProps) {
-  const { address, protocol, isExpanded, toggleExpand } = props
+  const { address, protocol, isDrawer, isExpanded, toggleExpand } = props
   const { myProfile } = useMyProfile()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [showChart, setShowChart] = useState(false)
@@ -79,7 +82,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
     handleFetchClosedPositions,
   } = useQueryClosedPositions({ address, protocol, isExpanded })
 
-  const tableSettings = xl && isExpanded ? fullHistoryColumns : historyColumns
+  const tableSettings = isDrawer ? drawerHistoryColumns : xl && isExpanded ? fullHistoryColumns : historyColumns
   const data = closedPositions?.data
   const dataMeta = closedPositions?.meta
   const [expanding, setExpanding] = useState(false)
@@ -89,7 +92,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
       setExpanding(false)
     }, 1000)
     resetSort()
-    toggleExpand()
+    toggleExpand?.()
   }
   //
 
@@ -218,7 +221,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
             data-tooltip-id="history_table_heatmap"
             data-tooltip-offset={8}
           />
-          {sm && (
+          {!isDrawer && sm && (
             <>
               <ButtonWithIcon
                 icon={
@@ -368,7 +371,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
 // })
 
 export function TraderHistoryPositionsListView(props: HistoryTableProps) {
-  const { address, protocol } = props
+  const { address, protocol, backgroundColor = 'neutral5' } = props
   const { myProfile } = useMyProfile()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [showChart, setShowChart] = useState(false)
@@ -454,7 +457,9 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
   return (
     <Flex flexDirection="column" height="100%">
       <Flex pt={16} px={12} pb={12} alignItems="center">
-        <Box flex="1" />
+        <Box flex="1" sx={{ '& > *': { pb: 0 } }}>
+          {props.hasTitle ? <SectionTitle icon={<ClockCounterClockwise size={24} />} title="History" /> : <></>}
+        </Box>
         <Flex
           sx={{
             alignItems: 'center',
@@ -506,7 +511,7 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
           <ActivityHeatmap account={data[0].account} protocol={data[0].protocol} />
         </Box>
       )} */}
-      <Box flex="1 0 0" overflowX="auto" overflowY="hidden" className="test" bg="neutral5">
+      <Box flex="1 0 0" overflowX="auto" overflowY="hidden" className="test" bg={backgroundColor}>
         <TraderPositionListView
           data={data}
           isLoading={isLoadingClosedPositions}

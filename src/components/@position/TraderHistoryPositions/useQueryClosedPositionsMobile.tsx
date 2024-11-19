@@ -62,8 +62,8 @@ export default function useQueryClosedPositionsMobile({
     [QUERY_KEYS.GET_POSITIONS_HISTORY, address, currentPage, currentLimit, currencyOption?.id, protocol],
     () => {
       return getTraderHistoryApi({
-        limit: DEFAULT_LIMIT,
-        offset: pageToOffset(currentPage, DEFAULT_LIMIT),
+        limit: currentLimit,
+        offset: pageToOffset(currentPage, currentLimit),
         sort: defaultSort,
         protocol,
       })

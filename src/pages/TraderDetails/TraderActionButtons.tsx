@@ -1,5 +1,7 @@
 import { CirclesThreePlus, UniteSquare } from '@phosphor-icons/react'
+import { SystemStyleObject } from '@styled-system/css'
 import { useResponsive } from 'ahooks'
+import { GridProps } from 'styled-system'
 
 import BacktestSingleButton from 'components/@backtest/BacktestSingleButton'
 import CopyTraderButton from 'components/@copyTrade/CopyTraderButton'
@@ -26,6 +28,8 @@ export default function TraderActionButtons({
   onCopyActionSuccess,
   timeOption,
   onChangeTime,
+  isDrawer,
+  sx,
 }: {
   traderData: TraderData | undefined
   timeOption: TimeFilterProps
@@ -33,6 +37,8 @@ export default function TraderActionButtons({
   account: string
   protocol: ProtocolEnum
   onCopyActionSuccess: () => void
+  isDrawer?: boolean
+  sx?: SystemStyleObject & GridProps
 }) {
   const { lg } = useResponsive()
   return (
@@ -50,11 +56,14 @@ export default function TraderActionButtons({
             top: [undefined, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71],
             zIndex: 10,
             bg: ['neutral7', 'neutral7', 'neutral7', undefined],
+            ...sx,
           }}
         >
           {/* <TradeProtocolAction protocol={protocol} /> */}
           <AlertAction protocol={protocol} account={account} />
-          <ExpandTraderRankingButton traderData={traderData} timeOption={timeOption} onChangeTime={onChangeTime} />
+          {!isDrawer && (
+            <ExpandTraderRankingButton traderData={traderData} timeOption={timeOption} onChangeTime={onChangeTime} />
+          )}
           <BacktestSingleButton key={protocol + account} protocol={protocol} account={account} />
           <CopyTraderButton
             protocol={protocol}

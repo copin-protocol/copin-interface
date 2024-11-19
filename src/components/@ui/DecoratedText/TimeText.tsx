@@ -90,8 +90,8 @@ export const RelativeShortTimeText = ({ date, suffix }: { date: string | undefin
 export const DualTimeText = ({ date, ...props }: { date: string | undefined } & TextProps) => {
   return (
     <Flex flexDirection="column">
-      <Type.Caption {...props}>{`${formatLocalRelativeDate(date ?? '')}`}</Type.Caption>
-      <Type.Caption {...props}>{`${formatLocalDate(date ?? '', DAYJS_FULL_DATE_FORMAT)}`}</Type.Caption>
+      <Type.Caption {...props}>{`${formatLocalDate(date ?? '', DATE_FORMAT)}`}</Type.Caption>
+      <Type.Caption color="neutral3">{`${formatLocalDate(date ?? '', TIME_FORMAT)}`}</Type.Caption>
     </Flex>
   )
 }

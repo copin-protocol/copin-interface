@@ -44,7 +44,7 @@ export function ProtocolFilter({ menuSx = {}, placement = 'bottomRight', ...prop
         setVisible={setVisible}
         menuDismissible
       >
-        {props.selectedProtocols.length === 0 ? (
+        {props.selectedProtocols?.length === 0 ? (
           <Trans>0 selected</Trans>
         ) : (
           <ProtocolGroup protocols={props.selectedProtocols} size={20} sx={{ gap: 1 }} />
