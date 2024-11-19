@@ -5,6 +5,7 @@ import LabelEPnL from 'components/@ui/LabelEPnL'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { ColumnData } from 'theme/Table/types'
 import { Box, IconBox, Type } from 'theme/base'
+import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 
 import { renderEntry, renderPnL, renderSource, renderTrader } from '../configs/copyPositionRenderProps'
 import { ExternalSourceCopyPositions } from '../types'
@@ -40,7 +41,11 @@ export const simpleOpeningColumns: ColumnData<CopyPositionData, ExternalSourceCo
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '80px', textAlign: 'right' },
-    render: (item, _, externalSource) => renderPnL(item, externalSource?.prices),
+    render: (item, _, externalSource) =>
+      renderPnL(
+        item,
+        GAINS_TRADE_PROTOCOLS.includes(item.protocol) ? externalSource?.gainsPrices : externalSource?.prices
+      ),
   },
   {
     title: '',
@@ -81,7 +86,11 @@ export const openingColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '80px', textAlign: 'right' },
-    render: (item, _, externalSource) => renderPnL(item, externalSource?.prices),
+    render: (item, _, externalSource) =>
+      renderPnL(
+        item,
+        GAINS_TRADE_PROTOCOLS.includes(item.protocol) ? externalSource?.gainsPrices : externalSource?.prices
+      ),
   },
   {
     title: <Box pr={1}>Source</Box>,

@@ -20,7 +20,7 @@ import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { FONT_FAMILY } from 'utils/config/constants'
+import { FONT_FAMILY, GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -48,7 +48,8 @@ export default function CopyChartProfit({
   closeBlockTime: number
   setCrossMovePnL: (value: number | undefined) => void
 }) {
-  const { prices } = useGetUsdPrices()
+  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
+  const prices = GAINS_TRADE_PROTOCOLS.includes(position.protocol) ? gainsPrices : pythPrices
   const { sm } = useResponsive()
   const [markerId, setMarkerId] = useState<string | undefined>()
   const tokensSupport = getTokenTradeSupport(position.protocol)

@@ -16,23 +16,24 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { renderCopyEntry } from 'components/@widgets/renderProps'
 import { CopyPositionData } from 'entities/copyTrade'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { CopyTradePlatformEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
+import { CopyTradePlatformEnum, PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
-import { GNS_PAIRS } from 'utils/config/tokenTradeGns'
 import { getTokenTradeSupport } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
 import { normalizeExchangePrice } from 'utils/helpers/transform'
 
-import ClosePositionGnsV8 from './ClosePositionGnsV8'
+import CloseOnchainPosition from './CloseOnchainPosition'
 import ClosePositionSnxV2 from './ClosePositionSnxV2'
 import CopyPositionHistories from './CopyPositionHistories'
 import ListCopyOrderTable from './ListCopyOrderTable'
@@ -40,7 +41,8 @@ import UnlinkPosition from './UnlinkPosition'
 
 export default function CopyPositionDetails({ id }: { id: string | undefined }) {
   const [isTradingChart, setIsTradingChart] = useState<boolean | undefined>()
-  const { prices } = useGetUsdPrices()
+  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
+  const refetchQueries = useRefetchQueries()
   const {
     data,
     isLoading,
@@ -109,6 +111,7 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
     return copyTradeOrders.filter((e) => e.isIncrease).reduce((sum, current) => sum + current.collateral, 0)
   }, [copyTradeOrders, data])
   const symbol = data?.protocol ? getTokenTradeSupport(data?.protocol)?.[data?.indexToken]?.symbol : undefined
+  const prices = data?.protocol && GAINS_TRADE_PROTOCOLS.includes(data?.protocol) ? gainsPrices : pythPrices
   const pnl = useMemo(
     () =>
       data && symbol
@@ -148,6 +151,7 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
   const onForceReload = () => {
     reloadPosition()
     reloadOrders()
+    refetchQueries([QUERY_KEYS.GET_MY_COPY_POSITIONS, QUERY_KEYS.GET_MY_COPY_POSITION_DETAIL])
   }
 
   return (
@@ -178,18 +182,14 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
               data.status === PositionStatusEnum.OPEN &&
               data.positionIndex != null && (
                 <Box mr={4}>
-                  <ClosePositionGnsV8
+                  <CloseOnchainPosition
                     position={{
-                      index: data.positionIndex,
-                      indexToken:
-                        Object.entries(GNS_PAIRS).find(
-                          ([, symbol]) => getTokenTradeSupport(data.protocol)?.[data.indexToken]?.symbol === symbol
-                        )?.[0] || '',
+                      copyPositionId: data.id,
+                      indexToken: data.indexToken,
                       isLong: data.isLong,
                       averagePrice: data.entryPrice,
-                      protocol: ProtocolEnum.GNS,
+                      protocol: data.protocol,
                     }}
-                    copyWalletId={copyTradeDetails.copyWalletId}
                     onSuccess={onForceReload}
                   />
                 </Box>

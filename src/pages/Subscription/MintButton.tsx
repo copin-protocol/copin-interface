@@ -55,9 +55,11 @@ export default function MintButton({
   bgType?: '1' | '2'
   disabled?: boolean
 }) {
-  const { isAuthenticated, account, connect } = useAuthContext()
+  const { isAuthenticated, account, connect, profile, handleSwitchAccount } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
   const [openModal, setOpenModal] = useState(false)
+  const isInvalidAccount = profile?.username?.toLowerCase() !== account?.address?.toLowerCase()
+
   const handleOpenModal = () => {
     if (!isAuthenticated) {
       handleClickLogin()
@@ -65,6 +67,10 @@ export default function MintButton({
     }
     if (!account) {
       connect?.({})
+      return
+    }
+    if (isInvalidAccount) {
+      handleSwitchAccount()
       return
     }
     setOpenModal(true)

@@ -1,7 +1,18 @@
+import { SystemStyleObject } from '@styled-system/css'
+import { GridProps } from 'styled-system'
+
 import { Flex } from 'theme/base'
 import { generateAvatar } from 'utils/helpers/generateAvatar'
 
-const AddressAvatar = ({ address, size = 48 }: { address: string; size?: number }) => {
+const AddressAvatar = ({
+  address,
+  size = 48,
+  sx,
+}: {
+  address: string
+  size?: number
+  sx?: SystemStyleObject & GridProps
+}) => {
   if (!address) return <></>
   // const [isError, setIsError] = useState(false)
   // const text = address.slice(2, address.length).match(/.{1,6}/g) ?? [
@@ -27,6 +38,7 @@ const AddressAvatar = ({ address, size = 48 }: { address: string; size?: number 
         overflow: 'hidden',
         background: gradient,
         flexShrink: 0,
+        ...sx,
       }}
       alignItems="center"
       justifyContent="center"

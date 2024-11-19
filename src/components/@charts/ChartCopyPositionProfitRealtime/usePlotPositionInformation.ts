@@ -142,11 +142,13 @@ export function usePlotPositionInformation({ chart, position, orders }: Props) {
     } catch (e) {}
 
     return () => {
-      chart?.onChartReady(() => {
-        line?.remove()
-        slLine?.remove()
-        tpLine?.remove()
-      })
+      try {
+        chart?.onChartReady(() => {
+          line?.remove()
+          slLine?.remove()
+          tpLine?.remove()
+        })
+      } catch {}
     }
   }, [
     chart,

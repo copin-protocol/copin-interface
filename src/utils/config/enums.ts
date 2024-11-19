@@ -378,3 +378,11 @@ export enum ReferralActivityTypeEnum {
   COMMISSION = 'COMMISSION',
   INVITE = 'INVITE',
 }
+
+export enum ActionTypeEnum {
+  SET_SLTP = 'SET_SLTP',
+}
+
+export const ACTION_NAMES = {
+  [ActionTypeEnum.SET_SLTP]: 'Set SL / TP',
+}

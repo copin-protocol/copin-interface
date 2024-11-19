@@ -1,11 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
+import { useResponsive } from 'ahooks'
 import React, { Fragment, useMemo, useState } from 'react'
 import { GridProps } from 'styled-system'
 
 import Divider from 'components/@ui/Divider'
 import InputSearchText from 'components/@ui/InputSearchText'
 import TraderAddress from 'components/@ui/TraderAddress'
+import { CopyTradeData } from 'entities/copyTrade'
 import useDebounce from 'hooks/helpers/useDebounce'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
@@ -15,10 +17,57 @@ import { Box, Flex, Grid, Type } from 'theme/base'
 import { SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 
+import { getTradersByProtocolFromCopyTrade } from './helpers'
+
+export default function SelectTradersCopied({
+  allTraders,
+  selectedTraders,
+  handleToggleTrader,
+  handleSelectAllTraders,
+  allCopyTrades,
+  buttonSx,
+}: {
+  allTraders: string[] // to check two request has same addresses
+  selectedTraders: string[]
+  allCopyTrades: CopyTradeData[] | undefined
+  handleToggleTrader: (key: string) => void
+  handleSelectAllTraders: (isSelectedAll: boolean) => void
+  buttonSx?: any
+}) {
+  const tradersByProtocol = getTradersByProtocolFromCopyTrade(allCopyTrades, allTraders)
+  const { sm } = useResponsive()
+
+  if (!tradersByProtocol || !allTraders.length) return <></>
+
+  let activeTraderAddress: string[] = []
+  let deletedTraderAddresses: string[] = []
+  Object.entries(tradersByProtocol).forEach(([_, traderData]) => {
+    traderData.forEach((data) => {
+      if (data.status === 'copying') activeTraderAddress.push(data.address)
+      if (data.status === 'deleted') deletedTraderAddresses.push(data.address)
+    })
+  })
+  activeTraderAddress = Array.from(new Set(activeTraderAddress))
+  deletedTraderAddresses = Array.from(new Set(deletedTraderAddresses))
+
+  return (
+    <SelectTradersCopiedDropdown
+      menuSx={sm ? undefined : { transform: 'translateX(10px)' }}
+      allTraders={allTraders}
+      selectedTraders={selectedTraders}
+      activeTraderAddresses={activeTraderAddress}
+      deletedTraderAddresses={deletedTraderAddresses}
+      handleSelectAllTraders={handleSelectAllTraders}
+      handleToggleTrader={handleToggleTrader}
+      buttonSx={buttonSx}
+    />
+  )
+}
+
 export type TradersByProtocolValuesData = { address: string; status: 'deleted' | 'copying' }
 export type TradersByProtocolData = Record<ProtocolEnum, TradersByProtocolValuesData[]>
 
-export default function SelectTradersDropdown({
+export function SelectTradersCopiedDropdown({
   allTraders,
   selectedTraders,
   activeTraderAddresses,

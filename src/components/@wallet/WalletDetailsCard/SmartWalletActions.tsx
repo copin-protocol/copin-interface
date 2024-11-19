@@ -1,16 +1,10 @@
 import { Trans } from '@lingui/macro'
-import {
-  ArrowCircleUpRight,
-  ClockCounterClockwise,
-  DotsThreeOutlineVertical,
-  Gift,
-  UserCircle,
-} from '@phosphor-icons/react'
-import React, { useState } from 'react'
+import { ArrowCircleUpRight, ClockCounterClockwise, DotsThreeOutlineVertical, UserCircle } from '@phosphor-icons/react'
+import { useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
+import ActionItem from 'components/@widgets/ActionItem'
 import { CopyWalletData } from 'entities/copyWallet'
-import ActionItem from 'pages/MyProfile/MyCopies/ActionItem'
 import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
@@ -24,9 +18,11 @@ import CopyWalletHistoryDrawer from './WalletHistoryDrawer'
 // import OnchainPositionsDrawer from './OnchainPositionsDrawer'
 
 const SmartWalletActions = ({
+  isOnlyAction = false,
   data,
   setFundingModal,
 }: {
+  isOnlyAction?: boolean
   data: CopyWalletData
   setFundingModal: (tab: FundTab) => void
 }) => {
@@ -44,29 +40,31 @@ const SmartWalletActions = ({
         }}
         menu={
           <>
-            <ActionItem
-              title={<Trans>Copy Management</Trans>}
-              icon={<UserCircle size={18} />}
-              onSelect={() => {
-                window.open(
-                  `${ROUTES.MY_MANAGEMENT.path}?${URL_PARAM_KEYS.MY_MANAGEMENT_WALLET_ID}=${data.id}`,
-                  '_blank'
-                )
-              }}
-            />
+            {!isOnlyAction && (
+              <ActionItem
+                title={<Trans>DCP Management</Trans>}
+                icon={<UserCircle size={18} />}
+                onSelect={() => {
+                  window.open(
+                    `${ROUTES.USER_DCP_MANAGEMENT.path}?${URL_PARAM_KEYS.MY_MANAGEMENT_WALLET_ID}=${data.id}`,
+                    '_blank'
+                  )
+                }}
+              />
+            )}
             <ActionItem
               title={<Trans>History</Trans>}
               icon={<ClockCounterClockwise size={18} />}
               onSelect={() => setOpeningHistoryDrawer(true)}
             />
             <Divider />
-            {data.exchange === CopyTradePlatformEnum.GNS_V8 && (
-              <ActionItem
-                title={<Trans>Claim Rewards</Trans>}
-                icon={<Gift size={18} />}
-                onSelect={() => setOpeningGainsRewardModal(true)}
-              />
-            )}
+            {/*{data.exchange === CopyTradePlatformEnum.GNS_V8 && (*/}
+            {/*  <ActionItem*/}
+            {/*    title={<Trans>Claim Rewards</Trans>}*/}
+            {/*    icon={<Gift size={18} />}*/}
+            {/*    onSelect={() => setOpeningGainsRewardModal(true)}*/}
+            {/*  />*/}
+            {/*)}*/}
             <ActionItem
               title={<Trans>Withdraw</Trans>}
               icon={<ArrowCircleUpRight size={18} />}

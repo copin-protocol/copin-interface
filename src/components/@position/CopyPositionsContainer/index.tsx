@@ -28,7 +28,7 @@ export default function CopyPositionsContainer({
 }) {
   const { copyWallets } = useCopyWalletContext()
   const { allCopyTrades: copyTrades } = useAllCopyTrades()
-  const { prices } = useGetUsdPrices()
+  const { prices, gainsPrices } = useGetUsdPrices()
   const [openSourceDrawer, setOpenSourceDrawer] = useState(false)
   const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
   const [openCloseModal, setOpenCloseModal] = useState(false)
@@ -115,6 +115,7 @@ export default function CopyPositionsContainer({
           copyWallets,
           copyTrades,
           prices,
+          gainsPrices,
           submitting,
           currentId: currentCopyPosition?.id,
           onViewSource: handleSelectSourceItem,

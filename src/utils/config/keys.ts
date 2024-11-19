@@ -115,6 +115,12 @@ export const STORAGE_KEYS = {
   TABS_OPEN: 'tabs-open',
   SUBSCRIPTION_LAST_CHECK: 'subscription-last-check',
   EVENT_NOTIFICATION_LAST_CHECK: 'event-notification-last-check',
+  USER_COPY_WALLET: 'user_copy_wallet',
+  USER_COPY_WALLET_DCP: 'user_copy_wallet_dcp',
+  USER_COPY_TRADERS_DCP: 'user_copy_traders_dcp',
+  USER_COPY_WALLET_CEX: 'user_copy_wallet_cex',
+  USER_COPY_TRADERS_CEX: 'user_copy_traders_cex',
+  USER_DCP_MANAGEMENT_EXPANDED: 'dcp_management_expanded',
 }
 
 export const URL_PARAM_KEYS = {
@@ -138,6 +144,7 @@ export const URL_PARAM_KEYS = {
   RANKING_FILTERS: 'ranking_filters',
   FILTER_TAB: 'filter_tab',
   TRADER_HISTORY_PAGE: 'history_page',
+  TRADER_HISTORY_LIMIT: 'history_limit',
   MY_PROFILE_HISTORY_PAGE: 'my_history_page',
   MY_PROFILE_HISTORY_LIMIT: 'my_history_limit',
   MY_PROFILE_OPENINGS_PAGE: 'my_openings_page',

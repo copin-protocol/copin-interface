@@ -28,10 +28,12 @@ export function useModifyMarginMarker({ chart, orders }: Props) {
       .filter(Boolean)
 
     return () => {
-      chart?.onChartReady(() => {
-        orderLines.current
-        orderLines.current?.forEach((line) => line && activeChart.removeEntity(line))
-      })
+      try {
+        chart?.onChartReady(() => {
+          orderLines.current
+          orderLines.current?.forEach((line) => line && activeChart.removeEntity(line))
+        })
+      } catch {}
     }
   }, [chart, orders])
 }

@@ -682,3 +682,14 @@ export function parseColorByValue(value?: number) {
   if (!value) return 'neutral1'
   return value > 0 ? 'green1' : value < 0 ? 'red2' : 'neutral1'
 }
+
+// String like '1' will parse to 1
+export function parseStorageData<T>({ storageKey, storage }: { storageKey: string; storage: Storage }) {
+  const storedString = storage.getItem(storageKey)
+  if (storedString == null) return null
+  try {
+    return JSON.parse(storedString) as T
+  } catch {
+    return null
+  }
+}

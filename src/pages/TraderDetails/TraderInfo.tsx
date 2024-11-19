@@ -17,6 +17,7 @@ import ROUTES from 'utils/config/routes'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten } from 'utils/helpers/format'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 
 import ShareProfile from './ShareProfile'
@@ -42,12 +43,23 @@ const TraderInfo = ({
   return (
     <Box px={3} py={2}>
       <Flex sx={{ gap: 2, alignItems: 'center' }}>
-        <AddressAvatar address={address} size={40} />
+        <Box
+          as={Link}
+          to={generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } })}
+          onClick={(e: any) => e.stopPropagation()}
+        >
+          <AddressAvatar address={address} size={40} />
+        </Box>
         <Box>
           <Flex mb={{ _: 1, sm: 0 }} alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
-            <Type.LargeBold lineHeight="20px" textAlign="left" fontSize={['16px', '18px']}>
-              {addressShorten(address, 3, 5)}
-            </Type.LargeBold>
+            <Box
+              as={Link}
+              to={generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } })}
+            >
+              <Type.LargeBold color="neutral1" lineHeight="20px" textAlign="left" fontSize={['16px', '18px']}>
+                {addressShorten(address, 3, 5)}
+              </Type.LargeBold>
+            </Box>
             <FavoriteButton address={address} protocol={protocol} size={16} />
             {isCopying && (
               <Box>

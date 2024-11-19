@@ -22,12 +22,13 @@ export default function CopyOpeningPositions({
   tableProps?: Partial<ComponentProps<typeof CopyPositionsTableView>>
   onClosePositionSuccess: () => void
 }) {
-  const { prices } = useGetUsdPrices()
+  const { prices, gainsPrices } = useGetUsdPrices()
 
   const title = <Trans>Opening Positions</Trans>
 
   const externalSource: ExternalSourceCopyPositions = {
     prices,
+    gainsPrices,
   }
 
   return (

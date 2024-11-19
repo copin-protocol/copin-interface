@@ -8,6 +8,7 @@ import ReverseTag from 'components/@ui/ReverseTag'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
+import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
 
 import CopyPositionsContainer from '../CopyPositionsContainer'
@@ -91,7 +92,15 @@ export function ListForm({
               <ListHistoryRow label={<Trans>Entry</Trans>} value={renderEntry(positionData)} />
               <ListHistoryRow label={<Trans>Size</Trans>} value={renderSizeMobile(positionData)} />
               {positionData.status === PositionStatusEnum.OPEN ? (
-                <ListHistoryRow label={<LabelEPnL />} value={renderPnL(positionData, externalSource?.prices)} />
+                <ListHistoryRow
+                  label={<LabelEPnL />}
+                  value={renderPnL(
+                    positionData,
+                    GAINS_TRADE_PROTOCOLS.includes(positionData.protocol)
+                      ? externalSource?.gainsPrices
+                      : externalSource?.prices
+                  )}
+                />
               ) : (
                 <Flex sx={{ flexDirection: 'column', gap: 2 }}>
                   <ListHistoryRow label={<Trans>PnL w. Fees</Trans>} value={renderValueWithColor(positionData.pnl)} />

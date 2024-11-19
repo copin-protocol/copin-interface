@@ -4,8 +4,8 @@ import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getTraderExchangeStatistic, getTraderStatisticApi } from 'apis/traderApis'
-import TraderHistoryPositions from 'components/@position/TraderHistoryPositions'
-import TraderOpeningPositions from 'components/@position/TraderOpeningPositions'
+import TraderHistoryPositions, { TraderHistoryPositionsListView } from 'components/@position/TraderHistoryPositions'
+import TraderOpeningPositions, { TraderOpeningPositionsListView } from 'components/@position/TraderOpeningPositions'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
 import NotFound from 'components/@ui/NotFound'
@@ -143,7 +143,7 @@ export function TraderDetailsComponent({
     }
   }, [address, protocol, isLastViewed])
 
-  const { lg, xl } = useResponsive()
+  const { sm, lg, xl } = useResponsive()
 
   const Layout = useMemo(() => {
     let layout = MobileLayout
@@ -210,13 +210,7 @@ export function TraderDetailsComponent({
             // onChangeTime={setTimeOption}
           />
         }
-        traderStatsSummary={
-          !!currentTraderData ? (
-            <GeneralStats traderData={currentTraderData} account={address} protocol={protocol} />
-          ) : (
-            <></>
-          )
-        }
+        traderStatsSummary={<GeneralStats traderData={currentTraderData} account={address} protocol={protocol} />}
         traderStats={
           isLoadingTraderData ? (
             <Loading />
@@ -241,20 +235,33 @@ export function TraderDetailsComponent({
         }
         heatmap={<div></div>}
         openingPositions={
-          <TraderOpeningPositions
-            address={address}
-            protocol={protocol}
-            isExpanded={openingPositionFullExpanded}
-            toggleExpand={handleOpeningPositionsExpand}
-          />
+          sm ? (
+            <TraderOpeningPositions
+              address={address}
+              protocol={protocol}
+              isExpanded={openingPositionFullExpanded}
+              toggleExpand={handleOpeningPositionsExpand}
+            />
+          ) : (
+            <TraderOpeningPositionsListView address={address} protocol={protocol} />
+          )
         }
         closedPositions={
-          <TraderHistoryPositions
-            address={address}
-            protocol={protocol}
-            isExpanded={positionFullExpanded}
-            toggleExpand={handlePositionsExpand}
-          />
+          sm ? (
+            <TraderHistoryPositions
+              address={address}
+              protocol={protocol}
+              isExpanded={positionFullExpanded}
+              toggleExpand={handlePositionsExpand}
+            />
+          ) : (
+            <TraderHistoryPositionsListView
+              address={address}
+              protocol={protocol}
+              isExpanded={positionFullExpanded}
+              toggleExpand={handlePositionsExpand}
+            />
+          )
         }
         openingPositionFullExpanded={openingPositionFullExpanded}
         positionFullExpanded={positionFullExpanded}

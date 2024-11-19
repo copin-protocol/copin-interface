@@ -79,9 +79,11 @@ export function usePlotPositionInformation({ chart, position }: Props) {
     } catch (e) {}
 
     return () => {
-      chart?.onChartReady(() => {
-        line?.remove()
-      })
+      try {
+        chart?.onChartReady(() => {
+          line?.remove()
+        })
+      } catch {}
     }
   }, [chart, entry, position?.isLong, side, size, symbol])
 

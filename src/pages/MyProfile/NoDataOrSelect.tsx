@@ -45,11 +45,11 @@ export default function NoDataOrSelect({
     <Flex
       sx={{ width: '100%', height: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
     >
-      <Image src={config.image} sx={{ height: 88 }} />
-      <Type.CaptionBold mt={20} mb={1}>
+      <Image src={config.image} sx={{ height: 48 }} />
+      <Type.CaptionBold textAlign="center" mt={20} mb={1}>
         {config.title}
       </Type.CaptionBold>
-      <Type.Caption>{config.content}</Type.Caption>
+      <Type.Caption textAlign="center">{config.content}</Type.Caption>
       {actionButton}
     </Flex>
   )

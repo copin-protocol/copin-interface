@@ -179,11 +179,15 @@ export async function getOpeningPositionsApi({
   account,
   sortBy,
   sortType,
+  limit,
+  offset,
 }: {
   protocol: ProtocolEnum
   account: string
   sortBy?: string
   sortType?: string
+  limit?: number
+  offset?: number
 }) {
   const params: Record<string, any> = {}
   if (!!sortBy && !!sortType) {
@@ -197,6 +201,12 @@ export async function getOpeningPositionsApi({
         params.sortBy = 'realisedPnl'
         break
     }
+  }
+  if (limit != null) {
+    params.limit = limit
+  }
+  if (offset != null) {
+    params.offset = offset
   }
   return requester.get(`${protocol}/${SERVICE}/opening/${account}`, { params }).then((res: any) =>
     (res.data as ResponsePositionData[])?.map((p) => {

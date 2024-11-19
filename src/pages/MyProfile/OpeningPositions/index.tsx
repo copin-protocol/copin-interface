@@ -18,12 +18,14 @@ import { formatNumber } from 'utils/helpers/format'
 
 import OnchainPositions from './OnchainPositions'
 import SettingConfigs from './SettingConfigs'
+import { OnchainPositionData } from './schema'
 
 export default function OpeningPositions({
   activeWallet,
   copyWallets,
   hasLabel = true,
   onSuccess,
+  onSelectPosition,
   limit = DEFAULT_LIMIT,
   restrictHeight = true,
   layoutType = 'normal',
@@ -33,6 +35,7 @@ export default function OpeningPositions({
   copyWallets: CopyWalletData[] | undefined
   hasLabel?: boolean
   onSuccess?: (data: CopyPositionData[] | undefined) => void
+  onSelectPosition?: (data: OnchainPositionData | undefined) => void
   limit?: number
   restrictHeight?: boolean
   layoutType?: 'simple' | 'normal'
@@ -126,7 +129,7 @@ export default function OpeningPositions({
         </Box>
         {activeWallet?.exchange === CopyTradePlatformEnum.GNS_V8 && activeWallet.smartWalletAddress && (
           <Box display={isOnchainSelected ? 'block' : 'none'} height="100%" sx={{ overflow: 'auto' }}>
-            <OnchainPositions address={activeWallet.smartWalletAddress} />
+            <OnchainPositions activeWallet={activeWallet} />
           </Box>
         )}
       </Box>

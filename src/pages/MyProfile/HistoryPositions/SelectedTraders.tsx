@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 
 import useCopyTraderAddresses from 'hooks/features/useCopyTraderAddresses'
 
-import SelectTradersDropdown from '../SelectTradersDropdown'
+import { SelectTradersCopiedDropdown } from '../SelectTradersCopied'
 import { DispatchSelectTraders } from './useFilterHistory'
 
 export default function SelectedTraders({
@@ -58,7 +58,7 @@ export default function SelectedTraders({
   const { sm } = useResponsive()
 
   return (
-    <SelectTradersDropdown
+    <SelectTradersCopiedDropdown
       menuSx={sm ? undefined : { transform: 'translateX(110px)' }}
       allTraders={allTraders}
       selectedTraders={selectedTraders}

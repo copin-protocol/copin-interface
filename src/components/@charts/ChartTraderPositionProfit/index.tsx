@@ -8,6 +8,7 @@ import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
@@ -26,7 +27,8 @@ export default function ChartProfit({
   protocol: ProtocolEnum
   chartId: string
 }) {
-  const { prices } = useGetUsdPrices()
+  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
+  const prices = GAINS_TRADE_PROTOCOLS.includes(protocol) ? gainsPrices : pythPrices
 
   const isOpening = data?.status === PositionStatusEnum.OPEN
 

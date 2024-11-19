@@ -4,10 +4,11 @@ import { ReactNode, useState } from 'react'
 
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useInternalRole from 'hooks/features/useInternalRole'
+import { CreateTypeWalletEnum } from 'pages/MyProfile/CheckingWalletRenderer'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { LINKS } from 'utils/config/constants'
+import { DCP_EXCHANGES, LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
@@ -20,7 +21,7 @@ import CreateHyperliquidWalletModal from '../CreateWalletModals/CreateHyperliqui
 import CreateOKXWalletModal from '../CreateWalletModals/CreateOKXWalletModal'
 import CreateSmartWalletModal from '../CreateWalletModals/CreateSmartWalletModal'
 
-export default function CreateWalletAction() {
+export default function CreateWalletAction({ type = CreateTypeWalletEnum.FULL }: { type?: CreateTypeWalletEnum }) {
   const { loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [currentExchange, setCurrentExchange] = useState<CopyTradePlatformEnum | undefined>()
@@ -29,11 +30,12 @@ export default function CreateWalletAction() {
     setCurrentExchange(exchange)
     setOpenCreateModal(true)
   }
-  return (
+
+  const cexItems = (
     <>
       <WalletItem
         exchange={CopyTradePlatformEnum.BINGX}
-        label={<Trans>BingX Wallet</Trans>}
+        label={<Trans>BingX API</Trans>}
         description={
           <Box>
             <Trans>
@@ -54,7 +56,7 @@ export default function CreateWalletAction() {
                 icon={<ArrowSquareOut size={16} />}
                 sx={{ mx: 0, p: 0, fontSize: '14px' }}
               >
-                <Trans>Register</Trans>
+                <Trans>Connect</Trans>
               </ButtonWithIcon>
             </Flex>
           </Box>
@@ -63,7 +65,7 @@ export default function CreateWalletAction() {
       />
       <WalletItem
         exchange={CopyTradePlatformEnum.BITGET}
-        label={<Trans>Bitget Wallet</Trans>}
+        label={<Trans>Bitget API</Trans>}
         description={
           <Box>
             <Trans>
@@ -84,7 +86,7 @@ export default function CreateWalletAction() {
                 icon={<ArrowSquareOut size={16} />}
                 sx={{ mx: 0, p: 0, fontSize: '14px' }}
               >
-                <Trans>Register</Trans>
+                <Trans>Connect</Trans>
               </ButtonWithIcon>
             </Flex>
           </Box>
@@ -93,7 +95,7 @@ export default function CreateWalletAction() {
       />
       <WalletItem
         exchange={CopyTradePlatformEnum.BYBIT}
-        label={<Trans>Bybit Wallet</Trans>}
+        label={<Trans>Bybit API</Trans>}
         description={
           <Box>
             <Trans>
@@ -114,7 +116,7 @@ export default function CreateWalletAction() {
                 icon={<ArrowSquareOut size={16} />}
                 sx={{ mx: 0, p: 0, fontSize: '14px' }}
               >
-                <Trans>Register</Trans>
+                <Trans>Connect</Trans>
               </ButtonWithIcon>
             </Flex>
           </Box>
@@ -123,7 +125,7 @@ export default function CreateWalletAction() {
       />
       <WalletItem
         exchange={CopyTradePlatformEnum.OKX}
-        label={<Trans>OKX Wallet</Trans>}
+        label={<Trans>OKX API</Trans>}
         description={
           <Box>
             <Trans>
@@ -144,7 +146,7 @@ export default function CreateWalletAction() {
                 icon={<ArrowSquareOut size={16} />}
                 sx={{ mx: 0, p: 0, fontSize: '14px' }}
               >
-                <Trans>Register</Trans>
+                <Trans>Connect</Trans>
               </ButtonWithIcon>
             </Flex>
           </Box>
@@ -153,7 +155,7 @@ export default function CreateWalletAction() {
       />
       <WalletItem
         exchange={CopyTradePlatformEnum.GATE}
-        label={<Trans>Gate Wallet</Trans>}
+        label={<Trans>Gate API</Trans>}
         description={
           <Box>
             <Trans>Link with your Gate account through API key</Trans>
@@ -171,7 +173,7 @@ export default function CreateWalletAction() {
                 icon={<ArrowSquareOut size={16} />}
                 sx={{ mx: 0, p: 0, fontSize: '14px' }}
               >
-                <Trans>Register</Trans>
+                <Trans>Connect</Trans>
               </ButtonWithIcon>
             </Flex>
           </Box>
@@ -180,7 +182,7 @@ export default function CreateWalletAction() {
       />
       <WalletItem
         exchange={CopyTradePlatformEnum.BINANCE}
-        label={<Trans>Binance Wallet</Trans>}
+        label={<Trans>Binance API</Trans>}
         description={
           <Trans>
             Link with your Binance account through API key. All your assets and your positions management by Binance.
@@ -189,7 +191,38 @@ export default function CreateWalletAction() {
         }
         handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BINANCE)}
       />
+      <WalletItem
+        exchange={CopyTradePlatformEnum.HYPERLIQUID}
+        label={<Trans>Hyperliquid API</Trans>}
+        description={
+          <Box>
+            <Trans>Link with your Hyperliquid account through API key</Trans>
+            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+              <Type.Caption color="neutral2">
+                <Trans>Don’t have a Hyperliquid account?</Trans>
+              </Type.Caption>
+              <ButtonWithIcon
+                type="button"
+                variant="ghostPrimary"
+                as="a"
+                href={LINKS.registerHyperliquid}
+                target="_blank"
+                direction="right"
+                icon={<ArrowSquareOut size={16} />}
+                sx={{ mx: 0, p: 0, fontSize: '14px' }}
+              >
+                <Trans>Connect</Trans>
+              </ButtonWithIcon>
+            </Flex>
+          </Box>
+        }
+        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.HYPERLIQUID)}
+      />
+    </>
+  )
 
+  const dcpItems = (
+    <>
       <WalletItem
         exchange={CopyTradePlatformEnum.SYNTHETIX_V2}
         label={<Trans>Synthetix v2 Wallet</Trans>}
@@ -213,7 +246,13 @@ export default function CreateWalletAction() {
           !loadingCopyWallets ? () => handleOpenCreateModal(CopyTradePlatformEnum.GNS_V8) : undefined
         }
       />
+    </>
+  )
 
+  return (
+    <>
+      {(type === CreateTypeWalletEnum.FULL || type === CreateTypeWalletEnum.CEX) && cexItems}
+      {(type === CreateTypeWalletEnum.FULL || type === CreateTypeWalletEnum.DCP) && dcpItems}
       <CreateWalletModal
         isOpen={openCreateModal}
         exchange={currentExchange}
@@ -278,6 +317,7 @@ interface WalletItemProps {
 function WalletItem({ exchange, label, description, handleClick }: WalletItemProps) {
   const isInternal = useInternalRole()
   const isComingSoon = !isInternal && exchange === CopyTradePlatformEnum.BINANCE
+  const isDCP = DCP_EXCHANGES.includes(exchange)
   return (
     <Flex minWidth={350} p={24} flexDirection="column" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
       <Flex alignItems="center" sx={{ gap: 3 }}>
@@ -293,7 +333,7 @@ function WalletItem({ exchange, label, description, handleClick }: WalletItemPro
         onClick={() => handleClick && handleClick(exchange)}
         disabled={!handleClick || isComingSoon}
       >
-        {isComingSoon ? <Trans>Coming Soon</Trans> : <Trans>Connect</Trans>}
+        {isComingSoon ? <Trans>Coming Soon</Trans> : isDCP ? <Trans>Create</Trans> : <Trans>Connect</Trans>}
       </Button>
     </Flex>
   )

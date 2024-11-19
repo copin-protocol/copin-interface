@@ -1,34 +1,46 @@
 import { CaretDown, CaretUp, Minus } from '@phosphor-icons/react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import IconEye from 'assets/icons/ic-eye.svg'
+import TraderDetailsDrawer from 'components/@trader/TraderDetailsDrawer'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { TopTraderData } from 'entities/trader'
 import { useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
-import { Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
+import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
+interface TraderProps {
+  address: string
+  protocol: ProtocolEnum
+  type?: TimeFrameEnum
+}
 export default function AccountInfo({
   info,
   size = 40,
   isCurrentLeaderboard,
+  hasHover = true,
 }: {
   info: TopTraderData
   size?: number
   isCurrentLeaderboard?: boolean
+  hasHover?: boolean
 }) {
   const { protocol: defaultProtocol } = useProtocolStore()
   const { isCopying } = useTraderCopying(info.account, info.protocol)
   const protocol = info.protocol ?? defaultProtocol
   const deltaRanking = isCurrentLeaderboard ? (info?.lastRanking ?? 1001) - info.ranking : 0
 
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const [currentTrader, setCurrentTrader] = useState<TraderProps | undefined>()
+
   return (
     <Flex
-      as={Link}
-      to={generateTraderMultiExchangeRoute({ protocol, address: info.account })}
       // target="_blank"
       alignItems="center"
       sx={{
@@ -37,11 +49,34 @@ export default function AccountInfo({
         font: 'inherit !important',
         py: 1,
       }}
-      onClick={(e: any) => e.stopPropagation()}
       minWidth="200px"
     >
-      <AddressAvatar address={info.account} size={size} />
+      <Box
+        width={size}
+        height={size}
+        sx={{
+          '&:hover': hasHover
+            ? {
+                cursor: 'pointer',
+                backgroundImage: `url(${IconEye})`,
+                backgroundSize: '24px',
+                backgroundPosition: 'center center',
+                backgroundRepeat: 'no-repeat',
+              }
+            : {},
+        }}
+        onClick={(event) => {
+          event.stopPropagation()
+          setCurrentTrader({ address: info.account, protocol })
+          setOpenDrawer(true)
+        }}
+      >
+        <AddressAvatar address={info.account} size={size} sx={{ '&:hover': hasHover ? { opacity: 0.25 } : {} }} />
+      </Box>
       <Flex
+        as={Link}
+        to={generateTraderMultiExchangeRoute({ protocol, address: info.account })}
+        onClick={(e: any) => e.stopPropagation()}
         flexDirection="column"
         sx={{
           textAlign: 'left',
@@ -118,6 +153,16 @@ export default function AccountInfo({
           </Tooltip>
         </Flex>
       </Flex>
+      {openDrawer && !!currentTrader && (
+        <TraderDetailsDrawer
+          onDismiss={() => {
+            setCurrentTrader(undefined)
+            setOpenDrawer(false)
+          }}
+          protocol={currentTrader.protocol}
+          address={currentTrader.address}
+        />
+      )}
     </Flex>
   )
 }

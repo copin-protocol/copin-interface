@@ -10,18 +10,20 @@ import ROUTES from 'utils/config/routes'
 
 const GAINS_TRADE_PRICE_FEED_URL = 'wss://backend-pricing.eu.gains.trade'
 
-const INTERVAL_TIME = 3 // s
+const INTERVAL_TIME = 1 // s
 const INCLUDE_PATH = [
   ROUTES.OPEN_INTEREST.path_prefix,
+  ROUTES.OPEN_INTEREST_POSITIONS.path_prefix,
   ROUTES.POSITION_DETAILS.path_prefix,
   ROUTES.TRADER_DETAILS.path_prefix,
   ROUTES.MY_MANAGEMENT.path,
+  ROUTES.USER_DCP_MANAGEMENT.path,
   ROUTES.USER_SUBSCRIPTION.path,
   ROUTES.MY_HISTORY.path,
 ]
 
 export default function GainsTradeConnection() {
-  const { setPrices, setIsReady, prices } = useRealtimeUsdPricesStore()
+  const { setGainsPrices, setIsReady, gainsPrices } = useRealtimeUsdPricesStore()
   const { pathname } = useLocation()
   const lastLogTime = useRef(Date.now())
   const protocol = useParsedProtocol()
@@ -39,7 +41,7 @@ export default function GainsTradeConnection() {
       if (currentTime - lastLogTime.current >= INTERVAL_TIME * 1000) {
         const data = processPriceData(JSON.parse(event.data))
         lastLogTime.current = currentTime
-        setPrices({ ...prices, ...data })
+        setGainsPrices({ ...gainsPrices, ...data })
       }
     },
   })
@@ -59,12 +61,13 @@ export default function GainsTradeConnection() {
             initialCache.closes.map((price: number, index: number) => {
               pricesData[`${ProtocolEnum.GNS}-` + index] = price
               pricesData[`${ProtocolEnum.GNS_POLY}-` + index] = price
+              pricesData[`${ProtocolEnum.GNS_BASE}-` + index] = price
             })
-            setPrices({ ...prices, ...pricesData })
+            setGainsPrices({ ...gainsPrices, ...pricesData })
           }
         }
 
-        if (isGains) {
+        if ((!gainsPrices || Object.values(gainsPrices).length === 0) && isGains) {
           await fetchAndProcessPriceFeeds()
         }
 
@@ -95,6 +98,7 @@ function processPriceData(data: number[]): Record<string, number> {
     const price = data[i + 1]
     result[`${ProtocolEnum.GNS}-` + pairIndex] = price
     result[`${ProtocolEnum.GNS_POLY}-` + pairIndex] = price
+    result[`${ProtocolEnum.GNS_BASE}-` + pairIndex] = price
   }
   return result
 }

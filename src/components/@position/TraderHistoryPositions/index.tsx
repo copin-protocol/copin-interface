@@ -6,11 +6,11 @@ import {
   ClockCounterClockwise,
 } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { ApiMeta } from 'apis/api'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
+import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
 import SectionTitle from 'components/@ui/SectionTitle'
 import CurrencyOption from 'components/@widgets/CurrencyOption'
@@ -22,7 +22,7 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import ActivityHeatmap from 'pages/TraderDetails/ActivityHeatmap'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
-import { ColumnData, TableSortProps } from 'theme/Table/types'
+import { PaginationWithLimit } from 'theme/Pagination'
 import Tooltip from 'theme/Tooltip'
 import VirtualList from 'theme/VirtualList'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -33,8 +33,9 @@ import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import TraderPositionListView from '../TraderPositionsListView'
-import { fullHistoryColumns, historyColumns } from '../configs/traderPositionRenderProps'
+import { drawerHistoryColumns, fullHistoryColumns, historyColumns } from '../configs/traderPositionRenderProps'
 import useQueryClosedPositions from './useQueryClosedPositions'
+import useQueryClosedPositionsMobile from './useQueryClosedPositionsMobile'
 
 function getHighestPnl(array: any): number {
   let high = 0
@@ -52,11 +53,14 @@ export interface HistoryTableProps {
   address: string
   protocol: ProtocolEnum
   isExpanded: boolean
-  toggleExpand: () => void
+  isDrawer?: boolean
+  hasTitle?: boolean
+  toggleExpand?: () => void
+  backgroundColor?: string
 }
 
 export default function TraderHistoryPositions(props: HistoryTableProps) {
-  const { address, protocol, isExpanded, toggleExpand } = props
+  const { address, protocol, isDrawer, isExpanded, toggleExpand } = props
   const { myProfile } = useMyProfile()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [showChart, setShowChart] = useState(false)
@@ -78,12 +82,17 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
     handleFetchClosedPositions,
   } = useQueryClosedPositions({ address, protocol, isExpanded })
 
-  const tableSettings = xl && isExpanded ? fullHistoryColumns : historyColumns
+  const tableSettings = isDrawer ? drawerHistoryColumns : xl && isExpanded ? fullHistoryColumns : historyColumns
   const data = closedPositions?.data
   const dataMeta = closedPositions?.meta
+  const [expanding, setExpanding] = useState(false)
   const handleToggleExpand = () => {
+    setExpanding(true)
+    setTimeout(() => {
+      setExpanding(false)
+    }, 1000)
     resetSort()
-    toggleExpand()
+    toggleExpand?.()
   }
   //
 
@@ -141,6 +150,30 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
     window.addEventListener('keydown', handleKeydown)
     return () => window.removeEventListener('keydown', handleKeydown)
   }, [history])
+  const { lg } = useResponsive()
+  const highValue: number = data?.length ? getHighestPnl(data) : 0
+
+  const renderRowBackground = useCallback(
+    (index: number) => {
+      if (!data || !showChart) return undefined
+
+      const sumProfit = data.slice(index, data.length).reduce((sum, item) => sum + item.pnl, 0)
+
+      const percent = (Math.abs(sumProfit) * 100) / highValue
+      return `linear-gradient(to right, #0B0E18 ${100 - percent}%, ${
+        sumProfit > 0 ? 'rgba(56, 208, 96, 0.15)' : 'rgba(239, 53, 53, 0.15)'
+      } 0%)`
+    },
+    [data, highValue, showChart]
+  )
+  const resizeDeps = useMemo(() => [isExpanded], [isExpanded])
+
+  useInfiniteLoadMore({
+    isDesktop: lg,
+    hasNextPage: hasNextClosedPositions,
+    fetchNextPage: handleFetchClosedPositions,
+    isLoading: isLoadingClosedPositions,
+  })
 
   return (
     <Box display={['block', 'block', 'block', 'flex']} flexDirection="column" height={['auto', 'auto', 'auto', '100%']}>
@@ -188,7 +221,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
             data-tooltip-id="history_table_heatmap"
             data-tooltip-offset={8}
           />
-          {sm && (
+          {!isDrawer && sm && (
             <>
               <ButtonWithIcon
                 icon={
@@ -248,20 +281,32 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
           <ActivityHeatmap account={data[0].account} protocol={data[0].protocol} />
         </Box>
       )}
-      <Box flex="1 0 0" overflowX="auto" overflowY="hidden" className="test">
-        <PositionsList
+      {expanding && <Loading />}
+      <Box
+        flex="1 0 0"
+        overflowX="auto"
+        overflowY="hidden"
+        className="test"
+        sx={{ visibility: expanding ? 'hidden' : 'visible' }}
+      >
+        <VirtualList
           data={data}
-          dataMeta={dataMeta}
           isLoading={isLoadingClosedPositions}
           hasNextPage={hasNextClosedPositions}
           fetchNextPage={handleFetchClosedPositions}
-          tableSettings={tableSettings}
+          columns={tableSettings}
           currentSort={currentSort}
           changeCurrentSort={changeCurrentSort}
+          dataMeta={dataMeta}
           handleSelectItem={handleSelectItem}
-          showChart={showChart}
-          isExpanded={isExpanded}
+          resizeDeps={resizeDeps}
+          rowBgFactory={renderRowBackground}
         />
+        {isLoadingClosedPositions && (
+          <Box sx={{ position: 'absolute', bottom: 0, left: 0, right: 0, bg: 'modalBG' }}>
+            <Loading />
+          </Box>
+        )}
       </Box>
 
       <TraderPositionDetailsDrawer
@@ -275,89 +320,225 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
   )
 }
 
-const PositionsList = memo(function PositionsListMemo({
-  data,
-  isLoading,
-  hasNextPage,
-  fetchNextPage,
-  tableSettings,
-  currentSort,
-  changeCurrentSort,
-  dataMeta,
-  showChart,
-  handleSelectItem,
-  isExpanded,
-}: {
-  data: PositionData[] | undefined
-  dataMeta: ApiMeta | undefined
-  isLoading: boolean
-  fetchNextPage: () => void
-  hasNextPage: boolean | undefined
-  tableSettings: ColumnData<PositionData>[]
-  currentSort: TableSortProps<PositionData> | undefined
-  changeCurrentSort: ((sort: TableSortProps<PositionData> | undefined) => void) | undefined
-  isExpanded: boolean
-} & { showChart: boolean; handleSelectItem: (data: PositionData) => void }) {
-  const { lg } = useResponsive()
-  const highValue: number = data?.length ? getHighestPnl(data) : 0
+// const PositionsList = memo(function PositionsListMemo({
+//   data,
+//   isLoading,
+//   hasNextPage,
+//   fetchNextPage,
+//   tableSettings,
+//   currentSort,
+//   changeCurrentSort,
+//   dataMeta,
+//   showChart,
+//   handleSelectItem,
+//   isExpanded,
+// }: {
+//   data: PositionData[] | undefined
+//   dataMeta: ApiMeta | undefined
+//   isLoading: boolean
+//   fetchNextPage: () => void
+//   hasNextPage: boolean | undefined
+//   tableSettings: ColumnData<PositionData>[]
+//   currentSort: TableSortProps<PositionData> | undefined
+//   changeCurrentSort: ((sort: TableSortProps<PositionData> | undefined) => void) | undefined
+//   isExpanded: boolean
+// } & { showChart: boolean; handleSelectItem: (data: PositionData) => void }) {
 
-  const renderRowBackground = useCallback(
-    (index: number) => {
-      if (!data || !showChart) return undefined
+//   return lg ? (
 
-      const sumProfit = data.slice(index, data.length).reduce((sum, item) => sum + item.pnl, 0)
+//   ) : (
+//     <>
 
-      const percent = (Math.abs(sumProfit) * 100) / highValue
-      return `linear-gradient(to right, #0B0E18 ${100 - percent}%, ${
-        sumProfit > 0 ? 'rgba(56, 208, 96, 0.15)' : 'rgba(239, 53, 53, 0.15)'
-      } 0%)`
-    },
-    [data, highValue, showChart]
+//       {isLoading && (
+//         <Box sx={{ position: 'absolute', bottom: 0, left: 0, right: 0, bg: 'modalBG' }}>
+//           <Loading />
+//         </Box>
+//       )}
+//       {data && !isLoading && (dataMeta?.total ?? 0) === data.length && (
+//         <Flex
+//           sx={{
+//             alignItems: 'center',
+//             justifyContent: 'center',
+//             bg: 'neutral6',
+//             height: 40,
+//           }}
+//         >
+//           <Type.Caption color="neutral3">End of list</Type.Caption>
+//         </Flex>
+//       )}
+//     </>
+//   )
+// })
+
+export function TraderHistoryPositionsListView(props: HistoryTableProps) {
+  const { address, protocol, backgroundColor = 'neutral5' } = props
+  const { myProfile } = useMyProfile()
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const [showChart, setShowChart] = useState(false)
+  const { heatmapVisible, setHeatmapVisible } = useHeatmapStore()
+  const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
+  const { sm } = useResponsive()
+
+  //
+  const {
+    currentPage,
+    currentLimit,
+    changeCurrentPage,
+    changeCurrentLimit,
+    tokenOptions,
+    currencyOption,
+    changeCurrency,
+    closedPositions,
+    isLoadingClosed: isLoadingClosedPositions,
+  } = useQueryClosedPositionsMobile({ address, protocol })
+
+  const data = closedPositions?.data
+  const dataMeta = closedPositions?.meta
+
+  const history = useHistory()
+  const { searchParams } = useSearchParams()
+  const nextHoursParam = useMemo(
+    () =>
+      searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
+        ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
+        : undefined,
+    [searchParams]
   )
-  const resizeDeps = useMemo(() => [isExpanded], [isExpanded])
 
-  useInfiniteLoadMore({ isDesktop: lg, hasNextPage, fetchNextPage, isLoading })
-  return lg ? (
-    <VirtualList
-      data={data}
-      isLoading={isLoading}
-      hasNextPage={hasNextPage}
-      fetchNextPage={fetchNextPage}
-      columns={tableSettings}
-      currentSort={currentSort}
-      changeCurrentSort={changeCurrentSort}
-      dataMeta={dataMeta}
-      handleSelectItem={handleSelectItem}
-      resizeDeps={resizeDeps}
-      rowBgFactory={renderRowBackground}
-    />
-  ) : (
-    <>
-      <TraderPositionListView
-        data={data}
-        isLoading={false}
-        scrollDep={data}
-        onClickItem={handleSelectItem}
-        hasAccountAddress={false}
-        isOpening={false}
-      />
-      {isLoading && (
-        <Box sx={{ position: 'absolute', bottom: 0, left: 0, right: 0, bg: 'modalBG' }}>
-          <Loading />
+  const handleSelectItem = useCallback(
+    (data: PositionData) => {
+      setCurrentPosition(data)
+      setOpenDrawer(true)
+      window.history.replaceState(
+        null,
+        '',
+        generatePositionDetailsRoute({
+          id: data.id,
+          protocol: data.protocol,
+          txHash: data.txHashes?.[0],
+          account: data.account,
+          logId: data.logId,
+          nextHours: nextHoursParam,
+        })
+      )
+    },
+    [nextHoursParam]
+  )
+
+  const handleDismiss = () => {
+    window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
+    setOpenDrawer(false)
+  }
+
+  const logEventLayout = (action: string) => {
+    logEvent({
+      label: getUserForTracking(myProfile?.username),
+      category: EventCategory.LAYOUT,
+      action,
+    })
+  }
+
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'F5') {
+        e.preventDefault()
+        window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
+        window.location.reload()
+      }
+    }
+    window.addEventListener('keydown', handleKeydown)
+    return () => window.removeEventListener('keydown', handleKeydown)
+  }, [history])
+
+  const scrollToTopDependencies = useMemo(() => {
+    return [address, protocol, currentPage, currentLimit]
+  }, [address, protocol, currentPage, currentLimit])
+
+  return (
+    <Flex flexDirection="column" height="100%">
+      <Flex pt={16} px={12} pb={12} alignItems="center">
+        <Box flex="1" sx={{ '& > *': { pb: 0 } }}>
+          {props.hasTitle ? <SectionTitle icon={<ClockCounterClockwise size={24} />} title="History" /> : <></>}
         </Box>
-      )}
-      {data && !isLoading && (dataMeta?.total ?? 0) === data.length && (
         <Flex
           sx={{
             alignItems: 'center',
-            justifyContent: 'center',
-            bg: 'neutral6',
-            height: 40,
+            gap: 2,
+            '.select__control': { border: 'none !important' },
+            '.currency_option': { width: 'auto !important' },
+            '.select__value-container': { p: '0 !important', '*': { p: '0 !important' } },
+            '.select__menu': { minWidth: 88, transform: 'translateX(-32px)' },
           }}
         >
-          <Type.Caption color="neutral3">End of list</Type.Caption>
+          <CurrencyOption
+            options={tokenOptions}
+            currentOption={currencyOption}
+            handleChangeOption={(option) => {
+              changeCurrency(option)
+            }}
+          />
+          {/* <ButtonWithIcon
+            icon={
+              <Box color={heatmapVisible ? 'primary1' : 'neutral3'}>
+                <ChartScatter fontVariant="bold" size={20} />
+              </Box>
+            }
+            variant="ghost"
+            p={0}
+            width={'auto'}
+            block
+            onClick={() => {
+              if (heatmapVisible) {
+                logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_HEATMAP_ACTIVITY)
+              } else {
+                logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].SHOW_HEATMAP_ACTIVITY)
+              }
+
+              setHeatmapVisible(!heatmapVisible)
+            }}
+            data-tip="React-tooltip"
+            data-tooltip-id="history_table_heatmap"
+            data-tooltip-offset={8}
+          />
+          <Tooltip id="history_table_heatmap" place="bottom" type="dark" effect="solid">
+            <Type.Caption>Show/Hide Heatmap Activity</Type.Caption>
+          </Tooltip> */}
         </Flex>
-      )}
-    </>
+      </Flex>
+      {!isLoadingClosedPositions && !data?.length && !sm && <NoDataFound message="No positions history" />}
+      {/* {!!data && data.length > 0 && !!data[0].account && heatmapVisible && (
+        <Box height={130} px={12}>
+          <ActivityHeatmap account={data[0].account} protocol={data[0].protocol} />
+        </Box>
+      )} */}
+      <Box flex="1 0 0" overflowX="auto" overflowY="hidden" className="test" bg={backgroundColor}>
+        <TraderPositionListView
+          data={data}
+          isLoading={isLoadingClosedPositions}
+          scrollDep={scrollToTopDependencies}
+          onClickItem={handleSelectItem}
+          hasAccountAddress={false}
+          isOpening={false}
+        />
+      </Box>
+      <Divider />
+      <Box bg="neutral5">
+        <PaginationWithLimit
+          currentPage={currentPage}
+          currentLimit={currentLimit}
+          onPageChange={changeCurrentPage}
+          onLimitChange={changeCurrentLimit}
+          apiMeta={dataMeta}
+        />
+      </Box>
+
+      <TraderPositionDetailsDrawer
+        isOpen={openDrawer}
+        onDismiss={handleDismiss}
+        protocol={currentPosition?.protocol}
+        id={currentPosition?.id}
+        chartProfitId="close-position-detail"
+      />
+    </Flex>
   )
-})
+}

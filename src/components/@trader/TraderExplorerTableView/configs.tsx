@@ -5,6 +5,7 @@ import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import MarketGroup from 'components/@ui/MarketGroup'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { MyCopyTraderData, TraderData } from 'entities/trader.d'
+import CopyButton from 'theme/Buttons/CopyButton'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
 import { PLATFORM_TRANS } from 'utils/config/translations'
@@ -30,7 +31,7 @@ export const emptyColumn = {
 const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, ExternalTraderListSource> } = {
   account: {
     style: {
-      minWidth: '220px',
+      minWidth: '230px',
     },
     text: 'Account',
     searchText: 'Account',
@@ -41,13 +42,26 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     ),
     visible: true,
     id: 'account',
-    freezeLeft: 220,
+    freezeLeft: 230,
     freezeIndex: 3,
     render: (item) => (
       <Box pl={3}>
         <AccountCell
           data={item}
-          additionalComponent={<FavoriteButton address={item.account} protocol={item.protocol} size={16} />}
+          additionalComponent={
+            <Flex alignItems="center" sx={{ gap: 2 }}>
+              <CopyButton
+                type="button"
+                variant="ghost"
+                value={item.account}
+                size={16}
+                sx={{ color: 'neutral3', p: 0 }}
+                iconSize={16}
+                className={'hiding-btn'}
+              ></CopyButton>
+              <FavoriteButton address={item.account} protocol={item.protocol} size={16} />
+            </Flex>
+          }
         />
       </Box>
     ),

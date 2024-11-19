@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Clock, Crown, Key, Notebook, SignOut, Star, UserCircle, Wallet } from '@phosphor-icons/react'
+import {Clock, Crown, Key, Notebook, SignOut, SquareHalf, Star, SubtractSquare, Wallet} from '@phosphor-icons/react'
 import { ReactNode, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -268,8 +268,14 @@ const userCopy = [
   {
     link: ROUTES.MY_MANAGEMENT.path,
     event: EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE,
-    icon: <UserCircle size={20} />,
-    label: <Trans>Copy Management</Trans>,
+    icon: <SquareHalf size={20} />,
+    label: <Trans>CEX Management</Trans>,
+  },
+  {
+    link: ROUTES.USER_DCP_MANAGEMENT.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE,
+    icon: <SubtractSquare size={20} />,
+    label: <Trans>DCP Management</Trans>,
   },
   {
     link: ROUTES.MY_HISTORY.path,

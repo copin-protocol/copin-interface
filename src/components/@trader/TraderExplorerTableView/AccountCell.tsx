@@ -31,7 +31,7 @@ export function AccountCellMobile({
   additionalComponent?: ReactElement
 }) {
   return (
-    <Flex alignItems="start" justifyContent="start" sx={{ gap: [1, 2], position: 'relative' }}>
+    <Flex alignItems="start" justifyContent="start" sx={{ gap: 1, position: 'relative' }}>
       <AccountInfo
         isOpenPosition={data.isOpenPosition}
         address={data.account}

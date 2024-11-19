@@ -80,7 +80,7 @@ const ClosePositionHandler = ({
   const [submitting, setSubmitting] = useState(false)
   const smartWalletContract = useSmartWalletContract(smartWallet, true)
   const smartWalletMutation = useContractMutation(smartWalletContract)
-  const { prices } = useGetUsdPrices()
+  const { gainsPrices: prices } = useGetUsdPrices()
 
   // console.log('positions', positions)
 

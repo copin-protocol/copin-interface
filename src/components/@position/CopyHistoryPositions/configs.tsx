@@ -2,6 +2,7 @@ import ReverseTag from 'components/@ui/ReverseTag'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { ColumnData } from 'theme/Table/types'
 import { Box } from 'theme/base'
+import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 
 import {
   renderCloseTime,
@@ -95,7 +96,11 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '100px', width: 100, textAlign: 'right' },
-    render: (item, _, externalSource) => renderPnL(item, externalSource?.prices),
+    render: (item, _, externalSource) =>
+      renderPnL(
+        item,
+        GAINS_TRADE_PROTOCOLS.includes(item.protocol) ? externalSource?.gainsPrices : externalSource?.prices
+      ),
   },
   {
     title: <Box>Closed Type</Box>,

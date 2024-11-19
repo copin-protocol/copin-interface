@@ -19,6 +19,7 @@ type Props = {
   onClickItem?: (data: PositionData) => void
   hasAccountAddress?: boolean
   isOpening?: boolean
+  sx?: any
 }
 
 export default function TraderPositionListView({
@@ -42,7 +43,7 @@ export default function TraderPositionListView({
         height: '100%',
         overflow: 'auto',
         position: 'relative',
-        '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4', '& > *:last-child': { borderBottom: 'none' } },
+        '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4', '&:last-child': { borderBottom: 'none' } },
       }}
     >
       {!isLoading && data?.length === 0 && <NoDataFound message={<Trans>No position was found</Trans>} />}

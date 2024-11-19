@@ -5,6 +5,7 @@ import useTabHandler from 'hooks/router/useTabHandler'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { FOOTER_HEIGHT } from 'utils/config/constants'
 
+import PositionMobileView from './PositionMobileView'
 import { LayoutProps } from './types'
 
 enum TabEnum {
@@ -33,7 +34,7 @@ const TabButton = ({
 const MobileLayout = (props: LayoutProps) => {
   const { tab, handleTab: setTab } = useTabHandler(TabEnum.POSITIONS)
   return (
-    <Box sx={{ position: 'relative', pb: 56 }}>
+    <Box sx={{ position: 'relative', pb: 56, height: '100%' }}>
       <Box
         width="100%"
         height={56}
@@ -94,19 +95,8 @@ const MobileLayout = (props: LayoutProps) => {
         </>
       )}
       {tab === TabEnum.POSITIONS && (
-        <Box>
-          <Box
-            minHeight={120}
-            sx={{
-              borderBottom: 'small',
-              borderColor: 'neutral4',
-            }}
-          >
-            {props.openingPositions}
-          </Box>
-          <Box sx={{ position: 'relative' }} flex="1">
-            {props.closedPositions}
-          </Box>
+        <Box height="calc(100% - 56px - 61px)">
+          <PositionMobileView openingPositions={props.openingPositions} historyPositions={props.closedPositions} />
         </Box>
       )}
       <Flex

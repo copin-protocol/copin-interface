@@ -1,10 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
+import { useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { Link } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 import { v4 as uuid } from 'uuid'
 
+import IconEye from 'assets/icons/ic-eye.svg'
+import TraderDetailsDrawer from 'components/@trader/TraderDetailsDrawer'
 import ActiveDot from 'components/@ui/ActiveDot'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
@@ -12,12 +15,18 @@ import { useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 // import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
-import { Flex, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { addressShorten, shortenText } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 // import ProtocolLogo from '../ProtocolLogo'
+
+interface TraderProps {
+  address: string
+  protocol: ProtocolEnum
+  type?: TimeFrameEnum
+}
 
 export function AccountInfo({
   isOpenPosition,
@@ -28,6 +37,7 @@ export function AccountInfo({
   size = 40,
   smartAccount,
   keyword,
+  hasHover = true,
   sx,
   wrapperSx,
 }: {
@@ -39,6 +49,7 @@ export function AccountInfo({
   size?: number
   smartAccount?: string
   keyword?: string
+  hasHover?: boolean
   sx?: SystemStyleObject & GridProps
   wrapperSx?: any
 }) {
@@ -47,10 +58,11 @@ export function AccountInfo({
   protocol = protocol ?? defaultProtocol
   const { isCopying } = useTraderCopying(address, protocol)
 
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const [currentTrader, setCurrentTrader] = useState<TraderProps | undefined>()
+
   return (
     <Flex
-      as={Link}
-      to={generateTraderMultiExchangeRoute({ protocol, address, params: { time: type } })}
       // target="_blank"
       alignItems="center"
       sx={{
@@ -60,14 +72,61 @@ export function AccountInfo({
         py: 1,
         ...(wrapperSx || {}),
       }}
-      onClick={(e: any) => e.stopPropagation()}
     >
-      <AddressAvatar address={address} size={size} />
+      <Box
+        width={size}
+        height={size}
+        sx={{
+          '&:hover': hasHover
+            ? {
+                cursor: 'pointer',
+                backgroundImage: `url(${IconEye})`,
+                backgroundSize: '24px',
+                backgroundPosition: 'center center',
+                backgroundRepeat: 'no-repeat',
+              }
+            : {},
+        }}
+        onClick={(event) => {
+          event.stopPropagation()
+          setCurrentTrader({ address, protocol, type })
+          setOpenDrawer(true)
+        }}
+      >
+        <AddressAvatar address={address} size={size} sx={{ '&:hover': hasHover ? { opacity: 0.25 } : {} }} />
+        {/*{!hasHover || (hasHover && !isHovered) ? (*/}
+        {/*  <AddressAvatar address={address} size={size} />*/}
+        {/*) : (*/}
+        {/*  <Flex*/}
+        {/*    width={size}*/}
+        {/*    height={size}*/}
+        {/*    fontSize={size * 0.65}*/}
+        {/*    sx={{*/}
+        {/*      borderRadius: size / 2,*/}
+        {/*      overflow: 'hidden',*/}
+        {/*      backgroundColor: 'neutral7',*/}
+        {/*      flexShrink: 0,*/}
+        {/*      '&:hover': { cursor: 'pointer' },*/}
+        {/*    }}*/}
+        {/*    alignItems="center"*/}
+        {/*    justifyContent="center"*/}
+        {/*    onClick={() => {*/}
+        {/*      action?.()*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    <Eye size={16} />*/}
+        {/*  </Flex>*/}
+        {/*)}*/}
+      </Box>
       <Flex
+        as={Link}
+        to={generateTraderMultiExchangeRoute({ protocol, address, params: { time: type } })}
+        onClick={(e: any) => e.stopPropagation()}
         flex="1"
         flexDirection="column"
         sx={{
           width: 100,
+          color: 'inherit',
           textAlign: 'left',
           ...sx,
         }}
@@ -152,6 +211,17 @@ export function AccountInfo({
           </Tooltip>
         )}
       </Flex>
+      {openDrawer && !!currentTrader && (
+        <TraderDetailsDrawer
+          onDismiss={() => {
+            setCurrentTrader(undefined)
+            setOpenDrawer(false)
+          }}
+          protocol={currentTrader.protocol}
+          address={currentTrader.address}
+          type={type}
+        />
+      )}
     </Flex>
   )
 }

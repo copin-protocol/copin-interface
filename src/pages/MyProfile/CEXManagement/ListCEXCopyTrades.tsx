@@ -8,66 +8,41 @@ import CopyTradeCloneDrawer from 'components/@copyTrade/CopyTradeCloneDrawer'
 import DeleteCopyTradeModal from 'components/@copyTrade/CopyTradeDeleteModal'
 import CopyTradeEditDrawer from 'components/@copyTrade/CopyTradeEditDrawer'
 import CopyTradeHistoryDrawer from 'components/@copyTrade/CopyTradeHistoryDrawer'
-import Num from 'entities/Num'
-import { CopyTradeData } from 'entities/copyTrade.d'
-import { CopyWalletData } from 'entities/copyWallet'
 import { getMaxVolumeCopy, useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useUpdateCopyTrade from 'hooks/features/useUpdateCopyTrade'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
 import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex } from 'theme/base'
-import { CopyTradeStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
+import { CopyTable, CopyTradeWithCheckingData, ListCopyCEX } from '../ListCopyTrade'
+import ConfirmStopModal from '../ListCopyTrade/ConfirmStopModal'
+import { TraderCopyCountWarning } from '../ListCopyTrade/TraderCopyCountWarning'
+import useCEXCopyTradeColumns from '../ListCopyTrade/useCEXCopyTradeColumns'
 import NoDataOrSelect from '../NoDataOrSelect'
-import ConfirmStopModal from './ConfirmStopModal'
 import FilterSection from './FilterSection'
-import { CopyTable, CopyTradeWithCheckingData, ListCopy } from './ListCopyTrade'
-import { TraderCopyCountWarning } from './TraderCopyCountWarning'
-import useCopyTradeColumns from './useCopyTradeColumns'
+import useCEXManagementContext from './useCEXManagementContext'
 
-export interface MyCopiesProps {
-  traders: string[]
-  selectedTraders: string[]
-  data: CopyTradeData[] | undefined
-  allCopyTrades: CopyTradeData[] | undefined
-  isLoading: boolean
-  onRefresh: () => void
-  handleToggleStatus: (status: CopyTradeStatusEnum) => void
-  checkIsStatusChecked: (status: CopyTradeStatusEnum) => boolean
-  handleToggleProtocol: (protocol: ProtocolEnum) => void
-  checkIsProtocolChecked: (protocol: ProtocolEnum) => boolean
-  handleSelectAllTraders: (isSelectedAll: boolean) => void
-  isLoadingTraders: boolean
-  handleToggleTrader: (address: string) => void
-  handleAddTrader: (address: string) => void
-  copyWallet: CopyWalletData | null
-  copyStatus: CopyTradeStatusEnum[]
-  selectedProtocol: ProtocolEnum[]
-  available: Num | null
-  toggleAllProtocol: (isToggledAll: boolean) => void
-  isToggleAllProtocol: boolean
-}
-
-export default function MyCopies(props: MyCopiesProps) {
+export default function ListCEXCopyTrades({ expanded }: { expanded: boolean }) {
   const {
-    traders,
+    listTraderAddresses,
     selectedTraders,
-    data,
-    isLoading,
-    onRefresh,
+    copyTrades,
+    isLoadingCopyTrades,
+    handleRefresh,
     handleSelectAllTraders,
     isLoadingTraders,
     handleAddTrader,
-    copyWallet,
-  } = props
+    activeWallet,
+  } = useCEXManagementContext()
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
   const [openConfirmStopModal, setOpenConfirmStopModal] = useState(false)
   const { updateCopyTrade, isMutating } = useUpdateCopyTrade({
     onSuccess: () => {
       setOpenConfirmStopModal(false)
-      onRefresh()
+      handleRefresh()
     },
   })
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -122,7 +97,7 @@ export default function MyCopies(props: MyCopiesProps) {
     [updateCopyTrade]
   )
 
-  const { columns, renderProps } = useCopyTradeColumns({
+  const { columns, renderProps } = useCEXCopyTradeColumns({
     onSelect,
     setOpenDrawer,
     setOpenHistoryDrawer,
@@ -135,9 +110,9 @@ export default function MyCopies(props: MyCopiesProps) {
   })
 
   const { data: volumeCopies } = useQuery(
-    [QUERY_KEYS.GET_TRADER_VOLUME_COPY, copyWallet?.id],
-    () => getTraderVolumeCopy({ exchange: copyWallet?.exchange }),
-    { enabled: !!copyWallet?.id }
+    [QUERY_KEYS.GET_TRADER_VOLUME_COPY, activeWallet?.id],
+    () => getTraderVolumeCopy({ exchange: activeWallet?.exchange }),
+    { enabled: !!activeWallet?.id }
   )
 
   const handleConfirmStop = () => {
@@ -162,10 +137,9 @@ export default function MyCopies(props: MyCopiesProps) {
   const changeCurrentSort = (sort: TableSortProps<CopyTradeWithCheckingData> | undefined) => {
     setCurrentSort(sort)
   }
-  let sortedData: CopyTradeWithCheckingData[] | undefined = Array.isArray(data) ? [] : undefined
-  if (data?.length) {
-    //@ts-ignore
-    sortedData = [...data]
+  let sortedData: CopyTradeWithCheckingData[] | undefined = Array.isArray(copyTrades) ? [] : undefined
+  if (copyTrades?.length) {
+    sortedData = [...copyTrades]
     if (sortedData && sortedData.length > 0 && !!currentSort) {
       sortedData.sort((a, b) => {
         const x = a?.[currentSort.sortBy] as any
@@ -178,7 +152,7 @@ export default function MyCopies(props: MyCopiesProps) {
       })
     }
   }
-  const isRef = !!copyWallet?.isReferral
+  const isRef = !!activeWallet?.isReferral
   const systemVolumeLimit = useSystemConfigContext()
   sortedData = sortedData?.map((_d) => ({
     ..._d,
@@ -199,22 +173,22 @@ export default function MyCopies(props: MyCopiesProps) {
         flexDirection: 'column',
       }}
     >
-      <FilterSection {...props} />
-      <TraderCopyCountWarning allCopyTrades={props.allCopyTrades} traderAddresses={props.traders} />
+      <FilterSection />
+      <TraderCopyCountWarning allCopyTrades={copyTrades} traderAddresses={listTraderAddresses} />
       <Box flex="1 0 0" overflow="hidden">
         {hasSelectedTraders &&
           (sm ? (
             <CopyTable
               sortedData={sortedData}
               columns={columns}
-              isLoading={isLoading}
+              isLoading={isLoadingCopyTrades}
               currentSort={currentSort}
               changeCurrentSort={changeCurrentSort}
             />
           ) : (
-            <ListCopy sortedData={sortedData} isLoading={isLoading} renderProps={renderProps} />
+            <ListCopyCEX sortedData={sortedData} isLoading={isLoadingCopyTrades} renderProps={renderProps} />
           ))}
-        {!isLoading && !!traders.length && !hasSelectedTraders && (
+        {!isLoadingCopyTrades && !!listTraderAddresses.length && !hasSelectedTraders && (
           <NoDataOrSelect
             type="noSelectTraders"
             actionButton={
@@ -231,14 +205,14 @@ export default function MyCopies(props: MyCopiesProps) {
           />
         )}
       </Box>
-      {!isLoadingTraders && !traders.length && <NoDataOrSelect type="noTraders" />}
+      {!isLoadingTraders && !listTraderAddresses.length && <NoDataOrSelect type="noTraders" />}
 
       {openDrawer && (
         <CopyTradeEditDrawer
           isOpen={openDrawer}
           onDismiss={handleCloseDrawer}
           copyTradeData={copyTradeData.current}
-          onSuccess={() => onRefresh()}
+          onSuccess={() => handleRefresh()}
         />
       )}
       <CopyTradeHistoryDrawer
@@ -253,7 +227,7 @@ export default function MyCopies(props: MyCopiesProps) {
           copyTradeData={copyTradeData.current}
           onSuccess={(traderAddress) => {
             traderAddress && handleAddTrader(traderAddress)
-            onRefresh()
+            handleRefresh()
           }}
         />
       )}
@@ -263,7 +237,7 @@ export default function MyCopies(props: MyCopiesProps) {
           account={copyTradeData.current?.account}
           protocol={copyTradeData.current?.protocol}
           onDismiss={handleCloseDeleteModal}
-          onSuccess={() => onRefresh()}
+          onSuccess={() => handleRefresh()}
         />
       )}
       {openConfirmStopModal && (

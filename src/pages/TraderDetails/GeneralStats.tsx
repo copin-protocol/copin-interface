@@ -26,11 +26,11 @@ export default function GeneralStats({
       }}
     >
       <Flex
-        p={12}
+        p={[0, 12]}
         sx={{
           height: '100%',
           alignItems: 'center',
-          gap: 24,
+          gap: [1, 24],
           '& > *': { flexShrink: 0 },
           width: ['100%', '100%', 'max-content'],
           mr: '0',

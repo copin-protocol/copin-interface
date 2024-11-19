@@ -14,6 +14,7 @@ import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
 import { Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { generatePositionCanvas } from 'utils/helpers/generateImage'
 import { generateParamsUrl, generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
@@ -28,7 +29,8 @@ export default function SharePosition({
   stats: PositionData
   chartId: string
 }) {
-  const { prices } = useGetUsdPrices()
+  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
+  const prices = GAINS_TRADE_PROTOCOLS.includes(stats.protocol) ? gainsPrices : pythPrices
   const [isSocialMediaSharingOpen, setIsSocialMediaSharingOpen] = useState(false)
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
   // const [shareData, setShareData] = useState<SharePositionData>()
