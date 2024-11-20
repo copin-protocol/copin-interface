@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 
 import { getTraderExchangeStatistic, getTraderStatisticApi } from 'apis/traderApis'
 import TraderHistoryPositions, { TraderHistoryPositionsListView } from 'components/@position/TraderHistoryPositions'
-import TraderOpeningPositions from 'components/@position/TraderOpeningPositions'
+import TraderOpeningPositions, { TraderOpeningPositionsListView } from 'components/@position/TraderOpeningPositions'
 import NotFound from 'components/@ui/NotFound'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
@@ -16,9 +16,10 @@ import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import ChartTrader from 'pages/TraderDetails/ChartTrader'
 import GeneralStats from 'pages/TraderDetails/GeneralStats'
-import ProtocolBetaWarning from 'pages/TraderDetails/ProtocolBetaWarning'
+import PositionMobileView from 'pages/TraderDetails/Layouts/PositionMobileView'
 import TraderActionButtons from 'pages/TraderDetails/TraderActionButtons'
 import TraderInfo from 'pages/TraderDetails/TraderInfo'
+import TraderRanking from 'pages/TraderDetails/TraderRanking'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
@@ -66,7 +67,7 @@ export function TraderDetailsComponent({
   protocol: ProtocolEnum
   type?: TimeFrameEnum
 }) {
-  const { sm } = useResponsive()
+  const { lg } = useResponsive()
   const timeFilterOptions = TIME_FILTER_OPTIONS
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
@@ -124,12 +125,14 @@ export function TraderDetailsComponent({
       <Box
         width="100%"
         sx={{
-          pr: 40,
+          pt: 1,
+          ml: -2,
+          pr: 4,
           zIndex: 10,
         }}
       >
         <BotAlertProvider>
-          <ProtocolBetaWarning protocol={protocol} />
+          {/*<ProtocolBetaWarning protocol={protocol} />*/}
           <Flex
             sx={{
               width: '100%',
@@ -154,55 +157,98 @@ export function TraderDetailsComponent({
         </BotAlertProvider>
       </Box>
       <Flex flexDirection="column" flex={1} sx={{ overflow: 'auto' }}>
-        <Box
-          height={250}
-          sx={{ m: [0, 3], backgroundColor: 'neutral5', borderRadius: '1px', border: 'small', borderColor: 'neutral4' }}
-        >
-          <Flex alignItems="center" justifyContent="space-between">
-            <Flex
-              sx={{
-                flexShrink: 0,
-                pl: [2, 3],
-                alignItems: 'center',
-                height: [60, 60, 60, 40],
-                borderBottom: 'small',
-                borderBottomColor: 'neutral4',
-              }}
-            >
-              <TimeDropdown timeOption={timeOption} onChangeTime={setTimeOption} />
-            </Flex>
-            <GeneralStats traderData={currentTraderData} account={address} protocol={protocol} />
-          </Flex>
-          <Box height={190}>
-            <ChartTrader
-              protocol={protocol}
-              account={address}
-              timeOption={timeOption}
-              // onChangeTime={setTimeOption}
-            />
-          </Box>
-        </Box>
-        <Box sx={{ backgroundColor: 'neutral7' }}>
-          <TraderOpeningPositions address={address} protocol={protocol} isDrawer isExpanded />
-        </Box>
         <Flex
-          flex={1}
-          flexDirection="column"
-          sx={{ position: 'relative', backgroundColor: 'neutral7', minHeight: 400 }}
+          height={250}
+          alignItems="center"
+          sx={{
+            m: [0, 2],
+            gap: 2,
+            backgroundColor: 'neutral5',
+            borderRadius: '1px',
+            border: 'small',
+            borderColor: 'neutral4',
+          }}
         >
-          {sm ? (
-            <TraderHistoryPositions address={address} protocol={protocol} isDrawer isExpanded />
-          ) : (
-            <TraderHistoryPositionsListView
-              address={address}
-              protocol={protocol}
-              backgroundColor="neutral7"
-              isDrawer
-              isExpanded
-              hasTitle
-            />
+          {lg && (
+            <Flex height="100%" alignItems="center" sx={{ gap: 2 }}>
+              <Box width="350px">
+                <TraderRanking data={currentTraderData} timeOption={timeOption} onChangeTime={setTimeOption} isDrawer />
+              </Box>
+              <Box height="90%" width="1px" backgroundColor="neutral4" />
+            </Flex>
           )}
+          <Box flex={1}>
+            <Flex alignItems="center" justifyContent="space-between">
+              <Flex
+                sx={{
+                  flexShrink: 0,
+                  pl: [2, 3],
+                  alignItems: 'center',
+                  height: [60, 60, 60, 40],
+                  borderBottom: 'small',
+                  borderBottomColor: 'neutral4',
+                }}
+              >
+                <TimeDropdown timeOption={timeOption} onChangeTime={setTimeOption} />
+              </Flex>
+              <GeneralStats traderData={currentTraderData} account={address} protocol={protocol} />
+            </Flex>
+            <Box height={190}>
+              <ChartTrader
+                protocol={protocol}
+                account={address}
+                timeOption={timeOption}
+                // onChangeTime={setTimeOption}
+              />
+            </Box>
+          </Box>
         </Flex>
+        {lg ? (
+          <Flex flex={1} flexDirection="column" sx={{ backgroundColor: 'neutral7' }}>
+            <Box>
+              <TraderOpeningPositions address={address} protocol={protocol} isDrawer isExpanded />
+            </Box>
+            <Box sx={{ position: 'relative', minHeight: 400 }}>
+              <TraderHistoryPositions address={address} protocol={protocol} isDrawer isExpanded />
+            </Box>
+          </Flex>
+        ) : (
+          <Flex sx={{ backgroundColor: 'neutral7', flex: 1 }}>
+            <PositionMobileView
+              openingPositions={<TraderOpeningPositionsListView address={address} protocol={protocol} isDrawer />}
+              historyPositions={
+                <TraderHistoryPositionsListView
+                  address={address}
+                  protocol={protocol}
+                  backgroundColor="neutral7"
+                  isDrawer
+                  isExpanded
+                />
+              }
+            />
+          </Flex>
+        )}
+        {/*<Box sx={{ backgroundColor: 'neutral7' }}>*/}
+        {/*  <TraderOpeningPositions address={address} protocol={protocol} isDrawer isExpanded />*/}
+        {/*</Box>*/}
+        {/*<Flex*/}
+        {/*  flex={1}*/}
+        {/*  flexDirection="column"*/}
+        {/*  sx={{ position: 'relative', backgroundColor: 'neutral7', minHeight: 400 }}*/}
+        {/*>*/}
+        {/*  {sm ? (*/}
+        {/*    <TraderHistoryPositions address={address} protocol={protocol} isDrawer isExpanded />*/}
+        {/*  ) : (*/}
+        {/*    <TraderHistoryPositionsListView*/}
+        {/*      address={address}*/}
+        {/*      protocol={protocol}*/}
+        {/*      backgroundColor="neutral7"*/}
+        {/*      isDrawer*/}
+        {/*      isExpanded*/}
+        {/*      hasTitle*/}
+        {/*    />*/}
+        {/*  )}*/}
+        {/*</Flex>*/}
       </Flex>
     </Flex>
   )

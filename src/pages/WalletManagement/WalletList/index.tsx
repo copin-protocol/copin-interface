@@ -60,6 +60,8 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
   const isInternal = useInternalRole()
   const exchangeOptions = isInternal ? INTERNAL_EXCHANGES : EXCHANGES
+  const apiWalletOptions = exchangeOptions.filter((e) => !DCP_EXCHANGES.includes(e))
+  const smartWalletOptions = exchangeOptions.filter((e) => DCP_EXCHANGES.includes(e))
 
   const updateCopyWallet = useMutation(updateCopyWalletApi, {
     onSuccess: () => {
@@ -116,81 +118,127 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
           '& > *:first-child': { borderTop: 'none' },
         }}
       >
-        {exchangeOptions.map((exchange) => {
-          const isAllowed = allowExchanges.includes(exchange)
-          const wallets = walletMapping[exchange] ?? []
-          return (
-            <Accordion
-              disabled={!isAllowed}
-              iconSize={24}
-              direction="left"
-              key={exchange}
-              wrapperSx={{ p: 0 }}
-              headerWrapperSx={{
-                p: 3,
-                gap: 3,
-                bg: 'neutral5',
-                alignItems: ['start', 'start', 'center'],
-                '.icon': { mt: [1, 1, 0] },
-              }}
-              header={
-                <Flex
-                  sx={{
-                    width: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 12,
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  <ExchangeTitle
-                    count={wallets.length}
-                    isAllowed={isAllowed}
-                    exchange={exchange}
-                    onCreateWalletSuccess={reloadCopyWallets}
-                  />
-                  <Box ml={{ _: '-40px', md: 0 }}>
-                    {DCP_EXCHANGES.includes(exchange) ? <WalletWarningDCP /> : <ExternalLink exchange={exchange} />}
-                  </Box>
-                </Flex>
-              }
-              body={
-                isAllowed && (
-                  <Box
-                    sx={{
-                      '& > *': {
-                        borderBottom: 'small',
-                        borderBottomColor: 'neutral4',
-                        '&:last-child': { borderBottom: 'none' },
-                      },
-                    }}
-                  >
-                    {wallets.map((wallet) => {
-                      return (
-                        <WalletDetailsCard
-                          hiddenBalance={hiddenBalance}
-                          key={wallet.id}
-                          data={wallet}
-                          hasBorderTop={false}
-                          handleUpdate={handleUpdate}
-                          reload={reloadCopyWallets}
-                        />
-                      )
-                    })}
-                    {!wallets?.length && (
-                      <Box sx={{ textAlign: 'left', p: 3 }} color="neutral3">
-                        No Wallet
-                      </Box>
-                    )}
-                  </Box>
-                )
-              }
-            />
-          )
+        <Type.BodyBold px={3} py={2}>
+          API Wallet
+        </Type.BodyBold>
+        {renderWalletList({
+          exchangeOptions: apiWalletOptions,
+          allowExchanges,
+          walletMapping,
+          hiddenBalance,
+          reloadCopyWallets,
+          handleUpdate,
+        })}
+
+        <Flex px={3} py={2} alignItems="center" justifyContent="space-between">
+          <Type.BodyBold>Smart Wallet</Type.BodyBold>
+          <WalletWarningDCP />
+        </Flex>
+        {renderWalletList({
+          exchangeOptions: smartWalletOptions,
+          allowExchanges,
+          walletMapping,
+          hiddenBalance,
+          reloadCopyWallets,
+          handleUpdate,
         })}
       </Flex>
     </Flex>
   )
+}
+
+function renderWalletList({
+  exchangeOptions,
+  allowExchanges,
+  walletMapping,
+  hiddenBalance,
+  reloadCopyWallets,
+  handleUpdate,
+}: {
+  exchangeOptions: CopyTradePlatformEnum[]
+  allowExchanges: CopyTradePlatformEnum[]
+  walletMapping: Record<CopyTradePlatformEnum, CopyWalletData[]>
+  hiddenBalance?: boolean
+  reloadCopyWallets: () => void
+  handleUpdate: (params: {
+    copyWalletId: string
+    name: string
+    previousValue: string
+    callback: (value: string) => void
+  }) => void
+}) {
+  return exchangeOptions.map((exchange) => {
+    const isAllowed = allowExchanges.includes(exchange)
+    const wallets = walletMapping[exchange] ?? []
+    return (
+      <Accordion
+        disabled={!isAllowed}
+        iconSize={24}
+        direction="left"
+        key={exchange}
+        wrapperSx={{ p: 0 }}
+        headerWrapperSx={{
+          p: 3,
+          gap: 3,
+          bg: 'neutral5',
+          alignItems: ['start', 'start', 'center'],
+          '.icon': { mt: [1, 1, 0] },
+        }}
+        header={
+          <Flex
+            sx={{
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 12,
+              flexWrap: 'wrap',
+            }}
+          >
+            <ExchangeTitle
+              count={wallets.length}
+              isAllowed={isAllowed}
+              exchange={exchange}
+              onCreateWalletSuccess={reloadCopyWallets}
+            />
+            <Box ml={{ _: '-40px', md: 0 }}>
+              {!DCP_EXCHANGES.includes(exchange) && <ExternalLink exchange={exchange} />}
+            </Box>
+          </Flex>
+        }
+        body={
+          isAllowed && (
+            <Box
+              sx={{
+                '& > *': {
+                  borderBottom: 'small',
+                  borderBottomColor: 'neutral4',
+                  '&:last-child': { borderBottom: 'none' },
+                },
+              }}
+            >
+              {wallets.map((wallet) => {
+                return (
+                  <WalletDetailsCard
+                    hiddenBalance={hiddenBalance}
+                    key={wallet.id}
+                    data={wallet}
+                    hasBorderTop={false}
+                    handleUpdate={handleUpdate}
+                    reload={reloadCopyWallets}
+                  />
+                )
+              })}
+              {!wallets?.length && (
+                <Box sx={{ textAlign: 'left', p: 3 }} color="neutral3">
+                  No Wallet
+                </Box>
+              )}
+            </Box>
+          )
+        }
+      />
+    )
+  })
 }
 
 function ExchangeTitle({
@@ -337,8 +385,8 @@ function WalletWarningDCP() {
       />
       <Tooltip id={'tt_dcp_wallet_warning'} place="top" type="dark" effect="solid" clickable>
         <Type.Small sx={{ maxWidth: [300, 400] }}>
-          DCP is currently in alpha version and experiment phase. Please use caution and test with limited capital. If
-          you encounter any issues, please contact direct support at:{' '}
+          Smart Wallet is currently in alpha version and experiment phase. Please use caution and test with limited
+          capital. If you encounter any issues, please contact direct support at:{' '}
           <a href={LINKS.support} target="_blank" rel="noreferrer">
             https://t.me/leecopin
           </a>

@@ -1,17 +1,16 @@
 import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
-import { useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { Link } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 import { v4 as uuid } from 'uuid'
 
 import IconEye from 'assets/icons/ic-eye.svg'
-import TraderDetailsDrawer from 'components/@trader/TraderDetailsDrawer'
 import ActiveDot from 'components/@ui/ActiveDot'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { useProtocolStore } from 'hooks/store/useProtocols'
+import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 // import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
@@ -21,12 +20,6 @@ import { addressShorten, shortenText } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 // import ProtocolLogo from '../ProtocolLogo'
-
-interface TraderProps {
-  address: string
-  protocol: ProtocolEnum
-  type?: TimeFrameEnum
-}
 
 export function AccountInfo({
   isOpenPosition,
@@ -54,12 +47,10 @@ export function AccountInfo({
   wrapperSx?: any
 }) {
   const protocolTooltipId = uuid()
+  const { setTrader } = useQuickViewTraderStore()
   const { protocol: defaultProtocol } = useProtocolStore()
   protocol = protocol ?? defaultProtocol
   const { isCopying } = useTraderCopying(address, protocol)
-
-  const [openDrawer, setOpenDrawer] = useState(false)
-  const [currentTrader, setCurrentTrader] = useState<TraderProps | undefined>()
 
   return (
     <Flex
@@ -89,8 +80,7 @@ export function AccountInfo({
         }}
         onClick={(event) => {
           event.stopPropagation()
-          setCurrentTrader({ address, protocol, type })
-          setOpenDrawer(true)
+          setTrader({ address, protocol, type })
         }}
       >
         <AddressAvatar address={address} size={size} sx={{ '&:hover': hasHover ? { opacity: 0.25 } : {} }} />
@@ -211,17 +201,6 @@ export function AccountInfo({
           </Tooltip>
         )}
       </Flex>
-      {openDrawer && !!currentTrader && (
-        <TraderDetailsDrawer
-          onDismiss={() => {
-            setCurrentTrader(undefined)
-            setOpenDrawer(false)
-          }}
-          protocol={currentTrader.protocol}
-          address={currentTrader.address}
-          type={type}
-        />
-      )}
     </Flex>
   )
 }

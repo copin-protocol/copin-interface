@@ -77,14 +77,14 @@ enum TabKeyEnum {
 
 const tabConfigs: TabConfig[] = [
   {
-    name: <Trans>CEX MANAGEMENT</Trans>,
+    name: <Trans>API WALLET MANAGEMENT</Trans>,
     activeIcon: <SquareHalf size={24} weight="fill" />,
     inactiveIcon: <SquareHalf size={24} />,
     key: TabKeyEnum.MANAGEMENT,
     route: ROUTES.MY_MANAGEMENT.path,
   },
   {
-    name: <Trans>DCP MANAGEMENT</Trans>,
+    name: <Trans>SMART WALLET MANAGEMENT</Trans>,
     activeIcon: <SubtractSquare size={24} weight="fill" />,
     inactiveIcon: <SubtractSquare size={24} />,
     key: TabKeyEnum.DCP_MANAGEMENT,
@@ -107,8 +107,8 @@ const tabConfigs: TabConfig[] = [
 ]
 
 const pageTitleMapping = {
-  [ROUTES.MY_MANAGEMENT.path]: t`CEX Management`,
-  [ROUTES.USER_DCP_MANAGEMENT.path]: t`DCP Management`,
+  [ROUTES.MY_MANAGEMENT.path]: t`API Wallet Management`,
+  [ROUTES.USER_DCP_MANAGEMENT.path]: t`Smart Wallet Management`,
   [ROUTES.MY_HISTORY.path]: t`History`,
   [ROUTES.USER_ACTIVITY.path]: t`Activities`,
 }

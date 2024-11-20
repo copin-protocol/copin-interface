@@ -36,13 +36,13 @@ const SmartWalletActions = ({
         hasArrow={false}
         menuSx={{
           bg: 'neutral7',
-          width: 165,
+          width: 210,
         }}
         menu={
           <>
             {!isOnlyAction && (
               <ActionItem
-                title={<Trans>DCP Management</Trans>}
+                title={<Trans>Smart Wallet Management</Trans>}
                 icon={<UserCircle size={18} />}
                 onSelect={() => {
                   window.open(

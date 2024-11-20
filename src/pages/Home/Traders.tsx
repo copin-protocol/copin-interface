@@ -520,7 +520,7 @@ function TraderItem({
       }}
     >
       <Flex sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between', '& *': { fontWeight: 600 } }}>
-        <TraderAddress address={account} protocol={protocol} options={{ timeType: type }} />
+        <TraderAddress address={account} protocol={protocol} options={{ timeType: type, size: 32 }} />
         <Flex sx={{ alignItems: 'center', gap: 3 }}>
           <FavoriteButton
             address={account}
@@ -528,7 +528,6 @@ function TraderItem({
             size={20}
             sx={{
               position: 'relative',
-              top: '-2px',
             }}
           />
           <IconBox

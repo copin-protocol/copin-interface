@@ -177,7 +177,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
 
   return (
     <Box display={['block', 'block', 'block', 'flex']} flexDirection="column" height={['auto', 'auto', 'auto', '100%']}>
-      <Flex pt={16} px={12} pb={12} alignItems="center">
+      <Flex pt={16} px={2} pb={12} alignItems="center">
         <Box flex="1" sx={{ '& > *': { pb: 0 } }}>
           <SectionTitle icon={<ClockCounterClockwise size={24} />} title="History" />
         </Box>

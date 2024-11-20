@@ -1,12 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { Link } from 'react-router-dom'
 
 import { ApiMeta } from 'apis/api'
-import AddressAvatar from 'components/@ui/AddressAvatar'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
-import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import ReverseTag from 'components/@ui/ReverseTag'
+import TraderAddress from 'components/@ui/TraderAddress'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserActivityData } from 'entities/user'
@@ -16,8 +14,7 @@ import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { EXPLORER_PLATFORMS } from 'utils/config/platforms'
 import { PROTOCOL_PROVIDER, getTokenTradeSupport } from 'utils/config/trades'
 import { ORDER_TYPE_TRANS } from 'utils/config/translations'
-import { addressShorten, formatNumber } from 'utils/helpers/format'
-import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+import { formatNumber } from 'utils/helpers/format'
 import { parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 
 export interface UserActivityTableProps {
@@ -60,16 +57,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
     </Type.CaptionBold>
   ),
   sourceTrader: (item) => (
-    <Flex
-      as={Link}
-      to={generateTraderMultiExchangeRoute({ protocol: item.protocol, address: item.sourceAccount })}
-      sx={{ alignItems: 'center', gap: 2 }}
-    >
-      <AddressAvatar address={item.sourceAccount} size={24} />
-      <Type.Caption color="neutral1">{addressShorten(item.sourceAccount)}</Type.Caption>
-      <VerticalDivider />
-      <ProtocolLogo protocol={item.protocol} hasText={false} size={24} />
-    </Flex>
+    <TraderAddress address={item.sourceAccount} protocol={item.protocol} options={{ size: 24 }} />
   ),
   sourceAction: (item) => (
     <Type.Caption color="neutral1">{item.type ? ORDER_TYPE_TRANS[item.type] : '--'}</Type.Caption>

@@ -560,7 +560,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     label: (
       <LabelWithTooltip
         id="tt_avg_duration_label"
-        tooltip="The average duration of trades (h: hours | m: minutes | s: seconds)"
+        tooltip="The average duration of trades (d: days | h: hours | m: minutes | s: seconds)"
       >
         Avg Duration
       </LabelWithTooltip>
@@ -582,7 +582,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     label: (
       <LabelWithTooltip
         id="tt_min_duration_label"
-        tooltip="The minimum duration of a trade (h: hours | m: minutes | s: seconds)"
+        tooltip="The minimum duration of a trade (d: days | h: hours | m: minutes | s: seconds)"
       >
         Min Duration
       </LabelWithTooltip>
@@ -604,7 +604,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     label: (
       <LabelWithTooltip
         id="tt_max_duration_label"
-        tooltip="The maximum duration of a trade (h: hours | m: minutes | s: seconds)"
+        tooltip="The maximum duration of a trade (d: days | h: hours | m: minutes | s: seconds)"
       >
         Max Duration
       </LabelWithTooltip>

@@ -3,14 +3,15 @@ import { useQuery } from 'react-query'
 
 import { ApiListResponse } from 'apis/api'
 import { getTraderHistoryApi, getTraderTokensStatistic } from 'apis/traderApis'
+import { QueryFilter } from 'apis/types'
 import { PositionData } from 'entities/trader'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import { TableSortProps } from 'theme/Table/types'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { PositionStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { ALL_OPTION } from 'utils/config/trades'
+import { ALL_OPTION, ALL_TOKENS_ID } from 'utils/config/trades'
 import { getSymbolFromPair, pageToOffset } from 'utils/helpers/transform'
 
 const defaultSort: TableSortProps<PositionData> = {
@@ -57,6 +58,14 @@ export default function useQueryClosedPositionsMobile({
       changeCurrentPage(1)
     },
   })
+  const queryFilters: QueryFilter[] = []
+  queryFilters.push({ fieldName: 'status', value: PositionStatusEnum.CLOSE })
+  if (!!address) {
+    queryFilters.push({ fieldName: 'account', value: address })
+  }
+  if (currencyOption?.id && currencyOption?.id !== ALL_TOKENS_ID) {
+    queryFilters.push({ fieldName: 'pair', value: `${currencyOption.id}-USDT` })
+  }
 
   const { data, isFetching: isLoading } = useQuery<ApiListResponse<PositionData>>(
     [QUERY_KEYS.GET_POSITIONS_HISTORY, address, currentPage, currentLimit, currencyOption?.id, protocol],
@@ -66,6 +75,7 @@ export default function useQueryClosedPositionsMobile({
         offset: pageToOffset(currentPage, currentLimit),
         sort: defaultSort,
         protocol,
+        queryFilters,
       })
     },
     {
