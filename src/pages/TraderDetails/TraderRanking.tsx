@@ -8,16 +8,19 @@ import { Box, Flex, Type } from 'theme/base'
 import { rankingFieldOptions } from 'utils/config/options'
 
 import CustomizeRankingColumns from './CustomizeRankingColumns'
+import CustomizeRankingColumn from './CustomizeRankingColumns'
 import ScoreChart, { ScoreChartData } from './ScoreChart'
 
 const TraderRanking = memo(function TraderRankingMemo({
   data,
   timeOption,
   onChangeTime,
+  isDrawer,
 }: {
   data: TraderData | undefined
   timeOption: TimeFilterProps
   onChangeTime: (option: TimeFilterProps) => void
+  isDrawer?: boolean
 }) {
   const { customizedRanking } = useRankingCustomizeStore()
 
@@ -52,25 +55,38 @@ const TraderRanking = memo(function TraderRankingMemo({
         bg: 'neutral5',
       }}
     >
-      <Flex
-        sx={{
-          flexShrink: 0,
-          px: 3,
-          width: '100%',
-          alignItems: 'center',
-          height: 40,
-          borderBottom: 'small',
-          borderBottomColor: 'neutral4',
-        }}
-      >
-        <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
-      </Flex>
-      <Type.CaptionBold mt={12} sx={{ px: 3, width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">
-        <Flex sx={{ alignItems: 'center', justifyContent: 'start', width: '100%', gap: 12 }}>
-          <Box as="span">Better than {avgScore.toFixed(0)}% traders</Box>
-          <CustomizeRankingColumns />
-        </Flex>
-      </Type.CaptionBold>
+      {isDrawer ? (
+        <Type.Caption sx={{ pb: 12, px: 0, width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">
+          <Flex sx={{ alignItems: 'center', justifyContent: 'flex-start', width: '100%', gap: 12 }}>
+            <Flex alignItems="center" sx={{ gap: 1, px: 2 }}>
+              <Box as="span">Better than {avgScore.toFixed(0)}% traders in </Box>
+              {timeOption.text}
+            </Flex>
+          </Flex>
+        </Type.Caption>
+      ) : (
+        <Box sx={{ width: '100%', height: '100%' }}>
+          <Flex
+            sx={{
+              flexShrink: 0,
+              px: 3,
+              width: '100%',
+              alignItems: 'center',
+              height: 40,
+              borderBottom: 'small',
+              borderBottomColor: 'neutral4',
+            }}
+          >
+            <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
+          </Flex>
+          <Type.CaptionBold mt={12} sx={{ px: 3, width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">
+            <Flex sx={{ alignItems: 'center', justifyContent: 'start', width: '100%', gap: 12 }}>
+              <Box as="span">Better than {avgScore.toFixed(0)}% traders</Box>
+              <CustomizeRankingColumns />
+            </Flex>
+          </Type.CaptionBold>
+        </Box>
+      )}
       <Flex sx={{ flex: 1, alignItems: 'center', justifyContent: 'center', width: '100%' }}>
         <ScoreChart data={ranking} width={400} height={175} />
       </Flex>

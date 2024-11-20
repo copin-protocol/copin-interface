@@ -7,12 +7,14 @@ import PositionListCard from 'components/@position/TraderPositionsListView'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { renderEntry, renderOpeningPnL, renderSizeOpening, renderTrader } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
+import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Type } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
-const columns: ColumnData<PositionData>[] = [
+const columns: ColumnData<PositionData, ExternalSource>[] = [
   {
     title: 'Time',
     dataIndex: 'openBlockTime',
@@ -28,8 +30,9 @@ const columns: ColumnData<PositionData>[] = [
     title: 'Trader',
     dataIndex: 'account',
     key: 'account',
-    style: { width: '135px' },
-    render: (item) => renderTrader(item.account, item.protocol, false, true),
+    style: { width: '154px' },
+    render: (item, _, externalSource) =>
+      renderTrader(item.account, item.protocol, true, true, externalSource?.onQuickView),
   },
   {
     title: 'Entry',
@@ -72,6 +75,7 @@ export type OpeningPositionProps = {
 }
 export type OpeningPositionComponentProps = {
   onClickItem?: (data: PositionData) => void
+  onQuickView?: ({ address, protocol }: { address: string; protocol: ProtocolEnum }) => void
 } & OpeningPositionProps
 
 export default function TopOpeningsWindow(props: OpeningPositionProps) {
@@ -83,12 +87,34 @@ export default function TopOpeningsWindow(props: OpeningPositionProps) {
     </div>
   )
 }
-function OpeningPositionsTable({ isLoading, data, scrollDep, onClickItem }: OpeningPositionComponentProps) {
+
+type ExternalSource = {
+  onQuickView?: ({ address, protocol }: { address: string; protocol: ProtocolEnum }) => void
+}
+function OpeningPositionsTable({
+  isLoading,
+  data,
+  scrollDep,
+  onClickItem,
+  onQuickView,
+}: OpeningPositionComponentProps) {
+  const externalSource: ExternalSource = {
+    onQuickView,
+  }
   return (
     <Table
       restrictHeight
       wrapperSx={{
         minWidth: 650,
+        '& tbody': {
+          '.hiding-btn': { opacity: 0, transition: 'all 240ms ease' },
+        },
+        '& tbody td': {
+          '.hiding-btn': { opacity: 0 },
+        },
+        '& tbody tr:hover': {
+          '.hiding-btn': { opacity: 1 },
+        },
       }}
       data={data}
       scrollToTopDependencies={[scrollDep]}
@@ -96,6 +122,7 @@ function OpeningPositionsTable({ isLoading, data, scrollDep, onClickItem }: Open
       isLoading={isLoading}
       onClickRow={onClickItem}
       renderRowBackground={() => 'rgb(31, 34, 50)'}
+      externalSource={externalSource}
     />
   )
 }
@@ -104,6 +131,7 @@ export function OpeningPositionsWrapper({ children }: { children: any }) {
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
+  const { setTrader } = useQuickViewTraderStore()
 
   const handleSelectItem = useCallback((data: PositionData) => {
     setCurrentPosition(data)
@@ -115,9 +143,20 @@ export function OpeningPositionsWrapper({ children }: { children: any }) {
     window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
     setOpenDrawer(false)
   }
+
+  const handleQuickView = useCallback(
+    ({ address, protocol }: { address: string; protocol: ProtocolEnum }) => {
+      setTrader({ address, protocol })
+    },
+    [setTrader]
+  )
+
   const renderedChildren = useMemo(() => {
-    return cloneElement<OpeningPositionComponentProps>(children, { onClickItem: handleSelectItem })
-  }, [children, handleSelectItem])
+    return cloneElement<OpeningPositionComponentProps>(children, {
+      onClickItem: handleSelectItem,
+      onQuickView: handleQuickView,
+    })
+  }, [children, handleSelectItem, handleQuickView])
 
   return (
     <div style={{ height: '100%' }}>

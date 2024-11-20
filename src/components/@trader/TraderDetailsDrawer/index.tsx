@@ -1,8 +1,8 @@
 import { XCircle } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { Suspense, lazy } from 'react'
 
 import Container from 'components/@ui/Container'
-import useIsMobile from 'hooks/helpers/useIsMobile'
 import useSearchParams from 'hooks/router/useSearchParams'
 import IconButton from 'theme/Buttons/IconButton'
 import RcDrawer from 'theme/RcDrawer'
@@ -22,7 +22,7 @@ export default function TraderDetailsDrawer({
   address: string
   type?: TimeFrameEnum
 }) {
-  const isMobile = useIsMobile()
+  const { lg } = useResponsive()
   const { setSearchParams } = useSearchParams()
   const handleDismiss = () => {
     setSearchParams({ [URL_PARAM_KEYS.TRADER_HISTORY_PAGE]: null })
@@ -30,7 +30,14 @@ export default function TraderDetailsDrawer({
   }
 
   return (
-    <RcDrawer open onClose={handleDismiss} width={isMobile ? '100%' : '1024px'}>
+    <RcDrawer
+      open
+      onClose={(e) => {
+        e.stopPropagation()
+        handleDismiss()
+      }}
+      width={lg ? '968px' : '100%'}
+    >
       <Container sx={{ position: 'relative', width: '100%', height: '100%', bg: 'neutral7' }}>
         <IconButton
           icon={<XCircle size={24} />}

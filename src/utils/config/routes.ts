@@ -66,13 +66,13 @@ const ROUTES = {
     path: '/me',
   },
   MY_MANAGEMENT: {
-    path: '/me/management',
+    path: '/me/api-wallet',
   },
   MY_HISTORY: {
     path: '/me/history',
   },
   USER_DCP_MANAGEMENT: {
-    path: '/me/dcp-management',
+    path: '/me/smart-wallet',
   },
   USER_ACTIVITY: {
     path: '/me/activity',

@@ -113,7 +113,7 @@ const NavUser = () => {
                 <Box mt={2} />
                 {hasCopyPermission && (
                   <>
-                    <SectionDivider label={<Trans>Copy</Trans>} />
+                    <SectionDivider label={<Trans>Copy Management</Trans>} />
                     {userCopy.map((configs, index) => (
                       <NavItem
                         key={index}
@@ -269,25 +269,25 @@ const userCopy = [
     link: ROUTES.MY_MANAGEMENT.path,
     event: EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE,
     icon: <SquareHalf size={20} />,
-    label: <Trans>CEX Management</Trans>,
+    label: <Trans>API Wallet</Trans>,
   },
   {
     link: ROUTES.USER_DCP_MANAGEMENT.path,
     event: EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE,
     icon: <SubtractSquare size={20} />,
-    label: <Trans>DCP Management</Trans>,
+    label: <Trans>Smart Wallet</Trans>,
   },
   {
     link: ROUTES.MY_HISTORY.path,
     event: EVENT_ACTIONS[EventCategory.ROUTES].HISTORY,
     icon: <Clock size={20} />,
-    label: <Trans>Copy Positions</Trans>,
+    label: <Trans>History</Trans>,
   },
   {
     link: ROUTES.USER_ACTIVITY.path,
     event: EVENT_ACTIONS[EventCategory.ROUTES].USER_ACTIVITY,
     icon: <Notebook size={20} />,
-    label: <Trans>Activity Logs</Trans>,
+    label: <Trans>Activities</Trans>,
   },
 ]
 const userSettings = [

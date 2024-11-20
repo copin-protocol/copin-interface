@@ -32,8 +32,9 @@ export default function WarningBetaVersion() {
         }}
       >
         <Type.Caption>
-          <IconBox icon={<Warning size={16} />} /> DCP is currently in alpha version and experiment phase. Please use
-          caution and test with limited capital. If you encounter any issues, please contact direct support at:{' '}
+          <IconBox icon={<Warning size={16} />} /> Smart Wallet is currently in alpha version and experiment phase.
+          Please use caution and test with limited capital. If you encounter any issues, please contact direct support
+          at:{' '}
           <a
             href={LINKS.support}
             target="_blank"

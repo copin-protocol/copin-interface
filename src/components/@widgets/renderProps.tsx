@@ -3,6 +3,7 @@ import { Square } from '@phosphor-icons/react'
 import { Link } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 
+import IconEye from 'assets/icons/ic-eye.svg'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
@@ -17,7 +18,7 @@ import CopyButton from 'theme/Buttons/CopyButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
 import Tooltip from 'theme/Tooltip'
-import { Flex, Image, TextProps, Type } from 'theme/base'
+import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -25,6 +26,7 @@ import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
 import { getTokenTradeSupport } from 'utils/config/trades'
 import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } from 'utils/helpers/calculate'
+import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
@@ -329,44 +331,78 @@ function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponen
   })
 }
 
-export function renderTrader(address: string, protocol: ProtocolEnum, hasCopy?: boolean, enableProtocolLogo?: boolean) {
+export function renderTrader(
+  address: string,
+  protocol: ProtocolEnum,
+  hasCopy?: boolean,
+  enableProtocolLogo?: boolean,
+  onQuickView?: ({ address, protocol }: { address: string; protocol: ProtocolEnum }) => void
+) {
   const protocolTooltipId = uuid()
 
   return (
-    <Link to={generateTraderMultiExchangeRoute({ protocol, address })} onClick={(e) => e.stopPropagation()}>
-      <Flex sx={{ gap: 1, px: 1 }} alignItems="center">
-        <AddressAvatar address={address} size={24} />
-        <Type.Caption color="neutral1" sx={{ ':hover': { textDecoration: 'underline' } }}>
-          {addressShorten(address, 3, 5)}
-        </Type.Caption>
-        {enableProtocolLogo && (
-          <>
-            <ProtocolLogo
-              protocol={protocol}
-              size={22}
-              hasText={false}
-              data-tip="React-tooltip"
-              data-tooltip-id={`tt_protocol_${protocolTooltipId}`}
-              data-tooltip-offset={0}
-            />
-            <Tooltip id={`tt_protocol_${protocolTooltipId}`} place="top" type="dark" effect="solid" clickable={false}>
-              <ProtocolLogo protocol={protocol} />
-            </Tooltip>
-          </>
-        )}
+    <Flex sx={{ gap: 1, px: 1 }} alignItems="center">
+      <Box
+        width={24}
+        height={24}
+        sx={{
+          '&:hover': onQuickView
+            ? {
+                cursor: 'pointer',
+                backgroundImage: `url(${IconEye})`,
+                backgroundSize: '20px',
+                backgroundPosition: 'center center',
+                backgroundRepeat: 'no-repeat',
+              }
+            : {},
+        }}
+        onClick={(event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          onQuickView?.({ address, protocol })
+        }}
+      >
+        <AddressAvatar address={address} size={24} sx={{ '&:hover': onQuickView ? { opacity: 0.25 } : {} }} />
+      </Box>
 
-        {hasCopy && (
-          <CopyButton
-            type="button"
-            variant="ghost"
-            value={address}
-            size="sm"
-            sx={{ color: 'neutral3', p: 0 }}
-            iconSize={14}
-          ></CopyButton>
-        )}
-      </Flex>
-    </Link>
+      <Link to={generateTraderMultiExchangeRoute({ protocol, address })} onClick={(e) => e.stopPropagation()}>
+        <Flex sx={{ gap: 1 }} alignItems="center">
+          <Type.Caption
+            color="neutral1"
+            width={72}
+            sx={{ ...overflowEllipsis(), display: 'flex', ':hover': { textDecoration: 'underline' } }}
+          >
+            {addressShorten(address, 3, 5)}
+          </Type.Caption>
+          {enableProtocolLogo && (
+            <>
+              <ProtocolLogo
+                protocol={protocol}
+                size={22}
+                hasText={false}
+                data-tip="React-tooltip"
+                data-tooltip-id={`tt_protocol_${protocolTooltipId}`}
+                data-tooltip-offset={0}
+              />
+              <Tooltip id={`tt_protocol_${protocolTooltipId}`} place="top" type="dark" effect="solid" clickable={false}>
+                <ProtocolLogo protocol={protocol} />
+              </Tooltip>
+            </>
+          )}
+          {hasCopy && (
+            <CopyButton
+              type="button"
+              variant="ghost"
+              value={address}
+              size="sm"
+              sx={{ color: 'neutral3', p: 0 }}
+              iconSize={14}
+              className={'hiding-btn'}
+            ></CopyButton>
+          )}
+        </Flex>
+      </Link>
+    </Flex>
   )
 }
 

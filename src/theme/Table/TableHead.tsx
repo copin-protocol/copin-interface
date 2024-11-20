@@ -1,3 +1,4 @@
+import React from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 import { TableSelectHandler } from 'hooks/helpers/useTableSelect'
@@ -8,6 +9,7 @@ import SortDescIcon from 'theme/Icons/SortDescIcon'
 import { Box, Flex, Type } from 'theme/base'
 import { SortTypeEnum } from 'utils/config/enums'
 
+import Tooltip from '../Tooltip'
 import { ColumnData, ColumnDataParameter, ColumnExternalSourceParameter, TableSortProps } from './types'
 
 export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
@@ -72,6 +74,7 @@ export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSou
         {columns?.map((column) => {
           const key = column?.key ? column.key : uuidv4()
           const isCurrentSort = currentSort?.sortBy === column.sortBy
+          const tooltipId = `tt_table_sort_${key.toString()}`
           return (
             <Box as="th" key={key.toString()} sx={column.style} data-table-key={column.key}>
               <Box
@@ -91,21 +94,32 @@ export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSou
                   <Type.Caption fontWeight={isCurrentSort ? 'bold' : 'normal'} sx={{ width: '100%' }}>
                     <Flex alignItems="center" as="span" sx={{ justifyContent: column.style?.textAlign }}>
                       {column.title}
-                      {isCurrentSort ? (
-                        currentSort?.sortType === SortTypeEnum.DESC ? (
+                      <Flex alignItems="center" data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
+                        {isCurrentSort && currentSort?.sortType === SortTypeEnum.DESC ? (
                           <SortDescIcon />
-                        ) : (
+                        ) : isCurrentSort && currentSort?.sortType === SortTypeEnum.ASC ? (
                           <SortAscIcon />
-                        )
-                      ) : (
-                        <SortDefaultIcon />
-                      )}
+                        ) : (
+                          <SortDefaultIcon />
+                        )}
+                      </Flex>
                     </Flex>
                   </Type.Caption>
                 ) : (
                   <Type.Caption sx={{ width: '100%' }}>{column.title}</Type.Caption>
                 )}
               </Box>
+              {column.sortBy && changeCurrentSort && (
+                <Tooltip id={tooltipId} place="top" type="dark" effect="solid">
+                  <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
+                    {isCurrentSort
+                      ? currentSort?.sortType === SortTypeEnum.DESC
+                        ? 'Click to sort ascending'
+                        : 'Click to cancel sorting'
+                      : 'Click to sort descending'}
+                  </Type.Caption>
+                </Tooltip>
+              )}
             </Box>
           )
         })}

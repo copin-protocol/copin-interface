@@ -20,6 +20,8 @@ import { Box, Flex } from 'theme/base'
 import { FOOTER_HEIGHT, NAVBAR_HEIGHT } from 'utils/config/constants'
 import { ELEMENT_IDS } from 'utils/config/keys'
 
+import TraderDetailsDrawer from '../components/@trader/TraderDetailsDrawer'
+import useQuickViewTraderStore from '../hooks/store/useQuickViewTraderStore'
 import Notification from './@layouts/EventsNotification'
 import SubscriptionExpiredWarning from './@layouts/SubscriptionExpiredWarning'
 
@@ -30,6 +32,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
   useResetSearchParams()
   const dialog = useGlobalDialog((state) => state.dialog)
   const restrictState = useSubscriptionRestrictStore((state) => state.state)
+  const { trader, resetTrader } = useQuickViewTraderStore()
 
   const { events } = useSystemConfigContext()
   const availableEvents = events?.filter((event) => event.status !== TradingEventStatusEnum.ENDED)
@@ -50,6 +53,16 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
       {restrictState && <SubscriptionRestrictModal />}
       {dialog && <DialogContent data={dialog} />}
       {!!availableEvents?.length && <Notification />}
+      {trader && (
+        <TraderDetailsDrawer
+          onDismiss={() => {
+            resetTrader()
+          }}
+          protocol={trader.protocol}
+          address={trader.address}
+          type={trader.type}
+        />
+      )}
 
       <InitTraderCopying />
       <InitTraderFavorites />

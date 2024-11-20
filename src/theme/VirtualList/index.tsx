@@ -1,8 +1,9 @@
 import { ArrowLineUp } from '@phosphor-icons/react'
 import debounce from 'lodash/debounce'
-import { Fragment, cloneElement, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { Fragment, cloneElement, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { VariableSizeList as List, ListOnScrollProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
+import { v4 as uuidv4 } from 'uuid'
 
 import { ApiMeta } from 'apis/api'
 import NoDataFound from 'components/@ui/NoDataFound'
@@ -14,6 +15,8 @@ import { ColumnData, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SortTypeEnum } from 'utils/config/enums'
+
+import Tooltip from '../Tooltip'
 
 type Props<T> = {
   data: T[] | undefined
@@ -140,11 +143,13 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
         }}
       >
         {columns.map((cellSetting, _index) => {
+          const key = cellSetting?.key ? cellSetting.key : uuidv4()
           const isCurrentSort = currentSort?.sortBy === cellSetting.sortBy
           const onClickSort = () => {
             handleChangeSort(cellSetting?.sortBy, cellSetting?.sortType, currentSort?.sortBy, currentSort?.sortType)
           }
           const hasSort = !!cellSetting.sortBy && !!changeCurrentSort
+          const tooltipId = `tt_table_sort_${key.toString()}`
           return (
             <Fragment key={_index}>
               <Type.Caption
@@ -165,7 +170,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
                 >
                   {cellSetting.title}
                   {hasSort && (
-                    <>
+                    <Flex alignItems="center" data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
                       {isCurrentSort ? (
                         currentSort?.sortType === SortTypeEnum.DESC ? (
                           <SortDescIcon onClick={onClickSort} />
@@ -175,10 +180,21 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
                       ) : (
                         <SortDefaultIcon onClick={onClickSort} />
                       )}
-                    </>
+                    </Flex>
                   )}
                 </Flex>
                 {cellSetting.filterComponent}
+                {cellSetting?.sortBy && changeCurrentSort && (
+                  <Tooltip id={tooltipId} place="top" type="dark" effect="solid">
+                    <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
+                      {isCurrentSort
+                        ? currentSort?.sortType === SortTypeEnum.DESC
+                          ? 'Click to sort ascending'
+                          : 'Click to cancel sorting'
+                        : 'Click to sort descending'}
+                    </Type.Caption>
+                  </Tooltip>
+                )}
               </Type.Caption>
             </Fragment>
           )

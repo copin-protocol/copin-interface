@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 
 import { getOpeningPositionsApi } from 'apis/positionApis'
 import emptyBg from 'assets/images/opening_empty_bg.png'
+import emptySmallBg from 'assets/images/opening_emty_small.png'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import TraderPositionListView from 'components/@position/TraderPositionsListView'
 import {
@@ -22,6 +23,7 @@ import { PaginationWithLimit } from 'theme/Pagination'
 import Table from 'theme/Table'
 import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -34,6 +36,14 @@ const emptyCss = {
   backgroundSize: 'cover',
   backgroundPosition: 'center center',
   backgroundRepeat: 'no-repeat',
+}
+
+const emptySmallCss = {
+  backgroundImage: `url(${emptySmallBg})`,
+  backgroundSize: '98%',
+  backgroundPosition: 'center center',
+  backgroundRepeat: 'no-repeat',
+  backgroundOrigin: 'content-box',
 }
 
 export default function TraderOpeningPositionsTable({
@@ -136,11 +146,11 @@ export default function TraderOpeningPositionsTable({
       height="100%"
       sx={{
         backgroundColor: !isDrawer && totalOpening ? 'neutral5' : 'neutral7',
-        ...(totalOpening || isLoading ? {} : emptyCss),
+        ...(totalOpening || isLoading ? {} : isDrawer ? emptySmallCss : emptyCss),
         pb: [0, 12],
       }}
     >
-      <Flex px={12} pt={12} alignItems="center" justifyContent="space-between">
+      <Flex px={2} pt={12} alignItems="center" justifyContent="space-between">
         <SectionTitle
           icon={<Pulse size={24} />}
           title={`Opening Positions${totalOpening ? ` (${formatNumber(totalOpening)})` : ''}`}
@@ -191,13 +201,16 @@ export default function TraderOpeningPositionsTable({
               wrapperSx={{
                 minWidth: 500,
               }}
+              tableBodySx={{
+                '& td:last-child': { pr: 2 },
+              }}
               data={tableData?.data}
               columns={isDrawer ? drawerOpeningColumns : xl && isExpanded ? fullOpeningColumns : openingColumns}
               currentSort={currentSort}
               changeCurrentSort={changeCurrentSortExpanded}
               isLoading={isLoading}
               onClickRow={handleSelectItem}
-              renderRowBackground={() => 'rgb(31, 34, 50)'}
+              renderRowBackground={() => (isDrawer ? themeColors.neutral7 : 'rgb(31, 34, 50)')}
               scrollToTopDependencies={scrollToTopDependencies}
             />
           ) : (
@@ -225,10 +238,12 @@ export default function TraderOpeningPositionsTable({
 export function TraderOpeningPositionsListView({
   protocol,
   address,
+  isDrawer,
 }: {
   address: string
   protocol: ProtocolEnum
   isExpanded?: boolean
+  isDrawer?: boolean
 }) {
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -283,8 +298,8 @@ export function TraderOpeningPositionsListView({
       height="100%"
       width="100%"
       sx={{
-        backgroundColor: totalOpening ? 'neutral5' : 'neutral7',
-        ...(totalOpening || isLoading ? {} : emptyCss),
+        backgroundColor: !isDrawer && totalOpening ? 'neutral5' : 'neutral7',
+        ...(totalOpening || isLoading ? {} : isDrawer ? emptySmallCss : emptyCss),
         pb: [0, 12],
       }}
     >

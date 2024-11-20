@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 
+import IconEye from 'assets/icons/ic-eye.svg'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
+import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
-import { Flex, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { addressShorten } from 'utils/helpers/format'
@@ -23,6 +25,7 @@ export default function TraderCopyAddress({
     isLink = true,
     size = 24,
     dividerColor = 'neutral4',
+    hasHover = true,
     hasCopyAddress = false,
     hasAddressTooltip = false,
     hasCopyCountWarningIcon = false,
@@ -42,6 +45,7 @@ export default function TraderCopyAddress({
     isLink?: boolean
     size?: number
     dividerColor?: string
+    hasHover?: boolean
     hasCopyAddress?: boolean
     hasAddressTooltip?: boolean
     hasCopyCountWarningIcon?: boolean
@@ -54,66 +58,94 @@ export default function TraderCopyAddress({
   }
 }) {
   const tooltipId = uuid()
+
+  const { setTrader } = useQuickViewTraderStore()
+
   return (
     <Flex sx={{ alignItems: 'center', '& > *': { flexShrink: 0 }, gap: 1 }}>
-      <Flex
-        //@ts-ignore
-        as={isLink && protocol ? Link : undefined}
-        to={isLink && protocol ? generateTraderMultiExchangeRoute({ protocol, address }) : undefined}
-        sx={{ gap: 1, flexShrink: 0, '& > *': { flexShrink: 0 }, ...sx }}
-        alignItems="center"
-        onClick={(e) => isLink && e.stopPropagation()}
-      >
-        <AddressAvatar address={address} size={size} />
-        <Type.Caption
-          minWidth="fit-content"
-          className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
-          color="inherit"
-          {...{ [DATA_ATTRIBUTES.TRADER_COPY_DELETED]: address }}
+      <Flex sx={{ gap: 1, flexShrink: 0, '& > *': { flexShrink: 0 }, ...sx }} alignItems="center">
+        <Box
+          width={size}
+          height={size}
           sx={{
-            flexShrink: 0,
-            color: 'neutral1',
-            ':hover': { textDecoration: isLink ? 'underline' : undefined },
-            minWidth: 74,
-            ...textSx,
+            '&:hover': hasHover
+              ? {
+                  cursor: 'pointer',
+                  backgroundImage: `url(${IconEye})`,
+                  backgroundSize: '20px',
+                  backgroundPosition: 'center center',
+                  backgroundRepeat: 'no-repeat',
+                }
+              : {},
           }}
-          {...(hasAddressTooltip ? { 'data-tooltip-id': tooltipId, 'data-tooltip-delay-show': 360 } : {})}
+          onClick={(event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            if (protocol) {
+              setTrader({ address, protocol })
+            }
+          }}
         >
-          {addressShorten(address, 3, 5)}
-        </Type.Caption>
-        {hasCopyAddress && (
-          <CopyButton
-            type="button"
-            variant="ghost"
-            value={address}
-            size="sm"
-            sx={{ color: 'neutral3', p: 0 }}
-            iconSize={14}
-          ></CopyButton>
-        )}
-        {protocol && (
-          <>
-            <Type.Caption color={dividerColor}>|</Type.Caption>
-            <ProtocolLogo protocol={protocol} hasText={false} size={20} />
-          </>
-        )}
+          <AddressAvatar address={address} size={size} sx={{ '&:hover': hasHover ? { opacity: 0.25 } : {} }} />
+        </Box>
+        <Flex
+          //@ts-ignore
+          as={isLink && protocol ? Link : undefined}
+          to={isLink && protocol ? generateTraderMultiExchangeRoute({ protocol, address }) : undefined}
+          onClick={(e) => isLink && e.stopPropagation()}
+          alignItems="center"
+          sx={{ gap: 1 }}
+        >
+          <Type.Caption
+            minWidth="fit-content"
+            className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
+            color="inherit"
+            {...{ [DATA_ATTRIBUTES.TRADER_COPY_DELETED]: address }}
+            sx={{
+              flexShrink: 0,
+              color: 'neutral1',
+              ':hover': { textDecoration: isLink ? 'underline' : undefined },
+              minWidth: 74,
+              ...textSx,
+            }}
+            {...(hasAddressTooltip ? { 'data-tooltip-id': tooltipId, 'data-tooltip-delay-show': 360 } : {})}
+          >
+            {addressShorten(address, 3, 5)}
+          </Type.Caption>
+          {hasCopyAddress && (
+            <CopyButton
+              type="button"
+              variant="ghost"
+              value={address}
+              size="sm"
+              sx={{ color: 'neutral3', p: 0 }}
+              iconSize={14}
+            ></CopyButton>
+          )}
+          {protocol && (
+            <>
+              <Type.Caption color={dividerColor}>|</Type.Caption>
+              <ProtocolLogo protocol={protocol} hasText={false} size={20} />
+            </>
+          )}
+          {hasAddressTooltip && <Tooltip id={tooltipId}>{address}</Tooltip>}
+          {(hasCopyCountWarningIcon || hasCopyVolumeWarningIcon) && <Type.Caption color={dividerColor}>|</Type.Caption>}
+          {hasCopyCountWarningIcon && <TraderCopyCountWarningIcon account={address} protocol={protocol} size={18} />}
+          {hasCopyVolumeWarningIcon && (
+            <TraderCopyVolumeWarningIcon account={address} protocol={protocol} size={18} copyVolume={copyVolume} />
+          )}
+          {hasCopyTradeVolumeIcon && copyVolume != null && maxCopyVolume && (
+            <TraderTotalCopyVolumeIcon
+              account={address}
+              protocol={protocol}
+              copyVolume={copyVolume}
+              maxVolume={maxCopyVolume}
+              isRef={isRef}
+              plan={plan}
+            />
+          )}
+        </Flex>
       </Flex>
-      {hasAddressTooltip && <Tooltip id={tooltipId}>{address}</Tooltip>}
-      {(hasCopyCountWarningIcon || hasCopyVolumeWarningIcon) && <Type.Caption color={dividerColor}>|</Type.Caption>}
-      {hasCopyCountWarningIcon && <TraderCopyCountWarningIcon account={address} protocol={protocol} size={18} />}
-      {hasCopyVolumeWarningIcon && (
-        <TraderCopyVolumeWarningIcon account={address} protocol={protocol} size={18} copyVolume={copyVolume} />
-      )}
-      {hasCopyTradeVolumeIcon && copyVolume != null && maxCopyVolume && (
-        <TraderTotalCopyVolumeIcon
-          account={address}
-          protocol={protocol}
-          copyVolume={copyVolume}
-          maxVolume={maxCopyVolume}
-          isRef={isRef}
-          plan={plan}
-        />
-      )}
     </Flex>
   )
 }

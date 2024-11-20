@@ -148,7 +148,7 @@ export default function useQueryClosedPositions({
           const oldData = prev?.data ?? []
           const parsedData: PositionData[] = []
           // remove duplicate
-          if (data.data.length) {
+          if (data?.data?.length) {
             const checker = data.data.reduce<Record<string, boolean>>((result, _p) => {
               return { ...result, [_p.id]: true }
             }, {})
@@ -240,7 +240,7 @@ export default function useQueryClosedPositions({
             const oldData = prev?.data ?? []
             const parsedData: PositionData[] = []
             // remove duplicate
-            if (_data.data.length) {
+            if (_data?.data?.length) {
               const checker = _data.data.reduce<Record<string, boolean>>((result, _p) => {
                 return { ...result, [_p.id]: true }
               }, {})

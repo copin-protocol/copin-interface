@@ -15,6 +15,7 @@ import { PositionData } from 'entities/trader'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { DAYJS_FULL_DATE_FORMAT, TIME_FORMAT } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
@@ -294,8 +295,8 @@ const actionColumn: ColumnData<PositionData> = {
   key: 'id',
   style: { width: '40px', textAlign: 'right', flex: '0 0 40px' },
   render: () => (
-    <Box sx={{ position: 'relative', top: '2px' }}>
-      <CaretRight />
+    <Box sx={{ position: 'relative', top: '4px' }}>
+      <CaretRight color={themeColors.neutral3} size={16} />
     </Box>
   ),
 }
