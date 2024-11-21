@@ -8,7 +8,6 @@ import { Box, Flex, Type } from 'theme/base'
 import { rankingFieldOptions } from 'utils/config/options'
 
 import CustomizeRankingColumns from './CustomizeRankingColumns'
-import CustomizeRankingColumn from './CustomizeRankingColumns'
 import ScoreChart, { ScoreChartData } from './ScoreChart'
 
 const TraderRanking = memo(function TraderRankingMemo({
@@ -65,7 +64,7 @@ const TraderRanking = memo(function TraderRankingMemo({
           </Flex>
         </Type.Caption>
       ) : (
-        <Box sx={{ width: '100%', height: '100%' }}>
+        <Box sx={{ width: '100%' }}>
           <Flex
             sx={{
               flexShrink: 0,
