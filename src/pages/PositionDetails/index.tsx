@@ -59,6 +59,7 @@ export default function PositionDetailsPage() {
             txHash={txHash}
             protocol={protocol}
             account={account}
+            logId={logId}
             title={<Trans>Recommend Results</Trans>}
           />
         )}
