@@ -77,14 +77,14 @@ enum TabKeyEnum {
 
 const tabConfigs: TabConfig[] = [
   {
-    name: <Trans>API WALLET MANAGEMENT</Trans>,
+    name: <Trans>API WALLET</Trans>,
     activeIcon: <SquareHalf size={24} weight="fill" />,
     inactiveIcon: <SquareHalf size={24} />,
     key: TabKeyEnum.MANAGEMENT,
     route: ROUTES.MY_MANAGEMENT.path,
   },
   {
-    name: <Trans>SMART WALLET MANAGEMENT</Trans>,
+    name: <Trans>SMART WALLET</Trans>,
     activeIcon: <SubtractSquare size={24} weight="fill" />,
     inactiveIcon: <SubtractSquare size={24} />,
     key: TabKeyEnum.DCP_MANAGEMENT,

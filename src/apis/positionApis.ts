@@ -152,7 +152,7 @@ export async function searchPositionDetailByTxHashApi({
 }) {
   const params: Record<string, any> = {}
   if (!!account) params.account = account
-  if (!!logId) params.logId = logId
+  if (!!logId) params.log_id = logId
   return requester
     .get(`${protocol}/${SERVICE}/${txHash}`, { params })
     .then((res: any) => normalizePositionListResponse(res.data as ResponsePositionData[]))

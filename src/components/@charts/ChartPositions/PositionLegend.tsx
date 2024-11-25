@@ -52,7 +52,7 @@ export default function PositionLegend({
   }
 
   const handleDismiss = useCallback(() => {
-    setOpenDrawer(false)
+    setTimeout(() => setOpenDrawer(false), 0)
     window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
   }, [])
 
@@ -159,13 +159,15 @@ export default function PositionLegend({
           </Box>
         </Flex>
       </Flex>
-      <TraderPositionDetailsDrawer
-        isOpen={openDrawer}
-        onDismiss={handleDismiss}
-        protocol={data.protocol}
-        id={data.id}
-        chartProfitId="chart-positions"
-      />
+      {openDrawer && (
+        <TraderPositionDetailsDrawer
+          isOpen={openDrawer}
+          onDismiss={handleDismiss}
+          protocol={data.protocol}
+          id={data.id}
+          chartProfitId="chart-positions"
+        />
+      )}
     </Button>
   )
 }

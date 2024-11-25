@@ -42,7 +42,7 @@ export default function TraderDetailsDrawer({
         <IconButton
           icon={<XCircle size={24} />}
           variant="ghost"
-          sx={{ position: 'absolute', right: 1, top: protocol === ProtocolEnum.HYPERLIQUID ? 4 : '12px', zIndex: 11 }}
+          sx={{ position: 'absolute', right: 1, top: lg ? '12px' : '14px', zIndex: 11 }}
           onClick={handleDismiss}
         />
         <Suspense fallback={null}>
