@@ -4,6 +4,7 @@ import React from 'react'
 import useTabHandler from 'hooks/router/useTabHandler'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { FOOTER_HEIGHT } from 'utils/config/constants'
+import { ProtocolEnum } from 'utils/config/enums'
 
 import PositionMobileView from './PositionMobileView'
 import { LayoutProps } from './types'
@@ -33,6 +34,7 @@ const TabButton = ({
 
 const MobileLayout = (props: LayoutProps) => {
   const { tab, handleTab: setTab } = useTabHandler(TabEnum.POSITIONS)
+  const protocol = props.protocolStats?.props?.protocol
   return (
     <Box sx={{ position: 'relative', pb: 56, height: '100%' }}>
       <Box
@@ -95,7 +97,7 @@ const MobileLayout = (props: LayoutProps) => {
         </>
       )}
       {tab === TabEnum.POSITIONS && (
-        <Box height="calc(100% - 56px - 61px)">
+        <Box height={`calc(100% - 56px - 61px - ${protocol === ProtocolEnum.HYPERLIQUID ? 58 : 0}px)`}>
           <PositionMobileView openingPositions={props.openingPositions} historyPositions={props.closedPositions} />
         </Box>
       )}

@@ -198,29 +198,31 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
               changeCurrency(option)
             }}
           />
-          <ButtonWithIcon
-            icon={
-              <Box color={heatmapVisible ? 'primary1' : 'neutral3'}>
-                <ChartScatter fontVariant="bold" size={20} />
-              </Box>
-            }
-            variant="ghost"
-            p={0}
-            width={'auto'}
-            block
-            onClick={() => {
-              if (heatmapVisible) {
-                logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_HEATMAP_ACTIVITY)
-              } else {
-                logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].SHOW_HEATMAP_ACTIVITY)
+          {!isDrawer && (
+            <ButtonWithIcon
+              icon={
+                <Box color={heatmapVisible ? 'primary1' : 'neutral3'}>
+                  <ChartScatter fontVariant="bold" size={20} />
+                </Box>
               }
+              variant="ghost"
+              p={0}
+              width={'auto'}
+              block
+              onClick={() => {
+                if (heatmapVisible) {
+                  logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].HIDE_HEATMAP_ACTIVITY)
+                } else {
+                  logEventLayout(EVENT_ACTIONS[EventCategory.LAYOUT].SHOW_HEATMAP_ACTIVITY)
+                }
 
-              setHeatmapVisible(!heatmapVisible)
-            }}
-            data-tip="React-tooltip"
-            data-tooltip-id="history_table_heatmap"
-            data-tooltip-offset={8}
-          />
+                setHeatmapVisible(!heatmapVisible)
+              }}
+              data-tip="React-tooltip"
+              data-tooltip-id="history_table_heatmap"
+              data-tooltip-offset={8}
+            />
+          )}
           {!isDrawer && sm && (
             <>
               <ButtonWithIcon
