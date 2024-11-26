@@ -23,21 +23,25 @@ const PositionTxResults = ({
   txHash,
   protocol,
   account,
+  logId,
   title = <Trans>Position List</Trans>,
 }: {
   txHash: string
   protocol?: ProtocolEnum
   account?: string
+  logId?: number
   title?: ReactNode
 }) => {
   const { sm } = useResponsive()
   const history = useHistory()
   const { data, isLoading } = useQuery(
-    [QUERY_KEYS.SEARCH_TX_HASH, txHash, protocol],
+    [QUERY_KEYS.SEARCH_TX_HASH, txHash, protocol, account, logId],
     () =>
       searchPositionsApi({
         txHash,
         protocol,
+        account,
+        logId,
         limit: DEFAULT_LIMIT,
       }),
     {

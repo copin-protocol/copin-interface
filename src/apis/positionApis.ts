@@ -46,14 +46,25 @@ export const normalizePositionPayload = (body: RequestBodyApiData) => {
 export async function searchPositionsApi({
   txHash,
   protocol,
+  account,
+  logId,
   limit = DEFAULT_LIMIT,
   offset = 0,
   sortBy,
   sortType,
-}: GetApiParams & { txHash: string; protocol?: ProtocolEnum; sortBy?: string; sortType?: string }) {
+}: GetApiParams & {
+  txHash: string
+  protocol?: ProtocolEnum
+  account?: string
+  logId?: number
+  sortBy?: string
+  sortType?: string
+}) {
   const params: Record<string, any> = {}
   params.txHash = txHash
-  if (!!protocol) params.protocol = protocol
+  if (!!protocol) params.protocols = protocol
+  if (!!account) params.account = account
+  if (!!logId) params.logId = logId
   if (!!sortBy) params.sortBy = sortBy
   if (!!sortType) params.sortType = sortType
   if (params.sortBy === 'pnl') {
@@ -152,7 +163,7 @@ export async function searchPositionDetailByTxHashApi({
 }) {
   const params: Record<string, any> = {}
   if (!!account) params.account = account
-  if (!!logId) params.log_id = logId
+  if (!!logId) params.logId = logId
   return requester
     .get(`${protocol}/${SERVICE}/${txHash}`, { params })
     .then((res: any) => normalizePositionListResponse(res.data as ResponsePositionData[]))
