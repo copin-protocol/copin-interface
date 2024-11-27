@@ -31,8 +31,8 @@ const ROUTES = {
   },
 
   LEADERBOARD: {
-    path: '/:protocol/leaderboard',
-    path_prefix: '/leaderboard',
+    path: '/:protocol/trader-board',
+    path_prefix: '/trader-board',
   },
   COPIER_LEADERBOARD: {
     path: '/copier-leaderboard',

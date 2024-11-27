@@ -3,16 +3,16 @@ import { generateProtocolName, renderHTML } from './utils.js'
 
 const getLeaderboard = async (req, res) => {
   const { protocol } = req.params
-  const thumbnail = `${configs.baseUrl}/images/cover/leaderboard-cover.png?time=${new Date().getTime()}`
+  const thumbnail = `${configs.baseUrl}/images/cover/trader-board-cover.png?time=${new Date().getTime()}`
 
   try {
     renderHTML({
       req,
       res,
       params: {
-        title: `Leaderboard on ${generateProtocolName(protocol)} | Copin Analyzer`,
+        title: `Trader Board on ${generateProtocolName(protocol)} | Copin Analyzer`,
         thumbnail,
-        url: `${configs.baseUrl}/${protocol}/leaderboard`,
+        url: `${configs.baseUrl}/${protocol}/trader-board`,
       },
     })
   } catch {

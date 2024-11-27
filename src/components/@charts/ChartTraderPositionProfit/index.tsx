@@ -102,6 +102,7 @@ export default function ChartProfit({
                 txHash={data.txHashes?.[0]}
                 account={data.account}
                 logId={data.logId}
+                isLong={data.isLong}
                 id={data.id}
                 sx={{ position: 'absolute', top: [-3, -24], right: 0 }}
               />

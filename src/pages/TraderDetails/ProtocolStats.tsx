@@ -9,6 +9,8 @@ import { ProtocolEnum } from 'utils/config/enums'
 import { compactNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
+import ProtocolBetaWarning from './ProtocolBetaWarning'
+
 export default function ProtocolStats({
   page,
   exchangeStats,
@@ -102,9 +104,12 @@ function StatsItem({
         <Image src={getProtocolStatsImage({ protocol: protocolOption.id, isActive })} width={32} height={32} />
       </Box>
       <Box>
-        <Type.Caption display="block" color={isActive ? 'primary1' : 'neutral3'}>
-          {protocolOption?.text}
-        </Type.Caption>
+        <Flex alignItems="center" sx={{ gap: 1 }}>
+          <Type.Caption display="block" color={isActive ? 'primary1' : 'neutral3'}>
+            {protocolOption?.text}
+          </Type.Caption>
+          <ProtocolBetaWarning protocol={data.protocol} />
+        </Flex>
         <Type.Small sx={{ display: 'flex', alignItems: 'center', gap: '1ch' }}>
           <Box as="span" color={isActive ? 'neutral1' : 'neutral3'}>
             {compactNumber(data.totalVolume, 2)}{' '}

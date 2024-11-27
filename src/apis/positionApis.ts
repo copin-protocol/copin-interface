@@ -155,15 +155,18 @@ export async function searchPositionDetailByTxHashApi({
   txHash,
   account,
   logId,
+  isLong,
 }: {
   protocol: ProtocolEnum
   txHash: string
   account?: string
   logId?: number
+  isLong?: boolean
 }) {
   const params: Record<string, any> = {}
   if (!!account) params.account = account
   if (!!logId) params.logId = logId
+  if (isLong != null) params.isLong = isLong
   return requester
     .get(`${protocol}/${SERVICE}/${txHash}`, { params })
     .then((res: any) => normalizePositionListResponse(res.data as ResponsePositionData[]))

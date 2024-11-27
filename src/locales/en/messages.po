@@ -65,7 +65,8 @@ msgstr "30D"
 msgid "30D PnL"
 msgstr "30D PnL"
 
-#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
 msgid "30D Pnl"
 msgstr "30D Pnl"
 
@@ -97,7 +98,8 @@ msgstr "7D"
 msgid "7D PnL"
 msgstr "7D PnL"
 
-#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
 msgid "7D Pnl"
 msgstr "7D Pnl"
 
@@ -139,6 +141,22 @@ msgstr "ACTIVITIES"
 msgid "ALERT LIST"
 msgstr "ALERT LIST"
 
+#: src/pages/MyProfile/index.tsx
+msgid "API WALLET"
+msgstr "API WALLET"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "API Wallet"
+msgstr "API Wallet"
+
+#: src/pages/WalletManagement/AssetDistribution/index.tsx
+msgid "API Wallet Asset Distribution"
+msgstr "API Wallet Asset Distribution"
+
+#: src/pages/MyProfile/index.tsx
+msgid "API Wallet Management"
+msgstr "API Wallet Management"
+
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/utils/config/translations.tsx
@@ -154,7 +172,7 @@ msgstr "Accounts"
 msgid "Action:"
 msgstr "Action:"
 
-#: src/pages/MyProfile/SelectTradersDropdown.tsx
+#: src/pages/MyProfile/SelectTradersCopied.tsx
 msgid "Active"
 msgstr "Active"
 
@@ -162,13 +180,10 @@ msgstr "Active"
 msgid "Active Copy"
 msgstr "Active Copy"
 
+#: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/MyProfile/index.tsx
 msgid "Activities"
 msgstr "Activities"
-
-#: src/pages/@layouts/Navbar/NavUser.tsx
-msgid "Activity Logs"
-msgstr "Activity Logs"
 
 #: src/pages/Settings/AlertList/TraderLastViewed.tsx
 msgid "Add Alert"
@@ -186,7 +201,8 @@ msgstr "Add referrer successful!"
 msgid "Added"
 msgstr "Added"
 
-#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
 msgid "Advance"
 msgstr "Advance"
 
@@ -299,17 +315,25 @@ msgstr "Are you sure you want to delete this trader from alert list?"
 msgid "Available / Total Fund"
 msgstr "Available / Total Fund"
 
+#: src/pages/MyProfile/DCPManagement/index.tsx
+msgid "Available / Total Fund:"
+msgstr "Available / Total Fund:"
+
 #: src/utils/config/translations.tsx
 msgid "Available Balance"
 msgstr "Available Balance"
 
-#: src/pages/MyProfile/MyCopies/FilterSection.tsx
+#: src/pages/MyProfile/CEXManagement/FilterSection.tsx
 msgid "Available Fund"
 msgstr "Available Fund"
 
 #: src/components/@copyTrade/CopyTradeForm/FundChecking.tsx
 msgid "Available Fund:"
 msgstr "Available Fund:"
+
+#: src/pages/MyProfile/DCPManagement/index.tsx
+msgid "Available:"
+msgstr "Available:"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/pages/TraderDetails/TraderStats.tsx
@@ -405,6 +429,10 @@ msgstr "Better than {value} traders"
 msgid "Binance"
 msgstr "Binance"
 
+#: src/components/@wallet/CreateWalletAction/index.tsx
+msgid "Binance API"
+msgstr "Binance API"
+
 #: src/components/@wallet/CreateWalletModals/CreateBinanceWalletModal.tsx
 msgid "Binance API Key"
 msgstr "Binance API Key"
@@ -413,13 +441,13 @@ msgstr "Binance API Key"
 msgid "Binance Secret Key"
 msgstr "Binance Secret Key"
 
-#: src/components/@wallet/CreateWalletAction/index.tsx
-msgid "Binance Wallet"
-msgstr "Binance Wallet"
-
 #: src/utils/config/translations.tsx
 msgid "BingX"
 msgstr "BingX"
+
+#: src/components/@wallet/CreateWalletAction/index.tsx
+msgid "BingX API"
+msgstr "BingX API"
 
 #: src/components/@wallet/CreateWalletModals/CreateBingXWalletModal.tsx
 #: src/utils/config/translations.tsx
@@ -430,13 +458,13 @@ msgstr "BingX API Key"
 msgid "BingX Secret Key"
 msgstr "BingX Secret Key"
 
-#: src/components/@wallet/CreateWalletAction/index.tsx
-msgid "BingX Wallet"
-msgstr "BingX Wallet"
-
 #: src/utils/config/translations.tsx
 msgid "Bitget"
 msgstr "Bitget"
+
+#: src/components/@wallet/CreateWalletAction/index.tsx
+msgid "Bitget API"
+msgstr "Bitget API"
 
 #: src/components/@wallet/CreateWalletModals/CreateBitgetWalletModal.tsx
 msgid "Bitget API Key"
@@ -449,10 +477,6 @@ msgstr "Bitget Pass Phrase"
 #: src/components/@wallet/CreateWalletModals/CreateBitgetWalletModal.tsx
 msgid "Bitget Secret Key"
 msgstr "Bitget Secret Key"
-
-#: src/components/@wallet/CreateWalletAction/index.tsx
-msgid "Bitget Wallet"
-msgstr "Bitget Wallet"
 
 #: src/pages/@layouts/Footer/index.tsx
 msgid "Blog"
@@ -471,6 +495,10 @@ msgstr "Bridge sUSD to OP (Sepolia)"
 msgid "By continuing, you agree to our"
 msgstr "By continuing, you agree to our"
 
+#: src/components/@wallet/CreateWalletAction/index.tsx
+msgid "Bybit API"
+msgstr "Bybit API"
+
 #: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
 msgid "Bybit API Key"
 msgstr "Bybit API Key"
@@ -478,14 +506,6 @@ msgstr "Bybit API Key"
 #: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
 msgid "Bybit Secret Key"
 msgstr "Bybit Secret Key"
-
-#: src/components/@wallet/CreateWalletAction/index.tsx
-msgid "Bybit Wallet"
-msgstr "Bybit Wallet"
-
-#: src/pages/WalletManagement/AssetDistribution/index.tsx
-msgid "CEX Asset Distribution"
-msgstr "CEX Asset Distribution"
 
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
@@ -509,6 +529,11 @@ msgstr "COLLATERAL ($)"
 #: src/pages/FeeRebate/Layout.tsx
 msgid "COPIN FEE REBATE"
 msgstr "COPIN FEE REBATE"
+
+#: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
+#: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
+msgid "Can not verify the action"
+msgstr "Can not verify the action"
 
 #: src/theme/Buttons/CopyButton.tsx
 msgid "Can't copy"
@@ -548,7 +573,7 @@ msgstr "Change Trader"
 msgid "Change password successful!"
 msgstr "Change password successful!"
 
-#: src/pages/MyProfile/Layouts/ManagementLayoutMobile.tsx
+#: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
 msgid "Charts"
 msgstr "Charts"
 
@@ -565,11 +590,8 @@ msgstr "Choose A Trader To Compare"
 msgid "Claim Gains Rewards"
 msgstr "Claim Gains Rewards"
 
-#: src/components/@wallet/WalletDetailsCard/SmartWalletActions.tsx
-msgid "Claim Rewards"
-msgstr "Claim Rewards"
-
-#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
+#: src/pages/MyProfile/ListCopyTrade/useCEXCopyTradeColumns.tsx
+#: src/pages/MyProfile/ListCopyTrade/useDEXCopyTradeColumns.tsx
 msgid "Clone"
 msgstr "Clone"
 
@@ -656,6 +678,12 @@ msgid "Congratulations!"
 msgstr "Congratulations!"
 
 #: src/components/@wallet/CreateWalletAction/index.tsx
+#: src/components/@wallet/CreateWalletAction/index.tsx
+#: src/components/@wallet/CreateWalletAction/index.tsx
+#: src/components/@wallet/CreateWalletAction/index.tsx
+#: src/components/@wallet/CreateWalletAction/index.tsx
+#: src/components/@wallet/CreateWalletAction/index.tsx
+#: src/components/@wallet/CreateWalletAction/index.tsx
 #: src/components/@wallet/CreateWalletModals/CreateBingXWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateBitgetWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateBybitWalletModal.tsx
@@ -704,7 +732,8 @@ msgstr "Considers settled (closed) positions"
 msgid "Copier Ranking"
 msgstr "Copier Ranking"
 
-#: src/pages/MyProfile/Layouts/ManagementLayoutMobile.tsx
+#: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
+#: src/pages/MyProfile/DCPManagement/index.tsx
 msgid "Copies"
 msgstr "Copies"
 
@@ -717,25 +746,18 @@ msgstr "Copin Subscription {0}"
 msgid "Copin will execute the order that is the inverse of the trader's order."
 msgstr "Copin will execute the order that is the inverse of the trader's order."
 
-#: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/Home/Traders.tsx
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Copy"
 msgstr "Copy"
 
-#: src/components/@wallet/WalletDetailsCard/SmartWalletActions.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
-#: src/pages/MyProfile/index.tsx
 msgid "Copy Management"
 msgstr "Copy Management"
 
 #: src/components/@position/CopyPositionDetails/index.tsx
 msgid "Copy Position Details"
 msgstr "Copy Position Details"
-
-#: src/pages/@layouts/Navbar/NavUser.tsx
-msgid "Copy Positions"
-msgstr "Copy Positions"
 
 #: src/pages/Stats/index.tsx
 msgid "Copy Statistic"
@@ -783,6 +805,7 @@ msgstr "Copytrade List"
 msgid "Copytrade Settings History"
 msgstr "Copytrade Settings History"
 
+#: src/components/@wallet/CreateWalletAction/index.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
 msgid "Create"
 msgstr "Create"
@@ -893,6 +916,10 @@ msgstr "Daily Unique Traders"
 msgid "Daily Volume"
 msgstr "Daily Volume"
 
+#: src/pages/TraderDetails/ProtocolBetaWarning.tsx
+msgid "Data maybe delayed by up to 2 hours"
+msgstr "Data maybe delayed by up to 2 hours"
+
 #: src/pages/Subscription/Plans.tsx
 msgid "Data range"
 msgstr "Data range"
@@ -962,6 +989,7 @@ msgstr "Don’t have a Bybit account?"
 msgid "Don’t have a Gate account?"
 msgstr "Don’t have a Gate account?"
 
+#: src/components/@wallet/CreateWalletAction/index.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpHyperliquid.tsx
 msgid "Don’t have a Hyperliquid account?"
 msgstr "Don’t have a Hyperliquid account?"
@@ -989,7 +1017,8 @@ msgstr "Duration:"
 msgid "Earning (USDC)"
 msgstr "Earning (USDC)"
 
-#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
+#: src/pages/MyProfile/ListCopyTrade/useCEXCopyTradeColumns.tsx
+#: src/pages/MyProfile/ListCopyTrade/useDEXCopyTradeColumns.tsx
 msgid "Edit"
 msgstr "Edit"
 
@@ -1010,6 +1039,7 @@ msgstr "Ended"
 msgid "Entry"
 msgstr "Entry"
 
+#: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
 #: src/utils/config/translations.tsx
 msgid "Entry Price"
 msgstr "Entry Price"
@@ -1170,7 +1200,8 @@ msgstr "Follow 200,000+ on-chain traders"
 msgid "Follow The Trader"
 msgstr "Follow The Trader"
 
-#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
+#: src/pages/MyProfile/ListCopyTrade/useCEXCopyTradeColumns.tsx
+#: src/pages/MyProfile/ListCopyTrade/useDEXCopyTradeColumns.tsx
 #: src/utils/config/translations.tsx
 msgid "Follow Trader"
 msgstr "Follow Trader"
@@ -1212,6 +1243,10 @@ msgstr "GTRADE REWARDS"
 msgid "Gate"
 msgstr "Gate"
 
+#: src/components/@wallet/CreateWalletAction/index.tsx
+msgid "Gate API"
+msgstr "Gate API"
+
 #: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
 msgid "Gate API Key"
 msgstr "Gate API Key"
@@ -1219,10 +1254,6 @@ msgstr "Gate API Key"
 #: src/components/@wallet/CreateWalletModals/CreateGateWalletModal.tsx
 msgid "Gate Secret Key"
 msgstr "Gate Secret Key"
-
-#: src/components/@wallet/CreateWalletAction/index.tsx
-msgid "Gate Wallet"
-msgstr "Gate Wallet"
 
 #: src/pages/ReferralManagement/ReferralActivities.tsx
 msgid "Global Referral Activities"
@@ -1276,7 +1307,9 @@ msgstr "High Win Rate"
 
 #: src/components/@position/CopyPositionDetails/index.tsx
 #: src/components/@wallet/WalletDetailsCard/SmartWalletActions.tsx
-#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
+#: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/MyProfile/ListCopyTrade/useCEXCopyTradeColumns.tsx
+#: src/pages/MyProfile/ListCopyTrade/useDEXCopyTradeColumns.tsx
 #: src/pages/MyProfile/index.tsx
 msgid "History"
 msgstr "History"
@@ -1313,6 +1346,10 @@ msgstr "How to connect your OKX API to Copin?"
 msgid "Hyperliquid"
 msgstr "Hyperliquid"
 
+#: src/components/@wallet/CreateWalletAction/index.tsx
+msgid "Hyperliquid API"
+msgstr "Hyperliquid API"
+
 #: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
 msgid "Hyperliquid API Wallet Private Key"
 msgstr "Hyperliquid API Wallet Private Key"
@@ -1325,6 +1362,10 @@ msgstr "Hyperliquid Account Address"
 msgid "Hyperliquid Vault Address"
 msgstr "Hyperliquid Vault Address"
 
+#: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
+msgid "If the trader increase / decrease position, the TP / SL will be re-adjusted as your copytrade settings"
+msgstr "If the trader increase / decrease position, the TP / SL will be re-adjusted as your copytrade settings"
+
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "If you skip it this time, you will be able to re-enter the referral code later."
 msgstr "If you skip it this time, you will be able to re-enter the referral code later."
@@ -1334,7 +1375,7 @@ msgid "In"
 msgstr "In"
 
 #: src/pages/MyProfile/SelectCopyTradesDropdown.tsx
-#: src/pages/MyProfile/SelectWalletsDropdown.tsx
+#: src/pages/MyProfile/SelectWallets.tsx
 msgid "Includes deleted data"
 msgstr "Includes deleted data"
 
@@ -1398,10 +1439,6 @@ msgstr "L"
 msgid "L/S Rate"
 msgstr "L/S Rate"
 
-#: src/pages/Leaderboard/index.tsx
-msgid "LEADERBOARD"
-msgstr "LEADERBOARD"
-
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 #: src/pages/DailyTrades/Orders/config.tsx
 msgid "LEVERAGE"
@@ -1456,10 +1493,6 @@ msgstr "Latest Take Profit ID"
 msgid "Latest activities"
 msgstr "Latest activities"
 
-#: src/pages/@layouts/Navbar/NavLinks.tsx
-msgid "Leaderboard"
-msgstr "Leaderboard"
-
 #: src/components/@wallet/CreateWalletModals/WalletHelpBingX.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpBitget.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpBybit.tsx
@@ -1474,7 +1507,8 @@ msgid "Let copy a trader and make profit!"
 msgstr "Let copy a trader and make profit!"
 
 #: src/components/@backtest/BacktestSimpleResult/index.tsx
-#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
 #: src/utils/config/translations.tsx
 msgid "Leverage"
 msgstr "Leverage"
@@ -1513,8 +1547,16 @@ msgid "Link with your Gate account through API key"
 msgstr "Link with your Gate account through API key"
 
 #: src/components/@wallet/CreateWalletAction/index.tsx
+msgid "Link with your Hyperliquid account through API key"
+msgstr "Link with your Hyperliquid account through API key"
+
+#: src/components/@wallet/CreateWalletAction/index.tsx
 msgid "Link with your OKX account through API key. All your assets and your positions management by OKX. Lowest fee, CEX trading"
 msgstr "Link with your OKX account through API key. All your assets and your positions management by OKX. Lowest fee, CEX trading"
+
+#: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
+msgid "Liq.Price"
+msgstr "Liq.Price"
 
 #: src/components/@position/PositionStatus/index.tsx
 #: src/theme/Tag/index.tsx
@@ -1589,10 +1631,6 @@ msgstr "Low Max Drawdown"
 msgid "Low Overtrading"
 msgstr "Low Overtrading"
 
-#: src/pages/MyProfile/index.tsx
-msgid "MANAGEMENT"
-msgstr "MANAGEMENT"
-
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 #: src/pages/TopOpenings/RouteWrapper.tsx
 msgid "MARKET"
@@ -1626,6 +1664,7 @@ msgstr "Manage Fund"
 msgid "Manual"
 msgstr "Manual"
 
+#: src/components/@position/CopyPositionDetails/CloseOnchainPosition.tsx
 #: src/components/@position/CopyPositionDetails/ClosePositionGnsV8.tsx
 #: src/components/@position/CopyPositionDetails/ClosePositionSnxV2.tsx
 #: src/components/@position/CopyPositionDetails/ClosePositionSnxV3.tsx
@@ -1687,7 +1726,8 @@ msgstr "Max Leverage"
 msgid "Max Margin Per Position"
 msgstr "Max Margin Per Position"
 
-#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
 msgid "Max Margin/Order"
 msgstr "Max Margin/Order"
 
@@ -1775,6 +1815,10 @@ msgstr "Minting NFT"
 #: src/components/@position/configs/order.tsx
 msgid "Modified Margin"
 msgstr "Modified Margin"
+
+#: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
+msgid "Modify SL / TP"
+msgstr "Modify SL / TP"
 
 #: src/utils/config/options.tsx
 msgid "Monthly"
@@ -1892,7 +1936,7 @@ msgstr "No Transaction Found"
 msgid "No Transactions Found"
 msgstr "No Transactions Found"
 
-#: src/pages/MyProfile/SelectWalletsDropdown.tsx
+#: src/pages/MyProfile/SelectWallets.tsx
 msgid "No Wallet Found"
 msgstr "No Wallet Found"
 
@@ -1943,6 +1987,7 @@ msgid "Note: Each Telegram account is only allowed to link to a Copin account"
 msgstr "Note: Each Telegram account is only allowed to link to a Copin account"
 
 #: src/components/@auth/ConfirmReferralModal/index.tsx
+#: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
 msgid "Notice"
 msgstr "Notice"
 
@@ -1953,6 +1998,10 @@ msgstr "Notice:"
 #: src/utils/config/translations.tsx
 msgid "OKX"
 msgstr "OKX"
+
+#: src/components/@wallet/CreateWalletAction/index.tsx
+msgid "OKX API"
+msgstr "OKX API"
 
 #: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
 msgid "OKX API Key"
@@ -1965,10 +2014,6 @@ msgstr "OKX Pass Phrase"
 #: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
 msgid "OKX Secret Key"
 msgstr "OKX Secret Key"
-
-#: src/components/@wallet/CreateWalletAction/index.tsx
-msgid "OKX Wallet"
-msgstr "OKX Wallet"
 
 #: src/pages/TopOpenings/RouteWrapper.tsx
 msgid "OPEN INTEREST"
@@ -2012,13 +2057,19 @@ msgstr "Open Homepage"
 msgid "Open Interest"
 msgstr "Open Interest"
 
+#: src/pages/MyProfile/DCPManagement/index.tsx
+#: src/pages/MyProfile/DCPManagement/index.tsx
+msgid "Open Positions"
+msgstr "Open Positions"
+
 #: src/components/@widgets/LinkBotAlertModal/index.tsx
 #: src/pages/LinkBotTelegram/index.tsx
 msgid "Open Telegram Bot"
 msgstr "Open Telegram Bot"
 
 #: src/components/@position/CopyOpeningPositions/index.tsx
-#: src/pages/MyProfile/Layouts/ManagementLayoutMobile.tsx
+#: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
+#: src/pages/MyProfile/DCPManagement/index.tsx
 #: src/pages/MyProfile/OpeningPositions/index.tsx
 msgid "Opening Positions"
 msgstr "Opening Positions"
@@ -2118,6 +2169,10 @@ msgstr "Platform"
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 msgid "Please check the verification code from your email!"
 msgstr "Please check the verification code from your email!"
+
+#: src/pages/MyProfile/CheckingWalletRenderer.tsx
+msgid "Please connect a API to start copy"
+msgstr "Please connect a API to start copy"
 
 #: src/pages/MyProfile/CheckingWalletRenderer.tsx
 msgid "Please create a wallet to start copy"
@@ -2226,6 +2281,10 @@ msgstr "Protocols"
 msgid "Protocols:"
 msgstr "Protocols:"
 
+#: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
+msgid "Qty"
+msgstr "Qty"
+
 #: src/utils/config/translations.tsx
 msgid "Quantity"
 msgstr "Quantity"
@@ -2276,11 +2335,6 @@ msgid "Refund not accepted."
 msgstr "Refund not accepted."
 
 #: src/components/@auth/LoginAction/ModalRegister.tsx
-#: src/components/@wallet/CreateWalletAction/index.tsx
-#: src/components/@wallet/CreateWalletAction/index.tsx
-#: src/components/@wallet/CreateWalletAction/index.tsx
-#: src/components/@wallet/CreateWalletAction/index.tsx
-#: src/components/@wallet/CreateWalletAction/index.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpBingX.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpBitget.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpBybit.tsx
@@ -2299,7 +2353,8 @@ msgstr "Register successful!"
 msgid "Reload"
 msgstr "Reload"
 
-#: src/pages/MyProfile/MyCopies/useCopyTradeColumns.tsx
+#: src/pages/MyProfile/ListCopyTrade/useCEXCopyTradeColumns.tsx
+#: src/pages/MyProfile/ListCopyTrade/useDEXCopyTradeColumns.tsx
 #: src/pages/TraderDetails/AlertAction.tsx
 msgid "Remove"
 msgstr "Remove"
@@ -2330,7 +2385,7 @@ msgstr "Reset password successful!"
 msgid "Results"
 msgstr "Results"
 
-#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
 #: src/utils/config/translations.tsx
 msgid "Reverse Copy"
 msgstr "Reverse Copy"
@@ -2367,9 +2422,14 @@ msgstr "S"
 msgid "SIZE ($)"
 msgstr "SIZE ($)"
 
-#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
 msgid "SL/TP"
 msgstr "SL/TP"
+
+#: src/pages/MyProfile/index.tsx
+msgid "SMART WALLET"
+msgstr "SMART WALLET"
 
 #: src/components/@dailyTrades/PositionStatusFilterTitle.tsx
 msgid "STATUS"
@@ -2383,7 +2443,8 @@ msgstr "Save {0}%"
 msgid "Search by address"
 msgstr "Search by address"
 
-#: src/pages/MyProfile/MyCopies/index.tsx
+#: src/pages/MyProfile/CEXManagement/ListCEXCopyTrades.tsx
+#: src/pages/MyProfile/DCPManagement/ListDCPCopyTrades.tsx
 msgid "Select All Traders"
 msgstr "Select All Traders"
 
@@ -2396,11 +2457,11 @@ msgid "Select Other Trader"
 msgstr "Select Other Trader"
 
 #: src/components/@widgets/SelectMarketWithSearch/index.tsx
-#: src/pages/MyProfile/MyCopies/FilterSection.tsx
-#: src/pages/MyProfile/MyCopies/FilterSection.tsx
+#: src/pages/MyProfile/FilterBySource.tsx
+#: src/pages/MyProfile/FilterBySource.tsx
 #: src/pages/MyProfile/SelectCopyTradesDropdown.tsx
-#: src/pages/MyProfile/SelectTradersDropdown.tsx
-#: src/pages/MyProfile/SelectWalletsDropdown.tsx
+#: src/pages/MyProfile/SelectTradersCopied.tsx
+#: src/pages/MyProfile/SelectWallets.tsx
 msgid "Select all"
 msgstr "Select all"
 
@@ -2492,6 +2553,7 @@ msgstr "Skip Lower Size Position"
 msgid "Skipping..."
 msgstr "Skipping..."
 
+#: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/utils/config/translations.tsx
 msgid "Smart Wallet"
 msgstr "Smart Wallet"
@@ -2499,6 +2561,11 @@ msgstr "Smart Wallet"
 #: src/components/@wallet/SmartWalletFundModal/Deposit.tsx
 msgid "Smart Wallet Available Fund"
 msgstr "Smart Wallet Available Fund"
+
+#: src/components/@wallet/WalletDetailsCard/SmartWalletActions.tsx
+#: src/pages/MyProfile/index.tsx
+msgid "Smart Wallet Management"
+msgstr "Smart Wallet Management"
 
 #: src/components/@wallet/CreateWalletModals/CreateSmartWalletModal.tsx
 msgid "Smart wallets are a unique Copin offering that allows copiers to copytrade at {0} platform."
@@ -2548,8 +2615,8 @@ msgstr "Source Size Token"
 msgid "Source Trader"
 msgstr "Source Trader"
 
-#: src/pages/MyProfile/MyCopies/FilterSection.tsx
-#: src/pages/MyProfile/MyCopies/FilterSection.tsx
+#: src/pages/MyProfile/FilterBySource.tsx
+#: src/pages/MyProfile/FilterBySource.tsx
 msgid "Source:"
 msgstr "Source:"
 
@@ -2566,7 +2633,7 @@ msgstr "Statistic"
 msgid "Stats"
 msgstr "Stats"
 
-#: src/pages/MyProfile/MyCopies/FilterSection.tsx
+#: src/pages/MyProfile/FilterByStatus.tsx
 #: src/pages/MyProfile/UserActivity/configs.tsx
 #: src/utils/config/translations.tsx
 msgid "Status"
@@ -2585,6 +2652,10 @@ msgstr "Stop Copy"
 #: src/utils/config/translations.tsx
 msgid "Stop Loss"
 msgstr "Stop Loss"
+
+#: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
+msgid "Stop Loss - Trigger by ROI (%)"
+msgstr "Stop Loss - Trigger by ROI (%)"
 
 #: src/utils/config/translations.tsx
 msgid "Stop Loss Amount"
@@ -2657,6 +2728,10 @@ msgstr "Swap sETH to sUSD"
 msgid "Swap wETH to sETH"
 msgstr "Swap wETH to sETH"
 
+#: src/components/@wallet/CreateWalletModals/CreateSmartWalletModal.tsx
+msgid "Switch Account"
+msgstr "Switch Account"
+
 #: src/pages/Subscription/MintButton.tsx
 msgid "Sync Onchain Data"
 msgstr "Sync Onchain Data"
@@ -2693,6 +2768,10 @@ msgstr "TIME"
 msgid "TOTAL ORDER"
 msgstr "TOTAL ORDER"
 
+#: src/pages/Leaderboard/index.tsx
+msgid "TRADER BOARD"
+msgstr "TRADER BOARD"
+
 #: src/pages/Explorer/index.tsx
 msgid "TRADER EXPLORER"
 msgstr "TRADER EXPLORER"
@@ -2702,6 +2781,10 @@ msgstr "TRADER EXPLORER"
 #: src/utils/config/translations.tsx
 msgid "Take Profit"
 msgstr "Take Profit"
+
+#: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
+msgid "Take Profit - Trigger by ROI (%)"
+msgstr "Take Profit - Trigger by ROI (%)"
 
 #: src/utils/config/translations.tsx
 msgid "Take Profit Amount"
@@ -2735,6 +2818,10 @@ msgstr "Terms & Policy"
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "Terms and conditions"
 msgstr "Terms and conditions"
+
+#: src/hooks/web3/useRequiredChain.tsx
+msgid "The account in your web3 wallet does not match the account currently in use in the app"
+msgstr "The account in your web3 wallet does not match the account currently in use in the app"
 
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
 msgid "The basic plan allows your to experience the basic features of Copin"
@@ -2909,7 +2996,8 @@ msgstr "Total Orders"
 msgid "Total Paid Fees"
 msgstr "Total Paid Fees"
 
-#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
 msgid "Total Pnl"
 msgstr "Total Pnl"
 
@@ -2956,9 +3044,14 @@ msgstr "Trade On"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/pages/@layouts/Navbar/SearchBox.tsx
-#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
 msgid "Trader"
 msgstr "Trader"
+
+#: src/pages/@layouts/Navbar/NavLinks.tsx
+msgid "Trader Board"
+msgstr "Trader Board"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Trader Favorites"
@@ -2968,10 +3061,6 @@ msgstr "Trader Favorites"
 #: src/pages/MyProfile/Favorites/index.tsx
 msgid "Trader Favorites Statistics"
 msgstr "Trader Favorites Statistics"
-
-#: src/pages/TraderDetails/ProtocolBetaWarning.tsx
-msgid "Trader data from Hyperliquid has been extracted from 2024/8/27. It is currently in testing and may be unstable. Please use it for reference purposes only!"
-msgstr "Trader data from Hyperliquid has been extracted from 2024/8/27. It is currently in testing and may be unstable. Please use it for reference purposes only!"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "Trader don't have statistic in {0}"
@@ -3009,7 +3098,8 @@ msgstr "Trades"
 
 #: src/components/@dailyTrades/PairFilterTitle.tsx
 #: src/components/@dailyTrades/PairFilterTitle.tsx
-#: src/pages/MyProfile/MyCopies/ListCopyTrade.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
+#: src/pages/MyProfile/ListCopyTrade/index.tsx
 #: src/utils/config/translations.tsx
 msgid "Trading Pairs"
 msgstr "Trading Pairs"
@@ -3280,6 +3370,10 @@ msgid "You do not have permission to access this data"
 msgstr "You do not have permission to access this data"
 
 #: src/pages/MyProfile/CheckingWalletRenderer.tsx
+msgid "You don't have any API"
+msgstr "You don't have any API"
+
+#: src/pages/MyProfile/CheckingWalletRenderer.tsx
 msgid "You don't have any wallet"
 msgstr "You don't have any wallet"
 
@@ -3543,10 +3637,6 @@ msgstr "slippage"
 #: src/pages/DailyTrades/Orders/index.tsx
 #: src/pages/DailyTrades/Orders/index.tsx
 #: src/pages/DailyTrades/Orders/index.tsx
-#: src/pages/DailyTrades/Orders/index.tsx
-#: src/pages/DailyTrades/Orders/index.tsx
-#: src/pages/DailyTrades/Positions/index.tsx
-#: src/pages/DailyTrades/Positions/index.tsx
 #: src/pages/DailyTrades/Positions/index.tsx
 #: src/pages/DailyTrades/Positions/index.tsx
 #: src/pages/DailyTrades/Positions/index.tsx
@@ -3580,7 +3670,7 @@ msgstr "{0} month"
 msgid "{0} months"
 msgstr "{0} months"
 
-#: src/pages/MyProfile/SelectTradersDropdown.tsx
+#: src/pages/MyProfile/SelectTradersCopied.tsx
 msgid "{0} traders"
 msgstr "{0} traders"
 

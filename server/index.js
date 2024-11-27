@@ -53,7 +53,7 @@ app.get('/subscription', getSubscription)
 app.get('/stats', getStats)
 app.get('/referral', getReferralProgram)
 app.get('/live-trades*', getLiveTrades)
-app.get('/:protocol/leaderboard', getLeaderboard)
+app.get('/:protocol/trader-board', getLeaderboard)
 app.get('/copier-ranking', getCopierRanking)
 
 app.get('*', (req, res) => {
