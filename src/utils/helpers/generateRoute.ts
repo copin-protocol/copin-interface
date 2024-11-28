@@ -1,6 +1,6 @@
 import { EventDetailsData } from 'entities/event'
 import { LINKS, TELEGRAM_BOT_ALERT } from 'utils/config/constants'
-import { ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
+import { PositionSideEnum, ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 
@@ -30,6 +30,7 @@ export const generatePositionDetailsRoute = (
     txHash: string
     account: string
     logId: number
+    isLong: boolean
     nextHours?: number
     id?: string
   }>,
@@ -42,6 +43,8 @@ export const generatePositionDetailsRoute = (
     params: {
       [URL_PARAM_KEYS.ACCOUNT]: data.account,
       [URL_PARAM_KEYS.LOG_ID]: data.logId,
+      [URL_PARAM_KEYS.SIDE]:
+        data.isLong != null ? (data.isLong ? PositionSideEnum.LONG : PositionSideEnum.SHORT) : undefined,
       [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: data.nextHours,
       [URL_PARAM_KEYS.HIGHLIGHT_TX_HASH]: others?.highlightTxHash,
     },

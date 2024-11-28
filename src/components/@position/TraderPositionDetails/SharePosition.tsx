@@ -107,6 +107,7 @@ export default function SharePosition({
       txHash: stats?.txHashes?.[0],
       account: stats?.account,
       logId: stats?.logId,
+      isLong: stats?.isLong,
     })}`,
     key: 'ref',
     value: referralCode,

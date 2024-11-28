@@ -4,7 +4,6 @@ import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getProtocolsStatistic } from 'apis/positionApis'
-import ActiveDot from 'components/@ui/ActiveDot'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { getProtocolConfigs } from 'components/@widgets/SwitchProtocols/helpers'
 import useDebounce from 'hooks/helpers/useDebounce'
@@ -315,21 +314,6 @@ export default function ProtocolSelection({
                       <IconBox color="neutral3" icon={<User size={12} />} />
                     </Flex>
                   </Flex>
-
-                  {/*{ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol) && (*/}
-                  {/*  <Box sx={{ position: 'absolute', top: 0, right: 0 }}>*/}
-                  {/*    <ActiveDot tooltipId={`tt_allow_copy_${protocol}`} tooltipContent={<Trans>Allow Copy</Trans>} />*/}
-                  {/*  </Box>*/}
-                  {/*)}*/}
-                  {protocol === ProtocolEnum.HYPERLIQUID && (
-                    <Box sx={{ position: 'absolute', top: 0, right: 0 }}>
-                      <ActiveDot
-                        color="orange1"
-                        tooltipId={`tt_warning_${protocol}`}
-                        tooltipContent={<ProtocolBetaWarning protocol={protocol} />}
-                      />
-                    </Box>
-                  )}
 
                   {/*{option.isCross ? (*/}
                   {/*  <img src={CrossTag} alt="cross" />*/}

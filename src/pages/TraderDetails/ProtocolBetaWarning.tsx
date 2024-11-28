@@ -1,19 +1,42 @@
 import { Trans } from '@lingui/macro'
-import { Warning } from '@phosphor-icons/react'
+import { Info } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
+import React from 'react'
 
-import { IconBox, Type } from 'theme/base'
+import Tooltip from 'theme/Tooltip'
+import { Flex, IconBox, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 
 export default function ProtocolBetaWarning({ protocol }: { protocol: ProtocolEnum }) {
+  const { lg } = useResponsive()
+  if (!WARNING_PROTOCOL.includes(protocol)) return null
+  const tooltipId = `tt-protocol-beta-warning-${protocol}`
+  return (
+    <>
+      <IconBox
+        icon={<Info size={16} color={themeColors.orange1} />}
+        sx={{ display: 'inline-block' }}
+        data-tip="React-tooltip"
+        data-tooltip-id={tooltipId}
+        data-tooltip-delay-show={360}
+      />
+      <Tooltip id={tooltipId} place={lg ? 'top' : 'bottom'} type="dark" effect="solid">
+        <ProtocolBetaWarningContent protocol={protocol} />
+      </Tooltip>
+    </>
+  )
+}
+
+export function ProtocolBetaWarningContent({ protocol }: { protocol: ProtocolEnum }) {
   if (!WARNING_PROTOCOL.includes(protocol)) return null
   return (
-    <Type.Small color="orange1" sx={{ display: 'block', px: 2, py: 1, bg: '#FCC55133' }}>
-      <IconBox icon={<Warning size={16} />} sx={{ display: 'inline-block', mr: 1 }} />
-      <Trans>
-        Trader data from Hyperliquid has been extracted from 2024/8/27. It is currently in testing and may be unstable.
-        Please use it for reference purposes only!
-      </Trans>
-    </Type.Small>
+    <Flex maxWidth={400} sx={{ gap: 1 }}>
+      <IconBox icon={<Info size={16} color={themeColors.neutral2} />} sx={{ display: 'inline-block' }} />
+      <Type.Small color="neutral2" display="block">
+        <Trans>Data maybe delayed by up to 2 hours</Trans>
+      </Type.Small>
+    </Flex>
   )
 }
 

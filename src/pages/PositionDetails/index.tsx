@@ -11,7 +11,7 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import useSearchParams from 'hooks/router/useSearchParams'
 // import Loading from 'theme/Loading'
 import { DEFAULT_PROTOCOL, DYDX_TX_HASH_REGEX, EVM_TX_HASH_REGEX } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
+import { PositionSideEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 
 export default function PositionDetailsPage() {
@@ -20,15 +20,18 @@ export default function PositionDetailsPage() {
   const txHash = EVM_TX_HASH_REGEX.test(id) || DYDX_TX_HASH_REGEX.test(id) ? id : ''
   const account = searchParams?.[URL_PARAM_KEYS.ACCOUNT] as string
   const logId = Number(searchParams?.[URL_PARAM_KEYS.LOG_ID] as string)
+  const side = searchParams?.[URL_PARAM_KEYS.SIDE] as PositionSideEnum
+  const isLong = side === PositionSideEnum.LONG ? true : side === PositionSideEnum.SHORT ? false : undefined
 
   const { data, isFetching: isLoading } = useQuery(
-    [QUERY_KEYS.SEARCH_POSITION_DETAILS_BY_TX_HASH, protocol, txHash, account, logId],
+    [QUERY_KEYS.SEARCH_POSITION_DETAILS_BY_TX_HASH, protocol, txHash, account, logId, isLong],
     () =>
       searchPositionDetailByTxHashApi({
         protocol,
         txHash,
         account,
         logId,
+        isLong,
       }),
     {
       enabled: !!protocol && !!txHash,

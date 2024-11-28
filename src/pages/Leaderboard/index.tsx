@@ -26,8 +26,8 @@ const Leaderboard = () => {
           }}
         >
           <PageHeader
-            pageTitle={`Leaderboard on ${protocol}`}
-            headerText={<Trans>LEADERBOARD</Trans>}
+            pageTitle={`Trader Board on ${protocol}`}
+            headerText={<Trans>TRADER BOARD</Trans>}
             icon={Trophy}
             routeSwitchProtocol
           />
@@ -68,7 +68,7 @@ const Leaderboard = () => {
             <TopLeaderboard />
           </Box>
           <BottomTabWrapperMobile>
-            <BottomTabItemMobile icon={<Trophy size={24} weight="fill" />} text={<Trans>Traders explorer</Trans>} />
+            <BottomTabItemMobile icon={<Trophy size={24} weight="fill" />} text={<Trans>Trader Board</Trans>} />
           </BottomTabWrapperMobile>
         </Flex>
       </LeaderboardProvider>

@@ -46,6 +46,7 @@ export default function PositionLegend({
         account: data.account,
         logId: data.logId,
         protocol: data.protocol,
+        isLong: data.isLong,
         nextHours: nextHoursParam,
       })
     )

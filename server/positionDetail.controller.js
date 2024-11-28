@@ -11,7 +11,7 @@ import {
 } from './utils.js'
 
 const getPositionDetails = async (req, res) => {
-  const { account, log_id, next_hours } = req.query
+  const { account, log_id, side, next_hours } = req.query
   const { protocol, id } = req.params
 
   const protocolName = generateProtocolName(protocol)
@@ -22,7 +22,7 @@ const getPositionDetails = async (req, res) => {
   try {
     const txHash = id?.startsWith('0x') || id?.length === 64 ? id : ''
     url = !!txHash
-      ? `${configs.baseUrl}/${protocol}/position/${id}?account=${account}&log_id=${log_id}${
+      ? `${configs.baseUrl}/${protocol}/position/${id}?account=${account}&log_id=${log_id}&side=${side}${
           next_hours ? `&next_hours=${next_hours}&${new Date().getTime()}` : `&${new Date().getTime()}`
         }`
       : `${configs.baseUrl}/${protocol}/position/${id}${
@@ -30,7 +30,7 @@ const getPositionDetails = async (req, res) => {
         }`
 
     const searchPositions = await axios.get(
-      `${configs.apiUrl}/${protocol}/position/${txHash}?account=${account}&log_id=${log_id}`
+      `${configs.apiUrl}/${protocol}/position/${txHash}?account=${account}&log_id=${log_id}&side=${side}`
     )
     const data = searchPositions?.data
     if (data) {

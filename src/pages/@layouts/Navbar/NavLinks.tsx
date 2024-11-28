@@ -131,7 +131,7 @@ const baseNavConfigs = [
   {
     routeFactory: (configs: { protocol: ProtocolEnum }) => generateLeaderboardRoute({ protocol: configs.protocol }),
     matchpath: ROUTES.LEADERBOARD.path_prefix,
-    label: <Trans>Leaderboard</Trans>,
+    label: <Trans>Trader Board</Trans>,
   },
   {
     routeFactory: () => ROUTES.COPIER_RANKING.path,

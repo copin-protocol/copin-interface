@@ -17,10 +17,18 @@ export default function WhatIf({
   txHash,
   account,
   logId,
+  isLong,
   protocol,
   id,
   ...props
-}: { protocol: ProtocolEnum; txHash: string; account: string; logId: number; id?: string } & BoxProps) {
+}: {
+  protocol: ProtocolEnum
+  txHash: string
+  account: string
+  logId: number
+  isLong: boolean
+  id?: string
+} & BoxProps) {
   const { searchParams, setSearchParams } = useSearchParams()
   const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
     ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
@@ -81,14 +89,18 @@ export default function WhatIf({
           setValue('amount', 0)
           setNextHours(undefined)
           setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: null })
-          window.history.replaceState(null, '', generatePositionDetailsRoute({ protocol, txHash, account, logId, id }))
+          window.history.replaceState(
+            null,
+            '',
+            generatePositionDetailsRoute({ protocol, txHash, account, logId, isLong, id })
+          )
         }}
         onSubmit={() => {
           setNextHours(amount)
           window.history.replaceState(
             null,
             '',
-            generatePositionDetailsRoute({ id, protocol, txHash, account, logId, nextHours: amount })
+            generatePositionDetailsRoute({ id, protocol, txHash, account, logId, isLong, nextHours: amount })
           )
           // setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: amount ? amount.toString() : null })
         }}
