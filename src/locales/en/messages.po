@@ -396,13 +396,8 @@ msgid "Back To Select"
 msgstr "Back To Select"
 
 #: src/components/@ui/NotFound/index.tsx
-#: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
 msgid "Back to home"
 msgstr "Back to home"
-
-#: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
-msgid "Back to {prevProtocol}"
-msgstr "Back to {prevProtocol}"
 
 #: src/components/@backtest/BacktestFormSimple/index.tsx
 #: src/components/@backtest/BacktestSimpleModal/index.tsx
@@ -1863,6 +1858,10 @@ msgstr "More"
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "More."
 msgstr "More."
+
+#: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
+msgid "Mrket data was not found"
+msgstr "Mrket data was not found"
 
 #: src/utils/config/translations.tsx
 msgid "Multiple Copy"
@@ -3744,14 +3743,6 @@ msgstr "{daysLeft} days left"
 #: src/pages/TraderDetails/ScoreChart.tsx
 msgid "{label} is better than {value} traders"
 msgstr "{label} is better than {value} traders"
-
-#: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
-msgid "{symbol} market data was not found"
-msgstr "{symbol} market data was not found"
-
-#: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
-msgid "{symbol} market does not exist on {0}"
-msgstr "{symbol} market does not exist on {0}"
 
 #: src/theme/Tab/IconTabItem.tsx
 msgid "{text}"
