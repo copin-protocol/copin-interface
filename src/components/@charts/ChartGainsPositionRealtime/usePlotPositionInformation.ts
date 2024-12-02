@@ -2,10 +2,10 @@ import dayjs from 'dayjs'
 import React, { useMemo } from 'react'
 
 import { CopyOrderData } from 'entities/copyTrade'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { OnchainPositionData } from 'pages/MyProfile/OpeningPositions/schema'
 import { themeColors } from 'theme/colors'
 import { PositionStatusEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcSLTPUsd } from 'utils/helpers/calculate'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
 
@@ -37,7 +37,10 @@ export function usePlotPositionInformation({ chart, position, orders }: Props) {
         : orders?.filter((e) => e.isIncrease)?.reduce((sum, current) => sum + current.size, 0) ?? 0,
     [isOpening, position?.size, position?.averagePrice, orders]
   )
-  const symbol = position ? TOKEN_TRADE_SUPPORT[position?.protocol][position?.indexToken]?.symbol : 'UNKNOWN'
+  const { getSymbolByIndexToken } = useMarketsConfig()
+  const symbol = position
+    ? getSymbolByIndexToken({ protocol: position.protocol, indexToken: position.indexToken })
+    : 'UNKNOWN'
 
   React.useEffect(() => {
     try {

@@ -1,16 +1,17 @@
 import dayjs from 'dayjs'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import { CopyOrderData } from 'entities/copyTrade'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { OnchainPositionData } from 'pages/MyProfile/OpeningPositions/schema'
 import { Box } from 'theme/base'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
 import { ChartingLibraryWidgetOptions, ResolutionString } from '../../../../public/static/charting_library'
 import { DEFAULT_CHART_REALTIME_PROPS } from '../configs'
-import datafeed from './datafeed'
+import { datafeedFactory } from './datafeed'
+import { initWebsocket } from './streaming'
 import { useChart } from './useChart'
 import { usePlotOrderMarker } from './usePlotOrderMarker'
 import { usePlotPositionInformation } from './usePlotPositionInformation'
@@ -20,9 +21,16 @@ interface Props {
   orders?: CopyOrderData[]
 }
 function ChartGainsPositionRealtime({ position, orders }: Props) {
+  const { getSymbolByIndexToken, getSymbolByIndexTokenMapping } = useMarketsConfig()
+  const initiated = useRef(false)
+  useEffect(() => {
+    if (!getSymbolByIndexTokenMapping || initiated.current) return
+    const symbolByIndexToken = getSymbolByIndexTokenMapping({ protocol: ProtocolEnum.GNS })
+    if (!symbolByIndexToken) return
+    initWebsocket({ symbolByIndexToken })
+  }, [getSymbolByIndexTokenMapping])
   const [chartContainer, setChartContainer] = useState<HTMLDivElement | null>(null)
-  const tokensSupport = getTokenTradeSupport(position?.protocol ?? ProtocolEnum.GNS)
-  const symbol = position?.indexToken ? tokensSupport[position.indexToken]?.symbol : 'BTC'
+  const symbol = getSymbolByIndexToken({ protocol: position?.protocol, indexToken: position?.indexToken }) ?? 'BTC'
   const openBlockTime = useMemo(() => (position ? dayjs(position.createdAt).utc().valueOf() : 0), [position])
   const closeBlockTime = useMemo(() => (position ? dayjs(position.lastOrderAt).utc().valueOf() : 0), [position])
   const isOpening = position?.status === PositionStatusEnum.OPEN
@@ -35,7 +43,8 @@ function ChartGainsPositionRealtime({ position, orders }: Props) {
   const chartOpts = React.useMemo(() => {
     return {
       ...DEFAULT_CHART_REALTIME_PROPS,
-      datafeed,
+      // datafeedFactory(position.indexToken),
+      datafeed: datafeedFactory(position?.indexToken),
       container: chartContainer,
       symbol: symbol ? `${symbol}` : undefined,
       interval: (durationInSecond < 1800 ? '1' : timeframe.toString()) as ResolutionString,

@@ -14,7 +14,6 @@ import Tag from 'theme/Tag'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
@@ -84,7 +83,7 @@ export function renderEntry(data: CopyPositionData) {
 }
 
 export function renderPnL(data: CopyPositionData, prices?: UsdPrices, textSx?: any) {
-  const symbol = data?.protocol ? getTokenTradeSupport(data?.protocol)?.[data?.indexToken]?.symbol : undefined
+  const symbol = data?.protocol ? getSymbolFromPair(data.pair) : undefined
   const isOpening = data.status === PositionStatusEnum.OPEN
   const pnl = isOpening
     ? calcCopyOpeningPnL(
@@ -92,7 +91,7 @@ export function renderPnL(data: CopyPositionData, prices?: UsdPrices, textSx?: a
         prices && symbol
           ? normalizeExchangePrice({
               protocolSymbol: symbol,
-              protocolSymbolPrice: prices[data.indexToken],
+              protocolSymbolPrice: prices[symbol],
               exchange: data.exchange,
             })
           : undefined

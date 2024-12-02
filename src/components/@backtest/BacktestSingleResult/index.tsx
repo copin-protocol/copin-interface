@@ -5,10 +5,12 @@ import { TimeRangeProps } from 'components/@charts/ChartPositions/types'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import { BackTestResultData, RequestBackTestData, SimulatorPosition } from 'entities/backTest.d'
 import { PositionData } from 'entities/trader'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { Box, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { ALL_OPTION, getDefaultTokenOptions } from 'utils/config/trades'
+import { ALL_OPTION } from 'utils/config/trades'
+import { getPairFromSymbol, getSymbolFromPair } from 'utils/helpers/transform'
 
 import BacktestSummaryAndPositions from '../BacktestSummaryAndPositions'
 
@@ -59,11 +61,13 @@ export default function BacktestSingleResult({
       )
   }, [simulatorPositions, settings?.leverage, settings?.orderVolume, settings?.reverseCopy])
 
+  const { getListSymbolOptions } = useMarketsConfig()
   const tokenOptions = useMemo(() => {
+    const allOptions = getListSymbolOptions()
     return settings?.pairs && settings.pairs.length > 0
-      ? getDefaultTokenOptions(protocol).filter((e) => settings?.pairs?.find((i) => i === e.id), [protocol])
-      : getDefaultTokenOptions(protocol)
-  }, [settings?.pairs, protocol])
+      ? allOptions.filter((e) => settings?.pairs?.find((i) => getSymbolFromPair(i) === e.id))
+      : allOptions
+  }, [getListSymbolOptions, settings?.pairs])
 
   const { currentOption: currencyOption, changeCurrentOption: changeCurrency } = useOptionChange({
     optionName: 'currency',
@@ -73,7 +77,7 @@ export default function BacktestSingleResult({
 
   useEffect(() => {
     if (!!defaultToken.current || !dataSimulations || dataSimulations.length === 0) return
-    const option = tokenOptions.find((e) => e.id === dataSimulations[dataSimulations.length - 1]?.position?.indexToken)
+    const option = tokenOptions.find((e) => e.id === dataSimulations[dataSimulations.length - 1]?.position?.pair)
     if (option) {
       changeCurrency(option)
       defaultToken.current = option.id
@@ -88,7 +92,7 @@ export default function BacktestSingleResult({
   const [targetPosition, setTargetPosition] = useState<PositionData | undefined>()
   useEffect(() => {
     if (!targetPosition) return
-    changeCurrency(tokenOptions.find((e) => e.id === targetPosition.indexToken) ?? ALL_OPTION)
+    changeCurrency(tokenOptions.find((e) => e.id === getSymbolFromPair(targetPosition.pair)) ?? ALL_OPTION)
   }, [targetPosition])
 
   const onClickPosition = useCallback(

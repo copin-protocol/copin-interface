@@ -22,14 +22,14 @@ import { useWhatIfStore } from 'hooks/store/useWhatIf'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { FONT_FAMILY, GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
-import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { FONT_FAMILY, GMX_V1_PROTOCOLS } from 'utils/config/constants'
+import { OrderTypeEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { TIMEFRAME_NAMES, TOKEN_COLLATERAL_SUPPORT, TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
+import { TIMEFRAME_NAMES, TOKEN_COLLATERAL_SUPPORT } from 'utils/config/trades'
 import { calcLiquidatePrice, calcOpeningPnL, calcPnL } from 'utils/helpers/calculate'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
-import { formatPositionChartData, getTimeframeFromTimeRange } from 'utils/helpers/transform'
+import { formatPositionChartData, getSymbolFromPair, getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
 import OrderTooltip from './OrderTooltip'
 
@@ -52,14 +52,14 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
 
   const { sm } = useResponsive()
   const CHART_HEIGHT = sm ? 250 : 150
-  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
-  const prices = GAINS_TRADE_PROTOCOLS.includes(position.protocol) ? gainsPrices : pythPrices
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: position.protocol })
   const { nextHours } = useWhatIfStore()
   const { searchParams } = useSearchParams()
   const nextHoursParam = searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
     ? Number(searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS] as string)
     : undefined
-  const tokenSymbol = TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken]?.symbol
+  const tokenSymbol = getSymbolFromPair(position.pair)
   const from = useMemo(() => openBlockTime * 1000, [openBlockTime])
   const to = useMemo(() => (isOpening ? dayjs().utc().valueOf() : closeBlockTime * 1000), [closeBlockTime, isOpening])
   const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])
@@ -97,7 +97,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
   const decreaseList = orders.filter(
     (e) =>
       e.type === OrderTypeEnum.DECREASE ||
-      (position.protocol !== ProtocolEnum.GMX && e.type === OrderTypeEnum.CLOSE) ||
+      (!GMX_V1_PROTOCOLS.includes(position.protocol) && e.type === OrderTypeEnum.CLOSE) ||
       e.type === OrderTypeEnum.LIQUIDATE
   )
   const modifiedMarginList = orders.filter((e) => e.type === OrderTypeEnum.MARGIN_TRANSFERRED)
@@ -105,13 +105,13 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
   const hasLiquidate = (position.orders.filter((e) => e.type === OrderTypeEnum.LIQUIDATE) ?? []).length > 0
 
   // Todo: Check when add new protocol
-  const useSizeNumber = [
-    ProtocolEnum.KWENTA,
-    ProtocolEnum.POLYNOMIAL,
-    ProtocolEnum.DEXTORO,
-    ProtocolEnum.CYBERDEX,
-    ProtocolEnum.COPIN,
-  ].includes(protocol)
+  // const useSizeNumber = [
+  //   ProtocolEnum.KWENTA,
+  //   ProtocolEnum.POLYNOMIAL,
+  //   ProtocolEnum.DEXTORO,
+  //   ProtocolEnum.CYBERDEX,
+  //   ProtocolEnum.COPIN,
+  // ].includes(protocol)
   const tickPositions = useMemo(() => {
     const positions: TickPosition[] = []
     if (!position) return []
@@ -159,7 +159,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
       }
     }
     return positions
-  }, [orders, position, useSizeNumber])
+  }, [orders, position])
   const currentOrder = orders.find((e) => e.id === markerId)
 
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
@@ -178,7 +178,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
     }
 
     if (isOpening) {
-      const currentPrice = prices[position.indexToken]
+      const currentPrice = prices[getSymbolFromPair(position.pair)]
       if (currentPrice) {
         tempData.push({
           open: currentPrice,
@@ -283,7 +283,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
       })
     }
     if (isOpening) {
-      const currentPrice = prices[position.indexToken]
+      const currentPrice = prices[getSymbolFromPair(position.pair)]
       if (currentPrice) {
         tempData.push({
           open: currentPrice,

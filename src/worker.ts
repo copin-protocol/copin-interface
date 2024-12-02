@@ -1,9 +1,12 @@
 import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
+import axios from 'axios'
+import axiosRetry from 'axios-retry'
 
+import { MarketsData } from 'entities/markets'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { NETWORK } from 'utils/config/constants'
+import { SPECIAL_MARKET_CONFIG_MAPPING } from 'utils/config/marketConfig'
 import { PYTH_IDS_MAPPING } from 'utils/config/pythIds'
-import { TOKEN_TRADE_SUPPORT, TokenTrade } from 'utils/config/trades'
 import { WorkerMessage } from 'utils/types'
 
 const ports: MessagePort[] = []
@@ -14,59 +17,39 @@ onconnect = (e: MessageEvent) => {
   ports.push(port)
 }
 
-const PYTH_PRICE_FEED_URL = NETWORK === 'devnet' ? 'https://hermes.pyth.network' : 'https://hermes.copin.io'
-const ALL_TOKEN_SUPPORTS = Object.values(TOKEN_TRADE_SUPPORT).reduce<TokenTrade[]>((result, values) => {
-  return [...result, ...Object.entries(values).map(([key, _v]) => ({ address: key, ..._v }))]
-}, [])
-const PYTH_IDS = Array.from(new Set(ALL_TOKEN_SUPPORTS.map((x) => PYTH_IDS_MAPPING[x.symbol]))).filter((e) => !!e)
+const requester = axios.create({
+  baseURL: import.meta.env.VITE_API,
+  timeout: 300000,
+  headers: {
+    'Access-Control-Max-Age': 600,
+  },
+})
+axiosRetry(requester, { retries: 10, retryDelay: (retryCount) => retryCount * 5_000, retryCondition: () => true })
 
+const PYTH_PRICE_FEED_URL = NETWORK === 'devnet' ? 'https://hermes.pyth.network' : 'https://hermes.copin.io'
 const pyth = new EvmPriceServiceConnection(PYTH_PRICE_FEED_URL)
 
 const SYMBOL_BY_PYTH_ID = Object.entries(PYTH_IDS_MAPPING).reduce<Record<string, string>>((result, [key, value]) => {
   return { ...result, [value]: key }
 }, {})
 
-const TOKENS_BY_SYMBOL = ALL_TOKEN_SUPPORTS.reduce<Record<string, string[]>>((result, { symbol, address }) => {
-  return { ...result, [symbol]: [...(result[symbol] ?? []), address] }
-}, {})
-
-const NORMALIZE_LIST = [
-  '0xD020364b804f5aDeEB1f0Df9b76d08Ef9eF84C0C',
-  '0x32E8C41779fF521aE5688d0F31B32C138bCC85eC',
-  '0x43B9cE0394d9AFfc97501359646A410A48c21a11',
-  '0x73d96307A0B172dd9963C25eB99beD929303c5b8',
-  '0x3d6F251203af12A0b858D250E7ae543B8A1bAD84',
-  'HMX_ARB-44',
-  'HYPERLIQUID-kBONK',
-  'HYPERLIQUID-kFLOKI',
-  'HYPERLIQUID-kLUNC',
-  'HYPERLIQUID-kPEPE',
-  'HYPERLIQUID-kSHIB',
-  'KILOEX_OPBNB-81',
-  'KILOEX_OPBNB-82',
-  'KILOEX_OPBNB-84',
-  'KILOEX_OPBNB-90',
-  'BSX_BASE-5',
-]
-
 function getPriceData({ priceFeed }: { priceFeed: PriceFeed }) {
   if (!priceFeed) return null
   const id = `0x${priceFeed.id}`
   const priceData = priceFeed.getPriceNoOlderThan(60)
   const symbol = SYMBOL_BY_PYTH_ID[id]
-  const tokenAddresses = TOKENS_BY_SYMBOL[symbol]
-  if (!priceData || !tokenAddresses || tokenAddresses.length === 0) {
+  if (!priceData || !symbol) {
     return null
   }
-  return { tokenAddresses, value: Number(priceData.price) * Math.pow(10, priceData.expo) }
+  return { symbol, value: Number(priceData.price) * Math.pow(10, priceData.expo) }
 }
 
 const processPriceFeed = (priceFeed: PriceFeed, pricesData: UsdPrices) => {
   const data = getPriceData({ priceFeed })
   if (!data) return pricesData
-  data.tokenAddresses.forEach((address) => {
-    pricesData[address] = NORMALIZE_LIST.includes(address) ? data.value * 1000 : data.value
-  })
+  const symbol = data.symbol
+  const multipleRatio = SPECIAL_MARKET_CONFIG_MAPPING[symbol]?.multiple ?? 1
+  pricesData[symbol] = data.value * multipleRatio
   return pricesData
 }
 
@@ -79,52 +62,66 @@ function chunkArray(array: string[], chunkSize: number) {
 }
 
 async function initPythWebsocket() {
-  const allPriceFeedIds = await pyth.getPriceFeedIds()
-  const availablePriceFeedIds = PYTH_IDS.filter((id) =>
-    !!allPriceFeedIds?.length ? allPriceFeedIds?.includes(id.split('0x')?.[1]) : true
-  )
+  try {
+    const data = await requester.get(`/pairs/tokens`).then((res: any) => res.data?.data as MarketsData)
+    const listAllSymbol = Array.from(
+      new Set(
+        Object.values(data)
+          .map((values) => values.map((_v) => _v.symbol))
+          .flat(Infinity) as string[]
+      )
+    ).sort()
 
-  const PYTH_IDS_CHUNKS = chunkArray(availablePriceFeedIds, 100)
+    const pythIds = listAllSymbol.map((symbol) => PYTH_IDS_MAPPING[symbol]).filter((v) => !!v)
 
-  async function fetchAndProcessPriceFeeds() {
-    let pricesData = {} as UsdPrices
-    for (const pythIds of PYTH_IDS_CHUNKS) {
-      const initialCache = await pyth.getLatestPriceFeeds(pythIds)
-      initialCache?.forEach((price) => {
-        pricesData = processPriceFeed(price, pricesData)
-      })
-    }
-    ports.forEach((port) => {
-      const msg: WorkerMessage = { type: 'pyth_price', data: pricesData }
-      port.postMessage(msg)
-    })
-  }
+    //=========================================
 
-  // if (!isGains) {
-  await fetchAndProcessPriceFeeds()
+    const allPriceFeedIds = await pyth.getPriceFeedIds()
+    const availablePriceFeedIds = pythIds.filter((id) =>
+      !!allPriceFeedIds?.length ? allPriceFeedIds?.includes(id.split('0x')?.[1]) : true
+    )
 
-  await pyth.startWebSocket()
+    const PYTH_IDS_CHUNKS = chunkArray(availablePriceFeedIds, 100)
 
-  let lastUpdate = Math.floor(Date.now() / 1000)
-  const pricesData = {} as UsdPrices
-  const INTERVAL_TIME = 3 // s
-
-  await pyth.subscribePriceFeedUpdates(availablePriceFeedIds, (priceFeed) => {
-    const data = getPriceData({ priceFeed })
-    if (!data) return
-    for (let i = 0; i < data.tokenAddresses.length; i++) {
-      pricesData[data.tokenAddresses[i]] = NORMALIZE_LIST.includes(data.tokenAddresses[i])
-        ? data.value * 1000
-        : data.value
-    }
-    const publishTime = priceFeed?.getPriceNoOlderThan?.(60)?.publishTime ?? 0
-    if (publishTime >= lastUpdate + INTERVAL_TIME) {
-      lastUpdate = publishTime
+    async function fetchAndProcessPriceFeeds() {
+      let pricesData = {} as UsdPrices
+      for (const pythIds of PYTH_IDS_CHUNKS) {
+        const initialCache = await pyth.getLatestPriceFeeds(pythIds)
+        initialCache?.forEach((price) => {
+          pricesData = processPriceFeed(price, pricesData)
+        })
+      }
       ports.forEach((port) => {
-        const msg: WorkerMessage = { type: 'pyth_price', data: { ...pricesData } }
+        const msg: WorkerMessage = { type: 'pyth_price', data: pricesData }
         port.postMessage(msg)
       })
     }
-  })
+
+    await fetchAndProcessPriceFeeds()
+
+    await pyth.startWebSocket()
+
+    let lastUpdate = Math.floor(Date.now() / 1000)
+    const pricesData = {} as UsdPrices
+    const INTERVAL_TIME = 3 // s
+
+    await pyth.subscribePriceFeedUpdates(availablePriceFeedIds, (priceFeed) => {
+      const data = getPriceData({ priceFeed })
+      if (!data) return
+      const symbol = data.symbol
+      const multipleRatio = SPECIAL_MARKET_CONFIG_MAPPING[symbol]?.multiple ?? 1
+      pricesData[symbol] = data.value * multipleRatio
+      const publishTime = priceFeed?.getPriceNoOlderThan?.(60)?.publishTime ?? 0
+      if (publishTime >= lastUpdate + INTERVAL_TIME) {
+        lastUpdate = publishTime
+        ports.forEach((port) => {
+          const msg: WorkerMessage = { type: 'pyth_price', data: { ...pricesData } }
+          port.postMessage(msg)
+        })
+      }
+    })
+  } catch (error) {
+    // console.log(error)
+  }
 }
 initPythWebsocket()

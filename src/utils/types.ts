@@ -28,3 +28,5 @@ export type WorkerMessage = {
   type: 'pyth_price'
   data: UsdPrices
 }
+
+export type ValueOf<T> = T[keyof T]

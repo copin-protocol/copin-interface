@@ -78,40 +78,15 @@ export function createUrlWithParams({ url, params = {} }: { url: string; params?
   return url + `${!!query ? `?${query.slice(1)}` : ''}`
 }
 
-export function generateOIOverviewRoute(data: { protocol?: string; symbol?: string; params?: Record<string, any> }) {
-  if (data.protocol) {
-    return createUrlWithParams({
-      url: data.symbol
-        ? `/${data.protocol}${ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix}/${data.symbol}`
-        : `/${data.protocol}${ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix}`,
-      params: data.params,
-    })
-  }
-
+export function generateOIOverviewRoute(data: { params?: Record<string, any> }) {
   return createUrlWithParams({
-    url: ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix,
+    url: ROUTES.OPEN_INTEREST_OVERVIEW.path,
     params: data.params,
   })
 }
-export function generateOIPositionsRoute(data: { protocol?: string; symbol?: string; params?: Record<string, any> }) {
-  if (data.protocol) {
-    return createUrlWithParams({
-      url: data.symbol
-        ? `/${data.protocol}${ROUTES.OPEN_INTEREST_POSITIONS.path_prefix}/${data.symbol}`
-        : `/${data.protocol}${ROUTES.OPEN_INTEREST_POSITIONS.path_prefix}`,
-      params: data.params,
-    })
-  }
-
-  if (data.symbol) {
-    return createUrlWithParams({
-      url: `${ROUTES.ALL_OPEN_INTEREST_POSITIONS.path_prefix}/${data.symbol}`,
-      params: data.params,
-    })
-  }
-
+export function generateOIPositionsRoute(data: { params?: Record<string, any> }) {
   return createUrlWithParams({
-    url: ROUTES.ALL_OPEN_INTEREST_POSITIONS.path_prefix,
+    url: ROUTES.OPEN_INTEREST_POSITIONS.path,
     params: data.params,
   })
 }

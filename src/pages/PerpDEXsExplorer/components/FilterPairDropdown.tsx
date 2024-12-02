@@ -1,10 +1,9 @@
 import { ReactNode, useState } from 'react'
 
 import MarketSelection from 'components/@ui/MarketFilter/MarketSelection'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import Dropdown from 'theme/Dropdown'
 import { Flex } from 'theme/base'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
-import { getPairsByProtocols } from 'utils/helpers/graphql'
 
 export function FilterPairDropdown({
   currentPairs,
@@ -20,8 +19,9 @@ export function FilterPairDropdown({
   hasArrow?: boolean
 }) {
   const [visible, setVisible] = useState(false)
-  const protocolPairs = getPairsByProtocols(RELEASED_PROTOCOLS)
-  const isCopyAll = !isExcluded && currentPairs.length === protocolPairs?.length
+  const { getListSymbol } = useMarketsConfig()
+  const allPairs = getListSymbol()
+  const isCopyAll = !isExcluded && currentPairs.length === allPairs?.length
   const selectedPairs = isExcluded ? [] : currentPairs
   const excludedPairs = isExcluded ? currentPairs : []
   return (
@@ -40,7 +40,7 @@ export function FilterPairDropdown({
             isAllPairs={isCopyAll}
             selectedPairs={selectedPairs}
             onChangePairs={onChangePairs}
-            allPairs={protocolPairs}
+            allPairs={allPairs}
             excludedPairs={excludedPairs}
             handleToggleDropdown={() => setVisible(!visible)}
           />

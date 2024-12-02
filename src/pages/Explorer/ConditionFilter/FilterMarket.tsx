@@ -1,14 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { ConditionFormValues, RowValues } from 'components/@widgets/ConditionFilterForm/types'
 import SelectMarketWithSearch from 'components/@widgets/SelectMarketWithSearch'
 import { TraderData } from 'entities/trader'
-import useSearchParams from 'hooks/router/useSearchParams'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { Flex, Type } from 'theme/base'
-import { getTokenTradeList } from 'utils/config/trades'
-import { useProtocolFromUrl } from 'utils/helpers/graphql'
 
 export default function FilterMarket({
   filters,
@@ -17,29 +15,15 @@ export default function FilterMarket({
   filters: ConditionFormValues<TraderData>
   changeFilters: (options: ConditionFormValues<TraderData>) => void
 }) {
-  const { searchParams, pathname } = useSearchParams()
-  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
+  const { getListSymbol } = useMarketsConfig()
 
-  const pairs = foundProtocolInUrl
-    .map((protocol) => {
-      return getTokenTradeList(protocol).map((token) => ({ ...token, protocol }))
-    })
-    .flat()
+  const allPairs = getListSymbol()
 
-  const pairOptions = Object.values(
-    pairs
-      ?.sort((x, y) => x.symbol.localeCompare(y.symbol))
-      ?.reduce((acc: any, market) => {
-        if (!acc[market.symbol]) {
-          acc[market.symbol] = market
-        }
-        return acc
-      }, {})
-  )?.map((e: any) => {
-    return { value: e.symbol, label: e.symbol }
-  })
+  const pairOptions = useMemo(() => {
+    const options = allPairs.map((symbol) => ({ value: symbol, label: symbol }))
+    return options
+  }, [allPairs])
 
-  const allPairs = Array.from(new Set(pairs?.map((e) => e.symbol))) ?? []
   const initSelected = filters.find((e) => e.key === 'indexTokens')?.in
 
   const [keyword, setKeyword] = useState<string | undefined>()
@@ -49,7 +33,7 @@ export default function FilterMarket({
 
   const handleSelect = (item: string) => {
     const newValues = selectedItems.includes(item) ? selectedItems.filter((e) => e !== item) : [...selectedItems, item]
-    const symbols = Array.from(new Set(pairs.filter((e) => newValues.includes(e.symbol)).map((e) => e.symbol)))
+    const symbols = Array.from(new Set(allPairs.filter((_symbol) => newValues.includes(_symbol))))
     setSelectedItems(symbols)
 
     let formValues = [...filters]

@@ -1,6 +1,9 @@
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { PositionData } from 'entities/trader'
-import { OrderTypeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
+import { PROTOCOL_USE_SIZE_NUMBER_TO_CALC } from 'utils/config/protocols'
+
+import { GMX_V1_PROTOCOLS } from '../config/constants'
 
 export function calcPnL(isLong: boolean, averagePrice: number, lastPrice: number, sizeUsd: number) {
   const priceDelta = averagePrice > lastPrice ? averagePrice - lastPrice : lastPrice - averagePrice
@@ -71,7 +74,7 @@ export function getOpeningPnl({
 }
 
 export function calcOpeningROI(position: PositionData, realPnL: number) {
-  return (realPnL / position.collateral) * 100
+  return position.collateral ? (realPnL / position.collateral) * 100 : undefined
 }
 
 export function calcCopyOpeningROI(position: CopyPositionData, realPnL: number) {
@@ -87,25 +90,18 @@ export function calcLiquidatePrice(position: PositionData) {
   let lastCollateral = position.size / (position.leverage ?? undefined)
   let lastSizeInToken = position.size / position.averagePrice
   let totalFee = position.fee
-  switch (position.protocol) {
-    case ProtocolEnum.KWENTA:
-    case ProtocolEnum.POLYNOMIAL:
-    case ProtocolEnum.DEXTORO:
-    case ProtocolEnum.CYBERDEX:
-    case ProtocolEnum.COPIN:
-      if (position.status === PositionStatusEnum.OPEN) {
-        lastCollateral = position.lastCollateral
-        lastSizeInToken =
-          position.lastSizeInToken != null
-            ? position.lastSizeInToken
-            : position.lastSize != null
-            ? position.lastSize / position.averagePrice
-            : position.lastSizeNumber != null
-            ? Math.abs(position.lastSizeNumber)
-            : lastSizeInToken
-      }
-
-      break
+  if (PROTOCOL_USE_SIZE_NUMBER_TO_CALC.includes(position.protocol)) {
+    if (position.status === PositionStatusEnum.OPEN) {
+      lastCollateral = position.lastCollateral
+      lastSizeInToken =
+        position.lastSizeInToken != null
+          ? position.lastSizeInToken
+          : position.lastSize != null
+          ? position.lastSize / position.averagePrice
+          : position.lastSizeNumber != null
+          ? Math.abs(position.lastSizeNumber)
+          : lastSizeInToken
+    }
   }
   if (position.funding) {
     // totalFee += useToken ? position.fundingInToken : position.funding
@@ -137,26 +133,20 @@ export function calcSLTPUsd(amount: number, price: number, entryPrice: number) {
   return amount * Math.abs(price - entryPrice)
 }
 
+// TODO: Check when add new protocol
 export function calcClosedPrice(position?: PositionData) {
   if (!position || !position.orders?.length) return
   const decreaseList =
     position.orders.filter(
       (e) =>
         e.type === OrderTypeEnum.DECREASE ||
-        (position.protocol !== ProtocolEnum.GMX && e.type === OrderTypeEnum.CLOSE) ||
+        (GMX_V1_PROTOCOLS.includes(position.protocol) && e.type === OrderTypeEnum.CLOSE) ||
         e.type === OrderTypeEnum.LIQUIDATE
     ) ?? []
   if (!decreaseList.length) return
   let totalSizeDecrease = 0
   let totalVolumeDecrease = 0
-  // Todo: Check when add new protocol
-  const useSizeNumber = [
-    ProtocolEnum.KWENTA,
-    ProtocolEnum.POLYNOMIAL,
-    ProtocolEnum.DEXTORO,
-    ProtocolEnum.CYBERDEX,
-    ProtocolEnum.COPIN,
-  ].includes(position.protocol)
+  const useSizeNumber = PROTOCOL_USE_SIZE_NUMBER_TO_CALC.includes(position.protocol)
 
   decreaseList.forEach((order) => {
     let sizeNumber = 0

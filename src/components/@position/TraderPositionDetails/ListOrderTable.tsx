@@ -145,7 +145,6 @@ export const renderOrderBlockTime = (item: OrderData, format = DAYJS_FULL_DATE_F
     <Type.Caption color="neutral1">
       <LocalTimeText date={item.blockTime} format={format} hasTooltip={false} />
     </Type.Caption>
-    {/* TODO: Check when add new protocol like Hyperliquid */}
     {!NO_TX_HASH_PROTOCOLS.includes(item.protocol) && (
       <ExplorerLogo
         protocol={item.protocol}

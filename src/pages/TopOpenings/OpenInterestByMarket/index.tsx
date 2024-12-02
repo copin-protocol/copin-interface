@@ -4,25 +4,19 @@ import { useResponsive } from 'ahooks'
 import { TopOpeningPositionsGraphQLResponse } from 'graphql/entities/topOpeningPositions'
 import { SEARCH_TOP_OPENING_POSITIONS_QUERY } from 'graphql/topOpeningPositions'
 import { ReactNode, useEffect, useMemo } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { normalizePositionData } from 'apis/normalize'
 import { normalizePositionPayload } from 'apis/positionApis'
-// import { getTopOpeningPositionsApi } from 'apis/positionApis'
 import tokenNotFound from 'assets/images/token-not-found.png'
 import { ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
 import PythWatermark from 'components/@ui/PythWatermark'
 import ToastBody from 'components/@ui/ToastBody'
 import { ResponsePositionData } from 'entities/trader'
-import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
-// import { QUERY_KEYS } from 'utils/config/keys'
-import { getTokenTradeList } from 'utils/config/trades'
+import { SortTypeEnum } from 'utils/config/enums'
 import { useProtocolFromUrl } from 'utils/helpers/graphql'
 
 import PositionsSection from '../PositionsSection'
@@ -58,17 +52,6 @@ function OpenInterestByMarketPage() {
     onChangePairs,
     excludedPairs,
   } = useFilters()
-  const { symbol, protocol } = useParams<{ symbol: string | undefined; protocol: ProtocolEnum }>()
-
-  // TODO: remove later
-  const tokenOptions = foundProtocolInUrl
-    .map((protocol) => {
-      return getTokenTradeList(protocol).map((token) => ({ ...token, protocol }))
-    })
-    .flat()
-
-  // TODO: remove later
-  const tokenInfo = tokenOptions?.filter((token) => token.symbol === symbol)
 
   const queryVariables = useMemo(() => {
     const index = 'copin.positions'
@@ -112,10 +95,6 @@ function OpenInterestByMarketPage() {
 
   const data = rawPositionData?.map((position) => normalizePositionData(position))
 
-  const history = useHistory<{ prevProtocol: ProtocolEnum | undefined }>()
-  const prevProtocol = history.location.state?.prevProtocol
-  const protocolOptionsMapping = useGetProtocolOptionsMapping()
-
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
       <Flex
@@ -135,65 +114,49 @@ function OpenInterestByMarketPage() {
           onChangeLimit={onChangeLimit}
           currentTimeOption={time}
           onChangeTime={onChangeTime}
-          protocols={foundProtocolInUrl}
           pairs={pairs}
           onChangePairs={onChangePairs}
           excludedPairs={excludedPairs}
         />
         {sm && <PythWatermark />}
       </Flex>
-      {tokenInfo ? (
-        <>
-          {isLoading && (
-            <Box sx={wrapperSx}>
-              <Loading />
-            </Box>
-          )}
-          {!isLoading && !data?.length && (
-            <Box sx={wrapperSx}>
-              <NoMarketFound message={symbol && <Trans>{symbol} market data was not found</Trans>} />
-            </Box>
-          )}
-          {!isLoading && !!data?.length && (
-            <Box sx={{ flex: '1 0 0' }}>
-              <Flex height="100%" flexDirection={lg ? 'row' : 'column'}>
-                {lg ? (
-                  <Box flex="1">
-                    <VisualizeSection data={data} isLoading={isLoading} />
-                  </Box>
-                ) : (
-                  <Box p={3}>
-                    <VisualizeSectionMobile data={data} />
-                  </Box>
-                )}
-                <Box flex={[1, 1, 1, '0 0 690px']}>
-                  {data && (
-                    <PositionsSection
-                      data={data}
-                      sort={sort.key}
-                      total={Math.min(limit, data?.length ?? 0)}
-                      isLoading={isLoading}
-                    />
-                  )}
+      <>
+        {isLoading && (
+          <Box sx={wrapperSx}>
+            <Loading />
+          </Box>
+        )}
+        {!isLoading && !data?.length && (
+          <Box sx={wrapperSx}>
+            <NoMarketFound message={<Trans>Mrket data was not found</Trans>} />
+          </Box>
+        )}
+        {!isLoading && !!data?.length && (
+          <Box sx={{ flex: '1 0 0' }}>
+            <Flex height="100%" flexDirection={lg ? 'row' : 'column'}>
+              {lg ? (
+                <Box flex="1">
+                  <VisualizeSection data={data} isLoading={isLoading} />
                 </Box>
-              </Flex>
-            </Box>
-          )}
-        </>
-      ) : (
-        <NoMarketFound
-          message={
-            <Trans>
-              {symbol} market does not exist on {protocolOptionsMapping[protocol]?.text}
-            </Trans>
-          }
-          actionButton={
-            <Button variant="primary" onClick={() => (prevProtocol ? history.goBack() : history.push('/'))} width={150}>
-              {prevProtocol ? <Trans>Back to {prevProtocol}</Trans> : <Trans>Back to home</Trans>}
-            </Button>
-          }
-        />
-      )}
+              ) : (
+                <Box p={3}>
+                  <VisualizeSectionMobile data={data} />
+                </Box>
+              )}
+              <Box flex={[1, 1, 1, '0 0 690px']}>
+                {data && (
+                  <PositionsSection
+                    data={data}
+                    sort={sort.key}
+                    total={Math.min(limit, data?.length ?? 0)}
+                    isLoading={isLoading}
+                  />
+                )}
+              </Box>
+            </Flex>
+          </Box>
+        )}
+      </>
     </Flex>
   )
 }

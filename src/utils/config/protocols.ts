@@ -1,20 +1,26 @@
 import {
   ARBITRUM_MAINNET,
+  AVALANCHE_MAINNET,
   BASE_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
   DYDX_MAINNET,
   FANTOM_MAINNET,
   HYPERLIQUID_TESTNET,
+  LINEA_MAINNET,
+  MANTA_MAINNET,
   MANTLE_MAINNET,
   MODE_MAINNET,
   OPBNB_MAINNET,
   OPTIMISM_MAINNET,
   POLYGON_MAINNET,
+  POLYNOMIAL_L2_MAINNET,
   SCROLL_MAINNET,
+  XCHAIN_MAINNET,
+  ZKSYNC_ERA_MAINNET,
 } from 'utils/web3/chains'
 
-import { BUILD_MODE, RELEASED_PROTOCOLS } from './constants'
+import { BUILD_MODE, LINKS, RELEASED_PROTOCOLS } from './constants'
 import { ProtocolEnum } from './enums'
 
 export type ProtocolOptionProps = {
@@ -25,12 +31,10 @@ export type ProtocolOptionProps = {
   isNew?: boolean
   isCross?: boolean
   key: string
+  linkTrade?: string
 }
 
-export const PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.KWENTA, ProtocolEnum.POLYNOMIAL]
-
 // TODO: Check when add new protocol
-
 //@ts-ignore
 export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps> = {
   [ProtocolEnum.GMX_V2]: {
@@ -39,6 +43,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     key: 'GMA2',
+    linkTrade: LINKS.tradeGMXv2,
   },
   [ProtocolEnum.GMX]: {
     id: ProtocolEnum.GMX,
@@ -46,6 +51,15 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     key: 'GMA',
+    linkTrade: LINKS.tradeGMX,
+  },
+  [ProtocolEnum.GMX_AVAX]: {
+    id: ProtocolEnum.GMX_AVAX,
+    text: 'GMX',
+    label: 'Avalanche',
+    chainId: AVALANCHE_MAINNET,
+    key: 'GMAV',
+    linkTrade: LINKS.tradeGMX,
   },
   [ProtocolEnum.KWENTA]: {
     id: ProtocolEnum.KWENTA,
@@ -53,6 +67,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Optimism',
     chainId: OPTIMISM_MAINNET,
     key: 'KWO',
+    linkTrade: LINKS.tradeKwenta,
   },
   [ProtocolEnum.POLYNOMIAL]: {
     id: ProtocolEnum.POLYNOMIAL,
@@ -60,6 +75,15 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Optimism',
     chainId: OPTIMISM_MAINNET,
     key: 'POO',
+    linkTrade: LINKS.tradePolynomial,
+  },
+  [ProtocolEnum.POLYNOMIAL_L2]: {
+    id: ProtocolEnum.POLYNOMIAL_L2,
+    text: 'Polynomial',
+    label: 'Polynomial L2',
+    chainId: POLYNOMIAL_L2_MAINNET,
+    isNew: true,
+    key: 'POP',
   },
   [ProtocolEnum.GNS]: {
     id: ProtocolEnum.GNS,
@@ -67,6 +91,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     key: 'GNA',
+    linkTrade: LINKS.tradeGains,
   },
   [ProtocolEnum.GNS_POLY]: {
     id: ProtocolEnum.GNS_POLY,
@@ -74,6 +99,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Polygon',
     chainId: POLYGON_MAINNET,
     key: 'GNP',
+    linkTrade: LINKS.tradeGains,
   },
   [ProtocolEnum.GNS_BASE]: {
     id: ProtocolEnum.GNS_BASE,
@@ -82,6 +108,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: BASE_MAINNET,
     key: 'GNB',
     isNew: true,
+    linkTrade: LINKS.tradeGains,
   },
   [ProtocolEnum.LEVEL_BNB]: {
     id: ProtocolEnum.LEVEL_BNB,
@@ -89,6 +116,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'BNB Chain',
     chainId: BNB_MAINNET,
     key: 'LEB',
+    linkTrade: LINKS.tradeLevel,
   },
   [ProtocolEnum.LEVEL_ARB]: {
     id: ProtocolEnum.LEVEL_ARB,
@@ -96,6 +124,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     key: 'LEA',
+    linkTrade: LINKS.tradeLevel,
   },
   [ProtocolEnum.MUX_ARB]: {
     id: ProtocolEnum.MUX_ARB,
@@ -120,6 +149,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: BLAST_MAINNET,
     isNew: false,
     key: 'BLB',
+    linkTrade: LINKS.tradeBloom,
   },
   [ProtocolEnum.APOLLOX_BNB]: {
     id: ProtocolEnum.APOLLOX_BNB,
@@ -128,6 +158,16 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: BNB_MAINNET,
     isNew: false,
     key: 'APB',
+    linkTrade: LINKS.tradeApolloX,
+  },
+  [ProtocolEnum.APOLLOX_BASE]: {
+    id: ProtocolEnum.APOLLOX_BASE,
+    text: 'ApolloX',
+    label: 'Base',
+    chainId: BASE_MAINNET,
+    isNew: false,
+    key: 'APB2',
+    linkTrade: LINKS.tradeApolloX,
   },
   [ProtocolEnum.AVANTIS_BASE]: {
     id: ProtocolEnum.AVANTIS_BASE,
@@ -136,6 +176,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: BASE_MAINNET,
     isNew: false,
     key: 'AVB',
+    linkTrade: LINKS.tradeAvantis,
   },
   [ProtocolEnum.TIGRIS_ARB]: {
     id: ProtocolEnum.TIGRIS_ARB,
@@ -144,6 +185,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: ARBITRUM_MAINNET,
     isNew: false,
     key: 'TIA',
+    linkTrade: LINKS.tradeTigris,
   },
   [ProtocolEnum.LOGX_BLAST]: {
     id: ProtocolEnum.LOGX_BLAST,
@@ -152,6 +194,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: BLAST_MAINNET,
     isNew: false,
     key: 'LOB',
+    linkTrade: LINKS.tradeLogX,
   },
   [ProtocolEnum.LOGX_MODE]: {
     id: ProtocolEnum.LOGX_MODE,
@@ -160,6 +203,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: MODE_MAINNET,
     isNew: false,
     key: 'LOM',
+    linkTrade: LINKS.tradeLogX,
   },
   [ProtocolEnum.MYX_ARB]: {
     id: ProtocolEnum.MYX_ARB,
@@ -168,6 +212,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: ARBITRUM_MAINNET,
     isNew: false,
     key: 'MYA',
+    linkTrade: LINKS.tradeMyx,
   },
   [ProtocolEnum.HMX_ARB]: {
     id: ProtocolEnum.HMX_ARB,
@@ -177,6 +222,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     isNew: false,
     isCross: true,
     key: 'HMA',
+    linkTrade: LINKS.tradeHmx,
   },
   [ProtocolEnum.DEXTORO]: {
     id: ProtocolEnum.DEXTORO,
@@ -185,6 +231,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: OPTIMISM_MAINNET,
     isNew: false,
     key: 'DEO',
+    linkTrade: LINKS.tradeDexToro,
   },
   [ProtocolEnum.VELA_ARB]: {
     id: ProtocolEnum.VELA_ARB,
@@ -194,6 +241,15 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     isNew: false,
     key: 'VEA',
   },
+  [ProtocolEnum.SYNTHETIX_V3_ARB]: {
+    id: ProtocolEnum.SYNTHETIX_V3_ARB,
+    text: 'Synthetix V3',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+    isNew: true,
+    isCross: true,
+    key: 'SYA',
+  },
   [ProtocolEnum.SYNTHETIX_V3]: {
     id: ProtocolEnum.SYNTHETIX_V3,
     text: 'Synthetix V3',
@@ -202,6 +258,15 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     isNew: false,
     isCross: true,
     key: 'SYB3',
+  },
+  [ProtocolEnum.SYNTHETIX]: {
+    id: ProtocolEnum.SYNTHETIX,
+    text: 'Synthetix',
+    label: 'Optimism',
+    chainId: OPTIMISM_MAINNET,
+    isNew: true,
+    isCross: true,
+    key: 'SYO',
   },
   [ProtocolEnum.COPIN]: {
     id: ProtocolEnum.COPIN,
@@ -226,6 +291,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: OPTIMISM_MAINNET,
     isNew: false,
     key: 'CYO',
+    linkTrade: LINKS.tradeCyberDEX,
   },
   [ProtocolEnum.YFX_ARB]: {
     id: ProtocolEnum.YFX_ARB,
@@ -234,6 +300,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: ARBITRUM_MAINNET,
     isNew: false,
     key: 'YFA',
+    linkTrade: LINKS.tradeYfx,
   },
   [ProtocolEnum.KILOEX_OPBNB]: {
     id: ProtocolEnum.KILOEX_OPBNB,
@@ -242,6 +309,34 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: OPBNB_MAINNET,
     isNew: false,
     key: 'KIO',
+    linkTrade: LINKS.tradeKiloEx,
+  },
+  [ProtocolEnum.KILOEX_BNB]: {
+    id: ProtocolEnum.KILOEX_BNB,
+    text: 'KiloEx',
+    label: 'BNB Chain',
+    chainId: BNB_MAINNET,
+    isNew: true,
+    key: 'KIB',
+    linkTrade: LINKS.tradeKiloEx,
+  },
+  [ProtocolEnum.KILOEX_BASE]: {
+    id: ProtocolEnum.KILOEX_BASE,
+    text: 'KiloEx',
+    label: 'Base',
+    chainId: BASE_MAINNET,
+    isNew: true,
+    key: 'KIB2',
+    linkTrade: LINKS.tradeKiloEx,
+  },
+  [ProtocolEnum.KILOEX_MANTA]: {
+    id: ProtocolEnum.KILOEX_MANTA,
+    text: 'KiloEx',
+    label: 'Manta',
+    chainId: MANTA_MAINNET,
+    isNew: true,
+    key: 'KIM',
+    linkTrade: LINKS.tradeKiloEx,
   },
   [ProtocolEnum.ROLLIE_SCROLL]: {
     id: ProtocolEnum.ROLLIE_SCROLL,
@@ -290,6 +385,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: BASE_MAINNET,
     isNew: false,
     key: 'SYB',
+    linkTrade: LINKS.tradeSynfutures,
   },
   [ProtocolEnum.DYDX]: {
     id: ProtocolEnum.DYDX,
@@ -323,9 +419,63 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     isNew: true,
     key: 'VEA',
   },
+  [ProtocolEnum.LINEHUB_LINEA]: {
+    id: ProtocolEnum.LINEHUB_LINEA,
+    text: 'LineHub',
+    label: 'Linea',
+    chainId: LINEA_MAINNET,
+    isNew: true,
+    key: 'LIL',
+  },
+  [ProtocolEnum.FOXIFY_ARB]: {
+    id: ProtocolEnum.FOXIFY_ARB,
+    text: 'Foxify',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+    isNew: true,
+    key: 'FOA',
+  },
+  [ProtocolEnum.BMX_BASE]: {
+    id: ProtocolEnum.BMX_BASE,
+    text: 'BMX Classic',
+    label: 'Base',
+    chainId: BASE_MAINNET,
+    isNew: true,
+    key: 'BMB',
+  },
+  [ProtocolEnum.DEPERP_BASE]: {
+    id: ProtocolEnum.DEPERP_BASE,
+    text: 'DePerp',
+    label: 'Base',
+    chainId: BASE_MAINNET,
+    isNew: true,
+    key: 'DEB',
+  },
+  [ProtocolEnum.HORIZON_BNB]: {
+    id: ProtocolEnum.HORIZON_BNB,
+    text: 'Horizon',
+    label: 'BNB Chain',
+    chainId: BNB_MAINNET,
+    isNew: true,
+    key: 'HOB',
+  },
+  [ProtocolEnum.IDEX]: {
+    id: ProtocolEnum.IDEX,
+    text: 'IDEX',
+    label: 'XCHAIN',
+    chainId: XCHAIN_MAINNET,
+    isNew: true,
+    key: 'IDX',
+  },
+  [ProtocolEnum.HOLDSTATION_ZKSYNC]: {
+    id: ProtocolEnum.HOLDSTATION_ZKSYNC,
+    text: 'Holdstation',
+    label: 'zkSync Era',
+    chainId: ZKSYNC_ERA_MAINNET,
+    isNew: true,
+    key: 'HOZ',
+  },
 }
-
-export const SELECTED_PROTOCOLS_ALL = 'all'
 
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
   BUILD_MODE === 'production'
@@ -336,12 +486,23 @@ export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
 export const PROTOCOLS_CROSS_MARGIN = [
   ProtocolEnum.HMX_ARB,
   ProtocolEnum.SYNTHETIX_V3,
+  ProtocolEnum.SYNTHETIX_V3_ARB,
   ProtocolEnum.HYPERLIQUID,
   ProtocolEnum.DYDX,
   ProtocolEnum.BSX_BASE,
   ProtocolEnum.VERTEX_ARB,
+  ProtocolEnum.IDEX,
+  ProtocolEnum.POLYNOMIAL_L2,
 ]
 
+export const PROTOCOL_USE_SIZE_NUMBER_TO_CALC: ProtocolEnum[] = [
+  ProtocolEnum.SYNTHETIX,
+  ProtocolEnum.KWENTA,
+  ProtocolEnum.POLYNOMIAL,
+  ProtocolEnum.DEXTORO,
+  ProtocolEnum.CYBERDEX,
+  ProtocolEnum.COPIN,
+]
 export const PROTOCOLS_IN_TOKEN: ProtocolEnum[] = []
 
 // TODO: Check when add new protocol

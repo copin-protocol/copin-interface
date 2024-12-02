@@ -11,13 +11,14 @@ import ToastBody from 'components/@ui/ToastBody'
 import { renderEntry } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import useWeb3 from 'hooks/web3/useWeb3'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, Type } from 'theme/base'
-import { DELAY_SYNC, GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
+import { DELAY_SYNC } from 'utils/config/constants'
 import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 import delay from 'utils/helpers/delay'
 import { getErrorMessage } from 'utils/helpers/handleError'
@@ -109,22 +110,23 @@ const ClosePositionHandler = ({
       toast.error(<ToastBody title="Error" message="Something went wrong. Please try later." />)
     },
   })
-  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
-  const prices = GAINS_TRADE_PROTOCOLS.includes(position.protocol) ? gainsPrices : pythPrices
-
-  // console.log('positions', positions)
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: position.protocol })
+  const { getSymbolByIndexToken } = useMarketsConfig()
+  const symbol = getSymbolByIndexToken({ indexToken: position.indexToken })
 
   useEffect(() => {
-    const price = prices[position.indexToken]
+    if (!symbol) return
+    const price = prices[symbol]
     if (!!price) {
       const _acceptablePrice = calculateAcceptablePrice(parseUnits(price.toFixed(10), 10), !position.isLong)
       setAcceptablePrice(Number(formatUnits(_acceptablePrice, 10)))
     }
-  }, [position.indexToken, position.isLong, prices])
+  }, [symbol, position.isLong, prices])
 
   const onConfirm = async () => {
-    if (submitting || !account?.address || !walletProvider) return
-    const price = prices[position.indexToken]
+    if (submitting || !account?.address || !walletProvider || !symbol) return
+    const price = prices[symbol]
     if (price == null) {
       toast.error(<ToastBody title="Fetch price error" message="Can't find the price of this token" />)
       return

@@ -19,8 +19,8 @@ import Table from 'theme/Table'
 import { ColumnData, TableSortProps } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { CopyTradeOrderTypeEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { DEFAULT_LIMIT, DEFAULT_PROTOCOL } from 'utils/config/constants'
+import { CopyTradeOrderTypeEnum, SortTypeEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
@@ -260,7 +260,7 @@ export const multipleBacktestResultColumns: ColumnData<TableResultData, RequestB
     style: { minWidth: '150px' },
     render: (item) => {
       if (!item.traderData) return
-      const { account = '', protocol = ProtocolEnum.GMX } = item
+      const { account = '', protocol = DEFAULT_PROTOCOL } = item
       return (
         <Box color="neutral1">
           <AccountCell

@@ -11,7 +11,7 @@ import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
-import { FEE_WITH_FUNDING_PROTOCOLS, GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
+import { FEE_WITH_FUNDING_PROTOCOLS } from 'utils/config/constants'
 import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
 import { formatDuration } from 'utils/helpers/format'
 
@@ -28,8 +28,8 @@ interface PositionStatsProps {
 
 export default function PositionStats({ data, chartId }: { data: PositionData; chartId: string }) {
   const { md } = useResponsive()
-  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
-  const prices = GAINS_TRADE_PROTOCOLS.includes(data.protocol) ? gainsPrices : pythPrices
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: data.protocol })
   const hasFundingFee = !!data?.funding
   const isOpening = data?.status === PositionStatusEnum.OPEN
   const hasLiquidate = (data?.orders?.filter((e) => e.type === OrderTypeEnum.LIQUIDATE) ?? []).length > 0

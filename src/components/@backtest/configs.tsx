@@ -1,5 +1,3 @@
-import { ProtocolEnum } from 'utils/config/enums'
-
 import { BackTestFormValues } from './types'
 
 export const fieldName: { [key in keyof BackTestFormValues]: keyof BackTestFormValues } = {
@@ -19,16 +17,6 @@ export const fieldName: { [key in keyof BackTestFormValues]: keyof BackTestFormV
   reverseCopy: 'reverseCopy',
   copyAll: 'copyAll',
 }
-
-// Todo: Check when add new protocol with cross margin
-export const DISABLED_MARGIN_PROTECTION_PROTOCOLS = [
-  ProtocolEnum.HMX_ARB,
-  ProtocolEnum.SYNTHETIX_V3,
-  ProtocolEnum.HYPERLIQUID,
-  ProtocolEnum.DYDX,
-  ProtocolEnum.BSX_BASE,
-  ProtocolEnum.VERTEX_ARB,
-]
 
 export const PARAM_MAPPING = {
   ACCOUNT: 'acc',

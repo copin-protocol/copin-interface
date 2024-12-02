@@ -1,4 +1,6 @@
 import useUsdPricesStore, { useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
+import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
+import { ProtocolEnum } from 'utils/config/enums'
 
 export default function useGetUsdPrices() {
   const { prices: _prices, gainsPrices: _gainsPrices } = useUsdPricesStore()
@@ -17,5 +19,11 @@ export default function useGetUsdPrices() {
     if (value == null) delete newRealtimeGainsPrices[key]
   }
   const gainsPrices = { ..._gainsPrices, ...(isReady ? newRealtimeGainsPrices : {}) }
-  return { prices, gainsPrices }
+  const getPricesData = (args?: { protocol?: ProtocolEnum }) => {
+    if (!!args?.protocol) {
+      return GAINS_TRADE_PROTOCOLS.includes(args.protocol) ? gainsPrices : prices
+    }
+    return prices
+  }
+  return { prices, gainsPrices, getPricesData }
 }

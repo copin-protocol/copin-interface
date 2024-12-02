@@ -12,10 +12,11 @@ import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { EXPLORER_PLATFORMS } from 'utils/config/platforms'
-import { PROTOCOL_PROVIDER, getTokenTradeSupport } from 'utils/config/trades'
+import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { ORDER_TYPE_TRANS } from 'utils/config/translations'
-import { formatNumber } from 'utils/helpers/format'
-import { parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
+import { addressShorten, formatNumber } from 'utils/helpers/format'
+import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+import { getSymbolFromPair, parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 
 export interface UserActivityTableProps {
   data: UserActivityData[] | undefined
@@ -74,7 +75,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
         {item.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{getTokenTradeSupport(item.protocol)[item.indexToken]?.symbol}</Type.Caption>
+      <Type.Caption>{getSymbolFromPair(item.pair)}</Type.Caption>
       <VerticalDivider />
       <Type.Caption>
         {item.sourcePrice ? PriceTokenText({ value: item.sourcePrice, maxDigit: 2, minDigit: 2 }) : '--'}
@@ -138,7 +139,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
           {isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
         </Type.Caption>
         <VerticalDivider />
-        <Type.Caption>{getTokenTradeSupport(item.protocol)?.[item.indexToken]?.symbol}</Type.Caption>
+        <Type.Caption>{getSymbolFromPair(item.pair)}</Type.Caption>
         <VerticalDivider />
         <Type.Caption>
           {item.price ? PriceTokenText({ value: item.price, maxDigit: 2, minDigit: 2 }) : '--'}

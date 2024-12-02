@@ -101,7 +101,7 @@ function App() {
             <Route path={ROUTES.ALL_TRADERS_EXPLORER.path} component={Explorer}></Route>
 
             {/* NEW ROUTE */}
-            <Route path={ROUTES.ALL_OPEN_INTEREST_POSITIONS.path} component={OpenInterest}></Route>
+            <Route path={ROUTES.ROOT_OPEN_INTEREST_POSITIONS.path} component={OpenInterest}></Route>
             {/* OLD ROUTE */}
             <Route path={ROUTES.OPEN_INTEREST.path} component={OldTopOpeningInterest}></Route>
 

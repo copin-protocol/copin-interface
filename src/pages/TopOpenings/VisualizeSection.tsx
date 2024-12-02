@@ -3,7 +3,6 @@ import { DifferentialBar } from 'components/@ui/DifferentialBar'
 import { PositionData } from 'entities/trader'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 
 import OpeningPositionsBubble from './OpeningPositionsBubble'

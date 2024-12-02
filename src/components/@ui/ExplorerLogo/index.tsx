@@ -1,88 +1,42 @@
-import React from 'react'
-
 import { Box } from 'theme/base'
 import { BoxProps } from 'theme/types'
 import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
+import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
+import { ARBITRUM_CHAIN, BASE_CHAIN, CHAINS } from 'utils/web3/chains'
 
-// TODO: Check when add new protocol
+// TODO: Check when add new DCP
 const ExplorerLogo = ({
   protocol,
+  exchange,
   explorerUrl,
   size = 20,
   sx = {},
   ...props
-}: { protocol: string; explorerUrl?: string; size?: number } & BoxProps) => {
-  let icon
-  switch (protocol) {
-    case ProtocolEnum.GNS:
-    case ProtocolEnum.GMX:
-    case ProtocolEnum.GMX_V2:
-    case ProtocolEnum.LEVEL_ARB:
-    case ProtocolEnum.MUX_ARB:
-    case ProtocolEnum.EQUATION_ARB:
-    case ProtocolEnum.TIGRIS_ARB:
-    case ProtocolEnum.MYX_ARB:
-    case ProtocolEnum.HMX_ARB:
-    case ProtocolEnum.VELA_ARB:
-    case CopyTradePlatformEnum.GNS_V8:
-    case ProtocolEnum.YFX_ARB:
-    case ProtocolEnum.PERENNIAL_ARB:
-    case ProtocolEnum.UNIDEX_ARB:
-    case ProtocolEnum.VERTEX_ARB:
-      icon = 'ARBITRUM'
-      break
-
-    case ProtocolEnum.KWENTA:
-    case ProtocolEnum.POLYNOMIAL:
-    case ProtocolEnum.DEXTORO:
-    case ProtocolEnum.CYBERDEX:
-    case ProtocolEnum.COPIN:
-      icon = 'OPTIMISM'
-      break
-    case ProtocolEnum.LEVEL_BNB:
-    case ProtocolEnum.APOLLOX_BNB:
-      icon = 'BNB'
-      break
-    case ProtocolEnum.GNS_POLY:
-      icon = 'POLYGON'
-      break
-    case ProtocolEnum.BLOOM_BLAST:
-    case ProtocolEnum.LOGX_BLAST:
-      icon = 'BLAST'
-      break
-    case ProtocolEnum.AVANTIS_BASE:
-    case ProtocolEnum.SYNTHETIX_V3:
-    case CopyTradePlatformEnum.SYNTHETIX_V3:
-    case ProtocolEnum.SYNFUTURE_BASE:
-    case ProtocolEnum.BSX_BASE:
-    case ProtocolEnum.GNS_BASE:
-      icon = 'BASE'
-      break
-    case ProtocolEnum.LOGX_MODE:
-      icon = 'MODE'
-      break
-    case ProtocolEnum.KTX_MANTLE:
-      icon = 'MANTLE'
-      break
-    case ProtocolEnum.KILOEX_OPBNB:
-      icon = 'OPBNB'
-      break
-    case ProtocolEnum.ROLLIE_SCROLL:
-      icon = 'SCROLL'
-      break
-    case ProtocolEnum.MUMMY_FANTOM:
-    case ProtocolEnum.MORPHEX_FANTOM:
-      icon = 'FANTOM'
-      break
-    case ProtocolEnum.HYPERLIQUID:
-      icon = 'HYPERLIQUID'
-      break
-    case ProtocolEnum.DYDX:
-      icon = 'DYDX'
-      break
-    default:
-      icon = 'OPTIMISM'
+}: { protocol?: ProtocolEnum; explorerUrl?: string; size?: number; exchange?: CopyTradePlatformEnum } & BoxProps) => {
+  let icon = ''
+  if (protocol) {
+    const protocolConfig = PROTOCOL_OPTIONS_MAPPING[protocol]
+    if (protocolConfig) {
+      const chainConfig = CHAINS[protocolConfig.chainId]
+      icon = chainConfig.icon
+    }
   }
+  if (exchange) {
+    let chainId: number | undefined = undefined
+    switch (exchange) {
+      case CopyTradePlatformEnum.GNS_V8:
+        chainId = ARBITRUM_CHAIN
+        break
+      case CopyTradePlatformEnum.SYNTHETIX_V3:
+        chainId = BASE_CHAIN
+        break
+    }
+    if (chainId) {
+      const chainConfig = CHAINS[chainId]
+      icon = chainConfig.icon
+    }
+  }
+  if (!icon) return null
   return (
     <Box sx={{ width: size, height: size, filter: 'grayscale(100%)', ':hover': { filter: 'none' }, ...sx }} {...props}>
       <Box
@@ -93,7 +47,7 @@ const ExplorerLogo = ({
         sx={{ height: size, display: 'block', lineHeight: `${size}px` }}
         onClick={(e) => e.stopPropagation()}
       >
-        <img width="100%" src={`/images/protocols/ic-${icon}-explorer.png`} alt={protocol} />
+        <img width="100%" src={`/images/chain_explorers/ic-${icon}-explorer.png`} alt={protocol} />
       </Box>
     </Box>
   )

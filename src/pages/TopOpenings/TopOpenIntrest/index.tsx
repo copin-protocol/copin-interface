@@ -6,7 +6,7 @@ import { SEARCH_TOP_OPENING_POSITIONS_QUERY } from 'graphql/topOpeningPositions'
 import { useEffect, useMemo } from 'react'
 import { toast } from 'react-toastify'
 
-import { normalizePositionData, normalizePositionResponse } from 'apis/normalize'
+import { normalizePositionData } from 'apis/normalize'
 import { normalizePositionPayload } from 'apis/positionApis'
 import { ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
 import PythWatermark from 'components/@ui/PythWatermark'
@@ -113,7 +113,6 @@ function TopOpeningsPage() {
           onChangeLimit={onChangeLimit}
           currentTimeOption={time}
           onChangeTime={onChangeTime}
-          protocols={foundProtocolInUrl}
           pairs={pairs}
           onChangePairs={onChangePairs}
           excludedPairs={excludedPairs}

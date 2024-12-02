@@ -23,15 +23,13 @@ import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { CopyTradePlatformEnum, PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
-import { normalizeExchangePrice } from 'utils/helpers/transform'
+import { getSymbolFromPair, normalizeExchangePrice } from 'utils/helpers/transform'
 
 import CloseOnchainPosition from './CloseOnchainPosition'
 import ClosePositionSnxV2 from './ClosePositionSnxV2'
@@ -41,7 +39,6 @@ import UnlinkPosition from './UnlinkPosition'
 
 export default function CopyPositionDetails({ id }: { id: string | undefined }) {
   const [isTradingChart, setIsTradingChart] = useState<boolean | undefined>()
-  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
   const refetchQueries = useRefetchQueries()
   const {
     data,
@@ -98,7 +95,7 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
     [copyTradeDetails, dataOrders]
   )
   const isOpening = data && data.status === PositionStatusEnum.OPEN
-  const token = data ? getTokenTradeSupport(data.protocol)?.[data.indexToken] : undefined
+  const symbol = data ? getSymbolFromPair(data.pair) : undefined
   const sizeDelta = useMemo(
     () =>
       isOpening
@@ -110,8 +107,8 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
     if (!data || !copyTradeOrders) return 0
     return copyTradeOrders.filter((e) => e.isIncrease).reduce((sum, current) => sum + current.collateral, 0)
   }, [copyTradeOrders, data])
-  const symbol = data?.protocol ? getTokenTradeSupport(data?.protocol)?.[data?.indexToken]?.symbol : undefined
-  const prices = data?.protocol && GAINS_TRADE_PROTOCOLS.includes(data?.protocol) ? gainsPrices : pythPrices
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: data?.protocol })
   const pnl = useMemo(
     () =>
       data && symbol
@@ -120,7 +117,7 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
               data,
               normalizeExchangePrice({
                 protocolSymbol: symbol,
-                protocolSymbolPrice: prices[data.indexToken],
+                protocolSymbolPrice: prices[getSymbolFromPair(data.pair)],
                 exchange: data.exchange,
               })
             )
@@ -264,7 +261,7 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
                   <Type.Caption color="neutral3" px={1}>
                     |
                   </Type.Caption>{' '}
-                  {formatNumber(sizeDelta, 4, 4)} {getTokenTradeSupport(data.protocol)[data.indexToken]?.symbol}
+                  {formatNumber(sizeDelta, 4, 4)} {symbol}
                 </Type.CaptionBold>
               </StatsItemWrapperB>
               <StatsItemWrapperB>
@@ -411,12 +408,12 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
               }}
             >
               <TabPane tab={<Trans>Orders</Trans>} key={TabKeyEnum.ORDER}>
-                {currentTab === TabKeyEnum.ORDER && copyTradeOrders && copyTradeOrders.length > 0 && token ? (
+                {currentTab === TabKeyEnum.ORDER && copyTradeOrders && copyTradeOrders.length > 0 && symbol ? (
                   <ListCopyOrderTable
                     data={copyTradeOrders}
                     isLoading={loadingOrders}
                     isOpening={isOpening}
-                    token={token}
+                    symbol={symbol}
                     platform={data.exchange}
                     protocol={data.protocol}
                   />

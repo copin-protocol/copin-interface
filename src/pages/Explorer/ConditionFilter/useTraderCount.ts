@@ -1,10 +1,9 @@
 import debounce from 'lodash/debounce'
 import isEqual from 'lodash/isEqual'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTradersCounter } from 'apis/traderApis'
-import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
 import { ConditionFormValues, FilterValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import { ProtocolEnum } from 'utils/config/enums'

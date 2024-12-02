@@ -1,16 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { Funnel } from '@phosphor-icons/react'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { createGlobalStyle } from 'styled-components/macro'
 
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { Button } from 'theme/Buttons'
 import Dropdown from 'theme/Dropdown'
 import Select from 'theme/Select'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
-import { TokenTrade, getTokenTradeList } from 'utils/config/trades'
 import { getPairFromSymbol } from 'utils/helpers/transform'
 
 const GlobalStyle = createGlobalStyle`
@@ -31,6 +29,13 @@ export function PairFilterTitle({
   changePairs: (pairs: string[] | undefined) => void
   title?: ReactNode
 }) {
+  const { getListSymbol } = useMarketsConfig()
+  const { fullOptions, allPairs } = useMemo(() => {
+    const listAllSymbol = getListSymbol()
+    const allPairs = listAllSymbol.map((symbol) => getPairFromSymbol(symbol))
+    const options = listAllSymbol.map((symbol) => ({ value: getPairFromSymbol(symbol), label: symbol }))
+    return { fullOptions: options, allPairs }
+  }, [getListSymbol])
   const [visible, setVisible] = useState(false)
   const applyChangePairs = (_pairs: string[] | undefined) => {
     if (_pairs?.length) {
@@ -59,7 +64,9 @@ export function PairFilterTitle({
         menu={
           <Box sx={{ p: 3, width: '330px' }}>
             <MarketSelection
-              defaultPairs={pairs?.length ? pairs : ALL_PAIRS}
+              fullOptions={fullOptions}
+              allPairs={allPairs}
+              defaultPairs={pairs?.length ? pairs : allPairs}
               onApply={applyChangePairs}
               onReset={resetPairs}
             />
@@ -82,41 +89,25 @@ export function PairFilterTitle({
 
 export interface MarketSelectionProps {
   defaultPairs: string[]
+  allPairs: string[]
+  fullOptions: { value: string; label: string }[]
   onApply: (pairs: string[]) => void
   onReset: () => void
 }
 
-// need to replace with exist code
-const getSymbolsByProtocols = (protocols: ProtocolEnum[]) => {
-  const protocolPairs = protocols
-    .map((protocol) => getTokenTradeList(protocol))
-    .flat()
-    .reduce((acc: any, market) => {
-      if (!acc[market.symbol]) {
-        acc[market.symbol] = market
-      }
-      return acc
-    }, {})
-
-  return Object.values(protocolPairs).map((option) => (option as TokenTrade).symbol)
-}
-const ALL_SYMBOLS = getSymbolsByProtocols(RELEASED_PROTOCOLS)
-export const ALL_PAIRS = getSymbolsByProtocols(RELEASED_PROTOCOLS).map((s) => getPairFromSymbol(s))
-const FULL_OPTIONS = ALL_SYMBOLS.map((symbol) => ({ value: getPairFromSymbol(symbol), label: symbol }))
-
-const MarketSelection = ({ defaultPairs, onApply, onReset }: MarketSelectionProps) => {
+const MarketSelection = ({ defaultPairs, allPairs, fullOptions, onApply, onReset }: MarketSelectionProps) => {
   const [isScaling, setIsScaling] = useState(false)
 
   const [isSelectAll, setIsSelectAll] = useState(false)
   const [currentOptions, setOptions] = useState<{ label: any; value: string }[]>([])
   useEffect(() => {
-    if (defaultPairs.length === ALL_PAIRS.length) {
+    if (defaultPairs.length === allPairs.length) {
       setIsSelectAll(true)
     } else {
       setIsScaling(true)
-      setOptions(FULL_OPTIONS.filter((option) => defaultPairs.includes(option.value)))
+      setOptions(fullOptions.filter((option) => defaultPairs.includes(option.value)))
     }
-  }, [defaultPairs])
+  }, [allPairs.length, defaultPairs, fullOptions])
 
   // const disabledResetBtn = copyAll && chosenPairs.length == 0 && chosenExcludedPairs.length == 0
   const toggleSelectAll = (e: any) => {
@@ -163,7 +154,7 @@ const MarketSelection = ({ defaultPairs, onApply, onReset }: MarketSelectionProp
           menuIsOpen={isScaling}
           closeMenuOnSelect={false}
           className="select-container daily_trades_select_pairs"
-          options={FULL_OPTIONS}
+          options={fullOptions}
           value={currentOptions}
           // onMenuOpen={() => setIsScaling(true)}
           // onMenuClose={() => setIsScaling(false)}
@@ -215,6 +206,13 @@ export const MarketSelect = ({
   pairs: string[] | undefined
   onChange: (pairs: string[] | undefined) => void
 }) => {
+  const { getListSymbol } = useMarketsConfig()
+  const { fullOptions } = useMemo(() => {
+    const listAllSymbol = getListSymbol()
+    // const allPairs = listAllSymbol.map((symbol) => getPairFromSymbol(symbol))
+    const options = listAllSymbol.map((symbol) => ({ value: getPairFromSymbol(symbol), label: symbol }))
+    return { fullOptions: options }
+  }, [getListSymbol])
   const [isSelectAll, setIsSelectAll] = useState(pairs?.length ? false : true)
 
   const toggleSelectAll = (e: any) => {
@@ -241,8 +239,8 @@ export const MarketSelect = ({
         <Select
           closeMenuOnSelect={false}
           className="select-container daily_trades_select_pairs"
-          options={FULL_OPTIONS}
-          value={FULL_OPTIONS.filter((o) => pairs?.includes(o.value))}
+          options={fullOptions}
+          value={fullOptions.filter((o) => pairs?.includes(o.value))}
           onChange={(newValue: any) => {
             onChange(newValue.map((o: any) => o.value))
           }}

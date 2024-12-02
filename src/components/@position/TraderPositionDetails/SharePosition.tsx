@@ -14,8 +14,7 @@ import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
 import { Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { generatePositionCanvas } from 'utils/helpers/generateImage'
 import { generateParamsUrl, generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getProtocolDropdownImage } from 'utils/helpers/transform'
@@ -29,8 +28,8 @@ export default function SharePosition({
   stats: PositionData
   chartId: string
 }) {
-  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
-  const prices = GAINS_TRADE_PROTOCOLS.includes(stats.protocol) ? gainsPrices : pythPrices
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: stats.protocol })
   const [isSocialMediaSharingOpen, setIsSocialMediaSharingOpen] = useState(false)
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
   // const [shareData, setShareData] = useState<SharePositionData>()
@@ -38,7 +37,7 @@ export default function SharePosition({
 
   const { protocolImg, logoImg } = useMemo(() => {
     const protocolImg = new Image(40, 40)
-    protocolImg.src = getProtocolDropdownImage({ protocol: stats?.protocol ?? ProtocolEnum.GMX, isActive: false })
+    protocolImg.src = getProtocolDropdownImage({ protocol: stats?.protocol ?? DEFAULT_PROTOCOL, isActive: false })
     const logoImg = new Image(182, 42)
     logoImg.src = logoWithText
     return { protocolImg, logoImg }

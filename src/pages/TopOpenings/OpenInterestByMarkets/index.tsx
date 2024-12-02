@@ -10,11 +10,10 @@ import { OpenInterestMarketData } from 'entities/statistic'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { TableProps, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
-import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { useProtocolFromUrl } from 'utils/helpers/graphql'
 
-import { NoMarketFound } from '../OpenInterestByMarket'
 import RouteWrapper from '../RouteWrapper'
 import { TimeDropdown, useFilters, useTimeFilter } from '../TopOpenIntrest/Filters'
 import useSearchParamsState from '../useSearchParamsState'
@@ -97,7 +96,6 @@ function OpenInterestByMarketsPage() {
         <Filter
           currentTimeOption={time}
           onChangeTime={onChangeTime}
-          protocols={foundProtocolInUrl}
           pairs={pairs}
           excludedPairs={excludedPairs}
           onChangePairs={onChangePairs}
@@ -147,12 +145,10 @@ function OpenInterestByMarketsPage() {
 function Filter({
   currentTimeOption,
   onChangeTime,
-  protocols,
   pairs,
   excludedPairs,
   onChangePairs,
 }: ComponentProps<typeof TimeDropdown> & {
-  protocols: ProtocolEnum[]
   pairs: string[]
   excludedPairs: string[]
   onChangePairs: (pairs: string[], excludePairs: string[]) => void
@@ -161,7 +157,7 @@ function Filter({
   return (
     <Flex sx={{ gap: '6px', justifyContent: !lg ? 'space-between' : 'flex-start', width: !lg ? '100%' : 'auto' }}>
       {sm && <Type.CaptionBold sx={{ mt: '-1px' }}>Selected</Type.CaptionBold>}
-      <MarketFilter protocols={protocols} pairs={pairs} onChangePairs={onChangePairs} excludedPairs={excludedPairs} />
+      <MarketFilter pairs={pairs} onChangePairs={onChangePairs} excludedPairs={excludedPairs} />
       <Flex sx={{ gap: '6px' }}>
         <Type.CaptionBold>In</Type.CaptionBold>
         <TimeDropdown currentTimeOption={currentTimeOption} onChangeTime={onChangeTime} />

@@ -9,6 +9,7 @@ import { SelectSLTPType } from 'components/@copyTrade/CopyTradeForm'
 import Divider from 'components/@ui/Divider'
 import RangeFilter from 'components/@ui/TimeFilter/RangeFilter'
 import useInternalRole from 'hooks/features/useInternalRole'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -20,11 +21,11 @@ import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Type } from 'theme/base'
 import { RISK_LEVERAGE } from 'utils/config/constants'
 import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { getSymbolsFromIndexTokens, getTokenOptions, getTokenTradeList } from 'utils/config/trades'
+import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 
-import { DISABLED_MARGIN_PROTECTION_PROTOCOLS, fieldName } from '../configs'
+import { fieldName } from '../configs'
 import { getDefaultBackTestFormValues } from '../helpers'
 import { BackTestFormValues } from '../types'
 import { backTestFormSchema } from '../yupSchemas'
@@ -57,26 +58,26 @@ export default function BacktestForm({
     resolver: yupResolver(backTestFormSchema),
   })
   const isInternal = useInternalRole()
+  const { getListSymbol, getListSymbolByListIndexToken } = useMarketsConfig()
 
   useEffect(() => {
     const _defaultValues = defaultValues ? { ...defaultValues } : getDefaultBackTestFormValues(protocol)
-    if (_defaultValues.pairs?.length) {
-      _defaultValues.pairs = _defaultValues.pairs
-    }
     for (const key in _defaultValues) {
       const _key = key as keyof BackTestFormValues
       setValue(_key, _defaultValues[_key])
     }
     if (!defaultValues?.pairs.length && !!tokensTraded?.length) {
-      setValue('pairs', getSymbolsFromIndexTokens(protocol, tokensTraded))
+      setValue('pairs', getListSymbolByListIndexToken({ protocol, listIndexToken: tokensTraded }))
       return
     }
     if (!_defaultValues.pairs?.length) {
-      setValue('pairs', Array.from(new Set(getTokenTradeList(protocol).map((v) => v.symbol))))
+      setValue('pairs', getListSymbol({ protocol }))
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultValues, tokensTraded, protocol])
+  console.log('tokensTraded', tokensTraded)
+  console.log('pairs', getListSymbolByListIndexToken({ protocol, listIndexToken: tokensTraded }))
 
   const copyAll = watch('copyAll')
   const orderVolume = watch('orderVolume')
@@ -98,10 +99,13 @@ export default function BacktestForm({
     return _maxDate
   }, [])
 
-  const pairOptions = getTokenOptions({ protocol, ignoredAll: true })
+  const { getListSymbolOptions } = useMarketsConfig()
+  const pairOptions = useMemo(() => {
+    const allOptions = getListSymbolOptions()
+    allOptions.unshift({ id: 'all', value: 'all', label: 'All Tokens' })
+    return allOptions
+  }, [getListSymbolOptions])
   const allPairs = pairOptions.map((p) => p.value)
-
-  pairOptions.unshift({ id: 'all', value: 'all', label: 'All Tokens' })
 
   const isSelectedAll = allPairs.length === pairs?.length
 
@@ -337,7 +341,7 @@ export default function BacktestForm({
                 as the margin.
               </Type.Caption>
             </Box>
-            {!DISABLED_MARGIN_PROTECTION_PROTOCOLS.includes(protocol) && (
+            {!PROTOCOLS_CROSS_MARGIN.includes(protocol) && (
               <Box mt={24}>
                 <NumberInputField
                   block

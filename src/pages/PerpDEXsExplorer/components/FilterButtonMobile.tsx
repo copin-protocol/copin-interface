@@ -11,6 +11,7 @@ import { TableSelectFilter } from 'components/@widgets/TableFilter/TableSelectFi
 import { generateRangeFilterKey } from 'components/@widgets/TableFilter/helpers'
 import { FilterValues, TableFilterConfig } from 'components/@widgets/TableFilter/types'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { FilterPairDropdown } from 'pages/PerpDEXsExplorer/components/FilterPairDropdown'
 import { TABLE_RANGE_FILTER_CONFIGS } from 'pages/PerpDEXsExplorer/configs'
@@ -20,8 +21,6 @@ import Dropdown from 'theme/Dropdown'
 import Label from 'theme/InputField/Label'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
-import { getPairsByProtocols } from 'utils/helpers/graphql'
 import { parseCollateralColorImage } from 'utils/helpers/transform'
 import { ConditionType } from 'utils/types'
 
@@ -147,13 +146,14 @@ export function FilterButton({ resetState }: { resetState: () => void }) {
   const handleChangeParams = ({ urlParamKey, value }: { urlParamKey: string; value: string | undefined }) => {
     handleSetParams({ [urlParamKey]: value })
   }
-  const protocolPairs = getPairsByProtocols(RELEASED_PROTOCOLS)
+  const { getListSymbol } = useMarketsConfig()
+  const allPairs = getListSymbol()
 
   const onChangePairs = (pairs: string[], unPairs: string[]) => {
     if (unPairs?.length) {
       handleSetParams({ ['pairs']: unPairs.join('_'), ['isExcludedPairs']: '1' })
     } else {
-      if (!pairs?.length || pairs?.length === protocolPairs?.length) {
+      if (!pairs?.length || pairs?.length === allPairs?.length) {
         handleSetParams({ ['pairs']: undefined, ['isExcludedPairs']: undefined })
       } else {
         handleSetParams({ ['pairs']: pairs.join('_'), ['isExcludedPairs']: undefined })

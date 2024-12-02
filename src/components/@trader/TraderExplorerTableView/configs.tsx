@@ -10,7 +10,6 @@ import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
 import { PLATFORM_TRANS } from 'utils/config/translations'
 import { compactNumber, formatDuration, formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
-import { convertUniqueMarkets } from 'utils/helpers/transform'
 
 import { AccountCell, AccountCellMobile, MyCopyAccountCell } from './AccountCell'
 import Text from './Text'
@@ -136,7 +135,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
       return (
         <MarketGroup
           protocol={item.protocol}
-          indexTokens={convertUniqueMarkets(item.protocol, item.indexTokens)}
+          indexTokens={item.indexTokens}
           sx={{ justifyContent: externalSource?.isMarketsLeft ? 'flex-start' : 'flex-end' }}
         />
       )

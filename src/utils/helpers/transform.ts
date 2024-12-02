@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 
 import { ApiListResponse, ApiMeta } from 'apis/api'
 import { ChartData } from 'entities/chart'
-import { CopyWalletData } from 'entities/copyWallet'
+import { ApiKeyWallet, CopyWalletData } from 'entities/copyWallet'
 import { LINKS, SUPPORTED_LOCALES } from 'utils/config/constants'
 import {
   ChainStatsEnum,
@@ -15,6 +15,7 @@ import {
   TimeFilterByEnum,
   TimeframeEnum,
 } from 'utils/config/enums'
+import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import {
   COPY_POSITION_CLOSE_TYPE_TRANS,
   COPY_WALLET_TRANS,
@@ -22,7 +23,7 @@ import {
   SLTP_TYPE_TRANS,
 } from 'utils/config/translations'
 
-import { TokenTrade, getTokenTradeSupport } from '../config/trades'
+import { TokenTrade } from '../config/trades'
 import {
   ARBITRUM_MAINNET,
   BASE_MAINNET,
@@ -187,52 +188,10 @@ export const getDurationFromTimeFilter = (timeFilter?: TimeFilterByEnum) => {
   }
 }
 
-// TODO: Check when add new protocol
 export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
-  switch (protocol) {
-    case ProtocolEnum.GNS:
-    case ProtocolEnum.GNS_POLY:
-    case ProtocolEnum.GNS_BASE:
-      return LINKS.tradeGains
-    case ProtocolEnum.GMX:
-      return LINKS.tradeGMX
-    case ProtocolEnum.GMX_V2:
-      return LINKS.tradeGMXv2
-    case ProtocolEnum.KWENTA:
-      return LINKS.tradeKwenta
-    case ProtocolEnum.POLYNOMIAL:
-      return LINKS.tradePolynomial
-    case ProtocolEnum.LEVEL_BNB:
-    case ProtocolEnum.LEVEL_ARB:
-      return LINKS.tradeLevel
-    case ProtocolEnum.BLOOM_BLAST:
-      return LINKS.tradeBloom
-    case ProtocolEnum.APOLLOX_BNB:
-      return LINKS.tradeApolloX
-    case ProtocolEnum.AVANTIS_BASE:
-      return LINKS.tradeAvantis
-    case ProtocolEnum.TIGRIS_ARB:
-      return LINKS.tradeTigris
-    case ProtocolEnum.LOGX_BLAST:
-    case ProtocolEnum.LOGX_MODE:
-      return LINKS.tradeLogX
-    case ProtocolEnum.MYX_ARB:
-      return LINKS.tradeMyx
-    case ProtocolEnum.HMX_ARB:
-      return LINKS.tradeHmx
-    case ProtocolEnum.DEXTORO:
-      return LINKS.tradeDexToro
-    case ProtocolEnum.CYBERDEX:
-      return LINKS.tradeCyberDEX
-    case ProtocolEnum.YFX_ARB:
-      return LINKS.tradeYfx
-    case ProtocolEnum.KILOEX_OPBNB:
-      return LINKS.tradeKiloEx
-    case ProtocolEnum.SYNFUTURE_BASE:
-      return LINKS.tradeSynfutures
-    default:
-      return LINKS.tradeGMX
-  }
+  const protocolConfig = PROTOCOL_OPTIONS_MAPPING[protocol]
+  if (!protocolConfig) return ''
+  return protocolConfig.linkTrade || ''
 }
 
 export function parseProtocolImage(protocol: ProtocolEnum) {
@@ -252,7 +211,7 @@ export function parseWalletName(wallet: CopyWalletData, returnExchange?: boolean
           : wallet.name
         : wallet?.smartWalletAddress
         ? addressShorten(wallet?.smartWalletAddress)
-        : wallet?.[getExchangeKey(wallet?.exchange)]?.apiKey?.slice(0, 5) ?? '--'
+        : (wallet?.[getExchangeKey(wallet?.exchange)] as ApiKeyWallet)?.apiKey?.slice(0, 5) ?? '--'
     }`
 
   return wallet.name
@@ -260,7 +219,7 @@ export function parseWalletName(wallet: CopyWalletData, returnExchange?: boolean
     : `${COPY_WALLET_TRANS[wallet.exchange]}: ${
         wallet?.smartWalletAddress
           ? addressShorten(wallet?.smartWalletAddress)
-          : wallet?.[getExchangeKey(wallet?.exchange)]?.apiKey?.slice(0, 5) ?? '--'
+          : (wallet?.[getExchangeKey(wallet?.exchange)] as ApiKeyWallet)?.apiKey?.slice(0, 5) ?? '--'
       }`
 }
 
@@ -369,57 +328,7 @@ export function getProtocolDropdownImage({
   }.png`
 }
 
-export const normalizePriceData = (
-  symbol: string,
-  value?: number,
-  exchange?: CopyTradePlatformEnum,
-  isRevert?: boolean
-) => {
-  if (!value) return 0
-  switch (symbol) {
-    case '1000BONK':
-    case '1000PEPE':
-    case '1000FLOKI':
-    case '1000SHIB':
-    case '1000DOGS':
-    case 'kPEPE':
-    case 'kBONK':
-    case 'kFLOKI':
-    case 'kLUNC':
-    case 'kSHIB':
-      return value * 1000
-    case 'MPEPE':
-      return value * 1000000
-    case 'BONK':
-    case 'PEPE':
-      if (exchange && [CopyTradePlatformEnum.BINGX, CopyTradePlatformEnum.BYBIT].includes(exchange)) {
-        return isRevert ? value / 1000 : value * 1000
-      } else {
-        return value
-      }
-    case 'RATS':
-      if (exchange && [CopyTradePlatformEnum.BYBIT].includes(exchange)) {
-        return isRevert ? value / 1000 : value * 1000
-      } else {
-        return value
-      }
-    case 'SATS':
-      if (exchange && [CopyTradePlatformEnum.BYBIT].includes(exchange)) {
-        return isRevert ? value / 10000 : value * 10000
-      } else {
-        return value
-      }
-    case 'MOG':
-      if (exchange && [CopyTradePlatformEnum.BYBIT].includes(exchange)) {
-        return isRevert ? value / 1000000 : value * 1000000
-      } else {
-        return value
-      }
-    default:
-      return value
-  }
-}
-
+// TODO: Check when add new pairs
 const PROTOCOL_PRICE_MULTIPLE_MAPPING: Record<string, { originalSymbol: string; multiple: number }> = {
   '1000PEPE': { originalSymbol: 'PEPE', multiple: 1_000 },
   kPEPE: { originalSymbol: 'PEPE', multiple: 1_000 },
@@ -432,6 +341,7 @@ const PROTOCOL_PRICE_MULTIPLE_MAPPING: Record<string, { originalSymbol: string; 
   '1000LUNC': { originalSymbol: 'LUNC', multiple: 1_000 },
   kLUNC: { originalSymbol: 'LUNC', multiple: 1_000 },
   '1MBABYDOGE': { originalSymbol: 'BABYDOGE', multiple: 1_000_000 },
+  MPEPE: { originalSymbol: 'PEPE', multiple: 1_000_000 },
 }
 export function normalizeProtocolPrice({ symbol, price }: { symbol: string | undefined; price: number | undefined }): {
   originalSymbol: string
@@ -450,15 +360,17 @@ export function formatPositionChartData({
   symbol,
 }: {
   data: ChartData[] | undefined
-  symbol: string | undefined
+  symbol: string | undefined // symbol like 1000PEPE
 }) {
   if (!data?.length || !symbol) return [] as ChartData[]
+  const { multiple } = PROTOCOL_PRICE_MULTIPLE_MAPPING[symbol] ?? {}
+  const _multiple = multiple || 1
   return data.map((v) => {
     const _chartData: ChartData = {
-      open: normalizePriceData(symbol, v.open),
-      close: normalizePriceData(symbol, v.close),
-      low: normalizePriceData(symbol, v.low),
-      high: normalizePriceData(symbol, v.high),
+      open: v.open * _multiple,
+      close: v.close * _multiple,
+      low: v.low * _multiple,
+      high: v.high * _multiple,
       timestamp: v.timestamp,
     }
     return _chartData
@@ -574,21 +486,22 @@ export const parseChainFromNetwork = (network: string) => {
   }
 }
 
-export function convertUniqueMarkets(protocol: ProtocolEnum, indexTokens?: string[]) {
-  if (!indexTokens) return []
-  const tokenTradeSupport = getTokenTradeSupport(protocol)
-  const markets: { indexToken: string; symbol: string }[] = indexTokens
-    .map((e) => {
-      return { indexToken: e, symbol: tokenTradeSupport[e]?.symbol ?? e }
-    })
-    .reduce((acc: any, market) => {
-      if (!acc[market.symbol]) {
-        acc[market.symbol] = market
-      }
-      return acc
-    }, {})
-  return Object.values(markets).map((market) => market.indexToken)
-}
+// TODO: Delete comment after at least 1 month
+// export function convertUniqueMarkets(protocol: ProtocolEnum, indexTokens?: string[]) {
+//   if (!indexTokens) return []
+//   const tokenTradeSupport = getTokenTradeSupport(protocol)
+//   const markets: { indexToken: string; symbol: string }[] = indexTokens
+//     .map((e) => {
+//       return { indexToken: e, symbol: tokenTradeSupport[e]?.symbol ?? e }
+//     })
+//     .reduce((acc: any, market) => {
+//       if (!acc[market.symbol]) {
+//         acc[market.symbol] = market
+//       }
+//       return acc
+//     }, {})
+//   return Object.values(markets).map((market) => market.indexToken)
+// }
 
 export function getUniqueTokenTrade(tokenSupport: { [key: string]: TokenTrade | undefined }): TokenTrade[] {
   if (!tokenSupport) return []
@@ -602,25 +515,19 @@ export function getUniqueTokenTrade(tokenSupport: { [key: string]: TokenTrade | 
   )
 }
 
-export const getExchangeKey = (exchange: CopyTradePlatformEnum) => {
-  switch (exchange) {
-    case CopyTradePlatformEnum.BINGX:
-      return 'bingX'
-    case CopyTradePlatformEnum.BITGET:
-      return 'bitget'
-    case CopyTradePlatformEnum.BINANCE:
-      return 'binance'
-    case CopyTradePlatformEnum.BYBIT:
-      return 'bybit'
-    case CopyTradePlatformEnum.OKX:
-      return 'okx'
-    case CopyTradePlatformEnum.GATE:
-      return 'gate'
-    case CopyTradePlatformEnum.HYPERLIQUID:
-      return 'hyperliquid'
-    default:
-      return 'bingX'
-  }
+const EXCHANGE_KEY_MAPPING: Partial<Record<CopyTradePlatformEnum, keyof CopyWalletData>> = {
+  [CopyTradePlatformEnum.BINGX]: 'bingX',
+  [CopyTradePlatformEnum.BITGET]: 'bitget',
+  [CopyTradePlatformEnum.BINANCE]: 'binance',
+  [CopyTradePlatformEnum.BYBIT]: 'binance',
+  [CopyTradePlatformEnum.OKX]: 'okx',
+  [CopyTradePlatformEnum.GATE]: 'gate',
+  [CopyTradePlatformEnum.HYPERLIQUID]: 'hyperliquid',
+}
+
+export const getExchangeKey = (exchange: CopyTradePlatformEnum | undefined): keyof CopyWalletData => {
+  if (!exchange) return 'bingX'
+  return EXCHANGE_KEY_MAPPING[exchange] ?? 'bingX'
 }
 
 export function getTimePeriod(dayCount: number) {
@@ -646,46 +553,22 @@ export function getPairFromSymbol(symbol: string) {
   return `${symbol}-USDT`
 }
 
+const MINI_NUMBER_MAPPING: Record<string, string> = {
+  '1': '\u2081',
+  '2': '\u2082',
+  '3': '\u2083',
+  '4': '\u2084',
+  '5': '\u2085',
+  '6': '\u2086',
+  '7': '\u2087',
+  '8': '\u2088',
+  '9': '\u2089',
+  '10': '\u2081\u2080',
+  '11': '\u2081\u2081',
+  '12': '\u2081\u2082',
+}
 export function convertMiniNumber(value: number | string) {
-  switch (value) {
-    case 1:
-    case '1':
-      return '\u2081'
-    case 2:
-    case '2':
-      return '\u2082'
-    case 3:
-    case '3':
-      return '\u2083'
-    case 4:
-    case '4':
-      return '\u2084'
-    case 5:
-    case '5':
-      return '\u2085'
-    case 6:
-    case '6':
-      return '\u2086'
-    case 7:
-    case '7':
-      return '\u2087'
-    case 8:
-    case '8':
-      return '\u2088'
-    case 9:
-    case '9':
-      return '\u2089'
-    case 10:
-    case '10':
-      return '\u2081\u2080'
-    case 11:
-    case '11':
-      return '\u2081\u2081'
-    case 12:
-    case '12':
-      return '\u2081\u2082'
-  }
-  return value
+  return MINI_NUMBER_MAPPING[value.toString()]
 }
 
 export function parseColorByValue(value?: number) {

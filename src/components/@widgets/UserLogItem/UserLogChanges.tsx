@@ -2,14 +2,15 @@ import { ArrowRight } from '@phosphor-icons/react'
 import { LayoutProps, SpaceProps } from 'styled-system'
 
 import { UserLogData } from 'entities/userLog'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { Flex, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
 import { ChangeFieldEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { CHANGE_FIELD_TRANS } from 'utils/config/translations'
 import { convertCamelCaseToText, convertDataToText } from 'utils/helpers/transform'
 
 const UserLogChanges = ({ data, ...props }: { data: UserLogData } & LayoutProps & SxProps & SpaceProps) => {
+  const { getSymbolByIndexToken } = useMarketsConfig()
   return (
     <Flex flexDirection="column" sx={{ gap: [2, 2, 3, 3], maxWidth: ['100%', '100%', '50%', '50%'] }} {...props}>
       {data.changeFields?.map((fieldName) => {
@@ -21,13 +22,13 @@ const UserLogChanges = ({ data, ...props }: { data: UserLogData } & LayoutProps 
           case ChangeFieldEnum.TOKEN_ADDRESSES:
           case ChangeFieldEnum.EXCLUDING_TOKEN_ADDRESSES:
             if (data.oldData?.protocol) {
-              parsedOldData = data.oldData?.[fieldName]?.map(
-                (e: string) => getTokenTradeSupport(data.oldData?.protocol)[e]?.symbol
+              parsedOldData = data.oldData?.[fieldName]?.map((e: string) =>
+                getSymbolByIndexToken({ protocol: data.oldData?.protocol, indexToken: e })
               )
             }
             if (data.newData?.protocol) {
-              parsedNewData = data.newData?.[fieldName]?.map(
-                (e: string) => getTokenTradeSupport(data.oldData?.protocol)[e]?.symbol
+              parsedNewData = data.newData?.[fieldName]?.map((e: string) =>
+                getSymbolByIndexToken({ protocol: data.newData?.protocol, indexToken: e })
               )
             }
             break

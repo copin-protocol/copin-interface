@@ -9,7 +9,7 @@ import {
   UpdateCopyTradeData,
 } from 'entities/copyTrade.d'
 import { MyAllCopyTradersData, MyCopyTraderData } from 'entities/trader'
-import { MAX_LIMIT } from 'utils/config/constants'
+import { DEFAULT_PROTOCOL, MAX_LIMIT } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { INTERNAL_SERVICE_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 
@@ -24,7 +24,7 @@ export async function requestCopyTradeApi({ data, isInternal }: { data: RequestC
   const serviceKey =
     data.exchange == CopyTradePlatformEnum.GNS_V8 || data.exchange == CopyTradePlatformEnum.SYNTHETIX_V2
       ? 'MIRROR_SIGNAL'
-      : service[data.protocol ?? ProtocolEnum.GMX]
+      : service[data.protocol ?? DEFAULT_PROTOCOL]
   return requester.post(`${SERVICE}`, { ...data, serviceKey }).then((res: any) => res.data as CopyTradeData)
 }
 
@@ -45,7 +45,7 @@ export async function duplicateCopyTradeApi({
   const serviceKey =
     data.exchange == CopyTradePlatformEnum.GNS_V8 || data.exchange == CopyTradePlatformEnum.SYNTHETIX_V2
       ? 'MIRROR_SIGNAL'
-      : service[data.protocol ?? ProtocolEnum.GMX]
+      : service[data.protocol ?? DEFAULT_PROTOCOL]
   return requester
     .post(`${SERVICE}/duplicate/${copyTradeId}`, { ...data, serviceKey })
     .then((res: any) => res.data as CopyTradeData)

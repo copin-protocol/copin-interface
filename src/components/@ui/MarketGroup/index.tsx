@@ -3,10 +3,10 @@ import { useMemo } from 'react'
 import { GridProps } from 'styled-system'
 import { v4 as uuid } from 'uuid'
 
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { getSymbolsFromIndexTokens } from 'utils/config/trades'
 
 import Market from './Market'
 
@@ -29,10 +29,16 @@ export default function MarketGroup({
   sx?: SystemStyleObject & GridProps
   imageUriFactory?: (symbol: string) => string
 }) {
+  const { getListSymbolByListIndexToken } = useMarketsConfig()
   const tooltipId = useMemo(() => uuid(), [])
-  const numberOfAddress = symbols ? symbols.length : indexTokens?.length
+  const _symbols = symbols
+    ? symbols
+    : indexTokens && protocol
+    ? getListSymbolByListIndexToken({ protocol, listIndexToken: indexTokens })
+    : []
+  const numberOfAddress = _symbols ? _symbols.length : indexTokens?.length
   if (!numberOfAddress) return <></>
-  const _symbols = symbols ? symbols : indexTokens && protocol ? getSymbolsFromIndexTokens(protocol, indexTokens) : []
+
   return (
     <Flex sx={{ position: 'relative', height: size, ...sx }}>
       {_symbols.slice(0, limit).map((symbol) => {
@@ -118,9 +124,14 @@ export function MarketGroupFull({
   sx?: SystemStyleObject & GridProps
   imageUriFactory?: (symbol: string) => string
 }) {
+  const { getListSymbolByListIndexToken } = useMarketsConfig()
   const numberOfAddress = symbols ? symbols.length : indexTokens?.length
   if (!numberOfAddress) return <></>
-  const _symbols = symbols ? symbols : indexTokens && protocol ? getSymbolsFromIndexTokens(protocol, indexTokens) : []
+  const _symbols = symbols
+    ? symbols
+    : indexTokens && protocol
+    ? getListSymbolByListIndexToken({ protocol, listIndexToken: indexTokens })
+    : []
   return (
     <Box
       sx={{

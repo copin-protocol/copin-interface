@@ -8,6 +8,7 @@ import { renderEntry } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { useSmartWalletContract } from 'hooks/web3/useContract'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
@@ -82,11 +83,11 @@ const ClosePositionHandler = ({
   const smartWalletMutation = useContractMutation(smartWalletContract)
   const { gainsPrices: prices } = useGetUsdPrices()
 
-  // console.log('positions', positions)
-
+  const { getSymbolByIndexToken } = useMarketsConfig()
+  const symbol = getSymbolByIndexToken({ indexToken: position.indexToken })
   const onConfirm = async () => {
-    if (submitting) return
-    const price = prices[position.indexToken]
+    if (submitting || !symbol) return
+    const price = prices[symbol]
     if (price == null) {
       toast.error(<ToastBody title="Fetch price error" message="Can't find the price of this token" />)
       return

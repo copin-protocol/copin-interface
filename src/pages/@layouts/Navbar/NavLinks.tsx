@@ -123,10 +123,9 @@ const baseNavConfigs = [
     matchpath: ROUTES.ALL_TRADERS_EXPLORER.path,
   },
   {
-    routeFactory: (configs: { protocol: ProtocolEnum; params?: any }) =>
-      generateOIPositionsRoute({ params: configs.params }),
+    routeFactory: (configs: { params?: any }) => generateOIPositionsRoute({ params: configs.params }),
     label: <Trans>Open Interest</Trans>,
-    matchpath: ROUTES.ALL_OPEN_INTEREST_POSITIONS.path,
+    matchpath: ROUTES.OPEN_INTEREST_POSITIONS.path,
   },
   {
     routeFactory: (configs: { protocol: ProtocolEnum }) => generateLeaderboardRoute({ protocol: configs.protocol }),
