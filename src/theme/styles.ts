@@ -420,6 +420,35 @@ input[type=number] {
   }
 }
 
+.row__visible {
+  display: table-row;
+}
+.row__hidden {
+  display: none;
+}
+.row__even {
+  td {
+    background: ${({ theme }) => theme.colors.neutral6}
+  }
+}
+.row__odd {
+  td {
+    background: ${({ theme }) => theme.colors.neutral7}
+  }
+}
+.row__child__even {
+  td {
+    // background: ${({ theme }) => theme.colors.neutral6}
+    background: rgba(0, 0, 0, 0.25);
+  }
+}
+.row__child__odd {
+  td {
+    // background: ${({ theme }) => theme.colors.neutral7}
+    background: rgba(0, 0, 0, 0.75);
+  }
+}
+
 
 
 //tour

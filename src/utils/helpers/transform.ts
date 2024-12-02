@@ -317,12 +317,22 @@ export function parseMarketImage(symbol: string) {
   return `/svg/markets/${symbol}.svg`
 }
 
+export function parseChainImage(chain: string) {
+  return `/images/chains/${chain.toUpperCase()}.png`
+}
+
 export function parseCollateralImage(symbol: string) {
   return `/images/collaterals/${symbol}.png`
+}
+export function parseCollateralColorImage(symbol: string) {
+  return `/images/collaterals_with_color/${symbol.toUpperCase()}.png`
 }
 
 export function parseRewardImage(symbol: string) {
   return `/images/rewards/${symbol}.png`
+}
+export function parsePlainProtocolImage(protocol: string) {
+  return `/images/protocol_images/${protocol}.png`
 }
 
 export function convertDurationInSecond(openTime: string) {

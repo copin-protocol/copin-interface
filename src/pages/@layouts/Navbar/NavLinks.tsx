@@ -148,6 +148,11 @@ const baseNavConfigs = [
     matchpath: ROUTES.LIVE_TRADES.path,
     label: <Trans>Live Trades</Trans>,
   },
+  {
+    routeFactory: () => ROUTES.PERP_DEXS_EXPLORER.path,
+    matchpath: ROUTES.PERP_DEXS_EXPLORER.path,
+    label: <Trans>Perp DEXs Explorer</Trans>,
+  },
 ]
 
 function NavLink(props: NavLinkProps & { matchpath?: string }) {

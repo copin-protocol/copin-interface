@@ -271,3 +271,4 @@ export const FEE_WITH_FUNDING_PROTOCOLS = [
 export const COLLATERAL_TOKEN_PROTOCOLS: ProtocolEnum[] = []
 
 export const MAX_LIMIT = 500
+export const MAX_PERPDEX_ISSUE_DESCRIPTION = 800

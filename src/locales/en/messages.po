@@ -103,6 +103,22 @@ msgstr "7D PnL"
 msgid "7D Pnl"
 msgstr "7D Pnl"
 
+#: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
+msgid "<0><1>The Issue Description*</1><2>({0}/{MAX_PERPDEX_ISSUE_DESCRIPTION})</2></0>"
+msgstr "<0><1>The Issue Description*</1><2>({0}/{MAX_PERPDEX_ISSUE_DESCRIPTION})</2></0>"
+
+#: src/pages/PerpDEXsExplorer/components/ReportPerpDEX.tsx
+msgid "<0>Data wrong?<1>Report</1></0>"
+msgstr "<0>Data wrong?<1>Report</1></0>"
+
+#: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
+msgid "<0>Please provide details about the issue you noticed. You can also attach an image and share your contact information if you want us to follow up</0>"
+msgstr "<0>Please provide details about the issue you noticed. You can also attach an image and share your contact information if you want us to follow up</0>"
+
+#: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
+msgid "<0>Telegram Contact</0>"
+msgstr "<0>Telegram Contact</0>"
+
 #: src/pages/ReferralManagement/ReferralActivities.tsx
 msgid "<0>{0} </0>earned <1>{1} USDC</1> in commission from {2}"
 msgstr "<0>{0} </0>earned <1>{1} USDC</1> in commission from {2}"
@@ -114,6 +130,10 @@ msgstr "<0>{0} </0>invited by <1>{1}</1>"
 #: src/pages/TopOpenings/RouteWrapper.tsx
 msgid "<0>{0}</0>"
 msgstr "<0>{0}</0>"
+
+#: src/pages/PerpDEXsExplorer/components/RichTextarea.tsx
+msgid "<0>{hintUploadImage}</0>"
+msgstr "<0>{hintUploadImage}</0>"
 
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "A 10% loyalty fee applies when trading the NFT."
@@ -232,6 +252,10 @@ msgstr "Alert traders signal"
 #: src/pages/Home/Traders.tsx
 msgid "All"
 msgstr "All"
+
+#: src/components/@widgets/ChainSelection/index.tsx
+msgid "All Chain"
+msgstr "All Chain"
 
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
@@ -1028,6 +1052,7 @@ msgstr "Edit"
 msgid "Email"
 msgstr "Email"
 
+#: src/pages/PerpDEXsExplorer/components/PerpDEXsEventOverview.tsx
 #: src/theme/Tag/index.tsx
 #: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
@@ -1057,6 +1082,7 @@ msgstr "Entry Price"
 #: src/hooks/web3/useContractMutation.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
+#: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
 msgid "Error"
 msgstr "Error"
 
@@ -1074,6 +1100,7 @@ msgstr "Est. Take Profit Price"
 
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/PerpDEXsExplorer/index.tsx
 msgid "Events"
 msgstr "Events"
 
@@ -1191,6 +1218,10 @@ msgstr "Find the trader you want in the list of traders above, all of the trader
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Find the trader you want in the list of traders, all of the trader's copy settings will be listed here."
 msgstr "Find the trader you want in the list of traders, all of the trader's copy settings will be listed here."
+
+#: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
+msgid "Flag Incorrect Data"
+msgstr "Flag Incorrect Data"
 
 #: src/pages/Home/Traders.tsx
 msgid "Follow 200,000+ on-chain traders"
@@ -1900,6 +1931,10 @@ msgstr "No Data Found"
 msgid "No History Found"
 msgstr "No History Found"
 
+#: src/theme/Table/CustomizeColumn.tsx
+msgid "No Metric Match"
+msgstr "No Metric Match"
+
 #: src/pages/PositionDetails/index.tsx
 msgid "No Position Found"
 msgstr "No Position Found"
@@ -2112,6 +2147,14 @@ msgstr "PAID FEE ($)"
 msgid "PAIRS"
 msgstr "PAIRS"
 
+#: src/pages/PerpDEXsExplorer/index.tsx
+msgid "PERP DEXS"
+msgstr "PERP DEXS"
+
+#: src/pages/PerpDEXsExplorer/index.tsx
+msgid "PERP DEXS EXPLORER"
+msgstr "PERP DEXS EXPLORER"
+
 #: src/components/@trader/TraderLeaderboardTableView/index.tsx
 msgid "PNL"
 msgstr "PNL"
@@ -2146,6 +2189,10 @@ msgstr "Percentile Filter"
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "Percentile Ranking Comparison"
 msgstr "Percentile Ranking Comparison"
+
+#: src/pages/@layouts/Navbar/NavLinks.tsx
+msgid "Perp DEXs Explorer"
+msgstr "Perp DEXs Explorer"
 
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
@@ -2470,12 +2517,22 @@ msgid "Select the copy you want to clone:"
 msgstr "Select the copy you want to clone:"
 
 #: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
+#: src/components/@widgets/ChainSelection/index.tsx
 msgid "Selected"
 msgstr "Selected"
 
 #: src/pages/TraderDetails/CustomizeRankingColumns.tsx
+#: src/theme/Table/CustomizeColumn.tsx
 msgid "Selected:"
 msgstr "Selected:"
+
+#: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
+msgid "Send Report"
+msgstr "Send Report"
+
+#: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
+msgid "Send report successfully"
+msgstr "Send report successfully"
 
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Session Expired"
@@ -2620,10 +2677,15 @@ msgstr "Source Trader"
 msgid "Source:"
 msgstr "Source:"
 
+#: src/pages/PerpDEXsExplorer/components/PerpDEXsEventOverview.tsx
+msgid "Start in {daysLeft} days"
+msgstr "Start in {daysLeft} days"
+
 #: src/components/@copyTrade/TraderCopyCountWarningIcon/index.tsx
 msgid "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
 msgstr "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
 
+#: src/pages/PerpDEXsExplorer/index.tsx
 #: src/pages/ReferralManagement/index.tsx
 msgid "Statistic"
 msgstr "Statistic"
@@ -2702,6 +2764,7 @@ msgstr "Subscription"
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/UserActivity/configs.tsx
+#: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
 #: src/pages/ReferralManagement/UserReferralTier.tsx
 #: src/pages/Settings/AlertList/TraderLastViewed.tsx
@@ -3050,6 +3113,7 @@ msgid "Trader"
 msgstr "Trader"
 
 #: src/pages/@layouts/Navbar/NavLinks.tsx
+#: src/pages/Leaderboard/index.tsx
 msgid "Trader Board"
 msgstr "Trader Board"
 
@@ -3087,7 +3151,6 @@ msgid "Traders Explorer"
 msgstr "Traders Explorer"
 
 #: src/pages/Explorer/index.tsx
-#: src/pages/Leaderboard/index.tsx
 msgid "Traders explorer"
 msgstr "Traders explorer"
 
@@ -3673,6 +3736,10 @@ msgstr "{0} months"
 #: src/pages/MyProfile/SelectTradersCopied.tsx
 msgid "{0} traders"
 msgstr "{0} traders"
+
+#: src/pages/PerpDEXsExplorer/components/PerpDEXsEventOverview.tsx
+msgid "{daysLeft} days left"
+msgstr "{daysLeft} days left"
 
 #: src/pages/TraderDetails/ScoreChart.tsx
 msgid "{label} is better than {value} traders"

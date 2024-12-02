@@ -2,7 +2,7 @@
 import { CaretDown, CaretUp } from '@phosphor-icons/react'
 import css, { SystemStyleObject } from '@styled-system/css'
 import RcDropdown from 'rc-dropdown'
-import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react'
+import React, { Dispatch, ReactNode, SetStateAction, cloneElement, useState } from 'react'
 import OutsideClickHandler from 'react-outside-click-handler'
 import styled from 'styled-components/macro'
 import { GridProps, LayoutProps } from 'styled-system'
@@ -139,9 +139,11 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
               }
             >
               {menuDismissible ? (
-                <OutsideClickHandler onOutsideClick={() => show(false)}>{menu}</OutsideClickHandler>
+                <OutsideClickHandler onOutsideClick={() => show(false)}>
+                  {cloneElement(menu as any, { key: showing.toString() })}
+                </OutsideClickHandler>
               ) : (
-                menu
+                cloneElement(menu as any, { key: showing.toString() })
               )}
             </Box>
             <Flex alignItems="center" justifyContent="end">

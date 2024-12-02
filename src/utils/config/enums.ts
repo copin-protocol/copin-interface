@@ -137,6 +137,15 @@ export enum MarginModeEnum {
   CROSS = 'CROSS',
 }
 
+export enum PositionModeEnum {
+  HEDGE = 'HEDGE',
+  ONE_WAY = 'ONE_WAY',
+}
+export enum PerpDEXTypeEnum {
+  INDEX = 'INDEX',
+  ORDERBOOK = 'ORDERBOOK',
+}
+
 export enum OrderTypeEnum {
   OPEN = 'OPEN',
   CLOSE = 'CLOSE',

@@ -17,7 +17,8 @@ export default function ConditionFilterForm<T>({
   fieldOptions,
   onValuesChange,
   type,
-}: ConditionFilterFormProps<T>) {
+  wrapperSx = {},
+}: ConditionFilterFormProps<T> & { wrapperSx?: any }) {
   const remainingFieldKeys = fieldOptions.filter((option) => !formValues.map((item) => item.key).includes(option.value))
 
   const onChangeRowValues = (index: number, values: RowValues<T>) => {
@@ -61,7 +62,7 @@ export default function ConditionFilterForm<T>({
   }
 
   return (
-    <Box px={12} width="100%" height="100%">
+    <Box px={12} width="100%" height="100%" sx={wrapperSx}>
       <RowWrapper sx={{ width: '100%' }}>
         <Box px={2} flex="7">
           <Type.Caption color="neutral3">

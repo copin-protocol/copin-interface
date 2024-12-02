@@ -14,8 +14,10 @@ export default function Market({
   hasTooltip = false,
   sx = {},
   symbolNameSx = {},
+  imageUriFactory = parseMarketImage,
 }: {
   symbol: string
+  imageUriFactory?: (symbol: string) => string
   size?: number
   hasName?: boolean
   hasTooltip?: boolean
@@ -43,7 +45,7 @@ export default function Market({
         data-tooltip-id={hasTooltip ? tooltipId : undefined}
         data-tooltip-delay-show={360}
       >
-        <Image src={parseMarketImage(symbol)} sx={{ width: size, height: size }} />
+        <Image src={imageUriFactory(symbol)} sx={{ width: size, height: size }} />
       </Flex>
       {hasName && !!symbol && (
         <Type.Small fontSize="10px" sx={symbolNameSx}>
@@ -53,7 +55,7 @@ export default function Market({
       {hasTooltip && (
         <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
           <Flex alignItems="center" justifyContent="center" sx={{ gap: 1 }}>
-            <Image src={parseMarketImage(symbol)} sx={{ width: size, height: size }} />
+            <Image src={imageUriFactory(symbol)} sx={{ width: size, height: size }} />
             <Type.Small fontSize="10px">{symbol}</Type.Small>
           </Flex>
         </Tooltip>

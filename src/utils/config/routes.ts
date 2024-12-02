@@ -163,6 +163,9 @@ const ROUTES = {
   LIVE_TRADES_POSITIONS: {
     path: '/live-trades/positions',
   },
+  PERP_DEXS_EXPLORER: {
+    path: '/perp-dexs-explorer',
+  },
 }
 
 export default ROUTES

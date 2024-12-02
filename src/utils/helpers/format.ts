@@ -156,7 +156,8 @@ export function shortenFileName({
   return `${prefix}...${suffix}`
 }
 
-export function compactNumber(num: number, digits = 1, isInteger?: boolean) {
+export function compactNumber(num: number | undefined, digits = 1, isInteger?: boolean) {
+  if (num == null) return '--'
   if (num === 0) return 0
 
   if (isInteger && num > 0 && num < 1000) return num

@@ -18,6 +18,7 @@ export default function MarketGroup({
   limit = 3,
   hasName = true,
   sx,
+  imageUriFactory,
 }: {
   protocol?: ProtocolEnum
   indexTokens?: string[]
@@ -26,6 +27,7 @@ export default function MarketGroup({
   limit?: number
   hasName?: boolean
   sx?: SystemStyleObject & GridProps
+  imageUriFactory?: (symbol: string) => string
 }) {
   const tooltipId = useMemo(() => uuid(), [])
   const numberOfAddress = symbols ? symbols.length : indexTokens?.length
@@ -42,7 +44,12 @@ export default function MarketGroup({
               height: size,
             }}
           >
-            <Market symbol={symbol} size={size} hasTooltip={numberOfAddress <= limit} />
+            <Market
+              symbol={symbol}
+              size={size}
+              hasTooltip={numberOfAddress <= limit}
+              imageUriFactory={imageUriFactory}
+            />
           </Box>
         )
       })}
@@ -85,6 +92,7 @@ export default function MarketGroup({
               symbols={symbols}
               hasName={hasName}
               sx={{ maxWidth: 400, maxHeight: 350, overflowY: 'auto' }}
+              imageUriFactory={imageUriFactory}
             />
           </Tooltip>
         </>
@@ -100,6 +108,7 @@ export function MarketGroupFull({
   size = 20,
   hasName = true,
   sx,
+  imageUriFactory,
 }: {
   protocol?: ProtocolEnum
   indexTokens?: string[]
@@ -107,6 +116,7 @@ export function MarketGroupFull({
   size?: number
   hasName?: boolean
   sx?: SystemStyleObject & GridProps
+  imageUriFactory?: (symbol: string) => string
 }) {
   const numberOfAddress = symbols ? symbols.length : indexTokens?.length
   if (!numberOfAddress) return <></>
@@ -121,7 +131,7 @@ export function MarketGroupFull({
       }}
     >
       {_symbols.map((symbol) => {
-        return <Market key={symbol} symbol={symbol} size={size} hasName={hasName} />
+        return <Market key={symbol} symbol={symbol} size={size} hasName={hasName} imageUriFactory={imageUriFactory} />
       })}
     </Box>
   )

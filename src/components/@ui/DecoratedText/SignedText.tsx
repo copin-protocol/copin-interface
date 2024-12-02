@@ -12,6 +12,7 @@ export function SignedText({
   prefix = '',
   fontInherit = false,
   isCompactNumber = false,
+  prefixZero = false,
 }: {
   value: number | undefined
   maxDigit?: number
@@ -23,6 +24,7 @@ export function SignedText({
   prefix?: string
   fontInherit?: boolean
   isCompactNumber?: boolean
+  prefixZero?: boolean
 }) {
   let color = 'inherit'
   if (!!value) {
@@ -45,16 +47,16 @@ export function SignedText({
       {fontInherit ? (
         <Box as="span" color={color} {...sx}>
           {value && value < 0 ? '-' : ''}
-          {!!value && prefix}
+          {(prefixZero ? value != null : !!value) && prefix}
           {formatedValue}
-          {!!value && suffix}
+          {(prefixZero ? value != null : !!value) && suffix}
         </Box>
       ) : (
         <Type.Caption color={color} {...sx}>
           {value && value < 0 ? '-' : ''}
-          {!!value && prefix}
+          {(prefixZero ? value != null : !!value) && prefix}
           {formatedValue}
-          {!!value && suffix}
+          {(prefixZero ? value != null : !!value) && suffix}
         </Type.Caption>
       )}
     </>
