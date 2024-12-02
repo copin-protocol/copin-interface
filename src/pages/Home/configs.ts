@@ -1,6 +1,5 @@
 import { RangeFilter } from 'apis/types'
 import { TraderData } from 'entities/trader'
-import { ProtocolEnum } from 'utils/config/enums'
 
 export const OVERVIEW_WIDTH = 343
 
@@ -40,27 +39,4 @@ export const BASE_RANGE_FILTER: RangeFilter<keyof TraderData>[] = [
   // { fieldName: 'avgRoi', gte: 1 },
   { fieldName: 'winRate', gte: 51 },
   { fieldName: 'runTimeDays', gte: 30 },
-]
-
-// TODO: Check when add new protocol
-export const ALLOWED_PROTOCOLS = [
-  ProtocolEnum.GMX,
-  ProtocolEnum.GMX_V2,
-  ProtocolEnum.KWENTA,
-  ProtocolEnum.POLYNOMIAL,
-  ProtocolEnum.GNS,
-  ProtocolEnum.GNS_POLY,
-  ProtocolEnum.MUX_ARB,
-  ProtocolEnum.AVANTIS_BASE,
-  ProtocolEnum.CYBERDEX,
-  ProtocolEnum.DEXTORO,
-  ProtocolEnum.VELA_ARB,
-  ProtocolEnum.EQUATION_ARB,
-  ProtocolEnum.HMX_ARB,
-  ProtocolEnum.LEVEL_ARB,
-  ProtocolEnum.LEVEL_BNB,
-  ProtocolEnum.APOLLOX_BNB,
-  ProtocolEnum.KILOEX_OPBNB,
-  ProtocolEnum.ROLLIE_SCROLL,
-  ProtocolEnum.MUMMY_FANTOM,
 ]

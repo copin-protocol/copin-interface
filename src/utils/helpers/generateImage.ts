@@ -3,11 +3,11 @@ import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Colors } from 'theme/types'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { ELEMENT_IDS } from 'utils/config/keys'
-import { getTokenTradeSupport } from 'utils/config/trades'
 
 import { calcLiquidatePrice, calcOpeningPnL, calcOpeningROI } from './calculate'
-import formatTokenPrices, { addressShorten, formatDuration, formatNumber, formatPrice } from './format'
+import formatTokenPrices, { addressShorten, formatDuration, formatLeverage, formatNumber, formatPrice } from './format'
 import { generateAvatar } from './generateAvatar'
+import { getSymbolFromPair } from './transform'
 
 export const generateTraderCanvas = ({
   address,
@@ -235,7 +235,7 @@ export const generatePositionCanvas = ({
   rightCtx.fillStyle = colors.neutral1
   rightCtx.font = `700 ${valueStatsFontSize}px Anuphan`
   rightCtx.fillText('$' + formatNumber(stats?.collateral, 0, 0), rightWidth / 2, valueStartY)
-  const latestPnL = isOpening ? calcOpeningPnL(stats, prices[stats.indexToken]) : stats.pnl
+  const latestPnL = isOpening ? calcOpeningPnL(stats, prices[getSymbolFromPair(stats.pair)]) : stats.pnl
   const latestROI = isOpening ? calcOpeningROI(stats, latestPnL) : stats.roi
   rightCtx.fillStyle = !stats
     ? colors.neutral1
@@ -284,7 +284,7 @@ export const generatePositionCanvas = ({
   leftCtx.fillText('|', 60, chartAreaOffsetY + 52)
   leftCtx.font = '700 32px Anuphan'
   leftCtx.fillStyle = colors.neutral1
-  const tokenSymbol = getTokenTradeSupport(stats.protocol)?.[stats.indexToken]?.symbol ?? ''
+  const tokenSymbol = getSymbolFromPair(stats.pair)
   leftCtx.fillText(tokenSymbol, 60 + 24, chartAreaOffsetY + 52)
   leftCtx.fillStyle = colors.neutral3
   leftCtx.font = '400 32px Anuphan'
@@ -317,7 +317,11 @@ export const generatePositionCanvas = ({
   leftCtx.font = '700 32px Anuphan'
   leftCtx.textAlign = 'left'
   leftCtx.fillStyle = colors.neutral1
-  leftCtx.fillText(`${formatNumber(stats.leverage, 1, 1)}x`, sizeX + sizeWidth + 16 + 24, chartAreaOffsetY + 52)
+  leftCtx.fillText(
+    `${formatLeverage(stats?.marginMode, stats?.leverage)}`,
+    sizeX + sizeWidth + 16 + 24,
+    chartAreaOffsetY + 52
+  )
 
   const durationX = leftWidth - 190
   leftCtx.font = '400 32px Anuphan'
@@ -419,6 +423,60 @@ export const generateAvatarAddress = ({
 }
 
 // TODO: Check when add new protocol
+const PROTOCOL_CONFIG_MAPPING: { [key in ProtocolEnum]?: { text: string; textWidth: number } } = {
+  [ProtocolEnum.MUX_ARB]: { text: 'MUX', textWidth: 72 },
+  [ProtocolEnum.LEVEL_BNB]: { text: 'Level', textWidth: 117 },
+  [ProtocolEnum.LEVEL_ARB]: { text: 'Level', textWidth: 117 },
+  [ProtocolEnum.GNS]: { text: 'gTrade', textWidth: 117 },
+  [ProtocolEnum.GNS_POLY]: { text: 'gTrade', textWidth: 117 },
+  [ProtocolEnum.GNS_BASE]: { text: 'gTrade', textWidth: 117 },
+  [ProtocolEnum.GMX]: { text: 'GMX (ARB)', textWidth: 168 },
+  [ProtocolEnum.GMX]: { text: 'GMX (AVAX)', textWidth: 168 },
+  [ProtocolEnum.GMX_V2]: { text: 'GMX V2', textWidth: 117 },
+  [ProtocolEnum.KWENTA]: { text: 'Kwenta', textWidth: 117 },
+  [ProtocolEnum.POLYNOMIAL]: { text: 'Polynomial', textWidth: 168 },
+  [ProtocolEnum.POLYNOMIAL_L2]: { text: 'Polynomial L2', textWidth: 168 },
+  [ProtocolEnum.EQUATION_ARB]: { text: 'Equation', textWidth: 141 },
+  [ProtocolEnum.BLOOM_BLAST]: { text: 'Bloom', textWidth: 117 },
+  [ProtocolEnum.APOLLOX_BNB]: { text: 'ApolloX (BNB)', textWidth: 288 },
+  [ProtocolEnum.APOLLOX_BASE]: { text: 'ApolloX (Base)', textWidth: 288 },
+  [ProtocolEnum.AVANTIS_BASE]: { text: 'Avantis', textWidth: 141 },
+  [ProtocolEnum.TIGRIS_ARB]: { text: 'Tigris', textWidth: 117 },
+  [ProtocolEnum.LOGX_BLAST]: { text: 'LogX', textWidth: 117 },
+  [ProtocolEnum.LOGX_MODE]: { text: 'LogX', textWidth: 117 },
+  [ProtocolEnum.MYX_ARB]: { text: 'MYX', textWidth: 72 },
+  [ProtocolEnum.HMX_ARB]: { text: 'HMX', textWidth: 72 },
+  [ProtocolEnum.DEXTORO]: { text: 'DexToro', textWidth: 141 },
+  [ProtocolEnum.CYBERDEX]: { text: 'CyberDEX', textWidth: 156 },
+  [ProtocolEnum.VELA_ARB]: { text: 'Vela', textWidth: 117 },
+  [ProtocolEnum.SYNTHETIX_V3_ARB]: { text: 'Synthetix V3 (ARB)', textWidth: 328 },
+  [ProtocolEnum.SYNTHETIX_V3]: { text: 'Synthetix V3 (Base)', textWidth: 328 },
+  [ProtocolEnum.SYNTHETIX]: { text: 'Synthetix', textWidth: 288 },
+  [ProtocolEnum.COPIN]: { text: 'Copin', textWidth: 117 },
+  [ProtocolEnum.KTX_MANTLE]: { text: 'KTX', textWidth: 72 },
+  [ProtocolEnum.YFX_ARB]: { text: 'YFX', textWidth: 72 },
+  [ProtocolEnum.KILOEX_OPBNB]: { text: 'KiloEx (opBNB)', textWidth: 328 },
+  [ProtocolEnum.KILOEX_BNB]: { text: 'KiloEx (BNB)', textWidth: 328 },
+  [ProtocolEnum.KILOEX_BASE]: { text: 'KiloEx (Base)', textWidth: 328 },
+  [ProtocolEnum.KILOEX_MANTA]: { text: 'KiloEx (Manta)', textWidth: 328 },
+  [ProtocolEnum.ROLLIE_SCROLL]: { text: 'Rollie (Scroll)', textWidth: 328 },
+  [ProtocolEnum.PERENNIAL_ARB]: { text: 'Perennial', textWidth: 168 },
+  [ProtocolEnum.MUMMY_FANTOM]: { text: 'Mummy Finance', textWidth: 310 },
+  [ProtocolEnum.MORPHEX_FANTOM]: { text: 'Morphex', textWidth: 156 },
+  [ProtocolEnum.HYPERLIQUID]: { text: 'Hyperliquid', textWidth: 268 },
+  [ProtocolEnum.SYNFUTURE_BASE]: { text: 'Synfutures', textWidth: 288 },
+  [ProtocolEnum.DYDX]: { text: 'dYdX', textWidth: 117 },
+  [ProtocolEnum.BSX_BASE]: { text: 'BSX', textWidth: 117 },
+  [ProtocolEnum.UNIDEX_ARB]: { text: 'UniDex', textWidth: 156 },
+  [ProtocolEnum.VERTEX_ARB]: { text: 'Vertex', textWidth: 156 },
+  [ProtocolEnum.LINEHUB_LINEA]: { text: 'Linehub', textWidth: 156 },
+  [ProtocolEnum.FOXIFY_ARB]: { text: 'Foxify', textWidth: 156 },
+  [ProtocolEnum.BMX_BASE]: { text: 'BMX Classic', textWidth: 328 },
+  [ProtocolEnum.DEPERP_BASE]: { text: 'Deperp', textWidth: 156 },
+  [ProtocolEnum.HORIZON_BNB]: { text: 'Horizon', textWidth: 168 },
+  [ProtocolEnum.IDEX]: { text: 'IDEX', textWidth: 156 },
+  [ProtocolEnum.HOLDSTATION_ZKSYNC]: { text: 'Holdstation', textWidth: 310 },
+}
 export const generateProtocol = ({
   protocol,
   protocolImg,
@@ -435,142 +493,10 @@ export const generateProtocol = ({
   const avatarCenterY = 60
   let protocolTextWidth = 72
   let protocolText = 'GMX'
-  switch (protocol) {
-    case ProtocolEnum.MUX_ARB:
-      protocolTextWidth = 72
-      protocolText = 'MUX'
-      break
-    case ProtocolEnum.LEVEL_BNB:
-    case ProtocolEnum.LEVEL_ARB:
-      protocolTextWidth = 117
-      protocolText = 'Level'
-      break
-    case ProtocolEnum.GNS:
-    case ProtocolEnum.GNS_POLY:
-    case ProtocolEnum.GNS_BASE:
-      protocolTextWidth = 117
-      protocolText = 'gTrade'
-      break
-    case ProtocolEnum.GMX:
-    case ProtocolEnum.GMX_V2:
-      protocolTextWidth = 72
-      protocolText = 'GMX'
-      break
-    case ProtocolEnum.KWENTA:
-      protocolTextWidth = 117
-      protocolText = 'Kwenta'
-      break
-    case ProtocolEnum.POLYNOMIAL:
-      protocolTextWidth = 168
-      protocolText = 'Polynomial'
-      break
-    case ProtocolEnum.EQUATION_ARB:
-      protocolTextWidth = 141
-      protocolText = 'Equation'
-      break
-    case ProtocolEnum.BLOOM_BLAST:
-      protocolTextWidth = 117
-      protocolText = 'Bloom'
-      break
-    case ProtocolEnum.APOLLOX_BNB:
-      protocolTextWidth = 141
-      protocolText = 'ApolloX'
-      break
-    case ProtocolEnum.AVANTIS_BASE:
-      protocolTextWidth = 141
-      protocolText = 'Avantis'
-      break
-    case ProtocolEnum.TIGRIS_ARB:
-      protocolTextWidth = 117
-      protocolText = 'Tigris'
-      break
-    case ProtocolEnum.LOGX_BLAST:
-    case ProtocolEnum.LOGX_MODE:
-      protocolTextWidth = 117
-      protocolText = 'LogX'
-      break
-    case ProtocolEnum.MYX_ARB:
-      protocolTextWidth = 72
-      protocolText = 'MYX'
-      break
-    case ProtocolEnum.HMX_ARB:
-      protocolTextWidth = 72
-      protocolText = 'HMX'
-      break
-    case ProtocolEnum.DEXTORO:
-      protocolTextWidth = 141
-      protocolText = 'DexToro'
-      break
-    case ProtocolEnum.CYBERDEX:
-      protocolTextWidth = 156
-      protocolText = 'CyberDEX'
-      break
-    case ProtocolEnum.VELA_ARB:
-      protocolTextWidth = 117
-      protocolText = 'Vela'
-      break
-    case ProtocolEnum.SYNTHETIX_V3:
-      protocolTextWidth = 288
-      protocolText = 'Synthetix V3'
-      break
-    case ProtocolEnum.COPIN:
-      protocolTextWidth = 117
-      protocolText = 'Copin'
-      break
-    case ProtocolEnum.KTX_MANTLE:
-      protocolTextWidth = 72
-      protocolText = 'KTX'
-      break
-    case ProtocolEnum.YFX_ARB:
-      protocolTextWidth = 72
-      protocolText = 'YFX'
-      break
-    case ProtocolEnum.KILOEX_OPBNB:
-      protocolTextWidth = 310
-      protocolText = 'KiloEx (opBNB)'
-      break
-    case ProtocolEnum.ROLLIE_SCROLL:
-      protocolTextWidth = 328
-      protocolText = 'Rollie (Scroll)'
-      break
-    case ProtocolEnum.PERENNIAL_ARB:
-      protocolTextWidth = 168
-      protocolText = 'Perennial'
-      break
-    case ProtocolEnum.MUMMY_FANTOM:
-      protocolTextWidth = 310
-      protocolText = 'Mummy Finance'
-      break
-    case ProtocolEnum.MORPHEX_FANTOM:
-      protocolTextWidth = 156
-      protocolText = 'Morphex'
-      break
-    case ProtocolEnum.HYPERLIQUID:
-      protocolTextWidth = 268
-      protocolText = 'Hyperliquid'
-      break
-    case ProtocolEnum.SYNFUTURE_BASE:
-      protocolTextWidth = 288
-      protocolText = 'Synfutures'
-      break
-    case ProtocolEnum.DYDX:
-      protocolTextWidth = 117
-      protocolText = 'dYdX'
-      break
-    case ProtocolEnum.BSX_BASE:
-      protocolTextWidth = 117
-      protocolText = 'BSX'
-      break
-    case ProtocolEnum.UNIDEX_ARB:
-      protocolTextWidth = 156
-      protocolText = 'UniDex'
-      break
-    case ProtocolEnum.VERTEX_ARB:
-      protocolTextWidth = 156
-      protocolText = 'Vertex'
-      break
-    default:
-      break
+  const config = PROTOCOL_CONFIG_MAPPING[protocol]
+  if (config) {
+    protocolTextWidth = config.textWidth
+    protocolText = config.text
   }
   // protocol text
   const protocolTextOffsetLeft = width - protocolImg.width - protocolTextWidth

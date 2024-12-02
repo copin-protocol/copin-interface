@@ -3,12 +3,13 @@ import { formatUnits } from '@ethersproject/units'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useUsdPrices from 'hooks/store/useUsdPrices'
 import { useCustomMulticallQuery } from 'hooks/web3/useMulticallQuery'
 import { NO_TX_HASH_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS, QUERY_KEYS } from 'utils/config/keys'
-import { PROTOCOL_PROVIDER, TOKEN_COLLATERAL_SUPPORT, getIndexTokensBySymbol } from 'utils/config/trades'
+import { PROTOCOL_PROVIDER, TOKEN_COLLATERAL_SUPPORT } from 'utils/config/trades'
 import { TokenCollateral } from 'utils/types'
 import { getNativeBalance } from 'utils/web3/balance'
 import { CHAINS, DEFAULT_CHAIN_ID } from 'utils/web3/chains'
@@ -68,9 +69,7 @@ const useTraderBalances = ({ account, protocol }: { account: string | undefined;
     }
   )
 
-  const indexTokensBySymbol = useMemo(() => {
-    return getIndexTokensBySymbol(protocol)
-  }, [protocol])
+  const { getListIndexTokenByListSymbols } = useMarketsConfig()
 
   const nativeBalance = useMemo(() => {
     if (!nativeBalanceData || !protocolProvider?.chainId) return 0
@@ -89,7 +88,7 @@ const useTraderBalances = ({ account, protocol }: { account: string | undefined;
       if (collateralToken.isStableCoin) {
         return (result += collateralAmount)
       }
-      const indexTokens = indexTokensBySymbol[collateralToken.symbol]
+      const indexTokens = getListIndexTokenByListSymbols({ protocol, listSymbol: [collateralToken.symbol] })
       if (!indexTokens?.length) {
         return result
       }
@@ -104,7 +103,7 @@ const useTraderBalances = ({ account, protocol }: { account: string | undefined;
       return (result += collateralAmount * collateralTokenPrice)
     }, 0)
     return balances
-  }, [tokenBalancesData, prices])
+  }, [tokenBalancesData, prices, getListIndexTokenByListSymbols])
 
   return { balance: tokenBalances + nativeBalance, isLoading, reloadToken }
 }

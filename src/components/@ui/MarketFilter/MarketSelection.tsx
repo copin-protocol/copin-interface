@@ -1,11 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { CaretLeft, Check, CheckCircle, Gear, Trash } from '@phosphor-icons/react'
-import debounce from 'lodash/debounce'
-import { ChangeEvent, Fragment, ReactNode, useMemo, useRef, useState } from 'react'
+import { Fragment, ReactNode, useCallback, useMemo, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
+import UncontrolledInputSearch, { useUncontrolledInputSearchHandler } from 'components/@widgets/UncontrolledInputSearch'
 import { Button } from 'theme/Buttons'
-import { InputSearch } from 'theme/Input'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -38,7 +37,9 @@ const MarketSelection = ({
   handleToggleDropdown,
 }: MarketSelectionProps) => {
   // TODO: condition to disable btn save
-  const fullOptions = allPairs.map((pair) => ({ value: pair, label: pair }))
+  const fullOptions = useMemo(() => {
+    return allPairs.map((pair) => ({ value: pair, label: pair }))
+  }, [allPairs?.sort?.()?.join('')])
 
   const [state, setState] = useState<State>({
     id: '',
@@ -63,7 +64,6 @@ const MarketSelection = ({
   const _selectedPairs = Object.values(state.selectedPairs)
   const _excludedPairs = Object.values(state.excludedPairs)
 
-  const inputRef = useRef<HTMLInputElement>(null)
   const handleSubmit = () => {
     const isExcluded = state.isExcluded
     const submitPairs = isExcluded ? allPairs : _selectedPairs.length ? _selectedPairs : allPairs
@@ -148,24 +148,20 @@ const MarketSelection = ({
   const [showPreference, setShowPreference] = useState(false)
 
   const [filterOptions, setFilterOptions] = useState(fullOptions)
-  const showClearSearchButtonRef = useRef(false)
-  const handleChangeSearch = useMemo(() => {
-    return debounce((e: ChangeEvent<HTMLInputElement>) => {
-      if (e.target.value) {
-        showClearSearchButtonRef.current = true
-      } else {
-        showClearSearchButtonRef.current = false
-      }
-      setFilterOptions(fullOptions.filter((v) => !!v.value.toUpperCase().includes(e.target.value.toUpperCase())))
-    }, 200)
-  }, [fullOptions])
-  const handleClearSearch = () => {
-    if (inputRef.current) {
-      inputRef.current.value = ''
-    }
-    showClearSearchButtonRef.current = false
+  const onChangeSearch = useCallback(
+    (searchText: string | undefined) => {
+      setFilterOptions(
+        searchText ? fullOptions.filter((v) => !!v.value.toUpperCase().includes(searchText.toUpperCase())) : fullOptions
+      )
+    },
+    [fullOptions]
+  )
+  const onClearSearch = useCallback(() => {
     setFilterOptions(fullOptions)
-  }
+  }, [fullOptions])
+
+  const { inputRef, showClearSearchButtonRef, handleChangeSearch, handleClearSearch } =
+    useUncontrolledInputSearchHandler({ onChange: onChangeSearch, onClear: onClearSearch })
 
   const _handleReset = () => {
     setState((prev) => {
@@ -298,28 +294,13 @@ const MarketSelection = ({
             gap: 2,
           }}
         >
-          <InputSearch
-            ref={inputRef}
+          <UncontrolledInputSearch
+            inputRef={inputRef}
+            showClearSearchButtonRef={showClearSearchButtonRef}
             onChange={handleChangeSearch}
             onClear={handleClearSearch}
-            placeholder="Search Pair"
-            iconSize={16}
-            sx={{
-              p: '4px 8px',
-              flex: 1,
-              border: 'none',
-              bg: 'neutral5',
-              '& input': { fontSize: '16px !important' },
-              '&:hover:not([disabled]), &:focus:not([disabled]), &:focus-within:not([disabled])': { bg: 'neutral5' },
-              ...(showClearSearchButtonRef.current
-                ? {
-                    '& button.search-btn--clear': {
-                      visibility: 'visible',
-                    },
-                  }
-                : {}),
-            }}
           />
+
           <IconBox
             icon={<Gear size={20} />}
             sx={{

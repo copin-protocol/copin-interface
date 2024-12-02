@@ -23,7 +23,7 @@ export type ThumbProps = {
 
 const Thumb = styled(Box)<{ hasAnimation?: boolean }>`
   position: absolute;
-  z-index: 2;
+  z-index: 0;
   // border-radius: 8px;
   top: 0;
 

@@ -15,21 +15,14 @@ const ROUTES = {
     path_prefix: '/open-interest',
   },
   OPEN_INTEREST_OVERVIEW: {
-    path: '/:protocol/open-interest/overview/:symbol',
-    alter_path: '/:protocol/open-interest/overview',
-    path_prefix: '/open-interest/overview',
+    path: '/open-interest/overview',
   },
   OPEN_INTEREST_POSITIONS: {
-    path: '/:protocol/open-interest/positions/:symbol',
-    alter_path: '/:protocol/open-interest/positions',
-    path_prefix: '/open-interest/positions',
+    path: '/open-interest/positions',
   },
-  ALL_OPEN_INTEREST_POSITIONS: {
+  ROOT_OPEN_INTEREST_POSITIONS: {
     path: '/open-interest',
-    alter_path: '/open-interest/positions/:symbol',
-    path_prefix: '/open-interest/positions',
   },
-
   LEADERBOARD: {
     path: '/:protocol/trader-board',
     path_prefix: '/trader-board',
@@ -162,6 +155,9 @@ const ROUTES = {
   },
   LIVE_TRADES_POSITIONS: {
     path: '/live-trades/positions',
+  },
+  PERP_DEXS_EXPLORER: {
+    path: '/perp-dexs-explorer',
   },
 }
 

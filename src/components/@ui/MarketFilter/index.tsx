@@ -4,13 +4,11 @@ import { useResponsive } from 'ahooks'
 import { DropdownProps } from 'rc-dropdown/lib/Dropdown'
 import { useState } from 'react'
 
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import Dropdown from 'theme/Dropdown'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
-import { getPairsByProtocols } from 'utils/helpers/graphql'
 
 import MarketSelection from './MarketSelection'
 import PairGroup, { PairGroupFull } from './PairGroup'
@@ -21,7 +19,6 @@ export interface MarketFilterProps {
   // allPairs?: boolean
   menuSx?: any
   placement?: DropdownProps['placement']
-  protocols: ProtocolEnum[]
   pairs: string[]
   excludedPairs: string[]
   onChangePairs: (pairs: string[], excludedPairs: string[]) => void
@@ -30,14 +27,14 @@ export interface MarketFilterProps {
 export function MarketFilter({
   menuSx = {},
   placement = 'bottomRight',
-  protocols,
   pairs,
   onChangePairs,
   excludedPairs,
 }: // ...props
 MarketFilterProps) {
   const { xl } = useResponsive()
-  const protocolPairs = getPairsByProtocols(RELEASED_PROTOCOLS)
+  const { getListSymbol } = useMarketsConfig()
+  const protocolPairs = getListSymbol()
   const isCopyAll = protocolPairs.length === pairs.length
   const hasExcludingPairs = excludedPairs.length > 0 && isCopyAll
   const tooltipId = `tt_excluding_pairs_0`

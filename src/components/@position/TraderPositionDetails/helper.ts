@@ -1,4 +1,5 @@
 import { OrderData } from 'entities/trader'
+import { GMX_V1_PROTOCOLS } from 'utils/config/constants'
 import { MarginModeEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 
 export function getOrderData({
@@ -15,7 +16,7 @@ export function getOrderData({
   let orders = [...(orderData ?? [])].sort((x, y) =>
     x.blockTime < y.blockTime ? -1 : x.blockTime > y.blockTime ? 1 : x.logId < y.logId ? -1 : x.logId > y.logId ? 1 : 0
   )
-  if (protocol === ProtocolEnum.GMX) {
+  if (GMX_V1_PROTOCOLS.includes(protocol)) {
     orders = orders?.filter((e) => e.type !== OrderTypeEnum.CLOSE)
   }
 

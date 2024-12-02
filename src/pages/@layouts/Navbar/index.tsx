@@ -64,27 +64,32 @@ export default function Navbar({ height }: { height: number }): ReactElement {
               </Box>
             </Flex>
 
-            <Flex alignItems="center" height="100%">
+            <Flex alignItems="center" height="100%" sx={{ gap: 3 }}>
               <QuickSearchBox />
 
-              <Box
-                alignItems="center"
-                px={3}
-                sx={{
-                  display: 'flex',
-                  textAlign: 'center',
-                  borderRight: 'small',
-                  borderColor: 'neutral4',
-                  gap: 24,
-                  height: '100%',
-                  '& > *': { flexShrink: 0 },
-                  [`@media all and (max-width: ${LARGE_BREAK_POINT}px)`]: { display: 'none' },
-                }}
-              >
-                <DesktopEventNavLinks hasEvents={hasEvents} />
-              </Box>
+              {hasEvents && (
+                <Box
+                  alignItems="center"
+                  px={3}
+                  sx={{
+                    display: 'flex',
+                    textAlign: 'center',
+                    borderRight: 'small',
+                    borderColor: 'neutral4',
+                    gap: 24,
+                    height: '100%',
+                    '& > *': { flexShrink: 0 },
+                    [`@media all and (max-width: ${LARGE_BREAK_POINT}px)`]: { display: 'none' },
+                  }}
+                >
+                  <DesktopEventNavLinks hasEvents={hasEvents} />
+                </Box>
+              )}
 
-              <Box flex="0 0 fit-content" sx={{ alignItems: 'center' }}>
+              <Flex
+                flex="0 0 fit-content"
+                sx={{ alignItems: 'center', borderLeft: 'small', height: '100%', borderLeftColor: 'neutral4' }}
+              >
                 {isAuthenticated === true && <NavbarUser />}
                 {isAuthenticated === false && <LoginAction />}
                 {isAuthenticated == null && (
@@ -102,7 +107,7 @@ export default function Navbar({ height }: { height: number }): ReactElement {
                     </Box>
                   </Flex>
                 )}
-              </Box>
+              </Flex>
               <Box
                 p={3}
                 height="100%"

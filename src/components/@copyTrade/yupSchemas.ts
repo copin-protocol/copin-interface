@@ -1,5 +1,6 @@
 import * as yup from 'yup'
 
+import { MAX_PERPDEX_ISSUE_DESCRIPTION } from 'utils/config/constants'
 import { CopyTradePlatformEnum, SLTPTypeEnum } from 'utils/config/enums'
 
 const commonSchema = {
@@ -141,4 +142,34 @@ export const cloneCopyTradeFormSchema = yup.object({
       // CopyTradePlatformEnum.SYNTHETIX_V3,
     ])
     .label('Exchange'),
+})
+
+const SUPPORTED_FORMATS = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/tiff', 'image/bmp']
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB in bytes
+
+export const reportPerpdexSchema = yup.object().shape({
+  perpdex: yup.string().required('PerpDEX is required'),
+  description: yup
+    .string()
+    .required('Description is required')
+    .max(MAX_PERPDEX_ISSUE_DESCRIPTION, 'Description is too long (max 800 characters)'),
+  telegramAccount: yup.string().optional(),
+  protocol: yup.string().optional(),
+  images: yup
+    .mixed<FileList>()
+    .nullable()
+    .transform((value) => (!value || value.length === 0 ? null : value))
+    .test('fileCount', 'Only one image is allowed', (value) => {
+      if (!value) return true
+      return value.length === 1
+    })
+    .test('fileType', 'Unsupported format. Use JPEG, PNG, WEBP, GIF, TIFF, or BMP', (value) => {
+      if (!value || !value[0]) return true
+      return SUPPORTED_FORMATS.includes(value[0].type)
+    })
+    .test('fileSize', 'File size is too large (max 10MB)', (value) => {
+      if (!value || !value[0]) return true
+      return value[0].size <= MAX_FILE_SIZE
+    }),
 })

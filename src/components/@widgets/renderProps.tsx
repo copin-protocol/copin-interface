@@ -13,6 +13,7 @@ import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { CopyPositionData } from 'entities/copyTrade'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import CopyButton from 'theme/Buttons/CopyButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
@@ -20,11 +21,9 @@ import ProgressBar from 'theme/ProgressBar'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Image, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
@@ -32,10 +31,21 @@ import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps, showMarketIcon?: boolean) {
+  return <EntryComponent data={data} textSx={textSx} showMarketIcon={showMarketIcon} />
+}
+
+function EntryComponent({
+  data,
+  textSx,
+  showMarketIcon,
+}: {
+  data: PositionData | undefined
+  textSx?: TextProps
+  showMarketIcon?: boolean
+}) {
+  const { getSymbolByIndexToken } = useMarketsConfig()
   if (!data || !data.protocol) return <></>
-  const symbol = data.pair
-    ? getSymbolFromPair(data.pair) || ''
-    : getTokenTradeSupport(data.protocol)[data.indexToken]?.symbol || ''
+  const symbol = data.pair ? getSymbolFromPair(data.pair) : getSymbolByIndexToken({ indexToken: data.indexToken }) ?? ''
 
   return (
     <Flex
@@ -60,7 +70,12 @@ export function renderEntry(data: PositionData | undefined, textSx?: TextProps, 
 }
 
 export function renderCopyEntry(data: CopyPositionData | undefined, textSx?: TextProps) {
-  if (!data) return <></>
+  return <CopyEntryComponent data={data} textSx={textSx} />
+}
+function CopyEntryComponent({ data, textSx }: { data: CopyPositionData | undefined; textSx?: TextProps }) {
+  const { getSymbolByIndexToken } = useMarketsConfig()
+  if (!data || !data.protocol) return <></>
+  const symbol = data.pair ? getSymbolFromPair(data.pair) : getSymbolByIndexToken({ indexToken: data.indexToken }) ?? ''
   return (
     <Flex
       sx={{
@@ -73,7 +88,7 @@ export function renderCopyEntry(data: CopyPositionData | undefined, textSx?: Tex
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{getTokenTradeSupport(data.protocol)?.[data.indexToken]?.symbol}</Type.Caption>
+      <Type.Caption>{symbol}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>${PriceTokenText({ value: data.entryPrice, maxDigit: 2, minDigit: 2 })}</Type.Caption>
     </Flex>
@@ -169,14 +184,21 @@ type SizeOpeningComponentProps = {
   dynamicWidth?: boolean
 }
 function SizeOpening(props: Omit<SizeOpeningComponentProps, 'prices'>) {
-  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
-  const prices = props?.data?.protocol && GAINS_TRADE_PROTOCOLS.includes(props.data.protocol) ? gainsPrices : pythPrices
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: props?.data?.protocol })
   if (!prices) return <>--</>
   return <SizeOpeningComponent {...props} prices={prices} />
 }
 function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpeningComponentProps) {
+  const { getSymbolByIndexToken } = useMarketsConfig()
   if (!data || !prices) return <></>
-  const marketPrice = prices[data.indexToken] ?? 0
+  // Todo: Check calc for value in rewards
+  const symbol = data.pair
+    ? getSymbolFromPair(data.pair)
+    : data.indexToken
+    ? getSymbolByIndexToken({ indexToken: data.indexToken }) ?? ''
+    : ''
+  const marketPrice = prices[symbol] ?? 0
   const liquidatePrice = calcLiquidatePrice(data)
   const riskPercent = calcRiskPercent(data.isLong, data.averagePrice, marketPrice, liquidatePrice ?? 0)
   const { sx, ..._textProps } = textProps ?? {}
@@ -265,15 +287,21 @@ export function renderOpeningPnLWithPrices(
   return <OpeningPnLComponent data={data} prices={prices} ignoreFee={ignoreFee} sx={sx} />
 }
 function OpeningPnL(props: Omit<OpeningPnLComponentProps, 'prices'>) {
-  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
-  const prices = props?.data?.protocol && GAINS_TRADE_PROTOCOLS.includes(props.data.protocol) ? gainsPrices : pythPrices
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: props?.data?.protocol })
   if (!prices) return <>--</>
   return <OpeningPnLComponent {...props} prices={prices} />
 }
 function OpeningPnLComponent({ data, prices, ignoreFee, sx }: OpeningPnLComponentProps) {
+  const { getSymbolByIndexToken } = useMarketsConfig()
   if (!data || !prices) return <></>
   // Todo: Check calc for value in rewards
-  const marketPrice = prices[data.indexToken]
+  const symbol = data.pair
+    ? getSymbolFromPair(data.pair)
+    : data.indexToken
+    ? getSymbolByIndexToken({ indexToken: data.indexToken }) ?? ''
+    : ''
+  const marketPrice = prices[symbol]
   const { pnl, pnlInToken } = getOpeningPnl({ data, marketPrice, ignoreFee })
   return (
     <ValueOrToken
@@ -313,14 +341,21 @@ export function renderOpeningRoi(data: PositionData | undefined, ignoreFee?: boo
   return <OpeningRoi data={data} ignoreFee={ignoreFee} sx={sx} />
 }
 function OpeningRoi(props: Omit<OpeningRoiComponentProps, 'prices'>) {
-  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
-  const prices = props?.data?.protocol && GAINS_TRADE_PROTOCOLS.includes(props.data.protocol) ? gainsPrices : pythPrices
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: props?.data?.protocol })
   if (!prices) return <>--</>
   return <OpeningRoiComponent {...props} prices={prices} />
 }
 function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponentProps) {
+  const { getSymbolByIndexToken } = useMarketsConfig()
   if (!data || !prices || !data?.protocol || PROTOCOLS_CROSS_MARGIN.includes(data.protocol)) return <>--</>
-  const marketPrice = prices[data.indexToken]
+  // Todo: Check calc for value in rewards
+  const symbol = data.pair
+    ? getSymbolFromPair(data.pair)
+    : data.indexToken
+    ? getSymbolByIndexToken({ indexToken: data.indexToken }) ?? ''
+    : ''
+  const marketPrice = prices[symbol]
   const { pnl, pnlInToken } = getOpeningPnl({ data, marketPrice, ignoreFee })
   return SignedText({
     value: ((pnl ?? 0) * 100) / data.collateral,
@@ -405,17 +440,3 @@ export function renderTrader(
     </Flex>
   )
 }
-
-// export function renderPnL(data: CopyPositionData, prices?: UsdPrices) {
-// const pnl =
-//   data.status === PositionStatusEnum.OPEN
-//     ? calcCopyOpeningPnL(data, prices ? prices[data.indexToken] : undefined)
-//     : data.pnl
-// return (
-//   <Flex width="100%" sx={{ flexDirection: 'column', color: 'neutral1' }}>
-//     {/* <Type.Caption color={pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'}>{formatNumber(pnl, 2, 2)}</Type.Caption> */}
-//     <Type.Caption color={pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'}>{formatNumber(pnl, 2, 2)}</Type.Caption>
-//     {/* <ProgressBar percent={0} sx={{ width: '100%' }} /> */}
-//   </Flex>
-// )
-// }

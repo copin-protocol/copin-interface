@@ -99,7 +99,7 @@ export default function PageHeader({
           </>
         )} */}
 
-        {renderProtocolSelection()}
+        {showSelectProtocol && renderProtocolSelection()}
       </Box>
     </>
   )

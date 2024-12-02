@@ -2,9 +2,9 @@ import dayjs from 'dayjs'
 import React from 'react'
 
 import { CopyOrderData } from 'entities/copyTrade'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { OnchainPositionData } from 'pages/MyProfile/OpeningPositions/schema'
 import { themeColors } from 'theme/colors'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
 
 import { IChartingLibraryWidget, IExecutionLineAdapter } from '../../../../public/static/charting_library'
@@ -16,8 +16,11 @@ interface Props {
 }
 export function usePlotOrderMarker({ chart, position, orders }: Props) {
   const orderMarker = React.useRef<IExecutionLineAdapter[]>([])
+  const { getSymbolByIndexToken } = useMarketsConfig()
 
-  const symbol = position ? TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken]?.symbol : 'UNKNOWN'
+  const symbol = position?.indexToken
+    ? getSymbolByIndexToken({ protocol: position.protocol, indexToken: position.indexToken })
+    : 'UNKNOWN'
 
   React.useEffect(() => {
     let markers: IExecutionLineAdapter[] = []

@@ -4,11 +4,10 @@ import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import Num from 'entities/Num'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useMulticallQuery from 'hooks/web3/useMulticallQuery'
-import useWeb3 from 'hooks/web3/useWeb3'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS, QUERY_KEYS } from 'utils/config/keys'
-import { SYNTHETIX_MARKETS } from 'utils/config/trades'
 import { OPTIMISM_CHAIN } from 'utils/web3/chains'
 import { CONTRACT_ABIS } from 'utils/web3/contracts'
 import { getCopyTradePlatformChain } from 'utils/web3/dcp'
@@ -37,6 +36,8 @@ const useWalletFund = ({
   totalIncluded?: boolean
   platform?: CopyTradePlatformEnum
 }): SmartWalletFund => {
+  const { getListIndexToken } = useMarketsConfig()
+  const tokenTradeSynthetix = getListIndexToken({ protocol: ProtocolEnum.KWENTA })
   const chainId = getCopyTradePlatformChain(platform)
   const publicProvider = rpcProvider(chainId)
   const smartWalletContract = useMemo(() => {
@@ -59,21 +60,21 @@ const useWalletFund = ({
   )
   const accessibleCalls: { address: string; name: string; params: any[] }[] = useMemo(
     () =>
-      SYNTHETIX_MARKETS[OPTIMISM_CHAIN].map((market) => ({
+      tokenTradeSynthetix.map((market) => ({
         address: market,
         name: 'accessibleMargin',
         params: [smartWalletContract?.address],
       })),
-    [smartWalletContract?.address]
+    [smartWalletContract?.address, tokenTradeSynthetix]
   )
   const remainingCalls: { address: string; name: string; params: any[] }[] = useMemo(
     () =>
-      SYNTHETIX_MARKETS[OPTIMISM_CHAIN].map((market) => ({
+      tokenTradeSynthetix.map((market) => ({
         address: market,
         name: 'remainingMargin',
         params: [smartWalletContract?.address],
       })),
-    [smartWalletContract?.address]
+    [smartWalletContract?.address, tokenTradeSynthetix]
   )
   const {
     data: accessibleMargins,

@@ -15,6 +15,7 @@ import ScrollToTop from './@helpers/ScrollToTop'
 import AppWrapper from './AppWrapper'
 import Favorites from './MyProfile/Favorites'
 
+const PerpDEXsExplorer = lazy(() => import('./PerpDEXsExplorer'))
 const Home = lazy(() => import('./Home'))
 const Explorer = lazy(() => import('./Explorer'))
 const OpenInterest = lazy(() => import('./TopOpenings'))
@@ -92,6 +93,7 @@ function App() {
             <Route path={ROUTES.COPIER_RANKING.path} component={CopierRanking}></Route>
             <Route path={ROUTES.REFERRAL_MANAGEMENT.path} component={ReferralManagement}></Route>
             <Route path={ROUTES.LIVE_TRADES.path} component={DailyTrades}></Route>
+            <Route path={ROUTES.PERP_DEXS_EXPLORER.path} component={PerpDEXsExplorer}></Route>
 
             {/* OLD ROUTE */}
             <Route path={ROUTES.TRADERS_EXPLORER.path} component={OldExplorer}></Route>
@@ -99,7 +101,7 @@ function App() {
             <Route path={ROUTES.ALL_TRADERS_EXPLORER.path} component={Explorer}></Route>
 
             {/* NEW ROUTE */}
-            <Route path={ROUTES.ALL_OPEN_INTEREST_POSITIONS.path} component={OpenInterest}></Route>
+            <Route path={ROUTES.ROOT_OPEN_INTEREST_POSITIONS.path} component={OpenInterest}></Route>
             {/* OLD ROUTE */}
             <Route path={ROUTES.OPEN_INTEREST.path} component={OldTopOpeningInterest}></Route>
 

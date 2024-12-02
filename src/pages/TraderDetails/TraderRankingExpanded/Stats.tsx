@@ -5,10 +5,10 @@ import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { TraderData } from 'entities/trader'
 import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
 
 export default function Stats({
@@ -64,9 +64,10 @@ function TokenTrades({
   account: string | undefined
   protocol: ProtocolEnum | undefined
 }) {
+  const { getSymbolByIndexToken } = useMarketsConfig()
   const { data } = useGetTokensTraded({ account, protocol })
   const tokens = data?.length
-    ? data.map((address) => getTokenTradeSupport(protocol)?.[address]?.symbol).join(', ')
+    ? data.map((address) => getSymbolByIndexToken({ protocol, indexToken: address })).join(', ')
     : '--'
   return <StatsRow label={<Trans>Markets</Trans>} value={tokens} />
 }

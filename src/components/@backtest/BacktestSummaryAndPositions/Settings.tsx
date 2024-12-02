@@ -5,6 +5,7 @@ import TableLabel from 'theme/Table/TableLabel'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 export default function BacktestSettings({
   data,
@@ -71,7 +72,13 @@ export default function BacktestSettings({
       <Box mt={3} />
       <SettingItem
         label={'Trading Pair'}
-        value={data?.copyAll ? 'Followed trader' : !!data.pairs?.length ? data.pairs.join(', ') : ''}
+        value={
+          data?.copyAll
+            ? 'Followed trader'
+            : !!data.pairs?.length
+            ? data.pairs?.map((e) => getSymbolFromPair(e))?.join(', ')
+            : ''
+        }
       />
     </>
   )

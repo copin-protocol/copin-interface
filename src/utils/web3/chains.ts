@@ -30,6 +30,9 @@ export const HYPERLIQUID_TESTNET = 998
 
 export const DYDX_MAINNET = 'dydx-mainnet-1'
 
+export const XCHAIN_MAINNET = 94524
+export const POLYNOMIAL_L2_MAINNET = 8008
+
 export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 export const BASE_CHAIN = NETWORK === 'devnet' ? BASE_SEPOLIA : BASE_MAINNET
 export const OPTIMISM_CHAIN = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
@@ -308,7 +311,7 @@ const CHAINS: { [key: number | string]: Chain } = {
     icon: 'AVAX',
     token: NATIVE_CURRENCIES.AVAX.symbol,
     rpcUrl: 'https://avalanche.public-rpc.com',
-    blockExplorerUrl: 'https://nets.avax.netwosubrk/dexalot',
+    blockExplorerUrl: 'https://snowtrace.io',
     secondaryTokens: SECONDARY_TOKENS[AVALANCHE_MAINNET],
   },
   [FANTOM_MAINNET]: {
@@ -370,7 +373,7 @@ const CHAINS: { [key: number | string]: Chain } = {
     label: 'Manta',
     icon: 'MANTA',
     token: NATIVE_CURRENCIES.ETH.symbol,
-    rpcUrl: 'https://r1.pacific.manta.systems/http',
+    rpcUrl: 'https://manta-pacific.drpc.org',
     blockExplorerUrl: 'https://pacific-explorer.manta.network',
     secondaryTokens: SECONDARY_TOKENS[MANTA_MAINNET],
   },
@@ -398,6 +401,22 @@ const CHAINS: { [key: number | string]: Chain } = {
     token: '',
     rpcUrl: 'https://dydx-rpc.publicnode.com:443',
     blockExplorerUrl: 'https://www.mintscan.io/dydx',
+  },
+  [XCHAIN_MAINNET]: {
+    id: `0x${XCHAIN_MAINNET.toString(16)}`,
+    label: 'XCHAIN',
+    icon: 'XCHAIN',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://xchain-rpc.idex.io',
+    blockExplorerUrl: 'https://xchain-explorer.idex.io',
+  },
+  [POLYNOMIAL_L2_MAINNET]: {
+    id: `0x${POLYNOMIAL_L2_MAINNET.toString(16)}`,
+    label: 'Polynomial L2',
+    icon: 'POLYNOMIAL',
+    token: NATIVE_CURRENCIES.ETH.symbol,
+    rpcUrl: 'https://rpc.polynomial.fi',
+    blockExplorerUrl: 'https://polynomialscan.io',
   },
 }
 

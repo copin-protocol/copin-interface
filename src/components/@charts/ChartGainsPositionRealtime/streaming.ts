@@ -1,5 +1,4 @@
 import { ProtocolEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_GNS } from 'utils/config/tokenTradeGns'
 
 import {
   Bar,
@@ -20,12 +19,26 @@ type SubscriptionItem = {
 
 const channelToSubscription = new Map<string, SubscriptionItem>()
 
+let instance: WebSocketSingleton
+
 class WebSocketSingleton {
   private static instance: WebSocketSingleton
-  private socket: WebSocket
+  private streamingUrl = 'wss://backend-pricing.eu.gains.trade'
+  private socket: WebSocket | null = null
+  private _this = this
 
-  private constructor(url: string) {
-    this.socket = new WebSocket(url)
+  constructor() {
+    if (instance) {
+      throw new Error('New instance cannot be created!!')
+    }
+    instance = this._this
+  }
+
+  public initWebsocket({ symbolByIndexToken }: { symbolByIndexToken: Record<string, string> }) {
+    if (this.socket) {
+      return
+    }
+    this.socket = new WebSocket(this.streamingUrl)
 
     this.socket.addEventListener('open', () => {
       console.log('[socket] Connected')
@@ -40,27 +53,21 @@ class WebSocketSingleton {
     })
 
     this.socket.addEventListener('message', (event) => {
-      const data = JSON.parse(event.data)
-      const parsedData = processPriceData(data)
+      const data = JSON.parse(event.data) as number[]
+      const parsedData = processPriceData({ data, symbolByIndexToken })
       handleStreamingDataWs(parsedData)
     })
   }
 
-  public static getInstance(url: string): WebSocketSingleton {
-    if (!WebSocketSingleton.instance) {
-      WebSocketSingleton.instance = new WebSocketSingleton(url)
-    }
-    return WebSocketSingleton.instance
-  }
-
-  public getSocket(): WebSocket {
+  public getSocket(): WebSocket | null {
     return this.socket
   }
 }
+const singleton = new WebSocketSingleton()
 
-const streamingUrl = 'wss://backend-pricing.eu.gains.trade'
-const webSocketInstance = WebSocketSingleton.getInstance(streamingUrl)
-const socket = webSocketInstance.getSocket()
+export function initWebsocket({ symbolByIndexToken }: { symbolByIndexToken: Record<string, string> }) {
+  singleton.initWebsocket({ symbolByIndexToken })
+}
 
 function handleStreamingDataWs(data: Record<string, number>) {
   Object.entries(data).forEach(([symbol, price]) => {
@@ -153,13 +160,20 @@ export function unsubscribeFromStream(subscriberUID: string) {
   }
 }
 
-function processPriceData(data: number[]): Record<string, number> {
+function processPriceData({
+  data,
+  symbolByIndexToken,
+}: {
+  data: number[]
+  symbolByIndexToken: Record<string, string>
+}): Record<string, number> {
   if (!data || data.length < 2) return {}
   const result: Record<string, number> = {}
   for (let i = 0; i < data.length; i += 2) {
     const pairIndex = data[i]
     const price = data[i + 1]
-    const symbol = TOKEN_TRADE_GNS[`${ProtocolEnum.GNS}-${pairIndex}`]?.symbol
+    const indexToken = `${ProtocolEnum.GNS}-${pairIndex}`
+    const symbol = symbolByIndexToken[indexToken]
     if (symbol) {
       result[symbol] = price
     }

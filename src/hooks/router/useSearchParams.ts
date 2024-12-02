@@ -26,11 +26,12 @@ export default function useSearchParams() {
     [history, search]
   )
 
-  const setSearchParamsOnly = (params: { [key: string]: string }) => {
-    if (Object.keys(params).length === 0) return
+  const setSearchParamsOnly = (params: { [key: string]: string | undefined }) => {
     const urlSearchParams = new URLSearchParams()
     for (const key in params) {
-      if (!!key) urlSearchParams.set(key, params[key])
+      const value = params[key]
+      if (value == null) continue
+      if (!!key) urlSearchParams.set(key, value)
     }
     history.replace({ search: urlSearchParams.toString() })
   }

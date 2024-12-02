@@ -5,8 +5,8 @@ import BubbleChart, { BubbleChartData } from 'components/@charts/BubbleChartPosi
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import { PositionData } from 'entities/trader'
 import { ProtocolEnum } from 'utils/config/enums'
-import { getTokenTradeSupport } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 const OpeningPositionsBubble = ({ data }: { data: PositionData[] }) => {
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -23,7 +23,7 @@ const OpeningPositionsBubble = ({ data }: { data: PositionData[] }) => {
       id: item.id,
       title: addressShorten(item.account),
       value: item.size,
-      token: getTokenTradeSupport(item.protocol)?.[item.indexToken]?.symbol ?? '',
+      token: getSymbolFromPair(item.pair) ?? '',
       leverage: item.leverage,
       isLong: item.isLong,
       protocol: item.protocol,

@@ -23,6 +23,8 @@ export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSou
   // title,
   // subTitle,
   checkIsTop,
+  getRowChildrenData,
+  getChildRowKey,
 }: {
   data: T[] | undefined
   columns: ColumnData<T, K>[] | undefined
@@ -35,19 +37,23 @@ export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSou
   // title?: ReactNode
   // subTitle?: ReactNode
   checkIsTop?: (data: T) => boolean
+  getRowChildrenData?: ({ rowData, data }: { rowData: T; data: T[] | undefined }) => T[]
+  getChildRowKey?: (props: { data: T }) => string
 }) {
   return (
     <tbody>
-      {data?.map((data: any, index: number) => {
+      {data?.map((rowData, index) => {
         const uuid = uuidv4()
-        const bg = renderRowBackground ? renderRowBackground(data, index) : undefined
+        const bg = renderRowBackground ? renderRowBackground(rowData, index) : undefined
+        const childrenData = getRowChildrenData?.({ rowData, data })
         return (
           <>
             {/* {topIndex && index === 0 && title}
             {topIndex && index === topIndex && subTitle} */}
             <Row
-              key={data?.id ?? uuid}
-              data={data}
+              //@ts-ignore
+              key={rowData?.id ?? uuid}
+              data={rowData}
               index={index}
               columnsData={columns}
               onClickRow={onClickRow}
@@ -57,7 +63,29 @@ export default function TableBody<T = ColumnDataParameter, K = ColumnExternalSou
               checkIsSelected={checkIsSelected}
               handleSelect={handleSelect}
               checkIsTop={checkIsTop}
+              isChildren={false}
             />
+            {childrenData?.map((_rowData) => {
+              if (!_rowData) return null
+              return (
+                <Row
+                  //@ts-ignore
+                  key={_rowData?.id ? _rowData?.id : getChildRowKey ? getChildRowKey(_rowData) : uuid}
+                  data={_rowData}
+                  index={index}
+                  columnsData={columns}
+                  onClickRow={onClickRow}
+                  sx={sx}
+                  bg={bg}
+                  externalSource={externalSource}
+                  checkIsSelected={checkIsSelected}
+                  handleSelect={handleSelect}
+                  checkIsTop={checkIsTop}
+                  getChildRowKey={getChildRowKey}
+                  isChildren
+                />
+              )
+            })}
           </>
         )
       })}
@@ -76,6 +104,8 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
   checkIsSelected,
   handleSelect,
   checkIsTop,
+  isChildren = false,
+  getChildRowKey,
 }: {
   data: T | undefined
   index: number | undefined
@@ -87,18 +117,19 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
   checkIsSelected?: (data: T) => boolean
   handleSelect?: (args: { isSelected: boolean; data: T }) => void
   checkIsTop?: (data: T) => boolean
+  isChildren?: boolean
+  getChildRowKey?: (props: { data: T }) => string
 }) {
   if (!data) return <></>
   const isSelected = !!checkIsSelected && checkIsSelected(data)
   const Wrapper = checkIsTop == null ? NormalRowWrapper : checkIsTop(data) ? AnimatedRowWrapper : RowWrapper
   return (
     <Wrapper
-      onClick={(e) => {
-        e.stopPropagation()
-        onClickRow && onClickRow(data)
-      }}
+      className={isChildren ? 'row__hidden' : 'row__visible'}
+      onClick={onClickRow ? () => onClickRow(data) : undefined}
       // @ts-ignore
       data-ranking={data.ranking}
+      data-children-key={isChildren && getChildRowKey ? getChildRowKey({ data }) : undefined}
       style={{
         cursor: !!onClickRow ? 'pointer' : 'default',
         background: bg,
@@ -127,7 +158,7 @@ function Row<T = ColumnDataParameter, K = ColumnExternalSourceParameter>({
             }}
           >
             {columnData.render ? (
-              columnData.render(data, index, externalSource)
+              columnData.render(data, index, externalSource, isChildren)
             ) : (
               <>
                 {!!columnData.dataIndex ? (

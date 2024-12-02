@@ -3,8 +3,9 @@ import React from 'react'
 
 import { PositionData } from 'entities/trader'
 import { themeColors } from 'theme/colors'
-import { TOKEN_TRADE_SUPPORT, getPriceTradingView } from 'utils/config/trades'
+import { getPriceTradingView } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import { IChartingLibraryWidget, IPositionLineAdapter } from '../../../../public/static/charting_library'
 
@@ -18,7 +19,7 @@ export function usePlotPositionInformation({ chart, position }: Props) {
 
   const side = position?.isLong ? 'LONG' : 'SHORT'
   const openedAt = dayjs(position?.openBlockTime).valueOf()
-  const symbol = position ? TOKEN_TRADE_SUPPORT[position?.protocol][position?.indexToken]?.symbol : 'UNKNOWN'
+  const symbol = position ? getSymbolFromPair(position.pair) : 'UNKNOWN'
   const entry = getPriceTradingView(symbol, position?.averagePrice)
   const size = position?.size
 

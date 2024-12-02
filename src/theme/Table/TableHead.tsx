@@ -6,7 +6,8 @@ import Checkbox from 'theme/Checkbox'
 import SortAscIcon from 'theme/Icons/SortAscIcon'
 import SortDefaultIcon from 'theme/Icons/SortDefaultIcon'
 import SortDescIcon from 'theme/Icons/SortDescIcon'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { SortTypeEnum } from 'utils/config/enums'
 
 import Tooltip from '../Tooltip'
@@ -74,39 +75,75 @@ export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSou
         {columns?.map((column) => {
           const key = column?.key ? column.key : uuidv4()
           const isCurrentSort = currentSort?.sortBy === column.sortBy
+          const handleClick = () => {
+            handleChangeSort(column?.sortBy, column?.sortType)
+          }
           const tooltipId = `tt_table_sort_${key.toString()}`
           return (
             <Box as="th" key={key.toString()} sx={column.style} data-table-key={column.key}>
-              <Box
-                width="100%"
-                role={column?.sortBy && changeCurrentSort ? 'button' : 'none'}
-                onClick={() => {
-                  handleChangeSort(column?.sortBy, column?.sortType)
-                }}
-                sx={{
-                  color: column?.sortBy && isCurrentSort ? 'neutral1' : 'inherit',
-                  '&:hover': {
-                    color: column?.sortBy ? 'neutral2' : 'inherit',
-                  },
-                }}
-              >
+              <Box width="100%">
                 {column.sortBy && changeCurrentSort ? (
                   <Type.Caption fontWeight={isCurrentSort ? 'bold' : 'normal'} sx={{ width: '100%' }}>
                     <Flex alignItems="center" as="span" sx={{ justifyContent: column.style?.textAlign }}>
-                      {column.title}
-                      <Flex alignItems="center" data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
-                        {isCurrentSort && currentSort?.sortType === SortTypeEnum.DESC ? (
-                          <SortDescIcon />
-                        ) : isCurrentSort && currentSort?.sortType === SortTypeEnum.ASC ? (
-                          <SortAscIcon />
-                        ) : (
-                          <SortDefaultIcon />
-                        )}
-                      </Flex>
+                      <Box
+                        as="span"
+                        mr={'4px'}
+                        role="button"
+                        onClick={handleClick}
+                        sx={{
+                          color: column?.sortBy && isCurrentSort ? 'neutral1' : 'inherit',
+                          '& + * path:last-child': {
+                            fill:
+                              isCurrentSort && currentSort?.sortType === SortTypeEnum.DESC ? 'primary1' : 'neutral3',
+                          },
+                          '& + * path:first-child': {
+                            fill: isCurrentSort && currentSort?.sortType === SortTypeEnum.ASC ? 'primary1' : 'neutral3',
+                          },
+                          '&:hover': {
+                            color: column?.sortBy ? 'neutral2' : 'inherit',
+                            '& + * path': {
+                              fill: 'neutral2',
+                            },
+                          },
+                          '& + *': {
+                            '&:hover path': {
+                              fill: 'neutral2',
+                            },
+                          },
+                        }}
+                      >
+                        {column.title}
+                      </Box>
+                      {column.sortBy && (
+                        <Flex alignItems="center" data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
+                          {isCurrentSort ? (
+                            currentSort?.sortType === SortTypeEnum.DESC ? (
+                              <SortDescIcon size={16} role="button" onClick={handleClick} />
+                            ) : (
+                              <SortAscIcon size={16} role="button" onClick={handleClick} />
+                            )
+                          ) : (
+                            <SortDefaultIcon size={16} role="button" onClick={handleClick} />
+                          )}
+                        </Flex>
+                      )}
+                      {column.filterComponent}
                     </Flex>
                   </Type.Caption>
                 ) : (
-                  <Type.Caption sx={{ width: '100%' }}>{column.title}</Type.Caption>
+                  <Type.Caption
+                    sx={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: column.style?.textAlign,
+                    }}
+                  >
+                    <Box as="span" mr={1}>
+                      {column.title}
+                    </Box>
+                    {column.filterComponent}
+                  </Type.Caption>
                 )}
               </Box>
               {column.sortBy && changeCurrentSort && (

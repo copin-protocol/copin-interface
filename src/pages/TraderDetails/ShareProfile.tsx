@@ -11,6 +11,7 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
 import { IconBox } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { generateTraderCanvas } from 'utils/helpers/generateImage'
 import { generateParamsUrl, generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
@@ -37,7 +38,7 @@ export default function ShareProfile({
   const [image, setImage] = useState<ImageData | null>(null)
 
   const protocolImg = new Image(40, 40)
-  protocolImg.src = getProtocolDropdownImage({ protocol: protocol ?? ProtocolEnum.KWENTA, isActive: false })
+  protocolImg.src = getProtocolDropdownImage({ protocol: protocol ?? DEFAULT_PROTOCOL, isActive: false })
   const logoImg = new Image(182, 42)
   logoImg.src = logoWithText
 

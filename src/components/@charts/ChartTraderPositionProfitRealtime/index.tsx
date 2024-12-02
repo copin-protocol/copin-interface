@@ -3,9 +3,10 @@ import React, { useMemo } from 'react'
 import { OrderData, PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { Box } from 'theme/base'
-import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
-import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
-import { getSymbolTradingView, getTokenTradeSupport } from 'utils/config/trades'
+import { GMX_V1_PROTOCOLS } from 'utils/config/constants'
+import { OrderTypeEnum } from 'utils/config/enums'
+import { getSymbolTradingView } from 'utils/config/trades'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import { ChartingLibraryWidgetOptions, ResolutionString } from '../../../../public/static/charting_library'
 import { DEFAULT_CHART_REALTIME_PROPS } from '../configs'
@@ -19,12 +20,11 @@ interface Props {
   orders: OrderData[]
 }
 function RealtimeChart({ position, orders }: Props) {
-  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
-  const prices = GAINS_TRADE_PROTOCOLS.includes(position.protocol) ? gainsPrices : pythPrices
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: position.protocol })
   const [chartContainer, setChartContainer] = React.useState<HTMLDivElement | null>(null)
-  const tokensSupport = getTokenTradeSupport(position.protocol)
-  const symbol = tokensSupport[position.indexToken]?.symbol ?? ''
-  const decimals = useMemo(() => ((prices?.[position.indexToken] ?? 0) < 1 ? 6 : 4), [position.indexToken, prices])
+  const symbol = getSymbolFromPair(position.pair) ?? ''
+  const decimals = useMemo(() => ((prices?.[symbol] ?? 0) < 1 ? 6 : 4), [symbol, prices])
 
   const chartOpts = React.useMemo(() => {
     return {
@@ -73,7 +73,7 @@ function RealtimeChart({ position, orders }: Props) {
   const decreaseList = orders?.filter(
     (e) =>
       e.type === OrderTypeEnum.DECREASE ||
-      (position?.protocol !== ProtocolEnum.GMX && e.type === OrderTypeEnum.CLOSE) ||
+      (!GMX_V1_PROTOCOLS.includes(position?.protocol) && e.type === OrderTypeEnum.CLOSE) ||
       e.type === OrderTypeEnum.LIQUIDATE
   )
   // const modifiedMarginList = orders?.filter((e) => e.type === OrderTypeEnum.MARGIN_TRANSFERRED)

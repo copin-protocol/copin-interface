@@ -20,14 +20,19 @@ import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { FONT_FAMILY, GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
+import { FONT_FAMILY } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { TIMEFRAME_NAMES, getTokenTradeSupport } from 'utils/config/trades'
+import { TIMEFRAME_NAMES } from 'utils/config/trades'
 import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcPnL, calcSLTPUsd } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
-import { formatCopyPositionChartData, getTimeframeFromTimeRange, normalizeExchangePrice } from 'utils/helpers/transform'
+import {
+  formatCopyPositionChartData,
+  getSymbolFromPair,
+  getTimeframeFromTimeRange,
+  normalizeExchangePrice,
+} from 'utils/helpers/transform'
 
 import CopyOrderTooltip from './CopyOrderTooltip'
 
@@ -48,12 +53,11 @@ export default function CopyChartProfit({
   closeBlockTime: number
   setCrossMovePnL: (value: number | undefined) => void
 }) {
-  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
-  const prices = GAINS_TRADE_PROTOCOLS.includes(position.protocol) ? gainsPrices : pythPrices
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: position.protocol })
   const { sm } = useResponsive()
   const [markerId, setMarkerId] = useState<string | undefined>()
-  const tokensSupport = getTokenTradeSupport(position.protocol)
-  const tokenSymbol = tokensSupport[position.indexToken]?.symbol ?? ''
+  const tokenSymbol = getSymbolFromPair(position.pair)
   const from = openBlockTime * 1000
   const to = useMemo(() => (isOpening ? dayjs().utc().valueOf() : closeBlockTime * 1000), [closeBlockTime, isOpening])
   const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])
@@ -99,7 +103,8 @@ export default function CopyChartProfit({
     }
 
     if (isOpening) {
-      const currentPrice = prices[position.indexToken]
+      const symbol = getSymbolFromPair(position.pair)
+      const currentPrice = prices[symbol]
       if (currentPrice) {
         tempData.push({
           open: normalizeExchangePrice({ protocolSymbol: tokenSymbol, protocolSymbolPrice: currentPrice, exchange }),
@@ -172,7 +177,8 @@ export default function CopyChartProfit({
       })
     }
     if (isOpening) {
-      const currentPrice = prices[position.indexToken]
+      const symbol = getSymbolFromPair(position.pair)
+      const currentPrice = prices[symbol]
       if (currentPrice) {
         tempData.push({
           open: currentPrice,

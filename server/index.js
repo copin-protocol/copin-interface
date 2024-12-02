@@ -9,8 +9,10 @@ import { getEventDetails } from './eventDetails.controller.js'
 import { getEvents } from './events.controller.js'
 import { getFeeRebate } from './feeRebate.controller.js'
 import { getLeaderboard } from './leaderboard.controller.js'
+import { getLiveTrades } from './liveTrades.controller.js'
 import { getOpenInterestMarket } from './oiMarket.controller.js'
 import { getOpenInterestPositions } from './oiPositions.controller.js'
+import { getPerpDexsExplorer } from './perpDexsExplorer.controller.js'
 import { getPositionDetails } from './positionDetail.controller.js'
 import { getReferralProgram } from './referralProgram.controller.js'
 import { getBacktestMultiple } from './sharedBacktestMultiple.controller.js'
@@ -20,7 +22,6 @@ import { getStats } from './stats.controller.js'
 import { getSubscription } from './subscription.controller.js'
 import { getTopOpenings } from './topOpening.controller.js'
 import { getTraderDetail } from './traderDetail.controller.js'
-import { getLiveTrades } from './liveTrades.controller.js'
 import { renderHTML } from './utils.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -55,6 +56,7 @@ app.get('/referral', getReferralProgram)
 app.get('/live-trades*', getLiveTrades)
 app.get('/:protocol/trader-board', getLeaderboard)
 app.get('/copier-ranking', getCopierRanking)
+app.get('/perp-dexs-explorer', getPerpDexsExplorer)
 
 app.get('*', (req, res) => {
   renderHTML(req, res)

@@ -5,7 +5,6 @@ import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { ALLOWED_COPYTRADE_PROTOCOLS, RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum, ProtocolFilterEnum } from 'utils/config/enums'
 import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
-import { TokenTrade, getTokenTradeList } from 'utils/config/trades'
 
 export const transformGraphqlFilters = (filters: { fieldName: string; [key: string]: any }[]) => {
   return filters.map(({ fieldName, ...rest }) => {
@@ -114,18 +113,4 @@ export const extractFiltersFromFormValues = <T>(data: ConditionFormValues<T>) =>
       currFilter['lte'] = values.lte
     return [...result, currFilter]
   }, [])
-}
-
-export const getPairsByProtocols = (protocols: ProtocolEnum[]) => {
-  const protocolPairs = protocols
-    .map((protocol) => getTokenTradeList(protocol))
-    .flat()
-    .reduce((acc: any, market) => {
-      if (!acc[market.symbol]) {
-        acc[market.symbol] = market
-      }
-      return acc
-    }, {})
-
-  return Object.values(protocolPairs).map((option) => (option as TokenTrade).symbol)
 }

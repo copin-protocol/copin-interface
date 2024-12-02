@@ -1,22 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { CaretDown, Icon, ListBullets, Pulse } from '@phosphor-icons/react'
+import { Icon, ListBullets, Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { ReactNode } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import { SingleValueProps, components } from 'react-select'
+import { useHistory } from 'react-router-dom'
 
 import { ProtocolFilter, ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
 import useSearchParams from 'hooks/router/useSearchParams'
-import Select from 'theme/Select'
-import { Box, Flex, IconBox, Image, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import ROUTES from 'utils/config/routes'
-import { TokenTrade, getTokenTradeList } from 'utils/config/trades'
 import { generateOIOverviewRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
 import { convertProtocolToParams, useProtocolFromUrl } from 'utils/helpers/graphql'
-import { parseMarketImage } from 'utils/helpers/transform'
-
-import { ALL_TOKEN_PARAM } from './configs'
 
 export default function RouteWrapper({
   children,
@@ -112,7 +105,6 @@ function RouteHeader({ protocolFilter }: { protocolFilter: ProtocolFilterProps }
 
 function Tabs() {
   const { searchParams, pathname } = useSearchParams()
-  const { symbol } = useParams<{ protocol: ProtocolEnum; symbol: string }>()
   const { push } = useHistory()
 
   const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
@@ -120,12 +112,12 @@ function Tabs() {
 
   const onChangeTab = (key: 'positions' | 'overview') => {
     if (key === 'positions') {
-      push(generateOIPositionsRoute({ symbol, params: { ...searchParams, protocol: protocolParams, page: 1 } }))
+      push(generateOIPositionsRoute({ params: { ...searchParams, protocol: protocolParams, page: 1 } }))
 
       return
     }
     if (key === 'overview') {
-      push(generateOIOverviewRoute({ symbol, params: { ...searchParams, protocol: protocolParams, page: 1 } }))
+      push(generateOIOverviewRoute({ params: { ...searchParams, protocol: protocolParams, page: 1 } }))
 
       return
     }
@@ -135,13 +127,13 @@ function Tabs() {
       <TabItem
         label={<Trans>OPEN INTEREST</Trans>}
         icon={Pulse}
-        isActive={!!pathname.match(ROUTES.OPEN_INTEREST_POSITIONS.path_prefix)?.length}
+        isActive={!!pathname.match(ROUTES.OPEN_INTEREST_POSITIONS.path)?.length}
         onClick={() => onChangeTab('positions')}
       />
       <TabItem
         label={<Trans>MARKET</Trans>}
         icon={ListBullets}
-        isActive={!!pathname.match(ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix)?.length}
+        isActive={!!pathname.match(ROUTES.OPEN_INTEREST_OVERVIEW.path)?.length}
         onClick={() => onChangeTab('overview')}
       />
     </>
@@ -164,91 +156,6 @@ function TabItem({
     <Flex role="button" sx={{ gap: 2, alignItems: 'center', justifyContent: 'center', color }} onClick={onClick}>
       <IconBox icon={<IconComponent size={24} weight="fill" />} />
       <Type.Body sx={{ flexShrink: 0, fontWeight: 500 }}>{label}</Type.Body>
-    </Flex>
-  )
-}
-
-function MarketsDropdown() {
-  const { push } = useHistory()
-  const { searchParams, pathname } = useSearchParams()
-  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
-  const protocolParams = convertProtocolToParams(foundProtocolInUrl)
-
-  const { symbol = ALL_TOKEN_PARAM } = useParams<{ protocol: ProtocolEnum; symbol: string }>()
-
-  const protocolTokens = foundProtocolInUrl
-    .map((protocol) => getTokenTradeList(protocol))
-    .flat()
-    .reduce((acc: any, market) => {
-      if (!acc[market.symbol]) {
-        acc[market.symbol] = market
-      }
-      return acc
-    }, {})
-
-  const tokenOptions: TokenTrade[] = Object.values(protocolTokens)
-
-  const tokenSelectOptions = [
-    { value: ALL_TOKEN_PARAM, label: 'ALL' },
-    ...tokenOptions.map((option) => ({ value: option.symbol, label: <MarketItem symbol={option.symbol} /> })),
-  ]
-  const selectOption = tokenSelectOptions.find((option) => option.value === symbol)
-
-  const onChangeToken = (newValue: any) => {
-    const symbol = newValue.value === ALL_TOKEN_PARAM ? undefined : newValue.value
-    if (pathname.match(ROUTES.OPEN_INTEREST_OVERVIEW.path_prefix)) {
-      push(generateOIOverviewRoute({ symbol, params: { ...searchParams, protocol: protocolParams, page: 1 } }))
-      return
-    }
-    if (pathname.match(ROUTES.OPEN_INTEREST_POSITIONS.path_prefix)) {
-      push(generateOIPositionsRoute({ symbol, params: { ...searchParams, protocol: protocolParams, page: 1 } }))
-      return
-    }
-  }
-
-  return (
-    <Box
-      sx={{
-        '.select__control': {
-          width: 130,
-          input: { width: '80px !important', margin: '0 !important' },
-        },
-      }}
-    >
-      <Select
-        variant="ghost"
-        value={selectOption}
-        options={tokenSelectOptions}
-        onChange={onChangeToken}
-        components={{ SingleValue, DropdownIndicator }}
-      />
-    </Box>
-  )
-}
-const SingleValue = ({ children, ...props }: SingleValueProps<any>) => {
-  const value = props.data?.value
-  return (
-    <components.SingleValue {...props}>
-      <Flex sx={{ alignItems: 'center', gap: 1, '*': { fontWeight: 500 } }}>
-        {!value || value === ALL_TOKEN_PARAM ? (
-          <Type.Body color="primary1">{children}</Type.Body>
-        ) : (
-          <MarketItem symbol={value} />
-        )}
-        <CaretDown size={16} style={{ transform: 'translateY(0px)' }} />
-      </Flex>
-    </components.SingleValue>
-  )
-}
-const DropdownIndicator = () => {
-  return null
-}
-
-function MarketItem({ symbol }: { symbol: string }) {
-  return (
-    <Flex sx={{ gap: 1, alignItems: 'center', '*': { flexShrink: 0 } }}>
-      <Image width={24} height={24} src={parseMarketImage(symbol)} alt={symbol} />
-      <Type.Caption>{symbol}</Type.Caption>
     </Flex>
   )
 }

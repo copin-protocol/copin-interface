@@ -176,6 +176,7 @@ export const DCP_EXCHANGES: CopyTradePlatformEnum[] = [
 ]
 
 export const GAINS_TRADE_PROTOCOLS = [ProtocolEnum.GNS, ProtocolEnum.GNS_POLY, ProtocolEnum.GNS_BASE]
+export const GMX_V1_PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.GMX_AVAX]
 
 export const DCP_SUPPORTED_PROTOCOLS = [
   ProtocolEnum.GMX_V2,
@@ -204,6 +205,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.GMX,
         ProtocolEnum.KWENTA,
         ProtocolEnum.POLYNOMIAL,
+        ProtocolEnum.POLYNOMIAL_L2,
         ProtocolEnum.GMX_V2,
         ProtocolEnum.GNS,
         ProtocolEnum.GNS_POLY,
@@ -267,7 +269,9 @@ export const FEE_WITH_FUNDING_PROTOCOLS = [
   ProtocolEnum.BSX_BASE,
   ProtocolEnum.DYDX,
   ProtocolEnum.VERTEX_ARB,
+  ProtocolEnum.IDEX,
 ]
 export const COLLATERAL_TOKEN_PROTOCOLS: ProtocolEnum[] = []
 
 export const MAX_LIMIT = 500
+export const MAX_PERPDEX_ISSUE_DESCRIPTION = 800

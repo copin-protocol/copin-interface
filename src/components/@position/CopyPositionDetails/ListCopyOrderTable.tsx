@@ -12,7 +12,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT, NO_TX_HASH_PROTOCOLS } from 'utils/config/constants'
 import { CopyTradePlatformEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { EXPLORER_PLATFORMS } from 'utils/config/platforms'
-import { PROTOCOL_PROVIDER, TokenTrade } from 'utils/config/trades'
+import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
 
 import { ORDER_TYPES } from '../configs/order'
@@ -29,14 +29,14 @@ export default function ListCopyOrderTable({
   data,
   isLoading,
   isOpening,
-  token,
+  symbol,
   platform,
   protocol,
 }: {
   data: CopyOrderData[]
   isLoading: boolean
   isOpening?: boolean
-  token: TokenTrade
+  symbol: string
   platform?: CopyTradePlatformEnum
   protocol: ProtocolEnum
 }) {
@@ -78,7 +78,7 @@ export default function ListCopyOrderTable({
                 <Flex alignItems="center" sx={{ gap: 2 }}>
                   {!!item.submitTxHash && (
                     <ExplorerLogo
-                      protocol={platform}
+                      exchange={platform}
                       explorerUrl={`${EXPLORER_PLATFORMS[platform]}/tx/${item.submitTxHash}`}
                       size={18}
                     />
@@ -86,7 +86,7 @@ export default function ListCopyOrderTable({
                   {!!item.submitTxHash && !!item.settleTxHash && <ArrowRight size={16} />}
                   {!!item.settleTxHash && (
                     <ExplorerLogo
-                      protocol={platform}
+                      exchange={platform}
                       explorerUrl={`${EXPLORER_PLATFORMS[platform]}/tx/${item.settleTxHash}`}
                       size={18}
                     />
@@ -280,7 +280,7 @@ export default function ListCopyOrderTable({
   const externalSource: ExternalSource = {
     isOpening,
     totalOrders: tableData.meta.total,
-    symbol: token?.symbol,
+    symbol,
   }
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>

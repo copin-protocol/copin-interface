@@ -3,8 +3,8 @@ import React from 'react'
 
 import { CopyOrderData, CopyPositionData } from 'entities/copyTrade'
 import { themeColors } from 'theme/colors'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import { IChartingLibraryWidget, IExecutionLineAdapter } from '../../../../public/static/charting_library'
 
@@ -16,7 +16,7 @@ interface Props {
 export function usePlotOrderMarker({ chart, position, orders }: Props) {
   const orderMarker = React.useRef<IExecutionLineAdapter[]>([])
 
-  const symbol = position ? TOKEN_TRADE_SUPPORT[position.protocol][position.indexToken]?.symbol : 'UNKNOWN'
+  const symbol = position ? getSymbolFromPair(position.pair) : 'UNKNOWN'
 
   React.useEffect(() => {
     let markers: IExecutionLineAdapter[] = []

@@ -7,7 +7,7 @@ export default function ToggleLiveButton({
   onClick,
   enabledLiveData,
 }: {
-  onClick: () => void
+  onClick?: () => void
   enabledLiveData: boolean
 }) {
   return (
@@ -17,7 +17,7 @@ export default function ToggleLiveButton({
       <Type.Caption ml={1} mr={2} color={enabledLiveData ? 'neutral1' : 'neutral3'} sx={{ color: 'red' }}>
         LIVE DATA
       </Type.Caption>
-      <SwitchInput checked={enabledLiveData} onClick={onClick} />
+      {!!onClick && <SwitchInput checked={enabledLiveData} onClick={onClick} />}
     </Flex>
   )
 }

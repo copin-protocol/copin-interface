@@ -4,9 +4,9 @@ import React, { useMemo } from 'react'
 import { CopyOrderData, CopyPositionData } from 'entities/copyTrade'
 import { themeColors } from 'theme/colors'
 import { PositionStatusEnum } from 'utils/config/enums'
-import { TOKEN_TRADE_SUPPORT } from 'utils/config/trades'
 import { calcSLTPUsd } from 'utils/helpers/calculate'
 import { formatNumber } from 'utils/helpers/format'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import {
   IChartingLibraryWidget,
@@ -36,7 +36,7 @@ export function usePlotPositionInformation({ chart, position, orders }: Props) {
         : orders?.filter((e) => e.isIncrease)?.reduce((sum, current) => sum + current.size, 0) ?? 0,
     [orders, position?.sizeDelta, isOpening]
   )
-  const symbol = position ? TOKEN_TRADE_SUPPORT[position?.protocol][position?.indexToken]?.symbol : 'UNKNOWN'
+  const symbol = position ? getSymbolFromPair(position.pair) : 'UNKNOWN'
 
   React.useEffect(() => {
     try {

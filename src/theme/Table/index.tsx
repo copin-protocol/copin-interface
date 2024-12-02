@@ -45,6 +45,9 @@ export default function Table<T, K>({
   footerRowSx = {},
   noDataComponent,
   noDataWrapperSx = {},
+  getRowChildrenData,
+  getChildRowKey,
+  hasHoverBg = true,
 }: // title,
 // subTitle,
 TableProps<T, K>) {
@@ -110,7 +113,7 @@ TableProps<T, K>) {
             sx={{ overflow: restrictHeight ? 'auto' : 'unset', ...(tableBodyWrapperSx ?? {}) }}
             ref={isInfiniteLoad ? scrollRef : bodyRef}
           >
-            <TableContainer sx={tableBodySx} hasHoverBg={!checkIsTop}>
+            <TableContainer sx={tableBodySx} hasHoverBg={hasHoverBg && !checkIsTop}>
               <TableBody
                 data={data}
                 columns={columns}
@@ -121,6 +124,8 @@ TableProps<T, K>) {
                 handleSelect={handleSelect}
                 checkIsSelected={checkIsSelected}
                 checkIsTop={checkIsTop}
+                getRowChildrenData={getRowChildrenData}
+                getChildRowKey={getChildRowKey}
                 // title={title}
                 // subTitle={subTitle}
               />
@@ -143,7 +148,7 @@ TableProps<T, K>) {
           </Box>
         )}
         {footerData && (
-          <TableContainer sx={footerRowContainerSx} hasHoverBg={!checkIsTop}>
+          <TableContainer sx={footerRowContainerSx} hasHoverBg={hasHoverBg && !checkIsTop}>
             <TableBody
               data={footerData}
               columns={columns}
@@ -232,6 +237,25 @@ TableProps<T, K>) {
       )}
     </Flex>
   )
+}
+
+/**
+ * use this for individual component, not render parent component
+ */
+export function getVisibleColumnStyle({ visibleColumns }: { visibleColumns: string[] }): any {
+  const visibleKeys = visibleColumns?.map((key) => `[data-table-key="${key.toString()}"]`).join(',')
+  return !!visibleColumns?.length && visibleKeys
+    ? {
+        '& + * [data-table-key]': {
+          display: 'none',
+        },
+        '& + *': {
+          [visibleKeys]: {
+            display: 'table-cell !important',
+          },
+        },
+      }
+    : {}
 }
 
 export function TableContainer({

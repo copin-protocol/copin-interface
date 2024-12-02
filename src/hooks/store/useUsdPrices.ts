@@ -3,6 +3,7 @@ import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
 import { getLatestPrices } from 'apis/positionApis'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { ProtocolEnum } from 'utils/config/enums'
 import { pollEvery } from 'utils/helpers/pollEvery'
 
@@ -71,6 +72,7 @@ export const useRealtimeUsdPricesStore = create<
 )
 const usePollingUsdPrice = () => {
   const { setPrices } = useUsdPricesStore()
+  const { getSymbolByIndexToken } = useMarketsConfig()
   useEffect(() => {
     let cancel = false
     const pollBalance = pollEvery((onUpdate: (prices: UsdPrices) => void) => {
@@ -86,35 +88,47 @@ const usePollingUsdPrice = () => {
     }, 30_000)
 
     // start polling balance every x time
-    const stopPollingBalance = pollBalance(setPrices)
+    const stopPollingBalance = pollBalance((prices: UsdPrices) => {
+      const parsedPrices: UsdPrices = {}
+      if (!prices) return
+      Object.entries(prices).forEach(([indexToken, price]) => {
+        const symbol = getSymbolByIndexToken({ indexToken })
+        if (symbol) {
+          parsedPrices[symbol] = price
+        }
+      })
+      setPrices(parsedPrices)
+    })
 
     return () => {
       cancel = true
       stopPollingBalance()
       setPrices({})
     }
-  }, [setPrices])
+  }, [getSymbolByIndexToken, setPrices])
 }
 
 const usePollingGainsUsdPrice = () => {
   const { setGainsPrices } = useUsdPricesStore()
+  const { getSymbolByIndexToken } = useMarketsConfig()
   useEffect(() => {
     let cancel = false
     const pollBalance = pollEvery((onUpdate: (prices: UsdPrices) => void) => {
       return {
         async request() {
-          return async function fetchAndProcessPriceFeeds() {
-            const pricesData = {} as UsdPrices
-            const initialCache = await fetch('https://backend-pricing.eu.gains.trade/charts').then((res) => res.json())
-            if (initialCache && initialCache.closes) {
-              initialCache.closes.map((price: number, index: number) => {
-                pricesData[`${ProtocolEnum.GNS}-` + index] = price
-                pricesData[`${ProtocolEnum.GNS_POLY}-` + index] = price
-                pricesData[`${ProtocolEnum.GNS_BASE}-` + index] = price
+          const pricesData = {} as UsdPrices
+          const initialCache = await fetch('https://backend-pricing.eu.gains.trade/charts').then((res) => res.json())
+          if (initialCache && initialCache.closes) {
+            initialCache.closes.map((price: number, index: number) => {
+              const symbol = getSymbolByIndexToken({
+                protocol: ProtocolEnum.GNS,
+                indexToken: `${ProtocolEnum.GNS}-${index}`,
               })
-              setGainsPrices(pricesData)
-            }
+              if (!symbol) return
+              pricesData[symbol] = price
+            })
           }
+          return pricesData
         },
         onResult(result: any) {
           if (cancel || !result) return
@@ -131,7 +145,7 @@ const usePollingGainsUsdPrice = () => {
       stopPollingBalance()
       setGainsPrices({})
     }
-  }, [setGainsPrices])
+  }, [getSymbolByIndexToken, setGainsPrices])
 }
 
 export const PollingUsdPrice = memo(function PollingUsdPriceMemo() {

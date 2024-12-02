@@ -4,7 +4,7 @@ import React, { ReactNode, useMemo } from 'react'
 
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import Logo from 'components/@ui/Logo'
-import { CopyWalletData } from 'entities/copyWallet'
+import { ApiKeyWallet, CopyWalletData } from 'entities/copyWallet'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -23,7 +23,7 @@ interface WalletInfoProps {
 }
 export default function WalletInfo({ data, hiddenBalance, showFund = true, sx }: WalletInfoProps & SxProps) {
   const walletKey = useMemo(
-    () => data?.smartWalletAddress ?? data?.[getExchangeKey(data?.exchange)]?.apiKey ?? '',
+    () => data?.smartWalletAddress ?? (data?.[getExchangeKey(data?.exchange)] as ApiKeyWallet)?.apiKey ?? '',
     [data]
   )
 
@@ -56,7 +56,7 @@ export default function WalletInfo({ data, hiddenBalance, showFund = true, sx }:
             {!!data.smartWalletAddress && (
               <ExplorerLogo
                 size={20}
-                protocol={data.exchange}
+                exchange={data.exchange}
                 explorerUrl={`${EXPLORER_PLATFORMS[data.exchange]}/address/${data.smartWalletAddress}`}
               />
             )}

@@ -8,13 +8,14 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import PythWatermark from 'components/@ui/PythWatermark'
 import CurrencyOption from 'components/@widgets/CurrencyOption'
 import { PositionData } from 'entities/trader.d'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { PositionStatusEnum, TimeframeEnum } from 'utils/config/enums'
-import { ALL_TOKENS_ID, getTokenTradeList } from 'utils/config/trades'
+import { ALL_TOKENS_ID } from 'utils/config/trades'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import BrushChart from './BrushChart'
@@ -31,6 +32,11 @@ export interface TimeScaleRange {
 }
 
 const THE_REST_HEIGHT = 200
+
+/**
+ *
+ * @param currencyOptions is type TokenOptionProps = { id: ETH, value: ETH, label: ETH }
+ */
 
 export default function ChartPositions({
   protocol,
@@ -62,14 +68,14 @@ export default function ChartPositions({
   const [visibleRange, setVisibleRange] = useState<TimeScaleRange | undefined>()
   const [timeframe, setTimeframe] = useState(TimeframeEnum.H1)
   const hasAllTokens = currencyOption?.id === ALL_TOKENS_ID
-  const indexTokens = getTokenTradeList(protocol)
-    .filter((e) => currencyOption?.id && e.symbol.match(currencyOption.id))
-    ?.map((e) => e.address)
+  const { getSymbolByIndexToken } = useMarketsConfig()
   const filterPositions = (positions?: PositionData[]) =>
     (positions &&
       positions.length > 0 &&
       positions.filter((e) =>
-        hasAllTokens ? e.indexToken === positions[0].indexToken : indexTokens.includes(e.indexToken)
+        hasAllTokens
+          ? e.indexToken === positions[0].indexToken
+          : !!getSymbolByIndexToken({ protocol, indexToken: e.indexToken })
       )) ||
     []
 

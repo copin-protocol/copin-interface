@@ -8,11 +8,11 @@ import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { calcOpeningPnL, calcOpeningROI } from 'utils/helpers/calculate'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import RealtimeChart from '../ChartTraderPositionProfitRealtime'
 import ChartProfitComponent from './ChartProfitComponent'
@@ -27,8 +27,8 @@ export default function ChartProfit({
   protocol: ProtocolEnum
   chartId: string
 }) {
-  const { prices: pythPrices, gainsPrices } = useGetUsdPrices()
-  const prices = GAINS_TRADE_PROTOCOLS.includes(protocol) ? gainsPrices : pythPrices
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol })
 
   const isOpening = data?.status === PositionStatusEnum.OPEN
 
@@ -42,7 +42,7 @@ export default function ChartProfit({
     if (crossMove?.pnl === 0 || !data) return 0
     if (crossMove?.pnl) return crossMove?.pnl
     if (!isOpening) return data.pnl
-    return calcOpeningPnL(data, prices[data.indexToken])
+    return calcOpeningPnL(data, prices[getSymbolFromPair(data.pair)])
   }, [crossMove?.pnl, data, isOpening, prices])
 
   const latestROI = useMemo(() => {

@@ -39,7 +39,8 @@ const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
 
 // eslint-disable-next-line
-const StyledDialogContent = styled(({ background, height, minHeight, maxHeight, maxWidth, mobile, isOpen, mode, ...rest }) => (
+const StyledDialogContent = styled(
+  ({ background, height, minHeight, maxHeight, maxWidth, mobile, isOpen, mode, ...rest }) => (
     <AnimatedDialogContent {...rest} />
   )
 ).attrs({

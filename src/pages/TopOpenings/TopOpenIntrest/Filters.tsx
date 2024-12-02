@@ -7,13 +7,12 @@ import { MarketFilter } from 'components/@ui/MarketFilter'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ALL_TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
 import { PositionData } from 'entities/trader'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { getDropdownProps } from 'pages/Home/configs'
 import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
-import { PairFilterEnum, ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
-import { getPairsByProtocols } from 'utils/helpers/graphql'
+import { PairFilterEnum, TimeFilterByEnum } from 'utils/config/enums'
 
 export default function Filters({
   currentSort,
@@ -22,7 +21,6 @@ export default function Filters({
   onChangeLimit,
   currentTimeOption,
   onChangeTime,
-  protocols,
   pairs,
   onChangePairs,
   excludedPairs,
@@ -31,7 +29,6 @@ export default function Filters({
   currentLimit: number
   onChangeSort: (optionKey: SortOption['key']) => void
   onChangeLimit: (limit: number) => void
-  protocols: ProtocolEnum[]
   pairs: string[]
   onChangePairs: (pairs: string[], excludePairs: string[]) => void
   excludedPairs: string[]
@@ -41,7 +38,7 @@ export default function Filters({
   return (
     <Flex sx={{ gap: ['10px', '6px'] }} alignItems="center">
       {sm && <Type.CaptionBold sx={{ mt: '-1px' }}>Selected</Type.CaptionBold>}
-      <MarketFilter protocols={protocols} pairs={pairs} onChangePairs={onChangePairs} excludedPairs={excludedPairs} />
+      <MarketFilter pairs={pairs} onChangePairs={onChangePairs} excludedPairs={excludedPairs} />
       <Type.CaptionBold sx={{ mt: '-1px' }}>Top</Type.CaptionBold>
       <Dropdown
         {...getDropdownProps({})}
@@ -151,7 +148,8 @@ export function useTimeFilter() {
 export function useFilters() {
   const { searchParams, setSearchParams } = useSearchParams()
 
-  const defaultAllPairs = getPairsByProtocols(RELEASED_PROTOCOLS)
+  const { getListSymbol } = useMarketsConfig()
+  const defaultAllPairs = getListSymbol()
 
   let limit = DEFAULT_LIMIT
   let sort = DEFAULT_SORT

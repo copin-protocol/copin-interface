@@ -4,8 +4,8 @@ import React, { useMemo, useState } from 'react'
 import { CopyOrderData, CopyPositionData } from 'entities/copyTrade'
 import { Box } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
-import { getSymbolTradingView, getTokenTradeSupport } from 'utils/config/trades'
-import { getTimeframeFromTimeRange } from 'utils/helpers/transform'
+import { getSymbolTradingView } from 'utils/config/trades'
+import { getSymbolFromPair, getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
 import { ChartingLibraryWidgetOptions, ResolutionString } from '../../../../public/static/charting_library'
 import { DEFAULT_CHART_REALTIME_PROPS } from '../configs'
@@ -20,8 +20,7 @@ interface Props {
 }
 function CopyRealtimeChart({ position, orders }: Props) {
   const [chartContainer, setChartContainer] = useState<HTMLDivElement | null>(null)
-  const tokensSupport = getTokenTradeSupport(position.protocol)
-  const symbol = tokensSupport[position.indexToken]?.symbol ?? ''
+  const symbol = getSymbolFromPair(position.pair)
   const openBlockTime = useMemo(() => (position ? dayjs(position.createdAt).utc().valueOf() : 0), [position])
   const closeBlockTime = useMemo(() => (position ? dayjs(position.lastOrderAt).utc().valueOf() : 0), [position])
   const isOpening = position?.status === PositionStatusEnum.OPEN

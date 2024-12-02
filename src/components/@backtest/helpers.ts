@@ -2,23 +2,22 @@ import dayjs from 'dayjs'
 
 import { RequestBackTestData } from 'entities/backTest'
 import { CopyTradeOrderTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { getSymbolsFromIndexTokens, getTokenTradeList } from 'utils/config/trades'
+import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
-import { DISABLED_MARGIN_PROTECTION_PROTOCOLS, PARAM_MAPPING } from './configs'
+import { PARAM_MAPPING } from './configs'
 import { BackTestFormValues } from './types'
 
 export const getDefaultBackTestFormValues: (protcol: ProtocolEnum) => BackTestFormValues = (protocol: ProtocolEnum) => {
-  const tokenAddresses = getTokenTradeList(protocol).map((token) => token.address)
   const result: BackTestFormValues = {
     balance: 1000,
     orderVolume: 100,
     leverage: 5,
     // tokenAddresses,
-    pairs: getSymbolsFromIndexTokens(protocol, tokenAddresses),
+    pairs: [],
     startTime: dayjs().subtract(30, 'days').toDate(),
     endTime: dayjs().subtract(1, 'days').toDate(),
-    lookBackOrders: DISABLED_MARGIN_PROTECTION_PROTOCOLS.includes(protocol) ? null : 10,
+    lookBackOrders: PROTOCOLS_CROSS_MARGIN.includes(protocol) ? null : 10,
     stopLossAmount: undefined,
     stopLossType: SLTPTypeEnum.USD,
     takeProfitAmount: undefined,
@@ -84,7 +83,6 @@ export function stringifyRequestData(
 export function parseRequestData(params: Record<string, any> | undefined, protocol: ProtocolEnum) {
   let result = {} as RequestBackTestData & { testingType: CopyTradeOrderTypeEnum }
   if (!params) return result
-  const tokenList = getTokenTradeList(protocol).map((value) => value.address)
 
   try {
     const account = params[PARAM_MAPPING.ACCOUNT] ?? ''
@@ -101,9 +99,7 @@ export function parseRequestData(params: Record<string, any> | undefined, protoc
     const maxVolMultiplier = Number(params[PARAM_MAPPING.MAX_VOL_MULTIPLIER] ?? 0)
     const reverseCopy = params[PARAM_MAPPING.REVERSE_COPY] === '1' ? true : false
     const copyAll = params[PARAM_MAPPING.COPY_ALL] === '1' ? true : false
-    const pairs = copyAll
-      ? getSymbolsFromIndexTokens(protocol, tokenList)
-      : params[PARAM_MAPPING.TOKEN_ADDRESSES]
+    const pairs = params[PARAM_MAPPING.TOKEN_ADDRESSES]
       ? params[PARAM_MAPPING.TOKEN_ADDRESSES].split('_').map((symbol: string) => symbol.toUpperCase())
       : []
 

@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Trans } from '@lingui/macro'
 import { CrownSimple, ShieldWarning } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
@@ -20,6 +20,7 @@ import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import useInternalRole from 'hooks/features/useInternalRole'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { getMaxVolumeCopy, useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
@@ -39,12 +40,7 @@ import { CopyTradePlatformEnum, EventTypeEnum, ProtocolEnum, SLTPTypeEnum } from
 import { INTERNAL_SERVICE_KEYS, QUERY_KEYS, SERVICE_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
 import ROUTES from 'utils/config/routes'
-import {
-  TOKEN_TRADE_IGNORE,
-  getIndexTokensFromSymbols,
-  getSymbolsFromIndexTokens,
-  getTokenOptions,
-} from 'utils/config/trades'
+import { TOKEN_TRADE_IGNORE } from 'utils/config/trades'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 import { generateEventDetailsRoute } from 'utils/helpers/generateRoute'
@@ -132,13 +128,15 @@ const CopyTraderForm: CopyTradeFormComponent = ({
 
   const [tradedPairs, setTradedPairs] = useState<string[]>([])
 
-  const pairOptions = getTokenOptions({ protocol, ignoredAll: true }).filter(
-    (option) => !TOKEN_TRADE_IGNORE[platform]?.includes(option.value)
-  )
+  const { getListSymbolOptions, getListSymbolByListIndexToken, getListIndexTokenByListSymbols } = useMarketsConfig()
+
+  const pairOptions = useMemo(() => {
+    const allOptions = getListSymbolOptions().filter((option) => !TOKEN_TRADE_IGNORE[platform]?.includes(option.value))
+    allOptions.unshift({ id: 'all', value: 'all', label: 'All Tokens' })
+    return allOptions
+  }, [getListSymbolOptions, platform])
 
   const allPairs = pairOptions.map((p) => p.value)
-
-  pairOptions.unshift({ id: 'all', value: 'all', label: 'All Tokens' })
 
   const multipleCopy = watch('multipleCopy')
   const account = watch('account')
@@ -152,7 +150,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     {
       enabled: !isEdit && (isClone ? !!duplicateToAddress : !!account),
       select: (data) => {
-        const symbols = getSymbolsFromIndexTokens(protocol, data)
+        const symbols = getListSymbolByListIndexToken({ protocol, listIndexToken: data })
         return symbols.filter((address) => !TOKEN_TRADE_IGNORE[platform]?.includes(address))
       },
       onSuccess: (data) => {
@@ -208,10 +206,16 @@ const CopyTraderForm: CopyTradeFormComponent = ({
     handleSubmit((_formValues) => {
       const formValues = { ..._formValues }
       if (formValues.tokenAddresses?.length) {
-        formValues.tokenAddresses = getIndexTokensFromSymbols(protocol, formValues.tokenAddresses)
+        formValues.tokenAddresses = getListIndexTokenByListSymbols({
+          protocol,
+          listSymbol: formValues.tokenAddresses,
+        })
       }
       if (formValues.excludingTokenAddresses?.length) {
-        formValues.excludingTokenAddresses = getIndexTokensFromSymbols(protocol, formValues.excludingTokenAddresses)
+        formValues.excludingTokenAddresses = getListIndexTokenByListSymbols({
+          protocol,
+          listSymbol: formValues.excludingTokenAddresses,
+        })
       }
       delete formValues.totalVolume
       onSubmit(formValues)
@@ -229,16 +233,16 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   useEffect(() => {
     const defaultFormValues = { ..._defaultFormValues }
     if (defaultFormValues.tokenAddresses?.length) {
-      defaultFormValues.tokenAddresses = getSymbolsFromIndexTokens(
-        defaultFormValues.protocol ?? DEFAULT_PROTOCOL,
-        defaultFormValues.tokenAddresses
-      )
+      defaultFormValues.tokenAddresses = getListSymbolByListIndexToken({
+        protocol: defaultFormValues.protocol ?? DEFAULT_PROTOCOL,
+        listIndexToken: defaultFormValues.tokenAddresses,
+      })
     }
     if (defaultFormValues.excludingTokenAddresses?.length) {
-      defaultFormValues.excludingTokenAddresses = getSymbolsFromIndexTokens(
-        defaultFormValues.protocol ?? DEFAULT_PROTOCOL,
-        defaultFormValues.excludingTokenAddresses
-      )
+      defaultFormValues.excludingTokenAddresses = getListSymbolByListIndexToken({
+        protocol: defaultFormValues.protocol ?? DEFAULT_PROTOCOL,
+        listIndexToken: defaultFormValues.excludingTokenAddresses,
+      })
     }
     reset(defaultFormValues)
     setTimeout(() => {

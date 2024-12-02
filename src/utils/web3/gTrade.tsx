@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import useWebSocket from 'react-use-websocket'
 
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { useParsedProtocol } from 'hooks/store/useProtocols'
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
 import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
@@ -10,10 +11,10 @@ import ROUTES from 'utils/config/routes'
 
 const GAINS_TRADE_PRICE_FEED_URL = 'wss://backend-pricing.eu.gains.trade'
 
-const INTERVAL_TIME = 1 // s
+const INTERVAL_TIME = 1_000 // 1s
 const INCLUDE_PATH = [
   ROUTES.OPEN_INTEREST.path_prefix,
-  ROUTES.OPEN_INTEREST_POSITIONS.path_prefix,
+  ROUTES.OPEN_INTEREST_POSITIONS.path,
   ROUTES.POSITION_DETAILS.path_prefix,
   ROUTES.TRADER_DETAILS.path_prefix,
   ROUTES.MY_MANAGEMENT.path,
@@ -24,6 +25,7 @@ const INCLUDE_PATH = [
 
 export default function GainsTradeConnection() {
   const { setGainsPrices, setIsReady, gainsPrices } = useRealtimeUsdPricesStore()
+  const { getSymbolByIndexToken } = useMarketsConfig()
   const { pathname } = useLocation()
   const lastLogTime = useRef(Date.now())
   const protocol = useParsedProtocol()
@@ -36,12 +38,31 @@ export default function GainsTradeConnection() {
     onClose: () => console.log('gTrade price feed connection closed.'),
     shouldReconnect: (closeEvent: any) => true,
     onMessage: (event: WebSocketEventMap['message']) => {
-      if (!isGains) return
-      const currentTime = Date.now()
-      if (currentTime - lastLogTime.current >= INTERVAL_TIME * 1000) {
-        const data = processPriceData(JSON.parse(event.data))
-        lastLogTime.current = currentTime
-        setGainsPrices({ ...gainsPrices, ...data })
+      try {
+        if (!isGains) return
+        const currentTime = Date.now()
+        if (currentTime - lastLogTime.current >= INTERVAL_TIME) {
+          const data = JSON.parse(event.data)
+
+          if (!data || data.length < 2) return {}
+          const pricesData: Record<string, number> = {}
+          for (let i = 0; i < data.length; i += 2) {
+            const pairIndex = data[i]
+            const price = data[i + 1]
+            const symbol = getSymbolByIndexToken({
+              protocol: ProtocolEnum.GNS,
+              indexToken: `${ProtocolEnum.GNS}-${pairIndex}`,
+            })
+            if (!symbol) return
+            pricesData[symbol] = price
+          }
+          lastLogTime.current = currentTime
+          setGainsPrices({ ...gainsPrices, ...pricesData })
+        }
+        return
+      } catch (error) {
+        return
+        // console.log(error)
       }
     },
   })
@@ -58,10 +79,13 @@ export default function GainsTradeConnection() {
           const pricesData = {} as UsdPrices
           const initialCache = await fetch('https://backend-pricing.eu.gains.trade/charts').then((res) => res.json())
           if (initialCache && initialCache.closes) {
-            initialCache.closes.map((price: number, index: number) => {
-              pricesData[`${ProtocolEnum.GNS}-` + index] = price
-              pricesData[`${ProtocolEnum.GNS_POLY}-` + index] = price
-              pricesData[`${ProtocolEnum.GNS_BASE}-` + index] = price
+            initialCache.closes.forEach((price: number, index: number) => {
+              const symbol = getSymbolByIndexToken({
+                protocol: ProtocolEnum.GNS,
+                indexToken: `${ProtocolEnum.GNS}-${index}`,
+              })
+              if (!symbol) return
+              pricesData[symbol] = price
             })
             setGainsPrices({ ...gainsPrices, ...pricesData })
           }
@@ -76,7 +100,7 @@ export default function GainsTradeConnection() {
 
       setIsReady(true)
     }
-  }, [pathname, protocol, isGains])
+  }, [pathname, protocol, isGains, getSymbolByIndexToken])
 
   useEffect(() => {
     return () => {
@@ -88,17 +112,4 @@ export default function GainsTradeConnection() {
   }, [])
 
   return null
-}
-
-function processPriceData(data: number[]): Record<string, number> {
-  if (!data || data.length < 2) return {}
-  const result: Record<string, number> = {}
-  for (let i = 0; i < data.length; i += 2) {
-    const pairIndex = data[i]
-    const price = data[i + 1]
-    result[`${ProtocolEnum.GNS}-` + pairIndex] = price
-    result[`${ProtocolEnum.GNS_POLY}-` + pairIndex] = price
-    result[`${ProtocolEnum.GNS_BASE}-` + pairIndex] = price
-  }
-  return result
 }

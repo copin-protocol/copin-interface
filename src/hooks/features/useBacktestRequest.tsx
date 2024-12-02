@@ -8,6 +8,7 @@ import { requestTestMultiOrderApi, requestTestSingleOrderApi } from 'apis/backTe
 import { BackTestFormValues } from 'components/@backtest/types'
 import ToastBody from 'components/@ui/ToastBody'
 import { BackTestResultData, RequestBackTestData } from 'entities/backTest.d'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { getErrorMessage } from 'utils/helpers/handleError'
@@ -62,7 +63,7 @@ export default function useBacktestRequest(
   })
 
   const onSubmitByRequestData = (requestData: RequestBackTestData, reqProtocol?: ProtocolEnum) => {
-    const _reqProtocol = protocol ?? reqProtocol ?? ProtocolEnum.GMX
+    const _reqProtocol = protocol ?? reqProtocol ?? DEFAULT_PROTOCOL
     setIsSubmitting(true)
     setBacktestSettings(requestData)
     requestTestMultiOrder({ protocol: _reqProtocol, data: requestData })
@@ -79,7 +80,7 @@ export default function useBacktestRequest(
     reqProtocol?: ProtocolEnum
   }) => {
     return (formData: BackTestFormValues) => {
-      const _protocol = protocol ?? reqProtocol ?? ProtocolEnum.GMX
+      const _protocol = protocol ?? reqProtocol ?? DEFAULT_PROTOCOL
       setIsSubmitting(true)
       const fromTime = dayjs(formData.startTime).utc().valueOf()
       const toTime = dayjs(formData.endTime).utc().valueOf()
