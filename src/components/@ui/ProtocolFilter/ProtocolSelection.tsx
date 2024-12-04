@@ -1,26 +1,23 @@
 import { Trans } from '@lingui/macro'
-import { User } from '@phosphor-icons/react'
-import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
+import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getProtocolsStatistic } from 'apis/positionApis'
-import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { getProtocolConfigs } from 'components/@widgets/SwitchProtocols/helpers'
 import useDebounce from 'hooks/helpers/useDebounce'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { useProtocolSortByStore } from 'hooks/store/useProtocolSortBy'
-import ProtocolBetaWarning from 'pages/TraderDetails/ProtocolBetaWarning'
 import { Button } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
-import { Box, Flex, Grid, IconBox, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { ALLOWED_COPYTRADE_PROTOCOLS, RELEASED_PROTOCOLS, SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
 import { ProtocolEnum, ProtocolSortByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { ProtocolOptionProps } from 'utils/config/protocols'
-import { compactNumber, formatNumber } from 'utils/helpers/format'
+import { formatNumber } from 'utils/helpers/format'
 
-import NoDataFound from '../NoDataFound'
 import InputSearchProtocols from './InputSearchProtocols'
+import ListProtocolSelection from './ListProtocolSelection'
 import ProtocolSortOptions from './ProtocolSortOptions'
 
 interface ProtocolSelectionProps {
@@ -33,7 +30,6 @@ interface ProtocolSelectionProps {
   handleToggleDropdown?: () => void
 }
 const DEFAULT_ALL_CHAINS = 0
-const TOOLTIP_ID = `tt_1`
 
 export default function ProtocolSelection({
   setSelectedProtocols: setSavedProtocols,
@@ -258,76 +254,12 @@ export default function ProtocolSelection({
           </Box>
         </Flex>
       </Box>
-
-      {/* RENDER PROTOCOLS */}
-      {!options?.length && (
-        <Box mt={3}>
-          <NoDataFound />
-        </Box>
-      )}
-      <Grid
-        sx={{
-          gridTemplateColumns: ['repeat(auto-fill, minmax(150px, 1fr))', 'repeat(auto-fill, minmax(150px, 1fr))'],
-          gap: 1,
-        }}
-        mt={3}
-      >
-        {options.map((option) => {
-          const protocol = option.id
-          const isActive = checkIsSelected(protocol)
-          const protocolStatistic = protocolsStatistic?.[protocol]
-
-          return (
-            <Box
-              key={protocol}
-              sx={{
-                backgroundColor: 'neutral6',
-                borderRadius: 'sm',
-                '&:hover': {
-                  backgroundColor: 'neutral5',
-                  cursor: 'pointer',
-                },
-              }}
-              onClick={() => handleToggle(protocol)}
-            >
-              <Flex
-                alignItems="center"
-                sx={{
-                  py: 10,
-                  px: 2,
-                  gap: '6px',
-                  backgroundColor: 'transparent',
-                  color: 'neutral5',
-                }}
-              >
-                <Checkbox key={protocol} checked={isActive} wrapperSx={{ height: 'auto' }} />
-
-                <ProtocolLogo className="active" protocol={protocol} isActive={false} hasText={false} size={32} />
-
-                <Flex width="100%" sx={{ gap: '5px', alignItems: 'center', position: 'relative' }}>
-                  <Flex flexDirection={'column'} sx={{ justifyContent: 'space-between' }} mx={1}>
-                    <Type.Caption color={'neutral1'}>{option.text}</Type.Caption>
-                    <Flex alignItems={'center'}>
-                      <Type.Small color={'neutral3'} mr={1}>
-                        {compactNumber(protocolStatistic?.traders ?? 0, 2, true)}
-                      </Type.Small>
-                      <IconBox color="neutral3" icon={<User size={12} />} />
-                    </Flex>
-                  </Flex>
-
-                  {/*{option.isCross ? (*/}
-                  {/*  <img src={CrossTag} alt="cross" />*/}
-                  {/*) : option.isNew ? (*/}
-                  {/*  <img src={NewTag} alt="new" />*/}
-                  {/*) : (*/}
-                  {/*  <></>*/}
-                  {/*)}*/}
-                </Flex>
-              </Flex>
-            </Box>
-          )
-        })}
-      </Grid>
+      <ListProtocolSelection
+        options={options}
+        checkIsSelected={checkIsSelected}
+        protocolsStatistic={protocolsStatistic}
+        handleToggle={handleToggle}
+      />
 
       <Flex
         sx={{
