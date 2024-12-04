@@ -119,6 +119,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
           txHash: data.txHashes?.[0],
           account: data.account,
           logId: data.logId,
+          isLong: data.isLong,
           nextHours: nextHoursParam,
         })
       )
