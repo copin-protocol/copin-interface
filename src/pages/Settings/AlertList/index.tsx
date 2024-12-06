@@ -11,14 +11,14 @@ import ToastBody from 'components/@ui/ToastBody'
 import UnsubscribeAlertModal from 'components/@widgets/UnsubscribeAlertModal'
 import { TraderAlertData } from 'entities/alert'
 import useBotAlertContext, { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
-import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremium, useIsVIP } from 'hooks/features/useSubscriptionRestrict'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useMyProfile from 'hooks/store/useMyProfile'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex, Type } from 'theme/base'
-import { MAX_TRADER_ALERT_BASIC, MAX_TRADER_ALERT_PREMIUM } from 'utils/config/constants'
+import { MAX_TRADER_ALERT_BASIC, MAX_TRADER_ALERT_PREMIUM, MAX_TRADER_ALERT_VIP } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { formatNumber } from 'utils/helpers/format'
@@ -42,6 +42,7 @@ export default function AlertList() {
 function AlertListComponent() {
   const { myProfile } = useMyProfile()
   const isPremiumUser = useIsPremium()
+  const isVIPUser = useIsVIP()
   const { md } = useResponsive()
 
   const { currentPage, changeCurrentPage } = usePageChange({ pageName: 'alert-list' })
@@ -134,7 +135,7 @@ function AlertListComponent() {
             <Flex p={3} alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
               <Type.BodyBold>
                 <Trans>Alert List</Trans> ({formatNumber(data?.meta?.total)}/
-                {isPremiumUser ? MAX_TRADER_ALERT_PREMIUM : MAX_TRADER_ALERT_BASIC})
+                {isVIPUser ? MAX_TRADER_ALERT_VIP : isPremiumUser ? MAX_TRADER_ALERT_PREMIUM : MAX_TRADER_ALERT_BASIC})
               </Type.BodyBold>
               {!isPremiumUser && (
                 <Link to={ROUTES.USER_SUBSCRIPTION.path}>

@@ -125,8 +125,9 @@ export const SUBSCRIPTION_COLLECTION_URL =
     ? 'https://testnets.opensea.io/collection/copin-subscription-3'
     : 'https://opensea.io/collection/copin-subscription'
 
-export const MAX_TRADER_ALERT_BASIC = 10
+export const MAX_TRADER_ALERT_BASIC = 20
 export const MAX_TRADER_ALERT_PREMIUM = 50
+export const MAX_TRADER_ALERT_VIP = 100
 
 export const VOLUME_LIMIT = 20000
 

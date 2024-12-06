@@ -44,6 +44,12 @@ export function useIsPremium() {
   return isPremiumUser
 }
 
+export function useIsVIP() {
+  const myProfile = useMyProfileStore((state) => state.myProfile)
+  const isVIPUser = myProfile ? myProfile.plan === SubscriptionPlanEnum.VIP : null
+  return isVIPUser
+}
+
 export function useIsPremiumAndAction() {
   const isPremiumUser = useIsPremium()
   const handleClickLogin = useClickLoginButton()
