@@ -24,7 +24,7 @@ import TextWithEdit, { parseInputValue } from 'components/@ui/TextWithEdit'
 import ToastBody from 'components/@ui/ToastBody'
 import ActionItem from 'components/@widgets/ActionItem'
 import { CopyTradeData } from 'entities/copyTrade'
-import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
+import { useCheckCopyTradeAction, useIsVIP } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
@@ -79,6 +79,7 @@ export default function useDEXCopyTradeColumns({
   copyTradeData: MutableRefObject<CopyTradeWithCheckingData | undefined>
   expanded: boolean
 }) {
+  const isVIPUser = useIsVIP()
   const refetchQueries = useRefetchQueries()
   const { mutate: updateCopyTrade } = useMutation(updateCopyTradeApi, {
     onSuccess: async (data) => {
@@ -135,10 +136,12 @@ export default function useDEXCopyTradeColumns({
     oldData,
     value,
     field,
+    isVIP,
   }: {
     oldData: CopyTradeData
     value: string
     field: keyof CopyTradeData
+    isVIP?: boolean | null
   }) => {
     if (typeof value !== 'string') return
     const numberValue = parseInputValue(value)
@@ -148,7 +151,7 @@ export default function useDEXCopyTradeColumns({
         //   toast.error(<ToastBody title="Error" message="DCP Volume must be greater than or equal to $60" />)
         //   return
         // }
-        if (numberValue > 100000) {
+        if (!isVIP && numberValue > 100000) {
           toast.error(<ToastBody title="Error" message="Volume must be less than $100,000" />)
           return
         }
@@ -209,7 +212,7 @@ export default function useDEXCopyTradeColumns({
     [isRunningFn]
   )
   const renderVolume = useCallback(
-    (item: CopyTradeWithCheckingData) => (
+    (item: CopyTradeWithCheckingData, isVIP?: boolean | null) => (
       <Flex
         color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}
         sx={{
@@ -223,7 +226,7 @@ export default function useDEXCopyTradeColumns({
           key={`volume_${item.id}_${item.volume}`}
           defaultValue={item.volume}
           onSave={(value) => updateNumberValue({ copyTradeId: item.id, oldData: item, value, field: 'volume' })}
-          onValidate={(value) => validateNumberValue({ oldData: item, value, field: 'volume' })}
+          onValidate={(value) => validateNumberValue({ isVIP, oldData: item, value, field: 'volume' })}
           disabled={!isRunningFn(item.status)}
         />
         {/*<Type.Caption color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}>*/}
@@ -643,7 +646,7 @@ export default function useDEXCopyTradeColumns({
             key: 'volume',
             sortBy: 'volume',
             style: { minWidth: '80px', textAlign: 'right' },
-            render: renderVolume,
+            render: (item) => renderVolume(item, isVIPUser),
           },
           {
             title: 'Leverage',
@@ -748,7 +751,7 @@ export default function useDEXCopyTradeColumns({
             key: 'volume',
             sortBy: 'volume',
             style: { minWidth: '80px', textAlign: 'right' },
-            render: renderVolume,
+            render: (item) => renderVolume(item, isVIPUser),
           },
           {
             title: 'Leverage',
@@ -780,21 +783,22 @@ export default function useDEXCopyTradeColumns({
       renderVolume,
       renderSLTP,
     }
-    return { columns, renderProps }
+    return { columns, renderProps, isVIPUser }
   }, [
-    render7DPNL,
-    render30DPNL,
+    expanded,
+    renderTitle,
+    renderTraderAccount,
     renderLeverage,
     renderMarkets,
-    renderOptions,
-    renderRiskControl,
     renderSLTP,
-    renderTitle,
-    renderToggleRunning,
+    renderRiskControl,
+    render7DPNL,
     renderTotalPNL,
-    renderTraderAccount,
     renderVolume,
-    expanded,
+    render30DPNL,
+    renderOptions,
+    renderToggleRunning,
+    isVIPUser,
   ])
   return returnValues
 }
