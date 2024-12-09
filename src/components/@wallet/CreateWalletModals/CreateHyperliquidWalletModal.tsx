@@ -79,7 +79,7 @@ export default function CreateHyperliquidWalletModal({
         secretKey: data.secretKey,
         passPhrase: !data.enableVault && !data.passPhrase ? undefined : data.passPhrase,
       },
-      hyperliquidSignature: !data.enableVault && !data.passPhrase ? signatureData : undefined,
+      hyperliquidSignature: signatureData,
     })
   }
 
@@ -220,34 +220,32 @@ export default function CreateHyperliquidWalletModal({
 
             <HyperliquidHelp />
 
-            {!enableVault && (
-              <Box>
-                <Checkbox checked={!!signatureData} onClick={handleAccept}>
-                  <Type.Caption>I agree to let Copin use the API to place orders.</Type.Caption>
-                </Checkbox>
-                <Type.Caption>
-                  <Box
-                    as="a"
-                    href={LINKS.termOfUse}
-                    target="_blank"
-                    color="primary1"
-                    sx={{ textDecoration: 'underline', '&:hover': { color: 'primary2' } }}
-                  >
-                    Terms of Service
-                  </Box>
-                  &nbsp;&&nbsp;
-                  <Box
-                    sx={{ textDecoration: 'underline', '&:hover': { color: 'primary2' } }}
-                    as="a"
-                    href={LINKS.riskDisclaimer}
-                    target="_blank"
-                    color="primary1"
-                  >
-                    Risk Disclaimer
-                  </Box>
-                </Type.Caption>
-              </Box>
-            )}
+            <Box>
+              <Checkbox checked={!!signatureData} onClick={handleAccept}>
+                <Type.Caption>I agree to let Copin use the API to place orders.</Type.Caption>
+              </Checkbox>
+              <Type.Caption>
+                <Box
+                  as="a"
+                  href={LINKS.termOfUse}
+                  target="_blank"
+                  color="primary1"
+                  sx={{ textDecoration: 'underline', '&:hover': { color: 'primary2' } }}
+                >
+                  Terms of Service
+                </Box>
+                &nbsp;&&nbsp;
+                <Box
+                  sx={{ textDecoration: 'underline', '&:hover': { color: 'primary2' } }}
+                  as="a"
+                  href={LINKS.riskDisclaimer}
+                  target="_blank"
+                  color="primary1"
+                >
+                  Risk Disclaimer
+                </Box>
+              </Type.Caption>
+            </Box>
 
             <Button
               size="xl"
