@@ -159,9 +159,10 @@ export default function Plans() {
                 <MintButton
                   planPrice={priceVip?.bn}
                   plan={SubscriptionPlanEnum.VIP}
-                  bgType="2"
-                  disabled
-                  buttonText="Coming Soon"
+                  bgType="1"
+                  // disabled
+                  // buttonText="Coming Soon"
+                  buttonText="Mint VIP NFT"
                 />
               </Flex>
               <Button
@@ -269,7 +270,7 @@ export function MobilePlans() {
           <MobilePlanItem label={label} value={planConfigs.vip[index]} />
         ))}
         <Flex sx={{ alignItems: 'center', justifyContent: 'center' }}>
-          <MintButton planPrice={priceVip?.bn} plan={SubscriptionPlanEnum.VIP} bgType="2" />
+          <MintButton planPrice={priceVip?.bn} plan={SubscriptionPlanEnum.VIP} bgType="1" />
         </Flex>
         <Button
           block
@@ -487,11 +488,11 @@ export function usePlanConfigs() {
         <Trans>VIP exclusive signal (group and APIs)</Trans> <TooltipIcon id="feature-alert" />
       </p>,
       <Trans>License copyright of Copin&apos;s signal</Trans>,
-      <Trans>Platform</Trans>,
+      <Trans>Alpha group access</Trans>,
     ],
     basic: [
       <Trans>Unlimited</Trans>,
-      <Trans>Last 60 days</Trans>,
+      <Trans>Unlimited</Trans>,
       <Trans>No</Trans>,
       // <Trans>No</Trans>,
       <Trans>20 traders</Trans>,
@@ -502,7 +503,7 @@ export function usePlanConfigs() {
       <Trans>All stable CEX</Trans>,
       <Trans>No</Trans>,
       <Trans>Personal</Trans>,
-      <Trans>https://app.copin.io</Trans>,
+      <Trans>No</Trans>,
     ],
     premium: [
       <Trans>Unlimited</Trans>,
@@ -521,7 +522,7 @@ export function usePlanConfigs() {
       <Trans>All stable CEX</Trans>,
       <Trans>No</Trans>,
       <Trans>Personal</Trans>,
-      <Trans>https://app.copin.io</Trans>,
+      <Trans>No</Trans>,
     ],
     vip: [
       <Trans>Unlimited</Trans>,
@@ -548,9 +549,9 @@ export function usePlanConfigs() {
         <Trans>Yes</Trans>
       </Box>,
       <Trans>Personal</Trans>,
-      <p>
-        <Trans>https://vip.copin.io</Trans> <TooltipIcon id="vip-platform" />
-      </p>,
+      <Box as="span" color="violet">
+        <Trans>Yes</Trans>
+      </Box>,
     ],
   }
 }
