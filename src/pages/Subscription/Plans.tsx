@@ -538,7 +538,8 @@ export function usePlanConfigs() {
         <Trans>All stable PerpDEX + Early access PerpDEX</Trans> <TooltipIcon id="vip-source-copy" />
       </p>,
       // <Trans>Maximum ${formatNumber(volumeLimit?.volumeVipWoReferral, 0, 0)}</Trans>,
-      <Trans>Maximum ${formatNumber(volumeLimit?.volumeVipReferral, 0, 0)}</Trans>,
+      // <Trans>Maximum ${formatNumber(volumeLimit?.volumeVipReferral, 0, 0)}</Trans>,
+      <Trans>Unlimited</Trans>,
       <Box as="span" color="violet">
         <Trans>Yes</Trans>
       </Box>,

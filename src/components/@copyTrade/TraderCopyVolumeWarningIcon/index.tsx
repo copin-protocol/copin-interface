@@ -138,7 +138,9 @@ export function TraderTotalCopyVolumeIcon({
             <Box
               as="span"
               color={
-                (copyVolume ?? 0) > (maxVolume ?? 0)
+                plan === SubscriptionPlanEnum.VIP
+                  ? 'green2'
+                  : (copyVolume ?? 0) > (maxVolume ?? 0)
                   ? 'red1'
                   : (copyVolume ?? 0) === (maxVolume ?? 0)
                   ? 'orange1'
@@ -147,7 +149,7 @@ export function TraderTotalCopyVolumeIcon({
             >
               ${_copyVolume}
             </Box>{' '}
-            / ${_maxVolume}
+            / {plan === SubscriptionPlanEnum.VIP ? 'Unlimited' : `$${_maxVolume}`}
             {plan !== SubscriptionPlanEnum.VIP && (
               <Box as={Link} to={ROUTES.SUBSCRIPTION.path} target="_blank">
                 {' '}
