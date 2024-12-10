@@ -1,6 +1,7 @@
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { ReferralData, ReferralStat, UserData } from 'entities/user.d'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
+import { WaitlistTypeEnum } from 'utils/config/enums'
 
 import { ApiListResponse } from './api'
 import requester from './index'
@@ -57,4 +58,8 @@ export async function customRefCodeApi({ data }: { data: { referralCode: string 
 
 export async function checkBeforeAddRefApi() {
   return requester.get(`${USER_SERVICE}/add-referral/eligible`).then((res: any) => res.data as boolean)
+}
+
+export async function registerWaitlistApi({ email, type }: { email: string; type: WaitlistTypeEnum }) {
+  return requester.post(`/public/${USER_SERVICE}/waitlist`, { email, type }).then((res: any) => res.data)
 }

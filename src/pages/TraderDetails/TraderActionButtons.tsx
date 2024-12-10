@@ -5,6 +5,7 @@ import { GridProps } from 'styled-system'
 
 import BacktestSingleButton from 'components/@backtest/BacktestSingleButton'
 import CopyTraderButton from 'components/@copyTrade/CopyTraderButton'
+import AnalyzeAction from 'components/@ui/AnalyzeButton'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { PositionData, TraderData } from 'entities/trader.d'
 import IconButton from 'theme/Buttons/IconButton'
@@ -60,6 +61,7 @@ export default function TraderActionButtons({
           }}
         >
           {/* <TradeProtocolAction protocol={protocol} /> */}
+          <AnalyzeAction />
           <AlertAction protocol={protocol} account={account} />
           {!isDrawer && (
             <ExpandTraderRankingButton traderData={traderData} timeOption={timeOption} onChangeTime={onChangeTime} />
@@ -107,9 +109,12 @@ export default function TraderActionButtons({
                 {/*  <TradeProtocolAction protocol={protocol} />*/}
                 {/*</Box>*/}
                 <Box height="40px">
+                  <AnalyzeAction />
+                </Box>
+                <Box height="40px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
                   <AlertAction account={account} protocol={protocol} />
                 </Box>
-                <Box height="40px">
+                <Box height="40px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
                   <BacktestSingleButton key={protocol + account} account={account} protocol={protocol} />
                 </Box>
                 <Box height="40px">

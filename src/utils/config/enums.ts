@@ -410,3 +410,7 @@ export enum ActionTypeEnum {
 export const ACTION_NAMES = {
   [ActionTypeEnum.SET_SLTP]: 'Set SL / TP',
 }
+
+export enum WaitlistTypeEnum {
+  ANALYZE_WITH_AI = 'ANALYZE_WITH_AI',
+}

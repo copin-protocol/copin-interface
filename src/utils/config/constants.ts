@@ -39,6 +39,7 @@ export const LINKS = {
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
+  telegramAI: 'https://t.me/+al7aD8DB8pNjYjM1',
   telegram: 'https://t.me/Copin_io',
   baseTelegram: 'https://t.me',
   docs: 'https://docs.copin.io/',
