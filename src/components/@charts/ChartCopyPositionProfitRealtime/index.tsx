@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import React, { useMemo, useState } from 'react'
 
 import { CopyOrderData, CopyPositionData } from 'entities/copyTrade'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { Box } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { getSymbolTradingView } from 'utils/config/trades'
@@ -20,7 +21,10 @@ interface Props {
 }
 function CopyRealtimeChart({ position, orders }: Props) {
   const [chartContainer, setChartContainer] = useState<HTMLDivElement | null>(null)
-  const symbol = getSymbolFromPair(position.pair)
+  const { getSymbolByIndexToken } = useMarketsConfig()
+  const symbol = position.pair
+    ? getSymbolFromPair(position.pair)
+    : getSymbolByIndexToken({ protocol: position.protocol, indexToken: position.indexToken }) ?? ''
   const openBlockTime = useMemo(() => (position ? dayjs(position.createdAt).utc().valueOf() : 0), [position])
   const closeBlockTime = useMemo(() => (position ? dayjs(position.lastOrderAt).utc().valueOf() : 0), [position])
   const isOpening = position?.status === PositionStatusEnum.OPEN

@@ -11,7 +11,7 @@ import { useClickLoginButton } from 'components/@auth/LoginAction'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { EventDetailsData, TradingEventStatusEnum } from 'entities/event'
 import { LatestActivityLogData } from 'entities/user'
-import { useIsPremium, useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
 import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -103,7 +103,6 @@ function EventItem({ eventDetails }: { eventDetails: EventDetailsData }) {
 
 function Activities() {
   const { isAuthenticated } = useAuthContext()
-  const isPremium = useIsPremium()
   const { data: activities } = useQuery([QUERY_KEYS.GET_LATEST_ACTIVITY_LOGS], () => getLatestActivityLogsApi({}), {
     refetchInterval: 15_000,
   })
@@ -134,8 +133,8 @@ function Activities() {
                     {addressShorten(data.username)}
                   </Box>{' '}
                   <Trans>copied a position from trader</Trans>{' '}
-                  {isAuthenticated && isPremium ? <RenderTrader data={data} /> : <RenderHiddenTrader data={data} />}{' '}
-                  with a size of ${formatNumber((data?.volume ?? 0) * (data?.price ?? 0), 2, 2)}
+                  {isAuthenticated ? <RenderTrader data={data} /> : <RenderHiddenTrader data={data} />} with a size of $
+                  {formatNumber((data?.volume ?? 0) * (data?.price ?? 0), 2, 2)}
                 </Type.Caption>
               </Box>
             </Box>
@@ -199,7 +198,7 @@ function RenderHiddenTrader({ data }: { data: LatestActivityLogData }) {
             >
               Login
             </Button>{' '}
-            and upgrade premium to see
+            to see
           </Type.Caption>
         )}
       </Tooltip>

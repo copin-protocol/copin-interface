@@ -9,6 +9,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import { ImageData } from 'entities/image'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useMyProfile from 'hooks/store/useMyProfile'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
@@ -29,6 +30,8 @@ export default function SharePosition({
   chartId: string
 }) {
   const { getPricesData } = useGetUsdPrices()
+  const { getSymbolByIndexToken } = useMarketsConfig()
+  const symbolByIndexToken = getSymbolByIndexToken({ protocol: stats.protocol, indexToken: stats.indexToken })
   const prices = getPricesData({ protocol: stats.protocol })
   const [isSocialMediaSharingOpen, setIsSocialMediaSharingOpen] = useState(false)
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
@@ -59,6 +62,7 @@ export default function SharePosition({
         colors: themeColors,
         protocolImg,
         logoImg,
+        symbolByIndexToken,
       })
       if (canvas) {
         canvas.toBlob((blob) => {
