@@ -18,6 +18,7 @@ import { renderCopyEntry } from 'components/@widgets/renderProps'
 import { CopyPositionData } from 'entities/copyTrade'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
@@ -94,8 +95,10 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
         : undefined,
     [copyTradeDetails, dataOrders]
   )
+  const { getSymbolByIndexToken } = useMarketsConfig()
+  const symbolByIndexToken = getSymbolByIndexToken({ protocol: data?.protocol, indexToken: data?.indexToken })
   const isOpening = data && data.status === PositionStatusEnum.OPEN
-  const symbol = data ? getSymbolFromPair(data.pair) : undefined
+  const symbol = data?.pair ? getSymbolFromPair(data.pair) : symbolByIndexToken
   const sizeDelta = useMemo(
     () =>
       isOpening
@@ -117,7 +120,7 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
               data,
               normalizeExchangePrice({
                 protocolSymbol: symbol,
-                protocolSymbolPrice: prices[getSymbolFromPair(data.pair)],
+                protocolSymbolPrice: prices[symbol],
                 exchange: data.exchange,
               })
             )

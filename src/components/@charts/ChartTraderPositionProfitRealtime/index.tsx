@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 
 import { OrderData, PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { Box } from 'theme/base'
 import { GMX_V1_PROTOCOLS } from 'utils/config/constants'
 import { OrderTypeEnum } from 'utils/config/enums'
@@ -20,10 +21,13 @@ interface Props {
   orders: OrderData[]
 }
 function RealtimeChart({ position, orders }: Props) {
+  const { getSymbolByIndexToken } = useMarketsConfig()
   const { getPricesData } = useGetUsdPrices()
   const prices = getPricesData({ protocol: position.protocol })
   const [chartContainer, setChartContainer] = React.useState<HTMLDivElement | null>(null)
-  const symbol = getSymbolFromPair(position.pair) ?? ''
+  const symbol = position.pair
+    ? getSymbolFromPair(position.pair)
+    : getSymbolByIndexToken({ protocol: position.protocol, indexToken: position.indexToken }) ?? ''
   const decimals = useMemo(() => ((prices?.[symbol] ?? 0) < 1 ? 6 : 4), [symbol, prices])
 
   const chartOpts = React.useMemo(() => {
@@ -41,7 +45,7 @@ function RealtimeChart({ position, orders }: Props) {
         },
       },
     } as ChartingLibraryWidgetOptions
-  }, [chartContainer, decimals, symbol])
+  }, [chartContainer, decimals, position.durationInSecond, symbol])
 
   const chart = useChart(chartOpts)
 

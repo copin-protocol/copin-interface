@@ -5,8 +5,10 @@ import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Divider from 'components/@ui/Divider'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import TraderAddress from 'components/@ui/TraderAddress'
+import { SymbolComponent } from 'components/@widgets/renderProps'
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
@@ -75,7 +77,9 @@ export function renderEntry(data: CopyPositionData) {
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{getSymbolFromPair(data.pair)}</Type.Caption>
+      <Type.Caption>
+        <SymbolComponent pair={data.pair} indexToken={data.indexToken} protocol={data.protocol} />
+      </Type.Caption>
       <VerticalDivider />
       <Type.Caption>{formatPrice(data.entryPrice)}</Type.Caption>
     </Flex>
@@ -83,7 +87,15 @@ export function renderEntry(data: CopyPositionData) {
 }
 
 export function renderPnL(data: CopyPositionData, prices?: UsdPrices, textSx?: any) {
-  const symbol = data?.protocol ? getSymbolFromPair(data.pair) : undefined
+  return <PnLComponent data={data} prices={prices} textSx={textSx} />
+}
+
+function PnLComponent({ data, prices, textSx }: { data: CopyPositionData; prices?: UsdPrices; textSx?: any }) {
+  const { getSymbolByIndexToken } = useMarketsConfig()
+  const symbolByIndexToken = getSymbolByIndexToken
+    ? getSymbolByIndexToken({ protocol: data?.protocol, indexToken: data?.indexToken })
+    : undefined
+  const symbol = data?.pair ? getSymbolFromPair(data.pair) : symbolByIndexToken
   const isOpening = data.status === PositionStatusEnum.OPEN
   const pnl = isOpening
     ? calcCopyOpeningPnL(

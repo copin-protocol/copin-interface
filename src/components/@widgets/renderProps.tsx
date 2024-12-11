@@ -440,3 +440,18 @@ export function renderTrader(
     </Flex>
   )
 }
+
+export function SymbolComponent({
+  pair,
+  indexToken,
+  protocol,
+}: {
+  pair?: string
+  indexToken?: string
+  protocol?: ProtocolEnum
+}) {
+  const { getSymbolByIndexToken } = useMarketsConfig()
+  if (!pair && !indexToken) return <></>
+  const symbol = pair ? getSymbolFromPair(pair) : getSymbolByIndexToken({ protocol, indexToken }) ?? ''
+  return <span>{symbol}</span>
+}

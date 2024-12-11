@@ -1,6 +1,7 @@
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
+import { ProtocolEnum } from 'utils/config/enums'
 
 export type ExternalSourceCopyPositions = {
   copyTrades?: CopyTradeData[]
@@ -11,4 +12,11 @@ export type ExternalSourceCopyPositions = {
   currentId?: string
   onViewSource?: (data: CopyPositionData, event?: any) => void
   handleSelectCopyItem?: (data: CopyPositionData) => void
+  getSymbolByIndexToken?: ({
+    protocol,
+    indexToken,
+  }: {
+    protocol?: ProtocolEnum
+    indexToken: string | undefined
+  }) => string | undefined
 }

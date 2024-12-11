@@ -179,6 +179,7 @@ export const generatePositionCanvas = ({
   logoImg,
   protocolImg,
   chartId,
+  symbolByIndexToken,
 }: {
   isOpening: boolean
   stats: PositionData
@@ -187,6 +188,7 @@ export const generatePositionCanvas = ({
   logoImg: HTMLImageElement
   protocolImg: HTMLImageElement
   chartId?: string
+  symbolByIndexToken?: string
 }) => {
   const protocol = stats.protocol
   const address = stats.account
@@ -218,6 +220,8 @@ export const generatePositionCanvas = ({
   ctx.fillRect(0, 0, canvasWidth, canvasHeight)
 
   // draw statistics
+  const tokenSymbol = !stats.pair && symbolByIndexToken ? symbolByIndexToken : getSymbolFromPair(stats.pair)
+
   const statsGap = canvasHeight / 3
   const titleStatsFontSize = 32
   const valueStatsFontSize = 40
@@ -235,7 +239,7 @@ export const generatePositionCanvas = ({
   rightCtx.fillStyle = colors.neutral1
   rightCtx.font = `700 ${valueStatsFontSize}px Anuphan`
   rightCtx.fillText('$' + formatNumber(stats?.collateral, 0, 0), rightWidth / 2, valueStartY)
-  const latestPnL = isOpening ? calcOpeningPnL(stats, prices[getSymbolFromPair(stats.pair)]) : stats.pnl
+  const latestPnL = isOpening ? calcOpeningPnL(stats, prices[tokenSymbol]) : stats.pnl
   const latestROI = isOpening ? calcOpeningROI(stats, latestPnL) : stats.roi
   rightCtx.fillStyle = !stats
     ? colors.neutral1
@@ -284,7 +288,6 @@ export const generatePositionCanvas = ({
   leftCtx.fillText('|', 60, chartAreaOffsetY + 52)
   leftCtx.font = '700 32px Anuphan'
   leftCtx.fillStyle = colors.neutral1
-  const tokenSymbol = getSymbolFromPair(stats.pair)
   leftCtx.fillText(tokenSymbol, 60 + 24, chartAreaOffsetY + 52)
   leftCtx.fillStyle = colors.neutral3
   leftCtx.font = '400 32px Anuphan'
