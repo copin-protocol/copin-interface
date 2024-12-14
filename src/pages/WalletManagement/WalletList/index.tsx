@@ -23,34 +23,34 @@ import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
 const EXCHANGES = [
+  CopyTradePlatformEnum.HYPERLIQUID,
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.BYBIT,
   CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.GATE,
   CopyTradePlatformEnum.BINANCE,
-  CopyTradePlatformEnum.HYPERLIQUID,
   CopyTradePlatformEnum.SYNTHETIX_V2,
   CopyTradePlatformEnum.GNS_V8,
 ]
 const ALLOW_EXCHANGE = [
+  CopyTradePlatformEnum.HYPERLIQUID,
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.BYBIT,
   CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.GATE,
-  CopyTradePlatformEnum.HYPERLIQUID,
   CopyTradePlatformEnum.SYNTHETIX_V2,
   CopyTradePlatformEnum.GNS_V8,
 ]
 const INTERNAL_EXCHANGES = [
+  CopyTradePlatformEnum.HYPERLIQUID,
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.BYBIT,
   CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.GATE,
   CopyTradePlatformEnum.BINANCE,
-  CopyTradePlatformEnum.HYPERLIQUID,
   CopyTradePlatformEnum.SYNTHETIX_V2,
   CopyTradePlatformEnum.GNS_V8,
 ]
@@ -172,6 +172,7 @@ function renderWalletList({
     const wallets = walletMapping[exchange] ?? []
     return (
       <Accordion
+        defaultOpen={exchange === CopyTradePlatformEnum.HYPERLIQUID}
         disabled={!isAllowed}
         iconSize={24}
         direction="left"

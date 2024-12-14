@@ -72,12 +72,13 @@ export const MenuWrapper = styled.div<{ visible: boolean; top?: number }>`
     z-index: 100;
     top: ${({ top }) => (top == null ? NAVBAR_HEIGHT : top)}px;
     left: 0;
-    height: calc(100vh - ${NAVBAR_HEIGHT}px);
+    height: ${({ top }) => `calc(100vh - ${top == null ? NAVBAR_HEIGHT : top}px)`};
     width: 100%;
     display: block;
     background: #0b0e18d6;
     transform: translateX(100%);
     ${transition()}
+    overflow-y: auto;
 
     ${({ visible }) => {
       return visible

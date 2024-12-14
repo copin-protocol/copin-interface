@@ -6,7 +6,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 
-import { requestCopyWalletApi } from 'apis/copyWalletApis'
+import { updateCopyWalletApi } from 'apis/copyWalletApis'
 import Divider from 'components/@ui/Divider'
 import ToastBody from 'components/@ui/ToastBody'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
@@ -15,25 +15,29 @@ import useRequiredChain from 'hooks/web3/useRequiredChain'
 import useWeb3 from 'hooks/web3/useWeb3'
 import { Button } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
-import InputField, { InputPasswordField } from 'theme/InputField'
+import { InputPasswordField } from 'theme/InputField'
 import Modal from 'theme/Modal'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { addressShorten } from 'utils/helpers/format'
 import { ARBITRUM_MAINNET } from 'utils/web3/chains'
 import { signTypedData } from 'utils/web3/wallet'
 
-import HyperliquidHelp from './WalletHelpHyperliquid'
-import { HyperliquidWalletFormValues, defaultFormValues, hyperliquidWalletFormSchema } from './hyperliquidSchema'
+import {
+  HyperliquidWalletFormValues,
+  defaultFormValues,
+  hyperliquidWalletFormSchema,
+} from '../CreateWalletModals/hyperliquidSchema'
 
-export default function CreateHyperliquidWalletModal({
+export default function UpdateHyperliquidWalletModal({
   isOpen,
   onDismiss,
+  copyWalletId,
 }: {
   isOpen: boolean
   onDismiss: () => void
+  copyWalletId: string
 }) {
   const {
     watch,
@@ -56,11 +60,11 @@ export default function CreateHyperliquidWalletModal({
   const [submitting, setSubmitting] = useState(false)
   const [signatureData, setSignatureData] = useState<{ signature: string; nonce: number }>()
 
-  const createWallet = useMutation(requestCopyWalletApi, {
+  const updateCopyWallet = useMutation(updateCopyWalletApi, {
     onMutate: () => setSubmitting(true),
     onSettled: () => setSubmitting(false),
     onSuccess: () => {
-      toast.success(<ToastBody title={<Trans>Success</Trans>} message={<Trans>Create wallet successful!</Trans>} />)
+      toast.success(<ToastBody title={<Trans>Success</Trans>} message={<Trans>Update wallet successful!</Trans>} />)
       onDismiss()
       reloadCopyWallets()
     },
@@ -72,15 +76,16 @@ export default function CreateHyperliquidWalletModal({
 
   const onSubmit: SubmitHandler<HyperliquidWalletFormValues> = (data) => {
     if (submitting) return
-    createWallet.mutate({
-      exchange: CopyTradePlatformEnum.HYPERLIQUID,
-      name: !!data.name ? data.name?.trim() : undefined,
-      hyperliquid: {
-        apiKey: data.apiKey,
-        secretKey: data.secretKey,
-        passPhrase: !data.enableVault && !data.passPhrase ? undefined : data.passPhrase,
+    updateCopyWallet.mutate({
+      copyWalletId,
+      data: {
+        hyperliquid: {
+          apiKey: data.apiKey,
+          secretKey: data.secretKey,
+          passPhrase: !data.enableVault && !data.passPhrase ? undefined : data.passPhrase,
+        },
+        hyperliquidSignature: signatureData,
       },
-      hyperliquidSignature: signatureData,
     })
   }
 
@@ -144,7 +149,7 @@ export default function CreateHyperliquidWalletModal({
     <Modal
       isOpen={isOpen}
       hasClose
-      title={'Connect Your Hyperliquid API'}
+      title={'Update Your Hyperliquid API'}
       onDismiss={onDismiss}
       width="90vw"
       maxWidth="450px"
@@ -209,17 +214,7 @@ export default function CreateHyperliquidWalletModal({
               </Box>
             )}
 
-            <InputField
-              block
-              label={<Trans>Wallet Name</Trans>}
-              placeholder={t`Input wallet name`}
-              {...register('name')}
-              error={errors.name?.message}
-            />
-
             <Divider />
-
-            <HyperliquidHelp />
 
             <Box>
               <Checkbox checked={!!signatureData} onClick={handleAccept}>

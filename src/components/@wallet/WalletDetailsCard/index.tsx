@@ -15,12 +15,14 @@ import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SxProps } from 'theme/types'
 import { CEX_EXCHANGES, WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { getColorFromText } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { parseWalletName } from 'utils/helpers/transform'
 
 import FundModal, { FundTab } from '../SmartWalletFundModal'
 import SmartWalletActions from './SmartWalletActions'
+import UpdateWalletAction from './UpdateWalletAction'
 import WalletActions from './WalletActions'
 import WalletInfo from './WalletInfo'
 
@@ -123,6 +125,7 @@ export default function WalletDetailsCard({ data, handleUpdate, reload, hiddenBa
           {/* <WalletKey walletKey={walletKey} isSmartWallet={isSmartWallet} /> */}
           <Info sx={{ display: ['none', 'flex'] }} data={data} hiddenBalance={hiddenBalance} />
         </Flex>
+        {data.exchange === CopyTradePlatformEnum.HYPERLIQUID && <UpdateWalletAction data={data} />}
         {!data.smartWalletAddress ? (
           <WalletActions data={data} />
         ) : (
