@@ -8,6 +8,7 @@ import Divider from 'components/@ui/Divider'
 import InputSearchText from 'components/@ui/InputSearchText'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { CopyWalletData } from 'entities/copyWallet'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useDebounce from 'hooks/helpers/useDebounce'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
@@ -84,6 +85,7 @@ export function SelectWalletsDropdown({
     })
   }, [allWallets, debounceSearchText])
 
+  const { vaultWallets } = useCopyWalletContext()
   if (!allWallets.length) return <></>
   const isSelectedAll =
     !!allWallets.length &&
@@ -142,7 +144,7 @@ export function SelectWalletsDropdown({
                   <ControlledCheckbox
                     checked={isChecked}
                     label={
-                      <Flex key={item.id} sx={{ alignItems: 'center', gap: 2, width: '100%' }}>
+                      <Flex key={item.id} sx={{ alignItems: 'center', gap: 1, width: '100%' }}>
                         <Image src={parseExchangeImage(item.exchange)} width={20} height={20} sx={{ flexShrink: 0 }} />
                         <Box
                           as="span"
@@ -156,6 +158,9 @@ export function SelectWalletsDropdown({
                         >
                           {parseWalletName(item)}
                         </Box>
+                        {vaultWallets?.some((_wallet) => _wallet.id === item.id) && (
+                          <Type.Caption minWidth="fit-content">(Vault)</Type.Caption>
+                        )}
                       </Flex>
                     }
                     size={16}

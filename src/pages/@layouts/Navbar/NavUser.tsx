@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro'
-import {Clock, Crown, Key, Notebook, SignOut, SquareHalf, Star, SubtractSquare, Wallet} from '@phosphor-icons/react'
+import { Clock, Crown, Key, Notebook, SignOut, SquareHalf, Star, SubtractSquare, Wallet } from '@phosphor-icons/react'
 import { ReactNode, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import Divider from 'components/@ui/Divider'
 import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
+import useInternalRole from 'hooks/features/useInternalRole'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
@@ -37,6 +38,7 @@ const NavUser = () => {
   const { logout, profile, isAuthenticated } = useAuthContext()
   const _address = useMemo(() => isAddress(profile?.username), [profile?.username])
   const hasCopyPermission = useCopyTradePermission()
+  const isInternal = useInternalRole()
 
   const [showMenu, setShowMenu] = useState(false)
   const onClickNavItem = (action?: string) => {
@@ -114,7 +116,7 @@ const NavUser = () => {
                 {hasCopyPermission && (
                   <>
                     <SectionDivider label={<Trans>Copy Management</Trans>} />
-                    {userCopy.map((configs, index) => (
+                    {(isInternal ? internalUserCopy : userCopy).map((configs, index) => (
                       <NavItem
                         key={index}
                         link={configs.link}
@@ -264,6 +266,38 @@ function SectionDivider({ label }: { label: ReactNode }) {
   )
 }
 
+const internalUserCopy = [
+  {
+    link: ROUTES.MY_MANAGEMENT.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE,
+    icon: <SquareHalf size={20} />,
+    label: <Trans>API Wallet</Trans>,
+  },
+  {
+    link: ROUTES.USER_DCP_MANAGEMENT.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE,
+    icon: <SubtractSquare size={20} />,
+    label: <Trans>Smart Wallet</Trans>,
+  },
+  {
+    link: ROUTES.USER_VAULT_MANAGEMENT.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE,
+    icon: <SubtractSquare size={20} />,
+    label: <Trans>Vault Wallet</Trans>,
+  },
+  {
+    link: ROUTES.MY_HISTORY.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].HISTORY,
+    icon: <Clock size={20} />,
+    label: <Trans>History</Trans>,
+  },
+  {
+    link: ROUTES.USER_ACTIVITY.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].USER_ACTIVITY,
+    icon: <Notebook size={20} />,
+    label: <Trans>Activities</Trans>,
+  },
+]
 const userCopy = [
   {
     link: ROUTES.MY_MANAGEMENT.path,

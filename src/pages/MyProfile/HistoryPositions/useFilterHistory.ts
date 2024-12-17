@@ -28,7 +28,8 @@ const defaultState: SelectionState = {
 }
 
 export default function useFilterHistory() {
-  const { copyWallets } = useCopyWalletContext()
+  const { copyWallets: _copyWallets, vaultWallets } = useCopyWalletContext()
+  const copyWallets = [...(_copyWallets ?? []), ...(vaultWallets ?? [])]
   const state = useReducer(
     (
       state: SelectionState,

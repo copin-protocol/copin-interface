@@ -128,3 +128,16 @@ export const signClosePosition = async (
   const signer = web3Provider.getSigner(from)
   return await signer.signMessage(message)
 }
+
+export const signOpenPosition = async (
+  from: string,
+  copyTradeId: string,
+  positionId: string,
+  acceptablePrice: string,
+  web3Provider: Web3Provider
+): Promise<string | undefined> => {
+  const message = `Request Open Position\nCopy Trade Id: ${copyTradeId}\nPosition Id: ${positionId}\nAcceptable Price: ${acceptablePrice}`
+  // if (web3Provider) {
+  const signer = web3Provider.getSigner(from)
+  return await signer.signMessage(message)
+}

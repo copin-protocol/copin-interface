@@ -590,6 +590,22 @@ export const drawerOpeningColumns: ColumnData<PositionData>[] = [
   actionColumn,
 ]
 
+export const vaultHistoryColumns: ColumnData<PositionData>[] = [
+  openDualTimeColumn,
+  closeDualTimeColumn,
+  entryColumn,
+  sizeColumn,
+  leverageColumn,
+  collateralColumn,
+  avgDurationColumn,
+  orderCountColumn,
+  feeColumn,
+  roiColumn,
+  pnlColumnFull,
+  actionColumn,
+]
+
+
 export function ShortDuration({ durationInSecond }: { durationInSecond?: number }) {
   return (
     <Flex alignItems="center" sx={{ gap: 1 }}>

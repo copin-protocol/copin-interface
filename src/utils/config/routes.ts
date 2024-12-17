@@ -67,6 +67,9 @@ const ROUTES = {
   USER_DCP_MANAGEMENT: {
     path: '/me/smart-wallet',
   },
+  USER_VAULT_MANAGEMENT: {
+    path: '/me/vault',
+  },
   USER_ACTIVITY: {
     path: '/me/activity',
     path_prefix: '/me/activity',
@@ -137,6 +140,10 @@ const ROUTES = {
   },
   EVENTS: {
     path: '/events',
+  },
+  VAULT_DETAILS: {
+    path: '/vaults/:address',
+    path_prefix: '/vaults',
   },
   FEE_REBATE: {
     path: '/fee-rebate',

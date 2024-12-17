@@ -88,6 +88,7 @@ export enum TimeFilterByEnum {
 
 export enum TraderStatusEnum {
   COPYING = 'COPYING',
+  VAULT_COPYING = 'VAULT_COPYING',
 }
 
 export enum CopyTradeStatusEnum {
@@ -98,6 +99,7 @@ export enum CopyTradeStatusEnum {
 export enum CopyTradeTypeEnum {
   COPY_TRADER = 'COPY_TRADER',
   SELF_BOT_CONFIG = 'SELF_BOT_CONFIG',
+  COPIN_VAULT = 'COPIN_VAULT',
 }
 
 export enum CopyTradeOrderTypeEnum {

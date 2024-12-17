@@ -45,11 +45,19 @@ import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 import { generateEventDetailsRoute } from 'utils/helpers/generateRoute'
 
-import { dcpExchangeOptions, exchangeOptions, fieldName, internalExchangeOptions, protocolOptions } from '../configs'
+import {
+  dcpExchangeOptions,
+  exchangeOptions,
+  fieldName,
+  internalExchangeOptions,
+  protocolOptions,
+  vaultExchangeOptions,
+} from '../configs'
 import { getExchangeOption } from '../helpers'
 import { CopyTradeFormValues } from '../types'
 import { cloneCopyTradeFormSchema, copyTradeFormSchema, updateCopyTradeFormSchema } from '../yupSchemas'
 import FundChecking, { SmartWalletFund } from './FundChecking'
+import VaultWallets from './VaultWallets'
 import Wallets from './Wallets'
 
 type CommonProps = {
@@ -57,6 +65,7 @@ type CommonProps = {
   isSubmitting: boolean
   defaultFormValues: CopyTradeFormValues
   submitButtonText?: ReactNode
+  isVault?: boolean
 }
 
 type CopyTraderEditFormProps = {
@@ -77,6 +86,7 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   submitButtonText = 'Copy Trade',
   isEdit,
   isClone,
+  isVault,
 }: Partial<CopyTraderEditFormProps> & Partial<CopyTraderCloneFormProps> & CommonProps) => {
   const {
     control,
@@ -100,8 +110,11 @@ const CopyTraderForm: CopyTradeFormComponent = ({
   const { checkIsPremium, isPremiumUser } = useIsPremiumAndAction()
   const isInternal = useInternalRole()
   const cexOptions = isInternal ? internalExchangeOptions : exchangeOptions
-  const options =
-    !!protocol && DCP_SUPPORTED_PROTOCOLS.includes(protocol) ? [...dcpExchangeOptions, ...cexOptions] : cexOptions
+  const options = isVault
+    ? vaultExchangeOptions
+    : !!protocol && DCP_SUPPORTED_PROTOCOLS.includes(protocol)
+    ? [...dcpExchangeOptions, ...cexOptions]
+    : cexOptions
   const serviceCopy = isInternal ? INTERNAL_SERVICE_KEYS : SERVICE_KEYS
 
   const volume = watch('volume')
@@ -472,12 +485,21 @@ const CopyTraderForm: CopyTradeFormComponent = ({
             </Box>
 
             <Box flex={[1, 2]}>
-              <Wallets
-                disabledSelect={!!isEdit || (!!isClone && !isPremiumUser)}
-                platform={platform}
-                currentWalletId={copyWalletId}
-                onChangeWallet={onChangeWallet}
-              />
+              {isVault ? (
+                <VaultWallets
+                  disabledSelect={!!isEdit || (!!isClone && !isPremiumUser)}
+                  platform={platform}
+                  currentWalletId={copyWalletId}
+                  onChangeWallet={onChangeWallet}
+                />
+              ) : (
+                <Wallets
+                  disabledSelect={!!isEdit || (!!isClone && !isPremiumUser)}
+                  platform={platform}
+                  currentWalletId={copyWalletId}
+                  onChangeWallet={onChangeWallet}
+                />
+              )}
             </Box>
           </Flex>
           {errors.copyWalletId?.message && (

@@ -23,7 +23,8 @@ const defaultState: SelectionState = {
 }
 
 export default function useFilterActivities() {
-  const { copyWallets } = useCopyWalletContext()
+  const { copyWallets: _copyWallets, vaultWallets } = useCopyWalletContext()
+  const copyWallets = [...(_copyWallets ?? []), ...(vaultWallets ?? [])]
 
   const state = useReducer(
     (

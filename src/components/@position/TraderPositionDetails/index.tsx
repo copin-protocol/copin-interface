@@ -11,6 +11,7 @@ import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import useTraderCopying from 'hooks/store/useTraderCopying'
+import useVaultCopying from 'hooks/store/useVaultCopying'
 import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Loading from 'theme/Loading'
@@ -26,6 +27,7 @@ import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import ListOrderTable from './ListOrderTable'
 import PositionStats from './PositionStats'
+import VaultCopyActions from './VaultCopyActions'
 import { getOrderData } from './helper'
 
 const TraderPositionDetails = memo(function PositionDetailsMemo({
@@ -64,6 +66,7 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
   )
 
   const { isCopying } = useTraderCopying(data?.account, data?.protocol)
+  const { isVaultCopying } = useVaultCopying(data?.account, data?.protocol)
 
   const explorerUrl = data && data.protocol ? PROTOCOL_PROVIDER[data.protocol]?.explorerUrl : LINKS.arbitrumExplorer
 
@@ -74,12 +77,12 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
       {data && (
         <Box pb={0} sx={{ border: 'small', borderTop: 'none', borderColor: isDrawer ? 'transparent' : 'neutral4' }}>
           <Flex p={12} alignItems="center" justifyContent="space-between" flexWrap="wrap" sx={{ gap: 2 }}>
-            <Flex alignItems="center" sx={{ gap: 12 }}>
+            <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 12 }}>
               <AddressAvatar address={data.account} size={40} />
               <Link to={generateTraderMultiExchangeRoute({ protocol, address: data.account })}>
                 <Button type="button" variant="ghost" sx={{ p: 0 }}>
                   <Flex flexDirection="column" textAlign="left">
-                    <Flex alignItems="center" sx={{ gap: 2 }}>
+                    <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2 }}>
                       <Type.BodyBold>{addressShorten(data.account)}</Type.BodyBold>
                       <ProtocolLogo
                         protocol={data.protocol}
@@ -113,6 +116,9 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
               </Link>
 
               {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
+              {isVaultCopying && <Tag width={100} status={TraderStatusEnum.VAULT_COPYING} />}
+
+              {isVaultCopying && <VaultCopyActions data={data} />}
             </Flex>
             {!isDrawer && <ProtocolLogo size={24} protocol={data.protocol} textSx={{ fontSize: '14px' }} />}
           </Flex>

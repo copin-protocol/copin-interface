@@ -19,7 +19,7 @@ export const getDurationFromSeconds = (duration: number) => {
   }
 }
 
-type Timer = { days: string; hours: string; minutes: string; seconds: string; hasEnded?: true }
+export type Timer = { days: string; hours: string; minutes: string; seconds: string; hasEnded?: true }
 
 const useCountdown = (endTime?: number) => {
   const [startTime, setStartTime] = useState(Date.now())

@@ -257,3 +257,8 @@ function countConsecutiveZeros(decimalPart: string): number {
 export function formatRewardSymbol(value: string, rewardSymbol?: string) {
   return !rewardSymbol || rewardSymbol === RewardSymbolEnum.USD ? `$${value}` : `${value} ${rewardSymbol}`
 }
+
+export function formatZeroBased(value: number) {
+  if (value < 0) return `${value}`
+  return value < 10 ? '0' + value : value
+}

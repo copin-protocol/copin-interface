@@ -23,6 +23,7 @@ import { ELEMENT_IDS } from 'utils/config/keys'
 
 import TraderDetailsDrawer from '../components/@trader/TraderDetailsDrawer'
 import useQuickViewTraderStore from '../hooks/store/useQuickViewTraderStore'
+import { InitVaultCopying } from '../hooks/store/useVaultCopying'
 import Notification from './@layouts/EventsNotification'
 import SubscriptionExpiredWarning from './@layouts/SubscriptionExpiredWarning'
 import WarningBetaVersion from './@layouts/WarningBetaVersion'
@@ -69,6 +70,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
       )}
 
       <InitTraderCopying />
+      <InitVaultCopying />
       <InitTraderFavorites />
       <PollingUsdPrice />
     </>

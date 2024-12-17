@@ -2,6 +2,7 @@ import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getAllCopyWalletsApi } from 'apis/copyWalletApis'
+import { getAllVaultCopyWalletsApi } from 'apis/vaultApis'
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserData } from 'entities/user'
 import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
@@ -12,15 +13,19 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 
 export interface CopyWalletContextData {
+  isDA?: boolean
   myProfile: UserData | null
   loadingCopyWallets: boolean
+  loadingVaultCopyWallets: boolean
   copyWallets: CopyWalletData[] | undefined
   smartWallets: CopyWalletData[] | undefined
   bingXWallets: CopyWalletData[] | undefined
   dcpWallets: CopyWalletData[] | undefined
   cexWallets: CopyWalletData[] | undefined
+  vaultWallets: CopyWalletData[] | undefined
   hlWallets: CopyWalletData[] | undefined
   reloadCopyWallets: () => void
+  reloadVaultCopyWallets: () => void
   loadTotalSmartWallet: () => void
 }
 
@@ -51,6 +56,16 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
     enabled: !!myProfile?.id && enabledQueryByPaths,
     retry: 0,
   })
+
+  const {
+    data: vaultWallets,
+    isLoading: loadingVaultCopyWallets,
+    refetch: reloadVaultCopyWallets,
+  } = useQuery([QUERY_KEYS.GET_VAULT_COPY_WALLETS_LIST, myProfile?.id], () => getAllVaultCopyWalletsApi(), {
+    enabled: !!myProfile?.id && enabledQueryByPaths,
+    retry: 0,
+  })
+  const isDA = !!vaultWallets?.length
 
   const bingXWallets = useMemo(
     () => copyWallets?.filter((w) => w.exchange === CopyTradePlatformEnum.BINGX),
@@ -91,15 +106,19 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
 
   const contextValue: CopyWalletContextData = useMemo(
     () => ({
+      isDA,
       dcpWallets,
       cexWallets,
       myProfile,
       loadingCopyWallets,
+      loadingVaultCopyWallets,
       copyWallets,
       smartWallets,
       bingXWallets,
+      vaultWallets,
       hlWallets,
       reloadCopyWallets,
+      reloadVaultCopyWallets,
       loadTotalSmartWallet: () => setLoadedTotalSmartWallet(true),
     }),
     [
@@ -108,10 +127,14 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
       copyWallets,
       dcpWallets,
       hlWallets,
+      isDA,
       loadingCopyWallets,
+      loadingVaultCopyWallets,
       myProfile,
       reloadCopyWallets,
+      reloadVaultCopyWallets,
       smartWallets,
+      vaultWallets,
     ]
   )
 
