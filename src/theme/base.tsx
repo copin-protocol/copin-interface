@@ -110,9 +110,9 @@ export const Card = forwardRef(
   )
 )
 
-export type TextProps = HTMLAttributes<HTMLDivElement> & BoxProps
+export type TextProps = HTMLAttributes<HTMLDivElement> & BoxProps & { as?: any; to?: any }
 
-const TextWrapper: React.FC<TextProps & { as?: string }> = styled(Text)`
+const TextWrapper: React.FC<TextProps & { as?: any }> = styled(Text)`
   color: ${({ theme, color }: { theme: any; color?: string }) => (color ? theme.colors[color] : 'inherit')};
   overflow-wrap: break-word;
   word-break: break-word;

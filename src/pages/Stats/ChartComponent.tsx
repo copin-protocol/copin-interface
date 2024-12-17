@@ -269,7 +269,7 @@ export function CopierChartComponent({ data, syncId }: { data: StatisticChartDat
       {/*/>*/}
       <Line
         type="monotone"
-        name="Cumulative Users"
+        name="Total Users"
         dataKey="totalCopier"
         yAxisId="right"
         dot={false}

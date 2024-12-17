@@ -158,3 +158,10 @@ export function generateTraderExchangesStatsRoute(data: {
 export function generateEventDetailsRoute(data: EventDetailsData) {
   return createUrlWithParams({ url: `/${ROUTES.EVENT_DETAILS.path_prefix}/${data.slug ?? data.id}` })
 }
+
+export function generatePerpDEXDetailsRoute(data: { perpdex: string; params?: Record<string, any> }) {
+  return createUrlWithParams({
+    url: `${ROUTES.PERP_DEX_DETAILS.path_prefix}/${data.perpdex}`,
+    params: data.params,
+  })
+}

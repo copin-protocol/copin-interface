@@ -17,7 +17,7 @@ export default function TimeFilter<T extends { id: unknown; text: ReactNode }>({
   sx?: any
 }) {
   return (
-    <Flex alignItems="center" sx={{ gap: ['2px', '2px', '2px', 2], ...sx }}>
+    <Flex alignItems="center" sx={{ gap: 2, ...sx }}>
       {options.map((option, index: number) => (
         <Button
           type="button"

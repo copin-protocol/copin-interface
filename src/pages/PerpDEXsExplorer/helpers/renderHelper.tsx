@@ -11,7 +11,7 @@ import {
   PERP_DEX_TYPE_MAPPING,
   POSITION_MODE_MAPPING,
 } from 'pages/PerpDEXsExplorer/constants/perpdex'
-import { FULL_TITLE_MAPPING, TITLE_MAPPING } from 'pages/PerpDEXsExplorer/constants/title'
+import { COMBINE_TITLE_MAPPING, FULL_TITLE_MAPPING, TITLE_MAPPING } from 'pages/PerpDEXsExplorer/constants/title'
 import { TOOLTIP_CONTENT_MAPPING } from 'pages/PerpDEXsExplorer/constants/tooltip'
 import { ExternalResource, NormalValueComponentType } from 'pages/PerpDEXsExplorer/types'
 import { getChangeValueConfig } from 'pages/PerpDEXsExplorer/utils'
@@ -202,13 +202,13 @@ export function renderLSRatio({
   return longRatio == null ? (
     '--'
   ) : (
-    <>
+    <Flex className="long_ratio__wrapper" sx={{ width: '100%', flexDirection: 'column' }}>
       <ProgressBar percent={longRatio} color="green2" bg="red2" sx={{ width: '90%' }} height={2} />
       <Flex alignItems="center" justifyContent="space-between" sx={{ width: '90%' }}>
         <Type.Small color="green2">{compactNumber(longRatio, 0)}%</Type.Small>
         <Type.Small color="red2">{compactNumber(100 - longRatio, 0)}%</Type.Small>
       </Flex>
-    </>
+    </Flex>
   )
 }
 
@@ -224,14 +224,28 @@ export function renderTableText(valueKey: keyof PerpDEXSourceResponse) {
   )
 }
 
-export function renderTableTitleWithTooltip(valueKey: keyof PerpDEXSourceResponse, title?: ReactNode) {
+export function renderTableTitleWithTooltip({
+  valueKey,
+  title,
+  upperCase = true,
+  combineField = false,
+}: {
+  valueKey: keyof PerpDEXSourceResponse
+  title?: ReactNode
+  upperCase?: boolean
+  combineField?: boolean
+}) {
   const tooltipContent = TOOLTIP_CONTENT_MAPPING[valueKey]
+  const mapTitle = TITLE_MAPPING[valueKey]
+  const combineTitle = COMBINE_TITLE_MAPPING[valueKey]
+  const _title =
+    title ?? (combineField && combineTitle ? combineTitle : upperCase ? mapTitle?.toUpperCase() : mapTitle) ?? ''
   return tooltipContent ? (
     <LabelWithTooltip id={`tt_perp_${valueKey}`} tooltip={tooltipContent}>
-      {title ?? TITLE_MAPPING[valueKey]?.toUpperCase()}
+      {_title}
     </LabelWithTooltip>
   ) : (
-    title ?? ((TITLE_MAPPING[valueKey]?.toUpperCase() ?? '') as ReactNode)
+    _title
   )
 }
 

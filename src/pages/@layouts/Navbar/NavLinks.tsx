@@ -150,7 +150,7 @@ const baseNavConfigs = [
   {
     routeFactory: () => ROUTES.PERP_DEXS_EXPLORER.path,
     matchpath: ROUTES.PERP_DEXS_EXPLORER.path,
-    label: <Trans>Perp DEXs Explorer</Trans>,
+    label: <Trans>Perp Explorer (Beta)</Trans>,
   },
 ]
 

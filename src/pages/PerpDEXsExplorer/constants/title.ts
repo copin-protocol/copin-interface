@@ -47,6 +47,12 @@ export const FULL_TITLE_MAPPING: Partial<Record<keyof PerpDEXSourceResponse, str
   openInterestToVolumeRatio: 'OI/V - Open Interest to Volume Ratio (All)',
 }
 
+export const COMBINE_TITLE_MAPPING: Partial<Record<keyof PerpDEXSourceResponse, string>> = {
+  minLeverage: 'Leverage',
+  minReferralCommission: 'Referral Commission',
+  minTradingFee: 'Trading Fee',
+}
+
 export const TITLE_MAPPING: Partial<Record<keyof PerpDEXSourceResponse, string>> = {
   volume1d: 'Volume (1D)',
   volume7d: 'Volume (7D)',

@@ -56,7 +56,7 @@ app.get('/referral', getReferralProgram)
 app.get('/live-trades*', getLiveTrades)
 app.get('/:protocol/trader-board', getLeaderboard)
 app.get('/copier-ranking', getCopierRanking)
-app.get('/perp-dexs-explorer', getPerpDexsExplorer)
+app.get('/perp-explorer*', getPerpDexsExplorer)
 
 app.get('*', (req, res) => {
   renderHTML(req, res)

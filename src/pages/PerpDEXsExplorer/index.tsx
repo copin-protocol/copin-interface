@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { Compass, Flag, PresentationChart } from '@phosphor-icons/react'
+import { Compass, PresentationChart } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
+import { Link } from 'react-router-dom'
 
 import { getPerpDexStatisticApi } from 'apis/perpDex'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
@@ -10,12 +11,10 @@ import DirectionButton from 'components/@ui/DirectionButton'
 import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
 import PerpDexLogo from 'components/@ui/PerpDexLogo'
-import { ChainFilterDropdown } from 'components/@widgets/ChainSelection'
 import IconGroup from 'components/@widgets/IconGroup'
 import Icon from 'components/@widgets/IconGroup/Icon'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { useToggleReportPerpDEXModal } from 'hooks/store/useToggleReportPerpDEXModal'
 import { BodyWrapperMobile, BottomTabItemMobile } from 'pages/@layouts/Components'
 import { OVERVIEW_WIDTH } from 'pages/Home/configs'
 import FilterButtonMobile from 'pages/PerpDEXsExplorer/components/FilterButtonMobile'
@@ -47,22 +46,23 @@ import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { hideScrollbar } from 'utils/helpers/css'
 import { formatDate } from 'utils/helpers/format'
+import { generatePerpDEXDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseChainImage, parseMarketImage, parsePlainProtocolImage } from 'utils/helpers/transform'
 
 import { Accordion } from './components/Accordion'
 import ChainFilter from './components/ChainFilter'
+import { ReportPerpDEXFlag } from './components/ReportPerpDEX'
 import Wrapper from './components/Wrapper'
 
 export default function PerpDEXsExplorer() {
   //@ts-ignore
-  const { perpdex, setIsOpen } = useToggleReportPerpDEXModal()
   const { lg } = useResponsive()
 
   return (
     <>
-      <CustomPageTitle title="Perp DEXs Explorer | Copin Analyzer" />
+      <CustomPageTitle title="Perp Explorer | Copin Analyzer" />
       {lg ? <DesktopView /> : <MobileView />}
-      {perpdex && <ReportPerpDEXsModal perpdex={perpdex} setIsOpen={setIsOpen} />}
+      <ReportPerpDEXsModal />
     </>
   )
 }
@@ -108,7 +108,7 @@ function DesktopView() {
           >
             <IconBox icon={<Compass size={24} weight="fill" />} />
             <Type.Body sx={{ flex: 1, flexShrink: 0, fontWeight: 500 }}>
-              <Trans>PERP DEXS EXPLORER</Trans>
+              <Trans>PERP EXPLORER</Trans>
             </Type.Body>
           </Flex>
         </Box>
@@ -182,6 +182,7 @@ function DesktopView() {
   )
 }
 
+// TODO: IMPROVE
 function MobileView() {
   const { searchParams, setSearchParamsOnly } = useSearchParams()
   const currentTab = searchParams.tab ?? TabKeys.statistic
@@ -218,7 +219,7 @@ function MobileView() {
           }}
         >
           <Type.BodyBold sx={{ flex: 1, flexShrink: 0 }}>
-            <Trans>PERP DEXS</Trans>
+            <Trans>PERP EXPLORER</Trans>
           </Type.BodyBold>
           <Flex sx={{ alignItems: 'center', height: '100%' }}>
             <FilterButtonMobile />
@@ -304,7 +305,7 @@ const tabConfigs = [
 const DesktopDataView = memo(function DataViewMemo() {
   const { data, isLoading } = useQuery([QUERY_KEYS.GET_PERP_DEX_STATISTIC_DATA], getPerpDexStatisticApi)
 
-  const { chains, changeChains, searchParams, setSearchParams } = useChains()
+  const { chains, searchParams, setSearchParams } = useChains()
   const currentSortBy = (searchParams['sortBy'] ?? 'volume1d') as TableSortProps<PerpDEXSourceResponse>['sortBy']
   const currentSortType = (searchParams['sortType'] ??
     SortTypeEnum.DESC) as TableSortProps<PerpDEXSourceResponse>['sortType']
@@ -476,22 +477,25 @@ const DesktopDataView = memo(function DataViewMemo() {
 
   return md ? (
     <Wrapper data={_data}>
-      <Table
-        data={_data}
-        columns={columns}
-        isLoading={isLoading}
-        restrictHeight
-        scrollToTopDependencies={BLOCK_SCROLL_DEPS}
-        currentSort={currentSort}
-        changeCurrentSort={changeCurrentSort}
-        externalSource={externalResource}
-        //@ts-ignore
-        getRowChildrenData={getRowChildrenData}
-        getChildRowKey={getChildRowKey}
-        containerSx={tableStyles}
-        tableBodySx={tableBodyStyles}
-        hasHoverBg={false}
-      />
+      {isLoading && <Loading />}
+      {!isLoading && (
+        <Table
+          data={_data}
+          columns={columns}
+          isLoading={isLoading}
+          restrictHeight
+          scrollToTopDependencies={BLOCK_SCROLL_DEPS}
+          currentSort={currentSort}
+          changeCurrentSort={changeCurrentSort}
+          externalSource={externalResource}
+          //@ts-ignore
+          getRowChildrenData={getRowChildrenData}
+          getChildRowKey={getChildRowKey}
+          containerSx={tableStyles}
+          tableBodySx={tableBodyStyles}
+          hasHoverBg={false}
+        />
+      )}
     </Wrapper>
   ) : (
     <MobileDataView data={_data} isLoading={isLoading} externalResource={externalResource} />
@@ -509,7 +513,6 @@ function MobileDataView({
   isLoading: boolean
   externalResource: ExternalResource
 }) {
-  const { isOpen, setIsOpen, setPerpDEX } = useToggleReportPerpDEXModal()
   const { visibleColumns } = useCustomizeColumnsMobile()
   // Keep order
   const _visibleColumns = useMemo(() => {
@@ -543,6 +546,8 @@ function MobileDataView({
         {data?.map((_data) => {
           if (!_data) return null
 
+          const url = generatePerpDEXDetailsRoute({ perpdex: _data.perpdex?.toLowerCase() })
+
           return (
             <>
               <Accordion
@@ -556,36 +561,32 @@ function MobileDataView({
                   </Flex>
                 }
                 header={
-                  <Box>
-                    <Flex sx={{ alignItems: 'center', gap: 2 }}>
+                  <Flex sx={{ alignItems: 'center', gap: 2 }}>
+                    <Box as={Link} to={url} sx={{ '&:hover': { '& + *': { textDecoration: 'underline' } } }}>
                       <PerpDexLogo perpDex={_data.perpdex} size={40} />
-                      <Box>
-                        <Flex mb={'2px'} sx={{ alignItems: 'center', gap: 1 }}>
-                          <Type.Caption color="neutral1" flexShrink={0}>
+                    </Box>
+                    <Box>
+                      <Flex mb={'2px'} sx={{ alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ '&:hover': { textDecoration: 'underline' } }}>
+                          <Type.Caption color="neutral1" flexShrink={0} as={Link} to={url}>
                             {_data.name}
                           </Type.Caption>
-                          <IconGroup iconNames={_data.chains ?? []} iconUriFactory={parseChainImage} size={16} />
-                          <IconBox
-                            icon={<Flag size={16} />}
-                            onClick={() => {
-                              setPerpDEX(_data)
-                              setIsOpen(!isOpen)
-                            }}
-                          />
-                        </Flex>
-                        <Flex sx={{ alignItems: 'center', gap: 1, height: '20px' }}>
-                          {_data.type?.map((type) => {
-                            const perpDexTypeConfig = PERP_DEX_TYPE_MAPPING[type]
-                            return (
-                              <Type.Caption key={type} color={perpDexTypeConfig.color} sx={{ lineHeight: '20px' }}>
-                                {perpDexTypeConfig.label}
-                              </Type.Caption>
-                            )
-                          })}
-                        </Flex>
-                      </Box>
-                    </Flex>
-                  </Box>
+                        </Box>
+                        <IconGroup iconNames={_data.chains ?? []} iconUriFactory={parseChainImage} size={16} />
+                        <ReportPerpDEXFlag data={_data} />
+                      </Flex>
+                      <Flex sx={{ alignItems: 'center', gap: 1, height: '20px' }}>
+                        {_data.type?.map((type) => {
+                          const perpDexTypeConfig = PERP_DEX_TYPE_MAPPING[type]
+                          return (
+                            <Type.Caption key={type} color={perpDexTypeConfig.color} sx={{ lineHeight: '20px' }}>
+                              {perpDexTypeConfig.label}
+                            </Type.Caption>
+                          )
+                        })}
+                      </Flex>
+                    </Box>
+                  </Flex>
                 }
                 subHeader={
                   <Box sx={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr 1fr' }}>
@@ -623,6 +624,11 @@ function MobileDataView({
                     </Box>
                     <Flex sx={{ width: '100%', gap: 2, flexDirection: 'column' }}>
                       {_data?.protocolInfos?.map((protocolData) => {
+                        const protocolUrl = generatePerpDEXDetailsRoute({
+                          perpdex: _data.perpdex?.toLowerCase(),
+                          params: { protocol: protocolData.protocol?.toLowerCase() },
+                        })
+
                         return (
                           <Box key={protocolData.protocol} sx={{ bg: 'neutral6' }}>
                             <Accordion
@@ -636,18 +642,26 @@ function MobileDataView({
                               }
                               header={
                                 <Flex sx={{ alignItems: 'center', gap: 2 }}>
-                                  <Icon
-                                    // @ts-ignore
-                                    iconName={protocolData.protocol}
-                                    iconUriFactory={parsePlainProtocolImage}
-                                    size={40}
-                                    hasBorder={false}
-                                  />
+                                  <Box
+                                    as={Link}
+                                    to={protocolUrl}
+                                    sx={{ '&:hover': { '& + *': { textDecoration: 'underline' } } }}
+                                  >
+                                    <Icon
+                                      // @ts-ignore
+                                      iconName={protocolData.protocol}
+                                      iconUriFactory={parsePlainProtocolImage}
+                                      size={40}
+                                      hasBorder={false}
+                                    />
+                                  </Box>
                                   <Box>
                                     <Flex mb={'2px'} sx={{ alignItems: 'center', gap: 1 }}>
-                                      <Type.Caption color="neutral1" flexShrink={0}>
-                                        {protocolData.name}
-                                      </Type.Caption>
+                                      <Box sx={{ '&:hover': { textDecoration: 'underline' } }}>
+                                        <Type.Caption color="neutral1" flexShrink={0} as={Link} to={protocolUrl}>
+                                          {protocolData.name}
+                                        </Type.Caption>
+                                      </Box>
                                       <Icon iconName={protocolData.chain} iconUriFactory={parseChainImage} size={16} />
                                     </Flex>
                                     {/* <Flex sx={{ alignItems: 'center', gap: 1, height: '20px' }}>
@@ -724,7 +738,7 @@ function CustomizeColumnWithState() {
   const { visibleColumns, setVisibleColumns } = useCustomizeColumns()
   const { visibleColumns: visibleColumnsMobile, setVisibleColumns: setVisibleColumnsMobile } =
     useCustomizeColumnsMobile()
-  const { md, sm } = useResponsive()
+  const { md } = useResponsive()
   return (
     <CustomizeColumn
       defaultColumns={md ? columns : columns.filter((c) => !!c.key && MOBILE_COLUMN_KEYS.includes(c.key))}

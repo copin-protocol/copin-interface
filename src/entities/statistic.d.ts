@@ -78,3 +78,25 @@ export type ProtocolsStatisticData = {
     oi: number
   }
 }
+
+interface PerpDexStatisticData {
+  statisticAt: string
+  perpdex: string
+  perpdexName: string
+  volume: number
+  traders: number
+  traderPnl: number
+  oi: number
+  revenue: number
+  liquidations: number
+  longRatio: number
+  longPnl: number
+  shortPnl: number
+  longLiquidations: number
+  shortLiquidations: number
+  longOi: number
+  shortOi: number
+  traderProfit: number
+  traderLoss: number
+  totalTraders: number
+}

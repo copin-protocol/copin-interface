@@ -46,6 +46,7 @@ const OldExplorer = lazy(() => import('./Explorer/OldExplorer'))
 const OldTopOpeningInterest = lazy(() => import('./TopOpenings/OldTopOpeningInterest'))
 const ReferralManagement = lazy(() => import('./ReferralManagement'))
 const DailyTrades = lazy(() => import('./DailyTrades'))
+const PerpDEXDetails = lazy(() => import('./PerpDEXsExplorer/PerpDexDetails'))
 
 function App() {
   useEffect(() => {
@@ -95,7 +96,8 @@ function App() {
             <Route path={ROUTES.COPIER_RANKING.path} component={CopierRanking}></Route>
             <Route path={ROUTES.REFERRAL_MANAGEMENT.path} component={ReferralManagement}></Route>
             <Route path={ROUTES.LIVE_TRADES.path} component={DailyTrades}></Route>
-            <Route path={ROUTES.PERP_DEXS_EXPLORER.path} component={PerpDEXsExplorer}></Route>
+            <Route exact path={ROUTES.PERP_DEX_DETAILS.path} component={PerpDEXDetails}></Route>
+            <Route exact path={ROUTES.PERP_DEXS_EXPLORER.path} component={PerpDEXsExplorer}></Route>
 
             {/* OLD ROUTE */}
             <Route path={ROUTES.TRADERS_EXPLORER.path} component={OldExplorer}></Route>

@@ -113,3 +113,36 @@ export const COPIER_LEADERBOARD_TIME_FILTER_OPTIONS: CopierLeaderboardTimeFilter
   { id: CopierLeaderboardTimeFilterEnum.D60, text: '60 Days' },
   { id: CopierLeaderboardTimeFilterEnum.FULL, text: 'All Time' },
 ]
+
+export const PERP_DEX_CHART_FILTER_OPTIONS: TimeFilterProps[] = [
+  {
+    id: TimeFilterByEnum.S7_DAY,
+    text: <Trans>7 days</Trans>,
+    sort_by: TimeFilterByEnum.S7_DAY,
+    value: 7,
+  },
+  {
+    id: TimeFilterByEnum.S30_DAY,
+    text: <Trans>30 days</Trans>,
+    sort_by: TimeFilterByEnum.S30_DAY,
+    value: 30,
+  },
+  {
+    id: TimeFilterByEnum.S90_DAY,
+    text: <Trans>90 days</Trans>,
+    sort_by: TimeFilterByEnum.S30_DAY,
+    value: 90,
+  },
+  {
+    id: TimeFilterByEnum.S365_DAY,
+    text: <Trans>1 year</Trans>,
+    sort_by: TimeFilterByEnum.S365_DAY,
+    value: 365,
+  },
+  {
+    id: TimeFilterByEnum.ALL_TIME,
+    text: <Trans>All Time</Trans>,
+    sort_by: TimeFilterByEnum.ALL_TIME,
+    value: 365 * 10, // 10 years
+  },
+]
