@@ -6,6 +6,7 @@ import { Redirect, Route, Switch, useLocation } from 'react-router'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
+import useInternalRole from 'hooks/features/useInternalRole'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
@@ -15,6 +16,7 @@ import CEXManagement from './CEXManagement'
 import DCPManagement from './DCPManagement'
 import HistoryPositions from './HistoryPositions'
 import UserActivity from './UserActivity'
+import VaultManagement from './VaultManagement'
 
 export default function MyProfile() {
   const { pathname } = useLocation()
@@ -45,6 +47,9 @@ export default function MyProfile() {
                 <Route exact path={ROUTES.USER_DCP_MANAGEMENT.path}>
                   <DCPManagement />
                 </Route>
+                <Route exact path={ROUTES.USER_VAULT_MANAGEMENT.path}>
+                  <VaultManagement />
+                </Route>
                 <Route exact path={ROUTES.MY_HISTORY.path}>
                   <HistoryPositions />
                 </Route>
@@ -71,6 +76,7 @@ export default function MyProfile() {
 enum TabKeyEnum {
   MANAGEMENT = 'management',
   DCP_MANAGEMENT = 'dcp-management',
+  VAULT_MANAGEMENT = 'vault-management',
   HISTORY = 'history',
   ACTIVITIES = 'activities',
 }
@@ -106,13 +112,59 @@ const tabConfigs: TabConfig[] = [
   },
 ]
 
+const internalTabConfigs: TabConfig[] = [
+  {
+    name: <Trans>API WALLET</Trans>,
+    activeIcon: <SquareHalf size={24} weight="fill" />,
+    inactiveIcon: <SquareHalf size={24} />,
+    key: TabKeyEnum.MANAGEMENT,
+    route: ROUTES.MY_MANAGEMENT.path,
+  },
+  {
+    name: <Trans>SMART WALLET</Trans>,
+    activeIcon: <SubtractSquare size={24} weight="fill" />,
+    inactiveIcon: <SubtractSquare size={24} />,
+    key: TabKeyEnum.DCP_MANAGEMENT,
+    route: ROUTES.USER_DCP_MANAGEMENT.path,
+  },
+  {
+    name: <Trans>VAULT</Trans>,
+    activeIcon: <SubtractSquare size={24} weight="fill" />,
+    inactiveIcon: <SubtractSquare size={24} />,
+    key: TabKeyEnum.VAULT_MANAGEMENT,
+    route: ROUTES.USER_VAULT_MANAGEMENT.path,
+  },
+  {
+    name: <Trans>HISTORY</Trans>,
+    inactiveIcon: <ClockCounterClockwise size={24} />,
+    activeIcon: <ClockCounterClockwise size={24} weight="fill" />,
+    key: TabKeyEnum.HISTORY,
+    route: ROUTES.MY_HISTORY.path,
+  },
+  {
+    name: <Trans>ACTIVITIES</Trans>,
+    inactiveIcon: <Notebook size={24} />,
+    activeIcon: <Notebook size={24} weight="fill" />,
+    key: TabKeyEnum.ACTIVITIES,
+    route: ROUTES.USER_ACTIVITY.path,
+  },
+]
+
 const pageTitleMapping = {
   [ROUTES.MY_MANAGEMENT.path]: t`API Wallet Management`,
   [ROUTES.USER_DCP_MANAGEMENT.path]: t`Smart Wallet Management`,
+  [ROUTES.USER_VAULT_MANAGEMENT.path]: t`Vault Management`,
   [ROUTES.MY_HISTORY.path]: t`History`,
   [ROUTES.USER_ACTIVITY.path]: t`Activities`,
 }
 
 function MainTab({ pathname }: { pathname: string }) {
-  return <TabHeader configs={tabConfigs} isActiveFn={(config) => config.route === pathname} fullWidth />
+  const isInternal = useInternalRole()
+  return (
+    <TabHeader
+      configs={isInternal ? internalTabConfigs : tabConfigs}
+      isActiveFn={(config) => config.route === pathname}
+      fullWidth
+    />
+  )
 }

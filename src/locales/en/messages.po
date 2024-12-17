@@ -2490,7 +2490,7 @@ msgid "Search by address"
 msgstr "Search by address"
 
 #: src/pages/MyProfile/CEXManagement/ListCEXCopyTrades.tsx
-#: src/pages/MyProfile/DCPManagement/ListDCPCopyTrades.tsx
+#: src/pages/MyProfile/DCPManagement/ListVaultCopyTrades.tsx
 msgid "Select All Traders"
 msgstr "Select All Traders"
 

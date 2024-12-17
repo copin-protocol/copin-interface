@@ -70,6 +70,12 @@ const STATUSES: StatusProps[] = [
     backgroundColor: 'neutral5',
   },
   {
+    id: TraderStatusEnum.VAULT_COPYING,
+    text: <Trans>Vault Copying</Trans>,
+    color: 'orange1',
+    backgroundColor: 'neutral5',
+  },
+  {
     id: EpochStatusEnum.NOT_HAPPEN,
     text: <Trans>Upcoming</Trans>,
     color: 'green1',

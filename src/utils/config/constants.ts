@@ -71,6 +71,8 @@ export const LINKS = {
   support: 'https://t.me/leecopin',
   feedback: 'https://copin.canny.io',
   duneUrl: 'https://dune.com/copin',
+  vaultTerms: 'https://docs.copin.io/another/terms-of-vault',
+  vaultQA: 'https://docs.copin.io/another/q-and-a-of-vault',
 }
 
 export const NAVBAR_HEIGHT = 64

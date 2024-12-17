@@ -37,7 +37,7 @@ import {
   POLYGON_MAINNET,
   SCROLL_MAINNET,
 } from '../web3/chains'
-import { addressShorten, formatNumber, shortenText } from './format'
+import { addressShorten, formatNumber, formatZeroBased, shortenText } from './format'
 
 // dayjs.extend(duration)
 
@@ -585,4 +585,11 @@ export function parseStorageData<T>({ storageKey, storage }: { storageKey: strin
   } catch {
     return null
   }
+}
+
+export function generateVaultInviteCode() {
+  const now = dayjs().utc()
+  const formatDay = formatZeroBased(Math.round(now.date() / 2))
+  const formatMonth = formatZeroBased(now.month() + 1)
+  return `VAULT${formatDay}${formatMonth}`
 }

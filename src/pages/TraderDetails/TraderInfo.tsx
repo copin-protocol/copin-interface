@@ -8,6 +8,7 @@ import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { TraderData } from 'entities/trader'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useTraderCopying from 'hooks/store/useTraderCopying'
+import useVaultCopying from 'hooks/store/useVaultCopying'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tag from 'theme/Tag'
 import { Box, Flex, Image, Type } from 'theme/base'
@@ -33,12 +34,14 @@ const TraderInfo = ({
   timeOption: TimeFilterProps
   traderStats: (TraderData | undefined)[] | undefined
 }) => {
-  const { copyWallets } = useCopyWalletContext()
+  const { copyWallets, vaultWallets } = useCopyWalletContext()
   const { isCopying, traderCopying } = useTraderCopying(address, protocol)
+  const { isVaultCopying, vaultCopying } = useVaultCopying(address, protocol)
   const explorerUrl = PROTOCOL_PROVIDER[protocol]?.explorerUrl
   // const shareStats = traderStats?.find((data) => data && data.type === (timeOption.id as unknown as TimeFrameEnum))
   const shareStats = traderStats?.find((data) => data && data.type === TimeFrameEnum.ALL_TIME)
   const copyingWallets = copyWallets?.filter((wallet) => traderCopying?.[address]?.[protocol]?.includes(wallet.id))
+  const vaultCopyingWallets = vaultWallets?.filter((wallet) => vaultCopying?.[address]?.[protocol]?.includes(wallet.id))
 
   return (
     <Box px={3} py={2}>
@@ -78,6 +81,58 @@ const TraderInfo = ({
                               key={wallet.id}
                               as={Link}
                               to={`${ROUTES.MY_MANAGEMENT.path}?${URL_PARAM_KEYS.MY_MANAGEMENT_WALLET_ID}=${wallet.id}`}
+                              target="_blank"
+                              sx={{
+                                alignItems: 'center',
+                                gap: '6px',
+                                color: 'neutral3',
+                                '&:hover': { color: 'primary1' },
+                              }}
+                            >
+                              <Image
+                                src={parseExchangeImage(wallet.exchange)}
+                                width={20}
+                                height={20}
+                                sx={{ flexShrink: 0 }}
+                              />
+                              <Box
+                                as="span"
+                                sx={{
+                                  display: 'inline-block',
+                                  verticalAlign: 'middle',
+                                  width: '100%',
+                                  maxWidth: 200,
+                                  ...overflowEllipsis(),
+                                }}
+                              >
+                                {parseWalletName(wallet)}
+                              </Box>
+                              <ArrowSquareOut size={16} />
+                            </Flex>
+                          )
+                        })}
+                    </Flex>
+                  }
+                />
+              </Box>
+            )}
+            {isVaultCopying && vaultCopyingWallets && (
+              <Box>
+                <Tag
+                  width={100}
+                  status={TraderStatusEnum.VAULT_COPYING}
+                  clickableTooltip
+                  tooltipContent={
+                    <Flex flexDirection="column" sx={{ gap: 1, maxHeight: '80svh', overflow: 'auto' }}>
+                      <Type.Caption color="neutral3">Vault Copy Wallet:</Type.Caption>
+                      {vaultCopying &&
+                        vaultCopyingWallets.length > 0 &&
+                        vaultCopyingWallets.map((wallet) => {
+                          return (
+                            <Flex
+                              key={wallet.id}
+                              as={Link}
+                              to={`${ROUTES.USER_VAULT_MANAGEMENT.path}?${URL_PARAM_KEYS.MY_MANAGEMENT_WALLET_ID}=${wallet.id}`}
                               target="_blank"
                               sx={{
                                 alignItems: 'center',

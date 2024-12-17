@@ -15,6 +15,7 @@ import ScrollToTop from './@helpers/ScrollToTop'
 import AppWrapper from './AppWrapper'
 import Favorites from './MyProfile/Favorites'
 
+const VaultDetails = lazy(() => import('./VaultDetails'))
 const PerpDEXsExplorer = lazy(() => import('./PerpDEXsExplorer'))
 const Home = lazy(() => import('./Home'))
 const Explorer = lazy(() => import('./Explorer'))
@@ -64,6 +65,7 @@ function App() {
           <ScrollToTop />
           <QSReader />
           <Switch>
+            <Route exact path={ROUTES.VAULT_DETAILS.path} component={VaultDetails}></Route>
             <Route exact path={ROUTES.EVENTS.path} component={Events}></Route>
             <Route exact path={ROUTES.EVENT_DETAILS.path} component={EventDetails}></Route>
             <Route exact path={ROUTES.EVENT_DETAILS.path} component={EventDetails}></Route>

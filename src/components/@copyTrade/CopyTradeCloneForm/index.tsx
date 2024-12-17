@@ -8,7 +8,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import { CopyTradeData, UpdateCopyTradeData } from 'entities/copyTrade'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMyProfileStore from 'hooks/store/useMyProfile'
-import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { CopyTradeStatusEnum, CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getErrorMessage } from 'utils/helpers/handleError'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
@@ -19,6 +19,7 @@ import { getFormValuesFromResponseData, getRequestDataFromForm } from '../helper
 import { CopyTradeFormValues } from '../types'
 
 type CloneTraderProps = {
+  isVault?: boolean
   copyTradeData: CopyTradeData | undefined
   onDismiss: () => void
   onSuccess: (trader: string) => void
@@ -36,6 +37,7 @@ const CopyTradeCloneForm: CopyTradeCloneFormComponent = ({
   duplicateToAddress,
   protocol,
   copyTradeData,
+  isVault,
   onDismiss,
   onSuccess,
 }: CloneTraderProps & Partial<DedicatedTraderProps>) => {
@@ -68,6 +70,7 @@ const CopyTradeCloneForm: CopyTradeCloneFormComponent = ({
     const data: UpdateCopyTradeData = {
       ...getRequestDataFromForm(formData),
       status: CopyTradeStatusEnum.RUNNING,
+      type: isVault ? CopyTradeTypeEnum.COPIN_VAULT : CopyTradeTypeEnum.COPY_TRADER,
     }
     if (formData.duplicateToAddress) data.account = formData.duplicateToAddress
     duplicateCopyTrade({ data, copyTradeId: copyTradeData?.id ?? '' })
@@ -87,6 +90,7 @@ const CopyTradeCloneForm: CopyTradeCloneFormComponent = ({
       submitButtonText={'Clone Copy Trade'}
       defaultFormValues={defaultFormValues}
       isClone={true}
+      isVault={isVault}
     />
   )
 }

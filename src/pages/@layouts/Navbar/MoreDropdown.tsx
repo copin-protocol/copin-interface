@@ -9,6 +9,7 @@ import {
   Swap,
   ThermometerSimple,
   Trophy,
+  Vault,
 } from '@phosphor-icons/react'
 import { ComponentType, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
@@ -17,7 +18,10 @@ import useInternalRole from 'hooks/features/useInternalRole'
 import Accordion from 'theme/Accordion'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
+import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
+import { ARBITRUM_CHAIN } from 'utils/web3/chains'
+import { CONTRACT_ADDRESSES } from 'utils/web3/contracts'
 
 export default function MoreDropdown({ hasEvents }: { hasEvents?: boolean }) {
   const isInternal = useInternalRole()
@@ -150,6 +154,13 @@ const configs = [
 ]
 
 const internalConfigs = [
+  {
+    icon: Vault,
+    text: <Trans>Vault</Trans>,
+    route: `${ROUTES.VAULT_DETAILS.path_prefix}/${
+      CONTRACT_ADDRESSES[ARBITRUM_CHAIN][CONTRACT_QUERY_KEYS.COPIN_VAULT_DETAILS]
+    }`,
+  },
   {
     icon: ThermometerSimple,
     text: <Trans>System Status</Trans>,

@@ -9,10 +9,11 @@ import Dropdown from 'theme/Dropdown'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, Grid, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
+import { ALLOWED_COPYTRADE_PROTOCOLS, DCP_SUPPORTED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 
 type FilterBySourceProps = {
+  isDCP?: boolean
   selectedProtocols: ProtocolEnum[]
   isToggleAllProtocol: boolean
   toggleAllProtocol: (isToggledAll: boolean) => void
@@ -21,12 +22,14 @@ type FilterBySourceProps = {
 }
 
 export default function FilterBySource({
+  isDCP,
   isToggleAllProtocol,
   toggleAllProtocol,
   checkIsProtocolChecked,
   handleToggleProtocol,
 }: FilterBySourceProps) {
   const protocolOptionsMapping = useGetProtocolOptionsMapping()
+  const protocolFilters = isDCP ? DCP_SUPPORTED_PROTOCOLS : ALLOWED_COPYTRADE_PROTOCOLS
 
   return (
     <Flex alignItems="start" sx={{ gap: 3, flexDirection: ['column', 'row'] }}>
@@ -71,12 +74,14 @@ export default function FilterBySource({
 }
 
 export function FilterBySourceDropdown({
+  isDCP,
   selectedProtocols,
   isToggleAllProtocol,
   toggleAllProtocol,
   checkIsProtocolChecked,
   handleToggleProtocol,
 }: FilterBySourceProps) {
+  const protocolFilters = isDCP ? DCP_SUPPORTED_PROTOCOLS : ALLOWED_COPYTRADE_PROTOCOLS
   return (
     <Flex alignItems="start" sx={{ gap: 1 }}>
       <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
@@ -129,5 +134,3 @@ export function FilterBySourceDropdown({
     </Flex>
   )
 }
-
-const protocolFilters = ALLOWED_COPYTRADE_PROTOCOLS

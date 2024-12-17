@@ -15,24 +15,31 @@ export type ProfileState = {
   activeWallet: CopyWalletData | null
   setActiveWallet: (wallet: CopyWalletData | null) => void
   myProfile: UserData | null
+  vaultWallets: CopyWalletData[] | undefined
   dcpWallets: CopyWalletData[] | undefined
   cexWallets: CopyWalletData[] | undefined
   activeWalletMapping: {
     cex: undefined | CopyWalletData
     dex: undefined | CopyWalletData
+    vault: undefined | CopyWalletData
   }
-  changeActiveWallet: (props: { cex: undefined | CopyWalletData; dex: undefined | CopyWalletData }) => void
+  changeActiveWallet: (props: {
+    cex: undefined | CopyWalletData
+    dex: undefined | CopyWalletData
+    vault: undefined | CopyWalletData
+  }) => void
 }
 
 // TODO: Check if this hook can change to context for all child page
 export default function useProfileState(): ProfileState {
   const { searchParams, setSearchParams } = useSearchParams()
   const { state } = useLocation<{ copyWalletId: string }>()
-  const { copyWallets, loadingCopyWallets, dcpWallets, cexWallets } = useCopyWalletContext()
+  const { copyWallets, loadingCopyWallets, dcpWallets, cexWallets, vaultWallets } = useCopyWalletContext()
   const [activeWallet, setActiveWallet] = useState<CopyWalletData | null>(null)
   const [activeWalletMapping, setActiveWalletMapping] = useState<ProfileState['activeWalletMapping']>({
     cex: undefined,
     dex: undefined,
+    vault: undefined,
   })
 
   // TODO: need to check these two useEffect
@@ -48,8 +55,10 @@ export default function useProfileState(): ProfileState {
       const newData = { ...prev }
       const foundWalletCex = cexWallets?.find((data) => (walletStored ? data.id === walletStored.cex?.id : false))
       const foundWalletDex = dcpWallets?.find((data) => (walletStored ? data.id === walletStored.dex?.id : false))
+      const foundWalletVault = vaultWallets?.find((data) => (walletStored ? data.id === walletStored.vault?.id : false))
       if (foundWalletCex) newData.cex = foundWalletCex
       if (foundWalletDex) newData.dex = foundWalletDex
+      if (foundWalletDex) newData.vault = foundWalletVault
       return newData
     })
   }, [loadingCopyWallets])
@@ -63,8 +72,10 @@ export default function useProfileState(): ProfileState {
       const newData = { ...prev }
       const foundWalletCex = cexWallets?.find((data) => data.id === defaultWalletId)
       const foundWalletDex = dcpWallets?.find((data) => data.id === defaultWalletId)
+      const foundWalletVault = vaultWallets?.find((data) => data.id === defaultWalletId)
       if (foundWalletCex) newData.cex = foundWalletCex
       if (foundWalletDex) newData.dex = foundWalletDex
+      if (foundWalletVault) newData.vault = foundWalletVault
       return newData
     })
   }, [loadingCopyWallets, state])
@@ -108,6 +119,7 @@ export default function useProfileState(): ProfileState {
   // Old logic <================
 
   return {
+    vaultWallets,
     dcpWallets,
     cexWallets,
     activeWalletMapping,

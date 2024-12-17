@@ -1,4 +1,4 @@
-import { ActionTypeEnum, CopyTradePlatformEnum } from 'utils/config/enums'
+import { ActionTypeEnum, CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 
 import { CopyPositionData } from '../entities/copyTrade'
 import requester from './index'
@@ -76,4 +76,30 @@ export async function submitCloseApi({
   payload: SubmitClosePayload
 }) {
   return requester.post(`${SERVICE}/close/${exchange}`, payload).then((res: any) => res.data)
+}
+
+export async function manualOpenDcpPositionApi({
+  copyTradeId,
+  positionId,
+  acceptablePrice,
+  signature,
+  protocol = ProtocolEnum.GNS,
+  exchange = CopyTradePlatformEnum.GNS_V8,
+}: {
+  copyTradeId: string
+  positionId: string
+  acceptablePrice: string
+  signature: string
+  protocol?: ProtocolEnum
+  exchange?: CopyTradePlatformEnum
+}) {
+  return requester
+    .post(`${SERVICE}/open/${exchange}`, {
+      copyTradeId,
+      positionId,
+      acceptablePrice,
+      signature,
+      protocol,
+    })
+    .then((res: any) => res.data as CopyPositionData)
 }

@@ -70,6 +70,10 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   lowSize: undefined,
 }
 
+export const vaultExchangeOptions: ExchangeOptions[] = [
+  getExchangeOption(CopyTradePlatformEnum.GNS_V8),
+]
+
 export const dcpExchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.GNS_V8),
   getExchangeOption(CopyTradePlatformEnum.SYNTHETIX_V2),
