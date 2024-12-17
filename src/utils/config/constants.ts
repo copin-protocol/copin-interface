@@ -277,3 +277,6 @@ export const COLLATERAL_TOKEN_PROTOCOLS: ProtocolEnum[] = []
 
 export const MAX_LIMIT = 500
 export const MAX_PERPDEX_ISSUE_DESCRIPTION = 800
+
+export const HYPERLIQUID_BUILDER_CODE = '0x055ba87dbff972e23bcf26ea4728c31e05240e66'
+export const HYPERLIQUID_BUILDER_MAX_FEES = '0.1%'

@@ -19,7 +19,7 @@ import { InputPasswordField } from 'theme/InputField'
 import Modal from 'theme/Modal'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Type } from 'theme/base'
-import { LINKS } from 'utils/config/constants'
+import { HYPERLIQUID_BUILDER_CODE, HYPERLIQUID_BUILDER_MAX_FEES, LINKS } from 'utils/config/constants'
 import { addressShorten } from 'utils/helpers/format'
 import { ARBITRUM_MAINNET } from 'utils/web3/chains'
 import { signTypedData } from 'utils/web3/wallet'
@@ -120,8 +120,8 @@ export default function UpdateHyperliquidWalletModal({
 
     const value = {
       hyperliquidChain: 'Mainnet',
-      maxFeeRate: '0.1%',
-      builder: '0x055ba87dbff972e23bcf26ea4728c31e05240e66',
+      maxFeeRate: HYPERLIQUID_BUILDER_MAX_FEES,
+      builder: HYPERLIQUID_BUILDER_CODE,
       nonce: Date.now(),
     }
     try {

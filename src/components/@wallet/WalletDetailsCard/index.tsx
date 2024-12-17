@@ -9,6 +9,7 @@ import 'react-edit-text/dist/index.css'
 import TitleWithIcon from 'components/@ui/TilleWithIcon'
 import ReferralStatus from 'components/@wallet/WalletReferralStatus'
 import { CopyWalletData } from 'entities/copyWallet'
+import useCheckHyperliquidBuilderFees from 'hooks/features/useCheckHyperliquidBuilderFees'
 import useWalletFund from 'hooks/features/useWalletFundSnxV2'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
@@ -71,6 +72,11 @@ export default function WalletDetailsCard({ data, handleUpdate, reload, hiddenBa
 
   const Info = data.smartWalletAddress ? SmartWalletInfo : WalletInfo
 
+  const { isValidFees } = useCheckHyperliquidBuilderFees({
+    enable: data.exchange === CopyTradePlatformEnum.HYPERLIQUID,
+    apiKey: data?.hyperliquid?.apiKey,
+  })
+
   return (
     <Flex p={3} sx={{ flexDirection: 'column', gap: 2 }}>
       <Flex sx={{ width: '100%', gap: 20, justifyContent: 'space-between' }}>
@@ -125,7 +131,7 @@ export default function WalletDetailsCard({ data, handleUpdate, reload, hiddenBa
           {/* <WalletKey walletKey={walletKey} isSmartWallet={isSmartWallet} /> */}
           <Info sx={{ display: ['none', 'flex'] }} data={data} hiddenBalance={hiddenBalance} />
         </Flex>
-        {data.exchange === CopyTradePlatformEnum.HYPERLIQUID && <UpdateWalletAction data={data} />}
+        {data.exchange === CopyTradePlatformEnum.HYPERLIQUID && !isValidFees && <UpdateWalletAction data={data} />}
         {!data.smartWalletAddress ? (
           <WalletActions data={data} />
         ) : (

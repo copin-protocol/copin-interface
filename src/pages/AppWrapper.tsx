@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify'
 import FavoriteNoteTooltip from 'components/@widgets/FavoriteButton/FavoriteNoteTooltip'
 import SubscriptionRestrictModal from 'components/@widgets/SubscriptionRestrictModal'
 import { TradingEventStatusEnum } from 'entities/event'
+import useCheckHyperliquidBuilderFees from 'hooks/features/useCheckHyperliquidBuilderFees'
 import useModifyStorage from 'hooks/features/useModifyStorage'
 import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useResetSearchParams from 'hooks/helpers/useResetSearchParams'
@@ -38,10 +39,12 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
   const { events } = useSystemConfigContext()
   const availableEvents = events?.filter((event) => event.status !== TradingEventStatusEnum.ENDED)
 
+  const { isValidFees } = useCheckHyperliquidBuilderFees({ enable: true })
+
   return (
     <>
       <Flex flexDirection="column" width="100vw" height="100vh" margin="0px auto" maxHeight="100%">
-        <WarningBetaVersion />
+        {!isValidFees && <WarningBetaVersion />}
         <Navbar height={NAVBAR_HEIGHT} />
         <Box id={ELEMENT_IDS.APP_MAIN_WRAPPER} width="100%" flex="1" sx={{ position: 'relative', overflowY: 'auto' }}>
           {children}

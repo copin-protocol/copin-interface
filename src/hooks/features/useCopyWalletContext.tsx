@@ -19,6 +19,7 @@ export interface CopyWalletContextData {
   bingXWallets: CopyWalletData[] | undefined
   dcpWallets: CopyWalletData[] | undefined
   cexWallets: CopyWalletData[] | undefined
+  hlWallets: CopyWalletData[] | undefined
   reloadCopyWallets: () => void
   loadTotalSmartWallet: () => void
 }
@@ -64,6 +65,10 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
   )
   const dcpWallets = useMemo(() => copyWallets?.filter((w) => DCP_EXCHANGES.includes(w.exchange)), [copyWallets])
   const cexWallets = useMemo(() => copyWallets?.filter((w) => !DCP_EXCHANGES.includes(w.exchange)), [copyWallets])
+  const hlWallets = useMemo(
+    () => copyWallets?.filter((w) => w.exchange === CopyTradePlatformEnum.HYPERLIQUID),
+    [copyWallets]
+  )
 
   // const normalizedCopyWallets = useMemo(
   //   () =>
@@ -93,10 +98,21 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
       copyWallets,
       smartWallets,
       bingXWallets,
+      hlWallets,
       reloadCopyWallets,
       loadTotalSmartWallet: () => setLoadedTotalSmartWallet(true),
     }),
-    [bingXWallets, cexWallets, copyWallets, dcpWallets, loadingCopyWallets, myProfile, reloadCopyWallets, smartWallets]
+    [
+      bingXWallets,
+      cexWallets,
+      copyWallets,
+      dcpWallets,
+      hlWallets,
+      loadingCopyWallets,
+      myProfile,
+      reloadCopyWallets,
+      smartWallets,
+    ]
   )
 
   return <CopyWalletContext.Provider value={contextValue}>{children}</CopyWalletContext.Provider>
