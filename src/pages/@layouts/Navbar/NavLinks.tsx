@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { NavLink as Link, NavLinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
+import BetaTag from 'components/@ui/BetaTag'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
@@ -150,7 +151,14 @@ const baseNavConfigs = [
   {
     routeFactory: () => ROUTES.PERP_DEXS_EXPLORER.path,
     matchpath: ROUTES.PERP_DEXS_EXPLORER.path,
-    label: <Trans>Perp Explorer (Beta)</Trans>,
+    label: (
+      <Flex sx={{ alignItems: 'center', gap: 1 }}>
+        <Box as="span">
+          <Trans>Perp Explorer</Trans>
+        </Box>
+        <BetaTag />
+      </Flex>
+    ),
   },
 ]
 

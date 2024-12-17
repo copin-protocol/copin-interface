@@ -481,6 +481,10 @@ msgstr "Basic Plan (FREE)"
 msgid "Benefits in each plan are added or removed continuously without prior notice."
 msgstr "Benefits in each plan are added or removed continuously without prior notice."
 
+#: src/components/@ui/BetaTag.tsx
+msgid "Beta"
+msgstr "Beta"
+
 #: src/pages/TraderDetails/ScoreChart.tsx
 msgid "Better than {value} traders"
 msgstr "Better than {value} traders"
@@ -2360,8 +2364,8 @@ msgid "Performance"
 msgstr "Performance"
 
 #: src/pages/@layouts/Navbar/NavLinks.tsx
-msgid "Perp Explorer (Beta)"
-msgstr "Perp Explorer (Beta)"
+msgid "Perp Explorer"
+msgstr "Perp Explorer"
 
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
