@@ -9,15 +9,17 @@ export function Accordion({
   pairs,
   subHeader,
   body,
+  wrapperSx = {},
 }: {
   header: ReactNode
-  subHeader: ReactNode
+  subHeader?: ReactNode
   body: ReactNode
-  pairs: ReactNode
+  pairs?: ReactNode
+  wrapperSx?: any
 }) {
   const [isExpand, setIsExpand] = useState(false)
   return (
-    <Box px={2} py={12}>
+    <Box px={2} py={12} sx={{ ...wrapperSx }}>
       <Box>
         <Flex mb={12} sx={{ gap: 3, alignItems: 'start' }}>
           <Box sx={{ flex: 1 }}>{header}</Box>

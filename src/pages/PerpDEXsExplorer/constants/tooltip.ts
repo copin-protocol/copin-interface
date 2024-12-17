@@ -88,7 +88,7 @@ export const TOOLTIP_CONTENT_MAPPING: Partial<Record<keyof PerpDEXSourceResponse
     'Volume Share represents the trading market share of each exchange over the total trading volume of all PerpDEX exchanges.',
   feePerMillion1d: 'Fee per million is the amount of fees an exchange earns per 1 million USD in trading volume.',
   feePerMillion7d: 'Fee per million is the amount of fees an exchange earns per 1 million USD in trading volume.',
-  feePerMillion30d: 'FFee per million is the amount of fees an exchange earns per 1 million USD in trading volume.',
+  feePerMillion30d: 'Fee per million is the amount of fees an exchange earns per 1 million USD in trading volume.',
   feePerMillion: 'Fee per million is the amount of fees an exchange earns per 1 million USD in trading volume.',
   averageFeeRate1d:
     'Average Fee Rate represents the average percentage of transaction fees paid by users on the total transaction volume.',

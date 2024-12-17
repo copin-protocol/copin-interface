@@ -181,6 +181,10 @@ export const getDurationFromTimeFilter = (timeFilter?: TimeFilterByEnum) => {
       return 30
     case TimeFilterByEnum.S60_DAY:
       return 60
+    case TimeFilterByEnum.S90_DAY:
+      return 90
+    case TimeFilterByEnum.S365_DAY:
+      return 365
     case TimeFilterByEnum.ALL_TIME:
       return 365 * 10
     default:
@@ -290,8 +294,11 @@ export function parseCollateralColorImage(symbol: string) {
 export function parseRewardImage(symbol: string) {
   return `/images/rewards/${symbol}.png`
 }
-export function parsePlainProtocolImage(protocol: string) {
-  return `/images/protocol_images/${protocol}.png`
+export function parsePlainProtocolImage(protocol: string, hasBorder?: boolean) {
+  return hasBorder ? `/images/protocol_images/${protocol}.png` : `/images/plain_protocol/${protocol}.png`
+}
+export function parsePerpdexImage(perpdex: string, hasBorder?: boolean) {
+  return hasBorder ? `/images/perpdex/${perpdex}.png` : `/images/plain_perpdex/${perpdex}.png`
 }
 
 export function convertDurationInSecond(openTime: string) {

@@ -164,7 +164,11 @@ const ROUTES = {
     path: '/live-trades/positions',
   },
   PERP_DEXS_EXPLORER: {
-    path: '/perp-dexs-explorer',
+    path: '/perp-explorer',
+  },
+  PERP_DEX_DETAILS: {
+    path: '/perp-explorer/:perpdex',
+    path_prefix: '/perp-explorer',
   },
 }
 

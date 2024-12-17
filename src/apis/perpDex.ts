@@ -1,9 +1,12 @@
 import requester from 'apis'
 
 import { PerpDEXEventResponse, PerpDEXSourceResponse, ReportPerpDEXResponse } from 'entities/perpDexsExplorer'
+import { formatPerpDexData } from 'pages/PerpDEXsExplorer/helpers/dataHelper'
 
 export async function getPerpDexStatisticApi() {
-  return requester.get(`/perpdex/list`).then((res: any) => res.data as PerpDEXSourceResponse[])
+  return requester
+    .get(`/perpdex/list`)
+    .then((res: any) => (res.data as PerpDEXSourceResponse[])?.map((data) => formatPerpDexData(data)))
 }
 
 export async function getPerpDexEventApi() {

@@ -1,0 +1,2 @@
+export const DESKTOP_LEFT_AREA_WIDTH = 326
+export const DESKTOP_EVENT_AREA_HEIGHT = 172

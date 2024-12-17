@@ -78,3 +78,23 @@ export const FIELDS_WITH_IDEAL_VALUE: (keyof PerpDEXSourceResponse)[] = [
   'traders30d',
   'traders',
 ]
+
+export const REFLECT_DATA_FIELDS: (keyof PerpDEXSourceResponse)[] = [
+  'perpdex',
+  'minTradingFee',
+  'maxTradingFee',
+  'makerFee',
+  'takerFee',
+  'borrowFee',
+  'hasFundingFee',
+  'type',
+  'marginModes',
+  'positionModes',
+  'oneClickTrading',
+  'collateralAssets',
+  'minCollateral',
+  'minLeverage',
+  'maxLeverage',
+  'minReferralCommission',
+  'maxReferralCommission',
+]

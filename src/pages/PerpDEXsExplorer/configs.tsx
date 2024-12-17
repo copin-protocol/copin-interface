@@ -9,12 +9,7 @@ import PerpDEXTitle from 'pages/PerpDEXsExplorer/components/PerpDEXTitle'
 import TableFilterIcon from 'pages/PerpDEXsExplorer/components/TableFilterIcon'
 import { COLLATERAL_ASSETS } from 'pages/PerpDEXsExplorer/constants/perpdex'
 import { TITLE_MAPPING } from 'pages/PerpDEXsExplorer/constants/title'
-import {
-  getLSRatioColumnConfig,
-  getNormalValueColumnConfig,
-  getSignValueColumnConfig,
-  getValueChangeColumnConfig,
-} from 'pages/PerpDEXsExplorer/helpers/getValueColumnConfig'
+import { getColumnConfig } from 'pages/PerpDEXsExplorer/helpers/getValueColumnConfig'
 import {
   renderAudit,
   renderChangeValue,
@@ -296,7 +291,7 @@ export const columns: ColumnData<PerpDEXSourceResponse, ExternalResource>[] = [
   },
   {
     key: 'volume1d',
-    title: renderTableTitleWithTooltip('volume1d'),
+    title: renderTableTitleWithTooltip({ valueKey: 'volume1d' }),
     text: renderTableText('volume1d'),
     searchText: getColumnSearchText('volume1d'),
     style: { minWidth: 150, width: 150, maxWidth: 150 },
@@ -319,141 +314,73 @@ export const columns: ColumnData<PerpDEXSourceResponse, ExternalResource>[] = [
       )
     },
   },
-  // // getValueChangeColumnConfig({ valueKey: 'volume1d', title: 'VOLUME (1D)', valuePrefix: '$' }),
-  getValueChangeColumnConfig({ valueKey: 'volume7d', valuePrefix: '$', width: 140 }),
-  getValueChangeColumnConfig({
-    valueKey: 'volume30d',
-    valuePrefix: '$',
-    width: 140,
-  }),
-  getNormalValueColumnConfig({ valueKey: 'volume', valuePrefix: '$', width: 140 }),
-  getNormalValueColumnConfig({
-    valueKey: 'volumeShare1d',
-    width: 105,
-    type: 'percentage',
-  }),
-  getNormalValueColumnConfig({ valueKey: 'volumeShare7d', type: 'percentage', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'volumeShare30d', type: 'percentage', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'volumeShare', type: 'percentage', width: 105 }),
-  getValueChangeColumnConfig({ valueKey: 'traders1d', width: 105 }),
-  getValueChangeColumnConfig({ valueKey: 'traders7d', width: 120 }),
-  getValueChangeColumnConfig({ valueKey: 'traders30d', width: 120 }),
-  getNormalValueColumnConfig({
-    valueKey: 'traders',
-    width: 150,
-    topValueHighlighting: true,
-  }),
-  getSignValueColumnConfig({
-    valueKey: 'traderPnl1d',
-    valuePrefix: '$',
-    width: 170,
-  }),
-  getSignValueColumnConfig({
-    valueKey: 'traderPnl7d',
-    valuePrefix: '$',
-    width: 170,
-  }),
-  getSignValueColumnConfig({
-    valueKey: 'traderPnl30d',
-    valuePrefix: '$',
-    width: 170,
-  }),
-  getSignValueColumnConfig({ valueKey: 'traderPnl', valuePrefix: '$', width: 170 }),
-  getNormalValueColumnConfig({ valueKey: 'oi1d', valuePrefix: '$', width: 120 }),
-  getNormalValueColumnConfig({ valueKey: 'oi7d', valuePrefix: '$', width: 120 }),
-  getNormalValueColumnConfig({ valueKey: 'oi30d', valuePrefix: '$', width: 120 }),
-  getNormalValueColumnConfig({ valueKey: 'oi', valuePrefix: '$', width: 120 }),
-  getNormalValueColumnConfig({ valueKey: 'openInterestShare1d', type: 'percentage', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'openInterestShare7d', type: 'percentage', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'openInterestShare30d', type: 'percentage', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'openInterestShare', type: 'percentage', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'openInterestToVolumeRatio1d', type: 'greaterThanZero', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'openInterestToVolumeRatio7d', type: 'greaterThanZero', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'openInterestToVolumeRatio30d', type: 'greaterThanZero', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'openInterestToVolumeRatio', type: 'greaterThanZero', width: 105 }),
-  getSignValueColumnConfig({ valueKey: 'longPnl1d', valuePrefix: '$', width: 160 }),
-  getSignValueColumnConfig({ valueKey: 'longPnl7d', valuePrefix: '$', width: 160 }),
-  getSignValueColumnConfig({
-    valueKey: 'longPnl30d',
-    valuePrefix: '$',
-    width: 160,
-  }),
-  getSignValueColumnConfig({ valueKey: 'longPnl', valuePrefix: '$', width: 160 }),
-  getSignValueColumnConfig({
-    valueKey: 'shortPnl1d',
-    valuePrefix: '$',
-    width: 160,
-  }),
-  getSignValueColumnConfig({
-    valueKey: 'shortPnl7d',
-    valuePrefix: '$',
-    width: 160,
-  }),
-  getSignValueColumnConfig({
-    valueKey: 'shortPnl30d',
-    valuePrefix: '$',
-    width: 160,
-  }),
-  getSignValueColumnConfig({ valueKey: 'shortPnl', valuePrefix: '$', width: 160 }),
-  getNormalValueColumnConfig({ valueKey: 'longLiquidations1d', valuePrefix: '$', width: 160 }),
-  getNormalValueColumnConfig({ valueKey: 'longLiquidations7d', valuePrefix: '$', width: 160 }),
-  getNormalValueColumnConfig({
-    valueKey: 'longLiquidations30d',
-    valuePrefix: '$',
-    width: 160,
-  }),
-  getNormalValueColumnConfig({ valueKey: 'longLiquidations', valuePrefix: '$', width: 160 }),
-  getNormalValueColumnConfig({
-    valueKey: 'shortLiquidations1d',
-    valuePrefix: '$',
-    width: 160,
-  }),
-  getNormalValueColumnConfig({
-    valueKey: 'shortLiquidations7d',
-    valuePrefix: '$',
-    width: 160,
-  }),
-  getNormalValueColumnConfig({
-    valueKey: 'shortLiquidations30d',
-    valuePrefix: '$',
-    width: 160,
-  }),
-  getNormalValueColumnConfig({ valueKey: 'shortLiquidations', valuePrefix: '$', width: 160 }),
-  getNormalValueColumnConfig({
-    valueKey: 'avgPositionDuration1d',
-    type: 'timeDuration',
-    width: 120,
-  }),
-  getNormalValueColumnConfig({
-    valueKey: 'avgPositionDuration7d',
-    type: 'timeDuration',
-    width: 120,
-  }),
-  getNormalValueColumnConfig({
-    valueKey: 'avgPositionDuration30d',
-    type: 'timeDuration',
-    width: 120,
-  }),
-  getNormalValueColumnConfig({ valueKey: 'avgPositionDuration', type: 'timeDuration', width: 110 }),
-  getNormalValueColumnConfig({ valueKey: 'avgPositionSize1d', width: 120, valuePrefix: '$' }),
-  getNormalValueColumnConfig({ valueKey: 'avgPositionSize7d', width: 120, valuePrefix: '$' }),
-  getNormalValueColumnConfig({ valueKey: 'avgPositionSize30d', width: 120, valuePrefix: '$' }),
-  getNormalValueColumnConfig({ valueKey: 'avgPositionSize', width: 120, valuePrefix: '$' }),
-  getLSRatioColumnConfig({ valueKey: 'longRatio1d' }),
-  getLSRatioColumnConfig({ valueKey: 'longRatio7d' }),
-  getLSRatioColumnConfig({ valueKey: 'longRatio30d' }),
-  getLSRatioColumnConfig({ valueKey: 'longRatio' }),
-  getNormalValueColumnConfig({ valueKey: 'revenue1d', valuePrefix: '$', width: 150 }),
-  getNormalValueColumnConfig({ valueKey: 'revenue7d', valuePrefix: '$', width: 150 }),
-  getNormalValueColumnConfig({ valueKey: 'revenue30d', valuePrefix: '$', width: 150 }),
-  getNormalValueColumnConfig({ valueKey: 'revenue', valuePrefix: '$', width: 150 }),
-  getNormalValueColumnConfig({ valueKey: 'liquidations1d', valuePrefix: '$', width: 120 }),
-  getNormalValueColumnConfig({ valueKey: 'liquidations7d', valuePrefix: '$', width: 120 }),
-  getNormalValueColumnConfig({ valueKey: 'liquidations30d', valuePrefix: '$', width: 120 }),
-  getNormalValueColumnConfig({ valueKey: 'liquidations', valuePrefix: '$', width: 120 }),
+  // // getColumnConfig({ valueKey: 'volume1d', title: 'VOLUME (1D)', valuePrefix: '$' }),
+  getColumnConfig({ valueKey: 'volume7d', width: 140 }),
+  getColumnConfig({ valueKey: 'volume30d', width: 140 }),
+  getColumnConfig({ valueKey: 'volume', width: 140 }),
+  getColumnConfig({ valueKey: 'volumeShare1d', width: 105 }),
+  getColumnConfig({ valueKey: 'volumeShare7d', width: 105 }),
+  getColumnConfig({ valueKey: 'volumeShare30d', width: 105 }),
+  getColumnConfig({ valueKey: 'volumeShare', width: 105 }),
+  getColumnConfig({ valueKey: 'traders1d', width: 105 }),
+  getColumnConfig({ valueKey: 'traders7d', width: 120 }),
+  getColumnConfig({ valueKey: 'traders30d', width: 120 }),
+  getColumnConfig({ valueKey: 'traders', width: 150 }),
+  getColumnConfig({ valueKey: 'traderPnl1d', width: 170 }),
+  getColumnConfig({ valueKey: 'traderPnl7d', width: 170 }),
+  getColumnConfig({ valueKey: 'traderPnl30d', width: 170 }),
+  getColumnConfig({ valueKey: 'traderPnl', width: 170 }),
+  getColumnConfig({ valueKey: 'oi1d', width: 120 }),
+  getColumnConfig({ valueKey: 'oi7d', width: 120 }),
+  getColumnConfig({ valueKey: 'oi30d', width: 120 }),
+  getColumnConfig({ valueKey: 'oi', width: 120 }),
+  getColumnConfig({ valueKey: 'openInterestShare1d', width: 105 }),
+  getColumnConfig({ valueKey: 'openInterestShare7d', width: 105 }),
+  getColumnConfig({ valueKey: 'openInterestShare30d', width: 105 }),
+  getColumnConfig({ valueKey: 'openInterestShare', width: 105 }),
+  getColumnConfig({ valueKey: 'openInterestToVolumeRatio1d', width: 105 }),
+  getColumnConfig({ valueKey: 'openInterestToVolumeRatio7d', width: 105 }),
+  getColumnConfig({ valueKey: 'openInterestToVolumeRatio30d', width: 105 }),
+  getColumnConfig({ valueKey: 'openInterestToVolumeRatio', width: 105 }),
+  getColumnConfig({ valueKey: 'longPnl1d', width: 160 }),
+  getColumnConfig({ valueKey: 'longPnl7d', width: 160 }),
+  getColumnConfig({ valueKey: 'longPnl30d', width: 160 }),
+  getColumnConfig({ valueKey: 'longPnl', width: 160 }),
+  getColumnConfig({ valueKey: 'shortPnl1d', width: 160 }),
+  getColumnConfig({ valueKey: 'shortPnl7d', width: 160 }),
+  getColumnConfig({ valueKey: 'shortPnl30d', width: 160 }),
+  getColumnConfig({ valueKey: 'shortPnl', width: 160 }),
+  getColumnConfig({ valueKey: 'longLiquidations1d', width: 160 }),
+  getColumnConfig({ valueKey: 'longLiquidations7d', width: 160 }),
+  getColumnConfig({ valueKey: 'longLiquidations30d', width: 160 }),
+  getColumnConfig({ valueKey: 'longLiquidations', width: 160 }),
+  getColumnConfig({ valueKey: 'shortLiquidations1d', width: 160 }),
+  getColumnConfig({ valueKey: 'shortLiquidations7d', width: 160 }),
+  getColumnConfig({ valueKey: 'shortLiquidations30d', width: 160 }),
+  getColumnConfig({ valueKey: 'shortLiquidations', width: 160 }),
+  getColumnConfig({ valueKey: 'avgPositionDuration1d', width: 120 }),
+  getColumnConfig({ valueKey: 'avgPositionDuration7d', width: 120 }),
+  getColumnConfig({ valueKey: 'avgPositionDuration30d', width: 120 }),
+  getColumnConfig({ valueKey: 'avgPositionDuration', width: 110 }),
+  getColumnConfig({ valueKey: 'avgPositionSize1d', width: 120 }),
+  getColumnConfig({ valueKey: 'avgPositionSize7d', width: 120 }),
+  getColumnConfig({ valueKey: 'avgPositionSize30d', width: 120 }),
+  getColumnConfig({ valueKey: 'avgPositionSize', width: 120 }),
+  getColumnConfig({ valueKey: 'longRatio1d', width: 150, style: { pl: 3 } }),
+  getColumnConfig({ valueKey: 'longRatio7d', width: 150, style: { pl: 3 } }),
+  getColumnConfig({ valueKey: 'longRatio30d', width: 150, style: { pl: 3 } }),
+  getColumnConfig({ valueKey: 'longRatio', width: 150, style: { pl: 3 } }),
+  getColumnConfig({ valueKey: 'revenue1d', width: 150 }),
+  getColumnConfig({ valueKey: 'revenue7d', width: 150 }),
+  getColumnConfig({ valueKey: 'revenue30d', width: 150 }),
+  getColumnConfig({ valueKey: 'revenue', width: 150 }),
+  getColumnConfig({ valueKey: 'liquidations1d', width: 120 }),
+  getColumnConfig({ valueKey: 'liquidations7d', width: 120 }),
+  getColumnConfig({ valueKey: 'liquidations30d', width: 120 }),
+  getColumnConfig({ valueKey: 'liquidations', width: 120 }),
   {
     key: 'minTradingFee',
-    title: renderTableTitleWithTooltip('minTradingFee', 'TRADING FEE'),
+    title: renderTableTitleWithTooltip({ valueKey: 'minTradingFee', title: 'TRADING FEE' }),
     searchText: 'Trading Fee',
     text: 'Trading Fee',
     style: { minWidth: 180, width: 180, maxWidth: 180, textAlign: 'right' },
@@ -468,11 +395,9 @@ export const columns: ColumnData<PerpDEXSourceResponse, ExternalResource>[] = [
       )
     },
   },
-  // getNormalValueColumnConfig({ valueKey: 'makerFee', valueSuffix: '%', width: 130 }),
-  // getNormalValueColumnConfig({ valueKey: 'takerFee', valueSuffix: '%', width: 130 }),
   {
     key: 'makerFee',
-    title: renderTableTitleWithTooltip('makerFee', 'MARKER/ TAKER FEE'),
+    title: renderTableTitleWithTooltip({ valueKey: 'makerFee', title: 'MARKER/ TAKER FEE' }),
     searchText: 'Marker/Taker fee',
     text: 'Marker/Taker fee',
     style: { minWidth: 180, width: 180, maxWidth: 180, textAlign: 'right' },
@@ -487,199 +412,45 @@ export const columns: ColumnData<PerpDEXSourceResponse, ExternalResource>[] = [
       )
     },
   },
-  getNormalValueColumnConfig({ valueKey: 'borrowFee', valueSuffix: '%', width: 140 }),
-  getNormalValueColumnConfig({
+  getColumnConfig({ valueKey: 'borrowFee', width: 140 }),
+  getColumnConfig({
     valueKey: 'hasFundingFee',
-    type: 'boolean',
-    textAlign: 'center',
     width: 140,
     hasSort: false,
   }),
-  {
-    key: 'type',
-    title: renderTableTitleWithTooltip('type'),
-    searchText: getColumnSearchText('type'),
-    text: renderTableText('type'),
-    style: { minWidth: 70, width: 70, pl: 3, textAlign: 'left' },
-    filterComponent: <TableFilterIcon valueKey={'type'} />,
-    render(data) {
-      return <Flex sx={{ width: '100%', justifyContent: 'start', gap: 1 }}>{renderPerpDexTypeItems({ data })}</Flex>
-    },
-  },
-  getNormalValueColumnConfig({ valueKey: 'feePerMillion1d', type: 'greaterThanZero', valuePrefix: '$', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'feePerMillion7d', type: 'greaterThanZero', valuePrefix: '$', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'feePerMillion30d', type: 'greaterThanZero', valuePrefix: '$', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'feePerMillion', type: 'greaterThanZero', valuePrefix: '$', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'averageFeeRate1d', type: 'percentage', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'averageFeeRate7d', type: 'percentage', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'averageFeeRate30d', type: 'percentage', width: 105 }),
-  getNormalValueColumnConfig({ valueKey: 'averageFeeRate', type: 'percentage', width: 105 }),
-  {
-    key: 'marginModes',
-    title: renderTableTitleWithTooltip('marginModes'),
-    searchText: getColumnSearchText('marginModes'),
-    text: renderTableText('marginModes'),
-    style: { minWidth: 150, width: 150, textAlign: 'left', pl: 4 },
-    filterComponent: <TableFilterIcon valueKey={'marginModes'} />,
-    render(data) {
-      return <Flex sx={{ width: '100%', justifyContent: 'start', gap: 1 }}>{renderMarginModeItems({ data })}</Flex>
-    },
-  },
-  {
-    key: 'positionModes',
-    title: renderTableTitleWithTooltip('positionModes'),
-    searchText: getColumnSearchText('positionModes'),
-    text: renderTableText('positionModes'),
-    style: { minWidth: 150, width: 150, textAlign: 'left', gap: 1 },
-    filterComponent: <TableFilterIcon valueKey={'positionModes'} />,
-    render(data) {
-      return <Flex sx={{ width: '100%', justifyContent: 'start', gap: 1 }}>{renderPositionModeItems({ data })}</Flex>
-    },
-  },
-  getNormalValueColumnConfig({
-    valueKey: 'oneClickTrading',
-    type: 'boolean',
-    textAlign: 'center',
-    width: 70,
-    hasSort: false,
-  }),
-  // TODO: filter runtime
-  getNormalValueColumnConfig({ valueKey: 'runTime', type: 'date', width: 100 }),
-  {
-    key: 'collateralAssets',
-    title: renderTableTitleWithTooltip('collateralAssets'),
-    text: renderTableText('collateralAssets'),
-    style: { minWidth: 130, width: 130, textAlign: 'center', px: 12 },
-    filterComponent: <TableFilterIcon valueKey={'collateralAssets'} />,
-    render(data) {
-      return (
-        <Flex sx={{ width: '100%', justifyContent: 'center' }}>
-          <IconGroup iconNames={data?.collateralAssets ?? []} iconUriFactory={parseCollateralColorImage} />
-        </Flex>
-      )
-    },
-  },
-  getNormalValueColumnConfig({ valueKey: 'minCollateral', valuePrefix: '$', width: 160 }),
-  {
-    key: 'minLeverage',
-    text: 'Leverage',
-    title: renderTableTitleWithTooltip('minLeverage', 'LEVERAGE'),
-    style: { minWidth: 150, width: 130, maxWidth: 130, textAlign: 'right' },
-    sortBy: 'minLeverage',
-    filterComponent: <TableFilterIcon valueKey={'minLeverage'} />,
-    render(data) {
-      return (
-        <Type.Caption color="neutral1">
-          {data.minLeverage != null ? `${formatNumber(data.minLeverage)}✕` : '--'} -{' '}
-          {data.maxLeverage != null ? `${formatNumber(data.maxLeverage)}✕` : '--'}
-        </Type.Caption>
-      )
-    },
-  },
-  {
-    key: 'pairs',
-    title: renderTableTitleWithTooltip('pairs'),
-    searchText: getColumnSearchText('pairs'),
-    text: renderTableText('pairs'),
-    style: { minWidth: 120, width: 120, textAlign: 'center' },
-    filterComponent: <TableFilterIcon valueKey={'pairs'} />,
-    render(data) {
-      return (
-        <Flex sx={{ width: '100%', justifyContent: 'center' }}>
-          <MarketGroup symbols={data.pairs} />
-        </Flex>
-      )
-    },
-  },
-
-  getNormalValueColumnConfig({ valueKey: 'invested', valuePrefix: '$', width: 120 }),
-  {
-    key: 'audit',
-    searchText: getColumnSearchText('audit'),
-    title: renderTableTitleWithTooltip('audit'),
-    text: renderTableText('audit'),
-    style: { minWidth: 100, width: 100, maxWidth: 100, textAlign: 'right' },
-    render(data) {
-      return <Flex sx={{ width: '100%', justifyContent: 'end' }}>{renderAudit({ data })}</Flex>
-    },
-  },
-  {
-    key: 'minReferralCommission',
-    title: renderTableTitleWithTooltip('minReferralCommission', 'REF COMMISSION'),
-    searchText: 'Ref Commission',
-    text: 'Ref Commission',
-    style: { minWidth: 160, width: 160, maxWidth: 160, textAlign: 'right' },
-    sortBy: 'minReferralCommission',
-    filterComponent: <TableFilterIcon valueKey={'minReferralCommission'} />,
-    render(data) {
-      return (
-        <Type.Caption color="neutral1">
-          {data.minReferralCommission != null ? `${formatNumber(data.minReferralCommission)}%` : '--'} -{' '}
-          {data.maxReferralCommission != null ? `${formatNumber(data.maxReferralCommission)}%` : '--'}
-        </Type.Caption>
-      )
-    },
-  },
-  // {
-  //   key: 'rewards',
-  //   title: getTableTitleWithTooltip('rewards'),
-  //   text: getTableText('rewards'),
-  //   searchText: getColumnSearchText('rewards'),
-  //   style: { minWidth: 100, width: 100, maxWidth: 100, textAlign: 'right' },
-  //   render(data) {
-  //     return <Type.Caption color="neutral1">{data.rewards}</Type.Caption>
-  //   },
-  // },
-
-  getNormalValueColumnConfig({
-    valueKey: 'rewards',
-    type: 'boolean',
-    textAlign: 'center',
-    width: 70,
-    hasSort: false,
-  }),
-  // Todo: link
-  {
-    key: 'tradeUrl',
-    title: renderTableTitleWithTooltip('tradeUrl'),
-    text: renderTableText('tradeUrl'),
-    searchText: getColumnSearchText('tradeUrl'),
-    // dataIndex: 'tradeUrl',
-    // key: undefined,
-    style: { minWidth: 100, width: 100, maxWidth: 100, textAlign: 'right' },
-    render(data) {
-      if (!data.tradeUrl) return '--'
-      return (
-        <Flex sx={{ width: '100%', justifyContent: 'end' }}>
-          <Flex
-            as="a"
-            href={data.tradeUrl}
-            target="_blank"
-            sx={{
-              alignItems: 'center',
-              gap: 1,
-              color: 'primary1',
-              '&:hover': { color: 'primary2' },
-            }}
-          >
-            <Type.Caption>Trade</Type.Caption> <ArrowSquareOut size={16} />
-          </Flex>
-        </Flex>
-      )
-    },
-  },
+  getColumnConfig({ valueKey: 'type', width: 100, style: { pl: 3, textAlign: 'left' } }),
+  getColumnConfig({ valueKey: 'feePerMillion1d', width: 105 }),
+  getColumnConfig({ valueKey: 'feePerMillion7d', width: 105 }),
+  getColumnConfig({ valueKey: 'feePerMillion30d', width: 105 }),
+  getColumnConfig({ valueKey: 'feePerMillion', width: 105 }),
+  getColumnConfig({ valueKey: 'averageFeeRate1d', width: 105 }),
+  getColumnConfig({ valueKey: 'averageFeeRate7d', width: 105 }),
+  getColumnConfig({ valueKey: 'averageFeeRate30d', width: 105 }),
+  getColumnConfig({ valueKey: 'averageFeeRate', width: 105 }),
+  getColumnConfig({ valueKey: 'marginModes', width: 170, style: { pl: 4 } }),
+  getColumnConfig({ valueKey: 'positionModes', width: 150 }),
+  getColumnConfig({ valueKey: 'oneClickTrading', width: 70, hasSort: false, style: { textAlign: 'center' } }),
+  getColumnConfig({ valueKey: 'runTime', width: 100 }),
+  getColumnConfig({ valueKey: 'collateralAssets', width: 130, style: { textAlign: 'center' } }),
+  getColumnConfig({ valueKey: 'minCollateral', width: 160 }),
+  getColumnConfig({ valueKey: 'minLeverage', width: 130, title: 'LEVERAGE' }),
+  getColumnConfig({ valueKey: 'pairs', width: 120, style: { textAlign: 'center' } }),
+  getColumnConfig({ valueKey: 'invested', width: 120 }),
+  getColumnConfig({ valueKey: 'audit', width: 90 }),
+  getColumnConfig({ valueKey: 'minReferralCommission', width: 160, title: 'REF COMMISSION' }),
+  getColumnConfig({ valueKey: 'rewards', width: 90, hasSort: false, style: { textAlign: 'center' } }),
+  getColumnConfig({ valueKey: 'tradeUrl', width: 100, hasSort: false }),
 ]
 
 export const RENDER_COLUMN_DATA_MAPPING: Partial<
   Record<
     keyof PerpDEXSourceResponse,
-    ({
-      data,
-    }: {
+    (args: {
       data: PerpDEXSourceResponse
       externalResource?: ExternalResource
       index?: number
-      isChildren?: boolean
+      // isChildren?: boolean
+      // align?: 'left' | 'right'
     }) => ReactNode
   >
 > = {
@@ -705,17 +476,53 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
   oneClickTrading: ({ data }) => {
     return renderNormalValue({ data, valueKey: 'oneClickTrading', type: 'boolean' })
   },
+  volumeShare: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'volumeShare', type: 'percentage' })
+  },
+  volumeShare1d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'volumeShare1d', type: 'percentage' })
+  },
+  volumeShare7d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'volumeShare7d', type: 'percentage' })
+  },
+  volumeShare30d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'volumeShare30d', type: 'percentage' })
+  },
+  openInterestShare: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestShare', type: 'percentage' })
+  },
+  openInterestShare1d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestShare1d', type: 'percentage' })
+  },
+  openInterestShare7d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestShare7d', type: 'percentage' })
+  },
+  openInterestShare30d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestShare30d', type: 'percentage' })
+  },
+  openInterestToVolumeRatio: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestToVolumeRatio', type: 'greaterThanZero' })
+  },
+  openInterestToVolumeRatio1d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestToVolumeRatio1d', type: 'greaterThanZero' })
+  },
+  openInterestToVolumeRatio7d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestToVolumeRatio7d', type: 'greaterThanZero' })
+  },
+  openInterestToVolumeRatio30d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestToVolumeRatio30d', type: 'greaterThanZero' })
+  },
   traders: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'traders', type: 'number' })
+    return renderNormalValue({ data, valueKey: 'traders', type: 'number', topValueHighlighting: true })
   },
   traders1d: ({ data, externalResource }) => {
-    return renderChangeValue({ data, valueKey: 'traders1d', externalResource })
+    return renderChangeValue({ data, valueKey: 'traders1d', externalResource, changeValueSuffix: '%' })
   },
   traders7d: ({ data, externalResource }) => {
-    return renderChangeValue({ data, valueKey: 'traders7d', externalResource })
+    return renderChangeValue({ data, valueKey: 'traders7d', externalResource, changeValueSuffix: '%' })
   },
   traders30d: ({ data, externalResource }) => {
-    return renderChangeValue({ data, valueKey: 'traders30d', externalResource })
+    return renderChangeValue({ data, valueKey: 'traders30d', externalResource, changeValueSuffix: '%' })
   },
   traderPnl: ({ data }) => {
     return renderSignValue({ data, valueKey: 'traderPnl', valuePrefix: '$' })
@@ -801,6 +608,30 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
   avgPositionDuration30d: ({ data }) => {
     return renderNormalValue({ data, valueKey: 'avgPositionDuration30d', type: 'timeDuration' })
   },
+  feePerMillion: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'feePerMillion', type: 'greaterThanZero', prefix: '$' })
+  },
+  feePerMillion1d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'feePerMillion1d', type: 'greaterThanZero', prefix: '$' })
+  },
+  feePerMillion7d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'feePerMillion7d', type: 'greaterThanZero', prefix: '$' })
+  },
+  feePerMillion30d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'feePerMillion30d', type: 'greaterThanZero', prefix: '$' })
+  },
+  averageFeeRate: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'averageFeeRate', type: 'percentage' })
+  },
+  averageFeeRate1d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'averageFeeRate1d', type: 'percentage' })
+  },
+  averageFeeRate7d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'averageFeeRate7d', type: 'percentage' })
+  },
+  averageFeeRate30d: ({ data }) => {
+    return renderNormalValue({ data, valueKey: 'averageFeeRate30d', type: 'percentage' })
+  },
   avgPositionSize: ({ data }) => {
     return renderNormalValue({ data, valueKey: 'avgPositionSize', type: 'number', prefix: '$' })
   },
@@ -850,23 +681,19 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
     return renderNormalValue({ data, valueKey: 'liquidations30d', type: 'number', prefix: '$' })
   },
   type: ({ data }) => {
-    return <Flex sx={{ width: '100%', alignItems: 'center', gap: 1 }}>{renderPerpDexTypeItems({ data })}</Flex>
+    return renderPerpDexTypeItems({ data })
   },
   marginModes: ({ data }) => {
-    return <Flex sx={{ width: '100%', alignItems: 'center', gap: 1 }}>{renderMarginModeItems({ data })}</Flex>
+    return renderMarginModeItems({ data })
   },
   positionModes: ({ data }) => {
-    return <Flex sx={{ width: '100%', alignItems: 'center', gap: 1 }}>{renderPositionModeItems({ data })}</Flex>
+    return renderPositionModeItems({ data })
   },
   runTime: ({ data }) => {
     return renderNormalValue({ data, valueKey: 'runTime', type: 'date' })
   },
   collateralAssets: ({ data }) => {
-    return (
-      <Flex sx={{ width: '100%', justifyContent: 'left' }}>
-        <IconGroup iconNames={data?.collateralAssets ?? []} iconUriFactory={parseCollateralColorImage} />
-      </Flex>
-    )
+    return <IconGroup iconNames={data?.collateralAssets ?? []} iconUriFactory={parseCollateralColorImage} />
   },
   minLeverage: ({ data }) => {
     return (
@@ -916,14 +743,10 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
     )
   },
   rewards: ({ data }) => {
-    return <Type.Caption color="neutral1">{data?.rewards}</Type.Caption>
+    return renderNormalValue({ data, valueKey: 'rewards', type: 'boolean' })
   },
   pairs: ({ data }) => {
-    return (
-      <Flex sx={{ width: '100%', justifyContent: 'left' }}>
-        <MarketGroup symbols={data.pairs} />
-      </Flex>
-    )
+    return <MarketGroup symbols={data.pairs} />
   },
   tradeUrl: ({ data }) => {
     return (

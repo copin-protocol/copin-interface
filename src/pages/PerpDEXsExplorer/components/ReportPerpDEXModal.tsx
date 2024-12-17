@@ -8,7 +8,6 @@ import { toast } from 'react-toastify'
 import { reportPerpDexApi } from 'apis/perpDex'
 import { reportPerpdexSchema } from 'components/@copyTrade/yupSchemas'
 import ToastBody from 'components/@ui/ToastBody'
-import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
 import { useToggleReportPerpDEXModal } from 'hooks/store/useToggleReportPerpDEXModal'
 import RichTextarea from 'pages/PerpDEXsExplorer/components/RichTextarea'
 import { Button } from 'theme/Buttons'
@@ -18,23 +17,19 @@ import { Box, Flex, Type } from 'theme/base'
 import { MAX_PERPDEX_ISSUE_DESCRIPTION } from 'utils/config/constants'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
+const ZOOM_INPUT_RATIO = 1.2308 // 16/13
+const SCALE_INPUT_RATIO = 0.8125 // 13/16
+const MARGIN_RATIO = ((1 - SCALE_INPUT_RATIO) / SCALE_INPUT_RATIO) * 100
+
 interface ReportPerpDEXFormData {
   perpdex: string
   description: string
-  images: FileList | null
+  images: FileList
   telegramAccount?: string
 }
 
-const ReportPerpDEXsModal = ({
-  perpdex,
-  // isOpen,
-  setIsOpen,
-}: {
-  perpdex: PerpDEXSourceResponse
-  isOpen?: boolean
-  setIsOpen: (bool: boolean) => void
-}) => {
-  const { isOpen, setPerpDEX } = useToggleReportPerpDEXModal()
+const ReportPerpDEXsModal = () => {
+  const { isOpen, setPerpDEX, perpdex, setIsOpen } = useToggleReportPerpDEXModal()
   const [preview, setPreview] = useState<string | null>(null)
   const mutation = useMutation(reportPerpDexApi, {
     onSuccess: async () => {
@@ -53,10 +48,6 @@ const ReportPerpDEXsModal = ({
     reset,
     watch,
   } = useForm<ReportPerpDEXFormData>({
-    defaultValues: {
-      perpdex: perpdex.perpdex,
-      images: null,
-    },
     resolver: yupResolver(reportPerpdexSchema),
   })
   const description = watch('description')
@@ -148,7 +139,16 @@ const ReportPerpDEXsModal = ({
                 block
                 rows={5}
                 placeholder={`Report PerpDEX`}
-                sx={{ textarea: { fontSize: 13 }, width: '100%' }}
+                sx={{
+                  textarea: {
+                    fontSize: 16,
+                    width: `${100 * ZOOM_INPUT_RATIO}%`,
+                    height: `${100 * ZOOM_INPUT_RATIO}%`,
+                    transform: `scale(${SCALE_INPUT_RATIO})`,
+                    transformOrigin: '0 50%',
+                    marginRight: `-${MARGIN_RATIO}%`,
+                  },
+                }}
                 imageController={register('images', {
                   onChange: handleImageChange,
                 })}

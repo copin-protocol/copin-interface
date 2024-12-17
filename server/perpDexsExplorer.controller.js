@@ -9,10 +9,10 @@ const getPerpDexsExplorer = async (req, res) => {
       req,
       res,
       params: {
-        title: `Perp DEXs Explorer | Copin Analyzer`,
+        title: `Perp Explorer | Copin Analyzer`,
         description: 'Compare top perpetual DEXs with 30+ metrics to find the best platform for your trading needs.',
         thumbnail,
-        url: `${configs.baseUrl}/perp-dexs-explorer`,
+        url: `${configs.baseUrl}/perp-explorer`,
       },
     })
   } catch {

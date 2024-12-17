@@ -31,7 +31,7 @@ function SocialLinkItems({ data }: { data: PerpDEXSourceResponse | undefined }) 
               sx={{ lineHeight: 0, flexShrink: 0, color: 'neutral3', '&:hover': { filter: 'brightness(150%)' } }}
               onClick={(e) => e.stopPropagation()}
             >
-              <_d.Icon size={16} />
+              <_d.Icon size={16} variant="Bold" />
             </Box>
           )
         })}

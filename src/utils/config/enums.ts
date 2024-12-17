@@ -74,6 +74,8 @@ export enum TimeFrameEnum {
   TWO_WEEK = 'D15',
   A_MONTH = 'D30',
   TWO_MONTH = 'D60',
+  THREE_MONTH = 'D90',
+  A_YEAR = 'D365',
   ALL_TIME = 'FULL',
 }
 
@@ -83,6 +85,8 @@ export enum TimeFilterByEnum {
   S14_DAY = TimeFrameEnum.TWO_WEEK,
   S30_DAY = TimeFrameEnum.A_MONTH,
   S60_DAY = TimeFrameEnum.TWO_MONTH,
+  S90_DAY = TimeFrameEnum.THREE_MONTH,
+  S365_DAY = TimeFrameEnum.A_YEAR,
   ALL_TIME = TimeFrameEnum.ALL_TIME,
 }
 
@@ -415,4 +419,12 @@ export const ACTION_NAMES = {
 
 export enum WaitlistTypeEnum {
   ANALYZE_WITH_AI = 'ANALYZE_WITH_AI',
+}
+export enum PerpChartTypeEnum {
+  VOLUME = 'VOLUME',
+  ACTIVE_USER = 'ACTIVE_USER',
+  REVENUE = 'REVENUE',
+  LIQUIDATIONS = 'LIQUIDATIONS',
+  NET_PNL = 'NET_PNL',
+  PROFIT_LOSS = 'PROFIT_LOSS',
 }

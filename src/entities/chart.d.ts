@@ -89,3 +89,28 @@ export interface DrawChartData {
   low: number
   time: Date
 }
+
+export type PerpDexChartData = {
+  date: string
+  dateTime: string
+  perpdex: string
+  perpdexName: string
+  volume: number
+  volumeCumulative: number
+  traders: number
+  traderCumulative: number
+  revenue: number
+  revenueCumulative: number
+  liquidations: number
+  liquidationCumulative: number
+  longLiquidations: number
+  shortLiquidations: number
+  longPnl: number
+  shortPnl: number
+  traderPnl: number
+  traderPnlCumulative: number
+  traderProfit: number
+  traderLoss: number
+  traderProfitCumulative: number
+  traderLossCumulative: number
+}
