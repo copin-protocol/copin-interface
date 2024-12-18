@@ -38,7 +38,7 @@ const columns: ColumnData<PositionData, ExternalSource>[] = [
     title: 'Entry',
     dataIndex: 'indexToken',
     key: 'indexToken',
-    style: { width: '185px' },
+    style: { width: '200px' },
     render: (item) => renderEntry(item, undefined, true),
   },
   {

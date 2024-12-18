@@ -63,7 +63,7 @@ const renderPositionFee = (item: PositionData, prefix = '$') => (
   <Type.Caption color="neutral1">
     <ValueOrToken
       protocol={item.protocol}
-      indexToken={item.collateralToken}
+      indexToken={item.fee == null && item.feeInToken != null ? item.collateralToken : undefined}
       value={item.fee != null ? item.fee * -1 : undefined}
       valueInToken={item.feeInToken != null ? item.feeInToken * -1 : undefined}
       component={
@@ -238,7 +238,7 @@ const pnlColumnFull: ColumnData<PositionData> = {
         {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
         <ValueOrToken
           protocol={item.protocol}
-          indexToken={item.collateralToken}
+          indexToken={item.realisedPnl == null && item.realisedPnlInToken != null ? item.collateralToken : undefined}
           value={item.realisedPnl}
           valueInToken={item.realisedPnlInToken}
           component={
@@ -262,9 +262,10 @@ const renderPositionPnL = (item: PositionData, prefix = '$') => {
       {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
       <ValueOrToken
         protocol={item.protocol}
-        indexToken={item.collateralToken}
+        indexToken={item.realisedPnl == null ? item.collateralToken : undefined}
         value={item.realisedPnl}
         valueInToken={item.realisedPnlInToken}
+        hasPrefix={item.realisedPnl != null}
         component={
           <SignedText value={item.realisedPnl ?? item.realisedPnlInToken} maxDigit={2} minDigit={2} prefix={prefix} />
         }
@@ -383,7 +384,7 @@ const mixPnLColumn: ColumnData<PositionData> = {
 
 export const historyColumns: ColumnData<PositionData>[] = [
   { ...timeColumn, style: { flex: 1 } },
-  { ...entryColumn, style: { flex: 1.8 } },
+  { ...entryColumn, style: { flex: 1.8, minWidth: 185 } },
   { ...sizeColumn, style: { flex: 1, textAlign: 'right' } },
   { ...leverageColumn, style: { flex: 0.8, textAlign: 'right' } },
   { ...pnlColumn, style: { flex: 1.4, textAlign: 'right' } },
@@ -560,7 +561,7 @@ export const fullOpeningColumns: ColumnData<PositionData>[] = [
 
 export const openingColumns: ColumnData<PositionData>[] = [
   openTimeShortColumn,
-  entryColumn,
+  { ...entryColumn, style: { minWidth: 185 } },
   sizeOpeningColumn,
   pnlOpeningColumn,
   actionColumn,
@@ -571,7 +572,7 @@ export const minimumOpeningColums: ColumnData<PositionData>[] = [entryColumn, si
 export const drawerHistoryColumns: ColumnData<PositionData>[] = [
   { ...openTimeColumn, style: { flex: 1.5 } },
   { ...closeTimeColumn, style: { flex: 1.5, pl: 2 } },
-  { ...entryColumn, style: { flex: 1.5, pl: 2 } },
+  { ...entryColumn, style: { minWidth: 185, flex: 1.5, pl: 2 } },
   { ...sizeColumn, style: { flex: 1, textAlign: 'right' } },
   { ...leverageColumn, style: { flex: 1, textAlign: 'right' } },
   { ...collateralColumn, style: { flex: 1, textAlign: 'right' } },
@@ -582,7 +583,7 @@ export const drawerHistoryColumns: ColumnData<PositionData>[] = [
 
 export const drawerOpeningColumns: ColumnData<PositionData>[] = [
   openTimeColumn,
-  { ...entryColumn, style: { minWidth: 150 } },
+  { ...entryColumn, style: { minWidth: 180 } },
   { ...sizeOpeningColumn, style: { minWidth: 200 } },
   collateralColumn,
   avgDurationColumn,
@@ -604,7 +605,6 @@ export const vaultHistoryColumns: ColumnData<PositionData>[] = [
   pnlColumnFull,
   actionColumn,
 ]
-
 
 export function ShortDuration({ durationInSecond }: { durationInSecond?: number }) {
   return (

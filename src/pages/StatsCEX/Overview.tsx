@@ -8,6 +8,7 @@ import { getDepthCEXStatsApi } from 'apis/cexStatsApis'
 import { exchangeOptions as copyTradeExchangeOptions } from 'components/@copyTrade/configs'
 import Container from 'components/@ui/Container'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
+import Market from 'components/@ui/MarketGroup/Market'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { FormattedDepthPairData } from 'entities/cexStats'
@@ -19,13 +20,12 @@ import Drawer from 'theme/Modal/Drawer'
 import Select from 'theme/Select'
 import Table from 'theme/Table'
 import { ColumnData, TableSortProps } from 'theme/Table/types'
-import { Box, Flex, Image, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { TokenOptionProps } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
-import { parseMarketImage } from 'utils/helpers/transform'
 
 import DepthPairDetails from './DepthPairDetails'
 import ExchangeFilter, { ExchangeFilterProps } from './ExchangeFilter'
@@ -490,7 +490,7 @@ function MarketItem({ symbol }: { symbol: string }) {
           justifyContent: 'center',
         }}
       >
-        <Image width={23} height={23} src={parseMarketImage(symbol)} alt={symbol} />
+        <Market symbol={symbol} size={24} />
       </Flex>
       <Type.Caption>{symbol}</Type.Caption>
     </Flex>

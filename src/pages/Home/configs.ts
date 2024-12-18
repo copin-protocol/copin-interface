@@ -38,5 +38,5 @@ export const BASE_RANGE_FILTER: RangeFilter<keyof TraderData>[] = [
   { fieldName: 'pnl', gte: 100 },
   // { fieldName: 'avgRoi', gte: 1 },
   { fieldName: 'winRate', gte: 51 },
-  { fieldName: 'runTimeDays', gte: 30 },
+  { fieldName: 'runTimeDays', gte: 7 },
 ]

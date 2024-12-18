@@ -20,6 +20,7 @@ import SUBSCRIPTION_ABI from 'abis/Subscription.json'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { ContractInfo } from 'utils/web3/types'
 
+import { SOLANA_ADDRESS_REGEX } from '../config/constants'
 import {
   ARBITRUM_MAINNET,
   ARBITRUM_SEPOLIA,
@@ -149,7 +150,7 @@ export const CONTRACT_ADDRESSES: {
 
 export function isAddress(value: any): string {
   try {
-    if (value?.startsWith('dydx')) return value
+    if (!!value && (value?.startsWith('dydx') || SOLANA_ADDRESS_REGEX.test(value))) return value
     return getAddress(value)
   } catch {
     return ''

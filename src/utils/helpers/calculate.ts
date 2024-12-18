@@ -1,7 +1,7 @@
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { PositionData } from 'entities/trader'
 import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
-import { PROTOCOL_USE_SIZE_NUMBER_TO_CALC } from 'utils/config/protocols'
+import { PROTOCOLS_IN_TOKEN_COLLATERAL, PROTOCOL_USE_SIZE_NUMBER_TO_CALC } from 'utils/config/protocols'
 
 import { GMX_V1_PROTOCOLS } from '../config/constants'
 
@@ -27,7 +27,12 @@ export function calcCopyOpeningPnL(position: CopyPositionData, marketPrice?: num
 export function calcOpeningPnL(position: PositionData, marketPrice?: number | undefined) {
   if (!marketPrice) return 0
 
-  if (position.status === PositionStatusEnum.OPEN && position.lastSizeInToken != null)
+  if (
+    position.status === PositionStatusEnum.OPEN &&
+    !PROTOCOLS_IN_TOKEN_COLLATERAL.includes(position.protocol) &&
+    position.lastSizeInToken != null &&
+    position.lastSizeInToken > 0
+  )
     return calcPnLBySizeInToken(position.isLong, position.averagePrice, marketPrice, position.lastSizeInToken)
 
   return calcPnL(
@@ -90,18 +95,16 @@ export function calcLiquidatePrice(position: PositionData) {
   let lastCollateral = position.size / (position.leverage ?? undefined)
   let lastSizeInToken = position.size / position.averagePrice
   let totalFee = position.fee
-  if (PROTOCOL_USE_SIZE_NUMBER_TO_CALC.includes(position.protocol)) {
-    if (position.status === PositionStatusEnum.OPEN) {
-      lastCollateral = position.lastCollateral
-      lastSizeInToken =
-        position.lastSizeInToken != null
-          ? position.lastSizeInToken
-          : position.lastSize != null
-          ? position.lastSize / position.averagePrice
-          : position.lastSizeNumber != null
-          ? Math.abs(position.lastSizeNumber)
-          : lastSizeInToken
-    }
+  if (position.status === PositionStatusEnum.OPEN) {
+    lastCollateral = position.lastCollateral
+    lastSizeInToken =
+      !PROTOCOLS_IN_TOKEN_COLLATERAL.includes(position.protocol) &&
+      position.lastSizeInToken != null &&
+      position.lastSizeInToken > 0
+        ? position.lastSizeInToken
+        : position.lastSize != null && position.lastSize > 0
+        ? position.lastSize / position.averagePrice
+        : lastSizeInToken
   }
   if (position.funding) {
     // totalFee += useToken ? position.fundingInToken : position.funding

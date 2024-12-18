@@ -76,8 +76,6 @@ export default function BacktestForm({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultValues, tokensTraded, protocol])
-  console.log('tokensTraded', tokensTraded)
-  console.log('pairs', getListSymbolByListIndexToken({ protocol, listIndexToken: tokensTraded }))
 
   const copyAll = watch('copyAll')
   const orderVolume = watch('orderVolume')

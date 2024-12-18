@@ -19,7 +19,7 @@ import CopyButton from 'theme/Buttons/CopyButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Image, TextProps, Type } from 'theme/base'
+import { Box, Flex, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
@@ -28,7 +28,9 @@ import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } f
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
+import { getSymbolFromPair } from 'utils/helpers/transform'
+
+import Market from '../@ui/MarketGroup/Market'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps, showMarketIcon?: boolean) {
   return <EntryComponent data={data} textSx={textSx} showMarketIcon={showMarketIcon} />
@@ -59,7 +61,7 @@ function EntryComponent({
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      {showMarketIcon && <Image width={24} height={24} src={parseMarketImage(symbol)} />}
+      {showMarketIcon && <Market symbol={symbol} size={24} />}
       <Type.Caption {...textSx}>{symbol}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>
@@ -306,7 +308,7 @@ function OpeningPnLComponent({ data, prices, ignoreFee, sx }: OpeningPnLComponen
   return (
     <ValueOrToken
       protocol={data.protocol}
-      indexToken={data.collateralToken}
+      indexToken={pnl == null ? data.collateralToken : undefined}
       value={pnl}
       valueInToken={pnlInToken}
       component={

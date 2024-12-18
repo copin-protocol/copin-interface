@@ -1,27 +1,31 @@
 import {
+  APE_MAINNET,
   ARBITRUM_MAINNET,
   AVALANCHE_MAINNET,
   BASE_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
+  CRONOS_MAINNET,
+  DERIVE_MAINNET,
   DYDX_MAINNET,
   FANTOM_MAINNET,
   HYPERLIQUID_TESTNET,
   LINEA_MAINNET,
   MANTA_MAINNET,
   MANTLE_MAINNET,
+  METIS_MAINNET,
   MODE_MAINNET,
   OPBNB_MAINNET,
   OPTIMISM_MAINNET,
   POLYGON_MAINNET,
   POLYNOMIAL_L2_MAINNET,
-  SCROLL_MAINNET,
+  SCROLL_MAINNET, SOLANA_MAINNET,
   XCHAIN_MAINNET,
   ZKSYNC_ERA_MAINNET,
 } from 'utils/web3/chains'
 
-import { BUILD_MODE, LINKS, RELEASED_PROTOCOLS } from './constants'
-import { ProtocolEnum } from './enums'
+import {BUILD_MODE, LINKS, RELEASED_PROTOCOLS} from './constants'
+import {ProtocolEnum} from './enums'
 
 export type ProtocolOptionProps = {
   id: ProtocolEnum
@@ -37,6 +41,14 @@ export type ProtocolOptionProps = {
 // TODO: Check when add new protocol
 //@ts-ignore
 export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps> = {
+  [ProtocolEnum.GMX_V2_AVAX]: {
+    id: ProtocolEnum.GMX_V2_AVAX,
+    text: 'GMX V2',
+    label: 'Avalanche',
+    chainId: AVALANCHE_MAINNET,
+    key: 'GMAV2',
+    linkTrade: LINKS.tradeGMXv2,
+  },
   [ProtocolEnum.GMX_V2]: {
     id: ProtocolEnum.GMX_V2,
     text: 'GMX V2',
@@ -107,6 +119,15 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Base',
     chainId: BASE_MAINNET,
     key: 'GNB',
+    isNew: true,
+    linkTrade: LINKS.tradeGains,
+  },
+  [ProtocolEnum.GNS_APE]: {
+    id: ProtocolEnum.GNS_APE,
+    text: 'gTrade',
+    label: 'Ape Chain',
+    chainId: APE_MAINNET,
+    key: 'GNA2',
     isNew: true,
     linkTrade: LINKS.tradeGains,
   },
@@ -212,6 +233,24 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: ARBITRUM_MAINNET,
     isNew: false,
     key: 'MYA',
+    linkTrade: LINKS.tradeMyx,
+  },
+  [ProtocolEnum.MYX_OPBNB]: {
+    id: ProtocolEnum.MYX_OPBNB,
+    text: 'MYX',
+    label: 'opBNB',
+    chainId: OPBNB_MAINNET,
+    isNew: true,
+    key: 'MYO',
+    linkTrade: LINKS.tradeMyx,
+  },
+  [ProtocolEnum.MYX_LINEA]: {
+    id: ProtocolEnum.MYX_LINEA,
+    text: 'MYX',
+    label: 'Linea',
+    chainId: LINEA_MAINNET,
+    isNew: false,
+    key: 'MYL',
     linkTrade: LINKS.tradeMyx,
   },
   [ProtocolEnum.HMX_ARB]: {
@@ -417,7 +456,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     label: 'Arbitrum',
     chainId: ARBITRUM_MAINNET,
     isNew: true,
-    key: 'VEA',
+    key: 'VEA2',
   },
   [ProtocolEnum.LINEHUB_LINEA]: {
     id: ProtocolEnum.LINEHUB_LINEA,
@@ -475,6 +514,86 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     isNew: true,
     key: 'HOZ',
   },
+  [ProtocolEnum.ZENO_METIS]: {
+    id: ProtocolEnum.ZENO_METIS,
+    text: 'Zeno',
+    label: 'Metis',
+    chainId: METIS_MAINNET,
+    isNew: true,
+    key: 'ZEM',
+  },
+  [ProtocolEnum.SYMMIO_BASE]: {
+    id: ProtocolEnum.SYMMIO_BASE,
+    text: 'Symmio',
+    label: 'Base',
+    chainId: BASE_MAINNET,
+    isNew: true,
+    key: 'SYM',
+  },
+  [ProtocolEnum.INTENTX_BASE]: {
+    id: ProtocolEnum.INTENTX_BASE,
+    text: 'IntentX',
+    label: 'Base',
+    chainId: BASE_MAINNET,
+    isNew: true,
+    key: 'INB',
+  },
+  [ProtocolEnum.BASED_BASE]: {
+    id: ProtocolEnum.BASED_BASE,
+    text: 'Based',
+    label: 'Base',
+    chainId: BASE_MAINNET,
+    isNew: true,
+    key: 'BAB',
+  },
+  [ProtocolEnum.DERIVE]: {
+    id: ProtocolEnum.DERIVE,
+    text: 'Derive',
+    label: 'Derive',
+    chainId: DERIVE_MAINNET,
+    isNew: true,
+    key: 'DED',
+  },
+  [ProtocolEnum.FULCROM_CRONOS]: {
+    id: ProtocolEnum.FULCROM_CRONOS,
+    text: 'Fulcrom',
+    label: 'Cronos',
+    chainId: CRONOS_MAINNET,
+    isNew: true,
+    key: 'FUC',
+  },
+  [ProtocolEnum.JOJO_BASE]: {
+    id: ProtocolEnum.JOJO_BASE,
+    text: 'JOJO',
+    label: 'Base',
+    chainId: BASE_MAINNET,
+    isNew: true,
+    key: 'JOB',
+  },
+  [ProtocolEnum.ELFI_ARB]: {
+    id: ProtocolEnum.ELFI_ARB,
+    text: 'ELFi',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+    isNew: true,
+    key: 'ELA',
+  },
+  [ProtocolEnum.JUPITER]: {
+    id: ProtocolEnum.JUPITER,
+    text: 'Jupiter',
+    label: 'Solana',
+    chainId: SOLANA_MAINNET,
+    isNew: true,
+    key: 'JUL',
+  },
+  [ProtocolEnum.PERPETUAL_OP]: {
+    id: ProtocolEnum.PERPETUAL_OP,
+    text: 'Perpetual V2',
+    label: 'Optimism',
+    chainId: OPTIMISM_MAINNET,
+    isNew: true,
+    key: 'PEO',
+  },
 }
 
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
@@ -493,6 +612,10 @@ export const PROTOCOLS_CROSS_MARGIN = [
   ProtocolEnum.VERTEX_ARB,
   ProtocolEnum.IDEX,
   ProtocolEnum.POLYNOMIAL_L2,
+  ProtocolEnum.ZENO_METIS,
+  ProtocolEnum.DERIVE,
+  ProtocolEnum.JOJO_BASE,
+  ProtocolEnum.ELFI_ARB,
 ]
 
 export const PROTOCOL_USE_SIZE_NUMBER_TO_CALC: ProtocolEnum[] = [
@@ -504,6 +627,7 @@ export const PROTOCOL_USE_SIZE_NUMBER_TO_CALC: ProtocolEnum[] = [
   ProtocolEnum.COPIN,
 ]
 export const PROTOCOLS_IN_TOKEN: ProtocolEnum[] = []
+export const PROTOCOLS_IN_TOKEN_COLLATERAL: ProtocolEnum[] = [ProtocolEnum.LINEHUB_LINEA]
 
 // TODO: Check when add new protocol
 export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {

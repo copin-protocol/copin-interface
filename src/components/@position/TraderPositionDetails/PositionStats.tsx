@@ -89,7 +89,7 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, c
             value={
               <ValueOrToken
                 protocol={data.protocol}
-                indexToken={data.collateralToken}
+                indexToken={data.collateral == null ? data.collateralToken : undefined}
                 value={data.collateral}
                 valueInToken={data.collateralInToken}
               />
@@ -119,7 +119,7 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, c
                 value={
                   <ValueOrToken
                     protocol={data.protocol}
-                    indexToken={data.collateralToken}
+                    indexToken={data.fee == null ? data.collateralToken : undefined}
                     value={data.fee != null ? data.fee * -1 : undefined}
                     valueInToken={data.feeInToken != null ? data.feeInToken * -1 : undefined}
                     component={
@@ -141,7 +141,7 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, c
                   hasFundingFee ? (
                     <ValueOrToken
                       protocol={data.protocol}
-                      indexToken={data.collateralToken}
+                      indexToken={data.funding == null ? data.collateralToken : undefined}
                       value={data.funding}
                       valueInToken={data.fundingInToken}
                       component={
@@ -209,7 +209,7 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, ch
               valueInToken={data.feeInToken != null ? data.feeInToken * -1 : undefined}
               component={
                 <SignedText
-                  value={data.fee == null && data.feeInToken == null ? undefined : (data.fee ?? data.feeInToken) * -1}
+                  value={data.fee == null && data.feeInToken == null ? undefined : (data.feeInToken ?? data.fee) * -1}
                   maxDigit={2}
                   minDigit={2}
                   prefix="$"
@@ -228,7 +228,7 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, ch
                 value={data.funding}
                 valueInToken={data.fundingInToken}
                 component={
-                  <SignedText value={data.funding ?? data.fundingInToken} maxDigit={2} minDigit={2} prefix="$" />
+                  <SignedText value={data.fundingInToken ?? data.funding} maxDigit={2} minDigit={2} prefix="$" />
                 }
               />
             ) : (

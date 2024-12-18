@@ -16,6 +16,7 @@ import {
   EVM_TX_HASH_REGEX,
   SEARCH_DEBOUNCE_TIME,
   SEARCH_DEFAULT_LIMIT,
+  SOLANA_TX_HASH_REGEX,
 } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -50,7 +51,9 @@ export default function useSearchAllData(args?: {
   const isTxHash = useMemo(
     () =>
       allowSearchPositions &&
-      (EVM_TX_HASH_REGEX.test(debounceSearchText) || DYDX_TX_HASH_REGEX.test(debounceSearchText)),
+      (EVM_TX_HASH_REGEX.test(debounceSearchText) ||
+        DYDX_TX_HASH_REGEX.test(debounceSearchText) ||
+        SOLANA_TX_HASH_REGEX.test(debounceSearchText)),
     [allowSearchPositions, debounceSearchText]
   )
 

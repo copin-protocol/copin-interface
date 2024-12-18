@@ -7,7 +7,10 @@ export const PROTOCOL_CONFIG_MAPPING = {
     title: "GMX (ARB)",
   },
   GMX_V2: {
-    title: "GMX (V2)",
+    title: "GMX V2 (ARB)",
+  },
+  GMX_V2_AVAX: {
+    title: "GMX V2 (AVAX)",
   },
   GNS: {
     title: "gTrade (ARB)",
@@ -17,6 +20,9 @@ export const PROTOCOL_CONFIG_MAPPING = {
   },
   GNS_BASE: {
     title: "gTrade (Base)",
+  },
+  GNS_APE: {
+    title: "gTrade (APE)",
   },
   KWENTA: {
     title: "Kwenta",
@@ -61,7 +67,13 @@ export const PROTOCOL_CONFIG_MAPPING = {
     title: "LogX (MODE)",
   },
   MYX_ARB: {
-    title: "MYX",
+    title: "MYX (ARB)",
+  },
+  MYX_OPBNB: {
+    title: "MYX (opBNB)",
+  },
+  MYX_LINEA: {
+    title: "MYX (Linea)",
   },
   HMX_ARB: {
     title: "HMX",
@@ -155,5 +167,35 @@ export const PROTOCOL_CONFIG_MAPPING = {
   },
   HOLDSTATION_ZKSYNC: {
     title: "Holdstation",
+  },
+  ZENO_METIS: {
+    title: "Zeno",
+  },
+  SYMMIO_BASE: {
+    title: "Symmio",
+  },
+  INTENTX_BASE: {
+    title: "IntentX",
+  },
+  BASED_BASE: {
+    title: "Based",
+  },
+  DERIVE: {
+    title: "Derive",
+  },
+  FULCROM_CRONOS: {
+    title: "Fulcrom",
+  },
+  JOJO_BASE: {
+    title: "JOJO",
+  },
+  ELFI_ARB: {
+    title: "ELFi",
+  },
+  JUPITER: {
+    title: "Jupiter",
+  },
+  PERPETUAL_OP: {
+    title: "Perpetual V2",
   },
 };

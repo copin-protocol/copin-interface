@@ -175,6 +175,7 @@ export interface OrderData {
   isLong: boolean
   isOpen: boolean
   isClose: boolean
+  isCrossMargin: boolean
   leverage: number
   type: OrderTypeEnum
   protocol: ProtocolEnum
