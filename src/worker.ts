@@ -29,27 +29,29 @@ axiosRetry(requester, { retries: 10, retryDelay: (retryCount) => retryCount * 5_
 const PYTH_PRICE_FEED_URL = NETWORK === 'devnet' ? 'https://hermes.pyth.network' : 'https://hermes.copin.io'
 const pyth = new EvmPriceServiceConnection(PYTH_PRICE_FEED_URL)
 
-const SYMBOL_BY_PYTH_ID = Object.entries(PYTH_IDS_MAPPING).reduce<Record<string, string>>((result, [key, value]) => {
-  return { ...result, [value]: key }
+const SYMBOLS_BY_PYTH_ID = Object.entries(PYTH_IDS_MAPPING).reduce<Record<string, string[]>>((result, [key, value]) => {
+  return { ...result, [value]: [...(result[value] ?? []), key] }
 }, {})
 
 function getPriceData({ priceFeed }: { priceFeed: PriceFeed }) {
   if (!priceFeed) return null
   const id = `0x${priceFeed.id}`
   const priceData = priceFeed.getPriceNoOlderThan(60)
-  const symbol = SYMBOL_BY_PYTH_ID[id]
-  if (!priceData || !symbol) {
+  const symbols = SYMBOLS_BY_PYTH_ID[id]
+  if (!priceData || !symbols?.length) {
     return null
   }
-  return { symbol, value: Number(priceData.price) * Math.pow(10, priceData.expo) }
+  return symbols.map((symbol) => ({ symbol, value: Number(priceData.price) * Math.pow(10, priceData.expo) }))
 }
 
 const processPriceFeed = (priceFeed: PriceFeed, pricesData: UsdPrices) => {
   const data = getPriceData({ priceFeed })
-  if (!data) return pricesData
-  const symbol = data.symbol
-  const multipleRatio = SPECIAL_MARKET_CONFIG_MAPPING[symbol]?.multiple ?? 1
-  pricesData[symbol] = data.value * multipleRatio
+  if (!data?.length) return pricesData
+  data.forEach((parsedData) => {
+    const symbol = parsedData.symbol
+    const multipleRatio = SPECIAL_MARKET_CONFIG_MAPPING[symbol]?.multiple ?? 1
+    pricesData[symbol] = parsedData.value * multipleRatio
+  })
   return pricesData
 }
 
@@ -107,18 +109,20 @@ async function initPythWebsocket() {
 
     await pyth.subscribePriceFeedUpdates(availablePriceFeedIds, (priceFeed) => {
       const data = getPriceData({ priceFeed })
-      if (!data) return
-      const symbol = data.symbol
-      const multipleRatio = SPECIAL_MARKET_CONFIG_MAPPING[symbol]?.multiple ?? 1
-      pricesData[symbol] = data.value * multipleRatio
-      const publishTime = priceFeed?.getPriceNoOlderThan?.(60)?.publishTime ?? 0
-      if (publishTime >= lastUpdate + INTERVAL_TIME) {
-        lastUpdate = publishTime
-        ports.forEach((port) => {
-          const msg: WorkerMessage = { type: 'pyth_price', data: { ...pricesData } }
-          port.postMessage(msg)
-        })
-      }
+      if (!data?.length) return
+      data.forEach((parsedData) => {
+        const symbol = parsedData.symbol
+        const multipleRatio = SPECIAL_MARKET_CONFIG_MAPPING[symbol]?.multiple ?? 1
+        pricesData[symbol] = parsedData.value * multipleRatio
+        const publishTime = priceFeed?.getPriceNoOlderThan?.(60)?.publishTime ?? 0
+        if (publishTime >= lastUpdate + INTERVAL_TIME) {
+          lastUpdate = publishTime
+          ports.forEach((port) => {
+            const msg: WorkerMessage = { type: 'pyth_price', data: { ...pricesData } }
+            port.postMessage(msg)
+          })
+        }
+      })
     })
   } catch (error) {
     // console.log(error)
