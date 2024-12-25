@@ -14,7 +14,19 @@ export function getOrderData({
   marginMode?: MarginModeEnum
 }) {
   let orders = [...(orderData ?? [])].sort((x, y) =>
-    x.blockTime < y.blockTime ? -1 : x.blockTime > y.blockTime ? 1 : x.logId < y.logId ? -1 : x.logId > y.logId ? 1 : 0
+    x.blockTime < y.blockTime
+      ? -1
+      : x.blockTime > y.blockTime
+      ? 1
+      : x.blockNumber < y.blockNumber
+      ? -1
+      : x.blockNumber > y.blockNumber
+      ? 1
+      : x.logId < y.logId
+      ? -1
+      : x.logId > y.logId
+      ? 1
+      : 0
   )
   if (GMX_V1_PROTOCOLS.includes(protocol)) {
     orders = orders?.filter((e) => e.type !== OrderTypeEnum.CLOSE)

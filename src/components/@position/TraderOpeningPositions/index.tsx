@@ -235,16 +235,19 @@ export default function TraderOpeningPositionsTable({
   )
 }
 
-export function TraderOpeningPositionsListView({
-  protocol,
-  address,
-  isDrawer,
-}: {
+export type TraderOpeningPositionsListViewProps = {
   address: string
   protocol: ProtocolEnum
   isExpanded?: boolean
   isDrawer?: boolean
-}) {
+  onNoPositionLoaded?: () => void
+}
+export function TraderOpeningPositionsListView({
+  protocol,
+  address,
+  isDrawer,
+  onNoPositionLoaded,
+}: TraderOpeningPositionsListViewProps) {
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
@@ -266,6 +269,9 @@ export function TraderOpeningPositionsListView({
       retry: 0,
       refetchInterval: 15_000,
       keepPreviousData: true,
+      onSuccess(data) {
+        if (!data?.length) onNoPositionLoaded?.()
+      },
     }
   )
   //

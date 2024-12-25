@@ -229,7 +229,6 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.DEXTORO,
         ProtocolEnum.VELA_ARB,
         ProtocolEnum.HMX_ARB,
-        ProtocolEnum.SYNTHETIX,
         ProtocolEnum.SYNTHETIX_V3,
         ProtocolEnum.KTX_MANTLE,
         ProtocolEnum.CYBERDEX,
@@ -245,6 +244,11 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.DYDX,
         ProtocolEnum.UNIDEX_ARB,
         ProtocolEnum.VERTEX_ARB,
+        ProtocolEnum.HOLDSTATION_ZKSYNC,
+        ProtocolEnum.ZENO_METIS,
+        ProtocolEnum.LINEHUB_LINEA,
+        ProtocolEnum.BMX_BASE,
+        ProtocolEnum.FOXIFY_ARB,
       ]
     : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 
@@ -256,8 +260,6 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.POLYNOMIAL,
   ProtocolEnum.GNS,
   ProtocolEnum.GNS_POLY,
-  ProtocolEnum.GNS_BASE,
-  ProtocolEnum.GNS_APE,
   ProtocolEnum.MUX_ARB,
   ProtocolEnum.AVANTIS_BASE,
   ProtocolEnum.CYBERDEX,
@@ -269,12 +271,14 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.LEVEL_BNB,
   ProtocolEnum.APOLLOX_BNB,
   ProtocolEnum.KILOEX_OPBNB,
-  ProtocolEnum.KILOEX_BNB,
-  ProtocolEnum.KILOEX_MANTA,
-  ProtocolEnum.KILOEX_BASE,
   ProtocolEnum.ROLLIE_SCROLL,
   ProtocolEnum.MUMMY_FANTOM,
   ProtocolEnum.MORPHEX_FANTOM,
+  // ProtocolEnum.KILOEX_BNB,
+  // ProtocolEnum.KILOEX_MANTA,
+  // ProtocolEnum.KILOEX_BASE,
+  // ProtocolEnum.GNS_BASE,
+  // ProtocolEnum.GNS_APE,
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
 export const FEE_WITH_FUNDING_PROTOCOLS = [
