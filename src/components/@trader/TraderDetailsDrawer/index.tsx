@@ -36,7 +36,7 @@ export default function TraderDetailsDrawer({
         e.stopPropagation()
         handleDismiss()
       }}
-      width={lg ? '968px' : '100%'}
+      width={lg ? '1024px' : '100%'}
     >
       <Container sx={{ position: 'relative', width: '100%', height: '100%', bg: 'neutral7' }}>
         <IconButton

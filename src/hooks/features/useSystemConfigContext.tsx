@@ -57,8 +57,8 @@ export function SystemConfigProvider({ children }: { children: ReactNode }) {
   const { data: volumeLimit } = useQuery([QUERY_KEYS.GET_SYSTEM_CONFIG], () => getVolumeLimit(), {
     retry: 0,
   })
-  const { data: events } = useQuery([QUERY_KEYS.GET_ALL_EVENTS, 'allEvents'], getListEvent)
-  const { data: markets } = useQuery([QUERY_KEYS.GET_MARKET_DATA, 'allEvents'], getMarketData)
+  const { data: events } = useQuery([QUERY_KEYS.GET_ALL_EVENTS], getListEvent)
+  const { data: markets } = useQuery([QUERY_KEYS.GET_MARKET_DATA], getMarketData)
 
   //========================
   const map = useMemo(() => {

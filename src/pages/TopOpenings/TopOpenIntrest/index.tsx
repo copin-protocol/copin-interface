@@ -130,7 +130,7 @@ function TopOpeningsPage() {
               <VisualizeSectionMobile data={data} />
             </Box>
           )}
-          <Box flex={[1, 1, 1, '0 0 690px']}>
+          <Box flex={[1, 1, 1, '0 0 720px']}>
             {data && (
               <PositionsSection
                 data={data}

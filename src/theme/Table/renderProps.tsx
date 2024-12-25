@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import Market from 'components/@ui/MarketGroup/Market'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { CopyPositionData } from 'entities/copyTrade'
@@ -14,14 +15,14 @@ import { UsdPrices } from 'hooks/store/useUsdPrices'
 import CopyButton from 'theme/Buttons/CopyButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
-import { Flex, Image, TextProps, Type } from 'theme/base'
+import { Flex, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
 import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } from 'utils/helpers/calculate'
 import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps, showMarketIcon?: boolean) {
   if (!data || !data.protocol) return <></>
@@ -39,7 +40,7 @@ export function renderEntry(data: PositionData | undefined, textSx?: TextProps, 
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      {showMarketIcon && <Image width={24} height={24} src={parseMarketImage(symbol)} />}
+      {showMarketIcon && <Market symbol={symbol} size={24} />}
       <Type.Caption {...textSx}>{getSymbolFromPair(data.protocol)}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>
@@ -260,7 +261,7 @@ function OpeningPnLComponent({ data, prices, ignoreFee, sx }: OpeningPnLComponen
   return (
     <ValueOrToken
       protocol={data.protocol}
-      indexToken={data.collateralToken}
+      indexToken={pnl == null && pnlInToken != null ? data.collateralToken : undefined}
       value={pnl}
       valueInToken={pnlInToken}
       component={

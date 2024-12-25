@@ -25,6 +25,7 @@ import { themeColors } from 'theme/colors'
 import { FONT_FAMILY, GMX_V1_PROTOCOLS } from 'utils/config/constants'
 import { OrderTypeEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { PROTOCOLS_IN_TOKEN_COLLATERAL } from 'utils/config/protocols'
 import { TIMEFRAME_NAMES, TOKEN_COLLATERAL_SUPPORT } from 'utils/config/trades'
 import { calcLiquidatePrice, calcOpeningPnL, calcPnL } from 'utils/helpers/calculate'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
@@ -130,7 +131,11 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
           orders[i].type === OrderTypeEnum.CLOSE ||
           orders[i].type === OrderTypeEnum.LIQUIDATE
         const sign = isDecrease ? -1 : 1
-        const sizeDeltaInToken = orders[i]?.sizeDeltaInTokenNumber ?? 0
+        const sizeDeltaInToken = PROTOCOLS_IN_TOKEN_COLLATERAL.includes(protocol)
+          ? orders[i]?.sizeDeltaNumber && orders[i]?.priceNumber
+            ? orders[i].sizeDeltaNumber / orders[i]?.priceNumber
+            : orders[i]?.sizeDeltaInTokenNumber ?? 0
+          : orders[i]?.sizeDeltaInTokenNumber ?? 0
         const sizeDeltaNumber =
           orders[i]?.sizeDeltaNumber ?? (sizeDeltaInToken ? sizeDeltaInToken * orders[i].priceNumber : 0)
         const sizeDelta = sign * Math.abs(sizeDeltaNumber)
@@ -159,7 +164,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
       }
     }
     return positions
-  }, [orders, position])
+  }, [orders, position, protocol])
   const currentOrder = orders.find((e) => e.id === markerId)
 
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
@@ -217,7 +222,9 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
           const size =
             pos?.sizeInToken != null
               ? pos.sizeInToken * avgPrice
-              : position.lastSizeInToken != null
+              : position.lastSizeInToken != null &&
+                position.lastSizeInToken > 0 &&
+                !PROTOCOLS_IN_TOKEN_COLLATERAL.includes(position.protocol)
               ? position.lastSizeInToken * avgPrice
               : position.lastSize != null
               ? position.lastSize

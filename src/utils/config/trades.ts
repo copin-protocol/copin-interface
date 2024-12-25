@@ -2,29 +2,35 @@
 import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 import { TokenCollateral } from 'utils/types'
 import {
+  APE_MAINNET,
   ARBITRUM_MAINNET,
   AVALANCHE_MAINNET,
   BASE_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
   CHAINS,
+  CRONOS_MAINNET,
+  DERIVE_MAINNET,
   DYDX_MAINNET,
   FANTOM_MAINNET,
   HYPERLIQUID_TESTNET,
   LINEA_MAINNET,
   MANTA_MAINNET,
   MANTLE_MAINNET,
+  METIS_MAINNET,
   MODE_MAINNET,
   OPBNB_MAINNET,
   OPTIMISM_MAINNET,
   POLYGON_MAINNET,
   POLYNOMIAL_L2_MAINNET,
   SCROLL_MAINNET,
+  SOLANA_MAINNET,
   XCHAIN_MAINNET,
   ZKSYNC_ERA_MAINNET,
 } from 'utils/web3/chains'
 
-import { TOKEN_COLLATERAL_APOLLOX_BNB } from './tokenCollateralApollox'
+import { TOKEN_COLLATERAL_APE } from './tokenCollateralApe'
+import { TOKEN_COLLATERAL_APOLLOX_BASE, TOKEN_COLLATERAL_APOLLOX_BNB } from './tokenCollateralApollox'
 import { TOKEN_COLLATERAL_ARB } from './tokenCollateralArb'
 import { TOKEN_COLLATERAL_AVAX } from './tokenCollateralAvax'
 import { TOKEN_COLLATERAL_BASE } from './tokenCollateralBase'
@@ -36,6 +42,7 @@ import { TOKEN_COLLATERAL_LINEHUB } from './tokenCollateralLineHub'
 import { TOKEN_COLLATERAL_LINEA } from './tokenCollateralLinea'
 import { TOKEN_COLLATERAL_MANTA } from './tokenCollateralManta'
 import { TOKEN_COLLATERAL_MANTLE } from './tokenCollateralMantle'
+import { TOKEN_COLLATERAL_METIS } from './tokenCollateralMetis'
 import { TOKEN_COLLATERAL_MODE } from './tokenCollateralMode'
 import { TOKEN_COLLATERAL_MORPHEX_FANTOM } from './tokenCollateralMorphex'
 import { TOKEN_COLLATERAL_MUMMY_FANTOM } from './tokenCollateralMummy'
@@ -73,6 +80,14 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
   [ProtocolEnum.GNS_BASE]: {
     chainId: BASE_MAINNET,
     explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.GNS_APE]: {
+    chainId: APE_MAINNET,
+    explorerUrl: CHAINS[APE_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.GMX_V2_AVAX]: {
+    chainId: AVALANCHE_MAINNET,
+    explorerUrl: CHAINS[AVALANCHE_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.GMX_V2]: {
     chainId: ARBITRUM_MAINNET,
@@ -133,6 +148,14 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
   [ProtocolEnum.MYX_ARB]: {
     chainId: ARBITRUM_MAINNET,
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.MYX_OPBNB]: {
+    chainId: OPBNB_MAINNET,
+    explorerUrl: CHAINS[OPBNB_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.MYX_LINEA]: {
+    chainId: LINEA_MAINNET,
+    explorerUrl: CHAINS[LINEA_MAINNET].blockExplorerUrl,
   },
   [ProtocolEnum.HMX_ARB]: {
     chainId: ARBITRUM_MAINNET,
@@ -258,6 +281,46 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: ZKSYNC_ERA_MAINNET,
     explorerUrl: CHAINS[ZKSYNC_ERA_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.ZENO_METIS]: {
+    chainId: METIS_MAINNET,
+    explorerUrl: CHAINS[METIS_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.SYMMIO_BASE]: {
+    chainId: BASE_MAINNET,
+    explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.INTENTX_BASE]: {
+    chainId: BASE_MAINNET,
+    explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.BASED_BASE]: {
+    chainId: BASE_MAINNET,
+    explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.DERIVE]: {
+    chainId: DERIVE_MAINNET,
+    explorerUrl: CHAINS[DERIVE_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.FULCROM_CRONOS]: {
+    chainId: CRONOS_MAINNET,
+    explorerUrl: CHAINS[CRONOS_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.JOJO_BASE]: {
+    chainId: BASE_MAINNET,
+    explorerUrl: CHAINS[BASE_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.ELFI_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.JUPITER]: {
+    chainId: SOLANA_MAINNET,
+    explorerUrl: CHAINS[SOLANA_MAINNET].blockExplorerUrl,
+  },
+  [ProtocolEnum.PERPETUAL_OP]: {
+    chainId: OPTIMISM_MAINNET,
+    explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
+  },
 }
 export interface TokenTrade {
   address: string
@@ -316,12 +379,14 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.CYBERDEX]: TOKEN_COLLATERAL_OPTIMISTIC,
   [ProtocolEnum.HMX_ARB]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.MYX_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.MYX_OPBNB]: TOKEN_COLLATERAL_OPBNB,
+  [ProtocolEnum.MYX_LINEA]: TOKEN_COLLATERAL_LINEA,
   [ProtocolEnum.LOGX_MODE]: TOKEN_COLLATERAL_MODE,
   [ProtocolEnum.LOGX_BLAST]: TOKEN_COLLATERAL_BLAST,
   [ProtocolEnum.TIGRIS_ARB]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.AVANTIS_BASE]: TOKEN_COLLATERAL_BASE,
   [ProtocolEnum.APOLLOX_BNB]: { ...TOKEN_COLLATERAL_BNB, ...TOKEN_COLLATERAL_APOLLOX_BNB },
-  [ProtocolEnum.APOLLOX_BASE]: { ...TOKEN_COLLATERAL_BASE },
+  [ProtocolEnum.APOLLOX_BASE]: { ...TOKEN_COLLATERAL_BASE, ...TOKEN_COLLATERAL_APOLLOX_BASE },
   [ProtocolEnum.BLOOM_BLAST]: TOKEN_COLLATERAL_BLAST,
   [ProtocolEnum.EQUATION_ARB]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.LEVEL_BNB]: TOKEN_COLLATERAL_BNB,
@@ -330,9 +395,11 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.GNS]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.GNS_POLY]: TOKEN_COLLATERAL_POLYGON,
   [ProtocolEnum.GNS_BASE]: TOKEN_COLLATERAL_BASE,
+  [ProtocolEnum.GNS_APE]: TOKEN_COLLATERAL_APE,
   [ProtocolEnum.GMX]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.GMX_AVAX]: TOKEN_COLLATERAL_AVAX,
   [ProtocolEnum.GMX_V2]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.GMX_V2_AVAX]: TOKEN_COLLATERAL_AVAX,
   [ProtocolEnum.KWENTA]: TOKEN_COLLATERAL_OPTIMISTIC,
   [ProtocolEnum.POLYNOMIAL]: TOKEN_COLLATERAL_OPTIMISTIC,
   [ProtocolEnum.POLYNOMIAL_L2]: TOKEN_COLLATERAL_POLYNOMIAL_L2,
@@ -358,6 +425,16 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.HORIZON_BNB]: TOKEN_COLLATERAL_BNB,
   [ProtocolEnum.IDEX]: TOKEN_COLLATERAL_IDEX,
   [ProtocolEnum.HOLDSTATION_ZKSYNC]: TOKEN_COLLATERAL_ZKSYNC_ERA,
+  [ProtocolEnum.ZENO_METIS]: TOKEN_COLLATERAL_METIS,
+  [ProtocolEnum.SYMMIO_BASE]: TOKEN_COLLATERAL_BASE,
+  [ProtocolEnum.INTENTX_BASE]: TOKEN_COLLATERAL_BASE,
+  [ProtocolEnum.BASED_BASE]: TOKEN_COLLATERAL_BASE,
+  [ProtocolEnum.DERIVE]: {},
+  [ProtocolEnum.FULCROM_CRONOS]: {},
+  [ProtocolEnum.JOJO_BASE]: TOKEN_COLLATERAL_BASE,
+  [ProtocolEnum.ELFI_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.JUPITER]: {},
+  [ProtocolEnum.PERPETUAL_OP]: TOKEN_COLLATERAL_OPTIMISTIC,
 }
 
 export const TIMEFRAME_NAMES = {
@@ -390,8 +467,30 @@ export function getSymbolTradingView(symbol: string) {
       return 'LUNC'
     case '1000DOGS':
       return 'DOGS'
+    case '1000RATS':
+      return 'RATS'
+    case '1000SATS':
+      return 'SATS'
+    case '1000MOG':
+    case '1000000MOG':
+    case '1MMOG':
+      return 'MOG'
+    case '1000X':
+      return 'X'
+    case '1000XEC':
+      return 'XEC'
+    case '1000WHY':
+      return 'WHY'
+    case '1MBABYDOGE':
+      return 'BABYDOGE'
+    case '1000CHEEMS':
+      return 'CHEEMS'
+    case '1000000AIDOGE':
+      return 'AIDOGE'
     case 'RNDR':
       return 'RENDER'
+    case 'BTCDEGEN':
+      return 'BTC'
     default:
       return symbol
   }
@@ -400,6 +499,10 @@ export function getPriceTradingView(symbol: string, price?: number) {
   if (!price) return
   switch (symbol) {
     case 'MPEPE':
+    case '1MMOG':
+    case '1MBABYDOGE':
+    case '1000000MOG':
+    case '1000000AIDOGE':
       return price / 1000000
     case '1000BONK':
     case 'kBONK':
@@ -412,6 +515,13 @@ export function getPriceTradingView(symbol: string, price?: number) {
     case '1000LUNC':
     case 'kLUNC':
     case '1000DOGS':
+    case '1000WHY':
+    case '1000XEC':
+    case '1000X':
+    case '1000MOG':
+    case '1000SATS':
+    case '1000RATS':
+    case '1000CHEEMS':
       return price / 1000
     default:
       return price

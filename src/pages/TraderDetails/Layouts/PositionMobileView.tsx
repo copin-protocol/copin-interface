@@ -1,5 +1,6 @@
-import { ReactNode } from 'react'
+import { ReactNode, cloneElement, useRef } from 'react'
 
+import { TraderOpeningPositionsListViewProps } from 'components/@position/TraderOpeningPositions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Box, Flex, Type } from 'theme/base'
 
@@ -18,6 +19,12 @@ export default function PositionMobileView({
   const { searchParams, setSearchParams } = useSearchParams()
   const currentTabKey = searchParams['position_tab'] ?? TABS[0].key
   const handleChangeTab = (key: string) => setSearchParams({ ['position_tab']: key })
+  const firstLoadedRef = useRef(!!searchParams['position_tab'] ? true : false)
+  const handleNoOpeningPositionsLoaded = () => {
+    if (firstLoadedRef.current) return
+    firstLoadedRef.current = true
+    handleChangeTab(TABS[1].key)
+  }
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
       <Flex sx={{ alignItems: 'center', bg: 'neutral6' }}>
@@ -28,6 +35,7 @@ export default function PositionMobileView({
               <Type.Body
                 onClick={() => handleChangeTab(config.key)}
                 sx={{
+                  cursor: 'pointer',
                   height: 48,
                   width: '100%',
                   lineHeight: '48px',
@@ -45,7 +53,10 @@ export default function PositionMobileView({
         })}
       </Flex>
       <Box flex="1 0 0">
-        {currentTabKey === TABS[0].key && openingPositions}
+        {currentTabKey === TABS[0].key &&
+          cloneElement<TraderOpeningPositionsListViewProps>(openingPositions as any, {
+            onNoPositionLoaded: handleNoOpeningPositionsLoaded,
+          })}
         {currentTabKey === TABS[1].key && historyPositions}
       </Box>
     </Flex>

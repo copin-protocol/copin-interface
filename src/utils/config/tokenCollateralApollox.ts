@@ -20,17 +20,34 @@ const TOKEN_COLLATERAL_APOLLOX_BNB: Record<string, TokenCollateral> = {
     address: '0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5',
     symbol: 'LUSD',
     decimals: 18,
+    isStableCoin: true,
   },
   '0x55d398326f99059fF775485246999027B3197955': {
     address: '0x55d398326f99059fF775485246999027B3197955',
     symbol: 'BUSD',
     decimals: 18,
+    isStableCoin: true,
   },
   '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d': {
     address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
     symbol: 'USDC',
     decimals: 18,
+    isStableCoin: true,
   },
 }
 
-export { TOKEN_COLLATERAL_APOLLOX_BNB }
+const TOKEN_COLLATERAL_APOLLOX_BASE: Record<string, TokenCollateral> = {
+  '0x4200000000000000000000000000000000000006': {
+    address: '0x4200000000000000000000000000000000000006',
+    symbol: 'ETH',
+    decimals: 18,
+  },
+  '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA': {
+    address: '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
+    symbol: 'USDbC',
+    decimals: 6,
+    isStableCoin: true,
+  },
+}
+
+export { TOKEN_COLLATERAL_APOLLOX_BNB, TOKEN_COLLATERAL_APOLLOX_BASE }

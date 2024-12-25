@@ -1,15 +1,15 @@
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import { DifferentialBar } from 'components/@ui/DifferentialBar'
+import Market from 'components/@ui/MarketGroup/Market'
 import { OpenInterestMarketData } from 'entities/statistic'
 import { ColumnData } from 'theme/Table/types'
-import { Box, Flex, Image, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
-import { parseMarketImage } from 'utils/helpers/transform'
 
 const renderMarket = (symbol: string) => {
   return (
     <Flex sx={{ alignItems: 'center', gap: 2 }}>
-      <Image src={parseMarketImage(symbol)} sx={{ width: 32, height: 32 }} />
+      <Market symbol={symbol} size={32} />
       <Type.Caption color="neutral1">{symbol}</Type.Caption>
     </Flex>
   )

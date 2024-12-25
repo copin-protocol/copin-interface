@@ -167,7 +167,7 @@ export const renderOrderCollateral = (item: OrderData, defaultToken?: string) =>
   <Flex justifyContent="flex-end" alignItems="center">
     <ValueOrToken
       protocol={item.protocol}
-      indexToken={item.collateralToken}
+      indexToken={item.collateralDeltaNumber == null ? item.collateralToken : undefined}
       value={item.collateralDeltaNumber}
       valueInToken={item.collateralDeltaInTokenNumber}
       defaultToken={defaultToken}
@@ -175,7 +175,7 @@ export const renderOrderCollateral = (item: OrderData, defaultToken?: string) =>
         <DeltaText
           color="neutral1"
           type={item.type}
-          delta={item.collateralDeltaNumber ? item.collateralDeltaNumber : item.collateralDeltaInTokenNumber}
+          delta={item.collateralDeltaNumber ?? item.collateralDeltaInTokenNumber}
           maxDigit={item.collateralToken ? 2 : undefined}
           minDigit={item.collateralToken ? 2 : undefined}
         />
@@ -190,7 +190,8 @@ export const renderOrderSize = (item: OrderData, defaultToken?: string) =>
     <Flex sx={{ width: '100%', alignItems: 'center', justifyContent: 'end' }}>
       <ValueOrToken
         protocol={item.protocol}
-        indexToken={item.collateralToken}
+        pair={item.pair}
+        indexToken={item.sizeDeltaNumber == null ? item.indexToken : undefined}
         value={item.sizeDeltaNumber}
         valueInToken={item.sizeDeltaInTokenNumber}
         defaultToken={defaultToken}

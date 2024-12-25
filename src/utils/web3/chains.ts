@@ -25,6 +25,9 @@ export const LINEA_MAINNET = 59144
 export const FANTOM_MAINNET = 250
 export const MODE_MAINNET = 34443
 export const SCROLL_MAINNET = 534352
+export const METIS_MAINNET = 1088
+export const APE_MAINNET = 33139
+export const CRONOS_MAINNET = 25
 
 export const HYPERLIQUID_TESTNET = 998
 
@@ -32,6 +35,9 @@ export const DYDX_MAINNET = 'dydx-mainnet-1'
 
 export const XCHAIN_MAINNET = 94524
 export const POLYNOMIAL_L2_MAINNET = 8008
+export const DERIVE_MAINNET = 957
+
+export const SOLANA_MAINNET = 101
 
 export const DEFAULT_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 export const BASE_CHAIN = NETWORK === 'devnet' ? BASE_SEPOLIA : BASE_MAINNET
@@ -63,6 +69,10 @@ export const SUPPORTED_CHAIN_IDS: number[] = [
   ZKSYNC_ERA_MAINNET,
   MANTA_MAINNET,
   SCROLL_MAINNET,
+  METIS_MAINNET,
+  APE_MAINNET,
+  DERIVE_MAINNET,
+  CRONOS_MAINNET,
 ]
 
 const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
@@ -104,6 +114,31 @@ const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
   FTM: {
     name: 'FTM',
     symbol: 'FTM',
+    decimals: 18,
+  },
+  METIS: {
+    name: 'METIS',
+    symbol: 'METIS',
+    decimals: 18,
+  },
+  APE: {
+    name: 'APE',
+    symbol: 'APE',
+    decimals: 18,
+  },
+  DRV: {
+    name: 'DRV',
+    symbol: 'DRV',
+    decimals: 18,
+  },
+  CRO: {
+    name: 'CRO',
+    symbol: 'CRO',
+    decimals: 18,
+  },
+  SOL: {
+    name: 'SOL',
+    symbol: 'SOL',
     decimals: 18,
   },
 }
@@ -417,6 +452,46 @@ const CHAINS: { [key: number | string]: Chain } = {
     token: NATIVE_CURRENCIES.ETH.symbol,
     rpcUrl: 'https://rpc.polynomial.fi',
     blockExplorerUrl: 'https://polynomialscan.io',
+  },
+  [METIS_MAINNET]: {
+    id: `0x${METIS_MAINNET.toString(16)}`,
+    label: 'Metis',
+    icon: 'METIS',
+    token: NATIVE_CURRENCIES.METIS.symbol,
+    rpcUrl: 'https://andromeda.metis.io/?owner=1088',
+    blockExplorerUrl: 'https://explorer.metis.io',
+  },
+  [APE_MAINNET]: {
+    id: `0x${APE_MAINNET.toString(16)}`,
+    label: 'Ape Chain',
+    icon: 'APE',
+    token: NATIVE_CURRENCIES.APE.symbol,
+    rpcUrl: 'https://rpc.apechain.com',
+    blockExplorerUrl: 'https://apescan.io',
+  },
+  [DERIVE_MAINNET]: {
+    id: `0x${DERIVE_MAINNET.toString(16)}`,
+    label: 'Derive',
+    icon: 'DRV',
+    token: NATIVE_CURRENCIES.DRV.symbol,
+    rpcUrl: 'https://rpc.lyra.finance',
+    blockExplorerUrl: 'https://explorer.lyra.finance',
+  },
+  [CRONOS_MAINNET]: {
+    id: `0x${CRONOS_MAINNET.toString(16)}`,
+    label: 'Cronos',
+    icon: 'CRO',
+    token: NATIVE_CURRENCIES.CRO.symbol,
+    rpcUrl: 'https://evm.cronos.org',
+    blockExplorerUrl: 'https://cronoscan.com',
+  },
+  [SOLANA_MAINNET]: {
+    id: `0x${SOLANA_MAINNET.toString(16)}`,
+    label: 'Solana',
+    icon: 'SOL',
+    token: '',
+    rpcUrl: 'https://api.mainnet-beta.solana.com',
+    blockExplorerUrl: 'https://solscan.io',
   },
 }
 

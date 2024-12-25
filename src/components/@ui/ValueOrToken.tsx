@@ -6,9 +6,10 @@ import { Flex, Image } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { TOKEN_COLLATERAL_SUPPORT } from 'utils/config/trades'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
-import { parseCollateralImage } from 'utils/helpers/transform'
+import { getSymbolFromPair, parseCollateralImage, parseMarketImage } from 'utils/helpers/transform'
 
 export default function ValueOrToken({
+  pair,
   indexToken,
   value,
   protocol,
@@ -24,6 +25,7 @@ export default function ValueOrToken({
   valueInToken?: number
   protocol?: ProtocolEnum
   indexToken?: string
+  pair?: string
   component?: ReactNode
   hasCompact?: boolean
   hasPrefix?: boolean
@@ -54,17 +56,29 @@ export default function ValueOrToken({
           : `${hasPrefix && !defaultToken ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`}
         {(isToken || defaultToken) && (
           <Image
-            src={parseCollateralImage(
-              isToken ? TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol : defaultToken ?? ''
-            )}
+            src={
+              isToken && pair
+                ? parseMarketImage(getSymbolFromPair(pair))
+                : parseCollateralImage(
+                    isToken ? TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol : defaultToken ?? ''
+                  )
+            }
             sx={{ width: 16, height: 16, flexShrink: 0 }}
           />
         )}
         {(isToken || defaultToken) && (
           <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
             {`${formatNumber(isToken ? valueInToken : defaultToken ? value : undefined, 2, 2)} ${
-              isToken ? TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol : defaultToken ?? ''
-            } ${value != null ? `~ ${hasPrefix && '$'}${formatNumber(value, maxDigit, minDigit)}` : ''}`}
+              isToken
+                ? pair
+                  ? getSymbolFromPair(pair)
+                  : TOKEN_COLLATERAL_SUPPORT[protocol][indexToken]?.symbol
+                : defaultToken ?? ''
+            } ${
+              value != null
+                ? `~ ${value < 0 ? '-' : ''}${hasPrefix && '$'}${formatNumber(Math.abs(value), maxDigit, minDigit)}`
+                : ''
+            }`}
           </Tooltip>
         )}
       </Flex>

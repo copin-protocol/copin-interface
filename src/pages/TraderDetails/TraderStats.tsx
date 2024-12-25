@@ -357,7 +357,7 @@ const AccountStats = memo(function AccountStatsMemo({
                 <Flex pr={3} key={key} alignItems="center" width="calc(100% - 2px)" mx="1px" className="stat">
                   <Flex
                     sx={{
-                      pl: 3,
+                      pl: 0,
                       position: 'sticky',
                       left: 0,
                       flex: 1.4,
@@ -367,7 +367,7 @@ const AccountStats = memo(function AccountStatsMemo({
                     className="column-freeze"
                     alignItems="center"
                   >
-                    <Type.Caption color="neutral3">{stat.label}</Type.Caption>
+                    <Type.Caption pl={3} color="neutral3">{stat.label}</Type.Caption>
                     <IconButton
                       data-tip="React-tooltip"
                       data-tooltip-id="tt_to_top"

@@ -55,7 +55,10 @@ export default function Market({
       {hasTooltip && (
         <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
           <Flex alignItems="center" justifyContent="center" sx={{ gap: 1 }}>
-            <Image src={imageUriFactory(symbol)} sx={{ width: size, height: size }} />
+            <Image
+              src={imageUriFactory(symbol)}
+              sx={{ width: size, height: size, borderRadius: size / 2, border: 'small', borderColor: 'neutral4' }}
+            />
             <Type.Small fontSize="10px">{symbol}</Type.Small>
           </Flex>
         </Tooltip>

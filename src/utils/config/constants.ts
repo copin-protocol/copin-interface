@@ -97,6 +97,8 @@ export const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/
 
 export const EVM_TX_HASH_REGEX = /^0x?([a-fA-F0-9]{64})$/
 export const DYDX_TX_HASH_REGEX = /^([a-fA-F0-9]{64})$/
+export const SOLANA_TX_HASH_REGEX = /^[1-9A-HJ-NP-Za-km-z]{88}$/
+export const SOLANA_ADDRESS_REGEX = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/
 
 export const CHART_DAYS_DURATION = 30
 export const CHART_DATE_FORMAT = 'DD.MM'
@@ -214,6 +216,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.GNS,
         ProtocolEnum.GNS_POLY,
         ProtocolEnum.GNS_BASE,
+        ProtocolEnum.GNS_APE,
         ProtocolEnum.LEVEL_BNB,
         ProtocolEnum.LEVEL_ARB,
         ProtocolEnum.MUX_ARB,
@@ -241,6 +244,11 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.DYDX,
         ProtocolEnum.UNIDEX_ARB,
         ProtocolEnum.VERTEX_ARB,
+        ProtocolEnum.HOLDSTATION_ZKSYNC,
+        ProtocolEnum.ZENO_METIS,
+        ProtocolEnum.LINEHUB_LINEA,
+        ProtocolEnum.BMX_BASE,
+        ProtocolEnum.FOXIFY_ARB,
       ]
     : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 
@@ -266,6 +274,11 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.ROLLIE_SCROLL,
   ProtocolEnum.MUMMY_FANTOM,
   ProtocolEnum.MORPHEX_FANTOM,
+  // ProtocolEnum.KILOEX_BNB,
+  // ProtocolEnum.KILOEX_MANTA,
+  // ProtocolEnum.KILOEX_BASE,
+  // ProtocolEnum.GNS_BASE,
+  // ProtocolEnum.GNS_APE,
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
 export const FEE_WITH_FUNDING_PROTOCOLS = [
@@ -274,6 +287,8 @@ export const FEE_WITH_FUNDING_PROTOCOLS = [
   ProtocolEnum.DYDX,
   ProtocolEnum.VERTEX_ARB,
   ProtocolEnum.IDEX,
+  ProtocolEnum.POLYNOMIAL_L2,
+  ProtocolEnum.JOJO_BASE,
 ]
 export const COLLATERAL_TOKEN_PROTOCOLS: ProtocolEnum[] = []
 
