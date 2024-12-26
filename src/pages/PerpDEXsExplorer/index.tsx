@@ -40,7 +40,6 @@ import { getFilters } from 'pages/PerpDEXsExplorer/utils'
 import Loading from 'theme/Loading'
 import Table, { getVisibleColumnStyle } from 'theme/Table'
 import CustomizeColumn from 'theme/Table/CustomizeColumn'
-import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex, Grid, IconBox, Type } from 'theme/base'
 import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -53,6 +52,7 @@ import { Accordion } from './components/Accordion'
 import ChainFilter from './components/ChainFilter'
 import { ReportPerpDEXFlag } from './components/ReportPerpDEX'
 import Wrapper from './components/Wrapper'
+import useSortData from './hooks/useSortData'
 
 export default function PerpDEXsExplorer() {
   //@ts-ignore
@@ -305,20 +305,9 @@ const tabConfigs = [
 const DesktopDataView = memo(function DataViewMemo() {
   const { data, isLoading } = useQuery([QUERY_KEYS.GET_PERP_DEX_STATISTIC_DATA], getPerpDexStatisticApi)
 
-  const { chains, searchParams, setSearchParams } = useChains()
-  const currentSortBy = (searchParams['sortBy'] ?? 'volume1d') as TableSortProps<PerpDEXSourceResponse>['sortBy']
-  const currentSortType = (searchParams['sortType'] ??
-    SortTypeEnum.DESC) as TableSortProps<PerpDEXSourceResponse>['sortType']
-  const currentSort = useMemo(
-    () => ({ sortBy: currentSortBy, sortType: currentSortType }),
-    [currentSortBy, currentSortType]
-  )
-  const changeCurrentSort = useCallback(
-    (sort: TableSortProps<PerpDEXSourceResponse> | undefined) => {
-      setSearchParams({ ['sortBy']: sort?.sortBy, ['sortType']: sort?.sortType })
-    },
-    [setSearchParams]
-  )
+  const { chains, searchParams } = useChains()
+  const { currentSort, changeCurrentSort } = useSortData()
+  const { sortBy: currentSortBy, sortType: currentSortType } = currentSort
   const getRowChildrenData = useCallback(({ rowData }: { rowData: PerpDEXSourceResponse }) => rowData.protocolInfos, [])
   const getChildRowKey = useCallback(({ data }: { data: PerpDEXSourceResponse }) => {
     //@ts-ignore
@@ -328,8 +317,8 @@ const DesktopDataView = memo(function DataViewMemo() {
   const filters = getFilters({ searchParams: searchParams as Record<string, string> })
 
   const _data = useMemo(() => {
-    if (!data) return undefined
-    let newData: PerpDEXSourceResponse[] | undefined = undefined
+    if (!data) return []
+    let newData: PerpDEXSourceResponse[] = []
     if (chains?.length) {
       newData = data.filter((_d) => _d.chains?.some((_c) => chains.includes(_c)))
     } else {
@@ -427,47 +416,50 @@ const DesktopDataView = memo(function DataViewMemo() {
   const externalResource = useMemo(() => {
     const _externalResource = {} as ExternalResource
     if (!_data) return _externalResource
-    FIELDS_WITH_IDEAL_VALUE.forEach((field) => {
-      const idealValues = [0, 0, 0]
-      _data.forEach((_data) => {
-        let value = _data[field]
+    // FIELDS_WITH_IDEAL_VALUE.forEach((field) => {
+    //   const idealValues = [0, 0, 0]
+    //   _data.forEach((_data) => {
+    //     let value = _data[field]
+    //     if (typeof value !== 'number') return
+    //     for (let i = 0; i < idealValues.length; i++) {
+    //       const idealValue = idealValues[i]
+    //       if (value > idealValue) {
+    //         idealValues[i] = value
+    //         value = idealValue
+    //       }
+    //     }
+    //     const idealValue = Math.max(...idealValues.filter((v) => !!v)) // get top 3
+    //     //@ts-ignore
+    //     if (!!idealValue) _externalResource[field] = idealValue
+    //   })
+    // })
+    const defaultResource: ExternalResource = { maxValueField: {}, lastSnapshot: '' }
+    const resource = _data.reduce<ExternalResource>((result, _d) => {
+      const newResult = { ...result }
+      // mobile keys equal desktop keys
+      FIELDS_WITH_IDEAL_VALUE.forEach((fieldName) => {
+        const value = _d[fieldName]
         if (typeof value !== 'number') return
-        for (let i = 0; i < idealValues.length; i++) {
-          const idealValue = idealValues[i]
-          if (value > idealValue) {
-            idealValues[i] = value
-            value = idealValue
-          }
-        }
-        const idealValue = Math.max(...idealValues.filter((v) => !!v)) // get top 3
-        //@ts-ignore
-        if (!!idealValue) _externalResource[field] = idealValue
+        const currentMaxValue = newResult.maxValueField[fieldName]?.value ?? 0
+        if (value > currentMaxValue) newResult.maxValueField[fieldName] = { perpdex: _d.perpdex, value }
       })
-    })
-    const { maxVolume1d, lastSnapshot } = _data.reduce<{ maxVolume1d: number; lastSnapshot: string }>(
-      (result, _data) => {
-        const newResult = { ...result }
-        const volume1d = _data?.volume1d ?? 0
-        const lastSnapshot = _data.statisticAt1d
-        newResult.maxVolume1d = Math.max(volume1d, result.maxVolume1d)
-        if (
-          !!lastSnapshot &&
-          (!result.lastSnapshot || new Date(lastSnapshot).valueOf() > new Date(result.lastSnapshot).valueOf())
-        )
-          newResult.lastSnapshot = lastSnapshot
-        return newResult
-      },
-      { maxVolume1d: 0, lastSnapshot: '' }
-    )
-    _externalResource.maxVolume1d = maxVolume1d
-    _externalResource.lastSnapshot = lastSnapshot
+      const lastSnapshot = _d.statisticAt1d
+      if (
+        !!lastSnapshot &&
+        (!result.lastSnapshot || new Date(lastSnapshot).valueOf() > new Date(result.lastSnapshot).valueOf())
+      )
+        newResult.lastSnapshot = lastSnapshot
+      return newResult
+    }, defaultResource)
     //   const volume1d = _data?.volume1d ?? 0
     //   return volume1d > result ? volume1d : result
     // }, 0)
-    return _externalResource
+    return resource
   }, [_data])
 
+  const loadedRef = useRef(false) // TODO: Check bug table make component rerender a lot
   useEffect(() => {
+    loadedRef.current = true
     const element = document.getElementById('perp_last_trade')
     if (!element) return
     element.innerHTML = `Last updated: ${formatDate(externalResource.lastSnapshot)} UTC`

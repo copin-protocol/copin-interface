@@ -29,28 +29,31 @@ export default function PerpDEXSelect() {
   const { data, isLoading } = useQuery([QUERY_KEYS.GET_PERP_DEX_STATISTIC_DATA], getPerpDexStatisticApi)
   const options = useMemo(() => {
     const result: Option[] = []
-    data?.forEach((v) => {
-      const option: Option = {
-        perpdex: v.perpdex,
-        chains: v.chains ?? [],
-        name: v.name,
-        protocol: undefined,
-        chain: undefined,
-      }
-      result.push(option)
-      if (v.protocolInfos) {
-        v.protocolInfos.forEach((p) => {
+    data &&
+      [...data]
+        .sort((a, b) => (a.perpdex > b.perpdex ? 1 : a.perpdex < b.perpdex ? -1 : 0))
+        .forEach((v) => {
           const option: Option = {
-            perpdex: p.perpdex,
-            chains: undefined,
-            name: p.name,
-            protocol: p.protocol,
-            chain: p.chain,
+            perpdex: v.perpdex,
+            chains: v.chains ?? [],
+            name: v.name,
+            protocol: undefined,
+            chain: undefined,
           }
           result.push(option)
+          if (v.protocolInfos) {
+            v.protocolInfos.forEach((p) => {
+              const option: Option = {
+                perpdex: p.perpdex,
+                chains: undefined,
+                name: p.name,
+                protocol: p.protocol,
+                chain: p.chain,
+              }
+              result.push(option)
+            })
+          }
         })
-      }
-    })
     return result
   }, [data])
   const [visible, setVisible] = useState(false)
@@ -124,7 +127,7 @@ function PerpDEXSelection({ options, onClickSelection }: { options: Option[]; on
       {!_options.length && <NoDataFound message={<Trans>No perp DEX matched!</Trans>} />}
       {!!_options.length && (
         <Grid mt={3} sx={{ gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 1 }}>
-          {_options.map((option) => {
+          {[..._options].map((option) => {
             return (
               <Flex
                 as={Link}

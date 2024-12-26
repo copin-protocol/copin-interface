@@ -289,42 +289,42 @@ export const columns: ColumnData<PerpDEXSourceResponse, ExternalResource>[] = [
       return <PerpDEXTitle data={data} isChildren={!!isChildren} />
     },
   },
-  {
-    key: 'volume1d',
-    title: renderTableTitleWithTooltip({ valueKey: 'volume1d' }),
-    text: renderTableText('volume1d'),
-    searchText: getColumnSearchText('volume1d'),
-    style: { minWidth: 150, width: 150, maxWidth: 150 },
-    sortBy: 'volume1d',
-    render(data, index, externalResource) {
-      const percent = externalResource?.maxVolume1d ? ((data?.volume1d ?? 0) / externalResource.maxVolume1d) * 100 : 100
-      return (
-        <Box sx={{ width: '100%', height: '100%', py: '3px', position: 'relative' }}>
-          <Type.Caption sx={{ width: `${percent}%`, height: '100%', bg: '#4EAEFD33' }}></Type.Caption>
-          <Flex sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, px: 12, alignItems: 'center' }}>
-            {renderChangeValue({
-              data,
-              valueKey: 'volume1d',
-              valuePrefix: '$',
-              changeValueSuffix: '%',
-              externalResource,
-            })}
-          </Flex>
-        </Box>
-      )
-    },
-  },
-  // // getColumnConfig({ valueKey: 'volume1d', title: 'VOLUME (1D)', valuePrefix: '$' }),
-  getColumnConfig({ valueKey: 'volume7d', width: 140 }),
-  getColumnConfig({ valueKey: 'volume30d', width: 140 }),
-  getColumnConfig({ valueKey: 'volume', width: 140 }),
+  // {
+  //   key: 'volume1d',
+  //   title: renderTableTitleWithTooltip({ valueKey: 'volume1d' }),
+  //   text: renderTableText('volume1d'),
+  //   searchText: getColumnSearchText('volume1d'),
+  //   style: { minWidth: 150, width: 150, maxWidth: 150 },
+  //   sortBy: 'volume1d',
+  //   render(data, index, externalResource) {
+  //     const percent = externalResource?.maxVolume1d ? ((data?.volume1d ?? 0) / externalResource.maxVolume1d) * 100 : 100
+  //     return (
+  //       <Box sx={{ width: '100%', height: '100%', py: '3px', position: 'relative' }}>
+  //         <Type.Caption sx={{ width: `${percent}%`, height: '100%', bg: '#4EAEFD33' }}></Type.Caption>
+  //         <Flex sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, px: 12, alignItems: 'center' }}>
+  //           {renderChangeValue({
+  //             data,
+  //             valueKey: 'volume1d',
+  //             valuePrefix: '$',
+  //             changeValueSuffix: '%',
+  //             externalResource,
+  //           })}
+  //         </Flex>
+  //       </Box>
+  //     )
+  //   },
+  // },
+  getColumnConfig({ valueKey: 'volume1d', title: 'VOLUME (1D)', width: 150 }),
+  getColumnConfig({ valueKey: 'volume7d', width: 150 }),
+  getColumnConfig({ valueKey: 'volume30d', width: 150 }),
+  getColumnConfig({ valueKey: 'volume', width: 150 }),
   getColumnConfig({ valueKey: 'volumeShare1d', width: 105 }),
   getColumnConfig({ valueKey: 'volumeShare7d', width: 105 }),
   getColumnConfig({ valueKey: 'volumeShare30d', width: 105 }),
   getColumnConfig({ valueKey: 'volumeShare', width: 105 }),
-  getColumnConfig({ valueKey: 'traders1d', width: 105 }),
-  getColumnConfig({ valueKey: 'traders7d', width: 120 }),
-  getColumnConfig({ valueKey: 'traders30d', width: 120 }),
+  getColumnConfig({ valueKey: 'traders1d', width: 150 }),
+  getColumnConfig({ valueKey: 'traders7d', width: 150 }),
+  getColumnConfig({ valueKey: 'traders30d', width: 150 }),
   getColumnConfig({ valueKey: 'traders', width: 150 }),
   getColumnConfig({ valueKey: 'traderPnl1d', width: 170 }),
   getColumnConfig({ valueKey: 'traderPnl7d', width: 170 }),
@@ -473,47 +473,68 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
       externalResource,
     })
   },
-  oneClickTrading: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'oneClickTrading', type: 'boolean' })
+  oneClickTrading: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'oneClickTrading', type: 'boolean', externalResource })
   },
-  volumeShare: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'volumeShare', type: 'percentage' })
+  volumeShare: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'volumeShare', type: 'percentage', externalResource })
   },
-  volumeShare1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'volumeShare1d', type: 'percentage' })
+  volumeShare1d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'volumeShare1d', type: 'percentage', externalResource })
   },
-  volumeShare7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'volumeShare7d', type: 'percentage' })
+  volumeShare7d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'volumeShare7d', type: 'percentage', externalResource })
   },
-  volumeShare30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'volumeShare30d', type: 'percentage' })
+  volumeShare30d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'volumeShare30d', type: 'percentage', externalResource })
   },
-  openInterestShare: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'openInterestShare', type: 'percentage' })
+  openInterestShare: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestShare', type: 'percentage', externalResource })
   },
-  openInterestShare1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'openInterestShare1d', type: 'percentage' })
+  openInterestShare1d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestShare1d', type: 'percentage', externalResource })
   },
-  openInterestShare7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'openInterestShare7d', type: 'percentage' })
+  openInterestShare7d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestShare7d', type: 'percentage', externalResource })
   },
-  openInterestShare30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'openInterestShare30d', type: 'percentage' })
+  openInterestShare30d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestShare30d', type: 'percentage', externalResource })
   },
-  openInterestToVolumeRatio: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'openInterestToVolumeRatio', type: 'greaterThanZero' })
+  openInterestToVolumeRatio: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'openInterestToVolumeRatio', type: 'greaterThanZero', externalResource })
   },
-  openInterestToVolumeRatio1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'openInterestToVolumeRatio1d', type: 'greaterThanZero' })
+  openInterestToVolumeRatio1d: ({ data, externalResource }) => {
+    return renderNormalValue({
+      data,
+      valueKey: 'openInterestToVolumeRatio1d',
+      type: 'greaterThanZero',
+      externalResource,
+    })
   },
-  openInterestToVolumeRatio7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'openInterestToVolumeRatio7d', type: 'greaterThanZero' })
+  openInterestToVolumeRatio7d: ({ data, externalResource }) => {
+    return renderNormalValue({
+      data,
+      valueKey: 'openInterestToVolumeRatio7d',
+      type: 'greaterThanZero',
+      externalResource,
+    })
   },
-  openInterestToVolumeRatio30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'openInterestToVolumeRatio30d', type: 'greaterThanZero' })
+  openInterestToVolumeRatio30d: ({ data, externalResource }) => {
+    return renderNormalValue({
+      data,
+      valueKey: 'openInterestToVolumeRatio30d',
+      type: 'greaterThanZero',
+      externalResource,
+    })
   },
-  traders: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'traders', type: 'number', topValueHighlighting: true })
+  traders: ({ data, externalResource }) => {
+    return renderNormalValue({
+      data,
+      valueKey: 'traders',
+      type: 'number',
+      topValueHighlighting: true,
+      externalResource,
+    })
   },
   traders1d: ({ data, externalResource }) => {
     return renderChangeValue({ data, valueKey: 'traders1d', externalResource, changeValueSuffix: '%' })
@@ -536,17 +557,17 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
   traderPnl30d: ({ data }) => {
     return renderSignValue({ data, valueKey: 'traderPnl30d', valuePrefix: '$' })
   },
-  oi: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'oi', type: 'number', prefix: '$' })
+  oi: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'oi', type: 'number', prefix: '$', externalResource })
   },
-  oi1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'oi1d', type: 'number', prefix: '$' })
+  oi1d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'oi1d', type: 'number', prefix: '$', externalResource })
   },
-  oi7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'oi7d', type: 'number', prefix: '$' })
+  oi7d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'oi7d', type: 'number', prefix: '$', externalResource })
   },
-  oi30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'oi30d', type: 'number', prefix: '$' })
+  oi30d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'oi30d', type: 'number', prefix: '$', externalResource })
   },
   longPnl: ({ data }) => {
     return renderSignValue({ data, valueKey: 'longPnl', valuePrefix: '$' })
@@ -572,77 +593,101 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
   shortPnl30d: ({ data }) => {
     return renderSignValue({ data, valueKey: 'shortPnl30d', valuePrefix: '$' })
   },
-  longLiquidations: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'longLiquidations', type: 'number', prefix: '$' })
+  longLiquidations: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'longLiquidations', type: 'number', prefix: '$', externalResource })
   },
-  longLiquidations1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'longLiquidations1d', type: 'number', prefix: '$' })
+  longLiquidations1d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'longLiquidations1d', type: 'number', prefix: '$', externalResource })
   },
-  longLiquidations7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'longLiquidations7d', type: 'number', prefix: '$' })
+  longLiquidations7d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'longLiquidations7d', type: 'number', prefix: '$', externalResource })
   },
-  longLiquidations30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'longLiquidations30d', type: 'number', prefix: '$' })
+  longLiquidations30d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'longLiquidations30d', type: 'number', prefix: '$', externalResource })
   },
-  shortLiquidations: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'shortLiquidations', type: 'number', prefix: '$' })
+  shortLiquidations: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'shortLiquidations', type: 'number', prefix: '$', externalResource })
   },
-  shortLiquidations1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'shortLiquidations1d', type: 'number', prefix: '$' })
+  shortLiquidations1d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'shortLiquidations1d', type: 'number', prefix: '$', externalResource })
   },
-  shortLiquidations7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'shortLiquidations7d', type: 'number', prefix: '$' })
+  shortLiquidations7d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'shortLiquidations7d', type: 'number', prefix: '$', externalResource })
   },
-  shortLiquidations30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'shortLiquidations30d', type: 'number', prefix: '$' })
+  shortLiquidations30d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'shortLiquidations30d', type: 'number', prefix: '$', externalResource })
   },
-  avgPositionDuration: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'avgPositionDuration', type: 'timeDuration' })
+  avgPositionDuration: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'avgPositionDuration', type: 'timeDuration', externalResource })
   },
-  avgPositionDuration1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'avgPositionDuration1d', type: 'timeDuration' })
+  avgPositionDuration1d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'avgPositionDuration1d', type: 'timeDuration', externalResource })
   },
-  avgPositionDuration7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'avgPositionDuration7d', type: 'timeDuration' })
+  avgPositionDuration7d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'avgPositionDuration7d', type: 'timeDuration', externalResource })
   },
-  avgPositionDuration30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'avgPositionDuration30d', type: 'timeDuration' })
+  avgPositionDuration30d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'avgPositionDuration30d', type: 'timeDuration', externalResource })
   },
-  feePerMillion: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'feePerMillion', type: 'greaterThanZero', prefix: '$' })
+  feePerMillion: ({ data, externalResource }) => {
+    return renderNormalValue({
+      data,
+      valueKey: 'feePerMillion',
+      type: 'greaterThanZero',
+      prefix: '$',
+      externalResource,
+    })
   },
-  feePerMillion1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'feePerMillion1d', type: 'greaterThanZero', prefix: '$' })
+  feePerMillion1d: ({ data, externalResource }) => {
+    return renderNormalValue({
+      data,
+      valueKey: 'feePerMillion1d',
+      type: 'greaterThanZero',
+      prefix: '$',
+      externalResource,
+    })
   },
-  feePerMillion7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'feePerMillion7d', type: 'greaterThanZero', prefix: '$' })
+  feePerMillion7d: ({ data, externalResource }) => {
+    return renderNormalValue({
+      data,
+      valueKey: 'feePerMillion7d',
+      type: 'greaterThanZero',
+      prefix: '$',
+      externalResource,
+    })
   },
-  feePerMillion30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'feePerMillion30d', type: 'greaterThanZero', prefix: '$' })
+  feePerMillion30d: ({ data, externalResource }) => {
+    return renderNormalValue({
+      data,
+      valueKey: 'feePerMillion30d',
+      type: 'greaterThanZero',
+      prefix: '$',
+      externalResource,
+    })
   },
-  averageFeeRate: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'averageFeeRate', type: 'percentage' })
+  averageFeeRate: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'averageFeeRate', type: 'percentage', externalResource })
   },
-  averageFeeRate1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'averageFeeRate1d', type: 'percentage' })
+  averageFeeRate1d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'averageFeeRate1d', type: 'percentage', externalResource })
   },
-  averageFeeRate7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'averageFeeRate7d', type: 'percentage' })
+  averageFeeRate7d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'averageFeeRate7d', type: 'percentage', externalResource })
   },
-  averageFeeRate30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'averageFeeRate30d', type: 'percentage' })
+  averageFeeRate30d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'averageFeeRate30d', type: 'percentage', externalResource })
   },
-  avgPositionSize: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'avgPositionSize', type: 'number', prefix: '$' })
+  avgPositionSize: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'avgPositionSize', type: 'number', prefix: '$', externalResource })
   },
-  avgPositionSize1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'avgPositionSize1d', type: 'number', prefix: '$' })
+  avgPositionSize1d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'avgPositionSize1d', type: 'number', prefix: '$', externalResource })
   },
-  avgPositionSize7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'avgPositionSize7d', type: 'number', prefix: '$' })
+  avgPositionSize7d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'avgPositionSize7d', type: 'number', prefix: '$', externalResource })
   },
-  avgPositionSize30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'avgPositionSize30d', type: 'number', prefix: '$' })
+  avgPositionSize30d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'avgPositionSize30d', type: 'number', prefix: '$', externalResource })
   },
   longRatio: ({ data }) => {
     return renderLSRatio({ data, valueKey: 'longRatio' })
@@ -656,29 +701,29 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
   longRatio30d: ({ data }) => {
     return renderLSRatio({ data, valueKey: 'longRatio30d' })
   },
-  revenue: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'revenue', type: 'number', prefix: '$' })
+  revenue: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'revenue', type: 'number', prefix: '$', externalResource })
   },
-  revenue1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'revenue1d', type: 'number', prefix: '$' })
+  revenue1d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'revenue1d', type: 'number', prefix: '$', externalResource })
   },
-  revenue7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'revenue7d', type: 'number', prefix: '$' })
+  revenue7d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'revenue7d', type: 'number', prefix: '$', externalResource })
   },
-  revenue30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'revenue30d', type: 'number', prefix: '$' })
+  revenue30d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'revenue30d', type: 'number', prefix: '$', externalResource })
   },
-  liquidations: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'liquidations', type: 'number', prefix: '$' })
+  liquidations: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'liquidations', type: 'number', prefix: '$', externalResource })
   },
-  liquidations1d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'liquidations1d', type: 'number', prefix: '$' })
+  liquidations1d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'liquidations1d', type: 'number', prefix: '$', externalResource })
   },
-  liquidations7d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'liquidations7d', type: 'number', prefix: '$' })
+  liquidations7d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'liquidations7d', type: 'number', prefix: '$', externalResource })
   },
-  liquidations30d: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'liquidations30d', type: 'number', prefix: '$' })
+  liquidations30d: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'liquidations30d', type: 'number', prefix: '$', externalResource })
   },
   type: ({ data }) => {
     return renderPerpDexTypeItems({ data })
@@ -689,8 +734,8 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
   positionModes: ({ data }) => {
     return renderPositionModeItems({ data })
   },
-  runTime: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'runTime', type: 'date' })
+  runTime: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'runTime', type: 'date', externalResource })
   },
   collateralAssets: ({ data }) => {
     return <IconGroup iconNames={data?.collateralAssets ?? []} iconUriFactory={parseCollateralColorImage} />
@@ -703,14 +748,14 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
       </Type.Caption>
     )
   },
-  minCollateral: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'minCollateral', type: 'number', prefix: '$' })
+  minCollateral: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'minCollateral', type: 'number', prefix: '$', externalResource })
   },
   token: ({ data }) => {
     return <Type.Caption color="neutral1">{data.token ? `$${data.token}` : '--'}</Type.Caption>
   },
-  invested: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'invested', type: 'number', prefix: '$' })
+  invested: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'invested', type: 'number', prefix: '$', externalResource })
   },
   audit: renderAudit,
   minTradingFee: ({ data }) => {
@@ -722,17 +767,17 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
       </Type.Caption>
     )
   },
-  makerFee: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'makerFee', type: 'number', suffix: '%' })
+  makerFee: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'makerFee', type: 'number', suffix: '%', externalResource })
   },
-  takerFee: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'takerFee', type: 'number', suffix: '%' })
+  takerFee: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'takerFee', type: 'number', suffix: '%', externalResource })
   },
-  borrowFee: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'borrowFee', type: 'number', suffix: '%' })
+  borrowFee: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'borrowFee', type: 'number', suffix: '%', externalResource })
   },
-  hasFundingFee: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'hasFundingFee', type: 'boolean' })
+  hasFundingFee: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'hasFundingFee', type: 'boolean', externalResource })
   },
   minReferralCommission: ({ data }) => {
     return (
@@ -742,8 +787,8 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
       </Type.Caption>
     )
   },
-  rewards: ({ data }) => {
-    return renderNormalValue({ data, valueKey: 'rewards', type: 'boolean' })
+  rewards: ({ data, externalResource }) => {
+    return renderNormalValue({ data, valueKey: 'rewards', type: 'boolean', externalResource })
   },
   pairs: ({ data }) => {
     return <MarketGroup symbols={data.pairs} />
