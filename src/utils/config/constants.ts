@@ -249,6 +249,9 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.LINEHUB_LINEA,
         ProtocolEnum.BMX_BASE,
         ProtocolEnum.FOXIFY_ARB,
+        ProtocolEnum.APOLLOX_BASE,
+        ProtocolEnum.GMX_AVAX,
+        ProtocolEnum.SYNTHETIX,
       ]
     : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 
