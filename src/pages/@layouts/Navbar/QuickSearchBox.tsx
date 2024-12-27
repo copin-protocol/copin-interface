@@ -147,6 +147,7 @@ function QuickSearchContainer({
     visibleSearchResult,
     isLoading,
     searchTraders,
+    searchHLTrader,
     searchPositions,
     handleClick,
     handleClickPosition,
@@ -178,7 +179,14 @@ function QuickSearchContainer({
     onDismiss()
   }
 
-  const totalResultTraders = searchTraders?.meta?.total ?? 0
+  const totalResultTraders =
+    (searchTraders?.meta?.total ?? 0) +
+    (searchHLTrader &&
+    !searchTraders?.data?.find(
+      (t) => t.account.toLowerCase() === searchHLTrader.account.toLowerCase() && t.protocol === ProtocolEnum.HYPERLIQUID
+    )
+      ? 1
+      : 0)
   const totalResultPositions = searchPositions?.length ?? 0
 
   const totalResult = isTxHash ? totalResultPositions : totalResultTraders
@@ -260,8 +268,8 @@ function QuickSearchContainer({
                   ? totalResultPositions
                     ? `(${formatNumber(totalResultPositions, 0, 0)})`
                     : ''
-                  : searchTraders?.data?.length
-                  ? `(${formatNumber(searchTraders.data.length, 0, 0)})`
+                  : totalResultTraders
+                  ? `(${formatNumber(totalResultTraders, 0, 0)})`
                   : ''}
               </Box>
             )}
@@ -274,6 +282,7 @@ function QuickSearchContainer({
               <SearchResult
                 keyword={searchText}
                 isTxHash={isTxHash}
+                searchHLTrader={searchHLTrader}
                 searchTraders={searchTraders?.data}
                 searchPositions={searchPositions}
                 onClickTraderItem={handleClickSearchItem}
@@ -354,6 +363,7 @@ function SearchResult({
   keyword,
   isTxHash,
   searchTraders,
+  searchHLTrader,
   searchPositions,
   onClickTraderItem,
   onClickPositionItem,
@@ -362,6 +372,7 @@ function SearchResult({
   keyword: string
   isTxHash: boolean
   searchTraders: TraderData[] | undefined
+  searchHLTrader: TraderData | undefined
   searchPositions: PositionData[] | undefined
   onClickTraderItem: (data: TraderData) => void
   onClickPositionItem: (data: PositionData) => void
@@ -401,19 +412,31 @@ function SearchResult({
       window.removeEventListener('keydown', handleKeyboard)
     }
   }, [handleKeyboard])
+  let traders: TraderData[] = []
+  if (
+    searchHLTrader &&
+    !searchTraders?.find(
+      (t) => t.account.toLowerCase() === searchHLTrader.account.toLowerCase() && t.protocol === ProtocolEnum.HYPERLIQUID
+    )
+  ) {
+    traders = [searchHLTrader, ...(searchTraders ?? [])]
+  } else {
+    traders = searchTraders || []
+  }
+
   useEffect(() => {
-    if (!searchPositions?.length && !searchTraders?.length) {
+    if (!searchPositions?.length && !searchTraders?.length && !searchHLTrader) {
       setSelectedItem(-1)
       return
     }
-    searchResultRef.current.data = isTxHash ? searchPositions ?? [] : searchTraders ?? []
+    searchResultRef.current.data = isTxHash ? searchPositions ?? [] : traders
     searchResultRef.current.isTxHash = isTxHash
-  }, [isTxHash, searchTraders, searchPositions])
+  }, [isTxHash, searchPositions, traders])
   return (
     <>
-      {!isTxHash && (searchTraders?.length ?? 0) > 0 && (
+      {!isTxHash && (traders?.length ?? 0) > 0 && (
         <Box>
-          {searchTraders?.map((userData, index) => {
+          {traders?.map((userData, index) => {
             const isActive = selectedItem === index
             return (
               <Box id={`search_trader_${index}`} key={userData.id} sx={{ bg: isActive ? 'neutral4' : 'transparent' }}>
@@ -444,7 +467,7 @@ function SearchResult({
           })}
         </Box>
       )}
-      {!isTxHash && searchTraders?.length === 0 && <NoDataFound message={<Trans>No Trader Found</Trans>} />}
+      {!isTxHash && traders?.length === 0 && <NoDataFound message={<Trans>No Trader Found</Trans>} />}
       {isTxHash && searchPositions?.length === 0 && <NoDataFound message={<Trans>No Transaction Found</Trans>} />}
     </>
   )

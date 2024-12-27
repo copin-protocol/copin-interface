@@ -5,10 +5,10 @@ export const CHANGE_COLOR_FIELDS: (keyof PerpDEXSourceResponse)[] = [
   'volume7d',
   'volume30d',
   'volume',
-  // 'traders1d',
-  // 'traders7d',
-  // 'traders30d',
-  // 'traders',
+  'traders1d',
+  'traders7d',
+  'traders30d',
+  'traders',
   'oi1d',
   'oi7d',
   'oi30d',
@@ -25,28 +25,6 @@ export const CHANGE_COLOR_FIELDS: (keyof PerpDEXSourceResponse)[] = [
   // 'liquidations7d',
   // 'liquidations30d',
   // 'liquidations',
-  // 'revenue1d',
-  // 'revenue7d',
-  // 'revenue30d',
-  // 'revenue',
-]
-
-export const NOT_CHANGE_COLOR_FIELDS: (keyof PerpDEXSourceResponse)[] = [
-  'minTradingFee',
-  'maxTradingFee',
-  'makerFee',
-  'takerFee',
-  'borrowFee',
-  'minCollateral',
-  'minLeverage',
-  'maxLeverage',
-  'invested',
-  'minReferralCommission',
-  'maxReferralCommission',
-  'traders1d',
-  'traders7d',
-  'traders30d',
-  'traders',
   'revenue1d',
   'revenue7d',
   'revenue30d',
@@ -69,14 +47,109 @@ export const NOT_CHANGE_COLOR_FIELDS: (keyof PerpDEXSourceResponse)[] = [
   'avgPositionSize',
 ]
 
-export const FIELDS_WITH_IDEAL_VALUE: (keyof PerpDEXSourceResponse)[] = [
+export const NOT_CHANGE_COLOR_FIELDS: (keyof PerpDEXSourceResponse)[] = [
+  'minTradingFee',
+  'maxTradingFee',
+  'makerFee',
+  'takerFee',
+  'borrowFee',
+  'minCollateral',
+  'minLeverage',
+  'maxLeverage',
+  'invested',
+  'minReferralCommission',
+  'maxReferralCommission',
+]
+
+export const DOMINANCE_VALUE_FIELDS: (keyof PerpDEXSourceResponse)[] = [
   'volume1d',
   'volume30d',
   'volume7d',
+  'volume',
   'traders1d',
   'traders7d',
   'traders30d',
   'traders',
+  'oi1d',
+  'oi7d',
+  'oi30d',
+  'oi',
+  'revenue1d',
+  'revenue7d',
+  'revenue30d',
+  'revenue',
+]
+
+export const FIELDS_WITH_IDEAL_VALUE: (keyof PerpDEXSourceResponse)[] = [
+  'volume1d',
+  'volume30d',
+  'volume7d',
+  'volume',
+
+  'volumeShare',
+  'volumeShare1d',
+  'volumeShare7d',
+  'volumeShare30d',
+
+  'traders1d',
+  'traders7d',
+  'traders30d',
+  'traders',
+
+  'oi',
+  'oi1d',
+  'oi7d',
+  'oi30d',
+
+  'openInterestShare',
+  'openInterestShare1d',
+  'openInterestShare7d',
+  'openInterestShare30d',
+
+  'openInterestToVolumeRatio',
+  'openInterestToVolumeRatio1d',
+  'openInterestToVolumeRatio7d',
+  'openInterestToVolumeRatio30d',
+
+  'longLiquidations',
+  'longLiquidations1d',
+  'longLiquidations7d',
+  'longLiquidations30d',
+
+  'shortLiquidations',
+  'shortLiquidations1d',
+  'shortLiquidations7d',
+  'shortLiquidations30d',
+
+  'liquidations',
+  'liquidations1d',
+  'liquidations7d',
+  'liquidations30d',
+
+  'avgPositionDuration',
+  'avgPositionDuration1d',
+  'avgPositionDuration7d',
+  'avgPositionDuration30d',
+
+  'avgPositionSize',
+  'avgPositionSize1d',
+  'avgPositionSize7d',
+  'avgPositionSize30d',
+
+  'revenue',
+  'revenue1d',
+  'revenue7d',
+  'revenue30d',
+
+  'feePerMillion',
+  'feePerMillion1d',
+  'feePerMillion7d',
+  'feePerMillion30d',
+
+  'averageFeeRate',
+  'averageFeeRate1d',
+  'averageFeeRate7d',
+  'averageFeeRate30d',
 ]
 
 export const REFLECT_DATA_FIELDS: (keyof PerpDEXSourceResponse)[] = [

@@ -32,7 +32,7 @@ import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
-import TraderPositionListView from '../TraderPositionsListView'
+import HLTraderPositionListView from '../TraderPositionsListView'
 import { drawerHistoryColumns, fullHistoryColumns, historyColumns } from '../configs/traderPositionRenderProps'
 import useQueryClosedPositions from './useQueryClosedPositions'
 import useQueryClosedPositionsMobile from './useQueryClosedPositionsMobile'
@@ -516,7 +516,7 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
         </Box>
       )} */}
       <Box flex="1 0 0" overflowX="auto" overflowY="hidden" className="test" bg={backgroundColor}>
-        <TraderPositionListView
+        <HLTraderPositionListView
           data={data}
           isLoading={isLoadingClosedPositions}
           scrollDep={scrollToTopDependencies}

@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import emptyBg from 'assets/images/opening_empty_bg.png'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
-import TraderPositionListView from 'components/@position/TraderPositionsListView'
+import HLTraderPositionListView from 'components/@position/TraderPositionsListView'
 import { fullOpeningColumns } from 'components/@position/configs/traderPositionRenderProps'
 import { PositionData } from 'entities/trader'
 import Loading from 'theme/Loading'
@@ -111,7 +111,7 @@ export default function VaultOpeningPositions({
               renderRowBackground={() => 'rgb(31, 34, 50)'}
             />
           ) : (
-            <TraderPositionListView
+            <HLTraderPositionListView
               data={tableData?.data}
               isLoading={isLoading}
               scrollDep={tableData?.meta?.offset}

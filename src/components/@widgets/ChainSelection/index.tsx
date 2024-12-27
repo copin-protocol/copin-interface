@@ -180,7 +180,7 @@ export function ChainSelection({ selectedChains, onApply, onReset }: ChainSelect
             gap: 1,
           }}
         >
-          {chainSelections.map((chainName) => {
+          {[...chainSelections].sort().map((chainName) => {
             const isActive = _selectedChains?.includes(chainName)
             return (
               <ChainSelectItem

@@ -103,6 +103,7 @@ export interface PositionData {
   lastSizeInToken?: number
   sizeInToken: number
   averagePrice: number
+  liquidationPrice?: number
   lastPriceNumber: number
   maxSizeNumber: number
   fee: number

@@ -4,6 +4,9 @@ import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getTraderExchangeStatistic, getTraderStatisticApi } from 'apis/traderApis'
+import HLTraderOpeningPositionsTable, {
+  HLTraderOpeningPositionsListView,
+} from 'components/@position/HLTraderOpeningPositions'
 import TraderHistoryPositions, { TraderHistoryPositionsListView } from 'components/@position/TraderHistoryPositions'
 import TraderOpeningPositions, { TraderOpeningPositionsListView } from 'components/@position/TraderOpeningPositions'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
@@ -234,12 +237,23 @@ export function TraderDetailsComponent({
         heatmap={<div></div>}
         openingPositions={
           sm ? (
-            <TraderOpeningPositions
-              address={address}
-              protocol={protocol}
-              isExpanded={openingPositionFullExpanded}
-              toggleExpand={handleOpeningPositionsExpand}
-            />
+            protocol === ProtocolEnum.HYPERLIQUID ? (
+              <HLTraderOpeningPositionsTable
+                address={address}
+                protocol={protocol}
+                isExpanded={openingPositionFullExpanded}
+                toggleExpand={handleOpeningPositionsExpand}
+              />
+            ) : (
+              <TraderOpeningPositions
+                address={address}
+                protocol={protocol}
+                isExpanded={openingPositionFullExpanded}
+                toggleExpand={handleOpeningPositionsExpand}
+              />
+            )
+          ) : protocol === ProtocolEnum.HYPERLIQUID ? (
+            <HLTraderOpeningPositionsListView address={address} protocol={protocol} />
           ) : (
             <TraderOpeningPositionsListView address={address} protocol={protocol} />
           )

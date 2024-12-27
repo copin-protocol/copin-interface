@@ -1,12 +1,27 @@
 import { getRangeFilterValues } from 'components/@widgets/TableFilter/TableRangeFilterIcon'
 import { FilterValues } from 'components/@widgets/TableFilter/types'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
-import { CHANGE_COLOR_FIELDS, NOT_CHANGE_COLOR_FIELDS } from 'pages/PerpDEXsExplorer/constants/field'
+import {
+  CHANGE_COLOR_FIELDS,
+  FIELDS_WITH_IDEAL_VALUE,
+  NOT_CHANGE_COLOR_FIELDS,
+} from 'pages/PerpDEXsExplorer/constants/field'
 import { FULL_TITLE_MAPPING, TITLE_MAPPING } from 'pages/PerpDEXsExplorer/constants/title'
 
 import { TABLE_RANGE_FILTER_CONFIGS } from './configs'
+import { ExternalResource } from './types'
 
-export function getChangeValueConfig({ valueKey, value }: { valueKey: keyof PerpDEXSourceResponse; value: number }) {
+export function getChangeValueConfig({
+  data,
+  valueKey,
+  value,
+  externalResource,
+}: {
+  data: PerpDEXSourceResponse | undefined
+  valueKey: keyof PerpDEXSourceResponse
+  value: number
+  externalResource: ExternalResource | undefined
+}) {
   let fontWeight = 'normal'
   let isInteger = true
   let isCompactNumber = false
@@ -18,15 +33,19 @@ export function getChangeValueConfig({ valueKey, value }: { valueKey: keyof Perp
       isInteger = false
       isCompactNumber = true
     }
-    if (value >= 1_000_000_000) {
-      color = 'orange1'
-      fontWeight = '500'
-    }
   }
+
   if (NOT_CHANGE_COLOR_FIELDS.includes(valueKey)) {
     color = 'neutral1'
     if (value === 0) {
       color = 'neutral3'
+    }
+  }
+
+  if (FIELDS_WITH_IDEAL_VALUE.includes(valueKey)) {
+    if (data?.perpdex && externalResource?.maxValueField?.[valueKey]?.perpdex === data.perpdex) {
+      color = 'orange1'
+      fontWeight = '700'
     }
   }
 
@@ -35,6 +54,34 @@ export function getChangeValueConfig({ valueKey, value }: { valueKey: keyof Perp
     fontWeight,
     isInteger,
     isCompactNumber,
+  }
+}
+
+export function getPercentValueConfig({
+  data,
+  valueKey,
+  value,
+  externalResource,
+}: {
+  data: PerpDEXSourceResponse | undefined
+  valueKey: keyof PerpDEXSourceResponse
+  value: number
+  externalResource: ExternalResource | undefined
+}) {
+  let fontWeight = 'normal'
+
+  let color = value > 0 ? 'neutral1' : 'neutral3'
+
+  if (FIELDS_WITH_IDEAL_VALUE.includes(valueKey)) {
+    if (data?.perpdex && externalResource?.maxValueField?.[valueKey]?.perpdex === data.perpdex) {
+      color = 'orange1'
+      fontWeight = '700'
+    }
+  }
+
+  return {
+    color,
+    fontWeight,
   }
 }
 

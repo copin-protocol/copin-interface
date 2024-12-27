@@ -14,7 +14,7 @@ import {
 import { COMBINE_TITLE_MAPPING, FULL_TITLE_MAPPING, TITLE_MAPPING } from 'pages/PerpDEXsExplorer/constants/title'
 import { TOOLTIP_CONTENT_MAPPING } from 'pages/PerpDEXsExplorer/constants/tooltip'
 import { ExternalResource, NormalValueComponentType } from 'pages/PerpDEXsExplorer/types'
-import { getChangeValueConfig } from 'pages/PerpDEXsExplorer/utils'
+import { getChangeValueConfig, getPercentValueConfig } from 'pages/PerpDEXsExplorer/utils'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
 import { DATE_FORMAT } from 'utils/config/constants'
@@ -49,14 +49,14 @@ export function renderChangeValue({
   valueSuffix?: string
   changeValuePrefix?: string
   changeValueSuffix?: string
-  externalResource?: ExternalResource
+  externalResource: ExternalResource | undefined
   topValueHighlighting?: boolean
 }) {
   const value = (data?.[valueKey] as any) ?? 0
   //@ts-ignore
   const lastValue = (data?.lastData?.[valueKey] as any) ?? 0
   const changeValue = !!lastValue ? ((value - lastValue) / lastValue) * 100 : undefined
-  const valueConfig = getChangeValueConfig({ value, valueKey })
+  const valueConfig = getChangeValueConfig({ value, valueKey, externalResource, data })
   return (
     <ValueChange
       value={value}
@@ -91,7 +91,7 @@ export function renderNormalValue({
   valueKey: keyof PerpDEXSourceResponse
   prefix?: string
   suffix?: string
-  externalResource?: ExternalResource
+  externalResource: ExternalResource | undefined
   topValueHighlighting?: boolean
 }) {
   const value = data?.[valueKey] as any
@@ -107,7 +107,7 @@ export function renderNormalValue({
           isInteger,
           color: _color,
           fontWeight: _fontWeight,
-        } = getChangeValueConfig({ value, valueKey })
+        } = getChangeValueConfig({ value, valueKey, externalResource, data })
         content = isInteger
           ? formatNumber(value, 0, 0)
           : isCompactNumber
@@ -118,6 +118,14 @@ export function renderNormalValue({
       }
       break
     case 'timeDuration':
+      const { color: _color, fontWeight: _fontWeight } = getPercentValueConfig({
+        data,
+        valueKey,
+        value,
+        externalResource,
+      })
+      color = _color
+      fontWeight = _fontWeight
       content = formatDuration(value ?? '')
       break
     case 'date':
@@ -135,15 +143,29 @@ export function renderNormalValue({
 
     case 'percentage':
       {
+        const { color: _color, fontWeight: _fontWeight } = getPercentValueConfig({
+          data,
+          valueKey,
+          value,
+          externalResource,
+        })
+        color = _color
+        fontWeight = _fontWeight
         const text = `${formatNumber(value, 2, 2)} %`
-        const color = value > 0 ? 'neutral1' : 'neutral3'
-        content = <Type.Caption color={color}>{text}</Type.Caption>
+        content = text
       }
       break
     case 'greaterThanZero':
       {
-        const color = value > 0 ? 'neutral1' : 'neutral3'
-        content = <Type.Caption color={color}>{formatNumber(value, 2, 2)}</Type.Caption>
+        const { color: _color, fontWeight: _fontWeight } = getPercentValueConfig({
+          data,
+          valueKey,
+          value,
+          externalResource,
+        })
+        color = _color
+        fontWeight = _fontWeight
+        content = formatNumber(value, 2, 2)
       }
       break
     default:

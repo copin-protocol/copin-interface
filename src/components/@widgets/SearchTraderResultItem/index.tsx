@@ -113,9 +113,13 @@ function LastTrade({ value, hasLabel = true, sx = {} }: { value: string | undefi
           <Box as="span">Last Trade</Box>
         </>
       )}
-      <Box as="span" color="neutral1">
-        <RelativeTimeText date={value} />
-      </Box>
+      {value ? (
+        <Box as="span" color="neutral1">
+          <RelativeTimeText date={value} />
+        </Box>
+      ) : (
+        '--'
+      )}
     </Type.Caption>
   )
 }

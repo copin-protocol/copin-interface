@@ -7,6 +7,7 @@ import IconEye from 'assets/icons/ic-eye.svg'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import Market from 'components/@ui/MarketGroup/Market'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
@@ -29,8 +30,6 @@ import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { getSymbolFromPair } from 'utils/helpers/transform'
-
-import Market from '../@ui/MarketGroup/Market'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps, showMarketIcon?: boolean) {
   return <EntryComponent data={data} textSx={textSx} showMarketIcon={showMarketIcon} />
@@ -201,7 +200,7 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
     ? getSymbolByIndexToken({ indexToken: data.indexToken }) ?? ''
     : ''
   const marketPrice = prices[symbol] ?? 0
-  const liquidatePrice = calcLiquidatePrice(data)
+  const liquidatePrice = data?.liquidationPrice ?? calcLiquidatePrice(data)
   const riskPercent = calcRiskPercent(data.isLong, data.averagePrice, marketPrice, liquidatePrice ?? 0)
   const { sx, ..._textProps } = textProps ?? {}
 

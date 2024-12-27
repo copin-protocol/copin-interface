@@ -36,9 +36,11 @@ export default function PerpDEXDetails() {
   const { searchParams } = useSearchParams()
   const protocol = (searchParams.protocol as string)?.toLowerCase()
 
+  const [loaded, setLoaded] = useState(false)
   const { data: perpDEXsStatistic, isLoading } = useQuery(
     [QUERY_KEYS.GET_PERP_DEX_STATISTIC_DATA],
-    getPerpDexStatisticApi
+    getPerpDexStatisticApi,
+    { onSuccess: () => setLoaded(true) }
   )
   const perpdexData = perpDEXsStatistic?.find((d) => d.perpdex.toLowerCase() === perpdex?.toLowerCase())
   const protocolData = perpdexData?.protocolInfos?.find((data) => data.protocol?.toLowerCase() === protocol)
@@ -60,6 +62,7 @@ export default function PerpDEXDetails() {
   }, [perpDEXEvent, perpdexData?.perpdex, protocolData?.protocol])
 
   const { lg } = useResponsive()
+  console.count()
 
   return (
     <>
@@ -68,7 +71,7 @@ export default function PerpDEXDetails() {
       />
       <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
         {!perpdexData && !isLoading && <NoDataFound />}
-        {!isLoading && (
+        {!isLoading && loaded && (
           <>
             {lg ? (
               <DesktopView
