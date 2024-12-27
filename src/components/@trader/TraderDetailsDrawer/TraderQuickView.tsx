@@ -3,8 +3,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTraderExchangeStatistic, getTraderStatisticApi } from 'apis/traderApis'
+import HLTraderOpeningPositionsTable from 'components/@position/HLTraderOpeningPositions'
 import TraderHistoryPositions, { TraderHistoryPositionsListView } from 'components/@position/TraderHistoryPositions'
-import TraderOpeningPositions, { TraderOpeningPositionsListView } from 'components/@position/TraderOpeningPositions'
+import { TraderOpeningPositionsListView } from 'components/@position/TraderOpeningPositions'
+import TraderOpeningPositions from 'components/@position/TraderOpeningPositions'
 import NotFound from 'components/@ui/NotFound'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
@@ -206,7 +208,11 @@ export function TraderDetailsComponent({
         {lg ? (
           <Flex flex={1} flexDirection="column" sx={{ backgroundColor: 'neutral7' }}>
             <Box>
-              <TraderOpeningPositions address={address} protocol={protocol} isDrawer isExpanded />
+              {protocol === ProtocolEnum.HYPERLIQUID ? (
+                <HLTraderOpeningPositionsTable address={address} protocol={protocol} isDrawer isExpanded />
+              ) : (
+                <TraderOpeningPositions address={address} protocol={protocol} isDrawer isExpanded />
+              )}
             </Box>
             <Box sx={{ position: 'relative', minHeight: 400 }}>
               <TraderHistoryPositions address={address} protocol={protocol} isDrawer isExpanded />

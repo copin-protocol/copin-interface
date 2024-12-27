@@ -38,7 +38,7 @@ export const LocalTimeText = ({
   format,
   hasTooltip = true,
 }: {
-  date: string | undefined
+  date: string | number | undefined
   format?: string
   hasTooltip?: boolean
 }) => {
@@ -71,7 +71,7 @@ export const LocalTimeText = ({
   )
 }
 
-export const RelativeShortTimeText = ({ date, suffix }: { date: string | undefined; suffix?: ReactNode }) => {
+export const RelativeShortTimeText = ({ date, suffix }: { date: string | number | undefined; suffix?: ReactNode }) => {
   const uuid = uuidv4()
   const tooltipId = `tt_${uuid}`
   return (

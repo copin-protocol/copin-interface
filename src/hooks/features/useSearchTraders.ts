@@ -1,16 +1,19 @@
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 
+import { getHlAccountInfo } from 'apis/hyperliquid'
 import { searchTradersApi } from 'apis/traderApis'
 import { SearchTradersParams } from 'apis/types'
+import { HlAccountData } from 'entities/hyperliquid'
 import { TraderData } from 'entities/trader'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { TableSortProps } from 'theme/Table/types'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum, TimeFrameEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
+import { isAddress } from 'utils/web3/contracts'
 
 export default function useSearchTraders({ protocols }: { protocols: ProtocolEnum[] }) {
   const { searchParams, setSearchParams } = useSearchParams()
@@ -55,6 +58,25 @@ export default function useSearchTraders({ protocols }: { protocols: ProtocolEnu
     }
   )
 
+  const address = isAddress(keyword)
+
+  const { data: searchHLTrader, isLoading: isLoadingHLTrader } = useQuery(
+    [QUERY_KEYS.SEARCH_HL_TRADER, keyword],
+    () => getHlAccountInfo({ user: keyword }),
+    {
+      enabled: address !== '' && currentPage === 1,
+      select: (data: HlAccountData) => {
+        if (Number(data.marginSummary.accountValue) <= 0) return
+        return {
+          id: address,
+          account: address,
+          protocol: ProtocolEnum.HYPERLIQUID,
+          type: TimeFrameEnum.ALL_TIME,
+        } as TraderData
+      },
+    }
+  )
+
   const changeCurrentSort = (data: TableSortProps<TraderData> | undefined) => {
     setCurrentSort(data)
     changeCurrentPage(1)
@@ -71,6 +93,8 @@ export default function useSearchTraders({ protocols }: { protocols: ProtocolEnu
     keyword,
     isLoading,
     searchTraders,
+    searchHLTrader,
+    isLoadingHLTrader,
     currentProtocol,
     currentPage,
     currentLimit,

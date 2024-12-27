@@ -2,9 +2,11 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 
+import { getHlAccountInfo } from 'apis/hyperliquid'
 import { searchPositionsApi } from 'apis/positionApis'
 import { searchTradersApi } from 'apis/traderApis'
 import { SearchPositionByTxHashParams, SearchTradersParams } from 'apis/types'
+import { HlAccountData } from 'entities/hyperliquid'
 import { PositionData, TraderData } from 'entities/trader'
 import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import useDebounce from 'hooks/helpers/useDebounce'
@@ -18,7 +20,7 @@ import {
   SEARCH_DEFAULT_LIMIT,
   SOLANA_TX_HASH_REGEX,
 } from 'utils/config/constants'
-import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum, TimeFrameEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { generatePositionDetailsRoute, generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
@@ -115,6 +117,23 @@ export default function useSearchAllData(args?: {
     }
   )
 
+  const { data: searchHLTrader, isLoading: searchingHLTrader } = useQuery(
+    [QUERY_KEYS.SEARCH_HL_TRADER, debounceSearchText],
+    () => getHlAccountInfo({ user: debounceSearchText }),
+    {
+      enabled: isAddress(debounceSearchText) !== '',
+      select: (data: HlAccountData) => {
+        if (Number(data.marginSummary.accountValue) <= 0) return
+        return {
+          id: debounceSearchText,
+          account: debounceSearchText,
+          protocol: ProtocolEnum.HYPERLIQUID,
+          type: TimeFrameEnum.ALL_TIME,
+        } as TraderData
+      },
+    }
+  )
+
   const { data: searchPositions, isFetching: searchingPositions } = useQuery(
     [QUERY_KEYS.SEARCH_TX_HASH, debounceSearchText, isPremiumUser, allowAllProtocol, protocol, protocols],
     () => searchPositionsApi(queryTxData),
@@ -124,10 +143,10 @@ export default function useSearchAllData(args?: {
   )
 
   useEffect(() => {
-    if (!searchingTraders && !searchingPositions) {
+    if (!searchingTraders && !searchingPositions && !searchingHLTrader) {
       setIsLoading(false)
     }
-  }, [searchingTraders, searchingPositions])
+  }, [searchingTraders, searchingPositions, searchingHLTrader])
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value)
@@ -252,6 +271,7 @@ export default function useSearchAllData(args?: {
     handleClick,
     handleClickPosition,
     searchTraders,
+    searchHLTrader,
     searchPositions,
     allowSearchProtocol,
     allowSearchPositions,

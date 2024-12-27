@@ -3,6 +3,7 @@ import { formatUnits } from '@ethersproject/units'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
+import { getHlAccountInfo } from 'apis/hyperliquid'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useUsdPrices from 'hooks/store/useUsdPrices'
 import { useCustomMulticallQuery } from 'hooks/web3/useMulticallQuery'
@@ -21,6 +22,16 @@ const useTraderBalances = ({ account, protocol }: { account: string | undefined;
   const { prices } = useUsdPrices()
   const protocolProvider = PROTOCOL_PROVIDER[protocol]
   const isEVM = typeof protocolProvider?.chainId === 'number'
+
+  const { data: hlAccountData } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_TRADER_DETAIL, account],
+    () => getHlAccountInfo({ user: account ?? '' }),
+    {
+      enabled: !!account && protocol === ProtocolEnum.HYPERLIQUID,
+      retry: 0,
+    }
+  )
+  const hlBalance = Number(hlAccountData?.marginSummary?.accountValue ?? 0)
 
   const { data: nativeBalanceData } = useQuery(
     [QUERY_KEYS.GET_TRADER_NATIVE_BALANCE],
@@ -105,7 +116,7 @@ const useTraderBalances = ({ account, protocol }: { account: string | undefined;
     return balances
   }, [tokenBalancesData, prices, getListIndexTokenByListSymbols])
 
-  return { balance: tokenBalances + nativeBalance, isLoading, reloadToken }
+  return { balance: tokenBalances + nativeBalance + hlBalance, isLoading, reloadToken }
 }
 
 export default useTraderBalances

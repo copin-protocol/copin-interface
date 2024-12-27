@@ -5,7 +5,7 @@ import ActiveDot from 'components/@ui/ActiveDot'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
-import { PositionData, TraderData } from 'entities/trader'
+import { TraderData } from 'entities/trader'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
@@ -45,7 +45,7 @@ export const searchResultsColumn: ColumnData<TraderData, ExternalSource>[] = [
     style: { minWidth: '110px' },
     render: (item) => (
       <Type.Caption color="neutral1">
-        <RelativeTimeText date={item.lastTradeAt} />
+        {item.lastTradeAt ? <RelativeTimeText date={item.lastTradeAt} /> : '--'}
       </Type.Caption>
     ),
   },

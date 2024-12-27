@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import { ApiMeta } from 'apis/api'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
-import TraderPositionListView from 'components/@position/TraderPositionsListView'
+import HLTraderPositionListView from 'components/@position/TraderPositionsListView'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { PositionData } from 'entities/trader'
 import useInfiniteLoadMore from 'hooks/features/useInfiniteLoadMore'
@@ -117,7 +117,7 @@ const PositionsList = memo(function PositionsListMemo({
     />
   ) : (
     <>
-      <TraderPositionListView
+      <HLTraderPositionListView
         data={data}
         isLoading={false}
         scrollDep={data}

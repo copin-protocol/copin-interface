@@ -7,6 +7,7 @@ import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { useSearchProtocolFilter } from 'hooks/store/useSearchProtocolFilter'
 import { Box, Flex, Type } from 'theme/base'
 import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
+import { ProtocolEnum } from 'utils/config/enums'
 
 const SearchTrader = () => {
   const isInternal = useInternalRole()
@@ -22,6 +23,8 @@ const SearchTrader = () => {
   const {
     keyword,
     searchTraders,
+    searchHLTrader,
+    isLoadingHLTrader,
     isLoading,
     currentPage,
     currentLimit,
@@ -32,6 +35,36 @@ const SearchTrader = () => {
     changeCurrentSort,
     changeCurrentProtocol,
   } = useSearchTraders({ protocols: selectedProtocols })
+
+  let traders
+  if (
+    searchHLTrader &&
+    !searchTraders?.data?.find(
+      (t) => t.account.toLowerCase() === searchHLTrader.account.toLowerCase() && t.protocol === ProtocolEnum.HYPERLIQUID
+    )
+  ) {
+    if (searchTraders) {
+      traders = {
+        data: [searchHLTrader, ...searchTraders.data],
+        meta: {
+          ...searchTraders.meta,
+          total: searchTraders.meta.total + 1,
+        },
+      }
+    } else {
+      traders = {
+        data: [searchHLTrader],
+        meta: {
+          limit: currentLimit,
+          offset: 0,
+          total: 1,
+          totalPages: 1,
+        },
+      }
+    }
+  } else {
+    traders = searchTraders
+  }
 
   return (
     <>
@@ -69,8 +102,8 @@ const SearchTrader = () => {
           <Box sx={{ flex: '1' }}>
             <SearchAllResults
               keyword={keyword}
-              isLoading={isLoading}
-              searchTraders={searchTraders}
+              isLoading={isLoading || isLoadingHLTrader}
+              searchTraders={traders}
               currentPage={currentPage}
               currentLimit={currentLimit}
               currentSort={currentSort}
