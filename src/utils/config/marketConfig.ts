@@ -23,4 +23,5 @@ export const SPECIAL_MARKET_CONFIG_MAPPING: Record<string, { originalSymbol: str
   '1000WHY': { originalSymbol: 'SATS', multiple: 1_000 },
   '1000X': { originalSymbol: 'X', multiple: 1_000 },
   '1000XEC': { originalSymbol: 'XEC', multiple: 1_000 },
+  '1000NEIRO': { originalSymbol: 'NEIRO', multiple: 1_000 },
 }

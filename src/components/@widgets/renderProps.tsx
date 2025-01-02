@@ -201,7 +201,9 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
     : ''
   const marketPrice = prices[symbol] ?? 0
   const liquidatePrice = data?.liquidationPrice ?? calcLiquidatePrice(data)
-  const riskPercent = calcRiskPercent(data.isLong, data.averagePrice, marketPrice, liquidatePrice ?? 0)
+  const riskPercent = marketPrice
+    ? calcRiskPercent(data.isLong, data.averagePrice, marketPrice, liquidatePrice ?? 0)
+    : 0
   const { sx, ..._textProps } = textProps ?? {}
 
   const sizeNumber = data.maxSizeNumber ?? data.size

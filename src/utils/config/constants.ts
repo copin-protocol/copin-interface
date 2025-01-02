@@ -212,6 +212,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.KWENTA,
         ProtocolEnum.POLYNOMIAL,
         ProtocolEnum.POLYNOMIAL_L2,
+        ProtocolEnum.GMX_V2_AVAX,
         ProtocolEnum.GMX_V2,
         ProtocolEnum.GNS,
         ProtocolEnum.GNS_POLY,

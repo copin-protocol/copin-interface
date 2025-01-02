@@ -484,6 +484,7 @@ export function getSymbolTradingView(symbol: string) {
     case '1MBABYDOGE':
       return 'BABYDOGE'
     case '1000CHEEMS':
+    case '1MCHEEMS':
       return 'CHEEMS'
     case '1000000AIDOGE':
       return 'AIDOGE'
@@ -491,6 +492,10 @@ export function getSymbolTradingView(symbol: string) {
       return 'RENDER'
     case 'BTCDEGEN':
       return 'BTC'
+    case 'ETHDEGEN':
+      return 'ETH'
+    case '1000NEIRO':
+      return 'NEIRO'
     default:
       return symbol
   }
@@ -503,6 +508,7 @@ export function getPriceTradingView(symbol: string, price?: number) {
     case '1MBABYDOGE':
     case '1000000MOG':
     case '1000000AIDOGE':
+    case '1MCHEEMS':
       return price / 1000000
     case '1000BONK':
     case 'kBONK':
@@ -522,6 +528,7 @@ export function getPriceTradingView(symbol: string, price?: number) {
     case '1000SATS':
     case '1000RATS':
     case '1000CHEEMS':
+    case '1000NEIRO':
       return price / 1000
     default:
       return price
