@@ -95,6 +95,7 @@ const useTraderBalances = ({ account, protocol }: { account: string | undefined;
     if (!tokenBalancesData?.length) return 0
     const balances = (tokenBalancesData as BigNumber[][]).reduce((result, balanceData, index) => {
       const collateralToken = tokens[index]
+      if (!collateralToken) return result
       const collateralAmount = Number(formatUnits(balanceData?.[0] ?? BigNumber.from(0), collateralToken.decimals))
       if (collateralToken.isStableCoin) {
         return (result += collateralAmount)

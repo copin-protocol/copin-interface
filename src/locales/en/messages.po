@@ -1100,6 +1100,7 @@ msgstr "Due to price slippage prevention, the stop loss price will increase / de
 msgid "Dune Dashboard"
 msgstr "Dune Dashboard"
 
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Duration:"
@@ -1353,6 +1354,8 @@ msgstr "Fund Management"
 msgid "Funding"
 msgstr "Funding"
 
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Funding:"
@@ -2142,6 +2145,7 @@ msgstr "No perp DEX matched!"
 msgid "No position found"
 msgstr "No position found"
 
+#: src/components/@position/HLTraderPositionsListView/index.tsx
 #: src/components/@position/TraderPositionsListView/index.tsx
 msgid "No position was found"
 msgstr "No position was found"
@@ -2253,6 +2257,10 @@ msgstr "Open Homepage"
 msgid "Open Interest"
 msgstr "Open Interest"
 
+#: src/components/@position/HLTraderOpeningPositions/index.tsx
+msgid "Open Orders"
+msgstr "Open Orders"
+
 #: src/pages/MyProfile/DCPManagement/index.tsx
 #: src/pages/MyProfile/DCPManagement/index.tsx
 #: src/pages/MyProfile/VaultManagement/index.tsx
@@ -2266,6 +2274,7 @@ msgid "Open Telegram Bot"
 msgstr "Open Telegram Bot"
 
 #: src/components/@position/CopyOpeningPositions/index.tsx
+#: src/components/@position/HLTraderOpeningPositions/index.tsx
 #: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
 #: src/pages/MyProfile/DCPManagement/index.tsx
 #: src/pages/MyProfile/OpeningPositions/index.tsx
@@ -2332,6 +2341,7 @@ msgstr "PNL ($)"
 msgid "PNL Ratio"
 msgstr "PNL Ratio"
 
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Paid Fees:"
@@ -2913,6 +2923,7 @@ msgstr "Stats"
 msgid "Status"
 msgstr "Status"
 
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Status:"
 msgstr "Status:"
@@ -3259,6 +3270,8 @@ msgstr "Toggle to select specific pairs"
 msgid "Top"
 msgstr "Top"
 
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Total Collateral:"
