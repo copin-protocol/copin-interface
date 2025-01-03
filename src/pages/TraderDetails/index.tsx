@@ -268,6 +268,7 @@ export function TraderDetailsComponent({
             />
           ) : (
             <TraderHistoryPositionsListView
+              backgroundColor="neutral7"
               address={address}
               protocol={protocol}
               isExpanded={positionFullExpanded}

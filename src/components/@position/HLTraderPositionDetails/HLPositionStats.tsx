@@ -4,7 +4,6 @@ import { ReactNode } from 'react'
 
 import PositionStatus from 'components/@position/PositionStatus'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
-import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { renderEntry, renderSize, renderSizeOpeningWithPrices } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
@@ -12,7 +11,6 @@ import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
 import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
-import { formatDuration } from 'utils/helpers/format'
 
 interface PositionStatsProps {
   data: PositionData
@@ -66,9 +64,7 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }:
           </Flex>
         </Flex>
         <Flex alignItems="center" sx={{ gap: 3 }}>
-          <PositionStatus
-            status={hasLiquidate ? PositionStatusEnum.LIQUIDATE : isOpening ? PositionStatusEnum.OPEN : data.status}
-          />
+          <PositionStatus status={PositionStatusEnum.OPEN} />
         </Flex>
       </Flex>
       <Flex mt={3} alignItems="center" justifyContent="space-between" sx={{ gap: [2, 24], flexWrap: 'wrap' }}>
@@ -111,14 +107,6 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }:
 const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }: PositionStatsProps) => {
   return (
     <Flex flexDirection="column" sx={{ gap: 2 }}>
-      <Flex alignItems="center" justifyContent="space-between" flexWrap="wrap" sx={{ gap: 3 }}>
-        <Flex alignItems="center" sx={{ gap: 12, flexWrap: 'wrap' }}>
-          <Type.Caption>
-            <RelativeTimeText date={data.openBlockTime} />
-          </Type.Caption>
-          {renderEntry(data)}
-        </Flex>
-      </Flex>
       <Flex width="100%" mb={1}>
         {isOpening ? renderSizeOpeningWithPrices(data, prices) : renderSize(data)}
       </Flex>
@@ -134,47 +122,17 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }: 
             />
           }
         />
-        <MobileItemInfo label={<Trans>Duration:</Trans>} value={formatDuration(data.durationInSecond)} />
-        <MobileItemInfo
-          label={<Trans>Status:</Trans>}
-          value={
-            <PositionStatus
-              status={hasLiquidate ? PositionStatusEnum.LIQUIDATE : isOpening ? PositionStatusEnum.OPEN : data.status}
-            />
-          }
-        />
-      </Flex>
-      <Flex alignItems="center" sx={{ gap: 2, flexWrap: 'wrap' }}>
-        <MobileItemInfo
-          label={<Trans>Paid Fees:</Trans>}
-          value={
-            <ValueOrToken
-              protocol={data.protocol}
-              indexToken={data.collateralToken}
-              value={data.fee != null ? data.fee * -1 : undefined}
-              valueInToken={data.feeInToken != null ? data.feeInToken * -1 : undefined}
-              component={
-                <SignedText
-                  value={data.fee == null && data.feeInToken == null ? undefined : (data.feeInToken ?? data.fee) * -1}
-                  maxDigit={2}
-                  minDigit={2}
-                  prefix="$"
-                />
-              }
-            />
-          }
-        />
         <MobileItemInfo
           label={<Trans>Funding:</Trans>}
           value={
             hasFundingFee ? (
               <ValueOrToken
                 protocol={data.protocol}
-                indexToken={data.collateralToken}
+                indexToken={data.funding == null ? data.collateralToken : undefined}
                 value={data.funding}
                 valueInToken={data.fundingInToken}
                 component={
-                  <SignedText value={data.fundingInToken ?? data.funding} maxDigit={2} minDigit={2} prefix="$" />
+                  <SignedText value={data.funding ?? data.fundingInToken} maxDigit={2} minDigit={2} prefix="$" />
                 }
               />
             ) : (
@@ -182,7 +140,7 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }: 
             )
           }
         />
-        <MobileItemInfo label={''} value={''} />
+        <MobileItemInfo label={<Trans>Status:</Trans>} value={<PositionStatus status={PositionStatusEnum.OPEN} />} />
       </Flex>
     </Flex>
   )

@@ -3,7 +3,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTraderExchangeStatistic, getTraderStatisticApi } from 'apis/traderApis'
-import HLTraderOpeningPositionsTable from 'components/@position/HLTraderOpeningPositions'
+import HLTraderOpeningPositionsTable, {
+  HLTraderOpeningPositionsListView,
+} from 'components/@position/HLTraderOpeningPositions'
 import TraderHistoryPositions, { TraderHistoryPositionsListView } from 'components/@position/TraderHistoryPositions'
 import { TraderOpeningPositionsListView } from 'components/@position/TraderOpeningPositions'
 import TraderOpeningPositions from 'components/@position/TraderOpeningPositions'
@@ -221,7 +223,13 @@ export function TraderDetailsComponent({
         ) : (
           <Flex sx={{ backgroundColor: 'neutral7', flex: 1 }}>
             <PositionMobileView
-              openingPositions={<TraderOpeningPositionsListView address={address} protocol={protocol} isDrawer />}
+              openingPositions={
+                protocol === ProtocolEnum.HYPERLIQUID ? (
+                  <HLTraderOpeningPositionsListView address={address} protocol={protocol} isDrawer />
+                ) : (
+                  <TraderOpeningPositionsListView address={address} protocol={protocol} isDrawer />
+                )
+              }
               historyPositions={
                 <TraderHistoryPositionsListView
                   address={address}

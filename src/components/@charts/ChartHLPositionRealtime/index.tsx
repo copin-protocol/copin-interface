@@ -12,6 +12,7 @@ import { ChartingLibraryWidgetOptions, ResolutionString } from '../../../../publ
 import datafeed from '../ChartTraderPositionProfitRealtime/datafeed'
 import { DEFAULT_CHART_REALTIME_PROPS } from '../configs'
 import { useChart } from './useChart'
+import { usePlotOrderMarker } from './usePlotOrderMarker'
 import { usePlotPositionInformation } from './usePlotPositionInformation'
 
 interface Props {
@@ -33,7 +34,7 @@ function HLRealtimeChart({ position, orders }: Props) {
       ...DEFAULT_CHART_REALTIME_PROPS,
       datafeed,
       container: chartContainer,
-      interval: '1' as ResolutionString,
+      interval: '5' as ResolutionString,
       symbol: symbol ? `${getSymbolTradingView(symbol)}USD` : undefined,
       custom_formatters: {
         priceFormatterFactory: (symbol, minTick) => {
@@ -43,37 +44,18 @@ function HLRealtimeChart({ position, orders }: Props) {
         },
       },
     } as ChartingLibraryWidgetOptions
-  }, [chartContainer, decimals, position.durationInSecond, symbol])
+  }, [chartContainer, decimals, symbol])
 
   const chart = useChart(chartOpts)
-
-  // const pos = positions.find((x) => x.ticker === symbol)
-  // const pnl = +formatNumber(pos?.pnl || 0)
-  //
-  // const entry = pos?.entry ? +pos.entry.toFixed(decimals) : undefined
-
-  // const _positionInfo = pos
-  //   ? {
-  //       direction: pos.direction,
-  //       openedAt: pos.openedAt,
-  //       entry,
-  //       pnl,
-  //       stop,
-  //       takeProfit,
-  //       size: +pos.size,
-  //       symbol: pos.ticker,
-  //     }
-  //   : undefined
-
-  // const positionInfo = React.useMemo(() => {
-  //   return _positionInfo
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [JSON.stringify(_positionInfo)])
-  //
 
   usePlotPositionInformation({
     chart,
     position,
+  })
+
+  usePlotOrderMarker({
+    chart,
+    orders,
   })
 
   return (

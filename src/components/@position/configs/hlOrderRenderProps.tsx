@@ -150,8 +150,13 @@ export const orderColumns: ColumnData<HlOrderData>[] = [
 ]
 
 export const drawerOrderColumns: ColumnData<HlOrderData>[] = [
-  openTimeShortColumn,
+  openTimeColumn,
+  orderTypeColumn,
   symbolColumn,
+  directionColumn,
+  triggerConditionColumn,
+  reduceOnlyColumn,
   sizeColumn,
+  sizeInTokenColumn,
   priceColumn,
 ]

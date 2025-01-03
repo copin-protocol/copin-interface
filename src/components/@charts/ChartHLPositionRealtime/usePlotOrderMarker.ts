@@ -1,22 +1,20 @@
-import dayjs from 'dayjs'
 import React from 'react'
 
-import { OrderData } from 'entities/trader'
+import { HlOrderData } from 'entities/hyperliquid'
 import { themeColors } from 'theme/colors'
-import { OrderTypeEnum } from 'utils/config/enums'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
 
-import { IChartingLibraryWidget, IExecutionLineAdapter } from '../../../../public/static/charting_library'
+import { IChartingLibraryWidget, IOrderLineAdapter } from '../../../../public/static/charting_library'
 
 interface Props {
   chart?: IChartingLibraryWidget
-  orders?: OrderData[]
+  orders?: HlOrderData[]
 }
 export function usePlotOrderMarker({ chart, orders }: Props) {
-  const orderMarker = React.useRef<IExecutionLineAdapter[]>([])
+  const orderMarker = React.useRef<IOrderLineAdapter[]>([])
 
   React.useEffect(() => {
-    let markers: IExecutionLineAdapter[] = []
+    let markers: IOrderLineAdapter[] = []
     try {
       chart?.onChartReady(() => {
         const activeChart = chart?.activeChart()
@@ -26,29 +24,28 @@ export function usePlotOrderMarker({ chart, orders }: Props) {
 
         markers = orders
           .map((order) => {
-            const isIncrease = order.type === OrderTypeEnum.INCREASE || order.type === OrderTypeEnum.OPEN
+            const color = order.isLong
+              ? order.reduceOnly
+                ? themeColors.red2
+                : themeColors.green1
+              : order.reduceOnly
+              ? themeColors.green1
+              : themeColors.red2
             return activeChart
-              ?.createExecutionShape()
-              ?.setText(`${order.isLong ? (isIncrease ? 'B' : 'S') : isIncrease ? 'S' : 'B'}`)
+              ?.createOrderLine()
+              ?.setPrice(order.priceNumber)
+              ?.setText(`${order.orderType}`)
+              ?.setQuantity(` $${formatNumber(order.sizeNumber, 0)} `)
               ?.setTooltip(
-                `${order.isLong ? (isIncrease ? 'Long' : 'Short') : isIncrease ? 'Short' : 'Long'} | ${formatPrice(
-                  order.priceNumber
-                )} | $${formatNumber(order.sizeDeltaNumber)}`
+                `${order.orderType} | ${formatPrice(order.priceNumber)} | $${formatNumber(order.sizeNumber)}`
               )
-              ?.setTextColor(
-                order.isLong
-                  ? isIncrease
-                    ? themeColors.green1
-                    : themeColors.red1
-                  : isIncrease
-                  ? themeColors.red1
-                  : themeColors.green1
-              )
-              .setArrowColor('#0F0')
-              .setArrowHeight(15)
-              .setDirection(order.isLong ? (isIncrease ? 'buy' : 'sell') : isIncrease ? 'sell' : 'buy')
-              .setTime(dayjs(order.blockTime).utc().unix())
-              .setPrice(order.priceNumber)
+              ?.setLineStyle(2)
+              ?.setLineWidth(0.5)
+              ?.setLineColor(color)
+              ?.setBodyBorderColor(color)
+              ?.setBodyBackgroundColor(themeColors.neutral1)
+              ?.setQuantityBackgroundColor(themeColors.neutral8)
+              ?.setQuantityBorderColor(color)
           })
           .filter(Boolean)
 

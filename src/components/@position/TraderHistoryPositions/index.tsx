@@ -177,7 +177,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
   })
 
   return (
-    <Box display={['block', 'block', 'block', 'flex']} flexDirection="column" height={['auto', 'auto', 'auto', '100%']}>
+    <Box display={'flex'} flexDirection="column" height={'100%'}>
       <Flex pt={16} px={2} pb={12} alignItems="center">
         <Box flex="1" sx={{ '& > *': { pb: 0 } }}>
           <SectionTitle icon={<ClockCounterClockwise size={24} />} title="History" />
@@ -278,7 +278,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
           )}
         </Flex>
       </Flex>
-      {!isLoadingClosedPositions && !data?.length && !sm && <NoDataFound message="No positions history" />}
+
       {!!data && data.length > 0 && !!data[0].account && heatmapVisible && (
         <Box height={130} px={12}>
           <ActivityHeatmap account={data[0].account} protocol={data[0].protocol} />
@@ -292,24 +292,28 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
         className="test"
         sx={{ visibility: expanding ? 'hidden' : 'visible' }}
       >
-        <VirtualList
-          data={data}
-          isLoading={isLoadingClosedPositions}
-          hasNextPage={hasNextClosedPositions}
-          fetchNextPage={handleFetchClosedPositions}
-          columns={tableSettings}
-          currentSort={currentSort}
-          changeCurrentSort={changeCurrentSort}
-          dataMeta={dataMeta}
-          handleSelectItem={handleSelectItem}
-          resizeDeps={resizeDeps}
-          rowBgFactory={renderRowBackground}
-        />
-        {isLoadingClosedPositions && (
+        {!isLoadingClosedPositions && !data?.length && !sm ? (
+          <NoDataFound message="No positions history" />
+        ) : (
+          <VirtualList
+            data={data}
+            isLoading={isLoadingClosedPositions}
+            hasNextPage={hasNextClosedPositions}
+            fetchNextPage={handleFetchClosedPositions}
+            columns={tableSettings}
+            currentSort={currentSort}
+            changeCurrentSort={changeCurrentSort}
+            dataMeta={dataMeta}
+            handleSelectItem={handleSelectItem}
+            resizeDeps={resizeDeps}
+            rowBgFactory={renderRowBackground}
+          />
+        )}
+        {/* {isLoadingClosedPositions && (
           <Box sx={{ position: 'absolute', bottom: 0, left: 0, right: 0, bg: 'modalBG' }}>
             <Loading />
           </Box>
-        )}
+        )} */}
       </Box>
 
       <TraderPositionDetailsDrawer
@@ -377,10 +381,10 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
   const { address, protocol, backgroundColor = 'neutral5' } = props
   const { myProfile } = useMyProfile()
   const [openDrawer, setOpenDrawer] = useState(false)
-  const [showChart, setShowChart] = useState(false)
-  const { heatmapVisible, setHeatmapVisible } = useHeatmapStore()
+  // const [showChart, setShowChart] = useState(false)
+  // const { heatmapVisible, setHeatmapVisible } = useHeatmapStore()
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
-  const { sm } = useResponsive()
+  // const { sm } = useResponsive()
 
   //
   const {
@@ -509,7 +513,7 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
           </Tooltip> */}
         </Flex>
       </Flex>
-      {!isLoadingClosedPositions && !data?.length && !sm && <NoDataFound message="No positions history" />}
+      {/* {!isLoadingClosedPositions && !data?.length && !sm && <NoDataFound message="No positions history" />} */}
       {/* {!!data && data.length > 0 && !!data[0].account && heatmapVisible && (
         <Box height={130} px={12}>
           <ActivityHeatmap account={data[0].account} protocol={data[0].protocol} />
