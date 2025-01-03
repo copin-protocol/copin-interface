@@ -74,7 +74,7 @@ export default function HLTraderPositionListView({
                   Funding:
                 </Type.Caption>
                 <Type.Caption>
-                  <SignedText value={position.funding} minDigit={2} maxDigit={2} fontInherit />
+                  <SignedText value={position.funding * -1} minDigit={2} maxDigit={2} fontInherit />
                 </Type.Caption>
               </Flex>
             </Flex>

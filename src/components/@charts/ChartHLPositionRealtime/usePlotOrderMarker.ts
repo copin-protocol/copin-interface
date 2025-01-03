@@ -35,16 +35,19 @@ export function usePlotOrderMarker({ chart, orders }: Props) {
               ?.createOrderLine()
               ?.setPrice(order.priceNumber)
               ?.setText(`${order.orderType}`)
-              ?.setQuantity(` $${formatNumber(order.sizeNumber, 0)} `)
+              ?.setQuantity(order.sizeNumber ? `$${formatNumber(order.sizeNumber, 0)}` : 'N/A')
               ?.setTooltip(
-                `${order.orderType} | ${formatPrice(order.priceNumber)} | $${formatNumber(order.sizeNumber)}`
+                `${order.orderType}${order.triggerCondition ? ` | ${order.triggerCondition}` : ''} | ${formatPrice(
+                  order.priceNumber
+                )} | ${order.sizeNumber ? `$${formatNumber(order.sizeNumber, 0)}` : 'N/A'}`
               )
               ?.setLineStyle(2)
               ?.setLineWidth(0.5)
               ?.setLineColor(color)
+              ?.setBodyTextColor(themeColors.neutral6)
               ?.setBodyBorderColor(color)
               ?.setBodyBackgroundColor(themeColors.neutral1)
-              ?.setQuantityBackgroundColor(themeColors.neutral8)
+              ?.setQuantityBackgroundColor(themeColors.neutral5)
               ?.setQuantityBorderColor(color)
           })
           .filter(Boolean)
