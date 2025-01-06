@@ -10,7 +10,7 @@ import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { Box, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { ALL_OPTION } from 'utils/config/trades'
-import { getPairFromSymbol, getSymbolFromPair } from 'utils/helpers/transform'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import BacktestSummaryAndPositions from '../BacktestSummaryAndPositions'
 
@@ -77,12 +77,14 @@ export default function BacktestSingleResult({
 
   useEffect(() => {
     if (!!defaultToken.current || !dataSimulations || dataSimulations.length === 0) return
-    const option = tokenOptions.find((e) => e.id === dataSimulations[dataSimulations.length - 1]?.position?.pair)
+    const option = tokenOptions.find(
+      (e) => e.id === getSymbolFromPair(dataSimulations[dataSimulations.length - 1]?.position?.pair)
+    )
     if (option) {
       changeCurrency(option)
       defaultToken.current = option.id
     }
-  }, [tokenOptions])
+  }, [dataSimulations, tokenOptions])
 
   const timeRange = {
     from: settings?.fromTime,
@@ -138,7 +140,7 @@ export default function BacktestSingleResult({
             <ChartPositions
               protocol={protocol}
               targetPosition={targetPosition}
-              closedPositions={[...(dataSimulations?.map((_d) => _d.position ?? ({} as PositionData)) ?? [])].reverse()}
+              closedPositions={[...(dataSimulations?.map((_d) => _d.position ?? ({} as PositionData)) ?? [])]}
               currencyOptions={tokenOptions}
               currencyOption={currencyOption}
               changeCurrency={changeCurrency}

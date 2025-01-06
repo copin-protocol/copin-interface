@@ -64,14 +64,14 @@ export default function ListHLOrderTable({ data }: { data: HlOrderData[] }) {
         render: (item) => renderOrderTriggerCondition(item),
       },
       {
-        title: 'Size',
+        title: 'Size ($)',
         dataIndex: 'sizeNumber',
         key: 'sizeNumber',
         style: { minWidth: '105px', textAlign: 'right' },
         render: (item) => renderOrderSize(item),
       },
       {
-        title: 'Size In Token',
+        title: 'Size',
         dataIndex: 'sizeInTokenNumber',
         key: 'sizeInTokenNumber',
         style: { minWidth: '100px', textAlign: 'right' },

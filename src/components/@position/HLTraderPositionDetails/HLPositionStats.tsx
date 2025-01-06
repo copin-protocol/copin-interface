@@ -90,7 +90,12 @@ const DesktopLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }:
                   value={data.funding}
                   valueInToken={data.fundingInToken}
                   component={
-                    <SignedText value={data.funding ?? data.fundingInToken} maxDigit={2} minDigit={2} prefix="$" />
+                    <SignedText
+                      value={(data.funding ?? data.fundingInToken) * -1}
+                      maxDigit={2}
+                      minDigit={2}
+                      prefix="$"
+                    />
                   }
                 />
               ) : (
@@ -132,7 +137,7 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening }: 
                 value={data.funding}
                 valueInToken={data.fundingInToken}
                 component={
-                  <SignedText value={data.funding ?? data.fundingInToken} maxDigit={2} minDigit={2} prefix="$" />
+                  <SignedText value={(data.funding ?? data.fundingInToken) * -1} maxDigit={2} minDigit={2} prefix="$" />
                 }
               />
             ) : (

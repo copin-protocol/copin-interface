@@ -38,7 +38,8 @@ import { ColumnData } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
+import { UNLIMITED_COPY_SIZE_EXCHANGES } from 'utils/config/constants'
+import { CopyTradePlatformEnum, CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { overflowEllipsis } from 'utils/helpers/css'
@@ -803,7 +804,7 @@ function renderCopyTrader(data: CopyTradeWithCheckingData, isRunning: boolean) {
             maxCopyVolume: data.maxVolume,
             isRef: data.isRef,
             plan: data.plan,
-            hasCopyTradeVolumeIcon: isRunning,
+            hasCopyTradeVolumeIcon: isRunning && !UNLIMITED_COPY_SIZE_EXCHANGES.includes(data.exchange),
             hasCopyAddress: true,
           }}
         />

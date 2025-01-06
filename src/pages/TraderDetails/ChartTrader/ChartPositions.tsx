@@ -1,6 +1,6 @@
 import { ArrowsIn, ArrowsOutSimple, Coins } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { memo, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTraderTokensStatistic } from 'apis/traderApis'
@@ -53,11 +53,11 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
       enabled: !!account && !!protocol,
       retry: 0,
       keepPreviousData: true,
-      onSuccess(data) {
-        if (!data.data.length) return
-        const firstData = data.data[0]
-        setCurrentPair(firstData?.pair)
-      },
+      // onSuccess(data) {
+      //   if (!data.data.length) return
+      //   const firstData = data.data[0]
+      //   setCurrentPair(firstData?.pair)
+      // },
     }
   )
 
@@ -70,6 +70,25 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
     })
 
   const { xl } = useResponsive()
+
+  useEffect(() => {
+    const existOpening = !!openingPositions?.find((e) => e.id === currentPair)
+    const existClosed = !!closedPositions?.find((e) => e.id === currentPair)
+    const existToken = !!tokensStatistic?.data?.find((e) => e.pair === currentPair)
+    if (currentPair && (existOpening || existClosed || existToken)) return
+    if (!!openingPositions?.length) {
+      setCurrentPair(openingPositions[0].pair)
+      return
+    }
+    if (!!closedPositions?.length) {
+      setCurrentPair(closedPositions[0].pair)
+      return
+    }
+    if (!!tokensStatistic?.data?.length) {
+      setCurrentPair(tokensStatistic?.data[0].pair)
+      return
+    }
+  }, [closedPositions, currentPair, openingPositions, tokensStatistic?.data])
 
   return (
     <Flex sx={{ flexDirection: 'column', height: '100%', width: '100%' }}>

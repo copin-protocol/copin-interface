@@ -181,6 +181,13 @@ export const DCP_EXCHANGES: CopyTradePlatformEnum[] = [
   CopyTradePlatformEnum.SYNTHETIX_V3,
 ]
 
+export const UNLIMITED_COPY_SIZE_EXCHANGES: CopyTradePlatformEnum[] = [
+  CopyTradePlatformEnum.GNS_V8,
+  CopyTradePlatformEnum.SYNTHETIX_V2,
+  CopyTradePlatformEnum.SYNTHETIX_V3,
+  CopyTradePlatformEnum.HYPERLIQUID,
+]
+
 export const GAINS_TRADE_PROTOCOLS = [ProtocolEnum.GNS, ProtocolEnum.GNS_POLY, ProtocolEnum.GNS_BASE]
 export const GMX_V1_PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.GMX_AVAX]
 
