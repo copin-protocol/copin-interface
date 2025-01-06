@@ -233,8 +233,8 @@ export const ELEMENT_CLASSNAMES = {
 export const SERVICE_KEYS = {
   [ProtocolEnum.GMX_V2_AVAX]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.GMX_V2]: 'COPY_TRADE_MAIN_STREAM',
-  [ProtocolEnum.GMX]: 'GMX_COPY_TRADE',
-  [ProtocolEnum.GMX_AVAX]: 'GMX_COPY_TRADE',
+  [ProtocolEnum.GMX]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.GMX_AVAX]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.KWENTA]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.POLYNOMIAL]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.POLYNOMIAL_L2]: '',
@@ -302,8 +302,8 @@ export const SERVICE_KEYS = {
 export const INTERNAL_SERVICE_KEYS = {
   [ProtocolEnum.GMX_V2_AVAX]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.GMX_V2]: 'COPY_TRADE_MAIN_STREAM',
-  [ProtocolEnum.GMX]: 'GMX_COPY_TRADE',
-  [ProtocolEnum.GMX_AVAX]: 'GMX_COPY_TRADE',
+  [ProtocolEnum.GMX]: 'COPY_TRADE_MAIN_STREAM',
+  [ProtocolEnum.GMX_AVAX]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.KWENTA]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.POLYNOMIAL]: 'COPY_TRADE_MAIN_STREAM',
   [ProtocolEnum.POLYNOMIAL_L2]: 'COPY_TRADE_MAIN_STREAM',
