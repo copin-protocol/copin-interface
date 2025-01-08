@@ -307,7 +307,6 @@ export const FEE_WITH_FUNDING_PROTOCOLS = [
   ProtocolEnum.IDEX,
   ProtocolEnum.POLYNOMIAL_L2,
   ProtocolEnum.JOJO_BASE,
-  ProtocolEnum.ZENO_METIS,
 ]
 export const COLLATERAL_TOKEN_PROTOCOLS: ProtocolEnum[] = []
 
