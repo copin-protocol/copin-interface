@@ -188,7 +188,12 @@ export const UNLIMITED_COPY_SIZE_EXCHANGES: CopyTradePlatformEnum[] = [
   CopyTradePlatformEnum.HYPERLIQUID,
 ]
 
-export const GAINS_TRADE_PROTOCOLS = [ProtocolEnum.GNS, ProtocolEnum.GNS_POLY, ProtocolEnum.GNS_BASE]
+export const GAINS_TRADE_PROTOCOLS = [
+  ProtocolEnum.GNS,
+  ProtocolEnum.GNS_POLY,
+  ProtocolEnum.GNS_BASE,
+  ProtocolEnum.GNS_APE,
+]
 export const GMX_V1_PROTOCOLS = [ProtocolEnum.GMX, ProtocolEnum.GMX_AVAX]
 
 export const DCP_SUPPORTED_PROTOCOLS = [
@@ -238,10 +243,14 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.VELA_ARB,
         ProtocolEnum.HMX_ARB,
         ProtocolEnum.SYNTHETIX_V3,
+        ProtocolEnum.SYNTHETIX_V3_ARB,
         ProtocolEnum.KTX_MANTLE,
         ProtocolEnum.CYBERDEX,
         ProtocolEnum.YFX_ARB,
         ProtocolEnum.KILOEX_OPBNB,
+        ProtocolEnum.KILOEX_BNB,
+        ProtocolEnum.KILOEX_MANTA,
+        ProtocolEnum.KILOEX_BASE,
         ProtocolEnum.ROLLIE_SCROLL,
         ProtocolEnum.MUMMY_FANTOM,
         ProtocolEnum.HYPERLIQUID,
@@ -252,6 +261,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.DYDX,
         ProtocolEnum.UNIDEX_ARB,
         ProtocolEnum.VERTEX_ARB,
+        ProtocolEnum.HORIZON_BNB,
         ProtocolEnum.HOLDSTATION_ZKSYNC,
         ProtocolEnum.ZENO_METIS,
         ProtocolEnum.LINEHUB_LINEA,
@@ -271,6 +281,8 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.POLYNOMIAL,
   ProtocolEnum.GNS,
   ProtocolEnum.GNS_POLY,
+  ProtocolEnum.GNS_BASE,
+  ProtocolEnum.GNS_APE,
   ProtocolEnum.MUX_ARB,
   ProtocolEnum.AVANTIS_BASE,
   ProtocolEnum.CYBERDEX,
@@ -285,11 +297,6 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.ROLLIE_SCROLL,
   ProtocolEnum.MUMMY_FANTOM,
   ProtocolEnum.MORPHEX_FANTOM,
-  // ProtocolEnum.KILOEX_BNB,
-  // ProtocolEnum.KILOEX_MANTA,
-  // ProtocolEnum.KILOEX_BASE,
-  // ProtocolEnum.GNS_BASE,
-  // ProtocolEnum.GNS_APE,
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
 export const FEE_WITH_FUNDING_PROTOCOLS = [
@@ -300,6 +307,7 @@ export const FEE_WITH_FUNDING_PROTOCOLS = [
   ProtocolEnum.IDEX,
   ProtocolEnum.POLYNOMIAL_L2,
   ProtocolEnum.JOJO_BASE,
+  ProtocolEnum.ZENO_METIS,
 ]
 export const COLLATERAL_TOKEN_PROTOCOLS: ProtocolEnum[] = []
 
