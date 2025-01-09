@@ -270,6 +270,8 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.APOLLOX_BASE,
         ProtocolEnum.GMX_AVAX,
         ProtocolEnum.SYNTHETIX,
+        ProtocolEnum.DEPERP_BASE,
+        ProtocolEnum.ELFI_ARB,
       ]
     : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 
