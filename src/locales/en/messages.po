@@ -1100,6 +1100,7 @@ msgstr "Due to price slippage prevention, the stop loss price will increase / de
 msgid "Dune Dashboard"
 msgstr "Dune Dashboard"
 
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Duration:"
@@ -2340,6 +2341,7 @@ msgstr "PNL ($)"
 msgid "PNL Ratio"
 msgstr "PNL Ratio"
 
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Paid Fees:"
