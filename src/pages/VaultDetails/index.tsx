@@ -239,13 +239,13 @@ const tabConfigs: TabConfig[] = [
   {
     name: 'Copin Vaults',
     activeIcon: <PresentationChart size={24} weight="fill" />,
-    inactiveIcon: <PresentationChart size={24} />,
+    icon: <PresentationChart size={24} />,
     key: TabKeyEnum.COPIN_VAULT,
   },
   {
     name: 'Fund Management',
     activeIcon: <BookBookmark size={24} weight="fill" />,
-    inactiveIcon: <BookBookmark size={24} />,
+    icon: <BookBookmark size={24} />,
     key: TabKeyEnum.FUND_MANAGEMENT,
   },
 ]

@@ -15,7 +15,7 @@ import IconGroup from 'components/@widgets/IconGroup'
 import Icon from 'components/@widgets/IconGroup/Icon'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { BodyWrapperMobile, BottomTabItemMobile } from 'pages/@layouts/Components'
+import { BodyWrapperMobile, BottomWrapperMobile } from 'pages/@layouts/Components'
 import { OVERVIEW_WIDTH } from 'pages/Home/configs'
 import FilterButtonMobile from 'pages/PerpDEXsExplorer/components/FilterButtonMobile'
 import FilterTags from 'pages/PerpDEXsExplorer/components/FilterTags'
@@ -38,9 +38,11 @@ import { tableBodyStyles, tableStyles } from 'pages/PerpDEXsExplorer/styles'
 import { ExternalResource } from 'pages/PerpDEXsExplorer/types'
 import { getFilters } from 'pages/PerpDEXsExplorer/utils'
 import Loading from 'theme/Loading'
+import { TabHeader } from 'theme/Tab'
 import Table, { getVisibleColumnStyle } from 'theme/Table'
 import CustomizeColumn from 'theme/Table/CustomizeColumn'
 import { Box, Flex, Grid, IconBox, Type } from 'theme/base'
+import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { hideScrollbar } from 'utils/helpers/css'
@@ -104,6 +106,7 @@ function DesktopView() {
               alignItems: 'center',
               color: 'neutral1',
               flex: 1,
+              height: PAGE_TITLE_HEIGHT,
             }}
           >
             <IconBox icon={<Compass size={24} weight="fill" />} />
@@ -206,7 +209,10 @@ function MobileView() {
         display={currentTab !== TabKeys.statistic && currentTab !== TabKeys.events ? 'block' : 'none'}
         sx={{ width: '100%', height: '100%' }}
       />
-      <Box display={currentTab === TabKeys.statistic ? 'block' : 'none'} sx={{ width: '100%', height: '100%' }}>
+      <Box
+        display={currentTab === TabKeys.statistic ? 'block' : 'none'}
+        sx={{ width: '100%', height: 'calc(100% - 1px)' }}
+      >
         <Flex
           sx={{
             width: '100%',
@@ -252,30 +258,14 @@ function MobileView() {
       <Box display={currentTab === TabKeys.events ? 'block' : 'none'} sx={{ width: '100%', height: '100%' }}>
         <PerpDEXsEventOverview />
       </Box>
-      <Flex
-        sx={{
-          height: 40,
-          bg: 'neutral8',
-          width: '100%',
-          alignItems: 'center',
-          borderTop: 'small',
-          borderTopColor: 'neutral4',
-        }}
-      >
-        {tabConfigs.map((config, index) => {
-          const isActive = currentTab === config.key
-          return (
-            <BottomTabItemMobile
-              key={index}
-              color={isActive ? 'primary1' : 'neutral3'}
-              onClick={() => handleClickItem(config.key)}
-              fontWeight={isActive ? 500 : 400}
-              icon={isActive ? config.activeIcon : config.inactiveIcon}
-              text={config.name}
-            />
-          )
-        })}
-      </Flex>
+      <BottomWrapperMobile>
+        <TabHeader
+          configs={tabConfigs}
+          isActiveFn={(config) => config.key === currentTab}
+          fullWidth={false}
+          onClickItem={handleClickItem}
+        />
+      </BottomWrapperMobile>
     </BodyWrapperMobile>
   )
 }
@@ -287,15 +277,15 @@ const TabKeys = {
 
 const tabConfigs = [
   {
-    name: <Trans>Statistic</Trans>,
+    name: <Trans>STATISTIC</Trans>,
     activeIcon: <Compass size={24} weight="fill" />,
-    inactiveIcon: <Compass size={24} />,
+    icon: <Compass size={24} />,
     key: TabKeys.statistic,
     paramKey: TabKeys.statistic,
   },
   {
-    name: <Trans>Events</Trans>,
-    inactiveIcon: <PresentationChart size={24} />,
+    name: <Trans>EVENTS</Trans>,
+    icon: <PresentationChart size={24} />,
     activeIcon: <PresentationChart size={24} weight="fill" />,
     key: TabKeys.events,
     paramKey: TabKeys.events,
@@ -741,35 +731,7 @@ function CustomizeColumnWithState() {
       titleFactory={(item) => item.text}
       onApply={(keys) => (md ? setVisibleColumns(keys) : setVisibleColumnsMobile(keys))}
       disabledItemFn={(key) => !key || ['volume1d', 'tradeUrl'].includes(key)}
-      menuSx={{
-        height: 376,
-        '& > *': {
-          height: '100%',
-          '& > *': {
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-          },
-        },
-        '.item__wrapper': {
-          flex: '1 0 0',
-          overflow: 'auto',
-        },
-      }}
-      buttonSx={{
-        color: 'primary2',
-        '&:hover:not([disabled])': { color: 'primary1' },
-        '& *': { verticalAlign: 'middle' },
-      }}
-      label={
-        md ? (
-          <Type.Caption ml={1} color="inherit">
-            Customize Columns
-          </Type.Caption>
-        ) : (
-          ''
-        )
-      }
+      label={md ? <Type.Caption color="inherit">Customize Columns</Type.Caption> : ''}
     />
   )
 }

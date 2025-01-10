@@ -49,38 +49,39 @@ breakpoints.lg = breakpoints[2]
 breakpoints.xl = breakpoints[3]
 
 function theme(darkMode: boolean): DefaultTheme {
+  const themeColors = colors(darkMode)
   return {
-    colors: colors(darkMode),
+    colors: themeColors,
     space: [0, 4, 8, 16, 32, 64, 128, 256],
     breakpoints,
     mediaWidth: mediaWidthTemplates,
     shadows: {
-      1: '0px 8px 16px -8px rgba(15, 15, 15, 0.2)',
-      2: '0px 24px 24px -16px rgba(15, 15, 15, 0.2)',
-      3: '0px 32px 32px -24px rgba(15, 15, 15, 0.3)',
-      4: '0px 48px 48px -32px rgba(15, 15, 15, 0.4)',
-      5: '0px 16px 64px -48px rgba(15, 15, 15, 0.5)',
+      1: `0px 2px 4px 0px ${themeColors.neutral3}20`,
+      2: `0px 4px 8px 0px ${themeColors.neutral3}20`,
+      3: `0px 8px 16px 0px ${themeColors.neutral3}20`,
+      4: `0px 16px 32px 0px ${themeColors.neutral3}20`,
+      5: `0px 32px 48px 0px ${themeColors.neutral3}20`,
     },
     borderRadius: {
       xs: '2px',
       sm: '4px',
       md: '12px',
       lg: '16px',
-      button: '4px',
+      button: '2px',
     },
     borderTopLeftRadius: {
       xs: '2px',
       sm: '4px',
       md: '12px',
       lg: '16px',
-      button: '4px',
+      button: '2px',
     },
     borderTopRightRadius: {
       xs: '2px',
       sm: '4px',
       md: '12px',
       lg: '16px',
-      button: '4px',
+      button: '2px',
     },
     borders: {
       small: '1px solid',

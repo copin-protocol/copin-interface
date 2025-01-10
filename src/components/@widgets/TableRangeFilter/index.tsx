@@ -4,7 +4,7 @@ import * as yup from 'yup'
 
 import { Button } from 'theme/Buttons'
 import NumberInputField from 'theme/InputField/NumberInputField'
-import { Flex, Type } from 'theme/base'
+import { Flex } from 'theme/base'
 
 export type Values = {
   lte?: number
@@ -42,14 +42,15 @@ export default function TableRangeFilter({
       </Flex>
       <Flex mt={12} sx={{ width: '100%', justifyContent: 'end' }}>
         <Flex sx={{ gap: 24 }}>
-          <Type.Caption
-            role="button"
+          <Button
+            variant="ghost"
+            type="button"
             onClick={enableReset ? onReset : undefined}
-            color={enableReset ? 'neutral1' : 'neutral3'}
-            sx={{ cursor: enableReset ? 'pointer' : 'not-allowed' }}
+            disabled={!enableReset}
+            sx={{ p: 0, fontWeight: 'normal' }}
           >
             Reset
-          </Type.Caption>
+          </Button>
           <Button
             variant="ghostPrimary"
             color="inherit"

@@ -29,4 +29,6 @@ export type WorkerMessage = {
   data: UsdPrices
 }
 
+export type NewUserCheckerData = { [userId: string]: '1' }
+
 export type ValueOf<T> = T[keyof T]

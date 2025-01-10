@@ -7,7 +7,7 @@ import { useMutation, useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
 import { customRefCodeApi, getMyProfileApi } from 'apis/userApis'
-import actionSuccess from 'assets/images/register-event-success.png'
+import actionSuccess from 'assets/images/success-img.png'
 import InputReferral from 'components/@auth/InputReferral'
 import { DifferentialBar } from 'components/@ui/DifferentialBar'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
@@ -72,16 +72,16 @@ export default function UserReferralTier() {
                   }
                   dashed
                   sx={{
-                    fontSize: '16px',
+                    fontSize: '14px',
                     lineHeight: '24px',
                     fontWeight: 700,
                   }}
                 >
-                  My Referral Tier: #{tierNumber}{' '}
+                  MY REFERRAL TIER: #{tierNumber}{' '}
                 </LabelWithTooltip>
 
                 <Type.Caption color="neutral3" sx={{ marginLeft: 2, fontWeight: 'normal', verticalAlign: 'middle' }}>
-                  (Last 30 days)
+                  (LAST 30 DAYS)
                 </Type.Caption>
               </Flex>
               <Flex mb={'2px'} sx={{ width: '100%', justifyContent: 'space-between' }}>
@@ -234,7 +234,7 @@ function UserReferralCode({
   return (
     <>
       <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-        <Type.Body>Your Referral Code</Type.Body>
+        <Type.Body>YOUR REFERRAL CODE</Type.Body>
         {!lastEdit && (
           <Flex
             role="button"
@@ -242,7 +242,7 @@ function UserReferralCode({
             onClick={() => setOpenModal(true)}
           >
             <PencilSimpleLine size={16} />
-            <Type.Caption>Custom Code</Type.Caption>
+            <Type.Caption>CUSTOM CODE</Type.Caption>
           </Flex>
         )}
       </Flex>
@@ -340,7 +340,7 @@ function EditReferralCodeModal({
                     px: 3,
                     listStyleType: 'decimal',
                     listStylePosition: 'outside',
-                    li: { fontSize: '13px', lineHeight: '24px' },
+                    li: { fontSize: '12px', lineHeight: '24px' },
                   }}
                 >
                   <li>

@@ -16,17 +16,17 @@ import { TOOLTIP_CONTENT_MAPPING } from 'pages/PerpDEXsExplorer/constants/toolti
 import { ExternalResource, NormalValueComponentType } from 'pages/PerpDEXsExplorer/types'
 import { getChangeValueConfig, getPercentValueConfig } from 'pages/PerpDEXsExplorer/utils'
 import ProgressBar from 'theme/ProgressBar'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DATE_FORMAT } from 'utils/config/constants'
 import { compactNumber, formatDate, formatDuration, formatNumber } from 'utils/helpers/format'
 
 const CaptionTag = styled(Box)`
   width: max-content;
-  font-size: 13px;
-  line-height: 24px;
+  font-size: 12px;
+  line-height: 20px;
   font-weight: 400;
   padding: 0 8px;
-  border-radius: 2px;
+  border-radius: 40px;
   background: ${({ theme }) => theme.colors.neutral6};
 `
 
@@ -333,7 +333,8 @@ export function renderAudit({ data }: { data: PerpDEXSourceResponse | undefined 
         '&:hover': { color: 'primary2' },
       }}
     >
-      <Type.Caption>Explore</Type.Caption> <ArrowSquareOut size={16} />
+      <Type.Caption>EXPLORE</Type.Caption>
+      <IconBox sx={{ position: 'relative', top: '-1.5px' }} icon={<ArrowSquareOut size={16} />} />
     </Flex>
   )
 }

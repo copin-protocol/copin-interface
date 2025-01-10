@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 
 import Container from 'components/@ui/Container'
-import { isMobile } from 'hooks/helpers/useIsMobile'
 import { useSmartWalletContract } from 'hooks/web3/useContract'
 import useContractQuery from 'hooks/web3/useContractQuery'
 import useMulticallQuery from 'hooks/web3/useMulticallQuery'
@@ -29,6 +29,7 @@ export default function OnchainPositionsDrawer({
   onDismiss: () => void
   smartWalletAddress: string
 }) {
+  const { lg, md } = useResponsive()
   const smartWalletContract = useSmartWalletContract(smartWalletAddress, true)
 
   const { data: numOfAccounts } = useContractQuery<BigNumber, any, number | undefined>(
@@ -76,7 +77,13 @@ export default function OnchainPositionsDrawer({
   )
 
   return (
-    <Drawer isOpen={isOpen} onDismiss={onDismiss} mode="right" size={isMobile ? '100%' : '60%'} background="neutral5">
+    <Drawer
+      isOpen={isOpen}
+      onDismiss={onDismiss}
+      mode="right"
+      size={lg ? '60%' : md ? '80%' : '100%'}
+      background="neutral5"
+    >
       <Container p={3} sx={{ position: 'relative', height: '100%' }}>
         <IconButton
           icon={<XCircle size={24} />}
@@ -84,10 +91,9 @@ export default function OnchainPositionsDrawer({
           sx={{ position: 'absolute', right: 1, top: 3, zIndex: 1 }}
           onClick={onDismiss}
         />
-        <Type.BodyBold>
-          <Trans>Copy Wallet History</Trans>
-        </Type.BodyBold>
-        sa
+        <Type.H5>
+          <Trans>Onchain Positions</Trans>
+        </Type.H5>
       </Container>
     </Drawer>
   )

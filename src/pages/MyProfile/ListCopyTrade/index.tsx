@@ -39,11 +39,6 @@ export function CopyTable({
         isLoading={isLoading}
         currentSort={currentSort}
         changeCurrentSort={changeCurrentSort}
-        tableHeadSx={{
-          '& th': {
-            border: 'none',
-          },
-        }}
         tableBodySx={{
           borderSpacing: '0px 4px',
           '& td': {

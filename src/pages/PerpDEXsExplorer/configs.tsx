@@ -25,7 +25,7 @@ import {
 import { ExternalResource } from 'pages/PerpDEXsExplorer/types'
 import { getColumnSearchText } from 'pages/PerpDEXsExplorer/utils'
 import { ColumnData } from 'theme/Table/types'
-import { Box, Flex, Image, Type } from 'theme/base'
+import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { MarginModeEnum, PerpDEXTypeEnum, PositionModeEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 import { parseCollateralColorImage } from 'utils/helpers/transform'
@@ -806,7 +806,8 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
           '&:hover': { color: 'primary2' },
         }}
       >
-        <Type.Caption>Trade</Type.Caption> <ArrowSquareOut size={16} />
+        <Type.Caption>TRADE</Type.Caption>
+        <IconBox sx={{ position: 'relative', top: '-1.5px' }} icon={<ArrowSquareOut size={16} />} />
       </Flex>
     )
   },

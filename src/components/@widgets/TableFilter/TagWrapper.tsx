@@ -17,7 +17,7 @@ export default function TagWrapper({
   return (
     <Flex
       sx={{
-        height: '28px',
+        height: '24px',
         px: '6px',
         borderRadius: '4px',
         gap: 2,

@@ -133,7 +133,6 @@ function TableContainer({ children }: { children: ReactNode }) {
         width: '100%',
         '& th, td': { verticalAlign: 'middle' },
         '& th': { pb: 10, pt: 20 },
-        '& td': { py: '2px' },
       }}
     >
       {children}

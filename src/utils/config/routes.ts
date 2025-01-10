@@ -2,6 +2,9 @@ const ROUTES = {
   HOME: {
     path: '/',
   },
+  LITE: {
+    path: '/lite',
+  },
   TRADERS_EXPLORER: {
     path: '/:protocol/explorer',
     path_prefix: '/explorer',

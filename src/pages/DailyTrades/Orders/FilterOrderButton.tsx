@@ -1,9 +1,9 @@
 import { Funnel, XCircle } from '@phosphor-icons/react'
 import { useState } from 'react'
 
-import { DirectionSelect } from 'components/@dailyTrades/DirectionFilterTitle'
-import { OrderActionSelect } from 'components/@dailyTrades/OrderActionFilterTitle'
-import { MarketSelect } from 'components/@dailyTrades/PairFilterTitle'
+import { DirectionSelect } from 'components/@dailyTrades/DirectionFilterIcon'
+import { OrderActionSelect } from 'components/@dailyTrades/OrderActionFilterIcon'
+import { MarketSelect } from 'components/@dailyTrades/PairFilterIcon'
 import { ORDER_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
 import { Button } from 'theme/Buttons'
 import Input from 'theme/Input'
@@ -65,9 +65,9 @@ export default function FilterOrderButton() {
         <IconBox icon={<Funnel size={20} weight="fill" />} color={hasFilter ? 'neutral1' : 'neutral3'} />
       </Button>
       <Modal isOpen={openModal} minHeight="80svh" mode="bottom" maxHeight="80svh" onDismiss={() => setOpenModal(false)}>
-        <Flex height="100%" p={3} sx={{ flexDirection: 'column' }}>
+        <Flex height="100%" px={3} pt={3} sx={{ flexDirection: 'column' }}>
           <Flex mb={24} sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Type.BodyBold>Filters</Type.BodyBold>
+            <Type.BodyBold>FILTERS</Type.BodyBold>
             <IconBox icon={<XCircle size={20} />} onClick={() => setOpenModal(false)} />
           </Flex>
           <Box flex="1 0 0" overflow="auto">

@@ -123,7 +123,7 @@ const Pagination = ({
               minWidth: 24,
               color: pageNumber === currentPage ? 'neutral1' : 'neutral3',
               fontWeight: pageNumber === currentPage ? '600' : '400',
-              fontSize: '13px',
+              fontSize: '12px',
             }}
           >
             {pageNumber}
@@ -206,6 +206,7 @@ export function PaginationWithLimit({
             py: 8,
             borderColor: 'transparent',
             px: [1, 1, 1, 1, 2],
+            borderRadius: 0,
           }}
           iconSize={12}
           menuSx={{ minWidth: 'auto', width: '52px', bg: 'neutral8' }}
@@ -270,7 +271,7 @@ export function PaginationWithSelect({
   if (totalPages === 0) return <></>
 
   return (
-    <Flex sx={{ gap: [1, 1, 2, 2, 2], alignItems: 'center', ...sx }}>
+    <Flex sx={{ gap: 1, alignItems: 'center', ...sx }}>
       {!disabledInput && (
         <>
           <Type.Caption>Go to page</Type.Caption>
@@ -284,6 +285,7 @@ export function PaginationWithSelect({
               py: 0,
               px: [1, 1, 2, 2, 2],
               bg: 'neutral6',
+              borderRadius: 0,
               borderColor: 'transparent',
               ...inputWrapperSx,
             }}
@@ -319,7 +321,6 @@ export function PaginationWithSelect({
           bg: 'neutral6',
           border: 'small',
           borderColor: 'transparent',
-          borderRadius: 'sm',
           '&:hover': {
             borderColor: 'neutral3',
           },

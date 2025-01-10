@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { CaretRight, ClockCounterClockwise } from '@phosphor-icons/react'
 
-import { PositionPairFilterTitle } from 'components/@dailyTrades/PositionPairFilterTitle'
+import { PositionPairFilterIcon } from 'components/@dailyTrades/PositionPairFilterIcon'
 import { PositionRangeFilterIcon } from 'components/@dailyTrades/PositionRangeFilterIcon'
-import { PositionStatusFilterTitle } from 'components/@dailyTrades/PositionStatusFilterTitle'
+import { PositionStatusFilterIcon } from 'components/@dailyTrades/PositionStatusFilterIcon'
 import { POSITION_RANGE_KEYS } from 'components/@dailyTrades/configs'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { DualTimeText, LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
@@ -296,8 +296,8 @@ const actionColumn: ColumnData<PositionData> = {
   key: 'id',
   style: { width: '40px', textAlign: 'right', flex: '0 0 40px' },
   render: () => (
-    <Box sx={{ position: 'relative', top: '4px' }}>
-      <CaretRight color={themeColors.neutral3} size={16} />
+    <Box sx={{ position: 'relative' }}>
+      <CaretRight color={themeColors.neutral3} size={12} />
     </Box>
   ),
 }
@@ -316,7 +316,7 @@ const positionStatusColumn: ColumnData<PositionData> = {
           color: isOpen ? 'green1' : 'neutral2',
         }}
       >
-        <Type.Caption color="inherit">{isOpen ? `Open` : 'Close'}</Type.Caption>
+        <Type.Caption color="inherit">{isOpen ? `OPEN` : 'CLOSE'}</Type.Caption>
       </Box>
     )
   },
@@ -429,12 +429,18 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
   //   sortBy: undefined,
   //   hasFilter: true,
   // },
-  { ...positionStatusColumn, style: { flex: 0.8 }, title: <PositionStatusFilterTitle /> },
+  {
+    ...positionStatusColumn,
+    style: { flex: 0.8 },
+    title: <Trans>STATUS</Trans>,
+    filterComponent: <PositionStatusFilterIcon />,
+  },
   { ...accountColumn, title: <Trans>ACCOUNT</Trans>, style: { flex: [2, 2, 2, 2, 1.7] } },
   {
     ...entryColumn,
     style: { flex: [1.3, 1.3, 1.8, 1.3], pl: 1 },
-    title: <PositionPairFilterTitle title={<Trans>MARKET</Trans>} />,
+    title: <Trans>MARKET</Trans>,
+    filterComponent: <PositionPairFilterIcon />,
     sortBy: undefined,
   },
   {
@@ -575,7 +581,7 @@ export const drawerHistoryColumns: ColumnData<PositionData>[] = [
   { ...entryColumn, style: { minWidth: 185, flex: 1.5, pl: 2 } },
   { ...sizeColumn, style: { flex: 1, textAlign: 'right' } },
   { ...leverageColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...collateralColumn, style: { flex: 1, textAlign: 'right' } },
+  { ...collateralColumn, style: { flex: 1.2, textAlign: 'right' } },
   { ...avgDurationColumn, style: { flex: 1, textAlign: 'right' } },
   { ...pnlColumnFull, style: { flex: 1.3, textAlign: 'right' } },
   { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', flex: '0 0 40px' } },

@@ -25,14 +25,13 @@ const SearchRanking = () => {
   return (
     <InputSearch
       ref={inputSearchRef}
-      placeholder="Search Trader Ranking"
+      placeholder="SEARCH TRADER RANKING"
       sx={{
-        ml: [0, 0, 3, 3],
-        width: ['100%', '100%', '200px', '300px'],
+        width: ['100%', '100%', '200px', '250px'],
         height: 'max-content',
         borderColor: 'neutral4',
-        borderRadius: 'xs',
         backgroundColor: 'transparent',
+        border: 'none',
       }}
       value={searchText}
       onChange={handleSearchChange}

@@ -40,11 +40,10 @@ const InputSearchText = ({
         ref={inputSearchRef}
         placeholder={placeholder}
         sx={{
-          padding: 2,
+          px: 2,
           width: '100%',
           height: 'max-content',
-          borderColor: 'neutral5',
-          borderRadius: 'xs',
+          // borderColor: 'neutral2',
         }}
         value={searchText}
         onChange={handleSearchChange}

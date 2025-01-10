@@ -56,7 +56,7 @@ const SettingConfigs = ({
             hasArrow={true}
             iconColor="primary1"
             buttonVariant="ghost"
-            buttonSx={{ height: '100%', border: 'none', px: 0, py: 0 }}
+            inline
             sx={{ height: '100%' }}
             menuSx={{ width: ['100%', 100] }}
             menu={
@@ -72,13 +72,13 @@ const SettingConfigs = ({
             }
           >
             <Type.Caption color="primary1">
-              <Trans>Max Positions</Trans>
+              <Trans>MAX POSITIONS</Trans>
             </Type.Caption>
           </Dropdown>
         ) : (
           <Flex alignItems="center" sx={{ gap: 1 }}>
             <Flex alignItems="center" sx={{ gap: 1 }}>
-              <Type.Caption>Max Positions:</Type.Caption>
+              <Type.Caption>MAX POSITIONS:</Type.Caption>
               <Type.CaptionBold>
                 {config?.maxPositions && config.maxPositions > 0 ? formatNumber(config.maxPositions) : 'N/A'}
               </Type.CaptionBold>

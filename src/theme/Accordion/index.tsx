@@ -13,9 +13,11 @@ export default function Accordion({
   type = 'horizontal',
   direction = 'right',
   iconSize = 16,
+  subHeader,
 }: {
   disabled?: boolean
   header: ReactNode
+  subHeader?: ReactNode
   body: ReactNode
   wrapperSx?: any
   headerWrapperSx?: any
@@ -42,9 +44,7 @@ export default function Accordion({
         }}
       >
         <Box
-          onClick={() => !disabled && setIsExpand((prev) => !prev)}
           sx={{
-            cursor: disabled ? 'not-allowed' : 'pointer',
             display: 'flex',
             justifyContent: 'start',
             alignItems: 'center',
@@ -54,22 +54,45 @@ export default function Accordion({
             ...headerWrapperSx,
           }}
         >
-          <Box sx={{ order: direction === 'right' ? 0 : 1, width: '100%', height: '100%' }}>{header}</Box>
+          <Box
+            sx={{
+              order: direction === 'right' ? 0 : 1,
+              width: '100%',
+              height: '100%',
+              cursor: disabled ? 'not-allowed' : 'pointer',
+            }}
+            onClick={() => !disabled && setIsExpand((prev) => !prev)}
+          >
+            {header}
+          </Box>
           {isExpand ? (
             <CaretUp
               className="icon"
               weight="bold"
               size={iconSize}
-              style={{ flexShrink: 0, marginLeft: '8px', order: direction === 'right' ? 1 : 0 }}
+              style={{
+                flexShrink: 0,
+                marginLeft: '8px',
+                order: direction === 'right' ? 1 : 0,
+                cursor: disabled ? 'not-allowed' : 'pointer',
+              }}
+              onClick={() => !disabled && setIsExpand((prev) => !prev)}
             />
           ) : (
             <CaretDown
               className="icon"
               weight="bold"
               size={iconSize}
-              style={{ flexShrink: 0, marginLeft: '8px', order: direction === 'right' ? 1 : 0 }}
+              style={{
+                flexShrink: 0,
+                marginLeft: '8px',
+                order: direction === 'right' ? 1 : 0,
+                cursor: disabled ? 'not-allowed' : 'pointer',
+              }}
+              onClick={() => !disabled && setIsExpand((prev) => !prev)}
             />
           )}
+          {isExpand && subHeader}
         </Box>
         {!disabled && (
           <Box
@@ -106,7 +129,7 @@ export default function Accordion({
             justifyContent: 'center',
             pt: 2,
             width: '100%',
-            borderTop: 'small',
+            borderTop: '1px dashed',
             borderTopColor: 'neutral4',
             cursor: 'pointer',
           }}

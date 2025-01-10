@@ -1,8 +1,8 @@
 import { Funnel } from '@phosphor-icons/react'
 import { useState } from 'react'
 
-import { MarketSelect } from 'components/@dailyTrades/PairFilterTitle'
-import { PositionStatusSelect } from 'components/@dailyTrades/PositionStatusFilterTitle'
+import { MarketSelect } from 'components/@dailyTrades/PairFilterIcon'
+import { PositionStatusSelect } from 'components/@dailyTrades/PositionStatusFilterIcon'
 import { POSITION_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
 import { Button } from 'theme/Buttons'
 import Input from 'theme/Input'
@@ -65,7 +65,7 @@ export default function FilterPositionButton() {
       <Modal isOpen={openModal} minHeight="80svh" mode="bottom" maxHeight="80svh" onDismiss={() => setOpenModal(false)}>
         <Flex height="100%" sx={{ flexDirection: 'column' }}>
           <Flex px={3} pt={3} mb={24} sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Type.BodyBold>Filters</Type.BodyBold>
+            <Type.BodyBold>FILTERS</Type.BodyBold>
             {/* <IconBox icon={<XCircle size={20} />} onClick={() => setOpenModal(false)} /> */}
           </Flex>
           <Box flex="1 0 0" overflow="auto">

@@ -63,7 +63,7 @@ const BacktestSummaryAndPositions = memo(function BacktestSummaryAndPositionsMem
           position: ['sticky'],
           top: 0,
           zIndex: 1,
-          bg: 'neutral7',
+          bg: '#000',
         }}
       >
         <Flex sx={{ alignItems: 'end', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: 3 }}>

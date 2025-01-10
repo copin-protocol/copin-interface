@@ -17,10 +17,10 @@ export default function SelectSingleWallet({
   return (
     <Dropdown
       buttonVariant="ghost"
-      buttonSx={{ height: '100%', border: 'none', p: 0 }}
+      buttonSx={{ height: '100%', border: 'none', p: 0, textTransform: 'none' }}
       sx={{ height: '100%', pr: 2, flexShrink: 0 }}
       menuSx={{
-        width: ['100%', 200],
+        width: 200,
         overflow: 'hidden auto',
         height: 'max-content',
         maxHeight: [400, 500],
@@ -31,7 +31,15 @@ export default function SelectSingleWallet({
           {wallets.map((wallet) => {
             return (
               <DropdownItem key={wallet.id} onClick={() => onChangeWallet(wallet)}>
-                <Box key={wallet.id} sx={{ width: '100%', maxWidth: 300 }}>
+                <Box
+                  key={wallet.id}
+                  sx={{
+                    width: '100%',
+                    maxWidth: 300,
+                    color: wallet.id === currentWallet.id ? 'primary1' : 'inherit',
+                    textTransform: 'none',
+                  }}
+                >
                   <WalletItem data={wallet} />
                 </Box>
               </DropdownItem>

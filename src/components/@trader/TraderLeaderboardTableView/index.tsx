@@ -74,6 +74,10 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: LeaderboardCo
                 '& tr': {
                   px: 3,
                 },
+                '& td': {
+                  py: '6px',
+                  my: 0,
+                },
                 '& td:first-child': {
                   pl: 0,
                 },
@@ -83,16 +87,12 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: LeaderboardCo
               },
             }}
             tableHeadSx={{
-              th: {
-                pt: 2,
-                pb: 12,
-              },
               '& th:first-child': {
-                pl: 4,
+                pl: '36px',
                 minWidth: ['90px !important', '90px !important', '85px !important', '85px !important'],
               },
               '& th:last-child': {
-                pr: 4,
+                pr: '36px',
                 minWidth: ['152px !important', '152px !important', '182px !important', '182px !important'],
               },
             }}
@@ -147,6 +147,7 @@ function TopLeaderboardMobile({ contextValues }: { contextValues: LeaderboardCon
               {traderData.ranking < 4 ? <StyledBorder /> : <NormalBorder />}
               <Box sx={{ position: 'relative', zIndex: 1 }}>
                 <Accordion
+                  iconSize={12}
                   type="vertical"
                   header={
                     <Box pb={2}>
@@ -239,7 +240,7 @@ const NormalBorder = styled(Box)`
   left: 0;
   right: 0;
   bottom: 0;
-  border: 1px solid ${({ theme }) => theme.colors.neutral4};
+  border: 0.5px solid ${({ theme }) => theme.colors.neutral5};
   z-index: 0;
 `
 const StyledBorder = styled(Box)`

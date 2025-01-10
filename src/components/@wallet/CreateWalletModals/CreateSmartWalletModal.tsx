@@ -16,6 +16,7 @@ import { DELAY_SYNC, LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { COPY_WALLET_TRANS } from 'utils/config/translations'
+import { Z_INDEX } from 'utils/config/zIndex'
 import delay from 'utils/helpers/delay'
 import { CONTRACT_ABIS, CONTRACT_ADDRESSES } from 'utils/web3/contracts'
 import { getCopyTradePlatformChain } from 'utils/web3/dcp'
@@ -75,7 +76,7 @@ const CreateSmartWalletModal = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={() => onDismiss()}>
+    <Modal isOpen={isOpen} onDismiss={() => onDismiss()} zIndex={Z_INDEX.TOASTIFY}>
       <Box sx={{ p: 3 }}>
         <Flex mb={2} sx={{ alignItems: 'center', gap: 2 }}>
           <IconBox color="primary1" icon={<HandWaving size={32} />} />

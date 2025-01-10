@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ArrowsIn, ArrowsOutSimple, BookOpen, Pulse } from '@phosphor-icons/react'
+import { ArrowsIn, ArrowsOutSimple, BookOpen, Notebook } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -7,7 +7,6 @@ import { useHistory } from 'react-router-dom'
 
 import { getHlAccountInfo, getHlOpenOrders } from 'apis/hyperliquid'
 import emptyBg from 'assets/images/opening_empty_bg.png'
-import emptySmallBg from 'assets/images/opening_emty_small.png'
 import HLTraderPositionListView from 'components/@position/HLTraderPositionsListView'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import { drawerOrderColumns, fullOrderColumns, orderColumns } from 'components/@position/configs/hlOrderRenderProps'
@@ -20,13 +19,13 @@ import Divider from 'components/@ui/Divider'
 import { PositionData } from 'entities/trader'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
+import { TabKeyEnum } from 'pages/Explorer/Layouts/layoutConfigs'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
-import Tabs, { TabPane } from 'theme/Tab'
+import { TabHeader } from 'theme/Tab'
 import Table from 'theme/Table'
 import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -44,11 +43,11 @@ const emptyCss = {
 }
 
 const emptySmallCss = {
-  backgroundImage: `url(${emptySmallBg})`,
-  backgroundSize: '98%',
-  backgroundPosition: 'center center',
-  backgroundRepeat: 'no-repeat',
-  backgroundOrigin: 'content-box',
+  // backgroundImage: `url(${emptySmallBg})`,
+  // backgroundSize: '98%',
+  // backgroundPosition: 'center center',
+  // backgroundRepeat: 'no-repeat',
+  // backgroundOrigin: 'content-box',
 }
 
 export enum HLPositionTab {
@@ -170,89 +169,60 @@ export default function HLTraderOpeningPositionsTable({
       flexDirection="column"
       height="100%"
       sx={{
-        backgroundColor: !isDrawer && totalOpening ? 'neutral5' : 'neutral7',
+        backgroundColor: !isDrawer && totalOpening ? 'neutral5' : 'transparent',
+
         ...(totalOpening || isLoading ? {} : isDrawer ? emptySmallCss : emptyCss),
       }}
     >
-      <Flex px={2} pt={12} alignItems="center" justifyContent="space-between">
-        <Tabs
-          defaultActiveKey={tab}
-          onChange={(tab) => setTab(tab)}
-          sx={{
-            width: '100%',
-          }}
-          fullWidth
-          headerSx={{
-            marginBottom: 0,
-            gap: 0,
-            width: ['fit-content', 'fit-content', '100%'],
-            mb: 0,
-            px: 0,
-            borderBottom: 'none',
-          }}
-          tabItemSx={{
-            pt: 0,
-            // px: 2,
-            borderBottom: 'none',
-            '&:hover,&:active,&:focus': {
-              color: 'neutral1',
-            },
-          }}
-          tabItemActiveSx={{
-            color: 'neutral1',
-          }}
-          inactiveHasLine={false}
-        >
-          <TabPane
-            key={HLPositionTab.OPEN_POSITIONS}
-            tab={
-              <Flex sx={{ gap: 2 }} alignItems="center">
-                <IconBox display={['none', 'none', 'none', 'block']} color="neutral3" icon={<Pulse size={24} />} />
+      <TabHeader
+        configs={[
+          {
+            name: <Trans>Opening Positions</Trans>,
+            key: HLPositionTab.OPEN_POSITIONS,
+            icon: <Notebook size={20} />,
+            activeIcon: <Notebook size={20} weight="fill" />,
+            count: totalOpening,
+          },
+          {
+            name: <Trans>Open Orders</Trans>,
+            key: HLPositionTab.OPEN_ORDERS,
+            icon: <BookOpen size={20} />,
+            activeIcon: <BookOpen size={20} weight="fill" />,
+            count: totalOpenOrders,
+          },
+        ]}
+        isActiveFn={(config) => config.key === tab}
+        onClickItem={(key) => setTab(key as TabKeyEnum)}
+        fullWidth={false}
+        size="lg"
+        sx={{
+          '& .tab-header > *': {
+            pl: 2,
+          },
+        }}
+        externalWidget={
+          !isDrawer && (
+            <IconBox
+              icon={isExpanded ? <ArrowsIn size={20} /> : <ArrowsOutSimple size={20} />}
+              role="button"
+              sx={{
+                width: 32,
+                height: 32,
+                display: ['none', 'none', 'none', 'none', 'flex'],
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 'sm',
 
-                <Type.BodyBold fontSize={['13px', '13px', '13px', '16px']}>
-                  <Trans>Opening Positions</Trans> {totalOpening > 0 && `(${totalOpening})`}
-                </Type.BodyBold>
-              </Flex>
-            }
-          >
-            <></>
-          </TabPane>
-          <TabPane
-            key={HLPositionTab.OPEN_ORDERS}
-            tab={
-              <Flex sx={{ gap: 2 }} alignItems="center">
-                <IconBox display={['none', 'none', 'none', 'block']} color="neutral3" icon={<BookOpen size={24} />} />
-                <Type.BodyBold fontSize={['13px', '13px', '13px', '16px']}>
-                  <Trans>Open Orders</Trans> {totalOpenOrders > 0 && `(${totalOpenOrders})`}
-                </Type.BodyBold>
-              </Flex>
-            }
-          >
-            <></>
-          </TabPane>
-        </Tabs>
-        {!isDrawer && (
-          <IconBox
-            icon={isExpanded ? <ArrowsIn size={20} /> : <ArrowsOutSimple size={20} />}
-            role="button"
-            sx={{
-              position: 'relative',
-              top: '-8px',
-              width: 32,
-              height: 32,
-              display: ['none', 'none', 'none', 'none', 'flex'],
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 'sm',
-              // border: 'small',
-              // borderColor: 'neutral4',
-              color: 'neutral2',
-              '&:hover': { color: 'neutral1' },
-            }}
-            onClick={handleToggleExpand}
-          />
-        )}
-      </Flex>
+                // border: 'small',
+                // borderColor: 'neutral4',
+                color: 'neutral2',
+                '&:hover': { color: 'neutral1' },
+              }}
+              onClick={handleToggleExpand}
+            />
+          )
+        }
+      />
       {tab === HLPositionTab.OPEN_POSITIONS && (
         <Box display={['block', 'block', 'block', isDrawer ? 'block' : 'flex']} flexDirection="column" height="100%">
           {isLoading && <Loading />}
@@ -288,7 +258,7 @@ export default function HLTraderOpeningPositionsTable({
                   changeCurrentSort={changeCurrentSortExpanded}
                   isLoading={isLoading}
                   onClickRow={handleSelectItem}
-                  renderRowBackground={() => (isDrawer ? themeColors.neutral7 : 'rgb(31, 34, 50)')}
+                  renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
                   scrollToTopDependencies={scrollToTopDependencies}
                 />
               ) : (
@@ -352,7 +322,7 @@ export default function HLTraderOpeningPositionsTable({
                   data={openOrders}
                   columns={isDrawer ? drawerOrderColumns : xl && isExpanded ? fullOrderColumns : orderColumns}
                   isLoading={isLoading}
-                  renderRowBackground={() => (isDrawer ? themeColors.neutral7 : 'rgb(31, 34, 50)')}
+                  renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
                   scrollToTopDependencies={scrollToTopDependencies}
                 />
               ) : (

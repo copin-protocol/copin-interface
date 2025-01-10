@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { getPositionDetailByIdApi } from 'apis/positionApis'
 import ChartTraderPositionProfit from 'components/@charts/ChartTraderPositionProfit'
 import AddressAvatar from 'components/@ui/AddressAvatar'
+import Divider from 'components/@ui/Divider'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
@@ -75,7 +76,15 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
       {isLoading && <Loading />}
       {!isLoading && !data && <NoDataFound />}
       {data && (
-        <Box pb={0} sx={{ border: 'small', borderTop: 'none', borderColor: isDrawer ? 'transparent' : 'neutral4' }}>
+        <Box
+          pb={0}
+          sx={{
+            border: 'small',
+            borderTop: isDrawer ? 'none' : undefined,
+            borderColor: isDrawer ? 'transparent' : 'neutral4',
+            mt: isDrawer ? 0 : 3,
+          }}
+        >
           <Flex p={12} alignItems="center" justifyContent="space-between" flexWrap="wrap" sx={{ gap: 2 }}>
             <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 12 }}>
               <AddressAvatar address={data.account} size={40} />
@@ -123,24 +132,22 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
             {!isDrawer && <ProtocolLogo size={24} protocol={data.protocol} textSx={{ fontSize: '14px' }} />}
           </Flex>
           <Box
-            bg="neutral7"
-            mb={3}
-            mx={3}
-            px={isDrawer ? 12 : 0}
+            px={12}
             sx={{
-              borderRadius: '2px',
-              border: isDrawer ? 'small' : 'none',
+              // borderRadius: '2px',
+              // border: isDrawer ? 'small' : 'none',
               borderTop: 'small',
               borderColor: 'neutral4',
             }}
           >
             <PositionStats data={data} chartId={chartProfitId} />
+            <Divider isDashed mb={3} />
             {data && (
               <ChartTraderPositionProfit data={data} protocol={protocol || DEFAULT_PROTOCOL} chartId={chartProfitId} />
             )}
           </Box>
 
-          <Box width="100%" overflow="hidden" sx={{ pt: 12 }}>
+          <Box width="100%" overflow="hidden" sx={{ mt: 12, borderTop: 'small', borderColor: 'neutral4' }}>
             {data.orders && data.orders.length > 0 && (
               <ListOrderTable
                 protocol={data.protocol}

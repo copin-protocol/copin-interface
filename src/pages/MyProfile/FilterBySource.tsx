@@ -32,12 +32,12 @@ export default function FilterBySource({
   const protocolFilters = isDCP ? DCP_SUPPORTED_PROTOCOLS : ALLOWED_COPYTRADE_PROTOCOLS
 
   return (
-    <Flex alignItems="start" sx={{ gap: 3, flexDirection: ['column', 'row'] }}>
+    <Flex alignItems="start" sx={{ gap: 3, flexDirection: 'column' }}>
       <Flex width="100%" sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
         <Type.Caption
-          sx={{ flexShrink: 0, color: [`${themeColors.neutral1} !important`, `${themeColors.neutral3} !important`] }}
+          sx={{ flexShrink: 0, color: [`${themeColors.neutral1} !important`, `${themeColors.neutral2} !important`] }}
         >
-          <Trans>Source:</Trans>
+          <Trans>SOURCE:</Trans>
         </Type.Caption>
         <Flex sx={{ gap: 1, alignItems: 'center' }}>
           <SwitchInput
@@ -47,8 +47,8 @@ export default function FilterBySource({
               toggleAllProtocol(isSelectedAll)
             }}
           />
-          <Type.Caption color="neutral3">
-            <Trans>Select all</Trans>
+          <Type.Caption color="neutral2">
+            <Trans>SELECT ALL</Trans>
           </Type.Caption>
         </Flex>
       </Flex>
@@ -83,19 +83,21 @@ export function FilterBySourceDropdown({
 }: FilterBySourceProps) {
   const protocolFilters = isDCP ? DCP_SUPPORTED_PROTOCOLS : ALLOWED_COPYTRADE_PROTOCOLS
   return (
-    <Flex alignItems="start" sx={{ gap: 1 }}>
+    <Flex alignItems="center" sx={{ gap: 1 }}>
       <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-        <Trans>Source:</Trans>
+        <Trans>SOURCE:</Trans>
       </Type.Caption>
       <Dropdown
-        buttonSx={{ p: 0, border: 'none', '.icon_dropdown': { ml: 2 } }}
+        buttonVariant="ghost"
+        inline
+        // buttonSx={{ p: 0, border: 'none', '.icon_dropdown': { ml: 2 } }}
         dismissible={false}
         menuDismissible
         menuSx={{ width: 'max-content', maxHeight: 390 }}
         placement="bottomRight"
         menu={
           <Box px={3} py={3}>
-            <Flex sx={{ gap: 1, alignItems: 'center' }}>
+            <Flex sx={{ gap: 2, alignItems: 'center' }}>
               <SwitchInput
                 checked={isToggleAllProtocol}
                 onChange={(event) => {
@@ -103,8 +105,8 @@ export function FilterBySourceDropdown({
                   toggleAllProtocol(isSelectedAll)
                 }}
               />
-              <Type.Caption color="neutral3">
-                <Trans>Select all</Trans>
+              <Type.Caption color="neutral1">
+                <Trans>SELECT ALL</Trans>
               </Type.Caption>
             </Flex>
             <Divider my={2} />

@@ -7,8 +7,10 @@ import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import useSearchParams from 'hooks/router/useSearchParams'
+import { BottomWrapperMobile } from 'pages/@layouts/Components'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
+import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
 
 import FilterProtocols from './FilterProtocols'
@@ -42,9 +44,17 @@ export default function DailyTrades() {
               justifyContent: 'space-between',
               borderBottom: 'small',
               borderBottomColor: 'neutral4',
+              height: PAGE_TITLE_HEIGHT,
             }}
           >
-            <MainTab pathname={pathname} />
+            <TabHeader
+              configs={tabConfigs}
+              isActiveFn={(config) => config.route === pathname}
+              fullWidth={false}
+              size="lg"
+              // fullWidth
+              // sx={{ justifyContent: 'center', width: '100%' }}
+            />
             <Box flexShrink={0}>
               <FilterProtocols />
             </Box>
@@ -62,18 +72,14 @@ export default function DailyTrades() {
           </Switch>
         </Box>
         {!md && (
-          <Flex
-            sx={{
-              width: '100%',
-              alignItems: 'center',
-              gap: 3,
-              justifyContent: 'space-between',
-              borderTop: 'small',
-              borderTopColor: 'neutral4',
-            }}
-          >
-            <MainTab pathname={pathname} />
-          </Flex>
+          <BottomWrapperMobile>
+            <TabHeader
+              configs={tabConfigs}
+              isActiveFn={(config) => config.route === pathname}
+              fullWidth={false}
+              // fullWidth
+            />
+          </BottomWrapperMobile>
         )}
       </Flex>
       <CustomPageTitle title={pageTitleMapping[pathname] ?? t`My Profile`} />
@@ -90,13 +96,13 @@ const tabConfigs: TabConfig[] = [
   {
     name: <Trans>LIVE ORDERS</Trans>,
     activeIcon: <Note size={24} weight="fill" />,
-    inactiveIcon: <Note size={24} />,
+    icon: <Note size={24} />,
     key: TabKeyEnum.ORDERS,
     route: ROUTES.LIVE_TRADES_ORDERS.path,
   },
   {
     name: <Trans>LIVE POSITIONS</Trans>,
-    inactiveIcon: <Notebook size={24} />,
+    icon: <Notebook size={24} />,
     activeIcon: <Notebook size={24} weight="fill" />,
     key: TabKeyEnum.POSITIONS,
     route: ROUTES.LIVE_TRADES_POSITIONS.path,
@@ -106,18 +112,4 @@ const tabConfigs: TabConfig[] = [
 const pageTitleMapping = {
   [ROUTES.LIVE_TRADES_ORDERS.path]: t`Live orders`,
   [ROUTES.LIVE_TRADES_POSITIONS.path]: t`Live positions`,
-}
-
-function MainTab({ pathname }: { pathname: string }) {
-  const { md } = useResponsive()
-
-  return (
-    <TabHeader
-      configs={tabConfigs}
-      isActiveFn={(config) => config.route === pathname}
-      fullWidth
-      sx={{ p: 0, borderBottom: 'none', '& > *': { gap: '0 !important' } }}
-      itemSx={{ px: 3, ...(md ? {} : { '& > *': { justifyContent: 'center' } }) }}
-    />
-  )
 }

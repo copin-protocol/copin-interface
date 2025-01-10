@@ -4,7 +4,7 @@ import { CaretRight } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { TraderGraphQLResponse } from 'graphql/entities/traders.graph'
 import { SEARCH_TRADERS_QUERY } from 'graphql/traders.graph'
-import { MouseEvent, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -38,6 +38,7 @@ import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { ALLOWED_COPYTRADE_PROTOCOLS, DATE_FORMAT } from 'utils/config/constants'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { TIME_TRANSLATION } from 'utils/config/translations'
 import { formatDate } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { transformGraphqlFilters, useProtocolFromUrl } from 'utils/helpers/graphql'
@@ -109,8 +110,8 @@ export default function Traders() {
     >
       <Box id={ELEMENT_IDS.HOME_HEADER_WRAPPER} sx={{ overflow: 'hidden', transition: 'max-height 0.5s ease-in-out' }}>
         <Flex
-          mt={['-8px', 0, 2]}
-          mb={[8, 24, 40]}
+          mt={['-8px', 0]}
+          mb={[8, 24]}
           sx={{ px: PADDING_X, pt: 3, width: '100%', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Type.H5 fontSize={['16px', '16px', '24px']}>
@@ -203,19 +204,19 @@ function Filters({ filters, protocolFilter }: { filters: FiltersState; protocolF
     <Flex sx={{ gap: [2, 3], flexWrap: 'wrap' }}>
       <Flex sx={{ alignItems: 'center', gap: '0.5ch' }}>
         <Type.CaptionBold>
-          <Trans>Top</Trans>
+          <Trans>TOP</Trans>
         </Type.CaptionBold>
         <SortDropdown sortBy={filters.sortBy} onChangeSort={handleChangeSort} />
       </Flex>
       <Flex sx={{ alignItems: 'center', gap: '0.5ch' }}>
         <Type.CaptionBold>
-          <Trans>In</Trans>
+          <Trans>IN</Trans>
         </Type.CaptionBold>
         <TimeFilter timeOption={filters.time} onChangeTime={handleChangeTime} />
       </Flex>
       <Flex sx={{ alignItems: 'center', gap: 2 }}>
         <Type.CaptionBold>
-          <Trans>Source</Trans>
+          <Trans>SOURCE</Trans>
         </Type.CaptionBold>
         <ProtocolFilter
           {...protocolFilter}
@@ -597,14 +598,6 @@ function TraderItem({
       </Flex>
     </Box>
   )
-}
-
-const TIME_TRANSLATION: Record<string, ReactNode> = {
-  [TimeFilterByEnum.ALL_TIME]: <Trans>All</Trans>,
-  [TimeFilterByEnum.S7_DAY]: <Trans>7D</Trans>,
-  [TimeFilterByEnum.S14_DAY]: <Trans>14D</Trans>,
-  [TimeFilterByEnum.S30_DAY]: <Trans>30D</Trans>,
-  [TimeFilterByEnum.S60_DAY]: <Trans>60D</Trans>,
 }
 
 function BacktestButton({ onClick }: { onClick: () => void }) {

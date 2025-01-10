@@ -1,5 +1,4 @@
 import {
-  CopyTradeBalanceDataResponse,
   CopyTradeData,
   CopyTradePnL,
   MyCopyTradeOverview,
@@ -73,7 +72,7 @@ export async function getCopyTradeSettingsApi(params: GetCopyTradeSettingsParams
     .then((res: any) => res.data as ApiListResponse<CopyTradeData>)
 }
 export async function getCopyTradeSettingsListApi(params?: {
-  accounts: string[]
+  accounts: string[] | undefined
   copyWalletId: string | undefined
   status: CopyTradeStatusEnum | undefined
   protocols?: ProtocolEnum[]

@@ -4,6 +4,7 @@ import React from 'react'
 import useLeaderboardContext from 'hooks/features/useLeaderboardProvider'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { Flex, Type } from 'theme/base'
+import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 
 const SelectSeason = () => {
   const { formatCurrent, formatPrev, formatNext, ignoreNext, onPrevious, onNext } = useLeaderboardContext()
@@ -13,39 +14,38 @@ const SelectSeason = () => {
       flex="auto"
       alignItems="center"
       justifyContent="space-between"
-      px={[0, 0, 2, 2]}
       sx={{
-        borderLeft: ['none', 'none', 'small', 'small'],
+        borderLeft: ['small', 'small', 'small', 'small'],
         borderRight: ['none', 'none', 'small', 'small'],
+        borderBottom: ['small', 'small', 'none', 'none'],
         borderColor: ['neutral4', 'neutral4', 'neutral4', 'neutral4'],
       }}
+      height={PAGE_TITLE_HEIGHT}
     >
       <ButtonWithIcon
         type="button"
-        variant="ghostActive"
-        icon={<CaretLeft size={20} />}
-        iconSx={{ color: 'neutral3' }}
-        sx={{ pl: [0, 0, 2, 2], pr: [2, 2, 12, 12], mx: 0 }}
+        variant="ghost"
+        icon={<CaretLeft size={16} />}
+        sx={{ mx: 0, borderRadius: 0 }}
         onClick={onPrevious}
       >
-        <Type.Caption color="neutral3"> {formatPrev}</Type.Caption>
+        <Type.Caption> {formatPrev}</Type.Caption>
       </ButtonWithIcon>
       <Flex flex={1} justifyContent="center">
-        <Type.CaptionBold textAlign="center" color="primary1" py={[2, 2, 20, 20]}>
+        <Type.CaptionBold textAlign="center" color="primary1" sx={{ textTransform: 'uppercase' }}>
           {formatCurrent}
         </Type.CaptionBold>
       </Flex>
       <ButtonWithIcon
         type="button"
-        variant="ghostActive"
-        icon={<CaretRight size={20} />}
-        iconSx={{ color: 'neutral3' }}
+        variant="ghost"
+        icon={<CaretRight size={16} />}
         direction="right"
-        sx={{ pr: [0, 0, 2, 2], pl: [2, 2, 12, 12], mx: 0 }}
+        sx={{ mx: 0, borderRadius: 0 }}
         onClick={onNext}
         disabled={ignoreNext}
       >
-        <Type.Caption color="neutral3"> {formatNext}</Type.Caption>
+        <Type.Caption> {formatNext}</Type.Caption>
       </ButtonWithIcon>
     </Flex>
   )

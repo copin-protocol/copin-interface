@@ -80,17 +80,17 @@ export default function Stats() {
     <>
       <CustomPageTitle title="Copin Stats" />
       <Container p={3}>
-        <Flex my={24} sx={{ alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 3 }}>
-          <Type.H5 color="neutral8" sx={{ px: 2, py: 1, bg: 'neutral1' }}>
+        <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 3 }}>
+          <Type.Head color="neutral8" sx={{ px: 2, py: 1, bg: 'neutral1' }}>
             <Trans>Overview</Trans>
-          </Type.H5>
+          </Type.Head>
         </Flex>
         <Overview />
-        <Flex my={24} sx={{ alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 3 }}>
-          <Type.H5 color="neutral8" sx={{ px: 2, py: 1, bg: 'neutral1' }}>
+        <Flex my={3} sx={{ alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 3 }}>
+          <Type.Head color="neutral8" sx={{ px: 2, py: 1, bg: 'neutral1' }}>
             <Trans>Analytics</Trans>
-          </Type.H5>
-          <Flex justifyContent="start" alignItems="center" sx={{ gap: 16 }}>
+          </Type.Head>
+          <Flex flex="1 0 0" justifyContent="end" alignItems="center" sx={{ gap: 16 }}>
             <TimeFilter
               currentFilter={selectingRange ? null : currentOption}
               handleFilterChange={(option) => {
@@ -168,9 +168,9 @@ function StatisticChart({ timeRange }: { timeRange: TimeRange }) {
 
   return (
     <Box>
-      <Type.H5 mb={20}>
+      <Type.Head>
         <Trans>Volume</Trans>
-      </Type.H5>
+      </Type.Head>
       <Box
         mt={24}
         sx={{
@@ -179,16 +179,16 @@ function StatisticChart({ timeRange }: { timeRange: TimeRange }) {
           gap: 24,
         }}
       >
-        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Volume</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>DAILY VOLUME</Trans>} time={lastUpdatedTime}>
           <VolumeChartComponent data={chartData} syncId="volume_chart" />
         </ChartWrapper>
-        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Orders</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>DAILY ORDERS</Trans>} time={lastUpdatedTime}>
           <OrderChartComponent data={chartData} syncId="volume_chart" />
         </ChartWrapper>
       </Box>
-      <Type.H5 mt={[3, 4]} mb={20}>
+      <Type.Head mt={[3, 4]}>
         <Trans>Profit & Loss</Trans>
-      </Type.H5>
+      </Type.Head>
       <Box
         mt={24}
         sx={{
@@ -197,12 +197,12 @@ function StatisticChart({ timeRange }: { timeRange: TimeRange }) {
           gap: 24,
         }}
       >
-        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Net PnL</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>DAILY NET PNL</Trans>} time={lastUpdatedTime}>
           {stats && <NetProfitChartComponent data={chartData} stats={stats} syncId="pnl_chart" />}
         </ChartWrapper>
         <ChartWrapper
           isLoading={isLoading}
-          title={<Trans>Daily Profit vs Loss</Trans>}
+          title={<Trans>DAILY PROFIT VS LOSS</Trans>}
           time={lastUpdatedTime}
           isPercentsView={isPercentView}
           togglePercentView={setIsPercentView}
@@ -212,9 +212,9 @@ function StatisticChart({ timeRange }: { timeRange: TimeRange }) {
           )}
         </ChartWrapper>
       </Box>
-      <Type.H5 mt={[3, 4]} mb={20}>
+      <Type.Head mt={[3, 4]}>
         <Trans>Copy Statistic</Trans>
-      </Type.H5>
+      </Type.Head>
       <Box
         mt={24}
         sx={{
@@ -223,13 +223,13 @@ function StatisticChart({ timeRange }: { timeRange: TimeRange }) {
           gap: 24,
         }}
       >
-        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Active Users (DAU)</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>DAILY ACTIVE USERS (DAU)</Trans>} time={lastUpdatedTime}>
           {<CopierChartComponent data={chartData} syncId="copy_chart" />}
         </ChartWrapper>
-        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Copy Trades</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>DAILY COPY TRADES</Trans>} time={lastUpdatedTime}>
           {<CopyTradeChartComponent data={chartData} syncId="copy_chart" />}
         </ChartWrapper>
-        <ChartWrapper isLoading={isLoading} title={<Trans>Daily Unique Traders</Trans>} time={lastUpdatedTime}>
+        <ChartWrapper isLoading={isLoading} title={<Trans>DAILY UNIQUE TRADERS</Trans>} time={lastUpdatedTime}>
           {<TraderChartComponent data={chartData} syncId="copy_chart" />}
         </ChartWrapper>
       </Box>
@@ -264,18 +264,7 @@ function ChartWrapper({
           <Flex alignItems="center" justifyContent="space-between">
             <Type.CaptionBold>{title}</Type.CaptionBold>
             {togglePercentView && (
-              <Button
-                py={2}
-                sx={{
-                  backgroundColor: isPercentsView ? 'primary1' : 'neutral2',
-                  color: 'neutral8',
-                  '&:hover': {
-                    color: 'neutral4',
-                  },
-                }}
-                type="button"
-                onClick={() => togglePercentView(!isPercentsView)}
-              >
+              <Button variant="outline" sx={{ py: 1 }} type="button" onClick={() => togglePercentView(!isPercentsView)}>
                 %
               </Button>
             )}

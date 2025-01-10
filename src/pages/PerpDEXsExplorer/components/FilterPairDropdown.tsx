@@ -26,14 +26,15 @@ export function FilterPairDropdown({
   const excludedPairs = isExcluded ? currentPairs : []
   return (
     <Dropdown
-      buttonSx={{ p: 0, border: 'none' }}
+      inline
+      buttonVariant="ghostInactive"
       hasArrow={hasArrow}
       menuDismissible
       dismissible={false}
       visible={visible}
       setVisible={setVisible}
       menu={
-        <Flex sx={{ flexDirection: 'column', bg: 'neutral7', p: 2, width: 250 }}>
+        <Flex sx={{ flexDirection: 'column', bg: 'neutral7', width: 250 }}>
           <MarketSelection
             key={visible.toString()}
             // protocols={protocols}

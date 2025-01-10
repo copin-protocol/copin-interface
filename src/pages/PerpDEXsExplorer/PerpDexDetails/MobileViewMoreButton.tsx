@@ -19,6 +19,8 @@ export default function MobileViewMoreButton({
 
   return (
     <Dropdown
+      inline
+      buttonVariant="ghost"
       hasArrow={false}
       menuSx={{
         bg: 'neutral7',
@@ -35,11 +37,6 @@ export default function MobileViewMoreButton({
         </Box>
       }
       sx={{}}
-      buttonSx={{
-        border: 'none',
-        height: '100%',
-        p: 0,
-      }}
       placement={'topRight'}
     >
       <IconButton

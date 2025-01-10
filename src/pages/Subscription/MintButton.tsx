@@ -33,6 +33,7 @@ import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { APP_URL } from 'utils/config/constants'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { getContractErrorMessage } from 'utils/helpers/handleError'
 import { SUBSCRIPTION_CHAIN_ID } from 'utils/web3/chains'
 
@@ -150,7 +151,7 @@ function MintModal({
     <Modal
       isOpen={isOpen}
       title={isSuccess ? '' : <Trans>Mint New Subscription</Trans>}
-      background={isSuccess ? 'transparent' : 'neutral5'}
+      background={isSuccess ? 'transparent' : undefined}
       modalContentStyle={isSuccess ? { border: 'none', boxShadow: 'none' } : undefined}
       hasClose={state === 'preparing'}
       onDismiss={onDismiss}
@@ -216,7 +217,7 @@ function PrepairingState({ planPrice, plan }: { planPrice: BigNumber | undefined
         </Type.Caption>
         <ModalPriceFormat price={price} />
       </Flex>
-      <Divider my={20} />
+      {/* <Divider my={20} /> */}
       {/* <Alert
         variant="cardWarning"
         message={
@@ -246,7 +247,7 @@ export function ModalPriceFormat({ price }: { price: Num }) {
       <Box as="span" sx={{ fontSize: '20px', ml: '0.3ch' }} color="orange1">
         ETH
       </Box>
-      <Box as="span" color="neutral1" sx={{ fontSize: '13px', fontWeight: 400 }}>
+      <Box as="span" color="neutral1" sx={{ fontSize: '12px', fontWeight: 400 }}>
         {' '}
         (~
         <ETHPriceInUSD value={price.bn} />
@@ -442,7 +443,7 @@ export function SuccessState({
       {showConfetti && (
         <Box sx={{ width: 0, height: 0, mx: 'auto', overflow: 'hidden' }}>
           <ConfettiExplosion
-            zIndex={99999}
+            zIndex={Z_INDEX.TOASTIFY}
             width={2000}
             height={1000}
             duration={4000}

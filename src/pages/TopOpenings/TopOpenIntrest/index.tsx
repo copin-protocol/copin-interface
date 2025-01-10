@@ -14,6 +14,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import { ResponsePositionData } from 'entities/trader'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Box, Flex } from 'theme/base'
+import { TAB_HEIGHT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
 import { useProtocolFromUrl } from 'utils/helpers/graphql'
 
@@ -100,7 +101,7 @@ function TopOpeningsPage() {
         alignItems="center"
         justifyContent="space-between"
         p={3}
-        height="48px"
+        height={TAB_HEIGHT}
         sx={{
           borderBottom: ['small', 'small', 'small', 'none'],
           borderBottomColor: ['neutral4', 'neutral4', 'neutral4', 'none'],

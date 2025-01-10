@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro'
 
 import { Box } from 'theme/base'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 const DatePickerWrapper = styled(Box)`
   .react-datepicker__year-read-view--down-arrow,
@@ -707,7 +708,7 @@ const DatePickerWrapper = styled(Box)`
     height: 16px;
     width: 16px;
     padding: 2px;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1;
     text-align: center;
     display: table-cell;
@@ -735,7 +736,7 @@ const DatePickerWrapper = styled(Box)`
     justify-content: center;
     align-items: center;
     display: flex;
-    z-index: 2147483647;
+    z-index: ${Z_INDEX.THEME_DROPDOWN};
   }
   .react-datepicker__portal .react-datepicker__day-name,
   .react-datepicker__portal .react-datepicker__day,

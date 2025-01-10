@@ -17,7 +17,7 @@ export default function LeaderboardRankingNumber({ ranking }: { ranking: number 
     case 3:
       return <Image src={IconRanking3} width={34} height={48} />
     default:
-      return <Type.CaptionBold color="neutral1"># {formatNumber(ranking, 0)}</Type.CaptionBold>
+      return <Type.CaptionBold color="neutral3">#{formatNumber(ranking, 0)}</Type.CaptionBold>
   }
 }
 
@@ -32,9 +32,9 @@ export function CopierRankingNumber({ ranking }: { ranking: number | undefined }
       return <Image src={CopierRanking3} width={54} height={44} />
     default:
       return (
-        <Type.CaptionBold color="neutral1" width={54} textAlign="center">
-          # {formatNumber(ranking, 0)}
-        </Type.CaptionBold>
+        <Type.Caption color="neutral3" width={54} textAlign="center">
+          #{formatNumber(ranking, 0)}
+        </Type.Caption>
       )
   }
 }

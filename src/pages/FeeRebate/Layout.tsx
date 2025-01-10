@@ -71,6 +71,8 @@ function MainTab({ pathname }: { pathname: string }) {
       configs={tabConfigs}
       isActiveFn={(config) => config.route === pathname}
       fullWidth
+      size="lg"
+      hasLine
       externalWidget={
         xl && (
           <Flex
@@ -78,7 +80,7 @@ function MainTab({ pathname }: { pathname: string }) {
             href="https://blog.copin.io/p/join-copins-decentralized-copy-trading?r=2m5jsa&utm_campaign=post&utm_medium=web&triedRedirect=true"
             target="_blank"
             alignItems="center"
-            sx={{ gap: 2 }}
+            sx={{ gap: 2, pr: 3 }}
           >
             <IconBox icon={<WarningCircle size={24} />} color="primary1" />
             <Type.CaptionBold color="primary1">How It Works</Type.CaptionBold>

@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import useTraderFavorites, { getTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
 import { useAuthContext } from 'hooks/web3/useAuth'
-import { IconBox } from 'theme/base'
+import IconButton from 'theme/Buttons/IconButton'
 import { ProtocolEnum } from 'utils/config/enums'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
@@ -82,15 +82,13 @@ export default function FavoriteButton({
   }, [setTooltip, tooltipAddress])
   return (
     <div className="favorite-btn">
-      <IconBox
-        // data-tip="React-tooltip"
-        // data-tooltip-id={`tt_favorite_note_${address}`}
-        // data-tooltip-delay-hide={240}
-        role="button"
+      <IconButton
+        type="button"
         variant="ghost"
         onClick={(e: any) => {
           e.preventDefault()
           e.stopPropagation()
+
           if (hasFavorite) {
             handleAddFavorite(e)
           } else {
@@ -98,18 +96,17 @@ export default function FavoriteButton({
               handleClickLogin()
               return
             }
+            console.log('gd')
             setTooltip({ address, protocol, position: e.currentTarget.getBoundingClientRect() })
           }
         }}
         disabled={favoriteSubmitting}
         className={hasFavorite ? '' : 'hiding-btn'}
         icon={<Star weight={hasFavorite ? 'fill' : 'regular'} size={size} />}
+        size={size}
         sx={{
-          mb: '4px',
+          p: 0,
           color: hasFavorite ? activeColor : color,
-          '&:hover:not([disabled])': {
-            color: hoverColor,
-          },
           ...sx,
         }}
         // onClick={handleAddFavorite}

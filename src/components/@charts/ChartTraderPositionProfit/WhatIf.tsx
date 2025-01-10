@@ -45,21 +45,18 @@ export default function WhatIf({
         menuSx={{
           width: [300, 400],
           p: 2,
-          bg: 'neutral5',
+          // bg: 'neutral5',
         }}
         hasArrow={true}
         dismissible={false}
         menu={
-          <Box px={2} py={2} mb={24}>
+          <Box py={2} mb={24}>
             <Flex mb={2} alignItems="center" justifyContent="space-between">
               <Type.Caption>
-                Next times:{' '}
-                <Box as="span" color="primary1">
-                  {amount ? amount : '--'} hours
-                </Box>
+                Next times: <Box as="span">{amount ? amount : '--'} hours</Box>
               </Type.Caption>
             </Flex>
-            <form>
+            <Box as="form" px={2}>
               <SliderInput
                 name="amount"
                 control={control}
@@ -70,20 +67,11 @@ export default function WhatIf({
                 marksStep={isMobile ? 8 : 4}
                 marksUnit={'h'}
               />
-            </form>
+            </Box>
           </Box>
         }
         sx={{ height: '100%', justifyContent: 'center' }}
-        buttonSx={{
-          border: 'none',
-          height: '100%',
-          p: 0,
-          ':hover': {
-            filter: 'brightness(140%)',
-          },
-        }}
-        iconColor="primary1"
-        iconSize={12}
+        buttonVariant="ghostPrimary"
         placement="bottomRight"
         onReset={() => {
           setValue('amount', 0)
@@ -105,11 +93,10 @@ export default function WhatIf({
           // setSearchParams({ [URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]: amount ? amount.toString() : null })
         }}
       >
-        <Type.Caption color="neutral1">
-          What If
-          {!amount ? '?' : ': '}{' '}
-          {!!amount && <Type.Caption color="primary1">{formatNumber(amount, 0)} hours</Type.Caption>}
-        </Type.Caption>
+        <Box as="span" color="neutral1">
+          What If{!amount ? '?' : ': '}
+        </Box>
+        {!!amount && <Type.Caption>{formatNumber(amount, 0)} hours</Type.Caption>}
       </Dropdown>
     </Box>
   )

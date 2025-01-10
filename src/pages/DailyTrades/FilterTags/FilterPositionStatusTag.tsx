@@ -1,8 +1,8 @@
-import { POSITION_STATUS_OPTIONS } from 'components/@dailyTrades/PositionStatusFilterTitle'
+import { POSITION_STATUS_OPTIONS } from 'components/@dailyTrades/PositionStatusFilterIcon'
 import { Type } from 'theme/base'
 
+import TagWrapper from '../../../theme/Tag/TagWrapper'
 import { useDailyPositionsContext } from '../Positions/usePositionsProvider'
-import TagWrapper from './TagWrapper'
 
 export default function FilterPositionStatusTag() {
   const { status, changeStatus } = useDailyPositionsContext()

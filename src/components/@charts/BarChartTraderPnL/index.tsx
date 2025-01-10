@@ -152,7 +152,7 @@ export default function BarChartTraderPnL({
                 contentStyle={{
                   backgroundColor: themeColors.neutral5,
                   borderColor: themeColors.neutral4,
-                  fontSize: '13px',
+                  fontSize: '12px',
                   fontFamily: FONT_FAMILY,
                 }}
                 content={(payload) => <CustomTooltip item={payload.payload} />}

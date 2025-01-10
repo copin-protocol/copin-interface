@@ -121,12 +121,13 @@ export default function SharePosition({
       <Flex alignItems="center">
         <ButtonWithIcon
           variant="ghost"
+          inline
           icon={<ShareFat size={20} />}
           onClick={handleShare}
           spacing={1}
-          sx={{ color: 'neutral3', p: 0 }}
+          sx={{ p: 0 }}
         >
-          <Type.Caption>
+          <Type.Caption display={['none', 'inline']}>
             <Trans>Share</Trans>
           </Type.Caption>
         </ButtonWithIcon>

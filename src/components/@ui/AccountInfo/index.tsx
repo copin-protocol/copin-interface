@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
 import Highlighter from 'react-highlight-words'
 import { Link } from 'react-router-dom'
@@ -6,7 +5,6 @@ import { GridProps } from 'styled-system'
 import { v4 as uuid } from 'uuid'
 
 import IconEye from 'assets/icons/ic-eye.svg'
-import ActiveDot from 'components/@ui/ActiveDot'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { useProtocolStore } from 'hooks/store/useProtocols'
@@ -115,7 +113,7 @@ export function AccountInfo({
         flex="1"
         flexDirection="column"
         sx={{
-          width: 100,
+          width: 110,
           color: 'inherit',
           textAlign: 'left',
           ...sx,
@@ -139,10 +137,9 @@ export function AccountInfo({
           >
             <HighlightKeyword text={address} keyword={keyword} />
           </Type.Caption>
-
-          {isOpenPosition && (
+          {/* {isOpenPosition && (
             <ActiveDot tooltipId={`tt_opening_${address}`} tooltipContent={<Trans>Having open positions</Trans>} />
-          )}
+          )} */}
           <ProtocolLogo
             protocol={protocol}
             size={24}
@@ -173,9 +170,9 @@ export function AccountInfo({
           note ? (
             <Type.Small
               px={2}
-              py={1}
+              py="2px"
               bg="neutral4"
-              sx={{ borderRadius: 'sm', width: 'fit-content' }}
+              sx={{ borderRadius: 20, width: 'fit-content' }}
               data-tip="React-tooltip"
               data-tooltip-id={`tt_note_${address}`}
               data-tooltip-offset={0}

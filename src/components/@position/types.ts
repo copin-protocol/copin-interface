@@ -11,6 +11,7 @@ export type ExternalSourceCopyPositions = {
   submitting?: boolean
   currentId?: string
   onViewSource?: (data: CopyPositionData, event?: any) => void
+  handleCloseCopyItem?: (data: CopyPositionData) => void
   handleSelectCopyItem?: (data: CopyPositionData) => void
   getSymbolByIndexToken?: ({
     protocol,

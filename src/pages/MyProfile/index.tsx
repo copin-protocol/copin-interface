@@ -85,27 +85,27 @@ const tabConfigs: TabConfig[] = [
   {
     name: <Trans>API WALLET</Trans>,
     activeIcon: <SquareHalf size={24} weight="fill" />,
-    inactiveIcon: <SquareHalf size={24} />,
+    icon: <SquareHalf size={24} />,
     key: TabKeyEnum.MANAGEMENT,
     route: ROUTES.MY_MANAGEMENT.path,
   },
   {
     name: <Trans>SMART WALLET</Trans>,
     activeIcon: <SubtractSquare size={24} weight="fill" />,
-    inactiveIcon: <SubtractSquare size={24} />,
+    icon: <SubtractSquare size={24} />,
     key: TabKeyEnum.DCP_MANAGEMENT,
     route: ROUTES.USER_DCP_MANAGEMENT.path,
   },
   {
     name: <Trans>HISTORY</Trans>,
-    inactiveIcon: <ClockCounterClockwise size={24} />,
+    icon: <ClockCounterClockwise size={24} />,
     activeIcon: <ClockCounterClockwise size={24} weight="fill" />,
     key: TabKeyEnum.HISTORY,
     route: ROUTES.MY_HISTORY.path,
   },
   {
     name: <Trans>ACTIVITIES</Trans>,
-    inactiveIcon: <Notebook size={24} />,
+    icon: <Notebook size={24} />,
     activeIcon: <Notebook size={24} weight="fill" />,
     key: TabKeyEnum.ACTIVITIES,
     route: ROUTES.USER_ACTIVITY.path,
@@ -116,34 +116,34 @@ const internalTabConfigs: TabConfig[] = [
   {
     name: <Trans>API WALLET</Trans>,
     activeIcon: <SquareHalf size={24} weight="fill" />,
-    inactiveIcon: <SquareHalf size={24} />,
+    icon: <SquareHalf size={24} />,
     key: TabKeyEnum.MANAGEMENT,
     route: ROUTES.MY_MANAGEMENT.path,
   },
   {
     name: <Trans>SMART WALLET</Trans>,
     activeIcon: <SubtractSquare size={24} weight="fill" />,
-    inactiveIcon: <SubtractSquare size={24} />,
+    icon: <SubtractSquare size={24} />,
     key: TabKeyEnum.DCP_MANAGEMENT,
     route: ROUTES.USER_DCP_MANAGEMENT.path,
   },
   {
     name: <Trans>VAULT</Trans>,
     activeIcon: <SubtractSquare size={24} weight="fill" />,
-    inactiveIcon: <SubtractSquare size={24} />,
+    icon: <SubtractSquare size={24} />,
     key: TabKeyEnum.VAULT_MANAGEMENT,
     route: ROUTES.USER_VAULT_MANAGEMENT.path,
   },
   {
     name: <Trans>HISTORY</Trans>,
-    inactiveIcon: <ClockCounterClockwise size={24} />,
+    icon: <ClockCounterClockwise size={24} />,
     activeIcon: <ClockCounterClockwise size={24} weight="fill" />,
     key: TabKeyEnum.HISTORY,
     route: ROUTES.MY_HISTORY.path,
   },
   {
     name: <Trans>ACTIVITIES</Trans>,
-    inactiveIcon: <Notebook size={24} />,
+    icon: <Notebook size={24} />,
     activeIcon: <Notebook size={24} weight="fill" />,
     key: TabKeyEnum.ACTIVITIES,
     route: ROUTES.USER_ACTIVITY.path,
@@ -160,11 +160,17 @@ const pageTitleMapping = {
 
 function MainTab({ pathname }: { pathname: string }) {
   const isInternal = useInternalRole()
+  const { lg } = useResponsive()
   return (
     <TabHeader
+      fullWidth={!lg}
       configs={isInternal ? internalTabConfigs : tabConfigs}
       isActiveFn={(config) => config.route === pathname}
-      fullWidth
+      size="lg"
+      sx={{ borderBottom: ['none', 'none', 'small'], borderColor: ['neutral4', 'neutral4', 'neutral4'] }}
+      itemSx={{
+        width: '100%',
+      }}
     />
   )
 }

@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { Link } from 'react-router-dom'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
+import Divider from 'components/@ui/Divider'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
@@ -88,19 +89,9 @@ const HLTraderPositionDetails = memo(function HLPositionDetailsMemo({
             </Flex>
             {!isDrawer && <ProtocolLogo size={24} protocol={data.protocol} textSx={{ fontSize: '14px' }} />}
           </Flex>
-          <Box
-            bg="neutral7"
-            mb={3}
-            mx={3}
-            px={isDrawer ? 12 : 0}
-            sx={{
-              borderRadius: '2px',
-              border: isDrawer ? 'small' : 'none',
-              borderTop: 'small',
-              borderColor: 'neutral4',
-            }}
-          >
+          <Box mb={3} mx={3}>
             {data && <HLPositionStats data={data} />}
+            <Divider isDashed />
             {data && <HLChartPositionComponent data={data} orders={orders} />}
           </Box>
 

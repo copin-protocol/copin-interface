@@ -111,7 +111,7 @@ export default function ComparisonComponent({
         </Box>
       </Flex>
       <Box sx={{ p: 3 }}>
-        <SectionTitle icon={<ChartBar size={24} />} title={<Trans>Percentile Ranking Comparison</Trans>} />
+        <SectionTitle icon={ChartBar} title={<Trans>PERCENTILE RANKING COMPARISON</Trans>} />
         <Box mb={1} />
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr', gap: [3, 3, 3, 3, 24] }}>
           <Flex sx={{ width: '100%', flexDirection: 'column', gap: 24 }}>

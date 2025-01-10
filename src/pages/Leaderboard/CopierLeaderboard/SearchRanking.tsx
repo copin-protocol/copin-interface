@@ -43,11 +43,10 @@ export default function SearchRanking() {
   return (
     <Box sx={{ position: 'relative' }}>
       <InputSearch
-        placeholder="Search Trader Ranking"
+        placeholder="SEARCH TRADER RANKING"
         sx={{
           height: 'max-content',
-          borderColor: 'neutral4',
-          borderRadius: 'xs',
+          border: 'none',
           backgroundColor: 'transparent',
         }}
         value={searchText}
@@ -60,7 +59,7 @@ export default function SearchRanking() {
           sx={{
             position: 'absolute',
             bottom: '-2px',
-            left: [0, 0, 3],
+            left: 0,
             right: 0,
             transform: 'translateY(100%)',
             p: 2,
@@ -71,7 +70,7 @@ export default function SearchRanking() {
           }}
         >
           <Warning size={16} style={{ flexShrink: 0, height: '22px' }} />
-          <Box as="span">Please enter a correct user address</Box>
+          <Box as="span">Please enter a correct address</Box>
         </Type.Caption>
       )}
     </Box>

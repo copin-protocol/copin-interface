@@ -18,37 +18,49 @@ export default function ExchangeFilterSection() {
   return (
     <Dropdown
       menuSx={{ p: 0, m: 0 }}
-      buttonSx={{
-        height: '100%',
-        width: 160,
-        p: '0 8px',
-        m: 0,
-        border: 'none',
-        '& *': { fontWeight: 'normal !important' },
-      }}
-      sx={{ height: '100%' }}
+      buttonSx={{ py: '10px' }}
+      buttonVariant="ghost"
       menu={
-        <Flex sx={{ width: 160, flexDirection: 'column', gap: 1 }}>
-          <MenuItemWrapper onClick={() => changeExchangeType(CopierLeaderBoardExchangeType.TOTAL)}>
+        <Flex sx={{ width: 176, flexDirection: 'column', gap: 1 }}>
+          <MenuItemWrapper
+            isActive={currentExchangeType === CopierLeaderBoardExchangeType.TOTAL}
+            onClick={() => changeExchangeType(CopierLeaderBoardExchangeType.TOTAL)}
+          >
             {EXCHANGE_TYPE_OPTION_MAPPING.TOTAL.text}
           </MenuItemWrapper>
-          <MenuItemWrapper onClick={() => changeExchangeType(CopierLeaderBoardExchangeType.ALL_DEX)}>
+          <MenuItemWrapper
+            isActive={currentExchangeType === CopierLeaderBoardExchangeType.ALL_DEX}
+            onClick={() => changeExchangeType(CopierLeaderBoardExchangeType.ALL_DEX)}
+          >
             {EXCHANGE_TYPE_OPTION_MAPPING.ALL_DEX.text}
           </MenuItemWrapper>
-          <MenuItemWrapper onClick={() => changeExchangeType(CopierLeaderBoardExchangeType.ALL_CEX)}>
+          <MenuItemWrapper
+            isActive={currentExchangeType === CopierLeaderBoardExchangeType.ALL_CEX}
+            onClick={() => changeExchangeType(CopierLeaderBoardExchangeType.ALL_CEX)}
+          >
             {EXCHANGE_TYPE_OPTION_MAPPING.ALL_CEX.text}
           </MenuItemWrapper>
           <Divider />
           {dcpExchangeOptions.map((option) => {
             return (
-              <MenuItemWrapper key={option.value} onClick={() => changeExchange(option.value)} sx={{ pl: 3 }}>
+              <MenuItemWrapper
+                isActive={option.value === currentExchange}
+                key={option.value}
+                onClick={() => changeExchange(option.value)}
+                sx={{ px: 2 }}
+              >
                 {option.label}
               </MenuItemWrapper>
             )
           })}
           {exchangeOptions.map((option) => {
             return (
-              <MenuItemWrapper key={option.value} onClick={() => changeExchange(option.value)} sx={{ pl: 3 }}>
+              <MenuItemWrapper
+                key={option.value}
+                isActive={option.value === currentExchange}
+                onClick={() => changeExchange(option.value)}
+                sx={{ px: 2 }}
+              >
                 {option.label}
               </MenuItemWrapper>
             )
@@ -81,7 +93,17 @@ const EXCHANGE_TYPE_OPTION_MAPPING: {
   },
 }
 
-function MenuItemWrapper({ children, onClick, sx = {} }: { children: ReactNode; onClick: () => void; sx?: any }) {
+function MenuItemWrapper({
+  children,
+  isActive,
+  onClick,
+  sx = {},
+}: {
+  children: ReactNode
+  isActive: boolean
+  onClick: () => void
+  sx?: any
+}) {
   return (
     <Flex
       role="button"
@@ -90,9 +112,9 @@ function MenuItemWrapper({ children, onClick, sx = {} }: { children: ReactNode; 
         px: 2,
         width: '100%',
         alignItems: 'center',
-        height: 32,
+        height: 36,
         bg: 'neutral7',
-        color: 'neutral1',
+        color: isActive ? 'primary1' : 'neutral1',
         '&:hover': { bg: 'neutral5' },
         ...sx,
       }}

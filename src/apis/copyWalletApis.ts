@@ -30,3 +30,11 @@ export async function getAllCopyWalletsApi(exchange?: CopyTradePlatformEnum) {
 export async function getCopyWalletDetailsApi({ id }: { id: string }) {
   return requester.get(`${SERVICE}/${id}`).then((res: any) => res.data as CopyWalletData)
 }
+
+export async function getEmbeddedWalletsApi() {
+  return requester.get(`${SERVICE}/hyperliquid-embedded/list`).then((res: any) => res.data as CopyWalletData[])
+}
+
+export async function checkEmbeddedWalletApi() {
+  return requester.post(`wallets/embedded`).then((res) => res.data as { address: string })
+}

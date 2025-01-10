@@ -44,6 +44,7 @@ MarketFilterProps) {
   return (
     <Flex alignItems="start" sx={{ gap: 1, pr: 2 }}>
       <Dropdown
+        buttonVariant="ghostPrimary"
         menu={
           <MarketSelection
             key={visible.toString()}
@@ -57,8 +58,7 @@ MarketFilterProps) {
           />
         }
         placement={xl ? undefined : placement}
-        buttonVariant="ghost"
-        buttonSx={{ borderRadius: 0, border: 'none', p: 0, color: 'primary1' }}
+        inline
         menuSx={{
           width: '250px',
           bg: '#0B0E18CC',

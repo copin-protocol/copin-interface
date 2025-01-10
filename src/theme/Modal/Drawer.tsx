@@ -6,17 +6,23 @@ import { animated, easings, useTransition } from 'react-spring'
 import styled from 'styled-components/macro'
 import { GridProps } from 'styled-system'
 
+import SafeDropdownIndex from 'components/@widgets/SafeDropdownIndex'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import IconButton from 'theme/Buttons/IconButton'
 import { Flex, Type } from 'theme/base'
 import { Colors } from 'theme/types'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ mode?: ModalProps['mode']; overlayBG?: string }>`
-  ${({ theme, mode, overlayBG }) => `
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{
+  mode?: ModalProps['mode']
+  overlayBG?: string
+  zindex?: number
+}>`
+  ${({ theme, mode, overlayBG, zindex }) => `
     &[data-reach-dialog-overlay] {
-      z-index: 9998;
+      z-index: ${zindex ?? Z_INDEX.THEME_MODAL};
       width: 100%;
       height: 100%;
       position: fixed;
@@ -78,6 +84,7 @@ export interface ModalProps {
   contentWidth?: string
   contentHeight?: string
   overlayBG?: string
+  zIndex?: number
 }
 
 export default function Drawer({
@@ -97,6 +104,7 @@ export default function Drawer({
   contentHeight,
   overlayBG,
   dangerouslyBypassFocusLock = false,
+  zIndex,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
     config: { duration: 240, easing: easings.linear },
@@ -122,6 +130,7 @@ export default function Drawer({
         return (
           item && (
             <StyledDialogOverlay
+              zindex={zIndex}
               style={props}
               onDismiss={() => dismissable && onDismissRequest()}
               initialFocusRef={initialFocusRef}
@@ -185,6 +194,7 @@ export default function Drawer({
                           </Flex>
                         )}
                       </Flex>
+                      <SafeDropdownIndex />
                     </StyledDialogContent>
                   )
               )}

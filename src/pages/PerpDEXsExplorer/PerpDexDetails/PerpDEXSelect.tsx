@@ -116,15 +116,9 @@ function PerpDEXSelection({ options, onClickSelection }: { options: Option[]; on
         value={searchText}
         onChange={handleChangeSearchText}
         onClear={handleClearSearchText}
-        placeholder="Search Perp"
-        sx={{
-          border: 'none',
-          '&:focus-within:not([disabled])': {
-            bg: 'neutral6',
-          },
-        }}
+        placeholder="SEARCH PERP"
       />
-      {!_options.length && <NoDataFound message={<Trans>No perp DEX matched!</Trans>} />}
+      {!_options.length && <NoDataFound message={<Trans>No Perp DEX matched!</Trans>} />}
       {!!_options.length && (
         <Grid mt={3} sx={{ gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 1 }}>
           {[..._options].map((option) => {

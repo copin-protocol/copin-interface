@@ -17,6 +17,7 @@ import { EventTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { STORAGE_KEYS } from 'utils/config/keys'
 import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import ROUTES from 'utils/config/routes'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { generateEventDetailsRoute, generateExplorerRoute } from 'utils/helpers/generateRoute'
 
 type State = {
@@ -240,7 +241,7 @@ export default function EventsNotification() {
             left: 0,
             // top: state.y,
             // left: state.x,
-            zIndex: 9997,
+            zIndex: Z_INDEX.THEME_MODAL,
           }}
         >
           <Flex

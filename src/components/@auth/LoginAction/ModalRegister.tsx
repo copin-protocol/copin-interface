@@ -139,7 +139,6 @@ const ModalRegister = ({
         </Flex>
       }
       maxWidth="450px"
-      background="neutral6"
       hasClose
     >
       <Box variant="card" pb={[3, 4]} px={[3, 4]} sx={{ backgroundColor: 'neutral6' }}>

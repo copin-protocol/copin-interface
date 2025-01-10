@@ -54,7 +54,7 @@ export default function AccountInfo({
             // data-tooltip-delay-show={360}
             // data-tooltip-offset={-8}
             color={'inherit'}
-            width={80}
+            width={85}
             // sx={{
             //   ':hover': {
             //     color: 'primary1',

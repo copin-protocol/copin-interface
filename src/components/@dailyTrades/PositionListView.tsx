@@ -84,7 +84,7 @@ export default function DailyPositionListView({ data, isLoading, scrollDep, onCl
             <Flex mt={3} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
               <Flex sx={{ gap: 2 }}>
                 <Flex sx={{ alignItems: 'center', gap: 2, width: '92px', flexShrink: 0 }}>
-                  <Market symbol={getSymbolFromPair(position.pair)} hasName symbolNameSx={{ fontSize: '13px' }} />
+                  <Market symbol={getSymbolFromPair(position.pair)} hasName symbolNameSx={{ fontSize: '12px' }} />
                 </Flex>
                 <Type.Caption color="neutral1">
                   <Box as="span" color={position.isLong ? 'green1' : 'red2'}>

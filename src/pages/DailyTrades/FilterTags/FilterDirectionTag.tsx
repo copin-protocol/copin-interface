@@ -1,8 +1,8 @@
-import { DIRECTION_OPTIONS } from 'components/@dailyTrades/DirectionFilterTitle'
+import { DIRECTION_OPTIONS } from 'components/@dailyTrades/DirectionFilterIcon'
 import { Type } from 'theme/base'
 
+import TagWrapper from '../../../theme/Tag/TagWrapper'
 import { useDailyOrdersContext } from '../Orders/useOrdersProvider'
-import TagWrapper from './TagWrapper'
 
 export default function OrderDirectionTag() {
   const { direction, changeDirection } = useDailyOrdersContext()

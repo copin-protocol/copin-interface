@@ -1,32 +1,40 @@
 import { SystemStyleObject } from '@styled-system/css'
-import React, { ReactElement, ReactNode, useEffect, useRef } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import React, { ReactElement, ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { GridProps } from 'styled-system'
 
 import { Box, Flex } from 'theme/base'
 import { SxProps } from 'theme/types'
+import { PAGE_TITLE_HEIGHT, TAB_HEIGHT } from 'utils/config/constants'
 
-import TabItem from './TabItem'
+import RouteTabItem from './RouteTabItem'
 
 type TabPaneProps = {
   children: ReactElement | ReactElement[] | string
   active?: boolean
   tab: ReactNode
   key: string
+  activeIcon?: ReactNode
+  icon?: ReactNode
+  route?: string
+  count?: number
 }
 
 type TabsProps = {
   children: ReactElement[] | ReactElement
   defaultActiveKey?: string
-  inactiveHasLine?: boolean
+  hasLine?: boolean
+  hasOverlay?: boolean
   fullWidth?: boolean
   onChange?: (key: string) => void
-  tabItemSx?: SystemStyleObject & GridProps
-  tabItemActiveSx?: SystemStyleObject & GridProps
+  tabItemSx?: any
+  tabItemActiveSx?: any
+  tabIconSx?: any
+  tabIconActiveSx?: any
   tabPanelSx?: SystemStyleObject & GridProps
   sx?: SystemStyleObject & GridProps
   headerSx?: SystemStyleObject & GridProps
+  size?: 'lg' | 'md'
 } & SxProps
 
 export const TabPane = styled(Box)<TabPaneProps>`
@@ -40,13 +48,18 @@ const Header = styled(Box)`
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
+  & span {
+    width: max-content;
+  }
 `
 
 const HeaderOverlay = styled.div<{ hasOverlay: boolean }>`
   position: relative;
   display: flex;
   justify-content: start;
-  ${({ hasOverlay }) =>
+  flex: auto;
+  width: 100%;
+  ${({ hasOverlay, theme }) =>
     hasOverlay &&
     ` &:after {
       content: '';
@@ -54,21 +67,26 @@ const HeaderOverlay = styled.div<{ hasOverlay: boolean }>`
       top: 0;
       right: 0;
       height: calc(100% - 2px);
-      width: 48px;
+      width: 20px;
+      background: linear-gradient(to right, ${theme.colors.neutral7}00, ${theme.colors.neutral7});
     }`}
 `
 
 const Tabs = ({
   children,
   defaultActiveKey,
-  inactiveHasLine = true,
+  hasLine = true,
+  hasOverlay,
   fullWidth = true,
   sx,
   headerSx,
   tabItemSx,
   tabItemActiveSx,
+  tabIconSx,
+  tabIconActiveSx,
   tabPanelSx,
   onChange,
+  size = 'md',
 }: TabsProps) => {
   const elements = children as ReactElement[]
   if (elements.length) {
@@ -81,16 +99,20 @@ const Tabs = ({
     return (
       <Box sx={{ width: '100%', ...sx }}>
         <TabHeader
+          size={size}
           configs={tabs}
           isActiveFn={(config) => config.key === defaultActiveKey}
           fullWidth={fullWidth}
           sx={headerSx}
           itemSx={tabItemSx}
           itemActiveSx={tabItemActiveSx}
+          iconSx={tabIconSx}
+          iconActiveSx={tabIconActiveSx}
           onClickItem={(key) => {
             onChange && onChange(key)
           }}
-          inactiveHasLine={inactiveHasLine}
+          hasLine={hasLine}
+          hasOverlay={hasOverlay}
         />
 
         {elements.map((c: ReactElement) =>
@@ -103,9 +125,18 @@ const Tabs = ({
   return (
     <Box sx={sx}>
       <Header mb={3} sx={{ borderBottom: 'small', borderColor: 'neutral6', ...headerSx }} display="flex">
-        <TabItem active={true} key={child.key} type="button">
+        <RouteTabItem
+          active={true}
+          icon={!!child.props.activeIcon ? child.props.activeIcon : child.props.icon}
+          sx={tabItemActiveSx ?? tabItemSx}
+          iconSx={tabItemActiveSx ?? tabItemSx}
+          onClick={() => onChange && onChange(child.props.key)}
+          hasLine={hasLine}
+          size={size}
+          route={child.props.route}
+        >
           {child.props.tab}
-        </TabItem>
+        </RouteTabItem>
       </Header>
       {React.cloneElement(child, { active: true })}
     </Box>
@@ -117,10 +148,11 @@ export default Tabs
 export type TabConfig = {
   name: ReactNode
   activeIcon?: ReactNode
-  inactiveIcon?: ReactNode
+  icon?: ReactNode
   key: string
   route?: string
   paramKey?: string
+  count?: number
 }
 type TabHeadersProps = {
   configs: TabConfig[]
@@ -129,9 +161,13 @@ type TabHeadersProps = {
   sx?: any
   itemSx?: any
   itemActiveSx?: any
+  iconSx?: any
+  iconActiveSx?: any
   onClickItem?: (key: string) => void
-  inactiveHasLine?: boolean
+  hasLine?: boolean
+  hasOverlay?: boolean
   externalWidget?: ReactNode
+  size?: 'lg' | 'md'
 }
 export function TabHeader({
   configs,
@@ -140,107 +176,67 @@ export function TabHeader({
   sx,
   itemSx,
   itemActiveSx,
+  iconSx,
+  iconActiveSx,
   onClickItem,
-  inactiveHasLine,
+  hasLine,
+  hasOverlay,
   externalWidget,
+  size = 'md',
 }: TabHeadersProps) {
   return (
-    <Box sx={{ width: '100%' }}>
-      <HeaderOverlay hasOverlay={fullWidth}>
+    <Flex sx={{ width: '100%', ...sx }} alignItems="center">
+      <HeaderOverlay hasOverlay={hasOverlay ?? fullWidth}>
         <Header
           sx={{
-            px: 3,
-            borderBottom: ['none', 'none', 'small'],
-            borderBottomColor: ['none', 'none', 'neutral4'],
             width: '100%',
-            display: fullWidth ? 'flex' : ['flex', 'flex', 'block'],
-            justifyContent: 'space-between',
-            gap: 28,
-            ...sx,
           }}
         >
           <Flex
-            alignItems="center"
-            sx={{ width: '100%', display: fullWidth ? 'flex' : ['flex', 'flex', 'block'], gap: 28 }}
+            className="tab-header"
+            sx={{
+              // width: '100%',
+              alignItems: 'center',
+              width: fullWidth ? ['100%', '100%', 'auto'] : 'max-content',
+              '& > *': {
+                width: fullWidth ? ['100%', '100%', 'auto'] : 'max-content',
+              },
+              height: size === 'lg' ? PAGE_TITLE_HEIGHT : TAB_HEIGHT,
+            }}
           >
             {configs.map((tab) => {
               const isActive = isActiveFn(tab)
               return (
-                <TabRouteItem
+                <RouteTabItem
                   key={tab.key}
-                  isActive={isActive}
-                  tabConfig={tab}
-                  itemOption={{
-                    itemSx,
-                    itemActiveSx,
-                    onClickItem,
-                    inactiveHasLine,
-                  }}
-                />
+                  active={isActive}
+                  icon={isActive && !!tab.activeIcon ? tab.activeIcon : tab.icon}
+                  sx={isActive && !!itemActiveSx ? itemActiveSx : itemSx}
+                  iconSx={isActive && !!iconActiveSx ? iconActiveSx : iconSx}
+                  onClick={() => onClickItem?.(tab.key)}
+                  hasLine={hasLine}
+                  size={size}
+                  route={tab.route}
+                  count={tab.count}
+                >
+                  {tab.name}
+                </RouteTabItem>
               )
             })}
-          </Flex>
-          <Flex minWidth="fit-content" alignItems="center">
-            {externalWidget}
+            {fullWidth && hasLine && (
+              <Box flex="1" sx={{ borderBottom: 'small', borderColor: 'neutral4', height: '100%' }}></Box>
+            )}
           </Flex>
         </Header>
       </HeaderOverlay>
-    </Box>
-  )
-}
-
-function TabRouteItem({
-  tabConfig,
-  itemOption,
-  isActive,
-}: {
-  tabConfig: TabConfig
-  itemOption: Pick<TabHeadersProps, 'itemSx' | 'itemActiveSx' | 'onClickItem' | 'inactiveHasLine'>
-  isActive: boolean
-}) {
-  const { search, pathname } = useLocation()
-  const _search = useRef('')
-  useEffect(() => {
-    if (pathname === tabConfig.route) {
-      _search.current = search
-    }
-  }, [pathname, search, tabConfig.route])
-  return (
-    <TabItem
-      as={tabConfig.route ? Link : undefined}
-      to={tabConfig.route ? tabConfig.route + _search.current : ''}
-      type="button"
-      size="lg"
-      onClick={itemOption.onClickItem ? () => itemOption?.onClickItem?.(tabConfig.key) : undefined}
-      active={isActive}
-      inactiveHasLine={itemOption.inactiveHasLine}
-      sx={{
-        flex: ['1 0 auto', '1 0 auto', '0 0 auto'],
-        ...(tabConfig.route
-          ? {
-              '&:active,&:focus,&:hover': { color: 'primary1' },
-            }
-          : {}),
-        ...itemOption.itemSx,
-        ...(isActive ? itemOption.itemActiveSx : {}),
-      }}
-    >
-      {tabConfig.activeIcon && tabConfig.inactiveIcon ? (
-        <Flex alignItems="center" sx={{ gap: 2 }}>
-          {isActive ? tabConfig.activeIcon : tabConfig.inactiveIcon}
-          <Box
-            as="span"
-            sx={{
-              textTransform: ['lowercase', 'none'],
-              '&:first-letter': { textTransform: 'uppercase' },
-            }}
-          >
-            {tabConfig.name}
-          </Box>
-        </Flex>
-      ) : (
-        tabConfig.name
-      )}
-    </TabItem>
+      <Flex
+        minWidth="fit-content"
+        alignItems="center"
+        height="100%"
+        sx={{ borderBottom: hasLine ? 'small' : undefined, borderColor: 'neutral4' }}
+      >
+        {externalWidget}
+      </Flex>
+    </Flex>
   )
 }

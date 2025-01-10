@@ -29,21 +29,21 @@ export default function BacktestSimpleResult({
           label={<Trans>ROI</Trans>}
           value={<SignedText value={result.roi} maxDigit={2} minDigit={2} suffix="%" />}
         />
-        <ResultItem label={<Trans>Total trade</Trans>} value={formatNumber(result.totalTrade)} />
+        <ResultItem label={<Trans>Total Trades</Trans>} value={formatNumber(result.totalTrade)} />
         <ResultItem
-          label={<Trans>Win rate</Trans>}
+          label={<Trans>Win Rate</Trans>}
           value={<SignedText value={result.winRate} maxDigit={2} minDigit={2} suffix="%" />}
         />
         <ResultItem label={<Trans>Leverage</Trans>} value={`${formatNumber(settings.leverage)}x`} />
         <ResultItem
-          label={<Trans>Max margin multiplier</Trans>}
+          label={<Trans>Max Margin Multiplier</Trans>}
           value={formatNumber(result.maxVolMultiplier ?? undefined)}
         />
         <ResultItem
-          label={<Trans>Max draw down</Trans>}
+          label={<Trans>Max Draw Down</Trans>}
           value={<SignedText value={result.maxDrawDown} maxDigit={2} minDigit={2} suffix="%" />}
         />
-        <ResultItem label={<Trans>Total liquidation</Trans>} value={formatNumber(result.totalLiquidate)} />
+        <ResultItem label={<Trans>Total Liquidation</Trans>} value={formatNumber(result.totalLiquidate)} />
       </Box>
     </>
   )

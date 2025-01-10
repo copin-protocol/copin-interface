@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
+import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import Divider from 'components/@ui/Divider'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import TraderAddress from 'components/@ui/TraderAddress'
@@ -11,13 +12,15 @@ import { CopyWalletData } from 'entities/copyWallet'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
+import SkullIcon from 'theme/Icons/SkullIcon'
 import Loading from 'theme/Loading'
+import ProgressBar from 'theme/ProgressBar'
 import Tag from 'theme/Tag'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
-import { calcCopyOpeningPnL } from 'utils/helpers/calculate'
+import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
 import {
@@ -54,7 +57,7 @@ export const renderCopyWallet = (data: CopyPositionData, _: number | undefined, 
     <Flex sx={{ alignItems: 'center', gap: 2 }}>
       <Type.Caption
         color="neutral1"
-        sx={{ maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+        sx={{ maxWidth: '84px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
       >
         {walletName}
       </Type.Caption>
@@ -82,6 +85,77 @@ export function renderEntry(data: CopyPositionData) {
       </Type.Caption>
       <VerticalDivider />
       <Type.Caption>{formatPrice(data.entryPrice)}</Type.Caption>
+    </Flex>
+  )
+}
+
+export function renderOpeningSize(data: CopyPositionData, prices?: UsdPrices) {
+  return <OpeningSizeComponent data={data} prices={prices} />
+}
+
+function OpeningSizeComponent({
+  data,
+  prices,
+  dynamicWidth,
+}: {
+  data: CopyPositionData | undefined
+  prices?: UsdPrices
+  dynamicWidth?: boolean
+}) {
+  const { getSymbolByIndexToken } = useMarketsConfig()
+  if (!data || !prices) return <></>
+  // Todo: Check calc for value in rewards
+
+  const symbolByIndexToken = getSymbolByIndexToken
+    ? getSymbolByIndexToken({ protocol: data?.protocol, indexToken: data?.indexToken })
+    : undefined
+  const symbol = data?.pair ? getSymbolFromPair(data.pair) : symbolByIndexToken
+  const marketPrice: number = symbol && prices[symbol] != null ? (prices[symbol] as number) : 0
+  const liquidatePrice = calcCopyLiquidatePrice(data)
+  const riskPercent = calcRiskPercent(data.isLong, data.entryPrice, marketPrice, liquidatePrice ?? 0)
+
+  return (
+    <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
+      <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '2px' }}>
+        <Flex flex={dynamicWidth ? undefined : '1.15'} minWidth={40} sx={{ flexShrink: 0 }}>
+          <Type.Caption>${formatNumber(Number(data.sizeDelta) * data.entryPrice, 0)}</Type.Caption>
+        </Flex>
+        <VerticalDivider sx={{ opacity: 0.2 }} />
+        <Flex minWidth={40} justifyContent="center" flexShrink={0}>
+          <Type.Caption textAlign="center">{formatNumber(data.leverage, 1, 1)}x</Type.Caption>
+        </Flex>
+        <VerticalDivider sx={{ opacity: 0.2 }} />
+        <Flex
+          flex={dynamicWidth ? undefined : '1.15'}
+          justifyContent="flex-end"
+          sx={{ flexShrink: 0, gap: 1, alignItems: 'center', height: 22 }}
+        >
+          <SkullIcon style={{ flexShrink: 0 }} />
+          <Type.Caption
+            sx={{
+              height: '22px',
+              '& > *:first-child': {
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                width: dynamicWidth ? 'max-content' : '100%',
+                maxWidth: 160,
+                display: 'inline-block',
+              },
+            }}
+          >
+            {liquidatePrice && liquidatePrice > 0
+              ? PriceTokenText({ value: liquidatePrice, maxDigit: 2, minDigit: 2 })
+              : '--'}
+          </Type.Caption>
+        </Flex>
+      </Flex>
+      <ProgressBar
+        percent={Math.abs(riskPercent)}
+        color={riskPercent < 0 ? 'green2' : 'red2'}
+        bg="neutral3"
+        sx={{ width: '100%', height: '2px', mt: '2px' }}
+      />
     </Flex>
   )
 }
@@ -228,7 +302,9 @@ const VerticalDivider = styled(Box)`
 
 export function renderSource(item: CopyPositionData, index?: number, externalSource?: any, isHistory?: boolean) {
   return externalSource?.submitting && externalSource?.currentId === item.id ? (
-    <Loading size={12} margin="0 4px!important" />
+    <Flex sx={{ width: '100%', height: '12px', alignItems: 'center', justifyContent: 'center' }}>
+      <Loading size={12} m={0} />
+    </Flex>
   ) : (
     <Button
       variant="ghost"

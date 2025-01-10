@@ -341,7 +341,7 @@ export default function ChartPositions({
           />
         )}
       </Flex>
-      <Flex alignItems="center" justifyContent="space-between" mr={12} mt={2} sx={{ gap: 2 }}>
+      <Flex alignItems="center" justifyContent="space-between" mr={12} mt={1} sx={{ gap: 2 }}>
         <Flex pl={12} alignItems="center" sx={{ gap: 2 }}>
           <Type.Caption color="neutral3">{currencyOption?.label}</Type.Caption>
           <Type.Small color="neutral1">-</Type.Small>

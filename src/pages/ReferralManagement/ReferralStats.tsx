@@ -1,4 +1,4 @@
-import { formatUnits, parseEther, parseUnits } from '@ethersproject/units'
+import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { CheckCircle, Warning, WarningOctagon, XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
@@ -7,10 +7,10 @@ import { useForm } from 'react-hook-form'
 import { useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
-import { getReferralRewardApi, getReferralStatisticApi, requestClaimRewardApi } from 'apis/referralManagement'
+import { getReferralRewardApi, requestClaimRewardApi } from 'apis/referralManagement'
 import { checkBeforeAddRefApi, getMyProfileApi } from 'apis/userApis'
 import moneyImage from 'assets/images/money.png'
-import successImage from 'assets/images/register-event-success.png'
+import successImage from 'assets/images/success-img.png'
 import InputReferral from 'components/@auth/InputReferral'
 import { GradientText } from 'components/@ui/GradientText'
 import ToastBody from 'components/@ui/ToastBody'
@@ -75,14 +75,14 @@ export default function ReferralStats({ data }: { data: ReferralStatisticData | 
       }}
     >
       <Box sx={{ gridArea: 'item-1' }}>
-        <NormalStatsItemContainer label="F1 Referrals" value={data?.f1Referrals ?? 0} />
+        <NormalStatsItemContainer label="F1 REFERRALS" value={data?.f1Referrals ?? 0} />
       </Box>
       <Box sx={{ gridArea: 'item-2' }}>
-        <NormalStatsItemContainer label="F2 Referrals" value={data?.f2Referrals ?? 0} />
+        <NormalStatsItemContainer label="F2 REFERRALS" value={data?.f2Referrals ?? 0} />
       </Box>
       <Box sx={{ gridArea: 'item-3' }}>
         <NormalStatsItemContainer
-          label="Total Earned (USDC)"
+          label="TOTAL EARNED (USDC)"
           value={
             <ValueWithCurrency
               value={
@@ -96,7 +96,7 @@ export default function ReferralStats({ data }: { data: ReferralStatisticData | 
       </Box>
       <Box sx={{ gridArea: 'item-4' }}>
         <NormalStatsItemContainer
-          label="F1 Commission (USDC)"
+          label="F1 COMMISSION (USDC)"
           value={
             <ValueWithCurrency
               value={sm ? formatNumber(data?.f1Commissions ?? 0, 2, 2) : compactNumber(data?.f1Commissions ?? 0, 2)}
@@ -106,7 +106,7 @@ export default function ReferralStats({ data }: { data: ReferralStatisticData | 
       </Box>
       <Box sx={{ gridArea: 'item-5' }}>
         <NormalStatsItemContainer
-          label="F2 Commission (USDC)"
+          label="F2 COMMISSION (USDC)"
           value={
             <ValueWithCurrency
               value={sm ? formatNumber(data?.f2Commissions ?? 0, 2, 2) : compactNumber(data?.f2Commissions ?? 0, 2)}
@@ -205,7 +205,7 @@ function ClaimableStatsItem({ profile }: { profile: UserData | null }) {
         bg: 'neutral6',
       }}
     >
-      <Type.Body color="neutral3">Total Unclaim (USDC)</Type.Body>
+      <Type.Body color="neutral3">TOTAL UNCLAIM (USDC)</Type.Body>
       <Box mt={2} />
       <StatsValue sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         {formatNumber(data?.totalUnclaim ?? 0, 2, 2)}
@@ -263,11 +263,11 @@ function ClaimableStatsItem({ profile }: { profile: UserData | null }) {
           sx={{ display: 'block', position: 'relative', zIndex: 3, fontWeight: 600, textAlign: 'center' }}
           color={data?.claimable ? 'neutral1' : 'neutral3'}
         >
-          Claim {formatNumber(data?.claimable ?? 0, 2, 2)} USDC
+          CLAIM {formatNumber(data?.claimable ?? 0, 2, 2)} USDC
         </Type.Caption>
       </Box>
       <Type.Small mt={2} color="neutral3">
-        Pending: {formatNumber(data?.pending ?? 0, 2, 2)} USDC
+        PENDING: {formatNumber(data?.pending ?? 0, 2, 2)} USDC
       </Type.Small>
 
       <ClaimRewardModal
@@ -460,7 +460,7 @@ function RebateTitle() {
             : {}
         }
       >
-        Fee Rebates (USDC)
+        FEE REBATES (USDC)
       </Box>
       {myProfile?.username && (
         <>

@@ -23,6 +23,8 @@ export default function CustomizeColumnMobile() {
       hasArrow={false}
       dismissible={false}
       menuDismissible
+      inline
+      buttonVariant="ghost"
       menu={
         <>
           {mobileTableSettings.map((item, index) => {
@@ -42,19 +44,7 @@ export default function CustomizeColumnMobile() {
           })}
         </>
       }
-      sx={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}
-      buttonSx={{
-        border: 'none',
-        height: '100%',
-        p: 0,
-        color: 'neutral2',
-        '&:hover:not([disabled])': {
-          color: 'neutral1',
-          svg: {
-            color: 'neutral1',
-          },
-        },
-      }}
+      sx={{ justifyContent: 'center', alignItems: 'center' }}
       placement="topRight"
     >
       <Flex sx={{ gap: 1, alignItems: 'center' }}>

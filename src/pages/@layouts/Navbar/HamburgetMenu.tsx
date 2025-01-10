@@ -5,10 +5,9 @@ import { Box } from 'theme/base'
 
 const Line = styled.span.attrs({ className: 'hamburger-line' })`
   display: block;
-  height: 2px;
+  height: 1px;
   width: 100%;
-  border-radius: 10px;
-  background: ${({ theme }) => theme.colors.neutral3};
+  background: ${({ theme }) => theme.colors.neutral2};
   transition: transform 0.4s ease-in-out;
   transform-origin: center;
 `
@@ -32,8 +31,8 @@ const Line4 = styled(Line)`
 
 export const Wrapper = styled.div<{ active: boolean }>`
   cursor: pointer;
-  height: 24px;
-  width: 24px;
+  height: 20px;
+  width: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

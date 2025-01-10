@@ -15,9 +15,10 @@ export const AlertStyled = styled.div<AlertProps>(
     textAlign: 'center',
     textDecoration: 'none',
     bg: 'transparent',
-    border: 'small',
-    borderRadius: 'sm',
-    p: '2',
+    // border: 'small',
+    borderRadius: 'xs',
+    py: 2,
+    px: '12px',
   }),
 
   ({ block }) => `
@@ -52,7 +53,7 @@ function Alert({
           <Type.CaptionBold>{message}</Type.CaptionBold>
         </Box>
       )}
-      {description && <Type.Caption>{description}</Type.Caption>}
+      {description && <Type.Caption color="neutral1">{description}</Type.Caption>}
     </AlertStyled>
   )
 }

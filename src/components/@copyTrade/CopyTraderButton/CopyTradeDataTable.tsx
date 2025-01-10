@@ -109,12 +109,13 @@ export default function CopyTradeDataTable({
   }, [])
 
   return data && data.length > 0 ? (
-    <Box mt={2} height="min(680px,calc(90vh - 160px))">
+    <Box mt={2} height="450px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
       <Table
         restrictHeight
         rowSx={{
+          borderTop: '2px solid',
           borderBottom: '4px solid',
-          borderColor: 'neutral5',
+          borderColor: '#000',
         }}
         data={data}
         columns={columns}

@@ -65,8 +65,8 @@ const ChartTrader = ({
       {stats && !loadingStats && (
         <>
           <Flex width="100%" alignItems="center" justifyContent="space-between">
-            <Box width={56} />
-            <Flex alignItems="center" sx={{ gap: 2 }} mb={1}>
+            <Box width={56} display={['none', 'block']} />
+            <Flex alignItems="center" sx={{ gap: 2 }} mb={1} flex="1">
               {isBarChart ? (
                 <Flex flexWrap="wrap" alignItems="center" color="neutral3" sx={{ gap: 2 }}>
                   <Flex alignItems="center" sx={{ gap: 1 }}>

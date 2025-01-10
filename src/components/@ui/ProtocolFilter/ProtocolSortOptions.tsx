@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react'
 
 import Select from 'theme/Select'
 import { Box } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { ProtocolSortByEnum } from 'utils/config/enums'
 
 export type ProtocolSortProps = {
@@ -14,12 +15,12 @@ export type ProtocolSortProps = {
 const PROTOCOL_SORT_OPTIONS: ProtocolSortProps[] = [
   {
     id: ProtocolSortByEnum.ALPHABET,
-    label: <Trans>Sort by A-Z</Trans>,
+    label: <Trans>SORT BY A-Z</Trans>,
     value: ProtocolSortByEnum.ALPHABET,
   },
   {
     id: ProtocolSortByEnum.TRADERS,
-    label: <Trans>Sort by traders</Trans>,
+    label: <Trans>SORT BY TRADERS</Trans>,
     value: ProtocolSortByEnum.TRADERS,
   },
 ]
@@ -34,12 +35,17 @@ const ProtocolSortOptions: React.FC<ProtocolSortOptionProps> = ({ currentSort, c
   const currentOption = PROTOCOL_SORT_OPTIONS.find((option) => option.id === currentSort)
   return (
     <Box
-      width={135}
+      width={150}
+      display={['none', 'block']}
       sx={{
         '.select__control': {
           minHeight: 'auto !important',
           py: '0px !important',
-          width: '134px !important',
+          width: '150px !important',
+          height: '40px !important',
+          border: 'none !important',
+          borderRadius: '0 !important',
+          bg: `${themeColors.neutral5} !important`,
         },
         '.select__value-container': { px: '8px !important' },
         '.select__indicators': { pr: '8px !important' },

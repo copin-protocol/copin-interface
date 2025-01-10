@@ -12,6 +12,7 @@ import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { calcOpeningPnL, calcOpeningROI } from 'utils/helpers/calculate'
+import { formatPrice } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import RealtimeChart from '../ChartTraderPositionProfitRealtime'
@@ -45,6 +46,11 @@ export default function ChartProfit({
     return calcOpeningPnL(data, prices[getSymbolFromPair(data.pair)])
   }, [crossMove?.pnl, data, isOpening, prices])
 
+  const markPrice = useMemo(() => {
+    if (!data?.pair || !prices) return null
+    return prices[getSymbolFromPair(data.pair)]
+  }, [prices, data?.pair])
+
   const latestROI = useMemo(() => {
     if (crossMove?.pnl === 0 || !data) return 0
     if (!crossMove || crossMove?.pnl == null || crossMove?.time == null) {
@@ -61,25 +67,24 @@ export default function ChartProfit({
       {data && (
         <Box>
           <Flex
-            mt={[20, 4]}
-            mb={3}
+            my={2}
             width="100%"
             alignItems="center"
             justifyContent="center"
-            sx={{ gap: 2, position: 'relative' }}
+            sx={{ gap: 2, position: 'relative', mt: [40, 0] }}
           >
             <Flex>
-              <Type.H5 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
+              <Type.Head color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
                 <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
-              </Type.H5>
+              </Type.Head>
             </Flex>
             {!!latestROI && (
               <Flex alignItems="center">
-                <Type.H5 color="neutral3">(</Type.H5>
-                <Type.H5 color={latestROI > 0 ? 'green1' : latestROI < 0 ? 'red2' : 'inherit'}>
+                <Type.Head color="neutral3">(</Type.Head>
+                <Type.Head color={latestROI > 0 ? 'green1' : latestROI < 0 ? 'red2' : 'inherit'}>
                   <PercentText percent={latestROI} digit={2} />
-                </Type.H5>
-                <Type.H5 color="neutral3">)</Type.H5>
+                </Type.Head>
+                <Type.Head color="neutral3">)</Type.Head>
               </Flex>
             )}
             {!isOpening && PROTOCOLS_CROSS_MARGIN.includes(data.protocol) && (
@@ -104,10 +109,18 @@ export default function ChartProfit({
                 logId={data.logId}
                 isLong={data.isLong}
                 id={data.id}
-                sx={{ position: 'absolute', top: [-3, -24], right: 0 }}
+                sx={{ position: 'absolute', right: 0, top: [-4, 0] }}
               />
             )}
-            <Flex alignItems="center" sx={{ position: 'absolute', top: [-3, -24], left: 0 }}>
+            {isOpening && !!markPrice ? (
+              <Type.Body sx={{ position: 'absolute', right: 0, top: [-4, 0] }} color="neutral3">
+                Mark Price:{' '}
+                <Box color="neutral1" as="span">
+                  {formatPrice(markPrice)}
+                </Box>
+              </Type.Body>
+            ) : null}
+            <Flex alignItems="center" sx={{ position: 'absolute', left: 0, top: [-4, 0] }}>
               <ButtonWithIcon
                 icon={
                   <Box color={isTradingChart ? 'primary1' : 'neutral3'}>

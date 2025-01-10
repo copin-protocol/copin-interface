@@ -72,7 +72,7 @@ const DateRangeWrapper = styled.div`
     }
   }
   .rdrDateInput.rdrDateDisplayItem input {
-    font-size: 13px;
+    font-size: 12px;
   }
 `
 

@@ -9,12 +9,12 @@ import CopyOpeningPositions from 'components/@position/CopyOpeningPositions'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { CopyPositionData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
+import Badge from 'theme/Badge'
 import { Button } from 'theme/Buttons'
 import { Box, Flex } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { CopyTradePlatformEnum, PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { formatNumber } from 'utils/helpers/format'
 
 import OnchainPositions from './OnchainPositions'
 import SettingConfigs from './SettingConfigs'
@@ -40,6 +40,7 @@ export default function OpeningPositions({
   restrictHeight?: boolean
   layoutType?: 'simple' | 'normal'
   tableProps?: Partial<ComponentProps<typeof CopyOpeningPositions>>['tableProps']
+  lite?: boolean
 }) {
   const _queryParams: GetMyPositionsParams = {
     limit,
@@ -66,7 +67,7 @@ export default function OpeningPositions({
   )
 
   const totalOpening = data?.data?.length ?? 0
-  const title = <Trans>Opening Positions</Trans>
+  const title = <Trans>OPENING POSITIONS</Trans>
 
   const [isOnchainSelected, setOnchainSelected] = useState(false)
 
@@ -81,12 +82,12 @@ export default function OpeningPositions({
       {hasLabel && (
         <Box px={3} pt={16}>
           <SectionTitle
-            icon={<Pulse size={24} />}
+            icon={Pulse}
             title={
-              <>
+              <Flex alignItems="center" sx={{ gap: 2 }}>
                 {title}
-                {totalOpening > 0 ? ` (${formatNumber(totalOpening)})` : ''}
-              </>
+                {totalOpening > 0 && <Badge count={totalOpening} />}
+              </Flex>
             }
             iconColor="primary1"
             suffix={<SettingConfigs activeWallet={activeWallet ?? null} copyWallets={copyWallets} />}

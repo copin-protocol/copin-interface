@@ -27,7 +27,7 @@ const Label = ({
   return (
     <Flex justifyContent={annotation ? 'space-between' : 'start'} alignItems="baseline" {...wrapperProps}>
       <Box sx={{ lineHeight: 0 }}>
-        <Caption color={error ? 'red1' : labelColor} mb={columnGap} fontWeight={600}>
+        <Caption color={error ? 'red1' : labelColor} mb={columnGap}>
           {label}
         </Caption>
         {required && (

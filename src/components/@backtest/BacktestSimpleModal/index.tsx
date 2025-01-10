@@ -94,13 +94,13 @@ export default function BacktestSimpleModal({
           />
         )}
       </Box>
-      <RcDrawer width={350} open={openResult} onClose={handleClearResult} zIndex={1000} styles={levelTwoStyles()}>
+      <RcDrawer width={400} open={openResult} onClose={handleClearResult} zIndex={1000} styles={levelTwoStyles()}>
         <Box p={3}>
           <Flex sx={{ alignItems: 'center', gap: 3 }}>
             <DrawerTitle
               onBack={handleClearResult}
               title={
-                <Type.BodyBold>
+                <Type.BodyBold sx={{ textTransform: 'uppercase' }}>
                   <Trans>Backtest result in {_timeOption.text}</Trans>
                 </Type.BodyBold>
               }
@@ -119,7 +119,7 @@ export default function BacktestSimpleModal({
 
           <Box mb={20} />
           <Alert
-            variant="warningPrimary"
+            variant="primary"
             message={
               <Flex sx={{ gap: 2, alignItems: 'center' }}>
                 <IconBox icon={<WarningCircle size={16} />} />

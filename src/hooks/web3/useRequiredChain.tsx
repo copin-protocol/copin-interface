@@ -61,7 +61,7 @@ const useRequiredChain = ({
     return (
       <Box sx={{ minWidth: 300 }}>
         <Flex sx={{ alignItems: 'center', flexDirection: 'column' }}>
-          <Image mb={3} width={150} height={150} src={switchChain} />
+          <Image mb={2} width={120} height={120} src={switchChain} />
           <Type.Caption mb={3} color="neutral2">
             {title}
           </Type.Caption>

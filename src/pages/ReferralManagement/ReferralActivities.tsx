@@ -5,9 +5,10 @@ import { useQuery } from 'react-query'
 import { getReferralActivitiesApi } from 'apis/referralManagement'
 import tokenNotFound from 'assets/images/token-not-found.png'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
+import SectionTitle from 'components/@ui/SectionTitle'
 import { ReferralActivityData } from 'entities/referralManagement'
 import Loading from 'theme/Loading'
-import { Box, Flex, IconBox, Image, Type } from 'theme/base'
+import { Box, Flex, Image, Type } from 'theme/base'
 import { ReferralActivityTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
@@ -23,7 +24,7 @@ export default function ReferralActivities({ isMobile }: { isMobile: boolean }) 
   )
   return isMobile ? (
     <Box>
-      <Box pb={3} px={3}>
+      <Box px={3}>
         <Head />
       </Box>
       <Flex px={3} pb={3} sx={{ width: '100%', flexDirection: 'column', gap: 12 }}>
@@ -32,7 +33,7 @@ export default function ReferralActivities({ isMobile }: { isMobile: boolean }) 
     </Box>
   ) : (
     <Box sx={{ display: 'flex', width: '100%', flex: '1 0 0', flexDirection: 'column' }}>
-      <Box pb={3} px={3}>
+      <Box px={3}>
         <Head />
       </Box>
       <Flex
@@ -52,12 +53,7 @@ export default function ReferralActivities({ isMobile }: { isMobile: boolean }) 
 }
 function Head() {
   return (
-    <Flex sx={{ alignItems: 'center', gap: 2 }}>
-      <IconBox icon={<SpeakerSimpleHigh size={24} weight="fill" />} color="neutral3" size={24} />
-      <Type.Body>
-        <Trans>Global Referral Activities </Trans>
-      </Type.Body>
-    </Flex>
+    <SectionTitle icon={SpeakerSimpleHigh} iconColor="neutral3" title={<Trans>GLOBAL REFERRAL ACTIVITIES</Trans>} />
   )
 }
 
@@ -81,20 +77,19 @@ function ListActivity({ activities }: { activities: ReferralActivityData[] | und
         return (
           <Box key={data.id}>
             <Box sx={{ a: { color: 'neutral1', textDecoration: 'underline', '&:hover': { color: 'neutral2' } } }}>
-              <Type.Caption mb={1} color="neutral3" display="block" width="max-content">
+              <Type.Caption color="neutral3" display="block" width="max-content">
                 <RelativeTimeText date={data.time} />
               </Type.Caption>
-              <Type.Caption color="neutral3">
+              <Type.Caption color="neutral2">
                 {data.type === ReferralActivityTypeEnum.COMMISSION && (
                   <Trans>
-                    <Box as="span" color="neutral1">
+                    <Box as="b" color="neutral1">
                       {data.referralFromUser}{' '}
                     </Box>
-                    earned{' '}
-                    <Box as="span" color="neutral1">
-                      {formatNumber(data.commission)} USDC
-                    </Box>{' '}
-                    in commission from {data.referralUser}
+                    earned {formatNumber(data.commission)} USDC in commission from{' '}
+                    <Box as="b" color="neutral1">
+                      {data.referralUser}
+                    </Box>
                   </Trans>
                 )}
                 {data.type === ReferralActivityTypeEnum.INVITE && (

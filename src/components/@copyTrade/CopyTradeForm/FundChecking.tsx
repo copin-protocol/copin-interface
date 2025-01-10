@@ -10,12 +10,20 @@ import { Box, Flex, Image, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 
-export const SmartWalletFund = ({ walletId, platform }: { walletId: string; platform?: CopyTradePlatformEnum }) => {
+export const SmartWalletFund = ({
+  walletId,
+  platform,
+  sx,
+}: {
+  walletId: string
+  platform?: CopyTradePlatformEnum
+  sx?: any
+}) => {
   const { copyWallets } = useCopyWalletContext()
   const wallet = copyWallets?.find((w) => w.id === walletId)
   const { available } = useWalletFund({ address: wallet?.smartWalletAddress, platform })
   return (
-    <Box>
+    <Box sx={sx}>
       <Type.Small mr={1}>
         <Trans>Available Fund:</Trans>
       </Type.Small>

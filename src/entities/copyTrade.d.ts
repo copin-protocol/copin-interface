@@ -91,6 +91,7 @@ export type UpdateCopyTradeData = Partial<CopyTradeData>
 
 export interface CopyPositionData {
   id: string
+  identifyKey: string
   protocol: ProtocolEnum
   exchange?: CopyTradePlatformEnum
   userId: string

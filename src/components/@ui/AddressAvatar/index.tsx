@@ -38,6 +38,7 @@ const AddressAvatar = ({
         overflow: 'hidden',
         background: gradient,
         flexShrink: 0,
+        fontFamily: 'Arial, Helvetica, Roboto',
         ...sx,
       }}
       alignItems="center"

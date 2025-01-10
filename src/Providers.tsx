@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 import ThemeProvider from 'theme'
 
+import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
 import { CopyWalletProvider } from 'hooks/features/useCopyWalletContext'
 import { SystemConfigProvider } from 'hooks/features/useSystemConfigContext'
 import { useInitTabsOpen } from 'hooks/helpers/useTabsOpen'
@@ -52,7 +53,9 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
                 <GainsTradeConnection />
                 <DappProvider>
                   <ProtocolProvider>
-                    <CopyWalletProvider>{children}</CopyWalletProvider>
+                    <CopyWalletProvider>
+                      <BotAlertProvider>{children}</BotAlertProvider>
+                    </CopyWalletProvider>
                   </ProtocolProvider>
                 </DappProvider>
               </BrowserRouter>

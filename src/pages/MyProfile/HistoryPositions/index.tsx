@@ -94,7 +94,7 @@ export default function HistoryPositions() {
       <Flex
         sx={{
           alignItems: 'center',
-          height: 50,
+          height: [56, 40],
           borderBottom: 'small',
           borderBottomColor: 'neutral4',
           display: selectionState.allTraders?.length ? 'flex' : 'none',
@@ -140,7 +140,7 @@ export default function HistoryPositions() {
         currentPage={currentPage}
         onPageChange={changeCurrentPage}
         apiMeta={data?.meta}
-        sx={{ py: 2 }}
+        sx={{ py: 1 }}
       />
       <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
         <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>

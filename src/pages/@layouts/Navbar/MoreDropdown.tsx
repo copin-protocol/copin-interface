@@ -51,8 +51,8 @@ export default function MoreDropdown({ hasEvents }: { hasEvents?: boolean }) {
         className="dropdown-title"
         sx={{ alignItems: 'center', justifyContent: 'center', height: '100%', gap: 1, px: 2 }}
       >
-        <Type.Caption>
-          <Trans>More</Trans>
+        <Type.Caption sx={{ textTransform: 'uppercase' }}>
+          <Trans>MORE</Trans>
         </Type.Caption>
         <IconBox icon={<CaretDown size={16} />} color="neutral1" />
       </Flex>
@@ -68,7 +68,7 @@ export default function MoreDropdown({ hasEvents }: { hasEvents?: boolean }) {
                 ? [
                     {
                       icon: Trophy,
-                      text: <Trans>Events</Trans>,
+                      text: <Trans>EVENTS</Trans>,
                       route: ROUTES.EVENTS.path,
                     },
                   ]
@@ -95,7 +95,7 @@ export function MoreDropdownMobile({
       defaultOpen
       header={
         <Type.CaptionBold>
-          <Trans>More</Trans>
+          <Trans>MORE</Trans>
         </Type.CaptionBold>
       }
       body={
@@ -106,7 +106,7 @@ export function MoreDropdownMobile({
               ? [
                   {
                     icon: Trophy,
-                    text: <Trans>Events</Trans>,
+                    text: <Trans>EVENTS</Trans>,
                     route: ROUTES.EVENTS.path,
                   },
                 ]
@@ -123,32 +123,32 @@ export function MoreDropdownMobile({
 const configs = [
   {
     icon: ChartBar,
-    text: <Trans>Stats</Trans>,
+    text: <Trans>STATS</Trans>,
     route: ROUTES.STATS.path,
   },
   {
     icon: PresentationChart,
-    text: <Trans>CEX Depth</Trans>,
+    text: <Trans>CEX DEPTH</Trans>,
     route: ROUTES.STATS_CEX.path,
   },
   {
     icon: BookBookmark,
-    text: <Trans>Document</Trans>,
+    text: <Trans>DOCUMENT</Trans>,
     link: LINKS.docs,
   },
   {
     icon: CrownSimple,
-    text: <Trans>Subscription</Trans>,
+    text: <Trans>SUBSCRIPTION</Trans>,
     route: ROUTES.SUBSCRIPTION.path,
   },
   {
     icon: CircleHalfTilt,
-    text: <Trans>Dune Dashboard</Trans>,
+    text: <Trans>DUNE DASHBOARD</Trans>,
     link: LINKS.duneUrl,
   },
   {
     icon: Swap,
-    text: <Trans>Fee Rebate</Trans>,
+    text: <Trans>FEE REBATE</Trans>,
     route: ROUTES.FEE_REBATE.path,
   },
 ]
@@ -156,46 +156,17 @@ const configs = [
 const internalConfigs = [
   {
     icon: Vault,
-    text: <Trans>Vault</Trans>,
+    text: <Trans>VAULT</Trans>,
     route: `${ROUTES.VAULT_DETAILS.path_prefix}/${
       CONTRACT_ADDRESSES[ARBITRUM_CHAIN][CONTRACT_QUERY_KEYS.COPIN_VAULT_DETAILS]
     }`,
   },
   {
     icon: ThermometerSimple,
-    text: <Trans>System Status</Trans>,
+    text: <Trans>SYSTEM STATUS</Trans>,
     route: ROUTES.SYSTEM_STATUS.path,
   },
-  {
-    icon: ChartBar,
-    text: <Trans>Stats</Trans>,
-    route: ROUTES.STATS.path,
-  },
-  {
-    icon: PresentationChart,
-    text: <Trans>CEX Depth</Trans>,
-    route: ROUTES.STATS_CEX.path,
-  },
-  {
-    icon: BookBookmark,
-    text: <Trans>Document</Trans>,
-    link: LINKS.docs,
-  },
-  {
-    icon: CrownSimple,
-    text: <Trans>Subscription</Trans>,
-    route: ROUTES.SUBSCRIPTION.path,
-  },
-  {
-    icon: CircleHalfTilt,
-    text: <Trans>Dune Dashboard</Trans>,
-    link: LINKS.duneUrl,
-  },
-  {
-    icon: Swap,
-    text: <Trans>Fee Rebate</Trans>,
-    route: ROUTES.FEE_REBATE.path,
-  },
+  ...configs,
 ]
 
 function MoreItem({

@@ -3,6 +3,7 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { CopierLeaderboardProvider } from 'hooks/features/useCopierLeaderboardProvider'
 import RankingIcon from 'theme/Icons/RankingIcon'
 import { Box, Flex, Type } from 'theme/base'
+import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 
 import ExchangeFilterSection from './ExchangeFilterSection'
 import SearchRanking from './SearchRanking'
@@ -21,25 +22,37 @@ const CopierLeaderboard = () => {
           }}
         >
           <Flex
-            height={48}
-            color="neutral1"
-            sx={{ alignItems: 'center', px: 3, gap: 2, borderBottom: 'small', borderBottomColor: 'neutral4' }}
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}
           >
-            <RankingIcon />
-            <Type.Body>COPIER RANKING</Type.Body>
+            <Flex height={48} color="neutral1" sx={{ alignItems: 'center', px: 3, gap: 2 }}>
+              <RankingIcon />
+              <Type.Body>COPIER RANKING</Type.Body>
+            </Flex>
+            <Box
+              display={['block', 'block', 'block', 'none']}
+              sx={{
+                flexShrink: 0,
+                alignItems: 'center',
+                // height: '100%',
+                width: 'max-content',
+              }}
+            >
+              <ExchangeFilterSection />
+            </Box>
           </Flex>
+
           <Flex
             sx={{
               position: 'relative',
               zIndex: 9,
-              height: ['auto', 'auto', 'auto', 62],
-              px: 3,
-              py: [12, 12, 12, 0],
+              height: ['auto', 'auto', 'auto', PAGE_TITLE_HEIGHT],
               width: '100%',
               flexDirection: ['column', 'column', 'column', 'row'],
               alignItems: ['start', 'start', 'start', 'center'],
               justifyContent: ['start', 'start', 'start', 'center'],
-              gap: 3,
+              gap: [0, 0, 0, 3],
               borderBottom: ['small', 'small', 'start', 'small'],
               maxWidth: 1000,
               mx: 'auto',
@@ -48,26 +61,39 @@ const CopierLeaderboard = () => {
               borderColor: ['neutral4', 'neutral4', 'neutral4', 'neutral4'],
             }}
           >
-            <Box flex={['auto', 'auto', 1]}>
-              <TimeFilterSection />
+            <Box
+              display={['none', 'none', 'none', 'flex']}
+              sx={{
+                flexShrink: 0,
+                alignItems: 'center',
+                // height: '100%',
+                width: 'max-content',
+                borderRight: 'small',
+                borderColor: 'neutral4',
+                height: 48,
+              }}
+            >
+              <ExchangeFilterSection />
             </Box>
-            <Flex sx={{ alignItems: 'center', gap: 3, height: [44, 44, '100%'] }}>
-              <Flex
-                sx={{
-                  flexShrink: 0,
-                  alignItems: 'center',
-                  height: '100%',
-                  width: 'max-content',
-                  borderLeft: 'small',
-                  borderRight: 'small',
-                  borderTop: ['small', 'small', 'small', 'none'],
-                  borderBottom: ['small', 'small', 'small', 'none'],
-                  borderColor: ['neutral4', 'neutral4', 'neutral4', 'none'],
-                  borderRadius: ['4px', '4px', 0],
-                }}
-              >
-                <ExchangeFilterSection />
-              </Flex>
+            <Flex
+              flex="auto"
+              justifyContent="center"
+              width={['100%', '100%', '100%', 'fit-content']}
+              sx={{
+                borderBottom: ['small', 'small', 'small', 'none'],
+                borderColor: ['neutral4', 'neutral4', 'neutral4', 'none'],
+              }}
+            >
+              <TimeFilterSection />
+            </Flex>
+            <Flex
+              sx={{
+                alignItems: 'center',
+                height: [PAGE_TITLE_HEIGHT, PAGE_TITLE_HEIGHT, '100%'],
+                borderLeft: ['none', 'none', 'none', 'small'],
+                borderColor: ['neutral4', 'neutral4', 'neutral4', 'neutral4'],
+              }}
+            >
               <SearchRanking />
             </Flex>
           </Flex>
@@ -81,15 +107,15 @@ const CopierLeaderboard = () => {
                 borderLeft: ['none', 'none', 'none', 'small'],
                 borderRight: ['none', 'none', 'none', 'small'],
                 borderColor: ['none', 'none', 'none', 'neutral4'],
-                py: [3, 3, 0],
+                // py: [3, 3, 0],
               }}
             >
               <CopierLeaderBoardTableView />
             </Box>
           </Box>
-          {/* <BottomTabWrapperMobile>
+          {/* <BottomWrapperMobile>
             <BottomTabItemMobile icon={<Trophy size={24} weight="fill" />} text={<Trans>Copier Leaderboard</Trans>} />
-          </BottomTabWrapperMobile> */}
+          </BottomWrapperMobile> */}
         </Flex>
       </CopierLeaderboardProvider>
     </>

@@ -65,7 +65,7 @@ export default function FilterMarket({
   return (
     <Flex alignItems="center" px={3} mt={1} sx={{ gap: 2 }}>
       <Type.Caption color="neutral3" sx={{ flexShrink: 0, py: 1 }}>
-        <Trans>Market:</Trans>
+        <Trans>MARKET</Trans>
       </Type.Caption>
       <SelectMarketWithSearch
         allItems={pairOptions}

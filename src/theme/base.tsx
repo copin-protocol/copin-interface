@@ -165,46 +165,46 @@ export const Type = {
     )
   },
   Caption(props: TextProps) {
-    return <TextWrapper fontSize="13px" lineHeight="22px" fontWeight="normal" display="inline-block" {...props} />
+    return <TextWrapper fontSize="12px" lineHeight="18px" fontWeight="normal" display="inline-block" {...props} />
   },
   CaptionBold(props: TextProps) {
-    return <TextWrapper fontSize="13px" lineHeight="22px" fontWeight="bold" display="inline-block" {...props} />
+    return <TextWrapper fontSize="12px" lineHeight="18px" fontWeight="bold" display="inline-block" {...props} />
   },
   Small(props: TextProps) {
-    return <TextWrapper fontSize="12px" lineHeight="16px" fontWeight="normal" display="inline-block" {...props} />
+    return <TextWrapper fontSize="10px" lineHeight="16px" fontWeight="normal" display="inline-block" {...props} />
   },
   SmallBold(props: TextProps) {
-    return <TextWrapper fontSize="12px" lineHeight="20px" display="inline-block" fontWeight="bold" {...props} />
+    return <TextWrapper fontSize="10px" lineHeight="16px" display="inline-block" fontWeight="bold" {...props} />
   },
   Large(props: TextProps) {
-    return <TextWrapper fontSize="18px" lineHeight="26px" fontWeight="normal" display="inline-block" {...props} />
-  },
-  LargeBold(props: TextProps) {
-    return <TextWrapper fontSize="18px" lineHeight="26px" display="inline-block" fontWeight="bold" {...props} />
-  },
-  Body(props: TextProps) {
     return <TextWrapper fontSize="16px" lineHeight="24px" fontWeight="normal" display="inline-block" {...props} />
   },
-  BodyBold(props: TextProps) {
+  LargeBold(props: TextProps) {
     return <TextWrapper fontSize="16px" lineHeight="24px" display="inline-block" fontWeight="bold" {...props} />
   },
-  Headline5(props: TextProps) {
+  Body(props: TextProps) {
+    return <TextWrapper fontSize="14px" lineHeight="20px" fontWeight="normal" display="inline-block" {...props} />
+  },
+  BodyBold(props: TextProps) {
+    return <TextWrapper fontSize="14px" lineHeight="20px" display="inline-block" fontWeight="bold" {...props} />
+  },
+  Head(props: TextProps) {
     return <TextWrapper fontSize="20px" lineHeight="28px" display="inline-block" fontWeight="bold" {...props} />
   },
 }
 
 export const Li = styled(Box)<{ signcolor?: string; signsize?: string; signradius?: string }>`
-  padding-left: 0.875em;
+  padding-left: 0.6em;
   position: relative;
   &::before {
     content: '';
     display: block;
     position: absolute;
-    width: ${({ signsize }) => (signsize ? signsize : '0.375em')};
-    height: ${({ signsize }) => (signsize ? signsize : '0.375em')};
+    width: ${({ signsize }) => (signsize ? signsize : '0.25em')};
+    height: ${({ signsize }) => (signsize ? signsize : '0.25em')};
     border-radius: ${({ signradius }) => (signradius ? signradius : '50%')};
     background-color: ${({ signcolor }) => (signcolor ? signcolor : 'currentcolor')};
     left: 0;
-    top: 0.6em;
+    top: 0.5em;
   }
 `

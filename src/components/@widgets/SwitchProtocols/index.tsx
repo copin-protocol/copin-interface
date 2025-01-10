@@ -142,10 +142,19 @@ function SwitchProtocolsComponent({
   const renderProtocols = () => {
     return (
       <Box>
-        <Box sx={{ px: 3, pt: 3, position: 'sticky', top: 0, left: 0, bg: 'neutral7', zIndex: 2 }}>
-          <Box mt={3}>
-            <InputSearchProtocols searchText={searchText} setSearchText={setSearchText} />
-          </Box>
+        <Box sx={{ position: 'sticky', top: 0, left: 0, bg: 'neutral7', zIndex: 2 }} px={2} pt={2}>
+          <Flex
+            sx={{
+              border: 'small',
+              borderColor: 'neutral4',
+              borderRadius: 'xs',
+            }}
+          >
+            <Box flex="auto" sx={{ borderRight: 'small', borderColor: 'neutral4' }}>
+              <InputSearchProtocols searchText={searchText} setSearchText={setSearchText} />
+            </Box>
+            <ProtocolSortOptions currentSort={protocolSortBy} changeCurrentSort={setProtocolSortBy} />
+          </Flex>
           {protocolRecentSearch.length > 0 && (
             <Flex mt={3} alignItems="center" sx={{ gap: [2, 3] }}>
               <Type.Caption>Recent searches:</Type.Caption>
@@ -164,11 +173,7 @@ function SwitchProtocolsComponent({
           )}
         </Box>
 
-        <Flex sx={{ justifyContent: 'end', py: 12, px: 3 }}>
-          <ProtocolSortOptions currentSort={protocolSortBy} changeCurrentSort={setProtocolSortBy} />
-        </Flex>
-
-        <Box px={3} pb={3}>
+        <Box p={2}>
           <ListProtocolSelection
             options={options}
             checkIsSelected={checkIsSelected}
@@ -186,27 +191,28 @@ function SwitchProtocolsComponent({
     <Dropdown
       menu={renderProtocols()}
       buttonVariant="ghost"
-      buttonSx={
-        md
-          ? {
-              px: 2,
-              mx: 0,
-              pt: '8px',
-              pb: '8px',
-              borderTop: 'none',
-              borderRadius: 0,
-              borderColor: 'neutral4',
-              '&:hover:not([disabled])': {
-                borderColor: 'neutral4',
-              },
-              '&[disabled]': {
-                borderColor: 'neutral4',
-                cursor: 'not-allowed',
-              },
-              ...(buttonSx ?? {}),
-            }
-          : { borderRadius: 0, border: 'none', p: 0, ...(buttonSx ?? {}) }
-      }
+      // inline
+      // inline
+      // buttonSx={
+      //   md
+      //     ? {
+      //         px: 3,
+      //         mx: 0,
+      //         border: 'none',
+      //         // borderTop: 'none',
+      //         borderRadius: 0,
+      //         // borderColor: 'neutral4',
+      //         '&:hover:not([disabled])': {
+      //           borderColor: 'neutral4',
+      //         },
+      //         '&[disabled]': {
+      //           borderColor: 'neutral4',
+      //           cursor: 'not-allowed',
+      //         },
+      //         ...(buttonSx ?? {}),
+      //       }
+      //     : { borderRadius: 0, border: 'none', p: 0, ...(buttonSx ?? {}) }
+      // }
       menuSx={{ width: '100vw', maxWidth: '900px', maxHeight: '80svh', py: 2, overflowY: 'auto' }}
       sx={{ minWidth: 'fit-content', ...(sx ?? {}) }}
       hasArrow={true}
@@ -215,7 +221,7 @@ function SwitchProtocolsComponent({
       visible={visible}
       setVisible={setVisible}
     >
-      <ProtocolLogo protocol={protocol} isActive={true} hasText={true} size={32} />
+      <ProtocolLogo protocol={protocol} isActive={true} hasText={true} size={28} />
     </Dropdown>
   )
 }

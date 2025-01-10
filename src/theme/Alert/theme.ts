@@ -4,8 +4,9 @@ import { variants } from './types'
 
 export const styleVariants = {
   [variants.PRIMARY]: {
-    color: 'primary2',
-    borderColor: 'primary2',
+    color: 'primary1',
+    borderColor: 'primary1',
+    bg: `${themeColors.primary1}25`,
   },
   [variants.INFO]: {
     color: 'neutral4',

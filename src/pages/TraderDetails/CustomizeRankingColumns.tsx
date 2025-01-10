@@ -37,6 +37,7 @@ export default function CustomizeRankingColumn() {
   return (
     <>
       <Dropdown
+        inline
         menuSx={{
           width: 190,
           p: 3,
@@ -77,7 +78,7 @@ export default function CustomizeRankingColumn() {
                 place="top"
                 type="dark"
                 clickable={false}
-                style={{ fontSize: '13px', maxWidth: '300px' }}
+                style={{ fontSize: '12px', maxWidth: '300px' }}
               ></Tooltip>
             </Flex>
             <Divider my={2} />
@@ -101,11 +102,6 @@ export default function CustomizeRankingColumn() {
           </>
         }
         buttonSx={{
-          p: 0,
-          color: 'neutral3',
-          '&:hover': {
-            color: 'neutral2',
-          },
           '& > *': {
             height: 22,
             width: 22,

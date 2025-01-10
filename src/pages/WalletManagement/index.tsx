@@ -1,11 +1,13 @@
 import { Trans } from '@lingui/macro'
+import { Wallet } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useState } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import PageTitle from 'theme/PageTitle'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 // import CreateWalletAction from 'components/CreateWalletAction'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex } from 'theme/base'
 
 import AssetDistribution from './AssetDistribution'
 import DesktopLayout from './Layouts/DesktopLayout'
@@ -40,9 +42,7 @@ export default function WalletManagement() {
               px: 3,
             }}
           >
-            <Type.H5 lineHeight="24px" textAlign="left" sx={{ fontSize: ['18px', '18px', '24px'] }}>
-              <Trans>Wallet Management</Trans>
-            </Type.H5>
+            <PageTitle title={<Trans>Wallet Management</Trans>} icon={Wallet} />
             <SwitchInputField
               switchLabel="Hide/Show Balance"
               checked={!hiddenBalance}

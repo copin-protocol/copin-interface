@@ -380,7 +380,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
         textColor: themeColors.neutral3,
         background: { type: ColorType.Solid, color: 'transparent' },
         fontFamily: FONT_FAMILY,
-        fontSize: 13,
+        fontSize: 12,
         attributionLogo: false,
       },
       timeScale: {
@@ -641,7 +641,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
         } else {
           const candleData = param.seriesData.get(priceSeries) as CandlestickData
           if (candleData && candleData.time) {
-            legend.innerHTML = `<div style="font-size: 13px; margin: 1px 0;">O: <span>${formatPrice(
+            legend.innerHTML = `<div style="font-size: 12px; margin: 1px 0;">O: <span>${formatPrice(
               candleData.open
             )}</span> | H: <span>${formatPrice(candleData.high)}</span> | L: <span>${formatPrice(
               candleData.low

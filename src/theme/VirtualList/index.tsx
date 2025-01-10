@@ -1,22 +1,18 @@
 import { ArrowLineUp } from '@phosphor-icons/react'
 import debounce from 'lodash/debounce'
-import React, { Fragment, cloneElement, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { Key, cloneElement, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { VariableSizeList as List, ListOnScrollProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import { v4 as uuidv4 } from 'uuid'
 
 import { ApiMeta } from 'apis/api'
 import NoDataFound from 'components/@ui/NoDataFound'
-import SortAscIcon from 'theme/Icons/SortAscIcon'
-import SortDefaultIcon from 'theme/Icons/SortDefaultIcon'
-import SortDescIcon from 'theme/Icons/SortDescIcon'
 import Loading from 'theme/Loading'
+import { TableHeadItem } from 'theme/Table/TableHead'
 import { ColumnData, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SortTypeEnum } from 'utils/config/enums'
-
-import Tooltip from '../Tooltip'
 
 type Props<T> = {
   data: T[] | undefined
@@ -37,6 +33,7 @@ type Props<T> = {
   onScroll?: (props: { scrollOffset: number }) => void
   hiddenScrollToTopButton?: boolean
   scrollWhenDataChange?: boolean
+  footerBg?: string
 }
 
 const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
@@ -58,6 +55,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
   isLoadingFooter,
   onScroll,
   hiddenScrollToTopButton = true,
+  footerBg,
 }: Props<T>) {
   const Row = useCallback(
     ({ data, index, style }: { data: T[]; index: number; style: any }) => {
@@ -71,7 +69,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
           style={style}
           width="100%"
           sx={{
-            height: 50,
+            height: 32,
             alignItems: 'center',
             '&:hover': { background: themeColors.neutral5 },
             pl: 2,
@@ -102,6 +100,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
       currentSortBy: TableSortProps<T>['sortBy'] | undefined,
       currentSortType: TableSortProps<T>['sortType'] | undefined
     ) => {
+      console.log('changeCurrentSort', changeCurrentSort)
       if (!changeCurrentSort) return
       const isCurrentSort = !!currentSortBy && currentSortBy === columnSortBy
       if (!columnSortBy) return
@@ -134,7 +133,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
         // pr 6px for offset scrollbar
         sx={{
           alignItems: 'center',
-          py: 2,
+          py: '6px',
           pr: '6px',
           pl: 2,
           borderBottom: 'small',
@@ -144,59 +143,16 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
       >
         {columns.map((cellSetting, _index) => {
           const key = cellSetting?.key ? cellSetting.key : uuidv4()
-          const isCurrentSort = currentSort?.sortBy === cellSetting.sortBy
-          const onClickSort = () => {
-            handleChangeSort(cellSetting?.sortBy, cellSetting?.sortType, currentSort?.sortBy, currentSort?.sortType)
-          }
           const hasSort = !!cellSetting.sortBy && !!changeCurrentSort
-          const tooltipId = `tt_table_sort_${key.toString()}`
           return (
-            <Fragment key={_index}>
-              <Type.Caption
-                sx={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: cellSetting.style?.textAlign,
-                  ...(cellSetting.style ?? {}),
-                }}
-              >
-                <Flex
-                  alignItems="center"
-                  as="span"
-                  sx={{ justifyContent: cellSetting.style?.textAlign }}
-                  onClick={!!onClickSort && onClickSort}
-                  role={hasSort ? 'button' : undefined}
-                >
-                  {cellSetting.title}
-                  {hasSort && (
-                    <Flex alignItems="center" data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
-                      {isCurrentSort ? (
-                        currentSort?.sortType === SortTypeEnum.DESC ? (
-                          <SortDescIcon onClick={onClickSort} />
-                        ) : (
-                          <SortAscIcon onClick={onClickSort} />
-                        )
-                      ) : (
-                        <SortDefaultIcon onClick={onClickSort} />
-                      )}
-                    </Flex>
-                  )}
-                </Flex>
-                {cellSetting.filterComponent}
-                {cellSetting?.sortBy && changeCurrentSort && (
-                  <Tooltip id={tooltipId} place="top" type="dark" effect="solid">
-                    <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                      {isCurrentSort
-                        ? currentSort?.sortType === SortTypeEnum.DESC
-                          ? 'Click to sort ascending'
-                          : 'Click to cancel sorting'
-                        : 'Click to sort descending'}
-                    </Type.Caption>
-                  </Tooltip>
-                )}
-              </Type.Caption>
-            </Fragment>
+            <TableHeadItem
+              key={key as Key}
+              as={Box}
+              column={cellSetting}
+              currentSort={currentSort}
+              hasSort={hasSort}
+              changeCurrentSort={handleChangeSort}
+            />
           )
         })}
       </Flex>
@@ -300,7 +256,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
               width={width}
               height={height}
               itemCount={data?.length ?? 0}
-              itemSize={() => 50}
+              itemSize={() => 40}
               itemData={data ?? ([] as T[])}
               overscanCount={20}
               onItemsRendered={onItemsRendered}
@@ -347,7 +303,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
       </Box>
       <Flex
         sx={{
-          bg: 'neutral5',
+          bg: footerBg ?? 'neutral6',
           width: '100%',
           alignItems: 'center',
           justifyContent: 'center',

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Eye, EyeClosed, Funnel, Pulse, XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import ChartGainsPositionRealtime from 'components/@charts/ChartGainsPositionRealtime'
 import DirectionButton from 'components/@ui/DirectionButton'
@@ -12,10 +12,11 @@ import FundModal, { FundTab } from 'components/@wallet/SmartWalletFundModal'
 import SmartWalletActions from 'components/@wallet/WalletDetailsCard/SmartWalletActions'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useWalletFund from 'hooks/features/useWalletFundSnxV2'
+import Badge from 'theme/Badge'
 import { Button } from 'theme/Buttons'
 import RcDrawer from 'theme/RcDrawer'
+import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { STORAGE_KEYS } from 'utils/config/keys'
 import { hideScrollbar } from 'utils/helpers/css'
@@ -83,7 +84,7 @@ function DesktopView() {
     <>
       <Flex
         sx={{
-          height: 48,
+          height: 40,
           width: '100%',
           alignItems: 'center',
           gap: 2,
@@ -130,7 +131,7 @@ function DesktopView() {
           </Flex>
         </Flex>
       </Flex>
-      <Flex sx={{ height: 'calc(100% - 48px)', width: '100%', overflow: 'hidden' }}>
+      <Flex sx={{ height: 'calc(100% - 40px)', width: '100%', overflow: 'hidden' }}>
         <Box
           sx={{
             height: '100%',
@@ -146,7 +147,7 @@ function DesktopView() {
             buttonSx={{
               top: '-1px',
               right: expandedTable ? '-1px' : '0px',
-              height: 48,
+              height: 40,
               borderLeft: 'small',
               border: 'none',
               borderColor: ['neutral4', 'neutral4', 'neutral4', 'neutral4'],
@@ -157,7 +158,7 @@ function DesktopView() {
             pl={3}
             pr={4}
             sx={{
-              height: 48,
+              height: 40,
               width: '100%',
               borderBottom: 'small',
               borderBottomColor: 'neutral4',
@@ -178,11 +179,11 @@ function DesktopView() {
           <Flex flexDirection="column" height="calc(100% - 300px)">
             <Box px={3} pt={16}>
               <SectionTitle
-                icon={<Pulse size={24} />}
+                icon={Pulse}
                 title={
                   <Flex alignItems="center" sx={{ gap: 2 }}>
-                    <Trans>Open Positions</Trans>
-                    {!!onchainPositions?.length ? ` (${formatNumber(onchainPositions?.length, 0)})` : ''}
+                    <Trans>OPEN POSITIONS</Trans>
+                    {!!onchainPositions?.length && <Badge count={onchainPositions.length} />}
                   </Flex>
                 }
                 iconColor="primary1"
@@ -203,27 +204,10 @@ enum TabEnum {
   SETTINGS = 'settings',
   POSITIONS = 'positions',
 }
-const tabConfigs = [
-  { id: TabEnum.SETTINGS, title: <Trans>Copies</Trans> },
-  { id: TabEnum.POSITIONS, title: <Trans>Opening Positions</Trans> },
+const tabConfigs: TabConfig[] = [
+  { key: TabEnum.SETTINGS, name: <Trans>COPIES</Trans> },
+  { key: TabEnum.POSITIONS, name: <Trans>OPENING POSITIONS</Trans> },
 ]
-
-const TabButton = ({
-  // icon: TabIcon,
-  title,
-  isActive,
-  onClick,
-}: {
-  // icon: Icon
-  title: ReactNode
-  isActive: boolean
-  onClick: () => void
-}) => (
-  <Flex role="button" onClick={onClick} width="fit-content" sx={{ gap: 2 }} justifyContent="center" alignItems="center">
-    {/* <IconBox color={isActive ? 'primary1' : 'neutral3'} icon={<TabIcon size={24} />}></IconBox> */}
-    <Type.BodyBold color={isActive ? 'neutral1' : 'neutral3'}>{title}</Type.BodyBold>
-  </Flex>
-)
 
 function MobileView() {
   const [tab, setTab] = useState(TabEnum.SETTINGS)
@@ -293,19 +277,13 @@ function MobileView() {
           </Flex>
         </>
       )}
-      <Flex
-        sx={{ px: 3, height: 48, gap: 3, alignItems: 'center', borderBottom: 'small', borderBottomColor: 'neutral4' }}
-      >
-        {tabConfigs.map((configs) => (
-          <TabButton
-            key={configs.id}
-            title={configs.title}
-            isActive={tab === configs.id}
-            onClick={() => setTab(configs.id)}
-          />
-        ))}
-      </Flex>
-
+      <TabHeader
+        configs={tabConfigs}
+        isActiveFn={(config: TabConfig) => config.key === tab}
+        fullWidth={false}
+        hasLine={false}
+      />
+      <Divider />
       <Box sx={{ height: xl ? 'calc(100% - 48px - 48px)' : 'calc(100% - 60px - 48px)' }}>
         {tab === TabEnum.SETTINGS && (
           <>
@@ -416,7 +394,6 @@ function MobileFilterButton() {
         </Box>
       </Flex>
       <RcDrawer
-        background={themeColors.neutral7}
         open={openMobileFilterModal}
         onClose={() => setOpenModal(false)}
         width="300px"
@@ -478,11 +455,11 @@ function ListPositionSection() {
         />
         <Box px={3} pt={16}>
           <SectionTitle
-            icon={<Pulse size={24} />}
+            icon={Pulse}
             title={
               <Flex alignItems="center" sx={{ gap: 2 }}>
                 <Trans>Open Positions</Trans>
-                {!!onchainPositions?.length ? ` (${formatNumber(onchainPositions?.length, 0)})` : ''}
+                {!!onchainPositions?.length && <Badge count={onchainPositions.length} />}
               </Flex>
             }
             iconColor="primary1"
@@ -532,54 +509,59 @@ function FundManagement() {
   const Icon = showBalance ? EyeClosed : Eye
   const { sm } = useResponsive()
   return (
-    <Flex sx={{ alignItems: 'center' }}>
-      <Type.Caption>{sm ? <Trans>Available / Total Fund:</Trans> : <Trans>Available:</Trans>}</Type.Caption>
-      {sm ? (
-        <Type.Caption ml={2} sx={{ fontWeight: 600 }}>
-          {showBalance ? (
-            `$${formatNumber(available?.num ?? 0, 2, 2)} / $${formatNumber(total?.num ?? 0, 2, 2)}`
-          ) : (
-            <>
-              <Box as="span" sx={{ transform: 'translateY(3px)', display: 'inline-block' }}>
-                ********
-              </Box>{' '}
-              /{' '}
-              <Box as="span" sx={{ transform: 'translateY(3px)', display: 'inline-block' }}>
-                ********
-              </Box>
-            </>
-          )}
-        </Type.Caption>
-      ) : (
-        <Type.Caption ml={2} sx={{ fontWeight: 600 }}>
-          {showBalance ? (
-            `$${formatNumber(available?.num ?? 0, 2, 2)}`
-          ) : (
-            <Type.Caption>
-              <Box as="span" sx={{ transform: 'translateY(3px)', display: 'inline-block' }}>
-                ********
-              </Box>
-              {sm && (
+    <Flex sx={{ alignItems: 'center', px: 2 }} justifyContent="space-between" width="100%">
+      <Flex alignItems="center">
+        <Flex flexDirection={['column', 'row']} justifyContent={['flex-start', 'center']}>
+          <Type.Caption>{sm ? <Trans>Available / Total Fund:</Trans> : <Trans>Available</Trans>}</Type.Caption>
+          {sm ? (
+            <Type.Caption ml={2} sx={{ fontWeight: 600 }}>
+              {showBalance ? (
+                `$${formatNumber(available?.num ?? 0, 2, 2)} / $${formatNumber(total?.num ?? 0, 2, 2)}`
+              ) : (
                 <>
-                  {' / '}
+                  <Box as="span" sx={{ transform: 'translateY(3px)', display: 'inline-block' }}>
+                    ********
+                  </Box>{' '}
+                  /{' '}
                   <Box as="span" sx={{ transform: 'translateY(3px)', display: 'inline-block' }}>
                     ********
                   </Box>
                 </>
               )}
             </Type.Caption>
+          ) : (
+            <Type.Caption ml={2} sx={{ fontWeight: 600 }}>
+              {showBalance ? (
+                `$${formatNumber(available?.num ?? 0, 2, 2)}`
+              ) : (
+                <Type.Caption>
+                  <Box as="span" sx={{ transform: 'translateY(3px)', display: 'inline-block' }}>
+                    ********
+                  </Box>
+                  {sm && (
+                    <>
+                      {' / '}
+                      <Box as="span" sx={{ transform: 'translateY(3px)', display: 'inline-block' }}>
+                        ********
+                      </Box>
+                    </>
+                  )}
+                </Type.Caption>
+              )}
+            </Type.Caption>
           )}
-        </Type.Caption>
-      )}
-      <IconBox
-        role="button"
-        onClick={() => setShowBalance((prev) => !prev)}
-        ml={2}
-        mr={3}
-        icon={<Icon size={16} />}
-        color="neutral3"
-        sx={{ '&:hover': { color: 'neutral2' } }}
-      />
+        </Flex>
+
+        <IconBox
+          role="button"
+          onClick={() => setShowBalance((prev) => !prev)}
+          ml={2}
+          mr={3}
+          icon={<Icon size={16} />}
+          color="neutral3"
+          sx={{ '&:hover': { color: 'neutral2' } }}
+        />
+      </Flex>
       <DepositButton />
     </Flex>
   )
@@ -590,7 +572,7 @@ function DepositButton() {
   const { activeWallet } = useDCPManagementContext()
   return (
     <>
-      <Flex alignItems="center" sx={{ gap: 0 }}>
+      <Flex alignItems="center" sx={{ gap: 1 }}>
         <Button variant="ghostPrimary" sx={{ p: 0 }} onClick={() => setFundingModal(FundTab.Deposit)}>
           Deposit
         </Button>

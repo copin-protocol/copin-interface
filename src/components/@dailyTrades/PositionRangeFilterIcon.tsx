@@ -37,11 +37,12 @@ export function PositionRangeFilterIcon({ valueKey }: { valueKey: PositionRangeF
     <Flex sx={{ justifyContent: 'start', alignItems: 'center', gap: 1, position: 'relative' }}>
       {/* <Box as="span">{title}</Box> */}
       <Dropdown
+        buttonVariant="ghostInactive"
+        inline
         menuDismissible
         dismissible={false}
         visible={visible}
         setVisible={_setVisible as any}
-        buttonSx={{ p: 0, border: 'none' }}
         hasArrow={false}
         menu={
           <Box sx={{ p: 3, width: '350px' }}>
@@ -60,8 +61,6 @@ export function PositionRangeFilterIcon({ valueKey }: { valueKey: PositionRangeF
           icon={<Funnel size={16} weight={!!hasFilter ? 'fill' : 'regular'} />}
           sx={{
             transform: 'translateY(-1.5px)',
-            color: !!hasFilter ? 'neutral2' : 'neutral3',
-            '&:hover:': { color: 'neutral1' },
           }}
         />
       </Dropdown>

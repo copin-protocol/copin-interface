@@ -11,6 +11,7 @@ import SectionTitle from 'components/@ui/SectionTitle'
 import FundModal, { FundTab } from 'components/@wallet/SmartWalletFundModal'
 import SmartWalletActions from 'components/@wallet/WalletDetailsCard/SmartWalletActions'
 import useWalletFund from 'hooks/features/useWalletFundSnxV2'
+import Badge from 'theme/Badge'
 import { Button } from 'theme/Buttons'
 import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -170,11 +171,11 @@ function DesktopView() {
           <Flex flexDirection="column" height="calc(100% - 300px)">
             <Box px={3} pt={16}>
               <SectionTitle
-                icon={<Pulse size={24} />}
+                icon={Pulse}
                 title={
                   <Flex alignItems="center" sx={{ gap: 2 }}>
                     <Trans>Open Positions</Trans>
-                    {!!onchainPositions?.length ? ` (${formatNumber(onchainPositions?.length, 0)})` : ''}
+                    {!!onchainPositions?.length && <Badge count={onchainPositions.length} />}
                   </Flex>
                 }
                 iconColor="primary1"
@@ -196,8 +197,8 @@ enum TabEnum {
   POSITIONS = 'positions',
 }
 const tabConfigs = [
-  { id: TabEnum.SETTINGS, title: <Trans>Copies</Trans> },
-  { id: TabEnum.POSITIONS, title: <Trans>Opening Positions</Trans> },
+  { id: TabEnum.SETTINGS, title: <Trans>COPIES</Trans> },
+  { id: TabEnum.POSITIONS, title: <Trans>OPENING POSITIONS</Trans> },
 ]
 
 const TabButton = ({
@@ -475,11 +476,11 @@ function ListPositionSection() {
         />
         <Box px={3} pt={16}>
           <SectionTitle
-            icon={<Pulse size={24} />}
+            icon={Pulse}
             title={
               <Flex alignItems="center" sx={{ gap: 2 }}>
                 <Trans>Open Positions</Trans>
-                {!!onchainPositions?.length ? ` (${formatNumber(onchainPositions?.length, 0)})` : ''}
+                {!!onchainPositions?.length && <Badge count={onchainPositions.length} />}
               </Flex>
             }
             iconColor="primary1"

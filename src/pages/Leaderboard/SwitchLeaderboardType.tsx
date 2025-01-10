@@ -12,8 +12,12 @@ const SwitchLeaderboardType = ({ sx }: { sx?: any }) => {
     return (
       <Box>
         {LEADERBOARD_OPTIONS.map((option) => (
-          <DropdownItem key={option.id} size="sm" onClick={() => changeCurrentOption(option)}>
-            <Type.Body color={currentOption.id === option.id ? 'primary1' : 'neutral3'}>{option.text}</Type.Body>
+          <DropdownItem
+            key={option.id}
+            isActive={currentOption.id === option.id}
+            onClick={() => changeCurrentOption(option)}
+          >
+            {option.text}
           </DropdownItem>
         ))}
       </Box>
@@ -24,13 +28,10 @@ const SwitchLeaderboardType = ({ sx }: { sx?: any }) => {
     <Dropdown
       menu={renderOptions()}
       buttonVariant="ghost"
-      buttonSx={{
-        border: 'none',
-        p: 0,
-      }}
-      menuSx={{ width: '80px' }}
+      menuSx={{ minWidth: '101px', width: '101px' }}
+      buttonSx={{ height: '100%', px: 16, width: '100px' }}
       hasArrow={true}
-      sx={{ minWidth: 'fit-content', ...sx }}
+      sx={{ width: '100%', ...sx }}
     >
       <Type.CaptionBold color="neutral2">{currentOption.text}</Type.CaptionBold>
     </Dropdown>

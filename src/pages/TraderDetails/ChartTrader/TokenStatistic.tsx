@@ -113,17 +113,17 @@ export function ListTokenStatistic({ data, currentPair, changePair }: TokenStati
       {currentStats && (
         <Flex alignItems="center" p={2} height={32} sx={{ gap: 0, borderTop: 'smallDashed', borderColor: 'neutral4' }}>
           <Flex flex={1} sx={{ gap: 2 }}>
-            <Type.Caption color="neutral2">Win Rate:</Type.Caption>
+            <Type.Caption color="neutral2">WIN RATE:</Type.Caption>
             <Type.CaptionBold>
               {formatNumber((currentStats.totalWin / currentStats.totalTrade) * 100, 2, 2)}%
             </Type.CaptionBold>
           </Flex>
           <Flex flex={1} sx={{ gap: 2 }}>
-            <Type.Caption color="neutral2">Volume:</Type.Caption>
+            <Type.Caption color="neutral2">VOLUME:</Type.Caption>
             <Type.CaptionBold>${compactNumber(currentStats.totalVolume, 1)}</Type.CaptionBold>
           </Flex>
           <Flex flex={1} sx={{ gap: 2 }}>
-            <Type.Caption color="neutral2">PnL ($):</Type.Caption>
+            <Type.Caption color="neutral2">PNL($):</Type.Caption>
             <Type.CaptionBold>
               <SignedText value={currentStats.realisedPnl} fontInherit minDigit={0} maxDigit={0} />
             </Type.CaptionBold>
@@ -326,14 +326,13 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
   return (
     <Table
       wrapperSx={{
-        pt: 2,
         pr: 0,
         table: {
           '& th:first-child, td:first-child': {
-            pl: 3,
+            pl: 2,
           },
           '& th:last-child, td:last-child': {
-            pr: 3,
+            pr: 2,
           },
         },
       }}

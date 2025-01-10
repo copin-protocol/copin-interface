@@ -9,6 +9,7 @@ import { useCustomizeColumns } from './useCustomiseColumns'
 
 const REQUIRED_FIELDS = ['account', 'pnl', 'avgRoi', 'winRate']
 
+// TODO: @toanla use the same as perps explorer
 const CustomizeColumn = ({ hasTitle, menuSx = {} }: { hasTitle?: boolean; menuSx?: any }) => {
   const { visibleColumns, setVisibleColumns } = useCustomizeColumns()
   const onChange = (index: number) => {
@@ -21,7 +22,9 @@ const CustomizeColumn = ({ hasTitle, menuSx = {} }: { hasTitle?: boolean; menuSx
 
   return (
     <Dropdown
+      buttonVariant="ghost"
       menuPosition="top"
+      inline
       menuSx={{
         width: 220,
         p: 2,
@@ -51,18 +54,6 @@ const CustomizeColumn = ({ hasTitle, menuSx = {} }: { hasTitle?: boolean; menuSx
         </>
       }
       sx={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}
-      buttonSx={{
-        border: 'none',
-        height: '100%',
-        p: 0,
-        color: 'neutral2',
-        '&:hover:not([disabled])': {
-          color: 'neutral1',
-          svg: {
-            color: 'neutral1',
-          },
-        },
-      }}
       placement="topRight"
     >
       <Flex sx={{ gap: 1, alignItems: 'center' }}>

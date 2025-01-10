@@ -35,7 +35,7 @@ const priceColumn: ColumnData<HlOrderData> = {
   title: 'Limit Price',
   dataIndex: 'priceNumber',
   key: 'priceNumber',
-  style: { minWidth: '100px', textAlign: 'right' },
+  style: { minWidth: '100px', textAlign: 'right', pr: '12px' },
   render: (item) => (
     <Type.Caption color="neutral1">
       {item.priceNumber && !item.isPositionTpsl
@@ -123,7 +123,7 @@ const reduceOnlyColumn: ColumnData<HlOrderData> = {
   dataIndex: 'reduceOnly',
   key: 'reduceOnly',
   sortBy: 'reduceOnly',
-  style: { width: '80px' },
+  style: { width: '90px' },
   render: (item) => {
     return <Type.Caption color="neutral1">{item.reduceOnly ? 'Yes' : 'No'}</Type.Caption>
   },

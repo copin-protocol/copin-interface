@@ -42,7 +42,7 @@ export default function PositionsSection({
   const { sm } = useResponsive()
 
   return (
-    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', bg: 'neutral5', pt: 2 }}>
+    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', bg: 'neutral5' }}>
       <Box sx={{ flex: '1 0 0', overflowX: 'auto', overflowY: 'hidden' }}>
         {sm ? (
           <OpeningsTable data={pagedData} isLoading={isLoading} scrollDep={currentPage} />
@@ -50,7 +50,7 @@ export default function PositionsSection({
           <ListOpeningPositions data={pagedData} isLoading={isLoading} scrollDep={currentPage} />
         )}
       </Box>
-      <Box px={2} sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
+      <Box p={1} sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
         <PaginationWithLimit
           currentPage={currentPage}
           currentLimit={currentLimit}
@@ -63,7 +63,7 @@ export default function PositionsSection({
             offset,
           }}
           menuPosition="top"
-          sx={{ my: 1, width: '100%', justifyContent: 'space-between', gap: 2 }}
+          sx={{ width: '100%', justifyContent: 'space-between', gap: 2 }}
         />
       </Box>
     </Flex>

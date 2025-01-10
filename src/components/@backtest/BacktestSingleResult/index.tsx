@@ -113,7 +113,7 @@ export default function BacktestSingleResult({
       height="100%"
       pl={0}
       pb={3}
-      bg="neutral7"
+      bg="#000"
     >
       <Box flex="1 0 0" sx={{ borderRight: 'small', borderRightColor: 'neutral4', overflow: 'auto' }}>
         <BacktestSummaryAndPositions

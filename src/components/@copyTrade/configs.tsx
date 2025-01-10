@@ -52,7 +52,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   takeProfitType: SLTPTypeEnum.PERCENT,
   takeProfitAmount: undefined,
   lookBackOrders: undefined,
-  exchange: CopyTradePlatformEnum.BINGX,
+  exchange: CopyTradePlatformEnum.HYPERLIQUID,
   copyWalletId: '',
   serviceKey: SERVICE_KEYS[ProtocolEnum.KWENTA],
   title: '',
@@ -62,7 +62,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   skipLowLeverage: false,
   lowLeverage: undefined,
   agreement: false,
-  copyAll: false,
+  copyAll: true,
   hasExclude: false,
   skipLowCollateral: false,
   lowCollateral: undefined,
@@ -70,9 +70,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   lowSize: undefined,
 }
 
-export const vaultExchangeOptions: ExchangeOptions[] = [
-  getExchangeOption(CopyTradePlatformEnum.GNS_V8),
-]
+export const vaultExchangeOptions: ExchangeOptions[] = [getExchangeOption(CopyTradePlatformEnum.GNS_V8)]
 
 export const dcpExchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.GNS_V8),

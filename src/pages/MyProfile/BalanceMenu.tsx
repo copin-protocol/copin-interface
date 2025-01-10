@@ -2,11 +2,9 @@ import { useQuery } from 'react-query'
 
 import { getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
 import Logo from 'components/@ui/Logo'
-import ReferralStatus from 'components/@wallet/WalletReferralStatus'
 import Num from 'entities/Num'
 import { CopyWalletData } from 'entities/copyWallet'
 import { Flex, IconBox } from 'theme/base'
-import { CEX_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { hideScrollbar } from 'utils/helpers/css'
@@ -48,7 +46,7 @@ export default function BalanceMenu({
         alignItems: ['start', 'start', 'center'],
         justifyContent: ['start', 'start', 'space-between'],
       }}
-      py={[1, 12]}
+      height={40}
     >
       <Flex
         flexDirection={['column', 'row']}
@@ -56,9 +54,9 @@ export default function BalanceMenu({
         sx={{ pl: 3, pr: 2, gap: 1, width: ['75%', 'max-content'], borderRight: 'small', borderRightColor: 'neutral4' }}
       >
         <SelectSingleWallet currentWallet={activeWallet} onChangeWallet={onChangeKey} wallets={copyWallets} />
-        {activeWallet && CEX_EXCHANGES.includes(activeWallet.exchange) && (
+        {/* {activeWallet && CEX_EXCHANGES.includes(activeWallet.exchange) && (
           <ReferralStatus data={activeWallet} sx={{ minWidth: 80 }} />
-        )}
+        )} */}
         {activeWallet &&
           activeWallet.exchange === CopyTradePlatformEnum.GNS_V8 &&
           !!activeWallet.smartWalletAddress && (

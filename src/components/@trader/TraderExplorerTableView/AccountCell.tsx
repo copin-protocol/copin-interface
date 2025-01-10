@@ -9,15 +9,15 @@ import { Box, Flex } from 'theme/base'
 export function AccountCell({ data, additionalComponent }: { data: TraderData; additionalComponent?: ReactElement }) {
   const { sm } = useResponsive()
   return (
-    <Flex alignItems="center" justifyContent="start" sx={{ gap: [1, 2], position: 'relative' }}>
+    <Flex alignItems="center" justifyContent="start" sx={{ gap: 0, position: 'relative' }}>
       <AccountInfo
         isOpenPosition={data.isOpenPosition}
         address={data.account}
         protocol={data.protocol}
         type={data.type}
         note={data.note}
-        size={sm ? 40 : 28}
-        wrapperSx={{ width: '100%' }}
+        size={sm ? 32 : 28}
+        wrapperSx={{ width: 'fit-content' }}
       />
       {additionalComponent ? additionalComponent : null}
     </Flex>
@@ -31,7 +31,7 @@ export function AccountCellMobile({
   additionalComponent?: ReactElement
 }) {
   return (
-    <Flex alignItems="start" justifyContent="start" sx={{ gap: 1, position: 'relative' }}>
+    <Flex alignItems="center" justifyContent="start" sx={{ gap: 1, position: 'relative' }}>
       <AccountInfo
         isOpenPosition={data.isOpenPosition}
         address={data.account}

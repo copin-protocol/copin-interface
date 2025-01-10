@@ -2,7 +2,7 @@ import MarketGroup from 'components/@ui/MarketGroup'
 import { Type } from 'theme/base'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
-import TagWrapper from './TagWrapper'
+import TagWrapper from '../../../theme/Tag/TagWrapper'
 
 export default function FilterPairTag({ pairs, onClear }: { pairs: string[] | undefined; onClear: () => void }) {
   return (

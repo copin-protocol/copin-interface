@@ -38,6 +38,7 @@ export default function BacktestForm({
   isSubmitting,
   onCancel,
   defaultValues,
+  isModalOpen,
 }: {
   protocol: ProtocolEnum
   tokensTraded?: string[]
@@ -45,6 +46,7 @@ export default function BacktestForm({
   onCancel?: () => void
   isSubmitting: boolean
   defaultValues?: BackTestFormValues
+  isModalOpen?: boolean
 }) {
   const {
     control,
@@ -126,6 +128,10 @@ export default function BacktestForm({
       onSubmit?.(formValues)
     })()
   }
+
+  useEffect(() => {
+    if (isModalOpen != null && !isModalOpen) setShowGuide(false)
+  }, [isModalOpen])
 
   return (
     <Box px={3}>

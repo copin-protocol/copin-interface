@@ -10,6 +10,7 @@ import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, Image, Type } from 'theme/base'
 import ROUTES from 'utils/config/routes'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 export default function SubscriptionRestrictModal() {
   const { state, resetRestrictState } = useSubscriptionRestrict()
@@ -47,7 +48,7 @@ export default function SubscriptionRestrictModal() {
     }
   }, [resetRestrictState, state])
   return (
-    <Modal isOpen={isOpen} onDismiss={resetRestrictState} hasClose>
+    <Modal isOpen={isOpen} onDismiss={resetRestrictState} zIndex={Z_INDEX.TOASTIFY + 1} hasClose>
       <Box sx={{ p: 24 }}>{content}</Box>
     </Modal>
   )
@@ -60,11 +61,11 @@ export function RestrictPremiumFeature({ onClickUpgrade }: { onClickUpgrade?: ()
   return (
     <Flex sx={{ flexDirection: 'column', alignItems: 'center' }}>
       <Image src={crow} width={166} height={190} alt="crow" />
-      <Type.BodyBold my={2}>
+      <Type.Head my={2}>
         <Trans>Upgrade To Premium Account</Trans>
-      </Type.BodyBold>
+      </Type.Head>
       <Type.Caption mb={20} color="neutral2">
-        <Trans>You need to upgrade to a premium account to use this feature</Trans>
+        <Trans>You need to upgrade to use this feature</Trans>
       </Type.Caption>
       {!myProfile ? (
         <Button variant="outlinePrimary" block onClick={handleClickLogin}>

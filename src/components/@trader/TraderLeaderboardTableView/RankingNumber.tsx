@@ -14,6 +14,10 @@ export default function RankingNumber({ ranking }: { ranking: number | undefined
     case 3:
       return <Image src={IconRanking3} width={34} height={48} />
     default:
-      return <Type.CaptionBold color="neutral1"># {formatNumber(ranking, 0)}</Type.CaptionBold>
+      return (
+        <Type.Caption color="neutral3" width={34} textAlign="center">
+          #{formatNumber(ranking, 0)}
+        </Type.Caption>
+      )
   }
 }

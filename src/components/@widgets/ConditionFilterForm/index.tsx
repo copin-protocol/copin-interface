@@ -52,27 +52,27 @@ export default function ConditionFilterForm<T>({
     })
   }
 
-  let valueText = <Trans>Value</Trans>
+  let valueText = <Trans>VALUE</Trans>
   switch (type) {
     case 'ranking':
-      valueText = <Trans>Percentile</Trans>
+      valueText = <Trans>PERCENTILE</Trans>
       break
     default:
       break
   }
 
   return (
-    <Box px={12} width="100%" height="100%" sx={wrapperSx}>
+    <Box px={8} width="100%" height="100%" sx={wrapperSx}>
       <RowWrapper sx={{ width: '100%' }}>
         <Box px={2} flex="7">
           <Type.Caption color="neutral3">
-            <Trans>Field</Trans>
+            <Trans>FIELD</Trans>
           </Type.Caption>
         </Box>
         {/* <VerticalDivider hidden /> */}
         <Box px={2} flex="6">
           <Type.Caption color="neutral3">
-            <Trans>Condition</Trans>
+            <Trans>CONDITION</Trans>
           </Type.Caption>
         </Box>
         {/* <VerticalDivider hidden /> */}
@@ -193,7 +193,7 @@ function Row<T>({
           />
         </Box>
         {/* <VerticalDivider /> */}
-        <Box flex="6" pl={2}>
+        <Box flex="6">
           <Select
             isSearchable={false}
             menuPlacement="top"

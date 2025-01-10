@@ -11,14 +11,22 @@ import { useAuthContext } from 'hooks/web3/useAuth'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
-import { getUserForTracking, logEvent } from 'utils/tracking/event'
+import { getUserForTracking, logEvent, logEventLite } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import { initBacktestState, initialState, reducer } from '../BacktestSingleModal/config'
 import { RESET_BACKTEST_PARAMS } from '../configs'
 import { parseRequestData } from '../helpers'
 
-export default function BacktestSingleButton({ account, protocol }: { account: string; protocol: ProtocolEnum }) {
+export default function BacktestSingleButton({
+  account,
+  protocol,
+  eventCategory,
+}: {
+  account: string
+  protocol: ProtocolEnum
+  eventCategory?: EventCategory
+}) {
   const { searchParams, setSearchParams } = useSearchParams()
   const myProfile = useMyProfileStore((state) => state.myProfile)
   const isForceOpenModal = searchParams[URL_PARAM_KEYS.OPEN_BACKTEST_MODAL] === '1' ? true : false
@@ -87,11 +95,16 @@ export default function BacktestSingleButton({ account, protocol }: { account: s
         icon={<ArrowElbowUpLeft size={20} />}
         onClick={() => {
           handleOpenBackTestModal()
-          logEventBacktest(
-            hadBacktest
-              ? EVENT_ACTIONS[EventCategory.BACK_TEST].VIEW_RESULT
-              : EVENT_ACTIONS[EventCategory.BACK_TEST].OPEN_SINGLE
-          )
+          eventCategory !== EventCategory.LITE
+            ? logEventBacktest(
+                hadBacktest
+                  ? EVENT_ACTIONS[EventCategory.BACK_TEST].VIEW_RESULT
+                  : EVENT_ACTIONS[EventCategory.BACK_TEST].OPEN_SINGLE
+              )
+            : logEventLite({
+                event: EVENT_ACTIONS[EventCategory.LITE].LITE_BACKTEST_TRADER,
+                username: getUserForTracking(myProfile?.username),
+              })
         }}
         sx={{
           px: 3,

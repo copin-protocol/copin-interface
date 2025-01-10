@@ -1,6 +1,7 @@
 import { useResponsive } from 'ahooks'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
+import { createGlobalStyle } from 'styled-components/macro'
 
 import { getTraderExchangeStatistic, getTraderStatisticApi } from 'apis/traderApis'
 import HLTraderOpeningPositionsTable, {
@@ -13,7 +14,6 @@ import NotFound from 'components/@ui/NotFound'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import { ResponseTraderExchangeStatistic } from 'entities/trader.d'
-import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
@@ -21,22 +21,34 @@ import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import ChartTrader from 'pages/TraderDetails/ChartTrader'
 import GeneralStats from 'pages/TraderDetails/GeneralStats'
 import PositionMobileView from 'pages/TraderDetails/Layouts/PositionMobileView'
-import TraderActionButtons from 'pages/TraderDetails/TraderActionButtons'
+import TraderActionButtons, { DisabledActionType } from 'pages/TraderDetails/TraderActionButtons'
 import TraderInfo from 'pages/TraderDetails/TraderInfo'
 import TraderRanking from 'pages/TraderDetails/TraderRanking'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { Z_INDEX } from 'utils/config/zIndex'
+import { EventCategory } from 'utils/tracking/types'
+
+const GlobalStyle = createGlobalStyle`
+  .rc-dropdown {
+    z-index: ${Z_INDEX.TOASTIFY};
+  }
+`
 
 export default function TraderQuickView({
   address,
   protocol,
   type,
+  disabledActions,
+  eventCategory,
 }: {
   address: string
   protocol: ProtocolEnum
   type?: TimeFrameEnum
+  disabledActions?: DisabledActionType[]
+  eventCategory?: EventCategory
 }) {
   const { data: exchangeStats, isLoading } = useQuery([QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address], () =>
     getTraderExchangeStatistic({ account: address })
@@ -52,7 +64,12 @@ export default function TraderQuickView({
 
   if (!isLoading && !orderedStats?.length && !protocol) return <NotFound message="" title="Trader have no statistic" />
 
-  return <TraderDetailsComponent address={address} protocol={protocol} type={type} />
+  return (
+    <>
+      {address && <GlobalStyle />}
+      <TraderDetailsComponent address={address} protocol={protocol} type={type} disabledActions={disabledActions} />
+    </>
+  )
 }
 
 function getOrderedExchangeStats(stats: ResponseTraderExchangeStatistic) {
@@ -62,14 +79,18 @@ function getOrderedExchangeStats(stats: ResponseTraderExchangeStatistic) {
   return orderedStats
 }
 
-export function TraderDetailsComponent({
+function TraderDetailsComponent({
   address,
   protocol,
   type,
+  disabledActions,
+  eventCategory,
 }: {
   address: string
   protocol: ProtocolEnum
   type?: TimeFrameEnum
+  disabledActions?: DisabledActionType[]
+  eventCategory?: EventCategory
 }) {
   const { lg } = useResponsive()
   const timeFilterOptions = TIME_FILTER_OPTIONS
@@ -135,30 +156,29 @@ export function TraderDetailsComponent({
           zIndex: 10,
         }}
       >
-        <BotAlertProvider>
-          {/*<ProtocolBetaWarning protocol={protocol} />*/}
-          <Flex
-            sx={{
-              width: '100%',
-              backgroundColor: 'neutral7',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 3,
-            }}
-          >
-            <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
-            <TraderActionButtons
-              traderData={currentTraderData}
-              timeOption={timeOption}
-              onChangeTime={setTimeOption}
-              account={address}
-              protocol={protocol}
-              onCopyActionSuccess={onForceReload}
-              isDrawer
-            />
-          </Flex>
-        </BotAlertProvider>
+        {/*<ProtocolBetaWarning protocol={protocol} />*/}
+        <Flex
+          sx={{
+            width: '100%',
+            // backgroundColor: 'neutral7',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 3,
+          }}
+        >
+          <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
+          <TraderActionButtons
+            traderData={currentTraderData}
+            timeOption={timeOption}
+            onChangeTime={setTimeOption}
+            account={address}
+            protocol={protocol}
+            onCopyActionSuccess={onForceReload}
+            eventCategory={eventCategory}
+            isDrawer
+          />
+        </Flex>
       </Box>
       <Flex flexDirection="column" flex={1} sx={{ overflow: 'auto' }}>
         <Flex
@@ -208,7 +228,7 @@ export function TraderDetailsComponent({
           </Box>
         </Flex>
         {lg ? (
-          <Flex flex={1} flexDirection="column" sx={{ backgroundColor: 'neutral7' }}>
+          <Flex flex={1} flexDirection="column">
             <Box>
               {protocol === ProtocolEnum.HYPERLIQUID ? (
                 <HLTraderOpeningPositionsTable address={address} protocol={protocol} isDrawer isExpanded />
@@ -221,7 +241,7 @@ export function TraderDetailsComponent({
             </Box>
           </Flex>
         ) : (
-          <Flex sx={{ backgroundColor: 'neutral7', flex: 1 }}>
+          <Flex sx={{ flex: 1 }}>
             <PositionMobileView
               openingPositions={
                 protocol === ProtocolEnum.HYPERLIQUID ? (
@@ -234,8 +254,8 @@ export function TraderDetailsComponent({
                 <TraderHistoryPositionsListView
                   address={address}
                   protocol={protocol}
-                  backgroundColor="neutral7"
                   isDrawer
+                  backgroundColor="black"
                   isExpanded
                 />
               }

@@ -19,28 +19,39 @@ export default function TabHeader({
 }) {
   const currentInstanceId = state.currentInstanceId
   return (
-    <Flex sx={{ justifyContent: 'space-between', gap: 3, alignItems: 'center', width: '100%', pt: 1 }}>
-      <Flex flex="1" sx={{ alignItems: 'center', gap: 3 }}>
-        <Flex sx={{ alignItems: 'center', maxWidth: '100%', overflow: 'auto' }}>
+    <Flex sx={{ gap: 3, alignItems: 'center', width: '100%' }}>
+      <Flex flex="1" sx={{ alignItems: 'center', overflow: 'auto' }}>
+        <Flex sx={{ alignItems: 'center', maxWidth: '100%', width: '100%' }}>
           {state.instanceIds.map((id) => {
             const isSelected = id === currentInstanceId
             return (
               <Flex
                 key={id}
                 sx={{
+                  // position: 'relative',
+                  overflow: 'hidden',
+                  marginTop: isSelected ? '1px' : 0,
                   alignItems: 'center',
-                  bg: isSelected ? 'neutral5' : 'transparent',
+                  bg: '#000',
+                  borderRight: `small`,
+                  borderBottom: isSelected ? 'none' : 'small',
+                  borderColor: 'neutral4',
+
                   gap: 2,
                   px: 3,
-                  borderTopLeftRadius: 'sm',
-                  borderTopRightRadius: 'sm',
                   flexShrink: 0,
                 }}
               >
                 <Flex
                   role="button"
                   onClick={() => onSelectItem(id)}
-                  sx={{ flex: 1, height: 48, fontSize: [13, 16], fontWeight: 700, lineHeight: '48px' }}
+                  sx={{
+                    flex: 1,
+                    height: 48,
+                    fontSize: [12, 14],
+                    fontWeight: 700,
+                    lineHeight: '48px',
+                  }}
                 >
                   {getTitle({ instanceData: state.instancesMapping[id] })}
                 </Flex>
@@ -53,13 +64,24 @@ export default function TabHeader({
               </Flex>
             )
           })}
+          <Flex
+            flex="1"
+            justifyContent="start"
+            alignItems="center"
+            sx={{
+              height: '49px',
+              borderBottom: 'small',
+              borderColor: 'neutral4',
+            }}
+          >
+            <IconBox
+              role="button"
+              onClick={onAddNewItem}
+              icon={<PlusCircle size={24} />}
+              sx={{ flexShrink: 0, color: 'primary1', '&:hover': { color: 'primary2' }, px: '12px' }}
+            />
+          </Flex>
         </Flex>
-        <IconBox
-          role="button"
-          onClick={onAddNewItem}
-          icon={<PlusCircle size={24} />}
-          sx={{ flexShrink: 0, color: 'primary1', '&:hover': { color: 'primary2' } }}
-        />
       </Flex>
       <IconBox
         role="button"

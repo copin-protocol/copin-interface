@@ -6,6 +6,7 @@ import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { STORAGE_KEYS } from 'utils/config/keys'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 export default function BacktestGuideTour() {
   const isInstructed = localStorage.getItem(STORAGE_KEYS.BACKTEST_GUIDE) === '1'
@@ -74,7 +75,7 @@ export default function BacktestGuideTour() {
       tooltipComponent={Tooltip}
       styles={{
         options: {
-          zIndex: 10000,
+          zIndex: Z_INDEX.TOASTIFY,
           arrowColor: themeColors.neutral4,
         },
         beaconInner: {

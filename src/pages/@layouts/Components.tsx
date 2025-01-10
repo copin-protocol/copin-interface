@@ -1,11 +1,11 @@
 import css from '@styled-system/css'
-import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box } from 'theme/base'
 import { sx } from 'theme/base'
+import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 
-export const BottomTabWrapperMobile = styled(Box)(
+export const BottomWrapperMobile = styled(Box)(
   css({
     display: ['flex', 'flex', 'none'],
     height: 40,
@@ -14,6 +14,26 @@ export const BottomTabWrapperMobile = styled(Box)(
     alignItems: 'center',
     borderTop: 'small',
     borderTopColor: 'neutral4',
+    '& .tab-header': {
+      width: '100%',
+    },
+    '& .tab-header > *': {
+      width: '100%',
+    },
+  }),
+  sx
+)
+
+export const TopWrapperMobile = styled(Box)(
+  css({
+    display: ['flex', 'flex', 'none'],
+    height: PAGE_TITLE_HEIGHT,
+    bg: 'neutral8',
+    width: '100%',
+    alignItems: 'center',
+    px: 3,
+    borderBottom: 'small',
+    borderBottomColor: 'neutral4',
   }),
   sx
 )
@@ -26,30 +46,3 @@ export const BodyWrapperMobile = styled(Box)(
   }),
   sx
 )
-
-export function BottomTabItemMobile({
-  onClick,
-  color = 'primary1',
-  icon,
-  text,
-  fontWeight = 500,
-}: {
-  icon?: ReactNode
-  text: ReactNode
-  color?: string
-  onClick?: () => void
-  fontWeight?: number
-}) {
-  return (
-    <Flex
-      role="button"
-      width="100%"
-      color={color}
-      sx={{ alignItems: 'center', justifyContent: 'center', gap: 2 }}
-      onClick={onClick}
-    >
-      {!!icon && <IconBox icon={icon} color="inherit" />}
-      <Type.Body sx={{ fontWeight }}>{text}</Type.Body>
-    </Flex>
-  )
-}

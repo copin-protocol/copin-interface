@@ -57,6 +57,7 @@ export interface TraderData {
   indexTokens: string[]
   lastTradeAt: string
   lastTradeAtTs: number
+  labels: string[]
   statisticAt: string
   createdAt: string
   updatedAt: string

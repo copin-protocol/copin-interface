@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import CopyTraderForm from 'components/@copyTrade/CopyTradeForm'
+import CopyTraderForm, { FormType } from 'components/@copyTrade/CopyTradeForm'
 import { CopyTradeData, UpdateCopyTradeData } from 'entities/copyTrade.d'
 import useUpdateCopyTrade from 'hooks/features/useUpdateCopyTrade'
 
@@ -11,10 +11,12 @@ export default function CopyTradeEditForm({
   onDismiss,
   onSuccess,
   copyTradeData,
+  isLite = false,
 }: {
   onDismiss: () => void
   onSuccess: () => void
   copyTradeData: CopyTradeData | undefined
+  isLite?: boolean
 }) {
   const { updateCopyTrade, isMutating } = useUpdateCopyTrade({
     onSuccess: () => {
@@ -31,6 +33,7 @@ export default function CopyTradeEditForm({
     if (formData.account) data.account = formData.account
     updateCopyTrade({ data, copyTradeId: copyTradeData?.id ?? '' })
   }
+  const formTypes = ['edit', ...(isLite ? ['lite'] : [])] as FormType[]
   return (
     <CopyTraderForm
       key={copyTradeData?.account}
@@ -38,7 +41,7 @@ export default function CopyTradeEditForm({
       isSubmitting={isMutating}
       submitButtonText={'Update Copy Trade'}
       defaultFormValues={defaultFormValues}
-      isEdit={true}
+      formTypes={formTypes}
     />
   )
 }

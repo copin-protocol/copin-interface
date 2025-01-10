@@ -9,6 +9,7 @@ import { useQuery } from 'react-query'
 
 import { getPerpDexDailyStatisticApi, getProtocolDailyStatisticApi } from 'apis/statisticApi'
 import logo from 'assets/logo-text.svg'
+import SectionTitle from 'components/@ui/SectionTitle'
 import TimeFilter from 'components/@ui/TimeFilter'
 import RangeFilter from 'components/@ui/TimeFilter/RangeFilter'
 import { PERP_DEX_CHART_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
@@ -17,7 +18,6 @@ import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
 import { PerpChartTypeEnum, ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getDurationFromTimeFilter } from 'utils/helpers/transform'
@@ -83,23 +83,21 @@ export default function Charts({
   const { md } = useResponsive()
 
   return (
-    <Box p={3} backgroundColor="neutral7">
+    <Box p={3} pt={1} backgroundColor="neutral7">
       <Flex
         sx={{
           flexDirection: ['column', 'column', 'row'],
           alignItems: ['start', 'start', 'center'],
           justifyContent: 'space-between',
           flexWrap: 'wrap',
-          gap: [2, 2, 3],
+          gap: 2,
         }}
       >
-        <Flex alignItems="center" sx={{ gap: 2 }}>
-          <ProjectorScreenChart weight="bold" size={24} color={themeColors.neutral3} />
-          <Type.BodyBold>
-            <Trans>Statistic Chart</Trans>
-          </Type.BodyBold>
-        </Flex>
-        <Flex justifyContent="start" alignItems="center" sx={{ gap: 16 }}>
+        <Box>
+          <SectionTitle icon={ProjectorScreenChart} title={<Trans>STATISTIC CHARTS</Trans>} sx={{ mb: 0 }} />
+        </Box>
+
+        <Flex flex="1 0 0" justifyContent="end" alignItems="center" sx={{ gap: 16 }}>
           <TimeFilter
             options={PERP_DEX_CHART_FILTER_OPTIONS}
             currentFilter={selectingRange ? null : currentOption}
@@ -201,7 +199,7 @@ function StatisticChart({
   }
 
   return (
-    <Box mt={2}>
+    <Box mt={1}>
       {isExpanded ? (
         <RenderChartComponent
           data={chartData}

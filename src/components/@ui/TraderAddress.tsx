@@ -1,3 +1,4 @@
+import { HTMLAttributeAnchorTarget } from 'react'
 import { Link } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 
@@ -5,6 +6,7 @@ import IconEye from 'assets/icons/ic-eye.svg'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
+import { DisabledActionType } from 'pages/TraderDetails/TraderActionButtons'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
@@ -12,12 +14,16 @@ import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+import { EventCategory } from 'utils/tracking/types'
 
 export default function TraderAddress({
   address,
   protocol,
   options = {},
   hasHover = true,
+  linkTarget,
+  quickViewDisabledActions,
+  onPreview,
 }: {
   address: string | undefined
   protocol?: ProtocolEnum
@@ -29,8 +35,13 @@ export default function TraderAddress({
     dividerColor?: string
     hasAddressTooltip?: boolean
     timeType?: TimeFilterByEnum | TimeFrameEnum
+    eventCategory?: EventCategory
   }
   hasHover?: boolean
+  linkTarget?: HTMLAttributeAnchorTarget
+  quickViewDisabledActions?: DisabledActionType[]
+
+  onPreview?: () => void
 }) {
   const {
     wrapperSx = {},
@@ -58,21 +69,17 @@ export default function TraderAddress({
         width={size}
         height={size}
         sx={{
-          '&:hover': hasHover
-            ? {
-                cursor: 'pointer',
-                backgroundImage: `url(${IconEye})`,
-                backgroundSize: '20px',
-                backgroundPosition: 'center center',
-                backgroundRepeat: 'no-repeat',
-              }
-            : {},
+          '&:hover': hasHover ? QUICKVIEW_HOVER_STYLE : {},
         }}
         onClick={(event) => {
           event.preventDefault()
           event.stopPropagation()
           if (protocol) {
-            setTrader({ address, protocol, type: timeType as TimeFrameEnum })
+            setTrader(
+              { address, protocol, type: timeType as TimeFrameEnum, eventCategory: options?.eventCategory },
+              quickViewDisabledActions
+            )
+            onPreview?.()
           }
         }}
       >
@@ -85,12 +92,13 @@ export default function TraderAddress({
         onClick={(e: any) => e.stopPropagation()}
         alignItems="center"
         sx={{ gap: 2 }}
+        target={linkTarget}
       >
         <Type.Caption
           className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
           color="inherit"
           {...{ [DATA_ATTRIBUTES.TRADER_COPY_DELETED]: address }}
-          width={72}
+          width={75}
           sx={{
             ...overflowEllipsis(),
             display: 'flex',
@@ -104,7 +112,7 @@ export default function TraderAddress({
         </Type.Caption>
         {protocol && (
           <>
-            <Type.Caption color={dividerColor}>|</Type.Caption>
+            {/* <Type.Caption color={dividerColor}>|</Type.Caption> */}
             <ProtocolLogo protocol={protocol} isActive={false} size={24} hasText={false} />
           </>
         )}
@@ -112,4 +120,12 @@ export default function TraderAddress({
       {hasAddressTooltip && <Tooltip id={tooltipId}>{address}</Tooltip>}
     </Flex>
   )
+}
+
+export const QUICKVIEW_HOVER_STYLE = {
+  cursor: 'pointer',
+  backgroundImage: `url(${IconEye})`,
+  backgroundSize: '20px',
+  backgroundPosition: 'center center',
+  backgroundRepeat: 'no-repeat',
 }

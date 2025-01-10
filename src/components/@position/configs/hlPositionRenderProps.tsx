@@ -14,7 +14,7 @@ const collateralColumn: ColumnData<PositionData> = {
   dataIndex: 'collateral',
   key: 'collateral',
   sortBy: 'collateral',
-  style: { minWidth: '90px', textAlign: 'right' },
+  style: { minWidth: '100px', textAlign: 'right' },
   render: (item) => renderPositionCollateral(item),
 }
 const renderPositionCollateral = (item: PositionData, defaultToken?: string) => (
@@ -118,8 +118,8 @@ const actionColumn: ColumnData<PositionData> = {
   key: 'id',
   style: { width: '40px', textAlign: 'right', flex: '0 0 40px' },
   render: () => (
-    <Box sx={{ position: 'relative', top: '4px' }}>
-      <CaretRight color={themeColors.neutral3} size={16} />
+    <Box sx={{ position: 'relative' }}>
+      <CaretRight color={themeColors.neutral3} size={12} />
     </Box>
   ),
 }

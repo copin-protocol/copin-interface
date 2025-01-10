@@ -225,7 +225,7 @@ const RowWrapper = styled('tr')<{ hasBorder?: boolean }>`
   align-items: center;
   // margin-top: ${({ hasBorder }) => (hasBorder ? '16px' : undefined)};
   // margin-left: ${({ hasBorder }) => (hasBorder ? '8px' : undefined)};
-  margin-top: ${({ hasBorder }) => (hasBorder ? '16px' : undefined)};
+  margin-top: ${({ hasBorder }) => (hasBorder ? '4px' : undefined)};
   margin-left: 16px;
   margin-right: 16px;
   max-width: calc(100% - 32px);

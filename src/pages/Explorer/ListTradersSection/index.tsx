@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 
 import { ApiListResponse } from 'apis/api'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
-import PickTradersButton, { CompareButton } from 'components/@backtest/BacktestPickTradersButton'
+import { CompareButton } from 'components/@backtest/BacktestPickTradersButton'
 import TraderListCard from 'components/@trader/TraderExplorerListView'
 import CustomizeColumnMobile from 'components/@trader/TraderExplorerListView/CustomizeColumnMobile'
 import TraderListTable from 'components/@trader/TraderExplorerTableView'
@@ -199,7 +199,7 @@ function TablePagination({
             <Flex
               sx={{
                 px: 12,
-                '& *': { fontSize: '13px' },
+                '& *': { fontSize: '12px' },
                 alignItems: 'center',
                 gap: [12, 2],
                 borderTop: ['small', 'none'],

@@ -28,7 +28,7 @@ export default function TradersExplorerLink({
       to={generateExplorerRoute({ protocol: explorerProtocol })}
       sx={{ fontSize: '13px', lineHeight: '24px', color: 'neutral2', '&:hover': { color: 'neutral1' } }}
     >
-      <Trans>Traders Explorer</Trans>
+      <Trans>TRADER EXPLORER</Trans>
     </Box>
   )
 }

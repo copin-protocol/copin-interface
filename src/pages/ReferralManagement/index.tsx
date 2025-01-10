@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Users, WarningCircle } from '@phosphor-icons/react'
+import { ChartLine, Users, WarningCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useEffect, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -80,7 +80,7 @@ export default function ReferralManagement() {
               }}
             >
               <WarningCircle size={20} />
-              <Type.Caption>How It Works</Type.Caption>
+              <Type.Caption>HOW IT WORKS</Type.Caption>
             </Flex>
           </Flex>
         </Flex>
@@ -208,11 +208,13 @@ enum TabKeyEnum {
 
 const tabConfigs: TabConfig[] = [
   {
-    name: <Trans>Statistic</Trans>,
+    icon: <ChartLine size={20} />,
+    name: <Trans>STATISTIC</Trans>,
     key: TabKeyEnum.STATISTIC,
   },
   {
-    name: <Trans>My Referral</Trans>,
+    icon: <Users size={20} />,
+    name: <Trans>MY REFERRAL</Trans>,
     key: TabKeyEnum.REFERRAL,
   },
 ]
@@ -301,17 +303,17 @@ function MobileView({
           <ReferralActivities isMobile />
         </Box>
       </Box>
-      <Box flexShrink={0} sx={{ borderTop: 'small', borderTopColor: 'neutral4', p: 3 }}>
+      <Box flexShrink={0} sx={{ borderTop: 'small', borderTopColor: 'neutral4', pt: 3, px: 3 }}>
         <InviteButton />
-        <Box mb={12} />
+
         <TabHeader
-          itemSx={{ py: 2, border: 'none !important', flex: 1, fontWeight: 500 }}
-          itemActiveSx={{ fontWeight: 700 }}
-          sx={{ borderBottom: 'none' }}
           configs={tabConfigs}
           isActiveFn={(config) => config.key === currentTab}
           onClickItem={(key) => onChangeTab(key)}
           fullWidth
+          itemSx={{
+            width: '100%',
+          }}
         />
       </Box>
     </>

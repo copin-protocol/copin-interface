@@ -40,7 +40,7 @@ const WalletHelpBitget = ({
               target="_blank"
               direction="right"
               icon={<ArrowSquareOut size={16} />}
-              sx={{ mx: 0, p: 0, fontSize: '14px' }}
+              sx={{ mx: 0, p: 0, fontSize: '12px', lineHeight: '18px' }}
             >
               <Trans>Register</Trans>
             </ButtonWithIcon>
@@ -82,7 +82,7 @@ const WalletHelpBitget = ({
             target="_blank"
             direction="right"
             icon={<ArrowSquareOut size={16} />}
-            sx={{ mx: 0, p: 0, fontSize: '14px' }}
+            sx={{ mx: 0, p: 0, fontSize: '12px', lineHeight: '18px' }}
           >
             <Trans> Learn how?</Trans>
           </ButtonWithIcon>

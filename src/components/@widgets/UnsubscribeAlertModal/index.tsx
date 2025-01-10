@@ -21,11 +21,11 @@ export default function UnsubscribeAlertModal({
     <Modal isOpen onDismiss={onDismiss} hasClose={false} maxWidth="480px">
       <Flex width="100%" p={24} flexDirection="column" alignItems="center">
         <AccountWithProtocol address={data.address} protocol={data.protocol} size={32} sx={{ gap: 2 }} />
-        <Type.Body my={12} textAlign="center" width="100%">
-          <Trans>Are you sure you want to delete this trader from alert list?</Trans>
-        </Type.Body>
-        <Type.Caption mb={24} color="neutral2" textAlign="center" width="100%">
-          <Trans>You won’t be notified each time this trader engages in new activity.</Trans>
+        <Type.LargeBold my={12} textAlign="center" width="100%">
+          <Trans>Remove this trader from alert list?</Trans>
+        </Type.LargeBold>
+        <Type.Caption mb={24} color="neutral3" textAlign="center" width="100%">
+          <Trans>You won’t be notified each time this trader places a trade</Trans>
         </Type.Caption>
         <Flex width="100%" sx={{ gap: 3 }}>
           <Button

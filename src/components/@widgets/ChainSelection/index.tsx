@@ -30,12 +30,11 @@ export function ChainFilterDropdown(props: ChainSelectionProps) {
     props.onReset()
   }
   return (
-    <Flex alignItems="start" sx={{ gap: 1, pr: 3 }}>
+    <Flex alignItems="start" sx={{ gap: 1 }}>
       <Dropdown
         menu={<ChainSelection selectedChains={props.selectedChains} onApply={_onApply} onReset={_onReset} />}
         placement={'bottomRight'}
         buttonVariant="ghost"
-        buttonSx={{ borderRadius: 0, border: 'none', p: 0, color: 'primary1' }}
         menuSx={{
           width: [300, 600, 600, 900],
           py: 3,
@@ -127,6 +126,7 @@ export function ChainSelection({ selectedChains, onApply, onReset }: ChainSelect
         px: 3,
         position: 'relative',
         '.checkbox': { marginRight: '0px !important' },
+        overflow: 'auto',
       }}
     >
       <InputSearch
@@ -134,14 +134,13 @@ export function ChainSelection({ selectedChains, onApply, onReset }: ChainSelect
         ref={inputRef}
         onChange={handleChangeSearch}
         onClear={handleClearSearch}
-        placeholder="Search Pair"
+        placeholder="SEARCH CHAIN"
         iconSize={16}
         sx={{
           p: '4px 8px',
           flex: 1,
           border: 'none',
           bg: 'neutral5',
-          '& input': { fontSize: '16px !important' },
           '&:hover:not([disabled]), &:focus:not([disabled]), &:focus-within:not([disabled])': { bg: 'neutral5' },
           ...(showClearSearchButtonRef.current
             ? {
@@ -162,8 +161,8 @@ export function ChainSelection({ selectedChains, onApply, onReset }: ChainSelect
               wrapperSx={{ height: 'auto', '*': { cursor: !!chainSelections?.length ? 'pointer' : 'not-allowed' } }}
               disabled={!chainSelections?.length}
             >
-              <Type.CaptionBold mx={2} color="neutral1">
-                <Trans>Selected</Trans>:
+              <Type.CaptionBold mx={3} color="neutral1">
+                <Trans>SELECTED</Trans>:
               </Type.CaptionBold>
               <Type.CaptionBold color="neutral3">
                 {`${formatNumber(_selectedChains?.length ?? 0)}`}/{formatNumber(PROTOCOL_CHAIN.length)}
@@ -173,7 +172,7 @@ export function ChainSelection({ selectedChains, onApply, onReset }: ChainSelect
         </Flex>
       </Box>
       {/* RENDER CHAINS */}
-      <Box sx={{ maxHeight: '500px', overflow: 'auto' }}>
+      <Box sx={{ maxHeight: 'min(50vh, 500px)', overflow: 'auto' }}>
         <Grid
           sx={{
             gridTemplateColumns: ['repeat(auto-fill, minmax(160px, 1fr))'],
@@ -237,7 +236,7 @@ function ChainSelectItem({
         width: '100%',
         bg: 'neutral6',
         // backgroundColor: isActive ? 'neutral5' : 'neutral6',
-        borderRadius: 'sm',
+        borderRadius: 'xs',
         cursor: 'pointer',
         '&:hover': {
           backgroundColor: 'neutral5',

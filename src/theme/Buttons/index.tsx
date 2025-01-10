@@ -22,7 +22,7 @@ export const Button = styled.button<ButtonProps>(
 
   ({ theme, block, isLoading }) => `&:before {
     position: relative;
-    top: 2px;
+    top: 3px;
     content: '';
     border: 2px solid ${theme.colors.neutral1}16;
     border-top: 2px solid ${theme.colors.neutral2};

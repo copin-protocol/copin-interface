@@ -2,7 +2,8 @@ import { CaretDown, CaretUp } from '@phosphor-icons/react'
 import { ReactNode, useState } from 'react'
 
 import { Button } from 'theme/Buttons'
-import { Box, Flex } from 'theme/base'
+import { Box, Flex, IconBox } from 'theme/base'
+import { BASE_LINE_HEIGHT } from 'utils/config/constants'
 
 export function Accordion({
   header,
@@ -32,11 +33,11 @@ export function Accordion({
             >
               {isExpand ? (
                 <>
-                  Collapse <CaretUp weight="bold" size={16} style={{ verticalAlign: 'middle' }} />
+                  Collapse <IconBox height={BASE_LINE_HEIGHT} icon={<CaretUp weight="bold" size={16} />} />
                 </>
               ) : (
                 <>
-                  Expand <CaretDown weight="bold" size={16} style={{ verticalAlign: 'middle' }} />
+                  Expand <IconBox height={BASE_LINE_HEIGHT} icon={<CaretDown weight="bold" size={16} />} />
                 </>
               )}
             </Button>

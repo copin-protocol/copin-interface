@@ -1,10 +1,11 @@
 import Dialog from 'rc-dialog'
 import 'rc-dialog/assets/index.css'
-import { useEffect } from 'react'
+import { CSSProperties, useEffect } from 'react'
 import { createGlobalStyle } from 'styled-components/macro'
 
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import { themeColors } from 'theme/colors'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 const RcDialogStyle = createGlobalStyle`
   .rc-dialog-wrap {
@@ -22,6 +23,11 @@ export default function RcDialog({
   maxWidth = '1000px',
   offsetTop = '100px',
   offsetBottom = '100px',
+  height,
+  contentStyles = {},
+  bodyStyles = {},
+  keyboard = true,
+  zIndex = Z_INDEX.THEME_MODAL,
 }: {
   isOpen: boolean
   onDismiss: () => void
@@ -32,6 +38,11 @@ export default function RcDialog({
   maxWidth?: string
   offsetTop?: string
   offsetBottom?: string
+  height?: string
+  contentStyles?: CSSProperties
+  bodyStyles?: CSSProperties
+  keyboard?: boolean
+  zIndex?: number
 }) {
   const maxHeight = `calc(100svh - ${offsetTop} - ${offsetBottom})`
   const isMobile = useIsMobile()
@@ -49,6 +60,7 @@ export default function RcDialog({
     <>
       <RcDialogStyle />
       <Dialog
+        keyboard={keyboard}
         visible={isOpen}
         // wrapClassName={wrapClassName}
         animation="fade"
@@ -61,7 +73,7 @@ export default function RcDialog({
         // closeIcon={useIcon ? getSvg(clearPath, {}, true) : undefined}
         closeIcon={<></>}
         forceRender={forceRender}
-        zIndex={9999}
+        zIndex={zIndex}
         styles={{
           wrapper: {
             margin: 0,
@@ -75,15 +87,17 @@ export default function RcDialog({
             padding: 0,
             margin: 0,
             borderRadius: 0,
+            ...contentStyles,
           },
           body: {
             padding: 0,
             margin: 0,
             backgroundColor: bg,
+            ...bodyStyles,
           },
         }}
         style={{
-          height: isMobile ? '100svh' : 'auto',
+          height: height || isMobile ? '100svh' : 'auto',
           width: '100svw',
           margin: 0,
           padding: 0,

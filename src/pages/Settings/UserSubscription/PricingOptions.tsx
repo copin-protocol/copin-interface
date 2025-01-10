@@ -221,7 +221,7 @@ function PriceText({ data, sx, color }: { data: Config; sx?: any; color?: string
           ETH
         </Box>
       </Box>
-      <Box as="span" sx={{ fontSize: '13px', lineHeight: '24px', fontWeight: 'normal', color: 'neutral1' }}>
+      <Box as="span" sx={{ fontSize: '12px', lineHeight: '24px', fontWeight: 'normal', color: 'neutral1' }}>
         (<ETHPriceInUSD value={data.price.bn} />$
         {data.discountRatio !== 1 && (
           <>

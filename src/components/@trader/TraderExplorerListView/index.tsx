@@ -7,7 +7,8 @@ import NoFavoriteFound from 'components/@ui/NoDataFound/NoFavoriteFound'
 import { TraderData } from 'entities/trader'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
+import { BASE_LINE_HEIGHT } from 'utils/config/constants'
 
 import { useExplorerColumnsMobile } from './useExplorerColumnsMobile'
 
@@ -116,11 +117,11 @@ function Accordion({ header, subHeader, body }: { header: ReactNode; subHeader: 
           >
             {isExpand ? (
               <>
-                Collapse <CaretUp weight="bold" size={16} style={{ verticalAlign: 'middle' }} />
+                Collapse <IconBox icon={<CaretUp weight="bold" size={16} />} height={BASE_LINE_HEIGHT} />
               </>
             ) : (
               <>
-                Expand <CaretDown weight="bold" size={16} style={{ verticalAlign: 'middle' }} />
+                Expand <IconBox icon={<CaretDown weight="bold" size={16} height={BASE_LINE_HEIGHT} />} />
               </>
             )}
           </Button>

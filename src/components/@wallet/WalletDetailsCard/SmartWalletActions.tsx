@@ -5,8 +5,8 @@ import { useState } from 'react'
 import Divider from 'components/@ui/Divider'
 import ActionItem from 'components/@widgets/ActionItem'
 import { CopyWalletData } from 'entities/copyWallet'
-import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
+import { IconBox } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
@@ -33,6 +33,8 @@ const SmartWalletActions = ({
   return (
     <>
       <Dropdown
+        inline
+        buttonVariant="ghostInactive"
         hasArrow={false}
         menuSx={{
           bg: 'neutral7',
@@ -78,22 +80,9 @@ const SmartWalletActions = ({
           </>
         }
         sx={{}}
-        buttonSx={{
-          border: 'none',
-          height: '100%',
-          p: 0,
-        }}
         placement="bottomRight"
       >
-        <IconButton
-          size={24}
-          type="button"
-          icon={<DotsThreeOutlineVertical size={16} weight="fill" />}
-          variant="ghost"
-          sx={{
-            color: 'neutral3',
-          }}
-        />
+        <IconBox icon={<DotsThreeOutlineVertical size={16} weight="fill" />} />
       </Dropdown>
       {openingHistoryDrawer && (
         <CopyWalletHistoryDrawer

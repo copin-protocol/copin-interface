@@ -25,7 +25,7 @@ export default function HLChartPositionComponent({
       {data && (
         <Box>
           <Flex
-            mt={[20, 4]}
+            mt={2}
             mb={3}
             width="100%"
             alignItems="center"
@@ -33,17 +33,17 @@ export default function HLChartPositionComponent({
             sx={{ gap: 2, position: 'relative' }}
           >
             <Flex>
-              <Type.H5 color={data.pnl > 0 ? 'green1' : data.pnl < 0 ? 'red2' : 'inherit'}>
+              <Type.Head color={data.pnl > 0 ? 'green1' : data.pnl < 0 ? 'red2' : 'inherit'}>
                 <AmountText amount={data.pnl} maxDigit={0} suffix="$" />
-              </Type.H5>
+              </Type.Head>
             </Flex>
             {!!data.roi && (
               <Flex alignItems="center">
-                <Type.H5 color="neutral3">(</Type.H5>
-                <Type.H5 color={data.roi > 0 ? 'green1' : data.roi < 0 ? 'red2' : 'inherit'}>
+                <Type.Head color="neutral3">(</Type.Head>
+                <Type.Head color={data.roi > 0 ? 'green1' : data.roi < 0 ? 'red2' : 'inherit'}>
                   <PercentText percent={data.roi} digit={2} />
-                </Type.H5>
-                <Type.H5 color="neutral3">)</Type.H5>
+                </Type.Head>
+                <Type.Head color="neutral3">)</Type.Head>
               </Flex>
             )}
             {!isOpening && PROTOCOLS_CROSS_MARGIN.includes(data.protocol) && (

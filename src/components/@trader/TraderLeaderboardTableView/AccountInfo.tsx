@@ -80,8 +80,8 @@ export default function AccountInfo({
             data-tooltip-delay-show={360}
             data-tooltip-offset={-8}
             lineHeight="24px"
-            color={isCopying ? 'orange1' : 'inherit'}
-            width={80}
+            color={isCopying ? 'orange1' : 'neutral1'}
+            width={85}
             sx={{
               ':hover': {
                 color: 'primary1',

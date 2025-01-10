@@ -19,7 +19,6 @@ import Table from 'theme/Table'
 import { TableSortProps } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
@@ -110,7 +109,7 @@ export default function UserActivity() {
             alignItems: 'center',
             borderBottom: 'small',
             borderBottomColor: 'neutral4',
-            height: 50,
+            height: 40,
             gap: 2,
           }}
         >
@@ -128,7 +127,6 @@ export default function UserActivity() {
             onChangeCopyTrades={onChangeFilter}
           />
         </Flex>
-        <Box mt={2} />
         <Box flex="1 0 0" sx={{ overflow: 'hidden' }}>
           {lg ? (
             <Table
@@ -138,7 +136,7 @@ export default function UserActivity() {
               isLoading={isFetching}
               externalSource={externalSource}
               tableBodyWrapperSx={{ table: { borderSpacing: '0 8px' }, '& tbody tr': { bg: 'neutral6' } }}
-              tableHeadSx={{ th: { borderBottom: 'none' } }}
+              // tableHeadSx={{ th: { borderBottom: 'none' } }}
               noDataMessage={<Trans>No Activity Found</Trans>}
               currentSort={currentSort}
               changeCurrentSort={changeCurrentSort}
@@ -158,15 +156,10 @@ export default function UserActivity() {
           onPageChange={changeCurrentPage}
           onLimitChange={changeCurrentLimit}
           apiMeta={data?.meta}
-          sx={{ py: 2 }}
+          sx={{ py: 1 }}
         />
       </Flex>
-      <RcDrawer
-        open={openCopyDrawer}
-        onClose={handleCopyDismiss}
-        width={isMobile ? '100%' : '60%'}
-        background={themeColors.neutral5}
-      >
+      <RcDrawer open={openCopyDrawer} onClose={handleCopyDismiss} width={isMobile ? '100%' : '60%'}>
         <Container sx={{ position: 'relative', height: '100%' }}>
           <IconButton
             icon={<XCircle size={24} />}
@@ -174,7 +167,7 @@ export default function UserActivity() {
             sx={{ position: 'absolute', right: 1, top: 1, zIndex: 1 }}
             onClick={handleCopyDismiss}
           />
-          <CopyTradePositionDetails id={currentCopyPosition?.id ?? ''} />
+          <CopyTradePositionDetails id={currentCopyPosition?.id ?? ''} copyTradeId={currentCopyPosition?.copyTradeId} />
         </Container>
       </RcDrawer>
     </>

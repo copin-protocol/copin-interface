@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { SpeakerSimpleHigh } from '@phosphor-icons/react'
-import { ReactNode } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import Slider, { Settings } from 'react-slick'
@@ -9,6 +8,7 @@ import { getLatestActivityLogsApi } from 'apis/activityLogApis'
 import homeEventBanner from 'assets/images/home-event-banner.png'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
+import SectionTitle from 'components/@ui/SectionTitle'
 import { EventDetailsData, TradingEventStatusEnum } from 'entities/event'
 import { LatestActivityLogData } from 'entities/user'
 import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
@@ -19,7 +19,7 @@ import { GradientText } from 'pages/@layouts/Navbar/EventButton'
 import { Button } from 'theme/Buttons'
 import { HorizontalCarouselWrapper } from 'theme/Carousel/Wrapper'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, IconBox, Image, Type } from 'theme/base'
+import { Box, Flex, Image, Type } from 'theme/base'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { addressShorten, formatImageUrl, formatNumber } from 'utils/helpers/format'
@@ -109,10 +109,9 @@ function Activities() {
   return activities?.length ? (
     <Flex pb={3} sx={{ width: '100%', flex: '1 0 0', flexDirection: 'column', overflow: 'hidden', minHeight: 200 }}>
       <Box px={3}>
-        <SectionLabel icon={<SpeakerSimpleHigh size={24} weight="fill" />} label={<Trans>Latest activities</Trans>} />
+        <SectionTitle icon={SpeakerSimpleHigh} title={<Trans>LATEST ACTIVITIES</Trans>} />
       </Box>
       <Flex
-        mt={3}
         px={3}
         sx={{
           flexDirection: 'column',
@@ -125,11 +124,11 @@ function Activities() {
           return (
             <Box key={data.id}>
               <Box sx={{ a: { color: 'neutral1', textDecoration: 'underline', '&:hover': { color: 'neutral2' } } }}>
-                <Type.Caption mb={1} color="neutral3">
+                <Type.Caption color="neutral3">
                   <RelativeTimeText date={data.createdAt} />
                 </Type.Caption>
-                <Type.Caption color="neutral3">
-                  <Box as="span" color="neutral1">
+                <Type.Caption color="neutral2">
+                  <Box as="b" color="neutral1">
                     {addressShorten(data.username)}
                   </Box>{' '}
                   <Trans>copied a position from trader</Trans>{' '}
@@ -144,18 +143,21 @@ function Activities() {
     </Flex>
   ) : null
 }
-function SectionLabel({ icon, label }: { icon: ReactNode; label: ReactNode }) {
-  return (
-    <Flex sx={{ alignItems: 'center', gap: 2 }}>
-      <IconBox icon={icon} color="neutral3" size={24} />
-      <Type.Body>{label}</Type.Body>
-    </Flex>
-  )
-}
 
 function RenderTrader({ data }: { data: LatestActivityLogData }) {
   return (
-    <Box as={Link} to={generateTraderMultiExchangeRoute({ protocol: data.protocol, address: data.sourceAccount })}>
+    <Box
+      as={Link}
+      to={generateTraderMultiExchangeRoute({ protocol: data.protocol, address: data.sourceAccount })}
+      sx={{
+        color: 'neutral1',
+        fontWeight: 'bold',
+        textDecoration: 'none!important',
+        '&:hover': {
+          textDecoration: 'underline!important',
+        },
+      }}
+    >
       [{addressShorten(data.sourceAccount)}]
     </Box>
   )
@@ -171,13 +173,17 @@ function RenderHiddenTrader({ data }: { data: LatestActivityLogData }) {
   return (
     <>
       <Box display="inline-block" data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
-        <Type.Caption color="neutral1">[0x...***]</Type.Caption>
+        <Type.CaptionBold color="neutral1">[0x...***]</Type.CaptionBold>
       </Box>
       <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
         {isAuthenticated ? (
           <Type.Caption>
             Please{' '}
-            <Button variant="ghostPrimary" sx={{ p: 0, width: 'fit-content' }} onClick={checkIsPremium}>
+            <Button
+              variant="ghostPrimary"
+              sx={{ p: 0, width: 'fit-content', textTransform: 'capitalize' }}
+              onClick={checkIsPremium}
+            >
               <GradientText>Upgrade Premium</GradientText>
             </Button>{' '}
             to see
@@ -189,6 +195,7 @@ function RenderHiddenTrader({ data }: { data: LatestActivityLogData }) {
               variant="ghostPrimary"
               sx={{
                 p: 0,
+                textTransform: 'capitalize',
                 width: 'fit-content',
                 '&:hover': {
                   textDecoration: 'underline',

@@ -18,7 +18,6 @@ import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
 import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
 
@@ -63,12 +62,12 @@ export function PickFromFavoritesModal({
   })
 
   return (
-    <RcDrawer open={isOpen} width="350px" background={themeColors.neutral5} onClose={onDismiss}>
+    <RcDrawer open={isOpen} width="350px" onClose={onDismiss}>
       <Box sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
         <Flex sx={{ height: 60, px: 3, alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
-          <Type.Body>
+          <Type.H5>
             <Trans>Favorite List</Trans>
-          </Type.Body>
+          </Type.H5>
           <IconButton icon={<XCircle size={24} />} variant="ghost" onClick={onDismiss} />
         </Flex>
         <Box sx={{ width: '100%', height: 'calc(100% - 60px)', overflow: 'auto' }}>
@@ -131,12 +130,12 @@ export function PickFromCopyTradesModal({
   })
 
   return (
-    <RcDrawer open={isOpen} width="350px" background={themeColors.neutral5} onClose={onDismiss}>
+    <RcDrawer open={isOpen} width="350px" onClose={onDismiss}>
       <Box sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
         <Flex sx={{ height: 60, px: 3, alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
-          <Type.Body>
+          <Type.H5>
             <Trans>Copytrade List</Trans>
-          </Type.Body>
+          </Type.H5>
           <IconButton icon={<XCircle size={24} />} variant="ghost" onClick={onDismiss} />
         </Flex>
         <Box sx={{ width: '100%', height: 'calc(100% - 60px)', overflow: 'auto' }}>

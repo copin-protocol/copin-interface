@@ -14,17 +14,17 @@ type StatusProps = {
 const STATUSES: StatusProps[] = [
   {
     id: PositionStatusEnum.OPEN,
-    text: <Trans>Open</Trans>,
+    text: <Trans>OPEN</Trans>,
     color: 'green1',
   },
   {
     id: PositionStatusEnum.CLOSE,
-    text: <Trans>Closed</Trans>,
+    text: <Trans>CLOSED</Trans>,
     color: 'neutral3',
   },
   {
     id: PositionStatusEnum.LIQUIDATE,
-    text: <Trans>Liquidated</Trans>,
+    text: <Trans>LIQUIDATED</Trans>,
     color: 'red2',
   },
 ]
@@ -41,7 +41,7 @@ const PositionStatus = ({ color, status, ...props }: { status: PositionStatusEnu
       }}
       {...props}
     >
-      {status === PositionStatusEnum.LIQUIDATE ? <SkullIcon /> : '•'}
+      {status === PositionStatusEnum.LIQUIDATE ? <SkullIcon /> : status === PositionStatusEnum.CLOSE ? '■' : '•'}
       <Type.Caption width="100%" textAlign="left" color={finder?.color} flex={1}>
         {finder?.text}
       </Type.Caption>

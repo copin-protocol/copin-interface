@@ -31,14 +31,9 @@ export default function SearchTraders({
     <Box ref={searchWrapperRef} sx={{ position: 'relative' }}>
       <InputSearch
         ref={inputSearchRef}
-        placeholder={t`Search by address`}
+        placeholder={t`SEARCH BY ADDRESS`}
         sx={{
-          px: 2,
-          py: 1,
           width: '100%',
-          borderColor: 'transparent',
-          bg: 'neutral8',
-          borderRadius: 'sm',
         }}
         value={searchText}
         onFocus={handleSearchFocus}

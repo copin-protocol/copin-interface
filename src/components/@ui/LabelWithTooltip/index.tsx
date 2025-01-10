@@ -13,6 +13,7 @@ const LabelWithTooltip = ({
   tooltip,
   dashed = false,
   tooltipSx = {},
+  tooltipClickable = false,
 }: {
   id: string
   sx?: SystemStyleObject & GridProps
@@ -20,6 +21,7 @@ const LabelWithTooltip = ({
   tooltip: ReactNode
   dashed?: boolean
   tooltipSx?: any
+  tooltipClickable?: boolean
 }) => {
   const uuid = useMemo(() => id + uuidv4(), [])
   return (
@@ -44,7 +46,7 @@ const LabelWithTooltip = ({
       >
         {children}
       </Type.Caption>
-      <Tooltip id={uuid} place="top" type="dark" effect="solid">
+      <Tooltip id={uuid} place="top" type="dark" effect="solid" clickable={tooltipClickable}>
         <Type.Caption
           maxWidth={300}
           textAlign="center"

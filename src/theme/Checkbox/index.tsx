@@ -58,7 +58,7 @@ export const CheckboxWrapper = styled(Box)<{ disabled?: boolean; hasError: boole
       background: ${theme.colors.neutral8};
       color: transparent;
       border: 1px solid ${hasError ? theme.colors.red1 : theme.colors.neutral3};
-      border-radius: 4px;
+      border-radius: 2px;
       margin-right: 8px;
     }
     &:hover .checkbox {

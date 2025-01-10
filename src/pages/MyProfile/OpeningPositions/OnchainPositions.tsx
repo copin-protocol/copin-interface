@@ -275,7 +275,7 @@ const OnchainPositions = memo(function OnchainPositionsRenderer({ activeWallet }
       <></>
     )
   ) : (
-    <Box>{alert}</Box>
+    <Box mt={-2}>{alert}</Box>
   )
 })
 

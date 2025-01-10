@@ -6,7 +6,7 @@ import { useState } from 'react'
 import Divider from 'components/@ui/Divider'
 import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
+import { TAB_HEIGHT } from 'utils/config/constants'
 import { formatNumber } from 'utils/helpers/format'
 
 import FilterBySource, { FilterBySourceDropdown } from '../FilterBySource'
@@ -52,7 +52,8 @@ export default function FilterSection() {
         }}
       >
         <Flex
-          height={48}
+          height={TAB_HEIGHT}
+          px={2}
           sx={{
             alignItems: 'center',
             '@media all and (max-width: 1400px)': {
@@ -71,7 +72,7 @@ export default function FilterSection() {
           />
         </Flex>
         <Flex
-          height={48}
+          height={TAB_HEIGHT}
           alignItems="center"
           sx={{
             gap: [2, 2, 2, 2, 3],
@@ -110,8 +111,8 @@ export default function FilterSection() {
           allCopyTrades={allCopyTrades}
           handleToggleTrader={handleToggleTrader}
           handleSelectAllTraders={handleSelectAllTraders}
-          buttonSx={{ py: 0, '& > *:first-child': { display: 'flex', flexDirection: 'column' } }}
         />
+
         <Box sx={{ width: '1px', height: '100%', bg: 'neutral4' }} />
         <Flex sx={{ flexDirection: 'column', px: 2, gap: 0, flex: 1 }}>
           <AvailableMargin value={activeWallet?.availableBalance} />
@@ -136,7 +137,6 @@ export default function FilterSection() {
           </Box>
         </Flex>
         <RcDrawer
-          background={themeColors.neutral7}
           open={openMobileFilterModal}
           onClose={() => setOpenModal(false)}
           width="300px"

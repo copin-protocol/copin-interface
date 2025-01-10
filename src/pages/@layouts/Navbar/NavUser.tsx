@@ -71,11 +71,13 @@ const NavUser = () => {
   return (
     <Flex alignItems="center" sx={{ height: NAVBAR_HEIGHT - 1 }}>
       <Flex flexDirection="column" alignItems="flex-start">
-        <Flex alignItems="center" sx={{ gap: 1, px: 3 }}>
+        <Flex alignItems="center" sx={{ gap: 1, px: 2 }}>
           <Dropdown
             menuSx={{
               width: 200,
             }}
+            inline
+            buttonVariant="ghost"
             dismissible={false}
             menuDismissible
             visible={showMenu}
@@ -96,7 +98,7 @@ const NavUser = () => {
                       iconSx={{ color: 'neutral1' }}
                     >
                       <Box>
-                        <Trans>Copy Your Address</Trans>
+                        <Trans>COPY YOUR ADDRESS</Trans>
                       </Box>
                     </CopyButton>
                   </Flex>
@@ -186,10 +188,6 @@ const NavUser = () => {
               height: '100%',
               justifyContent: 'center',
               backgroundColor: 'neutral7',
-            }}
-            buttonSx={{
-              border: 'none',
-              p: 0,
             }}
             placement="bottomRight"
           >

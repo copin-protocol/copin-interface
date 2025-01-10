@@ -4,10 +4,12 @@ import { useGesture } from '@use-gesture/react'
 import { animated, useSpring, useTransition } from 'react-spring'
 import styled, { DefaultTheme, css } from 'styled-components/macro'
 
+import SafeDropdownIndex from 'components/@widgets/SafeDropdownIndex'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import IconButton from 'theme/Buttons/IconButton'
 import { Box, Flex, Type } from 'theme/base'
 import { Colors } from 'theme/types'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,10 +17,11 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{
   mode?: ModalProps['mode']
   backdropFilter?: string
   overlayBackground?: string
+  zIndex?: number
 }>`
-  ${({ theme, mode, backdropFilter, overlayBackground }) => `
+  ${({ theme, mode, backdropFilter, overlayBackground, zIndex }) => `
     &[data-reach-dialog-overlay] {
-      z-index: 9998;
+      z-index: ${zIndex ?? Z_INDEX.THEME_MODAL};
       width: 100%;
       position: fixed;
       top: 0;
@@ -54,7 +57,7 @@ const StyledDialogContent = styled(
     background: ${({ theme, background }: { theme: DefaultTheme; background?: keyof Colors }) =>
       background ? (theme.colors[background] as string) : 'black'};
     border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.colors.neutral5};
-    box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.shadows[4]};
+    box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.shadows[3]};
     width: ${({ width }) => width ?? '50vw'};
     align-self: ${({ mobile, mode }) =>
       mode === 'right' ? 'flex-start' : mobile && mode === 'bottom' ? 'flex-end' : 'center'};
@@ -126,6 +129,7 @@ export interface ModalProps {
   backdropFilter?: string
   overlayBackground?: string
   height?: string
+  zIndex?: number
 }
 
 export default function Modal({
@@ -148,6 +152,7 @@ export default function Modal({
   children,
   modalContentStyle,
   dangerouslyBypassFocusLock = false,
+  zIndex,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
     config: { duration: 200 },
@@ -178,6 +183,7 @@ export default function Modal({
         (props, item) =>
           item && (
             <StyledDialogOverlay
+              zIndex={zIndex}
               style={props}
               onDismiss={() => dismissable && onDismissRequest()}
               initialFocusRef={initialFocusRef}
@@ -226,7 +232,7 @@ export default function Modal({
                   {(Boolean(title) || hasClose) && (
                     <Flex
                       width="100%"
-                      alignItems="start"
+                      alignItems="center"
                       justifyContent={hasClose ? 'flex-end' : 'flex-start'}
                       py={3}
                       px={[12, 24]}
@@ -254,6 +260,7 @@ export default function Modal({
                     </Flex>
                   )}
                 </Flex>
+                <SafeDropdownIndex />
               </StyledDialogContent>
             </StyledDialogOverlay>
           )

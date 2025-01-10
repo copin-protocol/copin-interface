@@ -10,7 +10,7 @@ import { PositionData } from 'entities/trader'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { getDropdownProps } from 'pages/Home/configs'
-import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
+import Dropdown, { CheckableDropdownItem, DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { PairFilterEnum, TimeFilterByEnum } from 'utils/config/enums'
 
@@ -37,32 +37,29 @@ export default function Filters({
 
   return (
     <Flex sx={{ gap: ['10px', '6px'] }} alignItems="center">
-      {sm && <Type.CaptionBold sx={{ mt: '-1px' }}>Selected</Type.CaptionBold>}
+      {sm && <Type.Caption>SELECTED</Type.Caption>}
       <MarketFilter pairs={pairs} onChangePairs={onChangePairs} excludedPairs={excludedPairs} />
-      <Type.CaptionBold sx={{ mt: '-1px' }}>Top</Type.CaptionBold>
+      <Type.Caption>TOP</Type.Caption>
       <Dropdown
+        buttonVariant="ghostPrimary"
+        inline
         {...getDropdownProps({})}
         menu={
           <>
             {LIMITS.map((option) => (
-              <CheckableDropdownItem
-                key={option}
-                selected={option === currentLimit}
-                text={option}
-                onClick={() => onChangeLimit(option)}
-              />
+              <DropdownItem key={option} isActive={option === currentLimit} onClick={() => onChangeLimit(option)}>
+                {option}
+              </DropdownItem>
             ))}
           </>
         }
       >
-        <Type.CaptionBold>{currentLimit}</Type.CaptionBold>
+        <Type.Caption>{currentLimit}</Type.Caption>
       </Dropdown>
-      {sm && (
-        <Type.CaptionBold ml={2} sx={{ mt: '-1px' }}>
-          By
-        </Type.CaptionBold>
-      )}
+      {sm && <Type.Caption ml={2}>BY</Type.Caption>}
       <Dropdown
+        buttonVariant="ghostPrimary"
+        inline
         {...getDropdownProps({})}
         menu={
           <>
@@ -77,13 +74,9 @@ export default function Filters({
           </>
         }
       >
-        <Type.CaptionBold>{currentSort.text}</Type.CaptionBold>
+        <Type.Caption>{currentSort.text}</Type.Caption>
       </Dropdown>
-      {sm && (
-        <Type.CaptionBold ml={2} sx={{ mt: '-1px' }}>
-          In
-        </Type.CaptionBold>
-      )}
+      {sm && <Type.Caption ml={2}>IN</Type.Caption>}
       <TimeDropdown currentTimeOption={currentTimeOption} onChangeTime={onChangeTime} />
     </Flex>
   )
@@ -97,6 +90,8 @@ type TimeDropdownProps = {
 export function TimeDropdown({ currentTimeOption, onChangeTime }: TimeDropdownProps) {
   return (
     <Dropdown
+      buttonVariant="ghostPrimary"
+      inline
       {...getDropdownProps({})}
       menu={
         <>
@@ -113,14 +108,14 @@ export function TimeDropdown({ currentTimeOption, onChangeTime }: TimeDropdownPr
         </>
       }
     >
-      <Type.CaptionBold sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Type.Caption sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <Box as="span">{currentTimeOption.text}</Box>
         {currentTimeOption.premiumFilter ? (
           <IconBox icon={<CrownSimple size={16} weight="fill" />} color="orange1" />
         ) : (
           ''
         )}
-      </Type.CaptionBold>
+      </Type.Caption>
     </Dropdown>
   )
 }

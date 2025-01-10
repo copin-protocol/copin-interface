@@ -15,7 +15,7 @@ const ActionItem = ({
 }) => {
   return (
     <DropdownItem onClick={() => onSelect()}>
-      <Flex alignItems="center" sx={{ gap: 10 }}>
+      <Flex alignItems="center" sx={{ gap: 2, py: 1 }}>
         <IconBox icon={icon} color="neutral3" />
         <Type.Caption>{title}</Type.Caption>
       </Flex>

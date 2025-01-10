@@ -14,6 +14,7 @@ import { ALLOWED_COPYTRADE_PROTOCOLS, RELEASED_PROTOCOLS, SEARCH_DEBOUNCE_TIME }
 import { ProtocolEnum, ProtocolSortByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { ProtocolOptionProps } from 'utils/config/protocols'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { formatNumber } from 'utils/helpers/format'
 
 import InputSearchProtocols from './InputSearchProtocols'
@@ -134,11 +135,24 @@ export default function ProtocolSelection({
   }, [savedProtocols, selectedProtocols])
 
   return (
-    <Box sx={{ px: 3, position: 'relative', '.checkbox': { marginRight: '0px !important' } }}>
+    <Box sx={{ px: 2, pt: 2, position: 'relative', '.checkbox': { marginRight: '0px !important' } }}>
       {/* RENDER SEARCH BAR */}
       {hasSearch && (
-        <Box mt={3}>
-          <InputSearchProtocols searchText={searchText} setSearchText={setSearchText} />
+        <Flex
+          sx={{
+            border: 'small',
+            borderColor: 'neutral4',
+            borderRadius: 'xs',
+          }}
+        >
+          <Box
+            flex="1 0 0"
+            sx={{ bg: 'neutral5', borderRight: ['none', 'small'], borderColor: ['neutral4', 'neutral4'] }}
+          >
+            <InputSearchProtocols searchText={searchText} setSearchText={setSearchText} />
+          </Box>
+          <ProtocolSortOptions currentSort={protocolSortBy} changeCurrentSort={setProtocolSortBy} />
+
           {/*<SearchProtocols*/}
           {/*  protocols={protocolOptions.map((p) => p.id)}*/}
           {/*  checkIsProtocolChecked={checkIsSelected}*/}
@@ -147,7 +161,7 @@ export default function ProtocolSelection({
           {/*  }}*/}
           {/*  checkIsAllowedProtocol={checkIsAllowedProtocol}*/}
           {/*/>*/}
-        </Box>
+        </Flex>
       )}
 
       {/* RENDER CHAINS */}
@@ -195,84 +209,85 @@ export default function ProtocolSelection({
       {/*  })}*/}
       {/*</Grid>*/}
 
-      <Flex
-        mt={3}
-        alignItems="center"
-        justifyContent={['space-between', 'flex-start']}
-        flexWrap="wrap"
-        sx={{ gap: ['6px', 2] }}
-      >
-        <Type.CaptionBold color="neutral3">
-          <Trans>Quick Search</Trans>:
-        </Type.CaptionBold>
-        <Flex alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
-          <Button
-            size="xs"
-            variant="info"
-            onClick={() => {
-              setSelectedProtocols(RELEASED_PROTOCOLS)
-            }}
-            px={2}
-            sx={{ color: 'neutral1', border: 'none' }}
-          >
-            <Type.Caption>All Perps</Type.Caption>
-          </Button>
-          <Button
-            size="xs"
-            variant="info"
-            onClick={() => {
-              setSelectedProtocols(ALLOWED_COPYTRADE_PROTOCOLS)
-            }}
-            px={2}
-            sx={{ color: 'neutral1', border: 'none' }}
-          >
-            <Type.Caption>All Copyable Perps</Type.Caption>
-          </Button>
-        </Flex>
-      </Flex>
-
       {/* RENDER TOGGLE BUTTON */}
-      <Box my="12px">
+      <Box my="12px" ml={2}>
         <Flex sx={{ gap: [1, 2], alignItems: 'center', justifyContent: 'space-between' }} flexWrap={'wrap'}>
-          <Flex alignItems={'center'} sx={{ gap: [1, 2] }}>
+          <Flex alignItems={'center'} sx={{ gap: [1, 2] }} order={[1, 1, 1, 0]}>
             <Checkbox
               hasClear={selectedProtocols.length > 0}
               checked={checkIsCheckedAll()}
               onChange={(event) => handleSelectAll(event)}
               wrapperSx={{ height: 'auto' }}
             >
-              <Type.CaptionBold mx={2} color="neutral1">
-                <Trans>Selected</Trans>:
-              </Type.CaptionBold>
-              <Type.CaptionBold color="neutral3">
+              <Type.Caption mx={2} color="neutral3">
+                <Trans>SELECTED</Trans>:
+              </Type.Caption>
+              <Type.Caption color="neutral2">
                 {`${formatNumber(selectedProtocols.length)}`}/{formatNumber(RELEASED_PROTOCOLS.length)}
-              </Type.CaptionBold>
+              </Type.Caption>
             </Checkbox>
           </Flex>
-          <Box>
-            <ProtocolSortOptions currentSort={protocolSortBy} changeCurrentSort={setProtocolSortBy} />
-          </Box>
+          <Flex
+            order={[0, 0, 0, 1]}
+            alignItems="center"
+            justifyContent={['space-between', 'flex-start']}
+            flexWrap="wrap"
+            sx={{ gap: [1, 2], mb: [2, 2, 2, 0] }}
+          >
+            <Type.Caption color="neutral3">
+              <Trans>QUICK SELECT</Trans>:
+            </Type.Caption>
+            <Flex alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
+              <Button
+                size="xs"
+                variant="info"
+                onClick={() => {
+                  setSelectedProtocols(RELEASED_PROTOCOLS)
+                }}
+                px={2}
+                sx={{ color: 'neutral1', border: 'none' }}
+              >
+                <Type.Caption>All Perps</Type.Caption>
+              </Button>
+              <Button
+                size="xs"
+                variant="info"
+                onClick={() => {
+                  setSelectedProtocols(ALLOWED_COPYTRADE_PROTOCOLS)
+                }}
+                px={2}
+                sx={{ color: 'neutral1', border: 'none' }}
+              >
+                <Type.Caption>Copyable Perps</Type.Caption>
+              </Button>
+            </Flex>
+          </Flex>
         </Flex>
       </Box>
-      <ListProtocolSelection
-        options={options}
-        checkIsSelected={checkIsSelected}
-        protocolsStatistic={protocolsStatistic}
-        handleToggle={handleToggle}
-      />
+
+      <Box pb={2}>
+        <ListProtocolSelection
+          options={options}
+          checkIsSelected={checkIsSelected}
+          protocolsStatistic={protocolsStatistic}
+          handleToggle={handleToggle}
+        />
+      </Box>
 
       <Flex
         sx={{
           bottom: 0,
           width: '100%',
+          borderTop: 'small',
+          borderColor: 'neutral5',
           position: 'sticky',
           alignItems: 'center',
           justifyContent: 'flex-end',
           backgroundColor: 'neutral7',
           gap: [3, 24],
-          py: 3,
-          px: 2,
-          zIndex: 1000,
+          height: 40,
+          px: 3,
+          zIndex: Z_INDEX.THEME_DROPDOWN,
         }}
       >
         <Button
@@ -291,7 +306,14 @@ export default function ProtocolSelection({
             setSavedProtocols(selectedProtocols)
             handleToggleDropdown?.()
           }}
-          sx={{ fontWeight: 400, p: 0 }}
+          sx={{
+            fontWeight: 400,
+            p: 0,
+            '&:not(:disabled)': {
+              fontWeight: 'bold',
+              transform: 'scale(1.05)',
+            },
+          }}
           disabled={isEqual}
         >
           Apply & Save

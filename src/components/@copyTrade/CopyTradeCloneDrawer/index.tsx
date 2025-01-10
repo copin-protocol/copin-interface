@@ -19,7 +19,6 @@ export default function CopyTradeCloneDrawer({
       title="Clone Copytrade Settings"
       minHeight="min(800px,80vh)"
       mode="bottom"
-      background="neutral5"
       hasClose
       isOpen={isOpen}
       onDismiss={onDismiss}

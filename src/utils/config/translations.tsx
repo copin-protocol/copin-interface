@@ -14,6 +14,7 @@ import {
   OrderTypeEnum,
   PositionStatusEnum,
   SLTPTypeEnum,
+  TimeFilterByEnum,
   UserActionEnum,
 } from './enums'
 
@@ -92,8 +93,8 @@ export const COPY_WALLET_TRANS: ObjectTrans = {
 }
 
 export const COPY_TRADE_STATUS_TRANS: ObjectTrans = {
-  [CopyTradeStatusEnum.RUNNING]: <Trans>Running</Trans>,
-  [CopyTradeStatusEnum.STOPPED]: <Trans>Stopped</Trans>,
+  [CopyTradeStatusEnum.RUNNING]: <Trans>RUNNING</Trans>,
+  [CopyTradeStatusEnum.STOPPED]: <Trans>STOPPED</Trans>,
 }
 
 export const USER_ACTION_TRANS: ObjectTrans = {
@@ -192,4 +193,20 @@ export const ERRORS: ObjectTrans = {
   UNKNOWN_ERROR: t`The server is not responding, please try again later!`,
   NETWORK_ERROR: t`The server is not responding, please try again later!`,
   limit_rate: t`Please wait a few minutes before you try again`,
+}
+
+export const TIME_TRANSLATION: Record<string, ReactNode> = {
+  [TimeFilterByEnum.ALL_TIME]: <Trans>All</Trans>,
+  [TimeFilterByEnum.S7_DAY]: <Trans>7D</Trans>,
+  [TimeFilterByEnum.S14_DAY]: <Trans>14D</Trans>,
+  [TimeFilterByEnum.S30_DAY]: <Trans>30D</Trans>,
+  [TimeFilterByEnum.S60_DAY]: <Trans>60D</Trans>,
+}
+
+export const TIME_TRANSLATION_FULL: Record<string, ReactNode> = {
+  [TimeFilterByEnum.ALL_TIME]: <Trans>All</Trans>,
+  [TimeFilterByEnum.S7_DAY]: <Trans>7 Days</Trans>,
+  [TimeFilterByEnum.S14_DAY]: <Trans>14 Days</Trans>,
+  [TimeFilterByEnum.S30_DAY]: <Trans>30 Days</Trans>,
+  [TimeFilterByEnum.S60_DAY]: <Trans>60 Days</Trans>,
 }

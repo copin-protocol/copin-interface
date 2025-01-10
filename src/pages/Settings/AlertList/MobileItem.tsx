@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
+import { BellSimpleSlash } from '@phosphor-icons/react'
 import { ReactNode } from 'react'
 
 import { AccountWithProtocol } from 'components/@ui/AccountWithProtocol'
 import { TraderAlertData } from 'entities/alert'
 import IconButton from 'theme/Buttons/IconButton'
-import AlertOffIcon from 'theme/Icons/AlerOffIcon'
 import { Box, Flex, Type } from 'theme/base'
 import { formatLocalRelativeDate } from 'utils/helpers/format'
 
@@ -29,7 +29,7 @@ export default function MobileItem({
             <IconButton
               type="button"
               variant="ghostDanger"
-              icon={<AlertOffIcon />}
+              icon={<BellSimpleSlash size={20} />}
               size={24}
               sx={{ p: 0 }}
               isLoading={submitting}

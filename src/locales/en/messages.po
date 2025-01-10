@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-10-21 15:36+0700\n"
+"POT-Creation-Date: 2025-01-06 15:21+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -38,19 +38,27 @@ msgstr "1 year"
 msgid "100 traders"
 msgstr "100 traders"
 
+#: src/utils/config/translations.tsx
+msgid "14 Days"
+msgstr "14 Days"
+
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
 msgid "14 days"
 msgstr "14 days"
 
-#: src/pages/Home/Traders.tsx
+#: src/utils/config/translations.tsx
 msgid "14D"
 msgstr "14D"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "20 traders"
 msgstr "20 traders"
+
+#: src/utils/config/translations.tsx
+msgid "30 Days"
+msgstr "30 Days"
 
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
@@ -59,7 +67,7 @@ msgstr "20 traders"
 msgid "30 days"
 msgstr "30 days"
 
-#: src/pages/Home/Traders.tsx
+#: src/utils/config/translations.tsx
 msgid "30D"
 msgstr "30D"
 
@@ -76,15 +84,23 @@ msgstr "30D Pnl"
 msgid "50 traders"
 msgstr "50 traders"
 
+#: src/utils/config/translations.tsx
+msgid "60 Days"
+msgstr "60 Days"
+
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
 msgid "60 days"
 msgstr "60 days"
 
-#: src/pages/Home/Traders.tsx
+#: src/utils/config/translations.tsx
 msgid "60D"
 msgstr "60D"
+
+#: src/utils/config/translations.tsx
+msgid "7 Days"
+msgstr "7 Days"
 
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
@@ -93,7 +109,7 @@ msgstr "60D"
 msgid "7 days"
 msgstr "7 days"
 
-#: src/pages/Home/Traders.tsx
+#: src/utils/config/translations.tsx
 msgid "7D"
 msgstr "7D"
 
@@ -127,16 +143,12 @@ msgid "<0>Telegram Contact</0>"
 msgstr "<0>Telegram Contact</0>"
 
 #: src/pages/ReferralManagement/ReferralActivities.tsx
-msgid "<0>{0} </0>earned <1>{1} USDC</1> in commission from {2}"
-msgstr "<0>{0} </0>earned <1>{1} USDC</1> in commission from {2}"
+msgid "<0>{0} </0>earned {1} USDC in commission from <1>{2}</1>"
+msgstr "<0>{0} </0>earned {1} USDC in commission from <1>{2}</1>"
 
 #: src/pages/ReferralManagement/ReferralActivities.tsx
 msgid "<0>{0} </0>invited by <1>{1}</1>"
 msgstr "<0>{0} </0>invited by <1>{1}</1>"
-
-#: src/pages/TopOpenings/RouteWrapper.tsx
-msgid "<0>{0}</0>"
-msgstr "<0>{0}</0>"
 
 #: src/pages/PerpDEXsExplorer/components/RichTextarea.tsx
 msgid "<0>{hintUploadImage}</0>"
@@ -156,15 +168,24 @@ msgstr "A message with a verification code has been sent to your email. Enter th
 msgid "ACCOUNT"
 msgstr "ACCOUNT"
 
-#: src/components/@dailyTrades/OrderActionFilterTitle.tsx
+#: src/pages/DailyTrades/Orders/config.tsx
 msgid "ACTION"
 msgstr "ACTION"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
+msgid "ACTIVE USERS"
+msgstr "ACTIVE USERS"
 
 #: src/pages/MyProfile/index.tsx
 #: src/pages/MyProfile/index.tsx
 msgid "ACTIVITIES"
 msgstr "ACTIVITIES"
 
+#: src/components/@copyTrade/CopyTradeForm/index.tsx
+msgid "ADVANCE SETTINGS"
+msgstr "ADVANCE SETTINGS"
+
+#: src/pages/Settings/AlertList/index.tsx
 #: src/pages/Settings/Layouts/Layout.tsx
 msgid "ALERT LIST"
 msgstr "ALERT LIST"
@@ -178,18 +199,22 @@ msgstr "ALL-TIME"
 msgid "API WALLET"
 msgstr "API WALLET"
 
+#: src/pages/WalletManagement/AssetDistribution/index.tsx
+msgid "API WALLET ASSET DISTRIBUTION"
+msgstr "API WALLET ASSET DISTRIBUTION"
+
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "API Wallet"
 msgstr "API Wallet"
 
-#: src/pages/WalletManagement/AssetDistribution/index.tsx
-msgid "API Wallet Asset Distribution"
-msgstr "API Wallet Asset Distribution"
-
 #: src/pages/MyProfile/index.tsx
 msgid "API Wallet Management"
 msgstr "API Wallet Management"
+
+#: src/pages/WalletManagement/Layouts/MobileLayout.tsx
+msgid "ASSETS"
+msgstr "ASSETS"
 
 #: src/components/@position/TraderPositionDetails/VaultCopyActions.tsx
 msgid "Acceptable Price:"
@@ -201,29 +226,30 @@ msgstr "Acceptable Price:"
 msgid "Account"
 msgstr "Account"
 
+#: src/pages/CopinLite/Transactions/configs.tsx
+msgid "Account Value Change"
+msgstr "Account Value Change"
+
 #: src/utils/config/translations.tsx
 msgid "Accounts"
 msgstr "Accounts"
+
+#: src/pages/CopinLite/Transactions/configs.tsx
+msgid "Action"
+msgstr "Action"
 
 #: src/components/@charts/ChartCopyPositionProfit/CopyOrderTooltip.tsx
 #: src/components/@charts/ChartTraderPositionProfit/OrderTooltip.tsx
 msgid "Action:"
 msgstr "Action:"
 
-#: src/pages/MyProfile/SelectTradersCopied.tsx
-msgid "Active"
-msgstr "Active"
-
 #: src/utils/config/translations.tsx
 msgid "Active Copy"
 msgstr "Active Copy"
 
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
-msgid "Active Users"
-msgstr "Active Users"
-
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/CopinLite/Trades/index.tsx
 #: src/pages/MyProfile/index.tsx
 msgid "Activities"
 msgstr "Activities"
@@ -231,6 +257,10 @@ msgstr "Activities"
 #: src/pages/Settings/AlertList/TraderLastViewed.tsx
 msgid "Add Alert"
 msgstr "Add Alert"
+
+#: src/pages/CopinLite/CopyManagement/index.tsx
+msgid "Add More Trader"
+msgstr "Add More Trader"
 
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "Add referral successful!"
@@ -244,13 +274,16 @@ msgstr "Add referrer successful!"
 msgid "Added"
 msgstr "Added"
 
+#: src/components/@copyTrade/CopyTradeForm/index.tsx
+msgid "Adjust Margin"
+msgstr "Adjust Margin"
+
 #: src/pages/MyProfile/ListCopyTrade/index.tsx
 #: src/pages/MyProfile/ListCopyTrade/index.tsx
 msgid "Advance"
 msgstr "Advance"
 
 #: src/components/@backtest/BacktestForm/index.tsx
-#: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "Advance Settings"
 msgstr "Advance Settings"
 
@@ -263,7 +296,6 @@ msgid "Alert"
 msgstr "Alert"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
-#: src/pages/Settings/AlertList/index.tsx
 #: src/pages/Settings/Layouts/Layout.tsx
 msgid "Alert List"
 msgstr "Alert List"
@@ -272,7 +304,8 @@ msgstr "Alert List"
 msgid "Alert traders signal"
 msgstr "Alert traders signal"
 
-#: src/pages/Home/Traders.tsx
+#: src/utils/config/translations.tsx
+#: src/utils/config/translations.tsx
 msgid "All"
 msgstr "All"
 
@@ -285,6 +318,10 @@ msgstr "All Chain"
 #: src/components/@ui/TimeFilter/constants.tsx
 msgid "All Time"
 msgstr "All Time"
+
+#: src/components/@position/CopyOpeningPositions/index.tsx
+msgid "All of your opening positions will be shown here"
+msgstr "All of your opening positions will be shown here"
 
 #: src/components/@ui/MarketFilter/index.tsx
 msgid "All pairs"
@@ -309,9 +346,12 @@ msgid "All stable PerpDEX + Early access PerpDEX"
 msgstr "All stable PerpDEX + Early access PerpDEX"
 
 #: src/components/@backtest/BacktestForm/index.tsx
-#: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "Allocating margin based on trader's average margin of the last {0}"
 msgstr "Allocating margin based on trader's average margin of the last {0}"
+
+#: src/components/@copyTrade/CopyTradeForm/index.tsx
+msgid "Allocating margin based on trader's average margin of the last {0} orders."
+msgstr "Allocating margin based on trader's average margin of the last {0} orders."
 
 #: src/pages/@layouts/Navbar/SelectProtocolDropdown.tsx
 msgid "Allow Copy"
@@ -325,6 +365,10 @@ msgstr "Allow the smart wallet to use your {0}"
 #: src/pages/Subscription/Plans.tsx
 msgid "Alpha group access"
 msgstr "Alpha group access"
+
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Altcoins"
+msgstr "Altcoins"
 
 #: src/components/@wallet/SmartWalletFundModal/Deposit.tsx
 #: src/components/@wallet/SmartWalletFundModal/Withdraw.tsx
@@ -366,13 +410,17 @@ msgstr "Approve"
 msgid "Are you sure to logout?"
 msgstr "Are you sure to logout?"
 
-#: src/components/@widgets/UnsubscribeAlertModal/index.tsx
-msgid "Are you sure you want to delete this trader from alert list?"
-msgstr "Are you sure you want to delete this trader from alert list?"
-
 #: src/pages/VaultDetails/VaultInfo/VaultBalances.tsx
 msgid "Assets and Shares"
 msgstr "Assets and Shares"
+
+#: src/components/@copyTrade/CopyTradeForm/index.tsx
+msgid "Auto-Fill Recommendations"
+msgstr "Auto-Fill Recommendations"
+
+#: src/pages/MyProfile/DCPManagement/index.tsx
+msgid "Available"
+msgstr "Available"
 
 #: src/components/@wallet/WalletDetailsCard/WalletInfo.tsx
 msgid "Available / Total Fund"
@@ -395,7 +443,6 @@ msgstr "Available Fund"
 msgid "Available Fund:"
 msgstr "Available Fund:"
 
-#: src/pages/MyProfile/DCPManagement/index.tsx
 #: src/pages/MyProfile/VaultManagement/index.tsx
 msgid "Available:"
 msgstr "Available:"
@@ -406,6 +453,7 @@ msgstr "Available:"
 msgid "Avg Duration"
 msgstr "Avg Duration"
 
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/pages/TraderDetails/TraderStats.tsx
@@ -413,16 +461,39 @@ msgstr "Avg Duration"
 msgid "Avg Leverage"
 msgstr "Avg Leverage"
 
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
+#: src/components/@copinLite/OnboardingModal/TraderList.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/pages/Home/SortDropdown.tsx
 #: src/utils/config/options.tsx
 msgid "Avg ROI"
 msgstr "Avg ROI"
 
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
+msgid "Avg Return On Notation"
+msgstr "Avg Return On Notation"
+
+#: src/components/@copinLite/OnboardingModal/TraderList.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/utils/config/options.tsx
 msgid "Avg Volume"
 msgstr "Avg Volume"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "BASIC PLAN"
+msgstr "BASIC PLAN"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "BASIC PLAN (FREE)"
+msgstr "BASIC PLAN (FREE)"
+
+#: src/pages/@layouts/Footer/index.tsx
+msgid "BLOG"
+msgstr "BLOG"
+
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "BTC / ETH"
+msgstr "BTC / ETH"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Back"
@@ -454,6 +525,7 @@ msgstr "Backtest Period"
 msgid "Backtest result in {0}"
 msgstr "Backtest result in {0}"
 
+#: src/pages/CopinLite/Wallet/Balance.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/Stats.tsx
 #: src/pages/TraderDetails/TraderStats.tsx
 #: src/utils/config/translations.tsx
@@ -469,13 +541,8 @@ msgid "Balance must be greater than or equal to margin"
 msgstr "Balance must be greater than or equal to margin"
 
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
-#: src/pages/Subscription/Plans.tsx
 msgid "Basic Plan"
 msgstr "Basic Plan"
-
-#: src/pages/Subscription/Plans.tsx
-msgid "Basic Plan (FREE)"
-msgstr "Basic Plan (FREE)"
 
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "Benefits in each plan are added or removed continuously without prior notice."
@@ -542,10 +609,6 @@ msgstr "Bitget Pass Phrase"
 msgid "Bitget Secret Key"
 msgstr "Bitget Secret Key"
 
-#: src/pages/@layouts/Footer/index.tsx
-msgid "Blog"
-msgstr "Blog"
-
 #: src/components/@wallet/SmartWalletFundModal/BridgeAndSwap/BridgeETH.tsx
 msgid "Bridge ETH to OP (Sepolia)"
 msgstr "Bridge ETH to OP (Sepolia)"
@@ -572,7 +635,9 @@ msgid "Bybit Secret Key"
 msgstr "Bybit Secret Key"
 
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+msgid "CEX DEPTH"
+msgstr "CEX DEPTH"
+
 #: src/pages/StatsCEX/Overview.tsx
 msgid "CEX Depth"
 msgstr "CEX Depth"
@@ -581,18 +646,61 @@ msgstr "CEX Depth"
 msgid "CEX account connection"
 msgstr "CEX account connection"
 
+#: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
+msgid "CHARTS"
+msgstr "CHARTS"
+
+#: src/pages/ReferralManagement/ReferralHistory.tsx
+msgid "CLAIM HISTORY"
+msgstr "CLAIM HISTORY"
+
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "CLOSE TIME"
 msgstr "CLOSE TIME"
+
+#: src/components/@position/PositionStatus/index.tsx
+#: src/theme/Tag/index.tsx
+msgid "CLOSED"
+msgstr "CLOSED"
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 #: src/pages/DailyTrades/Orders/config.tsx
 msgid "COLLATERAL ($)"
 msgstr "COLLATERAL ($)"
 
+#: src/pages/ReferralManagement/ReferralHistory.tsx
+msgid "COMMISSION & REBATE HISTORY"
+msgstr "COMMISSION & REBATE HISTORY"
+
+#: src/components/@widgets/ConditionFilterForm/index.tsx
+msgid "CONDITION"
+msgstr "CONDITION"
+
+#: src/pages/@layouts/Navbar/index.tsx
+msgid "CONNECTING WALLET..."
+msgstr "CONNECTING WALLET..."
+
+#: src/pages/@layouts/Navbar/NavLinks.tsx
+msgid "COPIER RANKING"
+msgstr "COPIER RANKING"
+
+#: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
+#: src/pages/MyProfile/DCPManagement/index.tsx
+#: src/pages/MyProfile/VaultManagement/index.tsx
+msgid "COPIES"
+msgstr "COPIES"
+
 #: src/pages/FeeRebate/Layout.tsx
 msgid "COPIN FEE REBATE"
 msgstr "COPIN FEE REBATE"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "COPY YOUR ADDRESS"
+msgstr "COPY YOUR ADDRESS"
+
+#: src/theme/Tag/index.tsx
+msgid "COPYING"
+msgstr "COPYING"
 
 #: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
 #: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
@@ -606,6 +714,8 @@ msgid "Can't copy"
 msgstr "Can't copy"
 
 #: src/components/@auth/AuthWaitingWallet/index.tsx
+#: src/components/@copinLite/OnboardingModal/index.tsx
+#: src/components/@copinLite/OnboardingModal/index.tsx
 #: src/pages/@layouts/Navbar/index.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 #: src/pages/VaultDetails/VaultFundMangement/InviteCodeModal.tsx
@@ -640,7 +750,7 @@ msgstr "Change Trader"
 msgid "Change password successful!"
 msgstr "Change password successful!"
 
-#: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
+#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
 msgid "Charts"
 msgstr "Charts"
 
@@ -678,8 +788,6 @@ msgstr "Clone copy trade has been succeeded"
 msgid "Close"
 msgstr "Close"
 
-#: src/components/@position/PositionStatus/index.tsx
-#: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
 msgid "Closed"
 msgstr "Closed"
@@ -693,7 +801,14 @@ msgstr "Closed Type"
 msgid "Collateral Delta:"
 msgstr "Collateral Delta:"
 
+#: src/components/@copyTrade/CopyTradeForm/index.tsx
+msgid "Collateral Lower Than"
+msgstr "Collateral Lower Than"
+
 #: src/components/@charts/ChartCopyPositionProfit/CopyOrderTooltip.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/TraderPositionDetails/PositionStats.tsx
+#: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Collateral:"
 msgstr "Collateral:"
 
@@ -726,10 +841,6 @@ msgstr "Compare"
 #: src/pages/TraderDetails/ExpandTraderRankingButton.tsx
 msgid "Compare Trader"
 msgstr "Compare Trader"
-
-#: src/components/@widgets/ConditionFilterForm/index.tsx
-msgid "Condition"
-msgstr "Condition"
 
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
@@ -780,10 +891,6 @@ msgstr "Connect Binance API"
 msgid "Connect Wallet"
 msgstr "Connect Wallet"
 
-#: src/pages/@layouts/Navbar/index.tsx
-msgid "Connecting Wallet..."
-msgstr "Connecting Wallet..."
-
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Connecting with your wallet..."
 msgstr "Connecting with your wallet..."
@@ -804,16 +911,6 @@ msgstr "Connecting..."
 msgid "Considers settled (closed) positions"
 msgstr "Considers settled (closed) positions"
 
-#: src/pages/@layouts/Navbar/NavLinks.tsx
-msgid "Copier Ranking"
-msgstr "Copier Ranking"
-
-#: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
-#: src/pages/MyProfile/DCPManagement/index.tsx
-#: src/pages/MyProfile/VaultManagement/index.tsx
-msgid "Copies"
-msgstr "Copies"
-
 #: src/components/@widgets/NFTSubscriptionCard.tsx
 msgid "Copin Subscription {0}"
 msgstr "Copin Subscription {0}"
@@ -827,6 +924,7 @@ msgstr "Copin Vaults"
 msgid "Copin will execute the order that is the inverse of the trader's order."
 msgstr "Copin will execute the order that is the inverse of the trader's order."
 
+#: src/pages/CopinLite/index.tsx
 #: src/pages/Home/Traders.tsx
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Copy"
@@ -836,6 +934,10 @@ msgstr "Copy"
 msgid "Copy Management"
 msgstr "Copy Management"
 
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
+msgid "Copy Now"
+msgstr "Copy Now"
+
 #: src/components/@position/CopyPositionDetails/index.tsx
 msgid "Copy Position Details"
 msgstr "Copy Position Details"
@@ -844,6 +946,11 @@ msgstr "Copy Position Details"
 msgid "Copy Statistic"
 msgstr "Copy Statistic"
 
+#: src/components/@copinLite/OnboardingModal/TraderList.tsx
+msgid "Copy Trade"
+msgstr "Copy Trade"
+
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyTraderButton/index.tsx
 msgid "Copy Trader"
@@ -867,10 +974,6 @@ msgstr "Copy Wallet"
 msgid "Copy Wallet History"
 msgstr "Copy Wallet History"
 
-#: src/pages/@layouts/Navbar/NavUser.tsx
-msgid "Copy Your Address"
-msgstr "Copy Your Address"
-
 #: src/pages/Subscription/Plans.tsx
 msgid "Copy hot trader"
 msgstr "Copy hot trader"
@@ -878,10 +981,6 @@ msgstr "Copy hot trader"
 #: src/pages/Subscription/Plans.tsx
 msgid "Copy size"
 msgstr "Copy size"
-
-#: src/theme/Tag/index.tsx
-msgid "Copying"
-msgstr "Copying"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/PickTraderModals.tsx
 msgid "Copytrade List"
@@ -966,45 +1065,67 @@ msgstr "Custom referral code successful!"
 msgid "DAILY"
 msgstr "DAILY"
 
+#: src/pages/Stats/index.tsx
+msgid "DAILY ACTIVE USERS (DAU)"
+msgstr "DAILY ACTIVE USERS (DAU)"
+
+#: src/pages/Stats/index.tsx
+msgid "DAILY COPY TRADES"
+msgstr "DAILY COPY TRADES"
+
+#: src/pages/Stats/index.tsx
+msgid "DAILY NET PNL"
+msgstr "DAILY NET PNL"
+
+#: src/pages/Stats/index.tsx
+msgid "DAILY ORDERS"
+msgstr "DAILY ORDERS"
+
+#: src/pages/Stats/index.tsx
+msgid "DAILY PROFIT VS LOSS"
+msgstr "DAILY PROFIT VS LOSS"
+
+#: src/pages/Stats/index.tsx
+msgid "DAILY UNIQUE TRADERS"
+msgstr "DAILY UNIQUE TRADERS"
+
+#: src/pages/Stats/index.tsx
+msgid "DAILY VOLUME"
+msgstr "DAILY VOLUME"
+
 #: src/pages/ReferralManagement/ReferralHistory.tsx
 msgid "DCP Volume"
 msgstr "DCP Volume"
 
-#: src/components/@dailyTrades/DirectionFilterTitle.tsx
+#: src/pages/Explorer/ConditionFilter/index.tsx
+msgid "DEFAULT FILTER"
+msgstr "DEFAULT FILTER"
+
+#: src/components/@wallet/SmartWalletFundModal/index.tsx
+#: src/pages/VaultDetails/VaultFundMangement/index.tsx
+msgid "DEPOSIT"
+msgstr "DEPOSIT"
+
+#: src/pages/DailyTrades/Orders/config.tsx
 msgid "DIRECTION"
 msgstr "DIRECTION"
+
+#: src/pages/@layouts/Footer/index.tsx
+#: src/pages/@layouts/Footer/index.tsx
+msgid "DOCS"
+msgstr "DOCS"
+
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+msgid "DOCUMENT"
+msgstr "DOCUMENT"
+
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+msgid "DUNE DASHBOARD"
+msgstr "DUNE DASHBOARD"
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "DURATION"
 msgstr "DURATION"
-
-#: src/pages/Stats/index.tsx
-msgid "Daily Active Users (DAU)"
-msgstr "Daily Active Users (DAU)"
-
-#: src/pages/Stats/index.tsx
-msgid "Daily Copy Trades"
-msgstr "Daily Copy Trades"
-
-#: src/pages/Stats/index.tsx
-msgid "Daily Net PnL"
-msgstr "Daily Net PnL"
-
-#: src/pages/Stats/index.tsx
-msgid "Daily Orders"
-msgstr "Daily Orders"
-
-#: src/pages/Stats/index.tsx
-msgid "Daily Profit vs Loss"
-msgstr "Daily Profit vs Loss"
-
-#: src/pages/Stats/index.tsx
-msgid "Daily Unique Traders"
-msgstr "Daily Unique Traders"
-
-#: src/pages/Stats/index.tsx
-msgid "Daily Volume"
-msgstr "Daily Volume"
 
 #: src/pages/TraderDetails/ProtocolBetaWarning.tsx
 msgid "Data maybe delayed by up to 2 hours"
@@ -1019,21 +1140,20 @@ msgstr "Data range"
 msgid "Decrease"
 msgstr "Decrease"
 
-#: src/pages/Explorer/ConditionFilter/index.tsx
-msgid "Default Filter"
-msgstr "Default Filter"
-
 #: src/components/@wallet/WalletDetailsCard/WalletActions.tsx
 msgid "Delete wallet successful!"
 msgstr "Delete wallet successful!"
 
 #: src/components/@wallet/SmartWalletFundModal/Deposit.tsx
-#: src/components/@wallet/SmartWalletFundModal/index.tsx
 #: src/components/@wallet/WalletDetailsCard/index.tsx
+#: src/pages/CopinLite/Wallet/index.tsx
 #: src/pages/VaultDetails/VaultFundMangement/VaultDeposit.tsx
-#: src/pages/VaultDetails/VaultFundMangement/index.tsx
 msgid "Deposit"
 msgstr "Deposit"
+
+#: src/pages/CopinLite/Trades/index.tsx
+msgid "Deposits And Withdrawals"
+msgstr "Deposits And Withdrawals"
 
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Details"
@@ -1047,15 +1167,13 @@ msgstr "Disconnect"
 msgid "Discover more than 100,000+ traders on Copin"
 msgstr "Discover more than 100,000+ traders on Copin"
 
-#: src/pages/@layouts/Footer/index.tsx
-#: src/pages/@layouts/Footer/index.tsx
-msgid "Docs"
-msgstr "Docs"
+#: src/components/@copinLite/OnboardingModal/TraderFilter.tsx
+msgid "Discover top trader for your style"
+msgstr "Discover top trader for your style"
 
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-msgid "Document"
-msgstr "Document"
+#: src/components/@position/CopyPositionsContainer/index.tsx
+msgid "Do you want to close this position?"
+msgstr "Do you want to close this position?"
 
 #: src/pages/ReferralManagement/ReferralStats.tsx
 msgid "Done"
@@ -1091,20 +1209,21 @@ msgstr "Don’t have a Hyperliquid account?"
 msgid "Don’t have a OKX account?"
 msgstr "Don’t have a OKX account?"
 
-#: src/components/@copyTrade/CopyTradeForm/index.tsx
-msgid "Due to price slippage prevention, the stop loss price will increase / decrease by 0.1%"
-msgstr "Due to price slippage prevention, the stop loss price will increase / decrease by 0.1%"
-
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-msgid "Dune Dashboard"
-msgstr "Dune Dashboard"
-
-#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Duration:"
 msgstr "Duration:"
+
+#: src/theme/Tag/index.tsx
+#: src/theme/Tag/index.tsx
+msgid "ENDED"
+msgstr "ENDED"
+
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/PerpDEXsExplorer/index.tsx
+msgid "EVENTS"
+msgstr "EVENTS"
 
 #: src/pages/ReferralManagement/ReferralHistory.tsx
 msgid "Earning (USDC)"
@@ -1116,6 +1235,10 @@ msgstr "Earning (USDC)"
 msgid "Edit"
 msgstr "Edit"
 
+#: src/components/@copyTrade/CopyTradeEditDrawer/index.tsx
+msgid "Edit Copytrade Settings"
+msgstr "Edit Copytrade Settings"
+
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
@@ -1123,8 +1246,6 @@ msgid "Email"
 msgstr "Email"
 
 #: src/pages/PerpDEXsExplorer/helpers/eventsHelper.tsx
-#: src/theme/Tag/index.tsx
-#: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
 msgid "Ended"
@@ -1157,10 +1278,12 @@ msgid "Entry Price"
 msgstr "Entry Price"
 
 #: src/components/@backtest/BacktestSimpleModal/index.tsx
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyTradeCloneForm/index.tsx
 #: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyVaultButton/CopyVaultModal.tsx
 #: src/components/@position/CloseCopyPositionModal/index.tsx
+#: src/components/@position/CopyPositionsContainer/index.tsx
 #: src/hooks/features/useBacktestRequest.tsx
 #: src/hooks/features/useBacktestRequest.tsx
 #: src/hooks/features/useBacktestRequest.tsx
@@ -1186,14 +1309,11 @@ msgstr "Est. Stop Price"
 msgid "Est. Take Profit Price"
 msgstr "Est. Take Profit Price"
 
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-#: src/pages/PerpDEXsExplorer/index.tsx
-msgid "Events"
-msgstr "Events"
+#: src/pages/CopinLite/Transactions/configs.tsx
+msgid "Estimated Finish"
+msgstr "Estimated Finish"
 
 #: src/components/@backtest/BacktestForm/index.tsx
-#: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "Example"
 msgstr "Example"
 
@@ -1243,13 +1363,38 @@ msgstr "Extended"
 msgid "Extending"
 msgstr "Extending"
 
+#: src/pages/ReferralManagement/ReferralHistory.tsx
+msgid "F1 REFERRAL LIST"
+msgstr "F1 REFERRAL LIST"
+
+#: src/pages/ReferralManagement/ReferralHistory.tsx
+msgid "F2 REFERRAL LIST"
+msgstr "F2 REFERRAL LIST"
+
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "FEE ($)"
 msgstr "FEE ($)"
 
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+msgid "FEE REBATE"
+msgstr "FEE REBATE"
+
+#: src/pages/@layouts/Footer/index.tsx
+#: src/pages/@layouts/Footer/index.tsx
+msgid "FEEDBACK"
+msgstr "FEEDBACK"
+
+#: src/components/@widgets/ConditionFilterForm/index.tsx
+msgid "FIELD"
+msgstr "FIELD"
+
 #: src/pages/Subscription/Plans.tsx
 msgid "FREE"
 msgstr "FREE"
+
+#: src/pages/VaultDetails/VaultFundMangement/index.tsx
+msgid "FUND MANAGEMENT"
+msgstr "FUND MANAGEMENT"
 
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Failed"
@@ -1267,15 +1412,9 @@ msgstr "Favorite List"
 msgid "Features"
 msgstr "Features"
 
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-msgid "Fee Rebate"
-msgstr "Fee Rebate"
-
-#: src/pages/@layouts/Footer/index.tsx
-#: src/pages/@layouts/Footer/index.tsx
-msgid "Feedback"
-msgstr "Feedback"
+#: src/pages/CopinLite/Transactions/configs.tsx
+msgid "Fee"
+msgstr "Fee"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/pages/ReferralManagement/ReferralHistory.tsx
@@ -1295,13 +1434,13 @@ msgstr "Fees and Profit Sharing"
 msgid "Fees are not factored into PnL"
 msgstr "Fees are not factored into PnL"
 
-#: src/components/@widgets/ConditionFilterForm/index.tsx
-msgid "Field"
-msgstr "Field"
-
 #: src/pages/Explorer/ConditionFilter/index.tsx
 msgid "Filters"
 msgstr "Filters"
+
+#: src/components/@copinLite/OnboardingModal/TraderFilter.tsx
+msgid "Find"
+msgstr "Find"
 
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Find the trader you want in the list of traders above, all of the trader's history positions will be listed here."
@@ -1346,20 +1485,23 @@ msgstr "Frequently Trade"
 msgid "Fund"
 msgstr "Fund"
 
-#: src/pages/VaultDetails/VaultFundMangement/index.tsx
-msgid "Fund Management"
-msgstr "Fund Management"
-
 #: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Funding"
 msgstr "Funding"
 
 #: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
-#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Funding:"
 msgstr "Funding:"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/Info.tsx
+msgid "GENERAL INFO"
+msgstr "GENERAL INFO"
+
+#: src/pages/ReferralManagement/ReferralActivities.tsx
+msgid "GLOBAL REFERRAL ACTIVITIES"
+msgstr "GLOBAL REFERRAL ACTIVITIES"
 
 #: src/utils/config/translations.tsx
 msgid "GMX"
@@ -1385,24 +1527,27 @@ msgstr "Gate API Key"
 msgid "Gate Secret Key"
 msgstr "Gate Secret Key"
 
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/Info.tsx
-msgid "General Info"
-msgstr "General Info"
-
 #: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
 msgid "Get Early Access"
 msgstr "Get Early Access"
 
-#: src/pages/ReferralManagement/ReferralActivities.tsx
-msgid "Global Referral Activities"
-msgstr "Global Referral Activities"
+#: src/pages/@layouts/LiteWalletNotice.tsx
+msgid "Go To Deposit"
+msgstr "Go To Deposit"
 
 #: src/pages/MyProfile/index.tsx
 #: src/pages/MyProfile/index.tsx
 msgid "HISTORY"
 msgstr "HISTORY"
 
-#: src/components/@ui/AccountInfo/index.tsx
+#: src/pages/VaultDetails/VaultInfo/index.tsx
+msgid "HISTORY POSITIONS"
+msgstr "HISTORY POSITIONS"
+
+#: src/pages/@layouts/Footer/index.tsx
+msgid "HOME"
+msgstr "HOME"
+
 #: src/components/@widgets/SearchAllResults/configs.tsx
 #: src/components/@widgets/SearchTraderResultItem/index.tsx
 msgid "Having open positions"
@@ -1423,6 +1568,10 @@ msgstr "High Avg ROI"
 #: src/utils/config/options.tsx
 msgid "High Avg Volume"
 msgstr "High Avg Volume"
+
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "High Frequency"
+msgstr "High Frequency"
 
 #: src/utils/config/options.tsx
 msgid "High Max ROI"
@@ -1448,16 +1597,14 @@ msgstr "High Win Rate"
 #: src/components/@wallet/WalletDetailsCard/SmartWalletActions.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/CopinLite/Trades/index.tsx
+#: src/pages/CopinLite/Wallet/index.tsx
 #: src/pages/MyProfile/ListCopyTrade/useCEXCopyTradeColumns.tsx
 #: src/pages/MyProfile/ListCopyTrade/useDEXCopyTradeColumns.tsx
 #: src/pages/MyProfile/ListCopyTrade/useVaultCopyTradeColumns.tsx
 #: src/pages/MyProfile/index.tsx
 msgid "History"
 msgstr "History"
-
-#: src/pages/@layouts/Footer/index.tsx
-msgid "Home"
-msgstr "Home"
 
 #: src/components/@wallet/CreateWalletModals/WalletHelpBingX.tsx
 msgid "How to connect your BingX API to Copin?"
@@ -1506,6 +1653,14 @@ msgstr "Hyperliquid Account Address"
 msgid "Hyperliquid Vault Address"
 msgstr "Hyperliquid Vault Address"
 
+#: src/pages/Home/Traders.tsx
+msgid "IN"
+msgstr "IN"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/index.tsx
+msgid "INFO & EVENTS"
+msgstr "INFO & EVENTS"
+
 #: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
 #: src/pages/MyProfile/VaultManagement/ModifyTPSLModal.tsx
 msgid "If the trader increase / decrease position, the TP / SL will be re-adjusted as your copytrade settings"
@@ -1514,10 +1669,6 @@ msgstr "If the trader increase / decrease position, the TP / SL will be re-adjus
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "If you skip it this time, you will be able to re-enter the referral code later."
 msgstr "If you skip it this time, you will be able to re-enter the referral code later."
-
-#: src/pages/Home/Traders.tsx
-msgid "In"
-msgstr "In"
 
 #: src/pages/MyProfile/SelectCopyTradesDropdown.tsx
 #: src/pages/MyProfile/SelectWallets.tsx
@@ -1528,10 +1679,6 @@ msgstr "Includes deleted data"
 #: src/utils/config/translations.tsx
 msgid "Increase"
 msgstr "Increase"
-
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/index.tsx
-msgid "Info & Events"
-msgstr "Info & Events"
 
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 msgid "Input current password"
@@ -1566,6 +1713,10 @@ msgstr "Input password"
 msgid "Input wallet name"
 msgstr "Input wallet name"
 
+#: src/pages/@layouts/LiteWalletNotice.tsx
+msgid "Insufficient balance to complete the copy transaction."
+msgstr "Insufficient balance to complete the copy transaction."
+
 #: src/utils/helpers/handleError.ts
 msgid "Insufficient funds for gas fee and value"
 msgstr "Insufficient funds for gas fee and value"
@@ -1592,10 +1743,19 @@ msgstr "L"
 msgid "L/S Rate"
 msgstr "L/S Rate"
 
+#: src/pages/Home/Overview.tsx
+msgid "LATEST ACTIVITIES"
+msgstr "LATEST ACTIVITIES"
+
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 #: src/pages/DailyTrades/Orders/config.tsx
 msgid "LEVERAGE"
 msgstr "LEVERAGE"
+
+#: src/components/@position/PositionStatus/index.tsx
+#: src/theme/Tag/index.tsx
+msgid "LIQUIDATED"
+msgstr "LIQUIDATED"
 
 #: src/pages/DailyTrades/index.tsx
 msgid "LIVE ORDERS"
@@ -1604,6 +1764,14 @@ msgstr "LIVE ORDERS"
 #: src/pages/DailyTrades/index.tsx
 msgid "LIVE POSITIONS"
 msgstr "LIVE POSITIONS"
+
+#: src/pages/@layouts/Navbar/NavLinks.tsx
+msgid "LIVE TRADES"
+msgstr "LIVE TRADES"
+
+#: src/theme/Tag/index.tsx
+msgid "LONG"
+msgstr "LONG"
 
 #: src/utils/config/translations.tsx
 msgid "Label"
@@ -1638,10 +1806,6 @@ msgstr "Latest Stop Loss ID"
 msgid "Latest Take Profit ID"
 msgstr "Latest Take Profit ID"
 
-#: src/pages/Home/Overview.tsx
-msgid "Latest activities"
-msgstr "Latest activities"
-
 #: src/components/@wallet/CreateWalletModals/WalletHelpBingX.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpBitget.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpBybit.tsx
@@ -1661,6 +1825,10 @@ msgstr "Let copy a trader and make profit!"
 #: src/utils/config/translations.tsx
 msgid "Leverage"
 msgstr "Leverage"
+
+#: src/components/@copyTrade/CopyTradeForm/index.tsx
+msgid "Leverage Lower Than"
+msgstr "Leverage Lower Than"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "License copyright of Copin's signal"
@@ -1708,8 +1876,6 @@ msgstr "Link with your OKX account through API key. All your assets and your pos
 msgid "Liq.Price"
 msgstr "Liq.Price"
 
-#: src/components/@position/PositionStatus/index.tsx
-#: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
 msgid "Liquidated"
 msgstr "Liquidated"
@@ -1723,10 +1889,6 @@ msgstr "Liquidation"
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Liquidations"
 msgstr "Liquidations"
-
-#: src/pages/@layouts/Navbar/NavLinks.tsx
-msgid "Live Trades"
-msgstr "Live Trades"
 
 #: src/pages/DailyTrades/index.tsx
 msgid "Live orders"
@@ -1749,9 +1911,13 @@ msgstr "Login to Copin"
 msgid "Logout"
 msgstr "Logout"
 
-#: src/theme/Tag/index.tsx
-msgid "Long"
-msgstr "Long"
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Long Term (Month)"
+msgstr "Long Term (Month)"
+
+#: src/components/@copyTrade/CopyTradeForm/index.tsx
+msgid "Look Back The Latest"
+msgstr "Look Back The Latest"
 
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Looks like you canceled signing of authentication message with your provider"
@@ -1782,6 +1948,8 @@ msgid "Low Overtrading"
 msgstr "Low Overtrading"
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
+#: src/pages/DailyTrades/Orders/config.tsx
+#: src/pages/Explorer/ConditionFilter/FilterMarket.tsx
 #: src/pages/TopOpenings/RouteWrapper.tsx
 msgid "MARKET"
 msgstr "MARKET"
@@ -1790,9 +1958,21 @@ msgstr "MARKET"
 msgid "MARKET PRICE ($)"
 msgstr "MARKET PRICE ($)"
 
+#: src/pages/CopinLite/Wallet/Withdraw.tsx
+msgid "MAX"
+msgstr "MAX"
+
+#: src/pages/MyProfile/OpeningPositions/SettingConfigs.tsx
+msgid "MAX POSITIONS"
+msgstr "MAX POSITIONS"
+
 #: src/utils/config/options.tsx
 msgid "MDD"
 msgstr "MDD"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/index.tsx
+msgid "METRIC"
+msgstr "METRIC"
 
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/Info.tsx
 msgid "METRICS"
@@ -1802,18 +1982,28 @@ msgstr "METRICS"
 msgid "MONTHLY"
 msgstr "MONTHLY"
 
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+msgid "MORE"
+msgstr "MORE"
+
+#: src/pages/ReferralManagement/index.tsx
+msgid "MY REFERRAL"
+msgstr "MY REFERRAL"
+
 #: src/pages/Settings/Layouts/Layout.tsx
 msgid "MY SUBSCRIPTION"
 msgstr "MY SUBSCRIPTION"
 
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyVaultButton/CopyVaultModal.tsx
 msgid "Make copy trade has been succeeded"
 msgstr "Make copy trade has been succeeded"
 
-#: src/components/@copyTrade/CopyTradeForm/index.tsx
-msgid "Make sure you have already activated the <0>BingX Guaranteed Price</0> to Prevent Slippage Losses."
-msgstr "Make sure you have already activated the <0>BingX Guaranteed Price</0> to Prevent Slippage Losses."
+#: src/pages/CopinLite/CopyManagement/index.tsx
+msgid "Manage Copy"
+msgstr "Manage Copy"
 
 #: src/components/@wallet/SmartWalletFundModal/index.tsx
 msgid "Manage Fund"
@@ -1856,10 +2046,6 @@ msgstr "Market Price:"
 msgid "Market data was not found"
 msgstr "Market data was not found"
 
-#: src/pages/Explorer/ConditionFilter/FilterMarket.tsx
-msgid "Market:"
-msgstr "Market:"
-
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/Stats.tsx
 msgid "Markets"
@@ -1869,6 +2055,11 @@ msgstr "Markets"
 msgid "Max Deposit"
 msgstr "Max Deposit"
 
+#: src/components/@backtest/BacktestSimpleResult/index.tsx
+msgid "Max Draw Down"
+msgstr "Max Draw Down"
+
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/pages/TraderDetails/TraderStats.tsx
 #: src/utils/config/options.tsx
@@ -1889,6 +2080,10 @@ msgstr "Max Duration"
 msgid "Max Leverage"
 msgstr "Max Leverage"
 
+#: src/components/@backtest/BacktestSimpleResult/index.tsx
+msgid "Max Margin Multiplier"
+msgstr "Max Margin Multiplier"
+
 #: src/utils/config/translations.tsx
 msgid "Max Margin Per Position"
 msgstr "Max Margin Per Position"
@@ -1898,10 +2093,6 @@ msgstr "Max Margin Per Position"
 msgid "Max Margin/Order"
 msgstr "Max Margin/Order"
 
-#: src/pages/MyProfile/OpeningPositions/SettingConfigs.tsx
-msgid "Max Positions"
-msgstr "Max Positions"
-
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/utils/config/options.tsx
 msgid "Max ROI"
@@ -1910,14 +2101,6 @@ msgstr "Max ROI"
 #: src/pages/VaultDetails/VaultFundMangement/VaultWithdraw.tsx
 msgid "Max Withdraw"
 msgstr "Max Withdraw"
-
-#: src/components/@backtest/BacktestSimpleResult/index.tsx
-msgid "Max draw down"
-msgstr "Max draw down"
-
-#: src/components/@backtest/BacktestSimpleResult/index.tsx
-msgid "Max margin multiplier"
-msgstr "Max margin multiplier"
 
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
@@ -1932,9 +2115,13 @@ msgstr "Maybe Later"
 msgid "Maybe you are missing a trader address or have incorrect logs, you can refer to \"Recommend Results\" section."
 msgstr "Maybe you are missing a trader address or have incorrect logs, you can refer to \"Recommend Results\" section."
 
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/index.tsx
-msgid "Metric"
-msgstr "Metric"
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Meme"
+msgstr "Meme"
+
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Middle Term (Week)"
+msgstr "Middle Term (Week)"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Min Duration"
@@ -1999,14 +2186,9 @@ msgstr "Modify SL / TP"
 msgid "Monthly"
 msgstr "Monthly"
 
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/Subscription/TermsAndConditions.tsx
 msgid "More"
 msgstr "More"
-
-#: src/pages/Subscription/TermsAndConditions.tsx
-msgid "More."
-msgstr "More."
 
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx
 msgid "Mrket data was not found"
@@ -2020,10 +2202,6 @@ msgstr "Multiple Copy"
 #: src/pages/MyProfile/index.tsx
 msgid "My Profile"
 msgstr "My Profile"
-
-#: src/pages/ReferralManagement/index.tsx
-msgid "My Referral"
-msgstr "My Referral"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/Settings/Layouts/Layout.tsx
@@ -2062,6 +2240,7 @@ msgstr "New Password"
 msgid "No"
 msgstr "No"
 
+#: src/pages/CopinLite/Trades/Activities.tsx
 #: src/pages/MyProfile/UserActivity/ListActivityMobile.tsx
 #: src/pages/MyProfile/UserActivity/index.tsx
 msgid "No Activity Found"
@@ -2088,6 +2267,10 @@ msgstr "No History Found"
 #: src/theme/Table/CustomizeColumn.tsx
 msgid "No Metric Match"
 msgstr "No Metric Match"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/PerpDEXSelect.tsx
+msgid "No Perp DEX matched!"
+msgstr "No Perp DEX matched!"
 
 #: src/pages/PositionDetails/index.tsx
 msgid "No Position Found"
@@ -2121,6 +2304,7 @@ msgid "No Transaction Found"
 msgstr "No Transaction Found"
 
 #: src/components/@position/PositionTxResults/index.tsx
+#: src/pages/CopinLite/Transactions/DepositsAndWithdrawals.tsx
 #: src/pages/SearchTxHash/index.tsx
 msgid "No Transactions Found"
 msgstr "No Transactions Found"
@@ -2136,10 +2320,6 @@ msgstr "No link to the trader’s original position was found."
 #: src/components/@dailyTrades/OrderListView.tsx
 msgid "No order found"
 msgstr "No order found"
-
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/PerpDEXSelect.tsx
-msgid "No perp DEX matched!"
-msgstr "No perp DEX matched!"
 
 #: src/components/@dailyTrades/PositionListView.tsx
 msgid "No position found"
@@ -2167,6 +2347,7 @@ msgstr "No, thanks"
 msgid "Node Status"
 msgstr "Node Status"
 
+#: src/components/@copinLite/OnboardingModal/TraderList.tsx
 #: src/pages/Home/Traders.tsx
 msgid "Not found any trending traders at this moment"
 msgstr "Not found any trending traders at this moment"
@@ -2210,13 +2391,36 @@ msgstr "OKX Pass Phrase"
 msgid "OKX Secret Key"
 msgstr "OKX Secret Key"
 
+#: src/theme/Tag/index.tsx
+msgid "ONGOING"
+msgstr "ONGOING"
+
+#: src/components/@position/PositionStatus/index.tsx
+#: src/theme/Tag/index.tsx
+msgid "OPEN"
+msgstr "OPEN"
+
+#: src/pages/@layouts/Navbar/NavLinks.tsx
 #: src/pages/TopOpenings/RouteWrapper.tsx
 msgid "OPEN INTEREST"
 msgstr "OPEN INTEREST"
 
+#: src/pages/MyProfile/DCPManagement/index.tsx
+#: src/pages/VaultDetails/VaultInfo/index.tsx
+msgid "OPEN POSITIONS"
+msgstr "OPEN POSITIONS"
+
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "OPEN TIME"
 msgstr "OPEN TIME"
+
+#: src/components/@position/TraderOpeningPositions/index.tsx
+#: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
+#: src/pages/MyProfile/DCPManagement/index.tsx
+#: src/pages/MyProfile/OpeningPositions/index.tsx
+#: src/pages/MyProfile/VaultManagement/index.tsx
+msgid "OPENING POSITIONS"
+msgstr "OPENING POSITIONS"
 
 #: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
 msgid "OR"
@@ -2226,11 +2430,18 @@ msgstr "OR"
 msgid "OR LOGIN WITH"
 msgstr "OR LOGIN WITH"
 
+#: src/pages/Home/index.tsx
+msgid "OVERVIEW"
+msgstr "OVERVIEW"
+
 #: src/pages/Subscription/Plans.tsx
 msgid "On-chain traders for copying"
 msgstr "On-chain traders for copying"
 
-#: src/theme/Tag/index.tsx
+#: src/components/@position/CopyOpeningPositions/index.tsx
+msgid "Once you have a position, you’ll see it listed here"
+msgstr "Once you have a position, you’ll see it listed here"
+
 #: src/utils/config/translations.tsx
 msgid "Ongoing"
 msgstr "Ongoing"
@@ -2240,10 +2451,8 @@ msgid "Only"
 msgstr "Only"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
-#: src/components/@position/PositionStatus/index.tsx
 #: src/components/@position/TraderPositionDetails/VaultCopyTradeTable.tsx
 #: src/components/@position/configs/order.tsx
-#: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
 msgid "Open"
@@ -2253,15 +2462,10 @@ msgstr "Open"
 msgid "Open Homepage"
 msgstr "Open Homepage"
 
-#: src/pages/@layouts/Navbar/NavLinks.tsx
-msgid "Open Interest"
-msgstr "Open Interest"
-
 #: src/components/@position/HLTraderOpeningPositions/index.tsx
 msgid "Open Orders"
 msgstr "Open Orders"
 
-#: src/pages/MyProfile/DCPManagement/index.tsx
 #: src/pages/MyProfile/DCPManagement/index.tsx
 #: src/pages/MyProfile/VaultManagement/index.tsx
 #: src/pages/MyProfile/VaultManagement/index.tsx
@@ -2275,10 +2479,7 @@ msgstr "Open Telegram Bot"
 
 #: src/components/@position/CopyOpeningPositions/index.tsx
 #: src/components/@position/HLTraderOpeningPositions/index.tsx
-#: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
-#: src/pages/MyProfile/DCPManagement/index.tsx
-#: src/pages/MyProfile/OpeningPositions/index.tsx
-#: src/pages/MyProfile/VaultManagement/index.tsx
+#: src/pages/CopinLite/Trades/index.tsx
 msgid "Opening Positions"
 msgstr "Opening Positions"
 
@@ -2307,7 +2508,6 @@ msgstr "Orders Lookback"
 msgid "Others"
 msgstr "Others"
 
-#: src/pages/Home/index.tsx
 #: src/pages/Stats/index.tsx
 msgid "Overview"
 msgstr "Overview"
@@ -2320,15 +2520,30 @@ msgstr "Overwrite"
 msgid "PAID FEE ($)"
 msgstr "PAID FEE ($)"
 
-#: src/components/@dailyTrades/PairFilterTitle.tsx
-msgid "PAIRS"
-msgstr "PAIRS"
+#: src/components/@widgets/ConditionFilterForm/index.tsx
+msgid "PERCENTILE"
+msgstr "PERCENTILE"
 
+#: src/pages/Explorer/ConditionFilter/index.tsx
+msgid "PERCENTILE FILTER"
+msgstr "PERCENTILE FILTER"
+
+#: src/pages/ComparingTraders/ComparisonComponent.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
+msgid "PERCENTILE RANKING COMPARISON"
+msgstr "PERCENTILE RANKING COMPARISON"
+
+#: src/pages/VaultDetails/VaultInfo/index.tsx
+msgid "PERFORMANCE"
+msgstr "PERFORMANCE"
+
+#: src/pages/@layouts/Navbar/NavLinks.tsx
 #: src/pages/PerpDEXsExplorer/index.tsx
 #: src/pages/PerpDEXsExplorer/index.tsx
 msgid "PERP EXPLORER"
 msgstr "PERP EXPLORER"
 
+#: src/components/@copinLite/OnboardingModal/TraderList.tsx
 #: src/components/@trader/TraderLeaderboardTableView/index.tsx
 msgid "PNL"
 msgstr "PNL"
@@ -2341,7 +2556,15 @@ msgstr "PNL ($)"
 msgid "PNL Ratio"
 msgstr "PNL Ratio"
 
-#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/pages/@layouts/Footer/index.tsx
+msgid "POLICY"
+msgstr "POLICY"
+
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+msgid "PREMIUM PLAN"
+msgstr "PREMIUM PLAN"
+
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Paid Fees:"
@@ -2356,26 +2579,9 @@ msgstr "Password"
 msgid "Past Month Return"
 msgstr "Past Month Return"
 
-#: src/components/@widgets/ConditionFilterForm/index.tsx
-msgid "Percentile"
-msgstr "Percentile"
-
-#: src/pages/Explorer/ConditionFilter/index.tsx
-msgid "Percentile Filter"
-msgstr "Percentile Filter"
-
-#: src/pages/ComparingTraders/ComparisonComponent.tsx
-#: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
-msgid "Percentile Ranking Comparison"
-msgstr "Percentile Ranking Comparison"
-
 #: src/pages/VaultDetails/VaultInfo/VaultPerformance.tsx
 msgid "Performance"
 msgstr "Performance"
-
-#: src/pages/@layouts/Navbar/NavLinks.tsx
-msgid "Perp Explorer"
-msgstr "Perp Explorer"
 
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
@@ -2390,6 +2596,10 @@ msgstr "Pick From Copytrades"
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 msgid "Pick From Favorites"
 msgstr "Pick From Favorites"
+
+#: src/components/@copinLite/OnboardingModal/TraderList.tsx
+msgid "Pick the trader you want to copy"
+msgstr "Pick the trader you want to copy"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Platform"
@@ -2457,10 +2667,6 @@ msgstr "PnL Ratio"
 msgid "PnL w. Fees"
 msgstr "PnL w. Fees"
 
-#: src/pages/@layouts/Footer/index.tsx
-msgid "Policy"
-msgstr "Policy"
-
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 msgid "Position"
 msgstr "Position"
@@ -2474,10 +2680,21 @@ msgstr "Position List"
 msgid "Position Side"
 msgstr "Position Side"
 
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-msgid "Premium Plan"
-msgstr "Premium Plan"
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Position average duration between 24 hours to 7 days."
+msgstr "Position average duration between 24 hours to 7 days."
+
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Position average duration less than 24 hours."
+msgstr "Position average duration less than 24 hours."
+
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Position average duration more than 7 days."
+msgstr "Position average duration more than 7 days."
+
+#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
+msgid "Positions"
+msgstr "Positions"
 
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "Prices may be changed by Copin depending on the project's performance and operations."
@@ -2509,6 +2726,10 @@ msgstr "Profit Rate"
 msgid "Profit Sharing"
 msgstr "Profit Sharing"
 
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
+msgid "Profit or loss as a percentage of the total trade value (notional)"
+msgstr "Profit or loss as a percentage of the total trade value (notional)"
+
 #: src/components/@widgets/FilterProtocol/index.tsx
 msgid "Protocols"
 msgstr "Protocols"
@@ -2522,6 +2743,10 @@ msgstr "Protocols:"
 msgid "Q&A"
 msgstr "Q&A"
 
+#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
+msgid "QUICK SELECT"
+msgstr "QUICK SELECT"
+
 #: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
 #: src/pages/MyProfile/VaultManagement/ModifyTPSLModal.tsx
 msgid "Qty"
@@ -2531,22 +2756,31 @@ msgstr "Qty"
 msgid "Quantity"
 msgstr "Quantity"
 
-#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
-msgid "Quick Search"
-msgstr "Quick Search"
-
 #: src/utils/config/options.tsx
 msgid "Quickly Settled"
 msgstr "Quickly Settled"
+
+#: src/pages/Subscription/TermsAndConditions.tsx
+msgid "READ MORE"
+msgstr "READ MORE"
+
+#: src/pages/@layouts/Navbar/NavLinks.tsx
+msgid "REFERRAL"
+msgstr "REFERRAL"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
+msgid "REVENUE (TRADING FEE)"
+msgstr "REVENUE (TRADING FEE)"
 
 #: src/components/@backtest/BacktestSimpleResult/index.tsx
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "ROI"
 msgstr "ROI"
 
-#: src/pages/Subscription/TermsAndConditions.tsx
-msgid "Read More"
-msgstr "Read More"
+#: src/theme/Tag/index.tsx
+#: src/utils/config/translations.tsx
+msgid "RUNNING"
+msgstr "RUNNING"
 
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 msgid "Read more"
@@ -2563,10 +2797,6 @@ msgstr "Recommend"
 #: src/pages/PositionDetails/index.tsx
 msgid "Recommend Results"
 msgstr "Recommend Results"
-
-#: src/pages/@layouts/Navbar/NavLinks.tsx
-msgid "Referral"
-msgstr "Referral"
 
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 msgid "Referral Code (optional)"
@@ -2599,9 +2829,12 @@ msgstr "Reload"
 #: src/pages/MyProfile/ListCopyTrade/useCEXCopyTradeColumns.tsx
 #: src/pages/MyProfile/ListCopyTrade/useDEXCopyTradeColumns.tsx
 #: src/pages/MyProfile/ListCopyTrade/useVaultCopyTradeColumns.tsx
-#: src/pages/TraderDetails/AlertAction.tsx
 msgid "Remove"
 msgstr "Remove"
+
+#: src/components/@widgets/UnsubscribeAlertModal/index.tsx
+msgid "Remove this trader from alert list?"
+msgstr "Remove this trader from alert list?"
 
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
 msgid "Request"
@@ -2629,10 +2862,6 @@ msgstr "Reset password successful!"
 msgid "Results"
 msgstr "Results"
 
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
-msgid "Revenue (Trading Fee)"
-msgstr "Revenue (Trading Fee)"
-
 #: src/pages/MyProfile/ListCopyTrade/index.tsx
 #: src/utils/config/translations.tsx
 msgid "Reverse Copy"
@@ -2641,11 +2870,6 @@ msgstr "Reverse Copy"
 #: src/pages/TraderDetails/TraderStats.tsx
 msgid "Run Time (All)"
 msgstr "Run Time (All)"
-
-#: src/theme/Tag/index.tsx
-#: src/utils/config/translations.tsx
-msgid "Running"
-msgstr "Running"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/Stats.tsx
 msgid "Runtime"
@@ -2665,6 +2889,30 @@ msgstr "Runtime (All)"
 msgid "S"
 msgstr "S"
 
+#: src/pages/TraderDetails/TraderRankingExpanded/SearchTraders.tsx
+msgid "SEARCH BY ADDRESS"
+msgstr "SEARCH BY ADDRESS"
+
+#: src/components/@widgets/SelectMarketWithSearch/index.tsx
+#: src/pages/MyProfile/FilterBySource.tsx
+#: src/pages/MyProfile/SelectCopyTradesDropdown.tsx
+#: src/pages/MyProfile/SelectTradersCopied.tsx
+#: src/pages/MyProfile/SelectWallets.tsx
+msgid "SELECT ALL"
+msgstr "SELECT ALL"
+
+#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
+msgid "SELECTED"
+msgstr "SELECTED"
+
+#: src/theme/Tag/index.tsx
+msgid "SHORT"
+msgstr "SHORT"
+
+#: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
+msgid "SIMILAR TRADERS"
+msgstr "SIMILAR TRADERS"
+
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 #: src/pages/DailyTrades/Orders/config.tsx
 msgid "SIZE ($)"
@@ -2680,17 +2928,57 @@ msgstr "SL/TP"
 msgid "SMART WALLET"
 msgstr "SMART WALLET"
 
-#: src/components/@dailyTrades/PositionStatusFilterTitle.tsx
+#: src/components/@ui/ProtocolFilter/ProtocolSortOptions.tsx
+msgid "SORT BY A-Z"
+msgstr "SORT BY A-Z"
+
+#: src/components/@ui/ProtocolFilter/ProtocolSortOptions.tsx
+msgid "SORT BY TRADERS"
+msgstr "SORT BY TRADERS"
+
+#: src/pages/Home/Traders.tsx
+msgid "SOURCE"
+msgstr "SOURCE"
+
+#: src/pages/MyProfile/FilterBySource.tsx
+msgid "SOURCE:"
+msgstr "SOURCE:"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/index.tsx
+#: src/pages/PerpDEXsExplorer/index.tsx
+#: src/pages/ReferralManagement/index.tsx
+msgid "STATISTIC"
+msgstr "STATISTIC"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/Charts.tsx
+msgid "STATISTIC CHARTS"
+msgstr "STATISTIC CHARTS"
+
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+msgid "STATS"
+msgstr "STATS"
+
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+#: src/pages/MyProfile/FilterByStatus.tsx
 msgid "STATUS"
 msgstr "STATUS"
+
+#: src/theme/Tag/index.tsx
+#: src/utils/config/translations.tsx
+msgid "STOPPED"
+msgstr "STOPPED"
+
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+msgid "SUBSCRIPTION"
+msgstr "SUBSCRIPTION"
+
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+msgid "SYSTEM STATUS"
+msgstr "SYSTEM STATUS"
 
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Save {0}%"
 msgstr "Save {0}%"
-
-#: src/pages/TraderDetails/TraderRankingExpanded/SearchTraders.tsx
-msgid "Search by address"
-msgstr "Search by address"
 
 #: src/pages/MyProfile/CEXManagement/ListCEXCopyTrades.tsx
 #: src/pages/MyProfile/DCPManagement/ListDCPCopyTrades.tsx
@@ -2706,12 +2994,7 @@ msgstr "Select Date"
 msgid "Select Other Trader"
 msgstr "Select Other Trader"
 
-#: src/components/@widgets/SelectMarketWithSearch/index.tsx
 #: src/pages/MyProfile/FilterBySource.tsx
-#: src/pages/MyProfile/FilterBySource.tsx
-#: src/pages/MyProfile/SelectCopyTradesDropdown.tsx
-#: src/pages/MyProfile/SelectTradersCopied.tsx
-#: src/pages/MyProfile/SelectWallets.tsx
 msgid "Select all"
 msgstr "Select all"
 
@@ -2727,7 +3010,6 @@ msgstr "Select the copy you want to open:"
 msgid "Select the vault you want to clone:"
 msgstr "Select the vault you want to clone:"
 
-#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
 #: src/components/@widgets/ChainSelection/index.tsx
 msgid "Selected"
 msgstr "Selected"
@@ -2740,6 +3022,10 @@ msgstr "Selected:"
 #: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
 msgid "Send Report"
 msgstr "Send Report"
+
+#: src/pages/CopinLite/Wallet/Deposit.tsx
+msgid "Send USDC over Arbitrum"
+msgstr "Send USDC over Arbitrum"
 
 #: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
 msgid "Send report successfully"
@@ -2757,6 +3043,7 @@ msgstr "Setting configs has been succeeded"
 msgid "Settings"
 msgstr "Settings"
 
+#: src/components/@backtest/BacktestShareButton/index.tsx
 #: src/components/@position/TraderPositionDetails/SharePosition.tsx
 msgid "Share"
 msgstr "Share"
@@ -2765,9 +3052,13 @@ msgstr "Share"
 msgid "Share On:"
 msgstr "Share On:"
 
-#: src/theme/Tag/index.tsx
-msgid "Short"
-msgstr "Short"
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Shark / Whale"
+msgstr "Shark / Whale"
+
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Short Term (Day)"
+msgstr "Short Term (Day)"
 
 #: src/components/@ui/InfiniteLoadmoreButton/index.tsx
 msgid "Show more"
@@ -2786,10 +3077,6 @@ msgstr "Sign Message Error"
 msgid "Sign message"
 msgstr "Sign message"
 
-#: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
-msgid "Similar Traders"
-msgstr "Similar Traders"
-
 #: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Size"
 msgstr "Size"
@@ -2802,9 +3089,19 @@ msgstr "Size ($):"
 msgid "Size Delta:"
 msgstr "Size Delta:"
 
+#: src/components/@copyTrade/CopyTradeForm/index.tsx
+msgid "Size Lower Than"
+msgstr "Size Lower Than"
+
 #: src/utils/config/translations.tsx
 msgid "Size Token"
 msgstr "Size Token"
+
+#: src/components/@copinLite/OnboardingModal/TraderFilter.tsx
+#: src/components/@copinLite/OnboardingModal/index.tsx
+#: src/components/@copinLite/OnboardingModal/index.tsx
+msgid "Skip"
+msgstr "Skip"
 
 #: src/utils/config/translations.tsx
 msgid "Skip Lower Collateral Position"
@@ -2817,6 +3114,10 @@ msgstr "Skip Lower Leverage Position"
 #: src/utils/config/translations.tsx
 msgid "Skip Lower Size Position"
 msgstr "Skip Lower Size Position"
+
+#: src/components/@copyTrade/CopyTradeForm/index.tsx
+msgid "Skip Trade"
+msgstr "Skip Trade"
 
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "Skipping..."
@@ -2857,18 +3158,6 @@ msgstr "Something went wrong, please try later"
 msgid "Something went wrong, please try later."
 msgstr "Something went wrong, please try later."
 
-#: src/components/@ui/ProtocolFilter/ProtocolSortOptions.tsx
-msgid "Sort by A-Z"
-msgstr "Sort by A-Z"
-
-#: src/components/@ui/ProtocolFilter/ProtocolSortOptions.tsx
-msgid "Sort by traders"
-msgstr "Sort by traders"
-
-#: src/pages/Home/Traders.tsx
-msgid "Source"
-msgstr "Source"
-
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Source Action"
 msgstr "Source Action"
@@ -2890,7 +3179,6 @@ msgid "Source Trader"
 msgstr "Source Trader"
 
 #: src/pages/MyProfile/FilterBySource.tsx
-#: src/pages/MyProfile/FilterBySource.tsx
 msgid "Source:"
 msgstr "Source:"
 
@@ -2902,31 +3190,15 @@ msgstr "Start in {daysLeft} days"
 msgid "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
 msgstr "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
 
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/index.tsx
-#: src/pages/PerpDEXsExplorer/index.tsx
-#: src/pages/ReferralManagement/index.tsx
-msgid "Statistic"
-msgstr "Statistic"
-
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/Charts.tsx
-msgid "Statistic Chart"
-msgstr "Statistic Chart"
-
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
+#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
 msgid "Stats"
 msgstr "Stats"
 
-#: src/pages/MyProfile/FilterByStatus.tsx
+#: src/pages/CopinLite/Transactions/configs.tsx
 #: src/pages/MyProfile/UserActivity/configs.tsx
 #: src/utils/config/translations.tsx
 msgid "Status"
 msgstr "Status"
-
-#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
-#: src/components/@position/TraderPositionDetails/PositionStats.tsx
-msgid "Status:"
-msgstr "Status:"
 
 #: src/utils/config/translations.tsx
 msgid "Stop Copy"
@@ -2955,13 +3227,6 @@ msgstr "Stop Loss Details"
 msgid "Stop Loss Type"
 msgstr "Stop Loss Type"
 
-#: src/theme/Tag/index.tsx
-#: src/utils/config/translations.tsx
-msgid "Stopped"
-msgstr "Stopped"
-
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/Subscription/index.tsx
 #: src/pages/Subscription/index.tsx
 msgid "Subscription"
@@ -2970,6 +3235,7 @@ msgstr "Subscription"
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyTradeCloneForm/index.tsx
 #: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyVaultButton/CopyVaultModal.tsx
@@ -3046,25 +3312,86 @@ msgstr "Synthetix v2 Wallet"
 msgid "Synthetix v3"
 msgstr "Synthetix v3"
 
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-msgid "System Status"
-msgstr "System Status"
+#: src/components/@position/CopyOpeningPositions/index.tsx
+msgid "System creates a copy order"
+msgstr "System creates a copy order"
+
+#: src/pages/@layouts/Footer/index.tsx
+msgid "TERMS & POLICY"
+msgstr "TERMS & POLICY"
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "TIME"
 msgstr "TIME"
 
+#: src/components/@copinLite/OnboardingModal/TraderList.tsx
+msgid "TIP: Click to trader avatar to quick view the details"
+msgstr "TIP: Click to trader avatar to quick view the details"
+
+#: src/pages/TraderDetails/ChartTrader/ChartPositions.tsx
+msgid "TOKEN PREFERENCES"
+msgstr "TOKEN PREFERENCES"
+
+#: src/pages/Home/Traders.tsx
+msgid "TOP"
+msgstr "TOP"
+
+#: src/pages/Stats/Overview.tsx
+msgid "TOTAL NET PROFIT"
+msgstr "TOTAL NET PROFIT"
+
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "TOTAL ORDER"
 msgstr "TOTAL ORDER"
 
+#: src/pages/Stats/Overview.tsx
+msgid "TOTAL ORDERS"
+msgstr "TOTAL ORDERS"
+
+#: src/pages/Stats/Overview.tsx
+msgid "TOTAL USERS"
+msgstr "TOTAL USERS"
+
+#: src/pages/Stats/Overview.tsx
+msgid "TOTAL VOLUME"
+msgstr "TOTAL VOLUME"
+
+#: src/pages/@layouts/Navbar/NavLinks.tsx
 #: src/pages/Leaderboard/index.tsx
 msgid "TRADER BOARD"
 msgstr "TRADER BOARD"
 
+#: src/pages/@layouts/Navbar/NavLinks.tsx
 #: src/pages/Explorer/index.tsx
+#: src/pages/Explorer/index.tsx
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/TradersExplorerLink.tsx
 msgid "TRADER EXPLORER"
 msgstr "TRADER EXPLORER"
+
+#: src/pages/MyProfile/Favorites/index.tsx
+#: src/pages/MyProfile/Favorites/index.tsx
+msgid "TRADER FAVORITES STATISTICS"
+msgstr "TRADER FAVORITES STATISTICS"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
+msgid "TRADER LIQUIDATIONS"
+msgstr "TRADER LIQUIDATIONS"
+
+#: src/pages/Home/index.tsx
+msgid "TRADERS"
+msgstr "TRADERS"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
+msgid "TRADERS' NET PNL"
+msgstr "TRADERS' NET PNL"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
+msgid "TRADERS' PROFIT & LOSS"
+msgstr "TRADERS' PROFIT & LOSS"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
+msgid "TRADING VOLUME"
+msgstr "TRADING VOLUME"
 
 #: src/pages/VaultDetails/VaultStats.tsx
 msgid "TVL"
@@ -3110,13 +3437,9 @@ msgstr "Term of Use"
 msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
-#: src/pages/@layouts/Footer/index.tsx
-msgid "Terms & Policy"
-msgstr "Terms & Policy"
-
 #: src/pages/Subscription/TermsAndConditions.tsx
-msgid "Terms and conditions"
-msgstr "Terms and conditions"
+msgid "Terms And Conditions"
+msgstr "Terms And Conditions"
 
 #: src/hooks/web3/useRequiredChain.tsx
 msgid "The account in your web3 wallet does not match the account currently in use in the app"
@@ -3204,6 +3527,10 @@ msgstr "This Page Could Not Be Found"
 msgid "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
 msgstr "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
 
+#: src/pages/CopinLite/Wallet/Deposit.tsx
+msgid "This address can only receive native USDC from the Arbitrum network. Minimum deposit is 5 USDC."
+msgstr "This address can only receive native USDC from the Arbitrum network. Minimum deposit is 5 USDC."
+
 #: src/pages/LinkBotTelegram/index.tsx
 msgid "This bot alert has been subscribed successfully"
 msgstr "This bot alert has been subscribed successfully"
@@ -3219,10 +3546,6 @@ msgstr "This feature only supports on {0}"
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/Charts.tsx
 msgid "This graph will show {0} demographics once responses come in"
 msgstr "This graph will show {0} demographics once responses come in"
-
-#: src/components/@copyTrade/CopyTradeForm/index.tsx
-msgid "This is a beta feature. Please copy at your own risk."
-msgstr "This is a beta feature. Please copy at your own risk."
 
 #: src/components/@backtest/BacktestSimpleModal/index.tsx
 msgid "This is the result of a calculation based on past data, not a prediction of future results. Please think twice before making a decision."
@@ -3246,6 +3569,11 @@ msgstr "This trader is being copied by 10 or more copiers."
 msgid "This trader list is empty"
 msgstr "This trader list is empty"
 
+#: src/components/@copinLite/OnboardingModal/TraderFilter.tsx
+msgid "This will help us find copy trader that fit for you"
+msgstr "This will help us find copy trader that fit for you"
+
+#: src/pages/CopinLite/Transactions/configs.tsx
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Time"
 msgstr "Time"
@@ -3262,24 +3590,25 @@ msgstr "To start, you need to create a smart wallet."
 msgid "To unlock premium and VIP features, mint a Copin NFT."
 msgstr "To unlock premium and VIP features, mint a Copin NFT."
 
-#: src/components/@dailyTrades/PairFilterTitle.tsx
+#: src/components/@dailyTrades/PairFilterIcon.tsx
 msgid "Toggle to select specific pairs"
 msgstr "Toggle to select specific pairs"
 
-#: src/pages/Home/Traders.tsx
-msgid "Top"
-msgstr "Top"
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
+msgid "Top Highest PNL Tokens"
+msgstr "Top Highest PNL Tokens"
 
-#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
-#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
-#: src/components/@position/TraderPositionDetails/PositionStats.tsx
-#: src/components/@position/TraderPositionDetails/PositionStats.tsx
-msgid "Total Collateral:"
-msgstr "Total Collateral:"
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Top Profit"
+msgstr "Top Profit"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Total Gain"
 msgstr "Total Gain"
+
+#: src/components/@backtest/BacktestSimpleResult/index.tsx
+msgid "Total Liquidation"
+msgstr "Total Liquidation"
 
 #: src/components/@trader/TraderLeaderboardTableView/index.tsx
 msgid "Total Liquidations"
@@ -3292,14 +3621,6 @@ msgstr "Total Loses"
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Total Loss"
 msgstr "Total Loss"
-
-#: src/pages/Stats/Overview.tsx
-msgid "Total Net Profit"
-msgstr "Total Net Profit"
-
-#: src/pages/Stats/Overview.tsx
-msgid "Total Orders"
-msgstr "Total Orders"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@trader/TraderLeaderboardTableView/index.tsx
@@ -3319,20 +3640,16 @@ msgstr "Total Size Token"
 msgid "Total Trade"
 msgstr "Total Trade"
 
+#: src/components/@backtest/BacktestSimpleResult/index.tsx
 #: src/components/@trader/TraderLeaderboardTableView/index.tsx
 #: src/components/@widgets/SearchAllResults/index.tsx
 msgid "Total Trades"
 msgstr "Total Trades"
 
-#: src/pages/Stats/Overview.tsx
-msgid "Total Users"
-msgstr "Total Users"
-
 #: src/components/@copier/CopierLeaderboardTableView/index.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@trader/TraderLeaderboardTableView/index.tsx
 #: src/components/@widgets/SearchAllResults/index.tsx
-#: src/pages/Stats/Overview.tsx
 msgid "Total Volume"
 msgstr "Total Volume"
 
@@ -3340,13 +3657,9 @@ msgstr "Total Volume"
 msgid "Total Wins"
 msgstr "Total Wins"
 
-#: src/components/@backtest/BacktestSimpleResult/index.tsx
-msgid "Total liquidation"
-msgstr "Total liquidation"
-
-#: src/components/@backtest/BacktestSimpleResult/index.tsx
-msgid "Total trade"
-msgstr "Total trade"
+#: src/pages/CopinLite/index.tsx
+msgid "Trade"
+msgstr "Trade"
 
 #: src/components/@ui/TradeProtocol/index.tsx
 msgid "Trade On"
@@ -3359,35 +3672,21 @@ msgstr "Trade On"
 msgid "Trader"
 msgstr "Trader"
 
-#: src/pages/@layouts/Navbar/NavLinks.tsx
-#: src/pages/Leaderboard/index.tsx
-msgid "Trader Board"
-msgstr "Trader Board"
-
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Trader Favorites"
 msgstr "Trader Favorites"
-
-#: src/pages/MyProfile/Favorites/index.tsx
-#: src/pages/MyProfile/Favorites/index.tsx
-msgid "Trader Favorites Statistics"
-msgstr "Trader Favorites Statistics"
-
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
-msgid "Trader Liquidations"
-msgstr "Trader Liquidations"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "Trader don't have statistic in {0}"
 msgstr "Trader don't have statistic in {0}"
 
+#: src/components/@position/CopyOpeningPositions/index.tsx
+msgid "Trader places an order"
+msgstr "Trader places an order"
+
 #: src/pages/Subscription/Plans.tsx
 msgid "Trader to copy"
 msgstr "Trader to copy"
-
-#: src/pages/Home/index.tsx
-msgid "Traders"
-msgstr "Traders"
 
 #: src/pages/ComparingTraders/index.tsx
 msgid "Traders Comparison in"
@@ -3397,39 +3696,46 @@ msgstr "Traders Comparison in"
 msgid "Traders Comparison in {0}"
 msgstr "Traders Comparison in {0}"
 
-#: src/pages/@layouts/Navbar/NavLinks.tsx
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/TradersExplorerLink.tsx
-msgid "Traders Explorer"
-msgstr "Traders Explorer"
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Traders has win rate more than 80%"
+msgstr "Traders has win rate more than 80%"
 
-#: src/pages/Explorer/index.tsx
-msgid "Traders explorer"
-msgstr "Traders explorer"
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Traders have average volume more than $1M"
+msgstr "Traders have average volume more than $1M"
 
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
-msgid "Traders' Net PnL"
-msgstr "Traders' Net PnL"
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Traders have profit rate more than 80%."
+msgstr "Traders have profit rate more than 80%."
 
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
-msgid "Traders' Profit & Loss"
-msgstr "Traders' Profit & Loss"
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Traders trade more than 1 position a day."
+msgstr "Traders trade more than 1 position a day."
+
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Traders usually trade Altcoin."
+msgstr "Traders usually trade Altcoin."
+
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Traders usually trade BTC/ETH."
+msgstr "Traders usually trade BTC/ETH."
+
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Traders usually trade Meme Coin."
+msgstr "Traders usually trade Meme Coin."
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/utils/config/options.tsx
 msgid "Trades"
 msgstr "Trades"
 
-#: src/components/@dailyTrades/PairFilterTitle.tsx
-#: src/components/@dailyTrades/PairFilterTitle.tsx
+#: src/components/@dailyTrades/PairFilterIcon.tsx
+#: src/components/@dailyTrades/PairFilterIcon.tsx
 #: src/pages/MyProfile/ListCopyTrade/index.tsx
 #: src/pages/MyProfile/ListCopyTrade/index.tsx
 #: src/utils/config/translations.tsx
 msgid "Trading Pairs"
 msgstr "Trading Pairs"
-
-#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
-msgid "Trading Volume"
-msgstr "Trading Volume"
 
 #: src/hooks/web3/useContractMutation.tsx
 msgid "Transaction has been executed successfully"
@@ -3452,6 +3758,15 @@ msgstr "TxHash"
 #: src/utils/config/translations.tsx
 msgid "Type"
 msgstr "Type"
+
+#: src/theme/Tag/index.tsx
+msgid "UPCOMING"
+msgstr "UPCOMING"
+
+#: src/pages/@layouts/Footer/index.tsx
+#: src/pages/@layouts/Footer/index.tsx
+msgid "UPGRADE"
+msgstr "UPGRADE"
 
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Unique traders are copied in the system"
@@ -3484,6 +3799,10 @@ msgstr "Unlink your account with Copin Telegram Bot?"
 msgid "Unlock"
 msgstr "Unlock"
 
+#: src/pages/TraderDetails/AlertAction.tsx
+msgid "Unnotify"
+msgstr "Unnotify"
+
 #: src/hooks/web3/useChainRestrict.tsx
 msgid "Unsupported Network"
 msgstr "Unsupported Network"
@@ -3492,7 +3811,6 @@ msgstr "Unsupported Network"
 msgid "Unverified User"
 msgstr "Unverified User"
 
-#: src/theme/Tag/index.tsx
 #: src/utils/config/translations.tsx
 msgid "Upcoming"
 msgstr "Upcoming"
@@ -3504,11 +3822,6 @@ msgstr "Update configs has been succeeded"
 #: src/components/@wallet/UpdateWalletModals/UpdateHyperliquidWalletModal.tsx
 msgid "Update wallet successful!"
 msgstr "Update wallet successful!"
-
-#: src/pages/@layouts/Footer/index.tsx
-#: src/pages/@layouts/Footer/index.tsx
-msgid "Upgrade"
-msgstr "Upgrade"
 
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
 #: src/pages/Settings/AlertList/index.tsx
@@ -3527,11 +3840,23 @@ msgstr "Upgrade To Premium Account"
 msgid "Use this code"
 msgstr "Use this code"
 
+#: src/components/@widgets/ConditionFilterForm/index.tsx
+msgid "VALUE"
+msgstr "VALUE"
+
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/MyProfile/index.tsx
 msgid "VAULT"
 msgstr "VAULT"
 
+#: src/pages/VaultDetails/VaultInfo/index.tsx
+msgid "VAULT INFORMATION"
+msgstr "VAULT INFORMATION"
+
 #: src/pages/Subscription/Plans.tsx
+msgid "VIP PLAN"
+msgstr "VIP PLAN"
+
 #: src/pages/Subscription/Plans.tsx
 msgid "VIP Plan"
 msgstr "VIP Plan"
@@ -3539,14 +3864,6 @@ msgstr "VIP Plan"
 #: src/pages/Subscription/Plans.tsx
 msgid "VIP exclusive signal (group and APIs)"
 msgstr "VIP exclusive signal (group and APIs)"
-
-#: src/components/@widgets/ConditionFilterForm/index.tsx
-msgid "Value"
-msgstr "Value"
-
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-msgid "Vault"
-msgstr "Vault"
 
 #: src/pages/VaultDetails/index.tsx
 msgid "Vault Address"
@@ -3556,17 +3873,9 @@ msgstr "Vault Address"
 msgid "Vault Copying"
 msgstr "Vault Copying"
 
-#: src/pages/VaultDetails/VaultInfo/index.tsx
-msgid "Vault Information"
-msgstr "Vault Information"
-
 #: src/pages/MyProfile/index.tsx
 msgid "Vault Management"
 msgstr "Vault Management"
-
-#: src/pages/VaultDetails/VaultInfo/index.tsx
-msgid "Vault Performance"
-msgstr "Vault Performance"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Vault Wallet"
@@ -3592,9 +3901,18 @@ msgstr "Volume"
 msgid "WALLET WATCHER"
 msgstr "WALLET WATCHER"
 
+#: src/pages/WalletManagement/Layouts/MobileLayout.tsx
+msgid "WALLETS"
+msgstr "WALLETS"
+
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/Info.tsx
 msgid "WEEKLY"
 msgstr "WEEKLY"
+
+#: src/components/@wallet/SmartWalletFundModal/index.tsx
+#: src/pages/VaultDetails/VaultFundMangement/index.tsx
+msgid "WITHDRAW"
+msgstr "WITHDRAW"
 
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 #: src/components/@auth/LoginAction/ModalRegister.tsx
@@ -3604,6 +3922,8 @@ msgid "Waiting..."
 msgstr "Waiting..."
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/CopinLite/Wallet/Balance.tsx
+#: src/pages/CopinLite/index.tsx
 msgid "Wallet"
 msgstr "Wallet"
 
@@ -3656,25 +3976,19 @@ msgid "What is smart wallet?"
 msgstr "What is smart wallet?"
 
 #: src/components/@backtest/BacktestForm/index.tsx
-#: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "When the position's loss exceeds {0}, the Stop Loss will be triggered to close the position."
 msgstr "When the position's loss exceeds {0}, the Stop Loss will be triggered to close the position."
 
 #: src/components/@backtest/BacktestForm/index.tsx
-#: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "When the position's profit exceeds {0}, the Take Profit will be triggered to close the position."
 msgstr "When the position's profit exceeds {0}, the Take Profit will be triggered to close the position."
 
-#: src/components/@copyTrade/CopyTradeForm/index.tsx
-msgid "When the trader increases the position, you will follow with a maximum of {0} as the margin."
-msgstr "When the trader increases the position, you will follow with a maximum of {0} as the margin."
-
 #: src/components/@backtest/BacktestForm/index.tsx
 #: src/components/@backtest/BacktestFormSimple/index.tsx
-#: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "When the trader opens a trade, the maximum margin per order is {0}."
 msgstr "When the trader opens a trade, the maximum margin per order is {0}."
 
+#: src/components/@backtest/BacktestSimpleResult/index.tsx
 #: src/components/@copier/CopierLeaderboardTableView/index.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@widgets/SearchAllResults/index.tsx
@@ -3683,9 +3997,9 @@ msgstr "When the trader opens a trade, the maximum margin per order is {0}."
 msgid "Win Rate"
 msgstr "Win Rate"
 
-#: src/components/@backtest/BacktestSimpleResult/index.tsx
-msgid "Win rate"
-msgstr "Win rate"
+#: src/components/@copinLite/OnboardingModal/configs.tsx
+msgid "Win Streak"
+msgstr "Win Streak"
 
 #: src/components/@copier/CopierLeaderboardTableView/index.tsx
 msgid "Win/Lose"
@@ -3699,14 +4013,21 @@ msgstr "Win/Trades"
 msgid "Wins"
 msgstr "Wins"
 
+#: src/components/@copinLite/OnboardingModal/TraderList.tsx
+msgid "Wins / Trades"
+msgstr "Wins / Trades"
+
 #: src/components/@wallet/SmartWalletFundModal/Withdraw.tsx
-#: src/components/@wallet/SmartWalletFundModal/index.tsx
 #: src/components/@wallet/WalletDetailsCard/SmartWalletActions.tsx
+#: src/pages/CopinLite/Wallet/index.tsx
 #: src/pages/VaultDetails/VaultFundMangement/ConfirmWithdrawModal.tsx
 #: src/pages/VaultDetails/VaultFundMangement/VaultWithdraw.tsx
-#: src/pages/VaultDetails/VaultFundMangement/index.tsx
 msgid "Withdraw"
 msgstr "Withdraw"
+
+#: src/pages/CopinLite/Wallet/Withdraw.tsx
+msgid "Withdraw USDC To Arbitrum"
+msgstr "Withdraw USDC To Arbitrum"
 
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
 msgid "Would you like to upgrade your account?"
@@ -3780,8 +4101,8 @@ msgid "You will {label} your plan for an additional"
 msgstr "You will {label} your plan for an additional"
 
 #: src/components/@widgets/UnsubscribeAlertModal/index.tsx
-msgid "You won’t be notified each time this trader engages in new activity."
-msgstr "You won’t be notified each time this trader engages in new activity."
+msgid "You won’t be notified each time this trader places a trade"
+msgstr "You won’t be notified each time this trader places a trade"
 
 #: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
 msgid "You won’t get any notification from our bot."
@@ -3898,6 +4219,10 @@ msgstr "Your OKX Pass Phrase"
 msgid "Your OKX Secret Key"
 msgstr "Your OKX Secret Key"
 
+#: src/pages/MyProfile/ListCopyTrade/useCEXCopyTradeColumns.tsx
+msgid "Your balance is too low for copy trading. Please Deposit now to continue!"
+msgstr "Your balance is too low for copy trading. Please Deposit now to continue!"
+
 #: src/components/@copyTrade/CopyTradeForm/FundChecking.tsx
 msgid "Your copy may failed due to insufficient available fund"
 msgstr "Your copy may failed due to insufficient available fund"
@@ -3906,6 +4231,10 @@ msgstr "Your copy may failed due to insufficient available fund"
 msgid "Your email"
 msgstr "Your email"
 
+#: src/components/@position/CopyOpeningPositions/index.tsx
+msgid "Your order will be executed"
+msgstr "Your order will be executed"
+
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To continue, mint a new NFT."
 msgstr "Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To continue, mint a new NFT."
@@ -3913,6 +4242,10 @@ msgstr "Your premium status lasts for 30 days, after which the NFT expires and c
 #: src/hooks/features/useUpdateCopyTrade.tsx
 msgid "Your update has been succeeded"
 msgstr "Your update has been succeeded"
+
+#: src/components/@position/CopyOpeningPositions/index.tsx
+msgid "Your {title} Is Empty"
+msgstr "Your {title} Is Empty"
 
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
@@ -3989,6 +4322,7 @@ msgstr "slippage"
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
+#: src/components/@copinLite/OnboardingModal/TraderList.tsx
 #: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
 #: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
 #: src/components/@wallet/CreateWalletModals/CreateBinanceWalletModal.tsx
@@ -4042,6 +4376,10 @@ msgstr "{0}"
 msgid "{0} Avg ROI (%)"
 msgstr "{0} Avg ROI (%)"
 
+#: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
+msgid "{0} Performance"
+msgstr "{0} Performance"
+
 #: src/pages/Home/Traders.tsx
 msgid "{0} PnL ($)"
 msgstr "{0} PnL ($)"
@@ -4055,8 +4393,8 @@ msgid "{0} months"
 msgstr "{0} months"
 
 #: src/pages/MyProfile/SelectTradersCopied.tsx
-msgid "{0} traders"
-msgstr "{0} traders"
+msgid "{0}/<0>{1}</0> Traders"
+msgstr "{0}/<0>{1}</0> Traders"
 
 #: src/pages/PerpDEXsExplorer/helpers/eventsHelper.tsx
 msgid "{daysLeft} days left"
@@ -4065,10 +4403,6 @@ msgstr "{daysLeft} days left"
 #: src/pages/TraderDetails/ScoreChart.tsx
 msgid "{label} is better than {value} traders"
 msgstr "{label} is better than {value} traders"
-
-#: src/theme/Tab/IconTabItem.tsx
-msgid "{text}"
-msgstr "{text}"
 
 #: src/pages/@layouts/Footer/index.tsx
 msgid "© 2024 Copin. All rights reserved. Data since Nov 2022. Smart contract: v0.1.0"

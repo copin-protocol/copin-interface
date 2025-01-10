@@ -5,11 +5,11 @@ import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { GridProps } from 'styled-system'
 
 import UncontrolledInputSearch, { useUncontrolledInputSearchHandler } from 'components/@widgets/UncontrolledInputSearch'
-import { Button } from 'theme/Buttons'
+import { Button, ButtonVariant } from 'theme/Buttons'
 import Checkbox from 'theme/Checkbox'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 
 import { ColumnData } from './types'
 
@@ -23,6 +23,7 @@ function CustomizeColumn<T, K>({
   placement = 'topRight',
   disabledItemFn,
   buttonSx = {},
+  buttonVariant = 'ghost',
   label,
   titleFactory,
   defaultKeys,
@@ -37,6 +38,7 @@ function CustomizeColumn<T, K>({
   placement?: 'bottom' | 'top' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
   disabledItemFn?: (key: keyof T | undefined) => boolean
   buttonSx?: any
+  buttonVariant?: ButtonVariant
   label?: ReactNode
   titleFactory?: (columnData: Partial<ColumnData<T, K>>) => any
 }) {
@@ -129,25 +131,41 @@ function CustomizeColumn<T, K>({
   }
   return (
     <Dropdown
+      buttonVariant={buttonVariant}
+      inline
       visible={visible}
       setVisible={setVisible}
       menuSx={{
         width: 320,
         p: 2,
+        height: 376,
+        '& > *': {
+          height: '100%',
+          '& > *': {
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+          },
+        },
+        '.item__wrapper': {
+          flex: '1 0 0',
+          overflow: 'auto',
+        },
         ...menuSx,
       }}
+      buttonSx={buttonSx}
       hasArrow={false}
       dismissible={false}
       menuDismissible
       menu={
         <>
-          <Flex mb={12}>
+          <Flex mb={2}>
             <UncontrolledInputSearch
               inputRef={inputRef}
               showClearSearchButtonRef={showClearSearchButtonRef}
               onChange={handleChangeSearch}
               onClear={handleClearSearch}
-              placeHolder="Search Metric"
+              placeHolder="SEARCH METRIC"
             />
           </Flex>
           <Box className="item__wrapper">
@@ -157,7 +175,7 @@ function CustomizeColumn<T, K>({
               if (key == null) return <></>
               const isChecked = selectedKeys.includes(key)
               return (
-                <Box py={'1px'} key={key.toString()}>
+                <Box py={1} key={key.toString()}>
                   <ControlledCheckbox
                     disabled={isDisable}
                     checked={isChecked}
@@ -170,7 +188,7 @@ function CustomizeColumn<T, K>({
               )
             })}
             {!_defaultColumns.length && (
-              <Type.Caption color="neutral2" sx={{ textAlign: 'center', display: 'block' }}>
+              <Type.Caption color="neutral2" sx={{ textAlign: 'center', display: 'block', mt: 3 }}>
                 <Trans>No Metric Match</Trans>
               </Type.Caption>
             )}
@@ -182,11 +200,13 @@ function CustomizeColumn<T, K>({
                 width: '100%',
                 position: 'sticky',
                 alignItems: 'center',
-                // justifyContent: 'flex-end',
+                justifyContent: 'space-between',
                 backgroundColor: 'neutral7',
+                borderTop: 'small',
+                borderColor: 'neutral4',
                 gap: 3,
-                pt: 1,
-                pr: 12,
+                pt: 2,
+                pr: 2,
                 zIndex: 1000,
               }}
             >
@@ -220,22 +240,13 @@ function CustomizeColumn<T, K>({
           )}
         </>
       }
-      sx={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}
-      buttonSx={{
-        border: 'none',
-        height: '100%',
-        p: 0,
-        lineHeight: 0,
-        color: 'neutral3',
-        '&:hover': {
-          color: 'neutral2',
-        },
-        ...buttonSx,
-      }}
+      sx={{ justifyContent: 'center', alignItems: 'center' }}
       placement={placement}
     >
-      <Gear size={18} />
-      {!!label && label}
+      <Flex alignItems="center" sx={{ gap: 1 }}>
+        <IconBox icon={<Gear size={16} />} />
+        {!!label && label}
+      </Flex>
     </Dropdown>
   )
 }

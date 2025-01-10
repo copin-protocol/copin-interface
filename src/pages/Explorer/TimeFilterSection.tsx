@@ -80,23 +80,13 @@ export function TimeFilterDropdown({ contextValues }: TimeFilterSectionProps) {
   const [visible, setVisible] = useState(false)
   return (
     <Dropdown
+      buttonVariant="ghost"
+      inline
       visible={visible}
       setVisible={setVisible}
       dismissible={false}
       menuDismissible
       menuSx={{ width: 100 }}
-      buttonSx={{
-        p: 0,
-        border: 'none',
-        width: '100%',
-        '& > div:first-child': {
-          fontWeight: 'normal',
-          width: '100%',
-          whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis',
-          overflow: 'hidden',
-        },
-      }}
       menu={
         <>
           {TIME_FILTER_OPTIONS.map((option, index: number) => (
@@ -104,6 +94,7 @@ export function TimeFilterDropdown({ contextValues }: TimeFilterSectionProps) {
               type="button"
               variant="ghost"
               key={index}
+              isActive={option.value === currentOption.value}
               onClick={() => {
                 changeTimeOption(option)
                 setVisible(false)

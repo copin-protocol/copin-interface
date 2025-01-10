@@ -25,7 +25,7 @@ import NoDataOrSelect from '../NoDataOrSelect'
 import FilterSection from './FilterSection'
 import useCEXManagementContext from './useCEXManagementContext'
 
-export default function ListCEXCopyTrades({ expanded }: { expanded: boolean }) {
+export default function ListCEXCopyTrades({ expanded, lite = false }: { expanded: boolean; lite?: boolean }) {
   const {
     listTraderAddresses,
     selectedTraders,
@@ -107,6 +107,7 @@ export default function ListCEXCopyTrades({ expanded }: { expanded: boolean }) {
     toggleStatus,
     isMutating,
     copyTradeData,
+    lite,
   })
 
   const { data: volumeCopies } = useQuery(
@@ -173,7 +174,7 @@ export default function ListCEXCopyTrades({ expanded }: { expanded: boolean }) {
         flexDirection: 'column',
       }}
     >
-      <FilterSection />
+      {!lite && <FilterSection />}
       <TraderCopyCountWarning allCopyTrades={copyTrades} traderAddresses={listTraderAddresses} />
       <Box flex="1 0 0" overflow="hidden">
         {hasSelectedTraders &&

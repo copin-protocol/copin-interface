@@ -18,7 +18,7 @@ export default function FilterByStatus({
       <Type.Caption
         sx={{ flexShrink: 0, color: [`${themeColors.neutral1} !important`, `${themeColors.neutral3} !important`] }}
       >
-        <Trans>Status</Trans>
+        <Trans>STATUS</Trans>:
       </Type.Caption>
       {statusFilters.map((status) => {
         return (

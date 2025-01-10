@@ -151,7 +151,7 @@ export function TraderTotalCopyVolumeIcon({
             </Box>{' '}
             / {plan === SubscriptionPlanEnum.VIP ? 'Unlimited' : `$${_maxVolume}`}
             {plan !== SubscriptionPlanEnum.VIP && (
-              <Box as={Link} to={ROUTES.SUBSCRIPTION.path} target="_blank">
+              <Box as={Link} to={ROUTES.SUBSCRIPTION.path} target="_blank" onClick={(e) => e.stopPropagation()}>
                 {' '}
                 Upgrade
               </Box>

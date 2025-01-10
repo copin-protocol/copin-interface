@@ -4,20 +4,20 @@ import { WalletState } from '@web3-onboard/core'
 import { useConnectWallet } from '@web3-onboard/react'
 import dayjs from 'dayjs'
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
-import { useQuery } from 'react-query'
+// import { useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
 import { loginWeb3Api, logoutApi, verifyLoginWeb3Api } from 'apis/authApis'
 import { clearAuth, clearWeb3Auth, getStoredJwt, getStoredWallet, setJwt, storeAuth } from 'apis/helpers'
 import { getMyProfileApi } from 'apis/userApis'
 import WaitingWallet, { WaitingState } from 'components/@auth/AuthWaitingWallet'
-import ConfirmReferralModal from 'components/@auth/ConfirmReferralModal'
+// import ConfirmReferralModal from 'components/@auth/ConfirmReferralModal'
 import ToastBody from 'components/@ui/ToastBody'
 import { UserData } from 'entities/user'
-import useReferralActions from 'hooks/features/useReferralActions'
+// import useReferralActions from 'hooks/features/useReferralActions'
 import useParsedQueryString from 'hooks/router/useParsedQueryString'
 import useMyProfile from 'hooks/store/useMyProfile'
-import useUserReferral from 'hooks/store/useReferral'
+// import useUserReferral from 'hooks/store/useReferral'
 import { STORAGE_KEYS } from 'utils/config/keys'
 import { Account } from 'utils/web3/types'
 import { signVerifyCode } from 'utils/web3/wallet'
@@ -37,6 +37,8 @@ interface ContextValues {
   eagerAuth: () => Promise<void>
   handleSwitchAccount: () => void
   setProfile: (myProfile: UserData | null) => void
+  isNewUser: boolean
+  setIsNewUser: (isNewUser: boolean) => void
 }
 
 export const AuthContext = createContext({} as ContextValues)
@@ -44,31 +46,32 @@ export const AuthContext = createContext({} as ContextValues)
 export function AuthProvider({ children }: { children: JSX.Element }) {
   const [{ wallet }, activate, deactivate, updateBalances] = useConnectWallet()
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
-  const [openingRefModal, setOpeningRefModal] = useState(false)
+  // const [openingRefModal, setOpeningRefModal] = useState(false)
 
   const authedRef = useRef<boolean>(false)
   const eagerTriggeredRef = useRef<boolean>(false)
   const accountRef = useRef<string | null | undefined>(wallet?.accounts[0].address)
   const verifyCodeRef = useRef<string>()
   const { myProfile, setMyProfile } = useMyProfile()
-  const { refetch: refetchProfile } = useQuery('get_user_profile_after_change_referrer', getMyProfileApi, {
-    enabled: false,
-    onSuccess: (data) => {
-      if (!data) return
-      setMyProfile(data)
-    },
-  })
-  const { setUserReferral } = useUserReferral()
+  // const { refetch: refetchProfile } = useQuery('get_user_profile_after_change_referrer', getMyProfileApi, {
+  //   enabled: false,
+  //   onSuccess: (data) => {
+  //     if (!data) return
+  //     setMyProfile(data)
+  //   },
+  // })
+  // const { setUserReferral } = useUserReferral()
   const [waitingState, setWaitingState] = useState<WaitingState | null>(null)
+  const [isNewUser, setIsNewUser] = useState(false)
 
   const parsedQS = useParsedQueryString()
   const referralCodeQs = parsedQS?.ref as string
-  const hasUrlRef = Boolean(referralCodeQs)
+  // const hasUrlRef = Boolean(referralCodeQs)
 
-  const onSuccess = () => {
-    setUserReferral(null)
-  }
-  const { addReferral } = useReferralActions({ onSuccess })
+  // const onSuccess = () => {
+  //   setUserReferral(null)
+  // }
+  // const { addReferral } = useReferralActions({ onSuccess })
 
   const disconnectWeb3 = useCallback(() => {
     clearWeb3Auth()
@@ -87,6 +90,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     disconnectWeb3()
   }, [disconnectWeb3, setMyProfile])
 
+  // DELETE
   // useEffect(() => {
   //   // if (!wallet) {
   //   //   const { wallet: storedWallet } = getStoredWallet()
@@ -129,13 +133,13 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
         setMyProfile({ ...response })
         setIsAuthenticated(true)
         setWaitingState(null)
-        if (!response.isAddedReferral && !response.isSkippedReferral) {
-          if (hasUrlRef && referralCodeQs) {
-            addReferral.mutate(referralCodeQs.toUpperCase())
-          } else {
-            setOpeningRefModal(true)
-          }
-        }
+        // if (!response.isAddedReferral && !response.isSkippedReferral) {
+        //   if (hasUrlRef && referralCodeQs) {
+        //     addReferral.mutate(referralCodeQs.toUpperCase())
+        //   } else {
+        //     setOpeningRefModal(true)
+        //   }
+        // }
         authedRef.current = true
         return account
       } catch (err: any) {
@@ -180,6 +184,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       return
     }
     if (storedWallet) {
+      // DELETE
       // setWaitingState(WaitingState.Connecting)
       activate({
         autoSelect: {
@@ -191,6 +196,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
           disconnectWeb3()
           return
         }
+        // DELETE
         // if (_wallet) {
         //   const _account = getAccount(_wallet)
         //   if (_account.address !== storedAccount) {
@@ -199,6 +205,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
         //   }
         // }
       })
+      // DELETE
       // if (!_wallet) {
       //   disconnect()
       //   return
@@ -233,6 +240,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   }, [myProfile])
 
   const handleSwitchAccount = useCallback(async () => {
+    setIsNewUser(false)
     const account = wallet ? getAccount(wallet) : undefined
     const { account: storedAccount } = getStoredWallet()
 
@@ -248,9 +256,11 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   }, [connect, waitingState, wallet])
 
   const logout = useCallback(() => {
+    setIsNewUser(false)
     logoutApi()
       .then(() => {
         disconnect()
+        // DELETE
         // setTimeout(() => {
         //   window.location.replace(ROUTES.HOME.path)
         // })
@@ -261,6 +271,8 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
 
   const contextValue: ContextValues = useMemo(() => {
     return {
+      isNewUser,
+      setIsNewUser,
       loading: waitingState != null,
       isAuthenticated,
       account: wallet ? getAccount(wallet) : null,
@@ -285,6 +297,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     logout,
     eagerAuth,
     setMyProfile,
+    isNewUser,
   ])
 
   return (
@@ -323,11 +336,11 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
           handleAuth={handleAuth}
         />
       )}
-      <ConfirmReferralModal
+      {/* <ConfirmReferralModal
         isOpen={openingRefModal}
         onDismiss={() => setOpeningRefModal(false)}
         onSuccess={() => refetchProfile()}
-      />
+      /> */}
     </AuthContext.Provider>
   )
 }
