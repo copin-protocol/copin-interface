@@ -66,8 +66,6 @@ const FavoriteNoteTooltip = () => {
 
   const { sm } = useResponsive()
 
-  console.log('enable')
-
   return (
     <>
       <Box
