@@ -155,3 +155,11 @@ export const logEventCompetition = ({ event, username }: { event: string; userna
     action: event,
   })
 }
+
+export const logEventLite = ({ event, username }: { event: string; username?: string }) => {
+  logEvent({
+    category: EventCategory.COMPETITION,
+    label: getUserForTracking(username),
+    action: event,
+  })
+}

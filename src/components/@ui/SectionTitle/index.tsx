@@ -1,25 +1,25 @@
-import React, { ReactNode } from 'react'
+import React, { ComponentType, ReactNode } from 'react'
 
 import { Flex, IconBox, Type } from 'theme/base'
 
 const SectionTitle = ({
-  icon,
+  icon: Icon,
   title,
-  iconColor = 'neutral3',
+  iconColor = 'neutral1',
   sx,
   suffix,
 }: {
-  icon: ReactNode
+  icon: ComponentType<any>
   title: ReactNode
   iconColor?: string
   sx?: any
   suffix?: ReactNode
 }) => {
   return (
-    <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ gap: 2, pb: 12 }}>
-      <Flex alignItems="center" sx={{ gap: 2, ...(sx ?? {}) }}>
-        <IconBox color={iconColor} icon={icon} />
-        <Type.BodyBold>{title}</Type.BodyBold>
+    <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+      <Flex alignItems="center" sx={{ gap: 2, mb: 12, ...(sx ?? {}) }}>
+        <IconBox color={iconColor} icon={<Icon size={20} weight="fill" />} />
+        <Type.Body>{title}</Type.Body>
       </Flex>
       {suffix}
     </Flex>

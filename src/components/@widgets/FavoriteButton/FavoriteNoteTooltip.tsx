@@ -9,6 +9,7 @@ import { Button } from 'theme/Buttons'
 import InputField from 'theme/InputField'
 import { Box, Type } from 'theme/base'
 import { KeyNameEnum } from 'utils/config/enums'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { addressShorten } from 'utils/helpers/format'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
@@ -72,7 +73,7 @@ const FavoriteNoteTooltip = () => {
         sx={{
           display: !!address ? 'block' : 'none',
           position: 'fixed',
-          zIndex: 10005,
+          zIndex: Z_INDEX.TOASTIFY + 1,
           top: position?.top ?? 0,
           left: position && sm ? position.left : 32,
           width: sm ? 'auto' : 'calc(100% - 64px)',

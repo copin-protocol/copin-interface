@@ -10,7 +10,6 @@ import Container from 'components/@ui/Container'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Market from 'components/@ui/MarketGroup/Market'
 import TraderAddress from 'components/@ui/TraderAddress'
-import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { FormattedDepthPairData } from 'entities/cexStats'
 import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
@@ -360,7 +359,7 @@ export default function Overview() {
         <Flex
           mt={3}
           flexDirection={['column', 'row']}
-          alignItems="center"
+          alignItems="end"
           justifyContent="space-between"
           flexWrap="wrap"
           sx={{ gap: 3 }}
@@ -369,8 +368,9 @@ export default function Overview() {
             alignItems="center"
             flexWrap="wrap"
             sx={{
-              gap: 3,
+              gap: 2,
               '.select__control': {
+                textTransform: 'uppercase',
                 width: 140,
               },
             }}
@@ -380,11 +380,11 @@ export default function Overview() {
               currentFilter={currentExchange}
               handleFilterChange={changeExchange}
             />
-            <VerticalDivider />
             <Box
               sx={{
                 '.select__control': {
                   width: 200,
+                  textTransform: 'uppercase',
                   input: { width: '80px !important', margin: '0 !important' },
                 },
               }}
@@ -397,26 +397,24 @@ export default function Overview() {
                 }}
               />
             </Box>
-            <VerticalDivider />
-            <Flex alignItems="center" sx={{ gap: 2 }}>
-              <Type.Caption color="neutral3">Latest Updated At:</Type.Caption>
-              {!!formattedData?.length && (
-                <Type.CaptionBold color="neutral1">
-                  <LocalTimeText
-                    date={formattedData[0].latestUpdatedAt}
-                    format={DAYJS_FULL_DATE_FORMAT}
-                    hasTooltip={false}
-                  />
-                </Type.CaptionBold>
-              )}
-            </Flex>
-          </Flex>
-          {!!allCopyTrades?.length && (
-            <Flex alignItems="center" sx={{ gap: 2 }}>
-              <Type.Caption color="neutral3">Your Copying Traders:</Type.Caption>
+            {!!allCopyTrades?.length && (
               <TraderFilter options={traderOptions} currentFilter={currentTrader} handleFilterChange={changeTrader} />
-            </Flex>
-          )}
+            )}
+          </Flex>
+          <Box>
+            <Type.Caption color="neutral3" mr={2}>
+              Last Updated:
+            </Type.Caption>
+            {!!formattedData?.length && (
+              <Type.Caption sx={{ '*': { color: 'neutral3' } }}>
+                <LocalTimeText
+                  date={formattedData[0].latestUpdatedAt}
+                  format={DAYJS_FULL_DATE_FORMAT}
+                  hasTooltip={false}
+                />
+              </Type.Caption>
+            )}
+          </Box>
         </Flex>
       </Box>
       <Box
@@ -457,7 +455,7 @@ export default function Overview() {
           onDismiss={handleDismiss}
           mode="right"
           size={sm ? '75%' : '100%'}
-          background="neutral6"
+          background="neutral7"
         >
           <Container sx={{ position: 'relative' }}>
             <IconButton

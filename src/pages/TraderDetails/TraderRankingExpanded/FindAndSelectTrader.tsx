@@ -8,6 +8,7 @@ import { useClickLoginButton } from 'components/@auth/LoginAction'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { TraderData } from 'entities/trader'
 import useMyProfileStore from 'hooks/store/useMyProfile'
+import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -182,11 +183,11 @@ export function SelectedTrader({
   return (
     <Box sx={{ position: 'relative', width: '100%' }}>
       {onClearTrader && (
-        <IconBox
-          role="button"
+        <IconButton
+          variant="ghost"
           icon={<XCircle size={20} />}
           onClick={onClearTrader}
-          sx={{ position: 'absolute', top: 16, right: 16, color: 'neutral2', '&:hover': { color: 'neutral1' } }}
+          sx={{ position: 'absolute', top: 2, right: 2, p: 1 }}
         />
       )}
       <Stats traderData={selectedTrader} indicatorColor="orange1" isLinkAddress />

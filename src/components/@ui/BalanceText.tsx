@@ -25,7 +25,7 @@ export default function BalanceText({
       {show ? (
         <Component color="neutral1">{value}</Component>
       ) : (
-        <Component sx={{ lineHeight: '1em' }}>******</Component>
+        <Component sx={{ lineHeight: '1em', transform: 'translateY(3px)' }}>******</Component>
       )}
 
       <Box

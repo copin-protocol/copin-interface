@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Trans } from '@lingui/macro'
-import { ArrowRight } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 import { ReactNode, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -9,7 +8,6 @@ import { useClickLoginButton } from 'components/@auth/LoginAction'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
-import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Label from 'theme/InputField/Label'
 import NumberInputField from 'theme/InputField/NumberInputField'
 import Select from 'theme/Select'
@@ -121,16 +119,9 @@ export default function BacktestFormSimple({
         </Type.Caption>
       </Box>
 
-      <Flex mt={20} flexDirection="column" sx={{ gap: 0 }}>
+      <Flex mt={20} flexDirection="column" sx={{ gap: 2 }}>
         <Label label={<Trans>Backtest Period</Trans>} columnGap={0} labelColor="neutral1" />
-        <Select
-          width={100}
-          variant="ghostPrimary"
-          isSearchable={false}
-          options={selectOptions}
-          value={selectValue}
-          onChange={handleChangeTime}
-        />
+        <Select isSearchable={false} options={selectOptions} value={selectValue} onChange={handleChangeTime} />
       </Flex>
       <Flex mt={20} sx={{ gap: 3, width: '100%', justifyContent: 'end' }}>
         {onCancel ? (
@@ -138,12 +129,9 @@ export default function BacktestFormSimple({
             Back
           </Button>
         ) : null}
-        <ButtonWithIcon
-          direction="right"
-          centered={false}
+        <Button
           variant="primary"
           block
-          icon={isSubmitting ? <></> : <ArrowRight size={16} weight="bold" />}
           onClick={() => {
             if (!myProfile) {
               handleClickLogin()
@@ -155,7 +143,7 @@ export default function BacktestFormSimple({
           disabled={isSubmitting}
         >
           <Trans>Backtest</Trans>
-        </ButtonWithIcon>
+        </Button>
       </Flex>
     </Box>
   )

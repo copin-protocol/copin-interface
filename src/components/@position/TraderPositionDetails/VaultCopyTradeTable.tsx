@@ -75,14 +75,6 @@ export default function VaultTradeDataTable({
     const numberValue = parseInputValue(value)
     switch (field) {
       case 'volume':
-        // if (DCP_EXCHANGES.includes(oldData.exchange) && numberValue < 60) {
-        //   toast.error(<ToastBody title="Error" message="DCP Volume must be greater than or equal to $60" />)
-        //   return
-        // }
-        if (numberValue > 100000) {
-          toast.error(<ToastBody title="Error" message="Volume must be less than $100,000" />)
-          return
-        }
         return true
       case 'leverage':
         if (numberValue < 2) {

@@ -68,10 +68,7 @@ const Stats = ({ exchange, copyWalletId }: { exchange: CopyTradePlatformEnum; co
       <Flex justifyContent="space-between" alignItems="center" py={1} px={12}>
         <Dropdown
           placement="bottomLeft"
-          buttonSx={{
-            border: 'none',
-            px: 0,
-          }}
+          inline
           menuSx={{
             width: '100px',
             minWidth: 'auto',

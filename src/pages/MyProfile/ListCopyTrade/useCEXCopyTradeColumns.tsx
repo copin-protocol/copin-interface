@@ -6,6 +6,7 @@ import {
   Exclude,
   PencilSimpleLine,
   Trash,
+  Warning,
 } from '@phosphor-icons/react'
 import { MutableRefObject, SetStateAction, useCallback, useMemo } from 'react'
 import { useMutation } from 'react-query'
@@ -24,23 +25,19 @@ import TextWithEdit, { parseInputValue } from 'components/@ui/TextWithEdit'
 import ToastBody from 'components/@ui/ToastBody'
 import ActionItem from 'components/@widgets/ActionItem'
 import { CopyTradeData } from 'entities/copyTrade'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { useCheckCopyTradeAction, useIsVIP } from 'hooks/features/useSubscriptionRestrict'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
-import MarginProtectionIcon from 'theme/Icons/MarginProtectionIcon'
-import MaxMarginIcon from 'theme/Icons/MaxMarginIcon'
-import SkipLowCollateralIcon from 'theme/Icons/SkipLowCollateralIcon'
-import SkipLowLeverageIcon from 'theme/Icons/SkipLowLeverageIcon'
-import SkipLowSizeIcon from 'theme/Icons/SkipLowSizeIcon'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { ColumnData } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, IconBox, Image, Type } from 'theme/base'
+import { Box, Flex, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { UNLIMITED_COPY_SIZE_EXCHANGES } from 'utils/config/constants'
-import { CopyTradePlatformEnum, CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
-import { QUERY_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
+import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
@@ -59,12 +56,13 @@ export default function useCEXCopyTradeColumns({
   setOpenConfirmStopModal,
   toggleStatus,
   copyTradeData,
+  lite = false,
 }: {
   onSelect: (data?: CopyTradeWithCheckingData) => void
   isMutating: boolean
   setOpenHistoryDrawer: (value: SetStateAction<boolean>) => void
   setOpenDrawer: (value: SetStateAction<boolean>) => void
-  setOpenCloneDrawer: (value: SetStateAction<boolean>) => void
+  setOpenCloneDrawer: ((value: SetStateAction<boolean>) => void) | undefined
   setOpenDeleteModal: (value: SetStateAction<boolean>) => void
   setOpenConfirmStopModal: (value: SetStateAction<boolean>) => void
   toggleStatus: ({
@@ -77,13 +75,21 @@ export default function useCEXCopyTradeColumns({
     multipleCopy: boolean
   }) => void
   copyTradeData: MutableRefObject<CopyTradeWithCheckingData | undefined>
+  lite?: boolean
 }) {
+  const { embeddedWallet, embeddedWalletInfo, loadingEmbeddedWallets } = useCopyWalletContext()
+  const balance = embeddedWalletInfo ? Number(embeddedWalletInfo.marginSummary.accountValue) : undefined
+
   const isVIPUser = useIsVIP()
   const refetchQueries = useRefetchQueries()
   const { mutate: updateCopyTrade } = useMutation(updateCopyTradeApi, {
     onSuccess: async (data) => {
       toast.success(<ToastBody title="Success" message="Your update has been succeeded" />)
-      refetchQueries([QUERY_KEYS.GET_COPY_TRADE_SETTINGS])
+      refetchQueries([
+        QUERY_KEYS.GET_COPY_TRADE_SETTINGS,
+        QUERY_KEYS.GET_EMBEDDED_COPY_TRADES,
+        QUERY_KEYS.USE_GET_ALL_COPY_TRADES,
+      ])
     },
     onError: (err) => {
       toast.error(<ToastBody title="Error" message={getErrorMessage(err)} />)
@@ -146,14 +152,6 @@ export default function useCEXCopyTradeColumns({
     const numberValue = parseInputValue(value)
     switch (field) {
       case 'volume':
-        // if (DCP_EXCHANGES.includes(oldData.exchange) && numberValue < 60) {
-        //   toast.error(<ToastBody title="Error" message="DCP Volume must be greater than or equal to $60" />)
-        //   return
-        // }
-        if (!isVIP && numberValue > 100000) {
-          toast.error(<ToastBody title="Error" message="Volume must be less than $100,000" />)
-          return
-        }
         return true
       case 'leverage':
         if (numberValue < 2) {
@@ -211,28 +209,45 @@ export default function useCEXCopyTradeColumns({
     [isRunningFn]
   )
   const renderVolume = useCallback(
-    (item: CopyTradeWithCheckingData, isVIP?: boolean | null) => (
-      <Flex
-        color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}
-        sx={{
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          width: '100%',
-        }}
-      >
-        <Type.Caption>$</Type.Caption>
-        <TextWithEdit
-          key={`volume_${item.id}_${item.volume}`}
-          defaultValue={item.volume}
-          onSave={(value) => updateNumberValue({ copyTradeId: item.id, oldData: item, value, field: 'volume' })}
-          onValidate={(value) => validateNumberValue({ isVIP, oldData: item, value, field: 'volume' })}
-          disabled={!isRunningFn(item.status)}
-        />
-        {/*<Type.Caption color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}>*/}
-        {/*  ${item.volume >= 10000 ? compactNumber(item.volume, 2) : formatNumber(item.volume)}*/}
-        {/*</Type.Caption>*/}
-      </Flex>
-    ),
+    (item: CopyTradeWithCheckingData, isVIP?: boolean | null) => {
+      const tooltipId = 'tt_lite_balance_warning_' + item.id
+      return (
+        <Flex
+          color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            width: '100%',
+          }}
+        >
+          {lite && isRunningFn(item.status) && balance != null && balance < item.volume && (
+            <>
+              <Warning
+                size={16}
+                style={{ color: themeColors.orange1, marginRight: '8px' }}
+                data-tooltip-id={tooltipId}
+              />
+              <Tooltip id={tooltipId}>
+                <Type.Small sx={{ maxWidth: 250, textAlign: 'left' }}>
+                  <Trans>Your balance is too low for copy trading. Please Deposit now to continue!</Trans>
+                </Type.Small>
+              </Tooltip>
+            </>
+          )}
+          <Type.Caption>$</Type.Caption>
+          <TextWithEdit
+            key={`volume_${item.id}_${item.volume}`}
+            defaultValue={item.volume}
+            onSave={(value) => updateNumberValue({ copyTradeId: item.id, oldData: item, value, field: 'volume' })}
+            onValidate={(value) => validateNumberValue({ isVIP, oldData: item, value, field: 'volume' })}
+            disabled={!isRunningFn(item.status)}
+          />
+          {/*<Type.Caption color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}>*/}
+          {/*  ${item.volume >= 10000 ? compactNumber(item.volume, 2) : formatNumber(item.volume)}*/}
+          {/*</Type.Caption>*/}
+        </Flex>
+      )
+    },
     [isRunningFn]
   )
   const renderLeverage = useCallback(
@@ -311,149 +326,97 @@ export default function useCEXCopyTradeColumns({
     []
   )
   const renderRiskControl = useCallback(
-    (item: CopyTradeData) => (
-      <Flex
-        sx={{
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: ['end', 'start'],
-          gap: 2,
-          filter: isRunningFn(item.status) ? undefined : 'grayscale(1)',
-        }}
-      >
-        {!!item.maxVolMultiplier && (
-          <>
-            <IconBox
-              icon={<MaxMarginIcon size={20} />}
-              color="primary1"
-              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
-              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_MAX_VOL_MULTIPLIER}_${item.id}`}
-            />
-            {isRunningFn(item.status) && (
-              <Tooltip
-                id={`${TOOLTIP_KEYS.MY_COPY_ICON_MAX_VOL_MULTIPLIER}_${item.id}`}
-                place="top"
-                type="dark"
-                effect="solid"
+    (item: CopyTradeData) => {
+      let settingsCount = 0
+      const settings = ['maxVolMultiplier', 'volumeProtection', 'skipLowLeverage', 'skipLowCollateral', 'skipLowSize']
+      settings.forEach((key) => {
+        if (item[key as keyof CopyTradeData]) {
+          settingsCount++
+        }
+      })
+      return (
+        <Flex
+          sx={{
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: ['end', 'start'],
+            gap: 2,
+            filter: isRunningFn(item.status) ? undefined : 'grayscale(1)',
+          }}
+        >
+          {settingsCount > 0 ? (
+            <>
+              <LabelWithTooltip
+                id={`advanced_settings_${item.id}`}
+                tooltip={
+                  <Box>
+                    {!!item.maxVolMultiplier && (
+                      <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                        Max Margin Per Position:{' '}
+                        <Box as="span" color="primary1">
+                          {`$${formatNumber(item.maxVolMultiplier * item.volume)}`}
+                        </Box>
+                      </Type.Caption>
+                    )}
+
+                    {!!item.volumeProtection && (
+                      <>
+                        <Type.Caption color="neutral1" display="block">
+                          Margin Protection:{' '}
+                          <Box as="span" color="primary1">
+                            On
+                          </Box>
+                        </Type.Caption>
+                        <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                          Lookback:{' '}
+                          <Box as="span" color="primary1">
+                            {formatNumber(item.lookBackOrders || 0, 0, 0)} Orders
+                          </Box>
+                        </Type.Caption>
+                      </>
+                    )}
+                    {!!item.skipLowLeverage && !!item.lowLeverage && (
+                      <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                        Skip Low Leverage Position:{' '}
+                        <Box as="span" color="primary1">
+                          On ({item.lowLeverage}x)
+                        </Box>
+                      </Type.Caption>
+                    )}
+                    {!!item.skipLowCollateral && !!item.lowCollateral && (
+                      <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                        Skip Low Collateral Position:{' '}
+                        <Box as="span" color="primary1">
+                          {`$${formatNumber(item.lowCollateral, 0, 0)}`}
+                        </Box>
+                      </Type.Caption>
+                    )}
+                    {!!item.skipLowSize && !!item.lowSize && (
+                      <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                        Skip Low Size Position:{' '}
+                        <Box as="span" color="primary1">
+                          {`$${formatNumber(item.lowSize, 0, 0)}`}
+                        </Box>
+                      </Type.Caption>
+                    )}
+                  </Box>
+                }
               >
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Max Margin Per Position:{' '}
-                  <Box as="span" color="primary1">
-                    {`$${formatNumber(item.maxVolMultiplier * item.volume)}`}
-                  </Box>
+                <Type.Caption
+                  color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}
+                  data-tooltip-id={`advanced_settings_${item.id}`}
+                >
+                  {' '}
+                  {settingsCount} Settings
                 </Type.Caption>
-              </Tooltip>
-            )}
-          </>
-        )}
-        {!!item.volumeProtection && !!item.lookBackOrders && (
-          <>
-            <IconBox
-              icon={<MarginProtectionIcon size={20} />}
-              color="primary1"
-              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
-              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_LOOK_BACK_ORDERS}_${item.id}`}
-            />
-            {isRunningFn(item.status) && (
-              <Tooltip
-                id={`${TOOLTIP_KEYS.MY_COPY_ICON_LOOK_BACK_ORDERS}_${item.id}`}
-                place="top"
-                type="dark"
-                effect="solid"
-              >
-                <Type.Caption color="neutral1" display="block">
-                  Margin Protection:{' '}
-                  <Box as="span" color="primary1">
-                    On
-                  </Box>
-                </Type.Caption>
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Lookback:{' '}
-                  <Box as="span" color="primary1">
-                    {formatNumber(item.lookBackOrders, 0, 0)} Orders
-                  </Box>
-                </Type.Caption>
-              </Tooltip>
-            )}
-          </>
-        )}
-        {item.skipLowLeverage && (
-          <>
-            <IconBox
-              icon={<SkipLowLeverageIcon size={20} />}
-              color={themeColors.primary1}
-              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
-              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_LEVERAGE}_${item.id}`}
-            />
-            {isRunningFn(item.status) && (
-              <Tooltip
-                id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_LEVERAGE}_${item.id}`}
-                place="top"
-                type="dark"
-                effect="solid"
-              >
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Skip Low Leverage Position:{' '}
-                  <Box as="span" color="primary1">
-                    On ({item.lowLeverage}x)
-                  </Box>
-                </Type.Caption>
-              </Tooltip>
-            )}
-          </>
-        )}
-        {item.skipLowCollateral && (
-          <>
-            <IconBox
-              icon={<SkipLowCollateralIcon size={20} />}
-              color={themeColors.primary1}
-              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
-              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_COLLATERAL}_${item.id}`}
-            />
-            {isRunningFn(item.status) && (
-              <Tooltip
-                id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_COLLATERAL}_${item.id}`}
-                place="top"
-                type="dark"
-                effect="solid"
-              >
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Skip Low Collateral Position:{' '}
-                  <Box as="span" color="primary1">
-                    {`$${formatNumber(item.lowCollateral, 0, 0)}`}
-                  </Box>
-                </Type.Caption>
-              </Tooltip>
-            )}
-          </>
-        )}
-        {item.skipLowSize && (
-          <>
-            <IconBox
-              icon={<SkipLowSizeIcon size={20} />}
-              color={themeColors.primary1}
-              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
-              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_SIZE}_${item.id}`}
-            />
-            {isRunningFn(item.status) && (
-              <Tooltip
-                id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_SIZE}_${item.id}`}
-                place="top"
-                type="dark"
-                effect="solid"
-              >
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Skip Low Size Position:{' '}
-                  <Box as="span" color="primary1">
-                    {`$${formatNumber(item.lowSize, 0, 0)}`}
-                  </Box>
-                </Type.Caption>
-              </Tooltip>
-            )}
-          </>
-        )}
-      </Flex>
-    ),
+              </LabelWithTooltip>
+            </>
+          ) : (
+            <Type.Caption>--</Type.Caption>
+          )}
+        </Flex>
+      )
+    },
     [isRunningFn]
   )
   const render7DPNL = useCallback(
@@ -532,7 +495,7 @@ export default function useCEXCopyTradeColumns({
 
   const handleOpenCloneDrawer = useCallback(
     (data?: CopyTradeWithCheckingData) => {
-      if (!checkIsEligible()) return
+      if (!checkIsEligible() || !setOpenCloneDrawer) return
       onSelect(data)
       setOpenCloneDrawer(true)
     },
@@ -550,6 +513,8 @@ export default function useCEXCopyTradeColumns({
     (item: CopyTradeWithCheckingData, option?: { placement: any }) => (
       <Flex justifyContent="end">
         <Dropdown
+          buttonVariant="ghost"
+          inline
           hasArrow={false}
           menuSx={{
             bg: 'neutral7',
@@ -568,11 +533,13 @@ export default function useCEXCopyTradeColumns({
                 icon={<PencilSimpleLine size={18} />}
                 onSelect={() => handleOpenDrawer(item)}
               />
-              <ActionItem
-                title={<Trans>Clone</Trans>}
-                icon={<CopySimple size={18} />}
-                onSelect={() => handleOpenCloneDrawer(item)}
-              />
+              {!!setOpenCloneDrawer && (
+                <ActionItem
+                  title={<Trans>Clone</Trans>}
+                  icon={<CopySimple size={18} />}
+                  onSelect={() => handleOpenCloneDrawer(item)}
+                />
+              )}
               <ActionItem
                 title={<Trans>Remove</Trans>}
                 icon={<Trash size={18} />}
@@ -581,11 +548,6 @@ export default function useCEXCopyTradeColumns({
             </>
           }
           sx={{}}
-          buttonSx={{
-            border: 'none',
-            height: '100%',
-            p: 0,
-          }}
           placement={option?.placement || 'topRight'}
         >
           <IconButton
@@ -673,21 +635,25 @@ export default function useCEXCopyTradeColumns({
         title: 'Advance',
         dataIndex: undefined,
         key: undefined,
-        style: { minWidth: '168px', textAlign: 'left', pl: 3 },
+        style: { minWidth: '90px', textAlign: 'left', pl: 3 },
         render: renderRiskControl,
       },
-      {
-        style: { minWidth: '100px', textAlign: 'right' },
-        title: (
-          <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
-            7D ePnL
-          </LabelWithTooltip>
-        ),
-        key: 'pnl7D',
-        dataIndex: 'pnl7D',
-        sortBy: 'pnl7D',
-        render: render7DPNL,
-      },
+      ...(lite
+        ? []
+        : [
+            {
+              style: { minWidth: '100px', textAlign: 'right' },
+              title: (
+                <LabelWithTooltip id={TOOLTIP_CONTENT.COPY_PNL.id} tooltip={TOOLTIP_CONTENT.COPY_PNL.content}>
+                  7D ePnL
+                </LabelWithTooltip>
+              ),
+              key: 'pnl7D' as any,
+              dataIndex: 'pnl7D' as any,
+              sortBy: 'pnl7D' as any,
+              render: render7DPNL,
+            },
+          ]),
       {
         style: { minWidth: '100px', textAlign: 'right' },
         title: (
@@ -722,6 +688,7 @@ export default function useCEXCopyTradeColumns({
     renderTotalPNL,
     renderTraderAccount,
     renderVolume,
+    lite,
   ])
   return {
     isVIPUser,

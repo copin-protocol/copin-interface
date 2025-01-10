@@ -111,7 +111,6 @@ const ReportPerpDEXsModal = () => {
       hasClose={true}
       onDismiss={handleClose}
       maxWidth={'530px'}
-      background="neutral7"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box px={[12, 24]}>

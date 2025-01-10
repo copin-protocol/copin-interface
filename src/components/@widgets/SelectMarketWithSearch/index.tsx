@@ -39,8 +39,10 @@ export default function SelectMarketWithSearch({
 
   return (
     <Dropdown
+      buttonVariant="ghost"
+      buttonSx={{ px: 0 }}
       menuSx={{
-        width: 330,
+        width: 350,
         height: 324,
         overflow: 'auto',
         p: 2,
@@ -52,7 +54,7 @@ export default function SelectMarketWithSearch({
         <>
           <InputSearch
             ref={inputSearchRef}
-            placeholder={'Search'}
+            placeholder={'SEARCH MARKET'}
             sx={{
               padding: 2,
               width: '100%',
@@ -66,14 +68,13 @@ export default function SelectMarketWithSearch({
             }}
             onClear={() => handleChangeKeyword(undefined)}
           />
-          <Divider my={2} />
-          <Flex sx={{ gap: 1, alignItems: 'center' }}>
+          <Flex sx={{ gap: 1, alignItems: 'center' }} mt={2}>
             <ControlledCheckbox
               checked={isSelectedAll}
               label={
-                <Type.CaptionBold color="neutral3">
-                  <Trans>Select all</Trans>
-                </Type.CaptionBold>
+                <Type.Caption color="neutral3">
+                  <Trans>SELECT ALL</Trans>
+                </Type.Caption>
               }
               size={16}
               onChange={(event) => {
@@ -86,7 +87,7 @@ export default function SelectMarketWithSearch({
               }}
             />
           </Flex>
-          <Divider mt={2} />
+          <Divider mt={2} color="neutral5" />
           <Fragment>
             <Grid
               sx={{
@@ -116,9 +117,6 @@ export default function SelectMarketWithSearch({
           </Fragment>
         </>
       }
-      buttonSx={{
-        border: 'none',
-      }}
       placement={placement}
     >
       {isSelectedAll || !selectedItems?.length ? (

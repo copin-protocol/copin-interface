@@ -2,9 +2,7 @@ import { useQuery } from 'react-query'
 
 import { getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
 import Logo from 'components/@ui/Logo'
-import ReferralStatus from 'components/@wallet/WalletReferralStatus'
 import { Flex, IconBox } from 'theme/base'
-import { CEX_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { hideScrollbar } from 'utils/helpers/css'
@@ -34,25 +32,22 @@ export default function BalanceMenu() {
     <Flex
       sx={{
         flexWrap: 'nowrap',
+        pr: [0, 0, 0, 20],
         gap: [0, 24],
-        alignItems: ['start', 'start', 'center'],
-        justifyContent: ['start', 'start', 'space-between'],
+        alignItems: ['start', 'center'],
+        justifyContent: ['start', 'space-between'],
       }}
-      py={[1, 12]}
+      height={[56, 40]}
     >
-      <Flex
-        flexDirection={['column', 'row']}
-        alignItems={['flex-start', 'center']}
-        sx={{ pl: 3, pr: 2, gap: 1, width: ['75%', 'max-content'], borderRight: 'small', borderRightColor: 'neutral4' }}
-      >
+      <Flex alignItems="center" sx={{ pl: 3, pr: 2, gap: 1, width: ['50%', 'max-content'], height: '100%' }}>
         <SelectSingleWallet
           currentWallet={activeWallet}
           onChangeWallet={handleChangeActiveWallet}
           wallets={cexWallets}
         />
-        {activeWallet && CEX_EXCHANGES.includes(activeWallet.exchange) && (
+        {/* {activeWallet && CEX_EXCHANGES.includes(activeWallet.exchange) && (
           <ReferralStatus data={activeWallet} sx={{ minWidth: 80 }} />
-        )}
+        )} */}
         {activeWallet &&
           activeWallet.exchange === CopyTradePlatformEnum.GNS_V8 &&
           !!activeWallet.smartWalletAddress && (

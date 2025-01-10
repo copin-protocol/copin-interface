@@ -16,6 +16,8 @@ export default function SortDropdown({
   const sortOption = SORT_OPTIONS.find((option) => option.id === sortBy) ?? SORT_OPTIONS[0]
   return (
     <Dropdown
+      buttonVariant="ghostPrimary"
+      inline
       {...getDropdownProps({})}
       menu={
         <>

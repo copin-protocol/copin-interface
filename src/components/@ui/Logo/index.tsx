@@ -4,7 +4,7 @@ import logo from 'assets/logo.svg'
 // import { useIsDarkMode } from 'hooks/setting/useDarkMode'
 import { Box, Image } from 'theme/base'
 
-const Logo = ({ size = 32 }: { size?: number | number[] }) => {
+const Logo = ({ size = 24 }: { size?: number | number[] }) => {
   // const responsive = useResponsive()
   // const isDarkMode = useIsDarkMode()
   return (
@@ -14,13 +14,13 @@ const Logo = ({ size = 32 }: { size?: number | number[] }) => {
     </Box>
   )
 }
-export const LogoText = ({ size = 32 }: { size?: number | number[] }) => {
+export const LogoText = ({ size = 24 }: { size?: number | number[] }) => {
   // const responsive = useResponsive()
   // const isDarkMode = useIsDarkMode()
   return (
     // <Image src={`/images/logo${responsive.md ? '' : '-mobile'}-${isDarkMode ? 'dark' : 'light'}.svg`} height="36px" />
     <Box height={size} display={['none', 'block']} sx={{ position: 'relative', top: '-4px' }}>
-      <Image src={logoText} />
+      <Image src={logoText} height="100%" />
     </Box>
   )
 }

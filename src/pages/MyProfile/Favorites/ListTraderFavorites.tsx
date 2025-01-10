@@ -21,8 +21,8 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
   notes: { [key: string]: string }
 }) {
   const { traderFavorites } = useTraderFavorites()
-  const { sm } = useResponsive()
-  const settings = sm ? tableSettings : mobileTableSettings
+  const { md } = useResponsive()
+  const settings = md ? tableSettings : mobileTableSettings
   const {
     protocol,
     tab,
@@ -99,7 +99,7 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
               position: 'relative',
             }}
           >
-            {sm ? (
+            {md ? (
               <TraderListTable
                 data={formatedData}
                 isLoading={isLoading}

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { Button } from 'theme/Buttons'
+import TabItem from 'theme/Tab/TabItem'
 import { Flex } from 'theme/base'
 
 import { TIME_FILTER_OPTIONS } from './constants'
@@ -17,8 +17,8 @@ export default function TimeFilter<T extends { id: unknown; text: ReactNode }>({
   sx?: any
 }) {
   return (
-    <Flex alignItems="center" sx={{ gap: 2, ...sx }}>
-      {options.map((option, index: number) => (
+    <Flex alignItems="center" sx={{ '& > button:first-child': { pl: 0 }, '& > button:last-child': { pr: 0 }, ...sx }}>
+      {/* {options.map((option, index: number) => (
         <Button
           type="button"
           variant="ghost"
@@ -43,6 +43,17 @@ export default function TimeFilter<T extends { id: unknown; text: ReactNode }>({
         >
           {option.text}
         </Button>
+      ))} */}
+
+      {options.map((option, index: number) => (
+        <TabItem
+          active={!!currentFilter && currentFilter.id === option.id}
+          onClick={() => handleFilterChange(option)}
+          key={index}
+          sx={{ px: ['6px', '6px', '8px', '8px'] }}
+        >
+          {option.text}
+        </TabItem>
       ))}
     </Flex>
   )

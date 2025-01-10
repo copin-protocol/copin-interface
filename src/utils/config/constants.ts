@@ -75,10 +75,14 @@ export const LINKS = {
   vaultQA: 'https://docs.copin.io/another/q-and-a-of-vault',
 }
 
-export const NAVBAR_HEIGHT = 64
+export const NAVBAR_HEIGHT = 56
+export const PAGE_TITLE_HEIGHT = 48
+export const TAB_HEIGHT = 40
 export const FOOTER_HEIGHT = 40
+export const LITE_TABLE_HEIGHT = 312
+export const BASE_LINE_HEIGHT = 20
 
-export const FONT_FAMILY = 'Anuphan'
+export const FONT_FAMILY = 'ABC Social Mono'
 export const DATE_FORMAT = 'YYYY/MM/DD'
 export const DATE_TEXT_FORMAT = 'DD MMM, YYYY'
 export const TIME_FORMAT = 'HH:mm:ss'

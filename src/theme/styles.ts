@@ -1,14 +1,15 @@
 import { createGlobalStyle } from 'styled-components/macro'
 
 import { FONT_FAMILY } from 'utils/config/constants'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 import { drawerStyles } from './RcDrawer/styles'
 
 const ThemedGlobalStyle = createGlobalStyle`
   html {
     font-family: ${FONT_FAMILY}, sans-serif;
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 12px;
+    line-height: 18px;
     color: ${({ theme }) => theme.colors.neutral1};
     background-color: ${({ theme }) => theme.colors.neutral7};
     font-variant: none;
@@ -17,6 +18,9 @@ const ThemedGlobalStyle = createGlobalStyle`
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     // scroll-behavior: smooth;
   }
+
+
+
   /* prettier-ignore */
   html, body, div, span, applet, object, iframe,
   h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -162,10 +166,11 @@ const ThemedGlobalStyle = createGlobalStyle`
     font-weight: bold;
     border: none;
     outline: none;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 16px;
     cursor: pointer;
     transition: all 240ms ease;
+    text-transform: uppercase;
   }
   a {
     color: ${({ theme }) => theme.colors.primary1};
@@ -275,7 +280,7 @@ const ThemedGlobalStyle = createGlobalStyle`
   h2,
   h3,
   h4 {
-    font-weight: 900;
+    font-weight: 700;
   }
   h1,
   h2,
@@ -284,8 +289,10 @@ const ThemedGlobalStyle = createGlobalStyle`
   h5 {
     margin-top: 0;
     margin-bottom: 0;
+    text-transform: uppercase;
   }
   :root {
+    --toastify-font-family: ${FONT_FAMILY}, sans-serif;
     --toastify-color-light: #fff;
     --toastify-color-dark:  #000;
     --toastify-color-info:  ${({ theme }) => theme.colors.primary1};
@@ -293,6 +300,7 @@ const ThemedGlobalStyle = createGlobalStyle`
     --toastify-color-warning:  ${({ theme }) => theme.colors.orange1};
     --toastify-color-error:  ${({ theme }) => theme.colors.red1};
     --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+    --toastify-z-index: ${Z_INDEX.TOASTIFY + 999};
     --onboard-primary-500:  ${({ theme }) => theme.colors.primary1};
     --onboard-primary-300:  ${({ theme }) => theme.colors.primary1};
     --onboard-wallet-button-background: ${({ theme }) => theme.colors.neutral5};
@@ -303,7 +311,7 @@ const ThemedGlobalStyle = createGlobalStyle`
     --onboard-primary-100: transparent;
     --onboard-gray-600: ${({ theme }) => theme.colors.neutral1};
     --onboard-wallet-button-border-radius:  6px;
-    --onboard-modal-z-index: 99999;
+    --onboard-modal-z-index: ${Z_INDEX.WEB3_CONNECT_MODAL};
   }
 
   .wallet-button-container-inner {
@@ -319,6 +327,8 @@ const ThemedGlobalStyle = createGlobalStyle`
     opacity: 1;
     z-index: 100;
     box-shadow: 0px 0px 6px 6px ${({ theme }) => theme.colors.neutral3}03;
+    max-width: 320px;
+    font-size: 12px;
   }
   .custom_react_tooltip_arrow_place_top_css {
     border-bottom: 1px solid ${({ theme }) => theme.colors.neutral4};
@@ -404,7 +414,7 @@ input[type=number] {
   line-height: 1;
 }
 .rc-dropdown {
-  z-index: 20000;
+  z-index: ${Z_INDEX.THEME_DROPDOWN};
 }
 
 .hidden {

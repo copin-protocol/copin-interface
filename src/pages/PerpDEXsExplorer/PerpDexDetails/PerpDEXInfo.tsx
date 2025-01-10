@@ -61,10 +61,10 @@ export default function PerpDEXInfo({
         <PerpDexLogo perpDex={perpdexData.perpdex} size={40} />
       )}
       <Box ml={2}>
-        <Flex sx={{ alignItems: 'center', gap: 0 }}>
-          <Type.Caption mb={'2px'} mr={1}>
+        <Flex sx={{ alignItems: 'center', gap: 0 }} mb={1}>
+          <Type.BodyBold mr="6px" sx={{ textTransform: 'uppercase' }}>
             {protocolData ? protocolData.name : perpdexData.name}
-          </Type.Caption>
+          </Type.BodyBold>
           {protocolData ? (
             <Icon iconName={protocolData.chain} iconUriFactory={parseChainImage} size={16} />
           ) : (

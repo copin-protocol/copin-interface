@@ -1,0 +1,11 @@
+@font-face {
+  font-family: 'ABC Social Mono';
+  src: url('/fonts/Font-Regular.woff') format('woff');
+  font-weight: normal;
+}
+
+@font-face {
+    font-family: 'ABC Social Mono';
+    src: url('/fonts/Font-Bold.woff') format('woff');
+    font-weight: bold;
+}

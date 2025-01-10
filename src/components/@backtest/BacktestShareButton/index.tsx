@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { ShareFat } from '@phosphor-icons/react'
 import { useRef, useState } from 'react'
 import { useMutation } from 'react-query'
@@ -7,8 +8,8 @@ import { shareBacktestApi } from 'apis/shareApis'
 import ToastBody from 'components/@ui/ToastBody'
 import { RequestBackTestData } from 'entities/backTest'
 import useMyProfile from 'hooks/store/useMyProfile'
+import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import SocialMediaSharingModal from 'theme/Modal/SocialMediaSharingModal'
-import { Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { generateParamsUrl } from 'utils/helpers/generateRoute'
@@ -61,14 +62,10 @@ export default function BacktestShareButton({
   }/${sharedId.current}`
   return (
     <>
-      <Flex
-        role="button"
-        onClick={handleShare}
-        sx={{ alignItems: 'center', gap: 1, color: 'neutral3', '&:hover': { color: 'neutral2' } }}
-      >
-        <IconBox icon={<ShareFat size={20} />} />
-        <Type.Caption>Share</Type.Caption>
-      </Flex>
+      <ButtonWithIcon icon={<ShareFat size={20} />} onClick={handleShare} variant="ghost">
+        <Trans>Share</Trans>
+      </ButtonWithIcon>
+
       {isOpenSocialShareModal && (
         <SocialMediaSharingModal
           link={generateParamsUrl({ url: sharedLink, key: 'ref', value: referralCode })}

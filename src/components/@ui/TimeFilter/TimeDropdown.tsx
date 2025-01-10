@@ -15,11 +15,8 @@ export default function TimeDropdown({
 }) {
   return (
     <Dropdown
-      buttonSx={{
-        border: 'none',
-        py: 0,
-        px: 0,
-      }}
+      buttonVariant="ghost"
+      inline
       menuSx={{
         width: '100px',
         minWidth: 'auto',

@@ -95,7 +95,7 @@ export default function WalletDetailsCard({ data, handleUpdate, reload, hiddenBa
                   style={{
                     margin: 0,
                     padding: '0px',
-                    fontSize: '13px',
+                    fontSize: '12px',
                     lineHeight: '25px',
                     backgroundColor: 'transparent',
                     borderColor: themeColors.neutral4,

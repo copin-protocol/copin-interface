@@ -12,9 +12,9 @@ export default function CopyPositionsTableView({
   ...tableProps
 }: {
   onClosePositionSuccess: () => void
-  layoutType?: 'simple' | 'normal'
+  layoutType?: 'simple' | 'normal' | 'lite'
 } & TableProps<CopyPositionData, ExternalSourceCopyPositions>) {
-  return layoutType === 'normal' ? (
+  return layoutType === 'normal' || layoutType === 'lite' ? (
     <CopyPositionsContainer onClosePositionSuccess={onClosePositionSuccess}>
       <TableForm tableProps={tableProps} />
     </CopyPositionsContainer>

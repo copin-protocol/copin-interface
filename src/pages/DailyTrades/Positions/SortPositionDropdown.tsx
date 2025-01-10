@@ -29,6 +29,7 @@ export default function SortPositionsDropdown() {
     changeCurrentSort?.(tempSort)
     setVisible(false)
   }
+  // TODO @toanla reuse
   return (
     <Dropdown
       visible={visible}
@@ -37,7 +38,7 @@ export default function SortPositionsDropdown() {
       dismissible={false}
       menuDismissible
       menu={
-        <Box width={200}>
+        <Box width={220}>
           <Box pt={2} sx={{ maxHeight: 380, overflow: 'auto' }}>
             <Box px={2}>
               <Type.Caption mb={2}>

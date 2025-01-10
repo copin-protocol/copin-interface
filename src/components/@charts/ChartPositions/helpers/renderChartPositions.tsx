@@ -87,7 +87,7 @@ export default function renderChartPositions({
       textColor: themeColors.neutral3,
       background: { type: ColorType.Solid, color: 'transparent' },
       fontFamily: FONT_FAMILY,
-      fontSize: 13,
+      fontSize: 12,
       attributionLogo: false,
     },
     crosshair: {
@@ -155,9 +155,9 @@ export default function renderChartPositions({
       legend.style.left = '8px'
       legend.style.bottom = hasBrush ? '140px' : '40px'
       legend.style.zIndex = '1'
-      legend.style.fontSize = '13px'
+      legend.style.fontSize = '12px'
       legend.style.fontFamily = FONT_FAMILY
-      legend.style.lineHeight = '13px'
+      legend.style.lineHeight = '12px'
       legend.style.color = themeColors.neutral3
       legend.style.display = 'none'
       container.appendChild(legend)

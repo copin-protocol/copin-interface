@@ -4,7 +4,6 @@ import { useResponsive } from 'ahooks'
 import React, { Fragment, useMemo, useState } from 'react'
 import { GridProps } from 'styled-system'
 
-import Divider from 'components/@ui/Divider'
 import InputSearchText from 'components/@ui/InputSearchText'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { CopyTradeData } from 'entities/copyTrade'
@@ -121,11 +120,13 @@ export function SelectTradersCopiedDropdown({
         p: 2,
         ...menuSx,
       }}
+      buttonVariant="ghost"
       dismissible={false}
       menuDismissible
       menu={
         <>
-          <Flex sx={{ gap: 1, alignItems: 'center' }}>
+          <InputSearchText placeholder="SEARCH TRADER" searchText={searchText} setSearchText={setSearchText} />
+          <Flex sx={{ gap: 2, alignItems: 'center' }} my={2}>
             <SwitchInput
               checked={isSelectedAll}
               onChange={(event) => {
@@ -137,13 +138,10 @@ export function SelectTradersCopiedDropdown({
                 }
               }}
             />
-            <Type.CaptionBold color="neutral3">
-              <Trans>Select all</Trans>
+            <Type.CaptionBold color="neutral2">
+              <Trans>SELECT ALL</Trans>
             </Type.CaptionBold>
           </Flex>
-          <Divider my={2} />
-          <InputSearchText placeholder="Search traders..." searchText={searchText} setSearchText={setSearchText} />
-          <Divider mt={2} />
           <ListTraderCheckboxes
             addresses={activeTraderOptions}
             selectedTraders={selectedTraders}
@@ -159,19 +157,16 @@ export function SelectTradersCopiedDropdown({
         </>
       }
       buttonSx={{
-        border: 'none',
-        alignItems: 'start',
-        '.icon_dropdown': { pt: '3px' },
+        // textTransform: 'none',
         ...(!allTraders?.length ? { '&[disabled]': { color: 'neutral3' } } : {}),
         ...(buttonSx || {}),
       }}
       disabled={!allTraders?.length}
       placement={placement}
     >
-      <Trans>{selectedTraders.length} traders</Trans>{' '}
-      <Box as="span" color="neutral3">
-        ({activeTraderAddresses.length} <Trans>Active</Trans>)
-      </Box>
+      <Trans>
+        {activeTraderAddresses.length}/<Box as="span">{selectedTraders.length}</Box> Traders
+      </Trans>
     </Dropdown>
   )
 }

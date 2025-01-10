@@ -201,11 +201,9 @@ const Deposit = ({
               </Button>
             </Flex>
           )}
-          <Flex mt={3} sx={{ gap: 3 }}>
-            <Button type="submit" size="lg" block variant="primary" disabled={disabled} isLoading={submitting}>
-              <Trans>Deposit</Trans>
-            </Button>
-          </Flex>
+          <Button sx={{ mt: 3 }} type="submit" block variant="primary" disabled={disabled} isLoading={submitting}>
+            <Trans>Deposit</Trans>
+          </Button>
         </form>
       ) : (
         <Box my={3}>{alert}</Box>

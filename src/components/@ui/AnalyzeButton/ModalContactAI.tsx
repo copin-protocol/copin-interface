@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans, t } from '@lingui/macro'
 import { Sparkle } from '@phosphor-icons/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
@@ -16,12 +16,14 @@ import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { EMAIL_REGEX, LINKS } from 'utils/config/constants'
 import { WaitlistTypeEnum } from 'utils/config/enums'
+import { Z_INDEX } from 'utils/config/zIndex'
 
-const ModalContactAI = ({ onDismiss }: { onDismiss: () => void }) => {
+const ModalContactAI = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const {
     watch,
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<{ email: string }>({
     mode: 'onChange',
@@ -51,25 +53,29 @@ const ModalContactAI = ({ onDismiss }: { onDismiss: () => void }) => {
     registerWaitlist.mutate({ email: data.email, type: WaitlistTypeEnum.ANALYZE_WITH_AI })
   }
 
+  useEffect(() => {
+    if (!isOpen) reset({ email: '' })
+  }, [isOpen])
+
   return (
     <Modal
-      isOpen
+      isOpen={isOpen}
       onDismiss={onDismiss}
       maxWidth="450px"
       title={
         <Flex alignItems="center" sx={{ gap: 2 }}>
-          <Type.CaptionBold>Analyze With AI</Type.CaptionBold>
+          <Type.H5>Analyze With AI</Type.H5>
           <Type.Caption color="orange1" sx={{ px: '6px', py: '2px', backgroundColor: 'neutral5', borderRadius: '4px' }}>
             <Trans>Coming soon</Trans>
           </Type.Caption>
         </Flex>
       }
-      background="neutral7"
       hasClose
+      zIndex={Z_INDEX.TOASTIFY}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex flexDirection="column" pb={[3, 24]} px={[3, 24]}>
-          <Flex sx={{ gap: '12px', mb: 3, p: 12, backgroundColor: 'neutral6', borderRadius: '4px' }}>
+          <Flex sx={{ gap: 3, mb: 3, p: 12, backgroundColor: 'neutral6', borderRadius: '4px' }}>
             <Box>
               <Sparkle size={16} color={themeColors.neutral2} />
             </Box>
@@ -120,7 +126,15 @@ const ModalContactAI = ({ onDismiss }: { onDismiss: () => void }) => {
             <Divider flex={1} />
           </Flex>
 
-          <Button p={0} variant="ghostPrimary" as="a" href={LINKS.telegramAI} target="_blank" rel="noreferrer">
+          <Button
+            sx={{ mt: 2 }}
+            p={0}
+            variant="ghostPrimary"
+            as="a"
+            href={LINKS.telegramAI}
+            target="_blank"
+            rel="noreferrer"
+          >
             <Type.Caption textAlign="center">Join Telegram Community</Type.Caption>
           </Button>
         </Flex>

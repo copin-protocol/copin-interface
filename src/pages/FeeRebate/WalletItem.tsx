@@ -226,7 +226,7 @@ function WalletDetailsCard({ data, hiddenBalance }: WalletDetailsProps) {
     <Flex p={3} sx={{ flexDirection: 'column', gap: 2 }}>
       <Flex alignItems="center" sx={{ flex: 1, flexWrap: 'wrap', gap: 2 }}>
         <Flex width={200} alignItems="center" sx={{ gap: 2 }}>
-          <TitleWithIcon color={getColorFromText(data.id)} title={walletName} textSx={{ fontSize: '13px' }} />
+          <TitleWithIcon color={getColorFromText(data.id)} title={walletName} textSx={{ fontSize: '12px' }} />
         </Flex>
         {/* <WalletKey walletKey={walletKey} isSmartWallet={isSmartWallet} /> */}
         <SmartWalletInfo sx={{ display: 'flex' }} data={data} hiddenBalance={hiddenBalance} showFund={false} />

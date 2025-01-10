@@ -48,7 +48,7 @@ export default function SearchTrader({
   return (
     <Box sx={{ position: 'relative', width: 'max-content', maxWidth: '220px' }}>
       <InputSearch
-        placeholder="Search Trader"
+        placeholder="SEARCH TRADER"
         sx={{
           width: 'auto',
           height: 'max-content',

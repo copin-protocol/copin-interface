@@ -53,9 +53,9 @@ export const styleVariants = {
     color: 'neutral1',
     bg: 'transparent',
     border: 'small',
-    borderColor: 'neutral3',
+    borderColor: 'neutral4',
     '&:hover:not(:disabled),&:active:not(:disabled)': {
-      borderColor: 'neutral1',
+      borderColor: 'neutral3',
     },
   },
 
@@ -121,7 +121,7 @@ export const styleVariants = {
     bg: 'transparent',
     border: 'none',
     '&:hover:not(:disabled),&:active:not(:disabled)': {
-      bg: 'neutral5',
+      bg: 'transparent',
       color: 'neutral1',
     },
   },
@@ -169,16 +169,16 @@ export const sizeVariants = {
   [sizes.XS]: {
     px: '8px',
     py: '4px',
-    fontSize: '14px',
-    borderRadius: '4px',
+    lineHeight: '16px',
+    fontSize: '10px',
   },
   [sizes.SM]: {
     px: '12px',
     py: 2,
   },
   [sizes.MD]: {
-    px: 3,
-    py: 3,
+    px: '12px',
+    py: '10px',
   },
   [sizes.LG]: {
     px: '12px',

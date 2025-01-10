@@ -79,7 +79,6 @@ export function WalletStatisticOverviewItem({
         height: '100%',
         flexShrink: 0,
         flexDirection: sm ? 'row' : 'column',
-        '*': { lineHeight: '1.5em !important' },
       }}
     >
       <Flex sx={{ gap: '1ch', alignItems: 'center' }}>
@@ -128,7 +127,7 @@ export function WalletStatisticOverviewItem({
         <Box
           role="button"
           onClick={() => setShow((prev) => !prev)}
-          sx={{ color: 'neutral3', '&:hover': { color: 'neutral2' }, lineHeight: 0 }}
+          sx={{ color: 'neutral3', '&:hover': { color: 'neutral2' }, height: 20 }}
           display={{ _: 'none', xl: 'block' }}
         >
           {show ? <EyeClosed onClick={() => setShow(true)} /> : <Eye />}

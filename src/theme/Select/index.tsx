@@ -27,21 +27,21 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
   ({ error, width, height, maxHeightSelectContainer }) =>
     css({
       input: {
-        fontSize: '16px !important',
+        fontSize: '12px !important',
       },
       border: 'none',
       width: width ?? '100%',
 
       '& .select__control': {
-        // paddingLeft: '5px',
-        minHeight: height ? 'auto' : 42,
+        paddingLeft: '4px',
+        minHeight: height ? 'auto' : 40,
         height: height ?? 'auto',
         alignItems: 'center',
         position: 'relative',
         border: 'small',
         borderColor: error ? 'red1' : 'neutral4',
-        borderRadius: 'sm',
-        bg: 'neutral5',
+        borderRadius: 'xs',
+        bg: 'neutral7',
         maxHeight: maxHeightSelectContainer ?? 'none',
         overflow: 'auto',
         '&:hover:not([disabled]), &--is-hovered': {
@@ -54,15 +54,15 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
           boxShadow: 'none',
         },
         '& .select__value-container': {
-          pl: '5px',
-          pr: '5px',
-          py: '5px',
+          pl: '4px',
+          pr: '4px',
+          py: '4px',
           color: 'inherit',
           cursor: 'pointer',
           fontFamily: `${FONT_FAMILY}`,
-          fontSize: '13px',
+          fontSize: '12px',
 
-          lineHeight: '20px !important',
+          lineHeight: '18px !important',
           '& .select__input-container': {
             margin: '0',
             padding: '0',
@@ -102,11 +102,11 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
         zIndex: 102,
       },
       '& .select__menu': {
-        fontSize: 13,
-        borderRadius: 'sm',
+        fontSize: 12,
+        borderRadius: 'xs',
         border: 'small',
         borderColor: 'neutral4',
-        boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+        boxShadow: '1',
         cursor: 'pointer',
         mt: 1,
         p: 0,
@@ -124,12 +124,13 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
             px: 2,
             cursor: 'pointer',
             '&--is-focused:not([disabled])': {
+              // color: 'primary1',
               bg: 'neutral5',
               // bg: '#23262F',
             },
             '&--is-selected:not([disabled])': {
-              bg: 'neutral4',
-              color: 'neutral1',
+              color: 'primary1',
+              bg: 'inherit',
             },
           },
           '.select__option--is-disabled': {
@@ -140,16 +141,18 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
         },
       },
       '& .select__multi-value': {
-        width: 64,
-        height: 26,
+        // minWidth: 64,
+        height: 20,
         justifyContent: 'space-between',
         alignItems: 'center',
+        borderRadius: '24px',
         backgroundColor: 'neutral4',
         '.select__multi-value__label': {
           color: 'neutral1',
         },
         '.select__multi-value__remove': {
           color: 'neutral3',
+          borderRadius: '24px',
           '&:hover': {
             color: 'neutral2',
             backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -161,13 +164,13 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
 )
 
 const DropdownIndicator = () => {
-  return <CaretDown size={16} />
+  return <CaretDown size={12} />
 }
 // const ClearIndicator = () =>
 const ClearIndicator = (props: ClearIndicatorProps<any>) => {
   const {
     children = (
-      <IconBox icon={<X size={16} />} sx={{ color: 'neutral2', bg: 'transparent', '&:hover': { color: 'neutral1' } }} />
+      <IconBox icon={<X size={12} />} sx={{ color: 'neutral2', bg: 'transparent', '&:hover': { color: 'neutral1' } }} />
     ),
     getStyles,
     innerProps: { ref, ...restInnerProps },
@@ -190,7 +193,7 @@ const MultiValueRemove = (props: MultiValueRemoveProps<any>) => {
 }
 const SelectStyles = {
   indicatorSeparator: () => ({ display: 'none' }),
-  indicatorsContainer: (providedStyled: any) => ({ ...providedStyled, paddingRight: '16px' }),
+  indicatorsContainer: (providedStyled: any) => ({ ...providedStyled, paddingRight: '12px' }),
   singleValue: (providedStyled: any) => ({ ...providedStyled, fontWeight: 400 }),
   multiValue: (providedStyled: any) => ({ ...providedStyled, fontWeight: 400, fontSize: '15px' }),
 }

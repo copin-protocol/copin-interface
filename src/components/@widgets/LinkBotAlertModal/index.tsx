@@ -6,12 +6,13 @@ import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
 import TelegramIcon from 'theme/Icons/TelegramIcon'
 import Modal from 'theme/Modal'
-import { Flex, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { generateTelegramBotAlertUrl } from 'utils/helpers/generateRoute'
 
 export default function LinkBotAlertModal({ state, onDismiss }: { state: string; onDismiss: () => void }) {
   return (
-    <Modal isOpen onDismiss={onDismiss} hasClose={false} maxWidth="480px">
+    <Modal isOpen onDismiss={onDismiss} hasClose={false} maxWidth="480px" zIndex={Z_INDEX.TOASTIFY}>
       <Flex width="100%" p={24} flexDirection="column" alignItems="center">
         <IconButton
           variant="outline"
@@ -31,18 +32,11 @@ export default function LinkBotAlertModal({ state, onDismiss }: { state: string;
           <Button variant="outline" onClick={onDismiss} sx={{ flex: 1 }}>
             <Trans>No, thanks</Trans>
           </Button>
-          <ButtonWithIcon
-            type="button"
-            variant="primary"
-            as="a"
-            href={generateTelegramBotAlertUrl(state)}
-            target="_top"
-            icon={<ArrowSquareOut />}
-            direction="right"
-            sx={{ flex: 1 }}
-          >
-            <Trans>Open Telegram Bot</Trans>
-          </ButtonWithIcon>
+          <Box as="a" flex={1} href={generateTelegramBotAlertUrl(state)} target="_top">
+            <ButtonWithIcon type="button" variant="primary" icon={<ArrowSquareOut />} direction="right" block>
+              <Trans>Open Telegram Bot</Trans>
+            </ButtonWithIcon>
+          </Box>
         </Flex>
       </Flex>
     </Modal>

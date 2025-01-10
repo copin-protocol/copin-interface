@@ -4,7 +4,6 @@ import { useResponsive } from 'ahooks'
 import { useMemo, useState } from 'react'
 import { GridProps } from 'styled-system'
 
-import Divider from 'components/@ui/Divider'
 import InputSearchText from 'components/@ui/InputSearchText'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { CopyWalletData } from 'entities/copyWallet'
@@ -100,11 +99,13 @@ export function SelectWalletsDropdown({
         p: 2,
         ...menuSx,
       }}
+      buttonVariant="ghost"
       dismissible={false}
       menuDismissible
       menu={
         <>
-          <Flex sx={{ gap: 1, alignItems: 'center' }}>
+          <InputSearchText placeholder="SEARCH WALLET" searchText={searchText} setSearchText={setSearchText} />
+          <Flex sx={{ gap: 2, alignItems: 'center', my: 2 }}>
             <SwitchInput
               checked={isSelectedAll}
               onChange={(event) => {
@@ -116,17 +117,14 @@ export function SelectWalletsDropdown({
                 }
               }}
             />
-            <Type.CaptionBold color="neutral3">
-              <Trans>Select all</Trans> (
-              <Type.Caption>
-                <Trans>Includes deleted data</Trans>
+            <Type.CaptionBold color="neutral2">
+              <Trans>SELECT ALL</Trans>
+              <Type.Caption color="neutral3" ml={1}>
+                (<Trans>Includes deleted data</Trans>)
               </Type.Caption>
-              )
             </Type.CaptionBold>
           </Flex>
-          <Divider my={2} />
-          <InputSearchText placeholder="Search wallets..." searchText={searchText} setSearchText={setSearchText} />
-          <Divider mt={2} />
+
           {!options.length && <NoDataFound message={<Trans>No Wallet Found</Trans>} />}
           <Grid
             sx={{
@@ -173,13 +171,13 @@ export function SelectWalletsDropdown({
         </>
       }
       buttonSx={{
-        border: 'none',
+        // textTransform: 'none',
         alignItems: ['start', 'center'],
         '.icon_dropdown': { pt: ['3px', 0] },
       }}
       placement={placement}
     >
-      {selectedWallets.length}/{allWallets.length} active {allWallets.length > 1 ? 'wallets' : 'wallet'}
+      {selectedWallets.length}/{allWallets.length} Active {allWallets.length > 1 ? 'Wallets' : 'Wallet'}
     </Dropdown>
   )
 }

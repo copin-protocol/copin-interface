@@ -20,10 +20,9 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-export function PairFilterTitle({
+export function PairFilterIcon({
   pairs,
   changePairs,
-  title = <Trans>PAIRS</Trans>,
 }: {
   pairs: string[] | undefined
   changePairs: (pairs: string[] | undefined) => void
@@ -52,38 +51,34 @@ export function PairFilterTitle({
   const hasFilter = !!pairs?.length
 
   return (
-    <Flex sx={{ justifyContent: 'start', alignItems: 'center', gap: 1, position: 'relative' }}>
-      <Box as="span">{title}</Box>
-      <Dropdown
-        menuDismissible
-        dismissible={false}
-        visible={visible}
-        setVisible={setVisible}
-        buttonSx={{ p: 0, border: 'none' }}
-        hasArrow={false}
-        menu={
-          <Box sx={{ p: 3, width: '330px' }}>
-            <MarketSelection
-              fullOptions={fullOptions}
-              allPairs={allPairs}
-              defaultPairs={pairs?.length ? pairs : allPairs}
-              onApply={applyChangePairs}
-              onReset={resetPairs}
-            />
-          </Box>
-        }
-      >
-        <IconBox
-          role="button"
-          icon={<Funnel size={16} weight={!!hasFilter ? 'fill' : 'regular'} />}
-          sx={{
-            transform: 'translateY(-1.5px)',
-            color: !!hasFilter ? 'neutral2' : 'neutral3',
-            '&:hover:': { color: 'neutral1' },
-          }}
-        />
-      </Dropdown>
-    </Flex>
+    <Dropdown
+      buttonVariant="ghostInactive"
+      inline
+      menuDismissible
+      dismissible={false}
+      visible={visible}
+      setVisible={setVisible}
+      hasArrow={false}
+      menu={
+        <Box sx={{ p: 3, width: '330px' }}>
+          <MarketSelection
+            fullOptions={fullOptions}
+            allPairs={allPairs}
+            defaultPairs={pairs?.length ? pairs : allPairs}
+            onApply={applyChangePairs}
+            onReset={resetPairs}
+          />
+        </Box>
+      }
+    >
+      <IconBox
+        role="button"
+        icon={<Funnel size={16} weight={!!hasFilter ? 'fill' : 'regular'} />}
+        sx={{
+          transform: 'translateY(-1.5px)',
+        }}
+      />
+    </Dropdown>
   )
 }
 

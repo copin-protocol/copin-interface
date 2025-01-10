@@ -51,7 +51,7 @@ export default function ListProtocolSelection({
               key={protocol}
               sx={{
                 backgroundColor: 'neutral6',
-                borderRadius: 'sm',
+                borderRadius: 'xs',
                 '&:hover': {
                   backgroundColor: 'neutral5',
                   cursor: 'pointer',
@@ -77,7 +77,9 @@ export default function ListProtocolSelection({
 
                 <Flex width="100%" sx={{ gap: '5px', alignItems: 'center', position: 'relative' }}>
                   <Flex width="100%" flexDirection={'column'} sx={{ justifyContent: 'space-between' }} mx={1}>
-                    <Type.Caption color={'neutral1'}>{option.text}</Type.Caption>
+                    <Type.Caption color={'neutral1'} sx={{ textTransform: 'uppercase' }}>
+                      {option.text}
+                    </Type.Caption>
                     <Flex alignItems={'center'}>
                       <Type.Small color={'neutral3'} mr={1}>
                         {compactNumber(protocolStatistic?.traders ?? 0, 2, true)}

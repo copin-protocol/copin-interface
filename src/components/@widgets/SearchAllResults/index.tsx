@@ -93,9 +93,6 @@ const SearchAllResults = ({
               },
             }}
             tableHeadSx={{
-              th: {
-                pt: 2,
-              },
               '& th:first-child': {
                 pl: 3,
               },

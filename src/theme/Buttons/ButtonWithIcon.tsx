@@ -12,7 +12,7 @@ const ButtonWithIcon = ({
   type = 'button',
   centered = true,
   children,
-  spacing = 2,
+  spacing = 1,
   sx,
   iconSx,
   ...props
@@ -23,6 +23,7 @@ const ButtonWithIcon = ({
   centered?: boolean
   direction?: 'left' | 'right'
   disabled?: boolean
+  inline?: boolean
 } & ComponentProps<typeof Button>) => (
   <Button
     type={type}

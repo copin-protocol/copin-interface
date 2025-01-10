@@ -22,7 +22,7 @@ function colors(darkMode: boolean): Colors {
     neutral4: darkMode ? '#313856' : '#777E90',
     neutral3: darkMode ? '#777E90' : '#353945',
     neutral2: darkMode ? '#C0C0C9' : '#23262F',
-    neutral1: darkMode ? '#FCFCFD' : '#141416',
+    neutral1: darkMode ? '#EAE5E3' : '#141416',
 
     //primary colors
     primary1: '#4EAEFD',

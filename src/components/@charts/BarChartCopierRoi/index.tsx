@@ -51,7 +51,7 @@ export default function BarChartCopierRoi({
             '.recharts-cartesian-axis-tick': {
               text: {
                 fill: 'neutral3',
-                fontSize: '13px',
+                fontSize: '12px',
               },
             },
           }}
@@ -77,7 +77,7 @@ export default function BarChartCopierRoi({
                 contentStyle={{
                   backgroundColor: themeColors.neutral5,
                   borderColor: 'transparent',
-                  fontSize: '13px',
+                  fontSize: '12px',
                   fontFamily: FONT_FAMILY,
                 }}
                 content={(payload) => <CustomTooltip item={payload.payload} />}

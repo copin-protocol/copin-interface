@@ -1,10 +1,12 @@
 import { CopierLeaderboardData } from 'entities/copier'
+import { ResponseTraderData } from 'entities/trader'
 import {
   CopyTradeStatusEnum,
   LeaderboardTypeEnum,
   ProtocolEnum,
   SortTypeEnum,
   TimeFilterByEnum,
+  TraderLabelEnum,
 } from 'utils/config/enums'
 
 export class ResponseError extends Error {
@@ -103,4 +105,12 @@ export type GetCopierLeaderboardParams = PaginationParams & {
   sortBy?: string
   sortType?: SortTypeEnum
   statisticAt?: string
+}
+
+export type GetTraderByLabelPayload = {
+  statisticType: TimeFilterByEnum
+  labels: TraderLabelEnum[]
+  sortBy: keyof ResponseTraderData
+  sortType: SortTypeEnum
+  protocols: ProtocolEnum[]
 }

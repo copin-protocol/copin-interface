@@ -66,9 +66,12 @@ export default function PositionLegend({
         px: 12,
         py: 2,
         borderRadius: 0,
-        bg: 'neutral4',
+        bg: 'neutral6',
+        border: 'none',
+        borderBottom: 'small',
+        borderBottomColor: 'neutral4',
         '&:hover:not(:disabled),&:active:not(:disabled)': {
-          bg: '#414763',
+          bg: 'neutral5',
         },
       }}
       onClick={() => handleSelectItem(data)}
@@ -82,39 +85,35 @@ export default function PositionLegend({
       >
         <Flex minWidth="30px" flexDirection="column" alignItems="flex-start" sx={{ gap: 2 }}>
           <Type.Small>Time</Type.Small>
-          <Type.Small color="neutral3">
+          <Type.Caption color="neutral3">
             <RelativeShortTimeText date={isOpening ? data.openBlockTime : data.closeBlockTime} />
-          </Type.Small>
+          </Type.Caption>
         </Flex>
         {isExpanded && (
           <Flex minWidth="100px" flexDirection="column" alignItems="flex-start" sx={{ gap: 2 }}>
             <Type.Small>Entry</Type.Small>
-            <Type.Small color="neutral1">{renderEntry(data, { fontSize: '12px', lineHeight: '16px' })}</Type.Small>
+            <Type.Caption color="neutral1">{renderEntry(data)}</Type.Caption>
           </Flex>
         )}
         <Flex minWidth="110px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
           <Type.Small>Size</Type.Small>
-          <Type.Small color="neutral1">
+          <Type.Caption color="neutral1">
             ${formatNumber(data.size, 0)} | {formatLeverage(data.marginMode, data.leverage)}
-          </Type.Small>
+          </Type.Caption>
         </Flex>
 
         <Flex minWidth="70px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
           <Type.Small>PnL</Type.Small>
           {isOpening ? (
             prices ? (
-              renderOpeningPnLWithPrices(data, prices, true, { fontSize: '12px', lineHeight: '16px' })
+              renderOpeningPnLWithPrices(data, prices, true)
             ) : (
               '--'
             )
           ) : (
             <Flex alignItems="center" sx={{ gap: '1px' }}>
               {data.isLiquidate && <SkullIcon />}
-              <SignedText
-                value={data.pnl}
-                maxDigit={0}
-                sx={{ textAlign: 'right', width: '100%', fontSize: '12px', lineHeight: '16px' }}
-              />
+              <SignedText value={data.pnl} maxDigit={0} sx={{ textAlign: 'right', width: '100%' }} />
             </Flex>
           )}
         </Flex>
@@ -122,20 +121,20 @@ export default function PositionLegend({
           <Flex minWidth="70px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
             <Type.Small>ROI</Type.Small>
             {isOpening ? (
-              renderOpeningRoiWithPrices(data, prices, false, { fontSize: '12px', lineHeight: '16px' })
+              renderOpeningRoiWithPrices(data, prices, false)
             ) : (
               <Flex alignItems="center" sx={{ gap: '1px' }}>
                 {data.isLiquidate && <SkullIcon />}
-                <Type.Small>
+                <Type.Caption>
                   <SignedText
                     value={data.roi}
                     maxDigit={2}
                     minDigit={2}
                     suffix="%"
-                    sx={{ textAlign: 'right', width: '100%', fontSize: '12px', lineHeight: '16px' }}
+                    sx={{ textAlign: 'right', width: '100%' }}
                     fontInherit={true}
                   />
-                </Type.Small>
+                </Type.Caption>
               </Flex>
             )}
           </Flex>
@@ -143,14 +142,9 @@ export default function PositionLegend({
 
         <Flex minWidth="60px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
           <Type.Small>Fee</Type.Small>
-          <Type.Small color="neutral1">
-            <SignedText
-              value={-data.fee}
-              maxDigit={0}
-              fontInherit={true}
-              sx={{ textAlign: 'right', width: '100%', fontSize: '12px', lineHeight: '16px' }}
-            />
-          </Type.Small>
+          <Type.Caption color="neutral1">
+            <SignedText value={-data.fee} maxDigit={0} fontInherit={true} sx={{ textAlign: 'right', width: '100%' }} />
+          </Type.Caption>
         </Flex>
 
         <Flex minWidth="20px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>

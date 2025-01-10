@@ -87,7 +87,7 @@ export default function DailyOrderListView({ data, isLoading, scrollDep }: Props
             <Flex mt={2} sx={{ alignItems: 'center', gap: 1, justifyContent: 'space-between' }}>
               <Flex sx={{ alignItems: 'center', gap: 1 }}>
                 <Flex sx={{ alignItems: 'center', gap: 2, width: '92px', flexShrink: 0 }}>
-                  <Market symbol={getSymbolFromPair(order.pair)} hasName symbolNameSx={{ fontSize: '13px' }} />
+                  <Market symbol={getSymbolFromPair(order.pair)} hasName symbolNameSx={{ fontSize: '12px' }} />
                 </Flex>
 
                 <Type.Caption color="neutral1" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

@@ -4,6 +4,7 @@ import { immer } from 'zustand/middleware/immer'
 
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 interface DialogContentData {
   id?: string
@@ -49,7 +50,7 @@ export function DialogContent({ data }: { data: DialogContentData }) {
         left: 0,
         width: '100%',
         height: '100%',
-        zIndex: 10000,
+        zIndex: Z_INDEX.THEME_DROPDOWN,
       }}
     >
       <Box

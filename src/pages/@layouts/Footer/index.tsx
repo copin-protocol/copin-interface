@@ -71,7 +71,7 @@ const Footer = ({ height }: { height: number }) => {
                   rel="noreferrer"
                   style={{
                     lineHeight: '16px',
-                    fontSize: '13px',
+                    fontSize: '12px',
                   }}
                 >
                   {_d.label}
@@ -104,18 +104,18 @@ const Footer = ({ height }: { height: number }) => {
 }
 
 const links = [
-  { label: <Trans>Home</Trans>, href: LINKS.website },
-  { label: <Trans>Upgrade</Trans>, href: ROUTES.SUBSCRIPTION.path },
-  { label: <Trans>Blog</Trans>, href: LINKS.blog },
-  { label: <Trans>Docs</Trans>, href: LINKS.docs },
-  { label: <Trans>Terms & Policy</Trans>, href: LINKS.policy },
-  { label: <Trans>Feedback</Trans>, href: LINKS.feedback },
+  { label: <Trans>HOME</Trans>, href: LINKS.website },
+  { label: <Trans>UPGRADE</Trans>, href: ROUTES.SUBSCRIPTION.path },
+  { label: <Trans>BLOG</Trans>, href: LINKS.blog },
+  { label: <Trans>DOCS</Trans>, href: LINKS.docs },
+  { label: <Trans>TERMS & POLICY</Trans>, href: LINKS.policy },
+  { label: <Trans>FEEDBACK</Trans>, href: LINKS.feedback },
 ]
 const linksMobile = [
-  { label: <Trans>Upgrade</Trans>, href: ROUTES.SUBSCRIPTION.path },
-  { label: <Trans>Docs</Trans>, href: LINKS.docs },
-  { label: <Trans>Policy</Trans>, href: LINKS.policy },
-  { label: <Trans>Feedback</Trans>, href: LINKS.feedback },
+  { label: <Trans>UPGRADE</Trans>, href: ROUTES.SUBSCRIPTION.path },
+  { label: <Trans>DOCS</Trans>, href: LINKS.docs },
+  { label: <Trans>POLICY</Trans>, href: LINKS.policy },
+  { label: <Trans>FEEDBACK</Trans>, href: LINKS.feedback },
 ]
 const channels = [
   { Icon: DiscordIcon, href: LINKS.discord, event: EVENT_ACTIONS[EventCategory.ROUTES].JOIN_DISCORD },

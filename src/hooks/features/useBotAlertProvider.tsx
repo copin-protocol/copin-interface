@@ -39,6 +39,7 @@ export function BotAlertProvider({ children }: { children: ReactNode }) {
 
   const { mutate: generateLinkBot, isLoading: isGeneratingLink } = useMutation(generateLinkBotAlertApi, {
     onSuccess: (state?: string) => {
+      console.log('generate success')
       setIsOpenLinkBotModal(true)
       setCurrentState(state)
     },

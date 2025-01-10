@@ -118,6 +118,7 @@ const CopyButton = ({
           alignItems: 'center',
           justifyContent: direction === 'center' ? 'center' : 'space-between',
           flexDirection: direction === 'right' ? 'row-reverse' : 'row',
+
           ...sx,
         }}
         {...props}
@@ -136,7 +137,7 @@ const CopyButton = ({
             {iconDirection === 'left' && (
               <IconBox className="icon_wrapper" color="neutral3" mr={2} icon={copyIcon} sx={iconSx} />
             )}
-            <Type.Caption fontWeight="normal" sx={{ wordBreak: 'break-all' }}>
+            <Type.Caption fontWeight="normal" sx={{ wordBreak: 'break-all', textTransform: 'none' }}>
               {children}
             </Type.Caption>
             {iconDirection === 'right' && (

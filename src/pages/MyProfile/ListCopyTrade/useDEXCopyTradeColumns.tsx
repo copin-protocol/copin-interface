@@ -147,14 +147,6 @@ export default function useDEXCopyTradeColumns({
     const numberValue = parseInputValue(value)
     switch (field) {
       case 'volume':
-        // if (DCP_EXCHANGES.includes(oldData.exchange) && numberValue < 60) {
-        //   toast.error(<ToastBody title="Error" message="DCP Volume must be greater than or equal to $60" />)
-        //   return
-        // }
-        if (!isVIP && numberValue > 100000) {
-          toast.error(<ToastBody title="Error" message="Volume must be less than $100,000" />)
-          return
-        }
         return true
       case 'leverage':
         if (numberValue < 2) {
@@ -551,6 +543,8 @@ export default function useDEXCopyTradeColumns({
     (item: CopyTradeWithCheckingData, option?: { placement: any }) => (
       <Flex justifyContent="end">
         <Dropdown
+          buttonVariant="ghost"
+          inline
           hasArrow={false}
           menuSx={{
             bg: 'neutral7',
@@ -582,11 +576,6 @@ export default function useDEXCopyTradeColumns({
             </>
           }
           sx={{}}
-          buttonSx={{
-            border: 'none',
-            height: '100%',
-            p: 0,
-          }}
           placement={option?.placement || 'topRight'}
         >
           <IconButton

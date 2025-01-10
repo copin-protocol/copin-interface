@@ -24,7 +24,7 @@ import {
   registerEvent,
 } from 'apis/event'
 import banner from 'assets/images/event-banner.png'
-import registerSuccess from 'assets/images/register-event-success.png'
+import registerSuccess from 'assets/images/success-img.png'
 import logo from 'assets/logo.svg'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import RankingNumber from 'components/@trader/TraderLeaderboardTableView/RankingNumber'
@@ -33,7 +33,6 @@ import Divider from 'components/@ui/Divider'
 import RewardWithSymbol from 'components/@ui/RewardWithSymbol'
 import ToastBody from 'components/@ui/ToastBody'
 import CreateSmartWalletAction from 'components/@wallet/CreateSmartWalletAction'
-import ReferralStatus from 'components/@wallet/WalletReferralStatus'
 import EventTradingProtocols from 'components/@widgets/EventTradingProtocols'
 import { CopyWalletData } from 'entities/copyWallet'
 import { EventDetailsData, TradingEventStatusEnum, UserEventRankingData } from 'entities/event'
@@ -51,7 +50,7 @@ import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Image, Li, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { CEX_EXCHANGES, DATE_FORMAT, DEFAULT_PROTOCOL, LINKS, TIME_FORMAT } from 'utils/config/constants'
+import { DATE_FORMAT, DEFAULT_PROTOCOL, LINKS, TIME_FORMAT } from 'utils/config/constants'
 import { CopyTradePlatformEnum, EventTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
@@ -304,7 +303,7 @@ function RegisterArea({
           ) : isJoined ? (
             <>
               {eventDetails?.status === TradingEventStatusEnum.UPCOMING && (
-                <Button variant="primary" block mt={24} sx={{ fontWeight: '600', fontSize: '13px', py: 2 }} disabled>
+                <Button variant="primary" block mt={24} sx={{ fontWeight: '600', fontSize: '12px', py: 2 }} disabled>
                   Joined
                 </Button>
               )}
@@ -321,7 +320,7 @@ function RegisterArea({
                       username: myProfile?.username,
                     })
                   }}
-                  sx={{ fontWeight: '600', fontSize: '13px', py: 2 }}
+                  sx={{ fontWeight: '600', fontSize: '12px', py: 2 }}
                 >
                   Copy Trade
                 </Button>
@@ -864,7 +863,8 @@ function UserOverview({
         <Label icon={Wallet} label={myProfile?.username ? addressShorten(myProfile?.username) : '--'} />
         {!!eligibleWallets?.length && (
           <Dropdown
-            buttonSx={{ color: 'primary1', p: 0, border: 'none', fontSize: 16 }}
+            buttonVariant="ghostPrimary"
+            inline
             placement="bottomRight"
             menu={
               <Box py={2}>
@@ -881,9 +881,9 @@ function UserOverview({
                         <Type.CaptionBold sx={{ flex: 1, maxWidth: 120, ...overflowEllipsis() }}>
                           {parseWalletName(wallet)}
                         </Type.CaptionBold>
-                        {CEX_EXCHANGES.includes(wallet.exchange) && (
+                        {/* {CEX_EXCHANGES.includes(wallet.exchange) && (
                           <ReferralStatus data={wallet} hasText={false} sx={{ width: 'auto', p: 1 }} size={16} />
-                        )}
+                        )} */}
                       </Flex>
                     )
                   })}
@@ -1346,19 +1346,19 @@ const tabConfigs: TabConfig[] = [
   {
     name: 'Overview',
     activeIcon: <PresentationChart size={24} weight="fill" />,
-    inactiveIcon: <PresentationChart size={24} />,
+    icon: <PresentationChart size={24} />,
     key: TabKeyEnum.OVERVIEW,
   },
   {
     name: 'Ranking',
     activeIcon: <ChartBar size={24} weight="fill" />,
-    inactiveIcon: <ChartBar size={24} />,
+    icon: <ChartBar size={24} />,
     key: TabKeyEnum.RANKING,
   },
   {
     name: 'Rules',
     activeIcon: <BookBookmark size={24} weight="fill" />,
-    inactiveIcon: <BookBookmark size={24} />,
+    icon: <BookBookmark size={24} />,
     key: TabKeyEnum.RULES,
   },
 ]

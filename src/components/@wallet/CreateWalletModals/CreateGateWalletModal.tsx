@@ -15,6 +15,7 @@ import InputField, { InputPasswordField } from 'theme/InputField'
 import Modal from 'theme/Modal'
 import { Box } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 import GateHelp from './WalletHelpGate'
 import { GateWalletFormValues, defaultFormValues, gateWalletFormSchema } from './gateSchema'
@@ -60,7 +61,15 @@ export default function CreateGateWalletModal({ isOpen, onDismiss }: { isOpen: b
   }
 
   return (
-    <Modal isOpen={isOpen} hasClose title={'Connect Your Gate API'} onDismiss={onDismiss} width="90vw" maxWidth="450px">
+    <Modal
+      isOpen={isOpen}
+      hasClose
+      title={'Connect Your Gate API'}
+      onDismiss={onDismiss}
+      width="90vw"
+      maxWidth="450px"
+      zIndex={Z_INDEX.TOASTIFY}
+    >
       <Box variant="card" sx={{ backgroundColor: 'modalBG' }}>
         <form
           onSubmit={handleSubmit(onSubmit)}

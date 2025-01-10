@@ -2,6 +2,7 @@ import { memo, useEffect } from 'react'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
+import { CopyTradeData } from 'entities/copyTrade'
 import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
 import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
@@ -13,6 +14,8 @@ interface TraderCopyingState {
   isLoading: boolean
   submitting: boolean
   traderCopying: TraderCopying
+  allCopyTrades: CopyTradeData[] | undefined
+  setAllCopyTrades: (allCopyTrades: CopyTradeData[] | undefined) => void
   setLoading: (bool: boolean) => void
   setSubmitting: (bool: boolean) => void
   setTraderCopying: (traders: TraderCopying) => void
@@ -21,8 +24,10 @@ interface TraderCopyingState {
 const useTraderCopyingStore = create<TraderCopyingState>()(
   immer((set) => ({
     traderCopying: {},
+    allCopyTrades: [],
     isLoading: false,
     submitting: false,
+    setAllCopyTrades: (allCopyTrades: CopyTradeData[] | undefined) => set({ allCopyTrades }),
     setLoading: (bool: boolean) => set({ isLoading: bool }),
     setSubmitting: (bool: boolean) => set({ submitting: bool }),
     setTraderCopying: (traders: TraderCopying) => set({ traderCopying: traders }),
@@ -40,7 +45,7 @@ const EXCLUDING_PATH = [
 ]
 const useInitTraderCopying = () => {
   const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH)
-  const { setTraderCopying, setLoading } = useTraderCopyingStore()
+  const { setTraderCopying, setLoading, setAllCopyTrades } = useTraderCopyingStore()
   const { allCopyTrades } = useAllCopyTrades({ enabled: enabledQueryByPaths })
 
   useEffect(() => {
@@ -63,6 +68,7 @@ const useInitTraderCopying = () => {
     }, {} as TraderCopying)
     if (!copyingTrader) return
     setTraderCopying(copyingTrader)
+    setAllCopyTrades(allCopyTrades)
     setLoading(true)
   }, [allCopyTrades])
 }
@@ -114,6 +120,11 @@ const useTraderCopying = (account: string | undefined, protocol: ProtocolEnum | 
     saveTraderCopying,
     removeTraderCopying,
   }
+}
+
+export const useStoredCopyTrades = () => {
+  const { allCopyTrades } = useTraderCopyingStore()
+  return allCopyTrades
 }
 
 export default useTraderCopying

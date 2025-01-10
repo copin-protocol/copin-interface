@@ -32,7 +32,7 @@ const SwitchProtocolsMobile = ({
         {protocolOptions.map((protocol) => (
           <DropdownItem key={protocol.id} size="sm" onClick={() => changeCurrentProtocol(protocol)}>
             <Flex py={1} alignItems="center" sx={{ gap: 2 }}>
-              <ProtocolLogo protocol={protocol.id} size={32} hasText={false} />
+              <ProtocolLogo protocol={protocol.id} size={24} hasText={false} />
               <Flex flexDirection="column">
                 <Type.Caption lineHeight="16px" color={currentProtocol.id === protocol.id ? 'primary1' : 'neutral1'}>
                   {protocol.text}
@@ -62,18 +62,6 @@ const SwitchProtocolsMobile = ({
       <Dropdown
         menu={renderProtocols()}
         buttonVariant="ghost"
-        buttonSx={{
-          px: 2,
-          mx: 0,
-          pt: '8px',
-          pb: '8px',
-          border: 'none',
-          borderRadius: 0,
-          '&[disabled]': {
-            cursor: 'not-allowed',
-          },
-          ...buttonSx,
-        }}
         menuSx={{ width: 160 }}
         hasArrow={true}
         sx={{ minWidth: 'fit-content', ...sx }}

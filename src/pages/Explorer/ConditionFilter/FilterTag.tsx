@@ -2,6 +2,7 @@ import { useResponsive } from 'ahooks'
 
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
+import TagWrapper from 'theme/Tag/TagWrapper'
 import { Box, Flex, Type } from 'theme/base'
 
 import { FilterTabEnum, defaultFieldOptionLabels, rankingFieldOptionLabels } from './configs'
@@ -17,24 +18,17 @@ const FilterTag = ({ filters, filterTab }: { filters: ConditionFormValues<Trader
         .map((values) => {
           if (!values) return <></>
           return (
-            <Box
-              key={values.key}
-              sx={{
-                borderRadius: 'xs',
-                px: '6px',
-                backgroundColor: 'neutral5',
-                lineHeight: 0,
-                textTransform: 'uppercase',
-              }}
-            >
+            <TagWrapper key={values.key}>
               <Type.Caption>{fieldOptionLabels[values.key]}</Type.Caption>{' '}
-              <Type.Caption color="primary1">
-                {values.conditionType === 'gte' || values.conditionType === 'between' ? `> ${values.gte}` : null}
-              </Type.Caption>{' '}
-              <Type.Caption color="primary1">
-                {values.conditionType === 'lte' || values.conditionType === 'between' ? `< ${values.lte}` : null}
+              <Type.Caption>
+                <Box as="span" color="primary1">
+                  {values.conditionType === 'gte' || values.conditionType === 'between' ? `> ${values.gte}` : null}
+                </Box>{' '}
+                <Box as="span" color="primary1">
+                  {values.conditionType === 'lte' || values.conditionType === 'between' ? `< ${values.lte}` : null}
+                </Box>
               </Type.Caption>
-            </Box>
+            </TagWrapper>
           )
         })}
       {Object.keys(filters).length > maxTag ? (

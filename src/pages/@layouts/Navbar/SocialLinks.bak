@@ -34,7 +34,7 @@ function LinkItem({ url, text, sx }: { url: string; text: ReactNode; sx?: any })
   return (
     <LinkUnderline
       sx={{
-        fontSize: 13,
+        fontSize: 12,
         fontWeight: 'bold',
         '&:hover': {
           color: 'neutral2',

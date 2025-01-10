@@ -18,7 +18,7 @@ export default function VisualizeSection({ data, isLoading }: VisualizeSectionPr
     <>
       <Box height="100%">
         <Flex
-          height="calc(100% - 136px)"
+          height="calc(100% - 120px)"
           sx={{
             position: 'relative',
             borderBottom: 'small',
@@ -35,7 +35,7 @@ export default function VisualizeSection({ data, isLoading }: VisualizeSectionPr
           {!data && isLoading && <Loading />}
           {data && <OpeningPositionsBubble data={data} />}
         </Flex>
-        <Box height="136px" p={12}>
+        <Box height="120px" p={12}>
           <LongShortRate {...longShortData} />
         </Box>
       </Box>
@@ -59,12 +59,12 @@ type LongShortRateProps = {
 function LongShortRate({ longRate, shortRate, longTraders, shortTraders, longVol, shortVol }: LongShortRateProps) {
   return (
     <Box>
-      <Flex justifyContent="space-between" mb={3}>
+      <Flex justifyContent="space-between" mb={2}>
         <Type.CaptionBold>Long Rate: {formatNumber(longRate, 1, 1)}%</Type.CaptionBold>
         <Type.CaptionBold>Short Rate: {formatNumber(shortRate, 1, 1)}%</Type.CaptionBold>
       </Flex>
       <DifferentialBar sourceRate={longRate ?? 0} targetRate={shortRate ?? 0} />
-      <Flex justifyContent="space-between" mt={3}>
+      <Flex justifyContent="space-between" mt={2}>
         <Box>
           <Type.Caption display="block">Long Volume: ${formatNumber(longVol, 0, 0)}</Type.Caption>
           <Type.Caption>{longTraders?.size ?? '--'} traders</Type.Caption>

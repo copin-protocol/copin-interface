@@ -32,13 +32,15 @@ export default function TableSortMobileButton<T, K>({
   }
   return (
     <Dropdown
+      buttonVariant="ghost"
+      buttonSx={{ px: 2 }}
       visible={visible}
       setVisible={setVisible}
       hasArrow={false}
       dismissible={false}
       menuDismissible
       menu={
-        <Box width={200}>
+        <Box width={250}>
           <Box pt={2} sx={{ maxHeight: 280, overflow: 'auto' }}>
             <Box px={2}>
               <Type.Caption mb={2}>
@@ -95,7 +97,7 @@ export default function TableSortMobileButton<T, K>({
             }}
           >
             <Button variant="ghost" onClick={onReset} sx={{ fontWeight: 400, p: 0 }}>
-              Reset Default
+              Reset
             </Button>
             <Button variant="ghostPrimary" onClick={onApply} sx={{ fontWeight: 400, p: 0 }}>
               Apply & Save
@@ -103,7 +105,6 @@ export default function TableSortMobileButton<T, K>({
           </Flex>
         </Box>
       }
-      buttonSx={{ border: 'none', px: 10, py: 0 }}
     >
       <Flex sx={{ alignItems: 'center', gap: 1 }}>
         <IconBox icon={<ArrowsDownUp size={20} />} color="neutral2" />

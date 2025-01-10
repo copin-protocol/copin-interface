@@ -1,8 +1,8 @@
-import { ORDER_ACTION_OPTIONS } from 'components/@dailyTrades/OrderActionFilterTitle'
+import { ORDER_ACTION_OPTIONS } from 'components/@dailyTrades/OrderActionFilterIcon'
 import { Type } from 'theme/base'
 
+import TagWrapper from '../../../theme/Tag/TagWrapper'
 import { useDailyOrdersContext } from '../Orders/useOrdersProvider'
-import TagWrapper from './TagWrapper'
 
 export default function FilterOrderActionTag() {
   const { action, changeAction } = useDailyOrdersContext()

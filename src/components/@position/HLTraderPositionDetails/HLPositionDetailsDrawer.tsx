@@ -7,6 +7,7 @@ import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import IconButton from 'theme/Buttons/IconButton'
 import RcDrawer from 'theme/RcDrawer'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 const HLTraderPositionDetails = lazy(() => import('components/@position/HLTraderPositionDetails'))
 
@@ -23,8 +24,8 @@ export default function HLPositionDetailsDrawer({
 }) {
   const isMobile = useIsMobile()
   return (
-    <RcDrawer open={isOpen} onClose={onDismiss} width={isMobile ? '100%' : '60%'}>
-      <Container sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'auto', bg: 'neutral6' }}>
+    <RcDrawer open={isOpen} onClose={onDismiss} width={isMobile ? '100%' : '60%'} zIndex={Z_INDEX.TOASTIFY + 1}>
+      <Container sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'auto' }}>
         <IconButton
           icon={<XCircle size={24} />}
           variant="ghost"

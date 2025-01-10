@@ -7,7 +7,7 @@ import { DATA_ATTRIBUTES } from 'utils/config/keys'
 
 import CopyPositionsListView from '../CopyPositionsListView'
 import CopyPositionsTableView from '../CopyPositionsTableView'
-import { historyColumns } from './configs'
+import { getCopyPositionHistoryColumns } from './configs'
 
 export default function CopyHistoryPositions({
   data,
@@ -16,20 +16,22 @@ export default function CopyHistoryPositions({
   currentSort,
   changeCurrentSort,
   onClosePositionSuccess,
+  layoutType = 'normal',
 }: {
   data: CopyPositionData[] | undefined
   isLoading: boolean
   deletedTraders: string[]
   currentSort: TableSortProps<CopyPositionData> | undefined
-  changeCurrentSort: (sort: TableSortProps<CopyPositionData> | undefined) => void
+  changeCurrentSort: ((sort: TableSortProps<CopyPositionData> | undefined) => void) | undefined
   onClosePositionSuccess: () => void
+  layoutType?: 'normal' | 'lite'
 }) {
   const { sm } = useResponsive()
 
   return sm ? (
     <CopyPositionsTableView
       data={data}
-      columns={historyColumns}
+      columns={getCopyPositionHistoryColumns(layoutType)}
       isLoading={isLoading}
       currentSort={currentSort}
       changeCurrentSort={changeCurrentSort}
@@ -39,9 +41,10 @@ export default function CopyHistoryPositions({
           pl: 3,
         },
         '& th': {
-          py: 2,
+          py: '6px',
           pr: '16px !important',
-          border: 'none',
+          borderBottom: 'small',
+          borderBottomColor: 'neutral4',
         },
       }}
       tableBodySx={{
@@ -62,6 +65,7 @@ export default function CopyHistoryPositions({
     />
   ) : (
     <CopyPositionsListView
+      layoutType={layoutType}
       data={data}
       isLoading={isLoading}
       onClosePositionSuccess={onClosePositionSuccess}

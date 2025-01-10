@@ -487,7 +487,9 @@ function DailyPositionsComponent() {
               </Flex>
             </Flex>
           </Flex>
-          <FilterProtocols />
+          <Box px={2}>
+            <FilterProtocols />
+          </Box>
         </Flex>
       )}
 

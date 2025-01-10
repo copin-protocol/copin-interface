@@ -46,7 +46,7 @@ export default function Plans() {
           </Flex>
           <Flex sx={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             <Type.BodyBold mb={2} color="neutral2">
-              <Trans>Basic Plan</Trans>
+              <Trans>BASIC PLAN</Trans>
             </Type.BodyBold>
             <Type.H2>
               <Trans>FREE</Trans>
@@ -56,7 +56,7 @@ export default function Plans() {
             <Flex mb={2} sx={{ alignItems: 'center', gap: 12 }}>
               <CrowIconGold />
               <Type.BodyBold color="orange1">
-                <Trans>Premium Plan</Trans>
+                <Trans>PREMIUM PLAN</Trans>
               </Type.BodyBold>
             </Flex>
             <Type.H2>
@@ -86,7 +86,7 @@ export default function Plans() {
             <Flex mb={2} sx={{ alignItems: 'center', gap: 12 }}>
               <VipPlanIcon1 />
               <Type.BodyBold color="violet">
-                <Trans>VIP Plan</Trans>
+                <Trans>VIP PLAN</Trans>
               </Type.BodyBold>
             </Flex>
             <Type.H2>
@@ -216,7 +216,7 @@ export function MobilePlans() {
         mb={20}
       >
         <Type.LargeBold textAlign="center">
-          <Trans>Basic Plan (FREE)</Trans>
+          <Trans>BASIC PLAN (FREE)</Trans>
         </Type.LargeBold>
         {planConfigs.features.map((label, index) => (
           <MobilePlanItem label={label} value={planConfigs.basic[index]} />
@@ -235,7 +235,7 @@ export function MobilePlans() {
         }}
       >
         <Type.LargeBold textAlign="center" color="orange1">
-          <Trans>Premium Plan</Trans> ({pricePremium?.str ?? '--'}ETH /30days)
+          <Trans>PREMIUM PLAN</Trans> ({pricePremium?.str ?? '--'}ETH /30days)
         </Type.LargeBold>
         {planConfigs.features.map((label, index) => (
           <MobilePlanItem label={label} value={planConfigs.premium[index]} />

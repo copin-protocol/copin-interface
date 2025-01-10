@@ -47,6 +47,7 @@ const OldTopOpeningInterest = lazy(() => import('./TopOpenings/OldTopOpeningInte
 const ReferralManagement = lazy(() => import('./ReferralManagement'))
 const DailyTrades = lazy(() => import('./DailyTrades'))
 const PerpDEXDetails = lazy(() => import('./PerpDEXsExplorer/PerpDexDetails'))
+const CopinLitePage = lazy(() => import('./CopinLite'))
 
 function App() {
   useEffect(() => {
@@ -100,19 +101,20 @@ function App() {
             <Route exact path={ROUTES.PERP_DEXS_EXPLORER.path} component={PerpDEXsExplorer}></Route>
 
             {/* OLD ROUTE */}
-            <Route path={ROUTES.TRADERS_EXPLORER.path} component={OldExplorer}></Route>
+            <Route exact path={ROUTES.TRADERS_EXPLORER.path} component={OldExplorer}></Route>
             {/* NEW ROUTE */}
-            <Route path={ROUTES.ALL_TRADERS_EXPLORER.path} component={Explorer}></Route>
+            <Route exact path={ROUTES.ALL_TRADERS_EXPLORER.path} component={Explorer}></Route>
 
             {/* NEW ROUTE */}
             <Route path={ROUTES.ROOT_OPEN_INTEREST_POSITIONS.path} component={OpenInterest}></Route>
             {/* OLD ROUTE */}
-            <Route path={ROUTES.OPEN_INTEREST.path} component={OldTopOpeningInterest}></Route>
+            <Route exact path={ROUTES.OPEN_INTEREST.path} component={OldTopOpeningInterest}></Route>
 
             {/* <Route exact path={ROUTES.TRADER_EXCHANGES_STATS.path} component={TraderExchangesStats}></Route> */}
             <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.path} component={TraderDetails}></Route>
             <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.alter_ath} component={TraderDetails}></Route>
 
+            <AuthedRoute path={ROUTES.LITE.path} exact component={CopinLitePage}></AuthedRoute>
             <Route path={ROUTES.HOME.path} exact component={Home}></Route>
 
             <Route path="*" component={NotFound}></Route>

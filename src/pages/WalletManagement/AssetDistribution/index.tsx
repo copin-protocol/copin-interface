@@ -36,8 +36,8 @@ export default function AssetDistribution({ hiddenBalance }: { hiddenBalance?: b
       }}
     >
       <SectionTitle
-        icon={<CoinVertical size={24} />}
-        title={<Trans>API Wallet Asset Distribution</Trans>}
+        icon={CoinVertical}
+        title={<Trans>API WALLET ASSET DISTRIBUTION</Trans>}
         sx={{ px: 3, pt: 3, pb: 1 }}
       />
       <ResponsiveContainer minHeight={400}>

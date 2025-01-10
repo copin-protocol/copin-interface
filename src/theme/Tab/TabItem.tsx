@@ -1,58 +1,37 @@
 import css from '@styled-system/css'
-import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 
 import { Button } from 'theme/Buttons'
-import { Box, Flex, IconBox } from 'theme/base'
 import { SxProps } from 'theme/types'
 
-type TabItemProps = {
+export type TabItemProps = {
   active?: boolean
-  inactiveHasLine?: boolean
+  hasLine?: boolean
   sx?: SxProps
+  size?: 'lg' | 'md'
+  as?: React.ElementType
+  to?: string
 }
 
-const TabItem = styled(Button)(({ active, sx, inactiveHasLine }: TabItemProps) =>
+const TabItem = styled(Button)(({ active, sx, hasLine, size = 'md' }: TabItemProps) =>
   css({
     border: 'none',
-    px: '0',
-    py: '12px',
-    fontSize: ['16px', '18px'],
-    fontWeight: ['bold', 'bold', 'normal'],
-    lineHeight: '24px',
+    px: '12px',
+    py: '11px',
+    fontWeight: 'normal',
+    fontSize: size === 'md' ? '12px' : '14px',
+    lineHeight: size === 'md' ? '18px' : '20px',
     width: 'fit-content',
     background: 'transparent',
-    color: active ? 'primary1' : 'neutral3',
-    '&:hover,&:focus,&:active': {
-      color: active ? 'primary1' : 'neutral1',
+    color: active ? 'neutral1' : 'neutral3',
+    '&:hover': {
+      color: 'neutral1',
     },
     borderRadius: 0,
-    borderBottom: ['none', 'normal'],
-    borderColor: active
-      ? ['none', 'primary1']
-      : inactiveHasLine
-      ? ['none', 'neutral6']
-      : ['transparent', 'transparent'],
+    borderBottom: hasLine ? 'small' : 'none',
+    borderColor: hasLine ? (active ? 'primary1' : 'neutral4') : 'transparent',
     ...sx,
   })
 )
 
 export default TabItem
-
-export const TabTitle = ({ icon, children, active }: { icon: ReactNode; children?: ReactNode; active: boolean }) => {
-  return (
-    <Flex alignItems="center" justifyContent="center">
-      <IconBox color={active ? 'neutral1' : 'neutral5'} icon={icon} />
-      <Box
-        display="inline-block"
-        ml={8}
-        sx={{
-          fontSize: ['16px', '24px'],
-          lineHeight: '24px',
-        }}
-      >
-        {children}
-      </Box>
-    </Flex>
-  )
-}

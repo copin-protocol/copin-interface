@@ -1,9 +1,11 @@
-import { BookOpenText, ChartLine, Icon, Pulse } from '@phosphor-icons/react'
+import { Trans } from '@lingui/macro'
+import { BookOpenText, ChartLine, Notebook } from '@phosphor-icons/react'
 import React from 'react'
 
 import useTabHandler from 'hooks/router/useTabHandler'
-import { Box, Flex, IconBox, Type } from 'theme/base'
-import { FOOTER_HEIGHT } from 'utils/config/constants'
+import { BottomWrapperMobile } from 'pages/@layouts/Components'
+import { TabHeader } from 'theme/Tab'
+import { Box } from 'theme/base'
 
 import PositionMobileView from './PositionMobileView'
 import { LayoutProps } from './types'
@@ -14,22 +16,26 @@ enum TabEnum {
   POSITIONS = 'positions',
 }
 
-const TabButton = ({
-  icon: TabIcon,
-  title,
-  isActive,
-  onClick,
-}: {
-  icon: Icon
-  title: string
-  isActive: boolean
-  onClick: () => void
-}) => (
-  <Flex role="button" onClick={onClick} width="fit-content" sx={{ gap: 2 }} justifyContent="center" alignItems="center">
-    <IconBox color={isActive ? 'primary1' : 'neutral3'} icon={<TabIcon size={24} weight="fill" />}></IconBox>
-    <Type.BodyBold color={isActive ? 'neutral1' : 'neutral3'}>{title}</Type.BodyBold>
-  </Flex>
-)
+const tabConfigs = [
+  {
+    key: TabEnum.STATS,
+    name: <Trans>Stats</Trans>,
+    icon: <BookOpenText size={20} />,
+    activeIcon: <BookOpenText size={20} weight="fill" />,
+  },
+  {
+    key: TabEnum.CHARTS,
+    name: <Trans>Charts</Trans>,
+    icon: <ChartLine size={20} />,
+    activeIcon: <ChartLine size={20} weight="fill" />,
+  },
+  {
+    key: TabEnum.POSITIONS,
+    name: <Trans>Positions</Trans>,
+    icon: <Notebook size={20} />,
+    activeIcon: <Notebook size={20} weight="fill" />,
+  },
+]
 
 const MobileLayout = (props: LayoutProps) => {
   const { tab, handleTab: setTab } = useTabHandler(TabEnum.POSITIONS)
@@ -89,48 +95,23 @@ const MobileLayout = (props: LayoutProps) => {
           >
             {props.traderRanking}
           </Box>
-          <Box mt={1} height="max(calc(100vh - 545px), 330px)" bg="neutral5">
+          <Box mt={1} height="max(calc(100vh - 486px), 330px)" bg="neutral5">
             {props.traderChartPositions}
           </Box>
         </>
       )}
       {tab === TabEnum.POSITIONS && (
-        <Box height={`calc(100% - 56px - 61px)`}>
+        <Box height={`calc(100% - 58px)`}>
           <PositionMobileView openingPositions={props.openingPositions} historyPositions={props.closedPositions} />
         </Box>
       )}
-      <Flex
-        sx={{
-          position: 'fixed',
-          bottom: FOOTER_HEIGHT,
-          width: '100%',
-          height: 56,
-          bg: 'neutral7',
-          zIndex: 10,
-          justifyContent: 'space-around',
-          borderTop: 'small',
-          borderColor: 'neutral4',
-        }}
-      >
-        <TabButton
-          icon={BookOpenText}
-          title="Stats"
-          isActive={tab === TabEnum.STATS}
-          onClick={() => setTab(TabEnum.STATS)}
+      <BottomWrapperMobile sx={{ position: 'fixed', bottom: 0, zIndex: 9999 }}>
+        <TabHeader
+          configs={tabConfigs}
+          isActiveFn={(config) => config.key === tab}
+          onClickItem={(key) => setTab(key as TabEnum)}
         />
-        <TabButton
-          icon={ChartLine}
-          title="Charts"
-          isActive={tab === TabEnum.CHARTS}
-          onClick={() => setTab(TabEnum.CHARTS)}
-        />
-        <TabButton
-          icon={Pulse}
-          title="Positions"
-          isActive={tab === TabEnum.POSITIONS}
-          onClick={() => setTab(TabEnum.POSITIONS)}
-        />
-      </Flex>
+      </BottomWrapperMobile>
     </Box>
   )
 }

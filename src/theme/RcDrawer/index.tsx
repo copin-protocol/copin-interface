@@ -3,6 +3,7 @@ import Drawer, { DrawerProps } from 'rc-drawer'
 import 'rc-drawer/assets/index.css'
 import { ReactNode } from 'react'
 
+import SafeDropdownIndex from 'components/@widgets/SafeDropdownIndex'
 import { Flex, IconBox } from 'theme/base'
 import { themeColors } from 'theme/colors'
 
@@ -12,27 +13,34 @@ import { levelOneStyles } from './styles'
 export default function RcDrawer({
   children,
   styles,
-  background = themeColors.neutral6,
+  background = '#000000',
   height = '100%',
   maskColor = themeColors.modalBG1,
+  placement = 'right',
   ...props
 }: DrawerProps & { children: ReactNode; background?: string; height?: string; maskColor?: string }) {
   return (
     <>
       <Drawer
         destroyOnClose={false}
-        placement="right"
+        placement={placement}
         keyboard
         styles={{
           ...levelOneStyles(),
           ...(styles || {}),
           mask: { background: maskColor, ...(styles?.mask || {}) },
           wrapper: { height, ...(styles?.wrapper || {}) },
-          content: { background, height, ...(styles?.content || {}) },
+          content: {
+            background,
+            height,
+            [`border${placement === 'right' ? 'Left' : 'Top'}`]: `1px solid ${themeColors.neutral5}`,
+            ...(styles?.content || {}),
+          },
         }}
         {...props}
         {...motionProps}
       >
+        <SafeDropdownIndex />
         {children}
       </Drawer>
     </>

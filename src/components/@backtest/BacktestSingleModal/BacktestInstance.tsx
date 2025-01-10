@@ -25,6 +25,7 @@ export interface BacktestInstanceProps {
   onSimulateSuccess: (resultData: BackTestResultData) => void
   onBackToSetting: () => void
   onSimulateError: () => void
+  isModalOpen?: boolean
 }
 
 export default function BacktestInstance({
@@ -36,6 +37,7 @@ export default function BacktestInstance({
   onSimulateSuccess,
   onSimulateError,
   onBackToSetting,
+  isModalOpen,
 }: BacktestInstanceProps) {
   const { myProfile } = useMyProfile()
   const { onSubmit } = useBacktestRequest(protocol, {
@@ -55,7 +57,7 @@ export default function BacktestInstance({
   }, [instanceData.result])
 
   return (
-    <Box sx={{ px: 0, borderRadius: 'sm', height: '100%', bg: 'neutral5' }}>
+    <Box sx={{ px: 0, borderRadius: 'sm', height: '100%', bg: '#000' }}>
       {instanceData.status === 'testing' && (
         <Box pt={4}>
           <Loading />
@@ -90,6 +92,7 @@ export default function BacktestInstance({
             }}
           >
             <BacktestForm
+              isModalOpen={isModalOpen}
               protocol={protocol}
               onSubmit={onSubmit({
                 accounts,
@@ -104,7 +107,7 @@ export default function BacktestInstance({
         </Box>
       )}
       {instanceData.status === 'tested' && instanceData.settings && backtestResult && (
-        <Box height="calc(100% - 40px)">
+        <Box height="calc(100% - 40px)" sx={{ borderTop: `small`, borderTopColor: 'neutral4' }}>
           <BacktestSingleResult protocol={protocol} settings={instanceData.settings} results={backtestResult} />
         </Box>
       )}

@@ -290,7 +290,7 @@ function ExchangeTitle({
       <Flex width={['100%', '100%', 'auto']} alignItems="center" sx={{ gap: 2, justifyContent: 'space-between' }}>
         <Flex flex="1" width={['100%', '100%', 'auto']} sx={{ alignItems: 'center', gap: 2 }}>
           <Image src={parseExchangeImage(exchange)} width={32} height={32} />
-          <Type.BodyBold display="inline-block" mr={1}>
+          <Type.BodyBold display="inline-block" mr={1} sx={{ textTransform: 'uppercase' }}>
             {title} {isAllowed && !!count ? `(${count})` : ''}
           </Type.BodyBold>
         </Flex>
@@ -367,7 +367,7 @@ function ExternalLink({ exchange }: { exchange: CopyTradePlatformEnum }) {
         target="_blank"
         direction="right"
         icon={<ArrowSquareOut size={16} style={{ color: 'inherit' }} />}
-        sx={{ mx: 0, p: 0, fontSize: '13px', gap: 1, '*': { marginLeft: 0 } }}
+        sx={{ mx: 0, p: 0, fontSize: '12px', gap: 1, '*': { marginLeft: 0 } }}
         onClick={(e: any) => e.stopPropagation()}
       >
         <Trans>Register</Trans>

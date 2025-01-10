@@ -24,16 +24,21 @@ export default function WarningSwitchAccountIcon() {
       />
       <Tooltip id="tt_switch_account" place="bottom" type="dark" effect="solid" clickable>
         <Box sx={{ maxWidth: 350 }}>
-          <Flex alignItems="flex-start" sx={{ gap: 2 }}>
+          <Flex alignItems="center" sx={{ gap: 2 }}>
             <Type.Caption>
-              <Box display="inline-block" pr="2px">
+              <IconBox
+                icon={<Info size={12} color={themeColors.orange1} />}
+                mr={1}
+                sx={{ position: 'relative', top: '-1px' }}
+              />
+              {/* <Box display="inline-block" pr="2px">
                 <Info size={12} color={themeColors.orange1} />
-              </Box>
+              </Box> */}
               Notice: The account in your web3 wallet does not match the account currently in use in the app
             </Type.Caption>
           </Flex>
 
-          <Button variant="ghostPrimary" type="button" p={0} onClick={handleSwitchAccount}>
+          <Button variant="ghostPrimary" type="button" p={0} onClick={handleSwitchAccount} sx={{ mt: 1 }}>
             {!account ? 'Connect Wallet' : `Switch account to ${addressShorten(account?.address)}`}
           </Button>
         </Box>

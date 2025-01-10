@@ -232,7 +232,7 @@ function renderChart({
       textColor: themeColors.neutral3,
       background: { type: ColorType.Solid, color: 'transparent' },
       fontFamily: FONT_FAMILY,
-      fontSize: 13,
+      fontSize: 12,
       attributionLogo: false,
     },
     timeScale: {

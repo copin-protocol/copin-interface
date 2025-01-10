@@ -15,6 +15,7 @@ import InputField, { InputPasswordField } from 'theme/InputField'
 import Modal from 'theme/Modal'
 import { Box } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 import BitgetHelp from './WalletHelpBitget'
 import { BitgetWalletFormValues, bitgetWalletFormSchema, defaultFormValues } from './bitgetSchema'
@@ -68,6 +69,7 @@ export default function CreateBitgetWalletModal({ isOpen, onDismiss }: { isOpen:
       onDismiss={onDismiss}
       width="90vw"
       maxWidth="450px"
+      zIndex={Z_INDEX.TOASTIFY}
     >
       <Box variant="card" sx={{ backgroundColor: 'modalBG' }}>
         <form

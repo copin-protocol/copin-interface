@@ -12,7 +12,8 @@ import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { PerpDEXEventResponse, PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { BodyWrapperMobile, BottomTabItemMobile } from 'pages/@layouts/Components'
+import { BodyWrapperMobile, BottomWrapperMobile } from 'pages/@layouts/Components'
+import { TabHeader } from 'theme/Tab'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -118,14 +119,14 @@ function DesktopView({ perpdexData, protocolData, events, isLoadingEvents }: Vie
         buttonSx={{
           display: expandedInfo ? 'none' : 'flex',
           left: expandedChart ? 0 : `calc(${DESKTOP_LEFT_AREA_WIDTH}px - 16px)`,
-          top: 66 + 8,
+          top: 60 + 4,
           border: 'small',
           height: 42,
           zIndex: expandedChart ? 9 : 1,
         }}
         direction={expandedChart ? 'right' : 'left'}
       />
-      <Box sx={{ width: '100%', height: 66, borderBottom: 'small', borderBottomColor: 'neutral4' }}>
+      <Box sx={{ width: '100%', height: 60, borderBottom: 'small', borderBottomColor: 'neutral4' }}>
         <Flex sx={{ width: '100%', height: '100%' }}>
           <Box
             sx={{
@@ -178,7 +179,7 @@ function DesktopView({ perpdexData, protocolData, events, isLoadingEvents }: Vie
           </Box>
         </Flex>
       </Box>
-      <Box sx={{ height: 'calc(100% - 66px)', position: 'relative' }}>
+      <Box sx={{ height: 'calc(100% - 60px)', position: 'relative' }}>
         <Flex sx={{ width: '100%', height: '100%' }}>
           <Box
             sx={{
@@ -252,7 +253,7 @@ function MobileView({ perpdexData, protocolData, events, isLoadingEvents }: View
   const data: any = protocolData || perpdexData
   return (
     <BodyWrapperMobile>
-      <Flex sx={{ width: '100%', height: '100%', overflow: 'hidden', flexDirection: 'column' }}>
+      <Flex sx={{ width: '100%', height: 'calc(100% - 1px)', overflow: 'hidden', flexDirection: 'column' }}>
         <Box sx={{ width: '100%', height: 66 }}>
           <Flex sx={{ width: '100%', height: '100%', alignItems: 'center', px: 3, justifyContent: 'space-between' }}>
             <Flex sx={{ height: '100%', alignItems: 'center', gap: 2 }}>
@@ -280,9 +281,9 @@ function MobileView({ perpdexData, protocolData, events, isLoadingEvents }: View
               wrapperSx={{ px: 3 }}
               header={
                 <Flex alignItems="center" sx={{ gap: 2 }}>
-                  <Calculator weight="bold" size={24} color={themeColors.neutral3} />
+                  <Calculator weight="bold" size={20} color={themeColors.neutral3} />
                   <Type.BodyBold>
-                    <Trans>Metric</Trans>
+                    <Trans>METRIC</Trans>
                   </Type.BodyBold>
                 </Flex>
               }
@@ -327,7 +328,7 @@ function MobileView({ perpdexData, protocolData, events, isLoadingEvents }: View
             <Flex
               sx={{
                 width: '100%',
-                height: 56,
+                height: 48,
                 alignItems: 'center',
                 px: 3,
               }}
@@ -347,30 +348,14 @@ function MobileView({ perpdexData, protocolData, events, isLoadingEvents }: View
           </Box>
         </Box>
       </Flex>
-      <Flex
-        sx={{
-          height: 40,
-          bg: 'neutral8',
-          width: '100%',
-          alignItems: 'center',
-          borderTop: 'small',
-          borderTopColor: 'neutral4',
-        }}
-      >
-        {tabConfigs.map((config, index) => {
-          const isActive = currentTab === config.key
-          return (
-            <BottomTabItemMobile
-              key={index}
-              color={isActive ? 'primary1' : 'neutral3'}
-              onClick={() => handleClickItem(config.key)}
-              fontWeight={isActive ? 500 : 400}
-              icon={isActive ? config.activeIcon : config.inactiveIcon}
-              text={config.name}
-            />
-          )
-        })}
-      </Flex>
+      <BottomWrapperMobile>
+        <TabHeader
+          configs={tabConfigs}
+          isActiveFn={(config) => config.key === currentTab}
+          fullWidth={false}
+          onClickItem={handleClickItem}
+        />
+      </BottomWrapperMobile>
     </BodyWrapperMobile>
   )
 }
@@ -382,16 +367,16 @@ const TabKeys: { [key: string]: string } = {
 
 const tabConfigs = [
   {
-    name: <Trans>Statistic</Trans>,
-    activeIcon: <Compass size={24} weight="fill" />,
-    inactiveIcon: <Compass size={24} />,
+    name: <Trans>STATISTIC</Trans>,
+    activeIcon: <Compass size={20} weight="fill" />,
+    icon: <Compass size={20} />,
     key: TabKeys.statistic,
     paramKey: TabKeys.statistic,
   },
   {
-    name: <Trans>Info & Events</Trans>,
-    inactiveIcon: <IntersectThree size={24} />,
-    activeIcon: <IntersectThree size={24} weight="fill" />,
+    name: <Trans>INFO & EVENTS</Trans>,
+    icon: <IntersectThree size={20} />,
+    activeIcon: <IntersectThree size={20} weight="fill" />,
     key: TabKeys.info,
     paramKey: TabKeys.info,
   },

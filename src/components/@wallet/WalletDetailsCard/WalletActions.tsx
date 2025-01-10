@@ -17,7 +17,7 @@ import ConfirmDeleteModal from './ConfirmDeleteModal'
 import CopyWalletHistoryDrawer from './WalletHistoryDrawer'
 
 const WalletActions = ({ data }: { data: CopyWalletData }) => {
-  const { reloadCopyWallets } = useCopyWalletContext()
+  const { reloadCopyWallets, embeddedWallet } = useCopyWalletContext()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openHistoryDrawer, setOpenHistoryDrawer] = useState(false)
 
@@ -36,6 +36,8 @@ const WalletActions = ({ data }: { data: CopyWalletData }) => {
     deleteWallet.mutate({ copyWalletId: data.id })
   }
 
+  const allowedDelete = embeddedWallet?.id !== data.id
+
   return (
     <>
       <Flex sx={{ alignItems: 'center', gap: 16 }}>
@@ -52,12 +54,14 @@ const WalletActions = ({ data }: { data: CopyWalletData }) => {
           onClick={() => setOpenHistoryDrawer(true)}
           sx={{ color: 'neutral3', '&:hover': { color: 'neutral2' } }}
         />
-        <IconBox
-          role="button"
-          icon={<Trash size={18} />}
-          onClick={() => setOpenDeleteModal(true)}
-          sx={{ color: 'red2', '&:hover': { color: 'red1' } }}
-        />
+        {allowedDelete && (
+          <IconBox
+            role="button"
+            icon={<Trash size={18} />}
+            onClick={() => setOpenDeleteModal(true)}
+            sx={{ color: 'red2', '&:hover': { color: 'red1' } }}
+          />
+        )}
       </Flex>
       {openHistoryDrawer && (
         <CopyWalletHistoryDrawer

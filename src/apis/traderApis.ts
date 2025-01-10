@@ -12,7 +12,7 @@ import {
 } from 'entities/trader.d'
 import { TraderTokenStatistic } from 'entities/trader.d'
 import { PositionSortPros } from 'pages/TraderDetails'
-import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { capitalizeFirstLetter } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
@@ -24,7 +24,14 @@ import {
   normalizeTraderData,
   normalizeTraderResponse,
 } from './normalize'
-import { GetApiParams, QueryFilter, RangeFilter, RequestBodyApiData, SearchTradersParams } from './types'
+import {
+  GetApiParams,
+  GetTraderByLabelPayload,
+  QueryFilter,
+  RangeFilter,
+  RequestBodyApiData,
+  SearchTradersParams,
+} from './types'
 
 const SERVICE = 'position'
 
@@ -276,4 +283,10 @@ export async function getPnlStatisticsApi(payload: StatisticData) {
   return requester
     .post(`public/${SERVICE}/statistic/pnl-statistics`, payload)
     .then((res: any) => res.data as PnlStatisticsResponse)
+}
+
+export async function getTraderByLabelApi({ payload }: { payload: GetTraderByLabelPayload }) {
+  return requester
+    .post(`/public/position/statistic/labels?offset=0&limit=16`, payload)
+    .then((res: any) => res.data as ApiListResponse<ResponseTraderData>)
 }

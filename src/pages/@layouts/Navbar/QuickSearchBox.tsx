@@ -26,6 +26,7 @@ import RcDialog from 'theme/RcDialog'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ALLOWED_COPYTRADE_PROTOCOLS, SEARCH_DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { formatNumber } from 'utils/helpers/format'
 
 const QuickSearchBox = memo(function QuickSearchBoxMemo() {
@@ -55,26 +56,29 @@ const QuickSearchBox = memo(function QuickSearchBoxMemo() {
           onClick={handleOpenModal}
           sx={{
             alignItems: 'center',
-            height: '40px',
-            px: 2,
-            bg: 'neutral5',
-            borderRadius: '4px',
+            height: '100%',
+            px: 3,
+            bg: 'transparent',
+            borderLeft: 'small',
+            borderColor: 'neutral4',
+            // borderRadius: '4px',
             '& *': { transition: '0.3s' },
-            '&:hover': { bg: 'neutral4', '.glass': { color: 'neutral1' }, '.text': { color: 'neutral2' } },
+            '&:hover': { bg: 'neutral5', '.glass': { color: 'neutral1' }, '.text': { color: 'neutral2' } },
             gap: 1,
           }}
         >
-          <IconBox icon={<MagnifyingGlass size={20} className="glass" />} color="neutral2 " />
+          <IconBox icon={<MagnifyingGlass size={16} className="glass" />} color="neutral2 " />
           <Type.Caption className="text" color="neutral3" ml="4px" display={['none', 'inline-block']}>
             {searchTextRef ? (
               <Box as="span" color="neutral1">
                 {searchTextRef.length > 3 ? `${searchTextRef.substring(0, 3)}...` : searchTextRef}
               </Box>
             ) : (
-              'Search'
+              'SEARCH'
             )}
           </Type.Caption>
           <Box
+            display={['none', 'block']}
             className="text"
             color="neutral3"
             sx={{
@@ -83,14 +87,21 @@ const QuickSearchBox = memo(function QuickSearchBoxMemo() {
                 top: '-0.5px',
                 transition: '0s',
               },
+              display: ['none', 'block'],
             }}
           >
-            (
-            <IconBox icon={<CommandIcon className="text" size={14} />} color="neutral3" />
-            <Type.Caption className="text" color="neutral3">
-              +K
-            </Type.Caption>
-            )
+            <Box
+              sx={{
+                ml: 1,
+                bg: 'neutral4',
+                px: 1,
+              }}
+            >
+              <IconBox icon={<CommandIcon className="text" size={14} />} color="neutral2" />
+              <Type.Caption className="text" color="neutral2">
+                K
+              </Type.Caption>
+            </Box>
           </Box>
         </Flex>
       )}
@@ -104,7 +115,7 @@ export default QuickSearchBox
 function QuickSearchContainer({
   isOpen,
   onDismiss,
-  placeholder = 'Search trader wallet address, smart account or transaction',
+  placeholder = 'SEARCH ADDRESS OR TRANSACTION',
   onSelect,
   returnRanking = false,
   allowAllProtocol = true,
@@ -207,6 +218,7 @@ function QuickSearchContainer({
       onDismiss={onDismiss}
       offsetTop={isMobile ? '48px' : '75px'}
       offsetBottom={isMobile ? '48px' : '75px'}
+      zIndex={Z_INDEX.TOASTIFY} // Above all
     >
       <Box
         sx={{
@@ -300,7 +312,7 @@ function QuickSearchContainer({
         </Box>
 
         {!isMobile && (
-          <Box sx={{ position: 'sticky', bottom: 0, left: 0, bg: 'neutral6' }}>
+          <Box sx={{ position: 'sticky', bottom: 0, left: 0, bg: 'neutral6', zIndex: 1 }}>
             <Divider />
             <NavigationHelp />
           </Box>
@@ -485,15 +497,12 @@ function SelectProtocolsButton({
       variant="ghost"
       onClick={onClick}
       sx={{
-        color: 'neutral3',
-        bg: 'neutral6',
         width: 'max-content',
         flexShrink: 0,
         display: 'flex',
         alignItems: 'center',
         height: 28,
         p: 0,
-        px: 2,
         mx: 2,
         gap: 1,
       }}
@@ -513,20 +522,20 @@ function SelectProtocolsButton({
 function NavigationHelp() {
   return (
     <Flex p={3} sx={{ gap: 3, flexShrink: 0, flexWrap: 'wrap' }}>
-      <Flex sx={{ gap: 2 }} color="neutral2">
+      <Flex sx={{ gap: 2, alignItems: 'center' }} color="neutral2">
         <TagContainer>
           <CommandIcon />
           <Type.Caption>K</Type.Caption>
         </TagContainer>
-        <Type.Caption>To open search</Type.Caption>
+        <Type.Caption>TO OPEN SEARCH</Type.Caption>
       </Flex>
-      <Flex sx={{ gap: 2 }} color="neutral2">
+      <Flex sx={{ gap: 2, alignItems: 'center' }} color="neutral2">
         <TagContainer>
           <EnterKeyIcon />
         </TagContainer>
-        <Type.Caption>To enter</Type.Caption>
+        <Type.Caption>TO ENTER</Type.Caption>
       </Flex>
-      <Flex sx={{ gap: 2 }} color="neutral2">
+      <Flex sx={{ gap: 2, alignItems: 'center' }} color="neutral2">
         <Flex sx={{ gap: 1 }}>
           <TagContainer>
             <ArrowUpIcon />
@@ -535,13 +544,13 @@ function NavigationHelp() {
             <ArrowUpIcon />
           </TagContainer>
         </Flex>
-        <Type.Caption>To navigate</Type.Caption>
+        <Type.Caption>TO NAVIGATE</Type.Caption>
       </Flex>
-      <Flex sx={{ gap: 2 }} color="neutral2">
+      <Flex sx={{ gap: 2, alignItems: 'center' }} color="neutral2">
         <TagContainer>
           <Type.Caption>ESC</Type.Caption>
         </TagContainer>
-        <Type.Caption>To exit</Type.Caption>
+        <Type.Caption>TO EXIT</Type.Caption>
       </Flex>
     </Flex>
   )

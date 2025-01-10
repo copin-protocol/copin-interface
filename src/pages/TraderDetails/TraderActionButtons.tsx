@@ -10,12 +10,12 @@ import AnalyzeAction from 'components/@ui/AnalyzeButton'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { PositionData, TraderData } from 'entities/trader.d'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { NAVBAR_HEIGHT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { EventCategory } from 'utils/tracking/types'
 
 import AlertAction from './AlertAction'
 import ExpandTraderRankingButton from './ExpandTraderRankingButton'
@@ -24,6 +24,8 @@ export interface PositionSortPros {
   sortBy: keyof PositionData
   sortType: SortTypeEnum
 }
+export type DisabledActionType = 'copy-trade' | 'alert' | 'backtest'
+
 export default function TraderActionButtons({
   account,
   traderData,
@@ -32,7 +34,9 @@ export default function TraderActionButtons({
   timeOption,
   onChangeTime,
   isDrawer,
+  disabledActions,
   sx,
+  eventCategory,
 }: {
   traderData: TraderData | undefined
   timeOption: TimeFilterProps
@@ -42,6 +46,8 @@ export default function TraderActionButtons({
   onCopyActionSuccess: () => void
   isDrawer?: boolean
   sx?: SystemStyleObject & GridProps
+  disabledActions?: DisabledActionType[]
+  eventCategory?: EventCategory
 }) {
   const { lg } = useResponsive()
   const { isDA } = useCopyWalletContext()
@@ -59,7 +65,7 @@ export default function TraderActionButtons({
             position: [undefined, 'fixed', 'fixed', 'static'],
             top: [undefined, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71, NAVBAR_HEIGHT + 71],
             zIndex: 10,
-            bg: ['neutral7', 'neutral7', 'neutral7', undefined],
+            bg: isDrawer ? 'transparent' : ['neutral7', 'neutral7', 'neutral7', undefined],
             ...sx,
           }}
         >
@@ -85,29 +91,38 @@ export default function TraderActionButtons({
             />
           )}
           <AnalyzeAction />
-          <AlertAction protocol={protocol} account={account} />
+          {!disabledActions?.includes('alert') && <AlertAction protocol={protocol} account={account} />}
           {!isDrawer && (
             <ExpandTraderRankingButton traderData={traderData} timeOption={timeOption} onChangeTime={onChangeTime} />
           )}
-          <BacktestSingleButton key={protocol + account} protocol={protocol} account={account} />
-          <CopyTraderButton
-            protocol={protocol}
-            account={account}
-            onForceReload={onCopyActionSuccess}
-            buttonSx={{
-              px: 3,
-              width: 'auto',
-              bg: 'transparent !important',
-              color: `${themeColors.primary1} !important`,
-              '&:hover:not(:disabled)': { color: `${themeColors.primary2} !important` },
-            }}
-            buttonText={
-              <Flex sx={{ alignItems: 'center', gap: 2 }}>
-                <UniteSquare size={20} />
-                <Type.CaptionBold>Copy Trader</Type.CaptionBold>
-              </Flex>
-            }
-          />
+          {!disabledActions?.includes('backtest') && (
+            <BacktestSingleButton
+              key={protocol + account}
+              protocol={protocol}
+              account={account}
+              eventCategory={eventCategory}
+            />
+          )}
+          {!disabledActions?.includes('copy-trade') && (
+            <CopyTraderButton
+              protocol={protocol}
+              account={account}
+              onForceReload={onCopyActionSuccess}
+              buttonSx={{
+                px: 3,
+                width: 'auto',
+                bg: 'transparent !important',
+                color: `${themeColors.primary1} !important`,
+                '&:hover:not(:disabled)': { color: `${themeColors.primary2} !important` },
+              }}
+              buttonText={
+                <Flex sx={{ alignItems: 'center', gap: 2 }}>
+                  <UniteSquare size={20} />
+                  <Type.CaptionBold>Copy Trader</Type.CaptionBold>
+                </Flex>
+              }
+            />
+          )}
         </Box>
       ) : (
         <Box
@@ -122,6 +137,8 @@ export default function TraderActionButtons({
         >
           <Dropdown
             hasArrow={false}
+            buttonVariant="ghost"
+            inline
             menuSx={{
               bg: 'neutral7',
               width: 'max-content',
@@ -146,22 +163,9 @@ export default function TraderActionButtons({
               </>
             }
             sx={{}}
-            buttonSx={{
-              border: 'none',
-              height: '100%',
-              p: 0,
-            }}
             placement={'topRight'}
           >
-            <IconButton
-              size={24}
-              type="button"
-              icon={<CirclesThreePlus size={24} weight="fill" />}
-              variant="ghost"
-              sx={{
-                color: 'neutral1',
-              }}
-            />
+            <IconBox icon={<CirclesThreePlus size={24} weight="fill" />} />
           </Dropdown>
         </Box>
       )}

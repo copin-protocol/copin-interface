@@ -45,7 +45,8 @@ export function TableMultiSelectFilterIcon(props: Props) {
 
   return (
     <Dropdown
-      buttonSx={{ p: 0, border: 'none' }}
+      buttonVariant="ghostInactive"
+      inline
       hasArrow={false}
       menuDismissible
       dismissible={false}
@@ -75,12 +76,9 @@ export function TableMultiSelectFilterIcon(props: Props) {
       }
     >
       <IconBox
-        role="button"
         icon={<Funnel size={16} weight={hasFilter ? 'fill' : 'regular'} />}
         sx={{
-          // transform: 'translateY(-1.5px)',
-          color: hasFilter ? 'neutral2' : 'neutral3',
-          '&:hover:': { color: 'neutral1' },
+          transform: 'translateY(-1.5px)',
         }}
       />
     </Dropdown>

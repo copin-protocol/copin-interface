@@ -334,7 +334,7 @@ const tabConfigs: TabConfig[] = [
   {
     name: 'Overview',
     activeIcon: <PresentationChart size={24} weight="fill" />,
-    inactiveIcon: <PresentationChart size={24} />,
+    icon: <PresentationChart size={24} />,
     key: TabKeyEnum.OVERVIEW,
   },
   // {
@@ -346,7 +346,7 @@ const tabConfigs: TabConfig[] = [
   {
     name: 'Rules',
     activeIcon: <BookBookmark size={24} weight="fill" />,
-    inactiveIcon: <BookBookmark size={24} />,
+    icon: <BookBookmark size={24} />,
     key: TabKeyEnum.RULES,
   },
 ]

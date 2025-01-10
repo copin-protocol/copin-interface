@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Bank, ClockCounterClockwise, Pulse, Vault } from '@phosphor-icons/react'
+import { Bank, Pulse, Vault } from '@phosphor-icons/react'
 import React, { useState } from 'react'
 
 import { vaultHistoryColumns } from 'components/@position/configs/traderPositionRenderProps'
@@ -7,12 +7,11 @@ import useVaultDetailsContext from 'hooks/features/useVaultDetailsProvider'
 import useVaultPositionContext from 'hooks/features/useVaultPositionProvider'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import VaultOnchainPositions from 'pages/MyProfile/VaultManagement/VaultOnchainPositions'
-import Tabs, { TabPane } from 'theme/Tab'
-import IconTabItem from 'theme/Tab/IconTabItem'
+import { TabHeader } from 'theme/Tab'
 import { Flex } from 'theme/base'
-import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
-import { formatNumber } from 'utils/helpers/format'
+import { ProtocolEnum } from 'utils/config/enums'
 
+import { VaultFundTab } from '../VaultFundMangement'
 import VaultBalances from './VaultBalances'
 import VaultHistoryPositions from './VaultHistoryPositions'
 import VaultOpeningPositions from './VaultOpeningPositions'
@@ -50,72 +49,37 @@ export default function VaultInfo() {
   return (
     <>
       <Flex flexDirection="column" height="100%" p={3} pb={0}>
-        <Tabs
-          defaultActiveKey={tab}
-          onChange={(tab) => setTab(tab)}
-          sx={{
-            width: '100%',
-          }}
-          headerSx={{ marginBottom: 0, gap: 0, width: '100%', mb: 3, px: 0 }}
-          tabItemSx={{
-            pt: 0,
-            px: 24,
-          }}
-        >
-          <TabPane
-            key={VaultInfoTab.Balances}
-            tab={
-              <IconTabItem
-                icon={<Bank size={24} weight={tab === VaultInfoTab.Balances ? 'fill' : 'regular'} />}
-                text={<Trans>Vault Information</Trans>}
-                active={tab === VaultInfoTab.Balances}
-              />
-            }
-          >
-            <></>
-          </TabPane>
-          <TabPane
-            key={VaultInfoTab.Performance}
-            tab={
-              <IconTabItem
-                icon={<Vault size={24} weight={tab === VaultInfoTab.Performance ? 'fill' : 'regular'} />}
-                text={<Trans>Vault Performance</Trans>}
-                active={tab === VaultInfoTab.Performance}
-              />
-            }
-          >
-            <></>
-          </TabPane>
-          <TabPane
-            key={VaultInfoTab.OpenPositions}
-            tab={
-              <IconTabItem
-                icon={<Pulse size={24} weight={tab === VaultInfoTab.OpenPositions ? 'fill' : 'regular'} />}
-                text={`Opening Positions${totalOpening ? ` (${formatNumber(totalOpening)})` : ''}`}
-                active={tab === VaultInfoTab.OpenPositions}
-              />
-            }
-          >
-            <></>
-          </TabPane>
-          <TabPane
-            key={VaultInfoTab.HistoryPositions}
-            tab={
-              <IconTabItem
-                icon={
-                  <ClockCounterClockwise
-                    size={24}
-                    weight={tab === VaultInfoTab.HistoryPositions ? 'fill' : 'regular'}
-                  />
-                }
-                text={`History${totalClosed ? ` (${formatNumber(totalClosed)})` : ''}`}
-                active={tab === VaultInfoTab.HistoryPositions}
-              />
-            }
-          >
-            <></>
-          </TabPane>
-        </Tabs>
+        <TabHeader
+          configs={[
+            {
+              name: <Trans>VAULT INFORMATION</Trans>,
+              key: VaultInfoTab.Balances,
+              icon: <Bank size={20} />,
+            },
+            {
+              name: <Trans>PERFORMANCE</Trans>,
+              key: VaultInfoTab.Performance,
+              icon: <Vault size={20} />,
+            },
+            {
+              name: <Trans>OPEN POSITIONS</Trans>,
+              key: VaultInfoTab.OpenPositions,
+              icon: <Pulse size={20} />,
+            },
+            {
+              name: <Trans>HISTORY POSITIONS</Trans>,
+              key: VaultInfoTab.HistoryPositions,
+              icon: <Vault size={20} />,
+            },
+          ]}
+          hasLine
+          isActiveFn={(config) => config.key === tab}
+          onClickItem={(key) => setTab(key as VaultFundTab)}
+          fullWidth
+          size="md"
+          sx={{ mb: 3 }}
+        />
+
         {tab === VaultInfoTab.Balances && <VaultBalances />}
         {tab === VaultInfoTab.Performance && <VaultPerformance />}
         {tab === VaultInfoTab.OpenPositions && (

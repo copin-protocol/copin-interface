@@ -180,7 +180,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
     <Box display={'flex'} flexDirection="column" height={'100%'}>
       <Flex pt={16} px={2} pb={12} alignItems="center">
         <Box flex="1" sx={{ '& > *': { pb: 0 } }}>
-          <SectionTitle icon={<ClockCounterClockwise size={24} />} title="History" />
+          <SectionTitle icon={ClockCounterClockwise} title="HISTORY" />
         </Box>
         <Flex
           sx={{
@@ -307,6 +307,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
             handleSelectItem={handleSelectItem}
             resizeDeps={resizeDeps}
             rowBgFactory={renderRowBackground}
+            footerBg={isDrawer ? 'neutral7' : undefined}
           />
         )}
         {/* {isLoadingClosedPositions && (
@@ -378,7 +379,7 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
 // })
 
 export function TraderHistoryPositionsListView(props: HistoryTableProps) {
-  const { address, protocol, backgroundColor = 'neutral5' } = props
+  const { address, protocol, backgroundColor = 'neutral7' } = props
   const { myProfile } = useMyProfile()
   const [openDrawer, setOpenDrawer] = useState(false)
   // const [showChart, setShowChart] = useState(false)
@@ -466,7 +467,7 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
     <Flex flexDirection="column" height="100%">
       <Flex pt={16} px={12} pb={12} alignItems="center">
         <Box flex="1" sx={{ '& > *': { pb: 0 } }}>
-          {props.hasTitle ? <SectionTitle icon={<ClockCounterClockwise size={24} />} title="History" /> : <></>}
+          {props.hasTitle ? <SectionTitle icon={ClockCounterClockwise} title="History" /> : <></>}
         </Box>
         <Flex
           sx={{
@@ -530,7 +531,7 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
         />
       </Box>
       <Divider />
-      <Box bg="neutral5">
+      <Box bg={props.isDrawer ? 'neutral7' : 'neutral5'}>
         <PaginationWithLimit
           currentPage={currentPage}
           currentLimit={currentLimit}

@@ -4,6 +4,7 @@ import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 import { BacktestActionType, BacktestState } from '../types'
 import BacktestInstance from './BacktestInstance'
@@ -37,8 +38,18 @@ export default function BacktestSingleModal({
       onClose={onDismiss}
       placement="bottom"
       styles={{ wrapper: { height: 'calc(100% - 80px)' } }}
+      zIndex={Z_INDEX.TOASTIFY}
     >
-      <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'auto', bg: 'neutral7' }}>
+      <Flex
+        sx={{
+          flexDirection: 'column',
+          width: '100%',
+          height: '100%',
+          overflow: 'auto',
+          bg: '#000',
+          position: 'relative',
+        }}
+      >
         {/* Header */}
         <TabHeader
           state={state}
@@ -56,6 +67,7 @@ export default function BacktestSingleModal({
         {/* Body */}
         <Box flex="1 0 0" overflow="hidden">
           <BacktestInstance
+            isModalOpen={isOpen}
             protocol={protocol}
             accounts={[account]}
             tokensTraded={tokensTraded}

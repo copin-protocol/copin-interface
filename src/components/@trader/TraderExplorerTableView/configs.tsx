@@ -30,7 +30,8 @@ export const emptyColumn = {
 const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, ExternalTraderListSource> } = {
   account: {
     style: {
-      minWidth: '230px',
+      minWidth: '216px',
+      pr: '0 !important',
     },
     text: 'Account',
     searchText: 'Account',
@@ -41,7 +42,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     ),
     visible: true,
     id: 'account',
-    freezeLeft: 230,
+    freezeLeft: 216,
     freezeIndex: 3,
     render: (item) => (
       <Box pl={3}>

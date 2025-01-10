@@ -16,7 +16,7 @@ import { ReferralClaimHistoryData, ReferralListData, ReferralRebateHistoryData }
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { useAuthContext } from 'hooks/web3/useAuth'
-import Dropdown from 'theme/Dropdown'
+import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { PaginationWithLimit, PaginationWithSelect } from 'theme/Pagination'
 import Tabs, { TabPane } from 'theme/Tab'
 import Table from 'theme/Table'
@@ -235,48 +235,26 @@ export default function ReferralHistory() {
       <Tabs
         defaultActiveKey={currentTab}
         onChange={(tab) => changeCurrentTab(tab)}
-        inactiveHasLine={false}
+        // inactiveHasLine={false}
         sx={{
+          width: '100%',
           position: ['sticky', 'sticky', 'sticky', 'relative'],
           top: 0,
           left: 0,
           px: 3,
           // bg: 'neutral5',
         }}
-        headerSx={{
-          height: 44,
-          width: '100%',
-          py: 0,
-          px: 0, // NOTE
-          gap: 0,
-          borderBottom: 'small',
-          borderColor: 'neutral4',
-        }}
-        tabItemSx={{
-          p: 0,
-          height: '100%',
-          fontSize: '16px',
-          color: 'neutral3',
-          '&:active,&:focus,&:hover': { color: 'inherit' },
-        }}
-        tabItemActiveSx={{
-          color: ['neutral1', 'neutral1'],
-          borderBottomColor: ['primary1', 'primary1'],
-        }}
-        tabPanelSx={{
-          pt: 2,
-        }}
       >
-        <TabPane tab={'F1 Referral List'} key={tabKeys.F1_REFERRAL_LIST}>
+        <TabPane tab={<Trans>F1 REFERRAL LIST</Trans>} key={tabKeys.F1_REFERRAL_LIST}>
           <></>
         </TabPane>
-        <TabPane tab={'F2 Referral List'} key={tabKeys.F2_REFERRAL_LIST}>
+        <TabPane tab={<Trans>F2 REFERRAL LIST</Trans>} key={tabKeys.F2_REFERRAL_LIST}>
           <></>
         </TabPane>
-        <TabPane tab={'Commission & Rebate History'} key={tabKeys.REBATE_HISTORY}>
+        <TabPane tab={<Trans>COMMISSION & REBATE HISTORY</Trans>} key={tabKeys.REBATE_HISTORY}>
           <></>
         </TabPane>
-        <TabPane tab={'Claim History'} key={tabKeys.CLAIM_HISTORY}>
+        <TabPane tab={<Trans>CLAIM HISTORY</Trans>} key={tabKeys.CLAIM_HISTORY}>
           <></>
         </TabPane>
       </Tabs>
@@ -908,38 +886,38 @@ function RebateTypeTitle({
 }) {
   return (
     <Flex sx={{ width: '100%', justifyContent: 'start', alignItems: 'center', gap: 1, position: 'relative' }}>
-      <Box as="span">Type</Box>
+      <Type.Caption>Type</Type.Caption>
       <Dropdown
-        buttonSx={{ p: '0 4px', border: 'none' }}
+        buttonVariant="ghostInactive"
+        inline
         hasArrow={false}
+        menuSx={{
+          width: 150,
+        }}
         menu={
-          <Flex sx={{ flexDirection: 'column', bg: 'neutral7' }}>
+          <>
             {rebateTypeFilter.map((config) => {
               const isActive = config.filter == currentFilterType
               return (
-                <Box
-                  role="button"
-                  key={`${config.filter}`}
-                  sx={{
-                    height: 32,
-                    lineHeight: '32px',
-                    px: 2,
-                    bg: isActive ? 'neutral4' : 'transparent',
-                    '&:hover': { bg: 'neutral5' },
-                  }}
+                <DropdownItem
+                  key={config.title}
+                  isActive={isActive}
                   onClick={() => changeCurrentFilterType(config.filter)}
                 >
                   {config.title}
-                </Box>
+                </DropdownItem>
               )
             })}
-          </Flex>
+          </>
         }
       >
         <IconBox
           role="button"
           icon={<Funnel size={16} weight={!!currentFilterType ? 'fill' : 'regular'} />}
-          sx={{ color: !!currentFilterType ? 'neutral2' : 'neutral3', '&:hover:': { color: 'neutral1' } }}
+          sx={{
+            position: 'relative',
+            top: '-2px',
+          }}
         />
       </Dropdown>
     </Flex>
@@ -973,29 +951,23 @@ function RebateStatusTitle({
 }) {
   return (
     <Flex sx={{ width: '100%', justifyContent: 'start', alignItems: 'center', gap: 1, position: 'relative' }}>
-      <Box as="span">Status</Box>
+      <Type.Caption>Status</Type.Caption>
       <Dropdown
-        buttonSx={{ p: '0 4px', border: 'none' }}
+        buttonVariant="ghostInactive"
+        inline
         hasArrow={false}
         menu={
           <Flex sx={{ flexDirection: 'column', bg: 'neutral7' }}>
             {rebateStatusFilter.map((config) => {
               const isActive = config.filter == currentFilterStatus
               return (
-                <Box
-                  role="button"
-                  key={`${config.filter}`}
-                  sx={{
-                    height: 32,
-                    lineHeight: '32px',
-                    px: 2,
-                    bg: isActive ? 'neutral4' : 'transparent',
-                    '&:hover': { bg: 'neutral5' },
-                  }}
+                <DropdownItem
+                  key={config.title}
+                  isActive={isActive}
                   onClick={() => changeCurrentFilterStatus(config.filter)}
                 >
                   {config.title}
-                </Box>
+                </DropdownItem>
               )
             })}
           </Flex>
@@ -1004,7 +976,10 @@ function RebateStatusTitle({
         <IconBox
           role="button"
           icon={<Funnel size={16} weight={!!currentFilterStatus ? 'fill' : 'regular'} />}
-          sx={{ color: !!currentFilterStatus ? 'neutral2' : 'neutral3', '&:hover:': { color: 'neutral1' } }}
+          sx={{
+            position: 'relative',
+            top: '-2px',
+          }}
         />
       </Dropdown>
     </Flex>

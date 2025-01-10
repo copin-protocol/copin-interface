@@ -1,3 +1,4 @@
+import { useResponsive } from 'ahooks'
 import dayjs, { Dayjs } from 'dayjs'
 import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -15,8 +16,6 @@ import { LeaderboardTypeEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { LEADERBOARD_OPTIONS, LeaderboardOptionProps } from 'utils/config/options'
 import { pageToOffset } from 'utils/helpers/transform'
-
-import useInternalRole from './useInternalRole'
 
 export interface LeaderboardContextValues {
   data: ApiListResponse<TopTraderData> | undefined
@@ -45,6 +44,7 @@ export interface LeaderboardContextValues {
 export const LeaderboardContext = createContext({} as LeaderboardContextValues)
 
 export function LeaderboardProvider({ children }: { children: ReactNode }) {
+  const { md } = useResponsive()
   const { searchParams, setSearchParams } = useSearchParams()
   const dateParams = searchParams?.[URL_PARAM_KEYS.LEADERBOARD_DATE] as string
   const { protocol } = useProtocolStore()
@@ -113,7 +113,7 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
   }
 
   const { formatNext, formatPrev, formatCurrent } = useMemo(
-    () => getSeasonFormat({ type: currentOption.id, queryDate }),
+    () => getSeasonFormat({ type: currentOption.id, queryDate, shorten: !md }),
     [queryDate, currentOption.id]
   )
 
@@ -203,7 +203,15 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
 const useLeaderboardContext = () => useContext(LeaderboardContext)
 export default useLeaderboardContext
 
-function getSeasonFormat({ type, queryDate }: { type: LeaderboardTypeEnum; queryDate: Dayjs }) {
+function getSeasonFormat({
+  type,
+  queryDate,
+  shorten,
+}: {
+  type: LeaderboardTypeEnum
+  queryDate: Dayjs
+  shorten?: boolean
+}) {
   let formatCurrent
   let formatPrev
   let formatNext
@@ -211,14 +219,14 @@ function getSeasonFormat({ type, queryDate }: { type: LeaderboardTypeEnum; query
 
   switch (type) {
     case LeaderboardTypeEnum.WEEKLY:
-      formatCurrent = `Week ${date.isoWeek()}/${date.format('YYYY')}`
-      formatPrev = `Week ${date.subtract(1, 'week').isoWeek()}/${date.format('YYYY')}`
-      formatNext = `Week ${date.add(1, 'week').isoWeek()}/${date.format('YYYY')}`
+      formatCurrent = `${shorten ? '' : 'Week'} ${date.isoWeek()}/${date.format('YYYY')}`
+      formatPrev = `${shorten ? '' : 'Week'} ${date.subtract(1, 'week').isoWeek()}/${date.format('YYYY')}`
+      formatNext = `${shorten ? '' : 'Week'} ${date.add(1, 'week').isoWeek()}/${date.format('YYYY')}`
       break
     case LeaderboardTypeEnum.MONTHLY:
-      formatCurrent = date.format('MMMM')
-      formatPrev = date.subtract(1, 'month').format('MMMM YYYY')
-      formatNext = date.add(1, 'month').format('MMMM YYYY')
+      formatCurrent = date.format(shorten ? 'MMM' : 'MMMM')
+      formatPrev = date.subtract(1, 'month').format(shorten ? 'MMM YYYY' : 'MMMM YYYY')
+      formatNext = date.add(1, 'month').format(shorten ? 'MMM YYYY' : 'MMMM YYYY')
       break
   }
 

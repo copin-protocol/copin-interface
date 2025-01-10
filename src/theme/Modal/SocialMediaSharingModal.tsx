@@ -9,6 +9,7 @@ import IconButtonTheme from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
 import Modal from 'theme/Modal'
 import { Box, Flex, Image, Type } from 'theme/base'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { addressShorten, generateImageUrl } from 'utils/helpers/format'
 
 interface Props {
@@ -36,6 +37,7 @@ const SocialMediaSharingModal = ({ title, link, isOpen, onDismiss, isGeneratingL
       title={title ?? 'Share'}
       maxWidth="500px"
       dangerouslyBypassFocusLock
+      zIndex={Z_INDEX.TOASTIFY}
     >
       <Box p={3} pt={0}>
         {isGeneratingLink ? (

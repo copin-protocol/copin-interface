@@ -10,6 +10,7 @@ import { OpenInterestMarketData } from 'entities/statistic'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { TableProps, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
+import { TAB_HEIGHT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { useProtocolFromUrl } from 'utils/helpers/graphql'
@@ -84,7 +85,7 @@ function OpenInterestByMarketsPage() {
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>
       <Flex
-        height="48px"
+        height={TAB_HEIGHT}
         px={3}
         sx={{
           alignItems: 'center',
@@ -156,10 +157,10 @@ function Filter({
   const { lg, sm } = useResponsive()
   return (
     <Flex sx={{ gap: '6px', justifyContent: !lg ? 'space-between' : 'flex-start', width: !lg ? '100%' : 'auto' }}>
-      {sm && <Type.CaptionBold sx={{ mt: '-1px' }}>Selected</Type.CaptionBold>}
+      {sm && <Type.CaptionBold>SELECTED</Type.CaptionBold>}
       <MarketFilter pairs={pairs} onChangePairs={onChangePairs} excludedPairs={excludedPairs} />
       <Flex sx={{ gap: '6px' }}>
-        <Type.CaptionBold>In</Type.CaptionBold>
+        <Type.CaptionBold>IN</Type.CaptionBold>
         <TimeDropdown currentTimeOption={currentTimeOption} onChangeTime={onChangeTime} />
       </Flex>
     </Flex>

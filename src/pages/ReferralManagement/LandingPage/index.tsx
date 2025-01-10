@@ -65,7 +65,7 @@ export default function LandingPage() {
       <Box sx={{ p: 3, borderTop: ['none', 'none', 'small'], borderTopColor: ['none', 'none', 'neutral4'] }}>
         <Flex mb={12} sx={{ alignItems: 'center', gap: 2 }}>
           <IconBox icon={<LightbulbFilament size={24} />} sx={{ color: 'neutral3' }} />
-          <Type.Body sx={{ fontWeight: 500 }}>How It Works?</Type.Body>
+          <Type.Body sx={{ fontWeight: 500 }}>HOW IT WORKS?</Type.Body>
         </Flex>
         <Grid sx={{ gridTemplateColumns: ['1fr', '1fr 1fr', '1fr 1fr', '1fr 1fr', '1fr 1fr 1fr 1fr'], gap: 2 }}>
           <ItemHow
@@ -105,12 +105,13 @@ export default function LandingPage() {
             to get more benefits!
           </Type.BodyBold>
           <Flex
+            mt={2}
             as="a"
             href={LINKS.support}
             sx={{ alignItems: 'center', gap: 2, color: 'primary1', '&:hover': { color: 'primary2' } }}
             target="_blank"
           >
-            <Type.Caption sx={{ fontWeight: 600 }}>Contact us</Type.Caption>
+            <Type.Caption sx={{ fontWeight: 600 }}>CONTACT US</Type.Caption>
             <ArrowRight size={16} />
           </Flex>
         </Flex>

@@ -40,5 +40,6 @@ export interface CopyWalletData {
 export interface ApiKeyWallet {
   apiKey?: string
   secretKey?: string
+  embeddedWallet?: string
   passPhrase?: string
 }

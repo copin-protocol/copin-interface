@@ -1,9 +1,9 @@
 import { gql } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 
-import { OrderDirectionFilterTitle } from 'components/@dailyTrades/DirectionFilterTitle'
-import { OrderActionFilterTitle } from 'components/@dailyTrades/OrderActionFilterTitle'
-import { OrderPairFilterTitle } from 'components/@dailyTrades/OrderPairFilterTitle'
+import { OrderDirectionFilterIcon } from 'components/@dailyTrades/DirectionFilterIcon'
+import { OrderActionFilterIcon } from 'components/@dailyTrades/OrderActionFilterIcon'
+import { OrderPairFilterIcon } from 'components/@dailyTrades/OrderPairFilterIcon'
 import OrderRangeFilterIcon from 'components/@dailyTrades/OrderRangeFilterIcon'
 import OrderTimeTitle from 'components/@dailyTrades/OrderTimeTitle'
 import { ORDER_RANGE_KEYS } from 'components/@dailyTrades/configs'
@@ -122,14 +122,16 @@ export const orderColumns: ColumnData<OrderData>[] = [
     ),
   },
   {
-    title: <OrderPairFilterTitle />,
+    title: <Trans>MARKET</Trans>,
     dataIndex: 'pair',
     key: 'pair',
     style: { flex: 1 },
-    render: (item) => <Market symbol={getSymbolFromPair(item.pair)} hasName symbolNameSx={{ fontSize: '13px' }} />,
+    filterComponent: <OrderPairFilterIcon />,
+    render: (item) => <Market symbol={getSymbolFromPair(item.pair)} hasName symbolNameSx={{ fontSize: '12px' }} />,
   },
   {
-    title: <OrderActionFilterTitle />,
+    filterComponent: <OrderActionFilterIcon />,
+    title: <Trans>ACTION</Trans>,
     dataIndex: 'type',
     key: 'type',
     style: { flex: 1.5 },
@@ -146,13 +148,14 @@ export const orderColumns: ColumnData<OrderData>[] = [
     },
   },
   {
-    title: <OrderDirectionFilterTitle />,
+    filterComponent: <OrderDirectionFilterIcon />,
+    title: <Trans>DIRECTION</Trans>,
     dataIndex: 'isLong',
     key: 'isLong',
     style: { flex: [1, 1, 1.2, 1, 1.2] },
     render: (item) => (
       <Flex alignItems="center" sx={{ gap: 2 }}>
-        <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{item.isLong ? 'Long' : 'Short'}</Type.Caption>
+        <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{item.isLong ? 'LONG' : 'SHORT'}</Type.Caption>
       </Flex>
     ),
   },

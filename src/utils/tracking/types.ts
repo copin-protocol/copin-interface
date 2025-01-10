@@ -9,6 +9,7 @@ export enum EventSource {
   HOME_BACKTEST = 'HOME_BACKTEST',
   TRADER_PROFILE = 'TRADER_PROFILE',
   EVENT = 'EVENT',
+  ONBOARDING_COPY_TRADE = 'ONBOARDING_COPY_TRADE',
 }
 
 export enum EventCategory {
@@ -22,6 +23,7 @@ export enum EventCategory {
   LAYOUT = 'LAYOUT',
   CHART = 'CHART',
   COMPETITION = 'COMPETITION',
+  LITE = 'LITE',
 }
 
 export const EVENT_ACTIONS = {
@@ -39,6 +41,8 @@ export const EVENT_ACTIONS = {
     HOME_BACKTEST_REQUEST_COPY_TRADE: 'home_backtest_request_copy_trade',
     HOME_BACKTEST_SUCCESS_COPY_TRADE: 'home_backtest_success_copy_trade',
     HOME_BACKTEST_FAILED_COPY_TRADE: 'home_backtest_failed_copy_trade',
+    ONBOARDING_COPY_TRADE_SUCCESS: 'ONBOARDING_COPY_TRADE_SUCCESS',
+    ONBOARDING_COPY_TRADE_FAIL: 'ONBOARDING_COPY_TRADE_FAIL',
   },
   [EventCategory.BACK_TEST]: {
     OPEN_SINGLE: 'open_backtest_single',
@@ -159,5 +163,18 @@ export const EVENT_ACTIONS = {
     EVENT_REGISTER_ELIGIBLE: 'comp_event_eligible',
     EVENT_REGISTER_NOT_ELIGIBLE: 'comp_event_not_eligible',
     EVENT_REGISTER_ERROR: 'comp_event_register_error',
+  },
+  [EventCategory.LITE]: {
+    LITE_START_ONBOARDING: 'lite_start_onboarding',
+    LITE_FIND_TRADER: 'lite_find_trader',
+    LITE_SKIP_ONBOARDING: 'lite_skip_onboarding',
+    LITE_BACKTEST_TRADER: 'lite_backtest_trader',
+    LITE_PREVIEW_TRADER: 'lite_preview_trader',
+    LITE_COPY_TRADER_START: 'lite_copy_trader_start',
+    LITE_COPY_TRADER_SUCCESS: 'lite_copy_trader_success',
+    LITE_COPY_TRADER_FAILED: 'lite_copy_trader_failed',
+    LITE_COPY_TRADER_CANCEL: 'lite_copy_trader_cancel',
+    LITE_COPY_USE_RECOMMEDATION_SETTINGS: 'lite_copy_use_recommendation_settings',
+    LITE_ONBOARDING_NAVIGATE_TO_LITE: 'lite_onboarding_navigate_to_lite',
   },
 }

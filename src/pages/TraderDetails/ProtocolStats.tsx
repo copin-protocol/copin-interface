@@ -105,12 +105,12 @@ function StatsItem({
       </Box>
       <Box>
         <Flex alignItems="center" sx={{ gap: 1 }}>
-          <Type.Caption display="block" color={isActive ? 'primary1' : 'neutral3'}>
+          <Type.Body display="block" color={isActive ? 'primary1' : 'neutral3'} sx={{ textTransform: 'uppercase' }}>
             {protocolOption?.text}
-          </Type.Caption>
+          </Type.Body>
           <ProtocolBetaWarning protocol={data.protocol} />
         </Flex>
-        <Type.Small sx={{ display: 'flex', alignItems: 'center', gap: '1ch' }}>
+        <Type.Caption sx={{ display: 'flex', alignItems: 'center', gap: '1ch', textTransform: 'uppercase' }}>
           <Box as="span" color={isActive ? 'neutral1' : 'neutral3'}>
             {compactNumber(data.totalVolume, 2)}{' '}
           </Box>
@@ -120,7 +120,7 @@ function StatsItem({
           <Box as="span" color="neutral3">
             <RelativeTimeText date={data.lastTradeAt} tooltipLabel="Last Trade: " hasTooltip={false} />
           </Box>
-        </Type.Small>
+        </Type.Caption>
       </Box>
       {isActive && (
         <Box sx={{ width: '100%', height: '2px', bg: 'primary1', position: 'absolute', bottom: '-0px', left: 0 }} />

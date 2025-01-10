@@ -3,6 +3,7 @@ import { ArrowsIn, ArrowsOutSimple, HardDrives } from '@phosphor-icons/react'
 import { Link } from 'react-router-dom'
 
 import Divider from 'components/@ui/Divider'
+import SectionTitle from 'components/@ui/SectionTitle'
 import Icon from 'components/@widgets/IconGroup/Icon'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -41,7 +42,7 @@ export default function InfoDesktopView({
         <Flex
           sx={{
             width: '100%',
-            height: 56,
+            height: 48,
             alignItems: 'center',
             position: 'sticky',
             top: 0,
@@ -60,7 +61,7 @@ export default function InfoDesktopView({
         </Flex>
       </Box>
       {isExpanded && <Divider />}
-      <Flex sx={{ width: '100%', height: 'calc(100% - 56px)' }}>
+      <Flex sx={{ width: '100%', height: 'calc(100% - 48px)' }}>
         <Box
           sx={{
             px: 3,
@@ -76,7 +77,7 @@ export default function InfoDesktopView({
           <GeneralInfo data={data} />
         </Box>
         <Box display={isExpanded ? 'block' : 'none'} sx={{ flex: '1', height: '100%', overflow: 'hidden' }}>
-          <Flex px={3} height={44} sx={{ width: '100%', alignItems: 'center', color: 'neutral3' }}>
+          <Flex px={3} py={2} sx={{ width: '100%', alignItems: 'center', color: 'neutral3' }}>
             <Type.Caption flex="1.2">
               <Trans>METRICS</Trans>
             </Type.Caption>
@@ -139,14 +140,7 @@ export default function InfoDesktopView({
   )
 }
 export function InfoTitle() {
-  return (
-    <Flex sx={{ alignItems: 'center', gap: 2 }}>
-      <IconBox icon={<HardDrives size={24} />} color="neutral3" />
-      <Type.Body color="neutral1" sx={{ fontWeight: 500 }}>
-        <Trans>General Info </Trans>
-      </Type.Body>
-    </Flex>
-  )
+  return <SectionTitle icon={HardDrives} title={<Trans>GENERAL INFO </Trans>} sx={{ mb: 0 }} />
 }
 export function GeneralInfo({ data }: { data: PerpDEXSourceResponse | undefined }) {
   const { searchParams } = useSearchParams()

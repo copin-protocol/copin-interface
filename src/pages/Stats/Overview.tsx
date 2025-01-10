@@ -29,7 +29,7 @@ export default function Overview() {
       <GridItemWrapper>
         <StatsItemWrapper>
           <StatsWithTooltip
-            label={<Trans>Total Volume</Trans>}
+            label={<Trans>TOTAL VOLUME</Trans>}
             value={data?.totalVolume?.allTime}
             valueConversionFactor={data?.totalVolume?.today}
             valuePrefix="$"
@@ -42,7 +42,7 @@ export default function Overview() {
       <GridItemWrapper>
         <StatsItemWrapper>
           <StatsWithTooltip
-            label={<Trans>Total Net Profit</Trans>}
+            label={<Trans>TOTAL NET PROFIT</Trans>}
             value={totalNetProfitAll}
             valueConversionFactor={totalNetProfitToday}
             valuePrefix="$"
@@ -56,7 +56,7 @@ export default function Overview() {
       <GridItemWrapper>
         <StatsItemWrapper>
           <StatsWithTooltip
-            label={<Trans>Total Orders</Trans>}
+            label={<Trans>TOTAL ORDERS</Trans>}
             value={data?.totalOrder?.allTime}
             valueConversionFactor={data?.totalOrder?.today}
             valuePrefix=""
@@ -69,7 +69,7 @@ export default function Overview() {
       <GridItemWrapper>
         <StatsItemWrapper>
           <StatsWithTooltip
-            label={<Trans>Total Users</Trans>}
+            label={<Trans>TOTAL USERS</Trans>}
             value={data?.totalCopier?.allTime}
             valueConversionFactor={
               data?.totalCopier && data.totalCopier.allTime && data.totalCopier.yesterday

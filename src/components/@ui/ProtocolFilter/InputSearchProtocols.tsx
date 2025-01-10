@@ -50,13 +50,14 @@ const InputSearchProtocols = ({
     <SearchWrapper ref={searchWrapperRef} width="100%">
       <InputSearch
         ref={inputSearchRef}
-        placeholder="Search protocols"
+        placeholder="SEARCH PROTOCOLS"
         sx={{
+          bg: 'neutral5',
+          border: 'none',
           padding: 2,
           width: '100%',
           height: 'max-content',
-          borderColor: 'neutral5',
-          borderRadius: 'xs',
+          borderRadius: 0,
         }}
         value={searchText}
         onChange={handleSearchChange}

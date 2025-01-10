@@ -1,5 +1,6 @@
 import { useQuery as useApolloQuery } from '@apollo/client'
 import { XCircle } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { Suspense, lazy, memo, useMemo } from 'react'
 
 import { ApiListResponse } from 'apis/api'
@@ -7,7 +8,6 @@ import Container from 'components/@ui/Container'
 import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import {
-  SEARCH_DAILY_POSITIONS_QUERY,
   SEARCH_DAILY_POSITION_ID_QUERY,
   SEARCH_POSITIONS_FUNCTION_NAME,
   SEARCH_POSITIONS_INDEX,
@@ -16,6 +16,7 @@ import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
 import RcDrawer from 'theme/RcDrawer'
 import { ProtocolEnum } from 'utils/config/enums'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 const TraderPositionDetails = lazy(() => import('components/@position/TraderPositionDetails'))
 
@@ -32,14 +33,14 @@ export default function TraderPositionDetailsDrawer({
   id: string | undefined
   chartProfitId: string
 }) {
-  const isMobile = useIsMobile()
+  const { lg, xl } = useResponsive()
   return (
-    <RcDrawer open={isOpen} onClose={onDismiss} width={isMobile ? '100%' : '60%'}>
-      <Container sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'auto', bg: 'neutral6' }}>
+    <RcDrawer open={isOpen} onClose={onDismiss} width={xl ? '60%' : lg ? '80%' : '100%'} zIndex={Z_INDEX.TOASTIFY}>
+      <Container sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'auto' }}>
         <IconButton
           icon={<XCircle size={24} />}
           variant="ghost"
-          sx={{ position: 'absolute', right: 1, top: 3, zIndex: 1 }}
+          sx={{ position: 'absolute', right: 1, top: '12px', zIndex: 1 }}
           onClick={onDismiss}
         />
         <Suspense fallback={null}>
@@ -120,7 +121,7 @@ export const TraderPositionDetailsFromOrderDrawer = memo(function PositionDrawer
   // TODO: Need to pass data to position details
   return (
     <RcDrawer open={isOpen} onClose={onDismiss} width={isMobile ? '100%' : '60%'}>
-      <Container sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'auto', bg: 'neutral6' }}>
+      <Container sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'auto' }}>
         <IconButton
           icon={<XCircle size={24} />}
           variant="ghost"

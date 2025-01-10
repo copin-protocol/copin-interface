@@ -140,11 +140,9 @@ const Withdraw = ({
             name="amount"
             block
           />
-          <Flex mt={3} sx={{ gap: 3 }}>
-            <Button type="submit" size="lg" block variant="primary" disabled={disabled} isLoading={submitting}>
-              <Trans>Withdraw</Trans>
-            </Button>
-          </Flex>
+          <Button sx={{ mt: 3 }} type="submit" block variant="primary" disabled={disabled} isLoading={submitting}>
+            <Trans>Withdraw</Trans>
+          </Button>
         </form>
       ) : (
         <Box my={3}>{alert}</Box>

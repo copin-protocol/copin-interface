@@ -224,7 +224,7 @@ export function FilterButton({ resetState }: { resetState: () => void }) {
             }}
           >
             <Flex mb={3} sx={{ width: '100%', justifyContent: 'space-between', px: 3 }}>
-              <Type.BodyBold>Filters</Type.BodyBold>
+              <Type.BodyBold>FILTERS</Type.BodyBold>
               <IconBox
                 role="button"
                 icon={<XCircle size={20} />}
@@ -289,7 +289,8 @@ export function FilterButton({ resetState }: { resetState: () => void }) {
                     {config.label}:
                   </Type.Caption>
                   <Dropdown
-                    buttonSx={{ p: 0, border: 'none' }}
+                    inline
+                    buttonVariant="ghost"
                     menuDismissible
                     dismissible={false}
                     menu={

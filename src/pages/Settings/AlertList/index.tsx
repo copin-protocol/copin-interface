@@ -10,7 +10,7 @@ import { deleteTraderAlertApi, getTraderAlertListApi } from 'apis/alertApis'
 import ToastBody from 'components/@ui/ToastBody'
 import UnsubscribeAlertModal from 'components/@widgets/UnsubscribeAlertModal'
 import { TraderAlertData } from 'entities/alert'
-import useBotAlertContext, { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
+import useBotAlertContext from 'hooks/features/useBotAlertProvider'
 import { useIsPremium, useIsVIP } from 'hooks/features/useSubscriptionRestrict'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useMyProfile from 'hooks/store/useMyProfile'
@@ -33,11 +33,7 @@ import UnlinkAlertModal from './UnlinkAlertModal'
 
 const LIMIT = 10
 export default function AlertList() {
-  return (
-    <BotAlertProvider>
-      <AlertListComponent />
-    </BotAlertProvider>
-  )
+  return <AlertListComponent />
 }
 function AlertListComponent() {
   const { myProfile } = useMyProfile()
@@ -134,7 +130,7 @@ function AlertListComponent() {
           <Box width="100%" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
             <Flex p={3} alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
               <Type.BodyBold>
-                <Trans>Alert List</Trans> ({formatNumber(data?.meta?.total)}/
+                <Trans>ALERT LIST</Trans> ({formatNumber(data?.meta?.total)}/
                 {isVIPUser ? MAX_TRADER_ALERT_VIP : isPremiumUser ? MAX_TRADER_ALERT_PREMIUM : MAX_TRADER_ALERT_BASIC})
               </Type.BodyBold>
               {!isPremiumUser && (
@@ -186,9 +182,9 @@ function AlertListComponent() {
               }}
             />
             <Flex
-              bg="neutral5"
+              bg="neutral6"
               px={3}
-              py={2}
+              py={3}
               sx={{
                 borderTop: 'small',
                 borderColor: 'neutral4',
@@ -202,10 +198,10 @@ function AlertListComponent() {
               <Type.Caption color={'neutral3'}>
                 Use{' '}
                 {showLinkButton ? (
-                  'Copin Telegram Bot'
+                  'Telegram Bot'
                 ) : (
                   <a href={generateTelegramBotAlertUrl()} target="_blank" rel="noreferrer">
-                    Copin Telegram Bot
+                    Telegram Bot
                   </a>
                 )}{' '}
                 to get notifications from traders

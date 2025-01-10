@@ -4,8 +4,7 @@ import { useState } from 'react'
 
 import useWalletFund from 'hooks/features/useWalletFundSnxV2'
 import Modal from 'theme/Modal'
-import Tabs, { TabPane } from 'theme/Tab'
-import IconTabItem from 'theme/Tab/IconTabItem'
+import { TabHeader } from 'theme/Tab'
 import { Box } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 
@@ -40,7 +39,7 @@ const FundModal = ({
   return (
     <Modal
       maxWidth="510px"
-      minHeight="320px"
+      minHeight="300px"
       dismissable={false}
       hasClose
       isOpen={isOpen}
@@ -48,59 +47,26 @@ const FundModal = ({
       title={<Trans>Manage Fund</Trans>}
     >
       <Box px={3} pb={3}>
-        <Tabs
-          defaultActiveKey={tab}
-          onChange={(tab) => setTab(tab)}
-          sx={{
-            width: '100%',
-          }}
-          headerSx={{ marginBottom: 0, gap: 0, width: '100%', mb: 3, px: 0 }}
-          tabItemSx={{
-            pt: 0,
-            px: 24,
-          }}
-        >
-          <TabPane
-            key={FundTab.Deposit}
-            tab={
-              <IconTabItem
-                icon={<ArrowSquareDownLeft size={24} weight={tab === FundTab.Deposit ? 'fill' : 'regular'} />}
-                text={<Trans>Deposit</Trans>}
-                active={tab === FundTab.Deposit}
-              />
-            }
-          >
-            <></>
-          </TabPane>
-          <TabPane
-            key={FundTab.Withdraw}
-            tab={
-              <IconTabItem
-                icon={<ArrowSquareUpRight size={24} weight={tab === FundTab.Withdraw ? 'fill' : 'regular'} />}
-                text={<Trans>Withdraw</Trans>}
-                active={tab === FundTab.Withdraw}
-              />
-            }
-          >
-            <></>
-          </TabPane>
-          {/* {DEFAULT_CHAIN_ID === OPTIMISM_MAINNET ? (
-            <TabPane
-              key={FundTab.BridgeSwap}
-              tab={
-                <IconTabItem
-                  icon={<Swap size={24} weight={tab === FundTab.BridgeSwap ? 'fill' : 'regular'} />}
-                  text={<Trans>Swap</Trans>}
-                  active={tab === FundTab.BridgeSwap}
-                />
-              }
-            >
-              <></>
-            </TabPane>
-          ) : (
-            <></>
-          )} */}
-        </Tabs>
+        <TabHeader
+          configs={[
+            {
+              name: <Trans>DEPOSIT</Trans>,
+              key: FundTab.Deposit,
+              icon: <ArrowSquareDownLeft size={20} />,
+            },
+            {
+              name: <Trans>WITHDRAW</Trans>,
+              key: FundTab.Withdraw,
+              icon: <ArrowSquareUpRight size={20} />,
+            },
+          ]}
+          hasLine
+          isActiveFn={(config) => config.key === tab}
+          onClickItem={(key) => setTab(key as FundTab)}
+          fullWidth
+          size="md"
+          sx={{ mb: 3 }}
+        />
         {tab === FundTab.Deposit && (
           <Deposit
             smartWallet={smartWallet}

@@ -18,6 +18,7 @@ import { CopyTradePlatformEnum } from 'utils/config/enums'
 
 import BingXHelp from './WalletHelpBingX'
 import { ApiWalletFormValues, apiWalletFormSchema, defaultFormValues } from './schema'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 export default function CreateBingXWalletModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
   const {
@@ -67,6 +68,7 @@ export default function CreateBingXWalletModal({ isOpen, onDismiss }: { isOpen: 
       onDismiss={onDismiss}
       width="90vw"
       maxWidth="450px"
+      zIndex={Z_INDEX.TOASTIFY}
     >
       <Box variant="card" sx={{ backgroundColor: 'modalBG' }}>
         <form

@@ -12,6 +12,8 @@ export default function TimeDropdown({
 }) {
   return (
     <Dropdown
+      buttonVariant="ghostPrimary"
+      inline
       {...getDropdownProps({ menuSx: { width: 100 } })}
       menu={
         <>

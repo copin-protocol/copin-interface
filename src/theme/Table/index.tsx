@@ -282,8 +282,8 @@ export function TableContainer({
         '& th:first-child, td:first-child': {
           pl: 2,
         },
-        '& tbody td': { py: 12, verticalAlign: 'middle' },
-        '& th': { pb: 2, borderBottom: 'small', borderColor: 'neutral4' },
+        '& tbody td': { py: '7px', verticalAlign: 'middle' },
+        '& th': { py: '6px', borderBottom: 'small', borderColor: 'neutral4' },
         ...sx,
       }}
     >

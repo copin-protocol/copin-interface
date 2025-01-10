@@ -53,7 +53,7 @@ export default function ListOrderTable({
         title: 'Action',
         dataIndex: 'type',
         key: 'type',
-        style: { minWidth: '120px' },
+        style: { minWidth: '100px' },
         render: (item, index, externalSource) => (
           <Flex alignItems="center" sx={{ gap: 2 }}>
             {item.isOpen || (externalSource && externalSource.totalOrders && index === externalSource.totalOrders - 1)
@@ -72,6 +72,20 @@ export default function ListOrderTable({
         ),
       },
       {
+        title: 'Market Price',
+        dataIndex: 'priceNumber',
+        key: 'priceNumber',
+        style: { minWidth: '100px', textAlign: 'right' },
+        render: renderOrderPrice,
+      },
+      {
+        title: 'Size Delta ($)',
+        dataIndex: 'sizeDeltaNumber',
+        key: 'sizeDeltaNumber',
+        style: { minWidth: '100px', textAlign: 'right' },
+        render: (item) => renderOrderSize(item),
+      },
+      {
         title: 'Leverage',
         dataIndex: 'leverage',
         key: 'leverage',
@@ -82,23 +96,10 @@ export default function ListOrderTable({
         title: 'Collateral Delta',
         dataIndex: 'collateralDeltaNumber',
         key: 'collateralDeltaNumber',
-        style: { minWidth: '105px', textAlign: 'right' },
+        style: { minWidth: '120px', textAlign: 'right' },
         render: (item) => renderOrderCollateral(item),
       },
-      {
-        title: 'Size Delta',
-        dataIndex: 'sizeDeltaNumber',
-        key: 'sizeDeltaNumber',
-        style: { minWidth: '100px', textAlign: 'right' },
-        render: (item) => renderOrderSize(item),
-      },
-      {
-        title: 'Market Price',
-        dataIndex: 'priceNumber',
-        key: 'priceNumber',
-        style: { minWidth: '100px', textAlign: 'right' },
-        render: renderOrderPrice,
-      },
+
       {
         title: isFeeWithFunding ? 'Fee & Funding' : 'Paid Fee',
         dataIndex: 'feeNumber',

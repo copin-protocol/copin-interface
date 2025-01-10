@@ -101,7 +101,7 @@ export default function TraderRankingExpanded({
             alignItems: 'center',
             gap: 3,
             justifyContent: 'space-between',
-            p: 3,
+            p: '12px 16px',
             borderBottom: 'small',
             borderBottomColor: 'neutral4',
           }}
@@ -116,7 +116,7 @@ export default function TraderRankingExpanded({
                 '& *': { fontSize: '1em !important' },
               }}
             >
-              <Box as="span">Better than {traderScore?.toFixed(0)}% traders in</Box>
+              COMPARE TRADER IN
               <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
             </Flex>
           </Type.Body>
@@ -168,7 +168,7 @@ export default function TraderRankingExpanded({
                       height: '100%',
                       overflow: 'hidden',
                       backgroundImage:
-                        'linear-gradient(180deg, rgba(78, 174, 253, 0.5) 0%, rgba(78, 174, 253, 0) 100%)',
+                        'linear-gradient(180deg, rgba(78, 174, 253, 0.2) 0%, rgba(78, 174, 253, 0) 100%)',
                     }}
                   >
                     <Stats traderData={traderData} indicatorColor="primary1" />
@@ -180,7 +180,7 @@ export default function TraderRankingExpanded({
                       justifyContent: 'center',
                       backgroundImage: linearGradient3,
                       borderRight: 'small',
-                      borderRightColor: 'neutral8',
+                      borderRightColor: 'neutral4',
                       position: 'relative',
                     }}
                   >
@@ -204,7 +204,7 @@ export default function TraderRankingExpanded({
                       ...(selectedTrader
                         ? {
                             backgroundImage:
-                              'linear-gradient(180deg, rgba(255, 194, 75, 0.5) 0%, rgba(255, 194, 75, 0) 100%)',
+                              'linear-gradient(180deg, rgba(255, 194, 75, 0.2) 0%, rgba(255, 194, 75, 0) 100%)',
                           }
                         : { bg: 'neutral5' }),
                     }}
@@ -291,7 +291,7 @@ export default function TraderRankingExpanded({
               )}
 
               <Box sx={{ p: 3 }}>
-                <SectionTitle icon={<ChartBar size={24} />} title={<Trans>Percentile Ranking Comparison</Trans>} />
+                <SectionTitle icon={ChartBar} title={<Trans>PERCENTILE RANKING COMPARISON</Trans>} />
                 <Box mb={1} />
                 <PercentileRankingDetails
                   data={traderData}
@@ -317,8 +317,8 @@ export default function TraderRankingExpanded({
                 flexDirection: 'column',
               }}
             >
-              <Box mb="6px" p={3} pb={0}>
-                <SectionTitle icon={<Users size={24} />} title={<Trans>Similar Traders</Trans>} />
+              <Box p={3} pb={0} sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}>
+                <SectionTitle icon={Users} title={<Trans>SIMILAR TRADERS</Trans>} />
               </Box>
               <Box sx={{ flex: '1 0 0', overflow: 'auto' }}>
                 <SimilarTraders

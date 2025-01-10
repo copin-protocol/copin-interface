@@ -3,7 +3,6 @@ import { SystemStyleObject } from '@styled-system/css'
 import React, { useMemo, useState } from 'react'
 import { GridProps } from 'styled-system'
 
-import Divider from 'components/@ui/Divider'
 import InputSearchText from 'components/@ui/InputSearchText'
 import { CopyTradeData } from 'entities/copyTrade'
 import useDebounce from 'hooks/helpers/useDebounce'
@@ -44,6 +43,10 @@ export default function SelectCopyTradesDropdown({
 
   return (
     <Dropdown
+      buttonVariant="ghost"
+      // buttonSx={{
+      //   textTransform: 'none',
+      // }}
       menuSx={{
         width: ['100%', 400],
         height: 350,
@@ -55,7 +58,8 @@ export default function SelectCopyTradesDropdown({
       menuDismissible
       menu={
         <>
-          <Flex sx={{ gap: 1, alignItems: 'center' }}>
+          <InputSearchText placeholder="SEARCH COPYTRADE" searchText={searchText} setSearchText={setSearchText} />
+          <Flex sx={{ gap: 2, alignItems: 'center', my: 2 }}>
             <SwitchInput
               checked={isSelectedAll}
               onChange={(event) => {
@@ -67,17 +71,13 @@ export default function SelectCopyTradesDropdown({
                 }
               }}
             />
-            <Type.CaptionBold color="neutral3">
-              <Trans>Select all</Trans> (
-              <Type.Caption>
-                <Trans>Includes deleted data</Trans>
+            <Type.CaptionBold color="neutral2">
+              <Trans>SELECT ALL</Trans>
+              <Type.Caption color="neutral3" ml={1}>
+                (<Trans>Includes deleted data</Trans>)
               </Type.Caption>
-              )
             </Type.CaptionBold>
           </Flex>
-          <Divider my={2} />
-          <InputSearchText placeholder="Search copytrades..." searchText={searchText} setSearchText={setSearchText} />
-          <Divider mt={2} />
           <Grid
             sx={{
               gridTemplateColumns: ['1fr', '1fr 1fr'],
@@ -103,13 +103,9 @@ export default function SelectCopyTradesDropdown({
           </Grid>
         </>
       }
-      buttonSx={{
-        border: 'none',
-        height: 50,
-      }}
       placement={placement}
     >
-      {selectedCopyTrades.length}/{allCopyTrades.length} active {allCopyTrades.length > 1 ? 'copytrades' : 'copytrade'}
+      {selectedCopyTrades.length}/{allCopyTrades.length} Active {allCopyTrades.length > 1 ? 'Copytrades' : 'Copytrade'}
     </Dropdown>
   )
 }

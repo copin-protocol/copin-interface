@@ -5,7 +5,8 @@ import { useRef } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { BodyWrapperMobile, BottomTabItemMobile, BottomTabWrapperMobile } from 'pages/@layouts/Components'
+import { BodyWrapperMobile, BottomWrapperMobile } from 'pages/@layouts/Components'
+import { TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 
 import Overview from './Overview'
@@ -73,21 +74,14 @@ function MobileHome() {
       <Box display={currentTab === TabKeys.overview ? 'block' : 'none'} sx={{ width: '100%', height: '100%' }}>
         <Overview />
       </Box>
-      <BottomTabWrapperMobile>
-        {tabConfigs.map((config, index) => {
-          const isActive = !!searchParams.tab ? searchParams.tab === config.key : config.key === TabKeys.traders
-          return (
-            <BottomTabItemMobile
-              key={index}
-              color={isActive ? 'primary1' : 'neutral3'}
-              onClick={() => handleClickItem(config.key)}
-              fontWeight={isActive ? 500 : 400}
-              icon={isActive ? config.activeIcon : config.inactiveIcon}
-              text={config.name}
-            />
-          )
-        })}
-      </BottomTabWrapperMobile>
+      <BottomWrapperMobile>
+        <TabHeader
+          configs={tabConfigs}
+          isActiveFn={(config) => config.key === currentTab}
+          fullWidth={false}
+          onClickItem={handleClickItem}
+        />
+      </BottomWrapperMobile>
     </BodyWrapperMobile>
   )
 }
@@ -99,15 +93,15 @@ const TabKeys = {
 
 const tabConfigs = [
   {
-    name: <Trans>Traders</Trans>,
+    name: <Trans>TRADERS</Trans>,
     activeIcon: <Users size={24} weight="fill" />,
-    inactiveIcon: <Users size={24} />,
+    icon: <Users size={24} />,
     key: TabKeys.traders,
     paramKey: TabKeys.traders,
   },
   {
-    name: <Trans>Overview</Trans>,
-    inactiveIcon: <PresentationChart size={24} />,
+    name: <Trans>OVERVIEW</Trans>,
+    icon: <PresentationChart size={24} />,
     activeIcon: <PresentationChart size={24} weight="fill" />,
     key: TabKeys.overview,
     paramKey: TabKeys.overview,

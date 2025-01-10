@@ -64,9 +64,11 @@ function DesktopNoSubscription() {
               <Trans>Basic Plan</Trans>
             </Type.LargeBold>
           </Flex>
-          <Button size="xs" px={4} as={Link} to={ROUTES.SUBSCRIPTION.path} variant="primary">
-            Upgrade
-          </Button>
+          <Box as={Link} to={ROUTES.SUBSCRIPTION.path}>
+            <Button size="sm" variant="primary">
+              Upgrade
+            </Button>
+          </Box>
         </Flex>
         <Type.Caption color="neutral3">
           <Trans>The basic plan allows your to experience the basic features of Copin</Trans>

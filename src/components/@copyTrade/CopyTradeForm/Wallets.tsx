@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Plus } from '@phosphor-icons/react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { ComponentProps, useEffect, useMemo, useRef, useState } from 'react'
 
 import { CreateWalletModal } from 'components/@wallet/CreateWalletAction'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
@@ -16,11 +16,13 @@ export default function Wallets({
   currentWalletId,
   onChangeWallet,
   disabledSelect,
+  selectProps,
 }: {
   platform: CopyTradePlatformEnum
   currentWalletId: string
   onChangeWallet: (walletId: string) => void
   disabledSelect: boolean
+  selectProps?: Omit<ComponentProps<typeof Select>, 'value' | 'options' | 'onChange' | 'isDisabled'>
 }) {
   const platformRef = useRef(platform)
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
@@ -53,6 +55,7 @@ export default function Wallets({
       options={walletOptions}
       onChange={(newValue: any) => onChangeWallet(newValue.value)}
       isDisabled={disabledSelect}
+      {...selectProps}
     />
   ) : null
 }

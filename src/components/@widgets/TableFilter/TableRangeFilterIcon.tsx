@@ -1,5 +1,5 @@
 import { Funnel } from '@phosphor-icons/react'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -115,11 +115,12 @@ export default function TableRangeFilterIcon({ config, sx = {} }: { config: Tabl
 
   return (
     <Dropdown
+      buttonVariant="ghostInactive"
+      inline
       menuDismissible
       dismissible={false}
       visible={visible}
       setVisible={_setVisible as any}
-      buttonSx={{ p: 0, border: 'none', ...sx }}
       hasArrow={false}
       menu={
         <Box sx={{ p: 3, width: '300px' }}>
@@ -136,9 +137,8 @@ export default function TableRangeFilterIcon({ config, sx = {} }: { config: Tabl
       }
     >
       <IconBox
-        role="button"
         icon={<Funnel size={16} weight={!!hasFilter ? 'fill' : 'regular'} />}
-        sx={{ color: !!hasFilter ? 'neutral2' : 'neutral3', '&:hover': { color: 'neutral2' } }}
+        sx={{ transform: 'translateY(-1.5px)' }}
       />
     </Dropdown>
   )

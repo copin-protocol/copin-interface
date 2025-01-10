@@ -12,6 +12,7 @@ import NavbarUser from 'pages/@layouts/Navbar/NavUser'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
+import ROUTES from 'utils/config/routes'
 import { generateHomeRoute } from 'utils/helpers/generateRoute'
 import { convertProtocolToParams } from 'utils/helpers/graphql'
 
@@ -19,7 +20,7 @@ import { ProtocolsStatisticProvider } from '../ProtocolsStatisticContext'
 import HamburgerMenu from './HamburgetMenu'
 import Menu from './Menu'
 import MoreDropdown from './MoreDropdown'
-import { DesktopEventNavLinks, DesktopNavLinks } from './NavLinks'
+import { DesktopEventNavLinks, DesktopNavLinks, DesktopWrapper, LiteText, NavLink } from './NavLinks'
 import QuickSearchBox from './QuickSearchBox'
 import { LARGE_BREAK_POINT } from './configs'
 import { LogoWrapper, Main, Wrapper } from './styled'
@@ -44,7 +45,7 @@ export default function Navbar({ height }: { height: number }): ReactElement {
               <Link to={generateHomeRoute({ params: { protocol: protocolParams } })}>
                 <LogoWrapper>
                   <Logo />
-                  <LogoText size={20} />
+                  <LogoText size={16} />
                 </LogoWrapper>
               </Link>
               <Box
@@ -64,13 +65,12 @@ export default function Navbar({ height }: { height: number }): ReactElement {
               </Box>
             </Flex>
 
-            <Flex alignItems="center" height="100%" sx={{ gap: 3 }}>
+            <Flex alignItems="center" height="100%">
               <QuickSearchBox />
-
               {hasEvents && (
                 <Box
                   alignItems="center"
-                  px={3}
+                  px={2}
                   sx={{
                     display: 'flex',
                     textAlign: 'center',
@@ -88,21 +88,34 @@ export default function Navbar({ height }: { height: number }): ReactElement {
 
               <Flex
                 flex="0 0 fit-content"
-                sx={{ alignItems: 'center', borderLeft: 'small', height: '100%', borderLeftColor: 'neutral4' }}
+                sx={{
+                  alignItems: 'center',
+                  borderLeft: 'small',
+                  height: '100%',
+                  borderLeftColor: 'neutral4',
+                  ml: [2, 0],
+                }}
               >
+                {isAuthenticated === true && (
+                  <DesktopWrapper sx={{ borderRight: 'small', borderRightColor: 'neutral4' }}>
+                    <NavLink to={ROUTES.LITE.path} matchpath={ROUTES.LITE.path} className="lite">
+                      <LiteText>Copin Lite</LiteText>
+                    </NavLink>
+                  </DesktopWrapper>
+                )}
                 {isAuthenticated === true && <NavbarUser />}
                 {isAuthenticated === false && <LoginAction />}
                 {isAuthenticated == null && (
-                  <Flex py={12} px={16} alignItems="center" sx={{ gap: 3 }}>
+                  <Flex py={12} px={2} alignItems="center" sx={{ gap: 3 }}>
                     <Loading size={16} />
                     <Box>
                       <Type.CaptionBold display="block" lineHeight="13px">
-                        <Trans>Connecting Wallet...</Trans>
+                        <Trans>CONNECTING WALLET...</Trans>
                       </Type.CaptionBold>
-                      <Button variant="ghost" px={0} py={0} my={0}>
-                        <Type.Caption lineHeight="13px" onClick={() => disconnect()}>
+                      <Button variant="ghostPrimary" px={0} py={0} my={0}>
+                        <Type.Small lineHeight="13px" onClick={() => disconnect()}>
                           <Trans>Cancel</Trans>
-                        </Type.Caption>
+                        </Type.Small>
                       </Button>
                     </Box>
                   </Flex>

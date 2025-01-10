@@ -28,12 +28,9 @@ function FilterPairIcon() {
   return (
     <FilterPairDropdown currentPairs={currentPairs} onChangePairs={onChangePairs} isExcluded={isExcluded}>
       <IconBox
-        role="button"
         icon={<Funnel size={16} weight={hasFilter ? 'fill' : 'regular'} />}
         sx={{
-          // transform: 'translateY(-1.5px)',
-          color: hasFilter ? 'neutral2' : 'neutral3',
-          '&:hover:': { color: 'neutral1' },
+          transform: 'translateY(-1.5px)',
         }}
       />
     </FilterPairDropdown>

@@ -117,7 +117,7 @@ const AccountStats = memo(function AccountStatsMemo({
   }
 
   return (
-    <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 610 : undefined} pb={[3, 4, 4, 4, 3]}>
+    <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 650 : undefined} pb={[3, 4, 4, 4, 3]}>
       <Box
         sx={{
           mr: '1px',
@@ -161,18 +161,16 @@ const AccountStats = memo(function AccountStatsMemo({
                 width: '100%',
                 borderBottom: 'small',
                 borderColor: 'neutral4',
-                pt: '10px',
-                pb: '4px',
+                alignItems: 'center',
+                py: '6px',
               }}
             >
               <CustomizeColumn
+                buttonVariant="ghostInactive"
                 defaultColumns={defaultColumns}
                 placement="bottomLeft"
                 currentColumnKeys={customizeStats}
                 handleToggleColumn={(key) => toggleVisibleStat(key.toString())}
-                menuSx={{
-                  maxHeight: 300,
-                }}
               />
               <IconButton
                 mt={'-2px'}
@@ -367,7 +365,9 @@ const AccountStats = memo(function AccountStatsMemo({
                     className="column-freeze"
                     alignItems="center"
                   >
-                    <Type.Caption pl={3} color="neutral3">{stat.label}</Type.Caption>
+                    <Type.Caption pl={3} color="neutral3">
+                      {stat.label}
+                    </Type.Caption>
                     <IconButton
                       data-tip="React-tooltip"
                       data-tooltip-id="tt_to_top"

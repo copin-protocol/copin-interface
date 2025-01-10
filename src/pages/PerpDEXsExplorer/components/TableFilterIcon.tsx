@@ -9,7 +9,7 @@ function TableFilterIcon({ valueKey }: { valueKey: keyof PerpDEXSourceResponse }
   const filterConfig = TABLE_RANGE_FILTER_CONFIGS[valueKey]
   if (!filterConfig) return null
   if (filterConfig.type === 'number' || filterConfig.type === 'duration') {
-    return <TableRangeFilterIcon config={filterConfig} sx={{ ml: 1 }} />
+    return <TableRangeFilterIcon config={filterConfig} />
   }
   if (filterConfig.type === 'select') {
     return <FilterSelectIcon config={filterConfig} />

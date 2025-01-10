@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { ArrowsIn, ArrowsOutSimple, Coins } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { memo, useEffect, useMemo, useState } from 'react'
@@ -6,10 +7,11 @@ import { useQuery } from 'react-query'
 import { getTraderTokensStatistic } from 'apis/traderApis'
 import ChartPositions from 'components/@charts/ChartPositions'
 import NoDataFound from 'components/@ui/NoDataFound'
+import SectionTitle from 'components/@ui/SectionTitle'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import { PositionData } from 'entities/trader.d'
 import Loading from 'theme/Loading'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, IconBox } from 'theme/base'
 import { DEFAULT_PROTOCOL, MAX_PAGE_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -103,10 +105,7 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
           borderBottomColor: 'neutral4',
         }}
       >
-        <Flex sx={{ gap: 2, alignItems: 'center' }}>
-          <IconBox color="neutral3" icon={<Coins size={24} />} />
-          <Type.BodyBold>Token Preference</Type.BodyBold>
-        </Flex>
+        <SectionTitle icon={Coins} title={<Trans>TOKEN PREFERENCES</Trans>} sx={{ mb: 0 }} />
         {xl && (
           <IconBox
             icon={isExpanded ? <ArrowsIn size={20} /> : <ArrowsOutSimple size={20} />}
@@ -135,7 +134,7 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
             flex: '1 0 0',
             flexDirection: isExpanded ? 'row' : 'column',
             width: '100%',
-            bg: isExpanded ? 'neutral5' : 'transparent',
+            bg: isExpanded ? 'neutral7' : 'transparent',
           }}
         >
           <ChartPositions

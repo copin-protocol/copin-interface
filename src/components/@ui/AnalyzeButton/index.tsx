@@ -30,7 +30,7 @@ export default function AnalyzeAction() {
           <Trans>Analyze With AI</Trans>
         </GradientText>
       </ButtonWithIcon>
-      {openModal && <ModalContactAI onDismiss={() => setOpenModal(false)} />}
+      <ModalContactAI isOpen={openModal} onDismiss={() => setOpenModal(false)} />
     </>
   )
 }

@@ -48,13 +48,13 @@ export default function SearchTraderResultItems({
       }}
     >
       <Flex sx={{ color: 'inherit', p: 0, mx: 0, gap: 12 }} width="100%">
-        <Flex sx={{ flexDirection: 'column', alignItems: 'center', gap: 1, flexShrink: 0 }}>
+        <Flex sx={{ flexDirection: 'column', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
           <AddressAvatar address={data.account} size={40} />
           <ProtocolLogo protocol={data.protocol} size={24} hasText={false} />
         </Flex>
         <Box flex={1} sx={{ textAlign: 'left' }}>
-          <Flex mb={[1, '2px']} sx={{ alignItems: 'center', gap: 12 }}>
-            <Type.CaptionBold
+          <Flex mb={1} sx={{ alignItems: 'center', gap: 12 }}>
+            <Type.BodyBold
               flex={1}
               lineHeight="24px"
               color={isCopying ? 'orange1' : 'inherit'}
@@ -67,12 +67,8 @@ export default function SearchTraderResultItems({
                   tooltipContent={<Trans>Having open positions</Trans>}
                 />
               )}
-            </Type.CaptionBold>
-            <LastTrade
-              hasLabel={false}
-              value={data.lastTradeAt}
-              sx={{ display: ['flex', 'flex', 'none'], flexShrink: 0 }}
-            />
+            </Type.BodyBold>
+            <LastTrade value={data.lastTradeAt} sx={{ flexShrink: 0 }} />
             <FavoriteButton
               address={data.account}
               protocol={data.protocol}
@@ -80,16 +76,16 @@ export default function SearchTraderResultItems({
               sx={{ display: ['block', 'block', 'none'], flexShrink: 0 }}
             />
           </Flex>
-          <Flex mb={[1, '2px']} color="neutral3" sx={{ width: '100%', gap: 1 }}>
+          <Flex mb={[1, '2px']} color="neutral2" sx={{ width: '100%', gap: 1 }}>
             <TotalPnL value={data.pnl} sx={{ flex: ['0 0 130px', '0 0 170px'], flexDirection: ['column', 'row'] }} />
             <TotalVolume
               value={data.totalVolume}
               sx={{ flex: ['0 0 130px', '0 0 180px'], flexDirection: ['column', 'row'] }}
             />
-            <LastTrade value={data.lastTradeAt} sx={{ display: ['none', 'none', 'flex'], flex: '0 0 180px' }} />
+            {/* <LastTrade value={data.lastTradeAt} sx={{ display: ['none', 'none', 'flex'], flex: '0 0 180px' }} /> */}
           </Flex>
           <Type.Caption color="neutral3" sx={{ lineHeight: '24px' }}>
-            {data.smartAccount ? `Smart Wallet: ${addressShorten(data.smartAccount)}` : 'EOA Account'}
+            {data.smartAccount ? `Smart Wallet: ${addressShorten(data.smartAccount)}` : 'EOA ACCOUNT'}
           </Type.Caption>
         </Box>
         <FavoriteButton
@@ -103,23 +99,24 @@ export default function SearchTraderResultItems({
   )
 }
 
-function LastTrade({ value, hasLabel = true, sx = {} }: { value: string | undefined; hasLabel?: boolean; sx?: any }) {
+function LastTrade({ value, sx = {} }: { value: string | undefined; sx?: any }) {
   return (
     <Type.Caption
-      sx={{ display: 'flex', gap: [1, 2], alignItems: 'center', flexWrap: 'nowrap', lineHeight: '24px', ...sx }}
+      sx={{
+        display: 'flex',
+        gap: [1, 2],
+        alignItems: 'center',
+        flexWrap: 'nowrap',
+        lineHeight: '24px',
+        ...sx,
+      }}
     >
-      {!!hasLabel && (
-        <>
-          <Box as="span">Last Trade</Box>
-        </>
-      )}
-      {value ? (
-        <Box as="span" color="neutral1">
-          <RelativeTimeText date={value} />
-        </Box>
-      ) : (
-        '--'
-      )}
+      <Box as="span" color="neutral3">
+        Traded
+      </Box>
+      <Box as="span" color="neutral3">
+        <RelativeTimeText date={value} />
+      </Box>
     </Type.Caption>
   )
 }
@@ -138,7 +135,7 @@ function TotalVolume({ value, sx = {} }: { value: number | undefined; sx?: any }
 function TotalPnL({ value, sx = {} }: { value: number | undefined; sx?: any }) {
   return (
     <Type.Caption sx={{ display: 'flex', gap: [0, 2], lineHeight: '24px', ...sx }}>
-      <Box as="span">Total PnL ($)</Box>
+      <Box as="span">Total PnL</Box>
       <SignedText isCompactNumber fontInherit value={value} maxDigit={2} minDigit={2} prefix="$" />
     </Type.Caption>
   )

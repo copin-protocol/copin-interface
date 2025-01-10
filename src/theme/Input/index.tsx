@@ -11,22 +11,24 @@ import { SxProps } from 'theme/types'
 
 import { InputProps, InputSearchProps, InputWrapperProps, TextareaProps } from './types'
 
-const ZOOM_INPUT_RATIO = 1.2308 // 16/13
-const SCALE_INPUT_RATIO = 0.8125 // 13/16
+const ZOOM_INPUT_RATIO = 1.3333 // 16/12
+const SCALE_INPUT_RATIO = 0.75 // 12/16
 
 export const StyledInput = styled.input`
   background: transparent !important;
   padding: 0;
   border: none;
-
-  font-size: 16px;
+  font-size: 13px;
   line-height: 24px;
-  width: calc(100% * ${ZOOM_INPUT_RATIO});
+  width: 100%;
 
-  transform: scale(${SCALE_INPUT_RATIO});
-  transform-origin: 0 50%;
-
-  margin-right: -12.5%;
+  @media screen and (max-width: 768px) {
+    font-size: 16px;
+    width: calc(100% * ${ZOOM_INPUT_RATIO});
+    transform: scale(${SCALE_INPUT_RATIO});
+    transform-origin: 0 50%;
+    margin-right: -12.5%;
+  }
 `
 
 const StyledTextarea = styled.textarea`
@@ -53,15 +55,15 @@ export const InputWrapper = styled(Flex)<InputWrapperProps>(
     css({
       width: props.block ? '100%' : 'fit-content',
       alignItems: 'center',
-      bg: 'neutral5',
+      bg: 'neutral7',
       position: 'relative',
       border: props.border ?? 'small',
-      borderColor: 'neutral3',
-      borderRadius: 'sm',
-      fontSize: 13,
+      borderColor: 'neutral4',
+      borderRadius: 'xs',
+      fontSize: 12,
       lineHeight: '24px',
       px: '12px',
-      py: '8px',
+      py: '7px',
       color: 'inherit',
       cursor: 'pointer',
       '&:focus-within:not([disabled])': {
@@ -73,8 +75,8 @@ export const InputWrapper = styled(Flex)<InputWrapperProps>(
         bg: 'neutral7',
       },
       '&[disabled]': {
-        bg: 'neutral5',
-        borderColor: 'neutral4',
+        bg: 'neutral7',
+        borderColor: 'neutral5',
         color: 'neutral3',
         cursor: 'not-allowed',
       },

@@ -10,27 +10,44 @@ import { Box, Flex, Type } from 'theme/base'
 
 import { ExternalSource, activityTitles, renderProps } from './configs'
 
+type LayoutType = 'normal' | 'lite'
 export default function ListActivityMobile({
   data,
   isLoading,
   externalSource,
+  layoutType = 'normal',
 }: {
   data: UserActivityData[] | undefined
   externalSource: ExternalSource
   isLoading: boolean
+  layoutType?: LayoutType
 }) {
   const { md } = useResponsive()
   if (isLoading) return <Loading />
   if (!isLoading && !data?.length) return <NoDataFound message={<Trans>No Activity Found</Trans>} />
   return (
     <Flex sx={{ width: '100%', height: '100%', overflow: 'auto', flexDirection: 'column', gap: 3 }}>
-      {!md && data?.map((value, index) => <MobileItem key={index} data={value} externalSource={externalSource} />)}
-      {md && data?.map((value, index) => <TabletItem key={index} data={value} externalSource={externalSource} />)}
+      {!md &&
+        data?.map((value, index) => (
+          <MobileItem key={index} data={value} externalSource={externalSource} layoutType={layoutType} />
+        ))}
+      {md &&
+        data?.map((value, index) => (
+          <TabletItem key={index} data={value} externalSource={externalSource} layoutType={layoutType} />
+        ))}
     </Flex>
   )
 }
 
-export function MobileItem({ data, externalSource }: { data: UserActivityData; externalSource: ExternalSource }) {
+export function MobileItem({
+  data,
+  externalSource,
+  layoutType,
+}: {
+  data: UserActivityData
+  externalSource: ExternalSource
+  layoutType: LayoutType
+}) {
   return (
     <Box sx={{ p: 3, bg: 'neutral6' }}>
       <Flex flexWrap="wrap" sx={{ gap: 3 }}>
@@ -49,7 +66,9 @@ export function MobileItem({ data, externalSource }: { data: UserActivityData; e
       </Flex>
       <Divider color="neutral5" my={2} />
       <Flex flexWrap="wrap" sx={{ gap: 3 }}>
-        <Property label={activityTitles.targetWallet} value={renderProps.targetWallet?.(data)} />
+        {layoutType === 'normal' && (
+          <Property label={activityTitles.targetWallet} value={renderProps.targetWallet?.(data)} />
+        )}
         <Property
           label={activityTitles.targetAction}
           value={renderProps.targetAction?.(data, undefined, externalSource)}
@@ -59,7 +78,15 @@ export function MobileItem({ data, externalSource }: { data: UserActivityData; e
   )
 }
 
-export function TabletItem({ data, externalSource }: { data: UserActivityData; externalSource: ExternalSource }) {
+export function TabletItem({
+  data,
+  externalSource,
+  layoutType,
+}: {
+  data: UserActivityData
+  externalSource: ExternalSource
+  layoutType: LayoutType
+}) {
   return (
     <Box sx={{ p: 3, bg: 'neutral6' }}>
       <Box mb={3} sx={{ display: 'grid', gridTemplateColumns: '180px 180px 1fr', gap: 3 }}>
@@ -72,7 +99,9 @@ export function TabletItem({ data, externalSource }: { data: UserActivityData; e
         <Property label={activityTitles.sourceAction} value={renderProps.sourceAction?.(data)} />
       </Box>
       <Box sx={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 3 }}>
-        <Property label={activityTitles.targetWallet} value={renderProps.targetWallet?.(data)} />
+        {layoutType === 'normal' && (
+          <Property label={activityTitles.targetWallet} value={renderProps.targetWallet?.(data)} />
+        )}
         <Property
           label={activityTitles.targetAction}
           value={renderProps.targetAction?.(data, undefined, externalSource)}

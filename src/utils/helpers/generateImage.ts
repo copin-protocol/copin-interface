@@ -1,6 +1,7 @@
 import { PositionData, TraderData } from 'entities/trader'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Colors } from 'theme/types'
+import { FONT_FAMILY } from 'utils/config/constants'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { ELEMENT_IDS } from 'utils/config/keys'
 
@@ -62,14 +63,14 @@ export const generateTraderCanvas = ({
   rightCtx.textAlign = 'center'
   rightCtx.textBaseline = 'middle'
   rightCtx.fillStyle = colors.neutral2
-  rightCtx.font = `${titleStatsFontSize}px Anuphan`
+  rightCtx.font = `${titleStatsFontSize}px ${FONT_FAMILY}`
   rightCtx.fillText('Trades', rightWidth / 2, titleStartY)
   rightCtx.fillText('Win Rate', rightWidth / 2, titleStartY + statsGap)
   rightCtx.fillText('Profit rate', rightWidth / 2, titleStartY + statsGap * 2)
 
   const valueStartY = titleStartY + titleStatsFontSize + titleAndValueGap
   rightCtx.fillStyle = colors.neutral1
-  rightCtx.font = `700 ${valueStatsFontSize}px Anuphan`
+  rightCtx.font = `700 ${valueStatsFontSize}px ${FONT_FAMILY}`
   rightCtx.fillText(stats?.totalTrade ? formatNumber(stats?.totalTrade, 0, 0) : '--', rightWidth / 2, valueStartY)
   rightCtx.fillText(
     stats?.winRate ? `${formatNumber(stats?.winRate, 1, 1)}%` : '--',
@@ -95,7 +96,7 @@ export const generateTraderCanvas = ({
   leftCtx.fillStyle = colors.neutral5
   leftCtx.fillRect(0, chartAreaOffsetY, leftWidth, chartAreaHeight)
   // text
-  leftCtx.font = '500 32px Anuphan'
+  leftCtx.font = `500 32px ${FONT_FAMILY}`
   leftCtx.textAlign = 'center'
   leftCtx.fillStyle = colors.neutral1
   leftCtx.textBaseline = 'top'
@@ -121,7 +122,7 @@ export const generateTraderCanvas = ({
   }
   leftCtx.fillText(`PNL in ${time} days`, leftWidth / 2, chartAreaOffsetY + 36)
 
-  leftCtx.font = '700 56px Anuphan'
+  leftCtx.font = `700 56px ${FONT_FAMILY}`
   leftCtx.textAlign = 'center'
   leftCtx.fillStyle = !stats
     ? colors.neutral1
@@ -230,14 +231,14 @@ export const generatePositionCanvas = ({
   rightCtx.textAlign = 'center'
   rightCtx.textBaseline = 'middle'
   rightCtx.fillStyle = colors.neutral2
-  rightCtx.font = `${titleStatsFontSize}px Anuphan`
+  rightCtx.font = `${titleStatsFontSize}px ${FONT_FAMILY}`
   rightCtx.fillText('Total Collateral', rightWidth / 2, titleStartY)
   rightCtx.fillText('PNL', rightWidth / 2, titleStartY + statsGap - 24)
   rightCtx.fillText('Paid Fee', rightWidth / 2, titleStartY + statsGap * 2)
 
   const valueStartY = titleStartY + titleStatsFontSize + titleAndValueGap
   rightCtx.fillStyle = colors.neutral1
-  rightCtx.font = `700 ${valueStatsFontSize}px Anuphan`
+  rightCtx.font = `700 ${valueStatsFontSize}px ${FONT_FAMILY}`
   rightCtx.fillText('$' + formatNumber(stats?.collateral, 0, 0), rightWidth / 2, valueStartY)
   const latestPnL = isOpening ? calcOpeningPnL(stats, prices[tokenSymbol]) : stats.pnl
   const latestROI = isOpening ? calcOpeningROI(stats, latestPnL) : stats.roi
@@ -253,10 +254,10 @@ export const generatePositionCanvas = ({
     rightWidth / 2,
     valueStartY + statsGap - 24
   )
-  rightCtx.font = `700 ${titleStatsFontSize}px Anuphan`
+  rightCtx.font = `700 ${titleStatsFontSize}px ${FONT_FAMILY}`
   rightCtx.fillText(formatNumber(latestROI, 2) + '%', rightWidth / 2, valueStartY + statsGap + 32)
   rightCtx.fillStyle = colors.red2
-  rightCtx.font = `700 ${valueStatsFontSize}px Anuphan`
+  rightCtx.font = `700 ${valueStatsFontSize}px ${FONT_FAMILY}`
   rightCtx.fillText('-$' + formatNumber(stats?.fee, 1), rightWidth / 2, valueStartY + statsGap * 2)
 
   // draw avatar & address
@@ -273,27 +274,27 @@ export const generatePositionCanvas = ({
   leftCtx.fillRect(0, chartAreaOffsetY, leftWidth, chartAreaHeight)
 
   // text
-  leftCtx.font = '400 32px Anuphan'
+  leftCtx.font = `400 32px ${FONT_FAMILY}`
   leftCtx.textAlign = 'left'
   leftCtx.fillStyle = colors.neutral2
   leftCtx.textBaseline = 'top'
   leftCtx.fillText(`Position`, 32, chartAreaOffsetY + 16)
 
-  leftCtx.font = '700 32px Anuphan'
+  leftCtx.font = `700 32px ${FONT_FAMILY}`
   leftCtx.textAlign = 'left'
   leftCtx.fillStyle = stats?.isLong ? colors.green1 : colors.red2
   leftCtx.fillText(stats?.isLong ? 'L' : 'S', 32, chartAreaOffsetY + 52)
   leftCtx.fillStyle = colors.neutral3
-  leftCtx.font = '400 32px Anuphan'
+  leftCtx.font = `400 32px ${FONT_FAMILY}`
   leftCtx.fillText('|', 60, chartAreaOffsetY + 52)
-  leftCtx.font = '700 32px Anuphan'
+  leftCtx.font = `700 32px ${FONT_FAMILY}`
   leftCtx.fillStyle = colors.neutral1
   leftCtx.fillText(tokenSymbol, 60 + 24, chartAreaOffsetY + 52)
   leftCtx.fillStyle = colors.neutral3
-  leftCtx.font = '400 32px Anuphan'
+  leftCtx.font = `400 32px ${FONT_FAMILY}`
   const symbolWidth = leftCtx.measureText(tokenSymbol).width
   leftCtx.fillText('|', 60 + 24 + symbolWidth + 16, chartAreaOffsetY + 52)
-  leftCtx.font = '700 32px Anuphan'
+  leftCtx.font = `700 32px ${FONT_FAMILY}`
   leftCtx.fillStyle = colors.neutral1
   generateTokenPrice({
     value: stats.averagePrice,
@@ -303,21 +304,21 @@ export const generatePositionCanvas = ({
   })
 
   const sizeX = leftWidth / 2 - 64
-  leftCtx.font = '400 32px Anuphan'
+  leftCtx.font = `400 32px ${FONT_FAMILY}`
   leftCtx.textAlign = 'left'
   leftCtx.fillStyle = colors.neutral2
   leftCtx.textBaseline = 'top'
   leftCtx.fillText(`Size`, sizeX, chartAreaOffsetY + 16)
   const positionSize = formatNumber(stats.maxSizeNumber ?? stats.size, 0)
   const sizeWidth = leftCtx.measureText(positionSize).width
-  leftCtx.font = '700 32px Anuphan'
+  leftCtx.font = `700 32px ${FONT_FAMILY}`
   leftCtx.textAlign = 'left'
   leftCtx.fillStyle = colors.neutral1
   leftCtx.fillText(positionSize, sizeX, chartAreaOffsetY + 52)
   leftCtx.fillStyle = colors.neutral3
-  leftCtx.font = '400 32px Anuphan'
+  leftCtx.font = `400 32px ${FONT_FAMILY}`
   leftCtx.fillText('|', sizeX + sizeWidth + 16, chartAreaOffsetY + 52)
-  leftCtx.font = '700 32px Anuphan'
+  leftCtx.font = `700 32px ${FONT_FAMILY}`
   leftCtx.textAlign = 'left'
   leftCtx.fillStyle = colors.neutral1
   leftCtx.fillText(
@@ -327,12 +328,12 @@ export const generatePositionCanvas = ({
   )
 
   const durationX = leftWidth - 190
-  leftCtx.font = '400 32px Anuphan'
+  leftCtx.font = `400 32px ${FONT_FAMILY}`
   leftCtx.textAlign = 'left'
   leftCtx.fillStyle = colors.neutral2
   leftCtx.textBaseline = 'top'
   leftCtx.fillText(isOpening ? 'Liq. Price' : 'Duration', durationX, chartAreaOffsetY + 16)
-  leftCtx.font = '700 32px Anuphan'
+  leftCtx.font = `700 32px ${FONT_FAMILY}`
   leftCtx.textAlign = 'left'
   leftCtx.fillStyle = colors.neutral1
   if (isOpening) {
@@ -410,7 +411,7 @@ export const generateAvatarAddress = ({
   canvas.fillStyle = avatarGradient
   canvas.arc(avatarCenterX, avatarCenterY, avatarSize / 2, 0, 360)
   canvas.fill()
-  canvas.font = '40px Anuphan'
+  canvas.font = `40px ${FONT_FAMILY}`
   canvas.textAlign = 'center'
   canvas.textBaseline = 'middle'
   canvas.fillText(emoji, avatarCenterX + 1, avatarCenterY + 3) // wierd
@@ -418,7 +419,7 @@ export const generateAvatarAddress = ({
   const addressOffsetX = avatarCenterX + avatarSize / 2 + 24
   const addressOffsetY = avatarCenterY
   canvas.textBaseline = 'top'
-  canvas.font = '700 48px Anuphan'
+  canvas.font = `700 48px ${FONT_FAMILY}`
   canvas.textAlign = 'left'
   canvas.textBaseline = 'middle'
   canvas.fillStyle = colors.neutral1
@@ -517,7 +518,7 @@ export const generateProtocol = ({
   }
   // protocol text
   const protocolTextOffsetLeft = width - protocolImg.width - protocolTextWidth
-  canvas.font = '700 32px Anuphan'
+  canvas.font = `700 32px ${FONT_FAMILY}`
   canvas.textAlign = 'left'
   canvas.fillStyle = colors.neutral1
   canvas.fillText(protocolText, protocolTextOffsetLeft, avatarCenterY)
@@ -534,7 +535,7 @@ export const generateProtocol = ({
   )
   // sub text
   const subProtocolTextOffsetRight = protocolImgOffsetLeft - 16
-  canvas.font = '700 24px Anuphan'
+  canvas.font = `700 24px ${FONT_FAMILY}`
   canvas.textAlign = 'right'
   canvas.fillStyle = colors.neutral1
   canvas.fillText('Trade on', subProtocolTextOffsetRight, avatarCenterY)
@@ -576,7 +577,7 @@ export const generateChartLine = ({
       const widthHeightRatio = _canvas.width / _canvas.height
       const desWidth = width - 32
       const desHeight = desWidth / widthHeightRatio
-      canvas.font = '400 16px Anuphan'
+      canvas.font = `400 16px ${FONT_FAMILY}`
       canvas.drawImage(_canvas, 0, 0, _canvas.width, _canvas.height, 16, chartAxisOffsetY, desWidth, desHeight)
     }
   }
@@ -596,7 +597,7 @@ export const generateFooter = ({
   footerContentMiddleOffset: number
 }) => {
   canvas.drawImage(logoImg, width - 180 - 24, footerContentMiddleOffset - 42 / 2, 182, 42)
-  // canvas.font = '700 24px Anuphan'
+  // canvas.font = '700 24px ${FONT_FAMILY}'
   // canvas.textAlign = 'center'
   // canvas.textBaseline = 'middle'
   // canvas.fillStyle = colors.neutral3
@@ -619,9 +620,9 @@ export const generateTokenPrice = ({
   })
   if (value < 1 && zeroPart.length > 3 && Number(decimalPart) > 0) {
     canvas.fillText(Number(integerPart).toFixed(1), x, y)
-    canvas.font = '700 24px Anuphan'
+    canvas.font = `700 24px ${FONT_FAMILY}`
     canvas.fillText(`${zeroPart.length}`, x + 48, y + 16)
-    canvas.font = '700 32px Anuphan'
+    canvas.font = `700 32px ${FONT_FAMILY}`
     canvas.fillText(formatNumber(decimalPart, 2), x + 48 + 12, y)
   } else {
     canvas.fillText(formattedNumber && formattedNumber > 0 ? formatPrice(formattedNumber, 2, 2) : '--', x, y)

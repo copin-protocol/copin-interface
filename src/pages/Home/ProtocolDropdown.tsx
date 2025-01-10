@@ -59,7 +59,7 @@ export default function ProtocolDropdown({
                   '& img': { filter: disabled ? 'grayscale(100%)' : 'none' },
                 }}
               >
-                <ProtocolLogo protocol={option.id} isActive={isActive} size={24} hasText={false} />
+                <ProtocolLogo protocol={option.id} isActive={isActive} size={20} hasText={false} />
                 <Box as="span">{option.text}</Box>
                 {disabled && (
                   <Box as="span">

@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { BellSimple, BellSimpleSlash } from '@phosphor-icons/react'
 import React, { useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { toast } from 'react-toastify'
@@ -10,8 +11,6 @@ import UnsubscribeAlertModal from 'components/@widgets/UnsubscribeAlertModal'
 import useBotAlertContext from 'hooks/features/useBotAlertProvider'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
-import AlertOffIcon from 'theme/Icons/AlerOffIcon'
-import AlertIcon from 'theme/Icons/AlertIcon'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getErrorMessage } from 'utils/helpers/handleError'
@@ -107,11 +106,11 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
           '&:hover:not(:disabled)': { color: 'neutral1' },
         }}
         variant={currentAlert ? 'ghostDanger' : 'ghost'}
-        icon={currentAlert ? <AlertOffIcon size={20} /> : <AlertIcon size={20} />}
+        icon={currentAlert ? <BellSimpleSlash size={20} /> : <BellSimple size={20} />}
         disabled={isLoading || submittingCreate || submittingDelete || isGeneratingLink}
         onClick={onSubmit}
       >
-        {currentAlert ? <Trans>Remove</Trans> : <Trans>Alert</Trans>}
+        {currentAlert ? <Trans>Unnotify</Trans> : <Trans>Alert</Trans>}
       </ButtonWithIcon>
       {isOpenUnsubscribeModal && currentAlert && (
         <UnsubscribeAlertModal

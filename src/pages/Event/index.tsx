@@ -10,9 +10,10 @@ import RewardWithSymbol from 'components/@ui/RewardWithSymbol'
 import { EventDetailsData, TradingEventStatusEnum } from 'entities/event'
 import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { BodyWrapperMobile, BottomTabItemMobile, BottomTabWrapperMobile } from 'pages/@layouts/Components'
+import { BodyWrapperMobile, BottomWrapperMobile } from 'pages/@layouts/Components'
 import { Button } from 'theme/Buttons'
 import CalendarStarIcon from 'theme/Icons/CalendarStarIcon'
+import { TabHeader } from 'theme/Tab'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import ROUTES from 'utils/config/routes'
@@ -119,20 +120,15 @@ function MobileEvents({ events }: { events: EventDetailsData[] }) {
       <Box sx={{ width: '100%', height: '100%' }}>
         <EventByStatus events={events} status={eventStatus} />
       </Box>
-      <BottomTabWrapperMobile>
-        {tabConfigs.map((config, index) => {
-          const isActive = eventStatus === config.key
-          return (
-            <BottomTabItemMobile
-              key={index}
-              color={isActive ? 'primary1' : 'neutral3'}
-              onClick={() => handleClickItem(config.key)}
-              fontWeight={isActive ? 500 : 400}
-              text={config.name}
-            />
-          )
-        })}
-      </BottomTabWrapperMobile>
+      <BottomWrapperMobile>
+        <TabHeader
+          configs={tabConfigs}
+          isActiveFn={(config) => config.key === eventStatus}
+          fullWidth={false}
+          onClickItem={handleClickItem}
+          // fullWidth
+        />
+      </BottomWrapperMobile>
     </BodyWrapperMobile>
   )
 }
@@ -141,14 +137,17 @@ const tabConfigs = [
   {
     name: 'Ongoing',
     key: TradingEventStatusEnum.ONGOING,
+    icon: <ArrowFatLineRight />,
   },
   {
     name: 'Upcoming',
     key: TradingEventStatusEnum.UPCOMING,
+    icon: <ShootingStar />,
   },
   {
     name: 'Ended',
     key: TradingEventStatusEnum.ENDED,
+    icon: <HourglassLow />,
   },
 ]
 

@@ -26,7 +26,7 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     dataIndex: 'createdAt',
     key: 'createdAt',
     sortBy: 'createdAt',
-    style: { minWidth: '172px', width: 172 },
+    style: { minWidth: '170px', width: 170 },
     render: (item) => (
       <Box sx={{ position: 'relative' }}>
         {item.isReverse && <ReverseTag sx={{ top: '-12px', left: '-16px' }} />}
@@ -39,7 +39,7 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     dataIndex: 'lastOrderAt',
     key: 'lastOrderAt',
     sortBy: 'lastOrderAt',
-    style: { minWidth: '156px', width: 156 },
+    style: { minWidth: '150px', width: 150 },
     render: renderCloseTime,
   },
   {
@@ -53,14 +53,14 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     title: 'Copy',
     dataIndex: 'copyTradeTitle',
     key: 'copyTradeTitle',
-    style: { minWidth: '130px', width: 130 },
+    style: { minWidth: '120px', width: 120 },
     render: renderCopyTitle,
   },
   {
     title: 'Copy Wallet',
     dataIndex: 'copyTradeId',
     key: 'copyTradeId',
-    style: { minWidth: '150px', width: 150 },
+    style: { minWidth: '120px', width: 120 },
     render: renderCopyWallet,
   },
   {
@@ -115,7 +115,18 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     dataIndex: 'status',
     key: 'status',
     sortBy: 'status',
-    style: { minWidth: '80px', width: 80, textAlign: 'left' },
+    style: { minWidth: '90px', width: 90, textAlign: 'left' },
     render: renderStatus,
   },
 ]
+
+const liteHistoryColumns = historyColumns.filter((v) => v.key !== 'copyTradeId')
+
+const mapping = {
+  lite: liteHistoryColumns,
+  normal: historyColumns,
+}
+
+export function getCopyPositionHistoryColumns(layoutType: 'normal' | 'lite') {
+  return mapping[layoutType]
+}

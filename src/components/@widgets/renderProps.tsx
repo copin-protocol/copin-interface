@@ -60,7 +60,7 @@ function EntryComponent({
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      {showMarketIcon && <Market symbol={symbol} size={24} />}
+      {showMarketIcon && <Market symbol={symbol} size={20} />}
       <Type.Caption {...textSx}>{symbol}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>
@@ -162,7 +162,7 @@ export function renderSize(data: PositionData | undefined, hasLiquidate?: boolea
           </Type.Caption>
         </Flex>
       </Flex>
-      <ProgressBar percent={0} sx={{ width: '100%' }} />
+      <ProgressBar height={2} bg="neutral2" percent={0} sx={{ width: '100%' }} />
     </Flex>
   )
 }
@@ -407,7 +407,7 @@ export function renderTrader(
         <Flex sx={{ gap: 1 }} alignItems="center">
           <Type.Caption
             color="neutral1"
-            width={72}
+            width={85}
             sx={{ ...overflowEllipsis(), display: 'flex', ':hover': { textDecoration: 'underline' } }}
           >
             {addressShorten(address, 3, 5)}

@@ -18,7 +18,7 @@ export const tableStyles = {
   // 'tbody tr:hover': {
   //   td: { bg: 'neutral5' },
   // },
-  'thead th': { py: '8px !important', alignItems: 'center', pr: 1 },
+  'thead th': { py: '6px !important', alignItems: 'center', pr: 1 },
   'thead th:nth-child(2)': { pl: 12 },
   // 'tbody td:nth-child(2)': { borderRight: 'small', borderRightColor: 'neutral4' },
 }

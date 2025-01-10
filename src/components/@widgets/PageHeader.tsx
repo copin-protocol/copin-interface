@@ -1,5 +1,5 @@
 import { useResponsive } from 'ahooks'
-import { ComponentType, ReactNode, useEffect } from 'react'
+import { ComponentType, ReactNode } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { ProtocolFilter } from 'components/@ui/ProtocolFilter'
@@ -7,8 +7,9 @@ import { HomeSwitchProtocols, RouteSwitchProtocol } from 'components/@widgets/Sw
 import useInternalRole from 'hooks/features/useInternalRole'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useTradersContext from 'pages/Explorer/useTradersContext'
-import { Box, Flex, IconBox, Type } from 'theme/base'
-import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
+import PageTitle from 'theme/PageTitle'
+import { Box } from 'theme/base'
+import { ALLOWED_COPYTRADE_PROTOCOLS, PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 
 export default function PageHeader({
   pageTitle,
@@ -67,28 +68,17 @@ export default function PageHeader({
         sx={{
           width: '100%',
           pl: 3,
-          pr: showOnMobile && !md ? 3 : 0,
+          pr: 0,
           alignItems: 'center',
-          justifyContent: 'space-between',
+          // justifyContent: 'space-between',
           borderBottom: 'small',
           borderBottomColor: 'neutral4',
           gap: 2,
-          height: 48,
+          height: PAGE_TITLE_HEIGHT,
           flexShrink: 0,
         }}
       >
-        <Flex
-          sx={{
-            width: '100%',
-            gap: 2,
-            alignItems: 'center',
-            color: 'neutral1',
-            flex: 1,
-          }}
-        >
-          <IconBox icon={<Icon size={24} weight="fill" />} />
-          <Type.Body sx={{ flex: 1, flexShrink: 0, fontWeight: 500 }}>{headerText}</Type.Body>
-        </Flex>
+        <PageTitle icon={Icon} title={headerText} />
         {/* {showSelectProtocol && (
           <>
             {routeSwitchProtocol ? (

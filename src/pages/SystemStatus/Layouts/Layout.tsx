@@ -6,6 +6,7 @@ import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
+import { BottomWrapperMobile } from 'pages/@layouts/Components'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 import ROUTES from 'utils/config/routes'
@@ -21,14 +22,14 @@ const tabConfigs: TabConfig[] = [
   {
     name: <Trans>NODE STATUS</Trans>,
     activeIcon: <ThermometerSimple size={24} weight="fill" />,
-    inactiveIcon: <ThermometerSimple size={24} />,
+    icon: <ThermometerSimple size={24} />,
     key: TabKeyEnum.NODE_STATUS,
     route: ROUTES.NODE_STATUS.path,
   },
   {
     name: <Trans>WALLET WATCHER</Trans>,
     activeIcon: <Wallet size={24} weight="fill" />,
-    inactiveIcon: <Wallet size={24} />,
+    icon: <Wallet size={24} />,
     key: TabKeyEnum.WALLET_WATCHER,
     route: ROUTES.WALLET_WATCHER.path,
   },
@@ -41,14 +42,18 @@ const pageTitleMapping = {
 
 export default function Layout(components: LayoutComponents) {
   const { pathname } = useLocation()
-  const { sm } = useResponsive()
+  const { md } = useResponsive()
 
   return (
     <>
       <CustomPageTitle title={pageTitleMapping[pathname]} />
-      <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-        {sm && <MainTab pathname={pathname} />}
-
+      <Flex sx={{ width: '100%', height: '100%', overflow: 'hidden', flexDirection: 'column' }}>
+        {md && (
+          <>
+            <MainTab pathname={pathname} />
+            <Divider />
+          </>
+        )}
         <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
           <Switch>
             <Route exact path={ROUTES.NODE_STATUS.path}>
@@ -61,17 +66,16 @@ export default function Layout(components: LayoutComponents) {
           </Switch>
         </Box>
 
-        {!sm && (
-          <>
-            <Divider />
-            <MainTab pathname={pathname} />
-          </>
-        )}
+        <BottomWrapperMobile>
+          <MainTab pathname={pathname} />
+        </BottomWrapperMobile>
       </Flex>
     </>
   )
 }
 
 function MainTab({ pathname }: { pathname: string }) {
-  return <TabHeader configs={tabConfigs} isActiveFn={(config) => config.route === pathname} fullWidth />
+  return (
+    <TabHeader configs={tabConfigs} isActiveFn={(config) => config.route === pathname} size="lg" fullWidth={false} />
+  )
 }

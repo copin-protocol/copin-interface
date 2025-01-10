@@ -16,7 +16,6 @@ import { PaginationWithLimit, PaginationWithSelect } from 'theme/Pagination'
 import Table from 'theme/Table'
 import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
-import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
 
 import { leaderboardColumns } from './configs'
@@ -70,8 +69,8 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: CopierLeaderb
             currentSort={currentSort}
             changeCurrentSort={changeCurrentSort}
             tableHeadSx={{
+              py: '6px',
               px: 3,
-              py: 3,
               borderBottom: 'small',
               borderColor: 'neutral4',
               '& th': { border: 'none' },
@@ -189,11 +188,8 @@ function TopLeaderboardMobile({ contextValues }: { contextValues: CopierLeaderbo
         </Box>
       )}
       <Flex sx={{ alignItems: 'center', borderTop: 'small', borderTopColor: 'neutral4' }}>
-        <Type.Caption color="neutral2" sx={{ flexShrink: 0, px: 12, flex: 1 }}>
-          <Trans>Last Updated:</Trans>{' '}
-          <Box as="span" color="neutral1">
-            {formatLocalDate(lastTimeUpdated, DAYJS_FULL_DATE_FORMAT)}
-          </Box>
+        <Type.Caption color="neutral3" sx={{ flexShrink: 0, px: 12, flex: 1 }}>
+          <Trans>Last Updated:</Trans> <Box as="span">{formatLocalDate(lastTimeUpdated, DAYJS_FULL_DATE_FORMAT)}</Box>
         </Type.Caption>
         <PaginationWithSelect
           currentPage={currentPage}

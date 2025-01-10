@@ -161,14 +161,14 @@ export default function SimilarTraders({
     )
 
   return (
-    <Box sx={{ width: '100%', minHeight: '100%', bg: 'neutral6' }}>
+    <Box sx={{ width: '100%', minHeight: '100%', bg: 'neutral7' }}>
       {!isFetching && !similarTraders?.length && <NoDataFound />}
       {!isFetching && (
         <Box
           sx={{
             display: ['grid', 'grid', 'grid', 'block'],
             gridTemplateColumns: ['1fr 1fr', '1fr 1fr', '1fr 1fr', '1fr'],
-            '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4', p: 3 },
+            '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4', p: 2 },
             '& > *:last-child': { borderBottom: 'none' },
             '& > *:nth-child(2n+1)': {
               borderRight: ['small', 'small', 'small', 'none'],
@@ -196,7 +196,7 @@ export default function SimilarTraders({
                     <Trans>Compare</Trans>
                   </Button>
                 </Flex>
-                <Flex mt={24} sx={{ gap: 24, alignItems: 'center' }}>
+                <Flex mt={0} sx={{ gap: 2, alignItems: 'center' }}>
                   <ScoreChart
                     data={formatChartData(traderData.ranking)}
                     outerRadius={55}
@@ -231,7 +231,7 @@ export default function SimilarTraders({
 function SimilarTraderStats({ label, value }: { label: ReactNode; value: ReactNode }) {
   return (
     <StatWrapper>
-      <Type.Caption color="neutral3" sx={{ width: 85, flexShrink: 0 }}>
+      <Type.Caption color="neutral3" sx={{ width: 90, flexShrink: 0 }}>
         {label}:
       </Type.Caption>
       <Type.Caption>{value}</Type.Caption>
@@ -252,4 +252,5 @@ const TraderDetailsWrapper = styled(Box)`
   grid-template-columns: 1fr 1fr;
   column-gap: 40px;
   row-gap: 12px;
+  flex: 1;
 `

@@ -74,6 +74,9 @@ export const DEFAULT_CHART_REALTIME_PROPS: Partial<ChartingLibraryWidgetOptions>
   disabled_features: disabledFeatures,
   theme: 'dark',
   time_frames: timeFrames,
+  toolbar_bg: themeColors.neutral8,
+  custom_css_url: '/static/styles-customize.css',
+
   overrides: {
     'paneProperties.background': themeColors.neutral8,
     'paneProperties.backgroundType': 'solid',

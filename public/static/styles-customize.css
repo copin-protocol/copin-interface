@@ -1,0 +1,5 @@
+.theme-dark:root {
+  --tv-color-platform-background: #0a0d18;
+  --tv-color-pane-background: #0a0d18;
+  /* --tv-color-toolbar-divider-background: #0a0d18; */
+}

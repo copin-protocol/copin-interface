@@ -35,11 +35,12 @@ export default function OrderRangeFilterIcon({ valueKey }: { valueKey: OrderRang
 
   return (
     <Dropdown
+      buttonVariant="ghostInactive"
+      inline
       menuDismissible
       dismissible={false}
       visible={visible}
       setVisible={_setVisible as any}
-      buttonSx={{ p: 0, border: 'none', transform: 'translateY(-1.5px)' }}
       hasArrow={false}
       menu={
         <Box sx={{ p: 3, width: '300px' }}>
@@ -56,7 +57,9 @@ export default function OrderRangeFilterIcon({ valueKey }: { valueKey: OrderRang
       <IconBox
         role="button"
         icon={<Funnel size={16} weight={!!hasFilter ? 'fill' : 'regular'} />}
-        sx={{ color: !!hasFilter ? 'neutral2' : 'neutral3', '&:hover:': { color: 'neutral1' } }}
+        sx={{
+          transform: 'translateY(-1.5px)',
+        }}
       />
     </Dropdown>
   )

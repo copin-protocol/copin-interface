@@ -4,49 +4,55 @@ import { Suspense, lazy } from 'react'
 
 import Container from 'components/@ui/Container'
 import useSearchParams from 'hooks/router/useSearchParams'
+import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import IconButton from 'theme/Buttons/IconButton'
 import RcDrawer from 'theme/RcDrawer'
-import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 const TraderQuickView = lazy(() => import('components/@trader/TraderDetailsDrawer/TraderQuickView'))
 
 export default function TraderDetailsDrawer({
-  onDismiss,
-  protocol,
-  address,
-  type,
+  zIndex = Z_INDEX.TOASTIFY, // above all
 }: {
-  onDismiss: () => void
-  protocol: ProtocolEnum
-  address: string
-  type?: TimeFrameEnum
+  zIndex?: number
 }) {
+  const { trader, resetTrader, disabledActions } = useQuickViewTraderStore()
+
   const { lg } = useResponsive()
   const { setSearchParams } = useSearchParams()
   const handleDismiss = () => {
     setSearchParams({ [URL_PARAM_KEYS.TRADER_HISTORY_PAGE]: null })
-    onDismiss()
+    resetTrader()
   }
 
   return (
     <RcDrawer
-      open
+      open={!!trader}
       onClose={(e) => {
         e.stopPropagation()
         handleDismiss()
       }}
-      width={lg ? '1024px' : '100%'}
+      width={lg ? '968px' : '100%'}
+      zIndex={zIndex}
     >
-      <Container sx={{ position: 'relative', width: '100%', height: '100%', bg: 'neutral7' }}>
+      <Container sx={{ position: 'relative', width: '100%', height: '100%' }}>
         <IconButton
           icon={<XCircle size={24} />}
           variant="ghost"
-          sx={{ position: 'absolute', right: 1, top: lg ? '12px' : '14px', zIndex: 11 }}
+          sx={{ position: 'absolute', right: 1, top: '12px', zIndex: 11 }}
           onClick={handleDismiss}
         />
         <Suspense fallback={null}>
-          <TraderQuickView address={address} protocol={protocol} type={type} />
+          {!!trader && (
+            <TraderQuickView
+              address={trader.address}
+              protocol={trader.protocol}
+              type={trader.type}
+              eventCategory={trader.eventCategory}
+              disabledActions={disabledActions}
+            />
+          )}
         </Suspense>
       </Container>
     </RcDrawer>

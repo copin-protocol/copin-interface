@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { ToastContainer } from 'react-toastify'
 
+import OnboardingModal from 'components/@copinLite/OnboardingModal'
 import FavoriteNoteTooltip from 'components/@widgets/FavoriteButton/FavoriteNoteTooltip'
 import SubscriptionRestrictModal from 'components/@widgets/SubscriptionRestrictModal'
 import { TradingEventStatusEnum } from 'entities/event'
@@ -22,9 +23,9 @@ import { FOOTER_HEIGHT, NAVBAR_HEIGHT } from 'utils/config/constants'
 import { ELEMENT_IDS } from 'utils/config/keys'
 
 import TraderDetailsDrawer from '../components/@trader/TraderDetailsDrawer'
-import useQuickViewTraderStore from '../hooks/store/useQuickViewTraderStore'
 import { InitVaultCopying } from '../hooks/store/useVaultCopying'
 import Notification from './@layouts/EventsNotification'
+import LiteWalletNotice from './@layouts/LiteWalletNotice'
 import SubscriptionExpiredWarning from './@layouts/SubscriptionExpiredWarning'
 
 // import WarningBetaVersion from './@layouts/WarningBetaVersion'
@@ -36,7 +37,6 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
   useResetSearchParams()
   const dialog = useGlobalDialog((state) => state.dialog)
   const restrictState = useSubscriptionRestrictStore((state) => state.state)
-  const { trader, resetTrader } = useQuickViewTraderStore()
 
   const { events } = useSystemConfigContext()
   const availableEvents = events?.filter((event) => event.status !== TradingEventStatusEnum.ENDED)
@@ -48,6 +48,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
       <Flex flexDirection="column" width="100vw" height="100vh" margin="0px auto" maxHeight="100%">
         {/* {!isValidFees && <WarningBetaVersion />} */}
         <Navbar height={NAVBAR_HEIGHT} />
+        <LiteWalletNotice />
         <Box id={ELEMENT_IDS.APP_MAIN_WRAPPER} width="100%" flex="1" sx={{ position: 'relative', overflowY: 'auto' }}>
           {children}
           <FavoriteNoteTooltip />
@@ -56,24 +57,17 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
         <Footer height={FOOTER_HEIGHT} />
       </Flex>
       <SubscriptionExpiredWarning />
+
       {restrictState && <SubscriptionRestrictModal />}
       {dialog && <DialogContent data={dialog} />}
       {!!availableEvents?.length && <Notification />}
-      {trader && (
-        <TraderDetailsDrawer
-          onDismiss={() => {
-            resetTrader()
-          }}
-          protocol={trader.protocol}
-          address={trader.address}
-          type={trader.type}
-        />
-      )}
 
+      <TraderDetailsDrawer />
       <InitTraderCopying />
       <InitVaultCopying />
       <InitTraderFavorites />
       <PollingUsdPrice />
+      <OnboardingModal />
     </>
   )
 }

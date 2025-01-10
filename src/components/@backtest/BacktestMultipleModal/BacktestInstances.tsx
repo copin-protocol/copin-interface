@@ -34,7 +34,7 @@ export default function BacktestInstances() {
 
   return (
     <RcDrawer open={isFocusBacktest} placement="bottom" height="calc(100vh - 80px)">
-      <Flex bg="neutral7" height="100%" flexDirection="column">
+      <Flex height="100%" flexDirection="column">
         {/* Header */}
         <Flex
           className="backtest_drawer_header"
@@ -47,7 +47,7 @@ export default function BacktestInstances() {
             pb: 0,
           }}
         >
-          <Box sx={{ flex: 1 }}>
+          <Box sx={{ flex: '1' }}>
             <TabHeader />
           </Box>
           <Button mb={3} variant="outline" onClick={handleClickReset} sx={{ height: 24, py: 0, px: 1 }}>
@@ -74,7 +74,7 @@ export default function BacktestInstances() {
             {!currentBacktestInstanceId ? (
               <HomeSelectedTable scrollRef={scrollRef} />
             ) : (
-              <SettingsAndResult data={currentBacktestInstance} />
+              <SettingsAndResult data={currentBacktestInstance} isModalOpen={isFocusBacktest} />
             )}
           </Box>
         </Box>

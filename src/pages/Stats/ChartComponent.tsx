@@ -485,7 +485,7 @@ function ChartComponentWrapper({
               fill: 'neutral3',
             },
           },
-          fontSize: isMobile ? 12 : 16,
+          fontSize: 12,
         }}
       >
         <ResponsiveContainer minHeight={CHART_MIN_HEIGHT}>

@@ -7,7 +7,7 @@ import { Box } from 'theme/base'
 const Distributions = () => {
   return (
     <Box height="fit-content" px={12} py={16}>
-      <SectionTitle icon={<ChartPieSlice size={24} />} title="Distributions" />
+      <SectionTitle icon={ChartPieSlice} title="Distributions" />
     </Box>
   )
 }

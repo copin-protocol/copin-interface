@@ -397,7 +397,7 @@ function DailyOrdersComponent() {
             height: 48,
             alignItems: 'center',
             gap: 3,
-            px: 3,
+            pl: 3,
             justifyContent: 'space-between',
             width: '100%',
             borderBottom: 'small',
@@ -405,8 +405,8 @@ function DailyOrdersComponent() {
           }}
         >
           <Flex sx={{ alignItems: 'center', gap: 2, flexWrap: 'nowrap', flex: '1 0 0', overflow: 'auto' }}>
-            <Type.Caption pr={1} flexShrink={0}>
-              Filter:
+            <Type.Caption pr={1} flexShrink={0} color="neutral2">
+              FILTER:
             </Type.Caption>
             <FilterPairTag pairs={pairs} onClear={() => changePairs(undefined)} />
             <FilterOrderActionTag />
@@ -442,7 +442,9 @@ function DailyOrdersComponent() {
               </Flex>
             </Flex>
           </Flex>
-          <FilterProtocols />
+          <Box px={2}>
+            <FilterProtocols />
+          </Box>
         </Flex>
       )}
       <Box

@@ -7,7 +7,7 @@ import OutsideClickHandler from 'react-outside-click-handler'
 import styled from 'styled-components/macro'
 import { GridProps, LayoutProps } from 'styled-system'
 
-import { Button } from 'theme/Buttons'
+import { Button, ButtonVariant } from 'theme/Buttons'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { BoxProps, Colors } from 'theme/types'
 import { FONT_FAMILY } from 'utils/config/constants'
@@ -22,6 +22,7 @@ type DropdownProps = {
   upIcon?: ReactNode
   downIcon?: ReactNode
   menuSx?: any
+  inline?: boolean
   disabled?: boolean
   hasArrow?: boolean
   hoveringMode?: boolean
@@ -29,7 +30,7 @@ type DropdownProps = {
   button?: any
   sx?: SystemStyleObject & GridProps
   buttonSx?: SystemStyleObject & GridProps
-  buttonVariant?: string
+  buttonVariant?: ButtonVariant
   placement?: 'bottom' | 'top' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
   handleScroll?: (e: any) => void
   onSubmit?: () => void
@@ -43,26 +44,17 @@ const ToggleButton = styled(Button)(({ sx }: { sx: SystemStyleObject & GridProps
   css({
     display: 'flex',
     alignItems: 'center',
-    fontWeight: 'inherit',
+    fontWeight: 'normal',
+    '& > *': {
+      color: 'inherit',
+    },
     // bg: 'transparent',
     // border: 'normal',
-    border: 'small',
-    borderColor: 'neutral4',
-    color: 'neutral1',
+    // border: 'small',
+    // borderColor: 'neutral4',
     py: '6px',
     px: '14px',
     lineHeight: 'inherit',
-    borderRadius: 'sm',
-    '&:hover:not([disabled])': {
-      borderColor: 'neutral3',
-      color: 'neutral2',
-    },
-    '&[disabled]': {
-      bg: 'transparent !important',
-      borderColor: 'neutral2',
-      color: 'neutral4',
-      cursor: 'not-allowed',
-    },
     ...sx,
   })
 )
@@ -86,6 +78,7 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
   children,
   menu,
   disabled,
+  inline = false,
   hoveringMode = false,
   hasArrow = true,
   dismissible = true,
@@ -96,8 +89,8 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
   menuSx = {},
   buttonSx = {},
   buttonVariant = 'outline',
-  iconColor = 'neutral2',
-  iconSize = 16,
+  iconColor = 'neutral1',
+  iconSize = 12,
   upIcon = <CaretUp weight="bold" size={iconSize} />,
   downIcon = <CaretDown weight="bold" size={iconSize} />,
   menuPosition = 'bottom',
@@ -184,13 +177,14 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
           }}
           width={width}
           sx={{
-            borderRadius: 'sm',
+            borderRadius: 'xs',
+            ...(inline ? { p: 0 } : {}),
             ...buttonSx,
           }}
         >
-          <Type.CaptionBold flex="1 1 auto" textAlign="left">
+          <Type.Caption flex="1 1 auto" textAlign="left">
             {children}
-          </Type.CaptionBold>
+          </Type.Caption>
           {hasArrow && (
             <IconBox className="icon_dropdown" color={iconColor} ml={1} icon={showing ? upIcon : downIcon} />
           )}
@@ -204,7 +198,7 @@ export const DropdownItem = styled(Button)<{ isActive?: boolean }>((props) =>
   css({
     maxWidth: '100%',
     height: 'auto',
-    py: '6px',
+    py: '4px',
     px: 12,
     width: '100%',
     textAlign: 'left',

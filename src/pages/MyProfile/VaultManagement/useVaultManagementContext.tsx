@@ -314,7 +314,6 @@ export function VaultManagementProvider({ children }: { children: ReactNode }) {
       },
     }
   )
-  console.log('onchainPositions', onchainPositions)
 
   const _queryParams: GetMyPositionsParams = {
     limit: 500,

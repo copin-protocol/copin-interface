@@ -33,17 +33,19 @@ export default function CopyPositionsListView({
   isLoading,
   onClosePositionSuccess,
   noDataMessage,
+  layoutType = 'normal',
 }: {
   data: CopyPositionData[] | undefined
   isLoading: boolean
   onClosePositionSuccess: () => void
   noDataMessage?: ReactNode
+  layoutType?: 'normal' | 'lite'
 }) {
   if (isLoading) return <Loading />
   if (!isLoading && !data?.length) return <NoDataFound message={noDataMessage} />
   return (
     <CopyPositionsContainer onClosePositionSuccess={onClosePositionSuccess}>
-      <ListForm data={data} />
+      <ListForm data={data} layoutType={layoutType} />
     </CopyPositionsContainer>
   )
 }
@@ -51,9 +53,11 @@ export default function CopyPositionsListView({
 export function ListForm({
   data,
   externalSource,
+  layoutType = 'normal',
 }: {
   data: CopyPositionData[] | undefined
   externalSource?: ExternalSourceCopyPositions
+  layoutType?: 'normal' | 'lite'
 }) {
   return (
     <Flex py={2} sx={{ width: '100%', height: '100%', overflow: 'hidden auto', flexDirection: 'column', gap: 2 }}>
@@ -81,13 +85,15 @@ export function ListForm({
                 label={<Trans>Trader</Trans>}
                 value={renderTrader(positionData.copyAccount, positionData.protocol)}
               />
-              <ListHistoryRow
-                label={<Trans>Copy Wallet</Trans>}
-                value={renderCopyWallet(positionData, undefined, externalSource)}
-              />
+              {layoutType === 'normal' && (
+                <ListHistoryRow
+                  label={<Trans>Copy Wallet</Trans>}
+                  value={renderCopyWallet(positionData, undefined, externalSource)}
+                />
+              )}
               <ListHistoryRow
                 label={<Trans>Source Position</Trans>}
-                value={renderSource(positionData, undefined, externalSource, true)}
+                value={<Flex>{renderSource(positionData, undefined, externalSource, true)}</Flex>}
               />
               <ListHistoryRow label={<Trans>Entry</Trans>} value={renderEntry(positionData)} />
               <ListHistoryRow label={<Trans>Size</Trans>} value={renderSizeMobile(positionData)} />

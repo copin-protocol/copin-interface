@@ -157,7 +157,6 @@ export default function CopyVaultDrawer({
       isOpen={isOpen}
       onDismiss={onClose}
       mode="bottom"
-      background="neutral5"
     >
       <Box sx={{ position: 'relative', width: '100%', mx: 'auto' }}>
         {isNewTab && (
@@ -171,7 +170,7 @@ export default function CopyVaultDrawer({
               protocol,
               account,
             }}
-            isVault
+            formTypes={['vault']}
           />
         )}
         {isCloneTab && !!copies && (

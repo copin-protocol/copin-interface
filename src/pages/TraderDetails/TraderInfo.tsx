@@ -1,4 +1,5 @@
 import { ArrowSquareOut } from '@phosphor-icons/react'
+import { HTMLAttributeAnchorTarget } from 'react'
 import { Link } from 'react-router-dom'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
@@ -28,11 +29,13 @@ const TraderInfo = ({
   protocol,
   timeOption,
   traderStats,
+  target,
 }: {
   address: string
   protocol: ProtocolEnum
   timeOption: TimeFilterProps
   traderStats: (TraderData | undefined)[] | undefined
+  target?: HTMLAttributeAnchorTarget
 }) => {
   const { copyWallets, vaultWallets } = useCopyWalletContext()
   const { isCopying, traderCopying } = useTraderCopying(address, protocol)
@@ -50,20 +53,22 @@ const TraderInfo = ({
           as={Link}
           to={generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } })}
           onClick={(e: any) => e.stopPropagation()}
+          target={target}
         >
           <AddressAvatar address={address} size={40} />
         </Box>
         <Box>
-          <Flex mb={{ _: 1, sm: 0 }} alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
+          <Flex mb={1} alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
             <Box
               as={Link}
               to={generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } })}
+              target={target}
             >
               <Type.LargeBold color="neutral1" lineHeight="20px" textAlign="left" fontSize={['16px', '18px']}>
                 {addressShorten(address, 3, 5)}
               </Type.LargeBold>
             </Box>
-            <FavoriteButton address={address} protocol={protocol} size={16} />
+            <FavoriteButton address={address} protocol={protocol} size={16} sx={{ mb: 0 }} />
             {isCopying && (
               <Box>
                 <Tag

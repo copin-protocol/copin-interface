@@ -14,8 +14,7 @@ import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { EXPLORER_PLATFORMS } from 'utils/config/platforms'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { ORDER_TYPE_TRANS } from 'utils/config/translations'
-import { addressShorten, formatNumber } from 'utils/helpers/format'
-import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+import { formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair, parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 
 export interface UserActivityTableProps {
@@ -26,7 +25,8 @@ export interface UserActivityTableProps {
 }
 
 export type CopySelection = {
-  id?: string
+  id: string | undefined
+  copyTradeId: string | undefined
 }
 
 export type ExternalSource = {
@@ -52,7 +52,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
   copy: (item) => (
     <Type.CaptionBold
       color="neutral1"
-      sx={{ width: 104, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: '1em' }}
+      sx={{ width: 96, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: '1em' }}
     >
       {item.copyTradeTitle}
     </Type.CaptionBold>
@@ -110,7 +110,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
       <Flex sx={{ alignItems: 'center', gap: 2 }}>
         <Type.Caption
           color="neutral1"
-          sx={{ maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+          sx={{ maxWidth: '122px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
         >
           {walletName}
         </Type.Caption>
@@ -154,7 +154,9 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
         <Type.Caption color="neutral3">-</Type.Caption>
         {item.copyPositionId && (
           <Type.Caption
-            onClick={() => externalSource?.handleSelectCopyItem({ id: item.copyPositionId })}
+            onClick={() =>
+              externalSource?.handleSelectCopyItem({ id: item.copyPositionId, copyTradeId: item.copyTradeId })
+            }
             color="primary1"
             sx={{ cursor: 'pointer', '&:hover': { color: 'primary2' } }}
           >
@@ -265,3 +267,14 @@ export const userActivityColumns: ColumnData<UserActivityData, ExternalSource>[]
     render: renderProps.status,
   },
 ]
+
+const liteUserActivityColumns = userActivityColumns.filter((v) => v.key !== 'copyWalletName')
+
+const mapping = {
+  lite: liteUserActivityColumns,
+  normal: userActivityColumns,
+}
+
+export function getUserActivityColumns(layoutType: 'normal' | 'lite') {
+  return mapping[layoutType]
+}

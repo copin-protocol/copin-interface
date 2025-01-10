@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { Funnel } from '@phosphor-icons/react'
 
 import { useDailyPositionsContext } from 'pages/DailyTrades/Positions/usePositionsProvider'
@@ -7,34 +6,27 @@ import Select from 'theme/Select'
 import { Box, Flex, IconBox } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
 
-export function PositionStatusFilterTitle() {
+export function PositionStatusFilterIcon() {
   const { status, changeStatus } = useDailyPositionsContext()
 
   return (
-    <Flex sx={{ width: '100%', justifyContent: 'start', alignItems: 'center', gap: 1, position: 'relative' }}>
-      <Box as="span">
-        <Trans>STATUS</Trans>
-      </Box>
-      <Dropdown
-        buttonSx={{ p: 0, border: 'none' }}
-        hasArrow={false}
-        menu={
-          <Flex sx={{ flexDirection: 'column', bg: 'neutral7' }}>
-            <PositionStatusFilter currentFilter={status} changeFilter={changeStatus} />
-          </Flex>
-        }
-      >
-        <IconBox
-          role="button"
-          icon={<Funnel size={16} weight={!!status ? 'fill' : 'regular'} />}
-          sx={{
-            transform: 'translateY(-1.5px)',
-            color: !!status ? 'neutral2' : 'neutral3',
-            '&:hover:': { color: 'neutral1' },
-          }}
-        />
-      </Dropdown>
-    </Flex>
+    <Dropdown
+      buttonVariant="ghostInactive"
+      inline
+      hasArrow={false}
+      menu={
+        <Flex sx={{ flexDirection: 'column', bg: 'neutral7' }}>
+          <PositionStatusFilter currentFilter={status} changeFilter={changeStatus} />
+        </Flex>
+      }
+    >
+      <IconBox
+        icon={<Funnel size={16} weight={!!status ? 'fill' : 'regular'} />}
+        sx={{
+          transform: 'translateY(-1.5px)',
+        }}
+      />
+    </Dropdown>
   )
 }
 export const POSITION_STATUS_OPTIONS = [

@@ -14,14 +14,17 @@ import ToastBody from 'components/@ui/ToastBody'
 import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade.d'
 import { TradingEventStatusEnum } from 'entities/event'
 import useBotAlertContext from 'hooks/features/useBotAlertProvider'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMyProfileStore from 'hooks/store/useMyProfile'
+import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DCP_SUPPORTED_PROTOCOLS } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeTypeEnum, EventTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { getErrorMessage } from 'utils/helpers/handleError'
 import { logEventCopyTrade } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
@@ -129,17 +132,27 @@ export default function CopyTraderDrawer({
 
   const { events } = useSystemConfigContext()
 
-  const newDefaultCopyExchange = useMemo(() => {
+  const { embeddedWallet, smartWallets } = useCopyWalletContext()
+  const _defaultFormValues = useMemo(() => {
+    let exchange = defaultCopyTradeFormValues.exchange
+    let copyWalletId = defaultCopyTradeFormValues.copyWalletId
+    if (embeddedWallet?.id) {
+      copyWalletId = embeddedWallet.id
+      exchange = CopyTradePlatformEnum.HYPERLIQUID
+    }
+
     const gnsEvent = events?.find((e) => e.type === EventTypeEnum.GNS && e.status !== TradingEventStatusEnum.ENDED)
     if (!!gnsEvent && DCP_SUPPORTED_PROTOCOLS.includes(protocol)) {
-      return CopyTradePlatformEnum.GNS_V8
+      exchange = CopyTradePlatformEnum.GNS_V8
+      copyWalletId = smartWallets?.find((w) => w.exchange === exchange)?.id ?? ''
     }
-    return undefined
-  }, [])
+    return { ...defaultCopyTradeFormValues, protocol, account, exchange, copyWalletId }
+  }, [defaultCopyTradeFormValues, embeddedWallet, events, protocol, account])
 
   return (
     <Modal
       dismissable={false}
+      zIndex={Z_INDEX.TOASTIFY}
       maxWidth="520px"
       {...(modalStyles || {})}
       title={
@@ -176,23 +189,20 @@ export default function CopyTraderDrawer({
                   role="button"
                 />
               )}
-              <Box
-                sx={{
-                  ...(isCloneTab
-                    ? { fontSize: '24px', lineHeight: '24px', fontWeight: 700 }
-                    : {
-                        fontSize: '14px',
-                        fontWeight: 400,
-                        lineHeight: '14px',
-                        cursor: 'pointer',
-                        color: 'primary1',
-                        '&:hover': { color: 'primary2' },
-                      }),
-                }}
-                onClick={isCloneTab ? undefined : () => handleTab(TabKeyEnum.Clone)}
-              >
-                <Trans>Clone Settings</Trans>
-              </Box>
+              {isCloneTab ? (
+                <Type.H5>
+                  <Trans>Clone Settings</Trans>
+                </Type.H5>
+              ) : (
+                <Button
+                  sx={{ px: 0 }}
+                  variant="ghostPrimary"
+                  type="button"
+                  onClick={isCloneTab ? undefined : () => handleTab(TabKeyEnum.Clone)}
+                >
+                  <Trans>Clone Settings</Trans>
+                </Button>
+              )}
             </Flex>
           )}
         </Flex>
@@ -201,20 +211,10 @@ export default function CopyTraderDrawer({
       isOpen={isOpen}
       onDismiss={onClose}
       mode="bottom"
-      background="neutral5"
     >
       <Box sx={{ position: 'relative', width: '100%', mx: 'auto' }}>
         {isNewTab && (
-          <CopyTraderForm
-            onSubmit={onSubmit}
-            isSubmitting={isLoading}
-            defaultFormValues={{
-              ...defaultCopyTradeFormValues,
-              ...(!!newDefaultCopyExchange ? { exchange: newDefaultCopyExchange } : {}),
-              protocol,
-              account,
-            }}
-          />
+          <CopyTraderForm onSubmit={onSubmit} isSubmitting={isLoading} defaultFormValues={_defaultFormValues} />
         )}
         {isCloneTab && !!copies && (
           <>

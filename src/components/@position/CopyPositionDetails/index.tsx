@@ -16,6 +16,8 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { renderCopyEntry } from 'components/@widgets/renderProps'
 import { CopyPositionData } from 'entities/copyTrade'
+import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
+import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
@@ -38,7 +40,13 @@ import CopyPositionHistories from './CopyPositionHistories'
 import ListCopyOrderTable from './ListCopyOrderTable'
 import UnlinkPosition from './UnlinkPosition'
 
-export default function CopyPositionDetails({ id }: { id: string | undefined }) {
+export default function CopyPositionDetails({
+  id,
+  copyTradeId,
+}: {
+  id: string | undefined
+  copyTradeId: string | undefined
+}) {
   const [isTradingChart, setIsTradingChart] = useState<boolean | undefined>()
   const refetchQueries = useRefetchQueries()
   const {
@@ -146,13 +154,16 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
   )
 
   const [currentTab, setCurrentTab] = useState<string>(TabKeyEnum.ORDER)
-  // console.log('copyTradeDetails', copyTradeDetails)
 
   const onForceReload = () => {
     reloadPosition()
     reloadOrders()
     refetchQueries([QUERY_KEYS.GET_MY_COPY_POSITIONS, QUERY_KEYS.GET_MY_COPY_POSITION_DETAIL])
   }
+  const { embeddedWallets } = useCopyWalletContext()
+  const { allCopyTrades } = useAllCopyTrades()
+  const disabledUnlinkButton =
+    allCopyTrades?.find((v) => v.id === copyTradeId)?.copyWalletId === embeddedWallets?.[0]?.id
 
   return (
     <>
@@ -161,10 +172,11 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
       {data && (
         <Flex sx={{ width: '100%', height: '100%', position: 'relative', flexDirection: 'column' }}>
           <Flex p={3} alignItems="center" justifyContent="space-between">
-            <Type.BodyBold>
+            <Type.H5>
               <Trans>Copy Position Details</Trans>
-            </Type.BodyBold>
-            {data.status === PositionStatusEnum.OPEN &&
+            </Type.H5>
+            {!disabledUnlinkButton &&
+              data.status === PositionStatusEnum.OPEN &&
               copyTradeDetails?.exchange !== CopyTradePlatformEnum.SYNTHETIX_V2 &&
               copyTradeDetails?.exchange !== CopyTradePlatformEnum.GNS_V8 && (
                 <UnlinkPosition copyPosition={data} onSuccess={onForceReload} mr={40} />
@@ -389,25 +401,8 @@ export default function CopyPositionDetails({ id }: { id: string | undefined }) 
                 width: '100%',
                 height: '100%',
               }}
-              headerSx={{
-                mb: 1,
-                gap: 0,
-                px: [0, 0, 3, 3],
-                width: '100%',
-                borderBottom: 'small',
-                borderColor: 'neutral4',
-              }}
               tabItemSx={{
-                pt: 0,
-                width: ['50%', 155],
-                borderBottom: 'small',
-              }}
-              tabPanelSx={{
-                position: 'relative',
-                width: '100%',
-                height: '100%',
-                overflow: 'auto',
-                pb: 4,
+                px: 3,
               }}
             >
               <TabPane tab={<Trans>Orders</Trans>} key={TabKeyEnum.ORDER}>

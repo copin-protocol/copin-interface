@@ -11,7 +11,7 @@ export default function TermsAndConditions({ text: Text = Type.Body }: { text?: 
   return (
     <Box
       sx={{
-        p: 24,
+        p: [16, 16, 24],
         borderRadius: '4px',
         border: 'small',
         borderColor: 'neutral4',
@@ -43,12 +43,12 @@ export default function TermsAndConditions({ text: Text = Type.Body }: { text?: 
         >
           <Box sx={{ width: '4px', height: '24px', bg: 'primary1' }} />
           <Box as="span">
-            <Trans>Terms and conditions</Trans>
+            <Trans>Terms And Conditions</Trans>
           </Box>
         </Type.BodyBold>
         <Flex as="a" href={LINKS.subscriptionDocument} target="_blank" sx={{ gap: 2 }}>
           <Type.Body>
-            <Trans>Read More</Trans>
+            <Trans>READ MORE</Trans>
           </Type.Body>
           <IconBox color="inherit" icon={<ArrowSquareOut size={20} />} />
         </Flex>
@@ -81,7 +81,7 @@ const termConfigs = [
     </Trans>{' '}
     <a href={LINKS.copinEliteClub} target="_blank" rel="noreferrer">
       <Box alignItems="center" sx={{ gap: 1, display: 'inline-flex' }}>
-        <Trans>More.</Trans>
+        <Trans>More</Trans>
         <ArrowSquareOut />
       </Box>
     </a>

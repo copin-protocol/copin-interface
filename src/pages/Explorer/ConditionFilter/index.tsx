@@ -4,7 +4,8 @@ import { useMemo, useState } from 'react'
 
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { TabConfig, TabHeader } from 'theme/Tab'
+import { Box, Flex, IconBox } from 'theme/base'
 
 import DefaultFilterForm from './DefaultFilterForm'
 // import FilterSuggestion from './FilterSuggestion'
@@ -44,59 +45,28 @@ export default function ConditionFilter({
 
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>
-      <Flex
-        sx={{
-          alignItems: 'center',
-          gap: 4,
-          px: [2, 2, 2, 3],
-          pt: [2, 2, 2, 3],
-          pb: [2, 2, 2, 12],
-          borderBottom: 'small',
-          borderBottomColor: 'neutral5',
-          color: 'neutral2',
-          cursor: onClickTitle ? 'pointer' : 'default',
-        }}
-        onClick={onClickTitle}
-      >
-        <Box
-          alignItems="center"
+      <Box onClick={() => onClickTitle?.()}>
+        <TabHeader
+          configs={[
+            {
+              key: FilterTabEnum.DEFAULT as unknown as string,
+              name: <Trans>DEFAULT FILTER</Trans>,
+              icon: <Funnel size={20} />,
+            },
+            {
+              key: FilterTabEnum.RANKING as unknown as string,
+              name: <Trans>PERCENTILE FILTER</Trans>,
+              icon: <ChartBar size={20} />,
+            },
+          ]}
+          isActiveFn={(config: TabConfig) => config.key === (filterTab as unknown as string)}
+          onClickItem={(key: string) => setFilterTab(key as unknown as FilterTabEnum)}
           sx={{
-            gap: 2,
-            color: [
-              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.DEFAULT ? 'neutral1' : 'neutral3',
-              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.DEFAULT ? 'neutral1' : 'neutral3',
-              filterTab === FilterTabEnum.DEFAULT ? 'neutral1' : 'neutral3',
-            ],
+            borderBottom: 'small',
+            borderBottomColor: 'neutral5',
           }}
-          onClick={() => setFilterTab(FilterTabEnum.DEFAULT)}
-          role="button"
-          display={{ _: tab !== FilterTabEnum.DEFAULT && !filtersExpanded ? 'none' : 'flex', md: 'flex' }}
-        >
-          <Funnel size={20} />
-          <Type.BodyBold fontSize={[14, 14, 16]}>
-            <Trans>Default Filter</Trans>
-          </Type.BodyBold>
-        </Box>
-        <Box
-          alignItems="center"
-          sx={{
-            gap: 2,
-            color: [
-              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.RANKING ? 'neutral1' : 'neutral3',
-              !filtersExpanded ? 'neutral1' : filterTab === FilterTabEnum.RANKING ? 'neutral1' : 'neutral3',
-              filterTab === FilterTabEnum.RANKING ? 'neutral1' : 'neutral3',
-            ],
-          }}
-          onClick={() => setFilterTab(FilterTabEnum.RANKING)}
-          role="button"
-          display={{ _: tab !== FilterTabEnum.RANKING && !filtersExpanded ? 'none' : 'flex', md: 'flex' }}
-        >
-          <ChartBar size={20} />
-          <Type.BodyBold fontSize={[14, 14, 16]}>
-            <Trans>Percentile Filter</Trans>
-          </Type.BodyBold>
-        </Box>
-      </Flex>
+        />
+      </Box>
 
       {/* {filterTab === FilterTabEnum.DEFAULT ? (
         <Box px={3}>

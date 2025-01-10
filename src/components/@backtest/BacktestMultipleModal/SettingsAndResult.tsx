@@ -18,7 +18,7 @@ import BacktestMultipleResultTable, { TableResultData } from '../BacktestMultipl
 import BacktestShareButton from '../BacktestShareButton'
 import SettingTags from './SettingTags'
 
-export default function SettingsAndResult({ data }: { data: TestInstanceData }) {
+export default function SettingsAndResult({ data, isModalOpen }: { data: TestInstanceData; isModalOpen?: boolean }) {
   const { myProfile } = useMyProfile()
   const { protocol } = useProtocolStore()
   const { currentHomeInstanceId, getCommonData, updateInstance, updateHomeInstance } = useSelectBacktestTraders()
@@ -112,6 +112,7 @@ export default function SettingsAndResult({ data }: { data: TestInstanceData }) 
           <Box sx={{ py: 4 }}>
             <Box sx={{ maxWidth: 700, mx: 'auto' }}>
               <BacktestForm
+                isModalOpen={isModalOpen}
                 protocol={protocol}
                 onSubmit={handleSubmit}
                 isSubmitting={false}

@@ -18,10 +18,10 @@ const UserLogItem = ({ data, ...props }: { data: UserLogData } & LayoutProps & S
       flexDirection={['column', 'column', 'row', 'row']}
       alignItems="flex-start"
       flexWrap="wrap"
-      sx={{ gap: [2, 2, 3, 3], borderBottom: 'small', borderColor: 'neutral4' }}
+      sx={{ gap: [2, 2, 3, 3], borderBottom: 'small', borderColor: 'neutral5' }}
       {...props}
     >
-      <Type.Caption color="neutral3" width={110}>
+      <Type.Caption color="neutral3" width={130}>
         <RelativeTimeText date={data.createdAt} />
       </Type.Caption>
       <UserLogActivity username={data.username} label={data.label} action={data.action} type={data.dataType} />

@@ -34,7 +34,7 @@ const NetworkPicker = () => {
   }, [setChain, settingChain])
   const { sm } = useResponsive()
   return (
-    <Dropdown menu={renderChains()} buttonVariant="ghost" buttonSx={{ p: 0 }} menuSx={{ width: 200 }} hasArrow={false}>
+    <Dropdown menu={renderChains()} buttonVariant="ghost" inline menuSx={{ width: 200 }} hasArrow={false}>
       <ChainLogo chain={currentChain} width={32} height={32} />
     </Dropdown>
   )

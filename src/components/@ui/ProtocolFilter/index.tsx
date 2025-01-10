@@ -24,12 +24,12 @@ export function ProtocolFilter({ menuSx = {}, placement = 'bottomRight', ...prop
   const { xl } = useResponsive()
   const [visible, setVisible] = useState(false)
   return (
-    <Flex alignItems="start" sx={{ gap: 1, pr: 3 }}>
+    <Flex alignItems="start" sx={{ gap: 1, pr: [0, 3] }}>
       <Dropdown
+        inline
         menu={<ProtocolSelection {...props} handleToggleDropdown={() => setVisible(!visible)} />}
         placement={xl ? undefined : placement}
         buttonVariant="ghost"
-        buttonSx={{ borderRadius: 0, border: 'none', p: 0, color: 'primary1' }}
         menuSx={{
           width: menuSx.width ? menuSx.width : ['90vw', '95vw', '95vw'],
           maxWidth: menuSx.maxWidth ? menuSx.maxWidth : '900px',

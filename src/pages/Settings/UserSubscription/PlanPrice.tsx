@@ -10,7 +10,7 @@ export default function PlanPrice({ planPrice }: { planPrice: BigNumber | undefi
     <Type.H3>
       {price ? (
         <>
-          <Box as="span" sx={{ fontSize: '13px', fontWeight: 400 }} color="neutral1">
+          <Box as="span" sx={{ fontSize: '12px', fontWeight: 400 }} color="neutral1">
             <Trans>Only</Trans>
           </Box>{' '}
           <Box as="span" color="orange1">
@@ -19,7 +19,7 @@ export default function PlanPrice({ planPrice }: { planPrice: BigNumber | undefi
           <Box as="span" sx={{ fontSize: '24px', ml: '0.3ch' }} color="orange1">
             ETH
           </Box>
-          <Box as="span" sx={{ fontSize: '13px', fontWeight: 400 }} color="neutral1">
+          <Box as="span" sx={{ fontSize: '12px', fontWeight: 400 }} color="neutral1">
             {' '}
             / 30days
           </Box>

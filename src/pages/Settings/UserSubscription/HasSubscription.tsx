@@ -71,13 +71,13 @@ export function PlanDetails({ plan }: { plan: SubscriptionPlanEnum }) {
   let Icon: any = Fragment
   switch (plan) {
     case SubscriptionPlanEnum.PREMIUM:
-      label = 'Premium Plan'
+      label = 'PREMIUM PLAN'
       description = 'The NFT subscription premium plan is a new way to provide premium features and benefits to users'
       Icon = CrowIconGold
       color = 'orange1'
       break
     case SubscriptionPlanEnum.VIP:
-      label = 'VIP Plan'
+      label = 'VIP PLAN'
       Icon = VipPlanIcon1
       description = 'The NFT subscription VIP plan is a new way to provide premium features and benefits to users'
       color = 'violet'
@@ -91,8 +91,13 @@ export function PlanDetails({ plan }: { plan: SubscriptionPlanEnum }) {
           <Icon />
           <Type.LargeBold color={color}>{label}</Type.LargeBold>
           {plan !== SubscriptionPlanEnum.VIP && (
-            <Button as={Link} to={ROUTES.SUBSCRIPTION.path} variant="ghostPrimary" sx={{ p: 0, fontWeight: 500 }}>
-              Upgrade
+            <Button
+              as={Link}
+              to={ROUTES.SUBSCRIPTION.path}
+              variant="ghostPrimary"
+              sx={{ p: 0, fontWeight: 500, ml: 2 }}
+            >
+              UPGRADE
             </Button>
           )}
         </Flex>

@@ -84,10 +84,12 @@ export default function MarketGroup({
                 wordBreak: 'unset',
                 textAlign: 'center',
                 overflowWrap: 'unset',
+                height: `${size}px`,
+                lineHeight: `${size}px`,
               }}
               fontSize="11px"
               sx={{
-                ...(numberOfAddress - limit > 99 ? { fontSize: '10px', lineHeight: '12px' } : {}),
+                ...(numberOfAddress - limit > 99 ? { fontSize: '10px' } : {}),
               }}
             >{`+${numberOfAddress - limit}`}</Type.Caption>
           </Flex>

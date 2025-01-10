@@ -14,14 +14,15 @@ export default function ReferralLinks({ referralCode }: { referralCode: string }
         width: '100%',
         backgroundImage: 'linear-gradient(90deg, #A9AFFF 0%, #FFAEFF 100%)',
         p: '1px',
+        mb: 3,
       }}
     >
       <Box sx={{ bg: 'neutral6', p: 12 }}>
-        <Item label={'Referral ID'} value={referralCode} valueText={referralCode} />
+        <Item label={'REFERRAL ID'} value={referralCode} valueText={referralCode} />
 
         <Box mb={12} />
 
-        <Item label={'Referral Link'} value={refLink} valueText={addressShorten(refLink, 10, 15)} />
+        <Item label={'REFERRAL LINK'} value={refLink} valueText={addressShorten(refLink, 10, 15)} />
       </Box>
     </Box>
   )
@@ -47,7 +48,7 @@ function Item({
     >
       <Type.Caption color="neutral3">{label}</Type.Caption>
       <Flex sx={{ alignItems: 'center', gap: 2 }}>
-        <Type.Body>{valueText}</Type.Body>
+        <Type.Caption>{valueText}</Type.Caption>
         {additionComponent}
         <CopyButton
           variant="ghost"

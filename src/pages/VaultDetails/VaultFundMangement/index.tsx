@@ -2,10 +2,9 @@ import { Trans } from '@lingui/macro'
 import { ArrowSquareDownLeft, ArrowSquareUpRight, Cardholder } from '@phosphor-icons/react'
 import React, { useState } from 'react'
 
-import LabelWithIcon from 'components/@ui/LabelWithIcon'
+import SectionTitle from 'components/@ui/SectionTitle'
 import useVaultDetailsContext from 'hooks/features/useVaultDetailsProvider'
-import Tabs, { TabPane } from 'theme/Tab'
-import IconTabItem from 'theme/Tab/IconTabItem'
+import { TabHeader } from 'theme/Tab'
 import { Box } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 
@@ -28,44 +27,27 @@ export default function VaultFundManagement({ vaultAddress }: { vaultAddress: st
   return (
     <>
       <Box p={3}>
-        <LabelWithIcon text={<Trans>Fund Management</Trans>} icon={<Cardholder size={24} />} sx={{ mb: 3 }} />
-        <Tabs
-          defaultActiveKey={tab}
-          onChange={(tab) => setTab(tab)}
-          sx={{
-            width: '100%',
-          }}
-          headerSx={{ marginBottom: 0, gap: 0, width: '100%', mb: 3, px: 0 }}
-          tabItemSx={{
-            pt: 0,
-            px: 24,
-          }}
-        >
-          <TabPane
-            key={VaultFundTab.Deposit}
-            tab={
-              <IconTabItem
-                icon={<ArrowSquareDownLeft size={24} weight={tab === VaultFundTab.Deposit ? 'fill' : 'regular'} />}
-                text={<Trans>Deposit</Trans>}
-                active={tab === VaultFundTab.Deposit}
-              />
-            }
-          >
-            <></>
-          </TabPane>
-          <TabPane
-            key={VaultFundTab.Withdraw}
-            tab={
-              <IconTabItem
-                icon={<ArrowSquareUpRight size={24} weight={tab === VaultFundTab.Withdraw ? 'fill' : 'regular'} />}
-                text={<Trans>Withdraw</Trans>}
-                active={tab === VaultFundTab.Withdraw}
-              />
-            }
-          >
-            <></>
-          </TabPane>
-        </Tabs>
+        <SectionTitle title={<Trans>FUND MANAGEMENT</Trans>} icon={Cardholder} />
+        <TabHeader
+          configs={[
+            {
+              name: <Trans>DEPOSIT</Trans>,
+              key: VaultFundTab.Deposit,
+              icon: <ArrowSquareDownLeft size={20} />,
+            },
+            {
+              name: <Trans>WITHDRAW</Trans>,
+              key: VaultFundTab.Withdraw,
+              icon: <ArrowSquareUpRight size={20} />,
+            },
+          ]}
+          hasLine
+          isActiveFn={(config) => config.key === tab}
+          onClickItem={(key) => setTab(key as VaultFundTab)}
+          fullWidth
+          size="md"
+          sx={{ mb: 3 }}
+        />
         {tab === VaultFundTab.Deposit && (
           <VaultDeposit smartWallet={vaultAddress} platform={CopyTradePlatformEnum.GNS_V8} onSuccess={onSuccess} />
         )}

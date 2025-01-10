@@ -63,12 +63,7 @@ export default function UncontrolledInputSearch({
       placeholder={placeHolder}
       iconSize={16}
       sx={{
-        p: '4px 8px',
         flex: 1,
-        border: 'none',
-        bg: 'neutral5',
-        '& input': { fontSize: '16px !important' },
-        '&:hover:not([disabled]), &:focus:not([disabled]), &:focus-within:not([disabled])': { bg: 'neutral5' },
         ...(showClearSearchButtonRef.current
           ? {
               '& button.search-btn--clear': {

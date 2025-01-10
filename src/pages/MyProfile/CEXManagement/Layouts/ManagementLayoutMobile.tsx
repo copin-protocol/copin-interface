@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
-import { Box, Flex, Type } from 'theme/base'
+import { TabConfig, TabHeader } from 'theme/Tab'
+import { Box, Flex } from 'theme/base'
 
 import { MainLayoutComponents } from './types'
 
@@ -11,28 +12,11 @@ enum TabEnum {
   POSITIONS = 'positions',
   CHART = 'chart',
 }
-const tabConfigs = [
-  { id: TabEnum.SETTINGS, title: <Trans>Copies</Trans> },
-  { id: TabEnum.POSITIONS, title: <Trans>Opening Positions</Trans> },
-  { id: TabEnum.CHART, title: <Trans>Charts</Trans> },
+const tabConfigs: TabConfig[] = [
+  { key: TabEnum.SETTINGS, name: <Trans>COPIES</Trans> },
+  { key: TabEnum.POSITIONS, name: <Trans>OPENING POSITIONS</Trans> },
+  { key: TabEnum.CHART, name: <Trans>CHARTS</Trans> },
 ]
-
-const TabButton = ({
-  // icon: TabIcon,
-  title,
-  isActive,
-  onClick,
-}: {
-  // icon: Icon
-  title: ReactNode
-  isActive: boolean
-  onClick: () => void
-}) => (
-  <Flex role="button" onClick={onClick} width="fit-content" sx={{ gap: 2 }} justifyContent="center" alignItems="center">
-    {/* <IconBox color={isActive ? 'primary1' : 'neutral3'} icon={<TabIcon size={24} />}></IconBox> */}
-    <Type.BodyBold color={isActive ? 'neutral1' : 'neutral3'}>{title}</Type.BodyBold>
-  </Flex>
-)
 
 export default function ManagementLayoutMobile({
   balanceMenu,
@@ -46,7 +30,15 @@ export default function ManagementLayoutMobile({
       <Flex sx={{ height: '100%', width: '100%', flexDirection: 'column' }}>
         {balanceMenu}
         <Divider />
-        <Flex sx={{ px: 3, py: 2, gap: 3 }}>
+        <TabHeader
+          configs={tabConfigs}
+          isActiveFn={(config: TabConfig) => (config.key as TabEnum) === tab}
+          onClickItem={(key: string) => setTab(key as TabEnum)}
+          size="md"
+          hasLine={false}
+          fullWidth={false}
+        />
+        {/* <Flex sx={{ px: 3, py: 3, gap: 3 }}>
           {tabConfigs.map((configs) => (
             <TabButton
               key={configs.id}
@@ -55,7 +47,7 @@ export default function ManagementLayoutMobile({
               onClick={() => setTab(configs.id)}
             />
           ))}
-        </Flex>
+        </Flex> */}
         <Divider />
         <Box flex="1 0 0" overflow="hidden">
           {tab === TabEnum.SETTINGS && mainSection}

@@ -21,6 +21,7 @@ import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Type } from 'theme/base'
 import { HYPERLIQUID_BUILDER_CODE, HYPERLIQUID_BUILDER_MAX_FEES, LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { addressShorten } from 'utils/helpers/format'
 import { ARBITRUM_MAINNET } from 'utils/web3/chains'
 import { signTypedData } from 'utils/web3/wallet'
@@ -148,6 +149,7 @@ export default function CreateHyperliquidWalletModal({
       onDismiss={onDismiss}
       width="90vw"
       maxWidth="450px"
+      zIndex={Z_INDEX.TOASTIFY}
     >
       <Box variant="card" sx={{ backgroundColor: 'modalBG' }}>
         {isValid ? (

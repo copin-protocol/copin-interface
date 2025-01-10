@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { BellSimpleSlash } from '@phosphor-icons/react'
 
 import { AccountWithProtocol } from 'components/@ui/AccountWithProtocol'
 import { TraderAlertData } from 'entities/alert'
 import IconButton from 'theme/Buttons/IconButton'
-import AlertOffIcon from 'theme/Icons/AlerOffIcon'
 import { Flex, Type } from 'theme/base'
 import { formatLocalRelativeDate } from 'utils/helpers/format'
 
@@ -25,8 +25,8 @@ export default function DesktopItem({
         </Type.Caption>
       </Flex>
       <IconButton
-        variant="ghost"
-        icon={<AlertOffIcon color="red2" />}
+        variant="ghostDanger"
+        icon={<BellSimpleSlash size={20} />}
         sx={{ p: 0 }}
         size={32}
         isLoading={submitting}

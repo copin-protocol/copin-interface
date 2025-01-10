@@ -6,7 +6,7 @@ import BetaTag from 'components/@ui/BetaTag'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
-import { Box, Flex } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { generateExplorerRoute, generateLeaderboardRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
@@ -120,33 +120,33 @@ const baseNavConfigs = [
   {
     routeFactory: (configs: { protocol: ProtocolEnum; params?: any }) =>
       generateExplorerRoute({ params: configs.params }),
-    label: <Trans>Traders Explorer</Trans>,
+    label: <Trans>TRADER EXPLORER</Trans>,
     matchpath: ROUTES.ALL_TRADERS_EXPLORER.path,
   },
   {
     routeFactory: (configs: { params?: any }) => generateOIPositionsRoute({ params: configs.params }),
-    label: <Trans>Open Interest</Trans>,
+    label: <Trans>OPEN INTEREST</Trans>,
     matchpath: ROUTES.OPEN_INTEREST_POSITIONS.path,
   },
   {
     routeFactory: (configs: { protocol: ProtocolEnum }) => generateLeaderboardRoute({ protocol: configs.protocol }),
     matchpath: ROUTES.LEADERBOARD.path_prefix,
-    label: <Trans>Trader Board</Trans>,
+    label: <Trans>TRADER BOARD</Trans>,
   },
   {
     routeFactory: () => ROUTES.COPIER_RANKING.path,
     matchpath: ROUTES.COPIER_RANKING.path,
-    label: <Trans>Copier Ranking</Trans>,
+    label: <Trans>COPIER RANKING</Trans>,
   },
   {
     routeFactory: () => ROUTES.REFERRAL_MANAGEMENT.path,
     matchpath: ROUTES.REFERRAL_MANAGEMENT.path,
-    label: <Trans>Referral</Trans>,
+    label: <Trans>REFERRAL</Trans>,
   },
   {
     routeFactory: () => ROUTES.LIVE_TRADES.path,
     matchpath: ROUTES.LIVE_TRADES.path,
-    label: <Trans>Live Trades</Trans>,
+    label: <Trans>LIVE TRADES</Trans>,
   },
   {
     routeFactory: () => ROUTES.PERP_DEXS_EXPLORER.path,
@@ -154,7 +154,7 @@ const baseNavConfigs = [
     label: (
       <Flex sx={{ alignItems: 'center', gap: 1 }}>
         <Box as="span">
-          <Trans>Perp Explorer</Trans>
+          <Trans>PERP EXPLORER</Trans>
         </Box>
         <BetaTag />
       </Flex>
@@ -162,11 +162,12 @@ const baseNavConfigs = [
   },
 ]
 
-function NavLink(props: NavLinkProps & { matchpath?: string }) {
+export function NavLink(props: NavLinkProps & { matchpath?: string }) {
   return (
     <Link
-      className="navlink-default"
-      activeClassName="navlink-active"
+      {...props}
+      className={props.className ? `navlink-default ${props.className}` : 'navlink-default'}
+      activeClassName={props.className ? `navlink-active ${props.className}` : 'navlink-active'}
       isActive={(match, location) => {
         if (!match) {
           return false
@@ -179,7 +180,6 @@ function NavLink(props: NavLinkProps & { matchpath?: string }) {
           return true
         return false
       }}
-      {...props}
     >
       <Box as="span" sx={{ display: 'inline-flex', height: '100%', alignItems: 'center' }}>
         {props.children}
@@ -188,10 +188,10 @@ function NavLink(props: NavLinkProps & { matchpath?: string }) {
   )
 }
 
-const DesktopWrapper = styled(Box)`
+export const DesktopWrapper = styled(Box)`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 8px;
   position: relative;
   height: 100%;
   .navlink-default {
@@ -200,12 +200,13 @@ const DesktopWrapper = styled(Box)`
     justify-content: center;
     align-items: center;
     font-weight: 400;
-    font-size: 13px;
+    font-size: 12px;
     padding: 0 8px;
     color: ${({ theme }) => theme.colors.neutral1};
     border-bottom: 1px solid transparent;
     background-position: bottom;
     transition: 0.3s;
+    text-transform: uppercase;
   }
   .navlink-active {
     color: ${({ theme }) => theme.colors.primary1};
@@ -216,8 +217,23 @@ const DesktopWrapper = styled(Box)`
     background-position: bottom;
     border-bottom: 1px solid ${({ theme }) => theme.colors.primary1};
   }
+  .navlink-active.lite {
+    background: linear-gradient(0deg, rgba(2, 255, 232, 0.2) 0.16%, rgba(239, 198, 86, 0) 102.34%);
+  }
   .navlink-default:hover {
     color: ${({ theme }) => theme.colors.primary1};
+  }
+`
+
+export const LiteText = styled(Type.CaptionBold)`
+  background: linear-gradient(93.49deg, #ffc24b 22.88%, #02ffe8 73.32%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  transition: 0.3s;
+  &:hover {
+    filter: brightness(150%);
   }
 `
 
@@ -228,7 +244,7 @@ const MobileWrapper = styled(Box)`
   .navlink-default {
     display: block;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 12px;
     color: ${({ theme }) => theme.colors.neutral1};
   }
   .navlink-active {

@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { ArrowsIn, ArrowsOutSimple, Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useMemo, useState } from 'react'
@@ -6,7 +7,6 @@ import { useHistory } from 'react-router-dom'
 
 import { getOpeningPositionsApi } from 'apis/positionApis'
 import emptyBg from 'assets/images/opening_empty_bg.png'
-import emptySmallBg from 'assets/images/opening_emty_small.png'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import TraderPositionListView from 'components/@position/TraderPositionsListView'
 import {
@@ -18,16 +18,15 @@ import Divider from 'components/@ui/Divider'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { PositionData } from 'entities/trader'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
+import Badge from 'theme/Badge'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import Table from 'theme/Table'
 import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { pageToOffset } from 'utils/helpers/transform'
 
@@ -39,11 +38,11 @@ const emptyCss = {
 }
 
 const emptySmallCss = {
-  backgroundImage: `url(${emptySmallBg})`,
-  backgroundSize: '98%',
-  backgroundPosition: 'center center',
-  backgroundRepeat: 'no-repeat',
-  backgroundOrigin: 'content-box',
+  // backgroundImage: `url(${emptySmallBg})`,
+  // backgroundSize: '98%',
+  // backgroundPosition: 'center center',
+  // backgroundRepeat: 'no-repeat',
+  // backgroundOrigin: 'content-box',
 }
 
 export default function TraderOpeningPositionsTable({
@@ -145,15 +144,22 @@ export default function TraderOpeningPositionsTable({
       flexDirection="column"
       height="100%"
       sx={{
-        backgroundColor: !isDrawer && totalOpening ? 'neutral5' : 'neutral7',
+        backgroundColor: !isDrawer && totalOpening ? 'neutral5' : 'transparent',
         ...(totalOpening || isLoading ? {} : isDrawer ? emptySmallCss : emptyCss),
         pb: [0, 12],
       }}
     >
       <Flex px={2} pt={12} alignItems="center" justifyContent="space-between">
         <SectionTitle
-          icon={<Pulse size={24} />}
-          title={`Opening Positions${totalOpening ? ` (${formatNumber(totalOpening)})` : ''}`}
+          icon={Pulse}
+          title={
+            <Flex alignItems="center" sx={{ gap: 2 }}>
+              <Box as="span">
+                <Trans>OPENING POSITIONS</Trans>
+              </Box>
+              {totalOpening > 0 && <Badge count={totalOpening} />}
+            </Flex>
+          }
           suffix={
             toggleExpand && (
               <IconBox
@@ -210,7 +216,7 @@ export default function TraderOpeningPositionsTable({
               changeCurrentSort={changeCurrentSortExpanded}
               isLoading={isLoading}
               onClickRow={handleSelectItem}
-              renderRowBackground={() => (isDrawer ? themeColors.neutral7 : 'rgb(31, 34, 50)')}
+              renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
               scrollToTopDependencies={scrollToTopDependencies}
             />
           ) : (

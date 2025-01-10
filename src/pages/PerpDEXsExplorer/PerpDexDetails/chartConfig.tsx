@@ -254,27 +254,27 @@ export const ProfitLossTooltip = ({ payload }: TooltipProps) => {
 
 export const CHART_CONFIG: Record<PerpChartTypeEnum, { label: ReactNode; noDataImage: string }> = {
   [PerpChartTypeEnum.VOLUME]: {
-    label: <Trans>Trading Volume</Trans>,
+    label: <Trans>TRADING VOLUME</Trans>,
     noDataImage: noVolume,
   },
   [PerpChartTypeEnum.ACTIVE_USER]: {
-    label: <Trans>Active Users</Trans>,
+    label: <Trans>ACTIVE USERS</Trans>,
     noDataImage: noUser,
   },
   [PerpChartTypeEnum.REVENUE]: {
-    label: <Trans>Revenue (Trading Fee)</Trans>,
+    label: <Trans>REVENUE (TRADING FEE)</Trans>,
     noDataImage: noRevenue,
   },
   [PerpChartTypeEnum.LIQUIDATIONS]: {
-    label: <Trans>Trader Liquidations</Trans>,
+    label: <Trans>TRADER LIQUIDATIONS</Trans>,
     noDataImage: noLiquidations,
   },
   [PerpChartTypeEnum.NET_PNL]: {
-    label: <Trans>Traders&apos; Net PnL</Trans>,
+    label: <Trans>TRADERS&apos; NET PNL</Trans>,
     noDataImage: noTraderPnL,
   },
   [PerpChartTypeEnum.PROFIT_LOSS]: {
-    label: <Trans>Traders&apos; Profit & Loss</Trans>,
+    label: <Trans>TRADERS&apos; PROFIT & LOSS</Trans>,
     noDataImage: noTraderProfitLoss,
   },
 }
