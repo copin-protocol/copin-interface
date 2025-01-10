@@ -221,7 +221,7 @@ function Filters({ filters, protocolFilter }: { filters: FiltersState; protocolF
         <ProtocolFilter
           {...protocolFilter}
           placement={sm ? 'bottom' : 'bottomRight'}
-          menuSx={{ width: ['300px', '400px', '50vw', '50vw'] }}
+          menuSx={{ width: ['312px', '400px', '50vw', '50vw'] }}
         />
       </Flex>
     </Flex>

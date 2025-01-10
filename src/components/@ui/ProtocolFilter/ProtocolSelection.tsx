@@ -143,6 +143,7 @@ export default function ProtocolSelection({
             border: 'small',
             borderColor: 'neutral4',
             borderRadius: 'xs',
+            mr: [2, 0],
           }}
         >
           <Box
@@ -210,7 +211,7 @@ export default function ProtocolSelection({
       {/*</Grid>*/}
 
       {/* RENDER TOGGLE BUTTON */}
-      <Box my="12px" ml={2}>
+      <Box my="12px" pl={2} pr={[2, 0]}>
         <Flex sx={{ gap: [1, 2], alignItems: 'center', justifyContent: 'space-between' }} flexWrap={'wrap'}>
           <Flex alignItems={'center'} sx={{ gap: [1, 2] }} order={[1, 1, 1, 0]}>
             <Checkbox
@@ -265,7 +266,7 @@ export default function ProtocolSelection({
         </Flex>
       </Box>
 
-      <Box pb={2}>
+      <Box pb={2} pr={[2, 0]}>
         <ListProtocolSelection
           options={options}
           checkIsSelected={checkIsSelected}

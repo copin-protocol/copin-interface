@@ -90,7 +90,9 @@ const ChartTrader = ({
                   </Flex>
                 </Flex>
               ) : (
-                <Type.Caption color="neutral3">PnL</Type.Caption>
+                <Type.Caption color="neutral3" sx={{ width: '100%', textAlign: 'center' }}>
+                  PnL
+                </Type.Caption>
               )}
               {/* <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} /> */}
             </Flex>
