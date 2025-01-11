@@ -89,7 +89,7 @@ const CopyTradeCloneForm: CopyTradeCloneFormComponent = ({
       isSubmitting={isLoading}
       submitButtonText={'Clone Copy Trade'}
       defaultFormValues={defaultFormValues}
-      formTypes={['clone', 'vault']}
+      formTypes={['clone']}
     />
   )
 }
