@@ -105,7 +105,9 @@ const MobileLayout = (props: LayoutProps) => {
           <PositionMobileView openingPositions={props.openingPositions} historyPositions={props.closedPositions} />
         </Box>
       )}
-      <BottomWrapperMobile sx={{ position: 'fixed', bottom: 0, zIndex: 9999 }}>
+      <BottomWrapperMobile
+        sx={{ position: 'fixed', bottom: 0, zIndex: 9999, display: ['flex', 'flex', 'flex', 'none'] }}
+      >
         <TabHeader
           configs={tabConfigs}
           isActiveFn={(config) => config.key === tab}

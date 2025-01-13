@@ -17,6 +17,7 @@ export const SPECIAL_MARKET_CONFIG_MAPPING: Record<string, { originalSymbol: str
   '1000000MOG': { originalSymbol: 'MOG', multiple: 1_000_000 },
   '1000000AIDOGE': { originalSymbol: 'AIDOGE', multiple: 1_000_000 },
   '1000CHEEMS': { originalSymbol: 'CHEEMS', multiple: 1_000 },
+  '1MCHEEMS': { originalSymbol: 'CHEEMS', multiple: 1_000_000 },
   '1000CAT': { originalSymbol: 'CAT', multiple: 1_000 },
   '1000RATS': { originalSymbol: 'RATS', multiple: 1_000 },
   '1000SATS': { originalSymbol: 'SATS', multiple: 1_000 },

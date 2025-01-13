@@ -14,7 +14,7 @@ import { getErrorMessage } from 'utils/helpers/handleError'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
-import CopyTraderForm from '../CopyTradeForm'
+import CopyTraderForm, { FormType } from '../CopyTradeForm'
 import { getFormValuesFromResponseData, getRequestDataFromForm } from '../helpers'
 import { CopyTradeFormValues } from '../types'
 
@@ -82,6 +82,7 @@ const CopyTradeCloneForm: CopyTradeCloneFormComponent = ({
     })
   }
 
+  const formTypes = ['clone', ...(isVault ? ['vault'] : [])] as FormType[]
   return (
     <CopyTraderForm
       key={copyTradeData?.account}
@@ -89,7 +90,7 @@ const CopyTradeCloneForm: CopyTradeCloneFormComponent = ({
       isSubmitting={isLoading}
       submitButtonText={'Clone Copy Trade'}
       defaultFormValues={defaultFormValues}
-      formTypes={['clone', 'vault']}
+      formTypes={formTypes}
     />
   )
 }

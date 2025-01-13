@@ -60,7 +60,7 @@ export default function ListHLOrderTable({ data }: { data: HlOrderData[] }) {
         dataIndex: 'triggerCondition',
         key: 'triggerCondition',
         sortBy: 'triggerCondition',
-        style: { width: '150px', textAlign: 'left' },
+        style: { minWidth: '150px', textAlign: 'left' },
         render: (item) => renderOrderTriggerCondition(item),
       },
       {
