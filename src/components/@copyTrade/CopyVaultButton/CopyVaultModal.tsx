@@ -20,6 +20,7 @@ import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { getErrorMessage } from 'utils/helpers/handleError'
 import { EventSource } from 'utils/tracking/types'
 
@@ -96,6 +97,7 @@ export default function CopyVaultDrawer({
   return (
     <Modal
       dismissable={false}
+      zIndex={Z_INDEX.TOASTIFY}
       maxWidth="520px"
       {...(modalStyles || {})}
       title={

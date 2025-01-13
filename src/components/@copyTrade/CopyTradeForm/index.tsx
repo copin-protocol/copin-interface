@@ -626,7 +626,7 @@ const CopyTraderForm = ({
           {/*)}*/}
         </Box>
 
-        <Flex mt={20} sx={{ gap: 2 }}>
+        <Flex alignItems="flex-start" mt={20} sx={{ gap: 2 }}>
           <Box flex={1}>
             <NumberInputField
               maxLength={40}
@@ -655,7 +655,7 @@ const CopyTraderForm = ({
                   <SmartWalletFund
                     walletId={copyWalletId}
                     platform={platform}
-                    sx={{ display: 'flex', flexDirection: 'column', alignItems: 'end' }}
+                    sx={{ display: 'flex', flexDirection: 'row', alignItems: 'end' }}
                   />
                 ) : (
                   <div></div>
