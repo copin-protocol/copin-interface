@@ -33,7 +33,7 @@ export function usePlotOrderMarker({ chart, orders }: Props) {
               : themeColors.red2
             return activeChart
               ?.createOrderLine()
-              ?.setPrice(order.priceNumber)
+              ?.setPrice(order.isTrigger ? order.triggerPriceNumber : order.priceNumber)
               ?.setText(`${order.orderType}`)
               ?.setQuantity(order.sizeNumber ? `$${formatNumber(order.sizeNumber, 0)}` : 'N/A')
               ?.setTooltip(

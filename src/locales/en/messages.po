@@ -439,10 +439,6 @@ msgstr "Available Balance"
 msgid "Available Fund"
 msgstr "Available Fund"
 
-#: src/components/@copyTrade/CopyTradeForm/FundChecking.tsx
-msgid "Available Fund:"
-msgstr "Available Fund:"
-
 #: src/pages/MyProfile/VaultManagement/index.tsx
 msgid "Available:"
 msgstr "Available:"
@@ -774,6 +770,7 @@ msgid "Clone"
 msgstr "Clone"
 
 #: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx
+#: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyVaultButton/CopyVaultModal.tsx
 msgid "Clone Settings"
 msgstr "Clone Settings"
@@ -969,7 +966,6 @@ msgstr "Copy Volume"
 msgid "Copy Wallet"
 msgstr "Copy Wallet"
 
-#: src/components/@wallet/WalletDetailsCard/OnchainPositionsDrawer.tsx
 #: src/components/@wallet/WalletDetailsCard/WalletHistoryDrawer.tsx
 msgid "Copy Wallet History"
 msgstr "Copy Wallet History"
@@ -1484,6 +1480,10 @@ msgstr "Frequently Trade"
 #: src/components/@copyTrade/CopyTradeForm/FundChecking.tsx
 msgid "Fund"
 msgstr "Fund"
+
+#: src/components/@copyTrade/CopyTradeForm/FundChecking.tsx
+msgid "Fund:"
+msgstr "Fund:"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Funding"
@@ -2442,6 +2442,10 @@ msgstr "On-chain traders for copying"
 msgid "Once you have a position, you’ll see it listed here"
 msgstr "Once you have a position, you’ll see it listed here"
 
+#: src/components/@wallet/WalletDetailsCard/OnchainPositionsDrawer.tsx
+msgid "Onchain Positions"
+msgstr "Onchain Positions"
+
 #: src/utils/config/translations.tsx
 msgid "Ongoing"
 msgstr "Ongoing"
@@ -2895,6 +2899,7 @@ msgstr "SEARCH BY ADDRESS"
 
 #: src/components/@widgets/SelectMarketWithSearch/index.tsx
 #: src/pages/MyProfile/FilterBySource.tsx
+#: src/pages/MyProfile/FilterBySource.tsx
 #: src/pages/MyProfile/SelectCopyTradesDropdown.tsx
 #: src/pages/MyProfile/SelectTradersCopied.tsx
 #: src/pages/MyProfile/SelectWallets.tsx
@@ -2902,6 +2907,7 @@ msgid "SELECT ALL"
 msgstr "SELECT ALL"
 
 #: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
+#: src/components/@widgets/ChainSelection/index.tsx
 msgid "SELECTED"
 msgstr "SELECTED"
 
@@ -2940,6 +2946,7 @@ msgstr "SORT BY TRADERS"
 msgid "SOURCE"
 msgstr "SOURCE"
 
+#: src/pages/MyProfile/FilterBySource.tsx
 #: src/pages/MyProfile/FilterBySource.tsx
 msgid "SOURCE:"
 msgstr "SOURCE:"
@@ -2994,10 +3001,6 @@ msgstr "Select Date"
 msgid "Select Other Trader"
 msgstr "Select Other Trader"
 
-#: src/pages/MyProfile/FilterBySource.tsx
-msgid "Select all"
-msgstr "Select all"
-
 #: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx
 msgid "Select the copy you want to clone:"
 msgstr "Select the copy you want to clone:"
@@ -3009,10 +3012,6 @@ msgstr "Select the copy you want to open:"
 #: src/components/@copyTrade/CopyVaultButton/CopyVaultModal.tsx
 msgid "Select the vault you want to clone:"
 msgstr "Select the vault you want to clone:"
-
-#: src/components/@widgets/ChainSelection/index.tsx
-msgid "Selected"
-msgstr "Selected"
 
 #: src/pages/TraderDetails/CustomizeRankingColumns.tsx
 #: src/theme/Table/CustomizeColumn.tsx
@@ -3177,10 +3176,6 @@ msgstr "Source Size Token"
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Source Trader"
 msgstr "Source Trader"
-
-#: src/pages/MyProfile/FilterBySource.tsx
-msgid "Source:"
-msgstr "Source:"
 
 #: src/pages/PerpDEXsExplorer/helpers/eventsHelper.tsx
 msgid "Start in {daysLeft} days"
@@ -4077,8 +4072,8 @@ msgid "You have exceeded your quota for this feature."
 msgstr "You have exceeded your quota for this feature."
 
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
-msgid "You need to upgrade to a premium account to use this feature"
-msgstr "You need to upgrade to a premium account to use this feature"
+msgid "You need to upgrade to use this feature"
+msgstr "You need to upgrade to use this feature"
 
 #: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "You will not copy the position has opened with collateral lower than"
@@ -4405,5 +4400,5 @@ msgid "{label} is better than {value} traders"
 msgstr "{label} is better than {value} traders"
 
 #: src/pages/@layouts/Footer/index.tsx
-msgid "© 2024 Copin. All rights reserved. Data since Nov 2022. Smart contract: v0.1.0"
-msgstr "© 2024 Copin. All rights reserved. Data since Nov 2022. Smart contract: v0.1.0"
+msgid "© {0} Copin."
+msgstr "© {0} Copin."

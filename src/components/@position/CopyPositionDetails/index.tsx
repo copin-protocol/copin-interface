@@ -78,10 +78,10 @@ export default function CopyPositionDetails({
   })
   const copyTradeOrders = useMemo(
     () =>
-      copyTradeDetails && dataOrders
+      data && dataOrders
         ? dataOrders.map((e, i) => {
             const sizeUsd = e.size * e.price
-            let collateral = ((e.size * e.price) / (e.leverage || copyTradeDetails.leverage)) * (e.isIncrease ? 1 : -1)
+            let collateral = ((e.size * e.price) / (e.leverage || data.leverage)) * (e.isIncrease ? 1 : -1)
             if (e.collateral != null) {
               collateral = e.collateral * (e.isIncrease ? 1 : -1)
             } else if (e.totalCollateral != null) {
@@ -97,11 +97,11 @@ export default function CopyPositionDetails({
               leverage:
                 e.totalCollateral && e.totalSize
                   ? (e.totalSize * e.price) / e.totalCollateral
-                  : e.leverage || copyTradeDetails.leverage,
+                  : e.leverage || data.leverage,
             }
           })
         : undefined,
-    [copyTradeDetails, dataOrders]
+    [data, dataOrders]
   )
   const { getSymbolByIndexToken } = useMarketsConfig()
   const symbolByIndexToken = getSymbolByIndexToken({ protocol: data?.protocol, indexToken: data?.indexToken })

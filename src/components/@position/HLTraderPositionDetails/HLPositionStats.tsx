@@ -1,33 +1,20 @@
 import { Trans } from '@lingui/macro'
-import { useResponsive } from 'ahooks'
 import { ReactNode } from 'react'
 
 import PositionStatus from 'components/@position/PositionStatus'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import ValueOrToken from 'components/@ui/ValueOrToken'
-import { renderEntry, renderSize, renderSizeOpeningWithPrices } from 'components/@widgets/renderProps'
+import { renderEntry, renderSizeOpeningWithPrices } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
-import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
-
-interface PositionStatsProps {
-  data: PositionData
-  prices: UsdPrices
-  hasFundingFee: boolean
-  hasLiquidate: boolean
-  isOpening: boolean
-}
+import { PositionStatusEnum } from 'utils/config/enums'
 
 export default function HLPositionStats({ data }: { data: PositionData }) {
-  const { md } = useResponsive()
   const { getPricesData } = useGetUsdPrices()
   const prices = getPricesData({ protocol: data.protocol })
   const hasFundingFee = !!data?.funding
-  const isOpening = data?.status === PositionStatusEnum.OPEN
-  const hasLiquidate = (data?.orders?.filter((e) => e.type === OrderTypeEnum.LIQUIDATE) ?? []).length > 0
 
   return (
     <Box py={[2, 3]}>
@@ -35,11 +22,7 @@ export default function HLPositionStats({ data }: { data: PositionData }) {
         <Flex alignItems="center" justifyContent="space-between" flexWrap="wrap" sx={{ gap: [2, 24] }}>
           <Flex alignItems="center" sx={{ gap: [2, 24], flexWrap: 'wrap' }}>
             <Box sx={{ width: '150px', height: 'fit-content' }}>{renderEntry(data)}</Box>
-            <Flex>
-              {isOpening
-                ? renderSizeOpeningWithPrices(data, prices, undefined, true)
-                : renderSize(data, hasLiquidate, true)}
-            </Flex>
+            <Flex>{renderSizeOpeningWithPrices(data, prices, undefined, true)}</Flex>
           </Flex>
           <Flex alignItems="center" sx={{ gap: [2, 24] }}>
             <PositionStatus status={PositionStatusEnum.OPEN} />

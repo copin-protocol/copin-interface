@@ -1,6 +1,6 @@
 import { AssetPosition, HlOrderData, HlOrderRawData } from 'entities/hyperliquid'
 import { PositionData } from 'entities/trader'
-import { MarginModeEnum, ProtocolEnum } from 'utils/config/enums'
+import { MarginModeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 
 export function parseHLPositionData({ account, data }: { account: string; data: AssetPosition[] }) {
   if (!data) return []
@@ -20,7 +20,8 @@ export function parseHLPositionData({ account, data }: { account: string; data: 
       sizeInToken: Math.abs(sizeInToken),
       size: Number(e.position.positionValue),
       pnl: Number(e.position.unrealizedPnl),
-      roi: (Number(e.position.unrealizedPnl) / Number(e.position.positionValue)) * 100,
+      roi: (Number(e.position.unrealizedPnl) / Number(e.position.positionValue)) * e.position.leverage.value * 100,
+      status: PositionStatusEnum.OPEN,
     } as PositionData
   })
 }

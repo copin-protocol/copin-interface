@@ -16,12 +16,14 @@ interface Props {
 
 export function usePlotPositionInformation({ chart, position }: Props) {
   const positionLine = React.useRef<IPositionLineAdapter>()
+  const liquidationLine = React.useRef<IPositionLineAdapter>()
 
   const side = position?.isLong ? 'LONG' : 'SHORT'
   const openedAt = dayjs(position?.openBlockTime).valueOf()
   const symbol = position ? getSymbolFromPair(position.pair) : 'UNKNOWN'
   const entry = getPriceTradingView(symbol, position?.averagePrice)
   const size = position?.size
+  const liquidationPrice = position?.liquidationPrice
 
   /**
    * BUY ARROW
@@ -48,6 +50,7 @@ export function usePlotPositionInformation({ chart, position }: Props) {
    */
   React.useEffect(() => {
     let line = positionLine.current
+    let liquidLine = liquidationLine.current
     try {
       chart?.onChartReady(() => {
         const activeChart = chart?.activeChart()
@@ -61,6 +64,7 @@ export function usePlotPositionInformation({ chart, position }: Props) {
           const color = position?.isLong ? themeColors.green1 : themeColors.red1
 
           line
+            .setText(` ${side} `)
             .setPrice(entry)
             .setQuantity(` $${formatNumber(size, 0)} `)
             .setLineWidth(0.5)
@@ -73,9 +77,27 @@ export function usePlotPositionInformation({ chart, position }: Props) {
             .setQuantityBorderColor(color)
         }
 
-        line.setText(` ${side} `)
+        if (liquidationPrice) {
+          liquidLine = activeChart.createPositionLine()
+
+          const color = themeColors.red1
+
+          liquidLine
+            .setText(`Liq. Price`)
+            .setPrice(liquidationPrice)
+            .setQuantity(`N/A`)
+            .setLineWidth(0.5)
+            .setLineColor(color)
+            .setBodyBackgroundColor(color)
+            .setBodyTextColor('#FFFFFF')
+            .setBodyBorderColor(color)
+            .setQuantityBackgroundColor('#E6DAFE')
+            .setQuantityTextColor('#000000')
+            .setQuantityBorderColor(color)
+        }
 
         positionLine.current = line
+        liquidationLine.current = liquidLine
       })
     } catch (e) {}
 
@@ -83,12 +105,14 @@ export function usePlotPositionInformation({ chart, position }: Props) {
       try {
         chart?.onChartReady(() => {
           line?.remove()
+          liquidLine?.remove()
         })
       } catch {}
     }
-  }, [chart, entry, position?.isLong, side, size, symbol])
+  }, [chart, entry, liquidationPrice, position?.isLong, position?.liquidationPrice, side, size, symbol])
 
   return {
     positionLine,
+    liquidationLine,
   }
 }

@@ -53,7 +53,7 @@ const Footer = ({ height }: { height: number }) => {
         }}
       >
         <Type.Caption color="neutral3" display={['none', 'none', 'none', 'block']}>
-          <Trans>© 2024 Copin. All rights reserved. Data since Nov 2022. Smart contract: v0.1.0</Trans>
+          <Trans>© {new Date().getFullYear()} Copin.</Trans>
         </Type.Caption>
         <Flex flex="1" sx={{ alignItems: 'center', justifyContent: ['space-between', 'end'], gap: [2, 3] }}>
           <Flex
