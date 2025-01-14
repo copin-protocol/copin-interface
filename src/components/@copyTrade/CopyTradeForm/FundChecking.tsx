@@ -25,9 +25,9 @@ export const SmartWalletFund = ({
   return (
     <Box sx={sx}>
       <Type.Small mr={1}>
-        <Trans>Available Fund:</Trans>
+        <Trans>Fund:</Trans>
       </Type.Small>
-      <Type.Small color="neutral2">{available?.num ? `$${formatNumber(available.num, 2, 2)}` : '--'}</Type.Small>
+      <Type.Small color="neutral2">{available?.num ? `$${formatNumber(available?.num, 2, 2)}` : '--'}</Type.Small>
     </Box>
   )
 }

@@ -40,4 +40,4 @@ export function ProtocolBetaWarningContent({ protocol }: { protocol: ProtocolEnu
   )
 }
 
-const WARNING_PROTOCOL = [ProtocolEnum.HYPERLIQUID]
+const WARNING_PROTOCOL: ProtocolEnum[] = []
