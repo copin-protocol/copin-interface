@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useLayoutEffect, useMemo, useState } from 'react'
+import { ReactNode, createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 
 import { checkEmbeddedWalletApi, getAllCopyWalletsApi, getEmbeddedWalletsApi } from 'apis/copyWalletApis'
@@ -57,38 +57,51 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
   const enabledQueryByPaths = true
   // Remove this logic for check new trader
   // const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH, true)
-  const {
-    data: embeddedWallets,
-    isLoading: loadingEmbeddedWallets,
-    refetch: reloadEmbeddedWallets,
-  } = useQuery([QUERY_KEYS.GET_EMBEDDED_COPY_WALLETS, myProfile?.id], () => getEmbeddedWalletsApi(), {
-    enabled: false,
-    retry: 0,
-  })
+  // const {
+  //   data: embeddedWallets,
+  //   isLoading: loadingEmbeddedWallets,
+  //   refetch: reloadEmbeddedWallets,
+  // } = useQuery([QUERY_KEYS.GET_EMBEDDED_COPY_WALLETS, myProfile?.id], () => getEmbeddedWalletsApi(), {
+  //   enabled: false,
+  //   retry: 0,
+  // })
+
+  // const {
+  //   data: copyWallets,
+  //   isLoading: loadingCopyWallets,
+  //   refetch: reloadCopyWallets,
+  // } = useQuery(['adsjflkdjsfa'], () => getAllCopyWalletsApi(), {
+  //   enabled: !!myProfile?.id && enabledQueryByPaths,
+  //   retry: 0,
+  // })
 
   const {
-    data: copyWallets,
-    isLoading: loadingCopyWallets,
-    refetch: reloadCopyWallets,
-  } = useQuery([QUERY_KEYS.GET_COPY_WALLETS_LIST, myProfile?.id], () => getAllCopyWalletsApi(), {
-    enabled: !!myProfile?.id && enabledQueryByPaths,
-    retry: 0,
-  })
+    data: wallets,
+    isLoading: loadingWallets,
+    refetch: reloadWallets,
+  } = useQuery(
+    [QUERY_KEYS.GET_COPY_WALLETS_LIST, myProfile?.id],
+    () => Promise.all([getEmbeddedWalletsApi(), getAllCopyWalletsApi()]),
+    {
+      enabled: !!myProfile?.id && enabledQueryByPaths,
+      retry: 0,
+      keepPreviousData: true,
+    }
+  )
+  const [embeddedWallets, copyWallets] = wallets ?? []
 
   const { mutate: checkEmbeddedWallet } = useMutation(checkEmbeddedWalletApi, {
     onSuccess: () => {
-      reloadEmbeddedWallets()
-      reloadCopyWallets()
+      reloadWallets()
     },
   })
 
   useLayoutEffect(() => {
-    if (loadingCopyWallets || !myProfile?.id) return
+    if (loadingWallets || !myProfile?.id) return
+    if (embeddedWallets?.length) return
     checkEmbeddedWallet()
-    if (copyWallets && copyWallets.length === 0) {
-      setIsNewUser(true)
-    }
-  }, [copyWallets, loadingCopyWallets])
+    setIsNewUser(true)
+  }, [wallets])
 
   const {
     data: vaultWallets,
@@ -154,7 +167,7 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
       dcpWallets,
       cexWallets,
       myProfile,
-      loadingCopyWallets,
+      loadingCopyWallets: loadingWallets,
       loadingVaultCopyWallets,
       copyWallets,
       smartWallets,
@@ -163,11 +176,11 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
       hlWallets,
       embeddedWallet: embeddedWallets?.[0],
       embeddedWallets,
-      loadingEmbeddedWallets,
-      reloadEmbeddedWallets,
+      loadingEmbeddedWallets: loadingWallets,
+      reloadEmbeddedWallets: reloadWallets,
       embeddedWalletInfo,
       reloadEmbeddedWalletInfo,
-      reloadCopyWallets,
+      reloadCopyWallets: reloadWallets,
       reloadVaultCopyWallets,
       loadTotalSmartWallet: () => setLoadedTotalSmartWallet(true),
     }),
@@ -178,14 +191,13 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
       dcpWallets,
       hlWallets,
       isDA,
-      loadingCopyWallets,
+      loadingWallets,
       loadingVaultCopyWallets,
       myProfile,
-      reloadCopyWallets,
+      reloadWallets,
       reloadVaultCopyWallets,
       smartWallets,
       vaultWallets,
-      loadingEmbeddedWallets,
       embeddedWallets,
       embeddedWalletInfo,
       reloadEmbeddedWalletInfo,

@@ -242,9 +242,6 @@ export default function useCEXCopyTradeColumns({
             onValidate={(value) => validateNumberValue({ isVIP, oldData: item, value, field: 'volume' })}
             disabled={!isRunningFn(item.status)}
           />
-          {/*<Type.Caption color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}>*/}
-          {/*  ${item.volume >= 10000 ? compactNumber(item.volume, 2) : formatNumber(item.volume)}*/}
-          {/*</Type.Caption>*/}
         </Flex>
       )
     },
@@ -743,13 +740,13 @@ function renderCopyTrader(data: CopyTradeWithCheckingData, isRunning: boolean) {
                         address={_a}
                         protocol={data.protocol}
                         options={{
-                          hasCopyCountWarningIcon: isRunning,
-                          hasCopyVolumeWarningIcon: isRunning,
+                          hasCopyCountWarningIcon: false, // note
+                          hasCopyVolumeWarningIcon: false, // note
                           copyVolume: data.copyVolume,
                           maxCopyVolume: data.maxVolume,
                           isRef: data.isRef,
                           plan: data.plan,
-                          hasCopyTradeVolumeIcon: isRunning,
+                          hasCopyTradeVolumeIcon: false, // NOTE
                           hasCopyAddress: true,
                         }}
                       />
@@ -765,13 +762,14 @@ function renderCopyTrader(data: CopyTradeWithCheckingData, isRunning: boolean) {
           address={data.account}
           protocol={data.protocol}
           options={{
-            hasCopyCountWarningIcon: isRunning,
-            hasCopyVolumeWarningIcon: isRunning,
+            hasCopyCountWarningIcon: false, // note
+            hasCopyVolumeWarningIcon: false, // note
             copyVolume: data.copyVolume,
             maxCopyVolume: data.maxVolume,
             isRef: data.isRef,
             plan: data.plan,
-            hasCopyTradeVolumeIcon: isRunning && !UNLIMITED_COPY_SIZE_EXCHANGES.includes(data.exchange),
+            // hasCopyTradeVolumeIcon: isRunning && !UNLIMITED_COPY_SIZE_EXCHANGES.includes(data.exchange),
+            hasCopyTradeVolumeIcon: false, // note
             hasCopyAddress: true,
           }}
         />

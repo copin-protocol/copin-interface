@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { GetMyPositionRequestBody, GetMyPositionsParams } from 'apis/types'
@@ -88,6 +88,12 @@ export default function HistoryPositions() {
   const onChangeTraders = () => {
     changeCurrentPage(1)
   }
+
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+  if (!mounted) return null
 
   return (
     <Flex width="100%" height="100%" flexDirection="column" bg="neutral7">

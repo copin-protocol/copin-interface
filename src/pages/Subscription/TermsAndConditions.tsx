@@ -86,4 +86,9 @@ const termConfigs = [
       </Box>
     </a>
   </p>,
+  <Trans>
+    When creating copy trades via Hyperliquid (or from Copin Lite), there is no size limit for copy trading and no
+    restriction on the number of hot traders you can follow. The size limit is calculated based on the total copy trades
+    of the respective trader.
+  </Trans>,
 ]

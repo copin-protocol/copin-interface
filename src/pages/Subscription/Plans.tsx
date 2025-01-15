@@ -494,12 +494,11 @@ export function usePlanConfigs() {
       <Trans>Unlimited</Trans>,
       <Trans>Unlimited</Trans>,
       <Trans>No</Trans>,
-      // <Trans>No</Trans>,
       <Trans>20 traders</Trans>,
       <Trans>All stable PerpDEX</Trans>,
       // <Trans>Maximum ${formatNumber(volumeLimit?.volumeWoReferral, 0, 0)}</Trans>,
-      <Trans>Maximum ${formatNumber(volumeLimit?.volumeWoReferral, 0, 0)}</Trans>,
-      <Trans>No</Trans>,
+      <Trans>Maximum ${formatNumber(200_000, 0, 0)}</Trans>,
+      <Trans>Maximum copy size ${formatNumber(500, 0, 0)}</Trans>,
       <Trans>All stable CEX</Trans>,
       <Trans>No</Trans>,
       <Trans>Personal</Trans>,
@@ -511,13 +510,11 @@ export function usePlanConfigs() {
       <Box as="span" color="orange1">
         <Trans>Yes</Trans>
       </Box>,
-      // <Trans>No</Trans>,
       <Trans>50 traders</Trans>,
       <Trans>All stable PerpDEX</Trans>,
-      // <Trans>Maximum ${formatNumber(volumeLimit?.volumePremiumWoReferral, 0, 0)}</Trans>,
-      <Trans>Maximum ${formatNumber(volumeLimit?.volumePremiumReferral, 0, 0)}</Trans>,
+      <Trans>Unlimited</Trans>,
       <Box as="span" color="orange1">
-        <Trans>Yes</Trans>
+        <Trans>Maximum copy size ${formatNumber(200_000, 0, 0)}</Trans>
       </Box>,
       <Trans>All stable CEX</Trans>,
       <Trans>No</Trans>,
@@ -541,7 +538,7 @@ export function usePlanConfigs() {
       // <Trans>Maximum ${formatNumber(volumeLimit?.volumeVipReferral, 0, 0)}</Trans>,
       <Trans>Unlimited</Trans>,
       <Box as="span" color="violet">
-        <Trans>Yes</Trans>
+        <Trans>Unlimited copy size</Trans>
       </Box>,
       <p>
         <Trans>All stable CEX + Exclusive CEX request</Trans> <TooltipIcon id="vip-cex-connection" />
