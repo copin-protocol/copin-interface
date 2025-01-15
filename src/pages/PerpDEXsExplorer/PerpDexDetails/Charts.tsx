@@ -18,19 +18,11 @@ import SectionTitle from 'components/@ui/SectionTitle'
 import TimeFilter from 'components/@ui/TimeFilter'
 import RangeFilter from 'components/@ui/TimeFilter/RangeFilter'
 import { PERP_DEX_CHART_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
-import { PerpDexChartData, StatsData, TopPairChartData } from 'entities/chart'
+import { DataPoint, PerpDexChartData, StatsData, TopPairChartData } from 'entities/chart'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useHourlyChartStore } from 'hooks/store/useSwitchHourlyChart'
-import Loading from 'theme/Loading'
-import { Box, Flex, IconBox, Image, Type } from 'theme/base'
-import { PerpChartTypeEnum, ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
-import { getDurationFromTimeFilter } from 'utils/helpers/transform'
-import { TimeRange } from 'utils/types'
-
 import {
-  DataPoint,
   HourlyChartComponent,
   LiquidationChartComponent,
   NetProfitChartComponent,
@@ -41,12 +33,20 @@ import {
   TopVolumeByPairChartComponent,
   TraderChartComponent,
   VolumeChartComponent,
+} from 'pages/PerpDEXsExplorer/PerpDexDetails/ChartComponent'
+import SwitchHourlyChart from 'pages/PerpDEXsExplorer/PerpDexDetails/SwitchHourlyChart'
+import { CHART_CONFIG } from 'pages/PerpDEXsExplorer/PerpDexDetails/chartConfig'
+import {
   getChartData,
   getHourlyChartDataByMetric,
   getPairChartDataByMetric,
-} from './ChartComponent'
-import SwitchHourlyChart from './SwitchHourlyChart'
-import { CHART_CONFIG } from './chartConfig'
+} from 'pages/PerpDEXsExplorer/PerpDexDetails/utils'
+import Loading from 'theme/Loading'
+import { Box, Flex, IconBox, Image, Type } from 'theme/base'
+import { PerpChartTypeEnum, ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
+import { getDurationFromTimeFilter } from 'utils/helpers/transform'
+import { TimeRange } from 'utils/types'
 
 export default function Charts({
   perpdex,

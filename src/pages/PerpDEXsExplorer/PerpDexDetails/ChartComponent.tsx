@@ -17,21 +17,9 @@ import {
 } from 'recharts'
 import { StackOffsetType } from 'recharts/types/util/types'
 
-import { PerpDexChartData, StatsData, TopPairChartData } from 'entities/chart'
-import { PerpDexHourlyStatistic, PerpDexStatisticData } from 'entities/statistic'
+import { DataPoint, PerpDexChartData, StatsData, TopPairChartData } from 'entities/chart'
 import { isMobile } from 'hooks/helpers/useIsMobile'
 import { useHourlyChartStore } from 'hooks/store/useSwitchHourlyChart'
-import { Box, Flex } from 'theme/base'
-import { themeColors } from 'theme/colors'
-import { Colors } from 'theme/types'
-import {
-  DATE_FORMAT,
-  ORDERS_CHART_GRADIENTS,
-  TRADERS_CHART_GRADIENTS,
-  VOLUME_CHART_GRADIENTS,
-} from 'utils/config/constants'
-import { compactNumber, formatLocalDate, formatNumber } from 'utils/helpers/format'
-
 import {
   ActiveUserTooltip,
   DailyVolumeTooltip,
@@ -44,13 +32,20 @@ import {
   TopOIByPairTooltip,
   TopProfitLossByPairTooltip,
   TopVolumeByPairTooltip,
-} from './chartConfig'
+} from 'pages/PerpDEXsExplorer/PerpDexDetails/chartConfig'
+import { getFillColor, getGradientColorsByOption, tooltipFormatter } from 'pages/PerpDEXsExplorer/PerpDexDetails/utils'
+import { Box, Flex } from 'theme/base'
+import { themeColors } from 'theme/colors'
+import { Colors } from 'theme/types'
+import { compactNumber } from 'utils/helpers/format'
 
 const CHART_DATE_FORMAT = 'DD.MM'
 const CHART_MIN_HEIGHT = 260
 const YAXIS_WIDTH = isMobile ? 50 : 50
 const STROKE_WIDTH = 0.5
 const MIN_TICK_GAP = 30
+const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`)
 
 export function VolumeChartComponent({
   data,
@@ -664,14 +659,6 @@ export function TopOIByPairChartComponent({
   )
 }
 
-export interface DataPoint {
-  day: number
-  hour: number
-  value: number
-}
-const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`)
-
 const GradientLegend = ({
   range,
   isExpanded,
@@ -790,347 +777,4 @@ export function HourlyChartComponent({
       </Box>
     </Box>
   )
-}
-
-function tooltipFormatter(value: any, index: any, item: any) {
-  const _value = value as number
-  if (item.unit === '%') return formatNumber(_value, 1)
-  return formatNumber(_value, _value < 1 && _value > -1 ? 1 : 0)
-}
-
-export function getChartData({ data }: { data: PerpDexStatisticData[] | undefined }) {
-  let chartData: PerpDexChartData[] = []
-  if (!data) return chartData
-  if (data && data.length > 0) {
-    // Data for Volume Chart
-    let volumeCumulative = 0
-
-    // Data for Active User Chart
-    // let traderCumulative = 0
-
-    // Data for Trader Chart
-    let revenueCumulative = 0
-
-    // Data for Liquidation Chart
-    let liquidationCumulative = 0
-
-    // Data for Net PnL Chart
-    let traderPnlCumulative = 0
-
-    // Data for Net PnL Chart
-    let traderProfitCumulative = 0
-    let traderLossCumulative = 0
-
-    chartData = data
-      // .sort((x, y) => (x.statisticAt < y.statisticAt ? -1 : x.statisticAt > y.statisticAt ? 1 : 0))
-      .map((stats) => {
-        // Volume Chart
-        volumeCumulative += stats.volume
-        // Volume Chart
-        const traderCumulative = stats.totalTraders
-        // Volume Chart
-        revenueCumulative += stats.revenue
-        // Liquidation Chart
-        liquidationCumulative += stats.liquidations
-        // Net PnL Chart
-        traderPnlCumulative += stats.traderPnl
-        // Profit & Loss Chart
-        traderProfitCumulative += stats.traderProfit
-        traderLossCumulative += stats.traderLoss
-
-        const formattedData: PerpDexChartData = {
-          date: formatLocalDate(stats.statisticAt, CHART_DATE_FORMAT),
-          dateTime: formatLocalDate(stats.statisticAt, DATE_FORMAT),
-          perpdex: stats.perpdex,
-          perpdexName: stats.perpdexName,
-          // Volume Chart
-          volume: stats.volume,
-          volumeCumulative,
-          // Active User Chart
-          traders: stats.traders,
-          traderCumulative,
-          // Active User Chart
-          revenue: stats.revenue,
-          revenueCumulative,
-          // Liquidation Chart
-          longLiquidations: stats.longLiquidations,
-          shortLiquidations: stats.shortLiquidations,
-          liquidations: stats.liquidations,
-          liquidationCumulative,
-          // Net PnL Chart
-          longPnl: stats.longPnl,
-          shortPnl: stats.shortPnl,
-          traderPnl: stats.traderPnl,
-          traderPnlCumulative,
-          // Profit & Loss Chart
-          traderProfit: stats.traderProfit,
-          traderLoss: stats.traderLoss,
-          traderProfitCumulative,
-          traderLossCumulative,
-        }
-
-        return formattedData
-      })
-  }
-
-  return chartData
-}
-
-// Format data by pair statistics
-export function getPairChartDataByMetric({
-  data,
-  metric,
-  sortType = 'asc',
-  top,
-}: {
-  data: PerpDexStatisticData[] | undefined
-  metric?: 'volume' | 'totalPnl' | 'totalOi' | 'totalProfit' | 'totalLoss' | 'longProfit'
-  sortType?: 'asc' | 'desc'
-  top?: number
-}) {
-  const chartData: TopPairChartData[] = []
-  if (!data) return chartData
-  // Aggregate data by pair
-  const pairAggregates: { [pair: string]: TopPairChartData } = {}
-  data.forEach((entry) => {
-    for (const [pair, stats] of Object.entries(entry.pairStatistics)) {
-      if (!pairAggregates[pair]) {
-        pairAggregates[pair] = {
-          pair,
-          volume: 0,
-          longPnl: 0,
-          shortPnl: 0,
-          totalPnl: 0,
-          longOi: 0,
-          shortOi: 0,
-          totalOi: 0,
-          longProfit: 0,
-          shortProfit: 0,
-          totalProfit: 0,
-          longLoss: 0,
-          shortLoss: 0,
-          totalLoss: 0,
-        }
-      }
-      pairAggregates[pair].volume += stats.volume ? stats.volume : 0
-      pairAggregates[pair].longPnl += stats.longPnl ? stats.longPnl : 0
-      pairAggregates[pair].shortPnl += stats.shortPnl ? stats.shortPnl : 0
-      pairAggregates[pair].totalPnl += stats.longPnl + stats.shortPnl
-      pairAggregates[pair].longOi += stats.longOi ? stats.longOi : 0
-      pairAggregates[pair].shortOi += stats.shortOi ? stats.shortOi : 0
-      pairAggregates[pair].totalOi += stats.longOi + stats.shortOi
-      pairAggregates[pair].longProfit += stats.longProfit ? stats.longProfit : 0
-      pairAggregates[pair].shortProfit += stats.shortProfit ? stats.shortProfit : 0
-      pairAggregates[pair].totalProfit +=
-        (stats.longProfit ? stats.longProfit : 0) + (stats.shortProfit ? stats.shortProfit : 0)
-      pairAggregates[pair].longLoss += stats.longLoss ? stats.longLoss : 0
-      pairAggregates[pair].shortLoss += stats.shortLoss ? stats.shortLoss : 0
-      pairAggregates[pair].totalLoss += (stats.longLoss ? stats.longLoss : 0) + (stats.shortLoss ? stats.shortLoss : 0)
-    }
-  })
-
-  // Convert aggregates to an array of TopPairChartData
-  const pairData: TopPairChartData[] = Object.entries(pairAggregates)
-    .map(([pair, stats]) => ({
-      pair: pair.split('-')?.[0] ?? pair,
-      volume: stats.volume,
-      longPnl: stats.longPnl,
-      shortPnl: stats.shortPnl,
-      totalPnl: stats.totalPnl,
-      longOi: stats.longOi,
-      shortOi: stats.shortOi,
-      totalOi: stats.totalOi,
-      backgroundColor:
-        stats.longOi > stats.shortOi
-          ? themeColors.green2
-          : stats.longOi < stats.shortOi
-          ? themeColors.red1
-          : themeColors.neutral4,
-      longProfit: stats.longProfit,
-      shortProfit: stats.shortProfit,
-      totalProfit: stats.totalProfit,
-      longLoss: stats.longLoss,
-      shortLoss: stats.shortLoss,
-      totalLoss: stats.totalLoss,
-    }))
-    .filter((pair) => {
-      switch (metric) {
-        case 'volume':
-          return pair.volume > 0
-        case 'totalOi':
-          return pair.longOi > 0 || pair.shortOi > 0
-        case 'totalProfit':
-          return pair.totalProfit > 0 || pair.totalLoss < 0
-        default:
-          return true
-      }
-    })
-
-  // Sort the data by the specified metric
-  const sortedPairs = metric ? pairData.sort((a, b) => (b[metric] || 0) - (a[metric] || 0)) : pairData
-
-  // If no top is specified, return full data
-  if (!top) {
-    return sortedPairs
-  }
-
-  // Get the top N pairs
-  const topPairs = sortedPairs
-    .slice(0, top)
-    .map((item, index) => ({ ...item, top: index + 1 }))
-    .sort((a, b) =>
-      metric ? (sortType === 'desc' ? (b[metric] || 0) - (a[metric] || 0) : (a[metric] || 0) - (b[metric] || 0)) : 0
-    )
-
-  // Calculate the cumulative data for "OTHERS"
-  // const others = sortedPairs.slice(top).reduce(
-  //   (acc, item) => {
-  //     acc.volume += item.volume
-  //     acc.longPnl += item.longPnl
-  //     acc.shortPnl += item.shortPnl
-  //     acc.totalPnl += item.totalPnl
-  //     acc.longOi += item.longOi
-  //     acc.shortOi += item.shortOi
-  //     acc.totalOi += item.totalOi
-  //     acc.longProfit += item.longProfit
-  //     acc.shortProfit += item.shortProfit
-  //     acc.totalProfit += item.totalProfit
-  //     acc.longLoss += item.longLoss
-  //     acc.shortLoss += item.shortLoss
-  //     acc.totalLoss += item.totalLoss
-  //     return acc
-  //   },
-  //   {
-  //     volume: 0,
-  //     longPnl: 0,
-  //     shortPnl: 0,
-  //     totalPnl: 0,
-  //     longOi: 0,
-  //     shortOi: 0,
-  //     totalOi: 0,
-  //     longProfit: 0,
-  //     shortProfit: 0,
-  //     totalProfit: 0,
-  //     longLoss: 0,
-  //     shortLoss: 0,
-  //     totalLoss: 0,
-  //   }
-  // )
-
-  // Add the "OTHERS" entry if applicable
-  // if (top > 0 && metric && others?.[metric] > 0) {
-  //   topPairs = [
-  //     {
-  //       pair: 'OTHERS',
-  //       top: 0,
-  //       volume: others.volume,
-  //       longPnl: others.longPnl,
-  //       shortPnl: others.shortPnl,
-  //       totalPnl: others.totalPnl,
-  //       longOi: others.longOi,
-  //       shortOi: others.shortOi,
-  //       totalOi: others.totalOi,
-  //       backgroundColor:
-  //         others.longOi > others.shortOi
-  //           ? themeColors.green2
-  //           : others.longOi < others.shortOi
-  //           ? themeColors.red1
-  //           : themeColors.neutral4,
-  //       longProfit: others.longProfit,
-  //       shortProfit: others.shortProfit,
-  //       totalProfit: others.totalProfit,
-  //       longLoss: others.longLoss,
-  //       shortLoss: others.shortLoss,
-  //       totalLoss: others.totalLoss,
-  //     },
-  //     ...topPairs,
-  //   ]
-  // }
-
-  return topPairs
-}
-
-// Format hourly data by metric
-export interface HourlyChartData {
-  [date: string]: PerpDexHourlyStatistic
-}
-
-export function getHourlyChartDataByMetric({
-  data,
-  metric,
-}: {
-  data: HourlyChartData | undefined
-  metric: string
-  // top?: number
-}) {
-  const chartData: DataPoint[] = []
-  const weekdaysData: any = {}
-  if (!data) return [] // TODO: refactor later
-
-  // Aggregate data day in a week
-  // Monday is 0 and Sunday is 6
-  Object.entries(data).forEach(([date, hourlyStats]) => {
-    const dayNumber = getWeekDayNumber(date).toString()
-    if (!weekdaysData[dayNumber]) {
-      weekdaysData[dayNumber] = { ...hourlyStats }
-    } else {
-      Object.entries(hourlyStats).forEach(([hour, value]) => {
-        if (!weekdaysData[dayNumber][hour]) {
-          weekdaysData[dayNumber][hour] = value
-        } else {
-          weekdaysData[dayNumber][hour].volume += value.volume
-          weekdaysData[dayNumber][hour].traders += value.traders
-          weekdaysData[dayNumber][hour].orders += value.orders
-        }
-      })
-    }
-  })
-
-  // Format data for chart
-  Object.entries(weekdaysData).forEach(([day, hourlyStats]) => {
-    Object.entries(hourlyStats as any).forEach(([hour, value]) => {
-      chartData.push({
-        day: Number(day),
-        hour: Number(hour),
-        value: (value as any)[metric],
-      })
-    })
-  })
-
-  return chartData
-}
-
-function getWeekDayNumber(dateStr: string): number {
-  // Create a Date object from the input string
-  const date = new Date(dateStr)
-
-  // Get day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-  const originalDayNumber = date.getDay()
-
-  // Convert to our desired format (0 = Monday, ..., 6 = Sunday)
-  return originalDayNumber === 0 ? 6 : originalDayNumber - 1
-}
-
-function getFillColor(minRange: number, maxRange: number, gradients: any[], value: number) {
-  const rangeStep = (maxRange - minRange) / gradients.length
-
-  for (let i = 0; i < gradients.length; i++) {
-    if (value >= maxRange - i * rangeStep) {
-      return gradients[i].color
-    }
-  }
-  return gradients[gradients.length - 1].color // return the last color if no match
-}
-
-const getGradientColorsByOption = (optionId: string) => {
-  switch (optionId) {
-    case 'traders':
-      return TRADERS_CHART_GRADIENTS
-    case 'volume':
-      return VOLUME_CHART_GRADIENTS
-    case 'orders':
-      return ORDERS_CHART_GRADIENTS
-    default:
-      return TRADERS_CHART_GRADIENTS
-  }
 }

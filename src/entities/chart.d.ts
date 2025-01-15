@@ -136,3 +136,13 @@ export interface TopPairChartData {
   shortLoss: number
   totalLoss: number
 }
+
+export interface DataPoint {
+  day: number
+  hour: number
+  value: number
+}
+
+export interface HourlyChartData {
+  [date: string]: PerpDexHourlyStatistic
+}
