@@ -2103,9 +2103,13 @@ msgid "Max Withdraw"
 msgstr "Max Withdraw"
 
 #: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
 msgid "Maximum ${0}"
 msgstr "Maximum ${0}"
+
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+msgid "Maximum copy size ${0}"
+msgstr "Maximum copy size ${0}"
 
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
 msgid "Maybe Later"
@@ -2231,7 +2235,6 @@ msgstr "New Password"
 
 #: src/components/@widgets/UnsubscribeAlertModal/index.tsx
 #: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
-#: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
@@ -3775,8 +3778,13 @@ msgstr "Unique traders are copied in the system"
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
 msgid "Unlimited"
 msgstr "Unlimited"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "Unlimited copy size"
+msgstr "Unlimited copy size"
 
 #: src/pages/Settings/AlertList/index.tsx
 msgid "Unlink Account"
@@ -3970,6 +3978,10 @@ msgstr "Weekly"
 msgid "What is smart wallet?"
 msgstr "What is smart wallet?"
 
+#: src/pages/Subscription/TermsAndConditions.tsx
+msgid "When creating copy trades via Hyperliquid (or from Copin Lite), there is no size limit for copy trading and no restriction on the number of hot traders you can follow. The size limit is calculated based on the total copy trades of the respective trader."
+msgstr "When creating copy trades via Hyperliquid (or from Copin Lite), there is no size limit for copy trading and no restriction on the number of hot traders you can follow. The size limit is calculated based on the total copy trades of the respective trader."
+
 #: src/components/@backtest/BacktestForm/index.tsx
 msgid "When the position's loss exceeds {0}, the Stop Loss will be triggered to close the position."
 msgstr "When the position's loss exceeds {0}, the Stop Loss will be triggered to close the position."
@@ -4038,8 +4050,6 @@ msgstr "Would you like to use a referral code?"
 
 #: src/components/@widgets/UnsubscribeAlertModal/index.tsx
 #: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx

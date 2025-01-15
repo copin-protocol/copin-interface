@@ -71,7 +71,7 @@ export default function TextWithEdit({
         value={value}
         showEditButton
         editButtonContent={
-          <Flex sx={{ alignItems: 'center', gap: '0.5ch' }}>
+          <Flex sx={{ alignItems: 'center', gap: '0.5ch', flexShrink: 0 }}>
             {!!unit && unit}
             <PencilSimpleLine size={editButtonSize} />
           </Flex>
@@ -81,6 +81,7 @@ export default function TextWithEdit({
             backgroundColor: 'transparent',
             color: themeColors.primary1,
             position: 'relative',
+            flexShrink: 0,
           },
           disabled,
         }}

@@ -427,7 +427,7 @@ const CopyTraderForm = ({
           </Flex>
         </Flex>
       )}
-      {!isOnboarding && !isLite && (
+      {/* {!isOnboarding && !isLite && (
         <Type.Caption mt={12} px={[12, 3]} display="inline-block" color="neutral3">
           Your current copy size:{' '}
           <Box as="span" color={getCopyVolumeColor({ copyVolume: currentCopyVolume ?? 0, maxVolume })}>
@@ -439,9 +439,9 @@ const CopyTraderForm = ({
             </Box>
           )}
         </Type.Caption>
-      )}
+      )} */}
 
-      <Box sx={{ pb: 20, px: [12, 3], pt: 3 }}>
+      <Box sx={{ pb: 20, px: [12, 3], mt: 3 }}>
         {(isEdit || isClone) && !isLite && (
           <>
             {isEdit && (
