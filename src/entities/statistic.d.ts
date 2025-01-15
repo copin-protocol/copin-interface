@@ -99,4 +99,47 @@ interface PerpDexStatisticData {
   traderProfit: number
   traderLoss: number
   totalTraders: number
+  pairStatistics: PairStatisticData
+}
+
+interface PairStatisticData {
+  [pair: string]: {
+    volume: number
+    longOi: number
+    shortOi: number
+    longPnl: number
+    shortPnl: number
+    longProfit: number
+    shortProfit: number
+    totalProfit: number
+    longLoss: number
+    shortLoss: number
+    totalLoss: number
+  }
+}
+
+export interface PerpDexHourlyStatisticData {
+  statisticAt: string
+  perpdex: string
+  perpdexName: string
+  volume: number
+  traders: number
+  traderPnl: number
+  oi: number
+  revenue: number
+  liquidations: number
+  longRatio: number
+  longPnl: number
+  shortPnl: number
+  longLiquidations: number
+  shortLiquidations: number
+  longOi: number
+  shortOi: number
+  traderProfit: number
+  traderLoss: number
+  orders: number
+}
+
+export interface PerpDexHourlyStatistic {
+  [hour: string]: PerpDexHourlyStatisticData
 }
