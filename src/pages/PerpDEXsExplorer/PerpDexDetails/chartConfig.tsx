@@ -249,9 +249,9 @@ export const TopProfitLossByPairTooltip = ({ payload }: TooltipProps) => {
 export const TopOIByPairContent = (props: any) => {
   const { depth, x, y, width, height, pair, totalOi, backgroundColor, stroke } = props
   // Set minimum dimensions for text visibility
-  const minWidth = 30
-  const minHeight = 30
-  const isShowText = width * height > minWidth * minHeight && height > 10 && width > 10
+  const minWidth = 40
+  const minHeight = 40
+  const isShowText = width * height > minWidth * minHeight && height > 40 && width > 40
   return (
     <g>
       <rect
@@ -268,12 +268,12 @@ export const TopOIByPairContent = (props: any) => {
       {isShowText && depth === 1 ? (
         <text
           x={x + width / 2}
-          y={y + height / 2 - 4}
+          y={y + height / 2}
           textAnchor="middle"
           fill={themeColors.neutral1}
           stroke={themeColors.neutral1}
           strokeWidth={0.5}
-          fontSize={Math.min(Math.sqrt(width * height) / 5, 60)}
+          fontSize={Math.min(Math.sqrt(width * height) / 6, 60)}
         >
           {pair}
         </text>
@@ -286,7 +286,7 @@ export const TopOIByPairContent = (props: any) => {
           fill={themeColors.neutral1}
           stroke={themeColors.neutral1}
           strokeWidth={0.5}
-          fontSize={Math.min(Math.sqrt(width * height) / 6, 40)}
+          fontSize={Math.min(Math.sqrt(width * height) / 8, 40)}
         >
           {`${compactNumber(totalOi, 1)}$`}
         </text>
