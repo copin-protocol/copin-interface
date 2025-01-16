@@ -1,4 +1,4 @@
-import { ExchangeStatsData } from './statistic'
+import { ExchangeStatsData, PairStatisticData } from './statistic'
 
 export interface ChartData {
   open: number
@@ -64,6 +64,9 @@ export type StatsData = {
   maxCumulativeProfitLoss: number
   maxAbsPnl: number
   maxAbsCumulativePnl: number
+  minHourly: number
+  maxHourly: number
+  rangeHourly: number[]
 }
 
 export type CopyTradeChartData = {
@@ -114,3 +117,35 @@ export type PerpDexChartData = {
   traderProfitCumulative: number
   traderLossCumulative: number
 }
+
+export interface TopPairChartData {
+  pair: string
+  volume: number
+  longPnl: number
+  shortPnl: number
+  totalPnl: number
+  longOi: number
+  shortOi: number
+  totalOi: number
+  top?: number
+  backgroundColor?: string
+  longProfit: number
+  shortProfit: number
+  totalProfit: number
+  longLoss: number
+  shortLoss: number
+  totalLoss: number
+  totalProfitLoss: number
+}
+
+export interface DataPoint {
+  day: number
+  hour: number
+  value: number
+}
+
+export interface HourlyChartData {
+  [date: string]: PerpDexHourlyStatistic
+}
+
+type HourlyChartOptionType = 'traders' | 'volume' | 'orders'

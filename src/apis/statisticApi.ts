@@ -1,5 +1,6 @@
 import {
   CopyStatisticData,
+  PerpDexHourlyStatistic,
   PerpDexStatisticData,
   StatisticOverviewData,
   TraderPnlStatisticData,
@@ -58,4 +59,32 @@ export async function getProtocolDailyStatisticApi({
   return requester
     .get(`perpdex-daily-statistic/protocol/${protocol}`, { params: { from, to } })
     .then((res: any) => res.data as PerpDexStatisticData[])
+}
+
+export async function getPerpDexHourlyStatisticApi({
+  perpdex,
+  from,
+  to,
+}: {
+  perpdex: string
+  from: number
+  to: number
+}) {
+  return requester
+    .get(`perpdex-hourly-statistic/${perpdex}`, { params: { from, to } })
+    .then((res: any) => res.data as { [date: string]: PerpDexHourlyStatistic })
+}
+
+export async function getProtocolHourlyStatisticApi({
+  protocol,
+  from,
+  to,
+}: {
+  protocol: ProtocolEnum | undefined
+  from: number
+  to: number
+}) {
+  return requester
+    .get(`perpdex-hourly-statistic/protocol/${protocol}`, { params: { from, to } })
+    .then((res: any) => res.data as { [date: string]: PerpDexHourlyStatistic })
 }

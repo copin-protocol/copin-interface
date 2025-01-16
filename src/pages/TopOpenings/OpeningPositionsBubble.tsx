@@ -27,6 +27,7 @@ const OpeningPositionsBubble = ({ data }: { data: PositionData[] }) => {
       leverage: item.leverage,
       isLong: item.isLong,
       protocol: item.protocol,
+      marginMode: item.marginMode,
     }))
 
   useEffect(() => {

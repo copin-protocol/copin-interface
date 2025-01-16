@@ -1,6 +1,6 @@
 import { isMobile } from 'hooks/helpers/useIsMobile'
 
-import { CopyTradePlatformEnum, ProtocolEnum } from './enums'
+import { CopyTradePlatformEnum, PerpChartTypeEnum, ProtocolEnum } from './enums'
 
 export const SUPPORTED_LOCALES = ['en']
 export const DEFAULT_LOCALE = 'en'
@@ -318,6 +318,15 @@ export const COLLATERAL_TOKEN_PROTOCOLS: ProtocolEnum[] = []
 
 export const MAX_LIMIT = 500
 export const MAX_PERPDEX_ISSUE_DESCRIPTION = 800
+
+export const LIST_PERP_DEX_BASIC_CHARTS = [
+  PerpChartTypeEnum.VOLUME,
+  PerpChartTypeEnum.ACTIVE_USER,
+  PerpChartTypeEnum.REVENUE,
+  PerpChartTypeEnum.LIQUIDATIONS,
+  PerpChartTypeEnum.NET_PNL,
+  PerpChartTypeEnum.PROFIT_LOSS,
+]
 
 export const HYPERLIQUID_BUILDER_CODE = '0x055ba87dbff972e23bcf26ea4728c31e05240e66'
 export const HYPERLIQUID_BUILDER_MAX_FEES = '0.1%'
