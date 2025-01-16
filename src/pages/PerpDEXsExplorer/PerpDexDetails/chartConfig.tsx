@@ -281,12 +281,12 @@ export const TopOIByPairContent = (props: any) => {
       {isShowText && depth === 1 ? (
         <text
           x={x + width / 2}
-          y={y + height / 2 + Math.min(Math.sqrt(width * height) / 5, 50)}
+          y={y + height / 2 + Math.min(Math.sqrt(width * height) / 6, 40)}
           textAnchor="middle"
           fill={themeColors.neutral1}
           stroke={themeColors.neutral1}
           strokeWidth={0.5}
-          fontSize={Math.min(Math.sqrt(width * height) / 5, 50)}
+          fontSize={Math.min(Math.sqrt(width * height) / 6, 40)}
         >
           {`${compactNumber(totalOi, 1)}$`}
         </text>
