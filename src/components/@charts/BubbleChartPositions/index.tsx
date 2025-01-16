@@ -1,8 +1,8 @@
 import * as d3 from 'd3'
 
 import { themeColors } from 'theme/colors'
-import { ProtocolEnum } from 'utils/config/enums'
-import { compactNumber, formatNumber } from 'utils/helpers/format'
+import { MarginModeEnum, ProtocolEnum } from 'utils/config/enums'
+import { compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 
 export type BubbleChartData = {
   id: string
@@ -12,6 +12,7 @@ export type BubbleChartData = {
   title: string
   isLong: boolean
   protocol: ProtocolEnum
+  marginMode: MarginModeEnum
 }
 
 function shuffle(array: BubbleChartData[]) {
@@ -213,7 +214,7 @@ const BubbleChart = (
     .attr('fill', (d: any) => (d.data.isLong ? 'black' : 'white'))
     .attr('fill-opacity', 0.7)
     // @ts-ignore
-    .text((d) => `$${compactNumber(d.value)} | ${formatNumber(d.data.leverage, 1, 1)}x`)
+    .text((d) => `$${compactNumber(d.value)} | ${formatLeverage(d.data.marginMode, d.data.leverage)}`)
 
   svg.call(
     d3

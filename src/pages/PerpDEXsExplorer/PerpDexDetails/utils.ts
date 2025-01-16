@@ -141,7 +141,7 @@ export function getPairChartDataByMetric({
   top,
 }: {
   data: PerpDexStatisticData[] | undefined
-  metric?: 'volume' | 'totalPnl' | 'totalOi' | 'totalProfit' | 'totalLoss' | 'longProfit' | 'totalNet'
+  metric?: 'volume' | 'totalPnl' | 'totalOi' | 'totalProfit' | 'totalLoss' | 'longProfit' | 'totalProfitLoss'
   sortType?: 'asc' | 'desc'
   top?: number
 }) {
@@ -165,7 +165,7 @@ export function getPairChartDataByMetric({
           longLoss: 0,
           shortLoss: 0,
           totalLoss: 0,
-          totalNet: 0,
+          totalProfitLoss: 0,
         }
       }
 
@@ -186,7 +186,7 @@ export function getPairChartDataByMetric({
 
   for (const pair in pairAggregates) {
     const { totalProfit, totalLoss } = pairAggregates[pair]
-    pairAggregates[pair].totalNet = Math.abs(totalProfit || 0) - Math.abs(totalLoss || 0)
+    pairAggregates[pair].totalProfitLoss = Math.abs(totalProfit || 0) + Math.abs(totalLoss || 0)
   }
 
   const pairData = Object.values(pairAggregates)
@@ -208,8 +208,8 @@ export function getPairChartDataByMetric({
           return pair.longOi > 0 || pair.shortOi > 0
         case 'totalProfit':
           return pair.totalProfit > 0 || pair.totalLoss < 0
-        case 'totalNet':
-          return pair.totalNet != 0
+        case 'totalProfitLoss':
+          return pair.totalProfitLoss != 0
         default:
           return true
       }

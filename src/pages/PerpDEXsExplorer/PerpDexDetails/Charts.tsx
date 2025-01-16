@@ -227,7 +227,7 @@ function StatisticChart({
       getPairChartDataByMetric({
         data: data || ([] as any),
         sortType: 'desc',
-        metric: 'totalNet',
+        metric: 'totalProfitLoss',
         top: isExpanded ? 50 : 20,
       }),
     [data, isExpanded]

@@ -715,7 +715,7 @@ export function HourlyChartComponent({
   isExpanded?: boolean
 }) {
   const { chartOption } = useHourlyChartStore()
-  const tooltipTitle = `Total ${chartOption.text}: `
+  const tooltipTitle = `Total ${chartOption.id}: `
   const gradients = getGradientColorsByOption(chartOption.id as HourlyChartOptionType)
 
   return (

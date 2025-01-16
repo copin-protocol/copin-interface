@@ -190,17 +190,18 @@ export const TopVolumeByPairTooltip = ({ payload }: TooltipProps) => {
   }
 
   return (
-    <Flex flexDirection="column" p={2} backgroundColor="neutral7" sx={{ gap: 1 }}>
-      <Flex alignItems="center" sx={{ gap: 2 }}>
-        <Type.Caption color="neutral3">
-          {data?.pair === 'OTHERS' ? 'Others' : !!data?.top ? `Top ${data.top}` : ''}
-        </Type.Caption>
+    <Flex flexDirection="column" p={2} backgroundColor="neutral7" sx={{ gap: '4px' }}>
+      <Flex alignItems="center" sx={{ ml: -1 }}>
         {data?.pair && data.pair !== 'OTHERS' && (
           <Flex alignItems="center" sx={{ gap: 1 }}>
             <Market symbol={data?.pair} />
-            <Type.Caption color="neutral3">{data?.pair}</Type.Caption>
+            <Type.Caption color="neutral1">{data?.pair}</Type.Caption>
           </Flex>
         )}
+        <Box height="10px" width="1px" backgroundColor={themeColors.neutral1} mx={2} />
+        <Type.Caption color="neutral1">
+          {data?.pair === 'OTHERS' ? 'Others' : !!data?.top ? `Top ${data.top}` : ''}
+        </Type.Caption>
       </Flex>
       <TooltipFieldItem value={data?.volume} label={'Volume:'} unit={unit} backgroundColor="#7AA6FF" />
     </Flex>
@@ -215,17 +216,18 @@ export const TopProfitLossByPairTooltip = ({ payload }: TooltipProps) => {
   }
 
   return (
-    <Flex flexDirection="column" p={2} backgroundColor="neutral7" sx={{ gap: 1 }}>
-      <Flex alignItems="center" sx={{ gap: 2 }}>
-        <Type.Caption color="neutral3">
-          {data?.pair === 'OTHERS' ? 'Others' : !!data?.top ? `Top ${data.top}` : ''}
-        </Type.Caption>
+    <Flex flexDirection="column" p={2} backgroundColor="neutral7" sx={{ gap: '4px' }}>
+      <Flex alignItems="center" sx={{ ml: -1 }}>
         {data?.pair && data.pair !== 'OTHERS' && (
           <Flex alignItems="center" sx={{ gap: 1 }}>
             <Market symbol={data?.pair} />
-            <Type.Caption color="neutral3">{data?.pair}</Type.Caption>
+            <Type.Caption color="neutral1">{data?.pair}</Type.Caption>
           </Flex>
         )}
+        <Box height="10px" width="1px" backgroundColor={themeColors.neutral1} mx={2} />
+        <Type.Caption color="neutral1">
+          {data?.pair === 'OTHERS' ? 'Others' : !!data?.top ? `Top ${data.top}` : ''}
+        </Type.Caption>
       </Flex>
       <TooltipFieldItem
         value={data?.totalProfit}
@@ -234,12 +236,12 @@ export const TopProfitLossByPairTooltip = ({ payload }: TooltipProps) => {
         backgroundColor={themeColors.green2}
       />
       <TooltipFieldItem value={data?.totalLoss} label={'Total Loss:'} unit={unit} backgroundColor={themeColors.red1} />
-      <TooltipFieldItem
+      {/* <TooltipFieldItem
         value={data?.totalNet}
         label={'Net Income:'}
         unit={unit}
         backgroundColor={themeColors.neutral1}
-      />
+      /> */}
     </Flex>
   )
 }
@@ -266,12 +268,12 @@ export const TopOIByPairContent = (props: any) => {
       {isShowText && depth === 1 ? (
         <text
           x={x + width / 2}
-          y={y + height / 2}
+          y={y + height / 2 - 4}
           textAnchor="middle"
           fill={themeColors.neutral1}
           stroke={themeColors.neutral1}
           strokeWidth={0.5}
-          fontSize={Math.min(Math.sqrt(width * height) / 15, 30)}
+          fontSize={Math.min(Math.sqrt(width * height) / 5, 60)}
         >
           {pair}
         </text>
@@ -279,12 +281,12 @@ export const TopOIByPairContent = (props: any) => {
       {isShowText && depth === 1 ? (
         <text
           x={x + width / 2}
-          y={y + height / 2 + Math.min(Math.sqrt(width * height) / 10, 25)}
+          y={y + height / 2 + Math.min(Math.sqrt(width * height) / 5, 50)}
           textAnchor="middle"
           fill={themeColors.neutral1}
           stroke={themeColors.neutral1}
           strokeWidth={0.5}
-          fontSize={Math.min(Math.sqrt(width * height) / 15, 20)}
+          fontSize={Math.min(Math.sqrt(width * height) / 5, 50)}
         >
           {`${compactNumber(totalOi, 1)}$`}
         </text>
@@ -301,17 +303,18 @@ export const TopOIByPairTooltip = ({ payload, unit: _unit }: TooltipProps) => {
   }
 
   return (
-    <Flex flexDirection="column" p={2} backgroundColor="neutral7" sx={{ gap: 1 }}>
-      <Flex alignItems="center" sx={{ gap: 2 }}>
-        <Type.Caption color="neutral3">
-          {data?.pair === 'OTHERS' ? 'Others' : !!data?.top ? `Top ${data.top}` : ''}
-        </Type.Caption>
+    <Flex flexDirection="column" p={2} backgroundColor="neutral7" sx={{ gap: '4px' }}>
+      <Flex alignItems="center" sx={{ ml: -1 }}>
         {data?.pair && data.pair !== 'OTHERS' && (
           <Flex alignItems="center" sx={{ gap: 1 }}>
             <Market symbol={data?.pair} />
-            <Type.Caption color="neutral3">{data?.pair}</Type.Caption>
+            <Type.Caption color="neutral1">{data?.pair}</Type.Caption>
           </Flex>
         )}
+        <Box height="10px" width="1px" backgroundColor={themeColors.neutral1} mx={2} />
+        <Type.Caption color="neutral1">
+          {data?.pair === 'OTHERS' ? 'Others' : !!data?.top ? `Top ${data.top}` : ''}
+        </Type.Caption>
       </Flex>
       <TooltipFieldItem value={data?.longOi} label={'Long OI:'} unit={unit} backgroundColor={themeColors.green2} />
       <TooltipFieldItem value={data?.shortOi} label={'Short OI:'} unit={unit} backgroundColor={themeColors.red1} />
@@ -361,7 +364,9 @@ export const HourlyChartTooltip = ({ active, payload, title }: any) => {
     const data = payload[0].payload
     return (
       <Flex backgroundColor="neutral7" sx={{ gap: 1, p: 2 }}>
-        <Type.Caption color="neutral3">{title}</Type.Caption>
+        <Type.Caption color="neutral3" sx={{ textTransform: 'capitalize' }}>
+          {title}
+        </Type.Caption>
         <Type.Caption color="neutral1">{compactNumber(data.value, 1)}</Type.Caption>
       </Flex>
     )

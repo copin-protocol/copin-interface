@@ -135,7 +135,7 @@ export interface TopPairChartData {
   longLoss: number
   shortLoss: number
   totalLoss: number
-  totalNet: number
+  totalProfitLoss: number
 }
 
 export interface DataPoint {
