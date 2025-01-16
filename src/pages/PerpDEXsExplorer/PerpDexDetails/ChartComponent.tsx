@@ -17,7 +17,7 @@ import {
 } from 'recharts'
 import { StackOffsetType } from 'recharts/types/util/types'
 
-import { DataPoint, PerpDexChartData, StatsData, TopPairChartData } from 'entities/chart'
+import { DataPoint, HourlyChartOptionType, PerpDexChartData, StatsData, TopPairChartData } from 'entities/chart'
 import { isMobile } from 'hooks/helpers/useIsMobile'
 import { useHourlyChartStore } from 'hooks/store/useSwitchHourlyChart'
 import {
@@ -39,7 +39,6 @@ import { themeColors } from 'theme/colors'
 import { Colors } from 'theme/types'
 import { compactNumber } from 'utils/helpers/format'
 
-const CHART_DATE_FORMAT = 'DD.MM'
 const CHART_MIN_HEIGHT = 260
 const YAXIS_WIDTH = isMobile ? 50 : 50
 const STROKE_WIDTH = 0.5
@@ -717,7 +716,7 @@ export function HourlyChartComponent({
 }) {
   const { chartOption } = useHourlyChartStore()
   const tooltipTitle = `Total ${chartOption.text}: `
-  const gradients = getGradientColorsByOption(chartOption.id)
+  const gradients = getGradientColorsByOption(chartOption.id as HourlyChartOptionType)
 
   return (
     <Box mt={2}>

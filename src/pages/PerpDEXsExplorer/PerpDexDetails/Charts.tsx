@@ -213,11 +213,23 @@ function StatisticChart({
     [data, isExpanded]
   )
   const chartPairTopVolumeData = useMemo(
-    () => getPairChartDataByMetric({ data: data || ([] as any), metric: 'volume', top: isExpanded ? 50 : 20 }),
+    () =>
+      getPairChartDataByMetric({
+        data: data || ([] as any),
+        sortType: 'desc',
+        metric: 'volume',
+        top: isExpanded ? 50 : 20,
+      }),
     [data, isExpanded]
   )
   const chartPairTopProfitLossData = useMemo(
-    () => getPairChartDataByMetric({ data: data || ([] as any), metric: 'totalProfit', top: isExpanded ? 50 : 20 }),
+    () =>
+      getPairChartDataByMetric({
+        data: data || ([] as any),
+        sortType: 'desc',
+        metric: 'totalNet',
+        top: isExpanded ? 50 : 20,
+      }),
     [data, isExpanded]
   )
   const chartHourlyData = useMemo(
@@ -410,7 +422,7 @@ function StatisticChart({
             isLoading={isHourlyLoading}
             isExpanded={isExpanded}
             handleToggleExpand={handleToggleExpand}
-            label={`${chartOption.text} Intensity By Day & Hour (UTC)`}
+            label={`${chartOption.text} INTENSITY BY DAY & HOUR (UTC)`}
           />
         </Box>
       )}

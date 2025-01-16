@@ -1,9 +1,7 @@
-import React from 'react'
-
 import { useHourlyChartStore } from 'hooks/store/useSwitchHourlyChart'
+import { HOURLY_CHART_OPTIONS } from 'pages/PerpDEXsExplorer/PerpDexDetails/configs/constants'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Type } from 'theme/base'
-import { HOURLY_CHART_OPTIONS } from 'utils/config/constants'
 
 const SwitchHourlyChart = ({ sx }: { sx?: any }) => {
   const { chartOption, setChartOption } = useHourlyChartStore()
@@ -12,8 +10,13 @@ const SwitchHourlyChart = ({ sx }: { sx?: any }) => {
     return (
       <Box>
         {HOURLY_CHART_OPTIONS.map((option) => (
-          <DropdownItem key={option.id} size="sm" onClick={() => setChartOption(option)}>
-            <Type.Body color={chartOption.id === option.id ? 'primary1' : 'neutral3'}>{option.text}</Type.Body>
+          <DropdownItem
+            key={option.id}
+            size="sm"
+            isActive={chartOption.id === option.id}
+            onClick={() => setChartOption(option)}
+          >
+            {option.text}
           </DropdownItem>
         ))}
       </Box>
@@ -24,16 +27,11 @@ const SwitchHourlyChart = ({ sx }: { sx?: any }) => {
     <Dropdown
       menu={renderOptions()}
       buttonVariant="ghost"
-      buttonSx={{
-        border: '1px solid #E0E0E0',
-        px: '5px',
-        py: '3px',
-      }}
       menuSx={{ width: '80px' }}
       hasArrow={true}
       sx={{ minWidth: 'fit-content', ...sx }}
     >
-      <Type.CaptionBold color="neutral2">{chartOption.text}</Type.CaptionBold>
+      <Type.CaptionBold>{chartOption.text}</Type.CaptionBold>
     </Dropdown>
   )
 }

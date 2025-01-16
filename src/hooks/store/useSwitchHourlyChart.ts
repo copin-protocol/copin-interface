@@ -2,7 +2,7 @@ import create from 'zustand'
 import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
-import { HOURLY_CHART_OPTIONS } from 'utils/config/constants'
+import { HOURLY_CHART_OPTIONS } from 'pages/PerpDEXsExplorer/PerpDexDetails/configs/constants'
 
 interface HourlyChartState {
   chartOption: { id: string; text: string }

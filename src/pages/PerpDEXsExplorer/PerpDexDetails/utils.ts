@@ -1,13 +1,12 @@
-import { DataPoint, HourlyChartData, TopPairChartData } from 'entities/chart'
+import { DataPoint, HourlyChartData, HourlyChartOptionType, TopPairChartData } from 'entities/chart'
 import { PerpDexStatisticData } from 'entities/statistic'
-import { themeColors } from 'theme/colors'
 import {
-  CHART_DATE_FORMAT,
-  DATE_FORMAT,
   ORDERS_CHART_GRADIENTS,
   TRADERS_CHART_GRADIENTS,
   VOLUME_CHART_GRADIENTS,
-} from 'utils/config/constants'
+} from 'pages/PerpDEXsExplorer/PerpDexDetails/configs/constants'
+import { themeColors } from 'theme/colors'
+import { CHART_DATE_FORMAT, DATE_FORMAT } from 'utils/config/constants'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
 
 export function getHourlyChartDataByMetric({
@@ -76,7 +75,7 @@ export function getFillColor(minRange: number, maxRange: number, gradients: any[
   return gradients[gradients.length - 1].color // return the last color if no match
 }
 
-export const getGradientColorsByOption = (optionId: string) => {
+export const getGradientColorsByOption = (optionId: HourlyChartOptionType) => {
   switch (optionId) {
     case 'traders':
       return TRADERS_CHART_GRADIENTS
@@ -142,7 +141,7 @@ export function getPairChartDataByMetric({
   top,
 }: {
   data: PerpDexStatisticData[] | undefined
-  metric?: 'volume' | 'totalPnl' | 'totalOi' | 'totalProfit' | 'totalLoss' | 'longProfit'
+  metric?: 'volume' | 'totalPnl' | 'totalOi' | 'totalProfit' | 'totalLoss' | 'longProfit' | 'totalNet'
   sortType?: 'asc' | 'desc'
   top?: number
 }) {
@@ -166,24 +165,16 @@ export function getPairChartDataByMetric({
           longLoss: 0,
           shortLoss: 0,
           totalLoss: 0,
+          totalNet: 0,
         }
       }
-      const fields = [
-        'volume',
-        'longPnl',
-        'shortPnl',
-        'longOi',
-        'shortOi',
-        'longProfit',
-        'shortProfit',
-        'longLoss',
-        'shortLoss',
-      ]
 
-      fields.forEach((field) => {
-        // @ts-ignore
-        acc[pair][field] += stats[field as keyof typeof stats] || 0
-      })
+      for (const key of Object.keys(stats)) {
+        if (key in acc[pair]) {
+          // @ts-ignore
+          acc[pair][key] += stats[key] || 0
+        }
+      }
 
       acc[pair].totalPnl += stats.longPnl + stats.shortPnl
       acc[pair].totalOi += stats.longOi + stats.shortOi
@@ -192,6 +183,11 @@ export function getPairChartDataByMetric({
     })
     return acc
   }, {} as { [pair: string]: TopPairChartData })
+
+  for (const pair in pairAggregates) {
+    const { totalProfit, totalLoss } = pairAggregates[pair]
+    pairAggregates[pair].totalNet = Math.abs(totalProfit || 0) - Math.abs(totalLoss || 0)
+  }
 
   const pairData = Object.values(pairAggregates)
     .map((stats) => ({
@@ -212,6 +208,8 @@ export function getPairChartDataByMetric({
           return pair.longOi > 0 || pair.shortOi > 0
         case 'totalProfit':
           return pair.totalProfit > 0 || pair.totalLoss < 0
+        case 'totalNet':
+          return pair.totalNet != 0
         default:
           return true
       }

@@ -135,6 +135,7 @@ export interface TopPairChartData {
   longLoss: number
   shortLoss: number
   totalLoss: number
+  totalNet: number
 }
 
 export interface DataPoint {
@@ -146,3 +147,5 @@ export interface DataPoint {
 export interface HourlyChartData {
   [date: string]: PerpDexHourlyStatistic
 }
+
+type HourlyChartOptionType = 'traders' | 'volume' | 'orders'

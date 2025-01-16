@@ -235,7 +235,7 @@ export const TopProfitLossByPairTooltip = ({ payload }: TooltipProps) => {
       />
       <TooltipFieldItem value={data?.totalLoss} label={'Total Loss:'} unit={unit} backgroundColor={themeColors.red1} />
       <TooltipFieldItem
-        value={data?.totalProfit + data?.totalLoss}
+        value={data?.totalNet}
         label={'Net Income:'}
         unit={unit}
         backgroundColor={themeColors.neutral1}
@@ -398,19 +398,19 @@ export const CHART_CONFIG: Record<
     noDataImage: noTraderProfitLoss,
   },
   [PerpChartTypeEnum.TOP_VOLUME_BY_PAIRS]: {
-    label: <Trans>Top Volume By Pairs</Trans>,
+    label: <Trans>TOP VOLUME BY PAIRS</Trans>,
     noDataImage: noTopVolumeByPairs,
   },
   [PerpChartTypeEnum.TOP_PROFIT_AND_LOSS_BY_PAIRS]: {
-    label: <Trans>Top Profit and Loss By Pairs</Trans>,
+    label: <Trans>TOP PROFIT AND LOSS BY PAIRS</Trans>,
     noDataImage: noTopPnlByPairs,
   },
   [PerpChartTypeEnum.TOP_OI_BY_PAIRS]: {
-    label: <Trans>Long/Short Open Interest By Pairs</Trans>,
+    label: <Trans>LONG/SHORT OPEN INTEREST BY PAIRS</Trans>,
     noDataImage: noTopOIByPairs,
   },
   [PerpChartTypeEnum.HOURLY_CHART]: {
-    label: <Trans>Activity Intensity By Day & Hour</Trans>,
+    label: <Trans>ACTIVITY INTENSITY BY DAY & HOUR</Trans>,
     noDataImage: noTraderActivityByDay,
     isHourlyChart: true,
   },
