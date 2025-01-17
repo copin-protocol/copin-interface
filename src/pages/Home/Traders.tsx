@@ -405,8 +405,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
             },
           }}
         >
-          {pnlData &&
-            traders &&
+          {traders &&
             traders.data?.map((traderData) => {
               return (
                 <TraderItem
@@ -484,10 +483,10 @@ function TraderItem({
   traderData: ResponseTraderData
   onClickBacktest: (traderData: TraderData) => void
   timeOption: TimeFilterProps
-  pnlData: PnlStatisticsResponse
+  pnlData: PnlStatisticsResponse | undefined
 }) {
   const { protocol, account, type, realisedPnl, realisedAvgRoi, totalWin, totalTrade } = traderData
-  const traderPnlData = pnlData[account]
+  const traderPnlData = pnlData?.[account]
 
   return (
     <Box
