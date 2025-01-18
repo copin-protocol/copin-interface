@@ -36,9 +36,10 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { UNLIMITED_COPY_SIZE_EXCHANGES } from 'utils/config/constants'
-import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
+import { CopyTradeSideEnum, CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
+import { COPY_SIDE_TRANS } from 'utils/config/translations'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { getErrorMessage } from 'utils/helpers/handleError'
@@ -325,7 +326,15 @@ export default function useCEXCopyTradeColumns({
   const renderRiskControl = useCallback(
     (item: CopyTradeData) => {
       let settingsCount = 0
-      const settings = ['maxVolMultiplier', 'volumeProtection', 'skipLowLeverage', 'skipLowCollateral', 'skipLowSize']
+      const hasPositionSide = item.side !== CopyTradeSideEnum.BOTH
+      const settings = [
+        'maxVolMultiplier',
+        'volumeProtection',
+        'skipLowLeverage',
+        'skipLowCollateral',
+        'skipLowSize',
+        ...(hasPositionSide ? ['side'] : []),
+      ]
       settings.forEach((key) => {
         if (item[key as keyof CopyTradeData]) {
           settingsCount++
@@ -371,6 +380,14 @@ export default function useCEXCopyTradeColumns({
                           </Box>
                         </Type.Caption>
                       </>
+                    )}
+                    {!!item.side && item.side !== CopyTradeSideEnum.BOTH && (
+                      <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                        Position Side:{' '}
+                        <Box as="span" color="primary1">
+                          {COPY_SIDE_TRANS[item.side]}
+                        </Box>
+                      </Type.Caption>
                     )}
                     {!!item.skipLowLeverage && !!item.lowLeverage && (
                       <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">

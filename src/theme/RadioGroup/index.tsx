@@ -1,21 +1,23 @@
 import { SystemStyleObject } from '@styled-system/css'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, ReactNode, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import { GridProps } from 'styled-system'
 
-import { Box, Flex } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { BoxProps } from 'theme/types'
 
 type RadioProps = {
+  direction?: 'column' | 'row'
   defaultChecked?: boolean
   checked?: boolean
   disabled?: boolean
   onChange?: (e: any) => void
-  children?: ReactElement | ReactElement[] | string
+  children?: ReactNode | ReactElement | ReactElement[] | string
   block?: boolean
 } & BoxProps
 
 type RadioWrapperProps = {
+  direction?: 'column' | 'row'
   value?: string
   active?: boolean
   disabled?: boolean
@@ -23,11 +25,12 @@ type RadioWrapperProps = {
 }
 
 type Option = {
-  label: ReactElement | ReactElement[] | string
+  label: ReactNode | ReactElement | ReactElement[] | string
   value: string | number
 }
 
 type RadioGroupProps = {
+  direction?: 'column' | 'row'
   value?: string | number
   defaultValue?: string | number
   options?: Option[]
@@ -42,55 +45,39 @@ const RadioWrapper = styled(Box)<RadioWrapperProps>`
   display: flex;
   align-items: center;
   width: ${(props) => (props.block ? '100%' : 'fit-content')};
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   transition: border-color 240ms ease-in;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   &:not(:first-child) {
-    margin-top: 12px;
+    margin-top: ${(props) => (props.direction === 'column' ? '12px' : undefined)};
+    margin-left: ${(props) => (props.direction === 'row' ? '12px' : undefined)};
   }
   .radio {
     position: relative;
     display: inline-block;
     margin-right: 8px;
-    min-width: 24px;
-    height: 24px;
+    min-width: 16px;
+    height: 16px;
     padding: 0;
-    background: ${({ theme }) => theme.colors.neutral8};
+    background: transparent;
     line-height: 24px;
     text-align: center;
-    border: 2px solid ${({ theme }) => theme.colors.neutral6};
+    border: 1px solid ${(props) => (props.active ? props.theme.colors.primary1 : props.theme.colors.neutral3)};
     border-radius: 50%;
   }
-
+  .radio:hover {
+    border: 1px solid ${({ theme, disabled }) => (disabled ? theme.colors.neutral3 : theme.colors.primary1)};
+  }
   .radio:after {
     content: '';
     position: absolute;
-    top: calc(50% - 8px);
-    left: calc(50% - 8px);
-    width: 16px;
-    height: 16px;
+    top: calc(50% - 4px);
+    left: calc(50% - 4px);
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    /* width: 13px;
-    height: 13px; */
     transition: background 240ms ease-in;
     background: ${(props) => (props.active ? props.theme.colors.primary1 : 'transparent')};
-  }
-  &[disabled] {
-    .radio {
-      cursor: not-allowed;
-      background: ${({ theme }) => theme.colors.neutral6};
-      border: 2px solid ${({ theme }) => theme.colors.neutral5};
-    }
-    .radio:after {
-      content: '';
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      border-radius: 12px;
-      width: 12px;
-      height: 12px;
-      transition: background 240ms ease-in;
-      background: ${(props) => (props.active ? props.theme.colors.neutral5 : 'transparent')};
-    }
   }
 `
 
@@ -122,6 +109,7 @@ const RadioGroup = ({
   sx,
   sxChildren,
   block = false,
+  direction = 'row',
 }: RadioGroupProps) => {
   const [currentValue, setCurrentValue] = useState(defaultValue)
   const changeValue = (option: Option) => {
@@ -135,17 +123,18 @@ const RadioGroup = ({
   }, [value, currentValue, setCurrentValue])
 
   return (
-    <Flex flexDirection="column" sx={sx}>
+    <Flex flexDirection={direction} sx={{ gap: 3, ...sx }}>
       {options.map((option: Option) => (
         <Radio
           key={option.value}
+          direction={direction}
           checked={currentValue === option.value}
           onChange={() => changeValue(option)}
           disabled={disabled}
           block={block}
           sx={sxChildren}
         >
-          {option.label}
+          <Type.Caption>{option.label}</Type.Caption>
         </Radio>
       ))}
     </Flex>

@@ -1,6 +1,7 @@
 import {
   CopyPositionCloseTypeEnum,
   CopyTradePlatformEnum,
+  CopyTradeSideEnum,
   CopyTradeStatusEnum,
   PositionStatusEnum,
   ProtocolEnum,
@@ -20,6 +21,7 @@ export interface RequestCopyTradeData {
   takeProfitAmount?: number
   protocol?: ProtocolEnum
   type?: CopyTradeTypeEnum
+  side: CopyTradeSideEnum
   exchange?: CopyTradePlatformEnum
   proxyUrl?: string
   serviceKey?: string
@@ -61,6 +63,7 @@ export interface CopyTradeData {
   status: CopyTradeStatusEnum
   createdAt: string
   type: CopyTradeTypeEnum
+  side: CopyTradeSideEnum
   proxyUrl: string
   serviceKey?: string
   title?: string

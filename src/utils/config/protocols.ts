@@ -19,13 +19,14 @@ import {
   OPTIMISM_MAINNET,
   POLYGON_MAINNET,
   POLYNOMIAL_L2_MAINNET,
-  SCROLL_MAINNET, SOLANA_MAINNET,
+  SCROLL_MAINNET,
+  SOLANA_MAINNET,
   XCHAIN_MAINNET,
   ZKSYNC_ERA_MAINNET,
 } from 'utils/web3/chains'
 
-import {BUILD_MODE, LINKS, RELEASED_PROTOCOLS} from './constants'
-import {ProtocolEnum} from './enums'
+import { BUILD_MODE, LINKS, RELEASED_PROTOCOLS } from './constants'
+import { ProtocolEnum } from './enums'
 
 export type ProtocolOptionProps = {
   id: ProtocolEnum
@@ -594,6 +595,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     isNew: true,
     key: 'PEO',
   },
+  [ProtocolEnum.PINGU_ARB]: {
+    id: ProtocolEnum.PINGU_ARB,
+    text: 'Pingu',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+    isNew: true,
+    key: 'PIA',
+  },
 }
 
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =
@@ -627,7 +636,7 @@ export const PROTOCOL_USE_SIZE_NUMBER_TO_CALC: ProtocolEnum[] = [
   ProtocolEnum.COPIN,
 ]
 export const PROTOCOLS_IN_TOKEN: ProtocolEnum[] = []
-export const PROTOCOLS_IN_TOKEN_COLLATERAL: ProtocolEnum[] = [ProtocolEnum.LINEHUB_LINEA]
+export const PROTOCOLS_IN_TOKEN_COLLATERAL: ProtocolEnum[] = [ProtocolEnum.LINEHUB_LINEA, ProtocolEnum.PINGU_ARB]
 
 // TODO: Check when add new protocol
 export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {

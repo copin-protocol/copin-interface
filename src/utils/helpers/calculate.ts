@@ -3,8 +3,6 @@ import { PositionData } from 'entities/trader'
 import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
 import { PROTOCOLS_IN_TOKEN_COLLATERAL, PROTOCOL_USE_SIZE_NUMBER_TO_CALC } from 'utils/config/protocols'
 
-import { GMX_V1_PROTOCOLS } from '../config/constants'
-
 export function calcPnL(isLong: boolean, averagePrice: number, lastPrice: number, sizeUsd: number) {
   const priceDelta = averagePrice > lastPrice ? averagePrice - lastPrice : lastPrice - averagePrice
   const hasProfit = isLong ? lastPrice > averagePrice : averagePrice > lastPrice
@@ -141,20 +139,16 @@ export function calcClosedPrice(position?: PositionData) {
   if (!position || !position.orders?.length) return
   const decreaseList =
     position.orders.filter(
-      (e) =>
-        e.type === OrderTypeEnum.DECREASE ||
-        (GMX_V1_PROTOCOLS.includes(position.protocol) && e.type === OrderTypeEnum.CLOSE) ||
-        e.type === OrderTypeEnum.LIQUIDATE
+      (e) => e.type === OrderTypeEnum.DECREASE || e.type === OrderTypeEnum.CLOSE || e.type === OrderTypeEnum.LIQUIDATE
     ) ?? []
   if (!decreaseList.length) return
   let totalSizeDecrease = 0
   let totalVolumeDecrease = 0
-  const useSizeNumber = PROTOCOL_USE_SIZE_NUMBER_TO_CALC.includes(position.protocol)
 
   decreaseList.forEach((order) => {
     let sizeNumber = 0
     let sizeDeltaNumber = 0
-    if (useSizeNumber && order.sizeNumber) {
+    if (order.sizeNumber) {
       sizeNumber = order.sizeNumber
       sizeDeltaNumber = order.sizeDeltaNumber
     } else if (order.sizeInTokenNumber || order.sizeDeltaInTokenNumber) {

@@ -1,7 +1,7 @@
 import { CopyTradeData } from 'entities/copyTrade'
 import { Flex, Image, Type } from 'theme/base'
 import { DCP_EXCHANGES } from 'utils/config/constants'
-import { CopyTradePlatformEnum, SLTPTypeEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, CopyTradeSideEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
 import { CopyTradeFormValues } from './types'
@@ -38,6 +38,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     lowCollateral,
     skipLowSize,
     lowSize,
+    side,
   } = copyTradeData
   if (accounts && accounts.length > 0) {
     result.multipleCopy = true
@@ -98,6 +99,7 @@ export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | und
     result.excludingTokenAddresses = []
     result.hasExclude = false
   }
+  result.side = side ?? CopyTradeSideEnum.BOTH
   return result
 }
 
@@ -137,6 +139,7 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues, isClone?: 
     ...(formData.multipleCopy && formData.accounts && formData.accounts.length > 0
       ? { multipleCopy: true, accounts: formData.accounts?.filter((_v) => !!_v) }
       : { multipleCopy: false, account: isClone ? formData.duplicateToAddress : formData.account }),
+    side: formData.side,
   }
 }
 export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {

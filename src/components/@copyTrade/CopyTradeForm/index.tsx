@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { getTraderVolumeCopy } from 'apis/copyTradeApis'
-import { getCopyVolumeColor } from 'components/@copyTrade/TraderCopyVolumeWarningIcon/helper'
 import Divider from 'components/@ui/Divider'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
@@ -34,24 +33,24 @@ import Input, { Textarea } from 'theme/Input'
 import InputField from 'theme/InputField'
 import Label from 'theme/InputField/Label'
 import NumberInputField from 'theme/InputField/NumberInputField'
+import RadioGroup from 'theme/RadioGroup'
 import Select from 'theme/Select'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { DCP_SUPPORTED_PROTOCOLS, DEFAULT_PROTOCOL, LINKS, UNLIMITED_COPY_SIZE_EXCHANGES } from 'utils/config/constants'
-import { CopyTradePlatformEnum, EventTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { INTERNAL_SERVICE_KEYS, QUERY_KEYS, SERVICE_KEYS } from 'utils/config/keys'
+import { CopyTradePlatformEnum, CopyTradeSideEnum, EventTypeEnum, SLTPTypeEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
 import ROUTES from 'utils/config/routes'
 import { TOKEN_TRADE_IGNORE } from 'utils/config/trades'
-import { SLTP_TYPE_TRANS } from 'utils/config/translations'
+import { COPY_SIDE_TRANS, SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 import { getAvatarName } from 'utils/helpers/generateAvatar'
+import { getCopyService } from 'utils/helpers/getCopyService'
 import { capitalizeFirstLetter } from 'utils/helpers/transform'
-import { getUserForTracking } from 'utils/tracking/event'
-import { logEventLite } from 'utils/tracking/event'
-import { EventCategory } from 'utils/tracking/types'
-import { EVENT_ACTIONS } from 'utils/tracking/types'
+import { getUserForTracking, logEventLite } from 'utils/tracking/event'
+import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import {
   dcpExchangeOptions,
@@ -134,6 +133,7 @@ const CopyTraderForm = ({
     account,
     accounts,
     duplicateToAddress,
+    side,
   ] = watch([
     'title',
     'exchange',
@@ -161,6 +161,7 @@ const CopyTraderForm = ({
     'account',
     'accounts',
     'duplicateToAddress',
+    'side',
   ])
 
   const { checkIsPremium, isPremiumUser } = useIsPremiumAndAction()
@@ -171,7 +172,6 @@ const CopyTraderForm = ({
     : !!protocol && DCP_SUPPORTED_PROTOCOLS.includes(protocol)
     ? [...dcpExchangeOptions, ...cexOptions]
     : cexOptions
-  const serviceCopy = isInternal ? INTERNAL_SERVICE_KEYS : SERVICE_KEYS
 
   const [tradedPairs, setTradedPairs] = useState<string[]>([])
 
@@ -223,6 +223,8 @@ const CopyTraderForm = ({
   const onChangeSLType = (type: SLTPTypeEnum) => setValue(fieldName.stopLossType, type)
 
   const onChangeTPType = (type: SLTPTypeEnum) => setValue(fieldName.takeProfitType, type)
+
+  const onChangeSide = (side: CopyTradeSideEnum) => setValue(fieldName.side, side)
 
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
 
@@ -525,7 +527,7 @@ const CopyTraderForm = ({
               value={protocolOptions.find((option) => option.value === protocol)}
               onChange={(newValue: any) => {
                 setValue('protocol', newValue.value)
-                setValue('serviceKey', serviceCopy[newValue.value as ProtocolEnum])
+                setValue('serviceKey', getCopyService({ protocol: newValue.value, exchange: platform, isInternal }))
               }}
               isSearchable
               isDisabled={!!_defaultFormValues.duplicateToAddress}
@@ -1092,6 +1094,9 @@ const CopyTraderForm = ({
                   </Box>
                 </Flex>
               )}
+
+              <SelectSide side={side} onChangeSide={onChangeSide} />
+
               {platform !== CopyTradePlatformEnum.SYNTHETIX_V2 &&
                 platform !== CopyTradePlatformEnum.SYNTHETIX_V3 &&
                 platform !== CopyTradePlatformEnum.GNS_V8 && (
@@ -1323,6 +1328,51 @@ export const SelectSLTPType = ({
     <Dropdown menu={renderTypes()} buttonVariant="ghost" inline menuSx={{ minWidth: 70, width: 70 }} hasArrow>
       <Type.Caption>{SLTP_TYPE_TRANS[type]}</Type.Caption>
     </Dropdown>
+  )
+}
+
+export const SelectSide = ({
+  side = CopyTradeSideEnum.BOTH,
+  onChangeSide,
+}: {
+  side?: CopyTradeSideEnum
+  onChangeSide: (type: CopyTradeSideEnum) => void
+}) => {
+  const options = [
+    { label: COPY_SIDE_TRANS[CopyTradeSideEnum.BOTH], value: CopyTradeSideEnum.BOTH },
+    {
+      label: <Type.Caption>{COPY_SIDE_TRANS[CopyTradeSideEnum.ONLY_LONG]}</Type.Caption>,
+      value: CopyTradeSideEnum.ONLY_LONG,
+    },
+    {
+      label: <Type.Caption> {COPY_SIDE_TRANS[CopyTradeSideEnum.ONLY_SHORT]}</Type.Caption>,
+      value: CopyTradeSideEnum.ONLY_SHORT,
+    },
+  ]
+
+  return (
+    <Box mt={3}>
+      <LabelWithTooltip
+        id={'tt_position_side'}
+        tooltip={`You will only copy positions that are opened with the selected side strategy.`}
+        sx={{
+          borderBottom: '1px dashed',
+          mb: 2,
+          borderBottomColor: 'neutral3',
+          textDecoration: 'none',
+        }}
+      >
+        Position Side
+      </LabelWithTooltip>
+      <RadioGroup
+        value={side}
+        options={options}
+        onChange={(value) => {
+          onChangeSide(value as CopyTradeSideEnum)
+        }}
+        sxChildren={{ mt: 0 }}
+      />
+    </Box>
   )
 }
 

@@ -1,8 +1,9 @@
 import { CopyTradeData, RequestCopyTradeData, UpdateCopyTradeData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
 import { VaultAprData } from 'entities/vault'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
-import { INTERNAL_SERVICE_KEYS, SERVICE_KEYS } from 'utils/config/keys'
+import { getCopyService } from 'utils/helpers/getCopyService'
 
 import { ApiListResponse } from './api'
 import requester from './index'
@@ -29,11 +30,11 @@ export async function requestVaultCopyTradeApi({
   data: RequestCopyTradeData
   isInternal?: boolean
 }) {
-  const service = isInternal ? INTERNAL_SERVICE_KEYS : SERVICE_KEYS
-  const serviceKey =
-    data.exchange == CopyTradePlatformEnum.GNS_V8 || data.exchange == CopyTradePlatformEnum.SYNTHETIX_V2
-      ? 'MIRROR_SIGNAL'
-      : service[data.protocol ?? ProtocolEnum.GMX]
+  const serviceKey = getCopyService({
+    protocol: data.protocol ?? DEFAULT_PROTOCOL,
+    exchange: data.exchange,
+    isInternal,
+  })
   return requester.post(`${COPY_SERVICE}/vault`, { ...data, serviceKey }).then((res: any) => res.data as CopyTradeData)
 }
 
@@ -44,7 +45,7 @@ export async function updateVaultCopyTradeApi({
   data: UpdateCopyTradeData
   copyTradeId: string
 }) {
-  const serviceKey = SERVICE_KEYS[data.protocol ?? ProtocolEnum.GMX]
+  const serviceKey = getCopyService({ protocol: data.protocol ?? DEFAULT_PROTOCOL, exchange: data.exchange })
   return requester
     .put(`${COPY_SERVICE}/${copyTradeId}`, { ...data, serviceKey })
     .then((res: any) => res.data as CopyTradeData)
