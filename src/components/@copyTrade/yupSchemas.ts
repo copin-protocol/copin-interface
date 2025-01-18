@@ -29,6 +29,7 @@ const commonSchema = {
   }),
   leverage: yup.number().required().min(2).label('Leverage'),
   lookBackOrders: yup.number().min(1).integer().label('Orders To Lookback'),
+  side: yup.string().label('Side'),
   stopLossType: yup.string().label('Stop Loss Type'),
   stopLossAmount: yup
     .number()

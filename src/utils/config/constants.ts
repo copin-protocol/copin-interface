@@ -243,6 +243,8 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.LOGX_BLAST,
         ProtocolEnum.LOGX_MODE,
         ProtocolEnum.MYX_ARB,
+        ProtocolEnum.MYX_LINEA,
+        ProtocolEnum.MYX_OPBNB,
         ProtocolEnum.DEXTORO,
         ProtocolEnum.VELA_ARB,
         ProtocolEnum.HMX_ARB,
@@ -276,15 +278,19 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.SYNTHETIX,
         ProtocolEnum.DEPERP_BASE,
         ProtocolEnum.ELFI_ARB,
+        ProtocolEnum.PINGU_ARB,
       ]
     : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 
 // TODO: Check when add new protocol copy-trade
 export const ALLOWED_COPYTRADE_PROTOCOLS = [
+  ProtocolEnum.GMX_AVAX,
   ProtocolEnum.GMX,
+  ProtocolEnum.GMX_V2_AVAX,
   ProtocolEnum.GMX_V2,
   ProtocolEnum.KWENTA,
   ProtocolEnum.POLYNOMIAL,
+  ProtocolEnum.POLYNOMIAL_L2,
   ProtocolEnum.GNS,
   ProtocolEnum.GNS_POLY,
   ProtocolEnum.GNS_BASE,
@@ -299,10 +305,13 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.LEVEL_ARB,
   ProtocolEnum.LEVEL_BNB,
   ProtocolEnum.APOLLOX_BNB,
+  ProtocolEnum.APOLLOX_BASE,
   ProtocolEnum.KILOEX_OPBNB,
   ProtocolEnum.ROLLIE_SCROLL,
   ProtocolEnum.MUMMY_FANTOM,
   ProtocolEnum.MORPHEX_FANTOM,
+  ProtocolEnum.FOXIFY_ARB,
+  ProtocolEnum.BMX_BASE,
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
 export const FEE_WITH_FUNDING_PROTOCOLS = [

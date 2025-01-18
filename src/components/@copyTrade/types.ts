@@ -1,6 +1,12 @@
 import { ReactNode } from 'react'
 
-import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
+import {
+  CopyTradePlatformEnum,
+  CopyTradeSideEnum,
+  CopyTradeTypeEnum,
+  ProtocolEnum,
+  SLTPTypeEnum,
+} from 'utils/config/enums'
 
 export interface CopyTradeFormValues {
   totalVolume?: number
@@ -13,6 +19,7 @@ export interface CopyTradeFormValues {
   excludingTokenAddresses: string[]
   type?: CopyTradeTypeEnum
   protocol?: ProtocolEnum
+  side: CopyTradeSideEnum
   stopLossType: SLTPTypeEnum
   stopLossAmount: number | undefined
   takeProfitType: SLTPTypeEnum

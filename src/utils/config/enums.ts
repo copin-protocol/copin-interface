@@ -65,6 +65,7 @@ export enum ProtocolEnum {
   ELFI_ARB = 'ELFI_ARB',
   JUPITER = 'JUPITER',
   PERPETUAL_OP = 'PERPETUAL_OP',
+  PINGU_ARB = 'PINGU_ARB',
 }
 
 export enum ProtocolFilterEnum {
@@ -227,6 +228,12 @@ export enum HlInfoType {
 export enum SLTPTypeEnum {
   USD = 'USD',
   PERCENT = 'PERCENT',
+}
+
+export enum CopyTradeSideEnum {
+  BOTH = 'BOTH',
+  ONLY_LONG = 'ONLY_LONG',
+  ONLY_SHORT = 'ONLY_SHORT',
 }
 
 export enum SortTypeEnum {

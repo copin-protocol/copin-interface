@@ -1,8 +1,14 @@
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { Flex, Type } from 'theme/base'
 import { RELEASED_PROTOCOLS } from 'utils/config/constants'
-import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { SERVICE_KEYS } from 'utils/config/keys'
+import {
+  CopyTradePlatformEnum,
+  CopyTradeSideEnum,
+  CopyTradeTypeEnum,
+  ProtocolEnum,
+  SLTPTypeEnum,
+} from 'utils/config/enums'
+import { DEFAULT_SERVICE_KEY } from 'utils/config/keys'
 
 import { getExchangeOption } from './helpers'
 import { CopyTradeFormValues, ExchangeOptions } from './types'
@@ -21,6 +27,8 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
   takeProfitType: 'takeProfitType',
   takeProfitAmount: 'takeProfitAmount',
   lookBackOrders: 'lookBackOrders',
+  type: 'type',
+  side: 'side',
   exchange: 'exchange',
   copyWalletId: 'copyWalletId',
   serviceKey: 'serviceKey',
@@ -47,6 +55,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   tokenAddresses: [],
   excludingTokenAddresses: [],
   type: CopyTradeTypeEnum.COPY_TRADER,
+  side: CopyTradeSideEnum.BOTH,
   stopLossType: SLTPTypeEnum.PERCENT,
   stopLossAmount: undefined,
   takeProfitType: SLTPTypeEnum.PERCENT,
@@ -54,7 +63,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   lookBackOrders: undefined,
   exchange: CopyTradePlatformEnum.HYPERLIQUID,
   copyWalletId: '',
-  serviceKey: SERVICE_KEYS[ProtocolEnum.KWENTA],
+  serviceKey: DEFAULT_SERVICE_KEY,
   title: '',
   reverseCopy: false,
   duplicateToAddress: '',

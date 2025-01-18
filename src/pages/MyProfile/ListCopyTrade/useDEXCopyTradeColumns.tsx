@@ -28,19 +28,15 @@ import { useCheckCopyTradeAction, useIsVIP } from 'hooks/features/useSubscriptio
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import IconButton from 'theme/Buttons/IconButton'
 import Dropdown from 'theme/Dropdown'
-import MarginProtectionIcon from 'theme/Icons/MarginProtectionIcon'
-import MaxMarginIcon from 'theme/Icons/MaxMarginIcon'
-import SkipLowCollateralIcon from 'theme/Icons/SkipLowCollateralIcon'
-import SkipLowLeverageIcon from 'theme/Icons/SkipLowLeverageIcon'
-import SkipLowSizeIcon from 'theme/Icons/SkipLowSizeIcon'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { ColumnData } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, IconBox, Image, Type } from 'theme/base'
+import { Box, Flex, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
-import { QUERY_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
+import { CopyTradeSideEnum, CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
+import { COPY_SIDE_TRANS } from 'utils/config/translations'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { getErrorMessage } from 'utils/helpers/handleError'
@@ -304,149 +300,113 @@ export default function useDEXCopyTradeColumns({
     []
   )
   const renderRiskControl = useCallback(
-    (item: CopyTradeData) => (
-      <Flex
-        sx={{
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: ['end', 'start'],
-          gap: 2,
-          filter: isRunningFn(item.status) ? undefined : 'grayscale(1)',
-        }}
-      >
-        {!!item.maxVolMultiplier && (
-          <>
-            <IconBox
-              icon={<MaxMarginIcon size={20} />}
-              color="primary1"
-              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
-              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_MAX_VOL_MULTIPLIER}_${item.id}`}
-            />
-            {isRunningFn(item.status) && (
-              <Tooltip
-                id={`${TOOLTIP_KEYS.MY_COPY_ICON_MAX_VOL_MULTIPLIER}_${item.id}`}
-                place="top"
-                type="dark"
-                effect="solid"
+    (item: CopyTradeData) => {
+      let settingsCount = 0
+      const hasPositionSide = item.side !== CopyTradeSideEnum.BOTH
+      const settings = [
+        'maxVolMultiplier',
+        'volumeProtection',
+        'skipLowLeverage',
+        'skipLowCollateral',
+        'skipLowSize',
+        ...(hasPositionSide ? ['side'] : []),
+      ]
+      settings.forEach((key) => {
+        if (item[key as keyof CopyTradeData]) {
+          settingsCount++
+        }
+      })
+      return (
+        <Flex
+          sx={{
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: ['end', 'start'],
+            gap: 2,
+            filter: isRunningFn(item.status) ? undefined : 'grayscale(1)',
+          }}
+        >
+          {settingsCount > 0 ? (
+            <>
+              <LabelWithTooltip
+                id={`advanced_settings_${item.id}`}
+                tooltip={
+                  <Box>
+                    {!!item.maxVolMultiplier && (
+                      <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                        Max Margin Per Position:{' '}
+                        <Box as="span" color="primary1">
+                          {`$${formatNumber(item.maxVolMultiplier * item.volume)}`}
+                        </Box>
+                      </Type.Caption>
+                    )}
+
+                    {!!item.volumeProtection && (
+                      <>
+                        <Type.Caption color="neutral1" display="block">
+                          Margin Protection:{' '}
+                          <Box as="span" color="primary1">
+                            On
+                          </Box>
+                        </Type.Caption>
+                        <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                          Lookback:{' '}
+                          <Box as="span" color="primary1">
+                            {formatNumber(item.lookBackOrders || 0, 0, 0)} Orders
+                          </Box>
+                        </Type.Caption>
+                      </>
+                    )}
+                    {!!item.side && item.side !== CopyTradeSideEnum.BOTH && (
+                      <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                        Position Side:{' '}
+                        <Box as="span" color="primary1">
+                          {COPY_SIDE_TRANS[item.side]}
+                        </Box>
+                      </Type.Caption>
+                    )}
+                    {!!item.skipLowLeverage && !!item.lowLeverage && (
+                      <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                        Skip Low Leverage Position:{' '}
+                        <Box as="span" color="primary1">
+                          On ({item.lowLeverage}x)
+                        </Box>
+                      </Type.Caption>
+                    )}
+                    {!!item.skipLowCollateral && !!item.lowCollateral && (
+                      <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                        Skip Low Collateral Position:{' '}
+                        <Box as="span" color="primary1">
+                          {`$${formatNumber(item.lowCollateral, 0, 0)}`}
+                        </Box>
+                      </Type.Caption>
+                    )}
+                    {!!item.skipLowSize && !!item.lowSize && (
+                      <Type.Caption color="neutral1" sx={{ maxWidth: 350 }} display="block">
+                        Skip Low Size Position:{' '}
+                        <Box as="span" color="primary1">
+                          {`$${formatNumber(item.lowSize, 0, 0)}`}
+                        </Box>
+                      </Type.Caption>
+                    )}
+                  </Box>
+                }
               >
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Max Margin Per Position:{' '}
-                  <Box as="span" color="primary1">
-                    {`$${formatNumber(item.maxVolMultiplier * item.volume)}`}
-                  </Box>
+                <Type.Caption
+                  color={isRunningFn(item.status) ? 'neutral1' : 'neutral3'}
+                  data-tooltip-id={`advanced_settings_${item.id}`}
+                >
+                  {' '}
+                  {settingsCount} Settings
                 </Type.Caption>
-              </Tooltip>
-            )}
-          </>
-        )}
-        {!!item.volumeProtection && !!item.lookBackOrders && (
-          <>
-            <IconBox
-              icon={<MarginProtectionIcon size={20} />}
-              color="primary1"
-              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
-              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_LOOK_BACK_ORDERS}_${item.id}`}
-            />
-            {isRunningFn(item.status) && (
-              <Tooltip
-                id={`${TOOLTIP_KEYS.MY_COPY_ICON_LOOK_BACK_ORDERS}_${item.id}`}
-                place="top"
-                type="dark"
-                effect="solid"
-              >
-                <Type.Caption color="neutral1" display="block">
-                  Margin Protection:{' '}
-                  <Box as="span" color="primary1">
-                    On
-                  </Box>
-                </Type.Caption>
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Lookback:{' '}
-                  <Box as="span" color="primary1">
-                    {formatNumber(item.lookBackOrders, 0, 0)} Orders
-                  </Box>
-                </Type.Caption>
-              </Tooltip>
-            )}
-          </>
-        )}
-        {item.skipLowLeverage && (
-          <>
-            <IconBox
-              icon={<SkipLowLeverageIcon size={20} />}
-              color={themeColors.primary1}
-              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
-              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_LEVERAGE}_${item.id}`}
-            />
-            {isRunningFn(item.status) && (
-              <Tooltip
-                id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_LEVERAGE}_${item.id}`}
-                place="top"
-                type="dark"
-                effect="solid"
-              >
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Skip Low Leverage Position:{' '}
-                  <Box as="span" color="primary1">
-                    On ({item.lowLeverage}x)
-                  </Box>
-                </Type.Caption>
-              </Tooltip>
-            )}
-          </>
-        )}
-        {item.skipLowCollateral && (
-          <>
-            <IconBox
-              icon={<SkipLowCollateralIcon size={20} />}
-              color={themeColors.primary1}
-              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
-              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_COLLATERAL}_${item.id}`}
-            />
-            {isRunningFn(item.status) && (
-              <Tooltip
-                id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_COLLATERAL}_${item.id}`}
-                place="top"
-                type="dark"
-                effect="solid"
-              >
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Skip Low Collateral Position:{' '}
-                  <Box as="span" color="primary1">
-                    {`$${formatNumber(item.lowCollateral, 0, 0)}`}
-                  </Box>
-                </Type.Caption>
-              </Tooltip>
-            )}
-          </>
-        )}
-        {item.skipLowSize && (
-          <>
-            <IconBox
-              icon={<SkipLowSizeIcon size={20} />}
-              color={themeColors.primary1}
-              sx={{ bg: `${themeColors.primary1}25`, p: '2px', borderRadius: 'sm' }}
-              data-tooltip-id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_SIZE}_${item.id}`}
-            />
-            {isRunningFn(item.status) && (
-              <Tooltip
-                id={`${TOOLTIP_KEYS.MY_COPY_ICON_SKIP_LOW_SIZE}_${item.id}`}
-                place="top"
-                type="dark"
-                effect="solid"
-              >
-                <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
-                  Skip Low Size Position:{' '}
-                  <Box as="span" color="primary1">
-                    {`$${formatNumber(item.lowSize, 0, 0)}`}
-                  </Box>
-                </Type.Caption>
-              </Tooltip>
-            )}
-          </>
-        )}
-      </Flex>
-    ),
+              </LabelWithTooltip>
+            </>
+          ) : (
+            <Type.Caption>--</Type.Caption>
+          )}
+        </Flex>
+      )
+    },
     [isRunningFn]
   )
   const render7DPNL = useCallback(

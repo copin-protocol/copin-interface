@@ -494,6 +494,7 @@ const PROTOCOL_CONFIG_MAPPING: { [key in ProtocolEnum]?: { text: string; textWid
   [ProtocolEnum.ELFI_ARB]: { text: 'ELFi', textWidth: 172 },
   [ProtocolEnum.JUPITER]: { text: 'Jupiter', textWidth: 288 },
   [ProtocolEnum.PERPETUAL_OP]: { text: 'Perpetual V2', textWidth: 328 },
+  [ProtocolEnum.PINGU_ARB]: { text: 'Pingu', textWidth: 328 },
 }
 export const generateProtocol = ({
   protocol,

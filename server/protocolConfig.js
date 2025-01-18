@@ -198,4 +198,7 @@ export const PROTOCOL_CONFIG_MAPPING = {
   PERPETUAL_OP: {
     title: "Perpetual V2",
   },
+  PINGU_ARB: {
+    title: "Pingu",
+  },
 };

@@ -6,7 +6,7 @@ import {
   ChainStatsEnum,
   ChangeFieldEnum,
   CopyPositionCloseTypeEnum,
-  CopyTradePlatformEnum,
+  CopyTradePlatformEnum, CopyTradeSideEnum,
   CopyTradeStatusEnum,
   DataTypeEnum,
   EpochStatusEnum,
@@ -15,7 +15,7 @@ import {
   PositionStatusEnum,
   SLTPTypeEnum,
   TimeFilterByEnum,
-  UserActionEnum,
+  UserActionEnum
 } from './enums'
 
 type ObjectTrans = {
@@ -113,6 +113,12 @@ export const DATA_TYPE_TRANS: ObjectTrans = {
 export const SLTP_TYPE_TRANS: ObjectTrans = {
   [SLTPTypeEnum.USD]: 'USD',
   [SLTPTypeEnum.PERCENT]: '% ROI',
+}
+
+export const COPY_SIDE_TRANS: ObjectTrans = {
+  [CopyTradeSideEnum.BOTH]: 'All',
+  [CopyTradeSideEnum.ONLY_LONG]: 'Only Long',
+  [CopyTradeSideEnum.ONLY_SHORT]: 'Only Short',
 }
 
 export const CHANGE_FIELD_TRANS: ObjectTrans = {

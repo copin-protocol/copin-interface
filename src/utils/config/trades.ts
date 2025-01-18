@@ -321,6 +321,10 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: OPTIMISM_MAINNET,
     explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.PINGU_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
 }
 export interface TokenTrade {
   address: string
@@ -435,6 +439,7 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.ELFI_ARB]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.JUPITER]: {},
   [ProtocolEnum.PERPETUAL_OP]: TOKEN_COLLATERAL_OPTIMISTIC,
+  [ProtocolEnum.PINGU_ARB]: TOKEN_COLLATERAL_ARB,
 }
 
 export const TIMEFRAME_NAMES = {
