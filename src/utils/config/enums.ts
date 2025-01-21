@@ -323,6 +323,23 @@ export enum DataTypeEnum {
   COPY_POSITION = 'COPY_POSITION',
 }
 
+export enum AlertTypeEnum {
+  COPY_TRADE = 'COPY',
+  TRADERS = 'TRADERS',
+  CUSTOM = 'CUSTOM',
+}
+
+export enum AlertSettingsEnum {
+  TRADERS = 'TRADERS',
+  TRIGGER = 'TRIGGER',
+  CHANNEL = 'CHANNEL',
+}
+
+export enum TelegramTypeEnum {
+  DIRECT = 'DIRECT',
+  GROUP = 'GROUP',
+}
+
 export enum ChangeFieldEnum {
   ACCOUNT = 'account',
   ACCOUNTS = 'accounts',

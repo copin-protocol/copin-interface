@@ -2,15 +2,14 @@ import { Trans } from '@lingui/macro'
 import { Crown } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import React, { useState } from 'react'
-import { useMutation, useQuery } from 'react-query'
+import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
-import { deleteTraderAlertApi, getTraderAlertListApi } from 'apis/alertApis'
-import ToastBody from 'components/@ui/ToastBody'
+import { getTraderAlertListApi } from 'apis/alertApis'
 import UnsubscribeAlertModal from 'components/@widgets/UnsubscribeAlertModal'
 import { TraderAlertData } from 'entities/alert'
 import useBotAlertContext from 'hooks/features/useBotAlertProvider'
+import useSettingWatchlistTraders from 'hooks/features/useSettingWatchlistTraders'
 import { useIsPremium, useIsVIP } from 'hooks/features/useSubscriptionRestrict'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useMyProfile from 'hooks/store/useMyProfile'
@@ -23,7 +22,6 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { formatNumber } from 'utils/helpers/format'
 import { generateTelegramBotAlertUrl } from 'utils/helpers/generateRoute'
-import { getErrorMessage } from 'utils/helpers/handleError'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import DesktopItem from './DesktopItem'
@@ -62,19 +60,9 @@ function AlertListComponent() {
     refetchList()
   }
 
-  const { mutate: deleteTraderAlert, isLoading: submitting } = useMutation(deleteTraderAlertApi, {
+  const { deleteTraderAlert, submittingDelete } = useSettingWatchlistTraders({
     onSuccess: () => {
-      toast.success(
-        <ToastBody
-          title={<Trans>Success</Trans>}
-          message={<Trans>This trader alert has been removed successfully</Trans>}
-        />
-      )
       setOpenModal(false)
-      reload()
-    },
-    onError: (error) => {
-      toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)
     },
   })
 
@@ -89,7 +77,7 @@ function AlertListComponent() {
     }
   }
 
-  const { botAlert, handleGenerateLinkBot, refetch } = useBotAlertContext()
+  const { botAlert, handleGenerateLinkBot, refetchAlerts } = useBotAlertContext()
   const showUnlinkButton = !!botAlert?.chatId
   const [showUnlinkModal, setShowUnlinkModal] = useState(false)
   const onClickUnlinkButton = () => {
@@ -97,7 +85,7 @@ function AlertListComponent() {
   }
   const onDismissUnlinkModal = () => {
     setShowUnlinkModal(false)
-    refetch()
+    refetchAlerts()
   }
   const showLinkButton = !botAlert?.chatId
   const onClickLinkButton = () => {
@@ -152,15 +140,25 @@ function AlertListComponent() {
             }}
           >
             {isLoading && <Loading />}
-            {!isLoading && !data?.data?.length && <TraderLastViewed reload={reload} />}
+            {!isLoading && !data?.data?.length && <TraderLastViewed />}
             {!isLoading && !!data?.data.length && (
               <>
                 <Flex flexDirection="column" sx={{ p: [0, 0, 3], gap: [2, 2, 12] }}>
                   {data?.data?.map((item) =>
                     md ? (
-                      <DesktopItem key={item.id} data={item} onSelect={onSelect} submitting={isLoading || submitting} />
+                      <DesktopItem
+                        key={item.id}
+                        data={item}
+                        onSelect={onSelect}
+                        submitting={isLoading || submittingDelete}
+                      />
                     ) : (
-                      <MobileItem key={item.id} data={item} onSelect={onSelect} submitting={isLoading || submitting} />
+                      <MobileItem
+                        key={item.id}
+                        data={item}
+                        onSelect={onSelect}
+                        submitting={isLoading || submittingDelete}
+                      />
                     )
                   )}
                 </Flex>

@@ -5,19 +5,21 @@ export default function AvatarGroup({
   addresses,
   size = 30,
   limit = 5,
+  total,
 }: {
   addresses: string[]
   size?: number
   limit?: number
+  total?: number
 }) {
   const numberOfAddress = addresses.length
   if (!numberOfAddress) return <></>
   return (
     <Flex sx={{ position: 'relative', height: size }}>
-      {addresses.slice(0, limit).map((address) => {
+      {addresses.slice(0, limit).map((address, index) => {
         return (
           <Box
-            key={address}
+            key={address + index}
             sx={{
               width: size / 2,
               height: size,
@@ -52,7 +54,7 @@ export default function AvatarGroup({
             sx={{
               ...(numberOfAddress - limit > 99 ? { fontSize: '12px', lineHeight: '12px' } : {}),
             }}
-          >{`+${numberOfAddress - limit}`}</Type.Caption>
+          >{`+${(total ?? numberOfAddress) - limit}`}</Type.Caption>
         </Flex>
       ) : null}
     </Flex>

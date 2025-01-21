@@ -35,6 +35,7 @@ const SharedBacktestMultiple = lazy(() => import('./SharedBacktestMultiple'))
 const Settings = lazy(() => import('./Settings'))
 const Subscription = lazy(() => import('./Subscription'))
 const LinkBotTelegram = lazy(() => import('./LinkBotTelegram'))
+const AlertSettingDetails = lazy(() => import('./Settings/AlertSettingDetails'))
 const ComparingTraders = lazy(() => import('./ComparingTraders'))
 const Search = lazy(() => import('./SearchTrader'))
 const SearchTxHash = lazy(() => import('./SearchTxHash'))
@@ -89,6 +90,7 @@ function App() {
             <AuthedRoute path={ROUTES.SETTINGS.path} component={Settings}></AuthedRoute>
             <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagement}></AuthedRoute>
             <Route path={ROUTES.LINK_BOT_ALERT.path} component={LinkBotTelegram}></Route>
+            <AuthedRoute path={ROUTES.ALERT_SETTING_DETAILS.path} component={AlertSettingDetails}></AuthedRoute>
             <AuthedRoute path={ROUTES.FAVORITES.path} component={Favorites}></AuthedRoute>
             <Route exact path={ROUTES.SEARCH.path} component={Search}></Route>
             <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHash}></Route>

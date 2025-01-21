@@ -1,19 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { BellSimple, BellSimpleSlash } from '@phosphor-icons/react'
 import React, { useState } from 'react'
-import { useMutation, useQuery } from 'react-query'
-import { toast } from 'react-toastify'
+import { useQuery } from 'react-query'
 
-import { createTraderAlertApi, deleteTraderAlertApi, getTraderAlertListApi } from 'apis/alertApis'
+import { getTraderAlertListApi } from 'apis/alertApis'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
-import ToastBody from 'components/@ui/ToastBody'
 import UnsubscribeAlertModal from 'components/@widgets/UnsubscribeAlertModal'
 import useBotAlertContext from 'hooks/features/useBotAlertProvider'
+import useSettingWatchlistTraders from 'hooks/features/useSettingWatchlistTraders'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { getErrorMessage } from 'utils/helpers/handleError'
 
 const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: string }) => {
   const { botAlert, handleGenerateLinkBot, isGeneratingLink } = useBotAlertContext()
@@ -22,7 +20,7 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
   const { isAuthenticated, profile } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
 
-  const { data, isLoading, refetch } = useQuery(
+  const { data, isLoading } = useQuery(
     [QUERY_KEYS.GET_TRADER_ALERTS, profile?.id, account, protocol],
     () => getTraderAlertListApi({ address: account, protocol }),
     {
@@ -33,42 +31,9 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
 
   const currentAlert = data?.data?.[0]
 
-  const reload = () => {
-    refetch()
-  }
-
-  const { mutate: createTraderAlert, isLoading: submittingCreate } = useMutation(createTraderAlertApi, {
+  const { createTraderAlert, deleteTraderAlert, submittingDelete, submittingCreate } = useSettingWatchlistTraders({
     onSuccess: () => {
-      toast.success(
-        <ToastBody
-          title={<Trans>Success</Trans>}
-          message={<Trans>This trader alert has been subscribed successfully</Trans>}
-        />
-      )
-      reload()
-    },
-    onError: (error: any) => {
-      if (error?.message?.includes(`Can't find data`)) {
-        handleGenerateLinkBot()
-      } else {
-        toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)
-      }
-    },
-  })
-
-  const { mutate: deleteTraderAlert, isLoading: submittingDelete } = useMutation(deleteTraderAlertApi, {
-    onSuccess: () => {
-      toast.success(
-        <ToastBody
-          title={<Trans>Success</Trans>}
-          message={<Trans>This trader alert has been removed successfully</Trans>}
-        />
-      )
       setIsOpenUnsubscribeModal(false)
-      reload()
-    },
-    onError: (error) => {
-      toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)
     },
   })
 

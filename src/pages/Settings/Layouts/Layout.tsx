@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans, t } from '@lingui/macro'
-import { Crown } from '@phosphor-icons/react'
+import { Crown, Siren } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
@@ -30,8 +30,8 @@ const tabConfigs: TabConfig[] = [
   },
   {
     name: <Trans>ALERT LIST</Trans>,
-    activeIcon: <AlertIcon size={24} variant="Bold" />,
-    icon: <AlertIcon size={24} />,
+    activeIcon: <Siren size={24} weight="fill" />,
+    icon: <Siren size={24} />,
     key: TabKeyEnum.BOT_ALERT,
     route: ROUTES.ALERT_LIST.path,
   },
@@ -69,7 +69,7 @@ export default function Layout(components: LayoutComponents) {
             <Route exact path={ROUTES.USER_SUBSCRIPTION.path}>
               {components.userSubscription}
             </Route>
-            <Redirect to={ROUTES.USER_SUBSCRIPTION.path} />
+            {/*<Redirect to={ROUTES.USER_SUBSCRIPTION.path} />*/}
           </Switch>
         </Box>
 

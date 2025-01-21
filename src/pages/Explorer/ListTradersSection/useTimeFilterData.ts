@@ -19,7 +19,7 @@ const useTimeFilterData = ({
   requestData: RequestBodyApiData
   timeOption: TimeFilterProps
   selectedProtocols: ProtocolEnum[]
-  setSelectedProtocols: (protocols: ProtocolEnum[]) => void
+  setSelectedProtocols?: (protocols: ProtocolEnum[]) => void
   isRangeSelection?: boolean
 }) => {
   const isAllowFetchData = !!timeOption && !isRangeSelection

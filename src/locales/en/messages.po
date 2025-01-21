@@ -185,6 +185,10 @@ msgstr "ACTIVITIES"
 msgid "ACTIVITY INTENSITY BY DAY & HOUR"
 msgstr "ACTIVITY INTENSITY BY DAY & HOUR"
 
+#: src/pages/Settings/AlertList/TraderLastViewed.tsx
+msgid "ADD"
+msgstr "ADD"
+
 #: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "ADVANCE SETTINGS"
 msgstr "ADVANCE SETTINGS"
@@ -193,6 +197,10 @@ msgstr "ADVANCE SETTINGS"
 #: src/pages/Settings/Layouts/Layout.tsx
 msgid "ALERT LIST"
 msgstr "ALERT LIST"
+
+#: src/pages/Settings/AlertSettingDetails/SettingTrigger.tsx
+msgid "ALERT TRIGGER"
+msgstr "ALERT TRIGGER"
 
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/Info.tsx
 msgid "ALL-TIME"
@@ -263,13 +271,13 @@ msgstr "Active Copy"
 msgid "Activities"
 msgstr "Activities"
 
-#: src/pages/Settings/AlertList/TraderLastViewed.tsx
-msgid "Add Alert"
-msgstr "Add Alert"
-
 #: src/pages/CopinLite/CopyManagement/index.tsx
 msgid "Add More Trader"
 msgstr "Add More Trader"
+
+#: src/pages/Settings/AlertSettingDetails/SearchToAdd.tsx
+msgid "Add Trader"
+msgstr "Add Trader"
 
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "Add referral successful!"
@@ -685,6 +693,10 @@ msgstr "COMMISSION & REBATE HISTORY"
 msgid "CONDITION"
 msgstr "CONDITION"
 
+#: src/components/@widgets/LinkBotAlertModal/index.tsx
+msgid "CONNECT"
+msgstr "CONNECT"
+
 #: src/pages/@layouts/Navbar/index.tsx
 msgid "CONNECTING WALLET..."
 msgstr "CONNECTING WALLET..."
@@ -1081,6 +1093,7 @@ msgid "Current Plan"
 msgstr "Current Plan"
 
 #: src/components/@ui/TimeFilter/constants.tsx
+#: src/utils/config/translations.tsx
 msgid "Custom"
 msgstr "Custom"
 
@@ -1190,13 +1203,13 @@ msgstr "Deposits And Withdrawals"
 msgid "Details"
 msgstr "Details"
 
+#: src/utils/config/translations.tsx
+msgid "Direct Alert"
+msgstr "Direct Alert"
+
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Disconnect"
 msgstr "Disconnect"
-
-#: src/pages/Settings/AlertList/NoAlertList.tsx
-msgid "Discover more than 100,000+ traders on Copin"
-msgstr "Discover more than 100,000+ traders on Copin"
 
 #: src/components/@copinLite/OnboardingModal/TraderFilter.tsx
 msgid "Discover top trader for your style"
@@ -1370,13 +1383,13 @@ msgstr "Exchange"
 msgid "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
 msgstr "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
 
+#: src/pages/Settings/AlertList/NoAlertList.tsx
+msgid "Explore Traders"
+msgstr "Explore Traders"
+
 #: src/pages/@layouts/GettingStarted/index.tsx
 msgid "Explore the best traders and set up copy-trading to boost your portfolio.{0}"
 msgstr "Explore the best traders and set up copy-trading to boost your portfolio.{0}"
-
-#: src/pages/Settings/AlertList/NoAlertList.tsx
-msgid "Explorer Traders"
-msgstr "Explorer Traders"
 
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "Extend"
@@ -1590,6 +1603,14 @@ msgstr "Get Started"
 #: src/pages/@layouts/LiteWalletNotice.tsx
 msgid "Go To Deposit"
 msgstr "Go To Deposit"
+
+#: src/pages/Settings/AlertSettingDetails/SettingCopiedTraders.tsx
+msgid "Go to Copy Management"
+msgstr "Go to Copy Management"
+
+#: src/utils/config/translations.tsx
+msgid "Group Alert"
+msgstr "Group Alert"
 
 #: src/pages/MyProfile/index.tsx
 #: src/pages/MyProfile/index.tsx
@@ -2356,13 +2377,12 @@ msgstr "No Rewards Found"
 #: src/pages/@layouts/Navbar/QuickSearchBox.tsx
 #: src/pages/@layouts/Navbar/QuickSearchBox.tsx
 #: src/pages/@layouts/Navbar/SearchBox.tsx
+#: src/pages/Settings/AlertSettingDetails/SearchToAdd.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingWatchlistTraders.tsx
 #: src/pages/StatsCEX/SearchTrader.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/SearchTraders.tsx
 msgid "No Trader Found"
 msgstr "No Trader Found"
-
-#: src/pages/TraderDetails/TraderRankingExpanded/SearchTraders.tsx
-msgid "No Trader Found In The Past 60 Days"
-msgstr "No Trader Found In The Past 60 Days"
 
 #: src/pages/@layouts/Navbar/QuickSearchBox.tsx
 #: src/pages/@layouts/Navbar/QuickSearchBox.tsx
@@ -2407,7 +2427,6 @@ msgid "No trader matched"
 msgstr "No trader matched"
 
 #: src/components/@auth/ConfirmReferralModal/index.tsx
-#: src/components/@widgets/LinkBotAlertModal/index.tsx
 msgid "No, thanks"
 msgstr "No, thanks"
 
@@ -2424,7 +2443,6 @@ msgstr "Not found any trending traders at this moment"
 msgid "Note:"
 msgstr "Note:"
 
-#: src/components/@widgets/LinkBotAlertModal/index.tsx
 #: src/pages/LinkBotTelegram/index.tsx
 msgid "Note: Each Telegram account is only allowed to link to a Copin account"
 msgstr "Note: Each Telegram account is only allowed to link to a Copin account"
@@ -2545,7 +2563,6 @@ msgstr "Open Orders"
 msgid "Open Positions"
 msgstr "Open Positions"
 
-#: src/components/@widgets/LinkBotAlertModal/index.tsx
 #: src/pages/LinkBotTelegram/index.tsx
 msgid "Open Telegram Bot"
 msgstr "Open Telegram Bot"
@@ -2841,6 +2858,10 @@ msgstr "Quickly Settled"
 msgid "READ MORE"
 msgstr "READ MORE"
 
+#: src/pages/Settings/AlertList/TraderLastViewed.tsx
+msgid "RECOMMEND TRADERS"
+msgstr "RECOMMEND TRADERS"
+
 #: src/pages/@layouts/Navbar/NavLinks.tsx
 msgid "REFERRAL"
 msgstr "REFERRAL"
@@ -2866,10 +2887,6 @@ msgstr "Read more"
 #: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Realized PnL"
 msgstr "Realized PnL"
-
-#: src/pages/Settings/AlertList/TraderLastViewed.tsx
-msgid "Recommend"
-msgstr "Recommend"
 
 #: src/pages/PositionDetails/index.tsx
 msgid "Recommend Results"
@@ -3230,6 +3247,7 @@ msgid "Something went wrong"
 msgstr "Something went wrong"
 
 #: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingChannel.tsx
 msgid "Something went wrong, please try later"
 msgstr "Something went wrong, please try later"
 
@@ -3325,6 +3343,8 @@ msgstr "Subscription"
 #: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
 #: src/components/@wallet/UpdateWalletModals/UpdateHyperliquidWalletModal.tsx
 #: src/components/@wallet/WalletDetailsCard/WalletActions.tsx
+#: src/hooks/features/useSettingWatchlistTraders.tsx
+#: src/hooks/features/useSettingWatchlistTraders.tsx
 #: src/hooks/features/useUnlinkPosition.tsx
 #: src/hooks/features/useUpdateCopyTrade.tsx
 #: src/hooks/web3/useContractMutation.tsx
@@ -3336,11 +3356,8 @@ msgstr "Subscription"
 #: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
 #: src/pages/ReferralManagement/UserReferralTier.tsx
-#: src/pages/Settings/AlertList/TraderLastViewed.tsx
 #: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
-#: src/pages/Settings/AlertList/index.tsx
-#: src/pages/TraderDetails/AlertAction.tsx
-#: src/pages/TraderDetails/AlertAction.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingChannel.tsx
 msgid "Success"
 msgstr "Success"
 
@@ -3387,6 +3404,11 @@ msgstr "Synthetix v2 Wallet"
 #: src/utils/config/translations.tsx
 msgid "Synthetix v3"
 msgstr "Synthetix v3"
+
+#: src/utils/config/translations.tsx
+#: src/utils/config/translations.tsx
+msgid "System"
+msgstr "System"
 
 #: src/components/@position/CopyOpeningPositions/index.tsx
 msgid "System creates a copy order"
@@ -3643,13 +3665,11 @@ msgstr "This is the result of a calculation based on past data, not a prediction
 msgid "This position is unlinked"
 msgstr "This position is unlinked"
 
-#: src/pages/Settings/AlertList/index.tsx
-#: src/pages/TraderDetails/AlertAction.tsx
+#: src/hooks/features/useSettingWatchlistTraders.tsx
 msgid "This trader alert has been removed successfully"
 msgstr "This trader alert has been removed successfully"
 
-#: src/pages/Settings/AlertList/TraderLastViewed.tsx
-#: src/pages/TraderDetails/AlertAction.tsx
+#: src/hooks/features/useSettingWatchlistTraders.tsx
 msgid "This trader alert has been subscribed successfully"
 msgstr "This trader alert has been subscribed successfully"
 
@@ -3890,6 +3910,7 @@ msgid "Unlink Account"
 msgstr "Unlink Account"
 
 #: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingChannel.tsx
 msgid "Unlink Copin Telegram Bot successfully"
 msgstr "Unlink Copin Telegram Bot successfully"
 
@@ -3927,6 +3948,7 @@ msgstr "Update wallet successful!"
 
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
 #: src/pages/Settings/AlertList/index.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingWatchlistTraders.tsx
 msgid "Upgrade Account"
 msgstr "Upgrade Account"
 
@@ -4139,10 +4161,6 @@ msgstr "Withdraw USDC To Arbitrum"
 msgid "Would you like to upgrade your account?"
 msgstr "Would you like to upgrade your account?"
 
-#: src/components/@widgets/LinkBotAlertModal/index.tsx
-msgid "Would you like to use a Copin’s Telegram Bot to receive your trader’s alert?"
-msgstr "Would you like to use a Copin’s Telegram Bot to receive your trader’s alert?"
-
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "Would you like to use a referral code?"
 msgstr "Would you like to use a referral code?"
@@ -4184,9 +4202,17 @@ msgstr "You don't have any wallet"
 msgid "You have exceeded your quota for this feature."
 msgstr "You have exceeded your quota for this feature."
 
+#: src/pages/Settings/AlertSettingDetails/SettingCopiedTraders.tsx
+msgid "You have not copied any trader yet."
+msgstr "You have not copied any trader yet."
+
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
 msgid "You need to upgrade to use this feature"
 msgstr "You need to upgrade to use this feature"
+
+#: src/pages/Settings/AlertSettingDetails/SettingChannel.tsx
+msgid "You still not setup any channel."
+msgstr "You still not setup any channel."
 
 #: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "You will not copy the position has opened with collateral lower than"

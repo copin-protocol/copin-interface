@@ -3,6 +3,7 @@ import { Trans, t } from '@lingui/macro'
 import { ReactNode } from 'react'
 
 import {
+  AlertTypeEnum,
   ChainStatsEnum,
   ChangeFieldEnum,
   CopyPositionCloseTypeEnum,
@@ -14,6 +15,7 @@ import {
   OrderTypeEnum,
   PositionStatusEnum,
   SLTPTypeEnum,
+  TelegramTypeEnum,
   TimeFilterByEnum,
   UserActionEnum
 } from './enums'
@@ -192,6 +194,17 @@ export const FEE_REBATE_EPOCH_STATUS_TRANS: ObjectTrans = {
   [EpochStatusEnum.ONGOING]: <Trans>Ongoing</Trans>,
   [EpochStatusEnum.ENDED]: <Trans>Ended</Trans>,
   [EpochStatusEnum.AWARDED]: <Trans>Ended</Trans>,
+}
+
+export const ALERT_TYPE_TRANS: ObjectTrans = {
+  [AlertTypeEnum.COPY_TRADE]: <Trans>System</Trans>,
+  [AlertTypeEnum.TRADERS]: <Trans>System</Trans>,
+  [AlertTypeEnum.CUSTOM]: <Trans>Custom</Trans>,
+}
+
+export const TELEGRAM_TYPE_TRANS: ObjectTrans = {
+  [TelegramTypeEnum.DIRECT]: <Trans>Direct Alert</Trans>,
+  [TelegramTypeEnum.GROUP]: <Trans>Group Alert</Trans>,
 }
 
 export const ERRORS: ObjectTrans = {

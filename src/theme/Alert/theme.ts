@@ -37,7 +37,7 @@ export const styleVariants = {
   },
   [variants.CARD_WARNING]: {
     color: 'orange1',
-    bg: 'rgba(255, 194, 75, 0.25)',
+    bg: 'rgba(255, 194, 75, 0.05)',
     border: 'none',
   },
   [variants.WARNING_PRIMARY]: {

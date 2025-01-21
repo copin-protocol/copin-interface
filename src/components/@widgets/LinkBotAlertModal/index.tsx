@@ -1,44 +1,108 @@
 import { Trans } from '@lingui/macro'
-import { ArrowSquareOut } from '@phosphor-icons/react'
+import { Info } from '@phosphor-icons/react'
+import dayjs from 'dayjs'
+import React, { useEffect } from 'react'
 
+import Divider from 'components/@ui/Divider'
+import useCountdown from 'hooks/helpers/useCountdown'
 import { Button } from 'theme/Buttons'
-import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
-import IconButton from 'theme/Buttons/IconButton'
 import TelegramIcon from 'theme/Icons/TelegramIcon'
 import Modal from 'theme/Modal'
-import { Box, Flex, Type } from 'theme/base'
+import Tooltip from 'theme/Tooltip'
+import { Flex, IconBox, Type } from 'theme/base'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { generateTelegramBotAlertUrl } from 'utils/helpers/generateRoute'
 
-export default function LinkBotAlertModal({ state, onDismiss }: { state: string; onDismiss: () => void }) {
+export default function LinkBotAlertModal({
+  state,
+  stateExpiredTime,
+  onReset,
+  onDismiss,
+}: {
+  state: string
+  stateExpiredTime?: number
+  onReset: () => void
+  onDismiss: () => void
+}) {
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (state && stateExpiredTime && dayjs().utc().isAfter(dayjs.utc(stateExpiredTime))) {
+        onReset()
+      }
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [onReset, state, stateExpiredTime])
+
   return (
-    <Modal isOpen onDismiss={onDismiss} hasClose={false} maxWidth="480px" zIndex={Z_INDEX.TOASTIFY}>
-      <Flex width="100%" p={24} flexDirection="column" alignItems="center">
-        <IconButton
-          variant="outline"
-          icon={<TelegramIcon size={56} variant="Bold" />}
-          size={56}
-          sx={{ '&:hover': { cursor: 'initial' } }}
-        />
-        <Flex my={24} alignItems="center" sx={{ gap: 1 }}>
-          <Type.Body textAlign="center">
-            <Trans>Would you like to use a Copin’s Telegram Bot to receive your trader’s alert?</Trans>
-          </Type.Body>
-        </Flex>
-        <Type.Caption mb={24} color="orange1" textAlign="center" width="100%">
-          <Trans>Note: Each Telegram account is only allowed to link to a Copin account</Trans>
-        </Type.Caption>
-        <Flex width="100%" sx={{ gap: 3 }}>
-          <Button variant="outline" onClick={onDismiss} sx={{ flex: 1 }}>
-            <Trans>No, thanks</Trans>
-          </Button>
-          <Box as="a" flex={1} href={generateTelegramBotAlertUrl(state)} target="_top">
-            <ButtonWithIcon type="button" variant="primary" icon={<ArrowSquareOut />} direction="right" block>
-              <Trans>Open Telegram Bot</Trans>
-            </ButtonWithIcon>
-          </Box>
+    <Modal isOpen title={'Connect Telegram'} onDismiss={onDismiss} hasClose maxWidth="500px" zIndex={Z_INDEX.TOASTIFY}>
+      <Flex width="100%" px={24} py={1} flexDirection="column" alignItems="center">
+        <TelegramIcon size={56} variant="Bold" />
+        <Flex my={24} flexDirection="column" sx={{ gap: 3 }}>
+          <Flex flex={1} flexDirection="column" alignItems="center" sx={{ gap: 1 }}>
+            <Type.BodyBold>Direct Message</Type.BodyBold>
+            <Type.Caption textAlign="center" color="neutral2">
+              To receive alerts as direct messages, click the button below to open Telegram. This session will be
+              expired after {stateExpiredTime ? <Countdown endTime={stateExpiredTime} /> : '--'}.
+            </Type.Caption>
+            <Button
+              mt={3}
+              type="button"
+              variant="primary"
+              as="a"
+              href={generateTelegramBotAlertUrl(state)}
+              target="_blank"
+              width="240px"
+              py="6px"
+            >
+              <Type.CaptionBold>
+                <Trans>CONNECT</Trans>
+              </Type.CaptionBold>
+            </Button>
+          </Flex>
+          <Flex width=" 100%" alignItems="center" justifyContent="center" sx={{ gap: 1 }}>
+            <Divider flex={1} color="neutral4" height={1} />
+            <Type.Caption color="neutral3">OR</Type.Caption>
+            <Divider flex={1} color="neutral4" width="25px" height={1} />
+          </Flex>
+          <Flex flex={1} flexDirection="column" alignItems="center" sx={{ gap: 1 }}>
+            <Flex alignItems="center" sx={{ gap: 1 }}>
+              <Type.BodyBold>Group Message</Type.BodyBold>
+              <IconBox
+                icon={<Info size={20} />}
+                size={20}
+                color="neutral3"
+                data-tip="React-tooltip"
+                data-tooltip-id={'tt-coming-soon'}
+                data-tooltip-delay-show={360}
+              />
+              <Tooltip id={'tt-coming-soon'}>
+                <Type.Caption color="neutral2" sx={{ maxWidth: 350 }}>
+                  Coming Soon
+                </Type.Caption>
+              </Tooltip>
+            </Flex>
+            <Type.Caption textAlign="center" color="neutral2">
+              Add @Copin_Alert_bot to your group and past the chat ID below. The bot will automatically send the chat ID
+              to the group.
+            </Type.Caption>
+          </Flex>
         </Flex>
       </Flex>
     </Modal>
+  )
+}
+
+function Countdown({ endTime }: { endTime: number }) {
+  const timer = useCountdown(endTime)
+
+  return (
+    <Type.Caption color="orange1">
+      {!timer?.hasEnded && (
+        <>
+          {timer?.minutes}m {timer?.seconds}s
+        </>
+      )}
+    </Type.Caption>
   )
 }

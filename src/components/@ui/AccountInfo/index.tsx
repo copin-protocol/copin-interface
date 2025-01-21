@@ -113,7 +113,6 @@ export function AccountInfo({
         flex="1"
         flexDirection="column"
         sx={{
-          width: 110,
           color: 'inherit',
           textAlign: 'left',
           ...sx,
@@ -126,6 +125,7 @@ export function AccountInfo({
             // data-tooltip-delay-hide={0}
             // data-tooltip-delay-show={360}
             // data-tooltip-offset={-8}
+            width={80}
             lineHeight="24px"
             color={isCopying ? 'orange1' : 'inherit'}
             sx={{

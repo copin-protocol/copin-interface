@@ -8,8 +8,8 @@ import { Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 
 export default function AlertNotice() {
-  const { botAlert, handleGenerateLinkBot, isLoading } = useBotAlertContext()
-  if (isLoading || (botAlert != null && !!botAlert.chatId)) return null
+  const { botAlert, handleGenerateLinkBot, loadingAlerts } = useBotAlertContext()
+  if (loadingAlerts || (botAlert != null && !!botAlert.chatId)) return null
   const tooltipId = 'tt_copin_lite_warning_alert'
   return (
     <>
