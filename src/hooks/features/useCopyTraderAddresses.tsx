@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 
 import useGetAllCopyTrades from './useGetAllCopyTrades'
 
-export default function useCopyTraderAddresses(params?: { copyWalletIds: string[] | undefined }) {
-  const { copiedTraders } = useGetAllCopyTrades({ copyWalletIds: params?.copyWalletIds })
+export default function useCopyTraderAddresses(params?: { copyWalletIds: string[] | undefined; enabled?: boolean }) {
+  const { copiedTraders } = useGetAllCopyTrades({ copyWalletIds: params?.copyWalletIds, enabled: params?.enabled })
   const listTraderAddresses = useMemo(
     () => [...(copiedTraders?.copyingTraders ?? []), ...(copiedTraders?.deletedTraders ?? [])],
     [copiedTraders]

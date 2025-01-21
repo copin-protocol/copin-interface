@@ -1,11 +1,13 @@
 import { Trans } from '@lingui/macro'
 
 import { ApiMeta } from 'apis/api'
+import { LayoutType } from 'components/@position/types'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import ReverseTag from 'components/@ui/ReverseTag'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
+import { CopyPositionData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserActivityData } from 'entities/user'
 import { ColumnData } from 'theme/Table/types'
@@ -17,6 +19,8 @@ import { ORDER_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair, parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 
+import LiteActivitiesFilterTrader from './LiteHistoryFilterTrader'
+
 export interface UserActivityTableProps {
   data: UserActivityData[] | undefined
   dataMeta?: ApiMeta
@@ -24,13 +28,8 @@ export interface UserActivityTableProps {
   tableSettings: ColumnData<UserActivityData>[]
 }
 
-export type CopySelection = {
-  id: string | undefined
-  copyTradeId: string | undefined
-}
-
 export type ExternalSource = {
-  handleSelectCopyItem: (data: CopySelection) => void
+  handleSelectCopyItem: (data: CopyPositionData) => void
   copyWallets: CopyWalletData[] | undefined
   isMobile?: boolean
 }
@@ -52,7 +51,13 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
   copy: (item) => (
     <Type.CaptionBold
       color="neutral1"
-      sx={{ width: 96, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: '1em' }}
+      sx={{
+        width: 96,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        verticalAlign: 'middle',
+      }}
     >
       {item.copyTradeTitle}
     </Type.CaptionBold>
@@ -269,12 +274,20 @@ export const userActivityColumns: ColumnData<UserActivityData, ExternalSource>[]
 ]
 
 const liteUserActivityColumns = userActivityColumns.filter((v) => v.key !== 'copyWalletName')
-
-const mapping = {
-  lite: liteUserActivityColumns,
-  normal: userActivityColumns,
+const traderColumnIndex = liteUserActivityColumns.findIndex((v) => v.key === 'sourceAccount')
+if (traderColumnIndex !== -1) {
+  liteUserActivityColumns[traderColumnIndex] = {
+    ...liteUserActivityColumns[traderColumnIndex],
+    filterComponent: <LiteActivitiesFilterTrader type="icon" />,
+  }
 }
 
-export function getUserActivityColumns(layoutType: 'normal' | 'lite') {
+const mapping: Record<LayoutType, ColumnData<UserActivityData, ExternalSource>[]> = {
+  lite: liteUserActivityColumns,
+  normal: userActivityColumns,
+  simple: userActivityColumns,
+}
+
+export function getUserActivityColumns(layoutType: LayoutType) {
   return mapping[layoutType]
 }

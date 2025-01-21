@@ -49,7 +49,7 @@ export function CopyTable({
           },
         }}
       />
-      <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
+      <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE}>
         <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
           <Trans>Reverse Copy</Trans>
         </Type.Caption>

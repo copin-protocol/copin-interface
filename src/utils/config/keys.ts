@@ -145,6 +145,15 @@ export const STORAGE_KEYS = {
   USER_COPY_TRADERS_VAULT: 'user_copy_traders_vault',
   USER_DCP_MANAGEMENT_EXPANDED: 'dcp_management_expanded',
   USER_VAULT_MANAGEMENT_EXPANDED: 'vault_management_expanded',
+  LITE_OPENING_POSITION_TRADERS: 'lite_opening_position_traders',
+  LITE_HISTORY_POSITION_TRADERS: 'lite_history_position_traders',
+  LITE_ACTIVITIES_TRADERS: 'lite_activities_traders',
+  LITE_COPY_MANAGEMENT_LAYOUT: 'lite_copy_management_layout',
+  LITE_OPENING_LAYOUT: 'lite_opening_layout',
+  LITE_HISTORY_LAYOUT: 'lite_history_layout',
+  LITE_ACTIVITIES_LAYOUT: 'lite_activities_layout',
+  LITE_DEPOSIT_HISTORY_LAYOUT: 'lite_deposit_history_layout',
+  GETTING_STARTED: 'getting_started',
 }
 
 export const URL_PARAM_KEYS = {
@@ -202,6 +211,7 @@ export const URL_PARAM_KEYS = {
   LITE_ACTIVITIES_LIMIT: 'lite_activities_limit',
   LITE_TRANSATIONS_PAGE: 'lite_transactions_page',
   LITE_TRANSATIONS_LIMIT: 'lite_transactions_limit',
+  LITE_FORCE_SHAKE_DEPOSIT: 'force_shake',
 }
 
 export const TOOLTIP_KEYS = {

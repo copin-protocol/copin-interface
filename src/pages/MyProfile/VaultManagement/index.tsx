@@ -312,7 +312,7 @@ function MobileView() {
                 gap: 0,
               }}
             >
-              <Box sx={{ maxWidth: [100, 100, 'max-content'], flexShrink: 0 }}>
+              <Box sx={{ maxWidth: [100, 100, 'max-content'], flexShrink: 0, px: 2 }}>
                 <SelectTradersCopied
                   selectedTraders={selectedTraders}
                   allTraders={listTraderAddresses}

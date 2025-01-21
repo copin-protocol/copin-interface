@@ -3,13 +3,13 @@ import { Copy, Icon, PersonSimpleRun } from '@phosphor-icons/react'
 import { ComponentProps, ReactNode } from 'react'
 
 import { CopyPositionData } from 'entities/copyTrade'
-import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import DashedArrow from 'theme/Icons/DashedArrow'
 import HyperLiquidIcon from 'theme/Icons/HyperliquidIcon'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 
+import CopyPositionsListView from '../CopyPositionsListView'
 import CopyPositionsTableView from '../CopyPositionsTableView'
-import { ExternalSourceCopyPositions } from '../types'
+import { MobileLayoutType } from '../types'
 import { getColumns } from './configs'
 
 type LayoutType = 'simple' | 'normal' | 'lite'
@@ -20,38 +20,47 @@ export default function CopyOpeningPositions({
   layoutType,
   tableProps = {},
   onClosePositionSuccess,
+  hasFilter = false,
+  mobileLayoutType,
+  noDataComponent,
 }: {
   data: CopyPositionData[] | undefined
   isLoading: boolean
   layoutType: LayoutType
   tableProps?: Partial<ComponentProps<typeof CopyPositionsTableView>>
   onClosePositionSuccess: () => void
+  hasFilter?: boolean
+  mobileLayoutType?: MobileLayoutType
+  noDataComponent?: ReactNode
 }) {
-  const { prices, gainsPrices } = useGetUsdPrices()
-
   const title = <Trans>Opening Positions</Trans>
 
-  const externalSource: ExternalSourceCopyPositions = {
-    prices,
-    gainsPrices,
-  }
+  const isGrid = mobileLayoutType === 'GRID' && layoutType === 'lite'
 
   return (
     <>
-      {!data?.length && !isLoading && <NoOpeningPositionMessage layoutType={layoutType} title={title} />}
-      {!!data?.length && (
-        <Box flex="1 0 0" overflow="hidden" height="100%">
+      {!hasFilter && !data?.length && !isLoading && <NoOpeningPositionMessage layoutType={layoutType} title={title} />}
+      {(!!data?.length || hasFilter) &&
+        (isGrid ? (
+          <CopyPositionsListView
+            layoutType={layoutType}
+            data={data ?? []}
+            isLoading={isLoading}
+            onClosePositionSuccess={onClosePositionSuccess}
+            isOpening
+            noDataComponent={noDataComponent}
+          />
+        ) : (
           <CopyPositionsTableView
             {...tableProps}
-            data={data}
+            data={data ?? []}
             columns={getColumns(layoutType)}
             isLoading={isLoading}
             onClosePositionSuccess={onClosePositionSuccess}
-            externalSource={externalSource}
             layoutType={layoutType}
+            noDataComponent={noDataComponent}
           />
-        </Box>
-      )}
+        ))}
     </>
   )
 }

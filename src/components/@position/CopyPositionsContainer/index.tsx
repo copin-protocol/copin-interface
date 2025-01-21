@@ -4,23 +4,23 @@ import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { getMyCopySourcePositionDetailApi } from 'apis/copyPositionApis'
-import { closeLitePositionApi } from 'apis/liteApis'
+import { closeHlPosition, closeLitePositionApi } from 'apis/liteApis'
 import ConfirmModal from 'components/@ui/ConfirmModal'
 import ToastBody from 'components/@ui/ToastBody'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { PositionData } from 'entities/trader'
 import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
-import CloseCopyPositionModal from '../CloseCopyPositionModal'
 import CopyPositionDetailsDrawer from '../CopyPositionDetailsDrawer'
 import TraderPositionDetailsDrawer from '../TraderPositionDetailsDrawer'
+import UnlinkCopyPositionModal from '../UnlinkCopyPositionModal'
+import { ExternalSourceCopyPositions } from '../types'
 
 export default function CopyPositionsContainer({
   onClosePositionSuccess,
@@ -29,12 +29,11 @@ export default function CopyPositionsContainer({
   onClosePositionSuccess: () => void
   children: any
 }) {
-  const { copyWallets, embeddedWallet } = useCopyWalletContext()
+  const { copyWallets, embeddedWallet, reloadEmbeddedWalletInfo } = useCopyWalletContext()
   const { allCopyTrades: copyTrades } = useAllCopyTrades()
-  const { prices, gainsPrices } = useGetUsdPrices()
   const [openSourceDrawer, setOpenSourceDrawer] = useState(false)
   const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
-  const [openCloseModal, setOpenCloseModal] = useState(false)
+  const [openUnlinkModal, setOpenUnlinkModal] = useState(false)
   const [confirmModal, setConfirmModal] = useState<{ message: ReactNode; data: any } | undefined>(undefined)
   const [currentCopyPosition, setCurrentCopyPosition] = useState<CopyPositionData | undefined>()
   const [sourcePosition, setSourcePosition] = useState<PositionData | undefined>()
@@ -82,7 +81,7 @@ export default function CopyPositionsContainer({
       } catch (error: any) {
         if (error?.message?.includes(`Can't find data`)) {
           if (isCopyOpen) {
-            setOpenCloseModal(true)
+            setOpenUnlinkModal(true)
           } else {
             toast.error(
               <ToastBody
@@ -116,10 +115,24 @@ export default function CopyPositionsContainer({
   }
 
   const closeCopyItem = async (data: CopyPositionData) => {
-    if (embeddedWallet?.id !== data.identifyKey) return
+    if (!embeddedWallet?.hyperliquid?.embeddedWallet) return
     setSubmitting(true)
     try {
-      await closeLitePositionApi(data.id)
+      if (data.openingPositionType === 'liveBoth') {
+        await closeLitePositionApi(data.id ?? '')
+      }
+      if (data.openingPositionType === 'onlyLiveHyper') {
+        await closeHlPosition({
+          walletAddress: embeddedWallet.hyperliquid.embeddedWallet,
+          isLong: !!data.isLong,
+          size: data.totalSizeDelta ?? 0,
+          symbol: data.pair ?? '',
+        })
+        reloadEmbeddedWalletInfo()
+      }
+
+      setConfirmModal(undefined)
+      onClosePositionSuccess()
     } catch (err) {
       toast.error(<ToastBody title={<Trans>Error</Trans>} message={getErrorMessage(err)} />)
     }
@@ -130,19 +143,23 @@ export default function CopyPositionsContainer({
     setOpenCopyDrawer(false)
   }
 
+  const handleUnlinkCopyPosition = (data: CopyPositionData) => {
+    setCurrentCopyPosition(data)
+    setOpenUnlinkModal(true)
+  }
+
   return (
     <>
-      {cloneElement(children, {
+      {cloneElement<{ externalSource: ExternalSourceCopyPositions }>(children, {
         externalSource: {
           copyWallets,
           copyTrades,
-          prices,
-          gainsPrices,
           submitting,
           currentId: currentCopyPosition?.id,
           onViewSource: handleSelectSourceItem,
           handleSelectCopyItem,
           handleCloseCopyItem,
+          handleUnlinkCopyPosition,
         },
       })}
       <TraderPositionDetailsDrawer
@@ -152,16 +169,11 @@ export default function CopyPositionsContainer({
         id={sourcePosition?.id}
         chartProfitId="my-profile-position"
       />
-      <CopyPositionDetailsDrawer
-        isOpen={openCopyDrawer}
-        onDismiss={handleCopyDismiss}
-        id={currentCopyPosition?.id}
-        copyTradeId={currentCopyPosition?.copyTradeId}
-      />
-      {openCloseModal && currentCopyPosition?.id && (
-        <CloseCopyPositionModal
+      <CopyPositionDetailsDrawer isOpen={openCopyDrawer} onDismiss={handleCopyDismiss} data={currentCopyPosition} />
+      {openUnlinkModal && currentCopyPosition?.id && (
+        <UnlinkCopyPositionModal
           copyId={currentCopyPosition?.id}
-          onDismiss={() => setOpenCloseModal(false)}
+          onDismiss={() => setOpenUnlinkModal(false)}
           onSuccess={onClosePositionSuccess}
         />
       )}

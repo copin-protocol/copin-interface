@@ -157,10 +157,10 @@ export default function ChartProfit({
                 data-tooltip-id="profit_chart"
                 data-tooltip-offset={8}
               />
-              <Tooltip id="trading_chart" place="top" type="dark" effect="solid">
+              <Tooltip id="trading_chart">
                 <Type.Caption>Trading Chart</Type.Caption>
               </Tooltip>
-              <Tooltip id="profit_chart" place="top" type="dark" effect="solid">
+              <Tooltip id="profit_chart">
                 <Type.Caption>Profit Chart</Type.Caption>
               </Tooltip>
             </Flex>

@@ -2,7 +2,6 @@ import ReverseTag from 'components/@ui/ReverseTag'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { ColumnData } from 'theme/Table/types'
 import { Box } from 'theme/base'
-import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 
 import {
   renderCloseTime,
@@ -18,7 +17,8 @@ import {
   renderStatus,
   renderTrader,
 } from '../configs/copyPositionRenderProps'
-import { ExternalSourceCopyPositions } from '../types'
+import { ExternalSourceCopyPositions, LayoutType } from '../types'
+import LiteHistoryFilterTrader from './LiteHistoryFilterTrader'
 
 export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPositions>[] = [
   {
@@ -96,11 +96,7 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '100px', width: 100, textAlign: 'right' },
-    render: (item, _, externalSource) =>
-      renderPnL(
-        item,
-        GAINS_TRADE_PROTOCOLS.includes(item.protocol) ? externalSource?.gainsPrices : externalSource?.prices
-      ),
+    render: (item) => renderPnL(item),
   },
   {
     title: <Box>Closed Type</Box>,
@@ -121,12 +117,20 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
 ]
 
 const liteHistoryColumns = historyColumns.filter((v) => v.key !== 'copyTradeId')
-
-const mapping = {
-  lite: liteHistoryColumns,
-  normal: historyColumns,
+const traderColumnIndex = liteHistoryColumns.findIndex((v) => v.key === 'copyAccount')
+if (traderColumnIndex !== -1) {
+  liteHistoryColumns[traderColumnIndex] = {
+    ...liteHistoryColumns[traderColumnIndex],
+    filterComponent: <LiteHistoryFilterTrader type="icon" />,
+  }
 }
 
-export function getCopyPositionHistoryColumns(layoutType: 'normal' | 'lite') {
+const mapping: { [type in LayoutType]: ColumnData<CopyPositionData, ExternalSourceCopyPositions>[] } = {
+  lite: liteHistoryColumns,
+  normal: historyColumns,
+  simple: historyColumns,
+}
+
+export function getCopyPositionHistoryColumns(layoutType: LayoutType) {
   return mapping[layoutType]
 }

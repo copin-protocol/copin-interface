@@ -28,7 +28,7 @@ const ActiveDot = ({
         data-tooltip-id={tooltipId}
       />
       {!!tooltipContent && (
-        <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
+        <Tooltip id={tooltipId} clickable={false}>
           <Type.Small sx={{ maxWidth: [300, 400] }}>{tooltipContent}</Type.Small>
         </Tooltip>
       )}

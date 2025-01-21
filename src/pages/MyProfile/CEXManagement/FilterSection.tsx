@@ -69,6 +69,7 @@ export default function FilterSection() {
             allCopyTrades={allCopyTrades}
             handleToggleTrader={handleToggleTrader}
             handleSelectAllTraders={handleSelectAllTraders}
+            buttonSx={{ p: 2, py: 0 }}
           />
         </Flex>
         <Flex
@@ -105,14 +106,16 @@ export default function FilterSection() {
   ) : (
     <>
       <Flex sx={{ alignItems: 'center', borderBottom: 'small', borderColor: 'neutral5', py: 1 }}>
-        <SelectTradersCopied
-          selectedTraders={selectedTraders}
-          allTraders={listTraderAddresses}
-          allCopyTrades={allCopyTrades}
-          handleToggleTrader={handleToggleTrader}
-          handleSelectAllTraders={handleSelectAllTraders}
-        />
-
+        <Box sx={{ px: 2 }}>
+          <SelectTradersCopied
+            selectedTraders={selectedTraders}
+            allTraders={listTraderAddresses}
+            allCopyTrades={allCopyTrades}
+            handleToggleTrader={handleToggleTrader}
+            handleSelectAllTraders={handleSelectAllTraders}
+            buttonSx={{ '& > *:first-child': { display: 'flex', flexDirection: 'column' } }}
+          />
+        </Box>
         <Box sx={{ width: '1px', height: '100%', bg: 'neutral4' }} />
         <Flex sx={{ flexDirection: 'column', px: 2, gap: 0, flex: 1 }}>
           <AvailableMargin value={activeWallet?.availableBalance} />

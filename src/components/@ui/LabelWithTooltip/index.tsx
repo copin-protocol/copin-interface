@@ -46,7 +46,7 @@ const LabelWithTooltip = ({
       >
         {children}
       </Type.Caption>
-      <Tooltip id={uuid} place="top" type="dark" effect="solid" clickable={tooltipClickable}>
+      <Tooltip id={uuid} clickable={tooltipClickable}>
         <Type.Caption
           maxWidth={300}
           textAlign="center"

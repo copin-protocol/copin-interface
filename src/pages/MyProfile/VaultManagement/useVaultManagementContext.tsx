@@ -210,7 +210,7 @@ export function VaultManagementProvider({ children }: { children: ReactNode }) {
   const handleSelectAllTraders = useCallback(
     (isSelectedAll: boolean) => {
       if (!listTraderAddresses.length) return
-      if (isSelectedAll) {
+      if (!isSelectedAll) {
         dispatch({ type: 'setTraders', payload: [] })
       } else {
         dispatch({ type: 'setTraders', payload: listTraderAddresses })

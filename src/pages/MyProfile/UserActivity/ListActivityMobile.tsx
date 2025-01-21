@@ -16,15 +16,18 @@ export default function ListActivityMobile({
   isLoading,
   externalSource,
   layoutType = 'normal',
+  noDataComponent,
 }: {
   data: UserActivityData[] | undefined
   externalSource: ExternalSource
   isLoading: boolean
   layoutType?: LayoutType
+  noDataComponent?: ReactNode
 }) {
   const { md } = useResponsive()
   if (isLoading) return <Loading />
-  if (!isLoading && !data?.length) return <NoDataFound message={<Trans>No Activity Found</Trans>} />
+  if (!isLoading && !data?.length)
+    return noDataComponent ? <>{noDataComponent}</> : <NoDataFound message={<Trans>No Activity Found</Trans>} />
   return (
     <Flex sx={{ width: '100%', height: '100%', overflow: 'auto', flexDirection: 'column', gap: 3 }}>
       {!md &&

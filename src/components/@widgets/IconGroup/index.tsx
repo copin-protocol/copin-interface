@@ -75,7 +75,7 @@ export default function IconGroup({
               }}
             >{`+${numberOfAddress - limit}`}</Type.Caption>
           </Flex>
-          <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
+          <Tooltip id={tooltipId} clickable>
             <IconGroupFull
               iconNames={iconNames}
               hasName={hasName}

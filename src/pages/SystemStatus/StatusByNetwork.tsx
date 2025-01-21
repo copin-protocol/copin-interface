@@ -7,6 +7,7 @@ import useLatestBlockNumber from 'hooks/features/useLastestBlockNumber'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_LISTENER_MAPPING } from 'utils/config/protocols'
 import { MIRROR_TRANS } from 'utils/config/translations'
 import { overflowEllipsis } from 'utils/helpers/css'
@@ -22,7 +23,7 @@ export default function StatusByNetwork({ network, data }: { network: string; da
   const externalSource: ExternalSource = {
     latestBlockNumber,
   }
-  const _data = data?.filter((v) => !!PROTOCOL_LISTENER_MAPPING[v.protocol + capitalizeFirstLetter(network)])
+  const _data = data?.filter((v) => !!v.protocol)
 
   const columns = useMemo(() => {
     const result: ColumnData<any, ExternalSource>[] = [
@@ -33,14 +34,13 @@ export default function StatusByNetwork({ network, data }: { network: string; da
         style: { minWidth: '150px' },
         render: (item: any) => {
           const isMirror = item.protocol?.includes('mirror')
+          const protocolByMapping = PROTOCOL_LISTENER_MAPPING[item.protocol + capitalizeFirstLetter(network)]
+          const protocol = protocolByMapping
+            ? protocolByMapping
+            : ((item.protocol + '_' + capitalizeFirstLetter(network)).toUpperCase() as ProtocolEnum)
           return (
             <Flex sx={{ alignItems: 'center', gap: 2 }}>
-              <ProtocolLogo
-                protocol={PROTOCOL_LISTENER_MAPPING[item.protocol + capitalizeFirstLetter(network)]}
-                hasText={!isMirror}
-                size={24}
-                textSx={{ color: 'neutral1' }}
-              />
+              <ProtocolLogo protocol={protocol} hasText={!isMirror} size={24} textSx={{ color: 'neutral1' }} />
               {isMirror && <Type.Caption color="neutral1">{MIRROR_TRANS[item.protocol]}</Type.Caption>}
             </Flex>
           )

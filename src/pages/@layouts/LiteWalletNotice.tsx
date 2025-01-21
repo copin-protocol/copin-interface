@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useQuery } from 'react-query'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -8,6 +8,7 @@ import { getLiteTransactionsApi } from 'apis/liteApis'
 import actionSuccess from 'assets/images/success-img.png'
 import { LITE_ACTION_STATUS, LITE_TRANSACTION_TYPE, LiteTransactionData } from 'entities/lite'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useLiteClickDepositFund from 'hooks/helpers/useLiteClickDepositFund'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useGlobalDialog from 'hooks/store/useGlobalDialog'
 import useMyProfileStore from 'hooks/store/useMyProfile'
@@ -16,7 +17,7 @@ import AlertBanner from 'theme/Alert/AlertBanner'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { CopyTradeStatusEnum } from 'utils/config/enums'
-import { ELEMENT_IDS, QUERY_KEYS } from 'utils/config/keys'
+import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -100,20 +101,15 @@ const LiteWalletNotice = () => {
     })
   }, [transactions])
 
-  const { lg } = useResponsive()
-  const { setSearchParams } = useSearchParams()
-  const handleClickDeposit = () => {
-    if (!lg) {
-      setSearchParams({ dtab: '1' })
-    } else {
-      const element = document.getElementById(ELEMENT_IDS.LITE_DEPOSIT_QRCODE)
-      if (!element) return
-      element.removeAttribute('data-animation-shake')
-      setTimeout(() => {
-        element.setAttribute('data-animation-shake', '1')
-      }, 100)
+  const { searchParams, setSearchParams } = useSearchParams()
+  const handleClickDeposit = useLiteClickDepositFund()
+
+  useEffect(() => {
+    if (searchParams?.[URL_PARAM_KEYS.LITE_FORCE_SHAKE_DEPOSIT]) {
+      handleClickDeposit()
+      setSearchParams({ [URL_PARAM_KEYS.LITE_FORCE_SHAKE_DEPOSIT]: null })
     }
-  }
+  }, [handleClickDeposit, searchParams, searchParams?.[URL_PARAM_KEYS.LITE_FORCE_SHAKE_DEPOSIT], setSearchParams])
 
   return (
     <div>

@@ -62,7 +62,7 @@ export default function Icon({
         </Type.Small>
       )}
       {hasTooltip && (
-        <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
+        <Tooltip id={tooltipId} clickable>
           <Flex alignItems="center" justifyContent="center" sx={{ gap: 1 }}>
             <Image src={iconUriFactory(iconName)} sx={{ width: size, height: size }} />
             <Type.Small fontSize="10px">{iconName}</Type.Small>

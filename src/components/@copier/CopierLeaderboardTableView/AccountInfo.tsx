@@ -67,9 +67,6 @@ export default function AccountInfo({
           {isCurrentLeaderboard && <RankingChangeIndicator ranking={info.ranking} lastRanking={info.lastRanking} />}
           {/* <Tooltip
             id={`account-${info.account}-tt`}
-            place="top"
-            type="dark"
-            effect="solid"
             noArrow={true}
             clickable={true}
             style={{

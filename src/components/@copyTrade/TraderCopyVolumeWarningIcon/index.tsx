@@ -34,13 +34,7 @@ export default function TraderCopyVolumeWarningIcon({
         color="orange1"
         data-tooltip-id={TOOLTIP_KEYS.TRADER_COPY_VOLUME_WARNING + id.current}
       />
-      <Tooltip
-        id={TOOLTIP_KEYS.TRADER_COPY_VOLUME_WARNING + id.current}
-        place="top"
-        type="dark"
-        effect="solid"
-        clickable={true}
-      >
+      <Tooltip id={TOOLTIP_KEYS.TRADER_COPY_VOLUME_WARNING + id.current} clickable={true}>
         <Type.Caption sx={{ maxWidth: 300 }}>
           Trader has a total copy volume of over{' '}
           <Box as="span" fontWeight={600}>
@@ -112,13 +106,7 @@ export function TraderTotalCopyVolumeIcon({
         color={iconColor}
         data-tooltip-id={TOOLTIP_KEYS.TRADER_TOTAL_COPY_VOLUME + id.current}
       />
-      <Tooltip
-        id={TOOLTIP_KEYS.TRADER_TOTAL_COPY_VOLUME + id.current}
-        place="top"
-        type="dark"
-        effect="solid"
-        clickable={true}
-      >
+      <Tooltip id={TOOLTIP_KEYS.TRADER_TOTAL_COPY_VOLUME + id.current} clickable={true}>
         <Box maxWidth={350}>
           {/* <Type.Caption color="neutral2">
             Your current plan is{' '}

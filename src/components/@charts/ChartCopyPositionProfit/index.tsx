@@ -116,10 +116,10 @@ export default function CopyChartProfit({
       }
     } else {
       tempData.push({
-        open: position.closePrice ?? position.entryPrice,
-        close: position.closePrice ?? position.entryPrice,
-        high: position.closePrice ?? position.entryPrice,
-        low: position.closePrice ?? position.entryPrice,
+        open: position.closePrice ?? position.entryPrice ?? 0,
+        close: position.closePrice ?? position.entryPrice ?? 0,
+        high: position.closePrice ?? position.entryPrice ?? 0,
+        low: position.closePrice ?? position.entryPrice ?? 0,
         timestamp: dayjs(position.lastOrderAt).utc().valueOf(),
       })
     }
@@ -138,7 +138,7 @@ export default function CopyChartProfit({
           const tickTime = dayjs(e.timestamp).utc()
           const realSize =
             index === chartData.length - 1
-              ? Number(position.sizeDelta) * position.entryPrice
+              ? Number(position.sizeDelta) * (position.entryPrice ?? 0)
               : orders.reduce((sum, item) => {
                   const orderTime = dayjs(item.createdAt).utc()
                   return tickTime.isAfter(orderTime) || tickTime.isSame(orderTime)
@@ -152,7 +152,7 @@ export default function CopyChartProfit({
                   return sum + value.price
                 }, 0) / filterOrders.length
               : position.entryPrice
-          const pnl = calcPnL(position.isLong, averagePrice, marketPrice, realSize)
+          const pnl = calcPnL(!!position.isLong, averagePrice, marketPrice, realSize)
 
           return {
             value: !isOpening && index === chartData.length - 1 ? position.pnl : pnl,
@@ -190,10 +190,10 @@ export default function CopyChartProfit({
       }
     } else {
       tempData.push({
-        open: position.closePrice ?? position.entryPrice,
-        close: position.closePrice ?? position.entryPrice,
-        high: position.closePrice ?? position.entryPrice,
-        low: position.closePrice ?? position.entryPrice,
+        open: position.closePrice ?? position.entryPrice ?? 0,
+        close: position.closePrice ?? position.entryPrice ?? 0,
+        high: position.closePrice ?? position.entryPrice ?? 0,
+        low: position.closePrice ?? position.entryPrice ?? 0,
         timestamp: dayjs(position.createdAt).utc().valueOf(),
       })
     }

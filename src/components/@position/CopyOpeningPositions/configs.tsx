@@ -1,22 +1,27 @@
-import { CaretRight } from '@phosphor-icons/react'
+import { Trans } from '@lingui/macro'
+import { CaretRight, Warning } from '@phosphor-icons/react'
 
 import { LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import LabelEPnL from 'components/@ui/LabelEPnL'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { Button } from 'theme/Buttons'
 import { ColumnData } from 'theme/Table/types'
+import Tooltip from 'theme/Tooltip'
 import { Box, IconBox, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT, GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
-import { formatNumber } from 'utils/helpers/format'
+import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 
 import {
+  renderCollateral,
   renderEntry,
+  renderOpeningROI,
   renderOpeningSize,
   renderPnL,
+  renderSLTP,
   renderSource,
   renderTrader,
 } from '../configs/copyPositionRenderProps'
-import { ExternalSourceCopyPositions } from '../types'
+import { ExternalSourceCopyPositions, LayoutType } from '../types'
+import LiteFilterOpeningPositionTrader from './LiteOpeningFilterTrader'
 
 export const simpleOpeningColumns: ColumnData<CopyPositionData, ExternalSourceCopyPositions>[] = [
   {
@@ -49,11 +54,7 @@ export const simpleOpeningColumns: ColumnData<CopyPositionData, ExternalSourceCo
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '80px', textAlign: 'right' },
-    render: (item, _, externalSource) =>
-      renderPnL(
-        item,
-        GAINS_TRADE_PROTOCOLS.includes(item.protocol) ? externalSource?.gainsPrices : externalSource?.prices
-      ),
+    render: (item) => renderPnL(item),
   },
   {
     title: '',
@@ -81,6 +82,7 @@ export const liteOpeningColumns: ColumnData<CopyPositionData, ExternalSourceCopy
     dataIndex: 'copyAccount',
     key: 'copyAccount',
     style: { minWidth: '170px' },
+    filterComponent: <LiteFilterOpeningPositionTrader type="icon" />,
     render: (item) => renderTrader(item.copyAccount, item.protocol),
   },
   {
@@ -95,62 +97,75 @@ export const liteOpeningColumns: ColumnData<CopyPositionData, ExternalSourceCopy
     dataIndex: 'sizeDelta',
     key: 'sizeDelta',
     style: { minWidth: '220px' },
-    render: (item, _, externalSource) =>
-      renderOpeningSize(
-        item,
-        GAINS_TRADE_PROTOCOLS.includes(item.protocol) ? externalSource?.gainsPrices : externalSource?.prices
-      ),
+    render: (item) => renderOpeningSize(item),
   },
   {
     title: 'Collateral',
     dataIndex: 'initialVol',
     key: 'initialVol',
     style: { minWidth: '80px', textAlign: 'right' },
-    render: (item) => (
-      <Type.Caption color="neutral1">${formatNumber(item.initialVol / item.leverage, 2, 2)}</Type.Caption>
-    ),
+    render: renderCollateral,
   },
   {
     title: 'Stop Loss / Take Profit',
     dataIndex: 'stopLossPrice',
     key: 'stopLossPrice',
     style: { minWidth: '150px', textAlign: 'right' },
-    render: (item) => (
-      <Type.Caption color="neutral1">
-        {item.stopLossPrice ? formatNumber(item.stopLossPrice, 2, 2) : '--'} /{' '}
-        {item.takeProfitPrice ? formatNumber(item.takeProfitPrice, 2, 2) : '--'}
-      </Type.Caption>
-    ),
+    render: renderSLTP,
+  },
+  {
+    title: 'ROI (%)',
+    key: undefined,
+    style: { minWidth: '60px', textAlign: 'right' },
+    render: renderOpeningROI,
   },
   {
     title: <LabelEPnL />,
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '80px', textAlign: 'right' },
-    render: (item, _, externalSource) =>
-      renderPnL(
-        item,
-        GAINS_TRADE_PROTOCOLS.includes(item.protocol) ? externalSource?.gainsPrices : externalSource?.prices
-      ),
+    render: (item) => renderPnL(item),
   },
   {
     title: '',
     dataIndex: 'id',
     key: 'id',
-    style: { minWidth: '60px', maxWidth: '60px', textAlign: 'right' },
-    render: (item, _, externalSource) => (
-      <Button
-        variant="ghostPrimary"
-        onClick={(e) => {
-          e.stopPropagation()
-          if (externalSource?.handleCloseCopyItem) {
-            externalSource.handleCloseCopyItem(item)
-          }
-        }}
-      >
-        Close
-      </Button>
-    ),
+    style: { minWidth: '80px', maxWidth: '80px', textAlign: 'right' },
+    render: (item, _, externalSource) => {
+      if (item.openingPositionType === 'onlyLiveApp') {
+        const tooltipId = `tt_mismatch_${item.id}`
+        return (
+          <>
+            <Type.Caption color="orange1" data-tooltip-id={tooltipId}>
+              <Warning size={16} style={{ verticalAlign: 'middle' }} /> <Trans>Mismatch</Trans>
+            </Type.Caption>
+            <Tooltip id={tooltipId} clickable>
+              <Type.Caption onClick={(e) => e.stopPropagation()} textAlign="left">
+                <Trans>
+                  For some reason, this position has been closed on Hyperliquid, causing a mismatch with the data.{' '}
+                  <Button variant="textPrimary" onClick={() => externalSource?.handleUnlinkCopyPosition?.(item)}>
+                    Unlink
+                  </Button>
+                </Trans>
+              </Type.Caption>
+            </Tooltip>
+          </>
+        )
+      }
+      return (
+        <Button
+          variant="ghostPrimary"
+          onClick={(e) => {
+            e.stopPropagation()
+            if (externalSource?.handleCloseCopyItem) {
+              externalSource.handleCloseCopyItem(item)
+            }
+          }}
+        >
+          Close
+        </Button>
+      )
+    },
   },
 ]
 
@@ -185,11 +200,7 @@ export const openingColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '80px', textAlign: 'right' },
-    render: (item, _, externalSource) =>
-      renderPnL(
-        item,
-        GAINS_TRADE_PROTOCOLS.includes(item.protocol) ? externalSource?.gainsPrices : externalSource?.prices
-      ),
+    render: (item) => renderPnL(item),
   },
   {
     title: <Box pr={1}>Source</Box>,
@@ -200,7 +211,7 @@ export const openingColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
   },
 ]
 
-export const getColumns = (type: 'lite' | 'normal' | 'simple') => {
+export const getColumns = (type: LayoutType) => {
   switch (type) {
     case 'lite':
       return liteOpeningColumns

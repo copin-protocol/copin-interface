@@ -11,6 +11,9 @@ import LiteActivities from './Activities'
 import LiteHistory from './History'
 import LiteOpeningPositions from './OpeningPositions'
 import { TradesTab } from './types'
+import { LiteActivitiesProvider } from './useActivitiesContext'
+import { LiteHistoryPositionProvider } from './useHistoryPositionsContext'
+import { LiteOpeningPositionProvider } from './useOpeningPositionsContext'
 
 const Trades = () => {
   const { tab, handleTab: setTab } = useTabHandler(TradesTab.OpeningPositions, true, 'table')
@@ -24,21 +27,27 @@ const Trades = () => {
   const renderOpenPositionsTab = () => {
     return (
       <TabPane key={TradesTab.OpeningPositions} tab={<Trans>Opening Positions</Trans>}>
-        <LiteOpeningPositions />
+        <LiteOpeningPositionProvider>
+          <LiteOpeningPositions />
+        </LiteOpeningPositionProvider>
       </TabPane>
     )
   }
   const renderHistoryTab = () => {
     return (
       <TabPane key={TradesTab.History} tab={<Trans>History</Trans>}>
-        <LiteHistory currentTab={tab} />
+        <LiteHistoryPositionProvider>
+          <LiteHistory currentTab={tab} />
+        </LiteHistoryPositionProvider>
       </TabPane>
     )
   }
   const renderActivitiesTab = () => {
     return (
       <TabPane key={TradesTab.Activities} tab={<Trans>Activities</Trans>}>
-        <LiteActivities currentTab={tab} />
+        <LiteActivitiesProvider>
+          <LiteActivities currentTab={tab} />
+        </LiteActivitiesProvider>
       </TabPane>
     )
   }

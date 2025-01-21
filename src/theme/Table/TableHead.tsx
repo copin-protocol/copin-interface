@@ -170,7 +170,7 @@ export const TableHeadItem = <T, K>({
         </Flex>
       </Box>
       {hasSort && (
-        <Tooltip id={tooltipId} place="top" type="dark" effect="solid">
+        <Tooltip id={tooltipId}>
           <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
             {isCurrentSort
               ? currentSort?.sortType === SortTypeEnum.DESC

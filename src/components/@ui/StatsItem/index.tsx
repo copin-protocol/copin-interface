@@ -116,7 +116,7 @@ export function StatsWithTooltip({
                     strictNum={strictNum}
                   />
                   {showValueTooltip ? (
-                    <Tooltip id={valueTooltipId} place="top" type="dark" effect="solid">
+                    <Tooltip id={valueTooltipId}>
                       <Type.Caption color="neutral6" sx={{ maxWidth: 300 }}>
                         {value < 0 && '-'}
                         {valuePrefix}
@@ -158,7 +158,7 @@ export function StatsWithTooltip({
       ) : null}
 
       {!!tooltipContent || !!tooltipText ? (
-        <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={clickableTooltip}>
+        <Tooltip id={tooltipId} clickable={clickableTooltip}>
           {!!tooltipContent ? (
             tooltipContent
           ) : (

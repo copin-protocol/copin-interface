@@ -25,6 +25,7 @@ import { ELEMENT_IDS } from 'utils/config/keys'
 import TraderDetailsDrawer from '../components/@trader/TraderDetailsDrawer'
 import { InitVaultCopying } from '../hooks/store/useVaultCopying'
 import Notification from './@layouts/EventsNotification'
+import GettingStarted from './@layouts/GettingStarted'
 import LiteWalletNotice from './@layouts/LiteWalletNotice'
 import SubscriptionExpiredWarning from './@layouts/SubscriptionExpiredWarning'
 

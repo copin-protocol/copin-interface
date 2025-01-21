@@ -6,6 +6,7 @@ import { useQuery } from 'react-query'
 import { GetMyPositionRequestBody, GetMyPositionsParams } from 'apis/types'
 import { getMyCopyPositionsApi } from 'apis/userApis'
 import CopyOpeningPositions from 'components/@position/CopyOpeningPositions'
+import { LayoutType } from 'components/@position/types'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { CopyPositionData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
@@ -38,7 +39,7 @@ export default function OpeningPositions({
   onSelectPosition?: (data: OnchainPositionData | undefined) => void
   limit?: number
   restrictHeight?: boolean
-  layoutType?: 'simple' | 'normal'
+  layoutType?: LayoutType
   tableProps?: Partial<ComponentProps<typeof CopyOpeningPositions>>['tableProps']
   lite?: boolean
 }) {

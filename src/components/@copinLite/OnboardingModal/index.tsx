@@ -9,8 +9,10 @@ import { getPnlStatisticsApi, getTraderByLabelApi } from 'apis/traderApis'
 import { GetTraderByLabelPayload } from 'apis/types'
 import logo from 'assets/images/logo.png'
 import { Account, ResponseTraderData, StatisticData } from 'entities/trader'
-import useBotAlertContext from 'hooks/features/useBotAlertProvider'
+import useReferralActions from 'hooks/features/useReferralActions'
+import useParsedQueryString from 'hooks/router/useParsedQueryString'
 import useOnboardingStore from 'hooks/store/useOnboardingStore'
+import useUserReferral from 'hooks/store/useReferral'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import RcDialog from 'theme/RcDialog'
@@ -38,14 +40,32 @@ const BASE_FILTER_TRADER_PAYLOAD: GetTraderByLabelPayload = {
 }
 
 export default function OnboardingModal() {
-  const { profile, isNewUser, setIsNewUser } = useAuthContext()
+  const { profile, isNewUser, setIsNewUser, setOpenReferralModal } = useAuthContext()
+  const parsedQS = useParsedQueryString()
+  const { setUserReferral } = useUserReferral()
+  const referralCodeQs = parsedQS?.ref as string
+  const hasUrlRef = Boolean(referralCodeQs)
+
+  const onSuccess = () => {
+    setUserReferral(null)
+  }
+  const { addReferral } = useReferralActions({ onSuccess })
   const { openModal, setOpenModal } = useOnboardingStore()
   const onDismiss = useCallback(() => {
     if (!profile?.id) return
-    setIsNewUser(false)
+    if (isNewUser) {
+      if (!profile.isAddedReferral && !profile.isSkippedReferral) {
+        if (hasUrlRef && referralCodeQs) {
+          addReferral.mutate(referralCodeQs.toUpperCase())
+        } else {
+          setOpenReferralModal(true)
+        }
+      }
+      setIsNewUser(false)
+    }
     setOpenModal(false)
     logEventLite({ event: EVENT_ACTIONS[EventCategory.LITE].LITE_SKIP_ONBOARDING })
-  }, [profile?.id])
+  }, [profile, isNewUser, hasUrlRef])
   useLayoutEffect(() => {
     if (isNewUser) setOpenModal(true)
   }, [isNewUser])
@@ -96,13 +116,13 @@ function OnboardingContent({ onDismiss }: { onDismiss: () => void }) {
     setSelectedTraderData(null)
     logEventLite({ event: EVENT_ACTIONS[EventCategory.LITE].LITE_COPY_TRADER_CANCEL })
   }
-  const { botAlert, handleGenerateLinkBot } = useBotAlertContext()
+  // const { botAlert, handleGenerateLinkBot } = useBotAlertContext()
 
   const history = useHistory()
   const onCopySuccess = () => {
     history.push(ROUTES.LITE.path)
     logEventLite({ event: EVENT_ACTIONS[EventCategory.LITE].LITE_ONBOARDING_NAVIGATE_TO_LITE })
-    if (!botAlert?.chatId) handleGenerateLinkBot?.()
+    // if (!botAlert?.chatId) handleGenerateLinkBot?.()
     onDismiss()
   }
 

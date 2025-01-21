@@ -27,7 +27,11 @@ const LiteBalance = ({ address, balance }: { address: string; balance: number | 
         <Type.Caption color="neutral2">
           <Trans>Balance</Trans>
         </Type.Caption>
-        <BalanceText value={balance != null ? `$${formatNumber(balance, 2, 2)}` : '--'} component={Type.Caption} />
+        <BalanceText
+          value={balance != null ? `$${formatNumber(balance, 2, 2)}` : '--'}
+          component={Type.Caption}
+          defaultShow
+        />
       </Flex>
     </Flex>
   )

@@ -93,7 +93,7 @@ export default function MarketGroup({
               }}
             >{`+${numberOfAddress - limit}`}</Type.Caption>
           </Flex>
-          <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
+          <Tooltip id={tooltipId} clickable>
             <MarketGroupFull
               protocol={protocol}
               indexTokens={indexTokens}

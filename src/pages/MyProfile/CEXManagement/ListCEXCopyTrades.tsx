@@ -11,7 +11,6 @@ import CopyTradeHistoryDrawer from 'components/@copyTrade/CopyTradeHistoryDrawer
 import { getMaxVolumeCopy, useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useUpdateCopyTrade from 'hooks/features/useUpdateCopyTrade'
 import useMyProfileStore from 'hooks/store/useMyProfile'
-import { Button } from 'theme/Buttons'
 import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex } from 'theme/base'
 import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
@@ -192,17 +191,9 @@ export default function ListCEXCopyTrades({ expanded, lite = false }: { expanded
         {!isLoadingCopyTrades && !!listTraderAddresses.length && !hasSelectedTraders && (
           <NoDataOrSelect
             type="noSelectTraders"
-            actionButton={
-              <Button
-                variant="primary"
-                mt={3}
-                onClick={() => handleSelectAllTraders(false)}
-                isLoading={isLoadingTraders}
-                disabled={isLoadingTraders}
-              >
-                <Trans>Select All Traders</Trans>
-              </Button>
-            }
+            handleClickActionButton={() => handleSelectAllTraders(true)}
+            actionButtonText={<Trans>Select All Traders</Trans>}
+            isLoading={isLoadingTraders}
           />
         )}
       </Box>

@@ -164,7 +164,7 @@ export default function TableHead<T>({
                   )}
                 </Flex>
                 {column.sortBy && changeCurrentSort && (
-                  <Tooltip id={tooltipId} place="top" type="dark" effect="solid">
+                  <Tooltip id={tooltipId}>
                     <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
                       {isCurrentSort
                         ? currentSort?.sortType === SortTypeEnum.DESC

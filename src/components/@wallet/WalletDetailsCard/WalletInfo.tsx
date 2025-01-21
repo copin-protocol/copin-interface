@@ -50,7 +50,7 @@ export default function WalletInfo({ data, hiddenBalance, showFund = true, sx }:
                 p: 0,
               }}
             ></CopyButton>
-            <Tooltip id={`tt-${walletKey}`} place="top" type="dark" effect="solid" clickable={false}>
+            <Tooltip id={`tt-${walletKey}`} clickable={false}>
               <Type.Small sx={{ maxWidth: [300, 400] }}>{walletKey}</Type.Small>
             </Tooltip>
             {!!data.smartWalletAddress && (
@@ -127,7 +127,7 @@ function WalletKey({ walletKey, isSmartWallet, sx }: { walletKey?: string; isSma
             }}
           ></CopyButton>
         )}
-        <Tooltip id={`tt-${walletKey}`} place="top" type="dark" effect="solid" clickable={false}>
+        <Tooltip id={`tt-${walletKey}`} clickable={false}>
           <Type.Small sx={{ maxWidth: [300, 400] }}>{walletKey}</Type.Small>
         </Tooltip>
       </Flex>

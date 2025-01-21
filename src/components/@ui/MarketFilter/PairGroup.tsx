@@ -72,7 +72,7 @@ export default function PairGroup({
               }}
             >{`+${numberOfSymbols - limit}`}</Type.Caption>
           </Flex>
-          <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
+          <Tooltip id={tooltipId} clickable>
             <PairGroupFull pairs={pairs} hasName={hasName} sx={{ maxWidth: 400, maxHeight: 350, overflowY: 'auto' }} />
           </Tooltip>
         </>

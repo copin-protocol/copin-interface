@@ -314,11 +314,15 @@ const ThemedGlobalStyle = createGlobalStyle`
     --onboard-modal-z-index: ${Z_INDEX.WEB3_CONNECT_MODAL};
   }
 
+
   .wallet-button-container-inner {
     padding: 12px!important;
   }
 
-    .custom_react_tooltip_css {
+  .custom_react_tooltip_css {
+    --rt-color-dark: ${({ theme }) => theme.colors.neutral7};
+    --rt-color-white: ${({ theme }) => theme.colors.neutral1};
+    --rt-opacity: 1;
     background-color: ${({ theme }) => theme.colors.neutral7};
     border: 1px solid ${({ theme }) => theme.colors.neutral4};
     border-radius: 4px;

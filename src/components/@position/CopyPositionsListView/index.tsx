@@ -6,46 +6,53 @@ import LabelEPnL from 'components/@ui/LabelEPnL'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { CopyPositionData } from 'entities/copyTrade.d'
+import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
 
 import CopyPositionsContainer from '../CopyPositionsContainer'
 import {
   renderCloseTime,
   renderCloseType,
+  renderCollateral,
   renderCopyTitle,
   renderCopyWallet,
   renderEntry,
   renderOpenTime,
   renderPnL,
+  renderSLTP,
   renderSizeMobile,
   renderSource,
   renderStatus,
   renderTrader,
   renderValueWithColor,
 } from '../configs/copyPositionRenderProps'
-import { ExternalSourceCopyPositions } from '../types'
+import { ExternalSourceCopyPositions, LayoutType } from '../types'
 
 export default function CopyPositionsListView({
   data,
   isLoading,
   onClosePositionSuccess,
   noDataMessage,
-  layoutType = 'normal',
+  noDataComponent,
+  isOpening = false,
+  layoutType,
 }: {
   data: CopyPositionData[] | undefined
   isLoading: boolean
   onClosePositionSuccess: () => void
   noDataMessage?: ReactNode
-  layoutType?: 'normal' | 'lite'
+  noDataComponent?: ReactNode
+  isOpening?: boolean
+  layoutType?: LayoutType
 }) {
   if (isLoading) return <Loading />
-  if (!isLoading && !data?.length) return <NoDataFound message={noDataMessage} />
+  if (!isLoading && !data?.length)
+    return noDataComponent ? <>{noDataComponent}</> : <NoDataFound message={noDataMessage} />
   return (
     <CopyPositionsContainer onClosePositionSuccess={onClosePositionSuccess}>
-      <ListForm data={data} layoutType={layoutType} />
+      {isOpening ? <OpeningPositionListForm data={data} layoutType={layoutType} /> : <ListForm data={data} />}
     </CopyPositionsContainer>
   )
 }
@@ -98,15 +105,7 @@ export function ListForm({
               <ListHistoryRow label={<Trans>Entry</Trans>} value={renderEntry(positionData)} />
               <ListHistoryRow label={<Trans>Size</Trans>} value={renderSizeMobile(positionData)} />
               {positionData.status === PositionStatusEnum.OPEN ? (
-                <ListHistoryRow
-                  label={<LabelEPnL />}
-                  value={renderPnL(
-                    positionData,
-                    GAINS_TRADE_PROTOCOLS.includes(positionData.protocol)
-                      ? externalSource?.gainsPrices
-                      : externalSource?.prices
-                  )}
-                />
+                <ListHistoryRow label={<LabelEPnL />} value={renderPnL(positionData)} />
               ) : (
                 <Flex sx={{ flexDirection: 'column', gap: 2 }}>
                   <ListHistoryRow label={<Trans>PnL w. Fees</Trans>} value={renderValueWithColor(positionData.pnl)} />
@@ -123,6 +122,75 @@ export function ListForm({
               <ListHistoryRow label={<Trans>Closed Type</Trans>} value={renderCloseType(positionData)} />
               <ListHistoryRow label={<Trans>Open</Trans>} value={renderOpenTime(positionData)} />
               <ListHistoryRow label={<Trans>Close</Trans>} value={renderCloseTime(positionData)} />
+            </Flex>
+          </Box>
+        )
+      })}
+    </Flex>
+  )
+}
+
+export function OpeningPositionListForm({
+  data,
+  externalSource,
+  layoutType,
+}: {
+  data: CopyPositionData[] | undefined
+  layoutType?: LayoutType
+  externalSource?: ExternalSourceCopyPositions
+}) {
+  return (
+    <Flex py={2} sx={{ width: '100%', height: '100%', overflow: 'hidden auto', flexDirection: 'column', gap: 2 }}>
+      {data?.map((positionData) => {
+        return (
+          <Box
+            key={positionData.id}
+            sx={{ px: 3, py: 2, bg: 'neutral6', position: 'relative', cursor: 'pointer' }}
+            onClick={() => externalSource?.handleSelectCopyItem?.(positionData)}
+          >
+            {positionData.isReverse && (
+              <Box sx={{ position: 'absolute', top: 16, left: 8 }}>
+                <ReverseTag />
+              </Box>
+            )}
+            <Flex>
+              <Box flex="1" sx={{ '& *': { fontWeight: 'bold' }, ...(positionData.isReverse ? { pl: 2 } : {}) }}>
+                {renderCopyTitle(positionData)}
+              </Box>
+              <Button
+                variant="ghostPrimary"
+                sx={{ fontWeight: 'normal', p: 0 }}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  externalSource?.handleCloseCopyItem?.(positionData)
+                }}
+              >
+                <Trans>Close Position</Trans>
+              </Button>
+            </Flex>
+            <Divider my={2} color="neutral5" />
+            <Flex sx={{ flexDirection: 'column', gap: 2 }}>
+              <ListHistoryRow
+                label={<Trans>Trader</Trans>}
+                value={renderTrader(positionData.copyAccount, positionData.protocol)}
+              />
+              {layoutType !== 'lite' && (
+                <ListHistoryRow
+                  label={<Trans>Copy Wallet</Trans>}
+                  value={renderCopyWallet(positionData, undefined, externalSource)}
+                />
+              )}
+              <ListHistoryRow
+                label={<Trans>Source Position</Trans>}
+                value={renderSource(positionData, undefined, externalSource, true)}
+              />
+              <ListHistoryRow label={<Trans>Entry</Trans>} value={renderEntry(positionData)} />
+              <ListHistoryRow label={<Trans>Size</Trans>} value={renderSizeMobile(positionData)} />
+              <ListHistoryRow label={<Trans>Collateral</Trans>} value={renderCollateral(positionData)} />
+              <ListHistoryRow label={<Trans>SL/TP</Trans>} value={renderSLTP(positionData)} />
+              <ListHistoryRow label={<LabelEPnL />} value={renderPnL(positionData)} />
+
+              <ListHistoryRow label={<Trans>Open</Trans>} value={renderOpenTime(positionData)} />
             </Flex>
           </Box>
         )

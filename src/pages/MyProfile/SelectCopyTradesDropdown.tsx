@@ -1,15 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { GridProps } from 'styled-system'
 
-import InputSearchText from 'components/@ui/InputSearchText'
+import SelectWithCheckbox from 'components/@widgets/SelectWithCheckbox'
 import { CopyTradeData } from 'entities/copyTrade'
 import useDebounce from 'hooks/helpers/useDebounce'
-import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
-import Dropdown from 'theme/Dropdown'
-import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
-import { Box, Flex, Grid, Type } from 'theme/base'
+import { Type } from 'theme/base'
 import { SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
 
 export default function SelectCopyTradesDropdown({
@@ -41,71 +38,40 @@ export default function SelectCopyTradesDropdown({
     !!allCopyTrades.length &&
     allCopyTrades.every((copyTrade) => selectedCopyTrades?.map((e) => e.id).includes(copyTrade.id))
 
+  const filterOptionsBySearchFn = ({ searchText, option }: { searchText: string; option: CopyTradeData }) => {
+    if (!searchText) return true
+    return !!option.title?.toLowerCase()?.includes(searchText.toLowerCase())
+  }
+  const optionItemKeyFn = (option: CopyTradeData) => option.id
+  const optionItemSelectedFn = (option: CopyTradeData) => selectedCopyTrades.findIndex((o) => o.id === option.id) !== -1
+  const renderOptionLabel = (option: CopyTradeData) => {
+    return option.title
+  }
+
   return (
-    <Dropdown
-      buttonVariant="ghost"
-      // buttonSx={{
-      //   textTransform: 'none',
-      // }}
-      menuSx={{
-        width: ['100%', 400],
-        height: 350,
-        overflow: 'auto',
-        p: 2,
-        ...menuSx,
-      }}
-      dismissible={false}
-      menuDismissible
-      menu={
+    <SelectWithCheckbox
+      menuSx={menuSx}
+      placement={placement}
+      isSelectedAll={isSelectedAll}
+      options={options}
+      selectAllLabel={
         <>
-          <InputSearchText placeholder="SEARCH COPYTRADE" searchText={searchText} setSearchText={setSearchText} />
-          <Flex sx={{ gap: 2, alignItems: 'center', my: 2 }}>
-            <SwitchInput
-              checked={isSelectedAll}
-              onChange={(event) => {
-                const value = event.target.checked
-                if (value) {
-                  handleSelectAllCopyTrades(false)
-                } else {
-                  handleSelectAllCopyTrades(true)
-                }
-              }}
-            />
-            <Type.CaptionBold color="neutral2">
-              <Trans>SELECT ALL</Trans>
-              <Type.Caption color="neutral3" ml={1}>
-                (<Trans>Includes deleted data</Trans>)
-              </Type.Caption>
-            </Type.CaptionBold>
-          </Flex>
-          <Grid
-            sx={{
-              gridTemplateColumns: ['1fr', '1fr 1fr'],
-              columnGap: 3,
-              rowGap: 2,
-            }}
-          >
-            {options.map((item) => {
-              const key = item.id
-              if (key == null) return <></>
-              const isChecked = selectedCopyTrades.findIndex((e) => e.id === item.id) !== -1
-              return (
-                <Box py={2} key={key.toString()}>
-                  <ControlledCheckbox
-                    checked={isChecked}
-                    label={item.title}
-                    size={16}
-                    onChange={() => handleToggleCopyTrade(item)}
-                  />
-                </Box>
-              )
-            })}
-          </Grid>
+          <Trans>Select all</Trans> (
+          <Type.Caption>
+            <Trans>Includes deleted data</Trans>
+          </Type.Caption>
+          )
         </>
       }
-      placement={placement}
+      value={selectedCopyTrades}
+      onChangeValue={handleToggleCopyTrade}
+      onToggleSelectAll={handleSelectAllCopyTrades}
+      filterOptionsBySearchFn={filterOptionsBySearchFn}
+      optionItemKeyFn={optionItemKeyFn}
+      optionItemSelectedFn={optionItemSelectedFn}
+      renderOptionLabel={renderOptionLabel}
     >
-      {selectedCopyTrades.length}/{allCopyTrades.length} Active {allCopyTrades.length > 1 ? 'Copytrades' : 'Copytrade'}
-    </Dropdown>
+      {selectedCopyTrades.length}/{allCopyTrades.length} active {allCopyTrades.length > 1 ? 'copytrades' : 'copytrade'}
+    </SelectWithCheckbox>
   )
 }

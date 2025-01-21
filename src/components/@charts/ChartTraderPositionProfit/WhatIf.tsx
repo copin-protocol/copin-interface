@@ -1,6 +1,7 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
+import SafeDropdownIndex from 'components/@widgets/SafeDropdownIndex'
 import { isMobile } from 'hooks/helpers/useIsMobile'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useWhatIfStore } from 'hooks/store/useWhatIf'
@@ -41,6 +42,7 @@ export default function WhatIf({
 
   return (
     <Box {...props}>
+      <SafeDropdownIndex />
       <Dropdown
         menuSx={{
           width: [300, 400],

@@ -181,6 +181,10 @@ msgstr "ACTIVE USERS"
 msgid "ACTIVITIES"
 msgstr "ACTIVITIES"
 
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
+msgid "ACTIVITY INTENSITY BY DAY & HOUR"
+msgstr "ACTIVITY INTENSITY BY DAY & HOUR"
+
 #: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "ADVANCE SETTINGS"
 msgstr "ADVANCE SETTINGS"
@@ -242,6 +246,11 @@ msgstr "Action"
 #: src/components/@charts/ChartTraderPositionProfit/OrderTooltip.tsx
 msgid "Action:"
 msgstr "Action:"
+
+#: src/components/@widgets/SelectTraderCopiedDropdown/index.tsx
+#: src/pages/MyProfile/SelectTradersCopied.tsx
+msgid "Active"
+msgstr "Active"
 
 #: src/utils/config/translations.tsx
 msgid "Active Copy"
@@ -344,6 +353,10 @@ msgstr "All stable PerpDEX"
 #: src/pages/Subscription/Plans.tsx
 msgid "All stable PerpDEX + Early access PerpDEX"
 msgstr "All stable PerpDEX + Early access PerpDEX"
+
+#: src/components/@widgets/SelectTraderCopiedDropdown/index.tsx
+msgid "All traders"
+msgstr "All traders"
 
 #: src/components/@backtest/BacktestForm/index.tsx
 msgid "Allocating margin based on trader's average margin of the last {0}"
@@ -785,6 +798,10 @@ msgstr "Clone copy trade has been succeeded"
 msgid "Close"
 msgstr "Close"
 
+#: src/components/@position/CopyPositionsListView/index.tsx
+msgid "Close Position"
+msgstr "Close Position"
+
 #: src/utils/config/translations.tsx
 msgid "Closed"
 msgstr "Closed"
@@ -793,6 +810,10 @@ msgstr "Closed"
 #: src/utils/config/translations.tsx
 msgid "Closed Type"
 msgstr "Closed Type"
+
+#: src/components/@position/CopyPositionsListView/index.tsx
+msgid "Collateral"
+msgstr "Collateral"
 
 #: src/components/@charts/ChartTraderPositionProfit/OrderTooltip.tsx
 msgid "Collateral Delta:"
@@ -884,7 +905,12 @@ msgstr "Connect API"
 msgid "Connect Binance API"
 msgstr "Connect Binance API"
 
+#: src/pages/@layouts/GettingStarted/index.tsx
+msgid "Connect Telegram to get real-time notifications from your copy-trades.{0}"
+msgstr "Connect Telegram to get real-time notifications from your copy-trades.{0}"
+
 #: src/components/@auth/LoginAction/ConnectButton.tsx
+#: src/pages/@layouts/GettingStarted/index.tsx
 msgid "Connect Wallet"
 msgstr "Connect Wallet"
 
@@ -927,6 +953,10 @@ msgstr "Copin will execute the order that is the inverse of the trader's order."
 msgid "Copy"
 msgstr "Copy"
 
+#: src/pages/@layouts/GettingStarted/index.tsx
+msgid "Copy 2 Traders"
+msgstr "Copy 2 Traders"
+
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Copy Management"
 msgstr "Copy Management"
@@ -962,6 +992,7 @@ msgstr "Copy Vault"
 msgid "Copy Volume"
 msgstr "Copy Volume"
 
+#: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Copy Wallet"
 msgstr "Copy Wallet"
@@ -1147,6 +1178,10 @@ msgstr "Delete wallet successful!"
 msgid "Deposit"
 msgstr "Deposit"
 
+#: src/pages/@layouts/GettingStarted/index.tsx
+msgid "Deposit Funds"
+msgstr "Deposit Funds"
+
 #: src/pages/CopinLite/Trades/index.tsx
 msgid "Deposits And Withdrawals"
 msgstr "Deposits And Withdrawals"
@@ -1225,6 +1260,10 @@ msgstr "EVENTS"
 msgid "Earning (USDC)"
 msgstr "Earning (USDC)"
 
+#: src/pages/@layouts/GettingStarted/index.tsx
+msgid "Easily deposit USDC over Arbitrum. Your funds are securely managed in MPC Wallet.{0}"
+msgstr "Easily deposit USDC over Arbitrum. Your funds are securely managed in MPC Wallet.{0}"
+
 #: src/pages/MyProfile/ListCopyTrade/useCEXCopyTradeColumns.tsx
 #: src/pages/MyProfile/ListCopyTrade/useDEXCopyTradeColumns.tsx
 #: src/pages/MyProfile/ListCopyTrade/useVaultCopyTradeColumns.tsx
@@ -1240,6 +1279,10 @@ msgstr "Edit Copytrade Settings"
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
 msgid "Email"
 msgstr "Email"
+
+#: src/pages/@layouts/GettingStarted/index.tsx
+msgid "Enable Alert"
+msgstr "Enable Alert"
 
 #: src/pages/PerpDEXsExplorer/helpers/eventsHelper.tsx
 #: src/utils/config/translations.tsx
@@ -1264,6 +1307,7 @@ msgid "Enter your email to join the waitlist today for exclusive early access to
 msgstr "Enter your email to join the waitlist today for exclusive early access to AI-driven insights that will revolutionize the way you trade!"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
+#: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Entry"
 msgstr "Entry"
 
@@ -1278,12 +1322,12 @@ msgstr "Entry Price"
 #: src/components/@copyTrade/CopyTradeCloneForm/index.tsx
 #: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyVaultButton/CopyVaultModal.tsx
-#: src/components/@position/CloseCopyPositionModal/index.tsx
 #: src/components/@position/CopyPositionsContainer/index.tsx
 #: src/hooks/features/useBacktestRequest.tsx
 #: src/hooks/features/useBacktestRequest.tsx
 #: src/hooks/features/useBacktestRequest.tsx
 #: src/hooks/features/useBacktestRequest.tsx
+#: src/hooks/features/useUnlinkPosition.tsx
 #: src/hooks/features/useUpdateCopyTrade.tsx
 #: src/hooks/web3/useAuth.tsx
 #: src/hooks/web3/useContractMutation.tsx
@@ -1325,6 +1369,10 @@ msgstr "Exchange"
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
 msgstr "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
+
+#: src/pages/@layouts/GettingStarted/index.tsx
+msgid "Explore the best traders and set up copy-trading to boost your portfolio.{0}"
+msgstr "Explore the best traders and set up copy-trading to boost your portfolio.{0}"
 
 #: src/pages/Settings/AlertList/NoAlertList.tsx
 msgid "Explorer Traders"
@@ -1465,6 +1513,10 @@ msgstr "Follow The Trader"
 msgid "Follow Trader"
 msgstr "Follow Trader"
 
+#: src/components/@position/CopyOpeningPositions/configs.tsx
+msgid "For some reason, this position has been closed on Hyperliquid, causing a mismatch with the data. <0>Unlink</0>"
+msgstr "For some reason, this position has been closed on Hyperliquid, causing a mismatch with the data. <0>Unlink</0>"
+
 #: src/utils/config/translations.tsx
 msgid "Force Close"
 msgstr "Force Close"
@@ -1530,6 +1582,10 @@ msgstr "Gate Secret Key"
 #: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
 msgid "Get Early Access"
 msgstr "Get Early Access"
+
+#: src/pages/@layouts/GettingStarted/index.tsx
+msgid "Get Started"
+msgstr "Get Started"
 
 #: src/pages/@layouts/LiteWalletNotice.tsx
 msgid "Go To Deposit"
@@ -1772,6 +1828,10 @@ msgstr "LIVE TRADES"
 #: src/theme/Tag/index.tsx
 msgid "LONG"
 msgstr "LONG"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
+msgid "LONG/SHORT OPEN INTEREST BY PAIRS"
+msgstr "LONG/SHORT OPEN INTEREST BY PAIRS"
 
 #: src/utils/config/translations.tsx
 msgid "Label"
@@ -2177,6 +2237,10 @@ msgstr "Minting"
 msgid "Minting NFT"
 msgstr "Minting NFT"
 
+#: src/components/@position/CopyOpeningPositions/configs.tsx
+msgid "Mismatch"
+msgstr "Mismatch"
+
 #: src/components/@position/configs/order.tsx
 msgid "Modified Margin"
 msgstr "Modified Margin"
@@ -2312,10 +2376,6 @@ msgstr "No Transaction Found"
 msgid "No Transactions Found"
 msgstr "No Transactions Found"
 
-#: src/pages/MyProfile/SelectWallets.tsx
-msgid "No Wallet Found"
-msgstr "No Wallet Found"
-
 #: src/components/@position/CopyPositionsContainer/index.tsx
 msgid "No link to the trader’s original position was found."
 msgstr "No link to the trader’s original position was found."
@@ -2340,6 +2400,11 @@ msgstr "No trade history from {0} to {1}"
 #: src/pages/TraderDetails/TraderRankingExpanded/PickTraderModals.tsx
 msgid "No trader data was found to compare in the past {0}"
 msgstr "No trader data was found to compare in the past {0}"
+
+#: src/components/@widgets/SelectTraderCopiedDropdown/index.tsx
+#: src/pages/MyProfile/SelectTradersCopied.tsx
+msgid "No trader matched"
+msgstr "No trader matched"
 
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 #: src/components/@widgets/LinkBotAlertModal/index.tsx
@@ -2457,6 +2522,7 @@ msgstr "Ongoing"
 msgid "Only"
 msgstr "Only"
 
+#: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/TraderPositionDetails/VaultCopyTradeTable.tsx
 #: src/components/@position/configs/order.tsx
@@ -2639,6 +2705,10 @@ msgstr "Please pick trader to view copies detail"
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Please pick trader to view your history"
 msgstr "Please pick trader to view your history"
+
+#: src/pages/MyProfile/NoDataOrSelect.tsx
+msgid "Please pick trader to view your opening positions"
+msgstr "Please pick trader to view your opening positions"
 
 #: src/hooks/web3/useChainRestrict.tsx
 msgid "Please switch your wallet to one of a chain below: {0}"
@@ -2902,10 +2972,6 @@ msgstr "SEARCH BY ADDRESS"
 
 #: src/components/@widgets/SelectMarketWithSearch/index.tsx
 #: src/pages/MyProfile/FilterBySource.tsx
-#: src/pages/MyProfile/FilterBySource.tsx
-#: src/pages/MyProfile/SelectCopyTradesDropdown.tsx
-#: src/pages/MyProfile/SelectTradersCopied.tsx
-#: src/pages/MyProfile/SelectWallets.tsx
 msgid "SELECT ALL"
 msgstr "SELECT ALL"
 
@@ -2927,6 +2993,7 @@ msgstr "SIMILAR TRADERS"
 msgid "SIZE ($)"
 msgstr "SIZE ($)"
 
+#: src/components/@position/CopyPositionsListView/index.tsx
 #: src/pages/MyProfile/ListCopyTrade/index.tsx
 #: src/pages/MyProfile/ListCopyTrade/index.tsx
 msgid "SL/TP"
@@ -2990,6 +3057,9 @@ msgstr "SYSTEM STATUS"
 msgid "Save {0}%"
 msgstr "Save {0}%"
 
+#: src/pages/CopinLite/Trades/Activities.tsx
+#: src/pages/CopinLite/Trades/History.tsx
+#: src/pages/CopinLite/Trades/OpeningPositions.tsx
 #: src/pages/MyProfile/CEXManagement/ListCEXCopyTrades.tsx
 #: src/pages/MyProfile/DCPManagement/ListDCPCopyTrades.tsx
 #: src/pages/MyProfile/VaultManagement/ListVaultCopyTrades.tsx
@@ -3003,6 +3073,12 @@ msgstr "Select Date"
 #: src/pages/TraderDetails/TraderRankingExpanded/PickTraderModals.tsx
 msgid "Select Other Trader"
 msgstr "Select Other Trader"
+
+#: src/components/@widgets/SelectWithCheckbox/index.tsx
+#: src/pages/MyProfile/SelectCopyTradesDropdown.tsx
+#: src/pages/MyProfile/SelectWallets.tsx
+msgid "Select all"
+msgstr "Select all"
 
 #: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx
 msgid "Select the copy you want to clone:"
@@ -3079,6 +3155,7 @@ msgstr "Sign Message Error"
 msgid "Sign message"
 msgstr "Sign message"
 
+#: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Size"
 msgstr "Size"
@@ -3169,6 +3246,7 @@ msgid "Source Details"
 msgstr "Source Details"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
+#: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Source Position"
 msgstr "Source Position"
 
@@ -3237,7 +3315,6 @@ msgstr "Subscription"
 #: src/components/@copyTrade/CopyTradeCloneForm/index.tsx
 #: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyVaultButton/CopyVaultModal.tsx
-#: src/components/@position/CloseCopyPositionModal/index.tsx
 #: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
 #: src/components/@wallet/CreateWalletModals/CreateBinanceWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateBingXWalletModal.tsx
@@ -3248,6 +3325,7 @@ msgstr "Subscription"
 #: src/components/@wallet/CreateWalletModals/CreateOKXWalletModal.tsx
 #: src/components/@wallet/UpdateWalletModals/UpdateHyperliquidWalletModal.tsx
 #: src/components/@wallet/WalletDetailsCard/WalletActions.tsx
+#: src/hooks/features/useUnlinkPosition.tsx
 #: src/hooks/features/useUpdateCopyTrade.tsx
 #: src/hooks/web3/useContractMutation.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
@@ -3333,6 +3411,14 @@ msgstr "TOKEN PREFERENCES"
 #: src/pages/Home/Traders.tsx
 msgid "TOP"
 msgstr "TOP"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
+msgid "TOP PROFIT AND LOSS BY PAIRS"
+msgstr "TOP PROFIT AND LOSS BY PAIRS"
+
+#: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
+msgid "TOP VOLUME BY PAIRS"
+msgstr "TOP VOLUME BY PAIRS"
 
 #: src/pages/Stats/Overview.tsx
 msgid "TOTAL NET PROFIT"
@@ -3425,6 +3511,10 @@ msgstr "Target Action"
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Target Wallet"
 msgstr "Target Wallet"
+
+#: src/pages/CopinLite/CopyManagement/AlertNotice.tsx
+msgid "Telegram Alert"
+msgstr "Telegram Alert"
 
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 #: src/components/@auth/LoginAction/ModalRegister.tsx
@@ -3521,7 +3611,7 @@ msgstr "The server is not responding, please try again later!"
 msgid "This Page Could Not Be Found"
 msgstr "This Page Could Not Be Found"
 
-#: src/components/@position/CloseCopyPositionModal/index.tsx
+#: src/components/@position/UnlinkCopyPositionModal/index.tsx
 msgid "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
 msgstr "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
 
@@ -3533,7 +3623,7 @@ msgstr "This address can only receive native USDC from the Arbitrum network. Min
 msgid "This bot alert has been subscribed successfully"
 msgstr "This bot alert has been subscribed successfully"
 
-#: src/components/@position/CloseCopyPositionModal/index.tsx
+#: src/hooks/features/useUnlinkPosition.tsx
 msgid "This copy position has been closed successfully"
 msgstr "This copy position has been closed successfully"
 
@@ -3548,6 +3638,10 @@ msgstr "This graph will show {0} demographics once responses come in"
 #: src/components/@backtest/BacktestSimpleModal/index.tsx
 msgid "This is the result of a calculation based on past data, not a prediction of future results. Please think twice before making a decision."
 msgstr "This is the result of a calculation based on past data, not a prediction of future results. Please think twice before making a decision."
+
+#: src/components/@position/CopyPositionDetailsDrawer/index.tsx
+msgid "This position is unlinked"
+msgstr "This position is unlinked"
 
 #: src/pages/Settings/AlertList/index.tsx
 #: src/pages/TraderDetails/AlertAction.tsx
@@ -3575,6 +3669,10 @@ msgstr "This will help us find copy trader that fit for you"
 #: src/pages/MyProfile/UserActivity/configs.tsx
 msgid "Time"
 msgstr "Time"
+
+#: src/pages/@layouts/GettingStarted/index.tsx
+msgid "To begin using Copin, please"
+msgstr "To begin using Copin, please"
 
 #: src/pages/LinkBotTelegram/index.tsx
 msgid "To get notifications from traders, you must use Copin Telegram Bot"
@@ -3663,6 +3761,7 @@ msgstr "Trade"
 msgid "Trade On"
 msgstr "Trade On"
 
+#: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 #: src/pages/MyProfile/ListCopyTrade/index.tsx
@@ -4061,6 +4160,10 @@ msgstr "Yes"
 msgid "You are not authorized to perform this action"
 msgstr "You are not authorized to perform this action"
 
+#: src/pages/CopinLite/CopyManagement/AlertNotice.tsx
+msgid "You are not yet linked to telegram to receive Alerts. <0>Click To Connect</0>"
+msgstr "You are not yet linked to telegram to receive Alerts. <0>Click To Connect</0>"
+
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "You can extend your usage, with a discounted fee compared to the original price"
 msgstr "You can extend your usage, with a discounted fee compared to the original price"
@@ -4225,8 +4328,8 @@ msgid "Your OKX Secret Key"
 msgstr "Your OKX Secret Key"
 
 #: src/pages/MyProfile/ListCopyTrade/useCEXCopyTradeColumns.tsx
-msgid "Your balance is too low for copy trading. Please Deposit now to continue!"
-msgstr "Your balance is too low for copy trading. Please Deposit now to continue!"
+msgid "Your balance is too low for copy trading. Please deposit now to continue!"
+msgstr "Your balance is too low for copy trading. Please deposit now to continue!"
 
 #: src/components/@copyTrade/CopyTradeForm/FundChecking.tsx
 msgid "Your copy may failed due to insufficient available fund"
@@ -4256,6 +4359,10 @@ msgstr "Your {title} Is Empty"
 #: src/utils/config/translations.tsx
 msgid "changed"
 msgstr "changed"
+
+#: src/pages/@layouts/GettingStarted/index.tsx
+msgid "connect your wallet."
+msgstr "connect your wallet."
 
 #: src/pages/Home/Overview.tsx
 msgid "copied a position from trader"
@@ -4397,9 +4504,10 @@ msgstr "{0} month"
 msgid "{0} months"
 msgstr "{0} months"
 
+#: src/components/@widgets/SelectTraderCopiedDropdown/index.tsx
 #: src/pages/MyProfile/SelectTradersCopied.tsx
-msgid "{0}/<0>{1}</0> Traders"
-msgstr "{0}/<0>{1}</0> Traders"
+msgid "{0} traders"
+msgstr "{0} traders"
 
 #: src/pages/PerpDEXsExplorer/helpers/eventsHelper.tsx
 msgid "{daysLeft} days left"
@@ -4412,3 +4520,7 @@ msgstr "{label} is better than {value} traders"
 #: src/pages/@layouts/Footer/index.tsx
 msgid "© {0} Copin."
 msgstr "© {0} Copin."
+
+#: src/pages/@layouts/GettingStarted/index.tsx
+msgid "🎉 Welcome! Complete the welcome tasks to start copy-trading with Copin Lite!"
+msgstr "🎉 Welcome! Complete the welcome tasks to start copy-trading with Copin Lite!"

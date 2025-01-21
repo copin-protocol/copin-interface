@@ -1,7 +1,10 @@
+import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 
 import Container from 'components/@ui/Container'
+import NoDataFound from 'components/@ui/NoDataFound'
+import { CopyPositionData } from 'entities/copyTrade'
 import IconButton from 'theme/Buttons/IconButton'
 import RcDrawer from 'theme/RcDrawer'
 
@@ -10,13 +13,11 @@ import CopyPositionDetails from '../CopyPositionDetails'
 export default function CopyPositionDetailsDrawer({
   isOpen,
   onDismiss,
-  id,
-  copyTradeId,
+  data,
 }: {
   isOpen: boolean
   onDismiss: () => void
-  id: string | undefined
-  copyTradeId: string | undefined
+  data: CopyPositionData | undefined
 }) {
   const { lg } = useResponsive()
   return (
@@ -28,7 +29,12 @@ export default function CopyPositionDetailsDrawer({
           sx={{ position: 'absolute', right: 1, top: '12px', zIndex: 1 }}
           onClick={onDismiss}
         />
-        <CopyPositionDetails key={isOpen.toString()} id={id} copyTradeId={copyTradeId} />
+        {data?.openingPositionType === 'onlyLiveHyper' && (
+          <NoDataFound message={<Trans>This position is unlinked</Trans>} />
+        )}
+        {data?.openingPositionType !== 'onlyLiveHyper' && (
+          <CopyPositionDetails key={isOpen.toString()} copyPositionData={data} />
+        )}
       </Container>
     </RcDrawer>
   )

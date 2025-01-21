@@ -21,7 +21,7 @@ export default function ProtocolBetaWarning({ protocol }: { protocol: ProtocolEn
         data-tooltip-id={tooltipId}
         data-tooltip-delay-show={360}
       />
-      <Tooltip id={tooltipId} place={lg ? 'top' : 'bottom'} type="dark" effect="solid">
+      <Tooltip id={tooltipId} place={lg ? 'top' : 'bottom'}>
         <ProtocolBetaWarningContent protocol={protocol} />
       </Tooltip>
     </>

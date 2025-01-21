@@ -249,12 +249,12 @@ export default function TraderHistoryPositions(props: HistoryTableProps) {
                 data-tooltip-id="history_table_chart"
                 data-tooltip-offset={8}
               />
-              <Tooltip id="history_table_chart" place="bottom" type="dark" effect="solid">
+              <Tooltip id="history_table_chart" place="bottom">
                 <Type.Caption>Show/Hide PnL Chart</Type.Caption>
               </Tooltip>
             </>
           )}
-          <Tooltip id="history_table_heatmap" place="bottom" type="dark" effect="solid">
+          <Tooltip id="history_table_heatmap" place="bottom">
             <Type.Caption>Show/Hide Heatmap Activity</Type.Caption>
           </Tooltip>
           {!!toggleExpand && (
@@ -509,7 +509,7 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
             data-tooltip-id="history_table_heatmap"
             data-tooltip-offset={8}
           />
-          <Tooltip id="history_table_heatmap" place="bottom" type="dark" effect="solid">
+          <Tooltip id="history_table_heatmap" place="bottom">
             <Type.Caption>Show/Hide Heatmap Activity</Type.Caption>
           </Tooltip> */}
         </Flex>

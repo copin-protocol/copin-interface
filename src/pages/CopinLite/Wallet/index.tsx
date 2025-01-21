@@ -66,7 +66,7 @@ const LiteWallet = () => {
 
   return (
     <Box
-      width={['100%', '100%', '100%', 400]}
+      width={['100%', '100%', '100%', 350, 400]}
       height="100%"
       bg={['neutral7', 'neutral7', 'neutral7', 'neutral5']}
       sx={{ overflow: 'hidden', borderRight: 'small', borderColor: 'neutral4' }}

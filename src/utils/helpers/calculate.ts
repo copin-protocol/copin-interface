@@ -1,9 +1,15 @@
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { PositionData } from 'entities/trader'
 import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
-import { PROTOCOLS_IN_TOKEN_COLLATERAL, PROTOCOL_USE_SIZE_NUMBER_TO_CALC } from 'utils/config/protocols'
+import { PROTOCOLS_IN_TOKEN_COLLATERAL } from 'utils/config/protocols'
 
-export function calcPnL(isLong: boolean, averagePrice: number, lastPrice: number, sizeUsd: number) {
+export function calcPnL(
+  isLong: boolean,
+  averagePrice: number | undefined,
+  lastPrice: number | undefined,
+  sizeUsd: number | undefined
+) {
+  if (averagePrice == null || lastPrice == null || sizeUsd == null) return 0
   const priceDelta = averagePrice > lastPrice ? averagePrice - lastPrice : lastPrice - averagePrice
   const hasProfit = isLong ? lastPrice > averagePrice : averagePrice > lastPrice
   const delta = (sizeUsd * priceDelta) / averagePrice
@@ -19,7 +25,7 @@ export function calcCopyOpeningPnL(position: CopyPositionData, marketPrice?: num
   if (!marketPrice || !position.entryPrice) return 0
   const sizedDelta = Number(position.sizeDelta)
   const sizeUsd = (!!sizedDelta && sizedDelta > 0 ? sizedDelta : position.totalSizeDelta ?? 0) * position.entryPrice
-  return calcPnL(position.isLong, position.entryPrice, marketPrice, sizeUsd)
+  return calcPnL(!!position.isLong, position.entryPrice, marketPrice, sizeUsd)
 }
 
 export function calcOpeningPnL(position: PositionData, marketPrice?: number | undefined) {
@@ -80,9 +86,10 @@ export function calcOpeningROI(position: PositionData, realPnL: number) {
   return position.collateral ? (realPnL / position.collateral) * 100 : undefined
 }
 
-export function calcCopyOpeningROI(position: CopyPositionData, realPnL: number) {
+export function calcCopyOpeningROI(position: CopyPositionData, realPnL: number | undefined) {
+  if (position.entryPrice == null || position.leverage == null) return 0
   const sizeUsd = Number(position.totalSizeDelta ?? position.sizeDelta) * position.entryPrice
-  return (realPnL / (sizeUsd / position.leverage)) * 100
+  return ((realPnL ?? 0) / (sizeUsd / position.leverage)) * 100
 }
 // TODO: Check when add new protocol
 export function calcLiquidatePrice(position: PositionData) {
@@ -118,11 +125,18 @@ export function calcLiquidatePrice(position: PositionData) {
 }
 
 export function calcCopyLiquidatePrice(position: CopyPositionData) {
+  if (position.entryPrice == null || position.leverage == null) return 0
   const deltaPrice = (1 / position.leverage) * position.entryPrice
   return position.isLong ? position.entryPrice - deltaPrice : position.entryPrice + deltaPrice
 }
 
-export function calcRiskPercent(isLong: boolean, entryPrice: number, marketPrice: number, liquidatePrice: number) {
+export function calcRiskPercent(
+  isLong: boolean,
+  entryPrice: number | undefined,
+  marketPrice: number | undefined,
+  liquidatePrice: number | undefined
+) {
+  if (entryPrice == null || marketPrice == null || liquidatePrice == null) return 0
   return (
     ((isLong && marketPrice > entryPrice) || (!isLong && marketPrice < entryPrice) ? -1 : 1) *
     (Math.abs(marketPrice - entryPrice) / Math.abs(liquidatePrice - entryPrice)) *
@@ -130,7 +144,8 @@ export function calcRiskPercent(isLong: boolean, entryPrice: number, marketPrice
   )
 }
 
-export function calcSLTPUsd(amount: number, price: number, entryPrice: number) {
+export function calcSLTPUsd(amount: number | undefined, price: number | undefined, entryPrice: number | undefined) {
+  if (amount == null || price == null || entryPrice == null) return 0
   return amount * Math.abs(price - entryPrice)
 }
 
