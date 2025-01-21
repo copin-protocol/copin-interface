@@ -781,13 +781,13 @@ function renderCopyTrader(data: CopyTradeWithCheckingData, isRunning: boolean) {
                         address={_a}
                         protocol={data.protocol}
                         options={{
-                          hasCopyCountWarningIcon: isRunning,
-                          hasCopyVolumeWarningIcon: isRunning,
+                          hasCopyCountWarningIcon: false, // note
+                          hasCopyVolumeWarningIcon: false, // note
                           copyVolume: data.copyVolume,
                           maxCopyVolume: data.maxVolume,
                           isRef: data.isRef,
                           plan: data.plan,
-                          hasCopyTradeVolumeIcon: isRunning,
+                          hasCopyTradeVolumeIcon: false, // NOTE
                           hasCopyAddress: true,
                         }}
                       />
@@ -803,13 +803,14 @@ function renderCopyTrader(data: CopyTradeWithCheckingData, isRunning: boolean) {
           address={data.account}
           protocol={data.protocol}
           options={{
-            hasCopyCountWarningIcon: isRunning,
-            hasCopyVolumeWarningIcon: isRunning,
+            hasCopyCountWarningIcon: false, // note
+            hasCopyVolumeWarningIcon: false, // note
             copyVolume: data.copyVolume,
             maxCopyVolume: data.maxVolume,
             isRef: data.isRef,
             plan: data.plan,
-            hasCopyTradeVolumeIcon: isRunning,
+            // hasCopyTradeVolumeIcon: isRunning && !UNLIMITED_COPY_SIZE_EXCHANGES.includes(data.exchange),
+            hasCopyTradeVolumeIcon: false, // note
             hasCopyAddress: true,
           }}
         />
