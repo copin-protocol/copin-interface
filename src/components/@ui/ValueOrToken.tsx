@@ -67,7 +67,7 @@ export default function ValueOrToken({
           />
         )}
         {(isToken || defaultToken) && (
-          <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
+          <Tooltip id={tooltipId} clickable={false}>
             {`${formatNumber(isToken ? valueInToken : defaultToken ? value : undefined, 2, 2)} ${
               isToken
                 ? pair

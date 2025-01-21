@@ -120,6 +120,7 @@ function DesktopView() {
             allCopyTrades={allCopyTrades}
             handleToggleTrader={handleToggleTrader}
             handleSelectAllTraders={handleSelectAllTraders}
+            buttonSx={{ p: 2, py: 0 }}
           />
           <Flex ml={2} sx={{ height: '100%', gap: 24, alignItems: 'center', flexShrink: 0 }}>
             <WalletStatisticOverview activeWallet={activeWallet} />
@@ -297,7 +298,7 @@ function MobileView() {
                 gap: 0,
               }}
             >
-              <Box sx={{ maxWidth: [100, 100, 'max-content'], flexShrink: 0 }}>
+              <Box sx={{ maxWidth: [100, 100, 'max-content'], flexShrink: 0, px: 2 }}>
                 <SelectTradersCopied
                   selectedTraders={selectedTraders}
                   allTraders={listTraderAddresses}

@@ -38,7 +38,7 @@ export default function ListCopyOrderTable({
   isOpening?: boolean
   symbol: string
   platform?: CopyTradePlatformEnum
-  protocol: ProtocolEnum
+  protocol?: ProtocolEnum
 }) {
   const orders = data.sort((x, y) => (x.createdAt < y.createdAt ? 1 : x.createdAt > y.createdAt ? -1 : 0))
   const tableData = { data: orders, meta: { limit: orders.length, offset: 0, total: orders.length, totalPages: 1 } }

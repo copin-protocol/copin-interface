@@ -1,3 +1,4 @@
+import { TraderAlertData } from 'entities/alert'
 import {
   CopyTradeData,
   CopyTradePnL,
@@ -14,7 +15,7 @@ import { getCopyService } from 'utils/helpers/getCopyService'
 
 import { ApiListResponse } from './api'
 import requester from './index'
-import { GetCopyTradeSettingsParams } from './types'
+import { GetApiParams, GetCopyTradeSettingsParams } from './types'
 
 const SERVICE = 'copy-trades'
 
@@ -125,6 +126,10 @@ export async function getAllMyCopyTradersApi(params?: {
   copyWalletIds: string[] | undefined
 }) {
   return requester.get(`${SERVICE}/traders/group`, { params }).then((res: any) => res.data as MyAllCopyTradersData)
+}
+
+export async function getActiveCopiedTradersApi(params?: GetApiParams) {
+  return requester.get(`${SERVICE}/traders/alert-list`, { params }).then((res: any) => res.data as TraderAlertData[])
 }
 
 export async function getMyCopyTradeOverviewApi(params: {

@@ -1,15 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { useMutation } from 'react-query'
-import { toast } from 'react-toastify'
 
-import { forceCloseCopyPositionApi } from 'apis/copyPositionApis'
-import ToastBody from 'components/@ui/ToastBody'
+import useUnlinkPosition from 'hooks/features/useUnlinkPosition'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, Type } from 'theme/base'
-import { getErrorMessage } from 'utils/helpers/handleError'
 
-export default function CloseCopyPositionModal({
+export default function UnlinkCopyPositionModal({
   copyId,
   onDismiss,
   onSuccess,
@@ -18,25 +14,16 @@ export default function CloseCopyPositionModal({
   onDismiss: () => void
   onSuccess?: () => void
 }) {
-  const { mutate: forceCloseCopyPosition, isLoading: submitting } = useMutation(forceCloseCopyPositionApi, {
-    onSuccess: async () => {
-      toast.success(
-        <ToastBody
-          title={<Trans>Success</Trans>}
-          message={<Trans>This copy position has been closed successfully</Trans>}
-        />
-      )
+  const { unlinkPosition, isSubmitting } = useUnlinkPosition({
+    onSuccess: () => {
       onDismiss()
-      onSuccess && onSuccess()
-    },
-    onError: (err) => {
-      toast.error(<ToastBody title={<Trans>Error</Trans>} message={getErrorMessage(err)} />)
+      onSuccess?.()
     },
   })
 
   const onSubmit = () => {
-    if (submitting) return
-    forceCloseCopyPosition(copyId)
+    if (isSubmitting) return
+    unlinkPosition(copyId)
   }
 
   return (
@@ -57,10 +44,10 @@ export default function CloseCopyPositionModal({
             variant="primary"
             sx={{ flex: 1 }}
             onClick={onSubmit}
-            isLoading={submitting}
-            disabled={submitting}
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
           >
-            {submitting ? 'Processing...' : 'Unlink'}
+            {isSubmitting ? 'Processing...' : 'Unlink'}
           </Button>
         </Flex>
       </Box>

@@ -1,4 +1,3 @@
-import { useResponsive } from 'ahooks'
 import { useCallback, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
@@ -6,6 +5,7 @@ import { getTraderVolumeCopy } from 'apis/copyTradeApis'
 import DeleteCopyTradeModal from 'components/@copyTrade/CopyTradeDeleteModal'
 import CopyTradeEditDrawer from 'components/@copyTrade/CopyTradeEditDrawer'
 import CopyTradeHistoryDrawer from 'components/@copyTrade/CopyTradeHistoryDrawer'
+import { MobileLayoutType } from 'components/@position/types'
 import { CopyTradeData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
 import { getMaxVolumeCopy, useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
@@ -26,11 +26,13 @@ export default function LiteCopyTrades({
   copyTrades,
   loading,
   reload,
+  layoutType,
 }: {
   copyWallet: CopyWalletData
   copyTrades: CopyTradeData[] | undefined
   loading: boolean
   reload: () => void
+  layoutType: MobileLayoutType
 }) {
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
   const [openConfirmStopModal, setOpenConfirmStopModal] = useState(false)
@@ -155,8 +157,6 @@ export default function LiteCopyTrades({
     plan: myProfile?.plan,
   }))
 
-  const { sm } = useResponsive()
-
   return (
     <Flex
       sx={{
@@ -168,7 +168,7 @@ export default function LiteCopyTrades({
       <Box flex="1 0 0" overflow="hidden">
         {!loading &&
           !!copyTrades?.length &&
-          (sm ? (
+          (layoutType === 'LIST' ? (
             <CopyTable
               sortedData={sortedData}
               columns={columns}

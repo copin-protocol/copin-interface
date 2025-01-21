@@ -113,7 +113,6 @@ export function AccountInfo({
         flex="1"
         flexDirection="column"
         sx={{
-          width: 110,
           color: 'inherit',
           textAlign: 'left',
           ...sx,
@@ -126,6 +125,7 @@ export function AccountInfo({
             // data-tooltip-delay-hide={0}
             // data-tooltip-delay-show={360}
             // data-tooltip-offset={-8}
+            width={80}
             lineHeight="24px"
             color={isCopying ? 'orange1' : 'inherit'}
             sx={{
@@ -148,7 +148,7 @@ export function AccountInfo({
             data-tooltip-id={`tt_protocol_${protocolTooltipId}`}
             data-tooltip-offset={0}
           />
-          <Tooltip id={`tt_protocol_${protocolTooltipId}`} place="top" type="dark" effect="solid" clickable={false}>
+          <Tooltip id={`tt_protocol_${protocolTooltipId}`} clickable={false}>
             <ProtocolLogo protocol={protocol} />
           </Tooltip>
         </Flex>
@@ -188,12 +188,12 @@ export function AccountInfo({
         // </Type.Small>
         null}
         {note && note.length > 10 && (
-          <Tooltip id={`tt_note_${address}`} place="top" type="dark" effect="solid" clickable={false}>
+          <Tooltip id={`tt_note_${address}`} clickable={false}>
             {note}
           </Tooltip>
         )}
         {smartAccount && (
-          <Tooltip id={`tt_sm_${smartAccount}`} place="top" type="dark" effect="solid" clickable={false}>
+          <Tooltip id={`tt_sm_${smartAccount}`} clickable={false}>
             Smart Account: {smartAccount}
           </Tooltip>
         )}

@@ -25,6 +25,9 @@ export interface FindAndSelectTraderProps {
   timeOption: TimeFilterProps
   selectedTrader: TraderData | null
   onClear?: () => void
+  placeholder?: string
+  addWidget?: ReactNode
+  limit?: number
 }
 
 export default function FindAndSelectTrader({

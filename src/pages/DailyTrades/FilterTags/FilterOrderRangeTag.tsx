@@ -1,7 +1,7 @@
 import { ORDER_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
+import TagWrapper from 'theme/Tag/TagWrapper'
 import { Type } from 'theme/base'
 
-import TagWrapper from '../../../theme/Tag/TagWrapper'
 import { useDailyOrdersContext } from '../Orders/useOrdersProvider'
 
 export default function FilterOrderRangesTag() {

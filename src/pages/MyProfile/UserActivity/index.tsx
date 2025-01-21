@@ -7,6 +7,7 @@ import { useQuery } from 'react-query'
 import { getUserActivityLogsApi } from 'apis/activityLogApis'
 import CopyTradePositionDetails from 'components/@position/CopyPositionDetails'
 import Container from 'components/@ui/Container'
+import { CopyPositionData } from 'entities/copyTrade'
 import { UserActivityData } from 'entities/user'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useIsMobile from 'hooks/helpers/useIsMobile'
@@ -27,7 +28,7 @@ import { pageToOffset } from 'utils/helpers/transform'
 import SelectWallets from '../SelectWallets'
 import ListActivityMobile from './ListActivityMobile'
 import SelectedCopyTrades from './SelectedCopyTrades'
-import { CopySelection, ExternalSource, userActivityColumns } from './configs'
+import { ExternalSource, userActivityColumns } from './configs'
 import useFilterActivities from './useFilterActivities'
 
 export default function UserActivity() {
@@ -79,8 +80,8 @@ export default function UserActivity() {
     { keepPreviousData: true, retry: 0 }
   )
   const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
-  const [currentCopyPosition, setCurrentCopyPosition] = useState<CopySelection>()
-  const handleSelectCopyItem = async (data: CopySelection) => {
+  const [currentCopyPosition, setCurrentCopyPosition] = useState<CopyPositionData>()
+  const handleSelectCopyItem = async (data: CopyPositionData) => {
     setCurrentCopyPosition(data)
     setOpenCopyDrawer(true)
   }
@@ -144,7 +145,7 @@ export default function UserActivity() {
           ) : (
             <ListActivityMobile data={data?.data} isLoading={isFetching} externalSource={externalSource} />
           )}
-          <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
+          <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE}>
             <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
               Reverse Copy
             </Type.Caption>
@@ -167,7 +168,7 @@ export default function UserActivity() {
             sx={{ position: 'absolute', right: 1, top: 1, zIndex: 1 }}
             onClick={handleCopyDismiss}
           />
-          <CopyTradePositionDetails id={currentCopyPosition?.id ?? ''} copyTradeId={currentCopyPosition?.copyTradeId} />
+          <CopyTradePositionDetails copyPositionData={currentCopyPosition} />
         </Container>
       </RcDrawer>
     </>

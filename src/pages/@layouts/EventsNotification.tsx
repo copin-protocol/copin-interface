@@ -288,7 +288,7 @@ function setStoredData(state: State) {
 }
 function getDefaultPositionValues(isShowMenu: boolean) {
   return {
-    x: window.innerWidth - (isShowMenu ? ICON_SIZE : 100) - 16,
+    x: window.innerWidth - (isShowMenu ? ICON_SIZE : 120) - 16,
     y: window.innerHeight - ICON_SIZE - 16,
   }
 }

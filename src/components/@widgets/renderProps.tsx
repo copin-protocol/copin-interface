@@ -422,7 +422,7 @@ export function renderTrader(
                 data-tooltip-id={`tt_protocol_${protocolTooltipId}`}
                 data-tooltip-offset={0}
               />
-              <Tooltip id={`tt_protocol_${protocolTooltipId}`} place="top" type="dark" effect="solid" clickable={false}>
+              <Tooltip id={`tt_protocol_${protocolTooltipId}`} clickable={false}>
                 <ProtocolLogo protocol={protocol} />
               </Tooltip>
             </>

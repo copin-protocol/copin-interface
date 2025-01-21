@@ -30,7 +30,7 @@ export default function Overview() {
         let protocol = ''
         let blockType = ''
         if (key.match('synthetixV3')?.length) {
-          protocol = 'synthetixV3'
+          protocol = 'synthetix_v3'
           blockType = lowerFirstLetter(key.split(/synthetixV3/i)?.[1])
         } else if (key.includes('mirror')) {
           blockType = 'latestRawDataBlock'

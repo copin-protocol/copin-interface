@@ -92,50 +92,52 @@ export interface PreDeleteCopyTradeData {
 
 export type UpdateCopyTradeData = Partial<CopyTradeData>
 
+type CopyOpeningPositionType = 'onlyLiveHyper' | 'onlyLiveApp' | 'liveBoth'
 export interface CopyPositionData {
-  id: string
-  identifyKey: string
-  protocol: ProtocolEnum
+  id?: string
+  identifyKey?: string
+  protocol?: ProtocolEnum
   exchange?: CopyTradePlatformEnum
-  userId: string
-  copyTradeId: string
-  copyAccount: string
+  userId?: string
+  copyTradeId?: string
+  copyAccount?: string
   positionIndex?: number
-  copyTradeTitle: string
+  copyTradeTitle?: string
   copyWalletName?: string
   copyWalletId?: string
-  name: string
-  indexToken: string
-  key: string
-  sourceSizeDelta: string
-  sizeDelta: string
-  sourceInitialVol: string
-  initialVol: number
-  leverage: number
-  sourceOrderTxHashes: string[]
-  orderTxHashes: string[]
-  isLong: boolean
+  name?: string
+  indexToken?: string
+  key?: string
+  sourceSizeDelta?: string
+  sizeDelta?: string
+  sourceInitialVol?: string
+  initialVol?: number
+  leverage?: number
+  sourceOrderTxHashes?: string[]
+  orderTxHashes?: string[]
+  isLong?: boolean
   // reverseCopy: boolean
   isReverse?: boolean
-  entryPrice: number
-  closePrice: number
-  stopLossPrice: number
-  stopLossAmount: number
+  entryPrice?: number
+  closePrice?: number
+  stopLossPrice?: number
+  stopLossAmount?: number
   latestStopLossId?: string
-  takeProfitPrice: number
-  takeProfitAmount: number
+  takeProfitPrice?: number
+  takeProfitAmount?: number
   latestTakeProfitId?: string
-  pnl: number
-  realisedPnl: number
-  fee: number
-  funding: number
-  closeType: CopyPositionCloseTypeEnum
-  status: PositionStatusEnum
-  lastOrderAt: string
-  createdAt: string
-  updatedAt: string
+  pnl?: number
+  realisedPnl?: number
+  fee?: number
+  funding?: number
+  closeType?: CopyPositionCloseTypeEnum
+  status?: PositionStatusEnum
+  lastOrderAt?: string
+  createdAt?: string
+  updatedAt?: string
   totalSizeDelta?: number
-  pair: string
+  pair?: string
+  openingPositionType?: CopyOpeningPositionType // custom type
 }
 
 export interface CopyOrderData {

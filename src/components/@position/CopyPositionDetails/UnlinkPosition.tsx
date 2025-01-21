@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { CopyPositionData } from 'entities/copyTrade'
 import { Button, ButtonProps } from 'theme/Buttons'
 
-import CloseCopyPositionModal from '../CloseCopyPositionModal'
+import UnlinkCopyPositionModal from '../UnlinkCopyPositionModal'
 
 const UnlinkPosition = ({
   copyPosition,
@@ -15,13 +15,14 @@ const UnlinkPosition = ({
 } & ButtonProps) => {
   const [opening, setOpening] = useState(false)
 
+  if (!copyPosition?.id) return null
   return (
     <>
       <Button {...props} variant="outlineDanger" size="xs" onClick={() => setOpening(true)}>
         Unlink Position
       </Button>
       {opening && (
-        <CloseCopyPositionModal copyId={copyPosition?.id} onDismiss={() => setOpening(false)} onSuccess={onSuccess} />
+        <UnlinkCopyPositionModal copyId={copyPosition?.id} onDismiss={() => setOpening(false)} onSuccess={onSuccess} />
       )}
     </>
   )

@@ -22,7 +22,7 @@ export default function WarningSwitchAccountIcon() {
         data-tooltip-id="tt_switch_account"
         data-tooltip-delay-show={360}
       />
-      <Tooltip id="tt_switch_account" place="bottom" type="dark" effect="solid" clickable>
+      <Tooltip id="tt_switch_account" place="bottom" clickable>
         <Box sx={{ maxWidth: 350 }}>
           <Flex alignItems="center" sx={{ gap: 2 }}>
             <Type.Caption>

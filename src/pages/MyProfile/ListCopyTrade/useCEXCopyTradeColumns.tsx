@@ -194,7 +194,7 @@ export default function useCEXCopyTradeColumns({
           {item.title ? item.title : '--'}
         </Type.Caption>
         {item.title && isRunningFn(item.status) && (
-          <Tooltip id={`${item.id}_${item.title}`} place="top" type="dark" effect="solid">
+          <Tooltip id={`${item.id}_${item.title}`}>
             <Type.Caption sx={{ maxWidth: 350 }}>{item.title}</Type.Caption>
           </Tooltip>
         )}
@@ -229,9 +229,9 @@ export default function useCEXCopyTradeColumns({
                 data-tooltip-id={tooltipId}
               />
               <Tooltip id={tooltipId}>
-                <Type.Small sx={{ maxWidth: 250, textAlign: 'left' }}>
-                  <Trans>Your balance is too low for copy trading. Please Deposit now to continue!</Trans>
-                </Type.Small>
+                <Type.Caption sx={{ maxWidth: 250, textAlign: 'left' }}>
+                  <Trans>Your balance is too low for copy trading. Please deposit now to continue!</Trans>
+                </Type.Caption>
               </Tooltip>
             </>
           )}
@@ -292,7 +292,7 @@ export default function useCEXCopyTradeColumns({
               '--'
             )}
             {hasExcludingPairs && (
-              <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
+              <Tooltip id={tooltipId} clickable>
                 <Box>
                   <Type.Caption mb={1} width="100%" color="neutral3" textAlign="left">
                     Excluding pairs:

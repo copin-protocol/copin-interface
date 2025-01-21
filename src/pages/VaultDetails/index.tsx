@@ -223,7 +223,7 @@ function VaultWalletInfo({
           icon={<Logo size={16} />}
         />
       )}
-      <Tooltip id={`tt-${address}`} place="top" type="dark" effect="solid" clickable={false}>
+      <Tooltip id={`tt-${address}`} clickable={false}>
         <Type.Small sx={{ maxWidth: [300, 400] }}>{address}</Type.Small>
       </Tooltip>
     </Flex>

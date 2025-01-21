@@ -384,7 +384,7 @@ function WalletWarningDCP() {
         data-tip="React-tooltip"
         data-tooltip-id={'tt_dcp_wallet_warning'}
       />
-      <Tooltip id={'tt_dcp_wallet_warning'} place="top" type="dark" effect="solid" clickable>
+      <Tooltip id={'tt_dcp_wallet_warning'} clickable>
         <Type.Small sx={{ maxWidth: [300, 400] }}>
           Smart Wallet is currently in alpha version and experiment phase. Please use caution and test with limited
           capital. If you encounter any issues, please contact direct support at:{' '}

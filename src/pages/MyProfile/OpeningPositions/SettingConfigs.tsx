@@ -103,7 +103,7 @@ const SettingConfigs = ({
           />
         )}
       </Box>
-      <Tooltip id={'tt-max-positions'} place="top" type="dark" effect="solid">
+      <Tooltip id={'tt-max-positions'}>
         <Box maxWidth={300}>
           <Type.Caption>The maximum number of positions that can be opened at the same time per API Key</Type.Caption>
         </Box>

@@ -1,8 +1,8 @@
 import { POSITION_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
+import TagWrapper from 'theme/Tag/TagWrapper'
 import { Type } from 'theme/base'
 import { formatNumber } from 'utils/helpers/format'
 
-import TagWrapper from '../../../theme/Tag/TagWrapper'
 import { useDailyPositionsContext } from '../Positions/usePositionsProvider'
 
 export default function FilterPositionRangesTag() {

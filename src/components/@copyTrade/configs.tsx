@@ -50,7 +50,7 @@ export const fieldName: { [key in keyof CopyTradeFormValues]: keyof CopyTradeFor
 export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   multipleCopy: false,
   protocol: ProtocolEnum.GMX,
-  volume: 0,
+  volume: 10,
   leverage: 2,
   tokenAddresses: [],
   excludingTokenAddresses: [],

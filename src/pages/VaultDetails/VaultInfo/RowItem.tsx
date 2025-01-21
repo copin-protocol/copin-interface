@@ -36,7 +36,7 @@ export default function RowItem({
         {content}
       </Type.CaptionBold>
       {!!tooltipContent && (
-        <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={clickableTooltip}>
+        <Tooltip id={tooltipId} clickable={!!clickableTooltip}>
           {tooltipContent}
         </Tooltip>
       )}

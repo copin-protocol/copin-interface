@@ -175,7 +175,7 @@ function RenderHiddenTrader({ data }: { data: LatestActivityLogData }) {
       <Box display="inline-block" data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
         <Type.CaptionBold color="neutral1">[0x...***]</Type.CaptionBold>
       </Box>
-      <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
+      <Tooltip id={tooltipId} clickable>
         {isAuthenticated ? (
           <Type.Caption>
             Please{' '}

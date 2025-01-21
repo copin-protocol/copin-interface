@@ -5,12 +5,14 @@ import { Box, Flex } from 'theme/base'
 
 export default function BalanceText({
   value,
+  defaultShow,
   component: Component,
 }: {
   value: ReactNode
+  defaultShow?: boolean
   component: ComponentType<any>
 }) {
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(!!defaultShow)
 
   return (
     <Flex

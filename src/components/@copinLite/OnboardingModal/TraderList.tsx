@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { CaretLeft, CaretRight } from '@phosphor-icons/react'
 import { memo, useCallback, useEffect, useState } from 'react'
 import Slider, { Settings } from 'react-slick'
 
@@ -9,7 +10,9 @@ import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { PnlStatisticsResponse, ResponseTraderData } from 'entities/trader'
+import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import { Button } from 'theme/Buttons'
+import IconButton from 'theme/Buttons/IconButton'
 import { HorizontalCarouselWrapper } from 'theme/Carousel/Wrapper'
 import Loading from 'theme/Loading'
 import { Box, Flex, Image, Type } from 'theme/base'
@@ -224,39 +227,63 @@ function CustomSlider({ children, deps }: { children: any; deps: any }) {
   useEffect(() => {
     setCurrentPage(1)
   }, [deps])
+  const handleClickNext = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, length))
+  }
+  const handleClickPrevious = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1))
+  }
   return (
-    <Box sx={{ width: '100%', overflow: 'hidden' }}>
-      <Flex
-        sx={{
-          width: '100%',
-          gap: 3,
-          transition: '0.6s',
-          transform:
-            currentPage === 1 ? 'none' : `translateX(calc(-${(currentPage - 1) * 100}% - ${(currentPage - 1) * 16}px))`,
-        }}
-      >
-        {children}
-      </Flex>
-      <Flex mt={24} sx={{ gap: 3, width: '100%', justifyContent: 'center', flexWrap: 'wrap' }}>
-        {Array.from({ length: length ?? 0 }, (_, v) => v + 1).map((v) => {
-          const isActive = currentPage === v
-          return (
-            <Box
-              key={v}
-              sx={{
-                width: '70px',
-                height: '8px',
-                flexShrink: 0,
-                bg: isActive ? 'primary1' : 'neutral5',
-                '&:hover': { bg: isActive ? 'primary1' : 'primary2' },
-              }}
-              onClick={() => handleClickPagination(v)}
-              role="button"
-            />
-          )
-        })}
-      </Flex>
-    </Box>
+    <Flex sx={{ width: '100%', position: 'relative', '& > *': { flexShrink: 0 }, gap: 2, alignItems: 'center' }}>
+      <IconButton
+        icon={<CaretLeft size={24} />}
+        variant="ghost"
+        onClick={handleClickPrevious}
+        disabled={currentPage === 1}
+      />
+      <Box sx={{ overflow: 'hidden', flex: '1 0 0' }}>
+        <Flex
+          sx={{
+            width: '100%',
+            gap: 3,
+            transition: '0.6s',
+            transform:
+              currentPage === 1
+                ? 'none'
+                : `translateX(calc(-${(currentPage - 1) * 100}% - ${(currentPage - 1) * 16}px))`,
+          }}
+        >
+          {children}
+        </Flex>
+        {length > 1 && (
+          <Flex mt={24} sx={{ gap: 3, width: '100%', justifyContent: 'center', flexWrap: 'wrap' }}>
+            {Array.from({ length: length ?? 0 }, (_, v) => v + 1).map((v) => {
+              const isActive = currentPage === v
+              return (
+                <Box
+                  key={v}
+                  sx={{
+                    width: '70px',
+                    height: '8px',
+                    flexShrink: 0,
+                    bg: isActive ? 'primary1' : 'neutral5',
+                    '&:hover': { bg: isActive ? 'primary1' : 'primary2' },
+                  }}
+                  onClick={() => handleClickPagination(v)}
+                  role="button"
+                />
+              )
+            })}
+          </Flex>
+        )}
+      </Box>
+      <IconButton
+        icon={<CaretRight size={24} />}
+        variant="ghost"
+        onClick={handleClickNext}
+        disabled={currentPage === length}
+      />
+    </Flex>
   )
 }
 
@@ -271,6 +298,7 @@ function TraderItem({
 }) {
   const { protocol, account, type, realisedPnl, realisedAvgRoi, totalWin, totalTrade, avgVolume } = traderData
   const traderPnlData = pnlData?.[account]
+  const { setTrader } = useQuickViewTraderStore()
 
   return (
     <Box
@@ -340,69 +368,76 @@ function TraderItem({
           />
         </Flex> */}
       </Flex>
-      <Flex mb={3} sx={{ alignItems: 'center', gap: 24 }}>
-        <Box>
-          <Flex mb={1} sx={{ alignItems: 'center', gap: 1 }}>
-            <Type.Small color="neutral2">
-              <Trans>PNL</Trans>
-            </Type.Small>
-            <Type.Small
-              color="neutral3"
-              sx={{
-                fontSize: '10px',
-                lineHeight: '17px',
-                height: '17px',
-                border: 'small',
-                borderColor: 'neutral4',
-                px: 1,
-                borderRadius: '4px',
-              }}
-            >
-              <Trans>{TIME_TRANSLATION_FULL[type]}</Trans>
-            </Type.Small>
-          </Flex>
+      <Box
+        sx={{ cursor: 'pointer' }}
+        onClick={() => {
+          setTrader({ address: account, protocol, type, eventCategory: EventCategory.LITE }, ['copy-trade'])
+        }}
+      >
+        <Flex mb={3} sx={{ alignItems: 'center', gap: 24 }}>
+          <Box>
+            <Flex mb={1} sx={{ alignItems: 'center', gap: 1 }}>
+              <Type.Small color="neutral2">
+                <Trans>PNL</Trans>
+              </Type.Small>
+              <Type.Small
+                color="neutral3"
+                sx={{
+                  fontSize: '10px',
+                  lineHeight: '17px',
+                  height: '17px',
+                  border: 'small',
+                  borderColor: 'neutral4',
+                  px: 1,
+                  borderRadius: '4px',
+                }}
+              >
+                <Trans>{TIME_TRANSLATION_FULL[type]}</Trans>
+              </Type.Small>
+            </Flex>
 
-          <Type.H5 mb={1}>
-            <SignedText value={realisedPnl} minDigit={0} maxDigit={0} fontInherit prefix="$" />
-          </Type.H5>
+            <Type.H5 mb={1}>
+              <SignedText value={realisedPnl} minDigit={0} maxDigit={0} fontInherit prefix="$" />
+            </Type.H5>
 
-          <Flex sx={{ alignItems: 'center', gap: 2 }}>
-            <Type.Small display="block" color="neutral2">
-              <Trans>Avg ROI</Trans>
-            </Type.Small>
-            <Type.Small sx={{ fontWeight: 600 }}>
-              <SignedText value={realisedAvgRoi} minDigit={2} maxDigit={2} fontInherit suffix="%" />
-            </Type.Small>
-          </Flex>
-        </Box>
-        <Box flex="1 0 0" sx={{ height: 64 }}>
-          <LineChartTraderPnl
-            data={parsePnLStatsData(traderPnlData)}
-            isCumulativeData={false}
-            dayCount={
-              TIME_FILTER_OPTIONS.find((option) => option.id === (type as unknown as TimeFilterByEnum))?.value ??
-              DAY_COUNT
-            }
-            isSimple
-            hasBalanceText={false}
-            height={64}
-          />
-        </Box>
-      </Flex>
-      <Box mb={22} sx={{ display: 'grid', gap: 3, gridTemplateColumns: '1fr 1fr' }}>
-        <Box>
-          <Type.Caption display="block" color="neutral2">
-            <Trans>Wins / Trades</Trans>
-          </Type.Caption>
-          <Type.Caption sx={{ fontWeight: 600 }}>
-            {totalWin} / {totalTrade} ({formatNumber((totalWin / totalTrade) * 100, 0, 0)}%)
-          </Type.Caption>
-        </Box>
-        <Box>
-          <Type.Caption display="block" color="neutral2">
-            <Trans>Avg Volume</Trans>
-          </Type.Caption>
-          <Type.Caption sx={{ fontWeight: 600 }}>${formatNumber(avgVolume, 2, 2)}</Type.Caption>
+            <Flex sx={{ alignItems: 'center', gap: 2 }}>
+              <Type.Small display="block" color="neutral2">
+                <Trans>Avg ROI</Trans>
+              </Type.Small>
+              <Type.Small sx={{ fontWeight: 600 }}>
+                <SignedText value={realisedAvgRoi} minDigit={2} maxDigit={2} fontInherit suffix="%" />
+              </Type.Small>
+            </Flex>
+          </Box>
+          <Box flex="1 0 0" sx={{ height: 64 }}>
+            <LineChartTraderPnl
+              data={parsePnLStatsData(traderPnlData)}
+              isCumulativeData={false}
+              dayCount={
+                TIME_FILTER_OPTIONS.find((option) => option.id === (type as unknown as TimeFilterByEnum))?.value ??
+                DAY_COUNT
+              }
+              isSimple
+              hasBalanceText={false}
+              height={64}
+            />
+          </Box>
+        </Flex>
+        <Box mb={22} sx={{ display: 'grid', gap: 3, gridTemplateColumns: '1fr 1fr' }}>
+          <Box>
+            <Type.Caption display="block" color="neutral2">
+              <Trans>Wins / Trades</Trans>
+            </Type.Caption>
+            <Type.Caption sx={{ fontWeight: 600 }}>
+              {totalWin} / {totalTrade} ({formatNumber((totalWin / totalTrade) * 100, 0, 0)}%)
+            </Type.Caption>
+          </Box>
+          <Box>
+            <Type.Caption display="block" color="neutral2">
+              <Trans>Avg Volume</Trans>
+            </Type.Caption>
+            <Type.Caption sx={{ fontWeight: 600 }}>${formatNumber(avgVolume, 2, 2)}</Type.Caption>
+          </Box>
         </Box>
       </Box>
       <Button block variant="primary" onClick={() => onClickCopyTrade(traderData)}>

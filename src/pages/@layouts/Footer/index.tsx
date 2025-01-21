@@ -12,6 +12,8 @@ import ROUTES from 'utils/config/routes'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
+import GettingStarted from '../GettingStarted'
+
 const Footer = ({ height }: { height: number }) => {
   const { myProfile } = useMyProfile()
 
@@ -30,7 +32,7 @@ const Footer = ({ height }: { height: number }) => {
       as="footer"
       height={height}
       display="block"
-      px={3}
+      pr={3}
       sx={{
         borderTop: 'small',
         borderColor: 'neutral4',
@@ -46,39 +48,43 @@ const Footer = ({ height }: { height: number }) => {
       <Flex
         sx={{
           alignItems: 'center',
-          gap: 3,
           height: '100%',
           width: '100%',
           // width: ['fit-content', 'fit-content', '100%'],
         }}
       >
-        <Type.Caption color="neutral3" display={['none', 'none', 'none', 'block']}>
+        <GettingStarted />
+        <Box height="100%" width="1px" bg="neutral4" />
+        <Type.Caption pl={2} color="neutral3" display={['none', 'none', 'none', 'block']}>
           <Trans>© {new Date().getFullYear()} Copin.</Trans>
         </Type.Caption>
-        <Flex flex="1" sx={{ alignItems: 'center', justifyContent: ['space-between', 'end'], gap: [2, 3] }}>
-          <Flex
-            sx={{
-              gap: ['12px', 3],
-            }}
-            color="neutral3"
-          >
-            {(sm ? links : linksMobile).map((_d, index) => {
-              return (
-                <a
-                  key={index}
-                  href={_d.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    lineHeight: '16px',
-                    fontSize: '12px',
-                  }}
-                >
-                  {_d.label}
-                </a>
-              )
-            })}
-          </Flex>
+        <Flex pl={3} flex="1" sx={{ alignItems: 'center', justifyContent: ['space-between', 'end'], gap: [2, 3] }}>
+          <Box>
+            <Box
+              sx={{
+                gap: ['12px', 3],
+              }}
+              color="neutral3"
+              display={['none', 'none', 'none', 'flex']}
+            >
+              {(sm ? links : linksMobile).map((_d, index) => {
+                return (
+                  <a
+                    key={index}
+                    href={_d.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      lineHeight: '16px',
+                      fontSize: '12px',
+                    }}
+                  >
+                    {_d.label}
+                  </a>
+                )
+              })}
+            </Box>
+          </Box>
           <Box display={['none', 'block']} sx={{ width: '1px', height: '24px', bg: 'neutral4' }} />
           <Flex color="neutral3" sx={{ alignItems: ['flex-start', 'center'], gap: ['12px', 3] }}>
             {channels.map((_d, index) => {

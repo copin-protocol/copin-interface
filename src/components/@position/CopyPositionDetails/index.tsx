@@ -40,13 +40,8 @@ import CopyPositionHistories from './CopyPositionHistories'
 import ListCopyOrderTable from './ListCopyOrderTable'
 import UnlinkPosition from './UnlinkPosition'
 
-export default function CopyPositionDetails({
-  id,
-  copyTradeId,
-}: {
-  id: string | undefined
-  copyTradeId: string | undefined
-}) {
+export default function CopyPositionDetails({ copyPositionData }: { copyPositionData: CopyPositionData | undefined }) {
+  const { id, copyTradeId } = copyPositionData ?? {}
   const [isTradingChart, setIsTradingChart] = useState<boolean | undefined>()
   const refetchQueries = useRefetchQueries()
   const {
@@ -81,7 +76,10 @@ export default function CopyPositionDetails({
       data && dataOrders
         ? dataOrders.map((e, i) => {
             const sizeUsd = e.size * e.price
-            let collateral = ((e.size * e.price) / (e.leverage || data.leverage)) * (e.isIncrease ? 1 : -1)
+            let collateral =
+              e.leverage != null || data.leverage != null
+                ? ((e.size * e.price) / ((e.leverage ?? 1) || (data.leverage ?? 1))) * (e.isIncrease ? 1 : -1)
+                : 0
             if (e.collateral != null) {
               collateral = e.collateral * (e.isIncrease ? 1 : -1)
             } else if (e.totalCollateral != null) {
@@ -97,7 +95,7 @@ export default function CopyPositionDetails({
               leverage:
                 e.totalCollateral && e.totalSize
                   ? (e.totalSize * e.price) / e.totalCollateral
-                  : e.leverage || data.leverage,
+                  : e.leverage || (data.leverage ?? 0),
             }
           })
         : undefined,
@@ -136,7 +134,7 @@ export default function CopyPositionDetails({
         : 0,
     [data, isOpening, prices, symbol]
   )
-  const roi = data ? (pnl / collateral) * 100 : 0
+  const roi = data ? ((pnl ?? 0) / collateral) * 100 : 0
 
   const openBlockTimeUnix = useMemo(() => (data ? dayjs(data.createdAt).utc().unix() : 0), [data])
   const closeBlockTimeUnix = useMemo(() => (data ? dayjs(data.lastOrderAt).utc().unix() : 0), [data])
@@ -144,12 +142,21 @@ export default function CopyPositionDetails({
   const [crossMovePnL, setCrossMovePnL] = useState<number | undefined>()
   const latestPnL = useMemo(
     () =>
-      crossMovePnL === 0 ? 0 : data ? (isOpening || crossMovePnL ? (crossMovePnL ? crossMovePnL : pnl) : data.pnl) : 0,
+      crossMovePnL === 0
+        ? 0
+        : data
+        ? isOpening || crossMovePnL
+          ? crossMovePnL
+            ? crossMovePnL
+            : pnl
+          : data.pnl ?? 0
+        : 0,
     [crossMovePnL, data, isOpening, pnl]
   )
 
   const latestROI = useMemo(
-    () => (crossMovePnL === 0 ? 0 : data ? (isOpening || crossMovePnL ? calcCopyOpeningROI(data, latestPnL) : roi) : 0),
+    () =>
+      crossMovePnL === 0 ? 0 : data ? (isOpening || crossMovePnL ? calcCopyOpeningROI(data, latestPnL ?? 0) : roi) : 0,
     [crossMovePnL, data, isOpening, latestPnL, roi]
   )
 
@@ -268,7 +275,7 @@ export default function CopyPositionDetails({
               <StatsItemWrapperB>
                 <Type.Caption color="neutral3">Position/Value:</Type.Caption>
                 <Type.CaptionBold>
-                  ${formatNumber(sizeDelta * data.entryPrice, 0)}{' '}
+                  ${formatNumber(sizeDelta * (data.entryPrice ?? 0), 0)}{' '}
                   <Type.Caption color="neutral3" px={1}>
                     |
                   </Type.Caption>{' '}
@@ -299,7 +306,7 @@ export default function CopyPositionDetails({
             <Box px={2} py={[2, 12]} sx={{ position: 'relative' }}>
               <Flex mb={[1, 3]} width="100%" alignItems="center" justifyContent="center">
                 {isOpening ? (
-                  <Type.H5 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
+                  <Type.H5 color={(latestPnL ?? 0) > 0 ? 'green1' : (latestPnL ?? 0) < 0 ? 'red2' : 'inherit'}>
                     <AmountText amount={latestPnL} maxDigit={2} minDigit={2} suffix="$" />
                   </Type.H5>
                 ) : (
@@ -369,10 +376,10 @@ export default function CopyPositionDetails({
                   data-tooltip-id="profit_chart"
                   data-tooltip-offset={8}
                 />
-                <Tooltip id="trading_chart" place="top" type="dark" effect="solid">
+                <Tooltip id="trading_chart">
                   <Type.Caption>Trading Chart</Type.Caption>
                 </Tooltip>
-                <Tooltip id="profit_chart" place="top" type="dark" effect="solid">
+                <Tooltip id="profit_chart">
                   <Type.Caption>Profit Chart</Type.Caption>
                 </Tooltip>
               </Flex>

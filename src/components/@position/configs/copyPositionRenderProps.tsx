@@ -9,6 +9,7 @@ import TraderAddress from 'components/@ui/TraderAddress'
 import { SymbolComponent } from 'components/@widgets/renderProps'
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
@@ -17,10 +18,15 @@ import Loading from 'theme/Loading'
 import ProgressBar from 'theme/ProgressBar'
 import Tag from 'theme/Tag'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { DAYJS_FULL_DATE_FORMAT, GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
-import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
+import {
+  calcCopyLiquidatePrice,
+  calcCopyOpeningPnL,
+  calcCopyOpeningROI,
+  calcRiskPercent,
+} from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
 import {
@@ -89,36 +95,30 @@ export function renderEntry(data: CopyPositionData) {
   )
 }
 
-export function renderOpeningSize(data: CopyPositionData, prices?: UsdPrices) {
-  return <OpeningSizeComponent data={data} prices={prices} />
+export function renderOpeningSize(data: CopyPositionData) {
+  return <OpeningSizeComponent data={data} />
 }
 
-function OpeningSizeComponent({
-  data,
-  prices,
-  dynamicWidth,
-}: {
-  data: CopyPositionData | undefined
-  prices?: UsdPrices
-  dynamicWidth?: boolean
-}) {
+function OpeningSizeComponent({ data, dynamicWidth }: { data: CopyPositionData | undefined; dynamicWidth?: boolean }) {
+  const { gainsPrices, prices } = useGetUsdPrices()
   const { getSymbolByIndexToken } = useMarketsConfig()
-  if (!data || !prices) return <></>
+  if (!data) return <></>
+  const _prices = data.protocol && GAINS_TRADE_PROTOCOLS.includes(data.protocol) ? gainsPrices : prices
   // Todo: Check calc for value in rewards
 
   const symbolByIndexToken = getSymbolByIndexToken
     ? getSymbolByIndexToken({ protocol: data?.protocol, indexToken: data?.indexToken })
     : undefined
   const symbol = data?.pair ? getSymbolFromPair(data.pair) : symbolByIndexToken
-  const marketPrice: number = symbol && prices[symbol] != null ? (prices[symbol] as number) : 0
+  const marketPrice: number = symbol && _prices[symbol] != null ? (_prices[symbol] as number) : 0
   const liquidatePrice = calcCopyLiquidatePrice(data)
-  const riskPercent = calcRiskPercent(data.isLong, data.entryPrice, marketPrice, liquidatePrice ?? 0)
+  const riskPercent = calcRiskPercent(!!data.isLong, data.entryPrice, marketPrice, liquidatePrice ?? 0)
 
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
       <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '2px' }}>
         <Flex flex={dynamicWidth ? undefined : '1.15'} minWidth={40} sx={{ flexShrink: 0 }}>
-          <Type.Caption>${formatNumber(Number(data.sizeDelta) * data.entryPrice, 0)}</Type.Caption>
+          <Type.Caption>${formatNumber(Number(data.sizeDelta) * (data.entryPrice ?? 0), 0)}</Type.Caption>
         </Flex>
         <VerticalDivider sx={{ opacity: 0.2 }} />
         <Flex minWidth={40} justifyContent="center" flexShrink={0}>
@@ -161,10 +161,26 @@ function OpeningSizeComponent({
 }
 
 export function renderPnL(data: CopyPositionData, prices?: UsdPrices, textSx?: any) {
+  if (data.status === PositionStatusEnum.OPEN) {
+    return <OpeningPositionPnlComponent data={data} textSx={textSx} />
+  }
   return <PnLComponent data={data} prices={prices} textSx={textSx} />
 }
 
-function PnLComponent({ data, prices, textSx }: { data: CopyPositionData; prices?: UsdPrices; textSx?: any }) {
+type PnLComponentProps = {
+  data: CopyPositionData
+  prices?: UsdPrices
+  textSx?: any
+}
+
+function OpeningPositionPnlComponent({ data, textSx }: PnLComponentProps) {
+  const { gainsPrices, prices } = useGetUsdPrices()
+  const _prices = data.protocol && GAINS_TRADE_PROTOCOLS.includes(data.protocol) ? gainsPrices : prices
+
+  return <PnLComponent data={data} prices={_prices} textSx={textSx} />
+}
+
+function useGetCopyPositionPnl({ data, prices }: { data: CopyPositionData; prices?: UsdPrices }) {
   const { getSymbolByIndexToken } = useMarketsConfig()
   const symbolByIndexToken = getSymbolByIndexToken
     ? getSymbolByIndexToken({ protocol: data?.protocol, indexToken: data?.indexToken })
@@ -183,9 +199,15 @@ function PnLComponent({ data, prices, textSx }: { data: CopyPositionData; prices
           : undefined
       )
     : data.realisedPnl ?? data.pnl
+  return pnl
+}
+
+function PnLComponent({ data, prices, textSx }: PnLComponentProps) {
+  const isOpening = data.status === PositionStatusEnum.OPEN
+  const pnl = useGetCopyPositionPnl({ data, prices })
 
   return isOpening ? (
-    renderValueWithColor(pnl)
+    renderValueWithColor(pnl ?? 0)
   ) : (
     <LabelWithTooltip
       id={`tt_copy_pnl_${data.id}_${data.status}`}
@@ -194,12 +216,12 @@ function PnLComponent({ data, prices, textSx }: { data: CopyPositionData; prices
         <Flex flexDirection="column" sx={{ gap: 2 }}>
           <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
             <Type.Caption>PnL w. Fees:</Type.Caption>
-            {renderValueWithColor(data.pnl)}
+            {renderValueWithColor(data.pnl ?? 0)}
           </Flex>
           <Divider />
           <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
             <Type.Caption>Realized PnL:</Type.Caption>
-            {renderValueWithColor(data.realisedPnl)}
+            {renderValueWithColor(data.realisedPnl ?? 0)}
           </Flex>
           {!!data.fee && (
             <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
@@ -217,12 +239,28 @@ function PnLComponent({ data, prices, textSx }: { data: CopyPositionData; prices
       }
       dashed
     >
-      {renderValueWithColor(data.pnl, textSx)}
+      {renderValueWithColor(data.pnl ?? 0, textSx)}
     </LabelWithTooltip>
   )
 }
 
-export function renderValueWithColor(value: number, textSx?: any) {
+/**
+ *  use for hl position
+ */
+export function renderOpeningROI(data: CopyPositionData) {
+  return <OpeningPositionROIComponent data={data} />
+}
+function OpeningPositionROIComponent({ data, textSx }: { data: CopyPositionData; textSx?: any }) {
+  const { gainsPrices, prices } = useGetUsdPrices()
+  const _prices = data.protocol && GAINS_TRADE_PROTOCOLS.includes(data.protocol) ? gainsPrices : prices
+  const pnl = useGetCopyPositionPnl({ data, prices: _prices })
+  const sizeUsd = data.entryPrice ? Number(data.sizeDelta ?? 0) * data.entryPrice : 0
+  const roi = data.leverage ? ((pnl ?? 0) / (sizeUsd / data.leverage)) * 100 : 0
+
+  return renderValueWithColor(roi, textSx)
+}
+
+export function renderValueWithColor(value: number | undefined, textSx?: any) {
   return (
     <Type.Caption color={parseColorByValue(value)} sx={{ ...textSx }}>
       {formatNumber(value, 2, 2)}
@@ -230,7 +268,8 @@ export function renderValueWithColor(value: number, textSx?: any) {
   )
 }
 
-export function renderTrader(address: string, protocol: ProtocolEnum) {
+export function renderTrader(address: string | undefined, protocol: ProtocolEnum | undefined) {
+  if (address == null) return <>--</>
   return <TraderAddress address={address} protocol={protocol} />
 }
 
@@ -264,9 +303,9 @@ export const renderSize = (data: CopyPositionData) => (
   <Type.Caption color="neutral1">
     $
     {!isNaN(Number(data.totalSizeDelta))
-      ? formatNumber(Number(data.totalSizeDelta) * data.entryPrice, 0)
+      ? formatNumber(Number(data.totalSizeDelta) * (data.entryPrice ?? 0), 0)
       : data.status === PositionStatusEnum.OPEN
-      ? formatNumber(Number(data.sizeDelta) * data.entryPrice, 0)
+      ? formatNumber(Number(data.sizeDelta) * (data.entryPrice ?? 0), 0)
       : '--'}
   </Type.Caption>
 )
@@ -322,9 +361,30 @@ export function renderSource(item: CopyPositionData, index?: number, externalSou
           },
         }}
       >
-        {addressShorten(item.sourceOrderTxHashes?.[0] ?? item.copyAccount, isHistory ? 4 : 3, isHistory ? 4 : 2)}
+        {addressShorten(item.sourceOrderTxHashes?.[0] ?? item.copyAccount ?? '', isHistory ? 4 : 3, isHistory ? 4 : 2)}
       </Type.Caption>
     </Button>
+  )
+}
+
+export function renderSLTP(item: CopyPositionData) {
+  return (
+    <Type.Caption color="neutral1">
+      {item.stopLossPrice ? formatNumber(item.stopLossPrice, 2, 2) : '--'} /{' '}
+      {item.takeProfitPrice ? formatNumber(item.takeProfitPrice, 2, 2) : '--'}
+    </Type.Caption>
+  )
+}
+export function renderCollateral(item: CopyPositionData) {
+  return (
+    <Type.Caption color="neutral1">
+      $
+      {formatNumber(
+        item.leverage && item.entryPrice ? (Number(item.sizeDelta ?? 0) * item.entryPrice) / item.leverage : undefined,
+        2,
+        2
+      )}
+    </Type.Caption>
   )
 }
 

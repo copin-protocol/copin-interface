@@ -133,10 +133,10 @@ const ChartTrader = ({
                 data-tooltip-id="trader_bar_chart"
                 data-tooltip-offset={8}
               />
-              <Tooltip id="trader_line_chart" place="top" type="dark" effect="solid">
+              <Tooltip id="trader_line_chart">
                 <Type.Caption>Line Chart</Type.Caption>
               </Tooltip>
-              <Tooltip id="trader_bar_chart" place="top" type="dark" effect="solid">
+              <Tooltip id="trader_bar_chart">
                 <Type.Caption>Bar Chart</Type.Caption>
               </Tooltip>
             </Flex>

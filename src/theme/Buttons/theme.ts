@@ -158,6 +158,30 @@ export const styleVariants = {
       color: 'red1',
     },
   },
+  [variants.TEXT]: {
+    color: 'neutral1',
+    fontSize: 'inherit',
+    fontWeight: 'inherit',
+    textTransform: 'none',
+    bg: 'transparent',
+    p: 0,
+    border: 'none',
+    '&:hover:not(:disabled),&:active:not(:disabled)': {
+      color: 'neutral2',
+    },
+  },
+  [variants.TEXT_PRIMARY]: {
+    color: 'primary1',
+    fontSize: 'inherit',
+    fontWeight: 'inherit',
+    textTransform: 'none',
+    bg: 'transparent',
+    p: 0,
+    border: 'none',
+    '&:hover:not(:disabled),&:active:not(:disabled)': {
+      color: 'primary2',
+    },
+  },
 }
 
 export const sizeVariants = {

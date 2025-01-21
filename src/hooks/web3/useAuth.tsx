@@ -4,6 +4,7 @@ import { WalletState } from '@web3-onboard/core'
 import { useConnectWallet } from '@web3-onboard/react'
 import dayjs from 'dayjs'
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { useQuery } from 'react-query'
 // import { useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
@@ -11,6 +12,7 @@ import { loginWeb3Api, logoutApi, verifyLoginWeb3Api } from 'apis/authApis'
 import { clearAuth, clearWeb3Auth, getStoredJwt, getStoredWallet, setJwt, storeAuth } from 'apis/helpers'
 import { getMyProfileApi } from 'apis/userApis'
 import WaitingWallet, { WaitingState } from 'components/@auth/AuthWaitingWallet'
+import ConfirmReferralModal from 'components/@auth/ConfirmReferralModal'
 // import ConfirmReferralModal from 'components/@auth/ConfirmReferralModal'
 import ToastBody from 'components/@ui/ToastBody'
 import { UserData } from 'entities/user'
@@ -39,6 +41,8 @@ interface ContextValues {
   setProfile: (myProfile: UserData | null) => void
   isNewUser: boolean
   setIsNewUser: (isNewUser: boolean) => void
+  setOpenReferralModal: (isOpen: boolean) => void
+  waitingState: WaitingState | null
 }
 
 export const AuthContext = createContext({} as ContextValues)
@@ -46,26 +50,26 @@ export const AuthContext = createContext({} as ContextValues)
 export function AuthProvider({ children }: { children: JSX.Element }) {
   const [{ wallet }, activate, deactivate, updateBalances] = useConnectWallet()
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
-  // const [openingRefModal, setOpeningRefModal] = useState(false)
+  const [openReferralModal, setOpenReferralModal] = useState(false)
 
   const authedRef = useRef<boolean>(false)
   const eagerTriggeredRef = useRef<boolean>(false)
   const accountRef = useRef<string | null | undefined>(wallet?.accounts[0].address)
   const verifyCodeRef = useRef<string>()
   const { myProfile, setMyProfile } = useMyProfile()
-  // const { refetch: refetchProfile } = useQuery('get_user_profile_after_change_referrer', getMyProfileApi, {
-  //   enabled: false,
-  //   onSuccess: (data) => {
-  //     if (!data) return
-  //     setMyProfile(data)
-  //   },
-  // })
-  // const { setUserReferral } = useUserReferral()
+  const { refetch: refetchProfile } = useQuery('get_user_profile_after_change_referrer', getMyProfileApi, {
+    enabled: false,
+    onSuccess: (data) => {
+      if (!data) return
+      setMyProfile(data)
+    },
+  })
   const [waitingState, setWaitingState] = useState<WaitingState | null>(null)
   const [isNewUser, setIsNewUser] = useState(false)
 
-  const parsedQS = useParsedQueryString()
-  const referralCodeQs = parsedQS?.ref as string
+  // const parsedQS = useParsedQueryString()
+  // const { setUserReferral } = useUserReferral()
+  // const referralCodeQs = parsedQS?.ref as string
   // const hasUrlRef = Boolean(referralCodeQs)
 
   // const onSuccess = () => {
@@ -86,7 +90,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     localStorage.removeItem(STORAGE_KEYS.BINGX_NOTE)
     clearAuth()
     setMyProfile(null)
-    setIsAuthenticated(false)
+    setIsAuthenticated(null)
     disconnectWeb3()
   }, [disconnectWeb3, setMyProfile])
 
@@ -285,6 +289,8 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       eagerAuth,
       handleSwitchAccount,
       setProfile: setMyProfile,
+      setOpenReferralModal,
+      waitingState,
     }
   }, [
     waitingState,
@@ -298,6 +304,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     eagerAuth,
     setMyProfile,
     isNewUser,
+    waitingState,
   ])
 
   return (
@@ -336,11 +343,11 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
           handleAuth={handleAuth}
         />
       )}
-      {/* <ConfirmReferralModal
-        isOpen={openingRefModal}
-        onDismiss={() => setOpeningRefModal(false)}
+      <ConfirmReferralModal
+        isOpen={openReferralModal}
+        onDismiss={() => setOpenReferralModal(false)}
         onSuccess={() => refetchProfile()}
-      /> */}
+      />
     </AuthContext.Provider>
   )
 }

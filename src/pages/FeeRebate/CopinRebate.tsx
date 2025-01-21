@@ -193,13 +193,7 @@ function ClaimHistories() {
             >
               {formatDate(item.epochStart, DATE_TEXT_FORMAT)} - {formatDate(item.epochEnd, DATE_TEXT_FORMAT)}
             </Type.Caption>
-            <Tooltip
-              id={`tt_rebate_${item.epochId}_${account}`}
-              place="top"
-              type="dark"
-              effect="solid"
-              clickable={false}
-            >
+            <Tooltip id={`tt_rebate_${item.epochId}_${account}`} clickable={false}>
               <Flex alignItems="center" sx={{ gap: 2 }}>
                 <Type.Caption width={65} color="neutral3">
                   Start Date:

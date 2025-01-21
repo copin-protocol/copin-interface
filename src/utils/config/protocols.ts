@@ -666,4 +666,5 @@ export const PROTOCOL_LISTENER_MAPPING: Record<string, ProtocolEnum> = {
   logxBlast: ProtocolEnum.LOGX_BLAST,
   logxMode: ProtocolEnum.LOGX_MODE,
   bsxBase: ProtocolEnum.BSX_BASE,
+  synthetix_v3Base: ProtocolEnum.SYNTHETIX,
 }

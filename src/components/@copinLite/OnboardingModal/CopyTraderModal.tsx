@@ -148,7 +148,7 @@ export default function CopyTraderModal({
           <TraderStats traderData={traderData} tokensStatistic={tokensStatistic?.data} />
         </Box>
         <Box flex="1 0 0" sx={{ height: '100%', overflow: 'hidden auto' }}>
-          <Flex pt={3} px={3} mb={-20} sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Flex pt={3} px={3} sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
             <Type.H5>
               <Trans>Copy Trader</Trans>
             </Type.H5>

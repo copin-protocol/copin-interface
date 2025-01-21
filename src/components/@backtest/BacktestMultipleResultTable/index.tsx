@@ -222,7 +222,7 @@ function ResultTable({
         </Flex>
       </Flex>
 
-      <Tooltip id="backtest-result-new-tab" place="top" type="dark" effect="solid">
+      <Tooltip id="backtest-result-new-tab">
         <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
           Open backtest result detail in new tab
         </Type.Caption>

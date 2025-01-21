@@ -35,7 +35,7 @@ const getColor = (type: string): Color => {
   }
 }
 
-const renderProps: Record<string, LiteTransactionColumnData['render']> = {
+export const renderProps: Record<string, LiteTransactionColumnData['render']> = {
   time: (item) => {
     return (
       <Flex sx={{ position: 'relative', gap: 1 }}>
@@ -108,7 +108,7 @@ const renderProps: Record<string, LiteTransactionColumnData['render']> = {
   ),
 }
 
-const transactionTitles = {
+export const transactionTitles = {
   time: <Trans>Time</Trans>,
   action: <Trans>Action</Trans>,
   accountValueChange: <Trans>Account Value Change</Trans>,

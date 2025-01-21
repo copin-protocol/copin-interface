@@ -1,11 +1,13 @@
+import { ComponentProps } from 'react'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 
-function Tooltip(props: any) {
+// function Tooltip(props: any) {
+function Tooltip(props: ComponentProps<typeof ReactTooltip>) {
   return (
     // <BodyPortal>
     <ReactTooltip
-      type="dark"
-      effect="solid"
+      variant="dark"
+      place="top"
       positionStrategy="fixed"
       className="custom_react_tooltip_css"
       classNameArrow={

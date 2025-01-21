@@ -69,7 +69,7 @@ export default function TraderAddress({
         width={size}
         height={size}
         sx={{
-          '&:hover': hasHover ? QUICKVIEW_HOVER_STYLE : {},
+          '&:hover': protocol && hasHover ? QUICKVIEW_HOVER_STYLE : {},
         }}
         onClick={(event) => {
           event.preventDefault()
@@ -83,12 +83,16 @@ export default function TraderAddress({
           }
         }}
       >
-        <AddressAvatar address={address} size={size} sx={{ '&:hover': hasHover ? { opacity: 0.25 } : {} }} />
+        <AddressAvatar
+          address={address}
+          size={size}
+          sx={{ '&:hover': protocol && hasHover ? { opacity: 0.25 } : {} }}
+        />
       </Box>
 
       <Flex
-        as={Link}
-        to={generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeType } })}
+        as={isLink ? Link : undefined}
+        to={isLink ? generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeType } }) : ''}
         onClick={(e: any) => e.stopPropagation()}
         alignItems="center"
         sx={{ gap: 2 }}

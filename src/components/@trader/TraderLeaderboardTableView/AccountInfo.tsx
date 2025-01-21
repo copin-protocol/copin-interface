@@ -111,9 +111,6 @@ export default function AccountInfo({
           </Flex>
           <Tooltip
             id={`account-${info.account}-tt`}
-            place="top"
-            type="dark"
-            effect="solid"
             noArrow={true}
             clickable={true}
             style={{

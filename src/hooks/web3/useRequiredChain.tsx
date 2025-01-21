@@ -70,7 +70,7 @@ const useRequiredChain = ({
           </Button>
         </Flex>
       </Box>
-      // <Alert
+      // <AlertDashboard
       //   variant="warning"
       //   message={title}
       //   description={

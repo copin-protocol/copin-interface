@@ -48,15 +48,18 @@ export default function UncontrolledInputSearch({
   onChange,
   onClear,
   placeHolder = 'Search',
+  block,
 }: {
   placeHolder?: string
   inputRef: RefObject<HTMLInputElement>
   showClearSearchButtonRef: MutableRefObject<boolean>
   onChange: ChangeEventHandler<HTMLInputElement> | undefined
   onClear: (() => void) | undefined
+  block?: boolean
 }) {
   return (
     <InputSearch
+      block={block}
       ref={inputRef}
       onChange={onChange}
       onClear={onClear}

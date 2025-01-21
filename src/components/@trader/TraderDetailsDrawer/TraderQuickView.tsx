@@ -176,6 +176,7 @@ function TraderDetailsComponent({
             protocol={protocol}
             onCopyActionSuccess={onForceReload}
             eventCategory={eventCategory}
+            disabledActions={disabledActions}
             isDrawer
           />
         </Flex>

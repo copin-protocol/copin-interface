@@ -1,9 +1,11 @@
 import { ReactNode, createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 
+import { getCopyTradeSettingsListApi } from 'apis/copyTradeApis'
 import { checkEmbeddedWalletApi, getAllCopyWalletsApi, getEmbeddedWalletsApi } from 'apis/copyWalletApis'
 import { getHlAccountInfo } from 'apis/hyperliquid'
 import { getAllVaultCopyWalletsApi } from 'apis/vaultApis'
+import { CopyTradeData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
 import { HlAccountData } from 'entities/hyperliquid'
 import { UserData } from 'entities/user'
@@ -11,6 +13,8 @@ import { useAuthContext } from 'hooks/web3/useAuth'
 import { DCP_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { logEventLite } from 'utils/tracking/event'
+import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 export interface CopyWalletContextData {
   isDA?: boolean
@@ -33,6 +37,8 @@ export interface CopyWalletContextData {
   loadTotalSmartWallet: () => void
   embeddedWalletInfo: HlAccountData | undefined
   reloadEmbeddedWalletInfo: () => void
+  embeddedCopyTrades: CopyTradeData[] | undefined
+  reloadEmbeddedCopyTrades: () => void
 }
 
 const CopyWalletContext = createContext<CopyWalletContextData>({} as CopyWalletContextData)
@@ -101,6 +107,7 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
     if (embeddedWallets?.length) return
     checkEmbeddedWallet()
     setIsNewUser(true)
+    logEventLite({ event: EVENT_ACTIONS[EventCategory.LITE].LITE_START_ONBOARDING })
   }, [wallets])
 
   const {
@@ -157,7 +164,27 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
     () => getHlAccountInfo({ user: embeddedWalletAddress || '' }),
     {
       enabled: !!embeddedWalletAddress,
-      refetchInterval: 15000,
+      refetchInterval: 10_000,
+    }
+  )
+
+  const embbededWalletId = embeddedWallets?.[0]?.id
+  const queryEmbeddedCopyTradesParams = useMemo(
+    () => ({
+      copyWalletId: embbededWalletId,
+      accounts: undefined,
+      status: undefined,
+    }),
+    [embbededWalletId]
+  )
+  const { data: embeddedCopyTrades, refetch: reloadEmbeddedCopyTrades } = useQuery(
+    [QUERY_KEYS.GET_EMBEDDED_COPY_TRADES, queryEmbeddedCopyTradesParams],
+
+    () => getCopyTradeSettingsListApi(queryEmbeddedCopyTradesParams),
+    {
+      enabled: !!embbededWalletId,
+      retry: 0,
+      keepPreviousData: true,
     }
   )
 
@@ -183,6 +210,8 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
       reloadCopyWallets: reloadWallets,
       reloadVaultCopyWallets,
       loadTotalSmartWallet: () => setLoadedTotalSmartWallet(true),
+      embeddedCopyTrades,
+      reloadEmbeddedCopyTrades,
     }),
     [
       bingXWallets,
@@ -201,6 +230,8 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
       embeddedWallets,
       embeddedWalletInfo,
       reloadEmbeddedWalletInfo,
+      embeddedCopyTrades,
+      reloadEmbeddedCopyTrades,
     ]
   )
 

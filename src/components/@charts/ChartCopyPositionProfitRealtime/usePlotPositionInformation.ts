@@ -95,12 +95,16 @@ export function usePlotPositionInformation({ chart, position, orders }: Props) {
 
         if (!slLine && position.latestStopLossId && position.stopLossAmount) {
           slLine = activeChart?.createOrderLine()
-          const stopLossUsd = calcSLTPUsd(position.stopLossAmount, position.stopLossPrice, position.entryPrice)
+          const stopLossUsd = calcSLTPUsd(
+            position.stopLossAmount,
+            position.stopLossPrice ?? 0,
+            position.entryPrice ?? 0
+          )
 
           slLine
             .setLineStyle(1)
             .setLineColor(themeColors.orange1)
-            .setPrice(position?.stopLossPrice)
+            .setPrice(position?.stopLossPrice ?? 0)
             .setText(
               `SL: -$${formatNumber(stopLossUsd, 2)}${
                 position.stopLossPrice ? ' - Est. Price: ' + formatNumber(position.stopLossPrice) : ''
@@ -118,12 +122,16 @@ export function usePlotPositionInformation({ chart, position, orders }: Props) {
 
         if (!tpLine && position.latestTakeProfitId && position.takeProfitAmount) {
           tpLine = activeChart?.createOrderLine()
-          const takeProfitUsd = calcSLTPUsd(position.takeProfitAmount, position.takeProfitPrice, position.entryPrice)
+          const takeProfitUsd = calcSLTPUsd(
+            position.takeProfitAmount,
+            position.takeProfitPrice ?? 0,
+            position.entryPrice ?? 0
+          )
 
           tpLine
             .setLineStyle(1)
             .setLineColor(themeColors.green1)
-            .setPrice(position?.takeProfitPrice)
+            .setPrice(position?.takeProfitPrice ?? 0)
             .setText(
               `TP: $${formatNumber(takeProfitUsd, 2)}${
                 position.takeProfitPrice ? ' - Est. Price: ' + formatNumber(position.takeProfitPrice) : ''

@@ -159,7 +159,7 @@ const Tag = ({
         {finder?.text}
       </Type.Caption>
       {!!tooltipContent && (
-        <Tooltip id={tooltipId} place="bottom" type="dark" effect="solid" clickable={clickableTooltip}>
+        <Tooltip id={tooltipId} place="bottom" clickable={clickableTooltip}>
           {tooltipContent}
         </Tooltip>
       )}

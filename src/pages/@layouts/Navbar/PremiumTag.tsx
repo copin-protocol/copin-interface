@@ -40,7 +40,7 @@ const PremiumTag = () => {
         </Type.Caption>
       </Flex>
       {isBasic && (
-        <Tooltip id={`tt-premium`} place="bottom" type="dark" effect="solid" noArrow={true} clickable={true}>
+        <Tooltip id={`tt-premium`} place="bottom" noArrow={true} clickable={true}>
           <Type.Small maxWidth={300}>
             Your account is <b>Basic Plan</b>.{' '}
             <a href={LINKS.upgradePremium} target="_blank" rel="noreferrer">

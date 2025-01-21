@@ -1,7 +1,7 @@
 import { ORDER_ACTION_OPTIONS } from 'components/@dailyTrades/OrderActionFilterIcon'
+import TagWrapper from 'theme/Tag/TagWrapper'
 import { Type } from 'theme/base'
 
-import TagWrapper from '../../../theme/Tag/TagWrapper'
 import { useDailyOrdersContext } from '../Orders/useOrdersProvider'
 
 export default function FilterOrderActionTag() {

@@ -281,7 +281,7 @@ const AccountStats = memo(function AccountStatsMemo({
           </Type.Caption>
         </Box>
 
-        <Tooltip id="balance-tooltip" place="top" type="dark" effect="solid">
+        <Tooltip id="balance-tooltip">
           Total values: WBTC + ETH + USDC
         </Tooltip>
 
@@ -396,7 +396,7 @@ const AccountStats = memo(function AccountStatsMemo({
               )
             })}
           </StatsWrapper>
-          <Tooltip id="tt_to_top" place="top" type="dark" effect="solid" clickable={false}>
+          <Tooltip id="tt_to_top" clickable={false}>
             <Type.Caption>Move stat to top</Type.Caption>
           </Tooltip>
         </>

@@ -77,7 +77,7 @@ const ClosePositionHandler = ({
 
   const market = copyPosition.indexToken
 
-  const marketContract = useSnxV2PerpsMarketContract(market, false)
+  const marketContract = useSnxV2PerpsMarketContract(market ?? '', false)
 
   const marketSettingsContract = useContract({
     contract: {
@@ -97,7 +97,7 @@ const ClosePositionHandler = ({
     withSignerIfPossible: false,
   })
 
-  const sizeDelta = parseEther(copyPosition.sizeDelta.toString()).mul(-1)
+  const sizeDelta = parseEther((copyPosition.sizeDelta ?? 0).toString()).mul(-1)
 
   const { data: priceInfo } = useContractQuery<BigNumber[]>(marketContract, 'assetPrice', [])
   const { data: minKeeperFee } = useContractQuery<BigNumber>(marketSettingsContract, 'minKeeperFee', [])

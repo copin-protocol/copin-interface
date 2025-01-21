@@ -165,3 +165,10 @@ export function generatePerpDEXDetailsRoute(data: { perpdex: string; params?: Re
     params: data.params,
   })
 }
+
+export function generateAlertSettingDetailsRoute(data: { id: string; params?: Record<string, any> }) {
+  return createUrlWithParams({
+    url: `${ROUTES.ALERT_SETTING_DETAILS.path_prefix}/${data.id}`,
+    params: data.params,
+  })
+}

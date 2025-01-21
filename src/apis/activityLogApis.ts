@@ -4,7 +4,14 @@ import { CopyTradePlatformEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/
 
 import { ApiListResponse } from './api'
 import requester from './index'
-import { GetApiParams } from './types'
+import {
+  GetApiParams,
+  GetUserActifityLogPayload,
+  PaginationParams,
+  QueryFilter,
+  RangeFilter,
+  RequestBodyApiData,
+} from './types'
 
 const SERVICE = 'activity-logs'
 
@@ -17,24 +24,52 @@ export async function getUserActivityLogsApi({
   protocol,
   sortBy,
   sortType,
-}: {
-  copyTradeIds?: string[]
-  copyWalletIds?: string[]
-  exchange?: CopyTradePlatformEnum
-  protocol?: ProtocolEnum
-  sortBy?: string
-  sortType?: SortTypeEnum
-} & GetApiParams) {
-  const params: Record<string, any> = {}
-  if (copyWalletIds) params.copyWalletIds = copyWalletIds
-  if (copyTradeIds) params.copyTradeIds = copyTradeIds
-  if (exchange) params.exchange = exchange
-  if (protocol) params.protocol = protocol
-  if (sortBy) params.sort_by = sortBy
-  if (sortType) params.sort_type = sortType
-  return requester
-    .get(`${SERVICE}/page`, { params: { limit, offset, ...params } })
-    .then((res: any) => res.data as ApiListResponse<UserActivityData>)
+  traders,
+  method = 'GET',
+}: GetUserActifityLogPayload & GetApiParams & { method?: 'GET' | 'POST' }) {
+  if (method === 'GET') {
+    const params: Record<string, any> = {}
+    if (copyWalletIds) params.copyWalletIds = copyWalletIds
+    if (copyTradeIds) params.copyTradeIds = copyTradeIds
+    if (exchange) params.exchange = exchange
+    if (protocol) params.protocol = protocol
+    if (sortBy) params.sort_by = sortBy
+    if (sortType) params.sort_type = sortType
+    if (!!traders) params.traders = traders
+    return requester
+      .get(`${SERVICE}/page`, { params: { limit, offset, ...params } })
+      .then((res: any) => res.data as ApiListResponse<UserActivityData>)
+  } else {
+    const payload: RequestBodyApiData = {}
+    payload.pagination = {
+      limit,
+      offset,
+    }
+    const ranges: RangeFilter<keyof UserActivityData>[] = []
+    if (!!traders) {
+      ranges.push({
+        fieldName: 'sourceAccount',
+        in: traders,
+      })
+    }
+    if (copyTradeIds?.length) {
+      ranges.push({
+        fieldName: 'copyTradeId',
+        in: copyTradeIds,
+      })
+    }
+    if (copyWalletIds?.length) {
+      ranges.push({
+        fieldName: 'copyWalletId',
+        in: copyWalletIds,
+      })
+    }
+    payload.ranges = ranges
+
+    if (sortBy) payload.sortBy = sortBy
+    if (sortType) payload.sortType = sortType
+    return requester.post(`${SERVICE}/page`, payload).then((res: any) => res.data as ApiListResponse<UserActivityData>)
+  }
 }
 
 export async function getLatestActivityLogsApi({ limit = DEFAULT_LIMIT, offset = 0 }: GetApiParams) {

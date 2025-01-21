@@ -22,7 +22,7 @@ export const RelativeTimeText = ({
     <Box as="span" sx={{ display: 'block' }} data-tip="React-tooltip" data-tooltip-id={tooltipId}>
       <span>{`${formatLocalRelativeDate(date ?? '')}`}</span>
       {hasTooltip && (
-        <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
+        <Tooltip id={tooltipId} clickable={false}>
           <Type.Caption sx={{ maxWidth: [300, 400] }}>
             {tooltipLabel}
             {formatLocalDate(date ?? '', DAYJS_FULL_DATE_FORMAT)}
@@ -44,6 +44,7 @@ export const LocalTimeText = ({
 }) => {
   const uuid = uuidv4()
   const tooltipId = `tt_${uuid}`
+  if (date == null) return <>--</>
   return (
     <Box as="span" sx={{ display: 'block' }} data-tip="React-tooltip" data-tooltip-id={tooltipId}>
       {format === DAYJS_FULL_DATE_FORMAT ? (
@@ -58,7 +59,7 @@ export const LocalTimeText = ({
         <span>{`${formatLocalDate(date ?? '', format)}`}</span>
       )}
       {hasTooltip && (
-        <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
+        <Tooltip id={tooltipId} clickable={false}>
           <Type.Caption display="block" mb={1} sx={{ maxWidth: [300, 400] }}>
             {formatLocalRelativeDate(date ?? '')}
           </Type.Caption>
@@ -80,7 +81,7 @@ export const RelativeShortTimeText = ({ date, suffix }: { date: string | number 
         {`${formatLocalRelativeShortDate(date ?? '')}`}
         {suffix ? ` ${suffix}` : ''}
       </span>
-      <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable={false}>
+      <Tooltip id={tooltipId} clickable={false}>
         <Type.Caption sx={{ maxWidth: [300, 400] }}>{formatLocalDate(date ?? '', DAYJS_FULL_DATE_FORMAT)}</Type.Caption>
       </Tooltip>
     </Box>

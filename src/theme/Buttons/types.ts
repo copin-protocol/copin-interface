@@ -30,6 +30,8 @@ export const variants = {
   GHOST_INACTIVE: 'ghostInactive',
   GHOST_WARNING: 'ghostWarning',
   WHITE: 'white',
+  TEXT: 'text',
+  TEXT_PRIMARY: 'textPrimary',
 } as const
 
 export type ButtonProps = {

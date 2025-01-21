@@ -1,6 +1,8 @@
 import { CopierLeaderboardData } from 'entities/copier'
 import { ResponseTraderData } from 'entities/trader'
+import { UserActivityData } from 'entities/user'
 import {
+  CopyTradePlatformEnum,
   CopyTradeStatusEnum,
   LeaderboardTypeEnum,
   ProtocolEnum,
@@ -113,4 +115,14 @@ export type GetTraderByLabelPayload = {
   sortBy: keyof ResponseTraderData
   sortType: SortTypeEnum
   protocols: ProtocolEnum[]
+}
+
+export type GetUserActifityLogPayload = {
+  copyTradeIds?: string[]
+  copyWalletIds?: string[]
+  exchange?: CopyTradePlatformEnum
+  protocol?: ProtocolEnum
+  sortBy?: keyof UserActivityData
+  sortType?: SortTypeEnum
+  traders?: string[]
 }

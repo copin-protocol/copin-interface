@@ -28,9 +28,9 @@ export default function SelectedTraders({
   const handleSelectAllTraders = (isSelectedAll: boolean) => {
     if (!listTraderAddresses.length) return
     if (isSelectedAll) {
-      dispatch({ type: 'setTraders', payload: [] })
-    } else {
       dispatch({ type: 'setTraders', payload: listTraderAddresses })
+    } else {
+      dispatch({ type: 'setTraders', payload: [] })
     }
     onChangeTraders()
   }
@@ -59,6 +59,7 @@ export default function SelectedTraders({
 
   return (
     <SelectTradersCopiedDropdown
+      buttonSx={{ padding: '0 8px' }}
       menuSx={sm ? undefined : { transform: 'translateX(110px)' }}
       allTraders={allTraders}
       selectedTraders={selectedTraders}

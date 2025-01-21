@@ -190,17 +190,9 @@ export default function ListVaultCopyTrades({ expanded }: { expanded: boolean })
         {!isLoadingCopyTrades && !!listTraderAddresses.length && !hasSelectedTraders && (
           <NoDataOrSelect
             type="noSelectTraders"
-            actionButton={
-              <Button
-                variant="primary"
-                mt={3}
-                onClick={() => handleSelectAllTraders(false)}
-                isLoading={isLoadingTraders}
-                disabled={isLoadingTraders}
-              >
-                <Trans>Select All Traders</Trans>
-              </Button>
-            }
+            handleClickActionButton={() => handleSelectAllTraders(true)}
+            actionButtonText={<Trans>Select All Traders</Trans>}
+            isLoading={isLoadingTraders}
           />
         )}
       </Box>

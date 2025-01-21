@@ -4,7 +4,7 @@ import { TableProps } from 'theme/Table/types'
 import { Box } from 'theme/base'
 
 import CopyPositionsContainer from '../CopyPositionsContainer'
-import { ExternalSourceCopyPositions } from '../types'
+import { ExternalSourceCopyPositions, LayoutType } from '../types'
 
 export default function CopyPositionsTableView({
   onClosePositionSuccess,
@@ -12,7 +12,7 @@ export default function CopyPositionsTableView({
   ...tableProps
 }: {
   onClosePositionSuccess: () => void
-  layoutType?: 'simple' | 'normal' | 'lite'
+  layoutType?: LayoutType
 } & TableProps<CopyPositionData, ExternalSourceCopyPositions>) {
   return layoutType === 'normal' || layoutType === 'lite' ? (
     <CopyPositionsContainer onClosePositionSuccess={onClosePositionSuccess}>

@@ -95,6 +95,10 @@ const ROUTES = {
   LINK_BOT_ALERT: {
     path: '/link/telegram',
   },
+  ALERT_SETTING_DETAILS: {
+    path: '/alert-settings/:alertId',
+    path_prefix: '/alert-settings',
+  },
   STATS: {
     path: '/stats',
   },

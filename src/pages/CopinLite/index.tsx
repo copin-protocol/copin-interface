@@ -15,6 +15,7 @@ import { LITE_TABLE_HEIGHT } from 'utils/config/constants'
 import CopyManagement from './CopyManagement'
 import Trades from './Trades'
 import LiteWallet from './Wallet'
+import { LiteContextProvider } from './useCopinLiteContext'
 
 const GlobalStyle = createGlobalStyle`
 [data-animation-shake] {
@@ -91,29 +92,31 @@ const CopinLitePage = () => {
   return (
     <>
       <GlobalStyle />
-      {lg ? (
-        <Flex height="100%" flexDirection="column">
-          <Box display={tableExpanded ? 'none' : 'flex'} height={`calc(100% - max(${LITE_TABLE_HEIGHT}px, 35%))`}>
-            <LiteWallet />
-            <CopyManagement />
-          </Box>
-          <Box
-            height={tableExpanded ? '100%' : `calc(max(${LITE_TABLE_HEIGHT}px, 35%))`}
-            sx={{ borderTop: 'small', borderColor: 'neutral4', position: 'relative' }}
-            width="100%"
-          >
-            <Trades />
-            <IconButton
-              onClick={() => setTableExpanded(!tableExpanded)}
-              variant="ghost"
-              icon={tableExpanded ? <ArrowsInSimple size={20} /> : <ArrowsOutSimple size={20} />}
-              sx={{ position: 'absolute', top: '2px', right: 0, p: 0 }}
-            />
-          </Box>
-        </Flex>
-      ) : (
-        <CopitLitePageMobile />
-      )}
+      <LiteContextProvider>
+        {lg ? (
+          <Flex height="100%" flexDirection="column">
+            <Box display={tableExpanded ? 'none' : 'flex'} height={`calc(100% - max(${LITE_TABLE_HEIGHT}px, 35%))`}>
+              <LiteWallet />
+              <CopyManagement />
+            </Box>
+            <Box
+              height={tableExpanded ? '100%' : `calc(max(${LITE_TABLE_HEIGHT}px, 35%))`}
+              sx={{ borderTop: 'small', borderColor: 'neutral4', position: 'relative' }}
+              width="100%"
+            >
+              <Trades />
+              <IconButton
+                onClick={() => setTableExpanded(!tableExpanded)}
+                variant="ghost"
+                icon={tableExpanded ? <ArrowsInSimple size={20} /> : <ArrowsOutSimple size={20} />}
+                sx={{ position: 'absolute', top: '2px', right: 0, p: 0 }}
+              />
+            </Box>
+          </Flex>
+        ) : (
+          <CopitLitePageMobile />
+        )}
+      </LiteContextProvider>
     </>
   )
 }

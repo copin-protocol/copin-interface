@@ -1,6 +1,6 @@
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 
-import AlertList from './AlertList'
+import AlertDashboard from './AlertDashboard'
 import Layout from './Layouts/Layout'
 import UserSubscription from './UserSubscription'
 
@@ -8,7 +8,7 @@ export default function Settings() {
   return (
     <>
       <CustomPageTitle title="Settings" />
-      <Layout userSubscription={<UserSubscription />} botAlert={<AlertList />} />
+      <Layout userSubscription={<UserSubscription />} botAlert={<AlertDashboard />} />
     </>
   )
 }

@@ -101,13 +101,7 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
                         data-tooltip-id={`tt_protocol_${data.protocol}`}
                         data-tooltip-offset={0}
                       />
-                      <Tooltip
-                        id={`tt_protocol_${data.protocol}`}
-                        place="top"
-                        type="dark"
-                        effect="solid"
-                        clickable={false}
-                      >
+                      <Tooltip id={`tt_protocol_${data.protocol}`} clickable={false}>
                         <ProtocolLogo protocol={data.protocol} />
                       </Tooltip>
 

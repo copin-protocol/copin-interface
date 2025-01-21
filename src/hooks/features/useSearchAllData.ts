@@ -35,8 +35,9 @@ export default function useSearchAllData(args?: {
   onSelect?: (data: TraderData) => void
   allowAllProtocol?: boolean
   allowSearchPositions?: boolean
+  limit?: number
 }) {
-  const { onSelect, allowAllProtocol = false, allowSearchPositions = false, protocols } = args ?? {}
+  const { onSelect, allowAllProtocol = false, allowSearchPositions = false, protocols, limit } = args ?? {}
   const { protocol } = useProtocolStore()
   const { myProfile } = useMyProfileStore()
   const isPremiumUser = useIsPremium()
@@ -80,13 +81,13 @@ export default function useSearchAllData(args?: {
   }
 
   const queryTraderData: SearchTradersParams = {
-    limit: SEARCH_DEFAULT_LIMIT,
+    limit: limit ?? SEARCH_DEFAULT_LIMIT,
     keyword: debounceSearchText,
     sortBy: 'lastTradeAtTs',
     sortType: SortTypeEnum.DESC,
   }
   const queryTxData: SearchPositionByTxHashParams = {
-    limit: SEARCH_DEFAULT_LIMIT,
+    limit: limit ?? SEARCH_DEFAULT_LIMIT,
     txHash: debounceSearchText,
     protocol: allowAllProtocol ? undefined : protocol,
   }
@@ -108,6 +109,7 @@ export default function useSearchAllData(args?: {
       protocol,
       protocols,
       currentProtocol,
+      limit,
     ],
     () => searchTradersApi(queryTraderData),
     {

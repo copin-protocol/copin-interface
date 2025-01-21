@@ -167,7 +167,7 @@ export const PriceTokenText = ({
           </Box>
         ) : null}
       </Box>
-      <Tooltip id={tooltipId} place="top" type="dark" effect="solid">
+      <Tooltip id={tooltipId}>
         <Type.Caption sx={{ maxWidth: 300 }}>
           {value < 0 && '-'}
           {prefix}

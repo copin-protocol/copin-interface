@@ -1,0 +1,313 @@
+import { CaretDown, X } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
+import dayjs from 'dayjs'
+import debounce from 'lodash/debounce'
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import Draggable, { DraggableEventHandler } from 'react-draggable'
+import OutsideClickHandler from 'react-outside-click-handler'
+import { v4 as uuid } from 'uuid'
+
+import IconButton from 'theme/Buttons/IconButton'
+import { Box, Flex } from 'theme/base'
+import { linearGradient1 } from 'theme/colors'
+import { STORAGE_KEYS } from 'utils/config/keys'
+import { Z_INDEX } from 'utils/config/zIndex'
+import { emptyFn } from 'utils/helpers/emptyFn'
+
+type State = {
+  visible: boolean
+  isShowMenu: boolean
+  x: number
+  y: number
+}
+
+const MAX_Y = window.innerHeight - 500
+
+type EventNotificationStore = State & {
+  lastCheck: string
+}
+
+// TODO: Dynamic later
+export default function FloatingButtonMenu({
+  defaultIconTitle,
+  menu,
+  side = 'right',
+  defaultOpen,
+  dismissible = true,
+}: {
+  defaultIconTitle: ReactNode
+  menu: ReactNode
+  side?: 'left' | 'right'
+  defaultOpen?: boolean
+  dismissible?: boolean // disable click outside
+}) {
+  const [buttonId] = useState(uuid())
+  const [state, setState] = useState<State | null>(null)
+
+  const onDrag: DraggableEventHandler = useCallback((e, data) => {
+    const { y } = data
+    setState((prev) => {
+      if (prev == null) {
+        return getDefaultValues({ isShowMenu: false, buttonHeight: BUTTON_HEIGHT, buttonWidth: BUTTON_WIDTH, side })
+      }
+      const defaultPosition = getDefaultPositionValues({
+        isShowMenu: prev.isShowMenu,
+        buttonHeight: BUTTON_HEIGHT,
+        buttonWidth: BUTTON_WIDTH,
+        side,
+      })
+      const realY = y >= defaultPosition.y ? defaultPosition.y : y <= MAX_Y ? MAX_Y : y
+
+      return { ...prev, x: defaultPosition.x, y: realY }
+    })
+  }, [])
+
+  const onToggleMenu = useCallback(
+    () =>
+      setState((prev) => {
+        return prev == null
+          ? getDefaultValues({ isShowMenu: false, buttonHeight: BUTTON_HEIGHT, buttonWidth: BUTTON_WIDTH, side })
+          : {
+              ...prev,
+              x: getDefaultPositionValues({
+                isShowMenu: !prev.isShowMenu,
+                buttonHeight: BUTTON_HEIGHT,
+                buttonWidth: BUTTON_WIDTH,
+                side,
+              }).x,
+              isShowMenu: !prev.isShowMenu,
+            }
+      }),
+    []
+  )
+  const hideMenu = useCallback(() => {
+    setState((prev) => {
+      if (prev == null) {
+        return getDefaultValues({ isShowMenu: false, buttonHeight: BUTTON_HEIGHT, buttonWidth: BUTTON_WIDTH, side })
+      }
+      return {
+        ...prev,
+        x: getDefaultPositionValues({ isShowMenu: false, buttonHeight: BUTTON_HEIGHT, buttonWidth: BUTTON_WIDTH, side })
+          .x,
+        isShowMenu: false,
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    const storedData = getStoredData()
+    if (!storedData) {
+      setState({
+        ...getDefaultPositionValues({ isShowMenu: true, buttonHeight: BUTTON_HEIGHT, buttonWidth: BUTTON_WIDTH, side }),
+        visible: true,
+        isShowMenu: defaultOpen ?? true,
+      })
+      return
+    }
+    const getRealDefaultPosition = (isShowMenu: boolean) => {
+      const _defaultPosition = getDefaultPositionValues({
+        isShowMenu,
+        buttonHeight: BUTTON_HEIGHT,
+        buttonWidth: BUTTON_WIDTH,
+        side,
+      })
+      const _realY =
+        storedData.y >= _defaultPosition.y ? _defaultPosition.y : storedData.y <= MAX_Y ? MAX_Y : storedData.y
+      return { x: _defaultPosition.x, y: _realY }
+    }
+
+    if (storedData.isShowMenu) {
+      const { x, y } = getRealDefaultPosition(true)
+      setState({ visible: true, x, y, isShowMenu: defaultOpen ?? true })
+      return
+    }
+
+    // diff from last check to 0h utc
+    const dayDiff = dayjs()
+      .utc()
+      .set('hour', 0)
+      .set('minute', 0)
+      .set('second', 0)
+      .diff(dayjs(storedData.lastCheck).utc(), 'd')
+    if (dayDiff > 1 && !storedData.isShowMenu) {
+      const { x, y } = getRealDefaultPosition(true)
+      setState({ visible: true, x, y, isShowMenu: defaultOpen ?? true })
+    } else {
+      const { x, y } = getRealDefaultPosition(storedData.isShowMenu)
+      setState({ isShowMenu: defaultOpen ?? storedData.isShowMenu, x, y, visible: true })
+    }
+  }, [])
+
+  const handleResize = useCallback(
+    debounce(() => {
+      setState((prev) => {
+        const newState: State = {
+          isShowMenu: !!prev?.isShowMenu,
+          visible: true,
+          ...getDefaultPositionValues({
+            isShowMenu: !!prev?.isShowMenu,
+            buttonHeight: BUTTON_HEIGHT,
+            buttonWidth: BUTTON_WIDTH,
+            side,
+          }),
+        }
+        setStoredData(newState)
+        return newState
+      })
+    }, 100),
+    []
+  )
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [handleResize])
+
+  const handleSetStore = useCallback(
+    debounce((state: State) => {
+      setState(state)
+      setStoredData(state)
+    }, 100),
+    []
+  )
+  useEffect(() => {
+    if (state == null) return
+    handleSetStore(state)
+  }, [state])
+
+  const timeRef = useRef(0)
+  const onClickStart = () => {
+    timeRef.current = dayjs().utc().valueOf()
+  }
+  const onClickEnd = () => {
+    const clickEndTime = dayjs().utc().valueOf()
+    if (clickEndTime - timeRef.current > 200) return
+    onToggleMenu()
+  }
+
+  const iconStyle: any = useMemo(() => {
+    return {
+      position: 'relative',
+      height: BUTTON_HEIGHT,
+      alignItems: 'center',
+      gap: 2,
+      // cursor: 'pointer',
+      backgroundImage: linearGradient1,
+      width: BUTTON_WIDTH,
+      px: 12,
+      // borderRadius: '25px',
+      // px: !!state?.isShowMenu ? `${(iconSize - 24) / 2}px` : 3,
+      // backgroundSize: '130%',
+      transition: '0.3s',
+      // '&:hover': { backgroundSize: '130%', transform: 'scale(1.05)' },
+    }
+  }, [state?.isShowMenu])
+  const { sm } = useResponsive()
+
+  if (!state?.visible) return null
+
+  return (
+    <OutsideClickHandler onOutsideClick={dismissible ? hideMenu : emptyFn}>
+      <Draggable cancel={sm ? undefined : '.strong'} axis="y" position={{ x: state?.x, y: state?.y }} onDrag={onDrag}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            // top: state.y,
+            // left: state.x,
+            zIndex: Z_INDEX.THEME_MODAL,
+          }}
+        >
+          <Flex
+            id={buttonId}
+            onMouseDown={onClickStart}
+            onMouseUp={onClickEnd}
+            onTouchStart={onClickStart}
+            onTouchEnd={onClickEnd}
+            color="black"
+            sx={iconStyle}
+          >
+            {state.isShowMenu ? <X size={24} /> : defaultIconTitle}
+            <IconButton icon={<CaretDown size={16} />} variant="ghost" iconColor="neutral3" />
+          </Flex>
+          {state.isShowMenu && (
+            <Flex
+              sx={{
+                flexDirection: 'column',
+                gap: 2,
+                width: MENU_WIDTH,
+                position: 'absolute',
+                bottom: '100%',
+                pb: 2,
+                ...(side === 'left' ? { left: 0 } : { right: 0 }),
+              }}
+            >
+              {menu}
+            </Flex>
+          )}
+        </Box>
+      </Draggable>
+    </OutsideClickHandler>
+  )
+}
+function getStoredData() {
+  const storedStr = localStorage.getItem(STORAGE_KEYS.EVENT_NOTIFICATION_LAST_CHECK)
+  if (!storedStr) return undefined
+  try {
+    const storedData = JSON.parse(storedStr) as EventNotificationStore
+    return storedData
+  } catch {
+    return undefined
+  }
+}
+function setStoredData(state: State) {
+  const data: EventNotificationStore = {
+    ...state,
+    lastCheck: dayjs.utc().toISOString(),
+  }
+  try {
+    localStorage.setItem(STORAGE_KEYS.EVENT_NOTIFICATION_LAST_CHECK, JSON.stringify(data))
+  } catch {}
+}
+
+const MARGIN_LEFT = 0
+const MARGIN_RIGHT = 0
+const MARGIN_BOTTOM = 0
+const MENU_WIDTH = 300
+const BUTTON_WIDTH = 300
+const BUTTON_HEIGHT = 50
+function getDefaultPositionValues({
+  isShowMenu,
+  buttonHeight,
+  buttonWidth,
+  side,
+}: {
+  isShowMenu: boolean
+  buttonHeight: number
+  buttonWidth: number
+  side: 'left' | 'right'
+}) {
+  return {
+    x: side === 'left' ? MARGIN_LEFT : window.innerWidth - (isShowMenu ? buttonHeight : buttonWidth) - MARGIN_RIGHT,
+    y: window.innerHeight - buttonHeight - MARGIN_BOTTOM,
+  }
+}
+function getDefaultValues({
+  isShowMenu,
+  buttonHeight,
+  buttonWidth,
+  side,
+}: {
+  isShowMenu: boolean
+  buttonHeight: number
+  buttonWidth: number
+  side: 'left' | 'right'
+}): State {
+  return {
+    visible: true,
+    isShowMenu: false,
+    ...getDefaultPositionValues({ isShowMenu, buttonHeight, buttonWidth, side }),
+  }
+}

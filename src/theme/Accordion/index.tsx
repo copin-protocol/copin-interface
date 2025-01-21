@@ -6,6 +6,7 @@ import { Box, Flex, IconBox } from 'theme/base'
 export default function Accordion({
   disabled,
   defaultOpen = false,
+  isOpen,
   header,
   body,
   wrapperSx = {},
@@ -15,6 +16,7 @@ export default function Accordion({
   iconSize = 16,
   subHeader,
 }: {
+  isOpen?: boolean
   disabled?: boolean
   header: ReactNode
   subHeader?: ReactNode
@@ -29,12 +31,16 @@ export default function Accordion({
   const [isExpand, setIsExpand] = useState(false)
   const firstUpdated = useRef(false)
   useEffect(() => {
+    if (isOpen != null) {
+      setIsExpand(isOpen)
+      return
+    }
     if (firstUpdated.current) return
     if (!!defaultOpen) {
       firstUpdated.current = true
       setIsExpand(true)
     }
-  }, [defaultOpen])
+  }, [defaultOpen, isOpen])
   if (type === 'horizontal') {
     return (
       <Box

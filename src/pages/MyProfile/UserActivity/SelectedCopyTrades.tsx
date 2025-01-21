@@ -29,9 +29,9 @@ export default function SelectedCopyTrades({
   const handleSelectAllCopyTrades = (isSelectedAll: boolean) => {
     if (!availableAllCopyTrades?.length) return
     if (isSelectedAll) {
-      dispatch({ type: 'setCopyTrades', payload: [] })
-    } else {
       dispatch({ type: 'setAllCopyTrades' })
+    } else {
+      dispatch({ type: 'setCopyTrades', payload: [] })
     }
     onChangeCopyTrades()
   }

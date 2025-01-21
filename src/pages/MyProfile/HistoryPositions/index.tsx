@@ -148,7 +148,7 @@ export default function HistoryPositions() {
         apiMeta={data?.meta}
         sx={{ py: 1 }}
       />
-      <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE} place="top" type="dark" effect="solid">
+      <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE}>
         <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
           Reverse Copy
         </Type.Caption>

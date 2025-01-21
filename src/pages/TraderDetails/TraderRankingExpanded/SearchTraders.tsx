@@ -25,13 +25,13 @@ export default function SearchTraders({
     visibleSearchResult,
     isLoading,
     searchTraders,
-  } = useSearchAllData({ onSelect: props.onSelect, returnRanking: true, allowAllProtocol: true })
+  } = useSearchAllData({ onSelect: props.onSelect, returnRanking: true, allowAllProtocol: true, limit: props.limit })
   const traders = [...filterFoundData(searchTraders?.data, props.ignoreSelectTraders)]
   return (
     <Box ref={searchWrapperRef} sx={{ position: 'relative' }}>
       <InputSearch
         ref={inputSearchRef}
-        placeholder={t`SEARCH BY ADDRESS`}
+        placeholder={props.placeholder ?? t`SEARCH BY ADDRESS`}
         sx={{
           width: '100%',
         }}
@@ -43,32 +43,34 @@ export default function SearchTraders({
       {visibleSearchResult && (
         <Flex
           sx={{
-            pt: 12,
             position: 'absolute',
             bottom: 0,
             left: 0,
             right: 0,
             transform: 'translateY(100%)',
-            height: resultHeight,
+            maxHeight: resultHeight,
             bg: 'neutral5',
             flexDirection: 'column',
             overflow: 'auto',
+            zIndex: 100,
           }}
         >
           {isLoading ? (
-            <Box pt={4}>
+            <Box px={1}>
               <Loading />
             </Box>
           ) : (
             <>
-              {!traders.length && <NoDataFound message={<Trans>No Trader Found In The Past 60 Days</Trans>} />}
+              {!traders.length && <NoDataFound message={<Trans>No Trader Found</Trans>} />}
               {traders.map((traderData) => {
                 return (
-                  <Box
+                  <Flex
+                    alignItems="center"
+                    justifyContent="space-between"
                     role="button"
                     key={traderData.id}
                     onClick={() => props.onSelect(traderData)}
-                    sx={{ py: '6px', px: 1, borderRadius: 'sm', '&:hover': { bg: 'neutral6' } }}
+                    sx={{ py: '6px', px: 2, borderRadius: 'sm', '&:hover': { bg: 'neutral6' } }}
                   >
                     <TraderAddress
                       address={traderData.account}
@@ -78,7 +80,8 @@ export default function SearchTraders({
                         textSx: { width: 80 },
                       }}
                     />
-                  </Box>
+                    {props.addWidget}
+                  </Flex>
                 )
               })}
             </>

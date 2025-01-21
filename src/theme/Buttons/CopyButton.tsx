@@ -146,9 +146,7 @@ const CopyButton = ({
           </Flex>
         )}
       </Button>
-      <Tooltip id="tt_icon_copy" place="top" type="dark" effect="solid">
-        Press to copy
-      </Tooltip>
+      <Tooltip id="tt_icon_copy">Press to copy</Tooltip>
     </>
   )
 }

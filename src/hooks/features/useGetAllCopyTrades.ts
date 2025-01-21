@@ -4,7 +4,7 @@ import { getAllMyCopyTradersApi } from 'apis/copyTradeApis'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { QUERY_KEYS } from 'utils/config/keys'
 
-export default function useGetAllCopyTrades(params?: { copyWalletIds: string[] | undefined }) {
+export default function useGetAllCopyTrades(params?: { copyWalletIds: string[] | undefined; enabled?: boolean }) {
   const { profile: myProfile } = useAuthContext()
 
   const { data } = useQuery(
@@ -12,7 +12,7 @@ export default function useGetAllCopyTrades(params?: { copyWalletIds: string[] |
     () => getAllMyCopyTradersApi({ copyWalletIds: params?.copyWalletIds }),
     {
       keepPreviousData: true,
-      enabled: !!myProfile?.id,
+      enabled: !!myProfile?.id && (params?.enabled == null || params.enabled),
       select(data) {
         return {
           copyingTraders: data?.copyingTraders?.filter?.((_t) => !!_t),

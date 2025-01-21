@@ -13,10 +13,12 @@ const InputSearchText = ({
   searchText = '',
   placeholder = 'Input keyword',
   setSearchText,
+  sx,
 }: {
   searchText: string
   placeholder: string
   setSearchText: (value: string) => void
+  sx?: any
 }) => {
   const searchWrapperRef = useRef<HTMLDivElement>(null)
   const inputSearchRef = useRef<HTMLInputElement>(null)
@@ -44,6 +46,7 @@ const InputSearchText = ({
           width: '100%',
           height: 'max-content',
           // borderColor: 'neutral2',
+          ...sx,
         }}
         value={searchText}
         onChange={handleSearchChange}

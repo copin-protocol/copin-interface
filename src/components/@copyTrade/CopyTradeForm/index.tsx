@@ -313,6 +313,7 @@ const CopyTraderForm = ({
 
   const permissionToSelectProtocol = useCopyTradePermission(true) && !isLite && (isEdit || isClone)
   const disabledSelectWallet = isEdit || (isClone && !isPremiumUser) || isOnboarding || isLite
+  const hiddenSelectWallet = isLite || isOnboarding
   const { sm } = useResponsive()
 
   const SwitchMultipleCopy = useCallback(
@@ -535,69 +536,70 @@ const CopyTraderForm = ({
           </Box>
         )}
 
-        <Box mt={20}>
-          {isClone ? (
-            <Flex mb={3} alignItems="center" sx={{ gap: 1 }}>
-              <LabelWithTooltip
-                id="tt_copy_wallet"
-                tooltip={`The feature for premium users allows cloning a copy-trade settings to other wallet.`}
-                sx={{
-                  borderBottom: '1px dashed',
-                  mb: '-1px',
-                  borderBottomColor: 'neutral3',
-                  textDecoration: 'none',
-                }}
-              >
-                Your Copy Wallet
-              </LabelWithTooltip>
-              <IconBox icon={<CrownSimple size={16} weight="fill" />} color="orange1" />
-            </Flex>
-          ) : (
-            <Label label="Your Copy Wallet" />
-          )}
-          <Flex sx={{ gap: 2, alignItems: ['start', 'end'] }}>
-            <Box flex={1} sx={{ '&& .select__menu': { zIndex: 10 } }}>
-              <Select
-                components={isLite ? { DropdownIndicator: SelectWalletIndicatorLite } : {}}
-                options={options}
-                defaultMenuIsOpen={false}
-                value={options.find((option) => option.value === platform)}
-                onChange={(newValue: any) => {
-                  if (platform !== newValue.value) {
-                    setDefaultWallet(newValue.value)
-                  }
-                  setValue(fieldName.exchange, newValue.value)
-                }}
-                isSearchable
-                isDisabled={disabledSelectWallet}
-              />
-            </Box>
+        {!hiddenSelectWallet && (
+          <Box mt={20}>
+            {isClone ? (
+              <Flex mb={3} alignItems="center" sx={{ gap: 1 }}>
+                <LabelWithTooltip
+                  id="tt_copy_wallet"
+                  tooltip={`The feature for premium users allows cloning a copy-trade settings to other wallet.`}
+                  sx={{
+                    borderBottom: '1px dashed',
+                    mb: '-1px',
+                    borderBottomColor: 'neutral3',
+                    textDecoration: 'none',
+                  }}
+                >
+                  Your Copy Wallet
+                </LabelWithTooltip>
+                <IconBox icon={<CrownSimple size={16} weight="fill" />} color="orange1" />
+              </Flex>
+            ) : (
+              <Label label="Your Copy Wallet" />
+            )}
+            <Flex sx={{ gap: 2, alignItems: ['start', 'end'] }}>
+              <Box flex={1} sx={{ '&& .select__menu': { zIndex: 10 } }}>
+                <Select
+                  components={isLite ? { DropdownIndicator: SelectWalletIndicatorLite } : {}}
+                  options={options}
+                  defaultMenuIsOpen={false}
+                  value={options.find((option) => option.value === platform)}
+                  onChange={(newValue: any) => {
+                    if (platform !== newValue.value) {
+                      setDefaultWallet(newValue.value)
+                    }
+                    setValue(fieldName.exchange, newValue.value)
+                  }}
+                  isSearchable
+                  isDisabled={disabledSelectWallet}
+                />
+              </Box>
 
-            <Box flex={1}>
-              {isVault ? (
-                <VaultWallets
-                  disabledSelect={disabledSelectWallet}
-                  platform={platform}
-                  currentWalletId={copyWalletId}
-                  onChangeWallet={onChangeWallet}
-                />
-              ) : (
-                <Wallets
-                  disabledSelect={disabledSelectWallet}
-                  platform={platform}
-                  currentWalletId={copyWalletId}
-                  onChangeWallet={onChangeWallet}
-                  selectProps={{ components: isLite ? { DropdownIndicator: SelectWalletIndicatorLite } : {} }}
-                />
-              )}
-            </Box>
-          </Flex>
-          {errors.copyWalletId?.message && (
-            <Type.Caption mt={2} color="red1">
-              {errors.copyWalletId.message}
-            </Type.Caption>
-          )}
-          {/* {!!currentWallet?.exchange && (
+              <Box flex={1}>
+                {isVault ? (
+                  <VaultWallets
+                    disabledSelect={disabledSelectWallet}
+                    platform={platform}
+                    currentWalletId={copyWalletId}
+                    onChangeWallet={onChangeWallet}
+                  />
+                ) : (
+                  <Wallets
+                    disabledSelect={disabledSelectWallet}
+                    platform={platform}
+                    currentWalletId={copyWalletId}
+                    onChangeWallet={onChangeWallet}
+                    selectProps={{ components: isLite ? { DropdownIndicator: SelectWalletIndicatorLite } : {} }}
+                  />
+                )}
+              </Box>
+            </Flex>
+            {errors.copyWalletId?.message && (
+              <Type.Caption mt={2} color="red1">
+                {errors.copyWalletId.message}
+              </Type.Caption>
+            )}
+            {/* {!!currentWallet?.exchange && (
             <Type.Caption color="neutral2" mt={2}>
               Copin&apos;s referral code:{' '}
               <Box as="span" color="neutral1" fontWeight={600}>
@@ -618,15 +620,16 @@ const CopyTraderForm = ({
               </Box>
             </Type.Caption>
           )} */}
-          {/*{platform === CopyTradePlatformEnum.GNS_V8 && !!gnsEvent && (*/}
-          {/*  <Type.Caption mt={2} display="block">*/}
-          {/*    DCP gTrade competition is ongoing.{' '}*/}
-          {/*    <Box as={Link} to={generateEventDetailsRoute(gnsEvent)} target="_blank">*/}
-          {/*      Join now.*/}
-          {/*    </Box>*/}
-          {/*  </Type.Caption>*/}
-          {/*)}*/}
-        </Box>
+            {/*{platform === CopyTradePlatformEnum.GNS_V8 && !!gnsEvent && (*/}
+            {/*  <Type.Caption mt={2} display="block">*/}
+            {/*    DCP gTrade competition is ongoing.{' '}*/}
+            {/*    <Box as={Link} to={generateEventDetailsRoute(gnsEvent)} target="_blank">*/}
+            {/*      Join now.*/}
+            {/*    </Box>*/}
+            {/*  </Type.Caption>*/}
+            {/*)}*/}
+          </Box>
+        )}
 
         <Flex alignItems="flex-start" mt={20} sx={{ gap: 2 }}>
           <Box flex={1}>

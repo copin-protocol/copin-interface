@@ -88,7 +88,7 @@ MarketFilterProps) {
         )}
 
         {hasExcludingPairs && (
-          <Tooltip id={tooltipId} place="top" type="dark" effect="solid" clickable>
+          <Tooltip id={tooltipId} clickable>
             <Box>
               <Type.Caption mb={1} width="100%" color="neutral3" textAlign="left">
                 Excluding pairs:

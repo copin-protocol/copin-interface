@@ -3,9 +3,10 @@ import { ReactNode } from 'react'
 
 import noSelectTraders from 'assets/images/select-traders.svg'
 import noTraders from 'assets/images/traders-empty.svg'
+import { Button } from 'theme/Buttons'
 import { Flex, Image, Type } from 'theme/base'
 
-type ComponentTypes = 'noTraders' | 'noSelectTraders' | 'noSelectTradersInHistory'
+type ComponentTypes = 'noTraders' | 'noSelectTraders' | 'noSelectTradersInHistory' | 'noSelectTradersInOpening'
 const configs: { [key in ComponentTypes]: { title: ReactNode; content: ReactNode; image: string } } = {
   noTraders: {
     title: <Trans>This trader list is empty</Trans>,
@@ -31,14 +32,25 @@ const configs: { [key in ComponentTypes]: { title: ReactNode; content: ReactNode
     ),
     image: noSelectTraders,
   },
+  noSelectTradersInOpening: {
+    title: <Trans>Please pick trader to view your opening positions</Trans>,
+    content: null,
+    image: noSelectTraders,
+  },
 }
 
 export default function NoDataOrSelect({
   type,
   actionButton,
+  handleClickActionButton,
+  isLoading,
+  actionButtonText,
 }: {
   type: ComponentTypes
   actionButton?: JSX.Element | null
+  handleClickActionButton?: () => void
+  isLoading?: boolean
+  actionButtonText?: ReactNode
 }) {
   const config = configs[type]
   return (
@@ -50,7 +62,13 @@ export default function NoDataOrSelect({
         {config.title}
       </Type.CaptionBold>
       <Type.Caption textAlign="center">{config.content}</Type.Caption>
-      {actionButton}
+      {actionButton ? (
+        actionButton
+      ) : handleClickActionButton ? (
+        <Button variant="primary" mt={3} onClick={handleClickActionButton} isLoading={isLoading} disabled={isLoading}>
+          {actionButtonText}
+        </Button>
+      ) : null}
     </Flex>
   )
 }

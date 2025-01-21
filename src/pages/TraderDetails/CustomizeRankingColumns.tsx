@@ -75,8 +75,6 @@ export default function CustomizeRankingColumn() {
               })}
               <Tooltip
                 id="tt_ranking_field"
-                place="top"
-                type="dark"
                 clickable={false}
                 style={{ fontSize: '12px', maxWidth: '300px' }}
               ></Tooltip>

@@ -29,11 +29,11 @@ import { signClosePosition, signForClose } from 'utils/web3/wallet'
 interface ClosePositionData {
   index?: number
   address?: string
-  copyPositionId: string
-  indexToken: string
-  isLong: boolean
-  averagePrice: number
-  protocol: ProtocolEnum
+  copyPositionId?: string
+  indexToken?: string
+  isLong?: boolean
+  averagePrice?: number
+  protocol?: ProtocolEnum
 }
 
 const CloseOnchainPosition = ({ position, onSuccess }: { position: ClosePositionData; onSuccess: () => void }) => {
@@ -142,7 +142,7 @@ const ClosePositionHandler = ({
             return
           }
           manualCloseMutation.mutate({
-            copyPositionId: position.copyPositionId,
+            copyPositionId: position.copyPositionId ?? '',
             acceptablePrice: _acceptablePrice.toString(),
             signature,
           })

@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { PlusCircle } from '@phosphor-icons/react'
-import React, { useMemo } from 'react'
+import { useResponsive } from 'ahooks'
+import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import { getCopyTradeSettingsListApi, getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
+import useBotAlertContext from 'hooks/features/useBotAlertProvider'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useOnboardingStore from 'hooks/store/useOnboardingStore'
 import Badge from 'theme/Badge'
@@ -11,9 +13,12 @@ import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS, STORAGE_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
 
+import SwitchLayoutButtons from '../SwitchLayoutButtons'
+import useMobileLayoutHandler from '../useMobileLayoutHandler'
+import AlertNotice from './AlertNotice'
 import LiteCopyTrades from './CopyTrades'
 
 const CopyManagement = () => {
@@ -29,7 +34,7 @@ const CopyManagement = () => {
   )
   const {
     data: copyTrades,
-    isFetching: isLoadingCopyTrades,
+    isLoading: isLoadingCopyTrades,
     refetch: reloadCopyTrades,
   } = useQuery(
     [QUERY_KEYS.GET_EMBEDDED_COPY_TRADES, queryParams],
@@ -56,6 +61,15 @@ const CopyManagement = () => {
 
   const { forceOpenModal } = useOnboardingStore()
   const handleClickFindTrader = () => forceOpenModal()
+  const { lg } = useResponsive()
+
+  const { layoutType, handleChangeLayout } = useMobileLayoutHandler({
+    storageKey: STORAGE_KEYS.LITE_COPY_MANAGEMENT_LAYOUT,
+    mobileBreakpoint: lg,
+  })
+
+  const { botAlert } = useBotAlertContext()
+  const hasBotAlert = botAlert != null && !!botAlert.chatId
 
   return (
     <Box flex="1 1 0" height="100%">
@@ -64,7 +78,7 @@ const CopyManagement = () => {
       ) : (
         <>
           <Flex
-            flexDirection={['column', 'column', 'column', 'row']}
+            flexDirection={lg ? 'row' : 'column'}
             sx={{
               borderBottom: 'small',
               borderColor: 'neutral4',
@@ -84,43 +98,65 @@ const CopyManagement = () => {
                 </Type.BodyBold>
                 {!!data?.copies && <Badge count={data.copies} />}
               </Flex>
-              <Box sx={{ display: ['block', 'block', 'flex'] }}>
-                <Flex>
-                  <Type.Caption color="neutral2" mr={1}>
-                    Total Volume
-                  </Type.Caption>
-                  <Type.Caption mr={3}>
+              <Box sx={{ display: ['block', 'block', 'flex'], gap: 24, pr: 3 }}>
+                <Flex sx={{ flexDirection: ['row', 'row', 'row', 'column', 'row'], columnGap: 1 }}>
+                  <Type.Caption color="neutral2">Total Volume</Type.Caption>
+                  <Type.Caption>
                     {data?.totalVolume != null ? `$${formatNumber(data?.totalVolume, 2, 2)}` : '--'}
                   </Type.Caption>
                 </Flex>
-                <Flex>
-                  <Type.Caption color="neutral2" mr={1}>
-                    Total ePnL
-                  </Type.Caption>
-                  <Type.Caption mr={3}>{data?.pnl != null ? `$${formatNumber(data?.pnl, 2, 2)}` : '--'}</Type.Caption>
+                <Flex sx={{ flexDirection: ['row', 'row', 'row', 'column', 'row'], columnGap: 1 }}>
+                  <Type.Caption color="neutral2">Total ePnL</Type.Caption>
+                  <Type.Caption>{data?.pnl != null ? `$${formatNumber(data?.pnl, 2, 2)}` : '--'}</Type.Caption>
                 </Flex>
               </Box>
             </Flex>
             {!!copyTrades && (
-              <ButtonWithIcon
-                icon={<PlusCircle size={20} />}
-                variant="ghostPrimary"
+              <Flex
                 sx={{
-                  width: ['100%', '100%', '100%', 'fit-content'],
-                  borderLeft: ['none', 'none', 'none', 'small'],
-                  borderTop: ['small', 'small', 'small', 'none'],
-                  borderRadius: 0,
-                  borderColor: ['neutral4', 'neutral4', 'neutral4', 'neutral4'],
+                  alignItems: 'center',
+                  borderLeft: lg ? 'small' : 'none',
+                  borderTop: lg ? 'none' : 'small',
+                  borderColor: 'neutral4',
+                  width: lg ? 'fit-content' : '100%',
+                  justifyContent: 'space-between',
+                  pr: 2,
                 }}
-                onClick={handleClickFindTrader}
               >
-                <Trans>Add More Trader</Trans>
-              </ButtonWithIcon>
+                <Flex sx={{ alignItems: 'center', height: '100%' }}>
+                  {lg && !hasBotAlert && (
+                    <Flex
+                      px={3}
+                      sx={{ borderRight: 'small', height: '100%', alignItems: 'center', borderRightColor: 'neutral4' }}
+                    >
+                      <AlertNotice />
+                    </Flex>
+                  )}
+                  <ButtonWithIcon
+                    icon={<PlusCircle size={20} />}
+                    variant="ghostPrimary"
+                    sx={{
+                      width: 'fit-content',
+                      borderRadius: 0,
+                    }}
+                    onClick={handleClickFindTrader}
+                  >
+                    <Trans>Add More Trader</Trans>
+                  </ButtonWithIcon>
+                  {!lg && !hasBotAlert && (
+                    <Box sx={{ borderLeft: 'small', height: '100%', pl: 3, borderColor: 'neutral4' }}>
+                      <AlertNotice />
+                    </Box>
+                  )}
+                </Flex>
+                {!lg && <SwitchLayoutButtons layoutType={layoutType} onChangeType={handleChangeLayout} />}
+              </Flex>
             )}
           </Flex>
-          <Box height={['calc(100% - 77px)', 'calc(100% - 77px)', 'calc(100% - 77px)', 'calc(100% - 46px)']}>
+          <Box height={lg ? 'calc(100% - 46px)' : 'calc(100% - 77px)'}>
             {!!embeddedWallet && (
               <LiteCopyTrades
+                layoutType={layoutType}
                 copyWallet={embeddedWallet}
                 copyTrades={copyTrades}
                 loading={isLoadingCopyTrades}
