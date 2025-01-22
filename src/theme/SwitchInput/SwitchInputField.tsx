@@ -13,10 +13,10 @@ interface StyledSwitchProps {
   disabled?: boolean
 }
 
-const WIDTH = 28 
+const WIDTH = 28
 const HEIGHT = 16
 const GAP = 2
-const LOADING_SIZE = HEIGHT - GAP 
+const LOADING_SIZE = HEIGHT - GAP
 
 const SwitchWrapper = styled.div<StyledSwitchProps>`
   line-height: 0;
@@ -26,11 +26,8 @@ const SwitchWrapper = styled.div<StyledSwitchProps>`
     width: ${WIDTH}px;
     height: ${HEIGHT}px;
   }
+
   .switch-disabled {
-    position: relative;
-    display: inline-block;
-    width: ${WIDTH}px;
-    height: ${HEIGHT}px;
     opacity: 0.5;
     & * {
       cursor: not-allowed !important;
@@ -92,7 +89,7 @@ export const SwitchInput = forwardRef(function SwitchInput(
 ) {
   return (
     <SwitchWrapper>
-      <label className={props.disabled ? 'switch-disabled' : 'switch'}>
+      <label className={`switch ${props.disabled ? 'switch-disabled' : ''}`}>
         <input ref={ref} type="checkbox" {...props} />
         <span className="slider round"></span>
         {props.isLoading && (

@@ -119,7 +119,7 @@ export function BotAlertProvider({ children }: { children: ReactNode }) {
     onSuccess: (state?: string) => {
       setIsOpenLinkBotModal(true)
       setCurrentState(state)
-      setStateExpiredTime(dayjs().utc().add(20, 'seconds').valueOf())
+      setStateExpiredTime(dayjs().utc().add(5, 'minutes').valueOf())
     },
     onError: (error: any) => {
       toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)

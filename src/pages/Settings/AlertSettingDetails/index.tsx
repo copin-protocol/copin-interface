@@ -1,17 +1,17 @@
 import { Siren, Sliders, Target, Warning, XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import React, { ReactNode, useEffect, useMemo, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
 
 import { getTraderAlertListApi } from 'apis/alertApis'
-import { ApiListResponse } from 'apis/api'
 import { getActiveCopiedTradersApi } from 'apis/copyTradeApis'
 import alertSettingBg from 'assets/images/alert_setting_bg.png'
 import AvatarGroup from 'components/@ui/Avatar/AvatarGroup'
 import Container from 'components/@ui/Container'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import { BotAlertData, TraderAlertData } from 'entities/alert'
+import { BotAlertData } from 'entities/alert'
+import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
 import useBotAlertContext from 'hooks/features/useBotAlertProvider'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -22,7 +22,7 @@ import Loading from 'theme/Loading'
 import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { AlertSettingsEnum, AlertTypeEnum } from 'utils/config/enums'
+import { AlertSettingsEnum, AlertTypeEnum, CopyTradeStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { pageToOffset } from 'utils/helpers/transform'
@@ -84,30 +84,24 @@ function AlertSettingDetailsComponent() {
       retry: 0,
     }
   )
-  const { data: copiedTraders } = useQuery(
+  const { data: totalCopiedTraders } = useQuery(
     [QUERY_KEYS.GET_COPIED_TRADER_ALERTS, myProfile?.id],
     () => getActiveCopiedTradersApi(),
     {
       enabled: !!myProfile?.id,
       retry: 0,
-      keepPreviousData: true,
-      select: (data) => {
-        return data.map((item) => ({ ...item, address: item.account } as TraderAlertData))
-      },
     }
   )
-  const formatedCopiedTraders = useMemo(() => {
-    const offset = pageToOffset(currentPage, limit)
-    return {
-      data: copiedTraders?.slice(offset, offset + limit) ?? [],
-      meta: {
-        limit,
-        offset,
-        total: copiedTraders?.length ?? 0,
-        totalPages: Math.ceil((copiedTraders?.length ?? 0) / limit),
-      },
-    } as ApiListResponse<TraderAlertData>
-  }, [copiedTraders, currentPage, limit])
+
+  const { allCopyTrades } = useAllCopyTrades()
+  const copiedTraders = Array.from(
+    new Set(
+      allCopyTrades
+        ?.filter((e) => e.status === CopyTradeStatusEnum.RUNNING)
+        ?.flatMap((_c) => [_c.account, ...(_c.accounts || [])])
+        ?.filter((e) => !!e)
+    )
+  )
 
   return (
     <>
@@ -158,10 +152,11 @@ function AlertSettingDetailsComponent() {
             <Flex
               flex={1}
               sx={{
+                mt: lg ? 72 : 0,
                 position: 'relative',
                 flexDirection: 'column',
                 overflow: 'hidden auto',
-                justifyContent: 'center',
+                justifyContent: lg ? 'flex-start' : 'center',
                 alignItems: 'center',
               }}
             >
@@ -171,8 +166,12 @@ function AlertSettingDetailsComponent() {
                 isActive={currentStep === AlertSettingsEnum.TRADERS}
                 content={
                   <ListTradersContent
-                    traders={botAlert?.type === AlertTypeEnum.COPY_TRADE ? copiedTraders : traderAlerts?.data}
-                    total={botAlert?.type === AlertTypeEnum.COPY_TRADE ? undefined : traderAlerts?.meta?.total}
+                    traders={
+                      botAlert?.type === AlertTypeEnum.COPY_TRADE
+                        ? copiedTraders
+                        : traderAlerts?.data?.map((e) => e.address)
+                    }
+                    total={botAlert?.type === AlertTypeEnum.COPY_TRADE ? totalCopiedTraders : traderAlerts?.meta?.total}
                   />
                 }
                 onSelect={onChangeStep}
@@ -220,7 +219,7 @@ function AlertSettingDetailsComponent() {
                     <Box height="100%" overflow="auto">
                       {currentStep === AlertSettingsEnum.TRADERS &&
                         (botAlert?.type === AlertTypeEnum.COPY_TRADE ? (
-                          <SettingCopiedTraders botAlert={botAlert} traders={formatedCopiedTraders} />
+                          <SettingCopiedTraders botAlert={botAlert} totalCopiedTraders={totalCopiedTraders} />
                         ) : (
                           <SettingWatchlistTraders
                             botAlert={botAlert}
@@ -242,7 +241,7 @@ function AlertSettingDetailsComponent() {
                   position: 'relative',
                   my: '24px',
                   mr: '24px',
-                  width: 565,
+                  width: 540,
                   height: 'max-content',
                   backgroundColor: 'neutral6',
                   border: 'small',
@@ -253,7 +252,7 @@ function AlertSettingDetailsComponent() {
               >
                 {currentStep === AlertSettingsEnum.TRADERS &&
                   (botAlert?.type === AlertTypeEnum.COPY_TRADE ? (
-                    <SettingCopiedTraders botAlert={botAlert} traders={formatedCopiedTraders} />
+                    <SettingCopiedTraders botAlert={botAlert} totalCopiedTraders={totalCopiedTraders} />
                   ) : (
                     <SettingWatchlistTraders
                       botAlert={botAlert}
@@ -344,11 +343,10 @@ function SettingItem({
   )
 }
 
-function ListTradersContent({ traders, total }: { traders?: TraderAlertData[]; total?: number }) {
-  const listTraders = traders?.map((item) => item.address)
-  return !!listTraders?.length ? (
+function ListTradersContent({ traders, total }: { traders?: string[]; total?: number }) {
+  return !!traders?.length ? (
     <Flex alignItems="center" sx={{ gap: 1 }}>
-      <AvatarGroup addresses={listTraders} size={18} total={total} />
+      <AvatarGroup addresses={traders} size={18} total={total} />
     </Flex>
   ) : (
     <Flex

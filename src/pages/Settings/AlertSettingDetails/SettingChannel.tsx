@@ -56,7 +56,7 @@ export default function SettingChannel({ botAlert }: { botAlert?: BotAlertData }
         title: 'CHANNEL RECEIVE ALERT',
         dataIndex: 'chatId',
         key: 'chatId',
-        style: { minWidth: '200px' },
+        style: { minWidth: '150px' },
         render: (item) => (
           <Flex alignItems="center" sx={{ gap: 1 }}>
             <TelegramIcon size={18} variant="Bold" />
@@ -68,7 +68,7 @@ export default function SettingChannel({ botAlert }: { botAlert?: BotAlertData }
         title: 'TYPE',
         dataIndex: 'telegramType',
         key: 'telegramType',
-        style: { minWidth: '150px' },
+        style: { minWidth: '100px' },
         render: (item) => (
           <Type.Caption color="neutral1">
             {item.telegramType ? TELEGRAM_TYPE_TRANS[item.telegramType] : 'N/A'}
@@ -194,12 +194,12 @@ export default function SettingChannel({ botAlert }: { botAlert?: BotAlertData }
             Webhook
           </ButtonWithIcon>
           <Tooltip id={'tt-next-version'}>
-            <Type.Caption color="neutral3" sx={{ maxWidth: 350 }}>
+            <Type.Caption color="neutral2" sx={{ maxWidth: 350 }}>
               You can add more Telegram channels in the next version
             </Type.Caption>
           </Tooltip>
           <Tooltip id="tt-coming-soon">
-            <Type.Caption color="neutral3" sx={{ maxWidth: 350 }}>
+            <Type.Caption color="neutral2" sx={{ maxWidth: 350 }}>
               Coming Soon
             </Type.Caption>
           </Tooltip>

@@ -78,7 +78,7 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
             const sizeUsd = e.size * e.price
             let collateral =
               e.leverage != null || data.leverage != null
-                ? ((e.size * e.price) / ((e.leverage ?? 1) || (data.leverage ?? 1))) * (e.isIncrease ? 1 : -1)
+                ? (sizeUsd / (e.leverage || data.leverage || 1)) * (e.isIncrease ? 1 : -1)
                 : 0
             if (e.collateral != null) {
               collateral = e.collateral * (e.isIncrease ? 1 : -1)

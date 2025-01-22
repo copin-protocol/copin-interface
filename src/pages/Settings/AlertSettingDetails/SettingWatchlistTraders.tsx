@@ -171,6 +171,7 @@ export default function SettingWatchlistTraders({
           flex={1}
           py={2}
           alignItems="center"
+          flexWrap="wrap"
           sx={{ gap: 2, borderRight: isMobile ? 'none' : 'small', borderColor: 'neutral4' }}
         >
           <IconBox icon={<Siren size={20} weight="fill" />} />
@@ -180,7 +181,7 @@ export default function SettingWatchlistTraders({
           {!isVIPUser && totalTrader >= maxTraderAlert && (
             <Link to={ROUTES.SUBSCRIPTION.path}>
               <Button size="xs" variant="outlinePrimary">
-                <Trans>Upgrade Account</Trans>
+                <Trans>Upgrade</Trans>
               </Button>
             </Link>
           )}
