@@ -155,6 +155,7 @@ export const STORAGE_KEYS = {
   LITE_ACTIVITIES_LAYOUT: 'lite_activities_layout',
   LITE_DEPOSIT_HISTORY_LAYOUT: 'lite_deposit_history_layout',
   GETTING_STARTED: 'getting_started',
+  GET_STARTED_LAST_CHECK: 'get_started_last_check',
 }
 
 export const URL_PARAM_KEYS = {
