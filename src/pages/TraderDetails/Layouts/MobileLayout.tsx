@@ -109,7 +109,7 @@ const MobileLayout = (props: LayoutProps) => {
         </Box>
       )}
       <BottomWrapperMobile
-        sx={{ position: 'fixed', bottom: FOOTER_HEIGHT, zIndex: 9999, display: ['flex', 'flex', 'flex', 'none'] }}
+        sx={{ position: 'fixed', bottom: FOOTER_HEIGHT, zIndex: 9, display: ['flex', 'flex', 'flex', 'none'] }}
       >
         <TabHeader
           configs={tabConfigs}
