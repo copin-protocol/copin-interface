@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CaretDown, CaretUp, Check } from '@phosphor-icons/react'
+import dayjs from 'dayjs'
 import { ReactNode, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
@@ -28,6 +29,10 @@ type State = {
   checkFund: boolean | null
   checkAlert: boolean | null
 }
+type LastCheckData = {
+  isOpen: boolean
+  time: string
+}
 type StoredState = Record<string, State>
 
 const DEFAULT_STATE = { checkCopyTrades: null, checkFund: null, checkAlert: null, checkConnectWallet: null }
@@ -45,34 +50,9 @@ function setStoredState({ state, userName }: { state: State | null; userName: st
 
 export default function GettingStarted() {
   const { isAuthenticated, profile, waitingState } = useAuthContext()
-  const [defaultOpen, setOpen] = useState<boolean | null>(null)
-  const [defaultState, setState] = useState<State | null>(null)
+  if (isAuthenticated == null || !!waitingState) return null
 
-  useEffect(() => {
-    if (isAuthenticated == null) return
-    if (!isAuthenticated) {
-      setOpen(true)
-      return
-    }
-    if (profile == null) return
-    const storedData = getStoredState()
-    const state = storedData?.[profile.username]
-    if (!state) {
-      setState({ ...DEFAULT_STATE, checkConnectWallet: true })
-      setOpen(true)
-      return
-    }
-    setState(state)
-    if (Object.values(state).some((v) => !v)) {
-      setOpen(true)
-      return
-    }
-    setOpen(false)
-  }, [isAuthenticated, profile?.username])
-
-  if (isAuthenticated == null || defaultOpen == null || !!waitingState) return null
-
-  return <Menu key={`${profile?.username}${defaultOpen}`} defaultOpen={defaultOpen} defaultState={defaultState} />
+  return <Menu key={`${profile?.username}`} />
 }
 
 const CHECK_STEP_MAPPING: Record<keyof State, number> = {
@@ -84,16 +64,59 @@ const CHECK_STEP_MAPPING: Record<keyof State, number> = {
 const checkIsExpand = ({ latestCompleted, step }: { latestCompleted: number; step: number }) =>
   latestCompleted + 1 === step
 
-function Menu({ defaultOpen, defaultState }: { defaultOpen?: boolean; defaultState: State | null }) {
-  const [open, setOpen] = useState(defaultOpen)
+function Menu() {
+  const { isAuthenticated, profile } = useAuthContext()
+  const [checkState, setCheckState] = useState<State | null>(null)
+  const [open, setOpen] = useState<boolean | null>(null)
+
   useEffect(() => {
-    setOpen(defaultOpen)
-  }, [defaultOpen])
-  const [checkState, setCheckState] = useState<State | null>(defaultState)
+    const storedCheckData = getStoredCheckData()
+    const storedData = getStoredState()
+    const state = storedData?.[profile?.username ?? '']
+    if (!state) {
+      setCheckState({ ...DEFAULT_STATE, checkConnectWallet: isAuthenticated })
+    } else {
+      setCheckState(state)
+    }
+    const checkStoredData = () => {
+      if (!state) {
+        setOpen(true)
+        return
+      }
+      if (Object.values(state).some((v) => !v)) {
+        setOpen(true)
+        return
+      }
+      setOpen(false)
+    }
+    if (storedCheckData == null) {
+      checkStoredData()
+      return
+    }
+    const dayDiff = dayjs()
+      .utc()
+      .set('hour', 0)
+      .set('minute', 0)
+      .set('second', 0)
+      .diff(dayjs(storedCheckData.time).utc(), 'd')
+    if (dayDiff > 1) {
+      checkStoredData()
+      return
+    } else {
+      setOpen(storedCheckData.isOpen)
+      return
+    }
+  }, [])
+
   useEffect(() => {
-    setCheckState(defaultState)
-  }, [defaultState])
-  const { profile, isAuthenticated } = useAuthContext()
+    if (open == null) return
+    const data: LastCheckData = {
+      isOpen: open,
+      time: dayjs.utc().toISOString(),
+    }
+    localStorage.setItem(STORAGE_KEYS.GET_STARTED_LAST_CHECK, JSON.stringify(data))
+  }, [open])
+
   const { embeddedCopyTrades, embeddedWalletInfo } = useCopyWalletContext()
   const { botAlert, handleGenerateLinkBot } = useBotAlertContext()
   const [latestCompleted, setLatestCompleted] = useState(CHECK_STEP_MAPPING.checkConnectWallet)
@@ -142,11 +165,7 @@ function Menu({ defaultOpen, defaultState }: { defaultOpen?: boolean; defaultSta
       return
     }
   }, [botAlert])
-  useEffect(() => {
-    if (!!checkState && Object.values(checkState).every((v) => !!v)) {
-      setOpen(false)
-    }
-  }, [checkState])
+
   const handleClickLogin = useClickLoginButton()
 
   const { forceOpenModal } = useOnboardingStore()
@@ -187,6 +206,8 @@ function Menu({ defaultOpen, defaultState }: { defaultOpen?: boolean; defaultSta
   }, 0)
   const sourceRate = totalStep === 0 ? 0 : (completeStep / totalStep) * 100
   const targetRate = 100 - sourceRate
+
+  if (open == null) return null
 
   return (
     <Flex
@@ -404,4 +425,12 @@ function Checkbox({ checked, label }: { checked: boolean; label: ReactNode }) {
       <Type.Body color="white">{label}</Type.Body>
     </Flex>
   )
+}
+
+function getStoredCheckData() {
+  const storedCheck = parseStorageData<LastCheckData>({
+    storageKey: STORAGE_KEYS.GET_STARTED_LAST_CHECK,
+    storage: localStorage,
+  })
+  return storedCheck
 }

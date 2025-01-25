@@ -100,12 +100,19 @@ function AlertDashboardComponent() {
           }}
         >
           <Flex
-            flexWrap="wrap"
+            flexDirection={isMobile ? 'column' : 'row'}
             alignItems={isMobile ? 'flex-start' : 'center'}
             justifyContent="space-between"
             width="100%"
             minHeight="40px"
-            sx={{ gap: 2, px: 3, py: 2, backgroundColor: 'neutral5', borderBottom: 'small', borderColor: 'neutral4' }}
+            sx={{
+              gap: 2,
+              px: 3,
+              py: 2,
+              backgroundColor: 'neutral5',
+              borderBottom: 'small',
+              borderColor: 'neutral4',
+            }}
           >
             <Type.Caption flex={2}>Easily create, modify and track alerts.</Type.Caption>
             <Flex minWidth="max-content" alignItems="center" flex={1} justifyContent="flex-end">
@@ -120,8 +127,8 @@ function AlertDashboardComponent() {
               >
                 <Type.Caption>Create New Alert</Type.Caption>
               </ButtonWithIcon>
-              <Tooltip id="tt-coming-soon">
-                <Type.Caption color="neutral3" sx={{ maxWidth: 350 }}>
+              <Tooltip id="tt-coming-soon" place="left">
+                <Type.Caption color="neutral2" sx={{ maxWidth: 350 }}>
                   Coming Soon
                 </Type.Caption>
               </Tooltip>

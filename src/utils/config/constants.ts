@@ -312,6 +312,7 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.MORPHEX_FANTOM,
   ProtocolEnum.FOXIFY_ARB,
   ProtocolEnum.BMX_BASE,
+  ProtocolEnum.HOLDSTATION_ZKSYNC,
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
 export const FEE_WITH_FUNDING_PROTOCOLS = [

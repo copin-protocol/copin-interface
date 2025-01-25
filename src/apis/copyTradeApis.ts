@@ -129,7 +129,7 @@ export async function getAllMyCopyTradersApi(params?: {
 }
 
 export async function getActiveCopiedTradersApi(params?: GetApiParams) {
-  return requester.get(`${SERVICE}/traders/alert-list`, { params }).then((res: any) => res.data as TraderAlertData[])
+  return requester.get(`${SERVICE}/traders/alert-list`, { params }).then((res: any) => res.data)
 }
 
 export async function getMyCopyTradeOverviewApi(params: {

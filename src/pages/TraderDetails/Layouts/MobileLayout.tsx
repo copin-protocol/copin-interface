@@ -6,6 +6,7 @@ import useTabHandler from 'hooks/router/useTabHandler'
 import { BottomWrapperMobile } from 'pages/@layouts/Components'
 import { TabHeader } from 'theme/Tab'
 import { Box } from 'theme/base'
+import { FOOTER_HEIGHT } from 'utils/config/constants'
 
 import PositionMobileView from './PositionMobileView'
 import { LayoutProps } from './types'
@@ -37,10 +38,12 @@ const tabConfigs = [
   },
 ]
 
+const BODY_HEIGHT = `calc(100% - 56px - 57px)` // - protocolStats height 56px - traderInfo height 57px
+
 const MobileLayout = (props: LayoutProps) => {
   const { tab, handleTab: setTab } = useTabHandler(TabEnum.POSITIONS)
   return (
-    <Box sx={{ position: 'relative', pb: 56, height: '100%' }}>
+    <Box sx={{ position: 'relative', pb: FOOTER_HEIGHT, height: '100%' }}>
       <Box
         width="100%"
         height={56}
@@ -69,7 +72,7 @@ const MobileLayout = (props: LayoutProps) => {
         {props.traderInfo}
       </Box>
       {tab === TabEnum.STATS && (
-        <Box height="100%">
+        <Box height={BODY_HEIGHT} sx={{ overflow: 'auto' }}>
           <Box
             sx={{
               height: 350,
@@ -79,13 +82,13 @@ const MobileLayout = (props: LayoutProps) => {
           >
             {props.traderChartPnl}
           </Box>
-          <Box overflow="auto" flex="1 0 0" sx={{ position: 'relative' }}>
-            <Box height="100%">{props.traderStats}</Box>
+          <Box sx={{ position: 'relative' }}>
+            <Box>{props.traderStats}</Box>
           </Box>
         </Box>
       )}
       {tab === TabEnum.CHARTS && (
-        <>
+        <Box height={BODY_HEIGHT} sx={{ overflow: 'auto' }}>
           <Box
             height={270}
             sx={{
@@ -95,18 +98,18 @@ const MobileLayout = (props: LayoutProps) => {
           >
             {props.traderRanking}
           </Box>
-          <Box mt={1} height="max(calc(100vh - 486px), 330px)" bg="neutral5">
+          <Box mt={1} height="max(calc(100% - 270px), 330px)" bg="neutral5">
             {props.traderChartPositions}
           </Box>
-        </>
+        </Box>
       )}
       {tab === TabEnum.POSITIONS && (
-        <Box height={`calc(100% - 58px)`}>
+        <Box height={BODY_HEIGHT}>
           <PositionMobileView openingPositions={props.openingPositions} historyPositions={props.closedPositions} />
         </Box>
       )}
       <BottomWrapperMobile
-        sx={{ position: 'fixed', bottom: 0, zIndex: 9999, display: ['flex', 'flex', 'flex', 'none'] }}
+        sx={{ position: 'fixed', bottom: FOOTER_HEIGHT, zIndex: 9, display: ['flex', 'flex', 'flex', 'none'] }}
       >
         <TabHeader
           configs={tabConfigs}
