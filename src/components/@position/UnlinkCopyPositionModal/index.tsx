@@ -4,13 +4,17 @@ import useUnlinkPosition from 'hooks/features/useUnlinkPosition'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, Type } from 'theme/base'
+import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { COPY_WALLET_TRANS } from 'utils/config/translations'
 
 export default function UnlinkCopyPositionModal({
   copyId,
+  exchange,
   onDismiss,
   onSuccess,
 }: {
   copyId: string
+  exchange?: CopyTradePlatformEnum
   onDismiss: () => void
   onSuccess?: () => void
 }) {
@@ -31,7 +35,8 @@ export default function UnlinkCopyPositionModal({
       <Box px={24} pb={24}>
         <Type.Caption color="neutral2">
           <Trans>
-            This action will unlink the BingX position; please ensure the BingX position is closed before proceeding.
+            This action will unlink the {exchange ? COPY_WALLET_TRANS[exchange] : 'copy'} position; please ensure the{' '}
+            {exchange ? COPY_WALLET_TRANS[exchange] : 'copy'} position is closed before proceeding.
           </Trans>
         </Type.Caption>
 

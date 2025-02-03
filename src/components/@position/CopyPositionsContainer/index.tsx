@@ -173,6 +173,7 @@ export default function CopyPositionsContainer({
       {openUnlinkModal && currentCopyPosition?.id && (
         <UnlinkCopyPositionModal
           copyId={currentCopyPosition?.id}
+          exchange={currentCopyPosition?.exchange}
           onDismiss={() => setOpenUnlinkModal(false)}
           onSuccess={onClosePositionSuccess}
         />

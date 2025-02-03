@@ -3634,8 +3634,8 @@ msgid "This Page Could Not Be Found"
 msgstr "This Page Could Not Be Found"
 
 #: src/components/@position/UnlinkCopyPositionModal/index.tsx
-msgid "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
-msgstr "This action will unlink the BingX position; please ensure the BingX position is closed before proceeding."
+msgid "This action will unlink the {0} position; please ensure the {1} position is closed before proceeding."
+msgstr "This action will unlink the {0} position; please ensure the {1} position is closed before proceeding."
 
 #: src/pages/CopinLite/Wallet/Deposit.tsx
 msgid "This address can only receive native USDC from the Arbitrum network. Minimum deposit is 5 USDC."
@@ -3946,9 +3946,12 @@ msgstr "Update configs has been succeeded"
 msgid "Update wallet successful!"
 msgstr "Update wallet successful!"
 
+#: src/pages/Settings/AlertSettingDetails/SettingWatchlistTraders.tsx
+msgid "Upgrade"
+msgstr "Upgrade"
+
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
 #: src/pages/Settings/AlertList/index.tsx
-#: src/pages/Settings/AlertSettingDetails/SettingWatchlistTraders.tsx
 msgid "Upgrade Account"
 msgstr "Upgrade Account"
 

@@ -22,7 +22,12 @@ const UnlinkPosition = ({
         Unlink Position
       </Button>
       {opening && (
-        <UnlinkCopyPositionModal copyId={copyPosition?.id} onDismiss={() => setOpening(false)} onSuccess={onSuccess} />
+        <UnlinkCopyPositionModal
+          copyId={copyPosition?.id}
+          exchange={copyPosition?.exchange}
+          onDismiss={() => setOpening(false)}
+          onSuccess={onSuccess}
+        />
       )}
     </>
   )
