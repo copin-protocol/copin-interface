@@ -307,12 +307,14 @@ export const ALLOWED_COPYTRADE_PROTOCOLS = [
   ProtocolEnum.APOLLOX_BNB,
   ProtocolEnum.APOLLOX_BASE,
   ProtocolEnum.KILOEX_OPBNB,
+  ProtocolEnum.KILOEX_BASE,
   ProtocolEnum.ROLLIE_SCROLL,
   ProtocolEnum.MUMMY_FANTOM,
   ProtocolEnum.MORPHEX_FANTOM,
   ProtocolEnum.FOXIFY_ARB,
   ProtocolEnum.BMX_BASE,
   ProtocolEnum.HOLDSTATION_ZKSYNC,
+  ProtocolEnum.UNIDEX_ARB,
 ]
 export const NO_TX_HASH_PROTOCOLS = [ProtocolEnum.HYPERLIQUID]
 export const FEE_WITH_FUNDING_PROTOCOLS = [
