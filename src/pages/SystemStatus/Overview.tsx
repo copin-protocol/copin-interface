@@ -1,11 +1,9 @@
-// eslint-disable-next-line no-restricted-imports
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import { getListenerStatsApi } from 'apis/systemApis'
 import useInternalRole from 'hooks/features/useInternalRole'
 import { Box, Flex } from 'theme/base'
-import { ChainStatsEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { lowerFirstLetter } from 'utils/helpers/transform'
 
@@ -32,6 +30,9 @@ export default function Overview() {
         if (key.match('synthetixV3')?.length) {
           protocol = 'synthetix_v3'
           blockType = lowerFirstLetter(key.split(/synthetixV3/i)?.[1])
+        } else if (key.match('gmxV2')?.length) {
+          protocol = 'gmx_V2'
+          blockType = lowerFirstLetter(key.split(/gmxV2Arb/i)?.[1])
         } else if (key.includes('mirror')) {
           blockType = 'latestRawDataBlock'
           const [mirrorProtocol, mirrorBlockType] = key.split(new RegExp(network, 'i'))
@@ -69,11 +70,13 @@ export default function Overview() {
     return result
   }, [data])
 
+  if (!formattedData) return null
+
   return (
     <Box p={3} sx={{ height: '100%', overflow: 'hidden auto' }}>
       <Flex flexDirection="column" sx={{ gap: 3 }}>
-        {Object.values(ChainStatsEnum).map((chainStats) => {
-          return <StatusByNetwork key={chainStats} network={chainStats} data={formattedData?.[chainStats]} />
+        {Object.entries(formattedData).map(([chain, protocolsData]) => {
+          return <StatusByNetwork key={chain} network={chain} data={protocolsData as any} />
         })}
       </Flex>
     </Box>

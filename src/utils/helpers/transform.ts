@@ -3,9 +3,8 @@ import dayjs from 'dayjs'
 import { ApiListResponse, ApiMeta } from 'apis/api'
 import { ChartData } from 'entities/chart'
 import { ApiKeyWallet, CopyWalletData } from 'entities/copyWallet'
-import { LINKS, SUPPORTED_LOCALES } from 'utils/config/constants'
+import { SUPPORTED_LOCALES } from 'utils/config/constants'
 import {
-  ChainStatsEnum,
   CopyPositionCloseTypeEnum,
   CopyTradePlatformEnum,
   OrderTypeEnum,
@@ -24,19 +23,7 @@ import {
 } from 'utils/config/translations'
 
 import { TokenTrade } from '../config/trades'
-import {
-  ARBITRUM_MAINNET,
-  BASE_MAINNET,
-  BLAST_MAINNET,
-  BNB_MAINNET,
-  CHAINS,
-  MANTLE_MAINNET,
-  MODE_MAINNET,
-  OPBNB_MAINNET,
-  OPTIMISM_MAINNET,
-  POLYGON_MAINNET,
-  SCROLL_MAINNET,
-} from '../web3/chains'
+import { CHAINS } from '../web3/chains'
 import { addressShorten, formatNumber, formatZeroBased, shortenText } from './format'
 
 // dayjs.extend(duration)
@@ -232,6 +219,7 @@ export function capitalizeFirstLetter(str: string) {
 }
 
 export function lowerFirstLetter(str: string) {
+  if (!str) return str
   return str.charAt(0).toLowerCase() + str.slice(1)
 }
 
@@ -485,27 +473,17 @@ export function normalizeExchangePrice({
   return (EXCHANGE_PRICE_MULTIPLE_MAPPING[exchange]?.[originalSymbol] ?? 1) * originalPrice
 }
 
-const CHAIN_ID_BY_CHAIN_STAT = {
-  [ChainStatsEnum.ABITRUM]: ARBITRUM_MAINNET,
-  [ChainStatsEnum.BASE]: BASE_MAINNET,
-  [ChainStatsEnum.BLAST]: BLAST_MAINNET,
-  [ChainStatsEnum.BNB_CHAIN]: BNB_MAINNET,
-  [ChainStatsEnum.MANTLE]: MANTLE_MAINNET,
-  [ChainStatsEnum.MODE]: MODE_MAINNET,
-  [ChainStatsEnum.OPBNB]: OPBNB_MAINNET,
-  [ChainStatsEnum.OPTIMISM]: OPTIMISM_MAINNET,
-  [ChainStatsEnum.POLYGON]: POLYGON_MAINNET,
-  [ChainStatsEnum.SCROLL]: SCROLL_MAINNET,
-}
-
-// TODO: Check when add new protocol
 export const parseChainFromNetwork = (network: string) => {
-  const chainId = CHAIN_ID_BY_CHAIN_STAT[network as ChainStatsEnum]
-  const chain = CHAINS[chainId]
+  const chain = Object.entries(CHAINS).find(([_, values]) => {
+    const _network = network.toUpperCase()
+    return (
+      values.icon === _network || values.label.toUpperCase() === _network || values.label.toUpperCase().match(_network)
+    )
+  })
   return {
-    chainId,
-    label: chain.label,
-    icon: chain.icon,
+    chainId: chain?.[0] ? Number(chain[0]) : undefined,
+    label: chain?.[1]?.label,
+    icon: chain?.[1]?.icon,
   }
 }
 
