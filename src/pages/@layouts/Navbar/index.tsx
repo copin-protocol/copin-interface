@@ -26,7 +26,7 @@ import { LARGE_BREAK_POINT } from './configs'
 import { LogoWrapper, Main, Wrapper } from './styled'
 
 export default function Navbar({ height }: { height: number }): ReactElement {
-  const { isAuthenticated, disconnect } = useAuthContext()
+  const { isAuthenticated, disconnect, loading } = useAuthContext()
   const { selectedProtocols } = useProtocolFilter()
   const protocolParams = convertProtocolToParams(selectedProtocols)
 
@@ -104,8 +104,8 @@ export default function Navbar({ height }: { height: number }): ReactElement {
                   </DesktopWrapper>
                 )}
                 {isAuthenticated === true && <NavbarUser />}
-                {isAuthenticated === false && <LoginAction />}
-                {isAuthenticated == null && (
+                {!isAuthenticated && <LoginAction />}
+                {loading && (
                   <Flex py={12} px={2} alignItems="center" sx={{ gap: 3 }}>
                     <Loading size={16} />
                     <Box>
