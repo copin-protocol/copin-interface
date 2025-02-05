@@ -29,7 +29,7 @@ const walletConnect = walletConnectModule({
 
 const metamask = metamaskModule({
   options: {
-    extensionOnly: false,
+    extensionOnly: true,
     logging: {
       developerMode: true,
     },
@@ -73,7 +73,7 @@ const web3Onboard = init({
     '--w3o-border-radius': theme.borderRadius.xs,
     '--w3o-font-family': FONT_FAMILY,
   },
-  wallets: [metamask, walletConnect, injected, okx, bitget],
+  wallets: [metamask, walletConnect, okx, bitget, injected],
   chains,
   appMetadata: {
     name: 'Copin',

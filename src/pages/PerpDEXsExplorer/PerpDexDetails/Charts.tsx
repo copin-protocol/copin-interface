@@ -7,12 +7,7 @@ import minBy from 'lodash/minBy'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
-import {
-  getPerpDexDailyStatisticApi,
-  getPerpDexHourlyStatisticApi,
-  getProtocolDailyStatisticApi,
-  getProtocolHourlyStatisticApi,
-} from 'apis/statisticApi'
+import { getPerpDexDailyStatisticApi, getProtocolDailyStatisticApi } from 'apis/statisticApi'
 import logo from 'assets/logo-text.svg'
 import SectionTitle from 'components/@ui/SectionTitle'
 import TimeFilter from 'components/@ui/TimeFilter'
@@ -21,9 +16,7 @@ import { PERP_DEX_CHART_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constan
 import { DataPoint, PerpDexChartData, StatsData, TopPairChartData } from 'entities/chart'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { useHourlyChartStore } from 'hooks/store/useSwitchHourlyChart'
 import {
-  HourlyChartComponent,
   LiquidationChartComponent,
   NetProfitChartComponent,
   ProfitLossChartComponent,
@@ -36,11 +29,7 @@ import {
 } from 'pages/PerpDEXsExplorer/PerpDexDetails/ChartComponent'
 import SwitchHourlyChart from 'pages/PerpDEXsExplorer/PerpDexDetails/SwitchHourlyChart'
 import { CHART_CONFIG } from 'pages/PerpDEXsExplorer/PerpDexDetails/chartConfig'
-import {
-  getChartData,
-  getHourlyChartDataByMetric,
-  getPairChartDataByMetric,
-} from 'pages/PerpDEXsExplorer/PerpDexDetails/utils'
+import { getChartData, getPairChartDataByMetric } from 'pages/PerpDEXsExplorer/PerpDexDetails/utils'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { PerpChartTypeEnum, ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
@@ -151,7 +140,7 @@ function StatisticChart({
   timeRange: TimeRange
   protocol: ProtocolEnum | undefined
 }) {
-  const { chartOption } = useHourlyChartStore()
+  // const { chartOption } = useHourlyChartStore()
   const [isExpanded, setIsExpanded] = useState(false)
   const [currentChartId, setCurrentChartId] = useState<PerpChartTypeEnum | undefined>()
 
@@ -175,30 +164,30 @@ function StatisticChart({
       }),
     { enabled: timeRange.from !== timeRange.to && !!protocol }
   )
-  const { data: perpdexHourlyStats, isLoading: isLoadingPerpDexHourlyStats } = useQuery(
-    [QUERY_KEYS.GET_HOURLY_PERP_DEX_STATISTIC_CHART_DATA, perpdex, timeRange],
-    () =>
-      getPerpDexHourlyStatisticApi({
-        perpdex: perpdex ?? '',
-        from: dayjs(timeRange.from).utc().valueOf(),
-        to: dayjs(timeRange.to).utc().valueOf(),
-      }),
-    { enabled: !protocol && timeRange.from !== timeRange.to && !!perpdex }
-  )
-  const { data: protocolHourlyStats, isLoading: isLoadingProtolHourlyStats } = useQuery(
-    [QUERY_KEYS.GET_HOURLY_PROTOCOL_STATISTIC_CHART_DATA, protocol, timeRange],
-    () =>
-      getProtocolHourlyStatisticApi({
-        protocol,
-        from: dayjs(timeRange.from).utc().valueOf(),
-        to: dayjs(timeRange.to).utc().valueOf(),
-      }),
-    { enabled: timeRange.from !== timeRange.to && !!protocol }
-  )
+  // const { data: perpdexHourlyStats, isLoading: isLoadingPerpDexHourlyStats } = useQuery(
+  //   [QUERY_KEYS.GET_HOURLY_PERP_DEX_STATISTIC_CHART_DATA, perpdex, timeRange],
+  //   () =>
+  //     getPerpDexHourlyStatisticApi({
+  //       perpdex: perpdex ?? '',
+  //       from: dayjs(timeRange.from).utc().valueOf(),
+  //       to: dayjs(timeRange.to).utc().valueOf(),
+  //     }),
+  //   { enabled: !protocol && timeRange.from !== timeRange.to && !!perpdex }
+  // )
+  // const { data: protocolHourlyStats, isLoading: isLoadingProtolHourlyStats } = useQuery(
+  //   [QUERY_KEYS.GET_HOURLY_PROTOCOL_STATISTIC_CHART_DATA, protocol, timeRange],
+  //   () =>
+  //     getProtocolHourlyStatisticApi({
+  //       protocol,
+  //       from: dayjs(timeRange.from).utc().valueOf(),
+  //       to: dayjs(timeRange.to).utc().valueOf(),
+  //     }),
+  //   { enabled: timeRange.from !== timeRange.to && !!protocol }
+  // )
   const data = protocolStats?.length ? protocolStats : perpdexStats
   const isLoading = isLoadingProtocolStats || isLoadingPerpDexStats
-  const hourlyData = protocolHourlyStats ? protocolHourlyStats : perpdexHourlyStats
-  const isHourlyLoading = isLoadingProtolHourlyStats || isLoadingPerpDexHourlyStats
+  // const hourlyData = protocolHourlyStats ? protocolHourlyStats : perpdexHourlyStats
+  // const isHourlyLoading = isLoadingProtolHourlyStats || isLoadingPerpDexHourlyStats
 
   // Handle chart data
   const chartData = useMemo(() => getChartData({ data: data || ([] as any) }), [data])
@@ -232,10 +221,10 @@ function StatisticChart({
       }),
     [data, isExpanded]
   )
-  const chartHourlyData = useMemo(
-    () => getHourlyChartDataByMetric({ data: hourlyData, metric: chartOption.id }),
-    [hourlyData, chartOption]
-  )
+  // const chartHourlyData = useMemo(
+  //   () => getHourlyChartDataByMetric({ data: hourlyData, metric: chartOption.id }),
+  //   [hourlyData, chartOption]
+  // )
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -286,19 +275,19 @@ function StatisticChart({
     return stats
   }, [data, chartPairTopProfitLossData])
 
-  const dataHourlyStats = useMemo(() => {
-    if (!chartHourlyData) return undefined
+  // const dataHourlyStats = useMemo(() => {
+  //   if (!chartHourlyData) return undefined
 
-    const max = maxBy(chartHourlyData, (item) => item.value)?.value ?? 0
-    const min = minBy(chartHourlyData, (item) => item.value)?.value ?? 0
-    const range = Array.from(new Set(Array.from({ length: 11 }, (_, i) => min + ((max - min) / 10) * i)))
+  //   const max = maxBy(chartHourlyData, (item) => item.value)?.value ?? 0
+  //   const min = minBy(chartHourlyData, (item) => item.value)?.value ?? 0
+  //   const range = Array.from(new Set(Array.from({ length: 11 }, (_, i) => min + ((max - min) / 10) * i)))
 
-    return {
-      minHourly: min,
-      maxHourly: max,
-      rangeHourly: range,
-    } as StatsData
-  }, [chartHourlyData])
+  //   return {
+  //     minHourly: min,
+  //     maxHourly: max,
+  //     rangeHourly: range,
+  //   } as StatsData
+  // }, [chartHourlyData])
 
   const handleToggleExpand = (chartId: string) => {
     setIsExpanded((prev) => !prev)
@@ -309,7 +298,7 @@ function StatisticChart({
     <Box mt={1}>
       {isExpanded ? (
         <RenderChartComponent
-          hourlyData={chartHourlyData}
+          // hourlyData={chartHourlyData}
           data={chartData}
           pairChartData={
             currentChartId === PerpChartTypeEnum.TOP_VOLUME_BY_PAIRS
@@ -321,9 +310,9 @@ function StatisticChart({
           stats={
             currentChartId === PerpChartTypeEnum.TOP_PROFIT_AND_LOSS_BY_PAIRS
               ? pairStats
-              : currentChartId === PerpChartTypeEnum.HOURLY_CHART
-              ? dataHourlyStats
-              : stats
+              : // : currentChartId === PerpChartTypeEnum.HOURLY_CHART
+                // ? dataHourlyStats
+                stats
           }
           syncId="perpdex"
           currentChartId={currentChartId}
@@ -415,7 +404,7 @@ function StatisticChart({
             isExpanded={isExpanded}
             handleToggleExpand={handleToggleExpand}
           />
-          <RenderChartComponent
+          {/* <RenderChartComponent
             hourlyData={chartHourlyData}
             stats={dataHourlyStats}
             currentChartId={PerpChartTypeEnum.HOURLY_CHART}
@@ -423,7 +412,7 @@ function StatisticChart({
             isExpanded={isExpanded}
             handleToggleExpand={handleToggleExpand}
             label={`${chartOption.text} INTENSITY BY DAY & HOUR (UTC)`}
-          />
+          /> */}
         </Box>
       )}
     </Box>
@@ -480,12 +469,12 @@ function RenderChartComponent({
         )
       case PerpChartTypeEnum.TOP_OI_BY_PAIRS:
         return <TopOIByPairChartComponent data={pairChartData} syncId={syncId} isExpanded={isExpanded} />
-      case PerpChartTypeEnum.HOURLY_CHART:
-        return <HourlyChartComponent data={hourlyData} stats={stats} isExpanded={isExpanded} />
+      // case PerpChartTypeEnum.HOURLY_CHART:
+      //   return <HourlyChartComponent data={hourlyData} stats={stats} isExpanded={isExpanded} />
       default:
         return null
     }
-  }, [currentChartId, data, isExpanded, pairChartData, stats, syncId, hourlyData])
+  }, [currentChartId, data, isExpanded, pairChartData, stats, syncId])
 
   if (!currentChartId) return null
 

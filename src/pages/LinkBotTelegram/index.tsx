@@ -55,7 +55,6 @@ const LinkBotTelegram = () => {
       window.open(telegramUrl, '_blank')
     }
   }
-  const isLoging = isAuthenticated == null
 
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="center" sx={{ height: '100%' }}>
@@ -90,7 +89,7 @@ const LinkBotTelegram = () => {
           {currentState ? <Trans>Link Account</Trans> : <Trans>Open Telegram Bot</Trans>}
         </ButtonWithIcon>
       ) : (
-        <Button variant="primary" onClick={handleClickLogin} disabled={isLoging} isLoading={isLoging}>
+        <Button variant="primary" onClick={handleClickLogin} disabled={loading || submitting} isLoading={loading}>
           Login
         </Button>
       )}
