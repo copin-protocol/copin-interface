@@ -5,13 +5,12 @@ import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
 
 import { getTraderAlertListApi } from 'apis/alertApis'
-import { getActiveCopiedTradersApi } from 'apis/copyTradeApis'
+import { getListActiveCopiedTradersApi } from 'apis/copyTradeApis'
 import alertSettingBg from 'assets/images/alert_setting_bg.png'
 import AvatarGroup from 'components/@ui/Avatar/AvatarGroup'
 import Container from 'components/@ui/Container'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { BotAlertData } from 'entities/alert'
-import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
 import useBotAlertContext from 'hooks/features/useBotAlertProvider'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -22,7 +21,7 @@ import Loading from 'theme/Loading'
 import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { AlertSettingsEnum, AlertTypeEnum, CopyTradeStatusEnum } from 'utils/config/enums'
+import { AlertSettingsEnum, AlertTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { pageToOffset } from 'utils/helpers/transform'
@@ -84,24 +83,15 @@ function AlertSettingDetailsComponent() {
       retry: 0,
     }
   )
-  const { data: totalCopiedTraders } = useQuery(
+  const { data: copiedTraders } = useQuery(
     [QUERY_KEYS.GET_COPIED_TRADER_ALERTS, myProfile?.id],
-    () => getActiveCopiedTradersApi(),
+    () => getListActiveCopiedTradersApi({ limit }),
     {
       enabled: !!myProfile?.id,
       retry: 0,
     }
   )
-
-  const { allCopyTrades } = useAllCopyTrades()
-  const copiedTraders = Array.from(
-    new Set(
-      allCopyTrades
-        ?.filter((e) => e.status === CopyTradeStatusEnum.RUNNING)
-        ?.flatMap((_c) => [_c.account, ...(_c.accounts || [])])
-        ?.filter((e) => !!e)
-    )
-  )
+  const totalCopiedTraders = copiedTraders?.meta?.total ?? 0
 
   return (
     <>
@@ -168,7 +158,7 @@ function AlertSettingDetailsComponent() {
                   <ListTradersContent
                     traders={
                       botAlert?.type === AlertTypeEnum.COPY_TRADE
-                        ? copiedTraders
+                        ? copiedTraders?.data
                         : traderAlerts?.data?.map((e) => e.address)
                     }
                     total={botAlert?.type === AlertTypeEnum.COPY_TRADE ? totalCopiedTraders : traderAlerts?.meta?.total}
