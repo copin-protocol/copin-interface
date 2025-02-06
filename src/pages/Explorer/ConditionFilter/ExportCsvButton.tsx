@@ -3,7 +3,6 @@ import { FileCsv } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import dayjs from 'dayjs'
 import { useMutation } from 'react-query'
-import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { exportTradersCsvApi } from 'apis/traderApis'
@@ -13,15 +12,14 @@ import { useCustomizeColumns } from 'components/@trader/TraderExplorerTableView/
 import ToastBody from 'components/@ui/ToastBody'
 import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
 import { TraderData } from 'entities/trader'
-import { UserData } from 'entities/user'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import useTradersContext from 'pages/Explorer/useTradersContext'
 import { Button } from 'theme/Buttons'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, IconBox, Type } from 'theme/base'
-import { SubscriptionPlanEnum } from 'utils/config/enums'
+import { Flex, IconBox, Type } from 'theme/base'
 import { TOOLTIP_KEYS } from 'utils/config/keys'
-import ROUTES from 'utils/config/routes'
+
+import TooltipContent from './TooltipContent'
 
 interface ExportCsvButtonProps {
   hasTitle?: boolean
@@ -92,35 +90,6 @@ const ExportCsvButton = ({ hasTitle }: ExportCsvButtonProps) => {
     onExportCSV()
   }
 
-  const generateTooltipContent = (myProfile: UserData | null) => {
-    switch (myProfile?.plan) {
-      case SubscriptionPlanEnum.BASIC:
-        return (
-          <Trans>
-            This feature requires a Premium or VIP plan.{' '}
-            <Box as={Link} to={ROUTES.SUBSCRIPTION.path} target="_blank">
-              <Box sx={{ color: 'neutral1' }}> Upgrade now to export data.</Box>
-              Upgrade
-            </Box>
-          </Trans>
-        )
-      case SubscriptionPlanEnum.PREMIUM:
-        return (
-          <Trans>
-            Export up to 1,000 records now. Upgrade to VIP for 10,000 records.
-            {/* <Box as={Link} to={ROUTES.SUBSCRIPTION.path} target="_blank">
-                <Box sx={{ color: 'neutral1' }}>Upgrade VIP to export up to 10,000 records.</Box>
-                Upgrade
-              </Box> */}
-          </Trans>
-        )
-      case SubscriptionPlanEnum.VIP:
-        return <Trans>Export up to 10,000 records</Trans>
-      default:
-        return ''
-    }
-  }
-
   return (
     <>
       <Flex
@@ -149,7 +118,9 @@ const ExportCsvButton = ({ hasTitle }: ExportCsvButtonProps) => {
       </Flex>
       {!!myProfile && (
         <Tooltip id={TOOLTIP_KEYS.EXPORT_TRADERS_CSV} clickable={true}>
-          <Type.Caption sx={{ maxWidth: 300 }}>{generateTooltipContent(myProfile)}</Type.Caption>
+          <Type.Caption sx={{ maxWidth: 300 }}>
+            <TooltipContent myProfile={myProfile} />
+          </Type.Caption>
         </Tooltip>
       )}
     </>
