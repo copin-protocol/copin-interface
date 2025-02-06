@@ -135,7 +135,7 @@ export async function getActiveCopiedTradersApi(params?: GetApiParams) {
 export async function getListActiveCopiedTradersApi({ limit = DEFAULT_LIMIT, offset = 0 }: GetApiParams) {
   return requester
     .get(`${SERVICE}/traders/alert-list/page`, { params: { limit, offset } })
-    .then((res: any) => res.data as ApiListResponse<string>)
+    .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
 }
 
 export async function getMyCopyTradeOverviewApi(params: {

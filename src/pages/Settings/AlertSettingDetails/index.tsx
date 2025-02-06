@@ -158,7 +158,7 @@ function AlertSettingDetailsComponent() {
                   <ListTradersContent
                     traders={
                       botAlert?.type === AlertTypeEnum.COPY_TRADE
-                        ? copiedTraders?.data
+                        ? copiedTraders?.data?.map((e) => e?.account ?? e.address)
                         : traderAlerts?.data?.map((e) => e.address)
                     }
                     total={botAlert?.type === AlertTypeEnum.COPY_TRADE ? totalCopiedTraders : traderAlerts?.meta?.total}
