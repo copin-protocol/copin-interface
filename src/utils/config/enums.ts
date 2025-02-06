@@ -390,19 +390,6 @@ export enum ChangeFieldEnum {
   TYPE = 'type',
 }
 
-export enum ChainStatsEnum {
-  ABITRUM = 'arb',
-  OPTIMISM = 'op',
-  POLYGON = 'poly',
-  BNB_CHAIN = 'bnb',
-  BASE = 'base',
-  MANTLE = 'mantle',
-  OPBNB = 'opbnb',
-  SCROLL = 'scroll',
-  BLAST = 'blast',
-  MODE = 'mode',
-}
-
 export enum RewardSymbolEnum {
   USD = 'USD',
   ARB = 'ARB',

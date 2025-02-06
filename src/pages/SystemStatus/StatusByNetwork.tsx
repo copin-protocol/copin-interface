@@ -96,6 +96,8 @@ export default function StatusByNetwork({ network, data }: { network: string; da
     return result
   }, [network])
 
+  if (!chainInfo.chainId) return null
+
   return (
     <Box>
       <Flex alignItems="center" sx={{ gap: 24 }}>

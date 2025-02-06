@@ -4,10 +4,10 @@ import { ReactNode } from 'react'
 
 import {
   AlertTypeEnum,
-  ChainStatsEnum,
   ChangeFieldEnum,
   CopyPositionCloseTypeEnum,
-  CopyTradePlatformEnum, CopyTradeSideEnum,
+  CopyTradePlatformEnum,
+  CopyTradeSideEnum,
   CopyTradeStatusEnum,
   DataTypeEnum,
   EpochStatusEnum,
@@ -17,7 +17,7 @@ import {
   SLTPTypeEnum,
   TelegramTypeEnum,
   TimeFilterByEnum,
-  UserActionEnum
+  UserActionEnum,
 } from './enums'
 
 type ObjectTrans = {
@@ -172,12 +172,6 @@ export const CHANGE_FIELD_TRANS: ObjectTrans = {
   [ChangeFieldEnum.ACCOUNT]: <Trans>Account</Trans>,
 }
 
-export const CHAIN_STATS_TRANS: ObjectTrans = {
-  [ChainStatsEnum.ABITRUM]: 'Arbitrum',
-  [ChainStatsEnum.OPTIMISM]: 'Optimism',
-  [ChainStatsEnum.POLYGON]: 'Polygon',
-  [ChainStatsEnum.BNB_CHAIN]: 'BNB Chain',
-}
 export const MIRROR_TRANS: ObjectTrans = {
   mirrorSignalSnx: 'Mirror Synthetix',
   mirrorSignalGns: 'Mirror gTrade',
