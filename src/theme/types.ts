@@ -61,7 +61,7 @@ export type BoxProps = SpaceProps &
   ColorProps &
   FlexboxProps &
   VariantProps &
-  SxProps & { itemId?: number | string } & { color?: string }
+  SxProps & { itemId?: number | string } & { color?: string } & { disabledInput?: boolean }
 
 export type DivProps = BoxProps & HTMLAttributes<HTMLDivElement>
 export type SvgProps = SpaceProps & LayoutProps & ColorProps & SxProps & SVGAttributes<SVGElement>

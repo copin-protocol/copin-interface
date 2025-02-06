@@ -38,6 +38,14 @@ msgstr "1 year"
 msgid "100 traders"
 msgstr "100 traders"
 
+#: src/pages/Subscription/Plans.tsx
+msgid "1000 records"
+msgstr "1000 records"
+
+#: src/pages/Subscription/Plans.tsx
+msgid "10000 records"
+msgstr "10000 records"
+
 #: src/utils/config/translations.tsx
 msgid "14 Days"
 msgstr "14 Days"
@@ -1391,6 +1399,22 @@ msgstr "Explore Traders"
 msgid "Explore the best traders and set up copy-trading to boost your portfolio.{0}"
 msgstr "Explore the best traders and set up copy-trading to boost your portfolio.{0}"
 
+#: src/pages/Subscription/Plans.tsx
+msgid "Export CSV data"
+msgstr "Export CSV data"
+
+#: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
+msgid "Export CSV has been succeeded"
+msgstr "Export CSV has been succeeded"
+
+#: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
+msgid "Export up to 1,000 records now. Upgrade to VIP for 10,000 records."
+msgstr "Export up to 1,000 records now. Upgrade to VIP for 10,000 records."
+
+#: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
+msgid "Export up to 10,000 records"
+msgstr "Export up to 10,000 records"
+
 #: src/pages/Settings/UserSubscription/ExtendPlan.tsx
 msgid "Extend"
 msgstr "Extend"
@@ -2320,6 +2344,7 @@ msgstr "New Password"
 
 #: src/components/@widgets/UnsubscribeAlertModal/index.tsx
 #: src/pages/Settings/AlertList/UnlinkAlertModal.tsx
+#: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
 #: src/pages/Subscription/Plans.tsx
@@ -3349,6 +3374,7 @@ msgstr "Subscription"
 #: src/hooks/features/useUpdateCopyTrade.tsx
 #: src/hooks/web3/useContractMutation.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
+#: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
 #: src/pages/LinkBotTelegram/index.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
@@ -3652,6 +3678,10 @@ msgstr "This copy position has been closed successfully"
 #: src/hooks/web3/useRequiredChain.tsx
 msgid "This feature only supports on {0}"
 msgstr "This feature only supports on {0}"
+
+#: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
+msgid "This feature requires a Premium or VIP plan. <0><1> Upgrade now to export data.</1>Upgrade</0>"
+msgstr "This feature requires a Premium or VIP plan. <0><1> Upgrade now to export data.</1>Upgrade</0>"
 
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/Charts.tsx
 msgid "This graph will show {0} demographics once responses come in"
@@ -4502,6 +4532,8 @@ msgstr "slippage"
 #: src/pages/DailyTrades/Positions/index.tsx
 #: src/pages/DailyTrades/Positions/index.tsx
 #: src/pages/DailyTrades/Positions/index.tsx
+#: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
+#: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
 #: src/pages/Home/Traders.tsx
 #: src/pages/Home/Traders.tsx
 #: src/pages/TopOpenings/OpenInterestByMarket/index.tsx

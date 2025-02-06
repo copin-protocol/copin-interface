@@ -35,7 +35,7 @@ import {
 
 const SERVICE = 'position'
 
-function transformRealisedField(fieldName: string) {
+export function transformRealisedField(fieldName: string) {
   switch (fieldName) {
     case 'pnl':
     case 'maxPnl':
@@ -289,4 +289,8 @@ export async function getTraderByLabelApi({ payload }: { payload: GetTraderByLab
   return requester
     .post(`/public/position/statistic/labels?offset=0&limit=16`, payload)
     .then((res: any) => res.data as ApiListResponse<ResponseTraderData>)
+}
+
+export async function exportTradersCsvApi(payload: any) {
+  return requester.post(`${SERVICE}/statistic/download`, payload).then((res: any) => res.data)
 }

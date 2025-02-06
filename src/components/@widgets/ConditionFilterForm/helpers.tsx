@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
-// import { ProtocolEnum } from 'utils/config/enums'
-// import { getTokenTradeList } from 'utils/config/trades'
+import { ProtocolEnum } from 'utils/config/enums'
+
 import { ConditionFormValues, FieldOption, FilterValues, RowValues } from './types'
 
 export function getDefaultFormValues<T>(
@@ -16,27 +16,24 @@ export function getDefaultFormValues<T>(
   }))
 }
 
-// export function getFiltersFromFormValues<T>(data: ConditionFormValues<T>, protocol?: ProtocolEnum) {
-//   return Object.values(data).reduce<FilterValues[]>((result, values) => {
-//     if (typeof values?.in === 'object' && values.conditionType === 'in') {
-//       if (values?.key === 'indexTokens' && protocol) {
-//         const tokenTradeSupports = getTokenTradeList(protocol)
-//         const inValues = tokenTradeSupports?.filter((e) => values.in?.includes(e.symbol))?.map((e: any) => e.address)
-//         return [...result, { fieldName: values.key, in: inValues } as FilterValues]
-//       }
-//       return [...result, { fieldName: values.key, in: values.in } as FilterValues]
-//     }
-//     if (typeof values?.gte !== 'number' && typeof values?.lte !== 'number') return result
-//     const currFilter = {} as FilterValues
-//     if (values?.key) currFilter['fieldName'] = values.key as string
-//     if (typeof values?.gte === 'number' && (values.conditionType === 'between' || values?.conditionType === 'gte'))
-//       currFilter['gte'] = values.gte
-//     if (typeof values?.lte === 'number' && (values.conditionType === 'between' || values?.conditionType === 'lte'))
-//       currFilter['lte'] = values.lte
-//     // result.push(currFilter)
-//     return [...result, currFilter]
-//   }, [])
-// }
+export function getFiltersFromFormValues<T>(data: ConditionFormValues<T>) {
+  return Object.values(data).reduce<FilterValues[]>((result, values) => {
+    if (typeof values?.in === 'object' && values.conditionType === 'in') {
+      if (values?.key === 'indexTokens') {
+        return [...result, { fieldName: 'pairs', in: values.in.map((symbol) => `${symbol}-USDT`) } as FilterValues]
+      }
+      return [...result, { fieldName: values.key, in: values.in } as FilterValues]
+    }
+    if (typeof values?.gte !== 'number' && typeof values?.lte !== 'number') return result
+    const currFilter = {} as FilterValues
+    if (values?.key) currFilter['fieldName'] = values.key as string
+    if (typeof values?.gte === 'number' && (values.conditionType === 'between' || values?.conditionType === 'gte'))
+      currFilter['gte'] = values.gte
+    if (typeof values?.lte === 'number' && (values.conditionType === 'between' || values?.conditionType === 'lte'))
+      currFilter['lte'] = values.lte
+    return [...result, currFilter]
+  }, [])
+}
 
 export function getFormValuesFromFilters<T>(data: FilterValues[], factory: (data: FilterValues) => RowValues<T>) {
   return data.map((e) => factory(e)) as ConditionFormValues<T>

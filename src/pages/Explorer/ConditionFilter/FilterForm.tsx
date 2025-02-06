@@ -39,6 +39,7 @@ export default function FilterForm({
     onApply(formValues)
     toast.success('Save filter success')
   }
+
   const handleReset = () => {
     onReset((defaultResetFields) => {
       const _formValues = getDefaultFormValues(defaultResetFields, fieldOptions)

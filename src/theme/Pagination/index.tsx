@@ -161,6 +161,7 @@ export function PaginationWithLimit({
   apiMeta,
   menuPosition,
   dividerSx = {},
+  disabledInput,
   ...props
 }: {
   currentPage: number
@@ -171,6 +172,7 @@ export function PaginationWithLimit({
   apiMeta?: ApiMeta
   menuPosition?: 'top' | 'bottom'
   dividerSx?: any
+  disabledInput?: boolean
 } & BoxProps) {
   const { lg } = useResponsive()
   const { total = 0, totalPages = 0 } = apiMeta ?? {}
@@ -240,7 +242,7 @@ export function PaginationWithLimit({
         currentPage={currentPage}
         apiMeta={apiMeta}
         onPageChange={onPageChange}
-        disabledInput={!lg}
+        disabledInput={disabledInput || !lg}
       />
     </Flex>
   )
