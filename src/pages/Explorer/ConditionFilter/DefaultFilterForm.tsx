@@ -45,11 +45,13 @@ export default function DefaultFilterForm({
     handleChangeRanges(newValues)
     setEnableApply(true)
   }
+
   const onChangeMarketFormValues: FilterFormProps['onValuesChange'] = (values) => {
     setFormValues(values)
     handleChangeRanges(values)
     setEnableApply(true)
   }
+
   const onApply: FilterFormProps['onApply'] = (_formValues) => {
     handleChangeOption(formValues)
     handleClose && handleClose()

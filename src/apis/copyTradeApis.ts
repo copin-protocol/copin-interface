@@ -9,7 +9,7 @@ import {
   UpdateCopyTradeData,
 } from 'entities/copyTrade.d'
 import { MyAllCopyTradersData, MyCopyTraderData } from 'entities/trader'
-import { DEFAULT_PROTOCOL, MAX_LIMIT } from 'utils/config/constants'
+import { DEFAULT_LIMIT, DEFAULT_PROTOCOL, MAX_LIMIT } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { getCopyService } from 'utils/helpers/getCopyService'
 
@@ -130,6 +130,12 @@ export async function getAllMyCopyTradersApi(params?: {
 
 export async function getActiveCopiedTradersApi(params?: GetApiParams) {
   return requester.get(`${SERVICE}/traders/alert-list`, { params }).then((res: any) => res.data)
+}
+
+export async function getListActiveCopiedTradersApi({ limit = DEFAULT_LIMIT, offset = 0 }: GetApiParams) {
+  return requester
+    .get(`${SERVICE}/traders/alert-list/page`, { params: { limit, offset } })
+    .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
 }
 
 export async function getMyCopyTradeOverviewApi(params: {

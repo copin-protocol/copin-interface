@@ -14,16 +14,16 @@ import { tableSettings } from 'components/@trader/TraderExplorerTableView/config
 import { TraderData } from 'entities/trader.d'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
 import { useAuthContext } from 'hooks/web3/useAuth'
+import ExportCsvButton from 'pages/Explorer/ConditionFilter/ExportCsvButton'
+import useBacktestTradersActions from 'pages/Explorer/ListTradersSection/useBacktestTradersActions'
+import useQueryTraders from 'pages/Explorer/ListTradersSection/useQueryTraders'
+import { TradersContextData } from 'pages/Explorer/useTradersContext'
 import { PaginationWithLimit } from 'theme/Pagination'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
 import { MEDIA_WIDTHS } from 'theme/theme'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
-
-import { TradersContextData } from '../useTradersContext'
-import useBacktestTradersActions from './useBacktestTradersActions'
-import useQueryTraders from './useQueryTraders'
 
 const ListTradersSection = memo(function ListTradersSectionMemo({
   contextValues,
@@ -164,13 +164,12 @@ function TablePagination({
               className="layout__wrapper"
               sx={{
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                justifyContent: 'end',
                 columnGap: 2,
                 rowGap: 0,
                 pr: [48, 48, 48, 0],
               }}
             >
-              <MultipleBacktestButton />
               <Flex className="pagination__wrapper" sx={{ alignItems: 'center', gap: 0 }}>
                 <PaginationWithLimit
                   sx={{ px: 2 }}
@@ -181,13 +180,16 @@ function TablePagination({
                   apiMeta={data?.meta}
                   my={1}
                   menuPosition="top"
+                  disabledInput={size?.width && size.width < 550 ? true : false}
                 />
                 {data && (
                   <>
                     <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
+                    <ExportCsvButton hasTitle={size?.width && size.width > 950 ? true : false} />
+                    <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
                     <Flex sx={{ gap: 20, alignItems: 'center', px: 2, py: 2, pr: !md ? 5 : 2 }}>
                       {/* <TradersVisualizer traders={data.data} hasButtonTitle={buttonsHasTitle ? true : lg ? true : false} /> */}
-                      <CustomizeColumn hasTitle={size?.width && size.width > 900 ? true : false} />
+                      <CustomizeColumn hasTitle={size?.width && size.width > 950 ? true : false} />
                     </Flex>
                   </>
                 )}
@@ -240,40 +242,6 @@ const TabletWrapper = styled(Box)`
     }
   `}
 `
-
-function MultipleBacktestButton() {
-  const { currentHomeInstanceId, getCommonData, toggleFocusBacktest } = useSelectBacktestTraders()
-  const { isAuthenticated, profile } = useAuthContext()
-  const handleClickLogin = useClickLoginButton()
-
-  const { homeInstance: currentHomeInstance } = getCommonData({ homeId: currentHomeInstanceId })
-  const listAddress = currentHomeInstance?.tradersByIds ?? []
-
-  const handleClickBacktestButton = () => {
-    if (!isAuthenticated) {
-      handleClickLogin()
-      return
-    }
-    toggleFocusBacktest()
-
-    logEvent({
-      label: getUserForTracking(profile?.username),
-      category: EventCategory.BACK_TEST,
-      action: EVENT_ACTIONS[EventCategory.BACK_TEST].OPEN_MULTIPLE,
-    })
-  }
-
-  useEffect(() => {
-    return () => toggleFocusBacktest(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return (
-    <Box sx={{ height: 40, width: ['100%', 228], flexShrink: 0 }}>
-      {/* <PickTradersButton enableCompare listAddress={listAddress} handleClick={handleClickBacktestButton} /> */}
-    </Box>
-  )
-}
 
 function CompareTradersButton() {
   const { currentHomeInstanceId, getCommonData } = useSelectBacktestTraders()

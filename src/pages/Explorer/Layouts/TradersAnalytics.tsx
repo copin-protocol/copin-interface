@@ -17,12 +17,12 @@ export default function TradersAnalytics() {
 
   const { filters, changeFilters, rankingFilters, changeRankingFilters, filterTab } = contextValues
   const _filters = filterTab === FilterTabEnum.RANKING ? rankingFilters : filters
-  const { lg } = useResponsive()
+  const { md } = useResponsive()
 
   return (
     <>
       <CustomPageTitle />
-      {lg ? (
+      {md ? (
         <AnalyticsLayoutDesktop
           timeFilterSection={<TimeFilterSection contextValues={contextValues} />}
           filterTag={<FilterTag filters={_filters} filterTab={filterTab} />}

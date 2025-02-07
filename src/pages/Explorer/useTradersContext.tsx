@@ -79,8 +79,6 @@ export function FilterTradersProvider({
     checkIsSelected: checkIsProtocolChecked,
     handleToggle: handleToggleProtocol,
     setSelectedProtocols,
-    urlProtocol,
-    setUrlProtocol,
   } = useProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
 
   const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)

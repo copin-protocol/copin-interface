@@ -229,6 +229,7 @@ export const TOOLTIP_KEYS = {
   TRADER_COPY_COUNT_WARNING_BASIC: 'data-trader-copy-count-basic',
   TRADER_COPY_VOLUME_WARNING: 'data-trader-copy-volume',
   TRADER_TOTAL_COPY_VOLUME: 'tt-trader-total-copy-volume',
+  EXPORT_TRADERS_CSV: 'export-traders-csv',
 }
 
 export const ELEMENT_IDS = {

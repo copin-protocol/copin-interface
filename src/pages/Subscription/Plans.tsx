@@ -489,6 +489,7 @@ export function usePlanConfigs() {
       </p>,
       <Trans>License copyright of Copin&apos;s signal</Trans>,
       <Trans>Alpha group access</Trans>,
+      <Trans>Export CSV data</Trans>,
     ],
     basic: [
       <Trans>Unlimited</Trans>,
@@ -502,6 +503,7 @@ export function usePlanConfigs() {
       <Trans>All stable CEX</Trans>,
       <Trans>No</Trans>,
       <Trans>Personal</Trans>,
+      <Trans>No</Trans>,
       <Trans>No</Trans>,
     ],
     premium: [
@@ -520,6 +522,7 @@ export function usePlanConfigs() {
       <Trans>No</Trans>,
       <Trans>Personal</Trans>,
       <Trans>No</Trans>,
+      <Trans>1000 records</Trans>,
     ],
     vip: [
       <Trans>Unlimited</Trans>,
@@ -550,6 +553,7 @@ export function usePlanConfigs() {
       <Box as="span" color="violet">
         <Trans>Yes</Trans>
       </Box>,
+      <Trans>10000 records</Trans>,
     ],
   }
 }

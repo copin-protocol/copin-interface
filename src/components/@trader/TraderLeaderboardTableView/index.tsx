@@ -113,6 +113,7 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: LeaderboardCo
             <Type.Caption color="neutral2">Last Updated:</Type.Caption>
             <Type.Caption>{formatLocalDate(lastTimeUpdated, DAYJS_FULL_DATE_FORMAT)}</Type.Caption>
           </Flex>
+
           <PaginationWithLimit
             currentPage={currentPage}
             currentLimit={currentLimit}
