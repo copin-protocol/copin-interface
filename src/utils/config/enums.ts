@@ -431,6 +431,7 @@ export enum CopierLeaderboardTimeFilterEnum {
 export enum ProtocolSortByEnum {
   ALPHABET = 'ALPHABET',
   TRADERS = 'TRADERS',
+  OI = 'OI',
 }
 
 export enum ReferralTierEnum {

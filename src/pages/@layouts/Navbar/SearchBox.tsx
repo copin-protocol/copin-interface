@@ -6,7 +6,7 @@ import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import FilterProtocol from 'components/@widgets/FilterProtocol'
 import SearchPositionResultItem from 'components/@widgets/SearchPositionResultItem'
 import { TraderData } from 'entities/trader'
-import useSearchAllData from 'hooks/features/useSearchAllData'
+import useSearchAllData from 'hooks/features/trader/useSearchAllData'
 import { Button } from 'theme/Buttons'
 import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
@@ -14,7 +14,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { SEARCH_DEFAULT_LIMIT } from 'utils/config/constants'
 import { formatNumber } from 'utils/helpers/format'
 
-import { SearchResultFixed, SearchWrapper } from './styled'
+import { SearchResultFixed } from './styled'
 
 const SearchBox = ({
   bg,
@@ -62,7 +62,12 @@ const SearchBox = ({
   const totalResultPositions = searchPositions?.length ?? 0
 
   return (
-    <SearchWrapper ref={searchWrapperRef} maxWidth={maxWidth} width={width ?? ['100%', '100%', 220, 220, 350]}>
+    <Box
+      ref={searchWrapperRef}
+      maxWidth={maxWidth}
+      width={width ?? ['100%', '100%', 220, 220, 350]}
+      sx={{ position: 'relative' }}
+    >
       <InputSearch
         ref={inputSearchRef}
         placeholder={placeholder}
@@ -150,7 +155,7 @@ const SearchBox = ({
           )}
         </SearchResultFixed>
       )}
-    </SearchWrapper>
+    </Box>
   )
 }
 

@@ -5,11 +5,12 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 import ThemeProvider from 'theme'
 
-import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
-import { CopyWalletProvider } from 'hooks/features/useCopyWalletContext'
-import { SystemConfigProvider } from 'hooks/features/useSystemConfigContext'
+import { BotAlertInitializer } from 'hooks/features/useBotAlertProvider'
+import { CopyWalletInitializer } from 'hooks/features/useCopyWalletContext'
+import ProtocolInitializer from 'hooks/helpers/useProtocols'
 import { useInitTabsOpen } from 'hooks/helpers/useTabsOpen'
-import { ProtocolProvider } from 'hooks/store/useProtocols'
+import { GlobalStoreInitializer } from 'hooks/store/useGlobalStore'
+import { SystemConfigInitializer } from 'hooks/store/useSystemConfigStore'
 import ThemedGlobalStyle from 'theme/styles'
 
 import DappProvider from './DappProvider'
@@ -45,21 +46,18 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
       <LanguageProvider>
         <QueryClientProvider client={queryClient}>
           <ApolloProvider client={apolloClient}>
-            <SystemConfigProvider>
-              {/* <Updaters /> */}
-              <BrowserRouter>
-                {/* <UseRemoveTimeFilter /> */}
-                <PythConnection />
-                <GainsTradeConnection />
-                <DappProvider>
-                  <ProtocolProvider>
-                    <CopyWalletProvider>
-                      <BotAlertProvider>{children}</BotAlertProvider>
-                    </CopyWalletProvider>
-                  </ProtocolProvider>
-                </DappProvider>
-              </BrowserRouter>
-            </SystemConfigProvider>
+            <BrowserRouter>
+              <SystemConfigInitializer />
+              <PythConnection />
+              <GainsTradeConnection />
+              <ProtocolInitializer />
+              <GlobalStoreInitializer />
+              <DappProvider>
+                <CopyWalletInitializer />
+                <BotAlertInitializer />
+                {children}
+              </DappProvider>
+            </BrowserRouter>
           </ApolloProvider>
         </QueryClientProvider>
       </LanguageProvider>

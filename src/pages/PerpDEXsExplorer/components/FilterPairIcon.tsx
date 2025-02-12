@@ -8,7 +8,7 @@ import { IconBox } from 'theme/base'
 function FilterPairIcon() {
   const { searchParams, setSearchParams } = useSearchParams()
   const { getListSymbol } = useMarketsConfig()
-  const allPairs = getListSymbol()
+  const allPairs = getListSymbol?.()
 
   const currentPairs = (searchParams['pairs'] as string)?.split('_') ?? [] // pairs
   const isExcluded = searchParams['isExcludedPairs'] === '1'

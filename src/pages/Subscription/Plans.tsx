@@ -5,8 +5,8 @@ import { ReactNode, useState } from 'react'
 
 import NFTSubscriptionCard from 'components/@widgets/NFTSubscriptionCard'
 import Num from 'entities/Num'
-import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
-import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+import useSubscriptionPlanPrice from 'hooks/features/subscription/useSubscriptionPlanPrice'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { Button } from 'theme/Buttons'
 import { CrowIconGold } from 'theme/Icons/CrowIcon'
 import { VipPlanIcon1 } from 'theme/Icons/VipPlanIcon'
@@ -457,7 +457,7 @@ function PlanDecorators() {
 }
 
 export function usePlanConfigs() {
-  const { volumeLimit } = useSystemConfigContext()
+  const { volumeLimit } = useSystemConfigStore()
   return {
     features: [
       <Trans>Trader to copy</Trans>,

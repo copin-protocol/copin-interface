@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom'
 import LoginAction from 'components/@auth/LoginAction'
 import Logo, { LogoText } from 'components/@ui/Logo'
 import { TradingEventStatusEnum } from 'entities/event'
-import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import NavbarUser from 'pages/@layouts/Navbar/NavUser'
 import { Button } from 'theme/Buttons'
@@ -14,7 +14,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import ROUTES from 'utils/config/routes'
 import { generateHomeRoute } from 'utils/helpers/generateRoute'
-import { convertProtocolToParams } from 'utils/helpers/graphql'
+import { convertProtocolToParams } from 'utils/helpers/protocol'
 
 import { ProtocolsStatisticProvider } from '../ProtocolsStatisticContext'
 import HamburgerMenu from './HamburgetMenu'
@@ -22,8 +22,7 @@ import Menu from './Menu'
 import MoreDropdown from './MoreDropdown'
 import { DesktopEventNavLinks, DesktopNavLinks, DesktopWrapper, LiteText, NavLink } from './NavLinks'
 import QuickSearchBox from './QuickSearchBox'
-import { LARGE_BREAK_POINT } from './configs'
-import { LogoWrapper, Main, Wrapper } from './styled'
+import { LogoWrapper, Main, displayMobileStyles, hiddenMobileStyles } from './styled'
 
 export default function Navbar({ height }: { height: number }): ReactElement {
   const { isAuthenticated, disconnect, loading } = useAuthContext()
@@ -32,13 +31,16 @@ export default function Navbar({ height }: { height: number }): ReactElement {
 
   const [activeMobileMenu, setActiveMobileMenu] = useState(false)
 
-  const { events } = useSystemConfigContext()
+  const { events } = useSystemConfigStore()
   const hasEvents = !!events?.filter((event) => event.status !== TradingEventStatusEnum.ENDED)?.length
 
   return (
     <ProtocolsStatisticProvider>
-      <Box as="header" sx={{ zIndex: [101, 101, 101, 11] }}>
-        <Wrapper height={height}>
+      <Box
+        as="header"
+        sx={{ zIndex: [101, 101, 101, 11], borderBottom: 'small', borderBottomColor: 'neutral4', pl: 3 }}
+      >
+        <Box height={height} sx={{ position: 'relative' }}>
           <Menu visible={activeMobileMenu} onClose={() => setActiveMobileMenu(false)} hasEvents={hasEvents} />
           <Main>
             <Flex height="100%" alignItems="center" sx={{ gap: 2 }}>
@@ -57,7 +59,7 @@ export default function Navbar({ height }: { height: number }): ReactElement {
                   gap: 24,
                   height: '100%',
                   '& > *': { flexShrink: 0 },
-                  [`@media all and (max-width: ${LARGE_BREAK_POINT}px)`]: { display: 'none' },
+                  [`@media all and (max-width: 1400px)`]: { display: 'none' },
                 }}
               >
                 <DesktopNavLinks />
@@ -79,7 +81,7 @@ export default function Navbar({ height }: { height: number }): ReactElement {
                     gap: 24,
                     height: '100%',
                     '& > *': { flexShrink: 0 },
-                    [`@media all and (max-width: ${LARGE_BREAK_POINT}px)`]: { display: 'none' },
+                    ...hiddenMobileStyles,
                   }}
                 >
                   <DesktopEventNavLinks hasEvents={hasEvents} />
@@ -128,14 +130,14 @@ export default function Navbar({ height }: { height: number }): ReactElement {
                   display: 'none',
                   borderLeft: 'small',
                   borderLeftColor: 'neutral4',
-                  [`@media all and (max-width: ${LARGE_BREAK_POINT}px)`]: { display: 'block' },
+                  ...displayMobileStyles,
                 }}
               >
                 <HamburgerMenu active={activeMobileMenu} onClick={() => setActiveMobileMenu((prev) => !prev)} />
               </Box>
             </Flex>
           </Main>
-        </Wrapper>
+        </Box>
       </Box>
     </ProtocolsStatisticProvider>
   )

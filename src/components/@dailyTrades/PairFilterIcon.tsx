@@ -30,9 +30,9 @@ export function PairFilterIcon({
 }) {
   const { getListSymbol } = useMarketsConfig()
   const { fullOptions, allPairs } = useMemo(() => {
-    const listAllSymbol = getListSymbol()
-    const allPairs = listAllSymbol.map((symbol) => getPairFromSymbol(symbol))
-    const options = listAllSymbol.map((symbol) => ({ value: getPairFromSymbol(symbol), label: symbol }))
+    const listAllSymbol = getListSymbol?.()
+    const allPairs = listAllSymbol?.map((symbol) => getPairFromSymbol(symbol)) ?? []
+    const options = listAllSymbol?.map((symbol) => ({ value: getPairFromSymbol(symbol), label: symbol })) ?? []
     return { fullOptions: options, allPairs }
   }, [getListSymbol])
   const [visible, setVisible] = useState(false)
@@ -203,9 +203,9 @@ export const MarketSelect = ({
 }) => {
   const { getListSymbol } = useMarketsConfig()
   const { fullOptions } = useMemo(() => {
-    const listAllSymbol = getListSymbol()
+    const listAllSymbol = getListSymbol?.()
     // const allPairs = listAllSymbol.map((symbol) => getPairFromSymbol(symbol))
-    const options = listAllSymbol.map((symbol) => ({ value: getPairFromSymbol(symbol), label: symbol }))
+    const options = listAllSymbol?.map((symbol) => ({ value: getPairFromSymbol(symbol), label: symbol })) ?? []
     return { fullOptions: options }
   }, [getListSymbol])
   const [isSelectAll, setIsSelectAll] = useState(pairs?.length ? false : true)

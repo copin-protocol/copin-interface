@@ -34,7 +34,7 @@ import SortPositionsDropdown from './SortPositionDropdown'
 import { SEARCH_DAILY_POSITIONS_QUERY, SEARCH_POSITIONS_FUNCTION_NAME, SEARCH_POSITIONS_INDEX } from './config'
 import { DailyPositionsProvider, useDailyPositionsContext } from './usePositionsProvider'
 
-export default function DailyPositions() {
+export default function DailyPositionsPage() {
   return (
     <DailyPositionsProvider>
       <DailyPositionsComponent />

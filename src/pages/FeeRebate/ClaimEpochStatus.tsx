@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { EpochHistoryData } from 'entities/feeRebate'
-import useFeeRebateClaimStatus from 'hooks/features/useFeeRebateClaimStatus'
+import useFeeRebateClaimStatus from 'pages/FeeRebate/useFeeRebateClaimStatus'
 import { Type } from 'theme/base'
 
 export default function ClaimEpochStatus({

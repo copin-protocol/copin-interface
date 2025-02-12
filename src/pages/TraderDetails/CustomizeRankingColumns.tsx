@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
 import { TraderData } from 'entities/trader'
-import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremiumAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
 import { RANKING_FIELDS_COUNT, useRankingCustomizeStore } from 'hooks/store/useRankingCustomize'
 import { Button } from 'theme/Buttons'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'

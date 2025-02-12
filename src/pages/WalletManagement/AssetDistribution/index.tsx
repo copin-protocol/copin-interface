@@ -19,8 +19,8 @@ export default function AssetDistribution({ hiddenBalance }: { hiddenBalance?: b
   const totalBalance = pieChartData.totalBalance ?? 0
 
   useEffect(() => {
-    loadTotalSmartWallet()
-  }, [])
+    loadTotalSmartWallet?.()
+  }, [loadTotalSmartWallet])
 
   return (
     <Flex

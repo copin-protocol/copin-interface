@@ -5,11 +5,11 @@ import React from 'react'
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TraderData } from 'entities/trader'
-import useSearchAllData from 'hooks/features/useSearchAllData'
-import { SearchResult, SearchWrapper } from 'pages/@layouts/Navbar/styled'
+import useSearchAllData from 'hooks/features/trader/useSearchAllData'
 import { Button } from 'theme/Buttons'
 import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
+import { SearchResult } from 'theme/Search'
 import { Box, Flex, Image } from 'theme/base'
 import { parseProtocolImage } from 'utils/helpers/transform'
 
@@ -42,7 +42,7 @@ const SearchTrader = ({
   } = useSearchAllData({ onSelect, allowAllProtocol })
 
   return (
-    <SearchWrapper ref={searchWrapperRef} width={width ?? ['100%', '100%', 220, 220, 380]}>
+    <Box ref={searchWrapperRef} width={width ?? ['100%', '100%', 220, 220, 380]} sx={{ position: 'relative' }}>
       <InputSearch
         ref={inputSearchRef}
         placeholder={placeholder}
@@ -87,7 +87,7 @@ const SearchTrader = ({
           )}
         </SearchResult>
       )}
-    </SearchWrapper>
+    </Box>
   )
 }
 

@@ -10,7 +10,7 @@ import Plans, { MobilePlans } from './Plans'
 import TermsAndConditions from './TermsAndConditions'
 import { SubscriptionColors, SubscriptionGrid } from './styled'
 
-export default function Subscription() {
+export default function SubscriptionPage() {
   const { xl } = useResponsive()
   if (!xl)
     return (

@@ -3,6 +3,7 @@ import { ReactNode, RefObject, useEffect, useRef } from 'react'
 import styled from 'styled-components/macro'
 
 import NoDataFound from 'components/@ui/NoDataFound'
+import { useTraderExplorerTableColumns } from 'hooks/store/useTraderCustomizeColumns'
 import { Box, Flex } from 'theme/base'
 import { Colors } from 'theme/types'
 
@@ -10,7 +11,6 @@ import TableBody from './TableBody'
 import TableHead from './TableHead'
 import { emptyColumn } from './configs'
 import { TableSettingsProps, TraderListSortProps } from './types'
-import { useCustomizeColumns } from './useCustomiseColumns'
 
 export default function TraderListTable<T>({
   data,
@@ -46,7 +46,7 @@ export default function TraderListTable<T>({
   hiddenSelectItemBox?: boolean
   lefts?: [number, number]
 }) {
-  const { visibleColumns } = useCustomizeColumns()
+  const { columnKeys: visibleColumns } = useTraderExplorerTableColumns()
 
   const bodyRef = useRef<HTMLDivElement>(null)
   const headRef = useRef<HTMLDivElement>(null)

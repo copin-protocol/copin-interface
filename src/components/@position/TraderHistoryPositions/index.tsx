@@ -59,7 +59,7 @@ export interface HistoryTableProps {
   backgroundColor?: string
 }
 
-export default function TraderHistoryPositions(props: HistoryTableProps) {
+export default function TraderHistoryPositionsTableView(props: HistoryTableProps) {
   const { address, protocol, isDrawer, isExpanded, toggleExpand } = props
   const { myProfile } = useMyProfile()
   const [openDrawer, setOpenDrawer] = useState(false)

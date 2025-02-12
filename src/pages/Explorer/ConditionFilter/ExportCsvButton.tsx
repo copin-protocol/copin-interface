@@ -8,11 +8,11 @@ import { toast } from 'react-toastify'
 import { exportTradersCsvApi } from 'apis/traderApis'
 import { normalizeTraderPayload, transformRealisedField } from 'apis/traderApis'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
-import { useCustomizeColumns } from 'components/@trader/TraderExplorerTableView/useCustomiseColumns'
 import ToastBody from 'components/@ui/ToastBody'
 import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
 import { TraderData } from 'entities/trader'
 import useMyProfileStore from 'hooks/store/useMyProfile'
+import { useTraderExplorerTableColumns } from 'hooks/store/useTraderCustomizeColumns'
 import useTradersContext from 'pages/Explorer/useTradersContext'
 import { Button } from 'theme/Buttons'
 import Tooltip from 'theme/Tooltip'
@@ -27,7 +27,7 @@ interface ExportCsvButtonProps {
 
 const ExportCsvButton = ({ hasTitle }: ExportCsvButtonProps) => {
   const { md } = useResponsive()
-  const { visibleColumns } = useCustomizeColumns()
+  const { columnKeys } = useTraderExplorerTableColumns()
   const handleClickLogin = useClickLoginButton()
   const { timeOption, selectedProtocols, currentSort, filters } = useTradersContext()
   const { myProfile } = useMyProfileStore()
@@ -61,7 +61,7 @@ const ExportCsvButton = ({ hasTitle }: ExportCsvButtonProps) => {
 
   const onExportCSV = () => {
     const ranges = getFiltersFromFormValues(filters)
-    const fieldData = visibleColumns.map((data) => transformRealisedField(data))
+    const fieldData = columnKeys.map((data) => transformRealisedField(data))
     const payload = {
       protocols: selectedProtocols,
       queries: [{ fieldName: 'type', value: timeOption.id }],

@@ -103,7 +103,6 @@ export const InitTraderFavorites = memo(function InitTraderFavoritesMemo() {
 })
 
 const useTraderFavorites = () => {
-  // const { protocol } = useProtocolStore()
   const {
     isLoading,
     submitting,

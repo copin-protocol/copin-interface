@@ -9,10 +9,8 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 
 import CopyPositionsListView from '../CopyPositionsListView'
 import CopyPositionsTableView from '../CopyPositionsTableView'
-import { MobileLayoutType } from '../types'
+import { LayoutType, MobileLayoutType } from '../types'
 import { getColumns } from './configs'
-
-type LayoutType = 'simple' | 'normal' | 'lite'
 
 export default function CopyOpeningPositions({
   data,
@@ -23,6 +21,7 @@ export default function CopyOpeningPositions({
   hasFilter = false,
   mobileLayoutType,
   noDataComponent,
+  excludingColumnKeys,
 }: {
   data: CopyPositionData[] | undefined
   isLoading: boolean
@@ -32,6 +31,7 @@ export default function CopyOpeningPositions({
   hasFilter?: boolean
   mobileLayoutType?: MobileLayoutType
   noDataComponent?: ReactNode
+  excludingColumnKeys?: (keyof CopyPositionData)[]
 }) {
   const title = <Trans>Opening Positions</Trans>
 
@@ -54,7 +54,7 @@ export default function CopyOpeningPositions({
           <CopyPositionsTableView
             {...tableProps}
             data={data ?? []}
-            columns={getColumns(layoutType)}
+            columns={getColumns({ type: layoutType, excludingColumnKeys })}
             isLoading={isLoading}
             onClosePositionSuccess={onClosePositionSuccess}
             layoutType={layoutType}

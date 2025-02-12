@@ -1,11 +1,12 @@
 import { Warning } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
 
-import useCopierLeaderboardContext from 'hooks/features/useCopierLeaderboardProvider'
 import useDebounce from 'hooks/helpers/useDebounce'
 import { InputSearch } from 'theme/Input'
 import { Box, Type } from 'theme/base'
 import { isAddress } from 'utils/web3/contracts'
+
+import useCopierLeaderboardContext from './useCopierLeaderboardProvider'
 
 export default function SearchRanking() {
   const { setKeyword } = useCopierLeaderboardContext()

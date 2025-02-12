@@ -15,6 +15,12 @@ import IconGroup from 'components/@widgets/IconGroup'
 import Icon from 'components/@widgets/IconGroup/Icon'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
 import useSearchParams from 'hooks/router/useSearchParams'
+import {
+  DEFAULT_COLUMN_KEYS,
+  DEFAULT_COLUMN_KEYS_MOBILE,
+  usePerpsExplorerListColumns,
+  usePerpsExplorerTableColumns,
+} from 'hooks/store/usePerpsCustomizeColumns'
 import { BodyWrapperMobile, BottomWrapperMobile } from 'pages/@layouts/Components'
 import { OVERVIEW_WIDTH } from 'pages/Home/configs'
 import FilterButtonMobile from 'pages/PerpDEXsExplorer/components/FilterButtonMobile'
@@ -23,17 +29,11 @@ import PerpDEXsEventOverview from 'pages/PerpDEXsExplorer/components/PerpDEXsEve
 import ReportPerpDEXsModal from 'pages/PerpDEXsExplorer/components/ReportPerpDEXModal'
 import SortButtonMobile from 'pages/PerpDEXsExplorer/components/SortButtonMobile'
 import { RENDER_COLUMN_DATA_MAPPING, columns } from 'pages/PerpDEXsExplorer/configs'
-import {
-  DEFAULT_COLUMN_KEYS,
-  DEFAULT_COLUMN_KEYS_MOBILE,
-  MOBILE_COLUMN_KEYS,
-} from 'pages/PerpDEXsExplorer/constants/column'
+import { MOBILE_COLUMN_KEYS } from 'pages/PerpDEXsExplorer/constants/column'
 import { FIELDS_WITH_IDEAL_VALUE } from 'pages/PerpDEXsExplorer/constants/field'
 import { PERP_DEX_TYPE_MAPPING } from 'pages/PerpDEXsExplorer/constants/perpdex'
 import { TITLE_MAPPING } from 'pages/PerpDEXsExplorer/constants/title'
 import { useChains } from 'pages/PerpDEXsExplorer/hooks/useChains'
-import { useCustomizeColumns } from 'pages/PerpDEXsExplorer/hooks/useCustomizeColumns'
-import { useCustomizeColumnsMobile } from 'pages/PerpDEXsExplorer/hooks/useCustomizeColumnsMobile'
 import { tableBodyStyles, tableStyles } from 'pages/PerpDEXsExplorer/styles'
 import { ExternalResource } from 'pages/PerpDEXsExplorer/types'
 import { getFilters } from 'pages/PerpDEXsExplorer/utils'
@@ -56,7 +56,7 @@ import { ReportPerpDEXFlag } from './components/ReportPerpDEX'
 import Wrapper from './components/Wrapper'
 import useSortData from './hooks/useSortData'
 
-export default function PerpDEXsExplorer() {
+export default function PerpDEXsExplorerPage() {
   //@ts-ignore
   const { lg } = useResponsive()
 
@@ -258,7 +258,7 @@ function MobileView() {
       <Box display={currentTab === TabKeys.events ? 'block' : 'none'} sx={{ width: '100%', height: '100%' }}>
         <PerpDEXsEventOverview />
       </Box>
-      <BottomWrapperMobile>
+      <BottomWrapperMobile sx={{ display: 'flex !important' }}>
         <TabHeader
           configs={tabConfigs}
           isActiveFn={(config) => config.key === currentTab}
@@ -495,7 +495,7 @@ function MobileDataView({
   isLoading: boolean
   externalResource: ExternalResource
 }) {
-  const { visibleColumns } = useCustomizeColumnsMobile()
+  const { columnKeys: visibleColumns } = usePerpsExplorerListColumns()
   // Keep order
   const _visibleColumns = useMemo(() => {
     return MOBILE_COLUMN_KEYS.filter((key) => visibleColumns.includes(key))
@@ -717,9 +717,8 @@ function MobileDataView({
 }
 
 function CustomizeColumnWithState() {
-  const { visibleColumns, setVisibleColumns } = useCustomizeColumns()
-  const { visibleColumns: visibleColumnsMobile, setVisibleColumns: setVisibleColumnsMobile } =
-    useCustomizeColumnsMobile()
+  const { columnKeys: visibleColumnsTable, setColumnKeys: setVisibleColumnsTable } = usePerpsExplorerTableColumns()
+  const { columnKeys: visibleColumnsList, setColumnKeys: setVisibleColumnsList } = usePerpsExplorerListColumns()
   const { md } = useResponsive()
   return (
     <CustomizeColumn
@@ -727,9 +726,9 @@ function CustomizeColumnWithState() {
       defaultKeys={md ? DEFAULT_COLUMN_KEYS : DEFAULT_COLUMN_KEYS_MOBILE}
       placement="topRight"
       //@ts-ignore
-      currentColumnKeys={md ? visibleColumns : visibleColumnsMobile}
+      currentColumnKeys={md ? visibleColumnsTable : visibleColumnsList}
       titleFactory={(item) => item.text}
-      onApply={(keys) => (md ? setVisibleColumns(keys) : setVisibleColumnsMobile(keys))}
+      onApply={(keys) => (md ? setVisibleColumnsTable(keys) : setVisibleColumnsList(keys))}
       disabledItemFn={(key) => !key || ['volume1d', 'tradeUrl'].includes(key)}
       label={md ? <Type.Caption color="inherit">Customize Columns</Type.Caption> : ''}
     />
@@ -737,6 +736,6 @@ function CustomizeColumnWithState() {
 }
 
 function CustomizeColumnsSelector() {
-  const { visibleColumns } = useCustomizeColumns()
+  const { columnKeys: visibleColumns } = usePerpsExplorerTableColumns()
   return <Box sx={getVisibleColumnStyle({ visibleColumns })} />
 }

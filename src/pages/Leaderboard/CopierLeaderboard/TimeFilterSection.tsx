@@ -1,6 +1,7 @@
 import TimeFilter from 'components/@ui/TimeFilter/TimeFilter'
 import { COPIER_LEADERBOARD_TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
-import useCopierLeaderboardContext from 'hooks/features/useCopierLeaderboardProvider'
+
+import useCopierLeaderboardContext from './useCopierLeaderboardProvider'
 
 export default function TimeFilterSection() {
   const { currentTime, changeCurrentTime } = useCopierLeaderboardContext()

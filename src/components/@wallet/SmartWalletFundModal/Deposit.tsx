@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react'
 import { FieldValues, useForm, useWatch } from 'react-hook-form'
 
 import ERC20_ABI from 'abis/ERC20.json'
-import { SmartWalletFund } from 'hooks/features/useWalletFundSnxV2'
+import { SmartWalletFund } from 'hooks/features/copyTrade/useWalletFundSnxV2'
 import { useContract } from 'hooks/web3/useContract'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useContractQuery from 'hooks/web3/useContractQuery'

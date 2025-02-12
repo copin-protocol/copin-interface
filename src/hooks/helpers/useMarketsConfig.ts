@@ -1,5 +1,5 @@
-import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 
 export default function useMarketsConfig() {
-  return useSystemConfigContext((c) => c.marketConfigs)
+  return useSystemConfigStore((c) => c.marketConfigs ?? {})
 }

@@ -45,7 +45,7 @@ const emptySmallCss = {
   // backgroundOrigin: 'content-box',
 }
 
-export default function TraderOpeningPositionsTable({
+export default function TraderOpeningPositionsTableView({
   protocol,
   address,
   toggleExpand,
@@ -335,7 +335,7 @@ export function TraderOpeningPositionsListView({
           />
         </Box>
       )}
-      <Divider />
+      {!isDrawer && <Divider />}
       <PaginationWithLimit
         currentPage={currentPage}
         currentLimit={currentLimit}

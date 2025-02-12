@@ -1,10 +1,10 @@
 import BacktestSingleResult from 'components/@backtest/BacktestSingleResult'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import useGetSharedBacktest from 'hooks/features/useGetSharedBacktest'
+import useGetSharedBacktest from 'hooks/features/backtest/useGetSharedBacktest'
 import Loading from 'theme/Loading'
 import { Box, Type } from 'theme/base'
 
-export default function SharedBacktestSingle() {
+export default function SharedBacktestSinglePage() {
   const {
     sharedBacktestSetting,
     isLoadingSharedSetting,

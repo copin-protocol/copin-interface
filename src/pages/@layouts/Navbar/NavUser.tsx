@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { Clock, Crown, Key, Notebook, SignOut, SquareHalf, Star, SubtractSquare, Wallet } from '@phosphor-icons/react'
+import { Clock, Crown, Notebook, SignOut, SquareHalf, Star, SubtractSquare, Wallet } from '@phosphor-icons/react'
 import { ReactNode, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import Divider from 'components/@ui/Divider'
-import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
+import useCopyTradePermission from 'hooks/features/copyTrade/useCopyTradePermission'
 import useInternalRole from 'hooks/features/useInternalRole'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -19,12 +19,12 @@ import ROUTES from 'utils/config/routes'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten } from 'utils/helpers/format'
 import { generateFavoriteTradersRoute } from 'utils/helpers/generateRoute'
-import { convertProtocolToParams } from 'utils/helpers/graphql'
+import { convertProtocolToParams } from 'utils/helpers/protocol'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
 
-import ChangePasswordModal from './ChangePasswordModal'
+// import ChangePasswordModal from './ChangePasswordModal'
 import PremiumTag from './PremiumTag'
 import WarningExpiredSubscriptionIcon from './WarningExpiredSubscriptionIcon'
 import WarningSwitchAccountIcon from './WarningSwithcAccountIcon'
@@ -34,7 +34,7 @@ const NavUser = () => {
   const protocolParams = convertProtocolToParams(selectedProtocols)
 
   const [isShowModalLogout, setIsShowModalLogout] = useState(false)
-  const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false)
+  // const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false)
   const { logout, profile, isAuthenticated } = useAuthContext()
   const _address = useMemo(() => isAddress(profile?.username), [profile?.username])
   const hasCopyPermission = useCopyTradePermission()
@@ -151,7 +151,7 @@ const NavUser = () => {
                   )
                 )}
                 <Divider my={2} />
-                {!isAuthenticated && (
+                {/* {!isAuthenticated && (
                   <DropdownItem
                     onClick={() => {
                       onClickNavItem()
@@ -165,7 +165,7 @@ const NavUser = () => {
                       </Box>
                     </Flex>
                   </DropdownItem>
-                )}
+                )} */}
                 <div>
                   <DropdownItem
                     onClick={() => {
@@ -202,7 +202,7 @@ const NavUser = () => {
           <WarningExpiredSubscriptionIcon />
         </Flex>
       </Flex>
-      {isShowModalChangePassword && <ChangePasswordModal onDismiss={() => setIsShowModalChangePassword(false)} />}
+      {/* {isShowModalChangePassword && <ChangePasswordModal onDismiss={() => setIsShowModalChangePassword(false)} />} */}
       {isShowModalLogout && (
         <Modal isOpen={isShowModalLogout} onDismiss={() => setIsShowModalLogout(false)}>
           <Box p={4}>

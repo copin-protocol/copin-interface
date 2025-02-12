@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import useLeaderboardContext from 'hooks/features/useLeaderboardProvider'
 import { InputSearch } from 'theme/Input'
+
+import useLeaderboardContext from './useLeaderboardProvider'
 
 const SearchRanking = () => {
   const history = useHistory()

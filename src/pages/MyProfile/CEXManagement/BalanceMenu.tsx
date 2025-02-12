@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query'
 
 import { getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
+import SelectCopyWallet from 'components/@copyTrade/SelectCopyWallet'
 import Logo from 'components/@ui/Logo'
 import { Flex, IconBox } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
@@ -9,7 +10,6 @@ import { hideScrollbar } from 'utils/helpers/css'
 import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import { getCopyTradePlatformProtocol } from 'utils/web3/dcp'
 
-import SelectSingleWallet from '../SelectSingleWallet'
 import WalletStatisticOverview, { WalletStatisticOverviewItem } from '../WaletStatisticOverview'
 import useCEXManagementContext from './useCEXManagementContext'
 
@@ -40,11 +40,7 @@ export default function BalanceMenu() {
       height={[56, 40]}
     >
       <Flex alignItems="center" sx={{ pl: 3, pr: 2, gap: 1, width: ['50%', 'max-content'], height: '100%' }}>
-        <SelectSingleWallet
-          currentWallet={activeWallet}
-          onChangeWallet={handleChangeActiveWallet}
-          wallets={cexWallets}
-        />
+        <SelectCopyWallet currentWallet={activeWallet} onChangeWallet={handleChangeActiveWallet} wallets={cexWallets} />
         {/* {activeWallet && CEX_EXCHANGES.includes(activeWallet.exchange) && (
           <ReferralStatus data={activeWallet} sx={{ minWidth: 80 }} />
         )} */}

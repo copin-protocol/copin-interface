@@ -10,8 +10,7 @@ import Divider from 'components/@ui/Divider'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import Logo from 'components/@ui/Logo'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
-import useVaultDetailsContext, { VaultDetailsProvider } from 'hooks/features/useVaultDetailsProvider'
-import { VaultPositionProvider } from 'hooks/features/useVaultPositionProvider'
+import useVaultDetailsContext, { VaultDetailsProvider } from 'pages/VaultDetails/useVaultDetailsProvider'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import CopyButton from 'theme/Buttons/CopyButton'
 import { TabConfig, TabHeader } from 'theme/Tab'
@@ -26,8 +25,9 @@ import { generateTraderDetailsRoute } from 'utils/helpers/generateRoute'
 import VaultFundManagement from './VaultFundMangement'
 import VaultInfo from './VaultInfo'
 import VaultStats from './VaultStats'
+import { VaultPositionProvider } from './useVaultPositionProvider'
 
-export default function VaultDetails() {
+export default function VaultDetailsPage() {
   const { address: vaultAddress } = useParams<{ address: string }>()
 
   const { md } = useResponsive()

@@ -1,5 +1,5 @@
 import Container from 'components/@ui/Container'
-import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremium } from 'hooks/features/subscription/useSubscriptionRestrict'
 import TermsAndConditions from 'pages/Subscription/TermsAndConditions'
 import { Box, Type } from 'theme/base'
 

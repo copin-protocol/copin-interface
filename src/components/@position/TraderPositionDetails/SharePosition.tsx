@@ -31,7 +31,7 @@ export default function SharePosition({
 }) {
   const { getPricesData } = useGetUsdPrices()
   const { getSymbolByIndexToken } = useMarketsConfig()
-  const symbolByIndexToken = getSymbolByIndexToken({ protocol: stats.protocol, indexToken: stats.indexToken })
+  const symbolByIndexToken = getSymbolByIndexToken?.({ protocol: stats.protocol, indexToken: stats.indexToken })
   const prices = getPricesData({ protocol: stats.protocol })
   const [isSocialMediaSharingOpen, setIsSocialMediaSharingOpen] = useState(false)
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
@@ -47,7 +47,7 @@ export default function SharePosition({
   }, [stats?.protocol])
 
   const handleShare = async () => {
-    if (!stats) {
+    if (!stats || !symbolByIndexToken) {
       toast.error(<ToastBody title="Error" message="Something went wrong" />)
     }
     try {

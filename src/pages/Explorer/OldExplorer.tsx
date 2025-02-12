@@ -1,15 +1,14 @@
 import { Redirect } from 'react-router-dom'
 
+import useProtocolFromUrl from 'hooks/router/useProtocolFromUrl'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { generateExplorerRoute } from 'utils/helpers/generateRoute'
-import { convertProtocolToParams, useProtocolFromUrl } from 'utils/helpers/graphql'
 
-const OldExplorer = () => {
+const OldExplorerPage = () => {
   const { searchParams, pathname } = useSearchParams()
-  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
-  const protocolParams = convertProtocolToParams(foundProtocolInUrl)
+  const { protocolParams } = useProtocolFromUrl(searchParams, pathname)
 
   return <Redirect to={generateExplorerRoute({ params: { ...searchParams, protocol: protocolParams } })} />
 }
 
-export default OldExplorer
+export default OldExplorerPage

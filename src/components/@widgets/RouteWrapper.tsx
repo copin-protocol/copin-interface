@@ -1,7 +1,7 @@
 import { useHistory, useParams } from 'react-router-dom'
 
 import { RestrictPremiumFeature } from 'components/@widgets/SubscriptionRestrictModal'
-import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
+import { useIsPremium } from 'hooks/features/subscription/useSubscriptionRestrict'
 import Loading from 'theme/Loading'
 import { Flex } from 'theme/base'
 import { RELEASED_PROTOCOLS } from 'utils/config/constants'

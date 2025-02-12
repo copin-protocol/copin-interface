@@ -8,10 +8,12 @@ export default function TimeDropdown({
   timeOption,
   onChangeTime,
   ignoreAllTime,
+  menuSx = {},
 }: {
   timeOption: TimeFilterProps
   onChangeTime: (option: TimeFilterProps) => void
   ignoreAllTime?: boolean
+  menuSx?: any
 }) {
   return (
     <Dropdown
@@ -20,6 +22,7 @@ export default function TimeDropdown({
       menuSx={{
         width: '100px',
         minWidth: 'auto',
+        ...menuSx,
       }}
       placement="bottom"
       menu={

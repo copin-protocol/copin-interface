@@ -1,5 +1,12 @@
 import { CopyPositionData } from 'entities/copyTrade'
-import { AssetPosition, HlOrderData, HlOrderRawData } from 'entities/hyperliquid'
+import {
+  AssetPosition,
+  GroupedFillsData,
+  HlOrderData,
+  HlOrderFillData,
+  HlOrderFillRawData,
+  HlOrderRawData
+} from 'entities/hyperliquid'
 import { PositionData } from 'entities/trader'
 import { CopyTradePlatformEnum, MarginModeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 
@@ -90,7 +97,7 @@ export function parseHLOrderData({ account, data }: { account: string; data: HlO
       return {
         account,
         protocol: ProtocolEnum.HYPERLIQUID,
-        openId: e.oid,
+        orderId: e.oid,
         closeId: e.cloid,
         pair: convertPairHL(e.coin),
         originalSizeNumber: Number(e.origSz) * Number(e.limitPx),
@@ -113,10 +120,95 @@ export function parseHLOrderData({ account, data }: { account: string; data: HlO
     .filter((d) => !d.pair.startsWith('@'))
 }
 
+export function parseHLOrderFillData({ account, data }: { account: string; data: HlOrderFillRawData[] }) {
+  if (!data) return []
+  return data
+    .map((e) => {
+      return {
+        id: e.tid,
+        orderId: e.oid,
+        txHash: e.hash,
+        account,
+        protocol: ProtocolEnum.HYPERLIQUID,
+        pair: convertPairHL(e.coin),
+        direction: e.dir,
+        sizeNumber: Number(e.sz) * Number(e.px),
+        sizeInTokenNumber: Number(e.sz),
+        priceNumber: Number(e.px),
+        pnl: Number(e.closedPnl),
+        fee: Number(e.fee),
+        builderFee: e.builderFee ? Number(e.builderFee) : undefined,
+        feeToken: e.feeToken,
+        isLong: e.side === 'B',
+        isBuy: e.side === 'B',
+        timestamp: e.time,
+      } as HlOrderFillData
+    })
+    .filter((d) => !d.pair.startsWith('@'))
+}
+
 export function convertPairHL(symbol: string) {
   let _pair = symbol
   if (_pair.startsWith('k')) {
     _pair = _pair.replace('k', '1000')
   }
   return _pair + '-USDT'
+}
+
+export function groupHLOrderFillsByOid(fills: HlOrderFillData[]) {
+  // First sort fills by timestamp to ensure chronological order
+  const sortedFills = [...fills].sort((a, b) => a.timestamp - b.timestamp)
+
+  // Group fills by orderId and track direction changes
+  const groups: Array<GroupedFillsData> = []
+
+  let currentGroup: (typeof groups)[0] | null = null
+
+  sortedFills.forEach((fill) => {
+    // Start a new group if:
+    // 1. No current group exists
+    // 2. Current fill has different orderId
+    // 3. Direction changed since last group
+    if (!currentGroup || currentGroup.fills[0].orderId !== fill.orderId || currentGroup.direction !== fill.direction) {
+      currentGroup = {
+        fills: [],
+        totalSize: 0,
+        totalSizeInToken: 0,
+        avgPrice: 0,
+        totalPnl: 0,
+        totalFee: 0,
+        totalBuilderFee: 0,
+        timestamp: fill.timestamp,
+        direction: fill.direction,
+        pair: fill.pair,
+        isLong: fill.isLong,
+        feeToken: fill.feeToken,
+        txHash: fill.txHash,
+      }
+      groups.push(currentGroup)
+    }
+
+    currentGroup.fills.push(fill)
+    currentGroup.totalSize += fill.sizeNumber
+    currentGroup.totalSizeInToken += fill.sizeInTokenNumber
+    currentGroup.totalPnl += fill.pnl
+    currentGroup.totalFee += fill.fee
+    currentGroup.totalBuilderFee += fill.builderFee ?? 0
+
+    // Calculate weighted average price
+    currentGroup.avgPrice =
+      currentGroup.fills.reduce((sum, f) => sum + f.priceNumber * f.sizeInTokenNumber, 0) /
+      currentGroup.totalSizeInToken
+
+    // Update timestamp to the latest fill timestamp
+    currentGroup.timestamp = Math.max(currentGroup.timestamp, fill.timestamp)
+  })
+
+  // Sort fills within each group by timestamp (most recent first)
+  groups.forEach((group) => {
+    group.fills.sort((a, b) => b.timestamp - a.timestamp)
+  })
+
+  // Sort groups by their latest fill timestamp
+  return groups.sort((a, b) => b.timestamp - a.timestamp)
 }

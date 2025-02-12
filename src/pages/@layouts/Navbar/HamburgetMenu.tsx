@@ -29,7 +29,7 @@ const Line4 = styled(Line)`
   top: 0;
 `
 
-export const Wrapper = styled.div<{ active: boolean }>`
+const Wrapper = styled.div<{ active: boolean }>`
   cursor: pointer;
   height: 20px;
   width: 20px;

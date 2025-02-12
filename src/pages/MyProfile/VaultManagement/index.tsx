@@ -4,13 +4,14 @@ import { useResponsive } from 'ahooks'
 import { ReactNode, useEffect, useState } from 'react'
 
 import ChartGainsPositionRealtime from 'components/@charts/ChartGainsPositionRealtime'
+import SelectCopyWallet from 'components/@copyTrade/SelectCopyWallet'
 import DirectionButton from 'components/@ui/DirectionButton'
 import Divider from 'components/@ui/Divider'
 import Logo from 'components/@ui/Logo'
 import SectionTitle from 'components/@ui/SectionTitle'
 import FundModal, { FundTab } from 'components/@wallet/SmartWalletFundModal'
 import SmartWalletActions from 'components/@wallet/WalletDetailsCard/SmartWalletActions'
-import useWalletFund from 'hooks/features/useWalletFundSnxV2'
+import useWalletFund from 'hooks/features/copyTrade/useWalletFundSnxV2'
 import Badge from 'theme/Badge'
 import { Button } from 'theme/Buttons'
 import RcDrawer from 'theme/RcDrawer'
@@ -28,13 +29,12 @@ import FilterBySource, { FilterBySourceDropdown } from '../FilterBySource'
 import FilterByStatus from '../FilterByStatus'
 import OnchainPositions from '../OpeningPositions/OnchainPositions'
 import SettingConfigs from '../OpeningPositions/SettingConfigs'
-import SelectSingleWallet from '../SelectSingleWallet'
 import SelectTradersCopied from '../SelectTradersCopied'
 import ListVaultCopyTrades from './ListVaultCopyTrades'
 import VaultOnchainPositions from './VaultOnchainPositions'
 import useVaultManagementContext, { VaultManagementProvider } from './useVaultManagementContext'
 
-export default function VaultManagement() {
+export default function VaultManagementPage() {
   return (
     <VaultManagementProvider>
       <VaultManagementComponent />
@@ -87,7 +87,7 @@ function DesktopView() {
       >
         <Flex px={3} sx={{ width: '100%', height: '100%', alignItems: 'center' }}>
           <Flex mr={10} sx={{ height: '100%', alignItems: 'center' }}>
-            <SelectSingleWallet
+            <SelectCopyWallet
               currentWallet={activeWallet}
               wallets={vaultWallets}
               onChangeWallet={handleChangeActiveWallet}
@@ -359,11 +359,7 @@ function SelectWalletSection() {
   const { activeWallet, handleChangeActiveWallet, vaultWallets } = useVaultManagementContext()
   return (
     <Flex sx={{ height: '100%', alignItems: 'center', flexShrink: 0 }}>
-      <SelectSingleWallet
-        currentWallet={activeWallet}
-        wallets={vaultWallets}
-        onChangeWallet={handleChangeActiveWallet}
-      />
+      <SelectCopyWallet currentWallet={activeWallet} wallets={vaultWallets} onChangeWallet={handleChangeActiveWallet} />
       {activeWallet && activeWallet.exchange === CopyTradePlatformEnum.GNS_V8 && !!activeWallet.smartWalletAddress && (
         <IconBox
           as={'a'}

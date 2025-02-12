@@ -2,7 +2,7 @@ import { useResponsive } from 'ahooks'
 
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
-import useTraderBalances from 'hooks/features/useTraderBalances'
+import useTraderBalances from 'hooks/features/trader/useTraderBalances'
 import CopyButton from 'theme/Buttons/CopyButton'
 import { Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'

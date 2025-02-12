@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ArrowSquareDownLeft, ArrowSquareUpRight } from '@phosphor-icons/react'
 import { useState } from 'react'
 
-import useWalletFund from 'hooks/features/useWalletFundSnxV2'
+import useWalletFund from 'hooks/features/copyTrade/useWalletFundSnxV2'
 import Modal from 'theme/Modal'
 import { TabHeader } from 'theme/Tab'
 import { Box } from 'theme/base'

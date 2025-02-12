@@ -1,9 +1,7 @@
-import { User } from '@phosphor-icons/react'
-
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { ProtocolsStatisticData } from 'entities/statistic'
 import Checkbox from 'theme/Checkbox'
-import { Box, Flex, Grid, IconBox, Type } from 'theme/base'
+import { Box, Flex, Grid, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { ProtocolOptionProps } from 'utils/config/protocols'
 import { compactNumber } from 'utils/helpers/format'
@@ -27,6 +25,7 @@ export default function ListProtocolSelection({
   itemActiveSx?: any
   hasCheckBox?: boolean
 }) {
+  console.log('protocolsStatistic', protocolsStatistic)
   return (
     <>
       {/* RENDER PROTOCOLS */}
@@ -37,7 +36,7 @@ export default function ListProtocolSelection({
       )}
       <Grid
         sx={{
-          gridTemplateColumns: ['repeat(auto-fill, minmax(160px, 1fr))', 'repeat(auto-fill, minmax(160px, 1fr))'],
+          gridTemplateColumns: ['repeat(auto-fill, minmax(175px, 1fr))', 'repeat(auto-fill, minmax(175px, 1fr))'],
           gap: 1,
         }}
       >
@@ -80,20 +79,14 @@ export default function ListProtocolSelection({
                     <Type.Caption color={'neutral1'} sx={{ textTransform: 'uppercase' }}>
                       {option.text}
                     </Type.Caption>
-                    <Flex alignItems={'center'}>
-                      <Type.Small color={'neutral3'} mr={1}>
-                        {compactNumber(protocolStatistic?.traders ?? 0, 2, true)}
+                    <Flex sx={{ alignItems: 'center', gap: 1, '& > *': { flexShrink: 0, wordSpacing: '-2px' } }}>
+                      <Type.Small width={54} color={'neutral3'}>
+                        MAU: {compactNumber(protocolStatistic?.traders30 ?? 0, 0, true)}
                       </Type.Small>
-                      <IconBox color="neutral3" icon={<User size={12} />} />
+                      <Type.Small width={54} color={'neutral3'}>
+                        OI: ${compactNumber(protocolStatistic?.oi, 0, true)}
+                      </Type.Small>
                     </Flex>
-                    {/* <Flex sx={{ alignItems: 'center', gap: 1 }}>
-                      <Type.Small flex="1" color={'neutral3'} mr={1}>
-                        MAU: {compactNumber(protocolStatistic?.traders ?? 0, 0, true)}
-                      </Type.Small>
-                      <Type.Small flex="1" color={'neutral3'} mr={1}>
-                        OI: {compactNumber(protocolStatistic?.oi, 0, true)}
-                      </Type.Small>
-                    </Flex> */}
                   </Flex>
 
                   {/*{option.isCross ? (*/}

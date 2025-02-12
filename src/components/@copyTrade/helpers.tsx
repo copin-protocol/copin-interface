@@ -1,10 +1,14 @@
+import { toast } from 'react-toastify'
+
+import { parseInputValue } from 'components/@ui/TextWithEdit'
+import ToastBody from 'components/@ui/ToastBody'
 import { CopyTradeData } from 'entities/copyTrade'
 import { Flex, Image, Type } from 'theme/base'
 import { DCP_EXCHANGES } from 'utils/config/constants'
-import { CopyTradePlatformEnum, CopyTradeSideEnum, SLTPTypeEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, CopyTradeSideEnum, CopyTradeStatusEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
-import { CopyTradeFormValues } from './types'
+import { CopyTradeFormValues, TradersByProtocolData } from './types'
 
 export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | undefined) {
   const result = {} as CopyTradeFormValues
@@ -195,4 +199,47 @@ export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boo
     labelText: label,
     isDisabled: enabled != null && !enabled,
   }
+}
+
+export const isCopyTradeRunningFn = (status: CopyTradeStatusEnum) => status === CopyTradeStatusEnum.RUNNING
+
+export const validateNumberValue = ({ value, field }: { value: string; field: keyof CopyTradeData }) => {
+  if (typeof value !== 'string') return
+  const numberValue = parseInputValue(value)
+  switch (field) {
+    case 'volume':
+      return true
+    case 'leverage':
+      if (numberValue < 2) {
+        toast.error(<ToastBody title="Error" message="Leverage must be greater than or equal to 2" />)
+        return
+      }
+      if (numberValue > 50) {
+        toast.error(<ToastBody title="Error" message="Leverage must be less than 50x" />)
+        return
+      }
+      return true
+  }
+  return numberValue >= 0
+}
+
+export function getTradersByProtocolFromCopyTrade(
+  copyTrades: CopyTradeData[] | undefined,
+  allTraders: string[] | undefined
+) {
+  if (!copyTrades?.length || !allTraders?.length) return undefined
+  const checkerMapping: Record<string, { [protocol: string]: boolean }> = {}
+  const tradersByProtocol = copyTrades?.reduce((result, copyTrade) => {
+    const accounts = [copyTrade.account, ...(copyTrade.accounts || [])]
+    accounts.forEach((account) => {
+      if (checkerMapping[account]?.[copyTrade.protocol] || !allTraders.includes(account)) return
+      checkerMapping[account] = { [copyTrade.protocol]: true }
+      result[copyTrade.protocol] = [
+        ...(result[copyTrade.protocol] ?? []),
+        { address: account, status: copyTrade.status === CopyTradeStatusEnum.RUNNING ? 'copying' : 'deleted' },
+      ]
+    })
+    return result
+  }, {} as TradersByProtocolData)
+  return tradersByProtocol
 }

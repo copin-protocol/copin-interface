@@ -1,5 +1,3 @@
-import { ProtocolEnum } from './enums'
-
 export const QUERY_KEYS = {
   GET_COPIER_LEADERBOARD: 'GET_COPIER_LEADERBOARD',
   GET_LATEST_BLOCK_NUMBER: 'GET_LATEST_BLOCK_NUMBER',
@@ -14,6 +12,7 @@ export const QUERY_KEYS = {
   GET_HYPERLIQUID_TRADER_DETAIL: 'GET_HYPERLIQUID_TRADER_DETAIL',
   GET_TOKEN_TRADES_BY_TRADER: 'GET_TOKEN_TRADES_BY_TRADER',
   GET_HYPERLIQUID_OPEN_ORDERS: 'GET_HYPERLIQUID_OPEN_ORDERS',
+  GET_HYPERLIQUID_FILLED_ORDERS: 'GET_HYPERLIQUID_FILLED_ORDERS',
   GET_POSITIONS_OPEN: 'GET_POSITIONS_OPEN',
   GET_POSITIONS_HISTORY: 'GET_POSITIONS_HISTORY',
   GET_POSITION_DETAIL: 'GET_POSITION_DETAIL',
@@ -121,7 +120,6 @@ export const STORAGE_KEYS = {
   WALLET: 'copin-wallet',
   ACCOUNT: 'copin-account',
   UNVERIFIED_ACCOUNT: 'unverified-account',
-  CONDITIONAL_FILTERS: 'conditional-filter', // TODO NEXT: keep to last deploy
   DEFAULT_FILTERS: 'default-filters',
   RANKING_FILTERS: 'ranking-filters',
   FILTER_TAB: 'filter-tab',
@@ -156,6 +154,7 @@ export const STORAGE_KEYS = {
   LITE_DEPOSIT_HISTORY_LAYOUT: 'lite_deposit_history_layout',
   GETTING_STARTED: 'getting_started',
   GET_STARTED_LAST_CHECK: 'get_started_last_check',
+  POSITION_TIME_TYPE: 'position_time_type',
 }
 
 export const URL_PARAM_KEYS = {

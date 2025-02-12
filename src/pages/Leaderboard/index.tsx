@@ -3,16 +3,16 @@ import { Trophy } from '@phosphor-icons/react'
 
 import TopLeaderboard from 'components/@trader/TraderLeaderboardTableView'
 import PageHeader from 'components/@widgets/PageHeader'
-import { LeaderboardProvider } from 'hooks/features/useLeaderboardProvider'
-import { useProtocolStore } from 'hooks/store/useProtocols'
+import useGlobalStore from 'hooks/store/useGlobalStore'
 import { Box, Flex } from 'theme/base'
 
 import SearchRanking from './SearchRanking'
 import SelectSeason from './SelectSeason'
 import SwitchLeaderboardType from './SwitchLeaderboardType'
+import { LeaderboardProvider } from './useLeaderboardProvider'
 
-const Leaderboard = () => {
-  const { protocol } = useProtocolStore()
+const LeaderboardPage = () => {
+  const protocol = useGlobalStore((s) => s.protocol)
   return (
     <>
       <LeaderboardProvider>
@@ -58,4 +58,4 @@ const Leaderboard = () => {
   )
 }
 
-export default Leaderboard
+export default LeaderboardPage

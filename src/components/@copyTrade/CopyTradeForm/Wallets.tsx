@@ -65,7 +65,7 @@ function NoWallet({
   onCreateWalletSuccess,
 }: {
   platform: CopyTradePlatformEnum
-  onCreateWalletSuccess: () => void
+  onCreateWalletSuccess: (() => void) | undefined
 }) {
   const [openModal, setOpenModal] = useState(false)
   const handleOpenModal = () => setOpenModal(true)
@@ -109,7 +109,7 @@ function NoWallet({
         exchange={platform}
         isOpen={openModal}
         onDismiss={() => {
-          onCreateWalletSuccess()
+          onCreateWalletSuccess?.()
           onDismissModal()
         }}
       />

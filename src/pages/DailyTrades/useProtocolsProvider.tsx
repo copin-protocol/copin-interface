@@ -2,12 +2,10 @@ import { createContext, useContext, useMemo } from 'react'
 
 import useInternalRole from 'hooks/features/useInternalRole'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
-import useSearchParams from 'hooks/router/useSearchParams'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { ProtocolOptionProps } from 'utils/config/protocols'
-import { useProtocolFromUrl } from 'utils/helpers/graphql'
 
 interface ContextValues {
   selectedProtocols: ProtocolEnum[]
@@ -26,9 +24,7 @@ export function ProtocolsProvider({ children }: { children: JSX.Element | JSX.El
   const defaultProtocols = useMemo(() => defaultProtocolOptions.map((p) => p.id), [defaultProtocolOptions])
 
   const isInternal = useInternalRole()
-  const { searchParams, pathname } = useSearchParams()
   const protocolOptions = useGetProtocolOptions()
-  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
   const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
 
   const { selectedProtocols, checkIsSelected, handleToggle, setSelectedProtocols } = useProtocolFilter({

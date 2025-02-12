@@ -3,14 +3,15 @@ import { NavLink as Link, NavLinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import BetaTag from 'components/@ui/BetaTag'
+import useGlobalStore from 'hooks/store/useGlobalStore'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
-import { parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
 import { Box, Flex, Type } from 'theme/base'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { generateExplorerRoute, generateLeaderboardRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
-import { convertProtocolToParams } from 'utils/helpers/graphql'
+import { convertProtocolToParams } from 'utils/helpers/protocol'
 import { logEventCompetition } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -51,10 +52,8 @@ function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () =
   const { selectedProtocols } = useProtocolFilter()
   const protocolParams = convertProtocolToParams(selectedProtocols)
 
-  const { protocol, navProtocol, setNavProtocol } = useProtocolStore()
-  const _navProtocol = parseNavProtocol(navProtocol)?.protocol
+  const protocol = useGlobalStore((s) => s.protocol)
   const onClickNavItem = () => {
-    setNavProtocol(undefined)
     onClose?.()
   }
 
@@ -64,7 +63,7 @@ function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () =
         return isMobile ? (
           <NavLink
             key={index}
-            to={config.routeFactory({ protocol: _navProtocol ?? protocol, params: { protocol: protocolParams } })}
+            to={config.routeFactory({ protocol, params: { protocol: protocolParams } })}
             onClick={onClickNavItem}
             matchpath={config.matchpath}
           >
@@ -73,7 +72,7 @@ function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () =
         ) : (
           <NavLink
             key={index}
-            to={config.routeFactory({ protocol: _navProtocol ?? protocol, params: { protocol: protocolParams } })}
+            to={config.routeFactory({ protocol, params: { protocol: protocolParams } })}
             onClick={onClickNavItem}
             matchpath={config.matchpath}
             style={{ display: 'block', height: '100%' }}
@@ -118,7 +117,7 @@ function EventNavLinks({ onClose, hasEvents }: { onClose?: () => void; hasEvents
 
 const baseNavConfigs = [
   {
-    routeFactory: (configs: { protocol: ProtocolEnum; params?: any }) =>
+    routeFactory: (configs: { protocol?: ProtocolEnum; params?: any }) =>
       generateExplorerRoute({ params: configs.params }),
     label: <Trans>TRADER EXPLORER</Trans>,
     matchpath: ROUTES.ALL_TRADERS_EXPLORER.path,
@@ -129,7 +128,8 @@ const baseNavConfigs = [
     matchpath: ROUTES.OPEN_INTEREST_POSITIONS.path,
   },
   {
-    routeFactory: (configs: { protocol: ProtocolEnum }) => generateLeaderboardRoute({ protocol: configs.protocol }),
+    routeFactory: (configs: { protocol?: ProtocolEnum }) =>
+      generateLeaderboardRoute({ protocol: configs.protocol ?? DEFAULT_PROTOCOL }),
     matchpath: ROUTES.LEADERBOARD.path_prefix,
     label: <Trans>TRADER BOARD</Trans>,
   },

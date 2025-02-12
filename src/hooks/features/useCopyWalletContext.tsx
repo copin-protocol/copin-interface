@@ -1,5 +1,7 @@
-import { ReactNode, createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { createContext, memo, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
+import create from 'zustand'
+import { immer } from 'zustand/middleware/immer'
 
 import { getCopyTradeSettingsListApi } from 'apis/copyTradeApis'
 import { checkEmbeddedWalletApi, getAllCopyWalletsApi, getEmbeddedWalletsApi } from 'apis/copyWalletApis'
@@ -18,69 +20,42 @@ import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 export interface CopyWalletContextData {
   isDA?: boolean
-  myProfile: UserData | null
-  loadingCopyWallets: boolean
-  loadingVaultCopyWallets: boolean
-  copyWallets: CopyWalletData[] | undefined
-  smartWallets: CopyWalletData[] | undefined
-  bingXWallets: CopyWalletData[] | undefined
-  dcpWallets: CopyWalletData[] | undefined
-  cexWallets: CopyWalletData[] | undefined
-  vaultWallets: CopyWalletData[] | undefined
-  hlWallets: CopyWalletData[] | undefined
-  embeddedWallets: CopyWalletData[] | undefined
-  embeddedWallet: CopyWalletData | undefined
-  reloadEmbeddedWallets: () => void
-  loadingEmbeddedWallets: boolean
-  reloadCopyWallets: () => void
-  reloadVaultCopyWallets: () => void
-  loadTotalSmartWallet: () => void
-  embeddedWalletInfo: HlAccountData | undefined
-  reloadEmbeddedWalletInfo: () => void
-  embeddedCopyTrades: CopyTradeData[] | undefined
-  reloadEmbeddedCopyTrades: () => void
+  myProfile?: UserData | null
+  loadingCopyWallets?: boolean
+  loadingVaultCopyWallets?: boolean
+  copyWallets?: CopyWalletData[]
+  smartWallets?: CopyWalletData[]
+  bingXWallets?: CopyWalletData[]
+  dcpWallets?: CopyWalletData[]
+  cexWallets?: CopyWalletData[]
+  vaultWallets?: CopyWalletData[]
+  hlWallets?: CopyWalletData[]
+  embeddedWallets?: CopyWalletData[]
+  embeddedWallet?: CopyWalletData
+  reloadEmbeddedWallets?: () => void
+  loadingEmbeddedWallets?: boolean
+  reloadCopyWallets?: () => void
+  reloadVaultCopyWallets?: () => void
+  loadTotalSmartWallet?: () => void
+  embeddedWalletInfo?: HlAccountData
+  reloadEmbeddedWalletInfo?: () => void
+  embeddedCopyTrades?: CopyTradeData[]
+  reloadEmbeddedCopyTrades?: () => void
+}
+
+interface CopyWalletContextModifier {
+  setState: (state: Partial<CopyWalletContextData>) => void
 }
 
 const CopyWalletContext = createContext<CopyWalletContextData>({} as CopyWalletContextData)
 
-// const EXCLUDING_PATH = [
-//   ROUTES.STATS.path,
-//   ROUTES.LEADERBOARD.path_prefix,
-//   ROUTES.FAVORITES.path,
-//   ROUTES.SUBSCRIPTION.path,
-//   ROUTES.USER_SUBSCRIPTION.path,
-//   ROUTES.ALERT_LIST.path,
-//   ROUTES.REFERRAL.path,
-//   ROUTES.COMPARING_TRADERS.path,
-//   ROUTES.OPEN_INTEREST.path_prefix,
-//   ROUTES.POSITION_DETAILS.path,
-// ]
-
-export function CopyWalletProvider({ children }: { children: ReactNode }) {
+export const CopyWalletInitializer = memo(function CopyWalletInitializerComponent() {
   const { profile: myProfile, setIsNewUser } = useAuthContext()
   const [loadedTotalSmartWallet, setLoadedTotalSmartWallet] = useState(false)
 
   const enabledQueryByPaths = true
-  // Remove this logic for check new trader
-  // const enabledQueryByPaths = useEnabledQueryByPaths(EXCLUDING_PATH, true)
-  // const {
-  //   data: embeddedWallets,
-  //   isLoading: loadingEmbeddedWallets,
-  //   refetch: reloadEmbeddedWallets,
-  // } = useQuery([QUERY_KEYS.GET_EMBEDDED_COPY_WALLETS, myProfile?.id], () => getEmbeddedWalletsApi(), {
-  //   enabled: false,
-  //   retry: 0,
-  // })
 
-  // const {
-  //   data: copyWallets,
-  //   isLoading: loadingCopyWallets,
-  //   refetch: reloadCopyWallets,
-  // } = useQuery(['adsjflkdjsfa'], () => getAllCopyWalletsApi(), {
-  //   enabled: !!myProfile?.id && enabledQueryByPaths,
-  //   retry: 0,
-  // })
-
+  // TODO: move to init and store in zustand store
   const {
     data: wallets,
     isLoading: loadingWallets,
@@ -137,26 +112,6 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
     () => copyWallets?.filter((w) => w.exchange === CopyTradePlatformEnum.HYPERLIQUID),
     [copyWallets]
   )
-
-  // const normalizedCopyWallets = useMemo(
-  //   () =>
-  //     copyWallets?.map((wallet) => {
-  //       switch (wallet.exchange) {
-  //         case CopyTradePlatformEnum.BINGX:
-  //           return wallet
-  //         case CopyTradePlatformEnum.SYNTHETIX:
-  //           return {
-  //             ...wallet,
-  //             // balance: smartWalletFund.total?.num ?? 0,
-  //             // availableBalance: smartWalletFund.available?.num ?? 0,
-  //           }
-  //         default:
-  //           return wallet
-  //       }
-  //     }),
-  //   [copyWallets]
-  // )
-
   const embeddedWalletAddress = embeddedWallets?.[0]?.hyperliquid?.embeddedWallet
 
   const { data: embeddedWalletInfo, refetch: reloadEmbeddedWalletInfo } = useQuery(
@@ -214,29 +169,34 @@ export function CopyWalletProvider({ children }: { children: ReactNode }) {
       reloadEmbeddedCopyTrades,
     }),
     [
-      bingXWallets,
-      cexWallets,
       copyWallets,
-      dcpWallets,
-      hlWallets,
-      isDA,
       loadingWallets,
       loadingVaultCopyWallets,
       myProfile,
-      reloadWallets,
-      reloadVaultCopyWallets,
-      smartWallets,
       vaultWallets,
       embeddedWallets,
       embeddedWalletInfo,
-      reloadEmbeddedWalletInfo,
       embeddedCopyTrades,
-      reloadEmbeddedCopyTrades,
     ]
   )
 
-  return <CopyWalletContext.Provider value={contextValue}>{children}</CopyWalletContext.Provider>
-}
+  const { setState } = useCopyWalletContext()
+  useEffect(() => {
+    setState(contextValue)
+  }, [contextValue])
 
-const useCopyWalletContext = () => useContext(CopyWalletContext)
+  return null
+})
+
+const useCopyWalletContext = create<CopyWalletContextData & CopyWalletContextModifier>()(
+  immer((set) => ({
+    setState(newState) {
+      set((state) => {
+        state = { ...state, ...newState }
+        return state
+      })
+    },
+  }))
+)
+
 export default useCopyWalletContext

@@ -10,7 +10,7 @@ import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import ToastBody from 'components/@ui/ToastBody'
 import { CopyTradeData } from 'entities/copyTrade'
 import { PositionData } from 'entities/trader'
-import useVaultCopyTrades from 'hooks/features/useVaultCopyTrades'
+import useVaultCopyTrades from 'hooks/features/copyTrade/useVaultCopyTrades'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -47,7 +47,7 @@ export default function VaultCopyActions({ data }: { data: PositionData }) {
   })
 
   const { getSymbolByIndexToken } = useMarketsConfig()
-  const symbol = getSymbolByIndexToken({ indexToken: data.indexToken })
+  const symbol = getSymbolByIndexToken?.({ indexToken: data.indexToken })
 
   useEffect(() => {
     if (!symbol) return

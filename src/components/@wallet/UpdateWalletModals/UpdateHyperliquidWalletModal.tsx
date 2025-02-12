@@ -66,7 +66,7 @@ export default function UpdateHyperliquidWalletModal({
     onSuccess: () => {
       toast.success(<ToastBody title={<Trans>Success</Trans>} message={<Trans>Update wallet successful!</Trans>} />)
       onDismiss()
-      reloadCopyWallets()
+      reloadCopyWallets?.()
     },
     onError: (error: any) => {
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)

@@ -23,16 +23,16 @@ import { getCopyTradePlatformChain } from 'utils/web3/dcp'
 
 const CreateSmartWalletModal = ({
   isOpen,
-  platform,
+  exchange,
   onDismiss,
   onSuccess,
 }: {
   isOpen: boolean
-  platform: CopyTradePlatformEnum
+  exchange: CopyTradePlatformEnum
   onDismiss: () => void
   onSuccess?: () => void
 }) => {
-  const chainId = getCopyTradePlatformChain(platform)
+  const chainId = getCopyTradePlatformChain(exchange)
   const { isValid, alert } = useRequiredChain({
     chainId,
   })
@@ -104,7 +104,7 @@ const CreateSmartWalletModal = ({
         </Flex>
         <Type.Caption mb={20} color="neutral3">
           <Trans>
-            Smart wallets are a unique Copin offering that allows copiers to copytrade at {COPY_WALLET_TRANS[platform]}{' '}
+            Smart wallets are a unique Copin offering that allows copiers to copytrade at {COPY_WALLET_TRANS[exchange]}{' '}
             platform.
           </Trans>
         </Type.Caption>

@@ -15,9 +15,9 @@ import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade.d'
 import { TradingEventStatusEnum } from 'entities/event'
 import useBotAlertContext from 'hooks/features/useBotAlertProvider'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMyProfileStore from 'hooks/store/useMyProfile'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -130,7 +130,7 @@ export default function CopyTraderDrawer({
   const isCloneTab = tab === TabKeyEnum.Clone
   const isSelectedCloneCopyTrade = !!copyTradeData
 
-  const { events } = useSystemConfigContext()
+  const { events } = useSystemConfigStore()
 
   const { embeddedWallet, smartWallets } = useCopyWalletContext()
   const _defaultFormValues = useMemo(() => {

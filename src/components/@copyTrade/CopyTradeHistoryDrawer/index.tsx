@@ -6,11 +6,12 @@ import Container from 'components/@ui/Container'
 import NoDataFound from 'components/@ui/NoDataFound'
 import UserLogItem from 'components/@widgets/UserLogItem'
 import { CopyTradeData } from 'entities/copyTrade.d'
-import useUserLogDetails from 'hooks/features/useUserLogDetails'
+import useUserLogDetails from 'hooks/features/copyTrade/useUserLogDetails'
 import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
 import RcDrawer from 'theme/RcDrawer'
 import { Flex, Type } from 'theme/base'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 export default function CopyTradeHistoryDrawer({
   isOpen,
@@ -25,7 +26,7 @@ export default function CopyTradeHistoryDrawer({
   const { lg, md } = useResponsive()
 
   return (
-    <RcDrawer open={isOpen} onClose={onDismiss} width={lg ? '60%' : md ? '80%' : '100%'}>
+    <RcDrawer open={isOpen} onClose={onDismiss} width={lg ? '60%' : md ? '80%' : '100%'} zIndex={Z_INDEX.TOASTIFY}>
       <Container p={3} sx={{ position: 'relative', height: '100%' }}>
         <IconButton
           icon={<XCircle size={24} />}

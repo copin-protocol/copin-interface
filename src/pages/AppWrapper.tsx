@@ -3,19 +3,12 @@ import { ToastContainer } from 'react-toastify'
 
 import OnboardingModal from 'components/@copinLite/OnboardingModal'
 import FavoriteNoteTooltip from 'components/@widgets/FavoriteButton/FavoriteNoteTooltip'
-import SubscriptionRestrictModal from 'components/@widgets/SubscriptionRestrictModal'
-import { TradingEventStatusEnum } from 'entities/event'
+import LinkBotAlertModal from 'components/@widgets/LinkBotAlertModal'
 // import useCheckHyperliquidBuilderFees from 'hooks/features/useCheckHyperliquidBuilderFees'
-import useModifyStorage from 'hooks/features/useModifyStorage'
-import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useResetSearchParams from 'hooks/helpers/useResetSearchParams'
-import useGlobalDialog, { DialogContent } from 'hooks/store/useGlobalDialog'
-import useSubscriptionRestrictStore from 'hooks/store/useSubscriptionRestrictStore'
 import { InitTraderCopying } from 'hooks/store/useTraderCopying'
 import { InitTraderFavorites } from 'hooks/store/useTraderFavorites'
 import { PollingUsdPrice } from 'hooks/store/useUsdPrices'
-import useChainRestrict from 'hooks/web3/useChainRestrict'
-import useEagerConnect from 'hooks/web3/useEagerConnect'
 import Footer from 'pages/@layouts/Footer'
 import Navbar from 'pages/@layouts/Navbar'
 import { Box, Flex } from 'theme/base'
@@ -24,24 +17,18 @@ import { ELEMENT_IDS } from 'utils/config/keys'
 
 import TraderDetailsDrawer from '../components/@trader/TraderDetailsDrawer'
 import { InitVaultCopying } from '../hooks/store/useVaultCopying'
-import Notification from './@layouts/EventsNotification'
-import GettingStarted from './@layouts/GettingStarted'
+import ChainRestrict from './@helpers/ChainRestrict'
+import EagerConnect from './@helpers/EagerConnect'
+import EventNotification from './@helpers/EventNotification'
+import GlobalDialog from './@helpers/GlobalDialog'
+import SubscriptionRestrict from './@helpers/SubscriptionRestrict'
 import LiteWalletNotice from './@layouts/LiteWalletNotice'
 import SubscriptionExpiredWarning from './@layouts/SubscriptionExpiredWarning'
 
 // import WarningBetaVersion from './@layouts/WarningBetaVersion'
 
 const AppWrapper = ({ children }: { children: ReactNode }) => {
-  useChainRestrict()
-  useEagerConnect()
-  useModifyStorage()
   useResetSearchParams()
-  const dialog = useGlobalDialog((state) => state.dialog)
-  const restrictState = useSubscriptionRestrictStore((state) => state.state)
-
-  const { events } = useSystemConfigContext()
-  const availableEvents = events?.filter((event) => event.status !== TradingEventStatusEnum.ENDED)
-
   // const { isValidFees } = useCheckHyperliquidBuilderFees({ enable: true })
 
   return (
@@ -57,18 +44,19 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
         </Box>
         <Footer height={FOOTER_HEIGHT} />
       </Flex>
+      <EagerConnect />
       <SubscriptionExpiredWarning />
-
-      {restrictState && <SubscriptionRestrictModal />}
-      {dialog && <DialogContent data={dialog} />}
-      {!!availableEvents?.length && <Notification />}
-
+      <EventNotification />
+      <GlobalDialog />
+      <SubscriptionRestrict />
+      <ChainRestrict />
       <TraderDetailsDrawer />
       <InitTraderCopying />
       <InitVaultCopying />
       <InitTraderFavorites />
       <PollingUsdPrice />
       <OnboardingModal />
+      <LinkBotAlertModal />
     </>
   )
 }

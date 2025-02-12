@@ -1,17 +1,17 @@
 import { Gear } from '@phosphor-icons/react'
 
+import { useTraderExplorerTableColumns } from 'hooks/store/useTraderCustomizeColumns'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 
 import { tableSettings } from './configs'
-import { useCustomizeColumns } from './useCustomiseColumns'
 
 const REQUIRED_FIELDS = ['account', 'pnl', 'avgRoi', 'winRate']
 
 // TODO: @toanla use the same as perps explorer
 const CustomizeColumn = ({ hasTitle, menuSx = {} }: { hasTitle?: boolean; menuSx?: any }) => {
-  const { visibleColumns, setVisibleColumns } = useCustomizeColumns()
+  const { columnKeys: visibleColumns, setColumnKeys: setVisibleColumns } = useTraderExplorerTableColumns()
   const onChange = (index: number) => {
     const id = tableSettings[index].id
     if (id) {
@@ -39,7 +39,7 @@ const CustomizeColumn = ({ hasTitle, menuSx = {} }: { hasTitle?: boolean; menuSx
           {tableSettings.map((item, index) => {
             const isDisable = REQUIRED_FIELDS.includes(item.id)
             return (
-              <Box mb={2} key={index}>
+              <Box mb={2} key={index} pt={index === 0 ? 2 : 0} sx={{ '.label *': { p: 0 } }}>
                 <ControlledCheckbox
                   disabled={isDisable}
                   checked={visibleColumns.includes(item.id)}

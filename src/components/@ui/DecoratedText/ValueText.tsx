@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 
-import useTraderBalances from 'hooks/features/useTraderBalances'
+import useTraderBalances from 'hooks/features/trader/useTraderBalances'
 import Tooltip from 'theme/Tooltip'
 import { Box, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'

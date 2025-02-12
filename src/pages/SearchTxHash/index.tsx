@@ -20,7 +20,7 @@ import { addressShorten, formatNumber } from 'utils/helpers/format'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 const MAX_WIDTH = 550
-const SearchTxHash = () => {
+const SearchTxHashPage = () => {
   const { sm } = useResponsive()
   const history = useHistory()
   const { txHash } = useParams<{ txHash: string }>()
@@ -147,4 +147,4 @@ const SearchTxHash = () => {
   )
 }
 
-export default SearchTxHash
+export default SearchTxHashPage

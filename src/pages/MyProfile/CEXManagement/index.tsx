@@ -11,7 +11,7 @@ import ListCEXCopyTrades from './ListCEXCopyTrades'
 import Stats from './Stats'
 import useCEXManagementContext, { CEXManagementProvider } from './useCEXManagementContext'
 
-export default function CEXManagement() {
+export default function CEXManagementPage() {
   return (
     <CEXManagementProvider>
       <CEXManagementComponent />
@@ -37,7 +37,13 @@ export function CEXManagementComponent() {
       <ManagementLayout
         balanceMenu={<BalanceMenu />}
         mainSection={<ListCEXCopyTrades expanded={false} />}
-        positionsTable={<OpeningPositions activeWallet={activeWallet} copyWallets={cexWallets} />}
+        positionsTable={
+          <OpeningPositions
+            activeWallet={activeWallet}
+            copyWallets={cexWallets}
+            excludingColumnKeys={['realisedPnl']}
+          />
+        }
         stats={
           <Stats exchange={activeWallet?.exchange ?? CopyTradePlatformEnum.BINGX} copyWalletId={activeWallet?.id} />
         }

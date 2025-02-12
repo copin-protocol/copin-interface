@@ -24,7 +24,7 @@ function CopyRealtimeChart({ position, orders }: Props) {
   const { getSymbolByIndexToken } = useMarketsConfig()
   const symbol = position.pair
     ? getSymbolFromPair(position.pair)
-    : getSymbolByIndexToken({ protocol: position.protocol, indexToken: position.indexToken }) ?? ''
+    : getSymbolByIndexToken?.({ protocol: position.protocol, indexToken: position.indexToken }) ?? ''
   const openBlockTime = useMemo(() => (position ? dayjs(position.createdAt).utc().valueOf() : 0), [position])
   const closeBlockTime = useMemo(() => (position ? dayjs(position.lastOrderAt).utc().valueOf() : 0), [position])
   const isOpening = position?.status === PositionStatusEnum.OPEN

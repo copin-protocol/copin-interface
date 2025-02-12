@@ -197,7 +197,7 @@ function Menu() {
       handleClickLogin()
       return
     }
-    handleGenerateLinkBot()
+    handleGenerateLinkBot?.()
   }
 
   const totalStep = Object.values(checkState ?? {}).length

@@ -147,7 +147,7 @@ export function FilterButton({ resetState }: { resetState: () => void }) {
     handleSetParams({ [urlParamKey]: value })
   }
   const { getListSymbol } = useMarketsConfig()
-  const allPairs = getListSymbol()
+  const allPairs = getListSymbol?.()
 
   const onChangePairs = (pairs: string[], unPairs: string[]) => {
     if (unPairs?.length) {

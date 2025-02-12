@@ -22,7 +22,7 @@ type CloneTraderProps = {
   isVault?: boolean
   copyTradeData: CopyTradeData | undefined
   onDismiss: () => void
-  onSuccess: (trader: string) => void
+  onSuccess: (data?: CopyTradeData) => void
 }
 type DedicatedTraderProps = {
   duplicateToAddress: string
@@ -50,7 +50,7 @@ const CopyTradeCloneForm: CopyTradeCloneFormComponent = ({
         <ToastBody title={<Trans>Success</Trans>} message={<Trans>Clone copy trade has been succeeded</Trans>} />
       )
       onDismiss()
-      onSuccess(data.account)
+      onSuccess(data)
     },
     onError: (err) => {
       toast.error(<ToastBody title={<Trans>Error</Trans>} message={getErrorMessage(err)} />)

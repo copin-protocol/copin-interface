@@ -32,11 +32,7 @@ const CopyManagement = () => {
     }),
     [embbededWalletId]
   )
-  const {
-    data: copyTrades,
-    isLoading: isLoadingCopyTrades,
-    refetch: reloadCopyTrades,
-  } = useQuery(
+  const { data: copyTrades, isLoading: isLoadingCopyTrades } = useQuery(
     [QUERY_KEYS.GET_EMBEDDED_COPY_TRADES, queryParams],
 
     () => getCopyTradeSettingsListApi(queryParams),
@@ -160,7 +156,6 @@ const CopyManagement = () => {
                 copyWallet={embeddedWallet}
                 copyTrades={copyTrades}
                 loading={isLoadingCopyTrades}
-                reload={reloadCopyTrades}
               />
             )}
           </Box>

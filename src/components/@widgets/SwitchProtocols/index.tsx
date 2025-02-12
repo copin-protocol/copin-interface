@@ -13,10 +13,10 @@ import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useDebounce from 'hooks/helpers/useDebounce'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
+import useGlobalStore from 'hooks/store/useGlobalStore'
 import useMyProfile from 'hooks/store/useMyProfile'
 import useProtocolRecentSearch from 'hooks/store/useProtocolRecentSearch'
 import { useProtocolSortByStore } from 'hooks/store/useProtocolSortBy'
-import { useProtocolStore } from 'hooks/store/useProtocols'
 import Dropdown from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
 import { SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
@@ -72,7 +72,7 @@ function SwitchProtocolsComponent({
   const { md, xl } = useResponsive()
   const { myProfile } = useMyProfile()
   const { protocolRecentSearch, addProtocolRecentSearch } = useProtocolRecentSearch()
-  const { protocol } = useProtocolStore()
+  const { protocol } = useGlobalStore()
   const protocolOptions = useGetProtocolOptions()
 
   const currentProtocolOption = protocolOptions.find((option) => option.id === protocol) ?? protocolOptions[0]
@@ -221,7 +221,7 @@ function SwitchProtocolsComponent({
       visible={visible}
       setVisible={setVisible}
     >
-      <ProtocolLogo protocol={protocol} isActive={true} hasText={true} size={28} />
+      {protocol && <ProtocolLogo protocol={protocol} isActive={true} hasText={true} size={28} />}
     </Dropdown>
   )
 }

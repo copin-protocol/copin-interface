@@ -8,17 +8,13 @@ import { CreateTypeWalletEnum } from 'pages/MyProfile/CheckingWalletRenderer'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { DCP_EXCHANGES, LINKS } from 'utils/config/constants'
+import { CEX_EXCHANGES, DCP_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { EXCHANGES_INFO } from 'utils/config/platforms'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
-import CreateBinanceWalletModal from '../CreateWalletModals/CreateBinanceWalletModal'
-import CreateBingXWalletModal from '../CreateWalletModals/CreateBingXWalletModal'
-import CreateBitgetWalletModal from '../CreateWalletModals/CreateBitgetWalletModal'
-import CreateBybitWalletModal from '../CreateWalletModals/CreateBybitWalletModal'
-import CreateGateWalletModal from '../CreateWalletModals/CreateGateWalletModal'
+import CreateCEXWalletModal from '../CreateWalletModals/CreateCEXWalletModal'
 import CreateHyperliquidWalletModal from '../CreateWalletModals/CreateHyperliquidWalletModal'
-import CreateOKXWalletModal from '../CreateWalletModals/CreateOKXWalletModal'
 import CreateSmartWalletModal from '../CreateWalletModals/CreateSmartWalletModal'
 
 export default function CreateWalletAction({ type = CreateTypeWalletEnum.FULL }: { type?: CreateTypeWalletEnum }) {
@@ -33,219 +29,58 @@ export default function CreateWalletAction({ type = CreateTypeWalletEnum.FULL }:
 
   const cexItems = (
     <>
-      <WalletItem
-        exchange={CopyTradePlatformEnum.BINGX}
-        label={<Trans>BingX API</Trans>}
-        description={
-          <Box>
-            <Trans>
-              Link with your BingX account through API key. All your assets and your positions management by BingX.
-              Lowest fee, CEX trading
-            </Trans>
-            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
-              <Type.Caption color="neutral2">
-                <Trans>Don’t have a BingX account?</Trans>
-              </Type.Caption>
-              <ButtonWithIcon
-                type="button"
-                variant="ghostPrimary"
-                as="a"
-                href={LINKS.registerBingX}
-                target="_blank"
-                direction="right"
-                icon={<ArrowSquareOut size={16} />}
-                sx={{ mx: 0, p: 0, fontSize: '12px', lineHeight: '18px' }}
-              >
-                <Trans>Connect</Trans>
-              </ButtonWithIcon>
-            </Flex>
-          </Box>
-        }
-        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BINGX)}
-      />
-      <WalletItem
-        exchange={CopyTradePlatformEnum.BITGET}
-        label={<Trans>Bitget API</Trans>}
-        description={
-          <Box>
-            <Trans>
-              Link with your Bitget account through API key. All your assets and your positions management by Bitget.
-              Lowest fee, CEX trading
-            </Trans>
-            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
-              <Type.Caption color="neutral2">
-                <Trans>Don’t have a Bitget account?</Trans>
-              </Type.Caption>
-              <ButtonWithIcon
-                type="button"
-                variant="ghostPrimary"
-                as="a"
-                href={LINKS.registerBitget}
-                target="_blank"
-                direction="right"
-                icon={<ArrowSquareOut size={16} />}
-                sx={{ mx: 0, p: 0, fontSize: '12px', lineHeight: '18px' }}
-              >
-                <Trans>Connect</Trans>
-              </ButtonWithIcon>
-            </Flex>
-          </Box>
-        }
-        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BITGET)}
-      />
-      <WalletItem
-        exchange={CopyTradePlatformEnum.BYBIT}
-        label={<Trans>Bybit API</Trans>}
-        description={
-          <Box>
-            <Trans>
-              Link with your Bybit account through API key. All your assets and your positions management by Bybit.
-              Lowest fee, CEX trading
-            </Trans>
-            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
-              <Type.Caption color="neutral2">
-                <Trans>Don’t have a Bybit account?</Trans>
-              </Type.Caption>
-              <ButtonWithIcon
-                type="button"
-                variant="ghostPrimary"
-                as="a"
-                href={LINKS.registerBybit}
-                target="_blank"
-                direction="right"
-                icon={<ArrowSquareOut size={16} />}
-                sx={{ mx: 0, p: 0, fontSize: '12px', lineHeight: '18px' }}
-              >
-                <Trans>Connect</Trans>
-              </ButtonWithIcon>
-            </Flex>
-          </Box>
-        }
-        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BYBIT)}
-      />
-      <WalletItem
-        exchange={CopyTradePlatformEnum.OKX}
-        label={<Trans>OKX API</Trans>}
-        description={
-          <Box>
-            <Trans>
-              Link with your OKX account through API key. All your assets and your positions management by OKX. Lowest
-              fee, CEX trading
-            </Trans>
-            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
-              <Type.Caption color="neutral2">
-                <Trans>Don’t have a OKX account?</Trans>
-              </Type.Caption>
-              <ButtonWithIcon
-                type="button"
-                variant="ghostPrimary"
-                as="a"
-                href={LINKS.registerOKX}
-                target="_blank"
-                direction="right"
-                icon={<ArrowSquareOut size={16} />}
-                sx={{ mx: 0, p: 0, fontSize: '12px', lineHeight: '18px' }}
-              >
-                <Trans>Connect</Trans>
-              </ButtonWithIcon>
-            </Flex>
-          </Box>
-        }
-        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.OKX)}
-      />
-      <WalletItem
-        exchange={CopyTradePlatformEnum.GATE}
-        label={<Trans>Gate API</Trans>}
-        description={
-          <Box>
-            <Trans>Link with your Gate account through API key</Trans>
-            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
-              <Type.Caption color="neutral2">
-                <Trans>Don’t have a Gate account?</Trans>
-              </Type.Caption>
-              <ButtonWithIcon
-                type="button"
-                variant="ghostPrimary"
-                as="a"
-                href={LINKS.registerGate}
-                target="_blank"
-                direction="right"
-                icon={<ArrowSquareOut size={16} />}
-                sx={{ mx: 0, p: 0, fontSize: '12px', lineHeight: '18px' }}
-              >
-                <Trans>Connect</Trans>
-              </ButtonWithIcon>
-            </Flex>
-          </Box>
-        }
-        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.GATE)}
-      />
-      <WalletItem
-        exchange={CopyTradePlatformEnum.BINANCE}
-        label={<Trans>Binance API</Trans>}
-        description={
-          <Trans>
-            Link with your Binance account through API key. All your assets and your positions management by Binance.
-            Lowest fee, CEX trading
-          </Trans>
-        }
-        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.BINANCE)}
-      />
-      <WalletItem
-        exchange={CopyTradePlatformEnum.HYPERLIQUID}
-        label={<Trans>Hyperliquid API</Trans>}
-        description={
-          <Box>
-            <Trans>Link with your Hyperliquid account through API key</Trans>
-            <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
-              <Type.Caption color="neutral2">
-                <Trans>Don’t have a Hyperliquid account?</Trans>
-              </Type.Caption>
-              <ButtonWithIcon
-                type="button"
-                variant="ghostPrimary"
-                as="a"
-                href={LINKS.registerHyperliquid}
-                target="_blank"
-                direction="right"
-                icon={<ArrowSquareOut size={16} />}
-                sx={{ mx: 0, p: 0, fontSize: '12px', lineHeight: '18px' }}
-              >
-                <Trans>Connect</Trans>
-              </ButtonWithIcon>
-            </Flex>
-          </Box>
-        }
-        handleClick={() => handleOpenCreateModal(CopyTradePlatformEnum.HYPERLIQUID)}
-      />
+      {CEX_EXCHANGES.map((exchange) => {
+        const exchangeInfo = EXCHANGES_INFO[exchange]
+        return (
+          <WalletItem
+            key={exchange}
+            exchange={exchange}
+            label={<Trans>{exchangeInfo.name} API</Trans>}
+            description={
+              <Box>
+                <Trans>Link with your {exchangeInfo.name} account through API key.</Trans>
+                <Flex sx={{ alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+                  <Type.Caption color="neutral2">
+                    <Trans>Don’t have a {exchangeInfo.name} account?</Trans>
+                  </Type.Caption>
+                  <ButtonWithIcon
+                    type="button"
+                    variant="ghostPrimary"
+                    as="a"
+                    href={exchangeInfo.linkRegister}
+                    target="_blank"
+                    direction="right"
+                    icon={<ArrowSquareOut size={16} />}
+                    sx={{ mx: 0, p: 0, fontSize: '12px', lineHeight: '18px' }}
+                  >
+                    <Trans>Connect</Trans>
+                  </ButtonWithIcon>
+                </Flex>
+              </Box>
+            }
+            handleClick={() => handleOpenCreateModal(exchange)}
+          />
+        )
+      })}
     </>
   )
 
   const dcpItems = (
     <>
-      <WalletItem
-        exchange={CopyTradePlatformEnum.SYNTHETIX_V2}
-        label={<Trans>Synthetix v2 Wallet</Trans>}
-        description={
-          <Trans>An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading</Trans>
-        }
-        handleClick={
-          // () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
-          !loadingCopyWallets ? () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX_V2) : undefined
-        }
-      />
-
-      <WalletItem
-        exchange={CopyTradePlatformEnum.GNS_V8}
-        label={<Trans>gTrade Wallet</Trans>}
-        description={
-          <Trans>An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading</Trans>
-        }
-        handleClick={
-          // () => handleOpenCreateModal(CopyTradePlatformEnum.SYNTHETIX)
-          !loadingCopyWallets ? () => handleOpenCreateModal(CopyTradePlatformEnum.GNS_V8) : undefined
-        }
-      />
+      {DCP_EXCHANGES.map((exchange) => {
+        const exchangeInfo = EXCHANGES_INFO[exchange]
+        return (
+          <WalletItem
+            key={exchange}
+            exchange={exchange}
+            label={<Trans>{exchangeInfo.name} Wallet</Trans>}
+            description={
+              <Trans>An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading</Trans>
+            }
+            handleClick={!loadingCopyWallets ? () => handleOpenCreateModal(exchange) : undefined}
+          />
+        )
+      })}
     </>
   )
 
@@ -258,7 +93,7 @@ export default function CreateWalletAction({ type = CreateTypeWalletEnum.FULL }:
         exchange={currentExchange}
         onDismiss={() => {
           setOpenCreateModal(false)
-          reloadCopyWallets()
+          reloadCopyWallets?.()
         }}
       />
     </>
@@ -278,22 +113,12 @@ export function CreateWalletModal({
   let Modal = null
   switch (exchange) {
     case CopyTradePlatformEnum.BINGX:
-      Modal = CreateBingXWalletModal
-      break
     case CopyTradePlatformEnum.BITGET:
-      Modal = CreateBitgetWalletModal
-      break
     case CopyTradePlatformEnum.BINANCE:
-      Modal = CreateBinanceWalletModal
-      break
     case CopyTradePlatformEnum.BYBIT:
-      Modal = CreateBybitWalletModal
-      break
     case CopyTradePlatformEnum.OKX:
-      Modal = CreateOKXWalletModal
-      break
     case CopyTradePlatformEnum.GATE:
-      Modal = CreateGateWalletModal
+      Modal = CreateCEXWalletModal
       break
     case CopyTradePlatformEnum.SYNTHETIX_V2:
     case CopyTradePlatformEnum.GNS_V8:
@@ -304,7 +129,7 @@ export function CreateWalletModal({
       break
   }
   if (!Modal || !isOpen) return null
-  return <Modal isOpen={isOpen} onDismiss={onDismiss} platform={exchange} />
+  return <Modal isOpen={isOpen} onDismiss={onDismiss} exchange={exchange} />
 }
 
 interface WalletItemProps {

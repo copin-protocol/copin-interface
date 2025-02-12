@@ -1,8 +1,7 @@
 import axios from 'axios'
 
+import { HlAccountData, HlOrderFillRawData, HlOrderRawData } from 'entities/hyperliquid'
 import { HYPERLIQUID_BUILDER_CODE } from 'utils/config/constants'
-
-import { HlAccountData, HlOrderRawData } from '../entities/hyperliquid'
 
 export async function checkUserApproveBuilderFees(user: string) {
   return axios
@@ -30,4 +29,13 @@ export async function getHlOpenOrders({ user }: { user: string }) {
       user,
     })
     .then((res: any) => res.data as HlOrderRawData[])
+}
+
+export async function getHlOrderFilled({ user }: { user: string }) {
+  return axios
+    .post(`https://api.hyperliquid.xyz/info`, {
+      type: 'userFills',
+      user,
+    })
+    .then((res: any) => res.data as HlOrderFillRawData[])
 }

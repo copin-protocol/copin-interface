@@ -9,8 +9,8 @@ import 'react-edit-text/dist/index.css'
 import TitleWithIcon from 'components/@ui/TilleWithIcon'
 import ReferralStatus from 'components/@wallet/WalletReferralStatus'
 import { CopyWalletData } from 'entities/copyWallet'
-import useCheckHyperliquidBuilderFees from 'hooks/features/useCheckHyperliquidBuilderFees'
-import useWalletFund from 'hooks/features/useWalletFundSnxV2'
+import useCheckHyperliquidBuilderFees from 'hooks/features/copyTrade/useCheckHyperliquidBuilderFees'
+import useWalletFund from 'hooks/features/copyTrade/useWalletFundSnxV2'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -29,7 +29,7 @@ import WalletInfo from './WalletInfo'
 
 interface WalletDetailsProps {
   data: CopyWalletData
-  reload: () => void
+  reload: (() => void) | undefined
   hasBorderTop?: boolean
   hiddenBalance?: boolean
   handleUpdate: (params: {

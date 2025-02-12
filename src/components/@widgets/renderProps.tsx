@@ -46,7 +46,9 @@ function EntryComponent({
 }) {
   const { getSymbolByIndexToken } = useMarketsConfig()
   if (!data || !data.protocol) return <></>
-  const symbol = data.pair ? getSymbolFromPair(data.pair) : getSymbolByIndexToken({ indexToken: data.indexToken }) ?? ''
+  const symbol = data.pair
+    ? getSymbolFromPair(data.pair)
+    : getSymbolByIndexToken?.({ indexToken: data.indexToken }) ?? ''
 
   return (
     <Flex
@@ -76,7 +78,9 @@ export function renderCopyEntry(data: CopyPositionData | undefined, textSx?: Tex
 function CopyEntryComponent({ data, textSx }: { data: CopyPositionData | undefined; textSx?: TextProps }) {
   const { getSymbolByIndexToken } = useMarketsConfig()
   if (!data || !data.protocol) return <></>
-  const symbol = data.pair ? getSymbolFromPair(data.pair) : getSymbolByIndexToken({ indexToken: data.indexToken }) ?? ''
+  const symbol = data.pair
+    ? getSymbolFromPair(data.pair)
+    : getSymbolByIndexToken?.({ indexToken: data.indexToken }) ?? ''
   return (
     <Flex
       sx={{
@@ -196,7 +200,7 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
   // Todo: Check calc for value in rewards
   const symbol = data.pair
     ? getSymbolFromPair(data.pair)
-    : data.indexToken
+    : data.indexToken && getSymbolByIndexToken
     ? getSymbolByIndexToken({ indexToken: data.indexToken }) ?? ''
     : ''
   const marketPrice = prices[symbol] ?? 0
@@ -301,7 +305,7 @@ function OpeningPnLComponent({ data, prices, ignoreFee, sx }: OpeningPnLComponen
   // Todo: Check calc for value in rewards
   const symbol = data.pair
     ? getSymbolFromPair(data.pair)
-    : data.indexToken
+    : data.indexToken && getSymbolByIndexToken
     ? getSymbolByIndexToken({ indexToken: data.indexToken }) ?? ''
     : ''
   const marketPrice = prices[symbol]
@@ -355,7 +359,7 @@ function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponen
   // Todo: Check calc for value in rewards
   const symbol = data.pair
     ? getSymbolFromPair(data.pair)
-    : data.indexToken
+    : data.indexToken && getSymbolByIndexToken
     ? getSymbolByIndexToken({ indexToken: data.indexToken }) ?? ''
     : ''
   const marketPrice = prices[symbol]
@@ -455,6 +459,6 @@ export function SymbolComponent({
 }) {
   const { getSymbolByIndexToken } = useMarketsConfig()
   if (!pair && !indexToken) return <></>
-  const symbol = pair ? getSymbolFromPair(pair) : getSymbolByIndexToken({ protocol, indexToken }) ?? ''
+  const symbol = pair ? getSymbolFromPair(pair) : getSymbolByIndexToken?.({ protocol, indexToken }) ?? ''
   return <span>{symbol}</span>
 }

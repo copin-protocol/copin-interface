@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 
 import IconEye from 'assets/icons/ic-eye.svg'
@@ -10,6 +10,7 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
+import ROUTES from 'utils/config/routes'
 import { addressShorten } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
@@ -25,7 +26,6 @@ export default function TraderCopyAddress({
     isLink = true,
     size = 24,
     dividerColor = 'neutral4',
-    hasHover = true,
     hasCopyAddress = false,
     hasAddressTooltip = false,
     hasCopyCountWarningIcon = false,
@@ -35,6 +35,7 @@ export default function TraderCopyAddress({
     maxCopyVolume,
     isRef,
     plan,
+    enabledQuickView = true,
   } = {},
 }: {
   address: string
@@ -45,7 +46,6 @@ export default function TraderCopyAddress({
     isLink?: boolean
     size?: number
     dividerColor?: string
-    hasHover?: boolean
     hasCopyAddress?: boolean
     hasAddressTooltip?: boolean
     hasCopyCountWarningIcon?: boolean
@@ -55,11 +55,18 @@ export default function TraderCopyAddress({
     maxCopyVolume?: number
     isRef?: boolean
     plan?: SubscriptionPlanEnum
+    enabledQuickView?: boolean
   }
 }) {
   const tooltipId = uuid()
+  const { pathname } = useLocation()
+  const params = useParams<{ address: string }>()
 
   const { setTrader } = useQuickViewTraderStore()
+
+  const enabledLink =
+    isLink &&
+    !(params?.address?.toLowerCase() === address?.toLowerCase() && pathname.includes(ROUTES.TRADER_DETAILS.path_prefix))
 
   return (
     <Flex sx={{ alignItems: 'center', '& > *': { flexShrink: 0 }, gap: 1 }}>
@@ -68,7 +75,7 @@ export default function TraderCopyAddress({
           width={size}
           height={size}
           sx={{
-            '&:hover': hasHover
+            '&:hover': enabledQuickView
               ? {
                   cursor: 'pointer',
                   backgroundImage: `url(${IconEye})`,
@@ -79,6 +86,7 @@ export default function TraderCopyAddress({
               : {},
           }}
           onClick={(event) => {
+            if (!enabledQuickView) return
             event.preventDefault()
             event.stopPropagation()
             if (protocol) {
@@ -86,13 +94,13 @@ export default function TraderCopyAddress({
             }
           }}
         >
-          <AddressAvatar address={address} size={size} sx={{ '&:hover': hasHover ? { opacity: 0.25 } : {} }} />
+          <AddressAvatar address={address} size={size} sx={{ '&:hover': enabledQuickView ? { opacity: 0.25 } : {} }} />
         </Box>
         <Flex
           //@ts-ignore
-          as={isLink && protocol ? Link : undefined}
-          to={isLink && protocol ? generateTraderMultiExchangeRoute({ protocol, address }) : undefined}
-          onClick={(e) => isLink && e.stopPropagation()}
+          as={enabledLink && protocol ? Link : undefined}
+          to={enabledLink && protocol ? generateTraderMultiExchangeRoute({ protocol, address }) : undefined}
+          onClick={(e) => enabledLink && e.stopPropagation()}
           alignItems="center"
           sx={{ gap: 1 }}
         >
@@ -104,7 +112,7 @@ export default function TraderCopyAddress({
             sx={{
               flexShrink: 0,
               color: 'neutral1',
-              ':hover': { textDecoration: isLink ? 'underline' : undefined },
+              ':hover': { textDecoration: enabledLink ? 'underline' : undefined },
               minWidth: 74,
               ...textSx,
             }}

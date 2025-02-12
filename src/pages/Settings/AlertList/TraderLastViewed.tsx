@@ -90,7 +90,7 @@ export default function TraderLastViewed() {
       return
     }
     if (!botAlert?.chatId) {
-      handleGenerateLinkBot()
+      handleGenerateLinkBot?.()
       return
     }
     createTraderAlert({ address, protocol })

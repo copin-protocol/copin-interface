@@ -19,7 +19,7 @@ export function usePlotOrderMarker({ chart, position, orders }: Props) {
   const { getSymbolByIndexToken } = useMarketsConfig()
 
   const symbol = position?.indexToken
-    ? getSymbolByIndexToken({ protocol: position.protocol, indexToken: position.indexToken })
+    ? getSymbolByIndexToken?.({ protocol: position.protocol, indexToken: position.indexToken }) ?? 'UNKNOWN'
     : 'UNKNOWN'
 
   React.useEffect(() => {

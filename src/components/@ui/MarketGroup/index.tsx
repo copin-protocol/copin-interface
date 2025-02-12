@@ -33,7 +33,7 @@ export default function MarketGroup({
   const tooltipId = useMemo(() => uuid(), [])
   const _symbols = symbols
     ? symbols
-    : indexTokens && protocol
+    : indexTokens && protocol && getListSymbolByListIndexToken
     ? getListSymbolByListIndexToken({ protocol, listIndexToken: indexTokens })
     : []
   const numberOfAddress = _symbols ? _symbols.length : indexTokens?.length
@@ -131,7 +131,7 @@ export function MarketGroupFull({
   if (!numberOfAddress) return <></>
   const _symbols = symbols
     ? symbols
-    : indexTokens && protocol
+    : indexTokens && protocol && getListSymbolByListIndexToken
     ? getListSymbolByListIndexToken({ protocol, listIndexToken: indexTokens })
     : []
   return (

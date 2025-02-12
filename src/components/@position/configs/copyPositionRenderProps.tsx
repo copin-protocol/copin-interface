@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 
+import { renderCopyWalletLabel } from 'components/@copyTrade/renderProps/copyTradeColumns'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import Divider from 'components/@ui/Divider'
@@ -17,25 +18,14 @@ import SkullIcon from 'theme/Icons/SkullIcon'
 import Loading from 'theme/Loading'
 import ProgressBar from 'theme/ProgressBar'
 import Tag from 'theme/Tag'
-import { Box, Flex, Image, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT, GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
-import {
-  calcCopyLiquidatePrice,
-  calcCopyOpeningPnL,
-  calcCopyOpeningROI,
-  calcRiskPercent,
-} from 'utils/helpers/calculate'
+import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
-import {
-  getSymbolFromPair,
-  normalizeExchangePrice,
-  parseColorByValue,
-  parseExchangeImage,
-  parseWalletName,
-} from 'utils/helpers/transform'
+import { getSymbolFromPair, normalizeExchangePrice, parseColorByValue, parseWalletName } from 'utils/helpers/transform'
 
 export const renderCopyWallet = (data: CopyPositionData, _: number | undefined, externalSource: any) => {
   let walletName = '--'
@@ -59,18 +49,7 @@ export const renderCopyWallet = (data: CopyPositionData, _: number | undefined, 
       }
     }
   }
-  return (
-    <Flex sx={{ alignItems: 'center', gap: 2 }}>
-      <Type.Caption
-        color="neutral1"
-        sx={{ maxWidth: '84px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-      >
-        {walletName}
-      </Type.Caption>
-      <VerticalDivider />
-      {data.exchange && <Image src={parseExchangeImage(data.exchange)} width={20} height={20} />}
-    </Flex>
-  )
+  return renderCopyWalletLabel({ walletName, exchange: data.exchange })
 }
 
 export const renderCopyTitle = (data: CopyPositionData) => (

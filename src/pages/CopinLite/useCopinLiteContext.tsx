@@ -3,7 +3,7 @@ import { useQuery } from 'react-query'
 
 import { getCopyTradeSettingsListApi } from 'apis/copyTradeApis'
 import { CopyTradeData } from 'entities/copyTrade'
-import useCopyTraderAddresses from 'hooks/features/useCopyTraderAddresses'
+import useCopyTraderAddresses from 'hooks/features/copyTrade/useCopyTraderAddresses'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { QUERY_KEYS } from 'utils/config/keys'
 

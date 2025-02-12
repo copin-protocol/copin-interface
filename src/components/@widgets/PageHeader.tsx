@@ -1,4 +1,3 @@
-import { useResponsive } from 'ahooks'
 import { ComponentType, ReactNode } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
@@ -31,34 +30,10 @@ export default function PageHeader({
   useNewCode?: boolean
 }) {
   const { selectedProtocols, checkIsProtocolChecked, handleToggleProtocol, setSelectedProtocols } = useTradersContext()
-  const { md } = useResponsive()
 
   const isInternal = useInternalRole()
   const protocolOptions = useGetProtocolOptions()
   const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
-
-  const renderProtocolSelection = () => {
-    if (useNewCode) {
-      return (
-        <ProtocolFilter
-          selectedProtocols={selectedProtocols}
-          checkIsProtocolChecked={checkIsProtocolChecked}
-          handleToggleProtocol={handleToggleProtocol}
-          setSelectedProtocols={setSelectedProtocols}
-          allowList={allowList}
-        />
-      )
-    }
-
-    {
-      /*TODO: REMOVE OLD CODE LATER */
-    }
-    return routeSwitchProtocol ? (
-      <RouteSwitchProtocol keepSearch={keepSearchOnSwitchProtocol} />
-    ) : (
-      <HomeSwitchProtocols buttonSx={{ border: 'none', borderLeft: 'small', borderLeftColor: 'neutral4' }} />
-    )
-  }
 
   return (
     <>
@@ -79,17 +54,20 @@ export default function PageHeader({
         }}
       >
         <PageTitle icon={Icon} title={headerText} />
-        {/* {showSelectProtocol && (
-          <>
-            {routeSwitchProtocol ? (
-              <RouteSwitchProtocol keepSearch={keepSearchOnSwitchProtocol} />
-            ) : (
-              <HomeSwitchProtocols buttonSx={{ border: 'none', borderLeft: 'small', borderLeftColor: 'neutral4' }} />
-            )}
-          </>
-        )} */}
-
-        {showSelectProtocol && renderProtocolSelection()}
+        {showSelectProtocol &&
+          (useNewCode ? (
+            <ProtocolFilter
+              selectedProtocols={selectedProtocols}
+              checkIsProtocolChecked={checkIsProtocolChecked}
+              handleToggleProtocol={handleToggleProtocol}
+              setSelectedProtocols={setSelectedProtocols}
+              allowList={allowList}
+            />
+          ) : routeSwitchProtocol ? (
+            <RouteSwitchProtocol keepSearch={keepSearchOnSwitchProtocol} />
+          ) : (
+            <HomeSwitchProtocols buttonSx={{ border: 'none', borderLeft: 'small', borderLeftColor: 'neutral4' }} />
+          ))}
       </Box>
     </>
   )

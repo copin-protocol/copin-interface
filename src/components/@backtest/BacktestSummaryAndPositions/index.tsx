@@ -237,7 +237,7 @@ const columns: ColumnData<SimulatorPosition>[] = [
     title: 'Entry',
     dataIndex: undefined,
     key: undefined,
-    style: { minWidth: '130px' },
+    style: { minWidth: '150px' },
     render: (item) => renderEntry(item?.position),
   },
   {

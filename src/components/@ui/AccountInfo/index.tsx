@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid'
 import IconEye from 'assets/icons/ic-eye.svg'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
-import { useProtocolStore } from 'hooks/store/useProtocols'
+import useGlobalStore from 'hooks/store/useGlobalStore'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 // import CopyButton from 'theme/Buttons/CopyButton'
@@ -46,7 +46,7 @@ export function AccountInfo({
 }) {
   const protocolTooltipId = uuid()
   const { setTrader } = useQuickViewTraderStore()
-  const { protocol: defaultProtocol } = useProtocolStore()
+  const { protocol: defaultProtocol } = useGlobalStore()
   protocol = protocol ?? defaultProtocol
   const { isCopying } = useTraderCopying(address, protocol)
 

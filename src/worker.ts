@@ -5,8 +5,8 @@ import axiosRetry from 'axios-retry'
 import { MarketsData } from 'entities/markets'
 import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { NETWORK } from 'utils/config/constants'
-import { SPECIAL_MARKET_CONFIG_MAPPING } from 'utils/config/marketConfig'
 import { PYTH_IDS_MAPPING } from 'utils/config/pythIds'
+import { PROTOCOL_PRICE_MULTIPLE_MAPPING } from 'utils/helpers/transform'
 import { WorkerMessage } from 'utils/types'
 
 const ports: MessagePort[] = []
@@ -49,7 +49,7 @@ const processPriceFeed = (priceFeed: PriceFeed, pricesData: UsdPrices) => {
   if (!data?.length) return pricesData
   data.forEach((parsedData) => {
     const symbol = parsedData.symbol
-    const multipleRatio = SPECIAL_MARKET_CONFIG_MAPPING[symbol]?.multiple ?? 1
+    const multipleRatio = PROTOCOL_PRICE_MULTIPLE_MAPPING[symbol]?.multiple ?? 1
     pricesData[symbol] = parsedData.value * multipleRatio
   })
   return pricesData
@@ -112,7 +112,7 @@ async function initPythWebsocket() {
       if (!data?.length) return
       data.forEach((parsedData) => {
         const symbol = parsedData.symbol
-        const multipleRatio = SPECIAL_MARKET_CONFIG_MAPPING[symbol]?.multiple ?? 1
+        const multipleRatio = PROTOCOL_PRICE_MULTIPLE_MAPPING[symbol]?.multiple ?? 1
         pricesData[symbol] = parsedData.value * multipleRatio
         const publishTime = priceFeed?.getPriceNoOlderThan?.(60)?.publishTime ?? 0
         if (publishTime >= lastUpdate + INTERVAL_TIME) {

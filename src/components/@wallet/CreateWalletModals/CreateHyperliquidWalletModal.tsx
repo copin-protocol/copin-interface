@@ -26,8 +26,9 @@ import { addressShorten } from 'utils/helpers/format'
 import { ARBITRUM_MAINNET } from 'utils/web3/chains'
 import { signTypedData } from 'utils/web3/wallet'
 
-import HyperliquidHelp from './WalletHelpHyperliquid'
+import WalletHelpCEX from './WalletHelpCEX'
 import { HyperliquidWalletFormValues, defaultFormValues, hyperliquidWalletFormSchema } from './hyperliquidSchema'
+
 
 export default function CreateHyperliquidWalletModal({
   isOpen,
@@ -63,7 +64,7 @@ export default function CreateHyperliquidWalletModal({
     onSuccess: () => {
       toast.success(<ToastBody title={<Trans>Success</Trans>} message={<Trans>Create wallet successful!</Trans>} />)
       onDismiss()
-      reloadCopyWallets()
+      reloadCopyWallets?.()
     },
     onError: (error: any) => {
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
@@ -221,7 +222,7 @@ export default function CreateHyperliquidWalletModal({
 
             <Divider />
 
-            <HyperliquidHelp />
+            <WalletHelpCEX exchange={CopyTradePlatformEnum.HYPERLIQUID} />
 
             <Box>
               <Checkbox checked={!!signatureData} onClick={handleAccept}>

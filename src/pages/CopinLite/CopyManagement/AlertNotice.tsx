@@ -23,7 +23,7 @@ export default function AlertNotice() {
         <Type.Caption>
           <Trans>
             You are not yet linked to telegram to receive Alerts.{' '}
-            <Button variant="textPrimary" onClick={() => handleGenerateLinkBot()}>
+            <Button variant="textPrimary" onClick={() => handleGenerateLinkBot?.()}>
               Click To Connect
             </Button>
           </Trans>

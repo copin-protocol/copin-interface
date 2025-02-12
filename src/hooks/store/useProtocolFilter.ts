@@ -6,7 +6,7 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { compareTwoArrays } from 'utils/helpers/common'
-import { convertProtocolToParams } from 'utils/helpers/graphql'
+import { convertProtocolToParams } from 'utils/helpers/protocol'
 
 interface ProtocolFilterState {
   selectedProtocols: ProtocolEnum[]

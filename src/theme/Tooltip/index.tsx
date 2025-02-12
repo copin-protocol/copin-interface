@@ -8,6 +8,7 @@ function Tooltip(props: ComponentProps<typeof ReactTooltip>) {
     <ReactTooltip
       variant="dark"
       place="top"
+      globalCloseEvents={{ scroll: true }}
       positionStrategy="fixed"
       className="custom_react_tooltip_css"
       classNameArrow={

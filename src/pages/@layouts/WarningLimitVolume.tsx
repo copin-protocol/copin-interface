@@ -1,9 +1,9 @@
 import { createGlobalStyle } from 'styled-components/macro'
 
-import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
+import useAllCopyTrades from 'hooks/features/copyTrade/useAllCopyTrades'
 import { VOLUME_LIMIT } from 'utils/config/constants'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
-import { DATA_ATTRIBUTES, ELEMENT_IDS } from 'utils/config/keys'
+import { DATA_ATTRIBUTES } from 'utils/config/keys'
 
 // Deprecate
 export default function WarningLimitVolume() {

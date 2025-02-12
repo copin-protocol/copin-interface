@@ -39,7 +39,7 @@ export function usePlotPositionInformation({ chart, position, orders }: Props) {
   )
   const { getSymbolByIndexToken } = useMarketsConfig()
   const symbol = position
-    ? getSymbolByIndexToken({ protocol: position.protocol, indexToken: position.indexToken })
+    ? getSymbolByIndexToken?.({ protocol: position.protocol, indexToken: position.indexToken }) ?? 'UNKNOWN'
     : 'UNKNOWN'
 
   React.useEffect(() => {

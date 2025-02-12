@@ -42,4 +42,6 @@ export interface ApiKeyWallet {
   secretKey?: string
   embeddedWallet?: string
   passPhrase?: string
+  isEmbedded?: boolean
+  verified?: boolean
 }

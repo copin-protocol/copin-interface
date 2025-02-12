@@ -9,7 +9,7 @@ import ConfirmModal from 'components/@ui/ConfirmModal'
 import ToastBody from 'components/@ui/ToastBody'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { PositionData } from 'entities/trader'
-import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
+import useAllCopyTrades from 'hooks/features/copyTrade/useAllCopyTrades'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { PositionStatusEnum } from 'utils/config/enums'
@@ -128,7 +128,7 @@ export default function CopyPositionsContainer({
           size: data.totalSizeDelta ?? 0,
           symbol: data.pair ?? '',
         })
-        reloadEmbeddedWalletInfo()
+        reloadEmbeddedWalletInfo?.()
       }
 
       setConfirmModal(undefined)

@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { ComponentProps, ReactNode, useState } from 'react'
 
-import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
-import { useCheckCopyTradeAction } from 'hooks/features/useSubscriptionRestrict'
+import useCopyTradePermission from 'hooks/features/copyTrade/useCopyTradePermission'
+import { useCheckCopyTradeAction } from 'hooks/features/subscription/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import Tooltip from 'theme/Tooltip'

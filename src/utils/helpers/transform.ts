@@ -324,7 +324,7 @@ export function getProtocolDropdownImage({
 }
 
 // TODO: Check when add new pairs
-const PROTOCOL_PRICE_MULTIPLE_MAPPING: Record<string, { originalSymbol: string; multiple: number }> = {
+export const PROTOCOL_PRICE_MULTIPLE_MAPPING: Record<string, { originalSymbol: string; multiple: number }> = {
   '1000PEPE': { originalSymbol: 'PEPE', multiple: 1_000 },
   kPEPE: { originalSymbol: 'PEPE', multiple: 1_000 },
   '1000BONK': { originalSymbol: 'BONK', multiple: 1_000 },
@@ -350,7 +350,9 @@ const PROTOCOL_PRICE_MULTIPLE_MAPPING: Record<string, { originalSymbol: string; 
   '1000WHY': { originalSymbol: 'SATS', multiple: 1_000 },
   '1000X': { originalSymbol: 'X', multiple: 1_000 },
   '1000XEC': { originalSymbol: 'XEC', multiple: 1_000 },
+  '1000NEIRO': { originalSymbol: 'NEIRO', multiple: 1_000 },
 }
+
 export function normalizeProtocolPrice({ symbol, price }: { symbol: string | undefined; price: number | undefined }): {
   originalSymbol: string
   originalPrice: number

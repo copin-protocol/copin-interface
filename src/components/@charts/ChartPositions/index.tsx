@@ -75,7 +75,7 @@ export default function ChartPositions({
       positions.filter((e) =>
         hasAllTokens
           ? e.indexToken === positions[0].indexToken
-          : !!getSymbolByIndexToken({ protocol, indexToken: e.indexToken })
+          : !!getSymbolByIndexToken?.({ protocol, indexToken: e.indexToken })
       )) ||
     []
 
@@ -329,6 +329,7 @@ export default function ChartPositions({
       width="100%"
       height="100%"
       sx={{ position: 'relative', overflow: 'hidden', ...(sx ?? {}) }}
+      className="chart-positions__wrapper"
     >
       {/*<div id={legendId} />*/}
       {/*<div id={tooltipId} />*/}

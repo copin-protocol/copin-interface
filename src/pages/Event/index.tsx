@@ -8,7 +8,7 @@ import banner from 'assets/images/event-banner.png'
 import ActiveDot from 'components/@ui/ActiveDot'
 import RewardWithSymbol from 'components/@ui/RewardWithSymbol'
 import { EventDetailsData, TradingEventStatusEnum } from 'entities/event'
-import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { BodyWrapperMobile, BottomWrapperMobile } from 'pages/@layouts/Components'
 import { Button } from 'theme/Buttons'
@@ -24,7 +24,7 @@ import { generateEventDetailsRoute } from 'utils/helpers/generateRoute'
 import ShareEventButton from './ShareEventButton'
 
 export default function EventPage() {
-  const { events } = useSystemConfigContext()
+  const { events } = useSystemConfigStore()
   const { md } = useResponsive()
   if (!events?.length) return null
   const Events = md ? DesktopEvents : MobileEvents

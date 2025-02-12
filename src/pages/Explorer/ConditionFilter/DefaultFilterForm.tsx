@@ -31,7 +31,7 @@ export default function DefaultFilterForm({
 }) {
   const [formValues, setFormValues] = useState(defaultFormValues)
   const { myProfile } = useMyProfile()
-  const { timeOption, protocol, setCurrentSuggestion, selectedProtocols } = useTradersContext()
+  const { timeOption, setCurrentSuggestion, selectedProtocols } = useTradersContext()
   const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues })
   const [enableApply, setEnableApply] = useState(false)
 
@@ -63,7 +63,7 @@ export default function DefaultFilterForm({
         action: EVENT_ACTIONS[EventCategory.FILTER].NORMAL,
         label: getUserForTracking(myProfile?.username),
       },
-      { protocol, data: JSON.stringify(formValues) }
+      { selectedProtocols: selectedProtocols.join('-'), data: JSON.stringify(formValues) }
     )
   }
 
@@ -81,7 +81,7 @@ export default function DefaultFilterForm({
         action: EVENT_ACTIONS[EventCategory.FILTER].RESET_DEFAULT,
         label: getUserForTracking(myProfile?.username),
       },
-      { protocol }
+      { selectedProtocols: selectedProtocols.join('-') }
     )
   }
 

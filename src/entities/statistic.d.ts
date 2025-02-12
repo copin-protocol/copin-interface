@@ -75,6 +75,7 @@ export interface MarketStatData {
 export type ProtocolsStatisticData = {
   [key in ProtocolEnum]: {
     traders: number
+    traders30: number
     oi: number
   }
 }

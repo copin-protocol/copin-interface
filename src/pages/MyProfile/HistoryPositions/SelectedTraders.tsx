@@ -2,7 +2,7 @@ import { useResponsive } from 'ahooks'
 import isEqual from 'lodash/isEqual'
 import { useEffect, useRef } from 'react'
 
-import useCopyTraderAddresses from 'hooks/features/useCopyTraderAddresses'
+import useCopyTraderAddresses from 'hooks/features/copyTrade/useCopyTraderAddresses'
 
 import { SelectTradersCopiedDropdown } from '../SelectTradersCopied'
 import { DispatchSelectTraders } from './useFilterHistory'

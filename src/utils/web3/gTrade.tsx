@@ -1,11 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import useWebSocket from 'react-use-websocket'
 
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
-import { useParsedProtocol } from 'hooks/store/useProtocols'
 import { UsdPrices, useRealtimeUsdPricesStore } from 'hooks/store/useUsdPrices'
-import { GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 
@@ -23,15 +21,15 @@ const INCLUDE_PATH = [
   ROUTES.MY_HISTORY.path,
 ]
 
-export default function GainsTradeConnection() {
+const GainsTradeConnection = memo(function GainsTradeConnectionComponent() {
   const { setGainsPrices, setIsReady, gainsPrices } = useRealtimeUsdPricesStore()
   const { getSymbolByIndexToken } = useMarketsConfig()
   const { pathname } = useLocation()
   const lastLogTime = useRef(Date.now())
-  const protocol = useParsedProtocol()
-  const isGains =
-    GAINS_TRADE_PROTOCOLS.some((protocol) => !!pathname.match(protocol)?.length) ||
-    GAINS_TRADE_PROTOCOLS.includes(protocol)
+  // const protocol = useParsedProtocol()
+  // const isGains =
+  //   GAINS_TRADE_PROTOCOLS.some((protocol) => !!pathname.match(protocol)?.length) ||
+  //   GAINS_TRADE_PROTOCOLS.includes(protocol)
 
   const { readyState, getWebSocket } = useWebSocket(GAINS_TRADE_PRICE_FEED_URL, {
     onOpen: () => console.log('gTrade price feed connection opened.'),
@@ -39,7 +37,7 @@ export default function GainsTradeConnection() {
     shouldReconnect: (closeEvent: any) => true,
     onMessage: (event: WebSocketEventMap['message']) => {
       try {
-        if (!isGains) return
+        // if (!isGains) return
         const currentTime = Date.now()
         if (currentTime - lastLogTime.current >= INTERVAL_TIME) {
           const data = JSON.parse(event.data)
@@ -49,7 +47,7 @@ export default function GainsTradeConnection() {
           for (let i = 0; i < data.length; i += 2) {
             const pairIndex = data[i]
             const price = data[i + 1]
-            const symbol = getSymbolByIndexToken({
+            const symbol = getSymbolByIndexToken?.({
               protocol: ProtocolEnum.GNS,
               indexToken: `${ProtocolEnum.GNS}-${pairIndex}`,
             })
@@ -80,7 +78,7 @@ export default function GainsTradeConnection() {
           const initialCache = await fetch('https://backend-pricing.eu.gains.trade/charts').then((res) => res.json())
           if (initialCache && initialCache.closes) {
             initialCache.closes.forEach((price: number, index: number) => {
-              const symbol = getSymbolByIndexToken({
+              const symbol = getSymbolByIndexToken?.({
                 protocol: ProtocolEnum.GNS,
                 indexToken: `${ProtocolEnum.GNS}-${index}`,
               })
@@ -91,7 +89,8 @@ export default function GainsTradeConnection() {
           }
         }
 
-        if ((!gainsPrices || Object.values(gainsPrices).length === 0) && isGains) {
+        // if ((!gainsPrices || Object.values(gainsPrices).length === 0) && isGains) {
+        if (!gainsPrices || Object.values(gainsPrices).length === 0) {
           await fetchAndProcessPriceFeeds()
         }
 
@@ -100,7 +99,7 @@ export default function GainsTradeConnection() {
 
       setIsReady(true)
     }
-  }, [pathname, protocol, isGains, getSymbolByIndexToken])
+  }, [pathname, getSymbolByIndexToken])
 
   useEffect(() => {
     return () => {
@@ -112,4 +111,26 @@ export default function GainsTradeConnection() {
   }, [])
 
   return null
-}
+})
+
+export default GainsTradeConnection
+
+// export function useParsedProtocol() {
+//   const { search, pathname } = useLocation()
+//   const searchParams = parsedQueryString(search)
+
+//   // Old protocol route: /{protocol}/...
+//   const parsedOldProtocolParam = RELEASED_PROTOCOLS.find(
+//     (protocol) => pathname.split('/')?.[1]?.toUpperCase() === protocol
+//   )
+//   // New protocol route: .../{protocol}
+//   const parsedProtocolParam = RELEASED_PROTOCOLS.find(
+//     (protocol) => pathname.split('/')?.at(-1)?.split('-')?.[0]?.toUpperCase() === protocol
+//   )
+//   // from search params, use at home page
+//   const parsedProtocolSearch = RELEASED_PROTOCOLS.find(
+//     (protocol) => (searchParams.protocol as string)?.toUpperCase() === protocol
+//   )
+
+//   return parsedOldProtocolParam ?? parsedProtocolParam ?? parsedProtocolSearch ?? DEFAULT_PROTOCOL
+// }

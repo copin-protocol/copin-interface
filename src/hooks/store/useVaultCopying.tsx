@@ -2,11 +2,10 @@ import { memo, useEffect } from 'react'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
+import useVaultCopyTrades from 'hooks/features/copyTrade/useVaultCopyTrades'
 import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
-
-import useVaultCopyTrades from '../features/useVaultCopyTrades'
 
 type VaultCopying = Record<string, Record<string, string[]>>
 

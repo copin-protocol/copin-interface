@@ -34,7 +34,7 @@ export const ControlledCheckbox = forwardRef(
           {children}
         </Wrapper>
         {label && (
-          <Type.Caption sx={{ cursor: disabled ? 'not-allowed' : 'pointer', ...labelSx }}>
+          <Type.Caption className="label" sx={{ cursor: disabled ? 'not-allowed' : 'pointer', ...labelSx }}>
             <label style={{ cursor: 'inherit' }} htmlFor={`checkbox_${uuid}`}>
               {label}
             </label>

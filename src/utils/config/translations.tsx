@@ -89,8 +89,8 @@ export const COPY_WALLET_TRANS: ObjectTrans = {
   [CopyTradePlatformEnum.OKX]: 'OKX',
   [CopyTradePlatformEnum.GATE]: 'Gate',
   [CopyTradePlatformEnum.HYPERLIQUID]: 'Hyperliquid',
-  [CopyTradePlatformEnum.SYNTHETIX_V2]: 'SNX v2',
-  [CopyTradePlatformEnum.SYNTHETIX_V3]: 'SNX v3',
+  [CopyTradePlatformEnum.SYNTHETIX_V2]: 'Synthetix v2',
+  [CopyTradePlatformEnum.SYNTHETIX_V3]: 'Synthetix v3',
   [CopyTradePlatformEnum.GNS_V8]: 'gTrade',
 }
 

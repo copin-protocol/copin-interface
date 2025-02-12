@@ -160,7 +160,7 @@ export function compactNumber(num: number | undefined, digits = 1, isInteger?: b
   if (num == null) return '--'
   if (num === 0) return 0
 
-  if (isInteger && num > 0 && num < 1000) return num
+  if (isInteger && num > 0 && num < 1000) return Math.round(num)
 
   if (Math.abs(num) < 1) return num.toFixed(digits)
   const lookup = [

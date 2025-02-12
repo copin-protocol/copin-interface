@@ -33,7 +33,7 @@ export default function SettingChannel({ botAlert }: { botAlert?: BotAlertData }
       toast.success(
         <ToastBody title={<Trans>Success</Trans>} message={<Trans>Unlink Copin Telegram Bot successfully</Trans>} />
       )
-      refetchAlerts()
+      refetchAlerts?.()
     },
     onError: () => {
       toast.error(<ToastBody title="Error" message={<Trans>Something went wrong, please try later</Trans>} />)

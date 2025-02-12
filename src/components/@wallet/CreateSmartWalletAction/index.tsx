@@ -57,7 +57,7 @@ export default function CreateSmartWalletAction({
       {isOpenModal && !!profile && (
         <CreateSmartWalletModal
           isOpen={isOpenModal}
-          platform={exchange}
+          exchange={exchange}
           onDismiss={handleCloseModal}
           onSuccess={onSuccess}
         />
