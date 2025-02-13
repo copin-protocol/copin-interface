@@ -4,7 +4,7 @@ import AlertDashboard from './AlertDashboard'
 import Layout from './Layouts/Layout'
 import UserSubscription from './UserSubscription'
 
-export default function Settings() {
+export default function SettingsPage() {
   return (
     <>
       <CustomPageTitle title="Settings" />

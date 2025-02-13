@@ -1,7 +1,7 @@
 import NoDataFound from 'components/@ui/NoDataFound'
 import UserLogItem from 'components/@widgets/UserLogItem'
 import { CopyPositionData } from 'entities/copyTrade.d'
-import useUserLogDetails from 'hooks/features/useUserLogDetails'
+import useUserLogDetails from 'hooks/features/copyTrade/useUserLogDetails'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
 

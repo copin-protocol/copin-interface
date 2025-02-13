@@ -27,7 +27,7 @@ export default function useSettingWatchlistTraders({ onSuccess }: { onSuccess?: 
     },
     onError: (error: any) => {
       if (error?.message?.includes(`Can't find data`)) {
-        handleGenerateLinkBot()
+        handleGenerateLinkBot?.()
       } else {
         toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)
       }

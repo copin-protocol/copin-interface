@@ -16,14 +16,14 @@ import { parseInputValue } from 'components/@ui/TextWithEdit'
 import ToastBody from 'components/@ui/ToastBody'
 import { renderTrader } from 'components/@widgets/renderProps'
 import { TradingEventStatusEnum } from 'entities/event'
-import useCopyTradePermission from 'hooks/features/useCopyTradePermission'
+import useCopyTradePermission from 'hooks/features/copyTrade/useCopyTradePermission'
+import { useIsPremiumAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
+import useGetTokensTraded from 'hooks/features/trader/useGetTokensTraded'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
 import useInternalRole from 'hooks/features/useInternalRole'
-import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
-import { getMaxVolumeCopy, useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useMyProfileStore from 'hooks/store/useMyProfile'
+import { getMaxVolumeCopy, useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -178,7 +178,10 @@ const CopyTraderForm = ({
   const { getListSymbolOptions, getListSymbolByListIndexToken, getListIndexTokenByListSymbols } = useMarketsConfig()
 
   const pairOptions = useMemo(() => {
-    const allOptions = getListSymbolOptions().filter((option) => !TOKEN_TRADE_IGNORE[platform]?.includes(option.value))
+    const allOptions = getListSymbolOptions?.().filter(
+      (option) => !TOKEN_TRADE_IGNORE[platform]?.includes(option.value)
+    )
+    if (!allOptions?.length) return []
     allOptions.unshift({ id: 'all', value: 'all', label: 'All Tokens' })
     return allOptions
   }, [getListSymbolOptions, platform])
@@ -193,7 +196,8 @@ const CopyTraderForm = ({
     {
       enabled: !isEdit && (isClone ? !!duplicateToAddress : !!account),
       select: (data) => {
-        const symbols = getListSymbolByListIndexToken({ protocol, listIndexToken: data })
+        const symbols = getListSymbolByListIndexToken?.({ protocol, listIndexToken: data })
+        if (!symbols?.length) return []
         return symbols.filter((address) => !TOKEN_TRADE_IGNORE[platform]?.includes(address))
       },
       onSuccess: (data) => {
@@ -207,7 +211,7 @@ const CopyTraderForm = ({
     }
   )
 
-  const { events } = useSystemConfigContext()
+  const { events } = useSystemConfigStore()
   const gnsEvent = events?.find((e) => e.type === EventTypeEnum.GNS && e.status !== TradingEventStatusEnum.ENDED)
 
   const { copyWallets } = useCopyWalletContext()
@@ -239,7 +243,7 @@ const CopyTraderForm = ({
     () => getTraderVolumeCopy({ protocol, account, exchange: platform }),
     { enabled: !!account && !!protocol && !!platform }
   )
-  const { volumeLimit } = useSystemConfigContext()
+  const { volumeLimit } = useSystemConfigStore()
 
   const maxVolume = getMaxVolumeCopy({ plan: myProfile?.plan, isRef: walletHasRef, volumeLimitData: volumeLimit })
   const currentCopyVolume = traderVolumeCopy?.[0]?.totalVolume
@@ -251,16 +255,18 @@ const CopyTraderForm = ({
     handleSubmit((_formValues) => {
       const formValues = { ..._formValues }
       if (formValues.tokenAddresses?.length) {
-        formValues.tokenAddresses = getListIndexTokenByListSymbols({
-          protocol,
-          listSymbol: formValues.tokenAddresses,
-        })
+        formValues.tokenAddresses =
+          getListIndexTokenByListSymbols?.({
+            protocol,
+            listSymbol: formValues.tokenAddresses,
+          }) ?? []
       }
       if (formValues.excludingTokenAddresses?.length) {
-        formValues.excludingTokenAddresses = getListIndexTokenByListSymbols({
-          protocol,
-          listSymbol: formValues.excludingTokenAddresses,
-        })
+        formValues.excludingTokenAddresses =
+          getListIndexTokenByListSymbols?.({
+            protocol,
+            listSymbol: formValues.excludingTokenAddresses,
+          }) ?? []
       }
       delete formValues.totalVolume
       onSubmit(formValues)
@@ -281,16 +287,18 @@ const CopyTraderForm = ({
       defaultFormValues.title = capitalizeFirstLetter(getAvatarName({ address: defaultFormValues.account }))
     }
     if (defaultFormValues.tokenAddresses?.length) {
-      defaultFormValues.tokenAddresses = getListSymbolByListIndexToken({
-        protocol: defaultFormValues.protocol ?? DEFAULT_PROTOCOL,
-        listIndexToken: defaultFormValues.tokenAddresses,
-      })
+      defaultFormValues.tokenAddresses =
+        getListSymbolByListIndexToken?.({
+          protocol: defaultFormValues.protocol ?? DEFAULT_PROTOCOL,
+          listIndexToken: defaultFormValues.tokenAddresses,
+        }) ?? []
     }
     if (defaultFormValues.excludingTokenAddresses?.length) {
-      defaultFormValues.excludingTokenAddresses = getListSymbolByListIndexToken({
-        protocol: defaultFormValues.protocol ?? DEFAULT_PROTOCOL,
-        listIndexToken: defaultFormValues.excludingTokenAddresses,
-      })
+      defaultFormValues.excludingTokenAddresses =
+        getListSymbolByListIndexToken?.({
+          protocol: defaultFormValues.protocol ?? DEFAULT_PROTOCOL,
+          listIndexToken: defaultFormValues.excludingTokenAddresses,
+        }) ?? []
     }
     reset(defaultFormValues)
     setTimeout(() => {

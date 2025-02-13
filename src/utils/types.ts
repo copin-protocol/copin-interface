@@ -32,3 +32,5 @@ export type WorkerMessage = {
 export type NewUserCheckerData = { [userId: string]: '1' }
 
 export type ValueOf<T> = T[keyof T]
+
+export type PositionTimeType = 'relative' | 'absolute'

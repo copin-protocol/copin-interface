@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom'
 import AvatarGroup from 'components/@ui/Avatar/AvatarGroup'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { useProtocolStore } from 'hooks/store/useProtocols'
+import useGlobalStore from 'hooks/store/useGlobalStore'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
 import { TimeFilterByEnum } from 'utils/config/enums'
@@ -143,7 +143,7 @@ export function CompareButton({
   const { pathname, search } = useLocation()
   const { searchParams } = useSearchParams()
   const time = searchParams[URL_PARAM_KEYS.EXPLORER_TIME_FILTER] ?? TimeFilterByEnum.S30_DAY
-  const protocol = useProtocolStore((state) => state.protocol)
+  const protocol = useGlobalStore((state) => state.protocol)
   const [isOpen, setIsOpen] = useState(false)
 
   if (listAddress?.length !== 2) return <></>

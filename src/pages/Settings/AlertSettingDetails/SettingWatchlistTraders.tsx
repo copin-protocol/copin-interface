@@ -178,14 +178,14 @@ export default function SettingWatchlistTraders({
           <Type.Body>
             {botAlert?.name?.toUpperCase() ?? ''} ({totalTrader}/{maxTraderAlert})
           </Type.Body>
-          {!isVIPUser && totalTrader >= maxTraderAlert && (
+          {!isVIPUser && totalTrader >= (maxTraderAlert ?? 0) && (
             <Link to={ROUTES.SUBSCRIPTION.path}>
               <Button size="xs" variant="outlinePrimary">
                 <Trans>Upgrade</Trans>
               </Button>
             </Link>
           )}
-          {totalTrader < maxTraderAlert && (
+          {totalTrader < (maxTraderAlert ?? 0) && (
             // <ButtonWithIcon size="xs" variant="outlinePrimary" icon={<Plus />} onClick={() => setOpenModalAdd(true)}>
             //   <Trans>Add Trader</Trans>
             // </ButtonWithIcon>

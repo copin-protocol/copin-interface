@@ -9,7 +9,7 @@ import Layout from './Layouts/Layout'
 import Overview from './Overview'
 import WalletWatcher from './WalletWatcher'
 
-export default function SystemStatus() {
+export default function SystemStatusPage() {
   const isInternal = useInternalRole()
   return (
     <>

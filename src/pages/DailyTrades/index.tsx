@@ -14,11 +14,11 @@ import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
 
 import FilterProtocols from './FilterProtocols'
-import DailyOrders from './Orders'
-import DailyPositions from './Positions'
+import DailyOrdersPage from './Orders'
+import DailyPositionsPage from './Positions'
 import { ProtocolsProvider } from './useProtocolsProvider'
 
-export default function DailyTrades() {
+export default function DailyTradesPage() {
   const { pathname } = useLocation()
   const { setSearchParams } = useSearchParams()
   useLayoutEffect(() => {
@@ -63,10 +63,10 @@ export default function DailyTrades() {
         <Box sx={{ overflow: 'hidden', flex: '1 0 0' }}>
           <Switch>
             <Route exact path={ROUTES.LIVE_TRADES_ORDERS.path}>
-              <DailyOrders />
+              <DailyOrdersPage />
             </Route>
             <Route exact path={ROUTES.LIVE_TRADES_POSITIONS.path}>
-              <DailyPositions />
+              <DailyPositionsPage />
             </Route>
             <Redirect to={ROUTES.LIVE_TRADES_ORDERS.path} />
           </Switch>

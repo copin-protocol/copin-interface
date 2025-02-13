@@ -36,7 +36,7 @@ const LiteWithdraw = ({ address }: { address: string }) => {
       reset()
       toast.success(<ToastBody title="Success" message="Your withdraw request has been submitted" />)
       await delay(DELAY_SYNC)
-      reloadEmbeddedWalletInfo()
+      reloadEmbeddedWalletInfo?.()
     },
     onError: (error) => {
       toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)

@@ -13,7 +13,7 @@ import Overview from './Overview'
 import Traders from './Traders'
 import { OVERVIEW_WIDTH } from './configs'
 
-export default function Home() {
+export default function HomePage() {
   const { md } = useResponsive()
   return (
     <>
@@ -85,7 +85,6 @@ function MobileHome() {
     </BodyWrapperMobile>
   )
 }
-
 const TabKeys = {
   traders: 'traders',
   overview: 'overview',

@@ -63,7 +63,8 @@ export default function BacktestSingleResult({
 
   const { getListSymbolOptions } = useMarketsConfig()
   const tokenOptions = useMemo(() => {
-    const allOptions = getListSymbolOptions()
+    const allOptions = getListSymbolOptions?.()
+    if (!allOptions?.length) return []
     return settings?.pairs && settings.pairs.length > 0
       ? allOptions.filter((e) => settings?.pairs?.find((i) => getSymbolFromPair(i) === e.id))
       : allOptions

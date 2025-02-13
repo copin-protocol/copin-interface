@@ -1,29 +1,20 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useQuery } from 'react-query'
+import { useEffect, useState } from 'react'
 
-import { GetMyPositionRequestBody, GetMyPositionsParams } from 'apis/types'
-import { getMyCopyPositionsApi } from 'apis/userApis'
-import CopyHistoryPositions from 'components/@position/CopyHistoryPositions'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
-import useMyProfileStore from 'hooks/store/useMyProfile'
-import { PaginationWithLimit } from 'theme/Pagination'
 import { TableSortProps } from 'theme/Table/types'
-import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
-import { QUERY_KEYS, TOOLTIP_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { pageToOffset } from 'utils/helpers/transform'
+import { URL_PARAM_KEYS } from 'utils/config/keys'
 
 import SelectWallets from '../SelectWallets'
 import FilterByStatus from './FilterByStatus'
+import HistoryPositionsView from './HistoryPositionView'
 import SelectedTraders from './SelectedTraders'
 import useFilterHistory from './useFilterHistory'
 
-export default function HistoryPositions() {
-  const { myProfile } = useMyProfileStore()
-
+export default function HistoryPositionsPage() {
   const [selectionState, dispatch] = useFilterHistory()
 
   const selectedWallets =
@@ -54,36 +45,6 @@ export default function HistoryPositions() {
       return selectedIds?.length ? selectedIds : ['']
     }
   }
-
-  const _queryParams: GetMyPositionsParams = useMemo(
-    () => ({
-      limit: currentLimit,
-      offset: pageToOffset(currentPage, currentLimit),
-      sortBy: currentSort?.sortBy,
-      sortType: currentSort?.sortType,
-      status: selectionState.selectedStatus?.length > 1 ? undefined : selectionState.selectedStatus,
-    }),
-    [currentLimit, currentPage, currentSort?.sortBy, currentSort?.sortType, selectionState.selectedStatus]
-  )
-  const _queryBody: GetMyPositionRequestBody = useMemo(
-    () => ({
-      traders: checkFilters(selectionState.allTraders, selectionState.selectedTraders),
-      copyWalletIds: selectionState.selectedWallets.map((wallet) => wallet.id),
-    }),
-    [selectionState.allTraders, selectionState.selectedTraders, selectionState.selectedWallets]
-  )
-  const {
-    data,
-    isFetching: isLoading,
-    refetch,
-  } = useQuery(
-    [QUERY_KEYS.GET_MY_COPY_POSITIONS, _queryParams, _queryBody, currentPage, myProfile?.id],
-    () => getMyCopyPositionsApi(_queryParams, _queryBody),
-    {
-      retry: 0,
-      keepPreviousData: true,
-    }
-  )
 
   const onChangeTraders = () => {
     changeCurrentPage(1)
@@ -130,29 +91,19 @@ export default function HistoryPositions() {
           />
         </Box>
       </Flex>
-      <Box flex="1 0 0" overflow="hidden">
-        <CopyHistoryPositions
-          data={data?.data}
-          isLoading={isLoading}
-          currentSort={currentSort}
-          changeCurrentSort={changeCurrentSort}
-          onClosePositionSuccess={refetch}
-          deletedTraders={selectionState.deletedTraders}
-        />
-      </Box>
-      <PaginationWithLimit
-        currentLimit={currentLimit}
-        onLimitChange={changeCurrentLimit}
+      <HistoryPositionsView
+        selectedTraders={checkFilters(selectionState.allTraders, selectionState.selectedTraders)}
+        deletedTraders={selectionState.deletedTraders}
+        selectedStatus={selectionState.selectedStatus}
+        selectedWallets={selectionState.selectedWallets}
+        currentSort={currentSort}
+        changeCurrentSort={changeCurrentSort}
         currentPage={currentPage}
-        onPageChange={changeCurrentPage}
-        apiMeta={data?.meta}
-        sx={{ py: 1 }}
+        currentLimit={currentLimit}
+        changeCurrentPage={changeCurrentPage}
+        changeCurrentLimit={changeCurrentLimit}
+        layoutType="normal"
       />
-      <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE}>
-        <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
-          Reverse Copy
-        </Type.Caption>
-      </Tooltip>
     </Flex>
   )
 }

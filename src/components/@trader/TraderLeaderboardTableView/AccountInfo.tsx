@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import IconEye from 'assets/icons/ic-eye.svg'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import { TopTraderData } from 'entities/trader'
-import { useProtocolStore } from 'hooks/store/useProtocols'
+import useGlobalStore from 'hooks/store/useGlobalStore'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import CopyButton from 'theme/Buttons/CopyButton'
@@ -25,7 +25,7 @@ export default function AccountInfo({
   hasHover?: boolean
 }) {
   const { setTrader } = useQuickViewTraderStore()
-  const { protocol: defaultProtocol } = useProtocolStore()
+  const { protocol: defaultProtocol } = useGlobalStore()
   const { isCopying } = useTraderCopying(info.account, info.protocol)
   const protocol = info.protocol ?? defaultProtocol
   const deltaRanking = isCurrentLeaderboard ? (info?.lastRanking ?? 1001) - info.ranking : 0

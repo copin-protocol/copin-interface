@@ -65,7 +65,7 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
 
   const updateCopyWallet = useMutation(updateCopyWalletApi, {
     onSuccess: () => {
-      reloadCopyWallets()
+      reloadCopyWallets?.()
     },
     onError: (error: any) => {
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
@@ -159,7 +159,7 @@ function renderWalletList({
   allowExchanges: CopyTradePlatformEnum[]
   walletMapping: Record<CopyTradePlatformEnum, CopyWalletData[]>
   hiddenBalance?: boolean
-  reloadCopyWallets: () => void
+  reloadCopyWallets: (() => void) | undefined
   handleUpdate: (params: {
     copyWalletId: string
     name: string
@@ -250,7 +250,7 @@ function ExchangeTitle({
 }: {
   isAllowed: boolean
   exchange: CopyTradePlatformEnum
-  onCreateWalletSuccess: () => void
+  onCreateWalletSuccess: (() => void) | undefined
   count: number
 }) {
   const [openModal, setOpenModal] = useState(false)
@@ -317,7 +317,7 @@ function ExchangeTitle({
         exchange={exchange}
         isOpen={openModal}
         onDismiss={() => {
-          onCreateWalletSuccess()
+          onCreateWalletSuccess?.()
           setOpenModal(false)
         }}
       />

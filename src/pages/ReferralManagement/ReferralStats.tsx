@@ -329,8 +329,9 @@ export function ClaimRewardModal({
         params,
         gasLimit: estimateGas < GAS_LIMIT ? GAS_LIMIT : estimateGas,
       })
+      return
     } catch (error) {
-      throw error
+      return getErrorMessage(error)
     }
   }
   const onClaim = async () => {
@@ -349,15 +350,16 @@ export function ClaimRewardModal({
   }
 
   // retry on claim error and when claim in history
-  const retryClaim = () => {
+  const retryClaim = async () => {
     setError('')
     setState('processing')
-    if (retryClaimData) {
-      claimReward(retryClaimData)
-      return
-    }
-    if (claimRewardData) {
-      claimReward(claimRewardData)
+    const data = retryClaimData || claimRewardData
+    if (data) {
+      const error = await claimReward(data)
+      if (error) {
+        setError(error)
+        setState('preparing')
+      }
       return
     }
     setState('preparing')
@@ -409,8 +411,19 @@ export function ClaimRewardModal({
                   isLoading={state === 'processing'}
                   disabled={state === 'processing'}
                 >
-                  {hasError ? <Trans>Try again</Trans> : <Trans>Confirm</Trans>}
+                  {state === 'processing' ? (
+                    <Trans>Confirming...</Trans>
+                  ) : hasError ? (
+                    <Trans>Try again</Trans>
+                  ) : (
+                    <Trans>Confirm</Trans>
+                  )}
                 </Button>
+                {state === 'processing' && (retryClaimData || hasError) && (
+                  <Type.Caption color="neutral3" mt={2}>
+                    <Trans>Confirm transaction in your wallet</Trans>
+                  </Type.Caption>
+                )}
               </>
             )}
             {state === 'success' && (

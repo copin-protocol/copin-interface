@@ -60,16 +60,16 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     title: 'Copy Wallet',
     dataIndex: 'copyTradeId',
     key: 'copyTradeId',
-    style: { minWidth: '120px', width: 120 },
+    style: { minWidth: '140px', width: 120 },
     render: renderCopyWallet,
   },
-  {
-    title: 'Source',
-    dataIndex: 'id',
-    key: 'id',
-    style: { minWidth: '100px', width: 100, textAlign: 'center' },
-    render: (item, index, externalSource) => renderSource(item, index, externalSource, true),
-  },
+  // {
+  //   title: 'Source',
+  //   dataIndex: 'id',
+  //   key: 'id',
+  //   style: { minWidth: '100px', width: 100, textAlign: 'center' },
+  //   render: (item, index, externalSource) => renderSource(item, index, externalSource, true),
+  // }, // enabled later
   {
     title: 'Entry',
     dataIndex: 'entryPrice',
@@ -124,6 +124,9 @@ if (traderColumnIndex !== -1) {
     filterComponent: <LiteHistoryFilterTrader type="icon" />,
   }
 }
+// const drawerHistoryColumns = historyColumns.filter(
+//   (v) => v.key != null && !['copyAccount', 'copyTradeId'].includes(v.key)
+// )
 
 const mapping: { [type in LayoutType]: ColumnData<CopyPositionData, ExternalSourceCopyPositions>[] } = {
   lite: liteHistoryColumns,
@@ -131,6 +134,16 @@ const mapping: { [type in LayoutType]: ColumnData<CopyPositionData, ExternalSour
   simple: historyColumns,
 }
 
-export function getCopyPositionHistoryColumns(layoutType: LayoutType) {
-  return mapping[layoutType]
+export function getCopyPositionHistoryColumns({
+  layoutType,
+  excludingColumnKeys,
+}: {
+  layoutType: LayoutType
+  excludingColumnKeys?: (keyof CopyPositionData)[]
+}) {
+  let columns = mapping[layoutType]
+  if (!!excludingColumnKeys) {
+    columns = columns.filter((v) => (v.key != null ? !excludingColumnKeys.includes(v.key) : true))
+  }
+  return columns
 }

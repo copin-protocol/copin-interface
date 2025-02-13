@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 
 import { CopyTradeData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
-import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
+import useAllCopyTrades from 'hooks/features/copyTrade/useAllCopyTrades'
 
 import SelectCopyTradesDropdown from '../SelectCopyTradesDropdown'
 import { DispatchFilterActivities } from './useFilterActivities'

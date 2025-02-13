@@ -1,15 +1,15 @@
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { ProtocolFilter } from 'components/@ui/ProtocolFilter'
 import SearchAllResults from 'components/@widgets/SearchAllResults'
+import useSearchTraders from 'hooks/features/trader/useSearchTraders'
 import useInternalRole from 'hooks/features/useInternalRole'
-import useSearchTraders from 'hooks/features/useSearchTraders'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { useSearchProtocolFilter } from 'hooks/store/useSearchProtocolFilter'
 import { Box, Flex, Type } from 'theme/base'
 import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 
-const SearchTrader = () => {
+const SearchTraderPage = () => {
   const isInternal = useInternalRole()
   const protocolOptions = useGetProtocolOptions()
   const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
@@ -118,4 +118,4 @@ const SearchTrader = () => {
   )
 }
 
-export default SearchTrader
+export default SearchTraderPage

@@ -5,6 +5,7 @@ import CopyTradeEditForm from 'components/@copyTrade/CopyTradeEditForm'
 import { CopyTradeData } from 'entities/copyTrade.d'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 export default function CopyTradeEditDrawer({
   isOpen,
@@ -29,6 +30,7 @@ export default function CopyTradeEditDrawer({
       // direction="bottom"
       isOpen={isOpen}
       onDismiss={onDismiss}
+      zIndex={Z_INDEX.TOASTIFY}
     >
       <Box sx={{ position: 'relative', width: '100%', mx: 'auto' }}>
         <Flex

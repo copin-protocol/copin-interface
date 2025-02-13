@@ -1,11 +1,13 @@
 import { ReactNode } from 'react'
 
+import { CopyTradeData } from 'entities/copyTrade'
 import {
   CopyTradePlatformEnum,
   CopyTradeSideEnum,
   CopyTradeTypeEnum,
   ProtocolEnum,
   SLTPTypeEnum,
+  SubscriptionPlanEnum,
 } from 'utils/config/enums'
 
 export interface CopyTradeFormValues {
@@ -48,3 +50,19 @@ export interface ExchangeOptions {
   label: ReactNode
   isDisabled?: boolean
 }
+
+export interface TraderCopyVolumeCheckingData {
+  copyVolume: number | undefined
+  maxVolume: number | undefined
+  plan: SubscriptionPlanEnum | undefined
+  isRef: boolean | undefined
+}
+
+export type CopyTradeWithCheckingData = CopyTradeData & Partial<TraderCopyVolumeCheckingData>
+
+export type LayoutType = 'LIST' | 'GRID'
+
+export type TradersByProtocolValuesData = { address: string; status: 'deleted' | 'copying' }
+export type TradersByProtocolData = Record<ProtocolEnum, TradersByProtocolValuesData[]>
+
+export type CopyTradeModalType = 'edit' | 'clone' | 'delete' | 'history' | 'stop'

@@ -32,7 +32,7 @@ export function ProtocolFilter({ menuSx = {}, placement = 'bottomRight', ...prop
         buttonVariant="ghost"
         menuSx={{
           width: menuSx.width ? menuSx.width : ['90vw', '95vw', '95vw'],
-          maxWidth: menuSx.maxWidth ? menuSx.maxWidth : '900px',
+          maxWidth: menuSx.maxWidth ? menuSx.maxWidth : '850px',
           maxHeight: '70svh',
           py: 2,
           ...menuSx,

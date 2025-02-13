@@ -26,7 +26,7 @@ function HLRealtimeChart({ position, orders }: Props) {
   const [chartContainer, setChartContainer] = React.useState<HTMLDivElement | null>(null)
   const symbol = position.pair
     ? getSymbolFromPair(position.pair)
-    : getSymbolByIndexToken({ protocol: position.protocol, indexToken: position.indexToken }) ?? ''
+    : getSymbolByIndexToken?.({ protocol: position.protocol, indexToken: position.indexToken }) ?? ''
   const decimals = useMemo(() => ((prices?.[symbol] ?? 0) < 1 ? 6 : 4), [symbol, prices])
 
   const chartOpts = React.useMemo(() => {

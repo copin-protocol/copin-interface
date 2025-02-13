@@ -23,6 +23,11 @@ const PROTOCOL_SORT_OPTIONS: ProtocolSortProps[] = [
     label: <Trans>SORT BY TRADERS</Trans>,
     value: ProtocolSortByEnum.TRADERS,
   },
+  {
+    id: ProtocolSortByEnum.OI,
+    label: <Trans>SORT BY OI</Trans>,
+    value: ProtocolSortByEnum.OI,
+  },
 ]
 
 // Define the props interface

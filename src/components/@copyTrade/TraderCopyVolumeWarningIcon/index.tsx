@@ -10,6 +10,7 @@ import { TOOLTIP_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { formatNumber } from 'utils/helpers/format'
 
+import { TraderCopyVolumeCheckingData } from '../types'
 import { getCopyVolumeColor } from './helper'
 
 export default function TraderCopyVolumeWarningIcon({
@@ -50,13 +51,6 @@ export default function TraderCopyVolumeWarningIcon({
       </Tooltip>
     </>
   )
-}
-
-export interface TraderCopyVolumeCheckingData {
-  copyVolume: number | undefined
-  maxVolume: number | undefined
-  plan: SubscriptionPlanEnum | undefined
-  isRef: boolean | undefined
 }
 
 export function TraderTotalCopyVolumeIcon({

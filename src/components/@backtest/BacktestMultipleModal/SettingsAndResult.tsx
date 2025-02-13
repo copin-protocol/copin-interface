@@ -3,9 +3,9 @@ import { useState } from 'react'
 
 import BacktestForm from 'components/@backtest/BacktestForm'
 import { getFormValuesFromRequestData } from 'components/@backtest/helpers'
-import useBacktestRequest from 'hooks/features/useBacktestRequest'
+import useBacktestRequest from 'hooks/features/backtest/useBacktestRequest'
+import useGlobalStore from 'hooks/store/useGlobalStore'
 import useMyProfile from 'hooks/store/useMyProfile'
-import { useProtocolStore } from 'hooks/store/useProtocols'
 import { TestInstanceData, useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
@@ -20,7 +20,7 @@ import SettingTags from './SettingTags'
 
 export default function SettingsAndResult({ data, isModalOpen }: { data: TestInstanceData; isModalOpen?: boolean }) {
   const { myProfile } = useMyProfile()
-  const { protocol } = useProtocolStore()
+  const { protocol } = useGlobalStore()
   const { currentHomeInstanceId, getCommonData, updateInstance, updateHomeInstance } = useSelectBacktestTraders()
   // if data.homeId === null => it is home
   const { homeInstance: currentHomeInstance } = getCommonData({ homeId: currentHomeInstanceId })
@@ -71,6 +71,8 @@ export default function SettingsAndResult({ data, isModalOpen }: { data: TestIns
     updateInstance({ id: data.id, homeId: data.homeId, stage: prevStage })
   }
   const [currentSort, setCurrentSort] = useState<TableSortProps<TableResultData>>()
+
+  if (!protocol) return null
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>

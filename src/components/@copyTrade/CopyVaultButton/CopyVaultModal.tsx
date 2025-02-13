@@ -13,9 +13,9 @@ import { CopyTradeFormValues } from 'components/@copyTrade/types'
 import ToastBody from 'components/@ui/ToastBody'
 import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade.d'
 import useBotAlertContext from 'hooks/features/useBotAlertProvider'
-import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMyProfileStore from 'hooks/store/useMyProfile'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
@@ -92,7 +92,7 @@ export default function CopyVaultDrawer({
   const isCloneTab = tab === TabKeyEnum.Clone
   const isSelectedCloneCopyTrade = !!copyTradeData
 
-  const { events } = useSystemConfigContext()
+  const { events } = useSystemConfigStore()
 
   return (
     <Modal

@@ -1,6 +1,6 @@
 import { Dispatch } from 'react'
 
-import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
+import useGetTokensTraded from 'hooks/features/trader/useGetTokensTraded'
 import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'

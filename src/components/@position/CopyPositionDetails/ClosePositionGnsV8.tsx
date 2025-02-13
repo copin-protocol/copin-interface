@@ -84,7 +84,7 @@ const ClosePositionHandler = ({
   const { gainsPrices: prices } = useGetUsdPrices()
 
   const { getSymbolByIndexToken } = useMarketsConfig()
-  const symbol = getSymbolByIndexToken({ indexToken: position.indexToken })
+  const symbol = getSymbolByIndexToken?.({ indexToken: position.indexToken })
   const onConfirm = async () => {
     if (submitting || !symbol) return
     const price = prices[symbol]

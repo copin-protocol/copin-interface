@@ -10,8 +10,10 @@ import { DualTimeText, LocalTimeText, RelativeShortTimeText } from 'components/@
 import Market from 'components/@ui/MarketGroup/Market'
 import TraderAddress from 'components/@ui/TraderAddress'
 import ValueOrToken from 'components/@ui/ValueOrToken'
+import TimeColumnTitleWrapper from 'components/@widgets/TimeColumeTitleWrapper'
 import { renderEntry, renderOpeningPnL, renderOpeningRoi, renderSizeOpening } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
+import useGlobalStore from 'hooks/store/useGlobalStore'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -164,15 +166,24 @@ const closeTimeColumn: ColumnData<PositionData> = {
   ),
 }
 const timeColumn: ColumnData<PositionData> = {
-  title: 'Time',
+  title: <TimeColumnTitleWrapper>Time</TimeColumnTitleWrapper>,
   dataIndex: 'closeBlockTime',
   key: 'closeBlockTime',
   style: { minWidth: '90px' },
-  render: (item) => (
+  render: (item) => <PositionTime data={item} />,
+}
+
+function PositionTime({ data }: { data: PositionData }) {
+  const [positionTimeType, currentTime] = useGlobalStore((state) => [state.positionTimeType, state.currentTime])
+  return (
     <Type.Caption color="neutral3">
-      <LocalTimeText date={item.closeBlockTime} />
+      {positionTimeType === 'absolute' ? (
+        <LocalTimeText date={data.closeBlockTime} />
+      ) : (
+        <RelativeShortTimeText key={currentTime} date={data.closeBlockTime} suffix="ago" />
+      )}
     </Type.Caption>
-  ),
+  )
 }
 const entryColumn: ColumnData<PositionData> = {
   title: 'Entry',

@@ -24,7 +24,7 @@ import ReferralHistory from './ReferralHistory'
 import ReferralStats from './ReferralStats'
 import UserReferralTier from './UserReferralTier'
 
-export default function ReferralManagement() {
+export default function ReferralManagementPage() {
   const { lg } = useResponsive()
   const { isAuthenticated, profile } = useAuthContext()
 

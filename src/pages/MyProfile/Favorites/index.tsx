@@ -9,6 +9,7 @@ import NoLoginFavorite from 'components/@ui/NoLogin/NoLoginFavorite'
 import { ProtocolFilter, ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
 import useInternalRole from 'hooks/features/useInternalRole'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
+import useProtocolFromUrl from 'hooks/router/useProtocolFromUrl'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
 import useTraderFavorites, { parseTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
@@ -23,11 +24,10 @@ import PageTitle from 'theme/PageTitle'
 import { Box, Flex } from 'theme/base'
 import { ALLOWED_COPYTRADE_PROTOCOLS, PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 import { generateFavoriteTradersRoute } from 'utils/helpers/generateRoute'
-import { convertProtocolToParams, useProtocolFromUrl } from 'utils/helpers/graphql'
 
 import ListTraderFavorites from './ListTraderFavorites'
 
-const Favorites = () => {
+const FavoritesPage = () => {
   const { searchParams, pathname } = useSearchParams()
   const { traderFavorites, notes, isLoading } = useTraderFavorites()
   const { isAuthenticated } = useAuthContext()
@@ -39,12 +39,11 @@ const Favorites = () => {
   const { selectedProtocols, checkIsSelected, handleToggle, setSelectedProtocols } = useProtocolFilter({
     defaultSelects: protocolOptions.map((_p) => _p.id),
   })
-  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
-  const protocolParams = convertProtocolToParams(foundProtocolInUrl)
+  const { protocols, protocolParams } = useProtocolFromUrl(searchParams, pathname)
 
   useEffect(() => {
-    if (foundProtocolInUrl) {
-      setSelectedProtocols(foundProtocolInUrl)
+    if (protocols) {
+      setSelectedProtocols(protocols)
     }
   }, [])
 
@@ -114,7 +113,7 @@ const Favorites = () => {
   )
 }
 
-export default Favorites
+export default FavoritesPage
 
 function ListTraders({
   notes,

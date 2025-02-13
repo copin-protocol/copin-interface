@@ -16,7 +16,7 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { renderCopyEntry } from 'components/@widgets/renderProps'
 import { CopyPositionData } from 'entities/copyTrade'
-import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
+import useAllCopyTrades from 'hooks/features/copyTrade/useAllCopyTrades'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
@@ -102,7 +102,7 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
     [data, dataOrders]
   )
   const { getSymbolByIndexToken } = useMarketsConfig()
-  const symbolByIndexToken = getSymbolByIndexToken({ protocol: data?.protocol, indexToken: data?.indexToken })
+  const symbolByIndexToken = getSymbolByIndexToken?.({ protocol: data?.protocol, indexToken: data?.indexToken })
   const isOpening = data && data.status === PositionStatusEnum.OPEN
   const symbol = data?.pair ? getSymbolFromPair(data.pair) : symbolByIndexToken
   const sizeDelta = useMemo(

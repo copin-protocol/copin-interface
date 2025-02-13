@@ -5,12 +5,11 @@ import { mobileTableSettings } from 'components/@trader/TraderExplorerTableView/
 import { ExternalTraderListSource } from 'components/@trader/TraderExplorerTableView/types'
 import NoFavoriteFound from 'components/@ui/NoDataFound/NoFavoriteFound'
 import { TraderData } from 'entities/trader'
+import { useTraderExplorerListColumns } from 'hooks/store/useTraderCustomizeColumns'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { BASE_LINE_HEIGHT } from 'utils/config/constants'
-
-import { useExplorerColumnsMobile } from './useExplorerColumnsMobile'
 
 export default function TraderExplorerListview({
   data,
@@ -19,7 +18,7 @@ export default function TraderExplorerListview({
   data: TraderData[] | undefined
   isLoading: boolean
 }) {
-  const { columnKeys } = useExplorerColumnsMobile()
+  const { columnKeys } = useTraderExplorerListColumns()
 
   const _tableSettings = mobileTableSettings.filter((data) => columnKeys.includes(data.id))
 

@@ -12,13 +12,13 @@ import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 import ROUTES from 'utils/config/routes'
 
-import CEXManagement from './CEXManagement'
-import DCPManagement from './DCPManagement'
-import HistoryPositions from './HistoryPositions'
-import UserActivity from './UserActivity'
-import VaultManagement from './VaultManagement'
+import CEXManagementPage from './CEXManagement'
+import DCPManagementPage from './DCPManagement'
+import HistoryPositionsPage from './HistoryPositions'
+import UserActivityPage from './UserActivity'
+import VaultManagementPage from './VaultManagement'
 
-export default function MyProfile() {
+export default function MyProfilePage() {
   const { pathname } = useLocation()
   const { lg } = useResponsive()
   const myProfile = useMyProfileStore((s) => s.myProfile)
@@ -42,19 +42,19 @@ export default function MyProfile() {
             <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
               <Switch>
                 <Route exact path={ROUTES.MY_MANAGEMENT.path}>
-                  <CEXManagement />
+                  <CEXManagementPage />
                 </Route>
                 <Route exact path={ROUTES.USER_DCP_MANAGEMENT.path}>
-                  <DCPManagement />
+                  <DCPManagementPage />
                 </Route>
                 <Route exact path={ROUTES.USER_VAULT_MANAGEMENT.path}>
-                  <VaultManagement />
+                  <VaultManagementPage />
                 </Route>
                 <Route exact path={ROUTES.MY_HISTORY.path}>
-                  <HistoryPositions />
+                  <HistoryPositionsPage />
                 </Route>
                 <Route exact path={ROUTES.USER_ACTIVITY.path}>
-                  <UserActivity />
+                  <UserActivityPage />
                 </Route>
                 <Redirect to={ROUTES.MY_MANAGEMENT.path} />
               </Switch>

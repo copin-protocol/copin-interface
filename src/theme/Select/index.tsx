@@ -110,14 +110,13 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
         cursor: 'pointer',
         mt: 1,
         p: 0,
-        overflow: 'hidden',
+        overflow: 'hidden auto',
         bg: 'neutral7',
         '&-list': {
           mr: '-1px',
           p: 0,
           borderRadius: 0,
           color: 'neutral2',
-          overflow: 'hidden scroll',
           '& .select__option': {
             borderRadius: 0,
             py: 2,

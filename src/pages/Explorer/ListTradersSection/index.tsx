@@ -19,7 +19,6 @@ import useBacktestTradersActions from 'pages/Explorer/ListTradersSection/useBack
 import useQueryTraders from 'pages/Explorer/ListTradersSection/useQueryTraders'
 import { TradersContextData } from 'pages/Explorer/useTradersContext'
 import { PaginationWithLimit } from 'theme/Pagination'
-import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
 import { MEDIA_WIDTHS } from 'theme/theme'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
@@ -34,7 +33,6 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
 }) {
   const { sm } = useResponsive()
   const {
-    protocol,
     tab,
     accounts,
     isRangeSelection,
@@ -51,8 +49,7 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
     setSelectedProtocols,
   } = contextValues
 
-  const { data, isLoading, isRangeProgressing, loadingRangeProgress } = useQueryTraders({
-    protocol,
+  const { data, isLoading } = useQueryTraders({
     tab,
     timeRange,
     timeOption,
@@ -72,7 +69,7 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
-      <>
+      {/* <>
         {isRangeProgressing ? (
           <Flex sx={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', p: 3 }}>
             <Box mt={4} mb={3} variant="card" sx={{ mx: 'auto', maxWidth: 600, width: '100%' }}>
@@ -88,48 +85,48 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
             </Box>
           </Flex>
         ) : null}
+      </> */}
+      {/* {isRangeProgressing ? null : ( */}
+      <>
+        <Box
+          flex="1 0 0"
+          sx={{
+            overflow: 'hidden',
+            borderBottom: 'small',
+            borderBottomColor: 'neutral5',
+            bg: 'neutral7',
+            position: 'relative',
+          }}
+        >
+          {sm ? (
+            <TraderListTable
+              data={formatedData}
+              isLoading={isLoading}
+              currentSort={currentSort}
+              changeCurrentSort={changeCurrentSort}
+              isSelectedAll={isSelectedAll}
+              handleSelectAll={handleSelectAll}
+              tableSettings={tableSettings}
+              checkIsSelected={checkIsSelected}
+              handleSelect={handleSelect}
+              hiddenSelectAllBox
+              hiddenSelectItemBox
+              lefts={[0, 0]}
+            />
+          ) : (
+            <TraderListCard data={formatedData} isLoading={isLoading} />
+          )}
+        </Box>
+        <TablePagination
+          data={data}
+          accounts={accounts}
+          currentPage={currentPage}
+          currentLimit={currentLimit}
+          changeCurrentLimit={changeCurrentLimit}
+          changeCurrentPage={changeCurrentPage}
+        />
       </>
-      {isRangeProgressing ? null : (
-        <>
-          <Box
-            flex="1 0 0"
-            sx={{
-              overflow: 'hidden',
-              borderBottom: 'small',
-              borderBottomColor: 'neutral5',
-              bg: 'neutral7',
-              position: 'relative',
-            }}
-          >
-            {sm ? (
-              <TraderListTable
-                data={formatedData}
-                isLoading={isLoading}
-                currentSort={currentSort}
-                changeCurrentSort={changeCurrentSort}
-                isSelectedAll={isSelectedAll}
-                handleSelectAll={handleSelectAll}
-                tableSettings={tableSettings}
-                checkIsSelected={checkIsSelected}
-                handleSelect={handleSelect}
-                hiddenSelectAllBox
-                hiddenSelectItemBox
-                lefts={[0, 0]}
-              />
-            ) : (
-              <TraderListCard data={formatedData} isLoading={isLoading} />
-            )}
-          </Box>
-          <TablePagination
-            data={data}
-            accounts={accounts}
-            currentPage={currentPage}
-            currentLimit={currentLimit}
-            changeCurrentLimit={changeCurrentLimit}
-            changeCurrentPage={changeCurrentPage}
-          />
-        </>
-      )}
+      {/* )} */}
     </Flex>
   )
 })

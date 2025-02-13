@@ -31,7 +31,7 @@ import SettingCopiedTraders from './SettingCopiedTraders'
 import SettingTrigger from './SettingTrigger'
 import SettingWatchlistTraders from './SettingWatchlistTraders'
 
-export default function AlertSettingDetails() {
+export default function AlertSettingDetailsPage() {
   return <AlertSettingDetailsComponent />
 }
 

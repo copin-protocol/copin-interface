@@ -3,7 +3,7 @@ import { ArrowSquareDownLeft, ArrowSquareUpRight, Cardholder } from '@phosphor-i
 import React, { useState } from 'react'
 
 import SectionTitle from 'components/@ui/SectionTitle'
-import useVaultDetailsContext from 'hooks/features/useVaultDetailsProvider'
+import useVaultDetailsContext from 'pages/VaultDetails/useVaultDetailsProvider'
 import { TabHeader } from 'theme/Tab'
 import { Box } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'

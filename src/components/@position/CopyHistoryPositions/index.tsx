@@ -21,6 +21,7 @@ export default function CopyHistoryPositions({
   layoutType = 'normal',
   mobileLayoutType,
   noDataComponent,
+  excludingColumnKeys,
 }: {
   data: CopyPositionData[] | undefined
   isLoading: boolean
@@ -31,6 +32,7 @@ export default function CopyHistoryPositions({
   changeCurrentSort: ((sort: TableSortProps<CopyPositionData> | undefined) => void) | undefined
   onClosePositionSuccess: () => void
   noDataComponent?: ReactNode
+  excludingColumnKeys?: (keyof CopyPositionData)[]
 }) {
   const { sm } = useResponsive()
 
@@ -39,7 +41,7 @@ export default function CopyHistoryPositions({
   return isList ? (
     <CopyPositionsTableView
       data={data}
-      columns={getCopyPositionHistoryColumns(layoutType)}
+      columns={getCopyPositionHistoryColumns({ layoutType, excludingColumnKeys })}
       isLoading={isLoading}
       currentSort={currentSort}
       changeCurrentSort={changeCurrentSort}

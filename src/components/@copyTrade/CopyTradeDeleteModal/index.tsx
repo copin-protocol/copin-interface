@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 
 import { deleteCopyTradeApi, preDeleteCopyTradeApi } from 'apis/copyTradeApis'
 import ToastBody from 'components/@ui/ToastBody'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
@@ -10,6 +11,9 @@ import Modal from 'theme/Modal'
 import { Box, Flex, Li, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { Z_INDEX } from 'utils/config/zIndex'
+
+import { postUpdateRefreshQueries } from '../configs'
 
 export default function DeleteCopyTradeModal({
   copyTradeId = '',
@@ -21,9 +25,10 @@ export default function DeleteCopyTradeModal({
   copyTradeId: string | undefined
   account: string | undefined
   protocol: ProtocolEnum | undefined
-  onSuccess: () => void
+  onSuccess?: () => void
   onDismiss: () => void
 }) {
+  const refetchQueries = useRefetchQueries()
   const { removeTraderCopying } = useTraderCopying(account, protocol)
   const { data: preDeleteData, isLoading: preDeleting } = useQuery(
     [QUERY_KEYS.GET_PRE_DELETE_DATA, copyTradeId],
@@ -37,7 +42,8 @@ export default function DeleteCopyTradeModal({
       if (account && protocol) {
         removeTraderCopying(account, protocol, copyTradeId)
       }
-      onSuccess()
+      refetchQueries(postUpdateRefreshQueries)
+      onSuccess?.()
       onDismiss()
     },
     onError() {
@@ -50,7 +56,7 @@ export default function DeleteCopyTradeModal({
   const { totalOpeningPositions = 0 } = preDeleteData ?? {}
   return (
     <>
-      <Modal isOpen onDismiss={onDismiss} maxWidth="430px">
+      <Modal isOpen onDismiss={onDismiss} maxWidth="430px" zIndex={Z_INDEX.TOASTIFY}>
         <Box p={24}>
           {preDeleting ? (
             <Loading />

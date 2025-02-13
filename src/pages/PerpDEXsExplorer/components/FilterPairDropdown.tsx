@@ -20,7 +20,7 @@ export function FilterPairDropdown({
 }) {
   const [visible, setVisible] = useState(false)
   const { getListSymbol } = useMarketsConfig()
-  const allPairs = getListSymbol()
+  const allPairs = getListSymbol?.()
   const isCopyAll = !isExcluded && currentPairs.length === allPairs?.length
   const selectedPairs = isExcluded ? [] : currentPairs
   const excludedPairs = isExcluded ? currentPairs : []
@@ -41,7 +41,7 @@ export function FilterPairDropdown({
             isAllPairs={isCopyAll}
             selectedPairs={selectedPairs}
             onChangePairs={onChangePairs}
-            allPairs={allPairs}
+            allPairs={allPairs ?? []}
             excludedPairs={excludedPairs}
             handleToggleDropdown={() => setVisible(!visible)}
           />

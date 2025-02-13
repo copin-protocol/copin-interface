@@ -35,7 +35,7 @@ import {
 } from './ChartComponent'
 import Overview from './Overview'
 
-export default function Stats() {
+export default function StatsPage() {
   const { searchParams, setSearchParams } = useSearchParams()
   const [timeRange, setTimeRange] = useState<TimeRange>({})
   const [selectingRange, setSelectingRange] = useState(() => {

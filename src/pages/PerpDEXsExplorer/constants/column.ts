@@ -1,39 +1,5 @@
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
 
-export const DEFAULT_COLUMN_KEYS: (keyof PerpDEXSourceResponse)[] = [
-  'volume1d',
-  'volume30d',
-  'traders30d',
-  'oi',
-  'longRatio',
-  'revenue30d',
-  'hasFundingFee',
-  'type',
-  'feePerMillion30d',
-  'averageFeeRate30d',
-  'marginModes',
-  'positionModes',
-  'pairs',
-  'tradeUrl',
-]
-
-export const DEFAULT_COLUMN_KEYS_MOBILE: (keyof PerpDEXSourceResponse)[] = [
-  'volume1d',
-  'volume30d',
-  'traders30d',
-  'oi',
-  'longRatio',
-  'revenue30d',
-  'hasFundingFee',
-  'type',
-  'feePerMillion30d',
-  'averageFeeRate30d',
-  'marginModes',
-  'positionModes',
-  'pairs',
-  'tradeUrl',
-]
-
 export const MOBILE_COLUMN_KEYS: (keyof PerpDEXSourceResponse)[] = [
   'volume1d',
   'volume7d',

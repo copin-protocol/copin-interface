@@ -4,14 +4,13 @@ import { useResponsive } from 'ahooks'
 import { ReactNode } from 'react'
 import { GridProps } from 'styled-system'
 
+import { getTradersByProtocolFromCopyTrade } from 'components/@copyTrade/helpers'
 import TraderAddress from 'components/@ui/TraderAddress'
 import SelectWithCheckbox from 'components/@widgets/SelectWithCheckbox'
 import { CopyTradeData } from 'entities/copyTrade'
 import Tooltip from 'theme/Tooltip'
 import { Box, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-
-import { getTradersByProtocolFromCopyTrade } from './helpers'
 
 export default function SelectTradersCopied({
   allTraders,

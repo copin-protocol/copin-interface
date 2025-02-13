@@ -2,7 +2,6 @@
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import RankingChangeIndicator from 'components/@ui/RankingChangeIndicator'
 import { TopTraderData } from 'entities/trader'
-// import { useProtocolStore } from 'hooks/store/useProtocols'
 // import useTraderCopying from 'hooks/store/useTraderCopying'
 // import CopyButton from 'theme/Buttons/CopyButton'
 // import Tooltip from 'theme/Tooltip'
@@ -20,7 +19,6 @@ export default function AccountInfo({
   size?: number
   isCurrentLeaderboard?: boolean
 }) {
-  // const { protocol: defaultProtocol } = useProtocolStore()
   // const { isCopying } = useTraderCopying(info.account, info.protocol)
   // const protocol = info.protocol ?? defaultProtocol
 

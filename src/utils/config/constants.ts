@@ -55,6 +55,7 @@ export const LINKS = {
   registerOKX: 'https://www.okx.com/join/75651458',
   registerGate: 'https://www.gate.io/signup/AgBFAApb?ref_type=103',
   registerHyperliquid: 'https://app.hyperliquid.xyz/join/COPIN',
+  getCEXAPIKey: 'https://docs.copin.io/features/centralized-copy-trading-ccp',
   getBingXAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bingx-api',
   getBitgetAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bitget-api',
   getBybitAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bybit-api',

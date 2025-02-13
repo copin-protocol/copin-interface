@@ -8,9 +8,9 @@ import { Link } from 'react-router-dom'
 import { getTraderAlertListApi } from 'apis/alertApis'
 import UnsubscribeAlertModal from 'components/@widgets/UnsubscribeAlertModal'
 import { TraderAlertData } from 'entities/alert'
+import { useIsPremium, useIsVIP } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useBotAlertContext from 'hooks/features/useBotAlertProvider'
 import useSettingWatchlistTraders from 'hooks/features/useSettingWatchlistTraders'
-import { useIsPremium, useIsVIP } from 'hooks/features/useSubscriptionRestrict'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useMyProfile from 'hooks/store/useMyProfile'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -85,11 +85,11 @@ function AlertListComponent() {
   }
   const onDismissUnlinkModal = () => {
     setShowUnlinkModal(false)
-    refetchAlerts()
+    refetchAlerts?.()
   }
   const showLinkButton = !botAlert?.chatId
   const onClickLinkButton = () => {
-    handleGenerateLinkBot()
+    handleGenerateLinkBot?.()
   }
 
   return (

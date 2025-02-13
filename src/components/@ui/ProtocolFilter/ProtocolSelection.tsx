@@ -3,7 +3,7 @@ import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getProtocolsStatistic } from 'apis/positionApis'
-import { getProtocolConfigs } from 'components/@widgets/SwitchProtocols/helpers'
+// import { getProtocolConfigs } from 'components/@widgets/SwitchProtocols/helpers'
 import useDebounce from 'hooks/helpers/useDebounce'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { useProtocolSortByStore } from 'hooks/store/useProtocolSortBy'
@@ -13,7 +13,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { ALLOWED_COPYTRADE_PROTOCOLS, RELEASED_PROTOCOLS, SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
 import { ProtocolEnum, ProtocolSortByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { ProtocolOptionProps } from 'utils/config/protocols'
+// import { ProtocolOptionProps } from 'utils/config/protocols'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -30,7 +30,7 @@ interface ProtocolSelectionProps {
   hasSearch?: boolean
   handleToggleDropdown?: () => void
 }
-const DEFAULT_ALL_CHAINS = 0
+// const DEFAULT_ALL_CHAINS = 0
 
 export default function ProtocolSelection({
   setSelectedProtocols: setSavedProtocols,
@@ -48,7 +48,7 @@ export default function ProtocolSelection({
   const trimmedSearchText = searchText.trim()
   const debounceSearchText = useDebounce<string>(trimmedSearchText, SEARCH_DEBOUNCE_TIME)
   const [selectedProtocols, setSelectedProtocols] = useState(savedProtocols)
-  const [selectedChainId, setSelectedChainId] = useState(DEFAULT_ALL_CHAINS)
+  // const [selectedChainId, setSelectedChainId] = useState(DEFAULT_ALL_CHAINS)
   const [isUseAllowList, setIsUseAllowList] = useState(
     selectedProtocols.every((protocol) => ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol))
   )
@@ -75,13 +75,13 @@ export default function ProtocolSelection({
 
   // ==========================> Protocol options <==============================
   const protocolOptions = useGetProtocolOptions()
-  const protocolConfigs = getProtocolConfigs(protocolOptions)
+  // const protocolConfigs = getProtocolConfigs(protocolOptions)
 
   const checkIsCheckedAll = (): boolean => {
     if (isUseAllowList) {
       return allowList.every((item) => selectedProtocols.includes(item))
     }
-    return generatedProtocolOpts.every((item) => selectedProtocols.includes(item.id))
+    return protocolOptions.every((item) => selectedProtocols.includes(item.id))
   }
 
   const handleSelectAll = (event: ChangeEvent<HTMLInputElement>) => {
@@ -94,16 +94,16 @@ export default function ProtocolSelection({
     }
   }
 
-  const generatedProtocolOpts = useMemo((): ProtocolOptionProps[] => {
-    if (selectedChainId == DEFAULT_ALL_CHAINS) {
-      return protocolOptions.sort((a: ProtocolOptionProps, b: ProtocolOptionProps) => a.text.localeCompare(b.text))
-    }
+  // const generatedProtocolOpts = useMemo((): ProtocolOptionProps[] => {
+  //   if (selectedChainId == DEFAULT_ALL_CHAINS) {
+  //     return protocolOptions.sort((a: ProtocolOptionProps, b: ProtocolOptionProps) => a.text.localeCompare(b.text))
+  //   }
 
-    return protocolConfigs.protocolsByChains[selectedChainId]
-  }, [selectedChainId])
+  //   return protocolConfigs.protocolsByChains[selectedChainId]
+  // }, [selectedChainId])
 
   const options = useMemo(() => {
-    const filteredOptions = generatedProtocolOpts.filter(
+    const filteredOptions = protocolOptions.filter(
       (option) =>
         option.text.toLowerCase().includes(debounceSearchText.toLowerCase()) ||
         option.id.toLowerCase().includes(debounceSearchText.toLowerCase()) ||
@@ -119,20 +119,14 @@ export default function ProtocolSelection({
       sortedOptions.sort(
         (a, b) => (protocolsStatistic?.[b.id]?.traders ?? 0) - (protocolsStatistic?.[a.id]?.traders ?? 0)
       )
+    } else if (protocolSortBy === ProtocolSortByEnum.OI) {
+      sortedOptions.sort((a, b) => (protocolsStatistic?.[b.id]?.oi ?? 0) - (protocolsStatistic?.[a.id]?.oi ?? 0))
     }
 
     return sortedOptions
-  }, [generatedProtocolOpts, protocolSortBy, protocolsStatistic, debounceSearchText])
+  }, [protocolOptions, protocolSortBy, protocolsStatistic, debounceSearchText])
 
-  const isEqual = useMemo(() => {
-    const compareProtocols = (arr1: ProtocolEnum[], arr2: ProtocolEnum[]): boolean => {
-      if (arr1.length !== arr2.length) return false
-      const sortedArr1 = [...arr1].sort()
-      const sortedArr2 = [...arr2].sort()
-      return sortedArr1.every((value, index) => value === sortedArr2[index])
-    }
-    return compareProtocols(savedProtocols, selectedProtocols)
-  }, [savedProtocols, selectedProtocols])
+  const isEqual = compareProtocols(savedProtocols, selectedProtocols)
 
   return (
     <Box sx={{ px: 2, pt: 2, position: 'relative', '.checkbox': { marginRight: '0px !important' } }}>
@@ -322,4 +316,11 @@ export default function ProtocolSelection({
       </Flex>
     </Box>
   )
+}
+
+const compareProtocols = (arr1: ProtocolEnum[], arr2: ProtocolEnum[]): boolean => {
+  if (arr1.length !== arr2.length) return false
+  const sortedArr1 = [...arr1].sort()
+  const sortedArr2 = [...arr2].sort()
+  return sortedArr1.every((value, index) => value === sortedArr2[index])
 }

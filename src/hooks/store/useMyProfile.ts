@@ -5,13 +5,15 @@ import { UserData } from 'entities/user.d'
 
 interface MyProfileState {
   myProfile: UserData | null
+  isAuthenticated: boolean | null
   setMyProfile: (myProfile: UserData | null) => void
 }
 
 const useMyProfileStore = create<MyProfileState>()(
   immer((set) => ({
     myProfile: null,
-    setMyProfile: (data: UserData | null) => set({ myProfile: data }),
+    isAuthenticated: null,
+    setMyProfile: (data: UserData | null) => set({ myProfile: data, isAuthenticated: data ? true : false }),
   }))
 )
 

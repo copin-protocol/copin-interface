@@ -5,9 +5,13 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import { TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 
+enum TabKeyEnum {
+  OPENING = 'opening',
+  CLOSED = 'closed',
+}
 const TABS = [
-  { key: 'opening', name: 'Opening Positions' },
-  { key: 'closed', name: 'History' },
+  { key: TabKeyEnum.OPENING, name: 'Opening Positions' },
+  { key: TabKeyEnum.CLOSED, name: 'History' },
 ]
 
 export default function PositionMobileView({
@@ -18,13 +22,13 @@ export default function PositionMobileView({
   openingPositions: ReactNode
 }) {
   const { searchParams, setSearchParams } = useSearchParams()
-  const currentTabKey = searchParams['position_tab'] ?? TABS[0].key
+  const currentTabKey = searchParams['position_tab'] ?? TabKeyEnum.OPENING
   const handleChangeTab = (key: string) => setSearchParams({ ['position_tab']: key })
   const firstLoadedRef = useRef(!!searchParams['position_tab'] ? true : false)
   const handleNoOpeningPositionsLoaded = () => {
     if (firstLoadedRef.current) return
     firstLoadedRef.current = true
-    handleChangeTab(TABS[1].key)
+    handleChangeTab(TabKeyEnum.CLOSED)
   }
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
@@ -35,11 +39,11 @@ export default function PositionMobileView({
         hasLine
       />
       <Box flex="1 0 0">
-        {currentTabKey === TABS[0].key &&
+        {currentTabKey === TabKeyEnum.OPENING &&
           cloneElement<TraderOpeningPositionsListViewProps>(openingPositions as any, {
             onNoPositionLoaded: handleNoOpeningPositionsLoaded,
           })}
-        {currentTabKey === TABS[1].key && historyPositions}
+        {currentTabKey === TabKeyEnum.CLOSED && historyPositions}
       </Box>
     </Flex>
   )

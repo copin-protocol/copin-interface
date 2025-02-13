@@ -41,7 +41,7 @@ function AlertDashboardComponent() {
         key: 'name',
         style: { minWidth: '200px' },
         render: (item) => (
-          <AlertName data={item} totalTraders={traderAlerts?.meta?.total ?? 0} maxTraders={maxTraderAlert} />
+          <AlertName data={item} totalTraders={traderAlerts?.meta?.total ?? 0} maxTraders={maxTraderAlert ?? 0} />
         ),
       },
       {
@@ -176,7 +176,7 @@ function AlertDashboardComponent() {
                 restrictHeight
                 data={botAlerts?.data}
                 columns={columns}
-                isLoading={loadingAlerts}
+                isLoading={!!loadingAlerts}
                 tableHeadSx={{
                   '& th': {
                     py: 2,

@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom'
 
 import ROUTES from 'utils/config/routes'
 
-export default function useEnabledQueryByPaths(excludingPaths: string[], includingHome = false) {
+export default function useEnabledQueryByPaths(excludingPaths: string[], includingHome = true) {
   const { pathname } = useLocation()
   const enabled =
     (pathname === ROUTES.HOME.path && includingHome) ||

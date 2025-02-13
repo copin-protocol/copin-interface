@@ -7,12 +7,11 @@ import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useOnClickOutside from 'hooks/helpers/useOnClickOutside'
 import { Button } from 'theme/Buttons'
 import { InputSearch } from 'theme/Input'
+import { SearchResult } from 'theme/Search'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 import { getChainMetadata } from 'utils/web3/chains'
-
-import { SearchResult, SearchWrapper } from './styled'
 
 const SearchProtocols = ({
   protocols,
@@ -85,7 +84,7 @@ const SearchProtocols = ({
   }, [])
 
   return (
-    <SearchWrapper ref={searchWrapperRef} width="100%">
+    <Box ref={searchWrapperRef} width="100%" sx={{ position: 'relative' }}>
       <InputSearch
         ref={inputSearchRef}
         placeholder="Search protocols"
@@ -103,7 +102,7 @@ const SearchProtocols = ({
         onKeyDown={(e) => (e.key === 'Enter' ? handleSearchEnter() : undefined)}
       />
       {visibleSearchResult && (
-        <SearchResult>
+        <SearchResult sx={{ backgroundColor: 'neutral6', borderTop: 'none' }}>
           {results.length > 0 && (
             <Box>
               {results.map((data) => (
@@ -114,7 +113,7 @@ const SearchProtocols = ({
           {results.length === 0 && <NoDataFound message={<Trans>No Protocol Found</Trans>} />}
         </SearchResult>
       )}
-    </SearchWrapper>
+    </Box>
   )
 }
 

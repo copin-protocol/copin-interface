@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 
 import { GradientText } from 'components/@ui/GradientText'
 import { TradingEventStatusEnum } from 'entities/event'
-import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { Box, Flex, Type } from 'theme/base'
 import { linearGradient1 } from 'theme/colors'
 import { DCP_SUPPORTED_PROTOCOLS } from 'utils/config/constants'
@@ -69,7 +69,7 @@ export default function EventsNotification() {
     })
   }, [])
 
-  const { events } = useSystemConfigContext()
+  const { events } = useSystemConfigStore()
   const gnsEvent = useMemo(
     () => events?.find((e) => e.type === EventTypeEnum.GNS && e.status !== TradingEventStatusEnum.ENDED),
     [events]

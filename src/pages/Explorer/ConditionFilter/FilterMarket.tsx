@@ -17,10 +17,10 @@ export default function FilterMarket({
 }) {
   const { getListSymbol } = useMarketsConfig()
 
-  const allPairs = getListSymbol()
+  const allPairs = getListSymbol?.()
 
   const pairOptions = useMemo(() => {
-    const options = allPairs.map((symbol) => ({ value: symbol, label: symbol }))
+    const options = allPairs?.map((symbol) => ({ value: symbol, label: symbol })) ?? []
     return options
   }, [allPairs])
 
@@ -33,7 +33,7 @@ export default function FilterMarket({
 
   const handleSelect = (item: string) => {
     const newValues = selectedItems.includes(item) ? selectedItems.filter((e) => e !== item) : [...selectedItems, item]
-    const symbols = Array.from(new Set(allPairs.filter((_symbol) => newValues.includes(_symbol))))
+    const symbols = Array.from(new Set(allPairs?.filter((_symbol) => newValues.includes(_symbol)) ?? []))
     setSelectedItems(symbols)
 
     let formValues = [...filters]
@@ -55,7 +55,7 @@ export default function FilterMarket({
     if (isSelectedAll) {
       setSelectedItems([])
     } else {
-      setSelectedItems(allPairs)
+      setSelectedItems(allPairs ?? [])
     }
     changeFilters(filters.filter((e) => e.key !== 'indexTokens'))
   }

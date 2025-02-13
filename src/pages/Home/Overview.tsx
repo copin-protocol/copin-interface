@@ -11,8 +11,8 @@ import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { EventDetailsData, TradingEventStatusEnum } from 'entities/event'
 import { LatestActivityLogData } from 'entities/user'
-import { useIsPremiumAndAction } from 'hooks/features/useSubscriptionRestrict'
-import { useSystemConfigContext } from 'hooks/features/useSystemConfigContext'
+import { useIsPremiumAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { GradientText } from 'pages/@layouts/Navbar/EventButton'
@@ -48,7 +48,7 @@ export default function Overview() {
 }
 
 function UserOverview() {
-  const { events } = useSystemConfigContext()
+  const { events } = useSystemConfigStore()
   const filterEvents = events?.filter((e) => e.status !== TradingEventStatusEnum.ENDED)
   return (
     <Box sx={{ position: 'relative' }}>

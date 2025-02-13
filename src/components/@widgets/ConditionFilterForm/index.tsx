@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Plus, Trash } from '@phosphor-icons/react'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useId, useState } from 'react'
 
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
@@ -151,6 +151,8 @@ function Row<T>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conditionType, fieldName, gte, lte])
 
+  const instanceId = useId()
+
   return (
     <Flex
       sx={{
@@ -172,6 +174,8 @@ function Row<T>({
       >
         <Box flex="7" pl={2}>
           <Select
+            id={instanceId}
+            instanceId={instanceId}
             menuPlacement="top"
             maxMenuHeight={300}
             menuPosition="fixed"

@@ -6,10 +6,11 @@ import { getFormValuesFromFilters } from 'components/@widgets/ConditionFilterFor
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { FilterSuggestionData } from 'entities/suggestion.d'
 import { TraderData } from 'entities/trader'
+import useGlobalStore from 'hooks/store/useGlobalStore'
 import useMyProfile from 'hooks/store/useMyProfile'
-import { useProtocolStore } from 'hooks/store/useProtocols'
 import { Button } from 'theme/Buttons'
 import { Flex, Type } from 'theme/base'
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
@@ -23,11 +24,11 @@ export default function FilterSuggestion({
   changeFilters: (options: ConditionFormValues<TraderData>) => void
 }) {
   const { myProfile } = useMyProfile()
-  const { protocol } = useProtocolStore()
+  const { protocol } = useGlobalStore()
   const { currentSuggestion, setCurrentSuggestion } = useTradersContext()
   const { data } = useQuery(
     [QUERY_KEYS.GET_TRADER_FILTER_SUGGESTIONS, protocol],
-    () => getFilterSuggestionsApi(protocol),
+    () => getFilterSuggestionsApi(protocol ?? DEFAULT_PROTOCOL),
     {
       keepPreviousData: true,
       retry: 0,

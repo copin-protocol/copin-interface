@@ -38,7 +38,7 @@ import {
 } from './config'
 import { DailyOrdersProvider, useDailyOrdersContext } from './useOrdersProvider'
 
-export default function DailyOrders() {
+export default function DailyOrdersPage() {
   return (
     <DailyOrdersProvider>
       <DailyOrdersComponent />

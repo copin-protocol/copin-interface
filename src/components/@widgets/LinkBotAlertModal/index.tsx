@@ -1,9 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Info } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
-import React, { useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 
 import Divider from 'components/@ui/Divider'
+import useBotAlertContext from 'hooks/features/useBotAlertProvider'
 import useCountdown from 'hooks/helpers/useCountdown'
 import { Button } from 'theme/Buttons'
 import TelegramIcon from 'theme/Icons/TelegramIcon'
@@ -13,29 +14,27 @@ import { Flex, IconBox, Type } from 'theme/base'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { generateTelegramBotAlertUrl } from 'utils/helpers/generateRoute'
 
-export default function LinkBotAlertModal({
-  state,
-  stateExpiredTime,
-  onReset,
-  onDismiss,
-}: {
-  state: string
-  stateExpiredTime?: number
-  onReset: () => void
-  onDismiss: () => void
-}) {
+const LinkBotAlertModal = memo(function LinkBotAlertModalComponent() {
+  const { botAlertState, openingModal, stateExpiredTime, handleResetState, handleDismissModal } = useBotAlertContext()
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (state && stateExpiredTime && dayjs().utc().isAfter(dayjs.utc(stateExpiredTime))) {
-        onReset()
+      if (botAlertState && stateExpiredTime && dayjs().utc().isAfter(dayjs.utc(stateExpiredTime))) {
+        handleResetState?.()
       }
     }, 5000)
     return () => clearInterval(interval)
-  }, [onReset, state, stateExpiredTime])
+  }, [botAlertState, handleResetState, stateExpiredTime])
 
   return (
-    <Modal isOpen title={'Connect Telegram'} onDismiss={onDismiss} hasClose maxWidth="500px" zIndex={Z_INDEX.TOASTIFY}>
+    <Modal
+      isOpen={!!openingModal && !!botAlertState}
+      title={'Connect Telegram'}
+      onDismiss={handleDismissModal}
+      hasClose
+      maxWidth="500px"
+      zIndex={Z_INDEX.TOASTIFY}
+    >
       <Flex width="100%" px={24} py={1} flexDirection="column" alignItems="center">
         <TelegramIcon size={56} variant="Bold" />
         <Flex my={24} flexDirection="column" sx={{ gap: 3 }}>
@@ -50,7 +49,7 @@ export default function LinkBotAlertModal({
               type="button"
               variant="primary"
               as="a"
-              href={generateTelegramBotAlertUrl(state)}
+              href={generateTelegramBotAlertUrl(botAlertState)}
               target="_blank"
               width="240px"
               py="6px"
@@ -91,7 +90,8 @@ export default function LinkBotAlertModal({
       </Flex>
     </Modal>
   )
-}
+})
+export default LinkBotAlertModal
 
 function Countdown({ endTime }: { endTime: number }) {
   const timer = useCountdown(endTime)

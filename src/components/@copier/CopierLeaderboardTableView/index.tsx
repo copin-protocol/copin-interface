@@ -10,7 +10,7 @@ import SubscriptionIcon from 'components/@ui/SubscriptionIcon'
 import { CopierLeaderboardData } from 'entities/copier'
 import useCopierLeaderboardContext, {
   CopierLeaderboardContextValues,
-} from 'hooks/features/useCopierLeaderboardProvider'
+} from 'pages/Leaderboard/CopierLeaderboard/useCopierLeaderboardProvider'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit, PaginationWithSelect } from 'theme/Pagination'
 import Table from 'theme/Table'

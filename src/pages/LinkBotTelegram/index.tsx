@@ -20,7 +20,7 @@ import ROUTES from 'utils/config/routes'
 import { generateTelegramBotAlertUrl } from 'utils/helpers/generateRoute'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
-const LinkBotTelegram = () => {
+const LinkBotTelegramPage = () => {
   const { searchParams } = useSearchParams()
   const history = useHistory()
   const currentState = (searchParams?.[URL_PARAM_KEYS.BOT_TELEGRAM_STATE] as string) ?? undefined
@@ -97,4 +97,4 @@ const LinkBotTelegram = () => {
   )
 }
 
-export default LinkBotTelegram
+export default LinkBotTelegramPage

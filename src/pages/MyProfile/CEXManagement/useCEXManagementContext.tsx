@@ -6,7 +6,6 @@ import { getCopyTradeSettingsListApi, getMyCopyTradersApi } from 'apis/copyTrade
 import { CopyTradeData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
@@ -24,7 +23,6 @@ type CEXManagementContextValues = {
   copyTrades: CopyTradeData[] | undefined
   cexWallets: CopyWalletData[] | undefined
   handleAddTrader: (address: string) => void
-  handleRefresh: () => void
   handleSelectAllTraders: (isSelectedAll: boolean) => void
   handleToggleProtocol: (option: ProtocolEnum) => void
   handleToggleStatus: (option: CopyTradeStatusEnum) => void
@@ -42,7 +40,6 @@ type CEXManagementContextValues = {
 const CEXManagementContext = createContext<CEXManagementContextValues>({} as CEXManagementContextValues)
 
 export function CEXManagementProvider({ children }: { children: ReactNode }) {
-  const refetchQueries = useRefetchQueries()
   const { searchParams, setSearchParams } = useSearchParams()
   const { state: locationState } = useLocation<{ copyWalletId: string }>()
   const { loadingCopyWallets, cexWallets, myProfile } = useCopyWalletContext()
@@ -201,22 +198,13 @@ export function CEXManagementProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'addTraders', payload: [address] })
   }, [])
 
-  const handleRefresh = useCallback(() => {
-    refetchQueries([
-      QUERY_KEYS.GET_COPY_TRADE_SETTINGS,
-      QUERY_KEYS.USE_GET_ALL_COPY_TRADES,
-      QUERY_KEYS.GET_TRADER_VOLUME_COPY,
-    ])
-  }, [refetchQueries])
-
   const contextValues = useMemo(() => {
     const result: CEXManagementContextValues = {
-      isLoadingCopyWallets: loadingCopyWallets,
+      isLoadingCopyWallets: !!loadingCopyWallets,
       cexWallets,
       allCopyTrades,
       copyTrades,
       isLoadingCopyTrades,
-      handleRefresh,
       selectedStatus,
       handleToggleStatus,
       checkIsStatusChecked,
@@ -245,7 +233,6 @@ export function CEXManagementProvider({ children }: { children: ReactNode }) {
     cexWallets,
     handleAddTrader,
     handleToggleTrader,
-    handleRefresh,
     handleSelectAllTraders,
     handleToggleProtocol,
     handleToggleStatus,

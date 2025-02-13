@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import useVaultInviteActions from 'hooks/features/useVaultInviteActions'
+import useVaultInviteActions from 'pages/VaultDetails/useVaultInviteActions'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, Type } from 'theme/base'

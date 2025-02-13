@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import React from 'react'
 
-import useVaultDetailsContext from 'hooks/features/useVaultDetailsProvider'
+import useVaultDetailsContext from 'pages/VaultDetails/useVaultDetailsProvider'
 import { Flex, Type } from 'theme/base'
 import { formatNumber } from 'utils/helpers/format'
 

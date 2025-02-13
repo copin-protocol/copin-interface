@@ -15,7 +15,7 @@ import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
 import WalletList from './WalletList'
 
-export default function WalletManagement() {
+export default function WalletManagementPage() {
   const { lg, xl } = useResponsive()
   const [hiddenBalance, hideBalance] = useState(true)
 

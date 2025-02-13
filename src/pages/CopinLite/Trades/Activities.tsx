@@ -5,6 +5,9 @@ import React, { useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getUserActivityLogsApi } from 'apis/activityLogApis'
+import ListActivityMobile from 'components/@copyActivity/ListActivityMobile'
+import LiteActivitiesFilterTrader from 'components/@copyActivity/LiteHistoryFilterTrader'
+import { ExternalSource, getUserActivityColumns } from 'components/@copyActivity/configs'
 import CopyPositionDetails from 'components/@position/CopyPositionDetails'
 import Container from 'components/@ui/Container'
 import { CopyPositionData } from 'entities/copyTrade'
@@ -12,9 +15,6 @@ import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import NoDataOrSelect from 'pages/MyProfile/NoDataOrSelect'
-import ListActivityMobile from 'pages/MyProfile/UserActivity/ListActivityMobile'
-import LiteActivitiesFilterTrader from 'pages/MyProfile/UserActivity/LiteHistoryFilterTrader'
-import { ExternalSource, getUserActivityColumns } from 'pages/MyProfile/UserActivity/configs'
 import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
@@ -109,7 +109,7 @@ const LiteActivities = ({ currentTab }: { currentTab: string }) => {
                 <Table
                   data={data?.data}
                   restrictHeight
-                  columns={getUserActivityColumns('lite')}
+                  columns={getUserActivityColumns({ layoutType: 'lite' })}
                   isLoading={isFetching}
                   externalSource={externalSource}
                   tableBodyWrapperSx={{ table: { borderSpacing: '0 0' }, '& tbody tr': { bg: 'neutral7' } }}

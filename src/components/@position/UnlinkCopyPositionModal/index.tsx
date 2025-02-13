@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
 
-import useUnlinkPosition from 'hooks/features/useUnlinkPosition'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { COPY_WALLET_TRANS } from 'utils/config/translations'
+
+import useUnlinkPosition from './useUnlinkPosition'
 
 export default function UnlinkCopyPositionModal({
   copyId,

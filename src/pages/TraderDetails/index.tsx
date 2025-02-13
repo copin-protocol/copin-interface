@@ -4,21 +4,23 @@ import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 import { getTraderExchangeStatistic, getTraderStatisticApi } from 'apis/traderApis'
-import HLTraderOpeningPositionsTable, {
+import HLTraderOpeningPositionsTableView, {
   HLTraderOpeningPositionsListView,
 } from 'components/@position/HLTraderOpeningPositions'
-import TraderHistoryPositions, { TraderHistoryPositionsListView } from 'components/@position/TraderHistoryPositions'
-import TraderOpeningPositions, { TraderOpeningPositionsListView } from 'components/@position/TraderOpeningPositions'
+import TraderHistoryPositionsTableView, {
+  TraderHistoryPositionsListView,
+} from 'components/@position/TraderHistoryPositions'
+import TraderOpeningPositionsTableView, {
+  TraderOpeningPositionsListView,
+} from 'components/@position/TraderOpeningPositions'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
 import NotFound from 'components/@ui/NotFound'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d'
-import { BotAlertProvider } from 'hooks/features/useBotAlertProvider'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
-import { getNavProtocol, parseNavProtocol, useProtocolStore } from 'hooks/store/useProtocols'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
@@ -45,9 +47,8 @@ export interface PositionSortPros {
   sortType: SortTypeEnum
 }
 
-export default function TraderDetails() {
+export default function TraderDetailsPage() {
   const { address: _address, protocol: _protocol } = useParams<{ address: string; protocol: ProtocolEnum }>()
-  const { setNavProtocol } = useProtocolStore()
   const address = isAddress(_address)
 
   const { data: exchangeStats, isLoading } = useQuery([QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address], () =>
@@ -62,16 +63,6 @@ export default function TraderDetails() {
   } else {
     protocol = orderedStats?.[0]?.protocol
   }
-
-  useEffect(() => {
-    if (protocol && address) {
-      setNavProtocol((prev) => {
-        const { distinction } = parseNavProtocol(prev)
-        if (distinction === address || !protocol || !address) return prev
-        return getNavProtocol({ protocol, distinction: address })
-      })
-    }
-  }, [])
 
   if (isLoading)
     return (
@@ -181,27 +172,25 @@ export function TraderDetailsComponent({
           <ProtocolStats address={address} protocol={protocol} page="details" exchangeStats={exchangeStats} />
         }
         traderInfo={
-          <BotAlertProvider>
-            <Flex
-              sx={{
-                width: '100%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: 3,
-              }}
-            >
-              <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
-              <TraderActionButtons
-                traderData={currentTraderData}
-                timeOption={timeOption}
-                onChangeTime={setTimeOption}
-                account={address}
-                protocol={protocol}
-                onCopyActionSuccess={onForceReload}
-              />
-            </Flex>
-          </BotAlertProvider>
+          <Flex
+            sx={{
+              width: '100%',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 3,
+            }}
+          >
+            <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
+            <TraderActionButtons
+              traderData={currentTraderData}
+              timeOption={timeOption}
+              onChangeTime={setTimeOption}
+              account={address}
+              protocol={protocol}
+              onCopyActionSuccess={onForceReload}
+            />
+          </Flex>
         }
         traderChartPnl={
           <ChartTrader
@@ -238,14 +227,14 @@ export function TraderDetailsComponent({
         openingPositions={
           sm ? (
             protocol === ProtocolEnum.HYPERLIQUID ? (
-              <HLTraderOpeningPositionsTable
+              <HLTraderOpeningPositionsTableView
                 address={address}
                 protocol={protocol}
                 isExpanded={openingPositionFullExpanded}
                 toggleExpand={handleOpeningPositionsExpand}
               />
             ) : (
-              <TraderOpeningPositions
+              <TraderOpeningPositionsTableView
                 address={address}
                 protocol={protocol}
                 isExpanded={openingPositionFullExpanded}
@@ -260,7 +249,7 @@ export function TraderDetailsComponent({
         }
         closedPositions={
           sm ? (
-            <TraderHistoryPositions
+            <TraderHistoryPositionsTableView
               address={address}
               protocol={protocol}
               isExpanded={positionFullExpanded}

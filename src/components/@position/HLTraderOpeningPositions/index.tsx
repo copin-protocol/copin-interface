@@ -1,14 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { ArrowsIn, ArrowsOutSimple, BookOpen, Notebook } from '@phosphor-icons/react'
+import { ArrowsIn, ArrowsOutSimple, BookOpen, Clock, Notebook } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 
-import { getHlAccountInfo, getHlOpenOrders } from 'apis/hyperliquid'
+import { getHlAccountInfo, getHlOpenOrders, getHlOrderFilled } from 'apis/hyperliquid'
 import emptyBg from 'assets/images/opening_empty_bg.png'
 import HLTraderPositionListView from 'components/@position/HLTraderPositionsListView'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
+import { drawerFillColumns, fillColumns, fullFillColumns } from 'components/@position/configs/hlFillRenderProps'
 import { drawerOrderColumns, fullOrderColumns, orderColumns } from 'components/@position/configs/hlOrderRenderProps'
 import {
   drawerOpeningColumns,
@@ -17,7 +18,6 @@ import {
 } from 'components/@position/configs/hlPositionRenderProps'
 import Divider from 'components/@ui/Divider'
 import { PositionData } from 'entities/trader'
-import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import { TabKeyEnum } from 'pages/Explorer/Layouts/layoutConfigs'
 import Loading from 'theme/Loading'
@@ -33,7 +33,12 @@ import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import HLPositionDetailsDrawer from '../HLTraderPositionDetails/HLPositionDetailsDrawer'
-import { parseHLOrderData, parseHLPositionData } from '../helpers/hyperliquid'
+import {
+  groupHLOrderFillsByOid,
+  parseHLOrderData,
+  parseHLOrderFillData,
+  parseHLPositionData,
+} from '../helpers/hyperliquid'
 
 const emptyCss = {
   backgroundImage: `url(${emptyBg})`,
@@ -53,9 +58,10 @@ const emptySmallCss = {
 export enum HLPositionTab {
   OPEN_POSITIONS = 'open_position',
   OPEN_ORDERS = 'open_order',
+  ORDER_FILLED = 'order_filled',
 }
 
-export default function HLTraderOpeningPositionsTable({
+export default function HLTraderOpeningPositionsTableView({
   protocol,
   address,
   toggleExpand,
@@ -72,7 +78,6 @@ export default function HLTraderOpeningPositionsTable({
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
   const [tab, setTab] = useState<string>(HLPositionTab.OPEN_POSITIONS)
   const { lg, xl, sm } = useResponsive()
-  const { getListIndexTokenByListSymbols } = useMarketsConfig()
 
   //
   const [currentSortExpanded, setCurrentSortExpanded] = useState<TableSortProps<PositionData> | undefined>({
@@ -145,6 +150,32 @@ export default function HLTraderOpeningPositionsTable({
     return (b.timestamp ?? 0) - (a.timestamp ?? 0)
   })
 
+  const { data: filledOrders, isLoading: isLoadingFilledOrders } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_FILLED_ORDERS, address],
+    () =>
+      getHlOrderFilled({
+        user: address,
+      }),
+    {
+      enabled: !!address && protocol === ProtocolEnum.HYPERLIQUID,
+      retry: 0,
+      refetchInterval: 15_000,
+      keepPreviousData: true,
+      select: (data) => {
+        return parseHLOrderFillData({ account: address, data })
+      },
+    }
+  )
+
+  // Sort filled orders by timestamp
+  filledOrders?.sort((a, b) => b.timestamp - a.timestamp)
+
+  // Group the filled orders
+  const groupedFilledOrders = useMemo(() => {
+    if (!filledOrders) return []
+    return groupHLOrderFillsByOid(filledOrders)
+  }, [filledOrders])
+
   const handleSelectItem = (data: PositionData) => {
     setCurrentPosition(data)
     setOpenDrawer(true)
@@ -184,11 +215,18 @@ export default function HLTraderOpeningPositionsTable({
             count: totalOpening,
           },
           {
-            name: <Trans>Open Orders</Trans>,
+            name: <Trans>Orders</Trans>,
             key: HLPositionTab.OPEN_ORDERS,
             icon: <BookOpen size={20} />,
             activeIcon: <BookOpen size={20} weight="fill" />,
             count: totalOpenOrders,
+          },
+          {
+            name: <Trans>Fills</Trans>,
+            key: HLPositionTab.ORDER_FILLED,
+            icon: <Clock size={20} />,
+            activeIcon: <Clock size={20} weight="fill" />,
+            count: groupedFilledOrders?.length ?? 0,
           },
         ]}
         isActiveFn={(config) => config.key === tab}
@@ -235,9 +273,9 @@ export default function HLTraderOpeningPositionsTable({
               justifyContent="center"
               alignItems="center"
             >
-              <Type.CaptionBold display="block">This trader’s opening position is empty</Type.CaptionBold>
+              <Type.CaptionBold display="block">This trader&quot;s opening position is empty</Type.CaptionBold>
               <Type.Caption mt={1} color="neutral3" textAlign="center" display="block">
-                Once the trader starts a new position, you’ll see it listed here
+                Once the trader starts a new position, you&quot;ll see it listed here
               </Type.Caption>
             </Flex>
           )}
@@ -302,9 +340,9 @@ export default function HLTraderOpeningPositionsTable({
               justifyContent="center"
               alignItems="center"
             >
-              <Type.CaptionBold display="block">This trader’s opening orders is empty</Type.CaptionBold>
+              <Type.CaptionBold display="block">This trader&quot;s opening orders is empty</Type.CaptionBold>
               <Type.Caption mt={1} color="neutral3" textAlign="center" display="block">
-                Once the trader starts a new open order, you’ll see it listed here
+                Once the trader starts a new open order, you&quot;ll see it listed here
               </Type.Caption>
             </Flex>
           )}
@@ -312,9 +350,10 @@ export default function HLTraderOpeningPositionsTable({
             <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
               {sm ? (
                 <Table
-                  restrictHeight={!isDrawer && lg}
+                  restrictHeight={(!isDrawer && lg) || (isDrawer && isDrawer && openOrders?.length > 10)}
                   wrapperSx={{
                     minWidth: 500,
+                    minHeight: isDrawer && openOrders?.length > 10 ? 368 : undefined,
                   }}
                   tableBodySx={{
                     '& td:last-child': { pr: 2 },
@@ -331,6 +370,54 @@ export default function HLTraderOpeningPositionsTable({
                   isLoading={isLoading}
                   scrollDep={tableData?.meta?.offset}
                   onClickItem={handleSelectItem}
+                  hasAccountAddress={false}
+                />
+              )}
+            </Box>
+          )}
+        </Box>
+      )}
+      {tab === HLPositionTab.ORDER_FILLED && (
+        <Box display={['block', 'block', 'block', isDrawer ? 'block' : 'flex']} flexDirection="column" height="100%">
+          {isLoadingFilledOrders && <Loading />}
+          {!groupedFilledOrders?.length && !isLoadingFilledOrders && (
+            <Flex
+              p={3}
+              flexDirection="column"
+              width="100%"
+              height={isDrawer ? 60 : 180}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Type.CaptionBold display="block">No recent fills</Type.CaptionBold>
+              <Type.Caption mt={1} color="neutral3" textAlign="center" display="block">
+                Once the trader has filled orders, you&quot;ll see them listed here
+              </Type.Caption>
+            </Flex>
+          )}
+          {groupedFilledOrders?.length > 0 && (
+            <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
+              {sm ? (
+                <Table
+                  restrictHeight={(!isDrawer && lg) || (isDrawer && isDrawer && groupedFilledOrders?.length > 10)}
+                  wrapperSx={{
+                    minWidth: 500,
+                    minHeight: isDrawer && groupedFilledOrders?.length > 10 ? 368 : undefined,
+                  }}
+                  tableBodySx={{
+                    '& td:last-child': { pr: 2 },
+                  }}
+                  data={groupedFilledOrders}
+                  columns={isDrawer ? drawerFillColumns : xl && isExpanded ? fullFillColumns : fillColumns}
+                  isLoading={isLoadingFilledOrders}
+                  renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
+                  scrollToTopDependencies={scrollToTopDependencies}
+                />
+              ) : (
+                <HLTraderPositionListView
+                  data={tableData?.data}
+                  isLoading={isLoadingFilledOrders}
+                  scrollDep={groupedFilledOrders?.length}
                   hasAccountAddress={false}
                 />
               )}
@@ -442,9 +529,9 @@ export function HLTraderOpeningPositionsListView({
       {isLoading && <Loading />}
       {!listData?.data?.length && !isLoading && (
         <Flex p={3} flexDirection="column" width="100%" height={180} justifyContent="center" alignItems="center">
-          <Type.CaptionBold display="block">This trader’s opening position is empty</Type.CaptionBold>
+          <Type.CaptionBold display="block">This trader&quot;s opening position is empty</Type.CaptionBold>
           <Type.Caption mt={1} color="neutral3" display="block">
-            Once the trader starts a new position, you’ll see it listed here
+            Once the trader starts a new position, you&quot;ll see it listed here
           </Type.Caption>
         </Flex>
       )}
@@ -459,7 +546,7 @@ export function HLTraderOpeningPositionsListView({
           />
         </Box>
       )}
-      <Divider />
+      {!isDrawer && <Divider />}
       <PaginationWithLimit
         currentPage={currentPage}
         currentLimit={currentLimit}

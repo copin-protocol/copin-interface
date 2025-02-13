@@ -34,8 +34,8 @@ export function MarketFilter({
 MarketFilterProps) {
   const { xl } = useResponsive()
   const { getListSymbol } = useMarketsConfig()
-  const protocolPairs = getListSymbol()
-  const isCopyAll = protocolPairs.length === pairs.length
+  const protocolPairs = getListSymbol?.()
+  const isCopyAll = protocolPairs?.length === pairs.length
   const hasExcludingPairs = excludedPairs.length > 0 && isCopyAll
   const tooltipId = `tt_excluding_pairs_0`
 
@@ -52,7 +52,7 @@ MarketFilterProps) {
             isAllPairs={isCopyAll}
             selectedPairs={pairs}
             onChangePairs={onChangePairs}
-            allPairs={protocolPairs}
+            allPairs={protocolPairs ?? []}
             excludedPairs={excludedPairs}
             handleToggleDropdown={() => setVisible(!visible)}
           />

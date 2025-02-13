@@ -24,7 +24,7 @@ const WalletActions = ({ data }: { data: CopyWalletData }) => {
   const deleteWallet = useMutation(deleteCopyWalletApi, {
     onSuccess: () => {
       toast.success(<ToastBody title={<Trans>Success</Trans>} message={<Trans>Delete wallet successful!</Trans>} />)
-      reloadCopyWallets()
+      reloadCopyWallets?.()
       setOpenDeleteModal(false)
     },
     onError: (error: any) => {

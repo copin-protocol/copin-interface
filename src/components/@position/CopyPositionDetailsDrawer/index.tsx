@@ -7,6 +7,7 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import { CopyPositionData } from 'entities/copyTrade'
 import IconButton from 'theme/Buttons/IconButton'
 import RcDrawer from 'theme/RcDrawer'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 import CopyPositionDetails from '../CopyPositionDetails'
 
@@ -21,7 +22,7 @@ export default function CopyPositionDetailsDrawer({
 }) {
   const { lg } = useResponsive()
   return (
-    <RcDrawer open={isOpen} onClose={onDismiss} width={lg ? '60%' : '100%'}>
+    <RcDrawer open={isOpen} onClose={onDismiss} width={lg ? '60%' : '100%'} zIndex={Z_INDEX.TOASTIFY}>
       <Container sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'auto' }}>
         <IconButton
           icon={<XCircle size={24} />}

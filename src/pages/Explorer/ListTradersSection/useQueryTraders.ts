@@ -3,10 +3,10 @@ import { useMemo } from 'react'
 
 import { normalizeTraderData } from 'apis/normalize'
 import { RequestBodyApiData } from 'apis/types'
-import { ResponseTraderData, TraderData } from 'entities/trader'
+import { ResponseTraderData } from 'entities/trader'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { DEFAULT_LIMIT, MAX_LIMIT } from 'utils/config/constants'
-import { CheckAvailableStatus, ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum } from 'utils/config/enums'
 import { getInitNumberValue } from 'utils/helpers/geInitialValue'
 import { extractFiltersFromFormValues } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
@@ -15,11 +15,10 @@ import { FilterTabEnum } from '../ConditionFilter/configs'
 import { formatRankingRanges } from '../helpers/formatRankingRanges'
 import { getInitFilters, getInitSort } from '../helpers/getInitValues'
 import { TradersContextData } from '../useTradersContext'
-import useRangeFilterData from './useRangeFilterData'
+// import useRangeFilterData from './useRangeFilterData'
 import useTimeFilterData from './useTimeFilterData'
 
 export default function useQueryTraders({
-  protocol,
   tab,
   timeRange,
   timeOption,
@@ -30,10 +29,7 @@ export default function useQueryTraders({
   setSelectedProtocols,
   isFavTraders = false,
   traderFavorites,
-}: Pick<
-  TradersContextData,
-  'protocol' | 'tab' | 'timeRange' | 'timeOption' | 'isRangeSelection' | 'accounts' | 'filterTab'
-> & {
+}: Pick<TradersContextData, 'tab' | 'timeRange' | 'timeOption' | 'isRangeSelection' | 'accounts' | 'filterTab'> & {
   selectedProtocols: ProtocolEnum[]
   setSelectedProtocols: (protocols: ProtocolEnum[]) => void
   isFavTraders?: boolean
@@ -70,13 +66,13 @@ export default function useQueryTraders({
     return request
   }, [accounts, filterTab, searchParams])
 
-  const { rangeTraders, loadingRangeTraders, loadingRangeProgress } = useRangeFilterData({
-    protocol,
-    tab,
-    requestData,
-    timeRange,
-    isRangeSelection,
-  })
+  // const { rangeTraders, loadingRangeTraders, loadingRangeProgress } = useRangeFilterData({
+  //   protocol,
+  //   tab,
+  //   requestData,
+  //   timeRange,
+  //   isRangeSelection,
+  // })
 
   const { traders: timeTraders, loading: loadingTimeTraders } = useTimeFilterData({
     requestData,
@@ -93,7 +89,8 @@ export default function useQueryTraders({
     timeTradersData = data
   }
 
-  let data = isRangeSelection ? rangeTraders : timeTradersData
+  // let data = isRangeSelection ? rangeTraders : timeTradersData
+  let data = timeTradersData
 
   if (accounts && data) {
     const protocolAccounts = traderFavorites ?? accounts
@@ -110,7 +107,7 @@ export default function useQueryTraders({
         return {
           account: address,
           protocol: protocol as ProtocolEnum,
-        } as TraderData
+        } as ResponseTraderData
       })
 
     data = {
@@ -123,11 +120,15 @@ export default function useQueryTraders({
       },
     }
   }
-  const isLoading = isRangeSelection ? loadingRangeTraders : loadingTimeTraders
-  const isRangeProgressing =
-    isRangeSelection && isLoading && loadingRangeProgress?.status !== CheckAvailableStatus.FINISH
+  // const isLoading = isRangeSelection ? loadingRangeTraders : loadingTimeTraders
+  // const isRangeProgressing =
+  //   isRangeSelection && isLoading && loadingRangeProgress?.status !== CheckAvailableStatus.FINISH
 
-  return { data, isLoading, isRangeProgressing, loadingRangeProgress }
+  // return { data, isLoading, isRangeProgressing, loadingRangeProgress }
+
+  const isLoading = loadingTimeTraders
+
+  return { data, isLoading }
 }
 
 function transformRequestWithAccounts(request: RequestBodyApiData, accounts: string[], isFavTrader: boolean) {

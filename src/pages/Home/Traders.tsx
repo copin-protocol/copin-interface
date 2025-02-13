@@ -25,6 +25,7 @@ import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { Account, PnlStatisticsResponse, ResponseTraderData, StatisticData, TraderData } from 'entities/trader'
 import useInternalRole from 'hooks/features/useInternalRole'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
+import useProtocolFromUrl from 'hooks/router/useProtocolFromUrl'
 // import useIsMobile from 'hooks/helpers/useIsMobile'
 // import useIsSafari from 'hooks/helpers/useIsSafari'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -41,7 +42,7 @@ import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { TIME_TRANSLATION } from 'utils/config/translations'
 import { formatDate } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { transformGraphqlFilters, useProtocolFromUrl } from 'utils/helpers/graphql'
+import { transformGraphqlFilters } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
 import { getUserForTracking, logEvent, logEventBacktest, logEventHomeFilter } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
@@ -67,11 +68,11 @@ export default function Traders() {
     setSelectedProtocols,
   } = useProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
 
-  const foundProtocolInUrl = useProtocolFromUrl(searchParams, pathname)
+  const { protocols } = useProtocolFromUrl(searchParams, pathname)
 
   useEffect(() => {
-    if (foundProtocolInUrl) {
-      setSelectedProtocols(foundProtocolInUrl)
+    if (protocols) {
+      setSelectedProtocols(protocols)
     }
   }, [])
 

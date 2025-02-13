@@ -2,7 +2,7 @@ import { Clock } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
 
-import useUserSubscription from 'hooks/features/useUserSubscription'
+import useUserSubscription from 'hooks/features/subscription/useUserSubscription'
 import useCountdown from 'hooks/helpers/useCountdown'
 import Tooltip from 'theme/Tooltip'
 import { Box, IconBox, Type } from 'theme/base'

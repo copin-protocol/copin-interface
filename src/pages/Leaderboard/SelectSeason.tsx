@@ -1,10 +1,11 @@
 import { CaretLeft, CaretRight } from '@phosphor-icons/react'
 import React from 'react'
 
-import useLeaderboardContext from 'hooks/features/useLeaderboardProvider'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { Flex, Type } from 'theme/base'
 import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
+
+import useLeaderboardContext from './useLeaderboardProvider'
 
 const SelectSeason = () => {
   const { formatCurrent, formatPrev, formatNext, ignoreNext, onPrevious, onNext } = useLeaderboardContext()

@@ -113,7 +113,7 @@ const ClosePositionHandler = ({
   const { getPricesData } = useGetUsdPrices()
   const prices = getPricesData({ protocol: position.protocol })
   const { getSymbolByIndexToken } = useMarketsConfig()
-  const symbol = getSymbolByIndexToken({ indexToken: position.indexToken })
+  const symbol = getSymbolByIndexToken?.({ indexToken: position.indexToken })
 
   useEffect(() => {
     if (!symbol) return

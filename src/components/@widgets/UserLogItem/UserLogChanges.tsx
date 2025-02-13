@@ -22,13 +22,13 @@ const UserLogChanges = ({ data, ...props }: { data: UserLogData } & LayoutProps 
           case ChangeFieldEnum.TOKEN_ADDRESSES:
           case ChangeFieldEnum.EXCLUDING_TOKEN_ADDRESSES:
             if (data.oldData?.protocol) {
-              parsedOldData = data.oldData?.[fieldName]?.map((e: string) =>
-                getSymbolByIndexToken({ protocol: data.oldData?.protocol, indexToken: e })
+              parsedOldData = data.oldData?.[fieldName]?.map(
+                (e: string) => getSymbolByIndexToken?.({ protocol: data.oldData?.protocol, indexToken: e }) ?? ''
               )
             }
             if (data.newData?.protocol) {
-              parsedNewData = data.newData?.[fieldName]?.map((e: string) =>
-                getSymbolByIndexToken({ protocol: data.newData?.protocol, indexToken: e })
+              parsedNewData = data.newData?.[fieldName]?.map(
+                (e: string) => getSymbolByIndexToken?.({ protocol: data.newData?.protocol, indexToken: e }) ?? ''
               )
             }
             break

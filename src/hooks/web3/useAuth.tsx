@@ -48,14 +48,13 @@ export const AuthContext = createContext({} as ContextValues)
 
 export function AuthProvider({ children }: { children: JSX.Element }) {
   const [{ wallet }, activate, deactivate, updateBalances] = useConnectWallet()
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [openReferralModal, setOpenReferralModal] = useState(false)
 
   const authedRef = useRef<boolean>(false)
   const eagerTriggeredRef = useRef<boolean>(false)
   const accountRef = useRef<string | null | undefined>(wallet?.accounts[0].address)
   const verifyCodeRef = useRef<string>()
-  const { myProfile, setMyProfile } = useMyProfile()
+  const { myProfile, isAuthenticated, setMyProfile } = useMyProfile()
   const { refetch: refetchProfile } = useQuery('get_user_profile_after_change_referrer', getMyProfileApi, {
     enabled: false,
     onSuccess: (data) => {
@@ -89,7 +88,6 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     localStorage.removeItem(STORAGE_KEYS.BINGX_NOTE)
     clearAuth()
     setMyProfile(null)
-    setIsAuthenticated(null)
     disconnectWeb3()
   }, [disconnectWeb3, setMyProfile])
 
@@ -134,7 +132,6 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
           account: account.address,
         })
         setMyProfile({ ...response })
-        setIsAuthenticated(true)
         setWaitingState(null)
         // if (!response.isAddedReferral && !response.isSkippedReferral) {
         //   if (hasUrlRef && referralCodeQs) {
@@ -183,7 +180,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     const { account: storedAccount, wallet: storedWallet } = getStoredWallet()
     const jwt = getStoredJwt()
     if (!jwt) {
-      setIsAuthenticated(false)
+      setMyProfile(null)
       return
     }
     if (storedWallet) {
@@ -225,7 +222,6 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       setJwt(jwt)
       const user = await getMyProfileApi()
       setMyProfile(user)
-      setIsAuthenticated(true)
       setWaitingState(null)
     } catch (error: any) {
       if (error.message.includes('Unauthorized')) {
@@ -236,7 +232,6 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
         toast.error(<ToastBody title={error.name} message={error.message} />)
       }
       clearAuth()
-      setIsAuthenticated(false)
       setMyProfile(null)
     }
     authedRef.current = true
@@ -293,8 +288,9 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     }
   }, [
     waitingState,
-    isAuthenticated,
     wallet,
+    isAuthenticated,
+    getAccount,
     updateBalances,
     myProfile,
     connect,
@@ -303,7 +299,6 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
     eagerAuth,
     setMyProfile,
     isNewUser,
-    waitingState,
   ])
 
   return (

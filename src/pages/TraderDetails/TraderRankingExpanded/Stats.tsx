@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { TraderData } from 'entities/trader'
-import useGetTokensTraded from 'hooks/features/useGetTokensTraded'
+import useGetTokensTraded from 'hooks/features/trader/useGetTokensTraded'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
@@ -67,7 +67,7 @@ function TokenTrades({
   const { getSymbolByIndexToken } = useMarketsConfig()
   const { data } = useGetTokensTraded({ account, protocol })
   const tokens = data?.length
-    ? data.map((address) => getSymbolByIndexToken({ protocol, indexToken: address })).join(', ')
+    ? data.map((address) => getSymbolByIndexToken?.({ protocol, indexToken: address })).join(', ')
     : '--'
   return <StatsRow label={<Trans>Markets</Trans>} value={tokens} />
 }

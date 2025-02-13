@@ -30,7 +30,7 @@ function ChartGainsPositionRealtime({ position, orders }: Props) {
     initWebsocket({ symbolByIndexToken })
   }, [getSymbolByIndexTokenMapping])
   const [chartContainer, setChartContainer] = useState<HTMLDivElement | null>(null)
-  const symbol = getSymbolByIndexToken({ protocol: position?.protocol, indexToken: position?.indexToken }) ?? 'BTC'
+  const symbol = getSymbolByIndexToken?.({ protocol: position?.protocol, indexToken: position?.indexToken }) ?? 'BTC'
   const openBlockTime = useMemo(() => (position ? dayjs(position.createdAt).utc().valueOf() : 0), [position])
   const closeBlockTime = useMemo(() => (position ? dayjs(position.lastOrderAt).utc().valueOf() : 0), [position])
   const isOpening = position?.status === PositionStatusEnum.OPEN

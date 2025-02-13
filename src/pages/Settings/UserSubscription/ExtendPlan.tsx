@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 
-import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
+import useSubscriptionPlanPrice from 'hooks/features/subscription/useSubscriptionPlanPrice'
 import { Type } from 'theme/base'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
 

@@ -191,7 +191,7 @@ TableProps<T, K>) {
           (noDataComponent ? (
             noDataComponent
           ) : (
-            <Box mb={24} sx={{ bg: 'neutral8', borderRadius: 'sm', ...noDataWrapperSx }}>
+            <Box mb={24} sx={{ borderRadius: 'sm', ...noDataWrapperSx }}>
               <NoDataFound message={noDataMessage} />
             </Box>
           ))}

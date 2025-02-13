@@ -1,6 +1,5 @@
 import CopierLeaderBoardTableView from 'components/@copier/CopierLeaderboardTableView'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import { CopierLeaderboardProvider } from 'hooks/features/useCopierLeaderboardProvider'
 import RankingIcon from 'theme/Icons/RankingIcon'
 import { Box, Flex, Type } from 'theme/base'
 import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
@@ -8,8 +7,9 @@ import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 import ExchangeFilterSection from './ExchangeFilterSection'
 import SearchRanking from './SearchRanking'
 import TimeFilterSection from './TimeFilterSection'
+import { CopierLeaderboardProvider } from './useCopierLeaderboardProvider'
 
-const CopierLeaderboard = () => {
+const CopierLeaderboardPage = () => {
   return (
     <>
       <CustomPageTitle title="Copier Ranking" />
@@ -122,4 +122,4 @@ const CopierLeaderboard = () => {
   )
 }
 
-export default CopierLeaderboard
+export default CopierLeaderboardPage

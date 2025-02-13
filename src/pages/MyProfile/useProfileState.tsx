@@ -126,7 +126,7 @@ export default function useProfileState(): ProfileState {
     changeActiveWallet,
     myProfile,
     copyWallets,
-    loadingCopyWallets,
+    loadingCopyWallets: !!loadingCopyWallets,
     activeWallet,
     setActiveWallet,
   }

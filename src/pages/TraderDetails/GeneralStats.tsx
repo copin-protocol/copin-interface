@@ -53,22 +53,18 @@ export default function GeneralStats({
             <BalanceText protocol={protocol} account={account} smartAccount={smartAccount} />
           </Type.Caption>
         </Box>
-        {lastTradeAt && (
-          <Box textAlign="center" flex={['1', 'none']}>
-            <Type.Caption mr={[0, 2]} color="neutral3" display={['block', 'inline-block']}>
-              Last Trade:
-            </Type.Caption>
-            <Type.Caption>{formatRelativeDate(lastTradeAt)}</Type.Caption>
-          </Box>
-        )}
-        {runTimeDays && (
-          <Box textAlign="center" flex={['1', 'none']}>
-            <Type.Caption mr={[0, 2]} color="neutral3" display={['block', 'inline-block']}>
-              Runtime:
-            </Type.Caption>
-            <Type.Caption>{runTimeDays} days</Type.Caption>
-          </Box>
-        )}
+        <Box textAlign="center" flex={['1', 'none']}>
+          <Type.Caption mr={[0, 2]} color="neutral3" display={['block', 'inline-block']}>
+            Last Trade:
+          </Type.Caption>
+          <Type.Caption>{lastTradeAt ? formatRelativeDate(lastTradeAt) : '--'}</Type.Caption>
+        </Box>
+        <Box textAlign="center" flex={['1', 'none']}>
+          <Type.Caption mr={[0, 2]} color="neutral3" display={['block', 'inline-block']}>
+            Runtime:
+          </Type.Caption>
+          <Type.Caption>{runTimeDays ? `${runTimeDays} days` : '--'}</Type.Caption>
+        </Box>
       </Flex>
     </Box>
   )

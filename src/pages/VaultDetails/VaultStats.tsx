@@ -2,15 +2,14 @@ import { Trans } from '@lingui/macro'
 import React, { ReactNode } from 'react'
 
 import CustomTag from 'components/@ui/CustomTag'
-import useVaultDetailsContext from 'hooks/features/useVaultDetailsProvider'
 import { GradientText } from 'pages/@layouts/Navbar/EventButton'
+import useVaultDetailsContext from 'pages/VaultDetails/useVaultDetailsProvider'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { formatNumber } from 'utils/helpers/format'
 
 export default function VaultStats() {
-  const { vault, vaultUserDetails, vaultApr, isLoading } =
-    useVaultDetailsContext()
+  const { vault, vaultUserDetails, vaultApr, isLoading } = useVaultDetailsContext()
 
   return (
     <Box>

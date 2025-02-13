@@ -8,7 +8,7 @@ import {
   ProtocolEnum,
   SLTPTypeEnum,
 } from 'utils/config/enums'
-import { DEFAULT_SERVICE_KEY } from 'utils/config/keys'
+import { DEFAULT_SERVICE_KEY, QUERY_KEYS } from 'utils/config/keys'
 
 import { getExchangeOption } from './helpers'
 import { CopyTradeFormValues, ExchangeOptions } from './types'
@@ -114,3 +114,10 @@ export const protocolOptions = RELEASED_PROTOCOLS.map((value) => {
     ),
   }
 })
+
+export const postUpdateRefreshQueries = [
+  QUERY_KEYS.GET_TRADER_VOLUME_COPY,
+  QUERY_KEYS.GET_COPY_TRADE_SETTINGS,
+  QUERY_KEYS.GET_EMBEDDED_COPY_TRADES,
+  QUERY_KEYS.USE_GET_ALL_COPY_TRADES,
+]

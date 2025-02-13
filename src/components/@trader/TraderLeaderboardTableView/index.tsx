@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import NoDataFound from 'components/@ui/NoDataFound'
-import useLeaderboardProvider, { LeaderboardContextValues } from 'hooks/features/useLeaderboardProvider'
+import useLeaderboardProvider, { LeaderboardContextValues } from 'pages/Leaderboard/useLeaderboardProvider'
 import Accordion from 'theme/Accordion'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit, PaginationWithSelect } from 'theme/Pagination'

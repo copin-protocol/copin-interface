@@ -3,7 +3,7 @@ import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
 import { CopyTradeData } from 'entities/copyTrade'
-import useAllCopyTrades from 'hooks/features/useAllCopyTrades'
+import useAllCopyTrades from 'hooks/features/copyTrade/useAllCopyTrades'
 import useEnabledQueryByPaths from 'hooks/helpers/useEnabledQueryByPaths'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'

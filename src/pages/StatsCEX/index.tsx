@@ -5,7 +5,7 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 
 import Overview from './Overview'
 
-export default function StatsCEX() {
+export default function StatsCEXPage() {
   return (
     <>
       <CustomPageTitle title="CEX Depth" />

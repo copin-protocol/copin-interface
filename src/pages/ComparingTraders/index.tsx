@@ -13,7 +13,7 @@ import { URL_PARAM_KEYS } from 'utils/config/keys'
 
 import ComparisonComponent, { ComparisonComponentProps } from './ComparisonComponent'
 
-export default function ComparingTraders() {
+export default function ComparingTradersPage() {
   const { searchParams, setSearchParams } = useSearchParams()
   const traders = useMemo(() => {
     return (searchParams[URL_PARAM_KEYS.COMPARE_TRADERS] as string)?.split?.('_') ?? []

@@ -196,28 +196,45 @@ export const openingColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     render: (item) => renderEntry(item),
   },
   {
+    title: 'ROI (%)',
+    key: 'realisedPnl', // just for identify
+    style: { minWidth: 50, maxWidth: 50, textAlign: 'right' },
+    render: renderOpeningROI,
+  },
+  {
     title: <LabelEPnL />,
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '80px', textAlign: 'right' },
     render: (item) => renderPnL(item),
   },
-  {
-    title: <Box pr={1}>Source</Box>,
-    dataIndex: 'id',
-    key: 'id',
-    style: { minWidth: '70px', textAlign: 'right' },
-    render: renderSource,
-  },
+  // {
+  //   title: <Box pr={1}>Source</Box>,
+  //   dataIndex: 'id',
+  //   key: 'id',
+  //   style: { minWidth: '70px', textAlign: 'right' },
+  //   render: renderSource,
+  // },
 ]
 
-export const getColumns = (type: LayoutType) => {
+export const getColumns = ({
+  type,
+  excludingColumnKeys,
+}: {
+  type: LayoutType
+  excludingColumnKeys?: (keyof CopyPositionData)[]
+}) => {
+  let columns = openingColumns
   switch (type) {
     case 'lite':
-      return liteOpeningColumns
+      columns = liteOpeningColumns
+      break
     case 'simple':
-      return simpleOpeningColumns
-    default:
-      return openingColumns
+      columns = simpleOpeningColumns
+      break
   }
+  if (excludingColumnKeys) {
+    columns = columns.filter((v) => (v.key != null ? !excludingColumnKeys.includes(v.key) : true))
+  }
+  return columns
 }

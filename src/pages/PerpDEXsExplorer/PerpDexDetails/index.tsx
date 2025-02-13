@@ -32,7 +32,7 @@ import RemarkableMetricFields from './RemarkableMetricFields'
 import { DESKTOP_EVENT_AREA_HEIGHT, DESKTOP_LEFT_AREA_WIDTH } from './configs/constants'
 import { METRIC_FIELD } from './configs/field'
 
-export default function PerpDEXDetails() {
+export default function PerpDEXDetailsPage() {
   const { perpdex } = useParams<{ perpdex: string | undefined }>()
   const { searchParams } = useSearchParams()
   const protocol = (searchParams.protocol as string)?.toLowerCase()
@@ -63,7 +63,6 @@ export default function PerpDEXDetails() {
   }, [perpDEXEvent, perpdexData?.perpdex, protocolData?.protocol])
 
   const { lg } = useResponsive()
-  console.count()
 
   return (
     <>

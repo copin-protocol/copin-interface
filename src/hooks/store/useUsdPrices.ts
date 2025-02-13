@@ -92,7 +92,7 @@ const usePollingUsdPrice = () => {
       const parsedPrices: UsdPrices = {}
       if (!prices) return
       Object.entries(prices).forEach(([indexToken, price]) => {
-        const symbol = getSymbolByIndexToken({ indexToken })
+        const symbol = getSymbolByIndexToken?.({ indexToken })
         if (symbol) {
           parsedPrices[symbol] = price
         }
@@ -120,7 +120,7 @@ const usePollingGainsUsdPrice = () => {
           const initialCache = await fetch('https://backend-pricing.eu.gains.trade/charts').then((res) => res.json())
           if (initialCache && initialCache.closes) {
             initialCache.closes.map((price: number, index: number) => {
-              const symbol = getSymbolByIndexToken({
+              const symbol = getSymbolByIndexToken?.({
                 protocol: ProtocolEnum.GNS,
                 indexToken: `${ProtocolEnum.GNS}-${index}`,
               })

@@ -1,9 +1,10 @@
 import React from 'react'
 
-import useLeaderboardContext from 'hooks/features/useLeaderboardProvider'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Type } from 'theme/base'
 import { LEADERBOARD_OPTIONS } from 'utils/config/options'
+
+import useLeaderboardContext from './useLeaderboardProvider'
 
 const SwitchLeaderboardType = ({ sx }: { sx?: any }) => {
   const { currentOption, changeCurrentOption } = useLeaderboardContext()

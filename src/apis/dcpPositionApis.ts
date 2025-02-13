@@ -1,6 +1,6 @@
+import { CopyPositionData } from 'entities/copyTrade'
 import { ActionTypeEnum, CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 
-import { CopyPositionData } from '../entities/copyTrade'
 import requester from './index'
 
 const SERVICE = 'dcp-positions'

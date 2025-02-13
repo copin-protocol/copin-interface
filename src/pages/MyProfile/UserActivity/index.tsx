@@ -1,39 +1,20 @@
-import { Trans } from '@lingui/macro'
-import { XCircle } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
 
-import { getUserActivityLogsApi } from 'apis/activityLogApis'
-import CopyTradePositionDetails from 'components/@position/CopyPositionDetails'
-import Container from 'components/@ui/Container'
-import { CopyPositionData } from 'entities/copyTrade'
+import UserActivityView from 'components/@copyActivity/UserActivityView'
 import { UserActivityData } from 'entities/user'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import useIsMobile from 'hooks/helpers/useIsMobile'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
-import useMyProfileStore from 'hooks/store/useMyProfile'
-import IconButton from 'theme/Buttons/IconButton'
-import { PaginationWithLimit } from 'theme/Pagination'
-import RcDrawer from 'theme/RcDrawer'
-import Table from 'theme/Table'
 import { TableSortProps } from 'theme/Table/types'
-import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Type } from 'theme/base'
+import { Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
-import { QUERY_KEYS, TOOLTIP_KEYS } from 'utils/config/keys'
-import { pageToOffset } from 'utils/helpers/transform'
 
 import SelectWallets from '../SelectWallets'
-import ListActivityMobile from './ListActivityMobile'
 import SelectedCopyTrades from './SelectedCopyTrades'
-import { ExternalSource, userActivityColumns } from './configs'
 import useFilterActivities from './useFilterActivities'
 
-export default function UserActivity() {
+export default function UserActivityPage() {
   const { copyWallets } = useCopyWalletContext()
-  const { myProfile } = useMyProfileStore()
   const [selectionState, dispatch] = useFilterActivities()
   const selectedWalletIds = selectionState?.selectedWallets?.map((e) => e.id)
   const selectedCopyTradeIds = selectionState?.selectedCopyTrades?.map((e) => e.id)
@@ -57,49 +38,8 @@ export default function UserActivity() {
     if (!!selectedIds.length) return selectedIds
     return ['']
   }
-
-  const { data, isFetching } = useQuery(
-    [
-      QUERY_KEYS.GET_USER_ACTIVITY_LOGS,
-      currentPage,
-      currentLimit,
-      myProfile?.id,
-      currentSort,
-      selectedWalletIds,
-      selectedCopyTradeIds,
-    ],
-    () =>
-      getUserActivityLogsApi({
-        limit: currentLimit,
-        offset: pageToOffset(currentPage, currentLimit),
-        copyWalletIds: checkFilters(selectionState.allWallets, selectedWalletIds),
-        copyTradeIds: checkFilters(selectionState.allCopyTrades, selectedCopyTradeIds),
-        sortBy: currentSort?.sortBy,
-        sortType: currentSort?.sortType,
-      }),
-    { keepPreviousData: true, retry: 0 }
-  )
-  const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
-  const [currentCopyPosition, setCurrentCopyPosition] = useState<CopyPositionData>()
-  const handleSelectCopyItem = async (data: CopyPositionData) => {
-    setCurrentCopyPosition(data)
-    setOpenCopyDrawer(true)
-  }
-  const handleCopyDismiss = () => {
-    setOpenCopyDrawer(false)
-  }
-
   const onChangeFilter = () => {
     changeCurrentPage(1)
-  }
-
-  const isMobile = useIsMobile()
-  const { lg } = useResponsive()
-
-  const externalSource: ExternalSource = {
-    handleSelectCopyItem,
-    copyWallets,
-    isMobile: !lg,
   }
 
   return (
@@ -128,49 +68,19 @@ export default function UserActivity() {
             onChangeCopyTrades={onChangeFilter}
           />
         </Flex>
-        <Box flex="1 0 0" sx={{ overflow: 'hidden' }}>
-          {lg ? (
-            <Table
-              data={data?.data}
-              restrictHeight
-              columns={userActivityColumns}
-              isLoading={isFetching}
-              externalSource={externalSource}
-              tableBodyWrapperSx={{ table: { borderSpacing: '0 8px' }, '& tbody tr': { bg: 'neutral6' } }}
-              // tableHeadSx={{ th: { borderBottom: 'none' } }}
-              noDataMessage={<Trans>No Activity Found</Trans>}
-              currentSort={currentSort}
-              changeCurrentSort={changeCurrentSort}
-            />
-          ) : (
-            <ListActivityMobile data={data?.data} isLoading={isFetching} externalSource={externalSource} />
-          )}
-          <Tooltip id={TOOLTIP_KEYS.MY_COPY_ICON_REVERSE}>
-            <Type.Caption color="orange1" sx={{ maxWidth: 350 }}>
-              Reverse Copy
-            </Type.Caption>
-          </Tooltip>
-        </Box>
-        <PaginationWithLimit
+        <UserActivityView
+          traders={undefined}
+          copyWalletIds={checkFilters(selectionState.allWallets, selectedWalletIds)}
+          copyTradeIds={checkFilters(selectionState.allCopyTrades, selectedCopyTradeIds)}
           currentPage={currentPage}
           currentLimit={currentLimit}
-          onPageChange={changeCurrentPage}
-          onLimitChange={changeCurrentLimit}
-          apiMeta={data?.meta}
-          sx={{ py: 1 }}
+          currentSort={currentSort}
+          changeCurrentPage={changeCurrentPage}
+          changeCurrentLimit={changeCurrentLimit}
+          changeCurrentSort={changeCurrentSort}
+          copyWallets={copyWallets}
         />
       </Flex>
-      <RcDrawer open={openCopyDrawer} onClose={handleCopyDismiss} width={isMobile ? '100%' : '60%'}>
-        <Container sx={{ position: 'relative', height: '100%' }}>
-          <IconButton
-            icon={<XCircle size={24} />}
-            variant="ghost"
-            sx={{ position: 'absolute', right: 1, top: 1, zIndex: 1 }}
-            onClick={handleCopyDismiss}
-          />
-          <CopyTradePositionDetails copyPositionData={currentCopyPosition} />
-        </Container>
-      </RcDrawer>
     </>
   )
 }

@@ -9,7 +9,7 @@ import {
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { BackTestResultData, RequestBackTestData } from 'entities/backTest'
-import useGetSharedBacktest from 'hooks/features/useGetSharedBacktest'
+import useGetSharedBacktest from 'hooks/features/backtest/useGetSharedBacktest'
 import { useBacktestCustomizeColumn } from 'hooks/store/useBacktestCustomizeColumns'
 import Loading from 'theme/Loading'
 import { PaginationWithSelect } from 'theme/Pagination'
@@ -20,7 +20,7 @@ import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
 import { getPaginationDataFromList } from 'utils/helpers/transform'
 
-export default function SharedBacktestMultiple() {
+export default function SharedBacktestMultiplePage() {
   const {
     sharedBacktestSetting,
     isLoadingSharedSetting,

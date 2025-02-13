@@ -4,7 +4,7 @@ import { Trans } from '@lingui/macro'
 import { useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form'
 
-import { SmartWalletFund } from 'hooks/features/useWalletFundSnxV2'
+import { SmartWalletFund } from 'hooks/features/copyTrade/useWalletFundSnxV2'
 import { useContract } from 'hooks/web3/useContract'
 import useContractMutation from 'hooks/web3/useContractMutation'
 import useRequiredChain from 'hooks/web3/useRequiredChain'

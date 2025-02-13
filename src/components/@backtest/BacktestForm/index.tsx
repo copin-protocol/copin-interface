@@ -69,11 +69,15 @@ export default function BacktestForm({
       setValue(_key, _defaultValues[_key])
     }
     if (!defaultValues?.pairs.length && !!tokensTraded?.length) {
-      setValue('pairs', getListSymbolByListIndexToken({ protocol, listIndexToken: tokensTraded }))
+      const pairs = getListSymbolByListIndexToken?.({ protocol, listIndexToken: tokensTraded })
+      if (!pairs?.length) return
+      setValue('pairs', pairs)
       return
     }
     if (!_defaultValues.pairs?.length) {
-      setValue('pairs', getListSymbol({ protocol }))
+      const pairs = getListSymbol?.({ protocol })
+      if (!pairs?.length) return
+      setValue('pairs', pairs)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,7 +105,8 @@ export default function BacktestForm({
 
   const { getListSymbolOptions } = useMarketsConfig()
   const pairOptions = useMemo(() => {
-    const allOptions = getListSymbolOptions()
+    const allOptions = getListSymbolOptions?.()
+    if (!allOptions?.length) return []
     allOptions.unshift({ id: 'all', value: 'all', label: 'All Tokens' })
     return allOptions
   }, [getListSymbolOptions])

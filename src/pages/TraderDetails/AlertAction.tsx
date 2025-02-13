@@ -49,7 +49,7 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
       return
     }
     if (!botAlert?.chatId) {
-      handleGenerateLinkBot()
+      handleGenerateLinkBot?.()
       return
     }
     if (currentAlert) {

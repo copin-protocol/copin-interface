@@ -25,7 +25,6 @@ type ChangeFilterVariables = {
   action?: OrderTypeEnum
   direction?: DirectionFilterEnum
 }
-type TimeType = 'relative' | 'absolute'
 export interface DailyOrderContextValues {
   pairs: string[] | undefined
   changePairs: (pairs: string[] | undefined) => void
@@ -48,8 +47,6 @@ export interface DailyOrderContextValues {
   changeFilters: (vars: ChangeFilterVariables) => void
   enabledLiveTrade: boolean
   toggleLiveTrade: (enabled?: boolean) => void
-  timeType: TimeType
-  changeTimeType: (type?: TimeType) => void
 }
 export const DailyOrdersContext = createContext({} as DailyOrderContextValues)
 
@@ -209,17 +206,7 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
   const [enabledLiveTrade, setEnabledLiveTrade] = useState(() => {
     return localStorage.getItem('live_trade_orders_enabled') === '1' ? true : false
   })
-  const [timeType, setTimeType] = useState<TimeType>(() => {
-    const storedData = localStorage.getItem('live_trade_orders_time_type')
-    return (storedData ? storedData : 'absolute') as TimeType
-  })
-  const handleChangeTimeType = useCallback((type?: TimeType) => {
-    if (type != null) {
-      setTimeType(type)
-      return
-    }
-    setTimeType((prev) => (prev === 'absolute' ? 'relative' : 'absolute'))
-  }, [])
+
   const toggleLiveTrade = useCallback(
     (enabled?: boolean) => {
       setSearchParams({ ['page']: null })
@@ -234,9 +221,6 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
   useEffect(() => {
     localStorage.setItem('live_trade_orders_enabled', enabledLiveTrade ? '1' : '0')
   }, [enabledLiveTrade])
-  useEffect(() => {
-    localStorage.setItem('live_trade_orders_time_type', timeType)
-  }, [timeType])
 
   const contextValue: DailyOrderContextValues = useMemo(() => {
     return {
@@ -261,8 +245,6 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
       changeFilters,
       enabledLiveTrade,
       toggleLiveTrade,
-      timeType,
-      changeTimeType: handleChangeTimeType,
     }
   }, [
     symbols,
@@ -286,8 +268,6 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
     changeFilters,
     enabledLiveTrade,
     toggleLiveTrade,
-    timeType,
-    handleChangeTimeType,
   ])
 
   return <DailyOrdersContext.Provider value={contextValue}>{children}</DailyOrdersContext.Provider>

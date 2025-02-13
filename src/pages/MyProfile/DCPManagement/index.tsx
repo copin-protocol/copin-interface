@@ -4,14 +4,15 @@ import { useResponsive } from 'ahooks'
 import { useEffect, useState } from 'react'
 
 import ChartGainsPositionRealtime from 'components/@charts/ChartGainsPositionRealtime'
+import SelectCopyWallet from 'components/@copyTrade/SelectCopyWallet'
 import DirectionButton from 'components/@ui/DirectionButton'
 import Divider from 'components/@ui/Divider'
 import Logo from 'components/@ui/Logo'
 import SectionTitle from 'components/@ui/SectionTitle'
 import FundModal, { FundTab } from 'components/@wallet/SmartWalletFundModal'
 import SmartWalletActions from 'components/@wallet/WalletDetailsCard/SmartWalletActions'
+import useWalletFund from 'hooks/features/copyTrade/useWalletFundSnxV2'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
-import useWalletFund from 'hooks/features/useWalletFundSnxV2'
 import Badge from 'theme/Badge'
 import { Button } from 'theme/Buttons'
 import RcDrawer from 'theme/RcDrawer'
@@ -29,13 +30,12 @@ import FilterBySource, { FilterBySourceDropdown } from '../FilterBySource'
 import FilterByStatus from '../FilterByStatus'
 import OnchainPositions from '../OpeningPositions/OnchainPositions'
 import SettingConfigs from '../OpeningPositions/SettingConfigs'
-import SelectSingleWallet from '../SelectSingleWallet'
 import SelectTradersCopied from '../SelectTradersCopied'
 import ListDCPCopyTrades from './ListDCPCopyTrades'
 import WalletStatisticOverview from './WaletStatisticOverview'
 import useDCPManagementContext, { DCPManagementProvider } from './useDCPManagementContext'
 
-export default function DCPManagement() {
+export default function DCPManagementPage() {
   return (
     <DCPManagementProvider>
       <DCPManagementComponent />
@@ -47,7 +47,7 @@ export function DCPManagementComponent() {
   const { loadingCopyWallets, dcpWallets } = useCopyWalletContext()
   return (
     <CheckingWalletRenderer
-      loadingCopyWallets={loadingCopyWallets}
+      loadingCopyWallets={!!loadingCopyWallets}
       copyWallets={dcpWallets}
       type={CreateTypeWalletEnum.DCP}
     >
@@ -95,7 +95,7 @@ function DesktopView() {
       >
         <Flex px={3} sx={{ width: '100%', height: '100%', alignItems: 'center' }}>
           <Flex mr={10} sx={{ height: '100%', alignItems: 'center' }}>
-            <SelectSingleWallet
+            <SelectCopyWallet
               currentWallet={activeWallet}
               wallets={dcpWallets}
               onChangeWallet={handleChangeActiveWallet}
@@ -345,7 +345,7 @@ function SelectWalletSection() {
   const { activeWallet, handleChangeActiveWallet, dcpWallets } = useDCPManagementContext()
   return (
     <Flex sx={{ height: '100%', alignItems: 'center', flexShrink: 0 }}>
-      <SelectSingleWallet currentWallet={activeWallet} wallets={dcpWallets} onChangeWallet={handleChangeActiveWallet} />
+      <SelectCopyWallet currentWallet={activeWallet} wallets={dcpWallets} onChangeWallet={handleChangeActiveWallet} />
       {activeWallet && activeWallet.exchange === CopyTradePlatformEnum.GNS_V8 && !!activeWallet.smartWalletAddress && (
         <IconBox
           as={'a'}

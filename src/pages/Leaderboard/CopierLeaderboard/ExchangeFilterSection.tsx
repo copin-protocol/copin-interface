@@ -3,10 +3,11 @@ import { ReactNode } from 'react'
 import { dcpExchangeOptions, exchangeOptions } from 'components/@copyTrade/configs'
 import { getExchangeOption } from 'components/@copyTrade/helpers'
 import Divider from 'components/@ui/Divider'
-import useCopierLeaderboardContext from 'hooks/features/useCopierLeaderboardProvider'
 import Dropdown from 'theme/Dropdown'
 import { Flex } from 'theme/base'
 import { CopierLeaderBoardExchangeType } from 'utils/config/enums'
+
+import useCopierLeaderboardContext from './useCopierLeaderboardProvider'
 
 export default function ExchangeFilterSection() {
   const { currentExchange, currentExchangeType, changeExchange, changeExchangeType } = useCopierLeaderboardContext()

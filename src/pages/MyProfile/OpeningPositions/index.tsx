@@ -31,9 +31,13 @@ export default function OpeningPositions({
   restrictHeight = true,
   layoutType = 'normal',
   tableProps,
+  traders,
+  excludingColumnKeys,
+  bg,
 }: {
   activeWallet: CopyWalletData | null
   copyWallets: CopyWalletData[] | undefined
+  traders?: string[]
   hasLabel?: boolean
   onSuccess?: (data: CopyPositionData[] | undefined) => void
   onSelectPosition?: (data: OnchainPositionData | undefined) => void
@@ -42,6 +46,8 @@ export default function OpeningPositions({
   layoutType?: LayoutType
   tableProps?: Partial<ComponentProps<typeof CopyOpeningPositions>>['tableProps']
   lite?: boolean
+  excludingColumnKeys?: (keyof CopyPositionData)[]
+  bg?: string
 }) {
   const _queryParams: GetMyPositionsParams = {
     limit,
@@ -52,6 +58,7 @@ export default function OpeningPositions({
   }
   const _queryBody: GetMyPositionRequestBody = {
     copyWalletIds: activeWallet?.id ? [activeWallet.id] : copyWallets?.map((e) => e.id),
+    traders,
   }
   const {
     data,
@@ -78,7 +85,7 @@ export default function OpeningPositions({
       display={restrictHeight ? 'flex' : 'block'}
       height={restrictHeight ? '100%' : 'auto'}
       flexDirection="column"
-      bg="neutral5"
+      bg={bg ?? 'neutral5'}
     >
       {hasLabel && (
         <Box px={3} pt={16}>
@@ -127,6 +134,7 @@ export default function OpeningPositions({
             isLoading={isLoading}
             layoutType={layoutType}
             onClosePositionSuccess={refetch}
+            excludingColumnKeys={excludingColumnKeys}
           />
         </Box>
         {activeWallet?.exchange === CopyTradePlatformEnum.GNS_V8 && activeWallet.smartWalletAddress && (

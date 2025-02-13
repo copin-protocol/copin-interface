@@ -3,7 +3,7 @@ import { Trans, t } from '@lingui/macro'
 
 import NoDataFound from 'components/@ui/NoDataFound'
 import TraderAddress from 'components/@ui/TraderAddress'
-import useSearchAllData from 'hooks/features/useSearchAllData'
+import useSearchAllData from 'hooks/features/trader/useSearchAllData'
 import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
