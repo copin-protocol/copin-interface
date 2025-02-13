@@ -5,6 +5,7 @@ import Divider from 'components/@ui/Divider'
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import useMyProfile from 'hooks/store/useMyProfile'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { Box, Flex } from 'theme/base'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
@@ -29,9 +30,10 @@ export default function DefaultFilterForm({
   currentTab: FilterTabEnum
   lastFilterTab: FilterTabEnum
 }) {
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
   const [formValues, setFormValues] = useState(defaultFormValues)
   const { myProfile } = useMyProfile()
-  const { timeOption, setCurrentSuggestion, selectedProtocols } = useTradersContext()
+  const { timeOption, setCurrentSuggestion } = useTradersContext()
   const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues })
   const [enableApply, setEnableApply] = useState(false)
 
@@ -63,7 +65,7 @@ export default function DefaultFilterForm({
         action: EVENT_ACTIONS[EventCategory.FILTER].NORMAL,
         label: getUserForTracking(myProfile?.username),
       },
-      { selectedProtocols: selectedProtocols.join('-'), data: JSON.stringify(formValues) }
+      { selectedProtocols: selectedProtocols?.join('-'), data: JSON.stringify(formValues) }
     )
   }
 
@@ -81,7 +83,7 @@ export default function DefaultFilterForm({
         action: EVENT_ACTIONS[EventCategory.FILTER].RESET_DEFAULT,
         label: getUserForTracking(myProfile?.username),
       },
-      { selectedProtocols: selectedProtocols.join('-') }
+      { selectedProtocols: selectedProtocols?.join('-') }
     )
   }
 
@@ -92,7 +94,7 @@ export default function DefaultFilterForm({
       <Box sx={sm ? {} : { position: 'sticky', top: 0, bg: 'neutral7', zIndex: 2 }}>
         <ResultEstimated
           ranges={ranges}
-          protocols={selectedProtocols}
+          protocols={selectedProtocols ?? []}
           timeOption={timeOption}
           filterTab={FilterTabEnum.DEFAULT}
         />

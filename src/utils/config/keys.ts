@@ -155,9 +155,12 @@ export const STORAGE_KEYS = {
   GETTING_STARTED: 'getting_started',
   GET_STARTED_LAST_CHECK: 'get_started_last_check',
   POSITION_TIME_TYPE: 'position_time_type',
+  GLOBAL_PROTOCOLS: 'global_protocols',
 }
 
 export const URL_PARAM_KEYS = {
+  PAGE: 'page',
+  LIMIT: 'limit',
   HOME_SORT_BY: 'sort',
   HOME_TIME: 'time',
   HOME_PROTOCOL: 'protocol',

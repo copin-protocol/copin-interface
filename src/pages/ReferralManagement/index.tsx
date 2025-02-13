@@ -8,6 +8,7 @@ import { getReferralStatisticApi } from 'apis/referralManagement'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import DirectionButton from 'components/@ui/DirectionButton'
 import Divider from 'components/@ui/Divider'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { ReferralStatisticData } from 'entities/referralManagement'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -49,7 +50,7 @@ export default function ReferralManagementPage() {
   }, [isAuthenticated])
   const referralStatistic = statistic?.[TimeFilterByEnum.ALL_TIME]
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title="Referral Statistic" />
       <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
         <Flex
@@ -90,7 +91,7 @@ export default function ReferralManagementPage() {
           <MobileView referralData={referralStatistic} hasStatistic={hasStatistic} />
         )}
       </Flex>
-    </>
+    </SafeComponentWrapper>
   )
 }
 

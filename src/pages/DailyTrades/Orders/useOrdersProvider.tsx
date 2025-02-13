@@ -28,7 +28,7 @@ type ChangeFilterVariables = {
 export interface DailyOrderContextValues {
   pairs: string[] | undefined
   changePairs: (pairs: string[] | undefined) => void
-  protocols: ProtocolEnum[] | undefined
+  protocols: ProtocolEnum[] | undefined | null
   changeProtocols: (protocols: ProtocolEnum[] | undefined) => void
   address: string | undefined
   changeAddress: (address: string) => void

@@ -12,6 +12,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
 import { TraderData } from 'entities/trader'
 import useMyProfileStore from 'hooks/store/useMyProfile'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { useTraderExplorerTableColumns } from 'hooks/store/useTraderCustomizeColumns'
 import useTradersContext from 'pages/Explorer/useTradersContext'
 import { Button } from 'theme/Buttons'
@@ -26,10 +27,11 @@ interface ExportCsvButtonProps {
 }
 
 const ExportCsvButton = ({ hasTitle }: ExportCsvButtonProps) => {
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
   const { md } = useResponsive()
   const { columnKeys } = useTraderExplorerTableColumns()
   const handleClickLogin = useClickLoginButton()
-  const { timeOption, selectedProtocols, currentSort, filters } = useTradersContext()
+  const { timeOption, currentSort, filters } = useTradersContext()
   const { myProfile } = useMyProfileStore()
 
   const { mutate: getCSVData, isLoading: isExportLoading } = useMutation(exportTradersCsvApi, {
@@ -63,7 +65,7 @@ const ExportCsvButton = ({ hasTitle }: ExportCsvButtonProps) => {
     const ranges = getFiltersFromFormValues(filters)
     const fieldData = columnKeys.map((data) => transformRealisedField(data))
     const payload = {
-      protocols: selectedProtocols,
+      protocols: selectedProtocols ?? [],
       queries: [{ fieldName: 'type', value: timeOption.id }],
       ranges,
       sortBy: currentSort?.sortBy,

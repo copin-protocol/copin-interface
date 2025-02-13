@@ -10,6 +10,7 @@ import Divider from 'components/@ui/Divider'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import Logo from 'components/@ui/Logo'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useVaultDetailsContext, { VaultDetailsProvider } from 'pages/VaultDetails/useVaultDetailsProvider'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import CopyButton from 'theme/Buttons/CopyButton'
@@ -33,12 +34,12 @@ export default function VaultDetailsPage() {
   const { md } = useResponsive()
 
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title={`Copin Vaults ${addressShorten(vaultAddress)}`} />
       <VaultDetailsProvider>
         {md ? <DesktopVersion vaultAddress={vaultAddress} /> : <MobileVersion vaultAddress={vaultAddress} />}
       </VaultDetailsProvider>
-    </>
+    </SafeComponentWrapper>
   )
 }
 

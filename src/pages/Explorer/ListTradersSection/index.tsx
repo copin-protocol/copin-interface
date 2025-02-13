@@ -1,10 +1,9 @@
 import { ArrowElbowLeftUp } from '@phosphor-icons/react'
 import { useResponsive, useSize } from 'ahooks'
-import { memo, useEffect, useRef } from 'react'
+import { memo, useRef } from 'react'
 import styled from 'styled-components/macro'
 
 import { ApiListResponse } from 'apis/api'
-import { useClickLoginButton } from 'components/@auth/LoginAction'
 import { CompareButton } from 'components/@backtest/BacktestPickTradersButton'
 import TraderListCard from 'components/@trader/TraderExplorerListView'
 import CustomizeColumnMobile from 'components/@trader/TraderExplorerListView/CustomizeColumnMobile'
@@ -12,8 +11,8 @@ import TraderListTable from 'components/@trader/TraderExplorerTableView'
 import CustomizeColumn from 'components/@trader/TraderExplorerTableView/CustomizeColumn'
 import { tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
 import { TraderData } from 'entities/trader.d'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
-import { useAuthContext } from 'hooks/web3/useAuth'
 import ExportCsvButton from 'pages/Explorer/ConditionFilter/ExportCsvButton'
 import useBacktestTradersActions from 'pages/Explorer/ListTradersSection/useBacktestTradersActions'
 import useQueryTraders from 'pages/Explorer/ListTradersSection/useQueryTraders'
@@ -21,8 +20,6 @@ import { TradersContextData } from 'pages/Explorer/useTradersContext'
 import { PaginationWithLimit } from 'theme/Pagination'
 import { Box, Flex, Type } from 'theme/base'
 import { MEDIA_WIDTHS } from 'theme/theme'
-import { getUserForTracking, logEvent } from 'utils/tracking/event'
-import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 const ListTradersSection = memo(function ListTradersSectionMemo({
   contextValues,
@@ -31,6 +28,7 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
   contextValues: TradersContextData
   notes?: { [key: string]: string }
 }) {
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
   const { sm } = useResponsive()
   const {
     tab,
@@ -45,8 +43,6 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
     currentLimit,
     changeCurrentLimit,
     filterTab,
-    selectedProtocols,
-    setSelectedProtocols,
   } = contextValues
 
   const { data, isLoading } = useQueryTraders({
@@ -57,7 +53,6 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
     accounts,
     filterTab,
     selectedProtocols,
-    setSelectedProtocols,
   })
 
   const { isSelectedAll, handleSelectAll, checkIsSelected, handleSelect } = useBacktestTradersActions({

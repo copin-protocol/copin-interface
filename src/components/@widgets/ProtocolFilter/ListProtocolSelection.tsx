@@ -1,3 +1,4 @@
+import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { ProtocolsStatisticData } from 'entities/statistic'
 import Checkbox from 'theme/Checkbox'
@@ -5,8 +6,6 @@ import { Box, Flex, Grid, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { ProtocolOptionProps } from 'utils/config/protocols'
 import { compactNumber } from 'utils/helpers/format'
-
-import NoDataFound from '../NoDataFound'
 
 export default function ListProtocolSelection({
   options,
@@ -25,7 +24,6 @@ export default function ListProtocolSelection({
   itemActiveSx?: any
   hasCheckBox?: boolean
 }) {
-  console.log('protocolsStatistic', protocolsStatistic)
   return (
     <>
       {/* RENDER PROTOCOLS */}

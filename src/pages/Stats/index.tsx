@@ -11,6 +11,7 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import TimeFilter from 'components/@ui/TimeFilter'
 import RangeFilter from 'components/@ui/TimeFilter/RangeFilter'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { StatsData } from 'entities/chart.d'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -77,7 +78,7 @@ export default function StatsPage() {
   }, [defaultTimeRange, duration, searchParams, selectingRange])
 
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title="Copin Stats" />
       <Container p={3}>
         <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 3 }}>
@@ -115,7 +116,7 @@ export default function StatsPage() {
         </Flex>
         <StatisticChart timeRange={timeRange} />
       </Container>
-    </>
+    </SafeComponentWrapper>
   )
 }
 

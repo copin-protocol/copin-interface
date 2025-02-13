@@ -226,7 +226,7 @@ function DailyPositionsComponent() {
     }: {
       filters: any[]
       sortBy: keyof PositionData
-      protocols: ProtocolEnum[] | undefined
+      protocols: ProtocolEnum[] | undefined | null
     }) => {
       setLoadingLiveData(true)
       const currentTime = dayjs().utc()
@@ -276,7 +276,7 @@ function DailyPositionsComponent() {
     }: {
       filters: any[]
       sortBy: keyof PositionData
-      protocols: ProtocolEnum[] | undefined
+      protocols: ProtocolEnum[] | undefined | null
     }) => {
       fetchMore({
         variables: {
@@ -326,7 +326,7 @@ function DailyPositionsComponent() {
     }: {
       filters: any[]
       sortBy: keyof PositionData
-      protocols: ProtocolEnum[] | undefined
+      protocols: ProtocolEnum[] | null | undefined
     }) => {
       setFetchingLiveData(true)
       fetchMore({

@@ -6,8 +6,7 @@ import { useQuery } from 'react-query'
 import { ApiListResponse } from 'apis/api'
 import { getLeaderboardApi } from 'apis/leaderboardApis'
 import { TopTraderData } from 'entities/trader'
-import { useOptionChange } from 'hooks/helpers/useOptionChange'
-import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
+import { getInitOption } from 'hooks/helpers/useOptionChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useGlobalStore from 'hooks/store/useGlobalStore'
 import { TableSortProps } from 'theme/Table/types'
@@ -15,6 +14,7 @@ import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { LeaderboardTypeEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { LEADERBOARD_OPTIONS, LeaderboardOptionProps } from 'utils/config/options'
+import { getInitNumberValue } from 'utils/helpers/geInitialValue'
 import { pageToOffset } from 'utils/helpers/transform'
 
 export interface LeaderboardContextValues {
@@ -43,10 +43,14 @@ export interface LeaderboardContextValues {
 
 export const LeaderboardContext = createContext({} as LeaderboardContextValues)
 
+const PAGE_PARAM_KEY = URL_PARAM_KEYS.PAGE
+const LIMIT_PARAM_KEY = URL_PARAM_KEYS.LIMIT
+const TYPE_PARAM_KEY = URL_PARAM_KEYS.LEADERBOARD_TYPE
+const DATE_PARAM_KEY = URL_PARAM_KEYS.LEADERBOARD_DATE
 export function LeaderboardProvider({ children }: { children: ReactNode }) {
   const { md } = useResponsive()
   const { searchParams, setSearchParams } = useSearchParams()
-  const dateParams = searchParams?.[URL_PARAM_KEYS.LEADERBOARD_DATE] as string
+  const dateParams = searchParams?.[DATE_PARAM_KEY] as string
   const { protocol } = useGlobalStore()
   const initDate = dateParams ? dayjs(Number(dateParams)) : dayjs().utc()
   const [queryDate, setQueryDate] = useState(parseQueryDate(initDate))
@@ -58,19 +62,21 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
     if (!initSortBy) return undefined
     return { sortBy: initSortBy as TableSortProps<TopTraderData>['sortBy'], sortType: initSortType as SortTypeEnum }
   })
-  const { currentPage, currentLimit, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
-    pageName: `page`,
-    limitName: 'limit',
-    defaultLimit: DEFAULT_LIMIT,
+
+  const currentPage = getInitNumberValue(searchParams, PAGE_PARAM_KEY, 1)
+  const currentLimit = getInitNumberValue(searchParams, LIMIT_PARAM_KEY, DEFAULT_LIMIT)
+  const changeCurrentPage = (page: number) => setSearchParams({ [PAGE_PARAM_KEY]: page.toString() })
+  const changeCurrentLimit = (limit: number) => setSearchParams({ [LIMIT_PARAM_KEY]: limit.toString() })
+
+  const currentOption = getInitOption({
+    initOption: (searchParams[TYPE_PARAM_KEY] as string) ?? '',
+    options: LEADERBOARD_OPTIONS,
   })
 
-  const { currentOption, changeCurrentOption } = useOptionChange({
-    optionName: URL_PARAM_KEYS.LEADERBOARD_TYPE,
-    options: LEADERBOARD_OPTIONS,
-    callback: () => {
-      setQueryDate(parseQueryDate(dayjs().utc()))
-    },
-  })
+  const changeCurrentOption = (option: LeaderboardOptionProps) => {
+    setQueryDate(parseQueryDate(dayjs().utc()))
+    setSearchParams({ [TYPE_PARAM_KEY]: option.id, [PAGE_PARAM_KEY]: '1' })
+  }
 
   const { data, isFetching: isLoading } = useQuery(
     [
@@ -104,12 +110,11 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
 
   const changeCurrentSort = (data: TableSortProps<TopTraderData> | undefined) => {
     setCurrentSort(data)
-    changeCurrentPage(1)
-    setTimeout(() => setSearchParams({ sort_by: data?.sortBy ?? null, sort_type: data?.sortType ?? null }), 100)
+    setSearchParams({ sort_by: data?.sortBy ?? null, sort_type: data?.sortType ?? null, [PAGE_PARAM_KEY]: '1' })
   }
 
   const changeSearchParams = (queryDate: Dayjs) => {
-    setTimeout(() => setSearchParams({ [URL_PARAM_KEYS.LEADERBOARD_DATE]: queryDate.valueOf().toString() }), 100)
+    setSearchParams({ [DATE_PARAM_KEY]: queryDate.valueOf().toString(), [PAGE_PARAM_KEY]: '1' })
   }
 
   const { formatNext, formatPrev, formatCurrent } = useMemo(

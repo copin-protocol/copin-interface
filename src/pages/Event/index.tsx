@@ -7,9 +7,10 @@ import noEventIcon from 'assets/icons/no-event.png'
 import banner from 'assets/images/event-banner.png'
 import ActiveDot from 'components/@ui/ActiveDot'
 import RewardWithSymbol from 'components/@ui/RewardWithSymbol'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { EventDetailsData, TradingEventStatusEnum } from 'entities/event'
-import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import useSearchParams from 'hooks/router/useSearchParams'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { BodyWrapperMobile, BottomWrapperMobile } from 'pages/@layouts/Components'
 import { Button } from 'theme/Buttons'
 import CalendarStarIcon from 'theme/Icons/CalendarStarIcon'
@@ -29,27 +30,29 @@ export default function EventPage() {
   if (!events?.length) return null
   const Events = md ? DesktopEvents : MobileEvents
   return (
-    <Flex height="100%" sx={{ flexDirection: 'column' }}>
-      <Flex
-        px={3}
-        py={2}
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ borderBottom: 'small', borderColor: 'neutral4' }}
-      >
-        <Box flex={1}>
-          <Flex sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Type.H5>Events</Type.H5>
-            {!md && <RewardHistoryButton />}
-          </Flex>
-          <Type.Caption color="neutral3">Claim rewards by joining events and competitions</Type.Caption>
+    <SafeComponentWrapper>
+      <Flex height="100%" sx={{ flexDirection: 'column' }}>
+        <Flex
+          px={3}
+          py={2}
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ borderBottom: 'small', borderColor: 'neutral4' }}
+        >
+          <Box flex={1}>
+            <Flex sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Type.H5>Events</Type.H5>
+              {!md && <RewardHistoryButton />}
+            </Flex>
+            <Type.Caption color="neutral3">Claim rewards by joining events and competitions</Type.Caption>
+          </Box>
+          {md && <RewardHistoryButton />}
+        </Flex>
+        <Box sx={{ flex: '1 0 0', overflow: 'hidden' }}>
+          <Events events={events} />
         </Box>
-        {md && <RewardHistoryButton />}
       </Flex>
-      <Box sx={{ flex: '1 0 0', overflow: 'hidden' }}>
-        <Events events={events} />
-      </Box>
-    </Flex>
+    </SafeComponentWrapper>
   )
 }
 

@@ -1,17 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { Star } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { useEffect } from 'react'
-import { Redirect } from 'react-router-dom'
+import { useMemo } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoLoginFavorite from 'components/@ui/NoLogin/NoLoginFavorite'
-import { ProtocolFilter, ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
-import useInternalRole from 'hooks/features/useInternalRole'
-import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
-import useProtocolFromUrl from 'hooks/router/useProtocolFromUrl'
+import { GlobalProtocolFilter, GlobalProtocolFilterProps } from 'components/@widgets/ProtocolFilter'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import useTraderFavorites, { parseTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { TopWrapperMobile } from 'pages/@layouts/Components'
@@ -22,30 +18,26 @@ import useTradersContext, { FilterTradersProvider } from 'pages/Explorer/useTrad
 import Loading from 'theme/Loading'
 import PageTitle from 'theme/PageTitle'
 import { Box, Flex } from 'theme/base'
-import { ALLOWED_COPYTRADE_PROTOCOLS, PAGE_TITLE_HEIGHT } from 'utils/config/constants'
-import { generateFavoriteTradersRoute } from 'utils/helpers/generateRoute'
+import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 
 import ListTraderFavorites from './ListTraderFavorites'
 
 const FavoritesPage = () => {
-  const { searchParams, pathname } = useSearchParams()
+  const { pathname } = useSearchParams()
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
   const { traderFavorites, notes, isLoading } = useTraderFavorites()
   const { isAuthenticated } = useAuthContext()
   const { md } = useResponsive()
-  const isInternal = useInternalRole()
-  const protocolOptions = useGetProtocolOptions()
-  const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
 
-  const { selectedProtocols, checkIsSelected, handleToggle, setSelectedProtocols } = useProtocolFilter({
-    defaultSelects: protocolOptions.map((_p) => _p.id),
-  })
-  const { protocols, protocolParams } = useProtocolFromUrl(searchParams, pathname)
+  const protocolFilterProps: GlobalProtocolFilterProps = useMemo(
+    () => ({
+      placement: md ? 'bottom' : 'bottomRight',
+      menuSx: { width: ['300px', '400px', '50vw', '50vw'] },
+    }),
+    [md]
+  )
 
-  useEffect(() => {
-    if (protocols) {
-      setSelectedProtocols(protocols)
-    }
-  }, [])
+  if (selectedProtocols == null) return null
 
   if (!isAuthenticated) return <NoLoginFavorite />
   if (isLoading)
@@ -56,7 +48,6 @@ const FavoritesPage = () => {
     )
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
-      <Redirect to={generateFavoriteTradersRoute({ params: { ...searchParams, protocol: protocolParams } })} />
       <CustomPageTitle title="Trader Favorites" />
       <TopWrapperMobile>
         <PageTitle title={<Trans>TRADER FAVORITES STATISTICS</Trans>} icon={Star} />
@@ -77,15 +68,7 @@ const FavoritesPage = () => {
             }}
           >
             <PageTitle title={<Trans>TRADER FAVORITES STATISTICS</Trans>} icon={Star} />
-            <ProtocolFilter
-              selectedProtocols={selectedProtocols}
-              handleToggleProtocol={handleToggle}
-              checkIsProtocolChecked={checkIsSelected}
-              allowList={allowList}
-              setSelectedProtocols={setSelectedProtocols}
-              placement={md ? 'bottom' : 'bottomRight'}
-              menuSx={{ width: ['300px', '400px', '50vw', '50vw'] }}
-            />
+            <GlobalProtocolFilter {...protocolFilterProps} />
           </Flex>
         )}
         <Box flex="1 0 0">
@@ -96,16 +79,7 @@ const FavoritesPage = () => {
               .filter((value) => selectedProtocols.includes(parseTraderFavoriteValue(value).protocol))
               .map((value) => parseTraderFavoriteValue(value).address)}
           >
-            <ListTraders
-              notes={notes}
-              protocolFilters={{
-                selectedProtocols,
-                handleToggleProtocol: handleToggle,
-                checkIsProtocolChecked: checkIsSelected,
-                setSelectedProtocols,
-                allowList,
-              }}
-            />
+            <ListTraders notes={notes} />
           </FilterTradersProvider>
         </Box>
       </Flex>
@@ -115,15 +89,16 @@ const FavoritesPage = () => {
 
 export default FavoritesPage
 
-function ListTraders({
-  notes,
-  protocolFilters,
-}: {
-  notes: { [key: string]: string }
-  protocolFilters: ProtocolFilterProps
-}) {
+function ListTraders({ notes }: { notes: { [key: string]: string } }) {
   const contextValues = useTradersContext()
   const { md } = useResponsive()
+  const protocolFilterProps: GlobalProtocolFilterProps = useMemo(
+    () => ({
+      placement: md ? 'bottom' : 'bottomRight',
+      menuSx: { width: ['300px', '400px', '50vw', '50vw'] },
+    }),
+    [md]
+  )
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
       <Box flex="1 1 0" sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}>
@@ -138,11 +113,7 @@ function ListTraders({
                   currentSort={contextValues.currentSort}
                   changeCurrentSort={contextValues.changeCurrentSort}
                 />
-                <ProtocolFilter
-                  {...protocolFilters}
-                  placement={md ? 'bottom' : 'bottomRight'}
-                  menuSx={{ width: ['300px', '400px', '50vw', '50vw'] }}
-                />
+                <GlobalProtocolFilter {...protocolFilterProps} />
               </Flex>
             </Flex>
           </Flex>

@@ -1,28 +1,35 @@
+import { memo, useLayoutEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
 import useSearchParams from 'hooks/router/useSearchParams'
-import { ProtocolEnum } from 'utils/config/enums'
-import { URL_PARAM_KEYS } from 'utils/config/keys'
-import { compareTwoArrays } from 'utils/helpers/common'
-import { convertProtocolToParams } from 'utils/helpers/protocol'
+import { ALLOWED_COPYTRADE_PROTOCOLS, RELEASED_PROTOCOLS } from 'utils/config/constants'
+import { ProtocolEnum, ProtocolFilterEnum } from 'utils/config/enums'
+import { STORAGE_KEYS } from 'utils/config/keys'
+import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
+import { parseStorageData } from 'utils/helpers/transform'
 
-interface ProtocolFilterState {
-  selectedProtocols: ProtocolEnum[]
-  setProtocols: (protocols: ProtocolEnum[]) => void
-  urlProtocol: ProtocolEnum | undefined
-  setUrlProtocol: (protocol: ProtocolEnum | undefined) => void
+type ProtocolFilterState = {
+  selectedProtocols: ProtocolEnum[] | null
+  setProtocols: (protocols: ProtocolEnum[] | null) => void
+  urlProtocol: ProtocolEnum | null
+  setUrlProtocol: (protocol: ProtocolEnum | null) => void
+  handleToggle: (protocol: ProtocolEnum | null) => void
+  checkIsSelected: (protocol: ProtocolEnum) => boolean
 }
+type ProtocolFilterStateModifier = {
+  setState: (state: ProtocolFilterState) => void
+}
+type Store = ProtocolFilterState & ProtocolFilterStateModifier
 
-const INIT_PAGE = 1
-
-const createProtocolFilterStore = (defaultSelects: ProtocolEnum[] = [], storageKey = 'protocol-filter') => {
-  return create<ProtocolFilterState>()(
+export const createProtocolFilterStore = (args?: { storageKey?: string; defaultProtocols?: ProtocolEnum[] }) => {
+  return create<Store>()(
     persist(
-      immer((set) => ({
-        selectedProtocols: defaultSelects,
-        urlProtocol: undefined,
+      immer((set, get) => ({
+        selectedProtocols: args?.defaultProtocols ?? null,
+        urlProtocol: null,
         setProtocols: (protocols) =>
           set((state) => {
             state.selectedProtocols = protocols
@@ -31,66 +38,91 @@ const createProtocolFilterStore = (defaultSelects: ProtocolEnum[] = [], storageK
           set((state) => {
             state.urlProtocol = protocol
           }),
+        handleToggle: (protocol) =>
+          set((state) => {
+            if (!protocol) return
+            state.selectedProtocols = state.selectedProtocols?.includes(protocol)
+              ? state.selectedProtocols.filter((v) => v === protocol)
+              : [...(state.selectedProtocols ?? []), protocol]
+          }),
+        checkIsSelected: (protocol) => !!protocol && !!get().selectedProtocols?.includes(protocol),
+        setState(newState) {
+          set((state) => {
+            state = { ...state, ...newState }
+            return state
+          })
+        },
       })),
-      {
-        name: storageKey,
-        getStorage: () => localStorage,
-      }
+      args?.storageKey
+        ? {
+            name: args.storageKey,
+            getStorage: () => localStorage,
+          }
+        : undefined
     )
   )
 }
 
-export const useProtocolFilter = ({
-  defaultSelects,
-  storageKey,
-}: { defaultSelects?: ProtocolEnum[]; storageKey?: string } = {}) => {
-  const { setSearchParams } = useSearchParams()
+export const useGlobalProtocolFilterStore = createProtocolFilterStore() // global store not store data in local, manual handle it to make sure default is null
 
-  const { selectedProtocols, setProtocols, urlProtocol, setUrlProtocol } = createProtocolFilterStore(
-    defaultSelects,
-    storageKey
-  )()
+export const ProtocolFilterStoreInitializer = memo(function InitializerMemo() {
+  const setProtocols = useGlobalProtocolFilterStore((s) => s.setProtocols)
+  const { pathname } = useLocation()
+  const { searchParams } = useSearchParams()
 
-  const checkIsSelected = (protocol: ProtocolEnum): boolean => {
-    return selectedProtocols.includes(protocol)
-  }
+  useLayoutEffect(() => {
+    const storedSelectedProtocols = parseStorageData<ProtocolEnum[]>({
+      storageKey: STORAGE_KEYS.GLOBAL_PROTOCOLS,
+      storage: localStorage,
+    })
+    // Old protocol route: /{protocol}/...
+    const parsedOldPreProtocolParam = RELEASED_PROTOCOLS.find(
+      (protocol) => pathname.split('/')?.[1]?.toUpperCase() === protocol
+    )
+    // New protocol route: .../{protocol}
+    const parsedOldLastProtocolParam = RELEASED_PROTOCOLS.find(
+      (protocol) => pathname.split('/')?.at(-1)?.split('-')?.[0]?.toUpperCase() === protocol
+    )
+    // from search params, use at home page
+    const parsedOldProtocolSearch = RELEASED_PROTOCOLS.find(
+      (protocol) => (searchParams.protocol as string)?.toUpperCase() === protocol
+    )
 
-  const setSelectedProtocols = (protocols: ProtocolEnum[], isClearAll?: boolean): void => {
-    // if (!protocols.length) return
+    // Get all protocols from query params
+    const protocolFromQuery = searchParams.protocol as string | undefined
 
-    const resetParams: Record<string, string | null> = {}
-    if (!compareTwoArrays(protocols, selectedProtocols)) {
-      // Reset page to 1 when changing protocols
-      resetParams[URL_PARAM_KEYS.HOME_PAGE] = null
-    }
+    const parsedNewProtocolOptions = protocolFromQuery
+      ? protocolFromQuery === ProtocolFilterEnum.ALL
+        ? RELEASED_PROTOCOLS
+        : protocolFromQuery === ProtocolFilterEnum.ALL_COPYABLE
+        ? ALLOWED_COPYTRADE_PROTOCOLS
+        : RELEASED_PROTOCOLS.includes(protocolFromQuery as ProtocolEnum)
+        ? [protocolFromQuery as ProtocolEnum]
+        : Object.values(PROTOCOL_OPTIONS_MAPPING)
+            .filter(({ key }) => protocolFromQuery.split('-').includes(key.toString()))
+            .map(({ id }) => id)
+      : []
 
-    const protocolParams = convertProtocolToParams(protocols)
+    // Get unique protocols
+    const uniqueProtocols = Array.from(
+      new Set<ProtocolEnum>(
+        [
+          parsedOldPreProtocolParam,
+          parsedOldLastProtocolParam,
+          parsedOldProtocolSearch,
+          ...parsedNewProtocolOptions,
+        ].filter(Boolean) as ProtocolEnum[]
+      )
+    )
 
-    if (!isClearAll) {
-      setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: protocolParams, ...resetParams })
-    } else {
-      setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: null, ...resetParams })
-    }
-
+    // If no protocol found, use protocol from store
+    const protocols: ProtocolEnum[] = uniqueProtocols.length
+      ? uniqueProtocols
+      : storedSelectedProtocols?.length
+      ? storedSelectedProtocols
+      : RELEASED_PROTOCOLS
     setProtocols(protocols)
-  }
+  }, [])
 
-  const handleToggle = (protocol: ProtocolEnum): void => {
-    if (selectedProtocols.includes(protocol)) {
-      const filtered = selectedProtocols.filter((selected) => selected !== protocol)
-      setSelectedProtocols(filtered)
-      return
-    }
-
-    setSelectedProtocols([...selectedProtocols, protocol])
-  }
-
-  return {
-    selectedProtocols,
-    checkIsSelected,
-    handleToggle,
-    setSelectedProtocols,
-    urlProtocol,
-    setUrlProtocol,
-  }
-}
+  return null
+})

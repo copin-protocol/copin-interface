@@ -4,6 +4,7 @@ import { useResponsive } from 'ahooks'
 import { useState } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import PageTitle from 'theme/PageTitle'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 // import CreateWalletAction from 'components/CreateWalletAction'
@@ -26,7 +27,7 @@ export default function WalletManagementPage() {
     Layout = TabletLayout
   }
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title={`Wallet Management`} />
       <Layout
         header={
@@ -62,6 +63,6 @@ export default function WalletManagementPage() {
           </Box>
         }
       />
-    </>
+    </SafeComponentWrapper>
   )
 }

@@ -4,6 +4,7 @@ import { useResponsive } from 'ahooks'
 import { useEffect, useState } from 'react'
 import { createGlobalStyle } from 'styled-components/macro'
 
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useTabHandler from 'hooks/router/useTabHandler'
 import { BottomWrapperMobile } from 'pages/@layouts/Components'
@@ -84,13 +85,9 @@ const CopitLitePageMobile = () => {
 const CopinLitePage = () => {
   const [tableExpanded, setTableExpanded] = useState(false)
   const { lg } = useResponsive()
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-  if (!mounted) return null
+
   return (
-    <>
+    <SafeComponentWrapper>
       <GlobalStyle />
       <LiteContextProvider>
         {lg ? (
@@ -117,7 +114,7 @@ const CopinLitePage = () => {
           <CopitLitePageMobile />
         )}
       </LiteContextProvider>
-    </>
+    </SafeComponentWrapper>
   )
 }
 

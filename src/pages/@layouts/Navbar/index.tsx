@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import LoginAction from 'components/@auth/LoginAction'
 import Logo, { LogoText } from 'components/@ui/Logo'
 import { TradingEventStatusEnum } from 'entities/event'
-import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import NavbarUser from 'pages/@layouts/Navbar/NavUser'
@@ -26,8 +26,8 @@ import { LogoWrapper, Main, displayMobileStyles, hiddenMobileStyles } from './st
 
 export default function Navbar({ height }: { height: number }): ReactElement {
   const { isAuthenticated, disconnect, loading } = useAuthContext()
-  const { selectedProtocols } = useProtocolFilter()
-  const protocolParams = convertProtocolToParams(selectedProtocols)
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
+  const protocolParams = convertProtocolToParams(selectedProtocols ?? [])
 
   const [activeMobileMenu, setActiveMobileMenu] = useState(false)
 

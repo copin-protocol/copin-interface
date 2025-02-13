@@ -4,6 +4,7 @@ import { useResponsive } from 'ahooks'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { GradientText } from 'components/@ui/GradientText'
 import NFTCollectionLinks from 'components/@widgets/NFTCollectionLinks'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { Box, Flex, Type } from 'theme/base'
 
 import Plans, { MobilePlans } from './Plans'
@@ -14,7 +15,7 @@ export default function SubscriptionPage() {
   const { xl } = useResponsive()
   if (!xl)
     return (
-      <>
+      <SafeComponentWrapper>
         <CustomPageTitle title="Subscription Plans" />
         <Box py={4}>
           <Type.H1 mb={3} textAlign="center">
@@ -37,10 +38,10 @@ export default function SubscriptionPage() {
             <TermsAndConditions />
           </Box>
         </Box>
-      </>
+      </SafeComponentWrapper>
     )
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title="Subscription Plans" />
       <Box
         sx={{
@@ -83,6 +84,6 @@ export default function SubscriptionPage() {
           <TermsAndConditions />
         </Box>
       </Box>
-    </>
+    </SafeComponentWrapper>
   )
 }

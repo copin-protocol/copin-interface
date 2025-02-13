@@ -17,26 +17,21 @@ import LineChartTraderPnl from 'components/@charts/LineChartPnL'
 import { parsePnLStatsData } from 'components/@charts/LineChartPnL/helpers'
 import CopyTraderButton from 'components/@copyTrade/CopyTraderButton'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
-import { ProtocolFilter } from 'components/@ui/ProtocolFilter'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import ToastBody from 'components/@ui/ToastBody'
 import TraderAddress from 'components/@ui/TraderAddress'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
+import { GlobalProtocolFilter, GlobalProtocolFilterProps } from 'components/@widgets/ProtocolFilter'
 import { Account, PnlStatisticsResponse, ResponseTraderData, StatisticData, TraderData } from 'entities/trader'
-import useInternalRole from 'hooks/features/useInternalRole'
-import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
-import useProtocolFromUrl from 'hooks/router/useProtocolFromUrl'
-// import useIsMobile from 'hooks/helpers/useIsMobile'
-// import useIsSafari from 'hooks/helpers/useIsSafari'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
-import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
-import { ALLOWED_COPYTRADE_PROTOCOLS, DATE_FORMAT } from 'utils/config/constants'
+import { DATE_FORMAT } from 'utils/config/constants'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { TIME_TRANSLATION } from 'utils/config/translations'
@@ -44,7 +39,7 @@ import { formatDate } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { transformGraphqlFilters } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
-import { getUserForTracking, logEvent, logEventBacktest, logEventHomeFilter } from 'utils/tracking/event'
+import { logEventBacktest, logEventHomeFilter } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 
 import SortDropdown from './SortDropdown'
@@ -55,27 +50,7 @@ const PADDING_X = 12
 const graphqlBaseFilters = transformGraphqlFilters(BASE_RANGE_FILTER)
 
 export default function Traders() {
-  const { myProfile } = useMyProfile()
-  const { searchParams, setSearchParams, pathname } = useSearchParams()
-  const isInternal = useInternalRole()
-  const protocolOptions = useGetProtocolOptions()
-  const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
-
-  const {
-    selectedProtocols,
-    checkIsSelected: checkIsProtocolChecked,
-    handleToggle: handleToggleProtocol,
-    setSelectedProtocols,
-  } = useProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
-
-  const { protocols } = useProtocolFromUrl(searchParams, pathname)
-
-  useEffect(() => {
-    if (protocols) {
-      setSelectedProtocols(protocols)
-    }
-  }, [])
-
+  const { searchParams } = useSearchParams()
   const filters: FiltersState = useMemo(() => {
     const sortBy = (searchParams[URL_PARAM_KEYS.HOME_SORT_BY] as unknown as keyof TraderData | undefined) ?? 'pnl'
     const time =
@@ -87,17 +62,8 @@ export default function Traders() {
     return {
       sortBy,
       time: timeOption,
-      protocols: selectedProtocols,
     }
-  }, [searchParams, setSearchParams, selectedProtocols])
-
-  const logEventHome = (category: EventCategory, action: string) => {
-    logEvent({
-      label: getUserForTracking(myProfile?.username),
-      category,
-      action,
-    })
-  }
+  }, [searchParams])
 
   return (
     <Flex
@@ -118,15 +84,6 @@ export default function Traders() {
           <Type.H5 fontSize={['16px', '16px', '24px']}>
             <Trans>Follow 200,000+ on-chain traders</Trans>
           </Type.H5>
-          {/* <Type.CaptionBold
-            display={{ _: 'block', sm: 'none' }}
-            onClick={() => logEventHome(EventCategory.ROUTES, EVENT_ACTIONS[EventCategory.ROUTES].HOME_EXPLORE_MORE)}
-          >
-            <Link to={generateExplorerRoute({ protocol: filters.protocol })}>
-              {' '}
-              <Trans>Explore More</Trans>
-            </Link>
-          </Type.CaptionBold> */}
         </Flex>
 
         <Flex
@@ -140,25 +97,7 @@ export default function Traders() {
             justifyContent: 'space-between',
           }}
         >
-          <Filters
-            filters={filters}
-            protocolFilter={{
-              allowList,
-              selectedProtocols,
-              setSelectedProtocols,
-              checkIsProtocolChecked,
-              handleToggleProtocol,
-            }}
-          />
-          {/* <Type.CaptionBold
-            display={{ _: 'none', sm: 'block' }}
-            onClick={() => logEventHome(EventCategory.ROUTES, EVENT_ACTIONS[EventCategory.ROUTES].HOME_EXPLORE_MORE)}
-          >
-            <Link to={generateExplorerRoute({ protocol: filters.protocol })}>
-              {' '}
-              <Trans>Explore More</Trans>
-            </Link>
-          </Type.CaptionBold> */}
+          <Filters filters={filters} />
         </Flex>
       </Box>
 
@@ -172,18 +111,9 @@ export default function Traders() {
 type FiltersState = {
   sortBy: keyof TraderData
   time: TimeFilterProps
-  protocols: ProtocolEnum[]
 }
 
-type ProtocolFilter = {
-  selectedProtocols: ProtocolEnum[]
-  checkIsProtocolChecked: (status: ProtocolEnum) => boolean
-  handleToggleProtocol: (option: ProtocolEnum) => void
-  allowList: ProtocolEnum[]
-  setSelectedProtocols: (protocols: ProtocolEnum[]) => void
-}
-
-function Filters({ filters, protocolFilter }: { filters: FiltersState; protocolFilter: ProtocolFilter }) {
+function Filters({ filters }: { filters: FiltersState }) {
   const { myProfile } = useMyProfile()
   const { setSearchParams } = useSearchParams()
 
@@ -200,6 +130,14 @@ function Filters({ filters, protocolFilter }: { filters: FiltersState; protocolF
   }
 
   const { sm } = useResponsive()
+
+  const protocolFilterProps: GlobalProtocolFilterProps = useMemo(
+    () => ({
+      placement: sm ? 'bottom' : 'bottomRight',
+      menuSx: { width: ['312px', '400px', '50vw', '50vw'] },
+    }),
+    [sm]
+  )
 
   return (
     <Flex sx={{ gap: [2, 3], flexWrap: 'wrap' }}>
@@ -219,11 +157,7 @@ function Filters({ filters, protocolFilter }: { filters: FiltersState; protocolF
         <Type.CaptionBold>
           <Trans>SOURCE</Trans>
         </Type.CaptionBold>
-        <ProtocolFilter
-          {...protocolFilter}
-          placement={sm ? 'bottom' : 'bottomRight'}
-          menuSx={{ width: ['312px', '400px', '50vw', '50vw'] }}
-        />
+        <GlobalProtocolFilter {...protocolFilterProps} />
       </Flex>
     </Flex>
   )
@@ -233,6 +167,7 @@ const LIMIT = 12
 function ListTraders({ filters }: { filters: FiltersState }) {
   const { md } = useResponsive()
   const { profile, isAuthenticated } = useAuthContext()
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
   const { searchParams, setSearchParams } = useSearchParams()
   const currentPageParam = Number(searchParams[URL_PARAM_KEYS.HOME_PAGE])
   const currentPage = !isNaN(currentPageParam) ? currentPageParam : 1
@@ -249,7 +184,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
 
     const query = [
       ...graphqlBaseFilters,
-      { field: 'protocol', in: filters.protocols },
+      { field: 'protocol', in: selectedProtocols },
       { field: 'type', match: filters.time.id },
     ]
     // if (!!filters.protocols?.length && filters.protocols.length !== RELEASED_PROTOCOLS.length) {
@@ -265,7 +200,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     }
 
     return { index, body }
-  }, [filters, currentPage])
+  }, [filters, selectedProtocols, currentPage])
 
   const onClickBacktest = (trader: TraderData) => {
     setSelectedTrader({ account: trader.account, protocol: trader.protocol })
@@ -293,6 +228,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     loading: isLoading,
     previousData,
   } = useApolloQuery<TraderGraphQLResponse<ResponseTraderData>>(SEARCH_TRADERS_QUERY, {
+    skip: selectedProtocols == null,
     variables: queryVariables,
     onError: (error) => {
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
@@ -322,7 +258,9 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     if (!isLoading && isAuthenticated != null) isDuplicateLoading.current = false
   }, [isLoading, isAuthenticated])
 
-  if (filters.protocols.length == 0) {
+  if (selectedProtocols == null) return null
+
+  if (selectedProtocols.length == 0) {
     return (
       <Flex
         sx={{

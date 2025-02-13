@@ -8,6 +8,7 @@ import { searchPositionsApi } from 'apis/positionApis'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import NoDataFound from 'components/@ui/NoDataFound'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import SearchPositionResultItem from 'components/@widgets/SearchPositionResultItem'
 import { PositionData } from 'entities/trader'
 import Loading from 'theme/Loading'
@@ -57,7 +58,7 @@ const SearchTxHashPage = () => {
   )
 
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title={`Search results for ${addressShorten(txHash, 6)}`} />
       <Flex
         sx={{
@@ -143,7 +144,7 @@ const SearchTxHashPage = () => {
           </Box>
         </Flex>
       </Flex>
-    </>
+    </SafeComponentWrapper>
   )
 }
 

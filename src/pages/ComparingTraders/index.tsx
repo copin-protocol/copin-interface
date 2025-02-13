@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from 'react'
 
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { TraderData } from 'entities/trader'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -100,7 +101,7 @@ export default function ComparingTradersPage() {
   )
 
   return (
-    <>
+    <SafeComponentWrapper>
       <Type.Body
         sx={{ p: 3, display: 'flex', alignItems: 'center', gap: '0.5ch', '& *': { fontSize: 'inherit !important' } }}
       >
@@ -116,6 +117,6 @@ export default function ComparingTradersPage() {
         secondComponent={SecondComponent}
         timeOption={timeOption}
       />
-    </>
+    </SafeComponentWrapper>
   )
 }
