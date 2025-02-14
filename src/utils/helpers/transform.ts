@@ -522,7 +522,7 @@ const EXCHANGE_KEY_MAPPING: Partial<Record<CopyTradePlatformEnum, keyof CopyWall
   [CopyTradePlatformEnum.BINGX]: 'bingX',
   [CopyTradePlatformEnum.BITGET]: 'bitget',
   [CopyTradePlatformEnum.BINANCE]: 'binance',
-  [CopyTradePlatformEnum.BYBIT]: 'binance',
+  [CopyTradePlatformEnum.BYBIT]: 'bybit',
   [CopyTradePlatformEnum.OKX]: 'okx',
   [CopyTradePlatformEnum.GATE]: 'gate',
   [CopyTradePlatformEnum.HYPERLIQUID]: 'hyperliquid',

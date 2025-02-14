@@ -5,6 +5,7 @@ import Modal from 'theme/Modal'
 import { Box, Flex, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { COPY_WALLET_TRANS } from 'utils/config/translations'
+import { Z_INDEX } from 'utils/config/zIndex'
 
 import useUnlinkPosition from './useUnlinkPosition'
 
@@ -32,7 +33,7 @@ export default function UnlinkCopyPositionModal({
   }
 
   return (
-    <Modal title={'Unlink this position?'} isOpen onDismiss={onDismiss} hasClose>
+    <Modal title={'Unlink this position?'} isOpen onDismiss={onDismiss} hasClose zIndex={Z_INDEX.TOASTIFY}>
       <Box px={24} pb={24}>
         <Type.Caption color="neutral2">
           <Trans>
