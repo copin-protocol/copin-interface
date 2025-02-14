@@ -92,7 +92,8 @@ export default function useListCopyTradeConfigs({
   const renderLeverage = useMemo(
     () =>
       renderLeverageFactory({
-        onSaveEdit: (value, data) => updateNumberValue({ copyTradeId: data.id, oldData: data, value, field: 'volume' }),
+        onSaveEdit: (value, data) =>
+          updateNumberValue({ copyTradeId: data.id, oldData: data, value, field: 'leverage' }),
       }),
     [updateNumberValue]
   )
