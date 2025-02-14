@@ -25,7 +25,6 @@ export default function ListProtocolSelection({
   itemActiveSx?: any
   hasCheckBox?: boolean
 }) {
-  console.log('protocolsStatistic', protocolsStatistic)
   return (
     <>
       {/* RENDER PROTOCOLS */}
