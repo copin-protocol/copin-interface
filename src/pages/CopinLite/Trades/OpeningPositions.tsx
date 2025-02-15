@@ -67,7 +67,7 @@ const LiteOpeningPositions = () => {
         const hlSize = Number(hlPosition.sizeDelta ?? 0)
         const appSize = Number(v.sizeDelta ?? 0)
         hlPosition.openingPositionType = 'liveBoth'
-        if (hlSize > appSize) {
+        if (hlSize - appSize > Number.EPSILON) {
           const newHlSize = hlSize - appSize
           const newHlPosition: CopyPositionData = {
             ...hlPosition,

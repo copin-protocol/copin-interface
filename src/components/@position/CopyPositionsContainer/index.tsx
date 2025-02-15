@@ -118,18 +118,13 @@ export default function CopyPositionsContainer({
     if (!embeddedWallet?.hyperliquid?.embeddedWallet) return
     setSubmitting(true)
     try {
-      if (data.openingPositionType === 'liveBoth') {
-        await closeLitePositionApi(data.id ?? '')
-      }
-      if (data.openingPositionType === 'onlyLiveHyper') {
-        await closeHlPosition({
-          walletAddress: embeddedWallet.hyperliquid.embeddedWallet,
-          isLong: !!data.isLong,
-          size: data.totalSizeDelta ?? 0,
-          symbol: data.pair ?? '',
-        })
-        reloadEmbeddedWalletInfo?.()
-      }
+      await closeHlPosition({
+        walletAddress: embeddedWallet.hyperliquid.embeddedWallet,
+        isLong: !!data.isLong,
+        size: data.totalSizeDelta ?? 0,
+        symbol: data.pair ?? '',
+      })
+      reloadEmbeddedWalletInfo?.()
 
       setConfirmModal(undefined)
       onClosePositionSuccess()
