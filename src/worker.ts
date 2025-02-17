@@ -106,6 +106,8 @@ async function initPythWebsocket() {
     let lastUpdate = Math.floor(Date.now() / 1000)
     const pricesData = {} as UsdPrices
     const INTERVAL_TIME = 3 // s
+    const INTERVAL_LOG_TIME = 30_000 // ms -> 30s
+    const lastLogTimes: Record<string, number> = {}
 
     await pyth.subscribePriceFeedUpdates(availablePriceFeedIds, (priceFeed) => {
       const data = getPriceData({ priceFeed })
@@ -123,6 +125,14 @@ async function initPythWebsocket() {
           })
         }
       })
+
+      // Log debug
+      const currentTime = Date.now()
+      const priceFeedId = priceFeed.id
+      if (!lastLogTimes[priceFeedId] || currentTime >= lastLogTimes[priceFeedId] + INTERVAL_LOG_TIME) {
+        lastLogTimes[priceFeedId] = currentTime
+        console.log('subscribePriceFeedUpdates', priceFeedId, data)
+      }
     })
   } catch (error) {
     // console.log(error)
