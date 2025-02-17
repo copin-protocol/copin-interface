@@ -7,9 +7,14 @@ import { GetMyPositionRequestBody, GetMyPositionsParams } from 'apis/types'
 import { getMyCopyPositionsApi } from 'apis/userApis'
 import CopyOpeningPositions from 'components/@position/CopyOpeningPositions'
 import LiteFilterOpeningPositionTrader from 'components/@position/CopyOpeningPositions/LiteOpeningFilterTrader'
-import { getHLCopyPositionIdentifyKey, parseHLCopyPositionData } from 'components/@position/helpers/hyperliquid'
+import {
+  convertPairHL,
+  getHLCopyPositionIdentifyKey,
+  parseHLCopyPositionData,
+} from 'components/@position/helpers/hyperliquid'
 import { CopyPositionData } from 'entities/copyTrade'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import NoDataOrSelect from 'pages/MyProfile/NoDataOrSelect'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
@@ -53,6 +58,7 @@ const LiteOpeningPositions = () => {
     storageKey: STORAGE_KEYS.LITE_OPENING_LAYOUT,
     mobileBreakpoint: lg,
   })
+  const { getSymbolByIndexToken } = useMarketsConfig()
   const _data = useMemo(() => {
     const hlCopyPositions = parseHLCopyPositionData({ data: embeddedWalletInfo?.assetPositions })
     const onlyHyperPositions: CopyPositionData[] = []
@@ -61,7 +67,13 @@ const LiteOpeningPositions = () => {
       return { ...result, [key]: { ...hlPosition } }
     }, {})
     const _openingPositions = data?.data?.map((v) => {
-      const key = getHLCopyPositionIdentifyKey(v)
+      const symbol = getSymbolByIndexToken?.({ indexToken: v.indexToken, protocol: v.protocol })
+      const pair = v.pair ? v.pair : symbol ? convertPairHL(symbol) : undefined
+      if (!pair) {
+        const result: CopyPositionData = { ...v, openingPositionType: 'liveBoth' }
+        return result
+      }
+      const key = getHLCopyPositionIdentifyKey({ ...v, pair })
       const hlPosition = hlPositionMapping[key]
       if (hlPosition) {
         const hlSize = Number(hlPosition.sizeDelta ?? 0)
@@ -91,7 +103,7 @@ const LiteOpeningPositions = () => {
       ...Object.values(hlPositionMapping).filter((v) => v.openingPositionType === 'onlyLiveHyper'),
       ...(_openingPositions ?? []),
     ]
-  }, [data?.data, embeddedWalletInfo?.assetPositions, selectedTraders])
+  }, [data?.data, embeddedWalletInfo?.assetPositions, getSymbolByIndexToken, selectedTraders])
 
   return (
     <Flex flexDirection="column" height="100%" width="100%">

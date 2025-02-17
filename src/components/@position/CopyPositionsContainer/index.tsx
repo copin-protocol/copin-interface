@@ -118,14 +118,24 @@ export default function CopyPositionsContainer({
     if (!embeddedWallet?.hyperliquid?.embeddedWallet) return
     setSubmitting(true)
     try {
-      await closeHlPosition({
-        walletAddress: embeddedWallet.hyperliquid.embeddedWallet,
-        isLong: !!data.isLong,
-        size: data.totalSizeDelta ?? 0,
-        symbol: data.pair ?? '',
-      })
+      if (data.openingPositionType === 'liveBoth') {
+        await closeLitePositionApi(data.id ?? '')
+      }
+      if (data.openingPositionType === 'onlyLiveHyper') {
+        await closeHlPosition({
+          walletAddress: embeddedWallet.hyperliquid.embeddedWallet,
+          isLong: !!data.isLong,
+          size: data.totalSizeDelta ?? 0,
+          symbol: data.pair ?? '',
+        })
+      }
+      // await closeHlPosition({
+      //   walletAddress: embeddedWallet.hyperliquid.embeddedWallet,
+      //   isLong: !!data.isLong,
+      //   size: data.totalSizeDelta ?? 0,
+      //   symbol: data.pair ?? '',
+      // })
       reloadEmbeddedWalletInfo?.()
-
       setConfirmModal(undefined)
       onClosePositionSuccess()
     } catch (err) {
