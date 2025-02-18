@@ -61,7 +61,6 @@ const LiteOpeningPositions = () => {
   const { getSymbolByIndexToken } = useMarketsConfig()
   const _data = useMemo(() => {
     const hlCopyPositions = parseHLCopyPositionData({ data: embeddedWalletInfo?.assetPositions })
-    const onlyHyperPositions: CopyPositionData[] = []
     const hlPositionMapping = hlCopyPositions.reduce<Record<string, CopyPositionData>>((result, hlPosition) => {
       const key = getHLCopyPositionIdentifyKey(hlPosition)
       return { ...result, [key]: { ...hlPosition } }
@@ -76,20 +75,21 @@ const LiteOpeningPositions = () => {
       const key = getHLCopyPositionIdentifyKey({ ...v, pair })
       const hlPosition = hlPositionMapping[key]
       if (hlPosition) {
+        hlPosition.openingPositionType = 'liveBoth'
         const hlSize = Number(hlPosition.sizeDelta ?? 0)
         const appSize = Number(v.sizeDelta ?? 0)
-        hlPosition.openingPositionType = 'liveBoth'
-        if (hlSize - appSize > Number.EPSILON) {
-          const newHlSize = hlSize - appSize
-          const newHlPosition: CopyPositionData = {
-            ...hlPosition,
-            sizeDelta: `${newHlSize}`,
-            totalSizeDelta: newHlSize,
-            openingPositionType: 'onlyLiveHyper',
-          }
-          onlyHyperPositions.push(newHlPosition)
+        const totalSizeDelta = v.totalSizeDelta ?? 0
+        let newSizeDelta = v.sizeDelta
+        let newTotalSizeDelta = totalSizeDelta
+        if (hlSize > appSize) newSizeDelta = `${hlSize}`
+        if (hlSize > totalSizeDelta) newTotalSizeDelta = hlSize
+        const result: CopyPositionData = {
+          ...v,
+          entryPrice: hlPosition.entryPrice,
+          openingPositionType: 'liveBoth',
+          sizeDelta: newSizeDelta,
+          totalSizeDelta: newTotalSizeDelta,
         }
-        const result: CopyPositionData = { ...v, entryPrice: hlPosition.entryPrice, openingPositionType: 'liveBoth' }
         return result
       }
       const result: CopyPositionData = { ...v, openingPositionType: 'onlyLiveApp' }
@@ -99,7 +99,6 @@ const LiteOpeningPositions = () => {
       return _openingPositions ?? []
     }
     return [
-      ...onlyHyperPositions,
       ...Object.values(hlPositionMapping).filter((v) => v.openingPositionType === 'onlyLiveHyper'),
       ...(_openingPositions ?? []),
     ]
