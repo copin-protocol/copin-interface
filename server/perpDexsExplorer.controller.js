@@ -2,7 +2,7 @@ import { configs } from './configs.js'
 import { renderHTML } from './utils.js'
 
 const getPerpDexsExplorer = async (req, res) => {
-  const thumbnail = `${configs.baseUrl}/images/cover/perp-dexs-explorer-cover.png`
+  const thumbnail = `${configs.apiUrl}/storage/image/cover__perp-explorer-cover`
 
   try {
     renderHTML({

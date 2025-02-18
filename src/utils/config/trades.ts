@@ -370,6 +370,7 @@ export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.SYNTHETIX_V3]: [],
   [CopyTradePlatformEnum.GNS_V8]: [],
   [CopyTradePlatformEnum.HYPERLIQUID]: [],
+  [CopyTradePlatformEnum.COPIN_HYPERLIQUID]: [],
 }
 
 export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {

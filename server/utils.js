@@ -36,7 +36,7 @@ const renderHTML = ({ req, res, params = {} }) => {
   const {
     title = 'Trader Explorer | Copin Analyzer',
     description = 'Explore, analyze, and evaluate on-chain traders from all of the perpetual DEXs (GMX, Kwenta, DYDX, etc.)',
-    thumbnail = `${configs.baseUrl}/images/cover/cover.png`,
+    thumbnail = `${configs.apiUrl}/storage/image/cover__cover`,
     url = `${configs.baseUrl}`,
   } = params
   readFile(indexPath, 'utf8', (err, htmlData) => {

@@ -16,6 +16,7 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import delay from 'utils/helpers/delay'
 import { formatNumber } from 'utils/helpers/format'
 import { getErrorMessage } from 'utils/helpers/handleError'
+import { parseChainImage } from 'utils/helpers/transform'
 
 interface LiteWithdrawForm {
   sourceAddress: string
@@ -82,7 +83,7 @@ const LiteWithdraw = ({ address }: { address: string }) => {
   return (
     <Box px={3} py={[24, 24, 24, 2]}>
       <Flex mx="auto" justifyContent="center" mb={[24, 24, 24, 12]} alignItems="center" sx={{ gap: 2 }}>
-        <Image src="/images/chains/ARB.png" height={28} />
+        <Image src={parseChainImage('ARB')} height={28} />
         <Type.CaptionBold>
           <Trans>Withdraw USDC To Arbitrum</Trans>
         </Type.CaptionBold>

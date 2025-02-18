@@ -17,7 +17,7 @@ const getBacktestSingle = async (req, res) => {
       res,
       params: {
         title: `Backtesting ${addressShorten(backtestTrader)} | Copin Analyzer`,
-        thumbnail: `${configs.baseUrl}/images/cover/backtest-cover.png`,
+        thumbnail: `${configs.apiUrl}/storage/image/cover__backtest-cover`,
         url: `${configs.baseUrl}/${protocol}/shared-backtest/single/${backtestId}`,
       },
     })

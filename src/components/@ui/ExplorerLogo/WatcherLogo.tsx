@@ -3,6 +3,7 @@ import React from 'react'
 import { Box } from 'theme/base'
 import { BoxProps } from 'theme/types'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { parseExchangeImage } from 'utils/helpers/transform'
 
 const WatcherLogo = ({
   platform,
@@ -24,7 +25,7 @@ const WatcherLogo = ({
   return (
     <Box sx={{ width: size, height: size, filter: 'grayscale(100%)', ':hover': { filter: 'none' } }} {...props}>
       <a href={watcherUrl} target="_blank" rel="noreferrer">
-        <img width="100%" src={`/images/exchanges/${icon}.png`} alt={platform} />
+        <img width="100%" src={parseExchangeImage(icon as CopyTradePlatformEnum)} alt={platform} />
       </a>
     </Box>
   )

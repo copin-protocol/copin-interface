@@ -2,7 +2,7 @@ import { configs } from './configs.js'
 import { renderHTML } from './utils.js'
 
 const getOpenInterestMarket = async (req, res) => {
-  const thumbnail = `${configs.baseUrl}/images/cover/oi-market-cover.png`
+  const thumbnail = `${configs.apiUrl}/storage/image/cover__oi-market-cover`
 
   try {
     renderHTML({

@@ -2,6 +2,7 @@ import { Box } from 'theme/base'
 import { BoxProps } from 'theme/types'
 import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
+import { parseChainExplorerImage } from 'utils/helpers/transform'
 import { ARBITRUM_CHAIN, BASE_CHAIN, CHAINS } from 'utils/web3/chains'
 
 // TODO: Check when add new DCP
@@ -47,7 +48,7 @@ const ExplorerLogo = ({
         sx={{ height: size, display: 'block', lineHeight: `${size}px` }}
         onClick={(e) => e.stopPropagation()}
       >
-        <img width="100%" src={`/images/chain_explorers/ic-${icon}-explorer.png`} alt={protocol} />
+        <img width="100%" src={parseChainExplorerImage(icon)} alt={protocol} />
       </Box>
     </Box>
   )

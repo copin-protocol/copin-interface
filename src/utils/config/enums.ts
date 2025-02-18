@@ -138,6 +138,7 @@ export enum CopyTradePlatformEnum {
   SYNTHETIX_V3 = 'SYNTHETIX_V3',
   GNS_V8 = 'GNS_V8',
   HYPERLIQUID = 'HYPERLIQUID',
+  COPIN_HYPERLIQUID = 'COPIN_HYPERLIQUID',
 }
 
 export enum CopyTradeConfigTypeEnum {

@@ -24,6 +24,7 @@ import { LINKS, MAX_REFERRAL_CODE_LENGTH, MIN_REFERRAL_CODE_LENGTH } from 'utils
 import { ReferralTierEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 import { getErrorMessage } from 'utils/helpers/handleError'
+import { referRewardImage } from 'utils/helpers/transform'
 
 import { InviteButton } from './InviteButton'
 import ReferralLinks from './ReferralLinks'
@@ -218,7 +219,7 @@ export default function UserReferralTier() {
 }
 
 function ReferralTierBadge({ tier }: { tier: string | number }) {
-  return <Image src={`/images/referral/referral-tier-${tier}.png`} width={60} height={60} />
+  return <Image src={referRewardImage(tier)} width={60} height={60} />
 }
 
 function UserReferralCode({
