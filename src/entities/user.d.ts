@@ -116,3 +116,8 @@ export interface UserSubscriptionData {
   owner: string // address
   createdAt: string
 }
+
+export interface SubscriptionCountData {
+  plan: SubscriptionPlanEnum
+  count: number
+}

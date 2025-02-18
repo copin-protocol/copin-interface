@@ -5,6 +5,7 @@ import { ReactNode, useState } from 'react'
 
 import NFTSubscriptionCard from 'components/@widgets/NFTSubscriptionCard'
 import Num from 'entities/Num'
+import { SubscriptionCountData } from 'entities/user'
 import useSubscriptionPlanPrice from 'hooks/features/subscription/useSubscriptionPlanPrice'
 import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { Button } from 'theme/Buttons'
@@ -18,9 +19,14 @@ import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 
 import MintButton from './MintButton'
+import { getSubscriptionCount } from './helpers'
 import { PlanRowWrapper } from './styled'
 
-export default function Plans() {
+export default function Plans({
+  subscriptionCountData,
+}: {
+  subscriptionCountData: SubscriptionCountData[] | undefined
+}) {
   const priceData = useSubscriptionPlanPrice()
   const pricePremium = priceData[SubscriptionPlanEnum.PREMIUM]
     ? new Num(priceData[SubscriptionPlanEnum.PREMIUM].price)
@@ -52,7 +58,7 @@ export default function Plans() {
               <Trans>FREE</Trans>
             </Type.H2>
           </Flex>
-          <Flex sx={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <Flex sx={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
             <Flex mb={2} sx={{ alignItems: 'center', gap: 12 }}>
               <CrowIconGold />
               <Type.BodyBold color="orange1">
@@ -81,8 +87,9 @@ export default function Plans() {
                 /30days
               </Box>
             </Type.H2>
+            <DesktopSubscriptionCount data={subscriptionCountData} plan={SubscriptionPlanEnum.PREMIUM} />
           </Flex>
-          <Flex sx={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <Flex sx={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
             <Flex mb={2} sx={{ alignItems: 'center', gap: 12 }}>
               <VipPlanIcon1 />
               <Type.BodyBold color="violet">
@@ -111,6 +118,7 @@ export default function Plans() {
                 /30days
               </Box>
             </Type.H2>
+            <DesktopSubscriptionCount data={subscriptionCountData} plan={SubscriptionPlanEnum.VIP} />
           </Flex>
         </PlanRowWrapper>
         <Flex sx={{ width: '100%', flexDirection: 'column', gap: 3, py: 3 }}>
@@ -184,6 +192,21 @@ export default function Plans() {
   )
 }
 
+function DesktopSubscriptionCount({
+  data,
+  plan,
+}: {
+  data: SubscriptionCountData[] | undefined
+  plan: SubscriptionPlanEnum
+}) {
+  const count = getSubscriptionCount({ data, plan })
+  return (
+    <Type.Caption color="neutral2" sx={{ position: 'absolute', bottom: 0, transform: 'translateY(-100%)' }}>
+      <Trans>Minted: {formatNumber(count)} NFTs</Trans>
+    </Type.Caption>
+  )
+}
+
 function PreviewNFT({ plan, onDismiss }: { plan: SubscriptionPlanEnum | null; onDismiss: () => void }) {
   if (!plan) return null
   return (
@@ -201,7 +224,7 @@ function PreviewNFT({ plan, onDismiss }: { plan: SubscriptionPlanEnum | null; on
   )
 }
 
-export function MobilePlans() {
+export function MobilePlans({ subscriptionCountData }: { subscriptionCountData: SubscriptionCountData[] | undefined }) {
   const planConfigs = usePlanConfigs()
   const priceData = useSubscriptionPlanPrice()
   const pricePremium = priceData[SubscriptionPlanEnum.PREMIUM]
@@ -236,6 +259,7 @@ export function MobilePlans() {
       >
         <Type.LargeBold textAlign="center" color="orange1">
           <Trans>PREMIUM PLAN</Trans> ({pricePremium?.str ?? '--'}ETH /30days)
+          <MobileSubscriptionCount data={subscriptionCountData} plan={SubscriptionPlanEnum.PREMIUM} />
         </Type.LargeBold>
         {planConfigs.features.map((label, index) => (
           <MobilePlanItem label={label} value={planConfigs.premium[index]} />
@@ -265,6 +289,7 @@ export function MobilePlans() {
       >
         <Type.LargeBold textAlign="center" color="violet">
           <Trans>VIP Plan</Trans> ({priceVip?.str ?? '--'}ETH /30days)
+          <MobileSubscriptionCount data={subscriptionCountData} plan={SubscriptionPlanEnum.VIP} />
         </Type.LargeBold>
         {planConfigs.features.map((label, index) => (
           <MobilePlanItem label={label} value={planConfigs.vip[index]} />
@@ -284,6 +309,21 @@ export function MobilePlans() {
       <PreviewNFT plan={previewPlan} onDismiss={() => setPreviewPlan(null)} />
       <Tooltips />
     </>
+  )
+}
+
+function MobileSubscriptionCount({
+  data,
+  plan,
+}: {
+  data: SubscriptionCountData[] | undefined
+  plan: SubscriptionPlanEnum
+}) {
+  const count = getSubscriptionCount({ data, plan })
+  return (
+    <Type.Caption color="neutral2" textAlign="center" display="block" mt={1}>
+      <Trans>Minted: {formatNumber(count)} NFTs</Trans>
+    </Type.Caption>
   )
 }
 

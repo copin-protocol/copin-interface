@@ -1,11 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
+import { useQuery } from 'react-query'
 
+import { getSubscriptionCountApi } from 'apis/subscription'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { GradientText } from 'components/@ui/GradientText'
 import NFTCollectionLinks from 'components/@widgets/NFTCollectionLinks'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { Box, Flex, Type } from 'theme/base'
+import { QUERY_KEYS } from 'utils/config/keys'
 
 import Plans, { MobilePlans } from './Plans'
 import TermsAndConditions from './TermsAndConditions'
@@ -13,6 +16,9 @@ import { SubscriptionColors, SubscriptionGrid } from './styled'
 
 export default function SubscriptionPage() {
   const { xl } = useResponsive()
+  const { data: subscriptionCountData } = useQuery([QUERY_KEYS.GET_SUBSCRIPTION_COUNT], getSubscriptionCountApi, {
+    refetchInterval: 30_000,
+  })
   if (!xl)
     return (
       <SafeComponentWrapper>
@@ -31,7 +37,7 @@ export default function SubscriptionPage() {
             <SubscriptionCard />
           </Box> */}
           <Box p={3}>
-            <MobilePlans />
+            <MobilePlans subscriptionCountData={subscriptionCountData} />
           </Box>
           <Box mb={42} />
           <Box p={3}>
@@ -78,7 +84,7 @@ export default function SubscriptionPage() {
           <NFTCollectionLinks />
           <Flex mt={5} width="100%" sx={{ gap: 24, flexDirection: ['column', 'column', 'column', 'column', 'row'] }}>
             {/* <SubscriptionCard /> */}
-            <Plans />
+            <Plans subscriptionCountData={subscriptionCountData} />
           </Flex>
           <Box mb={42} />
           <TermsAndConditions />

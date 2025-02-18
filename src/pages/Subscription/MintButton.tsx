@@ -130,6 +130,7 @@ function MintModal({
   const { isValid, alert } = useRequiredChain({ chainId: SUBSCRIPTION_CHAIN_ID })
   const subscriptionContract = useSubscriptionContract()
   const [state, setState] = useState<MintState>('preparing')
+  const refetchQueries = useRefetchQueries()
   const subscriptionMutation = useContractMutation(subscriptionContract, {
     onMutate: () => {
       setState('minting')
@@ -144,6 +145,7 @@ function MintModal({
     subscriptionMutation.mutate({ method: 'mint', params: [plan, MINT_DURATION], value: planPrice })
   }
   const handleSyncSuccess = () => {
+    refetchQueries([QUERY_KEYS.GET_SUBSCRIPTION_COUNT])
     setState('success')
   }
   const isSuccess = state === 'success'
