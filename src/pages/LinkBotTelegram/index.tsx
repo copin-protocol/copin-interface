@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import { linkToBotAlertApi } from 'apis/alertApis'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import ToastBody from 'components/@ui/ToastBody'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
@@ -57,43 +58,45 @@ const LinkBotTelegramPage = () => {
   }
 
   return (
-    <Flex flexDirection="column" alignItems="center" justifyContent="center" sx={{ height: '100%' }}>
-      <IconButton
-        variant="outline"
-        icon={<TelegramIcon size={56} variant="Bold" />}
-        size={56}
-        sx={{ '&:hover': { cursor: 'initial' } }}
-      />
-      <Flex my={24} flexDirection="column" sx={{ gap: 1 }}>
-        <Type.Body textAlign="center">
-          <Trans>To get notifications from traders, you must use Copin Telegram Bot</Trans>
-        </Type.Body>
-        <Type.Caption color="orange1" textAlign="center" width="100%">
-          <Trans>Note: Each Telegram account is only allowed to link to a Copin account</Trans>
-        </Type.Caption>
-      </Flex>
+    <SafeComponentWrapper>
+      <Flex flexDirection="column" alignItems="center" justifyContent="center" sx={{ height: '100%' }}>
+        <IconButton
+          variant="outline"
+          icon={<TelegramIcon size={56} variant="Bold" />}
+          size={56}
+          sx={{ '&:hover': { cursor: 'initial' } }}
+        />
+        <Flex my={24} flexDirection="column" sx={{ gap: 1 }}>
+          <Type.Body textAlign="center">
+            <Trans>To get notifications from traders, you must use Copin Telegram Bot</Trans>
+          </Type.Body>
+          <Type.Caption color="orange1" textAlign="center" width="100%">
+            <Trans>Note: Each Telegram account is only allowed to link to a Copin account</Trans>
+          </Type.Caption>
+        </Flex>
 
-      {isAuthenticated ? (
-        <ButtonWithIcon
-          variant="primary"
-          as={!currentState ? Link : undefined}
-          to={telegramUrl}
-          target="_blank"
-          icon={currentState ? <></> : <ArrowSquareOut size={16} />}
-          width={200}
-          direction="right"
-          isLoading={submitting}
-          disabled={submitting || loading}
-          onClick={currentState ? handleConfirmLinkAlert : undefined}
-        >
-          {currentState ? <Trans>Link Account</Trans> : <Trans>Open Telegram Bot</Trans>}
-        </ButtonWithIcon>
-      ) : (
-        <Button variant="primary" onClick={handleClickLogin} disabled={loading || submitting} isLoading={loading}>
-          Login
-        </Button>
-      )}
-    </Flex>
+        {isAuthenticated ? (
+          <ButtonWithIcon
+            variant="primary"
+            as={!currentState ? Link : undefined}
+            to={telegramUrl}
+            target="_blank"
+            icon={currentState ? <></> : <ArrowSquareOut size={16} />}
+            width={200}
+            direction="right"
+            isLoading={submitting}
+            disabled={submitting || loading}
+            onClick={currentState ? handleConfirmLinkAlert : undefined}
+          >
+            {currentState ? <Trans>Link Account</Trans> : <Trans>Open Telegram Bot</Trans>}
+          </ButtonWithIcon>
+        ) : (
+          <Button variant="primary" onClick={handleClickLogin} disabled={loading || submitting} isLoading={loading}>
+            Login
+          </Button>
+        )}
+      </Flex>
+    </SafeComponentWrapper>
   )
 }
 

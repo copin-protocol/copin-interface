@@ -254,7 +254,8 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
       render: (item) => {
         if (!item.pair) return <></>
         const symbol = getSymbolFromPair(item.pair)
-        const icon = `/svg/markets/${symbol}.svg`
+        const icon = parseMarketImage(symbol)
+
         return (
           <Flex
             role="button"

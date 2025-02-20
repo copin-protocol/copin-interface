@@ -2,7 +2,7 @@ import { configs } from './configs.js'
 import { renderHTML } from './utils.js'
 
 const getReferralProgram = async (req, res) => {
-  const thumbnail = `${configs.baseUrl}/images/cover/referral-program-cover.png`
+  const thumbnail = `${configs.apiUrl}/storage/image/cover__referral-program-cover`
 
   try {
     renderHTML({

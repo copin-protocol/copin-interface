@@ -1,5 +1,5 @@
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import { ProtocolFilter } from 'components/@ui/ProtocolFilter'
+import { ProtocolFilter } from 'components/@widgets/ProtocolFilter'
 import SearchAllResults from 'components/@widgets/SearchAllResults'
 import useSearchTraders from 'hooks/features/trader/useSearchTraders'
 import useInternalRole from 'hooks/features/useInternalRole'

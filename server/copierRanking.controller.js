@@ -2,7 +2,7 @@ import { configs } from './configs.js'
 import { generateProtocolName, renderHTML } from './utils.js'
 
 const getCopierRanking = async (req, res) => {
-  const thumbnail = `${configs.baseUrl}/images/cover/copier-ranking-cover.png`
+  const thumbnail = `${configs.apiUrl}/storage/image/cover__copier-ranking-cover`
 
   try {
     renderHTML({

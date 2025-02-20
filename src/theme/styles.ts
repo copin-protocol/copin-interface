@@ -326,8 +326,7 @@ const ThemedGlobalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.colors.neutral7};
     border: 1px solid ${({ theme }) => theme.colors.neutral4};
     border-radius: 4px;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding: 0;
     opacity: 1;
     z-index: 100;
     box-shadow: 0px 0px 6px 6px ${({ theme }) => theme.colors.neutral3}03;

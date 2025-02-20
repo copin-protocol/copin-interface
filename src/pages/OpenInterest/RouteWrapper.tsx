@@ -3,29 +3,21 @@ import { ListBullets, Pulse } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useHistory } from 'react-router-dom'
 
-import { ProtocolFilter, ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
-import useProtocolFromUrl from 'hooks/router/useProtocolFromUrl'
+import { GlobalProtocolFilter, GlobalProtocolFilterProps } from 'components/@widgets/ProtocolFilter'
 import useSearchParams from 'hooks/router/useSearchParams'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { BottomWrapperMobile } from 'pages/@layouts/Components'
 import { TabHeader } from 'theme/Tab'
 import { Box, Flex, Type } from 'theme/base'
 import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
 import { generateOIOverviewRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
+import { convertProtocolToParams } from 'utils/helpers/protocol'
 
-export default function RouteWrapper({
-  children,
-  protocolFilter,
-}: {
-  children: any
-  protocolFilter: ProtocolFilterProps
-}) {
-  // const { symbol } = useParams<{ symbol: string | undefined }>()
-  // const { pathname } = useLocation()
-  // if (!symbol) return <Redirect to={`${pathname}/${ALL_TOKEN_PARAM}`} />
+export default function RouteWrapper({ children }: { children: any }) {
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
-      <RouteHeader protocolFilter={protocolFilter} />
+      <RouteHeader />
       <Box flex="1 0 0">{children}</Box>
       <RouteFooter />
     </Flex>
@@ -38,7 +30,7 @@ function RouteFooter() {
     </BottomWrapperMobile>
   )
 }
-function RouteHeader({ protocolFilter }: { protocolFilter: ProtocolFilterProps }) {
+function RouteHeader() {
   const { md } = useResponsive()
   const { pathname } = useSearchParams()
   const tabName = pathname.split('/')[2] as 'positions' | 'overview'
@@ -52,6 +44,11 @@ function RouteHeader({ protocolFilter }: { protocolFilter: ProtocolFilterProps }
       default:
         return 'OPEN INTEREST'
     }
+  }
+
+  const protocolFilterProps: GlobalProtocolFilterProps = {
+    placement: md ? 'bottom' : 'bottomRight',
+    menuSx: { width: ['300px', '400px', '50vw', '50vw'] },
   }
 
   return (
@@ -71,22 +68,13 @@ function RouteHeader({ protocolFilter }: { protocolFilter: ProtocolFilterProps }
       }}
     >
       <Flex flex={{ _: '1', md: 'auto' }} sx={{ alignItems: 'center', height: '100%' }}>
-        {/* <MarketsDropdown /> */}
         {!md && <Type.BodyBold>{renderTabName(tabName as 'positions' | 'overview')}</Type.BodyBold>}
 
-        {/* <Box display={{ _: 'none', md: 'block' }} height="100%" width="1px" bg="neutral4" /> */}
         <Box width="100%" display={{ _: 'none', md: 'flex' }} sx={{ px: 0, gap: 30 }}>
           <Tabs size="lg" />
         </Box>
       </Flex>
-      {/* <Box display={{ _: 'block', md: 'none' }} sx={{ height: '100%', width: '1px', bg: 'neutral4' }} /> */}
-      <ProtocolFilter
-        {...protocolFilter}
-        // checkIsProtocolChecked={protocolFilter.checkIsSelected}
-        // handleToggleProtocol={protocolFilter.handleToggle}
-        placement={md ? 'bottom' : 'bottomRight'}
-        menuSx={{ width: ['300px', '400px', '50vw', '50vw'] }}
-      />
+      <GlobalProtocolFilter {...protocolFilterProps} />
     </Flex>
   )
 }
@@ -94,8 +82,8 @@ function RouteHeader({ protocolFilter }: { protocolFilter: ProtocolFilterProps }
 function Tabs({ size }: { size: 'lg' | 'md' }) {
   const { searchParams, pathname } = useSearchParams()
   const { push } = useHistory()
-
-  const { protocolParams } = useProtocolFromUrl(searchParams, pathname)
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
+  const protocolParams = convertProtocolToParams(selectedProtocols ?? [])
 
   const onChangeTab = (key: 'positions' | 'overview') => {
     if (key === 'positions') {

@@ -6,6 +6,7 @@ import { Redirect, Route, Switch, useLocation } from 'react-router'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useInternalRole from 'hooks/features/useInternalRole'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { TabConfig, TabHeader } from 'theme/Tab'
@@ -25,7 +26,7 @@ export default function MyProfilePage() {
   if (!myProfile) return null
 
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title={pageTitleMapping[pathname] ?? t`My Profile`} />
       <Flex
         sx={{
@@ -69,7 +70,7 @@ export default function MyProfilePage() {
           </Flex>
         </Box>
       </Flex>
-    </>
+    </SafeComponentWrapper>
   )
 }
 

@@ -2,7 +2,7 @@ import { configs } from './configs.js'
 import { renderHTML } from './utils.js'
 
 const getFeeRebate = async (req, res) => {
-  const thumbnail = `${configs.baseUrl}/images/cover/fee-rebate-cover.png`
+  const thumbnail = `${configs.apiUrl}/storage/image/cover__fee-rebate-cover`
 
   try {
     renderHTML({

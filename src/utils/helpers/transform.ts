@@ -186,11 +186,11 @@ export const getProtocolTradeUrl = (protocol: ProtocolEnum) => {
 }
 
 export function parseProtocolImage(protocol: ProtocolEnum) {
-  return `/images/protocols/${protocol}.png`
+  return `${import.meta.env.VITE_API}/storage/image/protocols__${protocol}`
 }
 
 export function parseExchangeImage(exchange: CopyTradePlatformEnum) {
-  return `/images/exchanges/${exchange}.png`
+  return `${import.meta.env.VITE_API}/storage/image/exchanges__${exchange}`
 }
 
 export function parseWalletName(wallet: CopyWalletData, returnExchange?: boolean, shortenName?: boolean) {
@@ -265,28 +265,45 @@ export function convertDataToText(data: any) {
 }
 
 export function parseMarketImage(symbol: string) {
-  return `/svg/markets/${symbol}.svg`
+  return `${import.meta.env.VITE_API}/storage/image/markets__${symbol}`
 }
 
 export function parseChainImage(chain: string) {
-  return `/images/chains/${chain.toUpperCase()}.png`
+  return `${import.meta.env.VITE_API}/storage/image/chains__${chain.toUpperCase()}`
+}
+
+export function parseChainExplorerImage(icon: string) {
+  return `${import.meta.env.VITE_API}/storage/image/chain_explorers__ic-${icon}-explorer`
 }
 
 export function parseCollateralImage(symbol: string) {
-  return `/images/collaterals/${symbol}.png`
+  return `${import.meta.env.VITE_API}/storage/image/collaterals__${symbol}`
 }
 export function parseCollateralColorImage(symbol: string) {
-  return `/images/collaterals_with_color/${symbol.toUpperCase()}.png`
+  return `${import.meta.env.VITE_API}/storage/image/collaterals_with_color__${symbol.toUpperCase()}`
+}
+
+export function parseCoverImage(symbol: string) {
+  return `${import.meta.env.VITE_API}/storage/image/cover__${symbol}`
 }
 
 export function parseRewardImage(symbol: string) {
-  return `/images/rewards/${symbol}.png`
+  return `${import.meta.env.VITE_API}/storage/image/rewards__${symbol}`
 }
+
+export function referRewardImage(tier: any) {
+  return `${import.meta.env.VITE_API}/storage/image/referral__referral-tier-${tier}`
+}
+
 export function parsePlainProtocolImage(protocol: string, hasBorder?: boolean) {
-  return hasBorder ? `/images/protocol_images/${protocol}.png` : `/images/plain_protocol/${protocol}.png`
+  return hasBorder
+    ? `${import.meta.env.VITE_API}/storage/image/protocol_images__${protocol}`
+    : `${import.meta.env.VITE_API}/storage/image/plain_protocol__${protocol}`
 }
 export function parsePerpdexImage(perpdex: string, hasBorder?: boolean) {
-  return hasBorder ? `/images/perpdex/${perpdex}.png` : `/images/plain_perpdex/${perpdex}.png`
+  return hasBorder
+    ? `${import.meta.env.VITE_API}/storage/image/perpdex__${perpdex}`
+    : `${import.meta.env.VITE_API}/storage/image/plain_perpdex__${perpdex}`
 }
 
 export function convertDurationInSecond(openTime: string) {
@@ -318,9 +335,8 @@ export function getProtocolDropdownImage({
   isActive: boolean
   disabled?: boolean
 }) {
-  return `/images/protocols_with_status/${protocol}-${
-    disabled ? 'inactive' : isActive ? 'active' : 'inactive_color'
-  }.png`
+  const status = disabled ? 'inactive' : isActive ? 'active' : 'inactive_color'
+  return `${import.meta.env.VITE_API}/storage/image/protocols_with_status__${protocol}-${status}`
 }
 
 // TODO: Check when add new pairs

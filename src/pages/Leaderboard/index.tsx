@@ -3,6 +3,7 @@ import { Trophy } from '@phosphor-icons/react'
 
 import TopLeaderboard from 'components/@trader/TraderLeaderboardTableView'
 import PageHeader from 'components/@widgets/PageHeader'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useGlobalStore from 'hooks/store/useGlobalStore'
 import { Box, Flex } from 'theme/base'
 
@@ -14,7 +15,7 @@ import { LeaderboardProvider } from './useLeaderboardProvider'
 const LeaderboardPage = () => {
   const protocol = useGlobalStore((s) => s.protocol)
   return (
-    <>
+    <SafeComponentWrapper>
       <LeaderboardProvider>
         <Flex
           sx={{
@@ -54,7 +55,7 @@ const LeaderboardPage = () => {
           </Box>
         </Flex>
       </LeaderboardProvider>
-    </>
+    </SafeComponentWrapper>
   )
 }
 

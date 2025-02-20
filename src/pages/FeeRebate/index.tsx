@@ -10,6 +10,7 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
 import CreateSmartWalletAction from 'components/@wallet/CreateSmartWalletAction'
 import EventTradingProtocols from 'components/@widgets/EventTradingProtocols'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { EventDetailsData, TradingEventStatusEnum } from 'entities/event'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useCountdown from 'hooks/helpers/useCountdown'
@@ -27,7 +28,7 @@ import GTradeRewards from './GTradeRewards'
 import Layout from './Layout'
 
 export default function FeeRebatePage() {
-  const { sm, xl, md } = useResponsive()
+  const { xl, md } = useResponsive()
   const tradingEventSlug = 'decentralized-copy-trading-competition-gtrade'
   const { data: eventDetails } = useQuery(
     [QUERY_KEYS.GET_EVENT_COMPETITION, 'eventDetails', tradingEventSlug],
@@ -39,7 +40,7 @@ export default function FeeRebatePage() {
   )
 
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title="10,000 ARB For Decentralized Copy-Trading Fee Rebates" />
       <FeeRebateProvider>
         {xl ? (
@@ -50,7 +51,7 @@ export default function FeeRebatePage() {
           <MobileVersion eventDetails={eventDetails} />
         )}
       </FeeRebateProvider>
-    </>
+    </SafeComponentWrapper>
   )
 }
 

@@ -11,8 +11,7 @@ import { normalizePositionPayload } from 'apis/positionApis'
 import PythWatermark from 'components/@ui/PythWatermark'
 import ToastBody from 'components/@ui/ToastBody'
 import { ResponsePositionData } from 'entities/trader'
-import useProtocolFromUrl from 'hooks/router/useProtocolFromUrl'
-import useSearchParams from 'hooks/router/useSearchParams'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { Box, Flex } from 'theme/base'
 import { TAB_HEIGHT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
@@ -22,9 +21,8 @@ import VisualizeSection, { VisualizeSectionMobile } from '../VisualizeSection'
 import Filters, { useFilters } from './Filters'
 
 export default function TopOpenInterest() {
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
   const { lg, sm } = useResponsive()
-  const { searchParams, pathname } = useSearchParams()
-  const { protocols } = useProtocolFromUrl(searchParams, pathname)
   const {
     sort,
     onChangeSort,
@@ -63,14 +61,15 @@ export default function TopOpenInterest() {
       paging: { size: limit, from: 0 },
     }
 
-    return { index, body, protocols }
-  }, [sort.key, from, to, pairs, limit, protocols, excludedPairs])
+    return { index, body, protocols: selectedProtocols ?? [] }
+  }, [sort.key, from, to, pairs, limit, selectedProtocols, excludedPairs])
 
   const {
     data: topOpeningPositionsData,
     loading: isLoading,
     previousData,
   } = useApolloQuery<TopOpeningPositionsGraphQLResponse<ResponsePositionData>>(SEARCH_TOP_OPENING_POSITIONS_QUERY, {
+    skip: selectedProtocols == null,
     variables: queryVariables,
     onError: (error) => {
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
@@ -81,6 +80,8 @@ export default function TopOpenInterest() {
     topOpeningPositionsData?.searchTopOpeningPosition.data || previousData?.searchTopOpeningPosition.data
 
   const data = rawPositionData?.map((position) => normalizePositionData(position))
+
+  if (selectedProtocols == null) return null
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>

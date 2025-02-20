@@ -4,7 +4,7 @@ import { generateProtocolName, renderHTML } from './utils.js'
 const getTopOpenings = async (req, res) => {
   const { protocol } = req.params
 
-  const thumbnail = `${configs.baseUrl}/images/cover/top-opening-${protocol}-cover.png`
+  const thumbnail = `${configs.apiUrl}/storage/image/cover__top-opening-${protocol}-cover`
 
   const protocolName = generateProtocolName(protocol)
 

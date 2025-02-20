@@ -4,11 +4,10 @@ import { useQuery } from 'react-query'
 
 import { getOpenInterestMarketApi } from 'apis/positionApis'
 import { MarketFilter } from 'components/@ui/MarketFilter'
-import { ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
 import PythWatermark from 'components/@ui/PythWatermark'
 import { OpenInterestMarketData } from 'entities/statistic'
-import useProtocolFromUrl from 'hooks/router/useProtocolFromUrl'
 import useSearchParams from 'hooks/router/useSearchParams'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { TableProps, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { TAB_HEIGHT } from 'utils/config/constants'
@@ -19,17 +18,17 @@ import RouteWrapper from '../RouteWrapper'
 import { TimeDropdown, useFilters, useTimeFilter } from '../TopOpenInterest/Filters'
 import { ListForm, TableForm } from './ListMarkets'
 
-export default function OpenInterestByMarkets({ protocolFilter }: { protocolFilter: ProtocolFilterProps }) {
+export default function OpenInterestByMarkets() {
   return (
-    <RouteWrapper protocolFilter={protocolFilter}>
+    <RouteWrapper>
       <OpenInterestByMarketsPage />
     </RouteWrapper>
   )
 }
 function OpenInterestByMarketsPage() {
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
   const { sm } = useResponsive()
-  const { setSearchParams, searchParams, pathname } = useSearchParams()
-  const { protocols } = useProtocolFromUrl(searchParams, pathname)
+  const { setSearchParams, searchParams } = useSearchParams()
   const { pairs, onChangePairs, excludedPairs } = useFilters()
   const { from, to, time, onChangeTime } = useTimeFilter()
 
@@ -49,9 +48,10 @@ function OpenInterestByMarketsPage() {
   }
 
   const { data, isFetching } = useQuery(
-    [QUERY_KEYS.GET_OPEN_INTEREST_BY_MARKET, protocols, from, to, time],
-    () => getOpenInterestMarketApi({ protocols, from, to, timeframe: time.value }),
+    [QUERY_KEYS.GET_OPEN_INTEREST_BY_MARKET, selectedProtocols, from, to, time],
+    () => getOpenInterestMarketApi({ protocols: selectedProtocols ?? [], from, to, timeframe: time.value }),
     {
+      enabled: selectedProtocols != null,
       keepPreviousData: true,
     }
   )
@@ -75,6 +75,8 @@ function OpenInterestByMarketsPage() {
       return (x - y) * (currentSort.sortType === SortTypeEnum.DESC ? -1 : 1)
     })
   }
+
+  if (selectedProtocols == null) return null
 
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>

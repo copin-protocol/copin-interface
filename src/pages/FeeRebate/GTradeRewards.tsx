@@ -8,7 +8,8 @@ import RebateIcon from 'theme/Icons/RebateIcon'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
+import { parseProtocolImage } from 'utils/helpers/transform'
 
 import WalletItem from './WalletItem'
 
@@ -31,7 +32,7 @@ function Overview() {
           sx={{ p: 1, backgroundColor: `${themeColors.primary1}40`, borderRadius: 'sm', gap: 2 }}
         >
           <Flex alignItems="center" sx={{ gap: 1 }}>
-            <Image src="/images/protocols/GNS.png" width={16} alt="gTrade" />
+            <Image src={parseProtocolImage(ProtocolEnum.GNS)} width={16} alt="gTrade" />
             <Type.Small fontWeight={500}>gTrade</Type.Small>
           </Flex>
           <VerticalDivider sx={{ backgroundColor: themeColors.primary1 }} />

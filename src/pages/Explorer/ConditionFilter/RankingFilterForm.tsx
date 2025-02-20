@@ -2,6 +2,7 @@ import { useResponsive } from 'ahooks'
 
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { Box, Flex } from 'theme/base'
 import { rankingFieldOptions } from 'utils/config/options'
 
@@ -24,7 +25,8 @@ export default function RankingFilterForm({
   currentTab: FilterTabEnum
   lastFilterTab: FilterTabEnum
 }) {
-  const { timeOption, selectedProtocols } = useTradersContext()
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
+  const { timeOption } = useTradersContext()
   const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues })
 
   const onChangeFormValues: FilterFormProps['onValuesChange'] = (values) => {
@@ -49,7 +51,7 @@ export default function RankingFilterForm({
       <Box sx={sm ? {} : { position: 'sticky', top: 0, bg: 'neutral7', zIndex: 2 }}>
         <ResultEstimated
           ranges={ranges}
-          protocols={selectedProtocols}
+          protocols={selectedProtocols ?? []}
           timeOption={timeOption}
           filterTab={FilterTabEnum.RANKING}
         />

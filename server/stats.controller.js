@@ -2,7 +2,7 @@ import { configs } from './configs.js'
 import { renderHTML } from './utils.js'
 
 const getStats = async (req, res) => {
-  const thumbnail = `${configs.baseUrl}/images/cover/stats-cover.png`
+  const thumbnail = `${configs.apiUrl}/storage/image/cover__stats-cover`
 
   try {
     renderHTML({

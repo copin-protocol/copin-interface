@@ -47,6 +47,7 @@ export default function MintButton({
   buttonText = <Trans>Mint NFT</Trans>,
   bgType = '1',
   disabled = false,
+  onSuccess,
 }: {
   planPrice: BigNumber | undefined
   plan: SubscriptionPlanEnum
@@ -55,6 +56,7 @@ export default function MintButton({
   buttonText?: ReactNode
   bgType?: '1' | '2'
   disabled?: boolean
+  onSuccess?: () => void
 }) {
   const { isAuthenticated, account, connect, profile, handleSwitchAccount } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
@@ -106,7 +108,15 @@ export default function MintButton({
           {buttonText}
         </Type.BodyBold>
       </StyledButton>
-      {openModal && <MintModal isOpen={openModal} onDismiss={handleDismiss} planPrice={planPrice} plan={plan} />}
+      {openModal && (
+        <MintModal
+          isOpen={openModal}
+          onDismiss={handleDismiss}
+          planPrice={planPrice}
+          plan={plan}
+          onSuccess={onSuccess}
+        />
+      )}
     </>
   )
 }
@@ -118,11 +128,13 @@ type MintState = 'preparing' | 'minting' | 'syncing' | 'success'
 function MintModal({
   isOpen,
   onDismiss,
+  onSuccess,
   planPrice,
   plan,
 }: {
   isOpen: boolean
   onDismiss: () => void
+  onSuccess?: () => void
   planPrice: BigNumber | undefined
   plan: SubscriptionPlanEnum
 }) {
@@ -135,6 +147,7 @@ function MintModal({
       setState('minting')
     },
     onSuccess: () => {
+      onSuccess?.()
       setState('syncing')
     },
     onError: () => setState('preparing'),
@@ -144,6 +157,7 @@ function MintModal({
     subscriptionMutation.mutate({ method: 'mint', params: [plan, MINT_DURATION], value: planPrice })
   }
   const handleSyncSuccess = () => {
+    onSuccess?.()
     setState('success')
   }
   const isSuccess = state === 'success'

@@ -17,7 +17,7 @@ const getBacktestMultiple = async (req, res) => {
       res,
       params: {
         title: `Backtesting ${numberOfTraders} traders | Copin Analyzer`,
-        thumbnail: `${configs.baseUrl}/images/cover/backtest-cover.png`,
+        thumbnail: `${configs.apiUrl}/storage/image/cover__backtest-cover`,
         url: `${configs.baseUrl}/${protocol}/shared-backtest/multiple/${backtestId}`,
       },
     })

@@ -6,6 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
 #: src/pages/Home/ProtocolDropdown.tsx
 msgid "(Coming soon)"
@@ -15,7 +21,7 @@ msgstr "(Coming soon)"
 msgid ". Try to reload the page to fix this issue"
 msgstr ". Try to reload the page to fix this issue"
 
-#: src/components/@ui/ProtocolFilter/index.tsx
+#: src/components/@widgets/ProtocolFilter/index.tsx
 msgid "0 selected"
 msgstr "0 selected"
 
@@ -904,7 +910,6 @@ msgid "Copy 2 Traders"
 msgstr "Copy 2 Traders"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
-#: src/pages/TraderDetails/CopyManagementDrawer.tsx
 msgid "Copy Management"
 msgstr "Copy Management"
 
@@ -2109,6 +2114,11 @@ msgstr "Minted"
 msgid "Minted NFT"
 msgstr "Minted NFT"
 
+#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/Plans.tsx
+msgid "Minted: {0} NFTs"
+msgstr "Minted: {0} NFTs"
+
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Minting"
 msgstr "Minting"
@@ -2224,7 +2234,7 @@ msgstr "No Perp DEX matched!"
 msgid "No Position Found"
 msgstr "No Position Found"
 
-#: src/components/@ui/ProtocolFilter/SearchProtocols.tsx
+#: src/components/@widgets/ProtocolFilter/SearchProtocols.tsx
 #: src/components/@widgets/SwitchProtocols/SearchProtocols.tsx
 msgid "No Protocol Found"
 msgstr "No Protocol Found"
@@ -2679,7 +2689,7 @@ msgstr "Protocols:"
 msgid "Q&A"
 msgstr "Q&A"
 
-#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
+#: src/components/@widgets/ProtocolFilter/ProtocolSelection.tsx
 msgid "QUICK SELECT"
 msgstr "QUICK SELECT"
 
@@ -2828,8 +2838,8 @@ msgstr "SEARCH BY ADDRESS"
 msgid "SELECT ALL"
 msgstr "SELECT ALL"
 
-#: src/components/@ui/ProtocolFilter/ProtocolSelection.tsx
 #: src/components/@widgets/ChainSelection/index.tsx
+#: src/components/@widgets/ProtocolFilter/ProtocolSelection.tsx
 msgid "SELECTED"
 msgstr "SELECTED"
 
@@ -2857,15 +2867,15 @@ msgstr "SL/TP"
 msgid "SMART WALLET"
 msgstr "SMART WALLET"
 
-#: src/components/@ui/ProtocolFilter/ProtocolSortOptions.tsx
+#: src/components/@widgets/ProtocolFilter/ProtocolSortOptions.tsx
 msgid "SORT BY A-Z"
 msgstr "SORT BY A-Z"
 
-#: src/components/@ui/ProtocolFilter/ProtocolSortOptions.tsx
+#: src/components/@widgets/ProtocolFilter/ProtocolSortOptions.tsx
 msgid "SORT BY OI"
 msgstr "SORT BY OI"
 
-#: src/components/@ui/ProtocolFilter/ProtocolSortOptions.tsx
+#: src/components/@widgets/ProtocolFilter/ProtocolSortOptions.tsx
 msgid "SORT BY TRADERS"
 msgstr "SORT BY TRADERS"
 

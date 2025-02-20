@@ -7,7 +7,7 @@ import {
   formatNumber,
   generateAvatar,
   generateProtocolName,
-  renderHTML
+  renderHTML,
 } from './utils.js'
 
 const getPositionDetails = async (req, res) => {
@@ -17,7 +17,7 @@ const getPositionDetails = async (req, res) => {
   const protocolName = generateProtocolName(protocol)
 
   let url = ''
-  let thumbnail = `${configs.baseUrl}/images/cover/default-position-cover.png`
+  let thumbnail = `${configs.apiUrl}/storage/image/cover__default-position-cover`
   let description = ''
   try {
     const txHash = id?.startsWith('0x') || id?.length === 64 ? id : ''

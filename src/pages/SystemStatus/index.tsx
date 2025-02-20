@@ -3,6 +3,7 @@ import React from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useInternalRole from 'hooks/features/useInternalRole'
 
 import Layout from './Layouts/Layout'
@@ -12,13 +13,13 @@ import WalletWatcher from './WalletWatcher'
 export default function SystemStatusPage() {
   const isInternal = useInternalRole()
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title="System Status" />
       {isInternal ? (
         <Layout nodeStatus={<Overview />} walletWatcher={<WalletWatcher />} />
       ) : (
         <NoDataFound message={<Trans>You do not have permission to access this data</Trans>} />
       )}
-    </>
+    </SafeComponentWrapper>
   )
 }

@@ -4,8 +4,6 @@ import { ToastContainer } from 'react-toastify'
 import OnboardingModal from 'components/@copinLite/OnboardingModal'
 import FavoriteNoteTooltip from 'components/@widgets/FavoriteButton/FavoriteNoteTooltip'
 import LinkBotAlertModal from 'components/@widgets/LinkBotAlertModal'
-// import useCheckHyperliquidBuilderFees from 'hooks/features/useCheckHyperliquidBuilderFees'
-import useResetSearchParams from 'hooks/helpers/useResetSearchParams'
 import { InitTraderCopying } from 'hooks/store/useTraderCopying'
 import { InitTraderFavorites } from 'hooks/store/useTraderFavorites'
 import { PollingUsdPrice } from 'hooks/store/useUsdPrices'
@@ -28,9 +26,6 @@ import SubscriptionExpiredWarning from './@layouts/SubscriptionExpiredWarning'
 // import WarningBetaVersion from './@layouts/WarningBetaVersion'
 
 const AppWrapper = ({ children }: { children: ReactNode }) => {
-  useResetSearchParams()
-  // const { isValidFees } = useCheckHyperliquidBuilderFees({ enable: true })
-
   return (
     <>
       <Flex flexDirection="column" width="100vw" height="100vh" margin="0px auto" maxHeight="100%">

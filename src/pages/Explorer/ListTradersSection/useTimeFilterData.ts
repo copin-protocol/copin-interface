@@ -18,8 +18,7 @@ const useTimeFilterData = ({
 }: {
   requestData: RequestBodyApiData
   timeOption: TimeFilterProps
-  selectedProtocols: ProtocolEnum[]
-  setSelectedProtocols?: (protocols: ProtocolEnum[]) => void
+  selectedProtocols: ProtocolEnum[] | null
   isRangeSelection?: boolean
 }) => {
   const isAllowFetchData = !!timeOption && !isRangeSelection
@@ -34,12 +33,9 @@ const useTimeFilterData = ({
 
     const query = [
       ...rangeFilters,
-      { field: 'protocol', in: selectedProtocols },
+      { field: 'protocol', in: selectedProtocols ?? [] },
       { field: 'type', match: timeOption.id },
     ]
-    // if (!!selectedProtocols?.length && selectedProtocols.length !== RELEASED_PROTOCOLS.length) {
-    //   query.push({ field: 'protocol', in: selectedProtocols })
-    // }
 
     const body = {
       filter: {
@@ -58,7 +54,7 @@ const useTimeFilterData = ({
     previousData,
   } = useApolloQuery<TraderGraphQLResponse<ResponseTraderData>>(SEARCH_TRADERS_QUERY, {
     variables: queryVariables,
-    skip: !isAllowFetchData,
+    skip: !isAllowFetchData || selectedProtocols == null,
   })
 
   return { traders: traders?.searchPositionStatistic || previousData?.searchPositionStatistic, loading }
