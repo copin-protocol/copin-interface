@@ -865,9 +865,9 @@ const CopyTraderForm = ({
                   setValue('skipLowLeverage', true)
                   setValue('lowLeverage', 5)
                   setValue('skipLowCollateral', true)
-                  setValue('lowCollateral', 500)
+                  setValue('lowCollateral', 300)
                   setValue('skipLowSize', true)
-                  setValue('lowSize', 100_000)
+                  setValue('lowSize', 20_000)
                   if (isLite) {
                     logEventLite({
                       event: EVENT_ACTIONS[EventCategory.LITE].LITE_COPY_USE_RECOMMEDATION_SETTINGS,

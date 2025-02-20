@@ -1,24 +1,49 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import { useQuery } from 'react-query'
 
-import { getSubscriptionCountApi } from 'apis/subscription'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { GradientText } from 'components/@ui/GradientText'
 import NFTCollectionLinks from 'components/@widgets/NFTCollectionLinks'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
+import { SubscriptionCountData } from 'entities/user'
+import useMulticallQuery from 'hooks/web3/useMulticallQuery'
 import { Box, Flex, Type } from 'theme/base'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
+import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
+import { OPTIMISM_MAINNET } from 'utils/web3/chains'
+import { CONTRACT_ABIS, CONTRACT_ADDRESSES } from 'utils/web3/contracts'
 
 import Plans, { MobilePlans } from './Plans'
 import TermsAndConditions from './TermsAndConditions'
 import { SubscriptionColors, SubscriptionGrid } from './styled'
 
+const plans = [SubscriptionPlanEnum.PREMIUM, SubscriptionPlanEnum.VIP]
+const queryCalls: { address: string; name: string; params: any[] }[] = plans.map((plan) => ({
+  address: CONTRACT_ADDRESSES[OPTIMISM_MAINNET][CONTRACT_QUERY_KEYS.NFT_SUBSCRIPTION],
+  name: 'tiers',
+  params: [plan],
+}))
+
 export default function SubscriptionPage() {
   const { xl } = useResponsive()
-  const { data: subscriptionCountData } = useQuery([QUERY_KEYS.GET_SUBSCRIPTION_COUNT], getSubscriptionCountApi, {
-    refetchInterval: 30_000,
-  })
+  const { data: subscriptionCountData, refetch } = useMulticallQuery(
+    CONTRACT_ABIS[CONTRACT_QUERY_KEYS.NFT_SUBSCRIPTION],
+    queryCalls,
+    OPTIMISM_MAINNET,
+    {
+      refetchInterval: 30_000,
+      select(data: BigNumber[][]) {
+        const result: SubscriptionCountData[] = plans.map((plan, index) => ({
+          plan,
+          count: BigNumber.from(data[index][2]).toNumber(),
+        }))
+        return result
+      },
+      cacheTime: 0,
+      staleTime: 0,
+    }
+  )
   if (!xl)
     return (
       <SafeComponentWrapper>
@@ -37,7 +62,7 @@ export default function SubscriptionPage() {
             <SubscriptionCard />
           </Box> */}
           <Box p={3}>
-            <MobilePlans subscriptionCountData={subscriptionCountData} />
+            <MobilePlans subscriptionCountData={subscriptionCountData} onSuccess={refetch} />
           </Box>
           <Box mb={42} />
           <Box p={3}>
@@ -84,7 +109,7 @@ export default function SubscriptionPage() {
           <NFTCollectionLinks />
           <Flex mt={5} width="100%" sx={{ gap: 24, flexDirection: ['column', 'column', 'column', 'column', 'row'] }}>
             {/* <SubscriptionCard /> */}
-            <Plans subscriptionCountData={subscriptionCountData} />
+            <Plans subscriptionCountData={subscriptionCountData} onSuccess={refetch} />
           </Flex>
           <Box mb={42} />
           <TermsAndConditions />

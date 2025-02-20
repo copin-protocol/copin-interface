@@ -24,8 +24,10 @@ import { PlanRowWrapper } from './styled'
 
 export default function Plans({
   subscriptionCountData,
+  onSuccess,
 }: {
   subscriptionCountData: SubscriptionCountData[] | undefined
+  onSuccess?: () => void
 }) {
   const priceData = useSubscriptionPlanPrice()
   const pricePremium = priceData[SubscriptionPlanEnum.PREMIUM]
@@ -150,7 +152,7 @@ export default function Plans({
             <Box />
             <Box>
               <Flex sx={{ alignItems: 'center', justifyContent: 'center' }} px={3}>
-                <MintButton planPrice={pricePremium?.bn} plan={SubscriptionPlanEnum.PREMIUM} />
+                <MintButton planPrice={pricePremium?.bn} plan={SubscriptionPlanEnum.PREMIUM} onSuccess={onSuccess} />
               </Flex>
               <Button
                 mt={2}
@@ -168,9 +170,8 @@ export default function Plans({
                   planPrice={priceVip?.bn}
                   plan={SubscriptionPlanEnum.VIP}
                   bgType="1"
-                  // disabled
-                  // buttonText="Coming Soon"
                   buttonText="Mint VIP NFT"
+                  onSuccess={onSuccess}
                 />
               </Flex>
               <Button
@@ -200,6 +201,7 @@ function DesktopSubscriptionCount({
   plan: SubscriptionPlanEnum
 }) {
   const count = getSubscriptionCount({ data, plan })
+  if (!count) return null
   return (
     <Type.Caption color="neutral2" sx={{ position: 'absolute', bottom: 0, transform: 'translateY(-100%)' }}>
       <Trans>Minted: {formatNumber(count)} NFTs</Trans>
@@ -224,7 +226,13 @@ function PreviewNFT({ plan, onDismiss }: { plan: SubscriptionPlanEnum | null; on
   )
 }
 
-export function MobilePlans({ subscriptionCountData }: { subscriptionCountData: SubscriptionCountData[] | undefined }) {
+export function MobilePlans({
+  subscriptionCountData,
+  onSuccess,
+}: {
+  subscriptionCountData: SubscriptionCountData[] | undefined
+  onSuccess?: () => void
+}) {
   const planConfigs = usePlanConfigs()
   const priceData = useSubscriptionPlanPrice()
   const pricePremium = priceData[SubscriptionPlanEnum.PREMIUM]
@@ -265,7 +273,7 @@ export function MobilePlans({ subscriptionCountData }: { subscriptionCountData: 
           <MobilePlanItem label={label} value={planConfigs.premium[index]} />
         ))}
         <Flex sx={{ alignItems: 'center', justifyContent: 'center' }}>
-          <MintButton planPrice={pricePremium?.bn} plan={SubscriptionPlanEnum.PREMIUM} />
+          <MintButton planPrice={pricePremium?.bn} plan={SubscriptionPlanEnum.PREMIUM} onSuccess={onSuccess} />
         </Flex>
         <Button
           block
@@ -295,7 +303,7 @@ export function MobilePlans({ subscriptionCountData }: { subscriptionCountData: 
           <MobilePlanItem label={label} value={planConfigs.vip[index]} />
         ))}
         <Flex sx={{ alignItems: 'center', justifyContent: 'center' }}>
-          <MintButton planPrice={priceVip?.bn} plan={SubscriptionPlanEnum.VIP} bgType="1" />
+          <MintButton planPrice={priceVip?.bn} plan={SubscriptionPlanEnum.VIP} bgType="1" onSuccess={onSuccess} />
         </Flex>
         <Button
           block
@@ -320,6 +328,7 @@ function MobileSubscriptionCount({
   plan: SubscriptionPlanEnum
 }) {
   const count = getSubscriptionCount({ data, plan })
+  if (!count) return null
   return (
     <Type.Caption color="neutral2" textAlign="center" display="block" mt={1}>
       <Trans>Minted: {formatNumber(count)} NFTs</Trans>
