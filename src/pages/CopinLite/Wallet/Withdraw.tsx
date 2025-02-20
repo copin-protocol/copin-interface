@@ -1,16 +1,17 @@
 import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
 import { getLiteConfigApi, withdrawLiteWalletApi } from 'apis/liteApis'
+import ConfirmModal from 'components/@ui/ConfirmModal'
 import ToastBody from 'components/@ui/ToastBody'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { Button } from 'theme/Buttons'
 import InputField from 'theme/InputField'
-import { Box, Flex, Image, Type } from 'theme/base'
+import { Box, Flex, Image, Li, Type } from 'theme/base'
 import { DELAY_SYNC } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
 import delay from 'utils/helpers/delay'
@@ -31,19 +32,19 @@ const LiteWithdraw = ({ address }: { address: string }) => {
   const available = embeddedWalletInfo?.withdrawable
     ? Math.floor(Number(embeddedWalletInfo.withdrawable) * 100) / 100
     : undefined
-  const withdrawMutation = useMutation(withdrawLiteWalletApi, {
+  const { mutate: withdraw, isLoading } = useMutation(withdrawLiteWalletApi, {
     onSuccess: async () => {
       reset()
       toast.success(<ToastBody title="Success" message="Your withdraw request has been submitted" />)
       await delay(DELAY_SYNC)
       reloadEmbeddedWalletInfo?.()
+      setConfirmModal(undefined)
     },
     onError: (error) => {
       toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)
     },
   })
   const {
-    control,
     watch,
     reset,
     setValue,
@@ -64,8 +65,45 @@ const LiteWithdraw = ({ address }: { address: string }) => {
   const fee = configs ? configs.withdrawFee + configs.hyperliquidTransferFee + configs.hyperliquidWithdrawFee : 0
   const minWithdrawalAmount = MIN_AMOUNT + fee
 
+  const [confirmModal, setConfirmModal] = useState<{ message: any; data: LiteWithdrawForm } | undefined>(undefined)
+  const handleConfirmTx = () =>
+    handleSubmit((formValues) => {
+      setConfirmModal({
+        message: (
+          //@ts-ignore
+          <Box sx={{ '& *': { textAlign: 'left !important' } }}>
+            <Type.Head mb={2}>Confirm your withdraw</Type.Head>
+            <Li>
+              <Type.Caption>
+                Amount:{' '}
+                <Box as="span" fontWeight="bold">
+                  {amount} USDC
+                </Box>
+              </Type.Caption>
+            </Li>
+            <Li>
+              <Type.Caption>
+                To address:{' '}
+                <Box as="span" fontWeight="bold">
+                  {destinationAddress}
+                </Box>
+              </Type.Caption>
+            </Li>
+            <Li>
+              <Type.Caption>
+                Chain:{' '}
+                <Box as="span" fontWeight="bold">
+                  Arbitrum
+                </Box>
+              </Type.Caption>
+            </Li>
+          </Box>
+        ),
+        data: formValues,
+      })
+    })()
   const onSubmit = async ({ sourceAddress, destinationAddress, amount }: LiteWithdrawForm) => {
-    if (withdrawMutation.isLoading) return
+    if (isLoading) return
     if (!amount) {
       setError('amount', new Error('Amount is required'))
       trigger()
@@ -76,8 +114,10 @@ const LiteWithdraw = ({ address }: { address: string }) => {
       return
     }
 
-    withdrawMutation.mutate({ sourceAddress, destinationAddress, amount })
+    withdraw({ sourceAddress, destinationAddress, amount })
   }
+
+  const handleWithdraw = () => confirmModal && onSubmit(confirmModal?.data)
 
   return (
     <Box px={3} py={[24, 24, 24, 2]}>
@@ -87,7 +127,7 @@ const LiteWithdraw = ({ address }: { address: string }) => {
           <Trans>Withdraw USDC To Arbitrum</Trans>
         </Type.CaptionBold>
       </Flex>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form noValidate>
         <InputField
           error={errors.amount?.message}
           type="text"
@@ -123,7 +163,7 @@ const LiteWithdraw = ({ address }: { address: string }) => {
               type="button"
               variant="ghostPrimary"
               p={0}
-              disabled={withdrawMutation.isLoading}
+              disabled={isLoading}
               onClick={() => {
                 setValue('amount', available || 0)
                 trigger()
@@ -156,15 +196,26 @@ const LiteWithdraw = ({ address }: { address: string }) => {
         </Type.Caption>
         <Button
           variant="primary"
-          type="submit"
+          type="button"
           block
           mt={3}
-          disabled={withdrawMutation.isLoading || !amount || !destinationAddress}
-          isLoading={withdrawMutation.isLoading}
+          disabled={isLoading || !amount || !destinationAddress}
+          isLoading={isLoading}
+          onClick={handleConfirmTx}
         >
           Withdraw
         </Button>
       </form>
+      {confirmModal && (
+        <ConfirmModal
+          isConfirming={isLoading}
+          message={confirmModal.message}
+          onConfirm={handleWithdraw}
+          onDismiss={() => {
+            setConfirmModal(undefined)
+          }}
+        />
+      )}
     </Box>
   )
 }

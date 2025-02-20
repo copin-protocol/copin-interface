@@ -74,35 +74,12 @@ const LiteOpeningPositions = () => {
       }
       const key = getHLCopyPositionIdentifyKey({ ...v, pair })
       const hlPosition = hlPositionMapping[key]
-      if (hlPosition) {
-        hlPosition.openingPositionType = 'liveBoth'
-        const hlSize = Number(hlPosition.sizeDelta ?? 0)
-        const appSize = Number(v.sizeDelta ?? 0)
-        const totalSizeDelta = v.totalSizeDelta ?? 0
-        let newSizeDelta = v.sizeDelta
-        let newTotalSizeDelta = totalSizeDelta
-        if (hlSize > appSize) newSizeDelta = `${hlSize}`
-        if (hlSize > totalSizeDelta) newTotalSizeDelta = hlSize
-        const result: CopyPositionData = {
-          ...v,
-          entryPrice: hlPosition.entryPrice,
-          openingPositionType: 'liveBoth',
-          sizeDelta: newSizeDelta,
-          totalSizeDelta: newTotalSizeDelta,
-        }
-        return result
-      }
-      const result: CopyPositionData = { ...v, openingPositionType: 'onlyLiveApp' }
+      const result: CopyPositionData = { ...v, openingPositionType: hlPosition ? 'liveBoth' : 'onlyLiveApp' }
       return result
     })
-    if (selectedTraders != null) {
-      return _openingPositions ?? []
-    }
-    return [
-      ...Object.values(hlPositionMapping).filter((v) => v.openingPositionType === 'onlyLiveHyper'),
-      ...(_openingPositions ?? []),
-    ]
-  }, [data?.data, embeddedWalletInfo?.assetPositions, getSymbolByIndexToken, selectedTraders])
+
+    return _openingPositions ?? []
+  }, [data?.data, embeddedWalletInfo?.assetPositions, getSymbolByIndexToken])
 
   return (
     <Flex flexDirection="column" height="100%" width="100%">

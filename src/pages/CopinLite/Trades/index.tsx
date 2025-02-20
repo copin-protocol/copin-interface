@@ -8,6 +8,7 @@ import { Box } from 'theme/base'
 
 import LiteDepositsAndWithdrawals from '../Transactions/DepositsAndWithdrawals'
 import LiteActivities from './Activities'
+import LiteHLOpeningPositions from './HLPositions'
 import LiteHistory from './History'
 import LiteOpeningPositions from './OpeningPositions'
 import { TradesTab } from './types'
@@ -24,40 +25,7 @@ const Trades = () => {
       setTab(TradesTab.OpeningPositions)
     }
   }, [lg, tab])
-  const renderOpenPositionsTab = () => {
-    return (
-      <TabPane key={TradesTab.OpeningPositions} tab={<Trans>Opening Positions</Trans>}>
-        <LiteOpeningPositionProvider>
-          <LiteOpeningPositions />
-        </LiteOpeningPositionProvider>
-      </TabPane>
-    )
-  }
-  const renderHistoryTab = () => {
-    return (
-      <TabPane key={TradesTab.History} tab={<Trans>History</Trans>}>
-        <LiteHistoryPositionProvider>
-          <LiteHistory currentTab={tab} />
-        </LiteHistoryPositionProvider>
-      </TabPane>
-    )
-  }
-  const renderActivitiesTab = () => {
-    return (
-      <TabPane key={TradesTab.Activities} tab={<Trans>Activities</Trans>}>
-        <LiteActivitiesProvider>
-          <LiteActivities currentTab={tab} />
-        </LiteActivitiesProvider>
-      </TabPane>
-    )
-  }
-  const renderTransactionsTab = () => {
-    return (
-      <TabPane key={TradesTab.DepositsAndWithdrawals} tab={<Trans>Deposits And Withdrawals</Trans>}>
-        <LiteDepositsAndWithdrawals currentTab={tab} />
-      </TabPane>
-    )
-  }
+
   return (
     <Box sx={{ overflowY: 'hidden' }} height="100%">
       <Tabs
@@ -72,9 +40,33 @@ const Trades = () => {
           py: 0,
         }}
       >
-        {lg
-          ? [renderOpenPositionsTab(), renderHistoryTab(), renderActivitiesTab(), renderTransactionsTab()]
-          : [renderOpenPositionsTab(), renderHistoryTab(), renderActivitiesTab()]}
+        <TabPane key={TradesTab.OpeningPositions} tab={<Trans>Opening</Trans>}>
+          <LiteOpeningPositionProvider>
+            <LiteOpeningPositions />
+          </LiteOpeningPositionProvider>
+        </TabPane>
+        <TabPane key={TradesTab.HLPositions} tab={<Trans>On-Chain Positions</Trans>}>
+          <LiteOpeningPositionProvider>
+            <LiteHLOpeningPositions />
+          </LiteOpeningPositionProvider>
+        </TabPane>
+        <TabPane key={TradesTab.History} tab={<Trans>History</Trans>}>
+          <LiteHistoryPositionProvider>
+            <LiteHistory currentTab={tab} />
+          </LiteHistoryPositionProvider>
+        </TabPane>
+        <TabPane key={TradesTab.Activities} tab={<Trans>Activities</Trans>}>
+          <LiteActivitiesProvider>
+            <LiteActivities currentTab={tab} />
+          </LiteActivitiesProvider>
+        </TabPane>
+        {lg ? (
+          <TabPane key={TradesTab.DepositsAndWithdrawals} tab={<Trans>Deposits And Withdrawals</Trans>}>
+            <LiteDepositsAndWithdrawals currentTab={tab} />
+          </TabPane>
+        ) : (
+          <></>
+        )}
       </Tabs>
     </Box>
   )

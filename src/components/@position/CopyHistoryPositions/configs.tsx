@@ -13,7 +13,6 @@ import {
   renderOpenTime,
   renderPnL,
   renderSize,
-  renderSource,
   renderStatus,
   renderTrader,
 } from '../configs/copyPositionRenderProps'
