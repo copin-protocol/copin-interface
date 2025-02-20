@@ -99,7 +99,6 @@ export default function MarketGroup({
               indexTokens={indexTokens}
               symbols={symbols}
               hasName={hasName}
-              sx={{ maxWidth: 400, maxHeight: 350, overflowY: 'auto' }}
               imageUriFactory={imageUriFactory}
             />
           </Tooltip>
@@ -138,7 +137,7 @@ export function MarketGroupFull({
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(4, auto)',
+        gridTemplateColumns: 'repeat(3, auto)',
         gap: '6px',
         ...sx,
       }}
