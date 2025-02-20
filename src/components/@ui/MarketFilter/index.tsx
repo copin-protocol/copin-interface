@@ -13,10 +13,7 @@ import { themeColors } from 'theme/colors'
 import MarketSelection from './MarketSelection'
 import PairGroup, { PairGroupFull } from './PairGroup'
 
-// import ProtocolSelection from './ProtocolSelection'
-
 export interface MarketFilterProps {
-  // allPairs?: boolean
   menuSx?: any
   placement?: DropdownProps['placement']
   pairs: string[]
@@ -30,8 +27,7 @@ export function MarketFilter({
   pairs,
   onChangePairs,
   excludedPairs,
-}: // ...props
-MarketFilterProps) {
+}: MarketFilterProps) {
   const { xl } = useResponsive()
   const { getListSymbol } = useMarketsConfig()
   const protocolPairs = getListSymbol?.()

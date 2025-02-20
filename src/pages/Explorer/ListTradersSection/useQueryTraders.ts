@@ -26,12 +26,10 @@ export default function useQueryTraders({
   accounts,
   filterTab,
   selectedProtocols,
-  setSelectedProtocols,
   isFavTraders = false,
   traderFavorites,
 }: Pick<TradersContextData, 'tab' | 'timeRange' | 'timeOption' | 'isRangeSelection' | 'accounts' | 'filterTab'> & {
-  selectedProtocols: ProtocolEnum[]
-  setSelectedProtocols: (protocols: ProtocolEnum[]) => void
+  selectedProtocols: ProtocolEnum[] | null
   isFavTraders?: boolean
   traderFavorites?: string[]
 }) {
@@ -64,7 +62,7 @@ export default function useQueryTraders({
     }
     if (accounts) transformRequestWithAccounts(request, accounts, isFavTraders)
     return request
-  }, [accounts, filterTab, searchParams])
+  }, [accounts, filterTab, isFavTraders, searchParams])
 
   // const { rangeTraders, loadingRangeTraders, loadingRangeProgress } = useRangeFilterData({
   //   protocol,
@@ -78,7 +76,6 @@ export default function useQueryTraders({
     requestData,
     timeOption,
     selectedProtocols,
-    setSelectedProtocols,
   })
 
   let timeTradersData = timeTraders
@@ -100,7 +97,7 @@ export default function useQueryTraders({
     const extraAccounts = protocolAccounts
       .filter((account) => {
         const [address, protocol] = account.split('-')
-        return !accountsWithInfo.includes(address) && selectedProtocols.includes(protocol as ProtocolEnum)
+        return !accountsWithInfo.includes(address) && selectedProtocols?.includes(protocol as ProtocolEnum)
       })
       .map((account) => {
         const [address, protocol] = account.split('-')

@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 import BetaTag from 'components/@ui/BetaTag'
 import useGlobalStore from 'hooks/store/useGlobalStore'
 import useMyProfile from 'hooks/store/useMyProfile'
-import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -49,8 +49,8 @@ export function MobileEventNavLinks({ onClose, hasEvents }: { onClose?: () => vo
 }
 
 function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () => void }) {
-  const { selectedProtocols } = useProtocolFilter()
-  const protocolParams = convertProtocolToParams(selectedProtocols)
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
+  const protocolParams = convertProtocolToParams(selectedProtocols ?? [])
 
   const protocol = useGlobalStore((s) => s.protocol)
   const onClickNavItem = () => {

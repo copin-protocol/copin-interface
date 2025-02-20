@@ -1,6 +1,6 @@
 import { memo } from 'react'
 
-import { ProtocolFilter } from 'components/@ui/ProtocolFilter'
+import { ProtocolFilter } from 'components/@widgets/ProtocolFilter'
 
 import { useProtocolsContext } from './useProtocolsProvider'
 

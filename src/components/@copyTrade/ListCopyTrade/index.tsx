@@ -1,5 +1,5 @@
 import { useResponsive } from 'ahooks'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTraderVolumeCopy } from 'apis/copyTradeApis'
@@ -64,30 +64,34 @@ export default function ListCopyTrade({
   const changeCurrentSort = (sort: TableSortProps<CopyTradeWithCheckingData> | undefined) => {
     setCurrentSort(sort)
   }
-  let sortedData: CopyTradeWithCheckingData[] | undefined = Array.isArray(copyTrades) ? [] : undefined
-  if (copyTrades?.length) {
-    sortedData = [...copyTrades]
-    if (sortedData && sortedData.length > 0 && !!currentSort) {
-      sortedData.sort((a, b) => {
-        const x = a?.[currentSort.sortBy] as any
-        const y = b?.[currentSort.sortBy] as any
-        if (currentSort.sortType === SortTypeEnum.ASC) {
-          return x < y ? -1 : x > y ? 1 : 0
-        } else {
-          return x < y ? 1 : x > y ? -1 : 0
-        }
-      })
-    }
-  }
-  const isRef = !!activeWallet?.isReferral
   const systemVolumeLimit = useSystemConfigStore()
-  sortedData = sortedData?.map((_d) => ({
-    ..._d,
-    isRef,
-    maxVolume: getMaxVolumeCopy({ plan: myProfile?.plan, isRef, volumeLimitData: systemVolumeLimit.volumeLimit }),
-    copyVolume: volumeCopies?.find((_v) => _v.account === _d.account && _v.protocol === _d.protocol)?.totalVolume ?? 0,
-    plan: myProfile?.plan,
-  }))
+  const sortedData = useMemo(() => {
+    let _sortedData: CopyTradeWithCheckingData[] | undefined = Array.isArray(copyTrades) ? [] : undefined
+    if (copyTrades?.length) {
+      _sortedData = [...copyTrades]
+      if (_sortedData && _sortedData.length > 0 && !!currentSort) {
+        _sortedData.sort((a, b) => {
+          const x = a?.[currentSort.sortBy] as any
+          const y = b?.[currentSort.sortBy] as any
+          if (currentSort.sortType === SortTypeEnum.ASC) {
+            return x < y ? -1 : x > y ? 1 : 0
+          } else {
+            return x < y ? 1 : x > y ? -1 : 0
+          }
+        })
+      }
+    }
+    const isRef = !!activeWallet?.isReferral
+    _sortedData = _sortedData?.map((_d) => ({
+      ..._d,
+      isRef,
+      maxVolume: getMaxVolumeCopy({ plan: myProfile?.plan, isRef, volumeLimitData: systemVolumeLimit.volumeLimit }),
+      copyVolume:
+        volumeCopies?.find((_v) => _v.account === _d.account && _v.protocol === _d.protocol)?.totalVolume ?? 0,
+      plan: myProfile?.plan,
+    }))
+    return _sortedData
+  }, [activeWallet?.isReferral, copyTrades, currentSort, myProfile?.plan, systemVolumeLimit.volumeLimit, volumeCopies])
 
   const { sm } = useResponsive()
 

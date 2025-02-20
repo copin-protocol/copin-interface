@@ -8,8 +8,8 @@ import TraderPositionDetails from 'components/@position/TraderPositionDetails'
 import Container from 'components/@ui/Container'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useSearchParams from 'hooks/router/useSearchParams'
-// import Loading from 'theme/Loading'
 import { DEFAULT_PROTOCOL, DYDX_TX_HASH_REGEX, EVM_TX_HASH_REGEX } from 'utils/config/constants'
 import { PositionSideEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
@@ -42,7 +42,7 @@ export default function PositionDetailsPage() {
   const positionId = !!txHash ? (data && data.length === 1 ? data[0].id : undefined) : id
 
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title="Position Details" />
       <Container maxWidth={{ lg: 1000 }} height="100%">
         {/*{isLoading && <Loading />}*/}
@@ -67,6 +67,6 @@ export default function PositionDetailsPage() {
           />
         )}
       </Container>
-    </>
+    </SafeComponentWrapper>
   )
 }

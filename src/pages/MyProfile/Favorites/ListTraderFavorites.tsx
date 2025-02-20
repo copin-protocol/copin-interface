@@ -5,6 +5,7 @@ import TraderListCard from 'components/@trader/TraderExplorerListView'
 import TraderListTable from 'components/@trader/TraderExplorerTableView'
 import { mobileTableSettings, tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
 import { TraderData } from 'entities/trader.d'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import useTraderFavorites, { getTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
 import useQueryTraders from 'pages/Explorer/ListTradersSection/useQueryTraders'
 import { TradersContextData } from 'pages/Explorer/useTradersContext'
@@ -17,21 +18,12 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
   contextValues: TradersContextData
   notes: { [key: string]: string }
 }) {
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
   const { traderFavorites } = useTraderFavorites()
   const { md } = useResponsive()
   const settings = md ? tableSettings : mobileTableSettings
-  const {
-    tab,
-    accounts,
-    isRangeSelection,
-    timeRange,
-    timeOption,
-    currentSort,
-    changeCurrentSort,
-    filterTab,
-    selectedProtocols,
-    setSelectedProtocols,
-  } = contextValues
+  const { tab, accounts, isRangeSelection, timeRange, timeOption, currentSort, changeCurrentSort, filterTab } =
+    contextValues
 
   const { data, isLoading } = useQueryTraders({
     tab,
@@ -41,7 +33,6 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     accounts,
     filterTab,
     selectedProtocols,
-    setSelectedProtocols,
     isFavTraders: true,
     traderFavorites,
   })

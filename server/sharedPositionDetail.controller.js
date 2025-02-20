@@ -11,7 +11,7 @@ const getSharedPositionDetails = async (req, res) => {
     const sharedData = await apiRequester.get(`/share/${sharedId}`).then((res) => res.query)
     const { account, txHashes, logId } = sharedData
     const txHash = txHashes[0]
-    let thumbnail = `${configs.baseUrl}/images/cover/default-position-cover.png`
+    let thumbnail = `${configs.apiUrl}/storage/image/cover__default-position-cover`
     const newThumbnail = `${configs.imageApiUrl}/share_${protocol}_${txHash}_${account}_${logId}`
     const image = await axios.get(`${newThumbnail}`)
     if (image.data) thumbnail = newThumbnail + `?${new Date().getTime()}`

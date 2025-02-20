@@ -4,6 +4,7 @@ import { useResponsive } from 'ahooks'
 import { useRef } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { BodyWrapperMobile, BottomWrapperMobile } from 'pages/@layouts/Components'
 import { TabHeader } from 'theme/Tab'
@@ -16,7 +17,7 @@ import { OVERVIEW_WIDTH } from './configs'
 export default function HomePage() {
   const { md } = useResponsive()
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title="Copin Analyzer" />
       {md ? (
         <Flex
@@ -45,7 +46,7 @@ export default function HomePage() {
       ) : (
         <MobileHome />
       )}
-    </>
+    </SafeComponentWrapper>
   )
 }
 

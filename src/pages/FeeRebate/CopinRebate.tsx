@@ -19,8 +19,9 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { DATE_TEXT_FORMAT, LINKS } from 'utils/config/constants'
-import { EpochStatusEnum } from 'utils/config/enums'
+import { EpochStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { formatDate, formatNumber } from 'utils/helpers/format'
+import { parseProtocolImage } from 'utils/helpers/transform'
 import { isAddress } from 'utils/web3/contracts'
 
 import ClaimButton from './ClaimAction'
@@ -48,7 +49,7 @@ function Overview() {
           sx={{ p: 1, backgroundColor: `${themeColors.primary1}40`, borderRadius: 'sm', gap: 2 }}
         >
           <Flex alignItems="center" sx={{ gap: 1 }}>
-            <Image src="/images/protocols/GNS.png" width={16} alt="gTrade" />
+            <Image src={parseProtocolImage(ProtocolEnum.GNS)} width={16} alt="gTrade" />
             <Type.Small fontWeight={500}>gTrade</Type.Small>
           </Flex>
           <VerticalDivider sx={{ backgroundColor: themeColors.primary1 }} />
@@ -107,7 +108,7 @@ function MobileOverview() {
           sx={{ p: 1, backgroundColor: `${themeColors.primary1}40`, borderRadius: 'sm', gap: 2 }}
         >
           <Flex alignItems="center" sx={{ gap: 1 }}>
-            <Image src="/images/protocols/GNS.png" width={16} alt="gTrade" />
+            <Image src={parseProtocolImage(ProtocolEnum.GNS)} width={16} alt="gTrade" />
             <Type.Small fontWeight={500}>gTrade</Type.Small>
           </Flex>
           <VerticalDivider sx={{ backgroundColor: themeColors.primary1 }} />

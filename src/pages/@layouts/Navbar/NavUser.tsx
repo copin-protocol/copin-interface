@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import Divider from 'components/@ui/Divider'
 import useCopyTradePermission from 'hooks/features/copyTrade/useCopyTradePermission'
 import useInternalRole from 'hooks/features/useInternalRole'
-import { useProtocolFilter } from 'hooks/store/useProtocolFilter'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
@@ -30,8 +30,8 @@ import WarningExpiredSubscriptionIcon from './WarningExpiredSubscriptionIcon'
 import WarningSwitchAccountIcon from './WarningSwithcAccountIcon'
 
 const NavUser = () => {
-  const { selectedProtocols } = useProtocolFilter()
-  const protocolParams = convertProtocolToParams(selectedProtocols)
+  const { selectedProtocols } = useGlobalProtocolFilterStore()
+  const protocolParams = convertProtocolToParams(selectedProtocols ?? [])
 
   const [isShowModalLogout, setIsShowModalLogout] = useState(false)
   // const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false)

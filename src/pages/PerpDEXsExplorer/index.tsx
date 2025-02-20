@@ -13,6 +13,7 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import PerpDexLogo from 'components/@ui/PerpDexLogo'
 import IconGroup from 'components/@widgets/IconGroup'
 import Icon from 'components/@widgets/IconGroup/Icon'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
 import useSearchParams from 'hooks/router/useSearchParams'
 import {
@@ -57,15 +58,14 @@ import Wrapper from './components/Wrapper'
 import useSortData from './hooks/useSortData'
 
 export default function PerpDEXsExplorerPage() {
-  //@ts-ignore
   const { lg } = useResponsive()
 
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title="Perp Explorer | Copin Analyzer" />
       {lg ? <DesktopView /> : <MobileView />}
       <ReportPerpDEXsModal />
-    </>
+    </SafeComponentWrapper>
   )
 }
 

@@ -2,7 +2,7 @@ import { configs } from './configs.js'
 import { renderHTML } from './utils.js'
 
 const getSubscription = async (req, res) => {
-  const thumbnail = `${configs.baseUrl}/images/cover/subscription-cover.png?v=2`
+  const thumbnail = `${configs.apiUrl}/storage/image/cover__subscription-cover?v=2`
 
   try {
     renderHTML({

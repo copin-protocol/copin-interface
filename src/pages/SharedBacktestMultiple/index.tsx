@@ -8,6 +8,7 @@ import {
 } from 'components/@backtest/BacktestMultipleResultTable'
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { BackTestResultData, RequestBackTestData } from 'entities/backTest'
 import useGetSharedBacktest from 'hooks/features/backtest/useGetSharedBacktest'
 import { useBacktestCustomizeColumn } from 'hooks/store/useBacktestCustomizeColumns'
@@ -77,7 +78,7 @@ export default function SharedBacktestMultiplePage() {
   ]
 
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title={`Backtesting ${settings.accounts.length} traders`} />
       <Box bg="neutral5" width="100%" height="100%">
         <Flex pt={3} height="100%" flexDirection="column" maxWidth={1920} mx="auto">
@@ -95,7 +96,7 @@ export default function SharedBacktestMultiplePage() {
           </Box>
         </Flex>
       </Box>
-    </>
+    </SafeComponentWrapper>
   )
 }
 

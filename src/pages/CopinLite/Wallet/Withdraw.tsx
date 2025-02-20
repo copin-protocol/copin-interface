@@ -1,6 +1,6 @@
 import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery } from 'react-query'
 import { toast } from 'react-toastify'
@@ -17,6 +17,7 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import delay from 'utils/helpers/delay'
 import { formatNumber } from 'utils/helpers/format'
 import { getErrorMessage } from 'utils/helpers/handleError'
+import { parseChainImage } from 'utils/helpers/transform'
 
 interface LiteWithdrawForm {
   sourceAddress: string
@@ -73,30 +74,9 @@ const LiteWithdraw = ({ address }: { address: string }) => {
           //@ts-ignore
           <Box sx={{ '& *': { textAlign: 'left !important' } }}>
             <Type.Head mb={2}>Confirm your withdraw</Type.Head>
-            <Li>
-              <Type.Caption>
-                Amount:{' '}
-                <Box as="span" fontWeight="bold">
-                  {amount} USDC
-                </Box>
-              </Type.Caption>
-            </Li>
-            <Li>
-              <Type.Caption>
-                To address:{' '}
-                <Box as="span" fontWeight="bold">
-                  {destinationAddress}
-                </Box>
-              </Type.Caption>
-            </Li>
-            <Li>
-              <Type.Caption>
-                Chain:{' '}
-                <Box as="span" fontWeight="bold">
-                  Arbitrum
-                </Box>
-              </Type.Caption>
-            </Li>
+            <ListItem label={<Trans>Amount:</Trans>} value={`${amount} USDC`} />
+            <ListItem label={<Trans>To address:</Trans>} value={destinationAddress} />
+            <ListItem label={<Trans>Chain:</Trans>} value={'Arbitrum'} />
           </Box>
         ),
         data: formValues,
@@ -122,7 +102,7 @@ const LiteWithdraw = ({ address }: { address: string }) => {
   return (
     <Box px={3} py={[24, 24, 24, 2]}>
       <Flex mx="auto" justifyContent="center" mb={[24, 24, 24, 12]} alignItems="center" sx={{ gap: 2 }}>
-        <Image src="/images/chains/ARB.png" height={28} />
+        <Image src={parseChainImage('ARB')} height={28} />
         <Type.CaptionBold>
           <Trans>Withdraw USDC To Arbitrum</Trans>
         </Type.CaptionBold>
@@ -221,3 +201,16 @@ const LiteWithdraw = ({ address }: { address: string }) => {
 }
 
 export default LiteWithdraw
+
+function ListItem({ label, value }: { label: ReactNode; value: ReactNode }) {
+  return (
+    <Li>
+      <Type.Caption>
+        {label}{' '}
+        <Box as="span" fontWeight="bold">
+          {value}
+        </Box>
+      </Type.Caption>
+    </Li>
+  )
+}

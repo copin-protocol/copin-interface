@@ -8,6 +8,7 @@ import { Box, Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { compactNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+import { getProtocolDropdownImage } from 'utils/helpers/transform'
 
 import ProtocolBetaWarning from './ProtocolBetaWarning'
 
@@ -130,5 +131,5 @@ function StatsItem({
 }
 
 function getProtocolStatsImage({ protocol, isActive }: { protocol: ProtocolEnum; isActive: boolean }) {
-  return `/images/protocols_with_status/${protocol}-${isActive ? 'active' : 'inactive'}.png`
+  return getProtocolDropdownImage({ protocol, isActive })
 }

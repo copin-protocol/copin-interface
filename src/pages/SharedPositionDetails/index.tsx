@@ -5,6 +5,7 @@ import { getSharedPositionSettingApi } from 'apis/shareApis'
 import TraderPositionDetails from 'components/@position/TraderPositionDetails'
 import Container from 'components/@ui/Container'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import Loading from 'theme/Loading'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -24,7 +25,7 @@ export default function SharedPositionDetailsPage() {
   if (isLoading) return <Loading />
 
   return (
-    <>
+    <SafeComponentWrapper>
       <CustomPageTitle title="Position Details" />
       <Container maxWidth={{ lg: 1000 }}>
         {data?.query?.positionId && (
@@ -36,6 +37,6 @@ export default function SharedPositionDetailsPage() {
           />
         )}
       </Container>
-    </>
+    </SafeComponentWrapper>
   )
 }

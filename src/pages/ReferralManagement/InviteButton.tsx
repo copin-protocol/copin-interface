@@ -7,6 +7,7 @@ import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox } from 'theme/base'
+import { parseCoverImage } from 'utils/helpers/transform'
 
 import ReferralLinks from './ReferralLinks'
 import ShareReferralLinks from './ShareReferralLinks'
@@ -55,7 +56,7 @@ export function ShareReferralModal({
           sx={{
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundImage: 'url(/images/cover/referral-share.png)',
+            backgroundImage: parseCoverImage('referral-share'),
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
           }}

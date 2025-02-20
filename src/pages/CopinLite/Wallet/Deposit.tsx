@@ -5,14 +5,14 @@ import { QRCodeSVG } from 'qrcode.react'
 import CopyButton from 'theme/Buttons/CopyButton'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { ELEMENT_IDS } from 'utils/config/keys'
-import { parseCollateralColorImage } from 'utils/helpers/transform'
+import { parseChainImage, parseCollateralColorImage } from 'utils/helpers/transform'
 
 const LiteDeposit = ({ address }: { address: string }) => {
   const { lg } = useResponsive()
   return (
     <>
       <Flex mx="auto" justifyContent="center" py={[24, 24, 24, 12]} alignItems="center" sx={{ gap: 2 }}>
-        <Image src="/images/chains/ARB.png" height={28} />
+        <Image src={parseChainImage('ARB')} height={28} />
         <Type.CaptionBold>
           <Trans>Send USDC over Arbitrum</Trans>
         </Type.CaptionBold>

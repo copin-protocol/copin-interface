@@ -1,14 +1,12 @@
 import { ComponentType, ReactNode } from 'react'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import { ProtocolFilter } from 'components/@ui/ProtocolFilter'
 import { HomeSwitchProtocols, RouteSwitchProtocol } from 'components/@widgets/SwitchProtocols'
-import useInternalRole from 'hooks/features/useInternalRole'
-import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
-import useTradersContext from 'pages/Explorer/useTradersContext'
 import PageTitle from 'theme/PageTitle'
 import { Box } from 'theme/base'
-import { ALLOWED_COPYTRADE_PROTOCOLS, PAGE_TITLE_HEIGHT } from 'utils/config/constants'
+import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
+
+import { GlobalProtocolFilter } from './ProtocolFilter'
 
 export default function PageHeader({
   pageTitle,
@@ -29,12 +27,6 @@ export default function PageHeader({
   showSelectProtocol?: boolean
   useNewCode?: boolean
 }) {
-  const { selectedProtocols, checkIsProtocolChecked, handleToggleProtocol, setSelectedProtocols } = useTradersContext()
-
-  const isInternal = useInternalRole()
-  const protocolOptions = useGetProtocolOptions()
-  const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
-
   return (
     <>
       <CustomPageTitle title={pageTitle} />
@@ -56,13 +48,7 @@ export default function PageHeader({
         <PageTitle icon={Icon} title={headerText} />
         {showSelectProtocol &&
           (useNewCode ? (
-            <ProtocolFilter
-              selectedProtocols={selectedProtocols}
-              checkIsProtocolChecked={checkIsProtocolChecked}
-              handleToggleProtocol={handleToggleProtocol}
-              setSelectedProtocols={setSelectedProtocols}
-              allowList={allowList}
-            />
+            <GlobalProtocolFilter />
           ) : routeSwitchProtocol ? (
             <RouteSwitchProtocol keepSearch={keepSearchOnSwitchProtocol} />
           ) : (

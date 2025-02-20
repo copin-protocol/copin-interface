@@ -12,6 +12,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: { error: any; resetErrorBo
   let dynamicModuleError = false
   if (message.includes('Failed to fetch dynamically imported module')) {
     dynamicModuleError = true
+    location.reload()
   }
   return (
     <Flex alignItems="center" justifyContent="center" flexDirection="column" height="100vh" textAlign="center">

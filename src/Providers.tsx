@@ -10,6 +10,7 @@ import { CopyWalletInitializer } from 'hooks/features/useCopyWalletContext'
 import ProtocolInitializer from 'hooks/helpers/useProtocols'
 import { useInitTabsOpen } from 'hooks/helpers/useTabsOpen'
 import { GlobalStoreInitializer } from 'hooks/store/useGlobalStore'
+import { ProtocolFilterStoreInitializer } from 'hooks/store/useProtocolFilter'
 import { SystemConfigInitializer } from 'hooks/store/useSystemConfigStore'
 import ThemedGlobalStyle from 'theme/styles'
 
@@ -52,6 +53,7 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
               <GainsTradeConnection />
               <ProtocolInitializer />
               <GlobalStoreInitializer />
+              <ProtocolFilterStoreInitializer />
               <DappProvider>
                 <CopyWalletInitializer />
                 <BotAlertInitializer />

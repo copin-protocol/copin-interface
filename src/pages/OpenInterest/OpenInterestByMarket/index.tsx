@@ -9,12 +9,10 @@ import { toast } from 'react-toastify'
 import { normalizePositionData } from 'apis/normalize'
 import { normalizePositionPayload } from 'apis/positionApis'
 import tokenNotFound from 'assets/images/token-not-found.png'
-import { ProtocolFilterProps } from 'components/@ui/ProtocolFilter'
 import PythWatermark from 'components/@ui/PythWatermark'
 import ToastBody from 'components/@ui/ToastBody'
 import { ResponsePositionData } from 'entities/trader'
-import useProtocolFromUrl from 'hooks/router/useProtocolFromUrl'
-import useSearchParams from 'hooks/router/useSearchParams'
+import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import Loading from 'theme/Loading'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { SortTypeEnum } from 'utils/config/enums'
@@ -24,9 +22,9 @@ import RouteWrapper from '../RouteWrapper'
 import Filters, { useFilters } from '../TopOpenInterest/Filters'
 import VisualizeSection, { VisualizeSectionMobile } from '../VisualizeSection'
 
-export default function OpenInterestByMarket({ protocolFilter }: { protocolFilter: ProtocolFilterProps }) {
+export default function OpenInterestByMarket() {
   return (
-    <RouteWrapper protocolFilter={protocolFilter}>
+    <RouteWrapper>
       <OpenInterestByMarketPage />
     </RouteWrapper>
   )
@@ -34,8 +32,7 @@ export default function OpenInterestByMarket({ protocolFilter }: { protocolFilte
 
 function OpenInterestByMarketPage() {
   const { lg, sm } = useResponsive()
-  const { searchParams, pathname } = useSearchParams()
-  const { protocols } = useProtocolFromUrl(searchParams, pathname)
+  const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
 
   const {
     sort,
@@ -59,7 +56,7 @@ function OpenInterestByMarketPage() {
       { field: 'status', match: 'OPEN' },
       { field: 'openBlockTime', gte: from, lte: to },
       { field: 'pair', in: pairs.filter((pair) => !excludedPairs.includes(pair)).map((pair) => `${pair}-USDT`) },
-      { field: 'protocol', in: protocols },
+      { field: 'protocol', in: selectedProtocols ?? [] },
     ]
 
     const body = {
@@ -70,14 +67,15 @@ function OpenInterestByMarketPage() {
       paging: { size: limit, from: 0 },
     }
 
-    return { index, body, protocols }
-  }, [sort.key, from, to, protocols, limit, pairs, excludedPairs])
+    return { index, body, protocols: selectedProtocols }
+  }, [sort.key, from, to, pairs, selectedProtocols, limit, excludedPairs])
 
   const {
     data: topOpeningPositionsData,
     loading: isLoading,
     previousData,
   } = useApolloQuery<TopOpeningPositionsGraphQLResponse<ResponsePositionData>>(SEARCH_TOP_OPENING_POSITIONS_QUERY, {
+    skip: selectedProtocols == null,
     variables: queryVariables,
     onError: (error) => {
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
@@ -88,6 +86,8 @@ function OpenInterestByMarketPage() {
     topOpeningPositionsData?.searchTopOpeningPosition.data || previousData?.searchTopOpeningPosition.data
 
   const data = rawPositionData?.map((position) => normalizePositionData(position))
+
+  if (selectedProtocols == null) return null
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>

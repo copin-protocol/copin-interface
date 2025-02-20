@@ -6,6 +6,7 @@ import { useLayoutEffect } from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { BottomWrapperMobile } from 'pages/@layouts/Components'
 import { TabConfig, TabHeader } from 'theme/Tab'
@@ -26,64 +27,66 @@ export default function DailyTradesPage() {
   }, [pathname]) // TODO: temp fix
   const { md } = useResponsive()
   return (
-    <ProtocolsProvider>
-      <Flex
-        sx={{
-          flexDirection: 'column',
-          width: '100%',
-          height: '100%',
-          overflow: 'hidden',
-        }}
-      >
-        {md && (
-          <Flex
-            sx={{
-              width: '100%',
-              alignItems: 'center',
-              gap: 3,
-              justifyContent: 'space-between',
-              borderBottom: 'small',
-              borderBottomColor: 'neutral4',
-              height: PAGE_TITLE_HEIGHT,
-            }}
-          >
-            <TabHeader
-              configs={tabConfigs}
-              isActiveFn={(config) => config.route === pathname}
-              fullWidth={false}
-              size="lg"
-              // fullWidth
-              // sx={{ justifyContent: 'center', width: '100%' }}
-            />
-            <Box flexShrink={0}>
-              <FilterProtocols />
-            </Box>
-          </Flex>
-        )}
-        <Box sx={{ overflow: 'hidden', flex: '1 0 0' }}>
-          <Switch>
-            <Route exact path={ROUTES.LIVE_TRADES_ORDERS.path}>
-              <DailyOrdersPage />
-            </Route>
-            <Route exact path={ROUTES.LIVE_TRADES_POSITIONS.path}>
-              <DailyPositionsPage />
-            </Route>
-            <Redirect to={ROUTES.LIVE_TRADES_ORDERS.path} />
-          </Switch>
-        </Box>
-        {!md && (
-          <BottomWrapperMobile>
-            <TabHeader
-              configs={tabConfigs}
-              isActiveFn={(config) => config.route === pathname}
-              fullWidth={false}
-              // fullWidth
-            />
-          </BottomWrapperMobile>
-        )}
-      </Flex>
-      <CustomPageTitle title={pageTitleMapping[pathname] ?? t`My Profile`} />
-    </ProtocolsProvider>
+    <SafeComponentWrapper>
+      <ProtocolsProvider>
+        <Flex
+          sx={{
+            flexDirection: 'column',
+            width: '100%',
+            height: '100%',
+            overflow: 'hidden',
+          }}
+        >
+          {md && (
+            <Flex
+              sx={{
+                width: '100%',
+                alignItems: 'center',
+                gap: 3,
+                justifyContent: 'space-between',
+                borderBottom: 'small',
+                borderBottomColor: 'neutral4',
+                height: PAGE_TITLE_HEIGHT,
+              }}
+            >
+              <TabHeader
+                configs={tabConfigs}
+                isActiveFn={(config) => config.route === pathname}
+                fullWidth={false}
+                size="lg"
+                // fullWidth
+                // sx={{ justifyContent: 'center', width: '100%' }}
+              />
+              <Box flexShrink={0}>
+                <FilterProtocols />
+              </Box>
+            </Flex>
+          )}
+          <Box sx={{ overflow: 'hidden', flex: '1 0 0' }}>
+            <Switch>
+              <Route exact path={ROUTES.LIVE_TRADES_ORDERS.path}>
+                <DailyOrdersPage />
+              </Route>
+              <Route exact path={ROUTES.LIVE_TRADES_POSITIONS.path}>
+                <DailyPositionsPage />
+              </Route>
+              <Redirect to={ROUTES.LIVE_TRADES_ORDERS.path} />
+            </Switch>
+          </Box>
+          {!md && (
+            <BottomWrapperMobile>
+              <TabHeader
+                configs={tabConfigs}
+                isActiveFn={(config) => config.route === pathname}
+                fullWidth={false}
+                // fullWidth
+              />
+            </BottomWrapperMobile>
+          )}
+        </Flex>
+        <CustomPageTitle title={pageTitleMapping[pathname] ?? t`My Profile`} />
+      </ProtocolsProvider>
+    </SafeComponentWrapper>
   )
 }
 

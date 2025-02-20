@@ -73,7 +73,7 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     title: 'Entry',
     dataIndex: 'entryPrice',
     key: 'entryPrice',
-    style: { minWidth: '150px', width: 150 },
+    style: { minWidth: 180, width: 180 },
     render: renderEntry,
   },
   {

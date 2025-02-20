@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import { Trans } from '@lingui/macro'
 import Dayjs from 'dayjs'
 import { ReactNode } from 'react'
@@ -10,6 +9,8 @@ import { UserSubscriptionData } from 'entities/user'
 import useCountdown from 'hooks/helpers/useCountdown'
 import { Box, Image, Type } from 'theme/base'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
+
+import NFTCount from './NFTCount'
 
 export default function NFTSubscriptionCard({
   data,
@@ -33,6 +34,7 @@ export default function NFTSubscriptionCard({
           </GradientText>
         </Type.H4>
         {!!data?.expiredTime && <ExpireCountdown expiredTime={data.expiredTime} />}
+        <NFTCount />
         {action}
       </Box>
     </Box>
