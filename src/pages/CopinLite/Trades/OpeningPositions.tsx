@@ -7,9 +7,14 @@ import { GetMyPositionRequestBody, GetMyPositionsParams } from 'apis/types'
 import { getMyCopyPositionsApi } from 'apis/userApis'
 import CopyOpeningPositions from 'components/@position/CopyOpeningPositions'
 import LiteFilterOpeningPositionTrader from 'components/@position/CopyOpeningPositions/LiteOpeningFilterTrader'
-import { getHLCopyPositionIdentifyKey, parseHLCopyPositionData } from 'components/@position/helpers/hyperliquid'
+import {
+  convertPairHL,
+  getHLCopyPositionIdentifyKey,
+  parseHLCopyPositionData,
+} from 'components/@position/helpers/hyperliquid'
 import { CopyPositionData } from 'entities/copyTrade'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import NoDataOrSelect from 'pages/MyProfile/NoDataOrSelect'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
@@ -53,45 +58,28 @@ const LiteOpeningPositions = () => {
     storageKey: STORAGE_KEYS.LITE_OPENING_LAYOUT,
     mobileBreakpoint: lg,
   })
+  const { getSymbolByIndexToken } = useMarketsConfig()
   const _data = useMemo(() => {
     const hlCopyPositions = parseHLCopyPositionData({ data: embeddedWalletInfo?.assetPositions })
-    const onlyHyperPositions: CopyPositionData[] = []
     const hlPositionMapping = hlCopyPositions.reduce<Record<string, CopyPositionData>>((result, hlPosition) => {
       const key = getHLCopyPositionIdentifyKey(hlPosition)
       return { ...result, [key]: { ...hlPosition } }
     }, {})
     const _openingPositions = data?.data?.map((v) => {
-      const key = getHLCopyPositionIdentifyKey(v)
-      const hlPosition = hlPositionMapping[key]
-      if (hlPosition) {
-        const hlSize = Number(hlPosition.sizeDelta ?? 0)
-        const appSize = Number(v.sizeDelta ?? 0)
-        hlPosition.openingPositionType = 'liveBoth'
-        if (hlSize > appSize) {
-          const newHlSize = hlSize - appSize
-          const newHlPosition: CopyPositionData = {
-            ...hlPosition,
-            sizeDelta: `${newHlSize}`,
-            totalSizeDelta: newHlSize,
-            openingPositionType: 'onlyLiveHyper',
-          }
-          onlyHyperPositions.push(newHlPosition)
-        }
-        const result: CopyPositionData = { ...v, entryPrice: hlPosition.entryPrice, openingPositionType: 'liveBoth' }
+      const symbol = getSymbolByIndexToken?.({ indexToken: v.indexToken, protocol: v.protocol })
+      const pair = v.pair ? v.pair : symbol ? convertPairHL(symbol) : undefined
+      if (!pair) {
+        const result: CopyPositionData = { ...v, openingPositionType: 'liveBoth' }
         return result
       }
-      const result: CopyPositionData = { ...v, openingPositionType: 'onlyLiveApp' }
+      const key = getHLCopyPositionIdentifyKey({ ...v, pair })
+      const hlPosition = hlPositionMapping[key]
+      const result: CopyPositionData = { ...v, openingPositionType: hlPosition ? 'liveBoth' : 'onlyLiveApp' }
       return result
     })
-    if (selectedTraders != null) {
-      return _openingPositions ?? []
-    }
-    return [
-      ...onlyHyperPositions,
-      ...Object.values(hlPositionMapping).filter((v) => v.openingPositionType === 'onlyLiveHyper'),
-      ...(_openingPositions ?? []),
-    ]
-  }, [data?.data, embeddedWalletInfo?.assetPositions, selectedTraders])
+
+    return _openingPositions ?? []
+  }, [data?.data, embeddedWalletInfo?.assetPositions, getSymbolByIndexToken])
 
   return (
     <Flex flexDirection="column" height="100%" width="100%">

@@ -128,9 +128,14 @@ export default function CopyPositionsContainer({
           size: data.totalSizeDelta ?? 0,
           symbol: data.pair ?? '',
         })
-        reloadEmbeddedWalletInfo?.()
       }
-
+      // await closeHlPosition({
+      //   walletAddress: embeddedWallet.hyperliquid.embeddedWallet,
+      //   isLong: !!data.isLong,
+      //   size: data.totalSizeDelta ?? 0,
+      //   symbol: data.pair ?? '',
+      // })
+      reloadEmbeddedWalletInfo?.()
       setConfirmModal(undefined)
       onClosePositionSuccess()
     } catch (err) {
