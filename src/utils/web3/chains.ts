@@ -28,6 +28,7 @@ export const SCROLL_MAINNET = 534352
 export const METIS_MAINNET = 1088
 export const APE_MAINNET = 33139
 export const CRONOS_MAINNET = 25
+export const BERA_MAINNET = 80094
 
 export const HYPERLIQUID_TESTNET = 998
 
@@ -73,6 +74,7 @@ export const SUPPORTED_CHAIN_IDS: number[] = [
   APE_MAINNET,
   DERIVE_MAINNET,
   CRONOS_MAINNET,
+  BERA_MAINNET,
 ]
 
 const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
@@ -139,6 +141,11 @@ const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
   SOL: {
     name: 'SOL',
     symbol: 'SOL',
+    decimals: 18,
+  },
+  BERA: {
+    name: 'BERA',
+    symbol: 'BERA',
     decimals: 18,
   },
 }
@@ -492,6 +499,14 @@ const CHAINS: { [key: number | string]: Chain } = {
     token: '',
     rpcUrl: 'https://api.mainnet-beta.solana.com',
     blockExplorerUrl: 'https://solscan.io',
+  },
+  [BERA_MAINNET]: {
+    id: `0x${BERA_MAINNET.toString(16)}`,
+    label: 'Berachain',
+    icon: 'BERA',
+    token: NATIVE_CURRENCIES.BERA.symbol,
+    rpcUrl: 'https://berachain-rpc.publicnode.com',
+    blockExplorerUrl: 'https://berascan.com',
   },
 }
 

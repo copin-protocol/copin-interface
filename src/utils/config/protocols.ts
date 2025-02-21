@@ -3,6 +3,7 @@ import {
   ARBITRUM_MAINNET,
   AVALANCHE_MAINNET,
   BASE_MAINNET,
+  BERA_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
   CRONOS_MAINNET,
@@ -514,6 +515,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: ZKSYNC_ERA_MAINNET,
     isNew: true,
     key: 'HOZ',
+  },
+  [ProtocolEnum.HOLDSTATION_BERA]: {
+    id: ProtocolEnum.HOLDSTATION_BERA,
+    text: 'Holdstation',
+    label: 'Berachain',
+    chainId: BERA_MAINNET,
+    isNew: true,
+    key: 'HOB2',
   },
   [ProtocolEnum.ZENO_METIS]: {
     id: ProtocolEnum.ZENO_METIS,
