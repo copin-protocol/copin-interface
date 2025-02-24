@@ -8,6 +8,8 @@ import {
   SLTPTypeEnum,
 } from 'utils/config/enums'
 
+import { AssetPosition } from './hyperliquid'
+
 export interface RequestCopyTradeData {
   account?: string
   tokenAddresses?: string[]
@@ -138,6 +140,7 @@ export interface CopyPositionData {
   totalSizeDelta?: number
   pair?: string
   openingPositionType?: CopyOpeningPositionType // custom type
+  hlPosition?: AssetPosition
 }
 
 export interface CopyOrderData {

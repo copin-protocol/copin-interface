@@ -45,7 +45,7 @@ export default function ListHLOrderTable({ data }: { data: HlOrderData[] }) {
         title: 'Direction',
         dataIndex: 'isLong',
         key: 'isLong',
-        style: { minWidth: '70px', textAlign: 'left' },
+        style: { minWidth: '120px', textAlign: 'left' },
         render: (item) => (
           <Type.Caption
             color={item.isLong ? (item.reduceOnly ? 'red2' : 'green1') : item.reduceOnly ? 'green1' : 'red2'}

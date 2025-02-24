@@ -9,7 +9,7 @@ export function calcPnL(
   lastPrice: number | undefined,
   sizeUsd: number | undefined
 ) {
-  if (!averagePrice || !lastPrice || !sizeUsd) return 0
+  if (!averagePrice || !lastPrice || !sizeUsd || sizeUsd <= 0) return 0
   const priceDelta = averagePrice > lastPrice ? averagePrice - lastPrice : lastPrice - averagePrice
   const hasProfit = isLong ? lastPrice > averagePrice : averagePrice > lastPrice
   const delta = (sizeUsd * priceDelta) / averagePrice

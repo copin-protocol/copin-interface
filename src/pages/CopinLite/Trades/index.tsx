@@ -40,28 +40,32 @@ const Trades = () => {
           py: 0,
         }}
       >
-        <TabPane key={TradesTab.OpeningPositions} tab={<Trans>Opening</Trans>}>
+        <TabPane destroyOnInactive key={TradesTab.OpeningPositions} tab={<Trans>Opening</Trans>}>
           <LiteOpeningPositionProvider>
             <LiteOpeningPositions />
           </LiteOpeningPositionProvider>
         </TabPane>
-        <TabPane key={TradesTab.HLPositions} tab={<Trans>On-Chain Positions</Trans>}>
+        <TabPane destroyOnInactive key={TradesTab.HLPositions} tab={<Trans>On-Chain Positions</Trans>}>
           <LiteOpeningPositionProvider>
             <LiteHLOpeningPositions />
           </LiteOpeningPositionProvider>
         </TabPane>
-        <TabPane key={TradesTab.History} tab={<Trans>History</Trans>}>
+        <TabPane destroyOnInactive key={TradesTab.History} tab={<Trans>History</Trans>}>
           <LiteHistoryPositionProvider>
             <LiteHistory currentTab={tab} />
           </LiteHistoryPositionProvider>
         </TabPane>
-        <TabPane key={TradesTab.Activities} tab={<Trans>Activities</Trans>}>
+        <TabPane destroyOnInactive key={TradesTab.Activities} tab={<Trans>Activities</Trans>}>
           <LiteActivitiesProvider>
             <LiteActivities currentTab={tab} />
           </LiteActivitiesProvider>
         </TabPane>
         {lg ? (
-          <TabPane key={TradesTab.DepositsAndWithdrawals} tab={<Trans>Deposits And Withdrawals</Trans>}>
+          <TabPane
+            destroyOnInactive
+            key={TradesTab.DepositsAndWithdrawals}
+            tab={<Trans>Deposits And Withdrawals</Trans>}
+          >
             <LiteDepositsAndWithdrawals currentTab={tab} />
           </TabPane>
         ) : (

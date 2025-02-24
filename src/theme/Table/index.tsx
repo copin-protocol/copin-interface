@@ -65,13 +65,14 @@ TableProps<T, K>) {
     sourceRef?.current?.addEventListener('scroll', handleScrollHorizontal)
     return () => sourceRef?.current?.removeEventListener('scroll', handleScrollHorizontal)
   }, [isInfiniteLoad, isLoading, scrollRef, data])
-  useEffect(
-    () => {
-      if (!data || isInfiniteLoad) return
-      bodyRef?.current?.scrollTo(0, 0)
-    },
-    scrollToTopDependencies ? scrollToTopDependencies : [data]
-  )
+  const scrollDeps =
+    scrollToTopDependencies == null && typeof scrollToTopDependencies === 'object'
+      ? undefined
+      : scrollToTopDependencies ?? data
+  useEffect(() => {
+    if (!data || isInfiniteLoad) return
+    bodyRef?.current?.scrollTo(0, 0)
+  }, [scrollDeps])
   const footerRowContainerSx = { ...tableBodySx, ...footerRowSx }
   return (
     <Flex

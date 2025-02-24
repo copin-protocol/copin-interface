@@ -4,12 +4,13 @@ import styled from 'styled-components/macro'
 import { GridProps } from 'styled-system'
 
 import { Box, Flex } from 'theme/base'
-import { SxProps } from 'theme/types'
+import { BoxProps, SxProps } from 'theme/types'
 import { PAGE_TITLE_HEIGHT, TAB_HEIGHT } from 'utils/config/constants'
 
 import RouteTabItem from './RouteTabItem'
 
 type TabPaneProps = {
+  destroyOnInactive?: boolean
   children: ReactElement | ReactElement[] | string
   active?: boolean
   tab: ReactNode
@@ -18,6 +19,7 @@ type TabPaneProps = {
   icon?: ReactNode
   route?: string
   count?: number
+  sx?: any
 }
 
 type TabsProps = {
@@ -37,9 +39,15 @@ type TabsProps = {
   size?: 'lg' | 'md'
 } & SxProps
 
-export const TabPane = styled(Box)<TabPaneProps>`
-  display: ${(props) => (props.active ? 'block' : 'none')};
-`
+export const TabPane = ({ active, children, destroyOnInactive, ...props }: TabPaneProps & BoxProps) => {
+  return destroyOnInactive && !active ? (
+    <Box display="none" />
+  ) : (
+    <Box display={active ? 'block' : 'none'} {...props}>
+      {children}
+    </Box>
+  )
+}
 
 const Header = styled(Box)`
   overflow-x: scroll;

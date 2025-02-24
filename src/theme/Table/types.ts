@@ -57,7 +57,7 @@ export interface TableProps<T, K> {
   tableBodySx?: any
   tableBodyWrapperSx?: any
   checkIsTop?: (data: T) => boolean
-  scrollToTopDependencies?: any[]
+  scrollToTopDependencies?: any | null // null === no scroll
   noDataMessage?: ReactNode
   footerData?: T[]
   footerRowSx?: any
