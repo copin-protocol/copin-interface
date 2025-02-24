@@ -466,7 +466,7 @@ const DesktopDataView = memo(function DataViewMemo() {
           columns={columns}
           isLoading={isLoading}
           restrictHeight
-          scrollToTopDependencies={BLOCK_SCROLL_DEPS}
+          scrollToTopDependencies={null}
           currentSort={currentSort}
           changeCurrentSort={changeCurrentSort}
           externalSource={externalResource}
@@ -483,8 +483,6 @@ const DesktopDataView = memo(function DataViewMemo() {
     <MobileDataView data={_data} isLoading={isLoading} externalResource={externalResource} />
   )
 })
-
-const BLOCK_SCROLL_DEPS: any[] = []
 
 function MobileDataView({
   data,

@@ -81,6 +81,7 @@ const LiteOpeningPositions = () => {
     return _openingPositions ?? []
   }, [data?.data, embeddedWalletInfo?.assetPositions, getSymbolByIndexToken])
 
+  const scrollDeps = useMemo(() => [selectedTraders], [selectedTraders])
   return (
     <Flex flexDirection="column" height="100%" width="100%">
       {loadingEmbeddedWallets ? (
@@ -111,6 +112,7 @@ const LiteOpeningPositions = () => {
               mobileLayoutType={mobileLayoutType}
               onClosePositionSuccess={refetch}
               tableProps={{
+                scrollToTopDependencies: scrollDeps,
                 wrapperSx: {
                   '& td': {
                     pt: '6px!important',

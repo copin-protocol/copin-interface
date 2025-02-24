@@ -142,6 +142,7 @@ export function OpeningPositionListForm({
   return (
     <Flex py={2} sx={{ width: '100%', height: '100%', overflow: 'hidden auto', flexDirection: 'column', gap: 2 }}>
       {data?.map((positionData) => {
+        const isHLPosition = positionData.openingPositionType === 'onlyLiveHyper'
         return (
           <Box
             key={positionData.id}
@@ -170,27 +171,30 @@ export function OpeningPositionListForm({
             </Flex>
             <Divider my={2} color="neutral5" />
             <Flex sx={{ flexDirection: 'column', gap: 2 }}>
-              <ListHistoryRow
-                label={<Trans>Trader</Trans>}
-                value={renderTrader(positionData.copyAccount, positionData.protocol)}
-              />
+              {!isHLPosition && (
+                <ListHistoryRow
+                  label={<Trans>Trader</Trans>}
+                  value={renderTrader(positionData.copyAccount, positionData.protocol)}
+                />
+              )}
               {layoutType !== 'lite' && (
                 <ListHistoryRow
                   label={<Trans>Copy Wallet</Trans>}
                   value={renderCopyWallet(positionData, undefined, externalSource)}
                 />
               )}
-              <ListHistoryRow
-                label={<Trans>Source Position</Trans>}
-                value={renderSource(positionData, undefined, externalSource, true)}
-              />
+              {/* {isHLPosition && (
+                <ListHistoryRow
+                  label={<Trans>Source Position</Trans>}
+                  value={renderSource(positionData, undefined, externalSource, true)}
+                />
+              )} */}
               <ListHistoryRow label={<Trans>Entry</Trans>} value={renderEntry(positionData)} />
               <ListHistoryRow label={<Trans>Size</Trans>} value={renderSizeMobile(positionData)} />
               <ListHistoryRow label={<Trans>Collateral</Trans>} value={renderCollateral(positionData)} />
-              <ListHistoryRow label={<Trans>SL/TP</Trans>} value={renderSLTP(positionData)} />
+              {!isHLPosition && <ListHistoryRow label={<Trans>SL/TP</Trans>} value={renderSLTP(positionData)} />}
               <ListHistoryRow label={<LabelEPnL />} value={renderPnL(positionData)} />
-
-              <ListHistoryRow label={<Trans>Open</Trans>} value={renderOpenTime(positionData)} />
+              {!isHLPosition && <ListHistoryRow label={<Trans>Open</Trans>} value={renderOpenTime(positionData)} />}
             </Flex>
           </Box>
         )

@@ -234,7 +234,7 @@ function OpeningPositionROIComponent({ data, textSx }: { data: CopyPositionData;
   const _prices = data.protocol && GAINS_TRADE_PROTOCOLS.includes(data.protocol) ? gainsPrices : prices
   const pnl = useGetCopyPositionPnl({ data, prices: _prices })
   const sizeUsd = data.entryPrice ? Number(data.sizeDelta ?? 0) * data.entryPrice : 0
-  const roi = data.leverage ? ((pnl ?? 0) / (sizeUsd / data.leverage)) * 100 : 0
+  const roi = sizeUsd <= 0 ? 0 : data.leverage ? ((pnl ?? 0) / (sizeUsd / data.leverage)) * 100 : 0
 
   return renderValueWithColor(roi, textSx)
 }

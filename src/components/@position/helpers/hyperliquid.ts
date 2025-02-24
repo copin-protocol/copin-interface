@@ -48,6 +48,7 @@ export function parseHLCopyPositionData({ data }: { data: AssetPosition[] | unde
       status: PositionStatusEnum.OPEN,
       exchange: CopyTradePlatformEnum.HYPERLIQUID,
       openingPositionType: 'onlyLiveHyper',
+      hlPosition: e,
     } as CopyPositionData
     return position
   })

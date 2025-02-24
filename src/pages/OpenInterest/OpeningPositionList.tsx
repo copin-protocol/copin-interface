@@ -117,7 +117,7 @@ function OpeningPositionsTable({
         },
       }}
       data={data}
-      scrollToTopDependencies={[scrollDep]}
+      scrollToTopDependencies={scrollDep}
       columns={columns}
       isLoading={isLoading}
       onClickRow={onClickItem}

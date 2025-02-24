@@ -51,6 +51,7 @@ const LiteHLOpeningPositions = () => {
               mobileLayoutType={mobileLayoutType}
               onClosePositionSuccess={() => reloadEmbeddedWalletInfo?.()}
               tableProps={{
+                scrollToTopDependencies: null,
                 wrapperSx: {
                   '& td': {
                     pt: '6px!important',
