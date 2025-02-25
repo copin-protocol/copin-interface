@@ -408,6 +408,10 @@ msgstr "Altcoins"
 msgid "Amount"
 msgstr "Amount"
 
+#: src/pages/CopinLite/Wallet/Withdraw.tsx
+msgid "Amount:"
+msgstr "Amount:"
+
 #: src/components/@wallet/CreateWalletAction/index.tsx
 msgid "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
 msgstr "An abstract account (AA) wallet. Your own all your assets, fully decentralized copy trading"
@@ -713,6 +717,10 @@ msgstr "Cannot interact with contract at this moment"
 #: src/hooks/web3/useAuth.tsx
 msgid "Cannot unlock your wallet"
 msgstr "Cannot unlock your wallet"
+
+#: src/pages/CopinLite/Wallet/Withdraw.tsx
+msgid "Chain:"
+msgstr "Chain:"
 
 #: src/pages/ReferralManagement/UserReferralTier.tsx
 msgid "Change Referral Code"
@@ -1227,10 +1235,6 @@ msgstr "Enter Vaults"
 msgid "Enter invite code"
 msgstr "Enter invite code"
 
-#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
-msgid "Enter your email to join the waitlist today for exclusive early access to AI-driven insights that will revolutionize the way you trade!"
-msgstr "Enter your email to join the waitlist today for exclusive early access to AI-driven insights that will revolutionize the way you trade!"
-
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Entry"
@@ -1510,10 +1514,6 @@ msgstr "GTRADE REWARDS"
 msgid "Gate"
 msgstr "Gate"
 
-#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
-msgid "Get Early Access"
-msgstr "Get Early Access"
-
 #: src/pages/@layouts/GettingStarted/index.tsx
 msgid "Get Started"
 msgstr "Get Started"
@@ -1697,6 +1697,14 @@ msgstr "Investment Capital"
 #: src/pages/VaultDetails/VaultFundMangement/InviteCodeModal.tsx
 msgid "Invite Code at least 6-character long with only uppercase letters and numbers."
 msgstr "Invite Code at least 6-character long with only uppercase letters and numbers."
+
+#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
+msgid "Join Telegram Community"
+msgstr "Join Telegram Community"
+
+#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
+msgid "Join the waitlist today for exclusive early access to AI-driven insights that will revolutionize the way you trade!"
+msgstr "Join the waitlist today for exclusive early access to AI-driven insights that will revolutionize the way you trade!"
 
 #: src/components/@copyActivity/configs.tsx
 #: src/components/@copyActivity/configs.tsx
@@ -2362,10 +2370,6 @@ msgstr "OPEN TIME"
 msgid "OPENING POSITIONS"
 msgstr "OPENING POSITIONS"
 
-#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
-msgid "OR"
-msgstr "OR"
-
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 msgid "OR LOGIN WITH"
 msgstr "OR LOGIN WITH"
@@ -2373,6 +2377,10 @@ msgstr "OR LOGIN WITH"
 #: src/pages/Home/index.tsx
 msgid "OVERVIEW"
 msgstr "OVERVIEW"
+
+#: src/pages/CopinLite/Trades/index.tsx
+msgid "On-Chain Positions"
+msgstr "On-Chain Positions"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "On-chain traders for copying"
@@ -2417,9 +2425,12 @@ msgstr "Open Positions"
 msgid "Open Telegram Bot"
 msgstr "Open Telegram Bot"
 
+#: src/pages/CopinLite/Trades/index.tsx
+msgid "Opening"
+msgstr "Opening"
+
 #: src/components/@position/CopyOpeningPositions/index.tsx
 #: src/components/@position/HLTraderOpeningPositions/index.tsx
-#: src/pages/CopinLite/Trades/index.tsx
 #: src/pages/TraderDetails/CopyManagementDrawer.tsx
 msgid "Opening Positions"
 msgstr "Opening Positions"
@@ -2562,10 +2573,6 @@ msgstr "Please create a wallet to start copy"
 #: src/components/@wallet/WalletDetailsCard/ConfirmDeleteModal.tsx
 msgid "Please delete all copy trades before deleting the copy wallet."
 msgstr "Please delete all copy trades before deleting the copy wallet."
-
-#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
-msgid "Please enter a valid email address"
-msgstr "Please enter a valid email address"
 
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Please pick trader to view copies detail"
@@ -2760,7 +2767,6 @@ msgid "Register"
 msgstr "Register"
 
 #: src/components/@auth/LoginAction/ModalRegister.tsx
-#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
 msgid "Register successful!"
 msgstr "Register successful!"
 
@@ -3114,7 +3120,6 @@ msgid "Source Details"
 msgstr "Source Details"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
-#: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Source Position"
 msgstr "Source Position"
 
@@ -3185,7 +3190,6 @@ msgstr "Subscription"
 #: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyVaultButton/CopyVaultModal.tsx
 #: src/components/@position/UnlinkCopyPositionModal/useUnlinkPosition.tsx
-#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
 #: src/components/@wallet/CreateWalletModals/CreateCEXWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
 #: src/components/@wallet/UpdateWalletModals/UpdateHyperliquidWalletModal.tsx
@@ -3507,10 +3511,6 @@ msgstr "This graph will show {0} demographics once responses come in"
 msgid "This is the result of a calculation based on past data, not a prediction of future results. Please think twice before making a decision."
 msgstr "This is the result of a calculation based on past data, not a prediction of future results. Please think twice before making a decision."
 
-#: src/components/@position/CopyPositionDetailsDrawer/index.tsx
-msgid "This position is unlinked"
-msgstr "This position is unlinked"
-
 #: src/hooks/features/useSettingWatchlistTraders.tsx
 msgid "This trader alert has been removed successfully"
 msgstr "This trader alert has been removed successfully"
@@ -3535,6 +3535,10 @@ msgstr "This will help us find copy trader that fit for you"
 #: src/pages/CopinLite/Transactions/configs.tsx
 msgid "Time"
 msgstr "Time"
+
+#: src/pages/CopinLite/Wallet/Withdraw.tsx
+msgid "To address:"
+msgstr "To address:"
 
 #: src/pages/@layouts/GettingStarted/index.tsx
 msgid "To begin using Copin, please"
@@ -3890,7 +3894,6 @@ msgstr "WITHDRAW"
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
-#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
 msgid "Waiting..."
 msgstr "Waiting..."
 
@@ -4149,10 +4152,6 @@ msgstr "Your balance is too low for copy trading. Please Deposit now to continue
 msgid "Your copy may failed due to insufficient available fund"
 msgstr "Your copy may failed due to insufficient available fund"
 
-#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
-msgid "Your email"
-msgstr "Your email"
-
 #: src/components/@position/CopyOpeningPositions/index.tsx
 msgid "Your order will be executed"
 msgstr "Your order will be executed"
@@ -4257,8 +4256,6 @@ msgstr "slippage"
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
 #: src/components/@copinLite/OnboardingModal/TraderList.tsx
-#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
-#: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
 #: src/components/@wallet/CreateWalletModals/CreateCEXWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateCEXWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
