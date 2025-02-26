@@ -39,8 +39,10 @@ export default function ShareProfile({
 
   const protocolImg = new Image(40, 40)
   protocolImg.src = getProtocolDropdownImage({ protocol: protocol ?? DEFAULT_PROTOCOL, isActive: false })
+  protocolImg.crossOrigin = 'anonymous'
   const logoImg = new Image(182, 42)
   logoImg.src = logoWithText
+  logoImg.crossOrigin = 'anonymous'
 
   const handleShare = async () => {
     try {
