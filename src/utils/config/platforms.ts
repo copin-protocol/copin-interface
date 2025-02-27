@@ -110,4 +110,28 @@ export const EXCHANGES_INFO: { [key: string]: ExchangeInfo } = {
     imageUrl: parseExchangeImage(CopyTradePlatformEnum.HYPERLIQUID),
     referralCode: 'COPIN',
   },
+  [CopyTradePlatformEnum.GNS_V8]: {
+    linkRegister: '',
+    linkTutorial: '',
+    name: PLATFORM_TEXT_TRANS[CopyTradePlatformEnum.GNS_V8],
+    key: getExchangeKey(CopyTradePlatformEnum.GNS_V8),
+    imageUrl: parseExchangeImage(CopyTradePlatformEnum.GNS_V8),
+    referralCode: '',
+  },
+  [CopyTradePlatformEnum.SYNTHETIX_V2]: {
+    linkRegister: '',
+    linkTutorial: '',
+    name: PLATFORM_TEXT_TRANS[CopyTradePlatformEnum.SYNTHETIX_V2],
+    key: getExchangeKey(CopyTradePlatformEnum.SYNTHETIX_V2),
+    imageUrl: parseExchangeImage(CopyTradePlatformEnum.SYNTHETIX_V2),
+    referralCode: '',
+  },
+  [CopyTradePlatformEnum.SYNTHETIX_V3]: {
+    linkRegister: '',
+    linkTutorial: '',
+    name: PLATFORM_TEXT_TRANS[CopyTradePlatformEnum.SYNTHETIX_V3],
+    key: getExchangeKey(CopyTradePlatformEnum.SYNTHETIX_V3),
+    imageUrl: parseExchangeImage(CopyTradePlatformEnum.SYNTHETIX_V3),
+    referralCode: '',
+  },
 }

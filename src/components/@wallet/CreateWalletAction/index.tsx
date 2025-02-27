@@ -69,6 +69,7 @@ export default function CreateWalletAction({ type = CreateTypeWalletEnum.FULL }:
     <>
       {DCP_EXCHANGES.map((exchange) => {
         const exchangeInfo = EXCHANGES_INFO[exchange]
+
         return (
           <WalletItem
             key={exchange}
