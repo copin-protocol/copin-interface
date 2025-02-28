@@ -18,6 +18,7 @@ import { Button } from 'theme/Buttons'
 import RcDrawer from 'theme/RcDrawer'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { DEPRECATED_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { STORAGE_KEYS } from 'utils/config/keys'
 import { hideScrollbar } from 'utils/helpers/css'
@@ -574,7 +575,12 @@ function DepositButton() {
   return (
     <>
       <Flex alignItems="center" sx={{ gap: 1 }}>
-        <Button variant="ghostPrimary" sx={{ p: 0 }} onClick={() => setFundingModal(FundTab.Deposit)}>
+        <Button
+          variant="ghostPrimary"
+          sx={{ p: 0 }}
+          onClick={() => setFundingModal(FundTab.Deposit)}
+          disabled={activeWallet?.exchange ? DEPRECATED_EXCHANGES.includes(activeWallet?.exchange) : undefined}
+        >
           Deposit
         </Button>
         {activeWallet && <SmartWalletActions data={activeWallet} setFundingModal={setFundingModal} isOnlyAction />}

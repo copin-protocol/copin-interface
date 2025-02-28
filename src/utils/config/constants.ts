@@ -187,6 +187,8 @@ export const DCP_EXCHANGES: CopyTradePlatformEnum[] = [
   CopyTradePlatformEnum.SYNTHETIX_V3,
 ]
 
+export const DEPRECATED_EXCHANGES = [CopyTradePlatformEnum.SYNTHETIX_V2, CopyTradePlatformEnum.SYNTHETIX_V3]
+
 export const UNLIMITED_COPY_SIZE_EXCHANGES: CopyTradePlatformEnum[] = [
   CopyTradePlatformEnum.GNS_V8,
   CopyTradePlatformEnum.SYNTHETIX_V2,

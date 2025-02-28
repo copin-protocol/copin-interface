@@ -15,7 +15,7 @@ import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SxProps } from 'theme/types'
-import { CEX_EXCHANGES, WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
+import { CEX_EXCHANGES, DEPRECATED_EXCHANGES, WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { getColorFromText } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
@@ -136,7 +136,13 @@ export default function WalletDetailsCard({ data, handleUpdate, reload, hiddenBa
           <WalletActions data={data} />
         ) : (
           <Flex alignItems="center" sx={{ gap: 20 }}>
-            <Button type="button" variant="ghostPrimary" sx={{ p: 0 }} onClick={() => setFundingModal(FundTab.Deposit)}>
+            <Button
+              type="button"
+              variant="ghostPrimary"
+              sx={{ p: 0 }}
+              onClick={() => setFundingModal(FundTab.Deposit)}
+              disabled={DEPRECATED_EXCHANGES.includes(data.exchange)}
+            >
               <Trans>Deposit</Trans>
             </Button>
             <SmartWalletActions data={data} setFundingModal={setFundingModal} />

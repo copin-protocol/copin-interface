@@ -103,8 +103,8 @@ export const copyTradeFormSchema = yup.object({
       CopyTradePlatformEnum.OKX,
       CopyTradePlatformEnum.GATE,
       CopyTradePlatformEnum.HYPERLIQUID,
-      CopyTradePlatformEnum.SYNTHETIX_V2,
       CopyTradePlatformEnum.GNS_V8,
+      // CopyTradePlatformEnum.SYNTHETIX_V2,
       // CopyTradePlatformEnum.SYNTHETIX_V3,
     ])
     .label('Exchange'),
@@ -138,8 +138,8 @@ export const cloneCopyTradeFormSchema = yup.object({
       CopyTradePlatformEnum.OKX,
       CopyTradePlatformEnum.GATE,
       CopyTradePlatformEnum.HYPERLIQUID,
-      CopyTradePlatformEnum.SYNTHETIX_V2,
       CopyTradePlatformEnum.GNS_V8,
+      // CopyTradePlatformEnum.SYNTHETIX_V2,
       // CopyTradePlatformEnum.SYNTHETIX_V3,
     ])
     .label('Exchange'),

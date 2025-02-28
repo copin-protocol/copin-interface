@@ -8,7 +8,7 @@ import { CreateTypeWalletEnum } from 'pages/MyProfile/CheckingWalletRenderer'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { CEX_EXCHANGES, DCP_EXCHANGES } from 'utils/config/constants'
+import { CEX_EXCHANGES, DCP_EXCHANGES, DEPRECATED_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { EXCHANGES_INFO } from 'utils/config/platforms'
 import { parseExchangeImage } from 'utils/helpers/transform'
@@ -27,9 +27,10 @@ export default function CreateWalletAction({ type = CreateTypeWalletEnum.FULL }:
     setOpenCreateModal(true)
   }
 
+  const cexExchanges = CEX_EXCHANGES.filter((e) => !DEPRECATED_EXCHANGES.includes(e))
   const cexItems = (
     <>
-      {CEX_EXCHANGES.map((exchange) => {
+      {cexExchanges.map((exchange) => {
         const exchangeInfo = EXCHANGES_INFO[exchange]
         return (
           <WalletItem
@@ -65,9 +66,10 @@ export default function CreateWalletAction({ type = CreateTypeWalletEnum.FULL }:
     </>
   )
 
+  const dcpExchanges = DCP_EXCHANGES.filter((e) => !DEPRECATED_EXCHANGES.includes(e))
   const dcpItems = (
     <>
-      {DCP_EXCHANGES.map((exchange) => {
+      {dcpExchanges.map((exchange) => {
         const exchangeInfo = EXCHANGES_INFO[exchange]
 
         return (
@@ -143,6 +145,7 @@ interface WalletItemProps {
 function WalletItem({ exchange, label, description, handleClick }: WalletItemProps) {
   const isInternal = useInternalRole()
   const isComingSoon = !isInternal && exchange === CopyTradePlatformEnum.BINANCE
+  const isDeprecated = DEPRECATED_EXCHANGES.includes(exchange)
   const isDCP = DCP_EXCHANGES.includes(exchange)
   return (
     <Flex minWidth={350} p={24} flexDirection="column" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
@@ -159,7 +162,15 @@ function WalletItem({ exchange, label, description, handleClick }: WalletItemPro
         onClick={() => handleClick && handleClick(exchange)}
         disabled={!handleClick || isComingSoon}
       >
-        {isComingSoon ? <Trans>Coming Soon</Trans> : isDCP ? <Trans>Create</Trans> : <Trans>Connect</Trans>}
+        {isComingSoon ? (
+          <Trans>Coming Soon</Trans>
+        ) : isDeprecated ? (
+          <Trans>Deprecated</Trans>
+        ) : isDCP ? (
+          <Trans>Create</Trans>
+        ) : (
+          <Trans>Connect</Trans>
+        )}
       </Button>
     </Flex>
   )

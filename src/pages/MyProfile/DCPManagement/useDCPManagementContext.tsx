@@ -14,7 +14,7 @@ import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useContract } from 'hooks/web3/useContract'
 import useContractQuery from 'hooks/web3/useContractQuery'
-import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
+import { ALLOWED_COPYTRADE_PROTOCOLS, DEPRECATED_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS, QUERY_KEYS, STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { ARBITRUM_CHAIN } from 'utils/web3/chains'
@@ -62,8 +62,9 @@ export function DCPManagementProvider({ children }: { children: ReactNode }) {
   const refetchQueries = useRefetchQueries()
   const { searchParams, setSearchParams } = useSearchParams()
   const { state: locationState } = useLocation<{ copyWalletId: string }>()
-  const { loadingCopyWallets, dcpWallets, myProfile } = useCopyWalletContext()
+  const { loadingCopyWallets, dcpWallets: _dcpWallets, myProfile } = useCopyWalletContext()
   const [activeWallet, setActiveWallet] = useState<CopyWalletData | null>(null)
+  const dcpWallets = _dcpWallets?.filter((e) => !DEPRECATED_EXCHANGES.includes(e.exchange))
 
   useEffect(() => {
     if (!dcpWallets?.length || loadingCopyWallets) return
