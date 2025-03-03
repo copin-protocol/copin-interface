@@ -3,7 +3,6 @@ import { ReactNode, useState } from 'react'
 import MarketSelection from 'components/@ui/MarketFilter/MarketSelection'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import Dropdown from 'theme/Dropdown'
-import { Flex } from 'theme/base'
 
 export function FilterPairDropdown({
   currentPairs,
@@ -33,19 +32,22 @@ export function FilterPairDropdown({
       dismissible={false}
       visible={visible}
       setVisible={setVisible}
+      menuSx={{
+        width: '250px',
+        bg: '#0B0E18CC',
+        backdropFilter: 'blur(10px)',
+      }}
       menu={
-        <Flex sx={{ flexDirection: 'column', bg: 'neutral7', width: 250 }}>
-          <MarketSelection
-            key={visible.toString()}
-            // protocols={protocols}
-            isAllPairs={isCopyAll}
-            selectedPairs={selectedPairs}
-            onChangePairs={onChangePairs}
-            allPairs={allPairs ?? []}
-            excludedPairs={excludedPairs}
-            handleToggleDropdown={() => setVisible(!visible)}
-          />
-        </Flex>
+        <MarketSelection
+          key={visible.toString()}
+          // protocols={protocols}
+          isAllPairs={isCopyAll}
+          selectedPairs={selectedPairs}
+          onChangePairs={onChangePairs}
+          allPairs={allPairs ?? []}
+          excludedPairs={excludedPairs}
+          handleToggleDropdown={() => setVisible(!visible)}
+        />
       }
     >
       {children}

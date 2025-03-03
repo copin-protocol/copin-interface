@@ -1,3 +1,5 @@
+import { ProtocolEnum } from 'utils/config/enums'
+
 export type LayoutProps = {
   protocolStats?: JSX.Element
   traderInfo?: JSX.Element
@@ -12,4 +14,6 @@ export type LayoutProps = {
   openingPositionFullExpanded?: boolean
   positionFullExpanded?: boolean
   chartFullExpanded?: boolean
+  protocol?: ProtocolEnum
+  address?: string
 }

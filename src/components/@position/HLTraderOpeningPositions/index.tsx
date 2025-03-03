@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ArrowsIn, ArrowsOutSimple, BookOpen, Clock, Notebook } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 
@@ -9,13 +8,6 @@ import { getHlAccountInfo, getHlOpenOrders, getHlOrderFilled } from 'apis/hyperl
 import emptyBg from 'assets/images/opening_empty_bg.png'
 import HLTraderPositionListView from 'components/@position/HLTraderPositionsListView'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
-import { drawerFillColumns, fillColumns, fullFillColumns } from 'components/@position/configs/hlFillRenderProps'
-import { drawerOrderColumns, fullOrderColumns, orderColumns } from 'components/@position/configs/hlOrderRenderProps'
-import {
-  drawerOpeningColumns,
-  fullOpeningColumns,
-  openingColumns,
-} from 'components/@position/configs/hlPositionRenderProps'
 import Divider from 'components/@ui/Divider'
 import { PositionData } from 'entities/trader'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
@@ -23,7 +15,6 @@ import { TabKeyEnum } from 'pages/Explorer/Layouts/layoutConfigs'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import { TabHeader } from 'theme/Tab'
-import Table from 'theme/Table'
 import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
@@ -39,6 +30,9 @@ import {
   parseHLOrderFillData,
   parseHLPositionData,
 } from '../helpers/hyperliquid'
+import OpenOrdersView from './OpenOrdersView'
+import OpeningPositionsView from './OpeningPositionsView'
+import OrderFiledView from './OrderFilledView'
 
 const emptyCss = {
   backgroundImage: `url(${emptyBg})`,
@@ -74,22 +68,18 @@ export default function HLTraderOpeningPositionsTableView({
   isExpanded?: boolean
   isDrawer?: boolean
 }) {
-  const [openDrawer, setOpenDrawer] = useState(false)
-  const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
   const [tab, setTab] = useState<string>(HLPositionTab.OPEN_POSITIONS)
-  const { lg, xl, sm } = useResponsive()
 
   //
-  const [currentSortExpanded, setCurrentSortExpanded] = useState<TableSortProps<PositionData> | undefined>({
+  const [currentSort, setCurrentSort] = useState<TableSortProps<PositionData> | undefined>({
     sortBy: 'pnl',
     sortType: SortTypeEnum.DESC,
   })
-  const currentSort = currentSortExpanded
   const changeCurrentSortExpanded = (sort: TableSortProps<PositionData> | undefined) => {
-    setCurrentSortExpanded(sort)
+    setCurrentSort(sort)
   }
   const resetSortOpening = () =>
-    setCurrentSortExpanded({
+    setCurrentSort({
       sortBy: 'pnl',
       sortType: SortTypeEnum.DESC,
     })
@@ -98,7 +88,7 @@ export default function HLTraderOpeningPositionsTableView({
     toggleExpand?.()
   }
 
-  const { data, isLoading } = useQuery(
+  const { data: hlAccountData, isLoading } = useQuery(
     [QUERY_KEYS.GET_HYPERLIQUID_TRADER_DETAIL, address],
     () =>
       getHlAccountInfo({
@@ -111,24 +101,6 @@ export default function HLTraderOpeningPositionsTableView({
       keepPreviousData: true,
     }
   )
-
-  const tableData = useMemo(() => {
-    if (!data?.assetPositions) return undefined
-    let openingPositions = parseHLPositionData({ account: address, data: data.assetPositions })
-    if (currentSort?.sortBy) {
-      openingPositions = openingPositions.sort((a, b) => {
-        return (
-          (((a?.[currentSort.sortBy] as number) ?? 0) - ((b?.[currentSort.sortBy] as number) ?? 0)) *
-          (currentSort?.sortType === SortTypeEnum.DESC ? -1 : 1)
-        )
-      })
-    }
-
-    return {
-      data: openingPositions,
-      meta: { limit: openingPositions.length, offset: 0, total: openingPositions.length, totalPages: 1 },
-    }
-  }, [currentSort, data])
 
   const { data: openOrders, isLoading: isLoadingOpenOders } = useQuery(
     [QUERY_KEYS.GET_HYPERLIQUID_OPEN_ORDERS, address],
@@ -150,6 +122,7 @@ export default function HLTraderOpeningPositionsTableView({
     return (b.timestamp ?? 0) - (a.timestamp ?? 0)
   })
 
+  const [enabledRefetchOrderFilled, setEnabledRefetchOrderFilled] = useState(true)
   const { data: filledOrders, isLoading: isLoadingFilledOrders } = useQuery(
     [QUERY_KEYS.GET_HYPERLIQUID_FILLED_ORDERS, address],
     () =>
@@ -159,13 +132,18 @@ export default function HLTraderOpeningPositionsTableView({
     {
       enabled: !!address && protocol === ProtocolEnum.HYPERLIQUID,
       retry: 0,
-      refetchInterval: 15_000,
+      refetchInterval: enabledRefetchOrderFilled ? 15_000 : undefined,
       keepPreviousData: true,
       select: (data) => {
         return parseHLOrderFillData({ account: address, data })
       },
     }
   )
+  const onOrderFilledPageChange = useCallback((page: number) => {
+    if (page === 1) {
+      setEnabledRefetchOrderFilled(true)
+    } else setEnabledRefetchOrderFilled(false)
+  }, [])
 
   // Sort filled orders by timestamp
   filledOrders?.sort((a, b) => b.timestamp - a.timestamp)
@@ -176,27 +154,13 @@ export default function HLTraderOpeningPositionsTableView({
     return groupHLOrderFillsByOid(filledOrders)
   }, [filledOrders])
 
-  const handleSelectItem = (data: PositionData) => {
-    setCurrentPosition(data)
-    setOpenDrawer(true)
-  }
-
-  const handleDismiss = () => {
-    setOpenDrawer(false)
-  }
-  const scrollToTopDependencies = useMemo(() => {
-    return isExpanded ? [currentSort?.sortBy, currentSort?.sortType, address, protocol] : [address, protocol]
-  }, [isExpanded, currentSort?.sortBy, currentSort?.sortType, address, protocol])
-
-  const totalOpening = data?.assetPositions?.length ?? 0
+  const totalOpening = hlAccountData?.assetPositions?.length ?? 0
   const totalOpenOrders = openOrders?.length ?? 0
-
-  const currentOpenOrders = openOrders?.filter((e) => e.pair === currentPosition?.pair)
 
   return (
     <Box
       className="opening"
-      display={['block', 'block', 'block', isDrawer ? 'block' : 'flex']}
+      display={['block', isDrawer ? 'block' : 'flex']}
       flexDirection="column"
       height="100%"
       sx={{
@@ -261,168 +225,46 @@ export default function HLTraderOpeningPositionsTableView({
           )
         }
       />
+
       {tab === HLPositionTab.OPEN_POSITIONS && (
-        <Box display={['block', 'block', 'block', isDrawer ? 'block' : 'flex']} flexDirection="column" height="100%">
-          {isLoading && <Loading />}
-          {!data?.assetPositions?.length && !isLoading && (
-            <Flex
-              p={3}
-              flexDirection="column"
-              width="100%"
-              height={isDrawer ? 60 : 180}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Type.CaptionBold display="block">This trader&quot;s opening position is empty</Type.CaptionBold>
-              <Type.Caption mt={1} color="neutral3" textAlign="center" display="block">
-                Once the trader starts a new position, you&quot;ll see it listed here
-              </Type.Caption>
-            </Flex>
-          )}
-          {data && data?.assetPositions?.length > 0 && (
-            <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
-              {sm ? (
-                <Table
-                  restrictHeight={!isDrawer && lg}
-                  wrapperSx={{
-                    minWidth: 500,
-                  }}
-                  tableBodySx={{
-                    '& td:last-child': { pr: 2 },
-                  }}
-                  data={tableData?.data}
-                  columns={isDrawer ? drawerOpeningColumns : xl && isExpanded ? fullOpeningColumns : openingColumns}
-                  currentSort={currentSort}
-                  changeCurrentSort={changeCurrentSortExpanded}
-                  isLoading={isLoading}
-                  onClickRow={handleSelectItem}
-                  renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
-                  scrollToTopDependencies={scrollToTopDependencies}
-                />
-              ) : (
-                <HLTraderPositionListView
-                  data={tableData?.data}
-                  isLoading={isLoading}
-                  scrollDep={tableData?.meta?.offset}
-                  onClickItem={handleSelectItem}
-                  hasAccountAddress={false}
-                />
-              )}
-            </Box>
-          )}
-          {protocol === ProtocolEnum.HYPERLIQUID && openDrawer && currentPosition ? (
-            <HLPositionDetailsDrawer
-              isOpen={openDrawer}
-              data={currentPosition}
-              orders={currentOpenOrders ?? []}
-              onDismiss={handleDismiss}
-            />
-          ) : (
-            <TraderPositionDetailsDrawer
-              isOpen={openDrawer}
-              onDismiss={handleDismiss}
-              protocol={protocol}
-              id={currentPosition?.id}
-              chartProfitId="opening-position-detail"
-            />
-          )}
+        <Box flex="1 0 0" display={['block', isDrawer ? 'block' : 'flex']} flexDirection="column" overflow="hidden">
+          <OpeningPositionsView
+            currentSort={currentSort}
+            changeCurrentSort={changeCurrentSortExpanded}
+            openOrders={openOrders}
+            address={address}
+            data={hlAccountData}
+            isLoading={isLoading}
+            isExpanded={!!isExpanded}
+            isDrawer={!!isDrawer}
+          />
         </Box>
       )}
       {tab === HLPositionTab.OPEN_ORDERS && (
-        <Box display={['block', 'block', 'block', isDrawer ? 'block' : 'flex']} flexDirection="column" height="100%">
-          {isLoadingOpenOders && <Loading />}
-          {!openOrders?.length && !isLoadingOpenOders && (
-            <Flex
-              p={3}
-              flexDirection="column"
-              width="100%"
-              height={isDrawer ? 60 : 180}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Type.CaptionBold display="block">This trader&quot;s opening orders is empty</Type.CaptionBold>
-              <Type.Caption mt={1} color="neutral3" textAlign="center" display="block">
-                Once the trader starts a new open order, you&quot;ll see it listed here
-              </Type.Caption>
-            </Flex>
-          )}
-          {openOrders && openOrders?.length > 0 && (
-            <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
-              {sm ? (
-                <Table
-                  restrictHeight={(!isDrawer && lg) || (isDrawer && isDrawer && openOrders?.length > 10)}
-                  wrapperSx={{
-                    minWidth: 500,
-                    minHeight: isDrawer && openOrders?.length > 10 ? 368 : undefined,
-                  }}
-                  tableBodySx={{
-                    '& td:last-child': { pr: 2 },
-                  }}
-                  data={openOrders}
-                  columns={isDrawer ? drawerOrderColumns : xl && isExpanded ? fullOrderColumns : orderColumns}
-                  isLoading={isLoading}
-                  renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
-                  scrollToTopDependencies={scrollToTopDependencies}
-                />
-              ) : (
-                <HLTraderPositionListView
-                  data={tableData?.data}
-                  isLoading={isLoading}
-                  scrollDep={tableData?.meta?.offset}
-                  onClickItem={handleSelectItem}
-                  hasAccountAddress={false}
-                />
-              )}
-            </Box>
-          )}
+        <Box display={['block', isDrawer ? 'block' : 'flex']} flexDirection="column" height="100%">
+          <OpenOrdersView
+            data={openOrders}
+            isLoading={isLoadingOpenOders}
+            isDrawer={!!isDrawer}
+            isExpanded={!!isExpanded}
+          />
         </Box>
       )}
       {tab === HLPositionTab.ORDER_FILLED && (
-        <Box display={['block', 'block', 'block', isDrawer ? 'block' : 'flex']} flexDirection="column" height="100%">
-          {isLoadingFilledOrders && <Loading />}
-          {!groupedFilledOrders?.length && !isLoadingFilledOrders && (
-            <Flex
-              p={3}
-              flexDirection="column"
-              width="100%"
-              height={isDrawer ? 60 : 180}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Type.CaptionBold display="block">No recent fills</Type.CaptionBold>
-              <Type.Caption mt={1} color="neutral3" textAlign="center" display="block">
-                Once the trader has filled orders, you&quot;ll see them listed here
-              </Type.Caption>
-            </Flex>
-          )}
-          {groupedFilledOrders?.length > 0 && (
-            <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
-              {sm ? (
-                <Table
-                  restrictHeight={(!isDrawer && lg) || (isDrawer && isDrawer && groupedFilledOrders?.length > 10)}
-                  wrapperSx={{
-                    minWidth: 500,
-                    minHeight: isDrawer && groupedFilledOrders?.length > 10 ? 368 : undefined,
-                  }}
-                  tableBodySx={{
-                    '& td:last-child': { pr: 2 },
-                  }}
-                  data={groupedFilledOrders}
-                  columns={isDrawer ? drawerFillColumns : xl && isExpanded ? fullFillColumns : fillColumns}
-                  isLoading={isLoadingFilledOrders}
-                  renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
-                  scrollToTopDependencies={scrollToTopDependencies}
-                />
-              ) : (
-                <HLTraderPositionListView
-                  data={tableData?.data}
-                  isLoading={isLoadingFilledOrders}
-                  scrollDep={groupedFilledOrders?.length}
-                  hasAccountAddress={false}
-                />
-              )}
-            </Box>
-          )}
+        <Box
+          display={['block', isDrawer ? 'block' : 'flex']}
+          flexDirection="column"
+          height="100%"
+          bg={isDrawer ? 'transparent' : 'neutral5'}
+        >
+          <OrderFiledView
+            onPageChange={onOrderFilledPageChange}
+            toggleExpand={handleToggleExpand}
+            isLoading={isLoadingFilledOrders}
+            data={groupedFilledOrders}
+            isDrawer={!!isDrawer}
+            isExpanded={!!isExpanded}
+          />
         </Box>
       )}
     </Box>

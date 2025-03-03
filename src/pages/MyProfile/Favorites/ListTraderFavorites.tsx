@@ -9,7 +9,9 @@ import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import useTraderFavorites, { getTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
 import useQueryTraders from 'pages/Explorer/ListTradersSection/useQueryTraders'
 import { TradersContextData } from 'pages/Explorer/useTradersContext'
+import { PaginationWithLimit } from 'theme/Pagination'
 import { Box, Flex } from 'theme/base'
+import { getPaginationDataFromList } from 'utils/helpers/transform'
 
 const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
   contextValues,
@@ -22,8 +24,20 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
   const { traderFavorites } = useTraderFavorites()
   const { md } = useResponsive()
   const settings = md ? tableSettings : mobileTableSettings
-  const { tab, accounts, isRangeSelection, timeRange, timeOption, currentSort, changeCurrentSort, filterTab } =
-    contextValues
+  const {
+    tab,
+    accounts,
+    isRangeSelection,
+    timeRange,
+    timeOption,
+    currentSort,
+    changeCurrentSort,
+    filterTab,
+    currentPage,
+    currentLimit,
+    changeCurrentPage,
+    changeCurrentLimit,
+  } = contextValues
 
   const { data, isLoading } = useQueryTraders({
     tab,
@@ -47,12 +61,14 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     })
   }
   const checkIsSelected = (data: TraderData) => selectedTraders.includes(data.account)
-  const formatedData = data?.data
+  const formattedData = data?.data
     .map((item) => ({ ...item, note: notes ? notes[item.account] : undefined }))
     .filter(({ account, protocol }) => {
       const traderFavorite = getTraderFavoriteValue({ address: account, protocol })
       return traderFavorites.includes(traderFavorite)
     })
+
+  const paginatedData = getPaginationDataFromList({ currentPage, limit: currentLimit, data: formattedData })
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
@@ -68,7 +84,7 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
       >
         {md ? (
           <TraderListTable
-            data={formatedData}
+            data={paginatedData.data}
             isLoading={isLoading}
             currentSort={currentSort}
             changeCurrentSort={changeCurrentSort}
@@ -81,9 +97,16 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
             lefts={[0, 0]}
           />
         ) : (
-          <TraderListCard data={formatedData} isLoading={isLoading} />
+          <TraderListCard data={paginatedData.data} isLoading={isLoading} />
         )}
       </Box>
+      <PaginationWithLimit
+        currentPage={currentPage}
+        currentLimit={currentLimit}
+        onPageChange={changeCurrentPage}
+        onLimitChange={changeCurrentLimit}
+        apiMeta={paginatedData.meta}
+      />
     </Flex>
   )
 })

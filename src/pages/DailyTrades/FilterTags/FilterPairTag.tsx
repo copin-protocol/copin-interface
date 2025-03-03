@@ -1,17 +1,23 @@
-import MarketGroup from 'components/@ui/MarketGroup'
+import { SelectedMarkets } from 'components/@ui/MarketFilter/SelectedMarkets'
+import { useFilterPairs } from 'hooks/features/useFilterPairs'
 import TagWrapper from 'theme/Tag/TagWrapper'
 import { Type } from 'theme/base'
-import { getSymbolFromPair } from 'utils/helpers/transform'
 
-export default function FilterPairTag({ pairs, onClear }: { pairs: string[] | undefined; onClear: () => void }) {
+export default function FilterPairTag({
+  pairs,
+  excludedPairs,
+  onClear,
+}: {
+  pairs: string[]
+  excludedPairs: string[]
+  onClear: () => void
+}) {
+  const { hasFilter } = useFilterPairs({ pairs, excludedPairs })
   return (
-    <TagWrapper onClear={pairs?.length ? onClear : undefined}>
-      <Type.Caption>Pair:</Type.Caption>
-      {pairs?.length ? (
-        <MarketGroup symbols={pairs.map((p) => getSymbolFromPair(p))} />
-      ) : (
-        <Type.Caption>All pairs</Type.Caption>
-      )}
+    <TagWrapper onClear={hasFilter ? onClear : undefined}>
+      <Type.Caption>
+        <SelectedMarkets pairs={pairs} excludedPairs={excludedPairs} />
+      </Type.Caption>
     </TagWrapper>
   )
 }

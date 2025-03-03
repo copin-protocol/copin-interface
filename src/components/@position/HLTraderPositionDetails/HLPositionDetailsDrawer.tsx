@@ -19,7 +19,7 @@ export default function HLPositionDetailsDrawer({
 }: {
   isOpen: boolean
   onDismiss: () => void
-  data: PositionData
+  data: PositionData | undefined
   orders: HlOrderData[]
 }) {
   const isMobile = useIsMobile()

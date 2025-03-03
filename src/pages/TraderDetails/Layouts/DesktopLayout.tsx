@@ -27,7 +27,7 @@ const DesktopLayout = (props: LayoutProps) => {
   )
 
   return (
-    <Flex sx={{ height: '100%', width: '100%', flexDirection: 'column' }}>
+    <Flex sx={{ height: '100%', width: '100%', flexDirection: 'column', minHeight: 640 }}>
       <Box sx={{ flexShrink: 0, height: 56, borderBottom: 'small', borderBottomColor: 'neutral4' }}>
         {props.protocolStats}
       </Box>

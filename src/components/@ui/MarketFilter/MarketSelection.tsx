@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { CaretLeft, Check, CheckCircle, Gear, Trash } from '@phosphor-icons/react'
 import { Fragment, ReactNode, useCallback, useMemo, useState } from 'react'
+import { FixedSizeList } from 'react-window'
+import styled from 'styled-components/macro'
 import { v4 as uuid } from 'uuid'
 
 import UncontrolledInputSearch, { useUncontrolledInputSearchHandler } from 'components/@widgets/UncontrolledInputSearch'
@@ -13,6 +15,16 @@ import { overflowEllipsis } from 'utils/helpers/css'
 import Divider from '../Divider'
 import Market from '../MarketGroup/Market'
 
+const StyledList = styled(FixedSizeList)`
+  ::-webkit-scrollbar {
+    border: none;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+  }
+`
+
+type Option = { value: string; label: string }
 export interface MarketSelectionProps {
   selectedPairs: string[]
   onChangePairs: (pairs: string[], unPairs: string[]) => void
@@ -176,6 +188,35 @@ const MarketSelection = ({
     handleClearSearch()
   }
 
+  const Row = useCallback(
+    ({ data, index, style }: { data: Option[]; index: number; style: any }) => {
+      const cellData = data[index] as Option
+      const _checkIconColor = state.isExcluded ? 'red1' : 'green2'
+      const _isSelected = state.isExcluded
+        ? !!state.excludedPairs[cellData.value]
+        : !!state.selectedPairs[cellData.value]
+      return (
+        <ItemWrapper key={cellData.value} onClick={() => _handleSelectPair(cellData.value)} sx={style}>
+          <Flex
+            sx={{
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Market symbol={cellData.value} size={20} hasName />
+            <IconBox
+              icon={<Check size={16} />}
+              color={_checkIconColor}
+              sx={{ visibility: _isSelected ? 'visible' : 'hidden' }}
+            />
+          </Flex>
+        </ItemWrapper>
+      )
+    },
+    [state.excludedPairs, state.isExcluded, state.selectedPairs]
+  )
+
   return (
     <Flex sx={{ p: 2, width: '100%', height: 330 }}>
       <Box display={showPreference ? 'flex' : 'none'} width="100%" height="100%" sx={{ flexDirection: 'column' }}>
@@ -313,32 +354,16 @@ const MarketSelection = ({
             onClick={() => setShowPreference((prev) => !prev)}
           />
         </Flex>
-        <ScrollWrapper>
-          {filterOptions.map((option) => {
-            const _checkIconColor = state.isExcluded ? 'red1' : 'green2'
-            const _isSelected = state.isExcluded
-              ? !!state.excludedPairs[option.value]
-              : !!state.selectedPairs[option.value]
-            return (
-              <ItemWrapper key={option.value} onClick={() => _handleSelectPair(option.value)}>
-                <Flex
-                  sx={{
-                    width: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <Market symbol={option.value} size={20} hasName />
-                  <IconBox
-                    icon={<Check size={16} />}
-                    color={_checkIconColor}
-                    sx={{ visibility: _isSelected ? 'visible' : 'hidden' }}
-                  />
-                </Flex>
-              </ItemWrapper>
-            )
-          })}
-        </ScrollWrapper>
+        <StyledList
+          width={232}
+          height={200}
+          itemCount={filterOptions.length}
+          itemSize={30}
+          itemData={filterOptions}
+          overscanCount={20}
+        >
+          {Row as any}
+        </StyledList>
         <Divider my={10} />
         <Type.Caption color="neutral2" mb={'4px'} sx={{ width: '100%', lineHeight: '24px', ...overflowEllipsis() }}>
           {state.isExcluded

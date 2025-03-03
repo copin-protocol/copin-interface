@@ -484,6 +484,7 @@ const PROTOCOL_CONFIG_MAPPING: { [key in ProtocolEnum]?: { text: string; textWid
   [ProtocolEnum.HORIZON_BNB]: { text: 'Horizon', textWidth: 168 },
   [ProtocolEnum.IDEX]: { text: 'IDEX', textWidth: 156 },
   [ProtocolEnum.HOLDSTATION_ZKSYNC]: { text: 'Holdstation', textWidth: 310 },
+  [ProtocolEnum.HOLDSTATION_BERA]: { text: 'Holdstation', textWidth: 310 },
   [ProtocolEnum.ZENO_METIS]: { text: 'Zeno', textWidth: 117 },
   [ProtocolEnum.SYMMIO_BASE]: { text: 'Symmio', textWidth: 172 },
   [ProtocolEnum.INTENTX_BASE]: { text: 'IntentX', textWidth: 172 },

@@ -11,6 +11,7 @@ import { normalizePositionPayload } from 'apis/positionApis'
 import PythWatermark from 'components/@ui/PythWatermark'
 import ToastBody from 'components/@ui/ToastBody'
 import { ResponsePositionData } from 'entities/trader'
+import { useFilterPairs } from 'hooks/features/useFilterPairs'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { Box, Flex } from 'theme/base'
 import { TAB_HEIGHT } from 'utils/config/constants'
@@ -37,6 +38,7 @@ export default function TopOpenInterest() {
     excludedPairs,
   } = useFilters()
 
+  const { hasExcludingPairs } = useFilterPairs({ pairs, excludedPairs })
   // FETCH DATA
   const queryVariables = useMemo(() => {
     const index = 'copin.positions'
@@ -46,10 +48,15 @@ export default function TopOpenInterest() {
       { field: 'status', match: 'OPEN' },
       { field: 'openBlockTime', gte: from, lte: to },
     ]
-    if (pairs?.length) {
+    if (hasExcludingPairs) {
       query.push({
         field: 'pair',
-        in: pairs.filter((pair) => !excludedPairs.includes(pair)).map((pair) => `${pair}-USDT`),
+        nin: excludedPairs.map((pair) => `${pair}-USDT`),
+      })
+    } else {
+      query.push({
+        field: 'pair',
+        in: pairs.map((pair) => `${pair}-USDT`),
       })
     }
 

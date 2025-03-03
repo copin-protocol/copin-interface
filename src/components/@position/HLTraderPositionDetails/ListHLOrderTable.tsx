@@ -38,7 +38,7 @@ export default function ListHLOrderTable({ data }: { data: HlOrderData[] }) {
         title: 'Type',
         dataIndex: 'orderType',
         key: 'orderType',
-        style: { minWidth: '120px', textAlign: 'left' },
+        style: { minWidth: '150px', textAlign: 'left' },
         render: (item) => <Type.Caption color="neutral1">{item.orderType ?? '--'}</Type.Caption>,
       },
       {

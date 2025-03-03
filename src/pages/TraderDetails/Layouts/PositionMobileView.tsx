@@ -1,25 +1,46 @@
-import { ReactNode, cloneElement, useRef } from 'react'
+import { ReactNode, cloneElement, useCallback, useMemo, useRef, useState } from 'react'
+import { useQuery } from 'react-query'
 
+import { getHlAccountInfo, getHlOpenOrders, getHlOrderFilled } from 'apis/hyperliquid'
+import OpenOrdersView from 'components/@position/HLTraderOpeningPositions/OpenOrdersView'
+import OrderFilledView from 'components/@position/HLTraderOpeningPositions/OrderFilledView'
 import { TraderOpeningPositionsListViewProps } from 'components/@position/TraderOpeningPositions'
+import { groupHLOrderFillsByOid, parseHLOrderData } from 'components/@position/helpers/hyperliquid'
+import { parseHLOrderFillData } from 'components/@position/helpers/hyperliquid'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 
 enum TabKeyEnum {
   OPENING = 'opening',
   CLOSED = 'closed',
+  OPEN_ORDERS = 'open_orders',
+  FILLS = 'fills',
 }
 const TABS = [
   { key: TabKeyEnum.OPENING, name: 'Opening Positions' },
   { key: TabKeyEnum.CLOSED, name: 'History' },
 ]
 
+const HYPERLIQUID_TABS = [
+  { key: TabKeyEnum.OPENING, name: 'Opening Positions' },
+  { key: TabKeyEnum.CLOSED, name: 'History' },
+  { key: TabKeyEnum.OPEN_ORDERS, name: 'Open Orders' },
+  { key: TabKeyEnum.FILLS, name: 'Fills' },
+]
+
 export default function PositionMobileView({
   historyPositions,
   openingPositions,
+  protocol,
+  address,
 }: {
   historyPositions: ReactNode
   openingPositions: ReactNode
+  protocol?: ProtocolEnum
+  address?: string
 }) {
   const { searchParams, setSearchParams } = useSearchParams()
   const currentTabKey = searchParams['position_tab'] ?? TabKeyEnum.OPENING
@@ -30,20 +51,106 @@ export default function PositionMobileView({
     firstLoadedRef.current = true
     handleChangeTab(TabKeyEnum.CLOSED)
   }
+
+  const isHyperliquid = protocol === ProtocolEnum.HYPERLIQUID
+
+  const { data: hlAccountData, isLoading } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_TRADER_DETAIL, address],
+    () =>
+      getHlAccountInfo({
+        user: address ?? '',
+      }),
+    {
+      enabled: !!address && isHyperliquid,
+      retry: 0,
+      refetchInterval: 15_000,
+      keepPreviousData: true,
+    }
+  )
+
+  const { data: openOrders, isLoading: isLoadingOpenOders } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_OPEN_ORDERS, address],
+    () =>
+      getHlOpenOrders({
+        user: address ?? '',
+      }),
+    {
+      enabled: !!address && isHyperliquid,
+      retry: 0,
+      refetchInterval: 15_000,
+      keepPreviousData: true,
+      select: (data) => {
+        return parseHLOrderData({ account: address ?? '', data })
+      },
+    }
+  )
+  openOrders?.sort((a, b) => {
+    return (b.timestamp ?? 0) - (a.timestamp ?? 0)
+  })
+
+  const [enabledRefetchOrderFilled, setEnabledRefetchOrderFilled] = useState(true)
+  const { data: filledOrders, isLoading: isLoadingFilledOrders } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_FILLED_ORDERS, address],
+    () =>
+      getHlOrderFilled({
+        user: address ?? '',
+      }),
+    {
+      enabled: !!address && isHyperliquid,
+      retry: 0,
+      refetchInterval: enabledRefetchOrderFilled ? 15_000 : undefined,
+      keepPreviousData: true,
+      select: (data) => {
+        return parseHLOrderFillData({ account: address ?? '', data })
+      },
+    }
+  )
+  const onOrderFilledPageChange = useCallback((page: number) => {
+    if (page === 1) {
+      setEnabledRefetchOrderFilled(true)
+    } else setEnabledRefetchOrderFilled(false)
+  }, [])
+
+  // Sort filled orders by timestamp
+  filledOrders?.sort((a, b) => b.timestamp - a.timestamp)
+
+  // Group the filled orders
+  const groupedFilledOrders = useMemo(() => {
+    if (!filledOrders) return []
+    return groupHLOrderFillsByOid(filledOrders)
+  }, [filledOrders])
+
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
       <TabHeader
-        configs={TABS}
+        configs={isHyperliquid ? HYPERLIQUID_TABS : TABS}
         isActiveFn={(config) => config.key === currentTabKey}
         onClickItem={handleChangeTab}
         hasLine
       />
-      <Box flex="1 0 0">
+      <Box flex="1 0 0" overflow="hidden">
         {currentTabKey === TabKeyEnum.OPENING &&
           cloneElement<TraderOpeningPositionsListViewProps>(openingPositions as any, {
             onNoPositionLoaded: handleNoOpeningPositionsLoaded,
           })}
         {currentTabKey === TabKeyEnum.CLOSED && historyPositions}
+        {currentTabKey === TabKeyEnum.OPEN_ORDERS && (
+          <Box display="flex" flexDirection="column" height="100%">
+            <OpenOrdersView data={openOrders} isLoading={isLoadingOpenOders} isDrawer={false} isExpanded={true} />
+          </Box>
+        )}
+        {currentTabKey === TabKeyEnum.FILLS && (
+          <OrderFilledView
+            toggleExpand={() => {
+              //
+            }}
+            onPageChange={onOrderFilledPageChange}
+            isLoading={isLoadingFilledOrders}
+            data={groupedFilledOrders}
+            isDrawer={false}
+            isExpanded={true}
+          />
+        )}
       </Box>
     </Flex>
   )

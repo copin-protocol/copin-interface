@@ -1,9 +1,9 @@
 import { Funnel } from '@phosphor-icons/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { MarketSelect } from 'components/@dailyTrades/PairFilterIcon'
 import { PositionStatusSelect } from 'components/@dailyTrades/PositionStatusFilterIcon'
 import { POSITION_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
+import { MarketSelect } from 'components/@widgets/PairFilterIcon'
 import { Button } from 'theme/Buttons'
 import Input from 'theme/Input'
 import Label from 'theme/InputField/Label'
@@ -14,7 +14,7 @@ import { DaliPositionsContextValues, useDailyPositionsContext } from './usePosit
 
 export default function FilterPositionButton() {
   const [openModal, setOpenModal] = useState(false)
-  const { ranges, pairs, status, changeFilters } = useDailyPositionsContext()
+  const { ranges, pairs, excludedPairs, status, changeFilters } = useDailyPositionsContext()
   const [_rangesFilter, _setRangesFilter] = useState<Record<string, DaliPositionsContextValues['ranges'][0]>>(() => {
     if (ranges.length) {
       return ranges.reduce((result, values) => {
@@ -44,7 +44,16 @@ export default function FilterPositionButton() {
       return { ...prev, [valueKey]: newValues }
     })
   }
-  const [_pairs, _setPairs] = useState(pairs)
+  const [_pairs, _setPairs] = useState<string[]>(pairs)
+  const [_excludedPairs, _setExcludedPairs] = useState<string[]>(excludedPairs)
+  const _changePairs = (pairs: string[], excludedPairs: string[]) => {
+    _setPairs(pairs)
+    _setExcludedPairs(excludedPairs)
+  }
+  useEffect(() => {
+    _changePairs(pairs, excludedPairs)
+  }, [pairs, excludedPairs])
+
   const [_status, _setStatus] = useState(status)
 
   const _onApply = () => {
@@ -73,7 +82,12 @@ export default function FilterPositionButton() {
               <Label label="Status" labelColor="neutral1" />
               <PositionStatusSelect currentFilter={_status} changeFilter={_setStatus} />
               <Box mb={3} />
-              <MarketSelect pairs={_pairs} onChange={_setPairs} />
+              <MarketSelect
+                key={openModal.toString()}
+                pairs={_pairs}
+                excludedPairs={_excludedPairs}
+                onChange={_changePairs}
+              />
               <Box mb={3} />
               <Label label="Others" labelColor="neutral1" />
               {Object.entries(POSITION_RANGE_CONFIG_MAPPING).map(([valueKey, configs]) => {

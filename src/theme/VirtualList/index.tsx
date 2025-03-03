@@ -100,7 +100,6 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
       currentSortBy: TableSortProps<T>['sortBy'] | undefined,
       currentSortType: TableSortProps<T>['sortType'] | undefined
     ) => {
-      console.log('changeCurrentSort', changeCurrentSort)
       if (!changeCurrentSort) return
       const isCurrentSort = !!currentSortBy && currentSortBy === columnSortBy
       if (!columnSortBy) return

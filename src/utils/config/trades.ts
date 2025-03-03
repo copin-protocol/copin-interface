@@ -6,6 +6,7 @@ import {
   ARBITRUM_MAINNET,
   AVALANCHE_MAINNET,
   BASE_MAINNET,
+  BERA_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
   CHAINS,
@@ -34,6 +35,7 @@ import { TOKEN_COLLATERAL_APOLLOX_BASE, TOKEN_COLLATERAL_APOLLOX_BNB } from './t
 import { TOKEN_COLLATERAL_ARB } from './tokenCollateralArb'
 import { TOKEN_COLLATERAL_AVAX } from './tokenCollateralAvax'
 import { TOKEN_COLLATERAL_BASE } from './tokenCollateralBase'
+import { TOKEN_COLLATERAL_BERA } from './tokenCollateralBera'
 import { TOKEN_COLLATERAL_BLAST } from './tokenCollateralBlast'
 import { TOKEN_COLLATERAL_BNB } from './tokenCollateralBnb'
 import { TOKEN_COLLATERAL_FTM } from './tokenCollateralFtm'
@@ -281,6 +283,10 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: ZKSYNC_ERA_MAINNET,
     explorerUrl: CHAINS[ZKSYNC_ERA_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.HOLDSTATION_BERA]: {
+    chainId: BERA_MAINNET,
+    explorerUrl: CHAINS[BERA_MAINNET].blockExplorerUrl,
+  },
   [ProtocolEnum.ZENO_METIS]: {
     chainId: METIS_MAINNET,
     explorerUrl: CHAINS[METIS_MAINNET].blockExplorerUrl,
@@ -430,6 +436,7 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.HORIZON_BNB]: TOKEN_COLLATERAL_BNB,
   [ProtocolEnum.IDEX]: TOKEN_COLLATERAL_IDEX,
   [ProtocolEnum.HOLDSTATION_ZKSYNC]: TOKEN_COLLATERAL_ZKSYNC_ERA,
+  [ProtocolEnum.HOLDSTATION_BERA]: TOKEN_COLLATERAL_BERA,
   [ProtocolEnum.ZENO_METIS]: TOKEN_COLLATERAL_METIS,
   [ProtocolEnum.SYMMIO_BASE]: TOKEN_COLLATERAL_BASE,
   [ProtocolEnum.INTENTX_BASE]: TOKEN_COLLATERAL_BASE,

@@ -98,14 +98,19 @@ const MobileLayout = (props: LayoutProps) => {
           >
             {props.traderRanking}
           </Box>
-          <Box mt={1} height="max(calc(100% - 270px), 330px)" bg="neutral5">
+          <Box height="max(calc(100% - 270px), 330px)" bg="neutral5">
             {props.traderChartPositions}
           </Box>
         </Box>
       )}
       {tab === TabEnum.POSITIONS && (
         <Box height={BODY_HEIGHT}>
-          <PositionMobileView openingPositions={props.openingPositions} historyPositions={props.closedPositions} />
+          <PositionMobileView
+            openingPositions={props.openingPositions}
+            historyPositions={props.closedPositions}
+            protocol={props.protocol}
+            address={props.address}
+          />
         </Box>
       )}
       <BottomWrapperMobile

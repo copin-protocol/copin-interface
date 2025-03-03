@@ -119,6 +119,7 @@ export default function useQueryClosedPositions({
   const [initiatedClosedPositions, setInitiated] = useState(false)
   const [closedPositions, setClosedPositions] = useState<ApiListResponse<PositionData>>()
   const [isLoadingClosedPositions, setIsLoadingClosedPositions] = useState(false)
+  const [isFetchingClosedPositions, setIsFetchingClosedPositions] = useState(false)
 
   const [enabledReload, setEnabledReload] = useState(false)
   useEffect(() => {
@@ -177,8 +178,8 @@ export default function useQueryClosedPositions({
       protocol,
     ],
     () => {
-      setIsLoadingClosedPositions(true)
       if (!initiatedClosedPositions || forceSetPositions) {
+        setIsLoadingClosedPositions(true)
         return Promise.all(
           limits.map((limit, index) => {
             return getTraderHistoryApi({
@@ -192,6 +193,7 @@ export default function useQueryClosedPositions({
           })
         )
       } else {
+        setIsFetchingClosedPositions(true)
         return getTraderHistoryApi({
           limit: DEFAULT_LIMIT,
           offset: pageToOffset(currentPage, DEFAULT_LIMIT),
@@ -205,12 +207,14 @@ export default function useQueryClosedPositions({
     {
       enabled: !!address,
       retry: 0,
-      onSettled: () => setIsLoadingClosedPositions(false),
+      onSettled: () => {
+        setIsLoadingClosedPositions(false)
+        setIsFetchingClosedPositions(false)
+      },
       onError: () => {
         changeCurrentPage(1)
       },
       onSuccess: (data) => {
-        setIsLoadingClosedPositions(false)
         if (!initiatedClosedPositions || forceSetPositions) {
           prevFilterKeyRef.current = currentFilterKey
           const _data = data as ApiListResponse<PositionData>[]
@@ -277,6 +281,7 @@ export default function useQueryClosedPositions({
       isLoadingClosed: isLoadingClosedPositions,
       hasNextClosedPositions,
       handleFetchClosedPositions,
+      isFetchingClosedPositions,
     }),
     [
       resetSort,
@@ -291,6 +296,7 @@ export default function useQueryClosedPositions({
       isLoadingClosedPositions,
       hasNextClosedPositions,
       handleFetchClosedPositions,
+      isFetchingClosedPositions,
     ]
   )
 }

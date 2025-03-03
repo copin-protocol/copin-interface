@@ -3,12 +3,14 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { POSITION_RANGE_KEYS, PositionRangeFields, RangeValuesType } from 'components/@dailyTrades/configs'
 import { PositionData } from 'entities/trader'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { TableProps, TableSortProps } from 'theme/Table/types'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { PositionStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
-import { getPairFromSymbol, getSymbolFromPair } from 'utils/helpers/transform'
+import { PairFilterEnum, PositionStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
+import { getPairsParam } from '../helpers'
 import { useProtocolsContext } from '../useProtocolsProvider'
 
 export type DailyPositionRangeFilter = {
@@ -22,8 +24,10 @@ type ChangeFilterVariables = {
   status?: PositionStatusEnum
 }
 export interface DaliPositionsContextValues {
-  pairs: string[] | undefined
-  changePairs: (pairs: string[] | undefined) => void
+  pairs: string[]
+  excludedPairs: string[]
+  changePairs: (pairs: string[], excludedPairs: string[]) => void
+  onClearPairs: () => void
   protocols: ProtocolEnum[] | undefined | null
   changeProtocols: (protocols: ProtocolEnum[] | undefined) => void
   address: string | undefined
@@ -54,21 +58,31 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
   const defaultProtocols = useMemo(() => defaultProtocolOptions.map((p) => p.id), [defaultProtocolOptions])
   const { selectedProtocols, setProtocols } = useProtocolsContext()
 
-  const symbols = (searchParams['pairs'] as string)?.split('_')
-  const changePairs = useCallback(
-    (pairs: string[] | undefined) => {
-      setSearchParams({
-        ['pairs']: pairs?.length
-          ? pairs
-              .map((v) => getSymbolFromPair(v))
-              .filter((v) => !!v)
-              .join('_')
-          : undefined,
-        ['page']: undefined,
-      })
+  const { getListSymbol } = useMarketsConfig()
+  const defaultAllPairs = getListSymbol?.()
+  const pairsParam = searchParams['pairs'] as string | undefined
+
+  const pairs = useMemo(() => {
+    if (!pairsParam || pairsParam === PairFilterEnum.ALL) {
+      if (!defaultAllPairs?.length) return []
+      return defaultAllPairs
+    }
+    return pairsParam.split('-')
+  }, [pairsParam, defaultAllPairs])
+
+  const excludedPairsParam = searchParams['excludedPairs'] as string | undefined
+  const excludedPairs = useMemo(() => {
+    return excludedPairsParam ? excludedPairsParam.split('-') : []
+  }, [excludedPairsParam])
+
+  const onChangePairs = useCallback(
+    (pairs: string[], excludedPairs: string[]) => {
+      const param = getPairsParam({ excludedPairs, pairs, defaultAllPairs })
+      setSearchParams(param)
     },
-    [setSearchParams]
+    [defaultAllPairs, setSearchParams]
   )
+  const onClearPairs = useCallback(() => setSearchParams({ pairs: null, excludedPairs: null }), [setSearchParams])
 
   const changeProtocols = useCallback(
     (protocols: ProtocolEnum[] | undefined) => {
@@ -183,9 +197,14 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
             ? _values
                 .map((v) => getSymbolFromPair(v))
                 .filter((v) => !!v)
-                .join('_')
+                .join('-')
             : undefined
         }
+        if (key === 'excludedPairs') {
+          const _values = values as string[] | undefined
+          params['excludedPairs'] = _values?.length ? _values.filter((v) => !!v).join('-') : undefined
+        }
+
         if (key === 'status') {
           const _values = values as PositionStatusEnum
           params['status'] = _values
@@ -213,8 +232,10 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
   const contextValue: DaliPositionsContextValues = useMemo(() => {
     return {
       ranges,
-      pairs: symbols?.map((v) => getPairFromSymbol(v)),
-      changePairs,
+      pairs,
+      excludedPairs,
+      changePairs: onChangePairs,
+      onClearPairs,
       protocols: selectedProtocols,
       changeProtocols,
       address,
@@ -237,8 +258,10 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
     }
   }, [
     ranges,
-    symbols,
-    changePairs,
+    pairs,
+    excludedPairs,
+    onChangePairs,
+    onClearPairs,
     selectedProtocols,
     changeProtocols,
     address,

@@ -80,6 +80,7 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
     isLoadingClosed: isLoadingClosedPositions,
     hasNextClosedPositions,
     handleFetchClosedPositions,
+    isFetchingClosedPositions,
   } = useQueryClosedPositions({ address, protocol, isExpanded })
 
   const tableSettings = isDrawer ? drawerHistoryColumns : xl && isExpanded ? fullHistoryColumns : historyColumns
@@ -308,6 +309,7 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
             resizeDeps={resizeDeps}
             rowBgFactory={renderRowBackground}
             footerBg={isDrawer ? 'neutral7' : undefined}
+            isLoadingFooter={isFetchingClosedPositions}
           />
         )}
         {/* {isLoadingClosedPositions && (
