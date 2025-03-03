@@ -15,13 +15,14 @@ import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDeta
 import { dailyPositionColumns } from 'components/@position/configs/traderPositionRenderProps'
 import ToastBody from 'components/@ui/ToastBody'
 import { PositionData, ResponsePositionData } from 'entities/trader'
+import { useFilterPairs } from 'hooks/features/useFilterPairs'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import VirtualList from 'theme/VirtualList'
 import { Box, Flex, Type } from 'theme/base'
 import { MAX_LIST_DATA_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
-import { pageToOffset } from 'utils/helpers/transform'
+import { getPairFromSymbol, pageToOffset } from 'utils/helpers/transform'
 
 import FilterProtocols from '../FilterProtocols'
 import FilterPairTags from '../FilterTags/FilterPairTag'
@@ -48,6 +49,8 @@ function DailyPositionsComponent() {
     currentSortBy,
     currentSortType,
     pairs,
+    excludedPairs,
+    onClearPairs,
     address,
     currentPage,
     currentLimit,
@@ -56,7 +59,6 @@ function DailyPositionsComponent() {
     changeCurrentSort,
     changeCurrentPage,
     changeCurrentLimit,
-    changePairs,
     enabledLiveTrade,
     toggleLiveTrade,
   } = useDailyPositionsContext()
@@ -64,12 +66,15 @@ function DailyPositionsComponent() {
   const { md } = useResponsive()
 
   // Filters
+  const { isCopyAll, hasExcludingPairs } = useFilterPairs({ pairs, excludedPairs })
   const tableFilters = useMemo(() => {
     const result: any[] = []
-
-    if (pairs?.length) {
-      result.push({ field: 'pair', in: pairs })
+    if (hasExcludingPairs) {
+      result.push({ field: 'pair', nin: excludedPairs.map((v) => getPairFromSymbol(v)) })
+    } else if (!isCopyAll) {
+      result.push({ field: 'pair', in: pairs.map((v) => getPairFromSymbol(v)) })
     }
+
     if (status) {
       result.push({
         field: 'status',
@@ -444,7 +449,7 @@ function DailyPositionsComponent() {
             <Type.Caption pr={1} sx={{ flexShrink: 0 }}>
               Filter:
             </Type.Caption>
-            <FilterPairTags pairs={pairs} onClear={() => changePairs(undefined)} />
+            <FilterPairTags pairs={pairs} excludedPairs={excludedPairs} onClear={onClearPairs} />
             <FilterPositionStatusTag />
             <FilterPositionRangesTag />
           </Flex>

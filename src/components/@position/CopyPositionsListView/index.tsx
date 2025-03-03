@@ -11,6 +11,7 @@ import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
 
+import MismatchPosition from '../CopyOpeningPositions/MismatchPosition'
 import CopyPositionsContainer from '../CopyPositionsContainer'
 import {
   renderCloseTime,
@@ -158,16 +159,20 @@ export function OpeningPositionListForm({
               <Box flex="1" sx={{ '& *': { fontWeight: 'bold' }, ...(positionData.isReverse ? { pl: 2 } : {}) }}>
                 {renderCopyTitle(positionData)}
               </Box>
-              <Button
-                variant="ghostPrimary"
-                sx={{ fontWeight: 'normal', p: 0 }}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  externalSource?.handleCloseCopyItem?.(positionData)
-                }}
-              >
-                <Trans>Close Position</Trans>
-              </Button>
+              {positionData.openingPositionType === 'onlyLiveApp' ? (
+                <MismatchPosition data={positionData} externalSource={externalSource} />
+              ) : (
+                <Button
+                  variant="ghostPrimary"
+                  sx={{ fontWeight: 'normal', p: 0 }}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    externalSource?.handleCloseCopyItem?.(positionData)
+                  }}
+                >
+                  <Trans>Close Position</Trans>
+                </Button>
+              )}
             </Flex>
             <Divider my={2} color="neutral5" />
             <Flex sx={{ flexDirection: 'column', gap: 2 }}>

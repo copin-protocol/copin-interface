@@ -150,9 +150,9 @@ export function SystemConfigInitializer() {
       const getListSymbol = (args?: { protocol: ProtocolEnum | undefined }) => {
         const { protocol } = args ?? {}
         if (!protocol) {
-          return map.listAllSymbol
+          return map.listAllSymbol.filter((v) => !!v)
         } else {
-          return map.listSymbolByProtocol[protocol] ?? []
+          return (map.listSymbolByProtocol[protocol] ?? []).filter((v) => !!v)
         }
       }
       const getListIndexToken = ({ protocol }: { protocol: ProtocolEnum }) => {

@@ -1,9 +1,8 @@
+import { PairFilterIcon } from 'components/@widgets/PairFilterIcon'
 import { useDailyOrdersContext } from 'pages/DailyTrades/Orders/useOrdersProvider'
 
-import { PairFilterIcon } from './PairFilterIcon'
-
 export function OrderPairFilterIcon() {
-  const { pairs, changePairs } = useDailyOrdersContext()
+  const { pairs, changePairs, excludedPairs } = useDailyOrdersContext()
 
-  return <PairFilterIcon pairs={pairs} changePairs={changePairs} />
+  return <PairFilterIcon pairs={pairs} excludedPairs={excludedPairs} changePairs={changePairs} />
 }

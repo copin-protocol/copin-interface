@@ -8,6 +8,8 @@ import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
+import OrderFilledPairFilterIcon from './OrderFilledPairFilterIcon'
+
 const timeColumn: ColumnData<GroupedFillsData> = {
   title: 'Time',
   dataIndex: 'timestamp',
@@ -109,7 +111,7 @@ const pnlColumn: ColumnData<GroupedFillsData> = {
 
 export const fullFillColumns: ColumnData<GroupedFillsData>[] = [
   timeColumn,
-  pairColumn,
+  { ...pairColumn, filterComponent: <OrderFilledPairFilterIcon /> },
   directionColumn,
   sizeTokenColumn,
   sizeUsdColumn,

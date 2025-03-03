@@ -47,12 +47,12 @@ const FavoritesPage = () => {
       </Box>
     )
   return (
-    <Box sx={{ width: '100%', height: '100%' }}>
+    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
       <CustomPageTitle title="Trader Favorites" />
       <TopWrapperMobile>
         <PageTitle title={<Trans>TRADER FAVORITES STATISTICS</Trans>} icon={Star} />
       </TopWrapperMobile>
-      <Flex flexDirection="column" height="100%">
+      <Flex flex="1 0 0" flexDirection="column" height="100%">
         {md && (
           <Flex
             height={PAGE_TITLE_HEIGHT}
@@ -83,7 +83,7 @@ const FavoritesPage = () => {
           </FilterTradersProvider>
         </Box>
       </Flex>
-    </Box>
+    </Flex>
   )
 }
 
@@ -100,7 +100,7 @@ function ListTraders({ notes }: { notes: { [key: string]: string } }) {
     [md]
   )
   return (
-    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
+    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
       <Box flex="1 1 0" sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}>
         {md ? (
           <TimeFilterSection contextValues={contextValues} />

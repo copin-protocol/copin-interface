@@ -13,6 +13,7 @@ import { DirectionFilterEnum } from 'components/@dailyTrades/configs'
 import { TraderPositionDetailsFromOrderDrawer } from 'components/@position/TraderPositionDetailsDrawer'
 import ToastBody from 'components/@ui/ToastBody'
 import { OrderData } from 'entities/trader'
+import { useFilterPairs } from 'hooks/features/useFilterPairs'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import VirtualList from 'theme/VirtualList'
@@ -20,7 +21,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { MAX_LIST_DATA_LIMIT, MAX_PAGE_LIMIT } from 'utils/config/constants'
 import { MarginModeEnum, OrderTypeEnum, SortTypeEnum } from 'utils/config/enums'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
-import { pageToOffset } from 'utils/helpers/transform'
+import { getPairFromSymbol, pageToOffset } from 'utils/helpers/transform'
 
 import FilterProtocols from '../FilterProtocols'
 import FilterOrderDirectionTag from '../FilterTags/FilterDirectionTag'
@@ -55,7 +56,8 @@ function DailyOrdersComponent() {
   const {
     ranges,
     pairs,
-    changePairs,
+    excludedPairs,
+    onClearPairs,
     address,
     changeAddress,
     protocols,
@@ -71,14 +73,18 @@ function DailyOrdersComponent() {
   const { md } = useResponsive()
 
   // FETCH DATA
+  const { isCopyAll, hasExcludingPairs } = useFilterPairs({ pairs, excludedPairs })
   const filters = useMemo(() => {
     const result: any[] = []
 
-    if (pairs?.length) {
-      result.push({ field: 'pair', in: pairs })
+    if (hasExcludingPairs) {
+      result.push({ field: 'pair', nin: excludedPairs.map((v) => getPairFromSymbol(v)) })
+    } else if (!isCopyAll) {
+      result.push({ field: 'pair', in: pairs.map((v) => getPairFromSymbol(v)) })
     } else {
       result.push({ field: 'pair', exists: true })
     }
+
     if (direction === DirectionFilterEnum.LONG) {
       result.push({ field: 'isLong', match: true })
     }
@@ -408,7 +414,7 @@ function DailyOrdersComponent() {
             <Type.Caption pr={1} flexShrink={0} color="neutral2">
               FILTER:
             </Type.Caption>
-            <FilterPairTag pairs={pairs} onClear={() => changePairs(undefined)} />
+            <FilterPairTag pairs={pairs} excludedPairs={excludedPairs} onClear={onClearPairs} />
             <FilterOrderActionTag />
             <FilterOrderDirectionTag />
             <FilterOrderRangesTag />

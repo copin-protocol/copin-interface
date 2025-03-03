@@ -7,11 +7,12 @@ import {
   RangeValuesType,
 } from 'components/@dailyTrades/configs'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
-import { getPairFromSymbol, getSymbolFromPair } from 'utils/helpers/transform'
+import { OrderTypeEnum, PairFilterEnum, ProtocolEnum } from 'utils/config/enums'
 
+import { getPairsParam } from '../helpers'
 import { useProtocolsContext } from '../useProtocolsProvider'
 
 export type DailyOrderRangeFilter = {
@@ -22,12 +23,15 @@ export type DailyOrderRangeFilter = {
 type ChangeFilterVariables = {
   ranges?: DailyOrderRangeFilter[]
   pairs?: string[]
+  excludedPairs?: string[]
   action?: OrderTypeEnum
   direction?: DirectionFilterEnum
 }
 export interface DailyOrderContextValues {
-  pairs: string[] | undefined
-  changePairs: (pairs: string[] | undefined) => void
+  pairs: string[]
+  excludedPairs: string[]
+  changePairs: (pairs: string[], excludedPairs: string[]) => void
+  onClearPairs: () => void
   protocols: ProtocolEnum[] | undefined | null
   changeProtocols: (protocols: ProtocolEnum[] | undefined) => void
   address: string | undefined
@@ -56,21 +60,31 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
   const defaultProtocols = useMemo(() => defaultProtocolOptions.map((p) => p.id), [defaultProtocolOptions])
   const { selectedProtocols, setProtocols } = useProtocolsContext()
 
-  const symbols = (searchParams['pairs'] as string)?.split('_')
-  const changePairs = useCallback(
-    (pairs: string[] | undefined) => {
-      setSearchParams({
-        ['pairs']: pairs?.length
-          ? pairs
-              .map((v) => getSymbolFromPair(v))
-              .filter((v) => !!v)
-              .join('_')
-          : undefined,
-        ['page']: undefined,
-      })
+  const { getListSymbol } = useMarketsConfig()
+  const defaultAllPairs = getListSymbol?.()
+  const pairsParam = searchParams['pairs'] as string | undefined
+
+  const pairs = useMemo(() => {
+    if (!pairsParam || pairsParam === PairFilterEnum.ALL) {
+      if (!defaultAllPairs?.length) return []
+      return defaultAllPairs
+    }
+    return pairsParam.split('-')
+  }, [pairsParam, defaultAllPairs])
+
+  const excludedPairsParam = searchParams['excludedPairs'] as string | undefined
+  const excludedPairs = useMemo(() => {
+    return excludedPairsParam ? excludedPairsParam.split('-') : []
+  }, [excludedPairsParam])
+
+  const onChangePairs = useCallback(
+    (pairs: string[], excludedPairs: string[]) => {
+      const param = getPairsParam({ excludedPairs, pairs, defaultAllPairs })
+      setSearchParams(param)
     },
-    [setSearchParams]
+    [defaultAllPairs, setSearchParams]
   )
+  const onClearPairs = useCallback(() => setSearchParams({ pairs: null, excludedPairs: null }), [setSearchParams])
 
   const changeProtocols = useCallback(
     (protocols: ProtocolEnum[] | undefined) => {
@@ -182,12 +196,11 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
         }
         if (key === 'pairs') {
           const _values = values as string[] | undefined
-          params['pairs'] = _values?.length
-            ? _values
-                .map((v) => getSymbolFromPair(v))
-                .filter((v) => !!v)
-                .join('_')
-            : undefined
+          params['pairs'] = _values?.length ? _values.filter((v) => !!v).join('-') : undefined
+        }
+        if (key === 'excludedPairs') {
+          const _values = values as string[] | undefined
+          params['excludedPairs'] = _values?.length ? _values.filter((v) => !!v).join('-') : undefined
         }
         if (key === 'action') {
           const _values = values as OrderTypeEnum | undefined
@@ -224,8 +237,10 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
 
   const contextValue: DailyOrderContextValues = useMemo(() => {
     return {
-      pairs: symbols?.map((v) => getPairFromSymbol(v)),
-      changePairs,
+      onClearPairs,
+      pairs,
+      excludedPairs,
+      changePairs: onChangePairs,
       protocols: selectedProtocols,
       changeProtocols,
       address,
@@ -247,8 +262,10 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
       toggleLiveTrade,
     }
   }, [
-    symbols,
-    changePairs,
+    onClearPairs,
+    pairs,
+    excludedPairs,
+    onChangePairs,
     selectedProtocols,
     changeProtocols,
     address,

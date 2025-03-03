@@ -206,6 +206,7 @@ function QuickSearchContainer({
   useEffect(() => {
     if (isOpen) {
       inputSearchRef.current?.focus?.()
+      inputSearchRef.current?.select?.()
     }
     if (!isOpen) {
       setSearchTextRef?.(searchText)

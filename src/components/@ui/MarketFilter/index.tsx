@@ -1,17 +1,13 @@
-import { Trans } from '@lingui/macro'
-import { Exclude } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { DropdownProps } from 'rc-dropdown/lib/Dropdown'
 import { useState } from 'react'
 
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import Dropdown from 'theme/Dropdown'
-import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
+import { Flex } from 'theme/base'
 
 import MarketSelection from './MarketSelection'
-import PairGroup, { PairGroupFull } from './PairGroup'
+import { SelectedMarkets } from './SelectedMarkets'
 
 export interface MarketFilterProps {
   menuSx?: any
@@ -32,8 +28,6 @@ export function MarketFilter({
   const { getListSymbol } = useMarketsConfig()
   const protocolPairs = getListSymbol?.()
   const isCopyAll = protocolPairs?.length === pairs.length
-  const hasExcludingPairs = excludedPairs.length > 0 && isCopyAll
-  const tooltipId = `tt_excluding_pairs_0`
 
   const [visible, setVisible] = useState(false)
 
@@ -71,37 +65,7 @@ export function MarketFilter({
         setVisible={setVisible}
         menuDismissible
       >
-        {/* TODO: Change this later */}
-        {isCopyAll ? (
-          <Flex width="100%" justifyContent="flex-start" alignItems="center" sx={{ gap: 1 }}>
-            {hasExcludingPairs && (
-              <Exclude color={`${themeColors.red1}80`} data-tooltip-id={hasExcludingPairs ? tooltipId : undefined} />
-            )}
-            <Trans>All pairs</Trans>
-          </Flex>
-        ) : (
-          <PairGroup pairs={pairs} />
-        )}
-
-        {hasExcludingPairs && (
-          <Tooltip id={tooltipId} clickable>
-            <Box>
-              <Type.Caption mb={1} width="100%" color="neutral3" textAlign="left">
-                Excluding pairs:
-              </Type.Caption>
-              <PairGroupFull
-                pairs={excludedPairs}
-                hasName
-                sx={{
-                  maxWidth: 400,
-                  maxHeight: 350,
-                  overflowY: 'auto',
-                  justifyContent: 'flex-start',
-                }}
-              />
-            </Box>
-          </Tooltip>
-        )}
+        <SelectedMarkets pairs={pairs} excludedPairs={excludedPairs} />
       </Dropdown>
     </Flex>
   )

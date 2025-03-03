@@ -168,6 +168,8 @@ export function TraderDetailsComponent({
       <CustomPageTitle title={`Trader ${addressShorten(address)} on ${protocolOptionsMapping[protocol]?.text}`} />
 
       <Layout
+        address={address}
+        protocol={protocol}
         protocolStats={
           <ProtocolStats address={address} protocol={protocol} page="details" exchangeStats={exchangeStats} />
         }

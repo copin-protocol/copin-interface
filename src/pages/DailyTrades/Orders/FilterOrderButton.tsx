@@ -1,10 +1,10 @@
 import { Funnel, XCircle } from '@phosphor-icons/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { DirectionSelect } from 'components/@dailyTrades/DirectionFilterIcon'
 import { OrderActionSelect } from 'components/@dailyTrades/OrderActionFilterIcon'
-import { MarketSelect } from 'components/@dailyTrades/PairFilterIcon'
 import { ORDER_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
+import { MarketSelect } from 'components/@widgets/PairFilterIcon'
 import { Button } from 'theme/Buttons'
 import Input from 'theme/Input'
 import Label from 'theme/InputField/Label'
@@ -15,7 +15,7 @@ import { DailyOrderContextValues, useDailyOrdersContext } from './useOrdersProvi
 
 export default function FilterOrderButton() {
   const [openModal, setOpenModal] = useState(false)
-  const { ranges, pairs, action, changeFilters, direction } = useDailyOrdersContext()
+  const { ranges, pairs, excludedPairs, action, changeFilters, direction } = useDailyOrdersContext()
   const [_rangesFilter, _setRangesFilter] = useState<Record<string, DailyOrderContextValues['ranges'][0]>>(() => {
     if (ranges.length) {
       return ranges.reduce((result, values) => {
@@ -44,12 +44,24 @@ export default function FilterOrderButton() {
       return { ...prev, [valueKey]: newValues }
     })
   }
-  const [_pairs, _setPairs] = useState(pairs)
+  const [_pairs, _setPairs] = useState<{ pairs: string[]; excludedPairs: string[] }>({ pairs, excludedPairs })
+  const _changePairs = (pairs: string[], excludedPairs: string[]) => {
+    _setPairs({ pairs, excludedPairs })
+  }
+  useEffect(() => {
+    _changePairs(pairs, excludedPairs)
+  }, [pairs, excludedPairs])
   const [_action, _setAction] = useState(action)
   const [_direction, _setDirection] = useState(direction)
 
   const _onApply = () => {
-    changeFilters({ action: _action, pairs: _pairs, ranges: Object.values(_rangesFilter), direction: _direction })
+    changeFilters({
+      action: _action,
+      pairs: _pairs.pairs,
+      excludedPairs: _pairs.excludedPairs,
+      ranges: Object.values(_rangesFilter),
+      direction: _direction,
+    })
     setOpenModal(false)
   }
 
@@ -77,7 +89,12 @@ export default function FilterOrderButton() {
             <Label label="Direction" labelColor="neutral1" />
             <DirectionSelect direction={_direction} changeDirection={_setDirection} />
             <Box mb={3} />
-            <MarketSelect pairs={_pairs} onChange={_setPairs} />
+            <MarketSelect
+              key={openModal.toString()}
+              pairs={_pairs.pairs}
+              excludedPairs={_pairs.excludedPairs}
+              onChange={_changePairs}
+            />
             <Box mb={3} />
             <Label label="Others" labelColor="neutral1" />
             {Object.entries(ORDER_RANGE_CONFIG_MAPPING).map(([valueKey, configs]) => {

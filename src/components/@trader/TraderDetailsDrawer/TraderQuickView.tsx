@@ -285,6 +285,8 @@ function TraderDetailsComponent({
                   isExpanded
                 />
               }
+              protocol={protocol}
+              address={address}
             />
           </Flex>
         )}

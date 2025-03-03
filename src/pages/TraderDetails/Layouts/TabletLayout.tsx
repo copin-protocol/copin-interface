@@ -56,7 +56,7 @@ const TabletLayout = (props: LayoutProps) => {
                   {props.traderStatsSummary}
                   <Box flex="1 0 0">{props.traderChartPnl}</Box>
                 </Flex>
-                <Box overflow="auto" flex="1 0 0" sx={{ position: 'relative' }}>
+                <Box overflow="auto" flex="1 0 0" sx={{ position: 'relative' }} maxHeight={500}>
                   <Box height="100%">{props.traderStats}</Box>
                 </Box>
               </Box>
@@ -66,7 +66,7 @@ const TabletLayout = (props: LayoutProps) => {
         <Box flex="1" minHeight={700}>
           <Flex flexDirection="column" height="100%">
             <Box
-              height={261}
+              height={300}
               sx={{
                 borderBottom: 'small',
                 borderColor: 'neutral4',
@@ -74,7 +74,7 @@ const TabletLayout = (props: LayoutProps) => {
             >
               {props.openingPositions}
             </Box>
-            <Box sx={{ position: 'relative' }} flex="1">
+            <Box sx={{ position: 'relative' }} flex="1" maxHeight={500}>
               {props.closedPositions}
             </Box>
           </Flex>

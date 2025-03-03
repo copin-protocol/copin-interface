@@ -353,7 +353,7 @@ msgstr "All Wallets"
 msgid "All of your opening positions will be shown here"
 msgstr "All of your opening positions will be shown here"
 
-#: src/components/@ui/MarketFilter/index.tsx
+#: src/components/@ui/MarketFilter/SelectedMarkets.tsx
 msgid "All pairs"
 msgstr "All pairs"
 
@@ -1142,6 +1142,10 @@ msgstr "Deposit Funds"
 msgid "Deposits And Withdrawals"
 msgstr "Deposits And Withdrawals"
 
+#: src/components/@wallet/CreateWalletAction/index.tsx
+msgid "Deprecated"
+msgstr "Deprecated"
+
 #: src/components/@copyActivity/configs.tsx
 msgid "Details"
 msgstr "Details"
@@ -1460,7 +1464,7 @@ msgstr "Follow The Trader"
 msgid "Follow Trader"
 msgstr "Follow Trader"
 
-#: src/components/@position/CopyOpeningPositions/configs.tsx
+#: src/components/@position/CopyOpeningPositions/MismatchPosition.tsx
 msgid "For some reason, this position has been closed on Hyperliquid, causing a mismatch with the data. <0>Unlink</0>"
 msgstr "For some reason, this position has been closed on Hyperliquid, causing a mismatch with the data. <0>Unlink</0>"
 
@@ -2135,7 +2139,7 @@ msgstr "Minting"
 msgid "Minting NFT"
 msgstr "Minting NFT"
 
-#: src/components/@position/CopyOpeningPositions/configs.tsx
+#: src/components/@position/CopyOpeningPositions/MismatchPosition.tsx
 msgid "Mismatch"
 msgstr "Mismatch"
 
@@ -3556,10 +3560,6 @@ msgstr "To start, you need to create a smart wallet."
 msgid "To unlock premium and VIP features, mint a Copin NFT."
 msgstr "To unlock premium and VIP features, mint a Copin NFT."
 
-#: src/components/@dailyTrades/PairFilterIcon.tsx
-msgid "Toggle to select specific pairs"
-msgstr "Toggle to select specific pairs"
-
 #: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 msgid "Top Highest PNL Tokens"
 msgstr "Top Highest PNL Tokens"
@@ -3698,8 +3698,7 @@ msgstr "Trades"
 
 #: src/components/@copyTrade/ListCopyTrade/View.tsx
 #: src/components/@copyTrade/ListCopyTrade/View.tsx
-#: src/components/@dailyTrades/PairFilterIcon.tsx
-#: src/components/@dailyTrades/PairFilterIcon.tsx
+#: src/components/@widgets/PairFilterIcon.tsx
 #: src/utils/config/translations.tsx
 msgid "Trading Pairs"
 msgstr "Trading Pairs"

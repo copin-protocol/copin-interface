@@ -22,6 +22,7 @@ import {
 } from '../configs/copyPositionRenderProps'
 import { ExternalSourceCopyPositions, LayoutType } from '../types'
 import LiteFilterOpeningPositionTrader from './LiteOpeningFilterTrader'
+import MismatchPosition from './MismatchPosition'
 
 export const simpleOpeningColumns: ColumnData<CopyPositionData, ExternalSourceCopyPositions>[] = [
   {
@@ -133,24 +134,7 @@ export const liteOpeningColumns: ColumnData<CopyPositionData, ExternalSourceCopy
     style: { minWidth: '80px', maxWidth: '80px', textAlign: 'right' },
     render: (item, _, externalSource) => {
       if (item.openingPositionType === 'onlyLiveApp') {
-        const tooltipId = `tt_mismatch_${item.id}`
-        return (
-          <>
-            <Type.Caption color="orange1" data-tooltip-id={tooltipId}>
-              <Warning size={16} style={{ verticalAlign: 'middle' }} /> <Trans>Mismatch</Trans>
-            </Type.Caption>
-            <Tooltip id={tooltipId} clickable>
-              <Type.Caption onClick={(e) => e.stopPropagation()} textAlign="left">
-                <Trans>
-                  For some reason, this position has been closed on Hyperliquid, causing a mismatch with the data.{' '}
-                  <Button variant="textPrimary" onClick={() => externalSource?.handleUnlinkCopyPosition?.(item)}>
-                    Unlink
-                  </Button>
-                </Trans>
-              </Type.Caption>
-            </Tooltip>
-          </>
-        )
+        return <MismatchPosition data={item} externalSource={externalSource} />
       }
       return (
         <Button
