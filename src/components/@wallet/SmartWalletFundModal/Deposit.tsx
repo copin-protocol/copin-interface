@@ -17,6 +17,7 @@ import useWeb3 from 'hooks/web3/useWeb3'
 import { Button } from 'theme/Buttons'
 import NumberInputField from 'theme/InputField/NumberInputField'
 import { Box, Flex, Type } from 'theme/base'
+import { DEPRECATED_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum, SmartWalletCommand } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
@@ -89,7 +90,8 @@ const Deposit = ({
     }
   )
 
-  const disabled = !usdAssetBalance || !enoughAllowance || submitting || !!errors.amount
+  const disabled =
+    !usdAssetBalance || !enoughAllowance || submitting || !!errors.amount || !DEPRECATED_EXCHANGES.includes(platform)
 
   const onSubmit = async (values: FieldValues) => {
     if (disabled) return
@@ -196,7 +198,12 @@ const Deposit = ({
               <Type.Caption flex="1">
                 <Trans>Allow the smart wallet to use your {usdAsset.symbol}</Trans>
               </Type.Caption>
-              <Button variant="primary" isLoading={approving} disabled={approving} onClick={() => approveToken(amount)}>
+              <Button
+                variant="primary"
+                isLoading={approving}
+                disabled={approving || DEPRECATED_EXCHANGES.includes(platform)}
+                onClick={() => approveToken(amount)}
+              >
                 <Trans>Approve</Trans>
               </Button>
             </Flex>

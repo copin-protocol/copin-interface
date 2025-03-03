@@ -41,7 +41,9 @@ export default function SharePosition({
   const { protocolImg, logoImg } = useMemo(() => {
     const protocolImg = new Image(40, 40)
     protocolImg.src = getProtocolDropdownImage({ protocol: stats?.protocol ?? DEFAULT_PROTOCOL, isActive: false })
+    protocolImg.crossOrigin = 'anonymous'
     const logoImg = new Image(182, 42)
+    logoImg.crossOrigin = 'anonymous'
     logoImg.src = logoWithText
     return { protocolImg, logoImg }
   }, [stats?.protocol])

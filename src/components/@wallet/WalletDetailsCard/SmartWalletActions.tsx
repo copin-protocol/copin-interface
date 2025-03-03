@@ -7,6 +7,7 @@ import ActionItem from 'components/@widgets/ActionItem'
 import { CopyWalletData } from 'entities/copyWallet'
 import Dropdown from 'theme/Dropdown'
 import { IconBox } from 'theme/base'
+import { DEPRECATED_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
@@ -42,7 +43,7 @@ const SmartWalletActions = ({
         }}
         menu={
           <>
-            {!isOnlyAction && (
+            {!isOnlyAction && !DEPRECATED_EXCHANGES.includes(data.exchange) && (
               <ActionItem
                 title={<Trans>Smart Wallet Management</Trans>}
                 icon={<UserCircle size={18} />}

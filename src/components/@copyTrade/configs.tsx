@@ -83,7 +83,7 @@ export const vaultExchangeOptions: ExchangeOptions[] = [getExchangeOption(CopyTr
 
 export const dcpExchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.GNS_V8),
-  getExchangeOption(CopyTradePlatformEnum.SYNTHETIX_V2),
+  // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX_V2),
 ]
 
 export const exchangeOptions: ExchangeOptions[] = [

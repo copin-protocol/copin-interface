@@ -18,7 +18,7 @@ import Loading from 'theme/Loading'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { DCP_EXCHANGES, LINKS } from 'utils/config/constants'
+import { DCP_EXCHANGES, DEPRECATED_EXCHANGES, LINKS } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
@@ -285,6 +285,7 @@ function ExchangeTitle({
       break
   }
   if (!title) return null
+  const isDeprecated = DEPRECATED_EXCHANGES.includes(exchange)
   return (
     <>
       <Flex width={['100%', '100%', 'auto']} alignItems="center" sx={{ gap: 2, justifyContent: 'space-between' }}>
@@ -294,7 +295,7 @@ function ExchangeTitle({
             {title} {isAllowed && !!count ? `(${count})` : ''}
           </Type.BodyBold>
         </Flex>
-        {isAllowed ? (
+        {isAllowed && !isDeprecated ? (
           <Button
             variant="ghostPrimary"
             sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 0 }}
@@ -309,7 +310,7 @@ function ExchangeTitle({
           </Button>
         ) : (
           <Type.Caption sx={{ py: 1, px: 2, bg: 'neutral6', borderRadius: '2px' }} color="neutral3">
-            Coming soon
+            {isDeprecated ? 'Deprecated' : 'Coming soon'}
           </Type.Caption>
         )}
       </Flex>

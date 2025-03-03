@@ -39,7 +39,8 @@ export const LINKS = {
   github: 'https://github.com/copin-protocol',
   twitter: 'https://twitter.com/intent/follow?region=follow_link&screen_name=copin_io',
   discord: 'https://discord.gg/jaJu8USARd',
-  telegramAI: 'https://t.me/+al7aD8DB8pNjYjM1',
+  // telegramAI: 'https://t.me/+al7aD8DB8pNjYjM1',
+  telegramAI: 'https://t.me/copin_ai',
   telegram: 'https://t.me/Copin_io',
   baseTelegram: 'https://t.me',
   docs: 'https://docs.copin.io/',
@@ -185,6 +186,8 @@ export const DCP_EXCHANGES: CopyTradePlatformEnum[] = [
   CopyTradePlatformEnum.SYNTHETIX_V2,
   CopyTradePlatformEnum.SYNTHETIX_V3,
 ]
+
+export const DEPRECATED_EXCHANGES = [CopyTradePlatformEnum.SYNTHETIX_V2, CopyTradePlatformEnum.SYNTHETIX_V3]
 
 export const UNLIMITED_COPY_SIZE_EXCHANGES: CopyTradePlatformEnum[] = [
   CopyTradePlatformEnum.GNS_V8,
