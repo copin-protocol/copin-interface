@@ -98,7 +98,7 @@ export function PairGroupFull({
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(4, auto)',
+        gridTemplateColumns: 'repeat(3, auto)',
         gap: '6px',
         ...sx,
       }}

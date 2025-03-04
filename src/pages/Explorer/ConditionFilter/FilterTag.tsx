@@ -4,21 +4,34 @@ import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/typ
 import { TraderData } from 'entities/trader'
 import TagWrapper from 'theme/Tag/TagWrapper'
 import { Box, Flex, Type } from 'theme/base'
+import { rankingFieldOptions } from 'utils/config/options'
 
-import { FilterTabEnum, defaultFieldOptionLabels, rankingFieldOptionLabels } from './configs'
+import { FilterTabEnum, defaultFieldOptionLabels, defaultFieldOptions, rankingFieldOptionLabels } from './configs'
 
-const FilterTag = ({ filters, filterTab }: { filters: ConditionFormValues<TraderData>; filterTab: FilterTabEnum }) => {
+const FilterTag = ({
+  filters,
+  filterTab,
+  limit,
+  tagSx,
+}: {
+  filters: ConditionFormValues<TraderData>
+  filterTab: FilterTabEnum
+  limit?: number
+  tagSx?: any
+}) => {
   const { md, xl } = useResponsive()
-  const maxTag = xl ? 6 : md ? 4 : 1
+  const maxTag = limit ? limit : xl ? 6 : md ? 4 : 1
   const fieldOptionLabels = filterTab === FilterTabEnum.RANKING ? rankingFieldOptionLabels : defaultFieldOptionLabels
+  const fieldOptions = filterTab === FilterTabEnum.RANKING ? rankingFieldOptions : defaultFieldOptions
   return (
     <Flex sx={{ gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
       {Object.values(filters)
         .slice(0, maxTag)
         .map((values) => {
           if (!values) return <></>
+          const unit = fieldOptions.find((e) => e.value === values.key)?.unit
           return (
-            <TagWrapper key={values.key}>
+            <TagWrapper key={values.key} sx={tagSx}>
               <Type.Caption>{fieldOptionLabels[values.key]}</Type.Caption>{' '}
               <Type.Caption>
                 <Box as="span" color="primary1">
@@ -26,6 +39,9 @@ const FilterTag = ({ filters, filterTab }: { filters: ConditionFormValues<Trader
                 </Box>{' '}
                 <Box as="span" color="primary1">
                   {values.conditionType === 'lte' || values.conditionType === 'between' ? `< ${values.lte}` : null}
+                </Box>{' '}
+                <Box as="span" color="neutral3">
+                  {unit}
                 </Box>
               </Type.Caption>
             </TagWrapper>

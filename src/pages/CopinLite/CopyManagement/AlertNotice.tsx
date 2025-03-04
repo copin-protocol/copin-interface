@@ -1,15 +1,16 @@
 import { Trans } from '@lingui/macro'
 import { Warning } from '@phosphor-icons/react'
 
-import useBotAlertContext from 'hooks/features/useBotAlertProvider'
+import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import { Button } from 'theme/Buttons'
 import Tooltip from 'theme/Tooltip'
 import { Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { AlertTypeEnum } from 'utils/config/enums'
 
 export default function AlertNotice() {
-  const { botAlert, handleGenerateLinkBot, loadingAlerts } = useBotAlertContext()
-  if (loadingAlerts || (botAlert != null && !!botAlert.chatId)) return null
+  const { hasCopiedChannel, handleGenerateLinkBot, loadingAlerts } = useBotAlertContext()
+  if (loadingAlerts || hasCopiedChannel) return null
   const tooltipId = 'tt_copin_lite_warning_alert'
   return (
     <>
@@ -23,7 +24,7 @@ export default function AlertNotice() {
         <Type.Caption>
           <Trans>
             You are not yet linked to telegram to receive Alerts.{' '}
-            <Button variant="textPrimary" onClick={() => handleGenerateLinkBot?.()}>
+            <Button variant="textPrimary" onClick={() => handleGenerateLinkBot?.(AlertTypeEnum.COPY_TRADE)}>
               Click To Connect
             </Button>
           </Trans>

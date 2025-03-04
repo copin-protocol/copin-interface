@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { Trans } from '@lingui/macro'
-import { CheckCircle, Info, XCircle } from '@phosphor-icons/react'
+import { CheckCircle, XCircle } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { ReactNode, useState } from 'react'
 
 import NFTSubscriptionCard from 'components/@widgets/NFTSubscriptionCard'
@@ -13,12 +14,12 @@ import { CrowIconGold } from 'theme/Icons/CrowIcon'
 import { VipPlanIcon1 } from 'theme/Icons/VipPlanIcon'
 import Loading from 'theme/Loading'
 import Modal from 'theme/Modal'
-import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 
 import MintButton from './MintButton'
+import { TooltipIcon, TooltipLabel, Tooltips } from './config'
 import { getSubscriptionCount } from './helpers'
 import { PlanRowWrapper } from './styled'
 
@@ -123,30 +124,33 @@ export default function Plans({
             <DesktopSubscriptionCount data={subscriptionCountData} plan={SubscriptionPlanEnum.VIP} />
           </Flex>
         </PlanRowWrapper>
-        <Flex sx={{ width: '100%', flexDirection: 'column', gap: 3, py: 3 }}>
-          {planConfigs.features.map((value, index) => (
-            <PlanRowWrapper key={index}>
-              <Flex sx={{ alignItems: 'center', gap: 10 }} px={3}>
-                <IconBox icon={<CheckCircle size={24} />} color="primary1" sx={{ flexShrink: 0 }} />
-                <Type.Body>{value}</Type.Body>
-              </Flex>
-              <Flex sx={{ alignItems: 'center', justifyContent: 'center' }} px={3}>
-                <Type.Body px={3} textAlign="center" fontWeight={500}>
-                  {planConfigs.basic[index]}
-                </Type.Body>
-              </Flex>
-              <Flex sx={{ alignItems: 'center', justifyContent: 'center' }} px={3}>
-                <Type.Body px={3} textAlign="center" fontWeight={500}>
-                  {planConfigs.premium[index]}
-                </Type.Body>
-              </Flex>
-              <Flex sx={{ alignItems: 'center', justifyContent: 'center' }} px={3}>
-                <Type.Body px={3} textAlign="center" fontWeight={500}>
-                  {planConfigs.vip[index]}
-                </Type.Body>
-              </Flex>
-            </PlanRowWrapper>
-          ))}
+        <Flex sx={{ width: '100%', flexDirection: 'column', gap: '12px', py: 3 }}>
+          {planConfigs.features.map((value, index) => {
+            const isTitle = index === 0 || index === 6 || index === 13
+            return (
+              <PlanRowWrapper key={index} py={isTitle ? 1 : 0}>
+                <Flex sx={{ alignItems: 'center', gap: 10 }} px={3}>
+                  {!isTitle && <IconBox icon={<CheckCircle size={24} />} color="primary1" sx={{ flexShrink: 0 }} />}
+                  <Type.Body color={isTitle ? 'primary2' : 'inherit'}>{value}</Type.Body>
+                </Flex>
+                <Flex sx={{ alignItems: 'center', justifyContent: 'center' }} px={3}>
+                  <Type.Body px={3} textAlign="center" fontWeight={500}>
+                    {planConfigs.basic[index]}
+                  </Type.Body>
+                </Flex>
+                <Flex sx={{ alignItems: 'center', justifyContent: 'center' }} px={3}>
+                  <Type.Body px={3} textAlign="center" fontWeight={500}>
+                    {planConfigs.premium[index]}
+                  </Type.Body>
+                </Flex>
+                <Flex sx={{ alignItems: 'center', justifyContent: 'center' }} px={3}>
+                  <Type.Body px={3} textAlign="center" fontWeight={500}>
+                    {planConfigs.vip[index]}
+                  </Type.Body>
+                </Flex>
+              </PlanRowWrapper>
+            )
+          })}
           <PlanRowWrapper>
             <Box />
             <Box />
@@ -250,7 +254,11 @@ export function MobilePlans({
           <Trans>BASIC PLAN (FREE)</Trans>
         </Type.LargeBold>
         {planConfigs.features.map((label, index) => (
-          <MobilePlanItem label={label} value={planConfigs.basic[index]} />
+          <MobilePlanItem
+            label={label}
+            value={planConfigs.basic[index]}
+            isTitle={index === 0 || index === 6 || index === 13}
+          />
         ))}
       </Flex>
       <Flex
@@ -270,7 +278,11 @@ export function MobilePlans({
           <MobileSubscriptionCount data={subscriptionCountData} plan={SubscriptionPlanEnum.PREMIUM} />
         </Type.LargeBold>
         {planConfigs.features.map((label, index) => (
-          <MobilePlanItem label={label} value={planConfigs.premium[index]} />
+          <MobilePlanItem
+            label={label}
+            value={planConfigs.premium[index]}
+            isTitle={index === 0 || index === 6 || index === 13}
+          />
         ))}
         <Flex sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <MintButton planPrice={pricePremium?.bn} plan={SubscriptionPlanEnum.PREMIUM} onSuccess={onSuccess} />
@@ -300,7 +312,11 @@ export function MobilePlans({
           <MobileSubscriptionCount data={subscriptionCountData} plan={SubscriptionPlanEnum.VIP} />
         </Type.LargeBold>
         {planConfigs.features.map((label, index) => (
-          <MobilePlanItem label={label} value={planConfigs.vip[index]} />
+          <MobilePlanItem
+            label={label}
+            value={planConfigs.vip[index]}
+            isTitle={index === 0 || index === 6 || index === 13}
+          />
         ))}
         <Flex sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <MintButton planPrice={priceVip?.bn} plan={SubscriptionPlanEnum.VIP} bgType="1" onSuccess={onSuccess} />
@@ -336,12 +352,12 @@ function MobileSubscriptionCount({
   )
 }
 
-export function MobilePlanItem({ label, value }: { label: ReactNode; value: ReactNode }) {
+export function MobilePlanItem({ label, value, isTitle }: { label: ReactNode; value: ReactNode; isTitle?: boolean }) {
   return (
     <Flex sx={{ alignItems: 'start', gap: [0, 4] }}>
       <Flex sx={{ alignItems: 'start', gap: 2, width: [168, 270, 400], flexShrink: 0 }}>
-        <IconBox icon={<CheckCircle size={20} />} color="primary1" sx={{ flexShrink: 0 }} />
-        <Type.Caption>{label}</Type.Caption>
+        {!isTitle && <IconBox icon={<CheckCircle size={20} />} color="primary1" sx={{ flexShrink: 0 }} />}
+        <Type.Caption color={isTitle ? 'primary2' : 'inherit'}>{label}</Type.Caption>
       </Flex>
       <Type.CaptionBold width="100%" textAlign={['right', 'left']}>
         {value}
@@ -506,18 +522,49 @@ function PlanDecorators() {
 }
 
 export function usePlanConfigs() {
-  const { volumeLimit } = useSystemConfigStore()
+  const { subscriptionLimit } = useSystemConfigStore()
+  const { xl } = useResponsive()
   return {
     features: [
-      <Trans>Trader to copy</Trans>,
-      <Trans>Data range</Trans>,
+      <Trans>COPY TRADING</Trans>,
       <p>
-        <Trans>Advanced data & visualization</Trans> <TooltipIcon id="advanced-data-visualization" />
+        <TooltipLabel label={<Trans>On-chain traders for copying</Trans>} id="on-chain-trader-for-copying" />
       </p>,
+      <p>
+        <TooltipLabel label={<Trans>Trader to copy</Trans>} id="trader-to-copying" />
+      </p>,
+      <p>
+        <TooltipLabel label={<Trans>Copy hot trader</Trans>} id="hot-trader" />
+      </p>,
+      <p>
+        <TooltipLabel label={<Trans>Copy size</Trans>} id="total-copy-size-limit" />
+      </p>,
+      <p>
+        <TooltipLabel label={<Trans>CEX account connection</Trans>} id="cex-account-connection" />
+      </p>,
+      // <p>
+      //   <Trans>Advanced data & visualization</Trans> <TooltipIcon id="advanced-data-visualization" />
+      // </p>,
+      <Trans>ALERT SIGNAL</Trans>,
       // <Trans>Join Copin Elite club</Trans>,
-      <Trans>Alert traders signal</Trans>,
-      <Trans>On-chain traders for copying</Trans>,
-      <Trans>Copy size</Trans>,
+      <p>
+        <TooltipLabel label={<Trans>Alert traders signal</Trans>} id="track-alert-signal" />
+      </p>,
+      <p>
+        <TooltipLabel label={<Trans>VIP exclusive signal (group and APIs)</Trans>} id="vip-exclusive-signal" />
+      </p>,
+      <p>
+        <TooltipLabel label={<Trans>Channel Alerts</Trans>} id="channel-alert" />
+      </p>,
+      <p>
+        <TooltipLabel label={<Trans>Custom Alerts</Trans>} id="custom-alert" />
+      </p>,
+      <p>
+        <TooltipLabel label={<Trans>Switch Alert BOT</Trans>} id="switch-alert" />
+      </p>,
+      <p>
+        <TooltipLabel label={<Trans>Hyperliquid Alert</Trans>} id="hyperliquid-alert" />
+      </p>,
       // <p>
       //   <Trans>
       //     Copy size if non-referral Copin on CEX <TooltipIcon id="vip-referral" />
@@ -528,133 +575,121 @@ export function usePlanConfigs() {
       //     Copy size if referral Copin on CEX <TooltipIcon id="vip-referral" />
       //   </Trans>
       // </p>,
-      <p>
-        <Trans>Copy hot trader</Trans> <TooltipIcon id="hot-trader" />
-      </p>,
-      <Trans>CEX account connection</Trans>,
       // <Trans>VIP support and exclusive signal</Trans>,
+      <Trans>OTHERS</Trans>,
       <p>
-        <Trans>VIP exclusive signal (group and APIs)</Trans> <TooltipIcon id="feature-alert" />
+        <TooltipLabel label={<Trans>Alpha group access</Trans>} id="alpha-group-access" />
       </p>,
-      <Trans>License copyright of Copin&apos;s signal</Trans>,
-      <Trans>Alpha group access</Trans>,
-      <Trans>Export CSV data</Trans>,
+      <p>
+        <TooltipLabel label={<Trans>Export CSV data</Trans>} id="export-data-csv" />
+      </p>,
+      <p>
+        <TooltipLabel label={<Trans>License copyright of Copin&apos;s signal</Trans>} id="license-signal" />
+      </p>,
     ],
     basic: [
-      <Trans>Unlimited</Trans>,
-      <Trans>Unlimited</Trans>,
-      <Trans>No</Trans>,
-      <Trans>20 traders</Trans>,
+      <></>,
       <Trans>All stable PerpDEX</Trans>,
-      // <Trans>Maximum ${formatNumber(volumeLimit?.volumeWoReferral, 0, 0)}</Trans>,
-      <Trans>Maximum ${formatNumber(200_000, 0, 0)}</Trans>,
+      <Trans>Unlimited</Trans>,
       <Trans>Maximum copy size ${formatNumber(500, 0, 0)}</Trans>,
+      <Trans>Maximum ${formatNumber(200_000, 0, 0)}</Trans>,
       <Trans>All stable CEX</Trans>,
+      // <Trans>No</Trans>,
+      <></>,
+      <Trans>{subscriptionLimit?.[SubscriptionPlanEnum.BASIC].traderAlerts} traders</Trans>,
+      // <Trans>Maximum ${formatNumber(volumeLimit?.volumeWoReferral, 0, 0)}</Trans>,
+      <Trans>No</Trans>,
+      <Trans>
+        <Box display={xl ? 'block' : 'inline-flex'}>
+          {subscriptionLimit?.[SubscriptionPlanEnum.BASIC].channelAlerts} channel
+          {(subscriptionLimit?.[SubscriptionPlanEnum.BASIC].channelAlerts ?? 0) > 1 ? 's' : ''}
+        </Box>
+        <Box>(Direct or Group)</Box>
+      </Trans>,
+      <Trans>{subscriptionLimit?.[SubscriptionPlanEnum.BASIC].customAlerts ?? 0}</Trans>,
+      <Trans>Yes</Trans>,
+      <Trans>Delay</Trans>,
+      <></>,
+      <Trans>No</Trans>,
       <Trans>No</Trans>,
       <Trans>Personal</Trans>,
-      <Trans>No</Trans>,
-      <Trans>No</Trans>,
     ],
     premium: [
-      <Trans>Unlimited</Trans>,
-      <Trans>Unlimited</Trans>,
-      <Box as="span" color="orange1">
-        <Trans>Yes</Trans>
-      </Box>,
-      <Trans>50 traders</Trans>,
+      <></>,
       <Trans>All stable PerpDEX</Trans>,
       <Trans>Unlimited</Trans>,
       <Box as="span" color="orange1">
         <Trans>Maximum copy size ${formatNumber(200_000, 0, 0)}</Trans>
       </Box>,
+      <Trans>Unlimited</Trans>,
       <Trans>All stable CEX</Trans>,
-      <Trans>No</Trans>,
-      <Trans>Personal</Trans>,
-      <Trans>No</Trans>,
-      <Trans>1000 records</Trans>,
-    ],
-    vip: [
-      <Trans>Unlimited</Trans>,
-      <Trans>Unlimited</Trans>,
-      <Box as="span" color="violet">
-        <Trans>Yes</Trans>
-      </Box>,
-      // <Box as="span" color="violet">
+      // <Box as="span" color="orange1">
       //   <Trans>Yes</Trans>
       // </Box>,
-      <Trans>100 traders</Trans>,
+      <></>,
+      <Trans>{subscriptionLimit?.[SubscriptionPlanEnum.PREMIUM].traderAlerts} traders</Trans>,
+      <Trans>No</Trans>,
+      <Trans>
+        <Box display={xl ? 'block' : 'inline-flex'}>
+          {subscriptionLimit?.[SubscriptionPlanEnum.PREMIUM].channelAlerts} channel
+          {(subscriptionLimit?.[SubscriptionPlanEnum.PREMIUM].channelAlerts ?? 0) > 1 ? 's' : ''}
+        </Box>
+        <Box>(Direct - Group - Webhook)</Box>
+      </Trans>,
+      <Trans>{subscriptionLimit?.[SubscriptionPlanEnum.PREMIUM].customAlerts ?? 0}</Trans>,
+      <Trans>Yes</Trans>,
+      <Trans>Delay</Trans>,
+      <></>,
+      <Trans>No</Trans>,
+      <Trans>1,000 records</Trans>,
+      <Trans>Personal</Trans>,
+    ],
+    vip: [
+      <></>,
       <p>
         <Trans>All stable PerpDEX + Early access PerpDEX</Trans> <TooltipIcon id="vip-source-copy" />
       </p>,
-      // <Trans>Maximum ${formatNumber(volumeLimit?.volumeVipWoReferral, 0, 0)}</Trans>,
-      // <Trans>Maximum ${formatNumber(volumeLimit?.volumeVipReferral, 0, 0)}</Trans>,
       <Trans>Unlimited</Trans>,
       <Box as="span" color="violet">
         <Trans>Unlimited copy size</Trans>
       </Box>,
+      <Trans>Unlimited</Trans>,
       <p>
         <Trans>All stable CEX + Exclusive CEX request</Trans> <TooltipIcon id="vip-cex-connection" />
       </p>,
+      // <Box as="span" color="violet">
+      //   <Trans>Yes</Trans>
+      // </Box>,
+      <></>,
+      <Trans>{subscriptionLimit?.[SubscriptionPlanEnum.VIP].traderAlerts} traders</Trans>,
       <Box as="span" color="violet">
         <Trans>Yes</Trans>
       </Box>,
+      <Trans>
+        <Box display={xl ? 'block' : 'inline-flex'}>
+          {subscriptionLimit?.[SubscriptionPlanEnum.VIP].channelAlerts} channel
+          {(subscriptionLimit?.[SubscriptionPlanEnum.VIP].channelAlerts ?? 0) > 1 ? 's' : ''}
+        </Box>
+        <Box>(Direct - Group - Webhook)</Box>
+      </Trans>,
+      <Trans>{subscriptionLimit?.[SubscriptionPlanEnum.VIP].customAlerts ?? 0}</Trans>,
+      // <Box as="span" color="violet">
+      //   <Trans>Yes</Trans>
+      // </Box>,
+      // <Trans>Maximum ${formatNumber(volumeLimit?.volumeVipWoReferral, 0, 0)}</Trans>,
+      // <Trans>Maximum ${formatNumber(volumeLimit?.volumeVipReferral, 0, 0)}</Trans>,
+      <Box as="span" color="violet">
+        <Trans>Yes</Trans>
+      </Box>,
+      <Box as="span" color="violet">
+        <Trans>Near Realtime</Trans>
+      </Box>,
+      <></>,
+      <Box as="span" color="violet">
+        <Trans>Yes</Trans>
+      </Box>,
+      <Trans>10,000 records</Trans>,
       <Trans>Personal</Trans>,
-      <Box as="span" color="violet">
-        <Trans>Yes</Trans>
-      </Box>,
-      <Trans>10000 records</Trans>,
     ],
   }
-}
-
-function TooltipIcon({ id, sx = {} }: { id: string; sx?: any }) {
-  return <IconBox color="neutral2" data-tooltip-id={id} icon={<Info size={14} />} sx={{ ...sx }} />
-}
-
-export function Tooltips() {
-  return (
-    <>
-      <Tooltip id="feature-alert">
-        <Type.Caption color="neutral2" maxWidth={300}>
-          You will receive alerts when MM, insider trader, whale trader... trading
-        </Type.Caption>
-      </Tooltip>
-      <Tooltip id="vip-cex-connection">
-        <Type.Caption color="neutral2" maxWidth={300}>
-          You can actively request additional CEXs that you want. Support is only provided for VIP packages of over 6
-          months
-        </Type.Caption>
-      </Tooltip>
-      <Tooltip id="advanced-data-visualization">
-        <Type.Caption color="neutral2" maxWidth={300}>
-          Ex: Custom trader percentile rank
-        </Type.Caption>
-      </Tooltip>
-      <Tooltip id="vip-non-referral">
-        <Type.Caption color="neutral2" maxWidth={300}>
-          The size is include leverage, Maximum size per exchange.
-        </Type.Caption>
-      </Tooltip>
-      <Tooltip id="vip-referral">
-        <Type.Caption color="neutral2" maxWidth={300}>
-          The size is include leverage, Maximum size per exchange.
-        </Type.Caption>
-      </Tooltip>
-      <Tooltip id="hot-trader">
-        <Type.Caption color="neutral2" maxWidth={300}>
-          Hot trader is trader has more than 10 copiers are following.
-        </Type.Caption>
-      </Tooltip>
-      <Tooltip id="vip-platform">
-        <Type.Caption color="neutral2" maxWidth={300}>
-          More powerful tools to management.
-        </Type.Caption>
-      </Tooltip>
-      <Tooltip id="vip-source-copy">
-        <Type.Caption color="neutral2" maxWidth={300}>
-          Early access to our data indexing.
-        </Type.Caption>
-      </Tooltip>
-    </>
-  )
 }

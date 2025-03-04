@@ -334,7 +334,7 @@ const userSettings = [
     link: ROUTES.ALERT_LIST.path,
     event: EVENT_ACTIONS[EventCategory.ROUTES].ALERT_LIST,
     icon: <AlertIcon size={20} />,
-    label: <Trans>Alert List</Trans>,
+    label: <Trans>Alert</Trans>,
   },
   // {
   //   link: ROUTES.REFERRAL_MANAGEMENT.path,

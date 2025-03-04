@@ -7,6 +7,7 @@ import IconButton from 'theme/Buttons/IconButton'
 import Input from 'theme/Input'
 import Select from 'theme/Select'
 import { Box, Flex, Type } from 'theme/base'
+import { Color } from 'theme/types'
 
 import { parseNumber } from './helpers'
 import { ConditionFilterFormProps, ConditionOption, FieldOption, RowValues } from './types'
@@ -18,7 +19,8 @@ export default function ConditionFilterForm<T>({
   onValuesChange,
   type,
   wrapperSx = {},
-}: ConditionFilterFormProps<T> & { wrapperSx?: any }) {
+  labelColor = 'neutral3',
+}: ConditionFilterFormProps<T> & { wrapperSx?: any; labelColor?: Color }) {
   const remainingFieldKeys = fieldOptions.filter((option) => !formValues.map((item) => item.key).includes(option.value))
 
   const onChangeRowValues = (index: number, values: RowValues<T>) => {
@@ -65,19 +67,19 @@ export default function ConditionFilterForm<T>({
     <Box px={8} width="100%" height="100%" sx={wrapperSx}>
       <RowWrapper sx={{ width: '100%' }}>
         <Box px={2} flex="7">
-          <Type.Caption color="neutral3">
+          <Type.Caption color={labelColor}>
             <Trans>FIELD</Trans>
           </Type.Caption>
         </Box>
         {/* <VerticalDivider hidden /> */}
         <Box px={2} flex="6">
-          <Type.Caption color="neutral3">
+          <Type.Caption color={labelColor}>
             <Trans>CONDITION</Trans>
           </Type.Caption>
         </Box>
         {/* <VerticalDivider hidden /> */}
         <Box px={2} flex="7">
-          <Type.Caption color="neutral3">{valueText}</Type.Caption>
+          <Type.Caption color={labelColor}>{valueText}</Type.Caption>
         </Box>
         <Box sx={{ flex: '0 0 24px !important' }}></Box>
       </RowWrapper>

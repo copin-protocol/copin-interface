@@ -6,15 +6,15 @@ import { useQuery } from 'react-query'
 import { getTraderAlertListApi } from 'apis/alertApis'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import UnsubscribeAlertModal from 'components/@widgets/UnsubscribeAlertModal'
-import useBotAlertContext from 'hooks/features/useBotAlertProvider'
-import useSettingWatchlistTraders from 'hooks/features/useSettingWatchlistTraders'
+import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
+import useSettingWatchlistTraders from 'hooks/features/alert/useSettingWatchlistTraders'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
-import { ProtocolEnum } from 'utils/config/enums'
+import { AlertTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: string }) => {
-  const { botAlert, handleGenerateLinkBot, isGeneratingLink } = useBotAlertContext()
+  const { hasWatchlistChannel, handleGenerateLinkBot, isGeneratingLink } = useBotAlertContext()
   const [isOpenUnsubscribeModal, setIsOpenUnsubscribeModal] = useState(false)
 
   const { isAuthenticated, profile } = useAuthContext()
@@ -24,7 +24,7 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
     [QUERY_KEYS.GET_TRADER_ALERTS, profile?.id, account, protocol],
     () => getTraderAlertListApi({ address: account, protocol }),
     {
-      enabled: !!profile?.id && !!botAlert?.chatId,
+      enabled: !!profile?.id,
       retry: 0,
     }
   )
@@ -48,8 +48,8 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
       handleClickLogin()
       return
     }
-    if (!botAlert?.chatId) {
-      handleGenerateLinkBot?.()
+    if (!hasWatchlistChannel) {
+      handleGenerateLinkBot?.(AlertTypeEnum.TRADERS)
       return
     }
     if (currentAlert) {

@@ -87,16 +87,16 @@ const ROUTES = {
     path: '/settings/referral',
   },
   USER_SUBSCRIPTION: {
-    path: '/settings/subscription',
+    path: '/my-subscription',
   },
   ALERT_LIST: {
-    path: '/settings/alert-list',
+    path: '/alert',
   },
   LINK_BOT_ALERT: {
     path: '/link/telegram',
   },
   ALERT_SETTING_DETAILS: {
-    path: '/alert-settings/:alertId',
+    path: '/alert-settings/:alertType/:alertId',
     path_prefix: '/alert-settings',
   },
   STATS: {

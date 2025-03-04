@@ -3,8 +3,10 @@ import { Trans, t } from '@lingui/macro'
 import { ReactNode } from 'react'
 
 import {
+  AlertCategoryEnum,
   AlertTypeEnum,
-  ChangeFieldEnum,
+  ChangeFieldEnum, ChannelStatusEnum,
+  ChannelTypeEnum,
   CopyPositionCloseTypeEnum,
   CopyTradePlatformEnum,
   CopyTradeSideEnum,
@@ -15,9 +17,8 @@ import {
   OrderTypeEnum,
   PositionStatusEnum,
   SLTPTypeEnum,
-  TelegramTypeEnum,
   TimeFilterByEnum,
-  UserActionEnum,
+  UserActionEnum
 } from './enums'
 
 type ObjectTrans = {
@@ -196,9 +197,19 @@ export const ALERT_TYPE_TRANS: ObjectTrans = {
   [AlertTypeEnum.CUSTOM]: <Trans>Custom</Trans>,
 }
 
-export const TELEGRAM_TYPE_TRANS: ObjectTrans = {
-  [TelegramTypeEnum.DIRECT]: <Trans>Direct Alert</Trans>,
-  [TelegramTypeEnum.GROUP]: <Trans>Group Alert</Trans>,
+export const ALERT_CATEGORY_TRANS: ObjectTrans = {
+  [AlertCategoryEnum.SYSTEM]: <Trans>System</Trans>,
+  [AlertCategoryEnum.CUSTOM]: <Trans>Custom</Trans>,
+}
+
+export const CHANNEL_TYPE_TRANS: ObjectTrans = {
+  [ChannelTypeEnum.TELEGRAM]: <Trans>Telegram</Trans>,
+  [ChannelTypeEnum.WEBHOOK]: <Trans>Webhook</Trans>,
+}
+
+export const CHANNEL_STATUS_TRANS: ObjectTrans = {
+  [ChannelStatusEnum.OPERATIONAL]: <Trans>Operational</Trans>,
+  [ChannelStatusEnum.SUSPENDED]: <Trans>Suspended</Trans>,
 }
 
 export const ERRORS: ObjectTrans = {

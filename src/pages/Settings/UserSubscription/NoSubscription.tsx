@@ -5,7 +5,9 @@ import { Link } from 'react-router-dom'
 
 // import useSubscriptionPlanPrice from 'hooks/features/useSubscriptionPlanPrice'
 // import MintButton from 'pages/Subscription/MintButton'
-import { MobilePlanItem, Tooltips, usePlanConfigs } from 'pages/Subscription/Plans'
+import { MobilePlanItem, usePlanConfigs } from 'pages/Subscription/Plans'
+import { Tooltips } from 'pages/Subscription/config'
+import { checkIsSubscriptionTitle } from 'pages/Subscription/helpers'
 import { Button } from 'theme/Buttons'
 import { CrowIconSilver } from 'theme/Icons/CrowIcon'
 import { Box, Flex, Grid, Type } from 'theme/base'
@@ -99,13 +101,17 @@ function DesktopNoSubscription() {
       {/* </RowWrapper> */}
 
       <Flex mt={20} sx={{ flexDirection: 'column', gap: 20 }}>
-        {planConfigs.features.map((value, index) => (
-          <RowWrapper key={index}>
-            <Type.Caption px={24}>{value}</Type.Caption>
-            <Flex px={24}>
-              <Type.Caption>{planConfigs.basic[index]}</Type.Caption>
-            </Flex>
-            {/* <Flex px={3} sx={{ alignItems: 'center', gap: 3 }}>
+        {planConfigs.features.map((value, index) => {
+          const isTitle = checkIsSubscriptionTitle(index)
+          return (
+            <RowWrapper key={index}>
+              <Type.Caption px={24} color={isTitle ? 'primary2' : 'inherit'}>
+                {value}
+              </Type.Caption>
+              <Flex px={24}>
+                <Type.Caption>{planConfigs.basic[index]}</Type.Caption>
+              </Flex>
+              {/* <Flex px={3} sx={{ alignItems: 'center', gap: 3 }}>
               <IconBox icon={<CheckCircle size={24} />} color="primary1" />
               <Type.Caption>{planConfigs.premium[index]}</Type.Caption>
             </Flex>
@@ -113,8 +119,9 @@ function DesktopNoSubscription() {
               <IconBox icon={<CheckCircle size={24} />} color="primary1" />
               <Type.Caption>{planConfigs.vip[index]}</Type.Caption>
             </Flex> */}
-          </RowWrapper>
-        ))}
+            </RowWrapper>
+          )
+        })}
         {/* <RowWrapper>
           <Box />
           <Box />
@@ -170,7 +177,12 @@ export function MobileNoSubscription() {
           </Type.BodyBold>
         </Flex>
         {planConfigs.features.map((label, index) => (
-          <MobilePlanItem key={index} label={label} value={planConfigs.basic[index]} />
+          <MobilePlanItem
+            key={index}
+            label={label}
+            value={planConfigs.basic[index]}
+            isTitle={checkIsSubscriptionTitle(index)}
+          />
         ))}
         <Button size="xs" px={4} as={Link} to={ROUTES.SUBSCRIPTION.path} variant="primary">
           Upgrade

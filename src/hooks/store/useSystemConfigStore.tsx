@@ -4,53 +4,52 @@ import { immer } from 'zustand/middleware/immer'
 
 import { getListEvent } from 'apis/event'
 import { getMarketData } from 'apis/markets'
-import { getVolumeLimit } from 'apis/systemApis'
+import { getPlanLimit, getVolumeLimit } from 'apis/systemApis'
 import { EventDetailsData } from 'entities/event'
-import { VolumeLimitData } from 'entities/system'
+import { SubscriptionLimitData, VolumeLimitData } from 'entities/system'
 import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 interface SystemConfigState {
   volumeLimit: VolumeLimitData | undefined
+  subscriptionLimit: SubscriptionLimitData | undefined
   eventId: string | undefined
   events: EventDetailsData[] | undefined
-  marketConfigs:
-    | {
-        getSymbolByIndexToken?: ({
-          protocol,
-          indexToken,
-        }: {
-          protocol?: ProtocolEnum
-          indexToken: string | undefined
-        }) => string | undefined
-        getListSymbol?: (args?: { protocol: ProtocolEnum | undefined }) => string[]
+  marketConfigs: {
+    getSymbolByIndexToken?: ({
+      protocol,
+      indexToken,
+    }: {
+      protocol?: ProtocolEnum
+      indexToken: string | undefined
+    }) => string | undefined
+    getListSymbol?: (args?: { protocol: ProtocolEnum | undefined }) => string[]
 
-        getListSymbolOptions?: (args?: { protocol?: ProtocolEnum }) => {
-          id: string
-          label: string
-          value: string
-        }[]
+    getListSymbolOptions?: (args?: { protocol?: ProtocolEnum }) => {
+      id: string
+      label: string
+      value: string
+    }[]
 
-        getListSymbolByListIndexToken?: ({
-          protocol,
-          listIndexToken,
-        }: {
-          protocol: ProtocolEnum | undefined
-          listIndexToken: string[] | undefined
-        }) => string[]
+    getListSymbolByListIndexToken?: ({
+      protocol,
+      listIndexToken,
+    }: {
+      protocol: ProtocolEnum | undefined
+      listIndexToken: string[] | undefined
+    }) => string[]
 
-        getListIndexTokenByListSymbols?: ({
-          protocol,
-          listSymbol,
-        }: {
-          protocol: ProtocolEnum | undefined
-          listSymbol: string[] | undefined
-        }) => string[]
-        getListIndexToken?: ({ protocol }: { protocol: ProtocolEnum }) => string[]
-        getSymbolByIndexTokenMapping?: ({ protocol }: { protocol: ProtocolEnum }) => Record<string, string> | undefined
-      }
-    | undefined
+    getListIndexTokenByListSymbols?: ({
+      protocol,
+      listSymbol,
+    }: {
+      protocol: ProtocolEnum | undefined
+      listSymbol: string[] | undefined
+    }) => string[]
+    getListIndexToken?: ({ protocol }: { protocol: ProtocolEnum }) => string[]
+    getSymbolByIndexTokenMapping?: ({ protocol }: { protocol: ProtocolEnum }) => Record<string, string> | undefined
+  }
 }
 interface SystemConfigModifier {
   setState: (state: Partial<SystemConfigState>) => void
@@ -220,15 +219,20 @@ export function SystemConfigInitializer() {
   })
 
   useQuery(
-    [QUERY_KEYS.GET_SYSTEM_CONFIG, QUERY_KEYS.GET_ALL_EVENTS],
-    () => Promise.all([getVolumeLimit(), getListEvent()]),
+    [QUERY_KEYS.GET_SYSTEM_CONFIG, QUERY_KEYS.GET_ALL_EVENTS, QUERY_KEYS.GET_PLANS_LIMIT],
+    () => Promise.all([getVolumeLimit(), getListEvent(), getPlanLimit()]),
     {
       retry: 0,
       onSuccess: (data) => {
-        const [volumeLimit, events] = data
+        const [volumeLimit, events, planLimit] = data
+        const subscriptionLimit = planLimit?.reduce((acc, item) => {
+          acc[item.plan] = item
+          return acc
+        }, {} as SubscriptionLimitData)
 
         const contextValue: Partial<SystemConfigState> = {
           volumeLimit,
+          subscriptionLimit,
           events,
           eventId: events?.[0]?.id,
         }
@@ -243,9 +247,10 @@ export function SystemConfigInitializer() {
 export const useSystemConfigStore = create<SystemConfigState & SystemConfigModifier>()(
   immer((set) => ({
     volumeLimit: undefined,
+    subscriptionLimit: undefined,
     eventId: undefined,
     events: undefined,
-    marketConfigs: undefined,
+    marketConfigs: {},
     setState(newState) {
       set((state) => {
         state = { ...state, ...newState }

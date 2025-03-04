@@ -9,8 +9,8 @@ import { useClickLoginButton } from 'components/@auth/LoginAction'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import { TraderAlertData } from 'entities/alert'
-import useBotAlertContext from 'hooks/features/useBotAlertProvider'
-import useSettingWatchlistTraders from 'hooks/features/useSettingWatchlistTraders'
+import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
+import useSettingWatchlistTraders from 'hooks/features/alert/useSettingWatchlistTraders'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import useTimeFilterData from 'pages/Explorer/ListTradersSection/useTimeFilterData'
@@ -19,8 +19,9 @@ import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex } from 'theme/base'
 import { MAX_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
+import { AlertTypeEnum, ProtocolEnum } from 'utils/config/enums'
 
+import NoAlertList from './NoAlertList'
 import {
   MobileRowItem,
   Trader24hTrades,
@@ -28,14 +29,13 @@ import {
   TraderAddress,
   TraderLastTradeAt,
   TraderStatus,
-} from '../AlertSettingDetails/config'
-import NoAlertList from './NoAlertList'
+} from './config'
 
 export default function TraderLastViewed() {
   const { lg } = useResponsive()
   const isMobile = !lg
   const { traderLastViewed = [] } = useTraderLastViewed()
-  const { botAlert, handleGenerateLinkBot, loadingAlerts, isGeneratingLink } = useBotAlertContext()
+  const { hasWatchlistChannel, handleGenerateLinkBot, loadingAlerts, isGeneratingLink } = useBotAlertContext()
 
   const { isAuthenticated } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
@@ -89,8 +89,8 @@ export default function TraderLastViewed() {
       handleClickLogin()
       return
     }
-    if (!botAlert?.chatId) {
-      handleGenerateLinkBot?.()
+    if (!hasWatchlistChannel) {
+      handleGenerateLinkBot?.(AlertTypeEnum.TRADERS)
       return
     }
     createTraderAlert({ address, protocol })

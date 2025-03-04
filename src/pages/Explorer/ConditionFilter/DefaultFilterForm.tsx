@@ -95,7 +95,7 @@ export default function DefaultFilterForm({
         <ResultEstimated
           ranges={ranges}
           protocols={selectedProtocols ?? []}
-          timeOption={timeOption}
+          type={timeOption.id}
           filterTab={FilterTabEnum.DEFAULT}
         />
       </Box>

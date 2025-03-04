@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import { getCopyTradeSettingsListApi, getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
-import useBotAlertContext from 'hooks/features/useBotAlertProvider'
+import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useOnboardingStore from 'hooks/store/useOnboardingStore'
 import Badge from 'theme/Badge'
@@ -64,8 +64,7 @@ const CopyManagement = () => {
     mobileBreakpoint: lg,
   })
 
-  const { botAlert } = useBotAlertContext()
-  const hasBotAlert = botAlert != null && !!botAlert.chatId
+  const { hasCopiedChannel: hasBotAlert } = useBotAlertContext()
 
   return (
     <Box flex="1 1 0" height="100%">

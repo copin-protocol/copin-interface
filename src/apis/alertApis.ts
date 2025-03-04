@@ -1,15 +1,22 @@
-import { BotAlertData, TraderAlertData } from 'entities/alert'
+import {
+  AlertSettingData,
+  BotAlertData,
+  ChannelAlertRequestData,
+  CustomAlertRequestData,
+  TraderAlertData,
+} from 'entities/alert'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
+import { AlertTypeEnum, ProtocolEnum } from 'utils/config/enums'
 
 import { ApiListResponse } from './api'
 import requester from './index'
+import { normalizeCustomAlertConfigData, normalizeCustomAlertConfigResponse } from './normalize'
 import { GetApiParams } from './types'
 
 const SERVICE = 'bot-alerts'
 
 export async function getBotAlertApi() {
-  return requester.get(`${SERVICE}/me`).then((res: any) => res.data as BotAlertData)
+  return requester.get(`${SERVICE}/me`).then((res: any) => res.data as AlertSettingData[])
 }
 
 export async function getTraderAlertListApi({
@@ -23,8 +30,64 @@ export async function getTraderAlertListApi({
     .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
 }
 
+export async function linkGroupToBotAlertApi({
+  type,
+  chatId,
+  name,
+  customAlertId,
+}: {
+  type: AlertTypeEnum
+  chatId: string
+  name?: string
+  customAlertId?: string
+}) {
+  return requester.post(`${SERVICE}`, { type, chatId, name, customAlertId }).then((res: any) => res.data)
+}
+
 export async function linkToBotAlertApi(state: string) {
   return requester.post(`${SERVICE}`, { state }).then((res: any) => res.data)
+}
+
+export async function linkWebhookToBotAlertApi({
+  type,
+  webhookUrl,
+  name,
+  customAlertId,
+}: {
+  type: AlertTypeEnum
+  webhookUrl: string
+  name?: string
+  customAlertId?: string
+}) {
+  return requester.post(`${SERVICE}/webhook`, { type, webhookUrl, name, customAlertId }).then((res: any) => res.data)
+}
+
+export async function updateChannelWebhookAlertApi({ id, data }: { id: string; data: ChannelAlertRequestData }) {
+  return requester.put(`${SERVICE}/webhook/${id}`, { ...data })
+}
+
+export async function deleteChannelWebhookAlertApi(id: string) {
+  return requester.delete(`${SERVICE}/webhook/${id}`)
+}
+
+export async function bulkUpdateStatusAlertApi({
+  type,
+  isPause,
+  customAlertId,
+}: {
+  type: AlertTypeEnum
+  isPause: boolean
+  customAlertId?: string
+}) {
+  return requester.put(`${SERVICE}/stop`, { type, isPause, customAlertId }).then((res: any) => res.data)
+}
+
+export async function updateChannelAlertApi({ id, data }: { id: string; data: ChannelAlertRequestData }) {
+  return requester.put(`${SERVICE}/${id}`, { ...data })
+}
+
+export async function deleteChannelAlertApi(id: string) {
+  return requester.delete(`${SERVICE}/${id}`)
 }
 
 export async function createTraderAlertApi({ address, protocol }: { address: string; protocol: ProtocolEnum }) {
@@ -35,10 +98,62 @@ export async function deleteTraderAlertApi(alertId: string) {
   return requester.delete(`${SERVICE}/trader/${alertId}`)
 }
 
-export async function generateLinkBotAlertApi() {
-  return requester.post(`${SERVICE}/state`).then((res: any) => res.data)
+export async function updateTraderAlertApi(id: string) {
+  return requester.put(`${SERVICE}/trader/on-off-alert/${id}`)
 }
 
-export async function unlinkToBotAlertApi() {
-  return requester.delete(`${SERVICE}/unlink`).then((res: any) => res?.data)
+export async function generateLinkBotAlertApi({
+  type,
+  customAlertId,
+}: {
+  type: AlertTypeEnum
+  customAlertId?: string
+}) {
+  return requester.post(`${SERVICE}/state`, { type, customAlertId }).then((res: any) => res.data)
+}
+
+export async function checkLinkedBotAlertApi(state?: string) {
+  return requester.get(`${SERVICE}/state/isLinked`, { params: { state } }).then((res: any) => res.data as boolean)
+}
+
+export async function unlinkToBotAlertApi(telegramAlertSettingId: string) {
+  return requester.delete(`${SERVICE}/unlink`, { params: { telegramAlertSettingId } }).then((res: any) => res?.data)
+}
+
+export async function getCustomAlertsApi({
+  limit,
+  offset,
+  sortBy,
+  sortType,
+  name,
+}: { name?: string; sortBy?: string; sortType?: string } & GetApiParams) {
+  const params: Record<string, any> = {}
+  if (name) params.name = name
+  if (sortBy) params.sort_by = sortBy
+  if (sortType) params.sort_type = sortType
+  return requester
+    .get(`${SERVICE}/custom`, { params: { limit, offset, ...params } })
+    .then((res: any) => normalizeCustomAlertConfigResponse(res.data as ApiListResponse<BotAlertData>))
+}
+
+export async function getCustomAlertDetailsByIdApi(id: string) {
+  return requester
+    .get(`${SERVICE}/custom/${id}`)
+    .then((res: any) => normalizeCustomAlertConfigData(res.data as BotAlertData))
+}
+
+export async function countCustomAlertApi() {
+  return requester.get(`${SERVICE}/custom/count`).then((res: any) => res.data)
+}
+
+export async function createCustomAlertApi(data: CustomAlertRequestData) {
+  return requester.post(`${SERVICE}/custom`, data).then((res: any) => res.data as BotAlertData)
+}
+
+export async function updateCustomAlertApi({ id, data }: { id: string; data: CustomAlertRequestData }) {
+  return requester.put(`${SERVICE}/custom/${id}`, data).then((res: any) => res.data as BotAlertData)
+}
+
+export async function deleteCustomAlertApi(id: string) {
+  return requester.delete(`${SERVICE}/custom/${id}`).then((res: any) => res.data)
 }

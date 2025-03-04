@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import { DifferentialBar } from 'components/@ui/DifferentialBar'
 import { GradientText } from 'components/@ui/GradientText'
-import useBotAlertContext from 'hooks/features/useBotAlertProvider'
+import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useLiteClickDepositFund from 'hooks/helpers/useLiteClickDepositFund'
 import useOnboardingStore from 'hooks/store/useOnboardingStore'
@@ -19,6 +19,7 @@ import IconButton from 'theme/Buttons/IconButton'
 import DepartureIcon from 'theme/Icons/DepartureIcon'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { AlertTypeEnum } from 'utils/config/enums'
 import { STORAGE_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { parseStorageData } from 'utils/helpers/transform'
@@ -118,7 +119,7 @@ function Menu() {
   }, [open])
 
   const { embeddedCopyTrades, embeddedWalletInfo } = useCopyWalletContext()
-  const { botAlert, handleGenerateLinkBot } = useBotAlertContext()
+  const { hasCopiedChannel, handleGenerateLinkBot } = useBotAlertContext()
   const [latestCompleted, setLatestCompleted] = useState(CHECK_STEP_MAPPING.checkConnectWallet)
 
   useEffect(() => {
@@ -158,13 +159,13 @@ function Menu() {
 
   useEffect(() => {
     if (checkState == null || checkState.checkAlert === true) return
-    if (botAlert != null) {
-      const checkedAlert = !!botAlert.chatId
+    if (hasCopiedChannel != null) {
+      const checkedAlert = hasCopiedChannel
       setCheckState((prev) => ({ ...(prev ?? DEFAULT_STATE), checkAlert: checkedAlert }))
       if (checkedAlert) updateLatestCompleted(CHECK_STEP_MAPPING.checkAlert)
       return
     }
-  }, [botAlert])
+  }, [hasCopiedChannel])
 
   const handleClickLogin = useClickLoginButton()
 
@@ -197,7 +198,7 @@ function Menu() {
       handleClickLogin()
       return
     }
-    handleGenerateLinkBot?.()
+    handleGenerateLinkBot?.(AlertTypeEnum.COPY_TRADE)
   }
 
   const totalStep = Object.values(checkState ?? {}).length

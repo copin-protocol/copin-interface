@@ -1,20 +1,28 @@
-import { Flex, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { SystemStyleObject } from '@styled-system/css'
+import { useMemo } from 'react'
+import { GridProps } from 'styled-system'
+import { v4 as uuid } from 'uuid'
 
-import ProtocolLogo from '../ProtocolLogo'
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
+import Tooltip from 'theme/Tooltip'
+import { Box, Flex, Type } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 
 export default function ProtocolGroup({
   protocols,
   size = 20,
   limit = 3,
+  hasTooltip,
   sx,
 }: {
   protocols: ProtocolEnum[] | undefined
   size?: number
   limit?: number
   gap?: number
+  hasTooltip?: boolean
   sx?: any
 }) {
+  const tooltipId = useMemo(() => uuid(), [])
   if (!protocols?.length) return null
   const numberOfProtocols = protocols.length
   return (
@@ -37,6 +45,9 @@ export default function ProtocolGroup({
               minWidth: size,
               px: '2px',
             }}
+            data-tip="React-tooltip"
+            data-tooltip-id={tooltipId}
+            data-tooltip-delay-show={360}
           >
             <Type.Caption
               style={{
@@ -51,8 +62,38 @@ export default function ProtocolGroup({
               }}
             >{`+${numberOfProtocols - limit}`}</Type.Caption>
           </Flex>
+          {hasTooltip && (
+            <Tooltip id={tooltipId} clickable>
+              <ProtocolGroupFull protocols={protocols} sx={{ maxWidth: 500, overflow: 'auto' }} />
+            </Tooltip>
+          )}
         </>
       ) : null}
     </Flex>
+  )
+}
+
+export function ProtocolGroupFull({
+  protocols,
+  size = 20,
+  sx,
+}: {
+  protocols?: ProtocolEnum[]
+  size?: number
+  sx?: SystemStyleObject & GridProps
+}) {
+  return (
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, auto)',
+        gap: '6px',
+        ...sx,
+      }}
+    >
+      {protocols?.map((protocol) => {
+        return <ProtocolLogo key={protocol} hasText protocol={protocol} size={size} />
+      })}
+    </Box>
   )
 }

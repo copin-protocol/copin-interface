@@ -1,6 +1,6 @@
 import { Flex } from 'theme/base'
 
-const Badge = ({ count }: { count: number }) => {
+const Badge = ({ count }: { count: number | string }) => {
   return (
     <Flex
       alignItems="center"

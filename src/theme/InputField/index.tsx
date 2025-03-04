@@ -107,6 +107,7 @@ export const TextareaField = forwardRef(
     {
       label,
       annotation = false,
+      bold = false,
       maxLength,
       error,
       required,
@@ -114,14 +115,14 @@ export const TextareaField = forwardRef(
       sx,
       onChange,
       ...props
-    }: { label: ReactNode; annotation?: boolean | ReactNode } & SxProps & TextareaProps,
+    }: { label: ReactNode; annotation?: boolean | ReactNode; bold?: boolean } & SxProps & TextareaProps,
     ref: ForwardedRef<HTMLTextAreaElement>
   ) => {
     const { count, handleCountText } = useCountText()
     return (
       <Flex flexDirection="column" width={block ? '100%' : 'fit-content'} sx={sx}>
         <Label
-          bold
+          bold={bold}
           label={label}
           annotation={annotation === true && maxLength ? `${count}/${maxLength}` : annotation}
           error={error}

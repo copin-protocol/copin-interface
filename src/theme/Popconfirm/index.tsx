@@ -17,6 +17,7 @@ interface PopconfirmProps {
   cancelText?: string
   confirmButtonProps?: ButtonProps
   cancelButtonProps?: ButtonProps
+  cancelAfterHide?: boolean
 }
 
 const Popconfirm = ({
@@ -30,6 +31,7 @@ const Popconfirm = ({
   cancelText = 'Cancel',
   confirmButtonProps = {},
   cancelButtonProps = {},
+  cancelAfterHide = true,
 }: PopconfirmProps) => {
   const tooltipId = uuidv4()
   const [visible, setVisible] = useState(false)
@@ -55,7 +57,7 @@ const Popconfirm = ({
         closeEvents={{ click: true }}
         isOpen={visible}
         setIsOpen={setVisible}
-        afterHide={onCancel}
+        afterHide={cancelAfterHide ? onCancel : undefined}
         clickable
       >
         <Content

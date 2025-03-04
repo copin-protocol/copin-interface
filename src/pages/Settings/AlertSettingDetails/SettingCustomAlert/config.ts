@@ -1,0 +1,1 @@
+export const LIMIT_FILTER_TRADERS = 1000

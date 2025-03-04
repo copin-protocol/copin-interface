@@ -202,7 +202,9 @@ export async function getTradersCounter(
   const body = normalizeTraderPayload(payload)
   const params: Record<string, any> = { pagination: body.pagination }
   if (!!body.ranges && body.ranges.length > 0) params.ranges = body.ranges
-  params.protocols = protocols
+  if (protocols?.length > 0) {
+    params.protocols = protocols
+  }
 
   return requester
     .post(`public/${SERVICE}/statistic/counter/level?type=${timeframe}`, params)

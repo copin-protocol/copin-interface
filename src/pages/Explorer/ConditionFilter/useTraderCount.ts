@@ -5,8 +5,8 @@ import { useQuery } from 'react-query'
 
 import { getTradersCounter } from 'apis/traderApis'
 import { ConditionFormValues, FilterValues } from 'components/@widgets/ConditionFilterForm/types'
-import { TraderData } from 'entities/trader'
-import { ProtocolEnum } from 'utils/config/enums'
+import { TraderCounter, TraderData } from 'entities/trader'
+import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { extractFiltersFromFormValues } from 'utils/helpers/graphql'
 
@@ -15,15 +15,19 @@ import { TradersContextData } from '../useTradersContext'
 import { FilterTabEnum } from './configs'
 
 export default function useTradersCount({
-  timeOption,
+  type,
   protocols,
   filterTab,
   ranges,
+  enabled = true,
+  onSuccess,
 }: {
   ranges: FilterValues[]
-  timeOption: TradersContextData['timeOption']
+  type: TimeFilterByEnum
   protocols: ProtocolEnum[]
   filterTab: TradersContextData['filterTab']
+  enabled?: boolean
+  onSuccess?: (data?: TraderCounter[]) => void
 }) {
   const [_ranges, setRanges] = useState<FilterValues[]>(ranges)
   const handleCallAPi = useMemo(
@@ -37,19 +41,26 @@ export default function useTradersCount({
     if (isEqual(ranges, _ranges)) return
     handleCallAPi(ranges)
   }, [ranges])
-  const { data, isFetching } = useQuery(
-    [QUERY_KEYS.GET_TRADER_FILTER_COUNTER, _ranges, timeOption, protocols],
+  const { data, isFetching, refetch } = useQuery(
+    [QUERY_KEYS.GET_TRADER_FILTER_COUNTER, _ranges, type, protocols, enabled],
     () =>
       getTradersCounter(
         protocols,
         {
           ranges: filterTab === FilterTabEnum.RANKING ? formatRankingRanges(_ranges) : _ranges,
         },
-        timeOption.id
+        type
       ),
-    { keepPreviousData: true, retry: 0 }
+    {
+      keepPreviousData: true,
+      retry: 0,
+      enabled,
+      onSuccess: (data) => {
+        onSuccess?.(data)
+      },
+    }
   )
-  return { data, isLoading: isFetching }
+  return { data, isLoading: isFetching, refetch }
 }
 
 export function useTraderCountState({ defaultFormValues }: { defaultFormValues: ConditionFormValues<TraderData> }) {

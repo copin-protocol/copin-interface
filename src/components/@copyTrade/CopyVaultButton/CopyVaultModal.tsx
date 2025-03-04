@@ -12,13 +12,13 @@ import { getRequestDataFromForm } from 'components/@copyTrade/helpers'
 import { CopyTradeFormValues } from 'components/@copyTrade/types'
 import ToastBody from 'components/@ui/ToastBody'
 import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade.d'
-import useBotAlertContext from 'hooks/features/useBotAlertProvider'
+import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { AlertTypeEnum, CopyTradePlatformEnum, CopyTradeTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { getErrorMessage } from 'utils/helpers/handleError'
@@ -50,7 +50,7 @@ export default function CopyVaultDrawer({
 }) {
   const refetchQueries = useRefetchQueries()
   const { myProfile } = useMyProfileStore()
-  const { botAlert, handleGenerateLinkBot } = useBotAlertContext()
+  const { hasCopiedChannel, handleGenerateLinkBot } = useBotAlertContext()
   const [tab, handleTab] = useState<string>(TabKeyEnum.New)
   const [copyTradeData, setCopyTradeData] = useState<CopyTradeData | null>()
   const { data: copies, isLoading: loadingCopies } = useQuery(
@@ -70,8 +70,8 @@ export default function CopyVaultDrawer({
       )
       onClose()
       onSuccess && onSuccess()
-      if (!botAlert?.chatId) {
-        handleGenerateLinkBot?.()
+      if (!hasCopiedChannel) {
+        handleGenerateLinkBot?.(AlertTypeEnum.COPY_TRADE)
       }
     },
     onError: (err) => {

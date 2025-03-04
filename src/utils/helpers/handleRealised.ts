@@ -24,7 +24,7 @@ export const encodeRealisedData = (obj: { [key: string]: number }, keys: string[
     })
     .reduce((prev, cur) => ({ ...prev, [cur.key]: cur.value }), {})
 }
-export const decodeRealisedData = (obj: { [key: string]: number }): { [key: string]: number } => {
+export const decodeRealisedData = (obj: { [key: string]: any }): { [key: string]: any } => {
   return Object.entries(obj)
     .map(([key, value]) => {
       return { key: decodeRealised(key), value }
