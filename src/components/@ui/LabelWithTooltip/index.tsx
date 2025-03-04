@@ -29,6 +29,7 @@ const LabelWithTooltip = ({
       <Type.Caption
         data-tip="React-tooltip"
         data-tooltip-id={uuid}
+        data-tooltip-delay-show={360}
         sx={
           dashed
             ? {

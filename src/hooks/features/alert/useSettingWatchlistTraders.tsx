@@ -3,9 +3,10 @@ import React from 'react'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 
-import { createTraderAlertApi, deleteTraderAlertApi } from 'apis/alertApis'
+import { createTraderAlertApi, deleteTraderAlertApi, updateTraderAlertApi } from 'apis/alertApis'
 import ToastBody from 'components/@ui/ToastBody'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
+import { AlertTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
@@ -27,7 +28,7 @@ export default function useSettingWatchlistTraders({ onSuccess }: { onSuccess?: 
     },
     onError: (error: any) => {
       if (error?.message?.includes(`Can't find data`)) {
-        handleGenerateLinkBot?.()
+        handleGenerateLinkBot?.(AlertTypeEnum.TRADERS)
       } else {
         toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)
       }
@@ -50,5 +51,28 @@ export default function useSettingWatchlistTraders({ onSuccess }: { onSuccess?: 
     },
   })
 
-  return { createTraderAlert, deleteTraderAlert, submittingCreate, submittingDelete }
+  const { mutate: updateTraderAlert, isLoading: submittingUpdate } = useMutation(updateTraderAlertApi, {
+    onSuccess: () => {
+      toast.success(
+        <ToastBody
+          title={<Trans>Success</Trans>}
+          message={<Trans>This trader alert has been updated successfully</Trans>}
+        />
+      )
+      refetchQueries([QUERY_KEYS.GET_TRADER_ALERTS])
+      onSuccess?.()
+    },
+    onError: (error) => {
+      toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)
+    },
+  })
+
+  return {
+    createTraderAlert,
+    deleteTraderAlert,
+    updateTraderAlert,
+    submittingCreate,
+    submittingDelete,
+    submittingUpdate,
+  }
 }

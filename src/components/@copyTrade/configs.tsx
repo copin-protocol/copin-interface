@@ -9,6 +9,7 @@ import {
   SLTPTypeEnum,
 } from 'utils/config/enums'
 import { DEFAULT_SERVICE_KEY, QUERY_KEYS } from 'utils/config/keys'
+import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 
 import { getExchangeOption } from './helpers'
 import { CopyTradeFormValues, ExchangeOptions } from './types'
@@ -106,10 +107,11 @@ export const internalExchangeOptions: ExchangeOptions[] = [
 ]
 export const protocolOptions = RELEASED_PROTOCOLS.map((value) => {
   return {
-    value,
+    value: value.toString(),
     label: (
       <Flex sx={{ alignItems: 'center', gap: 1 }}>
-        <Type.Body>{value}</Type.Body> <ProtocolLogo protocol={value} isActive={false} size={16} hasText={false} />
+        <Type.Body>{PROTOCOL_OPTIONS_MAPPING[value].text}</Type.Body>{' '}
+        <ProtocolLogo protocol={value} isActive={false} size={16} hasText={false} />
       </Flex>
     ),
   }

@@ -8,7 +8,8 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import NFTCollectionLinks from 'components/@widgets/NFTCollectionLinks'
 import NFTSubscriptionCard from 'components/@widgets/NFTSubscriptionCard'
 import useUserSubscription from 'hooks/features/subscription/useUserSubscription'
-import { MobilePlanItem, Tooltips, usePlanConfigs } from 'pages/Subscription/Plans'
+import { MobilePlanItem, usePlanConfigs } from 'pages/Subscription/Plans'
+import { Tooltips } from 'pages/Subscription/config'
 import { Button } from 'theme/Buttons'
 import { CrowIconGold } from 'theme/Icons/CrowIcon'
 import { VipPlanIcon1 } from 'theme/Icons/VipPlanIcon'
@@ -111,19 +112,21 @@ export function PlanDetails({ plan }: { plan: SubscriptionPlanEnum }) {
       <Flex sx={{ flexDirection: ['column', 'column', 'column', 'column', 'row'] }}>
         <Flex flex="1" mt={24} sx={{ flexDirection: 'column', gap: 24 }}>
           {planConfigs.features.slice(0, 6).map((label, index) => {
+            const isTitle = index === 0
             return sm ? (
-              <DetailItem key={index} label={label} value={configs[index]} />
+              <DetailItem key={index} label={label} value={configs[index]} isTitle={isTitle} />
             ) : (
-              <MobilePlanItem key={index} label={label} value={configs[index]} />
+              <MobilePlanItem key={index} label={label} value={configs[index]} isTitle={isTitle} />
             )
           })}
         </Flex>
         <Flex flex="1" mt={24} sx={{ flexDirection: 'column', gap: 24 }}>
           {planConfigs.features.slice(6).map((label, index) => {
+            const isTitle = index === 0 || index === 7
             return sm ? (
-              <DetailItem key={index} label={label} value={configs[index + 6]} />
+              <DetailItem key={index} label={label} value={configs[index + 6]} isTitle={isTitle} />
             ) : (
-              <MobilePlanItem key={index} label={label} value={configs[index + 6]} />
+              <MobilePlanItem key={index} label={label} value={configs[index + 6]} isTitle={isTitle} />
             )
           })}
         </Flex>
@@ -132,12 +135,12 @@ export function PlanDetails({ plan }: { plan: SubscriptionPlanEnum }) {
   )
 }
 
-function DetailItem({ label, value }: { label: JSX.Element; value: JSX.Element }) {
+function DetailItem({ label, value, isTitle }: { label: JSX.Element; value: JSX.Element; isTitle?: boolean }) {
   return (
     <Flex sx={{ width: '100%', alignItems: ['start'], justifyContent: 'space-between' }}>
       <Flex sx={{ alignItems: 'start', gap: 2, flexShrink: 0 }}>
-        <IconBox icon={<CheckCircle size={24} />} color="primary1" sx={{ flexShrink: 0 }} />
-        <Type.Caption>{label}</Type.Caption>
+        {!isTitle && <IconBox icon={<CheckCircle size={24} />} color="primary1" sx={{ flexShrink: 0 }} />}
+        <Type.Caption color={isTitle ? 'primary2' : 'inherit'}>{label}</Type.Caption>
       </Flex>
       <Flex flex="1" sx={{ alignItems: 'center', justifyContent: 'center' }}>
         <Type.CaptionBold px={3} textAlign="right" sx={{ width: '100%' }}>

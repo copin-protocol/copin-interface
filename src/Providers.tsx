@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 import ThemeProvider from 'theme'
 
-import { BotAlertInitializer } from 'hooks/features/useBotAlertProvider'
+import { BotAlertInitializer } from 'hooks/features/alert/useBotAlertProvider'
 import { CopyWalletInitializer } from 'hooks/features/useCopyWalletContext'
 import ProtocolInitializer from 'hooks/helpers/useProtocols'
 import { useInitTabsOpen } from 'hooks/helpers/useTabsOpen'

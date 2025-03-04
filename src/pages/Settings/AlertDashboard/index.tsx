@@ -1,233 +1,104 @@
-import { Plus } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
-import React, { ReactNode, useMemo } from 'react'
+import { Trans } from '@lingui/macro'
+import { Plus, Siren } from '@phosphor-icons/react'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-import { BotAlertData } from 'entities/alert'
-import useBotAlertContext from 'hooks/features/useBotAlertProvider'
-import usePageChange from 'hooks/helpers/usePageChange'
+import CustomPageTitle from 'components/@ui/CustomPageTitle'
+import InputSearchText from 'components/@ui/InputSearchText'
+import SectionTitle from 'components/@ui/SectionTitle'
+import useAlertDashboardContext, {
+  AlertDashboardProvider,
+  TabKeyEnum,
+} from 'hooks/features/alert/useAlertDashboardContext'
+import Badge from 'theme/Badge'
+import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
-import { PaginationWithSelect } from 'theme/Pagination'
-import Table from 'theme/Table'
-import { ColumnData } from 'theme/Table/types'
-import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Type } from 'theme/base'
-import { AlertTypeEnum } from 'utils/config/enums'
+import { Flex, Type } from 'theme/base'
+import ROUTES from 'utils/config/routes'
 
-import { AlertActions, AlertChannel, AlertLastMessageAt, AlertName, AlertStatus, AlertType } from './config'
+import DesktopView from './DesktopView'
+import MobileView from './MobileView'
 
-export default function AlertDashboard() {
-  return <AlertDashboardComponent />
-}
-function AlertDashboardComponent() {
-  const { lg } = useResponsive()
-  const isMobile = !lg
-  const { botAlerts, loadingAlerts } = useBotAlertContext()
-
-  const { currentPage, changeCurrentPage } = usePageChange({ pageName: 'alert-list' })
-  const { traderAlerts, maxTraderAlert } = useBotAlertContext()
-
-  const columns = useMemo(() => {
-    const result: ColumnData<BotAlertData>[] = [
-      {
-        title: '',
-        dataIndex: 'isRunning',
-        key: 'isRunning',
-        style: { minWidth: '50px' },
-        render: (item) => <AlertStatus data={item} />,
-      },
-      {
-        title: 'NAME',
-        dataIndex: 'name',
-        key: 'name',
-        style: { minWidth: '200px' },
-        render: (item) => (
-          <AlertName data={item} totalTraders={traderAlerts?.meta?.total ?? 0} maxTraders={maxTraderAlert ?? 0} />
-        ),
-      },
-      {
-        title: 'DELIVERY CHANNEL',
-        dataIndex: 'chatId',
-        key: 'chatId',
-        style: { minWidth: '215px' },
-        render: (item) => <AlertChannel data={item} />,
-      },
-      {
-        title: 'LAST MESSAGE',
-        dataIndex: 'lastMessageAt',
-        key: 'lastMessageAt',
-        style: { minWidth: '150px' },
-        render: (item) => <AlertLastMessageAt data={item} />,
-      },
-      {
-        title: 'TYPE',
-        dataIndex: 'type',
-        key: 'type',
-        style: { minWidth: '150px' },
-        render: (item) => <AlertType data={item} />,
-      },
-      {
-        title: '',
-        dataIndex: 'id',
-        key: 'id',
-        style: { minWidth: '50px' },
-        render: (item) => <AlertActions data={item} />,
-      },
-    ]
-    return result
-  }, [maxTraderAlert, traderAlerts?.meta?.total])
-
+export default function AlertDashboardPage() {
   return (
     <>
-      <Flex
-        sx={{
-          alignItems: 'center',
-          height: '100%',
-          width: '100%',
-          maxWidth: ['auto', 'auto', 962],
-          mx: 'auto',
-        }}
-      >
-        <Flex
-          sx={{
-            flexDirection: 'column',
-            height: '100%',
-            width: '100%',
-            overflow: ['hidden', 'hidden', 'auto'],
-            border: ['none', 'none', 'small'],
-            borderTop: ['none', 'none', 'none'],
-            borderBottom: ['none', 'none', 'none'],
-            borderColor: ['none', 'none', 'neutral4'],
-          }}
-        >
-          <Flex
-            flexDirection={isMobile ? 'column' : 'row'}
-            alignItems={isMobile ? 'flex-start' : 'center'}
-            justifyContent="space-between"
-            width="100%"
-            minHeight="40px"
-            sx={{
-              gap: 2,
-              px: 3,
-              py: 2,
-              backgroundColor: 'neutral5',
-              borderBottom: 'small',
-              borderColor: 'neutral4',
-            }}
-          >
-            <Type.Caption flex={2}>Easily create, modify and track alerts.</Type.Caption>
-            <Flex minWidth="max-content" alignItems="center" flex={1} justifyContent="flex-end">
-              <ButtonWithIcon
-                data-tip="React-tooltip"
-                data-tooltip-id={`tt-coming-soon`}
-                data-tooltip-delay-show={360}
-                variant="ghostPrimary"
-                disabled
-                icon={<Plus />}
-                p={0}
-              >
-                <Type.Caption>Create New Alert</Type.Caption>
-              </ButtonWithIcon>
-              <Tooltip id="tt-coming-soon" place="left">
-                <Type.Caption color="neutral2" sx={{ maxWidth: 350 }}>
-                  Coming Soon
-                </Type.Caption>
-              </Tooltip>
-            </Flex>
-          </Flex>
-          <Flex
-            sx={{
-              flex: '1 0 0',
-              width: '100%',
-              height: '100%',
-              flexDirection: 'column',
-              gap: [2, 2, 3],
-              overflow: 'auto',
-            }}
-          >
-            {isMobile ? (
-              <Flex mt={2} flexDirection="column" sx={{ gap: 2 }}>
-                {botAlerts?.data?.map((data) => {
-                  return (
-                    <Flex key={data.id} variant="card" flexDirection="column" width="100%" sx={{ gap: 3 }}>
-                      <Flex alignItems="center" justifyContent="space-between">
-                        <Type.Caption color="neutral1" sx={{ textTransform: 'capitalize' }}>
-                          {data.type === AlertTypeEnum.TRADERS
-                            ? `${data.name} (${traderAlerts?.meta?.total ?? 0}/${maxTraderAlert})`
-                            : data.name}
-                        </Type.Caption>
-                        <Flex alignItems="center" sx={{ gap: 3 }}>
-                          <AlertStatus data={data} />
-                          <AlertActions data={data} />
-                        </Flex>
-                      </Flex>
-                      <MobileRowItem label={'Delivery Channel'} value={<AlertChannel data={data} />} />
-                      <MobileRowItem label={'Last Message'} value={<AlertLastMessageAt data={data} />} />
-                      <MobileRowItem
-                        label={'Type'}
-                        value={<AlertType data={data} />}
-                        textColor={data.type === AlertTypeEnum.CUSTOM ? 'violet' : 'orange2'}
-                      />
-                    </Flex>
-                  )
-                })}
-              </Flex>
-            ) : (
-              <Table
-                restrictHeight
-                data={botAlerts?.data}
-                columns={columns}
-                isLoading={!!loadingAlerts}
-                tableHeadSx={{
-                  '& th': {
-                    py: 2,
-                    borderBottom: 'small',
-                    borderColor: 'neutral4',
-                  },
-                }}
-                tableBodySx={{
-                  '& td': {
-                    height: 40,
-                  },
-                }}
-              />
-            )}
-          </Flex>
-          <Box sx={{ backgroundColor: 'neutral7' }}>
-            <PaginationWithSelect
-              currentPage={currentPage}
-              onPageChange={changeCurrentPage}
-              apiMeta={botAlerts?.meta}
-              sx={{
-                width: '100%',
-                justifyContent: 'end',
-                py: 1,
-                px: 2,
-                borderTop: 'small',
-                borderColor: 'neutral4',
-              }}
-            />
-          </Box>
-        </Flex>
-      </Flex>
+      <CustomPageTitle title="Alert" />
+      <AlertDashboardProvider>
+        <AlertDashboardComponent />
+      </AlertDashboardProvider>
     </>
   )
 }
 
-function MobileRowItem({
-  label,
-  value,
-  textColor = 'neutral1',
-}: {
-  label: ReactNode
-  value: ReactNode
-  textColor?: string
-}) {
+function AlertDashboardComponent() {
+  const {
+    isMobile,
+    tab,
+    systemAlerts,
+    maxCustoms,
+    totalCustoms,
+    isVIPUser,
+    isLimited,
+    keyword,
+    setKeyword,
+    handleCreateCustomAlert,
+  } = useAlertDashboardContext()
+  const isCustom = tab === TabKeyEnum.CUSTOM
   return (
-    <Flex alignItems="center" justifyContent="space-between">
-      <Type.Caption color="neutral3" display="block">
-        {label}
-      </Type.Caption>
-      <Type.Caption color={textColor}>{value}</Type.Caption>
+    <Flex sx={{ width: '100%', height: 'calc(100% - 1px)', flexDirection: 'column' }}>
+      <Flex
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}
+      >
+        <SectionTitle
+          icon={Siren}
+          title={
+            <Flex height={48} alignItems="center" sx={{ gap: 2, flexWrap: 'wrap' }}>
+              {isMobile ? (isCustom ? 'CUSTOM ALERT' : 'SYSTEM ALERT') : 'ALERT'}
+              {isMobile && <Badge count={isCustom ? `${totalCustoms}/${maxCustoms}` : systemAlerts?.length ?? 0} />}
+              {isCustom && isMobile && (
+                <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2 }}>
+                  {!isVIPUser && isLimited ? (
+                    <Link to={ROUTES.SUBSCRIPTION.path}>
+                      <Button size="xs" variant="outlinePrimary">
+                        <Trans>Upgrade</Trans>
+                      </Button>
+                    </Link>
+                  ) : (
+                    <ButtonWithIcon
+                      size="xs"
+                      variant="outlinePrimary"
+                      icon={<Plus />}
+                      disabled={isLimited}
+                      onClick={handleCreateCustomAlert}
+                    >
+                      <Type.Caption>Create New Alert</Type.Caption>
+                    </ButtonWithIcon>
+                  )}
+                </Flex>
+              )}
+            </Flex>
+          }
+          sx={{ px: 3, mb: 0 }}
+        />
+      </Flex>
+      {isMobile && isCustom && setKeyword && (
+        <Flex width="100%" px={3} py={2} alignItems="center" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
+          <InputSearchText
+            placeholder="SEARCH ALERT NAME"
+            sx={{
+              width: '100%',
+              border: 'none',
+              backgroundColor: 'transparent !important',
+              p: 0,
+            }}
+            searchText={keyword ?? ''}
+            setSearchText={setKeyword}
+          />
+        </Flex>
+      )}
+      {isMobile ? <MobileView /> : <DesktopView />}
     </Flex>
   )
 }

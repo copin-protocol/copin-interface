@@ -11,9 +11,13 @@ import { Flex, Type } from 'theme/base'
 export default function FilterMarket({
   filters,
   changeFilters,
+  limit,
+  sx,
 }: {
   filters: ConditionFormValues<TraderData>
   changeFilters: (options: ConditionFormValues<TraderData>) => void
+  limit?: number
+  sx?: any
 }) {
   const { getListSymbol } = useMarketsConfig()
 
@@ -63,7 +67,7 @@ export default function FilterMarket({
   const { sm } = useResponsive()
 
   return (
-    <Flex alignItems="center" px={3} mt={1} sx={{ gap: 2 }}>
+    <Flex alignItems="center" px={3} mt={1} sx={{ gap: 2, ...sx }}>
       <Type.Caption color="neutral3" sx={{ flexShrink: 0, py: 1 }}>
         <Trans>MARKET</Trans>
       </Type.Caption>
@@ -74,7 +78,7 @@ export default function FilterMarket({
         handleToggleItem={handleSelect}
         handleSelectAllItems={handleSelectAll}
         handleChangeKeyword={setKeyword}
-        limit={sm ? (selectedItems.join('').length > 30 ? 3 : 4) : undefined}
+        limit={sm ? (!!limit ? limit : selectedItems.join('').length > 30 ? 3 : 4) : undefined}
       />
     </Flex>
   )

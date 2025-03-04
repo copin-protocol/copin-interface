@@ -106,3 +106,23 @@ export interface VolumeLimitData {
   // volumeVipWoReferral: number
   volumeVipReferral: number
 }
+
+export interface SubscriptionLimitData {
+  [plan: number]: PlanLimitData
+}
+
+export interface PlanLimitData {
+  id: string
+  customPercentileRank: boolean
+  dataFilterDay: number
+  copyTrades: number
+  maxCopySizePerTrader: number
+  maxCopyTradePerTrader: number
+  joinCopinAlphaClub: boolean
+  traderAlerts: number
+  customAlerts: number
+  channelAlerts: number
+  webhookAlerts: number
+  plan: number
+  createdAt: string
+}

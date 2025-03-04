@@ -122,7 +122,7 @@ export default function SelectMarketWithSearch({
       {isSelectedAll || !selectedItems?.length ? (
         <MarketTag label="ALL MARKETS" value="all" />
       ) : (
-        <Flex alignItems="center" sx={{ gap: 2 }}>
+        <Flex alignItems="center" sx={{ gap: 2, flexWrap: 'wrap' }}>
           {selectedItems.slice(0, limit).map((item) => {
             const market = allItems.find((e) => e.value === item)
             return (

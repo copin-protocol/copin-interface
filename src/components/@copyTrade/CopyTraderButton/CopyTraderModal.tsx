@@ -13,7 +13,7 @@ import { CopyTradeFormValues } from 'components/@copyTrade/types'
 import ToastBody from 'components/@ui/ToastBody'
 import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade.d'
 import { TradingEventStatusEnum } from 'entities/event'
-import useBotAlertContext from 'hooks/features/useBotAlertProvider'
+import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMyProfileStore from 'hooks/store/useMyProfile'
@@ -22,7 +22,13 @@ import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { DCP_SUPPORTED_PROTOCOLS } from 'utils/config/constants'
-import { CopyTradePlatformEnum, CopyTradeTypeEnum, EventTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import {
+  AlertTypeEnum,
+  CopyTradePlatformEnum,
+  CopyTradeTypeEnum,
+  EventTypeEnum,
+  ProtocolEnum,
+} from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { getErrorMessage } from 'utils/helpers/handleError'
@@ -55,7 +61,7 @@ export default function CopyTraderDrawer({
 }) {
   const refetchQueries = useRefetchQueries()
   const { myProfile } = useMyProfileStore()
-  const { botAlert, handleGenerateLinkBot } = useBotAlertContext()
+  const { hasCopiedChannel, handleGenerateLinkBot } = useBotAlertContext()
   const [tab, handleTab] = useState<string>(TabKeyEnum.New)
   const [copyTradeData, setCopyTradeData] = useState<CopyTradeData | null>()
   const { data: copies, isLoading: loadingCopies } = useQuery(
@@ -75,8 +81,8 @@ export default function CopyTraderDrawer({
       )
       onClose()
       onSuccess && onSuccess()
-      if (!botAlert?.chatId) {
-        handleGenerateLinkBot?.()
+      if (!hasCopiedChannel) {
+        handleGenerateLinkBot?.(AlertTypeEnum.COPY_TRADE)
       }
 
       switch (source) {

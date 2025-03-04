@@ -1,10 +1,10 @@
+import { useEffect } from 'react'
 import styled from 'styled-components/macro'
 
-import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { FilterValues } from 'components/@widgets/ConditionFilterForm/types'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { formatNumber, nFormatter } from 'utils/helpers/format'
 import { getDurationFromTimeFilter } from 'utils/helpers/transform'
 
@@ -15,21 +15,33 @@ const COLORS: string[] = ['#B6EBFB', '#6EB9F7', '#1183E1', '#0A53A9', '#083791']
 
 export default function ResultEstimated({
   ranges,
-  timeOption,
+  type,
   protocols,
   filterTab,
+  onCountChange,
+  zIndex = 2,
+  sx,
 }: {
   ranges: FilterValues[]
-  timeOption: TimeFilterProps
+  type: TimeFilterByEnum
   protocols: ProtocolEnum[]
   filterTab: FilterTabEnum
+  onCountChange?: (count: number) => void
+  zIndex?: number
+  sx?: any
 }) {
-  const effectDays = getDurationFromTimeFilter(timeOption.id)
-  const { data, isLoading } = useTradersCount({ ranges, timeOption, protocols, filterTab })
+  const effectDays = getDurationFromTimeFilter(type)
+  const { data, isLoading } = useTradersCount({ ranges, type, protocols, filterTab })
   const lastData = data?.at?.(-1)
   const percent = lastData && lastData?.total > 0 ? ((lastData?.counter ?? 0) * 100) / lastData.total : 0
   const count = lastData?.counter ?? 0
   const total = lastData?.total ?? 0
+
+  useEffect(() => {
+    if (!onCountChange) return
+    onCountChange(count)
+  }, [count, onCountChange])
+
   return (
     <Flex
       sx={{
@@ -41,6 +53,7 @@ export default function ResultEstimated({
         flexDirection: 'column',
         justifyContent: 'center',
         gap: 1,
+        ...sx,
       }}
     >
       <Flex alignItems="center" sx={{ gap: 1 }}>
@@ -67,7 +80,7 @@ export default function ResultEstimated({
             const percent = total > 0 ? (counter * 100) / total : 0
             return (
               <Box key={index}>
-                <Progress width={percent + 2} p={0} bg={COLORS[index]} />
+                <Progress width={percent + 2} p={0} bg={COLORS[index]} zIndex={zIndex} />
               </Box>
             )
           })}
@@ -84,9 +97,9 @@ export default function ResultEstimated({
   )
 }
 
-const Progress = styled(Box)<{ width: number; bg: string }>`
+const Progress = styled(Box)<{ width: number; bg: string; zIndex: number }>`
   position: absolute;
-  z-index: 2;
+  z-index: ${({ zIndex }) => zIndex};
   top: -1px;
   left: -1px;
   height: 16px;

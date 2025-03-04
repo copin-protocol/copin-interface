@@ -1,6 +1,6 @@
 import requester from 'apis'
 
-import { ListenerStatsData, VolumeLimitData } from 'entities/system'
+import { ListenerStatsData, PlanLimitData, VolumeLimitData } from 'entities/system'
 
 const SERVICE = 'system-statuses'
 
@@ -10,4 +10,8 @@ export async function getListenerStatsApi() {
 
 export async function getVolumeLimit() {
   return requester.get(`/public/copy-trades/volume-config`).then((res: any) => res.data as VolumeLimitData)
+}
+
+export async function getPlanLimit() {
+  return requester.get(`/public/plans/list`).then((res: any) => res.data as PlanLimitData[])
 }

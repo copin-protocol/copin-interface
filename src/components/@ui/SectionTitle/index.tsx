@@ -8,15 +8,26 @@ const SectionTitle = ({
   iconColor = 'neutral1',
   sx,
   suffix,
+  suffixPlacement = 'space-between',
 }: {
   icon: ComponentType<any>
   title: ReactNode
   iconColor?: string
   sx?: any
   suffix?: ReactNode
+  suffixPlacement?:
+    | 'center'
+    | 'end'
+    | 'flex-end'
+    | 'flex-start'
+    | 'start'
+    | 'space-around'
+    | 'space-between'
+    | 'space-evenly'
+    | 'stretch'
 }) => {
   return (
-    <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+    <Flex width="100%" alignItems="center" justifyContent={suffixPlacement} sx={{ gap: 2 }}>
       <Flex alignItems="center" sx={{ gap: 2, mb: 12, ...(sx ?? {}) }}>
         <IconBox color={iconColor} icon={<Icon size={20} weight="fill" />} />
         <Type.Body>{title}</Type.Body>

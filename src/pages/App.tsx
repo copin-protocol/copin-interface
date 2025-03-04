@@ -32,7 +32,8 @@ const WalletManagementPage = lazy(() => import('./WalletManagement'))
 const StatsPage = lazy(() => import('./Stats'))
 const SharedBacktestSinglePage = lazy(() => import('./SharedBacktestSingle'))
 const SharedBacktestMultiplePage = lazy(() => import('./SharedBacktestMultiple'))
-const SettingsPage = lazy(() => import('./Settings'))
+const AlertDashboardPage = lazy(() => import('./Settings/AlertDashboard'))
+const UserSubscriptionPage = lazy(() => import('./Settings/UserSubscription'))
 const SubscriptionPage = lazy(() => import('./Subscription'))
 const LinkBotTelegramPage = lazy(() => import('./LinkBotTelegram'))
 const AlertSettingDetailsPage = lazy(() => import('./Settings/AlertSettingDetails'))
@@ -86,7 +87,8 @@ function App() {
             <AuthedRoute path={ROUTES.SYSTEM_STATUS.path} component={SystemStatusPage}></AuthedRoute>
 
             <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfilePage}></AuthedRoute>
-            <AuthedRoute path={ROUTES.SETTINGS.path} component={SettingsPage}></AuthedRoute>
+            <AuthedRoute path={ROUTES.ALERT_LIST.path} component={AlertDashboardPage}></AuthedRoute>
+            <AuthedRoute path={ROUTES.USER_SUBSCRIPTION.path} component={UserSubscriptionPage}></AuthedRoute>
             <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagementPage}></AuthedRoute>
             <Route path={ROUTES.LINK_BOT_ALERT.path} component={LinkBotTelegramPage}></Route>
             <AuthedRoute path={ROUTES.ALERT_SETTING_DETAILS.path} component={AlertSettingDetailsPage}></AuthedRoute>

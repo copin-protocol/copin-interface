@@ -1,6 +1,14 @@
 import { EventDetailsData } from 'entities/event'
 import { LINKS, TELEGRAM_BOT_ALERT } from 'utils/config/constants'
-import { PositionSideEnum, ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
+import {
+  AlertCategoryEnum,
+  AlertSettingsEnum,
+  AlertTypeEnum,
+  PositionSideEnum,
+  ProtocolEnum,
+  TimeFilterByEnum,
+  TimeFrameEnum,
+} from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 
@@ -166,9 +174,20 @@ export function generatePerpDEXDetailsRoute(data: { perpdex: string; params?: Re
   })
 }
 
-export function generateAlertSettingDetailsRoute(data: { id: string; params?: Record<string, any> }) {
-  return createUrlWithParams({
-    url: `${ROUTES.ALERT_SETTING_DETAILS.path_prefix}/${data.id}`,
-    params: data.params,
-  })
+export function generateAlertSettingDetailsRoute({
+  id,
+  type,
+  params,
+}: {
+  type: AlertCategoryEnum
+  id: string
+  params?: { step?: AlertSettingsEnum; type?: AlertTypeEnum }
+}) {
+  const searchParams = new URLSearchParams()
+  if (params?.step) searchParams.set('step', params.step)
+  if (params?.type) searchParams.set('type', params.type)
+  const search = searchParams.toString()
+  return `${ROUTES.ALERT_SETTING_DETAILS.path_prefix}/${type?.toLowerCase()}/${id?.toLowerCase()}${
+    search ? `?${search}` : ''
+  }`
 }

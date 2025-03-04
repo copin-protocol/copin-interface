@@ -127,6 +127,11 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
               bg: 'neutral5',
               // bg: '#23262F',
             },
+            '&:active:not([disabled])': {
+              // color: 'primary1',
+              bg: 'neutral5',
+              // bg: '#23262F',
+            },
             '&--is-selected:not([disabled])': {
               color: 'primary1',
               bg: 'inherit',

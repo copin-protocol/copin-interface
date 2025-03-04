@@ -52,7 +52,7 @@ export default function RankingFilterForm({
         <ResultEstimated
           ranges={ranges}
           protocols={selectedProtocols ?? []}
-          timeOption={timeOption}
+          type={timeOption.id}
           filterTab={FilterTabEnum.RANKING}
         />
       </Box>

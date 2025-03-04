@@ -86,7 +86,7 @@ function OpeningSizeComponent({ data, dynamicWidth }: { data: CopyPositionData |
   // Todo: Check calc for value in rewards
 
   const symbolByIndexToken = getSymbolByIndexToken
-    ? getSymbolByIndexToken({ protocol: data?.protocol, indexToken: data?.indexToken })
+    ? getSymbolByIndexToken?.({ protocol: data?.protocol, indexToken: data?.indexToken })
     : undefined
   const symbol = data?.pair ? getSymbolFromPair(data.pair) : symbolByIndexToken
   const marketPrice: number = symbol && _prices[symbol] != null ? (_prices[symbol] as number) : 0
@@ -162,7 +162,7 @@ function OpeningPositionPnlComponent({ data, textSx }: PnLComponentProps) {
 function useGetCopyPositionPnl({ data, prices }: { data: CopyPositionData; prices?: UsdPrices }) {
   const { getSymbolByIndexToken } = useMarketsConfig()
   const symbolByIndexToken = getSymbolByIndexToken
-    ? getSymbolByIndexToken({ protocol: data?.protocol, indexToken: data?.indexToken })
+    ? getSymbolByIndexToken?.({ protocol: data?.protocol, indexToken: data?.indexToken })
     : undefined
   const symbol = data?.pair ? getSymbolFromPair(data.pair) : symbolByIndexToken
   const isOpening = data.status === PositionStatusEnum.OPEN

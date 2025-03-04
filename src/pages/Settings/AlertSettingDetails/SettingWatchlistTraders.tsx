@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Siren } from '@phosphor-icons/react'
+import { Siren, Trash } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import React, { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -7,20 +7,21 @@ import { Link } from 'react-router-dom'
 import { ApiListResponse } from 'apis/api'
 import InputSearchText from 'components/@ui/InputSearchText'
 import NoDataFound from 'components/@ui/NoDataFound'
+import SectionTitle from 'components/@ui/SectionTitle'
 import { BotAlertData, TraderAlertData } from 'entities/alert'
 import { TraderData } from 'entities/trader'
-import useBotAlertContext from 'hooks/features/useBotAlertProvider'
-import useSettingWatchlistTraders from 'hooks/features/useSettingWatchlistTraders'
+import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
+import useSettingWatchlistTraders from 'hooks/features/alert/useSettingWatchlistTraders'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
-import TraderLastViewed from 'pages/Settings/AlertList/TraderLastViewed'
+import TraderLastViewed from 'pages/Settings/AlertSettingDetails/TraderLastViewed'
+import Badge from 'theme/Badge'
 import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
-import AlertOffIcon from 'theme/Icons/AlerOffIcon'
 import { PaginationWithSelect } from 'theme/Pagination'
 import Popconfirm from 'theme/Popconfirm'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
-import { Flex, IconBox, Type } from 'theme/base'
+import { Flex } from 'theme/base'
 import { AlertSettingsEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 
@@ -95,7 +96,7 @@ export default function SettingWatchlistTraders({
             action={
               <IconButton
                 variant="ghost"
-                icon={<AlertOffIcon size={16} />}
+                icon={<Trash size={16} />}
                 size={16}
                 sx={{
                   color: 'neutral3',
@@ -108,6 +109,7 @@ export default function SettingWatchlistTraders({
             }
             title="Are you sure to unsubscribe this trader?"
             onConfirm={() => handleUnsubscribeAlert(data)}
+            confirmButtonProps={{ variant: 'ghostDanger' }}
           />
         </Flex>
       )
@@ -119,8 +121,8 @@ export default function SettingWatchlistTraders({
     const result: ColumnData<TraderAlertData>[] = [
       {
         title: 'RUN',
-        dataIndex: 'status',
-        key: 'status',
+        dataIndex: 'enableAlert',
+        key: 'enableAlert',
         style: { minWidth: '50px' },
         render: (item) => <TraderStatus data={item} />,
       },
@@ -174,23 +176,29 @@ export default function SettingWatchlistTraders({
           flexWrap="wrap"
           sx={{ gap: 2, borderRight: isMobile ? 'none' : 'small', borderColor: 'neutral4' }}
         >
-          <IconBox icon={<Siren size={20} weight="fill" />} />
-          <Type.Body>
-            {botAlert?.name?.toUpperCase() ?? ''} ({totalTrader}/{maxTraderAlert})
-          </Type.Body>
-          {!isVIPUser && totalTrader >= (maxTraderAlert ?? 0) && (
-            <Link to={ROUTES.SUBSCRIPTION.path}>
-              <Button size="xs" variant="outlinePrimary">
-                <Trans>Upgrade</Trans>
-              </Button>
-            </Link>
-          )}
-          {totalTrader < (maxTraderAlert ?? 0) && (
-            // <ButtonWithIcon size="xs" variant="outlinePrimary" icon={<Plus />} onClick={() => setOpenModalAdd(true)}>
-            //   <Trans>Add Trader</Trans>
-            // </ButtonWithIcon>
-            <SearchToAdd ignoreSelectTraders={ignoreSelectTraders} onSelect={onAddWatchlist} />
-          )}
+          <SectionTitle
+            icon={Siren}
+            title={
+              <Flex alignItems="center" sx={{ gap: 2 }}>
+                {botAlert?.name?.toUpperCase() ?? ''}
+                <Badge count={`${totalTrader}/${maxTraderAlert}`} />
+                {!isVIPUser && totalTrader >= (maxTraderAlert ?? 0) && (
+                  <Link to={ROUTES.SUBSCRIPTION.path}>
+                    <Button size="xs" variant="outlinePrimary">
+                      <Trans>Upgrade</Trans>
+                    </Button>
+                  </Link>
+                )}
+                {totalTrader < (maxTraderAlert ?? 0) && (
+                  // <ButtonWithIcon size="xs" variant="outlinePrimary" icon={<Plus />} onClick={() => setOpenModalAdd(true)}>
+                  //   <Trans>Add Trader</Trans>
+                  // </ButtonWithIcon>
+                  <SearchToAdd ignoreSelectTraders={ignoreSelectTraders} onSelect={onAddWatchlist} />
+                )}
+              </Flex>
+            }
+            sx={{ mb: 0 }}
+          />
         </Flex>
         <Flex alignItems="center" width={isMobile ? '100%' : '164px'} mt={isMobile ? 2 : 0} mb={isMobile ? 3 : 0}>
           {/*<SearchTraders*/}
@@ -225,19 +233,25 @@ export default function SettingWatchlistTraders({
       {!traders?.data?.length ? (
         <TraderLastViewed />
       ) : (
-        <Flex flex={1} flexDirection="column" sx={{ overflow: 'auto' }}>
+        <Flex flex={1} flexDirection="column" sx={{ overflow: 'auto', maxHeight: 'calc(100vh - 280px)' }}>
           {isMobile ? (
-            <Flex px={3} flexDirection="column" sx={{ gap: 2 }}>
+            <Flex pt={2} flexDirection="column" sx={{ gap: 2, overflow: 'auto' }}>
               {!!filteredTraders?.data?.length &&
-                filteredTraders?.data?.map((data, index) => {
+                filteredTraders?.data?.map((data) => {
                   return (
                     <Flex
                       key={data.id}
+                      variant="card"
                       flexDirection="column"
+                      bg="neutral6"
                       width="100%"
-                      sx={{ py: 2, gap: 2, borderTop: index > 0 ? 'small' : 'none', borderColor: 'neutral4' }}
+                      sx={{ pt: 2, gap: 2 }}
                     >
-                      <Flex alignItems="center" justifyContent="space-between">
+                      <Flex
+                        alignItems="center"
+                        justifyContent="space-between"
+                        sx={{ pb: 2, borderBottom: 'small', borderColor: 'neutral5' }}
+                      >
                         <TraderAddress data={data} />
                         <Flex alignItems="center" sx={{ gap: 3 }}>
                           <TraderStatus data={data} />

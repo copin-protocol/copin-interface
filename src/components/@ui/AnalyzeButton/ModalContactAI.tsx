@@ -14,6 +14,7 @@ const ModalContactAI = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
       isOpen={isOpen}
       onDismiss={onDismiss}
       maxWidth="450px"
+      mode="bottom"
       title={
         <Flex alignItems="center" sx={{ gap: 2 }}>
           <Type.H5>Analyze With AI</Type.H5>

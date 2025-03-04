@@ -1,14 +1,41 @@
-import { AlertTypeEnum, CopyTradePlatformEnum, ProtocolEnum, TelegramTypeEnum } from 'utils/config/enums'
+import { QueryFilter, RangeFilter } from 'apis/types'
+import {
+  AlertCategoryEnum,
+  AlertTypeEnum,
+  ChannelStatusEnum,
+  ChannelTypeEnum,
+  CopyTradePlatformEnum,
+  ProtocolEnum,
+  TimeFilterByEnum,
+} from 'utils/config/enums'
 
 export interface BotAlertData {
   id: string
   userId: string
   chatId?: string
   name?: string
+  description?: string
+  category: AlertCategoryEnum
   type?: AlertTypeEnum
-  telegramType?: TelegramTypeEnum
-  isRunning?: boolean
+  channels?: AlertSettingData[]
+  config?: CustomAlertConfigData
+  enableAlert?: boolean
   lastMessageAt?: string
+  createdAt: string
+}
+
+export interface AlertSettingData {
+  id: string
+  userId: string
+  chatId?: string
+  webhookUrl?: string
+  name?: string
+  description?: string
+  type: AlertTypeEnum
+  channelType?: ChannelTypeEnum
+  status?: ChannelStatusEnum
+  config?: CustomAlertConfigData
+  isPause?: boolean
   createdAt: string
 }
 
@@ -22,7 +49,7 @@ export interface TraderAlertData {
   trade30D?: number
   realisedPnl30D?: number
   pnl30D?: number
-  status?: string
+  enableAlert?: boolean
   lastTradeAt?: string
   createdAt: string
 }
@@ -34,7 +61,27 @@ export interface CopyTradeAlertData {
   createdAt: string
 }
 
-export interface BotAlertRequestData {
-  copyTradeList?: CopyTradeAlertData[]
-  traderList?: TraderAlertData[]
+export interface ChannelAlertRequestData {
+  isPause?: boolean
+  name?: string
+  webhookUrl?: string
+}
+
+export interface CustomAlertRequestData {
+  name?: string
+  description?: string
+  queries?: QueryFilter[]
+  ranges?: RangeFilter[]
+  enableAlert?: boolean
+}
+
+export interface CustomAlertConfigData {
+  type?: TimeFilterByEnum
+  [key: string]: CustomAlertConfigField
+}
+
+export type CustomAlertConfigField = {
+  gte?: number
+  lte?: number
+  in?: string[]
 }

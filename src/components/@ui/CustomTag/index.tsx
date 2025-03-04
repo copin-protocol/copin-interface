@@ -4,12 +4,15 @@ import { v4 as uuidv4 } from 'uuid'
 import Tooltip from 'theme/Tooltip'
 import { Flex, Type } from 'theme/base'
 
+import ActiveDot from '../ActiveDot'
+
 const CustomTag = ({
   text,
   color,
   backgroundColor,
   tooltipContent,
   clickableTooltip,
+  hasDot,
   sx,
   ...props
 }: {
@@ -18,6 +21,7 @@ const CustomTag = ({
   backgroundColor?: string
   tooltipContent?: ReactNode
   clickableTooltip?: boolean
+  hasDot?: boolean
 } & any) => {
   const uuid = useRef(uuidv4()).current
 
@@ -33,17 +37,16 @@ const CustomTag = ({
       px="6px"
       py="2px"
       sx={{
-        borderRadius: '4px',
+        borderRadius: '16px',
         gap: 1,
         ...(sx ?? {}),
       }}
       {...props}
     >
+      {hasDot && <ActiveDot size={4} color={color ?? 'neutral3'} />}
       <Type.Caption
-        width="100%"
         textAlign="center"
         color={color ?? 'neutral3'}
-        flex={1}
         sx={
           hasTooltip
             ? {

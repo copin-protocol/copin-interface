@@ -326,8 +326,13 @@ export enum DataTypeEnum {
 }
 
 export enum AlertTypeEnum {
-  COPY_TRADE = 'COPY',
-  TRADERS = 'TRADERS',
+  COPY_TRADE = 'COPY_TRADE',
+  TRADERS = 'TRADER',
+  CUSTOM = 'CUSTOM',
+}
+
+export enum AlertCategoryEnum {
+  SYSTEM = 'SYSTEM',
   CUSTOM = 'CUSTOM',
 }
 
@@ -337,9 +342,14 @@ export enum AlertSettingsEnum {
   CHANNEL = 'CHANNEL',
 }
 
-export enum TelegramTypeEnum {
-  DIRECT = 'DIRECT',
-  GROUP = 'GROUP',
+export enum ChannelTypeEnum {
+  TELEGRAM = 'TELEGRAM',
+  WEBHOOK = 'WEBHOOK',
+}
+
+export enum ChannelStatusEnum {
+  OPERATIONAL = 'OPERATIONAL',
+  SUSPENDED = 'SUSPENDED',
 }
 
 export enum ChangeFieldEnum {

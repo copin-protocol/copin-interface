@@ -11,6 +11,7 @@ import { MarginModeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/e
 import { decodeRealisedData } from 'utils/helpers/handleRealised'
 import { convertDurationInSecond } from 'utils/helpers/transform'
 
+import { BotAlertData } from '../entities/alert'
 import { PROTOCOLS_CROSS_MARGIN } from '../utils/config/protocols'
 // import { getSymbolByTokenTrade, getTokenTradeSupport } from '../utils/config/trades'
 import { ApiListResponse } from './api'
@@ -147,5 +148,25 @@ export const normalizeSymbolData = (symbol: string) => {
       return 'NEIRO'
     default:
       return symbol
+  }
+}
+
+export const normalizeCustomAlertConfigData = (res: BotAlertData): BotAlertData => {
+  if (!res) return res
+  return {
+    ...res,
+    config: res.config ? decodeRealisedData(res.config) : {},
+  }
+}
+
+export const normalizeCustomAlertConfigResponse = (
+  res: ApiListResponse<BotAlertData>
+): ApiListResponse<BotAlertData> => {
+  if (!res.data) return res
+  return {
+    ...res,
+    data: res.data.map((e) => {
+      return normalizeCustomAlertConfigData(e)
+    }),
   }
 }

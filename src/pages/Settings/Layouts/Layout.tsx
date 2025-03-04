@@ -2,12 +2,11 @@
 import { Trans, t } from '@lingui/macro'
 import { Crown, Siren } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
+import { Route, Switch, useLocation } from 'react-router-dom'
 
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
 import { BottomWrapperMobile } from 'pages/@layouts/Components'
-import AlertIcon from 'theme/Icons/AlertIcon'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 import ROUTES from 'utils/config/routes'
@@ -29,7 +28,7 @@ const tabConfigs: TabConfig[] = [
     route: ROUTES.USER_SUBSCRIPTION.path,
   },
   {
-    name: <Trans>ALERT LIST</Trans>,
+    name: <Trans>ALERT</Trans>,
     activeIcon: <Siren size={24} weight="fill" />,
     icon: <Siren size={24} />,
     key: TabKeyEnum.BOT_ALERT,
@@ -39,7 +38,7 @@ const tabConfigs: TabConfig[] = [
 
 const pageTitleMapping = {
   [ROUTES.USER_SUBSCRIPTION.path]: t`My Subscription`,
-  [ROUTES.ALERT_LIST.path]: t`Alert List`,
+  [ROUTES.ALERT_LIST.path]: t`Alert`,
 }
 
 export default function Layout(components: LayoutComponents) {

@@ -11,3 +11,7 @@ export function getSubscriptionCount({
   if (!data?.length) return undefined
   return data.find((v) => v.plan === plan)?.count
 }
+
+export const checkIsSubscriptionTitle = (index: number) => {
+  return index === 0 || index === 6 || index === 13
+}

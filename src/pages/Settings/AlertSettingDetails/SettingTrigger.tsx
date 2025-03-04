@@ -1,39 +1,18 @@
 import { Trans } from '@lingui/macro'
-import { Info, Sliders } from '@phosphor-icons/react'
+import { Sliders } from '@phosphor-icons/react'
 import React, { ReactNode, useMemo } from 'react'
 import { v4 as uuid } from 'uuid'
 
 import SectionTitle from 'components/@ui/SectionTitle'
 import Checkbox from 'theme/Checkbox'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 
 export default function SettingTrigger() {
   return (
     <Flex flexDirection="column" width="100%" height="100%" sx={{ overflow: 'hidden' }}>
       <Flex alignItems="center" px={3} py={2} sx={{ borderBottom: 'small', borderColor: 'neutral4', gap: 2 }}>
-        <SectionTitle
-          icon={Sliders}
-          title={
-            <Flex alignItems="center" sx={{ gap: 1 }}>
-              <Trans>ALERT TRIGGER</Trans>
-              <IconBox
-                icon={<Info size={20} />}
-                size={20}
-                color="neutral3"
-                data-tip="React-tooltip"
-                data-tooltip-id={'tt-alert-trigger'}
-                data-tooltip-delay-show={360}
-              />
-              <Tooltip id={'tt-alert-trigger'}>
-                <Type.Caption color="orange2" sx={{ maxWidth: 300 }}>
-                  *These actions are selected by default from the system. You cannot change them in the current version.
-                </Type.Caption>
-              </Tooltip>
-            </Flex>
-          }
-          sx={{ mb: 0 }}
-        />
+        <SectionTitle icon={Sliders} title={<Trans>ALERT TRIGGER</Trans>} sx={{ mb: 0 }} />
       </Flex>
       <Box p={3}>
         <CheckboxItem isChecked disabled label={'Position'} tooltipContent={`Can't modify yet`} />
@@ -50,6 +29,9 @@ export default function SettingTrigger() {
           <CheckboxItem isChecked={false} disabled label={'Send assets'} tooltipContent={'Coming Soon'} />
         </Flex>
       </Box>
+      <Type.Caption p={3} color="orange2">
+        *These actions are selected by default from the system. You cannot change them in the current version.
+      </Type.Caption>
     </Flex>
   )
 }
