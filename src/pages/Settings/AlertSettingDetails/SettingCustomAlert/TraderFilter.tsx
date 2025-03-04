@@ -157,142 +157,144 @@ export default function TraderFilter({
         )}
       </Flex>
 
-      <Box p={3} sx={{ overflow: 'auto' }}>
-        <Type.Caption color="neutral2" mb={2}>
-          Please adjust your filter criteria to match{' '}
-          <Type.CaptionBold color="neutral1">
-            less than {formatNumber(LIMIT_FILTER_TRADERS, 0)} traders.
-          </Type.CaptionBold>
-        </Type.Caption>
-        <ResultEstimated
-          ranges={convertRangesFromFormValues({ condition: conditionFormValues, pairs })}
-          type={timeFrame}
-          protocols={(protocols === 'all' ? [] : protocols) as ProtocolEnum[]}
-          filterTab={FilterTabEnum.DEFAULT}
-          onCountChange={setMatchingTraderCount}
-          zIndex={0}
-          sx={{ px: 0, height: 65, mb: 2 }}
-        />
+      <Box p={3} sx={{ overflow: 'hidden' }}>
+        <Flex flex={1} flexDirection="column" sx={{ overflow: 'auto', maxHeight: isMobile ? '' : '60vh' }}>
+          <Type.Caption color="neutral2" mb={2}>
+            Please adjust your filter criteria to match{' '}
+            <Type.CaptionBold color="neutral1">
+              less than {formatNumber(LIMIT_FILTER_TRADERS, 0)} traders.
+            </Type.CaptionBold>
+          </Type.Caption>
+          <ResultEstimated
+            ranges={convertRangesFromFormValues({ condition: conditionFormValues, pairs })}
+            type={timeFrame}
+            protocols={(protocols === 'all' ? [] : protocols) as ProtocolEnum[]}
+            filterTab={FilterTabEnum.DEFAULT}
+            onCountChange={setMatchingTraderCount}
+            zIndex={0}
+            sx={{ px: 0, height: 65, mb: 2 }}
+          />
 
-        <Flex flexDirection="column" sx={{ gap: 2 }}>
-          <Box>
-            <Type.Caption mb={2} color="neutral2">
-              <Trans>TIME FRAME</Trans>
-            </Type.Caption>
-            <RadioGroup
-              value={timeFrame}
-              onChange={(value) => setTimeFrame(value as TimeFilterByEnum)}
-              options={TIMEFRAME_OPTIONS}
-              sxChildren={{ textTransform: 'uppercase' }}
-              sx={{ gap: isMobile ? 2 : 3 }}
-            />
-          </Box>
-
-          {/* Market Filter */}
-          <Flex flexDirection="column" alignItems="flex-start" sx={{ gap: isMobile ? 3 : 2 }}>
-            <Flex flex={1} flexDirection="column" width="100%">
-              <Label label="PROTOCOL" />
-              <Select
-                closeMenuOnSelect={false}
-                className="select-container pad-right-0"
-                maxHeightSelectContainer={isMobile ? '40px' : '56px'}
-                maxMenuHeight={150}
-                options={_protocolOptions}
-                defaultMenuIsOpen={false}
-                value={_protocolOptions.filter((option) => protocols.includes(option.value))}
-                onChange={(newValue: any) => {
-                  const values = newValue?.map((data: any) => data.value)
-                  if (protocols === 'all') {
-                    setProtocols(values.filter((v: any) => v !== 'all'))
-                  } else {
-                    if (values.includes('all')) {
-                      setProtocols('all')
-                    } else {
-                      setProtocols(values)
-                    }
-                  }
-                }}
-                isSearchable
-                isMulti
-              />
-              {!protocols?.length && (
-                <Type.Caption mt={1} color="red1">
-                  Please select at least one protocol
-                </Type.Caption>
-              )}
-            </Flex>
-            <Flex flex={1} flexDirection="column" width="100%">
-              <Label label="MARKET" />
-              <Select
-                closeMenuOnSelect={false}
-                className="select-container pad-right-0"
-                maxHeightSelectContainer={isMobile ? '40px' : '56px'}
-                maxMenuHeight={150}
-                options={pairOptions}
-                value={pairOptions?.filter?.((option) => pairs.includes(option.value))}
-                onChange={(newValue: any) => {
-                  const values = newValue?.map((data: any) => data.value)
-                  if (pairs === 'all') {
-                    setPairs(values.filter((v: any) => v !== 'all'))
-                  } else {
-                    if (values.includes('all')) {
-                      setPairs('all')
-                    } else {
-                      setPairs(values)
-                    }
-                  }
-                }}
-                isSearchable
-                isMulti
-              />
-              {!pairs?.length && (
-                <Type.Caption mt={1} color="red1">
-                  Please select at least one pair
-                </Type.Caption>
-              )}
-            </Flex>
-          </Flex>
-
-          {/* Condition Filter Form */}
-          <Box>
-            <ConditionFilterForm
-              type="default"
-              formValues={conditionFormValues}
-              setFormValues={setConditionFormValues}
-              fieldOptions={defaultFieldOptions.filter((e) => e.value !== 'indexTokens')}
-              onValuesChange={setConditionFormValues}
-              wrapperSx={{ px: 0, maxHeight: isMobile ? '150px' : '250px', overflow: 'auto' }}
-              labelColor="neutral2"
-            />
-          </Box>
-          <Box>
-            {matchingTraderCount > LIMIT_FILTER_TRADERS && (
-              <Type.Caption color="red1">
-                The filter matches too many traders ({formatNumber(matchingTraderCount, 0)}/
-                {formatNumber(LIMIT_FILTER_TRADERS, 0)})
+          <Flex flexDirection="column" sx={{ gap: 2 }}>
+            <Box>
+              <Type.Caption mb={2} color="neutral2">
+                <Trans>TIME FRAME</Trans>
               </Type.Caption>
-            )}
-            <Flex justifyContent="flex-end" sx={{ gap: 2 }}>
-              <Button variant="ghost" onClick={handleResetFilter} disabled={!hasChange}>
-                <Trans>Reset</Trans>
-              </Button>
-              <Button
-                variant="ghostPrimary"
-                onClick={handleApplyFilter}
-                disabled={
-                  !protocols?.length ||
-                  !pairs?.length ||
-                  !conditionFormValues?.length ||
-                  matchingTraderCount === 0 ||
-                  matchingTraderCount > LIMIT_FILTER_TRADERS ||
-                  !hasChange
-                }
-              >
-                <Trans>Apply Filter</Trans>
-              </Button>
+              <RadioGroup
+                value={timeFrame}
+                onChange={(value) => setTimeFrame(value as TimeFilterByEnum)}
+                options={TIMEFRAME_OPTIONS}
+                sxChildren={{ textTransform: 'uppercase' }}
+                sx={{ gap: isMobile ? 2 : 3 }}
+              />
+            </Box>
+
+            {/* Market Filter */}
+            <Flex flexDirection="column" alignItems="flex-start" sx={{ gap: isMobile ? 3 : 2 }}>
+              <Flex flex={1} flexDirection="column" width="100%">
+                <Label label="PROTOCOL" />
+                <Select
+                  closeMenuOnSelect={false}
+                  className="select-container pad-right-0"
+                  maxHeightSelectContainer={isMobile ? '40px' : '56px'}
+                  maxMenuHeight={150}
+                  options={_protocolOptions}
+                  defaultMenuIsOpen={false}
+                  value={_protocolOptions.filter((option) => protocols.includes(option.value))}
+                  onChange={(newValue: any) => {
+                    const values = newValue?.map((data: any) => data.value)
+                    if (protocols === 'all') {
+                      setProtocols(values.filter((v: any) => v !== 'all'))
+                    } else {
+                      if (values.includes('all')) {
+                        setProtocols('all')
+                      } else {
+                        setProtocols(values)
+                      }
+                    }
+                  }}
+                  isSearchable
+                  isMulti
+                />
+                {!protocols?.length && (
+                  <Type.Caption mt={1} color="red1">
+                    Please select at least one protocol
+                  </Type.Caption>
+                )}
+              </Flex>
+              <Flex flex={1} flexDirection="column" width="100%">
+                <Label label="MARKET" />
+                <Select
+                  closeMenuOnSelect={false}
+                  className="select-container pad-right-0"
+                  maxHeightSelectContainer={isMobile ? '40px' : '56px'}
+                  maxMenuHeight={150}
+                  options={pairOptions}
+                  value={pairOptions?.filter?.((option) => pairs.includes(option.value))}
+                  onChange={(newValue: any) => {
+                    const values = newValue?.map((data: any) => data.value)
+                    if (pairs === 'all') {
+                      setPairs(values.filter((v: any) => v !== 'all'))
+                    } else {
+                      if (values.includes('all')) {
+                        setPairs('all')
+                      } else {
+                        setPairs(values)
+                      }
+                    }
+                  }}
+                  isSearchable
+                  isMulti
+                />
+                {!pairs?.length && (
+                  <Type.Caption mt={1} color="red1">
+                    Please select at least one pair
+                  </Type.Caption>
+                )}
+              </Flex>
             </Flex>
-          </Box>
+
+            {/* Condition Filter Form */}
+            <Box>
+              <ConditionFilterForm
+                type="default"
+                formValues={conditionFormValues}
+                setFormValues={setConditionFormValues}
+                fieldOptions={defaultFieldOptions.filter((e) => e.value !== 'indexTokens')}
+                onValuesChange={setConditionFormValues}
+                wrapperSx={{ px: 0 }}
+                labelColor="neutral2"
+              />
+            </Box>
+          </Flex>
         </Flex>
+        <Box>
+          {matchingTraderCount > LIMIT_FILTER_TRADERS && (
+            <Type.Caption color="red1">
+              The filter matches too many traders ({formatNumber(matchingTraderCount, 0)}/
+              {formatNumber(LIMIT_FILTER_TRADERS, 0)})
+            </Type.Caption>
+          )}
+          <Flex justifyContent="flex-end" sx={{ gap: 2 }}>
+            <Button variant="ghost" onClick={handleResetFilter} disabled={!hasChange}>
+              <Trans>Reset</Trans>
+            </Button>
+            <Button
+              variant="ghostPrimary"
+              onClick={handleApplyFilter}
+              disabled={
+                !protocols?.length ||
+                !pairs?.length ||
+                !conditionFormValues?.length ||
+                matchingTraderCount === 0 ||
+                matchingTraderCount > LIMIT_FILTER_TRADERS ||
+                !hasChange
+              }
+            >
+              <Trans>Apply Filter</Trans>
+            </Button>
+          </Flex>
+        </Box>
       </Box>
     </Flex>
   )
