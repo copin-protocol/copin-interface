@@ -57,10 +57,10 @@ export default function HLOrderFilledListView({ data, isLoading, scrollDep }: Pr
           </Box>
         </Flex>
       )}
-      {data?.map((item) => {
+      {data?.map((item, index) => {
         const symbol = getSymbolFromPair(item.pair)
         return (
-          <Box sx={{ p: [2, 3] }} key={item.txHash}>
+          <Box sx={{ p: [2, 3] }} key={index + symbol + item.orderId + item.txHash + item.timestamp}>
             <Flex sx={{ alignItems: 'center', gap: '1ch', flexWrap: 'wrap' }}>
               <Type.Caption color="neutral3">
                 <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />

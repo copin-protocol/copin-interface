@@ -152,4 +152,5 @@ export interface GroupedFillsData {
   isLong: boolean
   feeToken: string
   txHash: string
+  orderId: number
 }
