@@ -5,7 +5,7 @@ import {
   HlOrderData,
   HlOrderFillData,
   HlOrderFillRawData,
-  HlOrderRawData
+  HlOrderRawData,
 } from 'entities/hyperliquid'
 import { PositionData } from 'entities/trader'
 import { CopyTradePlatformEnum, MarginModeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
@@ -185,6 +185,7 @@ export function groupHLOrderFillsByOid(fills: HlOrderFillData[]) {
         isLong: fill.isLong,
         feeToken: fill.feeToken,
         txHash: fill.txHash,
+        orderId: fill.orderId,
       }
       groups.push(currentGroup)
     }

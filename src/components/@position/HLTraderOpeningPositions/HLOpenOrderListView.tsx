@@ -59,7 +59,7 @@ export default function HLOpenOrderListView({ data, isLoading, scrollDep }: Prop
       {data?.map((item) => {
         const symbol = getSymbolFromPair(item.pair)
         return (
-          <Box sx={{ p: [2, 3] }} key={item.orderId}>
+          <Box sx={{ p: [2, 3] }} key={item.timestamp + item.orderId}>
             <Flex sx={{ alignItems: 'center', gap: '1ch', flexWrap: 'wrap' }}>
               <Type.Caption color="neutral3">
                 <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />

@@ -27,7 +27,7 @@ const TABS = [
 const HYPERLIQUID_TABS = [
   { key: TabKeyEnum.OPENING, name: 'Opening Positions' },
   { key: TabKeyEnum.CLOSED, name: 'History' },
-  { key: TabKeyEnum.OPEN_ORDERS, name: 'Open Orders' },
+  { key: TabKeyEnum.OPEN_ORDERS, name: 'Orders' },
   { key: TabKeyEnum.FILLS, name: 'Fills' },
 ]
 
