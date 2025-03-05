@@ -66,7 +66,10 @@ export default function SettingWatchlistTraders({
     } as ApiListResponse<TraderAlertData>
   }, [protocolOptionsMapping, searchText, traders])
 
-  const { createTraderAlert, deleteTraderAlert, submittingDelete } = useSettingWatchlistTraders({})
+  const onSuccess = () => {
+    changeCurrentPage(1)
+  }
+  const { createTraderAlert, deleteTraderAlert, submittingDelete } = useSettingWatchlistTraders({ onSuccess })
 
   const handleUnsubscribeAlert = (alert?: TraderAlertData) => {
     if (alert) {
