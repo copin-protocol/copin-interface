@@ -91,7 +91,7 @@ const commonSchema = {
 
 export const copyTradeFormSchema = yup.object({
   ...commonSchema,
-  serviceKey: yup.string().required().label('Service Key'),
+  // serviceKey: yup.string().required().label('Service Key'),
   exchange: yup
     .mixed()
     .oneOf([
@@ -126,7 +126,7 @@ export const cloneCopyTradeFormSchema = yup.object({
       then: (schema) => schema.required(),
     })
     .label('Clone to address'),
-  serviceKey: yup.string().required().label('Service Key'),
+  // serviceKey: yup.string().required().label('Service Key'),
   exchange: yup
     .mixed()
     .oneOf([
