@@ -6,6 +6,7 @@ import { Link, useHistory } from 'react-router-dom'
 import ActiveDot from 'components/@ui/ActiveDot'
 import Divider from 'components/@ui/Divider'
 import { BotAlertData } from 'entities/alert'
+import useAlertDashboardContext from 'hooks/features/alert/useAlertDashboardContext'
 import useCustomAlerts from 'hooks/features/alert/useCustomAlerts'
 import useSettingChannels from 'hooks/features/alert/useSettingChannels'
 import { Button } from 'theme/Buttons'
@@ -145,7 +146,12 @@ export const AlertActions = ({ data }: { data: BotAlertData }) => {
 
 const CustomAlertActions = ({ data }: { data: BotAlertData }) => {
   const history = useHistory()
-  const { deleteCustomAlert } = useCustomAlerts({})
+  const { changeCurrentPage } = useAlertDashboardContext()
+
+  const onSuccess = () => {
+    changeCurrentPage?.(1)
+  }
+  const { deleteCustomAlert } = useCustomAlerts({ onSuccess })
 
   const handleSubmit = (type: 'edit' | 'delete') => {
     switch (type) {

@@ -20,25 +20,29 @@ import IconButton from 'theme/Buttons/IconButton'
 import { PaginationWithSelect } from 'theme/Pagination'
 import Popconfirm from 'theme/Popconfirm'
 import Table from 'theme/Table'
-import { ColumnData } from 'theme/Table/types'
+import { ColumnData, TableSortProps } from 'theme/Table/types'
 import { Flex } from 'theme/base'
 import { AlertSettingsEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 
 import SearchToAdd from './SearchToAdd'
-import { MobileRowItem, Trader24hTrades, TraderAddress, TraderLastTradeAt, TraderStatus } from './config'
+import { MobileRowItem, Trader24hTrades, TraderAddress, TraderCreatedAt, TraderStatus } from './config'
 
 export default function SettingWatchlistTraders({
   botAlert,
   traders,
   currentPage,
   changeCurrentPage,
+  currentSort,
+  changeCurrentSort,
   onChangeStep,
 }: {
   botAlert?: BotAlertData
   traders?: ApiListResponse<TraderAlertData>
   currentPage: number
   changeCurrentPage: (page: number) => void
+  currentSort: TableSortProps<TraderAlertData> | undefined
+  changeCurrentSort: (value: TableSortProps<TraderAlertData> | undefined) => void
   onChangeStep: (step: AlertSettingsEnum) => void
 }) {
   const { lg } = useResponsive()
@@ -66,7 +70,10 @@ export default function SettingWatchlistTraders({
     } as ApiListResponse<TraderAlertData>
   }, [protocolOptionsMapping, searchText, traders])
 
-  const { createTraderAlert, deleteTraderAlert, submittingDelete } = useSettingWatchlistTraders({})
+  const onSuccess = () => {
+    changeCurrentPage(1)
+  }
+  const { createTraderAlert, deleteTraderAlert, submittingDelete } = useSettingWatchlistTraders({ onSuccess })
 
   const handleUnsubscribeAlert = (alert?: TraderAlertData) => {
     if (alert) {
@@ -130,15 +137,17 @@ export default function SettingWatchlistTraders({
         title: 'TRADERS',
         dataIndex: 'address',
         key: 'address',
+        sortBy: 'address',
         style: { minWidth: '150px' },
         render: (item) => <TraderAddress data={item} />,
       },
       {
-        title: '24H LAST TRADE',
-        dataIndex: 'lastTradeAt',
-        key: 'lastTradeAt',
+        title: 'LATEST ADDED',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        sortBy: 'createdAt',
         style: { minWidth: '80px', textAlign: 'right' },
-        render: (item) => <TraderLastTradeAt data={item} />,
+        render: (item) => <TraderCreatedAt data={item} />,
       },
       {
         title: '24H TRADES',
@@ -258,7 +267,7 @@ export default function SettingWatchlistTraders({
                           <TraderActions data={data} />
                         </Flex>
                       </Flex>
-                      <MobileRowItem label={'24H Last Trade'} value={<TraderLastTradeAt data={data} />} />
+                      <MobileRowItem label={'Latest Added'} value={<TraderCreatedAt data={data} />} />
                       <MobileRowItem label={'24H Trades'} value={<Trader24hTrades data={data} />} />
                     </Flex>
                   )
@@ -270,6 +279,8 @@ export default function SettingWatchlistTraders({
               data={filteredTraders?.data}
               columns={columns}
               isLoading={false}
+              currentSort={currentSort}
+              changeCurrentSort={changeCurrentSort}
               tableHeadSx={{
                 '& th': {
                   py: 2,

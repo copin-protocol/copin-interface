@@ -41,6 +41,12 @@ export const TraderStatus = ({ data }: { data: TraderAlertData }) => {
   )
 }
 
+export const TraderCreatedAt = ({ data }: { data: TraderAlertData }) => {
+  return (
+    <Type.Caption color="neutral1">{data.createdAt ? formatLocalRelativeDate(data.createdAt) : 'N/A'}</Type.Caption>
+  )
+}
+
 export const TraderLastTradeAt = ({ data }: { data: TraderAlertData }) => {
   return (
     <Type.Caption color="neutral1">{data.lastTradeAt ? formatLocalRelativeDate(data.lastTradeAt) : 'N/A'}</Type.Caption>
