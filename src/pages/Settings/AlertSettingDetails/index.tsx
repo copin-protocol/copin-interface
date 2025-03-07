@@ -48,6 +48,8 @@ function AlertSettingDetailsComponent() {
     totalMatchingTraders,
     currentPage,
     changeCurrentPage,
+    currentSort,
+    changeCurrentSort,
     onChangeStep,
     onDismiss,
   } = useAlertSettingDetailsContext()
@@ -184,6 +186,8 @@ function AlertSettingDetailsComponent() {
                             traders={watchlistTraders}
                             currentPage={currentPage}
                             changeCurrentPage={changeCurrentPage}
+                            currentSort={currentSort}
+                            changeCurrentSort={changeCurrentSort}
                             onChangeStep={onChangeStep}
                           />
                         ) : (
@@ -219,6 +223,8 @@ function AlertSettingDetailsComponent() {
                       traders={watchlistTraders}
                       currentPage={currentPage}
                       changeCurrentPage={changeCurrentPage}
+                      currentSort={currentSort}
+                      changeCurrentSort={changeCurrentSort}
                       onChangeStep={onChangeStep}
                     />
                   ) : (

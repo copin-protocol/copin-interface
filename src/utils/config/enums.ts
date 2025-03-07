@@ -5,6 +5,7 @@ export enum ProtocolEnum {
   POLYNOMIAL = 'POLYNOMIAL',
   GMX_V2 = 'GMX_V2',
   GMX_V2_AVAX = 'GMX_V2_AVAX',
+  GMX_SOL = 'GMX_SOL',
   GNS = 'GNS',
   GNS_POLY = 'GNS_POLY',
   GNS_BASE = 'GNS_BASE',

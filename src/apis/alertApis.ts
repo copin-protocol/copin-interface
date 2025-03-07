@@ -6,7 +6,7 @@ import {
   TraderAlertData,
 } from 'entities/alert'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { AlertTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { AlertTypeEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 
 import { ApiListResponse } from './api'
 import requester from './index'
@@ -24,9 +24,17 @@ export async function getTraderAlertListApi({
   offset = 0,
   address,
   protocol,
-}: { address?: string; protocol?: ProtocolEnum } & GetApiParams) {
+  sortBy,
+  sortType,
+}: { address?: string; protocol?: ProtocolEnum; sortBy?: string; sortType?: SortTypeEnum } & GetApiParams) {
+  const params: Record<string, any> = {}
+  if (!!protocol) params.protocols = protocol
+  if (!!address) params.address = address
+  if (!!protocol) params.protocol = protocol
+  if (!!sortBy) params.sort_by = sortBy
+  if (!!sortType) params.sort_type = sortType
   return requester
-    .get(`${SERVICE}/trader`, { params: { limit, offset, address, protocol } })
+    .get(`${SERVICE}/trader`, { params: { limit, offset, ...params } })
     .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
 }
 

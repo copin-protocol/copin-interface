@@ -439,6 +439,7 @@ const PROTOCOL_CONFIG_MAPPING: { [key in ProtocolEnum]?: { text: string; textWid
   [ProtocolEnum.GMX_AVAX]: { text: 'GMX (AVAX)', textWidth: 168 },
   [ProtocolEnum.GMX_V2]: { text: 'GMX V2', textWidth: 117 },
   [ProtocolEnum.GMX_V2_AVAX]: { text: 'GMX V2 (AVAX)', textWidth: 328 },
+  [ProtocolEnum.GMX_SOL]: { text: 'GMX (SOL)', textWidth: 328 },
   [ProtocolEnum.KWENTA]: { text: 'Kwenta', textWidth: 117 },
   [ProtocolEnum.POLYNOMIAL]: { text: 'Polynomial', textWidth: 168 },
   [ProtocolEnum.POLYNOMIAL_L2]: { text: 'Polynomial L2', textWidth: 328 },

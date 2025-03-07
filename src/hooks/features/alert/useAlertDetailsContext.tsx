@@ -16,7 +16,15 @@ import useMyProfile from 'hooks/store/useMyProfile'
 import { FilterTabEnum } from 'pages/Explorer/ConditionFilter/configs'
 import useTradersCount from 'pages/Explorer/ConditionFilter/useTraderCount'
 import { convertRangesFromConfigs } from 'pages/Settings/AlertSettingDetails/SettingCustomAlert/helpers'
-import { AlertCategoryEnum, AlertSettingsEnum, AlertTypeEnum, ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { TableSortProps } from 'theme/Table/types'
+import {
+  AlertCategoryEnum,
+  AlertSettingsEnum,
+  AlertTypeEnum,
+  ProtocolEnum,
+  SortTypeEnum,
+  TimeFilterByEnum,
+} from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
@@ -40,6 +48,8 @@ export interface AlertDetailsContextData {
   currentStep?: AlertSettingsEnum
   currentPage: number
   changeCurrentPage: (page: number) => void
+  currentSort: TableSortProps<TraderAlertData> | undefined
+  changeCurrentSort: (value: TableSortProps<TraderAlertData> | undefined) => void
   onChangeStep: (step: AlertSettingsEnum) => void
   onDismiss: () => void
 }
@@ -111,9 +121,22 @@ export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode 
 
   const limit = 10
   const { currentPage, changeCurrentPage } = usePageChange({ pageName: 'page' })
+  const [currentSort, setCurrentSort] = useState<TableSortProps<TraderAlertData> | undefined>(() => {
+    const initSortBy = 'createdAt'
+    const initSortType = SortTypeEnum.DESC
+    if (!initSortBy) return undefined
+    return { sortBy: initSortBy as TableSortProps<TraderAlertData>['sortBy'], sortType: initSortType as SortTypeEnum }
+  })
+
   const { data: watchlistTraders } = useQuery(
-    [QUERY_KEYS.GET_TRADER_ALERTS, currentPage, limit, myProfile?.id],
-    () => getTraderAlertListApi({ limit, offset: pageToOffset(currentPage, limit) }),
+    [QUERY_KEYS.GET_TRADER_ALERTS, currentPage, currentSort, limit, myProfile?.id],
+    () =>
+      getTraderAlertListApi({
+        limit,
+        offset: pageToOffset(currentPage, limit),
+        sortBy: currentSort?.sortBy,
+        sortType: currentSort?.sortType,
+      }),
     {
       enabled: !!myProfile?.id && botAlert?.type === AlertTypeEnum.TRADERS,
       keepPreviousData: true,
@@ -157,6 +180,8 @@ export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode 
     maxTraderAlert,
     currentPage,
     changeCurrentPage,
+    currentSort,
+    changeCurrentSort: setCurrentSort,
     onChangeStep,
     onDismiss,
   }

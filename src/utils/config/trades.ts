@@ -103,6 +103,10 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: AVALANCHE_MAINNET,
     explorerUrl: CHAINS[AVALANCHE_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.GMX_SOL]: {
+    chainId: SOLANA_MAINNET,
+    explorerUrl: CHAINS[SOLANA_MAINNET].blockExplorerUrl,
+  },
   [ProtocolEnum.KWENTA]: {
     chainId: OPTIMISM_MAINNET,
     explorerUrl: CHAINS[OPTIMISM_MAINNET].blockExplorerUrl,
@@ -411,6 +415,7 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.GMX_AVAX]: TOKEN_COLLATERAL_AVAX,
   [ProtocolEnum.GMX_V2]: TOKEN_COLLATERAL_ARB,
   [ProtocolEnum.GMX_V2_AVAX]: TOKEN_COLLATERAL_AVAX,
+  [ProtocolEnum.GMX_SOL]: {},
   [ProtocolEnum.KWENTA]: TOKEN_COLLATERAL_OPTIMISTIC,
   [ProtocolEnum.POLYNOMIAL]: TOKEN_COLLATERAL_OPTIMISTIC,
   [ProtocolEnum.POLYNOMIAL_L2]: TOKEN_COLLATERAL_POLYNOMIAL_L2,

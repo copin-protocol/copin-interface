@@ -12,6 +12,9 @@ export const PROTOCOL_CONFIG_MAPPING = {
   GMX_V2_AVAX: {
     title: "GMX V2 (AVAX)",
   },
+  GMX_SOL: {
+    title: "GMX (SOL)",
+  },
   GNS: {
     title: "gTrade (ARB)",
   },

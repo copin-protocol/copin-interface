@@ -75,6 +75,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     key: 'GMAV',
     linkTrade: LINKS.tradeGMX,
   },
+  [ProtocolEnum.GMX_SOL]: {
+    id: ProtocolEnum.GMX_SOL,
+    text: 'GMX',
+    label: 'Solana',
+    chainId: SOLANA_MAINNET,
+    key: 'GMS',
+    linkTrade: LINKS.tradeGMXSol,
+  },
   [ProtocolEnum.KWENTA]: {
     id: ProtocolEnum.KWENTA,
     text: 'Kwenta',
