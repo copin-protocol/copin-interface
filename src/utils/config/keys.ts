@@ -248,7 +248,7 @@ export const ELEMENT_IDS = {
   HOME_TRADERS_WRAPPER: 'home__traders__wrapper',
   WARNING_LIMIT_VOLUME_WRAPPER: 'warning_limit_volume__wrapper',
   BINGX_INFO_WRAPPER: 'bingx_info__wrapper',
-  DCP_WARNING_BANNER: 'dcp_warning_banner',
+  WARNING_BANNER: 'warning_banner',
   LITE_DEPOSIT_QRCODE: 'lite_deposit_qrcode',
 }
 
