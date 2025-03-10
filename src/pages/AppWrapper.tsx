@@ -22,15 +22,14 @@ import GlobalDialog from './@helpers/GlobalDialog'
 import SubscriptionRestrict from './@helpers/SubscriptionRestrict'
 import LiteWalletNotice from './@layouts/LiteWalletNotice'
 import SubscriptionExpiredWarning from './@layouts/SubscriptionExpiredWarning'
-
-// import WarningBetaVersion from './@layouts/WarningBetaVersion'
+import WarningBanner from './@layouts/WarningBanner'
 
 const AppWrapper = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <Flex flexDirection="column" width="100vw" height="100vh" margin="0px auto" maxHeight="100%">
-        {/* {!isValidFees && <WarningBetaVersion />} */}
         <Navbar height={NAVBAR_HEIGHT} />
+        <WarningBanner />
         <LiteWalletNotice />
         <Box id={ELEMENT_IDS.APP_MAIN_WRAPPER} width="100%" flex="1" sx={{ position: 'relative', overflowY: 'auto' }}>
           {children}

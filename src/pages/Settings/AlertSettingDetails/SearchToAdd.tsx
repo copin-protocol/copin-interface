@@ -17,6 +17,7 @@ import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
 import RcDialog from 'theme/RcDialog'
 import { Box, Flex, Type } from 'theme/base'
+import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { formatNumber } from 'utils/helpers/format'
@@ -65,7 +66,6 @@ function SearchContainer({
   onSelect: (data: TraderData) => void
 }) {
   const isMobile = useIsMobile()
-
   const {
     searchWrapperRef,
     inputSearchRef,
@@ -76,7 +76,13 @@ function SearchContainer({
     visibleSearchResult,
     isLoading,
     searchTraders,
-  } = useSearchAllData({ onSelect, returnRanking: true, allowAllProtocol: true, limit: 500 })
+  } = useSearchAllData({
+    onSelect,
+    protocols: RELEASED_PROTOCOLS,
+    returnRanking: true,
+    allowAllProtocol: false,
+    limit: 500,
+  })
   // const traders = [...filterFoundData(searchTraders?.data, ignoreSelectTraders)]
   const traders = searchTraders?.data ?? []
 

@@ -1,18 +1,18 @@
 import { Warning } from '@phosphor-icons/react'
-import { Link } from 'react-router-dom'
 
-import { useAuthContext } from 'hooks/web3/useAuth'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { useParsedProtocol } from 'hooks/helpers/useProtocols'
+import { Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_IDS } from 'utils/config/keys'
-import ROUTES from 'utils/config/routes'
 
-export default function WarningBetaVersion() {
-  // const { showBanner, handleCloseBanner } = useBingXBannerDisplay()
-  const { isAuthenticated } = useAuthContext()
-  return (
+export default function WarningBanner() {
+  const protocol = useParsedProtocol()
+  const isWarning = protocol === ProtocolEnum.DYDX
+
+  return isWarning ? (
     <Flex
-      id={ELEMENT_IDS.DCP_WARNING_BANNER}
+      id={ELEMENT_IDS.WARNING_BANNER}
       sx={{
         position: 'relative',
         width: '100%',
@@ -36,15 +36,13 @@ export default function WarningBetaVersion() {
         }}
       >
         <Type.Caption>
-          <IconBox icon={<Warning size={16} />} /> HyperLiquid Exchange API Key update required. We kindly ask you to
-          update your HyperLiquid wallet API Key before 00:00 UTC, 14 Dec 2024.{' '}
-          {isAuthenticated && (
-            <Box as={Link} color="neutral1" to={ROUTES.WALLET_MANAGEMENT.path}>
-              Go to upgrade
-            </Box>
-          )}
+          <IconBox icon={<Warning size={16} />} pr={1} />
+          dYdX exchange is undergoing maintenance to resolve the data issue, and we are working to restore full
+          functionality as soon as possible. Thank you for your patience and understanding!
         </Type.Caption>
       </Flex>
     </Flex>
+  ) : (
+    <></>
   )
 }
