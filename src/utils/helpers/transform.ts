@@ -469,6 +469,24 @@ const EXCHANGE_PRICE_MULTIPLE_MAPPING: Partial<Record<CopyTradePlatformEnum, Rec
   },
   [CopyTradePlatformEnum.OKX]: {},
   [CopyTradePlatformEnum.GATE]: {},
+  [CopyTradePlatformEnum.HYPERLIQUID]: {
+    BONK: 1_000,
+    PEPE: 1_000,
+    FLOKI: 1_000,
+    SHIB: 1_000,
+    LUNC: 1_000,
+    DOGS: 1_000,
+    NEIRO: 1_000,
+  },
+  [CopyTradePlatformEnum.COPIN_HYPERLIQUID]: {
+    BONK: 1_000,
+    PEPE: 1_000,
+    FLOKI: 1_000,
+    SHIB: 1_000,
+    LUNC: 1_000,
+    DOGS: 1_000,
+    NEIRO: 1_000,
+  },
 }
 
 /**
