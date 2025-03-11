@@ -305,7 +305,7 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
             </Flex>
             <Box px={2} py={[2, 12]} sx={{ position: 'relative' }}>
               <Flex mb={[1, 3]} width="100%" alignItems="center" justifyContent="center">
-                {isOpening ? (
+                {isOpening || !!crossMovePnL ? (
                   <Type.H5 color={(latestPnL ?? 0) > 0 ? 'green1' : (latestPnL ?? 0) < 0 ? 'red2' : 'inherit'}>
                     <AmountText amount={latestPnL} maxDigit={2} minDigit={2} suffix="$" />
                   </Type.H5>

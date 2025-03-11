@@ -5,6 +5,7 @@ import { CopyTradePlatformEnum, PerpChartTypeEnum, ProtocolEnum } from './enums'
 export const SUPPORTED_LOCALES = ['en']
 export const DEFAULT_LOCALE = 'en'
 
+export const API_URL = import.meta.env.VITE_API
 export const NETWORK = import.meta.env.VITE_NETWORK_ENV
 export const BUILD_MODE = import.meta.env.VITE_BUILD_MODE
 export const APP_URL = import.meta.env.VITE_URL

@@ -1,131 +1,235 @@
-import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
-import axios from 'axios'
-import axiosRetry from 'axios-retry'
+import { HermesClient, PriceUpdate } from '@pythnetwork/hermes-client'
 
 import { MarketsData } from 'entities/markets'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
-import { NETWORK } from 'utils/config/constants'
+import { API_URL, NETWORK } from 'utils/config/constants'
 import { PYTH_IDS_MAPPING } from 'utils/config/pythIds'
-import { PROTOCOL_PRICE_MULTIPLE_MAPPING } from 'utils/helpers/transform'
-import { WorkerMessage } from 'utils/types'
+import { PROTOCOL_PRICE_MULTIPLE_MAPPING } from 'utils/helpers/price'
 
-const ports: MessagePort[] = []
-
-//@ts-ignore
-onconnect = (e: MessageEvent) => {
-  const port = e.ports[0]
-  ports.push(port)
+interface UsdPrices {
+  [key: string]: number | undefined
 }
 
-const requester = axios.create({
-  baseURL: import.meta.env.VITE_API,
-  timeout: 300000,
-  headers: {
-    'Access-Control-Max-Age': 600,
-  },
-})
-axiosRetry(requester, { retries: 10, retryDelay: (retryCount) => retryCount * 5_000, retryCondition: () => true })
+interface PriceConfig {
+  PYTH_PRICE_FEED_URL: string
+  CHUNK_SIZE: number
+  UPDATE_INTERVAL: number
+  REQUEST_TIMEOUT: number
+  MAX_RETRIES: number
+  RETRY_DELAY_MULTIPLIER: number
+  API_BASE_URL: string
+}
 
-const PYTH_PRICE_FEED_URL = NETWORK === 'devnet' ? 'https://hermes.pyth.network' : 'https://hermes.copin.io'
-const pyth = new EvmPriceServiceConnection(PYTH_PRICE_FEED_URL)
+interface PriceData {
+  symbol: string
+  value: number
+  publishTime: number
+}
 
-const SYMBOLS_BY_PYTH_ID = Object.entries(PYTH_IDS_MAPPING).reduce<Record<string, string[]>>((result, [key, value]) => {
-  return { ...result, [value]: [...(result[value] ?? []), key] }
-}, {})
+interface WorkerMessage {
+  type: 'pyth_price'
+  data: UsdPrices
+}
 
-function getPriceData({ priceFeed }: { priceFeed: PriceFeed }) {
-  if (!priceFeed) return null
-  const id = `0x${priceFeed.id}`
-  const priceData = priceFeed.getPriceNoOlderThan(60)
-  const symbols = SYMBOLS_BY_PYTH_ID[id]
-  if (!priceData || !symbols?.length) {
-    return null
+interface PriceFeed {
+  id: string
+  price: {
+    price: number
+    expo: number
+    publish_time: number
   }
-  return symbols.map((symbol) => ({ symbol, value: Number(priceData.price) * Math.pow(10, priceData.expo) }))
 }
 
-const processPriceFeed = (priceFeed: PriceFeed, pricesData: UsdPrices) => {
-  const data = getPriceData({ priceFeed })
-  if (!data?.length) return pricesData
-  data.forEach((parsedData) => {
-    const symbol = parsedData.symbol
-    const multipleRatio = PROTOCOL_PRICE_MULTIPLE_MAPPING[symbol]?.multiple ?? 1
-    pricesData[symbol] = parsedData.value * multipleRatio
-  })
-  return pricesData
-}
-
-function chunkArray(array: string[], chunkSize: number) {
-  const chunks = []
-  for (let i = 0; i < array.length; i += chunkSize) {
-    chunks.push(array.slice(i, i + chunkSize))
+class PriceManager {
+  private readonly config: PriceConfig = {
+    PYTH_PRICE_FEED_URL: NETWORK === 'devnet' ? 'https://hermes.pyth.network' : 'https://hermes.copin.io',
+    CHUNK_SIZE: 100,
+    UPDATE_INTERVAL: 3000,
+    REQUEST_TIMEOUT: 300000,
+    MAX_RETRIES: 3,
+    RETRY_DELAY_MULTIPLIER: 5000,
+    API_BASE_URL: API_URL,
   }
-  return chunks
-}
 
-async function initPythWebsocket() {
-  try {
-    const data = await requester.get(`/pairs/tokens`).then((res: any) => res.data?.data as MarketsData)
-    const listAllSymbol = Array.from(
-      new Set(
-        Object.values(data)
-          .map((values) => values.map((_v) => _v.symbol))
-          .flat(Infinity) as string[]
-      )
-    ).sort()
+  private readonly ports: MessagePort[] = []
+  private readonly pythClient: HermesClient = new HermesClient(this.config.PYTH_PRICE_FEED_URL)
 
-    const pythIds = listAllSymbol.map((symbol) => PYTH_IDS_MAPPING[symbol]).filter((v) => !!v)
+  constructor() {
+    this.setupWorkerConnection()
+  }
 
-    //=========================================
+  private async fetchWithRetry(url: string, options: RequestInit = {}, retryCount = 0): Promise<Response> {
+    try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), this.config.REQUEST_TIMEOUT)
 
-    const allPriceFeedIds = await pyth.getPriceFeedIds()
-    const availablePriceFeedIds = pythIds.filter((id) =>
-      !!allPriceFeedIds?.length ? allPriceFeedIds?.includes(id.split('0x')?.[1]) : true
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+        headers: {
+          'Access-Control-Max-Age': '600',
+          ...options.headers,
+        },
+      })
+
+      clearTimeout(timeoutId)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      return response
+    } catch (error) {
+      if (retryCount < this.config.MAX_RETRIES) {
+        const delay = retryCount * this.config.RETRY_DELAY_MULTIPLIER
+        await new Promise((resolve) => setTimeout(resolve, delay))
+        return this.fetchWithRetry(url, options, retryCount + 1)
+      }
+      throw error
+    }
+  }
+
+  private async fetchMarketsData(): Promise<MarketsData> {
+    const response = await this.fetchWithRetry(`${this.config.API_BASE_URL}/pairs/tokens`)
+    const json = await response.json()
+    return json.data as MarketsData
+  }
+
+  private setupWorkerConnection(): void {
+    // @ts-ignore
+    onconnect = (e: MessageEvent) => this.ports.push(e.ports[0])
+  }
+
+  private processSymbolMapping(priceFeeds: any[]): Record<string, string> {
+    const pythIdsBySymbol = priceFeeds.reduce(
+      (acc, item) => ({
+        ...acc,
+        [item.attributes.base]: '0x' + item.id,
+      }),
+      {} as Record<string, string>
+    )
+    return { ...PYTH_IDS_MAPPING, ...pythIdsBySymbol }
+  }
+
+  private parsePriceData(priceFeed: PriceFeed, pythIdsMapping: Record<string, string>): PriceData[] | null {
+    if (!priceFeed) return null
+
+    const id = `0x${priceFeed.id}`
+    const priceData = priceFeed.price
+    const symbolByIds = Object.entries(pythIdsMapping).reduce<Record<string, string[]>>(
+      (result, [key, value]) => ({
+        ...result,
+        [value]: [...(result[value] ?? []), key],
+      }),
+      {}
     )
 
-    const PYTH_IDS_CHUNKS = chunkArray(availablePriceFeedIds, 100)
+    const symbols = symbolByIds[id]
+    if (!priceData || !symbols?.length) return null
 
-    async function fetchAndProcessPriceFeeds() {
-      let pricesData = {} as UsdPrices
-      for (const pythIds of PYTH_IDS_CHUNKS) {
-        const initialCache = await pyth.getLatestPriceFeeds(pythIds)
-        initialCache?.forEach((price) => {
-          pricesData = processPriceFeed(price, pricesData)
-        })
-      }
-      ports.forEach((port) => {
-        const msg: WorkerMessage = { type: 'pyth_price', data: pricesData }
-        port.postMessage(msg)
-      })
-    }
+    return symbols.map((symbol) => ({
+      symbol,
+      value: Number(priceData.price) * Math.pow(10, priceData.expo),
+      publishTime: priceData.publish_time * 1000,
+    }))
+  }
 
-    await fetchAndProcessPriceFeeds()
+  private updatePrices(priceData: PriceData[], currentPrices: UsdPrices): UsdPrices {
+    priceData.forEach(({ symbol, value }) => {
+      const multipleRatio = PROTOCOL_PRICE_MULTIPLE_MAPPING[symbol]?.multiple ?? 1
+      currentPrices[symbol] = value * multipleRatio
+    })
+    return currentPrices
+  }
 
-    await pyth.startWebSocket()
+  private broadcastPriceUpdate(prices: UsdPrices): void {
+    const message: WorkerMessage = { type: 'pyth_price', data: prices }
+    this.ports.forEach((port) => port.postMessage(message))
+  }
 
-    let lastUpdate = Math.floor(Date.now() / 1000)
-    const pricesData = {} as UsdPrices
-    const INTERVAL_TIME = 3 // s
+  private handlePriceStreamUpdate(
+    event: MessageEvent,
+    pythIdsMapping: Record<string, string>,
+    lastUpdate: Record<string, number>,
+    prices: UsdPrices
+  ): void {
+    const priceUpdate = JSON.parse(event.data) as PriceUpdate
+    if (!priceUpdate?.parsed?.length) return
 
-    await pyth.subscribePriceFeedUpdates(availablePriceFeedIds, (priceFeed) => {
-      const data = getPriceData({ priceFeed })
-      if (!data?.length) return
-      data.forEach((parsedData) => {
-        const symbol = parsedData.symbol
-        const multipleRatio = PROTOCOL_PRICE_MULTIPLE_MAPPING[symbol]?.multiple ?? 1
-        pricesData[symbol] = parsedData.value * multipleRatio
-        const publishTime = priceFeed?.getPriceNoOlderThan?.(60)?.publishTime ?? 0
-        if (publishTime >= lastUpdate + INTERVAL_TIME) {
-          lastUpdate = publishTime
-          ports.forEach((port) => {
-            const msg: WorkerMessage = { type: 'pyth_price', data: { ...pricesData } }
-            port.postMessage(msg)
-          })
+    priceUpdate.parsed.forEach((priceFeed: any) => {
+      const priceData = this.parsePriceData(priceFeed, pythIdsMapping)
+      if (!priceData) return
+
+      priceData.forEach((data) => {
+        const publishTime = data.publishTime
+        if (lastUpdate[data.symbol] && publishTime < lastUpdate[data.symbol] + this.config.UPDATE_INTERVAL) {
+          return
         }
+        lastUpdate[data.symbol] = publishTime
+        this.updatePrices([data], prices)
+        this.broadcastPriceUpdate(prices)
       })
     })
-  } catch (error) {
-    // console.log(error)
+  }
+
+  public async initializePriceFeeds(): Promise<void> {
+    try {
+      const [marketsData, priceFeeds] = await Promise.all([
+        this.fetchMarketsData(),
+        this.pythClient.getPriceFeeds({ assetType: 'crypto' }),
+      ])
+
+      const pythIdsMapping = this.processSymbolMapping(priceFeeds)
+      const uniqueSymbols = Array.from(
+        new Set(Object.values(marketsData).flatMap((values) => values.map((v) => v.symbol)))
+      ).sort()
+
+      const availablePythIds = uniqueSymbols
+        .map((symbol) => pythIdsMapping[symbol])
+        .filter(Boolean)
+        .filter((id) => priceFeeds.map((feed) => feed.id).includes(id.split('0x')[1]))
+
+      const priceChunks = this.chunkArray(availablePythIds, this.config.CHUNK_SIZE)
+      await this.startPriceFeeds(priceChunks, pythIdsMapping)
+    } catch (error) {
+      console.error('Failed to initialize price feeds:', error)
+      setTimeout(() => this.initializePriceFeeds(), 5000)
+    }
+  }
+
+  private chunkArray<T>(array: T[], size: number): T[][] {
+    return array.reduce((chunks, item, index) => {
+      const chunkIndex = Math.floor(index / size)
+      ;(chunks[chunkIndex] = chunks[chunkIndex] || []).push(item)
+      return chunks
+    }, [] as T[][])
+  }
+
+  private async startPriceFeeds(priceChunks: string[][], pythIdsMapping: Record<string, string>): Promise<void> {
+    const prices: UsdPrices = {}
+    const lastUpdate: Record<string, number> = {}
+
+    for (const chunk of priceChunks) {
+      const initialPrices = await this.pythClient.getLatestPriceUpdates(chunk)
+      initialPrices?.parsed?.forEach((priceFeed: any) => {
+        const priceData = this.parsePriceData(priceFeed, pythIdsMapping)
+        if (priceData) {
+          this.updatePrices(priceData, prices)
+        }
+      })
+
+      const priceStream = await this.pythClient.getPriceUpdatesStream(chunk, {
+        ignoreInvalidPriceIds: true,
+      })
+
+      priceStream.onmessage = (event) => this.handlePriceStreamUpdate(event, pythIdsMapping, lastUpdate, prices)
+      priceStream.onerror = (error) => {
+        console.error('Price stream error:', error)
+        priceStream.close()
+      }
+    }
+
+    this.broadcastPriceUpdate(prices)
   }
 }
-initPythWebsocket()
+
+new PriceManager().initializePriceFeeds()

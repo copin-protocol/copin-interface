@@ -25,6 +25,7 @@ import {
 import { TokenTrade } from '../config/trades'
 import { CHAINS } from '../web3/chains'
 import { addressShorten, formatNumber, formatZeroBased, shortenText } from './format'
+import { EXCHANGE_PRICE_MULTIPLE_MAPPING, PROTOCOL_PRICE_MULTIPLE_MAPPING } from './price'
 
 // dayjs.extend(duration)
 
@@ -339,36 +340,6 @@ export function getProtocolDropdownImage({
   return `${import.meta.env.VITE_API}/storage/image/protocols_with_status__${protocol}-${status}`
 }
 
-// TODO: Check when add new pairs
-export const PROTOCOL_PRICE_MULTIPLE_MAPPING: Record<string, { originalSymbol: string; multiple: number }> = {
-  '1000PEPE': { originalSymbol: 'PEPE', multiple: 1_000 },
-  kPEPE: { originalSymbol: 'PEPE', multiple: 1_000 },
-  '1000BONK': { originalSymbol: 'BONK', multiple: 1_000 },
-  kBONK: { originalSymbol: 'BONK', multiple: 1_000 },
-  '1000SHIB': { originalSymbol: 'SHIB', multiple: 1_000 },
-  kSHIB: { originalSymbol: 'SHIB', multiple: 1_000 },
-  '1000DOGS': { originalSymbol: 'DOGS', multiple: 1_000 },
-  kDOGS: { originalSymbol: 'DOGS', multiple: 1_000 },
-  '1000LUNC': { originalSymbol: 'LUNC', multiple: 1_000 },
-  kLUNC: { originalSymbol: 'LUNC', multiple: 1_000 },
-  '1000FLOKI': { originalSymbol: 'FLOKI', multiple: 1_000 },
-  MPEPE: { originalSymbol: 'PEPE', multiple: 1_000_000 },
-  kFLOKI: { originalSymbol: 'FLOKI', multiple: 1_000 },
-  '1MBABYDOGE': { originalSymbol: 'BABYDOGE', multiple: 1_000_000 },
-  '1MMOG': { originalSymbol: 'MOG', multiple: 1_000_000 },
-  '1000000MOG': { originalSymbol: 'MOG', multiple: 1_000_000 },
-  '1000000AIDOGE': { originalSymbol: 'AIDOGE', multiple: 1_000_000 },
-  '1000CHEEMS': { originalSymbol: 'CHEEMS', multiple: 1_000 },
-  '1MCHEEMS': { originalSymbol: 'CHEEMS', multiple: 1_000_000 },
-  '1000CAT': { originalSymbol: 'CAT', multiple: 1_000 },
-  '1000RATS': { originalSymbol: 'RATS', multiple: 1_000 },
-  '1000SATS': { originalSymbol: 'SATS', multiple: 1_000 },
-  '1000WHY': { originalSymbol: 'SATS', multiple: 1_000 },
-  '1000X': { originalSymbol: 'X', multiple: 1_000 },
-  '1000XEC': { originalSymbol: 'XEC', multiple: 1_000 },
-  '1000NEIRO': { originalSymbol: 'NEIRO', multiple: 1_000 },
-}
-
 export function normalizeProtocolPrice({ symbol, price }: { symbol: string | undefined; price: number | undefined }): {
   originalSymbol: string
   originalPrice: number
@@ -427,48 +398,6 @@ export function formatCopyPositionChartData({
     }
     return _chartData
   })
-}
-
-const EXCHANGE_PRICE_MULTIPLE_MAPPING: Partial<Record<CopyTradePlatformEnum, Record<string, number>>> = {
-  [CopyTradePlatformEnum.BINGX]: {
-    PEPE: 1_000,
-    BONK: 1_000,
-    SATS: 10_000,
-    BABYDOGE: 1_000_000,
-    CAT: 1_000,
-    WHY: 10_000,
-    AIDOGE: 10_000_000,
-    CHEEMS: 1_000,
-  },
-  [CopyTradePlatformEnum.BITGET]: {
-    BONK: 1_000,
-    XEC: 1_000,
-    RATS: 1_000,
-    SATS: 1_000,
-    MOG: 1_000_000,
-    CHEEMS: 1_000_000,
-    CAT: 1_000,
-    WHY: 10_000,
-  },
-  [CopyTradePlatformEnum.BYBIT]: {
-    BONK: 1_000,
-    PEPE: 1_000,
-    FLOKI: 1_000,
-    SHIB: 1_000,
-    LUNC: 1_000,
-    MOG: 1_000_000,
-    NEIROCTO: 1_000,
-    BABYDOGE: 1_000_000,
-    TURBO: 1_000,
-    MUMU: 1_000,
-    X: 1_000,
-    WEN: 10_000,
-    CHEEMS: 1_000_000,
-    CAT: 1_000,
-    LADYS: 10_000,
-  },
-  [CopyTradePlatformEnum.OKX]: {},
-  [CopyTradePlatformEnum.GATE]: {},
 }
 
 /**
