@@ -1,5 +1,7 @@
+import { RequestBulkUpdateCopyTradeData } from 'components/@backtest/types'
 import { TraderAlertData } from 'entities/alert'
 import {
+  BulkUpdateResponseData,
   CopyTradeData,
   CopyTradePnL,
   MyCopyTradeOverview,
@@ -30,6 +32,9 @@ export async function requestCopyTradeApi({ data, isInternal }: { data: RequestC
 
 export async function updateCopyTradeApi({ data, copyTradeId }: { data: UpdateCopyTradeData; copyTradeId: string }) {
   return requester.put(`${SERVICE}/${copyTradeId}`, data).then((res: any) => res.data as CopyTradeData)
+}
+export async function bulkUpdateCopyTradeApi(data: RequestBulkUpdateCopyTradeData) {
+  return requester.post(`${SERVICE}/bulk`, data).then((res: any) => res.data as BulkUpdateResponseData)
 }
 
 export async function duplicateCopyTradeApi({

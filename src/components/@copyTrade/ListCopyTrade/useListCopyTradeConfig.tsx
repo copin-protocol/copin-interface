@@ -21,11 +21,12 @@ import useCopyTradeModalConfigs from 'hooks/features/useCopyTradeModalConfigs'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { ColumnData } from 'theme/Table/types'
-import { Box, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { parseWalletName } from 'utils/helpers/transform'
 
+import SelectCopyTradeCheckbox from './SelectCopyTradeCheckbox'
 import { ExternalResource, ListCopyTradeType } from './types'
 
 type CopyTradeColumn = ColumnData<CopyTradeWithCheckingData, ExternalResource>
@@ -39,6 +40,7 @@ export default function useListCopyTradeConfigs({
   isExpanded?: boolean
   excludingColumnKeys?: (keyof CopyTradeWithCheckingData)[]
 }) {
+  // const isCex = type === 'cex'
   const isLite = type === 'lite'
   const isDex = type === 'dex'
   const isDrawer = type === 'drawer'
@@ -200,6 +202,26 @@ export default function useListCopyTradeConfigs({
       : []
     const result: CopyTradeColumn[] = [
       // common
+
+      {
+        title: (
+          <Box pl={isDex && !isExpanded ? 2 : 3} sx={{ transform: 'translateY(3px)' }}>
+            <SelectCopyTradeCheckbox type="all" data={undefined} />
+          </Box>
+        ),
+        dataIndex: undefined,
+        key: undefined,
+        style: { minWidth: 50, width: 50, textAlign: 'center' },
+        render: (item) => (
+          <Flex
+            pl={isDex && !isExpanded ? 2 : 3}
+            sx={{ position: 'relative', width: '100%', justifyContent: 'center' }}
+          >
+            <SelectCopyTradeCheckbox type="copyTrade" data={item} />
+            {item.reverseCopy && <ReverseTag />}
+          </Flex>
+        ),
+      },
       {
         title: (
           <Box as="span" pl={isDex && !isExpanded ? 2 : 3}>
@@ -211,12 +233,7 @@ export default function useListCopyTradeConfigs({
         sortBy: 'status',
         sortType: SortTypeEnum.ASC,
         style: { minWidth: '80px', width: 80 },
-        render: (item) => (
-          <Box pl={isDex && !isExpanded ? 2 : 3} sx={{ position: 'relative' }}>
-            {item.reverseCopy && <ReverseTag />}
-            {renderToggleRunning(item)}
-          </Box>
-        ),
+        render: (item) => <Box pl={isDex && !isExpanded ? 2 : 3}>{renderToggleRunning(item)}</Box>,
       },
       {
         title: 'Label',

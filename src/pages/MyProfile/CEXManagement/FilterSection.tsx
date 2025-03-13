@@ -3,6 +3,7 @@ import { Funnel, XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useState } from 'react'
 
+import SelectedCopyTradeActions from 'components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions'
 import Divider from 'components/@ui/Divider'
 import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -61,6 +62,7 @@ export default function FilterSection() {
               borderColor: 'neutral4',
               width: '100%',
             },
+            gap: 3,
           }}
         >
           <SelectTradersCopied
@@ -71,6 +73,7 @@ export default function FilterSection() {
             handleSelectAllTraders={handleSelectAllTraders}
             buttonSx={{ p: 2, py: 0 }}
           />
+          <SelectedCopyTradeActions />
         </Flex>
         <Flex
           height={TAB_HEIGHT}
@@ -105,20 +108,23 @@ export default function FilterSection() {
     </Box>
   ) : (
     <>
-      <Flex sx={{ alignItems: 'center', borderBottom: 'small', borderColor: 'neutral5', py: 1 }}>
-        <Box sx={{ px: 2 }}>
-          <SelectTradersCopied
-            selectedTraders={selectedTraders}
-            allTraders={listTraderAddresses}
-            allCopyTrades={allCopyTrades}
-            handleToggleTrader={handleToggleTrader}
-            handleSelectAllTraders={handleSelectAllTraders}
-            buttonSx={{ '& > *:first-child': { display: 'flex', flexDirection: 'column' } }}
-          />
-        </Box>
-        <Box sx={{ width: '1px', height: '100%', bg: 'neutral4' }} />
-        <Flex sx={{ flexDirection: 'column', px: 2, gap: 0, flex: 1 }}>
-          <AvailableMargin value={activeWallet?.availableBalance} />
+      <Flex sx={{ alignItems: 'center', width: '100%', borderBottom: 'small', borderColor: 'neutral5', py: 1 }}>
+        <Flex sx={{ flex: '1', alignItems: 'center', height: '100%', position: 'relative' }}>
+          <Box sx={{ px: 2 }}>
+            <SelectTradersCopied
+              selectedTraders={selectedTraders}
+              allTraders={listTraderAddresses}
+              allCopyTrades={allCopyTrades}
+              handleToggleTrader={handleToggleTrader}
+              handleSelectAllTraders={handleSelectAllTraders}
+              buttonSx={{ '& > *:first-child': { display: 'flex', flexDirection: 'column' } }}
+            />
+          </Box>
+          <Box sx={{ width: '1px', height: '100%', bg: 'neutral4' }} />
+          <Flex sx={{ flexDirection: 'column', px: 2, gap: 0, flex: 1 }}>
+            <AvailableMargin value={activeWallet?.availableBalance} />
+          </Flex>
+          <SelectedCopyTradeActions isAbsolutePosition hiddenSelectedText />
         </Flex>
         <Box sx={{ width: '1px', height: '100%', bg: 'neutral4' }} />
         <Flex sx={{ px: 10, alignItems: 'center', gap: 1 }} role="button" onClick={() => setOpenModal(true)}>

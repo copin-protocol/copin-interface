@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 
-import { updateCopyTradeApi } from 'apis/copyTradeApis'
+import { bulkUpdateCopyTradeApi, updateCopyTradeApi } from 'apis/copyTradeApis'
 import { postUpdateRefreshQueries } from 'components/@copyTrade/configs'
 import { CopyTradeWithCheckingData } from 'components/@copyTrade/types'
 import { parseInputValue } from 'components/@ui/TextWithEdit'
@@ -75,4 +75,12 @@ export default function useUpdateCopyTrade() {
   }
 
   return { updateCopyTrade, isMutating, toggleStatus, updateNumberValue }
+}
+
+export function useBulkUpdateCopyTrade() {
+  return useMutation(bulkUpdateCopyTradeApi, {
+    onError: (err) => {
+      toast.error(<ToastBody title={<Trans>Error</Trans>} message={getErrorMessage(err)} />)
+    },
+  })
 }

@@ -12,6 +12,7 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { TOOLTIP_KEYS } from 'utils/config/keys'
 
+import SelectCopyTradeCheckbox from './SelectCopyTradeCheckbox'
 import { ExternalResource } from './types'
 import { ListCopyTradeRenderProps } from './useListCopyTradeConfig'
 
@@ -79,9 +80,10 @@ export function ListCopyCEX({
           <Box key={data.id} sx={{ bg: 'neutral6', px: 3, py: 2, position: 'relative' }}>
             <Box sx={{ position: 'absolute', top: 16, left: 8 }}>{data.reverseCopy && <ReverseTag />}</Box>
             <Flex sx={{ gap: 1, alignItems: 'center', width: '100%' }}>
-              <Box flex="1" sx={data.reverseCopy ? { pl: 2 } : {}}>
+              <Flex flex="1" sx={{ ...(data.reverseCopy ? { pl: 2 } : {}), gap: 1 }} alignItems="center">
+                <SelectCopyTradeCheckbox type="copyTrade" data={data} />
                 {renderProps.renderTitle(data)}
-              </Box>
+              </Flex>
               <Flex sx={{ alignItems: 'center', gap: 3 }}>
                 {renderProps.renderToggleRunning(data)}
                 {renderProps.renderOptions(data, { placement: 'bottomRight' })}

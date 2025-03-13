@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import { getCopyTradeSettingsListApi, getMyCopyTradeOverviewApi } from 'apis/copyTradeApis'
+import SelectedCopyTradeActions from 'components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useOnboardingStore from 'hooks/store/useOnboardingStore'
@@ -92,6 +93,7 @@ const CopyManagement = () => {
                   <Trans>Manage Copy</Trans>
                 </Type.BodyBold>
                 {!!data?.copies && <Badge count={data.copies} />}
+                <Box ml={20}>{lg && <SelectedCopyTradeActions />}</Box>
               </Flex>
               <Box sx={{ display: ['block', 'block', 'flex'], gap: 24, pr: 3 }}>
                 <Flex sx={{ flexDirection: ['row', 'row', 'row', 'column', 'row'], columnGap: 1 }}>
@@ -118,7 +120,7 @@ const CopyManagement = () => {
                   pr: 2,
                 }}
               >
-                <Flex sx={{ alignItems: 'center', height: '100%' }}>
+                <Flex sx={{ alignItems: 'center', height: '100%', position: 'relative', flex: 1 }}>
                   {lg && !hasBotAlert && (
                     <Flex
                       px={3}
@@ -142,6 +144,14 @@ const CopyManagement = () => {
                     <Box sx={{ borderLeft: 'small', height: '100%', pl: 3, borderColor: 'neutral4' }}>
                       <AlertNotice />
                     </Box>
+                  )}
+                  {!lg && (
+                    <SelectedCopyTradeActions
+                      isAbsolutePosition
+                      hiddenSelectAll={layoutType !== 'GRID'}
+                      hiddenSelectedText={layoutType === 'GRID'}
+                      hiddenCancel={layoutType !== 'GRID'}
+                    />
                   )}
                 </Flex>
                 {!lg && <SwitchLayoutButtons layoutType={layoutType} onChangeType={handleChangeLayout} />}

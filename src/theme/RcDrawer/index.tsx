@@ -53,7 +53,7 @@ export function DrawerTitle({
   onBack,
 }: {
   title: ReactNode
-  onClose: () => void
+  onClose: (() => void) | undefined
   onBack?: () => void
 }) {
   return (
@@ -68,13 +68,15 @@ export function DrawerTitle({
         />
       )}
       {title}
-      <IconBox
-        role="button"
-        icon={<XCircle size={20} />}
-        color="neutral3"
-        sx={{ '&:hover': { color: 'neutral2' } }}
-        onClick={onClose}
-      />
+      {onClose && (
+        <IconBox
+          role="button"
+          icon={<XCircle size={20} />}
+          color="neutral3"
+          sx={{ '&:hover': { color: 'neutral2' } }}
+          onClick={onClose}
+        />
+      )}
     </Flex>
   )
 }

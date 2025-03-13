@@ -15,8 +15,8 @@ export interface CopyTradeFormValues {
   multipleCopy: boolean
   account?: string
   accounts?: string[]
-  volume: number
-  leverage: number
+  volume: number | undefined
+  leverage: number | undefined
   tokenAddresses: string[]
   excludingTokenAddresses: string[]
   type?: CopyTradeTypeEnum

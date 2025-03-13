@@ -517,3 +517,9 @@ export enum TraderLabelEnum {
   'ALTCOIN_PAIRS' = 'ALTCOIN_PAIRS',
   'MEME_PAIRS' = 'MEME_PAIRS',
 }
+
+export enum BulkUpdateActionEnum {
+  'DELETE' = 'DELETE',
+  'UPDATE' = 'UPDATE',
+  'CLONE' = 'CLONE',
+}

@@ -2,12 +2,14 @@ import { toast } from 'react-toastify'
 
 import { parseInputValue } from 'components/@ui/TextWithEdit'
 import ToastBody from 'components/@ui/ToastBody'
-import { CopyTradeData } from 'entities/copyTrade'
+import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade'
 import { Flex, Image, Type } from 'theme/base'
 import { DCP_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeSideEnum, CopyTradeStatusEnum, SLTPTypeEnum } from 'utils/config/enums'
+import { findObjectDifferences } from 'utils/helpers/findObjectDiff'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
+import { defaultBulkUpdateFormValues } from './configs'
 import { CopyTradeFormValues, TradersByProtocolData } from './types'
 
 export function getFormValuesFromResponseData(copyTradeData: CopyTradeData | undefined) {
@@ -125,7 +127,7 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues, isClone?: 
     takeProfitType: formData.takeProfitType,
     takeProfitAmount: formData.takeProfitAmount,
     maxVolMultiplier:
-      !isDCP && formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0
+      !isDCP && formData.maxMarginPerPosition && formData.maxMarginPerPosition > 0 && !!formData.volume
         ? Number(formData.maxMarginPerPosition / formData.volume)
         : null,
     skipLowLeverage: formData.skipLowLeverage,
@@ -145,6 +147,44 @@ export function getRequestDataFromForm(formData: CopyTradeFormValues, isClone?: 
       : { multipleCopy: false, account: isClone ? formData.duplicateToAddress : formData.account }),
     side: formData.side,
   }
+}
+export function getRequestDataBulkUpdate(formData: CopyTradeFormValues) {
+  const diff = findObjectDifferences(formData, defaultBulkUpdateFormValues)
+  const result: RequestCopyTradeData = Object.entries(diff).reduce((result, [field, obj]) => {
+    const newResult = { ...result, [field]: obj.obj1Value }
+    if (field === 'stopLossAmount') {
+      newResult['enableStopLoss'] = true
+      if (!diff['stopLossType']) {
+        newResult['stopLossType'] = defaultBulkUpdateFormValues.stopLossType
+      }
+    }
+    if (field === 'takeProfitAmount') {
+      newResult['enableTakeProfit'] = true
+      if (!diff['takeProfitType']) {
+        newResult['takeProfitType'] = defaultBulkUpdateFormValues.takeProfitType
+      }
+    }
+    if (field === 'maxMarginPerPosition') {
+      //@ts-ignore
+      if (newResult['maxMarginPerPosition']) delete newResult['maxMarginPerPosition']
+      const maxMarginPerPosition = obj.obj1Value as number
+      const volume = diff['volume']?.obj1Value as unknown as number
+      if (!!maxMarginPerPosition && !!volume) {
+        newResult['maxVolMultiplier'] = Number(maxMarginPerPosition / volume)
+      }
+    }
+    if (field === 'lookBackOrders') {
+      const value = obj.obj1Value as number
+      if (!!value) {
+        newResult['volumeProtection'] = true
+        newResult['lookBackOrders'] = value
+      } else {
+        if (newResult['lookBackOrders']) delete newResult['lookBackOrders']
+      }
+    }
+    return newResult
+  }, {} as RequestCopyTradeData)
+  return result
 }
 export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {
   let label = ''

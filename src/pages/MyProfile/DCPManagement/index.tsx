@@ -4,6 +4,7 @@ import { useResponsive } from 'ahooks'
 import { useEffect, useState } from 'react'
 
 import ChartGainsPositionRealtime from 'components/@charts/ChartGainsPositionRealtime'
+import SelectedCopyTradeActions from 'components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions'
 import SelectCopyWallet from 'components/@copyTrade/SelectCopyWallet'
 import DirectionButton from 'components/@ui/DirectionButton'
 import Divider from 'components/@ui/Divider'
@@ -166,6 +167,7 @@ function DesktopView() {
               borderBottomColor: 'neutral4',
               alignItems: 'center',
               justifyContent: 'space-between',
+              '& > *': { flex: 1 },
             }}
           >
             <FilterSection />
@@ -297,6 +299,7 @@ function MobileView() {
                 borderBottomColor: 'neutral4',
                 alignItems: 'center',
                 gap: 0,
+                position: 'relative',
               }}
             >
               <Box sx={{ maxWidth: [100, 100, 'max-content'], flexShrink: 0, px: 2 }}>
@@ -326,6 +329,7 @@ function MobileView() {
                   </Flex>
                 </>
               )}
+              <SelectedCopyTradeActions isAbsolutePosition hiddenSelectedText isDcp />
             </Flex>
             <Box height="calc(100% - 48px)">
               <ListDCPCopyTrades expanded={true} />
@@ -488,13 +492,16 @@ function FilterSection() {
   } = useDCPManagementContext()
   return (
     <>
-      <FilterBySourceDropdown
-        selectedProtocols={selectedProtocol}
-        isToggleAllProtocol={isToggleAllProtocol}
-        toggleAllProtocol={toggleAllProtocol}
-        checkIsProtocolChecked={checkIsProtocolChecked}
-        handleToggleProtocol={handleToggleProtocol}
-      />
+      <Box sx={{ position: 'relative' }}>
+        <FilterBySourceDropdown
+          selectedProtocols={selectedProtocol}
+          isToggleAllProtocol={isToggleAllProtocol}
+          toggleAllProtocol={toggleAllProtocol}
+          checkIsProtocolChecked={checkIsProtocolChecked}
+          handleToggleProtocol={handleToggleProtocol}
+        />
+        <SelectedCopyTradeActions isAbsolutePosition hiddenCancel hiddenSelectAll wrapperSx={{ px: 0 }} isDcp />
+      </Box>
       <FilterByStatus checkIsStatusChecked={checkIsStatusChecked} handleToggleStatus={handleToggleStatus} />
     </>
   )

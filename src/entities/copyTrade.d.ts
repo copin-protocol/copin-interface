@@ -191,3 +191,11 @@ export interface TraderCopyCountData {
   account: string
   count: number
 }
+
+export interface BulkUpdateResponseData {
+  status: 'SUCCESS' | 'PARTIAL_FAILURE'
+  errors: { id: string; error: string }[]
+  totalRequests: number
+  totalSuccess: number
+  totalFail: number
+}

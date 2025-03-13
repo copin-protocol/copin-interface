@@ -24,13 +24,13 @@ import {
   registerEvent,
 } from 'apis/event'
 import banner from 'assets/images/event-banner.png'
-import registerSuccess from 'assets/images/success-img.png'
 import logo from 'assets/logo.svg'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import RankingNumber from 'components/@trader/TraderLeaderboardTableView/RankingNumber'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
 import RewardWithSymbol from 'components/@ui/RewardWithSymbol'
+import SuccessImage from 'components/@ui/SuccessImage'
 import ToastBody from 'components/@ui/ToastBody'
 import CreateSmartWalletAction from 'components/@wallet/CreateSmartWalletAction'
 import EventTradingProtocols from 'components/@widgets/EventTradingProtocols'
@@ -452,7 +452,7 @@ function RegisterSuccess({ onDismiss }: { onDismiss: () => void }) {
           onClick={onDismiss}
         />
       </Flex>
-      <Image mb={3} src={registerSuccess} width={160} sx={{ display: 'block', mx: 'auto' }} />
+      <SuccessImage mb={3} width={160} sx={{ display: 'block', mx: 'auto' }} />
       <Type.Caption color="green1" display="block" sx={{ textAlign: 'center' }}>
         Join event successfully
       </Type.Caption>

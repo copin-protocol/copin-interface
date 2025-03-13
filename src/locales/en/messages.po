@@ -717,6 +717,7 @@ msgstr "Can't copy"
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 #: src/components/@copinLite/OnboardingModal/index.tsx
 #: src/components/@copinLite/OnboardingModal/index.tsx
+#: src/components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions.tsx
 #: src/pages/@layouts/Navbar/index.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 #: src/pages/VaultDetails/VaultFundMangement/InviteCodeModal.tsx
@@ -860,6 +861,8 @@ msgstr "Compare Trader"
 
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
+#: src/components/@copyTrade/BulkCopyModifyModal/CloneContent.tsx
+#: src/components/@copyTrade/BulkCopyModifyModal/DeleteContent.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
@@ -1001,6 +1004,10 @@ msgstr "Copy hot trader"
 #: src/pages/Subscription/Plans.tsx
 msgid "Copy size"
 msgstr "Copy size"
+
+#: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
+msgid "Copy trades update successful"
+msgstr "Copy trades update successful"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/PickTraderModals.tsx
 msgid "Copytrade List"
@@ -1213,6 +1220,7 @@ msgstr "Discover top trader for your style"
 msgid "Do you want to close this position?"
 msgstr "Do you want to close this position?"
 
+#: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
 msgid "Done"
 msgstr "Done"
@@ -1309,6 +1317,7 @@ msgstr "Entry Price"
 #: src/hooks/features/backtest/useBacktestRequest.tsx
 #: src/hooks/features/backtest/useBacktestRequest.tsx
 #: src/hooks/features/copyTrade/useUpdateCopyTrade.tsx
+#: src/hooks/features/copyTrade/useUpdateCopyTrade.tsx
 #: src/hooks/web3/useAuth.tsx
 #: src/hooks/web3/useContractMutation.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
@@ -1320,6 +1329,10 @@ msgstr "Error"
 #: src/components/@copyActivity/configs.tsx
 msgid "Error while place order"
 msgstr "Error while place order"
+
+#: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
+msgid "Errors:"
+msgstr "Errors:"
 
 #: src/utils/config/translations.tsx
 msgid "Est. Stop Price"
@@ -1796,6 +1809,10 @@ msgstr "L"
 msgid "L/S Rate"
 msgstr "L/S Rate"
 
+#: src/components/@copyTrade/BulkCopyModifyModal/ListSelectedCopyTrade.tsx
+msgid "LABEL"
+msgstr "LABEL"
+
 #: src/pages/Home/Overview.tsx
 msgid "LATEST ACTIVITIES"
 msgstr "LATEST ACTIVITIES"
@@ -1833,6 +1850,10 @@ msgstr "LONG/SHORT OPEN INTEREST BY PAIRS"
 #: src/utils/config/translations.tsx
 msgid "Label"
 msgstr "Label"
+
+#: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
+msgid "Label:"
+msgstr "Label:"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
@@ -3081,6 +3102,10 @@ msgstr "Select the copy you want to open:"
 msgid "Select the vault you want to clone:"
 msgstr "Select the vault you want to clone:"
 
+#: src/components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions.tsx
+msgid "Selected <0>{0} Copies</0>"
+msgstr "Selected <0>{0} Copies</0>"
+
 #: src/pages/TraderDetails/CustomizeRankingColumns.tsx
 #: src/theme/Table/CustomizeColumn.tsx
 msgid "Selected:"
@@ -3444,6 +3469,10 @@ msgstr "TOTAL USERS"
 #: src/pages/Stats/Overview.tsx
 msgid "TOTAL VOLUME"
 msgstr "TOTAL VOLUME"
+
+#: src/components/@copyTrade/BulkCopyModifyModal/ListSelectedCopyTrade.tsx
+msgid "TRADER"
+msgstr "TRADER"
 
 #: src/pages/@layouts/Navbar/NavLinks.tsx
 #: src/pages/Leaderboard/index.tsx

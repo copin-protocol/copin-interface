@@ -37,7 +37,7 @@ const WalletFundChecking = ({
   address,
   platform,
 }: {
-  amount: number
+  amount: number | undefined
   address: string
   platform: CopyTradePlatformEnum
 }) => {
@@ -74,7 +74,7 @@ const WalletFundChecking = ({
   )
 }
 
-const FundChecking = ({ amount, walletId }: { walletId: string; amount: number }) => {
+const FundChecking = ({ amount, walletId }: { walletId: string; amount: number | undefined }) => {
   const { copyWallets } = useCopyWalletContext()
   const wallet = copyWallets?.find((w) => w.id === walletId)
 
