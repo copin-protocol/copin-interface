@@ -24,6 +24,7 @@ import { parseExchangeImage } from 'utils/helpers/transform'
 
 const EXCHANGES = [
   CopyTradePlatformEnum.HYPERLIQUID,
+  CopyTradePlatformEnum.APEX,
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.BYBIT,
@@ -35,6 +36,7 @@ const EXCHANGES = [
 ]
 const ALLOW_EXCHANGE = [
   CopyTradePlatformEnum.HYPERLIQUID,
+  CopyTradePlatformEnum.APEX,
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.BYBIT,
@@ -45,6 +47,7 @@ const ALLOW_EXCHANGE = [
 ]
 const INTERNAL_EXCHANGES = [
   CopyTradePlatformEnum.HYPERLIQUID,
+  CopyTradePlatformEnum.APEX,
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.BYBIT,
@@ -282,6 +285,9 @@ function ExchangeTitle({
       break
     case CopyTradePlatformEnum.GNS_V8:
       title = 'gTrade Exchange'
+      break
+    case CopyTradePlatformEnum.APEX:
+      title = 'ApeX Exchange'
       break
   }
   if (!title) return null

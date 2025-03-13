@@ -121,6 +121,7 @@ export function CreateWalletModal({
     case CopyTradePlatformEnum.BYBIT:
     case CopyTradePlatformEnum.OKX:
     case CopyTradePlatformEnum.GATE:
+    case CopyTradePlatformEnum.APEX:
       Modal = CreateCEXWalletModal
       break
     case CopyTradePlatformEnum.SYNTHETIX_V2:

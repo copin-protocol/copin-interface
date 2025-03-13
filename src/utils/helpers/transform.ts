@@ -464,6 +464,7 @@ export function getUniqueTokenTrade(tokenSupport: { [key: string]: TokenTrade | 
 }
 
 const EXCHANGE_KEY_MAPPING: Partial<Record<CopyTradePlatformEnum, keyof CopyWalletData>> = {
+  [CopyTradePlatformEnum.APEX]: 'apex',
   [CopyTradePlatformEnum.BINGX]: 'bingX',
   [CopyTradePlatformEnum.BITGET]: 'bitget',
   [CopyTradePlatformEnum.BINANCE]: 'binance',

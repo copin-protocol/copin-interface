@@ -106,6 +106,7 @@ const CopyTraderForm = ({
       isClone ? cloneCopyTradeFormSchema : isEdit ? updateCopyTradeFormSchema : copyTradeFormSchema
     ),
   })
+
   const [
     title,
     platform,

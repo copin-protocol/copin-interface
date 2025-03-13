@@ -3,7 +3,11 @@ import * as yup from 'yup'
 import { WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 
-export const PASS_PHRASE_EXCHANGES = [CopyTradePlatformEnum.BITGET, CopyTradePlatformEnum.OKX]
+export const PASS_PHRASE_EXCHANGES = [
+  CopyTradePlatformEnum.BITGET,
+  CopyTradePlatformEnum.OKX,
+  CopyTradePlatformEnum.APEX,
+]
 
 export const apiWalletFormSchema = yup.object({
   name: yup.string().nullable().max(WALLET_NAME_MAX_LENGTH).label('Name'),
@@ -16,6 +20,13 @@ export const apiWalletFormSchema = yup.object({
       return schema
     })
     .label('Pass Phrase'),
+  omniSeed: yup
+    .string()
+    .when('exchange', (exchange, schema) => {
+      if (exchange === CopyTradePlatformEnum.APEX) return schema.required()
+      return schema
+    })
+    .label('Omni Key Seed'),
 })
 
 export interface ApiWalletFormValues {
@@ -24,6 +35,7 @@ export interface ApiWalletFormValues {
   secretKey: string
   passPhrase: string
   exchange?: CopyTradePlatformEnum
+  omniSeed?: string
 }
 
 export const defaultFormValues: ApiWalletFormValues = {

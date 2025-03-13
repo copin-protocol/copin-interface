@@ -13,6 +13,9 @@ export interface RequestCopyWalletData {
     signature: string
     nonce: number
   }
+  apexSignature?: {
+    omniSeed: string
+  }
   name?: string
 }
 
@@ -27,6 +30,7 @@ export interface CopyWalletData {
   bybit?: ApiKeyWallet
   okx?: ApiKeyWallet
   gate?: ApiKeyWallet
+  apex?: ApiKeyWallet
   hyperliquid?: ApiKeyWallet
   smartWalletAddress?: string
   balance: number

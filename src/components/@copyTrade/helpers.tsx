@@ -184,6 +184,9 @@ export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boo
     case CopyTradePlatformEnum.GNS_V8:
       label = 'gTrade'
       break
+    case CopyTradePlatformEnum.APEX:
+      label = 'ApeX'
+      break
     default:
       break
   }

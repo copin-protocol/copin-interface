@@ -17,6 +17,7 @@ export const CURRENCY_PLATFORMS: Record<CopyTradePlatformEnum, CurrencyEnum> = {
   [CopyTradePlatformEnum.BYBIT]: CurrencyEnum.USD,
   [CopyTradePlatformEnum.OKX]: CurrencyEnum.USD,
   [CopyTradePlatformEnum.GATE]: CurrencyEnum.USD,
+  [CopyTradePlatformEnum.APEX]: CurrencyEnum.USD,
   [CopyTradePlatformEnum.HYPERLIQUID]: CurrencyEnum.USD,
   [CopyTradePlatformEnum.COPIN_HYPERLIQUID]: CurrencyEnum.USD,
 }
@@ -30,6 +31,7 @@ export const WATCHER_PLATFORMS = {
 }
 
 export const EXPLORER_PLATFORMS = {
+  [CopyTradePlatformEnum.APEX]: '',
   [CopyTradePlatformEnum.BINGX]: '',
   [CopyTradePlatformEnum.BITGET]: '',
   [CopyTradePlatformEnum.BINANCE]: '',
@@ -132,6 +134,14 @@ export const EXCHANGES_INFO: { [key: string]: ExchangeInfo } = {
     name: PLATFORM_TEXT_TRANS[CopyTradePlatformEnum.SYNTHETIX_V3],
     key: getExchangeKey(CopyTradePlatformEnum.SYNTHETIX_V3),
     imageUrl: parseExchangeImage(CopyTradePlatformEnum.SYNTHETIX_V3),
+    referralCode: '',
+  },
+  [CopyTradePlatformEnum.APEX]: {
+    linkRegister: '',
+    linkTutorial: '',
+    name: PLATFORM_TEXT_TRANS[CopyTradePlatformEnum.APEX],
+    key: getExchangeKey(CopyTradePlatformEnum.APEX),
+    imageUrl: parseExchangeImage(CopyTradePlatformEnum.APEX),
     referralCode: '',
   },
 }

@@ -128,6 +128,7 @@ export enum CopyTradeOrderTypeEnum {
   NOT_FULL_ORDER = 'NOT_FULL_ORDER',
 }
 export enum CopyTradePlatformEnum {
+  APEX = 'APEX',
   OTHERS = 'OTHERS',
   GMX = 'GMX',
   BINGX = 'BINGX',
