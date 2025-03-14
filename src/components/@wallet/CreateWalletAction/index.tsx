@@ -27,7 +27,9 @@ export default function CreateWalletAction({ type = CreateTypeWalletEnum.FULL }:
     setOpenCreateModal(true)
   }
 
-  const cexExchanges = CEX_EXCHANGES.filter((e) => !DEPRECATED_EXCHANGES.includes(e))
+  const cexExchanges = CEX_EXCHANGES.filter(
+    (e) => !DEPRECATED_EXCHANGES.includes(e) && e !== CopyTradePlatformEnum.APEX
+  )
   const cexItems = (
     <>
       {cexExchanges.map((exchange) => {

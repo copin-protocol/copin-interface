@@ -24,7 +24,7 @@ import { parseExchangeImage } from 'utils/helpers/transform'
 
 const EXCHANGES = [
   CopyTradePlatformEnum.HYPERLIQUID,
-  CopyTradePlatformEnum.APEX,
+  // CopyTradePlatformEnum.APEX,
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.BYBIT,
@@ -36,7 +36,7 @@ const EXCHANGES = [
 ]
 const ALLOW_EXCHANGE = [
   CopyTradePlatformEnum.HYPERLIQUID,
-  CopyTradePlatformEnum.APEX,
+  // CopyTradePlatformEnum.APEX,
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.BYBIT,
