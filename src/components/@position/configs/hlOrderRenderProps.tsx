@@ -7,6 +7,8 @@ import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
+import OpenOrderPairFilterIcon from './OpenOrderPairFilterIcon'
+
 const openTimeColumn: ColumnData<HlOrderData> = {
   title: 'Time',
   dataIndex: 'timestamp',
@@ -132,7 +134,7 @@ const reduceOnlyColumn: ColumnData<HlOrderData> = {
 export const fullOrderColumns: ColumnData<HlOrderData>[] = [
   openTimeColumn,
   orderTypeColumn,
-  symbolColumn,
+  { ...symbolColumn, filterComponent: <OpenOrderPairFilterIcon /> },
   directionColumn,
   triggerConditionColumn,
   reduceOnlyColumn,

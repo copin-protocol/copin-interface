@@ -102,6 +102,7 @@ export default function HLTraderOpeningPositionsTableView({
     }
   )
 
+  const [enabledRefetchOpenOrder, setEnabledRefetchOpenOrder] = useState(true)
   const { data: openOrders, isLoading: isLoadingOpenOders } = useQuery(
     [QUERY_KEYS.GET_HYPERLIQUID_OPEN_ORDERS, address],
     () =>
@@ -111,13 +112,18 @@ export default function HLTraderOpeningPositionsTableView({
     {
       enabled: !!address && protocol === ProtocolEnum.HYPERLIQUID,
       retry: 0,
-      refetchInterval: 15_000,
+      refetchInterval: enabledRefetchOpenOrder ? 15_000 : undefined,
       keepPreviousData: true,
       select: (data) => {
         return parseHLOrderData({ account: address, data })
       },
     }
   )
+  const onOpenOrderPageChange = useCallback((page: number) => {
+    if (page === 1) {
+      setEnabledRefetchOpenOrder(true)
+    } else setEnabledRefetchOpenOrder(false)
+  }, [])
   openOrders?.sort((a, b) => {
     return (b.timestamp ?? 0) - (a.timestamp ?? 0)
   })
@@ -156,6 +162,7 @@ export default function HLTraderOpeningPositionsTableView({
 
   const totalOpening = hlAccountData?.assetPositions?.length ?? 0
   const totalOpenOrders = openOrders?.length ?? 0
+  const totalOrderFilled = groupedFilledOrders?.length ?? 0
 
   return (
     <Box
@@ -190,7 +197,7 @@ export default function HLTraderOpeningPositionsTableView({
             key: HLPositionTab.ORDER_FILLED,
             icon: <Clock size={20} />,
             activeIcon: <Clock size={20} weight="fill" />,
-            count: groupedFilledOrders?.length ?? 0,
+            count: totalOrderFilled,
           },
         ]}
         isActiveFn={(config) => config.key === tab}
@@ -241,12 +248,19 @@ export default function HLTraderOpeningPositionsTableView({
         </Box>
       )}
       {tab === HLPositionTab.OPEN_ORDERS && (
-        <Box display={['block', isDrawer ? 'block' : 'flex']} flexDirection="column" height="100%">
+        <Box
+          display={['block', isDrawer ? 'block' : 'flex']}
+          flexDirection="column"
+          height="100%"
+          bg={isDrawer || !totalOpenOrders ? 'transparent' : 'neutral5'}
+        >
           <OpenOrdersView
             data={openOrders}
             isLoading={isLoadingOpenOders}
             isDrawer={!!isDrawer}
             isExpanded={!!isExpanded}
+            onPageChange={onOpenOrderPageChange}
+            toggleExpand={handleToggleExpand}
           />
         </Box>
       )}
@@ -255,7 +269,7 @@ export default function HLTraderOpeningPositionsTableView({
           display={['block', isDrawer ? 'block' : 'flex']}
           flexDirection="column"
           height="100%"
-          bg={isDrawer ? 'transparent' : 'neutral5'}
+          bg={isDrawer || !totalOrderFilled ? 'transparent' : 'neutral5'}
         >
           <OrderFiledView
             onPageChange={onOrderFilledPageChange}

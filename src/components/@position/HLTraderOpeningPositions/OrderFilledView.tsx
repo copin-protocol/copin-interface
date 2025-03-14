@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -14,6 +15,7 @@ import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { getPaginationDataFromList, getPairFromSymbol } from 'utils/helpers/transform'
 
 import HLOrderFilledListView from './HLOrderFilledListView'
+import NoOrderWrapper from './NoOrderWrapper'
 import { OrderFilledProvider, useOrderFilledContext } from './useOrderFilledContext'
 
 export enum HLPositionTab {
@@ -79,6 +81,7 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
     },
     [onPageChange]
   )
+  const totalDataLength = data?.length ?? 0
   const dataLength = filteredData?.length ?? 0
 
   const scrollDeps = useMemo(() => [currentPage, currentLimit], [currentLimit, currentPage])
@@ -86,66 +89,86 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
   return (
     <>
       {isLoading && <Loading />}
-      {sm ? (
+      {!totalDataLength && !isLoading && (
+        <NoOrderWrapper isDrawer={isDrawer}>
+          <Type.CaptionBold display="block">
+            <Trans>This trader&apos;s orders filled is empty</Trans>
+          </Type.CaptionBold>
+          <Type.Caption height={24} />
+        </NoOrderWrapper>
+      )}
+      {totalDataLength > 0 && (
         <>
-          <Box flex="1 0 0" overflow="hidden">
-            <Table
-              restrictHeight={(!isDrawer && lg) || (isDrawer && isDrawer && dataLength > 10)}
-              wrapperSx={{
-                minWidth: 500,
-                minHeight: isDrawer && dataLength > 10 ? 368 : undefined,
-              }}
-              tableBodySx={{
-                '& td:last-child': { pr: 2 },
-              }}
-              data={paginatedData.data}
-              columns={isDrawer ? drawerFillColumns : xl && isExpanded ? fullFillColumns : fillColumns}
-              isLoading={isLoading}
-              renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
-              scrollToTopDependencies={scrollDeps}
-              noDataMessage={'No recent fills'}
-            />
-          </Box>
-          {!isDrawer && (
-            <Box sx={{ px: 2 }}>
-              <Divider />
-            </Box>
-          )}
-          {paginatedData.meta?.totalPages > 1 ? (
+          {sm ? (
             <>
-              {!isExpanded && !isDrawer ? (
-                <Flex sx={{ alignItems: 'center', py: 1, px: 3, justifyContent: 'end' }}>
-                  <Button variant="text" sx={{ p: 0 }} onClick={toggleExpand}>
-                    <Type.Caption>View All</Type.Caption>
-                  </Button>
-                </Flex>
-              ) : (
-                <PaginationWithLimit
-                  currentPage={currentPage}
-                  currentLimit={currentLimit}
-                  onPageChange={handleChangePage}
-                  onLimitChange={setCurrentLimit}
-                  apiMeta={paginatedData.meta}
+              <Box flex="1 0 0" overflow="hidden">
+                <Table
+                  restrictHeight={(!isDrawer && lg) || (isDrawer && isDrawer && dataLength > 10)}
+                  wrapperSx={{
+                    minWidth: 500,
+                    minHeight: isDrawer && dataLength > 10 ? 368 : undefined,
+                  }}
+                  tableBodySx={{
+                    '& td:last-child': { pr: 2 },
+                  }}
+                  data={paginatedData.data}
+                  columns={isDrawer ? drawerFillColumns : xl && isExpanded ? fullFillColumns : fillColumns}
+                  isLoading={isLoading}
+                  // renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
+                  scrollToTopDependencies={scrollDeps}
+                  noDataComponent={
+                    !dataLength && !isLoading ? (
+                      <NoOrderWrapper isDrawer>
+                        <Type.CaptionBold display="block">
+                          <Trans>No orders filled are matched this filter</Trans>
+                        </Type.CaptionBold>
+                      </NoOrderWrapper>
+                    ) : undefined
+                  }
                 />
+              </Box>
+              {!isDrawer && (
+                <Box sx={{ px: 2 }}>
+                  <Divider />
+                </Box>
               )}
+              {paginatedData.meta?.totalPages > 1 ? (
+                <>
+                  {!isExpanded && !isDrawer ? (
+                    <Flex sx={{ alignItems: 'center', py: 1, px: 3, justifyContent: 'end' }}>
+                      <Button variant="text" sx={{ p: 0 }} onClick={toggleExpand}>
+                        <Type.Caption>
+                          <Trans>View All</Trans>
+                        </Type.Caption>
+                      </Button>
+                    </Flex>
+                  ) : (
+                    <PaginationWithLimit
+                      currentPage={currentPage}
+                      currentLimit={currentLimit}
+                      onPageChange={handleChangePage}
+                      onLimitChange={setCurrentLimit}
+                      apiMeta={paginatedData.meta}
+                    />
+                  )}
+                </>
+              ) : null}
             </>
-          ) : null}
+          ) : (
+            <Flex flexDirection="column" height="100%" flex="1 0 0" overflow="hidden">
+              {!!paginatedData?.data?.length && (
+                <HLOrderFilledListView data={paginatedData.data} isLoading={isLoading} scrollDep={scrollDeps} />
+              )}
+              <PaginationWithLimit
+                currentPage={currentPage}
+                currentLimit={currentLimit}
+                onPageChange={setCurrentPage}
+                onLimitChange={setCurrentLimit}
+                apiMeta={paginatedData.meta}
+              />
+            </Flex>
+          )}
         </>
-      ) : (
-        <Flex flexDirection="column" height="100%" flex="1 0 0" overflow="hidden">
-          {!!paginatedData?.data?.length && (
-            <HLOrderFilledListView data={paginatedData.data} isLoading={isLoading} scrollDep={scrollDeps} />
-          )}
-          {paginatedData?.meta?.totalPages > 1 && (
-            <PaginationWithLimit
-              currentPage={currentPage}
-              currentLimit={currentLimit}
-              onPageChange={setCurrentPage}
-              onLimitChange={setCurrentLimit}
-              apiMeta={paginatedData.meta}
-            />
-          )}
-        </Flex>
       )}
     </>
   )
