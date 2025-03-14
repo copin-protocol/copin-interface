@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 import { requestCopyWalletApi } from 'apis/copyWalletApis'
 import Divider from 'components/@ui/Divider'
 import ToastBody from 'components/@ui/ToastBody'
+import { RequestCopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { Button } from 'theme/Buttons'
 import InputField, { InputPasswordField } from 'theme/InputField'
@@ -61,7 +62,7 @@ export default function CreateCEXWalletModal({
 
   const onSubmit: SubmitHandler<ApiWalletFormValues> = (data) => {
     if (submitting) return
-    createWallet.mutate({
+    const requestData: RequestCopyWalletData = {
       exchange,
       name: !!data.name ? data.name?.trim() : undefined,
       [exchangeInfo.key]: {
@@ -69,7 +70,11 @@ export default function CreateCEXWalletModal({
         secretKey: data.secretKey,
         passPhrase: hasPassPhrase ? data.passPhrase : undefined,
       },
-    })
+    }
+    if (exchange === CopyTradePlatformEnum.APEX) {
+      requestData.apexSignature = { omniSeed: data.omniSeed! }
+    }
+    createWallet.mutate(requestData)
   }
 
   return (
@@ -124,6 +129,21 @@ export default function CreateCEXWalletModal({
               block
               error={errors?.passPhrase?.message}
               {...register('passPhrase', {
+                required: { value: true, message: 'This field is required' },
+                onChange: (e) => {
+                  e.target.value = e.target.value.trim().replace(/\s/g, '')
+                },
+              })}
+            />
+          )}
+          {exchange === CopyTradePlatformEnum.APEX && (
+            <InputPasswordField
+              required
+              placeholder={t`Your Omni Key Seed`}
+              label={<Trans>Omni Key Seed</Trans>}
+              block
+              error={errors?.omniSeed?.message}
+              {...register('omniSeed', {
                 required: { value: true, message: 'This field is required' },
                 onChange: (e) => {
                   e.target.value = e.target.value.trim().replace(/\s/g, '')

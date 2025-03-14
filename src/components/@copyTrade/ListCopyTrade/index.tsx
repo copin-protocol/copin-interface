@@ -14,6 +14,7 @@ import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 import { TraderCopyCountWarning } from '../TraderCopyCountWarning'
+import SelectCopyTradeModifier from './SelectCopyTradeModifier'
 import { CopyTable, ListCopyCEX } from './View'
 import { ExternalResource, ListCopyTradeType } from './types'
 import useListCopyTradeConfigs from './useListCopyTradeConfig'
@@ -97,6 +98,7 @@ export default function ListCopyTrade({
 
   return (
     <>
+      <SelectCopyTradeModifier data={copyTrades} />
       <TraderCopyCountWarning allCopyTrades={copyTrades} traderAddresses={listTraderAddresses} />
       {(layoutType != null ? layoutType === 'GRID' : !sm) && (
         <ListCopyCEX sortedData={sortedData} isLoading={isLoadingCopyTrades} renderProps={renderProps} />

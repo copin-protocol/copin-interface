@@ -69,6 +69,7 @@ export const PLATFORM_TRANS: ObjectTrans = {
 
 export const PLATFORM_TEXT_TRANS: { [key: string]: string } = {
   [CopyTradePlatformEnum.OTHERS]: 'Others',
+  [CopyTradePlatformEnum.APEX]: 'ApeX',
   [CopyTradePlatformEnum.BINGX]: 'BingX',
   [CopyTradePlatformEnum.BITGET]: 'Bitget',
   [CopyTradePlatformEnum.BINANCE]: 'Binance',
@@ -83,6 +84,7 @@ export const PLATFORM_TEXT_TRANS: { [key: string]: string } = {
 }
 
 export const COPY_WALLET_TRANS: ObjectTrans = {
+  [CopyTradePlatformEnum.APEX]: 'ApeX',
   [CopyTradePlatformEnum.BINGX]: 'BingX',
   [CopyTradePlatformEnum.BITGET]: 'Bitget',
   [CopyTradePlatformEnum.BINANCE]: 'Binance',

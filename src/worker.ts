@@ -39,6 +39,11 @@ interface PriceFeed {
   }
 }
 
+const ports: MessagePort[] = []
+
+//@ts-ignore
+onconnect = (e: MessageEvent) => ports.push(e.ports[0])
+
 class PriceManager {
   private readonly config: PriceConfig = {
     PYTH_PRICE_FEED_URL: NETWORK === 'devnet' ? 'https://hermes.pyth.network' : 'https://hermes.copin.io',
@@ -50,11 +55,10 @@ class PriceManager {
     API_BASE_URL: API_URL,
   }
 
-  private readonly ports: MessagePort[] = []
   private readonly pythClient: HermesClient = new HermesClient(this.config.PYTH_PRICE_FEED_URL)
 
   constructor() {
-    this.setupWorkerConnection()
+    this.initializePriceFeeds()
   }
 
   private async fetchWithRetry(url: string, options: RequestInit = {}, retryCount = 0): Promise<Response> {
@@ -92,11 +96,6 @@ class PriceManager {
     const response = await this.fetchWithRetry(`${this.config.API_BASE_URL}/pairs/tokens`)
     const json = await response.json()
     return json.data as MarketsData
-  }
-
-  private setupWorkerConnection(): void {
-    // @ts-ignore
-    onconnect = (e: MessageEvent) => this.ports.push(e.ports[0])
   }
 
   private processSymbolMapping(priceFeeds: any[]): Record<string, string> {
@@ -143,7 +142,7 @@ class PriceManager {
 
   private broadcastPriceUpdate(prices: UsdPrices): void {
     const message: WorkerMessage = { type: 'pyth_price', data: prices }
-    this.ports.forEach((port) => port.postMessage(message))
+    ports.forEach((port) => port.postMessage(message))
   }
 
   private handlePriceStreamUpdate(
@@ -232,4 +231,4 @@ class PriceManager {
   }
 }
 
-new PriceManager().initializePriceFeeds()
+new PriceManager()

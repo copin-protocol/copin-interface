@@ -142,6 +142,10 @@ msgstr "<0>Please provide details about the issue you noticed. You can also atta
 msgid "<0>Telegram Contact</0>"
 msgstr "<0>Telegram Contact</0>"
 
+#: src/components/@position/HLTraderOpeningPositions/OpenOrdersView.tsx
+msgid "<0>This trader's opening orders is empty</0><1>Once the trader starts a new open order, you'll see it listed here</1>"
+msgstr "<0>This trader's opening orders is empty</0><1>Once the trader starts a new open order, you'll see it listed here</1>"
+
 #: src/pages/ReferralManagement/ReferralActivities.tsx
 msgid "<0>{0} </0>earned {1} USDC in commission from <1>{2}</1>"
 msgstr "<0>{0} </0>earned {1} USDC in commission from <1>{2}</1>"
@@ -162,6 +166,10 @@ msgstr "<0>{0} channel{1}</0><1>(Direct or Group)</1>"
 #: src/pages/PerpDEXsExplorer/components/RichTextarea.tsx
 msgid "<0>{hintUploadImage}</0>"
 msgstr "<0>{hintUploadImage}</0>"
+
+#: src/pages/@layouts/Footer/FeedbackModal.tsx
+msgid "@leecopin"
+msgstr "@leecopin"
 
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "A 10% loyalty fee applies when trading the NFT."
@@ -349,10 +357,6 @@ msgstr "All Time"
 #: src/components/@copyTrade/SelectCopyWallet.tsx
 msgid "All Wallets"
 msgstr "All Wallets"
-
-#: src/components/@position/CopyOpeningPositions/index.tsx
-msgid "All of your opening positions will be shown here"
-msgstr "All of your opening positions will be shown here"
 
 #: src/components/@ui/MarketFilter/SelectedMarkets.tsx
 msgid "All pairs"
@@ -685,6 +689,10 @@ msgstr "COPIES"
 msgid "COPIN FEE REBATE"
 msgstr "COPIN FEE REBATE"
 
+#: src/pages/@layouts/Footer/FeedbackButton.tsx
+msgid "COPIN FEEDBACK"
+msgstr "COPIN FEEDBACK"
+
 #: src/pages/Subscription/Plans.tsx
 msgid "COPY TRADING"
 msgstr "COPY TRADING"
@@ -717,6 +725,7 @@ msgstr "Can't copy"
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 #: src/components/@copinLite/OnboardingModal/index.tsx
 #: src/components/@copinLite/OnboardingModal/index.tsx
+#: src/components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions.tsx
 #: src/pages/@layouts/Navbar/index.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 #: src/pages/VaultDetails/VaultFundMangement/InviteCodeModal.tsx
@@ -860,6 +869,8 @@ msgstr "Compare Trader"
 
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
+#: src/components/@copyTrade/BulkCopyModifyModal/CloneContent.tsx
+#: src/components/@copyTrade/BulkCopyModifyModal/DeleteContent.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
@@ -1001,6 +1012,10 @@ msgstr "Copy hot trader"
 #: src/pages/Subscription/Plans.tsx
 msgid "Copy size"
 msgstr "Copy size"
+
+#: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
+msgid "Copy trades update successful"
+msgstr "Copy trades update successful"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/PickTraderModals.tsx
 msgid "Copytrade List"
@@ -1213,6 +1228,7 @@ msgstr "Discover top trader for your style"
 msgid "Do you want to close this position?"
 msgstr "Do you want to close this position?"
 
+#: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
 msgid "Done"
 msgstr "Done"
@@ -1309,6 +1325,7 @@ msgstr "Entry Price"
 #: src/hooks/features/backtest/useBacktestRequest.tsx
 #: src/hooks/features/backtest/useBacktestRequest.tsx
 #: src/hooks/features/copyTrade/useUpdateCopyTrade.tsx
+#: src/hooks/features/copyTrade/useUpdateCopyTrade.tsx
 #: src/hooks/web3/useAuth.tsx
 #: src/hooks/web3/useContractMutation.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
@@ -1320,6 +1337,10 @@ msgstr "Error"
 #: src/components/@copyActivity/configs.tsx
 msgid "Error while place order"
 msgstr "Error while place order"
+
+#: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
+msgid "Errors:"
+msgstr "Errors:"
 
 #: src/utils/config/translations.tsx
 msgid "Est. Stop Price"
@@ -1418,11 +1439,6 @@ msgstr "FEE ($)"
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 msgid "FEE REBATE"
 msgstr "FEE REBATE"
-
-#: src/pages/@layouts/Footer/index.tsx
-#: src/pages/@layouts/Footer/index.tsx
-msgid "FEEDBACK"
-msgstr "FEEDBACK"
 
 #: src/components/@widgets/ConditionFilterForm/index.tsx
 msgid "FIELD"
@@ -1774,6 +1790,10 @@ msgstr "Investment Capital"
 msgid "Invite Code at least 6-character long with only uppercase letters and numbers."
 msgstr "Invite Code at least 6-character long with only uppercase letters and numbers."
 
+#: src/pages/@layouts/Footer/FeedbackModal.tsx
+msgid "JOIN DISCORD"
+msgstr "JOIN DISCORD"
+
 #: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
 msgid "Join Telegram Community"
 msgstr "Join Telegram Community"
@@ -1795,6 +1815,10 @@ msgstr "L"
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "L/S Rate"
 msgstr "L/S Rate"
+
+#: src/components/@copyTrade/BulkCopyModifyModal/ListSelectedCopyTrade.tsx
+msgid "LABEL"
+msgstr "LABEL"
 
 #: src/pages/Home/Overview.tsx
 msgid "LATEST ACTIVITIES"
@@ -1833,6 +1857,10 @@ msgstr "LONG/SHORT OPEN INTEREST BY PAIRS"
 #: src/utils/config/translations.tsx
 msgid "Label"
 msgstr "Label"
+
+#: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
+msgid "Label:"
+msgstr "Label:"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
@@ -2231,6 +2259,7 @@ msgstr "Modify SL / TP"
 msgid "Monthly"
 msgstr "Monthly"
 
+#: src/pages/@layouts/Footer/index.tsx
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "More"
 msgstr "More"
@@ -2363,9 +2392,17 @@ msgstr "No Transactions Found"
 msgid "No link to the trader’s original position was found."
 msgstr "No link to the trader’s original position was found."
 
+#: src/components/@position/HLTraderOpeningPositions/OpenOrdersView.tsx
+msgid "No opening orders are matched this filter"
+msgstr "No opening orders are matched this filter"
+
 #: src/components/@dailyTrades/OrderListView.tsx
 msgid "No order found"
 msgstr "No order found"
+
+#: src/components/@position/HLTraderOpeningPositions/OrderFilledView.tsx
+msgid "No orders filled are matched this filter"
+msgstr "No orders filled are matched this filter"
 
 #: src/components/@dailyTrades/PositionListView.tsx
 msgid "No position found"
@@ -2468,6 +2505,10 @@ msgstr "OTHERS"
 #: src/pages/Home/index.tsx
 msgid "OVERVIEW"
 msgstr "OVERVIEW"
+
+#: src/components/@wallet/CreateWalletModals/CreateCEXWalletModal.tsx
+msgid "Omni Key Seed"
+msgstr "Omni Key Seed"
 
 #: src/pages/CopinLite/Trades/index.tsx
 msgid "On-Chain Positions"
@@ -3081,6 +3122,10 @@ msgstr "Select the copy you want to open:"
 msgid "Select the vault you want to clone:"
 msgstr "Select the vault you want to clone:"
 
+#: src/components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions.tsx
+msgid "Selected <0>{0} Copies</0>"
+msgstr "Selected <0>{0} Copies</0>"
+
 #: src/pages/TraderDetails/CustomizeRankingColumns.tsx
 #: src/theme/Table/CustomizeColumn.tsx
 msgid "Selected:"
@@ -3389,10 +3434,6 @@ msgstr "Synthetix v3"
 msgid "System"
 msgstr "System"
 
-#: src/components/@position/CopyOpeningPositions/index.tsx
-msgid "System creates a copy order"
-msgstr "System creates a copy order"
-
 #: src/pages/@layouts/Footer/index.tsx
 msgid "TERMS & POLICY"
 msgstr "TERMS & POLICY"
@@ -3444,6 +3485,10 @@ msgstr "TOTAL USERS"
 #: src/pages/Stats/Overview.tsx
 msgid "TOTAL VOLUME"
 msgstr "TOTAL VOLUME"
+
+#: src/components/@copyTrade/BulkCopyModifyModal/ListSelectedCopyTrade.tsx
+msgid "TRADER"
+msgstr "TRADER"
 
 #: src/pages/@layouts/Navbar/NavLinks.tsx
 #: src/pages/Leaderboard/index.tsx
@@ -3694,6 +3739,10 @@ msgstr "This trader is being copied by 10 or more copiers."
 msgid "This trader list is empty"
 msgstr "This trader list is empty"
 
+#: src/components/@position/HLTraderOpeningPositions/OrderFilledView.tsx
+msgid "This trader's orders filled is empty"
+msgstr "This trader's orders filled is empty"
+
 #: src/pages/Settings/AlertSettingDetails/LinkWebhookAlertAction/index.tsx
 msgid "This webhook has been subscribed successfully"
 msgstr "This webhook has been subscribed successfully"
@@ -3814,10 +3863,6 @@ msgstr "Trader Favorites"
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "Trader don't have statistic in {0}"
 msgstr "Trader don't have statistic in {0}"
-
-#: src/components/@position/CopyOpeningPositions/index.tsx
-msgid "Trader places an order"
-msgstr "Trader places an order"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "Trader to copy"
@@ -4020,6 +4065,8 @@ msgstr "Vault Wallet"
 msgid "Verify account"
 msgstr "Verify account"
 
+#: src/components/@position/HLTraderOpeningPositions/OpenOrdersView.tsx
+#: src/components/@position/HLTraderOpeningPositions/OrderFilledView.tsx
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 msgid "View All"
 msgstr "View All"
@@ -4307,6 +4354,10 @@ msgstr "Your NFT has been successfully minted"
 msgid "Your NFT is expired"
 msgstr "Your NFT is expired"
 
+#: src/components/@wallet/CreateWalletModals/CreateCEXWalletModal.tsx
+msgid "Your Omni Key Seed"
+msgstr "Your Omni Key Seed"
+
 #: src/components/@copyTrade/renderProps/copyTradeColumns.tsx
 msgid "Your balance is too low for copy trading. Please Deposit now to continue!"
 msgstr "Your balance is too low for copy trading. Please Deposit now to continue!"
@@ -4314,10 +4365,6 @@ msgstr "Your balance is too low for copy trading. Please Deposit now to continue
 #: src/components/@copyTrade/CopyTradeForm/FundChecking.tsx
 msgid "Your copy may failed due to insufficient available fund"
 msgstr "Your copy may failed due to insufficient available fund"
-
-#: src/components/@position/CopyOpeningPositions/index.tsx
-msgid "Your order will be executed"
-msgstr "Your order will be executed"
 
 #: src/pages/Subscription/TermsAndConditions.tsx
 msgid "Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To continue, mint a new NFT."
@@ -4516,6 +4563,14 @@ msgstr "{daysLeft} days left"
 #: src/pages/TraderDetails/ScoreChart.tsx
 msgid "{label} is better than {value} traders"
 msgstr "{label} is better than {value} traders"
+
+#: src/components/@ui/IconMessageBox/index.tsx
+msgid "{message}"
+msgstr "{message}"
+
+#: src/components/@ui/IconMessageBox/index.tsx
+msgid "{title}"
+msgstr "{title}"
 
 #: src/pages/@layouts/Footer/index.tsx
 msgid "© {0} Copin."

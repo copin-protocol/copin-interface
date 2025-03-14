@@ -128,6 +128,7 @@ export enum CopyTradeOrderTypeEnum {
   NOT_FULL_ORDER = 'NOT_FULL_ORDER',
 }
 export enum CopyTradePlatformEnum {
+  APEX = 'APEX',
   OTHERS = 'OTHERS',
   GMX = 'GMX',
   BINGX = 'BINGX',
@@ -515,4 +516,10 @@ export enum TraderLabelEnum {
   'TIER1_PAIRS' = 'TIER1_PAIRS',
   'ALTCOIN_PAIRS' = 'ALTCOIN_PAIRS',
   'MEME_PAIRS' = 'MEME_PAIRS',
+}
+
+export enum BulkUpdateActionEnum {
+  'DELETE' = 'DELETE',
+  'UPDATE' = 'UPDATE',
+  'CLONE' = 'CLONE',
 }

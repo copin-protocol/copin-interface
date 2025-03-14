@@ -152,6 +152,7 @@ export const EXCHANGE_STATS = [
   CopyTradePlatformEnum.GATE,
   CopyTradePlatformEnum.HYPERLIQUID,
   CopyTradePlatformEnum.GNS_V8,
+  CopyTradePlatformEnum.APEX,
   // CopyTradePlatformEnum.OTHERS,
   // CopyTradePlatformEnum.BINANCE,
   // CopyTradePlatformEnum.SYNTHETIX,
@@ -171,6 +172,7 @@ export const EXCHANGE_COLOR: { [key: string]: string } = {
   [CopyTradePlatformEnum.SYNTHETIX_V3]: '#9573F7',
   [CopyTradePlatformEnum.GNS_V8]: '#4AF994',
   [CopyTradePlatformEnum.GMX]: '#E978F3',
+  [CopyTradePlatformEnum.APEX]: '#FADFA9',
 }
 
 export const CEX_EXCHANGES = [

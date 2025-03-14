@@ -68,6 +68,7 @@ export default function PositionMobileView({
     }
   )
 
+  const [enabledRefetchOpenOrder, setEnabledRefetchOpenOrder] = useState(true)
   const { data: openOrders, isLoading: isLoadingOpenOders } = useQuery(
     [QUERY_KEYS.GET_HYPERLIQUID_OPEN_ORDERS, address],
     () =>
@@ -77,13 +78,19 @@ export default function PositionMobileView({
     {
       enabled: !!address && isHyperliquid,
       retry: 0,
-      refetchInterval: 15_000,
+      refetchInterval: enabledRefetchOpenOrder ? 15_000 : undefined,
       keepPreviousData: true,
       select: (data) => {
         return parseHLOrderData({ account: address ?? '', data })
       },
     }
   )
+  const onOpenOrderPageChange = useCallback((page: number) => {
+    if (page === 1) {
+      setEnabledRefetchOpenOrder(true)
+    } else setEnabledRefetchOpenOrder(false)
+  }, [])
+
   openOrders?.sort((a, b) => {
     return (b.timestamp ?? 0) - (a.timestamp ?? 0)
   })
@@ -136,7 +143,14 @@ export default function PositionMobileView({
         {currentTabKey === TabKeyEnum.CLOSED && historyPositions}
         {currentTabKey === TabKeyEnum.OPEN_ORDERS && (
           <Box display="flex" flexDirection="column" height="100%">
-            <OpenOrdersView data={openOrders} isLoading={isLoadingOpenOders} isDrawer={false} isExpanded={true} />
+            <OpenOrdersView
+              data={openOrders}
+              isLoading={isLoadingOpenOders}
+              isDrawer={false}
+              isExpanded={true}
+              onPageChange={onOpenOrderPageChange}
+              toggleExpand={undefined}
+            />
           </Box>
         )}
         {currentTabKey === TabKeyEnum.FILLS && (

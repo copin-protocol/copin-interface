@@ -79,6 +79,11 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   skipLowSize: false,
   lowSize: undefined,
 }
+export const defaultBulkUpdateFormValues: CopyTradeFormValues = {
+  ...defaultCopyTradeFormValues,
+  volume: undefined,
+  leverage: undefined,
+}
 
 export const vaultExchangeOptions: ExchangeOptions[] = [getExchangeOption(CopyTradePlatformEnum.GNS_V8)]
 
@@ -94,6 +99,7 @@ export const exchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.OKX),
   getExchangeOption(CopyTradePlatformEnum.GATE),
   getExchangeOption(CopyTradePlatformEnum.HYPERLIQUID),
+  // getExchangeOption(CopyTradePlatformEnum.APEX),
   // getExchangeOption(CopyTradePlatformEnum.SYNTHETIX),
 ]
 export const internalExchangeOptions: ExchangeOptions[] = [
@@ -104,6 +110,7 @@ export const internalExchangeOptions: ExchangeOptions[] = [
   getExchangeOption(CopyTradePlatformEnum.GATE),
   getExchangeOption(CopyTradePlatformEnum.HYPERLIQUID),
   getExchangeOption(CopyTradePlatformEnum.BINANCE),
+  getExchangeOption(CopyTradePlatformEnum.APEX),
 ]
 export const protocolOptions = RELEASED_PROTOCOLS.map((value) => {
   return {
@@ -122,4 +129,5 @@ export const postUpdateRefreshQueries = [
   QUERY_KEYS.GET_COPY_TRADE_SETTINGS,
   QUERY_KEYS.GET_EMBEDDED_COPY_TRADES,
   QUERY_KEYS.USE_GET_ALL_COPY_TRADES,
+  QUERY_KEYS.GET_COPY_TRADE_BALANCE_OVERVIEW,
 ]

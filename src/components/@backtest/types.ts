@@ -1,5 +1,6 @@
 import { BackTestResultData, RequestBackTestData } from 'entities/backTest'
-import { SLTPTypeEnum } from 'utils/config/enums'
+import { UpdateCopyTradeData } from 'entities/copyTrade'
+import { BulkUpdateActionEnum, SLTPTypeEnum } from 'utils/config/enums'
 
 export interface BackTestFormValues {
   balance: number
@@ -62,3 +63,14 @@ export type BacktestActionType =
       type: 'toggleFocusBacktest'
       payload?: boolean
     }
+export type RequestBulkUpdateCopyTradeData = { copyTradeIds: string[] } & (
+  | { action: BulkUpdateActionEnum.DELETE }
+  | {
+      action: BulkUpdateActionEnum.UPDATE
+      update: UpdateCopyTradeData
+    }
+  | {
+      action: BulkUpdateActionEnum.CLONE
+      cloneWalletId: string
+    }
+)

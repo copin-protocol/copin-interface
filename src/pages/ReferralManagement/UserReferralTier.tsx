@@ -7,10 +7,10 @@ import { useMutation, useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
 import { customRefCodeApi, getMyProfileApi } from 'apis/userApis'
-import actionSuccess from 'assets/images/success-img.png'
 import InputReferral from 'components/@auth/InputReferral'
 import { DifferentialBar } from 'components/@ui/DifferentialBar'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
+import SuccessImage from 'components/@ui/SuccessImage'
 import ToastBody from 'components/@ui/ToastBody'
 import { RestrictPremiumFeature } from 'components/@widgets/SubscriptionRestrictModal'
 import { useIsPremium } from 'hooks/features/subscription/useSubscriptionRestrict'
@@ -384,7 +384,7 @@ function EditReferralCodeModal({
                   />
                 </Flex>
                 <Box mx="auto" mb={3} width="max-content">
-                  <ActionSuccess />
+                  <SuccessImage height={200} />
                 </Box>
                 <Box mb={3}>
                   <Type.Caption display="block" mb={1} color="neutral3" textAlign="center">
@@ -418,11 +418,6 @@ function EditReferralCodeModal({
     </Modal>
   )
 }
-
-function ActionSuccess() {
-  return <Image height={200} src={actionSuccess} />
-}
-
 // function EditReferrerCode({ myProfile, onEditSuccess }: { myProfile: UserData | null; onEditSuccess: () => void }) {
 //   const [openModal, setOpenModal] = useState(false)
 //   const { data: isEligibleAddReferrer } = useQuery(

@@ -599,6 +599,7 @@ export function getChartData({ data }: { data: CopyStatisticData[] | undefined }
                 CopyTradePlatformEnum.GATE,
                 CopyTradePlatformEnum.GNS_V8,
                 CopyTradePlatformEnum.HYPERLIQUID,
+                CopyTradePlatformEnum.APEX,
               ].includes(exchange as CopyTradePlatformEnum)
             ) {
               const exchangeStats = stats.exchanges[exchange] || {}

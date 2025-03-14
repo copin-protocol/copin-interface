@@ -6,6 +6,7 @@ import { useQuery } from 'react-query'
 import { getCopyTradeSettingsListApi } from 'apis/copyTradeApis'
 import UserActivityView from 'components/@copyActivity/UserActivityView'
 import ListCopyTrade from 'components/@copyTrade/ListCopyTrade'
+import SelectedCopyTradeActions from 'components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions'
 import SelectCopyWallet from 'components/@copyTrade/SelectCopyWallet'
 import { CopyTradeWithCheckingData } from 'components/@copyTrade/types'
 import Divider from 'components/@ui/Divider'
@@ -53,12 +54,22 @@ export default function CopyManagementDrawer({
           <DrawerTitle
             title={
               <Flex sx={{ alignItems: 'center', gap: 3 }}>
-                <Type.Head display="flex" sx={{ alignItems: 'center', gap: '1ch' }}>
-                  <TraderAddress
-                    address={address}
-                    options={{ isLink: false, textSx: { fontSize: 'inherit', width: 'auto', fontWeight: 'bold' } }}
-                  />
-                  COPY-TRADES ON
+                <Type.Head
+                  display="flex"
+                  sx={{
+                    alignItems: ['start', 'start', 'center'],
+                    gap: '1ch',
+                    flexDirection: ['column', 'column', 'row'],
+                    fontSize: ['18px', '20px'],
+                  }}
+                >
+                  <Flex as="span" sx={{ gap: '1ch' }}>
+                    <TraderAddress
+                      address={address}
+                      options={{ isLink: false, textSx: { fontSize: 'inherit', width: 'auto', fontWeight: 'bold' } }}
+                    />
+                    <Box as="span">COPY-TRADES ON</Box>
+                  </Flex>
                   <SelectCopyWallet
                     wallets={listWallets}
                     currentWallet={copyWallet}
@@ -119,7 +130,7 @@ function CopyManagementDrawerContent({
     return isSelectedAll ? ['pnl7D', 'pnl'] : ['pnl', 'pnl7D', 'copyWalletId', 'account']
   }, [isSelectedAll])
   return (
-    <Flex flexDirection="column" sx={{ width: '100%', height: '100%' }}>
+    <Flex flexDirection="column" sx={{ width: '100%', height: '100%', position: 'relative', pt: [12, 12, 0] }}>
       <Box flex="1 0 0" overflow="hidden">
         <ListCopyTrade
           type={'drawer'}
@@ -129,6 +140,11 @@ function CopyManagementDrawerContent({
           externalSource={{ copyWallets: listCopyWallets }}
           excludingColumnKeys={excludingKeys}
           tableBg="neutral7"
+        />
+        <SelectedCopyTradeActions
+          isAbsolutePosition
+          wrapperSx={{ top: ['-8px', '-8px', 0], bottom: 'auto', pl: [3, 3, 26], pt: 1, bg: 'black', height: 30 }}
+          hiddenCancel
         />
       </Box>
       <Divider />

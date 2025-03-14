@@ -4,6 +4,7 @@ import { useResponsive } from 'ahooks'
 import { ReactNode, useEffect, useState } from 'react'
 
 import ChartGainsPositionRealtime from 'components/@charts/ChartGainsPositionRealtime'
+import SelectedCopyTradeActions from 'components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions'
 import SelectCopyWallet from 'components/@copyTrade/SelectCopyWallet'
 import DirectionButton from 'components/@ui/DirectionButton'
 import Divider from 'components/@ui/Divider'
@@ -160,9 +161,12 @@ function DesktopView() {
           >
             <FilterSection />
           </Flex>
-          <Box height="calc(100% - 48px)">
+          <Box height="calc(100% - 48px - 32px)">
             <ListVaultCopyTrades expanded={expandedTable} />
           </Box>
+          <Flex px={2} height={32} sx={{ alignItems: 'center' }}>
+            <SelectedCopyTradeActions />
+          </Flex>
         </Box>
         <Box sx={{ flex: expandedTable ? 0 : '2 1', bg: 'neutral5' }}>
           <Box sx={{ height: 350, bg: 'neutral8' }}>
@@ -310,6 +314,7 @@ function MobileView() {
                 borderBottomColor: 'neutral4',
                 alignItems: 'center',
                 gap: 0,
+                position: 'relative',
               }}
             >
               <Box sx={{ maxWidth: [100, 100, 'max-content'], flexShrink: 0, px: 2 }}>
@@ -339,6 +344,7 @@ function MobileView() {
                   </Flex>
                 </>
               )}
+              <SelectedCopyTradeActions isAbsolutePosition hiddenSelectedText />
             </Flex>
             <Box height="calc(100% - 48px)">
               <ListVaultCopyTrades expanded={true} />
@@ -503,14 +509,17 @@ function FilterSection() {
   } = useVaultManagementContext()
   return (
     <>
-      <FilterBySourceDropdown
-        isDCP
-        selectedProtocols={selectedProtocol}
-        isToggleAllProtocol={isToggleAllProtocol}
-        toggleAllProtocol={toggleAllProtocol}
-        checkIsProtocolChecked={checkIsProtocolChecked}
-        handleToggleProtocol={handleToggleProtocol}
-      />
+      <Box sx={{ position: 'relative' }}>
+        <FilterBySourceDropdown
+          isDCP
+          selectedProtocols={selectedProtocol}
+          isToggleAllProtocol={isToggleAllProtocol}
+          toggleAllProtocol={toggleAllProtocol}
+          checkIsProtocolChecked={checkIsProtocolChecked}
+          handleToggleProtocol={handleToggleProtocol}
+        />
+        <SelectedCopyTradeActions isAbsolutePosition hiddenCancel hiddenSelectAll wrapperSx={{ px: 0 }} />
+      </Box>
       <FilterByStatus checkIsStatusChecked={checkIsStatusChecked} handleToggleStatus={handleToggleStatus} />
     </>
   )

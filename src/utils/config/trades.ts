@@ -369,6 +369,7 @@ export const SYNTHETIX_V3_MARKET_IDS = {
 
 export const TOKEN_TRADE_IGNORE: TokenIgnore = {
   [CopyTradePlatformEnum.OTHERS]: [],
+  [CopyTradePlatformEnum.APEX]: [],
   [CopyTradePlatformEnum.GMX]: [],
   [CopyTradePlatformEnum.BINGX]: ['YFI', 'PERP', 'RPL', 'ZEC', 'RPL', 'UMA', 'BAL', 'XTZ'],
   [CopyTradePlatformEnum.BITGET]: [],

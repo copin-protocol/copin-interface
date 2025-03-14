@@ -39,8 +39,17 @@ export default function BalanceMenu() {
       }}
       height={[56, 40]}
     >
-      <Flex alignItems="center" sx={{ pl: 3, pr: 2, gap: 1, width: ['50%', 'max-content'], height: '100%' }}>
-        <SelectCopyWallet currentWallet={activeWallet} onChangeWallet={handleChangeActiveWallet} wallets={cexWallets} />
+      <Flex
+        alignItems="center"
+        sx={{ pl: 3, pr: 2, gap: 1, width: ['150px', 'max-content'], flexShrink: 0, height: '100%' }}
+      >
+        <SelectCopyWallet
+          currentWallet={activeWallet}
+          onChangeWallet={handleChangeActiveWallet}
+          wallets={cexWallets}
+          buttonSx={{ width: ['100%', 'auto'] }}
+          sx={{ width: ['100%', 'auto'] }}
+        />
         {/* {activeWallet && CEX_EXCHANGES.includes(activeWallet.exchange) && (
           <ReferralStatus data={activeWallet} sx={{ minWidth: 80 }} />
         )} */}

@@ -62,13 +62,18 @@ import {
 } from '../configs'
 import { getExchangeOption } from '../helpers'
 import { CopyTradeFormValues } from '../types'
-import { cloneCopyTradeFormSchema, copyTradeFormSchema, updateCopyTradeFormSchema } from '../yupSchemas'
+import {
+  bulkUpdateFormSchema,
+  cloneCopyTradeFormSchema,
+  copyTradeFormSchema,
+  updateCopyTradeFormSchema,
+} from '../yupSchemas'
 import FundChecking, { SmartWalletFund } from './FundChecking'
 import QuickEditField from './QuickEditField'
 import VaultWallets from './VaultWallets'
 import Wallets from './Wallets'
 
-export type FormType = 'edit' | 'create' | 'clone' | 'onboarding' | 'lite' | 'vault'
+export type FormType = 'edit' | 'create' | 'clone' | 'onboarding' | 'lite' | 'vault' | 'bulkEdit' | 'dcp'
 
 type Props = {
   onSubmit: (data: CopyTradeFormValues) => void
@@ -89,6 +94,8 @@ const CopyTraderForm = ({
   const isVault = !!formTypes?.includes('vault')
   const isLite = !!formTypes?.includes('lite')
   const isOnboarding = !!formTypes?.includes('onboarding')
+  const isBulkEdit = !!formTypes?.includes('bulkEdit')
+  const isDcp = !!formTypes?.includes('dcp')
   const {
     control,
     watch,
@@ -99,13 +106,20 @@ const CopyTraderForm = ({
     setFocus,
     reset,
     setError,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<CopyTradeFormValues>({
     // mode: 'onChange',
     resolver: yupResolver(
-      isClone ? cloneCopyTradeFormSchema : isEdit ? updateCopyTradeFormSchema : copyTradeFormSchema
+      isBulkEdit
+        ? bulkUpdateFormSchema
+        : isClone
+        ? cloneCopyTradeFormSchema
+        : isEdit
+        ? updateCopyTradeFormSchema
+        : copyTradeFormSchema
     ),
   })
+
   const [
     title,
     platform,
@@ -194,7 +208,7 @@ const CopyTraderForm = ({
       protocol,
     },
     {
-      enabled: !isEdit && (isClone ? !!duplicateToAddress : !!account),
+      enabled: !isEdit && (isClone ? !!duplicateToAddress : !!account) && !isBulkEdit,
       select: (data) => {
         const symbols = getListSymbolByListIndexToken?.({ protocol, listIndexToken: data })
         if (!symbols?.length) return []
@@ -202,7 +216,7 @@ const CopyTraderForm = ({
       },
       onSuccess: (data) => {
         if (!!data?.length) {
-          if (!isEdit && (isClone ? !!duplicateToAddress : !!account)) {
+          if (!isEdit && (isClone ? !!duplicateToAddress : !!account) && !isBulkEdit) {
             setValue('tokenAddresses', data)
           }
           setTradedPairs(data ?? [])
@@ -222,13 +236,14 @@ const CopyTraderForm = ({
   }
   const isBingXWallet = copyWallets?.find((e) => e.id === copyWalletId)?.exchange === CopyTradePlatformEnum.BINGX
 
-  const onChangeWallet = (walletId: string) => setValue(fieldName.copyWalletId, walletId, { shouldValidate: true })
+  const onChangeWallet = (walletId: string) =>
+    setValue(fieldName.copyWalletId, walletId, { shouldValidate: true, shouldDirty: true })
 
   const onChangeSLType = (type: SLTPTypeEnum) => setValue(fieldName.stopLossType, type)
 
   const onChangeTPType = (type: SLTPTypeEnum) => setValue(fieldName.takeProfitType, type)
 
-  const onChangeSide = (side: CopyTradeSideEnum) => setValue(fieldName.side, side)
+  const onChangeSide = (side: CopyTradeSideEnum) => setValue(fieldName.side, side, { shouldDirty: true })
 
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
 
@@ -236,7 +251,7 @@ const CopyTraderForm = ({
   const currentWalletOption = currentWallet?.exchange && getExchangeOption(currentWallet.exchange)
   const walletHasRef = !!currentWallet?.isReferral
   const userPlan = myProfile?.plan
-  const totalVolume = volume * leverage
+  const totalVolume = volume && leverage ? volume * leverage : 0
 
   const { data: traderVolumeCopy } = useQuery(
     [QUERY_KEYS.GET_TRADER_VOLUME_COPY, protocol, account, platform],
@@ -302,7 +317,7 @@ const CopyTraderForm = ({
     }
     reset(defaultFormValues)
     setTimeout(() => {
-      if (isEdit) {
+      if (isEdit || isBulkEdit) {
         return setFocus(fieldName.volume)
       }
       if (isClone && !defaultFormValues.duplicateToAddress) {
@@ -319,9 +334,9 @@ const CopyTraderForm = ({
     }
   }, [clearErrors, copyWalletId])
 
-  const permissionToSelectProtocol = useCopyTradePermission(true) && !isLite && (isEdit || isClone)
+  const permissionToSelectProtocol = useCopyTradePermission(true) && !isLite && (isEdit || isClone) && !isBulkEdit
   const disabledSelectWallet = isEdit || (isClone && !isPremiumUser) || isOnboarding || isLite
-  const hiddenSelectWallet = isLite || isOnboarding
+  const hiddenSelectWallet = isLite || isOnboarding || isBulkEdit
   const { sm } = useResponsive()
 
   const SwitchMultipleCopy = useCallback(
@@ -392,16 +407,16 @@ const CopyTraderForm = ({
   }) => {
     if (typeof value !== 'string') return
     if (value === '' || value === '--') {
-      setValue(field, undefined)
+      setValue(field, undefined, { shouldDirty: true })
       if (booleanField) {
-        setValue(booleanField, false)
+        setValue(booleanField, false, { shouldDirty: true })
       }
       return
     }
     const numberValue = parseInputValue(value)
-    setValue(field, numberValue)
+    setValue(field, numberValue, { shouldDirty: true })
     if (booleanField) {
-      setValue(booleanField, true)
+      setValue(booleanField, true, { shouldDirty: true })
     }
   }
   const validateNumberValue = ({ value, field }: { value: string; field: keyof CopyTradeFormValues }) => {
@@ -429,7 +444,7 @@ const CopyTraderForm = ({
 
   return (
     <>
-      {!isOnboarding && account && protocol && (
+      {!isBulkEdit && !isOnboarding && account && protocol && (
         <Flex mb={1} px={[12, 3]} sx={{ alignItems: 'center', gap: 2 }}>
           {renderTrader(account, protocol, true)}
           <Type.Caption>-</Type.Caption>
@@ -453,7 +468,7 @@ const CopyTraderForm = ({
       )} */}
 
       <Box sx={{ pb: 20, px: [12, 3], mt: 3 }}>
-        {(isEdit || isClone) && !isLite && (
+        {!isBulkEdit && (isEdit || isClone) && !isLite && (
           <>
             {isEdit && (
               <Box mt={20}>
@@ -535,7 +550,7 @@ const CopyTraderForm = ({
               defaultMenuIsOpen={false}
               value={protocolOptions.find((option) => option.value === protocol)}
               onChange={(newValue: any) => {
-                setValue('protocol', newValue.value)
+                setValue('protocol', newValue.value, { shouldDirty: true })
                 setValue('serviceKey', getCopyService({ protocol: newValue.value, exchange: platform, isInternal }))
               }}
               isSearchable
@@ -576,7 +591,7 @@ const CopyTraderForm = ({
                     if (platform !== newValue.value) {
                       setDefaultWallet(newValue.value)
                     }
-                    setValue(fieldName.exchange, newValue.value)
+                    setValue(fieldName.exchange, newValue.value, { shouldDirty: true })
                   }}
                   isSearchable
                   isDisabled={disabledSelectWallet}
@@ -704,7 +719,7 @@ const CopyTraderForm = ({
           </Box>
         </Flex>
         <FundChecking walletId={copyWalletId} amount={volume} />
-        {platform !== CopyTradePlatformEnum.GNS_V8 && (
+        {platform !== CopyTradePlatformEnum.GNS_V8 && !(isBulkEdit && isDcp) && (
           <>
             <NumberInputField
               maxLength={40}
@@ -735,104 +750,6 @@ const CopyTraderForm = ({
         )}
         <Divider mt={24} />
 
-        {/*{platform !== CopyTradePlatformEnum.SYNTHETIX_V2 && platform !== CopyTradePlatformEnum.SYNTHETIX_V3 && (*/}
-        {/*  <Accordion*/}
-        {/*    header={<Type.BodyBold>Stop Loss / Take Profit</Type.BodyBold>}*/}
-        {/*    defaultOpen={(isEdit || isClone) && (!!stopLossAmount || !!takeProfitAmount)}*/}
-        {/*    body={*/}
-        {/*      <Box mt={3}>*/}
-        {/*        <NumberInputField*/}
-        {/*          maxLength={40}*/}
-        {/*          label="Stop Loss (Recommended)"*/}
-        {/*          block*/}
-        {/*          name={fieldName.stopLossAmount}*/}
-        {/*          control={control}*/}
-        {/*          error={errors.stopLossAmount?.message}*/}
-        {/*          suffix={*/}
-        {/*            <InputSuffix>*/}
-        {/*              <SelectSLTPType type={stopLossType} onTypeChange={onChangeSLType} />*/}
-        {/*              /!*<SelectSLTPType name={fieldName.stopLossType} type={stopLossType} onTypeChange={onChangeSLType} />*!/*/}
-        {/*            </InputSuffix>*/}
-        {/*          }*/}
-        {/*        />*/}
-        {/*        <Type.Caption mt={1} color="neutral2">*/}
-        {/*          <Trans>*/}
-        {/*            When the position&apos;s loss exceeds{' '}*/}
-        {/*            {stopLossAmount ? (*/}
-        {/*              <Type.CaptionBold color="red2">*/}
-        {/*                {formatNumber(stopLossAmount)} {SLTP_TYPE_TRANS[stopLossType]}*/}
-        {/*              </Type.CaptionBold>*/}
-        {/*            ) : (*/}
-        {/*              '--'*/}
-        {/*            )}*/}
-        {/*            , the Stop Loss will be triggered to close the position.*/}
-        {/*          </Trans>*/}
-        {/*        </Type.Caption>*/}
-
-        {/*        <Box mt={3} />*/}
-        {/*        <NumberInputField*/}
-        {/*          label="Take Profit"*/}
-        {/*          block*/}
-        {/*          maxLength={40}*/}
-        {/*          name={fieldName.takeProfitAmount}*/}
-        {/*          control={control}*/}
-        {/*          error={errors.takeProfitAmount?.message}*/}
-        {/*          suffix={*/}
-        {/*            <InputSuffix>*/}
-        {/*              <SelectSLTPType type={takeProfitType} onTypeChange={onChangeTPType} />*/}
-        {/*            </InputSuffix>*/}
-        {/*          }*/}
-        {/*        />*/}
-        {/*        <Type.Caption mt={1} color="neutral2">*/}
-        {/*          <Trans>*/}
-        {/*            When the position&apos;s profit exceeds{' '}*/}
-        {/*            {takeProfitAmount ? (*/}
-        {/*              <Type.CaptionBold color="green1">*/}
-        {/*                {formatNumber(takeProfitAmount)} {SLTP_TYPE_TRANS[takeProfitType]}*/}
-        {/*              </Type.CaptionBold>*/}
-        {/*            ) : (*/}
-        {/*              '--'*/}
-        {/*            )}*/}
-        {/*            , the Take Profit will be triggered to close the position.*/}
-        {/*          </Trans>*/}
-        {/*        </Type.Caption>*/}
-
-        {/*        {isBingXWallet && (*/}
-        {/*          <Box bg="rgba(255, 194, 75, 0.10)" py={2} px={12} mt={20}>*/}
-        {/*            <Flex sx={{ gap: 2 }} color="orange1" alignItems="center">*/}
-        {/*              <ShieldWarning />*/}
-        {/*              <Type.CaptionBold>Warning</Type.CaptionBold>*/}
-        {/*            </Flex>*/}
-        {/*            <Type.Caption mt={2}>*/}
-        {/*              <Trans>*/}
-        {/*                Make sure you have already activated the{' '}*/}
-        {/*                <Box as="a" href={LINKS.bingXGuarantee} target="_blank" rel="noreferrer">*/}
-        {/*                  BingX Guaranteed Price*/}
-        {/*                </Box>{' '}*/}
-        {/*                to Prevent Slippage Losses.*/}
-        {/*              </Trans>*/}
-        {/*            </Type.Caption>*/}
-        {/*          </Box>*/}
-        {/*        )}*/}
-
-        {/*        {platform === CopyTradePlatformEnum.GNS_V8 && (*/}
-        {/*          <Box bg="rgba(255, 194, 75, 0.10)" py={2} px={12} mt={20}>*/}
-        {/*            <Flex sx={{ gap: 2 }} color="orange1" alignItems="center">*/}
-        {/*              <ShieldWarning />*/}
-        {/*              <Type.CaptionBold>Warning</Type.CaptionBold>*/}
-        {/*            </Flex>*/}
-        {/*            <Type.Caption mt={2}>*/}
-        {/*              <Trans>*/}
-        {/*                Due to price slippage prevention, the stop loss price will increase / decrease by 0.1%*/}
-        {/*              </Trans>*/}
-        {/*            </Type.Caption>*/}
-        {/*          </Box>*/}
-        {/*        )}*/}
-        {/*      </Box>*/}
-        {/*    }*/}
-        {/*  />*/}
-        {/*)}*/}
-        {/*<Divider />*/}
         <Accordion
           headerWrapperSx={{ gap: 2, justifyContent: 'start', '& > *:first-child': { width: 'auto' } }}
           defaultOpen={
@@ -857,17 +774,17 @@ const CopyTraderForm = ({
                 size="xs"
                 icon={<StarFour size={16} />}
                 onClick={() => {
-                  setValue('takeProfitAmount', 50)
-                  setValue('takeProfitType', SLTPTypeEnum.PERCENT)
-                  setValue('stopLossAmount', 50)
-                  setValue('stopLossType', SLTPTypeEnum.PERCENT)
-                  setValue('lookBackOrders', 10)
-                  setValue('skipLowLeverage', true)
-                  setValue('lowLeverage', 5)
-                  setValue('skipLowCollateral', true)
-                  setValue('lowCollateral', 300)
-                  setValue('skipLowSize', true)
-                  setValue('lowSize', 20_000)
+                  setValue('takeProfitAmount', 50, { shouldDirty: true })
+                  setValue('takeProfitType', SLTPTypeEnum.PERCENT, { shouldDirty: true })
+                  setValue('stopLossAmount', 50, { shouldDirty: true })
+                  setValue('stopLossType', SLTPTypeEnum.PERCENT, { shouldDirty: true })
+                  setValue('lookBackOrders', 10, { shouldDirty: true })
+                  setValue('skipLowLeverage', true, { shouldDirty: true })
+                  setValue('lowLeverage', 5, { shouldDirty: true })
+                  setValue('skipLowCollateral', true, { shouldDirty: true })
+                  setValue('lowCollateral', 300, { shouldDirty: true })
+                  setValue('skipLowSize', true, { shouldDirty: true })
+                  setValue('lowSize', 20_000, { shouldDirty: true })
                   if (isLite) {
                     logEventLite({
                       event: EVENT_ACTIONS[EventCategory.LITE].LITE_COPY_USE_RECOMMEDATION_SETTINGS,
@@ -901,136 +818,142 @@ const CopyTraderForm = ({
                 '&& .select__indicators': { height: 'max-content', position: 'sticky', top: 0 },
               }}
             >
-              <Box>
-                <Flex mb={2} alignItems="center" justifyContent="space-between">
-                  <Flex sx={{ alignItems: 'center', gap: 12, '& *': { mb: '0 !important' } }}>
-                    <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
-                    <SwitchInputField
-                      switchLabel="Follow the trader"
-                      labelColor="neutral1"
-                      {...register(fieldName.copyAll)}
-                      error={errors.copyAll?.message}
-                      wrapperSx={{ flexDirection: 'row-reverse', '*': { fontWeight: 400 } }}
-                      onChange={(newValue: any) => {
-                        clearErrors(fieldName.excludingTokenAddresses)
-                        clearErrors(fieldName.tokenAddresses)
-                        clearErrors(fieldName.hasExclude)
-                        setValue(fieldName.copyAll, newValue.target.checked)
-                        if (!newValue.target.checked) {
-                          setValue(fieldName.excludingTokenAddresses, [])
-                          setValue(fieldName.hasExclude, false)
-                          setValue(fieldName.tokenAddresses, tradedPairs)
-                        }
-                      }}
-                    />
-                  </Flex>
+              {!isBulkEdit && (
+                <>
+                  <Box>
+                    <Flex mb={2} alignItems="center" justifyContent="space-between">
+                      <Flex sx={{ alignItems: 'center', gap: 12, '& *': { mb: '0 !important' } }}>
+                        <Label label="Trading Pairs" error={errors.tokenAddresses?.message} />
+                        <SwitchInputField
+                          switchLabel="Follow the trader"
+                          labelColor="neutral1"
+                          {...register(fieldName.copyAll)}
+                          error={errors.copyAll?.message}
+                          wrapperSx={{ flexDirection: 'row-reverse', '*': { fontWeight: 400 } }}
+                          onChange={(newValue: any) => {
+                            clearErrors(fieldName.excludingTokenAddresses)
+                            clearErrors(fieldName.tokenAddresses)
+                            clearErrors(fieldName.hasExclude)
+                            setValue(fieldName.copyAll, newValue.target.checked)
+                            if (!newValue.target.checked) {
+                              setValue(fieldName.excludingTokenAddresses, [])
+                              setValue(fieldName.hasExclude, false)
+                              setValue(fieldName.tokenAddresses, tradedPairs)
+                            }
+                          }}
+                        />
+                      </Flex>
 
-                  {copyAll && (
-                    <Flex
-                      sx={{
-                        alignItems: 'center',
-                        gap: 12,
-                        '& *': { mb: '0 !important' },
-                        '& input:checked + .slider': {
-                          backgroundColor: `${themeColors.red1}50 !important`,
-                        },
-                      }}
-                    >
-                      <SwitchInputField
-                        switchLabel={`Exclude (${excludingTokenAddresses?.length ?? 0})`}
-                        labelColor="neutral3"
-                        {...register(fieldName.hasExclude)}
-                        error={errors.hasExclude?.message}
-                        wrapperSx={{
-                          flexDirection: 'row-reverse',
+                      {copyAll && (
+                        <Flex
+                          sx={{
+                            alignItems: 'center',
+                            gap: 12,
+                            '& *': { mb: '0 !important' },
+                            '& input:checked + .slider': {
+                              backgroundColor: `${themeColors.red1}50 !important`,
+                            },
+                          }}
+                        >
+                          <SwitchInputField
+                            switchLabel={`Exclude (${excludingTokenAddresses?.length ?? 0})`}
+                            labelColor="neutral3"
+                            {...register(fieldName.hasExclude)}
+                            error={errors.hasExclude?.message}
+                            wrapperSx={{
+                              flexDirection: 'row-reverse',
 
-                          '*': { fontWeight: 400 },
-                        }}
-                        tooltipContent={
-                          <Type.Caption color="neutral2" maxWidth={400}>
-                            The pairs you choose below will not be copied if the trader has a newly opened position.
-                          </Type.Caption>
-                        }
-                      />
+                              '*': { fontWeight: 400 },
+                            }}
+                            tooltipContent={
+                              <Type.Caption color="neutral2" maxWidth={400}>
+                                The pairs you choose below will not be copied if the trader has a newly opened position.
+                              </Type.Caption>
+                            }
+                          />
+                        </Flex>
+                      )}
                     </Flex>
+                    <Box
+                      display={copyAll ? 'none' : 'flex'}
+                      sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}
+                    >
+                      <Select
+                        closeMenuOnSelect={false}
+                        className="select-container pad-right-0"
+                        options={pairOptions}
+                        value={pairOptions?.filter?.((option) => tokenAddresses.includes(option.value))}
+                        onChange={(newValue: any, actionMeta: any) => {
+                          clearErrors(fieldName.tokenAddresses)
+                          if (actionMeta?.option?.value === 'all') {
+                            setValue(fieldName.tokenAddresses, allPairs)
+                            return
+                          }
+                          setValue(
+                            fieldName.tokenAddresses,
+                            newValue?.map((data: any) => data.value)
+                          )
+                        }}
+                        components={{
+                          DropdownIndicator: () => <div></div>,
+                        }}
+                        isSearchable
+                        menuIsOpen={allPairs.length === tokenAddresses?.length ? false : undefined}
+                        isMulti
+                      />
+                    </Box>
+                    {!!errors?.tokenAddresses?.message && (
+                      <Type.Caption color="red1" mt={1} display="block">
+                        {errors?.tokenAddresses?.message}
+                      </Type.Caption>
+                    )}
+                  </Box>
+                  <Box
+                    display={copyAll && hasExclude ? 'flex' : 'none'}
+                    sx={{ alignItems: 'center', width: '100%', gap: 1, flexWrap: 'wrap' }}
+                  >
+                    <Select
+                      closeMenuOnSelect={false}
+                      className="select-container pad-right-0 warning"
+                      options={pairOptions}
+                      value={pairOptions?.filter?.((option) => excludingTokenAddresses?.includes(option.value))}
+                      onChange={(newValue: any, actionMeta: any) => {
+                        clearErrors(fieldName.excludingTokenAddresses)
+                        if (actionMeta?.option?.value === 'all') {
+                          setValue(fieldName.excludingTokenAddresses, allPairs)
+                          return
+                        }
+                        setValue(
+                          fieldName.excludingTokenAddresses,
+                          newValue?.map((data: any) => data.value)
+                        )
+                      }}
+                      components={{
+                        DropdownIndicator: () => <div></div>,
+                      }}
+                      menuIsOpen={allPairs.length === excludingTokenAddresses?.length ? false : undefined}
+                      isSearchable
+                      isMulti
+                    />
+                  </Box>
+                  {!!errors?.excludingTokenAddresses?.message && (
+                    <Type.Caption color="red1" mt={1} display="block">
+                      {errors?.excludingTokenAddresses?.message}
+                    </Type.Caption>
                   )}
-                </Flex>
-                <Box
-                  display={copyAll ? 'none' : 'flex'}
-                  sx={{ alignItems: 'center', width: '100%', gap: 3, flexWrap: 'wrap' }}
-                >
-                  <Select
-                    closeMenuOnSelect={false}
-                    className="select-container pad-right-0"
-                    options={pairOptions}
-                    value={pairOptions?.filter?.((option) => tokenAddresses.includes(option.value))}
-                    onChange={(newValue: any, actionMeta: any) => {
-                      clearErrors(fieldName.tokenAddresses)
-                      if (actionMeta?.option?.value === 'all') {
-                        setValue(fieldName.tokenAddresses, allPairs)
-                        return
-                      }
-                      setValue(
-                        fieldName.tokenAddresses,
-                        newValue?.map((data: any) => data.value)
-                      )
-                    }}
-                    components={{
-                      DropdownIndicator: () => <div></div>,
-                    }}
-                    isSearchable
-                    menuIsOpen={allPairs.length === tokenAddresses?.length ? false : undefined}
-                    isMulti
+                </>
+              )}
+              {!isBulkEdit && (
+                <Box mt={20}>
+                  <InputField
+                    block
+                    maxLength={40}
+                    {...register(fieldName.title)}
+                    error={errors.title?.message}
+                    label="Label"
                   />
                 </Box>
-                {!!errors?.tokenAddresses?.message && (
-                  <Type.Caption color="red1" mt={1} display="block">
-                    {errors?.tokenAddresses?.message}
-                  </Type.Caption>
-                )}
-              </Box>
-              <Box
-                display={copyAll && hasExclude ? 'flex' : 'none'}
-                sx={{ alignItems: 'center', width: '100%', gap: 1, flexWrap: 'wrap' }}
-              >
-                <Select
-                  closeMenuOnSelect={false}
-                  className="select-container pad-right-0 warning"
-                  options={pairOptions}
-                  value={pairOptions?.filter?.((option) => excludingTokenAddresses?.includes(option.value))}
-                  onChange={(newValue: any, actionMeta: any) => {
-                    clearErrors(fieldName.excludingTokenAddresses)
-                    if (actionMeta?.option?.value === 'all') {
-                      setValue(fieldName.excludingTokenAddresses, allPairs)
-                      return
-                    }
-                    setValue(
-                      fieldName.excludingTokenAddresses,
-                      newValue?.map((data: any) => data.value)
-                    )
-                  }}
-                  components={{
-                    DropdownIndicator: () => <div></div>,
-                  }}
-                  menuIsOpen={allPairs.length === excludingTokenAddresses?.length ? false : undefined}
-                  isSearchable
-                  isMulti
-                />
-              </Box>
-              {!!errors?.excludingTokenAddresses?.message && (
-                <Type.Caption color="red1" mt={1} display="block">
-                  {errors?.excludingTokenAddresses?.message}
-                </Type.Caption>
               )}
-              <Box mt={20}>
-                <InputField
-                  block
-                  maxLength={40}
-                  {...register(fieldName.title)}
-                  error={errors.title?.message}
-                  label="Label"
-                />
-              </Box>
               {platform !== CopyTradePlatformEnum.SYNTHETIX_V2 && platform !== CopyTradePlatformEnum.SYNTHETIX_V3 && (
                 <Flex mt={3} sx={{ gap: 2 }}>
                   <Box flex={1}>
@@ -1110,7 +1033,8 @@ const CopyTraderForm = ({
 
               {platform !== CopyTradePlatformEnum.SYNTHETIX_V2 &&
                 platform !== CopyTradePlatformEnum.SYNTHETIX_V3 &&
-                platform !== CopyTradePlatformEnum.GNS_V8 && (
+                platform !== CopyTradePlatformEnum.GNS_V8 &&
+                (!(isBulkEdit && isDcp) ? (
                   <Box mt={24}>
                     <Type.CaptionBold mb={1}>
                       <Trans>Adjust Margin</Trans>
@@ -1146,7 +1070,7 @@ const CopyTraderForm = ({
                       />
                     </Flex>
                   </Box>
-                )}
+                ) : null)}
               <Box mt={24}>
                 <Type.CaptionBold mb={1}>
                   <Trans>Skip Trade</Trans>
@@ -1202,7 +1126,8 @@ const CopyTraderForm = ({
 
                   {platform !== CopyTradePlatformEnum.GNS_V8 &&
                     platform !== CopyTradePlatformEnum.SYNTHETIX_V2 &&
-                    platform !== CopyTradePlatformEnum.SYNTHETIX_V3 && (
+                    platform !== CopyTradePlatformEnum.SYNTHETIX_V3 &&
+                    !(isBulkEdit && isDcp) && (
                       <QuickEditField
                         value={lowSize}
                         label={<Trans>Size Lower Than</Trans>}
@@ -1274,21 +1199,23 @@ const CopyTraderForm = ({
           </Type.Caption>
         )}
 
-        <Box mt={3}>
-          <Checkbox {...register('agreement')}>
-            <Type.Caption>
-              I have read and I agree to the{' '}
-              <a href={LINKS.agreement} target="_blank" rel="noreferrer">
-                Copytrading Service Agreement
-              </a>
-            </Type.Caption>
-          </Checkbox>
-          {!!errors.agreement?.message && (
-            <Type.Caption color="red1" display="block" mt={1}>
-              You must agree to the agreement before continuing
-            </Type.Caption>
-          )}
-        </Box>
+        {!isBulkEdit && (
+          <Box mt={3}>
+            <Checkbox {...register('agreement')}>
+              <Type.Caption>
+                I have read and I agree to the{' '}
+                <a href={LINKS.agreement} target="_blank" rel="noreferrer">
+                  Copytrading Service Agreement
+                </a>
+              </Type.Caption>
+            </Checkbox>
+            {!!errors.agreement?.message && (
+              <Type.Caption color="red1" display="block" mt={1}>
+                You must agree to the agreement before continuing
+              </Type.Caption>
+            )}
+          </Box>
+        )}
 
         <Box sx={{ gap: 4 }} mt={3}>
           <Button
@@ -1296,7 +1223,7 @@ const CopyTraderForm = ({
             variant="primary"
             onClick={_handleSubmit}
             isLoading={isSubmitting}
-            disabled={isSubmitting || !!Object.keys(errors).length}
+            disabled={!isDirty || isSubmitting || !!Object.keys(errors).length}
           >
             {submitButtonText}
           </Button>

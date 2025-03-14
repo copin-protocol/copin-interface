@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 
+import SafeDropdownIndex from 'components/@widgets/SafeDropdownIndex'
 import { CopyWalletData } from 'entities/copyWallet'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Image, Type } from 'theme/base'
@@ -14,6 +15,8 @@ export default function SelectCopyWallet({
   isSelectedAll,
   hasSelectAll,
   onSelectAll,
+  buttonSx = {},
+  sx = {},
 }: {
   wallets: CopyWalletData[] | undefined
   currentWallet: CopyWalletData | null | undefined
@@ -21,13 +24,15 @@ export default function SelectCopyWallet({
   isSelectedAll?: boolean
   hasSelectAll?: boolean
   onSelectAll?: (wallets?: CopyWalletData[]) => void
+  buttonSx?: any
+  sx?: any
 }) {
   if (!currentWallet || !wallets) return null
   return (
     <Dropdown
       buttonVariant="ghost"
-      buttonSx={{ height: '100%', border: 'none', p: 0, textTransform: 'none' }}
-      sx={{ height: '100%', pr: 2, flexShrink: 0 }}
+      buttonSx={{ height: '100%', border: 'none', p: 0, textTransform: 'none', ...buttonSx }}
+      sx={{ height: '100%', pr: 2, flexShrink: 0, ...sx }}
       menuSx={{
         width: 200,
         overflow: 'hidden auto',
@@ -56,6 +61,7 @@ export default function SelectCopyWallet({
         </>
       }
     >
+      <SafeDropdownIndex />
       {isSelectedAll ? <AllSelection isActive /> : <WalletItem data={currentWallet} isActive />}
     </Dropdown>
   )

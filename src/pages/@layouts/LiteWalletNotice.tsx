@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 import { Link, useLocation } from 'react-router-dom'
 
 import { getLiteTransactionsApi } from 'apis/liteApis'
-import actionSuccess from 'assets/images/success-img.png'
+import SuccessImage from 'components/@ui/SuccessImage'
 import { LITE_ACTION_STATUS, LITE_TRANSACTION_TYPE, LiteTransactionData } from 'entities/lite'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useLiteClickDepositFund from 'hooks/helpers/useLiteClickDepositFund'
@@ -14,7 +14,7 @@ import useMyProfileStore from 'hooks/store/useMyProfile'
 import { useStoredCopyTrades } from 'hooks/store/useTraderCopying'
 import AlertBanner from 'theme/Alert/AlertBanner'
 import { Button } from 'theme/Buttons'
-import { Box, Flex, Image, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { CopyTradeStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
@@ -89,7 +89,7 @@ const LiteWalletNotice = () => {
         // title: 'Deposit Success',
         body: (
           <Flex flexDirection="column" justifyContent="center" alignItems="center" minWidth={350}>
-            <Image src={actionSuccess} height={200} />
+            <SuccessImage height={200} />
             <Type.BodyBold mb={3}>
               {getTransactionText(latestTransaction.type)} of {formatNumber(latestTransaction.data.amount, 2, 2)} USDC
               was successful!

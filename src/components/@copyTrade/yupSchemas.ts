@@ -3,31 +3,7 @@ import * as yup from 'yup'
 import { MAX_PERPDEX_ISSUE_DESCRIPTION } from 'utils/config/constants'
 import { CopyTradePlatformEnum, SLTPTypeEnum } from 'utils/config/enums'
 
-const commonSchema = {
-  totalVolume: yup.number(),
-  multipleCopy: yup.boolean(),
-  accounts: yup
-    .array(yup.string())
-    .when('multipleCopy', {
-      is: true,
-      then: (schema) => schema.required(),
-    })
-    .label('Accounts'),
-  account: yup
-    .string()
-    .when('multipleCopy', {
-      is: false,
-      then: (schema) => schema.required(),
-    })
-    .label('Account'),
-  title: yup.string().required().label('Title'),
-  volume: yup.number().when('exchange', {
-    is: (val: CopyTradePlatformEnum) =>
-      val == CopyTradePlatformEnum.SYNTHETIX_V2 || val == CopyTradePlatformEnum.GNS_V8,
-    then: (schema) => schema.required().min(60).label('Margin'),
-    otherwise: (schema) => schema.required().min(0).label('Margin'),
-  }),
-  leverage: yup.number().required().min(2).label('Leverage'),
+export const advanceSettingSchema = {
   lookBackOrders: yup.number().min(1).integer().label('Orders To Lookback'),
   side: yup.string().label('Side'),
   stopLossType: yup.string().label('Stop Loss Type'),
@@ -70,7 +46,6 @@ const commonSchema = {
       then: (schema) => schema.required().min(1),
     })
     .label('Low Size'),
-  agreement: yup.boolean().isTrue(),
   copyAll: yup.boolean(),
   tokenAddresses: yup
     .array(yup.string())
@@ -89,6 +64,35 @@ const commonSchema = {
     .label('Excluding Trading Pairs'),
 }
 
+const commonSchema = {
+  totalVolume: yup.number(),
+  leverage: yup.number().required().min(2).label('Leverage'),
+  multipleCopy: yup.boolean(),
+  accounts: yup
+    .array(yup.string())
+    .when('multipleCopy', {
+      is: true,
+      then: (schema) => schema.required(),
+    })
+    .label('Accounts'),
+  account: yup
+    .string()
+    .when('multipleCopy', {
+      is: false,
+      then: (schema) => schema.required(),
+    })
+    .label('Account'),
+  title: yup.string().required().label('Title'),
+  volume: yup.number().when('exchange', {
+    is: (val: CopyTradePlatformEnum) =>
+      val == CopyTradePlatformEnum.SYNTHETIX_V2 || val == CopyTradePlatformEnum.GNS_V8,
+    then: (schema) => schema.required().min(60).label('Margin'),
+    otherwise: (schema) => schema.required().min(0).label('Margin'),
+  }),
+  agreement: yup.boolean().isTrue(),
+  ...advanceSettingSchema,
+}
+
 export const copyTradeFormSchema = yup.object({
   ...commonSchema,
   // serviceKey: yup.string().required().label('Service Key'),
@@ -105,10 +109,25 @@ export const copyTradeFormSchema = yup.object({
       CopyTradePlatformEnum.HYPERLIQUID,
       CopyTradePlatformEnum.GNS_V8,
       // CopyTradePlatformEnum.SYNTHETIX_V2,
+      CopyTradePlatformEnum.APEX,
       // CopyTradePlatformEnum.SYNTHETIX_V3,
     ])
     .label('Exchange'),
   copyWalletId: yup.string().required().label('Wallet'),
+})
+export const bulkUpdateFormSchema = yup.object({
+  ...advanceSettingSchema,
+  volume: yup
+    .number()
+    .min(0)
+    // @ts-ignore
+    .when(['maxMarginPerPosition'], (maxMarginPerPosition, schema) => {
+      if (!!maxMarginPerPosition) return schema.required('Margin is required when edit max margin per position')
+      return schema
+    })
+    .label('Margin'),
+  leverage: yup.number().min(2).max(50).label('Leverage'),
+  stopLossAmount: yup.number().min(1).label('Stop Loss Amount'),
 })
 
 export const updateCopyTradeFormSchema = yup.object({
@@ -140,6 +159,7 @@ export const cloneCopyTradeFormSchema = yup.object({
       CopyTradePlatformEnum.HYPERLIQUID,
       CopyTradePlatformEnum.GNS_V8,
       // CopyTradePlatformEnum.SYNTHETIX_V2,
+      CopyTradePlatformEnum.APEX,
       // CopyTradePlatformEnum.SYNTHETIX_V3,
     ])
     .label('Exchange'),

@@ -10,9 +10,9 @@ import { toast } from 'react-toastify'
 import { getReferralRewardApi, requestClaimRewardApi } from 'apis/referralManagement'
 import { checkBeforeAddRefApi, getMyProfileApi } from 'apis/userApis'
 import moneyImage from 'assets/images/money.png'
-import successImage from 'assets/images/success-img.png'
 import InputReferral from 'components/@auth/InputReferral'
 import { GradientText } from 'components/@ui/GradientText'
+import SuccessImage from 'components/@ui/SuccessImage'
 import ToastBody from 'components/@ui/ToastBody'
 import { RequestClaimRewardData } from 'entities/referralManagement'
 import { ReferralStatisticData } from 'entities/referralManagement'
@@ -428,7 +428,7 @@ export function ClaimRewardModal({
             )}
             {state === 'success' && (
               <>
-                <Image mb={24} src={successImage} height={160} />
+                <SuccessImage mb={24} height={160} />
                 <Type.Body mb={24} fontWeight={500} sx={{ display: 'block', textAlign: 'center' }}>
                   Your claim is success
                 </Type.Body>
