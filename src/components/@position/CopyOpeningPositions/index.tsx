@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { Copy, Icon, PersonSimpleRun } from '@phosphor-icons/react'
+import { Copy, PersonSimpleRun } from '@phosphor-icons/react'
 import { ComponentProps, ReactNode } from 'react'
 
+import { IconMessageBox } from 'components/@ui/IconMessageBox'
 import { CopyPositionData } from 'entities/copyTrade'
-import DashedArrow from 'theme/Icons/DashedArrow'
 import HyperLiquidIcon from 'theme/Icons/HyperliquidIcon'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Flex, Type } from 'theme/base'
 
 import CopyPositionsListView from '../CopyPositionsListView'
 import CopyPositionsTableView from '../CopyPositionsTableView'
@@ -40,6 +40,7 @@ export default function CopyOpeningPositions({
   return (
     <>
       {!hasFilter && !data?.length && !isLoading && <NoOpeningPositionMessage layoutType={layoutType} title={title} />}
+
       {(!!data?.length || hasFilter) &&
         (isGrid ? (
           <CopyPositionsListView
@@ -68,22 +69,14 @@ export default function CopyOpeningPositions({
 function NoOpeningPositionMessage({ title, layoutType }: { title: ReactNode; layoutType: LayoutType }) {
   if (layoutType === 'lite')
     return (
-      <Flex p={3} flexDirection="column" width="100%" height={180} justifyContent="center" alignItems="center">
-        <Type.Body color="neutral3" display="block" mb={3} textAlign="center">
-          <Trans>All of your opening positions will be shown here</Trans>
-        </Type.Body>
-        <Flex sx={{ width: '100%', maxWidth: 450, alignItems: 'stretch', justifyContent: 'space-between' }}>
-          <IconWrapper icon={PersonSimpleRun} description={<Trans>Trader places an order</Trans>} />
-          <Box pt={3}>
-            <DashedArrow />
-          </Box>
-          <IconWrapper icon={Copy} description={<Trans>System creates a copy order</Trans>} />
-          <Box pt={3}>
-            <DashedArrow />
-          </Box>
-          <IconWrapper icon={HyperLiquidIcon as Icon} description={<Trans>Your order will be executed</Trans>} />
-        </Flex>
-      </Flex>
+      <IconMessageBox
+        message="All of your opening positions will be shown here"
+        icons={[
+          { icon: <PersonSimpleRun size={24} />, description: 'Trader places an order' },
+          { icon: <Copy size={24} />, description: 'System creates a copy order' },
+          { icon: <HyperLiquidIcon size={24} />, description: 'Your order will be executed' },
+        ]}
+      />
     )
 
   return (
@@ -94,29 +87,6 @@ function NoOpeningPositionMessage({ title, layoutType }: { title: ReactNode; lay
       <Type.Caption mt={1} color="neutral3" display="block">
         <Trans>Once you have a position, you’ll see it listed here</Trans>
       </Type.Caption>
-    </Flex>
-  )
-}
-
-function IconWrapper({ icon: Icon, description }: { icon: Icon; description: ReactNode }) {
-  return (
-    <Flex sx={{ flexShrink: 0, width: 85, flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-      <IconBox
-        icon={<Icon size={24} />}
-        sx={{
-          color: 'neutral3',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 40,
-          height: 40,
-          bg: 'neutral5',
-          borderRadius: '6px',
-        }}
-      />
-      <Type.Small color="neutral3" textAlign="center">
-        {description}
-      </Type.Small>
     </Flex>
   )
 }
