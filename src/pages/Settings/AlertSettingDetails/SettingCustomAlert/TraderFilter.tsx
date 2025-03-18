@@ -262,7 +262,7 @@ export default function TraderFilter({
                 setFormValues={setConditionFormValues}
                 fieldOptions={defaultFieldOptions.filter((e) => e.value !== 'indexTokens')}
                 onValuesChange={setConditionFormValues}
-                wrapperSx={{ px: 0 }}
+                wrapperSx={{ px: 0, maxHeight: isMobile ? '300px' : undefined, overflow: 'auto' }}
                 labelColor="neutral2"
               />
             </Box>
