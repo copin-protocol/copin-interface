@@ -1,4 +1,4 @@
-import { UsdPrices } from 'hooks/store/useUsdPrices'
+import { ProtocolEnum } from './config/enums'
 
 export type TimeRange = {
   from?: Date
@@ -24,13 +24,33 @@ export interface TokenCollateral {
 
 export type TokenCollateralMapping = Record<string, TokenCollateral>
 
-export type WorkerMessage = {
-  type: 'pyth_price'
-  data: UsdPrices
+export type WorkerBalanceMessage = {
+  address: string
+  protocol: ProtocolEnum
+  balances: {
+    symbol: string
+    tokenAmount: number
+    isStableCoin: boolean
+  }[]
 }
 
+export type WorkerMessage =
+  | {
+      type: 'pyth_price' | 'gains_price'
+      data: UsdPrices
+    }
+  | {
+      type: 'trader_balance'
+      data: WorkerBalanceMessage
+    }
+
+export type WorkerSendMessage = { type: 'trader_balance'; data: { address: string; protocol: ProtocolEnum }[] }
 export type NewUserCheckerData = { [userId: string]: '1' }
 
 export type ValueOf<T> = T[keyof T]
 
 export type PositionTimeType = 'relative' | 'absolute'
+
+export interface UsdPrices {
+  [key: string]: number | undefined
+}

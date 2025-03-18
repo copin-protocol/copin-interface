@@ -6,10 +6,8 @@ import { getLatestPrices } from 'apis/positionApis'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { ProtocolEnum } from 'utils/config/enums'
 import { pollEvery } from 'utils/helpers/pollEvery'
+import { UsdPrices } from 'utils/types'
 
-export interface UsdPrices {
-  [key: string]: number | undefined
-}
 interface BalancesState {
   prices: UsdPrices
   setPrices: (prices: UsdPrices) => void

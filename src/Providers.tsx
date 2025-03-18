@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { LanguageProvider } from 'i18n'
-import PythConnection from 'pythConnection'
+import WorkerConnection from 'workerConnection'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 import ThemeProvider from 'theme'
@@ -15,7 +15,6 @@ import { SystemConfigInitializer } from 'hooks/store/useSystemConfigStore'
 import ThemedGlobalStyle from 'theme/styles'
 
 import DappProvider from './DappProvider'
-import GainsTradeConnection from './utils/web3/gTrade'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,8 +48,7 @@ const Providers = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
           <ApolloProvider client={apolloClient}>
             <BrowserRouter>
               <SystemConfigInitializer />
-              <PythConnection />
-              <GainsTradeConnection />
+              <WorkerConnection />
               <ProtocolInitializer />
               <GlobalStoreInitializer />
               <ProtocolFilterStoreInitializer />

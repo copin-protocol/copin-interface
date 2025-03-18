@@ -9,12 +9,12 @@ import ValueOrToken from 'components/@ui/ValueOrToken'
 import { renderEntry, renderSize, renderSizeOpeningWithPrices } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Box, Flex, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
 import { FEE_WITH_FUNDING_PROTOCOLS } from 'utils/config/constants'
 import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
 import { formatDuration } from 'utils/helpers/format'
+import { UsdPrices } from 'utils/types'
 
 import SharePosition from './SharePosition'
 
