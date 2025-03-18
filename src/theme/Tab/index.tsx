@@ -96,10 +96,10 @@ const Tabs = ({
   onChange,
   size = 'md',
 }: TabsProps) => {
-  const elements = children as ReactElement[]
+  const elements = (children as ReactElement[]).filter((e) => !!e)
   if (elements.length) {
     const tabs = elements
-      .filter((c: ReactElement) => c.props.active !== false)
+      .filter((c: ReactElement) => !!c && c.props.active !== false)
       .map((c: ReactElement) => ({
         key: c.key?.toString() ?? '',
         name: c.props.tab,

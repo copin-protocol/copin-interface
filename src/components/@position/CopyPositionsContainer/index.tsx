@@ -29,7 +29,7 @@ export default function CopyPositionsContainer({
   onClosePositionSuccess: () => void
   children: any
 }) {
-  const { copyWallets, embeddedWallet, reloadEmbeddedWalletInfo } = useCopyWalletContext()
+  const { copyWallets, embeddedWallet } = useCopyWalletContext()
   const { allCopyTrades: copyTrades } = useAllCopyTrades()
   const [openSourceDrawer, setOpenSourceDrawer] = useState(false)
   const [openCopyDrawer, setOpenCopyDrawer] = useState(false)
@@ -118,9 +118,6 @@ export default function CopyPositionsContainer({
     if (!embeddedWallet?.hyperliquid?.embeddedWallet) return
     setSubmitting(true)
     try {
-      if (data.openingPositionType === 'liveBoth') {
-        await closeLitePositionApi(data.id ?? '')
-      }
       if (data.openingPositionType === 'onlyLiveHyper') {
         await closeHlPosition({
           walletAddress: embeddedWallet.hyperliquid.embeddedWallet,
@@ -128,16 +125,11 @@ export default function CopyPositionsContainer({
           size: data.totalSizeDelta ?? 0,
           symbol: data.pair ?? '',
         })
+      } else {
+        await closeLitePositionApi(data.id ?? '')
       }
-      // await closeHlPosition({
-      //   walletAddress: embeddedWallet.hyperliquid.embeddedWallet,
-      //   isLong: !!data.isLong,
-      //   size: data.totalSizeDelta ?? 0,
-      //   symbol: data.pair ?? '',
-      // })
-      reloadEmbeddedWalletInfo?.()
-      setConfirmModal(undefined)
       onClosePositionSuccess()
+      setConfirmModal(undefined)
     } catch (err) {
       toast.error(<ToastBody title={<Trans>Error</Trans>} message={getErrorMessage(err)} />)
     }
