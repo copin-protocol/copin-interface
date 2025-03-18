@@ -239,6 +239,7 @@ const OnchainPositionContainer = ({ activeWallet }: { activeWallet: CopyWalletDa
       {/*)}*/}
       {!!openingCloseData && (
         <CloseOnchainPositionModal
+          copyWalletId={activeWallet.id}
           isOpen
           onDismiss={(success?: boolean) => {
             if (success) {

@@ -8,6 +8,7 @@ import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useTabHandler from 'hooks/router/useTabHandler'
 import { BottomWrapperMobile } from 'pages/@layouts/Components'
+import LiteWalletNotice from 'pages/@layouts/LiteWalletNotice'
 import IconButton from 'theme/Buttons/IconButton'
 import { TabConfig, TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
@@ -70,6 +71,7 @@ const CopitLitePageMobile = () => {
   }, [searchParams?.['dtab']])
   return (
     <Flex height="calc(100% - 1px)" flexDirection="column">
+      <LiteWalletNotice />
       <Box flex="1" overflow="hidden">
         {tab === LitePageTab.Wallet && <LiteWallet />}
         {tab === LitePageTab.Copy && <CopyManagement />}
@@ -92,6 +94,8 @@ const CopinLitePage = () => {
       <LiteContextProvider>
         {lg ? (
           <Flex height="100%" flexDirection="column">
+            <LiteWalletNotice />
+
             <Box display={tableExpanded ? 'none' : 'flex'} height={`calc(100% - max(${LITE_TABLE_HEIGHT}px, 35%))`}>
               <LiteWallet />
               <CopyManagement />

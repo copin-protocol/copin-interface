@@ -61,25 +61,27 @@ const ClosePositionGnsV8 = ({
             if (success) onSuccess()
           }}
           position={position}
-          smartWallet={smartWallet}
+          copyWalletId={copyWalletId}
         />
       )}
     </>
   )
 }
 
-const ClosePositionHandler = ({
+export const ClosePositionGnsV8Handler = ({
   position,
-  smartWallet,
+  copyWalletId,
   onDismiss,
 }: {
   position: ClosePositionData
-  smartWallet: string
+  copyWalletId: string
   onDismiss: (success?: boolean) => void
 }) => {
+  const { copyWallets } = useCopyWalletContext()
+  const smartWallet = copyWallets?.find((wallet) => wallet.id === copyWalletId)?.smartWalletAddress
   // console.log('copyPosition', copyPosition)
   const [submitting, setSubmitting] = useState(false)
-  const smartWalletContract = useSmartWalletContract(smartWallet, true)
+  const smartWalletContract = useSmartWalletContract(smartWallet ?? '', true)
   const smartWalletMutation = useContractMutation(smartWalletContract)
   const { gainsPrices: prices } = useGetUsdPrices()
 
@@ -94,24 +96,26 @@ const ClosePositionHandler = ({
     }
     setSubmitting(true)
 
-    smartWalletMutation.mutate(
-      {
+    try {
+      await smartWalletMutation.mutateAsync({
         method: 'closePosition',
         params: [position.index, calculateAcceptablePrice(parseUnits(price.toString(), 10), !position.isLong)],
         // gasLimit: 2500000,
-      },
-      {
-        onSuccess: async () => {
-          await delay(DELAY_SYNC * 2)
-          setSubmitting(false)
-          onDismiss(true)
-        },
-        onError: () => {
-          setSubmitting(false)
-        },
-      }
-    )
+      })
+      await delay(DELAY_SYNC * 2)
+      setSubmitting(false)
+      onDismiss(true)
+    } catch {
+      setSubmitting(false)
+    }
   }
+
+  if (!smartWallet)
+    return (
+      <Flex alignItems="center" sx={{ gap: 2 }}>
+        <Type.Caption>Cannot get Smart Wallet to close position</Type.Caption>
+      </Flex>
+    )
 
   return (
     <>
@@ -139,12 +143,12 @@ export const ClosePositionGnsV8Modal = ({
   isOpen,
   onDismiss,
   position,
-  smartWallet,
+  copyWalletId,
 }: {
   isOpen: boolean
   onDismiss: (success?: boolean) => void
   position: ClosePositionData
-  smartWallet: string
+  copyWalletId: string
 }) => {
   const { isValid, alert } = useRequiredChain({
     chainId: ARBITRUM_CHAIN,
@@ -152,7 +156,11 @@ export const ClosePositionGnsV8Modal = ({
   return (
     <Modal isOpen={isOpen} onDismiss={() => onDismiss()} hasClose title={<Trans>Manually Close Position</Trans>}>
       <Box p={3}>
-        {isValid ? <ClosePositionHandler position={position} smartWallet={smartWallet} onDismiss={onDismiss} /> : alert}
+        {isValid ? (
+          <ClosePositionGnsV8Handler position={position} copyWalletId={copyWalletId} onDismiss={onDismiss} />
+        ) : (
+          alert
+        )}
       </Box>
     </Modal>
   )

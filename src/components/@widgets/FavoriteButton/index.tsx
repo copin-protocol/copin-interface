@@ -96,7 +96,6 @@ export default function FavoriteButton({
               handleClickLogin()
               return
             }
-            console.log('gd')
             setTooltip({ address, protocol, position: e.currentTarget.getBoundingClientRect() })
           }
         }}

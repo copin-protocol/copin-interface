@@ -245,6 +245,7 @@ const VaultOnchainPositionContainer = ({ smartWalletAddress }: { smartWalletAddr
             }
             openCloseData(undefined)
           }}
+          copyWalletId={''}
           position={{
             copyPositionId: openingCloseData.copyPositionId ?? '',
             indexToken: openingCloseData.indexToken,

@@ -842,6 +842,7 @@ msgid "Coming Soon"
 msgstr "Coming Soon"
 
 #: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
+#: src/pages/WalletManagement/WalletList/index.tsx
 msgid "Coming soon"
 msgstr "Coming soon"
 
@@ -1205,6 +1206,7 @@ msgid "Deposits And Withdrawals"
 msgstr "Deposits And Withdrawals"
 
 #: src/components/@wallet/CreateWalletAction/index.tsx
+#: src/pages/WalletManagement/WalletList/index.tsx
 msgid "Deprecated"
 msgstr "Deprecated"
 
@@ -1719,6 +1721,10 @@ msgstr "INFO & EVENTS"
 msgid "If the trader increase / decrease position, the TP / SL will be re-adjusted as your copytrade settings"
 msgstr "If the trader increase / decrease position, the TP / SL will be re-adjusted as your copytrade settings"
 
+#: src/components/@copyTrade/CopyTradeNotice.tsx
+msgid "If you experience any problems, please contact us on Telegram <0>@leecopin</0>."
+msgstr "If you experience any problems, please contact us on Telegram <0>@leecopin</0>."
+
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "If you skip it this time, you will be able to re-enter the referral code later."
 msgstr "If you skip it this time, you will be able to re-enter the referral code later."
@@ -2054,6 +2060,11 @@ msgstr "MY REFERRAL"
 #: src/pages/Settings/Layouts/Layout.tsx
 msgid "MY SUBSCRIPTION"
 msgstr "MY SUBSCRIPTION"
+
+#: src/components/@wallet/CreateWalletAction/index.tsx
+#: src/pages/WalletManagement/WalletList/index.tsx
+msgid "Maintenance"
+msgstr "Maintenance"
 
 #: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 #: src/components/@copyTrade/CopyTraderButton/CopyTraderModal.tsx

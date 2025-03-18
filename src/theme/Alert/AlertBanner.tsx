@@ -11,7 +11,7 @@ type AlertBannerProps = {
   id: string
   type: Variant
   message: ReactNode
-  action: ReactNode
+  action?: ReactNode
 }
 
 const getProperty = (type: Variant) => {
@@ -33,6 +33,7 @@ const AlertBanner = ({ id, type, message, action, sx }: AlertBannerProps & SxPro
     <Flex
       id={id}
       sx={{
+        flexShrink: 0,
         position: 'relative',
         width: '100%',
         height: 'max-content',

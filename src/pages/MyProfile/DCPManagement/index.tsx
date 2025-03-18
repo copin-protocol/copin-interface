@@ -4,6 +4,7 @@ import { useResponsive } from 'ahooks'
 import { useEffect, useState } from 'react'
 
 import ChartGainsPositionRealtime from 'components/@charts/ChartGainsPositionRealtime'
+import CopyTradeNotice from 'components/@copyTrade/CopyTradeNotice'
 import SelectedCopyTradeActions from 'components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions'
 import SelectCopyWallet from 'components/@copyTrade/SelectCopyWallet'
 import DirectionButton from 'components/@ui/DirectionButton'
@@ -53,11 +54,12 @@ export function DCPManagementComponent() {
       copyWallets={dcpWallets}
       type={CreateTypeWalletEnum.DCP}
     >
-      <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
-        <Box sx={{ width: '100%', height: '100%', minHeight: 600, overflow: 'hidden' }}>
+      <Flex sx={{ width: '100%', height: '100%', overflow: 'auto', flexDirection: 'column' }}>
+        <CopyTradeNotice />
+        <Box flex="1 0 0" sx={{ width: '100%', height: '100%', minHeight: 600, overflow: 'hidden' }}>
           {xl ? <DesktopView /> : <MobileView />}
         </Box>
-      </Box>
+      </Flex>
     </CheckingWalletRenderer>
   )
 }

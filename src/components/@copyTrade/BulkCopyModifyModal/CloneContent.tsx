@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useState } from 'react'
 
+import useCheckCopyTradeExchange from 'hooks/features/copyTrade/useCheckCopyExchange'
 import { useSelectCopyTrade } from 'hooks/features/copyTrade/useSelectCopyTrade'
 import { useBulkUpdateCopyTrade } from 'hooks/features/copyTrade/useUpdateCopyTrade'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
@@ -22,6 +23,7 @@ export default function CloneContent({ onDismiss, onSuccess }: { onDismiss: () =
   const defaultWallet = copyWallets?.find((w) => w.exchange !== listCopyTrade[0]?.exchange)
   const [exchange, setExchange] = useState(defaultWallet?.exchange ?? CopyTradePlatformEnum.HYPERLIQUID)
   const [walletId, setWalletId] = useState(defaultWallet?.id)
+  const { disabledExchanges } = useCheckCopyTradeExchange()
   const handleConfirmClone = () => {
     if (!walletId) return
     mutate(
@@ -36,7 +38,9 @@ export default function CloneContent({ onDismiss, onSuccess }: { onDismiss: () =
   if (isSuccess) {
     return <ResponseContent onComplete={onDismiss} responseData={data} />
   }
-  const allExchangeOptions = [...exchangeOptions, ...dcpExchangeOptions]
+  const allExchangeOptions = [...exchangeOptions, ...dcpExchangeOptions].filter(
+    (v) => !disabledExchanges.includes(v.value)
+  )
   return (
     <Box px={1} pb={3}>
       <Box px={3}>
