@@ -7,6 +7,7 @@ import ReactSelect, { ClearIndicatorProps, MultiValueRemoveProps, Props } from '
 import styled from 'styled-components/macro'
 import { variant } from 'styled-system'
 
+import { isIphone } from 'hooks/helpers/useIsIphone'
 import { IconBox } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SxProps, VariantProps } from 'theme/types'
@@ -218,6 +219,14 @@ const Select = ({
       components={{ DropdownIndicator, ClearIndicator, MultiValueRemove, ...(components || {}) }}
       {...props}
       maxHeightSelectContainer={maxHeightSelectContainer}
+      onFocus={() => {
+        if (window.visualViewport && isIphone) {
+          window.visualViewport.addEventListener('resize', () => {
+            document.body.style.height = `${window.visualViewport?.height}px`
+            document.body.scrollIntoView({ behavior: 'smooth' })
+          })
+        }
+      }}
       // menuIsOpen
     />
   )

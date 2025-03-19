@@ -10,6 +10,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import ConditionFilterForm from 'components/@widgets/ConditionFilterForm'
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
+import useIsIphone from 'hooks/helpers/useIsIphone'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import ResultEstimated from 'pages/Explorer/ConditionFilter/ResultEstimated'
 import { FilterTabEnum, defaultFieldOptions } from 'pages/Explorer/ConditionFilter/configs'
@@ -61,6 +62,7 @@ export default function TraderFilter({
   matchingTraderCount,
   setMatchingTraderCount,
 }: TraderFilterProps) {
+  const isIphone = useIsIphone()
   const { lg } = useResponsive()
   const isMobile = !lg
   const [conditionFormValues, setConditionFormValues] = useState<ConditionFormValues<TraderData>>(
@@ -135,7 +137,7 @@ export default function TraderFilter({
   }
 
   return (
-    <Flex flexDirection="column" width="100%" height="100%" sx={{ overflow: 'hidden' }}>
+    <Flex flexDirection="column" width="100%" height="100%" sx={{ overflow: 'auto' }}>
       <Flex alignItems="center" px={3} py={2} sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
         {hasChange ? (
           <Popconfirm
@@ -158,7 +160,11 @@ export default function TraderFilter({
       </Flex>
 
       <Box p={3} sx={{ overflow: 'hidden' }}>
-        <Flex flex={1} flexDirection="column" sx={{ overflow: 'auto', maxHeight: isMobile ? '' : '60vh' }}>
+        <Flex
+          flex={1}
+          flexDirection="column"
+          sx={{ overflow: 'auto', maxHeight: isMobile && !isIphone ? undefined : '60vh' }}
+        >
           <Type.Caption color="neutral2" mb={2}>
             Please adjust your filter criteria to match{' '}
             <Type.CaptionBold color="neutral1">
@@ -262,7 +268,7 @@ export default function TraderFilter({
                 setFormValues={setConditionFormValues}
                 fieldOptions={defaultFieldOptions.filter((e) => e.value !== 'indexTokens')}
                 onValuesChange={setConditionFormValues}
-                wrapperSx={{ px: 0, maxHeight: isMobile ? '300px' : undefined, overflow: 'auto' }}
+                wrapperSx={{ px: 0, maxHeight: isMobile && !isIphone ? '300px' : undefined, overflow: 'auto' }}
                 labelColor="neutral2"
               />
             </Box>
