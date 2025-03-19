@@ -140,4 +140,9 @@ export const TOOLTIP_CONTENT = {
     id: 'tt_position_cross_roi',
     content: 'The return on investment is calculated based on the PnL and size, not including collateral and leverage',
   },
+  POSITION_JUPITER_LIQUIDATED_ROI: {
+    id: 'tt_position_jupiter-liquidated_roi',
+    content:
+      'Displayed ROI and PnL may be inaccurate due to the exchange’s liquidation calculation mechanism, leading to discrepancies from actual values.',
+  },
 }

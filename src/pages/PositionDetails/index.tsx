@@ -10,14 +10,14 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { DEFAULT_PROTOCOL, DYDX_TX_HASH_REGEX, EVM_TX_HASH_REGEX } from 'utils/config/constants'
+import { DEFAULT_PROTOCOL, DYDX_TX_HASH_REGEX, EVM_TX_HASH_REGEX, SOLANA_TX_HASH_REGEX } from 'utils/config/constants'
 import { PositionSideEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 
 export default function PositionDetailsPage() {
   const { protocol = DEFAULT_PROTOCOL, id } = useParams<{ protocol: ProtocolEnum; id: string }>()
   const { searchParams } = useSearchParams()
-  const txHash = EVM_TX_HASH_REGEX.test(id) || DYDX_TX_HASH_REGEX.test(id) ? id : ''
+  const txHash = EVM_TX_HASH_REGEX.test(id) || DYDX_TX_HASH_REGEX.test(id) || SOLANA_TX_HASH_REGEX.test(id) ? id : ''
   const account = searchParams?.[URL_PARAM_KEYS.ACCOUNT] as string
   const logId = Number(searchParams?.[URL_PARAM_KEYS.LOG_ID] as string)
   const side = searchParams?.[URL_PARAM_KEYS.SIDE] as PositionSideEnum
