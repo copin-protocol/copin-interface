@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import styled, { DefaultTheme, css } from 'styled-components/macro'
 
 import SafeDropdownIndex from 'components/@widgets/SafeDropdownIndex'
+import { isIphone } from 'hooks/helpers/useIsIphone'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import IconButton from 'theme/Buttons/IconButton'
 import { Box, Flex, Type } from 'theme/base'
@@ -220,7 +221,7 @@ export default function Modal({
         >
           <StyledDialogContent
             mode={mode}
-            drag={isMobile && mode === 'bottom' ? 'y' : false}
+            drag={isMobile && !isIphone && mode === 'bottom' ? 'y' : false}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.6}
             onDrag={handleDrag}

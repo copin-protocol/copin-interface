@@ -12,7 +12,6 @@ import { linkWebhookToBotAlertApi } from 'apis/alertApis'
 import ToastBody from 'components/@ui/ToastBody'
 import { BotAlertData } from 'entities/alert'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
-import useIsIphone from 'hooks/helpers/useIsIphone'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import WebhookIcon from 'theme/Icons/WebhookIcon'
@@ -35,7 +34,6 @@ const LinkWebhookAlertAction = memo(function LinkWebhookAlertModalComponent({
   isLimited?: boolean
   isPremiumUser?: boolean | null
 }) {
-  const isIphone = useIsIphone()
   const { lg } = useResponsive()
   const [isOpenModal, setIsOpenModal] = useState(false)
 
@@ -70,7 +68,7 @@ const LinkWebhookAlertAction = memo(function LinkWebhookAlertModalComponent({
         </Type.Caption>
       </Tooltip>
       <Modal
-        mode={lg || isIphone ? 'center' : 'bottom'}
+        mode={lg ? 'center' : 'bottom'}
         isOpen={isOpenModal}
         title={
           <Flex alignItems="center" sx={{ gap: 1 }}>

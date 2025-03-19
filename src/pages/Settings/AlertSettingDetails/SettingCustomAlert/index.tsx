@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Trans } from '@lingui/macro'
 import { CaretRight, Siren, UsersThree } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import isEqual from 'lodash/isEqual'
 import React, { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -18,7 +19,7 @@ import { FilterTabEnum } from 'pages/Explorer/ConditionFilter/configs'
 import useTradersCount from 'pages/Explorer/ConditionFilter/useTraderCount'
 import { Button } from 'theme/Buttons'
 import InputField, { TextareaField } from 'theme/InputField'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Flex, IconBox, Type } from 'theme/base'
 import { AlertCategoryEnum, ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 import { generateAlertSettingDetailsRoute } from 'utils/helpers/generateRoute'
@@ -162,6 +163,8 @@ export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps
     clearErrors()
   }
 
+  const { lg } = useResponsive()
+
   if (customStep === CustomAlertStep.TRADER_FILTER) {
     return (
       <TraderFilter
@@ -183,9 +186,9 @@ export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps
         <SectionTitle icon={Siren} title={<Trans>CUSTOM ALERT</Trans>} sx={{ mb: 0 }} />
       </Flex>
 
-      <Box p={3}>
-        <form onSubmit={handleSubmit(handleSaveCustomAlert)}>
-          <Flex flexDirection="column" sx={{ gap: 3 }}>
+      <Flex flexDirection="column" flex={1} p={3}>
+        <form style={{ height: '100%' }} onSubmit={handleSubmit(handleSaveCustomAlert)}>
+          <Flex flexDirection="column" flex={1} sx={{ gap: 3, overflow: 'auto' }}>
             <InputField
               required
               block
@@ -264,7 +267,7 @@ export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps
                         <FilterTag
                           filters={condition}
                           filterTab={FilterTabEnum.DEFAULT}
-                          limit={10}
+                          limit={lg ? 10 : 5}
                           tagSx={{
                             color: 'neutral2',
                             display: 'inline',
@@ -287,32 +290,31 @@ export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps
                 </Type.Caption>
               )}
             </Flex>
-
-            <Flex
-              sx={{
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                width: '100%',
-              }}
+          </Flex>
+          <Flex
+            sx={{
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
+            <Button
+              type="submit"
+              px={0}
+              variant="ghostPrimary"
+              disabled={
+                !name ||
+                matchingTraderCount === 0 ||
+                matchingTraderCount > LIMIT_FILTER_TRADERS ||
+                !!errors.type ||
+                !hasChange
+              }
             >
-              <Button
-                type="submit"
-                px={0}
-                variant="ghostPrimary"
-                disabled={
-                  !name ||
-                  matchingTraderCount === 0 ||
-                  matchingTraderCount > LIMIT_FILTER_TRADERS ||
-                  !!errors.type ||
-                  !hasChange
-                }
-              >
-                Save Alert
-              </Button>
-            </Flex>
+              Save Alert
+            </Button>
           </Flex>
         </form>
-      </Box>
+      </Flex>
     </Flex>
   )
 }
