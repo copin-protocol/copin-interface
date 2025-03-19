@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Trans } from '@lingui/macro'
 import { CrownSimple, StarFour } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
@@ -16,6 +16,7 @@ import { parseInputValue } from 'components/@ui/TextWithEdit'
 import ToastBody from 'components/@ui/ToastBody'
 import { renderTrader } from 'components/@widgets/renderProps'
 import { TradingEventStatusEnum } from 'entities/event'
+import useCheckCopyTradeExchange from 'hooks/features/copyTrade/useCheckCopyExchange'
 import useCopyTradePermission from 'hooks/features/copyTrade/useCopyTradePermission'
 import { useIsPremiumAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useGetTokensTraded from 'hooks/features/trader/useGetTokensTraded'
@@ -178,14 +179,28 @@ const CopyTraderForm = ({
     'side',
   ])
 
+  const { disabledExchanges } = useCheckCopyTradeExchange()
   const { checkIsPremium, isPremiumUser } = useIsPremiumAndAction()
   const isInternal = useInternalRole()
   const cexOptions = isInternal ? internalExchangeOptions : exchangeOptions
-  const options = isVault
-    ? vaultExchangeOptions
-    : !!protocol && DCP_SUPPORTED_PROTOCOLS.includes(protocol)
-    ? [...dcpExchangeOptions, ...cexOptions]
-    : cexOptions
+  const options = (
+    isVault
+      ? vaultExchangeOptions
+      : !!protocol && DCP_SUPPORTED_PROTOCOLS.includes(protocol)
+      ? [...dcpExchangeOptions, ...cexOptions]
+      : cexOptions
+  ).filter((v) => {
+    return disabledExchanges.length ? !disabledExchanges.includes(v.value) : true
+  })
+
+  const recheckedExchange = useRef(false)
+  useEffect(() => {
+    if (recheckedExchange.current) return
+    if (platform === CopyTradePlatformEnum.GNS_V8 && disabledExchanges.includes(platform) && isClone) {
+      setValue('exchange', CopyTradePlatformEnum.HYPERLIQUID)
+      recheckedExchange.current = true
+    }
+  }, [platform, disabledExchanges, isClone])
 
   const [tradedPairs, setTradedPairs] = useState<string[]>([])
 
@@ -226,6 +241,7 @@ const CopyTraderForm = ({
   )
 
   const { events } = useSystemConfigStore()
+
   const gnsEvent = events?.find((e) => e.type === EventTypeEnum.GNS && e.status !== TradingEventStatusEnum.ENDED)
 
   const { copyWallets } = useCopyWalletContext()
@@ -335,8 +351,8 @@ const CopyTraderForm = ({
   }, [clearErrors, copyWalletId])
 
   const permissionToSelectProtocol = useCopyTradePermission(true) && !isLite && (isEdit || isClone) && !isBulkEdit
-  const disabledSelectWallet = isEdit || (isClone && !isPremiumUser) || isOnboarding || isLite
-  const hiddenSelectWallet = isLite || isOnboarding || isBulkEdit
+  const disabledSelectWallet = isClone && !isPremiumUser
+  const hiddenSelectWallet = isEdit || isLite || isOnboarding || isBulkEdit
   const { sm } = useResponsive()
 
   const SwitchMultipleCopy = useCallback(

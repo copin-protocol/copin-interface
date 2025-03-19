@@ -10,6 +10,7 @@ import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import ToastBody from 'components/@ui/ToastBody'
 import { renderEntry } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
+import useCheckCopyTradeExchange from 'hooks/features/copyTrade/useCheckCopyExchange'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -26,6 +27,8 @@ import { ARBITRUM_CHAIN, OPTIMISM_CHAIN } from 'utils/web3/chains'
 import { calculateAcceptablePrice } from 'utils/web3/perps'
 import { signClosePosition, signForClose } from 'utils/web3/wallet'
 
+import ClosePositionGnsV8, { ClosePositionGnsV8Handler } from './ClosePositionGnsV8'
+
 interface ClosePositionData {
   index?: number
   address?: string
@@ -36,7 +39,15 @@ interface ClosePositionData {
   protocol?: ProtocolEnum
 }
 
-const CloseOnchainPosition = ({ position, onSuccess }: { position: ClosePositionData; onSuccess: () => void }) => {
+const CloseOnchainPosition = ({
+  position,
+  copyWalletId,
+  onSuccess,
+}: {
+  position: ClosePositionData
+  onSuccess: () => void
+  copyWalletId: string
+}) => {
   const { isAuthenticated, account, connect } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
   const [opening, setOpening] = useState(false)
@@ -60,6 +71,7 @@ const CloseOnchainPosition = ({ position, onSuccess }: { position: ClosePosition
       </Button>
       {opening && (
         <CloseOnchainPositionModal
+          copyWalletId={copyWalletId}
           isOpen={opening}
           onDismiss={(success?: boolean) => {
             setOpening(false)
@@ -230,17 +242,32 @@ export const CloseOnchainPositionModal = ({
   isOpen,
   onDismiss,
   position,
+  copyWalletId,
 }: {
   isOpen: boolean
   onDismiss: (success?: boolean) => void
   position: ClosePositionData
+  copyWalletId: string
 }) => {
   const { isValid, alert } = useRequiredChain({
     chainId: position.protocol === ProtocolEnum.GNS ? ARBITRUM_CHAIN : OPTIMISM_CHAIN,
   })
+  const { disabledExchanges } = useCheckCopyTradeExchange()
+  const isUseCloseOnChain = disabledExchanges.includes(CopyTradePlatformEnum.GNS_V8)
   return (
     <Modal isOpen={isOpen} onDismiss={() => onDismiss()} hasClose title={<Trans>Manually Close Position</Trans>}>
-      <Box p={3}>{isValid ? <ClosePositionHandler position={position} onDismiss={onDismiss} /> : alert}</Box>
+      <Box p={3}>
+        {isValid ? (
+          isUseCloseOnChain && !!position.index && position.isLong != null && !!copyWalletId ? (
+            //@ts-ignore
+            <ClosePositionGnsV8Handler position={position} copyWalletId={copyWalletId} onDismiss={onDismiss} />
+          ) : (
+            <ClosePositionHandler position={position} onDismiss={onDismiss} />
+          )
+        ) : (
+          alert
+        )}
+      </Box>
     </Modal>
   )
 }

@@ -12,7 +12,6 @@ import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Button } from 'theme/Buttons'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import Loading from 'theme/Loading'
@@ -26,6 +25,7 @@ import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcRiskPercent } from 'uti
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
 import { getSymbolFromPair, normalizeExchangePrice, parseColorByValue, parseWalletName } from 'utils/helpers/transform'
+import { UsdPrices } from 'utils/types'
 
 export const renderCopyWallet = (data: CopyPositionData, _: number | undefined, externalSource: any) => {
   let walletName = '--'

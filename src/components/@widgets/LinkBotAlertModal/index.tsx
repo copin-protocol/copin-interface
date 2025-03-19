@@ -12,6 +12,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useCountdown from 'hooks/helpers/useCountdown'
+import useIsIphone from 'hooks/helpers/useIsIphone'
 import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
 import TelegramIcon from 'theme/Icons/TelegramIcon'
@@ -33,6 +34,8 @@ enum TabEnum {
 
 const LinkBotAlertModal = memo(function LinkBotAlertModalComponent() {
   const { lg } = useResponsive()
+  const isIphone = useIsIphone()
+
   const { currentAlert, botAlertState, openingModal, stateExpiredTime, handleResetState, handleDismissModal } =
     useBotAlertContext()
   const [tab, setTab] = useState(TabEnum.DIRECT)
@@ -49,7 +52,7 @@ const LinkBotAlertModal = memo(function LinkBotAlertModalComponent() {
 
   return (
     <Modal
-      mode={lg ? 'center' : 'bottom'}
+      mode={lg || isIphone ? 'center' : 'bottom'}
       isOpen={!!openingModal && !!botAlertState}
       title={
         <Flex alignItems="center" sx={{ gap: 1 }}>

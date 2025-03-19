@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ArrowSquareOut } from '@phosphor-icons/react'
 import { ReactNode, useState } from 'react'
 
+import useCheckCopyTradeExchange from 'hooks/features/copyTrade/useCheckCopyExchange'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useInternalRole from 'hooks/features/useInternalRole'
 import { CreateTypeWalletEnum } from 'pages/MyProfile/CheckingWalletRenderer'
@@ -149,6 +150,8 @@ function WalletItem({ exchange, label, description, handleClick }: WalletItemPro
   const isInternal = useInternalRole()
   const isComingSoon = !isInternal && exchange === CopyTradePlatformEnum.BINANCE
   const isDeprecated = DEPRECATED_EXCHANGES.includes(exchange)
+  const { disabledExchanges } = useCheckCopyTradeExchange()
+  const isMaintenance = !!disabledExchanges.includes(exchange)
   const isDCP = DCP_EXCHANGES.includes(exchange)
   return (
     <Flex minWidth={350} p={24} flexDirection="column" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
@@ -165,7 +168,9 @@ function WalletItem({ exchange, label, description, handleClick }: WalletItemPro
         onClick={() => handleClick && handleClick(exchange)}
         disabled={!handleClick || isComingSoon}
       >
-        {isComingSoon ? (
+        {isMaintenance ? (
+          <Trans>Maintenance</Trans>
+        ) : isComingSoon ? (
           <Trans>Coming Soon</Trans>
         ) : isDeprecated ? (
           <Trans>Deprecated</Trans>

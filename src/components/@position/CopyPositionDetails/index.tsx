@@ -209,6 +209,7 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
                       averagePrice: data.entryPrice,
                       protocol: data.protocol,
                     }}
+                    copyWalletId={copyPositionData?.copyWalletId ?? ''}
                     onSuccess={onForceReload}
                   />
                 </Box>

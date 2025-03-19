@@ -62,6 +62,13 @@ export default function ChartProfit({
     return calcOpeningROI(data, latestPnL)
   }, [crossMove, data, isOpening, latestPnL, to])
 
+  const isInvalidROI = useMemo(() => {
+    if (protocol === ProtocolEnum.JUPITER && data?.roi && data.roi < -100) {
+      return true
+    }
+    return false
+  }, [data?.roi, protocol])
+
   return (
     <>
       {data && (
@@ -97,7 +104,23 @@ export default function ChartProfit({
                   data-tooltip-delay-show={260}
                 />
                 <Tooltip id={TOOLTIP_CONTENT.POSITION_CROSS_ROI.id + 'trader_position'}>
-                  {TOOLTIP_CONTENT.POSITION_CROSS_ROI.content}
+                  <Type.Caption color="neutral2">{TOOLTIP_CONTENT.POSITION_CROSS_ROI.content}</Type.Caption>
+                </Tooltip>
+              </>
+            )}
+            {isInvalidROI && (
+              <>
+                <IconBox
+                  icon={<Warning size={20} />}
+                  color="orange"
+                  sx={{ ml: 1 }}
+                  data-tooltip-id={TOOLTIP_CONTENT.POSITION_JUPITER_LIQUIDATED_ROI.id + 'trader_position'}
+                  data-tooltip-delay-show={260}
+                />
+                <Tooltip id={TOOLTIP_CONTENT.POSITION_JUPITER_LIQUIDATED_ROI.id + 'trader_position'}>
+                  <Type.Caption color="neutral2">
+                    {TOOLTIP_CONTENT.POSITION_JUPITER_LIQUIDATED_ROI.content}
+                  </Type.Caption>
                 </Tooltip>
               </>
             )}

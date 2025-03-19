@@ -15,6 +15,7 @@ import { CopyTradeWithCheckingData } from 'components/@copyTrade/types'
 import { renderSLTPSetting } from 'components/@position/configs/copyPositionRenderProps'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import ReverseTag from 'components/@ui/ReverseTag'
+import useCheckCopyTradeExchange from 'hooks/features/copyTrade/useCheckCopyExchange'
 import useUpdateCopyTrade from 'hooks/features/copyTrade/useUpdateCopyTrade'
 import { useIsVIP } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useCopyTradeModalConfigs from 'hooks/features/useCopyTradeModalConfigs'
@@ -44,6 +45,7 @@ export default function useListCopyTradeConfigs({
   const isLite = type === 'lite'
   const isDex = type === 'dex'
   const isDrawer = type === 'drawer'
+  const { disabledExchanges } = useCheckCopyTradeExchange()
   const { embeddedWalletInfo } = useCopyWalletContext()
   const balance = embeddedWalletInfo ? Number(embeddedWalletInfo.marginSummary.accountValue) : undefined
 
@@ -59,7 +61,7 @@ export default function useListCopyTradeConfigs({
         toggleStatus(item)
         return
       }
-      if (item.status === CopyTradeStatusEnum.RUNNING) {
+      if (item.status === CopyTradeStatusEnum.RUNNING || disabledExchanges.includes(item.exchange)) {
         handleOpenModal({ data: item, modalType: 'stop' })
         return
       }
@@ -76,10 +78,13 @@ export default function useListCopyTradeConfigs({
           toggleStatusCopyTrade(item)
         }}
         isLoading={currentCopyTrade?.id === item.id && isMutating}
-        disabled={currentCopyTrade?.id === item.id && isMutating}
+        disabled={
+          (currentCopyTrade?.id === item.id && isMutating) ||
+          (item.status === CopyTradeStatusEnum.STOPPED && disabledExchanges.includes(item.exchange))
+        }
       />
     ),
-    [currentCopyTrade?.id, isMutating, isRunningFn, toggleStatusCopyTrade]
+    [currentCopyTrade?.id, isMutating, isRunningFn, toggleStatusCopyTrade, disabledExchanges]
   )
 
   const renderVolume = useMemo(

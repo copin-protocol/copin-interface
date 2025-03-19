@@ -6,12 +6,13 @@ import { getListEvent } from 'apis/event'
 import { getMarketData } from 'apis/markets'
 import { getPlanLimit, getVolumeLimit } from 'apis/systemApis'
 import { EventDetailsData } from 'entities/event'
-import { SubscriptionLimitData, VolumeLimitData } from 'entities/system'
+import { SubscriptionLimitData, SystemAlert, VolumeLimitData } from 'entities/system'
 import { RELEASED_PROTOCOLS } from 'utils/config/constants'
-import { ProtocolEnum, SubscriptionPlanEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, ProtocolEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 interface SystemConfigState {
+  systemAlert: SystemAlert[]
   volumeLimit: VolumeLimitData | undefined
   subscriptionLimit: SubscriptionLimitData | undefined
   eventId: string | undefined
@@ -246,6 +247,17 @@ export function SystemConfigInitializer() {
 
 export const useSystemConfigStore = create<SystemConfigState & SystemConfigModifier>()(
   immer((set) => ({
+    systemAlert: [
+      {
+        type: 'copy_exchange',
+        data: {
+          type: 'warning',
+          exchange: CopyTradePlatformEnum.GNS_V8,
+          message: { en: 'Copy trade via GNS is currently under maintenance.' },
+          action: 'disabled',
+        },
+      },
+    ],
     volumeLimit: undefined,
     subscriptionLimit: undefined,
     eventId: undefined,

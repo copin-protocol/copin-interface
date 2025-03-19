@@ -5,6 +5,7 @@ import { ForwardedRef, TextareaHTMLAttributes, forwardRef, useState } from 'reac
 import styled from 'styled-components/macro'
 import { variant } from 'styled-system'
 
+import { isIphone } from 'hooks/helpers/useIsIphone'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, sx } from 'theme/base'
 import { SxProps } from 'theme/types'
@@ -134,6 +135,13 @@ export const Textarea = forwardRef(
       onClick={({ target }: { target: HTMLDivElement }) => {
         if (target?.querySelector('input')) {
           target?.querySelector('input')?.focus()
+
+          if (window.visualViewport && isIphone) {
+            window.visualViewport.addEventListener('resize', () => {
+              document.body.style.height = `${window.visualViewport?.height}px`
+              document.body.scrollIntoView({ behavior: 'smooth' })
+            })
+          }
         }
       }}
     >
@@ -157,6 +165,13 @@ export const InputPassword = forwardRef(
         onClick={({ target }: { target: HTMLDivElement }) => {
           if (target?.querySelector('input')) {
             target?.querySelector('input')?.focus()
+          }
+
+          if (window.visualViewport && isIphone) {
+            window.visualViewport.addEventListener('resize', () => {
+              document.body.style.height = `${window.visualViewport?.height}px`
+              document.body.scrollIntoView({ behavior: 'smooth' })
+            })
           }
         }}
       >

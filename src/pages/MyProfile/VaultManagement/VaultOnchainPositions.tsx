@@ -9,13 +9,13 @@ import TraderAddress from 'components/@ui/TraderAddress'
 import { renderEntry, renderOpeningPnL, renderOpeningRoi, renderSizeOpening } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
 import useRequiredChain from 'hooks/web3/useRequiredChain'
 import IconButton from 'theme/Buttons/IconButton'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { UsdPrices } from 'utils/types'
 import { ARBITRUM_CHAIN, OPTIMISM_CHAIN } from 'utils/web3/chains'
 
 import ModifyTPSLModal from '../DCPManagement/ModifyTPSLModal'
@@ -245,6 +245,7 @@ const VaultOnchainPositionContainer = ({ smartWalletAddress }: { smartWalletAddr
             }
             openCloseData(undefined)
           }}
+          copyWalletId={''}
           position={{
             copyPositionId: openingCloseData.copyPositionId ?? '',
             indexToken: openingCloseData.indexToken,

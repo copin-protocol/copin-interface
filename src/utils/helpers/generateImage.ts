@@ -1,9 +1,9 @@
 import { PositionData, TraderData } from 'entities/trader'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
 import { Colors } from 'theme/types'
 import { FONT_FAMILY } from 'utils/config/constants'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { ELEMENT_IDS } from 'utils/config/keys'
+import { UsdPrices } from 'utils/types'
 
 import { calcLiquidatePrice, calcOpeningPnL, calcOpeningROI } from './calculate'
 import formatTokenPrices, { addressShorten, formatDuration, formatLeverage, formatNumber, formatPrice } from './format'

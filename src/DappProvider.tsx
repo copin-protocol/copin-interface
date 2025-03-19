@@ -2,10 +2,8 @@ import bitgetModule from '@web3-onboard/bitget'
 import injectedModule, { ProviderLabel } from '@web3-onboard/injected-wallets'
 import metamaskModule from '@web3-onboard/metamask'
 import okxModule from '@web3-onboard/okx'
-// import ledgerModule from '@web3-onboard/ledger'
 import { Web3OnboardProvider, init } from '@web3-onboard/react'
 import walletConnectModule from '@web3-onboard/walletconnect'
-import React from 'react'
 
 import { AuthProvider } from 'hooks/web3/useAuth'
 import themeFn from 'theme/theme'
@@ -20,6 +18,9 @@ const theme = themeFn(true)
 //   walletConnectVersion: 2,
 // })
 
+const MODE = import.meta.env.VITE_BUILD_MODE
+const development = MODE === 'development'
+
 const walletConnect = walletConnectModule({
   projectId: '4ed591829f849797c6391880fa61d5e4',
   requiredChains: SUPPORTED_CHAIN_IDS,
@@ -31,7 +32,7 @@ const metamask = metamaskModule({
   options: {
     extensionOnly: true,
     logging: {
-      developerMode: true,
+      developerMode: development ? true : false,
     },
     dappMetadata: {
       name: 'Copin Analyzer',

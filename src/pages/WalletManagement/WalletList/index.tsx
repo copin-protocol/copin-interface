@@ -9,6 +9,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import { CreateWalletModal } from 'components/@wallet/CreateWalletAction'
 import WalletDetailsCard from 'components/@wallet/WalletDetailsCard'
 import { CopyWalletData } from 'entities/copyWallet'
+import useCheckCopyTradeExchange from 'hooks/features/copyTrade/useCheckCopyExchange'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useInternalRole from 'hooks/features/useInternalRole'
 import Accordion from 'theme/Accordion'
@@ -256,6 +257,8 @@ function ExchangeTitle({
   onCreateWalletSuccess: (() => void) | undefined
   count: number
 }) {
+  const { disabledExchanges } = useCheckCopyTradeExchange()
+  const isMaintenance = !!disabledExchanges.includes(exchange)
   const [openModal, setOpenModal] = useState(false)
   let title = ''
   switch (exchange) {
@@ -301,7 +304,7 @@ function ExchangeTitle({
             {title} {isAllowed && !!count ? `(${count})` : ''}
           </Type.BodyBold>
         </Flex>
-        {isAllowed && !isDeprecated ? (
+        {isAllowed && !isDeprecated && !isMaintenance ? (
           <Button
             variant="ghostPrimary"
             sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 0 }}
@@ -316,7 +319,13 @@ function ExchangeTitle({
           </Button>
         ) : (
           <Type.Caption sx={{ py: 1, px: 2, bg: 'neutral6', borderRadius: '2px' }} color="neutral3">
-            {isDeprecated ? 'Deprecated' : 'Coming soon'}
+            {isMaintenance ? (
+              <Trans>Maintenance</Trans>
+            ) : isDeprecated ? (
+              <Trans>Deprecated</Trans>
+            ) : (
+              <Trans>Coming soon</Trans>
+            )}
           </Type.Caption>
         )}
       </Flex>

@@ -20,7 +20,6 @@ import EagerConnect from './@helpers/EagerConnect'
 import EventNotification from './@helpers/EventNotification'
 import GlobalDialog from './@helpers/GlobalDialog'
 import SubscriptionRestrict from './@helpers/SubscriptionRestrict'
-import LiteWalletNotice from './@layouts/LiteWalletNotice'
 import SubscriptionExpiredWarning from './@layouts/SubscriptionExpiredWarning'
 import WarningBanner from './@layouts/WarningBanner'
 
@@ -30,7 +29,6 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
       <Flex flexDirection="column" width="100vw" height="100vh" margin="0px auto" maxHeight="100%">
         <Navbar height={NAVBAR_HEIGHT} />
         <WarningBanner />
-        <LiteWalletNotice />
         <Box id={ELEMENT_IDS.APP_MAIN_WRAPPER} width="100%" flex="1" sx={{ position: 'relative', overflowY: 'auto' }}>
           {children}
           <FavoriteNoteTooltip />

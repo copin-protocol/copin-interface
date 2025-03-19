@@ -22,6 +22,7 @@ export default function CopyOpeningPositions({
   mobileLayoutType,
   noDataComponent,
   excludingColumnKeys,
+  isStuckPositionsView,
 }: {
   data: CopyPositionData[] | undefined
   isLoading: boolean
@@ -32,6 +33,7 @@ export default function CopyOpeningPositions({
   mobileLayoutType?: MobileLayoutType
   noDataComponent?: ReactNode
   excludingColumnKeys?: (keyof CopyPositionData)[]
+  isStuckPositionsView?: boolean
 }) {
   const title = <Trans>Opening Positions</Trans>
 
@@ -39,8 +41,9 @@ export default function CopyOpeningPositions({
 
   return (
     <>
-      {!hasFilter && !data?.length && !isLoading && <NoOpeningPositionMessage layoutType={layoutType} title={title} />}
-
+      {!hasFilter && !data?.length && !isLoading && (
+        <NoOpeningPositionMessage layoutType={layoutType} title={title} isStuckPositionsView={!!isStuckPositionsView} />
+      )}
       {(!!data?.length || hasFilter) &&
         (isGrid ? (
           <CopyPositionsListView
@@ -66,7 +69,24 @@ export default function CopyOpeningPositions({
   )
 }
 
-function NoOpeningPositionMessage({ title, layoutType }: { title: ReactNode; layoutType: LayoutType }) {
+function NoOpeningPositionMessage({
+  title,
+  layoutType,
+  isStuckPositionsView,
+}: {
+  title: ReactNode
+  layoutType: LayoutType
+  isStuckPositionsView: boolean
+}) {
+  if (isStuckPositionsView) {
+    return (
+      <Flex p={3} flexDirection="column" width="100%" height={180} justifyContent="center" alignItems="center">
+        <Type.Body color="neutral3" display="block" mb={3} textAlign="center">
+          <Trans>All of your opening positions that did not synced correctly will be shown here</Trans>
+        </Type.Body>
+      </Flex>
+    )
+  }
   if (layoutType === 'lite')
     return (
       <IconMessageBox

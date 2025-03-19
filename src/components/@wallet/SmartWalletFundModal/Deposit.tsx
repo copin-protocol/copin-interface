@@ -91,7 +91,7 @@ const Deposit = ({
   )
 
   const disabled =
-    !usdAssetBalance || !enoughAllowance || submitting || !!errors.amount || !DEPRECATED_EXCHANGES.includes(platform)
+    !usdAssetBalance || !enoughAllowance || submitting || !!errors.amount || DEPRECATED_EXCHANGES.includes(platform)
 
   const onSubmit = async (values: FieldValues) => {
     if (disabled) return

@@ -1,4 +1,4 @@
-import { Siren, Sliders, Target, Warning } from '@phosphor-icons/react'
+import { Siren, Sliders, Target, Warning, XCircle } from '@phosphor-icons/react'
 import React, { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -9,6 +9,8 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import CustomTag from 'components/@ui/CustomTag'
 import { BotAlertData } from 'entities/alert'
 import { AlertSettingDetailsProvider, useAlertSettingDetailsContext } from 'hooks/features/alert/useAlertDetailsContext'
+import useIsIphone from 'hooks/helpers/useIsIphone'
+import IconButton from 'theme/Buttons/IconButton'
 import VerticalArrow from 'theme/Icons/VerticalArrow'
 import Loading from 'theme/Loading'
 import Modal from 'theme/Modal'
@@ -53,6 +55,7 @@ function AlertSettingDetailsComponent() {
     onChangeStep,
     onDismiss,
   } = useAlertSettingDetailsContext()
+  const isIphone = useIsIphone()
 
   return (
     <>
@@ -174,8 +177,13 @@ function AlertSettingDetailsComponent() {
             </Flex>
             {isMobile ? (
               <Box>
-                <Modal mode="bottom" isOpen={openDrawer} onDismiss={onDismiss}>
+                <Modal mode={isIphone ? 'center' : 'bottom'} isOpen={openDrawer} onDismiss={onDismiss}>
                   <Container sx={{ position: 'relative', height: '100%', minHeight: '400px' }}>
+                    {isIphone && (
+                      <Box sx={{ position: 'absolute', top: '6px', right: 2 }}>
+                        <IconButton variant="ghost" onClick={onDismiss} icon={<XCircle size={24} />} size={24} />
+                      </Box>
+                    )}
                     <Box height="100%" overflow="auto">
                       {currentStep === AlertSettingsEnum.TRADERS &&
                         (botAlert?.type === AlertTypeEnum.COPY_TRADE ? (

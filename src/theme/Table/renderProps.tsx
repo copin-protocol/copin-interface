@@ -11,7 +11,6 @@ import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { CopyPositionData } from 'entities/copyTrade'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
-import { UsdPrices } from 'hooks/store/useUsdPrices'
 import CopyButton from 'theme/Buttons/CopyButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
@@ -23,6 +22,7 @@ import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } f
 import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { getSymbolFromPair } from 'utils/helpers/transform'
+import { UsdPrices } from 'utils/types'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps, showMarketIcon?: boolean) {
   if (!data || !data.protocol) return <></>

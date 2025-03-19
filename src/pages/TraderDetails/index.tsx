@@ -21,6 +21,7 @@ import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
+import useTraderBalanceStore from 'hooks/store/useTraderBalanceStore'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
@@ -64,6 +65,10 @@ export default function TraderDetailsPage() {
     protocol = orderedStats?.[0]?.protocol
   }
 
+  const setTraderToGetBalance = useTraderBalanceStore((s) => s.setTraderToGetBalance)
+  useEffect(() => {
+    setTraderToGetBalance([{ address, protocol: protocol! }])
+  }, [address, protocol])
   if (isLoading)
     return (
       <Box p={4}>

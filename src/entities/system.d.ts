@@ -1,3 +1,5 @@
+import { Variant } from 'theme/Alert/types'
+
 export interface SystemConfigData {
   createdAt: string
 }
@@ -125,4 +127,9 @@ export interface PlanLimitData {
   webhookAlerts: number
   plan: number
   createdAt: string
+}
+
+export interface SystemAlert {
+  type: 'copy_exchange'
+  data: { type: Variant; exchange: CopyTradePlatformEnum; message: { en: string }; action?: 'disabled' }
 }
