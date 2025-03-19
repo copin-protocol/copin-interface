@@ -117,7 +117,7 @@ export default function SettingChannel({ botAlert }: { botAlert?: BotAlertData }
           sx={{ mb: 0 }}
         />
       </Flex>
-      <Flex flexDirection="column" flex={1} height="100%">
+      <Flex flexDirection="column" flex={1} sx={{ overflow: 'auto' }}>
         {!botAlert?.channels?.length ? (
           <Box px={3}>
             <Alert
@@ -138,9 +138,9 @@ export default function SettingChannel({ botAlert }: { botAlert?: BotAlertData }
             />
           </Box>
         ) : (
-          <Flex flex={1} flexDirection="column" sx={{ overflow: 'auto', maxHeight: 'calc(50vh - 0px)' }}>
+          <Flex flex={1} flexDirection="column" sx={{ overflow: 'auto' }}>
             {isMobile ? (
-              <Flex mt={2} flexDirection="column" sx={{ gap: 2, overflow: 'auto' }}>
+              <Flex mt={2} flexDirection="column" sx={{ gap: 2 }}>
                 {!!botAlert?.channels?.length &&
                   botAlert?.channels?.map((data) => {
                     return (
@@ -150,6 +150,7 @@ export default function SettingChannel({ botAlert }: { botAlert?: BotAlertData }
                         flexDirection="column"
                         bg="neutral6"
                         width="100%"
+                        height={100}
                         sx={{ pt: 2, gap: 2 }}
                       >
                         <Flex
