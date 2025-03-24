@@ -278,6 +278,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.VERTEX_ARB,
         ProtocolEnum.HORIZON_BNB,
         ProtocolEnum.HOLDSTATION_ZKSYNC,
+        ProtocolEnum.HOLDSTATION_BERA,
         ProtocolEnum.ZENO_METIS,
         ProtocolEnum.LINEHUB_LINEA,
         ProtocolEnum.BMX_BASE,
