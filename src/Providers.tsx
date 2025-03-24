@@ -1,9 +1,9 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { LanguageProvider } from 'i18n'
-import WorkerConnection from 'workerConnection'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 import ThemeProvider from 'theme'
+import WorkerConnection from 'workerConnection'
 
 import { BotAlertInitializer } from 'hooks/features/alert/useBotAlertProvider'
 import { CopyWalletInitializer } from 'hooks/features/useCopyWalletContext'
