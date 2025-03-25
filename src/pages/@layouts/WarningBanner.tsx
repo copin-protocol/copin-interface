@@ -1,14 +1,17 @@
 import { Warning } from '@phosphor-icons/react'
 
+import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { useParsedProtocol } from 'hooks/helpers/useProtocols'
 import { Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { ELEMENT_IDS } from 'utils/config/keys'
 
+const MAINTENANCE_PROTOCOLS: ProtocolEnum[] = []
 export default function WarningBanner() {
+  const protocolOptionsMapping = useGetProtocolOptionsMapping()
   const protocol = useParsedProtocol()
-  const isWarning = protocol === ProtocolEnum.DYDX
+  const isWarning = MAINTENANCE_PROTOCOLS.includes(protocol)
 
   return isWarning ? (
     <Flex
@@ -37,8 +40,8 @@ export default function WarningBanner() {
       >
         <Type.Caption>
           <IconBox icon={<Warning size={16} />} pr={1} />
-          dYdX exchange is undergoing maintenance to resolve the data issue, and we are working to restore full
-          functionality as soon as possible. Thank you for your patience and understanding!
+          {protocolOptionsMapping[protocol].text} exchange is undergoing maintenance to resolve the data issue, and we
+          are working to restore full functionality as soon as possible. Thank you for your patience and understanding!
         </Type.Caption>
       </Flex>
     </Flex>
