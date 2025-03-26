@@ -78,7 +78,6 @@ export class PythServiceWorker {
         priceStream.onmessage = (event) => this.handlePriceStreamUpdate(event, pythIdsMapping)
         priceStream.onerror = (error) => {
           console.error('Price stream error:', error)
-          priceStream.close()
         }
       }
     } catch (error) {

@@ -119,7 +119,7 @@ function App() {
             <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.path} component={TraderDetailsPage}></Route>
             <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.alter_ath} component={TraderDetailsPage}></Route>
 
-            <AuthedRoute path={ROUTES.LITE.path} exact component={CopinLitePage}></AuthedRoute>
+            <Route path={ROUTES.LITE.path} exact component={CopinLitePage}></Route>
             <Route path={ROUTES.HOME.path} exact component={HomePage}></Route>
 
             <Route path="*" component={NotFound}></Route>

@@ -4,9 +4,11 @@ import { useResponsive } from 'ahooks'
 import { useEffect, useState } from 'react'
 import { createGlobalStyle } from 'styled-components/macro'
 
+import { OnboardingContent } from 'components/@copinLite/OnboardingModal'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useTabHandler from 'hooks/router/useTabHandler'
+import { useAuthContext } from 'hooks/web3/useAuth'
 import { BottomWrapperMobile } from 'pages/@layouts/Components'
 import LiteWalletNotice from 'pages/@layouts/LiteWalletNotice'
 import IconButton from 'theme/Buttons/IconButton'
@@ -87,36 +89,65 @@ const CopitLitePageMobile = () => {
 const CopinLitePage = () => {
   const [tableExpanded, setTableExpanded] = useState(false)
   const { lg } = useResponsive()
+  const [showOnboarding, setShowOnboarding] = useState(true)
+  const [userInteracted, setUserInteracted] = useState(false)
+  const { isAuthenticated, loading, setIsNewUser } = useAuthContext()
+  useEffect(() => {
+    if (!loading && isAuthenticated && !userInteracted) {
+      setShowOnboarding(false)
+    }
+    // logout
+    if (!loading && !isAuthenticated) {
+      setShowOnboarding(true)
+      // setUserInteracted(false)
+    }
+  }, [isAuthenticated, loading, userInteracted])
+
+  const onUserInteract = () => {
+    setUserInteracted(true)
+    setIsNewUser(false)
+  }
+  const onDismissOnboarding = () => {
+    setShowOnboarding(false)
+  }
 
   return (
     <SafeComponentWrapper>
       <GlobalStyle />
       <LiteContextProvider>
-        {lg ? (
-          <Flex height="100%" flexDirection="column">
-            <LiteWalletNotice />
+        <Box display={showOnboarding ? 'block' : 'none'} width="100%" height="100%">
+          <OnboardingContent
+            onDismiss={isAuthenticated ? onDismissOnboarding : undefined}
+            onStartInteraction={onUserInteract}
+          />
+        </Box>
+        <Box display={showOnboarding ? 'none' : 'block'} width="100%" height="100%">
+          {lg ? (
+            <Flex height="100%" flexDirection="column">
+              <LiteWalletNotice />
 
-            <Box display={tableExpanded ? 'none' : 'flex'} height={`calc(100% - max(${LITE_TABLE_HEIGHT}px, 35%))`}>
-              <LiteWallet />
-              <CopyManagement />
-            </Box>
-            <Box
-              height={tableExpanded ? '100%' : `calc(max(${LITE_TABLE_HEIGHT}px, 35%))`}
-              sx={{ borderTop: 'small', borderColor: 'neutral4', position: 'relative' }}
-              width="100%"
-            >
-              <Trades />
-              <IconButton
-                onClick={() => setTableExpanded(!tableExpanded)}
-                variant="ghost"
-                icon={tableExpanded ? <ArrowsInSimple size={20} /> : <ArrowsOutSimple size={20} />}
-                sx={{ position: 'absolute', top: '2px', right: 0, p: 0 }}
-              />
-            </Box>
-          </Flex>
-        ) : (
-          <CopitLitePageMobile />
-        )}
+              <Box display={tableExpanded ? 'none' : 'flex'} height={`calc(100% - max(${LITE_TABLE_HEIGHT}px, 35%))`}>
+                <LiteWallet />
+                <CopyManagement />
+              </Box>
+              <Box
+                height={tableExpanded ? '100%' : `calc(max(${LITE_TABLE_HEIGHT}px, 35%))`}
+                sx={{ borderTop: 'small', borderColor: 'neutral4', position: 'relative' }}
+                width="100%"
+              >
+                <Trades />
+                <IconButton
+                  onClick={() => setTableExpanded(!tableExpanded)}
+                  variant="ghost"
+                  icon={tableExpanded ? <ArrowsInSimple size={20} /> : <ArrowsOutSimple size={20} />}
+                  sx={{ position: 'absolute', top: '2px', right: 0, p: 0 }}
+                />
+              </Box>
+            </Flex>
+          ) : (
+            <CopitLitePageMobile />
+          )}
+        </Box>
       </LiteContextProvider>
     </SafeComponentWrapper>
   )
