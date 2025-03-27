@@ -88,7 +88,13 @@ export default function OnboardingModal() {
   )
 }
 
-function OnboardingContent({ onDismiss }: { onDismiss: () => void }) {
+export function OnboardingContent({
+  onDismiss,
+  onStartInteraction,
+}: {
+  onDismiss: (() => void) | undefined
+  onStartInteraction?: () => void
+}) {
   const [step, setStep] = useState(1)
   const [listTraderLabel, setListTraderLabel] = useState<TraderLabelEnum[]>([])
   const { data: traderData, isFetching: isLoading } = useQuery(
@@ -123,7 +129,7 @@ function OnboardingContent({ onDismiss }: { onDismiss: () => void }) {
     history.push(ROUTES.LITE.path)
     logEventLite({ event: EVENT_ACTIONS[EventCategory.LITE].LITE_ONBOARDING_NAVIGATE_TO_LITE })
     // if (!botAlert?.chatId) handleGenerateLinkBot?.()
-    onDismiss()
+    onDismiss?.()
   }
 
   const listTraderData = useMemo(() => traderData?.data?.slice(0, LIMIT_TRADER), [traderData?.data])
@@ -231,6 +237,8 @@ function OnboardingContent({ onDismiss }: { onDismiss: () => void }) {
                   onSkip={onDismiss}
                   isFindingTrader={isLoading}
                   skipButtonText={isForcedOpen ? <Trans>Cancel</Trans> : <Trans>Skip</Trans>}
+                  showSkipButton={!!onDismiss}
+                  onClickFilter={onStartInteraction}
                 />
               </Flex>
 
@@ -247,9 +255,11 @@ function OnboardingContent({ onDismiss }: { onDismiss: () => void }) {
         <Flex py={3} sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
           <Flex mb={3} px={3} sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between', gap: 3 }}>
             <Image height={40} src={logo} width="auto" />
-            <Button variant="ghost" sx={{ color: 'neutral2' }} onClick={onDismiss}>
-              {isForcedOpen ? <Trans>Cancel</Trans> : <Trans>Skip</Trans>}
-            </Button>
+            {onDismiss && (
+              <Button variant="ghost" sx={{ color: 'neutral2' }} onClick={onDismiss}>
+                {isForcedOpen ? <Trans>Cancel</Trans> : <Trans>Skip</Trans>}
+              </Button>
+            )}
           </Flex>
           <Box id="mobile_trader_container" px={3} flex="1 0 0" sx={{ overflow: 'auto' }}>
             <Box sx={{ mt: step !== 1 ? filterHeadHeight * -1 : 'none', transition: '0.6s' }}>
@@ -258,6 +268,7 @@ function OnboardingContent({ onDismiss }: { onDismiss: () => void }) {
                 onSkip={onDismiss}
                 isFindingTrader={isLoading}
                 showSkipButton={false}
+                onClickFilter={onStartInteraction}
               />
               {step !== 1 && (
                 <TraderListMobile

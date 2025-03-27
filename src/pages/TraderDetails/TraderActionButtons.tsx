@@ -151,15 +151,21 @@ export default function TraderActionButtons({
                 <Box height="40px">
                   <AnalyzeAction />
                 </Box>
-                <Box height="40px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
-                  <AlertAction account={account} protocol={protocol} />
-                </Box>
-                <Box height="40px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
-                  <BacktestSingleButton key={protocol + account} account={account} protocol={protocol} />
-                </Box>
-                <Box height="40px">
-                  <CopyTraderButton account={account} protocol={protocol} onForceReload={onCopyActionSuccess} />
-                </Box>
+                {!disabledActions?.includes('alert') && (
+                  <Box height="40px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
+                    <AlertAction account={account} protocol={protocol} />
+                  </Box>
+                )}
+                {!disabledActions?.includes('backtest') && (
+                  <Box height="40px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
+                    <BacktestSingleButton key={protocol + account} account={account} protocol={protocol} />
+                  </Box>
+                )}
+                {!disabledActions?.includes('copy-trade') && (
+                  <Box height="40px">
+                    <CopyTraderButton account={account} protocol={protocol} onForceReload={onCopyActionSuccess} />
+                  </Box>
+                )}
               </>
             }
             sx={{}}

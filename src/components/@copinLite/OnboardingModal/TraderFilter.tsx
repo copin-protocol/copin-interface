@@ -14,17 +14,20 @@ const TraderFilter = memo(function TraderFilter({
   isFindingTrader,
   showSkipButton = true,
   skipButtonText = <Trans>Skip</Trans>,
+  onClickFilter,
 }: {
   onConfirm: (listLabel: TraderLabelEnum[]) => void
-  onSkip: () => void
+  onSkip: (() => void) | undefined
   isFindingTrader: boolean
   showSkipButton?: boolean
   skipButtonText?: ReactNode
+  onClickFilter?: () => void
 }) {
   const [selectedFilterKeys, setKeys] = useState<TraderLabelEnum[]>([])
   const prevKey = useRef([...selectedFilterKeys].sort().join(''))
   const currentKey = [...selectedFilterKeys].sort().join('')
-  const handleClickKey = (key: TraderLabelEnum) =>
+  const handleClickKey = (key: TraderLabelEnum) => {
+    onClickFilter?.()
     setKeys((prev) => {
       if (prev.includes(key)) {
         return prev.filter((v) => v !== key)
@@ -32,13 +35,14 @@ const TraderFilter = memo(function TraderFilter({
         return [...prev, key]
       }
     })
+  }
 
   const handleClickFind = () => {
     onConfirm(selectedFilterKeys)
     prevKey.current = [...selectedFilterKeys].sort().join('')
   }
   const handleClickSkip = () => {
-    onSkip()
+    onSkip?.()
   }
   const disabledFind = !selectedFilterKeys.length || isFindingTrader || currentKey === prevKey.current
   return (

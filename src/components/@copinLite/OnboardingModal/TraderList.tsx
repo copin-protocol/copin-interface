@@ -4,6 +4,7 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import Slider, { Settings } from 'react-slick'
 
 import tokenNotFound from 'assets/images/token-not-found.png'
+import { useClickLoginButton } from 'components/@auth/LoginAction'
 import LineChartTraderPnl from 'components/@charts/LineChartPnL'
 import { parsePnLStatsData } from 'components/@charts/LineChartPnL/helpers'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
@@ -11,6 +12,7 @@ import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { PnlStatisticsResponse, ResponseTraderData } from 'entities/trader'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
+import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
 import { HorizontalCarouselWrapper } from 'theme/Carousel/Wrapper'
@@ -296,9 +298,18 @@ function TraderItem({
   pnlData: PnlStatisticsResponse | undefined
   onClickCopyTrade: (traderData: ResponseTraderData) => void
 }) {
+  const { isAuthenticated } = useAuthContext()
   const { protocol, account, type, realisedPnl, realisedAvgRoi, totalWin, totalTrade, avgVolume } = traderData
   const traderPnlData = pnlData?.[account]
   const { setTrader } = useQuickViewTraderStore()
+  const handleClickLogin = useClickLoginButton()
+  const handleClickCopy = (traderData: ResponseTraderData) => {
+    if (!isAuthenticated) {
+      handleClickLogin()
+      return
+    }
+    onClickCopyTrade(traderData)
+  }
 
   return (
     <Box
@@ -440,7 +451,7 @@ function TraderItem({
           </Box>
         </Box>
       </Box>
-      <Button block variant="primary" onClick={() => onClickCopyTrade(traderData)}>
+      <Button block variant="primary" onClick={() => handleClickCopy(traderData)}>
         <Trans>Copy Trade</Trans>
       </Button>
     </Box>

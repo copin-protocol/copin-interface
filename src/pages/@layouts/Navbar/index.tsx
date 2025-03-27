@@ -98,13 +98,11 @@ export default function Navbar({ height }: { height: number }): ReactElement {
                   ml: [2, 0],
                 }}
               >
-                {isAuthenticated === true && (
-                  <DesktopWrapper sx={{ borderRight: 'small', borderRightColor: 'neutral4' }}>
-                    <NavLink to={ROUTES.LITE.path} matchpath={ROUTES.LITE.path} className="lite">
-                      <LiteText>Copin Lite</LiteText>
-                    </NavLink>
-                  </DesktopWrapper>
-                )}
+                <DesktopWrapper sx={{ borderRight: 'small', borderRightColor: 'neutral4' }}>
+                  <NavLink to={ROUTES.LITE.path} matchpath={ROUTES.LITE.path} className="lite">
+                    <LiteText>Copin Lite</LiteText>
+                  </NavLink>
+                </DesktopWrapper>
                 {isAuthenticated === true && <NavbarUser />}
                 {!isAuthenticated && <LoginAction />}
                 {loading && (
