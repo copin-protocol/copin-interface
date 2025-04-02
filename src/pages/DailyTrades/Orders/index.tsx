@@ -14,6 +14,7 @@ import { TraderPositionDetailsFromOrderDrawer } from 'components/@position/Trade
 import ToastBody from 'components/@ui/ToastBody'
 import { OrderData } from 'entities/trader'
 import { useFilterPairs } from 'hooks/features/useFilterPairs'
+import useInternalRole from 'hooks/features/useInternalRole'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import VirtualList from 'theme/VirtualList'
@@ -28,6 +29,7 @@ import FilterOrderDirectionTag from '../FilterTags/FilterDirectionTag'
 import FilterOrderActionTag from '../FilterTags/FilterOrderActionTag'
 import FilterOrderRangesTag from '../FilterTags/FilterOrderRangeTag'
 import FilterPairTag from '../FilterTags/FilterPairTag'
+import Maintain from '../Maintain'
 import SearchTrader from '../SearchTrader'
 import FilterOrderButton from './FilterOrderButton'
 import {
@@ -186,12 +188,13 @@ function DailyOrdersComponent() {
     }
   }, [currentLimit, currentPage, filters])
 
+  const isInternal = useInternalRole()
   const {
     data: ordersTableData,
     loading: isLoadingOrders,
     previousData,
   } = useApolloQuery<{ [SEARCH_FUNCTION_NAME]: ApiListResponse<OrderData> }>(SEARCH_DAILY_ORDERS_QUERY, {
-    skip: md && enabledLiveTrade,
+    skip: (md && enabledLiveTrade) || !isInternal,
     variables: queryOpeningVariables,
     onError: (error) => {
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
@@ -394,6 +397,8 @@ function DailyOrdersComponent() {
     setCurrentOrder(data)
   }, [])
   const handleDismiss = useCallback(() => setCurrentOrder(null), [])
+
+  if (!isInternal) return <Maintain />
 
   return (
     <Flex sx={{ width: '100%', height: '100%', overflow: 'hidden', flexDirection: 'column' }}>

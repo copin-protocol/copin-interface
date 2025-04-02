@@ -16,6 +16,7 @@ import { dailyPositionColumns } from 'components/@position/configs/traderPositio
 import ToastBody from 'components/@ui/ToastBody'
 import { PositionData, ResponsePositionData } from 'entities/trader'
 import { useFilterPairs } from 'hooks/features/useFilterPairs'
+import useInternalRole from 'hooks/features/useInternalRole'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import VirtualList from 'theme/VirtualList'
@@ -28,6 +29,7 @@ import FilterProtocols from '../FilterProtocols'
 import FilterPairTags from '../FilterTags/FilterPairTag'
 import FilterPositionRangesTag from '../FilterTags/FilterPositionRangesTag'
 import FilterPositionStatusTag from '../FilterTags/FilterPositionStatusTag'
+import Maintain from '../Maintain'
 import SearchTrader from '../SearchTrader'
 import FilterPositionButton from './FilterPositionButton'
 import { LiveDataSortSelect } from './LiveDataSortSelect'
@@ -172,13 +174,14 @@ function DailyPositionsComponent() {
     }
   }, [protocols, tableFilters, tablePaging, tableSorts])
 
+  const isInternal = useInternalRole()
   // Fetch table data
   const {
     data: tablePositionsData,
     loading: isLoadingTablePositions,
     previousData: previousTableData,
   } = useApolloQuery<TopOpeningPositionsGraphQLResponse<ResponsePositionData>>(SEARCH_DAILY_POSITIONS_QUERY, {
-    skip: md && enabledLiveTrade,
+    skip: (md && enabledLiveTrade) || !isInternal,
     variables: queryTableDataVariables,
     onError: (error) => {
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
@@ -429,6 +432,8 @@ function DailyPositionsComponent() {
   const dataMeta = enabledLiveTrade && md ? currentLiveDataMeta : tableData?.meta
   const isLoading = loadingLiveData || isLoadingTablePositions
   const isFetching = enabledLiveTrade ? fetchingLiveData : false
+
+  if (!isInternal) return <Maintain />
 
   return (
     <Flex sx={{ width: '100%', height: '100%', overflow: 'hidden', flexDirection: 'column' }}>
