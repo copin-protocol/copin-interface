@@ -1,3 +1,4 @@
+import { TableFilterConfig } from 'components/@widgets/TableFilter/types'
 import { OrderData, PositionData } from 'entities/trader'
 
 export type RangeValuesType = {
@@ -22,13 +23,13 @@ export const POSITION_RANGE_KEYS: { [key in keyof PositionRangeFields]: keyof Po
   realisedRoi: 'realisedRoi',
 }
 
-export const POSITION_RANGE_CONFIG_MAPPING: { [key in keyof PositionRangeFields]: { title: string; unit: string } } = {
-  size: { title: 'Size', unit: '$' },
-  leverage: { title: 'Leverage', unit: '✕' },
-  collateral: { title: 'Collateral', unit: '$' },
-  durationInSecond: { title: 'Duration', unit: 'min' },
-  realisedPnl: { title: 'PnL', unit: '$' },
-  realisedRoi: { title: 'ROI', unit: '%' },
+export const POSITION_RANGE_CONFIG_MAPPING: { [key in keyof PositionRangeFields]: TableFilterConfig } = {
+  size: { label: 'Size', unit: '$', type: 'number', urlParamKey: 'size' },
+  leverage: { label: 'Leverage', unit: '✕', type: 'number', urlParamKey: 'leverage' },
+  collateral: { label: 'Collateral', unit: '$', type: 'number', urlParamKey: 'collateral' },
+  durationInSecond: { label: 'Duration', unit: 'min', type: 'number', urlParamKey: 'duration' },
+  realisedPnl: { label: 'PnL', unit: '$', type: 'number', urlParamKey: 'pnl' },
+  realisedRoi: { label: 'ROI', unit: '%', type: 'number', urlParamKey: 'roi' },
 }
 
 export type OrderRangeFields = Pick<OrderData, 'leverage' | 'sizeDeltaNumber' | 'collateralDeltaNumber'>
@@ -39,8 +40,8 @@ export const ORDER_RANGE_KEYS: { [key in keyof OrderRangeFields]: keyof OrderRan
   collateralDeltaNumber: 'collateralDeltaNumber',
 }
 
-export const ORDER_RANGE_CONFIG_MAPPING: { [key in keyof OrderRangeFields]: { title: string; unit: string } } = {
-  leverage: { title: 'Leverage', unit: '✕' },
-  sizeDeltaNumber: { title: 'Size', unit: '$' },
-  collateralDeltaNumber: { title: 'Collateral', unit: '$' },
+export const ORDER_RANGE_CONFIG_MAPPING: { [key in keyof OrderRangeFields]: TableFilterConfig } = {
+  leverage: { label: 'Leverage', unit: '✕', type: 'number', urlParamKey: 'leverage' },
+  sizeDeltaNumber: { label: 'Size', unit: '$', type: 'number', urlParamKey: 'size' },
+  collateralDeltaNumber: { label: 'Collateral', unit: '$', type: 'number', urlParamKey: 'collateral' },
 }

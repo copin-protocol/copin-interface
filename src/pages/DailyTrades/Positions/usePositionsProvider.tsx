@@ -1,6 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
-import { POSITION_RANGE_KEYS, PositionRangeFields, RangeValuesType } from 'components/@dailyTrades/configs'
+import { POSITION_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
+import { getRangeFilterValues } from 'components/@widgets/TableFilter/helpers'
+import { RangeFilterValues } from 'components/@widgets/TableFilter/types'
 import { PositionData } from 'entities/trader'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
@@ -13,13 +15,8 @@ import { getSymbolFromPair } from 'utils/helpers/transform'
 import { getPairsParam } from '../helpers'
 import { useProtocolsContext } from '../useProtocolsProvider'
 
-export type DailyPositionRangeFilter = {
-  field: PositionRangeFields
-  gte?: number | string
-  lte?: number | string
-}
 type ChangeFilterVariables = {
-  ranges?: DailyPositionRangeFilter[]
+  ranges?: RangeFilterValues[]
   pairs?: string[]
   status?: PositionStatusEnum
 }
@@ -41,10 +38,7 @@ export interface DaliPositionsContextValues {
   currentSortBy: keyof PositionData
   currentSortType: SortTypeEnum
   changeCurrentSort: TableProps<PositionData, any>['changeCurrentSort']
-  getFilterRangeValues: ({ valueKey }: { valueKey: PositionRangeFields }) => RangeValuesType
-  changeFilterRange: ({ filter, valueKey }: { filter: RangeValuesType; valueKey: PositionRangeFields }) => void
-  resetFilterRange: ({ valueKey }: { valueKey: PositionRangeFields }) => void
-  ranges: DailyPositionRangeFilter[]
+  ranges: RangeFilterValues[]
   changeFilters: (vars: ChangeFilterVariables) => void
   enabledLiveTrade: boolean
   toggleLiveTrade: (enabled?: boolean) => void
@@ -124,66 +118,22 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
     },
     [setSearchParams]
   )
-  const ranges = useMemo(() => {
-    const result: DaliPositionsContextValues['ranges'] = []
-    Object.values(POSITION_RANGE_KEYS).forEach((key) => {
-      const gteKey = `${key}g`
-      const lteKey = `${key}l`
-      const gteValueString = searchParams[gteKey]
-      const lteValueString = searchParams[lteKey]
-      if (gteValueString == null && lteValueString == null) return
-      const values: DaliPositionsContextValues['ranges'][0] = { field: key as unknown as PositionRangeFields }
-      if (gteValueString != null) values.gte = Number(gteValueString)
-      if (lteValueString != null) values.lte = Number(lteValueString)
-      result.push(values)
+  const ranges: RangeFilterValues[] = useMemo(() => {
+    const result = Object.entries(POSITION_RANGE_CONFIG_MAPPING).map(([field, values]) => {
+      return {
+        ...getRangeFilterValues({ urlParamKey: values.urlParamKey ?? '', searchParams: searchParams as any }),
+        field,
+      }
     })
-    return result.filter((v) => Object.keys(v).length > 1)
+    return result.filter((v) => v.gte != null || v.lte != null)
   }, [searchParams])
 
-  const getFilterRangeValues = useCallback(
-    ({ valueKey }: { valueKey: PositionRangeFields }) => {
-      const gteString = searchParams[`${valueKey}g`] as string | undefined
-      const lteString = searchParams[`${valueKey}l`] as string | undefined
-      const values: RangeValuesType = {
-        gte: undefined,
-        lte: undefined,
-      }
-      if (gteString != null) {
-        values.gte = Number(gteString)
-      }
-      if (lteString != null) {
-        values.lte = Number(lteString)
-      }
-      return values
-    },
-    [searchParams]
-  )
-  const changeFilterRange = useCallback(
-    ({ filter, valueKey }: { filter: RangeValuesType; valueKey: PositionRangeFields }) => {
-      setSearchParams({
-        [`${valueKey}g`]: filter?.gte ? filter.gte.toString() : undefined,
-        [`${valueKey}l`]: filter?.lte ? filter.lte.toString() : undefined,
-        ['page']: undefined,
-      })
-    },
-    [setSearchParams]
-  )
-  const resetFilterRange = useCallback(
-    ({ valueKey }: { valueKey: PositionRangeFields }) => {
-      setSearchParams({
-        [`${valueKey}g`]: undefined,
-        [`${valueKey}l`]: undefined,
-        ['page']: undefined,
-      })
-    },
-    [setSearchParams]
-  )
   const changeFilters = useCallback(
     (vars: ChangeFilterVariables) => {
       const params: Record<string, string | undefined> = { ['page']: undefined }
       Object.entries(vars).forEach(([key, values]) => {
         if (key === 'ranges') {
-          const _values = values as DailyPositionRangeFilter[]
+          const _values = values as RangeFilterValues[]
           _values.forEach((v) => {
             const gte = v?.gte
             const lte = v?.lte
@@ -249,9 +199,6 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
       currentSortBy,
       currentSortType,
       changeCurrentSort,
-      getFilterRangeValues,
-      changeFilterRange,
-      resetFilterRange,
       changeFilters,
       enabledLiveTrade,
       toggleLiveTrade,
@@ -275,9 +222,6 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
     currentSortBy,
     currentSortType,
     changeCurrentSort,
-    getFilterRangeValues,
-    changeFilterRange,
-    resetFilterRange,
     changeFilters,
     enabledLiveTrade,
     toggleLiveTrade,

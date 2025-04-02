@@ -156,10 +156,10 @@ export function shortenFileName({
   return `${prefix}...${suffix}`
 }
 
-export function compactNumber(num: number | undefined, digits = 1, isInteger?: boolean) {
+export function compactNumber(num: number | string | undefined, digits = 1, isInteger?: boolean) {
   if (num == null) return '--'
   if (num === 0) return 0
-
+  if (typeof num === 'string') num = Number(num)
   if (isInteger && num > 0 && num < 1000) return Math.round(num)
 
   if (Math.abs(num) < 1) return num.toFixed(digits)
@@ -173,7 +173,7 @@ export function compactNumber(num: number | undefined, digits = 1, isInteger?: b
     { value: 1, symbol: '' },
   ]
   const item = lookup.find(function (item) {
-    return Math.abs(num) >= item.value
+    return Math.abs(num as number) >= item.value
   })
   return item ? (num / item.value).toFixed(digits) + item.symbol : '--'
 }

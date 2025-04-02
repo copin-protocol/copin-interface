@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { ApiListResponse, ApiMeta } from 'apis/api'
 import { ChartData } from 'entities/chart'
 import { ApiKeyWallet, CopyWalletData } from 'entities/copyWallet'
-import { SUPPORTED_LOCALES } from 'utils/config/constants'
+import { SPECIAL_SYMBOLS_REGEX, SUPPORTED_LOCALES } from 'utils/config/constants'
 import {
   CopyPositionCloseTypeEnum,
   CopyTradePlatformEnum,
@@ -496,7 +496,11 @@ export function getCurrentTimezone() {
 }
 
 export function getSymbolFromPair(pair: string | undefined) {
-  return pair?.split('-')?.[0] ?? ''
+  let symbol = pair?.split('-')?.[0] ?? ''
+
+  symbol = symbol.split(SPECIAL_SYMBOLS_REGEX)[0]
+  symbol = symbol.substring(0, 20)
+  return symbol
 }
 export function getPairFromSymbol(symbol: string) {
   return `${symbol}-USDT`
