@@ -140,7 +140,7 @@ export default function TraderOpeningPositionsTableView({
   return (
     <Box
       className="opening"
-      display={['block', 'block', 'block', isDrawer ? 'block' : 'flex']}
+      display={['block', isDrawer ? 'block' : 'flex']}
       flexDirection="column"
       height="100%"
       sx={{
