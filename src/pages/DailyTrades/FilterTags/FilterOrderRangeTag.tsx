@@ -1,39 +1,19 @@
 import { ORDER_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
-import TagWrapper from 'theme/Tag/TagWrapper'
-import { Type } from 'theme/base'
+import FilterRangeTags from 'components/@widgets/TableFilter/FilterRangeTags'
+import { resetRangeFilter } from 'components/@widgets/TableFilter/helpers'
+import useSearchParams from 'hooks/router/useSearchParams'
 
 import { useDailyOrdersContext } from '../Orders/useOrdersProvider'
 
 export default function FilterOrderRangesTag() {
-  const { ranges, resetFilterRange } = useDailyOrdersContext()
+  const { setSearchParams } = useSearchParams()
+  const { ranges } = useDailyOrdersContext()
   if (!ranges.length) return null
   return (
-    <>
-      {ranges.map((values) => {
-        //@ts-ignore
-        const config = ORDER_RANGE_CONFIG_MAPPING[values.field]
-        let text = ''
-        let prefix = ''
-        let suffix = ''
-        if (config.unit === '$') {
-          prefix = config.unit
-        } else {
-          suffix = config.unit
-        }
-        if (values.gte != null && values.lte != null) {
-          text = `${prefix}${values.gte}${suffix} to ${prefix}${values.lte}${suffix}`
-        } else if (values.gte != null) {
-          text = `>${prefix}${values.gte}${suffix}`
-        } else if (values.lte != null) {
-          text = `<${prefix}${values.lte}${suffix}`
-        }
-        return (
-          <TagWrapper key={values.field as any} onClear={() => resetFilterRange({ valueKey: values.field })}>
-            <Type.Caption>{config.title}:</Type.Caption>
-            <Type.Caption>{text}</Type.Caption>
-          </TagWrapper>
-        )
-      })}
-    </>
+    <FilterRangeTags
+      ranges={ranges}
+      rangeConfigMapping={ORDER_RANGE_CONFIG_MAPPING}
+      onClear={(key) => resetRangeFilter({ urlParamKey: key, setSearchParams })}
+    />
   )
 }

@@ -23,6 +23,7 @@ export type TableFilterConfig = {
   label?: ReactNode
   listLabel?: ReactNode[]
   type: 'number' | 'duration' | 'select' | 'multiSelect' | 'pairs'
+  isCompactNumber?: boolean
 }
 
 export type TableRangeFilterValues = Record<string, number | undefined>
@@ -67,3 +68,9 @@ export type FilterValues =
       pairs: string[] | undefined
       isExcluded: boolean
     }
+
+export type RangeFilterValues = {
+  field: string
+  gte?: number | string
+  lte?: number | string
+}

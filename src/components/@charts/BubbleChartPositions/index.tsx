@@ -60,7 +60,7 @@ const BubbleChart = (
     .attr('height', height)
     .attr('width', width)
     .attr('viewBox', [-margin, -margin, width, height])
-    .attr('style', `max-width: 100%; height: auto; font-size: ${FONT_SIZE}px;`)
+    .attr('style', `max-width: 100%; height: auto`)
     .attr('text-anchor', 'middle')
 
   // const shuffleData = shuffle([...data])
@@ -169,7 +169,7 @@ const BubbleChart = (
   const text = node
     .append('text')
     .attr('clip-path', (d) => `circle(${d.r})`)
-    .attr('font-size', (d) => `${Math.min((d.r * FONT_SIZE) / maxR, FONT_SIZE)}px`)
+    .attr('font-size', getFontSize(FONT_SIZE))
 
   text
     // .selectAll()
@@ -271,7 +271,7 @@ const BubbleChart = (
     const text = nodeEnter
       .append('text')
       .attr('clip-path', (d) => `circle(${d.r})`)
-      .attr('font-size', (d) => `${Math.min((d.r * FONT_SIZE) / maxR, FONT_SIZE)}px`)
+      .attr('font-size', getFontSize(FONT_SIZE))
 
     // re-use enter selection for circles
     nodeEnter
@@ -348,7 +348,7 @@ const BubbleChart = (
       .transition()
       .duration(1000)
       .attr('clip-path', (d) => `circle(${d.r})`)
-      .attr('font-size', (d: any) => `${Math.min((d.r * FONT_SIZE) / maxR, FONT_SIZE)}px`)
+      .attr('font-size', getFontSize(FONT_SIZE))
 
     text.raise()
 
@@ -363,3 +363,7 @@ const BubbleChart = (
 }
 
 export default BubbleChart
+
+const getFontSize = (maxFont: number) => (d: any) => {
+  return `${d.r * 0.2}px`
+}

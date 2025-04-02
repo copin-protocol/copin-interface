@@ -1,5 +1,4 @@
 import { useResponsive } from 'ahooks'
-import { useEffect, useRef } from 'react'
 
 import { PositionData } from 'entities/trader'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
@@ -13,16 +12,13 @@ import { ListOpeningPositions, default as OpeningsTable } from './OpeningPositio
 export default function PositionsSection({
   data,
   total,
-  sort,
   isLoading,
 }: {
   total: number
-  sort: string
   data: PositionData[] | undefined
   isLoading: boolean
 }) {
-  const totalRef = useRef(total)
-  const sortRef = useRef(sort)
+  // const dataRef = useRef(data)
   const { currentPage, currentLimit, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
     pageName: `page`,
     limitName: 'limit',
@@ -32,13 +28,6 @@ export default function PositionsSection({
   const offset = pageToOffset(currentPage, currentLimit)
   const pagedData = data?.slice(offset, offset + currentLimit)
 
-  useEffect(() => {
-    if (totalRef.current !== total || sortRef.current !== sort) {
-      totalRef.current = total
-      sortRef.current = sort
-      changeCurrentPage(1)
-    }
-  }, [total, sort])
   const { sm } = useResponsive()
 
   return (

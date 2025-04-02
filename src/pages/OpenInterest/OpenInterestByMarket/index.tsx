@@ -139,12 +139,7 @@ function OpenInterestByMarketPage() {
               )}
               <Box flex={[1, 1, 1, '0 0 690px']}>
                 {data && (
-                  <PositionsSection
-                    data={data}
-                    sort={sort.key}
-                    total={Math.min(limit, data?.length ?? 0)}
-                    isLoading={isLoading}
-                  />
+                  <PositionsSection data={data} total={Math.min(limit, data?.length ?? 0)} isLoading={isLoading} />
                 )}
               </Box>
             </Flex>

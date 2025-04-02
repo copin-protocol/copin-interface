@@ -1,22 +1,17 @@
 import { ReactNode } from 'react'
 
-import { CopierLeaderboardTimeFilterEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { TimeFilterByEnum } from 'utils/config/enums'
 
-export type TimeFilterProps = {
-  id: TimeFilterByEnum
+export type TimeFilterProps<T = TimeFilterByEnum, V = number> = {
+  id: T
   text: ReactNode
-  sort_by: TimeFilterByEnum
-  value: number
+  sort_by: T
+  value: V
   premiumFilter?: boolean
 }
 
-export type TimeWithRangeFilterProps = {
-  id: TimeFilterByEnum | 'custom'
+export type TimeWithRangeFilterProps<T = TimeFilterByEnum> = {
+  id: T | 'custom'
   text: ReactNode
-  sort_by: TimeFilterByEnum | undefined
-}
-
-export type CopierLeaderboardTimeFilterProps = {
-  id: CopierLeaderboardTimeFilterEnum
-  text: ReactNode
+  sort_by: T | undefined
 }

@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 
 import { CopierLeaderboardTimeFilterEnum, TimeFilterByEnum } from 'utils/config/enums'
 
-import { CopierLeaderboardTimeFilterProps, TimeFilterProps, TimeWithRangeFilterProps } from './type'
+import { TimeFilterProps, TimeWithRangeFilterProps } from './type'
 
 export const TIME_FILTER_OPTIONS: TimeFilterProps[] = [
   {
@@ -105,13 +105,46 @@ export const ALL_TIME_FILTER_OPTIONS: TimeFilterProps[] = [
   },
 ]
 
-export const COPIER_LEADERBOARD_TIME_FILTER_OPTIONS: CopierLeaderboardTimeFilterProps[] = [
-  { id: CopierLeaderboardTimeFilterEnum.DAILY, text: 'Today' },
-  { id: CopierLeaderboardTimeFilterEnum.YESTERDAY, text: 'Yesterday' },
-  { id: CopierLeaderboardTimeFilterEnum.D7, text: '7 Days' },
-  { id: CopierLeaderboardTimeFilterEnum.D30, text: '30 Days' },
-  { id: CopierLeaderboardTimeFilterEnum.D60, text: '60 Days' },
-  { id: CopierLeaderboardTimeFilterEnum.FULL, text: 'All Time' },
+export const COPIER_LEADERBOARD_TIME_FILTER_OPTIONS: TimeFilterProps<
+  CopierLeaderboardTimeFilterEnum,
+  CopierLeaderboardTimeFilterEnum
+>[] = [
+  {
+    id: CopierLeaderboardTimeFilterEnum.DAILY,
+    sort_by: CopierLeaderboardTimeFilterEnum.DAILY,
+    text: 'Today',
+    value: CopierLeaderboardTimeFilterEnum.DAILY,
+  },
+  {
+    id: CopierLeaderboardTimeFilterEnum.YESTERDAY,
+    value: CopierLeaderboardTimeFilterEnum.YESTERDAY,
+    sort_by: CopierLeaderboardTimeFilterEnum.YESTERDAY,
+    text: 'Yesterday',
+  },
+  {
+    id: CopierLeaderboardTimeFilterEnum.D7,
+    text: '7 Days',
+    value: CopierLeaderboardTimeFilterEnum.D7,
+    sort_by: CopierLeaderboardTimeFilterEnum.D7,
+  },
+  {
+    id: CopierLeaderboardTimeFilterEnum.D30,
+    sort_by: CopierLeaderboardTimeFilterEnum.D30,
+    text: '30 Days',
+    value: CopierLeaderboardTimeFilterEnum.D30,
+  },
+  {
+    id: CopierLeaderboardTimeFilterEnum.D60,
+    sort_by: CopierLeaderboardTimeFilterEnum.D60,
+    text: '60 Days',
+    value: CopierLeaderboardTimeFilterEnum.D60,
+  },
+  {
+    id: CopierLeaderboardTimeFilterEnum.FULL,
+    text: 'All Time',
+    sort_by: CopierLeaderboardTimeFilterEnum.FULL,
+    value: CopierLeaderboardTimeFilterEnum.FULL,
+  },
 ]
 
 export const PERP_DEX_CHART_FILTER_OPTIONS: TimeFilterProps[] = [

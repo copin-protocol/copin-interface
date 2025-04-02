@@ -9,13 +9,13 @@ export function getRangeFilterValues({
   searchParams,
   urlParamKey,
 }: {
-  searchParams: Record<string, string>
+  searchParams: Record<string, string | undefined>
   urlParamKey: string
 }) {
   const values: { gte: number | undefined; lte: number | undefined } = { gte: undefined, lte: undefined }
   const { gteKey, lteKey } = generateRangeFilterKey({ key: urlParamKey })
-  const gteString = searchParams[gteKey] as string | undefined
-  const lteString = searchParams[lteKey] as string | undefined
+  const gteString = searchParams[gteKey]
+  const lteString = searchParams[lteKey]
 
   if (gteString != null) {
     values.gte = Number(gteString)
@@ -34,7 +34,7 @@ export function resetRangeFilter({
   urlParamKey: string
 }) {
   const { gteKey, lteKey } = generateRangeFilterKey({ key: urlParamKey })
-  const params: Record<string, string | undefined> = {}
+  const params: Record<string, string | undefined> = { ['page']: '1' }
   params[gteKey] = undefined
   params[lteKey] = undefined
   setSearchParams(params)

@@ -1,11 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
-import {
-  DirectionFilterEnum,
-  ORDER_RANGE_KEYS,
-  OrderRangeFields,
-  RangeValuesType,
-} from 'components/@dailyTrades/configs'
+import { DirectionFilterEnum, ORDER_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
+import { getRangeFilterValues } from 'components/@widgets/TableFilter/helpers'
+import { RangeFilterValues } from 'components/@widgets/TableFilter/types'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -15,13 +12,8 @@ import { OrderTypeEnum, PairFilterEnum, ProtocolEnum } from 'utils/config/enums'
 import { getPairsParam } from '../helpers'
 import { useProtocolsContext } from '../useProtocolsProvider'
 
-export type DailyOrderRangeFilter = {
-  field: OrderRangeFields
-  gte?: number | string
-  lte?: number | string
-}
 type ChangeFilterVariables = {
-  ranges?: DailyOrderRangeFilter[]
+  ranges?: RangeFilterValues[]
   pairs?: string[]
   excludedPairs?: string[]
   action?: OrderTypeEnum
@@ -44,10 +36,7 @@ export interface DailyOrderContextValues {
   changeCurrentPage: (page: number) => void
   currentLimit: number
   changeCurrentLimit: (limit: number) => void
-  getFilterRangeValues: ({ valueKey }: { valueKey: OrderRangeFields }) => RangeValuesType
-  changeFilterRange: ({ filter, valueKey }: { filter: RangeValuesType; valueKey: OrderRangeFields }) => void
-  resetFilterRange: ({ valueKey }: { valueKey: OrderRangeFields }) => void
-  ranges: DailyOrderRangeFilter[]
+  ranges: RangeFilterValues[]
   changeFilters: (vars: ChangeFilterVariables) => void
   enabledLiveTrade: boolean
   toggleLiveTrade: (enabled?: boolean) => void
@@ -124,67 +113,22 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
     [setSearchParams]
   )
 
-  // TODO: need to improve duplicated code
-  const ranges = useMemo(() => {
-    const result: DailyOrderContextValues['ranges'] = []
-    Object.values(ORDER_RANGE_KEYS).forEach((key) => {
-      const gteKey = `${key}g`
-      const lteKey = `${key}l`
-      const gteValueString = searchParams[gteKey]
-      const lteValueString = searchParams[lteKey]
-      if (gteValueString == null && lteValueString == null) return
-      const values: DailyOrderContextValues['ranges'][0] = { field: key as unknown as OrderRangeFields }
-      if (gteValueString != null) values.gte = Number(gteValueString)
-      if (lteValueString != null) values.lte = Number(lteValueString)
-      result.push(values)
+  const ranges: RangeFilterValues[] = useMemo(() => {
+    const result = Object.entries(ORDER_RANGE_CONFIG_MAPPING).map(([field, values]) => {
+      return {
+        ...getRangeFilterValues({ urlParamKey: values.urlParamKey ?? '', searchParams: searchParams as any }),
+        field,
+      }
     })
-    return result.filter((v) => Object.keys(v).length > 1)
+    return result.filter((v) => v.gte != null || v.lte != null)
   }, [searchParams])
 
-  const getFilterRangeValues = useCallback(
-    ({ valueKey }: { valueKey: OrderRangeFields }) => {
-      const gteString = searchParams[`${valueKey}g`] as string | undefined
-      const lteString = searchParams[`${valueKey}l`] as string | undefined
-      const values: RangeValuesType = {
-        gte: undefined,
-        lte: undefined,
-      }
-      if (gteString != null) {
-        values.gte = Number(gteString)
-      }
-      if (lteString != null) {
-        values.lte = Number(lteString)
-      }
-      return values
-    },
-    [searchParams]
-  )
-  const changeFilterRange = useCallback(
-    ({ filter, valueKey }: { filter: RangeValuesType; valueKey: OrderRangeFields }) => {
-      setSearchParams({
-        [`${valueKey}g`]: filter?.gte ? filter.gte.toString() : undefined,
-        [`${valueKey}l`]: filter?.lte ? filter.lte.toString() : undefined,
-        ['page']: undefined,
-      })
-    },
-    [setSearchParams]
-  )
-  const resetFilterRange = useCallback(
-    ({ valueKey }: { valueKey: OrderRangeFields }) => {
-      setSearchParams({
-        [`${valueKey}g`]: undefined,
-        [`${valueKey}l`]: undefined,
-        ['page']: undefined,
-      })
-    },
-    [setSearchParams]
-  )
   const changeFilters = useCallback(
     (vars: ChangeFilterVariables) => {
       const params: Record<string, string | undefined> = { ['page']: undefined }
       Object.entries(vars).forEach(([key, values]) => {
         if (key === 'ranges') {
-          const _values = values as DailyOrderRangeFilter[] | undefined
+          const _values = values as RangeFilterValues[] | undefined
           _values?.length
             ? _values.forEach((v) => {
                 const gte = v?.gte
@@ -254,9 +198,6 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
       currentLimit,
       changeCurrentLimit,
       ranges,
-      getFilterRangeValues,
-      changeFilterRange,
-      resetFilterRange,
       changeFilters,
       enabledLiveTrade,
       toggleLiveTrade,
@@ -279,9 +220,6 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
     currentLimit,
     changeCurrentLimit,
     ranges,
-    getFilterRangeValues,
-    changeFilterRange,
-    resetFilterRange,
     changeFilters,
     enabledLiveTrade,
     toggleLiveTrade,

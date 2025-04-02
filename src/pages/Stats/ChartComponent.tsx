@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import {
   Area,
   Bar,
@@ -15,33 +15,18 @@ import {
 } from 'recharts'
 import { StackOffsetType } from 'recharts/types/util/types'
 
-import { StatisticChartData, StatsData } from 'entities/chart'
-import { CopyStatisticData } from 'entities/statistic'
+import { StatisticChartData } from 'entities/chart'
 import { isMobile } from 'hooks/helpers/useIsMobile'
 import { Box, Flex, Li, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { Colors } from 'theme/types'
-import {
-  CHART_DATE_FORMAT,
-  CHART_MIN_HEIGHT,
-  EXCHANGE_COLOR,
-  EXCHANGE_STATS,
-  MIN_TICK_GAP,
-  YAXIS_WIDTH,
-} from 'utils/config/constants'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { CHART_MIN_HEIGHT, EXCHANGE_COLOR, EXCHANGE_STATS, MIN_TICK_GAP, YAXIS_WIDTH } from 'utils/config/constants'
 import { PLATFORM_TEXT_TRANS } from 'utils/config/translations'
-import { compactNumber, formatLocalDate, formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatNumber } from 'utils/helpers/format'
 
-export function NetProfitChartComponent({
-  data,
-  stats,
-  syncId,
-}: {
-  data: StatisticChartData[]
-  stats: StatsData
-  syncId?: string
-}) {
+import { ChartComponentProps } from './types'
+
+export function NetProfitChartComponent({ data, stats, syncId, onChartRenderEnd, id }: ChartComponentProps) {
   return (
     <ChartComponentWrapper
       data={data}
@@ -94,6 +79,8 @@ export function NetProfitChartComponent({
         dot={false}
         stroke={themeColors.orange1}
         strokeWidth={3}
+        isAnimationActive={true}
+        onAnimationEnd={() => onChartRenderEnd(id)}
       />
     </ChartComponentWrapper>
   )
@@ -104,12 +91,9 @@ export function ProfitLossChartComponent({
   stats,
   syncId,
   isPercentView,
-}: {
-  data: StatisticChartData[]
-  stats: StatsData
-  syncId?: string
-  isPercentView?: boolean
-}) {
+  id,
+  onChartRenderEnd,
+}: ChartComponentProps) {
   return (
     <ChartComponentWrapper
       data={data}
@@ -209,7 +193,8 @@ export function ProfitLossChartComponent({
             fill={themeColors.green1}
             dataKey="profitPercent"
             name="Profit"
-            isAnimationActive={false}
+            isAnimationActive={true}
+            onAnimationEnd={() => onChartRenderEnd(id)}
           />
         </>
       ) : (
@@ -230,7 +215,8 @@ export function ProfitLossChartComponent({
             fill={themeColors.red2}
             dataKey="totalLoss"
             name="Loss"
-            isAnimationActive={false}
+            isAnimationActive={true}
+            onAnimationEnd={() => onChartRenderEnd(id)}
           />
         </>
       )}
@@ -238,7 +224,7 @@ export function ProfitLossChartComponent({
   )
 }
 
-export function CopierChartComponent({ data, syncId }: { data: StatisticChartData[]; syncId?: string }) {
+export function CopierChartComponent({ data, syncId, id, onChartRenderEnd }: ChartComponentProps) {
   return (
     <ChartComponentWrapper data={data} colors={themeColors} syncId={syncId}>
       <YAxis
@@ -256,9 +242,10 @@ export function CopierChartComponent({ data, syncId }: { data: StatisticChartDat
       <Bar
         // stackId="copier"
         type="monotone"
-        name="Daily Active Users"
+        name="Active Users"
         dataKey="totalActiveCopier"
         fill={themeColors.primary1}
+        isAnimationActive={false}
       />
       {/*<Bar*/}
       {/*  // stackId="copier"*/}
@@ -275,12 +262,14 @@ export function CopierChartComponent({ data, syncId }: { data: StatisticChartDat
         dot={false}
         stroke={themeColors.orange1}
         strokeWidth={3}
+        isAnimationActive={true}
+        onAnimationEnd={() => onChartRenderEnd(id)}
       />
     </ChartComponentWrapper>
   )
 }
 
-export function CopyTradeChartComponent({ data, syncId }: { data: StatisticChartData[]; syncId?: string }) {
+export function CopyTradeChartComponent({ data, syncId, id, onChartRenderEnd }: ChartComponentProps) {
   return (
     <ChartComponentWrapper colors={themeColors} data={data} syncId={syncId}>
       <YAxis
@@ -304,6 +293,7 @@ export function CopyTradeChartComponent({ data, syncId }: { data: StatisticChart
             stackId="1"
             fill={EXCHANGE_COLOR[exchange]}
             stroke={EXCHANGE_COLOR[exchange]}
+            isAnimationActive={false}
           />
         )
       })}
@@ -329,12 +319,14 @@ export function CopyTradeChartComponent({ data, syncId }: { data: StatisticChart
         dot={false}
         stroke={themeColors.orange1}
         strokeWidth={3}
+        isAnimationActive={true}
+        onAnimationEnd={() => onChartRenderEnd(id)}
       />
     </ChartComponentWrapper>
   )
 }
 
-export function OrderChartComponent({ data, syncId }: { data: StatisticChartData[]; syncId?: string }) {
+export function OrderChartComponent({ data, syncId, id, onChartRenderEnd }: ChartComponentProps) {
   return (
     <ChartComponentWrapper colors={themeColors} data={data} syncId={syncId}>
       <YAxis
@@ -359,6 +351,7 @@ export function OrderChartComponent({ data, syncId }: { data: StatisticChartData
             stackId="totalOrder"
             fill={EXCHANGE_COLOR[exchange]}
             stroke={EXCHANGE_COLOR[exchange]}
+            isAnimationActive={false}
           />
         )
       })}
@@ -370,12 +363,14 @@ export function OrderChartComponent({ data, syncId }: { data: StatisticChartData
         dot={false}
         stroke={themeColors.orange1}
         strokeWidth={3}
+        isAnimationActive={true}
+        onAnimationEnd={() => onChartRenderEnd(id)}
       />
     </ChartComponentWrapper>
   )
 }
 
-export function VolumeChartComponent({ data, syncId }: { data: StatisticChartData[]; syncId?: string }) {
+export function VolumeChartComponent({ data, syncId, id, onChartRenderEnd }: ChartComponentProps) {
   return (
     <ChartComponentWrapper
       colors={themeColors}
@@ -407,6 +402,7 @@ export function VolumeChartComponent({ data, syncId }: { data: StatisticChartDat
             stackId="totalVolume"
             fill={EXCHANGE_COLOR[exchange]}
             stroke={EXCHANGE_COLOR[exchange]}
+            isAnimationActive={false}
           />
         )
       })}
@@ -419,12 +415,14 @@ export function VolumeChartComponent({ data, syncId }: { data: StatisticChartDat
         dot={false}
         stroke={themeColors.orange1}
         strokeWidth={3}
+        isAnimationActive={true}
+        onAnimationEnd={() => onChartRenderEnd(id)}
       />
     </ChartComponentWrapper>
   )
 }
 
-export function TraderChartComponent({ data, syncId }: { data: StatisticChartData[]; syncId?: string }) {
+export function TraderChartComponent({ data, syncId, id, onChartRenderEnd }: ChartComponentProps) {
   return (
     <ChartComponentWrapper
       colors={themeColors}
@@ -449,9 +447,11 @@ export function TraderChartComponent({ data, syncId }: { data: StatisticChartDat
       <Bar
         // stackId="copier"
         type="monotone"
-        name="Daily Unique Trader"
+        name="Unique Trader"
         dataKey="totalDistinctTrader"
         fill={themeColors.primary1}
+        isAnimationActive={true}
+        onAnimationEnd={() => onChartRenderEnd(id)}
       />
     </ChartComponentWrapper>
   )
@@ -521,169 +521,6 @@ function tooltipFormatter(value: any, index: any, item: any) {
   const _value = value as number
   if (item.unit === '%') return formatNumber(_value, 1)
   return formatNumber(_value, _value < 1 && _value > -1 ? 1 : 0)
-}
-
-export function getChartData({ data }: { data: CopyStatisticData[] | undefined }) {
-  let chartData: StatisticChartData[] = []
-  if (!data) return chartData
-  if (data && data.length > 0) {
-    // Data for Volume Chart
-    let volumeCumulative = 0
-    let orderCumulative = 0
-
-    // Data for Profit & Loss Chart
-    let pnlCumulative = 0
-    let profitCumulative = 0
-    let lossCumulative = 0
-
-    // Data for Realised Profit & Loss Chart
-    let realisedPnlCumulative = 0
-    let realisedProfitCumulative = 0
-    let realisedLossCumulative = 0
-
-    // Data for Copy Statistic Chart
-    let copierCumulative = 0
-    let copierActiveCumulative = 0
-    let copyTradeCumulative = 0
-    let copyTradeActiveCumulative = 0
-
-    chartData = data
-      // .sort((x, y) => (x.statisticAt < y.statisticAt ? -1 : x.statisticAt > y.statisticAt ? 1 : 0))
-      .map((stats) => {
-        // Volume Chart
-        volumeCumulative += stats.totalVolume
-        orderCumulative += stats.totalOrder
-
-        // Profit & Loss Chart
-        const pnl = stats.totalProfit + stats.totalLoss
-        const absPnl = Math.abs(stats.totalProfit) + Math.abs(stats.totalLoss)
-        profitCumulative += stats.totalProfit
-        lossCumulative += stats.totalLoss
-        pnlCumulative += pnl
-
-        // Realised Profit & Loss Chart
-        const realisedPnl = stats.totalRealisedProfit + stats.totalRealisedLoss
-        const absRealisedPnl = Math.abs(stats.totalRealisedProfit) + Math.abs(stats.totalRealisedLoss)
-        realisedProfitCumulative += stats.totalRealisedProfit
-        realisedLossCumulative += stats.totalRealisedLoss
-        realisedPnlCumulative += realisedPnl
-
-        // Copy Statistic Chart
-        const totalCopier = stats.totalActiveCopier + stats.totalInactiveCopier
-        const totalCopyTrade = stats.totalActiveCopyTrade + stats.totalInactiveCopyTrade
-        copierCumulative += totalCopier
-        copierActiveCumulative += stats.totalActiveCopier
-        copyTradeCumulative += totalCopyTrade
-        copyTradeActiveCumulative += stats.totalActiveCopyTrade
-
-        // Other Exchanges
-        const otherExchanges = (stats: any) => {
-          let totalActiveCopyTrade = 0
-          let totalInactiveCopyTrade = 0
-          let totalOrder = 0
-          let totalVolume = 0
-          let totalPnl = 0
-          let totalProfit = 0
-          let totalLoss = 0
-          let totalRealisedPnl = 0
-          let totalRealisedProfit = 0
-          let totalRealisedLoss = 0
-
-          for (const exchange in stats.exchanges) {
-            if (
-              [
-                CopyTradePlatformEnum.BINGX,
-                CopyTradePlatformEnum.BITGET,
-                CopyTradePlatformEnum.BYBIT,
-                CopyTradePlatformEnum.OKX,
-                CopyTradePlatformEnum.GATE,
-                CopyTradePlatformEnum.GNS_V8,
-                CopyTradePlatformEnum.HYPERLIQUID,
-                CopyTradePlatformEnum.APEX,
-              ].includes(exchange as CopyTradePlatformEnum)
-            ) {
-              const exchangeStats = stats.exchanges[exchange] || {}
-              totalActiveCopyTrade += exchangeStats.totalActiveCopyTrade || 0
-              totalInactiveCopyTrade += exchangeStats.totalInactiveCopyTrade || 0
-              totalOrder += exchangeStats.totalOrder || 0
-              totalVolume += exchangeStats.totalVolume || 0
-              totalPnl += exchangeStats.totalPnl || 0
-              totalProfit += exchangeStats.totalProfit || 0
-              totalLoss += exchangeStats.totalLoss || 0
-              totalRealisedPnl += exchangeStats.totalRealisedPnl || 0
-              totalRealisedProfit += exchangeStats.totalRealisedProfit || 0
-              totalRealisedLoss += exchangeStats.totalRealisedLoss || 0
-            }
-          }
-
-          return {
-            totalActiveCopyTrade: stats.totalActiveCopyTrade - totalActiveCopyTrade,
-            totalInactiveCopyTrade: stats.totalInactiveCopyTrade - totalInactiveCopyTrade,
-            totalOrder: stats.totalOrder - totalOrder,
-            totalVolume: stats.totalVolume - totalVolume,
-            totalPnl: pnl - totalPnl,
-            totalProfit: stats.totalProfit - totalProfit,
-            totalLoss: stats.totalLoss - totalLoss,
-            totalRealisedPnl: realisedPnl - totalRealisedPnl,
-            totalRealisedProfit: stats.totalRealisedProfit - totalRealisedProfit,
-            totalRealisedLoss: stats.totalRealisedLoss - totalRealisedLoss,
-          }
-        }
-
-        stats.exchanges = {
-          ...stats.exchanges,
-          [CopyTradePlatformEnum.OTHERS]: otherExchanges(stats),
-        }
-
-        const formattedData: StatisticChartData = {
-          date: formatLocalDate(stats.statisticAt, CHART_DATE_FORMAT),
-          exchanges: stats.exchanges,
-          // Volume Chart
-          volumeCumulative,
-          orderCumulative,
-          totalVolume: stats.totalVolume,
-          totalOrder: stats.totalOrder,
-          // Profit & Loss Chart
-          pnl,
-          pnlCumulative,
-          profitCumulative,
-          lossCumulative,
-          totalProfit: stats.totalProfit,
-          totalLoss: stats.totalLoss,
-          profitPercent: absPnl > 0 ? (stats.totalProfit / absPnl) * 100 : 0,
-          lossPercent: absPnl > 0 ? (Math.abs(stats.totalLoss) / absPnl) * 100 : 0,
-          // Realised Profit & Loss Chart
-          realisedPnl,
-          realisedPnlCumulative,
-          realisedProfitCumulative,
-          realisedLossCumulative,
-          totalRealisedProfit: stats.totalRealisedProfit,
-          totalRealisedLoss: stats.totalRealisedLoss,
-          realisedProfitPercent: absRealisedPnl > 0 ? (stats.totalRealisedProfit / absRealisedPnl) * 100 : 0,
-          realisedLossPercent: absRealisedPnl > 0 ? (Math.abs(stats.totalRealisedLoss) / absRealisedPnl) * 100 : 0,
-          // Copy Statistic Chart
-          copierCumulative,
-          copierActiveCumulative,
-          copyTradeCumulative,
-          copyTradeActiveCumulative,
-          totalCopier,
-          totalCopyTrade,
-          totalActiveCopier: stats.totalActiveCopier,
-          totalInactiveCopier: stats.totalInactiveCopier,
-          totalActiveCopyTrade: stats.totalActiveCopyTrade,
-          totalInactiveCopyTrade: stats.totalInactiveCopyTrade,
-          totalDistinctTrader: stats.totalDistinctTrader,
-        }
-
-        // for (const exchange in stats.exchanges) {
-        //   formattedData['activeCopyTrade' + exchange] = stats.exchanges[exchange].totalActiveCopyTrade
-        // }
-
-        return formattedData
-      })
-  }
-
-  return chartData
 }
 
 interface TooltipProps {

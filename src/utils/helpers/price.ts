@@ -88,4 +88,11 @@ export const EXCHANGE_PRICE_MULTIPLE_MAPPING: Partial<Record<CopyTradePlatformEn
     DOGS: 1_000,
     NEIRO: 1_000,
   },
+  [CopyTradePlatformEnum.APEX]: {
+    BONK: 1_000,
+    PEPE: 1_000,
+    FLOKI: 1_000,
+    SHIB: 1_000,
+    MOG: 1_000_000,
+  },
 }

@@ -131,7 +131,7 @@ export function useTimeFilter() {
     if (foundTime) time = foundTime
   }
   const onChangeTime = (option: TimeFilterByEnum) => {
-    setSearchParams({ time: option.toString() })
+    setSearchParams({ time: option.toString(), ['page']: '1' })
   }
   const { from, to } = useMemo(() => {
     return getTimePeriod(time.value)
@@ -171,18 +171,18 @@ export function useFilters() {
   }
 
   const onChangeSort = (optionKey: SortOption['key']) => {
-    setSearchParams({ sort: optionKey })
+    setSearchParams({ sort: optionKey, ['page']: '1' })
   }
   const onChangeLimit = (limit: number) => {
-    setSearchParams({ top: limit.toString() })
+    setSearchParams({ top: limit.toString(), ['page']: '1' })
   }
 
   const onChangePairs = (pairs: string[], excludedPairs: string[]) => {
     if (pairs.length == defaultAllPairs?.length) {
-      setSearchParams({ pairs: PairFilterEnum.ALL, excludedPairs: excludedPairs.join('-') })
+      setSearchParams({ pairs: PairFilterEnum.ALL, excludedPairs: excludedPairs.join('-'), ['page']: '1' })
       return
     }
-    setSearchParams({ pairs: pairs.join('-'), excludedPairs: excludedPairs.join('-') })
+    setSearchParams({ pairs: pairs.join('-'), excludedPairs: excludedPairs.join('-'), ['page']: '1' })
   }
 
   const { time, from, to, onChangeTime } = useTimeFilter()

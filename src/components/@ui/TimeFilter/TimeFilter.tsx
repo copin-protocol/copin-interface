@@ -1,19 +1,19 @@
-import { ReactNode } from 'react'
-
 import TabItem from 'theme/Tab/TabItem'
 import { Flex } from 'theme/base'
+import { TimeFilterByEnum } from 'utils/config/enums'
 
 import { TIME_FILTER_OPTIONS } from './constants'
+import { TimeFilterProps } from './type'
 
-export default function TimeFilter<T extends { id: unknown; text: ReactNode }>({
+export default function TimeFilter<T = TimeFilterByEnum, V = number>({
   currentFilter,
   handleFilterChange,
-  options = TIME_FILTER_OPTIONS as unknown as T[],
+  options = TIME_FILTER_OPTIONS as TimeFilterProps<T, V>[],
   sx = {},
 }: {
-  currentFilter: T | null
-  handleFilterChange: (sort: T) => void
-  options?: T[]
+  currentFilter: TimeFilterProps<T, V> | null | undefined
+  handleFilterChange: (sort: TimeFilterProps<T, V>) => void
+  options?: TimeFilterProps<T, V>[]
   sx?: any
 }) {
   return (
@@ -45,16 +45,20 @@ export default function TimeFilter<T extends { id: unknown; text: ReactNode }>({
         </Button>
       ))} */}
 
-      {options.map((option, index: number) => (
-        <TabItem
-          active={!!currentFilter && currentFilter.id === option.id}
-          onClick={() => handleFilterChange(option)}
-          key={index}
-          sx={{ px: ['6px', '6px', '8px', '8px'] }}
-        >
-          {option.text}
-        </TabItem>
-      ))}
+      {options.map((option, index: number) => {
+        const active = !!currentFilter && currentFilter.id === option.id
+        return (
+          <TabItem
+            active={active}
+            onClick={() => handleFilterChange(option)}
+            key={index}
+            sx={{ px: ['6px', '6px', '8px', '8px'] }}
+            disabled={active || options.length === 1}
+          >
+            {option.text}
+          </TabItem>
+        )
+      })}
     </Flex>
   )
 }

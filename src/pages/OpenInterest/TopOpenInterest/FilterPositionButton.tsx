@@ -1,27 +1,22 @@
 import { Funnel, XCircle } from '@phosphor-icons/react'
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
-import { DirectionSelect } from 'components/@dailyTrades/DirectionFilterIcon'
-import { OrderActionSelect } from 'components/@dailyTrades/OrderActionFilterIcon'
-import { ORDER_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
-import { MarketSelect } from 'components/@widgets/PairFilterIcon'
 import { MobileRangeFilterButtons, MobileRangeFilterItem } from 'components/@widgets/TableFilter/MobileRangeFilter'
-import useSearchParams from 'hooks/router/useSearchParams'
+import { RangeFilterValues } from 'components/@widgets/TableFilter/types'
 import { Button } from 'theme/Buttons'
-import Label from 'theme/InputField/Label'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 
-import { DailyOrderContextValues, useDailyOrdersContext } from './useOrdersProvider'
+import { TOP_POSITION_RANGE_CONFIG_MAPPING } from '../configs'
+import useGetFilterRange from './useGetFilterRange'
 
-export default function FilterOrderButton() {
+export default function FilterPositionButton() {
   const [openModal, setOpenModal] = useState(false)
-  const { setSearchParamsOnly } = useSearchParams()
-  const { ranges, pairs, excludedPairs, action, changeFilters, direction } = useDailyOrdersContext()
-  const [_rangesFilter, _setRangesFilter] = useState<Record<string, DailyOrderContextValues['ranges'][0]>>(() => {
+  const { ranges, setSearchParams, setSearchParamsOnly } = useGetFilterRange()
+  const [_rangesFilter, _setRangesFilter] = useState<Record<string, RangeFilterValues>>(() => {
     if (ranges.length) {
       return ranges.reduce((result, values) => {
-        return { ...result, [values.field as any]: values }
+        return { ...result, [values.field]: values }
       }, {})
     }
     return {}
@@ -46,24 +41,20 @@ export default function FilterOrderButton() {
       return { ...prev, [valueKey]: newValues }
     })
   }
-  const [_pairs, _setPairs] = useState<{ pairs: string[]; excludedPairs: string[] }>({ pairs, excludedPairs })
-  const _changePairs = (pairs: string[], excludedPairs: string[]) => {
-    _setPairs({ pairs, excludedPairs })
-  }
-  useEffect(() => {
-    _changePairs(pairs, excludedPairs)
-  }, [pairs, excludedPairs])
-  const [_action, _setAction] = useState(action)
-  const [_direction, _setDirection] = useState(direction)
+
+  const changeFilters = useCallback(() => {
+    const params: Record<string, string | undefined> = { ['page']: '1' }
+    Object.entries(_rangesFilter).forEach(([key, values]) => {
+      const gte = values?.gte
+      const lte = values?.lte
+      params[`${values.field}g`] = gte ? gte.toString() : undefined
+      params[`${values.field}l`] = lte ? lte.toString() : undefined
+    })
+    setSearchParams(params)
+  }, [setSearchParams, _rangesFilter])
 
   const _onApply = () => {
-    changeFilters({
-      action: _action,
-      pairs: _pairs.pairs,
-      excludedPairs: _pairs.excludedPairs,
-      ranges: Object.values(_rangesFilter),
-      direction: _direction,
-    })
+    changeFilters()
     setOpenModal(false)
   }
   const _onReset = () => {
@@ -71,8 +62,7 @@ export default function FilterOrderButton() {
     _setRangesFilter({})
     setOpenModal(false)
   }
-
-  const hasFilter = !!pairs?.length || !!action || !!ranges?.length
+  const hasFilter = !!ranges?.length
 
   return (
     <>
@@ -86,9 +76,9 @@ export default function FilterOrderButton() {
       {openModal && (
         <Modal
           isOpen={openModal}
-          minHeight="80svh"
+          minHeight="50svh"
           mode="bottom"
-          maxHeight="80svh"
+          maxHeight="50svh"
           onDismiss={() => setOpenModal(false)}
         >
           <Flex height="100%" px={3} pt={3} sx={{ flexDirection: 'column' }}>
@@ -97,21 +87,7 @@ export default function FilterOrderButton() {
               <IconBox icon={<XCircle size={20} />} onClick={() => setOpenModal(false)} />
             </Flex>
             <Box flex="1 0 0" overflow="auto">
-              <Label label="Status" labelColor="neutral1" />
-              <OrderActionSelect currentFilter={_action} changeFilter={_setAction} />
-              <Box mb={3} />
-              <Label label="Direction" labelColor="neutral1" />
-              <DirectionSelect direction={_direction} changeDirection={_setDirection} />
-              <Box mb={3} />
-              <MarketSelect
-                key={openModal.toString()}
-                pairs={_pairs.pairs}
-                excludedPairs={_pairs.excludedPairs}
-                onChange={_changePairs}
-              />
-              <Box mb={3} />
-              <Label label="Others" labelColor="neutral1" />
-              {Object.entries(ORDER_RANGE_CONFIG_MAPPING).map(([valueKey, configs]) => {
+              {Object.entries(TOP_POSITION_RANGE_CONFIG_MAPPING).map(([valueKey, configs]) => {
                 const { gte, lte } = _rangesFilter[valueKey] ?? {}
                 return (
                   <Box key={valueKey} mb={2}>
@@ -127,6 +103,7 @@ export default function FilterOrderButton() {
               })}
             </Box>
             <MobileRangeFilterButtons onApply={_onApply} onReset={_onReset} />
+            <Box />
           </Flex>
         </Modal>
       )}

@@ -305,6 +305,12 @@ export enum LeaderboardTypeEnum {
   MONTHLY = 'MONTH',
 }
 
+export enum TimeIntervalEnum {
+  DAILY = 'daily',
+  WEEKLY = 'week',
+  MONTHLY = 'month',
+}
+
 export enum SubscriptionPlanEnum {
   BASIC = 0,
   PREMIUM = 1,

@@ -56,6 +56,7 @@ function EntryComponent({
         gap: 2,
         alignItems: 'center',
         color: 'neutral1',
+        pr: 1,
       }}
     >
       <Type.Caption {...textSx} width={8} color={data.isLong ? 'green1' : 'red2'}>
@@ -63,9 +64,13 @@ function EntryComponent({
       </Type.Caption>
       <VerticalDivider />
       {showMarketIcon && <Market symbol={symbol} size={20} />}
-      <Type.Caption {...textSx}>{symbol}</Type.Caption>
+      <Type.Caption sx={{ ...textSx } as any}>
+        <Box as="span" sx={{ display: 'block', width: '100%', ...overflowEllipsis() }}>
+          {symbol}
+        </Box>
+      </Type.Caption>
       <VerticalDivider />
-      <Type.Caption {...textSx}>
+      <Type.Caption sx={{ ...textSx, flexShrink: 0 } as any}>
         {data.averagePrice ? PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2 }) : '--'}
       </Type.Caption>
     </Flex>

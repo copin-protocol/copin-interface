@@ -6,7 +6,7 @@ import { ApiListResponse } from 'apis/api'
 import { getCopierLeaderboardApi } from 'apis/copierApis'
 import { GetCopierLeaderboardParams } from 'apis/types'
 import { COPIER_LEADERBOARD_TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
-import { CopierLeaderboardTimeFilterProps } from 'components/@ui/TimeFilter/type'
+import { TimeFilterProps } from 'components/@ui/TimeFilter/type'
 import { CopierLeaderboardData } from 'entities/copier'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
@@ -36,8 +36,10 @@ export interface CopierLeaderboardContextValues {
   changeCurrentPage: (page: number) => void
   currentLimit: number
   changeCurrentLimit: (limit: number) => void
-  currentTime: CopierLeaderboardTimeFilterProps
-  changeCurrentTime: (timeOpetion: CopierLeaderboardTimeFilterProps) => void
+  currentTime: TimeFilterProps<CopierLeaderboardTimeFilterEnum, CopierLeaderboardTimeFilterEnum>
+  changeCurrentTime: (
+    timeOpetion: TimeFilterProps<CopierLeaderboardTimeFilterEnum, CopierLeaderboardTimeFilterEnum>
+  ) => void
   currentExchange: CopyTradePlatformEnum | null
   currentExchangeType: CopierLeaderBoardExchangeType | null
   changeExchange: (exchange: CopyTradePlatformEnum) => void
@@ -111,7 +113,9 @@ export function CopierLeaderboardProvider({ children }: { children: ReactNode })
       sort_type: data?.sortType ?? null,
     })
   }
-  const changeCurrentTime = (timeOption: CopierLeaderboardTimeFilterProps) => {
+  const changeCurrentTime = (
+    timeOption: TimeFilterProps<CopierLeaderboardTimeFilterEnum, CopierLeaderboardTimeFilterEnum>
+  ) => {
     setTimeOption(timeOption)
     setCurrentPage(1)
     setSearchParams({

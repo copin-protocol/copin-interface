@@ -7,32 +7,8 @@ import Dropdown from 'theme/Dropdown'
 import { Box, IconBox } from 'theme/base'
 
 import TableRangeFilter from './TableRangeFilter'
-import { generateRangeFilterKey } from './helpers'
+import { generateRangeFilterKey, getRangeFilterValues } from './helpers'
 import { TableFilterConfig, TableRangeFilterValues } from './types'
-
-/**
- *  use for from to values
- */
-export function getRangeFilterValues({
-  searchParams,
-  urlParamKey,
-}: {
-  searchParams: Record<string, string | undefined>
-  urlParamKey: string
-}) {
-  const values: { gte: number | undefined; lte: number | undefined } = { gte: undefined, lte: undefined }
-  const { gteKey, lteKey } = generateRangeFilterKey({ key: urlParamKey })
-  const gteString = searchParams[gteKey]
-  const lteString = searchParams[lteKey]
-
-  if (gteString != null) {
-    values.gte = Number(gteString)
-  }
-  if (lteString != null) {
-    values.lte = Number(lteString)
-  }
-  return values
-}
 
 export function useFilterAction() {
   const { searchParams, setSearchParams } = useSearchParams()
@@ -58,7 +34,7 @@ export function useFilterAction() {
       filter: TableRangeFilterValues
       // otherParams?: Record<string, string | null | undefined>
     }) => {
-      const params: Record<string, string | undefined> = {}
+      const params: Record<string, string | undefined> = { ['page']: undefined }
       Object.entries(filter).forEach(([key, value]) => {
         params[key] = value == null ? undefined : value.toString()
       })
@@ -72,7 +48,7 @@ export function useFilterAction() {
   const resetFilterRange = useCallback(
     // ({ listParamKey, otherParams = {} }: { listParamKey: string[]; otherParams?: Record<string, string | null | undefined> }) => {
     ({ listParamKey }: { listParamKey: string[] }) => {
-      const params: Record<string, string | undefined> = {}
+      const params: Record<string, string | undefined> = { ['page']: undefined }
       listParamKey.forEach((key) => {
         const { gteKey, lteKey } = generateRangeFilterKey({ key })
         params[gteKey] = undefined

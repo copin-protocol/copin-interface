@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { CaretRight } from '@phosphor-icons/react'
 import { cloneElement, useCallback, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -5,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import PositionListCard from 'components/@position/TraderPositionsListView'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
+import TableRangeFilterIcon from 'components/@widgets/TableFilter/TableRangeFilterIcon'
 import { renderEntry, renderOpeningPnL, renderSizeOpening, renderTrader } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
@@ -47,6 +49,10 @@ const columns: ColumnData<PositionData, ExternalSource>[] = [
     key: 'size',
     style: { width: '218px' },
     render: (item, index, externalSource) => renderSizeOpening(item),
+    filterComponent: (
+      <TableRangeFilterIcon config={{ type: 'number', urlParamKey: 'size', label: <Trans>Size</Trans> }} />
+    ),
+    // filterComponent: <TableRangeFilterIcon  />,
   },
   {
     title: 'PnL',

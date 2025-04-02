@@ -1,4 +1,4 @@
-import { getRangeFilterValues } from 'components/@widgets/TableFilter/TableRangeFilterIcon'
+import { getRangeFilterValues } from 'components/@widgets/TableFilter/helpers'
 import { FilterValues } from 'components/@widgets/TableFilter/types'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
 import {
