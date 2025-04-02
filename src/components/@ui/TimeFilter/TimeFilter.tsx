@@ -47,13 +47,16 @@ export default function TimeFilter<T = TimeFilterByEnum, V = number>({
 
       {options.map((option, index: number) => {
         const active = !!currentFilter && currentFilter.id === option.id
+        const disabledAction = active || options.length === 1
         return (
           <TabItem
             active={active}
-            onClick={() => handleFilterChange(option)}
+            onClick={disabledAction ? undefined : () => handleFilterChange(option)}
             key={index}
-            sx={{ px: ['6px', '6px', '8px', '8px'] }}
-            disabled={active || options.length === 1}
+            sx={{
+              px: ['6px', '6px', '8px', '8px'],
+              cursor: disabledAction ? 'default' : 'pointer',
+            }}
           >
             {option.text}
           </TabItem>
