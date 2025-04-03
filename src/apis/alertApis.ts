@@ -26,7 +26,12 @@ export async function getTraderAlertListApi({
   protocol,
   sortBy,
   sortType,
-}: { address?: string; protocol?: ProtocolEnum; sortBy?: string; sortType?: SortTypeEnum } & GetApiParams) {
+}: {
+  address?: string
+  protocol?: ProtocolEnum
+  sortBy?: string
+  sortType?: SortTypeEnum
+} & GetApiParams) {
   const params: Record<string, any> = {}
   if (!!protocol) params.protocols = protocol
   if (!!address) params.address = address
@@ -164,4 +169,30 @@ export async function updateCustomAlertApi({ id, data }: { id: string; data: Cus
 
 export async function deleteCustomAlertApi(id: string) {
   return requester.delete(`${SERVICE}/custom/${id}`).then((res: any) => res.data)
+}
+
+export async function getCustomTraderGroupByIdApi({
+  limit = DEFAULT_LIMIT,
+  offset = 0,
+  customAlertId,
+  address,
+  protocol,
+  sortBy,
+  sortType,
+}: {
+  customAlertId?: string
+  address?: string
+  protocol?: ProtocolEnum
+  sortBy?: string
+  sortType?: SortTypeEnum
+} & GetApiParams) {
+  const params: Record<string, any> = {}
+  if (!!protocol) params.protocols = protocol
+  if (!!address) params.address = address
+  if (!!protocol) params.protocol = protocol
+  if (!!sortBy) params.sort_by = sortBy
+  if (!!sortType) params.sort_type = sortType
+  return requester
+    .get(`${SERVICE}/custom/trader/${customAlertId}`, { params: { limit, offset, ...params } })
+    .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
 }

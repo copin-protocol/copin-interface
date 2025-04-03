@@ -27,8 +27,11 @@ export default function TextWithEdit({
   formatDisplayText,
   disabled,
   allowEmpty = false,
+  fullWidth = false,
   unit,
   editButtonSize = 16,
+  maxLength,
+  textSx,
 }: {
   defaultValue: string | number
   onSave: (value: string) => void
@@ -36,12 +39,18 @@ export default function TextWithEdit({
   formatDisplayText?: (value: string) => string
   disabled?: boolean
   allowEmpty?: boolean
+  fullWidth?: boolean
   unit?: ReactNode
   editButtonSize?: number
+  maxLength?: number
+  textSx?: any
 }) {
   const [value, setValue] = useState(defaultValue.toString())
 
   const onChange = (e: any) => {
+    if (maxLength && e.target.value.length > maxLength) {
+      return
+    }
     if (typeof defaultValue === 'number' || (allowEmpty && (defaultValue === '--' || defaultValue === ''))) {
       let newValue = e.target.value.replace(/,/g, '.')
       if (newValue === '.') {
@@ -55,7 +64,7 @@ export default function TextWithEdit({
       }
       setValue(e.target.value)
     } else {
-      setValue(defaultValue.toString())
+      setValue(e.target.value)
     }
   }
   return (
@@ -97,9 +106,10 @@ export default function TextWithEdit({
           backgroundColor: 'transparent',
           borderColor: themeColors.neutral4,
           borderWidth: '1px',
-          maxWidth: 80,
+          maxWidth: fullWidth ? 'max-content' : 80,
           display: 'inline-flex',
           alignItems: 'center',
+          ...textSx,
         }}
         formatDisplayText={formatDisplayText}
         onChange={(e) => onChange(e)}

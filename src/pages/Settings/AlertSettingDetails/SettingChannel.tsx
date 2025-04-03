@@ -27,6 +27,7 @@ import ROUTES from 'utils/config/routes'
 import LinkWebhookAlertAction from './LinkWebhookAlertAction'
 import { ChannelAction, ChannelConnection, ChannelName, ChannelStatus, ChannelType, MobileRowItem } from './config'
 
+
 export default function SettingChannel({ botAlert }: { botAlert?: BotAlertData }) {
   const { handleGenerateLinkBot, isVIPUser, isPremiumUser } = useBotAlertContext()
   const { myProfile } = useMyProfile()
@@ -49,8 +50,8 @@ export default function SettingChannel({ botAlert }: { botAlert?: BotAlertData }
       )
       return
     }
-    if (botAlert?.type && handleGenerateLinkBot) {
-      handleGenerateLinkBot(botAlert.type, botAlert?.id)
+    if (botAlert?.alertType && handleGenerateLinkBot) {
+      handleGenerateLinkBot(botAlert.alertType, botAlert?.id)
     }
   }
 
@@ -215,8 +216,8 @@ export default function SettingChannel({ botAlert }: { botAlert?: BotAlertData }
             variant="primary"
             sx={{ width: 178 }}
             onClick={() => {
-              if (botAlert?.type && handleGenerateLinkBot) {
-                handleGenerateLinkBot(botAlert.type, botAlert?.id)
+              if (botAlert?.alertType && handleGenerateLinkBot) {
+                handleGenerateLinkBot(botAlert.alertType, botAlert?.id)
               }
             }}
             disabled={!!botAlert?.chatId || isLimited}

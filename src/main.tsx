@@ -7,6 +7,7 @@ import React from 'react'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 import ReactDOM from 'react-dom/client'
+import 'react-edit-text/dist/index.css'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-tooltip/dist/react-tooltip.css'
 

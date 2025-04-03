@@ -49,7 +49,8 @@ msgstr "14 Days"
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
 msgid "14 days"
 msgstr "14 days"
 
@@ -65,7 +66,8 @@ msgstr "30 Days"
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
 msgid "30 days"
 msgstr "30 days"
 
@@ -89,7 +91,8 @@ msgstr "60 Days"
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
 msgid "60 days"
 msgstr "60 days"
 
@@ -105,7 +108,8 @@ msgstr "7 Days"
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
 msgid "7 days"
 msgstr "7 days"
 
@@ -125,6 +129,10 @@ msgstr "7D Pnl"
 #: src/components/@ui/TimeFilter/constants.tsx
 msgid "90 days"
 msgstr "90 days"
+
+#: src/pages/CopinLite/Trades/index.tsx
+msgid "<0/>Stuck Positions"
+msgstr "<0/>Stuck Positions"
 
 #: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
 msgid "<0><1>The Issue Description*</1><2>({0}/{MAX_PERPDEX_ISSUE_DESCRIPTION})</2></0>"
@@ -190,6 +198,7 @@ msgid "ACTION"
 msgstr "ACTION"
 
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
+#: src/pages/Stats/config.tsx
 msgid "ACTIVE USERS"
 msgstr "ACTIVE USERS"
 
@@ -327,7 +336,7 @@ msgstr "Advance Settings"
 msgid "Alert"
 msgstr "Alert"
 
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/index.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/BasicInfoModal.tsx
 msgid "Alert Name (Required)"
 msgstr "Alert Name (Required)"
 
@@ -344,7 +353,8 @@ msgstr "All"
 msgid "All Chain"
 msgstr "All Chain"
 
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/useTraderFilterState.tsx
 msgid "All Protocols"
 msgstr "All Protocols"
 
@@ -357,6 +367,10 @@ msgstr "All Time"
 #: src/components/@copyTrade/SelectCopyWallet.tsx
 msgid "All Wallets"
 msgstr "All Wallets"
+
+#: src/components/@position/CopyOpeningPositions/index.tsx
+msgid "All of your opening positions that did not synced correctly will be shown here"
+msgstr "All of your opening positions that did not synced correctly will be shown here"
 
 #: src/components/@ui/MarketFilter/SelectedMarkets.tsx
 msgid "All pairs"
@@ -439,7 +453,7 @@ msgstr "Analyze With AI"
 msgid "Apply"
 msgstr "Apply"
 
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
 msgid "Apply Filter"
 msgstr "Apply Filter"
 
@@ -692,6 +706,10 @@ msgstr "COPIN FEE REBATE"
 #: src/pages/@layouts/Footer/FeedbackButton.tsx
 msgid "COPIN FEEDBACK"
 msgstr "COPIN FEEDBACK"
+
+#: src/pages/Stats/config.tsx
+msgid "COPY TRADES"
+msgstr "COPY TRADES"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "COPY TRADING"
@@ -1086,7 +1104,6 @@ msgstr "Current Plan"
 
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/utils/config/translations.tsx
-#: src/utils/config/translations.tsx
 msgid "Custom"
 msgstr "Custom"
 
@@ -1101,34 +1118,6 @@ msgstr "Custom referral code successful!"
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/Info.tsx
 msgid "DAILY"
 msgstr "DAILY"
-
-#: src/pages/Stats/index.tsx
-msgid "DAILY ACTIVE USERS (DAU)"
-msgstr "DAILY ACTIVE USERS (DAU)"
-
-#: src/pages/Stats/index.tsx
-msgid "DAILY COPY TRADES"
-msgstr "DAILY COPY TRADES"
-
-#: src/pages/Stats/index.tsx
-msgid "DAILY NET PNL"
-msgstr "DAILY NET PNL"
-
-#: src/pages/Stats/index.tsx
-msgid "DAILY ORDERS"
-msgstr "DAILY ORDERS"
-
-#: src/pages/Stats/index.tsx
-msgid "DAILY PROFIT VS LOSS"
-msgstr "DAILY PROFIT VS LOSS"
-
-#: src/pages/Stats/index.tsx
-msgid "DAILY UNIQUE TRADERS"
-msgstr "DAILY UNIQUE TRADERS"
-
-#: src/pages/Stats/index.tsx
-msgid "DAILY VOLUME"
-msgstr "DAILY VOLUME"
 
 #: src/pages/ReferralManagement/ReferralHistory.tsx
 msgid "DCP Volume"
@@ -1167,6 +1156,10 @@ msgstr "DUNE DASHBOARD"
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "DURATION"
 msgstr "DURATION"
+
+#: src/pages/Stats/config.tsx
+msgid "Daily"
+msgstr "Daily"
 
 #: src/pages/TraderDetails/ProtocolBetaWarning.tsx
 msgid "Data maybe delayed by up to 2 hours"
@@ -1210,7 +1203,7 @@ msgstr "Deposits And Withdrawals"
 msgid "Deprecated"
 msgstr "Deprecated"
 
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/index.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/BasicInfoModal.tsx
 msgid "Description"
 msgstr "Description"
 
@@ -2293,6 +2286,10 @@ msgstr "My Profile"
 msgid "My Subscription"
 msgstr "My Subscription"
 
+#: src/pages/Stats/config.tsx
+msgid "NET PNL"
+msgstr "NET PNL"
+
 #: src/components/@widgets/NFTCollectionLinks.tsx
 msgid "NFT Collection"
 msgstr "NFT Collection"
@@ -2346,10 +2343,6 @@ msgstr "No Data Found"
 msgid "No Data Yet"
 msgstr "No Data Yet"
 
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/index.tsx
-msgid "No Filter"
-msgstr "No Filter"
-
 #: src/components/@position/CopyHistoryPositions/index.tsx
 #: src/components/@position/CopyHistoryPositions/index.tsx
 msgid "No History Found"
@@ -2381,6 +2374,7 @@ msgstr "No Rewards Found"
 #: src/pages/@layouts/Navbar/QuickSearchBox.tsx
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 #: src/pages/Settings/AlertSettingDetails/SearchToAdd.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderGroup/components.tsx
 #: src/pages/Settings/AlertSettingDetails/SettingWatchlistTraders.tsx
 #: src/pages/StatsCEX/SearchTrader.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/SearchTraders.tsx
@@ -2509,6 +2503,10 @@ msgstr "OPENING POSITIONS"
 msgid "OR LOGIN WITH"
 msgstr "OR LOGIN WITH"
 
+#: src/pages/Stats/config.tsx
+msgid "ORDERS"
+msgstr "ORDERS"
+
 #: src/pages/Subscription/Plans.tsx
 msgid "OTHERS"
 msgstr "OTHERS"
@@ -2520,10 +2518,6 @@ msgstr "OVERVIEW"
 #: src/components/@wallet/CreateWalletModals/CreateCEXWalletModal.tsx
 msgid "Omni Key Seed"
 msgstr "Omni Key Seed"
-
-#: src/pages/CopinLite/Trades/index.tsx
-msgid "On-Chain Positions"
-msgstr "On-Chain Positions"
 
 #: src/pages/Subscription/Plans.tsx
 msgid "On-chain traders for copying"
@@ -2665,6 +2659,10 @@ msgstr "POLICY"
 msgid "PREMIUM PLAN"
 msgstr "PREMIUM PLAN"
 
+#: src/pages/Stats/config.tsx
+msgid "PROFIT VS LOSS"
+msgstr "PROFIT VS LOSS"
+
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Paid Fees:"
@@ -2705,7 +2703,11 @@ msgstr "Pick the trader you want to copy"
 msgid "Platform"
 msgstr "Platform"
 
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
+msgid "Please adjust your filter criteria to match <0>less than {0} traders.</0>"
+msgstr "Please adjust your filter criteria to match <0>less than {0} traders.</0>"
+
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
 msgid "Please adjust your filter criteria to match less than {0} traders."
 msgstr "Please adjust your filter criteria to match less than {0} traders."
 
@@ -2736,6 +2738,14 @@ msgstr "Please pick trader to view your history"
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Please pick trader to view your opening positions"
 msgstr "Please pick trader to view your opening positions"
+
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
+msgid "Please select at least one pair"
+msgstr "Please select at least one pair"
+
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
+msgid "Please select at least one protocol"
+msgstr "Please select at least one protocol"
 
 #: src/hooks/web3/useChainRestrict.tsx
 msgid "Please switch your wallet to one of a chain below: {0}"
@@ -2772,6 +2782,7 @@ msgid "PnL w. Fees"
 msgstr "PnL w. Fees"
 
 #: src/pages/@layouts/Navbar/SearchBox.tsx
+#: src/utils/config/translations.tsx
 msgid "Position"
 msgstr "Position"
 
@@ -2951,7 +2962,9 @@ msgstr "Resend"
 msgid "Resend after {resendCountdown}s"
 msgstr "Resend after {resendCountdown}s"
 
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderGroup/components.tsx
 msgid "Reset"
 msgstr "Reset"
 
@@ -3094,6 +3107,11 @@ msgstr "SYSTEM ALERT"
 msgid "SYSTEM STATUS"
 msgstr "SYSTEM STATUS"
 
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderGroup/components.tsx
+msgid "Save"
+msgstr "Save"
+
 #: src/pages/Settings/UserSubscription/PricingOptions.tsx
 msgid "Save {0}%"
 msgstr "Save {0}%"
@@ -3202,6 +3220,7 @@ msgstr "Sign message"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/CopyPositionsListView/index.tsx
+#: src/pages/OpenInterest/OpeningPositionList.tsx
 msgid "Size"
 msgstr "Size"
 
@@ -3440,8 +3459,6 @@ msgid "Synthetix v3"
 msgstr "Synthetix v3"
 
 #: src/utils/config/translations.tsx
-#: src/utils/config/translations.tsx
-#: src/utils/config/translations.tsx
 msgid "System"
 msgstr "System"
 
@@ -3453,7 +3470,8 @@ msgstr "TERMS & POLICY"
 msgid "TIME"
 msgstr "TIME"
 
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
 msgid "TIME FRAME"
 msgstr "TIME FRAME"
 
@@ -3601,6 +3619,10 @@ msgstr "The account in your web3 wallet does not match the account currently in 
 #: src/pages/Settings/UserSubscription/NoSubscription.tsx
 msgid "The basic plan allows your to experience the basic features of Copin"
 msgstr "The basic plan allows your to experience the basic features of Copin"
+
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
+msgid "The filter matches too many traders ({0}/{1})"
+msgstr "The filter matches too many traders ({0}/{1})"
 
 #: src/pages/VaultDetails/VaultFundMangement/InputInviteCode.tsx
 #: src/pages/VaultDetails/VaultFundMangement/InputInviteCode.tsx
@@ -3863,13 +3885,24 @@ msgstr "Trade On"
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/pages/@layouts/Navbar/SearchBox.tsx
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/index.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/BasicInfoModal.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/BasicInfoModal.tsx
 msgid "Trader"
 msgstr "Trader"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Trader Favorites"
 msgstr "Trader Favorites"
+
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/index.tsx
+#: src/utils/config/translations.tsx
+msgid "Trader Filter"
+msgstr "Trader Filter"
+
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/index.tsx
+#: src/utils/config/translations.tsx
+msgid "Trader Group"
+msgstr "Trader Group"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "Trader don't have statistic in {0}"
@@ -3949,6 +3982,10 @@ msgstr "TxHash"
 msgid "Type"
 msgstr "Type"
 
+#: src/pages/Stats/config.tsx
+msgid "UNIQUE TRADERS"
+msgstr "UNIQUE TRADERS"
+
 #: src/theme/Tag/index.tsx
 msgid "UPCOMING"
 msgstr "UPCOMING"
@@ -4011,6 +4048,7 @@ msgstr "Update wallet successful!"
 #: src/pages/Settings/AlertDashboard/NoCustomAlert.tsx
 #: src/pages/Settings/AlertDashboard/index.tsx
 #: src/pages/Settings/AlertSettingDetails/SettingChannel.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderGroup/components.tsx
 #: src/pages/Settings/AlertSettingDetails/SettingWatchlistTraders.tsx
 msgid "Upgrade"
 msgstr "Upgrade"
@@ -4055,6 +4093,10 @@ msgstr "VIP Plan"
 #: src/pages/Subscription/Plans.tsx
 msgid "VIP exclusive signal (group and APIs)"
 msgstr "VIP exclusive signal (group and APIs)"
+
+#: src/pages/Stats/config.tsx
+msgid "VOLUME"
+msgstr "VOLUME"
 
 #: src/pages/VaultDetails/index.tsx
 msgid "Vault Address"
@@ -4138,7 +4180,7 @@ msgid "Wallet Watcher"
 msgstr "Wallet Watcher"
 
 #: src/components/@position/CopyPositionsContainer/index.tsx
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
 msgid "Warning"
 msgstr "Warning"
 

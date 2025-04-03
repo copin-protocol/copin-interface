@@ -3,7 +3,7 @@ import { Trans, t } from '@lingui/macro'
 import { ReactNode } from 'react'
 
 import {
-  AlertCategoryEnum,
+  AlertCategoryEnum, AlertCustomType,
   AlertTypeEnum,
   ChangeFieldEnum, ChannelStatusEnum,
   ChannelTypeEnum,
@@ -193,10 +193,10 @@ export const FEE_REBATE_EPOCH_STATUS_TRANS: ObjectTrans = {
   [EpochStatusEnum.AWARDED]: <Trans>Ended</Trans>,
 }
 
-export const ALERT_TYPE_TRANS: ObjectTrans = {
-  [AlertTypeEnum.COPY_TRADE]: <Trans>System</Trans>,
-  [AlertTypeEnum.TRADERS]: <Trans>System</Trans>,
-  [AlertTypeEnum.CUSTOM]: <Trans>Custom</Trans>,
+export const ALERT_CUSTOM_TYPE_TRANS: ObjectTrans = {
+  [AlertCustomType.TRADER_FILTER]: <Trans>Trader Filter</Trans>,
+  [AlertCustomType.TRADER_GROUP]: <Trans>Trader Group</Trans>,
+  [AlertCustomType.TRADER_POSITION]: <Trans>Position</Trans>,
 }
 
 export const ALERT_CATEGORY_TRANS: ObjectTrans = {

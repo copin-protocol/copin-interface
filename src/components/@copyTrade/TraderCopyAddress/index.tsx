@@ -136,7 +136,11 @@ export default function TraderCopyAddress({
               <ProtocolLogo protocol={protocol} hasText={false} size={20} />
             </>
           )}
-          {hasAddressTooltip && <Tooltip id={tooltipId}>{address}</Tooltip>}
+          {hasAddressTooltip && (
+            <Tooltip id={tooltipId}>
+              <Type.Caption width="max-content">{address}</Type.Caption>
+            </Tooltip>
+          )}
           {(hasCopyCountWarningIcon || hasCopyVolumeWarningIcon) && <Type.Caption color={dividerColor}>|</Type.Caption>}
           {hasCopyCountWarningIcon && <TraderCopyCountWarningIcon account={address} protocol={protocol} size={18} />}
           {hasCopyVolumeWarningIcon && (

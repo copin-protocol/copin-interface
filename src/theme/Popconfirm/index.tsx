@@ -13,8 +13,8 @@ interface PopconfirmProps {
   icon?: ReactNode
   onConfirm?: () => void
   onCancel?: () => void
-  confirmText?: string
-  cancelText?: string
+  confirmText?: ReactNode
+  cancelText?: ReactNode
   confirmButtonProps?: ButtonProps
   cancelButtonProps?: ButtonProps
   cancelAfterHide?: boolean
@@ -82,8 +82,8 @@ interface ContentProps {
   description?: ReactNode
   onConfirm: () => void
   onCancel: () => void
-  confirmText: string
-  cancelText: string
+  confirmText: ReactNode
+  cancelText: ReactNode
   confirmButtonProps: object
   cancelButtonProps: object
 }
@@ -116,10 +116,10 @@ const Content = ({
         </Flex>
       </Flex>
       <Flex justifyContent="flex-end" alignItems="center">
-        <Button variant="ghost" onClick={onCancel} {...cancelButtonProps} py={0}>
+        <Button type="button" variant="ghost" onClick={onCancel} {...cancelButtonProps} py={0}>
           {cancelText}
         </Button>
-        <Button variant="ghostPrimary" onClick={onConfirm} {...confirmButtonProps} py={0}>
+        <Button type="button" variant="ghostPrimary" onClick={onConfirm} {...confirmButtonProps} py={0}>
           {confirmText}
         </Button>
       </Flex>

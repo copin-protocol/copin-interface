@@ -1,6 +1,8 @@
 import { QueryFilter, RangeFilter } from 'apis/types'
+import { CustomTraderData } from 'pages/Settings/AlertSettingDetails/SettingCustomAlert/types'
 import {
   AlertCategoryEnum,
+  AlertCustomType,
   AlertTypeEnum,
   ChannelStatusEnum,
   ChannelTypeEnum,
@@ -16,7 +18,8 @@ export interface BotAlertData {
   name?: string
   description?: string
   category: AlertCategoryEnum
-  type?: AlertTypeEnum
+  alertType?: AlertTypeEnum
+  type?: AlertCustomType
   channels?: AlertSettingData[]
   config?: CustomAlertConfigData
   enableAlert?: boolean
@@ -40,7 +43,7 @@ export interface AlertSettingData {
 }
 
 export interface TraderAlertData {
-  id: string
+  id?: string
   address: string
   account?: string
   protocol: ProtocolEnum
@@ -51,7 +54,7 @@ export interface TraderAlertData {
   pnl30D?: number
   enableAlert?: boolean
   lastTradeAt?: string
-  createdAt: string
+  createdAt?: string
 }
 
 export interface CopyTradeAlertData {
@@ -73,10 +76,13 @@ export interface CustomAlertRequestData {
   queries?: QueryFilter[]
   ranges?: RangeFilter[]
   enableAlert?: boolean
+  type?: AlertCustomType
+  traderGroup?: TraderGroupRequestData
 }
 
 export interface CustomAlertConfigData {
   type?: TimeFilterByEnum
+
   [key: string]: CustomAlertConfigField
 }
 
@@ -84,4 +90,9 @@ export type CustomAlertConfigField = {
   gte?: number
   lte?: number
   in?: string[]
+}
+
+export interface TraderGroupRequestData {
+  upsert?: CustomTraderData[]
+  remove?: CustomTraderData[]
 }

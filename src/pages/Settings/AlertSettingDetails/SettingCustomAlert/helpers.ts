@@ -2,12 +2,34 @@ import dayjs from 'dayjs'
 
 import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
 import { ConditionFormValues, FilterValues, RowValues } from 'components/@widgets/ConditionFilterForm/types'
-import { CustomAlertConfigData } from 'entities/alert'
+import { BotAlertData, CustomAlertConfigData } from 'entities/alert'
 import { TraderData } from 'entities/trader'
-import { TimeFilterByEnum } from 'utils/config/enums'
-import { getPairFromSymbol } from 'utils/helpers/transform'
+import { AlertCustomType, TimeFilterByEnum } from 'utils/config/enums'
+import { getPairFromSymbol, getSymbolFromPair } from 'utils/helpers/transform'
 
 import { CustomAlertFormValues } from './types'
+
+export function getDefaultValues(botAlert?: BotAlertData) {
+  const isNew = botAlert?.id === 'new'
+  const defaultValues = {
+    name: botAlert?.name,
+    description: botAlert?.description,
+  } as CustomAlertFormValues
+  switch (botAlert?.type) {
+    case AlertCustomType.TRADER_FILTER:
+      defaultValues.customType = AlertCustomType.TRADER_FILTER
+      defaultValues.type = botAlert?.config?.type ?? TimeFilterByEnum.S30_DAY
+      defaultValues.protocols = botAlert?.config?.['protocol']?.in
+      defaultValues.pairs = botAlert?.config?.['pairs']?.in?.map((pair) => getSymbolFromPair(pair))
+      defaultValues.condition = convertConfigToConditionValues(botAlert?.config)
+      break
+    case AlertCustomType.TRADER_GROUP:
+      defaultValues.customType = AlertCustomType.TRADER_GROUP
+      break
+  }
+
+  return defaultValues
+}
 
 export function convertConfigToConditionValues(config?: CustomAlertConfigData): ConditionFormValues<TraderData> {
   if (!config) return []
@@ -157,17 +179,23 @@ export function convertRangesFromConfigs(config?: CustomAlertConfigData) {
 }
 
 export function transformFormValues({
+  name,
+  description,
   type,
   protocols,
   pairs,
   condition,
 }: {
+  name?: string
+  description?: string
   type?: TimeFilterByEnum
   protocols?: string[] | 'all'
   pairs?: string[] | 'all'
   condition?: ConditionFormValues<TraderData>
 }) {
   return {
+    name,
+    description,
     type,
     condition: normalizeCondition(condition),
     protocols: protocols !== 'all' ? protocols : undefined,
@@ -176,7 +204,7 @@ export function transformFormValues({
 }
 
 export const normalizeCondition = (condition?: ConditionFormValues<TraderData>) => {
-  if (!condition) return
+  if (!condition) return []
   return condition
     .filter((item) => {
       // Keep item only if at least one of gte or lte has a valid value (not 0 or undefined)

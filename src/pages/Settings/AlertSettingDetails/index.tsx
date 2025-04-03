@@ -14,7 +14,7 @@ import Loading from 'theme/Loading'
 import Modal from 'theme/Modal'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { AlertCategoryEnum, AlertSettingsEnum, AlertTypeEnum } from 'utils/config/enums'
+import { AlertCategoryEnum, AlertCustomType, AlertSettingsEnum, AlertTypeEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
@@ -44,6 +44,7 @@ function AlertSettingDetailsComponent() {
     isCreatingCustomAlert,
     watchlistTraders,
     copiedTraders,
+    groupTraders,
     totalCopiedTraders,
     totalMatchingTraders,
     currentPage,
@@ -110,132 +111,141 @@ function AlertSettingDetailsComponent() {
               backgroundRepeat: 'no-repeat',
             }}
           >
-            <Flex
-              flex={1}
-              sx={{
-                mt: !isMobile ? 72 : 0,
-                position: 'relative',
-                flexDirection: 'column',
-                overflow: 'hidden auto',
-                justifyContent: !isMobile ? 'flex-start' : 'center',
-                alignItems: 'center',
-              }}
-            >
-              <SettingItem
-                botAlert={botAlert}
-                step={AlertSettingsEnum.TRADERS}
-                isActive={currentStep === AlertSettingsEnum.TRADERS}
-                content={
-                  botAlert.category === AlertCategoryEnum.CUSTOM ? (
-                    isCreatingCustomAlert ? (
-                      <Type.Caption color="orange1">No Traders</Type.Caption>
-                    ) : (
-                      <Flex
-                        alignItems="center"
-                        sx={{ borderRadius: 26, border: 'small', borderColor: 'neutral4', px: 2 }}
-                      >
-                        <Type.Caption color="neutral1">{formatNumber(totalMatchingTraders, 0)} traders</Type.Caption>
-                      </Flex>
-                    )
-                  ) : (
-                    <ListTradersContent
-                      traders={
-                        botAlert?.type === AlertTypeEnum.COPY_TRADE
-                          ? copiedTraders?.data?.map((e) => e?.account ?? e.address)
-                          : traderAlerts?.data?.map((e) => e.address)
-                      }
-                      total={
-                        botAlert?.type === AlertTypeEnum.COPY_TRADE ? totalCopiedTraders : traderAlerts?.meta?.total
-                      }
-                    />
-                  )
-                }
-                onSelect={onChangeStep}
-              />
-              <Box pr={120}>
-                <VerticalArrow />
-              </Box>
-              <SettingItem
-                step={AlertSettingsEnum.TRIGGER}
-                isActive={currentStep === AlertSettingsEnum.TRIGGER}
-                onSelect={onChangeStep}
-                disabled={isCreatingCustomAlert}
-              />
-              <Box pr={120}>
-                <VerticalArrow />
-              </Box>
-              <SettingItem
-                step={AlertSettingsEnum.CHANNEL}
-                isActive={currentStep === AlertSettingsEnum.CHANNEL}
-                content={<ChannelContent botAlert={botAlert} />}
-                onSelect={onChangeStep}
-                disabled={isCreatingCustomAlert}
-              />
-            </Flex>
-            {isMobile ? (
-              <Box>
-                <Modal mode="bottom" isOpen={openDrawer} onDismiss={onDismiss}>
-                  <Container sx={{ position: 'relative', height: '100%', minHeight: '400px' }}>
-                    <Box height="100%" overflow="auto">
-                      {currentStep === AlertSettingsEnum.TRADERS &&
-                        (botAlert?.type === AlertTypeEnum.COPY_TRADE ? (
-                          <SettingCopiedTraders botAlert={botAlert} totalCopiedTraders={totalCopiedTraders} />
-                        ) : botAlert?.type === AlertTypeEnum.TRADERS ? (
-                          <SettingWatchlistTraders
-                            botAlert={botAlert}
-                            traders={watchlistTraders}
-                            currentPage={currentPage}
-                            changeCurrentPage={changeCurrentPage}
-                            currentSort={currentSort}
-                            changeCurrentSort={changeCurrentSort}
-                            onChangeStep={onChangeStep}
-                          />
-                        ) : (
-                          <SettingCustomAlert botAlert={botAlert} />
-                        ))}
-                      {currentStep === AlertSettingsEnum.TRIGGER && <SettingTrigger />}
-                      {currentStep === AlertSettingsEnum.CHANNEL && <SettingChannel botAlert={botAlert} />}
-                    </Box>
-                  </Container>
-                </Modal>
-              </Box>
-            ) : currentStep ? (
-              <Box
+            <Flex mx="auto" width="100%" maxWidth={1920}>
+              <Flex
+                flex={1}
                 sx={{
+                  mt: !isMobile ? 72 : 0,
                   position: 'relative',
-                  my: '24px',
-                  mr: '24px',
-                  width: 540,
-                  height: 'max-content',
-                  backgroundColor: 'neutral6',
-                  border: 'small',
-                  borderColor: 'neutral4',
-                  borderRadius: '4px',
-                  overflow: 'auto',
+                  flexDirection: 'column',
+                  overflow: 'hidden auto',
+                  justifyContent: !isMobile ? 'flex-start' : 'center',
+                  alignItems: 'center',
                 }}
               >
-                {currentStep === AlertSettingsEnum.TRADERS &&
-                  (botAlert?.type === AlertTypeEnum.COPY_TRADE ? (
-                    <SettingCopiedTraders botAlert={botAlert} totalCopiedTraders={totalCopiedTraders} />
-                  ) : botAlert?.type === AlertTypeEnum.TRADERS ? (
-                    <SettingWatchlistTraders
-                      botAlert={botAlert}
-                      traders={watchlistTraders}
-                      currentPage={currentPage}
-                      changeCurrentPage={changeCurrentPage}
-                      currentSort={currentSort}
-                      changeCurrentSort={changeCurrentSort}
-                      onChangeStep={onChangeStep}
-                    />
-                  ) : (
-                    <SettingCustomAlert botAlert={botAlert} />
-                  ))}
-                {currentStep === AlertSettingsEnum.TRIGGER && <SettingTrigger />}
-                {currentStep === AlertSettingsEnum.CHANNEL && <SettingChannel botAlert={botAlert} />}
-              </Box>
-            ) : (
-              <></>
-            )}
+                <SettingItem
+                  botAlert={botAlert}
+                  step={AlertSettingsEnum.TRADERS}
+                  isActive={currentStep === AlertSettingsEnum.TRADERS}
+                  content={
+                    botAlert.category === AlertCategoryEnum.CUSTOM ? (
+                      isCreatingCustomAlert ? (
+                        <Type.Caption color="orange1">No Traders</Type.Caption>
+                      ) : botAlert.type === AlertCustomType.TRADER_GROUP ? (
+                        <ListTradersContent
+                          traders={groupTraders?.data?.map((e) => e.address)}
+                          total={groupTraders?.meta?.total}
+                        />
+                      ) : (
+                        <Flex
+                          alignItems="center"
+                          sx={{ borderRadius: 26, border: 'small', borderColor: 'neutral4', px: 2 }}
+                        >
+                          <Type.Caption color="neutral1">{formatNumber(totalMatchingTraders, 0)} traders</Type.Caption>
+                        </Flex>
+                      )
+                    ) : (
+                      <ListTradersContent
+                        traders={
+                          botAlert?.alertType === AlertTypeEnum.COPY_TRADE
+                            ? copiedTraders?.data?.map((e) => e?.account ?? e.address)
+                            : traderAlerts?.data?.map((e) => e.address)
+                        }
+                        total={
+                          botAlert?.alertType === AlertTypeEnum.COPY_TRADE
+                            ? totalCopiedTraders
+                            : traderAlerts?.meta?.total
+                        }
+                      />
+                    )
+                  }
+                  onSelect={onChangeStep}
+                />
+                <Box pr={120}>
+                  <VerticalArrow />
+                </Box>
+                <SettingItem
+                  step={AlertSettingsEnum.TRIGGER}
+                  isActive={currentStep === AlertSettingsEnum.TRIGGER}
+                  onSelect={onChangeStep}
+                  disabled={isCreatingCustomAlert}
+                />
+                <Box pr={120}>
+                  <VerticalArrow />
+                </Box>
+                <SettingItem
+                  step={AlertSettingsEnum.CHANNEL}
+                  isActive={currentStep === AlertSettingsEnum.CHANNEL}
+                  content={<ChannelContent botAlert={botAlert} />}
+                  onSelect={onChangeStep}
+                  disabled={isCreatingCustomAlert}
+                />
+              </Flex>
+              {isMobile ? (
+                <Box>
+                  <Modal mode="bottom" isOpen={openDrawer} onDismiss={onDismiss}>
+                    <Container sx={{ position: 'relative', height: '100%', minHeight: '400px' }}>
+                      <Box height="100%" overflow="auto">
+                        {currentStep === AlertSettingsEnum.TRADERS &&
+                          (botAlert?.alertType === AlertTypeEnum.COPY_TRADE ? (
+                            <SettingCopiedTraders botAlert={botAlert} totalCopiedTraders={totalCopiedTraders} />
+                          ) : botAlert?.alertType === AlertTypeEnum.TRADERS ? (
+                            <SettingWatchlistTraders
+                              botAlert={botAlert}
+                              traders={watchlistTraders}
+                              currentPage={currentPage}
+                              changeCurrentPage={changeCurrentPage}
+                              currentSort={currentSort}
+                              changeCurrentSort={changeCurrentSort}
+                              onChangeStep={onChangeStep}
+                            />
+                          ) : (
+                            <SettingCustomAlert botAlert={botAlert} />
+                          ))}
+                        {currentStep === AlertSettingsEnum.TRIGGER && <SettingTrigger />}
+                        {currentStep === AlertSettingsEnum.CHANNEL && <SettingChannel botAlert={botAlert} />}
+                      </Box>
+                    </Container>
+                  </Modal>
+                </Box>
+              ) : currentStep ? (
+                <Box
+                  sx={{
+                    position: 'relative',
+                    my: '24px',
+                    mr: '24px',
+                    width: 540,
+                    height: 'max-content',
+                    backgroundColor: 'neutral6',
+                    border: 'small',
+                    borderColor: 'neutral4',
+                    borderRadius: '4px',
+                    overflow: 'auto',
+                  }}
+                >
+                  {currentStep === AlertSettingsEnum.TRADERS &&
+                    (botAlert?.alertType === AlertTypeEnum.COPY_TRADE ? (
+                      <SettingCopiedTraders botAlert={botAlert} totalCopiedTraders={totalCopiedTraders} />
+                    ) : botAlert?.alertType === AlertTypeEnum.TRADERS ? (
+                      <SettingWatchlistTraders
+                        botAlert={botAlert}
+                        traders={watchlistTraders}
+                        currentPage={currentPage}
+                        changeCurrentPage={changeCurrentPage}
+                        currentSort={currentSort}
+                        changeCurrentSort={changeCurrentSort}
+                        onChangeStep={onChangeStep}
+                      />
+                    ) : (
+                      <SettingCustomAlert botAlert={botAlert} />
+                    ))}
+                  {currentStep === AlertSettingsEnum.TRIGGER && <SettingTrigger />}
+                  {currentStep === AlertSettingsEnum.CHANNEL && <SettingChannel botAlert={botAlert} />}
+                </Box>
+              ) : (
+                <></>
+              )}
+            </Flex>
           </Flex>
         </Box>
       )}
@@ -266,7 +276,7 @@ function SettingItem({
     case AlertSettingsEnum.TRADERS:
       icon = <Siren size={18} weight={iconVariant} />
       title = botAlert?.name ?? 'List Traders'
-      if (botAlert?.type === AlertTypeEnum.CUSTOM) {
+      if (botAlert?.alertType === AlertTypeEnum.CUSTOM && botAlert?.type !== AlertCustomType.TRADER_GROUP) {
         if (botAlert?.id === 'new') {
           description = 'Create your own filters.'
         } else {

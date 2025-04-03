@@ -21,7 +21,11 @@ export default function useCustomAlerts({ onSuccess }: { onSuccess?: (data?: Bot
           message={<Trans>This custom alert has been created successfully</Trans>}
         />
       )
-      refetchQueries([QUERY_KEYS.GET_CUSTOM_ALERTS, QUERY_KEYS.COUNT_CUSTOM_ALERTS])
+      refetchQueries([
+        QUERY_KEYS.GET_CUSTOM_ALERTS,
+        QUERY_KEYS.COUNT_CUSTOM_ALERTS,
+        QUERY_KEYS.GET_CUSTOM_TRADER_GROUP_BY_ID,
+      ])
       onSuccess?.(data)
     },
     onError: (error: any) => {
@@ -30,15 +34,19 @@ export default function useCustomAlerts({ onSuccess }: { onSuccess?: (data?: Bot
   })
 
   const { mutate: updateCustomAlert, isLoading: submittingUpdate } = useMutation(updateCustomAlertApi, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success(
         <ToastBody
           title={<Trans>Success</Trans>}
           message={<Trans>This custom alert has been updated successfully</Trans>}
         />
       )
-      refetchQueries([QUERY_KEYS.GET_CUSTOM_ALERTS, QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID])
-      onSuccess?.()
+      refetchQueries([
+        QUERY_KEYS.GET_CUSTOM_ALERTS,
+        QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID,
+        QUERY_KEYS.GET_CUSTOM_TRADER_GROUP_BY_ID,
+      ])
+      onSuccess?.(data)
     },
     onError: (error) => {
       toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)

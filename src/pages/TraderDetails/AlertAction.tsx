@@ -13,6 +13,7 @@ import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { AlertTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
+
 const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: string }) => {
   const { hasWatchlistChannel, handleGenerateLinkBot, isGeneratingLink } = useBotAlertContext()
   const [isOpenUnsubscribeModal, setIsOpenUnsubscribeModal] = useState(false)
@@ -38,7 +39,7 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
   })
 
   const handleConfirmDeleteAlert = () => {
-    if (currentAlert) {
+    if (currentAlert?.id) {
       deleteTraderAlert(currentAlert.id)
     }
   }
