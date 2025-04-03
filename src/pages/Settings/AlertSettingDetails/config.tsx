@@ -33,11 +33,13 @@ export const TraderAddress = ({ data }: { data: TraderAlertData }) => {
 
 export const TraderStatus = ({ data }: { data: TraderAlertData }) => {
   const { updateTraderAlert, submittingUpdate } = useSettingWatchlistTraders({})
-  const handleUpdateAlert = (alertId: string) => {
-    updateTraderAlert(alertId)
+  const handleUpdateAlert = (alertId?: string) => {
+    if (alertId) {
+      updateTraderAlert(alertId)
+    }
   }
   return (
-    <SwitchInput checked={data.enableAlert} disabled={submittingUpdate} onClick={() => handleUpdateAlert(data.id)} />
+    <SwitchInput checked={data.enableAlert} disabled={submittingUpdate} onClick={() => handleUpdateAlert(data?.id)} />
   )
 }
 

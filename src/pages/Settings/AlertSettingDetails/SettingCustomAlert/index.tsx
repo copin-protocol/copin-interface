@@ -1,42 +1,27 @@
-import { yupResolver } from '@hookform/resolvers/yup'
 import { Trans } from '@lingui/macro'
-import { CaretRight, Siren, UsersThree } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
-import isEqual from 'lodash/isEqual'
-import React, { useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { CaretRight, Funnel, Siren, UsersThree } from '@phosphor-icons/react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { normalizeTraderPayload } from 'apis/traderApis'
-import { RangeFilter } from 'apis/types'
 import SectionTitle from 'components/@ui/SectionTitle'
-import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
-import { BotAlertData, CustomAlertRequestData } from 'entities/alert'
-import useCustomAlerts from 'hooks/features/alert/useCustomAlerts'
-import FilterPairTag from 'pages/DailyTrades/FilterTags/FilterPairTag'
-import FilterTag from 'pages/Explorer/ConditionFilter/FilterTag'
+import { BotAlertData } from 'entities/alert'
+import { useAlertSettingDetailsContext } from 'hooks/features/alert/useAlertDetailsContext'
+import { useCustomAlertForm } from 'hooks/features/alert/useCustomAlertForm'
 import { FilterTabEnum } from 'pages/Explorer/ConditionFilter/configs'
 import useTradersCount from 'pages/Explorer/ConditionFilter/useTraderCount'
+import Badge from 'theme/Badge'
 import { Button } from 'theme/Buttons'
-import InputField, { TextareaField } from 'theme/InputField'
-import { Flex, IconBox, Type } from 'theme/base'
-import { AlertCategoryEnum, ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { Box, Flex, IconBox, Type } from 'theme/base'
+import { AlertCategoryEnum, AlertCustomType, ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 import { generateAlertSettingDetailsRoute } from 'utils/helpers/generateRoute'
-import { getPairFromSymbol, getSymbolFromPair } from 'utils/helpers/transform'
 
-import FilterProtocolTag from './FilterProtocolTag'
-import FilterTimeframeTag from './FilterTimeframeTag'
+import DisplayFilter from './DisplayFilters'
 import TraderFilter from './TraderFilter'
-import { LIMIT_FILTER_TRADERS } from './config'
-import {
-  convertConfigToConditionValues,
-  convertRangesFromFormValues,
-  normalizeCondition,
-  transformFormValues,
-} from './helpers'
+import TraderGroup from './TraderGroup'
+import TradersTag from './TradersTag'
+import { convertRangesFromFormValues } from './helpers'
 import { CustomAlertFormValues } from './types'
-import { customSchema } from './yupSchemas'
 
 interface SettingCustomAlertProps {
   botAlert?: BotAlertData
@@ -45,66 +30,51 @@ interface SettingCustomAlertProps {
 enum CustomAlertStep {
   BASIC_INFO = 'BASIC_INFO',
   TRADER_FILTER = 'TRADER_FILTER',
+  TRADER_GROUP = 'TRADER_GROUP',
 }
 
 export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps) {
-  const isNew = botAlert?.id === 'new'
-  const defaultValues = useMemo(() => {
-    return {
-      name: !isNew ? botAlert?.name : undefined,
-      description: botAlert?.description,
-      type: botAlert?.config?.type ?? TimeFilterByEnum.S30_DAY,
-      protocols: botAlert?.config?.['protocol']?.in,
-      pairs: botAlert?.config?.['pairs']?.in?.map((pair) => getSymbolFromPair(pair)),
-      condition: convertConfigToConditionValues(botAlert?.config),
-    } as CustomAlertFormValues
-  }, [botAlert?.config, botAlert?.description, botAlert?.name, isNew])
+  const { groupTraders, isCreatingCustomAlert, maxTraderAlert } = useAlertSettingDetailsContext()
+
+  const history = useHistory()
+  const onSuccess = (data?: BotAlertData) => {
+    if (data && data.id) {
+      history.replace(generateAlertSettingDetailsRoute({ id: data.id, type: AlertCategoryEnum.CUSTOM }))
+      if (customType === AlertCustomType.TRADER_GROUP) {
+        methods.setValue('traderGroupAdd', [])
+        methods.setValue('traderGroupUpdate', [])
+        methods.setValue('traderGroupRemove', [])
+      }
+    }
+    setCustomStep(CustomAlertStep.BASIC_INFO)
+  }
 
   const {
-    register,
-    watch,
-    setValue,
-    handleSubmit,
-    clearErrors,
-    formState: { errors },
-  } = useForm<CustomAlertFormValues>({
-    mode: 'onChange',
-    resolver: yupResolver(customSchema),
+    methods,
     defaultValues,
+    name,
+    description,
+    customType,
+    traderFilter,
+    traderGroup,
+    handleApplyTraderFilter,
+    handleApplyTraderGroup,
+    onSubmit,
+    submitting,
+  } = useCustomAlertForm({
+    botAlert,
+    onSuccess,
   })
-  const name = watch('name')
-  const description = watch('description')
-  const type = watch('type')
-  const protocols = watch('protocols')
-  const pairs = watch('pairs')
-  const condition = watch('condition')
 
-  const isShowAction = !!protocols?.length || !!pairs?.length || !!condition?.length
+  const [customStep, setCustomStep] = useState<CustomAlertStep>(CustomAlertStep.BASIC_INFO)
+  const [matchingTraderCount, setMatchingTraderCount] = useState<number>(0)
+  const totalTraderGroup: number = groupTraders?.meta?.total ?? 0
+  const safeMaxTraderAlert: number = maxTraderAlert ?? 0
 
-  const [customStep, setCustomStep] = useState(CustomAlertStep.BASIC_INFO)
-  const [matchingTraderCount, setMatchingTraderCount] = useState(0)
-  const [showAnnotation, setShowAnnotation] = useState(false)
-
-  const hasChange = useMemo(() => {
-    return !isEqual(
-      { ...defaultValues, condition: normalizeCondition(defaultValues?.condition) },
-      {
-        name,
-        description,
-        ...transformFormValues({
-          protocols,
-          pairs,
-          type,
-          condition: normalizeCondition(condition),
-        }),
-      }
-    )
-  }, [condition, defaultValues, description, name, pairs, protocols, type])
-
-  const { refetch: reloadMatchingTraders } = useTradersCount({
-    ranges: convertRangesFromFormValues({ condition, pairs }),
-    type: type ?? TimeFilterByEnum.S30_DAY,
-    protocols: protocols as ProtocolEnum[],
+  const { refetch } = useTradersCount({
+    ranges: convertRangesFromFormValues({ condition: traderFilter.condition, pairs: traderFilter.pairs }),
+    type: traderFilter.type ?? TimeFilterByEnum.S30_DAY,
+    protocols: traderFilter.protocols as ProtocolEnum[],
     filterTab: FilterTabEnum.DEFAULT,
     onSuccess: (data) => {
       const count = data?.at?.(-1)?.counter ?? 0
@@ -112,209 +82,298 @@ export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps
     },
   })
 
-  const history = useHistory()
-  const onSuccess = (data?: BotAlertData) => {
-    if (data && data.id) {
-      history.replace(generateAlertSettingDetailsRoute({ id: data.id, type: AlertCategoryEnum.CUSTOM }))
-    }
-  }
-  const { createCustomAlert, updateCustomAlert } = useCustomAlerts({ onSuccess })
+  const reloadMatchingTraders = refetch
 
-  const handleSaveCustomAlert = (values: CustomAlertFormValues) => {
-    const { name, description, type, protocols, pairs, condition } = values
-    if (!type && !protocols?.length && !pairs?.length && !condition?.length) {
-      return
+  const onApply = (form: CustomAlertFormValues) => {
+    switch (customStep) {
+      case CustomAlertStep.TRADER_FILTER:
+        handleApplyTraderFilter(form)
+        break
+      case CustomAlertStep.TRADER_GROUP:
+        handleApplyTraderGroup(form)
+        break
     }
-    clearErrors()
-    const parsedCondition = condition ? getFiltersFromFormValues(condition) : []
-    const ranges: RangeFilter[] = []
-    if (!!protocols?.length) {
-      ranges.push({
-        fieldName: 'protocol',
-        in: protocols,
-      })
-    }
-    if (!!pairs?.length) {
-      ranges.push({
-        fieldName: 'pairs',
-        in: pairs.map((e) => getPairFromSymbol(e)),
-      })
-    }
-    const { ranges: normalizeCondition } = normalizeTraderPayload({ ranges: parsedCondition })
-    const requestData = {
-      name,
-      description,
-      queries: [{ fieldName: 'type', value: type }],
-      ranges: [...ranges, ...(normalizeCondition ?? [])],
-    } as CustomAlertRequestData
-    if (!botAlert?.id || botAlert?.id === 'new') {
-      createCustomAlert(requestData)
-    } else {
-      updateCustomAlert({ id: botAlert?.id, data: requestData })
-    }
+    onSubmit(form)
   }
 
-  const handleTraderFilterChange = (filters: CustomAlertFormValues) => {
-    setValue('type', filters.type)
-    setValue('protocols', filters.protocols)
-    setValue('pairs', filters.pairs)
-    setValue('condition', filters.condition)
-    setCustomStep(CustomAlertStep.BASIC_INFO)
-    clearErrors()
-  }
-
-  const { lg } = useResponsive()
-
-  if (customStep === CustomAlertStep.TRADER_FILTER) {
-    return (
-      <TraderFilter
-        matchingTraderCount={matchingTraderCount}
-        setMatchingTraderCount={setMatchingTraderCount}
-        defaultValues={{ name, description, type, protocols, pairs, condition }}
-        onBack={() => {
-          setCustomStep(CustomAlertStep.BASIC_INFO)
-          reloadMatchingTraders()
-        }}
-        onApply={handleTraderFilterChange}
-      />
-    )
+  const onRequestEdit = () => {
+    switch (customType) {
+      case AlertCustomType.TRADER_FILTER:
+        setCustomStep(CustomAlertStep.TRADER_FILTER)
+        break
+      case AlertCustomType.TRADER_GROUP:
+        setCustomStep(CustomAlertStep.TRADER_GROUP)
+        break
+    }
   }
 
   return (
+    <>
+      {customStep === CustomAlertStep.TRADER_GROUP ? (
+        <TraderGroup
+          isNew={isCreatingCustomAlert}
+          matchingTraderCount={matchingTraderCount}
+          setMatchingTraderCount={setMatchingTraderCount}
+          defaultValues={{ ...defaultValues, ...traderGroup }}
+          groupTraders={groupTraders}
+          onBack={() => setCustomStep(CustomAlertStep.BASIC_INFO)}
+          onApply={onApply}
+          submitting={submitting}
+        />
+      ) : customStep === CustomAlertStep.TRADER_FILTER ? (
+        <TraderFilter
+          isNew={isCreatingCustomAlert}
+          matchingTraderCount={matchingTraderCount}
+          setMatchingTraderCount={setMatchingTraderCount}
+          defaultValues={{ ...defaultValues, ...traderFilter }}
+          onBack={() => {
+            setCustomStep(CustomAlertStep.BASIC_INFO)
+            reloadMatchingTraders()
+          }}
+          onApply={onApply}
+          submitting={submitting}
+        />
+      ) : (
+        <AlertBasicInfo
+          isCreatingCustomAlert={isCreatingCustomAlert}
+          name={name}
+          description={description}
+          customType={customType}
+          traderFilter={traderFilter}
+          totalTraderGroup={totalTraderGroup}
+          maxTraderAlert={safeMaxTraderAlert}
+          matchingTraderCount={matchingTraderCount}
+          groupTraders={groupTraders}
+          methods={methods}
+          onSubmit={onSubmit}
+          onRequestEdit={onRequestEdit}
+          setCustomStep={setCustomStep}
+        />
+      )}
+    </>
+  )
+}
+
+interface AlertBasicInfoProps {
+  isCreatingCustomAlert: boolean
+  name?: string
+  description?: string
+  customType?: AlertCustomType
+  traderFilter: any
+  totalTraderGroup: number
+  maxTraderAlert: number
+  matchingTraderCount: number
+  groupTraders: any
+  methods: any
+  onSubmit: (form: CustomAlertFormValues) => void
+  onRequestEdit: () => void
+  setCustomStep: (step: CustomAlertStep) => void
+}
+
+function AlertBasicInfo({
+  isCreatingCustomAlert,
+  name,
+  description,
+  customType,
+  traderFilter,
+  totalTraderGroup,
+  maxTraderAlert,
+  matchingTraderCount,
+  groupTraders,
+  methods,
+  onSubmit,
+  onRequestEdit,
+  setCustomStep,
+}: AlertBasicInfoProps) {
+  return (
     <Flex flexDirection="column" width="100%" height="100%" sx={{ overflow: 'hidden' }}>
-      <Flex alignItems="center" px={3} py={2} sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
-        <SectionTitle icon={Siren} title={<Trans>CUSTOM ALERT</Trans>} sx={{ mb: 0 }} />
+      <AlertHeader
+        isCreatingCustomAlert={isCreatingCustomAlert}
+        name={name}
+        customType={customType}
+        totalTraderGroup={totalTraderGroup}
+        maxTraderAlert={maxTraderAlert}
+        matchingTraderCount={matchingTraderCount}
+        methods={methods}
+        onSubmit={onSubmit}
+      />
+
+      <Flex flexDirection="column" flex={1} px={3} pt={3} pb={1}>
+        <Flex flexDirection="column" flex={1} sx={{ gap: 3, overflow: 'auto' }}>
+          {!isCreatingCustomAlert ? (
+            <ExistingAlertInfo
+              description={description}
+              customType={customType}
+              traderFilter={traderFilter}
+              totalTraderGroup={totalTraderGroup}
+              groupTraders={groupTraders}
+              methods={methods}
+              onSubmit={onSubmit}
+            />
+          ) : (
+            <NewAlertOptions customType={customType} setCustomStep={setCustomStep} />
+          )}
+        </Flex>
+        <Flex
+          sx={{
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            width: '100%',
+            mt: 2,
+          }}
+        >
+          <Button type="button" px={0} variant="ghostPrimary" onClick={onRequestEdit} disabled={isCreatingCustomAlert}>
+            {isCreatingCustomAlert ? 'Save Alert' : 'Edit Alert'}
+          </Button>
+        </Flex>
       </Flex>
+    </Flex>
+  )
+}
 
-      <Flex flexDirection="column" flex={1} p={3}>
-        <form style={{ height: '100%' }} onSubmit={handleSubmit(handleSaveCustomAlert)}>
-          <Flex flexDirection="column" flex={1} sx={{ gap: 3, overflow: 'auto' }}>
-            <InputField
-              required
-              block
-              annotation={showAnnotation}
-              label={<Trans>Alert Name (Required)</Trans>}
-              defaultValue={name}
-              placeholder="Input alert name"
-              {...register('name', {
-                required: { value: true, message: 'This field is required' },
-                onChange: () => {
-                  if (!showAnnotation) {
-                    setShowAnnotation(true)
-                  }
-                },
-              })}
-              maxLength={20}
-              error={errors?.name?.message}
-            />
+interface AlertHeaderProps {
+  isCreatingCustomAlert: boolean
+  name?: string
+  customType?: AlertCustomType
+  totalTraderGroup: number
+  maxTraderAlert: number
+  matchingTraderCount: number
+  methods: any
+  onSubmit: (form: CustomAlertFormValues) => void
+}
 
-            <TextareaField
-              block
-              label={<Trans>Description</Trans>}
-              placeholder="Input alert description"
-              rows={3}
-              {...register('description')}
-              error={errors?.description?.message}
-              sx={{ textarea: { fontSize: 12 } }}
-            />
+function AlertHeader({
+  isCreatingCustomAlert,
+  name,
+  customType,
+  totalTraderGroup,
+  maxTraderAlert,
+  matchingTraderCount,
+  methods,
+  onSubmit,
+}: AlertHeaderProps) {
+  return (
+    <Flex alignItems="center" px={3} py={2} sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
+      <SectionTitle
+        icon={Siren}
+        title={
+          <Flex alignItems="center" sx={{ gap: 2 }}>
+            {isCreatingCustomAlert ? <Trans>CUSTOM ALERT</Trans> : name}
+            {customType && (
+              <Badge
+                count={
+                  customType === AlertCustomType.TRADER_FILTER
+                    ? formatNumber(matchingTraderCount)
+                    : `${formatNumber(totalTraderGroup)}/${formatNumber(maxTraderAlert)}`
+                }
+              />
+            )}
+          </Flex>
+        }
+        sx={{ mb: 0, textTransform: 'uppercase' }}
+      />
+    </Flex>
+  )
+}
 
-            <Flex flexDirection="column">
-              <Type.Caption mb={2} color="neutral2">
-                <Trans>Choose Object</Trans>
-              </Type.Caption>
-              <Button
-                variant="outline"
-                sx={{ color: 'neutral1', textTransform: 'initial' }}
-                onClick={() => setCustomStep(CustomAlertStep.TRADER_FILTER)}
-              >
-                <Flex flexDirection="column" alignItems="flex-start" sx={{ gap: 1 }}>
-                  <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
-                    <Flex alignItems="center" sx={{ gap: 2 }}>
-                      <IconBox icon={<UsersThree size={20} />} size={20} />
-                      <Type.CaptionBold>
-                        <Trans>Trader</Trans>
-                        {isShowAction && ':'}
-                      </Type.CaptionBold>
-                      {isShowAction && (
-                        <Type.Caption color="neutral1">
-                          {formatNumber(matchingTraderCount, 0)} traders matching filters
-                        </Type.Caption>
-                      )}
-                    </Flex>
-                    <Flex alignItems="center" sx={{ gap: 2 }}>
-                      {!isShowAction && matchingTraderCount === 0 && (
-                        <Type.Caption color="orange1">
-                          <Trans>No Filter</Trans>
-                        </Type.Caption>
-                      )}
-                      <IconBox icon={<CaretRight />} />
-                    </Flex>
-                  </Flex>
-                  {isShowAction && (
-                    <Flex alignItems="center" sx={{ flexWrap: 'wrap', gap: 2 }}>
-                      <FilterProtocolTag
-                        protocols={!!protocols?.length ? (protocols as ProtocolEnum[]) : undefined}
-                        tagSx={{ color: 'neutral2' }}
-                      />
-                      <FilterPairTag
-                        pairs={!!pairs?.length ? pairs : undefined}
-                        tagSx={{ color: 'neutral2' }}
-                        textColor="primary1"
-                        hasLabel
-                      />
-                      {type && <FilterTimeframeTag type={type} tagSx={{ color: 'neutral2' }} />}
-                      {condition && (
-                        <FilterTag
-                          filters={condition}
-                          filterTab={FilterTabEnum.DEFAULT}
-                          limit={lg ? 10 : 5}
-                          tagSx={{
-                            color: 'neutral2',
-                            display: 'inline',
-                          }}
-                        />
-                      )}
-                    </Flex>
-                  )}
+interface ExistingAlertInfoProps {
+  description?: string
+  customType?: AlertCustomType
+  traderFilter: any
+  totalTraderGroup: number
+  groupTraders: any
+  methods: any
+  onSubmit: (form: CustomAlertFormValues) => void
+}
+
+function ExistingAlertInfo({
+  description,
+  customType,
+  traderFilter,
+  totalTraderGroup,
+  groupTraders,
+  methods,
+  onSubmit,
+}: ExistingAlertInfoProps) {
+  return (
+    <Flex flexDirection="column" sx={{ gap: 3 }}>
+      {!!description && <Type.Caption color="neutral1">{description}</Type.Caption>}
+      {customType === AlertCustomType.TRADER_FILTER && (
+        <Flex flexDirection="column" alignItems="flex-start" sx={{ gap: 1 }}>
+          <DisplayFilter {...traderFilter} />
+        </Flex>
+      )}
+      {customType === AlertCustomType.TRADER_GROUP && (
+        <Flex alignItems="center">
+          <TradersTag
+            title={<Type.Caption color="neutral1">{formatNumber(totalTraderGroup)} traders in group</Type.Caption>}
+            traders={groupTraders?.data ?? []}
+            tagSx={{ color: 'neutral1', textTransform: 'initial' }}
+          />
+        </Flex>
+      )}
+    </Flex>
+  )
+}
+
+interface NewAlertOptionsProps {
+  customType?: AlertCustomType
+  setCustomStep: (step: CustomAlertStep) => void
+}
+
+function NewAlertOptions({ customType, setCustomStep }: NewAlertOptionsProps) {
+  return (
+    <Flex flexDirection="column">
+      <Type.Caption mb={2} color="neutral2">
+        <Trans>Choose Object</Trans>
+      </Type.Caption>
+      {(!customType || customType === AlertCustomType.TRADER_FILTER) && (
+        <Box>
+          <Button
+            variant="outline"
+            sx={{ color: 'neutral1', textTransform: 'initial', width: '100%' }}
+            onClick={() => setCustomStep(CustomAlertStep.TRADER_FILTER)}
+          >
+            <Flex flexDirection="column" alignItems="flex-start" sx={{ gap: 1 }}>
+              <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+                <Flex alignItems="center" sx={{ gap: 2 }}>
+                  <IconBox icon={<Funnel size={20} />} size={20} />
+                  <Type.CaptionBold>
+                    <Trans>Trader Filter</Trans>
+                  </Type.CaptionBold>
                 </Flex>
-              </Button>
-              {errors?.type?.message && (
-                <Type.Caption mt={1} color="red1">
-                  You must have completed at least one filter
-                </Type.Caption>
-              )}
-              {matchingTraderCount > LIMIT_FILTER_TRADERS && (
-                <Type.Caption mt={1} color="red1">
-                  The filter matches too many traders ({formatNumber(matchingTraderCount, 0)}/
-                  {formatNumber(LIMIT_FILTER_TRADERS, 0)})
-                </Type.Caption>
-              )}
+                <Flex alignItems="center" sx={{ gap: 2 }}>
+                  <IconBox icon={<CaretRight />} />
+                </Flex>
+              </Flex>
+            </Flex>
+          </Button>
+        </Box>
+      )}
+
+      {(!customType || customType === AlertCustomType.TRADER_GROUP) && (
+        <Button
+          mt={2}
+          type="button"
+          variant="outline"
+          sx={{ color: 'neutral1', textTransform: 'initial' }}
+          onClick={() => setCustomStep(CustomAlertStep.TRADER_GROUP)}
+        >
+          <Flex flexDirection="column" alignItems="flex-start" sx={{ gap: 1 }}>
+            <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+              <Flex alignItems="center" sx={{ gap: 2 }}>
+                <IconBox icon={<UsersThree size={20} />} size={20} />
+                <Type.CaptionBold>
+                  <Trans>Trader Group</Trans>
+                </Type.CaptionBold>
+              </Flex>
+              <Flex alignItems="center" sx={{ gap: 2 }}>
+                <IconBox icon={<CaretRight />} />
+              </Flex>
             </Flex>
           </Flex>
-          <Flex
-            sx={{
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            <Button
-              type="submit"
-              px={0}
-              variant="ghostPrimary"
-              disabled={
-                !name ||
-                matchingTraderCount === 0 ||
-                matchingTraderCount > LIMIT_FILTER_TRADERS ||
-                !!errors.type ||
-                !hasChange
-              }
-            >
-              Save Alert
-            </Button>
-          </Flex>
-        </form>
-      </Flex>
+        </Button>
+      )}
     </Flex>
   )
 }

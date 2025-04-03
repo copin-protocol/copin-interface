@@ -17,7 +17,8 @@ import { Box, Flex, Type } from 'theme/base'
 import ROUTES from 'utils/config/routes'
 
 import NoCustomAlert from './NoCustomAlert'
-import { AlertActions, AlertChannel, AlertName, AlertStatus, AlertStatusAction } from './config'
+import { AlertActions, AlertChannel, AlertName, AlertStatus, AlertStatusAction, AlertType } from './config'
+
 
 export default function DesktopView() {
   const {
@@ -42,7 +43,7 @@ export default function DesktopView() {
       {
         title: '',
         dataIndex: 'enableAlert',
-        key: 'type',
+        key: 'alertType',
         style: { minWidth: '50px' },
         render: (item) => <AlertStatusAction data={item} />,
       },
@@ -70,10 +71,17 @@ export default function DesktopView() {
       //   render: (item) => <AlertLastMessageAt data={item} />,
       // },
       {
+        title: 'TYPE',
+        dataIndex: 'type',
+        key: 'type',
+        style: { minWidth: '120px', textAlign: 'right' },
+        render: (item) => <AlertType data={item} />,
+      },
+      {
         title: 'STATUS',
         dataIndex: 'enableAlert',
         key: 'enableAlert',
-        style: { minWidth: '150px', textAlign: 'right', justifyContent: 'right', display: 'flex' },
+        style: { minWidth: '120px', textAlign: 'right', justifyContent: 'right', display: 'flex' },
         render: (item) => <AlertStatus data={item} />,
       },
       {

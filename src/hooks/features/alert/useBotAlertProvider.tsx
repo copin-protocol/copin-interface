@@ -24,6 +24,7 @@ import { pageToOffset } from 'utils/helpers/transform'
 
 import useSettingChannels from './useSettingChannels'
 
+
 export interface BotAlertContextValues {
   totalCustomAlerts?: number
   maxTraderAlert?: number
@@ -52,6 +53,7 @@ export interface BotAlertContextValues {
   keyword?: string
   setKeyword?: (keyword: string) => void
 }
+
 interface BotAlertContextModifier {
   setState: (state: BotAlertContextValues) => void
 }
@@ -279,7 +281,7 @@ const groupSystemAlertSettings = (settings: AlertSettingData[] = []): BotAlertDa
       id: 'copy',
       name: 'Copied traders',
       category: AlertCategoryEnum.SYSTEM,
-      type: AlertTypeEnum.COPY_TRADE,
+      alertType: AlertTypeEnum.COPY_TRADE,
       enableAlert: !isCopyTradeStopped,
       channels: copyTradeChannels,
       createdAt: copyTradeChannels[0]?.createdAt ?? '',
@@ -289,7 +291,7 @@ const groupSystemAlertSettings = (settings: AlertSettingData[] = []): BotAlertDa
       id: 'trader',
       name: 'Watchlist traders',
       category: AlertCategoryEnum.SYSTEM,
-      type: AlertTypeEnum.TRADERS,
+      alertType: AlertTypeEnum.TRADERS,
       enableAlert: !isTraderStopped,
       channels: traderAlertChannels,
       createdAt: traderAlertChannels[0]?.createdAt ?? '',

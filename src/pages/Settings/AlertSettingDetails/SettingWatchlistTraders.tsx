@@ -28,6 +28,7 @@ import ROUTES from 'utils/config/routes'
 import SearchToAdd from './SearchToAdd'
 import { MobileRowItem, Trader24hTrades, TraderAddress, TraderCreatedAt, TraderStatus } from './config'
 
+
 export default function SettingWatchlistTraders({
   botAlert,
   traders,
@@ -76,8 +77,8 @@ export default function SettingWatchlistTraders({
   const { createTraderAlert, deleteTraderAlert, submittingDelete } = useSettingWatchlistTraders({ onSuccess })
 
   const handleUnsubscribeAlert = (alert?: TraderAlertData) => {
-    if (alert) {
-      deleteTraderAlert(alert?.id)
+    if (alert?.id) {
+      deleteTraderAlert(alert.id)
     }
   }
 

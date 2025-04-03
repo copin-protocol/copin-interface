@@ -10,7 +10,7 @@ import { AlertTypeEnum } from 'utils/config/enums'
 import { overflowEllipsis } from 'utils/helpers/css'
 
 import NoCustomAlert from './NoCustomAlert'
-import { AlertActions, AlertChannel, AlertStatus, AlertStatusAction } from './config'
+import { AlertActions, AlertChannel, AlertStatus, AlertStatusAction, AlertType } from './config'
 
 const tabConfigs: TabConfig[] = [
   {
@@ -53,7 +53,7 @@ export default function MobileView() {
                     sx={{ pb: 2, borderBottom: 'small', borderColor: 'neutral5' }}
                   >
                     <Type.Caption flex={1} color="neutral1" sx={{ textTransform: 'capitalize', ...overflowEllipsis() }}>
-                      {data.type === AlertTypeEnum.TRADERS
+                      {data.alertType === AlertTypeEnum.TRADERS
                         ? `${data.name} (${traderAlerts?.meta?.total ?? 0}/${maxTraderAlert})`
                         : data.name}
                     </Type.Caption>
@@ -64,7 +64,8 @@ export default function MobileView() {
                   </Flex>
                   <MobileRowItem label={'Delivery Channel'} value={<AlertChannel data={data} isMobile />} />
                   {/*<MobileRowItem label={'Last Message'} value={<AlertLastMessageAt data={data} />} />*/}
-                  <MobileRowItem label={'Type'} value={<AlertStatus data={data} />} />
+                  {/*<MobileRowItem label={'Type'} value={<AlertType data={data} />} />*/}
+                  <MobileRowItem label={'Status'} value={<AlertStatus data={data} />} />
                 </Flex>
               )
             })}
@@ -88,7 +89,7 @@ export default function MobileView() {
                     sx={{ pb: 2, borderBottom: 'small', borderColor: 'neutral5' }}
                   >
                     <Type.Caption color="neutral1" sx={{ textTransform: 'capitalize' }}>
-                      {data.type === AlertTypeEnum.TRADERS
+                      {data.alertType === AlertTypeEnum.TRADERS
                         ? `${data.name} (${traderAlerts?.meta?.total ?? 0}/${maxTraderAlert})`
                         : data.name}
                     </Type.Caption>
@@ -99,7 +100,8 @@ export default function MobileView() {
                   </Flex>
                   <MobileRowItem label={'Delivery Channel'} value={<AlertChannel data={data} isMobile />} />
                   {/*<MobileRowItem label={'Last Message'} value={<AlertLastMessageAt data={data} />} />*/}
-                  <MobileRowItem label={'Type'} value={<AlertStatus data={data} />} />
+                  <MobileRowItem label={'Type'} value={<AlertType data={data} />} />
+                  <MobileRowItem label={'Status'} value={<AlertStatus data={data} />} />
                 </Flex>
               )
             })}

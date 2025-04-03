@@ -19,7 +19,7 @@ import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { AlertCategoryEnum, AlertSettingsEnum, AlertTypeEnum, ChannelTypeEnum } from 'utils/config/enums'
-import { ALERT_CATEGORY_TRANS } from 'utils/config/translations'
+import { ALERT_CUSTOM_TYPE_TRANS } from 'utils/config/translations'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { formatLocalRelativeDate } from 'utils/helpers/format'
 import { generateAlertSettingDetailsRoute } from 'utils/helpers/generateRoute'
@@ -32,8 +32,8 @@ export const AlertStatusAction = ({ data }: { data: BotAlertData }) => {
     if (data.category === AlertCategoryEnum.CUSTOM) {
       updateCustomAlert({ id: data.id, data: { enableAlert: !status } })
     } else {
-      if (data.type && status != null) {
-        updateStatusAlert({ type: data.type, isPause: status })
+      if (data.alertType && status != null) {
+        updateStatusAlert({ type: data.alertType, isPause: status })
       }
     }
   }
@@ -60,11 +60,7 @@ export const AlertLastMessageAt = ({ data }: { data: BotAlertData }) => {
 }
 
 export const AlertType = ({ data }: { data: BotAlertData }) => {
-  return (
-    <Type.Caption color={data.category === AlertCategoryEnum.CUSTOM ? 'violet' : 'orange2'}>
-      {data.category ? ALERT_CATEGORY_TRANS[data.category] : 'N/A'}
-    </Type.Caption>
-  )
+  return <Type.Caption color="neutral1">{data.type ? ALERT_CUSTOM_TYPE_TRANS[data.type] : 'N/A'}</Type.Caption>
 }
 
 export const AlertStatus = ({ data }: { data: BotAlertData }) => {
@@ -88,7 +84,7 @@ export const AlertName = ({
 }) => {
   return (
     <Type.Caption color="neutral1" width="100%" sx={{ textTransform: 'capitalize', ...overflowEllipsis() }}>
-      {data.type === AlertTypeEnum.TRADERS ? `${data.name} (${totalTraders}/${maxTraders})` : data.name}
+      {data.alertType === AlertTypeEnum.TRADERS ? `${data.name} (${totalTraders}/${maxTraders})` : data.name}
     </Type.Caption>
   )
 }

@@ -25,6 +25,7 @@ import ROUTES from 'utils/config/routes'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
+
 const LinkWebhookAlertAction = memo(function LinkWebhookAlertModalComponent({
   botAlert,
   isLimited,
@@ -81,7 +82,7 @@ const LinkWebhookAlertAction = memo(function LinkWebhookAlertModalComponent({
         maxWidth="450px"
         zIndex={Z_INDEX.TOASTIFY}
       >
-        <LinkWebhookComponent alertType={botAlert?.type} customAlertId={botAlert?.id} onSuccess={onSuccess} />
+        <LinkWebhookComponent alertType={botAlert?.alertType} customAlertId={botAlert?.id} onSuccess={onSuccess} />
       </Modal>
     </>
   )

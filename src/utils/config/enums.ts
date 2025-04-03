@@ -127,6 +127,7 @@ export enum CopyTradeOrderTypeEnum {
   FULL_ORDER = 'FULL_ORDER',
   NOT_FULL_ORDER = 'NOT_FULL_ORDER',
 }
+
 export enum CopyTradePlatformEnum {
   APEX = 'APEX',
   OTHERS = 'OTHERS',
@@ -181,6 +182,7 @@ export enum PositionModeEnum {
   HEDGE = 'HEDGE',
   ONE_WAY = 'ONE_WAY',
 }
+
 export enum PerpDEXTypeEnum {
   INDEX = 'INDEX',
   ORDERBOOK = 'ORDERBOOK',
@@ -316,6 +318,7 @@ export enum SubscriptionPlanEnum {
   PREMIUM = 1,
   VIP = 2,
 }
+
 export enum MaxCopyTradeQuotaEnum {
   BASIC = 3,
 }
@@ -337,6 +340,12 @@ export enum AlertTypeEnum {
   COPY_TRADE = 'COPY_TRADE',
   TRADERS = 'TRADER',
   CUSTOM = 'CUSTOM',
+}
+
+export enum AlertCustomType {
+  'TRADER_FILTER' = 'TRADER_FILTER',
+  'TRADER_GROUP' = 'TRADER_GROUP',
+  'TRADER_POSITION' = 'TRADER_POSITION',
 }
 
 export enum AlertCategoryEnum {
@@ -475,6 +484,7 @@ export enum ReferralHistoryStatusEnum {
   IN_PROGRESS = 'IN_PROGRESS',
   CLAIMED = 'CLAIMED',
 }
+
 export enum ClaimRewardStatusEnum {
   PENDING = 'PENDING',
   IN_PROGRESS = 'IN_PROGRESS',
@@ -498,6 +508,7 @@ export const ACTION_NAMES = {
 export enum WaitlistTypeEnum {
   ANALYZE_WITH_AI = 'ANALYZE_WITH_AI',
 }
+
 export enum PerpChartTypeEnum {
   VOLUME = 'VOLUME',
   ACTIVE_USER = 'ACTIVE_USER',

@@ -14,7 +14,7 @@ import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import ResultEstimated from 'pages/Explorer/ConditionFilter/ResultEstimated'
 import { FilterTabEnum, defaultFieldOptions } from 'pages/Explorer/ConditionFilter/configs'
 import { Button } from 'theme/Buttons'
-import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
+import IconButton from 'theme/Buttons/IconButton'
 import Label from 'theme/InputField/Label'
 import Popconfirm from 'theme/Popconfirm'
 import RadioGroup from 'theme/RadioGroup'
@@ -23,9 +23,11 @@ import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 
-import { LIMIT_FILTER_TRADERS } from './config'
-import { convertRangesFromFormValues, normalizeCondition, transformFormValues } from './helpers'
-import { CustomAlertFormValues } from './types'
+import { LIMIT_FILTER_TRADERS } from '../config'
+import { convertRangesFromFormValues, normalizeCondition, transformFormValues } from '../helpers'
+import { CustomAlertFormValues } from '../types'
+
+// This file re-exports the refactored implementation
 
 const TIMEFRAME_OPTIONS: { label: ReactNode; value: string }[] = [
   {
@@ -72,7 +74,11 @@ export default function TraderFilter({
 
   const hasChange = useMemo(() => {
     return !isEqual(
-      { ...defaultValues, condition: normalizeCondition(defaultValues?.condition) },
+      {
+        ...defaultValues,
+        type: defaultValues?.type ?? TimeFilterByEnum.S30_DAY,
+        condition: normalizeCondition(defaultValues?.condition),
+      },
       {
         ...defaultValues,
         ...transformFormValues({
@@ -136,14 +142,16 @@ export default function TraderFilter({
 
   return (
     <Flex flexDirection="column" width="100%" height="100%" sx={{ overflow: 'auto' }}>
-      <Flex alignItems="center" px={3} py={2} sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
+      <Flex
+        alignItems="center"
+        justifyContent="space-between"
+        px={3}
+        py={2}
+        sx={{ borderBottom: 'small', borderColor: 'neutral4' }}
+      >
         {hasChange ? (
           <Popconfirm
-            action={
-              <ButtonWithIcon icon={<ArrowLeft size={20} />} variant="ghost" sx={{ p: 0 }}>
-                <Type.Body>TRADER FILTER</Type.Body>
-              </ButtonWithIcon>
-            }
+            action={<IconButton icon={<ArrowLeft size={20} />} size={20} variant="ghost" sx={{ p: 0 }}></IconButton>}
             title="Discard changes?"
             description="You have unsaved changes. Are you sure to discard them?"
             onConfirm={onBack}
@@ -151,10 +159,16 @@ export default function TraderFilter({
             confirmButtonProps={{ variant: 'ghostDanger' }}
           />
         ) : (
-          <ButtonWithIcon icon={<ArrowLeft size={20} />} variant="ghost" onClick={onBack} sx={{ p: 0 }}>
-            <Type.Body>TRADER FILTER</Type.Body>
-          </ButtonWithIcon>
+          <IconButton
+            icon={<ArrowLeft size={20} />}
+            size={20}
+            variant="ghost"
+            onClick={onBack}
+            sx={{ p: 0 }}
+          ></IconButton>
         )}
+        <Type.Body>TRADER FILTER</Type.Body>
+        <Box width={20} />
       </Flex>
 
       <Box p={3} sx={{ overflow: 'hidden' }}>

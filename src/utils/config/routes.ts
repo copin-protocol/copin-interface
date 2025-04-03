@@ -96,8 +96,8 @@ const ROUTES = {
     path: '/link/telegram',
   },
   ALERT_SETTING_DETAILS: {
-    path: '/alert-settings/:alertType/:alertId',
-    path_prefix: '/alert-settings',
+    path: '/alert/:alertType/:alertId',
+    path_prefix: '/alert',
   },
   STATS: {
     path: '/stats',

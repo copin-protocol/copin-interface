@@ -3,7 +3,7 @@ import React, { ReactNode, createContext, useContext, useEffect, useState } from
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
-import { getCustomAlertDetailsByIdApi, getTraderAlertListApi } from 'apis/alertApis'
+import { getCustomAlertDetailsByIdApi, getCustomTraderGroupByIdApi, getTraderAlertListApi } from 'apis/alertApis'
 import { ApiListResponse } from 'apis/api'
 import { getListActiveCopiedTradersApi } from 'apis/copyTradeApis'
 import { BotAlertData, TraderAlertData } from 'entities/alert'
@@ -19,6 +19,7 @@ import { convertRangesFromConfigs } from 'pages/Settings/AlertSettingDetails/Set
 import { TableSortProps } from 'theme/Table/types'
 import {
   AlertCategoryEnum,
+  AlertCustomType,
   AlertSettingsEnum,
   AlertTypeEnum,
   ProtocolEnum,
@@ -36,6 +37,7 @@ export interface AlertDetailsContextData {
   traderAlerts?: ApiListResponse<TraderAlertData>
   watchlistTraders?: ApiListResponse<TraderAlertData>
   copiedTraders?: ApiListResponse<TraderAlertData>
+  groupTraders?: ApiListResponse<TraderAlertData>
   totalCopiedTraders?: number
   totalMatchingTraders?: number
   maxTraderAlert?: number
@@ -53,6 +55,7 @@ export interface AlertDetailsContextData {
   onChangeStep: (step: AlertSettingsEnum) => void
   onDismiss: () => void
 }
+
 const AlertSettingDetailsContext = createContext<AlertDetailsContextData>({} as AlertDetailsContextData)
 export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode }) => {
   const { alertType, alertId } = useParams<{ alertType: string; alertId?: string }>()
@@ -75,7 +78,7 @@ export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode 
         return {
           ...data,
           category: AlertCategoryEnum.CUSTOM,
-          type: AlertTypeEnum.CUSTOM,
+          alertType: AlertTypeEnum.CUSTOM,
         } as BotAlertData
       },
     }
@@ -87,7 +90,7 @@ export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode 
           id: 'new',
           name: 'Custom Alert',
           category: AlertCategoryEnum.CUSTOM,
-          type: AlertTypeEnum.CUSTOM,
+          alertType: AlertTypeEnum.CUSTOM,
         } as BotAlertData)
       : data
     : systemAlerts?.find((alert) => alert?.id?.toLowerCase() === alertId?.toLowerCase())
@@ -138,7 +141,7 @@ export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode 
         sortType: currentSort?.sortType,
       }),
     {
-      enabled: !!myProfile?.id && botAlert?.type === AlertTypeEnum.TRADERS,
+      enabled: !!myProfile?.id && botAlert?.alertType === AlertTypeEnum.TRADERS,
       keepPreviousData: true,
       retry: 0,
     }
@@ -147,7 +150,7 @@ export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode 
     [QUERY_KEYS.GET_COPIED_TRADER_ALERTS, myProfile?.id],
     () => getListActiveCopiedTradersApi({ limit }),
     {
-      enabled: !!myProfile?.id && botAlert?.type === AlertTypeEnum.COPY_TRADE,
+      enabled: !!myProfile?.id && botAlert?.alertType === AlertTypeEnum.COPY_TRADE,
       retry: 0,
     }
   )
@@ -162,6 +165,19 @@ export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode 
   })
   const totalMatchingTraders = customTraders?.at?.(-1)?.counter ?? 0
 
+  const { data: groupTraders } = useQuery(
+    [QUERY_KEYS.GET_CUSTOM_TRADER_GROUP_BY_ID, myProfile?.id, botAlert?.id],
+    () => getCustomTraderGroupByIdApi({ customAlertId: botAlert?.id, limit: 500 }),
+    {
+      enabled:
+        !!myProfile?.id &&
+        botAlert?.id !== 'new' &&
+        botAlert?.alertType === AlertTypeEnum.CUSTOM &&
+        botAlert?.type === AlertCustomType.TRADER_GROUP,
+      retry: 0,
+    }
+  )
+
   const contextValue: AlertDetailsContextData = {
     myProfile,
     isMobile,
@@ -175,6 +191,7 @@ export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode 
     traderAlerts,
     watchlistTraders,
     copiedTraders,
+    groupTraders,
     totalCopiedTraders,
     totalMatchingTraders,
     maxTraderAlert,
