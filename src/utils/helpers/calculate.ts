@@ -163,10 +163,7 @@ export function calcClosedPrice(position?: PositionData) {
   decreaseList.forEach((order) => {
     let sizeNumber = 0
     let sizeDeltaNumber = 0
-    if (order.sizeNumber) {
-      sizeNumber = order.sizeNumber
-      sizeDeltaNumber = order.sizeDeltaNumber
-    } else if (order.sizeInTokenNumber || order.sizeDeltaInTokenNumber) {
+    if (order.sizeInTokenNumber || order.sizeDeltaInTokenNumber) {
       sizeNumber = order.sizeInTokenNumber
         ? order.sizeInTokenNumber
         : Math.abs((order.sizeDeltaInTokenNumber ?? 0) / order.priceNumber)

@@ -14,7 +14,7 @@ export const TOKEN_COLLATERAL_BLAST: TokenCollateralMapping = {
   '0x4300000000000000000000000000000000000003': {
     address: '0x4300000000000000000000000000000000000003',
     symbol: 'USDB',
-    decimals: 6,
+    decimals: 18,
     isStableCoin: true,
   },
 }
