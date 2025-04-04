@@ -9,6 +9,8 @@ import {
 } from 'entities/hyperliquid'
 import { PositionData } from 'entities/trader'
 import { CopyTradePlatformEnum, MarginModeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { PROTOCOL_PRICE_MULTIPLE_MAPPING } from 'utils/helpers/price'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 export function parseHLPositionData({ account, data }: { account: string; data: AssetPosition[] }) {
   if (!data) return []
@@ -55,7 +57,9 @@ export function parseHLCopyPositionData({ data }: { data: AssetPosition[] | unde
 }
 
 export function getHLCopyPositionIdentifyKey(position: CopyPositionData) {
-  return `${position.pair}${position.isLong}`
+  const symbol = getSymbolFromPair(position.pair)
+  const { originalSymbol } = PROTOCOL_PRICE_MULTIPLE_MAPPING[symbol]
+  return `${originalSymbol}${position.isLong}`
 }
 
 function getHLPositionData(data: AssetPosition) {
