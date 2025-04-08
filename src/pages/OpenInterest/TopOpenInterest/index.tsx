@@ -12,7 +12,9 @@ import PythWatermark from 'components/@ui/PythWatermark'
 import ToastBody from 'components/@ui/ToastBody'
 import { ResponsePositionData } from 'entities/trader'
 import { useFilterPairs } from 'hooks/features/useFilterPairs'
+import useInternalRole from 'hooks/features/useInternalRole'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
+import Maintain from 'pages/DailyTrades/Maintain'
 import { Box, Flex } from 'theme/base'
 import { TAB_HEIGHT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
@@ -78,12 +80,13 @@ export default function TopOpenInterest() {
     return { index, body, protocols: selectedProtocols ?? [] }
   }, [sort.key, from, to, pairs, limit, selectedProtocols, excludedPairs, ranges])
 
+  const isInternal = useInternalRole()
   const {
     data: topOpeningPositionsData,
     loading: isLoading,
     previousData,
   } = useApolloQuery<TopOpeningPositionsGraphQLResponse<ResponsePositionData>>(SEARCH_TOP_OPENING_POSITIONS_QUERY, {
-    skip: selectedProtocols == null,
+    skip: selectedProtocols == null || !isInternal,
     variables: queryVariables,
     onError: (error) => {
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
@@ -96,6 +99,8 @@ export default function TopOpenInterest() {
   const data = useMemo(() => {
     return rawPositionData?.map((position) => normalizePositionData(position))
   }, [rawPositionData])
+
+  if (!isInternal) return <Maintain />
 
   if (selectedProtocols == null) return null
 
