@@ -176,5 +176,6 @@ export const EVENT_ACTIONS = {
     LITE_COPY_TRADER_CANCEL: 'lite_copy_trader_cancel',
     LITE_COPY_USE_RECOMMEDATION_SETTINGS: 'lite_copy_use_recommendation_settings',
     LITE_ONBOARDING_NAVIGATE_TO_LITE: 'lite_onboarding_navigate_to_lite',
+    LITE_UPGRADE: 'lite_upgrade',
   },
 }

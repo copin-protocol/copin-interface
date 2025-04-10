@@ -73,22 +73,11 @@ export const TraderGroupSearch = ({
   searchText,
   setSearchText,
   onAddWatchlist,
+  onRemoveWatchlist,
 }: TraderGroupSearchProps) => {
   return (
     <Flex alignItems="center" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
-      <Flex flex={1} sx={{ pl: 3, gap: 2 }}>
-        {totalTrader < (maxTraderAlert ?? 0) && (
-          <SearchToAdd ignoreSelectTraders={ignoreSelectTraders} onSelect={onAddWatchlist} />
-        )}
-        {!isVIPUser && totalTrader >= (maxTraderAlert ?? 0) && (
-          <Link to={ROUTES.SUBSCRIPTION.path}>
-            <Button size="xs" variant="outlinePrimary">
-              <Trans>Upgrade</Trans>
-            </Button>
-          </Link>
-        )}
-      </Flex>
-      <Flex sx={{ width: 200, borderLeft: 'small', borderColor: 'neutral4' }}>
+      <Flex sx={{ pl: 1, width: 200, borderRight: 'small', borderColor: 'neutral4' }}>
         <InputSearchText
           placeholder="SEARCH TRADER"
           sx={{
@@ -101,6 +90,22 @@ export const TraderGroupSearch = ({
           searchText={searchText}
           setSearchText={setSearchText}
         />
+      </Flex>
+      <Flex flex={1} justifyContent="flex-end" sx={{ pr: 3, gap: 2 }}>
+        {totalTrader < (maxTraderAlert ?? 0) && (
+          <SearchToAdd
+            ignoreSelectTraders={ignoreSelectTraders}
+            onSelect={onAddWatchlist}
+            onRemove={onRemoveWatchlist}
+          />
+        )}
+        {!isVIPUser && totalTrader >= (maxTraderAlert ?? 0) && (
+          <Link to={ROUTES.SUBSCRIPTION.path}>
+            <Button size="xs" variant="outlinePrimary">
+              <Trans>Upgrade</Trans>
+            </Button>
+          </Link>
+        )}
       </Flex>
     </Flex>
   )

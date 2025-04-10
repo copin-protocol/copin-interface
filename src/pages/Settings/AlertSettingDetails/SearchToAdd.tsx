@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { Check, Plus } from '@phosphor-icons/react'
+import { Plus, Trash } from '@phosphor-icons/react'
 import React, { ChangeEvent, RefObject, memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
 import TraderAddress from 'components/@ui/TraderAddress'
+import { LastTrade, TotalPnL, TotalVolume } from 'components/@widgets/SearchTraderResultItem'
 import { TraderData } from 'entities/trader'
 import useSearchAllData from 'hooks/features/trader/useSearchAllData'
 import useIsMobile from 'hooks/helpers/useIsMobile'
@@ -25,9 +26,11 @@ import { formatNumber } from 'utils/helpers/format'
 const SearchToAdd = memo(function SearchToAddMemo({
   ignoreSelectTraders,
   onSelect,
+  onRemove,
 }: {
   ignoreSelectTraders?: { account: string; protocol: ProtocolEnum }[]
   onSelect: (data: TraderData) => void
+  onRemove?: (data: TraderData) => void
 }) {
   const [openModal, setOpenModal] = useState(false)
   const handleOpenModal = () => setOpenModal(true)
@@ -44,6 +47,7 @@ const SearchToAdd = memo(function SearchToAddMemo({
           onDismiss={handleDismissModal}
           ignoreSelectTraders={ignoreSelectTraders}
           onSelect={onSelect}
+          onRemove={onRemove}
         />
       )}
     </>
@@ -58,12 +62,14 @@ function SearchContainer({
   placeholder = 'SEARCH ADDRESS TO ADD',
   ignoreSelectTraders = [],
   onSelect,
+  onRemove,
 }: {
   isOpen: boolean
   onDismiss: () => void
   placeholder?: string
   ignoreSelectTraders?: { account: string; protocol: ProtocolEnum }[]
   onSelect: (data: TraderData) => void
+  onRemove?: (data: TraderData) => void
 }) {
   const isMobile = useIsMobile()
   const {
@@ -93,6 +99,12 @@ function SearchContainer({
   const handleClickSearchItem = (data: TraderData) => {
     if (ignoreSelectTraders.find((e) => e.account === data.account && e.protocol === data.protocol)) return
     onSelect(data)
+  }
+
+  const handleRemoveSearchItem = (data: TraderData) => {
+    if (!onRemove || !ignoreSelectTraders.find((e) => e.account !== data.account && e.protocol !== data.protocol))
+      return
+    onRemove(data)
   }
 
   return (
@@ -143,6 +155,7 @@ function SearchContainer({
                 searchTraders={traders}
                 ignoreSelectTraders={ignoreSelectTraders}
                 onClickTraderItem={handleClickSearchItem}
+                onRemoveTraderItem={handleRemoveSearchItem}
                 handleHideResult={onDismiss}
               />
               {!traders?.length && <NoDataFound message={<Trans>No Trader Found</Trans>} />}
@@ -210,12 +223,14 @@ function SearchResult({
   searchTraders,
   ignoreSelectTraders,
   onClickTraderItem,
+  onRemoveTraderItem,
   handleHideResult,
 }: {
   keyword: string
   searchTraders: TraderData[] | undefined
   ignoreSelectTraders?: { account: string; protocol: ProtocolEnum }[]
   onClickTraderItem: (data: TraderData) => void
+  onRemoveTraderItem?: (data: TraderData) => void
   handleHideResult?: () => void
 }) {
   const [selectedItem, setSelectedItem] = useState(-1)
@@ -223,19 +238,28 @@ function SearchResult({
     data: [],
     selectedIndex: 0,
   })
-  const handleKeyboard = useCallback((e: KeyboardEvent) => {
-    if (!searchResultRef.current) return
-    if (e.key === 'Enter') {
-      const data = searchResultRef.current.data[searchResultRef.current.selectedIndex]
-      if (data) onClickTraderItem(data)
-    }
-    if (e.key === 'ArrowDown') {
-      setSelectedItem((prev) => (prev + 1 > searchResultRef.current.data.length - 1 ? prev : prev + 1))
-    }
-    if (e.key === 'ArrowUp') {
-      setSelectedItem((prev) => (prev === 0 ? 0 : prev - 1))
-    }
-  }, [])
+  const handleKeyboard = useCallback(
+    (e: KeyboardEvent) => {
+      if (!searchResultRef.current) return
+      if (e.key === 'Enter') {
+        const data = searchResultRef.current.data[searchResultRef.current.selectedIndex]
+        if (data) {
+          if (ignoreSelectTraders?.find((e) => e.account === data.account && e.protocol === data.protocol)) {
+            onRemoveTraderItem?.(data)
+          } else {
+            onClickTraderItem(data)
+          }
+        }
+      }
+      if (e.key === 'ArrowDown') {
+        setSelectedItem((prev) => (prev + 1 > searchResultRef.current.data.length - 1 ? prev : prev + 1))
+      }
+      if (e.key === 'ArrowUp') {
+        setSelectedItem((prev) => (prev === 0 ? 0 : prev - 1))
+      }
+    },
+    [ignoreSelectTraders, onClickTraderItem, onRemoveTraderItem]
+  )
   useEffect(() => {
     searchResultRef.current.selectedIndex = selectedItem
     const searchTraderItemBox = document.getElementById(`search_trader_${selectedItem}`)
@@ -267,31 +291,52 @@ function SearchResult({
             )
             return (
               <Box id={`search_trader_${index}`} key={traderData.id} sx={{ bg: isActive ? 'neutral4' : 'transparent' }}>
-                <Flex
-                  alignItems="center"
-                  justifyContent="space-between"
+                <Box
                   role="button"
                   key={traderData.id}
-                  onClick={() => onClickTraderItem(traderData)}
-                  sx={{ py: '6px', px: 3, borderRadius: 'sm', '&:hover': { bg: 'neutral6' } }}
+                  onClick={() => (isSelected ? onRemoveTraderItem?.(traderData) : onClickTraderItem(traderData))}
+                  sx={{
+                    pt: 2,
+                    pb: 1,
+                    px: 3,
+                    borderRadius: 'sm',
+                    '&:hover': { bg: 'neutral6' },
+                    borderTop: 'small',
+                    borderColor: 'neutral5',
+                  }}
                 >
-                  <TraderAddress
-                    address={traderData.account}
-                    protocol={traderData.protocol}
-                    options={{
-                      isLink: false,
-                      textSx: { width: 80 },
-                    }}
-                  />
-                  <ButtonWithIcon
-                    variant="ghostPrimary"
-                    icon={isSelected ? <Check /> : <Plus />}
-                    p={0}
-                    disabled={isSelected}
-                  >
-                    {isSelected ? <Type.Caption>Added</Type.Caption> : <Type.Caption>Add</Type.Caption>}
-                  </ButtonWithIcon>
-                </Flex>
+                  <Flex alignItems="center" justifyContent="space-between">
+                    <TraderAddress
+                      address={traderData.account}
+                      protocol={traderData.protocol}
+                      options={{
+                        isLink: false,
+                        textSx: { width: 80 },
+                      }}
+                    />
+                    <LastTrade value={traderData.lastTradeAt} sx={{ flexShrink: 0 }} />
+                  </Flex>
+                  <Flex mt={1} alignItems="center" justifyContent="space-between">
+                    <Flex color="neutral2" sx={{ gap: 1 }}>
+                      <TotalPnL
+                        value={traderData.pnl}
+                        sx={{ flex: ['0 0 130px', '0 0 170px'], flexDirection: ['column', 'row'] }}
+                      />
+                      <TotalVolume
+                        value={traderData.totalVolume}
+                        sx={{ flex: ['0 0 130px', '0 0 180px'], flexDirection: ['column', 'row'] }}
+                      />
+                      {/* <LastTrade value={data.lastTradeAt} sx={{ display: ['none', 'none', 'flex'], flex: '0 0 180px' }} /> */}
+                    </Flex>
+                    <ButtonWithIcon
+                      variant={isSelected ? 'ghostDanger' : 'ghostPrimary'}
+                      icon={isSelected ? <Trash /> : <Plus />}
+                      p={0}
+                    >
+                      {isSelected ? <Type.Caption>Remove</Type.Caption> : <Type.Caption>Add</Type.Caption>}
+                    </ButtonWithIcon>
+                  </Flex>
+                </Box>
               </Box>
             )
           })}

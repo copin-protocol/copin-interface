@@ -28,7 +28,6 @@ import ROUTES from 'utils/config/routes'
 import SearchToAdd from './SearchToAdd'
 import { MobileRowItem, Trader24hTrades, TraderAddress, TraderCreatedAt, TraderStatus } from './config'
 
-
 export default function SettingWatchlistTraders({
   botAlert,
   traders,
@@ -203,7 +202,18 @@ export default function SettingWatchlistTraders({
                   // <ButtonWithIcon size="xs" variant="outlinePrimary" icon={<Plus />} onClick={() => setOpenModalAdd(true)}>
                   //   <Trans>Add Trader</Trans>
                   // </ButtonWithIcon>
-                  <SearchToAdd ignoreSelectTraders={ignoreSelectTraders} onSelect={onAddWatchlist} />
+                  <SearchToAdd
+                    ignoreSelectTraders={ignoreSelectTraders}
+                    onSelect={onAddWatchlist}
+                    onRemove={(data: TraderData) => {
+                      const traderAlertData = filteredTraders?.data?.find(
+                        (e) => e.address === data.account && e.protocol === data.protocol
+                      )
+                      if (traderAlertData) {
+                        handleUnsubscribeAlert(traderAlertData)
+                      }
+                    }}
+                  />
                 )}
               </Flex>
             }
