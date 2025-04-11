@@ -8,7 +8,7 @@ import {
   ProtocolEnum,
   SLTPTypeEnum,
 } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { DEFAULT_SERVICE_KEY, QUERY_KEYS } from 'utils/config/keys'
 import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 
 import { getExchangeOption } from './helpers'
@@ -64,7 +64,7 @@ export const defaultCopyTradeFormValues: CopyTradeFormValues = {
   lookBackOrders: undefined,
   exchange: CopyTradePlatformEnum.HYPERLIQUID,
   copyWalletId: '',
-  serviceKey: undefined,
+  serviceKey: DEFAULT_SERVICE_KEY,
   title: '',
   reverseCopy: false,
   duplicateToAddress: '',
