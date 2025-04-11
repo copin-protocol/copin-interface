@@ -29,7 +29,7 @@ export interface CopyTradeFormValues {
   lookBackOrders: number | null | undefined
   exchange: CopyTradePlatformEnum
   copyWalletId: string
-  serviceKey: string
+  serviceKey?: string
   title: string
   reverseCopy: boolean
   duplicateToAddress?: string
