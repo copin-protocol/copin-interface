@@ -8,12 +8,13 @@ import { getCopyTradeSettingsListApi, getMyCopyTradeOverviewApi } from 'apis/cop
 import SelectedCopyTradeActions from 'components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 import useOnboardingStore from 'hooks/store/useOnboardingStore'
 import Badge from 'theme/Badge'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS, STORAGE_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -66,6 +67,9 @@ const CopyManagement = () => {
   })
 
   const { hasCopiedChannel: hasBotAlert } = useBotAlertContext()
+
+  const { myProfile } = useMyProfileStore()
+  const subscriptionPlan = myProfile?.plan ?? SubscriptionPlanEnum.BASIC
 
   return (
     <Box flex="1 1 0" height="100%">
@@ -165,6 +169,7 @@ const CopyManagement = () => {
                 copyWallet={embeddedWallet}
                 copyTrades={copyTrades}
                 loading={isLoadingCopyTrades}
+                subscriptionPlan={subscriptionPlan}
               />
             )}
           </Box>

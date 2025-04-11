@@ -3,10 +3,10 @@ import { ComponentProps, ReactNode, useState } from 'react'
 
 import useCopyTradePermission from 'hooks/features/copyTrade/useCopyTradePermission'
 import { useCheckCopyTradeAction } from 'hooks/features/subscription/useSubscriptionRestrict'
+import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import Tooltip from 'theme/Tooltip'
-import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { logEventCopyTrade } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
@@ -43,7 +43,8 @@ export default function CopyTraderButton({
 
   const hasCopyPermission = useCopyTradePermission()
 
-  const disabledCopy = !ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol)
+  const allowedProtocols = useGetCopyTradeProtocols()
+  const disabledCopy = !allowedProtocols.includes(protocol)
   const disabledCopyTooltipId = `tt_copy_trade_${account}_${protocol}`
 
   return (

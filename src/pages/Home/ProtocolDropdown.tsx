@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
 
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
-import useInternalRole from 'hooks/features/useInternalRole'
+import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 
 import { getDropdownProps } from './configs'
@@ -18,10 +17,9 @@ export default function ProtocolDropdown({
   protocol: ProtocolEnum
   onChangeProtocol: (protocol: ProtocolEnum) => void
 }) {
-  const isInternal = useInternalRole()
   const protocolOptions = useGetProtocolOptions()
 
-  const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
+  const allowList = useGetCopyTradeProtocols()
 
   const protocolOption = protocolOptions.find((option) => option.id === protocol) ?? protocolOptions[0]
   return (

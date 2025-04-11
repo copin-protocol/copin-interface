@@ -39,6 +39,7 @@ export interface TraderGroupSearchProps {
   searchText: string
   setSearchText: (value: string) => void
   onAddWatchlist: (data: TraderData) => void
+  onRemoveWatchlist: (data: TraderData) => void
 }
 
 export interface TraderGroupListProps {

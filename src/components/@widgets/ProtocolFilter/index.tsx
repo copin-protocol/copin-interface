@@ -4,13 +4,11 @@ import { DropdownProps } from 'rc-dropdown/lib/Dropdown'
 import { memo, useState } from 'react'
 
 import ProtocolGroup from 'components/@ui/ProtocolGroup'
-import useInternalRole from 'hooks/features/useInternalRole'
-import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
+import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import Dropdown from 'theme/Dropdown'
 import { Flex } from 'theme/base'
-import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { compareTwoArrays } from 'utils/helpers/common'
@@ -35,9 +33,8 @@ export type GlobalProtocolFilterProps = {
 export const GlobalProtocolFilter = memo(function GlobalProtocolFilterMemo(props: GlobalProtocolFilterProps) {
   const { setSearchParams } = useSearchParams()
   const { selectedProtocols, setProtocols, checkIsSelected, handleToggle } = useGlobalProtocolFilterStore()
-  const isInternal = useInternalRole()
-  const protocolOptions = useGetProtocolOptions()
-  const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
+
+  const allowList = useGetCopyTradeProtocols()
   const setSelectedProtocols = (protocols: ProtocolEnum[], isClearAll?: boolean): void => {
     const resetParams: Record<string, string | null> = {}
     if (selectedProtocols == null || !compareTwoArrays(protocols, selectedProtocols)) {

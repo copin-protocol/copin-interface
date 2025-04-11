@@ -290,6 +290,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.DEPERP_BASE,
         ProtocolEnum.ELFI_ARB,
         ProtocolEnum.PINGU_ARB,
+        ProtocolEnum.JUPITER,
       ]
     : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 

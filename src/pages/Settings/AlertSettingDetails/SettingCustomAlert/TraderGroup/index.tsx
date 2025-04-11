@@ -1,6 +1,8 @@
 import { useResponsive } from 'ahooks'
 import React from 'react'
 
+import { TraderAlertData } from 'entities/alert'
+import { TraderData } from 'entities/trader'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import { Flex } from 'theme/base'
 import { AlertCustomType } from 'utils/config/enums'
@@ -87,6 +89,9 @@ const TraderGroup = ({
           searchText={searchText}
           setSearchText={setSearchText}
           onAddWatchlist={onAddWatchlist}
+          onRemoveWatchlist={(data: TraderData) => {
+            onRemoveWatchlist?.({ address: data.account, protocol: data.protocol } as TraderAlertData)
+          }}
         />
       </Flex>
 

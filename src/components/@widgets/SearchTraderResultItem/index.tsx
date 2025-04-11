@@ -99,7 +99,7 @@ export default function SearchTraderResultItems({
   )
 }
 
-function LastTrade({ value, sx = {} }: { value: string | undefined; sx?: any }) {
+export function LastTrade({ value, sx = {} }: { value: string | undefined; sx?: any }) {
   return (
     <Type.Caption
       sx={{
@@ -121,10 +121,12 @@ function LastTrade({ value, sx = {} }: { value: string | undefined; sx?: any }) 
   )
 }
 
-function TotalVolume({ value, sx = {} }: { value: number | undefined; sx?: any }) {
+export function TotalVolume({ value, sx = {} }: { value: number | undefined; sx?: any }) {
   return (
     <Type.Caption sx={{ display: 'flex', gap: [0, 2], lineHeight: '24px', ...sx }}>
-      <Box as="span">Total Volume ($)</Box>
+      <Box as="span" color="neutral3">
+        Total Volume ($)
+      </Box>
       <Box as="span" color="neutral1">
         {value ? compactNumber(value, 2) : '--'}
       </Box>
@@ -132,10 +134,12 @@ function TotalVolume({ value, sx = {} }: { value: number | undefined; sx?: any }
   )
 }
 
-function TotalPnL({ value, sx = {} }: { value: number | undefined; sx?: any }) {
+export function TotalPnL({ value, sx = {} }: { value: number | undefined; sx?: any }) {
   return (
     <Type.Caption sx={{ display: 'flex', gap: [0, 2], lineHeight: '24px', ...sx }}>
-      <Box as="span">Total PnL</Box>
+      <Box as="span" color="neutral3">
+        Total PnL
+      </Box>
       <SignedText isCompactNumber fontInherit value={value} maxDigit={2} minDigit={2} prefix="$" />
     </Type.Caption>
   )

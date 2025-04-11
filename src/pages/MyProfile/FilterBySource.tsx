@@ -3,12 +3,13 @@ import { Trans } from '@lingui/macro'
 import ProtocolGroup from 'components/@ui/ProtocolGroup'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import SelectWithCheckbox from 'components/@widgets/SelectWithCheckbox'
+import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import Checkbox from 'theme/Checkbox'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Flex, Grid, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { ALLOWED_COPYTRADE_PROTOCOLS, DCP_SUPPORTED_PROTOCOLS } from 'utils/config/constants'
+import { DCP_SUPPORTED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 
 type FilterBySourceProps = {
@@ -27,8 +28,9 @@ export default function FilterBySource({
   checkIsProtocolChecked,
   handleToggleProtocol,
 }: FilterBySourceProps) {
+  const allowedProtocols = useGetCopyTradeProtocols()
   const protocolOptionsMapping = useGetProtocolOptionsMapping()
-  const protocolFilters = isDCP ? DCP_SUPPORTED_PROTOCOLS : ALLOWED_COPYTRADE_PROTOCOLS
+  const protocolFilters = isDCP ? DCP_SUPPORTED_PROTOCOLS : allowedProtocols
 
   return (
     <Flex alignItems="start" sx={{ gap: 3, flexDirection: 'column' }}>
@@ -80,7 +82,8 @@ export function FilterBySourceDropdown({
   checkIsProtocolChecked,
   handleToggleProtocol,
 }: FilterBySourceProps) {
-  const protocolFilters = isDCP ? DCP_SUPPORTED_PROTOCOLS : ALLOWED_COPYTRADE_PROTOCOLS
+  const allowedProtocols = useGetCopyTradeProtocols()
+  const protocolFilters = isDCP ? DCP_SUPPORTED_PROTOCOLS : allowedProtocols
   const filterOptionsBySearchFn = ({ searchText, option }: { searchText: string; option: ProtocolEnum }) => {
     if (!searchText) return true
     return !!option.toLowerCase().includes(searchText?.toLowerCase())

@@ -151,11 +151,11 @@ export const styleVariants = {
     },
   },
   [variants.GHOST_DANGER]: {
-    color: 'red2',
+    color: 'red1',
     bg: 'transparent',
     border: 'none',
     '&:hover:not(:disabled),&:active:not(:disabled)': {
-      color: 'red1',
+      color: 'red2',
     },
   },
   [variants.TEXT]: {
