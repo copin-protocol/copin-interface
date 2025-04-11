@@ -6,8 +6,8 @@ import { getCopyTradeSettingsListApi, getMyCopyTradersApi } from 'apis/copyTrade
 import { CopyTradeData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { CopyTradeStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS, STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 
@@ -40,6 +40,7 @@ type CEXManagementContextValues = {
 const CEXManagementContext = createContext<CEXManagementContextValues>({} as CEXManagementContextValues)
 
 export function CEXManagementProvider({ children }: { children: ReactNode }) {
+  const allowedProtocols = useGetCopyTradeProtocols()
   const { searchParams, setSearchParams } = useSearchParams()
   const { state: locationState } = useLocation<{ copyWalletId: string }>()
   const { loadingCopyWallets, cexWallets, myProfile } = useCopyWalletContext()
@@ -146,7 +147,7 @@ export function CEXManagementProvider({ children }: { children: ReactNode }) {
     isToggledAll: isToggleAllProtocol,
   } = useSelectMultiple({
     paramKey: URL_PARAM_KEYS.MY_COPIES_PROTOCOL,
-    defaultSelected: ALLOWED_COPYTRADE_PROTOCOLS,
+    defaultSelected: allowedProtocols,
     toggleLastItem: true,
   })
   const queryParams = useMemo(

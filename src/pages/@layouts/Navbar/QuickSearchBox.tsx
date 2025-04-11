@@ -11,7 +11,7 @@ import SearchPositionResultItem from 'components/@widgets/SearchPositionResultIt
 import SearchTraderResultItems from 'components/@widgets/SearchTraderResultItem'
 import { PositionData, TraderData } from 'entities/trader'
 import useSearchAllData from 'hooks/features/trader/useSearchAllData'
-import useInternalRole from 'hooks/features/useInternalRole'
+import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import { useSearchProtocolFilter } from 'hooks/store/useSearchProtocolFilter'
@@ -24,7 +24,7 @@ import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
 import RcDialog from 'theme/RcDialog'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { ALLOWED_COPYTRADE_PROTOCOLS, SEARCH_DEFAULT_LIMIT } from 'utils/config/constants'
+import { SEARCH_DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { formatNumber } from 'utils/helpers/format'
@@ -136,9 +136,8 @@ function QuickSearchContainer({
   const [openSelectProtocols, setOpenSelectProtocols] = useState(false)
   const handleToggleSelectProtocols = () => setOpenSelectProtocols((prev) => !prev)
 
-  const isInternal = useInternalRole()
   const protocolOptions = useGetProtocolOptions()
-  const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
+  const allowList = useGetCopyTradeProtocols()
 
   const {
     protocolSortBy,

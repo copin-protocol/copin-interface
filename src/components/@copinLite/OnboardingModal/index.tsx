@@ -10,6 +10,7 @@ import { GetTraderByLabelPayload } from 'apis/types'
 import logo from 'assets/images/logo.png'
 import { Account, ResponseTraderData, StatisticData } from 'entities/trader'
 import useReferralActions from 'hooks/features/useReferralActions'
+import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
 import useParsedQueryString from 'hooks/router/useParsedQueryString'
 import useOnboardingStore from 'hooks/store/useOnboardingStore'
 import useUserReferral from 'hooks/store/useReferral'
@@ -17,7 +18,6 @@ import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import RcDialog from 'theme/RcDialog'
 import { Box, Flex, Image } from 'theme/base'
-import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { SortTypeEnum, TimeFilterByEnum, TraderLabelEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
@@ -30,14 +30,6 @@ import TraderFilter from './TraderFilter'
 import { TraderListDesktop, TraderListMobile } from './TraderList'
 
 const LIMIT_TRADER = 16
-
-const BASE_FILTER_TRADER_PAYLOAD: GetTraderByLabelPayload = {
-  protocols: ALLOWED_COPYTRADE_PROTOCOLS,
-  statisticType: TimeFilterByEnum.S30_DAY,
-  labels: [],
-  sortBy: 'realisedPnl',
-  sortType: SortTypeEnum.DESC,
-}
 
 export default function OnboardingModal() {
   const { profile, isNewUser, setIsNewUser, setOpenReferralModal } = useAuthContext()
@@ -95,13 +87,21 @@ export function OnboardingContent({
   onDismiss: (() => void) | undefined
   onStartInteraction?: () => void
 }) {
+  const allowedProtocols = useGetCopyTradeProtocols()
+  const baseFilterTraderPayload: GetTraderByLabelPayload = {
+    protocols: allowedProtocols,
+    statisticType: TimeFilterByEnum.S30_DAY,
+    labels: [],
+    sortBy: 'realisedPnl',
+    sortType: SortTypeEnum.DESC,
+  }
   const [step, setStep] = useState(1)
   const [listTraderLabel, setListTraderLabel] = useState<TraderLabelEnum[]>([])
   const { data: traderData, isFetching: isLoading } = useQuery(
     [QUERY_KEYS, listTraderLabel],
     () =>
       getTraderByLabelApi({
-        payload: { ...BASE_FILTER_TRADER_PAYLOAD, labels: listTraderLabel, protocols: ALLOWED_COPYTRADE_PROTOCOLS },
+        payload: { ...baseFilterTraderPayload, labels: listTraderLabel, protocols: allowedProtocols },
       }),
     {
       enabled: !!listTraderLabel.length,

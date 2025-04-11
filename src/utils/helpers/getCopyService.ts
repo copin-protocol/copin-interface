@@ -17,5 +17,5 @@ export const getCopyService = ({
   if (isInternal) {
     return DEFAULT_SERVICE_KEY
   }
-  return ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol) ? 'COPY_TRADE_MAIN_STREAM' : ''
+  return ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol) ? DEFAULT_SERVICE_KEY : ''
 }

@@ -11,10 +11,11 @@ import { CopyOrderData, CopyPositionData, CopyTradeData } from 'entities/copyTra
 import { CopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
+import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useContract } from 'hooks/web3/useContract'
 import useContractQuery from 'hooks/web3/useContractQuery'
-import { ALLOWED_COPYTRADE_PROTOCOLS, DEPRECATED_EXCHANGES } from 'utils/config/constants'
+import { DEPRECATED_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum, CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { CONTRACT_QUERY_KEYS, QUERY_KEYS, STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { ARBITRUM_CHAIN } from 'utils/web3/chains'
@@ -60,6 +61,7 @@ const DCPManagementContext = createContext<DCPManagementContextValues>({} as DCP
 
 export function DCPManagementProvider({ children }: { children: ReactNode }) {
   const refetchQueries = useRefetchQueries()
+  const allowedProtocols = useGetCopyTradeProtocols()
   const { searchParams, setSearchParams } = useSearchParams()
   const { state: locationState } = useLocation<{ copyWalletId: string }>()
   const { loadingCopyWallets, dcpWallets: _dcpWallets, myProfile } = useCopyWalletContext()
@@ -173,7 +175,7 @@ export function DCPManagementProvider({ children }: { children: ReactNode }) {
     isToggledAll: isToggleAllProtocol,
   } = useSelectMultiple({
     paramKey: URL_PARAM_KEYS.MY_COPIES_PROTOCOL,
-    defaultSelected: ALLOWED_COPYTRADE_PROTOCOLS,
+    defaultSelected: allowedProtocols,
     toggleLastItem: true,
   })
   const queryParams = useMemo(

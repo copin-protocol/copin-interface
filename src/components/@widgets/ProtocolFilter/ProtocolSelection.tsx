@@ -41,6 +41,7 @@ export default function ProtocolSelection({
   hasSearch = true,
   handleToggleDropdown,
 }: ProtocolSelectionProps) {
+  const allowedProtocols = ALLOWED_COPYTRADE_PROTOCOLS
   const { protocolSortBy, setProtocolSortBy } = useProtocolSortByStore()
   const { data: protocolsStatistic } = useQuery([QUERY_KEYS.GET_PROTOCOLS_STATISTIC], getProtocolsStatistic)
 
@@ -50,14 +51,14 @@ export default function ProtocolSelection({
   const [selectedProtocols, setSelectedProtocols] = useState(savedProtocols)
   // const [selectedChainId, setSelectedChainId] = useState(DEFAULT_ALL_CHAINS)
   const [isUseAllowList, setIsUseAllowList] = useState(
-    selectedProtocols.every((protocol) => ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol))
+    selectedProtocols.every((protocol) => allowedProtocols.includes(protocol))
   )
 
   useEffect(() => {
-    if (selectedProtocols.some((protocol) => !ALLOWED_COPYTRADE_PROTOCOLS.includes(protocol))) {
+    if (selectedProtocols.some((protocol) => !allowedProtocols.includes(protocol))) {
       setIsUseAllowList(false)
     }
-  }, [selectedProtocols])
+  }, [allowedProtocols, selectedProtocols])
 
   const checkIsSelected = (protocol: ProtocolEnum): boolean => {
     return selectedProtocols.includes(protocol)
@@ -248,7 +249,7 @@ export default function ProtocolSelection({
                 size="xs"
                 variant="info"
                 onClick={() => {
-                  setSelectedProtocols(ALLOWED_COPYTRADE_PROTOCOLS)
+                  setSelectedProtocols(allowedProtocols)
                 }}
                 px={2}
                 sx={{ color: 'neutral1', border: 'none' }}

@@ -1,10 +1,9 @@
 import { createContext, useCallback, useContext, useMemo } from 'react'
 
-import useInternalRole from 'hooks/features/useInternalRole'
+import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { createProtocolFilterStore } from 'hooks/store/useProtocolFilter'
-import { ALLOWED_COPYTRADE_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { ProtocolOptionProps } from 'utils/config/protocols'
@@ -28,9 +27,8 @@ export function ProtocolsProvider({ children }: { children: JSX.Element | JSX.El
   const defaultProtocolOptions = useGetProtocolOptions()
   const defaultProtocols = useMemo(() => defaultProtocolOptions.map((p) => p.id), [defaultProtocolOptions])
 
-  const isInternal = useInternalRole()
   const protocolOptions = useGetProtocolOptions()
-  const allowList = isInternal ? protocolOptions.map((_p) => _p.id) : ALLOWED_COPYTRADE_PROTOCOLS
+  const allowList = useGetCopyTradeProtocols()
 
   const { selectedProtocols, checkIsSelected, handleToggle, setProtocols } = createProtocolFilterStore({
     defaultProtocols: protocolOptions.map((_p) => _p.id),
