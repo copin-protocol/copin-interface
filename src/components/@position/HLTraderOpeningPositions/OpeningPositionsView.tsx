@@ -9,11 +9,12 @@ import {
 } from 'components/@position/configs/hlPositionRenderProps'
 import { HlAccountData, HlOrderData } from 'entities/hyperliquid'
 import { PositionData } from 'entities/trader'
+import useGetTraderPnL from 'hooks/features/trader/useGetTraderPnL'
 import Loading from 'theme/Loading'
 import Table from 'theme/Table'
 import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
-import { SortTypeEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 
 import HLPositionDetailsDrawer from '../HLTraderPositionDetails/HLPositionDetailsDrawer'
 import { parseHLPositionData } from '../helpers/hyperliquid'
@@ -64,6 +65,8 @@ export default function OpeningPositionsView({
       meta: { limit: openingPositions.length, offset: 0, total: openingPositions.length, totalPages: 1 },
     }
   }, [currentSort, data])
+
+  useGetTraderPnL({ protocol: ProtocolEnum.HYPERLIQUID, positions: tableData?.data })
 
   // Group the filled orders
   const handleSelectItem = (data: PositionData) => {

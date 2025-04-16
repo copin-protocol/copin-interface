@@ -23,6 +23,7 @@ import TraderAddress from 'components/@ui/TraderAddress'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { GlobalProtocolFilter, GlobalProtocolFilterProps } from 'components/@widgets/ProtocolFilter'
 import { Account, PnlStatisticsResponse, ResponseTraderData, StatisticData, TraderData } from 'entities/trader'
+import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
@@ -51,19 +52,20 @@ const graphqlBaseFilters = transformGraphqlFilters(BASE_RANGE_FILTER)
 
 export default function Traders() {
   const { searchParams } = useSearchParams()
+  const { timeFilterOptions, defaultTimeOption } = useGetTimeFilterOptions()
   const filters: FiltersState = useMemo(() => {
     const sortBy = (searchParams[URL_PARAM_KEYS.HOME_SORT_BY] as unknown as keyof TraderData | undefined) ?? 'pnl'
     const time =
       (searchParams[URL_PARAM_KEYS.HOME_TIME] as unknown as TimeFilterByEnum | undefined) ?? TimeFilterByEnum.S30_DAY
     const timeOption = time
-      ? TIME_FILTER_OPTIONS.find((option) => option.id === time) ?? TIME_FILTER_OPTIONS[2]
-      : TIME_FILTER_OPTIONS[2]
+      ? timeFilterOptions.find((option) => option.id === time) ?? defaultTimeOption
+      : defaultTimeOption
 
     return {
       sortBy,
       time: timeOption,
     }
-  }, [searchParams])
+  }, [defaultTimeOption, searchParams, timeFilterOptions])
 
   return (
     <Flex
@@ -209,6 +211,11 @@ function ListTraders({ filters }: { filters: FiltersState }) {
   }
 
   const getPnlStatisticsPayload = (traderData: any): StatisticData => {
+    // NOTE: If time is 1 day, we will get 7 days data
+    const timeFrame = [TimeFilterByEnum.S1_DAY, TimeFilterByEnum.LAST_24H].includes(filters.time.id)
+      ? TimeFilterByEnum.S7_DAY
+      : filters.time.id
+
     const accounts: Account[] = traderData?.searchPositionStatistic?.data?.map((trader: TraderData) => ({
       account: trader.account,
       protocol: trader.protocol,
@@ -216,7 +223,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
 
     const payload: StatisticData = {
       accounts,
-      statisticType: filters.time.id,
+      statisticType: timeFrame,
     }
 
     return payload
@@ -426,6 +433,11 @@ function TraderItem({
 }) {
   const { protocol, account, type, realisedPnl, realisedAvgRoi, totalWin, totalTrade } = traderData
   const traderPnlData = pnlData?.[account]
+  const defaultDayCount = 7 // Default 7 days
+  // NOTE: If time is 1 day, get 7 days count
+  const dayCount = [TimeFilterByEnum.S1_DAY, TimeFilterByEnum.S1_DAY].includes(timeOption.id)
+    ? TIME_FILTER_OPTIONS.find((time) => time.id === TimeFilterByEnum.S7_DAY)?.value || defaultDayCount
+    : timeOption.value
 
   return (
     <Box
@@ -489,7 +501,7 @@ function TraderItem({
         <LineChartTraderPnl
           data={parsePnLStatsData(traderPnlData)}
           isCumulativeData={false}
-          dayCount={timeOption.value}
+          dayCount={dayCount}
           isSimple
           hasBalanceText={false}
           height={30}

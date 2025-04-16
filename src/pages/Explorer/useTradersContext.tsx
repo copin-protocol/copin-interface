@@ -2,10 +2,11 @@ import dayjs from 'dayjs'
 import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
 
 import { TraderListSortProps } from 'components/@trader/TraderExplorerTableView/types'
-import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
+import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader.d'
 import { useIsPremiumAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
+import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -85,9 +86,10 @@ export function FilterTradersProvider({
     return false
   })
 
+  const { timeFilterOptions } = useGetTimeFilterOptions()
   const { currentOption: timeOption, setCurrentOption: setTimeOption } = useOptionChange({
     optionName: timeFilterKey,
-    options: TIME_FILTER_OPTIONS,
+    options: timeFilterOptions,
     defaultOption: TimeFilterByEnum.S30_DAY.toString(),
     // optionNameToBeDelete: [rangeFilterKey],
     // callback: () => {

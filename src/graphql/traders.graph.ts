@@ -28,6 +28,7 @@ export const SEARCH_TRADERS_QUERY = gql`
         longRate
         profitRate
         pnl
+        unrealisedPnl
         avgRoi
         maxRoi
         maxPnl

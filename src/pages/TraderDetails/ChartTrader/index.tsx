@@ -9,6 +9,7 @@ import LineChartPnL from 'components/@charts/LineChartPnL'
 import { parseTraderPnLStatisticData } from 'components/@charts/LineChartPnL/helpers'
 import ActiveDot from 'components/@ui/ActiveDot'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import useTraderProfitStore from 'hooks/store/useTraderProfitStore'
 // import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
@@ -31,10 +32,14 @@ const ChartTrader = ({
   timeOption: TimeFilterProps
   // onChangeTime: (option: TimeFilterProps) => void
 }) => {
+  const { unrealisedPnl } = useTraderProfitStore()
   const [isBarChart, setIsBarChart] = useState(false)
-  const to = useMemo(() => dayjs().utc().startOf('day').valueOf(), [])
+  const to = useMemo(() => dayjs().utc().valueOf(), [])
   const timeframeDuration = getDurationFromTimeFilter(timeOption.id)
-  const from = useMemo(() => dayjs(to).utc().subtract(timeframeDuration, 'day').valueOf(), [timeframeDuration, to])
+  const from = useMemo(
+    () => dayjs(to).utc().startOf('day').subtract(timeframeDuration, 'day').valueOf(),
+    [timeframeDuration, to]
+  )
 
   const { data: stats, isLoading: loadingStats } = useQuery(
     [QUERY_KEYS.GET_TRADER_PNL_STATISTIC, protocol, account, from, to],
@@ -44,15 +49,29 @@ const ChartTrader = ({
         to,
         account,
         protocol,
+        isFill: true,
       }),
     {
       retry: 0,
+      refetchInterval: 60_000,
+      select: (data) => {
+        if (protocol === ProtocolEnum.HYPERLIQUID) {
+          return data.map((item, index) => {
+            return {
+              ...item,
+              unrealisedPnl: index < data.length - 1 ? 0 : unrealisedPnl,
+            }
+          })
+        }
+
+        return data
+      },
     }
   )
   const cumulativePnL = useMemo(() => {
     let cumulativePnL = 0
     if (stats) {
-      cumulativePnL = stats.reduce((acc, item) => acc + item.pnl, 0)
+      cumulativePnL = stats.reduce((acc, item) => acc + item.realisedPnl + item.unrealisedPnl, 0)
     }
     return cumulativePnL
   }, [stats])

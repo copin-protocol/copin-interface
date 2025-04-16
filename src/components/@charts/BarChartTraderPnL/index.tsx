@@ -171,6 +171,8 @@ interface TraderPnlChartData {
   cumulativePnl: number
   cumulativePnlProfit?: number | null
   cumulativePnlLoss?: number | null
+  realisedPnl: number
+  unrealisedPnl: number
   pnl: number
   fee: number
   roi: number
@@ -190,9 +192,14 @@ type TraderPnlStatsData = {
 
 function CustomTooltip({ item }: { item: any }) {
   const cumulativePnl = item?.[0]?.payload?.cumulativePnl ?? 0
+  const realisedPnl = item?.[0]?.payload?.realisedPnl ?? 0
+  const unrealisedPnl = item?.[0]?.payload?.unrealisedPnl ?? 0
   const pnl = item?.[0]?.payload?.pnl ?? 0
   const fee = item?.[0]?.payload?.fee ?? 0
-  const color = pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'
+  const getColor = (pnl?: number) => {
+    if (!pnl) return 'neutral1'
+    return pnl > 0 ? 'green1' : pnl < 0 ? 'red2' : 'neutral1'
+  }
   return (
     <Flex p={2} bg="neutral6" flexDirection="column" sx={{ gap: 1 }}>
       <Type.Small mb={1}>{formatLocalDate(item?.[0]?.payload?.date, DAYJS_FULL_DATE_FORMAT)}</Type.Small>
@@ -203,8 +210,20 @@ function CustomTooltip({ item }: { item: any }) {
         </Type.Small>
       </Type.Small>
       <Type.Small>
+        Realized PnL:{' '}
+        <Type.Small color={getColor(realisedPnl)}>
+          {realisedPnl < 0 && '-'}${formatNumber(Math.abs(realisedPnl), 2)}
+        </Type.Small>
+      </Type.Small>
+      <Type.Small>
+        Unrealized PnL:{' '}
+        <Type.Small color={getColor(unrealisedPnl)}>
+          {unrealisedPnl < 0 && '-'}${formatNumber(Math.abs(unrealisedPnl), 2)}
+        </Type.Small>
+      </Type.Small>
+      <Type.Small>
         PnL:{' '}
-        <Type.Small color={color}>
+        <Type.Small color={getColor(pnl)}>
           {pnl < 0 && '-'}${formatNumber(Math.abs(pnl), 2)}
         </Type.Small>
       </Type.Small>
@@ -228,6 +247,8 @@ function getChartData({ data }: { data: TraderPnlStatisticData[] | undefined }) 
           cumulativePnl: stats.cumulativePnl,
           cumulativePnlProfit: stats.cumulativePnl >= 0 ? stats.cumulativePnl : null,
           cumulativePnlLoss: stats.cumulativePnl < 0 ? stats.cumulativePnl : null,
+          realisedPnl: stats.realisedPnl,
+          unrealisedPnl: stats.unrealisedPnl,
           pnl: stats.pnl,
           fee: -stats.fee,
           roi: stats.percentage,
@@ -243,16 +264,20 @@ export function generateChartDailyPnL(fromDate: number, toDate: number, cumulati
   let currentDate = dayjs(fromDate).utc().startOf('day')
 
   while (currentDate.isSame(toDate) || currentDate.isBefore(toDate)) {
+    let realisedPnl = 0
+    let unrealisedPnl = 0
     let pnl = 0
     let fee = 0
     cumulativeDates.forEach((cumulativeDate) => {
       if (currentDate.isSame(cumulativeDate.date)) {
-        pnl = cumulativeDate.pnl
+        realisedPnl = cumulativeDate.realisedPnl
+        unrealisedPnl = cumulativeDate.unrealisedPnl
+        pnl = realisedPnl + unrealisedPnl
         fee = cumulativeDate.fee
       }
     })
 
-    dateArray.push({ date: currentDate.toISOString(), cumulativePnl: 0, pnl, fee })
+    dateArray.push({ date: currentDate.toISOString(), cumulativePnl: 0, realisedPnl, unrealisedPnl, pnl, fee })
     currentDate = currentDate.add(1, 'day')
   }
 
@@ -266,6 +291,8 @@ export function generateChartDailyPnL(fromDate: number, toDate: number, cumulati
     result.push({
       cumulativePnl,
       date: data[i].date,
+      realisedPnl: data[i].realisedPnl,
+      unrealisedPnl: data[i].unrealisedPnl,
       pnl: data[i].pnl,
       fee: data[i].fee,
       percentage: i > 0 && data[i - 1].pnl ? ((data[i].pnl - data[i - 1].pnl) / data[i - 1].pnl) * 100 : 0,

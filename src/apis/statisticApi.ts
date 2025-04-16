@@ -22,14 +22,16 @@ export async function getTraderPnlStatsApi({
   account,
   from,
   to,
+  isFill,
 }: {
   protocol: ProtocolEnum
   account: string
   from: number
   to: number
+  isFill?: boolean
 }) {
   return requester
-    .get(`${protocol}/${SERVICE}/trader/pnl/${account}`, { params: { from, to } })
+    .get(`${protocol}/${SERVICE}/trader/pnl/${account}`, { params: { from, to, isFill } })
     .then((res: any) => res.data as TraderPnlStatisticData[])
 }
 

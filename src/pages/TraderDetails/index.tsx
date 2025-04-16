@@ -16,10 +16,11 @@ import TraderOpeningPositionsTableView, {
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
 import NotFound from 'components/@ui/NotFound'
-import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
+import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
+import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useTraderBalanceStore from 'hooks/store/useTraderBalanceStore'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
@@ -97,7 +98,7 @@ export function TraderDetailsComponent({
   protocol: ProtocolEnum
   exchangeStats: ResponseTraderExchangeStatistic
 }) {
-  const timeFilterOptions = TIME_FILTER_OPTIONS
+  const { timeFilterOptions } = useGetTimeFilterOptions()
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
     [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol],
