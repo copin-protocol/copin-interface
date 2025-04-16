@@ -223,6 +223,8 @@ export const ERRORS: ObjectTrans = {
 
 export const TIME_TRANSLATION: Record<string, ReactNode> = {
   [TimeFilterByEnum.ALL_TIME]: <Trans>All</Trans>,
+  [TimeFilterByEnum.LAST_24H]: <Trans>24H</Trans>,
+  [TimeFilterByEnum.S1_DAY]: <Trans>1D</Trans>,
   [TimeFilterByEnum.S7_DAY]: <Trans>7D</Trans>,
   [TimeFilterByEnum.S14_DAY]: <Trans>14D</Trans>,
   [TimeFilterByEnum.S30_DAY]: <Trans>30D</Trans>,
@@ -231,6 +233,8 @@ export const TIME_TRANSLATION: Record<string, ReactNode> = {
 
 export const TIME_TRANSLATION_FULL: Record<string, ReactNode> = {
   [TimeFilterByEnum.ALL_TIME]: <Trans>All</Trans>,
+  [TimeFilterByEnum.LAST_24H]: <Trans>Last 24H</Trans>,
+  [TimeFilterByEnum.S1_DAY]: <Trans>Yesterday</Trans>,
   [TimeFilterByEnum.S7_DAY]: <Trans>7 Days</Trans>,
   [TimeFilterByEnum.S14_DAY]: <Trans>14 Days</Trans>,
   [TimeFilterByEnum.S30_DAY]: <Trans>30 Days</Trans>,

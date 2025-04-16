@@ -7,6 +7,7 @@ import { tableSettings } from 'components/@trader/TraderExplorerTableView/config
 import { ExternalTraderListSource } from 'components/@trader/TraderExplorerTableView/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { TraderData } from 'entities/trader.d'
+import useInternalRole from 'hooks/features/useInternalRole'
 import { IGNORE_FIELDS, useStatsCustomizeStore } from 'hooks/store/useStatsCustomize'
 import IconButton from 'theme/Buttons/IconButton'
 import Checkbox from 'theme/Checkbox'
@@ -116,6 +117,23 @@ const AccountStats = memo(function AccountStatsMemo({
     isMarketsLeft: customizeView === 'GRID',
   }
 
+  const isInternal = useInternalRole()
+  const types = isInternal
+    ? {
+        ...TYPES,
+        [TimeFilterByEnum.S1_DAY]: {
+          index: 5,
+          key: '1D',
+          text: 'Yesterday',
+        },
+        [TimeFilterByEnum.LAST_24H]: {
+          index: 6,
+          key: 'L24H',
+          text: 'Last 24H',
+        },
+      }
+    : TYPES
+
   return (
     <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 650 : undefined} pb={[3, 4, 4, 4, 3]}>
       <Box
@@ -140,7 +158,7 @@ const AccountStats = memo(function AccountStatsMemo({
               top: 0,
 
               bg: 'neutral7',
-              flex: 1.2,
+              flex: '10%',
               alignItems: 'center',
             }}
           >
@@ -199,7 +217,7 @@ const AccountStats = memo(function AccountStatsMemo({
               }}
             >
               <Checkbox checked={currentStatOnly} onChange={(e) => toogleCurrentStatOnly(e.target.checked)}>
-                <Type.Caption>Only show {TYPES[timeOption.id]?.text}</Type.Caption>
+                <Type.Caption>Only show {types[timeOption.id]?.text}</Type.Caption>
               </Checkbox>
             </Flex>
           )}
@@ -260,6 +278,32 @@ const AccountStats = memo(function AccountStatsMemo({
               >
                 7 DAYS
               </Type.Caption>
+              {isInternal && (
+                <Type.Caption
+                  textAlign="right"
+                  sx={{
+                    flex: 1,
+                    py: 2,
+                    borderBottom: 'small',
+                    borderColor: 'neutral4',
+                  }}
+                >
+                  YESTERDAY
+                </Type.Caption>
+              )}
+              {isInternal && (
+                <Type.Caption
+                  textAlign="right"
+                  sx={{
+                    flex: 1,
+                    py: 2,
+                    borderBottom: 'small',
+                    borderColor: 'neutral4',
+                  }}
+                >
+                  LAST 24H
+                </Type.Caption>
+              )}
             </>
           )}
         </Flex>
@@ -317,18 +361,21 @@ const AccountStats = memo(function AccountStatsMemo({
                 <Type.CaptionBold>{stat.label}</Type.CaptionBold>
                 {currentStatOnly ? (
                   <Box>
-                    {stat.render && data[TYPES[timeOption.id]?.index ?? 0]
-                      ? stat.render(data[TYPES[timeOption.id]?.index ?? 0] as TraderData, index, externalSource)
+                    {stat.render && data[types[timeOption.id]?.index ?? 0]
+                      ? stat.render(data[types[timeOption.id]?.index ?? 0] as TraderData, index, externalSource)
                       : '--'}
                   </Box>
                 ) : (
                   <div>
                     {[
-                      TYPES[TimeFilterByEnum.ALL_TIME]?.key,
-                      TYPES[TimeFilterByEnum.S60_DAY]?.key,
-                      TYPES[TimeFilterByEnum.S30_DAY]?.key,
-                      TYPES[TimeFilterByEnum.S14_DAY]?.key,
-                      TYPES[TimeFilterByEnum.S7_DAY]?.key,
+                      types[TimeFilterByEnum.ALL_TIME]?.key,
+                      types[TimeFilterByEnum.S60_DAY]?.key,
+                      types[TimeFilterByEnum.S30_DAY]?.key,
+                      types[TimeFilterByEnum.S14_DAY]?.key,
+                      types[TimeFilterByEnum.S7_DAY]?.key,
+                      ...(isInternal
+                        ? [types[TimeFilterByEnum.S1_DAY]?.key, types[TimeFilterByEnum.LAST_24H]?.key]
+                        : []),
                     ].map((item, i) => (
                       <Flex key={item} justifyContent="space-between" mt={1}>
                         <Type.Caption color="neutral3" width={40}>
@@ -358,7 +405,7 @@ const AccountStats = memo(function AccountStatsMemo({
                       pl: 0,
                       position: 'sticky',
                       left: 0,
-                      flex: 1.4,
+                      flex: '10%',
                       py: 2,
                       zIndex: 3,
                     }}

@@ -14,11 +14,12 @@ import TraderOpeningPositionsTableView, {
   TraderOpeningPositionsListView,
 } from 'components/@position/TraderOpeningPositions'
 import NotFound from 'components/@ui/NotFound'
-import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
+import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import { ResponseTraderExchangeStatistic } from 'entities/trader.d'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
+import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import ChartTrader from 'pages/TraderDetails/ChartTrader'
@@ -101,7 +102,7 @@ function TraderDetailsComponent({
   eventCategory?: EventCategory
 }) {
   const { sm, lg } = useResponsive()
-  const timeFilterOptions = TIME_FILTER_OPTIONS
+  const { timeFilterOptions } = useGetTimeFilterOptions()
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
     [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol],

@@ -48,6 +48,8 @@ export interface ExchangeStatsData {
 export interface TraderPnlStatisticData {
   cumulativePnl: number
   pnl: number
+  realisedPnl: number
+  unrealisedPnl: number
   fee: number
   percentage?: number
   date: string

@@ -1,6 +1,7 @@
+import { Trans } from '@lingui/macro'
 import { ArrowElbowLeftUp } from '@phosphor-icons/react'
 import { useResponsive, useSize } from 'ahooks'
-import { memo, useRef } from 'react'
+import React, { memo, useMemo, useRef } from 'react'
 import styled from 'styled-components/macro'
 
 import { ApiListResponse } from 'apis/api'
@@ -20,6 +21,8 @@ import { TradersContextData } from 'pages/Explorer/useTradersContext'
 import { PaginationWithLimit } from 'theme/Pagination'
 import { Box, Flex, Type } from 'theme/base'
 import { MEDIA_WIDTHS } from 'theme/theme'
+import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { formatLocalDate } from 'utils/helpers/format'
 
 const ListTradersSection = memo(function ListTradersSectionMemo({
   contextValues,
@@ -143,79 +146,92 @@ function TablePagination({
   changeCurrentLimit: (page: number) => void
   data: ApiListResponse<TraderData> | undefined
 }) {
-  const { md } = useResponsive()
+  const { md, xl } = useResponsive()
   const ref = useRef(null)
   const size = useSize(ref)
+  const statisticAt = useMemo(() => {
+    if (!!data?.data?.length) {
+      return data.data[0].statisticAt
+    }
+    return
+  }, [data?.data])
   return (
-    <>
-      {accounts?.length && <CompareTradersButton />}
-      {!accounts?.length &&
-        (md ? (
-          <TabletWrapper ref={ref}>
-            <Flex
-              className="layout__wrapper"
-              sx={{
-                alignItems: 'center',
-                justifyContent: 'end',
-                columnGap: 2,
-                rowGap: 0,
-                pr: [48, 48, 48, 0],
-              }}
-            >
-              <Flex className="pagination__wrapper" sx={{ alignItems: 'center', gap: 0 }}>
-                <PaginationWithLimit
-                  sx={{ px: 2 }}
-                  currentPage={currentPage}
-                  currentLimit={currentLimit}
-                  onPageChange={changeCurrentPage}
-                  onLimitChange={changeCurrentLimit}
-                  apiMeta={data?.meta}
-                  my={1}
-                  menuPosition="top"
-                  disabledInput={size?.width && size.width < 550 ? true : false}
-                />
-                {data && (
-                  <>
-                    <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
-                    <ExportCsvButton hasTitle={size?.width && size.width > 950 ? true : false} />
-                    <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
-                    <Flex sx={{ gap: 20, alignItems: 'center', px: 2, py: 2, pr: !md ? 5 : 2 }}>
-                      {/* <TradersVisualizer traders={data.data} hasButtonTitle={buttonsHasTitle ? true : lg ? true : false} /> */}
-                      <CustomizeColumn hasTitle={size?.width && size.width > 950 ? true : false} />
-                    </Flex>
-                  </>
-                )}
+    <Flex width="100%" alignItems="center" justifyContent="space-between">
+      {xl && statisticAt && (
+        <Type.Caption px={3} color="neutral3">
+          <Trans>Last Updated:</Trans> <Box as="span">{formatLocalDate(statisticAt, DAYJS_FULL_DATE_FORMAT)}</Box>
+        </Type.Caption>
+      )}
+      <Flex alignItems="center" justifyContent="flex-end" flex={1}>
+        {accounts?.length && <CompareTradersButton />}
+        {!accounts?.length &&
+          (md ? (
+            <TabletWrapper ref={ref}>
+              <Flex
+                className="layout__wrapper"
+                sx={{
+                  alignItems: 'center',
+                  justifyContent: 'end',
+                  columnGap: 2,
+                  rowGap: 0,
+                  pr: [48, 48, 48, 0],
+                }}
+              >
+                <Flex className="pagination__wrapper" sx={{ alignItems: 'center', gap: 0 }}>
+                  <PaginationWithLimit
+                    sx={{ px: 2 }}
+                    currentPage={currentPage}
+                    currentLimit={currentLimit}
+                    onPageChange={changeCurrentPage}
+                    onLimitChange={changeCurrentLimit}
+                    apiMeta={data?.meta}
+                    my={1}
+                    menuPosition="top"
+                    disabledInput={size?.width && size.width < 550 ? true : false}
+                  />
+                  {data && (
+                    <>
+                      <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
+                      <ExportCsvButton hasTitle={size?.width && size.width > 950 ? true : false} />
+                      <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
+                      <Flex sx={{ gap: 20, alignItems: 'center', px: 2, py: 2, pr: !md ? 5 : 2 }}>
+                        {/* <TradersVisualizer traders={data.data} hasButtonTitle={buttonsHasTitle ? true : lg ? true : false} /> */}
+                        <CustomizeColumn hasTitle={size?.width && size.width > 950 ? true : false} />
+                      </Flex>
+                    </>
+                  )}
+                </Flex>
               </Flex>
-            </Flex>
-          </TabletWrapper>
-        ) : (
-          <Box display={['block', 'flex']}>
-            <Flex
-              sx={{
-                px: 12,
-                '& *': { fontSize: '12px' },
-                alignItems: 'center',
-                gap: [12, 2],
-                borderTop: ['small', 'none'],
-                borderTopColor: ['neutral4', 'none'],
-              }}
-            >
-              <Box flex="1">
-                <PaginationWithLimit
-                  currentLimit={currentLimit}
-                  onLimitChange={changeCurrentLimit}
-                  currentPage={currentPage}
-                  onPageChange={changeCurrentPage}
-                  apiMeta={data?.meta}
-                  sx={{ flexDirection: 'row', px: 0 }}
-                />
-              </Box>
-              <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
-              <CustomizeColumnMobile />
-            </Flex>
-          </Box>
-        ))}
-    </>
+            </TabletWrapper>
+          ) : (
+            <Box display={['block', 'flex']}>
+              <Flex
+                sx={{
+                  px: 12,
+                  '& *': { fontSize: '12px' },
+                  alignItems: 'center',
+                  gap: [12, 2],
+                  borderTop: ['small', 'none'],
+                  borderTopColor: ['neutral4', 'none'],
+                }}
+              >
+                <Box flex="1">
+                  <PaginationWithLimit
+                    currentLimit={currentLimit}
+                    onLimitChange={changeCurrentLimit}
+                    currentPage={currentPage}
+                    onPageChange={changeCurrentPage}
+                    apiMeta={data?.meta}
+                    sx={{ flexDirection: 'row', px: 0 }}
+                  />
+                </Box>
+                <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
+                <CustomizeColumnMobile />
+              </Flex>
+            </Box>
+          ))}
+      </Flex>
+    </Flex>
   )
 }
 

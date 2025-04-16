@@ -161,6 +161,28 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     id: 'pnl',
     render: (item) => <SignedText value={item.pnl} maxDigit={0} prefix="$" />,
   },
+  unrealisedPnl: {
+    style: { minWidth: ['110px', '130px'] },
+    text: <Trans>Unrealized PnL</Trans>,
+    searchText: 'Unrealized PnL',
+    label: (
+      <LabelWithTooltip
+        id="tt_unrealised_pnl_label"
+        tooltip="The overall profit or loss without fees generated from the opening positions"
+      >
+        Unrealized PnL
+      </LabelWithTooltip>
+    ),
+    unit: '$',
+    sortBy: 'unrealisedPnl',
+    visible: true,
+    filter: {
+      conditionType: 'gte',
+      gte: 100,
+    },
+    id: 'unrealisedPnl',
+    render: (item) => <SignedText value={item.unrealisedPnl} maxDigit={0} prefix="$" />,
+  },
   totalGain: {
     searchText: 'Total Gain',
     style: { minWidth: ['100px', '111px'] },
@@ -210,7 +232,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     ),
     unit: '$',
     sortBy: 'totalFee',
-    visible: false,
+    visible: true,
     filter: {
       conditionType: 'gte',
       gte: 100,
@@ -671,6 +693,7 @@ const tableColumnKeys: (keyof TraderData)[] = [
   'lastTradeAtTs',
   'indexTokens',
   'pnl',
+  'unrealisedPnl',
   'totalGain',
   'totalLoss',
   'totalFee',
@@ -704,6 +727,7 @@ export const tableSettings: TableSettingsProps<TraderData> = tableColumnKeys
 const mobileTableColumnKeys: (keyof TraderData)[] = [
   'account',
   'pnl',
+  'unrealisedPnl',
   'avgRoi',
   'winRate',
   'runTimeDays',

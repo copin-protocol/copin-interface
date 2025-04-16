@@ -10,7 +10,9 @@ import {
 } from 'lightweight-charts'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
+import { renderValueWithColor } from 'components/@position/configs/copyPositionRenderProps'
 import { AmountText } from 'components/@ui/DecoratedText/ValueText'
+import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
@@ -71,6 +73,8 @@ export default function LineChartPnL({
         : 0,
     [chartData, crossMovePnL]
   )
+  const unrealisedPnl = useMemo(() => (data && data.length > 0 ? data[data.length - 1].unrealisedPnl : 0), [data])
+  const realisedPnl = latestPnL - unrealisedPnl
 
   const chartRef = useRef<IChartApi | null>(null)
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -101,13 +105,35 @@ export default function LineChartPnL({
       {data && chartData && !isLoading && (
         <>
           {hasBalanceText && (
-            <BalanceTextComponent
-              color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}
-              sx={{ display: 'block', textAlign: 'center' }}
+            <Box
+              data-tooltip-id="tt-trader-pnl"
+              data-tooltip-delay-show={360}
+              sx={{
+                textDecoration: 'underline',
+                textDecorationStyle: 'dashed',
+                textDecorationColor: 'rgba(119, 126, 144, 0.5)',
+              }}
             >
-              <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
-            </BalanceTextComponent>
+              <BalanceTextComponent
+                color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}
+                sx={{ display: 'block', textAlign: 'center' }}
+              >
+                <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
+              </BalanceTextComponent>
+            </Box>
           )}
+          <Tooltip id="tt-trader-pnl">
+            <Flex flexDirection="column" sx={{ gap: 2 }}>
+              <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+                <Type.Caption>Realized PnL:</Type.Caption>
+                {renderValueWithColor(realisedPnl)}
+              </Flex>
+              <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+                <Type.Caption>Unrealized PnL:</Type.Caption>
+                {renderValueWithColor(unrealisedPnl)}
+              </Flex>
+            </Flex>
+          </Tooltip>
           <Box sx={{ flex: '1 0 0', overflow: 'hidden' }}>
             <Box ref={containerRef} sx={{ position: 'relative', width: '100%', height: '100%' }} height={height} />
           </Box>
@@ -136,18 +162,23 @@ function generateChartData({
   let currentDate = dayjs(fromDate).utc().startOf('hour')
 
   while (currentDate.isSame(toDate) || currentDate.isBefore(toDate)) {
+    const realisedPnl = 0
+    let unrealisedPnl = 0
     let pnl = 0
     let fee = 0
     let roi = 0
     chartData.forEach((data) => {
-      if (currentDate.isAfter(data.date)) {
+      if (currentDate.isSame(data.date) || currentDate.isAfter(data.date)) {
+        pnl = data.realisedPnl
+        unrealisedPnl = data.unrealisedPnl
+        pnl = data.pnl
         pnl = data.pnl
         fee = data.fee
         roi = data.roi
       }
     })
 
-    dateArray.push({ date: currentDate.toISOString(), pnl, fee, roi })
+    dateArray.push({ date: currentDate.toISOString(), realisedPnl, unrealisedPnl, pnl, fee, roi })
     currentDate = chartTimeFrame(currentDate.valueOf(), fromDate, toDate)
   }
 
@@ -168,6 +199,8 @@ function convertToCumulativeArray(data: ChartDataType[]): ChartDataType[] {
       uniquePnlData.splice(index, 1)
       uniquePnlData.push({
         date: item.date,
+        realisedPnl: item.realisedPnl + exist.realisedPnl,
+        unrealisedPnl: item.unrealisedPnl + exist.unrealisedPnl,
         pnl: item.pnl + exist.pnl,
         fee: item.fee + exist.fee,
         roi: item.roi + exist.roi,
@@ -177,14 +210,25 @@ function convertToCumulativeArray(data: ChartDataType[]): ChartDataType[] {
     }
   })
 
+  let cumulativeRealisedPnl = 0
+  let cumulativeUnrealisedPnl = 0
   let cumulativePnl = 0
   let cumulativeFee = 0
   let cumulativeRoi = 0
   return uniquePnlData.reduce((result: ChartDataType[], dataPoint) => {
+    cumulativeRealisedPnl += dataPoint.realisedPnl
+    cumulativeUnrealisedPnl += dataPoint.unrealisedPnl
     cumulativePnl += dataPoint.pnl
     cumulativeFee += dataPoint.fee
     cumulativeRoi += dataPoint.roi
-    result.push({ date: dataPoint.date, pnl: cumulativePnl, fee: cumulativeFee, roi: cumulativeRoi })
+    result.push({
+      date: dataPoint.date,
+      realisedPnl: cumulativeRealisedPnl,
+      unrealisedPnl: cumulativeUnrealisedPnl,
+      pnl: cumulativePnl,
+      fee: cumulativeFee,
+      roi: cumulativeRoi,
+    })
 
     return result
   }, [])

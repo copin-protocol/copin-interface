@@ -45,6 +45,7 @@ export interface TraderData {
   longRate: number
   profitRate: number
   pnl: number
+  unrealisedPnl: number
   avgRoi: number
   maxRoi: number
   maxPnl: number

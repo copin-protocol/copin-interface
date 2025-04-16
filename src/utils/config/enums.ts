@@ -86,6 +86,7 @@ export enum UserRoleEnum {
 }
 
 export enum TimeFrameEnum {
+  LAST_24H = 'L24H',
   A_DAY = 'D1',
   A_WEEK = 'D7',
   TWO_WEEK = 'D15',
@@ -97,6 +98,7 @@ export enum TimeFrameEnum {
 }
 
 export enum TimeFilterByEnum {
+  LAST_24H = TimeFrameEnum.LAST_24H,
   S1_DAY = TimeFrameEnum.A_DAY,
   S7_DAY = TimeFrameEnum.A_WEEK,
   S14_DAY = TimeFrameEnum.TWO_WEEK,

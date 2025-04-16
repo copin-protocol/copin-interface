@@ -14,7 +14,7 @@ export function parsePnLStatsData(data: TraderData['pnlStatistics'] | undefined)
       ...result,
       {
         //@ts-ignore
-        pnl: data.pnl?.[index] ?? 0,
+        pnl: data.realisedPnl?.[index] ?? 0,
         //@ts-ignore
         fee: data.fee?.[index] ?? 0,
         date,
@@ -27,8 +27,12 @@ export function parsePnLStatsData(data: TraderData['pnlStatistics'] | undefined)
 export function parseTraderPnLStatisticData(data: TraderPnlStatisticData[] | undefined) {
   if (!data) return []
   return data.map((stats) => {
+    const realisedPnl = stats.realisedPnl ?? 0
+    const unrealisedPnl = stats.unrealisedPnl ?? 0
     return {
-      pnl: stats.pnl ?? 0,
+      realisedPnl: stats.realisedPnl ?? 0,
+      unrealisedPnl: stats.unrealisedPnl ?? 0,
+      pnl: realisedPnl + unrealisedPnl,
       fee: stats.fee ?? 0,
       roi: stats.percentage ?? 0,
       date: stats.date,
@@ -41,6 +45,8 @@ export function parseCopyTraderPnLData(data: CopyTradePnL[] | undefined) {
   if (!data) return []
   return data.map((stats) => {
     return {
+      realisedPnl: 0,
+      unrealisedPnl: 0,
       pnl: stats.amount ?? 0,
       fee: 0,
       roi: stats.roi,

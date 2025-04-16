@@ -1,7 +1,7 @@
+import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
 import { TimeFilterByEnum } from 'utils/config/enums'
 
-import { TIME_FILTER_OPTIONS } from './constants'
 import { TimeFilterProps } from './type'
 
 export default function TimeDropdown({
@@ -15,6 +15,7 @@ export default function TimeDropdown({
   ignoreAllTime?: boolean
   menuSx?: any
 }) {
+  const { timeFilterOptions } = useGetTimeFilterOptions()
   return (
     <Dropdown
       buttonVariant="ghost"
@@ -27,16 +28,16 @@ export default function TimeDropdown({
       placement="bottom"
       menu={
         <>
-          {TIME_FILTER_OPTIONS.filter((option) => (ignoreAllTime ? option.id !== TimeFilterByEnum.ALL_TIME : true)).map(
-            (option) => (
+          {timeFilterOptions
+            .filter((option) => (ignoreAllTime ? option.id !== TimeFilterByEnum.ALL_TIME : true))
+            .map((option) => (
               <CheckableDropdownItem
                 key={option.id}
                 selected={option.id === timeOption.id}
                 text={option.text}
                 onClick={() => onChangeTime(option)}
               />
-            )
-          )}
+            ))}
         </>
       }
     >

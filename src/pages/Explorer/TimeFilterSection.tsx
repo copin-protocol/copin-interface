@@ -1,7 +1,9 @@
 import dayjs from 'dayjs'
 import { useState } from 'react'
 
-import TimeFilter, { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
+import TimeFilter from 'components/@ui/TimeFilter'
+import { ALL_TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
+import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 // import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex } from 'theme/base'
@@ -20,6 +22,7 @@ export default function TimeFilterSection({ triggerResize, contextValues }: Time
   // const { isRangeSelection, from, to, changeTimeRange, timeOption, changeTimeOption } = contextValues
   // const isPremiumUser = useIsPremium()
   const { timeOption, changeTimeOption } = contextValues
+  const { timeFilterOptions } = useGetTimeFilterOptions()
 
   return (
     <Flex sx={{ position: 'relative', width: '100%', height: '100%', flexDirection: 'column' }}>
@@ -44,7 +47,7 @@ export default function TimeFilterSection({ triggerResize, contextValues }: Time
           // mt={isPremiumUser ? 0 : ['6px', '6px', '6px', 0]}
           mt={['6px', '6px', '6px', 0]}
         >
-          <TimeFilter currentFilter={timeOption} handleFilterChange={changeTimeOption} />
+          <TimeFilter currentFilter={timeOption} handleFilterChange={changeTimeOption} options={timeFilterOptions} />
           {/* TODO date range  <TimeFilter currentFilter={isRangeSelection ? null : timeOption} handleFilterChange={changeTimeOption} />
            {isPremiumUser && <Box height={16} flex="0 0 1px" bg="neutral4"></Box>}
            {!!from && isPremiumUser && (
@@ -89,7 +92,7 @@ export function TimeFilterDropdown({ contextValues }: TimeFilterSectionProps) {
       menuSx={{ width: 100 }}
       menu={
         <>
-          {TIME_FILTER_OPTIONS.map((option, index: number) => (
+          {ALL_TIME_FILTER_OPTIONS.map((option, index: number) => (
             <DropdownItem
               type="button"
               variant="ghost"
