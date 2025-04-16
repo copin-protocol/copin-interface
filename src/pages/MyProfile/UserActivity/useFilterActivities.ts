@@ -83,7 +83,7 @@ export default function useFilterActivities() {
         try {
           const _storageData = JSON.parse(storageData) as SelectionState
           if (copyWallets && !checkEqualWallets(_storageData.allWallets, copyWallets)) {
-            _storageData.allWallets === copyWallets
+            _storageData.allWallets = copyWallets
             _storageData.selectedWallets = copyWallets
           }
           if (!_storageData.version || _storageData.version < 1) {
