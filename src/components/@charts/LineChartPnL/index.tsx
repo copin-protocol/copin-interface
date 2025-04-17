@@ -162,17 +162,16 @@ function generateChartData({
   let currentDate = dayjs(fromDate).utc().startOf('hour')
 
   while (currentDate.isSame(toDate) || currentDate.isBefore(toDate)) {
-    const realisedPnl = 0
+    let realisedPnl = 0
     let unrealisedPnl = 0
     let pnl = 0
     let fee = 0
     let roi = 0
     chartData.forEach((data) => {
       if (currentDate.isSame(data.date) || currentDate.isAfter(data.date)) {
-        pnl = data.realisedPnl
+        realisedPnl = data.realisedPnl
         unrealisedPnl = data.unrealisedPnl
-        pnl = data.pnl
-        pnl = data.pnl
+        pnl = realisedPnl + unrealisedPnl
         fee = data.fee
         roi = data.roi
       }

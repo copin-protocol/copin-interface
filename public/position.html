@@ -479,7 +479,7 @@
 
       function generateProtocolName(protocol) {
         if (!protocol) return ''
-        return PROTOCOL_CONFIG_MAPPING[protocol]?.title ?? ''
+        return PROTOCOL_CONFIG_MAPPING[protocol.toUpperCase()]?.title ?? ''
       }
 
       function addressShorten(address, num, numsPrefix) {
