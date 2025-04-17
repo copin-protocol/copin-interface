@@ -438,7 +438,7 @@
 
       function generateProtocolName(protocol) {
         if (!protocol) return ''
-        return PROTOCOL_CONFIG_MAPPING[protocol]?.title ?? ''
+        return PROTOCOL_CONFIG_MAPPING[protocol.toUpperCase()]?.title ?? ''
       }
 
       function addressShorten(address, num, numsPrefix) {
@@ -636,11 +636,15 @@
         let currentDate = dayjs(fromDate).utc().startOf("day");
 
         while (currentDate.isSame(toDate) || currentDate.isBefore(toDate)) {
+          let realisedPnl = 0
+          let unrealisedPnl = 0
           let pnl = 0;
           let fee = 0;
           cumulativeDates.forEach((cumulativeDate) => {
             if (currentDate.isSame(cumulativeDate.date)) {
-              pnl = cumulativeDate.pnl;
+              realisedPnl = cumulativeDate.realisedPnl;
+              unrealisedPnl = cumulativeDate.unrealisedPnl;
+              pnl = realisedPnl + unrealisedPnl;
               fee = cumulativeDate.fee;
             }
           });
@@ -648,6 +652,8 @@
           dateArray.push({
             date: currentDate.toISOString(),
             cumulativePnl: 0,
+            realisedPnl,
+            unrealisedPnl,
             pnl,
             fee,
           });
@@ -668,6 +674,8 @@
           result.push({
             cumulativePnl,
             date: data[i].date,
+            realisedPnl: data[i].realisedPnl,
+            unrealisedPnl: data[i].unrealisedPnl,
             pnl: data[i].pnl,
           });
         }
@@ -686,6 +694,8 @@
                 date: stats.date,
                 cumulativePnl: stats.cumulativePnl,
                 pnl: stats.pnl,
+                realisedPnl: stats.realisedPnl,
+                unrealisedPnl: stats.unrealisedPnl,
               };
             });
         }
@@ -693,7 +703,7 @@
         return chartData;
       }
 
-      const now = dayjs().utc().startOf("day").valueOf();
+      const now = dayjs().utc().valueOf();
 
       fetch(
         `https://api.copin.io/${protocol}/statistic/trader/pnl/${trader}?from=${
