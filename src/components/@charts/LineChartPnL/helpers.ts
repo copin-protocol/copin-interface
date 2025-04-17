@@ -10,11 +10,16 @@ export function parsePnLStatsData(data: TraderData['pnlStatistics'] | undefined)
   //@ts-ignore
   return data.date.reduce((result, date, index) => {
     if (!date) return result
+    //@ts-ignore
+    const realisedPnl = data.realisedPnl?.[index] ?? 0
+    //@ts-ignore
+    const unrealisedPnl = data.unrealisedPnl?.[index] ?? 0
     return [
       ...result,
       {
-        //@ts-ignore
-        pnl: data.realisedPnl?.[index] ?? 0,
+        realisedPnl,
+        unrealisedPnl,
+        pnl: realisedPnl + unrealisedPnl,
         //@ts-ignore
         fee: data.fee?.[index] ?? 0,
         date,

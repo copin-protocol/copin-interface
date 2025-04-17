@@ -16,7 +16,7 @@ import Loading from 'theme/Loading'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
 import { getDurationFromTimeFilter } from 'utils/helpers/transform'
@@ -49,7 +49,7 @@ const ChartTrader = ({
         to,
         account,
         protocol,
-        isFill: true,
+        isFill: timeOption.id !== TimeFilterByEnum.ALL_TIME,
       }),
     {
       retry: 0,
