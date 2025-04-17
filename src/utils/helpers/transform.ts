@@ -496,6 +496,7 @@ export function getCurrentTimezone() {
 }
 
 export function getSymbolFromPair(pair: string | undefined) {
+  if (pair === 'NOT_SUPPORTED') return pair
   let symbol = pair?.split('-')?.[0] ?? ''
 
   symbol = symbol.split(SPECIAL_SYMBOLS_REGEX)[0]
