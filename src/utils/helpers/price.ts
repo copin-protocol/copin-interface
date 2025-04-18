@@ -1,5 +1,5 @@
 // TODO: Check when add new pairs
-import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, ProtocolEnum } from 'utils/config/enums'
 
 export const PROTOCOL_PRICE_MULTIPLE_MAPPING: Record<string, { originalSymbol: string; multiple: number }> = {
   '1000PEPE': { originalSymbol: 'PEPE', multiple: 1_000 },
@@ -28,6 +28,18 @@ export const PROTOCOL_PRICE_MULTIPLE_MAPPING: Record<string, { originalSymbol: s
   '1000X': { originalSymbol: 'X', multiple: 1_000 },
   '1000XEC': { originalSymbol: 'XEC', multiple: 1_000 },
   '1000NEIRO': { originalSymbol: 'NEIRO', multiple: 1_000 },
+  kNEIRO: { originalSymbol: 'NEIRO', multiple: 1_000 },
+}
+
+export const SYMBOL_BY_PROTOCOL_MAPPING: Record<string, string> = {
+  [`${ProtocolEnum.GNS}-NEIRO`]: 'NEIROETH',
+  [`${ProtocolEnum.GNS}-NEIROCTO`]: 'NEIRO',
+  [`${ProtocolEnum.GNS_APE}-NEIRO`]: 'NEIROETH',
+  [`${ProtocolEnum.GNS_APE}-NEIROCTO`]: 'NEIRO',
+  [`${ProtocolEnum.GNS_BASE}-NEIRO`]: 'NEIROETH',
+  [`${ProtocolEnum.GNS_BASE}-NEIROCTO`]: 'NEIRO',
+  [`${ProtocolEnum.GNS_POLY}-NEIRO`]: 'NEIROETH',
+  [`${ProtocolEnum.GNS_POLY}-NEIROCTO`]: 'NEIRO',
 }
 
 export const EXCHANGE_PRICE_MULTIPLE_MAPPING: Partial<Record<CopyTradePlatformEnum, Record<string, number>>> = {
@@ -58,7 +70,7 @@ export const EXCHANGE_PRICE_MULTIPLE_MAPPING: Partial<Record<CopyTradePlatformEn
     SHIB: 1_000,
     LUNC: 1_000,
     MOG: 1_000_000,
-    NEIROCTO: 1_000,
+    NEIRO: 1_000,
     BABYDOGE: 1_000_000,
     TURBO: 1_000,
     MUMU: 1_000,

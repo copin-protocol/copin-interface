@@ -19,11 +19,18 @@ import ProgressBar from 'theme/ProgressBar'
 import Tag from 'theme/Tag'
 import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT, GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
-import { CopyTradeStatusEnum, PositionStatusEnum, ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
+import {
+  CopyTradePlatformEnum,
+  CopyTradeStatusEnum,
+  PositionStatusEnum,
+  ProtocolEnum,
+  SLTPTypeEnum,
+} from 'utils/config/enums'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
+import { SYMBOL_BY_PROTOCOL_MAPPING } from 'utils/helpers/price'
 import { getSymbolFromPair, normalizeExchangePrice, parseColorByValue, parseWalletName } from 'utils/helpers/transform'
 import { UsdPrices } from 'utils/types'
 
@@ -153,26 +160,34 @@ type PnLComponentProps = {
 }
 
 function OpeningPositionPnlComponent({ data, textSx }: PnLComponentProps) {
-  const { gainsPrices, prices } = useGetUsdPrices()
-  const _prices = data.protocol && GAINS_TRADE_PROTOCOLS.includes(data.protocol) ? gainsPrices : prices
+  const { getPricesData } = useGetUsdPrices()
+  const _prices = getPricesData({ protocol: data.protocol, exchange: data.exchange })
 
   return <PnLComponent data={data} prices={_prices} textSx={textSx} />
 }
 
 function useGetCopyPositionPnl({ data, prices }: { data: CopyPositionData; prices?: UsdPrices }) {
   const { getSymbolByIndexToken } = useMarketsConfig()
+  if (!data.protocol) return 0
   const symbolByIndexToken = getSymbolByIndexToken
     ? getSymbolByIndexToken?.({ protocol: data?.protocol, indexToken: data?.indexToken })
     : undefined
   const symbol = data?.pair ? getSymbolFromPair(data.pair) : symbolByIndexToken
   const isOpening = data.status === PositionStatusEnum.OPEN
+  const symbolByProtocol = SYMBOL_BY_PROTOCOL_MAPPING[`${data.protocol}-${symbol}`]
+  const priceSymbol =
+    [ProtocolEnum.GNS, ProtocolEnum.GNS_APE, ProtocolEnum.GNS_BASE, ProtocolEnum.GNS_POLY].includes(data.protocol) &&
+    data.exchange === CopyTradePlatformEnum.HYPERLIQUID &&
+    symbolByProtocol
+      ? symbolByProtocol
+      : symbol ?? ''
   const pnl = isOpening
     ? calcCopyOpeningPnL(
         data,
-        prices && symbol
+        prices && priceSymbol
           ? normalizeExchangePrice({
-              protocolSymbol: symbol,
-              protocolSymbolPrice: prices[symbol],
+              protocolSymbol: priceSymbol,
+              protocolSymbolPrice: prices[priceSymbol],
               exchange: data.exchange,
             })
           : undefined
@@ -230,8 +245,8 @@ export function renderOpeningROI(data: CopyPositionData) {
   return <OpeningPositionROIComponent data={data} />
 }
 function OpeningPositionROIComponent({ data, textSx }: { data: CopyPositionData; textSx?: any }) {
-  const { gainsPrices, prices } = useGetUsdPrices()
-  const _prices = data.protocol && GAINS_TRADE_PROTOCOLS.includes(data.protocol) ? gainsPrices : prices
+  const { getPricesData } = useGetUsdPrices()
+  const _prices = getPricesData({ protocol: data.protocol, exchange: data.exchange })
   const pnl = useGetCopyPositionPnl({ data, prices: _prices })
   const sizeUsd = data.entryPrice ? Number(data.sizeDelta ?? 0) * data.entryPrice : 0
   const roi = sizeUsd <= 0 ? 0 : data.leverage ? ((pnl ?? 0) / (sizeUsd / data.leverage)) * 100 : 0

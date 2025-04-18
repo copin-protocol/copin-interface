@@ -127,6 +127,11 @@ const configs = [
     route: ROUTES.STATS.path,
   },
   {
+    icon: ThermometerSimple,
+    text: <Trans>SYSTEM STATUS</Trans>,
+    route: ROUTES.SYSTEM_STATUS.path,
+  },
+  {
     icon: PresentationChart,
     text: <Trans>CEX DEPTH</Trans>,
     route: ROUTES.STATS_CEX.path,
@@ -160,11 +165,6 @@ const internalConfigs = [
     route: `${ROUTES.VAULT_DETAILS.path_prefix}/${
       CONTRACT_ADDRESSES[ARBITRUM_CHAIN][CONTRACT_QUERY_KEYS.COPIN_VAULT_DETAILS]
     }`,
-  },
-  {
-    icon: ThermometerSimple,
-    text: <Trans>SYSTEM STATUS</Trans>,
-    route: ROUTES.SYSTEM_STATUS.path,
   },
   ...configs,
 ]

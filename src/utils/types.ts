@@ -36,7 +36,7 @@ export type WorkerBalanceMessage = {
 
 export type WorkerMessage =
   | {
-      type: 'pyth_price' | 'gains_price'
+      type: 'pyth_price' | 'gains_price' | 'hl_price'
       data: UsdPrices
     }
   | {

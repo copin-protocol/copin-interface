@@ -26,12 +26,13 @@ import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { CopyTradePlatformEnum, PositionStatusEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
-import { formatNumber } from 'utils/helpers/format'
+import { formatNumber, formatPrice } from 'utils/helpers/format'
+import { SYMBOL_BY_PROTOCOL_MAPPING } from 'utils/helpers/price'
 import { getSymbolFromPair, normalizeExchangePrice } from 'utils/helpers/transform'
 
 import CloseOnchainPosition from './CloseOnchainPosition'
@@ -117,48 +118,32 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
     return copyTradeOrders.filter((e) => e.isIncrease).reduce((sum, current) => sum + current.collateral, 0)
   }, [copyTradeOrders, data])
   const { getPricesData } = useGetUsdPrices()
-  const prices = getPricesData({ protocol: data?.protocol })
-  const pnl = useMemo(
-    () =>
-      data && symbol
-        ? isOpening
-          ? calcCopyOpeningPnL(
-              data,
-              normalizeExchangePrice({
-                protocolSymbol: symbol,
-                protocolSymbolPrice: prices[symbol],
-                exchange: data.exchange,
-              })
-            )
-          : data.pnl
-        : 0,
-    [data, isOpening, prices, symbol]
-  )
+  const prices = getPricesData({ exchange: data?.exchange })
+  const symbolByProtocol = SYMBOL_BY_PROTOCOL_MAPPING[`${data?.protocol}-${symbol}`]
+  const priceSymbol =
+    data?.protocol &&
+    [ProtocolEnum.GNS, ProtocolEnum.GNS_APE, ProtocolEnum.GNS_BASE, ProtocolEnum.GNS_POLY].includes(data.protocol) &&
+    data?.exchange === CopyTradePlatformEnum.HYPERLIQUID &&
+    symbolByProtocol
+      ? symbolByProtocol
+      : symbol ?? ''
+  const markPrice = symbol
+    ? normalizeExchangePrice({
+        protocolSymbol: priceSymbol,
+        protocolSymbolPrice: prices[priceSymbol],
+        exchange: data?.exchange,
+      })
+    : 0
+  const pnl = (() => (data && symbol ? (isOpening ? calcCopyOpeningPnL(data, markPrice) : data.pnl) : 0))()
   const roi = data ? ((pnl ?? 0) / collateral) * 100 : 0
 
   const openBlockTimeUnix = useMemo(() => (data ? dayjs(data.createdAt).utc().unix() : 0), [data])
   const closeBlockTimeUnix = useMemo(() => (data ? dayjs(data.lastOrderAt).utc().unix() : 0), [data])
 
   const [crossMovePnL, setCrossMovePnL] = useState<number | undefined>()
-  const latestPnL = useMemo(
-    () =>
-      crossMovePnL === 0
-        ? 0
-        : data
-        ? isOpening || crossMovePnL
-          ? crossMovePnL
-            ? crossMovePnL
-            : pnl
-          : data.pnl ?? 0
-        : 0,
-    [crossMovePnL, data, isOpening, pnl]
-  )
 
-  const latestROI = useMemo(
-    () =>
-      crossMovePnL === 0 ? 0 : data ? (isOpening || crossMovePnL ? calcCopyOpeningROI(data, latestPnL ?? 0) : roi) : 0,
-    [crossMovePnL, data, isOpening, latestPnL, roi]
-  )
+  const latestPnL = crossMovePnL != null ? crossMovePnL : isOpening ? pnl : data?.pnl ?? 0
+  const latestROI = data && (crossMovePnL != null || isOpening) ? calcCopyOpeningROI(data, latestPnL ?? 0) : roi
 
   const [currentTab, setCurrentTab] = useState<string>(TabKeyEnum.ORDER)
 
@@ -306,7 +291,7 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
             </Flex>
             <Box px={2} py={[2, 12]} sx={{ position: 'relative' }}>
               <Flex mb={[1, 3]} width="100%" alignItems="center" justifyContent="center">
-                {isOpening || !!crossMovePnL ? (
+                {isOpening || crossMovePnL != null ? (
                   <Type.H5 color={(latestPnL ?? 0) > 0 ? 'green1' : (latestPnL ?? 0) < 0 ? 'red2' : 'inherit'}>
                     <AmountText amount={latestPnL} maxDigit={2} minDigit={2} suffix="$" />
                   </Type.H5>
@@ -340,7 +325,7 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
                   </>
                 )}
               </Flex>
-              <Flex alignItems="center" sx={{ position: 'absolute', top: 2, left: 2 }}>
+              <Flex alignItems="center" sx={{ position: 'absolute', top: 2, left: 2, right: 2 }}>
                 <ButtonWithIcon
                   icon={
                     <Box color={isTradingChart ? 'primary1' : 'neutral3'}>
@@ -383,6 +368,14 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
                 <Tooltip id="profit_chart">
                   <Type.Caption>Profit Chart</Type.Caption>
                 </Tooltip>
+                {isOpening && !!markPrice ? (
+                  <Type.Body sx={{ position: 'absolute', right: 0, top: [-4, 0] }} color="neutral3">
+                    Mark Price:{' '}
+                    <Box color="neutral1" as="span">
+                      {formatPrice(markPrice)}
+                    </Box>
+                  </Type.Body>
+                ) : null}
               </Flex>
               {data &&
                 copyTradeOrders &&

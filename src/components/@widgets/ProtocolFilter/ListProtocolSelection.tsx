@@ -1,11 +1,13 @@
+import ActiveDot from 'components/@ui/ActiveDot'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { ProtocolsStatisticData } from 'entities/statistic'
+import useGetProtocolStatus from 'hooks/features/systemConfig/useGetProtocolStatus'
 import Checkbox from 'theme/Checkbox'
 import { Box, Flex, Grid, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, SystemStatusTypeEnum } from 'utils/config/enums'
 import { ProtocolOptionProps } from 'utils/config/protocols'
-import { compactNumber } from 'utils/helpers/format'
+import { compactNumber, getSystemStatusTypeColor } from 'utils/helpers/format'
 
 export default function ListProtocolSelection({
   options,
@@ -24,6 +26,7 @@ export default function ListProtocolSelection({
   itemActiveSx?: any
   hasCheckBox?: boolean
 }) {
+  const { protocolDataStatusMapping, getProtocolMessage } = useGetProtocolStatus()
   return (
     <>
       {/* RENDER PROTOCOLS */}
@@ -42,6 +45,7 @@ export default function ListProtocolSelection({
           const protocol = option.id
           const isActive = checkIsSelected(protocol)
           const protocolStatistic = protocolsStatistic?.[protocol]
+          const protocolStatus = protocolDataStatusMapping[protocol]
 
           return (
             <Box
@@ -74,9 +78,18 @@ export default function ListProtocolSelection({
 
                 <Flex width="100%" sx={{ gap: '5px', alignItems: 'center', position: 'relative' }}>
                   <Flex width="100%" flexDirection={'column'} sx={{ justifyContent: 'space-between' }} mx={1}>
-                    <Type.Caption color={'neutral1'} sx={{ textTransform: 'uppercase' }}>
-                      {option.text}
-                    </Type.Caption>
+                    <Flex sx={{ alignItems: 'center', gap: 1 }}>
+                      <Type.Caption color={'neutral1'} sx={{ textTransform: 'uppercase' }}>
+                        {option.text}
+                      </Type.Caption>
+                      {protocolStatus !== SystemStatusTypeEnum.STABLE && (
+                        <ActiveDot
+                          color={getSystemStatusTypeColor(protocolStatus)}
+                          tooltipContent={getProtocolMessage(protocol)}
+                          tooltipId={`status_indicator_${protocol}`}
+                        />
+                      )}
+                    </Flex>
                     <Flex sx={{ alignItems: 'center', gap: 1, '& > *': { flexShrink: 0, wordSpacing: '-2px' } }}>
                       <Type.Small width={54} color={'neutral3'}>
                         MAU: {compactNumber(protocolStatistic?.traders30 ?? 0, 0, true)}

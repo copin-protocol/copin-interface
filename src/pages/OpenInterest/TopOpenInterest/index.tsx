@@ -100,6 +100,10 @@ export default function TopOpenInterest() {
     return rawPositionData?.map((position) => normalizePositionData(position))
   }, [rawPositionData])
 
+  // const { listMaintenancePage } = useGetPageStatus()
+  // if (listMaintenancePage?.includes(SystemStatusPageEnum.OPEN_INTEREST) && !isInternal) {
+  //   return <Maintain />
+  // }
   if (!isInternal) return <Maintain />
 
   if (selectedProtocols == null) return null

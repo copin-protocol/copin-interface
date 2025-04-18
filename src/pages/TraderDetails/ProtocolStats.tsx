@@ -1,12 +1,14 @@
 import { useHistory } from 'react-router-dom'
 
+import ActiveDot from 'components/@ui/ActiveDot'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import HorizontalScroll from 'components/@ui/HorizontalScroll'
 import { ResponseTraderExchangeStatistic, TraderExchangeStatistic } from 'entities/trader'
+import useGetProtocolStatus from 'hooks/features/systemConfig/useGetProtocolStatus'
 import useGetProtocolOptions, { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
-import { compactNumber } from 'utils/helpers/format'
+import { ProtocolEnum, SystemStatusTypeEnum } from 'utils/config/enums'
+import { compactNumber, getSystemStatusTypeColor } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { getProtocolDropdownImage } from 'utils/helpers/transform'
 
@@ -95,6 +97,11 @@ function StatsItem({
 }) {
   const protocolOptionsMapping = useGetProtocolOptionsMapping()
   const protocolOption = protocolOptionsMapping[data.protocol]
+  const { protocolDataStatusMapping, getProtocolMessage } = useGetProtocolStatus()
+
+  const protocol = data.protocol
+  const protocolStatus = protocolDataStatusMapping[protocol]
+
   return (
     <Flex
       role="button"
@@ -109,6 +116,13 @@ function StatsItem({
           <Type.Body display="block" color={isActive ? 'primary1' : 'neutral3'} sx={{ textTransform: 'uppercase' }}>
             {protocolOption?.text}
           </Type.Body>
+          {protocolStatus !== SystemStatusTypeEnum.STABLE && (
+            <ActiveDot
+              color={getSystemStatusTypeColor(protocolStatus)}
+              tooltipContent={getProtocolMessage(protocol)}
+              tooltipId={`status_indicator_${protocol}`}
+            />
+          )}
           <ProtocolBetaWarning protocol={data.protocol} />
         </Flex>
         <Type.Caption sx={{ display: 'flex', alignItems: 'center', gap: '1ch', textTransform: 'uppercase' }}>

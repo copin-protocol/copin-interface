@@ -114,6 +114,9 @@ const ROUTES = {
   WALLET_WATCHER: {
     path: '/system/wallet',
   },
+  PROTOCOL_STATUS: {
+    path: '/system/protocol',
+  },
   SHARED_BACKTEST_SINGLE: {
     path: '/:protocol/shared-backtest/single/:id',
     path_prefix: '/shared-backtest/single',

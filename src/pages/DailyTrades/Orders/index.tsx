@@ -398,6 +398,10 @@ function DailyOrdersComponent() {
   }, [])
   const handleDismiss = useCallback(() => setCurrentOrder(null), [])
 
+  // const { listMaintenancePage } = useGetPageStatus()
+  // if (listMaintenancePage?.includes(SystemStatusPageEnum.LIVE_TRADES) && !isInternal) {
+  //   return <Maintain />
+  // }
   if (!isInternal) return <Maintain />
 
   return (

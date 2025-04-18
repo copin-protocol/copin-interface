@@ -433,6 +433,10 @@ function DailyPositionsComponent() {
   const isLoading = loadingLiveData || isLoadingTablePositions
   const isFetching = enabledLiveTrade ? fetchingLiveData : false
 
+  // const { listMaintenancePage } = useGetPageStatus()
+  // if (listMaintenancePage?.includes(SystemStatusPageEnum.LIVE_TRADES) && !isInternal) {
+  //   return <Maintain />
+  // }
   if (!isInternal) return <Maintain />
 
   return (

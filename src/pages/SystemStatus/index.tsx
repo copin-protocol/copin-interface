@@ -1,13 +1,11 @@
-import { Trans } from '@lingui/macro'
-import React from 'react'
-
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import NoDataFound from 'components/@ui/NoDataFound'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useInternalRole from 'hooks/features/useInternalRole'
 
 import Layout from './Layouts/Layout'
 import Overview from './Overview'
+import PublicSystemStatus from './PublicPage'
+import SystemAlert from './PublicPage/ProtocolStatus'
 import WalletWatcher from './WalletWatcher'
 
 export default function SystemStatusPage() {
@@ -16,9 +14,9 @@ export default function SystemStatusPage() {
     <SafeComponentWrapper>
       <CustomPageTitle title="System Status" />
       {isInternal ? (
-        <Layout nodeStatus={<Overview />} walletWatcher={<WalletWatcher />} />
+        <Layout nodeStatus={<Overview />} walletWatcher={<WalletWatcher />} systemAlert={<SystemAlert />} />
       ) : (
-        <NoDataFound message={<Trans>You do not have permission to access this data</Trans>} />
+        <PublicSystemStatus />
       )}
     </SafeComponentWrapper>
   )

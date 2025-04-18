@@ -1,15 +1,18 @@
 import dayjs from 'dayjs'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
+import { datafeedFactory as gainsDatafeedFactory } from 'components/@charts/ChartGainsPositionRealtime/datafeed'
+import { datafeedFactory as hyperliquidDatafeedFactory } from 'components/@charts/ChartHLPositionRealtime/datafeed'
+import { DEFAULT_CHART_REALTIME_PROPS } from 'components/@charts/configs'
 import { CopyOrderData, CopyPositionData } from 'entities/copyTrade'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { Box } from 'theme/base'
-import { PositionStatusEnum } from 'utils/config/enums'
+import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { getSymbolTradingView } from 'utils/config/trades'
 import { getSymbolFromPair, getTimeframeFromTimeRange } from 'utils/helpers/transform'
 
 import { ChartingLibraryWidgetOptions, ResolutionString } from '../../../../public/static/charting_library'
-import { DEFAULT_CHART_REALTIME_PROPS } from '../configs'
+import { initWebsocket } from '../ChartGainsPositionRealtime/streaming'
 import datafeed from './datafeed'
 import { useChart } from './useChart'
 import { usePlotOrderMarker } from './usePlotOrderMarker'
@@ -21,7 +24,7 @@ interface Props {
 }
 function CopyRealtimeChart({ position, orders }: Props) {
   const [chartContainer, setChartContainer] = useState<HTMLDivElement | null>(null)
-  const { getSymbolByIndexToken } = useMarketsConfig()
+  const { getSymbolByIndexToken, getSymbolByIndexTokenMapping } = useMarketsConfig()
   const symbol = position.pair
     ? getSymbolFromPair(position.pair)
     : getSymbolByIndexToken?.({ protocol: position.protocol, indexToken: position.indexToken }) ?? ''
@@ -33,13 +36,32 @@ function CopyRealtimeChart({ position, orders }: Props) {
   const timeframe = useMemo(() => getTimeframeFromTimeRange(from, to), [from, to])
   const durationInSecond = (to - from) / 1000
   const decimals = 4
+  const {
+    isGains,
+    isHyperliquid,
+    symbol: symbolTradingView,
+  } = getSymbolTradingView({ protocol: position.protocol, exchange: position.exchange, symbol })
+
+  const initiated = useRef(false)
+  useEffect(() => {
+    if (!isGains || !getSymbolByIndexTokenMapping || initiated.current) return
+    const symbolByIndexToken = getSymbolByIndexTokenMapping({ protocol: ProtocolEnum.GNS })
+    if (!symbolByIndexToken) return
+    initWebsocket({ symbolByIndexToken })
+  }, [getSymbolByIndexTokenMapping, isGains])
 
   const chartOpts = React.useMemo(() => {
     return {
       ...DEFAULT_CHART_REALTIME_PROPS,
-      datafeed,
+      datafeed: position?.protocol
+        ? isHyperliquid
+          ? hyperliquidDatafeedFactory()
+          : isGains
+          ? gainsDatafeedFactory(position?.indexToken)
+          : datafeed
+        : datafeed,
       container: chartContainer,
-      symbol: symbol ? `${getSymbolTradingView(symbol)}USD` : undefined,
+      symbol: symbolTradingView,
       interval: (durationInSecond < 1800 ? '1' : timeframe.toString()) as ResolutionString,
       custom_formatters: {
         priceFormatterFactory: (symbol, minTick) => {
@@ -50,7 +72,16 @@ function CopyRealtimeChart({ position, orders }: Props) {
       },
       overrides: {},
     } as ChartingLibraryWidgetOptions
-  }, [chartContainer, symbol, timeframe])
+  }, [
+    chartContainer,
+    durationInSecond,
+    isGains,
+    isHyperliquid,
+    position?.indexToken,
+    position?.protocol,
+    symbolTradingView,
+    timeframe,
+  ])
 
   const chart = useChart(chartOpts)
 

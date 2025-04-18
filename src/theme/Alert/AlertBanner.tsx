@@ -1,5 +1,6 @@
 import { Info, Warning } from '@phosphor-icons/react'
 import React, { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 
 import { Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -12,9 +13,11 @@ type AlertBannerProps = {
   type: Variant
   message: ReactNode
   action?: ReactNode
+  onClick?: () => void
+  link?: string
 }
 
-const getProperty = (type: Variant) => {
+export const getAlertProperty = (type: Variant) => {
   switch (type) {
     case 'success':
       return { color: themeColors.green1, icon: Info }
@@ -27,8 +30,8 @@ const getProperty = (type: Variant) => {
   }
 }
 
-const AlertBanner = ({ id, type, message, action, sx }: AlertBannerProps & SxProps) => {
-  const { icon: Icon, color } = getProperty(type)
+const AlertBanner = ({ id, type, message, action, onClick, link, sx }: AlertBannerProps & SxProps) => {
+  const { icon: Icon, color } = getAlertProperty(type)
   return (
     <Flex
       id={id}
@@ -49,7 +52,7 @@ const AlertBanner = ({ id, type, message, action, sx }: AlertBannerProps & SxPro
         ...(sx || {}),
       }}
     >
-      <Type.Caption>
+      <Type.Caption as={link ? Link : undefined} to={link ? link : undefined} onClick={onClick}>
         <IconBox icon={<Icon size={16} />} mr={2} />
         {message}
       </Type.Caption>

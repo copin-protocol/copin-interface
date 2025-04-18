@@ -86,14 +86,18 @@ function App() {
             <Route exact path={ROUTES.SHARED_BACKTEST_MULTIPLE.path} component={SharedBacktestMultiplePage}></Route>
             <Route exact path={ROUTES.STATS.path} component={StatsPage}></Route>
             <Route exact path={ROUTES.STATS_CEX.path} component={StatsCEXPage}></Route>
-            <AuthedRoute path={ROUTES.SYSTEM_STATUS.path} component={SystemStatusPage}></AuthedRoute>
+            <Route path={ROUTES.SYSTEM_STATUS.path} component={SystemStatusPage}></Route>
 
             <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfilePage}></AuthedRoute>
             <AuthedRoute exact path={ROUTES.ALERT_LIST.path} component={AlertDashboardPage}></AuthedRoute>
             <AuthedRoute path={ROUTES.USER_SUBSCRIPTION.path} component={UserSubscriptionPage}></AuthedRoute>
             <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagementPage}></AuthedRoute>
             <Route path={ROUTES.LINK_BOT_ALERT.path} component={LinkBotTelegramPage}></Route>
-            <AuthedRoute exact path={ROUTES.ALERT_SETTING_DETAILS.path} component={AlertSettingDetailsPage}></AuthedRoute>
+            <AuthedRoute
+              exact
+              path={ROUTES.ALERT_SETTING_DETAILS.path}
+              component={AlertSettingDetailsPage}
+            ></AuthedRoute>
             <AuthedRoute path={ROUTES.FAVORITES.path} component={FavoritesPage}></AuthedRoute>
             <Route exact path={ROUTES.SEARCH.path} component={SearchPage}></Route>
             <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHashPage}></Route>

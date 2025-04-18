@@ -4,15 +4,15 @@ import { immer } from 'zustand/middleware/immer'
 
 import { getListEvent } from 'apis/event'
 import { getMarketData } from 'apis/markets'
-import { getPlanLimit, getVolumeLimit } from 'apis/systemApis'
+import { getSystemConfigApi } from 'apis/systemApis'
 import { EventDetailsData } from 'entities/event'
-import { SubscriptionLimitData, SystemAlert, VolumeLimitData } from 'entities/system'
+import { SubscriptionLimitData, SystemAlertData, VolumeLimitData } from 'entities/system'
 import { RELEASED_PROTOCOLS } from 'utils/config/constants'
-import { CopyTradePlatformEnum, ProtocolEnum, SubscriptionPlanEnum } from 'utils/config/enums'
+import { ProtocolEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 interface SystemConfigState {
-  systemAlert: SystemAlert[]
+  systemAlert: SystemAlertData[]
   volumeLimit: VolumeLimitData | undefined
   subscriptionLimit: SubscriptionLimitData | undefined
   eventId: string | undefined
@@ -221,18 +221,19 @@ export function SystemConfigInitializer() {
 
   useQuery(
     [QUERY_KEYS.GET_SYSTEM_CONFIG, QUERY_KEYS.GET_ALL_EVENTS, QUERY_KEYS.GET_PLANS_LIMIT],
-    () => Promise.all([getVolumeLimit(), getListEvent(), getPlanLimit()]),
+    () => Promise.all([getSystemConfigApi(), getListEvent()]),
     {
       retry: 0,
       onSuccess: (data) => {
-        const [volumeLimit, events, planLimit] = data
-        const subscriptionLimit = planLimit?.reduce((acc, item) => {
+        const [systemConfig, events] = data
+        const subscriptionLimit = systemConfig.planSubscriptionLimitConfig.reduce((acc, item) => {
           acc[item.plan] = item
           return acc
         }, {} as SubscriptionLimitData)
 
         const contextValue: Partial<SystemConfigState> = {
-          volumeLimit,
+          volumeLimit: systemConfig.copyTradeVolumeConfig,
+          systemAlert: systemConfig.systemAlert,
           subscriptionLimit,
           events,
           eventId: events?.[0]?.id,
@@ -247,17 +248,7 @@ export function SystemConfigInitializer() {
 
 export const useSystemConfigStore = create<SystemConfigState & SystemConfigModifier>()(
   immer((set) => ({
-    systemAlert: [
-      {
-        type: 'copy_exchange',
-        data: {
-          type: 'warning',
-          exchange: CopyTradePlatformEnum.GNS_V8,
-          message: { en: 'Copy trade via GNS is currently under maintenance.' },
-          action: 'disabled',
-        },
-      },
-    ],
+    systemAlert: [],
     volumeLimit: undefined,
     subscriptionLimit: undefined,
     eventId: undefined,

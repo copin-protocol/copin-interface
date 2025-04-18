@@ -10,12 +10,14 @@ const ProtocolLogo = ({
   textSx,
   sx,
   hasText = true,
+  hasChainText = false,
   isActive = false,
   className,
   disabled = false,
   ...props
 }: {
   protocol: ProtocolEnum
+  hasChainText?: boolean
   size?: number
   textSx?: TextProps
   hasText?: boolean
@@ -49,6 +51,12 @@ const ProtocolLogo = ({
         >
           {/* {PROTOCOL_OPTIONS_MAPPING[protocol].text?.toLowerCase()} */}
           {protocolOptionsMapping[protocol]?.text}
+        </Type.Caption>
+      )}
+      {hasChainText && (
+        <Type.Caption lineHeight={`${size}px`} color="neutral2" {...textSx}>
+          {/* {PROTOCOL_OPTIONS_MAPPING[protocol].text?.toLowerCase()} */}
+          {protocolOptionsMapping[protocol]?.label}
         </Type.Caption>
       )}
     </Flex>
