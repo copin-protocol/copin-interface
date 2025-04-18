@@ -1,12 +1,29 @@
 import { Trans } from '@lingui/macro'
-import { Ticket } from '@phosphor-icons/react'
+import { Ticket, XCircle } from '@phosphor-icons/react'
 
 import { IconMessageBox } from 'components/@ui/IconMessageBox'
 import { Button } from 'theme/Buttons'
 import DiscordV2Icon from 'theme/Icons/DiscordIconV2'
 import FeedbackIcon from 'theme/Icons/FeedbackIcon'
-import { Box, Flex, LinkText, Type } from 'theme/base'
+import Modal from 'theme/Modal'
+import { Box, Flex, IconBox, LinkText, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
+
+export default function FeedBackModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
+  return (
+    <Modal isOpen={isOpen} onDismiss={onDismiss} aria-label="Feedback Form">
+      <Box sx={{ bg: 'neutral7', borderRadius: 'sm', p: 16, overflowY: 'auto', mx: 'auto' }}>
+        <Flex sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+          <Type.BodyBold>
+            <Trans>COPIN FEEDBACK</Trans>
+          </Type.BodyBold>
+          <IconBox role="button" icon={<XCircle size={20} />} sx={{ color: 'neutral3' }} onClick={onDismiss} />
+        </Flex>
+        <FeedbackForm />
+      </Box>
+    </Modal>
+  )
+}
 
 const FeedbackForm = () => {
   return (
@@ -50,5 +67,3 @@ const FeedbackForm = () => {
     </Box>
   )
 }
-
-export default FeedbackForm

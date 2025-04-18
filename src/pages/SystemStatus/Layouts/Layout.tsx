@@ -15,6 +15,7 @@ import { LayoutComponents } from './types'
 
 enum TabKeyEnum {
   NODE_STATUS = 'node_status',
+  PROTOCOL_STATUS = 'protocol_status',
   WALLET_WATCHER = 'wallet_watcher',
 }
 
@@ -25,6 +26,13 @@ const tabConfigs: TabConfig[] = [
     icon: <ThermometerSimple size={24} />,
     key: TabKeyEnum.NODE_STATUS,
     route: ROUTES.NODE_STATUS.path,
+  },
+  {
+    name: <Trans>PROTOCOL STATUS</Trans>,
+    activeIcon: <ThermometerSimple size={24} weight="fill" />,
+    icon: <ThermometerSimple size={24} />,
+    key: TabKeyEnum.PROTOCOL_STATUS,
+    route: ROUTES.PROTOCOL_STATUS.path,
   },
   {
     name: <Trans>WALLET WATCHER</Trans>,
@@ -58,6 +66,9 @@ export default function Layout(components: LayoutComponents) {
           <Switch>
             <Route exact path={ROUTES.NODE_STATUS.path}>
               {components.nodeStatus}
+            </Route>
+            <Route exact path={ROUTES.PROTOCOL_STATUS.path}>
+              {components.systemAlert}
             </Route>
             <Route exact path={ROUTES.WALLET_WATCHER.path}>
               {components.walletWatcher}

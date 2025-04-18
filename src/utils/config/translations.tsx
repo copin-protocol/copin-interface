@@ -3,9 +3,11 @@ import { Trans, t } from '@lingui/macro'
 import { ReactNode } from 'react'
 
 import {
-  AlertCategoryEnum, AlertCustomType,
+  AlertCategoryEnum,
+  AlertCustomType,
   AlertTypeEnum,
-  ChangeFieldEnum, ChannelStatusEnum,
+  ChangeFieldEnum,
+  ChannelStatusEnum,
   ChannelTypeEnum,
   CopyPositionCloseTypeEnum,
   CopyTradePlatformEnum,
@@ -16,9 +18,11 @@ import {
   MarginModeEnum,
   OrderTypeEnum,
   PositionStatusEnum,
+  ProtocolCopyTradeStatusEnum,
   SLTPTypeEnum,
+  SystemStatusTypeEnum,
   TimeFilterByEnum,
-  UserActionEnum
+  UserActionEnum,
 } from './enums'
 
 type ObjectTrans = {
@@ -239,4 +243,15 @@ export const TIME_TRANSLATION_FULL: Record<string, ReactNode> = {
   [TimeFilterByEnum.S14_DAY]: <Trans>14 Days</Trans>,
   [TimeFilterByEnum.S30_DAY]: <Trans>30 Days</Trans>,
   [TimeFilterByEnum.S60_DAY]: <Trans>60 Days</Trans>,
+}
+
+export const SYSTEM_STATUS_TYPE_TRANSLATION: Record<string, ReactNode> = {
+  [SystemStatusTypeEnum.CLOSED]: <Trans>Closed</Trans>,
+  [SystemStatusTypeEnum.STABLE]: <Trans>Stable</Trans>,
+  [SystemStatusTypeEnum.UNSTABLE]: <Trans>Unstable</Trans>,
+}
+
+export const PROTOCOL_COPY_TRADE_STATUS_TRANSLATION: Record<string, ReactNode> = {
+  [ProtocolCopyTradeStatusEnum.COPYABLE]: <Trans>Copyable</Trans>,
+  [ProtocolCopyTradeStatusEnum.UNCOPYABLE]: <Trans>Uncopyable</Trans>,
 }

@@ -1,11 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { BookOpenText, ChartLine, Notebook } from '@phosphor-icons/react'
-import React from 'react'
 
 import useTabHandler from 'hooks/router/useTabHandler'
 import { BottomWrapperMobile } from 'pages/@layouts/Components'
 import { TabHeader } from 'theme/Tab'
-import { Box } from 'theme/base'
+import { Box, Flex } from 'theme/base'
 import { FOOTER_HEIGHT } from 'utils/config/constants'
 
 import PositionMobileView from './PositionMobileView'
@@ -38,12 +37,10 @@ const tabConfigs = [
   },
 ]
 
-const BODY_HEIGHT = `calc(100% - 56px - 57px)` // - protocolStats height 56px - traderInfo height 57px
-
 const MobileLayout = (props: LayoutProps) => {
   const { tab, handleTab: setTab } = useTabHandler(TabEnum.POSITIONS)
   return (
-    <Box sx={{ position: 'relative', pb: FOOTER_HEIGHT, height: '100%' }}>
+    <Flex sx={{ position: 'relative', pb: FOOTER_HEIGHT, height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
       <Box
         width="100%"
         height={56}
@@ -58,6 +55,12 @@ const MobileLayout = (props: LayoutProps) => {
       >
         {props.protocolStats}
       </Box>
+      {/* {!!props.protocol && (
+        <>
+          <TraderDetailsAlertBanner protocol={props.protocol} />
+          <Divider />
+        </>
+      )} */}
       <Box
         width="100%"
         sx={{
@@ -72,7 +75,7 @@ const MobileLayout = (props: LayoutProps) => {
         {props.traderInfo}
       </Box>
       {tab === TabEnum.STATS && (
-        <Box height={BODY_HEIGHT} sx={{ overflow: 'auto' }}>
+        <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
           <Box
             sx={{
               height: 350,
@@ -88,7 +91,7 @@ const MobileLayout = (props: LayoutProps) => {
         </Box>
       )}
       {tab === TabEnum.CHARTS && (
-        <Box height={BODY_HEIGHT} sx={{ overflow: 'auto' }}>
+        <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
           <Box
             height={270}
             sx={{
@@ -104,7 +107,7 @@ const MobileLayout = (props: LayoutProps) => {
         </Box>
       )}
       {tab === TabEnum.POSITIONS && (
-        <Box height={BODY_HEIGHT}>
+        <Box flex="1 0 0">
           <PositionMobileView
             openingPositions={props.openingPositions}
             historyPositions={props.closedPositions}
@@ -122,7 +125,7 @@ const MobileLayout = (props: LayoutProps) => {
           onClickItem={(key) => setTab(key as TabEnum)}
         />
       </BottomWrapperMobile>
-    </Box>
+    </Flex>
   )
 }
 

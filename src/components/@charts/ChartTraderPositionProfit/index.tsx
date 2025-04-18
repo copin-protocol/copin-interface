@@ -37,22 +37,20 @@ export default function ChartProfit({
   const closeBlockTimeUnix = useMemo(() => (data ? dayjs(data.closeBlockTime).utc().unix() : 0), [data])
   const to = useMemo(() => (isOpening ? dayjs().utc().unix() : closeBlockTimeUnix), [closeBlockTimeUnix, isOpening])
 
+  const symbol = getSymbolFromPair(data?.pair)
   const [isTradingChart, setIsTradingChart] = useState(isOpening)
   const [crossMove, setCrossMove] = useState<{ pnl?: number; time?: number } | undefined>()
-  const latestPnL = useMemo(() => {
-    if (crossMove?.pnl === 0 || !data) return 0
+  const latestPnL = (() => {
+    if (crossMove?.pnl === 0 || !data || !symbol) return 0
     if (crossMove?.pnl) return crossMove?.pnl
     if (!isOpening) return data.pnl
-    return calcOpeningPnL(data, prices[getSymbolFromPair(data.pair)])
-  }, [crossMove?.pnl, data, isOpening, prices])
+    return calcOpeningPnL(data, prices[symbol])
+  })()
 
-  const markPrice = useMemo(() => {
-    if (!data?.pair || !prices) return null
-    return prices[getSymbolFromPair(data.pair)]
-  }, [prices, data?.pair])
+  const markPrice = !symbol && !prices ? prices[symbol] : null
 
-  const latestROI = useMemo(() => {
-    if (crossMove?.pnl === 0 || !data) return 0
+  const latestROI = (() => {
+    if (crossMove?.pnl === 0 || !data || !symbol) return 0
     if (!crossMove || crossMove?.pnl == null || crossMove?.time == null) {
       return isOpening ? calcOpeningROI(data, latestPnL) : data.roi
     }
@@ -60,14 +58,9 @@ export default function ChartProfit({
     if ((crossMove.time as number) < to) return undefined
     if (!isOpening && (crossMove.time as number) === to) return data.roi
     return calcOpeningROI(data, latestPnL)
-  }, [crossMove, data, isOpening, latestPnL, to])
+  })()
 
-  const isInvalidROI = useMemo(() => {
-    if (protocol === ProtocolEnum.JUPITER && data?.roi && data.roi < -100) {
-      return true
-    }
-    return false
-  }, [data?.roi, protocol])
+  const isInvalidROI = protocol === ProtocolEnum.JUPITER && !!data?.roi && data.roi < -100
 
   return (
     <>

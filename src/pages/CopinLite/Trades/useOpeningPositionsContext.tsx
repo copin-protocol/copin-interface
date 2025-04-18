@@ -84,20 +84,23 @@ export function LiteOpeningPositionProvider({ children }: { children: JSX.Elemen
         const embeddedAccountInfo = await getHlAccountInfo({ user: embeddedWallet?.hyperliquid?.embeddedWallet || '' })
         const hlCopyPositions = parseHLCopyPositionData({ data: embeddedAccountInfo?.assetPositions })
         const _stuckPositions = hlCopyPositions.filter((hlPosition) => {
-          const hlPositionKey = getHLCopyPositionIdentifyKey(hlPosition)
-          return !!openingPositions?.data?.every((copyPosition) => {
-            const symbol = getSymbolByIndexToken?.({
-              indexToken: copyPosition.indexToken,
-              protocol: copyPosition.protocol,
+          if (openingPositions?.data?.length) {
+            const hlPositionKey = getHLCopyPositionIdentifyKey(hlPosition)
+            return !!openingPositions?.data?.every((copyPosition) => {
+              const symbol = getSymbolByIndexToken?.({
+                indexToken: copyPosition.indexToken,
+                protocol: copyPosition.protocol,
+              })
+              const pair = copyPosition.pair ? copyPosition.pair : symbol ? convertPairHL(symbol) : undefined
+              if (!pair) {
+                const result: CopyPositionData = { ...copyPosition, openingPositionType: 'liveBoth' }
+                return result
+              }
+              const copyPositionKey = getHLCopyPositionIdentifyKey({ ...copyPosition, pair })
+              return hlPositionKey !== copyPositionKey
             })
-            const pair = copyPosition.pair ? copyPosition.pair : symbol ? convertPairHL(symbol) : undefined
-            if (!pair) {
-              const result: CopyPositionData = { ...copyPosition, openingPositionType: 'liveBoth' }
-              return result
-            }
-            const copyPositionKey = getHLCopyPositionIdentifyKey({ ...copyPosition, pair })
-            return hlPositionKey !== copyPositionKey
-          })
+          }
+          return true
         })
         setStuckPositions(!!_stuckPositions?.length ? _stuckPositions : undefined)
       } catch {}

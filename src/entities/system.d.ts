@@ -1,9 +1,10 @@
-import { Variant } from 'theme/Alert/types'
+import { CopyTradePlatformEnum, ProtocolEnum, SystemStatusPageEnum } from 'utils/config/enums'
 
 export interface SystemConfigData {
-  createdAt: string
+  copyTradeVolumeConfig: VolumeLimitData
+  systemAlert: SystemAlert[]
+  planSubscriptionLimitConfig: PlanLimitData[]
 }
-
 export interface ListenerStatsData {
   arb: {
     gnsArbLatestRawDataBlock: number
@@ -129,7 +130,19 @@ export interface PlanLimitData {
   createdAt: string
 }
 
-export interface SystemAlert {
-  type: 'copy_exchange'
-  data: { type: Variant; exchange: CopyTradePlatformEnum; message: { en: string }; action?: 'disabled' }
+export interface SystemAlertData {
+  isActive: boolean
+  message: Record<string, string>
+  section: SystemAlertSectionEnum
+  type: SystemAlertTypeEnum
+  sectionData?: Record<string, string>
+}
+
+export interface SystemStatusData {
+  feature: ProtocolEnum | CopyTradePlatformEnum | SystemStatusPageEnum
+  status?: SystemStatusTypeEnum // use for common
+  dataStatus?: SystemStatusTypeEnum // use for protocol
+  copyTradeStatus?: SystemStatusTypeEnum // use for protocol
+  alertStatus?: SystemStatusTypeEnum // use for protocol
+  note: string
 }

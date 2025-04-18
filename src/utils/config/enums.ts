@@ -542,3 +542,28 @@ export enum BulkUpdateActionEnum {
   'UPDATE' = 'UPDATE',
   'CLONE' = 'CLONE',
 }
+
+export enum SystemAlertTypeEnum {
+  WARNING = 'warning',
+  DANGER = 'danger',
+  SUCCESS = 'success',
+  INFO = 'info',
+}
+export enum SystemStatusSectionEnum {
+  PROTOCOL_STATUS = 'PROTOCOL_STATUS',
+  COPY_EXCHANGE_STATUS = 'COPY_EXCHANGE_STATUS',
+  PAGE_STATUS = 'PAGE_STATUS',
+}
+export enum SystemStatusTypeEnum {
+  STABLE = 'STABLE',
+  UNSTABLE = 'UNSTABLE',
+  CLOSED = 'CLOSED',
+}
+export enum ProtocolCopyTradeStatusEnum {
+  COPYABLE = 'COPYABLE',
+  UNCOPYABLE = 'UNCOPYABLE',
+}
+export enum SystemStatusPageEnum {
+  OPEN_INTEREST = 'OPEN_INTEREST',
+  LIVE_TRADES = 'LIVE_TRADES',
+}

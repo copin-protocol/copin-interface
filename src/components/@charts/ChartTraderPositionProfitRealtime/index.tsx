@@ -1,16 +1,19 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 
+import { datafeedFactory as gainsDatafeedFactory } from 'components/@charts/ChartGainsPositionRealtime/datafeed'
+import { initWebsocket } from 'components/@charts/ChartGainsPositionRealtime/streaming'
+import { datafeedFactory as hyperliquidDatafeedFactory } from 'components/@charts/ChartHLPositionRealtime/datafeed'
+import { DEFAULT_CHART_REALTIME_PROPS } from 'components/@charts/configs'
 import { OrderData, PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { Box } from 'theme/base'
-import { GMX_V1_PROTOCOLS } from 'utils/config/constants'
-import { OrderTypeEnum } from 'utils/config/enums'
+import { GAINS_TRADE_PROTOCOLS, GMX_V1_PROTOCOLS } from 'utils/config/constants'
+import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { getSymbolTradingView } from 'utils/config/trades'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import { ChartingLibraryWidgetOptions, ResolutionString } from '../../../../public/static/charting_library'
-import { DEFAULT_CHART_REALTIME_PROPS } from '../configs'
 import datafeed from './datafeed'
 import { useChart } from './useChart'
 import { usePlotOrderMarker } from './usePlotOrderMarker'
@@ -21,7 +24,7 @@ interface Props {
   orders: OrderData[]
 }
 function RealtimeChart({ position, orders }: Props) {
-  const { getSymbolByIndexToken } = useMarketsConfig()
+  const { getSymbolByIndexToken, getSymbolByIndexTokenMapping } = useMarketsConfig()
   const { getPricesData } = useGetUsdPrices()
   const prices = getPricesData({ protocol: position.protocol })
   const [chartContainer, setChartContainer] = React.useState<HTMLDivElement | null>(null)
@@ -29,14 +32,33 @@ function RealtimeChart({ position, orders }: Props) {
     ? getSymbolFromPair(position.pair)
     : getSymbolByIndexToken?.({ protocol: position.protocol, indexToken: position.indexToken }) ?? ''
   const decimals = useMemo(() => ((prices?.[symbol] ?? 0) < 1 ? 6 : 4), [symbol, prices])
+  const {
+    isGains,
+    isHyperliquid,
+    symbol: symbolTradingView,
+  } = getSymbolTradingView({ protocol: position?.protocol, symbol })
+
+  const initiated = useRef(false)
+  useEffect(() => {
+    if (!isGains || !getSymbolByIndexTokenMapping || initiated.current) return
+    const symbolByIndexToken = getSymbolByIndexTokenMapping({ protocol: ProtocolEnum.GNS })
+    if (!symbolByIndexToken) return
+    initWebsocket({ symbolByIndexToken })
+  }, [getSymbolByIndexTokenMapping, isGains])
 
   const chartOpts = React.useMemo(() => {
     return {
       ...DEFAULT_CHART_REALTIME_PROPS,
-      datafeed,
+      datafeed: position?.protocol
+        ? isHyperliquid
+          ? hyperliquidDatafeedFactory()
+          : isGains
+          ? gainsDatafeedFactory(position?.indexToken)
+          : datafeed
+        : datafeed,
       container: chartContainer,
       interval: (position.durationInSecond < 1800 ? '1' : '5') as ResolutionString,
-      symbol: symbol ? `${getSymbolTradingView(symbol)}USD` : undefined,
+      symbol: symbolTradingView,
       custom_formatters: {
         priceFormatterFactory: (symbol, minTick) => {
           return {
@@ -45,7 +67,16 @@ function RealtimeChart({ position, orders }: Props) {
         },
       },
     } as ChartingLibraryWidgetOptions
-  }, [chartContainer, decimals, position.durationInSecond, symbol])
+  }, [
+    position?.protocol,
+    position?.indexToken,
+    position.durationInSecond,
+    isHyperliquid,
+    isGains,
+    chartContainer,
+    symbolTradingView,
+    decimals,
+  ])
 
   const chart = useChart(chartOpts)
 

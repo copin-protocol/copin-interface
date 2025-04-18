@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Box, Flex } from 'theme/base'
 
 import { LayoutProps } from './types'
@@ -17,6 +15,12 @@ const TabletLayout = (props: LayoutProps) => {
       >
         {props.protocolStats}
       </Box>
+      {/* {props.protocol && (
+        <>
+          <TraderDetailsAlertBanner protocol={props.protocol} />
+          <Divider />
+        </>
+      )} */}
       <Box
         width="100%"
         sx={{

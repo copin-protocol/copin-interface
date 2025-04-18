@@ -31,6 +31,12 @@ const DesktopLayout = (props: LayoutProps) => {
       <Box sx={{ flexShrink: 0, height: 56, borderBottom: 'small', borderBottomColor: 'neutral4' }}>
         {props.protocolStats}
       </Box>
+      {/* {!!props.protocol && (
+        <>
+          <TraderDetailsAlertBanner protocol={props.protocol} />
+          <Divider />
+        </>
+      )} */}
       <Box
         sx={{ flexShrink: 0, borderBottom: 'small', borderBottomColor: 'neutral4', position: 'relative', zIndex: 10 }}
       >

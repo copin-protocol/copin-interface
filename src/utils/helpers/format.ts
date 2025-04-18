@@ -10,7 +10,7 @@ import { ImageData } from 'entities/image.d'
 import { DATE_FORMAT, DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { isAddress } from 'utils/web3/contracts'
 
-import { MarginModeEnum, RewardSymbolEnum } from '../config/enums'
+import { MarginModeEnum, RewardSymbolEnum, SystemStatusTypeEnum } from '../config/enums'
 import { MARGIN_MODE_TRANS } from '../config/translations'
 import { convertMiniNumber } from './transform'
 
@@ -261,4 +261,17 @@ export function formatRewardSymbol(value: string, rewardSymbol?: string) {
 export function formatZeroBased(value: number) {
   if (value < 0) return `${value}`
   return value < 10 ? '0' + value : value
+}
+
+export function getSystemStatusTypeColor(type: SystemStatusTypeEnum) {
+  let color = 'green1'
+  switch (type) {
+    case SystemStatusTypeEnum.CLOSED:
+      color = 'red2'
+      break
+    case SystemStatusTypeEnum.UNSTABLE:
+      color = 'orange1'
+      break
+  }
+  return color
 }

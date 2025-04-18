@@ -413,10 +413,12 @@ export function normalizeExchangePrice({
   exchange: CopyTradePlatformEnum | undefined
 }) {
   if (!protocolSymbol || !protocolSymbolPrice || !exchange) return 0
+
   const { originalSymbol, originalPrice } = normalizeProtocolPrice({
     symbol: protocolSymbol,
     price: protocolSymbolPrice,
   })
+
   return (EXCHANGE_PRICE_MULTIPLE_MAPPING[exchange]?.[originalSymbol] ?? 1) * originalPrice
 }
 

@@ -15,6 +15,9 @@ interface BalancesState {
   gainsPrices: UsdPrices
   setGainsPrices: (prices: UsdPrices) => void
   setGainsPrice: ({ address, price }: { address: string; price: number }) => void
+  hlPrices: UsdPrices
+  setHlPrices: (prices: UsdPrices) => void
+  setHlPrice: ({ address, price }: { address: string; price: number }) => void
 }
 
 const useUsdPricesStore = create<BalancesState>()(
@@ -37,6 +40,15 @@ const useUsdPricesStore = create<BalancesState>()(
       set((state) => {
         state.gainsPrices[address] = price
       }),
+    hlPrices: {},
+    setHlPrices: (prices) =>
+      set((state) => {
+        state.gainsPrices = prices
+      }),
+    setHlPrice: ({ address, price }: { address: string; price: number }) =>
+      set((state) => {
+        state.gainsPrices[address] = price
+      }),
   }))
 )
 export const useRealtimeUsdPricesStore = create<
@@ -45,6 +57,7 @@ export const useRealtimeUsdPricesStore = create<
   immer((set) => ({
     prices: {},
     gainsPrices: {},
+    hlPrices: {},
     isReady: false,
     setIsReady: (isReady) =>
       set((state) => {
@@ -65,6 +78,14 @@ export const useRealtimeUsdPricesStore = create<
     setGainsPrice: ({ address, price }: { address: string; price: number }) =>
       set((state) => {
         state.gainsPrices[address] = price
+      }),
+    setHlPrices: (prices) =>
+      set((state) => {
+        state.hlPrices = { ...state.hlPrices, ...prices }
+      }),
+    setHlPrice: ({ address, price }: { address: string; price: number }) =>
+      set((state) => {
+        state.hlPrices[address] = price
       }),
   }))
 )

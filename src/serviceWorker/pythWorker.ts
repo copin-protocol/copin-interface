@@ -3,7 +3,6 @@ import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js'
 import { MarketsData } from 'entities/markets'
 import { NETWORK } from 'utils/config/constants'
 import { PYTH_IDS_MAPPING } from 'utils/config/pythIds'
-import { PROTOCOL_PRICE_MULTIPLE_MAPPING } from 'utils/helpers/price'
 import { UsdPrices } from 'utils/types'
 
 import { MessageUpdateHandler } from './types'
@@ -107,8 +106,7 @@ export class PythServiceWorker {
     if (!data?.length) return
     data.forEach((parsedData) => {
       const symbol = parsedData.symbol
-      const multipleRatio = PROTOCOL_PRICE_MULTIPLE_MAPPING[symbol]?.multiple ?? 1
-      this.updatedPricesData[symbol] = parsedData.value * multipleRatio
+      this.updatedPricesData[symbol] = parsedData.value
     })
   }
   private chunkArray<T>(array: T[], size: number): T[][] {

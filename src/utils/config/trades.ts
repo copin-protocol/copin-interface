@@ -1,6 +1,9 @@
 // TODO: Check when add new protocol
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 
+import { GAINS_TRADE_PROTOCOLS } from './constants'
+import { ProtocolEnum } from './enums'
+
 export { PROTOCOL_PROVIDER } from './protocolProviderConfig'
 
 export type ProtocolTokenMapping = { [address: string]: { symbol: string } }
@@ -62,59 +65,127 @@ export const TIMEFRAME_NAMES = {
   1440: 'D1',
 }
 
-export function getSymbolTradingView(symbol: string) {
-  switch (symbol) {
-    case '1000BONK':
-    case 'kBONK':
-      return 'BONK'
-    case '1000PEPE':
-    case 'kPEPE':
-    case 'MPEPE':
-      return 'PEPE'
-    case '1000FLOKI':
-    case 'kFLOKI':
-      return 'FLOKI'
-    case '1000SHIB':
-    case 'kSHIB':
-      return 'SHIB'
-    case '1000LUNC':
-    case 'kLUNC':
-      return 'LUNC'
-    case '1000DOGS':
-      return 'DOGS'
-    case '1000RATS':
-      return 'RATS'
-    case '1000SATS':
-      return 'SATS'
-    case '1000MOG':
-    case '1000000MOG':
-    case '1MMOG':
-      return 'MOG'
-    case '1000X':
-      return 'X'
-    case '1000XEC':
-      return 'XEC'
-    case '1000WHY':
-      return 'WHY'
-    case '1MBABYDOGE':
-      return 'BABYDOGE'
-    case '1000CHEEMS':
-    case '1MCHEEMS':
-      return 'CHEEMS'
-    case '1000000AIDOGE':
-      return 'AIDOGE'
-    case 'RNDR':
-      return 'RENDER'
-    case 'BTCDEGEN':
-      return 'BTC'
-    case 'ETHDEGEN':
-      return 'ETH'
-    case '1000NEIRO':
-      return 'NEIRO'
-    default:
-      return symbol
+// TODO: Refactor this to get from api
+export function getSymbolTradingView({
+  protocol,
+  exchange,
+  symbol,
+}: {
+  protocol?: ProtocolEnum
+  exchange?: CopyTradePlatformEnum
+  symbol: string
+}) {
+  const isHyperliquid =
+    exchange === CopyTradePlatformEnum.HYPERLIQUID ||
+    (exchange !== CopyTradePlatformEnum.GNS_V8 && protocol === ProtocolEnum.HYPERLIQUID)
+  const isGains =
+    exchange === CopyTradePlatformEnum.GNS_V8 ||
+    (exchange !== CopyTradePlatformEnum.HYPERLIQUID && protocol && GAINS_TRADE_PROTOCOLS.includes(protocol))
+  let _symbol = symbol ? symbol : undefined
+  if (isHyperliquid) {
+    switch (symbol) {
+      case '1000NEIRO':
+        _symbol = 'kNEIRO'
+        break
+      case '1000PEPE':
+      case 'MPEPE':
+        _symbol = 'kPEPE'
+        break
+      case '1000FLOKI':
+        _symbol = 'kFLOKI'
+        break
+      case '1000LUNC':
+        _symbol = 'kLUNC'
+        break
+      case '1000SHIB':
+        _symbol = 'kSHIB'
+        break
+      case '1000DOGS':
+        _symbol = 'kDOGS'
+        break
+      case '1000BONK':
+        _symbol = 'kBONK'
+        break
+      default:
+        break
+    }
+  } else if (isGains) {
+    _symbol = symbol
+  } else {
+    switch (symbol) {
+      case '1000BONK':
+      case 'kBONK':
+        _symbol = 'BONK'
+        break
+      case '1000PEPE':
+      case 'kPEPE':
+      case 'MPEPE':
+        _symbol = 'PEPE'
+        break
+      case '1000FLOKI':
+      case 'kFLOKI':
+        _symbol = 'FLOKI'
+        break
+      case '1000SHIB':
+      case 'kSHIB':
+        _symbol = 'SHIB'
+        break
+      case '1000LUNC':
+      case 'kLUNC':
+        _symbol = 'LUNC'
+        break
+      case '1000DOGS':
+        _symbol = 'DOGS'
+        break
+      case '1000RATS':
+        _symbol = 'RATS'
+        break
+      case '1000SATS':
+        _symbol = 'SATS'
+        break
+      case '1000MOG':
+      case '1000000MOG':
+      case '1MMOG':
+        _symbol = 'MOG'
+        break
+      case '1000X':
+        _symbol = 'X'
+        break
+      case '1000XEC':
+        _symbol = 'XEC'
+        break
+      case '1000WHY':
+        _symbol = 'WHY'
+        break
+      case '1MBABYDOGE':
+        _symbol = 'BABYDOGE'
+        break
+      case '1000CHEEMS':
+      case '1MCHEEMS':
+        _symbol = 'CHEEMS'
+        break
+      case '1000000AIDOGE':
+        _symbol = 'AIDOGE'
+        break
+      case 'RNDR':
+        _symbol = 'RENDER'
+        break
+      case 'BTCDEGEN':
+        _symbol = 'BTC'
+        break
+      case 'ETHDEGEN':
+        _symbol = 'ETH'
+        break
+      case '1000NEIRO':
+        _symbol = 'NEIRO'
+        break
+      default:
+        break
+    }
   }
+  return { isHyperliquid, isGains, symbol: _symbol }
 }
+
 export function getPriceTradingView(symbol: string, price?: number) {
   if (!price) return
   switch (symbol) {
