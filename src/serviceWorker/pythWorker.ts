@@ -48,7 +48,11 @@ export class PythServiceWorker {
     try {
       const listPriceIdData = await fetchPythPriceIds()
       listPriceIdData.forEach((data) => {
-        this.symbolByPythId[data.id] = [data.attributes.base]
+        if (data.attributes.generic_symbol === 'ETHBTC') {
+          this.symbolByPythId[data.id] = [data.attributes.generic_symbol]
+        } else {
+          this.symbolByPythId[data.id] = [data.attributes.base]
+        }
       })
     } catch (error) {}
   }

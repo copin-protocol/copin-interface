@@ -62,14 +62,14 @@ export async function fetchPythPriceIds() {
           asset_type: string // 'Crypto'
           base: string //'AAVE'
           // description: 'AAVE / US DOLLAR'
-          // display_symbol: 'AAVE/USD'
-          // generic_symbol: 'AAVEUSD'
-          // quote_currency: 'USD'
+          display_symbol: string // 'AAVE/USD'
+          generic_symbol: string // 'AAVEUSD'
+          quote_currency: string // 'USD'
           // schedule: 'America/New_York;O,O,O,O,O,O,O;'
           // symbol: 'Crypto.AAVE/USD'
         }
       }[]
-      return data
+      return data?.filter((v) => v.attributes.quote_currency === 'USD' || v.attributes.generic_symbol === 'ETHBTC')
     },
     {
       maxRetries: CONFIG.MAX_RETRIES,
