@@ -25,6 +25,7 @@ import { CopyTradePlatformEnum, CopyTradeStatusEnum, SortTypeEnum } from 'utils/
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { TokenOptionProps } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import DepthPairDetails from './DepthPairDetails'
 import ExchangeFilter, { ExchangeFilterProps } from './ExchangeFilter'
@@ -92,7 +93,7 @@ export default function Overview() {
     () =>
       data
         ? Object.entries(data).map(([pair]) => {
-            const symbol = getSymbolFromPair(pair)
+            const symbol = _getSymbolFromPair(pair)
             return {
               id: symbol,
               label: symbol,
@@ -133,7 +134,7 @@ export default function Overview() {
                 }
                 return acc
               }, {})
-              const symbol = getSymbolFromPair(pair)
+              const symbol = _getSymbolFromPair(pair)
 
               return {
                 latestUpdatedAt,
@@ -500,9 +501,9 @@ function getRiskColor(totalCopyVolume: number, depthVolume: number) {
   return 'neutral1'
 }
 
-function getSymbolFromPair(pair: string) {
+function _getSymbolFromPair(pair: string) {
   return pair.includes('-')
-    ? pair.split('-')[0]
+    ? getSymbolFromPair(pair)
     : pair.includes('USDTM')
     ? pair.split('USDTM')[0]
     : pair.includes('USDCM')

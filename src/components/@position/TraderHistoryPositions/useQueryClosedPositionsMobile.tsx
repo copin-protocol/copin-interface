@@ -12,7 +12,7 @@ import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { ALL_OPTION, ALL_TOKENS_ID } from 'utils/config/trades'
-import { getSymbolFromPair, pageToOffset } from 'utils/helpers/transform'
+import { getPairFromSymbol, getSymbolFromPair, pageToOffset } from 'utils/helpers/transform'
 
 const defaultSort: TableSortProps<PositionData> = {
   sortBy: 'closeBlockTime',
@@ -64,7 +64,7 @@ export default function useQueryClosedPositionsMobile({
     queryFilters.push({ fieldName: 'account', value: address })
   }
   if (currencyOption?.id && currencyOption?.id !== ALL_TOKENS_ID) {
-    queryFilters.push({ fieldName: 'pair', value: `${currencyOption.id}-USDT` })
+    queryFilters.push({ fieldName: 'pair', value: getPairFromSymbol(currencyOption.id) })
   }
 
   const { data, isFetching: isLoading } = useQuery<ApiListResponse<PositionData>>(

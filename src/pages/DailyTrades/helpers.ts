@@ -13,9 +13,9 @@ export function getPairsParam({
   const isCopyAll = pairs.length === defaultAllPairs?.length
   const hasExcludingPairs = excludedPairs.length > 0 && isCopyAll
   if (hasExcludingPairs) {
-    params = { pairs: PairFilterEnum.ALL, excludedPairs: excludedPairs.join('-') }
+    params = { pairs: PairFilterEnum.ALL, excludedPairs: excludedPairs.join('_') }
   } else if (!isCopyAll) {
-    params = { pairs: pairs.join('-'), excludedPairs: null }
+    params = { pairs: pairs.join('_'), excludedPairs: null }
   } else {
     params = { pairs: null, excludedPairs: null }
   }

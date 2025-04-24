@@ -61,12 +61,12 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
       if (!defaultAllPairs?.length) return []
       return defaultAllPairs
     }
-    return pairsParam.split('-')
+    return pairsParam.split('_')
   }, [pairsParam, defaultAllPairs])
 
   const excludedPairsParam = searchParams['excludedPairs'] as string | undefined
   const excludedPairs = useMemo(() => {
-    return excludedPairsParam ? excludedPairsParam.split('-') : []
+    return excludedPairsParam ? excludedPairsParam.split('_') : []
   }, [excludedPairsParam])
 
   const onChangePairs = useCallback(
@@ -147,12 +147,12 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
             ? _values
                 .map((v) => getSymbolFromPair(v))
                 .filter((v) => !!v)
-                .join('-')
+                .join('_')
             : undefined
         }
         if (key === 'excludedPairs') {
           const _values = values as string[] | undefined
-          params['excludedPairs'] = _values?.length ? _values.filter((v) => !!v).join('-') : undefined
+          params['excludedPairs'] = _values?.length ? _values.filter((v) => !!v).join('_') : undefined
         }
 
         if (key === 'status') {

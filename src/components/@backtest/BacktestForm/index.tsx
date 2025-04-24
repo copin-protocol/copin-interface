@@ -24,6 +24,7 @@ import { ProtocolEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
+import { getPairFromSymbol } from 'utils/helpers/transform'
 
 import { fieldName } from '../configs'
 import { getDefaultBackTestFormValues } from '../helpers'
@@ -128,7 +129,7 @@ export default function BacktestForm({
     handleSubmit((_formValues) => {
       const formValues = { ..._formValues }
       if (formValues.pairs?.length) {
-        formValues.pairs = formValues.pairs.map((v) => `${v}-USDT`)
+        formValues.pairs = formValues.pairs.map((v) => getPairFromSymbol(v))
       }
       onSubmit?.(formValues)
     })()

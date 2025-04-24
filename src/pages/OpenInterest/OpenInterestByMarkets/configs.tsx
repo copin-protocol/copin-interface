@@ -5,6 +5,7 @@ import { OpenInterestMarketData } from 'entities/statistic'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 const renderMarket = (symbol: string) => {
   return (
@@ -252,7 +253,7 @@ export function getColumns() {
       key: 'pair',
       style: { minWidth: '120px' },
       render: (item) => {
-        const symbol = item.pair.split('-')[0]
+        const symbol = getSymbolFromPair(item.pair, true)
 
         if (!symbol) return <></>
         return <Box pl={2}>{renderMarket(symbol)}</Box>

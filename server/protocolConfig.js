@@ -204,4 +204,7 @@ export const PROTOCOL_CONFIG_MAPPING = {
   PINGU_ARB: {
     title: "Pingu",
   },
+  OSTIUM_ARB: {
+    title: "Ostium",
+  },
 };

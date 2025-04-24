@@ -137,7 +137,8 @@ export const datafeed: IBasicDataFeed = {
   },
   resolveSymbol: (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) => {
     console.log('[resolveSymbol]: Method call', symbolName)
-    const _symbol = symbolName === 'ETHBTC' ? symbolName : `${symbolName}USD`
+    const _symbol =
+      symbolName === 'ETHBTC' ? symbolName : symbolName.includes('-') ? symbolName.replace('-', '') : `${symbolName}USD`
     fetch(`${API_ENDPOINT}/symbols?symbol=${_symbol}&type=crypto`).then((response) => {
       response
         .json()

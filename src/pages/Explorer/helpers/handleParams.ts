@@ -6,8 +6,8 @@ export function parseParams(string: string | undefined) {
   const result: ConditionFormValues<TraderData> = []
   if (!string) return result
   const keys: TraderDataKey[] = []
-  const rows = string.split('__')
-  const fields = rows.map((row) => row.split('_'))
+  const rows = string.split('___')
+  const fields = rows.map((row) => row.split('__'))
   for (let i = 0; i < fields.length; i++) {
     const field = fields[i]
     const rowData = {} as RowValues<TraderData>
@@ -20,7 +20,7 @@ export function parseParams(string: string | undefined) {
       rowData.gte = Number(field[2])
       rowData.lte = Number(field[3])
     }
-    if (field[1] === 'in') rowData.in = field[2]?.split('-')
+    if (field[1] === 'in') rowData.in = field[2]?.split('_')
     keys.push(rowData.key)
     result.push(rowData)
   }
@@ -35,32 +35,32 @@ export function stringifyParams(option: ConditionFormValues<TraderData>) {
       const lte = values.lte ?? 0
       const inList = values.in ?? []
       if (index !== 0) {
-        params += '__'
+        params += '___'
       }
       if (values.key) params += values.key
       if (values.conditionType) {
-        params += '_'
+        params += '__'
         params += values.conditionType
       }
       if (values.conditionType === 'between') {
-        params += '_'
+        params += '__'
         params += gte.toString()
-        params += '_'
+        params += '__'
         params += lte.toString()
         return
       }
       if (values.conditionType === 'gte') {
-        params += '_'
+        params += '__'
         params += gte.toString()
         return
       }
       if (values.conditionType === 'lte') {
-        params += '_'
+        params += '__'
         params += lte.toString()
       }
       if (values.conditionType === 'in') {
-        params += '_'
-        params += inList.join('-')
+        params += '__'
+        params += inList.join('_')
       }
     }
   })

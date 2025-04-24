@@ -107,7 +107,7 @@ export const EVM_TX_HASH_REGEX = /^0x?([a-fA-F0-9]{64})$/
 export const DYDX_TX_HASH_REGEX = /^([a-fA-F0-9]{64})$/
 export const SOLANA_TX_HASH_REGEX = /^[1-9A-HJ-NP-Za-km-z]{88}$/
 export const SOLANA_ADDRESS_REGEX = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/
-export const SPECIAL_SYMBOLS_REGEX = /[!@#$%^&*()_+\-=\[\]{};:'",.<>?/\\|`~]/g
+export const SPECIAL_SYMBOLS_REGEX = /[!@#$%^&*()+\-=\[\]{};:'",.<>?/\\|`~]/g
 
 export const CHART_DAYS_DURATION = 30
 export const CHART_DATE_FORMAT = 'DD.MM'

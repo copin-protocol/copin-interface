@@ -54,7 +54,7 @@ export async function fetchMarketsData() {
 export async function fetchPythPriceIds() {
   const response = await retryAsync(
     async () => {
-      const res = await fetch(`https://hermes.copin.io/v2/price_feeds?asset_type=crypto`, { headers: HEADER_CONFIG })
+      const res = await fetch(`https://hermes.copin.io/v2/price_feeds`, { headers: HEADER_CONFIG })
       const parsedRes = await res.json()
       const data = parsedRes as {
         id: string
@@ -69,7 +69,11 @@ export async function fetchPythPriceIds() {
           // symbol: 'Crypto.AAVE/USD'
         }
       }[]
-      return data?.filter((v) => v.attributes.quote_currency === 'USD' || v.attributes.generic_symbol === 'ETHBTC')
+      return data?.filter(
+        (v) =>
+          (['Crypto', 'Metal'].includes(v.attributes.asset_type) && v.attributes.quote_currency === 'USD') ||
+          v.attributes.generic_symbol === 'ETHBTC'
+      )
     },
     {
       maxRetries: CONFIG.MAX_RETRIES,

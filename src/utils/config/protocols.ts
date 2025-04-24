@@ -620,6 +620,14 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     isNew: true,
     key: 'PIA',
   },
+  [ProtocolEnum.OSTIUM_ARB]: {
+    id: ProtocolEnum.OSTIUM_ARB,
+    text: 'Ostium',
+    label: 'Arbitrum',
+    chainId: ARBITRUM_MAINNET,
+    isNew: true,
+    key: 'OSA',
+  },
 }
 
 export const PROTOCOL_OPTIONS: ProtocolOptionProps[] =

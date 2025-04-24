@@ -28,7 +28,7 @@ import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } f
 import { overflowEllipsis } from 'utils/helpers/css'
 import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { getSymbolFromPair } from 'utils/helpers/transform'
+import { formatSymbol, getSymbolFromPair } from 'utils/helpers/transform'
 import { UsdPrices } from 'utils/types'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps, showMarketIcon?: boolean) {
@@ -66,7 +66,7 @@ function EntryComponent({
       {showMarketIcon && <Market symbol={symbol} size={20} />}
       <Type.Caption sx={{ ...textSx } as any}>
         <Box as="span" sx={{ display: 'block', width: '100%', ...overflowEllipsis() }}>
-          {symbol}
+          {formatSymbol(symbol)}
         </Box>
       </Type.Caption>
       <VerticalDivider />
@@ -465,5 +465,5 @@ export function SymbolComponent({
   const { getSymbolByIndexToken } = useMarketsConfig()
   if (!pair && !indexToken) return <></>
   const symbol = pair ? getSymbolFromPair(pair) : getSymbolByIndexToken?.({ protocol, indexToken }) ?? ''
-  return <span>{symbol}</span>
+  return <span>{formatSymbol(symbol)}</span>
 }
