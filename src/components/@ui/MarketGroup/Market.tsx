@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid'
 
 import Tooltip from 'theme/Tooltip'
 import { Flex, Image, Type } from 'theme/base'
-import { parseMarketImage } from 'utils/helpers/transform'
+import { formatSymbol, parseMarketImage } from 'utils/helpers/transform'
 
 export default function Market({
   symbol,
@@ -49,7 +49,7 @@ export default function Market({
       </Flex>
       {hasName && !!symbol && (
         <Type.Small fontSize="10px" sx={symbolNameSx}>
-          {symbol}
+          {formatSymbol(symbol)}
         </Type.Small>
       )}
       {hasTooltip && (
@@ -59,7 +59,7 @@ export default function Market({
               src={imageUriFactory(symbol)}
               sx={{ width: size, height: size, borderRadius: size / 2, border: 'small', borderColor: 'neutral4' }}
             />
-            <Type.Small fontSize="10px">{symbol}</Type.Small>
+            <Type.Small fontSize="10px">{formatSymbol(symbol)}</Type.Small>
           </Flex>
         </Tooltip>
       )}

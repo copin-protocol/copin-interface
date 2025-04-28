@@ -41,7 +41,7 @@ export function renderEntry(data: PositionData | undefined, textSx?: TextProps, 
       </Type.Caption>
       <VerticalDivider />
       {showMarketIcon && <Market symbol={symbol} size={24} />}
-      <Type.Caption {...textSx}>{getSymbolFromPair(data.protocol)}</Type.Caption>
+      <Type.Caption {...textSx}>{getSymbolFromPair(data.pair, true)}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>
         {data.averagePrice ? PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2 }) : '--'}
@@ -64,7 +64,7 @@ export function renderCopyEntry(data: CopyPositionData | undefined, textSx?: Tex
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{getSymbolFromPair(data.pair)}</Type.Caption>
+      <Type.Caption>{getSymbolFromPair(data.pair, true)}</Type.Caption>
       <VerticalDivider />
       <Type.Caption {...textSx}>${PriceTokenText({ value: data.entryPrice, maxDigit: 2, minDigit: 2 })}</Type.Caption>
     </Flex>

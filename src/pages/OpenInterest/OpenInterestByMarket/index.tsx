@@ -16,6 +16,7 @@ import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import Loading from 'theme/Loading'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { SortTypeEnum } from 'utils/config/enums'
+import { getPairFromSymbol } from 'utils/helpers/transform'
 
 import PositionsSection from '../PositionsSection'
 import RouteWrapper from '../RouteWrapper'
@@ -55,7 +56,10 @@ function OpenInterestByMarketPage() {
     const query = [
       { field: 'status', match: 'OPEN' },
       { field: 'openBlockTime', gte: from, lte: to },
-      { field: 'pair', in: pairs.filter((pair) => !excludedPairs.includes(pair)).map((pair) => `${pair}-USDT`) },
+      {
+        field: 'pair',
+        in: pairs.filter((pair) => !excludedPairs.includes(pair)).map((pair) => getPairFromSymbol(pair)),
+      },
       { field: 'protocol', in: selectedProtocols ?? [] },
     ]
 

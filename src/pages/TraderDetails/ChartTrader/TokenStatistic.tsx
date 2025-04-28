@@ -11,7 +11,7 @@ import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SortTypeEnum } from 'utils/config/enums'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
-import { getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
+import { formatSymbol, getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
 
 type TokenStatisticProps = {
   data: TraderTokenStatistic[] | undefined
@@ -177,7 +177,7 @@ export function ListTokenStatistic({ data, currentPair, changePair }: TokenStati
               >
                 <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={symbol} />
                 <Type.Caption>
-                  {getSymbolFromPair(stats.pair)}{' '}
+                  {getSymbolFromPair(stats.pair, true)}{' '}
                   <Box as="span" color="neutral3">
                     ({formatNumber(stats.totalTrade, 0)})
                   </Box>
@@ -253,7 +253,7 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
       style: { minWidth: '80px' },
       render: (item) => {
         if (!item.pair) return <></>
-        const symbol = getSymbolFromPair(item.pair)
+        const symbol = getSymbolFromPair(item.pair, true)
         const icon = parseMarketImage(symbol)
 
         return (

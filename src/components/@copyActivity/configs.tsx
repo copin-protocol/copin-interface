@@ -80,7 +80,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
         {item.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{getSymbolFromPair(item.pair)}</Type.Caption>
+      <Type.Caption>{getSymbolFromPair(item.pair, true)}</Type.Caption>
       <VerticalDivider />
       <Type.Caption>
         {item.sourcePrice ? PriceTokenText({ value: item.sourcePrice, maxDigit: 2, minDigit: 2 }) : '--'}
@@ -144,7 +144,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
           {isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
         </Type.Caption>
         <VerticalDivider />
-        <Type.Caption>{getSymbolFromPair(item.pair)}</Type.Caption>
+        <Type.Caption>{getSymbolFromPair(item.pair, true)}</Type.Caption>
         <VerticalDivider />
         <Type.Caption>
           {item.price ? PriceTokenText({ value: item.price, maxDigit: 2, minDigit: 2 }) : '--'}

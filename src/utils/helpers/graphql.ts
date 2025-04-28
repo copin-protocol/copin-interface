@@ -1,5 +1,7 @@
 import { ConditionFormValues, FilterValues } from 'components/@widgets/ConditionFilterForm/types'
 
+import { getPairFromSymbol } from './transform'
+
 export const transformGraphqlFilters = (filters: { fieldName: string; [key: string]: any }[]) => {
   return filters.map(({ fieldName, ...rest }) => {
     // Convert all values in rest to strings
@@ -27,7 +29,13 @@ export const extractFiltersFromFormValues = <T>(data: ConditionFormValues<T>) =>
   return Object.values(data).reduce<FilterValues[]>((result, values) => {
     if (typeof values?.in === 'object' && values.conditionType === 'in') {
       if (values?.key === 'indexTokens') {
-        return [...result, { fieldName: 'pairs', in: values.in.map((symbol) => `${symbol}-USDT`) } as FilterValues]
+        return [
+          ...result,
+          {
+            fieldName: 'pairs',
+            in: values.in.map((symbol) => getPairFromSymbol(symbol)),
+          } as FilterValues,
+        ]
       }
       return [...result, { fieldName: values.key, in: values.in } as FilterValues]
     }

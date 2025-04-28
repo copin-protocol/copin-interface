@@ -19,6 +19,7 @@ import { Box, Flex } from 'theme/base'
 import { TAB_HEIGHT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
 import { transformGraphqlFilters } from 'utils/helpers/graphql'
+import { getPairFromSymbol } from 'utils/helpers/transform'
 
 import PositionsSection from '../PositionsSection'
 import VisualizeSection, { VisualizeSectionMobile } from '../VisualizeSection'
@@ -58,12 +59,12 @@ export default function TopOpenInterest() {
     if (hasExcludingPairs) {
       query.push({
         field: 'pair',
-        nin: excludedPairs.map((pair) => `${pair}-USDT`),
+        nin: excludedPairs.map((pair) => getPairFromSymbol(pair)),
       })
     } else {
       query.push({
         field: 'pair',
-        in: pairs.map((pair) => `${pair}-USDT`),
+        in: pairs.map((pair) => getPairFromSymbol(pair)),
       })
     }
     const rangeFilters = transformGraphqlFilters(ranges.map((v) => ({ gte: v.gte, lte: v.lte, fieldName: v.field })))

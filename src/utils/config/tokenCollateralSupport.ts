@@ -100,4 +100,5 @@ export const TOKEN_COLLATERAL_SUPPORT: TokenCollateralSupport = {
   [ProtocolEnum.JUPITER]: {},
   [ProtocolEnum.PERPETUAL_OP]: TOKEN_COLLATERAL_OPTIMISTIC,
   [ProtocolEnum.PINGU_ARB]: TOKEN_COLLATERAL_ARB,
+  [ProtocolEnum.OSTIUM_ARB]: TOKEN_COLLATERAL_ARB,
 }

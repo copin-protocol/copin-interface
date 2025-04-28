@@ -13,6 +13,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { TAB_HEIGHT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import RouteWrapper from '../RouteWrapper'
 import { TimeDropdown, useFilters, useTimeFilter } from '../TopOpenInterest/Filters'
@@ -63,7 +64,7 @@ function OpenInterestByMarketsPage() {
           totalInterest: _data.totalVolumeLong + _data.totalVolumeShort,
         }))
         .filter((_data) => {
-          const symbol = _data.pair.split('-')[0]
+          const symbol = getSymbolFromPair(_data.pair)
           return pairs.includes(symbol) && !excludedPairs.includes(symbol)
         })
     : []

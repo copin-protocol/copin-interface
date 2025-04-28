@@ -307,4 +307,8 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: ARBITRUM_MAINNET,
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
+  [ProtocolEnum.OSTIUM_ARB]: {
+    chainId: ARBITRUM_MAINNET,
+    explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
+  },
 }

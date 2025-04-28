@@ -7,6 +7,7 @@ import SelectMarketWithSearch from 'components/@widgets/SelectMarketWithSearch'
 import { TraderData } from 'entities/trader'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { Flex, Type } from 'theme/base'
+import { formatSymbol } from 'utils/helpers/transform'
 
 export default function FilterMarket({
   filters,
@@ -24,7 +25,7 @@ export default function FilterMarket({
   const allPairs = getListSymbol?.()
 
   const pairOptions = useMemo(() => {
-    const options = allPairs?.map((symbol) => ({ value: symbol, label: symbol })) ?? []
+    const options = allPairs?.map((symbol) => ({ value: symbol, label: formatSymbol(symbol) })) ?? []
     return options
   }, [allPairs])
 

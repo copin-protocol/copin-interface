@@ -157,10 +157,10 @@ export function useFilters() {
       if (!defaultAllPairs?.length) return []
       return defaultAllPairs
     }
-    return pairsFromQuery.split('-')
+    return pairsFromQuery.split('_')
   }, [pairsFromQuery, defaultAllPairs])
 
-  const excludedPairs = typeof searchParams.excludedPairs === 'string' ? searchParams.excludedPairs.split('-') : []
+  const excludedPairs = typeof searchParams.excludedPairs === 'string' ? searchParams.excludedPairs.split('_') : []
 
   if (searchParams.top && LIMITS.includes(Number(searchParams.top))) {
     limit = Number(searchParams.top)
@@ -179,10 +179,10 @@ export function useFilters() {
 
   const onChangePairs = (pairs: string[], excludedPairs: string[]) => {
     if (pairs.length == defaultAllPairs?.length) {
-      setSearchParams({ pairs: PairFilterEnum.ALL, excludedPairs: excludedPairs.join('-'), ['page']: '1' })
+      setSearchParams({ pairs: PairFilterEnum.ALL, excludedPairs: excludedPairs.join('_'), ['page']: '1' })
       return
     }
-    setSearchParams({ pairs: pairs.join('-'), excludedPairs: excludedPairs.join('-'), ['page']: '1' })
+    setSearchParams({ pairs: pairs.join('_'), excludedPairs: excludedPairs.join('_'), ['page']: '1' })
   }
 
   const { time, from, to, onChangeTime } = useTimeFilter()

@@ -497,16 +497,22 @@ export function getCurrentTimezone() {
   }
 }
 
-export function getSymbolFromPair(pair: string | undefined) {
+export function getSymbolFromPair(pair: string | undefined, isShowUI?: boolean) {
+  if (!pair) return ''
   if (pair === 'NOT_SUPPORTED') return pair
+  if (!pair?.includes('USDT')) {
+    return isShowUI ? pair?.replace('-', '/') : pair
+  }
   let symbol = pair?.split('-')?.[0] ?? ''
-
   symbol = symbol.split(SPECIAL_SYMBOLS_REGEX)[0]
   symbol = symbol.substring(0, 20)
   return symbol
 }
 export function getPairFromSymbol(symbol: string) {
-  return `${symbol}-USDT`
+  return symbol.includes('-') ? symbol : `${symbol}-USDT`
+}
+export function formatSymbol(symbol: string) {
+  return symbol.includes('-') ? symbol.replace('-', '/') : symbol
 }
 
 const MINI_NUMBER_MAPPING: Record<string, string> = {

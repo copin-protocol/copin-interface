@@ -110,7 +110,13 @@ export function getSymbolTradingView({
         break
     }
   } else if (isGains) {
-    _symbol = symbol
+    if (symbol.includes('_USD')) {
+      _symbol = symbol.replace('_USD', '')
+    } else if (symbol.includes('_')) {
+      _symbol = symbol.replace('_', '/')
+    } else {
+      _symbol = symbol
+    }
   } else {
     switch (symbol) {
       case '1000BONK':

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { ProtocolEnum } from 'utils/config/enums'
+import { getPairFromSymbol } from 'utils/helpers/transform'
 
 import { ConditionFormValues, FieldOption, FilterValues, RowValues } from './types'
 
@@ -20,7 +20,10 @@ export function getFiltersFromFormValues<T>(data: ConditionFormValues<T>) {
   return Object.values(data).reduce<FilterValues[]>((result, values) => {
     if (typeof values?.in === 'object' && values.conditionType === 'in') {
       if (values?.key === 'indexTokens') {
-        return [...result, { fieldName: 'pairs', in: values.in.map((symbol) => `${symbol}-USDT`) } as FilterValues]
+        return [
+          ...result,
+          { fieldName: 'pairs', in: values.in.map((symbol) => getPairFromSymbol(symbol)) } as FilterValues,
+        ]
       }
       return [...result, { fieldName: values.key, in: values.in } as FilterValues]
     }

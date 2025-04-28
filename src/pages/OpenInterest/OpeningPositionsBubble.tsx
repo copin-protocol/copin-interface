@@ -23,7 +23,7 @@ const OpeningPositionsBubble = ({ data }: { data: PositionData[] }) => {
       id: item.id,
       title: addressShorten(item.account),
       value: item.size,
-      token: getSymbolFromPair(item.pair) ?? '',
+      token: getSymbolFromPair(item.pair, true) ?? '',
       leverage: item.leverage,
       isLong: item.isLong,
       protocol: item.protocol,

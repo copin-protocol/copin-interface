@@ -7,6 +7,7 @@ import Loading from 'theme/Loading'
 import Table from 'theme/Table'
 import { TableProps } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import { NoMarketFound } from '../OpenInterestByMarket'
 import { getColumns, getRenderProps, titlesMapping } from './configs'
@@ -87,7 +88,7 @@ export function ListForm({ data, isFetching }: ListMarketsProps) {
         </Flex>
       )}
       {data?.map((marketData) => {
-        const symbol = marketData.pair.split('-')[0]
+        const symbol = getSymbolFromPair(marketData.pair, true)
         return (
           <Box sx={{ p: 3 }} key={marketData.indexToken}>
             <Flex mb={2} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>

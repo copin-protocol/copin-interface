@@ -13,7 +13,7 @@ import { DEFAULT_LIMIT, MAX_PAGE_LIMIT } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { ALL_OPTION, ALL_TOKENS_ID, TokenOptionProps } from 'utils/config/trades'
-import { getSymbolFromPair, pageToOffset } from 'utils/helpers/transform'
+import { getPairFromSymbol, getSymbolFromPair, pageToOffset } from 'utils/helpers/transform'
 
 const MAX_FIRST_LOAD_PAGE = 100
 const defaultSort: TableSortProps<PositionData> = {
@@ -92,7 +92,7 @@ export default function useQueryClosedPositions({
     //   .filter((e) => e.symbol === currencyOption?.id)
     //   ?.map((e) => e.address)
     // rangeFilters.push({ fieldName: 'indexToken', in: indexTokens })
-    queryFilters.push({ fieldName: 'pair', value: `${currencyOption.id}-USDT` })
+    queryFilters.push({ fieldName: 'pair', value: getPairFromSymbol(currencyOption.id) })
   }
   if (latestBlockNumber.current) {
     rangeFilters.push({ fieldName: 'closeBlockNumber', lte: latestBlockNumber.current })

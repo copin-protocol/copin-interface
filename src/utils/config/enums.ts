@@ -68,6 +68,7 @@ export enum ProtocolEnum {
   JUPITER = 'JUPITER',
   PERPETUAL_OP = 'PERPETUAL_OP',
   PINGU_ARB = 'PINGU_ARB',
+  OSTIUM_ARB = 'OSTIUM_ARB',
 }
 
 export enum ProtocolFilterEnum {

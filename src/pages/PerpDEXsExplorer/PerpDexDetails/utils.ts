@@ -8,6 +8,7 @@ import {
 import { themeColors } from 'theme/colors'
 import { CHART_DATE_FORMAT, DATE_FORMAT } from 'utils/config/constants'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 export function getHourlyChartDataByMetric({
   data,
@@ -192,7 +193,7 @@ export function getPairChartDataByMetric({
   const pairData = Object.values(pairAggregates)
     .map((stats) => ({
       ...stats,
-      pair: stats.pair.split('-')?.[0] ?? stats.pair,
+      pair: getSymbolFromPair(stats.pair, true),
       backgroundColor:
         stats.longOi > stats.shortOi
           ? themeColors.green2

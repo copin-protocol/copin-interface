@@ -58,12 +58,12 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
       if (!defaultAllPairs?.length) return []
       return defaultAllPairs
     }
-    return pairsParam.split('-')
+    return pairsParam.split('_')
   }, [pairsParam, defaultAllPairs])
 
   const excludedPairsParam = searchParams['excludedPairs'] as string | undefined
   const excludedPairs = useMemo(() => {
-    return excludedPairsParam ? excludedPairsParam.split('-') : []
+    return excludedPairsParam ? excludedPairsParam.split('_') : []
   }, [excludedPairsParam])
 
   const onChangePairs = useCallback(
@@ -140,11 +140,11 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
         }
         if (key === 'pairs') {
           const _values = values as string[] | undefined
-          params['pairs'] = _values?.length ? _values.filter((v) => !!v).join('-') : undefined
+          params['pairs'] = _values?.length ? _values.filter((v) => !!v).join('_') : undefined
         }
         if (key === 'excludedPairs') {
           const _values = values as string[] | undefined
-          params['excludedPairs'] = _values?.length ? _values.filter((v) => !!v).join('-') : undefined
+          params['excludedPairs'] = _values?.length ? _values.filter((v) => !!v).join('_') : undefined
         }
         if (key === 'action') {
           const _values = values as OrderTypeEnum | undefined
