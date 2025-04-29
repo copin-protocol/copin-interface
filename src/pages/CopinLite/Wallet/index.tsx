@@ -3,6 +3,7 @@ import { useResponsive } from 'ahooks'
 import { useEffect } from 'react'
 
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useSearchParams from 'hooks/router/useSearchParams'
 import useTabHandler from 'hooks/router/useTabHandler'
 import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
@@ -21,6 +22,7 @@ export enum LiteWalletTab {
 }
 
 const LiteWallet = () => {
+  const { searchParams, setSearchParams } = useSearchParams()
   const { embeddedWallet, embeddedWalletInfo, loadingEmbeddedWallets } = useCopyWalletContext()
   const { tab, handleTab: setTab } = useTabHandler(LiteWalletTab.Deposit, true, 'wallet')
   const { lg } = useResponsive()
@@ -33,6 +35,12 @@ const LiteWallet = () => {
       setTab(LiteWalletTab.Deposit)
     }
   }, [lg, tab])
+  useEffect(() => {
+    if (searchParams?.['dtab']) {
+      setTab(LiteWalletTab.Deposit)
+      setSearchParams({ dtab: undefined })
+    }
+  }, [searchParams?.['dtab']])
 
   // TODO: Rescusive not having wallet button
 
