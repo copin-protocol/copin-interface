@@ -5,6 +5,7 @@ import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { Box } from 'theme/base'
+import { getSymbolTradingView } from 'utils/config/trades'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import {
@@ -86,6 +87,7 @@ function HLRealtimeChart({ position, orders }: Props) {
   const symbol = position.pair
     ? getSymbolFromPair(position.pair)
     : getSymbolByIndexToken?.({ protocol: position.protocol, indexToken: position.indexToken }) ?? ''
+  const { symbol: symbolTradingView } = getSymbolTradingView({ protocol: position.protocol, symbol })
 
   const decimals = useMemo(() => ((prices?.[symbol] ?? 0) < 1 ? 6 : 4), [symbol, prices])
 
@@ -97,7 +99,7 @@ function HLRealtimeChart({ position, orders }: Props) {
         ...DEFAULT_CHART_REALTIME_PROPS,
         container: containerId,
         interval: '5' as ResolutionString,
-        symbol: symbol ?? 'DEFAULT',
+        symbol: symbolTradingView ?? 'DEFAULT',
         datafeed: defaultDatafeed,
         disabled_features: ['header_widget'], // Disable features until ready
         custom_formatters: {
@@ -114,7 +116,7 @@ function HLRealtimeChart({ position, orders }: Props) {
       datafeed: datafeedFactory(),
       container: chartContainer,
       interval: '5' as ResolutionString,
-      symbol,
+      symbol: symbolTradingView ?? 'DEFAULT',
       custom_formatters: {
         priceFormatterFactory: (symbolInfo, minTick) => ({
           format: (price) => price.toFixed(decimals),
