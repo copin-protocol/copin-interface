@@ -24,7 +24,7 @@ export enum LiteWalletTab {
 const LiteWallet = () => {
   const { searchParams, setSearchParams } = useSearchParams()
   const { embeddedWallet, embeddedWalletInfo, loadingEmbeddedWallets } = useCopyWalletContext()
-  const { tab, handleTab: setTab } = useTabHandler(LiteWalletTab.Deposit, true, 'wallet')
+  const { tab, handleTab: setTab } = useTabHandler({ defaultTab: LiteWalletTab.Deposit, tabKey: 'wallet' })
   const { lg } = useResponsive()
 
   const address = embeddedWallet?.hyperliquid?.embeddedWallet
@@ -32,15 +32,9 @@ const LiteWallet = () => {
 
   useEffect(() => {
     if (lg && tab === LiteWalletTab.History) {
-      setTab(LiteWalletTab.Deposit)
+      setTab({ tab: LiteWalletTab.Deposit })
     }
   }, [lg, tab])
-  useEffect(() => {
-    if (searchParams?.['dtab']) {
-      setTab(LiteWalletTab.Deposit)
-      setSearchParams({ dtab: undefined })
-    }
-  }, [searchParams?.['dtab']])
 
   // TODO: Rescusive not having wallet button
 
@@ -98,7 +92,7 @@ const LiteWallet = () => {
           size={lg ? 'lg' : 'md'}
           defaultActiveKey={tab}
           hasOverlay={false}
-          onChange={(tab) => setTab(tab)}
+          onChange={(tab) => setTab({ tab })}
           tabItemSx={{ width: '100%' }}
         >
           {lg

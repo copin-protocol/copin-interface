@@ -187,11 +187,7 @@ function Menu() {
       handleClickLogin()
       return
     }
-    if (history.location.pathname === ROUTES.LITE.path) {
-      handleClickDepositFund()
-    } else {
-      history.push(`${ROUTES.LITE.path}?force_shake=1`)
-    }
+    handleClickDepositFund()
     setOpen(false)
   }
 

@@ -2,18 +2,15 @@ import { useCallback, useState } from 'react'
 
 import useSearchParams from './useSearchParams'
 
-const useTabHandler = (defaultTab: string, shouldChangeUrl = true, tabKey?: string) => {
+const useTabHandler = ({ defaultTab, tabKey = 'tab' }: { defaultTab: string; tabKey?: string }) => {
   const { searchParams, setSearchParams } = useSearchParams()
-  const [tab, setTab] = useState<string>(
-    shouldChangeUrl ? (searchParams[tabKey ?? 'tab'] as string) || defaultTab : defaultTab
-  )
+  const tab = (searchParams[tabKey] as string) ?? defaultTab
   const handleTab = useCallback(
-    (t: string) => {
-      setTab(t)
-      shouldChangeUrl &&
-        setSearchParams({
-          [tabKey ?? 'tab']: t,
-        })
+    ({ tab, otherParams = {} }: { tab: string; otherParams?: Record<string, string | undefined | null> }) => {
+      setSearchParams({
+        [tabKey]: tab as string,
+        ...otherParams,
+      })
     },
     [setSearchParams]
   )

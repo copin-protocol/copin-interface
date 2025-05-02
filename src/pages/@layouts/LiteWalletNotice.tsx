@@ -8,7 +8,6 @@ import SuccessImage from 'components/@ui/SuccessImage'
 import { LITE_ACTION_STATUS, LITE_TRANSACTION_TYPE, LiteTransactionData } from 'entities/lite'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useLiteClickDepositFund from 'hooks/helpers/useLiteClickDepositFund'
-import useSearchParams from 'hooks/router/useSearchParams'
 import useGlobalDialog from 'hooks/store/useGlobalDialog'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { useStoredCopyTrades } from 'hooks/store/useTraderCopying'
@@ -16,7 +15,7 @@ import AlertBanner from 'theme/Alert/AlertBanner'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
 import { CopyTradeStatusEnum } from 'utils/config/enums'
-import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -102,15 +101,7 @@ const LiteWalletNotice = () => {
       })
   }, [transactions, disabledInterval])
 
-  const { searchParams, setSearchParams } = useSearchParams()
   const handleClickDeposit = useLiteClickDepositFund()
-
-  useEffect(() => {
-    if (searchParams?.[URL_PARAM_KEYS.LITE_FORCE_SHAKE_DEPOSIT]) {
-      handleClickDeposit()
-      setSearchParams({ [URL_PARAM_KEYS.LITE_FORCE_SHAKE_DEPOSIT]: null })
-    }
-  }, [handleClickDeposit, searchParams, searchParams?.[URL_PARAM_KEYS.LITE_FORCE_SHAKE_DEPOSIT], setSearchParams])
 
   return (
     <div>

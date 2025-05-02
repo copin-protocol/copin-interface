@@ -18,13 +18,13 @@ import { LiteHistoryPositionProvider } from './useHistoryPositionsContext'
 import { LiteOpeningPositionProvider, useLiteOpeningPositionsContext } from './useOpeningPositionsContext'
 
 const Trades = () => {
-  const { tab, handleTab: setTab } = useTabHandler(TradesTab.OpeningPositions, true, 'table')
-  const handleChangeTab = (tab: string) => setTab(tab)
+  const { tab, handleTab: setTab } = useTabHandler({ defaultTab: TradesTab.OpeningPositions, tabKey: 'table' })
+  const handleChangeTab = (tab: string) => setTab({ tab })
   const { lg } = useResponsive()
 
   useEffect(() => {
     if (!lg && tab === TradesTab.DepositsAndWithdrawals) {
-      setTab(TradesTab.OpeningPositions)
+      setTab({ tab: TradesTab.OpeningPositions })
     }
   }, [lg, tab])
 
