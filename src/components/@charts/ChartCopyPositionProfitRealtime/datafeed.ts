@@ -142,7 +142,12 @@ export const datafeed: IBasicDataFeed = {
       response
         .json()
         .then((symbolInfo) => {
-          onSymbolResolvedCallback(symbolInfo)
+          if (symbolInfo.s === 'error') {
+            console.log('[resolveSymbol]: Cannot resolve symbol', symbolName)
+            onResolveErrorCallback('Cannot resolve symbol')
+          } else {
+            onSymbolResolvedCallback(symbolInfo)
+          }
         })
         .catch((error) => {
           console.log('[resolveSymbol]: Cannot resolve symbol', symbolName)
