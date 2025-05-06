@@ -46,10 +46,11 @@ const injected = injectedModule({
   filter: {
     [ProviderLabel.Detected]: false,
     [ProviderLabel.RoninWallet]: false,
+    [ProviderLabel.Binance]: false,
   },
   displayUnavailable: [
     ProviderLabel.MetaMask,
-    ProviderLabel.Brave,
+    ProviderLabel.Binance,
     ProviderLabel.Coinbase,
     ProviderLabel.Trust,
     ProviderLabel.Coin98Wallet,
