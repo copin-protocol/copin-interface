@@ -1,3 +1,4 @@
+import binanceModule from '@binance/w3w-blocknative-connector'
 import bitgetModule from '@web3-onboard/bitget'
 import injectedModule, { ProviderLabel } from '@web3-onboard/injected-wallets'
 import metamaskModule from '@web3-onboard/metamask'
@@ -41,6 +42,7 @@ const metamask = metamaskModule({
 })
 const okx = okxModule()
 const bitget = bitgetModule()
+const binance = binanceModule()
 
 const injected = injectedModule({
   filter: {
@@ -75,7 +77,7 @@ const web3Onboard = init({
     '--w3o-border-radius': theme.borderRadius.xs,
     '--w3o-font-family': FONT_FAMILY,
   },
-  wallets: [metamask, walletConnect, okx, bitget, injected],
+  wallets: [metamask, walletConnect, binance, okx, bitget, injected],
   chains,
   appMetadata: {
     name: 'Copin',
