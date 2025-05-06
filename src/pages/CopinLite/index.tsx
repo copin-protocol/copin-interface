@@ -67,10 +67,8 @@ const tabs: TabConfig[] = [
 
 const CopitLitePageMobile = () => {
   const { searchParams } = useSearchParams()
-  const { tab, handleTab: setTab } = useTabHandler(LitePageTab.Copy)
-  useEffect(() => {
-    if (searchParams?.['dtab']) setTab(LitePageTab.Wallet)
-  }, [searchParams?.['dtab']])
+  const { tab, handleTab: setTab } = useTabHandler({ defaultTab: LitePageTab.Copy })
+
   return (
     <Flex height="calc(100% - 1px)" flexDirection="column">
       <LiteWalletNotice />
@@ -80,7 +78,7 @@ const CopitLitePageMobile = () => {
         {tab === LitePageTab.Trade && <Trades />}
       </Box>
       <BottomWrapperMobile sx={{ display: ['flex', 'flex', 'flex', 'none'] }}>
-        <TabHeader configs={tabs} isActiveFn={({ key }) => key === tab} onClickItem={(key) => setTab(key)} />
+        <TabHeader configs={tabs} isActiveFn={({ key }) => key === tab} onClickItem={(key) => setTab({ tab: key })} />
       </BottomWrapperMobile>
     </Flex>
   )

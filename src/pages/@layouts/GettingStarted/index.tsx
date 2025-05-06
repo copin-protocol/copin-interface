@@ -177,6 +177,7 @@ function Menu() {
       return
     }
     forceOpenModal()
+    setOpen(false)
   }
 
   const history = useHistory()
@@ -186,11 +187,8 @@ function Menu() {
       handleClickLogin()
       return
     }
-    if (history.location.pathname === ROUTES.LITE.path) {
-      handleClickDepositFund()
-    } else {
-      history.push(`${ROUTES.LITE.path}?force_shake=1`)
-    }
+    handleClickDepositFund()
+    setOpen(false)
   }
 
   const handleClickAlertBot = () => {
@@ -199,6 +197,7 @@ function Menu() {
       return
     }
     handleGenerateLinkBot?.(AlertTypeEnum.COPY_TRADE)
+    setOpen(false)
   }
 
   const totalStep = Object.values(checkState ?? {}).length

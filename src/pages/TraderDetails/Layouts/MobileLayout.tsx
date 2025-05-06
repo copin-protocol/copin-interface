@@ -38,7 +38,7 @@ const tabConfigs = [
 ]
 
 const MobileLayout = (props: LayoutProps) => {
-  const { tab, handleTab: setTab } = useTabHandler(TabEnum.POSITIONS)
+  const { tab, handleTab: setTab } = useTabHandler({ defaultTab: TabEnum.POSITIONS })
   return (
     <Flex sx={{ position: 'relative', pb: FOOTER_HEIGHT, height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
       <Box
@@ -122,7 +122,7 @@ const MobileLayout = (props: LayoutProps) => {
         <TabHeader
           configs={tabConfigs}
           isActiveFn={(config) => config.key === tab}
-          onClickItem={(key) => setTab(key as TabEnum)}
+          onClickItem={(key) => setTab({ tab: key })}
         />
       </BottomWrapperMobile>
     </Flex>

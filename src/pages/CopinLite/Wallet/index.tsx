@@ -3,6 +3,7 @@ import { useResponsive } from 'ahooks'
 import { useEffect } from 'react'
 
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useSearchParams from 'hooks/router/useSearchParams'
 import useTabHandler from 'hooks/router/useTabHandler'
 import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
@@ -21,8 +22,9 @@ export enum LiteWalletTab {
 }
 
 const LiteWallet = () => {
+  const { searchParams, setSearchParams } = useSearchParams()
   const { embeddedWallet, embeddedWalletInfo, loadingEmbeddedWallets } = useCopyWalletContext()
-  const { tab, handleTab: setTab } = useTabHandler(LiteWalletTab.Deposit, true, 'wallet')
+  const { tab, handleTab: setTab } = useTabHandler({ defaultTab: LiteWalletTab.Deposit, tabKey: 'wallet' })
   const { lg } = useResponsive()
 
   const address = embeddedWallet?.hyperliquid?.embeddedWallet
@@ -30,7 +32,7 @@ const LiteWallet = () => {
 
   useEffect(() => {
     if (lg && tab === LiteWalletTab.History) {
-      setTab(LiteWalletTab.Deposit)
+      setTab({ tab: LiteWalletTab.Deposit })
     }
   }, [lg, tab])
 
@@ -90,7 +92,7 @@ const LiteWallet = () => {
           size={lg ? 'lg' : 'md'}
           defaultActiveKey={tab}
           hasOverlay={false}
-          onChange={(tab) => setTab(tab)}
+          onChange={(tab) => setTab({ tab })}
           tabItemSx={{ width: '100%' }}
         >
           {lg

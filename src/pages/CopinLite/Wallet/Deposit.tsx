@@ -1,14 +1,28 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { QRCodeSVG } from 'qrcode.react'
+import { useEffect } from 'react'
 
+import useSearchParams from 'hooks/router/useSearchParams'
 import CopyButton from 'theme/Buttons/CopyButton'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { ELEMENT_IDS } from 'utils/config/keys'
+import { ELEMENT_IDS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { parseChainImage, parseCollateralColorImage } from 'utils/helpers/transform'
 
 const LiteDeposit = ({ address }: { address: string }) => {
   const { lg } = useResponsive()
+  const { searchParams, setSearchParams } = useSearchParams()
+  useEffect(() => {
+    if (!!searchParams[URL_PARAM_KEYS.LITE_FORCE_SHAKE_DEPOSIT]) {
+      const element = document.getElementById(ELEMENT_IDS.LITE_DEPOSIT_QRCODE)
+      if (!element) return
+      element.removeAttribute('data-animation-shake')
+      setTimeout(() => {
+        element.setAttribute('data-animation-shake', '1')
+      }, 100)
+      setSearchParams({ [URL_PARAM_KEYS.LITE_FORCE_SHAKE_DEPOSIT]: undefined })
+    }
+  }, [searchParams, setSearchParams])
   return (
     <>
       <Flex mx="auto" justifyContent="center" py={[24, 24, 24, 12]} alignItems="center" sx={{ gap: 2 }}>
