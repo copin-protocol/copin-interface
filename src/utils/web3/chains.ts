@@ -47,15 +47,8 @@ export const ARBITRUM_CHAIN = NETWORK === 'devnet' ? ARBITRUM_SEPOLIA : ARBITRUM
 export const SUBSCRIPTION_CHAIN_ID = NETWORK === 'devnet' ? OPTIMISM_SEPOLIA : OPTIMISM_MAINNET
 
 export const SUPPORTED_CHAIN_IDS: number[] = [
-  GOERLI,
-  SEPOLIA,
-  OPTIMISM_GOERLI,
-  OPTIMISM_SEPOLIA,
-  BLAST_SEPOLIA,
-  ARBITRUM_GOERLI,
-  ARBITRUM_SEPOLIA,
-  ETHEREUM_MAINNET,
   ARBITRUM_MAINNET,
+  ETHEREUM_MAINNET,
   OPTIMISM_MAINNET,
   BLAST_MAINNET,
   BNB_MAINNET,
@@ -75,6 +68,13 @@ export const SUPPORTED_CHAIN_IDS: number[] = [
   DERIVE_MAINNET,
   CRONOS_MAINNET,
   BERA_MAINNET,
+  GOERLI,
+  SEPOLIA,
+  OPTIMISM_GOERLI,
+  OPTIMISM_SEPOLIA,
+  BLAST_SEPOLIA,
+  ARBITRUM_GOERLI,
+  ARBITRUM_SEPOLIA,
 ]
 
 const NATIVE_CURRENCIES: { [key: string]: NativeCurrency } = {
@@ -212,6 +212,15 @@ const SECONDARY_TOKENS: {
 }
 
 const CHAINS: { [key: number | string]: Chain } = {
+  [BNB_MAINNET]: {
+    id: `0x${BNB_MAINNET.toString(16)}`,
+    label: 'BNB Chain',
+    icon: 'BNB',
+    token: NATIVE_CURRENCIES.BNB.symbol,
+    rpcUrl: 'https://bsc-rpc.publicnode.com',
+    blockExplorerUrl: 'https://bscscan.com',
+    secondaryTokens: SECONDARY_TOKENS[BNB_MAINNET],
+  },
   [ETHEREUM_MAINNET]: {
     id: `0x${ETHEREUM_MAINNET.toString(16)}`,
     token: NATIVE_CURRENCIES.ETH.symbol,
@@ -310,15 +319,6 @@ const CHAINS: { [key: number | string]: Chain } = {
     rpcUrl: 'https://base-sepolia-rpc.publicnode.com',
     blockExplorerUrl: 'https://sepolia.basescan.org',
     secondaryTokens: SECONDARY_TOKENS[BASE_SEPOLIA],
-  },
-  [BNB_MAINNET]: {
-    id: `0x${BNB_MAINNET.toString(16)}`,
-    label: 'BNB Chain',
-    icon: 'BNB',
-    token: NATIVE_CURRENCIES.BNB.symbol,
-    rpcUrl: 'https://bsc-rpc.publicnode.com',
-    blockExplorerUrl: 'https://bscscan.com',
-    secondaryTokens: SECONDARY_TOKENS[BNB_MAINNET],
   },
   [OPBNB_MAINNET]: {
     id: `0x${OPBNB_MAINNET.toString(16)}`,
