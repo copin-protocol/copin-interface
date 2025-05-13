@@ -291,6 +291,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.ELFI_ARB,
         ProtocolEnum.PINGU_ARB,
         ProtocolEnum.JUPITER,
+        ProtocolEnum.OSTIUM_ARB,
       ]
     : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
 
