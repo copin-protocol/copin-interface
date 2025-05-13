@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.11.4",
+    "@binance/w3w-blocknative-connector": "1.1.8-alpha.0",
     "@hookform/resolvers": "2.9.11",
     "@lingui/react": "3.17.1",
     "@phosphor-icons/react": "2.1.7",
