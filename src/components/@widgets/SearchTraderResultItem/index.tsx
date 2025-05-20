@@ -68,7 +68,7 @@ export default function SearchTraderResultItems({
                 />
               )}
             </Type.BodyBold>
-            <LastTrade value={data.lastTradeAt} sx={{ flexShrink: 0 }} />
+            {!!data.lastTradeAt && <LastTrade value={data.lastTradeAt} sx={{ flexShrink: 0 }} />}
             <FavoriteButton
               address={data.account}
               protocol={data.protocol}

@@ -49,7 +49,7 @@ export default function AlertLogsPage() {
   const { md } = useResponsive()
   const { myProfile } = useMyProfileStore()
   const { currentPage, changeCurrentPage, currentLimit, changeCurrentLimit } = usePageChangeWithLimit({
-    pageName: 'page',
+    pageName: 'logs-page',
     limitName: 'limit',
     defaultLimit: DEFAULT_LIMIT,
   })

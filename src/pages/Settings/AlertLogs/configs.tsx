@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import DOMPurify from 'dompurify'
 import React, { ReactNode } from 'react'
 
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
@@ -213,11 +214,21 @@ export const renderProps: Record<string, AlertLogColumnData['render']> = {
     </Type.Caption>
   ),
   reason: (item) => {
-    return item.isSuccess ? (
-      <Type.Caption>--</Type.Caption>
-    ) : (
-      <Type.Caption>{item.errorMsg ?? 'Unknown Error'}</Type.Caption>
-    )
+    if (item.isSuccess) {
+      return <Type.Caption>--</Type.Caption>
+    }
+    const errorMsg = item.errorMsg ?? 'Unknown Error'
+    // Check if errorMsg contains an anchor tag
+    if (/<a\s/i.test(errorMsg)) {
+      return (
+        <Type.Caption
+          // Sanitize before rendering
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(errorMsg) }}
+          sx={{ a: { color: 'blue2', textDecoration: 'underline' } }}
+        />
+      )
+    }
+    return <Type.Caption>{errorMsg}</Type.Caption>
   },
 }
 

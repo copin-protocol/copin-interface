@@ -114,6 +114,7 @@ function SearchContainer({
     visibleSearchResult,
     isLoading,
     searchTraders,
+    searchHLTrader,
   } = useSearchAllData({
     onSelect,
     protocols: releasedProtocols,
@@ -122,7 +123,17 @@ function SearchContainer({
     limit: 500,
   })
   // const traders = [...filterFoundData(searchTraders?.data, ignoreSelectTraders)]
-  const traders = searchTraders?.data ?? []
+  let traders: TraderData[]
+  if (
+    searchHLTrader &&
+    !searchTraders?.data?.find(
+      (t) => t.account.toLowerCase() === searchHLTrader.account.toLowerCase() && t.protocol === ProtocolEnum.HYPERLIQUID
+    )
+  ) {
+    traders = [searchHLTrader, ...(searchTraders?.data ?? [])]
+  } else {
+    traders = searchTraders?.data ?? []
+  }
 
   const handleChangeSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
     handleSearchChange(e)
@@ -361,7 +372,7 @@ function SearchResult({
                         textSx: { width: 80 },
                       }}
                     />
-                    <LastTrade value={traderData.lastTradeAt} sx={{ flexShrink: 0 }} />
+                    {!!traderData.lastTradeAt && <LastTrade value={traderData.lastTradeAt} sx={{ flexShrink: 0 }} />}
                   </Flex>
                   <Flex mt={1} alignItems="center" justifyContent="space-between">
                     <Flex color="neutral2" sx={{ gap: 1 }}>
