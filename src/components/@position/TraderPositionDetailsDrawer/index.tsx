@@ -1,4 +1,5 @@
 import { useQuery as useApolloQuery } from '@apollo/client'
+import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { SEARCH_DAILY_POSITION_ID_QUERY, SEARCH_POSITIONS_FUNCTION_NAME, SEARCH_POSITIONS_INDEX } from 'graphql/query'
@@ -6,6 +7,7 @@ import { Suspense, lazy, memo, useMemo } from 'react'
 
 import { ApiListResponse } from 'apis/api'
 import Container from 'components/@ui/Container'
+import NoDataFound from 'components/@ui/NoDataFound'
 import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import IconButton from 'theme/Buttons/IconButton'
@@ -116,7 +118,7 @@ export const TraderPositionDetailsFromOrderDrawer = memo(function PositionDrawer
 
   // TODO: Need to pass data to position details
   return (
-    <RcDrawer open={isOpen} onClose={onDismiss} width={isMobile ? '100%' : '60%'}>
+    <RcDrawer open={isOpen} onClose={onDismiss} width={isMobile ? '100%' : '60%'} zIndex={Z_INDEX.TOASTIFY}>
       <Container sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'auto' }}>
         <IconButton
           icon={<XCircle size={24} />}
@@ -126,8 +128,10 @@ export const TraderPositionDetailsFromOrderDrawer = memo(function PositionDrawer
         />
         <Suspense fallback={null}>
           {isLoading && <Loading />}
-          {isOpen && !isLoading && !!positionId && (
+          {isOpen && !isLoading && !!positionId ? (
             <TraderPositionDetails protocol={protocol} id={positionId} chartProfitId={chartProfitId} />
+          ) : (
+            <NoDataFound message={<Trans>Position not yet synced</Trans>} />
           )}
         </Suspense>
       </Container>
