@@ -19,27 +19,26 @@ import { CopyPositionData } from 'entities/copyTrade'
 import useAllCopyTrades from 'hooks/features/copyTrade/useAllCopyTrades'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
-import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { CopyTradePlatformEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyOpeningPnL, calcCopyOpeningROI } from 'utils/helpers/calculate'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
-import { SYMBOL_BY_PROTOCOL_MAPPING } from 'utils/helpers/price'
-import { getSymbolFromPair, normalizeExchangePrice } from 'utils/helpers/transform'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import CloseOnchainPosition from './CloseOnchainPosition'
 import ClosePositionSnxV2 from './ClosePositionSnxV2'
 import CopyPositionHistories from './CopyPositionHistories'
 import ListCopyOrderTable from './ListCopyOrderTable'
 import UnlinkPosition from './UnlinkPosition'
+import useMarkPrice from './useMarkPrice'
 
 export default function CopyPositionDetails({ copyPositionData }: { copyPositionData: CopyPositionData | undefined }) {
   const { id, copyTradeId } = copyPositionData ?? {}
@@ -117,33 +116,11 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
     if (!data || !copyTradeOrders) return 0
     return copyTradeOrders.filter((e) => e.isIncrease).reduce((sum, current) => sum + current.collateral, 0)
   }, [copyTradeOrders, data])
-  const { getPricesData } = useGetUsdPrices()
-  const prices = getPricesData({ exchange: data?.exchange })
-  const symbolByProtocol = SYMBOL_BY_PROTOCOL_MAPPING[`${data?.protocol}-${symbol}`]
-  const priceSymbol =
-    data?.protocol &&
-    [ProtocolEnum.GNS, ProtocolEnum.GNS_APE, ProtocolEnum.GNS_BASE, ProtocolEnum.GNS_POLY].includes(data.protocol) &&
-    data?.exchange === CopyTradePlatformEnum.HYPERLIQUID &&
-    symbolByProtocol
-      ? symbolByProtocol
-      : symbol ?? ''
-  const markPrice = symbol
-    ? normalizeExchangePrice({
-        protocolSymbol: priceSymbol,
-        protocolSymbolPrice: prices[priceSymbol],
-        exchange: data?.exchange,
-      })
-    : 0
-  const pnl = (() => (data && symbol ? (isOpening ? calcCopyOpeningPnL(data, markPrice) : data.pnl) : 0))()
-  const roi = data ? ((pnl ?? 0) / collateral) * 100 : 0
 
   const openBlockTimeUnix = useMemo(() => (data ? dayjs(data.createdAt).utc().unix() : 0), [data])
   const closeBlockTimeUnix = useMemo(() => (data ? dayjs(data.lastOrderAt).utc().unix() : 0), [data])
 
   const [crossMovePnL, setCrossMovePnL] = useState<number | undefined>()
-
-  const latestPnL = crossMovePnL != null ? crossMovePnL : isOpening ? pnl : data?.pnl ?? 0
-  const latestROI = data && (crossMovePnL != null || isOpening) ? calcCopyOpeningROI(data, latestPnL ?? 0) : roi
 
   const [currentTab, setCurrentTab] = useState<string>(TabKeyEnum.ORDER)
 
@@ -291,24 +268,23 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
             </Flex>
             <Box px={2} py={[2, 12]} sx={{ position: 'relative' }}>
               <Flex mb={[1, 3]} width="100%" alignItems="center" justifyContent="center">
-                {isOpening || crossMovePnL != null ? (
-                  <Type.H5 color={(latestPnL ?? 0) > 0 ? 'green1' : (latestPnL ?? 0) < 0 ? 'red2' : 'inherit'}>
-                    <AmountText amount={latestPnL} maxDigit={2} minDigit={2} suffix="$" />
-                  </Type.H5>
-                ) : (
-                  <Flex alignItems="center">
-                    {renderPnL(data, undefined, { fontWeight: 'bold', fontSize: '24px' })}
-                    <Type.H5 mb="4px" color="neutral3">
-                      $
-                    </Type.H5>
-                  </Flex>
-                )}
+                <LatestPnLAndROIItem
+                  copyPosition={data}
+                  crossMovePnL={crossMovePnL}
+                  collateral={collateral}
+                  isOpening={!!isOpening}
+                  isROIItem={false}
+                />
                 <Type.H5 ml={2} color="neutral3">
                   (
                 </Type.H5>
-                <Type.H5 color={latestROI > 0 ? 'green1' : latestROI < 0 ? 'red2' : 'inherit'}>
-                  <PercentText percent={latestROI} digit={2} />
-                </Type.H5>
+                <LatestPnLAndROIItem
+                  copyPosition={data}
+                  crossMovePnL={crossMovePnL}
+                  collateral={collateral}
+                  isOpening={!!isOpening}
+                  isROIItem
+                />
                 <Type.H5 color="neutral3">)</Type.H5>
                 {(isOpening || data.exchange === CopyTradePlatformEnum.GNS_V8) && (
                   <>
@@ -368,14 +344,7 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
                 <Tooltip id="profit_chart">
                   <Type.Caption>Profit Chart</Type.Caption>
                 </Tooltip>
-                {isOpening && !!markPrice ? (
-                  <Type.Body sx={{ position: 'absolute', right: 0, top: [-4, 0] }} color="neutral3">
-                    Mark Price:{' '}
-                    <Box color="neutral1" as="span">
-                      {formatPrice(markPrice)}
-                    </Box>
-                  </Type.Body>
-                ) : null}
+                <MarkPriceItem copyPosition={data} isOpening={!!isOpening} />
               </Flex>
               {data &&
                 copyTradeOrders &&
@@ -449,4 +418,69 @@ function StatsItemWrapperB({ children }: { children: ReactNode }) {
 enum TabKeyEnum {
   ORDER = 'order',
   HISTORY = 'history',
+}
+
+function MarkPriceItem({ copyPosition, isOpening }: { copyPosition: CopyPositionData; isOpening: boolean }) {
+  const { markPrice } = useMarkPrice({ copyPosition })
+
+  return (
+    <>
+      {isOpening && !!markPrice ? (
+        <Type.Body sx={{ position: 'absolute', right: 0, top: [-4, 0] }} color="neutral3">
+          Mark Price:{' '}
+          <Box color="neutral1" as="span">
+            {formatPrice(markPrice)}
+          </Box>
+        </Type.Body>
+      ) : null}
+    </>
+  )
+}
+
+function LatestPnLAndROIItem({
+  copyPosition,
+  collateral,
+  crossMovePnL,
+  isOpening,
+  isROIItem,
+}: {
+  copyPosition: CopyPositionData | undefined
+  collateral: number
+  crossMovePnL: number | undefined
+  isOpening: boolean
+  isROIItem: boolean
+}) {
+  const { markPrice, symbol } = useMarkPrice({ copyPosition })
+
+  const pnl = (() =>
+    copyPosition && symbol ? (isOpening ? calcCopyOpeningPnL(copyPosition, markPrice) : copyPosition.pnl) : 0)()
+  const roi = copyPosition ? ((pnl ?? 0) / collateral) * 100 : 0
+
+  const latestPnL = crossMovePnL != null ? crossMovePnL : isOpening ? pnl : copyPosition?.pnl ?? 0
+  const latestROI =
+    copyPosition && (crossMovePnL != null || isOpening) ? calcCopyOpeningROI(copyPosition, latestPnL ?? 0) : roi
+  if (!copyPosition) return null
+  if (isROIItem) {
+    return (
+      <Type.H5 color={latestROI > 0 ? 'green1' : latestROI < 0 ? 'red2' : 'inherit'}>
+        <PercentText percent={latestROI} digit={2} />
+      </Type.H5>
+    )
+  }
+  return (
+    <>
+      {isOpening || crossMovePnL != null ? (
+        <Type.H5 color={(latestPnL ?? 0) > 0 ? 'green1' : (latestPnL ?? 0) < 0 ? 'red2' : 'inherit'}>
+          <AmountText amount={latestPnL} maxDigit={2} minDigit={2} suffix="$" />
+        </Type.H5>
+      ) : (
+        <Flex alignItems="center">
+          {renderPnL(copyPosition, undefined, { fontWeight: 'bold', fontSize: '24px' })}
+          <Type.H5 mb="4px" color="neutral3">
+            $
+          </Type.H5>
+        </Flex>
+      )}
+    </>
+  )
 }
