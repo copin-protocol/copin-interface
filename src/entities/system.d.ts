@@ -111,7 +111,7 @@ export interface VolumeLimitData {
 }
 
 export interface SubscriptionLimitData {
-  [plan: number]: PlanLimitData
+  [plan: string]: PlanLimitData
 }
 
 export interface PlanLimitData {
@@ -126,7 +126,7 @@ export interface PlanLimitData {
   customAlerts: number
   channelAlerts: number
   webhookAlerts: number
-  plan: number
+  plan: string
   createdAt: string
 }
 

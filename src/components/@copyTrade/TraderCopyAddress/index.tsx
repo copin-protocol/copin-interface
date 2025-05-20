@@ -16,6 +16,7 @@ import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import TraderCopyCountWarningIcon from '../TraderCopyCountWarningIcon'
 import TraderCopyVolumeWarningIcon, { TraderTotalCopyVolumeIcon } from '../TraderCopyVolumeWarningIcon'
+import TraderDisabledWarningIcon from '../TraderDisabledWarningIcon'
 
 export default function TraderCopyAddress({
   address,
@@ -31,10 +32,13 @@ export default function TraderCopyAddress({
     hasCopyCountWarningIcon = false,
     hasCopyVolumeWarningIcon = false,
     hasCopyTradeVolumeIcon = false,
+    hasDisabledWarningIcon = false,
+    disabledLabel,
     copyVolume,
     maxCopyVolume,
     isRef,
     plan,
+    running,
     enabledQuickView = true,
   } = {},
 }: {
@@ -51,11 +55,14 @@ export default function TraderCopyAddress({
     hasCopyCountWarningIcon?: boolean
     hasCopyVolumeWarningIcon?: boolean
     hasCopyTradeVolumeIcon?: boolean
+    hasDisabledWarningIcon?: boolean
     copyVolume?: number
     maxCopyVolume?: number
     isRef?: boolean
+    running?: boolean
     plan?: SubscriptionPlanEnum
     enabledQuickView?: boolean
+    disabledLabel?: string
   }
 }) {
   const tooltipId = uuid()
@@ -141,10 +148,21 @@ export default function TraderCopyAddress({
               <Type.Caption width="max-content">{address}</Type.Caption>
             </Tooltip>
           )}
-          {(hasCopyCountWarningIcon || hasCopyVolumeWarningIcon) && <Type.Caption color={dividerColor}>|</Type.Caption>}
-          {hasCopyCountWarningIcon && <TraderCopyCountWarningIcon account={address} protocol={protocol} size={18} />}
+          {(hasCopyCountWarningIcon || hasCopyVolumeWarningIcon || hasDisabledWarningIcon) && (
+            <Type.Caption color={dividerColor}>|</Type.Caption>
+          )}
+          {hasDisabledWarningIcon && (
+            <TraderDisabledWarningIcon
+              account={address}
+              protocol={protocol}
+              size={16}
+              hasTooltip={running}
+              label={disabledLabel}
+            />
+          )}
+          {hasCopyCountWarningIcon && <TraderCopyCountWarningIcon account={address} protocol={protocol} size={16} />}
           {hasCopyVolumeWarningIcon && (
-            <TraderCopyVolumeWarningIcon account={address} protocol={protocol} size={18} copyVolume={copyVolume} />
+            <TraderCopyVolumeWarningIcon account={address} protocol={protocol} size={16} copyVolume={copyVolume} />
           )}
           {hasCopyTradeVolumeIcon && copyVolume != null && maxCopyVolume && (
             <TraderTotalCopyVolumeIcon

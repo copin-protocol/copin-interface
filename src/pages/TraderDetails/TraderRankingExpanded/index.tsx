@@ -9,7 +9,7 @@ import SquareIconButton from 'components/@ui/SquareIconButton'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import { TraderData } from 'entities/trader'
-import { useRankingCustomizeStore } from 'hooks/store/useRankingCustomize'
+import { useUserRankingConfig } from 'hooks/store/useUserCustomize'
 import { Box, Flex, Type } from 'theme/base'
 import { linearGradient3 } from 'theme/colors'
 import { MEDIA_WIDTHS } from 'theme/theme'
@@ -60,7 +60,7 @@ export default function TraderRankingExpanded({
   }, [])
   const [selectedTrader, setSelectedTrader] = useState<TraderData | null>(null)
   const handleSelectTrader = (data: TraderData | null) => setSelectedTrader(data)
-  const { customizedRanking } = useRankingCustomizeStore()
+  const { customizedRanking } = useUserRankingConfig()
 
   const _rankingFieldOptions = rankingFieldOptions.filter((option) => customizedRanking.includes(option.value))
   const chartData: ScoreChartData[] = formatChartData(traderData?.ranking, selectedTrader?.ranking)
@@ -69,7 +69,7 @@ export default function TraderRankingExpanded({
     if (!sourceData) return [] as ScoreChartData[]
     return _rankingFieldOptions.reduce((result, option) => {
       const rankingValue = sourceData[option.value]
-      if (!rankingValue) return result
+      // if (!rankingValue) return result
       const rankingData = {
         subject: option.label as string,
         value: rankingValue,

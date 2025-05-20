@@ -1,4 +1,4 @@
-import React, { ComponentType, Key, useCallback } from 'react'
+import { ComponentType, Key, ReactNode, useCallback } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 import { TableSelectHandler } from 'hooks/helpers/useTableSelect'
@@ -18,12 +18,16 @@ export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSou
   columns,
   isSelectedAll,
   handleSelectedAll,
+  renderAdditionIcon,
+  externalSource,
 }: {
   currentSort: TableSortProps<T> | undefined
   changeCurrentSort: ((sort: TableSortProps<T> | undefined) => void) | undefined
   columns: ColumnData<T, K>[] | undefined
   isSelectedAll?: boolean
   handleSelectedAll?: TableSelectHandler<T>['handleSelectAll']
+  renderAdditionIcon?: (column: ColumnData<T, K>) => ReactNode
+  externalSource?: K
 }) {
   const handleChangeSort = useCallback(
     (
@@ -87,6 +91,8 @@ export default function TableHead<T = ColumnDataParameter, K = ColumnExternalSou
               currentSort={currentSort}
               hasSort={hasSort}
               changeCurrentSort={handleChangeSort}
+              renderAdditionIcon={renderAdditionIcon}
+              externalSource={externalSource}
             />
           )
         })}
@@ -102,18 +108,22 @@ export const TableHeadItem = <T, K>({
   currentSort,
   hasSort,
   changeCurrentSort,
+  renderAdditionIcon,
+  externalSource,
 }: {
   as: 'th' | ComponentType | undefined
   key: Key
   hasSort: boolean
   column: ColumnData<T, K>
   currentSort?: TableSortProps<T>
+  renderAdditionIcon?: (column: ColumnData<T, K>) => ReactNode
   changeCurrentSort?: (
     columnSortBy: TableSortProps<T>['sortBy'] | undefined,
     columnSortType: TableSortProps<T>['sortType'] | undefined,
     currentSortBy: TableSortProps<T>['sortBy'] | undefined,
     currentSortType: TableSortProps<T>['sortType'] | undefined
   ) => void
+  externalSource?: K
 }) => {
   const isCurrentSort = currentSort?.sortBy === column.sortBy
   const tooltipId = `tt_table_sort_${key?.toString()}`
@@ -153,6 +163,7 @@ export const TableHeadItem = <T, K>({
           >
             {column.title}
           </Type.Caption>
+          {renderAdditionIcon?.(column)}
           {hasSort && (
             <Flex className="sort-icons" alignItems="center" data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
               {isCurrentSort ? (
@@ -166,7 +177,9 @@ export const TableHeadItem = <T, K>({
               )}
             </Flex>
           )}
-          {column.filterComponent}
+          {typeof column.filterComponent === 'function'
+            ? column.filterComponent({ externalSource })
+            : column.filterComponent}
         </Flex>
       </Box>
       {hasSort && (

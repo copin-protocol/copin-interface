@@ -24,7 +24,7 @@ const WaitingWallet = ({
 }: {
   active: boolean
   waitingState: WaitingState
-  connect: (options: { skipAuth?: boolean }) => void
+  connect: () => void
   disconnect: () => void
   handleAuth: () => void
 }) => {
@@ -61,13 +61,13 @@ const WaitingWallet = ({
       case WaitingState.SwitchAccount:
         return (
           <Trans>
-            Looks like you have changed primary address in your wallet. You should sign new authentication message
+            Looks like you have changed primary address in your wallet. You should connect your wallet again
           </Trans>
         )
       case WaitingState.Signing:
         return <Trans>Communicating with wallet. Sign message with your wallet</Trans>
       default:
-        return <Trans>Connecting with your wallet...</Trans>
+        return <Trans>Logging in to your account...</Trans>
     }
   }
 
@@ -98,20 +98,20 @@ const WaitingWallet = ({
             </Type.LargeBold>
             {waitingState === WaitingState.WalletLocked ? (
               <Box mt={4}>
-                <Button type="button" width={150} variant="primary" onClick={() => connect({})}>
+                <Button type="button" width={150} variant="primary" onClick={() => connect()}>
                   <Trans>Unlock</Trans>
                 </Button>
               </Box>
             ) : (
               <Flex mt={4} width="100%" alignItems="center" justifyContent="center" sx={{ gap: 3 }}>
                 {waitingState !== WaitingState.Signing && waitingState !== WaitingState.Connecting && (
-                  <Button type="button" width={150} variant="primary" onClick={() => handleAuth()}>
-                    {waitingState === WaitingState.CancelSign ? <Trans>Try Again</Trans> : <Trans>Sign message</Trans>}
+                  <Button type="button" width={150} variant="primary" onClick={() => connect()}>
+                    {waitingState === WaitingState.CancelSign ? <Trans>Try Again</Trans> : <Trans>Login</Trans>}
                   </Button>
                 )}
 
                 <Button type="button" width={150} variant="outline" onClick={disconnect}>
-                  {waitingState === WaitingState.Connecting ? <Trans>Cancel</Trans> : <Trans>Disconnect</Trans>}
+                  {waitingState === WaitingState.Connecting ? <Trans>Cancel</Trans> : <Trans>Logout</Trans>}
                 </Button>
               </Flex>
             )}

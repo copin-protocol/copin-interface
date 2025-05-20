@@ -5,9 +5,8 @@ import { GridProps } from 'styled-system'
 
 import HorizontalScroll from 'components/@ui/HorizontalScroll'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
-import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import { Box, Flex, Type } from 'theme/base'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 
 export default function FilterProtocol({
@@ -19,10 +18,10 @@ export default function FilterProtocol({
   changeProtocol: (option?: ProtocolEnum) => void
   sx?: SystemStyleObject & GridProps
 }) {
-  const allowedProtocols = useGetCopyTradeProtocols()
+  const { allowedCopyTradeProtocols, releasedProtocols } = useProtocolPermission()
   const protocols = useMemo(
-    () => [...allowedProtocols, ...RELEASED_PROTOCOLS.filter((e) => !allowedProtocols.includes(e))],
-    [allowedProtocols]
+    () => [...allowedCopyTradeProtocols, ...releasedProtocols.filter((e) => !allowedCopyTradeProtocols.includes(e))],
+    [allowedCopyTradeProtocols]
   )
 
   return (

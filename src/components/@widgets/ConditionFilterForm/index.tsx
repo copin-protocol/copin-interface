@@ -2,11 +2,13 @@ import { Trans } from '@lingui/macro'
 import { Plus, Trash } from '@phosphor-icons/react'
 import { ReactNode, useEffect, useId, useState } from 'react'
 
+import UpgradeButton from 'components/@subscription/UpgradeButton'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
 import Input from 'theme/Input'
 import Select from 'theme/Select'
 import { Box, Flex, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { Color } from 'theme/types'
 
 import { parseNumber } from './helpers'
@@ -20,8 +22,13 @@ export default function ConditionFilterForm<T>({
   type,
   wrapperSx = {},
   labelColor = 'neutral3',
-}: ConditionFilterFormProps<T> & { wrapperSx?: any; labelColor?: Color }) {
+  showUpgradeWarning,
+  maxFilterFields,
+  invalidFormValues,
+}: ConditionFilterFormProps<T> & { wrapperSx?: any; labelColor?: Color; showUpgradeWarning?: boolean }) {
   const remainingFieldKeys = fieldOptions.filter((option) => !formValues.map((item) => item.key).includes(option.value))
+  const optionsLength = fieldOptions.length
+  const remainingLength = remainingFieldKeys.length
 
   const onChangeRowValues = (index: number, values: RowValues<T>) => {
     setFormValues((prev) => {
@@ -32,10 +39,11 @@ export default function ConditionFilterForm<T>({
   }
 
   const handleAddNewRow = () => {
-    if (!remainingFieldKeys.length) return
+    const remainingKeys = remainingFieldKeys.filter((o) => !o.isDisabled)
+    if (!remainingKeys.length) return
     setFormValues((prev) => {
       const newValues = [...prev]
-      const key = remainingFieldKeys[0].value
+      const key = remainingKeys[0].value
       newValues.push({
         key,
         ...(fieldOptions.find((item) => item.value === key)?.default ?? {
@@ -62,6 +70,8 @@ export default function ConditionFilterForm<T>({
     default:
       break
   }
+
+  const hasInvalidValues = !!invalidFormValues?.length
 
   return (
     <Box px={8} width="100%" height="100%" sx={wrapperSx}>
@@ -94,24 +104,65 @@ export default function ConditionFilterForm<T>({
               excludingKeys={formValues.map((item) => item.key)}
               onChange={(values) => onChangeRowValues(index, values)}
               onRemove={() => handleClearRow(values.key)}
+              disabled={hasInvalidValues}
               type={type}
             />
           )
         })}
-        <ButtonWithIcon
-          py={2}
-          px={2}
-          mt={2}
-          disabled={!remainingFieldKeys.length}
-          icon={<Plus size={16} />}
-          variant="ghostPrimary"
-          onClick={handleAddNewRow}
-          sx={{
-            fontWeight: 'normal',
-          }}
-        >
-          Add Field
-        </ButtonWithIcon>
+
+        {hasInvalidValues
+          ? invalidFormValues.map((values, index) => {
+              if (!values) return <></>
+              return (
+                <Row
+                  fieldOptions={fieldOptions}
+                  key={values.key.toString() + index}
+                  data={values}
+                  disabled
+                  wrapperSx={{
+                    '& *': { color: `${themeColors.neutral3} !important` },
+                  }}
+                  type={type}
+                />
+              )
+            })
+          : null}
+        {hasInvalidValues ? null : (
+          <>
+            {showUpgradeWarning && maxFilterFields != null && formValues.length >= maxFilterFields ? (
+              <>
+                <Box mt={12} />
+                <Flex sx={{ alignItems: 'center', gap: 3, px: 2 }}>
+                  <Type.Caption>
+                    {!!optionsLength ? (
+                      <Trans>
+                        Using {optionsLength - remainingLength} of {maxFilterFields} filters. Upgrade to add more
+                      </Trans>
+                    ) : (
+                      <Trans>Upgrade to filter</Trans>
+                    )}
+                  </Type.Caption>
+                  <UpgradeButton />
+                </Flex>
+              </>
+            ) : (
+              <ButtonWithIcon
+                py={2}
+                px={2}
+                mt={2}
+                disabled={!remainingFieldKeys.length}
+                icon={<Plus size={16} />}
+                variant="ghostPrimary"
+                onClick={handleAddNewRow}
+                sx={{
+                  fontWeight: 'normal',
+                }}
+              >
+                Add Field
+              </ButtonWithIcon>
+            )}
+          </>
+        )}
       </Box>
     </Box>
   )
@@ -129,13 +180,17 @@ function Row<T>({
   onChange,
   onRemove,
   type,
+  disabled,
+  wrapperSx = {},
 }: {
   fieldOptions: FieldOption<T>[]
   data: RowValues<T>
-  excludingKeys: (keyof T)[]
-  onChange: (values: RowValues<T>) => void
-  onRemove: () => void
+  excludingKeys?: (keyof T)[]
+  onChange?: (values: RowValues<T>) => void
+  onRemove?: () => void
   type: ConditionFilterFormProps<T>['type']
+  disabled?: boolean
+  wrapperSx?: any
 }) {
   const [conditionOption, setConditionOption] = useState<ConditionOption>(() => getConditionOption(data.conditionType))
   const [fieldNameOption, setFieldNameOption] = useState<FieldOption<T>>(() => {
@@ -143,13 +198,13 @@ function Row<T>({
     if (!!option) return option
     return fieldOptions[0]
   })
-  const fieldName = fieldNameOption.value
-  const conditionType = conditionOption.value
+  const fieldName = fieldNameOption?.value
+  const conditionType = conditionOption?.value
   const [gte, setGte] = useState<string | undefined>(data?.gte?.toString())
   const [lte, setLte] = useState<string | undefined>(data?.lte?.toString())
 
   useEffect(() => {
-    onChange({ key: fieldName, conditionType, gte: parseNumber(gte), lte: parseNumber(lte) })
+    !disabled && onChange?.({ key: fieldName, conditionType, gte: parseNumber(gte), lte: parseNumber(lte) })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conditionType, fieldName, gte, lte])
 
@@ -169,21 +224,26 @@ function Row<T>({
           borderBottom: 'small',
           borderColor: 'neutral5',
           height: 40,
-          '&:hover': {
-            borderColor: 'neutral3',
-          },
+          '&:hover': disabled
+            ? {}
+            : {
+                borderColor: 'neutral3',
+              },
+          ...wrapperSx,
         }}
       >
         <Box flex="7" pl={2}>
           <Select
+            isDisabled={disabled}
+            components={disabled ? { DropdownIndicator: () => <Box /> } : {}}
             id={instanceId}
             instanceId={instanceId}
             menuPlacement="top"
-            maxMenuHeight={300}
+            maxMenuHeight={230}
             menuPosition="fixed"
             variant="ghost"
             options={fieldOptions.filter(
-              (option) => option.value === fieldNameOption.value || !excludingKeys.includes(option.value)
+              (option) => option.value === fieldNameOption?.value || !excludingKeys?.includes(option.value)
             )}
             filterOption={type === 'default' ? customFilter : undefined}
             value={fieldNameOption}
@@ -201,6 +261,8 @@ function Row<T>({
         {/* <VerticalDivider /> */}
         <Box flex="6">
           <Select
+            isDisabled={disabled}
+            components={disabled ? { DropdownIndicator: () => <Box /> } : {}}
             isSearchable={false}
             menuPlacement="top"
             maxMenuHeight={300}
@@ -220,6 +282,7 @@ function Row<T>({
           <Flex sx={{ alignItems: 'center', gap: 2, '& > *': { flex: 1 }, height: '100%' }}>
             {conditionOption.value === 'gte' || conditionOption.value === 'between' ? (
               <Input
+                disabled={disabled}
                 key="gte"
                 type="number"
                 placeholder=""
@@ -233,13 +296,14 @@ function Row<T>({
                   border: 'none',
                   bg: 'transparent !important',
                 }}
-                suffix={fieldNameOption.unit}
+                suffix={fieldNameOption?.unit}
               />
             ) : null}
             {conditionOption.value === 'lte' || conditionOption.value === 'between' ? (
               <>
                 {conditionOption.value === 'between' && <VerticalDivider sx={{ height: 'calc(100% - 16px)' }} />}
                 <Input
+                  disabled={disabled}
                   key="lte"
                   type="number"
                   placeholder=""
@@ -253,7 +317,7 @@ function Row<T>({
                     border: 'none',
                     bg: 'transparent !important',
                   }}
-                  suffix={fieldNameOption.unit}
+                  suffix={fieldNameOption?.unit}
                 />
               </>
             ) : null}
@@ -264,7 +328,12 @@ function Row<T>({
         variant="ghost"
         icon={<Trash size={16} weight="fill" />}
         onClick={onRemove}
-        sx={{ color: 'neutral3', width: 'max-content', height: 'max-content' }}
+        sx={{
+          color: 'neutral3',
+          width: 'max-content',
+          height: 'max-content',
+          visibility: disabled ? 'hidden' : 'visible',
+        }}
       />
     </Flex>
   )

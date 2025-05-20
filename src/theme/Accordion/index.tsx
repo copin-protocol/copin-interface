@@ -1,21 +1,9 @@
 import { CaretDown, CaretUp } from '@phosphor-icons/react'
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import { Dispatch, ReactNode, SetStateAction, useEffect, useRef, useState } from 'react'
 
 import { Box, Flex, IconBox } from 'theme/base'
 
-export default function Accordion({
-  disabled,
-  defaultOpen = false,
-  isOpen,
-  header,
-  body,
-  wrapperSx = {},
-  headerWrapperSx = {},
-  type = 'horizontal',
-  direction = 'right',
-  iconSize = 16,
-  subHeader,
-}: {
+type BaseProps = {
   isOpen?: boolean
   disabled?: boolean
   header: ReactNode
@@ -27,8 +15,51 @@ export default function Accordion({
   type?: 'horizontal' | 'vertical'
   direction?: 'left' | 'right'
   iconSize?: number
+}
+
+export default Accordion
+
+function Accordion(props: BaseProps): JSX.Element
+function Accordion(
+  props: BaseProps & {
+    isExpand: boolean
+    setIsExpand: Dispatch<SetStateAction<boolean>>
+  }
+): JSX.Element
+function Accordion({
+  disabled,
+  defaultOpen = false,
+  isOpen,
+  isExpand: isExternalExpand,
+  setIsExpand: setIsExternalExpand,
+  header,
+  body,
+  wrapperSx = {},
+  headerWrapperSx = {},
+  type = 'horizontal',
+  direction = 'right',
+  iconSize = 16,
+  subHeader,
+}: {
+  isOpen?: boolean
+  isExpand?: boolean
+  setIsExpand?: Dispatch<SetStateAction<boolean>>
+  disabled?: boolean
+  header: ReactNode
+  subHeader?: ReactNode
+  body: ReactNode
+  wrapperSx?: any
+  headerWrapperSx?: any
+  defaultOpen?: boolean
+  type?: 'horizontal' | 'vertical'
+  direction?: 'left' | 'right'
+  iconSize?: number
 }) {
-  const [isExpand, setIsExpand] = useState(false)
+  const [_isExpand, _setIsExpand] = useState(false)
+
+  const isExpand = isExternalExpand ?? _isExpand
+  const setIsExpand = setIsExternalExpand ?? _setIsExpand
+
   const firstUpdated = useRef(false)
   useEffect(() => {
     if (isOpen != null) {
@@ -54,7 +85,7 @@ export default function Accordion({
             display: 'flex',
             justifyContent: 'start',
             alignItems: 'center',
-            '& svg': {
+            '& svg.icon': {
               color: 'neutral3',
             },
             ...headerWrapperSx,

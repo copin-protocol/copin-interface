@@ -1,12 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { ComponentProps, ReactNode, useState } from 'react'
 
-import useCopyTradePermission from 'hooks/features/copyTrade/useCopyTradePermission'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import { useCheckCopyTradeAction } from 'hooks/features/subscription/useSubscriptionRestrict'
-import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
-import Tooltip from 'theme/Tooltip'
 import { ProtocolEnum } from 'utils/config/enums'
 import { logEventCopyTrade } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
@@ -41,11 +39,8 @@ export default function CopyTraderButton({
     onForceReload?.()
   }
 
-  const hasCopyPermission = useCopyTradePermission()
-
-  const allowedProtocols = useGetCopyTradeProtocols()
-  const disabledCopy = !allowedProtocols.includes(protocol)
-  const disabledCopyTooltipId = `tt_copy_trade_${account}_${protocol}`
+  const { allowedSelectProtocols, allowedCopyTradeProtocols } = useProtocolPermission()
+  const disabledCopy = !allowedSelectProtocols?.includes(protocol) || !allowedCopyTradeProtocols?.includes(protocol)
 
   return (
     <>
@@ -62,7 +57,7 @@ export default function CopyTraderButton({
           e.preventDefault()
           if (!checkIsEligible()) return
 
-          hasCopyPermission ? setIsOpenModal(true) : setIsOpenContactModal(true)
+          setIsOpenModal(true)
 
           switch (source) {
             case EventSource.HOME:
@@ -85,15 +80,9 @@ export default function CopyTraderButton({
               })
           }
         }}
-        data-tooltip-id={disabledCopy ? disabledCopyTooltipId : undefined}
       >
         {buttonText}
       </Button>
-      {disabledCopy && (
-        <Tooltip id={disabledCopyTooltipId} place="bottom">
-          <Trans>Coming soon!</Trans>
-        </Tooltip>
-      )}
       {!disabledCopy && isOpenModal && !!profile && (
         <CopyTraderModal
           protocol={protocol}

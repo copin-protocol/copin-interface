@@ -31,6 +31,10 @@ export interface UserData {
   createdAt: string
   updatedAt: string
   plan?: SubscriptionPlanEnum
+  subscription?: {
+    plan: SubscriptionPlanEnum
+    expiredTime: string
+  }
   referralFromUserAddress?: string
   referralTier?: ReferralTierEnum
   lastCustomRefCode?: string

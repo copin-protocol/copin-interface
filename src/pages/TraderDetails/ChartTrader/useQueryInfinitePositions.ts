@@ -5,6 +5,7 @@ import { getOpeningPositionsApi } from 'apis/positionApis'
 import { getTraderHistoryApi } from 'apis/traderApis'
 import { QueryFilter, RangeFilter } from 'apis/types'
 import { PositionData } from 'entities/trader'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import { PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getNextParam } from 'utils/helpers/transform'
@@ -20,35 +21,39 @@ export function useQueryInfinitePositions({
   currentPair: string | undefined
   limit: number
 }) {
+  const { isEnableOpeningPosition, isEnablePosition, isUnlimitedPosition, maxPositionHistory } =
+    useTraderProfilePermission({ protocol })
   const rangeFilters: RangeFilter[] = []
   const queryFilters: QueryFilter[] = []
   queryFilters.push({ fieldName: 'status', value: PositionStatusEnum.CLOSE })
-  if (!!address) {
-    queryFilters.push({ fieldName: 'account', value: address })
-  }
+  // if (!!address) {
+  //   queryFilters.push({ fieldName: 'account', value: address })
+  // }
   if (currentPair) {
     queryFilters.push({ fieldName: 'pair', value: currentPair })
   }
   const { data: openingPositions, isLoading: isLoadingOpening } = useQuery(
-    [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol],
+    [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol, isEnableOpeningPosition],
     () =>
       getOpeningPositionsApi({
         protocol,
         account: address,
       }),
-    { enabled: !!address, retry: 0 }
+    { enabled: !!address && isEnableOpeningPosition, retry: 0 }
   )
+  const _limit = isUnlimitedPosition ? limit : Math.min(limit, maxPositionHistory)
   const {
     data: closedPositions,
     isFetching: isLoadingClosed,
     hasNextPage,
     fetchNextPage,
   } = useInfiniteQuery(
-    [QUERY_KEYS.GET_POSITIONS_HISTORY, address, currentPair, protocol, limit],
+    [QUERY_KEYS.GET_POSITIONS_HISTORY, address, currentPair, protocol, _limit, isEnablePosition],
     ({ pageParam = 0 }) => {
       return getTraderHistoryApi({
-        limit,
+        limit: _limit,
         offset: pageParam,
+        account: address,
         protocol,
         queryFilters,
         rangeFilters,
@@ -59,7 +64,7 @@ export function useQueryInfinitePositions({
         return getNextParam(limit, prev.meta)
       },
       retry: 0,
-      enabled: !!address && !!currentPair,
+      enabled: !!address && !!currentPair && isEnablePosition && isUnlimitedPosition,
       keepPreviousData: true,
     }
   )

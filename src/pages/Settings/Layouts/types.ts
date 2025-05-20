@@ -1,4 +1,4 @@
 export interface LayoutComponents {
-  userSubscription: JSX.Element
-  botAlert: JSX.Element
+  alertList: JSX.Element
+  alertLogs: JSX.Element
 }

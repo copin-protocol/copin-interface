@@ -8,7 +8,15 @@ import { useERC20Contract } from './useContract'
 import useContractMutation from './useContractMutation'
 import useContractQuery from './useContractQuery'
 
-const useERC20Approval = ({ token, account, spender }: { token: string; account?: string; spender?: string }) => {
+const useERC20Approval = ({
+  token,
+  account,
+  spender,
+}: {
+  token: string
+  account?: string | null
+  spender?: string
+}) => {
   const tokenContract = useERC20Contract(token, true)
   const { data: allowance = BigNumber.from(0), refetch: refetchAllowance } = useContractQuery<BigNumber>(
     tokenContract,

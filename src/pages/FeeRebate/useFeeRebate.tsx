@@ -15,7 +15,13 @@ export interface FeeRebateContractData {
   reloadFeeRebate?: () => void
 }
 
-const useFeeRebate = ({ account, enabled = true }: { account?: string; enabled?: boolean }): FeeRebateContractData => {
+const useFeeRebate = ({
+  account,
+  enabled = true,
+}: {
+  account?: string | null
+  enabled?: boolean
+}): FeeRebateContractData => {
   const address = CONTRACT_ADDRESSES[ARBITRUM_CHAIN][CONTRACT_QUERY_KEYS.FEE_REBATE]
 
   const calls: { address: string; name: string; params: any[] }[] = [

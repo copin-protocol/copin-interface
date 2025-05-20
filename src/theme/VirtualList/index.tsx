@@ -1,6 +1,6 @@
 import { ArrowLineUp } from '@phosphor-icons/react'
 import debounce from 'lodash/debounce'
-import React, { Key, cloneElement, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { Key, ReactNode, cloneElement, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { VariableSizeList as List, ListOnScrollProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import { v4 as uuidv4 } from 'uuid'
@@ -18,6 +18,7 @@ type Props<T> = {
   data: T[] | undefined
   isLoading: boolean
   columns: ColumnData<T>[]
+  columnTooltipIdFn?: (column: ColumnData<T>) => string
   dataMeta?: ApiMeta
   fetchNextPage?: () => void
   hasNextPage?: boolean | undefined
@@ -34,6 +35,10 @@ type Props<T> = {
   hiddenScrollToTopButton?: boolean
   scrollWhenDataChange?: boolean
   footerBg?: string
+  footerWidget?: ReactNode
+  availableColumns?: string[]
+  renderHeaderAdditionIcon?: (column: ColumnData<T>) => ReactNode
+  scrollWrapperRef?: React.RefObject<HTMLDivElement>
 }
 
 const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
@@ -56,6 +61,11 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
   onScroll,
   hiddenScrollToTopButton = true,
   footerBg,
+  footerWidget,
+  availableColumns,
+  columnTooltipIdFn,
+  renderHeaderAdditionIcon,
+  scrollWrapperRef,
 }: Props<T>) {
   const Row = useCallback(
     ({ data, index, style }: { data: T[]; index: number; style: any }) => {
@@ -69,7 +79,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
           style={style}
           width="100%"
           sx={{
-            height: 32,
+            height: '100%',
             alignItems: 'center',
             '&:hover': { background: themeColors.neutral5 },
             pl: 2,
@@ -78,15 +88,47 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
           }}
           onClick={() => handleSelectItem?.(cellData)}
         >
-          {columns.map((cellSetting, _index) =>
-            cellData ? (
-              <Type.Caption key={cellData.id + _index} sx={cellSetting.style}>
+          {columns.map((cellSetting, _index) => {
+            const isAvailable = availableColumns ? availableColumns?.includes(cellSetting.key as string) : true
+            const tooltipId = columnTooltipIdFn?.(cellSetting) ?? ''
+            const className = tooltipId
+            return cellData ? (
+              <Type.Caption
+                key={cellData.id + _index}
+                sx={{
+                  filter: isAvailable ? 'none' : 'blur(6px)',
+                  width: '100%',
+                  userSelect: isAvailable ? 'inherit' : 'none',
+                  position: 'relative',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  ...(cellSetting.style ?? {}),
+                }}
+                data-table-cell-key={cellSetting.key}
+                data-table-cell-row-index={index}
+              >
                 {cellSetting.render?.(cellData)}
+                {!isAvailable && (
+                  <Box
+                    className={className}
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      zIndex: 1,
+                      cursor: 'not-allowed',
+                    }}
+                    onClick={(e) => !isAvailable && e.stopPropagation()}
+                  />
+                )}
               </Type.Caption>
             ) : (
               <Box key={_index}></Box>
             )
-          )}
+          })}
         </Flex>
       )
     },
@@ -151,14 +193,24 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
               currentSort={currentSort}
               hasSort={hasSort}
               changeCurrentSort={handleChangeSort}
+              renderAdditionIcon={renderHeaderAdditionIcon}
             />
           )
         })}
       </Flex>
     )
-  }, [headerSx, columns, currentSort?.sortBy, currentSort?.sortType, changeCurrentSort, handleChangeSort])
+  }, [
+    headerSx,
+    columns,
+    currentSort?.sortBy,
+    currentSort?.sortType,
+    changeCurrentSort,
+    handleChangeSort,
+    renderHeaderAdditionIcon,
+  ])
 
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const innerWrapperRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = scrollWrapperRef ?? innerWrapperRef
   const listRef = useRef<InfiniteLoader>(null)
   const hasMountedRef = useRef(false)
 
@@ -184,7 +236,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
     return debounce(({ width, height }: { width: number; height: number }) => {
       if (!wrapperRef.current) return
       setRect({ width, height })
-    }, 200)
+    }, 50)
   }, [])
   useEffect(() => {
     if (wrapperRef.current) {
@@ -308,6 +360,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
           justifyContent: 'center',
           gap: 3,
           visibility: data?.length ? 'visible' : 'hidden',
+          height: 32,
         }}
       >
         {/* {isLoading && (
@@ -315,25 +368,27 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
             <Loading size={16} m="0 !important" />
           </Box>
         )} */}
-        {hiddenFooter ? null : (
-          <Type.Caption color="neutral3" display="block" lineHeight="30px">
-            <Box as="span" sx={{ position: 'relative' }}>
-              {itemCount} / {totalItem}
-              <Box
-                as="span"
-                sx={{
-                  visibility: isLoadingFooter ? 'visible' : 'hidden',
-                  position: 'absolute',
-                  top: '50%',
-                  right: '-24px',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                <Loading size={16} />
-              </Box>
-            </Box>
-          </Type.Caption>
-        )}
+        {hiddenFooter
+          ? null
+          : footerWidget ?? (
+              <Type.Caption color="neutral3" display="block" lineHeight="30px">
+                <Box as="span" sx={{ position: 'relative' }}>
+                  {itemCount} / {totalItem}
+                  <Box
+                    as="span"
+                    sx={{
+                      visibility: isLoadingFooter ? 'visible' : 'hidden',
+                      position: 'absolute',
+                      top: '50%',
+                      right: '-24px',
+                      transform: 'translateY(-50%)',
+                    }}
+                  >
+                    <Loading size={16} />
+                  </Box>
+                </Box>
+              </Type.Caption>
+            )}
       </Flex>
     </Flex>
   )
@@ -350,6 +405,7 @@ export const SimpleVirtualList = memo<any>(function SimpleVirtualListMemo<T = an
   handleSelectItem,
   renderRow,
   resizeDeps,
+  onResize,
 }: {
   data: T[] | undefined
   dataMeta: ApiMeta | undefined
@@ -359,6 +415,7 @@ export const SimpleVirtualList = memo<any>(function SimpleVirtualListMemo<T = an
   handleSelectItem: (data: T) => void
   renderRow: (data: T) => any
   resizeDeps?: any[]
+  onResize?: () => void
 }) {
   const Row = useCallback(
     ({ data, index, style }: { data: T[]; index: number; style: any }) => {
@@ -382,9 +439,10 @@ export const SimpleVirtualList = memo<any>(function SimpleVirtualListMemo<T = an
   // set width height for virtual list
   const [{ width, height }, setRect] = useState({ width: 0, height: 0 })
   const handleResize = useCallback(() => {
+    onResize?.()
     if (!wrapperRef.current) return
     setRect({ width: wrapperRef.current.clientWidth, height: wrapperRef.current.clientHeight })
-  }, [])
+  }, [onResize])
   useEffect(() => {
     handleResize()
   }, [...(resizeDeps ?? [])])

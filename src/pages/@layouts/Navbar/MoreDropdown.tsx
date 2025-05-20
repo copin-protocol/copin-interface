@@ -5,10 +5,11 @@ import {
   ChartBar,
   CircleHalfTilt,
   CrownSimple,
+  Medal,
   PresentationChart,
-  Swap,
   ThermometerSimple,
   Trophy,
+  Users,
   Vault,
 } from '@phosphor-icons/react'
 import { ComponentType, ReactNode } from 'react'
@@ -20,6 +21,7 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { ARBITRUM_CHAIN } from 'utils/web3/chains'
 import { CONTRACT_ADDRESSES } from 'utils/web3/contracts'
 
@@ -58,7 +60,14 @@ export default function MoreDropdown({ hasEvents }: { hasEvents?: boolean }) {
       </Flex>
       <Box
         className="dropdown-content"
-        sx={{ position: 'absolute', pt: 1, display: 'none', left: '50%', transform: 'translateX(-50%)' }}
+        sx={{
+          position: 'absolute',
+          pt: 1,
+          display: 'none',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: Z_INDEX.THEME_DROPDOWN,
+        }}
       >
         <Box sx={{ p: 2, width: 140, bg: 'neutral8', border: 'small', borderColor: 'neutral4' }}>
           <Flex sx={{ flexDirection: 'column', gap: 12 }}>
@@ -122,10 +131,25 @@ export function MoreDropdownMobile({
 
 const configs = [
   {
+    icon: CrownSimple,
+    text: <Trans>SUBSCRIPTION</Trans>,
+    route: ROUTES.SUBSCRIPTION.path,
+  },
+  {
     icon: ChartBar,
     text: <Trans>STATS</Trans>,
     route: ROUTES.STATS.path,
   },
+  {
+    icon: Medal,
+    text: <Trans>COPIER RANKING</Trans>,
+    route: ROUTES.COPIER_RANKING.path,
+  },
+  // {
+  //   icon: Users,
+  //   text: <Trans>REFERRAL</Trans>,
+  //   route: ROUTES.REFERRAL_MANAGEMENT.path,
+  // },
   {
     icon: ThermometerSimple,
     text: <Trans>SYSTEM STATUS</Trans>,
@@ -142,20 +166,15 @@ const configs = [
     link: LINKS.docs,
   },
   {
-    icon: CrownSimple,
-    text: <Trans>SUBSCRIPTION</Trans>,
-    route: ROUTES.SUBSCRIPTION.path,
-  },
-  {
     icon: CircleHalfTilt,
     text: <Trans>DUNE DASHBOARD</Trans>,
     link: LINKS.duneUrl,
   },
-  {
-    icon: Swap,
-    text: <Trans>FEE REBATE</Trans>,
-    route: ROUTES.FEE_REBATE.path,
-  },
+  // {
+  //   icon: Swap,
+  //   text: <Trans>FEE REBATE</Trans>,
+  //   route: ROUTES.FEE_REBATE.path,
+  // },
 ]
 
 const internalConfigs = [

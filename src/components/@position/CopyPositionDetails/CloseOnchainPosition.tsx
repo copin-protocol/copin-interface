@@ -27,7 +27,7 @@ import { ARBITRUM_CHAIN, OPTIMISM_CHAIN } from 'utils/web3/chains'
 import { calculateAcceptablePrice } from 'utils/web3/perps'
 import { signClosePosition, signForClose } from 'utils/web3/wallet'
 
-import ClosePositionGnsV8, { ClosePositionGnsV8Handler } from './ClosePositionGnsV8'
+import { ClosePositionGnsV8Handler } from './ClosePositionGnsV8'
 
 interface ClosePositionData {
   index?: number
@@ -58,7 +58,7 @@ const CloseOnchainPosition = ({
       return
     }
     if (!account) {
-      connect?.({})
+      connect?.()
       return
     }
     setOpening(true)
@@ -137,7 +137,7 @@ const ClosePositionHandler = ({
   }, [symbol, position.isLong, prices])
 
   const onConfirm = async () => {
-    if (submitting || !account?.address || !walletProvider || !symbol) return
+    if (submitting || !account || !walletProvider || !symbol) return
     const price = prices[symbol]
     if (price == null) {
       toast.error(<ToastBody title="Fetch price error" message="Can't find the price of this token" />)
@@ -146,7 +146,7 @@ const ClosePositionHandler = ({
     setSubmitting(true)
     const _acceptablePrice = calculateAcceptablePrice(parseUnits(price.toFixed(10), 10), !position.isLong)
     if (position.copyPositionId) {
-      signClosePosition(account?.address, position.copyPositionId, _acceptablePrice.toString(), walletProvider)
+      signClosePosition(account, position.copyPositionId, _acceptablePrice.toString(), walletProvider)
         .then((signature) => {
           if (!signature) {
             setSubmitting(false)
@@ -170,7 +170,7 @@ const ClosePositionHandler = ({
     } else {
       if (position.address && position.index) {
         signForClose({
-          from: account?.address,
+          from: account,
           smartWalletAddress: position.address,
           positionIndex: position.index,
           acceptablePrice: _acceptablePrice.toString(),

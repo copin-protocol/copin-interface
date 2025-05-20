@@ -1,6 +1,6 @@
 import { useResponsive } from 'ahooks'
 import { DropdownProps } from 'rc-dropdown/lib/Dropdown'
-import { useState } from 'react'
+import { Fragment, ReactNode, useState } from 'react'
 
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import Dropdown from 'theme/Dropdown'
@@ -15,6 +15,10 @@ export interface MarketFilterProps {
   pairs: string[]
   excludedPairs: string[]
   onChangePairs: (pairs: string[], excludedPairs: string[]) => void
+  menuWrapper?: any
+  titleSuffix?: ReactNode
+  iconSize?: number
+  allowedFilter?: boolean
 }
 
 export function MarketFilter({
@@ -23,6 +27,10 @@ export function MarketFilter({
   pairs,
   onChangePairs,
   excludedPairs,
+  menuWrapper: MenuWrapper = Fragment,
+  titleSuffix,
+  iconSize,
+  allowedFilter,
 }: MarketFilterProps) {
   const { xl } = useResponsive()
   const { getListSymbol } = useMarketsConfig()
@@ -34,18 +42,25 @@ export function MarketFilter({
   return (
     <Flex alignItems="start" sx={{ gap: 1, pr: 2 }}>
       <Dropdown
+        iconSize={iconSize}
         buttonVariant="ghostPrimary"
         menu={
-          <MarketSelection
-            key={visible.toString()}
-            // protocols={protocols}
-            isAllPairs={isCopyAll}
-            selectedPairs={pairs}
-            onChangePairs={onChangePairs}
-            allPairs={protocolPairs ?? []}
-            excludedPairs={excludedPairs}
-            handleToggleDropdown={() => setVisible(!visible)}
-          />
+          allowedFilter ? (
+            <MenuWrapper isFilterPair>
+              <MarketSelection
+                key={visible.toString()}
+                // protocols={protocols}
+                isAllPairs={isCopyAll}
+                selectedPairs={pairs}
+                onChangePairs={onChangePairs}
+                allPairs={protocolPairs ?? []}
+                excludedPairs={excludedPairs}
+                handleToggleDropdown={() => setVisible(!visible)}
+              />
+            </MenuWrapper>
+          ) : (
+            <></>
+          )
         }
         placement={xl ? undefined : placement}
         inline
@@ -65,7 +80,7 @@ export function MarketFilter({
         setVisible={setVisible}
         menuDismissible
       >
-        <SelectedMarkets pairs={pairs} excludedPairs={excludedPairs} />
+        <SelectedMarkets pairs={pairs} excludedPairs={excludedPairs} titleSuffix={titleSuffix} />
       </Dropdown>
     </Flex>
   )

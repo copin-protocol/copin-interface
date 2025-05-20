@@ -31,16 +31,24 @@ const HYPERLIQUID_TABS = [
   { key: TabKeyEnum.FILLS, name: 'Fills' },
 ]
 
+const LITE_TABS = [
+  { key: TabKeyEnum.OPENING, name: 'Opening Positions' },
+  { key: TabKeyEnum.OPEN_ORDERS, name: 'Orders' },
+  { key: TabKeyEnum.FILLS, name: 'Fills' },
+]
+
 export default function PositionMobileView({
   historyPositions,
   openingPositions,
   protocol,
   address,
+  isLite,
 }: {
   historyPositions: ReactNode
   openingPositions: ReactNode
   protocol?: ProtocolEnum
   address?: string
+  isLite?: boolean
 }) {
   const { searchParams, setSearchParams } = useSearchParams()
   const currentTabKey = searchParams['position_tab'] ?? TabKeyEnum.OPENING
@@ -130,7 +138,7 @@ export default function PositionMobileView({
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
       <TabHeader
-        configs={isHyperliquid ? HYPERLIQUID_TABS : TABS}
+        configs={isLite ? LITE_TABS : isHyperliquid ? HYPERLIQUID_TABS : TABS}
         isActiveFn={(config) => config.key === currentTabKey}
         onClickItem={handleChangeTab}
         hasLine

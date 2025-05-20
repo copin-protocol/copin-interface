@@ -16,6 +16,7 @@ import RcDrawer, { DrawerTitle } from 'theme/RcDrawer'
 import { levelTwoStyles } from 'theme/RcDrawer/styles'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { logEventBacktest } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 
@@ -65,7 +66,7 @@ export default function BacktestSimpleModal({
   }
 
   return (
-    <RcDrawer width={300} open={isOpen} onClose={onDismiss} push={{ distance: 350 }} zIndex={999}>
+    <RcDrawer width={300} open={isOpen} onClose={onDismiss} push={{ distance: 350 }} zIndex={Z_INDEX.THEME_MODAL}>
       <Box p={3}>
         <DrawerTitle
           title={
@@ -94,7 +95,13 @@ export default function BacktestSimpleModal({
           />
         )}
       </Box>
-      <RcDrawer width={400} open={openResult} onClose={handleClearResult} zIndex={1000} styles={levelTwoStyles()}>
+      <RcDrawer
+        width={400}
+        open={openResult}
+        onClose={handleClearResult}
+        zIndex={Z_INDEX.THEME_MODAL + 1}
+        styles={levelTwoStyles()}
+      >
         <Box p={3}>
           <Flex sx={{ alignItems: 'center', gap: 3 }}>
             <DrawerTitle

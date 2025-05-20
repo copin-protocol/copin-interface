@@ -1,17 +1,27 @@
 import { Trans } from '@lingui/macro'
 import { ArrowSquareOut, PlusSquare, Warning } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import React, { useState } from 'react'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 
 import { updateCopyWalletApi } from 'apis/copyWalletApis'
+import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import UpgradeButton from 'components/@subscription/UpgradeButton'
+import UpgradeModal from 'components/@subscription/UpgradeModal'
+import BadgeWithLimit from 'components/@ui/BadgeWithLimit'
 import ToastBody from 'components/@ui/ToastBody'
 import { CreateWalletModal } from 'components/@wallet/CreateWalletAction'
 import WalletDetailsCard from 'components/@wallet/WalletDetailsCard'
 import { CopyWalletData } from 'entities/copyWallet'
 import useCheckCopyTradeExchange from 'hooks/features/copyTrade/useCheckCopyExchange'
+import useCopyTradePermission from 'hooks/features/subscription/useCopyTradePermission'
+import { useIsElite } from 'hooks/features/subscription/useSubscriptionRestrict'
+import useUserUsage from 'hooks/features/subscription/useUserUsage'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useInternalRole from 'hooks/features/useInternalRole'
+import { useAuthContext } from 'hooks/web3/useAuth'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -20,49 +30,42 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { DCP_EXCHANGES, DEPRECATED_EXCHANGES, LINKS } from 'utils/config/constants'
-import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
 const EXCHANGES = [
   CopyTradePlatformEnum.HYPERLIQUID,
   // CopyTradePlatformEnum.APEX,
-  CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
-  CopyTradePlatformEnum.BYBIT,
-  CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.GATE,
+  CopyTradePlatformEnum.BINGX,
+  CopyTradePlatformEnum.OKX,
+  CopyTradePlatformEnum.BYBIT,
   CopyTradePlatformEnum.BINANCE,
-  CopyTradePlatformEnum.SYNTHETIX_V2,
-  CopyTradePlatformEnum.GNS_V8,
-]
-const ALLOW_EXCHANGE = [
-  CopyTradePlatformEnum.HYPERLIQUID,
-  // CopyTradePlatformEnum.APEX,
-  CopyTradePlatformEnum.BINGX,
-  CopyTradePlatformEnum.BITGET,
-  CopyTradePlatformEnum.BYBIT,
-  CopyTradePlatformEnum.OKX,
-  CopyTradePlatformEnum.GATE,
   CopyTradePlatformEnum.SYNTHETIX_V2,
   CopyTradePlatformEnum.GNS_V8,
 ]
 const INTERNAL_EXCHANGES = [
   CopyTradePlatformEnum.HYPERLIQUID,
   CopyTradePlatformEnum.APEX,
-  CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.BITGET,
-  CopyTradePlatformEnum.BYBIT,
-  CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.GATE,
+  CopyTradePlatformEnum.BINGX,
+  CopyTradePlatformEnum.OKX,
+  CopyTradePlatformEnum.BYBIT,
   CopyTradePlatformEnum.BINANCE,
   CopyTradePlatformEnum.SYNTHETIX_V2,
   CopyTradePlatformEnum.GNS_V8,
 ]
 
 export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean }) {
-  const allowExchanges = ALLOW_EXCHANGE
+  const { exchangeAllowed, apiKeyQuota, userNextPlan } = useCopyTradePermission()
+  const { usage } = useUserUsage()
   const { copyWallets, loadingCopyWallets, reloadCopyWallets } = useCopyWalletContext()
   const isInternal = useInternalRole()
+  const isElite = useIsElite()
+  const allowExchanges = exchangeAllowed
   const exchangeOptions = isInternal ? INTERNAL_EXCHANGES : EXCHANGES
   const apiWalletOptions = exchangeOptions.filter((e) => !DCP_EXCHANGES.includes(e))
   const smartWalletOptions = exchangeOptions.filter((e) => DCP_EXCHANGES.includes(e))
@@ -107,6 +110,8 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
           return { ...result, [wallet.exchange]: [...(result[wallet.exchange] || []), wallet] }
         }, {} as Record<CopyTradePlatformEnum, CopyWalletData[]>)
     : ({} as Record<CopyTradePlatformEnum, CopyWalletData[]>)
+  const totalCopyWallets = usage?.exchangeApis ?? 0
+  const isLimited = totalCopyWallets >= apiKeyQuota
 
   return (
     <Flex flexDirection="column" height="100%">
@@ -122,9 +127,31 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
           '& > *:first-child': { borderTop: 'none' },
         }}
       >
-        <Type.BodyBold px={3} py={2}>
-          API Wallet
-        </Type.BodyBold>
+        <Flex px={3} py={2} alignItems="center" sx={{ gap: [1, 2], flexWrap: 'wrap' }}>
+          <Type.BodyBold>API Wallet</Type.BodyBold>
+          <BadgeWithLimit
+            total={totalCopyWallets}
+            limit={apiKeyQuota}
+            tooltipContent={
+              !isElite &&
+              userNextPlan && (
+                <PlanUpgradePrompt
+                  requiredPlan={userNextPlan}
+                  title={<Trans>You’ve hit your API wallets limit ({apiKeyQuota})</Trans>}
+                  confirmButtonVariant="textPrimary"
+                  titleSx={{ textTransform: 'none !important', fontWeight: 400 }}
+                />
+              )
+            }
+            clickableTooltip
+          />
+          {isLimited && (
+            <Flex alignItems="center" sx={{ gap: [1, 2, 2, 2] }}>
+              <Type.Body>-</Type.Body>
+              <UpgradeButton requiredPlan={userNextPlan} showIcon={false} showCurrentPlan />
+            </Flex>
+          )}
+        </Flex>
         {renderWalletList({
           exchangeOptions: apiWalletOptions,
           allowExchanges,
@@ -132,6 +159,7 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
           hiddenBalance,
           reloadCopyWallets,
           handleUpdate,
+          isLimited,
         })}
 
         <Flex px={3} py={2} alignItems="center" justifyContent="space-between">
@@ -145,6 +173,7 @@ export default function WalletList({ hiddenBalance }: { hiddenBalance?: boolean 
           hiddenBalance,
           reloadCopyWallets,
           handleUpdate,
+          isLimited,
         })}
       </Flex>
     </Flex>
@@ -158,6 +187,7 @@ function renderWalletList({
   hiddenBalance,
   reloadCopyWallets,
   handleUpdate,
+  isLimited,
 }: {
   exchangeOptions: CopyTradePlatformEnum[]
   allowExchanges: CopyTradePlatformEnum[]
@@ -170,14 +200,17 @@ function renderWalletList({
     previousValue: string
     callback: (value: string) => void
   }) => void
+  isLimited?: boolean
 }) {
   return exchangeOptions.map((exchange) => {
     const isAllowed = allowExchanges.includes(exchange)
     const wallets = walletMapping[exchange] ?? []
+    const { getRequiredPlanToExchange, maxApiKeyQuota } = useCopyTradePermission()
+    const requiredPlan = getRequiredPlanToExchange(exchange)
+
     return (
       <Accordion
         defaultOpen={exchange === CopyTradePlatformEnum.HYPERLIQUID}
-        disabled={!isAllowed}
         iconSize={24}
         direction="left"
         key={exchange}
@@ -200,7 +233,10 @@ function renderWalletList({
             }}
           >
             <ExchangeTitle
+              maxApiKeyQuota={maxApiKeyQuota}
+              requiredPlan={requiredPlan}
               count={wallets.length}
+              isLimited={isLimited}
               isAllowed={isAllowed}
               exchange={exchange}
               onCreateWalletSuccess={reloadCopyWallets}
@@ -211,35 +247,33 @@ function renderWalletList({
           </Flex>
         }
         body={
-          isAllowed && (
-            <Box
-              sx={{
-                '& > *': {
-                  borderBottom: 'small',
-                  borderBottomColor: 'neutral4',
-                  '&:last-child': { borderBottom: 'none' },
-                },
-              }}
-            >
-              {wallets.map((wallet) => {
-                return (
-                  <WalletDetailsCard
-                    hiddenBalance={hiddenBalance}
-                    key={wallet.id}
-                    data={wallet}
-                    hasBorderTop={false}
-                    handleUpdate={handleUpdate}
-                    reload={reloadCopyWallets}
-                  />
-                )
-              })}
-              {!wallets?.length && (
-                <Box sx={{ textAlign: 'left', p: 3 }} color="neutral3">
-                  No Wallet
-                </Box>
-              )}
-            </Box>
-          )
+          <Box
+            sx={{
+              '& > *': {
+                borderBottom: 'small',
+                borderBottomColor: 'neutral4',
+                '&:last-child': { borderBottom: 'none' },
+              },
+            }}
+          >
+            {wallets.map((wallet) => {
+              return (
+                <WalletDetailsCard
+                  hiddenBalance={hiddenBalance}
+                  key={wallet.id}
+                  data={wallet}
+                  hasBorderTop={false}
+                  handleUpdate={handleUpdate}
+                  reload={reloadCopyWallets}
+                />
+              )
+            })}
+            {!wallets?.length && (
+              <Box sx={{ textAlign: 'left', p: 3 }} color="neutral3">
+                No Wallet
+              </Box>
+            )}
+          </Box>
         }
       />
     )
@@ -247,19 +281,28 @@ function renderWalletList({
 }
 
 function ExchangeTitle({
+  requiredPlan,
+  isLimited,
   isAllowed,
   exchange,
   onCreateWalletSuccess,
   count,
+  maxApiKeyQuota,
 }: {
+  requiredPlan: SubscriptionPlanEnum
+  isLimited?: boolean
   isAllowed: boolean
   exchange: CopyTradePlatformEnum
   onCreateWalletSuccess: (() => void) | undefined
   count: number
+  maxApiKeyQuota: number
 }) {
+  const { profile } = useAuthContext()
+  const { sm } = useResponsive()
   const { disabledExchanges } = useCheckCopyTradeExchange()
   const isMaintenance = !!disabledExchanges.includes(exchange)
   const [openModal, setOpenModal] = useState(false)
+  const [isOpenUpgradeModal, setIsOpenUpgradeModal] = useState(false)
   let title = ''
   switch (exchange) {
     case CopyTradePlatformEnum.BINGX:
@@ -295,6 +338,9 @@ function ExchangeTitle({
   }
   if (!title) return null
   const isDeprecated = DEPRECATED_EXCHANGES.includes(exchange)
+  const isEmail = profile?.username?.includes('@')
+  const isUnsupport = exchange === CopyTradePlatformEnum.HYPERLIQUID && isEmail
+
   return (
     <>
       <Flex width={['100%', '100%', 'auto']} alignItems="center" sx={{ gap: 2, justifyContent: 'space-between' }}>
@@ -304,29 +350,49 @@ function ExchangeTitle({
             {title} {isAllowed && !!count ? `(${count})` : ''}
           </Type.BodyBold>
         </Flex>
-        {isAllowed && !isDeprecated && !isMaintenance ? (
+        {isAllowed && !isDeprecated && !isMaintenance && !isUnsupport ? (
           <Button
             variant="ghostPrimary"
             sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 0 }}
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
-              setOpenModal(true)
+              if (isLimited) {
+                setIsOpenUpgradeModal(true)
+              } else {
+                setOpenModal(true)
+              }
             }}
           >
             <PlusSquare size={16} style={{ color: 'inherit' }} />
             <Box as="span">{DCP_EXCHANGES.includes(exchange) ? <Trans>Create</Trans> : <Trans>Connect</Trans>}</Box>
           </Button>
-        ) : (
+        ) : isMaintenance || isDeprecated || isUnsupport ? (
           <Type.Caption sx={{ py: 1, px: 2, bg: 'neutral6', borderRadius: '2px' }} color="neutral3">
-            {isMaintenance ? (
+            {isUnsupport ? (
+              <Trans>Copin Lite only</Trans>
+            ) : isMaintenance ? (
               <Trans>Maintenance</Trans>
-            ) : isDeprecated ? (
-              <Trans>Deprecated</Trans>
             ) : (
-              <Trans>Coming soon</Trans>
+              <Trans>Deprecated</Trans>
             )}
           </Type.Caption>
+        ) : (
+          <Flex alignItems="center" sx={{ gap: 1 }}>
+            <PlanUpgradeIndicator
+              requiredPlan={requiredPlan}
+              title={
+                <Type.Caption sx={{ textTransform: 'initial' }}>
+                  {sm ? (
+                    <Trans>Available from {SUBSCRIPTION_PLAN_TRANSLATION[requiredPlan]} plans</Trans>
+                  ) : (
+                    <Trans>{SUBSCRIPTION_PLAN_TRANSLATION[requiredPlan]} plans</Trans>
+                  )}
+                </Type.Caption>
+              }
+              learnMoreSection={SubscriptionFeatureEnum.COPY_MANAGEMENT}
+            />
+          </Flex>
         )}
       </Flex>
       <CreateWalletModal
@@ -337,6 +403,19 @@ function ExchangeTitle({
           setOpenModal(false)
         }}
       />
+      {isOpenUpgradeModal && (
+        <UpgradeModal
+          isOpen={isOpenUpgradeModal}
+          onDismiss={() => setIsOpenUpgradeModal(false)}
+          title={<Trans>YOU’VE HIT YOUR API WALLET LIMIT</Trans>}
+          description={
+            <Trans>
+              You&apos;re reach the maximum of API wallets for your current plan. Upgrade your plan to unlock access up
+              to <b>{maxApiKeyQuota} wallets</b>
+            </Trans>
+          }
+        />
+      )}
     </>
   )
 }

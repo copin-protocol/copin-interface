@@ -98,7 +98,7 @@ const WalletItem = ({ wallet }: { wallet: CopyWalletData }) => {
       return
     }
     if (!account) {
-      connect?.({})
+      connect?.()
       return
     }
     if (!isValid) {

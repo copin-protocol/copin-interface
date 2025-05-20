@@ -135,7 +135,7 @@ function DesktopView({
             direction={showLP ? 'top' : 'bottom'}
             onClick={() => setShowLP((prev) => !prev)}
             buttonSx={{
-              zIndex: 999,
+              zIndex: 10,
               left: '50%',
               transform: 'translateX(-50%)',
               top: showLP ? -16 : '-1px',

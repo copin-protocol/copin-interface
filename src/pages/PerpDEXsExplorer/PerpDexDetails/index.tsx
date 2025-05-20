@@ -18,6 +18,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { QUERY_KEYS } from 'utils/config/keys'
 
+import PermissionContainer from '../PermissionContainer'
 import { Accordion } from '../components/Accordion'
 import ReportPerpDEXsModal from '../components/ReportPerpDEXModal'
 import { RENDER_COLUMN_DATA_MAPPING } from '../configs'
@@ -33,6 +34,16 @@ import { DESKTOP_EVENT_AREA_HEIGHT, DESKTOP_LEFT_AREA_WIDTH } from './configs/co
 import { METRIC_FIELD } from './configs/field'
 
 export default function PerpDEXDetailsPage() {
+  return (
+    <>
+      <CustomPageTitle title={`Perp DEX Details`} />
+      <PermissionContainer isDetails>
+        <PerpDEXDetailsComponent />
+      </PermissionContainer>
+    </>
+  )
+}
+function PerpDEXDetailsComponent() {
   const { perpdex } = useParams<{ perpdex: string | undefined }>()
   const { searchParams } = useSearchParams()
   const protocol = (searchParams.protocol as string)?.toLowerCase()

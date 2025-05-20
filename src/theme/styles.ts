@@ -313,6 +313,26 @@ const ThemedGlobalStyle = createGlobalStyle`
     --onboard-gray-600: ${({ theme }) => theme.colors.neutral1};
     --onboard-wallet-button-border-radius:  6px;
     --onboard-modal-z-index: ${Z_INDEX.WEB3_CONNECT_MODAL};
+    --privy-border-radius-sm: ${({ theme }) => theme.borderRadius.xs}px;
+    --privy-border-radius-md: ${({ theme }) => theme.borderRadius.xs}px;
+    --privy-border-radius-lg: ${({ theme }) => theme.borderRadius.xs}px;
+    --privy-border-radius-full: ${({ theme }) => theme.borderRadius.xs}px;
+    --privy-color-background: ${({ theme }) => theme.colors.neutral7};
+    --privy-color-background-2: ${({ theme }) => theme.colors.neutral6};
+    --privy-color-background-3: ${({ theme }) => theme.colors.neutral5};
+    --privy-color-foreground: ${({ theme }) => theme.colors.neutral1};
+    --privy-color-foreground-2: ${({ theme }) => theme.colors.neutral2};
+    --privy-color-foreground-3: ${({ theme }) => theme.colors.neutral3};
+    --privy-color-foreground-4: ${({ theme }) => theme.colors.neutral4};
+    --privy-color-foreground-accent: ${({ theme }) => theme.colors.neutral8};
+    --privy-color-accent: ${({ theme }) => theme.colors.primary1};
+    --privy-color-accent-light: ${({ theme }) => theme.colors.primary2};
+    --privy-color-accent-lightest: ${({ theme }) => theme.colors.primary2};
+    --privy-color-accent-dark: ${({ theme }) => theme.colors.primary3};
+    --privy-color-accent-darkest: ${({ theme }) => theme.colors.primary3};
+    --privy-color-success: ${({ theme }) => theme.colors.green2};
+    --privy-color-error: ${({ theme }) => theme.colors.red1};
+    --privy-color-error-light: ${({ theme }) => theme.colors.red2};
   }
 
 
@@ -530,6 +550,11 @@ input[type=number] {
     100% {
       background: transparent;
     }
+  }
+
+  #privy-modal-content {
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
   }
 
 ${drawerStyles}

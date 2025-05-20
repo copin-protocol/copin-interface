@@ -2,9 +2,11 @@ import { Trans } from '@lingui/macro'
 import { Siren, Trash } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import React, { useCallback, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
 
 import { ApiListResponse } from 'apis/api'
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import UpgradeButton from 'components/@subscription/UpgradeButton'
+import BadgeWithLimit from 'components/@ui/BadgeWithLimit'
 import InputSearchText from 'components/@ui/InputSearchText'
 import NoDataFound from 'components/@ui/NoDataFound'
 import SectionTitle from 'components/@ui/SectionTitle'
@@ -12,10 +14,9 @@ import { BotAlertData, TraderAlertData } from 'entities/alert'
 import { TraderData } from 'entities/trader'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useSettingWatchlistTraders from 'hooks/features/alert/useSettingWatchlistTraders'
+import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import TraderLastViewed from 'pages/Settings/AlertSettingDetails/TraderLastViewed'
-import Badge from 'theme/Badge'
-import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
 import { PaginationWithSelect } from 'theme/Pagination'
 import Popconfirm from 'theme/Popconfirm'
@@ -23,7 +24,7 @@ import Table from 'theme/Table'
 import { ColumnData, TableSortProps } from 'theme/Table/types'
 import { Flex } from 'theme/base'
 import { AlertSettingsEnum } from 'utils/config/enums'
-import ROUTES from 'utils/config/routes'
+import { goToPreviousPage } from 'utils/helpers/transform'
 
 import SearchToAdd from './SearchToAdd'
 import { MobileRowItem, Trader24hTrades, TraderAddress, TraderCreatedAt, TraderStatus } from './config'
@@ -47,9 +48,11 @@ export default function SettingWatchlistTraders({
 }) {
   const { lg } = useResponsive()
   const isMobile = !lg
-  const { maxTraderAlert, isVIPUser } = useBotAlertContext()
+  const { maxTraderAlert, usage } = useBotAlertContext()
   const [searchText, setSearchText] = useState('')
   const protocolOptionsMapping = useGetProtocolOptionsMapping()
+
+  const { isAvailableWatchlistAlert, watchlistRequiredPlan, userWatchlistNextPlan } = useAlertPermission()
 
   const filteredTraders = useMemo(() => {
     if (!traders?.data) return traders
@@ -71,7 +74,9 @@ export default function SettingWatchlistTraders({
   }, [protocolOptionsMapping, searchText, traders])
 
   const onSuccess = () => {
-    changeCurrentPage(1)
+    if (traders && currentPage && !!changeCurrentPage) {
+      goToPreviousPage({ total: traders.meta.total, limit: 10, currentPage, changeCurrentPage })
+    }
   }
   const { createTraderAlert, deleteTraderAlert, submittingDelete } = useSettingWatchlistTraders({ onSuccess })
 
@@ -167,7 +172,7 @@ export default function SettingWatchlistTraders({
     return result
   }, [TraderActions])
 
-  const totalTrader = traders?.meta?.total ?? 0
+  const totalTrader = usage?.watchedListAlerts ?? 0
 
   return (
     <Flex flexDirection="column" width="100%" height="100%" sx={{ overflow: 'hidden' }}>
@@ -178,75 +183,67 @@ export default function SettingWatchlistTraders({
         px={3}
         sx={{ borderBottom: 'small', borderColor: 'neutral4' }}
       >
-        <Flex
-          flex={1}
-          py={2}
-          alignItems="center"
-          flexWrap="wrap"
-          sx={{ gap: 2, borderRight: isMobile ? 'none' : 'small', borderColor: 'neutral4' }}
-        >
+        <Flex flex={1} py={2} alignItems="center" flexWrap="wrap">
           <SectionTitle
             icon={Siren}
             title={
               <Flex alignItems="center" sx={{ gap: 2 }}>
                 {botAlert?.name?.toUpperCase() ?? ''}
-                <Badge count={`${totalTrader}/${maxTraderAlert}`} />
-                {!isVIPUser && totalTrader >= (maxTraderAlert ?? 0) && (
-                  <Link to={ROUTES.SUBSCRIPTION.path}>
-                    <Button size="xs" variant="outlinePrimary">
-                      <Trans>Upgrade</Trans>
-                    </Button>
-                  </Link>
-                )}
-                {totalTrader < (maxTraderAlert ?? 0) && (
-                  // <ButtonWithIcon size="xs" variant="outlinePrimary" icon={<Plus />} onClick={() => setOpenModalAdd(true)}>
-                  //   <Trans>Add Trader</Trans>
-                  // </ButtonWithIcon>
-                  <SearchToAdd
-                    ignoreSelectTraders={ignoreSelectTraders}
-                    onSelect={onAddWatchlist}
-                    onRemove={(data: TraderData) => {
-                      const traderAlertData = filteredTraders?.data?.find(
-                        (e) => e.address === data.account && e.protocol === data.protocol
-                      )
-                      if (traderAlertData) {
-                        handleUnsubscribeAlert(traderAlertData)
-                      }
-                    }}
-                  />
-                )}
+                <BadgeWithLimit
+                  total={totalTrader}
+                  limit={maxTraderAlert}
+                  tooltipContent={
+                    userWatchlistNextPlan && (
+                      <PlanUpgradePrompt
+                        requiredPlan={userWatchlistNextPlan}
+                        title={<Trans>You have exceeded your trader limit for the current plan.</Trans>}
+                        confirmButtonVariant="textPrimary"
+                        titleSx={{ textTransform: 'none !important', fontWeight: 400 }}
+                      />
+                    )
+                  }
+                  clickableTooltip
+                />
               </Flex>
+            }
+            suffix={
+              isAvailableWatchlistAlert && (
+                <UpgradeButton requiredPlan={watchlistRequiredPlan} showIcon={isMobile} showCurrentPlan={!isMobile} />
+              )
             }
             sx={{ mb: 0 }}
           />
         </Flex>
-        <Flex alignItems="center" width={isMobile ? '100%' : '164px'} mt={isMobile ? 2 : 0} mb={isMobile ? 3 : 0}>
-          {/*<SearchTraders*/}
-          {/*  limit={500}*/}
-          {/*  timeOption={TIME_FILTER_OPTIONS[4]}*/}
-          {/*  onSelect={onAddWatchlist}*/}
-          {/*  resultHeight={180}*/}
-          {/*  ignoreSelectTraders={ignoreSelectTraders}*/}
-          {/*  selectedTrader={null}*/}
-          {/*  placeholder={'Search Trader To Add'}*/}
-          {/*  addWidget={*/}
-          {/*    <ButtonWithIcon variant="ghostPrimary" icon={<Plus />} p={0}>*/}
-          {/*      ADD*/}
-          {/*    </ButtonWithIcon>*/}
-          {/*  }*/}
-          {/*/>*/}
+      </Flex>
+      <Flex alignItems="center" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
+        <Flex sx={{ pl: 1, width: 200, borderRight: 'small', borderColor: 'neutral4' }}>
           <InputSearchText
             placeholder="SEARCH TRADER"
             sx={{
               width: '100%',
               height: 'max-content',
-              border: isMobile ? undefined : 'none',
+              border: 'none',
               borderRadius: 'xs',
               backgroundColor: 'transparent !important',
-              pr: isMobile ? undefined : 0,
             }}
             searchText={searchText}
             setSearchText={setSearchText}
+          />
+        </Flex>
+        <Flex flex={1} justifyContent="flex-end" sx={{ pr: 3, gap: 2 }}>
+          <SearchToAdd
+            totalTrader={totalTrader}
+            maxTraderAlert={maxTraderAlert ?? 0}
+            ignoreSelectTraders={ignoreSelectTraders}
+            onSelect={onAddWatchlist}
+            onRemove={(data: TraderData) => {
+              const traderAlertData = filteredTraders?.data?.find(
+                (e) => e.address === data.account && e.protocol === data.protocol
+              )
+              if (traderAlertData) {
+                handleUnsubscribeAlert(traderAlertData)
+              }
+            }}
           />
         </Flex>
       </Flex>

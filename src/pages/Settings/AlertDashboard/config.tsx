@@ -18,11 +18,13 @@ import Popconfirm from 'theme/Popconfirm'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { AlertCategoryEnum, AlertSettingsEnum, AlertTypeEnum, ChannelTypeEnum } from 'utils/config/enums'
 import { ALERT_CUSTOM_TYPE_TRANS } from 'utils/config/translations'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { formatLocalRelativeDate } from 'utils/helpers/format'
 import { generateAlertSettingDetailsRoute } from 'utils/helpers/generateRoute'
+import { goToPreviousPage } from 'utils/helpers/transform'
 
 export const AlertStatusAction = ({ data }: { data: BotAlertData }) => {
   const { updateStatusAlert } = useSettingChannels({})
@@ -142,10 +144,12 @@ export const AlertActions = ({ data }: { data: BotAlertData }) => {
 
 const CustomAlertActions = ({ data }: { data: BotAlertData }) => {
   const history = useHistory()
-  const { changeCurrentPage } = useAlertDashboardContext()
+  const { currentPage, changeCurrentPage, totalCustoms } = useAlertDashboardContext()
 
   const onSuccess = () => {
-    changeCurrentPage?.(1)
+    if (currentPage && !!changeCurrentPage) {
+      goToPreviousPage({ total: totalCustoms, limit: DEFAULT_LIMIT, currentPage, changeCurrentPage })
+    }
   }
   const { deleteCustomAlert } = useCustomAlerts({ onSuccess })
 

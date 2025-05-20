@@ -166,7 +166,7 @@ function WalletItem({ exchange, label, description, handleClick }: WalletItemPro
         type="button"
         variant="outlinePrimary"
         onClick={() => handleClick && handleClick(exchange)}
-        disabled={!handleClick || isComingSoon}
+        disabled={!handleClick || isComingSoon || isMaintenance}
       >
         {isMaintenance ? (
           <Trans>Maintenance</Trans>

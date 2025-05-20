@@ -5,7 +5,7 @@ const LOGIN_BUTTON_ID = 'login_button__id'
 const LoginAction = () => {
   return (
     <>
-      <ConnectButton id={LOGIN_BUTTON_ID} px={3} />
+      <ConnectButton id={LOGIN_BUTTON_ID} px={3} sx={{ minWidth: [undefined, undefined, 70, 70, 123] }} />
     </>
   )
 }

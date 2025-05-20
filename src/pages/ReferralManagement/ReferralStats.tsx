@@ -446,7 +446,7 @@ export function ClaimRewardModal({
 
 function RebateTitle() {
   const { myProfile, setMyProfile } = useMyProfileStore()
-  const { refetch } = useQuery('get_user_profile_after_change_referrer', getMyProfileApi, {
+  const { refetch } = useQuery(QUERY_KEYS.GET_USER_PROFILE_AFTER_CHANGE, getMyProfileApi, {
     enabled: false,
     onSuccess: (data) => {
       if (!data) return

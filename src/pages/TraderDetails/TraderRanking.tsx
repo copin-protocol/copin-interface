@@ -1,11 +1,17 @@
+import { Trans } from '@lingui/macro'
 import { memo } from 'react'
 
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import BlurMask from 'components/@ui/BlurMask'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import { TraderData } from 'entities/trader'
-import { useRankingCustomizeStore } from 'hooks/store/useRankingCustomize'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
+import { useUserRankingConfig } from 'hooks/store/useUserCustomize'
 import { Box, Flex, Type } from 'theme/base'
+import { SubscriptionFeatureEnum } from 'utils/config/enums'
 import { rankingFieldOptions } from 'utils/config/options'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 
 import CustomizeRankingColumns from './CustomizeRankingColumns'
 import ScoreChart, { ScoreChartData } from './ScoreChart'
@@ -21,7 +27,10 @@ const TraderRanking = memo(function TraderRankingMemo({
   onChangeTime: (option: TimeFilterProps) => void
   isDrawer?: boolean
 }) {
-  const { customizedRanking } = useRankingCustomizeStore()
+  const { customizedRanking } = useUserRankingConfig()
+  const { traderRankingFields, isEnableTraderRanking, requiredPlanToTraderRanking } = useTraderProfilePermission({
+    protocol: data?.protocol,
+  })
 
   const avgScore = !data
     ? 0
@@ -32,7 +41,7 @@ const TraderRanking = memo(function TraderRankingMemo({
         return result
       }, 0) / customizedRanking.length
   const ranking: ScoreChartData[] = rankingFieldOptions
-    .filter((option) => customizedRanking.includes(option.value))
+    .filter((option) => customizedRanking.includes(option.value) && traderRankingFields?.includes(option.value))
     .map((option) => {
       return {
         subject: option.label as string,
@@ -54,6 +63,17 @@ const TraderRanking = memo(function TraderRankingMemo({
         bg: 'neutral5',
       }}
     >
+      <BlurMask isBlur={!isEnableTraderRanking}>
+        <PlanUpgradePrompt
+          requiredPlan={requiredPlanToTraderRanking}
+          title={<Trans>Available from {SUBSCRIPTION_PLAN_TRANSLATION[requiredPlanToTraderRanking]} plans</Trans>}
+          description={<Trans>Upgrade to customize your chart and unlock all 12 insights.</Trans>}
+          showTitleIcon
+          showLearnMoreButton
+          useLockIcon
+          learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+        />
+      </BlurMask>
       {isDrawer ? (
         <Type.Caption sx={{ pb: 12, px: 0, width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">
           <Flex sx={{ alignItems: 'center', justifyContent: 'flex-start', width: '100%', gap: 12 }}>

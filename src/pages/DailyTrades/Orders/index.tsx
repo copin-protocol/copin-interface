@@ -2,6 +2,7 @@ import { useQuery as useApolloQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import dayjs from 'dayjs'
+import { SEARCH_DAILY_ORDERS_QUERY, SEARCH_ORDERS_FUNCTION_NAME, SEARCH_ORDERS_INDEX } from 'graphql/query'
 import debounce from 'lodash/debounce'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -11,17 +12,21 @@ import DailyOrderListView from 'components/@dailyTrades/OrderListView'
 import ToggleLiveButton from 'components/@dailyTrades/ToggleLIveButton'
 import { DirectionFilterEnum } from 'components/@dailyTrades/configs'
 import { TraderPositionDetailsFromOrderDrawer } from 'components/@position/TraderPositionDetailsDrawer'
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import ToastBody from 'components/@ui/ToastBody'
 import { OrderData } from 'entities/trader'
+import useCheckFeature from 'hooks/features/subscription/useCheckFeature'
+import useLiveTradesPermission from 'hooks/features/subscription/useLiveTradesPermission'
 import { useFilterPairs } from 'hooks/features/useFilterPairs'
-import useInternalRole from 'hooks/features/useInternalRole'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import VirtualList from 'theme/VirtualList'
 import { Box, Flex, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { MAX_LIST_DATA_LIMIT, MAX_PAGE_LIMIT } from 'utils/config/constants'
-import { MarginModeEnum, OrderTypeEnum, SortTypeEnum } from 'utils/config/enums'
+import { MarginModeEnum, SortTypeEnum, SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
+import reorderArray from 'utils/helpers/reorderArray'
 import { getPairFromSymbol, pageToOffset } from 'utils/helpers/transform'
 
 import FilterProtocols from '../FilterProtocols'
@@ -29,16 +34,10 @@ import FilterOrderDirectionTag from '../FilterTags/FilterDirectionTag'
 import FilterOrderActionTag from '../FilterTags/FilterOrderActionTag'
 import FilterOrderRangesTag from '../FilterTags/FilterOrderRangeTag'
 import FilterPairTag from '../FilterTags/FilterPairTag'
-import Maintain from '../Maintain'
 import SearchTrader from '../SearchTrader'
+import { mapOrderData } from '../helpers'
 import FilterOrderButton from './FilterOrderButton'
-import {
-  ORDER_FILTER_TYPE_MAPPING,
-  SEARCH_DAILY_ORDERS_QUERY,
-  SEARCH_FUNCTION_NAME,
-  SEARCH_ORDERS_INDEX,
-  orderColumns,
-} from './config'
+import { ORDER_FILTER_TYPE_MAPPING, orderColumns } from './config'
 import { DailyOrdersProvider, useDailyOrdersContext } from './useOrdersProvider'
 
 export default function DailyOrdersPage() {
@@ -83,8 +82,6 @@ function DailyOrdersComponent() {
       result.push({ field: 'pair', nin: excludedPairs.map((v) => getPairFromSymbol(v)) })
     } else if (!isCopyAll) {
       result.push({ field: 'pair', in: pairs.map((v) => getPairFromSymbol(v)) })
-    } else {
-      result.push({ field: 'pair', exists: true })
     }
 
     if (direction === DirectionFilterEnum.LONG) {
@@ -95,37 +92,6 @@ function DailyOrdersComponent() {
     }
     if (action) {
       result.push(ORDER_FILTER_TYPE_MAPPING[action])
-    } else {
-      const _filters: any[] = []
-      ;[
-        OrderTypeEnum.OPEN,
-        OrderTypeEnum.INCREASE,
-        OrderTypeEnum.DECREASE,
-        OrderTypeEnum.CLOSE,
-        OrderTypeEnum.LIQUIDATE,
-        // OrderTypeEnum.MARGIN_TRANSFERRED,
-      ].forEach((type) => {
-        _filters.push(ORDER_FILTER_TYPE_MAPPING[type])
-      })
-      result.push({
-        or: _filters.map(({ field, ...rest }) => {
-          const convertedRest = Object.fromEntries(
-            Object.entries(rest)
-              .filter(([_, value]) => value !== null && value !== undefined)
-              .map(([key, value]) => {
-                if (Array.isArray(value) || key === 'exists') {
-                  return [key, value]
-                }
-                return [key, String(value)]
-              })
-          )
-
-          return {
-            field,
-            ...convertedRest,
-          }
-        }),
-      })
     }
     if (address) {
       result.push({
@@ -188,19 +154,20 @@ function DailyOrdersComponent() {
     }
   }, [currentLimit, currentPage, filters])
 
-  const isInternal = useInternalRole()
   const {
     data: ordersTableData,
     loading: isLoadingOrders,
     previousData,
-  } = useApolloQuery<{ [SEARCH_FUNCTION_NAME]: ApiListResponse<OrderData> }>(SEARCH_DAILY_ORDERS_QUERY, {
-    skip: (md && enabledLiveTrade) || !isInternal,
+  } = useApolloQuery<{ [SEARCH_ORDERS_FUNCTION_NAME]: ApiListResponse<OrderData> }>(SEARCH_DAILY_ORDERS_QUERY, {
+    skip: md && enabledLiveTrade,
     variables: queryOpeningVariables,
     onError: (error) => {
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
     },
   })
-  const tableData = isLoadingOrders ? previousData?.[SEARCH_FUNCTION_NAME] : ordersTableData?.[SEARCH_FUNCTION_NAME]
+  const tableData = isLoadingOrders
+    ? previousData?.[SEARCH_ORDERS_FUNCTION_NAME]
+    : ordersTableData?.[SEARCH_ORDERS_FUNCTION_NAME]
 
   // live data
 
@@ -221,7 +188,7 @@ function DailyOrdersComponent() {
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(false)
 
-  const { fetchMore } = useApolloQuery<{ [SEARCH_FUNCTION_NAME]: ApiListResponse<OrderData> } | null>(
+  const { fetchMore } = useApolloQuery<{ [SEARCH_ORDERS_FUNCTION_NAME]: ApiListResponse<OrderData> } | null>(
     SEARCH_DAILY_ORDERS_QUERY,
     { skip: true }
   )
@@ -258,7 +225,7 @@ function DailyOrdersComponent() {
         .then(({ data: fetchMoreResult }) => {
           setLoading(false)
           if (!fetchMoreResult) return
-          const resData = fetchMoreResult[SEARCH_FUNCTION_NAME]
+          const resData = fetchMoreResult[SEARCH_ORDERS_FUNCTION_NAME]
           setCurrentData(resData.data)
           setCurrentDataMeta(resData.meta)
         })
@@ -287,7 +254,7 @@ function DailyOrdersComponent() {
       })
         .then(({ data: fetchMoreResult }) => {
           if (!fetchMoreResult) return
-          const resData = fetchMoreResult[SEARCH_FUNCTION_NAME]
+          const resData = fetchMoreResult[SEARCH_ORDERS_FUNCTION_NAME]
           const fetchedOrderData = resData.data.filter((d) => !checkDataRef.current[d.id]).reverse()
           const newOrderData: OrderData[] = [...fetchedOrderData, ...(currentDataRef.current ?? [])]
           if (newOrderData.length > MAX_LIST_DATA_LIMIT) {
@@ -338,7 +305,7 @@ function DailyOrdersComponent() {
       })
         .then(({ data: fetchMoreResult }) => {
           setFetching(false)
-          const resData = fetchMoreResult?.[SEARCH_FUNCTION_NAME]
+          const resData = fetchMoreResult?.[SEARCH_ORDERS_FUNCTION_NAME]
           const fetchedOrderData = resData?.data.filter((d) => !checkDataRef.current[d.id]) ?? []
           const newOrderData: OrderData[] = [...(currentDataRef.current ?? []), ...fetchedOrderData]
           if (newOrderData.length > MAX_LIST_DATA_LIMIT) {
@@ -388,24 +355,124 @@ function DailyOrdersComponent() {
   const styleLongKey = styleLongKeys.join(', ')
   const styleShortKey = styleShortKeys.join(', ')
 
-  const data = enabledLiveTrade && md ? currentData : tableData?.data
+  const {
+    orderFieldsAllowed,
+    isEliteUser,
+    planToShowOrderDetails,
+    isEnableSearchOrderTrader,
+    planToSearchOrderTrader,
+    liveOrderDelayInSecond,
+    planToEnabledLiveOrder,
+  } = useLiveTradesPermission()
+
+  const _data = enabledLiveTrade && md ? currentData : tableData?.data
+  const data = _data ? _data.map((v) => mapOrderData({ sourceData: v, allowedFields: orderFieldsAllowed })) : undefined
   const dataMeta = enabledLiveTrade && md ? currentDataMeta : tableData?.meta
   const isLoading = loading || isLoadingOrders
 
+  const { isAvailableFeature: isAllowShowPositionDetails } = useCheckFeature({
+    requiredPlan: planToShowOrderDetails,
+  })
   const [currentOrder, setCurrentOrder] = useState<OrderData | null>(null)
-  const handleClickRow = useCallback((data: OrderData) => {
-    setCurrentOrder(data)
-  }, [])
+  const handleClickRow = useCallback(
+    (data: OrderData) => {
+      isAllowShowPositionDetails && setCurrentOrder(data)
+    },
+    [isAllowShowPositionDetails]
+  )
   const handleDismiss = useCallback(() => setCurrentOrder(null), [])
 
-  // const { listMaintenancePage } = useGetPageStatus()
-  // if (listMaintenancePage?.includes(SystemStatusPageEnum.LIVE_TRADES) && !isInternal) {
-  //   return <Maintain />
-  // }
-  if (!isInternal) return <Maintain />
+  const _orderColumns = reorderArray({ source: orderFieldsAllowed, target: orderColumns, getValue: (v) => v.key }).map(
+    (v) => {
+      const isAllowed = orderFieldsAllowed == null || !v.key || orderFieldsAllowed.includes(v.key) || isEliteUser
+      return {
+        ...v,
+        sortBy: isAllowed ? v.sortBy : undefined,
+        filterComponent: isAllowed ? v.filterComponent : undefined,
+        style: { ...v.style, paddingRight: '8px' },
+      }
+    }
+  )
+
+  const overlayRef = useRef<HTMLDivElement | null>(null)
+  const tableWrapperRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!tableWrapperRef.current || !data?.length || orderFieldsAllowed == null) return
+    const rows = tableWrapperRef.current.querySelectorAll(`[data-table-cell-row-index="0"]`)
+    let attr = ''
+    for (const cell of rows) {
+      const _attr = cell.getAttribute('data-table-cell-key')
+      if (orderFieldsAllowed != null && !orderFieldsAllowed.includes(_attr as any)) {
+        attr = _attr as string
+        break
+      }
+    }
+    if (!attr) return
+    const headerWrapper = document.querySelector('.row_header_wrapper')
+    const headerTopLeftElement = headerWrapper?.querySelector(`[data-table-key="${attr as any}"]`)
+    if (headerTopLeftElement) {
+      ;(headerTopLeftElement as HTMLDivElement).style.paddingLeft = '8px'
+    }
+    const listBodyCell = tableWrapperRef.current.querySelectorAll(`[data-table-cell-key="${attr as any}"]`)
+
+    if (!listBodyCell) return
+    for (const cell of listBodyCell) {
+      ;(cell as HTMLDivElement).style.paddingLeft = '8px'
+    }
+    const topLeftElement: Element | undefined = listBodyCell[0]
+
+    const handleResize = debounce(() => {
+      if (overlayRef.current) {
+        const topLeftRect = topLeftElement?.getBoundingClientRect()
+        const bodyRect = tableWrapperRef.current?.getBoundingClientRect()
+        overlayRef.current.style.left = `${Math.max(topLeftRect?.x ?? 0, bodyRect?.x ?? 0)}px`
+        overlayRef.current.style.top = `${bodyRect?.y ?? 0}px`
+        overlayRef.current.style.right = `${window.innerWidth - (bodyRect?.x ?? 0) - (bodyRect?.width ?? 0)}px`
+        overlayRef.current.style.height = `${bodyRect?.height ?? 0}px`
+        if (overlayRef.current.clientWidth > 1) {
+          overlayRef.current.style.borderLeft = `1px solid ${themeColors.neutral4}`
+        } else {
+          overlayRef.current.style.borderLeft = 'none'
+        }
+        if (overlayRef.current.clientWidth > 200) {
+          overlayRef.current.classList.add('active')
+        } else {
+          overlayRef.current.classList.remove('active')
+        }
+      }
+    }, 300)
+    const handleWhell = (e: WheelEvent) => {
+      const multiple = 2
+      tableWrapperRef.current?.firstElementChild?.scrollBy(
+        e.shiftKey
+          ? { left: e.deltaY * multiple, top: 0, behavior: 'smooth' }
+          : { left: e.deltaX * multiple, top: e.deltaY * multiple, behavior: 'smooth' }
+      )
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    overlayRef.current?.addEventListener('wheel', handleWhell)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      overlayRef.current?.removeEventListener('wheel', handleWhell)
+    }
+  }, [data, orderFieldsAllowed])
 
   return (
-    <Flex sx={{ width: '100%', height: '100%', overflow: 'hidden', flexDirection: 'column' }}>
+    <Flex
+      sx={{
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        flexDirection: 'column',
+        '.active': {
+          '& > *': {
+            display: 'block',
+          },
+        },
+      }}
+    >
       {md ? (
         <Flex
           sx={{
@@ -419,7 +486,7 @@ function DailyOrdersComponent() {
             borderBottomColor: 'neutral4',
           }}
         >
-          <Flex sx={{ alignItems: 'center', gap: 2, flexWrap: 'nowrap', flex: '1 0 0', overflow: 'auto' }}>
+          <Flex sx={{ alignItems: 'center', gap: 2, flexWrap: 'nowrap', flex: '1 0 0', overflow: 'auto hidden' }}>
             <Type.Caption pr={1} flexShrink={0} color="neutral2">
               FILTER:
             </Type.Caption>
@@ -430,17 +497,30 @@ function DailyOrdersComponent() {
           </Flex>
           <Flex sx={{ height: '100%', alignItems: 'center' }}>
             <Box px={3}>
-              <ToggleLiveButton enabledLiveData={enabledLiveTrade} onClick={() => toggleLiveTrade()} />
+              <ToggleLiveButton
+                enabledLiveData={enabledLiveTrade}
+                onClick={() => toggleLiveTrade()}
+                requiredPlan={!liveOrderDelayInSecond ? undefined : planToEnabledLiveOrder}
+                delay={liveOrderDelayInSecond}
+              />
             </Box>
             <Box height="100%" sx={{ bg: 'neutral4', flexShrink: 0, width: '1px' }} />
-            <SearchTrader address={address} setAddress={changeAddress} />
+            <SearchTrader
+              address={address}
+              setAddress={changeAddress}
+              requiredPlan={isEnableSearchOrderTrader ? undefined : planToSearchOrderTrader}
+            />
           </Flex>
         </Flex>
       ) : (
         <Flex sx={{ alignItems: 'center', borderBottom: 'small', borderBottomColor: 'neutral4', height: 40 }}>
           <Flex sx={{ height: '100%', alignItems: 'center', justifyContent: 'space-between', flex: 1, gap: 2 }}>
             <Flex sx={{ alignItems: 'center', py: '2px' }}>
-              <SearchTrader address={address} setAddress={changeAddress} />
+              <SearchTrader
+                address={address}
+                setAddress={changeAddress}
+                requiredPlan={isEnableSearchOrderTrader ? undefined : planToSearchOrderTrader}
+              />
             </Flex>
             <Flex sx={{ height: '100%', gap: 3, flexShrink: 0 }}>
               <Flex
@@ -491,13 +571,14 @@ function DailyOrdersComponent() {
       >
         {md ? (
           <VirtualList
+            scrollWrapperRef={tableWrapperRef}
             key={enabledLiveTrade.toString()}
-            handleSelectItem={handleClickRow}
+            handleSelectItem={isAllowShowPositionDetails ? handleClickRow : undefined}
             data={data?.map((v) => ({
               ...v,
               marginMode: PROTOCOLS_CROSS_MARGIN.includes(v.protocol) ? MarginModeEnum.CROSS : MarginModeEnum.ISOLATED, // Todo: need to improve
             }))}
-            columns={orderColumns}
+            columns={_orderColumns}
             isLoading={isLoading}
             dataMeta={dataMeta}
             hasNextPage={enabledLiveTrade ? (data?.length ?? 0) < (dataMeta?.total ?? 0) : undefined}
@@ -507,9 +588,16 @@ function DailyOrdersComponent() {
             hiddenFooter
             hiddenScrollToTopButton={false}
             scrollWhenDataChange={enabledLiveTrade ? false : true}
+            availableColumns={orderFieldsAllowed}
           />
         ) : (
-          <DailyOrderListView data={data} isLoading={isLoading} scrollDep={data} />
+          <DailyOrderListView
+            data={data}
+            isLoading={isLoading}
+            scrollDep={data}
+            availableColumns={orderFieldsAllowed}
+            onClickItem={isAllowShowPositionDetails ? handleClickRow : undefined}
+          />
         )}
       </Box>
       {enabledLiveTrade && md && (
@@ -570,6 +658,31 @@ function DailyOrdersComponent() {
             onLimitChange={changeCurrentLimit}
             apiMeta={dataMeta}
           />
+        </Flex>
+      )}
+      {!isEliteUser && !!data?.length && (
+        <Flex
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'fixed',
+            backdropFilter: 'blur(10px)',
+            borderLeftColor: 'neutral4',
+            overflow: 'hidden',
+          }}
+          ref={overlayRef}
+        >
+          <Box display="none" minWidth={180} sx={{ flexShrink: 0 }}>
+            <PlanUpgradePrompt
+              requiredPlan={SubscriptionPlanEnum.ELITE}
+              title={<Trans>Upgrade to Unlock more Metrics</Trans>}
+              description={<Trans>See Unrealised PnL, Traded Tokens and more.</Trans>}
+              showTitleIcon
+              showLearnMoreButton
+              useLockIcon
+              learnMoreSection={SubscriptionFeatureEnum.LIVE_TRADES}
+            />
+          </Box>
         </Flex>
       )}
       <TraderPositionDetailsFromOrderDrawer

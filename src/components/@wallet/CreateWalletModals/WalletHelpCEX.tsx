@@ -50,7 +50,7 @@ const WalletHelpCEX = ({
       </Wrapper>
 
       <Wrapper>
-        <Flex alignItems="center" sx={{ gap: 2 }}>
+        <Flex alignItems="center" sx={{ gap: 2, flexWrap: 'wrap' }}>
           <Type.Caption>
             <Trans>How to connect your {exchangeInfo.name} API to Copin?</Trans>
           </Type.Caption>

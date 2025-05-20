@@ -25,6 +25,8 @@ import { logEventLite } from 'utils/tracking/event'
 import { EventCategory } from 'utils/tracking/types'
 import { EVENT_ACTIONS } from 'utils/tracking/types'
 
+import UpgradeCTA from './UpgradeCTA'
+
 const DAY_COUNT = 30
 
 export const TraderListDesktop = memo(function TraderListDesktopMemo({
@@ -75,19 +77,7 @@ export const TraderListDesktop = memo(function TraderListDesktopMemo({
         >
           <TraderListHead />
           <Box mb={40} />
-          {!!listTraderData && listTraderData.length === 0 && (
-            <Flex
-              sx={{
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <Image mt={64} mb={2} src={tokenNotFound} width={190} height={190} alt="token" />
-              <Box sx={{ color: 'neutral3' }}>
-                <Trans>Not found any trending traders at this moment</Trans>
-              </Box>
-            </Flex>
-          )}
+          {!!listTraderData && listTraderData.length === 0 && <NotFoundData />}
           {!!listTraderData && !!listTraderData.length && (
             <Box sx={{ width: '100%', position: 'relative' }}>
               {isLoading && (
@@ -135,6 +125,7 @@ export const TraderListDesktop = memo(function TraderListDesktopMemo({
                   )
                 })}
               </CustomSlider>
+              <UpgradeCTA />
             </Box>
           )}
         </Flex>
@@ -166,6 +157,10 @@ export const TraderListMobile = memo(function TraderListMobileMemo({
   onClickCopyTrade: (traderData: ResponseTraderData) => void
   pnlData: PnlStatisticsResponse | undefined
 }) {
+  if (!!listTraderData && listTraderData.length === 0) {
+    return <NotFoundData />
+  }
+
   return (
     <>
       <Box mt={24} mb={3}>
@@ -205,6 +200,7 @@ export const TraderListMobile = memo(function TraderListMobileMemo({
               )
             })}
         </Slider>
+        <UpgradeCTA />
       </HorizontalCarouselWrapper>
     </>
   )
@@ -299,7 +295,7 @@ function TraderItem({
   onClickCopyTrade: (traderData: ResponseTraderData) => void
 }) {
   const { isAuthenticated } = useAuthContext()
-  const { protocol, account, type, realisedPnl, realisedAvgRoi, totalWin, totalTrade, avgVolume } = traderData
+  const { protocol, account, type, realisedPnl, realisedAvgRoi, winRate, avgVolume } = traderData
   const traderPnlData = pnlData?.[account]
   const { setTrader } = useQuickViewTraderStore()
   const handleClickLogin = useClickLoginButton()
@@ -313,14 +309,6 @@ function TraderItem({
 
   return (
     <Box
-      // as={Link}
-      // to={generateTraderMultiExchangeRoute({
-      //   protocol,
-      //   address: account,
-      //   params: {
-      //     time: type,
-      //   },
-      // })}
       sx={{
         display: 'block',
         color: 'inherit',
@@ -336,9 +324,6 @@ function TraderItem({
           bg: 'rgba(49, 56, 86, 0.3)',
         },
       }}
-      // onClick={(e) => {
-      //   e.stopPropagation()
-      // }}
     >
       <Flex
         mb={24}
@@ -353,36 +338,16 @@ function TraderItem({
           options={{ timeType: type, size: 32, textSx: { width: 75 } }}
           linkTarget="_blank"
           quickViewDisabledActions={['copy-trade']}
+          quickViewDisabledLinkAccount
         />
-        {/* <Flex sx={{ alignItems: 'center', gap: 3 }}>
-          <FavoriteButton
-            address={account}
-            protocol={protocol}
-            size={20}
-            sx={{
-              position: 'relative',
-            }}
-          />
-          <IconBox
-            role="button"
-            as={Link}
-            to={generateTraderMultiExchangeRoute({
-              protocol,
-              address: account,
-              params: {
-                time: type,
-              },
-            })}
-            icon={<CaretRight size={20} />}
-            color="neutral3"
-            sx={{ '&:hover': { color: 'neutral2' } }}
-          />
-        </Flex> */}
       </Flex>
       <Box
         sx={{ cursor: 'pointer' }}
         onClick={() => {
-          setTrader({ address: account, protocol, type, eventCategory: EventCategory.LITE }, ['copy-trade'])
+          setTrader(
+            { address: account, protocol, type, eventCategory: EventCategory.LITE },
+            { disabledActions: ['copy-trade'], disabledLinkAccount: true }
+          )
         }}
       >
         <Flex mb={3} sx={{ alignItems: 'center', gap: 24 }}>
@@ -437,11 +402,9 @@ function TraderItem({
         <Box mb={22} sx={{ display: 'grid', gap: 3, gridTemplateColumns: '1fr 1fr' }}>
           <Box>
             <Type.Caption display="block" color="neutral2">
-              <Trans>Wins / Trades</Trans>
+              <Trans>Win Rate</Trans>
             </Type.Caption>
-            <Type.Caption sx={{ fontWeight: 600 }}>
-              {totalWin} / {totalTrade} ({formatNumber((totalWin / totalTrade) * 100, 0, 0)}%)
-            </Type.Caption>
+            <Type.Caption sx={{ fontWeight: 600 }}>{formatNumber(winRate, 0, 0)}%</Type.Caption>
           </Box>
           <Box>
             <Type.Caption display="block" color="neutral2">
@@ -455,5 +418,21 @@ function TraderItem({
         <Trans>Copy Trade</Trans>
       </Button>
     </Box>
+  )
+}
+
+function NotFoundData() {
+  return (
+    <Flex
+      sx={{
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Image mt={[3, 64]} mb={2} src={tokenNotFound} sx={{ width: [150, 190], height: [150, 190] }} alt="token" />
+      <Type.Body color="neutral3">
+        <Trans>Not found any trending traders at this moment</Trans>
+      </Type.Body>
+    </Flex>
   )
 }

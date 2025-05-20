@@ -3,7 +3,6 @@ import { BookBookmark } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useLocation } from 'react-router-dom'
 
-import { TraderExplorerAlertBanner } from 'components/@systemConfig/SystemAlertBanner'
 import PageHeader from 'components/@widgets/PageHeader'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { TopWrapperMobile } from 'pages/@layouts/Components'
@@ -36,7 +35,7 @@ export default function ExplorerPage() {
         )}
         {/* <TraderExplorerAlertBanner /> */}
         <FilterTradersProvider key={pathname} tab={TabKeyEnum.Explorer}>
-          <Box sx={{ overflow: 'hidden', flex: '1 0 0' }}>
+          <Box sx={{ overflow: 'hidden', flex: '1 0 0', position: 'relative' }}>
             <TradersAnalytics />
           </Box>
         </FilterTradersProvider>

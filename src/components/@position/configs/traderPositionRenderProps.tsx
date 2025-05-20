@@ -187,8 +187,8 @@ function PositionTime({ data }: { data: PositionData }) {
 }
 const entryColumn: ColumnData<PositionData> = {
   title: 'Entry',
-  dataIndex: 'averagePrice',
-  key: 'averagePrice',
+  dataIndex: 'pair',
+  key: 'pair',
   sortBy: 'averagePrice',
   style: { minWidth: '115px' },
   render: (item) => renderEntry(item),
@@ -357,7 +357,7 @@ const pairColumn: ColumnData<PositionData> = {
 const positionTimeColumn: ColumnData<PositionData> = {
   title: 'Time',
   dataIndex: undefined,
-  key: undefined,
+  key: 'openBlockTime',
   style: {},
   render: (item) => {
     return (
@@ -396,42 +396,42 @@ const mixPnLColumn: ColumnData<PositionData> = {
 export const historyColumns: ColumnData<PositionData>[] = [
   { ...timeColumn, style: { flex: 1 } },
   { ...entryColumn, style: { flex: 1.8, minWidth: 185 } },
-  { ...sizeColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...leverageColumn, style: { flex: 0.8, textAlign: 'right' } },
-  { ...pnlColumn, style: { flex: 1.4, textAlign: 'right' } },
-  { ...actionColumn, style: { width: 24, pr: 1, textAlign: 'right', flex: '0 0 24px' } },
+  { ...sizeColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...leverageColumn, style: { flex: 0.8, textAlign: 'right', justifyContent: 'end' } },
+  { ...pnlColumn, style: { flex: 1.4, textAlign: 'right', justifyContent: 'end' } },
+  { ...actionColumn, style: { width: 24, pr: 1, textAlign: 'right', justifyContent: 'end', flex: '0 0 24px' } },
 ]
 export const fullHistoryColumns: ColumnData<PositionData>[] = [
   { ...openTimeColumn, style: { flex: 1.5 } },
   { ...closeTimeColumn, style: { flex: 1.5, pl: 2 } },
   { ...entryColumn, style: { flex: 1.5, pl: 2 } },
-  { ...sizeColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...leverageColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...collateralColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...avgDurationColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...orderCountColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...feeColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...roiColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...pnlColumnFull, style: { flex: 1.3, textAlign: 'right' } },
-  { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', flex: '0 0 40px' } },
+  { ...sizeColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...leverageColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...collateralColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...avgDurationColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...orderCountColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...feeColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...roiColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...pnlColumnFull, style: { flex: 1.3, textAlign: 'right', justifyContent: 'end' } },
+  { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', justifyContent: 'end', flex: '0 0 40px' } },
 ]
 
 export const dailyPositionColumns: ColumnData<PositionData>[] = [
   {
     ...positionTimeColumn,
     title: <Trans>TIME</Trans>,
-    style: { flex: 1, display: ['block', 'block', 'block', 'none'] },
+    style: { flex: 1, display: ['flex', 'flex', 'flex', 'none'] },
   },
   {
     ...openTimeColumn,
     title: <Trans>OPEN TIME</Trans>,
-    style: { flex: 1.5, display: ['none', 'none', 'none', 'block'] },
+    style: { flex: 1.5, display: ['none', 'none', 'none', 'flex'] },
     text: 'Open Time',
   },
   {
     ...closeTimeColumn,
     title: <Trans>CLOSE TIME</Trans>,
-    style: { flex: 1.5, pl: 2, display: ['none', 'none', 'none', 'block'], text: 'Close Time' },
+    style: { flex: 1.5, pl: 2, display: ['none', 'none', 'none', 'flex'], text: 'Close Time' },
   },
   // {
   //   ...pairColumn,
@@ -519,13 +519,25 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
   {
     ...orderCountColumn,
     title: <Trans>TOTAL ORDER</Trans>,
-    style: { flex: 1, textAlign: 'right', display: 'none', '@media all and (min-width: 1800px)': { display: 'block' } },
+    style: {
+      flex: 1,
+      textAlign: 'right',
+      display: 'none',
+      '@media all and (min-width: 1800px)': { display: 'flex' },
+      justifyContent: 'end',
+    },
     sortBy: undefined,
   },
   {
     ...feeColumn,
     title: <Trans>FEE ($)</Trans>,
-    style: { flex: 1, textAlign: 'right', display: 'none', '@media all and (min-width: 1800px)': { display: 'block' } },
+    style: {
+      flex: 1,
+      textAlign: 'right',
+      display: 'none',
+      '@media all and (min-width: 1800px)': { display: 'flex' },
+      justifyContent: 'end',
+    },
     sortBy: undefined,
     render: (item) => renderPositionFee(item, ''),
   },
@@ -535,7 +547,7 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
       flex: 0.8,
       textAlign: 'right',
       display: 'none',
-      '@media all and (min-width: 1800px)': { display: 'flex', width: '100%', justifyContent: 'end' },
+      '@media all and (min-width: 1800px)': { display: 'flex', justifyContent: 'end' },
     },
     title: <Trans>ROI</Trans>,
     filterComponent: (
@@ -590,12 +602,12 @@ export const drawerHistoryColumns: ColumnData<PositionData>[] = [
   { ...openTimeColumn, style: { flex: 1.5 } },
   { ...closeTimeColumn, style: { flex: 1.5, pl: 2 } },
   { ...entryColumn, style: { minWidth: 185, flex: 1.5, pl: 2 } },
-  { ...sizeColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...leverageColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...collateralColumn, style: { flex: 1.2, textAlign: 'right' } },
-  { ...avgDurationColumn, style: { flex: 1, textAlign: 'right' } },
-  { ...pnlColumnFull, style: { flex: 1.3, textAlign: 'right' } },
-  { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', flex: '0 0 40px' } },
+  { ...sizeColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...leverageColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...collateralColumn, style: { flex: 1.2, textAlign: 'right', justifyContent: 'end' } },
+  { ...avgDurationColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...pnlColumnFull, style: { flex: 1.3, textAlign: 'right', justifyContent: 'end' } },
+  { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', justifyContent: 'end', flex: '0 0 40px' } },
 ]
 
 export const drawerOpeningColumns: ColumnData<PositionData>[] = [

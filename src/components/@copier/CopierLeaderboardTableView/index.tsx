@@ -3,10 +3,10 @@ import { useResponsive } from 'ahooks'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 
+import SubscriptionIcon from 'components/@subscription/SubscriptionIcon'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { CopierRankingNumber } from 'components/@ui/LeaderboardRankingNumber'
 import NoDataFound from 'components/@ui/NoDataFound'
-import SubscriptionIcon from 'components/@ui/SubscriptionIcon'
 import { CopierLeaderboardData } from 'entities/copier'
 import useCopierLeaderboardContext, {
   CopierLeaderboardContextValues,

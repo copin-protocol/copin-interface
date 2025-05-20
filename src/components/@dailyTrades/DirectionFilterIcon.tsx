@@ -1,23 +1,27 @@
 import { Funnel } from '@phosphor-icons/react'
 
+import TableFilterMenuWrapper from 'components/@subscription/TableFilterMenuWrapper'
 import { useDailyOrdersContext } from 'pages/DailyTrades/Orders/useOrdersProvider'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import Select from 'theme/Select'
 import { Flex, IconBox } from 'theme/base'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 
 import { DirectionFilterEnum } from './configs'
 
-export function OrderDirectionFilterIcon() {
+export function OrderDirectionFilterIcon({ requiredPlan }: { requiredPlan?: SubscriptionPlanEnum }) {
   const { direction, changeDirection } = useDailyOrdersContext()
-  return <DirectionFilterIcon direction={direction} changeDirection={changeDirection} />
+  return <DirectionFilterIcon direction={direction} changeDirection={changeDirection} requiredPlan={requiredPlan} />
 }
 
 export function DirectionFilterIcon({
   direction,
   changeDirection,
+  requiredPlan,
 }: {
   direction: DirectionFilterEnum | undefined
   changeDirection: (direction: DirectionFilterEnum | undefined) => void
+  requiredPlan?: SubscriptionPlanEnum
 }) {
   return (
     <Dropdown
@@ -26,16 +30,18 @@ export function DirectionFilterIcon({
       // buttonSx={{ p: '0 4px', border: 'none' }}
       hasArrow={false}
       menu={
-        <Flex sx={{ flexDirection: 'column', bg: 'neutral7' }}>
-          {DIRECTION_OPTIONS.map((config) => {
-            const isActive = config.value == direction
-            return (
-              <DropdownItem key={`${config.value}`} isActive={isActive} onClick={() => changeDirection(config.value)}>
-                {config.label}
-              </DropdownItem>
-            )
-          })}
-        </Flex>
+        <TableFilterMenuWrapper requiredPlan={requiredPlan}>
+          <Flex sx={{ flexDirection: 'column', bg: 'neutral7' }}>
+            {DIRECTION_OPTIONS.map((config) => {
+              const isActive = config.value == direction
+              return (
+                <DropdownItem key={`${config.value}`} isActive={isActive} onClick={() => changeDirection(config.value)}>
+                  {config.label}
+                </DropdownItem>
+              )
+            })}
+          </Flex>
+        </TableFilterMenuWrapper>
       }
     >
       <IconBox

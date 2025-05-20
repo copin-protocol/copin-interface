@@ -18,6 +18,7 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import NotFound from 'components/@ui/NotFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
@@ -53,8 +54,10 @@ export default function TraderDetailsPage() {
   const { address: _address, protocol: _protocol } = useParams<{ address: string; protocol: ProtocolEnum }>()
   const address = isAddress(_address)
 
-  const { data: exchangeStats, isLoading } = useQuery([QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address], () =>
-    getTraderExchangeStatistic({ account: address })
+  const { data: exchangeStats, isLoading } = useQuery(
+    [QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address],
+    () => getTraderExchangeStatistic({ account: address }),
+    { keepPreviousData: true, retry: 0 }
   )
 
   const orderedStats = getOrderedExchangeStats(exchangeStats)
@@ -98,13 +101,14 @@ export function TraderDetailsComponent({
   protocol: ProtocolEnum
   exchangeStats: ResponseTraderExchangeStatistic
 }) {
+  const { timeFramesAllowed, isAllowedProtocol } = useTraderProfilePermission({ protocol })
   const { timeFilterOptions } = useGetTimeFilterOptions()
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
-    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol],
+    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol, isAllowedProtocol],
     () => getTraderStatisticApi({ protocol, account: address }),
     {
-      enabled: !!address,
+      enabled: !!address && isAllowedProtocol,
       retry: 0,
       select: (data) =>
         timeFilterOptions
@@ -119,6 +123,7 @@ export function TraderDetailsComponent({
     optionName: URL_PARAM_KEYS.EXPLORER_TIME_FILTER,
     options: timeFilterOptions,
     defaultOption: TimeFilterByEnum.ALL_TIME.toString(),
+    optionsAllowed: timeFramesAllowed,
   })
 
   const setTimeOption = (option: TimeFilterProps) => {

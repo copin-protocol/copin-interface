@@ -36,6 +36,7 @@ export async function getHlOrderFilled({ user }: { user: string }) {
     .post(`https://api.hyperliquid.xyz/info`, {
       type: 'userFills',
       user,
+      aggregateByTime: true,
     })
     .then((res: any) => res.data as HlOrderFillRawData[])
 }

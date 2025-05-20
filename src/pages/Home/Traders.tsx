@@ -2,13 +2,13 @@ import { useQuery as useApolloQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { CaretRight } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { TraderGraphQLResponse } from 'graphql/entities/traders.graph'
-import { SEARCH_TRADERS_QUERY } from 'graphql/traders.graph'
-import { MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { SEARCH_HOME_TRADERS_FUNCTION_NAME, SEARCH_HOME_TRADERS_STATISTIC_QUERY } from 'graphql/query'
+import { MouseEvent, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { ApiListResponse } from 'apis/api'
 import { normalizePositionPayload } from 'apis/positionApis'
 import { getPnlStatisticsApi } from 'apis/traderApis'
 import tokenNotFound from 'assets/images/token-not-found.png'
@@ -16,6 +16,7 @@ import BacktestSimpleModal from 'components/@backtest/BacktestSimpleModal'
 import LineChartTraderPnl from 'components/@charts/LineChartPnL'
 import { parsePnLStatsData } from 'components/@charts/LineChartPnL/helpers'
 import CopyTraderButton from 'components/@copyTrade/CopyTraderButton'
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import ToastBody from 'components/@ui/ToastBody'
@@ -23,6 +24,8 @@ import TraderAddress from 'components/@ui/TraderAddress'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { GlobalProtocolFilter, GlobalProtocolFilterProps } from 'components/@widgets/ProtocolFilter'
 import { Account, PnlStatisticsResponse, ResponseTraderData, StatisticData, TraderData } from 'entities/trader'
+import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
@@ -33,26 +36,26 @@ import Loading from 'theme/Loading'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { DATE_FORMAT } from 'utils/config/constants'
-import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { ProtocolEnum, SubscriptionFeatureEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { TIME_TRANSLATION } from 'utils/config/translations'
-import { formatDate } from 'utils/helpers/format'
+import { SUBSCRIPTION_PLAN_TRANSLATION, TIME_TRANSLATION } from 'utils/config/translations'
+import { formatDate, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
-import { transformGraphqlFilters } from 'utils/helpers/graphql'
+import { getRequiredPlan } from 'utils/helpers/permissionHelper'
 import { pageToOffset } from 'utils/helpers/transform'
 import { logEventBacktest, logEventHomeFilter } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 
 import SortDropdown from './SortDropdown'
 import TimeFilter from './TimeDropdown'
-import { BASE_RANGE_FILTER } from './configs'
 
 const PADDING_X = 12
-const graphqlBaseFilters = transformGraphqlFilters(BASE_RANGE_FILTER)
 
 export default function Traders() {
-  const { searchParams } = useSearchParams()
+  const { searchParams, setSearchParamsOnly } = useSearchParams()
   const { timeFilterOptions, defaultTimeOption } = useGetTimeFilterOptions()
+  const { isAuthenticated, loading } = useAuthContext()
+
   const filters: FiltersState = useMemo(() => {
     const sortBy = (searchParams[URL_PARAM_KEYS.HOME_SORT_BY] as unknown as keyof TraderData | undefined) ?? 'pnl'
     const time =
@@ -66,6 +69,40 @@ export default function Traders() {
       time: timeOption,
     }
   }, [defaultTimeOption, searchParams, timeFilterOptions])
+
+  const { userPermission, pagePermission } = useExplorerPermission()
+  let noDataMessage: ReactNode | undefined = undefined
+  {
+    const hasFilterTimeFromHigherPlan = loading ? false : !userPermission?.timeFramesAllowed?.includes(filters.time.id)
+    let requiredPlan: SubscriptionPlanEnum | undefined = undefined
+    if (hasFilterTimeFromHigherPlan) {
+      requiredPlan = getRequiredPlan({
+        conditionFn: (plan) => {
+          return !!pagePermission?.[plan]?.timeFramesAllowed?.includes(filters.time.id)
+        },
+      })
+    }
+
+    if (requiredPlan) {
+      const title = (
+        <Trans>This URL contains filters available from {SUBSCRIPTION_PLAN_TRANSLATION[requiredPlan]} plan</Trans>
+      )
+      const description = <Trans>Please upgrade to explore traders with advanced filters</Trans>
+      noDataMessage = (
+        <Box pt={4}>
+          <PlanUpgradePrompt
+            title={title}
+            description={description}
+            requiredPlan={requiredPlan}
+            useLockIcon
+            showTitleIcon
+            cancelText={<Trans>Reset Filters</Trans>}
+            onCancel={() => setSearchParamsOnly({})}
+          />
+        </Box>
+      )
+    }
+  }
 
   return (
     <Flex
@@ -103,9 +140,7 @@ export default function Traders() {
         </Flex>
       </Box>
 
-      <Box flex="1 0 0">
-        <ListTraders filters={filters} />
-      </Box>
+      <Box flex="1 0 0">{noDataMessage ? <Box pt={3}>{noDataMessage}</Box> : <ListTraders filters={filters} />}</Box>
     </Flex>
   )
 }
@@ -168,8 +203,9 @@ function Filters({ filters }: { filters: FiltersState }) {
 const LIMIT = 12
 function ListTraders({ filters }: { filters: FiltersState }) {
   const { md } = useResponsive()
-  const { profile, isAuthenticated } = useAuthContext()
+  const { profile, loading, isAuthenticated } = useAuthContext()
   const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
+  const { allowedSelectProtocols } = useProtocolPermission()
   const { searchParams, setSearchParams } = useSearchParams()
   const currentPageParam = Number(searchParams[URL_PARAM_KEYS.HOME_PAGE])
   const currentPage = !isNaN(currentPageParam) ? currentPageParam : 1
@@ -185,8 +221,8 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     const { sortBy } = normalizePositionPayload(filters)
 
     const query = [
-      ...graphqlBaseFilters,
-      { field: 'protocol', in: selectedProtocols },
+      // ...graphqlBaseFilters,
+      { field: 'protocol', in: selectedProtocols ?? allowedSelectProtocols },
       { field: 'type', match: filters.time.id },
     ]
     // if (!!filters.protocols?.length && filters.protocols.length !== RELEASED_PROTOCOLS.length) {
@@ -202,7 +238,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     }
 
     return { index, body }
-  }, [filters, selectedProtocols, currentPage])
+  }, [filters, selectedProtocols, currentPage, allowedSelectProtocols])
 
   const onClickBacktest = (trader: TraderData) => {
     setSelectedTrader({ account: trader.account, protocol: trader.protocol })
@@ -216,7 +252,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
       ? TimeFilterByEnum.S7_DAY
       : filters.time.id
 
-    const accounts: Account[] = traderData?.searchPositionStatistic?.data?.map((trader: TraderData) => ({
+    const accounts: Account[] = traderData?.[SEARCH_HOME_TRADERS_FUNCTION_NAME]?.data?.map((trader: TraderData) => ({
       account: trader.account,
       protocol: trader.protocol,
     }))
@@ -234,13 +270,16 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     data: traderData,
     loading: isLoading,
     previousData,
-  } = useApolloQuery<TraderGraphQLResponse<ResponseTraderData>>(SEARCH_TRADERS_QUERY, {
-    skip: selectedProtocols == null,
-    variables: queryVariables,
-    onError: (error) => {
-      toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
-    },
-  })
+  } = useApolloQuery<{ [SEARCH_HOME_TRADERS_FUNCTION_NAME]: ApiListResponse<ResponseTraderData> } | null>(
+    SEARCH_HOME_TRADERS_STATISTIC_QUERY,
+    {
+      skip: selectedProtocols == null || loading,
+      variables: queryVariables,
+      onError: (error) => {
+        toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
+      },
+    }
+  )
 
   const { data: pnlData } = useQuery(
     [QUERY_KEYS.GET_PNL_STATISTICS, traderData],
@@ -250,7 +289,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     }
   )
 
-  const traders = traderData?.searchPositionStatistic || previousData?.searchPositionStatistic
+  const traders = traderData?.[SEARCH_HOME_TRADERS_FUNCTION_NAME] || previousData?.[SEARCH_HOME_TRADERS_FUNCTION_NAME]
 
   // HANDLE EFFECTS
   useEffect(() => {
@@ -367,7 +406,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
       </Box>
       <Box display="none">
         <BacktestSimpleModal
-          key={selectedTrader?.account ?? '' + selectedTrader?.protocol ?? ''}
+          key={selectedTrader?.account ?? '' + (selectedTrader?.protocol ?? '')}
           isOpen={!!selectedTrader}
           onDismiss={() => {
             setSelectedTrader(null)
@@ -431,11 +470,11 @@ function TraderItem({
   timeOption: TimeFilterProps
   pnlData: PnlStatisticsResponse | undefined
 }) {
-  const { protocol, account, type, realisedPnl, realisedAvgRoi, totalWin, totalTrade } = traderData
+  const { protocol, account, type, realisedPnl, realisedAvgRoi, winRate } = traderData
   const traderPnlData = pnlData?.[account]
   const defaultDayCount = 7 // Default 7 days
   // NOTE: If time is 1 day, get 7 days count
-  const dayCount = [TimeFilterByEnum.S1_DAY, TimeFilterByEnum.S1_DAY].includes(timeOption.id)
+  const dayCount = [TimeFilterByEnum.LAST_24H, TimeFilterByEnum.S1_DAY].includes(timeOption.id)
     ? TIME_FILTER_OPTIONS.find((time) => time.id === TimeFilterByEnum.S7_DAY)?.value || defaultDayCount
     : timeOption.value
 
@@ -526,11 +565,9 @@ function TraderItem({
         </Box>
         <Box>
           <Type.Caption display="block">
-            <Trans>Win/Trades</Trans>
+            <Trans>Win Rate</Trans>
           </Type.Caption>
-          <Type.Caption sx={{ fontWeight: 600 }}>
-            {totalWin}/{totalTrade}
-          </Type.Caption>
+          <Type.Caption sx={{ fontWeight: 600 }}>{formatNumber(winRate, 0, 0)}%</Type.Caption>
         </Box>
       </Box>
       <Flex mt={12} sx={{ alignItems: 'center', gap: 2 }}>
@@ -559,7 +596,7 @@ function BacktestButton({ onClick }: { onClick: () => void }) {
 
   return (
     <Button variant="ghostPrimary" onClick={handleOpenBackTestModal} sx={{ p: 3, fontWeight: 400 }}>
-      <Trans>Backtest</Trans>
+      <Trans>Quick Backtest</Trans>
     </Button>
   )
 }

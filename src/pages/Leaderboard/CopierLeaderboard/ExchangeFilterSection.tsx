@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
 
-import { dcpExchangeOptions, exchangeOptions } from 'components/@copyTrade/configs'
-import { getExchangeOption } from 'components/@copyTrade/helpers'
+import { dcpExchangeOptions, exchangeOptions, getExchangeOption } from 'components/@copyTrade/configs'
 import Divider from 'components/@ui/Divider'
 import Dropdown from 'theme/Dropdown'
 import { Flex } from 'theme/base'

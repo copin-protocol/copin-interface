@@ -57,14 +57,6 @@ const SearchAllResults = ({
         sx={{
           flex: '1 0 0',
           overflowX: 'auto',
-          ...(sm
-            ? {}
-            : {
-                '& *': {
-                  fontSize: '13px !important',
-                  lineHeight: '18px !important',
-                },
-              }),
           border: 'small',
           borderColor: 'neutral4',
           borderTop: 'none',
@@ -150,7 +142,9 @@ function ResultItemMobile({ data, keyword }: { data: TraderData; keyword: string
           <Type.Caption color="neutral3" display="block">
             <Trans>Last Trade</Trans>
           </Type.Caption>
-          <RelativeTimeText date={data.lastTradeAt} />
+          <Type.Caption>
+            <RelativeTimeText date={data.lastTradeAt} />
+          </Type.Caption>
         </Box>
         <Box>
           <Type.Caption color="neutral3" display="block">

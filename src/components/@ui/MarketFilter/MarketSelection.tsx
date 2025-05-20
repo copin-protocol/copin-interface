@@ -95,12 +95,9 @@ const MarketSelection = ({
       )
     })
     if (!isSavedFilter && _statePairs.length && _statePairs.length !== allPairs.length) {
-      // !!(Object.keys(state.selectedPairs).length || !!(isExcluded && Object.keys(state.excludedPairs).length))
-      setSavedFilter((prev) => {
-        const newSavedData = [...prev, { ...state, id: uuid() }]
-        localStorage.setItem('open_interest_pair_filter', JSON.stringify(newSavedData))
-        return newSavedData
-      })
+      const newSavedData = [...savedFilter, { ...state, id: uuid() }]
+      localStorage.setItem('open_interest_pair_filter', JSON.stringify(newSavedData))
+      setSavedFilter(newSavedData)
     }
     handleToggleDropdown?.()
   }

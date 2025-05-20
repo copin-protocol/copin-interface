@@ -5,6 +5,9 @@ import {
   VerifyLoginResponse,
   VerifyRegisterResponse,
 } from 'entities/auth.d'
+import { UserData } from 'entities/user'
+
+import { parseMyProfileResponse } from './helpers'
 
 const SERVICE = 'auth'
 
@@ -49,7 +52,9 @@ export async function verifyForgotPasswordApi({
 }
 
 export async function requestLoginApi({ username, password }: { username: string; password: string }) {
-  return requester.post(`${SERVICE}/login`, { username, password }).then((res: any) => res.data as VerifyLoginResponse)
+  return requester
+    .post(`${SERVICE}/login`, { username, password })
+    .then((res: any) => parseMyProfileResponse(res.data as UserData) as VerifyLoginResponse)
 }
 
 export async function loginWeb3Api(address: string) {
@@ -60,6 +65,12 @@ export async function verifyLoginWeb3Api(address: string, sign: string, time: st
   return requester
     .post(`${SERVICE}/web3/verify-login`, { address, sign, time })
     .then((res: any) => res.data as VerifyLoginResponse)
+}
+
+export async function loginPrivyApi(jwt: string) {
+  return requester
+    .post(`${SERVICE}/privy/login`, { jwt })
+    .then((res: any) => parseMyProfileResponse(res.data as UserData) as VerifyLoginResponse)
 }
 
 export async function logoutApi() {

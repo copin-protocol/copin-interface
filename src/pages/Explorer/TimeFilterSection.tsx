@@ -1,13 +1,17 @@
+import { Lock } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 
 import TimeFilter from 'components/@ui/TimeFilter'
 import { ALL_TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
+import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
 import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 // import { useIsPremium } from 'hooks/features/useSubscriptionRestrict'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { DATE_FORMAT } from 'utils/config/constants'
+import { SubscriptionFeatureEnum } from 'utils/config/enums'
 
 // import TimeRangePriceChart from './TimeRangePriceChart'
 import { TradersContextData } from './useTradersContext'
@@ -15,9 +19,14 @@ import { TradersContextData } from './useTradersContext'
 export interface TimeFilterSectionProps {
   triggerResize?: any
   contextValues: TradersContextData
+  learnMoreSection?: SubscriptionFeatureEnum
 }
 
-export default function TimeFilterSection({ triggerResize, contextValues }: TimeFilterSectionProps) {
+export default function TimeFilterSection({
+  triggerResize,
+  contextValues,
+  learnMoreSection = SubscriptionFeatureEnum.TRADER_EXPLORER,
+}: TimeFilterSectionProps) {
   // TODO date range
   // const { isRangeSelection, from, to, changeTimeRange, timeOption, changeTimeOption } = contextValues
   // const isPremiumUser = useIsPremium()
@@ -47,7 +56,12 @@ export default function TimeFilterSection({ triggerResize, contextValues }: Time
           // mt={isPremiumUser ? 0 : ['6px', '6px', '6px', 0]}
           mt={['6px', '6px', '6px', 0]}
         >
-          <TimeFilter currentFilter={timeOption} handleFilterChange={changeTimeOption} options={timeFilterOptions} />
+          <TimeFilter
+            currentFilter={timeOption}
+            handleFilterChange={changeTimeOption}
+            options={timeFilterOptions}
+            learnMoreSection={learnMoreSection}
+          />
           {/* TODO date range  <TimeFilter currentFilter={isRangeSelection ? null : timeOption} handleFilterChange={changeTimeOption} />
            {isPremiumUser && <Box height={16} flex="0 0 1px" bg="neutral4"></Box>}
            {!!from && isPremiumUser && (
@@ -81,6 +95,7 @@ export function TimeFilterDropdown({ contextValues }: TimeFilterSectionProps) {
   // const currentOption = isRangeSelection ? null : timeOption
 
   const [visible, setVisible] = useState(false)
+  const { userPermission } = useExplorerPermission()
   return (
     <Dropdown
       buttonVariant="ghost"
@@ -92,25 +107,33 @@ export function TimeFilterDropdown({ contextValues }: TimeFilterSectionProps) {
       menuSx={{ width: 100 }}
       menu={
         <>
-          {ALL_TIME_FILTER_OPTIONS.map((option, index: number) => (
-            <DropdownItem
-              type="button"
-              variant="ghost"
-              key={index}
-              isActive={option.value === currentOption.value}
-              onClick={() => {
-                changeTimeOption(option)
-                setVisible(false)
-              }}
-              width="fit-content"
-              sx={{
-                color: currentOption && currentOption.id === option.id ? 'neutral1' : 'neutral3',
-                fontWeight: 'normal',
-              }}
-            >
-              {option.text}
-            </DropdownItem>
-          ))}
+          {ALL_TIME_FILTER_OPTIONS.map((option, index: number) => {
+            const hasPermission = userPermission?.timeFramesAllowed?.includes(option.id as string)
+            return (
+              <DropdownItem
+                type="button"
+                variant="ghost"
+                key={index}
+                isActive={option.value === currentOption.value}
+                onClick={
+                  hasPermission
+                    ? () => {
+                        changeTimeOption(option)
+                        setVisible(false)
+                      }
+                    : undefined
+                }
+                width="fit-content"
+                sx={{
+                  color: hasPermission ? 'neutral1' : `${themeColors.neutral3} !important`, // need important to override
+                  fontWeight: 'normal',
+                  cursor: hasPermission ? 'pointer' : 'not-allowed',
+                }}
+              >
+                {option.text} {!hasPermission && <Lock size={12} />}
+              </DropdownItem>
+            )
+          })}
 
           {/* TODO date range {!!from && isPremiumUser && (
             <DropdownItem>

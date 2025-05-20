@@ -87,7 +87,7 @@ const CopitLitePageMobile = () => {
 const CopinLitePage = () => {
   const [tableExpanded, setTableExpanded] = useState(false)
   const { lg } = useResponsive()
-  const [showOnboarding, setShowOnboarding] = useState(true)
+  const [showOnboarding, setShowOnboarding] = useState<boolean | undefined>()
   const [userInteracted, setUserInteracted] = useState(false)
   const { isAuthenticated, loading, setIsNewUser } = useAuthContext()
   useEffect(() => {
@@ -108,6 +108,8 @@ const CopinLitePage = () => {
   const onDismissOnboarding = () => {
     setShowOnboarding(false)
   }
+
+  if (showOnboarding == null) return <></>
 
   return (
     <SafeComponentWrapper>

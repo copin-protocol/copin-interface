@@ -46,7 +46,7 @@ export default function AnalyticsLayoutDesktop({
         gridTemplate: `
       "${GridAreas.MAIN} ${GridAreas.COL_RIGHT}" 100% / minmax(${MAIN.minWidth}px, ${MAIN.ratioWidth}fr) minmax(${
           COL_RIGHT.minWidth
-        }px, ${COL_RIGHT.maxWidth ? COL_RIGHT.maxWidth + 'px' : COL_RIGHT.ratioWidth + 'fr'})
+        }px, ${COL_RIGHT.ratioWidth + 'fr'})
     `,
       }}
     >
@@ -204,7 +204,7 @@ function initState(state: LayoutState) {
   try {
     const storageLayout = JSON.parse(localStorage.getItem(STORAGE_KEYS.HOME_DESKTOP_LAYOUT) ?? '')
     if (typeof storageLayout !== 'object') return newState
-    if ((storageLayout?.version ?? 0) < 1) return newState
+    if ((storageLayout?.version ?? 0) < 2) return newState
     if (Object.keys(storageLayout?.state ?? {}).length === Object.keys(initialState).length)
       newState = storageLayout.state as LayoutState
   } catch {}
@@ -212,7 +212,7 @@ function initState(state: LayoutState) {
 }
 
 function saveLayout(state: LayoutState) {
-  localStorage.setItem(STORAGE_KEYS.HOME_DESKTOP_LAYOUT, JSON.stringify({ version: 1, state }))
+  localStorage.setItem(STORAGE_KEYS.HOME_DESKTOP_LAYOUT, JSON.stringify({ version: 2, state }))
 }
 
 function reducer(state: LayoutState, buttonName: ButtonName): LayoutState {

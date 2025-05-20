@@ -9,34 +9,45 @@ import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { linkWebhookToBotAlertApi } from 'apis/alertApis'
+import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
+import { EnterpriseUpgradePrompt } from 'components/@subscription/PlanUpgradePrompt'
+import BadgeWithLimit from 'components/@ui/BadgeWithLimit'
 import ToastBody from 'components/@ui/ToastBody'
 import { BotAlertData } from 'entities/alert'
+import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
+import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import WebhookIcon from 'theme/Icons/WebhookIcon'
 import InputField from 'theme/InputField'
 import Modal from 'theme/Modal'
-import Tooltip from 'theme/Tooltip'
-import { Flex, IconBox, Type } from 'theme/base'
-import { AlertTypeEnum } from 'utils/config/enums'
+import { Box, Flex, IconBox, Type } from 'theme/base'
+import { AlertTypeEnum, SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
-
 const LinkWebhookAlertAction = memo(function LinkWebhookAlertModalComponent({
   botAlert,
   isLimited,
-  isPremiumUser,
+  isAvailableFeature,
+  requiredPlan,
+  openLimitModal,
 }: {
   botAlert?: BotAlertData
   isLimited?: boolean
-  isPremiumUser?: boolean | null
+  isAvailableFeature?: boolean | null
+  requiredPlan: SubscriptionPlanEnum
+  openLimitModal?: () => void
 }) {
+  const { usage } = useBotAlertContext()
+  const { webhookQuota } = useAlertPermission()
   const { lg } = useResponsive()
   const [isOpenModal, setIsOpenModal] = useState(false)
+  const webhookUsage = usage?.webhookAlerts ?? 0
+  const isLimitedWebhook = webhookUsage >= webhookQuota
 
   const onSuccess = () => {
     setIsOpenModal(false)
@@ -44,46 +55,64 @@ const LinkWebhookAlertAction = memo(function LinkWebhookAlertModalComponent({
 
   return (
     <>
-      <ButtonWithIcon
-        icon={<Plus />}
-        variant="primary"
-        sx={{ width: 178 }}
-        onClick={() => {
-          setIsOpenModal(true)
-        }}
-        disabled={!isPremiumUser || isLimited}
-        data-tooltip-id={!isPremiumUser ? 'tt-webhook' : isLimited ? 'tt-max-channels' : undefined}
-        data-tooltip-delay-show={360}
-      >
-        Webhook
-      </ButtonWithIcon>
-      <Tooltip id={'tt-webhook'} clickable>
-        <Type.Caption color="neutral2" sx={{ maxWidth: 350 }}>
-          You need to{' '}
-          <Link to={ROUTES.SUBSCRIPTION.path}>
-            <Button type="button" variant="ghostPrimary" p={0} sx={{ textTransform: 'lowercase' }}>
-              upgrade
-            </Button>
-          </Link>{' '}
-          to use this feature.
-        </Type.Caption>
-      </Tooltip>
-      <Modal
-        mode={lg ? 'center' : 'bottom'}
-        isOpen={isOpenModal}
-        title={
-          <Flex alignItems="center" sx={{ gap: 1 }}>
-            <IconBox icon={<WebhookIcon size={24} variant="Bold" />} />
-            <Trans>Connect Webhook</Trans>
-          </Flex>
-        }
-        onDismiss={() => setIsOpenModal(false)}
-        hasClose
-        maxWidth="450px"
-        zIndex={Z_INDEX.TOASTIFY}
-      >
-        <LinkWebhookComponent alertType={botAlert?.alertType} customAlertId={botAlert?.id} onSuccess={onSuccess} />
-      </Modal>
+      {isAvailableFeature ? (
+        <ButtonWithIcon
+          icon={<Plus />}
+          variant="primary"
+          sx={{ width: 225 }}
+          onClick={() => {
+            if (isLimited) {
+              openLimitModal?.()
+            } else {
+              setIsOpenModal(true)
+            }
+          }}
+          disabled={!isAvailableFeature}
+        >
+          Webhook
+        </ButtonWithIcon>
+      ) : (
+        <Link to={`${ROUTES.SUBSCRIPTION.path}?plan=${requiredPlan}`}>
+          <ButtonWithIcon
+            icon={<PlanUpgradeIndicator requiredPlan={requiredPlan} useLockIcon={false} />}
+            variant="outline"
+            sx={{ width: 225 }}
+          >
+            <Trans>Upgrade to add Webhook</Trans>
+          </ButtonWithIcon>
+        </Link>
+      )}
+      {isOpenModal && (
+        <Modal
+          mode={lg ? 'center' : 'bottom'}
+          isOpen={isOpenModal}
+          title={
+            <Flex alignItems="center" sx={{ gap: 1 }}>
+              <IconBox icon={<WebhookIcon size={24} variant="Bold" />} />
+              <Trans>Connect Webhook</Trans>
+              <BadgeWithLimit total={webhookUsage} limit={webhookQuota} />
+            </Flex>
+          }
+          onDismiss={() => setIsOpenModal(false)}
+          hasClose
+          maxWidth="450px"
+          zIndex={Z_INDEX.TOASTIFY}
+        >
+          {isLimitedWebhook ? (
+            <Box p={24} pt={1}>
+              <EnterpriseUpgradePrompt
+                title={<Trans>Reach maximum quota ({webhookQuota}) for this plan</Trans>}
+                description={<Trans>Customize a pricing plan that scales to your business&apos; needs</Trans>}
+                showTitleIcon
+                showLearnMoreButton
+                learnMoreSection={SubscriptionFeatureEnum.TRADER_ALERT}
+              />
+            </Box>
+          ) : (
+            <LinkWebhookComponent alertType={botAlert?.alertType} customAlertId={botAlert?.id} onSuccess={onSuccess} />
+          )}
+        </Modal>
+      )}
     </>
   )
 })
@@ -116,7 +145,11 @@ function LinkWebhookComponent({
           message={<Trans>This webhook has been subscribed successfully</Trans>}
         />
       )
-      refetchQueries([QUERY_KEYS.GET_BOT_ALERT, QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID])
+      refetchQueries([
+        QUERY_KEYS.GET_BOT_ALERT,
+        QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID,
+        QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE,
+      ])
       onSuccess?.()
     },
     onError: (error: any) => {
@@ -151,7 +184,7 @@ function LinkWebhookComponent({
                 {...register('webhookUrl', {
                   required: { value: true, message: 'This field is required' },
                   onChange: (e) => {
-                    e.target.value = e.target.value.trim().replace(/\s/g, '').toLowerCase()
+                    e.target.value = e.target.value.trim().replace(/\s/g, '')
                   },
                 })}
               />

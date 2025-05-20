@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 import { getTraderCopyCount } from 'apis/copyTradeApis'
 import { generateTraderCountWarningStyle } from 'components/@copyTrade/TraderCopyCountWarningIcon'
 import { CopyTradeData } from 'entities/copyTrade'
-import { useIsPremium } from 'hooks/features/subscription/useSubscriptionRestrict'
+import { useIsPro } from 'hooks/features/subscription/useSubscriptionRestrict'
 import { Box } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -53,11 +53,11 @@ export function TraderCopyCountWarning({
     }
   )
 
-  const isPremium = useIsPremium()
+  const isPro = useIsPro()
 
-  if (!traderCopyCount || isPremium == null) return null
+  if (!traderCopyCount || isPro == null) return null
   const styles = Object.entries(traderCopyCount).reduce((result, [protocol, addresses]) => {
-    return { ...result, ...generateTraderCountWarningStyle(addresses, protocol as ProtocolEnum, isPremium) }
+    return { ...result, ...generateTraderCountWarningStyle(addresses, protocol as ProtocolEnum, isPro) }
   }, {})
   return (
     <Box

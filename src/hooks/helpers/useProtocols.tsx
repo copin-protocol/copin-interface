@@ -1,8 +1,8 @@
 import { memo, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import { parsedQueryString } from 'hooks/router/useParsedQueryString'
-import { DEFAULT_PROTOCOL, RELEASED_PROTOCOLS } from 'utils/config/constants'
 
 import useGlobalStore from '../store/useGlobalStore'
 
@@ -18,21 +18,22 @@ const ProtocolInitializer = memo(function ProtocolInitializerComponent() {
 export default ProtocolInitializer
 
 export function useParsedProtocol() {
+  const { allowedSelectProtocols } = useProtocolPermission()
   const { search, pathname } = useLocation()
   const searchParams = parsedQueryString(search)
 
   // Old protocol route: /{protocol}/...
-  const parsedOldProtocolParam = RELEASED_PROTOCOLS.find(
+  const parsedOldProtocolParam = allowedSelectProtocols.find(
     (protocol) => pathname.split('/')?.[1]?.toUpperCase() === protocol
   )
   // New protocol route: .../{protocol}
-  const parsedProtocolParam = RELEASED_PROTOCOLS.find(
+  const parsedProtocolParam = allowedSelectProtocols.find(
     (protocol) => pathname.split('/')?.at(-1)?.split('-')?.[0]?.toUpperCase() === protocol
   )
   // from search params, use at home page
-  const parsedProtocolSearch = RELEASED_PROTOCOLS.find(
+  const parsedProtocolSearch = allowedSelectProtocols.find(
     (protocol) => (searchParams.protocol as string)?.toUpperCase() === protocol
   )
 
-  return parsedOldProtocolParam ?? parsedProtocolParam ?? parsedProtocolSearch ?? DEFAULT_PROTOCOL
+  return parsedOldProtocolParam ?? parsedProtocolParam ?? parsedProtocolSearch ?? allowedSelectProtocols[0]
 }

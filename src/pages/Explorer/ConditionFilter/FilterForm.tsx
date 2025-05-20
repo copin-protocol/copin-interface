@@ -16,22 +16,28 @@ type FormType = ConditionFilterFormProps<TraderData>['type']
 
 export type FilterFormProps = {
   initialFormValues: ConditionFilterFormValues
+  invalidFormValues?: ConditionFilterFormValues
   fieldOptions: FieldOption
   onApply: (values: ConditionFilterFormValues) => void
   onReset: (formValueFactory?: (defaultResetFields: (keyof TraderData)[]) => ConditionFilterFormValues) => void
   onValuesChange?: OnValuesChange
   enabledApply: boolean
   formType?: FormType
+  maxFilterFields?: number
+  showUpgradeWarning?: boolean
 }
 
 export default function FilterForm({
   initialFormValues,
   fieldOptions,
+  maxFilterFields,
   onApply,
   onReset,
   onValuesChange,
   enabledApply,
   formType,
+  showUpgradeWarning,
+  invalidFormValues,
 }: FilterFormProps) {
   const [formValues, setFormValues] = useState(initialFormValues)
 
@@ -56,10 +62,14 @@ export default function FilterForm({
       <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
         <ConditionFilterForm
           type={formType}
-          formValues={formValues}
+          formValues={formValues.slice(0, maxFilterFields)}
+          invalidFormValues={invalidFormValues}
           setFormValues={setFormValues}
           fieldOptions={fieldOptions}
           onValuesChange={onValuesChange}
+          showUpgradeWarning={showUpgradeWarning}
+          maxFilterFields={maxFilterFields}
+          wrapperSx={{ height: 'auto' }}
         />
       </Box>
 

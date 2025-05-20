@@ -8,10 +8,10 @@ import { ApiListResponse } from 'apis/api'
 import { getClaimHistoryListApi, getRebateHistoryListApi, getReferralListApi } from 'apis/referralManagement'
 import tokenNotFound from 'assets/images/token-not-found.png'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
+import SubscriptionIcon from 'components/@subscription/SubscriptionIcon'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import NoDataFound from 'components/@ui/NoDataFound'
-import SubscriptionIcon from 'components/@ui/SubscriptionIcon'
 import { ReferralClaimHistoryData, ReferralListData, ReferralRebateHistoryData } from 'entities/referralManagement'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfileStore from 'hooks/store/useMyProfile'
@@ -268,7 +268,7 @@ export default function ReferralHistory() {
                 sx={{ color: 'primary1', '&:hover': { color: 'primary2' } }}
                 onClick={handleClickLogin}
               >
-                Connect Wallet
+                Login
               </Box>{' '}
               and Invite friends. Your{' '}
               <Box as="span" color="neutral1">

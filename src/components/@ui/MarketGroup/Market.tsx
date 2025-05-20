@@ -27,7 +27,7 @@ export default function Market({
   const tooltipId = useMemo(() => uuid(), [])
   if (!symbol) return <></>
   return (
-    <Flex alignItems="center" sx={{ gap: 1 }}>
+    <Flex alignItems="center" sx={{ gap: 1 }} data-key="pair">
       <Flex
         width={size}
         height={size}

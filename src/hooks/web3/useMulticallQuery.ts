@@ -20,14 +20,11 @@ export interface MulticallOptions extends CallOverrides {
 }
 
 export const useMulticall = async <T = any>(chainId?: number) => {
-  const { walletAccount, walletProvider, publicProvider } = useWeb3({ chainId })
+  const { walletProvider, publicProvider } = useWeb3({ chainId })
   const { chain } = useChain()
   return useCallback(
     async (abi: any[], calls: Call[]): Promise<T> => {
-      const multi = getMulticallContract(
-        Number(chain.id),
-        walletProvider ? walletProvider.getSigner(walletAccount?.address) : publicProvider
-      )
+      const multi = getMulticallContract(Number(chain.id), walletProvider ? walletProvider.getSigner() : publicProvider)
       const itf = new Interface(abi)
 
       const calldata = calls.map((call) => ({
@@ -40,7 +37,7 @@ export const useMulticall = async <T = any>(chainId?: number) => {
 
       return res as any
     },
-    [chain, publicProvider, walletAccount, walletProvider]
+    [chain, publicProvider, walletProvider]
   )
 }
 
@@ -56,10 +53,7 @@ export const useMulticallv2 = async <T = any>(chainId?: number) => {
   return useCallback(
     async (abi: any[], calls: Call[], options?: MulticallOptions): Promise<T> => {
       const { requireSuccess = true, ...overrides } = options || {}
-      const multi = getMulticallContract(
-        Number(chain.id),
-        walletProvider ? walletProvider.getSigner(walletAccount?.address) : publicProvider
-      )
+      const multi = getMulticallContract(Number(chain.id), walletProvider ? walletProvider.getSigner() : publicProvider)
       const itf = new Interface(abi)
 
       const calldata = calls.map((call) => ({
@@ -85,7 +79,7 @@ export const useCustomMulticall = <T = any>({
   provider,
 }: {
   chainId: number
-  account?: string
+  account?: string | null
   provider: JsonRpcProvider
 }) => {
   return useCallback(
@@ -114,7 +108,7 @@ export const useCustomMulticallQuery = <TQueryFnData = unknown, TError = unknown
   calls: { address: string; name: string; params: any[] }[],
   chainId: number,
   provider: JsonRpcProvider,
-  account?: string,
+  account?: string | null,
   options?: UseQueryOptions<TQueryFnData, TError, TData, any[]>
 ) => {
   const multicall = useCustomMulticall({ chainId, account, provider })

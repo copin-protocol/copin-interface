@@ -8,7 +8,7 @@ import { linearGradient1 } from 'theme/colors'
 
 import ModalContactAI from './ModalContactAI'
 
-export default function AnalyzeAction() {
+export default function AnalyzeAction({ forceDisabled }: { forceDisabled?: boolean }) {
   const [openModal, setOpenModal] = useState(false)
 
   return (
@@ -25,12 +25,13 @@ export default function AnalyzeAction() {
         }}
         icon={<Robot size={20} />}
         onClick={() => setOpenModal(true)}
+        disabled={forceDisabled}
       >
         <GradientText bg={linearGradient1}>
           <Trans>Analyze With AI</Trans>
         </GradientText>
       </ButtonWithIcon>
-      <ModalContactAI isOpen={openModal} onDismiss={() => setOpenModal(false)} />
+      {openModal && <ModalContactAI isOpen={openModal} onDismiss={() => setOpenModal(false)} />}
     </>
   )
 }

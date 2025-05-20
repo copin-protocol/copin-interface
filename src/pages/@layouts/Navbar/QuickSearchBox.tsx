@@ -3,16 +3,14 @@ import { CaretDown, MagnifyingGlass } from '@phosphor-icons/react'
 import { ChangeEvent, MouseEventHandler, RefObject, memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
-import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolGroup from 'components/@ui/ProtocolGroup'
 import ProtocolSelection from 'components/@widgets/ProtocolFilter/ProtocolSelection'
 import SearchPositionResultItem from 'components/@widgets/SearchPositionResultItem'
 import SearchTraderResultItems from 'components/@widgets/SearchTraderResultItem'
 import { PositionData, TraderData } from 'entities/trader'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useSearchAllData from 'hooks/features/trader/useSearchAllData'
-import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
-import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import { useSearchProtocolFilter } from 'hooks/store/useSearchProtocolFilter'
 import { Button } from 'theme/Buttons'
@@ -136,8 +134,7 @@ function QuickSearchContainer({
   const [openSelectProtocols, setOpenSelectProtocols] = useState(false)
   const handleToggleSelectProtocols = () => setOpenSelectProtocols((prev) => !prev)
 
-  const protocolOptions = useGetProtocolOptions()
-  const allowList = useGetCopyTradeProtocols()
+  const { releasedProtocols, copyableProtocols } = useProtocolPermission()
 
   const {
     protocolSortBy,
@@ -146,7 +143,7 @@ function QuickSearchContainer({
     checkIsSelected: checkIsProtocolChecked,
     handleToggle: handleToggleProtocol,
     setSelectedProtocols,
-  } = useSearchProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
+  } = useSearchProtocolFilter({ defaultSelects: releasedProtocols })
   const {
     inputSearchRef,
     searchText,
@@ -218,7 +215,11 @@ function QuickSearchContainer({
       onDismiss={onDismiss}
       offsetTop={isMobile ? '48px' : '75px'}
       offsetBottom={isMobile ? '48px' : '75px'}
-      zIndex={Z_INDEX.TOASTIFY} // Above all
+      zIndex={Z_INDEX.TOASTIFY}
+      style={{
+        overflow: 'unset',
+      }}
+      footer={!isMobile ? ((<NavigationHelp />) as any) : undefined}
     >
       <Box
         sx={{
@@ -243,22 +244,24 @@ function QuickSearchContainer({
             </Button>
           )}
         </Flex>
-        <Box
-          display={openSelectProtocols ? 'block' : 'none'}
-          sx={{ flex: 1, overflow: 'hidden auto', position: 'relative', zIndex: 1 }}
-        >
+        <Box display={openSelectProtocols ? 'block' : 'none'} sx={{ flex: 1, position: 'relative', zIndex: 1 }}>
           <ProtocolSelection
+            restrictHeight="50svh"
             selectedProtocols={selectedProtocols}
             setSelectedProtocols={setSelectedProtocols}
             checkIsProtocolChecked={checkIsProtocolChecked}
             handleToggleProtocol={handleToggleProtocol}
-            allowList={allowList}
+            allowList={copyableProtocols}
+            list={releasedProtocols}
             hasSearch={false}
             handleToggleDropdown={handleToggleSelectProtocols}
+            shouldCheckPermission={false}
           />
         </Box>
-
-        <Box overflow="hidden auto" display={visibleSearchResult && !openSelectProtocols ? 'block' : 'none'}>
+        <Box
+          display={visibleSearchResult && !openSelectProtocols ? 'block' : 'none'}
+          sx={{ height: '60svh', overflowY: 'auto' }}
+        >
           <Type.Caption mb={3} px={3} color="neutral3">
             {isTxHash ? 'Position' : 'Trader'} search results{' '}
             {showViewAllResultText ? (
@@ -310,13 +313,6 @@ function QuickSearchContainer({
             )}
           </Box>
         </Box>
-
-        {!isMobile && (
-          <Box sx={{ position: 'sticky', bottom: 0, left: 0, bg: 'neutral6', zIndex: 1 }}>
-            <Divider />
-            <NavigationHelp />
-          </Box>
-        )}
       </Box>
     </RcDialog>
   )
@@ -521,7 +517,7 @@ function SelectProtocolsButton({
 
 function NavigationHelp() {
   return (
-    <Flex p={3} sx={{ gap: 3, flexShrink: 0, flexWrap: 'wrap' }}>
+    <Flex p={3} sx={{ gap: 3, flexShrink: 0, flexWrap: 'wrap', bg: 'neutral6' }}>
       <Flex sx={{ gap: 2, alignItems: 'center' }} color="neutral2">
         <TagContainer>
           <CommandIcon />

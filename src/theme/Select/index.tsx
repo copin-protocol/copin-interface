@@ -21,6 +21,7 @@ export type SelectProps = {
   width?: number | string
   height?: number
   maxHeightSelectContainer?: string
+  customClassName?: string
 } & VariantProps &
   SxProps
 
@@ -32,6 +33,11 @@ const StyledSelect = styled(ReactSelect)<SelectProps>(
       },
       border: 'none',
       width: width ?? '100%',
+      '&.no-disabled-style .select__option--is-disabled': {
+        cursor: 'unset!important',
+        filter: 'none!important',
+        opacity: '1!important',
+      },
 
       '& .select__control': {
         paddingLeft: '4px',
@@ -206,6 +212,7 @@ const SelectStyles = {
 const Select = ({
   components,
   maxHeightSelectContainer,
+  customClassName,
   ...props
 }: Omit<Props, 'theme'> & SelectProps & { maxHeightSelectContainer?: string }) => {
   return (
@@ -213,7 +220,7 @@ const Select = ({
       isSearchable
       maxMenuHeight={250}
       noOptionsMessage={() => t`No Data Found`}
-      className="select-container"
+      className={`select-container${customClassName ? ` ${customClassName}` : ''}`}
       classNamePrefix="select"
       styles={SelectStyles}
       components={{ DropdownIndicator, ClearIndicator, MultiValueRemove, ...(components || {}) }}

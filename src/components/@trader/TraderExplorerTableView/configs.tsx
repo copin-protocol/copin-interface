@@ -67,7 +67,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     ),
   },
   runTimeDays: {
-    style: { minWidth: ['120px', '130px'] },
+    style: { minWidth: ['140px', '150px'] },
     text: <Trans>Runtime (All)</Trans>,
     searchText: 'Runtime All',
     label: (
@@ -111,7 +111,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     // freezeLeft: 140,
     // freezeIndex: 2,
     render: (item) => {
-      return <Type.Caption>{item.lastTradeAt ? formatLocalRelativeDate(item.lastTradeAt) : '--'}</Type.Caption>
+      return <Type.Caption>{item.lastTradeAtTs ? formatLocalRelativeDate(item.lastTradeAtTs) : '--'}</Type.Caption>
     },
   },
   indexTokens: {
@@ -162,7 +162,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <SignedText value={item.pnl} maxDigit={0} prefix="$" />,
   },
   unrealisedPnl: {
-    style: { minWidth: ['110px', '130px'] },
+    style: { minWidth: ['130px', '150px'] },
     text: <Trans>Unrealized PnL</Trans>,
     searchText: 'Unrealized PnL',
     label: (
@@ -185,7 +185,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
   },
   totalGain: {
     searchText: 'Total Gain',
-    style: { minWidth: ['100px', '111px'] },
+    style: { minWidth: ['120px', '131px'] },
     text: <Trans>Total Gain</Trans>,
     label: (
       <LabelWithTooltip id="tt_total_gain_label" tooltip="The cumulative gain without fees made from all trades">
@@ -203,7 +203,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <SignedText value={item.totalGain} maxDigit={0} pos prefix="$" />,
   },
   totalLoss: {
-    style: { minWidth: ['100px', '111px'] },
+    style: { minWidth: ['120px', '131px'] },
     text: <Trans>Total Loss</Trans>,
     searchText: 'Total Loss',
     label: (
@@ -222,7 +222,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <SignedText value={item.totalLoss} maxDigit={0} neg prefix="$" />,
   },
   totalFee: {
-    style: { minWidth: ['135px', '140px'] },
+    style: { minWidth: ['155px', '160px'] },
     text: <Trans>Total Paid Fees</Trans>,
     searchText: 'Total Paid Fees',
     label: (
@@ -241,7 +241,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <SignedText value={item.totalFee} maxDigit={0} neg prefix="$" />,
   },
   totalVolume: {
-    style: { minWidth: ['120px', '130px'] },
+    style: { minWidth: ['130px', '140px'] },
     text: <Trans>Total Volume</Trans>,
     searchText: 'Total Volume',
     label: (
@@ -260,7 +260,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.totalVolume ? `$${formatNumber(item.totalVolume, 0, 0)}` : undefined} />,
   },
   avgVolume: {
-    style: { minWidth: ['110px', '120px'] },
+    style: { minWidth: ['120px', '130px'] },
     text: <Trans>Avg Volume</Trans>,
     searchText: 'Avg Volume',
     label: (
@@ -279,7 +279,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.avgVolume ? `$${formatNumber(item.avgVolume, 0, 0)}` : undefined} />,
   },
   avgRoi: {
-    style: { minWidth: '90px' },
+    style: { minWidth: '110px' },
     text: <Trans>Avg ROI</Trans>,
     searchText: 'Avg ROI',
     label: (
@@ -301,7 +301,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <SignedText value={item.avgRoi} maxDigit={2} minDigit={2} suffix="%" />,
   },
   maxRoi: {
-    style: { minWidth: '90px' },
+    style: { minWidth: '110px' },
     text: <Trans>Max ROI</Trans>,
     searchText: 'Max ROI',
     label: (
@@ -323,7 +323,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <SignedText value={item.maxRoi} maxDigit={2} minDigit={2} suffix="%" />,
   },
   totalTrade: {
-    style: { minWidth: '85px' },
+    style: { minWidth: '105px' },
     text: <Trans>Trades</Trans>,
     searchText: 'Trades',
     label: (
@@ -341,7 +341,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.totalTrade} />,
   },
   totalWin: {
-    style: { minWidth: '70px' },
+    style: { minWidth: '90px' },
     text: <Trans>Wins</Trans>,
     label: (
       <LabelWithTooltip id="tt_wins_label" tooltip="The total number of winning trades">
@@ -359,7 +359,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.totalWin} />,
   },
   totalLose: {
-    style: { minWidth: '75px' },
+    style: { minWidth: '95px' },
     text: <Trans>Loses</Trans>,
     searchText: 'Loses',
     label: (
@@ -377,7 +377,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.totalLose} />,
   },
   totalLiquidation: {
-    style: { minWidth: '125px' },
+    style: { minWidth: '145px' },
     text: <Trans>Liquidations</Trans>,
     searchText: 'Liquidations',
     label: (
@@ -395,7 +395,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.totalLiquidation} />,
   },
   winRate: {
-    style: { minWidth: '100px' },
+    style: { minWidth: '120px' },
     text: <Trans>Win Rate</Trans>,
     searchText: 'Win rate',
     label: (
@@ -414,7 +414,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.winRate ? `${formatNumber(item.winRate, 2, 2)}%` : undefined} />,
   },
   profitRate: {
-    style: { minWidth: ['110px', '120px'] },
+    style: { minWidth: ['130px', '140px'] },
     text: <Trans>Profit Rate</Trans>,
     searchText: 'Profit rate',
     label: (
@@ -436,7 +436,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.profitRate ? `${formatNumber(item.profitRate, 2, 2)}%` : undefined} />,
   },
   longRate: {
-    style: { minWidth: ['100px', '110px'] },
+    style: { minWidth: ['120px', '130px'] },
     text: <Trans>L/S Rate</Trans>,
     searchText: 'L/S rate',
     label: (
@@ -466,7 +466,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
       ),
   },
   orderPositionRatio: {
-    style: { minWidth: ['140px', '160px'] },
+    style: { minWidth: ['160px', '180px'] },
     text: <Trans>Order/Pos Ratio</Trans>,
     searchText: 'Order/Pos Ratio',
     label: (
@@ -487,7 +487,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.orderPositionRatio ? formatNumber(item.orderPositionRatio, 1, 1) : undefined} />,
   },
   profitLossRatio: {
-    style: { minWidth: ['90px', '105px'] },
+    style: { minWidth: ['110px', '125px'] },
     text: <Trans>PnL Ratio</Trans>,
     searchText: 'PnL Ratio',
     label: (
@@ -508,7 +508,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.profitLossRatio ? formatNumber(item.profitLossRatio, 1, 1) : undefined} />,
   },
   gainLossRatio: {
-    style: { minWidth: ['120px', '136px'] },
+    style: { minWidth: ['140px', '156px'] },
     text: <Trans>Profit Factor</Trans>,
     searchText: 'Profit Factor',
     label: (
@@ -526,7 +526,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.gainLossRatio ? formatNumber(item.gainLossRatio, 1, 1) : undefined} />,
   },
   avgLeverage: {
-    style: { minWidth: ['125px', '145px'] },
+    style: { minWidth: ['145px', '165px'] },
     text: <Trans>Avg Leverage</Trans>,
     searchText: 'Avg Leverage',
     label: (
@@ -546,7 +546,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.avgLeverage ? formatNumber(item.avgLeverage, 1, 1) + 'x' : undefined} />,
   },
   maxLeverage: {
-    style: { minWidth: ['125px', '145px'] },
+    style: { minWidth: ['145px', '165px'] },
     text: <Trans>Max Leverage</Trans>,
     label: <Trans>Max Leverage</Trans>,
     searchText: 'Max Leverage',
@@ -561,7 +561,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.maxLeverage ? formatNumber(item.maxLeverage, 1, 1) + 'x' : undefined} />,
   },
   minLeverage: {
-    style: { minWidth: ['125px', '145px'] },
+    style: { minWidth: ['145px', '165px'] },
     text: <Trans>Min Leverage</Trans>,
     label: <Trans>Min Leverage</Trans>,
     searchText: 'Min Leverage',
@@ -576,7 +576,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.minLeverage ? formatNumber(item.minLeverage, 1, 1) + 'x' : undefined} />,
   },
   avgDuration: {
-    style: { minWidth: ['120px', '132px'] },
+    style: { minWidth: ['140px', '152px'] },
     text: <Trans>Avg Duration</Trans>,
     searchText: 'Avg Duration',
     label: (
@@ -598,7 +598,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={formatDuration(item.avgDuration)} />,
   },
   minDuration: {
-    style: { minWidth: ['120px', '132px'] },
+    style: { minWidth: ['140px', '152px'] },
     text: <Trans>Min Duration</Trans>,
     searchText: 'Min Duration',
     label: (
@@ -620,7 +620,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={formatDuration(item.minDuration)} />,
   },
   maxDuration: {
-    style: { minWidth: ['120px', '135px'] },
+    style: { minWidth: ['140px', '155px'] },
     text: <Trans>Max Duration</Trans>,
     searchText: 'Max Duration',
     label: (
@@ -642,7 +642,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={formatDuration(item.maxDuration)} />,
   },
   maxDrawdown: {
-    style: { minWidth: ['130px', '150px'] },
+    style: { minWidth: ['150px', '150px'] },
     text: <Trans>Max Drawdown</Trans>,
     searchText: 'Max Drawdown',
     label: (
@@ -699,14 +699,14 @@ const tableColumnKeys: (keyof TraderData)[] = [
   'totalFee',
   'totalVolume',
   'avgVolume',
-  'avgRoi',
-  'maxRoi',
   'totalTrade',
   'totalWin',
   'totalLose',
   'totalLiquidation',
   'winRate',
   'profitRate',
+  'avgRoi',
+  'maxRoi',
   'longRate',
   'orderPositionRatio',
   'profitLossRatio',
@@ -728,8 +728,8 @@ const mobileTableColumnKeys: (keyof TraderData)[] = [
   'account',
   'pnl',
   'unrealisedPnl',
-  'avgRoi',
   'winRate',
+  'avgRoi',
   'runTimeDays',
   'lastTradeAtTs',
   'indexTokens',

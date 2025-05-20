@@ -31,26 +31,10 @@ export const LEADERBOARD_OPTIONS: LeaderboardOptionProps[] = [
 
 const rankingFieldsBase: RankingFieldOption<TraderData>[] = [
   {
-    value: 'pnl',
-    label: t`High PnL`,
-    statLabel: t`PnL`,
-    tooltipContent: t`The percentile ranking of traders earning the most money`,
-    statFormat: (value) =>
-      !value ? '--' : <SignedText value={value} minDigit={1} maxDigit={1} fontInherit prefix="$" isCompactNumber />,
-  },
-  {
     value: 'avgRoi',
     label: t`High Avg ROI`,
     statLabel: t`Avg ROI`,
     tooltipContent: t`The percentile ranking of traders with the highest average return on investment`,
-    statFormat: (value) =>
-      !value ? '--' : <SignedText value={value} minDigit={1} maxDigit={1} fontInherit suffix="%" />,
-  },
-  {
-    value: 'maxRoi',
-    label: t`High Max ROI`,
-    statLabel: t`Max ROI`,
-    tooltipContent: t`The percentile ranking of traders with the highest maximum return on investment`,
     statFormat: (value) =>
       !value ? '--' : <SignedText value={value} minDigit={1} maxDigit={1} fontInherit suffix="%" />,
   },
@@ -62,32 +46,11 @@ const rankingFieldsBase: RankingFieldOption<TraderData>[] = [
     statFormat: (value) => (!value ? '--' : `$${compactNumber(value, 0)}`),
   },
   {
-    value: 'avgLeverage',
-    label: t`Low Leverage`,
-    statLabel: t`Avg Leverage`,
-    tooltipContent: t`The percentile ranking of traders with the lowest leverage usage`,
-    statFormat: (value) => (!value ? '--' : `${formatNumber(value, 1, 1)}x`),
-  },
-  {
     value: 'winRate',
     label: t`High Win Rate`,
     statLabel: t`Win Rate`,
     tooltipContent: t`The percentile ranking of traders with the highest win rate`,
     statFormat: (value) => (!value ? '--' : `${formatNumber(value, 1, 1)}%`),
-  },
-  {
-    value: 'profitRate',
-    label: t`High Profit Rate`,
-    statLabel: t`Profit Rate`,
-    tooltipContent: t`The percentile ranking of traders with the highest profit rate`,
-    statFormat: (value) => (!value ? '--' : formatNumber(value, 1, 1)),
-  },
-  {
-    value: 'profitLossRatio',
-    label: t`High PnL Ratio`,
-    statLabel: t`PnL Ratio`,
-    tooltipContent: t`The percentile ranking of traders with the highest profit and loss ratio`,
-    statFormat: (value) => (!value ? '--' : formatNumber(value, 1, 1)),
   },
   {
     value: 'maxDrawdown',
@@ -113,12 +76,49 @@ const rankingFieldsBase: RankingFieldOption<TraderData>[] = [
     statFormat: (data) => (!data ? '--' : `${formatNumber((data ?? 0) / 3600, 1, 1)}h`),
   },
   {
+    value: 'pnl',
+    label: t`High PnL`,
+    statLabel: t`PnL`,
+    tooltipContent: t`The percentile ranking of traders earning the most money`,
+    statFormat: (value) =>
+      !value ? '--' : <SignedText value={value} minDigit={1} maxDigit={1} fontInherit prefix="$" isCompactNumber />,
+  },
+  {
+    value: 'maxRoi',
+    label: t`High Max ROI`,
+    statLabel: t`Max ROI`,
+    tooltipContent: t`The percentile ranking of traders with the highest maximum return on investment`,
+    statFormat: (value) =>
+      !value ? '--' : <SignedText value={value} minDigit={1} maxDigit={1} fontInherit suffix="%" />,
+  },
+  {
+    value: 'profitRate',
+    label: t`High Profit Rate`,
+    statLabel: t`Profit Rate`,
+    tooltipContent: t`The percentile ranking of traders with the highest profit rate`,
+    statFormat: (value) => (!value ? '--' : formatNumber(value, 1, 1)),
+  },
+  {
+    value: 'avgLeverage',
+    label: t`Low Leverage`,
+    statLabel: t`Avg Leverage`,
+    tooltipContent: t`The percentile ranking of traders with the lowest leverage usage`,
+    statFormat: (value) => (!value ? '--' : `${formatNumber(value, 1, 1)}x`),
+  },
+  {
     value: 'orderPositionRatio',
     label: t`Low Overtrading`,
     statLabel: t`Order/Pos Ratio`,
     shortStatLabel: t`Order/Pos`,
     tooltipContent: t`The percentile ranking of traders with the fewest trades per position`,
     statFormat: (data) => (!data ? '--' : formatNumber(data, 1, 1)),
+  },
+  {
+    value: 'profitLossRatio',
+    label: t`High PnL Ratio`,
+    statLabel: t`PnL Ratio`,
+    tooltipContent: t`The percentile ranking of traders with the highest profit and loss ratio`,
+    statFormat: (value) => (!value ? '--' : formatNumber(value, 1, 1)),
   },
 ]
 

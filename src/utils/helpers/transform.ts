@@ -20,6 +20,7 @@ import {
   COPY_WALLET_TRANS,
   ORDER_TYPE_TRANS,
   SLTP_TYPE_TRANS,
+  SUBSCRIPTION_PLAN_TRANSLATION,
 } from 'utils/config/translations'
 
 import { TokenTrade } from '../config/trades'
@@ -315,12 +316,16 @@ export function getSubscriptionPlanConfigs(plan: SubscriptionPlanEnum | undefine
   let label = ''
   let color = ''
   switch (plan) {
-    case SubscriptionPlanEnum.PREMIUM:
-      label = 'Premium'
-      color = 'orange'
+    case SubscriptionPlanEnum.STARTER:
+      label = 'Starter'
+      color = 'green2'
       break
-    case SubscriptionPlanEnum.VIP:
-      label = 'VIP'
+    case SubscriptionPlanEnum.PRO:
+      label = 'Pro'
+      color = 'orange1'
+      break
+    case SubscriptionPlanEnum.ELITE:
+      label = 'Elite'
       color = 'violet'
       break
   }
@@ -554,4 +559,42 @@ export function generateVaultInviteCode() {
   const formatDay = formatZeroBased(Math.round(now.date() / 2))
   const formatMonth = formatZeroBased(now.month() + 1)
   return `VAULT${formatDay}${formatMonth}`
+}
+
+export function getSubscriptionPlanLabel({ plan }: { plan: SubscriptionPlanEnum }) {
+  return SUBSCRIPTION_PLAN_TRANSLATION[plan]
+}
+
+export const getItemsAndRequiredPlan = (
+  key: string,
+  permissions?: { [key in SubscriptionPlanEnum]: any }
+): { [key: string]: SubscriptionPlanEnum } => {
+  const itemsMapping: { [key: string]: SubscriptionPlanEnum } = {}
+  Object.keys(permissions ?? {}).forEach((plan) => {
+    const planEnum = plan as SubscriptionPlanEnum
+    permissions?.[planEnum]?.[key]?.forEach((item: any) => {
+      if (itemsMapping[item] == null) {
+        itemsMapping[item] = planEnum
+      }
+    })
+  })
+  return itemsMapping
+}
+
+export function goToPreviousPage({
+  total,
+  currentPage,
+  limit,
+  changeCurrentPage,
+}: {
+  total: number
+  currentPage: number
+  limit: number
+  changeCurrentPage: (page: number) => void
+}) {
+  const newTotal = total - 1
+  const remainingItemsOnPage = newTotal - (currentPage - 1) * limit
+  if (remainingItemsOnPage <= 0 && currentPage > 1) {
+    changeCurrentPage(currentPage - 1)
+  }
 }

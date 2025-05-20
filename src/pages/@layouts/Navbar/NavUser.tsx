@@ -4,7 +4,7 @@ import { ReactNode, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import Divider from 'components/@ui/Divider'
-import useCopyTradePermission from 'hooks/features/copyTrade/useCopyTradePermission'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useInternalRole from 'hooks/features/useInternalRole'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -17,27 +17,27 @@ import { Box, Flex, Type } from 'theme/base'
 import { NAVBAR_HEIGHT } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { addressShorten } from 'utils/helpers/format'
+import { addressShorten, shortenText } from 'utils/helpers/format'
 import { generateFavoriteTradersRoute } from 'utils/helpers/generateRoute'
-import { convertProtocolToParams } from 'utils/helpers/protocol'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
 
+import PaymentProgress from './PaymentProgress'
 // import ChangePasswordModal from './ChangePasswordModal'
 import PremiumTag from './PremiumTag'
 import WarningExpiredSubscriptionIcon from './WarningExpiredSubscriptionIcon'
-import WarningSwitchAccountIcon from './WarningSwithcAccountIcon'
+import WarningWalletDisconnected from './WarningWalletDisconnected'
 
 const NavUser = () => {
   const { selectedProtocols } = useGlobalProtocolFilterStore()
-  const protocolParams = convertProtocolToParams(selectedProtocols ?? [])
+  const { convertProtocolToParams } = useProtocolPermission()
+  const protocolParams = convertProtocolToParams({ protocols: selectedProtocols ?? [] })
 
   const [isShowModalLogout, setIsShowModalLogout] = useState(false)
   // const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false)
   const { logout, profile, isAuthenticated } = useAuthContext()
   const _address = useMemo(() => isAddress(profile?.username), [profile?.username])
-  const hasCopyPermission = useCopyTradePermission()
   const isInternal = useInternalRole()
 
   const [showMenu, setShowMenu] = useState(false)
@@ -69,9 +69,13 @@ const NavUser = () => {
   ]
 
   return (
-    <Flex alignItems="center" sx={{ height: NAVBAR_HEIGHT - 1 }}>
-      <Flex flexDirection="column" alignItems="flex-start">
-        <Flex alignItems="center" sx={{ gap: 1, px: 2 }}>
+    <Flex
+      alignItems="center"
+      justifyContent="center"
+      sx={{ height: NAVBAR_HEIGHT - 1, minWidth: [undefined, undefined, 70, 70, 123] }}
+    >
+      <Flex flexDirection="column" alignItems="flex-start" justifyContent="center">
+        <Flex alignItems="center" sx={{ gap: 1, px: 2 }} justifyContent="center">
           <Dropdown
             menuSx={{
               width: 200,
@@ -85,24 +89,26 @@ const NavUser = () => {
             menu={
               <>
                 <Box mt={2} />
-                <DropdownItem>
-                  <Flex alignItems="center" sx={{ gap: 2 }}>
-                    <CopyButton
-                      type="button"
-                      variant="ghost"
-                      iconDirection="left"
-                      value={_address}
-                      size="sm"
-                      iconSize={20}
-                      sx={{ p: 0, width: '100%', justifyContent: 'flex-start' }}
-                      iconSx={{ color: 'neutral1' }}
-                    >
-                      <Box>
-                        <Trans>COPY YOUR ADDRESS</Trans>
-                      </Box>
-                    </CopyButton>
-                  </Flex>
-                </DropdownItem>
+                {_address && (
+                  <DropdownItem>
+                    <Flex alignItems="center" sx={{ gap: 2 }}>
+                      <CopyButton
+                        type="button"
+                        variant="ghost"
+                        iconDirection="left"
+                        value={_address}
+                        size="sm"
+                        iconSize={20}
+                        sx={{ p: 0, width: '100%', justifyContent: 'flex-start' }}
+                        iconSx={{ color: 'neutral1' }}
+                      >
+                        <Box>
+                          <Trans>COPY YOUR ADDRESS</Trans>
+                        </Box>
+                      </CopyButton>
+                    </Flex>
+                  </DropdownItem>
+                )}
                 {otherRoutes.map((configs, index) =>
                   configs.isWeb3Required && !isAuthenticated ? null : (
                     <NavItem
@@ -115,20 +121,15 @@ const NavUser = () => {
                   )
                 )}
                 <Box mt={2} />
-                {hasCopyPermission && (
-                  <>
-                    <SectionDivider label={<Trans>Copy Management</Trans>} />
-                    {(isInternal ? internalUserCopy : userCopy).map((configs, index) => (
-                      <NavItem
-                        key={index}
-                        link={configs.link}
-                        onClick={() => onClickNavItem(configs.event)}
-                        icon={configs.icon}
-                        label={configs.label}
-                      />
-                    ))}
-                  </>
-                )}
+                {(isInternal ? internalUserCopy : userCopy).map((configs, index) => (
+                  <NavItem
+                    key={index}
+                    link={configs.link}
+                    onClick={() => onClickNavItem(configs.event)}
+                    icon={configs.icon}
+                    label={configs.label}
+                  />
+                ))}
                 <Box mb={3} />
                 <SectionDivider label={<Trans>Wallet</Trans>} />
                 <NavItem
@@ -192,14 +193,15 @@ const NavUser = () => {
             placement="bottomRight"
           >
             <Type.CaptionBold maxWidth={['120px', 'max-content']} sx={{ ...overflowEllipsis(), display: 'flex' }}>
-              {_address ? addressShorten(_address) : profile?.username}
+              {_address ? addressShorten(_address) : shortenText(profile?.username, 8)}
             </Type.CaptionBold>
           </Dropdown>
-          <WarningSwitchAccountIcon />
+          <WarningWalletDisconnected />
         </Flex>
-        <Flex sx={{ alignItems: 'center', gap: 1, px: 3 }}>
+        <Flex sx={{ alignItems: 'center', gap: 1, px: 2, position: 'relative' }}>
           <PremiumTag />
           <WarningExpiredSubscriptionIcon />
+          <PaymentProgress />
         </Flex>
       </Flex>
       {/* {isShowModalChangePassword && <ChangePasswordModal onDismiss={() => setIsShowModalChangePassword(false)} />} */}

@@ -3,11 +3,15 @@ import { Plus, Trash } from '@phosphor-icons/react'
 import React, { ChangeEvent, RefObject, memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
+import UpgradeButton from 'components/@subscription/UpgradeButton'
+import UpgradeModal from 'components/@subscription/UpgradeModal'
 import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { LastTrade, TotalPnL, TotalVolume } from 'components/@widgets/SearchTraderResultItem'
 import { TraderData } from 'entities/trader'
+import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useSearchAllData from 'hooks/features/trader/useSearchAllData'
 import useIsMobile from 'hooks/helpers/useIsMobile'
 import { Button } from 'theme/Buttons'
@@ -18,29 +22,56 @@ import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
 import RcDialog from 'theme/RcDialog'
 import { Box, Flex, Type } from 'theme/base'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { formatNumber } from 'utils/helpers/format'
+import { getRequiredPlan } from 'utils/helpers/permissionHelper'
 
 const SearchToAdd = memo(function SearchToAddMemo({
+  totalTrader,
+  maxTraderAlert,
   ignoreSelectTraders,
   onSelect,
   onRemove,
 }: {
+  totalTrader: number
+  maxTraderAlert: number
   ignoreSelectTraders?: { account: string; protocol: ProtocolEnum }[]
   onSelect: (data: TraderData) => void
   onRemove?: (data: TraderData) => void
 }) {
+  const { maxWatchedListQuota } = useAlertPermission()
   const [openModal, setOpenModal] = useState(false)
+  const [openLimitModal, setOpenLimitModal] = useState(false)
+
+  const handleOpenLimitModal = () => setOpenLimitModal(true)
+  const handleDismissLimitModal = () => setOpenLimitModal(false)
   const handleOpenModal = () => setOpenModal(true)
   const handleDismissModal = () => setOpenModal(false)
 
   return (
     <>
-      <ButtonWithIcon size="xs" variant="outlinePrimary" icon={<Plus />} onClick={handleOpenModal}>
+      <ButtonWithIcon
+        size="xs"
+        variant="outlinePrimary"
+        icon={<Plus />}
+        onClick={totalTrader >= maxTraderAlert ? handleOpenLimitModal : handleOpenModal}
+      >
         <Trans>Add Trader</Trans>
       </ButtonWithIcon>
+      {openLimitModal && (
+        <UpgradeModal
+          isOpen={openLimitModal}
+          onDismiss={handleDismissLimitModal}
+          title={<Trans>YOU’VE HIT YOUR WATCHLIST TRADERS LIMIT</Trans>}
+          description={
+            <Trans>
+              You’re reach the maximum of Trader in watchlist for your current plan. Upgrade your plan to unlock access
+              up to <b>{formatNumber(maxWatchedListQuota)} traders</b>
+            </Trans>
+          }
+        />
+      )}
       {openModal && (
         <SearchContainer
           isOpen={openModal}
@@ -71,6 +102,7 @@ function SearchContainer({
   onSelect: (data: TraderData) => void
   onRemove?: (data: TraderData) => void
 }) {
+  const { releasedProtocols } = useProtocolPermission()
   const isMobile = useIsMobile()
   const {
     searchWrapperRef,
@@ -82,15 +114,26 @@ function SearchContainer({
     visibleSearchResult,
     isLoading,
     searchTraders,
+    searchHLTrader,
   } = useSearchAllData({
     onSelect,
-    protocols: RELEASED_PROTOCOLS,
+    protocols: releasedProtocols,
     returnRanking: true,
     allowAllProtocol: false,
     limit: 500,
   })
   // const traders = [...filterFoundData(searchTraders?.data, ignoreSelectTraders)]
-  const traders = searchTraders?.data ?? []
+  let traders: TraderData[]
+  if (
+    searchHLTrader &&
+    !searchTraders?.data?.find(
+      (t) => t.account.toLowerCase() === searchHLTrader.account.toLowerCase() && t.protocol === ProtocolEnum.HYPERLIQUID
+    )
+  ) {
+    traders = [searchHLTrader, ...(searchTraders?.data ?? [])]
+  } else {
+    traders = searchTraders?.data ?? []
+  }
 
   const handleChangeSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
     handleSearchChange(e)
@@ -102,7 +145,7 @@ function SearchContainer({
   }
 
   const handleRemoveSearchItem = (data: TraderData) => {
-    if (!onRemove || !ignoreSelectTraders.find((e) => e.account !== data.account && e.protocol !== data.protocol))
+    if (!onRemove || !ignoreSelectTraders.find((e) => e.account === data.account && e.protocol === data.protocol))
       return
     onRemove(data)
   }
@@ -233,17 +276,20 @@ function SearchResult({
   onRemoveTraderItem?: (data: TraderData) => void
   handleHideResult?: () => void
 }) {
+  const { allowedSelectProtocols, pagePermission } = useProtocolPermission()
   const [selectedItem, setSelectedItem] = useState(-1)
   const searchResultRef = useRef<{ data: any[]; selectedIndex: number }>({
     data: [],
     selectedIndex: 0,
   })
+
   const handleKeyboard = useCallback(
     (e: KeyboardEvent) => {
       if (!searchResultRef.current) return
       if (e.key === 'Enter') {
         const data = searchResultRef.current.data[searchResultRef.current.selectedIndex]
         if (data) {
+          if (!allowedSelectProtocols?.includes(data.protocol)) return
           if (ignoreSelectTraders?.find((e) => e.account === data.account && e.protocol === data.protocol)) {
             onRemoveTraderItem?.(data)
           } else {
@@ -285,16 +331,28 @@ function SearchResult({
       {!!searchTraders?.length && (
         <Box>
           {searchTraders?.map((traderData, index) => {
+            const isAllowed = allowedSelectProtocols?.includes(traderData.protocol)
             const isActive = selectedItem === index
             const isSelected = !!ignoreSelectTraders?.find(
               (e) => e.account === traderData.account && e.protocol === traderData.protocol
             )
+            const requiredPlanToProtocol = getRequiredPlan({
+              conditionFn: (plan) =>
+                (traderData.protocol && pagePermission?.[plan]?.protocolAllowed?.includes(traderData.protocol)) ||
+                false,
+            })
             return (
               <Box id={`search_trader_${index}`} key={traderData.id} sx={{ bg: isActive ? 'neutral4' : 'transparent' }}>
                 <Box
                   role="button"
                   key={traderData.id}
-                  onClick={() => (isSelected ? onRemoveTraderItem?.(traderData) : onClickTraderItem(traderData))}
+                  onClick={() =>
+                    !isAllowed
+                      ? undefined
+                      : isSelected
+                      ? onRemoveTraderItem?.(traderData)
+                      : onClickTraderItem(traderData)
+                  }
                   sx={{
                     pt: 2,
                     pb: 1,
@@ -314,7 +372,7 @@ function SearchResult({
                         textSx: { width: 80 },
                       }}
                     />
-                    <LastTrade value={traderData.lastTradeAt} sx={{ flexShrink: 0 }} />
+                    {!!traderData.lastTradeAt && <LastTrade value={traderData.lastTradeAt} sx={{ flexShrink: 0 }} />}
                   </Flex>
                   <Flex mt={1} alignItems="center" justifyContent="space-between">
                     <Flex color="neutral2" sx={{ gap: 1 }}>
@@ -328,13 +386,33 @@ function SearchResult({
                       />
                       {/* <LastTrade value={data.lastTradeAt} sx={{ display: ['none', 'none', 'flex'], flex: '0 0 180px' }} /> */}
                     </Flex>
-                    <ButtonWithIcon
-                      variant={isSelected ? 'ghostDanger' : 'ghostPrimary'}
-                      icon={isSelected ? <Trash /> : <Plus />}
-                      p={0}
-                    >
-                      {isSelected ? <Type.Caption>Remove</Type.Caption> : <Type.Caption>Add</Type.Caption>}
-                    </ButtonWithIcon>
+                    {isAllowed ? (
+                      <ButtonWithIcon
+                        variant={isSelected ? 'ghostDanger' : 'ghostPrimary'}
+                        icon={isSelected ? <Trash /> : <Plus />}
+                        p={0}
+                      >
+                        {isSelected ? (
+                          <Type.Caption>
+                            <Trans>Remove</Trans>
+                          </Type.Caption>
+                        ) : (
+                          <Type.Caption>
+                            <Trans>Add</Trans>
+                          </Type.Caption>
+                        )}
+                      </ButtonWithIcon>
+                    ) : (
+                      <UpgradeButton
+                        requiredPlan={requiredPlanToProtocol}
+                        text={
+                          <Type.Caption>
+                            <Trans>Upgrade To Add</Trans>
+                          </Type.Caption>
+                        }
+                        buttonSx={{ mr: 0 }}
+                      />
+                    )}
                   </Flex>
                 </Box>
               </Box>

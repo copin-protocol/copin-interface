@@ -1,17 +1,17 @@
 import dayjs from 'dayjs'
-import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
+import { ReactNode, createContext, useContext, useState } from 'react'
 
 import { TraderListSortProps } from 'components/@trader/TraderExplorerTableView/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader.d'
-import { useIsPremiumAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
+import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
+import { useIsProAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
-import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
-import { RANKING_FIELD_NAMES } from 'hooks/store/useRankingCustomize'
+import { RANKING_FIELD_NAMES } from 'hooks/store/useUserCustomize'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { TimeFilterByEnum } from 'utils/config/enums'
 import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
@@ -21,7 +21,7 @@ import { TimeRange } from 'utils/types'
 
 import { FilterTabEnum } from './ConditionFilter/configs'
 import { TabKeyEnum } from './Layouts/layoutConfigs'
-import { getInitFilterTab, getInitFilters, getInitSort } from './helpers/getInitValues'
+import { DEFAULT_SORT_BY, getInitFilterTab, getInitFilters, getInitSort } from './helpers/getInitValues'
 import { stringifyParams } from './helpers/handleParams'
 
 export interface TradersContextData {
@@ -41,12 +41,12 @@ export interface TradersContextData {
   currentSuggestion: string | undefined
   setCurrentSuggestion: (data?: string) => void
   filters: ConditionFormValues<TraderData>
-  changeFilters: (filters: ConditionFormValues<TraderData>) => void
+  changeFilters: (props: { filters: ConditionFormValues<TraderData>; filterTab: FilterTabEnum }) => void
   rankingFilters: ConditionFormValues<TraderData>
-  changeRankingFilters: (filters: ConditionFormValues<TraderData>) => void
   currentSort: TraderListSortProps<TraderData> | undefined
   changeCurrentSort: (sort: TraderListSortProps<TraderData> | undefined) => void
   filterTab: FilterTabEnum
+  resetFilter: () => void
 }
 
 const TradersContext = createContext<TradersContextData>({} as TradersContextData)
@@ -61,7 +61,7 @@ export function FilterTradersProvider({
   children: ReactNode
 }) {
   const { myProfile } = useMyProfile()
-  const { searchParams, setSearchParams } = useSearchParams()
+  const { searchParams, setSearchParams, setSearchParamsOnly } = useSearchParams()
 
   const [currentSuggestion, setCurrentSuggestion] = useState<string | undefined>()
 
@@ -79,9 +79,9 @@ export function FilterTradersProvider({
     tab === TabKeyEnum.Explorer ? URL_PARAM_KEYS.EXPLORER_TIME_RANGE_FILTER : URL_PARAM_KEYS.FAVORITE_TIME_RANGE_FILTER
 
   // START TIME FILTER
-  const { isPremiumUser } = useIsPremiumAndAction()
+  const { isProUser } = useIsProAndAction()
   const [isRangeSelection, setRangeSelection] = useState(() => {
-    if (!isPremiumUser) return false
+    if (!isProUser) return false
     if (searchParams[rangeFilterKey]) return true
     return false
   })
@@ -91,10 +91,6 @@ export function FilterTradersProvider({
     optionName: timeFilterKey,
     options: timeFilterOptions,
     defaultOption: TimeFilterByEnum.S30_DAY.toString(),
-    // optionNameToBeDelete: [rangeFilterKey],
-    // callback: () => {
-    //   changeCurrentPage(1)
-    // },
   })
   const [timeRange, setTimeRange] = useState<TimeRange>(() => {
     if (!isRangeSelection) return {}
@@ -114,8 +110,7 @@ export function FilterTradersProvider({
       return
     }
     const rangeSearch = `${dayjs(range.from).utc().valueOf()}_${dayjs(range.to).utc().valueOf()}`
-    setSearchParams({ [rangeFilterKey]: rangeSearch, [timeFilterKey]: null, [URL_PARAM_KEYS.EXPLORER_PAGE]: '1' })
-    setCurrentPage(1)
+    setSearchParams({ [rangeFilterKey]: rangeSearch, [timeFilterKey]: null, [URL_PARAM_KEYS.PAGE]: '1' })
     setTimeRange(range)
     setRangeSelection(true)
 
@@ -128,7 +123,6 @@ export function FilterTradersProvider({
       [URL_PARAM_KEYS.PAGE]: '1',
       [timeFilterKey]: timeOption.id as unknown as string,
     })
-    setCurrentPage(1)
     setTimeOption(timeOption)
     setRangeSelection(false)
 
@@ -146,75 +140,71 @@ export function FilterTradersProvider({
     }
   }
 
-  const { from, to } = useMemo(() => {
+  const { from, to } = (() => {
     if (isRangeSelection) return timeRange
-    const from = dayjs().subtract(timeOption.value, 'days').toDate()
-    return { from }
-  }, [isRangeSelection, timeOption, timeRange])
+    const today = dayjs()
+    const from = today.subtract(timeOption.value, 'days').toDate()
+    return { from, to: today.toDate() }
+  })()
 
   // END TIME FILTER
 
-  const currentPageParam = Number(searchParams[URL_PARAM_KEYS.HOME_PAGE]) // use page param instead of currentPage to reset it in GlobalFilterProtocol
-  const { currentLimit, setCurrentPage, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
-    pageName: URL_PARAM_KEYS.PAGE,
-    limitName: URL_PARAM_KEYS.EXPLORER_LIMIT,
-    defaultLimit: DEFAULT_LIMIT,
-  })
+  const currentPage = Number(searchParams[URL_PARAM_KEYS.PAGE] ?? 1) // use page param instead of currentPage to reset it in GlobalFilterProtocol
+  const changeCurrentPage = (page: number) => setSearchParams({ [URL_PARAM_KEYS.PAGE]: `${page}` })
+  const currentLimit = Number(searchParams[URL_PARAM_KEYS.LIMIT] ?? DEFAULT_LIMIT) // use page param instead of currentPage to reset it in GlobalFilterProtocol
+  const changeCurrentLimit = (limit: number) => setSearchParams({ [URL_PARAM_KEYS.LIMIT]: `${limit}` })
 
-  const [filters, setFilters] = useState<ConditionFormValues<TraderData>>(() =>
-    getInitFilters({
-      searchParams,
-      accounts,
-      filterTab: FilterTabEnum.DEFAULT,
-    })
-  )
-  const [rankingFilters, setRankingFilters] = useState<ConditionFormValues<TraderData>>(() =>
-    getInitFilters({
-      searchParams,
-      accounts,
-      filterTab: FilterTabEnum.RANKING,
-    }).filter((option) => !!RANKING_FIELD_NAMES.includes(option.key))
-  )
-  const changeFilters = (options: ConditionFormValues<TraderData>) => {
-    const stringParams = stringifyParams(options)
+  const { userPermission } = useExplorerPermission()
+  const filters = getInitFilters({
+    searchParams,
+    accounts,
+    filterTab: FilterTabEnum.DEFAULT,
+  })
+  const rankingFilters = getInitFilters({
+    searchParams,
+    accounts,
+    filterTab: FilterTabEnum.RANKING,
+  }).filter((option) => !!RANKING_FIELD_NAMES.includes(option.key))
+
+  const changeFilters = ({
+    filters,
+    filterTab,
+  }: {
+    filters: ConditionFormValues<TraderData>
+    filterTab: FilterTabEnum
+  }) => {
+    const stringParams = stringifyParams(filters)
     setSearchParams({
       [URL_PARAM_KEYS.RANKING_FILTERS]: null,
       [URL_PARAM_KEYS.DEFAULT_FILTERS]: stringParams,
-      [URL_PARAM_KEYS.FILTER_TAB]: FilterTabEnum.DEFAULT,
+      [URL_PARAM_KEYS.FILTER_TAB]: filterTab,
       [URL_PARAM_KEYS.PAGE]: '1',
     })
-    localStorage.setItem(STORAGE_KEYS.FILTER_TAB, FilterTabEnum.DEFAULT)
-    localStorage.setItem(STORAGE_KEYS.DEFAULT_FILTERS, JSON.stringify(options))
-    setCurrentPage(1)
-    setFilters(options)
-  }
-  const changeRankingFilters = (options: ConditionFormValues<TraderData>) => {
-    const stringParams = stringifyParams(options)
-    setSearchParams({
-      [URL_PARAM_KEYS.DEFAULT_FILTERS]: null,
-      [URL_PARAM_KEYS.RANKING_FILTERS]: stringParams,
-      [URL_PARAM_KEYS.FILTER_TAB]: FilterTabEnum.RANKING,
-      [URL_PARAM_KEYS.PAGE]: '1',
-    })
-    localStorage.setItem(STORAGE_KEYS.FILTER_TAB, FilterTabEnum.RANKING)
-    localStorage.setItem(STORAGE_KEYS.RANKING_FILTERS, JSON.stringify(options))
-    setCurrentPage(1)
-    setRankingFilters(options)
+    localStorage.setItem(STORAGE_KEYS.FILTER_TAB, filterTab)
+    localStorage.setItem(
+      filterTab === FilterTabEnum.DEFAULT ? STORAGE_KEYS.DEFAULT_FILTERS : STORAGE_KEYS.RANKING_FILTERS,
+      JSON.stringify(filters)
+    )
   }
 
-  const [currentSort, setCurrentSort] = useState<TraderListSortProps<TraderData> | undefined>(() =>
-    getInitSort(searchParams)
-  )
+  const currentSort = getInitSort(searchParams)
+  if (!userPermission?.fieldsAllowed.includes(currentSort.sortBy)) {
+    currentSort.sortBy = DEFAULT_SORT_BY
+  }
+
   const changeCurrentSort = (sort: TraderListSortProps<TraderData> | undefined) => {
     const params: Record<string, string | null> = {}
     params.sort_by = sort?.sortBy ?? null
     params.sort_type = sort?.sortType ?? null
     params[URL_PARAM_KEYS.PAGE] = '1'
     setSearchParams(params)
-    setCurrentPage(1)
-    setCurrentSort(sort)
   }
   const filterTab = getInitFilterTab({ searchParams })
+
+  const resetFilter = () => {
+    setTimeOption(timeFilterOptions.find((option) => userPermission?.timeFramesAllowed?.[0] === option.id)!)
+    setSearchParamsOnly({})
+  }
 
   const contextValue: TradersContextData = {
     tab,
@@ -226,19 +216,19 @@ export function FilterTradersProvider({
     changeTimeRange: handleSetTimeRange,
     timeOption,
     changeTimeOption: handleSetTimeOption,
-    currentPage: !isNaN(currentPageParam) ? currentPageParam : 1,
+    currentPage: !isNaN(currentPage) ? currentPage : 1,
     changeCurrentPage,
     currentSuggestion,
     setCurrentSuggestion,
-    currentLimit,
+    currentLimit: !isNaN(currentLimit) ? currentLimit : DEFAULT_LIMIT,
     changeCurrentLimit,
     filters,
     changeFilters,
     rankingFilters,
-    changeRankingFilters,
     currentSort,
     changeCurrentSort,
     filterTab,
+    resetFilter,
   }
 
   return <TradersContext.Provider value={contextValue}>{children}</TradersContext.Provider>

@@ -30,6 +30,7 @@ const LabelWithTooltip = ({
         data-tip="React-tooltip"
         data-tooltip-id={uuid}
         data-tooltip-delay-show={360}
+        color="inherit"
         sx={
           dashed
             ? {

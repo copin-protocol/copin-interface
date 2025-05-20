@@ -28,6 +28,8 @@ export default function RcDialog({
   bodyStyles = {},
   keyboard = true,
   zIndex = Z_INDEX.THEME_MODAL,
+  footer,
+  style,
 }: {
   isOpen: boolean
   onDismiss: () => void
@@ -43,6 +45,8 @@ export default function RcDialog({
   bodyStyles?: CSSProperties
   keyboard?: boolean
   zIndex?: number
+  footer?: JSX.Element
+  style?: CSSProperties
 }) {
   const maxHeight = `calc(100svh - ${offsetTop} - ${offsetBottom})`
   const isMobile = useIsMobile()
@@ -65,6 +69,7 @@ export default function RcDialog({
         // wrapClassName={wrapClassName}
         animation="fade"
         maskAnimation="fade"
+        footer={footer}
         onClose={onDismiss}
         // style={style}
         // title="dialog1"
@@ -95,6 +100,12 @@ export default function RcDialog({
             backgroundColor: bg,
             ...bodyStyles,
           },
+          footer: {
+            padding: 0,
+            margin: 0,
+            backgroundColor: bg,
+            borderColor: themeColors.neutral4,
+          },
         }}
         style={{
           height: height || isMobile ? '100svh' : 'auto',
@@ -106,6 +117,7 @@ export default function RcDialog({
           maxWidth,
           maxHeight,
           overflow: 'hidden auto',
+          ...(style || {}),
         }}
         // focusTriggerAfterClose={false}
       >

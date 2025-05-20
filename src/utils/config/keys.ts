@@ -62,6 +62,7 @@ export const QUERY_KEYS = {
   GET_CUSTOM_TRADER_GROUP_BY_ID: 'GET_CUSTOM_TRADER_GROUP_BY_ID',
   COUNT_CUSTOM_ALERTS: 'COUNT_CUSTOM_ALERTS',
   CHECK_LINKED_BOT_ALERT: 'CHECK_LINKED_BOT_ALERT',
+  GET_USER_ALERT_LOGS: 'GET_USER_ALERT_LOGS',
   GET_USER_PROFILE: 'GET_USER_PROFILE',
   SEARCH_ALL_TRADERS: 'SEARCH_ALL_TRADERS',
   SEARCH_HL_TRADER: 'SEARCH_HL_TRADER',
@@ -99,6 +100,12 @@ export const QUERY_KEYS = {
   GET_HOURLY_PERP_DEX_STATISTIC_CHART_DATA: 'GET_HOURLY_PERP_DEX_STATISTIC_CHART_DATA',
   GET_HOURLY_PROTOCOL_STATISTIC_CHART_DATA: 'GET_HOURLY_PROTOCOL_STATISTIC_CHART_DATA',
   GET_SUBSCRIPTION_COUNT: 'GET_SUBSCRIPTION_COUNT',
+  GET_PERMISSIONS: 'GET_PERMISSIONS',
+  GET_SUBSCRIPTION_PLANS: 'GET_SUBSCRIPTION_PLANS',
+  GET_USER_SUBSCRIPTION_USAGE: 'GET_USER_SUBSCRIPTION_USAGE',
+  GET_PAYMENT_CURRENCIES: 'GET_PAYMENT_CURRENCIES',
+  GET_PAYMENT_DETAILS: 'GET_PAYMENT_DETAILS',
+  GET_USER_PROFILE_AFTER_CHANGE: 'GET_USER_PROFILE_AFTER_CHANGE',
 }
 
 export const CONTRACT_QUERY_KEYS = {
@@ -138,6 +145,7 @@ export const STORAGE_KEYS = {
   MY_ACTIVITIES: 'my-activities',
   BACKTEST_GUIDE: 'backtest-guide',
   TRADER_RANKING_FIELDS: 'trader-ranking-fields',
+  USER_CUSTOMIZE_STORE: 'user-customize-store',
   BINGX_NOTE: 'bingx-note',
   TABS_OPEN: 'tabs-open',
   SUBSCRIPTION_LAST_CHECK: 'subscription-last-check',
@@ -163,6 +171,8 @@ export const STORAGE_KEYS = {
   GET_STARTED_LAST_CHECK: 'get_started_last_check',
   POSITION_TIME_TYPE: 'position_time_type',
   GLOBAL_PROTOCOLS: 'global_protocols',
+  PRIVY_CONNECTIONS: 'privy:connections',
+  PAYMENT_ID: 'payment-id',
 }
 
 export const URL_PARAM_KEYS = {
@@ -176,8 +186,8 @@ export const URL_PARAM_KEYS = {
   EXPLORER_TIME_FILTER: 'time',
   EXPLORER_TIME_RANGE_FILTER: 'range',
   EXPLORER_SORT_BY: 'sort_by',
-  FAVORITE_TIME_RANGE_FILTER: 'time-favorite',
-  FAVORITE_TIME_FILTER: 'range-favorite',
+  FAVORITE_TIME_RANGE_FILTER: 'range-favorite',
+  FAVORITE_TIME_FILTER: 'time-favorite',
   EXPLORER_PAGE: 'page',
   EXPLORER_LIMIT: 'limit',
   CURRENCY: 'currency',
@@ -237,6 +247,7 @@ export const TOOLTIP_KEYS = {
   TRADER_COPY_COUNT_WARNING: 'data-trader-copy-count',
   TRADER_COPY_COUNT_WARNING_BASIC: 'data-trader-copy-count-basic',
   TRADER_COPY_VOLUME_WARNING: 'data-trader-copy-volume',
+  TRADER_PROTOCOL_WARNING: 'data-trader-protocol-warning',
   TRADER_TOTAL_COPY_VOLUME: 'tt-trader-total-copy-volume',
   EXPORT_TRADERS_CSV: 'export-traders-csv',
 }
@@ -256,6 +267,7 @@ export const ELEMENT_IDS = {
 export const DATA_ATTRIBUTES = {
   TRADER_COPY_COUNT_WARNING: 'data-trader-copy-count',
   TRADER_COPY_COUNT_WARNING_BASIC: 'data-trader-copy-count-basic',
+  TRADER_PROTOCOL_WARNING: 'data-trader-protocol-warning',
   TRADER_COPY_DELETED: 'data-trader-copy-deleted',
   TRADER_COPY_VOLUME_WARNING: 'data-trader-copy-volume',
   TRADER_TOTAL_COPY_VOLUME: 'data-trader-total-copy-volume',

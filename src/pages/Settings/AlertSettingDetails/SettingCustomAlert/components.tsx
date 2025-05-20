@@ -1,8 +1,10 @@
+import { Trans } from '@lingui/macro'
 import { ArrowLeft, PencilSimpleLine } from '@phosphor-icons/react'
 import React, { useState } from 'react'
 import { EditText } from 'react-edit-text'
 
-import Badge from 'theme/Badge'
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import BadgeWithLimit from 'components/@ui/BadgeWithLimit'
 import IconButton from 'theme/Buttons/IconButton'
 import Input from 'theme/Input'
 import Popconfirm from 'theme/Popconfirm'
@@ -21,7 +23,9 @@ export const EditAlertHeader = ({
   customType,
   name,
   description,
-  badgeContent,
+  total,
+  limit,
+  userNextPlan,
   setName,
   setDescription,
   onBack,
@@ -34,7 +38,7 @@ export const EditAlertHeader = ({
         defaultName = 'TRADER FILTER'
         break
       case AlertCustomType.TRADER_GROUP:
-        defaultName = 'TRADER FILTER'
+        defaultName = 'TRADER GROUP'
         break
     }
   }
@@ -117,7 +121,23 @@ export const EditAlertHeader = ({
               </Box>
             )}
           </Type.Body>
-          {badgeContent && <Badge count={badgeContent} />}
+          {total != null && (
+            <BadgeWithLimit
+              total={total}
+              limit={limit}
+              tooltipContent={
+                userNextPlan && (
+                  <PlanUpgradePrompt
+                    requiredPlan={userNextPlan}
+                    title={<Trans>You have exceeded your trader limit for the current plan.</Trans>}
+                    confirmButtonVariant="textPrimary"
+                    titleSx={{ textTransform: 'none !important', fontWeight: 400 }}
+                  />
+                )
+              }
+              clickableTooltip
+            />
+          )}
         </Flex>
         <Box width={20} />
       </Flex>

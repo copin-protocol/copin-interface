@@ -35,7 +35,7 @@ export default function useUpdateCopyTrade() {
   })
 
   const toggleStatus = useCallback(
-    (data: CopyTradeData, onSuccess?: (data: CopyTradeData) => void) => {
+    async (data: CopyTradeData, onSuccess?: (data: CopyTradeData) => void) => {
       updateCopyTrade(
         {
           copyTradeId: data.id,
@@ -83,4 +83,7 @@ export function useBulkUpdateCopyTrade() {
       toast.error(<ToastBody title={<Trans>Error</Trans>} message={getErrorMessage(err)} />)
     },
   })
+}
+function getCopyTradeListApi() {
+  throw new Error('Function not implemented.')
 }

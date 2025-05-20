@@ -6,7 +6,7 @@ import { getTraderStatisticApi } from 'apis/traderApis'
 import Text from 'components/@trader/TraderExplorerTableView/Text'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import TimeFilter, { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
-import { useIsPremiumAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
+import { useIsProAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useVaultDetailsContext from 'pages/VaultDetails/useVaultDetailsProvider'
 import { Box, Flex, Type } from 'theme/base'
@@ -19,7 +19,7 @@ import RowItem from './RowItem'
 export default function VaultPerformance() {
   const { vaultCopyWallet } = useVaultDetailsContext()
 
-  const { checkIsPremium } = useIsPremiumAndAction()
+  const { checkIsPro } = useIsProAndAction()
   const timeFilterOptions = TIME_FILTER_OPTIONS.filter((e) => e.id !== TimeFilterByEnum.ALL_TIME)
   const { currentOption: timeOption, changeCurrentOption } = useOptionChange({
     optionName: URL_PARAM_KEYS.EXPLORER_TIME_FILTER,
@@ -28,7 +28,7 @@ export default function VaultPerformance() {
   })
 
   const setTimeOption = (option: TimeFilterProps) => {
-    if (option.id === TimeFilterByEnum.ALL_TIME && !checkIsPremium()) return
+    if (option.id === TimeFilterByEnum.ALL_TIME && !checkIsPro()) return
     changeCurrentOption(option)
   }
 

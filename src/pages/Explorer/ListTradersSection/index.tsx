@@ -1,17 +1,22 @@
 import { Trans } from '@lingui/macro'
 import { ArrowElbowLeftUp } from '@phosphor-icons/react'
 import { useResponsive, useSize } from 'ahooks'
-import React, { memo, useMemo, useRef } from 'react'
+import { ReactNode, useMemo, useRef } from 'react'
 import styled from 'styled-components/macro'
 
 import { ApiListResponse } from 'apis/api'
 import { CompareButton } from 'components/@backtest/BacktestPickTradersButton'
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import TraderListCard from 'components/@trader/TraderExplorerListView'
 import CustomizeColumnMobile from 'components/@trader/TraderExplorerListView/CustomizeColumnMobile'
 import TraderListTable from 'components/@trader/TraderExplorerTableView'
 import CustomizeColumn from 'components/@trader/TraderExplorerTableView/CustomizeColumn'
 import { tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
+import TraderPermissionTooltip from 'components/@trader/TraderPermissionTooltip'
 import { TraderData } from 'entities/trader.d'
+import { isAllowedPlan } from 'hooks/features/subscription/useCheckFeature'
+import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
+import useMyProfileStore from 'hooks/store/useMyProfile'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
 import ExportCsvButton from 'pages/Explorer/ConditionFilter/ExportCsvButton'
@@ -22,9 +27,14 @@ import { PaginationWithLimit } from 'theme/Pagination'
 import { Box, Flex, Type } from 'theme/base'
 import { MEDIA_WIDTHS } from 'theme/theme'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 import { formatLocalDate } from 'utils/helpers/format'
+import { getRequiredPlan } from 'utils/helpers/permissionHelper'
 
-const ListTradersSection = memo(function ListTradersSectionMemo({
+import { FilterTabEnum } from '../ConditionFilter/configs'
+
+const ListTradersSection = function ListTradersSectionMemo({
   contextValues,
   notes,
 }: {
@@ -32,6 +42,7 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
   notes?: { [key: string]: string }
 }) {
   const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
+
   const { sm } = useResponsive()
   const {
     tab,
@@ -46,9 +57,66 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
     currentLimit,
     changeCurrentLimit,
     filterTab,
+    rankingFilters,
+    filters,
+    resetFilter,
   } = contextValues
 
+  // Permission
+  const myProfile = useMyProfileStore((s) => s.myProfile)
+  const { userPermission, pagePermission } = useExplorerPermission()
+  let noDataMessage: ReactNode | undefined = undefined
+  {
+    const hasFilterRangeFromHigherPlan =
+      filterTab === FilterTabEnum.DEFAULT &&
+      filters.some((_f) => {
+        return userPermission?.fieldsAllowed != null && !userPermission.fieldsAllowed.includes(_f.key)
+      })
+    const hasFilterTimeFromHigherPlan = !userPermission?.timeFramesAllowed?.includes(timeOption.id)
+    let requiredPlan: SubscriptionPlanEnum | undefined = undefined
+    if (hasFilterTimeFromHigherPlan) {
+      requiredPlan = getRequiredPlan({
+        conditionFn: (plan) => {
+          return !!pagePermission?.[plan]?.timeFramesAllowed?.includes(timeOption.id)
+        },
+      })
+    }
+    if (hasFilterRangeFromHigherPlan) {
+      requiredPlan = getRequiredPlan({
+        conditionFn: (plan) => {
+          return (
+            isAllowedPlan({ currentPlan: plan, targetPlan: myProfile?.plan ?? SubscriptionPlanEnum.NON_LOGIN }) &&
+            filters.every((v) => pagePermission?.[plan]?.fieldsAllowed.includes(v.key))
+          )
+        },
+      })
+    }
+    if (requiredPlan) {
+      const title = (
+        <Trans>This URL contains filters available from {SUBSCRIPTION_PLAN_TRANSLATION[requiredPlan]} plan</Trans>
+      )
+      const description = <Trans>Please upgrade to explore traders with advanced filters</Trans>
+      noDataMessage = (
+        <Box pt={4}>
+          <PlanUpgradePrompt
+            title={title}
+            description={description}
+            requiredPlan={requiredPlan}
+            learnMoreSection={SubscriptionFeatureEnum.TRADER_EXPLORER}
+            useLockIcon
+            showTitleIcon
+            cancelText={<Trans>Reset Filters</Trans>}
+            onCancel={resetFilter}
+          />
+        </Box>
+      )
+    }
+  }
+
   const { data, isLoading } = useQueryTraders({
+    currentLimit,
+    currentPage,
+    currentSort,
     tab,
     timeRange,
     timeOption,
@@ -56,6 +124,9 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
     accounts,
     filterTab,
     selectedProtocols,
+    rankingFilters,
+    filters,
+    enabled: !noDataMessage,
   })
 
   const { isSelectedAll, handleSelectAll, checkIsSelected, handleSelect } = useBacktestTradersActions({
@@ -110,10 +181,12 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
               hiddenSelectAllBox
               hiddenSelectItemBox
               lefts={[0, 0]}
+              noDataMessage={noDataMessage}
             />
           ) : (
-            <TraderListCard data={formatedData} isLoading={isLoading} />
+            <TraderListCard data={formatedData} isLoading={isLoading} noDataMessage={noDataMessage} />
           )}
+          <TraderPermissionTooltip />
         </Box>
         <TablePagination
           data={data}
@@ -127,7 +200,7 @@ const ListTradersSection = memo(function ListTradersSectionMemo({
       {/* )} */}
     </Flex>
   )
-})
+}
 
 export default ListTradersSection
 

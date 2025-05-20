@@ -4,6 +4,7 @@ import { POSITION_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
 import { getRangeFilterValues } from 'components/@widgets/TableFilter/helpers'
 import { RangeFilterValues } from 'components/@widgets/TableFilter/types'
 import { PositionData } from 'entities/trader'
+import useLiveTradesPermission from 'hooks/features/subscription/useLiveTradesPermission'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -118,15 +119,17 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
     },
     [setSearchParams]
   )
+  const { positionFieldsAllowed } = useLiveTradesPermission()
   const ranges: RangeFilterValues[] = useMemo(() => {
     const result = Object.entries(POSITION_RANGE_CONFIG_MAPPING).map(([field, values]) => {
+      if (positionFieldsAllowed != null && !positionFieldsAllowed.includes(field as any)) return undefined
       return {
         ...getRangeFilterValues({ urlParamKey: values.urlParamKey ?? '', searchParams: searchParams as any }),
         field,
       }
     })
-    return result.filter((v) => v.gte != null || v.lte != null)
-  }, [searchParams])
+    return result.filter((v) => !!v && (v.gte != null || v.lte != null)) as RangeFilterValues[]
+  }, [positionFieldsAllowed, searchParams])
 
   const changeFilters = useCallback(
     (vars: ChangeFilterVariables) => {
@@ -165,9 +168,10 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
     [setSearchParams]
   )
 
-  const [enabledLiveTrade, setEnabledLiveTrade] = useState(() => {
-    return localStorage.getItem('live_trade_positions_enabled') === '1' ? true : false
-  })
+  const [enabledLiveTrade, setEnabledLiveTrade] = useState(false)
+  // const [enabledLiveTrade, setEnabledLiveTrade] = useState(() => {
+  //   return localStorage.getItem('live_trade_positions_enabled') === '1' ? true : false
+  // })
   const toggleLiveTrade = useCallback((enabled?: boolean) => {
     if (enabled == null) {
       setEnabledLiveTrade((prev) => !prev)
@@ -175,9 +179,9 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
     }
     setEnabledLiveTrade(enabled)
   }, [])
-  useEffect(() => {
-    localStorage.setItem('live_trade_positions_enabled', enabledLiveTrade ? '1' : '0')
-  }, [enabledLiveTrade])
+  // useEffect(() => {
+  //   localStorage.setItem('live_trade_positions_enabled', enabledLiveTrade ? '1' : '0')
+  // }, [enabledLiveTrade])
 
   const contextValue: DaliPositionsContextValues = useMemo(() => {
     return {

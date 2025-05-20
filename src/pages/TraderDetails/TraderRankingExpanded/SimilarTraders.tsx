@@ -5,18 +5,20 @@ import styled from 'styled-components/macro'
 
 import { getTradersApi } from 'apis/traderApis'
 import defaultImage from 'assets/images/similar-trader.png'
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { FilterValues, RankingFieldOption } from 'components/@widgets/ConditionFilterForm/types'
-import { RestrictPremiumFeature } from 'components/@widgets/SubscriptionRestrictModal'
 import { TraderData } from 'entities/trader'
-import { useIsPremium } from 'hooks/features/subscription/useSubscriptionRestrict'
+import useCheckFeature from 'hooks/features/subscription/useCheckFeature'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import { RELEASED_PROTOCOLS } from 'utils/config/constants'
+import { SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 import { encodeRealised } from 'utils/helpers/handleRealised'
 
 import ScoreChart, { ScoreChartData } from '../ScoreChart'
@@ -41,7 +43,8 @@ export default function SimilarTraders({
   formatChartData: (rankingData: TraderData['ranking']) => ScoreChartData[]
   onClickCompareButton: (data: TraderData) => void
 }) {
-  const isPremiumUser = useIsPremium()
+  const { allowedSelectProtocols } = useProtocolPermission()
+  const { isAvailableFeature } = useCheckFeature({ requiredPlan: SubscriptionPlanEnum.PRO })
   const [retryTime, setRetryTime] = useState(0)
   const fieldNames = useMemo(() => rankingFieldOptions.map((option) => option.value), [rankingFieldOptions])
   const alterFieldNames = useMemo(() => {
@@ -90,10 +93,10 @@ export default function SimilarTraders({
   const [isFetching, setIsFetching] = useState(true)
   // TODO: Need new api for this
   const { data: similarTraders } = useQuery(
-    [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, similarTradersFilter, retryTime],
+    [QUERY_KEYS.GET_TOP_TRADERS, timeOption.id, similarTradersFilter, retryTime, isAvailableFeature],
     () =>
       Promise.all(
-        RELEASED_PROTOCOLS.map((protocol) => {
+        allowedSelectProtocols.map((protocol) => {
           return getTradersApi({
             protocol,
             body: queryBody,
@@ -103,7 +106,7 @@ export default function SimilarTraders({
     {
       keepPreviousData: true,
       retry: 0,
-      enabled: !!timeOption && retryTime <= MAXIMUM_RETRY_TIME,
+      enabled: !!timeOption && retryTime <= MAXIMUM_RETRY_TIME && !!isAvailableFeature,
       select: (result) => {
         return result.reduce((result, data) => {
           return [...result, ...filterFoundData(data.data, [traderData])]
@@ -122,7 +125,7 @@ export default function SimilarTraders({
     }
   )
 
-  if (!isPremiumUser) {
+  if (!isAvailableFeature) {
     return (
       <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
         <Box
@@ -141,13 +144,23 @@ export default function SimilarTraders({
             width: '100%',
             height: '100%',
             justifyContent: 'center',
+            alignItems: 'center',
             bg: 'modalBG',
             backdropFilter: 'blur(5px)',
             pt: [4, 4, 4, 5],
             pb: 4,
           }}
         >
-          <RestrictPremiumFeature />
+          <PlanUpgradePrompt
+            requiredPlan={SubscriptionPlanEnum.PRO}
+            title={<Trans>Available from {SUBSCRIPTION_PLAN_TRANSLATION[SubscriptionPlanEnum.PRO]} plan</Trans>}
+            description={<Trans>Unlock to discover more similar traders and advanced insights.</Trans>}
+            noLoginDescription={<Trans>Login to upgrade</Trans>}
+            useLockIcon
+            showTitleIcon
+            showLearnMoreButton
+            learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+          />
         </Flex>
       </Box>
     )

@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
+import { Lock } from '@phosphor-icons/react'
 
 import SafeDropdownIndex from 'components/@widgets/SafeDropdownIndex'
 import { CopyWalletData } from 'entities/copyWallet'
+import useCopyTradePermission from 'hooks/features/subscription/useCopyTradePermission'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
-import { Box, Image, Type } from 'theme/base'
+import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 
@@ -27,6 +29,7 @@ export default function SelectCopyWallet({
   buttonSx?: any
   sx?: any
 }) {
+  const { userPermission } = useCopyTradePermission()
   if (!currentWallet || !wallets) return null
   return (
     <Dropdown
@@ -53,6 +56,7 @@ export default function SelectCopyWallet({
                 <WalletItem
                   key={wallet.id}
                   data={wallet}
+                  disabled={!userPermission?.exchangeAllowed?.includes(wallet.exchange)}
                   isActive={!!isSelectedAll ? false : wallet.id === currentWallet.id}
                 />
               </DropdownItem>
@@ -62,7 +66,15 @@ export default function SelectCopyWallet({
       }
     >
       <SafeDropdownIndex />
-      {isSelectedAll ? <AllSelection isActive /> : <WalletItem data={currentWallet} isActive />}
+      {isSelectedAll ? (
+        <AllSelection isActive />
+      ) : (
+        <WalletItem
+          data={currentWallet}
+          isActive
+          disabled={!userPermission?.exchangeAllowed?.includes(currentWallet.exchange)}
+        />
+      )}
     </Dropdown>
   )
 }
@@ -75,7 +87,7 @@ function AllSelection({ isActive }: { isActive: boolean }) {
   )
 }
 
-function WalletItem({ data, isActive }: { data: CopyWalletData; isActive: boolean }) {
+function WalletItem({ data, isActive, disabled }: { data: CopyWalletData; isActive: boolean; disabled: boolean }) {
   return (
     <Box
       sx={{
@@ -85,21 +97,21 @@ function WalletItem({ data, isActive }: { data: CopyWalletData; isActive: boolea
         textTransform: 'none',
       }}
     >
-      <Type.Caption sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+      <Flex sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
         <Image src={parseExchangeImage(data.exchange)} width={20} height={20} sx={{ flexShrink: 0 }} />
-        <Box
-          as="span"
-          sx={{
-            display: 'inline-block',
-            verticalAlign: 'middle',
-            width: '100%',
-            maxWidth: 200,
-            ...overflowEllipsis(),
-          }}
-        >
-          {parseWalletName(data)}
-        </Box>
-      </Type.Caption>
+        <Flex sx={{ alignItems: 'center' }}>
+          <Type.Caption
+            sx={{
+              width: '100%',
+              maxWidth: 200,
+              ...overflowEllipsis(),
+            }}
+          >
+            {parseWalletName(data)}
+          </Type.Caption>
+          {disabled && <IconBox color="neutral3" mr={2} icon={<Lock size={12} />} />}
+        </Flex>
+      </Flex>
     </Box>
   )
 }

@@ -14,19 +14,27 @@ export interface QuickViewTraderState {
 
 interface QuickViewTraderStore {
   trader: QuickViewTraderState | null
-  setTrader: (state: QuickViewTraderState | null, disabledActions?: DisabledActionType[]) => void
+  options:
+    | {
+        disabledActions?: DisabledActionType[]
+        disabledLinkAccount?: boolean
+      }
+    | undefined
+  setTrader: (
+    state: QuickViewTraderState | null,
+    options?: { disabledActions?: DisabledActionType[]; disabledLinkAccount?: boolean }
+  ) => void
   resetTrader: () => void
-  disabledActions: DisabledActionType[] | undefined
 }
 
 const useQuickViewTraderStore = create<QuickViewTraderStore>()(
   immer((set) => ({
     trader: null,
-    disabledActions: undefined,
-    setTrader: (trader, disabledActions) =>
+    options: {},
+    setTrader: (trader, options) =>
       set((state) => {
         state.trader = trader
-        if (!!disabledActions?.length) state.disabledActions = disabledActions
+        state.options = options
       }),
     resetTrader: () => set({ trader: null }),
   }))

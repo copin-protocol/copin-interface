@@ -1,6 +1,6 @@
 import { Flex } from 'theme/base'
 
-const Badge = ({ count }: { count: number | string }) => {
+const Badge = ({ count, sx }: { count: number | string; sx?: any }) => {
   return (
     <Flex
       alignItems="center"
@@ -15,6 +15,7 @@ const Badge = ({ count }: { count: number | string }) => {
         fontSize: '12px',
         height: '20px',
         width: 'fit-content',
+        ...sx
       }}
     >
       {count}

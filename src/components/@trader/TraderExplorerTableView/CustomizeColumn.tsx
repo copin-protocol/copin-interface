@@ -1,5 +1,6 @@
 import { Gear } from '@phosphor-icons/react'
 
+import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
 import { useTraderExplorerTableColumns } from 'hooks/store/useTraderCustomizeColumns'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
@@ -7,13 +8,15 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 
 import { tableSettings } from './configs'
 
-const REQUIRED_FIELDS = ['account', 'pnl', 'avgRoi', 'winRate']
+const REQUIRED_FIELDS = ['account', 'pnl', 'winRate']
 
 // TODO: @toanla use the same as perps explorer
 const CustomizeColumn = ({ hasTitle, menuSx = {} }: { hasTitle?: boolean; menuSx?: any }) => {
   const { columnKeys: visibleColumns, setColumnKeys: setVisibleColumns } = useTraderExplorerTableColumns()
+  const { userPermission } = useExplorerPermission()
+  const filteredTableSettings = tableSettings.filter((item) => userPermission?.fieldsAllowed?.includes(item.id))
   const onChange = (index: number) => {
-    const id = tableSettings[index].id
+    const id = filteredTableSettings[index].id
     if (id) {
       // setUserTraderList(new Set(userTraderList).add(tableSettings[index].id))
       setVisibleColumns(visibleColumns.includes(id) ? visibleColumns.filter((e) => e !== id) : [...visibleColumns, id])
@@ -36,7 +39,7 @@ const CustomizeColumn = ({ hasTitle, menuSx = {} }: { hasTitle?: boolean; menuSx
       menuDismissible
       menu={
         <>
-          {tableSettings.map((item, index) => {
+          {filteredTableSettings.map((item, index) => {
             const isDisable = REQUIRED_FIELDS.includes(item.id)
             return (
               <Box mb={2} key={index} pt={index === 0 ? 2 : 0} sx={{ '.label *': { p: 0 } }}>

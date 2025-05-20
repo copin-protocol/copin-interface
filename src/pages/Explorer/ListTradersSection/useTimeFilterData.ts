@@ -1,6 +1,10 @@
 import { useQuery as useApolloQuery } from '@apollo/client'
 import { TraderGraphQLResponse } from 'graphql/entities/traders.graph'
-import { SEARCH_TRADERS_QUERY } from 'graphql/traders.graph'
+import {
+  SEARCH_TRADERS_STATISTIC_FUNCTION_NAME,
+  SEARCH_TRADERS_STATISTIC_QUERY,
+  SEARCH_TRADER_STATISTIC_INDEX,
+} from 'graphql/query'
 import { useMemo } from 'react'
 
 import { normalizeTraderPayload } from 'apis/traderApis'
@@ -15,18 +19,18 @@ const useTimeFilterData = ({
   timeOption,
   selectedProtocols,
   isRangeSelection = false,
+  enabled = true,
 }: {
   requestData: RequestBodyApiData
   timeOption: TimeFilterProps
   selectedProtocols: ProtocolEnum[] | null
   isRangeSelection?: boolean
+  enabled?: boolean
 }) => {
   const isAllowFetchData = !!timeOption && !isRangeSelection
 
   // FETCH DATA
   const queryVariables = useMemo(() => {
-    const index = 'copin.position_statistics'
-
     const { sortBy, ranges, pagination } = normalizeTraderPayload(requestData)
 
     const rangeFilters = transformGraphqlFilters(ranges ?? [])
@@ -45,19 +49,23 @@ const useTimeFilterData = ({
       paging: { size: pagination?.limit, from: pagination?.offset },
     }
 
-    return { index, body }
+    return { index: SEARCH_TRADER_STATISTIC_INDEX, body }
   }, [requestData, selectedProtocols, timeOption])
 
   const {
     data: traders,
     loading,
     previousData,
-  } = useApolloQuery<TraderGraphQLResponse<ResponseTraderData>>(SEARCH_TRADERS_QUERY, {
+  } = useApolloQuery<TraderGraphQLResponse<ResponseTraderData>>(SEARCH_TRADERS_STATISTIC_QUERY, {
     variables: queryVariables,
-    skip: !isAllowFetchData || selectedProtocols == null,
+    skip: !isAllowFetchData || selectedProtocols == null || !enabled,
   })
 
-  return { traders: traders?.searchPositionStatistic || previousData?.searchPositionStatistic, loading }
+  return {
+    traders:
+      traders?.[SEARCH_TRADERS_STATISTIC_FUNCTION_NAME] || previousData?.[SEARCH_TRADERS_STATISTIC_FUNCTION_NAME],
+    loading,
+  }
 }
 
 export default useTimeFilterData

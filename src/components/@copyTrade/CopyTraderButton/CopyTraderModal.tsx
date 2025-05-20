@@ -14,6 +14,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade.d'
 import { TradingEventStatusEnum } from 'entities/event'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
+import useCopyTradePermission from 'hooks/features/subscription/useCopyTradePermission'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMyProfileStore from 'hooks/store/useMyProfile'
@@ -25,6 +26,7 @@ import { DCP_SUPPORTED_PROTOCOLS } from 'utils/config/constants'
 import {
   AlertTypeEnum,
   CopyTradePlatformEnum,
+  CopyTradeStatusEnum,
   CopyTradeTypeEnum,
   EventTypeEnum,
   ProtocolEnum,
@@ -64,6 +66,7 @@ export default function CopyTraderDrawer({
   const { hasCopiedChannel, handleGenerateLinkBot } = useBotAlertContext()
   const [tab, handleTab] = useState<string>(TabKeyEnum.New)
   const [copyTradeData, setCopyTradeData] = useState<CopyTradeData | null>()
+  const { userPermission } = useCopyTradePermission()
   const { data: copies, isLoading: loadingCopies } = useQuery(
     [QUERY_KEYS.GET_COPY_TRADE_SETTINGS],
     () =>
@@ -220,7 +223,20 @@ export default function CopyTraderDrawer({
     >
       <Box sx={{ position: 'relative', width: '100%', mx: 'auto' }}>
         {isNewTab && (
-          <CopyTraderForm onSubmit={onSubmit} isSubmitting={isLoading} defaultFormValues={_defaultFormValues} />
+          <CopyTraderForm
+            defaultOpenUpgradeModal={
+              userPermission?.copyTradeQuota != null &&
+              (copies?.data?.filter((copy) => copy.status === CopyTradeStatusEnum.RUNNING)?.length ?? 0) >=
+                userPermission.copyTradeQuota
+            }
+            onDismissUpgradeModal={() => {
+              setCopyTradeData(null)
+              onClose()
+            }}
+            onSubmit={onSubmit}
+            isSubmitting={isLoading}
+            defaultFormValues={_defaultFormValues}
+          />
         )}
         {isCloneTab && !!copies && (
           <>

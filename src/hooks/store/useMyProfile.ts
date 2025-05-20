@@ -13,7 +13,9 @@ const useMyProfileStore = create<MyProfileState>()(
   immer((set) => ({
     myProfile: null,
     isAuthenticated: null,
-    setMyProfile: (data: UserData | null) => set({ myProfile: data, isAuthenticated: data ? true : false }),
+    setMyProfile: (data: UserData | null) =>
+      // @ts-ignore
+      set({ myProfile: data, isAuthenticated: data ? true : false }),
   }))
 )
 

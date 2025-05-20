@@ -9,11 +9,12 @@ import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import TableRangeFilterIcon from 'components/@widgets/TableFilter/TableRangeFilterIcon'
 import { renderEntry, renderOpeningPnL, renderSizeOpening, renderTrader } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
+import useOIPermission from 'hooks/features/subscription/useOIPermission'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 
 const columns: ColumnData<PositionData, ExternalSource>[] = [
@@ -49,8 +50,15 @@ const columns: ColumnData<PositionData, ExternalSource>[] = [
     key: 'size',
     style: { width: '218px' },
     render: (item, index, externalSource) => renderSizeOpening(item),
-    filterComponent: (
-      <TableRangeFilterIcon config={{ type: 'number', urlParamKey: 'size', label: <Trans>Size</Trans> }} />
+    filterComponent: ({ externalSource }) => (
+      <TableRangeFilterIcon
+        config={{ type: 'number', urlParamKey: 'size', label: <Trans>Size</Trans> }}
+        requiredPlan={
+          externalSource?.allowedFilter != null && !externalSource.allowedFilter
+            ? externalSource?.planToFilter
+            : undefined
+        }
+      />
     ),
     // filterComponent: <TableRangeFilterIcon  />,
   },
@@ -82,6 +90,8 @@ export type OpeningPositionProps = {
 export type OpeningPositionComponentProps = {
   onClickItem?: (data: PositionData) => void
   onQuickView?: ({ address, protocol }: { address: string; protocol: ProtocolEnum }) => void
+  allowedFilter?: boolean
+  planToFilter?: SubscriptionPlanEnum
 } & OpeningPositionProps
 
 export default function TopOpeningsWindow(props: OpeningPositionProps) {
@@ -96,6 +106,8 @@ export default function TopOpeningsWindow(props: OpeningPositionProps) {
 
 type ExternalSource = {
   onQuickView?: ({ address, protocol }: { address: string; protocol: ProtocolEnum }) => void
+  allowedFilter?: boolean
+  planToFilter?: SubscriptionPlanEnum
 }
 function OpeningPositionsTable({
   isLoading,
@@ -103,9 +115,13 @@ function OpeningPositionsTable({
   scrollDep,
   onClickItem,
   onQuickView,
+  allowedFilter,
+  planToFilter,
 }: OpeningPositionComponentProps) {
   const externalSource: ExternalSource = {
     onQuickView,
+    allowedFilter,
+    planToFilter,
   }
   return (
     <Table
@@ -133,7 +149,7 @@ function OpeningPositionsTable({
   )
 }
 
-export function OpeningPositionsWrapper({ children }: { children: any }) {
+function OpeningPositionsWrapper({ children }: { children: any }) {
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
@@ -156,13 +172,16 @@ export function OpeningPositionsWrapper({ children }: { children: any }) {
     },
     [setTrader]
   )
+  const { allowedFilter, planToFilter } = useOIPermission()
 
   const renderedChildren = useMemo(() => {
     return cloneElement<OpeningPositionComponentProps>(children, {
       onClickItem: handleSelectItem,
       onQuickView: handleQuickView,
+      allowedFilter,
+      planToFilter,
     })
-  }, [children, handleSelectItem, handleQuickView])
+  }, [children, handleSelectItem, handleQuickView, allowedFilter, planToFilter])
 
   return (
     <div style={{ height: '100%' }}>

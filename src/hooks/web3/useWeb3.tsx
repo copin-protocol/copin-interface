@@ -6,11 +6,11 @@ import { getSimpleRpcProvider } from 'utils/web3/getRpcUrl'
 import { useAuthContext } from './useAuth'
 
 const useWeb3 = ({ chainId = DEFAULT_CHAIN_ID }: { chainId?: number } = {}) => {
-  const { provider, account } = useAuthContext()
+  const { wallet, account } = useAuthContext()
   const simpleRpcProvider = useMemo(() => getSimpleRpcProvider(chainId), [chainId])
   // console.log('account', account)
   return {
-    walletProvider: provider,
+    walletProvider: wallet?.provider,
     publicProvider: simpleRpcProvider,
     walletAccount: account,
   }

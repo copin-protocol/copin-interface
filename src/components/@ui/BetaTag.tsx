@@ -23,7 +23,7 @@ export default function BetaTag() {
     >
       <Box as="span" sx={{ lineHeight: '14px', bg: 'neutral7', px: '2px', borderRadius: '2px' }}>
         <GradientText bg={gradientColor}>
-          <Trans>Beta</Trans>
+          <Trans>BETA</Trans>
         </GradientText>
       </Box>
     </Flex>

@@ -6,6 +6,7 @@ import { ApiListResponse, ApiMeta } from 'apis/api'
 import { getTraderHistoryApi, getTraderTokensStatistic } from 'apis/traderApis'
 import { QueryFilter, RangeFilter } from 'apis/types'
 import { PositionData } from 'entities/trader'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import usePageChange from 'hooks/helpers/usePageChange'
 import { TableSortProps } from 'theme/Table/types'
@@ -32,6 +33,16 @@ export default function useQueryClosedPositions({
 }) {
   const { xl } = useResponsive()
   const { currentPage, changeCurrentPage } = usePageChange({ pageName: URL_PARAM_KEYS.TRADER_HISTORY_PAGE })
+
+  const {
+    requiredPlanToUnlimitedPosition,
+    isEnableTokenStats,
+    isEnablePosition,
+    isUnlimitedPosition: isUnlimited,
+    maxPositionHistory: maxAllowedRecords,
+  } = useTraderProfilePermission({ protocol })
+  const isAllowedFetch = isEnablePosition && (isUnlimited || (!isUnlimited && maxAllowedRecords !== 0))
+
   useLayoutEffect(() => {
     if (!currentPage || currentPage < 1) {
       changeCurrentPage(1)
@@ -41,9 +52,9 @@ export default function useQueryClosedPositions({
   }, [])
 
   const { data: tokensStatistic } = useQuery(
-    [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, address],
+    [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, address, isEnableTokenStats],
     () => getTraderTokensStatistic({ protocol, account: address }),
-    { enabled: !!address && !!protocol }
+    { enabled: !!address && !!protocol && isEnableTokenStats }
   )
   const tokenOptions = useMemo(() => {
     if (tokensStatistic?.data?.length) {
@@ -84,9 +95,9 @@ export default function useQueryClosedPositions({
   const rangeFiltersReload: RangeFilter<keyof PositionData>[] = []
   const queryFilters: QueryFilter[] = []
   queryFilters.push({ fieldName: 'status', value: PositionStatusEnum.CLOSE })
-  if (!!address) {
-    queryFilters.push({ fieldName: 'account', value: address })
-  }
+  // if (!!address) {
+  //   queryFilters.push({ fieldName: 'account', value: address })
+  // }
   if (currencyOption?.id && currencyOption?.id !== ALL_TOKENS_ID) {
     // const indexTokens = getTokenTradeList(protocol)
     //   .filter((e) => e.symbol === currencyOption?.id)
@@ -99,27 +110,36 @@ export default function useQueryClosedPositions({
     rangeFiltersReload.push({ fieldName: 'closeBlockNumber', gte: latestBlockNumber.current + 1 })
   }
   const limits = useMemo(() => {
-    if (!currentPage) return []
+    if (!currentPage || (!isUnlimited && maxAllowedRecords === 0)) return []
+
     const _currentPage = currentPage > MAX_FIRST_LOAD_PAGE ? MAX_FIRST_LOAD_PAGE : currentPage
-    const maxPositionCount = _currentPage * DEFAULT_LIMIT
+    let maxPositionCount = _currentPage * DEFAULT_LIMIT
+
+    if (!isUnlimited && maxAllowedRecords > 0) {
+      maxPositionCount = Math.min(maxPositionCount, maxAllowedRecords)
+    }
+
     const maxLoadTimes = Math.ceil(maxPositionCount / MAX_PAGE_LIMIT)
     const result: number[] = []
     let remainPositionCount = maxPositionCount
+
     for (let i = 1; i <= maxLoadTimes; i++) {
       if (i === maxLoadTimes) {
         result.push(remainPositionCount)
-        continue
+      } else {
+        result.push(MAX_PAGE_LIMIT)
+        remainPositionCount -= MAX_PAGE_LIMIT
       }
-      result.push(MAX_PAGE_LIMIT)
-      remainPositionCount -= MAX_PAGE_LIMIT
     }
+
     return result
-  }, [currentPage])
+  }, [currentPage, isUnlimited, maxAllowedRecords])
 
   const [initiatedClosedPositions, setInitiated] = useState(false)
   const [closedPositions, setClosedPositions] = useState<ApiListResponse<PositionData>>()
   const [isLoadingClosedPositions, setIsLoadingClosedPositions] = useState(false)
   const [isFetchingClosedPositions, setIsFetchingClosedPositions] = useState(false)
+  const defaultLimit = Math.min(maxAllowedRecords, DEFAULT_LIMIT)
 
   const [enabledReload, setEnabledReload] = useState(false)
   useEffect(() => {
@@ -128,20 +148,21 @@ export default function useQueryClosedPositions({
     return () => clearTimeout(timeout)
   }, [isExpanded])
   useQuery(
-    [QUERY_KEYS.GET_POSITIONS_HISTORY, address, protocol, 'reload'],
+    [QUERY_KEYS.GET_POSITIONS_HISTORY, address, protocol, 'reload', isAllowedFetch],
     () => {
       return getTraderHistoryApi({
-        limit: DEFAULT_LIMIT,
+        limit: defaultLimit,
         offset: 0,
         sort: defaultSort,
+        account: address,
         protocol,
         queryFilters,
         rangeFilters: rangeFiltersReload,
       })
     },
     {
-      enabled: enabledReload && !isExpanded,
-      refetchInterval: isExpanded ? undefined : 15_000,
+      enabled: enabledReload && !isExpanded && isAllowedFetch,
+      refetchInterval: isExpanded || !isAllowedFetch ? undefined : 15_000,
       retry: 0,
       onSuccess: (data) => {
         if (!enabledReload || isExpanded) return
@@ -176,6 +197,7 @@ export default function useQueryClosedPositions({
       currentSort?.sortBy,
       currentSort?.sortType,
       protocol,
+      isAllowedFetch,
     ],
     () => {
       if (!initiatedClosedPositions || forceSetPositions) {
@@ -186,6 +208,7 @@ export default function useQueryClosedPositions({
               limit,
               offset: pageToOffset(index + 1, MAX_PAGE_LIMIT),
               sort: currentSort,
+              account: address,
               protocol,
               queryFilters,
               rangeFilters,
@@ -195,9 +218,10 @@ export default function useQueryClosedPositions({
       } else {
         setIsFetchingClosedPositions(true)
         return getTraderHistoryApi({
-          limit: DEFAULT_LIMIT,
-          offset: pageToOffset(currentPage, DEFAULT_LIMIT),
+          limit: defaultLimit,
+          offset: pageToOffset(currentPage, defaultLimit),
           sort: currentSort,
+          account: address,
           protocol,
           queryFilters,
           rangeFilters,
@@ -205,7 +229,7 @@ export default function useQueryClosedPositions({
       }
     },
     {
-      enabled: !!address,
+      enabled: !!address && isAllowedFetch,
       retry: 0,
       onSettled: () => {
         setIsLoadingClosedPositions(false)
@@ -267,7 +291,9 @@ export default function useQueryClosedPositions({
     changeCurrentPage(currentPage + 1)
   }, [changeCurrentPage, currentPage])
   const hasNextClosedPositions =
-    closedPositions && closedPositions.meta.limit + closedPositions.meta.offset < closedPositions.meta.total
+    closedPositions &&
+    closedPositions.meta.limit + closedPositions.meta.offset <
+      (maxAllowedRecords === 0 ? closedPositions.meta.total : maxAllowedRecords)
 
   return useMemo(
     () => ({
@@ -282,6 +308,9 @@ export default function useQueryClosedPositions({
       hasNextClosedPositions,
       handleFetchClosedPositions,
       isFetchingClosedPositions,
+      maxAllowedRecords,
+      isUnlimited,
+      requiredPlanToUnlimitedPosition,
     }),
     [
       resetSort,
@@ -297,6 +326,9 @@ export default function useQueryClosedPositions({
       hasNextClosedPositions,
       handleFetchClosedPositions,
       isFetchingClosedPositions,
+      maxAllowedRecords,
+      isUnlimited,
+      requiredPlanToUnlimitedPosition,
     ]
   )
 }

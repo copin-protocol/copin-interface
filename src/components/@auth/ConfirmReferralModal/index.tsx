@@ -92,12 +92,11 @@ const ConfirmReferralModal = ({
           />
 
           <Flex mt={[3, 24]} width="100%" sx={{ gap: 3 }}>
-            <Button size="lg" variant="outline" type="button" onClick={onSkip} sx={{ flex: 1 }}>
+            <Button variant="outline" type="button" onClick={onSkip} sx={{ flex: 1 }}>
               {skipping ? <Trans>Skipping...</Trans> : <Trans>No, thanks</Trans>}
             </Button>
             <Button
               sx={{ flex: 1 }}
-              size="lg"
               variant="primary"
               type="submit"
               isLoading={submitting}

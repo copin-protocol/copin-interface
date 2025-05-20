@@ -33,7 +33,7 @@ const WalletManagementPage = lazy(() => import('./WalletManagement'))
 const StatsPage = lazy(() => import('./Stats'))
 const SharedBacktestSinglePage = lazy(() => import('./SharedBacktestSingle'))
 const SharedBacktestMultiplePage = lazy(() => import('./SharedBacktestMultiple'))
-const AlertDashboardPage = lazy(() => import('./Settings/AlertDashboard'))
+const AlertSettingsPage = lazy(() => import('./Settings'))
 const UserSubscriptionPage = lazy(() => import('./Settings/UserSubscription'))
 const SubscriptionPage = lazy(() => import('./Subscription'))
 const LinkBotTelegramPage = lazy(() => import('./LinkBotTelegram'))
@@ -51,6 +51,7 @@ const ReferralManagementPage = lazy(() => import('./ReferralManagement'))
 const DailyTradesPage = lazy(() => import('./DailyTrades'))
 const PerpDEXDetailsPage = lazy(() => import('./PerpDEXsExplorer/PerpDexDetails'))
 const CopinLitePage = lazy(() => import('./CopinLite'))
+const Components = lazy(() => import('./Components'))
 
 function App() {
   useEffect(() => {
@@ -71,6 +72,7 @@ function App() {
           <ScrollToTop />
           <QSReader />
           <Switch>
+            <Route exact path={'/components'} component={Components}></Route>
             <Route exact path={ROUTES.VAULT_DETAILS.path} component={VaultDetailsPage}></Route>
             <Route exact path={ROUTES.EVENTS.path} component={EventsPage}></Route>
             <Route exact path={ROUTES.EVENT_DETAILS.path} component={EventDetailsPage}></Route>
@@ -89,7 +91,7 @@ function App() {
             <Route path={ROUTES.SYSTEM_STATUS.path} component={SystemStatusPage}></Route>
 
             <AuthedRoute path={ROUTES.MY_PROFILE.path} component={MyProfilePage}></AuthedRoute>
-            <AuthedRoute exact path={ROUTES.ALERT_LIST.path} component={AlertDashboardPage}></AuthedRoute>
+            <AuthedRoute path={ROUTES.ALERT.path} component={AlertSettingsPage}></AuthedRoute>
             <AuthedRoute path={ROUTES.USER_SUBSCRIPTION.path} component={UserSubscriptionPage}></AuthedRoute>
             <AuthedRoute path={ROUTES.WALLET_MANAGEMENT.path} component={WalletManagementPage}></AuthedRoute>
             <Route path={ROUTES.LINK_BOT_ALERT.path} component={LinkBotTelegramPage}></Route>

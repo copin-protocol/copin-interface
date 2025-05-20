@@ -1,12 +1,17 @@
+import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { v4 as uuid } from 'uuid'
 
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { TraderData } from 'entities/trader'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
+import { SubscriptionFeatureEnum } from 'utils/config/enums'
 import { rankingFieldOptions } from 'utils/config/options'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 
 export default function PercentileRankingDetails({
   data,
@@ -17,6 +22,9 @@ export default function PercentileRankingDetails({
   comparedTrader: TraderData | null
   activeFields: (keyof TraderData)[]
 }) {
+  const { traderRankingFields, requiredPlanToMaxTraderRanking } = useTraderProfilePermission({
+    protocol: data.protocol,
+  })
   const ranking = data.ranking
   const comparedRanking = comparedTrader?.ranking
   return (
@@ -40,19 +48,33 @@ export default function PercentileRankingDetails({
           </Flex>
           <Box sx={{ width: '100%', height: '100%', bg: 'neutral4' }} />
           <Flex sx={{ width: '100%', flexDirection: 'column', gap: 24 }}>
-            {rankingFieldOptions.slice(6).map((option, index) => {
-              return (
-                <RankingComparedItem
-                  account={data.account}
-                  comparedAccount={comparedTrader.account}
-                  key={index}
-                  label={option.label}
-                  value={ranking[option.value]}
-                  comparedValue={comparedRanking[option.value]}
-                  isActive={activeFields.includes(option.value)}
-                />
-              )
-            })}
+            {traderRankingFields.length > 6 ? (
+              rankingFieldOptions.slice(6).map((option, index) => {
+                return (
+                  <RankingComparedItem
+                    account={data.account}
+                    comparedAccount={comparedTrader.account}
+                    key={index}
+                    label={option.label}
+                    value={ranking[option.value]}
+                    comparedValue={comparedRanking[option.value]}
+                    isActive={activeFields.includes(option.value)}
+                  />
+                )
+              })
+            ) : (
+              <PlanUpgradePrompt
+                requiredPlan={requiredPlanToMaxTraderRanking}
+                title={
+                  <Trans>Available from {SUBSCRIPTION_PLAN_TRANSLATION[requiredPlanToMaxTraderRanking]} plans</Trans>
+                }
+                description={<Trans>Upgrade to customize your chart and unlock all 12 insights.</Trans>}
+                showTitleIcon
+                showLearnMoreButton
+                useLockIcon
+                learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+              />
+            )}
           </Flex>
         </>
       ) : (
@@ -74,19 +96,33 @@ export default function PercentileRankingDetails({
           </Flex>
           <Box sx={{ width: '100%', height: '100%', bg: 'neutral4' }} />
           <Flex sx={{ width: '100%', flexDirection: 'column', gap: 24 }}>
-            {rankingFieldOptions.slice(6).map((option, index) => {
-              const value = ranking[option.value]
-              return (
-                <RankingDetailsItem
-                  key={index}
-                  label={option.label}
-                  value={!value ? '--' : Math.round(value)}
-                  statLabel={option.statLabel}
-                  statValue={option.statFormat?.(data[option.value])}
-                  isActive={activeFields.includes(option.value)}
-                />
-              )
-            })}
+            {traderRankingFields.length > 6 ? (
+              rankingFieldOptions.slice(6).map((option, index) => {
+                const value = ranking[option.value]
+                return (
+                  <RankingDetailsItem
+                    key={index}
+                    label={option.label}
+                    value={!value ? '--' : Math.round(value)}
+                    statLabel={option.statLabel}
+                    statValue={option.statFormat?.(data[option.value])}
+                    isActive={activeFields.includes(option.value)}
+                  />
+                )
+              })
+            ) : (
+              <PlanUpgradePrompt
+                requiredPlan={requiredPlanToMaxTraderRanking}
+                title={
+                  <Trans>Available from {SUBSCRIPTION_PLAN_TRANSLATION[requiredPlanToMaxTraderRanking]} plans</Trans>
+                }
+                description={<Trans>Upgrade to customize your chart and unlock all 12 insights.</Trans>}
+                showTitleIcon
+                showLearnMoreButton
+                useLockIcon
+                learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+              />
+            )}
           </Flex>
         </>
       )}

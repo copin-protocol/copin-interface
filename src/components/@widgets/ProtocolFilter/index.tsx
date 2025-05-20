@@ -4,15 +4,15 @@ import { DropdownProps } from 'rc-dropdown/lib/Dropdown'
 import { memo, useState } from 'react'
 
 import ProtocolGroup from 'components/@ui/ProtocolGroup'
-import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import Dropdown from 'theme/Dropdown'
 import { Flex } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { compareTwoArrays } from 'utils/helpers/common'
-import { convertProtocolToParams } from 'utils/helpers/protocol'
 
 import ProtocolSelection from './ProtocolSelection'
 
@@ -34,14 +34,14 @@ export const GlobalProtocolFilter = memo(function GlobalProtocolFilterMemo(props
   const { setSearchParams } = useSearchParams()
   const { selectedProtocols, setProtocols, checkIsSelected, handleToggle } = useGlobalProtocolFilterStore()
 
-  const allowList = useGetCopyTradeProtocols()
+  const { allowedCopyTradeProtocols, convertProtocolToParams } = useProtocolPermission()
   const setSelectedProtocols = (protocols: ProtocolEnum[], isClearAll?: boolean): void => {
     const resetParams: Record<string, string | null> = {}
     if (selectedProtocols == null || !compareTwoArrays(protocols, selectedProtocols)) {
       // Reset page to 1 when changing protocols
       resetParams[URL_PARAM_KEYS.PAGE] = null
     }
-    const protocolParams = convertProtocolToParams(protocols)
+    const protocolParams = convertProtocolToParams({ protocols })
     if (!isClearAll) {
       setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: protocolParams, ...resetParams })
     } else {
@@ -56,14 +56,14 @@ export const GlobalProtocolFilter = memo(function GlobalProtocolFilterMemo(props
       setSelectedProtocols={setSelectedProtocols}
       checkIsProtocolChecked={checkIsSelected}
       handleToggleProtocol={handleToggle}
-      allowList={allowList}
+      allowList={allowedCopyTradeProtocols}
       {...props}
     />
   )
 })
 
 export function ProtocolFilter({ menuSx = {}, placement = 'bottomRight', ...props }: ProtocolFilterProps) {
-  const { xl } = useResponsive()
+  const { md } = useResponsive()
   const [visible, setVisible] = useState(false)
   if (props.selectedProtocols == null) return null
   return (
@@ -77,7 +77,7 @@ export function ProtocolFilter({ menuSx = {}, placement = 'bottomRight', ...prop
             handleToggleDropdown={() => setVisible(!visible)}
           />
         }
-        placement={xl ? undefined : placement}
+        placement={md ? undefined : placement}
         buttonVariant="ghost"
         menuSx={{
           width: menuSx.width ? menuSx.width : ['90vw', '95vw', '95vw'],
@@ -86,7 +86,7 @@ export function ProtocolFilter({ menuSx = {}, placement = 'bottomRight', ...prop
           py: 2,
           ...menuSx,
         }}
-        sx={{ minWidth: 'fit-content' }}
+        sx={{ minWidth: 'fit-content', zIndex: Z_INDEX.THEME_MODAL }}
         hasArrow={true}
         dismissible={false}
         visible={visible}

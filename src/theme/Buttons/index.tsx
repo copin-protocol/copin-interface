@@ -20,16 +20,16 @@ export const Button = styled.button<ButtonProps>(
     borderRadius: 'button',
   }),
 
-  ({ theme, block, isLoading }) => `&:before {
+  ({ theme, block, isLoading, size }) => `&:before {
     position: relative;
     top: 3px;
     content: '';
-    border: 2px solid ${theme.colors.neutral1}16;
-    border-top: 2px solid ${theme.colors.neutral2};
+    border: ${size === 'xs' ? 1 : 2}px solid ${theme.colors.neutral1}16;
+    border-top: ${size === 'xs' ? 1 : 2}px solid ${theme.colors.neutral2};
     border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
+    width: ${size === 'xs' ? 12 : 16}px;
+    height: ${size === 'xs' ? 12 : 16}px;
+    margin-right: ${size === 'xs' ? 4 : 8}px;
     animation: spin 1s linear infinite;
     display: ${isLoading ? 'inline-block' : 'none'};
   }

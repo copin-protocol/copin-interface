@@ -37,7 +37,7 @@ export default function ClaimButton({
       return
     }
     if (!account) {
-      connect?.({})
+      connect?.()
       return
     }
     if (!isValid) {

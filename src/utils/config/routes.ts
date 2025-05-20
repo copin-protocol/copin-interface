@@ -89,8 +89,14 @@ const ROUTES = {
   USER_SUBSCRIPTION: {
     path: '/my-subscription',
   },
+  ALERT: {
+    path: '/alerts',
+  },
+  ALERT_LOGS: {
+    path: '/alerts/logs',
+  },
   ALERT_LIST: {
-    path: '/alert',
+    path: '/alerts',
   },
   LINK_BOT_ALERT: {
     path: '/link/telegram',

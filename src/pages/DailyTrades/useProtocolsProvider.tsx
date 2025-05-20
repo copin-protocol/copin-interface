@@ -1,13 +1,12 @@
 import { createContext, useCallback, useContext, useMemo } from 'react'
 
-import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { createProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { ProtocolOptionProps } from 'utils/config/protocols'
-import { convertProtocolToParams } from 'utils/helpers/protocol'
 
 interface ContextValues {
   selectedProtocols: ProtocolEnum[] | null
@@ -27,11 +26,10 @@ export function ProtocolsProvider({ children }: { children: JSX.Element | JSX.El
   const defaultProtocolOptions = useGetProtocolOptions()
   const defaultProtocols = useMemo(() => defaultProtocolOptions.map((p) => p.id), [defaultProtocolOptions])
 
-  const protocolOptions = useGetProtocolOptions()
-  const allowList = useGetCopyTradeProtocols()
+  const { allowedCopyTradeProtocols, allowedSelectProtocols, convertProtocolToParams } = useProtocolPermission()
 
   const { selectedProtocols, checkIsSelected, handleToggle, setProtocols } = createProtocolFilterStore({
-    defaultProtocols: protocolOptions.map((_p) => _p.id),
+    defaultProtocols: allowedSelectProtocols,
     storageKey: 'daily-trade-protocols-filter',
   })()
 
@@ -41,7 +39,7 @@ export function ProtocolsProvider({ children }: { children: JSX.Element | JSX.El
 
       const resetParams: Record<string, string | null> = {}
 
-      const protocolParams = convertProtocolToParams(protocols)
+      const protocolParams = convertProtocolToParams({ protocols: selectedProtocols ?? [] })
 
       if (!isClearAll) {
         setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: protocolParams, ...resetParams })
@@ -51,7 +49,7 @@ export function ProtocolsProvider({ children }: { children: JSX.Element | JSX.El
 
       setProtocols(protocols)
     },
-    [selectedProtocols]
+    [selectedProtocols, convertProtocolToParams]
   )
 
   const contextValue: ContextValues = useMemo(() => {
@@ -62,10 +60,10 @@ export function ProtocolsProvider({ children }: { children: JSX.Element | JSX.El
       setProtocols: setSelectedProtocols,
       defaultProtocols,
       defaultProtocolOptions,
-      allowList,
+      allowList: allowedCopyTradeProtocols,
     }
   }, [
-    allowList,
+    allowedCopyTradeProtocols,
     checkIsSelected,
     defaultProtocolOptions,
     defaultProtocols,

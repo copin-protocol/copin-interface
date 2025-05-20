@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Exclude } from '@phosphor-icons/react'
-import { useId } from 'react'
+import { ReactNode, useId } from 'react'
 
 import { useFilterPairs } from 'hooks/features/useFilterPairs'
 import Tooltip from 'theme/Tooltip'
@@ -9,7 +9,15 @@ import { themeColors } from 'theme/colors'
 
 import PairGroup, { PairGroupFull } from './PairGroup'
 
-export function SelectedMarkets({ pairs, excludedPairs }: { pairs: string[]; excludedPairs: string[] }) {
+export function SelectedMarkets({
+  pairs,
+  excludedPairs,
+  titleSuffix,
+}: {
+  pairs: string[]
+  excludedPairs: string[]
+  titleSuffix?: ReactNode
+}) {
   const { isCopyAll, hasExcludingPairs } = useFilterPairs({ pairs, excludedPairs })
   const tooltipId = 'market_filter' + useId()
   return (
@@ -20,10 +28,16 @@ export function SelectedMarkets({ pairs, excludedPairs }: { pairs: string[]; exc
           {hasExcludingPairs && (
             <Exclude color={`${themeColors.red1}80`} data-tooltip-id={hasExcludingPairs ? tooltipId : undefined} />
           )}
-          <Trans>All pairs</Trans>
+          <Box as="span">
+            <Trans>All pairs</Trans>
+          </Box>
+          {titleSuffix}
         </Flex>
       ) : (
-        <PairGroup pairs={pairs} />
+        <Flex width="100%" justifyContent="flex-start" alignItems="center" sx={{ gap: 1 }}>
+          <PairGroup pairs={pairs} />
+          {titleSuffix}
+        </Flex>
       )}
 
       {hasExcludingPairs && (

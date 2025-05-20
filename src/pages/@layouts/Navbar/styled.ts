@@ -4,6 +4,7 @@ import { SearchResult } from 'theme/Search'
 import { Flex } from 'theme/base'
 import { MEDIA_WIDTHS } from 'theme/theme'
 import { NAVBAR_HEIGHT } from 'utils/config/constants'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { transition } from 'utils/helpers/css'
 
 const LARGE_BREAK_POINT = 1400
@@ -42,8 +43,9 @@ export const MenuWrapper = styled.div<{ visible: boolean; top?: number }>`
 
   @media screen and (max-width: ${LARGE_BREAK_POINT}px) {
     position: fixed;
-    z-index: 100;
+    z-index: ${Z_INDEX.THEME_MODAL + 1};
     top: ${({ top }) => (top == null ? NAVBAR_HEIGHT : top)}px;
+    margin-top: 1px;
     left: 0;
     height: ${({ top }) => `calc(100vh - ${top == null ? NAVBAR_HEIGHT : top}px)`};
     width: 100%;

@@ -225,29 +225,31 @@ export const InputSearch = forwardRef(
           <MagnifyingGlass size={iconSize} />
         </Box>
         <StyledInput {...props} ref={ref} style={{ marginLeft: 8 }} />
-        <Button
-          type="button"
-          variant="ghost"
-          color="neutral3"
-          className="search-btn--clear"
-          p={0}
-          pl={3}
-          sx={{
-            flexShrink: 0,
-            minWidth: '20px',
-            height: '20px',
-            '&>svg': {
-              verticalAlign: 'middle',
-            },
-            color: 'neutral3',
-            '&:hover, &:focus': {
-              color: 'inherit !important',
-            },
-          }}
-          onClick={onClear}
-        >
-          <X size={16} />
-        </Button>
+        {onClear && (
+          <Button
+            type="button"
+            variant="ghost"
+            color="neutral3"
+            className="search-btn--clear"
+            p={0}
+            pl={3}
+            sx={{
+              flexShrink: 0,
+              minWidth: '20px',
+              height: '20px',
+              '&>svg': {
+                verticalAlign: 'middle',
+              },
+              color: 'neutral3',
+              '&:hover, &:focus': {
+                color: 'inherit !important',
+              },
+            }}
+            onClick={onClear}
+          >
+            <X size={16} />
+          </Button>
+        )}
         {props.suffix ? props.suffix : null}
       </InputWrapper>
     )

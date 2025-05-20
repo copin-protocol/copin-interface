@@ -38,7 +38,7 @@ export default function RankingFilterForm({
   }
   const onReset: FilterFormProps['onReset'] = (formValueFactory) => {
     if (formValueFactory) {
-      const formValues = formValueFactory(['pnl', 'winRate'])
+      const formValues = formValueFactory(['pnl'])
       handleChangeOption(formValues)
     }
     handleClose && handleClose()

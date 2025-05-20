@@ -3,9 +3,13 @@ import { Users } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { ComponentProps, Suspense, lazy, useState } from 'react'
 
+import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
 import { TraderData } from 'entities/trader'
-import { useRankingCustomizeStore } from 'hooks/store/useRankingCustomize'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
+import { useUserRankingConfig } from 'hooks/store/useUserCustomize'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
+import { Flex } from 'theme/base'
+import { ProtocolEnum, SubscriptionFeatureEnum } from 'utils/config/enums'
 
 const TraderRankingExpanded = lazy(() => import('./TraderRankingExpanded'))
 type TraderRankingExpandedProps = ComponentProps<typeof TraderRankingExpanded>
@@ -13,9 +17,13 @@ type TraderRankingExpandedProps = ComponentProps<typeof TraderRankingExpanded>
 export default function ExpandTraderRankingButton(
   props: Omit<TraderRankingExpandedProps, 'handleExpand' | 'traderData' | 'traderScore'> & {
     traderData: TraderData | undefined
+    protocol?: ProtocolEnum
   }
 ) {
-  const { customizedRanking } = useRankingCustomizeStore()
+  const { isAllowedProtocol, isEnableCompareTrader, requiredPlanToCompareTrader } = useTraderProfilePermission({
+    protocol: props?.protocol,
+  })
+  const { customizedRanking } = useUserRankingConfig()
 
   const avgScore = !props.traderData
     ? 0
@@ -30,21 +38,30 @@ export default function ExpandTraderRankingButton(
   if (!md) return <></>
   return (
     <>
-      <ButtonWithIcon
-        variant="ghost"
-        onClick={() => setExpanded(true)}
-        sx={{
-          px: 3,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          color: 'neutral2',
-          '&:hover:not(:disabled)': { color: 'neutral1' },
-        }}
-        icon={<Users size={20} />}
-      >
-        <Trans>Compare Trader</Trans>
-      </ButtonWithIcon>
+      <Flex alignItems="center" px={3} sx={{ gap: 1 }}>
+        <ButtonWithIcon
+          variant="ghost"
+          onClick={() => setExpanded(true)}
+          sx={{
+            px: 0,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            color: 'neutral2',
+            '&:hover:not(:disabled)': { color: 'neutral1' },
+          }}
+          icon={<Users size={20} />}
+          disabled={!isEnableCompareTrader || !isAllowedProtocol}
+        >
+          <Trans>Compare Trader</Trans>
+        </ButtonWithIcon>
+        {!isEnableCompareTrader && (
+          <PlanUpgradeIndicator
+            requiredPlan={requiredPlanToCompareTrader}
+            learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+          />
+        )}
+      </Flex>
       <Suspense fallback={<></>}>
         {expanded && (
           <TraderRankingExpanded

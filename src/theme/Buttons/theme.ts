@@ -29,10 +29,10 @@ export const styleVariants = {
     },
   },
   [variants.WARNING]: {
-    color: 'white',
-    bg: 'warning1',
+    color: 'neutral8',
+    bg: 'orange1',
     '&:hover:not(:disabled),&:active:not(:disabled)': {
-      bg: 'warning2',
+      bg: 'orange2',
     },
   },
   [variants.SUCCESS]: {
@@ -164,7 +164,7 @@ export const styleVariants = {
     fontWeight: 'inherit',
     textTransform: 'none',
     bg: 'transparent',
-    p: 0,
+    p: '0 !important',
     border: 'none',
     '&:hover:not(:disabled),&:active:not(:disabled)': {
       color: 'neutral2',
@@ -176,7 +176,7 @@ export const styleVariants = {
     fontWeight: 'inherit',
     textTransform: 'none',
     bg: 'transparent',
-    p: 0,
+    p: '0 !important',
     border: 'none',
     '&:hover:not(:disabled),&:active:not(:disabled)': {
       color: 'primary2',

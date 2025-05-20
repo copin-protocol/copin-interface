@@ -19,8 +19,8 @@ const FilterTag = ({
   limit?: number
   tagSx?: any
 }) => {
-  const { md, xl } = useResponsive()
-  const maxTag = limit ? limit : xl ? 6 : md ? 4 : 1
+  const { lg, xl } = useResponsive()
+  const maxTag = limit ? limit : xl ? 4 : lg ? 3 : 1
   const fieldOptionLabels = filterTab === FilterTabEnum.RANKING ? rankingFieldOptionLabels : defaultFieldOptionLabels
   const fieldOptions = filterTab === FilterTabEnum.RANKING ? rankingFieldOptions : defaultFieldOptions
   return (

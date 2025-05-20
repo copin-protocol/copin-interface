@@ -1,20 +1,21 @@
 import { Trans } from '@lingui/macro'
 import { ArrowLineUp, GridFour, ListDashes } from '@phosphor-icons/react'
-import { ReactNode, memo } from 'react'
+import { ReactNode, memo, useMemo } from 'react'
 import styled from 'styled-components/macro'
 
+import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
 import { tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
 import { ExternalTraderListSource } from 'components/@trader/TraderExplorerTableView/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { TraderData } from 'entities/trader.d'
-import useInternalRole from 'hooks/features/useInternalRole'
-import { IGNORE_FIELDS, useStatsCustomizeStore } from 'hooks/store/useStatsCustomize'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
+import { IGNORE_FIELDS, useUserStatsConfig } from 'hooks/store/useUserCustomize'
 import IconButton from 'theme/Buttons/IconButton'
 import Checkbox from 'theme/Checkbox'
 import CustomizeColumn from 'theme/Table/CustomizeColumn'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Grid, Type } from 'theme/base'
-import { TimeFilterByEnum } from 'utils/config/enums'
+import { SubscriptionFeatureEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
 import { formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
 
 const GridWrapper = styled(Grid)`
@@ -68,7 +69,7 @@ const statsObj = stats.reduce((prev, cur) => {
   return prev
 }, {} as { [key: string]: StatProps })
 
-const TYPES: { [key in TimeFilterByEnum]?: { index: number; key: string; text: string } } = {
+const TYPES: { [key in TimeFilterByEnum]?: { index: number; key: string; text: ReactNode } } = {
   [TimeFilterByEnum.ALL_TIME]: {
     index: 0,
     key: 'ALL',
@@ -94,6 +95,16 @@ const TYPES: { [key in TimeFilterByEnum]?: { index: number; key: string; text: s
     key: '7D',
     text: '7 days',
   },
+  [TimeFilterByEnum.S1_DAY]: {
+    index: 5,
+    key: '1D',
+    text: 'Yesterday',
+  },
+  [TimeFilterByEnum.LAST_24H]: {
+    index: 6,
+    key: 'L24H',
+    text: 'Last 24H',
+  },
 }
 
 const AccountStats = memo(function AccountStatsMemo({
@@ -111,28 +122,28 @@ const AccountStats = memo(function AccountStatsMemo({
     toogleCurrentStatOnly,
     customizeView,
     currentStatOnly,
-  } = useStatsCustomizeStore()
+  } = useUserStatsConfig()
 
   const externalSource: ExternalTraderListSource = {
     isMarketsLeft: customizeView === 'GRID',
   }
 
-  const isInternal = useInternalRole()
-  const types = isInternal
-    ? {
-        ...TYPES,
-        [TimeFilterByEnum.S1_DAY]: {
-          index: 5,
-          key: '1D',
-          text: 'Yesterday',
-        },
-        [TimeFilterByEnum.LAST_24H]: {
-          index: 6,
-          key: 'L24H',
-          text: 'Last 24H',
-        },
-      }
-    : TYPES
+  const types = TYPES
+
+  const { timeFramesAllowed, isEnableLast24H, isEnableYesterday, getRequiredPlanByTimeframe } =
+    useTraderProfilePermission({})
+
+  const formattedData = useMemo(() => {
+    if (!data) return data
+    const _data = [...data]
+    if (!isEnableYesterday) {
+      _data[_data.length - 2] = { ..._data[0], type: TimeFrameEnum.A_DAY } as TraderData
+    }
+    if (!isEnableLast24H) {
+      _data[_data.length - 1] = { ..._data[0], type: TimeFrameEnum.LAST_24H } as TraderData
+    }
+    return _data
+  }, [data, isEnableLast24H, isEnableYesterday])
 
   return (
     <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 765 : undefined} pb={[3, 4, 4, 4, 3]}>
@@ -211,7 +222,7 @@ const AccountStats = memo(function AccountStatsMemo({
               justifyContent="end"
               sx={{
                 flex: 1,
-                py: '11px',
+                py: '9px',
                 borderBottom: 'small',
                 borderColor: 'neutral4',
               }}
@@ -278,32 +289,50 @@ const AccountStats = memo(function AccountStatsMemo({
               >
                 7 DAYS
               </Type.Caption>
-              {isInternal && (
-                <Type.Caption
-                  textAlign="right"
-                  sx={{
-                    flex: 1,
-                    py: 2,
-                    borderBottom: 'small',
-                    borderColor: 'neutral4',
-                  }}
-                >
-                  YESTERDAY
-                </Type.Caption>
-              )}
-              {isInternal && (
-                <Type.Caption
-                  textAlign="right"
-                  sx={{
-                    flex: 1,
-                    py: 2,
-                    borderBottom: 'small',
-                    borderColor: 'neutral4',
-                  }}
-                >
-                  LAST 24H
-                </Type.Caption>
-              )}
+              <Type.Caption
+                textAlign="right"
+                sx={{
+                  flex: 1,
+                  py: 2,
+                  borderBottom: 'small',
+                  borderColor: 'neutral4',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  gap: 1,
+                }}
+              >
+                YESTERDAY
+                {!isEnableYesterday && (
+                  <PlanUpgradeIndicator
+                    requiredPlan={getRequiredPlanByTimeframe(TimeFrameEnum.A_DAY)}
+                    useLockIcon
+                    learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+                  />
+                )}
+              </Type.Caption>
+              <Type.Caption
+                textAlign="right"
+                sx={{
+                  flex: 1,
+                  py: 2,
+                  borderBottom: 'small',
+                  borderColor: 'neutral4',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  gap: 1,
+                }}
+              >
+                LAST 24H
+                {!isEnableLast24H && (
+                  <PlanUpgradeIndicator
+                    requiredPlan={getRequiredPlanByTimeframe(TimeFrameEnum.LAST_24H)}
+                    useLockIcon
+                    learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+                  />
+                )}
+              </Type.Caption>
             </>
           )}
         </Flex>
@@ -361,8 +390,12 @@ const AccountStats = memo(function AccountStatsMemo({
                 <Type.CaptionBold>{stat.label}</Type.CaptionBold>
                 {currentStatOnly ? (
                   <Box>
-                    {stat.render && data[types[timeOption.id]?.index ?? 0]
-                      ? stat.render(data[types[timeOption.id]?.index ?? 0] as TraderData, index, externalSource)
+                    {stat.render && formattedData[types[timeOption.id]?.index ?? 0]
+                      ? stat.render(
+                          formattedData[types[timeOption.id]?.index ?? 0] as TraderData,
+                          index,
+                          externalSource
+                        )
                       : '--'}
                   </Box>
                 ) : (
@@ -373,17 +406,45 @@ const AccountStats = memo(function AccountStatsMemo({
                       types[TimeFilterByEnum.S30_DAY]?.key,
                       types[TimeFilterByEnum.S14_DAY]?.key,
                       types[TimeFilterByEnum.S7_DAY]?.key,
-                      ...(isInternal
-                        ? [types[TimeFilterByEnum.S1_DAY]?.key, types[TimeFilterByEnum.LAST_24H]?.key]
-                        : []),
-                    ].map((item, i) => (
-                      <Flex key={item} justifyContent="space-between" mt={1}>
-                        <Type.Caption color="neutral3" width={40}>
-                          {item}
-                        </Type.Caption>
-                        {stat.render && data[i] ? stat.render(data[i] as TraderData, index, externalSource) : '--'}
-                      </Flex>
-                    ))}
+                      types[TimeFilterByEnum.S1_DAY]?.key,
+                      types[TimeFilterByEnum.LAST_24H]?.key,
+                    ].map((item, i) => {
+                      const isNotAllowed =
+                        //@ts-ignore
+                        !!formattedData?.[i]?.type && !timeFramesAllowed.includes(formattedData[i]?.type)
+                      const requiredPlan = !!formattedData?.[i]?.type
+                        ? //@ts-ignore
+                          getRequiredPlanByTimeframe(formattedData?.[i]?.type)
+                        : undefined
+                      return (
+                        <Flex key={item} justifyContent="space-between" mt={1}>
+                          <Flex alignItems="center" sx={{ gap: 1 }}>
+                            <Type.Caption color="neutral3" width={40}>
+                              {item}
+                            </Type.Caption>
+                            {isNotAllowed && requiredPlan && (
+                              <PlanUpgradeIndicator
+                                requiredPlan={requiredPlan}
+                                useLockIcon
+                                learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+                              />
+                            )}
+                          </Flex>
+                          <Box
+                            key={i}
+                            textAlign="right"
+                            sx={{
+                              filter: isNotAllowed ? 'blur(6px)' : 'none',
+                              position: 'relative',
+                            }}
+                          >
+                            {stat.render && formattedData[i]
+                              ? stat.render(formattedData[i] as TraderData, index, externalSource)
+                              : '--'}
+                          </Box>
+                        </Flex>
+                      )
+                    })}
                   </div>
                 )}
               </Box>
@@ -427,13 +488,15 @@ const AccountStats = memo(function AccountStatsMemo({
                     />
                   </Flex>
 
-                  {data.map((item, i) => (
+                  {formattedData.map((item, i) => (
                     <Box
                       key={i}
                       textAlign="right"
                       sx={{
+                        filter: item?.type && !timeFramesAllowed.includes(item.type) ? 'blur(6px)' : 'none',
                         flex: 1,
                         py: 2,
+                        position: 'relative',
                       }}
                     >
                       {stat.render && item ? stat.render(item, index) : '--'}

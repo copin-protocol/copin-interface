@@ -144,7 +144,7 @@ const ModifyTPSLModal = memo(function ModifyTPSLModal({
     }
     if (positionData.copyPositionId) {
       const signature = await signForActionByCopy({
-        from: walletAccount?.address,
+        from: walletAccount,
         copyPositionId: positionData.copyPositionId,
         data: {
           sl,
@@ -171,7 +171,7 @@ const ModifyTPSLModal = memo(function ModifyTPSLModal({
       })
     } else {
       const signature = await signForAction({
-        from: walletAccount.address,
+        from: walletAccount,
         smartWalletAddress: positionData.address,
         positionIndex: positionData.index,
         data: {

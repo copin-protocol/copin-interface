@@ -1,76 +1,51 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
-import { useResponsive } from 'ahooks'
+import { useState } from 'react'
+import { useQuery } from 'react-query'
 
+import { getPaymentCurrenciesApi } from 'apis/subscription'
+import { useClickLoginButton } from 'components/@auth/LoginAction'
+import PaySubscriptionModal from 'components/@subscription/PaySubscriptionModal'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
-import { GradientText } from 'components/@ui/GradientText'
-import NFTCollectionLinks from 'components/@widgets/NFTCollectionLinks'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
-import { SubscriptionCountData } from 'entities/user'
-import useMulticallQuery from 'hooks/web3/useMulticallQuery'
+import { useSubscriptionPlans } from 'hooks/features/subscription/useSubscriptionPlans'
+import useSearchParams from 'hooks/router/useSearchParams'
+import { useAuthContext } from 'hooks/web3/useAuth'
+import PlanUpgradeModal from 'pages/Settings/UserSubscription/PlanUpgradeModal'
+import SwitchInput from 'theme/SwitchInput'
 import { Box, Flex, Type } from 'theme/base'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
-import { CONTRACT_QUERY_KEYS } from 'utils/config/keys'
-import { OPTIMISM_MAINNET } from 'utils/web3/chains'
-import { CONTRACT_ABIS, CONTRACT_ADDRESSES } from 'utils/web3/contracts'
+import { QUERY_KEYS } from 'utils/config/keys'
+import { PRO_PLAN, PlanConfig } from 'utils/config/subscription'
 
-import Plans, { MobilePlans } from './Plans'
-import TermsAndConditions from './TermsAndConditions'
-import { SubscriptionColors, SubscriptionGrid } from './styled'
-
-const plans = [SubscriptionPlanEnum.PREMIUM, SubscriptionPlanEnum.VIP]
-const queryCalls: { address: string; name: string; params: any[] }[] = plans.map((plan) => ({
-  address: CONTRACT_ADDRESSES[OPTIMISM_MAINNET][CONTRACT_QUERY_KEYS.NFT_SUBSCRIPTION],
-  name: 'tiers',
-  params: [plan],
-}))
+import EnterprisePlan from './EnterprisePlan'
+import FAQ from './FAQ'
+import PlansComparison from './PlansComparison'
+import PricingCards from './PricingCards'
+import { SubscriptionColors, SubscriptionGrid, SubscriptionTitle } from './styled'
 
 export default function SubscriptionPage() {
-  const { xl } = useResponsive()
-  const { data: subscriptionCountData, refetch } = useMulticallQuery(
-    CONTRACT_ABIS[CONTRACT_QUERY_KEYS.NFT_SUBSCRIPTION],
-    queryCalls,
-    OPTIMISM_MAINNET,
-    {
-      refetchInterval: 30_000,
-      select(data: BigNumber[][]) {
-        const result: SubscriptionCountData[] = plans.map((plan, index) => ({
-          plan,
-          count: BigNumber.from(data[index][2]).toNumber(),
-        }))
-        return result
-      },
-      cacheTime: 0,
-      staleTime: 0,
+  const [yearly, setYearly] = useState(true)
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false)
+  const [upgradingPlan, setUpgradingPlan] = useState<PlanConfig | null>(null)
+  const { searchParams } = useSearchParams()
+  const handleClickLogin = useClickLoginButton()
+
+  const { profile } = useAuthContext()
+  const { data: currencies } = useQuery(QUERY_KEYS.GET_PAYMENT_CURRENCIES, getPaymentCurrenciesApi, {
+    enabled: !!profile,
+  })
+  const subscriptionPlans = useSubscriptionPlans()
+  const currentPlan = subscriptionPlans.find((plan) => plan.title === profile?.subscription?.plan)
+  let targetPlan = PRO_PLAN
+  if (searchParams?.['plan']) {
+    const paramsPlan = subscriptionPlans.find((plan) => plan.title === searchParams['plan'] && plan.id >= PRO_PLAN.id)
+    if (paramsPlan) {
+      targetPlan = paramsPlan
     }
-  )
-  if (!xl)
-    return (
-      <SafeComponentWrapper>
-        <CustomPageTitle title="Subscription Plans" />
-        <Box py={4}>
-          <Type.H1 mb={3} textAlign="center">
-            <GradientText>
-              <Trans>Subscription</Trans>
-            </GradientText>
-          </Type.H1>
-          <Type.BodyBold mb={3} display="block" textAlign="center">
-            <Trans>We&apos;ve got a pricing plan that&apos;s perfect for you</Trans>
-          </Type.BodyBold>
-          <NFTCollectionLinks />
-          {/* <Box mt={4} p={3}>
-            <SubscriptionCard />
-          </Box> */}
-          <Box p={3}>
-            <MobilePlans subscriptionCountData={subscriptionCountData} onSuccess={refetch} />
-          </Box>
-          <Box mb={42} />
-          <Box p={3}>
-            <TermsAndConditions />
-          </Box>
-        </Box>
-      </SafeComponentWrapper>
-    )
+  }
+  const highlightPlan =
+    targetPlan && currentPlan ? (targetPlan.id > currentPlan.id ? targetPlan : currentPlan) : targetPlan
+
   return (
     <SafeComponentWrapper>
       <CustomPageTitle title="Subscription Plans" />
@@ -81,40 +56,77 @@ export default function SubscriptionPage() {
           position: 'relative',
         }}
         py={4}
-        px={3}
+        px={[2, 3]}
       >
-        <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: '60vh', overflow: 'hidden' }}>
+        <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: '650px', overflow: 'hidden' }}>
           <SubscriptionColors />
           <SubscriptionGrid />
-          <Box
-            sx={{
-              backgroundImage: `linear-gradient(180deg, rgba(11,14,24,0) 0%, rgba(11,14,24,1) 100%)`,
-              position: 'absolute',
-              bottom: 0,
-              top: '50%',
-              left: 0,
-              right: 0,
-            }}
-          />
         </Box>
-        <Box sx={{ width: '100%', maxWidth: 1200, mx: 'auto', position: 'relative' }}>
-          <Type.H1 mb={3} textAlign="center">
-            <GradientText>
-              <Trans>Subscription</Trans>
-            </GradientText>
-          </Type.H1>
-          <Type.BodyBold mb={3} display="block" textAlign="center">
+        <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: 1400, mx: 'auto' }}>
+          <SubscriptionTitle>
+            <Trans>Subscription</Trans>
+          </SubscriptionTitle>
+          <Type.Body>
             <Trans>We&apos;ve got a pricing plan that&apos;s perfect for you</Trans>
-          </Type.BodyBold>
-          <NFTCollectionLinks />
-          <Flex mt={5} width="100%" sx={{ gap: 24, flexDirection: ['column', 'column', 'column', 'column', 'row'] }}>
-            {/* <SubscriptionCard /> */}
-            <Plans subscriptionCountData={subscriptionCountData} onSuccess={refetch} />
+          </Type.Body>
+          <Flex justifyContent="center" alignItems="center" sx={{ gap: 2, mt: 24 }}>
+            <Type.LargeBold color={yearly ? 'neutral3' : 'neutral1'}>
+              <Trans>Monthly</Trans>
+            </Type.LargeBold>
+            <SwitchInput defaultActive={yearly} onChange={() => setYearly(!yearly)} isManual />
+            <Type.LargeBold color={yearly ? 'neutral1' : 'neutral3'}>
+              <Trans>Yearly</Trans>
+            </Type.LargeBold>
+            <Type.CaptionBold sx={{ bg: yearly ? 'green1' : 'neutral3', px: 2, borderRadius: '8px' }} color="neutral8">
+              <Trans>Save {Math.max(...subscriptionPlans.map((plan) => plan.yearlyDiscountPercent))}%</Trans>
+            </Type.CaptionBold>
           </Flex>
-          <Box mb={42} />
-          <TermsAndConditions />
+          <Box width="100%" px={{ _: 2, xl: 64 }} mx="auto" py={4} alignItems="center">
+            <PricingCards
+              highlightPlan={highlightPlan?.title as SubscriptionPlanEnum}
+              yearly={yearly}
+              plans={subscriptionPlans}
+              currentPlan={profile?.subscription?.plan}
+              onUpgrade={(plan) => {
+                if (!profile) {
+                  handleClickLogin()
+                  return
+                }
+                if (currentPlan && currentPlan.title !== SubscriptionPlanEnum.FREE && plan.id > currentPlan?.id) {
+                  setIsUpgradeModalOpen(true)
+                }
+                setUpgradingPlan(plan)
+              }}
+            />
+            <PlansComparison />
+            <EnterprisePlan />
+            <FAQ />
+          </Box>
         </Box>
       </Box>
+      {!!upgradingPlan && !!currencies && !isUpgradeModalOpen && (
+        <PaySubscriptionModal
+          plan={upgradingPlan}
+          period={yearly ? 12 : 1}
+          onDismiss={() => setUpgradingPlan(null)}
+          currencies={currencies}
+        />
+      )}
+      {currentPlan && upgradingPlan && (
+        <PlanUpgradeModal
+          isOpen={isUpgradeModalOpen}
+          onClose={() => {
+            setUpgradingPlan(null)
+            setIsUpgradeModalOpen(false)
+          }}
+          onConfirm={() => {
+            setIsUpgradeModalOpen(false)
+          }}
+          expiredTime={profile?.subscription?.expiredTime}
+          currentPlan={currentPlan}
+          targetPlan={upgradingPlan}
+        />
+      )}
     </SafeComponentWrapper>
   )
 }

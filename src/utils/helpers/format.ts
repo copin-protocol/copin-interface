@@ -21,11 +21,21 @@ dayjs.extend(isoWeek)
 dayjs.extend(duration)
 dayjs.extend(timezone)
 
-export function formatDuration(durationInSecond: number | undefined) {
+export function formatDuration(durationInSecond: number | undefined, isShorten = true, isInt?: boolean) {
   if (!durationInSecond) return '--'
-  if (durationInSecond < 60) return `${formatNumber(durationInSecond, 0, 0)}s`
-  if (durationInSecond < 3600) return `${formatNumber(durationInSecond / 60, 1, 1)}m`
-  if (durationInSecond < 360000) return `${formatNumber(durationInSecond / (60 * 60), 1, 1)}h`
+  if (durationInSecond < 60) {
+    return `${formatNumber(durationInSecond, 0, 0)}${isShorten ? 's' : durationInSecond > 1 ? ' seconds' : ' second'}`
+  }
+  if (durationInSecond < 3600) {
+    const minute = durationInSecond / 60
+    return `${formatNumber(minute, isInt ? 0 : 1, isInt ? 0 : 1)}${
+      isShorten ? 'm' : minute > 1 ? ' minutes' : ' minute'
+    }`
+  }
+  if (durationInSecond < 360000) {
+    const hour = durationInSecond / (60 * 60)
+    return `${formatNumber(hour, isInt ? 0 : 1, isInt ? 0 : 1)}${isShorten ? 'h' : hour > 1 ? ' hours' : ' hour'}`
+  }
   return `${formatNumber(durationInSecond / (60 * 60 * 24), 0, 0)}d`
 }
 

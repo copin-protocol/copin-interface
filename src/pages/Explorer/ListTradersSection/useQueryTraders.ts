@@ -4,18 +4,16 @@ import { useMemo } from 'react'
 import { normalizeTraderData } from 'apis/normalize'
 import { RequestBodyApiData } from 'apis/types'
 import { ResponseTraderData } from 'entities/trader'
-import useSearchParams from 'hooks/router/useSearchParams'
-import { DEFAULT_LIMIT, MAX_LIMIT } from 'utils/config/constants'
+import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
+import { MAX_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
-import { getInitNumberValue } from 'utils/helpers/geInitialValue'
 import { extractFiltersFromFormValues } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import { FilterTabEnum } from '../ConditionFilter/configs'
 import { formatRankingRanges } from '../helpers/formatRankingRanges'
-import { getInitFilters, getInitSort } from '../helpers/getInitValues'
 import { TradersContextData } from '../useTradersContext'
-// import useRangeFilterData from './useRangeFilterData'
+import useMapPermissionData from './useMapPermissionData'
 import useTimeFilterData from './useTimeFilterData'
 
 export default function useQueryTraders({
@@ -28,41 +26,63 @@ export default function useQueryTraders({
   selectedProtocols,
   isFavTraders = false,
   traderFavorites,
-}: Pick<TradersContextData, 'tab' | 'timeRange' | 'timeOption' | 'isRangeSelection' | 'accounts' | 'filterTab'> & {
+  rankingFilters,
+  filters,
+  currentPage,
+  currentLimit,
+  currentSort,
+  enabled = true,
+}: Pick<
+  TradersContextData,
+  | 'tab'
+  | 'timeRange'
+  | 'timeOption'
+  | 'isRangeSelection'
+  | 'accounts'
+  | 'filterTab'
+  | 'filters'
+  | 'rankingFilters'
+  | 'currentPage'
+  | 'currentLimit'
+  | 'currentSort'
+> & {
   selectedProtocols: ProtocolEnum[] | null
   isFavTraders?: boolean
   traderFavorites?: string[]
+  enabled?: boolean
 }) {
-  const { searchParams } = useSearchParams()
+  const { getData } = useMapPermissionData()
+  const { userPermission } = useExplorerPermission()
 
   const requestData = useMemo<RequestBodyApiData>(() => {
-    const page = getInitNumberValue(searchParams, 'page', 1)
-    const limit = getInitNumberValue(searchParams, 'limit', DEFAULT_LIMIT)
-    const { sortBy, sortType } = getInitSort(searchParams)
-
     const request: Record<string, any> = {
-      sortBy,
-      sortType,
+      sortBy: currentSort?.sortBy,
+      sortType: currentSort?.sortType,
       pagination: {
-        limit,
-        offset: pageToOffset(page ?? 0, limit ?? 0),
+        limit: currentLimit,
+        offset: pageToOffset(currentPage ?? 0, currentLimit ?? 0),
       },
     }
 
-    const ranges = extractFiltersFromFormValues(
-      getInitFilters({
-        searchParams,
-        accounts,
-        filterTab,
-      })
-    )
-    request.ranges = ranges
-    if (filterTab === FilterTabEnum.RANKING) {
-      request.ranges = formatRankingRanges(ranges)
+    if (filterTab === FilterTabEnum.RANKING && userPermission?.isEnableRankingFilter) {
+      request.ranges = formatRankingRanges(extractFiltersFromFormValues(rankingFilters))
+    } else {
+      request.ranges = extractFiltersFromFormValues(filters)
     }
     if (accounts) transformRequestWithAccounts(request, accounts, isFavTraders)
     return request
-  }, [accounts, filterTab, isFavTraders, searchParams])
+  }, [
+    accounts,
+    currentLimit,
+    currentPage,
+    currentSort?.sortBy,
+    currentSort?.sortType,
+    filterTab,
+    filters,
+    isFavTraders,
+    rankingFilters,
+    userPermission?.isEnableRankingFilter,
+  ])
 
   // const { rangeTraders, loadingRangeTraders, loadingRangeProgress } = useRangeFilterData({
   //   protocol,
@@ -76,12 +96,13 @@ export default function useQueryTraders({
     requestData,
     timeOption,
     selectedProtocols,
+    enabled: !!userPermission && enabled,
   })
 
   let timeTradersData = timeTraders
 
   if (!loadingTimeTraders && timeTraders) {
-    const formattedTimeTraders = timeTraders.data.map((trader) => normalizeTraderData(trader))
+    const formattedTimeTraders = timeTraders.data.map((trader) => getData(normalizeTraderData(trader) as any))
     const data = { ...timeTraders, data: formattedTimeTraders } as BaseGraphQLResponse<ResponseTraderData>
     timeTradersData = data
   }

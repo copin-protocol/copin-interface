@@ -16,6 +16,7 @@ import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import Divider from 'components/@ui/Divider'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import MarketGroup, { MarketGroupFull } from 'components/@ui/MarketGroup'
+import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import TextWithEdit from 'components/@ui/TextWithEdit'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import ActionItem from 'components/@widgets/ActionItem'
@@ -26,14 +27,15 @@ import { ColumnData } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { CopyTradePlatformEnum, CopyTradeSideEnum } from 'utils/config/enums'
+import { CopyTradePlatformEnum, CopyTradeSideEnum, CopyTradeStatusEnum } from 'utils/config/enums'
 import { COPY_SIDE_TRANS } from 'utils/config/translations'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
-import { getProtocolDropdownImage, parseExchangeImage } from 'utils/helpers/transform'
+import { parseExchangeImage } from 'utils/helpers/transform'
 
 import { ListCopyTradeType } from '../ListCopyTrade/types'
 import TraderCopyAddress from '../TraderCopyAddress'
+import TraderDisabledWarningIcon from '../TraderDisabledWarningIcon'
 import { isCopyTradeRunningFn, validateNumberValue } from '../helpers'
 import { CopyTradeModalType, CopyTradeWithCheckingData } from '../types'
 
@@ -44,9 +46,15 @@ export const renderCopyTrader = ({
   options,
 }: {
   data: CopyTradeWithCheckingData
-  options?: { enabledQuickView?: boolean }
+  options?: {
+    enabledQuickView?: boolean
+    protocolNotAllowed?: boolean
+    exchangeNotAllowed?: boolean
+  }
 }) => {
   const isRunning = isCopyTradeRunningFn(data.status)
+
+  const isNotAllowed = options?.protocolNotAllowed || options?.exchangeNotAllowed
 
   return (
     <Box
@@ -58,15 +66,22 @@ export const renderCopyTrader = ({
       {data.multipleCopy ? (
         data.accounts && (
           <>
-            <Flex data-tooltip-id={data.id} sx={{ alignItems: 'center', gap: 2, width: 'max-content' }}>
-              <AvatarGroup addresses={data.accounts} size={24} />
+            <Flex sx={{ alignItems: 'center', gap: 2, width: 'max-content' }}>
+              <div data-tooltip-id={data.id}>
+                <AvatarGroup addresses={data.accounts} size={24} />
+              </div>
               <Type.Caption color="neutral4">|</Type.Caption>
-              <Image
-                src={getProtocolDropdownImage({ protocol: data.protocol, isActive: true })}
-                width={16}
-                height={16}
-                sx={{ flexShrink: 0 }}
-              />
+              <ProtocolLogo protocol={data.protocol} size={20} hasText={false} />
+              {isNotAllowed && <Type.Caption color="neutral4">|</Type.Caption>}
+              {isNotAllowed && (
+                <TraderDisabledWarningIcon
+                  account={data.accounts?.join(',')}
+                  protocol={data.protocol}
+                  size={16}
+                  hasTooltip={isRunning}
+                  label={options?.protocolNotAllowed ? 'protocol' : 'exchange'}
+                />
+              )}
             </Flex>
             {isRunning && (
               <Tooltip id={data.id} clickable>
@@ -84,6 +99,7 @@ export const renderCopyTrader = ({
                           maxCopyVolume: data.maxVolume,
                           isRef: data.isRef,
                           plan: data.plan,
+                          running: data.status === CopyTradeStatusEnum.RUNNING,
                           hasCopyTradeVolumeIcon: false, // NOTE
                           hasCopyAddress: true,
                           enabledQuickView: options?.enabledQuickView ?? true,
@@ -107,6 +123,9 @@ export const renderCopyTrader = ({
             maxCopyVolume: data.maxVolume,
             isRef: data.isRef,
             plan: data.plan,
+            hasDisabledWarningIcon: isNotAllowed,
+            disabledLabel: options?.protocolNotAllowed ? 'protocol' : 'exchange',
+            running: data.status === CopyTradeStatusEnum.RUNNING,
             // hasCopyTradeVolumeIcon: isRunning && !UNLIMITED_COPY_SIZE_EXCHANGES.includes(data.exchange),
             hasCopyTradeVolumeIcon: false, // note
             hasCopyAddress: true,
@@ -158,7 +177,7 @@ export const renderVolumeFactory: (props: {
       >
         {isLite && isRunning && balance != null && balance < data.volume && (
           <>
-            <Warning size={16} style={{ color: themeColors.orange1, marginRight: '8px' }} data-tooltip-id={tooltipId} />
+            <Warning size={16} style={{ color: themeColors.orange1, marginRight: '6px' }} data-tooltip-id={tooltipId} />
             <Tooltip id={tooltipId}>
               <Type.Small sx={{ maxWidth: 250, textAlign: 'left' }}>
                 <Trans>Your balance is too low for copy trading. Please Deposit now to continue!</Trans>
@@ -168,6 +187,7 @@ export const renderVolumeFactory: (props: {
         )}
         <Type.Caption>$</Type.Caption>
         <TextWithEdit
+          fullWidth
           key={`volume_${data.id}_${data.volume}`}
           defaultValue={data.volume}
           onSave={(value) => onSaveEdit(value, data)}

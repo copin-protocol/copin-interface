@@ -1,16 +1,22 @@
+import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import { memo, useState } from 'react'
+import { ReactNode, memo, useState } from 'react'
 
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import TraderListCard from 'components/@trader/TraderExplorerListView'
 import TraderListTable from 'components/@trader/TraderExplorerTableView'
 import { mobileTableSettings, tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
 import { TraderData } from 'entities/trader.d'
+import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import useTraderFavorites, { getTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
 import useQueryTraders from 'pages/Explorer/ListTradersSection/useQueryTraders'
 import { TradersContextData } from 'pages/Explorer/useTradersContext'
 import { PaginationWithLimit } from 'theme/Pagination'
 import { Box, Flex } from 'theme/base'
+import { SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
+import { getRequiredPlan } from 'utils/helpers/permissionHelper'
 import { getPaginationDataFromList } from 'utils/helpers/transform'
 
 const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
@@ -37,9 +43,51 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     currentLimit,
     changeCurrentPage,
     changeCurrentLimit,
+    rankingFilters,
+    filters,
+    resetFilter,
   } = contextValues
 
+  // Permission
+  const { userPermission, pagePermission } = useExplorerPermission()
+  let noDataMessage: ReactNode | undefined = undefined
+  {
+    const hasFilterTimeFromHigherPlan = !userPermission?.timeFramesAllowed?.includes(timeOption.id)
+    let requiredPlan: SubscriptionPlanEnum | undefined = undefined
+    if (hasFilterTimeFromHigherPlan) {
+      requiredPlan = getRequiredPlan({
+        conditionFn: (plan) => {
+          return !!pagePermission?.[plan]?.timeFramesAllowed?.includes(timeOption.id)
+        },
+      })
+    }
+
+    if (requiredPlan) {
+      const title = (
+        <Trans>This URL contains filters available from {SUBSCRIPTION_PLAN_TRANSLATION[requiredPlan]} plan</Trans>
+      )
+      const description = <Trans>Please upgrade to explore traders with advanced filters</Trans>
+      noDataMessage = (
+        <Box pt={4}>
+          <PlanUpgradePrompt
+            title={title}
+            description={description}
+            requiredPlan={requiredPlan}
+            learnMoreSection={SubscriptionFeatureEnum.TRADER_FAVORITE}
+            useLockIcon
+            showTitleIcon
+            cancelText={<Trans>Reset Filters</Trans>}
+            onCancel={resetFilter}
+          />
+        </Box>
+      )
+    }
+  }
+
   const { data, isLoading } = useQueryTraders({
+    currentLimit,
+    currentPage,
+    currentSort,
     tab,
     timeRange,
     timeOption,
@@ -49,6 +97,9 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     selectedProtocols,
     isFavTraders: true,
     traderFavorites,
+    rankingFilters,
+    filters,
+    enabled: !noDataMessage,
   })
 
   const [selectedTraders, setSelectedTraders] = useState<string[]>([])
@@ -95,9 +146,16 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
             hiddenSelectAllBox
             hiddenSelectItemBox
             lefts={[0, 0]}
+            noDataMessage={noDataMessage}
+            learnMoreSection={SubscriptionFeatureEnum.TRADER_FAVORITE}
           />
         ) : (
-          <TraderListCard data={paginatedData.data} isLoading={isLoading} />
+          <TraderListCard
+            data={paginatedData.data}
+            isLoading={isLoading}
+            isFavoritePage
+            noDataMessage={noDataMessage}
+          />
         )}
       </Box>
       <PaginationWithLimit

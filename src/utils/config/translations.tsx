@@ -20,6 +20,7 @@ import {
   PositionStatusEnum,
   ProtocolCopyTradeStatusEnum,
   SLTPTypeEnum,
+  SubscriptionPlanEnum,
   SystemStatusTypeEnum,
   TimeFilterByEnum,
   UserActionEnum,
@@ -197,6 +198,12 @@ export const FEE_REBATE_EPOCH_STATUS_TRANS: ObjectTrans = {
   [EpochStatusEnum.AWARDED]: <Trans>Ended</Trans>,
 }
 
+export const ALERT_TYPE_TRANS: ObjectTrans = {
+  [AlertTypeEnum.TRADERS]: <Trans>Watchlist Traders</Trans>,
+  [AlertTypeEnum.COPY_TRADE]: <Trans>Copied Traders</Trans>,
+  [AlertTypeEnum.CUSTOM]: <Trans>Custom Alert</Trans>,
+}
+
 export const ALERT_CUSTOM_TYPE_TRANS: ObjectTrans = {
   [AlertCustomType.TRADER_FILTER]: <Trans>Trader Filter</Trans>,
   [AlertCustomType.TRADER_GROUP]: <Trans>Trader Group</Trans>,
@@ -254,4 +261,12 @@ export const SYSTEM_STATUS_TYPE_TRANSLATION: Record<string, ReactNode> = {
 export const PROTOCOL_COPY_TRADE_STATUS_TRANSLATION: Record<string, ReactNode> = {
   [ProtocolCopyTradeStatusEnum.COPYABLE]: <Trans>Copyable</Trans>,
   [ProtocolCopyTradeStatusEnum.UNCOPYABLE]: <Trans>Uncopyable</Trans>,
+}
+
+export const SUBSCRIPTION_PLAN_TRANSLATION: Record<string, ReactNode> = {
+  [SubscriptionPlanEnum.NON_LOGIN]: <Trans>Non Login</Trans>,
+  [SubscriptionPlanEnum.FREE]: <Trans>Free</Trans>,
+  [SubscriptionPlanEnum.STARTER]: <Trans>Starter</Trans>,
+  [SubscriptionPlanEnum.PRO]: <Trans>Pro</Trans>,
+  [SubscriptionPlanEnum.ELITE]: <Trans>Elite</Trans>,
 }

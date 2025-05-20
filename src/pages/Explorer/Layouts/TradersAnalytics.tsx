@@ -15,14 +15,14 @@ import SortTradersDropdown from './SortTradersDropdown'
 export default function TradersAnalytics() {
   const contextValues = useTradersContext()
 
-  const { filters, changeFilters, rankingFilters, changeRankingFilters, filterTab } = contextValues
+  const { filters, changeFilters, rankingFilters, filterTab } = contextValues
   const _filters = filterTab === FilterTabEnum.RANKING ? rankingFilters : filters
-  const { md } = useResponsive()
+  const { lg } = useResponsive()
 
   return (
     <>
       <CustomPageTitle />
-      {md ? (
+      {lg ? (
         <AnalyticsLayoutDesktop
           timeFilterSection={<TimeFilterSection contextValues={contextValues} />}
           filterTag={<FilterTag filters={_filters} filterTab={filterTab} />}
@@ -32,7 +32,6 @@ export default function TradersAnalytics() {
               filters={filters}
               changeFilters={changeFilters}
               rankingFilters={rankingFilters}
-              changeRankingFilters={changeRankingFilters}
               tab={filterTab}
             />
           }
@@ -53,7 +52,6 @@ export default function TradersAnalytics() {
               filters={filters}
               changeFilters={changeFilters}
               rankingFilters={rankingFilters}
-              changeRankingFilters={changeRankingFilters}
               tab={filterTab}
             />
           }

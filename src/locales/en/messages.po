@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2025-02-11 16:10+0700\n"
+"POT-Creation-Date: 2025-05-13 08:11+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,6 +17,10 @@ msgstr ""
 msgid "(Coming soon)"
 msgstr "(Coming soon)"
 
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "({0}% off)"
+msgstr "({0}% off)"
+
 #: src/pages/@helpers/ErrorFallback.tsx
 msgid ". Try to reload the page to fix this issue"
 msgstr ". Try to reload the page to fix this issue"
@@ -26,19 +30,15 @@ msgid "0 selected"
 msgstr "0 selected"
 
 #: src/components/@ui/TimeFilter/constants.tsx
-msgid "1 day"
-msgstr "1 day"
-
-#: src/components/@ui/TimeFilter/constants.tsx
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "1 year"
 msgstr "1 year"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "1,000 records"
 msgstr "1,000 records"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "10,000 records"
 msgstr "10,000 records"
 
@@ -57,6 +57,14 @@ msgstr "14 days"
 #: src/utils/config/translations.tsx
 msgid "14D"
 msgstr "14D"
+
+#: src/utils/config/translations.tsx
+msgid "1D"
+msgstr "1D"
+
+#: src/utils/config/translations.tsx
+msgid "24H"
+msgstr "24H"
 
 #: src/utils/config/translations.tsx
 msgid "30 Days"
@@ -162,12 +170,12 @@ msgstr "<0>{0} </0>earned {1} USDC in commission from <1>{2}</1>"
 msgid "<0>{0} </0>invited by <1>{1}</1>"
 msgstr "<0>{0} </0>invited by <1>{1}</1>"
 
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "<0>{0} channel{1}</0><1>(Direct - Group - Webhook)</1>"
 msgstr "<0>{0} channel{1}</0><1>(Direct - Group - Webhook)</1>"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "<0>{0} channel{1}</0><1>(Direct or Group)</1>"
 msgstr "<0>{0} channel{1}</0><1>(Direct or Group)</1>"
 
@@ -179,7 +187,7 @@ msgstr "<0>{hintUploadImage}</0>"
 msgid "@leecopin"
 msgstr "@leecopin"
 
-#: src/pages/Subscription/TermsAndConditions.tsx
+#: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "A 10% loyalty fee applies when trading the NFT."
 msgstr "A 10% loyalty fee applies when trading the NFT."
 
@@ -194,6 +202,7 @@ msgid "ACCOUNT"
 msgstr "ACCOUNT"
 
 #: src/pages/DailyTrades/Orders/config.tsx
+#: src/pages/Settings/AlertLogs/configs.tsx
 msgid "ACTION"
 msgstr "ACTION"
 
@@ -220,10 +229,14 @@ msgid "ADVANCE SETTINGS"
 msgstr "ADVANCE SETTINGS"
 
 #: src/pages/Settings/Layouts/Layout.tsx
-msgid "ALERT"
-msgstr "ALERT"
+msgid "ALERT LIST"
+msgstr "ALERT LIST"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Settings/Layouts/Layout.tsx
+msgid "ALERT LOGS"
+msgstr "ALERT LOGS"
+
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "ALERT SIGNAL"
 msgstr "ALERT SIGNAL"
 
@@ -253,6 +266,10 @@ msgstr "API Wallet"
 msgid "API Wallet Management"
 msgstr "API Wallet Management"
 
+#: src/pages/Subscription/EnterprisePlan.tsx
+msgid "API access rights"
+msgstr "API access rights"
+
 #: src/pages/WalletManagement/Layouts/MobileLayout.tsx
 msgid "ASSETS"
 msgstr "ASSETS"
@@ -260,6 +277,10 @@ msgstr "ASSETS"
 #: src/components/@position/TraderPositionDetails/VaultCopyActions.tsx
 msgid "Acceptable Price:"
 msgstr "Acceptable Price:"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Access more data for trader analysis"
+msgstr "Access more data for trader analysis"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
@@ -301,6 +322,10 @@ msgstr "Active Copy"
 msgid "Activities"
 msgstr "Activities"
 
+#: src/pages/Settings/AlertSettingDetails/SearchToAdd.tsx
+msgid "Add"
+msgstr "Add"
+
 #: src/pages/CopinLite/CopyManagement/index.tsx
 msgid "Add More Trader"
 msgstr "Add More Trader"
@@ -331,16 +356,27 @@ msgid "Advance Settings"
 msgstr "Advance Settings"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
-#: src/pages/Settings/Layouts/Layout.tsx
 #: src/pages/TraderDetails/AlertAction.tsx
 msgid "Alert"
 msgstr "Alert"
+
+#: src/pages/Settings/Layouts/Layout.tsx
+msgid "Alert List"
+msgstr "Alert List"
+
+#: src/pages/Settings/Layouts/Layout.tsx
+msgid "Alert Logs"
+msgstr "Alert Logs"
 
 #: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/BasicInfoModal.tsx
 msgid "Alert Name (Required)"
 msgstr "Alert Name (Required)"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Alert groups or trigger webhooks to stay synced with your community"
+msgstr "Alert groups or trigger webhooks to stay synced with your community"
+
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Alert traders signal"
 msgstr "Alert traders signal"
 
@@ -349,11 +385,14 @@ msgstr "Alert traders signal"
 msgid "All"
 msgstr "All"
 
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
+msgid "All Allowed Protocols"
+msgstr "All Allowed Protocols"
+
 #: src/components/@widgets/ChainSelection/index.tsx
 msgid "All Chain"
 msgstr "All Chain"
 
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
 #: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/useTraderFilterState.tsx
 msgid "All Protocols"
 msgstr "All Protocols"
@@ -376,21 +415,21 @@ msgstr "All of your opening positions that did not synced correctly will be show
 msgid "All pairs"
 msgstr "All pairs"
 
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "All stable CEX"
 msgstr "All stable CEX"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "All stable CEX + Exclusive CEX request"
 msgstr "All stable CEX + Exclusive CEX request"
 
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "All stable PerpDEX"
 msgstr "All stable PerpDEX"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "All stable PerpDEX + Early access PerpDEX"
 msgstr "All stable PerpDEX + Early access PerpDEX"
 
@@ -411,7 +450,15 @@ msgstr "Allocating margin based on trader's average margin of the last {0} order
 msgid "Allow the smart wallet to use your {0}"
 msgstr "Allow the smart wallet to use your {0}"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Allows for easy management of traders with the same settings"
+msgstr "Allows for easy management of traders with the same settings"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Allows you to personalize alert settings to suit your needs"
+msgstr "Allows you to personalize alert settings to suit your needs"
+
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Alpha group access"
 msgstr "Alpha group access"
 
@@ -449,9 +496,18 @@ msgstr "Analytics"
 msgid "Analyze With AI"
 msgstr "Analyze With AI"
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Analyze traders behavior pre-copy trade setup"
+msgstr "Analyze traders behavior pre-copy trade setup"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
 #: src/pages/TraderDetails/CustomizeRankingColumns.tsx
 msgid "Apply"
 msgstr "Apply"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Apply Discount Code"
+msgstr "Apply Discount Code"
 
 #: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
 msgid "Apply Filter"
@@ -495,6 +551,40 @@ msgstr "Available Balance"
 msgid "Available Fund"
 msgstr "Available Fund"
 
+#: src/components/@subscription/PlanUpgradeIndicator.tsx
+msgid "Available from Free plans"
+msgstr "Available from Free plans"
+
+#: src/components/@subscription/PlanUpgradeIndicator.tsx
+msgid "Available from Pro plans"
+msgstr "Available from Pro plans"
+
+#: src/components/@subscription/PlanUpgradeIndicator.tsx
+msgid "Available from Starter plans"
+msgstr "Available from Starter plans"
+
+#: src/components/@subscription/NotPermittedFilter.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/SimilarTraders.tsx
+msgid "Available from {0} plan"
+msgstr "Available from {0} plan"
+
+#: src/components/@widgets/LinkBotAlertModal/index.tsx
+#: src/pages/ComparingTraders/ComparisonComponent.tsx
+#: src/pages/Settings/AlertDashboard/DesktopView.tsx
+#: src/pages/Settings/AlertDashboard/DesktopView.tsx
+#: src/pages/Settings/AlertDashboard/MobileView.tsx
+#: src/pages/TraderDetails/ChartTrader/PermissionContainer.tsx
+#: src/pages/TraderDetails/TraderRanking.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/PercentileRankingDetails.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/PercentileRankingDetails.tsx
+#: src/pages/WalletManagement/WalletList/index.tsx
+msgid "Available from {0} plans"
+msgstr "Available from {0} plans"
+
+#: src/components/@subscription/PlanUpgradeIndicator.tsx
+msgid "Available only on Elite plans"
+msgstr "Available only on Elite plans"
+
 #: src/pages/MyProfile/VaultManagement/index.tsx
 msgid "Available:"
 msgstr "Available:"
@@ -531,13 +621,17 @@ msgstr "Avg Return On Notation"
 msgid "Avg Volume"
 msgstr "Avg Volume"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "BASIC PLAN"
 msgstr "BASIC PLAN"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "BASIC PLAN (FREE)"
 msgstr "BASIC PLAN (FREE)"
+
+#: src/components/@ui/BetaTag.tsx
+msgid "BETA"
+msgstr "BETA"
 
 #: src/pages/@layouts/Footer/index.tsx
 msgid "BLOG"
@@ -565,7 +659,6 @@ msgstr "Back to home"
 
 #: src/components/@backtest/BacktestFormSimple/index.tsx
 #: src/components/@backtest/BacktestSimpleModal/index.tsx
-#: src/pages/Home/Traders.tsx
 msgid "Backtest"
 msgstr "Backtest"
 
@@ -592,17 +685,13 @@ msgstr "Balance after simulation"
 msgid "Balance must be greater than or equal to margin"
 msgstr "Balance must be greater than or equal to margin"
 
-#: src/pages/Settings/UserSubscription/NoSubscription.tsx
+#: src/pages/Settings/UserSubscription/v1/NoSubscription.tsx
 msgid "Basic Plan"
 msgstr "Basic Plan"
 
-#: src/pages/Subscription/TermsAndConditions.tsx
+#: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "Benefits in each plan are added or removed continuously without prior notice."
 msgstr "Benefits in each plan are added or removed continuously without prior notice."
-
-#: src/components/@ui/BetaTag.tsx
-msgid "Beta"
-msgstr "Beta"
 
 #: src/pages/TraderDetails/ScoreChart.tsx
 msgid "Better than {value} traders"
@@ -632,22 +721,56 @@ msgstr "Bridge ETH to OP (Sepolia)"
 msgid "Bridge sUSD to OP (Sepolia)"
 msgstr "Bridge sUSD to OP (Sepolia)"
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Broaden your view with more Open Interest data"
+msgstr "Broaden your view with more Open Interest data"
+
+#: src/pages/Settings/AlertDashboard/DesktopView.tsx
+#: src/pages/Settings/AlertDashboard/MobileView.tsx
+msgid "Build your own alert rules.Only get notified when it really matters."
+msgstr "Build your own alert rules.Only get notified when it really matters."
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Bulk Action Management"
+msgstr "Bulk Action Management"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Bulk edit / clone / delete your copy trades in one go"
+msgstr "Bulk edit / clone / delete your copy trades in one go"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "By clicking button above you agreed with"
+msgstr "By clicking button above you agreed with"
+
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 msgid "By continuing, you agree to our"
 msgstr "By continuing, you agree to our"
 
+#: src/pages/Settings/UserSubscription/PlanDowngradeModal.tsx
+#: src/pages/Settings/UserSubscription/PlanUpgradeModal.tsx
+msgid "CANCEL"
+msgstr "CANCEL"
+
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 msgid "CEX DEPTH"
 msgstr "CEX DEPTH"
 
-#: src/pages/StatsCEX/Overview.tsx
+#: src/pages/StatsCEX/Title.tsx
 msgid "CEX Depth"
 msgstr "CEX Depth"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "CEX account connection"
 msgstr "CEX account connection"
+
+#: src/pages/Settings/AlertLogs/configs.tsx
+msgid "CHANNEL"
+msgstr "CHANNEL"
+
+#: src/pages/Settings/AlertLogs/configs.tsx
+msgid "CHANNEL NAME"
+msgstr "CHANNEL NAME"
 
 #: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
 msgid "CHARTS"
@@ -685,11 +808,21 @@ msgstr "CONDITION"
 msgid "CONNECT"
 msgstr "CONNECT"
 
-#: src/pages/@layouts/Navbar/index.tsx
-msgid "CONNECTING WALLET..."
-msgstr "CONNECTING WALLET..."
+#: src/components/@subscription/PlanUpgradePrompt.tsx
+#: src/pages/Subscription/EnterprisePlan.tsx
+msgid "CONTACT US"
+msgstr "CONTACT US"
 
-#: src/pages/@layouts/Navbar/NavLinks.tsx
+#: src/pages/Settings/UserSubscription/PlanDowngradeModal.tsx
+#: src/pages/Settings/UserSubscription/PlanUpgradeModal.tsx
+msgid "CONTINUE"
+msgstr "CONTINUE"
+
+#: src/pages/Settings/AlertLogs/index.tsx
+msgid "COPIED"
+msgstr "COPIED"
+
+#: src/pages/@layouts/Navbar/MoreDropdown.tsx
 msgid "COPIER RANKING"
 msgstr "COPIER RANKING"
 
@@ -703,15 +836,19 @@ msgstr "COPIES"
 msgid "COPIN FEE REBATE"
 msgstr "COPIN FEE REBATE"
 
-#: src/pages/@layouts/Footer/FeedbackButton.tsx
+#: src/pages/@layouts/Footer/FeedbackModal.tsx
 msgid "COPIN FEEDBACK"
 msgstr "COPIN FEEDBACK"
+
+#: src/pages/Settings/AlertLogs/configs.tsx
+msgid "COPY"
+msgstr "COPY"
 
 #: src/pages/Stats/config.tsx
 msgid "COPY TRADES"
 msgstr "COPY TRADES"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "COPY TRADING"
 msgstr "COPY TRADING"
 
@@ -722,6 +859,14 @@ msgstr "COPY YOUR ADDRESS"
 #: src/theme/Tag/index.tsx
 msgid "COPYING"
 msgstr "COPYING"
+
+#: src/pages/Settings/UserSubscription/UsageTable.tsx
+msgid "CURRENT PLAN"
+msgstr "CURRENT PLAN"
+
+#: src/pages/Settings/AlertLogs/index.tsx
+msgid "CUSTOM"
+msgstr "CUSTOM"
 
 #: src/pages/Settings/AlertDashboard/DesktopView.tsx
 #: src/pages/Settings/AlertDashboard/MobileView.tsx
@@ -740,6 +885,10 @@ msgstr "Can not verify the action"
 msgid "Can't copy"
 msgstr "Can't copy"
 
+#: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
+msgid "Can't retrieve any data to export"
+msgstr "Can't retrieve any data to export"
+
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 #: src/components/@copinLite/OnboardingModal/index.tsx
 #: src/components/@copinLite/OnboardingModal/index.tsx
@@ -754,13 +903,9 @@ msgstr "Cancel"
 msgid "Canceled"
 msgstr "Canceled"
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Cannot interact with contract at this moment"
 msgstr "Cannot interact with contract at this moment"
-
-#: src/hooks/web3/useAuth.tsx
-msgid "Cannot unlock your wallet"
-msgstr "Cannot unlock your wallet"
 
 #: src/pages/CopinLite/Wallet/Withdraw.tsx
 msgid "Chain:"
@@ -778,13 +923,21 @@ msgstr "Change Trader"
 msgid "Change password successful!"
 msgstr "Change password successful!"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Channel Alerts"
 msgstr "Channel Alerts"
 
 #: src/pages/TraderDetails/Layouts/MobileLayout.tsx
 msgid "Charts"
 msgstr "Charts"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Check depth levels of supported CEXs integrated with Copin"
+msgstr "Check depth levels of supported CEXs integrated with Copin"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Check volume impact at every 0.1% depth level for each trader and pair"
+msgstr "Check volume impact at every 0.1% depth level for each trader and pair"
 
 #: src/pages/Home/Traders.tsx
 msgid "Choose <0>Perp DEXs source </0> to view traders list."
@@ -828,6 +981,7 @@ msgid "Close Position"
 msgstr "Close Position"
 
 #: src/utils/config/translations.tsx
+#: src/utils/config/translations.tsx
 msgid "Closed"
 msgstr "Closed"
 
@@ -855,16 +1009,20 @@ msgstr "Collateral Lower Than"
 msgid "Collateral:"
 msgstr "Collateral:"
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Combine deeper insights to make good decisions"
+msgstr "Combine deeper insights to make good decisions"
+
 #: src/components/@wallet/CreateWalletAction/index.tsx
 msgid "Coming Soon"
 msgstr "Coming Soon"
 
 #: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
-#: src/pages/WalletManagement/WalletList/index.tsx
 msgid "Coming soon"
 msgstr "Coming soon"
 
-#: src/components/@copyTrade/CopyTraderButton/index.tsx
 #: src/components/@copyTrade/CopyVaultButton/index.tsx
 msgid "Coming soon!"
 msgstr "Coming soon!"
@@ -892,6 +1050,7 @@ msgstr "Compare Trader"
 #: src/components/@copyTrade/BulkCopyModifyModal/DeleteContent.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/Explorer/ConditionFilter/ExportCsvConfirmModal.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
 msgid "Confirm"
@@ -909,7 +1068,7 @@ msgstr "Confirm transaction in your wallet"
 msgid "Confirming..."
 msgstr "Confirming..."
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Congratulations!"
 msgstr "Congratulations!"
 
@@ -933,18 +1092,15 @@ msgstr "Connect Telegram"
 msgid "Connect Telegram to get real-time notifications from your copy-trades.{0}"
 msgstr "Connect Telegram to get real-time notifications from your copy-trades.{0}"
 
-#: src/components/@auth/LoginAction/ConnectButton.tsx
+#: src/components/@wallet/CreateWalletModals/CreateSmartWalletModal.tsx
 #: src/pages/@layouts/GettingStarted/index.tsx
+#: src/pages/@layouts/Navbar/WarningWalletDisconnected.tsx
 msgid "Connect Wallet"
 msgstr "Connect Wallet"
 
 #: src/pages/Settings/AlertSettingDetails/LinkWebhookAlertAction/index.tsx
 msgid "Connect Webhook"
 msgstr "Connect Webhook"
-
-#: src/components/@auth/AuthWaitingWallet/index.tsx
-msgid "Connecting with your wallet..."
-msgstr "Connecting with your wallet..."
 
 #: src/components/@wallet/CreateWalletModals/CreateCEXWalletModal.tsx
 #: src/components/@wallet/CreateWalletModals/CreateHyperliquidWalletModal.tsx
@@ -956,6 +1112,14 @@ msgstr "Connecting..."
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Considers settled (closed) positions"
 msgstr "Considers settled (closed) positions"
+
+#: src/utils/config/translations.tsx
+msgid "Copied Traders"
+msgstr "Copied Traders"
+
+#: src/pages/WalletManagement/WalletList/index.tsx
+msgid "Copin Lite only"
+msgstr "Copin Lite only"
 
 #: src/components/@widgets/NFTSubscriptionCard.tsx
 msgid "Copin Subscription {0}"
@@ -980,10 +1144,6 @@ msgstr "Copy"
 msgid "Copy 2 Traders"
 msgstr "Copy 2 Traders"
 
-#: src/pages/@layouts/Navbar/NavUser.tsx
-msgid "Copy Management"
-msgstr "Copy Management"
-
 #: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 msgid "Copy Now"
 msgstr "Copy Now"
@@ -991,6 +1151,10 @@ msgstr "Copy Now"
 #: src/components/@position/CopyPositionDetails/index.tsx
 msgid "Copy Position Details"
 msgstr "Copy Position Details"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Copy Slippage Estimation"
+msgstr "Copy Slippage Estimation"
 
 #: src/pages/Stats/index.tsx
 msgid "Copy Statistic"
@@ -1024,17 +1188,21 @@ msgstr "Copy Wallet"
 msgid "Copy Wallet History"
 msgstr "Copy Wallet History"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Copy hot trader"
 msgstr "Copy hot trader"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Copy size"
 msgstr "Copy size"
 
 #: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
 msgid "Copy trades update successful"
 msgstr "Copy trades update successful"
+
+#: src/utils/config/translations.tsx
+msgid "Copyable"
+msgstr "Copyable"
 
 #: src/pages/TraderDetails/TraderRankingExpanded/PickTraderModals.tsx
 msgid "Copytrade List"
@@ -1094,11 +1262,15 @@ msgstr "Create gTrade wallet"
 msgid "Create wallet successful!"
 msgstr "Create wallet successful!"
 
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Currency"
+msgstr "Currency"
+
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 msgid "Current Password"
 msgstr "Current Password"
 
-#: src/pages/Settings/UserSubscription/NoSubscription.tsx
+#: src/pages/Settings/UserSubscription/v1/NoSubscription.tsx
 msgid "Current Plan"
 msgstr "Current Plan"
 
@@ -1107,13 +1279,31 @@ msgstr "Current Plan"
 msgid "Custom"
 msgstr "Custom"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/utils/config/translations.tsx
+msgid "Custom Alert"
+msgstr "Custom Alert"
+
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Custom Alerts"
 msgstr "Custom Alerts"
+
+#: src/pages/Subscription/EnterprisePlan.tsx
+msgid "Custom call limits"
+msgstr "Custom call limits"
+
+#: src/pages/Subscription/EnterprisePlan.tsx
+msgid "Custom license"
+msgstr "Custom license"
 
 #: src/pages/ReferralManagement/UserReferralTier.tsx
 msgid "Custom referral code successful!"
 msgstr "Custom referral code successful!"
+
+#: src/components/@widgets/LinkBotAlertModal/index.tsx
+#: src/pages/Settings/AlertSettingDetails/LinkWebhookAlertAction/index.tsx
+#: src/pages/Subscription/EnterprisePlan.tsx
+msgid "Customize a pricing plan that scales to your business' needs"
+msgstr "Customize a pricing plan that scales to your business' needs"
 
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/Info.tsx
 msgid "DAILY"
@@ -1127,10 +1317,18 @@ msgstr "DCP Volume"
 msgid "DEFAULT FILTER"
 msgstr "DEFAULT FILTER"
 
+#: src/pages/Settings/AlertSettingDetails/SettingChannel.tsx
+msgid "DELIVERY ALERT CHANNEL"
+msgstr "DELIVERY ALERT CHANNEL"
+
 #: src/components/@wallet/SmartWalletFundModal/index.tsx
 #: src/pages/VaultDetails/VaultFundMangement/index.tsx
 msgid "DEPOSIT"
 msgstr "DEPOSIT"
+
+#: src/pages/Settings/AlertLogs/configs.tsx
+msgid "DETAILS"
+msgstr "DETAILS"
 
 #: src/components/@widgets/LinkBotAlertModal/index.tsx
 msgid "DIRECT MESSAGE"
@@ -1148,6 +1346,10 @@ msgstr "DOCS"
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 msgid "DOCUMENT"
 msgstr "DOCUMENT"
+
+#: src/pages/Settings/UserSubscription/PlanDowngradeModal.tsx
+msgid "DOWNGRADE SUBSCRIPTION"
+msgstr "DOWNGRADE SUBSCRIPTION"
 
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 msgid "DUNE DASHBOARD"
@@ -1170,8 +1372,8 @@ msgstr "Data maybe delayed by up to 2 hours"
 msgid "Decrease"
 msgstr "Decrease"
 
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Delay"
 msgstr "Delay"
 
@@ -1203,6 +1405,11 @@ msgstr "Deposits And Withdrawals"
 msgid "Deprecated"
 msgstr "Deprecated"
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Depth Overview"
+msgstr "Depth Overview"
+
+#: src/pages/Components.tsx
 #: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/BasicInfoModal.tsx
 msgid "Description"
 msgstr "Description"
@@ -1211,17 +1418,33 @@ msgstr "Description"
 msgid "Details"
 msgstr "Details"
 
-#: src/components/@auth/AuthWaitingWallet/index.tsx
-msgid "Disconnect"
-msgstr "Disconnect"
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Discover deeper insights with advanced filtering"
+msgstr "Discover deeper insights with advanced filtering"
 
 #: src/components/@copinLite/OnboardingModal/TraderFilter.tsx
 msgid "Discover top trader for your style"
 msgstr "Discover top trader for your style"
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Dive into performance of each exchange over time"
+msgstr "Dive into performance of each exchange over time"
+
+#: src/pages/Subscription/FAQ.tsx
+msgid "Do you accept payment in crypto?"
+msgstr "Do you accept payment in crypto?"
+
+#: src/pages/Subscription/EnterprisePlan.tsx
+msgid "Do you need more data or features?"
+msgstr "Do you need more data or features?"
+
 #: src/components/@position/CopyPositionsContainer/index.tsx
 msgid "Do you want to close this position?"
 msgstr "Do you want to close this position?"
+
+#: src/pages/Explorer/ConditionFilter/ExportCsvConfirmModal.tsx
+msgid "Do you want to export data?"
+msgstr "Do you want to export data?"
 
 #: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
@@ -1237,6 +1460,10 @@ msgstr "Don’t have a Hyperliquid account?"
 msgid "Don’t have a {0} account?"
 msgstr "Don’t have a {0} account?"
 
+#: src/pages/Settings/UserSubscription/index.tsx
+msgid "Downgrade"
+msgstr "Downgrade"
+
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Duration:"
@@ -1247,11 +1474,19 @@ msgstr "Duration:"
 msgid "ENDED"
 msgstr "ENDED"
 
+#: src/pages/Subscription/EnterprisePlan.tsx
+msgid "ENTERPRISE"
+msgstr "ENTERPRISE"
+
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/PerpDEXsExplorer/index.tsx
 msgid "EVENTS"
 msgstr "EVENTS"
+
+#: src/pages/Settings/UserSubscription/index.tsx
+msgid "EXTEND PLAN"
+msgstr "EXTEND PLAN"
 
 #: src/pages/ReferralManagement/ReferralHistory.tsx
 msgid "Earning (USDC)"
@@ -1261,6 +1496,10 @@ msgstr "Earning (USDC)"
 msgid "Easily deposit USDC over Arbitrum. Your funds are securely managed in MPC Wallet.{0}"
 msgstr "Easily deposit USDC over Arbitrum. Your funds are securely managed in MPC Wallet.{0}"
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Easily see how a trader stacks up against the rest"
+msgstr "Easily see how a trader stacks up against the rest"
+
 #: src/components/@copyTrade/renderProps/copyTradeColumns.tsx
 msgid "Edit"
 msgstr "Edit"
@@ -1269,9 +1508,14 @@ msgstr "Edit"
 msgid "Edit Copytrade Settings"
 msgstr "Edit Copytrade Settings"
 
+#: src/utils/config/translations.tsx
+msgid "Elite"
+msgstr "Elite"
+
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
+#: src/components/@subscription/PaySubscriptionModal.tsx
 msgid "Email"
 msgstr "Email"
 
@@ -1321,8 +1565,8 @@ msgstr "Entry Price"
 #: src/hooks/features/backtest/useBacktestRequest.tsx
 #: src/hooks/features/copyTrade/useUpdateCopyTrade.tsx
 #: src/hooks/features/copyTrade/useUpdateCopyTrade.tsx
-#: src/hooks/web3/useAuth.tsx
 #: src/hooks/web3/useContractMutation.tsx
+#: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 #: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
@@ -1330,6 +1574,7 @@ msgid "Error"
 msgstr "Error"
 
 #: src/components/@copyActivity/configs.tsx
+#: src/pages/Settings/AlertLogs/configs.tsx
 msgid "Error while place order"
 msgstr "Error while place order"
 
@@ -1362,9 +1607,29 @@ msgstr "Example: Trader opened LONG, you will open SHORT."
 msgid "Exchange"
 msgstr "Exchange"
 
-#: src/pages/Subscription/TermsAndConditions.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Exchange Details"
+msgstr "Exchange Details"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Exchange Events"
+msgstr "Exchange Events"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Exchanges Overview"
+msgstr "Exchanges Overview"
+
+#: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
 msgstr "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
+
+#: src/pages/Settings/UserSubscription/index.tsx
+msgid "Expires: {0}"
+msgstr "Expires: {0}"
+
+#: src/pages/Settings/UserSubscription/index.tsx
+msgid "Explore Copin's basic features. Upgrade to unlock more powerful tools."
+msgstr "Explore Copin's basic features. Upgrade to unlock more powerful tools."
 
 #: src/pages/Settings/AlertSettingDetails/NoAlertList.tsx
 msgid "Explore Traders"
@@ -1374,7 +1639,11 @@ msgstr "Explore Traders"
 msgid "Explore the best traders and set up copy-trading to boost your portfolio.{0}"
 msgstr "Explore the best traders and set up copy-trading to boost your portfolio.{0}"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Exploring all trader’s history positions"
+msgstr "Exploring all trader’s history positions"
+
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Export CSV data"
 msgstr "Export CSV data"
 
@@ -1382,40 +1651,41 @@ msgstr "Export CSV data"
 msgid "Export CSV has been succeeded"
 msgstr "Export CSV has been succeeded"
 
-#: src/pages/Explorer/ConditionFilter/TooltipContent.tsx
-msgid "Export up to 1,000 records now. Upgrade to VIP for 10,000 records."
-msgstr "Export up to 1,000 records now. Upgrade to VIP for 10,000 records."
+#: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
+msgid "Export Limit Exceeded"
+msgstr "Export Limit Exceeded"
 
-#: src/pages/Explorer/ConditionFilter/TooltipContent.tsx
-msgid "Export up to 10,000 records"
-msgstr "Export up to 10,000 records"
-
-#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/v1/ExtendPlan.tsx
 msgid "Extend"
 msgstr "Extend"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "Extend Again"
 msgstr "Extend Again"
 
 #: src/pages/@layouts/SubscriptionExpiredWarning.tsx
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "Extend Now"
 msgstr "Extend Now"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Extend Subscription"
+msgstr "Extend Subscription"
+
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "Extend Your Subscription"
 msgstr "Extend Your Subscription"
 
-#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+#: src/pages/Settings/UserSubscription/v1/ExtendPlan.tsx
 msgid "Extend plan"
 msgstr "Extend plan"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "Extended"
 msgstr "Extended"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "Extending"
 msgstr "Extending"
 
@@ -1427,19 +1697,23 @@ msgstr "F1 REFERRAL LIST"
 msgid "F2 REFERRAL LIST"
 msgstr "F2 REFERRAL LIST"
 
+#: src/pages/Subscription/FAQ.tsx
+msgid "FAQ"
+msgstr "FAQ"
+
+#: src/pages/Settings/UserSubscription/UsageTable.tsx
+msgid "FEATURE"
+msgstr "FEATURE"
+
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 msgid "FEE ($)"
 msgstr "FEE ($)"
-
-#: src/pages/@layouts/Navbar/MoreDropdown.tsx
-msgid "FEE REBATE"
-msgstr "FEE REBATE"
 
 #: src/components/@widgets/ConditionFilterForm/index.tsx
 msgid "FIELD"
 msgstr "FIELD"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "FREE"
 msgstr "FREE"
 
@@ -1448,6 +1722,7 @@ msgid "FUND MANAGEMENT"
 msgstr "FUND MANAGEMENT"
 
 #: src/components/@copyActivity/configs.tsx
+#: src/pages/Settings/AlertLogs/configs.tsx
 msgid "Failed"
 msgstr "Failed"
 
@@ -1459,7 +1734,7 @@ msgstr "Failure for reasons:"
 msgid "Favorite List"
 msgstr "Favorite List"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Features"
 msgstr "Features"
 
@@ -1489,6 +1764,10 @@ msgstr "Fees are not factored into PnL"
 msgid "Fills"
 msgstr "Fills"
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Filter by ranking and easily spot top performers"
+msgstr "Filter by ranking and easily spot top performers"
+
 #: src/pages/Explorer/ConditionFilter/index.tsx
 msgid "Filters"
 msgstr "Filters"
@@ -1496,6 +1775,10 @@ msgstr "Filters"
 #: src/components/@copinLite/OnboardingModal/TraderFilter.tsx
 msgid "Find"
 msgstr "Find"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Find like-minded traders with advanced filters"
+msgstr "Find like-minded traders with advanced filters"
 
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "Find the trader you want in the list of traders above, all of the trader's history positions will be listed here."
@@ -1534,9 +1817,22 @@ msgstr "Force Close"
 msgid "Forgot password?"
 msgstr "Forgot password?"
 
+#: src/utils/config/translations.tsx
+msgid "Free"
+msgstr "Free"
+
 #: src/utils/config/options.tsx
 msgid "Frequently Trade"
 msgstr "Frequently Trade"
+
+#: src/components/@widgets/ProtocolFilter/ProtocolSelection.tsx
+#: src/components/@widgets/SwitchProtocols/index.tsx
+msgid "From"
+msgstr "From"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Full History"
+msgstr "Full History"
 
 #: src/components/@copyTrade/CopyTradeForm/FundChecking.tsx
 msgid "Fund"
@@ -1670,6 +1966,10 @@ msgstr "High Win Rate"
 msgid "History"
 msgstr "History"
 
+#: src/pages/Subscription/FAQ.tsx
+msgid "How do I change my subscription plan?"
+msgstr "How do I change my subscription plan?"
+
 #: src/components/@wallet/CreateWalletModals/WalletHelpHyperliquid.tsx
 msgid "How to connect your Hyperliquid API to Copin?"
 msgstr "How to connect your Hyperliquid API to Copin?"
@@ -1692,7 +1992,7 @@ msgstr "Hyperliquid API Wallet Private Key"
 msgid "Hyperliquid Account Address"
 msgstr "Hyperliquid Account Address"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Hyperliquid Alert"
 msgstr "Hyperliquid Alert"
 
@@ -1714,9 +2014,13 @@ msgstr "INFO & EVENTS"
 msgid "If the trader increase / decrease position, the TP / SL will be re-adjusted as your copytrade settings"
 msgstr "If the trader increase / decrease position, the TP / SL will be re-adjusted as your copytrade settings"
 
-#: src/components/@copyTrade/CopyTradeNotice.tsx
+#: src/components/@systemConfig/SystemAlertBanner/index.tsx
 msgid "If you experience any problems, please contact us on Telegram <0>@leecopin</0>."
 msgstr "If you experience any problems, please contact us on Telegram <0>@leecopin</0>."
+
+#: src/pages/Subscription/FAQ.tsx
+msgid "If you reach your plan's limits (such as API calls, watchlist traders, etc.), you'll receive a notification. You can either upgrade to a higher tier plan or wait until your limits reset in the next billing cycle."
+msgstr "If you reach your plan's limits (such as API calls, watchlist traders, etc.), you'll receive a notification. You can either upgrade to a higher tier plan or wait until your limits reset in the next billing cycle."
 
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "If you skip it this time, you will be able to re-enter the referral code later."
@@ -1773,6 +2077,10 @@ msgstr "Input wallet name"
 msgid "Input webhook url"
 msgstr "Input webhook url"
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Instantly track trader daily performance"
+msgstr "Instantly track trader daily performance"
+
 #: src/pages/@layouts/LiteWalletNotice.tsx
 msgid "Insufficient balance to complete the copy transaction."
 msgstr "Insufficient balance to complete the copy transaction."
@@ -1801,11 +2109,21 @@ msgstr "Join Telegram Community"
 msgid "Join the waitlist today for exclusive early access to AI-driven insights that will revolutionize the way you trade!"
 msgstr "Join the waitlist today for exclusive early access to AI-driven insights that will revolutionize the way you trade!"
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Know exactly which tokens this trader dominates"
+msgstr "Know exactly which tokens this trader dominates"
+
+#: src/pages/TraderDetails/ChartTrader/PermissionContainer.tsx
+msgid "Know exactly which tokens this trader dominates, and which they don’t"
+msgstr "Know exactly which tokens this trader dominates, and which they don’t"
+
 #: src/components/@copyActivity/configs.tsx
 #: src/components/@copyActivity/configs.tsx
 #: src/components/@position/configs/copyPositionRenderProps.tsx
 #: src/components/@widgets/renderProps.tsx
 #: src/components/@widgets/renderProps.tsx
+#: src/pages/Settings/AlertLogs/configs.tsx
+#: src/pages/Settings/AlertLogs/configs.tsx
 #: src/theme/Table/renderProps.tsx
 #: src/theme/Table/renderProps.tsx
 msgid "L"
@@ -1861,6 +2179,11 @@ msgstr "Label"
 msgid "Label:"
 msgstr "Label:"
 
+#: src/components/@ui/TimeFilter/constants.tsx
+#: src/utils/config/translations.tsx
+msgid "Last 24H"
+msgstr "Last 24H"
+
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@widgets/SearchAllResults/index.tsx
@@ -1874,6 +2197,7 @@ msgstr "Last Trade (All)"
 
 #: src/components/@copier/CopierLeaderboardTableView/index.tsx
 #: src/components/@trader/TraderLeaderboardTableView/index.tsx
+#: src/pages/Explorer/ListTradersSection/index.tsx
 msgid "Last Updated:"
 msgstr "Last Updated:"
 
@@ -1889,6 +2213,11 @@ msgstr "Latest Stop Loss ID"
 #: src/utils/config/translations.tsx
 msgid "Latest Take Profit ID"
 msgstr "Latest Take Profit ID"
+
+#: src/components/@subscription/PlanUpgradePrompt.tsx
+#: src/components/@subscription/PlanUpgradePrompt.tsx
+msgid "Learn More"
+msgstr "Learn More"
 
 #: src/components/@wallet/CreateWalletModals/WalletHelpCEX.tsx
 #: src/components/@wallet/CreateWalletModals/WalletHelpHyperliquid.tsx
@@ -1910,7 +2239,7 @@ msgstr "Leverage"
 msgid "Leverage Lower Than"
 msgstr "Leverage Lower Than"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "License copyright of Copin's signal"
 msgstr "License copyright of Copin's signal"
 
@@ -1945,6 +2274,10 @@ msgstr "Liquidation"
 msgid "Liquidations"
 msgstr "Liquidations"
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Live Data"
+msgstr "Live Data"
+
 #: src/pages/DailyTrades/index.tsx
 msgid "Live orders"
 msgstr "Live orders"
@@ -1953,7 +2286,18 @@ msgstr "Live orders"
 msgid "Live positions"
 msgstr "Live positions"
 
+#: src/components/@auth/AuthWaitingWallet/index.tsx
+msgid "Logging in to your account..."
+msgstr "Logging in to your account..."
+
+#: src/pages/@layouts/Navbar/index.tsx
+msgid "Logging in..."
+msgstr "Logging in..."
+
+#: src/components/@auth/AuthWaitingWallet/index.tsx
+#: src/components/@auth/LoginAction/ConnectButton.tsx
 #: src/components/@auth/LoginAction/ModalLogin.tsx
+#: src/components/@subscription/PlanUpgradePrompt.tsx
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
 msgid "Login"
 msgstr "Login"
@@ -1962,6 +2306,32 @@ msgstr "Login"
 msgid "Login to Copin"
 msgstr "Login to Copin"
 
+#: src/pages/Components.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/SimilarTraders.tsx
+msgid "Login to upgrade"
+msgstr "Login to upgrade"
+
+#: src/pages/DailyTrades/PermissionContainer.tsx
+msgid "Login to view Live trader positions"
+msgstr "Login to view Live trader positions"
+
+#: src/pages/OpenInterest/OpenInterestByMarkets/index.tsx
+#: src/pages/OpenInterest/TopOpenInterest/index.tsx
+msgid "Login to view Open Interest"
+msgstr "Login to view Open Interest"
+
+#: src/components/@trader/TraderDetailsDrawer/TraderQuickView.tsx
+#: src/pages/PositionDetails/PermissionContainer.tsx
+#: src/pages/Settings/AlertDashboard/DesktopView.tsx
+#: src/pages/Settings/AlertDashboard/MobileView.tsx
+#: src/pages/TraderDetails/Layouts/DesktopLayout.tsx
+#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
+#: src/pages/TraderDetails/Layouts/PositionPermissionContainer.tsx
+#: src/pages/TraderDetails/Layouts/TabletLayout.tsx
+msgid "Login to view more information"
+msgstr "Login to view more information"
+
+#: src/components/@auth/AuthWaitingWallet/index.tsx
 #: src/pages/@layouts/Navbar/NavUser.tsx
 msgid "Logout"
 msgstr "Logout"
@@ -1979,8 +2349,8 @@ msgid "Looks like you canceled signing of authentication message with your provi
 msgstr "Looks like you canceled signing of authentication message with your provider"
 
 #: src/components/@auth/AuthWaitingWallet/index.tsx
-msgid "Looks like you have changed primary address in your wallet. You should sign new authentication message"
-msgstr "Looks like you have changed primary address in your wallet. You should sign new authentication message"
+msgid "Looks like you have changed primary address in your wallet. You should connect your wallet again"
+msgstr "Looks like you have changed primary address in your wallet. You should connect your wallet again"
 
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Looks like your session has expired. You should sign new authentication message"
@@ -2025,6 +2395,10 @@ msgstr "MAX"
 msgid "MAX POSITIONS"
 msgstr "MAX POSITIONS"
 
+#: src/components/@subscription/PlanUpgradePrompt.tsx
+msgid "MAYBE LATTER"
+msgstr "MAYBE LATTER"
+
 #: src/utils/config/options.tsx
 msgid "MDD"
 msgstr "MDD"
@@ -2049,10 +2423,6 @@ msgstr "MORE"
 #: src/pages/ReferralManagement/index.tsx
 msgid "MY REFERRAL"
 msgstr "MY REFERRAL"
-
-#: src/pages/Settings/Layouts/Layout.tsx
-msgid "MY SUBSCRIPTION"
-msgstr "MY SUBSCRIPTION"
 
 #: src/components/@wallet/CreateWalletAction/index.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
@@ -2166,18 +2536,22 @@ msgstr "Max ROI"
 msgid "Max Withdraw"
 msgstr "Max Withdraw"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Maximum ${0}"
 msgstr "Maximum ${0}"
 
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Maximum copy size ${0}"
 msgstr "Maximum copy size ${0}"
 
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
 msgid "Maybe Later"
 msgstr "Maybe Later"
+
+#: src/components/@subscription/UpgradeModal.tsx
+msgid "Maybe later"
+msgstr "Maybe later"
 
 #: src/components/@position/PositionTxResults/index.tsx
 msgid "Maybe you are missing a trader address or have incorrect logs, you can refer to \"Recommend Results\" section."
@@ -2201,48 +2575,48 @@ msgstr "Min Duration"
 msgid "Min Leverage"
 msgstr "Min Leverage"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Mint Again"
 msgstr "Mint Again"
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Mint NFT"
 msgstr "Mint NFT"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Mint New Subscription"
 msgstr "Mint New Subscription"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Mint Now"
 msgstr "Mint Now"
 
 #: src/pages/@layouts/SubscriptionExpiredWarning.tsx
-#: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
+#: src/pages/Settings/UserSubscription/v1/SubscriptionExpired.tsx
 msgid "Mint new NFT"
 msgstr "Mint new NFT"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "Minted"
 msgstr "Minted"
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Minted NFT"
 msgstr "Minted NFT"
 
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Minted: {0} NFTs"
 msgstr "Minted: {0} NFTs"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "Minting"
 msgstr "Minting"
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Minting NFT"
 msgstr "Minting NFT"
 
@@ -2259,22 +2633,83 @@ msgstr "Modified Margin"
 msgid "Modify SL / TP"
 msgstr "Modify SL / TP"
 
+#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/pages/Subscription/index.tsx
 #: src/utils/config/options.tsx
 msgid "Monthly"
 msgstr "Monthly"
 
 #: src/pages/@layouts/Footer/index.tsx
-#: src/pages/Subscription/TermsAndConditions.tsx
+#: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "More"
 msgstr "More"
 
-#: src/pages/OpenInterest/OpenInterestByMarket/index.tsx
-msgid "Mrket data was not found"
-msgstr "Mrket data was not found"
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More API connection"
+msgstr "More API connection"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More Alert Channels"
+msgstr "More Alert Channels"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More CSV Download"
+msgstr "More CSV Download"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More Copy Trade Settings"
+msgstr "More Copy Trade Settings"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More Exchange support"
+msgstr "More Exchange support"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More Filters"
+msgstr "More Filters"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More Metrics"
+msgstr "More Metrics"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More Monthly Alert Quota"
+msgstr "More Monthly Alert Quota"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More Protocols"
+msgstr "More Protocols"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More Time Frames"
+msgstr "More Time Frames"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More Tools"
+msgstr "More Tools"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More Trader Ranking"
+msgstr "More Trader Ranking"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "More Watchlist Traders"
+msgstr "More Watchlist Traders"
 
 #: src/utils/config/translations.tsx
 msgid "Multiple Copy"
 msgstr "Multiple Copy"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Multiple-Traders Setting"
+msgstr "Multiple-Traders Setting"
 
 #: src/pages/DailyTrades/index.tsx
 #: src/pages/MyProfile/index.tsx
@@ -2282,7 +2717,7 @@ msgid "My Profile"
 msgstr "My Profile"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
-#: src/pages/Settings/Layouts/Layout.tsx
+#: src/pages/Settings/UserSubscription/index.tsx
 msgid "My Subscription"
 msgstr "My Subscription"
 
@@ -2302,7 +2737,7 @@ msgstr "NODE STATUS"
 msgid "Name"
 msgstr "Name"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Near Realtime"
 msgstr "Near Realtime"
 
@@ -2310,23 +2745,37 @@ msgstr "Near Realtime"
 msgid "Need help?"
 msgstr "Need help?"
 
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Network"
+msgstr "Network"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Never miss every significant event on any exchange"
+msgstr "Never miss every significant event on any exchange"
+
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 msgid "New Password"
 msgstr "New Password"
 
 #: src/components/@widgets/UnsubscribeAlertModal/index.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "No"
 msgstr "No"
 
 #: src/components/@copyActivity/ListActivityMobile.tsx
 #: src/components/@copyActivity/UserActivityView.tsx
 #: src/pages/CopinLite/Trades/Activities.tsx
+#: src/pages/Settings/AlertLogs/CopyTradeLogMobile.tsx
+#: src/pages/Settings/AlertLogs/CopyTradeLogs.tsx
+#: src/pages/Settings/AlertLogs/CustomLogMobile.tsx
+#: src/pages/Settings/AlertLogs/CustomLogs.tsx
+#: src/pages/Settings/AlertLogs/WatchlistLogMobile.tsx
+#: src/pages/Settings/AlertLogs/WatchlistLogs.tsx
 msgid "No Activity Found"
 msgstr "No Activity Found"
 
@@ -2397,6 +2846,10 @@ msgstr "No Transactions Found"
 msgid "No link to the trader’s original position was found."
 msgstr "No link to the trader’s original position was found."
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "No missed signals from copied traders or watchlist"
+msgstr "No missed signals from copied traders or watchlist"
+
 #: src/components/@position/HLTraderOpeningPositions/OpenOrdersView.tsx
 msgid "No opening orders are matched this filter"
 msgstr "No opening orders are matched this filter"
@@ -2441,12 +2894,16 @@ msgstr "No, thanks"
 msgid "Node Status"
 msgstr "Node Status"
 
+#: src/utils/config/translations.tsx
+msgid "Non Login"
+msgstr "Non Login"
+
 #: src/components/@copinLite/OnboardingModal/TraderList.tsx
 #: src/pages/Home/Traders.tsx
 msgid "Not found any trending traders at this moment"
 msgstr "Not found any trending traders at this moment"
 
-#: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
+#: src/pages/Settings/UserSubscription/v1/SubscriptionExpired.tsx
 msgid "Note:"
 msgstr "Note:"
 
@@ -2463,6 +2920,10 @@ msgstr "Notice"
 #: src/components/@backtest/BacktestSimpleModal/index.tsx
 msgid "Notice:"
 msgstr "Notice:"
+
+#: src/pages/@layouts/Navbar/WarningWalletDisconnected.tsx
+msgid "Notice: Your wallet has been disconnected from Copin"
+msgstr "Notice: Your wallet has been disconnected from Copin"
 
 #: src/utils/config/translations.tsx
 msgid "OKX"
@@ -2507,7 +2968,7 @@ msgstr "OR LOGIN WITH"
 msgid "ORDERS"
 msgstr "ORDERS"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "OTHERS"
 msgstr "OTHERS"
 
@@ -2519,7 +2980,11 @@ msgstr "OVERVIEW"
 msgid "Omni Key Seed"
 msgstr "Omni Key Seed"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/FAQ.tsx
+msgid "On Navbar, Go to User Menu > My Subscription, then upgrade to the subscription you want. You can upgrade at any time, and the new features will be available immediately."
+msgstr "On Navbar, Go to User Menu > My Subscription, then upgrade to the subscription you want. You can upgrade at any time, and the new features will be available immediately."
+
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "On-chain traders for copying"
 msgstr "On-chain traders for copying"
 
@@ -2535,7 +3000,7 @@ msgstr "Onchain Positions"
 msgid "Ongoing"
 msgstr "Ongoing"
 
-#: src/pages/Settings/UserSubscription/PlanPrice.tsx
+#: src/pages/Settings/UserSubscription/v1/PlanPrice.tsx
 msgid "Only"
 msgstr "Only"
 
@@ -2548,7 +3013,7 @@ msgstr "Only"
 msgid "Open"
 msgstr "Open"
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Open Homepage"
 msgstr "Open Homepage"
 
@@ -2654,14 +3119,19 @@ msgstr "PNL Ratio"
 msgid "POLICY"
 msgstr "POLICY"
 
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "PREMIUM PLAN"
 msgstr "PREMIUM PLAN"
 
 #: src/pages/Stats/config.tsx
 msgid "PROFIT VS LOSS"
 msgstr "PROFIT VS LOSS"
+
+#: src/pages/SystemStatus/Layouts/Layout.tsx
+#: src/pages/SystemStatus/PublicPage/index.tsx
+msgid "PROTOCOL STATUS"
+msgstr "PROTOCOL STATUS"
 
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
@@ -2677,13 +3147,33 @@ msgstr "Password"
 msgid "Past Month Return"
 msgstr "Past Month Return"
 
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Pay"
+msgstr "Pay"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Payment Details"
+msgstr "Payment Details"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Payment by <0>{token}</0> of <1>{chain} Network</1>"
+msgstr "Payment by <0>{token}</0> of <1>{chain} Network</1>"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Percentile Filter"
+msgstr "Percentile Filter"
+
 #: src/pages/VaultDetails/VaultInfo/VaultPerformance.tsx
 msgid "Performance"
 msgstr "Performance"
 
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/PerpDEXsExplorer/PermissionContainer.tsx
+msgid "Perp Explorer"
+msgstr "Perp Explorer"
+
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Personal"
 msgstr "Personal"
 
@@ -2755,8 +3245,20 @@ msgstr "Please switch your wallet to one of a chain below: {0}"
 msgid "Please unlock your wallet to continue"
 msgstr "Please unlock your wallet to continue"
 
+#: src/pages/OpenInterest/OpenInterestByMarkets/index.tsx
+#: src/pages/OpenInterest/TopOpenInterest/index.tsx
+msgid "Please upgrade to explore open interest with advanced filters"
+msgstr "Please upgrade to explore open interest with advanced filters"
+
+#: src/pages/Explorer/ListTradersSection/index.tsx
+#: src/pages/Home/Traders.tsx
+#: src/pages/MyProfile/Favorites/ListTraderFavorites.tsx
+msgid "Please upgrade to explore traders with advanced filters"
+msgstr "Please upgrade to explore traders with advanced filters"
+
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
+#: src/components/@subscription/PaySubscriptionModal.tsx
 msgid "Please use a valid email address."
 msgstr "Please use a valid email address."
 
@@ -2811,9 +3313,17 @@ msgstr "Position average duration more than 7 days."
 msgid "Positions"
 msgstr "Positions"
 
-#: src/pages/Subscription/TermsAndConditions.tsx
+#: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "Prices may be changed by Copin depending on the project's performance and operations."
 msgstr "Prices may be changed by Copin depending on the project's performance and operations."
+
+#: src/utils/config/translations.tsx
+msgid "Pro"
+msgstr "Pro"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Process To Checkout"
+msgstr "Process To Checkout"
 
 #: src/components/@copyActivity/configs.tsx
 msgid "Processing"
@@ -2871,21 +3381,25 @@ msgstr "Qty"
 msgid "Quantity"
 msgstr "Quantity"
 
+#: src/pages/Home/Traders.tsx
+msgid "Quick Backtest"
+msgstr "Quick Backtest"
+
 #: src/utils/config/options.tsx
 msgid "Quickly Settled"
 msgstr "Quickly Settled"
 
-#: src/pages/Subscription/TermsAndConditions.tsx
+#: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "READ MORE"
 msgstr "READ MORE"
+
+#: src/pages/Settings/AlertLogs/configs.tsx
+msgid "REASON"
+msgstr "REASON"
 
 #: src/pages/Settings/AlertSettingDetails/TraderLastViewed.tsx
 msgid "RECOMMEND TRADERS"
 msgstr "RECOMMEND TRADERS"
-
-#: src/pages/@layouts/Navbar/NavLinks.tsx
-msgid "REFERRAL"
-msgstr "REFERRAL"
 
 #: src/pages/Settings/AlertDashboard/config.tsx
 msgid "REMOVE ALERT"
@@ -2905,9 +3419,21 @@ msgstr "ROI"
 msgid "RUNNING"
 msgstr "RUNNING"
 
+#: src/components/@widgets/LinkBotAlertModal/index.tsx
+msgid "Reach maximum quota ({groupQuota}) for this plan"
+msgstr "Reach maximum quota ({groupQuota}) for this plan"
+
+#: src/pages/Settings/AlertSettingDetails/LinkWebhookAlertAction/index.tsx
+msgid "Reach maximum quota ({webhookQuota}) for this plan"
+msgstr "Reach maximum quota ({webhookQuota}) for this plan"
+
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 msgid "Read more"
 msgstr "Read more"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Real-time data help you quickly stay ahead of the market"
+msgstr "Real-time data help you quickly stay ahead of the market"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Realized PnL"
@@ -2917,11 +3443,15 @@ msgstr "Realized PnL"
 msgid "Recommend Results"
 msgstr "Recommend Results"
 
+#: src/pages/Explorer/ConditionFilter/ExportCsvConfirmModal.tsx
+msgid "Records to export"
+msgstr "Records to export"
+
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 msgid "Referral Code (optional)"
 msgstr "Referral Code (optional)"
 
-#: src/pages/Subscription/TermsAndConditions.tsx
+#: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "Refund not accepted."
 msgstr "Refund not accepted."
 
@@ -2940,7 +3470,12 @@ msgstr "Register successful!"
 msgid "Reload"
 msgstr "Reload"
 
+#: src/pages/Explorer/ConditionFilter/ExportCsvConfirmModal.tsx
+msgid "Remaining quota after export"
+msgstr "Remaining quota after export"
+
 #: src/components/@copyTrade/renderProps/copyTradeColumns.tsx
+#: src/pages/Settings/AlertSettingDetails/SearchToAdd.tsx
 msgid "Remove"
 msgstr "Remove"
 
@@ -2967,6 +3502,14 @@ msgstr "Resend after {resendCountdown}s"
 #: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderGroup/components.tsx
 msgid "Reset"
 msgstr "Reset"
+
+#: src/pages/Explorer/ListTradersSection/index.tsx
+#: src/pages/Home/Traders.tsx
+#: src/pages/MyProfile/Favorites/ListTraderFavorites.tsx
+#: src/pages/OpenInterest/OpenInterestByMarkets/index.tsx
+#: src/pages/OpenInterest/TopOpenInterest/index.tsx
+msgid "Reset Filters"
+msgstr "Reset Filters"
 
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
 msgid "Reset password"
@@ -3006,6 +3549,8 @@ msgstr "Runtime (All)"
 #: src/components/@position/configs/copyPositionRenderProps.tsx
 #: src/components/@widgets/renderProps.tsx
 #: src/components/@widgets/renderProps.tsx
+#: src/pages/Settings/AlertLogs/configs.tsx
+#: src/pages/Settings/AlertLogs/configs.tsx
 #: src/theme/Table/renderProps.tsx
 #: src/theme/Table/renderProps.tsx
 msgid "S"
@@ -3086,6 +3631,7 @@ msgstr "STATS"
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 #: src/pages/MyProfile/FilterByStatus.tsx
+#: src/pages/Settings/AlertLogs/configs.tsx
 msgid "STATUS"
 msgstr "STATUS"
 
@@ -3112,9 +3658,33 @@ msgstr "SYSTEM STATUS"
 msgid "Save"
 msgstr "Save"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
+#: src/pages/Subscription/index.tsx
 msgid "Save {0}%"
 msgstr "Save {0}%"
+
+#: src/pages/Settings/UserSubscription/index.tsx
+msgid "Save {discountPercent}%"
+msgstr "Save {discountPercent}%"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "See Traders, collateral and more"
+msgstr "See Traders, collateral and more"
+
+#: src/components/@trader/TraderExplorerTableView/index.tsx
+#: src/pages/DailyTrades/Orders/index.tsx
+#: src/pages/DailyTrades/Positions/index.tsx
+msgid "See Unrealised PnL, Traded Tokens and more."
+msgstr "See Unrealised PnL, Traded Tokens and more."
+
+#: src/pages/PositionDetails/PermissionContainer.tsx
+msgid "See full position history, and detailed trade performance – as it happens"
+msgstr "See full position history, and detailed trade performance – as it happens"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "See volume, OI & PnL across all perpetual DEXes"
+msgstr "See volume, OI & PnL across all perpetual DEXes"
 
 #: src/pages/CopinLite/Trades/Activities.tsx
 #: src/pages/CopinLite/Trades/History.tsx
@@ -3189,7 +3759,7 @@ msgstr "Settings"
 msgid "Share"
 msgstr "Share"
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Share On:"
 msgstr "Share On:"
 
@@ -3213,10 +3783,6 @@ msgstr "Side"
 #: src/components/@wallet/UpdateWalletModals/UpdateHyperliquidWalletModal.tsx
 msgid "Sign Message Error"
 msgstr "Sign Message Error"
-
-#: src/components/@auth/AuthWaitingWallet/index.tsx
-msgid "Sign message"
-msgstr "Sign message"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/CopyPositionsListView/index.tsx
@@ -3289,6 +3855,10 @@ msgstr "Smart Wallet Management"
 msgid "Smart wallets are a unique Copin offering that allows copiers to copytrade at {0} platform."
 msgstr "Smart wallets are a unique Copin offering that allows copiers to copytrade at {0} platform."
 
+#: src/pages/Settings/UserSubscription/PlanDowngradeModal.tsx
+msgid "Some features or data from your current plan may no longer be available after downgrading."
+msgstr "Some features or data from your current plan may no longer be available after downgrading."
+
 #: src/pages/@helpers/ErrorFallback.tsx
 msgid "Something went wrong"
 msgstr "Something went wrong"
@@ -3317,9 +3887,21 @@ msgstr "Source Size Token"
 msgid "Source Trader"
 msgstr "Source Trader"
 
+#: src/utils/config/translations.tsx
+msgid "Stable"
+msgstr "Stable"
+
 #: src/pages/PerpDEXsExplorer/helpers/eventsHelper.tsx
 msgid "Start in {daysLeft} days"
 msgstr "Start in {daysLeft} days"
+
+#: src/pages/Subscription/EnterprisePlan.tsx
+msgid "Start with $2000/month. 12-month contract"
+msgstr "Start with $2000/month. 12-month contract"
+
+#: src/utils/config/translations.tsx
+msgid "Starter"
+msgstr "Starter"
 
 #: src/components/@copyTrade/TraderCopyCountWarningIcon/index.tsx
 msgid "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
@@ -3334,6 +3916,10 @@ msgstr "Stats"
 #: src/utils/config/translations.tsx
 msgid "Status"
 msgstr "Status"
+
+#: src/components/@widgets/LinkBotAlertModal/index.tsx
+msgid "Stay in sync with your community. Send real-time alerts directly to your private Telegram group"
+msgstr "Stay in sync with your community. Send real-time alerts directly to your private Telegram group"
 
 #: src/utils/config/translations.tsx
 msgid "Stop Copy"
@@ -3367,7 +3953,8 @@ msgid "Stopped"
 msgstr "Stopped"
 
 #: src/pages/Subscription/index.tsx
-#: src/pages/Subscription/index.tsx
+#: src/pages/Subscription/v1/v1.tsx
+#: src/pages/Subscription/v1/v1.tsx
 msgid "Subscription"
 msgstr "Subscription"
 
@@ -3406,9 +3993,14 @@ msgstr "Subscription"
 #: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
 #: src/pages/ReferralManagement/UserReferralTier.tsx
+#: src/pages/Settings/AlertLogs/configs.tsx
 #: src/pages/Settings/AlertSettingDetails/LinkWebhookAlertAction/index.tsx
 msgid "Success"
 msgstr "Success"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Successfully applied discount code: <0>{0}</0>"
+msgstr "Successfully applied discount code: <0>{0}</0>"
 
 #: src/pages/Explorer/ConditionFilter/FilterSuggestion.tsx
 msgid "Suggestion:"
@@ -3430,23 +4022,19 @@ msgstr "Swap sETH to sUSD"
 msgid "Swap wETH to sETH"
 msgstr "Swap wETH to sETH"
 
-#: src/components/@wallet/CreateWalletModals/CreateSmartWalletModal.tsx
-msgid "Switch Account"
-msgstr "Switch Account"
-
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Switch Alert BOT"
 msgstr "Switch Alert BOT"
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Sync Onchain Data"
 msgstr "Sync Onchain Data"
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Sync progress may take approximately 5 minutes. Continue using Copin while syncing?"
 msgstr "Sync progress may take approximately 5 minutes. Continue using Copin while syncing?"
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Syncing Onchain Data"
 msgstr "Syncing Onchain Data"
 
@@ -3462,11 +4050,20 @@ msgstr "Synthetix v3"
 msgid "System"
 msgstr "System"
 
+#: src/pages/Settings/AlertLogs/configs.tsx
+msgid "TARGET ACTION"
+msgstr "TARGET ACTION"
+
+#: src/pages/Settings/AlertLogs/configs.tsx
+msgid "TARGET WALLET"
+msgstr "TARGET WALLET"
+
 #: src/pages/@layouts/Footer/index.tsx
 msgid "TERMS & POLICY"
 msgstr "TERMS & POLICY"
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
+#: src/pages/Settings/AlertLogs/configs.tsx
 msgid "TIME"
 msgstr "TIME"
 
@@ -3516,6 +4113,7 @@ msgid "TOTAL VOLUME"
 msgstr "TOTAL VOLUME"
 
 #: src/components/@copyTrade/BulkCopyModifyModal/ListSelectedCopyTrade.tsx
+#: src/pages/Settings/AlertLogs/configs.tsx
 msgid "TRADER"
 msgstr "TRADER"
 
@@ -3559,6 +4157,10 @@ msgstr "TRADING VOLUME"
 #: src/pages/VaultDetails/VaultStats.tsx
 msgid "TVL"
 msgstr "TVL"
+
+#: src/pages/Settings/AlertLogs/configs.tsx
+msgid "TYPE"
+msgstr "TYPE"
 
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
@@ -3608,17 +4210,25 @@ msgstr "Term of Use"
 msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
-#: src/pages/Subscription/TermsAndConditions.tsx
+#: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "Terms And Conditions"
 msgstr "Terms And Conditions"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Terms of services"
+msgstr "Terms of services"
 
 #: src/hooks/web3/useRequiredChain.tsx
 msgid "The account in your web3 wallet does not match the account currently in use in the app"
 msgstr "The account in your web3 wallet does not match the account currently in use in the app"
 
-#: src/pages/Settings/UserSubscription/NoSubscription.tsx
+#: src/pages/Settings/UserSubscription/v1/NoSubscription.tsx
 msgid "The basic plan allows your to experience the basic features of Copin"
 msgstr "The basic plan allows your to experience the basic features of Copin"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "The email is used for transaction updates and refunds."
+msgstr "The email is used for transaction updates and refunds."
 
 #: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
 msgid "The filter matches too many traders ({0}/{1})"
@@ -3632,6 +4242,10 @@ msgstr "The invite code has {INVITE_CODE_LENGTH} characters."
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
 msgid "The maximum number of positions that can be opened at the same time per wallet"
 msgstr "The maximum number of positions that can be opened at the same time per wallet"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "The new plan will start within 10 minutes after the payment is successful."
+msgstr "The new plan will start within 10 minutes after the payment is successful."
 
 #: src/components/@ui/NotFound/index.tsx
 msgid "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
@@ -3689,6 +4303,14 @@ msgstr "The percentile ranking of traders with the lowest maximum drawdown"
 msgid "The process of creating a wallet is quick and only costs a small amount in gas fees."
 msgstr "The process of creating a wallet is quick and only costs a small amount in gas fees."
 
+#: src/pages/Settings/UserSubscription/PlanDowngradeModal.tsx
+msgid "The remaining <0>days</0> of your current plan will be added to the new plan after successful payment"
+msgstr "The remaining <0>days</0> of your current plan will be added to the new plan after successful payment"
+
+#: src/pages/Settings/UserSubscription/PlanUpgradeModal.tsx
+msgid "The remaining <0>value</0> of your current plan will be added to the new plan after successful payment"
+msgstr "The remaining <0>value</0> of your current plan will be added to the new plan after successful payment"
+
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
 msgid "The server is not responding, please try again later!"
@@ -3697,6 +4319,17 @@ msgstr "The server is not responding, please try again later!"
 #: src/components/@ui/NotFound/index.tsx
 msgid "This Page Could Not Be Found"
 msgstr "This Page Could Not Be Found"
+
+#: src/pages/OpenInterest/OpenInterestByMarkets/index.tsx
+#: src/pages/OpenInterest/TopOpenInterest/index.tsx
+msgid "This URL contains filters available from the {requiredPlanText} plan"
+msgstr "This URL contains filters available from the {requiredPlanText} plan"
+
+#: src/pages/Explorer/ListTradersSection/index.tsx
+#: src/pages/Home/Traders.tsx
+#: src/pages/MyProfile/Favorites/ListTraderFavorites.tsx
+msgid "This URL contains filters available from {0} plan"
+msgstr "This URL contains filters available from {0} plan"
 
 #: src/components/@position/UnlinkCopyPositionModal/index.tsx
 msgid "This action will unlink the {0} position; please ensure the {1} position is closed before proceeding."
@@ -3736,13 +4369,25 @@ msgstr "This custom alert has been deleted successfully"
 msgid "This custom alert has been updated successfully"
 msgstr "This custom alert has been updated successfully"
 
+#: src/components/@trader/TraderDetailsDrawer/ProtocolPermissionContainer.tsx
+#: src/pages/PositionDetails/PermissionContainer.tsx
+#: src/pages/TraderDetails/Layouts/ProtocolPermissionContainer.tsx
+msgid "This exchange is available from {0} plans"
+msgstr "This exchange is available from {0} plans"
+
 #: src/hooks/web3/useRequiredChain.tsx
 msgid "This feature only supports on {0}"
 msgstr "This feature only supports on {0}"
 
-#: src/pages/Explorer/ConditionFilter/TooltipContent.tsx
-msgid "This feature requires a Premium or VIP plan. <0><1> Upgrade now to export data.</1>Upgrade</0>"
-msgstr "This feature requires a Premium or VIP plan. <0><1> Upgrade now to export data.</1>Upgrade</0>"
+#: src/pages/DailyTrades/Orders/FilterOrderButton.tsx
+#: src/pages/DailyTrades/Positions/FilterPositionButton.tsx
+#: src/pages/Explorer/ConditionFilter/index.tsx
+msgid "This features is available from {0} plan"
+msgstr "This features is available from {0} plan"
+
+#: src/pages/StatsCEX/PermissionContainer.tsx
+msgid "This features is available from {requiredPlanText} plan"
+msgstr "This features is available from {requiredPlanText} plan"
 
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/Charts.tsx
 msgid "This graph will show {0} demographics once responses come in"
@@ -3789,6 +4434,18 @@ msgstr "This will help us find copy trader that fit for you"
 msgid "Time"
 msgstr "Time"
 
+#: src/pages/Components.tsx
+msgid "Title"
+msgstr "Title"
+
+#: src/pages/ReferralManagement/UserReferralTier.tsx
+msgid "To Unlock Custom Code"
+msgstr "To Unlock Custom Code"
+
+#: src/components/@dailyTrades/ToggleLIveButton.tsx
+msgid "To Unlock Live Data"
+msgstr "To Unlock Live Data"
+
 #: src/pages/CopinLite/Wallet/Withdraw.tsx
 msgid "To address:"
 msgstr "To address:"
@@ -3805,9 +4462,13 @@ msgstr "To get notifications from traders, you must use Copin Telegram Bot"
 msgid "To start, you need to create a smart wallet."
 msgstr "To start, you need to create a smart wallet."
 
-#: src/pages/Subscription/TermsAndConditions.tsx
+#: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "To unlock premium and VIP features, mint a Copin NFT."
 msgstr "To unlock premium and VIP features, mint a Copin NFT."
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Token Preference"
+msgstr "Token Preference"
 
 #: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 msgid "Top Highest PNL Tokens"
@@ -3816,6 +4477,10 @@ msgstr "Top Highest PNL Tokens"
 #: src/components/@copinLite/OnboardingModal/configs.tsx
 msgid "Top Profit"
 msgstr "Top Profit"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Total"
+msgstr "Total"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Total Gain"
@@ -3872,6 +4537,10 @@ msgstr "Total Volume"
 msgid "Total Wins"
 msgstr "Total Wins"
 
+#: src/pages/DailyTrades/PermissionContainer.tsx
+msgid "Track what every trader is doing right now across all exchanges. Entries, Size, PnL – all in one place and realtime."
+msgstr "Track what every trader is doing right now across all exchanges. Entries, Size, PnL – all in one place and realtime."
+
 #: src/pages/CopinLite/index.tsx
 msgid "Trade"
 msgstr "Trade"
@@ -3908,7 +4577,7 @@ msgstr "Trader Group"
 msgid "Trader don't have statistic in {0}"
 msgstr "Trader don't have statistic in {0}"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Trader to copy"
 msgstr "Trader to copy"
 
@@ -3990,25 +4659,56 @@ msgstr "UNIQUE TRADERS"
 msgid "UPCOMING"
 msgstr "UPCOMING"
 
+#: src/components/@subscription/PlanUpgradePrompt.tsx
+#: src/components/@subscription/UpgradeButton.tsx
 #: src/pages/@layouts/Footer/index.tsx
 #: src/pages/@layouts/Footer/index.tsx
 msgid "UPGRADE"
 msgstr "UPGRADE"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "UPGRADE FOR MORE FUNCTIONALITY"
+msgstr "UPGRADE FOR MORE FUNCTIONALITY"
+
+#: src/components/@subscription/UpgradeBenefitModal.tsx
+msgid "UPGRADE NOW"
+msgstr "UPGRADE NOW"
+
+#: src/pages/Settings/UserSubscription/PlanUpgradeModal.tsx
+msgid "UPGRADE SUBSCRIPTION"
+msgstr "UPGRADE SUBSCRIPTION"
+
+#: src/pages/Settings/UserSubscription/UsageTable.tsx
+msgid "USED"
+msgstr "USED"
+
+#: src/utils/config/translations.tsx
+msgid "Uncopyable"
+msgstr "Uncopyable"
 
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Unique traders are copied in the system"
 msgstr "Unique traders are copied in the system"
 
 #: src/pages/MyProfile/OpeningPositions/SettingConfigsModal.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Unlimited"
 msgstr "Unlimited"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Unlimited copy size"
 msgstr "Unlimited copy size"
 
@@ -4020,9 +4720,79 @@ msgstr "Unlink Alert successfully"
 msgid "Unlock"
 msgstr "Unlock"
 
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Unlock Backtest, Compare Trader and Analyze By AI"
+msgstr "Unlock Backtest, Compare Trader and Analyze By AI"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Unlock Custom Alert"
+msgstr "Unlock Custom Alert"
+
+#: src/pages/PerpDEXsExplorer/PermissionContainer.tsx
+msgid "Unlock Full Perp Insights"
+msgstr "Unlock Full Perp Insights"
+
+#: src/pages/StatsCEX/PermissionContainer.tsx
+msgid "Unlock advanced market depth data to minimize slippage and optimize your copy trading decisions."
+msgstr "Unlock advanced market depth data to minimize slippage and optimize your copy trading decisions."
+
+#: src/components/@position/TraderHistoryPositions/index.tsx
+msgid "Unlock all positions"
+msgstr "Unlock all positions"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Unlock more APIs to optimize capital allocation and maximize profits"
+msgstr "Unlock more APIs to optimize capital allocation and maximize profits"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Unlock more copy trade settings to optimize your profit strategy"
+msgstr "Unlock more copy trade settings to optimize your profit strategy"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/pages/OpenInterest/OpenInterestByMarkets/index.tsx
+#: src/pages/OpenInterest/TopOpenInterest/index.tsx
+msgid "Unlock more powerful features and gain deeper market insights"
+msgstr "Unlock more powerful features and gain deeper market insights"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Unlock more powerful features to manage your copy trades"
+msgstr "Unlock more powerful features to manage your copy trades"
+
+#: src/pages/Explorer/ConditionFilter/index.tsx
+msgid "Unlock powerful filters to enhance your copy trading decisions"
+msgstr "Unlock powerful filters to enhance your copy trading decisions"
+
+#: src/components/@trader/TraderDetailsDrawer/ProtocolPermissionContainer.tsx
+#: src/pages/TraderDetails/Layouts/ProtocolPermissionContainer.tsx
+msgid "Unlock real-time entries, full position history, and detailed trade performance – as it happens"
+msgstr "Unlock real-time entries, full position history, and detailed trade performance – as it happens"
+
+#: src/pages/TraderDetails/TraderRankingExpanded/SimilarTraders.tsx
+msgid "Unlock to discover more similar traders and advanced insights."
+msgstr "Unlock to discover more similar traders and advanced insights."
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Unlocking more exchanges brings more choices for your strategies"
+msgstr "Unlocking more exchanges brings more choices for your strategies"
+
 #: src/pages/TraderDetails/AlertAction.tsx
 msgid "Unnotify"
 msgstr "Unnotify"
+
+#: src/components/@trader/TraderExplorerTableView/configs.tsx
+msgid "Unrealized PnL"
+msgstr "Unrealized PnL"
+
+#: src/utils/config/translations.tsx
+msgid "Unstable"
+msgstr "Unstable"
 
 #: src/hooks/web3/useChainRestrict.tsx
 msgid "Unsupported Network"
@@ -4044,12 +4814,11 @@ msgstr "Update configs has been succeeded"
 msgid "Update wallet successful!"
 msgstr "Update wallet successful!"
 
-#: src/pages/Settings/AlertDashboard/DesktopView.tsx
+#: src/components/@copyTrade/TraderDisabledWarningIcon/index.tsx
+#: src/components/@subscription/UpgradeModal.tsx
 #: src/pages/Settings/AlertDashboard/NoCustomAlert.tsx
-#: src/pages/Settings/AlertDashboard/index.tsx
-#: src/pages/Settings/AlertSettingDetails/SettingChannel.tsx
-#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderGroup/components.tsx
-#: src/pages/Settings/AlertSettingDetails/SettingWatchlistTraders.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/PickTraderModals.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/PickTraderModals.tsx
 msgid "Upgrade"
 msgstr "Upgrade"
 
@@ -4061,13 +4830,70 @@ msgstr "Upgrade Account"
 msgid "Upgrade Now"
 msgstr "Upgrade Now"
 
+#: src/pages/Settings/UserSubscription/index.tsx
+msgid "Upgrade Plan"
+msgstr "Upgrade Plan"
+
+#: src/pages/Settings/AlertSettingDetails/SearchToAdd.tsx
+msgid "Upgrade To Add"
+msgstr "Upgrade To Add"
+
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
 msgid "Upgrade To Premium Account"
 msgstr "Upgrade To Premium Account"
 
+#: src/components/@subscription/NotPermittedFilter.tsx
+msgid "Upgrade To Unlock Filtering"
+msgstr "Upgrade To Unlock Filtering"
+
+#: src/components/@trader/TraderExplorerTableView/index.tsx
+#: src/pages/DailyTrades/Orders/index.tsx
+#: src/pages/DailyTrades/Positions/index.tsx
+msgid "Upgrade to Unlock more Metrics"
+msgstr "Upgrade to Unlock more Metrics"
+
+#: src/pages/Settings/AlertSettingDetails/LinkWebhookAlertAction/index.tsx
+msgid "Upgrade to add Webhook"
+msgstr "Upgrade to add Webhook"
+
+#: src/pages/ComparingTraders/ComparisonComponent.tsx
+#: src/pages/TraderDetails/TraderRanking.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/PercentileRankingDetails.tsx
+#: src/pages/TraderDetails/TraderRankingExpanded/PercentileRankingDetails.tsx
+msgid "Upgrade to customize your chart and unlock all 12 insights."
+msgstr "Upgrade to customize your chart and unlock all 12 insights."
+
+#: src/pages/TraderDetails/CustomizeRankingColumns.tsx
+msgid "Upgrade to customize your chart and unlock all {0} insights."
+msgstr "Upgrade to customize your chart and unlock all {0} insights."
+
+#: src/components/@widgets/ConditionFilterForm/index.tsx
+msgid "Upgrade to filter"
+msgstr "Upgrade to filter"
+
+#: src/components/@position/PositionUpgradePlanIndicator.tsx
+msgid "Upgrade to keep exploring all positions"
+msgstr "Upgrade to keep exploring all positions"
+
+#: src/pages/PositionDetails/PermissionContainer.tsx
+msgid "Upgrade to the {0} plan to view positions and more trader insights."
+msgstr "Upgrade to the {0} plan to view positions and more trader insights."
+
+#: src/pages/PerpDEXsExplorer/PermissionContainer.tsx
+msgid "Upgrade to the {requiredPlanText} plan to explore trade volume, open interest, and advanced stats across all perpetual dexes."
+msgstr "Upgrade to the {requiredPlanText} plan to explore trade volume, open interest, and advanced stats across all perpetual dexes."
+
+#: src/pages/Settings/UserSubscription/index.tsx
+msgid "Usage"
+msgstr "Usage"
+
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "Use this code"
 msgstr "Use this code"
+
+#: src/components/@widgets/ConditionFilterForm/index.tsx
+msgid "Using {0} of {maxFilterFields} filters. Upgrade to add more"
+msgstr "Using {0} of {maxFilterFields} filters. Upgrade to add more"
 
 #: src/components/@widgets/ConditionFilterForm/index.tsx
 msgid "VALUE"
@@ -4082,15 +4908,15 @@ msgstr "VAULT"
 msgid "VAULT INFORMATION"
 msgstr "VAULT INFORMATION"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "VIP PLAN"
 msgstr "VIP PLAN"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "VIP Plan"
 msgstr "VIP Plan"
 
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "VIP exclusive signal (group and APIs)"
 msgstr "VIP exclusive signal (group and APIs)"
 
@@ -4128,6 +4954,14 @@ msgstr "View All"
 msgid "View more"
 msgstr "View more"
 
+#: src/components/@trader/TraderDetailsDrawer/TraderQuickView.tsx
+#: src/pages/TraderDetails/Layouts/DesktopLayout.tsx
+#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
+#: src/pages/TraderDetails/Layouts/PositionPermissionContainer.tsx
+#: src/pages/TraderDetails/Layouts/TabletLayout.tsx
+msgid "View positions and more trader insights."
+msgstr "View positions and more trader insights."
+
 #: src/pages/Stats/index.tsx
 msgid "Volume"
 msgstr "Volume"
@@ -4139,6 +4973,10 @@ msgstr "WALLET WATCHER"
 #: src/pages/WalletManagement/Layouts/MobileLayout.tsx
 msgid "WALLETS"
 msgstr "WALLETS"
+
+#: src/pages/Settings/AlertLogs/index.tsx
+msgid "WATCHLIST"
+msgstr "WATCHLIST"
 
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/Info.tsx
 msgid "WEEKLY"
@@ -4184,12 +5022,21 @@ msgstr "Wallet Watcher"
 msgid "Warning"
 msgstr "Warning"
 
+#: src/utils/config/translations.tsx
+msgid "Watchlist Traders"
+msgstr "Watchlist Traders"
+
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 msgid "We only support login by email within the next 30 days (Deadline: November 30, 2023)"
 msgstr "We only support login by email within the next 30 days (Deadline: November 30, 2023)"
 
+#: src/pages/Subscription/FAQ.tsx
+msgid "We use CoinPayments as our payment gateway, which allows you to pay using many different blockchains."
+msgstr "We use CoinPayments as our payment gateway, which allows you to pay using many different blockchains."
+
 #: src/pages/Subscription/index.tsx
-#: src/pages/Subscription/index.tsx
+#: src/pages/Subscription/v1/v1.tsx
+#: src/pages/Subscription/v1/v1.tsx
 msgid "We've got a pricing plan that's perfect for you"
 msgstr "We've got a pricing plan that's perfect for you"
 
@@ -4209,11 +5056,27 @@ msgstr "Webhook Url"
 msgid "Weekly"
 msgstr "Weekly"
 
+#: src/pages/Subscription/FAQ.tsx
+msgid "What happens if I exceed my plan limits?"
+msgstr "What happens if I exceed my plan limits?"
+
+#: src/pages/Subscription/FAQ.tsx
+msgid "What happens when I downgrade my plan?"
+msgstr "What happens when I downgrade my plan?"
+
+#: src/pages/Subscription/FAQ.tsx
+msgid "What happens when I upgrade my plan?"
+msgstr "What happens when I upgrade my plan?"
+
 #: src/components/@wallet/CreateWalletModals/CreateSmartWalletModal.tsx
 msgid "What is smart wallet?"
 msgstr "What is smart wallet?"
 
-#: src/pages/Subscription/TermsAndConditions.tsx
+#: src/pages/Subscription/FAQ.tsx
+msgid "What payment methods do you accept?"
+msgstr "What payment methods do you accept?"
+
+#: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "When creating copy trades via Hyperliquid (or from Copin Lite), there is no size limit for copy trading and no restriction on the number of hot traders you can follow. The size limit is calculated based on the total copy trades of the respective trader."
 msgstr "When creating copy trades via Hyperliquid (or from Copin Lite), there is no size limit for copy trading and no restriction on the number of hot traders you can follow. The size limit is calculated based on the total copy trades of the respective trader."
 
@@ -4230,11 +5093,28 @@ msgstr "When the position's profit exceeds {0}, the Take Profit will be triggere
 msgid "When the trader opens a trade, the maximum margin per order is {0}."
 msgstr "When the trader opens a trade, the maximum margin per order is {0}."
 
+#: src/pages/Subscription/FAQ.tsx
+msgid "When you downgrade, your current plan is canceled immediately. The new plan starts from the time of purchase, and the remaining time of previous plan will be added to the new plan."
+msgstr "When you downgrade, your current plan is canceled immediately. The new plan starts from the time of purchase, and the remaining time of previous plan will be added to the new plan."
+
+#: src/pages/Subscription/FAQ.tsx
+msgid "When you upgrade, the remaining value of your current plan is converted into extra time on the new plan, based on the price ratio. E.g. 6 months on a $299 plan = ~1.8 months on a $999 plan. Your new plan starts immediately."
+msgstr "When you upgrade, the remaining value of your current plan is converted into extra time on the new plan, based on the price ratio. E.g. 6 months on a $299 plan = ~1.8 months on a $999 plan. Your new plan starts immediately."
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Wider trader coverage for data-driven calls"
+msgstr "Wider trader coverage for data-driven calls"
+
 #: src/components/@backtest/BacktestSimpleResult/index.tsx
 #: src/components/@copier/CopierLeaderboardTableView/index.tsx
+#: src/components/@copinLite/OnboardingModal/TraderList.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@widgets/SearchAllResults/index.tsx
 #: src/pages/Home/SortDropdown.tsx
+#: src/pages/Home/Traders.tsx
 #: src/utils/config/options.tsx
 msgid "Win Rate"
 msgstr "Win Rate"
@@ -4247,17 +5127,9 @@ msgstr "Win Streak"
 msgid "Win/Lose"
 msgstr "Win/Lose"
 
-#: src/pages/Home/Traders.tsx
-msgid "Win/Trades"
-msgstr "Win/Trades"
-
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Wins"
 msgstr "Wins"
-
-#: src/components/@copinLite/OnboardingModal/TraderList.tsx
-msgid "Wins / Trades"
-msgstr "Wins / Trades"
 
 #: src/components/@wallet/SmartWalletFundModal/Withdraw.tsx
 #: src/components/@wallet/WalletDetailsCard/SmartWalletActions.tsx
@@ -4279,14 +5151,49 @@ msgstr "Would you like to upgrade your account?"
 msgid "Would you like to use a referral code?"
 msgstr "Would you like to use a referral code?"
 
+#: src/pages/Components.tsx
+msgid "YOU'VE HIT YOUR API WALLET LIMIT"
+msgstr "YOU'VE HIT YOUR API WALLET LIMIT"
+
+#: src/pages/WalletManagement/WalletList/index.tsx
+msgid "YOU’VE HIT YOUR API WALLET LIMIT"
+msgstr "YOU’VE HIT YOUR API WALLET LIMIT"
+
+#: src/pages/Settings/AlertDashboard/index.tsx
+msgid "YOU’VE HIT YOUR CUSTOM ALERTS LIMIT"
+msgstr "YOU’VE HIT YOUR CUSTOM ALERTS LIMIT"
+
+#: src/pages/Settings/AlertSettingDetails/SettingChannel.tsx
+msgid "YOU’VE HIT YOUR DELIVERY CHANNELS LIMIT"
+msgstr "YOU’VE HIT YOUR DELIVERY CHANNELS LIMIT"
+
+#: src/pages/Settings/AlertSettingDetails/SearchToAdd.tsx
+#: src/pages/TraderDetails/AlertAction.tsx
+msgid "YOU’VE HIT YOUR WATCHLIST TRADERS LIMIT"
+msgstr "YOU’VE HIT YOUR WATCHLIST TRADERS LIMIT"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/pages/Subscription/index.tsx
+msgid "Yearly"
+msgstr "Yearly"
+
 #: src/components/@widgets/UnsubscribeAlertModal/index.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "Yes"
 msgstr "Yes"
+
+#: src/pages/Subscription/FAQ.tsx
+msgid "Yes, we do! We support payments in 3 cryptocurrencies through our payment gateway, including USDC, USDT and ETH."
+msgstr "Yes, we do! We support payments in 3 cryptocurrencies through our payment gateway, including USDC, USDT and ETH."
+
+#: src/components/@ui/TimeFilter/constants.tsx
+#: src/utils/config/translations.tsx
+msgid "Yesterday"
+msgstr "Yesterday"
 
 #: src/utils/config/translations.tsx
 msgid "You are not authorized to perform this action"
@@ -4296,13 +5203,10 @@ msgstr "You are not authorized to perform this action"
 msgid "You are not yet linked to telegram to receive Alerts. <0>Click To Connect</0>"
 msgstr "You are not yet linked to telegram to receive Alerts. <0>Click To Connect</0>"
 
-#: src/pages/Settings/UserSubscription/ExtendPlan.tsx
+#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/v1/ExtendPlan.tsx
 msgid "You can extend your usage, with a discounted fee compared to the original price"
 msgstr "You can extend your usage, with a discounted fee compared to the original price"
-
-#: src/pages/SystemStatus/index.tsx
-msgid "You do not have permission to access this data"
-msgstr "You do not have permission to access this data"
 
 #: src/pages/MyProfile/CheckingWalletRenderer.tsx
 msgid "You don't have any API"
@@ -4312,9 +5216,25 @@ msgstr "You don't have any API"
 msgid "You don't have any wallet"
 msgstr "You don't have any wallet"
 
+#: src/pages/Settings/AlertSettingDetails/SettingChannel.tsx
+msgid "You have exceeded your channel limit for the current plan."
+msgstr "You have exceeded your channel limit for the current plan."
+
+#: src/pages/Settings/AlertDashboard/DesktopView.tsx
+#: src/pages/Settings/AlertDashboard/MobileView.tsx
+msgid "You have exceeded your custom alert limit for the current plan."
+msgstr "You have exceeded your custom alert limit for the current plan."
+
 #: src/components/@widgets/SubscriptionRestrictModal.tsx
 msgid "You have exceeded your quota for this feature."
 msgstr "You have exceeded your quota for this feature."
+
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderGroup/components.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/components.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/index.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingWatchlistTraders.tsx
+msgid "You have exceeded your trader limit for the current plan."
+msgstr "You have exceeded your trader limit for the current plan."
 
 #: src/pages/Settings/AlertSettingDetails/SettingCopiedTraders.tsx
 msgid "You have not copied any trader yet."
@@ -4324,9 +5244,21 @@ msgstr "You have not copied any trader yet."
 msgid "You need to upgrade to use this feature"
 msgstr "You need to upgrade to use this feature"
 
+#: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
+msgid "You need {0} quota, but your current plan only includes {1}. Please upgrade to export this data."
+msgstr "You need {0} quota, but your current plan only includes {1}. Please upgrade to export this data."
+
 #: src/pages/Settings/AlertSettingDetails/SettingChannel.tsx
 msgid "You still not setup any channel."
 msgstr "You still not setup any channel."
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "You will be redirected to the payment gateway."
+msgstr "You will be redirected to the payment gateway."
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "You will extend <0>{0} days</0> from your <1>{1}</1> plan"
+msgstr "You will extend <0>{0} days</0> from your <1>{1}</1> plan"
 
 #: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "You will not copy the position has opened with collateral lower than"
@@ -4340,11 +5272,15 @@ msgstr "You will not copy the position has opened with leverage lower than"
 msgid "You will not copy the position has opened with size lower than"
 msgstr "You will not copy the position has opened with size lower than"
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "You will receive <0>30 days</0> {0} NFT Plan"
 msgstr "You will receive <0>30 days</0> {0} NFT Plan"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "You will receive <0>{0} days</0> of <1>{1}</1> plan"
+msgstr "You will receive <0>{0} days</0> of <1>{1}</1> plan"
+
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "You will {label} your plan for an additional"
 msgstr "You will {label} your plan for an additional"
 
@@ -4352,9 +5288,35 @@ msgstr "You will {label} your plan for an additional"
 msgid "You won’t be notified each time this trader places a trade"
 msgstr "You won’t be notified each time this trader places a trade"
 
-#: src/pages/Settings/UserSubscription/SubscriptionExpired.tsx
+#: src/pages/Settings/UserSubscription/v1/SubscriptionExpired.tsx
 msgid "You'll still have access to Premium after your NFT expires in 30 minutes. Keep an eye on the renewal time."
 msgstr "You'll still have access to Premium after your NFT expires in 30 minutes. Keep an eye on the renewal time."
+
+#: src/pages/Settings/UserSubscription/PlanDowngradeModal.tsx
+msgid "You're about to downgrade your subscription."
+msgstr "You're about to downgrade your subscription."
+
+#: src/pages/Components.tsx
+msgid "You're reach the maximum of API wallets for your current plan. Upgrade your plan to unlock access up to <0>10 wallets</0>"
+msgstr "You're reach the maximum of API wallets for your current plan. Upgrade your plan to unlock access up to <0>10 wallets</0>"
+
+#: src/pages/WalletManagement/WalletList/index.tsx
+msgid "You're reach the maximum of API wallets for your current plan. Upgrade your plan to unlock access up to <0>{maxApiKeyQuota} wallets</0>"
+msgstr "You're reach the maximum of API wallets for your current plan. Upgrade your plan to unlock access up to <0>{maxApiKeyQuota} wallets</0>"
+
+#: src/components/@copyTrade/CopyTradeForm/index.tsx
+#: src/components/@copyTrade/ListCopyTrade/useListCopyTradeConfig.tsx
+msgid "You're reach the maximum of Copy Trades for your current plan. Upgrade your plan to unlock access up to {0} copy trades"
+msgstr "You're reach the maximum of Copy Trades for your current plan. Upgrade your plan to unlock access up to {0} copy trades"
+
+#: src/pages/Settings/UserSubscription/PlanUpgradeModal.tsx
+msgid "You're upgrading your subscription before your current plan ends."
+msgstr "You're upgrading your subscription before your current plan ends."
+
+#: src/components/@copyTrade/CopyTradeForm/index.tsx
+#: src/components/@copyTrade/ListCopyTrade/useListCopyTradeConfig.tsx
+msgid "You've hit your copy trades limit"
+msgstr "You've hit your copy trades limit"
 
 #: src/pages/VaultDetails/VaultStats.tsx
 msgid "Your Balance"
@@ -4391,15 +5353,15 @@ msgstr "Your NFT expires in {0} days"
 msgid "Your NFT expires in {0}h {1}m {2}s"
 msgstr "Your NFT expires in {0}h {1}m {2}s"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "Your NFT has been Minted successfully"
 msgstr "Your NFT has been Minted successfully"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "Your NFT has been extended successfully"
 msgstr "Your NFT has been extended successfully"
 
-#: src/pages/Subscription/MintButton.tsx
+#: src/pages/Subscription/v1/MintButton.tsx
 msgid "Your NFT has been successfully minted"
 msgstr "Your NFT has been successfully minted"
 
@@ -4419,7 +5381,19 @@ msgstr "Your balance is too low for copy trading. Please Deposit now to continue
 msgid "Your copy may failed due to insufficient available fund"
 msgstr "Your copy may failed due to insufficient available fund"
 
-#: src/pages/Subscription/TermsAndConditions.tsx
+#: src/pages/Settings/UserSubscription/PlanDowngradeModal.tsx
+msgid "Your new plan starts immediately after downgrading."
+msgstr "Your new plan starts immediately after downgrading."
+
+#: src/pages/Settings/UserSubscription/PlanUpgradeModal.tsx
+msgid "Your new plan starts immediately after upgrading."
+msgstr "Your new plan starts immediately after upgrading."
+
+#: src/components/@copyTrade/TraderDisabledWarningIcon/index.tsx
+msgid "Your plan doesn't support this {label}. Upgrade to follow this trader."
+msgstr "Your plan doesn't support this {label}. Upgrade to follow this trader."
+
+#: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To continue, mint a new NFT."
 msgstr "Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To continue, mint a new NFT."
 
@@ -4442,6 +5416,23 @@ msgstr "Your {0} Secret Key"
 #: src/components/@position/CopyOpeningPositions/index.tsx
 msgid "Your {title} Is Empty"
 msgstr "Your {title} Is Empty"
+
+#: src/pages/Settings/AlertSettingDetails/SearchToAdd.tsx
+#: src/pages/TraderDetails/AlertAction.tsx
+msgid "You’re reach the maximum of Trader in watchlist for your current plan. Upgrade your plan to unlock access up to <0>{0} traders</0>"
+msgstr "You’re reach the maximum of Trader in watchlist for your current plan. Upgrade your plan to unlock access up to <0>{0} traders</0>"
+
+#: src/pages/Settings/AlertDashboard/index.tsx
+msgid "You’re reach the maximum of custom alerts for your current plan. Upgrade your plan to unlock more custom alerts."
+msgstr "You’re reach the maximum of custom alerts for your current plan. Upgrade your plan to unlock more custom alerts."
+
+#: src/pages/Settings/AlertSettingDetails/SettingChannel.tsx
+msgid "You’re reach the maximum of delivery channels for your current plan. Upgrade your plan to unlock access up to <0>{maxChannelQuota} channels</0>"
+msgstr "You’re reach the maximum of delivery channels for your current plan. Upgrade your plan to unlock access up to <0>{maxChannelQuota} channels</0>"
+
+#: src/pages/WalletManagement/WalletList/index.tsx
+msgid "You’ve hit your API wallets limit ({apiKeyQuota})"
+msgstr "You’ve hit your API wallets limit ({apiKeyQuota})"
 
 #: src/utils/config/translations.tsx
 #: src/utils/config/translations.tsx
@@ -4488,7 +5479,7 @@ msgstr "deleted"
 msgid "ePNL"
 msgstr "ePNL"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "extend"
 msgstr "extend"
 
@@ -4496,13 +5487,33 @@ msgstr "extend"
 msgid "gTrade"
 msgstr "gTrade"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "mint"
 msgstr "mint"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "month"
+msgstr "month"
+
+#: src/pages/Settings/UserSubscription/UsageTable.tsx
+msgid "remaining"
+msgstr "remaining"
 
 #: src/components/@copyActivity/configs.tsx
 msgid "slippage"
 msgstr "slippage"
+
+#: src/components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions.tsx
+msgid "to enable bulk actions"
+msgstr "to enable bulk actions"
+
+#: src/components/@trader/TraderExplorerListView/index.tsx
+msgid "to unlock more metric"
+msgstr "to unlock more metric"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "year"
+msgstr "year"
 
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 #: src/components/@auth/LoginAction/ModalLogin.tsx
@@ -4549,13 +5560,11 @@ msgstr "slippage"
 #: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
 #: src/pages/Home/Traders.tsx
 #: src/pages/Home/Traders.tsx
-#: src/pages/OpenInterest/OpenInterestByMarket/index.tsx
-#: src/pages/OpenInterest/OpenInterestByMarket/index.tsx
 #: src/pages/OpenInterest/TopOpenInterest/index.tsx
 #: src/pages/OpenInterest/TopOpenInterest/index.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
 msgid "{0}"
@@ -4593,19 +5602,27 @@ msgstr "{0} Secret Key"
 msgid "{0} Wallet"
 msgstr "{0} Wallet"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "{0} month"
 msgstr "{0} month"
 
-#: src/pages/Settings/UserSubscription/PricingOptions.tsx
+#: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 msgid "{0} months"
 msgstr "{0} months"
 
+#: src/pages/TraderDetails/CustomizeRankingColumns.tsx
+msgid "{0} more metrics available"
+msgstr "{0} more metrics available"
+
+#: src/pages/WalletManagement/WalletList/index.tsx
+msgid "{0} plans"
+msgstr "{0} plans"
+
 #: src/components/@widgets/SelectTraderCopiedDropdown/index.tsx
 #: src/pages/MyProfile/SelectTradersCopied.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
-#: src/pages/Subscription/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/Subscription/v1/Plans.tsx
 msgid "{0} traders"
 msgstr "{0} traders"
 

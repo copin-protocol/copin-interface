@@ -3,11 +3,9 @@ import { toast } from 'react-toastify'
 import { parseInputValue } from 'components/@ui/TextWithEdit'
 import ToastBody from 'components/@ui/ToastBody'
 import { CopyTradeData, RequestCopyTradeData } from 'entities/copyTrade'
-import { Flex, Image, Type } from 'theme/base'
 import { DCP_EXCHANGES } from 'utils/config/constants'
-import { CopyTradePlatformEnum, CopyTradeSideEnum, CopyTradeStatusEnum, SLTPTypeEnum } from 'utils/config/enums'
+import { CopyTradeSideEnum, CopyTradeStatusEnum, SLTPTypeEnum } from 'utils/config/enums'
 import { findObjectDifferences } from 'utils/helpers/findObjectDiff'
-import { parseExchangeImage } from 'utils/helpers/transform'
 
 import { defaultBulkUpdateFormValues } from './configs'
 import { CopyTradeFormValues, TradersByProtocolData } from './types'
@@ -185,63 +183,6 @@ export function getRequestDataBulkUpdate(formData: CopyTradeFormValues) {
     return newResult
   }, {} as RequestCopyTradeData)
   return result
-}
-export function getExchangeOption(exchange: CopyTradePlatformEnum, enabled?: boolean) {
-  let label = ''
-  let refCode = ''
-  switch (exchange) {
-    case CopyTradePlatformEnum.BINGX:
-      label = 'BingX'
-      refCode = 'DY5QNN'
-      break
-    case CopyTradePlatformEnum.BITGET:
-      label = 'Bitget'
-      refCode = '1qlg'
-      break
-    case CopyTradePlatformEnum.BINANCE:
-      label = 'Binance'
-      refCode = '19902233'
-      break
-    case CopyTradePlatformEnum.BYBIT:
-      label = 'Bybit'
-      refCode = 'COPIN'
-      break
-    case CopyTradePlatformEnum.OKX:
-      label = 'OKX'
-      refCode = '75651458'
-      break
-    case CopyTradePlatformEnum.GATE:
-      label = 'Gate'
-      refCode = 'AgBFAApb'
-      break
-    case CopyTradePlatformEnum.HYPERLIQUID:
-      label = 'Hyperliquid'
-      refCode = 'COPIN'
-      break
-    case CopyTradePlatformEnum.SYNTHETIX_V2:
-      label = 'Synthetix v2'
-      break
-    case CopyTradePlatformEnum.GNS_V8:
-      label = 'gTrade'
-      break
-    case CopyTradePlatformEnum.APEX:
-      label = 'ApeX'
-      break
-    default:
-      break
-  }
-  return {
-    value: exchange,
-    label: (
-      <Flex sx={{ alignItems: 'center', gap: 2 }}>
-        <Image src={parseExchangeImage(exchange)} width={24} height={24} />
-        <Type.Caption>{label}</Type.Caption>
-      </Flex>
-    ),
-    refCode,
-    labelText: label,
-    isDisabled: enabled != null && !enabled,
-  }
 }
 
 export const isCopyTradeRunningFn = (status: CopyTradeStatusEnum) => status === CopyTradeStatusEnum.RUNNING

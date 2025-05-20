@@ -2,16 +2,20 @@ import { Trans } from '@lingui/macro'
 import { ChartBar } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { TraderData } from 'entities/trader'
-import { useRankingCustomizeStore } from 'hooks/store/useRankingCustomize'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
+import { useUserRankingConfig } from 'hooks/store/useUserCustomize'
 import CustomizeRankingColumn from 'pages/TraderDetails/CustomizeRankingColumns'
 import ScoreChart, { ScoreChartData } from 'pages/TraderDetails/ScoreChart'
 import { RankingComparedItem } from 'pages/TraderDetails/TraderRankingExpanded/PercentileRankingDetails'
 import { Box, Flex } from 'theme/base'
 import { linearGradient3 } from 'theme/colors'
+import { SubscriptionFeatureEnum } from 'utils/config/enums'
 import { rankingFieldOptions } from 'utils/config/options'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 
 export type ComparisonComponentProps = {
   firstTrader: TraderData
@@ -29,7 +33,10 @@ export default function ComparisonComponent({
   firstComponent: (props: ComparisonComponentProps) => JSX.Element
   secondComponent: (props: ComparisonComponentProps) => JSX.Element
 }) {
-  const { customizedRanking } = useRankingCustomizeStore()
+  const { traderRankingFields, requiredPlanToMaxTraderRanking } = useTraderProfilePermission({
+    protocol: firstTrader?.protocol,
+  })
+  const { customizedRanking } = useUserRankingConfig()
   const _rankingFieldOptions = rankingFieldOptions.filter((option) => customizedRanking.includes(option.value))
   const chartData: ScoreChartData[] = formatChartData(firstTrader?.ranking, secondTrader?.ranking)
 
@@ -115,7 +122,7 @@ export default function ComparisonComponent({
         <Box mb={1} />
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr', gap: [3, 3, 3, 3, 24] }}>
           <Flex sx={{ width: '100%', flexDirection: 'column', gap: 24 }}>
-            {rankingFieldOptions.slice(0, 6).map((option, index) => {
+            {_rankingFieldOptions.slice(0, 6).map((option, index) => {
               return (
                 <RankingComparedItem
                   account={firstTrader.account}
@@ -131,19 +138,33 @@ export default function ComparisonComponent({
           </Flex>
           <Box sx={{ width: '100%', height: '100%', bg: 'neutral4' }} />
           <Flex sx={{ width: '100%', flexDirection: 'column', gap: 24 }}>
-            {rankingFieldOptions.slice(6).map((option, index) => {
-              return (
-                <RankingComparedItem
-                  account={firstTrader.account}
-                  comparedAccount={secondTrader.account}
-                  key={index}
-                  label={option.label}
-                  value={firstTrader?.ranking?.[option.value]}
-                  comparedValue={secondTrader?.ranking?.[option.value]}
-                  isActive={activeRankingField.includes(option.value)}
-                />
-              )
-            })}
+            {traderRankingFields.length > 6 ? (
+              rankingFieldOptions.slice(6).map((option, index) => {
+                return (
+                  <RankingComparedItem
+                    account={firstTrader.account}
+                    comparedAccount={secondTrader.account}
+                    key={index}
+                    label={option.label}
+                    value={firstTrader?.ranking?.[option.value]}
+                    comparedValue={secondTrader?.ranking?.[option.value]}
+                    isActive={activeRankingField.includes(option.value)}
+                  />
+                )
+              })
+            ) : (
+              <PlanUpgradePrompt
+                requiredPlan={requiredPlanToMaxTraderRanking}
+                title={
+                  <Trans>Available from {SUBSCRIPTION_PLAN_TRANSLATION[requiredPlanToMaxTraderRanking]} plans</Trans>
+                }
+                description={<Trans>Upgrade to customize your chart and unlock all 12 insights.</Trans>}
+                showTitleIcon
+                showLearnMoreButton
+                useLockIcon
+                learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+              />
+            )}
           </Flex>
         </Box>
       </Box>

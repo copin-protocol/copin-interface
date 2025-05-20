@@ -63,6 +63,19 @@ const FavoriteNoteTooltip = () => {
       inputRef.current.value = ''
     }
   }
+  useEffect(() => {
+    const dom = document.getElementById('trader-table')
+    const domMobile = document.getElementById('trader-table-mobile')
+    const handleScroll = () => {
+      setTooltip(undefined)
+    }
+    dom?.addEventListener('scroll', handleScroll)
+    domMobile?.addEventListener('scroll', handleScroll)
+    return () => {
+      dom?.removeEventListener('scroll', handleScroll)
+      domMobile?.removeEventListener('scroll', handleScroll)
+    }
+  }, [setTooltip, address, protocol, position])
 
   const { sm } = useResponsive()
 

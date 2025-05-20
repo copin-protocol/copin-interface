@@ -15,7 +15,9 @@ import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
 
 import FilterProtocols from './FilterProtocols'
+import LiveTradesPermissionTooltip from './LiveTradesPermissionTooltip'
 import DailyOrdersPage from './Orders'
+import PermissionContainer from './PermissionContainer'
 import DailyPositionsPage from './Positions'
 import { ProtocolsProvider } from './useProtocolsProvider'
 
@@ -62,16 +64,21 @@ export default function DailyTradesPage() {
               </Box>
             </Flex>
           )}
-          <Box sx={{ overflow: 'hidden', flex: '1 0 0' }}>
+          <Box sx={{ overflow: 'hidden', flex: '1 0 0', position: 'relative' }}>
             <Switch>
               <Route exact path={ROUTES.LIVE_TRADES_ORDERS.path}>
-                <DailyOrdersPage />
+                <PermissionContainer>
+                  <DailyOrdersPage />
+                </PermissionContainer>
               </Route>
               <Route exact path={ROUTES.LIVE_TRADES_POSITIONS.path}>
-                <DailyPositionsPage />
+                <PermissionContainer>
+                  <DailyPositionsPage />
+                </PermissionContainer>
               </Route>
               <Redirect to={ROUTES.LIVE_TRADES_ORDERS.path} />
             </Switch>
+            <LiveTradesPermissionTooltip />
           </Box>
           {!md && (
             <BottomWrapperMobile>

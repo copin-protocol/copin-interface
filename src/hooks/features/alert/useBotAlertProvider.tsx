@@ -4,29 +4,24 @@ import { useQuery } from 'react-query'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
-import {
-  checkLinkedBotAlertApi,
-  countCustomAlertApi,
-  getBotAlertApi,
-  getCustomAlertsApi,
-  getTraderAlertListApi,
-} from 'apis/alertApis'
+import { checkLinkedBotAlertApi, getBotAlertApi, getCustomAlertsApi, getTraderAlertListApi } from 'apis/alertApis'
 import { ApiListResponse } from 'apis/api'
 import { AlertSettingData, BotAlertData, TraderAlertData } from 'entities/alert'
-import { useIsPremium, useIsVIP } from 'hooks/features/subscription/useSubscriptionRestrict'
+import { AlertPermission, AlertPermissionConfig } from 'entities/permission'
+import { SubscriptionUsageData } from 'entities/subscription'
+import useGetSubscriptionPermission from 'hooks/features/subscription/useGetSubscriptionPermission'
+import { useIsElite, useIsPro } from 'hooks/features/subscription/useSubscriptionRestrict'
+import useUserUsage from 'hooks/features/subscription/useUserUsage'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import usePageChange from 'hooks/helpers/usePageChange'
-import useMyProfile from 'hooks/store/useMyProfile'
-import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
-import { AlertCategoryEnum, AlertTypeEnum, SubscriptionPlanEnum } from 'utils/config/enums'
+import { AlertCategoryEnum, AlertTypeEnum, SubscriptionPermission } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import useSettingChannels from './useSettingChannels'
 
-
 export interface BotAlertContextValues {
-  totalCustomAlerts?: number
+  usage?: SubscriptionUsageData
   maxTraderAlert?: number
   systemAlerts?: BotAlertData[]
   customAlerts?: ApiListResponse<BotAlertData>
@@ -34,7 +29,7 @@ export interface BotAlertContextValues {
   loadingAlerts?: boolean
   loadingTraders?: boolean
   isPremiumUser?: boolean | null
-  isVIPUser?: boolean | null
+  isEliteUser?: boolean | null
   hasCopiedChannel?: boolean
   hasWatchlistChannel?: boolean
   isGeneratingLink?: boolean
@@ -52,6 +47,8 @@ export interface BotAlertContextValues {
   handleDismissModal?: () => void
   keyword?: string
   setKeyword?: (keyword: string) => void
+  userPermission?: AlertPermissionConfig
+  pagePermission?: AlertPermission
 }
 
 interface BotAlertContextModifier {
@@ -63,10 +60,14 @@ export const BotAlertContext = createContext({} as BotAlertContextValues)
 const LIMIT_TRADERS = 10
 
 export const BotAlertInitializer = memo(function BotAlertProvider() {
-  const isPremiumUser = useIsPremium()
-  const isVIPUser = useIsVIP()
-  const { myProfile } = useMyProfile()
-  const { subscriptionLimit } = useSystemConfigStore()
+  const isProUser = useIsPro()
+  const isEliteUser = useIsElite()
+  const { pagePermission, userPermission, myProfile } = useGetSubscriptionPermission<
+    AlertPermission,
+    AlertPermissionConfig
+  >({
+    section: SubscriptionPermission.TRADER_ALERT,
+  })
   const refetchQueries = useRefetchQueries()
   const { currentPage, changeCurrentPage } = usePageChange({ pageName: 'page' })
   const [isOpenLinkBotModal, setIsOpenLinkBotModal] = useState(false)
@@ -75,15 +76,17 @@ export const BotAlertInitializer = memo(function BotAlertProvider() {
   const [stateExpiredTime, setStateExpiredTime] = useState<number | undefined>()
   const [searchText, setSearchText] = useState('')
 
-  const userAlertLimit = subscriptionLimit?.[myProfile?.plan ?? SubscriptionPlanEnum.BASIC]
-  const maxTraderAlert = userAlertLimit?.traderAlerts ?? 0
+  const { usage } = useUserUsage()
+
+  const maxTraderAlert = userPermission?.watchedListQuota ?? 0
 
   const handleResetState = useCallback(() => {
     setIsOpenLinkBotModal(false)
     setCurrentState(undefined)
     setCurrentAlert(undefined)
     setStateExpiredTime(undefined)
-  }, [])
+    refetchQueries([QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE])
+  }, [refetchQueries])
 
   const {
     data: systemAlertSettings,
@@ -127,15 +130,6 @@ export const BotAlertInitializer = memo(function BotAlertProvider() {
     }
   )
 
-  const { data: totalCustomAlerts } = useQuery(
-    [QUERY_KEYS.COUNT_CUSTOM_ALERTS, myProfile?.id],
-    () => countCustomAlertApi(),
-    {
-      enabled: !!myProfile?.id,
-      retry: 0,
-    }
-  )
-
   useQuery(
     [QUERY_KEYS.CHECK_LINKED_BOT_ALERT, myProfile?.id, currentState, isOpenLinkBotModal],
     () => checkLinkedBotAlertApi(currentState ?? ''),
@@ -149,7 +143,7 @@ export const BotAlertInitializer = memo(function BotAlertProvider() {
           handleResetState()
           refetchAlerts()
           refetchCustomAlerts()
-          refetchQueries([QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID])
+          refetchQueries([QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID, QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE])
         }
       },
     }
@@ -198,14 +192,13 @@ export const BotAlertInitializer = memo(function BotAlertProvider() {
     () => ({
       stateExpiredTime,
       maxTraderAlert,
-      totalCustomAlerts,
       traderAlerts,
       systemAlerts,
       customAlerts,
       loadingAlerts,
       loadingTraders,
-      isPremiumUser,
-      isVIPUser,
+      isProUser,
+      isEliteUser,
       hasCopiedChannel,
       hasWatchlistChannel,
       isGeneratingLink,
@@ -221,18 +214,20 @@ export const BotAlertInitializer = memo(function BotAlertProvider() {
       currentAlert,
       keyword: searchText,
       setKeyword: setSearchText,
+      userPermission,
+      pagePermission,
+      usage,
     }),
     [
       stateExpiredTime,
-      totalCustomAlerts,
       maxTraderAlert,
       traderAlerts,
       systemAlerts,
       customAlerts,
       loadingAlerts,
       loadingTraders,
-      isPremiumUser,
-      isVIPUser,
+      isProUser,
+      isEliteUser,
       hasCopiedChannel,
       hasWatchlistChannel,
       isGeneratingLink,
@@ -246,6 +241,9 @@ export const BotAlertInitializer = memo(function BotAlertProvider() {
       currentState,
       currentAlert,
       searchText,
+      userPermission,
+      pagePermission,
+      usage,
     ]
   )
 

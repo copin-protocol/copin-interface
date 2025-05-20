@@ -1,19 +1,27 @@
+import { Trans } from '@lingui/macro'
 import { Funnel } from '@phosphor-icons/react'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 import { PositionStatusSelect } from 'components/@dailyTrades/PositionStatusFilterIcon'
 import { POSITION_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import { MarketSelect } from 'components/@widgets/PairFilterIcon'
 import { MobileRangeFilterButtons, MobileRangeFilterItem } from 'components/@widgets/TableFilter/MobileRangeFilter'
+import { PositionData } from 'entities/trader'
+import useLiveTradesPermission from 'hooks/features/subscription/useLiveTradesPermission'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Button } from 'theme/Buttons'
 import Label from 'theme/InputField/Label'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { SubscriptionFeatureEnum } from 'utils/config/enums'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 
 import { DaliPositionsContextValues, useDailyPositionsContext } from './usePositionsProvider'
 
 export default function FilterPositionButton() {
+  const { isEnabledFilterPosition, planToFilterPosition, positionFieldsAllowed } = useLiveTradesPermission()
+
   const [openModal, setOpenModal] = useState(false)
   const { setSearchParamsOnly } = useSearchParams()
   const { ranges, pairs, excludedPairs, status, changeFilters } = useDailyPositionsContext()
@@ -85,42 +93,61 @@ export default function FilterPositionButton() {
           maxHeight="80svh"
           onDismiss={() => setOpenModal(false)}
         >
-          <Flex height="100%" sx={{ flexDirection: 'column' }}>
-            <Flex px={3} pt={3} mb={24} sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Type.BodyBold>FILTERS</Type.BodyBold>
-              {/* <IconBox icon={<XCircle size={20} />} onClick={() => setOpenModal(false)} /> */}
-            </Flex>
-            <Box flex="1 0 0" overflow="auto">
-              <Box px={3} pb={3}>
-                <Label label="Status" labelColor="neutral1" />
-                <PositionStatusSelect currentFilter={_status} changeFilter={_setStatus} />
-                <Box mb={3} />
-                <MarketSelect
-                  key={openModal.toString()}
-                  pairs={_pairs}
-                  excludedPairs={_excludedPairs}
-                  onChange={_changePairs}
-                />
-                <Box mb={3} />
-                <Label label="Others" labelColor="neutral1" />
-                {Object.entries(POSITION_RANGE_CONFIG_MAPPING).map(([valueKey, configs]) => {
-                  const { gte, lte } = _rangesFilter[valueKey] ?? {}
-                  return (
-                    <Box key={valueKey} mb={2}>
-                      <MobileRangeFilterItem
-                        configs={configs}
-                        gte={gte}
-                        lte={lte}
-                        onChangeGte={(e) => _onChangeRangeValue({ valueKey, isGte: true, gte: e })}
-                        onChangeLte={(e) => _onChangeRangeValue({ valueKey, isLte: true, lte: e })}
-                      />
-                    </Box>
-                  )
-                })}
+          {isEnabledFilterPosition ? (
+            <Flex height="100%" sx={{ flexDirection: 'column' }}>
+              <Flex px={3} pt={3} mb={24} sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Type.BodyBold>FILTERS</Type.BodyBold>
+                {/* <IconBox icon={<XCircle size={20} />} onClick={() => setOpenModal(false)} /> */}
+              </Flex>
+              <Box flex="1 0 0" overflow="auto">
+                <Box px={3} pb={3}>
+                  <Label label="Status" labelColor="neutral1" />
+                  <PositionStatusSelect currentFilter={_status} changeFilter={_setStatus} />
+                  <Box mb={3} />
+                  <MarketSelect
+                    key={openModal.toString()}
+                    pairs={_pairs}
+                    excludedPairs={_excludedPairs}
+                    onChange={_changePairs}
+                  />
+                  <Box mb={3} />
+                  <Label label="Others" labelColor="neutral1" />
+                  {Object.entries(POSITION_RANGE_CONFIG_MAPPING).map(([valueKey, configs]) => {
+                    const { gte, lte } = _rangesFilter[valueKey] ?? {}
+                    if (
+                      positionFieldsAllowed != null &&
+                      !positionFieldsAllowed.includes(valueKey as keyof PositionData)
+                    )
+                      return <Fragment key={valueKey}></Fragment>
+                    return (
+                      <Box key={valueKey} mb={2}>
+                        <MobileRangeFilterItem
+                          configs={configs}
+                          gte={gte}
+                          lte={lte}
+                          onChangeGte={(e) => _onChangeRangeValue({ valueKey, isGte: true, gte: e })}
+                          onChangeLte={(e) => _onChangeRangeValue({ valueKey, isLte: true, lte: e })}
+                        />
+                      </Box>
+                    )
+                  })}
+                </Box>
               </Box>
-            </Box>
-            <MobileRangeFilterButtons onApply={_onApply} onReset={_onReset} />
-          </Flex>
+              <MobileRangeFilterButtons onApply={_onApply} onReset={_onReset} />
+            </Flex>
+          ) : (
+            <PlanUpgradePrompt
+              requiredPlan={planToFilterPosition}
+              title={
+                <Trans>
+                  This features is available from {SUBSCRIPTION_PLAN_TRANSLATION[planToFilterPosition]} plan
+                </Trans>
+              }
+              showTitleIcon
+              showLearnMoreButton
+              learnMoreSection={SubscriptionFeatureEnum.LIVE_TRADES}
+            />
+          )}
         </Modal>
       )}
     </>

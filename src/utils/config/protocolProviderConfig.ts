@@ -95,10 +95,6 @@ export const PROTOCOL_PROVIDER: ProtocolProvider = {
     chainId: ARBITRUM_MAINNET,
     explorerUrl: CHAINS[ARBITRUM_MAINNET].blockExplorerUrl,
   },
-  [ProtocolEnum.BLOOM_BLAST]: {
-    chainId: BLAST_MAINNET,
-    explorerUrl: CHAINS[BLAST_MAINNET].blockExplorerUrl,
-  },
   [ProtocolEnum.APOLLOX_BNB]: {
     chainId: BNB_MAINNET,
     explorerUrl: CHAINS[BNB_MAINNET].blockExplorerUrl,

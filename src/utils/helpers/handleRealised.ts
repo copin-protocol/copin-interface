@@ -10,7 +10,7 @@ export const encodeRealised = (key: string, keys: string[]) => {
 
 export const decodeRealised = (key: string): string => {
   let normalizedKey = key
-  if (key.includes('realised')) {
+  if (!key.includes('unrealised') && key.includes('realised')) {
     normalizedKey = key.replace('realised', '')
     normalizedKey = lowerFirstLetter(normalizedKey)
   }

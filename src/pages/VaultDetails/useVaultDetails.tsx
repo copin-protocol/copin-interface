@@ -20,7 +20,7 @@ const useVaultDetails = ({
   enabled = true,
 }: {
   vaultAddress?: string
-  account?: string
+  account?: string | null
   enabled?: boolean
 }): VaultDetailsContractData => {
   const address = vaultAddress ?? ''

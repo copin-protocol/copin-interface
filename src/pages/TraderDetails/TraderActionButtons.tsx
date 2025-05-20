@@ -9,6 +9,7 @@ import CopyVaultButton from 'components/@copyTrade/CopyVaultButton'
 import AnalyzeAction from 'components/@ui/AnalyzeButton'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { PositionData, TraderData } from 'entities/trader.d'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import Dropdown from 'theme/Dropdown'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -51,6 +52,7 @@ export default function TraderActionButtons({
 }) {
   const { lg } = useResponsive()
   const { isDA } = useCopyWalletContext()
+  const { isAllowedProtocol } = useTraderProfilePermission({ protocol })
   return (
     <>
       {lg ? (
@@ -90,10 +92,15 @@ export default function TraderActionButtons({
               }
             />
           )}
-          <AnalyzeAction />
+          <AnalyzeAction forceDisabled={!isAllowedProtocol} />
           {!disabledActions?.includes('alert') && <AlertAction protocol={protocol} account={account} />}
           {!isDrawer && (
-            <ExpandTraderRankingButton traderData={traderData} timeOption={timeOption} onChangeTime={onChangeTime} />
+            <ExpandTraderRankingButton
+              protocol={protocol}
+              traderData={traderData}
+              timeOption={timeOption}
+              onChangeTime={onChangeTime}
+            />
           )}
           {!disabledActions?.includes('backtest') && (
             <BacktestSingleButton
@@ -149,7 +156,7 @@ export default function TraderActionButtons({
                 {/*  <TradeProtocolAction protocol={protocol} />*/}
                 {/*</Box>*/}
                 <Box height="40px">
-                  <AnalyzeAction />
+                  <AnalyzeAction forceDisabled={!isAllowedProtocol} />
                 </Box>
                 {!disabledActions?.includes('alert') && (
                   <Box height="40px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>

@@ -43,11 +43,7 @@ export const VaultDetailsContext = createContext({} as VaultDetailsContextValues
 export function VaultDetailsProvider({ children }: { children: ReactNode }) {
   const { address: vaultAddress } = useParams<{ address: string }>()
   const { account } = useAuthContext()
-  const {
-    vault,
-    isLoading: isLoadingVaultDetails,
-    reloadVaultDetails,
-  } = useVaultDetails({ vaultAddress, account: account?.address })
+  const { vault, isLoading: isLoadingVaultDetails, reloadVaultDetails } = useVaultDetails({ vaultAddress, account })
   const {
     vaultUserDetails,
     isLoading: isLoadingVaultUserDetails,

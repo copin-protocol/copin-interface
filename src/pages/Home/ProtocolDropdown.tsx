@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
-import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex } from 'theme/base'
@@ -19,7 +19,7 @@ export default function ProtocolDropdown({
 }) {
   const protocolOptions = useGetProtocolOptions()
 
-  const allowList = useGetCopyTradeProtocols()
+  const { allowedCopyTradeProtocols } = useProtocolPermission()
 
   const protocolOption = protocolOptions.find((option) => option.id === protocol) ?? protocolOptions[0]
   return (
@@ -29,7 +29,7 @@ export default function ProtocolDropdown({
       menu={
         <>
           {protocolOptions.map((option) => {
-            const disabled = !allowList.includes(option.id)
+            const disabled = !allowedCopyTradeProtocols.includes(option.id)
             const isActive = option.id === protocol
             return (
               <DropdownItem
