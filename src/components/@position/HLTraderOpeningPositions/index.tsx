@@ -61,12 +61,14 @@ export default function HLTraderOpeningPositionsTableView({
   toggleExpand,
   isExpanded,
   isDrawer,
+  isShowIcon = true,
 }: {
   address: string
   protocol: ProtocolEnum
   toggleExpand?: () => void
   isExpanded?: boolean
   isDrawer?: boolean
+  isShowIcon?: boolean
 }) {
   const [tab, setTab] = useState<string>(HLPositionTab.OPEN_POSITIONS)
 
@@ -210,6 +212,7 @@ export default function HLTraderOpeningPositionsTableView({
           },
         }}
         externalWidget={
+          isShowIcon &&
           !isDrawer && (
             <IconBox
               icon={isExpanded ? <ArrowsIn size={20} /> : <ArrowsOutSimple size={20} />}

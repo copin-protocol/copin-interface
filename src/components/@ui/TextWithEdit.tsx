@@ -35,7 +35,7 @@ export default function TextWithEdit({
 }: {
   defaultValue: string | number
   onSave: (value: string) => void
-  onValidate?: (value: string) => boolean | undefined
+  onValidate?: (value: string) => Promise<boolean | undefined> | boolean | undefined
   formatDisplayText?: (value: string) => string
   disabled?: boolean
   allowEmpty?: boolean
@@ -67,6 +67,26 @@ export default function TextWithEdit({
       setValue(e.target.value)
     }
   }
+
+  const handleSave = async ({ value, previousValue }: { value: string; previousValue: string }) => {
+    const trimValue = value.trim()
+    try {
+      if (allowEmpty || (!allowEmpty && !!trimValue)) {
+        const isValid = onValidate ? await onValidate(trimValue) : true
+        if (isValid) {
+          onSave(trimValue)
+          if (allowEmpty && trimValue === '') {
+            setValue('--')
+          }
+          return
+        }
+      }
+      setValue(previousValue)
+    } catch (error) {
+      setValue(previousValue)
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -94,7 +114,6 @@ export default function TextWithEdit({
           },
           disabled,
         }}
-        // placeholder={'Enter wallet name'}
         style={{
           color: 'inherit',
           margin: 0,
@@ -112,19 +131,8 @@ export default function TextWithEdit({
           ...textSx,
         }}
         formatDisplayText={formatDisplayText}
-        onChange={(e) => onChange(e)}
-        onSave={({ value, previousValue }) => {
-          const trimValue = value.trim()
-          if (allowEmpty || (!allowEmpty && !!trimValue && (!onValidate || onValidate(trimValue)))) {
-            onSave(trimValue)
-            if (allowEmpty && trimValue === '') {
-              setValue('--')
-            }
-          } else {
-            setValue(previousValue)
-          }
-          // setIsEdit(false)
-        }}
+        onChange={onChange}
+        onSave={handleSave}
         onBlur={() => {
           if (allowEmpty && value === '') {
             setValue('--')

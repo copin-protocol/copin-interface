@@ -3,13 +3,17 @@ import { CaretRight, Funnel, Siren, UsersThree } from '@phosphor-icons/react'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import BadgeWithLimit from 'components/@ui/BadgeWithLimit'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { BotAlertData } from 'entities/alert'
 import { useAlertSettingDetailsContext } from 'hooks/features/alert/useAlertDetailsContext'
+import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import { useCustomAlertForm } from 'hooks/features/alert/useCustomAlertForm'
+import useCheckFeature from 'hooks/features/subscription/useCheckFeature'
 import { FilterTabEnum } from 'pages/Explorer/ConditionFilter/configs'
 import useTradersCount from 'pages/Explorer/ConditionFilter/useTraderCount'
-import Badge from 'theme/Badge'
+import { getAlertQuotaRequiredPlan } from 'pages/Settings/helpers'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { AlertCategoryEnum, AlertCustomType, ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
@@ -68,7 +72,7 @@ export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps
 
   const [customStep, setCustomStep] = useState<CustomAlertStep>(CustomAlertStep.BASIC_INFO)
   const [matchingTraderCount, setMatchingTraderCount] = useState<number>(0)
-  const totalTraderGroup: number = groupTraders?.meta?.total ?? 0
+  const totalTraderGroup: number = groupTraders?.data?.filter((e) => e.enableAlert)?.length ?? 0
   const safeMaxTraderAlert: number = maxTraderAlert ?? 0
 
   const { refetch } = useTradersCount({
@@ -252,6 +256,9 @@ function AlertHeader({
   methods,
   onSubmit,
 }: AlertHeaderProps) {
+  const { pagePermission } = useBotAlertContext()
+  const requiredPlan = getAlertQuotaRequiredPlan({ section: 'customPersonalQuota', alertPermission: pagePermission })
+  const { userNextPlan } = useCheckFeature({ requiredPlan })
   return (
     <Flex alignItems="center" px={3} py={2} sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
       <SectionTitle
@@ -260,12 +267,20 @@ function AlertHeader({
           <Flex alignItems="center" sx={{ gap: 2 }}>
             {isCreatingCustomAlert ? <Trans>CUSTOM ALERT</Trans> : name}
             {customType && (
-              <Badge
-                count={
-                  customType === AlertCustomType.TRADER_FILTER
-                    ? formatNumber(matchingTraderCount)
-                    : `${formatNumber(totalTraderGroup)}/${formatNumber(maxTraderAlert)}`
+              <BadgeWithLimit
+                total={customType === AlertCustomType.TRADER_FILTER ? matchingTraderCount : totalTraderGroup}
+                limit={customType !== AlertCustomType.TRADER_FILTER ? maxTraderAlert : undefined}
+                tooltipContent={
+                  userNextPlan && (
+                    <PlanUpgradePrompt
+                      requiredPlan={userNextPlan}
+                      title={<Trans>You have exceeded your trader limit for the current plan.</Trans>}
+                      confirmButtonVariant="textPrimary"
+                      titleSx={{ textTransform: 'none !important', fontWeight: 400 }}
+                    />
+                  )
                 }
+                clickableTooltip
               />
             )}
           </Flex>
@@ -306,7 +321,9 @@ function ExistingAlertInfo({
       {customType === AlertCustomType.TRADER_GROUP && (
         <Flex alignItems="center">
           <TradersTag
-            title={<Type.Caption color="neutral1">{formatNumber(totalTraderGroup)} traders in group</Type.Caption>}
+            title={
+              <Type.Caption color="neutral1">{formatNumber(totalTraderGroup)} active traders in group</Type.Caption>
+            }
             traders={groupTraders?.data ?? []}
             tagSx={{ color: 'neutral1', textTransform: 'initial' }}
           />

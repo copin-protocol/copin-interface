@@ -23,6 +23,7 @@ export default function TraderAddress({
   hasHover = true,
   linkTarget,
   quickViewDisabledActions,
+  quickViewDisabledLinkAccount,
   onPreview,
 }: {
   address: string | undefined
@@ -40,6 +41,7 @@ export default function TraderAddress({
   hasHover?: boolean
   linkTarget?: HTMLAttributeAnchorTarget
   quickViewDisabledActions?: DisabledActionType[]
+  quickViewDisabledLinkAccount?: boolean
 
   onPreview?: () => void
 }) {
@@ -77,7 +79,7 @@ export default function TraderAddress({
           if (protocol) {
             setTrader(
               { address, protocol, type: timeType as TimeFrameEnum, eventCategory: options?.eventCategory },
-              quickViewDisabledActions
+              { disabledActions: quickViewDisabledActions, disabledLinkAccount: quickViewDisabledLinkAccount }
             )
             onPreview?.()
           }
@@ -116,7 +118,6 @@ export default function TraderAddress({
         </Type.Caption>
         {protocol && (
           <>
-            {/* <Type.Caption color={dividerColor}>|</Type.Caption> */}
             <ProtocolLogo protocol={protocol} isActive={false} size={24} hasText={false} />
           </>
         )}

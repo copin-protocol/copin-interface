@@ -1,6 +1,6 @@
 import { isMobile } from 'hooks/helpers/useIsMobile'
 
-import { CopyTradePlatformEnum, PerpChartTypeEnum, ProtocolEnum } from './enums'
+import { CopyTradePlatformEnum, PerpChartTypeEnum, ProtocolEnum, SubscriptionPlanEnum } from './enums'
 
 export const SUPPORTED_LOCALES = ['en']
 export const DEFAULT_LOCALE = 'en'
@@ -10,8 +10,10 @@ export const NETWORK = import.meta.env.VITE_NETWORK_ENV
 export const BUILD_MODE = import.meta.env.VITE_BUILD_MODE
 export const APP_URL = import.meta.env.VITE_URL
 export const SOCKET_API_KEY = import.meta.env.VITE_SOCKET_API_KEY
+export const PRIVY_APP_ID = import.meta.env.VITE_PRIVY_APP_ID!
 
 export const TELEGRAM_BOT_ALERT = import.meta.env.VITE_TELEGRAM_BOT_ALERT
+export const SYMBOL_ALLOWED_ALL = '*'
 
 export const LINKS = {
   website: 'https://copin.io',
@@ -58,6 +60,7 @@ export const LINKS = {
   registerOKX: 'https://www.okx.com/join/75651458',
   registerGate: 'https://www.gate.io/signup/AgBFAApb?ref_type=103',
   registerHyperliquid: 'https://app.hyperliquid.xyz/join/COPIN',
+  registerApex: 'https://deeplink.omni.apex.exchange/AFF-6966',
   getCEXAPIKey: 'https://docs.copin.io/features/centralized-copy-trading-ccp',
   getBingXAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bingx-api',
   getBitgetAPIKey: 'https://docs.copin.io/features/copy-trading/connect-bitget-api',
@@ -65,6 +68,7 @@ export const LINKS = {
   getOKXAPIKey: 'https://docs.copin.io/features/copy-trading/connect-okx-api',
   getGateAPIKey: 'https://docs.copin.io/features/copy-trading/connect-gate-api',
   getHyperliquidAPIKey: 'https://docs.copin.io/features/decentralized-copy-trading-dcp/connect-hyperliquid-api',
+  getApexAPIKey: 'https://docs.copin.io/features/decentralized-copy-trading-dcp/connect-apex',
   feeStructureDocs: 'https://docs.copin.io/features/decentralized-copy-trading-dcp/fees-structure',
   notice: 'https://copin.substack.com/p/copin-profile-login-updates-road',
   bingXGuarantee:
@@ -133,6 +137,12 @@ export const RISK_LEVERAGE = 20
 
 export const MAX_PAGE_LIMIT = 500
 export const MAX_LIST_DATA_LIMIT = 10_000
+
+export const MAX_LIMIT = 500
+export const MAX_PERPDEX_ISSUE_DESCRIPTION = 800
+
+export const HYPERLIQUID_BUILDER_CODE = '0x055ba87dbff972e23bcf26ea4728c31e05240e66'
+export const HYPERLIQUID_BUILDER_MAX_FEES = '0.1%'
 
 export const SUBSCRIPTION_COLLECTION_URL =
   NETWORK === 'devnet'
@@ -227,7 +237,7 @@ export const DCP_SUPPORTED_PROTOCOLS = [
   ProtocolEnum.MUMMY_FANTOM,
 ]
 
-export const DEFAULT_PROTOCOL = ProtocolEnum.GNS
+export const DEFAULT_PROTOCOL = ProtocolEnum.GMX
 
 // TODO: Check when add new protocol
 export const RELEASED_PROTOCOLS =
@@ -293,7 +303,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.JUPITER,
         ProtocolEnum.OSTIUM_ARB,
       ]
-    : Object.values(ProtocolEnum).filter((protocol) => protocol !== ProtocolEnum.BLOOM_BLAST)
+    : Object.values(ProtocolEnum)
 
 // TODO: Check when add new protocol copy-trade
 export const ALLOWED_COPYTRADE_PROTOCOLS = [
@@ -341,9 +351,6 @@ export const FEE_WITH_FUNDING_PROTOCOLS = [
 ]
 export const COLLATERAL_TOKEN_PROTOCOLS: ProtocolEnum[] = []
 
-export const MAX_LIMIT = 500
-export const MAX_PERPDEX_ISSUE_DESCRIPTION = 800
-
 export const LIST_PERP_DEX_BASIC_CHARTS = [
   PerpChartTypeEnum.VOLUME,
   PerpChartTypeEnum.ACTIVE_USER,
@@ -353,5 +360,10 @@ export const LIST_PERP_DEX_BASIC_CHARTS = [
   PerpChartTypeEnum.PROFIT_LOSS,
 ]
 
-export const HYPERLIQUID_BUILDER_CODE = '0x055ba87dbff972e23bcf26ea4728c31e05240e66'
-export const HYPERLIQUID_BUILDER_MAX_FEES = '0.1%'
+export const SUBSCRIPTION_PLAN_ORDER = [
+  SubscriptionPlanEnum.ELITE,
+  SubscriptionPlanEnum.PRO,
+  SubscriptionPlanEnum.STARTER,
+  SubscriptionPlanEnum.FREE,
+  SubscriptionPlanEnum.NON_LOGIN,
+]

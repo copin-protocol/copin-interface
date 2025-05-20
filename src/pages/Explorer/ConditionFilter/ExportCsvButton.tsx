@@ -2,25 +2,29 @@ import { Trans } from '@lingui/macro'
 import { FileCsv } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import dayjs from 'dayjs'
+import { useState } from 'react'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 
-import { exportTradersCsvApi } from 'apis/traderApis'
+import { exportTradersCsvApi, preExportTradersCsvApi } from 'apis/traderApis'
 import { normalizeTraderPayload, transformRealisedField } from 'apis/traderApis'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
+import UpgradeModal from 'components/@subscription/UpgradeModal'
 import ToastBody from 'components/@ui/ToastBody'
 import { getFiltersFromFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
 import { TraderData } from 'entities/trader'
+import useBenefitModalStore from 'hooks/features/subscription/useBenefitModalStore'
+import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { useTraderExplorerTableColumns } from 'hooks/store/useTraderCustomizeColumns'
 import useTradersContext from 'pages/Explorer/useTradersContext'
 import { Button } from 'theme/Buttons'
-import Tooltip from 'theme/Tooltip'
 import { Flex, IconBox, Type } from 'theme/base'
-import { TOOLTIP_KEYS } from 'utils/config/keys'
+import { SubscriptionFeatureEnum } from 'utils/config/enums'
+import { formatNumber } from 'utils/helpers/format'
 
-import TooltipContent from './TooltipContent'
+import ExportCsvConfirmModal from './ExportCsvConfirmModal'
 
 interface ExportCsvButtonProps {
   hasTitle?: boolean
@@ -33,6 +37,12 @@ const ExportCsvButton = ({ hasTitle }: ExportCsvButtonProps) => {
   const handleClickLogin = useClickLoginButton()
   const { timeOption, currentSort, filters } = useTradersContext()
   const { myProfile } = useMyProfileStore()
+  const { enableExport, planToExport } = useExplorerPermission()
+  const { setConfig } = useBenefitModalStore()
+  const [confirmingData, setConfirmingData] = useState<{
+    estimatedQuota: number
+    remainingQuota: number
+  } | null>(null)
 
   const { mutate: getCSVData, isLoading: isExportLoading } = useMutation(exportTradersCsvApi, {
     onSuccess: (csvContent) => {
@@ -61,7 +71,7 @@ const ExportCsvButton = ({ hasTitle }: ExportCsvButtonProps) => {
     },
   })
 
-  const onExportCSV = () => {
+  const getRequest = () => {
     const ranges = getFiltersFromFormValues(filters)
     const fieldData = columnKeys.map((data) => transformRealisedField(data))
     const payload = {
@@ -79,17 +89,32 @@ const ExportCsvButton = ({ hasTitle }: ExportCsvButtonProps) => {
       payload.sortBy = sortBy as keyof TraderData | undefined
       payload.sortType = sortType
     }
+    return payload
+  }
 
+  const onExportCSV = () => {
+    const payload = getRequest()
     getCSVData(payload)
   }
 
-  const handleExportCSV = () => {
+  const handleExportCSV = async () => {
     if (!myProfile) {
       handleClickLogin()
       return
     }
-
-    onExportCSV()
+    if (!enableExport) {
+      setConfig(SubscriptionFeatureEnum.TRADER_EXPLORER, planToExport)
+      return
+    }
+    const payload = getRequest()
+    const data = await preExportTradersCsvApi(payload)
+    if (data.estimatedQuota === 0) {
+      toast.error(
+        <ToastBody title={<Trans>Error</Trans>} message={<Trans>Can&apos;t retrieve any data to export</Trans>} />
+      )
+      return
+    }
+    setConfirmingData(data)
   }
 
   return (
@@ -104,26 +129,48 @@ const ExportCsvButton = ({ hasTitle }: ExportCsvButtonProps) => {
           gap: '5px',
         }}
       >
-        {!isExportLoading && (
+        {!isExportLoading && !confirmingData && (
           <IconBox icon={<FileCsv size={18} />} color="neutral3" onClick={handleExportCSV} sx={{ cursor: 'pointer' }} />
         )}
         <Button
-          isLoading={isExportLoading}
+          isLoading={isExportLoading || !!confirmingData}
           px={0}
           variant="ghost"
           onClick={handleExportCSV}
           sx={{ fontWeight: 'normal', marginRight: 'auto', color: 'neutral3' }}
-          data-tooltip-id={TOOLTIP_KEYS.EXPORT_TRADERS_CSV}
         >
           {hasTitle ? <Type.Caption color={'neutral1'}>Export CSV</Type.Caption> : ''}
         </Button>
       </Flex>
-      {!!myProfile && (
-        <Tooltip id={TOOLTIP_KEYS.EXPORT_TRADERS_CSV} clickable={true}>
-          <Type.Caption sx={{ maxWidth: 300 }}>
-            <TooltipContent myProfile={myProfile} />
-          </Type.Caption>
-        </Tooltip>
+
+      {!!confirmingData && confirmingData.remainingQuota >= confirmingData.estimatedQuota && (
+        <ExportCsvConfirmModal
+          isOpen={!!confirmingData}
+          onClose={() => setConfirmingData(null)}
+          onConfirm={() => {
+            setConfirmingData(null)
+            onExportCSV()
+          }}
+          confirmingData={confirmingData}
+        />
+      )}
+      {!!confirmingData && confirmingData.remainingQuota < confirmingData.estimatedQuota && (
+        <UpgradeModal
+          isOpen={!!confirmingData}
+          onDismiss={() => {
+            setConfirmingData(null)
+          }}
+          title={<Trans>Export Limit Exceeded</Trans>}
+          descriptionSx={{
+            textAlign: 'center',
+          }}
+          description={
+            <Trans>
+              You need {formatNumber(confirmingData.estimatedQuota)} quota, but your current plan only includes{' '}
+              {formatNumber(confirmingData.remainingQuota)}. Please upgrade to export this data.
+            </Trans>
+          }
+        />
       )}
     </>
   )

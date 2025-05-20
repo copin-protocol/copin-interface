@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans, t } from '@lingui/macro'
-import { Crown, Siren } from '@phosphor-icons/react'
+import { ListBullets, Siren } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { Route, Switch, useLocation } from 'react-router-dom'
 
@@ -14,31 +14,30 @@ import ROUTES from 'utils/config/routes'
 import { LayoutComponents } from './types'
 
 enum TabKeyEnum {
-  REFERRAL = 'referral',
-  USER_SUBSCRIPTION = 'subscription',
-  BOT_ALERT = 'bot_alert',
+  ALERT_LIST = 'alert-list',
+  ALERT_LOGS = 'alert-logs',
 }
 
 const tabConfigs: TabConfig[] = [
   {
-    name: <Trans>MY SUBSCRIPTION</Trans>,
-    activeIcon: <Crown size={24} weight="fill" />,
-    icon: <Crown size={24} />,
-    key: TabKeyEnum.USER_SUBSCRIPTION,
-    route: ROUTES.USER_SUBSCRIPTION.path,
-  },
-  {
-    name: <Trans>ALERT</Trans>,
+    name: <Trans>ALERT LIST</Trans>,
     activeIcon: <Siren size={24} weight="fill" />,
     icon: <Siren size={24} />,
-    key: TabKeyEnum.BOT_ALERT,
+    key: TabKeyEnum.ALERT_LIST,
     route: ROUTES.ALERT_LIST.path,
+  },
+  {
+    name: <Trans>ALERT LOGS</Trans>,
+    activeIcon: <ListBullets size={24} weight="fill" />,
+    icon: <ListBullets size={24} />,
+    key: TabKeyEnum.ALERT_LOGS,
+    route: ROUTES.ALERT_LOGS.path,
   },
 ]
 
 const pageTitleMapping = {
-  [ROUTES.USER_SUBSCRIPTION.path]: t`My Subscription`,
-  [ROUTES.ALERT_LIST.path]: t`Alert`,
+  [ROUTES.ALERT_LIST.path]: t`Alert List`,
+  [ROUTES.ALERT_LOGS.path]: t`Alert Logs`,
 }
 
 export default function Layout(components: LayoutComponents) {
@@ -63,12 +62,11 @@ export default function Layout(components: LayoutComponents) {
         <Box sx={{ overflow: 'hidden', flexBasis: 0, flexGrow: 1 }}>
           <Switch>
             <Route exact path={ROUTES.ALERT_LIST.path}>
-              {components.botAlert}
+              {components.alertList}
             </Route>
-            <Route exact path={ROUTES.USER_SUBSCRIPTION.path}>
-              {components.userSubscription}
+            <Route exact path={ROUTES.ALERT_LOGS.path}>
+              {components.alertLogs}
             </Route>
-            {/*<Redirect to={ROUTES.USER_SUBSCRIPTION.path} />*/}
           </Switch>
         </Box>
 

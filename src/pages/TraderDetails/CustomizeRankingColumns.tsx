@@ -1,23 +1,29 @@
 import { Trans } from '@lingui/macro'
-import { CrownSimple, Gear } from '@phosphor-icons/react'
+import { Gear } from '@phosphor-icons/react'
 import { useState } from 'react'
 
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import Divider from 'components/@ui/Divider'
 import { TraderData } from 'entities/trader'
-import { useIsPremiumAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
-import { RANKING_FIELDS_COUNT, useRankingCustomizeStore } from 'hooks/store/useRankingCustomize'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
+import { RANKING_FIELDS_COUNT, RANKING_FIELD_NAMES, useUserRankingConfig } from 'hooks/store/useUserCustomize'
 import { Button } from 'theme/Buttons'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
 import Tooltip from 'theme/Tooltip'
-import { Box, Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
+import { SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { rankingFieldOptions } from 'utils/config/options'
 
 export default function CustomizeRankingColumn() {
   const [menuVisible, setMenuVisible] = useState(false)
-  const { customizedRanking, setVisibleRanking } = useRankingCustomizeStore()
+  const { customizedRanking, setVisibleRanking } = useUserRankingConfig()
   const [rankingFields, setRankingFields] = useState(customizedRanking)
-  const { checkIsPremium } = useIsPremiumAndAction()
+
+  const { traderRankingFields } = useTraderProfilePermission({})
+  const options = rankingFieldOptions.filter((option) => traderRankingFields.includes(option.value))
+  const isLimited = traderRankingFields.length < RANKING_FIELD_NAMES.length
+
   const toggleVisibleRanking = (key: keyof TraderData) => {
     setRankingFields((prev) => {
       if (prev.includes(key)) {
@@ -31,7 +37,7 @@ export default function CustomizeRankingColumn() {
   }
   const handleApply = () => {
     setMenuVisible(false)
-    if (!checkIsPremium()) return
+    // if (!checkIsPro()) return
     setVisibleRanking(rankingFields)
   }
   return (
@@ -39,9 +45,8 @@ export default function CustomizeRankingColumn() {
       <Dropdown
         inline
         menuSx={{
-          width: 190,
+          width: 234,
           p: 3,
-          pr: 0,
           position: 'relative',
         }}
         visible={menuVisible}
@@ -52,8 +57,9 @@ export default function CustomizeRankingColumn() {
         menu={
           <>
             <Flex sx={{ flexDirection: 'column', gap: 2, maxHeight: 250, overflowY: 'auto', pr: 3 }}>
-              {rankingFieldOptions.map((item) => {
-                const disabled = rankingFields.length === RANKING_FIELDS_COUNT && !rankingFields.includes(item.value)
+              {options.map((item) => {
+                const disabled =
+                  (rankingFields.length === RANKING_FIELDS_COUNT && !rankingFields.includes(item.value)) || isLimited
                 const checked = rankingFields.includes(item.value)
                 return (
                   <Box
@@ -80,23 +86,36 @@ export default function CustomizeRankingColumn() {
               ></Tooltip>
             </Flex>
             <Divider my={2} />
-            <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 2, pr: 3 }}>
-              <Type.Caption color="neutral2">
-                <Trans>Selected:</Trans> {rankingFields.length}/{RANKING_FIELDS_COUNT}
-              </Type.Caption>
-              <Button
-                variant="ghostPrimary"
-                size="sm"
-                sx={{ p: 0, display: 'flex', alignItems: 'center', gap: 2 }}
-                onClick={handleApply}
-                disabled={rankingFields.length < RANKING_FIELDS_COUNT}
-              >
-                <Box as="span">
-                  <Trans>Apply</Trans>
-                </Box>
-                <IconBox icon={<CrownSimple size={16} weight="fill" />} color="orange1" />
-              </Button>
-            </Flex>
+            {isLimited ? (
+              <PlanUpgradePrompt
+                requiredPlan={SubscriptionPlanEnum.ELITE}
+                title={<Trans>{RANKING_FIELD_NAMES.length - traderRankingFields.length} more metrics available</Trans>}
+                description={
+                  <Trans>Upgrade to customize your chart and unlock all {RANKING_FIELD_NAMES.length} insights.</Trans>
+                }
+                showTitleIcon
+                showLearnMoreButton
+                useLockIcon
+                learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+              />
+            ) : (
+              <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 2, pr: 3 }}>
+                <Type.Caption color="neutral2">
+                  <Trans>Selected:</Trans> {rankingFields.length}/{RANKING_FIELDS_COUNT}
+                </Type.Caption>
+                <Button
+                  variant="ghostPrimary"
+                  size="sm"
+                  sx={{ p: 0, display: 'flex', alignItems: 'center', gap: 2 }}
+                  onClick={handleApply}
+                  disabled={rankingFields.length < RANKING_FIELDS_COUNT}
+                >
+                  <Box as="span">
+                    <Trans>Apply</Trans>
+                  </Box>
+                </Button>
+              </Flex>
+            )}
           </>
         }
         buttonSx={{

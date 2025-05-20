@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
+import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { STORAGE_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
@@ -25,7 +26,7 @@ const useGlobalStore = create<GlobalStore>()(
       set((state) => {
         state.currentTime = time
       }),
-    protocol: undefined,
+    protocol: DEFAULT_PROTOCOL,
     setProtocol: (protocol) =>
       set((state) => {
         state.protocol = protocol

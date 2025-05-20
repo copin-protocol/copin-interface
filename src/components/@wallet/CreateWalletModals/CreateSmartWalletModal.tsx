@@ -37,7 +37,7 @@ const CreateSmartWalletModal = ({
     chainId,
   })
   const { walletProvider, publicProvider, walletAccount } = useWeb3()
-  const { profile, handleSwitchAccount } = useAuthContext()
+  const { walletDisconnected, reconnectWallet } = useAuthContext()
   const [submitting, setSubmitting] = useState(false)
   const [agreement, setAgreement] = useState(false)
   const [trigger, setTrigger] = useState(false)
@@ -47,13 +47,11 @@ const CreateSmartWalletModal = ({
       new Contract(
         CONTRACT_ADDRESSES[chainId][CONTRACT_QUERY_KEYS.SMART_COPYWALLET_FACTORY],
         CONTRACT_ABIS[CONTRACT_QUERY_KEYS.SMART_COPYWALLET_FACTORY],
-        walletProvider ? walletProvider.getSigner(walletAccount?.address).connectUnchecked() : publicProvider
+        walletProvider ? walletProvider.getSigner().connectUnchecked() : publicProvider
       ),
     [walletAccount, walletProvider, publicProvider]
   )
   const factoryMutation = useContractMutation(factory)
-
-  const isInvalidAccount = profile?.username?.toLowerCase() !== walletAccount?.address?.toLowerCase()
 
   const createAccount = async () => {
     setTrigger(true)
@@ -134,9 +132,9 @@ const CreateSmartWalletModal = ({
           )}
         </Box>
         {isValid ? (
-          isInvalidAccount ? (
-            <Button variant="primary" block onClick={handleSwitchAccount}>
-              <Trans>Switch Account</Trans>
+          walletDisconnected ? (
+            <Button variant="primary" block onClick={reconnectWallet}>
+              <Trans>Connect Wallet</Trans>
             </Button>
           ) : (
             <Button

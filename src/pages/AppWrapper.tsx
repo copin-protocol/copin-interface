@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 import { ToastContainer } from 'react-toastify'
 
 import OnboardingModal from 'components/@copinLite/OnboardingModal'
+import UpgradeBenefitModal from 'components/@subscription/UpgradeBenefitModal'
 import FavoriteNoteTooltip from 'components/@widgets/FavoriteButton/FavoriteNoteTooltip'
 import LinkBotAlertModal from 'components/@widgets/LinkBotAlertModal'
 import { InitTraderCopying } from 'hooks/store/useTraderCopying'
@@ -15,7 +16,6 @@ import { ELEMENT_IDS } from 'utils/config/keys'
 
 import TraderDetailsDrawer from '../components/@trader/TraderDetailsDrawer'
 import { InitVaultCopying } from '../hooks/store/useVaultCopying'
-import ChainRestrict from './@helpers/ChainRestrict'
 import EagerConnect from './@helpers/EagerConnect'
 import EventNotification from './@helpers/EventNotification'
 import GlobalDialog from './@helpers/GlobalDialog'
@@ -41,7 +41,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
       <EventNotification />
       <GlobalDialog />
       <SubscriptionRestrict />
-      <ChainRestrict />
+      {/* <ChainRestrict /> */}
       <TraderDetailsDrawer />
       <InitTraderCopying />
       <InitVaultCopying />
@@ -49,6 +49,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
       <PollingUsdPrice />
       <OnboardingModal />
       <LinkBotAlertModal />
+      <UpgradeBenefitModal />
     </>
   )
 }

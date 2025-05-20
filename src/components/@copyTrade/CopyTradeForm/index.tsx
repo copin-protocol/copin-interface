@@ -1,30 +1,28 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Trans } from '@lingui/macro'
 import { CrownSimple, StarFour } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useQuery } from 'react-query'
-import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { getTraderVolumeCopy } from 'apis/copyTradeApis'
+import { getCopyTradeSettingsListApi } from 'apis/copyTradeApis'
+import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
+import UpgradeModal from 'components/@subscription/UpgradeModal'
 import Divider from 'components/@ui/Divider'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { parseInputValue } from 'components/@ui/TextWithEdit'
 import ToastBody from 'components/@ui/ToastBody'
 import { renderTrader } from 'components/@widgets/renderProps'
-import { TradingEventStatusEnum } from 'entities/event'
+import { ProtocolPermission, ProtocolPermissionConfig } from 'entities/permission'
 import useCheckCopyTradeExchange from 'hooks/features/copyTrade/useCheckCopyExchange'
-import useCopyTradePermission from 'hooks/features/copyTrade/useCopyTradePermission'
-import { useIsPremiumAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
+import useCopyTradePermission from 'hooks/features/subscription/useCopyTradePermission'
+import useGetSubscriptionPermission from 'hooks/features/subscription/useGetSubscriptionPermission'
 import useGetTokensTraded from 'hooks/features/trader/useGetTokensTraded'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useInternalRole from 'hooks/features/useInternalRole'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useMyProfileStore from 'hooks/store/useMyProfile'
-import { getMaxVolumeCopy, useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import Accordion from 'theme/Accordion'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -39,29 +37,35 @@ import Select from 'theme/Select'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { DCP_SUPPORTED_PROTOCOLS, DEFAULT_PROTOCOL, LINKS, UNLIMITED_COPY_SIZE_EXCHANGES } from 'utils/config/constants'
-import { CopyTradePlatformEnum, CopyTradeSideEnum, EventTypeEnum, SLTPTypeEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { DCP_SUPPORTED_PROTOCOLS, DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
+import {
+  CopyTradePlatformEnum,
+  CopyTradeSideEnum,
+  CopyTradeStatusEnum,
+  SLTPTypeEnum,
+  SubscriptionFeatureEnum,
+  SubscriptionPermission,
+  SubscriptionPlanEnum,
+} from 'utils/config/enums'
 import { CURRENCY_PLATFORMS } from 'utils/config/platforms'
-import ROUTES from 'utils/config/routes'
 import { TOKEN_TRADE_IGNORE } from 'utils/config/trades'
 import { COPY_SIDE_TRANS, SLTP_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
 import { getAvatarName } from 'utils/helpers/generateAvatar'
 import { getCopyService } from 'utils/helpers/getCopyService'
+import { getRequiredPlan } from 'utils/helpers/permissionHelper'
 import { capitalizeFirstLetter } from 'utils/helpers/transform'
 import { getUserForTracking, logEventLite } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import {
   dcpExchangeOptions,
-  exchangeOptions,
   fieldName,
+  getExchangeOptions,
+  getProtocolOptions,
   internalExchangeOptions,
-  protocolOptions,
   vaultExchangeOptions,
 } from '../configs'
-import { getExchangeOption } from '../helpers'
 import { CopyTradeFormValues } from '../types'
 import {
   bulkUpdateFormSchema,
@@ -82,13 +86,17 @@ type Props = {
   defaultFormValues: CopyTradeFormValues
   submitButtonText?: ReactNode
   formTypes?: FormType[]
+  defaultOpenUpgradeModal?: boolean
+  onDismissUpgradeModal?: () => void
 }
 const CopyTraderForm = ({
   onSubmit,
-  isSubmitting,
+  defaultOpenUpgradeModal = false,
+  isSubmitting: requestSubmitting,
   defaultFormValues: _defaultFormValues,
   submitButtonText = 'Copy Trade',
   formTypes,
+  onDismissUpgradeModal,
 }: Props) => {
   const isEdit = !!formTypes?.includes('edit')
   const isClone = !!formTypes?.includes('clone')
@@ -180,29 +188,21 @@ const CopyTraderForm = ({
   ])
 
   const { disabledExchanges } = useCheckCopyTradeExchange()
-  const { checkIsPremium, isPremiumUser } = useIsPremiumAndAction()
   const isInternal = useInternalRole()
-  const cexOptions = isInternal ? internalExchangeOptions : exchangeOptions
-  const options = (
-    isVault
-      ? vaultExchangeOptions
-      : !!protocol && DCP_SUPPORTED_PROTOCOLS.includes(protocol)
-      ? [...dcpExchangeOptions, ...cexOptions]
-      : cexOptions
-  ).filter((v) => {
-    return disabledExchanges.length ? !disabledExchanges.includes(v.value) : true
+
+  const { userPermission, pagePermission } = useCopyTradePermission()
+  const { userPermission: userProtocolPermission, pagePermission: pageProtocolPermission } =
+    useGetSubscriptionPermission<ProtocolPermission, ProtocolPermissionConfig>({
+      section: SubscriptionPermission.PROTOCOL,
+    })
+
+  const isEnableMultiAccount = userPermission?.isEnableMultiAccount
+
+  const enableMultiAccountRequiredPlan = getRequiredPlan({
+    conditionFn: (plan) => !!pagePermission?.[plan]?.isEnableMultiAccount,
   })
 
-  const recheckedExchange = useRef(false)
-  useEffect(() => {
-    if (recheckedExchange.current) return
-    if (platform === CopyTradePlatformEnum.GNS_V8 && disabledExchanges.includes(platform) && isClone) {
-      setValue('exchange', CopyTradePlatformEnum.HYPERLIQUID)
-      recheckedExchange.current = true
-    }
-  }, [platform, disabledExchanges, isClone])
-
-  const [tradedPairs, setTradedPairs] = useState<string[]>([])
+  // TODO: comeback
 
   const { getListSymbolOptions, getListSymbolByListIndexToken, getListIndexTokenByListSymbols } = useMarketsConfig()
 
@@ -239,18 +239,36 @@ const CopyTraderForm = ({
       },
     }
   )
-
-  const { events } = useSystemConfigStore()
-
-  const gnsEvent = events?.find((e) => e.type === EventTypeEnum.GNS && e.status !== TradingEventStatusEnum.ENDED)
-
   const { copyWallets } = useCopyWalletContext()
+
+  const recheckedExchange = useRef(false)
+  const [tradedPairs, setTradedPairs] = useState<string[]>([])
+  const [isOpenUpgradeModal, setIsOpenUpgradeModal] = useState(defaultOpenUpgradeModal)
+  const [submitting, setSubmitting] = useState(false)
+
+  const cexOptions = isInternal ? internalExchangeOptions : getExchangeOptions({ userPermission, pagePermission })
+  const options = (
+    isVault
+      ? vaultExchangeOptions
+      : !!protocol && DCP_SUPPORTED_PROTOCOLS.includes(protocol)
+      ? [...dcpExchangeOptions, ...cexOptions]
+      : cexOptions
+  ).filter((v) => {
+    return disabledExchanges.length ? !disabledExchanges.includes(v.value) : true
+  })
+
+  useEffect(() => {
+    if (recheckedExchange.current) return
+    if (platform === CopyTradePlatformEnum.GNS_V8 && disabledExchanges.includes(platform) && isClone) {
+      setValue('exchange', CopyTradePlatformEnum.HYPERLIQUID)
+      recheckedExchange.current = true
+    }
+  }, [platform, disabledExchanges, isClone])
 
   const setDefaultWallet = (currentPlatform: string) => {
     const copyWalletsByExchange = copyWallets?.filter((e) => e.exchange === currentPlatform)
     onChangeWallet(copyWalletsByExchange?.[0]?.id ?? '')
   }
-  const isBingXWallet = copyWallets?.find((e) => e.id === copyWalletId)?.exchange === CopyTradePlatformEnum.BINGX
 
   const onChangeWallet = (walletId: string) =>
     setValue(fieldName.copyWalletId, walletId, { shouldValidate: true, shouldDirty: true })
@@ -263,27 +281,10 @@ const CopyTraderForm = ({
 
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
 
-  const currentWallet = copyWallets?.find((_w) => _w.id === copyWalletId)
-  const currentWalletOption = currentWallet?.exchange && getExchangeOption(currentWallet.exchange)
-  const walletHasRef = !!currentWallet?.isReferral
-  const userPlan = myProfile?.plan
-  const totalVolume = volume && leverage ? volume * leverage : 0
-
-  const { data: traderVolumeCopy } = useQuery(
-    [QUERY_KEYS.GET_TRADER_VOLUME_COPY, protocol, account, platform],
-    () => getTraderVolumeCopy({ protocol, account, exchange: platform }),
-    { enabled: !!account && !!protocol && !!platform }
-  )
-  const { volumeLimit } = useSystemConfigStore()
-
-  const maxVolume = getMaxVolumeCopy({ plan: myProfile?.plan, isRef: walletHasRef, volumeLimitData: volumeLimit })
-  const currentCopyVolume = traderVolumeCopy?.[0]?.totalVolume
-
-  const showWarningVolume = totalVolume > maxVolume
-
   // Todo: uncomment after 20/4
   const _handleSubmit = () =>
-    handleSubmit((_formValues) => {
+    handleSubmit(async (_formValues) => {
+      setSubmitting(true)
       const formValues = { ..._formValues }
       if (formValues.tokenAddresses?.length) {
         formValues.tokenAddresses =
@@ -300,9 +301,22 @@ const CopyTraderForm = ({
           }) ?? []
       }
       delete formValues.totalVolume
-      onSubmit(formValues)
-    })()
+      const allCopyTrades = await getCopyTradeSettingsListApi()
+      if (
+        !isEdit &&
+        !isBulkEdit &&
+        userPermission?.copyTradeQuota != null &&
+        allCopyTrades.filter((copyTrade) => copyTrade.status === CopyTradeStatusEnum.RUNNING).length + 1 >
+          userPermission.copyTradeQuota
+      ) {
+        setIsOpenUpgradeModal(true)
+        setSubmitting(false)
+        return
+      }
 
+      onSubmit(formValues)
+      setSubmitting(false)
+    })()
   // useEffect(() => {
   //   if (totalVolume > maxVolume) {
   //     const errorMsg = `Maximum volume (include leverage) is ${formatNumber(maxVolume, 0, 0)}`
@@ -350,10 +364,16 @@ const CopyTraderForm = ({
     }
   }, [clearErrors, copyWalletId])
 
-  const permissionToSelectProtocol = useCopyTradePermission(true) && !isLite && (isEdit || isClone) && !isBulkEdit
-  const disabledSelectWallet = isClone && !isPremiumUser
+  const permissionToSelectProtocol = !isLite && (isEdit || isClone) && !isBulkEdit
+  const disabledSelectWallet = isClone && !isInternal
   const hiddenSelectWallet = isEdit || isLite || isOnboarding || isBulkEdit
-  const { sm } = useResponsive()
+  const isSubmitting = requestSubmitting || submitting
+  const protocolOptions = useMemo(() => {
+    return getProtocolOptions({
+      userPermission: userProtocolPermission,
+      pagePermission: pageProtocolPermission,
+    })
+  }, [userProtocolPermission, pageProtocolPermission])
 
   const SwitchMultipleCopy = useCallback(
     (props: { label: string; switchLabel: string }) => {
@@ -361,11 +381,12 @@ const CopyTraderForm = ({
         <Flex mb={12} sx={{ alignItems: 'center', gap: 12, '& *': { mb: '0 !important' } }}>
           <Label label={props.label} />
           <SwitchInputField
+            disabled={!isEnableMultiAccount}
             switchLabel={
               <Flex alignItems="center" sx={{ gap: 1 }}>
                 <LabelWithTooltip
                   id="tt_multiple_address"
-                  tooltip={`The feature for premium users allows copying multiple traders with the same configuration. List of addresses in line break format.`}
+                  tooltip={`Allows copying multiple traders with the same configuration. List of addresses in line break format.`}
                   sx={{
                     borderBottom: '1px dashed',
                     mb: '-1px',
@@ -375,14 +396,19 @@ const CopyTraderForm = ({
                 >
                   {props.switchLabel}
                 </LabelWithTooltip>
-                <IconBox icon={<CrownSimple size={16} weight="fill" />} color="orange1" />
+                {!isEnableMultiAccount && !!enableMultiAccountRequiredPlan && (
+                  <PlanUpgradeIndicator
+                    requiredPlan={enableMultiAccountRequiredPlan as SubscriptionPlanEnum}
+                    learnMoreSection={SubscriptionFeatureEnum.COPY_TRADE}
+                  />
+                )}
               </Flex>
             }
             labelColor="neutral1"
             {...register(fieldName.multipleCopy)}
             wrapperSx={{ flexDirection: 'row-reverse', '*': { fontWeight: 400 } }}
             onChange={(newValue: any) => {
-              if (!checkIsPremium()) {
+              if (!isEnableMultiAccount) {
                 setValue(fieldName.multipleCopy, false)
               } else {
                 setValue(fieldName.multipleCopy, newValue.target.checked)
@@ -392,7 +418,7 @@ const CopyTraderForm = ({
         </Flex>
       )
     },
-    [register, isPremiumUser, checkIsPremium]
+    [register, isEnableMultiAccount]
   )
   const SourceTrader = useCallback(() => {
     if (!account || !protocol) return null
@@ -408,9 +434,7 @@ const CopyTraderForm = ({
     )
   }, [account, protocol])
 
-  const leverageError = errors.leverage?.message
   const volumeError = errors.volume?.message
-  const isUnlimitedCopySize = UNLIMITED_COPY_SIZE_EXCHANGES.includes(platform)
 
   const updateNumberValue = ({
     value,
@@ -559,7 +583,12 @@ const CopyTraderForm = ({
         )}
 
         {permissionToSelectProtocol && (
-          <Box mt={20} sx={{ flex: '0 0 max-content' }}>
+          <Box
+            mt={20}
+            sx={{
+              flex: '0 0 max-content',
+            }}
+          >
             <Label label="Protocol" />
             <Select
               options={protocolOptions}
@@ -1206,15 +1235,6 @@ const CopyTraderForm = ({
           </Flex>
         )}
 
-        {platform === CopyTradePlatformEnum.GNS_V8 && !!gnsEvent && (
-          <Type.Caption mt={2} display="block">
-            Fee-rebates program is ongoing.{' '}
-            <Box as={Link} to={ROUTES.FEE_REBATE.path} target="_blank">
-              View.
-            </Box>
-          </Type.Caption>
-        )}
-
         {!isBulkEdit && (
           <Box mt={3}>
             <Checkbox {...register('agreement')}>
@@ -1248,6 +1268,22 @@ const CopyTraderForm = ({
           {/*</Button>*/}
         </Box>
       </Box>
+      {!!pagePermission?.[SubscriptionPlanEnum.ELITE] && (
+        <UpgradeModal
+          isOpen={isOpenUpgradeModal}
+          onDismiss={() => {
+            setIsOpenUpgradeModal(false)
+            onDismissUpgradeModal?.()
+          }}
+          title={<Trans>You&apos;ve hit your copy trades limit</Trans>}
+          description={
+            <Trans>
+              You&apos;re reach the maximum of Copy Trades for your current plan. Upgrade your plan to unlock access up
+              to {pagePermission[SubscriptionPlanEnum.ELITE].copyTradeQuota} copy trades
+            </Trans>
+          }
+        />
+      )}
     </>
   )
 }

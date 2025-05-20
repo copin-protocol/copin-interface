@@ -6,6 +6,7 @@ import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { TraderData } from 'entities/trader'
+import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import CopyButton from 'theme/Buttons/CopyButton'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
@@ -21,6 +22,7 @@ const TraderInfo = ({
   protocol,
   timeOption,
   traderStats,
+  isLink = true,
   target,
 }: {
   address: string
@@ -28,18 +30,27 @@ const TraderInfo = ({
   timeOption: TimeFilterProps
   traderStats: (TraderData | undefined)[] | undefined
   target?: HTMLAttributeAnchorTarget
+  isLink?: boolean
 }) => {
   const explorerUrl = PROTOCOL_PROVIDER[protocol]?.explorerUrl
   // const shareStats = traderStats?.find((data) => data && data.type === (timeOption.id as unknown as TimeFrameEnum))
   const shareStats = traderStats?.find((data) => data && data.type === TimeFrameEnum.ALL_TIME)
+  const { trader, resetTrader } = useQuickViewTraderStore()
+
+  const onViewTrader = (e: any) => {
+    e.stopPropagation()
+    if (!!trader) {
+      resetTrader()
+    }
+  }
 
   return (
     <Box px={3} py={2}>
       <Flex sx={{ gap: 2, alignItems: 'center' }}>
         <Box
-          as={Link}
-          to={generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } })}
-          onClick={(e: any) => e.stopPropagation()}
+          as={isLink ? Link : undefined}
+          to={isLink ? generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } }) : ''}
+          onClick={isLink ? onViewTrader : undefined}
           target={target}
         >
           <AddressAvatar address={address} size={40} />
@@ -47,8 +58,11 @@ const TraderInfo = ({
         <Box>
           <Flex mb={1} alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
             <Box
-              as={Link}
-              to={generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } })}
+              as={isLink ? Link : undefined}
+              to={
+                isLink ? generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } }) : ''
+              }
+              onClick={isLink ? onViewTrader : undefined}
               target={target}
             >
               <Type.LargeBold color="neutral1" lineHeight="20px" textAlign="left" fontSize={['16px', '18px']}>

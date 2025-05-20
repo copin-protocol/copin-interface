@@ -17,6 +17,7 @@ import {
 import Divider from 'components/@ui/Divider'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { PositionData } from 'entities/trader'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import Badge from 'theme/Badge'
 import Loading from 'theme/Loading'
@@ -63,6 +64,8 @@ export default function TraderOpeningPositionsTableView({
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
   const { lg, xl, sm } = useResponsive()
 
+  const { isEnableOpeningPosition } = useTraderProfilePermission({ protocol })
+
   //
   const [currentSortExpanded, setCurrentSortExpanded] = useState<TableSortProps<PositionData> | undefined>({
     sortBy: 'openBlockTime',
@@ -82,7 +85,7 @@ export default function TraderOpeningPositionsTableView({
     toggleExpand?.()
   }
   const { data, isLoading } = useQuery(
-    [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol, currentSort],
+    [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol, currentSort, isEnableOpeningPosition],
     () =>
       getOpeningPositionsApi({
         protocol,
@@ -91,7 +94,7 @@ export default function TraderOpeningPositionsTableView({
         sortType: currentSort?.sortType,
       }),
     {
-      enabled: !!address,
+      enabled: !!address && isEnableOpeningPosition,
       retry: 0,
       refetchInterval: 15_000,
       keepPreviousData: true,

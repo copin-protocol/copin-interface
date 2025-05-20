@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 import Checkbox from 'theme/Checkbox'
@@ -10,7 +10,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { SortTypeEnum } from 'utils/config/enums'
 
 import { getFreezeLeftPos } from './helpers'
-import { TableSettingsProps, TraderListSortProps } from './types'
+import { ExternalTraderListSource, TableSettings, TableSettingsProps, TraderListSortProps } from './types'
 
 export default function TableHead<T>({
   hasData,
@@ -24,6 +24,8 @@ export default function TableHead<T>({
   hideCustomColumns,
   hiddenSelectBox = false,
   lefts: _lefts = [36, 48],
+  renderAdditionalIcon,
+  loading,
 }: {
   hasData: boolean
   currentSort?: TraderListSortProps<T>
@@ -36,6 +38,8 @@ export default function TableHead<T>({
   handleSelectedAll?: ((isSelectedAll: boolean) => void) | null
   hiddenSelectBox?: boolean
   lefts?: [number, number]
+  renderAdditionalIcon?: (data: TableSettings<T, ExternalTraderListSource>) => ReactNode
+  loading: boolean
 }) {
   const handleChangeSort = (columnSortBy: TraderListSortProps<T>['sortBy'] | undefined) => {
     if (!changeCurrentSort) return
@@ -135,6 +139,7 @@ export default function TableHead<T>({
                   role={column?.sortBy ? 'button' : 'none'}
                   width="100%"
                   alignItems="center"
+                  sx={{ gap: 1 }}
                   onClick={() => {
                     handleChangeSort(column?.sortBy)
                   }}
@@ -151,6 +156,7 @@ export default function TableHead<T>({
                   >
                     {column.label}
                   </Type.Caption>
+                  {renderAdditionalIcon?.(column)}
                   {column.sortBy && (
                     <Flex alignItems="center" data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
                       {isCurrentSort && currentSort?.sortType === SortTypeEnum.DESC ? (
@@ -163,7 +169,7 @@ export default function TableHead<T>({
                     </Flex>
                   )}
                 </Flex>
-                {column.sortBy && changeCurrentSort && (
+                {!loading && column.sortBy && changeCurrentSort && (
                   <Tooltip id={tooltipId}>
                     <Type.Caption color="neutral1" sx={{ maxWidth: 350 }}>
                       {isCurrentSort

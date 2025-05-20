@@ -4,6 +4,7 @@ import { useResponsive } from 'ahooks'
 import { useHistory } from 'react-router-dom'
 
 import { GlobalProtocolFilter, GlobalProtocolFilterProps } from 'components/@widgets/ProtocolFilter'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { BottomWrapperMobile } from 'pages/@layouts/Components'
@@ -12,13 +13,14 @@ import { Box, Flex, Type } from 'theme/base'
 import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
 import { generateOIOverviewRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
-import { convertProtocolToParams } from 'utils/helpers/protocol'
 
 export default function RouteWrapper({ children }: { children: any }) {
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
       <RouteHeader />
-      <Box flex="1 0 0">{children}</Box>
+      <Box flex="1 0 0" sx={{ position: 'relative' }}>
+        {children}
+      </Box>
       <RouteFooter />
     </Flex>
   )
@@ -83,7 +85,8 @@ function Tabs({ size }: { size: 'lg' | 'md' }) {
   const { searchParams, pathname } = useSearchParams()
   const { push } = useHistory()
   const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
-  const protocolParams = convertProtocolToParams(selectedProtocols ?? [])
+  const { convertProtocolToParams } = useProtocolPermission()
+  const protocolParams = convertProtocolToParams({ protocols: selectedProtocols ?? [] })
 
   const onChangeTab = (key: 'positions' | 'overview') => {
     if (key === 'positions') {

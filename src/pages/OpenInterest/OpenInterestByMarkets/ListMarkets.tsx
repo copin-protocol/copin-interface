@@ -1,15 +1,16 @@
 import { Trans } from '@lingui/macro'
+import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 
+import tokenNotFound from 'assets/images/token-not-found.png'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { OpenInterestMarketData } from 'entities/statistic'
 import Loading from 'theme/Loading'
 import Table from 'theme/Table'
 import { TableProps } from 'theme/Table/types'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex, Image, Type } from 'theme/base'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
-import { NoMarketFound } from '../OpenInterestByMarket'
 import { getColumns, getRenderProps, titlesMapping } from './configs'
 
 type ListMarketsProps = {
@@ -129,3 +130,25 @@ const FlexBetween = styled(Flex)`
   justify-content: space-between;
   gap: 4px;
 `
+
+export function NoMarketFound({ message, actionButton }: { message: ReactNode; actionButton?: any }) {
+  return (
+    <Flex
+      sx={{
+        flexDirection: 'column',
+        alignItems: 'center',
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        borderTop: 'small',
+        borderTopColor: 'neutral4',
+      }}
+    >
+      <Image mt={64} mb={2} src={tokenNotFound} width={190} height={190} alt="token" />
+      <Type.Caption color="neutral3" mb={24}>
+        {message}
+      </Type.Caption>
+      {actionButton}
+    </Flex>
+  )
+}

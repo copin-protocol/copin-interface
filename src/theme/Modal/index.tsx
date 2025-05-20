@@ -126,6 +126,7 @@ export interface ModalProps {
   overlayBackground?: string
   height?: string
   zIndex?: number
+  titleWrapperSx?: any
 }
 
 export default function Modal({
@@ -149,6 +150,7 @@ export default function Modal({
   modalContentStyle,
   dangerouslyBypassFocusLock = false,
   zIndex,
+  titleWrapperSx = {},
 }: ModalProps) {
   const isMobile = useIsMobile()
   const [isVisible, setIsVisible] = useState(isOpen)
@@ -263,6 +265,7 @@ export default function Modal({
                   justifyContent={hasClose ? 'flex-end' : 'flex-start'}
                   py={3}
                   px={[12, 24]}
+                  sx={titleWrapperSx}
                 >
                   {Boolean(title) && (
                     <Flex flex="1 1 auto">

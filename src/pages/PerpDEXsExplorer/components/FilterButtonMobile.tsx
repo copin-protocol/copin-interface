@@ -57,6 +57,7 @@ export function FilterButton({ resetState }: { resetState: () => void }) {
     resetState()
     setOpen(false)
   }
+  // TODO: Handle permission
   const fieldRangeOptions = useMemo(() => {
     const options: FieldOption<PerpDEXSourceResponse>[] = []
     Object.entries(TABLE_RANGE_FILTER_CONFIGS).forEach(([fieldName, config]) => {

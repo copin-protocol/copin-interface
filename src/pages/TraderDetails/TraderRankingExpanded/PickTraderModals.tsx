@@ -1,17 +1,19 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
 
 import { getAllFavoritesApi } from 'apis/favoriteApis'
+import UpgradeButton from 'components/@subscription/UpgradeButton'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TraderAddress from 'components/@ui/TraderAddress'
 import { CopyTradeData } from 'entities/copyTrade'
 import { FavoritedTrader } from 'entities/trader'
 import useAllCopyTrades from 'hooks/features/copyTrade/useAllCopyTrades'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
@@ -20,6 +22,7 @@ import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { getRequiredPlan } from 'utils/helpers/permissionHelper'
 
 import { FindAndSelectTraderProps } from './FindAndSelectTrader'
 import { filterFoundData } from './helpers'
@@ -32,6 +35,8 @@ export function PickFromFavoritesModal({
   timeOption,
   isOpen,
 }: FindAndSelectTraderProps & { isOpen: boolean; onDismiss: () => void }) {
+  const { allowedSelectProtocols, pagePermission } = useProtocolPermission()
+
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
   const { data: tradersData, isLoading } = useQuery(
     [QUERY_KEYS.GET_FAVORITE_TRADERS, ignoreSelectTraders, myProfile?.id],
@@ -76,8 +81,17 @@ export function PickFromFavoritesModal({
           {!isLoading &&
             tradersData &&
             tradersData.map((data) => {
+              const isAllowed = data?.protocol && allowedSelectProtocols?.includes(data.protocol)
+              const requiredPlanToProtocol = getRequiredPlan({
+                conditionFn: (plan) =>
+                  (data?.protocol && pagePermission?.[plan]?.protocolAllowed?.includes(data.protocol)) || false,
+              })
               return (
-                <ModalItemWrapper key={data.id} role="button" onClick={() => setSelectedTrader(data)}>
+                <ModalItemWrapper
+                  key={data.id}
+                  role="button"
+                  onClick={() => (isAllowed ? setSelectedTrader(data) : undefined)}
+                >
                   <TraderAddress
                     address={data.account}
                     protocol={data.protocol ?? DEFAULT_PROTOCOL}
@@ -87,7 +101,19 @@ export function PickFromFavoritesModal({
                       textSx: { width: 80 },
                     }}
                   />
-                  {data.note && <ModalItemTag className="favorite_note">{data.note}</ModalItemTag>}
+                  {isAllowed && data.note && <ModalItemTag className="favorite_note">{data.note}</ModalItemTag>}
+                  {!isAllowed && (
+                    <UpgradeButton
+                      requiredPlan={requiredPlanToProtocol}
+                      text={
+                        <Type.Caption>
+                          <Trans>Upgrade</Trans>
+                        </Type.Caption>
+                      }
+                      buttonSx={{ mr: 0 }}
+                      target="_blank"
+                    />
+                  )}
                 </ModalItemWrapper>
               )
             })}
@@ -105,6 +131,7 @@ export function PickFromCopyTradesModal({
   onDismiss,
   timeOption,
 }: FindAndSelectTraderProps & { isOpen: boolean; onDismiss: () => void }) {
+  const { allowedSelectProtocols, pagePermission } = useProtocolPermission()
   const [selectedCopyTrade, setSelectedCopyTrade] = useState<CopyTradeData>()
   const {
     isLoading: isSelecting,
@@ -141,14 +168,35 @@ export function PickFromCopyTradesModal({
         <Box sx={{ width: '100%', height: 'calc(100% - 60px)', overflow: 'auto' }}>
           {!_allCopyTrades?.length && <NoDataFound />}
           {_allCopyTrades?.map((data) => {
+            const isAllowed = data?.protocol && allowedSelectProtocols?.includes(data.protocol)
+            const requiredPlanToProtocol = getRequiredPlan({
+              conditionFn: (plan) =>
+                (data?.protocol && pagePermission?.[plan]?.protocolAllowed?.includes(data.protocol)) || false,
+            })
             return (
-              <ModalItemWrapper key={data.id} role="button" onClick={() => setSelectedCopyTrade(data)}>
+              <ModalItemWrapper
+                key={data.id}
+                role="button"
+                onClick={() => (isAllowed ? setSelectedCopyTrade(data) : undefined)}
+              >
                 <TraderAddress
                   address={data.account}
                   protocol={data.protocol}
                   options={{ isLink: false, size: 32, textSx: { width: 80 } }}
                 />
-                {data.title && <ModalItemTag className="favorite_note">{data.title}</ModalItemTag>}
+                {isAllowed && data.title && <ModalItemTag className="favorite_note">{data.title}</ModalItemTag>}
+                {!isAllowed && (
+                  <UpgradeButton
+                    requiredPlan={requiredPlanToProtocol}
+                    text={
+                      <Type.Caption>
+                        <Trans>Upgrade</Trans>
+                      </Type.Caption>
+                    }
+                    buttonSx={{ mr: 0 }}
+                    target="_blank"
+                  />
+                )}
               </ModalItemWrapper>
             )
           })}

@@ -1,5 +1,7 @@
-import { useCallback, useMemo } from 'react'
+import { Trans } from '@lingui/macro'
+import { useCallback, useMemo, useState } from 'react'
 
+import { getCopyTradeSettingsListApi } from 'apis/copyTradeApis'
 import {
   renderCopyTrader,
   renderCopyWalletLabel,
@@ -13,17 +15,20 @@ import {
 } from 'components/@copyTrade/renderProps/copyTradeColumns'
 import { CopyTradeWithCheckingData } from 'components/@copyTrade/types'
 import { renderSLTPSetting } from 'components/@position/configs/copyPositionRenderProps'
+import UpgradeModal from 'components/@subscription/UpgradeModal'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import ReverseTag from 'components/@ui/ReverseTag'
 import useCheckCopyTradeExchange from 'hooks/features/copyTrade/useCheckCopyExchange'
 import useUpdateCopyTrade from 'hooks/features/copyTrade/useUpdateCopyTrade'
-import { useIsVIP } from 'hooks/features/subscription/useSubscriptionRestrict'
+import useCopyTradePermission from 'hooks/features/subscription/useCopyTradePermission'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
+import { useIsElite } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useCopyTradeModalConfigs from 'hooks/features/useCopyTradeModalConfigs'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
-import { CopyTradeStatusEnum, SortTypeEnum } from 'utils/config/enums'
+import { CopyTradeStatusEnum, SortTypeEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { TOOLTIP_CONTENT } from 'utils/config/options'
 import { parseWalletName } from 'utils/helpers/transform'
 
@@ -47,17 +52,32 @@ export default function useListCopyTradeConfigs({
   const isDrawer = type === 'drawer'
   const { disabledExchanges } = useCheckCopyTradeExchange()
   const { embeddedWalletInfo } = useCopyWalletContext()
+  const { userPermission, pagePermission } = useCopyTradePermission()
+  const { userPermission: userProtocolPermission } = useProtocolPermission()
+  const allowedProtocols = userProtocolPermission?.protocolAllowed
   const balance = embeddedWalletInfo ? Number(embeddedWalletInfo.marginSummary.accountValue) : undefined
 
-  const isVIPUser = useIsVIP()
+  const isEliteUser = useIsElite()
   const { isMutating, toggleStatus, updateNumberValue } = useUpdateCopyTrade()
   const copyTradeModalConfigs = useCopyTradeModalConfigs({ toggleStatus })
   const { currentCopyTrade, handleOpenModal } = copyTradeModalConfigs
 
+  const [isOpenUpgradeModal, setIsOpenUpgradeModal] = useState(false)
+
   const toggleStatusCopyTrade = useCallback(
-    (item: CopyTradeWithCheckingData) => {
+    async (item: CopyTradeWithCheckingData) => {
       if (isMutating) return
       if (item.status === CopyTradeStatusEnum.STOPPED) {
+        // TODO: check permission copy trade
+        const allCopyTrades = await getCopyTradeSettingsListApi()
+        if (
+          userPermission?.copyTradeQuota == null ||
+          allCopyTrades.filter((copyTrade) => copyTrade.status === CopyTradeStatusEnum.RUNNING).length + 1 >
+            userPermission.copyTradeQuota
+        ) {
+          setIsOpenUpgradeModal(true)
+          return
+        }
         toggleStatus(item)
         return
       }
@@ -254,7 +274,15 @@ export default function useListCopyTradeConfigs({
         key: 'account',
         sortBy: 'account',
         style: { minWidth: 180, width: 180 },
-        render: (item) => renderCopyTrader({ data: item, options: { enabledQuickView: isDrawer ? false : true } }),
+        render: (item) =>
+          renderCopyTrader({
+            data: item,
+            options: {
+              enabledQuickView: isDrawer ? false : true,
+              protocolNotAllowed: !allowedProtocols?.includes(item.protocol),
+              exchangeNotAllowed: !userPermission?.exchangeAllowed?.includes(item.exchange),
+            },
+          }),
       },
       ...walletColumn,
       {
@@ -262,7 +290,7 @@ export default function useListCopyTradeConfigs({
         dataIndex: 'volume',
         key: 'volume',
         sortBy: 'volume',
-        style: { minWidth: 80, textAlign: 'right' },
+        style: { minWidth: 100, maxWidth: 100, textAlign: 'right', pl: 12 },
         render: (item) => renderVolume(item),
       },
       {
@@ -307,7 +335,7 @@ export default function useListCopyTradeConfigs({
   return {
     isMutating,
     toggleStatus,
-    isVIPUser,
+    isEliteUser,
     columns,
     renderProps: {
       render30DPNL,
@@ -324,6 +352,19 @@ export default function useListCopyTradeConfigs({
       renderCopyTrader,
     },
     copyTradeModalConfigs,
+    upgradingModal: !!pagePermission?.[SubscriptionPlanEnum.ELITE] && (
+      <UpgradeModal
+        isOpen={isOpenUpgradeModal}
+        onDismiss={() => setIsOpenUpgradeModal(false)}
+        title={<Trans>You&apos;ve hit your copy trades limit</Trans>}
+        description={
+          <Trans>
+            You&apos;re reach the maximum of Copy Trades for your current plan. Upgrade your plan to unlock access up to{' '}
+            {pagePermission[SubscriptionPlanEnum.ELITE].copyTradeQuota} copy trades
+          </Trans>
+        }
+      />
+    ),
   }
 }
 

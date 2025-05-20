@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useMemo, useState } from 'react'
@@ -29,6 +28,7 @@ import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import DepthPairDetails from './DepthPairDetails'
 import ExchangeFilter, { ExchangeFilterProps } from './ExchangeFilter'
+import CexDepthTitle from './Title'
 import TraderFilter, { TraderFilterProps } from './TraderFilter'
 
 type ExternalSource = {
@@ -354,9 +354,7 @@ export default function Overview() {
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>
       <Box>
-        <Type.H5 color="neutral8" maxWidth="fit-content" sx={{ px: 2, py: 1, bg: 'neutral1' }}>
-          <Trans>CEX Depth</Trans>
-        </Type.H5>
+        <CexDepthTitle />
         <Flex
           mt={3}
           flexDirection={['column', 'row']}

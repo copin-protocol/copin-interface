@@ -11,9 +11,9 @@ import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { EventDetailsData, TradingEventStatusEnum } from 'entities/event'
 import { LatestActivityLogData } from 'entities/user'
-import { useIsPremiumAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
-import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
+import { useIsProAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useMyProfile from 'hooks/store/useMyProfile'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { GradientText } from 'pages/@layouts/Navbar/EventButton'
 import { Button } from 'theme/Buttons'
@@ -166,7 +166,7 @@ function RenderTrader({ data }: { data: LatestActivityLogData }) {
 function RenderHiddenTrader({ data }: { data: LatestActivityLogData }) {
   const { isAuthenticated } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
-  const { checkIsPremium } = useIsPremiumAndAction()
+  const { checkIsPro } = useIsProAndAction()
 
   const tooltipId = `tt-activities-${data.id}`
 
@@ -182,9 +182,9 @@ function RenderHiddenTrader({ data }: { data: LatestActivityLogData }) {
             <Button
               variant="ghostPrimary"
               sx={{ p: 0, width: 'fit-content', textTransform: 'capitalize' }}
-              onClick={checkIsPremium}
+              onClick={checkIsPro}
             >
-              <GradientText>Upgrade Premium</GradientText>
+              <GradientText>Upgrade Pro</GradientText>
             </Button>{' '}
             to see
           </Type.Caption>

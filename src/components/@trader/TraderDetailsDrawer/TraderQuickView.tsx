@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -13,10 +14,13 @@ import TraderHistoryPositionsTableView, {
 import TraderOpeningPositionsTableView, {
   TraderOpeningPositionsListView,
 } from 'components/@position/TraderOpeningPositions'
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import BlurMask from 'components/@ui/BlurMask'
 import NotFound from 'components/@ui/NotFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import { ResponseTraderExchangeStatistic } from 'entities/trader.d'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
@@ -35,6 +39,8 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { EventCategory } from 'utils/tracking/types'
 
+import ProtocolPermissionContainer from './ProtocolPermissionContainer'
+
 const GlobalStyle = createGlobalStyle`
   .rc-dropdown {
     z-index: ${Z_INDEX.TOASTIFY};
@@ -51,12 +57,14 @@ export default function TraderQuickView({
   protocol,
   type,
   disabledActions,
+  disabledLinkAccount,
   eventCategory,
 }: {
   address: string
   protocol: ProtocolEnum
   type?: TimeFrameEnum
   disabledActions?: DisabledActionType[]
+  disabledLinkAccount?: boolean
   eventCategory?: EventCategory
 }) {
   const { data: exchangeStats, isLoading } = useQuery([QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address], () =>
@@ -76,7 +84,13 @@ export default function TraderQuickView({
   return (
     <>
       {address && <GlobalStyle />}
-      <TraderDetailsComponent address={address} protocol={protocol} type={type} disabledActions={disabledActions} />
+      <TraderDetailsComponent
+        address={address}
+        protocol={protocol}
+        type={type}
+        disabledActions={disabledActions}
+        disabledLinkAccount={disabledLinkAccount}
+      />
     </>
   )
 }
@@ -94,21 +108,25 @@ function TraderDetailsComponent({
   type,
   disabledActions,
   eventCategory,
+  disabledLinkAccount,
 }: {
   address: string
   protocol: ProtocolEnum
   type?: TimeFrameEnum
   disabledActions?: DisabledActionType[]
+  disabledLinkAccount?: boolean
   eventCategory?: EventCategory
 }) {
   const { sm, lg } = useResponsive()
   const { timeFilterOptions } = useGetTimeFilterOptions()
+  const { timeFramesAllowed, isEnablePosition, requiredPlanToViewPosition, isAllowedProtocol } =
+    useTraderProfilePermission({ protocol })
 
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
-    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol],
+    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol, isAllowedProtocol],
     () => getTraderStatisticApi({ protocol, account: address }),
     {
-      enabled: !!address,
+      enabled: !!address && isAllowedProtocol,
       retry: 0,
       select: (data) =>
         timeFilterOptions
@@ -124,6 +142,7 @@ function TraderDetailsComponent({
     options: timeFilterOptions,
     defaultOption: type ? type.toString() : TimeFilterByEnum.ALL_TIME.toString(),
     optionNameToBeDelete: ['temp'],
+    optionsAllowed: timeFramesAllowed,
   })
 
   const setTimeOption = (option: TimeFilterProps) => {
@@ -183,7 +202,13 @@ function TraderDetailsComponent({
             flexWrap: 'wrap',
           }}
         >
-          <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
+          <TraderInfo
+            address={address}
+            protocol={protocol}
+            timeOption={timeOption}
+            traderStats={traderData}
+            isLink={!disabledLinkAccount}
+          />
           <TraderActionButtons
             traderData={currentTraderData}
             timeOption={timeOption}
@@ -197,122 +222,142 @@ function TraderDetailsComponent({
           />
         </Flex>
       </Box>
-      <Flex flexDirection="column" flex={1} sx={{ overflow: 'auto' }}>
-        <Flex
-          height={250}
-          alignItems="center"
-          sx={{
-            m: [0, 2],
-            gap: 2,
-            backgroundColor: 'neutral5',
-            borderRadius: '1px',
-            border: 'small',
-            borderColor: 'neutral4',
-          }}
-        >
-          {lg && (
-            <Flex height="100%" alignItems="center" sx={{ gap: 2 }}>
-              <Box width="380px">
-                <TraderRanking data={currentTraderData} timeOption={timeOption} onChangeTime={setTimeOption} isDrawer />
-              </Box>
-              <Box height="90%" width="1px" backgroundColor="neutral4" />
-            </Flex>
-          )}
-          <Box flex={1}>
-            <Flex alignItems="center" justifyContent="space-between">
-              <Flex
-                sx={{
-                  flexShrink: 0,
-                  pl: [2, 3],
-                  alignItems: 'center',
-                  height: [60, 60, 60, 40],
-                  borderBottom: 'small',
-                  borderBottomColor: 'neutral4',
-                }}
-              >
-                <TimeDropdown
+      <ProtocolPermissionContainer protocol={protocol}>
+        <Flex flexDirection="column" flex={1} sx={{ overflow: 'auto' }}>
+          <Flex
+            height={250}
+            alignItems="center"
+            sx={{
+              m: [0, 2],
+              gap: 2,
+              backgroundColor: 'neutral5',
+              borderRadius: '1px',
+              border: 'small',
+              borderColor: 'neutral4',
+            }}
+          >
+            {lg && (
+              <Flex height="100%" alignItems="center" sx={{ gap: 2 }}>
+                <Box width="380px">
+                  <TraderRanking
+                    data={currentTraderData}
+                    timeOption={timeOption}
+                    onChangeTime={setTimeOption}
+                    isDrawer
+                  />
+                </Box>
+                <Box height="90%" width="1px" backgroundColor="neutral4" />
+              </Flex>
+            )}
+            <Box flex={1}>
+              <Flex alignItems="center" justifyContent="space-between">
+                <Flex
+                  sx={{
+                    flexShrink: 0,
+                    pl: [2, 3],
+                    alignItems: 'center',
+                    height: [60, 60, 60, 40],
+                    borderBottom: 'small',
+                    borderBottomColor: 'neutral4',
+                  }}
+                >
+                  <TimeDropdown
+                    timeOption={timeOption}
+                    onChangeTime={setTimeOption}
+                    menuSx={{ transform: 'translateX(12px)' }}
+                  />
+                </Flex>
+                <GeneralStats traderData={currentTraderData} account={address} protocol={protocol} />
+              </Flex>
+              <Box height={190}>
+                <ChartTrader
+                  protocol={protocol}
+                  account={address}
                   timeOption={timeOption}
-                  onChangeTime={setTimeOption}
-                  menuSx={{ transform: 'translateX(12px)' }}
+                  // onChangeTime={setTimeOption}
+                />
+              </Box>
+            </Box>
+          </Flex>
+
+          <Flex flex={1} flexDirection="column" sx={{ position: 'relative' }}>
+            <BlurMask isBlur={!isEnablePosition}>
+              <PlanUpgradePrompt
+                requiredPlan={requiredPlanToViewPosition}
+                noLoginTitle={<Trans>Login to view more information</Trans>}
+                noLoginDescription={<Trans>View positions and more trader insights.</Trans>}
+                showTitleIcon
+                showNoLoginTitleIcon
+                requiredLogin
+              />
+            </BlurMask>
+            {lg ? (
+              <Flex flex={1} flexDirection="column">
+                <Box>
+                  {protocol === ProtocolEnum.HYPERLIQUID ? (
+                    <HLTraderOpeningPositionsTableView address={address} protocol={protocol} isDrawer isExpanded />
+                  ) : (
+                    <TraderOpeningPositionsTableView address={address} protocol={protocol} isDrawer isExpanded />
+                  )}
+                </Box>
+                <Box
+                  sx={{
+                    position: 'relative',
+                    minHeight: 400,
+                    '& .currency_option .select__menu': { transform: 'translateX(-30px)' },
+                  }}
+                >
+                  <TraderHistoryPositionsTableView address={address} protocol={protocol} isDrawer isExpanded />
+                </Box>
+              </Flex>
+            ) : (
+              <Flex sx={{ flex: 1 }}>
+                <PositionMobileView
+                  openingPositions={
+                    protocol === ProtocolEnum.HYPERLIQUID ? (
+                      <HLTraderOpeningPositionsListView address={address} protocol={protocol} isDrawer />
+                    ) : (
+                      <TraderOpeningPositionsListView address={address} protocol={protocol} isDrawer />
+                    )
+                  }
+                  historyPositions={
+                    <TraderHistoryPositionsListView
+                      address={address}
+                      protocol={protocol}
+                      isDrawer
+                      backgroundColor="black"
+                      isExpanded
+                    />
+                  }
+                  protocol={protocol}
+                  address={address}
                 />
               </Flex>
-              <GeneralStats traderData={currentTraderData} account={address} protocol={protocol} />
-            </Flex>
-            <Box height={190}>
-              <ChartTrader
-                protocol={protocol}
-                account={address}
-                timeOption={timeOption}
-                // onChangeTime={setTimeOption}
-              />
-            </Box>
-          </Box>
+            )}
+          </Flex>
+          {/*<Box sx={{ backgroundColor: 'neutral7' }}>*/}
+          {/*  <TraderOpeningPositions address={address} protocol={protocol} isDrawer isExpanded />*/}
+          {/*</Box>*/}
+          {/*<Flex*/}
+          {/*  flex={1}*/}
+          {/*  flexDirection="column"*/}
+          {/*  sx={{ position: 'relative', backgroundColor: 'neutral7', minHeight: 400 }}*/}
+          {/*>*/}
+          {/*  {sm ? (*/}
+          {/*    <TraderHistoryPositions address={address} protocol={protocol} isDrawer isExpanded />*/}
+          {/*  ) : (*/}
+          {/*    <TraderHistoryPositionsListView*/}
+          {/*      address={address}*/}
+          {/*      protocol={protocol}*/}
+          {/*      backgroundColor="neutral7"*/}
+          {/*      isDrawer*/}
+          {/*      isExpanded*/}
+          {/*      hasTitle*/}
+          {/*    />*/}
+          {/*  )}*/}
+          {/*</Flex>*/}
         </Flex>
-        {lg ? (
-          <Flex flex={1} flexDirection="column">
-            <Box>
-              {protocol === ProtocolEnum.HYPERLIQUID ? (
-                <HLTraderOpeningPositionsTableView address={address} protocol={protocol} isDrawer isExpanded />
-              ) : (
-                <TraderOpeningPositionsTableView address={address} protocol={protocol} isDrawer isExpanded />
-              )}
-            </Box>
-            <Box
-              sx={{
-                position: 'relative',
-                minHeight: 400,
-                '& .currency_option .select__menu': { transform: 'translateX(-30px)' },
-              }}
-            >
-              <TraderHistoryPositionsTableView address={address} protocol={protocol} isDrawer isExpanded />
-            </Box>
-          </Flex>
-        ) : (
-          <Flex sx={{ flex: 1 }}>
-            <PositionMobileView
-              openingPositions={
-                protocol === ProtocolEnum.HYPERLIQUID ? (
-                  <HLTraderOpeningPositionsListView address={address} protocol={protocol} isDrawer />
-                ) : (
-                  <TraderOpeningPositionsListView address={address} protocol={protocol} isDrawer />
-                )
-              }
-              historyPositions={
-                <TraderHistoryPositionsListView
-                  address={address}
-                  protocol={protocol}
-                  isDrawer
-                  backgroundColor="black"
-                  isExpanded
-                />
-              }
-              protocol={protocol}
-              address={address}
-            />
-          </Flex>
-        )}
-        {/*<Box sx={{ backgroundColor: 'neutral7' }}>*/}
-        {/*  <TraderOpeningPositions address={address} protocol={protocol} isDrawer isExpanded />*/}
-        {/*</Box>*/}
-        {/*<Flex*/}
-        {/*  flex={1}*/}
-        {/*  flexDirection="column"*/}
-        {/*  sx={{ position: 'relative', backgroundColor: 'neutral7', minHeight: 400 }}*/}
-        {/*>*/}
-        {/*  {sm ? (*/}
-        {/*    <TraderHistoryPositions address={address} protocol={protocol} isDrawer isExpanded />*/}
-        {/*  ) : (*/}
-        {/*    <TraderHistoryPositionsListView*/}
-        {/*      address={address}*/}
-        {/*      protocol={protocol}*/}
-        {/*      backgroundColor="neutral7"*/}
-        {/*      isDrawer*/}
-        {/*      isExpanded*/}
-        {/*      hasTitle*/}
-        {/*    />*/}
-        {/*  )}*/}
-        {/*</Flex>*/}
-      </Flex>
+      </ProtocolPermissionContainer>
     </Flex>
   )
 }

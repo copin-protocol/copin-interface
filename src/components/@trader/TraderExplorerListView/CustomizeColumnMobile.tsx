@@ -1,16 +1,19 @@
 import { Gear } from '@phosphor-icons/react'
 
 import { mobileTableSettings } from 'components/@trader/TraderExplorerTableView/configs'
+import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
 import { useTraderExplorerListColumns } from 'hooks/store/useTraderCustomizeColumns'
 import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import Dropdown from 'theme/Dropdown'
 import { Box, Flex, IconBox } from 'theme/base'
 
-const REQUIRED_FIELDS = ['account', 'pnl', 'avgRoi', 'winRate']
+const REQUIRED_FIELDS = ['account', 'pnl', 'winRate']
 
 //Note: using different component because local storage conflict
 export default function CustomizeColumnMobile() {
   const { columnKeys, setColumnKeys } = useTraderExplorerListColumns()
+  const { userPermission } = useExplorerPermission()
+  const filteredTableSettings = mobileTableSettings.filter((item) => userPermission?.fieldsAllowed?.includes(item.id))
   const onChange = (key: string) => {
     setColumnKeys(columnKeys.includes(key) ? columnKeys.filter((e) => e !== key) : [...columnKeys, key])
   }
@@ -26,7 +29,7 @@ export default function CustomizeColumnMobile() {
       buttonVariant="ghost"
       menu={
         <>
-          {mobileTableSettings.map((item, index) => {
+          {filteredTableSettings.map((item, index) => {
             const isDisable = REQUIRED_FIELDS.includes(item.id)
             return (
               <Box mb={2} key={index}>

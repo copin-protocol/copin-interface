@@ -10,6 +10,7 @@ export default function TimeFilterSection() {
       currentFilter={currentTime}
       handleFilterChange={changeCurrentTime}
       options={COPIER_LEADERBOARD_TIME_FILTER_OPTIONS}
+      shouldCheckPermission={false}
     />
   )
 }

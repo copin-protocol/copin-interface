@@ -1,17 +1,13 @@
 import { useQuery as useApolloQuery } from '@apollo/client'
 import { XCircle } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
+import { SEARCH_DAILY_POSITION_ID_QUERY, SEARCH_POSITIONS_FUNCTION_NAME, SEARCH_POSITIONS_INDEX } from 'graphql/query'
 import { Suspense, lazy, memo, useMemo } from 'react'
 
 import { ApiListResponse } from 'apis/api'
 import Container from 'components/@ui/Container'
 import { PositionData } from 'entities/trader'
 import useIsMobile from 'hooks/helpers/useIsMobile'
-import {
-  SEARCH_DAILY_POSITION_ID_QUERY,
-  SEARCH_POSITIONS_FUNCTION_NAME,
-  SEARCH_POSITIONS_INDEX,
-} from 'pages/DailyTrades/Positions/config'
 import IconButton from 'theme/Buttons/IconButton'
 import Loading from 'theme/Loading'
 import RcDrawer from 'theme/RcDrawer'

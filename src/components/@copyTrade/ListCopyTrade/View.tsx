@@ -5,6 +5,8 @@ import { CopyTradeWithCheckingData } from 'components/@copyTrade/types'
 import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ReverseTag from 'components/@ui/ReverseTag'
+import useCopyTradePermission from 'hooks/features/subscription/useCopyTradePermission'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import Loading from 'theme/Loading'
 import Table from 'theme/Table'
 import { ColumnData, TableSortProps } from 'theme/Table/types'
@@ -71,6 +73,8 @@ export function ListCopyCEX({
   isLoading: boolean
   renderProps: ListCopyTradeRenderProps
 }) {
+  const { userPermission } = useCopyTradePermission()
+  const { userPermission: userProtocolPermission } = useProtocolPermission()
   if (isLoading) return <Loading />
   if (!isLoading && !sortedData?.length) return <NoDataFound />
   return (
@@ -91,7 +95,16 @@ export function ListCopyCEX({
             </Flex>
             <Divider my={2} color="neutral5" />
             <Flex sx={{ flexDirection: 'column', gap: 2 }}>
-              <ListCopyRowItem label={<Trans>Trader</Trans>} value={renderProps.renderCopyTrader({ data })} />
+              <ListCopyRowItem
+                label={<Trans>Trader</Trans>}
+                value={renderProps.renderCopyTrader({
+                  data,
+                  options: {
+                    protocolNotAllowed: !userProtocolPermission?.protocolAllowed?.includes(data.protocol),
+                    exchangeNotAllowed: !userPermission?.exchangeAllowed?.includes(data.exchange),
+                  },
+                })}
+              />
               <ListCopyRowItem label={<Trans>Max Margin/Order</Trans>} value={renderProps.renderVolume(data)} />
               <ListCopyRowItem label={<Trans>Leverage</Trans>} value={renderProps.renderLeverage(data)} />
               <ListCopyRowItem label={<Trans>Trading Pairs</Trans>} value={renderProps.renderMarkets(data)} />

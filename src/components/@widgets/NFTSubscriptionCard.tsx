@@ -12,6 +12,7 @@ import { SubscriptionPlanEnum } from 'utils/config/enums'
 
 import NFTCount from './NFTCount'
 
+// TODO: SUB 3
 export default function NFTSubscriptionCard({
   data,
   action,
@@ -19,7 +20,7 @@ export default function NFTSubscriptionCard({
   data?: Partial<UserSubscriptionData>
   action?: ReactNode
 }) {
-  const nftImageSrc = data?.tierId === SubscriptionPlanEnum.VIP ? vipNft : defaultNft
+  const nftImageSrc = data?.tierId === SubscriptionPlanEnum.ELITE ? vipNft : defaultNft
   return (
     <Box sx={{ position: 'relative', overflow: 'hidden', p: 3 }}>
       <CardDecorators />

@@ -7,13 +7,13 @@ const ConnectButton = ({ onConnect, ...props }: ButtonProps & { onConnect?: () =
   const { connect, loading } = useAuthContext()
 
   const handleSubmit = () => {
-    connect({})
+    connect()
     onConnect && onConnect()
   }
 
   return (
     <Button variant="ghostPrimary" onClick={handleSubmit} isLoading={loading} disabled={loading} {...props}>
-      <Trans>Connect Wallet</Trans>
+      <Trans>Login</Trans>
     </Button>
   )
 }

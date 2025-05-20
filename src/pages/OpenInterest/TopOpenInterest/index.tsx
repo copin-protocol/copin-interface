@@ -2,22 +2,28 @@ import { useQuery as useApolloQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { TopOpeningPositionsGraphQLResponse } from 'graphql/entities/topOpeningPositions'
-import { SEARCH_TOP_OPENING_POSITIONS_QUERY } from 'graphql/topOpeningPositions'
-import { useMemo } from 'react'
+import {
+  SEARCH_POSITIONS_INDEX,
+  SEARCH_TOP_OPENING_POSITIONS_FUNCTION_NAME,
+  SEARCH_TOP_OPENING_POSITIONS_QUERY,
+} from 'graphql/query'
+import { ReactNode, useMemo } from 'react'
 import { toast } from 'react-toastify'
 
 import { normalizePositionData } from 'apis/normalize'
 import { normalizePositionPayload } from 'apis/positionApis'
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import PythWatermark from 'components/@ui/PythWatermark'
 import ToastBody from 'components/@ui/ToastBody'
 import { ResponsePositionData } from 'entities/trader'
-import { useFilterPairs } from 'hooks/features/useFilterPairs'
-import useInternalRole from 'hooks/features/useInternalRole'
+import useOIPermission from 'hooks/features/subscription/useOIPermission'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
-import Maintain from 'pages/DailyTrades/Maintain'
+import { useAuthContext } from 'hooks/web3/useAuth'
+import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
 import { TAB_HEIGHT } from 'utils/config/constants'
-import { SortTypeEnum } from 'utils/config/enums'
+import { SortTypeEnum, SubscriptionPlanEnum } from 'utils/config/enums'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 import { transformGraphqlFilters } from 'utils/helpers/graphql'
 import { getPairFromSymbol } from 'utils/helpers/transform'
 
@@ -29,7 +35,9 @@ import Filters, { useFilters } from './Filters'
 import useGetFilterRange from './useGetFilterRange'
 
 export default function TopOpenInterest() {
+  const { isAuthenticated, loading } = useAuthContext()
   const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
+
   const { ranges } = useGetFilterRange()
   const { lg, sm } = useResponsive()
   const {
@@ -44,12 +52,14 @@ export default function TopOpenInterest() {
     pairs,
     onChangePairs,
     excludedPairs,
+    hasFilter,
+    resetFilters,
+    hasExcludingPairs,
+    isCopyAll,
   } = useFilters()
 
-  const { hasExcludingPairs } = useFilterPairs({ pairs, excludedPairs })
   // FETCH DATA
   const queryVariables = useMemo(() => {
-    const index = 'copin.positions'
     const { sortBy } = normalizePositionPayload({ sortBy: sort.key })
 
     const query: any = [
@@ -61,7 +71,7 @@ export default function TopOpenInterest() {
         field: 'pair',
         nin: excludedPairs.map((pair) => getPairFromSymbol(pair)),
       })
-    } else {
+    } else if (!isCopyAll) {
       query.push({
         field: 'pair',
         in: pairs.map((pair) => getPairFromSymbol(pair)),
@@ -78,16 +88,91 @@ export default function TopOpenInterest() {
       paging: { size: limit, from: 0 },
     }
 
-    return { index, body, protocols: selectedProtocols ?? [] }
-  }, [sort.key, from, to, pairs, limit, selectedProtocols, excludedPairs, ranges])
+    return { index: SEARCH_POSITIONS_INDEX, body, protocols: selectedProtocols ?? [] }
+  }, [sort.key, from, to, pairs, limit, selectedProtocols, excludedPairs, ranges, isCopyAll])
 
-  const isInternal = useInternalRole()
+  const { allowedFilter, planToFilter, isEnabled } = useOIPermission()
+  // const { allowedSelectProtocols } = useProtocolPermission()
+
+  const isNotLogin = !loading && !isAuthenticated
+  let noDataMessage: ReactNode | undefined = undefined
+  {
+    if (!allowedFilter) {
+      const requiredPlanText = SUBSCRIPTION_PLAN_TRANSLATION[planToFilter]
+
+      let title: ReactNode = undefined
+      let noLoginTitle: ReactNode = undefined
+      let noLoginDescription: ReactNode = undefined
+      // const protocols = queryVariables.protocols
+      // if (
+      //   (protocols?.length && allowedSelectProtocols?.length && protocols.length > allowedSelectProtocols.length) ||
+      //   protocols.some((p) => !allowedSelectProtocols.includes(p))
+      // ) {
+      //   title = <Trans>Protocol not allowed</Trans>
+      // }
+
+      const hasRangeFilter = !!ranges.length
+      if (hasFilter || hasRangeFilter) {
+        title = <Trans>This URL contains filters available from the {requiredPlanText} plan</Trans>
+      } else {
+        if (isNotLogin && !isEnabled) {
+          noLoginTitle = <Trans>Login to view Open Interest</Trans>
+          noLoginDescription = <Trans>Unlock more powerful features and gain deeper market insights</Trans>
+        }
+      }
+
+      if (!!title || noLoginTitle) {
+        noDataMessage = (
+          <Flex
+            sx={{ flexDirection: 'column', width: '100%', height: '100%', alignItems: 'center', position: 'relative' }}
+          >
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 24,
+                left: 2,
+                right: 2,
+                bottom: 2,
+                backgroundImage: `url(/images/subscriptions/live-trade-non-login-permission.png)`,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                zIndex: 0,
+                filter: 'blur(10px)',
+              }}
+            />
+            <Box sx={{ maxWidth: 450, pt: [100, 100, 200] }}>
+              {noLoginTitle ? (
+                <PlanUpgradePrompt
+                  requiredPlan={SubscriptionPlanEnum.FREE}
+                  noLoginDescription={noLoginDescription}
+                  noLoginTitle={noLoginTitle}
+                  requiredLogin={!!noLoginTitle}
+                  showNoLoginTitleIcon={!!noLoginTitle}
+                />
+              ) : (
+                <PlanUpgradePrompt
+                  title={title}
+                  description={<Trans>Please upgrade to explore open interest with advanced filters</Trans>}
+                  requiredPlan={planToFilter}
+                  useLockIcon
+                  showTitleIcon
+                  onCancel={isNotLogin ? undefined : resetFilters}
+                  cancelText={isNotLogin ? undefined : <Trans>Reset Filters</Trans>}
+                />
+              )}
+            </Box>
+          </Flex>
+        )
+      }
+    }
+  }
+
   const {
     data: topOpeningPositionsData,
     loading: isLoading,
     previousData,
   } = useApolloQuery<TopOpeningPositionsGraphQLResponse<ResponsePositionData>>(SEARCH_TOP_OPENING_POSITIONS_QUERY, {
-    skip: selectedProtocols == null || !isInternal,
+    skip: selectedProtocols == null || !!noDataMessage || loading || isAuthenticated == null,
     variables: queryVariables,
     onError: (error) => {
       toast.error(<ToastBody title={<Trans>{error.name}</Trans>} message={<Trans>{error.message}</Trans>} />)
@@ -95,17 +180,12 @@ export default function TopOpenInterest() {
   })
 
   const rawPositionData =
-    topOpeningPositionsData?.searchTopOpeningPosition.data || previousData?.searchTopOpeningPosition.data
+    topOpeningPositionsData?.[SEARCH_TOP_OPENING_POSITIONS_FUNCTION_NAME].data ||
+    previousData?.[SEARCH_TOP_OPENING_POSITIONS_FUNCTION_NAME].data
 
   const data = useMemo(() => {
     return rawPositionData?.map((position) => normalizePositionData(position))
   }, [rawPositionData])
-
-  // const { listMaintenancePage } = useGetPageStatus()
-  // if (listMaintenancePage?.includes(SystemStatusPageEnum.OPEN_INTEREST) && !isInternal) {
-  //   return <Maintain />
-  // }
-  if (!isInternal) return <Maintain />
 
   if (selectedProtocols == null) return null
 
@@ -131,28 +211,38 @@ export default function TopOpenInterest() {
           pairs={pairs ?? []}
           onChangePairs={onChangePairs}
           excludedPairs={excludedPairs}
+          allowedFilter={allowedFilter}
+          planToFilter={planToFilter}
         />
         <Flex sx={{ alignItems: 'center', gap: 3 }}>
-          {sm && <FilterPositionRangesTags />}
-          {!sm && <FilterPositionButton />}
+          {sm && <FilterPositionRangesTags allowedFilter={allowedFilter} />}
+          {!sm && allowedFilter && <FilterPositionButton />}
           {sm && <PythWatermark />}
         </Flex>
       </Flex>
       <Box sx={{ flex: '1 0 0' }}>
-        <Flex height="100%" flexDirection={lg ? 'row' : 'column'}>
-          {lg ? (
-            <Box flex="1">
-              <VisualizeSection data={data} isLoading={isLoading} />
+        {isLoading ? (
+          <Loading />
+        ) : noDataMessage ? (
+          noDataMessage
+        ) : (
+          <Flex height="100%" flexDirection={lg ? 'row' : 'column'}>
+            {lg ? (
+              <Box flex="1">
+                <VisualizeSection data={data} isLoading={isLoading} />
+              </Box>
+            ) : (
+              <Box p={3}>
+                <VisualizeSectionMobile data={data} />
+              </Box>
+            )}
+            <Box flex={[1, 1, 1, '0 0 720px']}>
+              {data && (
+                <PositionsSection data={data} total={Math.min(limit, data?.length ?? 0)} isLoading={isLoading} />
+              )}
             </Box>
-          ) : (
-            <Box p={3}>
-              <VisualizeSectionMobile data={data} />
-            </Box>
-          )}
-          <Box flex={[1, 1, 1, '0 0 720px']}>
-            {data && <PositionsSection data={data} total={Math.min(limit, data?.length ?? 0)} isLoading={isLoading} />}
-          </Box>
-        </Flex>
+          </Flex>
+        )}
       </Box>
     </Flex>
   )

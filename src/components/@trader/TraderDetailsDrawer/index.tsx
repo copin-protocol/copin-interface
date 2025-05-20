@@ -17,7 +17,7 @@ export default function TraderDetailsDrawer({
 }: {
   zIndex?: number
 }) {
-  const { trader, resetTrader, disabledActions } = useQuickViewTraderStore()
+  const { trader, resetTrader, options } = useQuickViewTraderStore()
 
   const { lg } = useResponsive()
   const { setSearchParams } = useSearchParams()
@@ -50,7 +50,8 @@ export default function TraderDetailsDrawer({
               protocol={trader.protocol}
               type={trader.type}
               eventCategory={trader.eventCategory}
-              disabledActions={disabledActions}
+              disabledActions={options?.disabledActions}
+              disabledLinkAccount={options?.disabledLinkAccount}
             />
           )}
         </Suspense>

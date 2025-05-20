@@ -33,7 +33,6 @@ export default function FavoriteButton({
     submitting: favoriteSubmitting,
     setTraderFavorite,
     unsetTraderFavorite,
-    tooltipAddress,
     setTooltip,
   } = useTraderFavorites()
   const { isAuthenticated, profile } = useAuthContext()
@@ -71,15 +70,7 @@ export default function FavoriteButton({
         : EVENT_ACTIONS[EventCategory.FAVORITES].OPEN_FAVORITES
     )
   }
-  useEffect(() => {
-    if (!tooltipAddress) return
-    const dom = document.getElementById('trader-table')
-    const handleScroll = () => {
-      if (tooltipAddress) setTooltip(undefined)
-    }
-    dom?.addEventListener('scroll', handleScroll)
-    return () => dom?.removeEventListener('scroll', handleScroll)
-  }, [setTooltip, tooltipAddress])
+
   return (
     <div className="favorite-btn">
       <IconButton

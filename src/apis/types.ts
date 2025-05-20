@@ -7,6 +7,7 @@ import {
   LeaderboardTypeEnum,
   ProtocolEnum,
   SortTypeEnum,
+  SubscriptionPlanEnum,
   TimeFilterByEnum,
   TraderLabelEnum,
 } from 'utils/config/enums'
@@ -125,4 +126,12 @@ export type GetUserActifityLogPayload = {
   sortBy?: keyof UserActivityData
   sortType?: SortTypeEnum
   traders?: string[]
+}
+
+export type GetSubscriptionPaymentPayload = {
+  plan: SubscriptionPlanEnum
+  currency: string
+  period: number
+  discountCode?: string
+  refundEmail: string
 }

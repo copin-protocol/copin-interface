@@ -5,6 +5,7 @@ import { ApiListResponse } from 'apis/api'
 import { getTraderHistoryApi, getTraderTokensStatistic } from 'apis/traderApis'
 import { QueryFilter } from 'apis/types'
 import { PositionData } from 'entities/trader'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import { TableSortProps } from 'theme/Table/types'
@@ -26,6 +27,15 @@ export default function useQueryClosedPositionsMobile({
   address: string
   protocol: ProtocolEnum
 }) {
+  const {
+    requiredPlanToUnlimitedPosition,
+    isEnableTokenStats,
+    isEnablePosition,
+    isUnlimitedPosition: isUnlimited,
+    maxPositionHistory: maxAllowedRecords,
+  } = useTraderProfilePermission({ protocol })
+  const isAllowedFetch = isEnablePosition && (isUnlimited || (!isUnlimited && maxAllowedRecords !== 0))
+
   const { currentPage, changeCurrentPage, currentLimit, changeCurrentLimit } = usePageChangeWithLimit({
     pageName: URL_PARAM_KEYS.TRADER_HISTORY_PAGE,
     limitName: URL_PARAM_KEYS.TRADER_HISTORY_LIMIT,
@@ -35,7 +45,7 @@ export default function useQueryClosedPositionsMobile({
   const { data: tokensStatistic } = useQuery(
     [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, address],
     () => getTraderTokensStatistic({ protocol, account: address }),
-    { enabled: !!address && !!protocol }
+    { enabled: !!address && !!protocol && isEnableTokenStats }
   )
   const tokenOptions = useMemo(() => {
     if (tokensStatistic?.data?.length) {
@@ -60,26 +70,28 @@ export default function useQueryClosedPositionsMobile({
   })
   const queryFilters: QueryFilter[] = []
   queryFilters.push({ fieldName: 'status', value: PositionStatusEnum.CLOSE })
-  if (!!address) {
-    queryFilters.push({ fieldName: 'account', value: address })
-  }
+  // if (!!address) {
+  //   queryFilters.push({ fieldName: 'account', value: address })
+  // }
   if (currencyOption?.id && currencyOption?.id !== ALL_TOKENS_ID) {
     queryFilters.push({ fieldName: 'pair', value: getPairFromSymbol(currencyOption.id) })
   }
 
+  const limit = isUnlimited ? currentLimit : Math.min(maxAllowedRecords, currentLimit)
   const { data, isFetching: isLoading } = useQuery<ApiListResponse<PositionData>>(
-    [QUERY_KEYS.GET_POSITIONS_HISTORY, address, currentPage, currentLimit, currencyOption?.id, protocol],
+    [QUERY_KEYS.GET_POSITIONS_HISTORY, address, currentPage, limit, currencyOption?.id, protocol, isAllowedFetch],
     () => {
       return getTraderHistoryApi({
-        limit: currentLimit,
-        offset: pageToOffset(currentPage, currentLimit),
+        limit,
+        offset: pageToOffset(currentPage, limit),
         sort: defaultSort,
+        account: address,
         protocol,
         queryFilters,
       })
     },
     {
-      enabled: !!address,
+      enabled: !!address && isAllowedFetch,
       retry: 0,
       keepPreviousData: true,
     }
@@ -96,6 +108,9 @@ export default function useQueryClosedPositionsMobile({
       changeCurrentLimit,
       closedPositions: data,
       isLoadingClosed: isLoading,
+      maxAllowedRecords,
+      isUnlimited,
+      requiredPlanToUnlimitedPosition,
     }),
     [
       tokenOptions,
@@ -107,6 +122,9 @@ export default function useQueryClosedPositionsMobile({
       changeCurrentLimit,
       data,
       isLoading,
+      maxAllowedRecords,
+      isUnlimited,
+      requiredPlanToUnlimitedPosition,
     ]
   )
 }

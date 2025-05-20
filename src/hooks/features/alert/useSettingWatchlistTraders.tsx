@@ -24,7 +24,7 @@ export default function useSettingWatchlistTraders({ onSuccess }: { onSuccess?: 
           message={<Trans>This trader alert has been subscribed successfully</Trans>}
         />
       )
-      refetchQueries([QUERY_KEYS.GET_TRADER_ALERTS])
+      refetchQueries([QUERY_KEYS.GET_TRADER_ALERTS, QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE])
     },
     onError: (error: any) => {
       if (error?.message?.includes(`Can't find data`)) {
@@ -43,7 +43,7 @@ export default function useSettingWatchlistTraders({ onSuccess }: { onSuccess?: 
           message={<Trans>This trader alert has been removed successfully</Trans>}
         />
       )
-      refetchQueries([QUERY_KEYS.GET_TRADER_ALERTS])
+      refetchQueries([QUERY_KEYS.GET_TRADER_ALERTS, QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE])
       onSuccess?.()
     },
     onError: (error) => {
@@ -59,7 +59,7 @@ export default function useSettingWatchlistTraders({ onSuccess }: { onSuccess?: 
           message={<Trans>This trader alert has been updated successfully</Trans>}
         />
       )
-      refetchQueries([QUERY_KEYS.GET_TRADER_ALERTS])
+      refetchQueries([QUERY_KEYS.GET_TRADER_ALERTS, QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE])
       onSuccess?.()
     },
     onError: (error) => {

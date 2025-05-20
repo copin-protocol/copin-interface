@@ -44,7 +44,7 @@ export default function SearchRanking() {
   return (
     <Box sx={{ position: 'relative' }}>
       <InputSearch
-        placeholder="SEARCH TRADER RANKING"
+        placeholder="SEARCH TRADER"
         sx={{
           height: 'max-content',
           border: 'none',

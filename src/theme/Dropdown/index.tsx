@@ -127,6 +127,7 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
                       margin: '-8px -8px -8px 0',
                       maxHeight: menuSx.maxHeight,
                       overflow: 'hidden scroll',
+                      pr: '2px',
                     }
                   : {}
               }

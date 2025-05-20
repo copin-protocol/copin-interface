@@ -3,6 +3,7 @@ import { Funnel } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 import { createGlobalStyle } from 'styled-components/macro'
 
+import TableFilterMenuWrapper from 'components/@subscription/TableFilterMenuWrapper'
 import MarketSelection from 'components/@ui/MarketFilter/MarketSelection'
 import { useFilterPairs } from 'hooks/features/useFilterPairs'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
@@ -10,7 +11,8 @@ import Dropdown from 'theme/Dropdown'
 import Select from 'theme/Select'
 import SwitchInputField from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { getPairFromSymbol, getSymbolFromPair } from 'utils/helpers/transform'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 const GlobalStyle = createGlobalStyle`
   .daily_trades_select_pairs {
@@ -25,10 +27,12 @@ export function PairFilterIcon({
   pairs,
   excludedPairs,
   changePairs,
+  requiredPlan,
 }: {
   pairs: string[]
   excludedPairs: string[]
   changePairs: (pairs: string[], excludedPairs: string[]) => void
+  requiredPlan?: SubscriptionPlanEnum
 }) {
   const { getListSymbol } = useMarketsConfig()
   const [visible, setVisible] = useState(false)
@@ -47,16 +51,18 @@ export function PairFilterIcon({
       setVisible={setVisible}
       hasArrow={false}
       menu={
-        <MarketSelection
-          key={visible.toString()}
-          // protocols={protocols}
-          isAllPairs={isCopyAll}
-          selectedPairs={pairs}
-          onChangePairs={changePairs}
-          allPairs={protocolPairs ?? []}
-          excludedPairs={excludedPairs}
-          handleToggleDropdown={() => setVisible(!visible)}
-        />
+        <TableFilterMenuWrapper requiredPlan={requiredPlan}>
+          <MarketSelection
+            key={visible.toString()}
+            // protocols={protocols}
+            isAllPairs={isCopyAll}
+            selectedPairs={pairs}
+            onChangePairs={changePairs}
+            allPairs={protocolPairs ?? []}
+            excludedPairs={excludedPairs}
+            handleToggleDropdown={() => setVisible(!visible)}
+          />
+        </TableFilterMenuWrapper>
       }
       menuSx={{
         width: '250px',

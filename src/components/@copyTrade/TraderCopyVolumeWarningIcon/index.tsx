@@ -53,6 +53,7 @@ export default function TraderCopyVolumeWarningIcon({
   )
 }
 
+// TODO: SUB 3
 export function TraderTotalCopyVolumeIcon({
   account,
   protocol,
@@ -81,13 +82,17 @@ export function TraderTotalCopyVolumeIcon({
   if (!isRef) {
     description = '(Non-referral Copin on CEX)'
   }
-  if (plan === SubscriptionPlanEnum.PREMIUM) {
-    color = 'orange1'
-    label = 'Premium'
+  if (plan === SubscriptionPlanEnum.STARTER) {
+    color = 'green2'
+    label = 'Starter'
   }
-  if (plan === SubscriptionPlanEnum.VIP) {
+  if (plan === SubscriptionPlanEnum.PRO) {
+    color = 'orange1'
+    label = 'Pro'
+  }
+  if (plan === SubscriptionPlanEnum.ELITE) {
     color = 'violet'
-    label = 'VIP'
+    label = 'Elite'
   }
   const iconColor = getCopyVolumeColor({ copyVolume, maxVolume })
 
@@ -120,7 +125,7 @@ export function TraderTotalCopyVolumeIcon({
             <Box
               as="span"
               color={
-                plan === SubscriptionPlanEnum.VIP
+                plan === SubscriptionPlanEnum.ELITE
                   ? 'green2'
                   : (copyVolume ?? 0) > (maxVolume ?? 0)
                   ? 'red1'
@@ -131,8 +136,8 @@ export function TraderTotalCopyVolumeIcon({
             >
               ${_copyVolume}
             </Box>{' '}
-            / {plan === SubscriptionPlanEnum.VIP ? 'Unlimited' : `$${_maxVolume}`}
-            {plan !== SubscriptionPlanEnum.VIP && (
+            / {plan === SubscriptionPlanEnum.ELITE ? 'Unlimited' : `$${_maxVolume}`}
+            {plan !== SubscriptionPlanEnum.ELITE && (
               <Box as={Link} to={ROUTES.SUBSCRIPTION.path} target="_blank" onClick={(e) => e.stopPropagation()}>
                 {' '}
                 Upgrade

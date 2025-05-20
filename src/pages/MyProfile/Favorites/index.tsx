@@ -19,6 +19,7 @@ import Loading from 'theme/Loading'
 import PageTitle from 'theme/PageTitle'
 import { Box, Flex } from 'theme/base'
 import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
+import { SubscriptionFeatureEnum } from 'utils/config/enums'
 
 import ListTraderFavorites from './ListTraderFavorites'
 
@@ -103,7 +104,7 @@ function ListTraders({ notes }: { notes: { [key: string]: string } }) {
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
       <Box flex="1 1 0" sx={{ borderBottom: 'small', borderBottomColor: 'neutral4' }}>
         {md ? (
-          <TimeFilterSection contextValues={contextValues} />
+          <TimeFilterSection contextValues={contextValues} learnMoreSection={SubscriptionFeatureEnum.TRADER_FAVORITE} />
         ) : (
           <Flex sx={{ height: 40, alignItems: 'center', pl: 3, pr: [3, 3, 0], justifyContent: 'space-between' }}>
             <TimeFilterDropdown contextValues={contextValues} />

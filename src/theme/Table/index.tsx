@@ -105,6 +105,7 @@ TableProps<T, K>) {
               changeCurrentSort={changeCurrentSort}
               isSelectedAll={isSelectedAll}
               handleSelectedAll={handleSelectAll}
+              externalSource={externalSource}
             />
           </TableContainer>
         </Box>

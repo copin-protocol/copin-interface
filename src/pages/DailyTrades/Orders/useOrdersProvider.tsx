@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { DirectionFilterEnum, ORDER_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
 import { getRangeFilterValues } from 'components/@widgets/TableFilter/helpers'
 import { RangeFilterValues } from 'components/@widgets/TableFilter/types'
+import useLiveTradesPermission from 'hooks/features/subscription/useLiveTradesPermission'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -113,15 +114,17 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
     [setSearchParams]
   )
 
+  const { orderFieldsAllowed } = useLiveTradesPermission()
   const ranges: RangeFilterValues[] = useMemo(() => {
     const result = Object.entries(ORDER_RANGE_CONFIG_MAPPING).map(([field, values]) => {
+      if (orderFieldsAllowed != null && !orderFieldsAllowed.includes(field as any)) return undefined
       return {
         ...getRangeFilterValues({ urlParamKey: values.urlParamKey ?? '', searchParams: searchParams as any }),
         field,
       }
     })
-    return result.filter((v) => v.gte != null || v.lte != null)
-  }, [searchParams])
+    return result.filter((v) => !!v && (v.gte != null || v.lte != null)) as RangeFilterValues[]
+  }, [searchParams, orderFieldsAllowed])
 
   const changeFilters = useCallback(
     (vars: ChangeFilterVariables) => {
@@ -160,9 +163,10 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
     [setSearchParams]
   )
 
-  const [enabledLiveTrade, setEnabledLiveTrade] = useState(() => {
-    return localStorage.getItem('live_trade_orders_enabled') === '1' ? true : false
-  })
+  const [enabledLiveTrade, setEnabledLiveTrade] = useState(false)
+  // const [enabledLiveTrade, setEnabledLiveTrade] = useState(() => {
+  //   return localStorage.getItem('live_trade_orders_enabled') === '1' ? true : false
+  // })
 
   const toggleLiveTrade = useCallback(
     (enabled?: boolean) => {
@@ -175,9 +179,9 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
     },
     [setSearchParams]
   )
-  useEffect(() => {
-    localStorage.setItem('live_trade_orders_enabled', enabledLiveTrade ? '1' : '0')
-  }, [enabledLiveTrade])
+  // useEffect(() => {
+  //   localStorage.setItem('live_trade_orders_enabled', enabledLiveTrade ? '1' : '0')
+  // }, [enabledLiveTrade])
 
   const contextValue: DailyOrderContextValues = useMemo(() => {
     return {

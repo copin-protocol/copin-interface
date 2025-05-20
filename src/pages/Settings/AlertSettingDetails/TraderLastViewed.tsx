@@ -6,11 +6,13 @@ import React, { useCallback, useMemo } from 'react'
 import { normalizeTraderData } from 'apis/normalize'
 import { RequestBodyApiData } from 'apis/types'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
+import UpgradeButton from 'components/@subscription/UpgradeButton'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import { TraderAlertData } from 'entities/alert'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useSettingWatchlistTraders from 'hooks/features/alert/useSettingWatchlistTraders'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import useTimeFilterData from 'pages/Explorer/ListTradersSection/useTimeFilterData'
@@ -20,6 +22,7 @@ import { ColumnData } from 'theme/Table/types'
 import { Box, Flex } from 'theme/base'
 import { MAX_LIMIT } from 'utils/config/constants'
 import { AlertTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { getRequiredPlan } from 'utils/helpers/permissionHelper'
 
 import NoAlertList from './NoAlertList'
 import {
@@ -36,6 +39,7 @@ export default function TraderLastViewed() {
   const isMobile = !lg
   const { traderLastViewed = [] } = useTraderLastViewed()
   const { hasWatchlistChannel, handleGenerateLinkBot, loadingAlerts, isGeneratingLink } = useBotAlertContext()
+  const { allowedSelectProtocols, pagePermission } = useProtocolPermission()
 
   const { isAuthenticated } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
@@ -98,7 +102,12 @@ export default function TraderLastViewed() {
 
   const TraderActions = useCallback(
     ({ data }: { data: TraderAlertData }) => {
-      return (
+      const isAllowed = allowedSelectProtocols?.includes(data.protocol)
+      const requiredPlanToProtocol = getRequiredPlan({
+        conditionFn: (plan) =>
+          (data.protocol && pagePermission?.[plan]?.protocolAllowed?.includes(data.protocol)) || false,
+      })
+      return isAllowed ? (
         <ButtonWithIcon
           type="button"
           variant="ghostPrimary"
@@ -109,9 +118,11 @@ export default function TraderLastViewed() {
         >
           <Trans>ADD</Trans>
         </ButtonWithIcon>
+      ) : (
+        <UpgradeButton requiredPlan={requiredPlanToProtocol} buttonSx={{ mr: 0 }} />
       )
     },
-    [isGeneratingLink, loadingAlerts, submittingCreate]
+    [isGeneratingLink, loadingAlerts, submittingCreate, allowedSelectProtocols, pagePermission]
   )
 
   const columns = useMemo(() => {

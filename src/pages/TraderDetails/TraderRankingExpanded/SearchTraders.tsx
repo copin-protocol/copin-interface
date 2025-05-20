@@ -1,12 +1,17 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans, t } from '@lingui/macro'
+import React from 'react'
 
+import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
 import NoDataFound from 'components/@ui/NoDataFound'
 import TraderAddress from 'components/@ui/TraderAddress'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useSearchAllData from 'hooks/features/trader/useSearchAllData'
 import { InputSearch } from 'theme/Input'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
+import { SubscriptionFeatureEnum } from 'utils/config/enums'
+import { getRequiredPlan } from 'utils/helpers/permissionHelper'
 
 import { FindAndSelectTraderProps } from './FindAndSelectTrader'
 import { filterFoundData } from './helpers'
@@ -26,7 +31,11 @@ export default function SearchTraders({
     isLoading,
     searchTraders,
   } = useSearchAllData({ onSelect: props.onSelect, returnRanking: true, allowAllProtocol: true, limit: props.limit })
+
+  const { allowedSelectProtocols, pagePermission } = useProtocolPermission()
+
   const traders = [...filterFoundData(searchTraders?.data, props.ignoreSelectTraders)]
+
   return (
     <Box ref={searchWrapperRef} sx={{ position: 'relative' }}>
       <InputSearch
@@ -63,13 +72,19 @@ export default function SearchTraders({
             <>
               {!traders.length && <NoDataFound message={<Trans>No Trader Found</Trans>} />}
               {traders.map((traderData) => {
+                const isAllowed = allowedSelectProtocols?.includes(traderData.protocol)
+                const requiredPlanToProtocol = getRequiredPlan({
+                  conditionFn: (plan) =>
+                    (traderData.protocol && pagePermission?.[plan]?.protocolAllowed?.includes(traderData.protocol)) ||
+                    false,
+                })
                 return (
                   <Flex
                     alignItems="center"
                     justifyContent="space-between"
                     role="button"
                     key={traderData.id}
-                    onClick={() => props.onSelect(traderData)}
+                    onClick={() => (isAllowed ? props.onSelect(traderData) : undefined)}
                     sx={{ py: '6px', px: 2, borderRadius: 'sm', '&:hover': { bg: 'neutral6' } }}
                   >
                     <TraderAddress
@@ -80,7 +95,15 @@ export default function SearchTraders({
                         textSx: { width: 80 },
                       }}
                     />
-                    {props.addWidget}
+                    {isAllowed ? (
+                      props.addWidget
+                    ) : (
+                      <PlanUpgradeIndicator
+                        requiredPlan={requiredPlanToProtocol}
+                        learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+                        useLockIcon={false}
+                      />
+                    )}
                   </Flex>
                 )
               })}

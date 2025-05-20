@@ -2,9 +2,8 @@ import { TradersContextData } from '../useTradersContext'
 
 export interface ConditionFilterProps {
   filters: TradersContextData['filters']
-  changeFilters: TradersContextData['changeFilters']
   rankingFilters: TradersContextData['rankingFilters']
-  changeRankingFilters: TradersContextData['changeRankingFilters']
+  changeFilters: TradersContextData['changeFilters']
   tab: TradersContextData['filterTab']
   onCancel?: () => void
   filtersExpanded?: boolean

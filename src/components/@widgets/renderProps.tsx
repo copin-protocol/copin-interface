@@ -59,18 +59,18 @@ function EntryComponent({
         pr: 1,
       }}
     >
-      <Type.Caption {...textSx} width={8} color={data.isLong ? 'green1' : 'red2'}>
+      <Type.Caption {...textSx} width={8} color={data.isLong ? 'green1' : 'red2'} data-key="isLong">
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
       {showMarketIcon && <Market symbol={symbol} size={20} />}
-      <Type.Caption sx={{ ...textSx } as any}>
+      <Type.Caption sx={{ ...textSx } as any} data-key="pair">
         <Box as="span" sx={{ display: 'block', width: '100%', ...overflowEllipsis() }}>
           {formatSymbol(symbol)}
         </Box>
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption sx={{ ...textSx, flexShrink: 0 } as any}>
+      <Type.Caption sx={{ ...textSx, flexShrink: 0 } as any} data-key="averagePrice">
         {data.averagePrice ? PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2 }) : '--'}
       </Type.Caption>
     </Flex>

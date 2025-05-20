@@ -137,11 +137,11 @@ export const EXCHANGES_INFO: { [key: string]: ExchangeInfo } = {
     referralCode: '',
   },
   [CopyTradePlatformEnum.APEX]: {
-    linkRegister: '',
-    linkTutorial: '',
+    linkRegister: LINKS.registerApex,
+    linkTutorial: LINKS.getApexAPIKey,
     name: PLATFORM_TEXT_TRANS[CopyTradePlatformEnum.APEX],
     key: getExchangeKey(CopyTradePlatformEnum.APEX),
     imageUrl: parseExchangeImage(CopyTradePlatformEnum.APEX),
-    referralCode: '',
+    referralCode: '6966',
   },
 }

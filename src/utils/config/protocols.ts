@@ -38,6 +38,7 @@ export type ProtocolOptionProps = {
   isCross?: boolean
   key: string
   linkTrade?: string
+  isBeta?: boolean
 }
 
 // TODO: Check when add new protocol
@@ -172,15 +173,6 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     chainId: ARBITRUM_MAINNET,
     isNew: false,
     key: 'EQA',
-  },
-  [ProtocolEnum.BLOOM_BLAST]: {
-    id: ProtocolEnum.BLOOM_BLAST,
-    text: 'Bloom',
-    label: 'Blast',
-    chainId: BLAST_MAINNET,
-    isNew: false,
-    key: 'BLB',
-    linkTrade: LINKS.tradeBloom,
   },
   [ProtocolEnum.APOLLOX_BNB]: {
     id: ProtocolEnum.APOLLOX_BNB,
@@ -426,6 +418,7 @@ export const PROTOCOL_OPTIONS_MAPPING: Record<ProtocolEnum, ProtocolOptionProps>
     isNew: false,
     chainId: HYPERLIQUID_TESTNET,
     key: 'HLP',
+    isBeta: true,
   },
   [ProtocolEnum.SYNFUTURE_BASE]: {
     id: ProtocolEnum.SYNFUTURE_BASE,

@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
 import { PencilSimpleLine } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery } from 'react-query'
@@ -8,12 +9,16 @@ import { toast } from 'react-toastify'
 
 import { customRefCodeApi, getMyProfileApi } from 'apis/userApis'
 import InputReferral from 'components/@auth/InputReferral'
+import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
+import { ShortUpgradePrompt } from 'components/@subscription/PlanUpgradePrompt'
+import UpgradeButton from 'components/@subscription/UpgradeButton'
 import { DifferentialBar } from 'components/@ui/DifferentialBar'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import SuccessImage from 'components/@ui/SuccessImage'
 import ToastBody from 'components/@ui/ToastBody'
 import { RestrictPremiumFeature } from 'components/@widgets/SubscriptionRestrictModal'
-import { useIsPremium } from 'hooks/features/subscription/useSubscriptionRestrict'
+import { useIsPro } from 'hooks/features/subscription/useSubscriptionRestrict'
+import useUserPermission from 'hooks/features/subscription/useUserPermisison'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import WaveHandIcon from 'theme/Icons/WaveHandIcon'
@@ -22,6 +27,7 @@ import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { LINKS, MAX_REFERRAL_CODE_LENGTH, MIN_REFERRAL_CODE_LENGTH } from 'utils/config/constants'
 import { ReferralTierEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
 import { getErrorMessage } from 'utils/helpers/handleError'
 import { referRewardImage } from 'utils/helpers/transform'
@@ -34,7 +40,7 @@ import { TIER_SYSTEM } from './configs'
 export default function UserReferralTier() {
   const { isAuthenticated, profile, setProfile } = useAuthContext()
   const referralCode = profile?.referralCode ?? ''
-  const { refetch } = useQuery('get_user_profile_after_change_referrer', getMyProfileApi, {
+  const { refetch } = useQuery(QUERY_KEYS.GET_USER_PROFILE_AFTER_CHANGE, getMyProfileApi, {
     enabled: false,
     onSuccess: (data) => {
       if (!data) return
@@ -232,20 +238,30 @@ function UserReferralCode({
   onCustomReferralCodeSuccess: () => void
 }) {
   const [openModal, setOpenModal] = useState(false)
+  const { isEnabledEditReferralCode, planToEditReferralCode } = useUserPermission()
+  const { sm } = useResponsive()
+
   return (
     <>
       <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
         <Type.Body>YOUR REFERRAL CODE</Type.Body>
-        {!lastEdit && (
-          <Flex
-            role="button"
-            sx={{ alignItems: 'center', gap: 2, color: 'primary1', '&:hover': { color: 'primary2' } }}
-            onClick={() => setOpenModal(true)}
-          >
-            <PencilSimpleLine size={16} />
-            <Type.Caption>CUSTOM CODE</Type.Caption>
-          </Flex>
-        )}
+        {!lastEdit &&
+          (isEnabledEditReferralCode ? (
+            <Flex
+              role="button"
+              sx={{ alignItems: 'center', gap: 2, color: 'primary1', '&:hover': { color: 'primary2' } }}
+              onClick={() => setOpenModal(true)}
+            >
+              <PencilSimpleLine size={16} />
+              <Type.Caption>CUSTOM CODE</Type.Caption>
+            </Flex>
+          ) : (
+            <ShortUpgradePrompt
+              wrapperSx={{ flexDirection: sm ? 'row' : 'column', alignItems: sm ? 'center' : 'end' }}
+              requiredPlan={planToEditReferralCode}
+              description={<Trans>To Unlock Custom Code</Trans>}
+            />
+          ))}
       </Flex>
       <EditReferralCodeModal
         isOpen={openModal}
@@ -282,7 +298,7 @@ function EditReferralCodeModal({
     mode: 'onChange',
     shouldFocusError: true,
   })
-  const isPremiumUser = useIsPremium()
+  const isProUser = useIsPro()
   const _referralCode = watch('referralCode')
 
   const { mutate, isLoading: submitting } = useMutation(customRefCodeApi, {
@@ -306,7 +322,7 @@ function EditReferralCodeModal({
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} width="500px" maxWidth="500px">
       <Box p={3}>
-        {isPremiumUser ? (
+        {isProUser ? (
           <>
             {step === 1 && (
               <>

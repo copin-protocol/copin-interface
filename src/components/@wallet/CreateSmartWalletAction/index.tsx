@@ -50,6 +50,7 @@ export default function CreateSmartWalletAction({
         }}
         variant="primary"
         onClick={handleOpenModal}
+        disabled
       >
         Create Smart Wallet
       </Button>

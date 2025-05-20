@@ -3,6 +3,7 @@ import { NavLink as Link, NavLinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import BetaTag from 'components/@ui/BetaTag'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useGlobalStore from 'hooks/store/useGlobalStore'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
@@ -11,7 +12,6 @@ import { DEFAULT_PROTOCOL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { generateExplorerRoute, generateLeaderboardRoute, generateOIPositionsRoute } from 'utils/helpers/generateRoute'
-import { convertProtocolToParams } from 'utils/helpers/protocol'
 import { logEventCompetition } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -50,9 +50,11 @@ export function MobileEventNavLinks({ onClose, hasEvents }: { onClose?: () => vo
 
 function BaseNavLinks({ isMobile, onClose }: { isMobile: boolean; onClose?: () => void }) {
   const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
-  const protocolParams = convertProtocolToParams(selectedProtocols ?? [])
+  const { convertProtocolToParams, allowedSelectProtocols } = useProtocolPermission()
+  const protocolParams = convertProtocolToParams({ protocols: selectedProtocols ?? [] })
 
-  const protocol = useGlobalStore((s) => s.protocol)
+  const storedProtocol = useGlobalStore((s) => s.protocol)
+  const protocol = allowedSelectProtocols.find((p) => p === storedProtocol) ?? allowedSelectProtocols[0]
   const onClickNavItem = () => {
     onClose?.()
   }
@@ -117,8 +119,7 @@ function EventNavLinks({ onClose, hasEvents }: { onClose?: () => void; hasEvents
 
 const baseNavConfigs = [
   {
-    routeFactory: (configs: { protocol?: ProtocolEnum; params?: any }) =>
-      generateExplorerRoute({ params: configs.params }),
+    routeFactory: (configs: { params?: any }) => generateExplorerRoute({ params: configs.params }),
     label: <Trans>TRADER EXPLORER</Trans>,
     matchpath: ROUTES.ALL_TRADERS_EXPLORER.path,
   },
@@ -132,16 +133,6 @@ const baseNavConfigs = [
       generateLeaderboardRoute({ protocol: configs.protocol ?? DEFAULT_PROTOCOL }),
     matchpath: ROUTES.LEADERBOARD.path_prefix,
     label: <Trans>TRADER BOARD</Trans>,
-  },
-  {
-    routeFactory: () => ROUTES.COPIER_RANKING.path,
-    matchpath: ROUTES.COPIER_RANKING.path,
-    label: <Trans>COPIER RANKING</Trans>,
-  },
-  {
-    routeFactory: () => ROUTES.REFERRAL_MANAGEMENT.path,
-    matchpath: ROUTES.REFERRAL_MANAGEMENT.path,
-    label: <Trans>REFERRAL</Trans>,
   },
   {
     routeFactory: () => ROUTES.LIVE_TRADES.path,

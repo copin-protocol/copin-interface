@@ -1,12 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { ArrowLeft } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import UpgradeButton from 'components/@subscription/UpgradeButton'
+import BadgeWithLimit from 'components/@ui/BadgeWithLimit'
 import InputSearchText from 'components/@ui/InputSearchText'
 import NoDataFound from 'components/@ui/NoDataFound'
+import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
 import SearchToAdd from 'pages/Settings/AlertSettingDetails/SearchToAdd'
-import Badge from 'theme/Badge'
 import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
 import { PaginationWithSelect } from 'theme/Pagination'
@@ -14,7 +17,6 @@ import Popconfirm from 'theme/Popconfirm'
 import Table from 'theme/Table'
 import { Box, Flex, Type } from 'theme/base'
 import { AlertCustomType } from 'utils/config/enums'
-import ROUTES from 'utils/config/routes'
 
 import BasicInfoModal from '../BasicInfoModal'
 import MobileTraderItem from './MobileTraderItem'
@@ -31,6 +33,7 @@ export const TraderGroupHeader = ({
   hasChange,
   onBack,
 }: TraderGroupHeaderProps) => {
+  const { userWatchlistNextPlan } = useAlertPermission()
   return (
     <Flex flex={1} px={3} py={2} alignItems="center" justifyContent="space-between" flexWrap="wrap" sx={{ gap: 2 }}>
       <Flex alignItems="center" sx={{ gap: 2 }}>
@@ -55,7 +58,21 @@ export const TraderGroupHeader = ({
       </Flex>
       <Flex alignItems="center" sx={{ gap: 2 }}>
         <Type.Body>{isNew ? 'TRADER GROUP' : name}</Type.Body>
-        <Badge count={`${totalTrader}/${maxTraderAlert}`} />
+        <BadgeWithLimit
+          total={totalTrader}
+          limit={maxTraderAlert}
+          tooltipContent={
+            userWatchlistNextPlan && (
+              <PlanUpgradePrompt
+                requiredPlan={userWatchlistNextPlan}
+                title={<Trans>You have exceeded your trader limit for the current plan.</Trans>}
+                confirmButtonVariant="textPrimary"
+                titleSx={{ textTransform: 'none !important', fontWeight: 400 }}
+              />
+            )
+          }
+          clickableTooltip
+        />
       </Flex>
       <Box width={20} />
     </Flex>
@@ -68,13 +85,14 @@ export const TraderGroupHeader = ({
 export const TraderGroupSearch = ({
   totalTrader,
   maxTraderAlert,
-  isVIPUser,
   ignoreSelectTraders,
   searchText,
   setSearchText,
   onAddWatchlist,
   onRemoveWatchlist,
 }: TraderGroupSearchProps) => {
+  const { isAvailableWatchlistAlert, watchlistRequiredPlan } = useAlertPermission()
+  const { sm } = useResponsive()
   return (
     <Flex alignItems="center" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
       <Flex sx={{ pl: 1, width: 200, borderRight: 'small', borderColor: 'neutral4' }}>
@@ -94,17 +112,15 @@ export const TraderGroupSearch = ({
       <Flex flex={1} justifyContent="flex-end" sx={{ pr: 3, gap: 2 }}>
         {totalTrader < (maxTraderAlert ?? 0) && (
           <SearchToAdd
+            totalTrader={totalTrader}
+            maxTraderAlert={maxTraderAlert ?? 0}
             ignoreSelectTraders={ignoreSelectTraders}
             onSelect={onAddWatchlist}
             onRemove={onRemoveWatchlist}
           />
         )}
-        {!isVIPUser && totalTrader >= (maxTraderAlert ?? 0) && (
-          <Link to={ROUTES.SUBSCRIPTION.path}>
-            <Button size="xs" variant="outlinePrimary">
-              <Trans>Upgrade</Trans>
-            </Button>
-          </Link>
+        {isAvailableWatchlistAlert && (
+          <UpgradeButton requiredPlan={watchlistRequiredPlan} showIcon={!sm} showCurrentPlan={sm} />
         )}
       </Flex>
     </Flex>

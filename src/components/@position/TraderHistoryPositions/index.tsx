@@ -32,10 +32,12 @@ import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
+import PositionUpgradePlanIndicator from '../PositionUpgradePlanIndicator'
 import HLTraderPositionListView from '../TraderPositionsListView'
 import { drawerHistoryColumns, fullHistoryColumns, historyColumns } from '../configs/traderPositionRenderProps'
 import useQueryClosedPositions from './useQueryClosedPositions'
 import useQueryClosedPositionsMobile from './useQueryClosedPositionsMobile'
+import { Trans } from '@lingui/macro'
 
 function getHighestPnl(array: any): number {
   let high = 0
@@ -81,6 +83,9 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
     hasNextClosedPositions,
     handleFetchClosedPositions,
     isFetchingClosedPositions,
+    maxAllowedRecords,
+    isUnlimited,
+    requiredPlanToUnlimitedPosition,
   } = useQueryClosedPositions({ address, protocol, isExpanded })
 
   const tableSettings = isDrawer ? drawerHistoryColumns : xl && isExpanded ? fullHistoryColumns : historyColumns
@@ -310,6 +315,15 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
             rowBgFactory={renderRowBackground}
             footerBg={isDrawer ? 'neutral7' : undefined}
             isLoadingFooter={isFetchingClosedPositions}
+            footerWidget={
+              !isUnlimited && (dataMeta?.total ?? 0) > maxAllowedRecords ? (
+                <PositionUpgradePlanIndicator
+                  maxAllowedRecords={maxAllowedRecords}
+                  totalRecords={dataMeta?.total ?? 0}
+                  nextPlan={requiredPlanToUnlimitedPosition}
+                />
+              ) : undefined
+            }
           />
         )}
         {/* {isLoadingClosedPositions && (
@@ -400,6 +414,9 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
     changeCurrency,
     closedPositions,
     isLoadingClosed: isLoadingClosedPositions,
+    requiredPlanToUnlimitedPosition,
+    isUnlimited,
+    maxAllowedRecords,
   } = useQueryClosedPositionsMobile({ address, protocol })
 
   const data = closedPositions?.data
@@ -534,13 +551,24 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
       </Box>
       <Divider />
       <Box bg={props.isDrawer ? 'neutral7' : 'neutral5'}>
-        <PaginationWithLimit
-          currentPage={currentPage}
-          currentLimit={currentLimit}
-          onPageChange={changeCurrentPage}
-          onLimitChange={changeCurrentLimit}
-          apiMeta={dataMeta}
-        />
+        {!isUnlimited && (dataMeta?.total ?? 0) > maxAllowedRecords ? (
+          <Flex height={32} alignItems="center" justifyContent="center">
+            <PositionUpgradePlanIndicator
+              maxAllowedRecords={maxAllowedRecords}
+              totalRecords={dataMeta?.total ?? 0}
+              nextPlan={requiredPlanToUnlimitedPosition}
+              title={<Trans>Unlock all positions</Trans>}
+            />
+          </Flex>
+        ) : (
+          <PaginationWithLimit
+            currentPage={currentPage}
+            currentLimit={currentLimit}
+            onPageChange={changeCurrentPage}
+            onLimitChange={changeCurrentLimit}
+            apiMeta={dataMeta}
+          />
+        )}
       </Box>
 
       <TraderPositionDetailsDrawer

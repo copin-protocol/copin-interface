@@ -38,35 +38,37 @@ export function useCheckCopyTradeAction() {
   }
 }
 
-export function useIsPremium() {
+export function useIsPro() {
   const myProfile = useMyProfileStore((state) => state.myProfile)
-  const isPremiumUser = myProfile ? myProfile.plan !== SubscriptionPlanEnum.BASIC : null
+  const isPremiumUser = myProfile?.subscription?.plan
+    ? [SubscriptionPlanEnum.PRO, SubscriptionPlanEnum.ELITE].includes(myProfile.subscription.plan)
+    : null
   return isPremiumUser
 }
 
-export function useIsVIP() {
+export function useIsElite() {
   const myProfile = useMyProfileStore((state) => state.myProfile)
-  const isVIPUser = myProfile ? myProfile.plan === SubscriptionPlanEnum.VIP : null
-  return isVIPUser
+  const isEliteUser = myProfile ? myProfile.subscription?.plan === SubscriptionPlanEnum.ELITE : null
+  return isEliteUser
 }
 
-export function useIsPremiumAndAction() {
-  const isPremiumUser = useIsPremium()
+export function useIsProAndAction() {
+  const isProUser = useIsPro()
   const handleClickLogin = useClickLoginButton()
   const setRestrictState = useSubscriptionRestrictStore((state) => state.setRestrictState)
-  const checkIsPremium = useCallback(() => {
-    if (isPremiumUser == null) {
+  const checkIsPro = useCallback(() => {
+    if (isProUser == null) {
       handleClickLogin()
       return false
     }
-    if (!isPremiumUser) {
+    if (!isProUser) {
       setRestrictState(RestrictState.PREMIUM_FEATURE)
       return false
     }
     return true
-  }, [isPremiumUser])
+  }, [isProUser])
   return {
-    isPremiumUser,
-    checkIsPremium,
+    isProUser,
+    checkIsPro,
   }
 }

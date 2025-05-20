@@ -190,7 +190,7 @@ export async function getTraderHistoryApi({
     }
   }
   return requester
-    .post(`${protocol}/${SERVICE}/filter`, params)
+    .post(`${protocol}/${SERVICE}/filter/${account}`, params)
     .then((res: any) => normalizePositionResponse(res.data as ApiListResponse<ResponsePositionData>))
 }
 
@@ -295,4 +295,9 @@ export async function getTraderByLabelApi({ payload }: { payload: GetTraderByLab
 
 export async function exportTradersCsvApi(payload: any) {
   return requester.post(`${SERVICE}/statistic/download`, payload).then((res: any) => res.data)
+}
+export async function preExportTradersCsvApi(payload: any) {
+  return requester
+    .post(`${SERVICE}/statistic/pre-download`, payload)
+    .then((res: any) => res.data as { estimatedQuota: number; remainingQuota: number })
 }

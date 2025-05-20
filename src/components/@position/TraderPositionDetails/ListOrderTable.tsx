@@ -155,7 +155,7 @@ export const renderOrderBlockTime = (item: OrderData, format = DAYJS_FULL_DATE_F
     <Type.Caption color="neutral1">
       <LocalTimeText date={item.blockTime} format={format} hasTooltip={false} />
     </Type.Caption>
-    {!NO_TX_HASH_PROTOCOLS.includes(item.protocol) && (
+    {!NO_TX_HASH_PROTOCOLS.includes(item.protocol) && !!item.txHash && (
       <ExplorerLogo
         protocol={item.protocol}
         explorerUrl={`${PROTOCOL_PROVIDER[item.protocol]?.explorerUrl}/tx/${item.txHash}`}

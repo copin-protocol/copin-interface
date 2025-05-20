@@ -189,7 +189,7 @@ export function CopierLeaderboardProvider({ children }: { children: ReactNode })
                 statisticAt: undefined,
                 createdAt: undefined,
                 isMe: true,
-                plan: myProfile?.plan,
+                plan: myProfile?.subscription?.plan,
               },
             ] as unknown as CopierLeaderboardData[])
       },

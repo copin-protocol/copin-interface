@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.5.3",
   "engines": {
-    "node": ">=18.20.4 <19.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "start": "vite",
@@ -57,6 +57,7 @@
     "@hookform/resolvers": "2.9.11",
     "@lingui/react": "3.17.1",
     "@phosphor-icons/react": "2.1.7",
+    "@privy-io/react-auth": "2.8.3",
     "@pythnetwork/pyth-evm-js": "1.83.0",
     "@reach/dialog": "0.18.0",
     "@sentry/react": "7.68.0",

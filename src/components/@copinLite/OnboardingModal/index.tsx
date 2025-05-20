@@ -9,8 +9,8 @@ import { getPnlStatisticsApi, getTraderByLabelApi } from 'apis/traderApis'
 import { GetTraderByLabelPayload } from 'apis/types'
 import logo from 'assets/images/logo.png'
 import { Account, ResponseTraderData, StatisticData } from 'entities/trader'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useReferralActions from 'hooks/features/useReferralActions'
-import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
 import useParsedQueryString from 'hooks/router/useParsedQueryString'
 import useOnboardingStore from 'hooks/store/useOnboardingStore'
 import useUserReferral from 'hooks/store/useReferral'
@@ -87,9 +87,9 @@ export function OnboardingContent({
   onDismiss: (() => void) | undefined
   onStartInteraction?: () => void
 }) {
-  const allowedProtocols = useGetCopyTradeProtocols()
+  const { allowedCopyTradeProtocols } = useProtocolPermission()
   const baseFilterTraderPayload: GetTraderByLabelPayload = {
-    protocols: allowedProtocols,
+    protocols: allowedCopyTradeProtocols,
     statisticType: TimeFilterByEnum.S30_DAY,
     labels: [],
     sortBy: 'realisedPnl',
@@ -101,7 +101,7 @@ export function OnboardingContent({
     [QUERY_KEYS, listTraderLabel],
     () =>
       getTraderByLabelApi({
-        payload: { ...baseFilterTraderPayload, labels: listTraderLabel, protocols: allowedProtocols },
+        payload: { ...baseFilterTraderPayload, labels: listTraderLabel, protocols: allowedCopyTradeProtocols },
       }),
     {
       enabled: !!listTraderLabel.length,

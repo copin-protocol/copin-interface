@@ -4,11 +4,12 @@ import { useHistory } from 'react-router-dom'
 
 import { ApiListResponse } from 'apis/api'
 import { BotAlertData, TraderAlertData } from 'entities/alert'
-import { PlanLimitData } from 'entities/system'
+import { AlertPermission, AlertPermissionConfig } from 'entities/permission'
+import { SubscriptionUsageData } from 'entities/subscription'
 import { UserData } from 'entities/user'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
+import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
 import useMyProfile from 'hooks/store/useMyProfile'
-import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { AlertCategoryEnum, AlertSettingsEnum, AlertTypeEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { generateAlertSettingDetailsRoute } from 'utils/helpers/generateRoute'
 
@@ -18,15 +19,20 @@ export enum TabKeyEnum {
 }
 
 export interface AlertDashboardContextData {
+  usage?: SubscriptionUsageData
   systemAlerts?: BotAlertData[]
   customAlerts?: ApiListResponse<BotAlertData>
   loadingAlerts?: boolean
   traderAlerts?: ApiListResponse<TraderAlertData>
   maxTraderAlert?: number
-  isVIPUser?: boolean | null
+  isEliteUser?: boolean | null
   isMobile: boolean
   myProfile?: UserData | null
-  userAlertLimit?: PlanLimitData
+  userPermission?: AlertPermissionConfig
+  pagePermission?: AlertPermission
+  customRequiredPlan: SubscriptionPlanEnum
+  userCustomNextPlan?: SubscriptionPlanEnum | null
+  isAvailableCustomAlert?: boolean | null
   totalCustoms: number
   maxCustoms: number
   isLimited: boolean
@@ -37,42 +43,52 @@ export interface AlertDashboardContextData {
   tab: TabKeyEnum
   setTab: (tab: TabKeyEnum) => void
   handleCreateCustomAlert: () => void
+  openLimitModal: boolean
+  setOpenLimitModal: (data: boolean) => void
 }
 const AlertDashboardContext = createContext<AlertDashboardContextData>({} as AlertDashboardContextData)
 export function AlertDashboardProvider({ children }: { children: ReactNode }) {
   const {
-    totalCustomAlerts,
+    usage,
     systemAlerts,
     customAlerts,
     loadingAlerts,
     traderAlerts,
     maxTraderAlert,
-    isVIPUser,
+    isEliteUser,
     currentPage,
     changeCurrentPage,
     keyword,
     setKeyword,
+    userPermission,
+    pagePermission,
   } = useBotAlertContext()
   const { lg } = useResponsive()
   const isMobile = !lg
 
+  // TODO: SUB 3
   const history = useHistory()
   const { myProfile } = useMyProfile()
-  const { subscriptionLimit } = useSystemConfigStore()
-  const userAlertLimit = subscriptionLimit?.[myProfile?.plan ?? SubscriptionPlanEnum.BASIC]
-  const totalCustoms = totalCustomAlerts ?? 0
-  const maxCustoms = userAlertLimit?.customAlerts ?? 0
+  const totalCustoms = usage?.customAlerts ?? 0
+  const maxCustoms = userPermission?.customPersonalQuota ?? 0
   const isLimited = totalCustoms >= maxCustoms
   const [tab, setTab] = useState(TabKeyEnum.SYSTEM)
+  const [openLimitModal, setOpenLimitModal] = useState(false)
+
+  const { isAvailableCustomAlert, customRequiredPlan, userCustomNextPlan } = useAlertPermission()
 
   const handleCreateCustomAlert = () => {
-    history.push(
-      generateAlertSettingDetailsRoute({
-        id: 'new',
-        type: AlertCategoryEnum.CUSTOM,
-        params: { step: AlertSettingsEnum.TRADERS, type: AlertTypeEnum.CUSTOM },
-      })
-    )
+    if (isLimited) {
+      setOpenLimitModal(true)
+    } else {
+      history.push(
+        generateAlertSettingDetailsRoute({
+          id: 'new',
+          type: AlertCategoryEnum.CUSTOM,
+          params: { step: AlertSettingsEnum.TRADERS, type: AlertTypeEnum.CUSTOM },
+        })
+      )
+    }
   }
   const contextValue: AlertDashboardContextData = {
     systemAlerts,
@@ -80,13 +96,18 @@ export function AlertDashboardProvider({ children }: { children: ReactNode }) {
     loadingAlerts,
     traderAlerts,
     maxTraderAlert,
-    isVIPUser,
+    isEliteUser,
     isMobile,
     myProfile,
-    userAlertLimit,
+    userPermission,
+    pagePermission,
+    customRequiredPlan,
+    userCustomNextPlan,
+    isAvailableCustomAlert,
     totalCustoms,
     maxCustoms,
     isLimited,
+    usage,
     currentPage,
     changeCurrentPage,
     keyword,
@@ -94,6 +115,8 @@ export function AlertDashboardProvider({ children }: { children: ReactNode }) {
     tab,
     setTab,
     handleCreateCustomAlert,
+    openLimitModal,
+    setOpenLimitModal,
   }
 
   return <AlertDashboardContext.Provider value={contextValue}>{children}</AlertDashboardContext.Provider>

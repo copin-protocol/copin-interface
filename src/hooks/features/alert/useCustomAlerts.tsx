@@ -23,7 +23,7 @@ export default function useCustomAlerts({ onSuccess }: { onSuccess?: (data?: Bot
       )
       refetchQueries([
         QUERY_KEYS.GET_CUSTOM_ALERTS,
-        QUERY_KEYS.COUNT_CUSTOM_ALERTS,
+        QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE,
         QUERY_KEYS.GET_CUSTOM_TRADER_GROUP_BY_ID,
       ])
       onSuccess?.(data)
@@ -61,7 +61,7 @@ export default function useCustomAlerts({ onSuccess }: { onSuccess?: (data?: Bot
           message={<Trans>This custom alert has been deleted successfully</Trans>}
         />
       )
-      refetchQueries([QUERY_KEYS.GET_CUSTOM_ALERTS, QUERY_KEYS.COUNT_CUSTOM_ALERTS])
+      refetchQueries([QUERY_KEYS.GET_CUSTOM_ALERTS, QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE])
       onSuccess?.()
     },
     onError: (error) => {

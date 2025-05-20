@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ComponentProps, ReactNode, useState } from 'react'
 
-import useCopyTradePermission from 'hooks/features/copyTrade/useCopyTradePermission'
 import { useCheckCopyTradeAction } from 'hooks/features/subscription/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
@@ -40,8 +39,6 @@ export default function CopyVaultButton({
     onForceReload?.()
   }
 
-  const hasCopyPermission = useCopyTradePermission()
-
   const disabledCopy = !DCP_SUPPORTED_PROTOCOLS.includes(protocol)
   const disabledCopyTooltipId = `tt_copy_trade_${account}_${protocol}`
 
@@ -59,7 +56,7 @@ export default function CopyVaultButton({
         onClick={(e) => {
           e.preventDefault()
           if (!checkIsEligible()) return
-          hasCopyPermission ? setIsOpenModal(true) : setIsOpenContactModal(true)
+          setIsOpenModal(true)
         }}
         data-tooltip-id={disabledCopy ? disabledCopyTooltipId : undefined}
       >

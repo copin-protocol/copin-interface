@@ -50,8 +50,8 @@ function setStoredState({ state, userName }: { state: State | null; userName: st
 }
 
 export default function GettingStarted() {
-  const { isAuthenticated, profile, waitingState } = useAuthContext()
-  if (isAuthenticated == null || !!waitingState) return null
+  const { isAuthenticated, profile, loading } = useAuthContext()
+  if (isAuthenticated == null || loading) return null
 
   return <Menu key={`${profile?.username}`} />
 }

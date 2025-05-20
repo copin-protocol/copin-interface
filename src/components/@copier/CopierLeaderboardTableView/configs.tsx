@@ -1,10 +1,9 @@
+import SubscriptionIcon from 'components/@subscription/SubscriptionIcon'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { CopierRankingNumber } from 'components/@ui/LeaderboardRankingNumber'
-import SubscriptionIcon from 'components/@ui/SubscriptionIcon'
 import { CopierLeaderboardData } from 'entities/copier'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
-import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { formatNumber } from 'utils/helpers/format'
 
 import { ExternalLeaderboardSource } from './types'

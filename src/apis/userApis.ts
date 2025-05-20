@@ -4,6 +4,7 @@ import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { WaitlistTypeEnum } from 'utils/config/enums'
 
 import { ApiListResponse } from './api'
+import { parseMyProfileResponse } from './helpers'
 import requester from './index'
 import { GetApiParams, GetMyPositionRequestBody, GetMyPositionsParams } from './types'
 
@@ -11,7 +12,7 @@ const POSITION_SERVICE = 'copy-positions'
 const USER_SERVICE = 'users'
 
 export async function getMyProfileApi() {
-  return requester.get(`me`).then((res: any) => res.data as UserData)
+  return requester.get(`me`).then((res: any) => parseMyProfileResponse(res.data as UserData))
 }
 
 export async function changePasswordApi({ oldPassword, password }: { oldPassword: string; password: string }) {

@@ -11,7 +11,7 @@ export default function FilterRangeTags({
 }: {
   ranges: RangeFilterValues[]
   rangeConfigMapping: Record<string, TableFilterConfig>
-  onClear: (key: string) => void
+  onClear?: (key: string) => void
 }) {
   if (!ranges.length) return null
   return (
@@ -61,7 +61,10 @@ export default function FilterRangeTags({
           })
         }
         return (
-          <TagWrapper key={values.field as any} onClear={() => onClear(values.field)}>
+          <TagWrapper
+            key={values.field as any}
+            onClear={onClear ? () => onClear(config?.urlParamKey ?? '') : undefined}
+          >
             <Type.Caption>{config.label}:</Type.Caption>
             <Type.Caption>{text}</Type.Caption>
           </TagWrapper>

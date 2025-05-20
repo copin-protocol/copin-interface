@@ -162,7 +162,7 @@ function MobileOverview() {
 function ClaimHistories() {
   const { account: _account } = useAuthContext()
   const { info, histories, format, isLoadingFeeRebate, isLoadingHistories } = useFeeRebateContext()
-  const account = isAddress(_account?.address)
+  const account = isAddress(_account)
 
   const { sm, xl } = useResponsive()
 

@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
 
 import ConditionFilterForm from 'components/@widgets/ConditionFilterForm'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import ResultEstimated from 'pages/Explorer/ConditionFilter/ResultEstimated'
 import { FilterTabEnum, defaultFieldOptions } from 'pages/Explorer/ConditionFilter/configs'
 import { Button } from 'theme/Buttons'
@@ -54,6 +55,7 @@ export const TraderFilterForm: React.FC<TraderFilterFormProps> = ({
   matchingTraderCount,
   setMatchingTraderCount,
 }) => {
+  const { allowedSelectProtocols } = useProtocolPermission()
   return (
     <Flex flex={1} flexDirection="column" sx={{ overflow: 'auto', maxHeight: isMobile ? '90%' : '60svh' }}>
       <Type.Caption color="neutral2" mb={2}>
@@ -65,7 +67,7 @@ export const TraderFilterForm: React.FC<TraderFilterFormProps> = ({
       <ResultEstimated
         ranges={convertRangesFromFormValues({ condition: conditionFormValues, pairs })}
         type={timeFrame}
-        protocols={(protocols === 'all' ? [] : protocols) as ProtocolEnum[]}
+        protocols={(protocols === 'all' ? allowedSelectProtocols : protocols) as ProtocolEnum[]}
         filterTab={FilterTabEnum.DEFAULT}
         onCountChange={setMatchingTraderCount} // This will be handled by the parent component
         zIndex={0}

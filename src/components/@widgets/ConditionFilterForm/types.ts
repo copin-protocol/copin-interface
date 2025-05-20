@@ -24,6 +24,7 @@ export interface FieldOption<T> {
   default?: FilterCondition
   unit?: string
   searchText?: string
+  isDisabled?: boolean
 }
 export interface RankingFieldOption<T> extends FieldOption<T> {
   statLabel?: string
@@ -41,8 +42,11 @@ export interface ConditionOption {
 
 export type ConditionFilterFormProps<T> = {
   formValues: ConditionFormValues<T>
+  invalidFormValues?: ConditionFormValues<T>
   fieldOptions: FieldOption<T>[]
   setFormValues: Dispatch<SetStateAction<ConditionFormValues<T>>>
   onValuesChange?: (values: ConditionFormValues<T>) => void
   type?: 'ranking' | 'default'
+  maxFilterFields?: number
+  disabled?: boolean
 }

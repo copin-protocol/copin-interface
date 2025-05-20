@@ -1,3 +1,4 @@
+import { UserData } from 'entities/user'
 import { STORAGE_KEYS } from 'utils/config/keys'
 
 import requester from './index'
@@ -11,24 +12,32 @@ export const storeAuth = ({ jwt, wallet, account }: { jwt: string; wallet?: stri
   if (wallet) localStorage.setItem(STORAGE_KEYS.WALLET, wallet)
   localStorage.setItem(STORAGE_KEYS.ACCOUNT, account)
 }
-export const clearWeb3Auth = () => {
-  localStorage.removeItem(STORAGE_KEYS.WALLET)
-  localStorage.removeItem(STORAGE_KEYS.ACCOUNT)
-}
+
 export const clearAuth = () => {
   requester.defaults.headers.common['Authorization'] = ''
   localStorage.removeItem(STORAGE_KEYS.JWT)
-  clearWeb3Auth()
+  localStorage.removeItem(STORAGE_KEYS.ACCOUNT)
 }
 export const getStoredJwt = (): string | null => {
   const storedJwt = localStorage.getItem(STORAGE_KEYS.JWT)
   if (!storedJwt) return null
   return storedJwt
 }
-export const getStoredWallet = (): { account: string | null; wallet: string | null } => {
-  const wallet = localStorage.getItem(STORAGE_KEYS.WALLET)
-  const account = localStorage.getItem(STORAGE_KEYS.ACCOUNT)
-  return { wallet, account }
+
+export const getStoredAccount = (): string | null => {
+  const storedAccount = localStorage.getItem(STORAGE_KEYS.ACCOUNT)
+  if (!storedAccount) return null
+  return storedAccount
+}
+
+export const getStoredConnection = (): { address?: string; connectorType?: string } => {
+  const connections = localStorage.getItem(STORAGE_KEYS.PRIVY_CONNECTIONS)
+  if (!connections) return {}
+  try {
+    const parsedConnections = JSON.parse(connections)
+    return parsedConnections[0] ?? {}
+  } catch {}
+  return {}
 }
 
 export const getUnverifiedAccount = (): string | undefined => {
@@ -53,4 +62,9 @@ export const apiWrapper = (url: string): string => {
     return URL_PRIVATE + url
   }
   return URL_PUBLIC + url
+}
+
+export function parseMyProfileResponse(data: UserData) {
+  const newResponse: UserData = { ...data, plan: data.subscription?.plan ?? data.plan }
+  return newResponse
 }

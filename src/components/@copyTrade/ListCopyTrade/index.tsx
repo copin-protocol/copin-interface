@@ -46,7 +46,7 @@ export default function ListCopyTrade({
 }) {
   const myProfile = useMyProfileStore((_s) => _s.myProfile)
 
-  const { columns, isMutating, renderProps, copyTradeModalConfigs } = useListCopyTradeConfigs({
+  const { columns, isMutating, renderProps, copyTradeModalConfigs, upgradingModal } = useListCopyTradeConfigs({
     type,
     isExpanded: expanded,
     excludingColumnKeys,
@@ -89,10 +89,17 @@ export default function ListCopyTrade({
       maxVolume: getMaxVolumeCopy({ plan: myProfile?.plan, isRef, volumeLimitData: systemVolumeLimit.volumeLimit }),
       copyVolume:
         volumeCopies?.find((_v) => _v.account === _d.account && _v.protocol === _d.protocol)?.totalVolume ?? 0,
-      plan: myProfile?.plan,
+      plan: myProfile?.subscription?.plan,
     }))
     return _sortedData
-  }, [activeWallet?.isReferral, copyTrades, currentSort, myProfile?.plan, systemVolumeLimit.volumeLimit, volumeCopies])
+  }, [
+    activeWallet?.isReferral,
+    copyTrades,
+    currentSort,
+    myProfile?.subscription?.plan,
+    systemVolumeLimit.volumeLimit,
+    volumeCopies,
+  ])
 
   const { sm } = useResponsive()
 
@@ -121,6 +128,7 @@ export default function ListCopyTrade({
         }}
         isUpdatingCopyTrade={isMutating}
       />
+      {upgradingModal}
     </>
   )
 }

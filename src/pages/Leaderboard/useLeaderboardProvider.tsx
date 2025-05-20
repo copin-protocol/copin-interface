@@ -1,11 +1,12 @@
 import { useResponsive } from 'ahooks'
 import dayjs, { Dayjs } from 'dayjs'
-import { ReactNode, createContext, useContext, useMemo, useState } from 'react'
+import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { ApiListResponse } from 'apis/api'
 import { getLeaderboardApi } from 'apis/leaderboardApis'
 import { TopTraderData } from 'entities/trader'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import { getInitOption } from 'hooks/helpers/useOptionChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useGlobalStore from 'hooks/store/useGlobalStore'
@@ -51,7 +52,14 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
   const { md } = useResponsive()
   const { searchParams, setSearchParams } = useSearchParams()
   const dateParams = searchParams?.[DATE_PARAM_KEY] as string
-  const { protocol } = useGlobalStore()
+  const { allowedSelectProtocols } = useProtocolPermission()
+  const { protocol: storedProtocol, setProtocol } = useGlobalStore()
+  const protocol = allowedSelectProtocols.find((p) => p === storedProtocol)
+
+  useEffect(() => {
+    if (!protocol) setProtocol(allowedSelectProtocols[0])
+  }, [allowedSelectProtocols, protocol, setProtocol])
+
   const initDate = dateParams ? dayjs(Number(dateParams)) : dayjs().utc()
   const [queryDate, setQueryDate] = useState(parseQueryDate(initDate))
   const [keyword, setKeyword] = useState<string | undefined>()
@@ -103,6 +111,7 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
     {
       retry: 0,
       keepPreviousData: true,
+      enabled: !!protocol,
     }
   )
 

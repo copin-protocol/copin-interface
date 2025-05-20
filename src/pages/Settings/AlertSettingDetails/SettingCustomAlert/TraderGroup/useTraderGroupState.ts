@@ -6,7 +6,7 @@ import { TraderAlertData } from 'entities/alert'
 import { TraderData } from 'entities/trader'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import { AlertCustomType } from 'utils/config/enums'
-import { getPaginationDataFromList } from 'utils/helpers/transform'
+import { getPaginationDataFromList, goToPreviousPage } from 'utils/helpers/transform'
 
 import { CustomAlertFormValues } from '../types'
 import { traderGroupReducer } from './reducer'
@@ -41,29 +41,6 @@ export const useTraderGroupState = ({
   })
 
   const { name, description, traderGroupAdd, traderGroupUpdate, traderGroupRemove } = state
-
-  // Action handlers
-  const onAddWatchlist = useCallback((data: TraderData) => {
-    dispatch({ type: 'ADD_TRADER', payload: data })
-    setCurrentPage(1)
-  }, [])
-
-  const onUpdateWatchlist = useCallback((data: TraderAlertData) => {
-    dispatch({ type: 'UPDATE_TRADER', payload: data })
-  }, [])
-
-  const onRemoveWatchlist = useCallback((data: TraderAlertData) => {
-    dispatch({ type: 'REMOVE_TRADER', payload: data })
-    setCurrentPage(1)
-  }, [])
-
-  const onChangeName = useCallback((value?: string) => {
-    dispatch({ type: 'SET_NAME', payload: value })
-  }, [])
-
-  const onChangeDescription = useCallback((value?: string) => {
-    dispatch({ type: 'SET_DESCRIPTION', payload: value })
-  }, [])
 
   // Check if there are unsaved changes
   const hasChange = useMemo(() => {
@@ -110,6 +87,7 @@ export const useTraderGroupState = ({
   }, [groupTraders?.data, groupTraders?.meta, traderGroupAdd, traderGroupRemove, traderGroupUpdate])
 
   const totalTrader = parsedTraders?.data?.length ?? 0
+  const totalActiveTrader = parsedTraders?.data?.filter((e) => e.enableAlert)?.length ?? 0
 
   // Filter traders based on search text
   const filteredTraders = useMemo(() => {
@@ -147,6 +125,37 @@ export const useTraderGroupState = ({
     [parsedTraders?.data]
   )
 
+  // Action handlers
+  const onAddWatchlist = useCallback((data: TraderData) => {
+    dispatch({ type: 'ADD_TRADER', payload: data })
+    setCurrentPage(1)
+  }, [])
+
+  const onUpdateWatchlist = useCallback((data: TraderAlertData) => {
+    dispatch({ type: 'UPDATE_TRADER', payload: data })
+  }, [])
+
+  const onRemoveWatchlist = useCallback(
+    (data: TraderAlertData) => {
+      dispatch({ type: 'REMOVE_TRADER', payload: data })
+      goToPreviousPage({
+        total: totalTrader,
+        limit: 10,
+        currentPage,
+        changeCurrentPage: setCurrentPage,
+      })
+    },
+    [currentPage, totalTrader]
+  )
+
+  const onChangeName = useCallback((value?: string) => {
+    dispatch({ type: 'SET_NAME', payload: value })
+  }, [])
+
+  const onChangeDescription = useCallback((value?: string) => {
+    dispatch({ type: 'SET_DESCRIPTION', payload: value })
+  }, [])
+
   const handleApply = useCallback(
     (form?: CustomAlertFormValues) => {
       onApply({
@@ -157,7 +166,7 @@ export const useTraderGroupState = ({
         description: form?.description ?? description,
         customType: AlertCustomType.TRADER_GROUP,
       })
-      setMatchingTraderCount(totalTrader)
+      setMatchingTraderCount(totalActiveTrader)
     },
     [
       onApply,
@@ -168,11 +177,13 @@ export const useTraderGroupState = ({
       traderGroupRemove,
       setMatchingTraderCount,
       totalTrader,
+      totalActiveTrader,
     ]
   )
 
   const handleReset = useCallback(() => {
     dispatch({ type: 'RESET', payload: defaultValues })
+    setCurrentPage(1)
   }, [defaultValues])
 
   return {
@@ -188,6 +199,7 @@ export const useTraderGroupState = ({
     setCurrentPage,
     hasChange,
     totalTrader,
+    totalActiveTrader,
     filteredTraders,
     paginatedTraders,
     ignoreSelectTraders,

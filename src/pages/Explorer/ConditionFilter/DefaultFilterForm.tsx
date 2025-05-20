@@ -1,12 +1,14 @@
 import { useResponsive } from 'ahooks'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
+import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { Box, Flex } from 'theme/base'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -14,7 +16,7 @@ import useTradersContext from '../useTradersContext'
 import FilterForm, { FilterFormProps } from './FilterForm'
 import FilterMarket from './FilterMarket'
 import ResultEstimated from './ResultEstimated'
-import { FilterTabEnum, defaultFieldOptions } from './configs'
+import { FilterTabEnum, getFilterOptions } from './configs'
 import { useTraderCountState } from './useTraderCount'
 
 export default function DefaultFilterForm({
@@ -36,6 +38,24 @@ export default function DefaultFilterForm({
   const { timeOption, setCurrentSuggestion } = useTradersContext()
   const { ranges, handleChangeRanges } = useTraderCountState({ defaultFormValues })
   const [enableApply, setEnableApply] = useState(false)
+  const { fieldsAllowed, pagePermission, userPermission } = useExplorerPermission()
+  const { sm } = useResponsive()
+
+  const fieldOptions = useMemo(
+    () =>
+      getFilterOptions({
+        pagePermission,
+        userPermission,
+      }),
+    [pagePermission, userPermission]
+  )
+
+  useEffect(() => {
+    setFormValues((formValues) => {
+      const newValues = formValues.filter((e) => e.key !== 'indexTokens' && fieldsAllowed.includes(e.key))
+      return newValues
+    })
+  }, [fieldsAllowed])
 
   const onChangeFormValues: FilterFormProps['onValuesChange'] = (values) => {
     let newValues = [...values]
@@ -71,7 +91,8 @@ export default function DefaultFilterForm({
 
   const onReset: FilterFormProps['onReset'] = (formValueFactory) => {
     if (formValueFactory) {
-      const formValues = formValueFactory(['pnl', 'winRate'])
+      // const formValues = formValueFactory(['pnl'])
+      const formValues = formValueFactory([])
       handleChangeOption(formValues)
     }
     handleClose && handleClose()
@@ -87,8 +108,6 @@ export default function DefaultFilterForm({
     )
   }
 
-  const { sm } = useResponsive()
-
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
       <Box sx={sm ? {} : { position: 'sticky', top: 0, bg: 'neutral7', zIndex: 2 }}>
@@ -100,20 +119,27 @@ export default function DefaultFilterForm({
         />
       </Box>
 
-      <FilterMarket filters={formValues} changeFilters={onChangeMarketFormValues} />
-      <Divider my={1} color="neutral5" />
+      {fieldsAllowed.includes('indexTokens') && (
+        <>
+          <FilterMarket filters={formValues} changeFilters={onChangeMarketFormValues} />
+          <Divider my={1} color="neutral5" />
+        </>
+      )}
       <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
         <FilterForm
           key={formValues.map((e) => e.key).join('-')}
           formType="default"
-          fieldOptions={defaultFieldOptions.filter((e) => e.value !== 'indexTokens')}
-          initialFormValues={formValues.filter((e) => e.key !== 'indexTokens')}
+          fieldOptions={fieldOptions}
+          maxFilterFields={userPermission?.maxFilterFields}
+          initialFormValues={formValues.filter((e) => e.key !== 'indexTokens' && fieldsAllowed.includes(e.key))}
+          invalidFormValues={defaultFormValues.filter((e) => e.key !== 'indexTokens' && !fieldsAllowed.includes(e.key))}
           onApply={onApply}
           onReset={onReset}
           onValuesChange={onChangeFormValues}
           enabledApply={
             enableApply || (currentTab === FilterTabEnum.DEFAULT && lastFilterTab !== FilterTabEnum.DEFAULT)
           }
+          showUpgradeWarning={myProfile?.plan !== SubscriptionPlanEnum.ELITE}
         />
       </Box>
     </Flex>

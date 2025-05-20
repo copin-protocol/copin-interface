@@ -1,12 +1,13 @@
 import { Trans } from '@lingui/macro'
 import isEqual from 'lodash/isEqual'
-import { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { protocolOptions } from 'components/@copyTrade/configs'
 import ToastBody from 'components/@ui/ToastBody'
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
+import useGetProtocolOptionsByPermission from 'hooks/features/subscription/useGetProtocolOptionsByPermission'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { AlertCustomType, TimeFilterByEnum } from 'utils/config/enums'
 
@@ -23,13 +24,22 @@ interface UseTraderFilterStateProps {
  * Custom hook for TraderFilter state management
  */
 export const useTraderFilterState = ({ defaultValues, onApply }: UseTraderFilterStateProps) => {
+  const { allowedSelectProtocols } = useProtocolPermission()
+  const initProtocols = useMemo(
+    () =>
+      !!defaultValues?.protocols?.length
+        ? allowedSelectProtocols.every((p) => defaultValues?.protocols?.includes(p))
+          ? 'all'
+          : defaultValues?.protocols
+        : 'all',
+    [allowedSelectProtocols, defaultValues?.protocols]
+  )
+
   // Form state
   const [name, setName] = useState<string | undefined>(defaultValues?.name)
   const [description, setDescription] = useState<string | undefined>(defaultValues?.description)
   const [timeFrame, setTimeFrame] = useState<TimeFilterByEnum>(defaultValues?.type ?? TimeFilterByEnum.S30_DAY)
-  const [protocols, setProtocols] = useState<string[] | 'all'>(
-    !!defaultValues?.protocols?.length ? defaultValues?.protocols : 'all'
-  )
+  const [protocols, setProtocols] = useState<string[] | 'all'>(initProtocols)
   const [pairs, setPairs] = useState<string[] | 'all'>(!!defaultValues?.pairs?.length ? defaultValues?.pairs : 'all')
   const [conditionFormValues, setConditionFormValues] = useState<ConditionFormValues<TraderData>>(
     defaultValues?.condition ?? []
@@ -45,12 +55,14 @@ export const useTraderFilterState = ({ defaultValues, onApply }: UseTraderFilter
   }, [getListSymbolOptions])
 
   // Protocol options
+  const protocolOptions = useGetProtocolOptionsByPermission()
+
   const _protocolOptions = useMemo(() => {
     const allOptions = [...protocolOptions]
     if (!allOptions?.length) return []
-    allOptions.unshift({ value: 'all', label: <Trans>All Protocols</Trans> })
+    allOptions.unshift({ value: 'all', label: <Trans>All Protocols</Trans>, isDisabled: false })
     return allOptions
-  }, [])
+  }, [protocolOptions])
 
   // Check for changes in form state
   const hasChange = useMemo(() => {
@@ -58,7 +70,7 @@ export const useTraderFilterState = ({ defaultValues, onApply }: UseTraderFilter
       name: defaultValues?.name,
       description: defaultValues?.description,
       timeFrame: defaultValues?.type ?? TimeFilterByEnum.S30_DAY,
-      protocols: !!defaultValues?.protocols?.length ? defaultValues?.protocols : 'all',
+      protocols: initProtocols,
       pairs: !!defaultValues?.pairs?.length ? defaultValues?.pairs : 'all',
       condition: normalizeCondition(defaultValues?.condition),
     }
@@ -106,7 +118,7 @@ export const useTraderFilterState = ({ defaultValues, onApply }: UseTraderFilter
         name: form?.name ?? name,
         description: form?.description ?? description,
         type: timeFrame,
-        protocols: protocols === 'all' ? [] : protocols,
+        protocols: protocols === 'all' ? allowedSelectProtocols : protocols,
         pairs: pairs === 'all' ? [] : pairs,
         condition: conditionFormValues,
         customType: AlertCustomType.TRADER_FILTER,

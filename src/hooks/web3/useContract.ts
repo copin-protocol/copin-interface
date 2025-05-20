@@ -44,7 +44,7 @@ export function useContract<T extends Contract = Contract>({
   return useMemo(() => {
     const providerOrSigner =
       withSignerIfPossible && selectedProvider
-        ? getProviderOrSigner(selectedProvider, account ?? walletAccount?.address)
+        ? getProviderOrSigner(selectedProvider, account ?? walletAccount)
         : publicProvider
     if (!providerOrSigner) throw new WalletProviderError('Unable to get provider')
     return getContract(contract, providerOrSigner)

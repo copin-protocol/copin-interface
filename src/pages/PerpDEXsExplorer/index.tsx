@@ -51,6 +51,7 @@ import { formatDate } from 'utils/helpers/format'
 import { generatePerpDEXDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseChainImage, parseMarketImage, parsePlainProtocolImage } from 'utils/helpers/transform'
 
+import PermissionContainer from './PermissionContainer'
 import { Accordion } from './components/Accordion'
 import ChainFilter from './components/ChainFilter'
 import { ReportPerpDEXFlag } from './components/ReportPerpDEX'
@@ -63,8 +64,10 @@ export default function PerpDEXsExplorerPage() {
   return (
     <SafeComponentWrapper>
       <CustomPageTitle title="Perp Explorer | Copin Analyzer" />
-      {lg ? <DesktopView /> : <MobileView />}
-      <ReportPerpDEXsModal />
+      <PermissionContainer>
+        {lg ? <DesktopView /> : <MobileView />}
+        <ReportPerpDEXsModal />
+      </PermissionContainer>
     </SafeComponentWrapper>
   )
 }

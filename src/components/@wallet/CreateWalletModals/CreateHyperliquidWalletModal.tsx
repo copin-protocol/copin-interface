@@ -29,7 +29,6 @@ import { signTypedData } from 'utils/web3/wallet'
 import WalletHelpCEX from './WalletHelpCEX'
 import { HyperliquidWalletFormValues, defaultFormValues, hyperliquidWalletFormSchema } from './hyperliquidSchema'
 
-
 export default function CreateHyperliquidWalletModal({
   isOpen,
   onDismiss,
@@ -89,7 +88,7 @@ export default function CreateHyperliquidWalletModal({
   const handleAccept = async () => {
     if (!!signatureData) return setSignatureData(undefined)
     if (!walletAccount || !walletProvider) return
-    if (walletAccount.address?.toLowerCase() !== apiKey?.toLowerCase()) {
+    if (walletAccount?.toLowerCase() !== apiKey?.toLowerCase()) {
       toast.error(
         <ToastBody
           title="Can not approve Hyperliquid Builder Fee"
@@ -123,7 +122,7 @@ export default function CreateHyperliquidWalletModal({
     }
     try {
       const signature = await signTypedData(
-        walletAccount?.address,
+        walletAccount,
         {
           domain,
           types,

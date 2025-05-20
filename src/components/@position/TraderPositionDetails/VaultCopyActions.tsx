@@ -73,7 +73,7 @@ export default function VaultCopyActions({ data }: { data: PositionData }) {
   })
 
   const onConfirm = async (currentCopyTrade: CopyTradeData) => {
-    if (submitting || !account?.address || !walletProvider || !symbol) return
+    if (submitting || !account || !walletProvider || !symbol) return
     const price = prices[symbol]
     if (price == null) {
       toast.error(<ToastBody title="Fetch price error" message="Can't find the price of this token" />)
@@ -82,7 +82,7 @@ export default function VaultCopyActions({ data }: { data: PositionData }) {
     setSubmitting(true)
     const _acceptablePrice = calculateAcceptablePrice(parseUnits(price.toFixed(10), 10), !data.isLong)
     if (data.id) {
-      signOpenPosition(account?.address, currentCopyTrade.id, data.id, _acceptablePrice.toString(), walletProvider)
+      signOpenPosition(account, currentCopyTrade.id, data.id, _acceptablePrice.toString(), walletProvider)
         .then((signature) => {
           if (!signature) {
             setSubmitting(false)

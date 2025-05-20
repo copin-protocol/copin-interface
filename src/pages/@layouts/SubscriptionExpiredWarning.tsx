@@ -62,7 +62,7 @@ export default function SubscriptionExpiredWarning() {
   if (!state) return null
 
   const { label, color } = getSubscriptionPlanConfigs(data?.tierId)
-  const imageSrc = data?.tierId === SubscriptionPlanEnum.PREMIUM ? crow : vipLogo
+  const imageSrc = data?.tierId === SubscriptionPlanEnum.PRO ? crow : vipLogo
 
   return (
     <Modal isOpen={state.show} onDismiss={onDismiss} dismissable={false} maxWidth="375px">

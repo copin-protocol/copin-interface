@@ -46,6 +46,7 @@ export default function useSettingChannels({
         QUERY_KEYS.GET_BOT_ALERT,
         QUERY_KEYS.GET_CUSTOM_ALERTS,
         QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID,
+        QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE,
       ])
       onSuccess?.()
     },
@@ -61,6 +62,7 @@ export default function useSettingChannels({
         QUERY_KEYS.GET_BOT_ALERT,
         QUERY_KEYS.GET_CUSTOM_ALERTS,
         QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID,
+        QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE,
       ])
       onSuccess?.()
     },
@@ -101,6 +103,7 @@ export default function useSettingChannels({
           QUERY_KEYS.GET_BOT_ALERT,
           QUERY_KEYS.GET_CUSTOM_ALERTS,
           QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID,
+          QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE,
         ])
         onSuccess?.()
       },

@@ -27,17 +27,26 @@ export function useOptionChange<TOption extends { id: any }>({
   defaultOption,
   callback,
   optionNameToBeDelete,
+  optionsAllowed,
 }: {
   optionName: string
   options: TOption[]
   defaultOption?: string
   callback?: () => void
   optionNameToBeDelete?: string[]
+  optionsAllowed?: string[]
 }) {
   const { searchParams, setSearchParams } = useSearchParams()
+  const paramOption = searchParams[optionName] as string
 
   const [currentOption, setCurrentOption] = useState<TOption>(
-    getInitOption({ initOption: (searchParams[optionName] as string) ?? defaultOption, options })
+    getInitOption({
+      initOption:
+        (!!optionsAllowed?.length && !optionsAllowed.includes(paramOption)
+          ? defaultOption ?? options[0]?.id
+          : paramOption) ?? defaultOption,
+      options,
+    })
   )
 
   const changeCurrentOption = useCallback(

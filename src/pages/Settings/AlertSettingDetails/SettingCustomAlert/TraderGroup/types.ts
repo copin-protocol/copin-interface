@@ -34,7 +34,7 @@ export interface TraderGroupHeaderProps {
 export interface TraderGroupSearchProps {
   totalTrader: number
   maxTraderAlert: number | undefined
-  isVIPUser: boolean | null | undefined
+  isEliteUser: boolean | null | undefined
   ignoreSelectTraders: { account: string; protocol: ProtocolEnum }[] | undefined
   searchText: string
   setSearchText: (value: string) => void

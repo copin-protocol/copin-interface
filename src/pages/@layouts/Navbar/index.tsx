@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import LoginAction from 'components/@auth/LoginAction'
 import Logo, { LogoText } from 'components/@ui/Logo'
 import { TradingEventStatusEnum } from 'entities/event'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -14,7 +15,6 @@ import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import ROUTES from 'utils/config/routes'
 import { generateHomeRoute } from 'utils/helpers/generateRoute'
-import { convertProtocolToParams } from 'utils/helpers/protocol'
 
 import { ProtocolsStatisticProvider } from '../ProtocolsStatisticContext'
 import HamburgerMenu from './HamburgetMenu'
@@ -27,7 +27,8 @@ import { LogoWrapper, Main, displayMobileStyles, hiddenMobileStyles } from './st
 export default function Navbar({ height }: { height: number }): ReactElement {
   const { isAuthenticated, disconnect, loading } = useAuthContext()
   const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
-  const protocolParams = convertProtocolToParams(selectedProtocols ?? [])
+  const { convertProtocolToParams } = useProtocolPermission()
+  const protocolParams = convertProtocolToParams({ protocols: selectedProtocols ?? [] })
 
   const [activeMobileMenu, setActiveMobileMenu] = useState(false)
 
@@ -38,7 +39,13 @@ export default function Navbar({ height }: { height: number }): ReactElement {
     <ProtocolsStatisticProvider>
       <Box
         as="header"
-        sx={{ zIndex: [101, 101, 101, 11], borderBottom: 'small', borderBottomColor: 'neutral4', pl: 3 }}
+        sx={{
+          zIndex: [101, 101, 101, 11],
+          borderBottom: 'small',
+          borderBottomColor: 'neutral4',
+          pl: 3,
+          bg: 'neutral7',
+        }}
       >
         <Box height={height} sx={{ position: 'relative' }}>
           <Menu visible={activeMobileMenu} onClose={() => setActiveMobileMenu(false)} hasEvents={hasEvents} />
@@ -104,13 +111,13 @@ export default function Navbar({ height }: { height: number }): ReactElement {
                   </NavLink>
                 </DesktopWrapper>
                 {isAuthenticated === true && <NavbarUser />}
-                {!isAuthenticated && <LoginAction />}
-                {loading && (
+                {isAuthenticated === false && <LoginAction />}
+                {loading && isAuthenticated === undefined && (
                   <Flex py={12} px={2} alignItems="center" sx={{ gap: 3 }}>
                     <Loading size={16} />
                     <Box>
                       <Type.CaptionBold display="block" lineHeight="13px">
-                        <Trans>CONNECTING WALLET...</Trans>
+                        <Trans>Logging in...</Trans>
                       </Type.CaptionBold>
                       <Button variant="ghostPrimary" px={0} py={0} my={0}>
                         <Type.Small lineHeight="13px" onClick={() => disconnect()}>

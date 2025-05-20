@@ -8,8 +8,12 @@ import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 
 import { linkGroupToBotAlertApi } from 'apis/alertApis'
+import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
+import PlanUpgradePrompt, { EnterpriseUpgradePrompt } from 'components/@subscription/PlanUpgradePrompt'
+import BadgeWithLimit from 'components/@ui/BadgeWithLimit'
 import ToastBody from 'components/@ui/ToastBody'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
+import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useCountdown from 'hooks/helpers/useCountdown'
 import { Button } from 'theme/Buttons'
@@ -18,10 +22,11 @@ import TelegramIcon from 'theme/Icons/TelegramIcon'
 import InputField from 'theme/InputField'
 import Modal from 'theme/Modal'
 import Tabs, { TabPane } from 'theme/Tab'
-import { Flex, IconBox, Type } from 'theme/base'
+import { Box, Flex, IconBox, Type } from 'theme/base'
 import { TELEGRAM_BOT_ALERT } from 'utils/config/constants'
-import { AlertTypeEnum } from 'utils/config/enums'
+import { AlertTypeEnum, SubscriptionFeatureEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { generateTelegramBotAlertUrl } from 'utils/helpers/generateRoute'
 import { getErrorMessage } from 'utils/helpers/handleError'
@@ -33,9 +38,13 @@ enum TabEnum {
 
 const LinkBotAlertModal = memo(function LinkBotAlertModalComponent() {
   const { lg } = useResponsive()
-  const { currentAlert, botAlertState, openingModal, stateExpiredTime, handleResetState, handleDismissModal } =
+  const { usage, currentAlert, botAlertState, openingModal, stateExpiredTime, handleResetState, handleDismissModal } =
     useBotAlertContext()
+  const { groupRequiredPlan, isAvailableGroupAlert, groupQuota } = useAlertPermission()
   const [tab, setTab] = useState(TabEnum.DIRECT)
+
+  const totalGroup = usage?.groupAlerts ?? 0
+  const isLimited = totalGroup >= groupQuota
 
   function onDismiss() {
     setTab(TabEnum.DIRECT)
@@ -78,12 +87,54 @@ const LinkBotAlertModal = memo(function LinkBotAlertModalComponent() {
         <TabPane key={TabEnum.DIRECT} tab={<Trans>DIRECT MESSAGE</Trans>}>
           <LinkBotComponent botAlertState={botAlertState} stateExpiredTime={stateExpiredTime} onSuccess={onSuccess} />
         </TabPane>
-        <TabPane key={TabEnum.GROUP} tab={<Trans>GROUP MESSAGE</Trans>}>
-          <LinkGroupComponent
-            alertType={currentAlert?.type}
-            customAlertId={currentAlert?.customAlertId}
-            onSuccess={onSuccess}
-          />
+        <TabPane
+          key={TabEnum.GROUP}
+          tab={
+            <Flex alignItems="center" sx={{ gap: 2 }}>
+              <Trans>GROUP MESSAGE</Trans>
+              {isAvailableGroupAlert ? (
+                <BadgeWithLimit total={totalGroup} limit={groupQuota} />
+              ) : (
+                <PlanUpgradeIndicator requiredPlan={groupRequiredPlan} />
+              )}
+            </Flex>
+          }
+        >
+          {isAvailableGroupAlert ? (
+            isLimited ? (
+              <Box p={24}>
+                <EnterpriseUpgradePrompt
+                  title={<Trans>Reach maximum quota ({groupQuota}) for this plan</Trans>}
+                  description={<Trans>Customize a pricing plan that scales to your business&apos; needs</Trans>}
+                  showTitleIcon
+                  showLearnMoreButton
+                  learnMoreSection={SubscriptionFeatureEnum.TRADER_ALERT}
+                />
+              </Box>
+            ) : (
+              <LinkGroupComponent
+                alertType={currentAlert?.type}
+                customAlertId={currentAlert?.customAlertId}
+                onSuccess={onSuccess}
+              />
+            )
+          ) : (
+            <Box p={24}>
+              <PlanUpgradePrompt
+                requiredPlan={groupRequiredPlan}
+                title={<Trans>Available from {SUBSCRIPTION_PLAN_TRANSLATION[groupRequiredPlan]} plans</Trans>}
+                description={
+                  <Trans>
+                    Stay in sync with your community. Send real-time alerts directly to your private Telegram group
+                  </Trans>
+                }
+                useLockIcon
+                showTitleIcon
+                showLearnMoreButton
+                learnMoreSection={SubscriptionFeatureEnum.TRADER_ALERT}
+              />
+            </Box>
+          )}
         </TabPane>
       </Tabs>
     </Modal>
@@ -119,7 +170,11 @@ function LinkGroupComponent({
           message={<Trans>This bot alert has been subscribed successfully</Trans>}
         />
       )
-      refetchQueries([QUERY_KEYS.GET_BOT_ALERT, QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID])
+      refetchQueries([
+        QUERY_KEYS.GET_BOT_ALERT,
+        QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID,
+        QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE,
+      ])
       onSuccess?.()
     },
     onError: (error: any) => {

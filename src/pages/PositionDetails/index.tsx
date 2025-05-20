@@ -14,6 +14,8 @@ import { DEFAULT_PROTOCOL, DYDX_TX_HASH_REGEX, EVM_TX_HASH_REGEX, SOLANA_TX_HASH
 import { PositionSideEnum, ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 
+import PermissionContainer from './PermissionContainer'
+
 export default function PositionDetailsPage() {
   const { protocol = DEFAULT_PROTOCOL, id } = useParams<{ protocol: ProtocolEnum; id: string }>()
   const { searchParams } = useSearchParams()
@@ -44,28 +46,30 @@ export default function PositionDetailsPage() {
   return (
     <SafeComponentWrapper>
       <CustomPageTitle title="Position Details" />
-      <Container maxWidth={{ lg: 1000 }} height="100%">
+      <Container maxWidth={{ lg: 1000 }} height="100%" sx={{ position: 'relative' }}>
         {/*{isLoading && <Loading />}*/}
-        {!isLoading && !account && !data?.length && !!txHash && (
-          <NoDataFound message={<Trans>No Position Found</Trans>} />
-        )}
-        {!isLoading && !!positionId && (
-          <TraderPositionDetails
-            protocol={protocol}
-            id={positionId}
-            isDrawer={false}
-            chartProfitId="position-detail-page"
-          />
-        )}
-        {!isLoading && !!txHash && !!account && !positionId && (
-          <PositionTxResults
-            txHash={txHash}
-            protocol={protocol}
-            account={account}
-            logId={logId}
-            title={<Trans>Recommend Results</Trans>}
-          />
-        )}
+        <PermissionContainer protocol={protocol} data={data?.[0]}>
+          {!isLoading && !account && !data?.length && !!txHash && (
+            <NoDataFound message={<Trans>No Position Found</Trans>} />
+          )}
+          {!isLoading && !!positionId && (
+            <TraderPositionDetails
+              protocol={protocol}
+              id={positionId}
+              isDrawer={false}
+              chartProfitId="position-detail-page"
+            />
+          )}
+          {!isLoading && !!txHash && !!account && !positionId && (
+            <PositionTxResults
+              txHash={txHash}
+              protocol={protocol}
+              account={account}
+              logId={logId}
+              title={<Trans>Recommend Results</Trans>}
+            />
+          )}
+        </PermissionContainer>
       </Container>
     </SafeComponentWrapper>
   )

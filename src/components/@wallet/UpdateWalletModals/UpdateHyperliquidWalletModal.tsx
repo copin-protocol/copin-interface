@@ -92,7 +92,7 @@ export default function UpdateHyperliquidWalletModal({
   const handleAccept = async () => {
     if (!!signatureData) return setSignatureData(undefined)
     if (!walletAccount || !walletProvider) return
-    if (walletAccount.address?.toLowerCase() !== apiKey?.toLowerCase()) {
+    if (walletAccount?.toLowerCase() !== apiKey?.toLowerCase()) {
       toast.error(
         <ToastBody
           title="Can not approve Hyperliquid Builder Fee"
@@ -126,7 +126,7 @@ export default function UpdateHyperliquidWalletModal({
     }
     try {
       const signature = await signTypedData(
-        walletAccount?.address,
+        walletAccount,
         {
           domain,
           types,

@@ -4,9 +4,12 @@ import { immer } from 'zustand/middleware/immer'
 
 import { getListEvent } from 'apis/event'
 import { getMarketData } from 'apis/markets'
+import { getPermissionsApi } from 'apis/permissionApis'
 import { getSystemConfigApi } from 'apis/systemApis'
 import { EventDetailsData } from 'entities/event'
+import { PermissionData } from 'entities/permission'
 import { SubscriptionLimitData, SystemAlertData, VolumeLimitData } from 'entities/system'
+import { SUBSCRIPTION_PERMISSION_DATA } from 'hooks/features/subscription/data'
 import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -17,6 +20,7 @@ interface SystemConfigState {
   subscriptionLimit: SubscriptionLimitData | undefined
   eventId: string | undefined
   events: EventDetailsData[] | undefined
+  permission: PermissionData | undefined
   marketConfigs: {
     getSymbolByIndexToken?: ({
       protocol,
@@ -220,12 +224,12 @@ export function SystemConfigInitializer() {
   })
 
   useQuery(
-    [QUERY_KEYS.GET_SYSTEM_CONFIG, QUERY_KEYS.GET_ALL_EVENTS, QUERY_KEYS.GET_PLANS_LIMIT],
-    () => Promise.all([getSystemConfigApi(), getListEvent()]),
+    [QUERY_KEYS.GET_SYSTEM_CONFIG, QUERY_KEYS.GET_ALL_EVENTS, QUERY_KEYS.GET_PLANS_LIMIT, QUERY_KEYS.GET_PERMISSIONS],
+    () => Promise.all([getSystemConfigApi(), getListEvent(), getPermissionsApi()]),
     {
       retry: 0,
       onSuccess: (data) => {
-        const [systemConfig, events] = data
+        const [systemConfig, events, permissions] = data
         const subscriptionLimit = systemConfig.planSubscriptionLimitConfig.reduce((acc, item) => {
           acc[item.plan] = item
           return acc
@@ -237,6 +241,7 @@ export function SystemConfigInitializer() {
           subscriptionLimit,
           events,
           eventId: events?.[0]?.id,
+          permission: permissions,
         }
         setState(contextValue)
       },
@@ -254,6 +259,7 @@ export const useSystemConfigStore = create<SystemConfigState & SystemConfigModif
     eventId: undefined,
     events: undefined,
     marketConfigs: {},
+    permission: SUBSCRIPTION_PERMISSION_DATA,
     setState(newState) {
       set((state) => {
         state = { ...state, ...newState }
@@ -278,8 +284,8 @@ export function getMaxVolumeCopy({
   //   if (plan === SubscriptionPlanEnum.PREMIUM) return volumeLimitData.volumePremiumReferral
   //   return volumeLimitData.volumeReferral
   // } else {
-  if (plan === SubscriptionPlanEnum.VIP) return volumeLimitData.volumeVipReferral
-  if (plan === SubscriptionPlanEnum.PREMIUM) return volumeLimitData.volumePremiumReferral
+  if (plan === SubscriptionPlanEnum.ELITE) return volumeLimitData.volumeVipReferral
+  if (plan === SubscriptionPlanEnum.PRO) return volumeLimitData.volumePremiumReferral
   return volumeLimitData.volumeWoReferral
   // }
 }

@@ -22,7 +22,7 @@ export const FeeRebateContext = createContext({} as FeeRebateContextValues)
 
 export function FeeRebateProvider({ children }: { children: ReactNode }) {
   const { account } = useAuthContext()
-  const { info, isLoading: isLoadingFeeRebate, reloadFeeRebate } = useFeeRebate({ account: account?.address })
+  const { info, isLoading: isLoadingFeeRebate, reloadFeeRebate } = useFeeRebate({ account })
   const {
     histories,
     isLoading: isLoadingHistories,

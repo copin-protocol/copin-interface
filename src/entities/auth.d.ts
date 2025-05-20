@@ -19,6 +19,10 @@ export interface VerifyLoginResponse {
   referralCode?: string
   createdAt: string
   updatedAt: string
+  subscription?: {
+    plan: SubscriptionPlanEnum
+    expiredTime: string
+  }
 }
 
 export interface RegisterResponse {

@@ -23,15 +23,14 @@ const useRequiredChain = ({
   dialogMode?: boolean
   onDismiss?: () => void
 } = {}) => {
-  const { isAuthenticated, connect, profile, handleSwitchAccount } = useAuthContext()
+  const { isAuthenticated, connect, profile, reconnectWallet, walletDisconnected } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
   const { walletAccount } = useWeb3()
   const { chain, setChain } = useChain()
   const [alert, setAlert] = useState<ReactNode>()
   const { dialog, showDialog, hideDialog } = useGlobalDialog()
   const requiredChain = getChainMetadata(chainId)
-  const isInvalidAccount = !!walletAccount && profile?.username?.toLowerCase() !== walletAccount?.address?.toLowerCase()
-  const title = isInvalidAccount ? (
+  const title = walletDisconnected ? (
     <Trans>The account in your web3 wallet does not match the account currently in use in the app</Trans>
   ) : (
     <Trans>This feature only supports on {requiredChain.label}</Trans>
@@ -43,17 +42,17 @@ const useRequiredChain = ({
       return
     }
     if (!walletAccount) {
-      connect?.({})
+      connect?.()
       // onDismiss?.()
       return
     }
-    if (isInvalidAccount) {
-      handleSwitchAccount()
+    if (walletDisconnected) {
+      reconnectWallet()
       return
     }
-    setChain({ chainId: requiredChain.id }).catch((error) => {
-      console.error('Failed to switch chain', error)
-      connect?.({})
+    setChain(requiredChain.id).catch((err) => {
+      console.error('Failed to switch chain', err)
+      connect?.()
     })
   }
 
@@ -66,7 +65,7 @@ const useRequiredChain = ({
             {title}
           </Type.Caption>
           <Button variant="primary" width={200} onClick={handleSubmit}>
-            {isInvalidAccount ? 'Switch Account' : 'Switch Chain'}
+            {walletDisconnected ? 'Connect Wallet' : 'Switch Chain'}
           </Button>
         </Flex>
       </Box>
@@ -92,11 +91,11 @@ const useRequiredChain = ({
 
       // </Flex>
     )
-  }, [requiredChain, isInvalidAccount])
+  }, [requiredChain, walletDisconnected])
 
   useEffect(() => {
     if (!enabled) return
-    if (chain.id !== requiredChain.id || isInvalidAccount) {
+    if (chain.id !== requiredChain.id || walletDisconnected) {
       if (dialogMode) {
         if (dialog?.id !== 'SWITCH_CHAIN')
           showDialog({
@@ -114,7 +113,7 @@ const useRequiredChain = ({
                   Cancel
                 </Button>
                 <Button variant="primary" onClick={handleSubmit}>
-                  {isInvalidAccount ? 'Switch Account' : 'Switch Chain'}
+                  {walletDisconnected ? 'Connect Wallet' : 'Switch Chain'}
                 </Button>
               </Flex>
             ),
@@ -129,9 +128,10 @@ const useRequiredChain = ({
         setAlert(undefined)
       }
     }
-  }, [chain, dialog, enabled, requiredChain, isInvalidAccount])
+  }, [chain, dialog, enabled, requiredChain, walletDisconnected])
+
   return {
-    isValid: !isInvalidAccount && chain.id === requiredChain.id,
+    isValid: !walletDisconnected && chain.id === requiredChain.id,
     alert,
   }
 }

@@ -1,27 +1,30 @@
 import { Trans } from '@lingui/macro'
 import { Gear, Plus, Wrench } from '@phosphor-icons/react'
 import React, { useMemo } from 'react'
-import { Link } from 'react-router-dom'
 
+import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
+import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import UpgradeButton from 'components/@subscription/UpgradeButton'
+import BadgeWithLimit from 'components/@ui/BadgeWithLimit'
 import InputSearchText from 'components/@ui/InputSearchText'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { BotAlertData } from 'entities/alert'
 import useAlertDashboardContext from 'hooks/features/alert/useAlertDashboardContext'
 import Badge from 'theme/Badge'
-import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { PaginationWithSelect } from 'theme/Pagination'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
-import ROUTES from 'utils/config/routes'
+import { SubscriptionFeatureEnum } from 'utils/config/enums'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 
 import NoCustomAlert from './NoCustomAlert'
 import { AlertActions, AlertChannel, AlertName, AlertStatus, AlertStatusAction, AlertType } from './config'
 
-
 export default function DesktopView() {
   const {
+    usage,
     systemAlerts,
     customAlerts,
     loadingAlerts,
@@ -29,8 +32,9 @@ export default function DesktopView() {
     maxTraderAlert,
     totalCustoms,
     maxCustoms,
-    isLimited,
-    isVIPUser,
+    customRequiredPlan,
+    userCustomNextPlan,
+    isAvailableCustomAlert,
     currentPage,
     changeCurrentPage,
     keyword,
@@ -53,7 +57,7 @@ export default function DesktopView() {
         key: 'name',
         style: { minWidth: '200px', maxWidth: '200px' },
         render: (item) => (
-          <AlertName data={item} totalTraders={traderAlerts?.meta?.total ?? 0} maxTraders={maxTraderAlert ?? 0} />
+          <AlertName data={item} totalTraders={usage?.watchedListAlerts ?? 0} maxTraders={maxTraderAlert ?? 0} />
         ),
       },
       {
@@ -157,13 +161,23 @@ export default function DesktopView() {
               tableHeadSx={{
                 '& th': {
                   py: 2,
-                  pr: 2,
+                },
+                '& th:first-child': {
+                  pl: 3,
+                },
+                '& th:last-child': {
+                  pr: 3,
                 },
               }}
               tableBodySx={{
                 '& td': {
                   height: 40,
-                  pr: 2,
+                },
+                '& td:first-child': {
+                  pl: 3,
+                },
+                '& td:last-child': {
+                  pr: 3,
                 },
               }}
             />
@@ -189,51 +203,80 @@ export default function DesktopView() {
                 title={
                   <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2 }}>
                     <Trans>CUSTOM ALERT</Trans>
-                    <Badge count={`${totalCustoms}/${maxCustoms}`} />
-                    {!isVIPUser && isLimited ? (
-                      <Link to={ROUTES.SUBSCRIPTION.path}>
-                        <Button size="xs" variant="outlinePrimary">
-                          <Trans>Upgrade</Trans>
-                        </Button>
-                      </Link>
-                    ) : (
-                      <ButtonWithIcon
-                        size="xs"
-                        variant="outlinePrimary"
-                        icon={<Plus />}
-                        disabled={isLimited}
-                        onClick={handleCreateCustomAlert}
-                      >
-                        <Type.Caption>Create New Alert</Type.Caption>
-                      </ButtonWithIcon>
+                    {maxCustoms > 0 && (
+                      <BadgeWithLimit
+                        total={totalCustoms}
+                        limit={maxCustoms}
+                        tooltipContent={
+                          userCustomNextPlan && (
+                            <PlanUpgradePrompt
+                              requiredPlan={userCustomNextPlan}
+                              title={<Trans>You have exceeded your custom alert limit for the current plan.</Trans>}
+                              confirmButtonVariant="textPrimary"
+                              titleSx={{ textTransform: 'none !important', fontWeight: 400 }}
+                            />
+                          )
+                        }
+                        clickableTooltip
+                      />
                     )}
                   </Flex>
+                }
+                suffix={
+                  isAvailableCustomAlert ? (
+                    <UpgradeButton
+                      requiredPlan={userCustomNextPlan ?? customRequiredPlan}
+                      showIcon={false}
+                      showCurrentPlan
+                    />
+                  ) : !!customAlerts?.meta?.total ? (
+                    <PlanUpgradeIndicator
+                      requiredPlan={customRequiredPlan}
+                      title={
+                        <Type.Caption color="neutral2" sx={{ textTransform: 'initial' }}>
+                          <Trans>Available from {SUBSCRIPTION_PLAN_TRANSLATION[customRequiredPlan]} plans</Trans>
+                        </Type.Caption>
+                      }
+                      learnMoreSection={SubscriptionFeatureEnum.TRADER_ALERT}
+                    />
+                  ) : (
+                    <></>
+                  )
                 }
                 sx={{ mb: 0 }}
               />
             </Flex>
-            {setKeyword && (
-              <Flex
-                pl={3}
-                height={40}
-                alignItems="center"
-                width="200px"
-                sx={{ borderLeft: 'small', borderColor: 'neutral4' }}
-              >
-                <InputSearchText
-                  placeholder="SEARCH ALERT NAME"
-                  sx={{
-                    width: '100%',
-                    border: 'none',
-                    backgroundColor: 'transparent !important',
-                    p: 0,
-                  }}
-                  searchText={keyword ?? ''}
-                  setSearchText={setKeyword}
-                />
-              </Flex>
-            )}
           </Flex>
+          {isAvailableCustomAlert && (
+            <Flex alignItems="center" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
+              {setKeyword && (
+                <Flex
+                  px={3}
+                  height={40}
+                  alignItems="center"
+                  width="220px"
+                  sx={{ borderRight: 'small', borderColor: 'neutral4' }}
+                >
+                  <InputSearchText
+                    placeholder="SEARCH ALERT NAME"
+                    sx={{
+                      width: '100%',
+                      border: 'none',
+                      backgroundColor: 'transparent !important',
+                      p: 0,
+                    }}
+                    searchText={keyword ?? ''}
+                    setSearchText={setKeyword}
+                  />
+                </Flex>
+              )}
+              <Flex flex={1} pr={3} justifyContent="flex-end">
+                <ButtonWithIcon size="xs" variant="outlinePrimary" icon={<Plus />} onClick={handleCreateCustomAlert}>
+                  <Type.Caption>Create New Alert</Type.Caption>
+                </ButtonWithIcon>
+              </Flex>
+            </Flex>
+          )}
           {!!customAlerts?.data?.length && (
             <Flex
               sx={{
@@ -265,7 +308,25 @@ export default function DesktopView() {
               />
             </Flex>
           )}
-          {!customAlerts?.data?.length && <NoCustomAlert />}
+          {!isAvailableCustomAlert && !customAlerts?.meta?.total && (
+            <PlanUpgradePrompt
+              requiredPlan={customRequiredPlan}
+              title={<Trans>Available from {SUBSCRIPTION_PLAN_TRANSLATION[customRequiredPlan]} plans</Trans>}
+              description={<Trans>Build your own alert rules.Only get notified when it really matters.</Trans>}
+              noLoginTitle={<Trans>Login to view more information</Trans>}
+              showTitleIcon
+              showLearnMoreButton
+              useLockIcon
+              learnMoreSection={SubscriptionFeatureEnum.TRADER_ALERT}
+              titleSx={{
+                pt: 4,
+              }}
+              buttonsWrapperSx={{
+                pb: 4,
+              }}
+            />
+          )}
+          {isAvailableCustomAlert && !customAlerts?.data?.length && <NoCustomAlert />}
           {currentPage && changeCurrentPage && (
             <Box sx={{ backgroundColor: 'neutral7' }}>
               <PaginationWithSelect

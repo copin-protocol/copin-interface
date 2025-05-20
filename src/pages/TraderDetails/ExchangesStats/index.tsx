@@ -65,13 +65,13 @@ export default function ExchangesStats() {
   const { data: exchangeStats, isLoading: isLoadingExchangeStats } = useQuery(
     [QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address],
     () => getTraderExchangeStatistic({ account: address }),
-    { keepPreviousData: true }
+    { keepPreviousData: true, retry: 0 }
   )
 
   const { data: multiExchangeStats, isLoading: isLoadingMultiExchangeStats } = useQuery(
     [QUERY_KEYS.GET_TRADER_MULTI_EXCHANGE_STATISTIC, address, timeOption.id, myProfile?.id],
     () => getTraderMultiExchangeStatistic({ account: address, params: { statisticType: timeOption.id } }),
-    { keepPreviousData: true }
+    { keepPreviousData: true, retry: 0 }
   )
 
   const comparedData =

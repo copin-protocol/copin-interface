@@ -1,23 +1,21 @@
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { ProtocolFilter } from 'components/@widgets/ProtocolFilter'
 import SearchAllResults from 'components/@widgets/SearchAllResults'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useSearchTraders from 'hooks/features/trader/useSearchTraders'
-import useGetCopyTradeProtocols from 'hooks/helpers/useGetCopyTradeProtocols'
-import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import { useSearchProtocolFilter } from 'hooks/store/useSearchProtocolFilter'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 
 const SearchTraderPage = () => {
-  const protocolOptions = useGetProtocolOptions()
-  const allowList = useGetCopyTradeProtocols()
+  const { allowedCopyTradeProtocols, releasedProtocols } = useProtocolPermission()
 
   const {
     selectedProtocols,
     checkIsSelected: checkIsProtocolChecked,
     handleToggle: handleToggleProtocol,
     setSelectedProtocols,
-  } = useSearchProtocolFilter({ defaultSelects: protocolOptions.map((_p) => _p.id) })
+  } = useSearchProtocolFilter({ defaultSelects: releasedProtocols })
   const {
     keyword,
     searchTraders,
@@ -88,13 +86,13 @@ const SearchTraderPage = () => {
             <Type.BodyBold flex={1}>
               All results for <Type.BodyBold color="primary1">{keyword}</Type.BodyBold>
             </Type.BodyBold>
-            <Box sx={{ width: '1px', height: '48px', bg: 'neutral4' }} />
+            <Box sx={{ width: '1px', height: '100%', bg: 'neutral4' }} />
             <ProtocolFilter
               selectedProtocols={selectedProtocols}
               setSelectedProtocols={setSelectedProtocols}
               checkIsProtocolChecked={checkIsProtocolChecked}
               handleToggleProtocol={handleToggleProtocol}
-              allowList={allowList}
+              allowList={allowedCopyTradeProtocols}
             />
           </Flex>
           <Box sx={{ flex: '1' }}>

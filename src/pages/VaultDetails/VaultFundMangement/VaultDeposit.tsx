@@ -72,7 +72,7 @@ const VaultDeposit = ({
   const [submitting, setSubmitting] = useState(false)
   const { isTokenAllowanceEnough, approving, approveToken } = useERC20Approval({
     token: usdAsset.address,
-    account: walletAccount?.address,
+    account: walletAccount,
     spender: smartWallet,
   })
 
@@ -92,9 +92,9 @@ const VaultDeposit = ({
   const { data: usdAssetBalance, refetch: refetchUSDBalance } = useContractQuery<number>(
     usdAssetContract,
     'balanceOf',
-    [walletAccount?.address],
+    [walletAccount],
     {
-      enabled: !!walletAccount?.address,
+      enabled: !!walletAccount,
       select(data) {
         return Number(formatUnits(data, usdAsset.decimals))
       },

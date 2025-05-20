@@ -41,7 +41,7 @@ export default function LiteCopyTrades({
         )}
         {!loading && !copyTrades?.length && <NoDataOrSelect type="noTraders" />}
       </Box>
-      {subscriptionPlan === SubscriptionPlanEnum.BASIC && <CtaPremium />}
+      {subscriptionPlan === SubscriptionPlanEnum.FREE && <CtaPremium />}
     </Flex>
   )
 }

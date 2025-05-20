@@ -27,7 +27,7 @@ const SectionTitle = ({
     | 'stretch'
 }) => {
   return (
-    <Flex width="100%" alignItems="center" justifyContent={suffixPlacement} sx={{ gap: 2 }}>
+    <Flex width="100%" alignItems="center" justifyContent={suffixPlacement} flexWrap="wrap" sx={{ gap: 2 }}>
       <Flex alignItems="center" sx={{ gap: 2, mb: 12, ...(sx ?? {}) }}>
         <IconBox color={iconColor} icon={<Icon size={20} weight="fill" />} />
         <Type.Body>{title}</Type.Body>

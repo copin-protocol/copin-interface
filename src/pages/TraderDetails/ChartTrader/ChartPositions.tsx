@@ -10,6 +10,7 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import { PositionData } from 'entities/trader.d'
+import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox } from 'theme/base'
 import { DEFAULT_PROTOCOL, MAX_PAGE_LIMIT } from 'utils/config/constants'
@@ -18,6 +19,7 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import { TokenOptionProps } from 'utils/config/trades'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
+import PermissionContainer from './PermissionContainer'
 import { ListTokenStatistic, TableTokenStatistic } from './TokenStatistic'
 import { useQueryInfinitePositions } from './useQueryInfinitePositions'
 
@@ -37,6 +39,7 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
   isExpanded: boolean
   handleExpand: () => void
 }) {
+  const { isEnableTokenStats } = useTraderProfilePermission({ protocol })
   const [currentPair, setCurrentPair] = useState<string | undefined>()
   const currencyOption = useMemo(() => {
     if (!currentPair) return undefined
@@ -49,10 +52,10 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
     return result
   }, [currentPair])
   const { data: tokensStatistic, isLoading: loadingTokenStatistic } = useQuery(
-    [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, account],
+    [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, account, isEnableTokenStats],
     () => getTraderTokensStatistic({ protocol, account }),
     {
-      enabled: !!account && !!protocol,
+      enabled: !!account && !!protocol && isEnableTokenStats,
       retry: 0,
       keepPreviousData: true,
       // onSuccess(data) {
@@ -93,7 +96,7 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
   }, [closedPositions, currentPair, openingPositions, tokensStatistic?.data])
 
   return (
-    <Flex sx={{ flexDirection: 'column', height: '100%', width: '100%' }}>
+    <Flex sx={{ flexDirection: 'column', height: '100%', width: '100%', position: 'relative' }}>
       <Flex
         height={44}
         px={3}
@@ -106,7 +109,7 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
         }}
       >
         <SectionTitle icon={Coins} title={<Trans>TOKEN PREFERENCES</Trans>} sx={{ mb: 0 }} />
-        {xl && (
+        {xl && isEnableTokenStats && (
           <IconBox
             icon={isExpanded ? <ArrowsIn size={20} /> : <ArrowsOutSimple size={20} />}
             role="button"
@@ -124,61 +127,86 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
           />
         )}
       </Flex>
-      {loadingTokenStatistic ? (
-        <Loading />
-      ) : !tokensStatistic?.data?.length ? (
-        <NoDataFound message="No token preference statistic" />
-      ) : (
-        <Flex
-          sx={{
-            flex: '1 0 0',
-            flexDirection: isExpanded ? 'row' : 'column',
-            width: '100%',
-            bg: isExpanded ? 'neutral7' : 'transparent',
-          }}
-        >
-          <ChartPositions
-            sx={{
-              flex: '1 0 0',
-              overflow: 'hidden',
-              height: '100%',
-              order: isExpanded ? 2 : 1,
-            }}
-            protocol={protocol ?? DEFAULT_PROTOCOL}
-            timeframeOption={TIME_FILTER_OPTIONS[1]}
-            currencyOption={currencyOption}
-            openingPositions={openingPositions ?? []}
-            closedPositions={closedPositions ?? []}
-            fetchNextPage={handleFetchClosedPositions}
-            hasNextPage={hasNextClosedPositions}
-            isLoadingClosed={isLoadingClosed}
-            account={account}
-            handleExpand={handleExpand}
-            isExpanded={isExpanded}
-          />
-          <Box
-            width={isExpanded ? 500 : 'auto'}
-            height={isExpanded ? '100%' : 70}
-            order={isExpanded ? 1 : 2}
-            sx={{
-              flexShrink: 0,
-              bg: 'neutral8',
-              ...(isExpanded
-                ? {
-                    borderRight: 'small',
-                    borderRightColor: 'neutral4',
-                  }
-                : {}),
-            }}
-          >
-            {isExpanded ? (
-              <TableTokenStatistic data={tokensStatistic?.data} currentPair={currentPair} changePair={setCurrentPair} />
-            ) : (
-              <ListTokenStatistic data={tokensStatistic?.data} currentPair={currentPair} changePair={setCurrentPair} />
-            )}
-          </Box>
+      <PermissionContainer>
+        <Flex sx={{ flexDirection: 'column', flex: '1 0 0', position: 'relative' }}>
+          {/*<BlurMask isBlur={!isAvailableFeature}>*/}
+          {/*  <PlanUpgradePrompt*/}
+          {/*    requiredPlan={requiredPlan}*/}
+          {/*    title={<Trans>Available on Pro & Elite plans</Trans>}*/}
+          {/*    description={<Trans>Know exactly which tokens this trader dominates, and which they don’t</Trans>}*/}
+          {/*    noLoginTitle={<Trans>Login to view more information</Trans>}*/}
+          {/*    showTitleIcon*/}
+          {/*    showLearnMoreButton*/}
+          {/*    showNoLoginTitleIcon*/}
+          {/*    requiredLogin*/}
+          {/*  />*/}
+          {/*</BlurMask>*/}
+          {loadingTokenStatistic ? (
+            <Loading />
+          ) : !tokensStatistic?.data?.length ? (
+            <NoDataFound message="No token preference statistic" />
+          ) : (
+            <Flex
+              sx={{
+                flex: '1 0 0',
+                flexDirection: isExpanded ? 'row' : 'column',
+                width: '100%',
+                bg: isExpanded ? 'neutral7' : 'transparent',
+                position: 'relative',
+              }}
+            >
+              <ChartPositions
+                sx={{
+                  flex: '1 0 0',
+                  overflow: 'hidden',
+                  height: '100%',
+                  order: isExpanded ? 2 : 1,
+                }}
+                protocol={protocol ?? DEFAULT_PROTOCOL}
+                timeframeOption={TIME_FILTER_OPTIONS[1]}
+                currencyOption={currencyOption}
+                openingPositions={openingPositions ?? []}
+                closedPositions={closedPositions ?? []}
+                fetchNextPage={handleFetchClosedPositions}
+                hasNextPage={hasNextClosedPositions}
+                isLoadingClosed={isLoadingClosed}
+                account={account}
+                handleExpand={handleExpand}
+                isExpanded={isExpanded}
+              />
+              <Box
+                width={isExpanded ? 500 : 'auto'}
+                height={isExpanded ? '100%' : 70}
+                order={isExpanded ? 1 : 2}
+                sx={{
+                  flexShrink: 0,
+                  bg: 'neutral8',
+                  ...(isExpanded
+                    ? {
+                        borderRight: 'small',
+                        borderRightColor: 'neutral4',
+                      }
+                    : {}),
+                }}
+              >
+                {isExpanded ? (
+                  <TableTokenStatistic
+                    data={tokensStatistic?.data}
+                    currentPair={currentPair}
+                    changePair={setCurrentPair}
+                  />
+                ) : (
+                  <ListTokenStatistic
+                    data={tokensStatistic?.data}
+                    currentPair={currentPair}
+                    changePair={setCurrentPair}
+                  />
+                )}
+              </Box>
+            </Flex>
+          )}
         </Flex>
-      )}
+      </PermissionContainer>
     </Flex>
   )
 })

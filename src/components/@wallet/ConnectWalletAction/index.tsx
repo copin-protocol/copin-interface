@@ -7,8 +7,8 @@ import WaveHandIcon from 'theme/Icons/WaveHandIcon'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 
 export default function ConnectWalletAction({
-  title = 'To start, you need to connect your wallet',
-  description = 'Connect your wallet is like “logging in” to Web3',
+  title = 'To start, you need to login',
+  description = 'You can login with your email or web3 wallet',
 }: {
   title?: ReactNode
   description?: ReactNode
@@ -22,7 +22,7 @@ export default function ConnectWalletAction({
       return
     }
     if (!account) {
-      connect?.({})
+      connect?.()
       return
     }
   }
@@ -43,7 +43,7 @@ export default function ConnectWalletAction({
         variant="primary"
         onClick={handleConnect}
       >
-        Connect Wallet
+        Login
       </Button>
     </Box>
   )

@@ -296,7 +296,7 @@ function PerformanceItem({
   return (
     <Flex flex="1" sx={{ flexDirection: 'column', alignItems: 'center' }}>
       {tooltipContent ? (
-        <LabelWithTooltip id={tooltipId.current} tooltip={tooltipContent} sx={{ fontSize: '12px', lineHeight: '16px' }}>
+        <LabelWithTooltip id={tooltipId.current} tooltip={tooltipContent} sx={{ fontSize: '10px', lineHeight: '16px' }}>
           {label}
         </LabelWithTooltip>
       ) : (
@@ -319,7 +319,9 @@ function DetailsTraderAddress({ traderData }: { traderData: ResponseTraderData }
     <Flex sx={{ width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       <Box
         mb={12}
-        onClick={() => setTrader({ address, protocol, type }, ['copy-trade'])}
+        onClick={() =>
+          setTrader({ address, protocol, type }, { disabledActions: ['copy-trade'], disabledLinkAccount: true })
+        }
         sx={{
           '&:hover': { ...QUICKVIEW_HOVER_STYLE, '& > *': { opacity: 0.25, transition: '0.3s' } },
         }}

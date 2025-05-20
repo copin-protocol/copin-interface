@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { SystemStyleObject } from '@styled-system/css'
 import { useResponsive } from 'ahooks'
 import { useCallback, useMemo, useState } from 'react'
@@ -6,10 +7,13 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
 import { getProtocolsStatistic } from 'apis/positionApis'
+import SubscriptionIcon from 'components/@subscription/SubscriptionIcon'
+import UpgradeButton from 'components/@subscription/UpgradeButton'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import InputSearchProtocols from 'components/@widgets/ProtocolFilter/InputSearchProtocols'
 import ListProtocolSelection from 'components/@widgets/ProtocolFilter/ListProtocolSelection'
 import ProtocolSortOptions from 'components/@widgets/ProtocolFilter/ProtocolSortOptions'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useDebounce from 'hooks/helpers/useDebounce'
 import useGetProtocolOptions from 'hooks/helpers/useGetProtocolOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -20,9 +24,11 @@ import { useProtocolSortByStore } from 'hooks/store/useProtocolSortBy'
 import Dropdown from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
 import { SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
-import { ProtocolEnum, ProtocolSortByEnum } from 'utils/config/enums'
+import { ProtocolEnum, ProtocolSortByEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { ProtocolOptionProps } from 'utils/config/protocols'
+import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
+import { getItemsAndRequiredPlan } from 'utils/helpers/transform'
 import { logEventSwitchProtocol } from 'utils/tracking/event'
 
 type SwitchProtocolComponentProps = {
@@ -69,11 +75,17 @@ function SwitchProtocolsComponent({
   onSwitch,
   showIcon = false,
 }: SwitchProtocolComponentProps & { onSwitch: (() => void) | ((protocol: ProtocolEnum) => void) }) {
-  const { md, xl } = useResponsive()
+  const { md } = useResponsive()
   const { myProfile } = useMyProfile()
   const { protocolRecentSearch, addProtocolRecentSearch } = useProtocolRecentSearch()
-  const { protocol } = useGlobalStore()
+  const { protocol: storedProtocol } = useGlobalStore()
+  const { allowedSelectProtocols, pagePermission } = useProtocolPermission()
+  const protocol = allowedSelectProtocols.find((p) => p === storedProtocol) ?? allowedSelectProtocols[0]
   const protocolOptions = useGetProtocolOptions()
+
+  const protocolsByPlan = useMemo(() => {
+    return getItemsAndRequiredPlan('protocolAllowed', pagePermission)
+  }, [pagePermission])
 
   const currentProtocolOption = protocolOptions.find((option) => option.id === protocol) ?? protocolOptions[0]
   const handleSwitchProtocol = useCallback(
@@ -139,6 +151,8 @@ function SwitchProtocolsComponent({
     return protocol === currentProtocolOption.id
   }
 
+  const allowedOptions = options.filter((option) => allowedSelectProtocols.includes(option.id))
+
   const renderProtocols = () => {
     return (
       <Box>
@@ -174,14 +188,49 @@ function SwitchProtocolsComponent({
         </Box>
 
         <Box p={2}>
-          <ListProtocolSelection
-            options={options}
-            checkIsSelected={checkIsSelected}
-            protocolsStatistic={protocolsStatistic}
-            handleToggle={handleSelectProtocol}
-            hasCheckBox={false}
-            itemActiveSx={{ bg: 'neutral5' }}
-          />
+          <UpgradeButton sx={{ my: 2 }} showCurrentPlan showIcon={false} />
+          {(allowedOptions.length > 0 || options.length === 0) && (
+            <ListProtocolSelection
+              options={allowedOptions}
+              checkIsSelected={checkIsSelected}
+              protocolsStatistic={protocolsStatistic}
+              handleToggle={handleSelectProtocol}
+              itemActiveSx={{ bg: 'neutral4' }}
+              hasCheckBox={false}
+            />
+          )}
+          {!!pagePermission &&
+            Object.keys(pagePermission).map((key) => {
+              const availableProtocols = Object.keys(protocolsByPlan || {}).filter(
+                (k) => protocolsByPlan[k] === key && !allowedSelectProtocols.includes(k as ProtocolEnum)
+              )
+
+              if (!availableProtocols.length) return <></>
+
+              const availableOptions = options.filter((option) => availableProtocols.includes(option.id))
+
+              if (!availableOptions.length) return <></>
+
+              return (
+                <Box key={key}>
+                  <Flex sx={{ gap: 1, mt: 3, mb: 2, alignItems: 'center' }}>
+                    <Type.CaptionBold>
+                      <Trans>From</Trans>
+                    </Type.CaptionBold>
+                    <SubscriptionIcon plan={key as SubscriptionPlanEnum} />
+                    <Type.CaptionBold>{SUBSCRIPTION_PLAN_TRANSLATION[key]}</Type.CaptionBold>
+                  </Flex>
+                  <ListProtocolSelection
+                    options={availableOptions}
+                    checkIsSelected={checkIsSelected}
+                    protocolsStatistic={protocolsStatistic}
+                    handleToggle={handleSelectProtocol}
+                    isAvailable={false}
+                    hasCheckBox={false}
+                  />
+                </Box>
+              )
+            })}
         </Box>
       </Box>
     )
@@ -213,7 +262,7 @@ function SwitchProtocolsComponent({
       //       }
       //     : { borderRadius: 0, border: 'none', p: 0, ...(buttonSx ?? {}) }
       // }
-      menuSx={{ width: '100vw', maxWidth: '900px', maxHeight: '80svh', py: 2, overflowY: 'auto' }}
+      menuSx={{ width: '100vw', maxWidth: '900px', maxHeight: '60svh', py: 2, overflowY: 'auto' }}
       sx={{ minWidth: 'fit-content', ...(sx ?? {}) }}
       hasArrow={true}
       dismissible={false}

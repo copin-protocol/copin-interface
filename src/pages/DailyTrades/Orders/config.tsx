@@ -29,55 +29,6 @@ import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
-export const SEARCH_ORDERS_INDEX = 'copin.orders'
-export const SEARCH_FUNCTION_NAME = 'searchOrders'
-
-export const SEARCH_DAILY_ORDERS_QUERY = gql`
-  query Search($index: String!, $body: SearchPayload!) {
-    ${SEARCH_FUNCTION_NAME}(index: $index, body: $body) {
-      data  {
-        id
-        account
-        key
-        protocol
-        txHash
-        indexToken
-        collateralToken
-        sizeDeltaNumber
-        sizeNumber
-        collateralDeltaNumber
-        collateralNumber
-        collateralDeltaInTokenNumber
-        sizeDeltaInTokenNumber
-        realisedPnlNumber
-        priceNumber
-        sizeTokenNumber
-        averagePriceNumber
-        feeNumber
-        fundingNumber
-        realisedPnl
-        isLong
-        isOpen
-        isClose
-        leverage
-        type
-        logId
-        blockNumber
-        protocol
-        blockTime
-        createdAt
-        pair
-      }
-      meta {
-        total
-        limit
-        offset
-        totalPages
-      }
-    }
-  }
-`
-
 function OrderTime({ data }: { data: OrderData }) {
   const [positionTimeType, currentTime] = useGlobalStore((state) => [state.positionTimeType, state.currentTime])
   return positionTimeType === 'absolute' ? (
@@ -89,7 +40,7 @@ function OrderTime({ data }: { data: OrderData }) {
     <Flex color="neutral2" sx={{ alignItems: 'center', gap: 2 }}>
       {/* // for update new time */}
       <RelativeTimeText key={currentTime} date={data.blockTime} />
-      {!NO_TX_HASH_PROTOCOLS.includes(data.protocol) && (
+      {!NO_TX_HASH_PROTOCOLS.includes(data.protocol) && !!data.txHash && (
         <ExplorerLogo
           protocol={data.protocol}
           explorerUrl={`${PROTOCOL_PROVIDER[data.protocol]?.explorerUrl}/tx/${data.txHash}`}
@@ -210,48 +161,10 @@ export const orderColumns: ColumnData<OrderData>[] = [
 ]
 
 export const ORDER_FILTER_TYPE_MAPPING: { [key in OrderTypeEnum]?: any } = {
-  [OrderTypeEnum.OPEN]: {
-    or: [
-      { field: 'type', match: OrderTypeEnum.OPEN },
-      {
-        and: [
-          { field: 'type', match: OrderTypeEnum.INCREASE },
-          { field: 'isOpen', match: 'true' },
-        ],
-      },
-    ],
-  },
-  [OrderTypeEnum.INCREASE]: {
-    and: [
-      { field: 'type', match: OrderTypeEnum.INCREASE },
-      { field: 'isOpen', ne: 'true' },
-      { field: 'sizeDeltaNumber', gt: '0' },
-    ],
-  },
-  [OrderTypeEnum.DECREASE]: {
-    and: [
-      { field: 'type', match: OrderTypeEnum.DECREASE },
-      { field: 'isClose', ne: 'true' },
-      { field: 'sizeDeltaNumber', gt: '0' },
-    ],
-  },
-  [OrderTypeEnum.CLOSE]: {
-    or: [
-      { field: 'type', match: OrderTypeEnum.CLOSE },
-      {
-        and: [
-          { field: 'type', match: OrderTypeEnum.DECREASE },
-          { field: 'isClose', match: 'true' },
-        ],
-      },
-    ],
-  },
-  [OrderTypeEnum.LIQUIDATE]: {
-    field: 'type',
-    match: OrderTypeEnum.LIQUIDATE,
-  },
-  [OrderTypeEnum.MARGIN_TRANSFERRED]: {
-    field: 'type',
-    match: OrderTypeEnum.MARGIN_TRANSFERRED,
-  },
+  [OrderTypeEnum.OPEN]: { field: 'type', match: OrderTypeEnum.OPEN },
+  [OrderTypeEnum.INCREASE]: { field: 'type', match: OrderTypeEnum.INCREASE },
+  [OrderTypeEnum.DECREASE]: { field: 'type', match: OrderTypeEnum.DECREASE },
+  [OrderTypeEnum.CLOSE]: { field: 'type', match: OrderTypeEnum.CLOSE },
+  [OrderTypeEnum.LIQUIDATE]: { field: 'type', match: OrderTypeEnum.LIQUIDATE },
+  [OrderTypeEnum.MARGIN_TRANSFERRED]: { field: 'type', match: OrderTypeEnum.MARGIN_TRANSFERRED },
 }

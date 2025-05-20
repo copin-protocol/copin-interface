@@ -1,18 +1,21 @@
-import { CrownSimple } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import dayjs from 'dayjs'
 import { ReactNode, useMemo } from 'react'
 
 import { MarketFilter } from 'components/@ui/MarketFilter'
-import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { ALL_TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
 import { PositionData } from 'entities/trader'
+import { useFilterPairs } from 'hooks/features/useFilterPairs'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { getDropdownProps } from 'pages/Home/configs'
 import Dropdown, { CheckableDropdownItem, DropdownItem } from 'theme/Dropdown'
-import { Box, Flex, IconBox, Type } from 'theme/base'
-import { PairFilterEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { Flex, Type } from 'theme/base'
+import { PairFilterEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
+
+import ItemWrapper from '../FilterItemWrapper'
+import FilterMenuWrapper from '../FilterMenuWrapper'
+import { TimeDropdown, TimeDropdownProps } from '../TimeFilterDropdown'
 
 export default function Filters({
   currentSort,
@@ -24,6 +27,8 @@ export default function Filters({
   pairs,
   onChangePairs,
   excludedPairs,
+  planToFilter,
+  allowedFilter,
 }: {
   currentSort: SortOption
   currentLimit: number
@@ -32,94 +37,89 @@ export default function Filters({
   pairs: string[]
   onChangePairs: (pairs: string[], excludePairs: string[]) => void
   excludedPairs: string[]
+  planToFilter: SubscriptionPlanEnum
+  allowedFilter: boolean
 } & TimeDropdownProps) {
   const { sm } = useResponsive()
 
   return (
     <Flex sx={{ gap: ['10px', '6px'] }} alignItems="center">
       {sm && <Type.Caption>SELECTED</Type.Caption>}
-      <MarketFilter pairs={pairs} onChangePairs={onChangePairs} excludedPairs={excludedPairs} />
+      <ItemWrapper
+        permissionIconSx={{ transform: 'translateX(-8px)' }}
+        allowedFilter={allowedFilter}
+        planToFilter={planToFilter}
+      >
+        <MarketFilter
+          pairs={pairs}
+          onChangePairs={onChangePairs}
+          excludedPairs={excludedPairs}
+          menuWrapper={FilterMenuWrapper}
+          iconSize={allowedFilter ? undefined : 0}
+          allowedFilter={true}
+        />
+      </ItemWrapper>
       <Type.Caption>TOP</Type.Caption>
-      <Dropdown
-        buttonVariant="ghostPrimary"
-        inline
-        {...getDropdownProps({})}
-        menu={
-          <>
-            {LIMITS.map((option) => (
-              <DropdownItem key={option} isActive={option === currentLimit} onClick={() => onChangeLimit(option)}>
-                {option}
-              </DropdownItem>
-            ))}
-          </>
-        }
-      >
-        <Type.Caption>{currentLimit}</Type.Caption>
-      </Dropdown>
+      <ItemWrapper allowedFilter={allowedFilter} planToFilter={planToFilter}>
+        <Dropdown
+          buttonVariant="ghostPrimary"
+          inline
+          iconSize={allowedFilter ? undefined : 0}
+          {...getDropdownProps({ menuSx: allowedFilter ? {} : { width: 250 } })}
+          menu={
+            allowedFilter ? (
+              <FilterMenuWrapper>
+                {LIMITS.map((option) => (
+                  <DropdownItem key={option} isActive={option === currentLimit} onClick={() => onChangeLimit(option)}>
+                    {option}
+                  </DropdownItem>
+                ))}
+              </FilterMenuWrapper>
+            ) : (
+              <></>
+            )
+          }
+        >
+          <Type.Caption>{currentLimit}</Type.Caption>
+        </Dropdown>
+      </ItemWrapper>
       {sm && <Type.Caption ml={2}>BY</Type.Caption>}
-      <Dropdown
-        buttonVariant="ghostPrimary"
-        inline
-        {...getDropdownProps({})}
-        menu={
-          <>
-            {SORTS.map((option) => (
-              <CheckableDropdownItem
-                key={option.key}
-                selected={option.key === currentSort.key}
-                text={option.text}
-                onClick={() => onChangeSort(option.key)}
-              />
-            ))}
-          </>
-        }
-      >
-        <Type.Caption>{currentSort.text}</Type.Caption>
-      </Dropdown>
-      {sm && <Type.Caption ml={2}>IN</Type.Caption>}
-      <TimeDropdown currentTimeOption={currentTimeOption} onChangeTime={onChangeTime} />
+      <ItemWrapper allowedFilter={allowedFilter} planToFilter={planToFilter}>
+        <Dropdown
+          buttonVariant="ghostPrimary"
+          inline
+          iconSize={allowedFilter ? undefined : 0}
+          {...getDropdownProps({ menuSx: allowedFilter ? {} : { width: 250 } })}
+          menu={
+            allowedFilter ? (
+              <FilterMenuWrapper>
+                {SORTS.map((option) => (
+                  <CheckableDropdownItem
+                    key={option.key}
+                    selected={option.key === currentSort.key}
+                    text={option.text}
+                    onClick={() => onChangeSort(option.key)}
+                  />
+                ))}
+              </FilterMenuWrapper>
+            ) : (
+              <></>
+            )
+          }
+        >
+          <Type.Caption>{currentSort.text}</Type.Caption>
+        </Dropdown>
+      </ItemWrapper>
+      {sm && <Type.Caption ml={2}>OPEN FROM</Type.Caption>}
+      <TimeDropdown
+        currentTimeOption={currentTimeOption}
+        onChangeTime={onChangeTime}
+        allowedFilter={allowedFilter}
+        planToFilter={planToFilter}
+      />
     </Flex>
   )
 }
-
-type TimeDropdownProps = {
-  currentTimeOption: TimeFilterProps
-  onChangeTime: (option: TimeFilterByEnum) => void
-}
-
-export function TimeDropdown({ currentTimeOption, onChangeTime }: TimeDropdownProps) {
-  return (
-    <Dropdown
-      buttonVariant="ghostPrimary"
-      inline
-      {...getDropdownProps({})}
-      menu={
-        <>
-          {ALL_TIME_FILTER_OPTIONS.map((option) => (
-            <CheckableDropdownItem
-              key={option.id}
-              selected={option.id === currentTimeOption.id}
-              text={<Box as="span">{option.text}</Box>}
-              onClick={() => {
-                onChangeTime(option.id)
-              }}
-            />
-          ))}
-        </>
-      }
-    >
-      <Type.Caption sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Box as="span">{currentTimeOption.text}</Box>
-        {currentTimeOption.premiumFilter ? (
-          <IconBox icon={<CrownSimple size={16} weight="fill" />} color="orange1" />
-        ) : (
-          ''
-        )}
-      </Type.Caption>
-    </Dropdown>
-  )
-}
-
 export function useTimeFilter() {
   const { searchParams, setSearchParams } = useSearchParams()
   let time = DEFAULT_TIME
@@ -140,8 +140,8 @@ export function useTimeFilter() {
   return { time, from, to, onChangeTime }
 }
 
-export function useFilters() {
-  const { searchParams, setSearchParams } = useSearchParams()
+export function useFilters(args?: { isOverviewPage?: boolean }) {
+  const { searchParams, setSearchParams, setSearchParamsOnly } = useSearchParams()
 
   const { getListSymbol } = useMarketsConfig()
   const defaultAllPairs = getListSymbol?.()
@@ -151,14 +151,15 @@ export function useFilters() {
 
   // Get all selected pairs from query params
   const pairsFromQuery = searchParams.pairs as string | undefined
+  const isAllPairs = pairsFromQuery === PairFilterEnum.ALL
 
   const pairs = useMemo(() => {
-    if (!pairsFromQuery || pairsFromQuery === PairFilterEnum.ALL) {
+    if (!pairsFromQuery || isAllPairs) {
       if (!defaultAllPairs?.length) return []
       return defaultAllPairs
     }
-    return pairsFromQuery.split('_')
-  }, [pairsFromQuery, defaultAllPairs])
+    return pairsFromQuery.split('-')
+  }, [pairsFromQuery, isAllPairs, defaultAllPairs])
 
   const excludedPairs = typeof searchParams.excludedPairs === 'string' ? searchParams.excludedPairs.split('_') : []
 
@@ -187,6 +188,18 @@ export function useFilters() {
 
   const { time, from, to, onChangeTime } = useTimeFilter()
 
+  const { hasExcludingPairs, isCopyAll } = useFilterPairs({ pairs, excludedPairs })
+
+  const hasFilter = args?.isOverviewPage
+    ? !!excludedPairs.length || (!isCopyAll && !!pairs.length) || time.id !== DEFAULT_TIME.id
+    : !!excludedPairs.length ||
+      (!isCopyAll && !!pairs.length) ||
+      limit !== DEFAULT_LIMIT ||
+      time.id !== DEFAULT_TIME.id ||
+      sort.key !== DEFAULT_SORT.key
+
+  const resetFilters = () => setSearchParamsOnly({})
+
   return {
     limit,
     sort,
@@ -198,7 +211,11 @@ export function useFilters() {
     onChangeTime,
     onChangePairs,
     pairs,
+    isCopyAll,
+    hasExcludingPairs,
     excludedPairs,
+    hasFilter,
+    resetFilters,
   }
 }
 
@@ -222,9 +239,9 @@ const SORTS: SortOption[] = [
     key: 'size',
   },
 ]
-const DEFAULT_SORT = SORTS[0]
+const DEFAULT_SORT = SORTS[2]
 const DEFAULT_LIMIT = LIMITS[0]
-const DEFAULT_TIME = ALL_TIME_FILTER_OPTIONS[0]
+const DEFAULT_TIME = ALL_TIME_FILTER_OPTIONS[1]
 
 function getTimePeriod(timeValue: number | undefined) {
   if (!timeValue) return { from: undefined, to: undefined }

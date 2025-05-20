@@ -1,342 +1,228 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { Trans } from '@lingui/macro'
-import { WalletState } from '@web3-onboard/core'
-import { useConnectWallet } from '@web3-onboard/react'
-import dayjs from 'dayjs'
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { ConnectedWallet, User, WalletListEntry, usePrivy, useWallets } from '@privy-io/react-auth'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
-// import { useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
-import { loginWeb3Api, logoutApi, verifyLoginWeb3Api } from 'apis/authApis'
-import { clearAuth, clearWeb3Auth, getStoredJwt, getStoredWallet, setJwt, storeAuth } from 'apis/helpers'
+import { loginPrivyApi, logoutApi } from 'apis/authApis'
+import { clearAuth, getStoredAccount, getStoredJwt, setJwt, storeAuth } from 'apis/helpers'
 import { getMyProfileApi } from 'apis/userApis'
-import WaitingWallet, { WaitingState } from 'components/@auth/AuthWaitingWallet'
 import ConfirmReferralModal from 'components/@auth/ConfirmReferralModal'
-// import ConfirmReferralModal from 'components/@auth/ConfirmReferralModal'
 import ToastBody from 'components/@ui/ToastBody'
 import { UserData } from 'entities/user'
-// import useReferralActions from 'hooks/features/useReferralActions'
 import useMyProfile from 'hooks/store/useMyProfile'
-// import useUserReferral from 'hooks/store/useReferral'
-import { STORAGE_KEYS } from 'utils/config/keys'
+import { PRIVY_APP_ID } from 'utils/config/constants'
+import { QUERY_KEYS, STORAGE_KEYS } from 'utils/config/keys'
 import { Account } from 'utils/web3/types'
-import { signVerifyCode } from 'utils/web3/wallet'
-
-const getAccount = (wallet: WalletState) => wallet?.accounts[0] as any as Account
 
 interface ContextValues {
   loading: boolean
   isAuthenticated: boolean | null
-  account: Account | null
-  updateBalances: () => void
-  provider: Web3Provider | null
+  account: string | null
+  wallet: Wallet | null
   profile: UserData | null
-  connect: ({ skipAuth }: { skipAuth?: boolean }) => Promise<Account | null>
+  connect: () => Promise<void>
   disconnect: () => void
   logout: () => void
   eagerAuth: () => Promise<void>
-  handleSwitchAccount: () => void
+  reconnectWallet: () => void
   setProfile: (myProfile: UserData | null) => void
   isNewUser: boolean
   setIsNewUser: (isNewUser: boolean) => void
   setOpenReferralModal: (isOpen: boolean) => void
-  waitingState: WaitingState | null
+  walletDisconnected: boolean
+  refetchProfile: () => void
 }
+
+export type Wallet = { provider: Web3Provider; chainId: number } & ConnectedWallet
 
 export const AuthContext = createContext({} as ContextValues)
 
 export function AuthProvider({ children }: { children: JSX.Element }) {
-  const [{ wallet }, activate, deactivate, updateBalances] = useConnectWallet()
+  const { login, logout: privyLogout, user, getAccessToken, ready, connectWallet } = usePrivy()
   const [openReferralModal, setOpenReferralModal] = useState(false)
-
-  const authedRef = useRef<boolean>(false)
-  const eagerTriggeredRef = useRef<boolean>(false)
-  const accountRef = useRef<string | null | undefined>(wallet?.accounts[0].address)
-  const verifyCodeRef = useRef<string>()
+  const [wallet, setWallet] = useState<Wallet | null>(null)
+  const { wallets } = useWallets()
+  const [loading, setLoading] = useState(true)
   const { myProfile, isAuthenticated, setMyProfile } = useMyProfile()
-  const { refetch: refetchProfile } = useQuery('get_user_profile_after_change_referrer', getMyProfileApi, {
-    enabled: false,
-    onSuccess: (data) => {
-      if (!data) return
-      setMyProfile(data)
-    },
-  })
-  const [waitingState, setWaitingState] = useState<WaitingState | null>(null)
+  const { refetch: refetchProfile } = useQuery(
+    [QUERY_KEYS.GET_USER_PROFILE_AFTER_CHANGE, myProfile?.id],
+    getMyProfileApi,
+    {
+      enabled: false,
+      onSuccess: (data) => {
+        if (!data) return
+        setMyProfile(data)
+      },
+      keepPreviousData: false,
+    }
+  )
   const [isNewUser, setIsNewUser] = useState(false)
 
-  // const parsedQS = useParsedQueryString()
-  // const { setUserReferral } = useUserReferral()
-  // const referralCodeQs = parsedQS?.ref as string
-  // const hasUrlRef = Boolean(referralCodeQs)
+  const eagerTriggeredRef = useRef<boolean>(false)
+  const requestedWalletRef = useRef<string>()
 
-  // const onSuccess = () => {
-  //   setUserReferral(null)
-  // }
-  // const { addReferral } = useReferralActions({ onSuccess })
+  useEffect(() => {
+    async function initProvider() {
+      if (!wallets.length || !user || !ready) return
+      const selectedWallet = wallets.find((wallet) => wallet.address === user.wallet?.address)
+      if (!selectedWallet) return
+      if (requestedWalletRef.current && requestedWalletRef.current !== selectedWallet.address) {
+        toast.error(
+          <ToastBody title="Wallet mismatch" message={`Please connect to the address ${requestedWalletRef.current}`} />
+        )
+        requestedWalletRef.current = undefined
+        return
+      }
+      const privyProvider = await selectedWallet.getEthereumProvider()
+      const provider = new Web3Provider(privyProvider, 'any')
+      const chainComponents = selectedWallet.chainId.split(':')
+      setWallet({ ...selectedWallet, provider, chainId: Number(chainComponents[chainComponents.length - 1]) } as Wallet)
+    }
+    initProvider()
+  }, [wallets, ready, user])
 
   const disconnectWeb3 = useCallback(() => {
-    clearWeb3Auth()
-    setWaitingState(null)
-    if (!wallet) return
-    deactivate({
-      label: wallet.label,
-    })
-  }, [deactivate, wallet])
+    privyLogout()
+  }, [privyLogout])
 
   const disconnect = useCallback(() => {
     localStorage.removeItem(STORAGE_KEYS.BINGX_NOTE)
     clearAuth()
+    setLoading(false)
     setMyProfile(null)
+    setWallet(null)
+    setIsNewUser(false)
     disconnectWeb3()
+    toast.dismiss()
   }, [disconnectWeb3, setMyProfile])
 
-  // DELETE
-  // useEffect(() => {
-  //   // if (!wallet) {
-  //   //   const { wallet: storedWallet } = getStoredWallet()
-  //   //   if (storedWallet && authedRef.current) {
-  //   //     setWaitingState(WaitingState.WalletLocked)
-  //   //   }
-  //   //   return
-  //   // }
-  //   // if (waitingState === WaitingState.WalletLocked) setWaitingState(null)
-  //
-  //   const account = wallet ? getAccount(wallet) : undefined
-  //   const { account: storedAccount } = getStoredWallet()
-  //   if (storedAccount && account && storedAccount !== account?.address) {
-  //     setWaitingState(WaitingState.SwitchAccount)
-  //   } else {
-  //     if (waitingState === WaitingState.SwitchAccount) setWaitingState(null)
-  //   }
-  // }, [waitingState, wallet])
+  useEffect(() => {
+    const jwt = getStoredJwt()
+    if (user && !jwt) {
+      auth(user)
+    }
+  }, [user])
+
+  const connect = useCallback(async () => {
+    await login()
+  }, [login])
 
   const auth = useCallback(
-    async (wallet: WalletState): Promise<Account | null> => {
-      const account = getAccount(wallet)
-      setWaitingState(WaitingState.Signing)
+    async (user: User): Promise<Account | null> => {
+      setLoading(true)
       try {
-        const { verifyCode } = await loginWeb3Api(account.address)
-        verifyCodeRef.current = verifyCode
-        accountRef.current = account.address
-        const time = dayjs().utc().toISOString()
-        const provider = new Web3Provider(wallet.provider, 'any')
-        const sign = await signVerifyCode(account.address, verifyCode, time, provider)
-        if (!sign) throw Error("Can't sign verify message")
-        if (verifyCodeRef.current !== verifyCode || account.address !== accountRef.current) return null
-        const response = await verifyLoginWeb3Api(account.address, sign, time)
+        const jwt = await getAccessToken()
+        if (!jwt) {
+          login()
+          return null
+        }
+
+        const response = await loginPrivyApi(jwt)
         sessionStorage.clear()
         storeAuth({
           jwt: response.access_token,
-          wallet: wallet.label,
-          account: account.address,
+          account: user.wallet?.address ?? '',
         })
-        setMyProfile({ ...response })
-        setWaitingState(null)
-        // if (!response.isAddedReferral && !response.isSkippedReferral) {
-        //   if (hasUrlRef && referralCodeQs) {
-        //     addReferral.mutate(referralCodeQs.toUpperCase())
-        //   } else {
-        //     setOpeningRefModal(true)
-        //   }
-        // }
-        authedRef.current = true
-        return account
+        setMyProfile(response)
+        setLoading(false)
       } catch (err: any) {
-        console.error(err)
-        if (err?.code !== 4001) {
-          toast.error(<ToastBody title={err.name} message={err.message} />)
-          disconnect()
-        } else {
-          setWaitingState(WaitingState.CancelSign)
-        }
+        console.error('Error auth', err)
+        toast.error(<ToastBody title={err.name} message={err.message} />)
+        disconnect()
       }
-      authedRef.current = true
       return null
     },
-    [disconnect, setMyProfile]
+    [getAccessToken, setMyProfile, login, disconnect]
   )
-
-  const connect = useCallback(
-    async ({ skipAuth = false }: { skipAuth?: boolean } = {}) => {
-      const [_wallet] = await activate()
-      if (!skipAuth && _wallet) {
-        return auth(_wallet)
-      }
-      return getAccount(_wallet)
-    },
-    [activate, auth]
-  )
-
-  const handleAuth = useCallback(() => {
-    if (!wallet) return null
-    return auth(wallet)
-  }, [auth, wallet])
 
   const eagerAuth = useCallback(async () => {
     if (!!myProfile || eagerTriggeredRef.current) return
     eagerTriggeredRef.current = true
 
-    const { account: storedAccount, wallet: storedWallet } = getStoredWallet()
     const jwt = getStoredJwt()
     if (!jwt) {
       setMyProfile(null)
+      setLoading(false)
       return
     }
-    if (storedWallet) {
-      // DELETE
-      // setWaitingState(WaitingState.Connecting)
-      activate({
-        autoSelect: {
-          label: storedWallet,
-          disableModals: true,
-        },
-      }).then(([_wallet]) => {
-        if (!_wallet) {
-          disconnectWeb3()
-          return
-        }
-        // DELETE
-        // if (_wallet) {
-        //   const _account = getAccount(_wallet)
-        //   if (_account.address !== storedAccount) {
-        //     setWaitingState(WaitingState.SwitchAccount)
-        //     return
-        //   }
-        // }
-      })
-      // DELETE
-      // if (!_wallet) {
-      //   disconnect()
-      //   return
-      // }
-      // if (_wallet) {
-      //   const _account = getAccount(_wallet)
-      //   if (_account.address !== storedAccount) {
-      //     setWaitingState(WaitingState.SwitchAccount)
-      //     return
-      //   }
-      // }
-    }
+
     try {
       setJwt(jwt)
-      const user = await getMyProfileApi()
-      setMyProfile(user)
-      setWaitingState(null)
+      const profile = await getMyProfileApi()
+      setMyProfile(profile)
     } catch (error: any) {
       if (error.message.includes('Unauthorized')) {
-        const { wallet: storedWallet } = getStoredWallet()
-        if (storedWallet) setWaitingState(WaitingState.TokenExpired)
+        if (user) {
+          await auth(user)
+        }
       } else {
-        setWaitingState(null)
         toast.error(<ToastBody title={error.name} message={error.message} />)
       }
       clearAuth()
       setMyProfile(null)
     }
-    authedRef.current = true
-  }, [myProfile])
+    setLoading(false)
+  }, [myProfile, user])
 
-  const handleSwitchAccount = useCallback(async () => {
-    setIsNewUser(false)
-    const account = wallet ? getAccount(wallet) : undefined
-    const { account: storedAccount } = getStoredWallet()
-
-    if (!account) {
-      connect({})
-      return
-    }
-    if (storedAccount && account && storedAccount !== account?.address) {
-      setWaitingState(WaitingState.SwitchAccount)
-    } else {
-      if (waitingState === WaitingState.SwitchAccount) setWaitingState(null)
-    }
-  }, [connect, waitingState, wallet])
+  const reconnectWallet = useCallback(() => {
+    const storedAccount = getStoredAccount()
+    const lastWalletClient = localStorage.getItem(`privy:${PRIVY_APP_ID}:recent-login-wallet-client`)
+    requestedWalletRef.current = storedAccount ?? undefined
+    connectWallet({
+      suggestedAddress: storedAccount ?? undefined,
+      walletList: lastWalletClient ? [lastWalletClient.replace(/"/g, '') as WalletListEntry] : undefined,
+    })
+  }, [connectWallet])
 
   const logout = useCallback(() => {
-    setIsNewUser(false)
     logoutApi()
       .then(() => {
         disconnect()
-        // DELETE
-        // setTimeout(() => {
-        //   window.location.replace(ROUTES.HOME.path)
-        // })
       })
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {})
   }, [disconnect])
 
+  const walletDisconnected =
+    !wallet || !myProfile || (!myProfile.username.includes('@') && wallet.address !== myProfile.username)
+
   const contextValue: ContextValues = useMemo(() => {
     return {
       isNewUser,
       setIsNewUser,
-      loading: waitingState != null,
+      loading,
       isAuthenticated,
-      account: wallet ? getAccount(wallet) : null,
-      updateBalances,
-      provider: wallet ? new Web3Provider(wallet.provider, 'any') : null,
+      account: wallet?.address ?? null,
+      wallet,
+      walletDisconnected,
       profile: myProfile,
       connect,
       disconnect,
       logout,
       eagerAuth,
-      handleSwitchAccount,
+      reconnectWallet,
       setProfile: setMyProfile,
       setOpenReferralModal,
-      waitingState,
+      refetchProfile,
     }
   }, [
-    waitingState,
     wallet,
     isAuthenticated,
-    getAccount,
-    updateBalances,
     myProfile,
     connect,
     disconnect,
     logout,
     eagerAuth,
+    reconnectWallet,
     setMyProfile,
     isNewUser,
+    refetchProfile,
   ])
 
   return (
     <AuthContext.Provider value={contextValue}>
-      {/* {cloneElement(children, { key: myProfile?.id })} */}
       {children}
-      {waitingState != null && (
-        <WaitingWallet
-          active={waitingState != null}
-          waitingState={waitingState}
-          connect={async () => {
-            const { account: storedAccount, wallet: storedWallet } = getStoredWallet()
-            if (storedWallet) {
-              const [_wallet] = await activate({
-                autoSelect: {
-                  label: storedWallet,
-                  disableModals: true,
-                },
-              })
-              if (!_wallet) {
-                disconnect()
-                toast.error(
-                  <ToastBody title={<Trans>Error</Trans>} message={<Trans>Cannot unlock your wallet</Trans>} />
-                )
-                return
-              }
-              const _account = getAccount(_wallet)
-              if (_account.address !== storedAccount) {
-                setWaitingState(WaitingState.SwitchAccount)
-                return
-              }
-              setWaitingState(null)
-            }
-          }}
-          disconnect={disconnect}
-          handleAuth={handleAuth}
-        />
-      )}
       <ConfirmReferralModal
         isOpen={openReferralModal}
         onDismiss={() => setOpenReferralModal(false)}

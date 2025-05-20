@@ -4,6 +4,7 @@ import React from 'react'
 import { TraderAlertData } from 'entities/alert'
 import { TraderData } from 'entities/trader'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
+import useUserNextPlan from 'hooks/features/subscription/useUserNextPlan'
 import { Flex } from 'theme/base'
 import { AlertCustomType } from 'utils/config/enums'
 
@@ -29,7 +30,7 @@ const TraderGroup = ({
 }: TraderGroupProps) => {
   const { lg } = useResponsive()
   const isMobile = !lg
-  const { maxTraderAlert, isVIPUser } = useBotAlertContext()
+  const { maxTraderAlert, isEliteUser } = useBotAlertContext()
 
   // Initialize state using custom hook
   const {
@@ -44,6 +45,7 @@ const TraderGroup = ({
     setCurrentPage,
     hasChange,
     totalTrader,
+    totalActiveTrader,
     filteredTraders,
     paginatedTraders,
     ignoreSelectTraders,
@@ -61,6 +63,8 @@ const TraderGroup = ({
     setMatchingTraderCount,
   })
 
+  const { userNextPlan } = useUserNextPlan()
+
   // Get table configuration
   const { columns } = useTraderGroupTable(onUpdateWatchlist, onRemoveWatchlist)
 
@@ -77,14 +81,16 @@ const TraderGroup = ({
           setName={onChangeName}
           setDescription={onChangeDescription}
           onBack={onBack}
-          badgeContent={`${totalTrader}/${maxTraderAlert}`}
+          total={totalActiveTrader}
+          limit={maxTraderAlert}
+          userNextPlan={userNextPlan}
         />
 
         {/* Search section */}
         <TraderGroupSearch
-          totalTrader={totalTrader}
+          totalTrader={totalActiveTrader}
           maxTraderAlert={maxTraderAlert}
-          isVIPUser={isVIPUser}
+          isEliteUser={isEliteUser}
           ignoreSelectTraders={ignoreSelectTraders}
           searchText={searchText}
           setSearchText={setSearchText}

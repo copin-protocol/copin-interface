@@ -1,11 +1,10 @@
 import { memo, useLayoutEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useSearchParams from 'hooks/router/useSearchParams'
-import { ALLOWED_COPYTRADE_PROTOCOLS, RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum, ProtocolFilterEnum } from 'utils/config/enums'
 import { STORAGE_KEYS } from 'utils/config/keys'
 import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
@@ -67,24 +66,17 @@ export const useGlobalProtocolFilterStore = createProtocolFilterStore() // globa
 
 export const ProtocolFilterStoreInitializer = memo(function InitializerMemo() {
   const setProtocols = useGlobalProtocolFilterStore((s) => s.setProtocols)
-  const { pathname } = useLocation()
-  const { searchParams } = useSearchParams()
+  const { searchParams, setSearchParams } = useSearchParams()
+  const { allowedCopyTradeProtocols, allowedSelectProtocols, convertProtocolToParams } = useProtocolPermission()
 
   useLayoutEffect(() => {
     const storedSelectedProtocols = parseStorageData<ProtocolEnum[]>({
       storageKey: STORAGE_KEYS.GLOBAL_PROTOCOLS,
       storage: localStorage,
     })
-    // Old protocol route: /{protocol}/...
-    const parsedOldPreProtocolParam = RELEASED_PROTOCOLS.find(
-      (protocol) => pathname.split('/')?.[1]?.toUpperCase() === protocol
-    )
-    // New protocol route: .../{protocol}
-    const parsedOldLastProtocolParam = RELEASED_PROTOCOLS.find(
-      (protocol) => pathname.split('/')?.at(-1)?.split('-')?.[0]?.toUpperCase() === protocol
-    )
+
     // from search params, use at home page
-    const parsedOldProtocolSearch = RELEASED_PROTOCOLS.find(
+    const parsedOldProtocolSearch = allowedSelectProtocols.find(
       (protocol) => (searchParams.protocol as string)?.toUpperCase() === protocol
     )
 
@@ -93,26 +85,20 @@ export const ProtocolFilterStoreInitializer = memo(function InitializerMemo() {
 
     const parsedNewProtocolOptions = protocolFromQuery
       ? protocolFromQuery === ProtocolFilterEnum.ALL
-        ? RELEASED_PROTOCOLS
+        ? allowedSelectProtocols
         : protocolFromQuery === ProtocolFilterEnum.ALL_COPYABLE
-        ? ALLOWED_COPYTRADE_PROTOCOLS
-        : RELEASED_PROTOCOLS.includes(protocolFromQuery as ProtocolEnum)
+        ? allowedCopyTradeProtocols
+        : allowedSelectProtocols.includes(protocolFromQuery as ProtocolEnum)
         ? [protocolFromQuery as ProtocolEnum]
         : Object.values(PROTOCOL_OPTIONS_MAPPING)
             .filter(({ key }) => protocolFromQuery.split('-').includes(key.toString()))
             .map(({ id }) => id)
+            .filter((p) => allowedSelectProtocols.includes(p))
       : []
 
     // Get unique protocols
     const uniqueProtocols = Array.from(
-      new Set<ProtocolEnum>(
-        [
-          parsedOldPreProtocolParam,
-          parsedOldLastProtocolParam,
-          parsedOldProtocolSearch,
-          ...parsedNewProtocolOptions,
-        ].filter(Boolean) as ProtocolEnum[]
-      )
+      new Set<ProtocolEnum>([parsedOldProtocolSearch, ...parsedNewProtocolOptions].filter(Boolean) as ProtocolEnum[])
     )
 
     // If no protocol found, use protocol from store
@@ -120,9 +106,10 @@ export const ProtocolFilterStoreInitializer = memo(function InitializerMemo() {
       ? uniqueProtocols
       : storedSelectedProtocols?.length
       ? storedSelectedProtocols
-      : RELEASED_PROTOCOLS
+      : allowedSelectProtocols
     setProtocols(protocols)
-  }, [])
+    setSearchParams({ protocol: convertProtocolToParams({ protocols }) })
+  }, [allowedSelectProtocols, convertProtocolToParams])
 
   return null
 })

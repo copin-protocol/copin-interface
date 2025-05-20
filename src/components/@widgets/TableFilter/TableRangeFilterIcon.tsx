@@ -2,9 +2,11 @@ import { Funnel } from '@phosphor-icons/react'
 import { useCallback, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
+import TableFilterMenuWrapper from 'components/@subscription/TableFilterMenuWrapper'
 import useSearchParams from 'hooks/router/useSearchParams'
 import Dropdown from 'theme/Dropdown'
 import { Box, IconBox } from 'theme/base'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 
 import TableRangeFilter from './TableRangeFilter'
 import { generateRangeFilterKey, getRangeFilterValues } from './helpers'
@@ -66,7 +68,15 @@ export function useFilterAction() {
 
 // TODO: refactor this component to common component
 
-export default function TableRangeFilterIcon({ config, sx = {} }: { config: TableFilterConfig; sx?: any }) {
+export default function TableRangeFilterIcon({
+  config,
+  sx = {},
+  requiredPlan,
+}: {
+  config: TableFilterConfig
+  sx?: any
+  requiredPlan?: SubscriptionPlanEnum
+}) {
   const listParamKey = config.urlParamKey ? [config.urlParamKey] : config.listParamKey ? config.listParamKey : []
   const listLabel = config.label ? [config.label] : config.listLabel ? config.listLabel : []
   const listUnit = config.unit ? [config.unit] : config.listUnit ? config.listUnit : []
@@ -99,16 +109,18 @@ export default function TableRangeFilterIcon({ config, sx = {} }: { config: Tabl
       setVisible={_setVisible as any}
       hasArrow={false}
       menu={
-        <Box sx={{ p: 3, width: '300px' }}>
-          <TableRangeFilter
-            key={key}
-            defaultValues={filterValues}
-            urlKeys={listParamKey}
-            labels={listLabel}
-            onApply={changeFilter}
-            onReset={resetFilter}
-            units={listUnit}
-          />
+        <Box sx={{ p: requiredPlan ? 0 : 3, width: requiredPlan ? 250 : 300 }}>
+          <TableFilterMenuWrapper requiredPlan={requiredPlan}>
+            <TableRangeFilter
+              key={key}
+              defaultValues={filterValues}
+              urlKeys={listParamKey}
+              labels={listLabel}
+              onApply={changeFilter}
+              onReset={resetFilter}
+              units={listUnit}
+            />
+          </TableFilterMenuWrapper>
         </Box>
       }
     >

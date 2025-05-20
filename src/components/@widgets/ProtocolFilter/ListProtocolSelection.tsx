@@ -1,4 +1,5 @@
 import ActiveDot from 'components/@ui/ActiveDot'
+import BetaTag from 'components/@ui/BetaTag'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { ProtocolsStatisticData } from 'entities/statistic'
@@ -15,6 +16,7 @@ export default function ListProtocolSelection({
   protocolsStatistic,
   handleToggle,
   itemSx = {},
+  isAvailable = true,
   itemActiveSx = {},
   hasCheckBox = true,
 }: {
@@ -24,9 +26,11 @@ export default function ListProtocolSelection({
   handleToggle: (protocol: ProtocolEnum) => void
   itemSx?: any
   itemActiveSx?: any
+  isAvailable?: boolean
   hasCheckBox?: boolean
 }) {
   const { protocolDataStatusMapping, getProtocolMessage } = useGetProtocolStatus()
+
   return (
     <>
       {/* RENDER PROTOCOLS */}
@@ -37,7 +41,7 @@ export default function ListProtocolSelection({
       )}
       <Grid
         sx={{
-          gridTemplateColumns: ['repeat(auto-fill, minmax(175px, 1fr))', 'repeat(auto-fill, minmax(175px, 1fr))'],
+          gridTemplateColumns: ['repeat(auto-fill, minmax(200px, 1fr))', 'repeat(auto-fill, minmax(200px, 1fr))'],
           gap: 1,
         }}
       >
@@ -53,14 +57,19 @@ export default function ListProtocolSelection({
               sx={{
                 backgroundColor: 'neutral6',
                 borderRadius: 'xs',
-                '&:hover': {
-                  backgroundColor: 'neutral5',
-                  cursor: 'pointer',
-                },
+                cursor: 'pointer',
+
                 ...itemSx,
                 ...(isActive ? itemActiveSx : {}),
+                ...(isAvailable
+                  ? {
+                      '&:hover': {
+                        backgroundColor: isActive ? undefined : 'neutral5',
+                      },
+                    }
+                  : { cursor: 'not-allowed' }),
               }}
-              onClick={() => handleToggle(protocol)}
+              onClick={() => isAvailable && handleToggle(protocol)}
             >
               <Flex
                 alignItems="center"
@@ -72,16 +81,18 @@ export default function ListProtocolSelection({
                   color: 'neutral5',
                 }}
               >
-                {hasCheckBox && <Checkbox key={protocol} checked={isActive} wrapperSx={{ height: 'auto' }} />}
-
+                {hasCheckBox && (
+                  <Checkbox key={protocol} checked={isActive} disabled={!isAvailable} wrapperSx={{ height: 'auto' }} />
+                )}
                 <ProtocolLogo className="active" protocol={protocol} isActive={false} hasText={false} size={32} />
 
-                <Flex width="100%" sx={{ gap: '5px', alignItems: 'center', position: 'relative' }}>
+                <Flex flex="1" sx={{ gap: '5px', alignItems: 'center', position: 'relative' }}>
                   <Flex width="100%" flexDirection={'column'} sx={{ justifyContent: 'space-between' }} mx={1}>
                     <Flex sx={{ alignItems: 'center', gap: 1 }}>
                       <Type.Caption color={'neutral1'} sx={{ textTransform: 'uppercase' }}>
                         {option.text}
                       </Type.Caption>
+                      {option.isBeta && <BetaTag />}
                       {protocolStatus !== SystemStatusTypeEnum.STABLE && (
                         <ActiveDot
                           color={getSystemStatusTypeColor(protocolStatus)}
@@ -99,14 +110,6 @@ export default function ListProtocolSelection({
                       </Type.Small>
                     </Flex>
                   </Flex>
-
-                  {/*{option.isCross ? (*/}
-                  {/*  <img src={CrossTag} alt="cross" />*/}
-                  {/*) : option.isNew ? (*/}
-                  {/*  <img src={NewTag} alt="new" />*/}
-                  {/*) : (*/}
-                  {/*  <></>*/}
-                  {/*)}*/}
                 </Flex>
               </Flex>
             </Box>

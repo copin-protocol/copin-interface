@@ -69,7 +69,7 @@ const CopyManagement = () => {
   const { hasCopiedChannel: hasBotAlert } = useBotAlertContext()
 
   const { myProfile } = useMyProfileStore()
-  const subscriptionPlan = myProfile?.plan ?? SubscriptionPlanEnum.BASIC
+  const subscriptionPlan = myProfile?.subscription?.plan ?? SubscriptionPlanEnum.FREE
 
   return (
     <Box flex="1 1 0" height="100%">

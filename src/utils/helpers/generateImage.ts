@@ -444,7 +444,6 @@ const PROTOCOL_CONFIG_MAPPING: { [key in ProtocolEnum]?: { text: string; textWid
   [ProtocolEnum.POLYNOMIAL]: { text: 'Polynomial', textWidth: 168 },
   [ProtocolEnum.POLYNOMIAL_L2]: { text: 'Polynomial L2', textWidth: 328 },
   [ProtocolEnum.EQUATION_ARB]: { text: 'Equation', textWidth: 141 },
-  [ProtocolEnum.BLOOM_BLAST]: { text: 'Bloom', textWidth: 117 },
   [ProtocolEnum.APOLLOX_BNB]: { text: 'ApolloX (BNB)', textWidth: 288 },
   [ProtocolEnum.APOLLOX_BASE]: { text: 'ApolloX (Base)', textWidth: 288 },
   [ProtocolEnum.AVANTIS_BASE]: { text: 'Avantis', textWidth: 141 },

@@ -1,7 +1,7 @@
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderAlertData } from 'entities/alert'
 import { TraderData } from 'entities/trader'
-import { AlertCustomType, TimeFilterByEnum } from 'utils/config/enums'
+import { AlertCustomType, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
 
 export interface CustomAlertFormValues {
   name?: string
@@ -20,8 +20,10 @@ export interface CustomHeaderProps {
   isNew?: boolean
   hasChange: boolean
   customType: AlertCustomType
-  badgeContent?: string | number
+  total?: number
+  limit?: number
   name?: string
+  userNextPlan?: SubscriptionPlanEnum
   description?: string
   setName: (value?: string) => void
   setDescription: (value?: string) => void

@@ -2,7 +2,11 @@ import { useQuery as useApolloQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { TopOpeningPositionsGraphQLResponse } from 'graphql/entities/topOpeningPositions'
-import { SEARCH_TOP_OPENING_POSITIONS_QUERY } from 'graphql/topOpeningPositions'
+import {
+  SEARCH_POSITIONS_INDEX,
+  SEARCH_TOP_OPENING_POSITIONS_FUNCTION_NAME,
+  SEARCH_TOP_OPENING_POSITIONS_QUERY,
+} from 'graphql/query'
 import { ReactNode, useMemo } from 'react'
 import { toast } from 'react-toastify'
 
@@ -50,7 +54,6 @@ function OpenInterestByMarketPage() {
   } = useFilters()
 
   const queryVariables = useMemo(() => {
-    const index = 'copin.positions'
     const { sortBy } = normalizePositionPayload({ sortBy: sort.key })
 
     const query = [
@@ -71,7 +74,7 @@ function OpenInterestByMarketPage() {
       paging: { size: limit, from: 0 },
     }
 
-    return { index, body, protocols: selectedProtocols }
+    return { index: SEARCH_POSITIONS_INDEX, body, protocols: selectedProtocols }
   }, [sort.key, from, to, pairs, selectedProtocols, limit, excludedPairs])
 
   const {
@@ -87,7 +90,8 @@ function OpenInterestByMarketPage() {
   })
 
   const rawPositionData =
-    topOpeningPositionsData?.searchTopOpeningPosition.data || previousData?.searchTopOpeningPosition.data
+    topOpeningPositionsData?.[SEARCH_TOP_OPENING_POSITIONS_FUNCTION_NAME].data ||
+    previousData?.[SEARCH_TOP_OPENING_POSITIONS_FUNCTION_NAME].data
 
   const data = rawPositionData?.map((position) => normalizePositionData(position))
 

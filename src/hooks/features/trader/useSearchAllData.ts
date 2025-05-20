@@ -8,7 +8,7 @@ import { searchTradersApi } from 'apis/traderApis'
 import { SearchPositionByTxHashParams, SearchTradersParams } from 'apis/types'
 import { HlAccountData } from 'entities/hyperliquid'
 import { PositionData, TraderData } from 'entities/trader'
-import { useIsPremium } from 'hooks/features/subscription/useSubscriptionRestrict'
+import { useIsPro } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useDebounce from 'hooks/helpers/useDebounce'
 import useOnClickOutside from 'hooks/helpers/useOnClickOutside'
 import useGlobalStore from 'hooks/store/useGlobalStore'
@@ -28,6 +28,8 @@ import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
 
+import useProtocolPermission from '../subscription/useProtocolPermission'
+
 const MIN_QUICK_SEARCH_LENGTH = 3
 export default function useSearchAllData(args?: {
   protocols?: ProtocolEnum[]
@@ -38,9 +40,11 @@ export default function useSearchAllData(args?: {
   limit?: number
 }) {
   const { onSelect, allowAllProtocol = false, allowSearchPositions = false, protocols, limit } = args ?? {}
-  const { protocol } = useGlobalStore()
+  const { protocol: storedProtocol } = useGlobalStore()
+  const { allowedSelectProtocols } = useProtocolPermission()
+  const protocol = allowedSelectProtocols.find((p) => p === storedProtocol) ?? allowedSelectProtocols[0]
   const { myProfile } = useMyProfileStore()
-  const isPremiumUser = useIsPremium()
+  const isProUser = useIsPro()
   const history = useHistory()
   const searchWrapperRef = useRef<HTMLDivElement>(null)
   const inputSearchRef = useRef<HTMLInputElement>(null)
@@ -104,7 +108,7 @@ export default function useSearchAllData(args?: {
     [
       QUERY_KEYS.SEARCH_ALL_TRADERS,
       debounceSearchText,
-      isPremiumUser,
+      isProUser,
       allowAllProtocol,
       protocol,
       protocols,
@@ -137,7 +141,7 @@ export default function useSearchAllData(args?: {
   )
 
   const { data: searchPositions, isFetching: searchingPositions } = useQuery(
-    [QUERY_KEYS.SEARCH_TX_HASH, debounceSearchText, isPremiumUser, allowAllProtocol, protocol, protocols],
+    [QUERY_KEYS.SEARCH_TX_HASH, debounceSearchText, isProUser, allowAllProtocol, protocol, protocols],
     () => searchPositionsApi(queryTxData),
     {
       enabled: isTxHash,

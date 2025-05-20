@@ -19,10 +19,7 @@ const BridgeAndSwap = () => {
     chainId: OPTIMISM_SEPOLIA,
   })
   const { walletProvider, walletAccount, publicProvider } = useWeb3()
-  const signer = useMemo(
-    () => walletProvider?.getSigner(walletAccount?.address).connectUnchecked(),
-    [walletAccount, walletProvider]
-  )
+  const signer = useMemo(() => walletProvider?.getSigner().connectUnchecked(), [walletProvider])
 
   const sUSDContract = useMemo(
     () => new Contract('0xd7d674d80e79cf3a3b67d6a510ac1b0493df47cf', ERC20_ABI, publicProvider),
@@ -41,9 +38,9 @@ const BridgeAndSwap = () => {
 
   const { data: ethBalance, refetch: refetchEthBalance } = useQuery(
     ['eth_balance'],
-    () => (walletProvider && walletAccount ? walletProvider.getBalance(walletAccount.address) : undefined),
+    () => (walletProvider && walletAccount ? walletProvider.getBalance(walletAccount) : undefined),
     {
-      enabled: !!walletAccount?.address,
+      enabled: !!walletAccount,
       select(data) {
         return data ? Number(formatEther(data)) : undefined
       },
@@ -63,9 +60,9 @@ const BridgeAndSwap = () => {
   const { data: sETHBalance, refetch: refetchsETHBalance } = useContractQuery<number>(
     sETHContract,
     'balanceOf',
-    [walletAccount?.address],
+    [walletAccount],
     {
-      enabled: !!walletAccount?.address,
+      enabled: !!walletAccount,
       select(data) {
         return Number(formatEther(data))
       },
@@ -75,9 +72,9 @@ const BridgeAndSwap = () => {
   const { data: wETHBalance, refetch: refetchwETHBalance } = useContractQuery<number>(
     wETHContract,
     'balanceOf',
-    [walletAccount?.address],
+    [walletAccount],
     {
-      enabled: !!walletAccount?.address,
+      enabled: !!walletAccount,
       select(data) {
         return Number(formatEther(data))
       },
@@ -87,9 +84,9 @@ const BridgeAndSwap = () => {
   const { data: sUSDBalance, refetch: refetchsUSDBalance } = useContractQuery<number>(
     sUSDContract,
     'balanceOf',
-    [walletAccount?.address],
+    [walletAccount],
     {
-      enabled: !!walletAccount?.address,
+      enabled: !!walletAccount,
       select(data) {
         return Number(formatEther(data))
       },
@@ -109,9 +106,9 @@ const BridgeAndSwap = () => {
               refetchwETHBalance()
             }}
           />
-          {walletAccount?.address && (
+          {walletAccount && (
             <WethToSeth
-              account={walletAccount.address}
+              account={walletAccount}
               signer={signer}
               wethBalance={wETHBalance}
               sethBalance={sETHBalance}

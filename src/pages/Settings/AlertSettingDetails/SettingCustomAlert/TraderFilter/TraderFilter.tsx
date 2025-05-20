@@ -5,14 +5,16 @@ import isEqual from 'lodash/isEqual'
 import React, { ReactNode, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { protocolOptions } from 'components/@copyTrade/configs'
+import { getProtocolOptions } from 'components/@copyTrade/configs'
 import ToastBody from 'components/@ui/ToastBody'
 import ConditionFilterForm from 'components/@widgets/ConditionFilterForm'
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
+import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
+import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import ResultEstimated from 'pages/Explorer/ConditionFilter/ResultEstimated'
-import { FilterTabEnum, defaultFieldOptions } from 'pages/Explorer/ConditionFilter/configs'
+import { FilterTabEnum, getFilterOptions } from 'pages/Explorer/ConditionFilter/configs'
 import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
 import Label from 'theme/InputField/Label'
@@ -64,6 +66,15 @@ export default function TraderFilter({
   setMatchingTraderCount,
 }: TraderFilterProps) {
   const { lg } = useResponsive()
+  const { pagePermission, userPermission } = useExplorerPermission()
+  const fieldOptions = useMemo(
+    () =>
+      getFilterOptions({
+        pagePermission,
+        userPermission,
+      }),
+    [pagePermission, userPermission]
+  )
   const isMobile = !lg
   const [conditionFormValues, setConditionFormValues] = useState<ConditionFormValues<TraderData>>(
     defaultValues?.condition || []
@@ -91,12 +102,24 @@ export default function TraderFilter({
     )
   }, [conditionFormValues, defaultValues, pairs, protocols, timeFrame])
 
+  const {
+    allowedSelectProtocols,
+    userPermission: userProtocolPermission,
+    pagePermission: pageProtocolPermission,
+  } = useProtocolPermission()
+  const protocolOptions = useMemo(() => {
+    return getProtocolOptions({
+      userPermission: userProtocolPermission,
+      pagePermission: pageProtocolPermission,
+    })
+  }, [userProtocolPermission, pageProtocolPermission])
+
   const _protocolOptions = useMemo(() => {
     const allOptions = [...protocolOptions]
     if (!allOptions?.length) return []
-    allOptions.unshift({ value: 'all', label: <Trans>All Protocols</Trans> })
+    allOptions.unshift({ value: 'all', label: <Trans>All Allowed Protocols</Trans>, isDisabled: false })
     return allOptions
-  }, [])
+  }, [protocolOptions])
 
   const { getListSymbolOptions } = useMarketsConfig()
   const pairOptions = useMemo(() => {
@@ -182,7 +205,7 @@ export default function TraderFilter({
           <ResultEstimated
             ranges={convertRangesFromFormValues({ condition: conditionFormValues, pairs })}
             type={timeFrame}
-            protocols={(protocols === 'all' ? [] : protocols) as ProtocolEnum[]}
+            protocols={(protocols === 'all' ? allowedSelectProtocols : protocols) as ProtocolEnum[]}
             filterTab={FilterTabEnum.DEFAULT}
             onCountChange={setMatchingTraderCount}
             zIndex={0}
@@ -274,7 +297,7 @@ export default function TraderFilter({
                 type="default"
                 formValues={conditionFormValues}
                 setFormValues={setConditionFormValues}
-                fieldOptions={defaultFieldOptions.filter((e) => e.value !== 'indexTokens')}
+                fieldOptions={fieldOptions}
                 onValuesChange={setConditionFormValues}
                 wrapperSx={{ px: 0 }}
                 labelColor="neutral2"
