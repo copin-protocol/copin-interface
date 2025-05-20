@@ -27,7 +27,7 @@ import VirtualList from 'theme/VirtualList'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { MAX_LIST_DATA_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum, SortTypeEnum, SubscriptionFeatureEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum, SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import reorderArray from 'utils/helpers/reorderArray'
 import { getPairFromSymbol, pageToOffset } from 'utils/helpers/transform'
 
@@ -538,8 +538,6 @@ function DailyPositionsComponent() {
     }
   }, [data, positionFieldsAllowed])
 
-  const { userNextPlan } = useUserNextPlan()
-
   return (
     <Flex
       sx={{
@@ -769,7 +767,7 @@ function DailyPositionsComponent() {
         >
           <Box display="none" minWidth={180} sx={{ flexShrink: 0 }}>
             <PlanUpgradePrompt
-              requiredPlan={userNextPlan}
+              requiredPlan={SubscriptionPlanEnum.ELITE}
               title={<Trans>Upgrade to Unlock more Metrics</Trans>}
               description={<Trans>See Unrealised PnL, Traded Tokens and more.</Trans>}
               showTitleIcon

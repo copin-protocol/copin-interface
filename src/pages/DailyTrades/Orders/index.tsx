@@ -17,7 +17,6 @@ import ToastBody from 'components/@ui/ToastBody'
 import { OrderData } from 'entities/trader'
 import useCheckFeature from 'hooks/features/subscription/useCheckFeature'
 import useLiveTradesPermission from 'hooks/features/subscription/useLiveTradesPermission'
-import useUserNextPlan from 'hooks/features/subscription/useUserNextPlan'
 import { useFilterPairs } from 'hooks/features/useFilterPairs'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
@@ -25,7 +24,7 @@ import VirtualList from 'theme/VirtualList'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { MAX_LIST_DATA_LIMIT, MAX_PAGE_LIMIT } from 'utils/config/constants'
-import { MarginModeEnum, SortTypeEnum, SubscriptionFeatureEnum } from 'utils/config/enums'
+import { MarginModeEnum, SortTypeEnum, SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import reorderArray from 'utils/helpers/reorderArray'
 import { getPairFromSymbol, pageToOffset } from 'utils/helpers/transform'
@@ -460,8 +459,6 @@ function DailyOrdersComponent() {
     }
   }, [data, orderFieldsAllowed])
 
-  const { userNextPlan } = useUserNextPlan()
-
   return (
     <Flex
       sx={{
@@ -677,7 +674,7 @@ function DailyOrdersComponent() {
         >
           <Box display="none" minWidth={180} sx={{ flexShrink: 0 }}>
             <PlanUpgradePrompt
-              requiredPlan={userNextPlan}
+              requiredPlan={SubscriptionPlanEnum.ELITE}
               title={<Trans>Upgrade to Unlock more Metrics</Trans>}
               description={<Trans>See Unrealised PnL, Traded Tokens and more.</Trans>}
               showTitleIcon
