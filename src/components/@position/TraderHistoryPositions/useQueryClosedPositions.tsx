@@ -139,7 +139,7 @@ export default function useQueryClosedPositions({
   const [closedPositions, setClosedPositions] = useState<ApiListResponse<PositionData>>()
   const [isLoadingClosedPositions, setIsLoadingClosedPositions] = useState(false)
   const [isFetchingClosedPositions, setIsFetchingClosedPositions] = useState(false)
-  const defaultLimit = Math.min(maxAllowedRecords, DEFAULT_LIMIT)
+  const defaultLimit = isUnlimited ? DEFAULT_LIMIT : Math.min(maxAllowedRecords, DEFAULT_LIMIT)
 
   const [enabledReload, setEnabledReload] = useState(false)
   useEffect(() => {
