@@ -151,7 +151,7 @@ export function OnboardingContent({
     [QUERY_KEYS.GET_PNL_STATISTICS, traderData],
     () => getPnlStatisticsApi(getPnlStatisticsPayload(listTraderData ?? [])),
     {
-      enabled: !!traderData?.data?.length || step === 2,
+      enabled: !!traderData?.data?.length && step === 2,
       retry: 0,
     }
   )

@@ -165,7 +165,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
     },
     [changeCurrentSort]
   )
-  const Header = useCallback(() => {
+  const header = useMemo(() => {
     return (
       <Flex
         width="100%"
@@ -287,7 +287,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
   }, [scrollWhenDataChange, data])
   return (
     <Flex sx={{ flexDirection: 'column', height: '100%', width: '100%', overflow: 'hidden' }}>
-      <Header />
+      {header}
       <Box flex="1 0 0" ref={wrapperRef} sx={{ position: 'relative', overflow: 'hidden' }}>
         {!isLoading && !data?.length && <NoDataFound />}
         <InfiniteLoader

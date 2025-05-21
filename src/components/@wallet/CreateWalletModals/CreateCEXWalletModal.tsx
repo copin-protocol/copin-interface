@@ -11,11 +11,13 @@ import Divider from 'components/@ui/Divider'
 import ToastBody from 'components/@ui/ToastBody'
 import { RequestCopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { Button } from 'theme/Buttons'
 import InputField, { InputPasswordField } from 'theme/InputField'
 import Modal from 'theme/Modal'
 import { Box } from 'theme/base'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 import { EXCHANGES_INFO } from 'utils/config/platforms'
 import { Z_INDEX } from 'utils/config/zIndex'
 
@@ -46,6 +48,7 @@ export default function CreateCEXWalletModal({
   const [submitting, setSubmitting] = useState(false)
   const hasPassPhrase = PASS_PHRASE_EXCHANGES.includes(exchange)
   const exchangeInfo = EXCHANGES_INFO[exchange]
+  const refetchQueries = useRefetchQueries()
 
   const createWallet = useMutation(requestCopyWalletApi, {
     onMutate: () => setSubmitting(true),
@@ -53,6 +56,7 @@ export default function CreateCEXWalletModal({
     onSuccess: () => {
       toast.success(<ToastBody title={<Trans>Success</Trans>} message={<Trans>Create wallet successful!</Trans>} />)
       onDismiss()
+      refetchQueries([QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE])
       reloadCopyWallets?.()
     },
     onError: (error: any) => {

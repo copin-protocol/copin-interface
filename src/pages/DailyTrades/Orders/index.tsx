@@ -382,8 +382,8 @@ function DailyOrdersComponent() {
   )
   const handleDismiss = useCallback(() => setCurrentOrder(null), [])
 
-  const _orderColumns = reorderArray({ source: orderFieldsAllowed, target: orderColumns, getValue: (v) => v.key }).map(
-    (v) => {
+  const _orderColumns = useMemo(() => {
+    return reorderArray({ source: orderFieldsAllowed, target: orderColumns, getValue: (v) => v.key }).map((v) => {
       const isAllowed = orderFieldsAllowed == null || !v.key || orderFieldsAllowed.includes(v.key) || isEliteUser
       return {
         ...v,
@@ -391,8 +391,8 @@ function DailyOrdersComponent() {
         filterComponent: isAllowed ? v.filterComponent : undefined,
         style: { ...v.style, paddingRight: '8px' },
       }
-    }
-  )
+    })
+  }, [isEliteUser, orderFieldsAllowed])
 
   const overlayRef = useRef<HTMLDivElement | null>(null)
   const tableWrapperRef = useRef<HTMLDivElement | null>(null)

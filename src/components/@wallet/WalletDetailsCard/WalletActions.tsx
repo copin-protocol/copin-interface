@@ -9,8 +9,9 @@ import { deleteCopyWalletApi } from 'apis/copyWalletApis'
 import ToastBody from 'components/@ui/ToastBody'
 import { CopyWalletData } from 'entities/copyWallet'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { Flex, IconBox } from 'theme/base'
-import { URL_PARAM_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 
 import ConfirmDeleteModal from './ConfirmDeleteModal'
@@ -20,11 +21,13 @@ const WalletActions = ({ data }: { data: CopyWalletData }) => {
   const { reloadCopyWallets, embeddedWallet } = useCopyWalletContext()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openHistoryDrawer, setOpenHistoryDrawer] = useState(false)
+  const refetchQueries = useRefetchQueries()
 
   const deleteWallet = useMutation(deleteCopyWalletApi, {
     onSuccess: () => {
       toast.success(<ToastBody title={<Trans>Success</Trans>} message={<Trans>Delete wallet successful!</Trans>} />)
       reloadCopyWallets?.()
+      refetchQueries([QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE])
       setOpenDeleteModal(false)
     },
     onError: (error: any) => {

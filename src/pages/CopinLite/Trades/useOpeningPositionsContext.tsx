@@ -14,6 +14,7 @@ import { CopyPositionData } from 'entities/copyTrade'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSelectMultipleFactory from 'hooks/helpers/useSelectMultipleFactory'
+import { useAuthContext } from 'hooks/web3/useAuth'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS, STORAGE_KEYS } from 'utils/config/keys'
 
@@ -34,6 +35,7 @@ export interface LiteOpeningPositionsContextValues {
 export const Context = createContext({} as LiteOpeningPositionsContextValues)
 
 export function LiteOpeningPositionProvider({ children }: { children: JSX.Element | JSX.Element[] }) {
+  const { isAuthenticated } = useAuthContext()
   const { traderAddresses } = useLiteContext()
   const { embeddedWallet } = useCopyWalletContext()
   const [stuckPositions, setStuckPositions] = useState<CopyPositionData[] | undefined>()
@@ -67,7 +69,7 @@ export function LiteOpeningPositionProvider({ children }: { children: JSX.Elemen
     [QUERY_KEYS.GET_MY_COPY_POSITIONS, _queryParams, _queryBody],
     () => getMyCopyPositionsApi(_queryParams, _queryBody),
     {
-      enabled: !!embeddedWallet?.id,
+      enabled: !!embeddedWallet?.id && !!isAuthenticated,
       retry: 0,
       keepPreviousData: true,
       refetchInterval: 5000,
