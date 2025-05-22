@@ -36,13 +36,13 @@ import { parseExchangeImage } from 'utils/helpers/transform'
 
 const EXCHANGES = [
   CopyTradePlatformEnum.HYPERLIQUID,
-  CopyTradePlatformEnum.APEX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.GATE,
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.BYBIT,
   CopyTradePlatformEnum.BINANCE,
+  CopyTradePlatformEnum.APEX,
   CopyTradePlatformEnum.SYNTHETIX_V2,
   CopyTradePlatformEnum.GNS_V8,
 ]
@@ -453,6 +453,14 @@ function ExternalLink({ exchange }: { exchange: CopyTradePlatformEnum }) {
     case CopyTradePlatformEnum.GATE:
       link = LINKS.registerGate
       text = `Don’t have a Gate account?`
+      break
+    case CopyTradePlatformEnum.APEX:
+      link = LINKS.registerApex
+      text = `Don’t have a Apex account?`
+      break
+    case CopyTradePlatformEnum.HYPERLIQUID:
+      link = LINKS.registerHyperliquid
+      text = `Don’t have a Hyperliquid account?`
       break
   }
   if (!link) return null

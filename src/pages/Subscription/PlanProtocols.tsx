@@ -42,6 +42,7 @@ const PERPDEX_NAMES: Record<string, string> = {
   MORPHEX: 'Morphex',
   EQUATION: 'Equation',
   PERENNIAL: 'Perennial',
+  OSTIUM: 'Ostium',
 } as const
 
 type PerpDex = keyof typeof PERPDEX_NAMES
@@ -138,6 +139,8 @@ const getPerpDexFromProtocol = (protocol: ProtocolEnum): PerpDex | undefined => 
       return 'EQUATION'
     case ProtocolEnum.PERENNIAL_ARB:
       return 'PERENNIAL'
+    case ProtocolEnum.OSTIUM_ARB:
+      return 'OSTIUM'
   }
   return
 }

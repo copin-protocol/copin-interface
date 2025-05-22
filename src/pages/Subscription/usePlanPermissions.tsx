@@ -2,6 +2,7 @@ import { ReactNode, useMemo } from 'react'
 
 import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { PlanProtocol } from 'pages/Subscription/PlanProtocols'
+import { WAITLIST_EXCHANGES } from 'utils/config/constants'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { EXCHANGES_INFO } from 'utils/config/platforms'
 import { formatDuration, formatNumber } from 'utils/helpers/format'
@@ -236,7 +237,13 @@ export const usePlanPermissions = (): PlanPermission[] => {
           {
             name: 'Supported Exchanges',
             ...generatePermissionData(permission?.COPY_TRADING, 'exchangeAllowed', (value) => {
-              return value?.map((exchange: any) => EXCHANGES_INFO[exchange].name).join(', ')
+              return value
+                ?.map((exchange: any) =>
+                  WAITLIST_EXCHANGES.includes(exchange)
+                    ? `${EXCHANGES_INFO[exchange].name} (Coming soon)`
+                    : EXCHANGES_INFO[exchange].name
+                )
+                .join(', ')
             }),
           },
           {
