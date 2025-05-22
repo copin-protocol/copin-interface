@@ -9,7 +9,7 @@ import { CreateTypeWalletEnum } from 'pages/MyProfile/CheckingWalletRenderer'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { Box, Flex, Image, Type } from 'theme/base'
-import { CEX_EXCHANGES, DCP_EXCHANGES, DEPRECATED_EXCHANGES } from 'utils/config/constants'
+import { CEX_EXCHANGES, DCP_EXCHANGES, DEPRECATED_EXCHANGES, WAITLIST_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { EXCHANGES_INFO } from 'utils/config/platforms'
 import { parseExchangeImage } from 'utils/helpers/transform'
@@ -28,9 +28,7 @@ export default function CreateWalletAction({ type = CreateTypeWalletEnum.FULL }:
     setOpenCreateModal(true)
   }
 
-  const cexExchanges = CEX_EXCHANGES.filter(
-    (e) => !DEPRECATED_EXCHANGES.includes(e) && e !== CopyTradePlatformEnum.APEX
-  )
+  const cexExchanges = CEX_EXCHANGES.filter((e) => !DEPRECATED_EXCHANGES.includes(e))
   const cexItems = (
     <>
       {cexExchanges.map((exchange) => {
@@ -148,7 +146,7 @@ interface WalletItemProps {
 
 function WalletItem({ exchange, label, description, handleClick }: WalletItemProps) {
   const isInternal = useInternalRole()
-  const isComingSoon = !isInternal && exchange === CopyTradePlatformEnum.BINANCE
+  const isComingSoon = !isInternal && WAITLIST_EXCHANGES.includes(exchange)
   const isDeprecated = DEPRECATED_EXCHANGES.includes(exchange)
   const { disabledExchanges } = useCheckCopyTradeExchange()
   const isMaintenance = !!disabledExchanges.includes(exchange)

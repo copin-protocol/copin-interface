@@ -29,14 +29,14 @@ import Loading from 'theme/Loading'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { DCP_EXCHANGES, DEPRECATED_EXCHANGES, LINKS } from 'utils/config/constants'
+import { DCP_EXCHANGES, DEPRECATED_EXCHANGES, LINKS, WAITLIST_EXCHANGES } from 'utils/config/constants'
 import { CopyTradePlatformEnum, SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
 const EXCHANGES = [
   CopyTradePlatformEnum.HYPERLIQUID,
-  // CopyTradePlatformEnum.APEX,
+  CopyTradePlatformEnum.APEX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.GATE,
   CopyTradePlatformEnum.BINGX,
@@ -297,6 +297,7 @@ function ExchangeTitle({
   count: number
   maxApiKeyQuota: number
 }) {
+  const isInternal = useInternalRole()
   const { profile } = useAuthContext()
   const { sm } = useResponsive()
   const { disabledExchanges } = useCheckCopyTradeExchange()
@@ -337,6 +338,7 @@ function ExchangeTitle({
       break
   }
   if (!title) return null
+  const isWaitlist = !isInternal && WAITLIST_EXCHANGES.includes(exchange)
   const isDeprecated = DEPRECATED_EXCHANGES.includes(exchange)
   const isEmail = profile?.username?.includes('@')
   const isUnsupport = exchange === CopyTradePlatformEnum.HYPERLIQUID && isEmail
@@ -350,7 +352,7 @@ function ExchangeTitle({
             {title} {isAllowed && !!count ? `(${count})` : ''}
           </Type.BodyBold>
         </Flex>
-        {isAllowed && !isDeprecated && !isMaintenance && !isUnsupport ? (
+        {isAllowed && !isWaitlist && !isDeprecated && !isMaintenance && !isUnsupport ? (
           <Button
             variant="ghostPrimary"
             sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 0 }}
@@ -367,14 +369,16 @@ function ExchangeTitle({
             <PlusSquare size={16} style={{ color: 'inherit' }} />
             <Box as="span">{DCP_EXCHANGES.includes(exchange) ? <Trans>Create</Trans> : <Trans>Connect</Trans>}</Box>
           </Button>
-        ) : isMaintenance || isDeprecated || isUnsupport ? (
+        ) : isMaintenance || isDeprecated || isUnsupport || isWaitlist ? (
           <Type.Caption sx={{ py: 1, px: 2, bg: 'neutral6', borderRadius: '2px' }} color="neutral3">
             {isUnsupport ? (
               <Trans>Copin Lite only</Trans>
             ) : isMaintenance ? (
               <Trans>Maintenance</Trans>
-            ) : (
+            ) : isDeprecated ? (
               <Trans>Deprecated</Trans>
+            ) : (
+              <Trans>Coming soon</Trans>
             )}
           </Type.Caption>
         ) : (
@@ -395,14 +399,16 @@ function ExchangeTitle({
           </Flex>
         )}
       </Flex>
-      <CreateWalletModal
-        exchange={exchange}
-        isOpen={openModal}
-        onDismiss={() => {
-          onCreateWalletSuccess?.()
-          setOpenModal(false)
-        }}
-      />
+      {openModal && (
+        <CreateWalletModal
+          exchange={exchange}
+          isOpen={openModal}
+          onDismiss={() => {
+            onCreateWalletSuccess?.()
+            setOpenModal(false)
+          }}
+        />
+      )}
       {isOpenUpgradeModal && (
         <UpgradeModal
           isOpen={isOpenUpgradeModal}
