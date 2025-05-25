@@ -2,8 +2,6 @@ import { Trans } from '@lingui/macro'
 
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
-import { useAuthContext } from 'hooks/web3/useAuth'
-import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SubscriptionFeatureEnum } from 'utils/config/enums'
 import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
@@ -17,9 +15,9 @@ export default function ProtocolPermissionContainer({
   protocol?: ProtocolEnum
   children: any
 }) {
-  const { loading } = useAuthContext()
+  // const { loading } = useAuthContext()
   const { isAllowedProtocol, requiredPlanToProtocol } = useTraderProfilePermission({ protocol })
-  if (loading) return <Loading />
+  // if (loading) return <Loading />
   if (isAllowedProtocol) return children
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', alignItems: 'center' }}>

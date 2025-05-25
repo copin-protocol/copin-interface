@@ -8,10 +8,8 @@ import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { PositionData } from 'entities/trader'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
-import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
-import Loading from 'theme/Loading'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
@@ -32,9 +30,9 @@ export default function PermissionContainer({
   protocol?: ProtocolEnum
   children: any
 }) {
-  const { loading } = useAuthContext()
+  // const { loading } = useAuthContext()
   const { isAllowedProtocol, requiredPlanToProtocol } = useTraderProfilePermission({ protocol })
-  if (loading) return <Loading />
+  // if (loading) return <Loading />
   if (isAllowedProtocol) return children
 
   const explorerUrl = data && data.protocol ? PROTOCOL_PROVIDER[data.protocol]?.explorerUrl : LINKS.arbitrumExplorer

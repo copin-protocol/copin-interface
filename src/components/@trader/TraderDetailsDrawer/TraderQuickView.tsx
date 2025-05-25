@@ -67,8 +67,10 @@ export default function TraderQuickView({
   disabledLinkAccount?: boolean
   eventCategory?: EventCategory
 }) {
-  const { data: exchangeStats, isLoading } = useQuery([QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address], () =>
-    getTraderExchangeStatistic({ account: address })
+  const { data: exchangeStats, isLoading } = useQuery(
+    [QUERY_KEYS.GET_TRADER_EXCHANGE_STATISTIC, address],
+    () => getTraderExchangeStatistic({ account: address }),
+    { retry: 0, keepPreviousData: true }
   )
   const orderedStats = getOrderedExchangeStats(exchangeStats)
 
