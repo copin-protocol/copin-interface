@@ -203,7 +203,7 @@ export const DCP_EXCHANGES: CopyTradePlatformEnum[] = [
   CopyTradePlatformEnum.SYNTHETIX_V3,
 ]
 
-export const WAITLIST_EXCHANGES: CopyTradePlatformEnum[] = [CopyTradePlatformEnum.BINANCE, CopyTradePlatformEnum.APEX]
+export const WAITLIST_EXCHANGES: CopyTradePlatformEnum[] = [CopyTradePlatformEnum.BINANCE]
 
 export const DEPRECATED_EXCHANGES = [CopyTradePlatformEnum.SYNTHETIX_V2, CopyTradePlatformEnum.SYNTHETIX_V3]
 

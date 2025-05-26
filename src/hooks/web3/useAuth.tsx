@@ -115,6 +115,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
         const jwt = await getAccessToken()
         if (!jwt) {
           login()
+          setLoading(false)
           return null
         }
 
@@ -130,6 +131,8 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
         console.error('Error auth', err)
         toast.error(<ToastBody title={err.name} message={err.message} />)
         disconnect()
+      } finally {
+        setLoading(false)
       }
       return null
     },
