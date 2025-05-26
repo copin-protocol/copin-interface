@@ -36,13 +36,13 @@ import { parseExchangeImage } from 'utils/helpers/transform'
 
 const EXCHANGES = [
   CopyTradePlatformEnum.HYPERLIQUID,
+  CopyTradePlatformEnum.APEX,
   CopyTradePlatformEnum.BITGET,
   CopyTradePlatformEnum.GATE,
   CopyTradePlatformEnum.BINGX,
   CopyTradePlatformEnum.OKX,
   CopyTradePlatformEnum.BYBIT,
   CopyTradePlatformEnum.BINANCE,
-  CopyTradePlatformEnum.APEX,
   CopyTradePlatformEnum.SYNTHETIX_V2,
   CopyTradePlatformEnum.GNS_V8,
 ]
