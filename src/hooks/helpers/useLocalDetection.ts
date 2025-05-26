@@ -12,7 +12,7 @@ interface LocalDetectionResult {
 export const useLocalDetection = (): LocalDetectionResult => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['location'],
-    queryFn: () => axios.get('http://ip-api.com/json/'),
+    queryFn: () => axios.get('https://freeipapi.com/api/json'),
     staleTime: Infinity, // Location rarely changes
     retry: 2,
   })
@@ -20,7 +20,7 @@ export const useLocalDetection = (): LocalDetectionResult => {
   return {
     isVN: data ? data.data.countryCode === 'VN' : null,
     countryCode: data?.data.countryCode,
-    countryName: data?.data.country,
+    countryName: data?.data.countryName,
     isLoading,
     error: error ? 'Failed to detect location' : null,
   }

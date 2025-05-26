@@ -25,7 +25,7 @@ const PaymentProgress = () => {
       toastId.current = toast.loading(
         <ToastBody
           title="Payment Progressing"
-          message="Your subscription is being processed"
+          message="Your subscription is being processed. Estimated time: 15 minutes"
           onClose={() => {
             localStorage.removeItem(`${profile?.id}_${STORAGE_KEYS.PAYMENT_ID}`)
             setPaymentId(null)
