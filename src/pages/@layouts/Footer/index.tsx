@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { DotsNine } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 
+import { useLocalDetection } from 'hooks/helpers/useLocalDetection'
 import useMyProfile from 'hooks/store/useMyProfile'
-import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Dropdown from 'theme/Dropdown'
 import DiscordIcon from 'theme/Icons/DiscordIcon'
 import GithubIcon from 'theme/Icons/GithubIcon'
@@ -21,6 +20,8 @@ import FeedbackButton from './FeedbackButton'
 const Footer = ({ height }: { height: number }) => {
   const { myProfile } = useMyProfile()
   const { sm } = useResponsive()
+
+  const { isVN } = useLocalDetection()
 
   const logEventRoutes = (action: string) => {
     logEvent({
@@ -77,18 +78,20 @@ const Footer = ({ height }: { height: number }) => {
           </Box>
           <Box display={['block']} sx={{ width: '1px', height: '24px', bg: 'neutral4' }} />
           <Flex color="neutral3" sx={{ alignItems: 'center', gap: [2, 3] }}>
-            {channels.map((_d, index) => (
-              <Box
-                key={index}
-                as="a"
-                href={_d.href}
-                target="_blank"
-                sx={{ lineHeight: 0 }}
-                onClick={() => logEventRoutes(_d.event)}
-              >
-                <_d.Icon variant="Bold" size={20} />
-              </Box>
-            ))}
+            {channels
+              .filter((_d) => (isVN ? _d.href !== LINKS.telegram : true))
+              .map((_d, index) => (
+                <Box
+                  key={index}
+                  as="a"
+                  href={_d.href}
+                  target="_blank"
+                  sx={{ lineHeight: 0 }}
+                  onClick={() => logEventRoutes(_d.event)}
+                >
+                  <_d.Icon variant="Bold" size={20} />
+                </Box>
+              ))}
           </Flex>
         </Flex>
       </Flex>
