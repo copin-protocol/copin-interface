@@ -2,15 +2,16 @@ import { Clock } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
 
-import useUserSubscription from 'hooks/features/subscription/useUserSubscription'
 import useCountdown from 'hooks/helpers/useCountdown'
+import useMyProfile from 'hooks/store/useMyProfile'
 import Tooltip from 'theme/Tooltip'
 import { Box, IconBox, Type } from 'theme/base'
 import ROUTES from 'utils/config/routes'
 import { getSubscriptionPlanConfigs } from 'utils/helpers/transform'
 
 export default function WarningExpiredSubscriptionIcon() {
-  const { data } = useUserSubscription()
+  const { myProfile } = useMyProfile()
+  const data = myProfile?.subscription
 
   if (!data) return null
 
@@ -20,7 +21,7 @@ export default function WarningExpiredSubscriptionIcon() {
 
   if (minuteDiff <= 1 || dayDiff > 5) return null
 
-  const { label, color } = getSubscriptionPlanConfigs(data.tierId)
+  const { label, color } = getSubscriptionPlanConfigs(data.plan)
 
   return (
     <>

@@ -370,3 +370,5 @@ export const SUBSCRIPTION_PLAN_ORDER = [
   SubscriptionPlanEnum.FREE,
   SubscriptionPlanEnum.NON_LOGIN,
 ]
+
+export const IGNORE_SUBSCRIPTION_ICON = [SubscriptionPlanEnum.NON_LOGIN, SubscriptionPlanEnum.FREE]

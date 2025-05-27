@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import crow from 'assets/images/crow-big-blue.png'
 import vipLogo from 'assets/images/vip-large-icon.png'
 import Divider from 'components/@ui/Divider'
-import useUserSubscription from 'hooks/features/subscription/useUserSubscription'
+import useMyProfile from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Image, Li, Type } from 'theme/base'
@@ -24,7 +24,8 @@ export default function SubscriptionExpiredWarning() {
     hour?: number
     isExpired: boolean
   } | null>(null)
-  const { data } = useUserSubscription()
+  const { myProfile } = useMyProfile()
+  const data = myProfile?.subscription
 
   const today = dayjs().set('hour', 0).set('minute', 0).set('second', 0)
   const setStorage = () => localStorage.setItem(STORAGE_KEYS.SUBSCRIPTION_LAST_CHECK, today.toISOString())
@@ -61,8 +62,8 @@ export default function SubscriptionExpiredWarning() {
 
   if (!state) return null
 
-  const { label, color } = getSubscriptionPlanConfigs(data?.tierId)
-  const imageSrc = data?.tierId === SubscriptionPlanEnum.PRO ? crow : vipLogo
+  const { label, color } = getSubscriptionPlanConfigs(data?.plan)
+  const imageSrc = data?.plan === SubscriptionPlanEnum.PRO ? crow : vipLogo
 
   return (
     <Modal isOpen={state.show} onDismiss={onDismiss} dismissable={false} maxWidth="375px">

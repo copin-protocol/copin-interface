@@ -22,7 +22,7 @@ import Tabs, { TabPane } from 'theme/Tab'
 import Table from 'theme/Table'
 import { ColumnData, TableProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT, DEFAULT_LIMIT } from 'utils/config/constants'
+import { DAYJS_FULL_DATE_FORMAT, DEFAULT_LIMIT, IGNORE_SUBSCRIPTION_ICON } from 'utils/config/constants'
 import {
   ClaimRewardStatusEnum,
   ReferralHistoryStatusEnum,
@@ -720,7 +720,9 @@ function TraderAddress({ address, subscriptionPlan }: { address: string; subscri
   return (
     <Type.Small color="neutral1" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
       <Box as="span">{addressShorten(address)}</Box>
-      {!!subscriptionPlan && <SubscriptionIcon plan={subscriptionPlan} />}
+      {!!subscriptionPlan && !IGNORE_SUBSCRIPTION_ICON.includes(subscriptionPlan) && (
+        <SubscriptionIcon plan={subscriptionPlan} />
+      )}
     </Type.Small>
   )
 }

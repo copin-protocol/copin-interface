@@ -15,7 +15,7 @@ import Loading from 'theme/Loading'
 import { PaginationWithLimit, PaginationWithSelect } from 'theme/Pagination'
 import Table from 'theme/Table'
 import { Box, Flex, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { DAYJS_FULL_DATE_FORMAT, IGNORE_SUBSCRIPTION_ICON } from 'utils/config/constants'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
 
 import { leaderboardColumns } from './configs'
@@ -94,6 +94,8 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: CopierLeaderb
             externalSource={externalSource}
             footerData={myRankingData}
             footerRowSx={{
+              position: !data?.data?.length ? 'absolute' : undefined,
+              bottom: !data?.data?.length ? 0 : undefined,
               borderTop: 'small',
               borderColor: 'transparent',
               borderRadius: '4px',
@@ -222,7 +224,7 @@ function LeaderboardMobileItem({ data }: { data: CopierLeaderboardData }) {
                   ''
                 )}
               </Type.CaptionBold>
-              {!!data.plan && <SubscriptionIcon plan={data.plan} />}
+              {!!data.plan && !IGNORE_SUBSCRIPTION_ICON.includes(data.plan) && <SubscriptionIcon plan={data.plan} />}
             </Flex>
             <Box sx={{ mr: '-12px' }}>
               <CopierRankingNumber ranking={data.ranking} />

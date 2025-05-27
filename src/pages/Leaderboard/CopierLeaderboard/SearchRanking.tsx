@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import useDebounce from 'hooks/helpers/useDebounce'
 import { InputSearch } from 'theme/Input'
 import { Box, Type } from 'theme/base'
+import { EMAIL_REGEX } from 'utils/config/constants'
 import { isAddress } from 'utils/web3/contracts'
 
 import useCopierLeaderboardContext from './useCopierLeaderboardProvider'
@@ -32,8 +33,12 @@ export default function SearchRanking() {
     try {
       address = isAddress(debounceSearchText)
     } catch {}
-    if (address) {
-      setKeyword(address)
+    if (address || EMAIL_REGEX.test(debounceSearchText)) {
+      if (address) {
+        setKeyword(address)
+      } else {
+        setKeyword(debounceSearchText)
+      }
       setError(false)
     } else {
       setKeyword('')

@@ -4,6 +4,7 @@ import { CopierRankingNumber } from 'components/@ui/LeaderboardRankingNumber'
 import { CopierLeaderboardData } from 'entities/copier'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
+import { IGNORE_SUBSCRIPTION_ICON } from 'utils/config/constants'
 import { formatNumber } from 'utils/helpers/format'
 
 import { ExternalLeaderboardSource } from './types'
@@ -42,7 +43,7 @@ export const leaderboardColumns: ColumnData<CopierLeaderboardData, ExternalLeade
             ''
           )}
         </Type.CaptionBold>
-        {!!item.plan && <SubscriptionIcon plan={item.plan} />}
+        {!!item.plan && !IGNORE_SUBSCRIPTION_ICON.includes(item.plan) && <SubscriptionIcon plan={item.plan} />}
       </Flex>
     ),
   },
