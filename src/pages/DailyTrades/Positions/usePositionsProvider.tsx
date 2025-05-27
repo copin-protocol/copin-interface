@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 
 import { POSITION_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
 import { getRangeFilterValues } from 'components/@widgets/TableFilter/helpers'
@@ -11,7 +11,7 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import { TableProps, TableSortProps } from 'theme/Table/types'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { PairFilterEnum, PositionStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
-import { getSymbolFromPair } from 'utils/helpers/transform'
+import { getSymbolFromPair, parsePairsFromQueryString } from 'utils/helpers/transform'
 
 import { getPairsParam } from '../helpers'
 import { useProtocolsContext } from '../useProtocolsProvider'
@@ -62,12 +62,12 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
       if (!defaultAllPairs?.length) return []
       return defaultAllPairs
     }
-    return pairsParam.split('_')
+    return parsePairsFromQueryString(pairsParam)
   }, [pairsParam, defaultAllPairs])
 
   const excludedPairsParam = searchParams['excludedPairs'] as string | undefined
   const excludedPairs = useMemo(() => {
-    return excludedPairsParam ? excludedPairsParam.split('_') : []
+    return parsePairsFromQueryString(excludedPairsParam)
   }, [excludedPairsParam])
 
   const onChangePairs = useCallback(

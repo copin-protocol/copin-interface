@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 
 import { DirectionFilterEnum, ORDER_RANGE_CONFIG_MAPPING } from 'components/@dailyTrades/configs'
 import { getRangeFilterValues } from 'components/@widgets/TableFilter/helpers'
@@ -9,6 +9,7 @@ import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { OrderTypeEnum, PairFilterEnum, ProtocolEnum } from 'utils/config/enums'
+import { parsePairsFromQueryString } from 'utils/helpers/transform'
 
 import { getPairsParam } from '../helpers'
 import { useProtocolsContext } from '../useProtocolsProvider'
@@ -59,12 +60,12 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
       if (!defaultAllPairs?.length) return []
       return defaultAllPairs
     }
-    return pairsParam.split('_')
+    return parsePairsFromQueryString(pairsParam)
   }, [pairsParam, defaultAllPairs])
 
   const excludedPairsParam = searchParams['excludedPairs'] as string | undefined
   const excludedPairs = useMemo(() => {
-    return excludedPairsParam ? excludedPairsParam.split('_') : []
+    return parsePairsFromQueryString(excludedPairsParam)
   }, [excludedPairsParam])
 
   const onChangePairs = useCallback(

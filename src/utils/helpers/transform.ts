@@ -598,3 +598,13 @@ export function goToPreviousPage({
     changeCurrentPage(currentPage - 1)
   }
 }
+
+export function parsePairsFromQueryString(query: string | undefined): string[] {
+  if (!query) return []
+  return query.split('_')
+}
+
+export function stringifyPairsQuery(pairs: string[] | undefined) {
+  if (!pairs) return undefined
+  return pairs.join('_')
+}

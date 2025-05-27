@@ -7,6 +7,7 @@ import {
   NOT_CHANGE_COLOR_FIELDS,
 } from 'pages/PerpDEXsExplorer/constants/field'
 import { FULL_TITLE_MAPPING, TITLE_MAPPING } from 'pages/PerpDEXsExplorer/constants/title'
+import { parsePairsFromQueryString } from 'utils/helpers/transform'
 
 import { TABLE_RANGE_FILTER_CONFIGS } from './configs'
 import { ExternalResource } from './types'
@@ -184,7 +185,7 @@ export function getFilters({ searchParams }: { searchParams: Record<string, stri
       }
     }
     if (filterConfigs.type === 'pairs') {
-      const pairs = searchParams['pairs']?.split('_')
+      const pairs = parsePairsFromQueryString(searchParams['pairs'])
       if (!pairs?.length) {
         const filter: FilterValues = {
           type: 'pairs',

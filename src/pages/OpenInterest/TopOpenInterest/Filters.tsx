@@ -12,6 +12,7 @@ import { getDropdownProps } from 'pages/Home/configs'
 import Dropdown, { CheckableDropdownItem, DropdownItem } from 'theme/Dropdown'
 import { Flex, Type } from 'theme/base'
 import { PairFilterEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { parsePairsFromQueryString, stringifyPairsQuery } from 'utils/helpers/transform'
 
 import ItemWrapper from '../FilterItemWrapper'
 import FilterMenuWrapper from '../FilterMenuWrapper'
@@ -158,10 +159,11 @@ export function useFilters(args?: { isOverviewPage?: boolean }) {
       if (!defaultAllPairs?.length) return []
       return defaultAllPairs
     }
-    return pairsFromQuery.split('-')
+    return parsePairsFromQueryString(pairsFromQuery)
   }, [pairsFromQuery, isAllPairs, defaultAllPairs])
 
-  const excludedPairs = typeof searchParams.excludedPairs === 'string' ? searchParams.excludedPairs.split('_') : []
+  const excludedPairs =
+    typeof searchParams.excludedPairs === 'string' ? parsePairsFromQueryString(searchParams.excludedPairs) : []
 
   if (searchParams.top && LIMITS.includes(Number(searchParams.top))) {
     limit = Number(searchParams.top)
@@ -180,10 +182,14 @@ export function useFilters(args?: { isOverviewPage?: boolean }) {
 
   const onChangePairs = (pairs: string[], excludedPairs: string[]) => {
     if (pairs.length == defaultAllPairs?.length) {
-      setSearchParams({ pairs: PairFilterEnum.ALL, excludedPairs: excludedPairs.join('_'), ['page']: '1' })
+      setSearchParams({ pairs: PairFilterEnum.ALL, excludedPairs: stringifyPairsQuery(excludedPairs), ['page']: '1' })
       return
     }
-    setSearchParams({ pairs: pairs.join('_'), excludedPairs: excludedPairs.join('_'), ['page']: '1' })
+    setSearchParams({
+      pairs: stringifyPairsQuery(pairs),
+      excludedPairs: stringifyPairsQuery(excludedPairs),
+      ['page']: '1',
+    })
   }
 
   const { time, from, to, onChangeTime } = useTimeFilter()
