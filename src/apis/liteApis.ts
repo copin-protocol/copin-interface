@@ -38,6 +38,21 @@ export async function closeHlPosition(payload: {
   return requester.post('hyperliquid/exchange/close-position', payload)
 }
 
+export async function placeHLTriggerOrder(payload: {
+  walletAddress: string
+  isStoploss: boolean
+  isLong: boolean
+  triggerPrice: number
+  size: number
+  symbol: string
+}) {
+  return requester.post('hyperliquid/exchange/place-trigger-order', payload)
+}
+
+export async function cancelHlOrder(payload: { walletAddress: string; size: number; symbol: string }) {
+  return requester.post('hyperliquid/exchange/cancel-order', payload)
+}
+
 // POST hyperliquid/exchange/place-trigger-order
 
 // {

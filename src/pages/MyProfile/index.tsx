@@ -16,12 +16,13 @@ import ROUTES from 'utils/config/routes'
 import CEXManagementPage from './CEXManagement'
 import DCPManagementPage from './DCPManagement'
 import HistoryPositionsPage from './HistoryPositions'
+import IFManagementPage from './IFManagement'
 import UserActivityPage from './UserActivity'
-import VaultManagementPage from './VaultManagement'
 
 export default function MyProfilePage() {
   const { pathname } = useLocation()
   const { lg } = useResponsive()
+  const isInternal = useInternalRole()
   const myProfile = useMyProfileStore((s) => s.myProfile)
   if (!myProfile) return null
 
@@ -48,9 +49,14 @@ export default function MyProfilePage() {
                 <Route exact path={ROUTES.USER_DCP_MANAGEMENT.path}>
                   <DCPManagementPage />
                 </Route>
-                <Route exact path={ROUTES.USER_VAULT_MANAGEMENT.path}>
-                  <VaultManagementPage />
-                </Route>
+                {/*<Route exact path={ROUTES.USER_VAULT_MANAGEMENT.path}>*/}
+                {/*  <VaultManagementPage />*/}
+                {/*</Route>*/}
+                {isInternal && (
+                  <Route exact path={ROUTES.USER_IF_MANAGEMENT.path}>
+                    <IFManagementPage />
+                  </Route>
+                )}
                 <Route exact path={ROUTES.MY_HISTORY.path}>
                   <HistoryPositionsPage />
                 </Route>
@@ -78,6 +84,7 @@ enum TabKeyEnum {
   MANAGEMENT = 'management',
   DCP_MANAGEMENT = 'dcp-management',
   VAULT_MANAGEMENT = 'vault-management',
+  IF_MANAGEMENT = 'if-management',
   HISTORY = 'history',
   ACTIVITIES = 'activities',
 }
@@ -128,12 +135,19 @@ const internalTabConfigs: TabConfig[] = [
     key: TabKeyEnum.DCP_MANAGEMENT,
     route: ROUTES.USER_DCP_MANAGEMENT.path,
   },
+  // {
+  //   name: <Trans>VAULT</Trans>,
+  //   activeIcon: <SubtractSquare size={24} weight="fill" />,
+  //   icon: <SubtractSquare size={24} />,
+  //   key: TabKeyEnum.VAULT_MANAGEMENT,
+  //   route: ROUTES.USER_VAULT_MANAGEMENT.path,
+  // },
   {
-    name: <Trans>VAULT</Trans>,
+    name: <Trans>IF WALLET</Trans>,
     activeIcon: <SubtractSquare size={24} weight="fill" />,
     icon: <SubtractSquare size={24} />,
-    key: TabKeyEnum.VAULT_MANAGEMENT,
-    route: ROUTES.USER_VAULT_MANAGEMENT.path,
+    key: TabKeyEnum.IF_MANAGEMENT,
+    route: ROUTES.USER_IF_MANAGEMENT.path,
   },
   {
     name: <Trans>HISTORY</Trans>,

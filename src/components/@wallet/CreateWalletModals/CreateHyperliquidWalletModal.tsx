@@ -196,6 +196,7 @@ export default function CreateHyperliquidWalletModal({
                 />
                 <Box mt={2} sx={{ display: enableVault ? 'block' : 'none' }}>
                   <InputPasswordField
+                    allowShowPassword
                     required={enableVault}
                     placeholder={t`Your Hyperliquid Vault Address`}
                     label={<Trans>Hyperliquid Vault Address</Trans>}
@@ -224,7 +225,7 @@ export default function CreateHyperliquidWalletModal({
             <WalletHelpCEX exchange={CopyTradePlatformEnum.HYPERLIQUID} />
 
             <Box>
-              <Checkbox checked={!!signatureData} onClick={handleAccept}>
+              <Checkbox checked={!!signatureData && !isInternal} onClick={handleAccept}>
                 <Type.Caption>I agree to let Copin use the API to place orders.</Type.Caption>
               </Checkbox>
               <Type.Caption>
@@ -255,7 +256,7 @@ export default function CreateHyperliquidWalletModal({
               variant="primary"
               type="submit"
               isLoading={submitting}
-              disabled={Object.keys(errors).length > 0 || submitting || (!enableVault && !signatureData)}
+              disabled={Object.keys(errors).length > 0 || submitting || (!isInternal && !enableVault && !signatureData)}
             >
               {submitting ? <Trans>Connecting...</Trans> : <Trans>Connect API</Trans>}
             </Button>

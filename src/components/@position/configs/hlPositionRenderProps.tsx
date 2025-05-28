@@ -9,7 +9,7 @@ import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 
-const collateralColumn: ColumnData<PositionData> = {
+export const collateralColumn: ColumnData<PositionData> = {
   title: 'Collateral',
   dataIndex: 'collateral',
   key: 'collateral',
@@ -28,7 +28,7 @@ const renderPositionCollateral = (item: PositionData, defaultToken?: string) => 
     />
   </Type.Caption>
 )
-const fundingColumn: ColumnData<PositionData> = {
+export const fundingColumn: ColumnData<PositionData> = {
   title: 'Funding',
   dataIndex: 'funding',
   key: 'funding',
@@ -64,7 +64,7 @@ const renderPositionRoi = (item: PositionData) => (
   </Type.Caption>
 )
 
-const roiColumn: ColumnData<PositionData> = {
+export const roiColumn: ColumnData<PositionData> = {
   title: 'ROI',
   dataIndex: 'roi',
   key: 'roi',
@@ -73,7 +73,7 @@ const roiColumn: ColumnData<PositionData> = {
   render: renderPositionRoi,
 }
 
-const entryColumn: ColumnData<PositionData> = {
+export const entryColumn: ColumnData<PositionData> = {
   title: 'Entry',
   dataIndex: 'averagePrice',
   key: 'averagePrice',
@@ -82,7 +82,7 @@ const entryColumn: ColumnData<PositionData> = {
   render: (item) => renderEntry(item),
 }
 
-const sizeOpeningColumn: ColumnData<PositionData> = {
+export const sizeOpeningColumn: ColumnData<PositionData> = {
   title: 'Size',
   dataIndex: 'size',
   key: 'size',
@@ -91,7 +91,7 @@ const sizeOpeningColumn: ColumnData<PositionData> = {
   render: (item) => renderSizeOpening(item),
 }
 
-const pnlColumn: ColumnData<PositionData> = {
+export const pnlColumn: ColumnData<PositionData> = {
   title: 'PnL',
   dataIndex: 'pnl',
   key: 'pnl',
@@ -99,7 +99,7 @@ const pnlColumn: ColumnData<PositionData> = {
   style: { minWidth: '100px', textAlign: 'right' },
   render: (item) => renderPositionPnL(item),
 }
-const renderPositionPnL = (item: PositionData, prefix = '$') => {
+export const renderPositionPnL = (item: PositionData, prefix = '$') => {
   return (
     <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
       {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}

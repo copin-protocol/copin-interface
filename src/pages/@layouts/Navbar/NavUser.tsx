@@ -279,11 +279,17 @@ const internalUserCopy = [
     icon: <SubtractSquare size={20} />,
     label: <Trans>Smart Wallet</Trans>,
   },
+  // {
+  //   link: ROUTES.USER_VAULT_MANAGEMENT.path,
+  //   event: EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE,
+  //   icon: <SubtractSquare size={20} />,
+  //   label: <Trans>Vault Wallet</Trans>,
+  // },
   {
-    link: ROUTES.USER_VAULT_MANAGEMENT.path,
+    link: ROUTES.USER_IF_MANAGEMENT.path,
     event: EVENT_ACTIONS[EventCategory.ROUTES].MY_PROFILE,
     icon: <SubtractSquare size={20} />,
-    label: <Trans>Vault Wallet</Trans>,
+    label: <Trans>IF Wallet</Trans>,
   },
   {
     link: ROUTES.MY_HISTORY.path,

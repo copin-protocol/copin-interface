@@ -28,7 +28,6 @@ import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import ListOrderTable from './ListOrderTable'
 import PositionStats from './PositionStats'
-import VaultCopyActions from './VaultCopyActions'
 import { getOrderData } from './helper'
 
 const TraderPositionDetails = memo(function PositionDetailsMemo({
@@ -119,9 +118,8 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
               </Link>
 
               {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
-              {isVaultCopying && <Tag width={100} status={TraderStatusEnum.VAULT_COPYING} />}
-
-              {isVaultCopying && <VaultCopyActions data={data} />}
+              {/*{isVaultCopying && <Tag width={100} status={TraderStatusEnum.VAULT_COPYING} />}*/}
+              {/*{isVaultCopying && <VaultCopyActions data={data} />}*/}
             </Flex>
             {!isDrawer && <ProtocolLogo size={24} protocol={data.protocol} textSx={{ fontSize: '14px' }} />}
           </Flex>

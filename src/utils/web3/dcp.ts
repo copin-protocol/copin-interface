@@ -17,6 +17,8 @@ export const getCopyTradePlatformProtocol = (platform: CopyTradePlatformEnum) =>
   switch (platform) {
     case CopyTradePlatformEnum.GNS_V8:
       return ProtocolEnum.GNS
+    case CopyTradePlatformEnum.HYPERLIQUID:
+      return ProtocolEnum.HYPERLIQUID
     default:
       return ProtocolEnum.COPIN
   }

@@ -341,7 +341,7 @@ function ExchangeTitle({
   const isWaitlist = !isInternal && WAITLIST_EXCHANGES.includes(exchange)
   const isDeprecated = DEPRECATED_EXCHANGES.includes(exchange)
   const isEmail = profile?.username?.includes('@')
-  const isUnsupport = exchange === CopyTradePlatformEnum.HYPERLIQUID && isEmail
+  const isUnsupport = exchange === CopyTradePlatformEnum.HYPERLIQUID && isEmail && !isInternal
 
   return (
     <>

@@ -32,6 +32,7 @@ export function parseHLPositionData({ account, data }: { account: string; data: 
       pnl: Number(e.position.unrealizedPnl),
       roi: (Number(e.position.unrealizedPnl) / Number(e.position.positionValue)) * e.position.leverage.value * 100,
       status: PositionStatusEnum.OPEN,
+      id: `${sizeInToken >= 0 ? 'Long' : 'Short'}-${e.position.coin}`,
     } as PositionData
   })
 }

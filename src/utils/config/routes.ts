@@ -73,6 +73,9 @@ const ROUTES = {
   USER_VAULT_MANAGEMENT: {
     path: '/me/vault',
   },
+  USER_IF_MANAGEMENT: {
+    path: '/me/if',
+  },
   USER_ACTIVITY: {
     path: '/me/activity',
     path_prefix: '/me/activity',
