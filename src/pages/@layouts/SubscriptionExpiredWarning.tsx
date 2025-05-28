@@ -4,14 +4,11 @@ import dayjs from 'dayjs'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import crow from 'assets/images/crow-big-blue.png'
-import vipLogo from 'assets/images/vip-large-icon.png'
 import Divider from 'components/@ui/Divider'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { Box, Flex, IconBox, Image, Li, Type } from 'theme/base'
-import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { STORAGE_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { getSubscriptionPlanConfigs } from 'utils/helpers/transform'
@@ -63,7 +60,6 @@ export default function SubscriptionExpiredWarning() {
   if (!state) return null
 
   const { label, color } = getSubscriptionPlanConfigs(data?.plan)
-  const imageSrc = data?.plan === SubscriptionPlanEnum.PRO ? crow : vipLogo
 
   return (
     <Modal isOpen={state.show} onDismiss={onDismiss} dismissable={false} maxWidth="375px">
@@ -77,7 +73,7 @@ export default function SubscriptionExpiredWarning() {
 
       <Box sx={{ p: 3 }}>
         <Flex sx={{ width: '100%', flexDirection: 'column', alignItems: 'center' }}>
-          <Image src={imageSrc} width={166} height={190} alt="crow" />
+          <Image height={152} src={`/images/subscriptions/${data?.plan}_FULL.png`} alt={`${data?.plan}-plan`} />
           {state.isExpired && (
             <Type.BodyBold my={2}>
               Your{' '}
@@ -111,10 +107,10 @@ export default function SubscriptionExpiredWarning() {
           )}
           <Box mt={2} mb={24} color="neutral2">
             <Li>
-              <Type.Caption>Your copy trading with hot traders will be disrupted.</Type.Caption>
+              <Type.Caption>Some quota reductions may stop copy trading or alerts.</Type.Caption>
             </Li>
             <Li mt={2}>
-              <Type.Caption>Your copy trading size will be lowered.</Type.Caption>
+              <Type.Caption>Certain features will no longer be available.</Type.Caption>
             </Li>
           </Box>
           {/* <Type.Caption mb={20} color="neutral2" sx={{ textAlign: 'center' }}>
