@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { QRCodeSVG } from 'qrcode.react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 import useSearchParams from 'hooks/router/useSearchParams'
 import CopyButton from 'theme/Buttons/CopyButton'
@@ -54,9 +54,38 @@ const LiteDeposit = ({ address }: { address: string }) => {
       <CopyButton value={address} variant="outline" mt={[24, 24, 24, 3]} mx="auto">
         {address}
       </CopyButton>
-      <Box my={2} width={372} mx="auto" textAlign="center" color="neutral2">
+      <Box
+        my={2}
+        width={342}
+        mx="auto"
+        textAlign="left"
+        color="neutral1"
+        sx={{
+          background: 'rgba(255, 194, 75, 0.1)',
+          border: 'small',
+          borderColor: 'orange1',
+          borderRadius: 'sm',
+          p: 10,
+          '& span': {
+            color: 'orange1',
+          },
+        }}
+      >
         <Type.Caption>
-          <Trans>This address can only receive native USDC from the Arbitrum network. Minimum deposit is 5 USDC.</Trans>
+          <Trans>IMPORTANT:</Trans>
+        </Type.Caption>
+        <Type.Caption>
+          <Trans>
+            There is a <span>minimum</span> deposit of
+            <span> 5 USDC</span>. This address can only receive
+            <span> USDC on the Arbitrum</span> network.
+          </Trans>
+        </Type.Caption>
+        <Type.Caption>
+          <span>
+            <Trans>Lower amounts or wrong networks will cause unrecoverable loss</Trans>
+          </span>
+          .
         </Type.Caption>
       </Box>
     </>

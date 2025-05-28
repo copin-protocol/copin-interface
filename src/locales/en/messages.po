@@ -1020,6 +1020,7 @@ msgid "Coming Soon"
 msgstr "Coming Soon"
 
 #: src/components/@ui/AnalyzeButton/ModalContactAI.tsx
+#: src/pages/WalletManagement/WalletList/index.tsx
 msgid "Coming soon"
 msgstr "Coming soon"
 
@@ -2001,6 +2002,10 @@ msgstr "Hyperliquid Alert"
 msgid "Hyperliquid Vault Address"
 msgstr "Hyperliquid Vault Address"
 
+#: src/pages/CopinLite/Wallet/Deposit.tsx
+msgid "IMPORTANT:"
+msgstr "IMPORTANT:"
+
 #: src/pages/Home/Traders.tsx
 msgid "IN"
 msgstr "IN"
@@ -2371,6 +2376,10 @@ msgstr "Low Max Drawdown"
 #: src/utils/config/options.tsx
 msgid "Low Overtrading"
 msgstr "Low Overtrading"
+
+#: src/pages/CopinLite/Wallet/Deposit.tsx
+msgid "Lower amounts or wrong networks will cause unrecoverable loss"
+msgstr "Lower amounts or wrong networks will cause unrecoverable loss"
 
 #: src/pages/Settings/AlertDashboard/config.tsx
 msgid "MANAGE ALERT"
@@ -3308,6 +3317,10 @@ msgstr "Position average duration less than 24 hours."
 #: src/components/@copinLite/OnboardingModal/configs.tsx
 msgid "Position average duration more than 7 days."
 msgstr "Position average duration more than 7 days."
+
+#: src/components/@position/TraderPositionDetailsDrawer/index.tsx
+msgid "Position not yet synced"
+msgstr "Position not yet synced"
 
 #: src/pages/TraderDetails/Layouts/MobileLayout.tsx
 msgid "Positions"
@@ -4316,6 +4329,10 @@ msgstr "The remaining <0>value</0> of your current plan will be added to the new
 msgid "The server is not responding, please try again later!"
 msgstr "The server is not responding, please try again later!"
 
+#: src/pages/CopinLite/Wallet/Deposit.tsx
+msgid "There is a <0>minimum</0> deposit of<1> 5 USDC</1>. This address can only receive<2> USDC on the Arbitrum</2> network."
+msgstr "There is a <0>minimum</0> deposit of<1> 5 USDC</1>. This address can only receive<2> USDC on the Arbitrum</2> network."
+
 #: src/components/@ui/NotFound/index.tsx
 msgid "This Page Could Not Be Found"
 msgstr "This Page Could Not Be Found"
@@ -4334,10 +4351,6 @@ msgstr "This URL contains filters available from {0} plan"
 #: src/components/@position/UnlinkCopyPositionModal/index.tsx
 msgid "This action will unlink the {0} position; please ensure the {1} position is closed before proceeding."
 msgstr "This action will unlink the {0} position; please ensure the {1} position is closed before proceeding."
-
-#: src/pages/CopinLite/Wallet/Deposit.tsx
-msgid "This address can only receive native USDC from the Arbitrum network. Minimum deposit is 5 USDC."
-msgstr "This address can only receive native USDC from the Arbitrum network. Minimum deposit is 5 USDC."
 
 #: src/hooks/features/alert/useSettingChannels.tsx
 msgid "This alert has been updated successfully"
