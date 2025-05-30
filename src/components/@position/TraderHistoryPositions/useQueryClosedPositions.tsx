@@ -290,10 +290,11 @@ export default function useQueryClosedPositions({
   const handleFetchClosedPositions = useCallback(() => {
     changeCurrentPage(currentPage + 1)
   }, [changeCurrentPage, currentPage])
+  const metaLimit = closedPositions?.meta?.limit ?? 0
+  const metaOffset = closedPositions?.meta?.offset ?? 0
+  const metaTotal = closedPositions?.meta?.total ?? 0
   const hasNextClosedPositions =
-    closedPositions &&
-    closedPositions.meta.limit + closedPositions.meta.offset <
-      (maxAllowedRecords === 0 ? closedPositions.meta.total : maxAllowedRecords)
+    closedPositions && metaLimit + metaOffset < (maxAllowedRecords === 0 ? metaTotal : maxAllowedRecords)
 
   return useMemo(
     () => ({

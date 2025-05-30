@@ -7,15 +7,14 @@ import { EditText } from 'react-edit-text'
 import 'react-edit-text/dist/index.css'
 
 import TitleWithIcon from 'components/@ui/TilleWithIcon'
-import ReferralStatus from 'components/@wallet/WalletReferralStatus'
 import { CopyWalletData } from 'entities/copyWallet'
-import useCheckHyperliquidBuilderFees from 'hooks/features/copyTrade/useCheckHyperliquidBuilderFees'
 import useWalletFund from 'hooks/features/copyTrade/useWalletFundSnxV2'
+import useInternalRole from 'hooks/features/useInternalRole'
 import { Button } from 'theme/Buttons'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SxProps } from 'theme/types'
-import { CEX_EXCHANGES, DEPRECATED_EXCHANGES, WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
+import { DEPRECATED_EXCHANGES, WALLET_NAME_MAX_LENGTH } from 'utils/config/constants'
 import { CopyTradePlatformEnum } from 'utils/config/enums'
 import { getColorFromText } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
@@ -72,16 +71,13 @@ export default function WalletDetailsCard({ data, handleUpdate, reload, hiddenBa
 
   const Info = data.smartWalletAddress ? SmartWalletInfo : WalletInfo
 
-  const { isValidFees } = useCheckHyperliquidBuilderFees({
-    enable: data.exchange === CopyTradePlatformEnum.HYPERLIQUID,
-    apiKey: data?.hyperliquid?.apiKey,
-  })
+  const isInternal = useInternalRole()
 
   return (
     <Flex p={3} sx={{ flexDirection: 'column', gap: 2 }}>
       <Flex sx={{ width: '100%', gap: 20, justifyContent: 'space-between' }}>
         <Flex alignItems="center" sx={{ flex: 1, flexWrap: 'wrap', gap: 2 }}>
-          {CEX_EXCHANGES.includes(data.exchange) && <ReferralStatus data={data} />}
+          {/*{CEX_EXCHANGES.includes(data.exchange) && <ReferralStatus data={data} />}*/}
           <Flex width={250} alignItems="center" sx={{ gap: 2 }}>
             <TitleWithIcon
               color={getColorFromText(data.id)}
@@ -131,7 +127,9 @@ export default function WalletDetailsCard({ data, handleUpdate, reload, hiddenBa
           {/* <WalletKey walletKey={walletKey} isSmartWallet={isSmartWallet} /> */}
           <Info sx={{ display: ['none', 'flex'] }} data={data} hiddenBalance={hiddenBalance} />
         </Flex>
-        {data.exchange === CopyTradePlatformEnum.HYPERLIQUID && !isValidFees && <UpdateWalletAction data={data} />}
+        {data.exchange === CopyTradePlatformEnum.HYPERLIQUID && isInternal && !data.hyperliquid?.embeddedWallet && (
+          <UpdateWalletAction data={data} />
+        )}
         {!data.smartWalletAddress ? (
           <WalletActions data={data} />
         ) : (
