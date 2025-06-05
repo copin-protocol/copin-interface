@@ -917,10 +917,6 @@ msgstr "Canceled"
 msgid "Cannot interact with contract at this moment"
 msgstr "Cannot interact with contract at this moment"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
-msgid "Cash"
-msgstr "Cash"
-
 #: src/pages/CopinLite/Wallet/Withdraw.tsx
 msgid "Chain:"
 msgstr "Chain:"
