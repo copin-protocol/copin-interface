@@ -155,7 +155,7 @@ export const orderColumns: ColumnData<OrderData>[] = [
     title: <Trans>PAID FEE ($)</Trans>,
     dataIndex: 'feeNumber',
     key: 'feeNumber',
-    style: { textAlign: 'right', flex: 1, pr: 3, display: ['none', 'none', 'none', 'none', 'block'] },
+    style: { textAlign: 'right', flex: 1, pr: 3, display: ['none', 'none', 'none', 'none', 'flex'] },
     render: renderOrderFee,
   },
 ]
