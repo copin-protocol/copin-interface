@@ -53,6 +53,7 @@ const DailyTradesPage = lazy(() => import('./DailyTrades'))
 const PerpDEXDetailsPage = lazy(() => import('./PerpDEXsExplorer/PerpDexDetails'))
 const CopinLitePage = lazy(() => import('./CopinLite'))
 const Components = lazy(() => import('./Components'))
+const CheckoutPage = lazy(() => import('./Checkout'))
 
 function App() {
   useEffect(() => {
@@ -127,6 +128,7 @@ function App() {
             <Route exact path={ROUTES.TRADER_DETAILS_MULTI_EXCHANGE.alter_ath} component={TraderDetailsPage}></Route>
 
             <Route path={ROUTES.LITE.path} exact component={CopinLitePage}></Route>
+            <Route path={ROUTES.CHECKOUT.path} exact component={CheckoutPage}></Route>
             <Route path={ROUTES.HOME.path} exact component={HomePage}></Route>
 
             <Route path="*" component={NotFound}></Route>
