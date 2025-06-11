@@ -17,13 +17,6 @@ interface GlobalStore {
   setProtocol: (protocol: ProtocolEnum | undefined) => void
   positionTimeType: PositionTimeType
   setPositionTimeType: (type: PositionTimeType) => void
-  realisedPnl?: number
-  totalPnl?: number
-  fee?: number
-  pnlSettings: {
-    showPnlWithFee: boolean
-  }
-  setShowPnlWithFee: (show: boolean) => void
 }
 
 const useGlobalStore = create<GlobalStore>()(
@@ -42,17 +35,6 @@ const useGlobalStore = create<GlobalStore>()(
     setPositionTimeType: (type) =>
       set((state) => {
         state.positionTimeType = type
-      }),
-
-    pnlSettings: {
-      showPnlWithFee: JSON.parse(localStorage.getItem(STORAGE_KEYS.SHOW_REALISED_PNL_WITH_FEE) ?? 'false'),
-      showTotalPnlWithFee: JSON.parse(localStorage.getItem(STORAGE_KEYS.SHOW_TOTAL_PNL_WITH_FEE) ?? 'false'),
-    },
-
-    setShowPnlWithFee: (showRealisedWithFee) =>
-      set((state) => {
-        state.pnlSettings.showPnlWithFee = showRealisedWithFee
-        localStorage.setItem(STORAGE_KEYS.SHOW_REALISED_PNL_WITH_FEE, JSON.stringify(showRealisedWithFee))
       }),
   }))
 )
