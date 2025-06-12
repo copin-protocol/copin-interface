@@ -59,7 +59,7 @@ const entryColumn: ColumnData<OnchainPositionData> = {
   render: (item) => renderEntry(item as unknown as PositionData),
 }
 const sizeOpeningColumn: ColumnData<OnchainPositionData> = {
-  title: 'Size',
+  title: 'Value',
   dataIndex: 'size',
   key: 'size',
   sortBy: 'size',

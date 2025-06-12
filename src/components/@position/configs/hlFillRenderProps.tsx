@@ -1,27 +1,50 @@
+import { PositionRangeFilterIcon } from 'components/@dailyTrades/PositionRangeFilterIcon'
+import { POSITION_RANGE_KEYS } from 'components/@dailyTrades/configs'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
-import { LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
+import { LocalTimeText, RelativeShortTimeText, RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import TimeColumnTitleWrapper from 'components/@widgets/TimeColumeTitleWrapper'
 import { GroupedFillsData } from 'entities/hyperliquid'
+import useGlobalStore from 'hooks/store/useGlobalStore'
 import { ColumnData } from 'theme/Table/types'
-import { Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { Box, Flex, Type } from 'theme/base'
+import { DAYJS_FULL_DATE_FORMAT, TIME_FORMAT } from 'utils/config/constants'
 import { formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
+import { HLDirectionFilterIcon } from '../HLTraderOpeningPositions/HLDirectionFilterIcon'
 import OrderFilledPairFilterIcon from './OrderFilledPairFilterIcon'
 
 const timeColumn: ColumnData<GroupedFillsData> = {
-  title: 'Time',
+  title: <TimeColumnTitleWrapper>Time</TimeColumnTitleWrapper>,
   dataIndex: 'timestamp',
   key: 'timestamp',
   sortBy: 'timestamp',
   style: { minWidth: '156px' },
-  render: (item) => (
-    <Type.Caption color="neutral1">
-      <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
-    </Type.Caption>
-  ),
+  render: (item) => <FillTime data={item} />,
 }
+
+function FillTime({ data }: { data: GroupedFillsData }) {
+  const [positionTimeType, currentTime] = useGlobalStore((state) => [state.positionTimeType, state.currentTime])
+  return positionTimeType === 'absolute' ? (
+    <Box>
+      <Box display={['none', 'none', 'none', 'block']}>{renderFillsBlockTime(data)}</Box>
+      <Box display={['block', 'block', 'block', 'none']}>{renderFillsBlockTime(data, TIME_FORMAT)}</Box>
+    </Box>
+  ) : (
+    <Flex color="neutral2" sx={{ alignItems: 'center', gap: 2 }}>
+      <RelativeTimeText key={currentTime} date={data.timestamp} textStyle={{ fontSize: '12px' }} />
+    </Flex>
+  )
+}
+
+export const renderFillsBlockTime = (item: GroupedFillsData, format = DAYJS_FULL_DATE_FORMAT) => (
+  <Flex alignItems="center" sx={{ gap: 2 }}>
+    <Type.Caption color="neutral1">
+      <LocalTimeText date={item.timestamp} format={format} hasTooltip={false} />
+    </Type.Caption>
+  </Flex>
+)
 
 const shortTimeColumn: ColumnData<GroupedFillsData> = {
   title: 'Time',
@@ -52,7 +75,7 @@ const directionColumn: ColumnData<GroupedFillsData> = {
 }
 
 const sizeUsdColumn: ColumnData<GroupedFillsData> = {
-  title: 'Size ($)',
+  title: 'Value',
   dataIndex: 'totalSize',
   key: 'totalSize',
   style: { minWidth: '100px', textAlign: 'right' },
@@ -112,13 +135,13 @@ const pnlColumn: ColumnData<GroupedFillsData> = {
 export const fullFillColumns: ColumnData<GroupedFillsData>[] = [
   timeColumn,
   { ...pairColumn, filterComponent: <OrderFilledPairFilterIcon /> },
-  directionColumn,
-  sizeTokenColumn,
-  sizeUsdColumn,
+  { ...directionColumn, filterComponent: <HLDirectionFilterIcon /> },
+  { ...sizeTokenColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalSizeInToken} /> },
+  { ...sizeUsdColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalSize} /> },
   fillsColumn,
-  priceColumn,
-  feeColumn,
-  pnlColumn,
+  { ...priceColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.avgPrice} /> },
+  { ...feeColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalFee} /> },
+  { ...pnlColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalPnl} /> },
 ]
 
 export const fillColumns: ColumnData<GroupedFillsData>[] = [

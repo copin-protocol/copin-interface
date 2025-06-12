@@ -35,7 +35,7 @@ export default function CopyOrderTooltip({ data }: { data: CopyOrderData }) {
         }
       />
       <ItemInfo
-        label={<Trans>Size ($):</Trans>}
+        label={<Trans>Value:</Trans>}
         value={
           data.sizeUsd ? (
             <DeltaText

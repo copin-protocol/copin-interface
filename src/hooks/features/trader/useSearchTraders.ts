@@ -18,7 +18,7 @@ import { isAddress } from 'utils/web3/contracts'
 export default function useSearchTraders({ protocols }: { protocols: ProtocolEnum[] }) {
   const { searchParams, setSearchParams } = useSearchParams()
   const keyword = searchParams?.[URL_PARAM_KEYS.SEARCH_KEYWORD] as string
-  const protocol = searchParams?.[URL_PARAM_KEYS.PROTOCOL] as ProtocolEnum
+  // const protocol = searchParams?.[URL_PARAM_KEYS.PROTOCOL] as ProtocolEnum
 
   const [currentSort, setCurrentSort] = useState<TableSortProps<TraderData> | undefined>(() => {
     const initSortBy = searchParams?.sort_by ?? 'lastTradeAtTs'
@@ -27,7 +27,7 @@ export default function useSearchTraders({ protocols }: { protocols: ProtocolEnu
     return { sortBy: initSortBy as TableSortProps<TraderData>['sortBy'], sortType: initSortType as SortTypeEnum }
   })
 
-  const [currentProtocol, setCurrentProtocol] = useState<ProtocolEnum | undefined>(protocol)
+  // const [currentProtocol, setCurrentProtocol] = useState<ProtocolEnum | undefined>(protocol)
 
   const { currentPage, currentLimit, changeCurrentPage, changeCurrentLimit } = usePageChangeWithLimit({
     pageName: URL_PARAM_KEYS.EXPLORER_PAGE,
@@ -43,10 +43,11 @@ export default function useSearchTraders({ protocols }: { protocols: ProtocolEnu
   }
   if (protocols) {
     queryTraderData.protocols = protocols
-  } else {
-    const _protocol = !!currentProtocol ? currentProtocol : undefined
-    queryTraderData.protocol = _protocol
   }
+  // else {
+  //   const _protocol = !!currentProtocol ? currentProtocol : undefined
+  //   queryTraderData.protocol = _protocol
+  // }
 
   const { data: searchTraders, isFetching: isLoading } = useQuery(
     [QUERY_KEYS.SEARCH_ALL_TRADERS, queryTraderData],
@@ -83,11 +84,11 @@ export default function useSearchTraders({ protocols }: { protocols: ProtocolEnu
     setTimeout(() => setSearchParams({ sort_by: data?.sortBy ?? null, sort_type: data?.sortType ?? null }), 100)
   }
 
-  const changeCurrentProtocol = (data: ProtocolEnum | undefined) => {
-    setCurrentProtocol(data)
-    changeCurrentPage(1)
-    setTimeout(() => setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: data ?? null }), 100)
-  }
+  // const changeCurrentProtocol = (data: ProtocolEnum | undefined) => {
+  //   setCurrentProtocol(data)
+  //   changeCurrentPage(1)
+  //   setTimeout(() => setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: data ?? null }), 100)
+  // }
 
   return {
     keyword,
@@ -95,13 +96,13 @@ export default function useSearchTraders({ protocols }: { protocols: ProtocolEnu
     searchTraders,
     searchHLTrader,
     isLoadingHLTrader,
-    currentProtocol,
+    // currentProtocol,
     currentPage,
     currentLimit,
     currentSort,
     changeCurrentPage,
     changeCurrentLimit,
     changeCurrentSort,
-    changeCurrentProtocol,
+    // changeCurrentProtocol,
   }
 }

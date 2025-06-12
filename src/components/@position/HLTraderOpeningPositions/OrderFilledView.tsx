@@ -42,25 +42,39 @@ export default function OrderFilledView(props: Props) {
 }
 
 const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawer, onPageChange }: Props) => {
-  const { pairs, excludedPairs, changePairs } = useOrderFilledContext()
+  const { direction, pairs, excludedPairs, changePairs, sizeRange, sizeInToken, avgPrice, totalPnl, totalFee } =
+    useOrderFilledContext()
+
   useEffect(() => {
     changePairs([], [])
-  }, [isExpanded])
+  }, [isExpanded, changePairs])
+
   const { hasExcludingPairs } = useFilterPairs({ pairs, excludedPairs })
   const { lg, xl, sm } = useResponsive()
-  const filteredData = useMemo(
-    () =>
-      data?.filter((v) => {
-        if (hasExcludingPairs) {
-          return !excludedPairs.map((v) => getPairFromSymbol(v)).includes(v.pair)
-        }
-        if (pairs?.length) {
-          return pairs.map((v) => getPairFromSymbol(v)).includes(v.pair)
-        }
-        return true
-      }),
-    [data, excludedPairs, hasExcludingPairs, pairs]
-  )
+  const isInRange = (value: number, range?: { min?: number; max?: number }) => {
+    if (range?.min !== undefined && value < range.min) return false
+    if (range?.max !== undefined && value > range.max) return false
+    return true
+  }
+
+  const filteredData = useMemo(() => {
+    return data?.filter((v) => {
+      if (!isInRange(v.totalSize, sizeRange)) return false
+      if (!isInRange(v.totalSizeInToken, sizeInToken)) return false
+      if (!isInRange(v.avgPrice, avgPrice)) return false
+      if (!isInRange(v.totalPnl, totalPnl)) return false
+      if (!isInRange(v.totalFee, totalFee)) return false
+      if (direction && v.direction !== direction) return false
+
+      if (hasExcludingPairs) {
+        return !excludedPairs.map((v) => getPairFromSymbol(v)).includes(v.pair)
+      }
+      if (pairs?.length) {
+        return pairs.map((v) => getPairFromSymbol(v)).includes(v.pair)
+      }
+      return true
+    })
+  }, [data, sizeRange, sizeInToken, avgPrice, totalPnl, totalFee, direction, pairs, excludedPairs, hasExcludingPairs])
 
   const [currentPage, setCurrentPage] = useState(1)
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT)

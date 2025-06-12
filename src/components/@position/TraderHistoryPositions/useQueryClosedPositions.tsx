@@ -5,15 +5,17 @@ import { useQuery } from 'react-query'
 import { ApiListResponse, ApiMeta } from 'apis/api'
 import { getTraderHistoryApi, getTraderTokensStatistic } from 'apis/traderApis'
 import { QueryFilter, RangeFilter } from 'apis/types'
+import { useFilterAction } from 'components/@widgets/TableFilter/TableRangeFilterIcon'
 import { PositionData } from 'entities/trader'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import usePageChange from 'hooks/helpers/usePageChange'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import { TableSortProps } from 'theme/Table/types'
 import { DEFAULT_LIMIT, MAX_PAGE_LIMIT } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
-import { ALL_OPTION, ALL_TOKENS_ID, TokenOptionProps } from 'utils/config/trades'
+import { ALL_OPTION, ALL_TOKENS_ID } from 'utils/config/trades'
 import { getPairFromSymbol, getSymbolFromPair, pageToOffset } from 'utils/helpers/transform'
 
 const MAX_FIRST_LOAD_PAGE = 100
@@ -26,10 +28,16 @@ export default function useQueryClosedPositions({
   address,
   protocol,
   isExpanded,
+  isCopyAll,
+  pairs,
+  excludedPairs,
 }: {
   address: string
   protocol: ProtocolEnum
   isExpanded: boolean
+  isCopyAll?: boolean
+  pairs?: string[]
+  excludedPairs?: string[]
 }) {
   const { xl } = useResponsive()
   const { currentPage, changeCurrentPage } = usePageChange({ pageName: URL_PARAM_KEYS.TRADER_HISTORY_PAGE })
@@ -78,15 +86,63 @@ export default function useQueryClosedPositions({
     },
   })
 
+  const { getFilterRangeValues } = useFilterAction()
+  const getRange = (min?: number, max?: number): { min?: number; max?: number } | undefined => {
+    const range: { min?: number; max?: number } = {}
+    if (min != null) range.min = min
+    if (max != null) range.max = max
+    return Object.keys(range).length ? range : undefined
+  }
+  const {
+    sizeGte,
+    sizeLte,
+    leverageGte,
+    leverageLte,
+    collateralGte,
+    collateralLte,
+    realisedRoiGte,
+    realisedRoiLte,
+    feeGte,
+    feeLte,
+    pnlGte,
+    pnlLte,
+  } = getFilterRangeValues({ listParamKey: ['size', 'leverage', 'collateral', 'realisedRoi', 'fee', 'pnl'] })
+
+  const sizeRange = getRange(sizeGte, sizeLte)
+  const leverageRange = getRange(leverageGte, leverageLte)
+  const collateralRange = getRange(collateralGte, collateralLte)
+  const realisedRoiRange = getRange(realisedRoiGte, realisedRoiLte)
+  const feeRange = getRange(feeGte, feeLte)
+  const pnlRange = getRange(pnlGte, pnlLte)
   const [currentSortPositions, setCurrentSort] = useState<TableSortProps<PositionData> | undefined>(defaultSort)
+  const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
   const currentSort = xl && isExpanded ? currentSortPositions : defaultSort
+
   const resetSort = useCallback(() => setCurrentSort(defaultSort), [])
   const changeCurrentSort = useCallback((sort: TableSortProps<PositionData> | undefined) => {
     setCurrentSort(sort)
   }, [])
+  const range = (range?: { min?: number; max?: number }) => ({
+    min: range?.min,
+    max: range?.max,
+  })
 
-  const prevFilterKeyRef = useRef(getFilterCheckKey({ address, protocol, currencyOption, currentSort }))
-  const currentFilterKey = getFilterCheckKey({ address, protocol, currencyOption, currentSort })
+  const currentFilterKey = getFilterCheckKey({
+    address,
+    protocol,
+    currencyOption,
+    currentSort,
+    leverageRange: range(leverageRange),
+    sizeRange: range(sizeRange),
+    pairs,
+    excludedPairs,
+    collateralRange: range(collateralRange),
+    realisedRoiRange: range(realisedRoiRange),
+    feeRange: range(feeRange),
+    pnlRange: range(pnlRange),
+    pnlWithFeeEnabled,
+  })
+  const prevFilterKeyRef = useRef(currentFilterKey)
   const forceSetPositions = prevFilterKeyRef.current !== currentFilterKey
 
   const latestBlockNumber = useRef(0)
@@ -109,6 +165,46 @@ export default function useQueryClosedPositions({
     rangeFilters.push({ fieldName: 'closeBlockNumber', lte: latestBlockNumber.current })
     rangeFiltersReload.push({ fieldName: 'closeBlockNumber', gte: latestBlockNumber.current + 1 })
   }
+
+  const rangeConditions = [
+    { range: sizeRange, field: 'size' },
+    { range: leverageRange, field: 'leverage' },
+    { range: collateralRange, field: 'collateral' },
+    { range: realisedRoiRange, field: pnlWithFeeEnabled ? 'roi' : 'realisedRoi' },
+    { range: feeRange, field: 'fee' },
+    { range: pnlRange, field: pnlWithFeeEnabled ? 'pnl' : 'realisedPnl' },
+  ]
+  rangeConditions.forEach(({ range, field }) => {
+    if (range && (range.min !== undefined || range.max !== undefined)) {
+      rangeFilters.push({ fieldName: field as keyof PositionData, gte: range.min, lte: range.max })
+      rangeFiltersReload.push({ fieldName: field as keyof PositionData, gte: range.min, lte: range.max })
+    }
+  })
+
+  // Pairs
+  const inPairs = pairs?.map((symbol) => `${symbol}-USDT`)
+  const notInPairs = excludedPairs?.map((symbol) => `${symbol}-USDT`)
+
+  if (isCopyAll && notInPairs?.length) {
+    rangeFilters.push({
+      fieldName: 'pair',
+      nin: notInPairs,
+    })
+    rangeFiltersReload.push({
+      fieldName: 'pair',
+      nin: notInPairs,
+    })
+  } else if (!isCopyAll && inPairs?.length) {
+    rangeFilters.push({
+      fieldName: 'pair',
+      in: inPairs,
+    })
+    rangeFilters.push({
+      fieldName: 'pair',
+      in: inPairs,
+    })
+  }
+
   const limits = useMemo(() => {
     if (!currentPage || (!isUnlimited && maxAllowedRecords === 0)) return []
 
@@ -148,12 +244,12 @@ export default function useQueryClosedPositions({
     return () => clearTimeout(timeout)
   }, [isExpanded])
   useQuery(
-    [QUERY_KEYS.GET_POSITIONS_HISTORY, address, protocol, 'reload', isAllowedFetch],
+    [QUERY_KEYS.GET_POSITIONS_HISTORY, address, protocol, pairs, 'reload', isAllowedFetch, pnlWithFeeEnabled],
     () => {
       return getTraderHistoryApi({
         limit: defaultLimit,
         offset: 0,
-        sort: defaultSort,
+        sort: currentSort,
         account: address,
         protocol,
         queryFilters,
@@ -162,7 +258,7 @@ export default function useQueryClosedPositions({
     },
     {
       enabled: enabledReload && !isExpanded && isAllowedFetch,
-      refetchInterval: isExpanded || !isAllowedFetch ? undefined : 15_000,
+      refetchInterval: isExpanded || !isAllowedFetch ? undefined : 5_000,
       retry: 0,
       onSuccess: (data) => {
         if (!enabledReload || isExpanded) return
@@ -198,6 +294,9 @@ export default function useQueryClosedPositions({
       currentSort?.sortType,
       protocol,
       isAllowedFetch,
+      queryFilters,
+      rangeFilters,
+      pnlWithFeeEnabled,
     ],
     () => {
       if (!initiatedClosedPositions || forceSetPositions) {
@@ -312,6 +411,7 @@ export default function useQueryClosedPositions({
       maxAllowedRecords,
       isUnlimited,
       requiredPlanToUnlimitedPosition,
+      forceSetPositions,
     }),
     [
       resetSort,
@@ -330,20 +430,27 @@ export default function useQueryClosedPositions({
       maxAllowedRecords,
       isUnlimited,
       requiredPlanToUnlimitedPosition,
+      forceSetPositions,
     ]
   )
 }
 
-function getFilterCheckKey({
-  address,
-  protocol,
-  currentSort,
-  currencyOption,
-}: {
-  address: string
-  protocol: ProtocolEnum
-  currentSort: TableSortProps<PositionData> | undefined
-  currencyOption: TokenOptionProps
-}) {
-  return `${address}_${protocol}_${currencyOption.id}_${currentSort?.sortBy}_${currentSort?.sortType}`
+function getFilterCheckKey(params: Record<string, any>): string {
+  return Object.keys(params)
+    .sort()
+    .map((key) => {
+      const value = params[key]
+
+      if (value == null) return ''
+
+      if (typeof value === 'object') {
+        if (Array.isArray(value)) {
+          return value.join(',')
+        }
+        return getFilterCheckKey(value)
+      }
+
+      return String(value)
+    })
+    .join('|')
 }

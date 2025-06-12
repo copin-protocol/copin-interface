@@ -1,8 +1,7 @@
-import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 
-import ActiveDot from 'components/@ui/ActiveDot'
 import AddressAvatar from 'components/@ui/AddressAvatar'
+import AddressText from 'components/@ui/AddressText'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { TraderData } from 'entities/trader'
@@ -10,8 +9,6 @@ import useTraderCopying from 'hooks/store/useTraderCopying'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
-
-import { HighlightKeyword } from '../SearchTraderResultItem'
 
 export type ExternalSource = {
   keyword?: string
@@ -91,20 +88,15 @@ function AccountInfo({ data, keyword }: { data: TraderData; keyword: string }) {
   const { isCopying } = useTraderCopying(data.account, data.protocol)
   const { lg } = useResponsive()
   return (
-    <Flex alignItems="center" justifyContent="start" sx={{ color: 'neutral1', gap: 2, position: 'relative' }}>
+    <Flex
+      alignItems="center"
+      justifyContent="start"
+      sx={{ color: 'neutral1', gap: 2, position: 'relative', py: '2px' }}
+    >
       <AddressAvatar address={data.account} size={40} />
       <Box>
-        <Type.CaptionBold
-          lineHeight="24px"
-          color={isCopying ? 'orange1' : 'inherit'}
-          sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
-        >
-          <HighlightKeyword text={lg ? data.account : addressShorten(data.account)} keyword={keyword} />
-          {data.isOpenPosition && (
-            <ActiveDot tooltipId={`tt_opening_${data.account}`} tooltipContent={<Trans>Having open positions</Trans>} />
-          )}
-        </Type.CaptionBold>
-        <Type.Caption color="neutral3" sx={{ lineHeight: '24px' }}>
+        <AddressText shouldShowFullText={lg} address={data.account} sx={{ fontWeight: 'bold', display: 'block' }} />
+        <Type.Caption color="neutral3">
           {data.smartAccount ? `Smart Wallet: ${addressShorten(data.smartAccount)}` : 'EOA Account'}
         </Type.Caption>
       </Box>

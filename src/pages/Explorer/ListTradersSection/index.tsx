@@ -73,6 +73,7 @@ const ListTradersSection = function ListTradersSectionMemo({
         return userPermission?.fieldsAllowed != null && !userPermission.fieldsAllowed.includes(_f.key)
       })
     const hasFilterTimeFromHigherPlan = !userPermission?.timeFramesAllowed?.includes(timeOption.id)
+    const overMaxFilterFields = filters.length > (userPermission?.maxFilterFields ?? Infinity)
     let requiredPlan: SubscriptionPlanEnum | undefined = undefined
     if (hasFilterTimeFromHigherPlan) {
       requiredPlan = getRequiredPlan({
@@ -90,12 +91,24 @@ const ListTradersSection = function ListTradersSectionMemo({
           )
         },
       })
+    } else if (overMaxFilterFields) {
+      requiredPlan = getRequiredPlan({
+        conditionFn: (plan) => {
+          return filters.length <= (pagePermission?.[plan]?.maxFilterFields ?? Infinity)
+        },
+      })
     }
     if (requiredPlan) {
-      const title = (
+      const title = overMaxFilterFields ? (
+        <Trans>This URL contains more filters than allowed</Trans>
+      ) : (
         <Trans>This URL contains filters available from {SUBSCRIPTION_PLAN_TRANSLATION[requiredPlan]} plan</Trans>
       )
-      const description = <Trans>Please upgrade to explore traders with advanced filters</Trans>
+      const description = overMaxFilterFields ? (
+        <Trans>Please upgrade to add more filters</Trans>
+      ) : (
+        <Trans>Please upgrade to explore traders with advanced filters</Trans>
+      )
       noDataMessage = (
         <Box pt={4}>
           <PlanUpgradePrompt

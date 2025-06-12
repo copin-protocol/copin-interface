@@ -21,7 +21,7 @@ import {
   SOLANA_TX_HASH_REGEX,
 } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum, TimeFrameEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
+import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { generatePositionDetailsRoute, generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
@@ -41,7 +41,7 @@ export default function useSearchAllData(args?: {
 }) {
   const { onSelect, allowAllProtocol = false, allowSearchPositions = false, protocols, limit } = args ?? {}
   const { protocol: storedProtocol } = useGlobalStore()
-  const { allowedSelectProtocols } = useProtocolPermission()
+  const { allowedSelectProtocols, convertProtocolToParams } = useProtocolPermission()
   const protocol = allowedSelectProtocols.find((p) => p === storedProtocol) ?? allowedSelectProtocols[0]
   const { myProfile } = useMyProfileStore()
   const isProUser = useIsPro()
@@ -240,9 +240,11 @@ export default function useSearchAllData(args?: {
       return
     }
     if (isTxHash) {
-      history.push(`${ROUTES.SEARCH_TX_HASH.path_prefix}/${debounceSearchText}`)
+      history.push(`${ROUTES.SEARCH_TX_HASH.path_prefix}/${debounceSearchText}?${URL_PARAM_KEYS.SEARCH_PROTOCOL}`)
     } else {
-      const matchProtocol = !!currentProtocol ? `&protocol=${currentProtocol}` : ''
+      const matchProtocol = protocols
+        ? `&${URL_PARAM_KEYS.PAGE_SEARCH_PROTOCOL}=${convertProtocolToParams({ protocols, ignorePermission: true })}`
+        : ''
       history.push(
         `${ROUTES.SEARCH.path}?keyword=${trimmedSearchText}${matchProtocol}&sort_by=lastTradeAtTs&sort_type=${SortTypeEnum.DESC}`
       )

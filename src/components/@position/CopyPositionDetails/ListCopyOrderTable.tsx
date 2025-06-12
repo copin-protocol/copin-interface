@@ -119,7 +119,7 @@ export default function ListCopyOrderTable({
         ),
       },
       {
-        title: 'Size',
+        title: 'Value',
         dataIndex: 'size',
         key: 'size',
         style: { minWidth: '120px', textAlign: 'right' },
@@ -135,7 +135,7 @@ export default function ListCopyOrderTable({
         ),
       },
       {
-        title: 'Size ($)',
+        title: 'Value',
         dataIndex: 'sizeUsd',
         key: 'sizeUsd',
         style: { minWidth: '120px', textAlign: 'right' },

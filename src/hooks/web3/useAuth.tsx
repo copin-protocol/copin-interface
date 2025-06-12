@@ -115,7 +115,6 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
         const jwt = await getAccessToken()
         if (!jwt) {
           login()
-          setLoading(false)
           return null
         }
 
@@ -131,8 +130,6 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
         console.error('Error auth', err)
         toast.error(<ToastBody title={err.name} message={err.message} />)
         disconnect()
-      } finally {
-        setLoading(false)
       }
       return null
     },
@@ -140,7 +137,12 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   )
 
   const eagerAuth = useCallback(async () => {
-    if (!!myProfile || eagerTriggeredRef.current) return
+    if (!!myProfile || eagerTriggeredRef.current) {
+      if (loading && !!myProfile) {
+        setLoading(false)
+      }
+      return
+    }
     eagerTriggeredRef.current = true
 
     const jwt = getStoredJwt()
@@ -166,7 +168,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
       setMyProfile(null)
     }
     setLoading(false)
-  }, [myProfile, user])
+  }, [myProfile, user, loading, setLoading])
 
   const reconnectWallet = useCallback(() => {
     const storedAccount = getStoredAccount()

@@ -12,6 +12,7 @@ import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import { Button } from 'theme/Buttons'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import Loading from 'theme/Loading'
@@ -198,7 +199,9 @@ function useGetCopyPositionPnl({ data, prices }: { data: CopyPositionData; price
 
 function PnLComponent({ data, prices, textSx }: PnLComponentProps) {
   const isOpening = data.status === PositionStatusEnum.OPEN
-  const pnl = useGetCopyPositionPnl({ data, prices })
+  // const pnl = useGetCopyPositionPnl({ data, prices })
+  const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
+  const pnl = pnlWithFeeEnabled ? data.pnl : data.realisedPnl
 
   return isOpening ? (
     renderValueWithColor(pnl ?? 0)
@@ -233,7 +236,7 @@ function PnLComponent({ data, prices, textSx }: PnLComponentProps) {
       }
       dashed
     >
-      {renderValueWithColor(data.pnl ?? 0, textSx)}
+      {renderValueWithColor(pnl ?? 0, textSx)}
     </LabelWithTooltip>
   )
 }

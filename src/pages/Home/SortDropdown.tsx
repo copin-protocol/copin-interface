@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 
+import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import { TraderData } from 'entities/trader'
 import Dropdown, { CheckableDropdownItem } from 'theme/Dropdown'
 
@@ -42,7 +43,7 @@ export type SortOption = { text: ReactNode; id: keyof TraderData }
 const SORT_OPTIONS: SortOption[] = [
   {
     id: 'pnl',
-    text: <Trans>PnL</Trans>,
+    text: <PnlTitle />,
   },
   {
     id: 'avgRoi',

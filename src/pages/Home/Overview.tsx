@@ -14,6 +14,7 @@ import { LatestActivityLogData } from 'entities/user'
 import { useIsProAndAction } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
+import { useEnsName } from 'hooks/useEnsName'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { GradientText } from 'pages/@layouts/Navbar/EventButton'
 import { Button } from 'theme/Buttons'
@@ -22,7 +23,7 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
-import { addressShorten, formatImageUrl, formatNumber } from 'utils/helpers/format'
+import { addressShorten, formatImageUrl, formatNumber, shortenEnsName } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { logEventCompetition } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
@@ -132,8 +133,8 @@ function Activities() {
                     {addressShorten(data.username)}
                   </Box>{' '}
                   <Trans>copied a position from trader</Trans>{' '}
-                  {isAuthenticated ? <RenderTrader data={data} /> : <RenderHiddenTrader data={data} />} with a size of $
-                  {formatNumber((data?.volume ?? 0) * (data?.price ?? 0), 2, 2)}
+                  {isAuthenticated ? <RenderTrader data={data} /> : <RenderHiddenTrader data={data} />} with a value of
+                  ${formatNumber((data?.volume ?? 0) * (data?.price ?? 0), 2, 2)}
                 </Type.Caption>
               </Box>
             </Box>
@@ -145,6 +146,7 @@ function Activities() {
 }
 
 function RenderTrader({ data }: { data: LatestActivityLogData }) {
+  const { ensName } = useEnsName(data.sourceAccount)
   return (
     <Box
       as={Link}
@@ -158,7 +160,7 @@ function RenderTrader({ data }: { data: LatestActivityLogData }) {
         },
       }}
     >
-      [{addressShorten(data.sourceAccount)}]
+      [{ensName ? shortenEnsName(ensName) : addressShorten(data.sourceAccount)}]
     </Box>
   )
 }

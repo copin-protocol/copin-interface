@@ -113,6 +113,16 @@ export default function ProtocolSelection({
     }
   }
 
+  const searchingProtocolOptions = useMemo(() => {
+    return protocolOptions.filter(
+      (option) =>
+        option.text.toLowerCase().includes(debounceSearchText.toLowerCase()) ||
+        option.id.toLowerCase().includes(debounceSearchText.toLowerCase()) ||
+        option.label.toLowerCase().includes(debounceSearchText.toLowerCase()) ||
+        option.key.toLowerCase().includes(debounceSearchText.toLowerCase())
+    )
+  }, [protocolOptions, debounceSearchText])
+
   // const generatedProtocolOpts = useMemo((): ProtocolOptionProps[] => {
   //   if (selectedChainId == DEFAULT_ALL_CHAINS) {
   //     return protocolOptions.sort((a: ProtocolOptionProps, b: ProtocolOptionProps) => a.text.localeCompare(b.text))
@@ -248,7 +258,7 @@ export default function ProtocolSelection({
             </>
           ) : (
             <ListProtocolSelection
-              options={protocolOptions}
+              options={searchingProtocolOptions}
               checkIsSelected={checkIsSelected}
               protocolsStatistic={protocolsStatistic}
               handleToggle={handleToggle}

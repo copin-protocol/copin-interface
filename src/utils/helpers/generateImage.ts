@@ -308,7 +308,7 @@ export const generatePositionCanvas = ({
   leftCtx.textAlign = 'left'
   leftCtx.fillStyle = colors.neutral2
   leftCtx.textBaseline = 'top'
-  leftCtx.fillText(`Size`, sizeX, chartAreaOffsetY + 16)
+  leftCtx.fillText(`Value`, sizeX, chartAreaOffsetY + 16)
   const positionSize = formatNumber(stats.maxSizeNumber ?? stats.size, 0)
   const sizeWidth = leftCtx.measureText(positionSize).width
   leftCtx.font = `700 32px ${FONT_FAMILY}`

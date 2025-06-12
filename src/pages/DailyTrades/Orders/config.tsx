@@ -138,7 +138,7 @@ export const orderColumns: ColumnData<OrderData>[] = [
   },
   {
     filterComponent: <OrderRangeFilterIcon valueKey={ORDER_RANGE_KEYS.sizeDeltaNumber as any} />,
-    title: <Trans>SIZE ($)</Trans>,
+    title: <Trans>VALUE ($)</Trans>,
     dataIndex: 'sizeDeltaNumber',
     key: 'sizeDeltaNumber',
     style: { textAlign: 'right', flex: 1, justifyContent: 'end', gap: 1 },

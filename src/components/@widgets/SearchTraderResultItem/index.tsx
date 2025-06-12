@@ -1,10 +1,9 @@
-import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import Highlighter from 'react-highlight-words'
 import { Link } from 'react-router-dom'
 
-import ActiveDot from 'components/@ui/ActiveDot'
 import AddressAvatar from 'components/@ui/AddressAvatar'
+import AddressText from 'components/@ui/AddressText'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
@@ -54,20 +53,19 @@ export default function SearchTraderResultItems({
         </Flex>
         <Box flex={1} sx={{ textAlign: 'left' }}>
           <Flex mb={1} sx={{ alignItems: 'center', gap: 12 }}>
-            <Type.BodyBold
-              flex={1}
-              lineHeight="24px"
+            <AddressText
+              address={data.account}
+              shouldShowFullText={md}
+              sx={{
+                display: 'flex',
+                width: 'fit-content',
+                mr: 'auto',
+                fontSize: '14px',
+                lineHeight: '24px',
+              }}
               color={isCopying ? 'orange1' : 'inherit'}
-              sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
-            >
-              <HighlightKeyword text={md ? data.account : addressShorten(data.account)} keyword={keyword} />
-              {data.isOpenPosition && (
-                <ActiveDot
-                  tooltipId={`tt_opening_${data.account}`}
-                  tooltipContent={<Trans>Having open positions</Trans>}
-                />
-              )}
-            </Type.BodyBold>
+            />
+
             {!!data.lastTradeAt && <LastTrade value={data.lastTradeAt} sx={{ flexShrink: 0 }} />}
             <FavoriteButton
               address={data.account}

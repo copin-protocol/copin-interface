@@ -10,6 +10,7 @@ import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { renderEntry } from 'components/@widgets/renderProps'
 import { BackTestResultData, RequestBackTestData, SimulatorPosition } from 'entities/backTest.d'
+import { useEnsName } from 'hooks/useEnsName'
 import { Button } from 'theme/Buttons'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import Table from 'theme/Table'
@@ -17,7 +18,7 @@ import TableLabel from 'theme/Table/TableLabel'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { addressShorten, formatLocalDate, formatNumber } from 'utils/helpers/format'
+import { addressShorten, formatLocalDate, formatNumber, shortenEnsName } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import ShareBacktestButton from '../BacktestShareButton'
@@ -47,6 +48,8 @@ const BacktestSummaryAndPositions = memo(function BacktestSummaryAndPositionsMem
   const { sm, md, xl } = useResponsive()
   const statsColumns = xl ? 3 : md ? 2 : sm ? 1 : 1
   const totalStatsItems = 9
+
+  const { ensName } = useEnsName(account)
 
   return (
     <Box>
@@ -78,7 +81,9 @@ const BacktestSummaryAndPositions = memo(function BacktestSummaryAndPositionsMem
             target="_blank"
           >
             <AddressAvatar address={account} size={40} />
-            <Type.H5>{addressShorten(account)}</Type.H5>
+            <Type.H5 sx={{ textTransform: 'unset' }}>
+              {ensName ? shortenEnsName(ensName) : addressShorten(account)}
+            </Type.H5>
           </Flex>
           {settings && !disabledShare ? (
             <ShareBacktestButton protocol={protocol} type="single" settings={settings} />
@@ -241,7 +246,7 @@ const columns: ColumnData<SimulatorPosition>[] = [
     render: (item) => renderEntry(item?.position),
   },
   {
-    title: 'Size',
+    title: 'Value',
     dataIndex: undefined,
     key: undefined,
     style: { minWidth: '60px', textAlign: 'right' },

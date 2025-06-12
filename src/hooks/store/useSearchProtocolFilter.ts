@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
@@ -33,7 +33,9 @@ export const useSearchProtocolFilter = ({ defaultSelects }: { defaultSelects: Pr
   const { selectedProtocols, setSelectedProtocols, protocolSortBy, setProtocolSortBy } =
     useProtocolFilterStore.current()
 
-  // const isToggledAll = selectedProtocols.length === defaultSelects.length
+  useEffect(() => {
+    setSelectedProtocols(defaultSelects)
+  }, [defaultSelects])
 
   const checkIsSelected = (protocol: ProtocolEnum): boolean => {
     return selectedProtocols.includes(protocol)
@@ -48,10 +50,6 @@ export const useSearchProtocolFilter = ({ defaultSelects }: { defaultSelects: Pr
 
     setSelectedProtocols([...selectedProtocols, protocol])
   }
-
-  // const set = (options: ProtocolEnum[]): void => {
-  //   setSelectedProtocols(options)
-  // }
 
   return {
     selectedProtocols,

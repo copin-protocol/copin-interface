@@ -156,7 +156,7 @@ export const historyColumns: typeof openingColumns = [
     render: renderEntry,
   },
   {
-    title: 'Size',
+    title: 'Value',
     dataIndex: 'totalSizeDelta',
     key: 'totalSizeDelta',
     style: { minWidth: '100px', width: 100, textAlign: 'right' },

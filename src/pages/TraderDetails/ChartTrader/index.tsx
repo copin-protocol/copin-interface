@@ -59,7 +59,7 @@ const ChartTrader = ({
           return data.map((item, index) => {
             return {
               ...item,
-              unrealisedPnl: index < data.length - 1 ? 0 : unrealisedPnl,
+              unrealisedPnl: index < data.length - 1 ? item.unrealisedPnl ?? 0 : unrealisedPnl,
             }
           })
         }
@@ -77,6 +77,10 @@ const ChartTrader = ({
   }, [stats])
 
   const filteredFrom = stats && stats.length > 0 ? Math.max(from, dayjs(stats[0].date).utc().valueOf()) : from
+
+  const chartData = useMemo(() => {
+    return parseTraderPnLStatisticData(stats)
+  }, [stats])
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', px: 12, pt: 12, pb: 1 }}>
@@ -185,7 +189,7 @@ const ChartTrader = ({
                 }}
               >
                 <LineChartPnL
-                  data={parseTraderPnLStatisticData(stats)}
+                  data={chartData}
                   isCumulativeData={false}
                   isLoading={loadingStats}
                   from={filteredFrom}

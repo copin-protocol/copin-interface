@@ -87,8 +87,8 @@ const MarketSelection = ({
       return
     }
     const isSavedFilter = savedFilter.some((filter) => {
-      const _filterIsExcluded = filter.isExcluded
-      const _filterPairsMapping = _filterIsExcluded ? filter.excludedPairs : filter.selectedPairs
+      if (filter.isExcluded !== state.isExcluded) return false
+      const _filterPairsMapping = state.isExcluded ? filter.excludedPairs : filter.selectedPairs
       return (
         Object.keys(_filterPairsMapping).length === _statePairs.length &&
         _statePairs.every((pair) => !!_filterPairsMapping[pair])

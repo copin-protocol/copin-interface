@@ -3,6 +3,7 @@ import { Trans } from '@lingui/macro'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import { LITE_ACTION_STATUS, LITE_TRANSACTION_TYPE, LiteTransactionData } from 'entities/lite'
+import Status from 'theme/Status'
 import { ColumnData } from 'theme/Table/types'
 import { Flex, Type } from 'theme/base'
 import { Color } from 'theme/types'
@@ -89,23 +90,7 @@ export const renderProps: Record<string, LiteTransactionColumnData['render']> = 
       )}
     </Type.Caption>
   ),
-  status: (item) => (
-    <Type.Caption
-      color={getColor(item.status)}
-      sx={{
-        mr: -2,
-        borderRadius: '16px',
-        width: 'fit-content',
-        textAlign: 'right',
-        lineHeight: '24px',
-        px: 2,
-        bg: 'neutral7',
-        textTransform: 'capitalize',
-      }}
-    >
-      {item.status.split('_').join(' ').toLowerCase()}
-    </Type.Caption>
-  ),
+  status: (item) => <Status status={item.status} getColorFn={getColor} />,
 }
 
 export const transactionTitles = {

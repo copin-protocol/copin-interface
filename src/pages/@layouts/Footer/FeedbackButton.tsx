@@ -22,7 +22,7 @@ const FeedbackButton = () => {
         onClick={handleFeedbackClick}
         sx={{
           background: 'transparent',
-          color: ['white', 'white', 'white', 'neutral3'],
+          color: ['inherit', 'neutral3', 'neutral3', 'neutral3'],
           fontWeight: 'normal',
           fontSize: '12px',
           p: 0,

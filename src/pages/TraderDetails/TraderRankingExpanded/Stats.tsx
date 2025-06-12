@@ -25,11 +25,7 @@ export default function Stats({
     <Box sx={{ p: 3, width: '100%', height: '100%', overflow: 'auto' }}>
       <Flex sx={{ alignItems: 'center', gap: 2 }}>
         <Box sx={{ width: '4px', height: 24, bg: indicatorColor }} />
-        <TraderAddress
-          address={account}
-          protocol={protocol}
-          options={{ isLink: isLinkAddress, dividerColor: 'neutral2', hasAddressTooltip: true }}
-        />
+        <TraderAddress address={account} protocol={protocol} options={{ isLink: isLinkAddress }} />
       </Flex>
       <Flex mt={3} sx={{ width: '100%', flexDirection: 'column', gap: 12 }}>
         <StatsRow

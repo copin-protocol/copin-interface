@@ -16,9 +16,18 @@ import { PROTOCOLS_CROSS_MARGIN } from '../utils/config/protocols'
 // import { getSymbolByTokenTrade, getTokenTradeSupport } from '../utils/config/trades'
 import { ApiListResponse } from './api'
 
-export const normalizeTraderData = (t: ResponseTraderData) => {
-  const normalizedData: TraderData = {
+export const normalizeTraderData = (t: ResponseTraderData, pnlWithFeeEnabled?: boolean) => {
+  const base = {
     ...t,
+    ranking: t.ranking ? decodeRealisedData(t.ranking) : {},
+  }
+
+  if (pnlWithFeeEnabled) {
+    return base
+  }
+
+  return {
+    ...base,
     totalGain: t.realisedTotalGain,
     totalLoss: t.realisedTotalLoss,
     avgRoi: t.realisedAvgRoi,
@@ -30,16 +39,14 @@ export const normalizeTraderData = (t: ResponseTraderData) => {
     profitRate: t.realisedProfitRate,
     gainLossRatio: t.realisedGainLossRatio,
     profitLossRatio: t.realisedProfitLossRatio,
-    ranking: t.ranking ? decodeRealisedData(t.ranking) : {},
   }
-  return normalizedData
 }
 
 export const normalizePositionData = (p: ResponsePositionData): PositionData => {
   return {
     ...p,
-    roi: p.realisedRoi,
-    pnl: p.realisedPnl,
+    // roi: p.realisedRoi,
+    // pnl: p.realisedPnl,
     durationInSecond:
       p.status === PositionStatusEnum.OPEN ? convertDurationInSecond(p.openBlockTime) : p.durationInSecond,
     marginMode: p.marginMode
@@ -54,7 +61,7 @@ export const normalizeTraderResponse = (res: ApiListResponse<ResponseTraderData>
   if (!res.data) return res
   return {
     ...res,
-    data: res.data.map(normalizeTraderData),
+    data: res.data.map((t) => normalizeTraderData(t)),
   }
 }
 

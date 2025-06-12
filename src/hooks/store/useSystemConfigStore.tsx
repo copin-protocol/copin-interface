@@ -9,7 +9,6 @@ import { getSystemConfigApi } from 'apis/systemApis'
 import { EventDetailsData } from 'entities/event'
 import { PermissionData } from 'entities/permission'
 import { SubscriptionLimitData, SystemAlertData, VolumeLimitData } from 'entities/system'
-import { SUBSCRIPTION_PERMISSION_DATA } from 'hooks/features/subscription/data'
 import { RELEASED_PROTOCOLS } from 'utils/config/constants'
 import { ProtocolEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
@@ -30,6 +29,7 @@ interface SystemConfigState {
       indexToken: string | undefined
     }) => string | undefined
     getListSymbol?: (args?: { protocol: ProtocolEnum | undefined }) => string[]
+    getListForexSymbols?: (args?: { protocol: ProtocolEnum | undefined }) => string[]
 
     getListSymbolOptions?: (args?: { protocol?: ProtocolEnum }) => {
       id: string
@@ -71,6 +71,7 @@ export function SystemConfigInitializer() {
         const indexTokensBySymbolMapping: Partial<Record<ProtocolEnum, Record<string, string[]>>> = {}
         const listSymbolByProtocol: Partial<Record<ProtocolEnum, string[]>> = {}
         const listIndexTokenByProtocol: Partial<Record<ProtocolEnum, string[]>> = {}
+        const listForexSymbolByProtocol: Partial<Record<ProtocolEnum, string[]>> = {}
         let listAllSymbol: string[] = []
         if (!markets)
           return {
@@ -79,14 +80,15 @@ export function SystemConfigInitializer() {
             listSymbolByProtocol,
             listAllSymbol,
             listIndexTokenByProtocol,
+            listForexSymbolByProtocol,
           }
         //
         const filteredMarkets = Object.entries(markets)
           .filter(([protocol]) => RELEASED_PROTOCOLS.includes(protocol as ProtocolEnum))
           .reduce((acc, [protocol, marketConfig]) => {
-            acc[protocol] = marketConfig.map(({ symbol, indexTokens }) => ({ symbol, indexTokens }))
+            acc[protocol] = marketConfig.map(({ symbol, indexTokens, isForex }) => ({ symbol, indexTokens, isForex }))
             return acc
-          }, {} as Record<string, { symbol: string; indexTokens: string[] }[]>)
+          }, {} as Record<string, { symbol: string; indexTokens: string[]; isForex?: boolean }[]>)
 
         listAllSymbol = Array.from(
           new Set(
@@ -102,6 +104,7 @@ export function SystemConfigInitializer() {
           indexTokensBySymbolMapping[protocol] = {}
           listSymbolByProtocol[protocol] = []
           listIndexTokenByProtocol[protocol] = []
+          listForexSymbolByProtocol[protocol] = []
           marketConfig.forEach((config) => {
             const symbol = config.symbol
             const indexTokens = [...config.indexTokens]
@@ -111,8 +114,12 @@ export function SystemConfigInitializer() {
             })
             indexTokensBySymbolMapping[protocol]![symbol] = indexTokens
             listSymbolByProtocol[protocol]!.push(symbol)
+            if (config.isForex) {
+              listForexSymbolByProtocol[protocol]!.push(symbol)
+            }
           })
           listSymbolByProtocol[protocol]!.sort()
+          listForexSymbolByProtocol[protocol]!.sort()
         })
         return {
           symbolByIndexTokenMapping,
@@ -120,6 +127,7 @@ export function SystemConfigInitializer() {
           listSymbolByProtocol,
           listAllSymbol,
           listIndexTokenByProtocol,
+          listForexSymbolByProtocol,
         }
       })()
 
@@ -159,6 +167,18 @@ export function SystemConfigInitializer() {
           return (map.listSymbolByProtocol[protocol] ?? []).filter((v) => !!v)
         }
       }
+
+      const getListForexSymbols = (args?: { protocol: ProtocolEnum | undefined }) => {
+        const { protocol } = args ?? {}
+        if (!protocol) {
+          return Object.values(map.listForexSymbolByProtocol)
+            .flat()
+            .filter((v) => !!v)
+        } else {
+          return (map.listForexSymbolByProtocol[protocol] ?? []).filter((v) => !!v)
+        }
+      }
+
       const getListIndexToken = ({ protocol }: { protocol: ProtocolEnum }) => {
         return map.listIndexTokenByProtocol[protocol] ?? []
       }
@@ -213,6 +233,7 @@ export function SystemConfigInitializer() {
           getSymbolByIndexTokenMapping,
           getSymbolByIndexToken,
           getListSymbol,
+          getListForexSymbols,
           getListSymbolByListIndexToken,
           getListIndexTokenByListSymbols,
           getListSymbolOptions,
@@ -259,7 +280,7 @@ export const useSystemConfigStore = create<SystemConfigState & SystemConfigModif
     eventId: undefined,
     events: undefined,
     marketConfigs: {},
-    permission: SUBSCRIPTION_PERMISSION_DATA,
+    permission: undefined,
     setState(newState) {
       set((state) => {
         state = { ...state, ...newState }

@@ -6,6 +6,8 @@ import {
   HlOrderFillData,
   HlOrderFillRawData,
   HlOrderRawData,
+  HlTwapOrderData,
+  HlTwapOrderRawData,
 } from 'entities/hyperliquid'
 import { PositionData } from 'entities/trader'
 import { CopyTradePlatformEnum, MarginModeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
@@ -218,4 +220,33 @@ export function groupHLOrderFillsByOid(fills: HlOrderFillData[]) {
 
   // Sort groups by their latest fill timestamp
   return groups.sort((a, b) => b.timestamp - a.timestamp)
+}
+
+export function parseHLTwapOrderFillData({ account, data }: { account: string; data: HlTwapOrderRawData[] }) {
+  if (!data) return []
+  return data
+    .map((e) => {
+      return {
+        twapOrderId: e.twapId,
+        orderId: e.fill.oid,
+        twapFillId: e.fill.tid,
+        txHash: e.fill.hash,
+        account,
+        protocol: ProtocolEnum.HYPERLIQUID,
+        pair: convertPairHL(e.fill.coin),
+        direction: e.fill.dir,
+        side: e.fill.side,
+        sizeNumber: Number(e.fill.sz) * Number(e.fill.px),
+        sizeInTokenNumber: Number(e.fill.sz),
+        priceNumber: Number(e.fill.px),
+        startPosition: Number(e.fill.startPosition),
+        pnl: Number(e.fill.closedPnl),
+        fee: Number(e.fill.fee),
+        feeToken: e.fill.feeToken,
+        isLong: e.fill.side === 'B',
+        isBuy: e.fill.side === 'B',
+        timestamp: e.fill.time,
+      } as HlTwapOrderData
+    })
+    .filter((d) => !d.pair.startsWith('@'))
 }

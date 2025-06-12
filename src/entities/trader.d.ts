@@ -65,6 +65,7 @@ export interface TraderData {
   ranking: { [key: string]: number }
   pnlStatistics?: TraderPnlStatisticData
   pairs: string[]
+  excludedPairs: string[]
 }
 
 export interface ResponseTraderData extends TraderData {
@@ -87,6 +88,7 @@ export interface PositionData {
   id: string
   synthetixPositionId: string
   account: string
+  avgPrice: number
   smartAccount: string
   name: string
   protocol: ProtocolEnum
@@ -140,6 +142,10 @@ export interface PositionData {
   realisedRoi: number
   pair: string
   updatedAt: string
+  totalSize: number
+  totalSizeInToken: number
+  totalPnl: number
+  totalFee: number
 }
 
 export interface ResponsePositionData extends PositionData {
@@ -262,6 +268,9 @@ export type TickPosition = {
   collateralInToken: number
   price: number
   averagePrice: number
+  realisedPnl: number
+  totalCollateral: number
+  totalIncreasedSize: number
 }
 
 export interface TraderTokenStatistic {

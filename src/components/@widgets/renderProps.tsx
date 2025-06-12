@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid'
 
 import IconEye from 'assets/icons/ic-eye.svg'
 import AddressAvatar from 'components/@ui/AddressAvatar'
+import AddressText from 'components/@ui/AddressText'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import Market from 'components/@ui/MarketGroup/Market'
@@ -26,7 +27,7 @@ import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
 import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { formatSymbol, getSymbolFromPair } from 'utils/helpers/transform'
 import { UsdPrices } from 'utils/types'
@@ -414,13 +415,16 @@ export function renderTrader(
 
       <Link to={generateTraderMultiExchangeRoute({ protocol, address })} onClick={(e) => e.stopPropagation()}>
         <Flex sx={{ gap: 1 }} alignItems="center">
-          <Type.Caption
-            color="neutral1"
-            width={85}
-            sx={{ ...overflowEllipsis(), display: 'flex', ':hover': { textDecoration: 'underline' } }}
-          >
-            {addressShorten(address, 3, 5)}
-          </Type.Caption>
+          <AddressText
+            address={address}
+            sx={{
+              ...overflowEllipsis(),
+              width: '85px',
+              display: 'flex',
+              ':hover': { textDecoration: 'underline' },
+            }}
+          />
+
           {enableProtocolLogo && (
             <>
               <ProtocolLogo

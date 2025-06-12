@@ -12,6 +12,7 @@ import { PositionData, TraderData } from 'entities/trader'
 import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useSearchAllData from 'hooks/features/trader/useSearchAllData'
 import useIsMobile from 'hooks/helpers/useIsMobile'
+import useSearchParams from 'hooks/router/useSearchParams'
 import { useSearchProtocolFilter } from 'hooks/store/useSearchProtocolFilter'
 import { Button } from 'theme/Buttons'
 import IconButton from 'theme/Buttons/IconButton'
@@ -24,6 +25,7 @@ import RcDialog from 'theme/RcDialog'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { SEARCH_DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
+import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { Z_INDEX } from 'utils/config/zIndex'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -134,7 +136,9 @@ function QuickSearchContainer({
   const [openSelectProtocols, setOpenSelectProtocols] = useState(false)
   const handleToggleSelectProtocols = () => setOpenSelectProtocols((prev) => !prev)
 
-  const { releasedProtocols, copyableProtocols } = useProtocolPermission()
+  const { setSearchParams } = useSearchParams()
+
+  const { releasedProtocols, copyableProtocols, convertProtocolToParams } = useProtocolPermission()
 
   const {
     protocolSortBy,
@@ -248,7 +252,12 @@ function QuickSearchContainer({
           <ProtocolSelection
             restrictHeight="50svh"
             selectedProtocols={selectedProtocols}
-            setSelectedProtocols={setSelectedProtocols}
+            setSelectedProtocols={(protocols) => {
+              setSearchParams({
+                [URL_PARAM_KEYS.SEARCH_PROTOCOL]: convertProtocolToParams({ protocols, ignorePermission: true }),
+              })
+              setSelectedProtocols(protocols)
+            }}
             checkIsProtocolChecked={checkIsProtocolChecked}
             handleToggleProtocol={handleToggleProtocol}
             allowList={copyableProtocols}

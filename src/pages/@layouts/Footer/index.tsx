@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { useResponsive } from 'ahooks'
+import { Gear } from '@phosphor-icons/react'
 
+import { PreferencesPanel } from 'components/@ui/PreferencesPanel'
+import { SwitchPnlButton } from 'components/@widgets/SwitchPnlButton'
 import { useLocalDetection } from 'hooks/helpers/useLocalDetection'
 import useMyProfile from 'hooks/store/useMyProfile'
 import Dropdown from 'theme/Dropdown'
@@ -19,7 +21,6 @@ import FeedbackButton from './FeedbackButton'
 
 const Footer = ({ height }: { height: number }) => {
   const { myProfile } = useMyProfile()
-  const { sm } = useResponsive()
 
   const { isVN } = useLocalDetection()
 
@@ -51,22 +52,33 @@ const Footer = ({ height }: { height: number }) => {
       <Flex width="100%" height="100%" alignItems="center">
         <GettingStarted />
         <Box height="100%" width="1px" bg="neutral4" />
-        <Type.Caption pl={2} color="neutral3" display={['none', 'none', 'none', 'block']}>
+
+        <Type.Caption color="neutral3" display={['none', 'none', 'none', 'block']} sx={{ px: 2 }}>
           <Trans>© {new Date().getFullYear()} Copin.</Trans>
         </Type.Caption>
-        <Flex pl={3} flex="1" sx={{ alignItems: 'center', justifyContent: ['end'], gap: [2, 3] }}>
-          <Box>
-            <Box sx={{ transform: 'translateX(10px)' }}>
+
+        <Flex flex="1" sx={{ alignItems: 'center', justifyContent: ['end'], gap: [1, 2] }}>
+          <PreferencesPanel
+            icon={<Gear size={16} className="glass" color="#EAE5E3" />}
+            menu={<SwitchPnlButton />}
+            menuSx={{ mb: '7px', right: '-50px' }}
+            buttonSx={{ mt: 1, mx: '2px', display: ['block', 'none', 'none', 'none'] }}
+            textColor="#EAE5E3"
+          />
+          <Box display={['block', 'none']} sx={{ width: '1px', height: '40px', bg: 'neutral4' }} />
+
+          <Flex alignItems={'center'}>
+            <Box display={['block', 'none']} sx={{ transform: 'translateX(3px)', mx: '2px' }}>
               <DropDownMobile />
             </Box>
             <Box
               sx={{
-                gap: ['12px', 3],
+                gap: ['12px', '12px', '10px', 3],
                 fontSize: '12px',
                 alignItems: 'center',
               }}
               color="neutral3"
-              display={['none', 'none', 'none', 'flex']}
+              display={['none', 'flex']}
             >
               {links.map((link, index) => (
                 <a key={index} href={link.href} target="_blank" rel="noreferrer">
@@ -75,8 +87,17 @@ const Footer = ({ height }: { height: number }) => {
               ))}
               <FeedbackButton />
             </Box>
-          </Box>
-          <Box display={['block']} sx={{ width: '1px', height: '24px', bg: 'neutral4' }} />
+          </Flex>
+
+          <Box display={['block']} sx={{ width: '1px', height: ['40px'], bg: 'neutral4', mx: ['0px', 0] }} />
+          <PreferencesPanel
+            icon={<Gear size={16} className="glass" color="#777e90" />}
+            menu={<SwitchPnlButton />}
+            menuSx={{ mb: '7px', right: '-13px' }}
+            buttonSx={{ mt: '4px', mx: 1, display: ['none', 'block'] }}
+          />
+          <Box display={['none', 'block']} sx={{ width: '1px', height: '40px', bg: 'neutral4' }} />
+
           <Flex color="neutral3" sx={{ alignItems: 'center', gap: [2, 3] }}>
             {channels
               .filter((_d) => (isVN ? _d.href !== LINKS.telegram : true))
@@ -101,7 +122,7 @@ const Footer = ({ height }: { height: number }) => {
 
 const links = [
   { label: <Trans>HOME</Trans>, href: LINKS.website },
-  { label: <Trans>UPGRADE</Trans>, href: ROUTES.SUBSCRIPTION.path },
+  { label: <Trans>PRICING</Trans>, href: ROUTES.SUBSCRIPTION.path },
   { label: <Trans>BLOG</Trans>, href: LINKS.blog },
   { label: <Trans>DOCS</Trans>, href: LINKS.docs },
   { label: <Trans>TERMS & POLICY</Trans>, href: LINKS.policy },
@@ -124,13 +145,19 @@ export default Footer
 
 function DropDownMobile() {
   return (
-    <Box display={['block', 'block', 'block', 'none']}>
+    <Box sx={{ position: 'relative' }}>
       <Dropdown
         placement="bottomRight"
         dismissible
         hasArrow={true}
-        buttonSx={{ pt: '7px', pr: '9px' }}
+        buttonSx={{ p: 0 }}
         buttonVariant="ghost"
+        menuSx={{
+          width: '135px',
+          position: 'absolute',
+          top: -239,
+          right: '-4px',
+        }}
         menu={
           <Flex
             p={'0 12px'}

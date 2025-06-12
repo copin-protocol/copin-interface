@@ -94,7 +94,7 @@ export const liteOpeningColumns: ColumnData<CopyPositionData, ExternalSourceCopy
     render: (item) => renderEntry(item),
   },
   {
-    title: 'Size',
+    title: 'Value',
     dataIndex: 'sizeDelta',
     key: 'sizeDelta',
     style: { minWidth: '220px' },

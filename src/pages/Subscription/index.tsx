@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
 
-import { getPaymentCurrenciesApi } from 'apis/subscription'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import PaySubscriptionModal from 'components/@subscription/PaySubscriptionModal'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
@@ -14,7 +12,6 @@ import PlanUpgradeModal from 'pages/Settings/UserSubscription/PlanUpgradeModal'
 import SwitchInput from 'theme/SwitchInput'
 import { Box, Flex, Type } from 'theme/base'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
-import { QUERY_KEYS } from 'utils/config/keys'
 import { PRO_PLAN, PlanConfig } from 'utils/config/subscription'
 
 import EnterprisePlan from './EnterprisePlan'
@@ -31,9 +28,6 @@ export default function SubscriptionPage() {
   const handleClickLogin = useClickLoginButton()
 
   const { profile } = useAuthContext()
-  const { data: currencies } = useQuery(QUERY_KEYS.GET_PAYMENT_CURRENCIES, getPaymentCurrenciesApi, {
-    enabled: !!profile,
-  })
   const subscriptionPlans = useSubscriptionPlans()
   const currentPlan = subscriptionPlans.find((plan) => plan.title === profile?.subscription?.plan)
   let targetPlan = PRO_PLAN
@@ -104,13 +98,8 @@ export default function SubscriptionPage() {
           </Box>
         </Box>
       </Box>
-      {!!upgradingPlan && !!currencies && !isUpgradeModalOpen && (
-        <PaySubscriptionModal
-          plan={upgradingPlan}
-          period={yearly ? 12 : 1}
-          onDismiss={() => setUpgradingPlan(null)}
-          currencies={currencies}
-        />
+      {!!upgradingPlan && !isUpgradeModalOpen && (
+        <PaySubscriptionModal plan={upgradingPlan} period={yearly ? 12 : 1} onDismiss={() => setUpgradingPlan(null)} />
       )}
       {currentPlan && upgradingPlan && (
         <PlanUpgradeModal

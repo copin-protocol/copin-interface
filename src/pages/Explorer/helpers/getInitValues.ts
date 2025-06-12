@@ -2,9 +2,10 @@ import { ParsedQs } from 'qs'
 
 import { TraderListSortProps } from 'components/@trader/TraderExplorerTableView/types'
 import { getDefaultFormValues } from 'components/@widgets/ConditionFilterForm/helpers'
+import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import { SortTypeEnum } from 'utils/config/enums'
-import { URL_PARAM_KEYS } from 'utils/config/keys'
+import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { rankingFieldOptions } from 'utils/config/options'
 
 import { FilterTabEnum, defaultFieldOptions } from '../ConditionFilter/configs'
@@ -20,13 +21,26 @@ export const getInitFilters = ({
   filterTab: FilterTabEnum
 }) => {
   const paramKey = filterTab === FilterTabEnum.DEFAULT ? URL_PARAM_KEYS.DEFAULT_FILTERS : URL_PARAM_KEYS.RANKING_FILTERS
-  const fieldOptions = filterTab === FilterTabEnum.DEFAULT ? defaultFieldOptions : rankingFieldOptions
   const paramsStr = searchParams[paramKey] as string
   const filtersFromParams = parseParams(paramsStr)
   if (Object.keys(filtersFromParams).length !== 0) {
     return filtersFromParams
   }
 
+  if (filterTab === FilterTabEnum.DEFAULT) {
+    const defaultFilters = localStorage.getItem(STORAGE_KEYS.DEFAULT_FILTERS)
+    if (defaultFilters) {
+      return JSON.parse(defaultFilters) as ConditionFormValues<TraderData>
+    }
+  }
+
+  if (filterTab === FilterTabEnum.RANKING) {
+    const rankingFilters = localStorage.getItem(STORAGE_KEYS.RANKING_FILTERS)
+    if (rankingFilters) {
+      return JSON.parse(rankingFilters) as ConditionFormValues<TraderData>
+    }
+  }
+  const fieldOptions = filterTab === FilterTabEnum.DEFAULT ? defaultFieldOptions : rankingFieldOptions
   const defaultFilters = accounts ? [] : getDefaultFormValues([], fieldOptions)
   return defaultFilters
 }

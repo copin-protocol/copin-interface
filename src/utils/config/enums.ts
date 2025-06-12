@@ -201,6 +201,15 @@ export enum HlOrderTypeEnum {
   TAKE_PROFIT = 'TAKE_PROFIT',
 }
 
+export enum HlDirectionEnum {
+  OPEN_LONG = 'Open Long',
+  OPEN_SHORT = 'Open Short',
+  CLOSE_LONG = 'Close Long',
+  CLOSE_SHORT = 'Close Short',
+  LONG_SHORT = 'Long > Short',
+  SHORT_LONG = 'Short > Long',
+}
+
 export enum OrderTypeEnum {
   OPEN = 'OPEN',
   CLOSE = 'CLOSE',

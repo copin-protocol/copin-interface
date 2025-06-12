@@ -7,6 +7,7 @@ import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { TraderData } from 'entities/trader'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
+import { useEnsName } from 'hooks/useEnsName'
 import CopyButton from 'theme/Buttons/CopyButton'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
@@ -36,6 +37,7 @@ const TraderInfo = ({
   // const shareStats = traderStats?.find((data) => data && data.type === (timeOption.id as unknown as TimeFrameEnum))
   const shareStats = traderStats?.find((data) => data && data.type === TimeFrameEnum.ALL_TIME)
   const { trader, resetTrader } = useQuickViewTraderStore()
+  const { ensName } = useEnsName(address)
 
   const onViewTrader = (e: any) => {
     e.stopPropagation()
@@ -66,7 +68,7 @@ const TraderInfo = ({
               target={target}
             >
               <Type.LargeBold color="neutral1" lineHeight="20px" textAlign="left" fontSize={['16px', '18px']}>
-                {addressShorten(address, 3, 5)}
+                {ensName ? ensName : addressShorten(address, 3, 5)}
               </Type.LargeBold>
             </Box>
             <FavoriteButton address={address} protocol={protocol} size={16} sx={{ mb: 0 }} />

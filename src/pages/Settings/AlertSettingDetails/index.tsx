@@ -1,6 +1,5 @@
 import { Siren, Sliders, Target, Warning } from '@phosphor-icons/react'
 import React, { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
 
 import alertSettingBg from 'assets/images/alert_setting_bg.png'
 import AvatarGroup from 'components/@ui/Avatar/AvatarGroup'
@@ -9,6 +8,7 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import CustomTag from 'components/@ui/CustomTag'
 import { BotAlertData } from 'entities/alert'
 import { AlertSettingDetailsProvider, useAlertSettingDetailsContext } from 'hooks/features/alert/useAlertDetailsContext'
+import Breadcrumb from 'theme/Breadcrumbs'
 import VerticalArrow from 'theme/Icons/VerticalArrow'
 import Loading from 'theme/Loading'
 import Modal from 'theme/Modal'
@@ -16,7 +16,6 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { AlertCategoryEnum, AlertCustomType, AlertSettingsEnum, AlertTypeEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
-import { overflowEllipsis } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 
 import SettingChannel from './SettingChannel'
@@ -64,35 +63,23 @@ function AlertSettingDetailsComponent() {
           <Flex
             sx={{
               width: '100%',
-              px: 3,
+              pr: 3,
               alignItems: 'center',
               justifyContent: 'space-between',
               borderBottom: 'small',
               borderBottomColor: 'neutral4',
               gap: 2,
-              height: 48,
               flexShrink: 0,
               position: 'relative',
             }}
           >
-            <Flex
-              sx={{
-                width: '100%',
-                gap: 1,
-                alignItems: 'center',
-                color: 'neutral1',
-                flex: 1,
-              }}
-            >
-              <Link to={ROUTES.ALERT_LIST.path}>
-                <Type.Body minWidth="max-content" sx={{ fontWeight: 500 }}>
-                  COPIN ALERT
-                </Type.Body>
-              </Link>
-              <Type.Body sx={{ fontWeight: 500, ...overflowEllipsis() }}>{`/ ${
-                botAlert?.name?.toUpperCase() ?? ''
-              }`}</Type.Body>
-            </Flex>
+            <Breadcrumb
+              items={[
+                { title: 'COPIN ALERT', path: ROUTES.ALERT_LIST.path },
+                { title: botAlert?.name?.toUpperCase() ?? '' },
+              ]}
+            />
+
             <CustomTag
               width={80}
               text={isCreatingCustomAlert ? 'CREATING' : botAlert?.enableAlert ? 'RUNNING' : 'STOPPED'}

@@ -218,7 +218,7 @@ export default function SettingWatchlistTraders({
       <Flex alignItems="center" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
         <Flex sx={{ pl: 1, width: 200, borderRight: 'small', borderColor: 'neutral4' }}>
           <InputSearchText
-            placeholder="SEARCH TRADER"
+            placeholder="SEARCH ADDRESS"
             sx={{
               width: '100%',
               height: 'max-content',

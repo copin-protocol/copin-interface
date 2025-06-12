@@ -23,6 +23,7 @@ import ToastBody from 'components/@ui/ToastBody'
 import TraderAddress from 'components/@ui/TraderAddress'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { GlobalProtocolFilter, GlobalProtocolFilterProps } from 'components/@widgets/ProtocolFilter'
+import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import { Account, PnlStatisticsResponse, ResponseTraderData, StatisticData, TraderData } from 'entities/trader'
 import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
 import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
@@ -30,6 +31,7 @@ import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
@@ -152,7 +154,33 @@ type FiltersState = {
 
 function Filters({ filters }: { filters: FiltersState }) {
   const { myProfile } = useMyProfile()
-  const { setSearchParams } = useSearchParams()
+  const { setSearchParams, searchParams } = useSearchParams()
+
+  const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
+
+  const prevPnlSettingsRef = useRef({
+    pnlWithFeeEnabled,
+  })
+
+  useEffect(() => {
+    const currentPage = Number(searchParams[URL_PARAM_KEYS.HOME_PAGE] || '1')
+    const sortByParam = (searchParams[URL_PARAM_KEYS.HOME_SORT_BY] as keyof TraderData | undefined) ?? 'pnl'
+    const prevSettings = prevPnlSettingsRef.current
+    const affectedSorts = ['pnl', 'realisedPnl', 'avgRoi', 'realisedAvgRoi']
+
+    if (
+      prevSettings.pnlWithFeeEnabled !== pnlWithFeeEnabled &&
+      !isNaN(currentPage) &&
+      currentPage > 1 &&
+      affectedSorts.includes(sortByParam as string)
+    ) {
+      setSearchParams({ [URL_PARAM_KEYS.HOME_PAGE]: '1' })
+    }
+
+    prevPnlSettingsRef.current = {
+      pnlWithFeeEnabled,
+    }
+  }, [pnlWithFeeEnabled, searchParams, setSearchParams])
 
   const handleChangeSort = (sortBy: keyof TraderData) => {
     setSearchParams({ [URL_PARAM_KEYS.HOME_SORT_BY]: sortBy as unknown as string, [URL_PARAM_KEYS.HOME_PAGE]: '1' })
@@ -215,10 +243,11 @@ function ListTraders({ filters }: { filters: FiltersState }) {
   const [selectedTrader, setSelectedTrader] = useState<{ account: string; protocol: ProtocolEnum } | null>(null)
 
   // METHODS
+  const pnlWithFeeEnabled = useUserPreferencesStore()
   const queryVariables = useMemo(() => {
     const index = 'copin.position_statistics'
 
-    const { sortBy } = normalizePositionPayload(filters)
+    const { sortBy } = normalizePositionPayload(filters, pnlWithFeeEnabled)
 
     const query = [
       // ...graphqlBaseFilters,
@@ -238,7 +267,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     }
 
     return { index, body }
-  }, [filters, selectedProtocols, currentPage, allowedSelectProtocols])
+  }, [filters, selectedProtocols, currentPage, allowedSelectProtocols, pnlWithFeeEnabled])
 
   const onClickBacktest = (trader: TraderData) => {
     setSelectedTrader({ account: trader.account, protocol: trader.protocol })
@@ -281,7 +310,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
     }
   )
 
-  const { data: pnlData } = useQuery(
+  const { data: pnlData, isLoading: loadingPnl } = useQuery(
     [QUERY_KEYS.GET_PNL_STATISTICS, traderData],
     () => getPnlStatisticsApi(getPnlStatisticsPayload(traderData)),
     {
@@ -399,6 +428,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
                   timeOption={filters.time}
                   onClickBacktest={onClickBacktest}
                   pnlData={pnlData}
+                  loadingPnl={loadingPnl}
                 />
               )
             })}
@@ -406,7 +436,7 @@ function ListTraders({ filters }: { filters: FiltersState }) {
       </Box>
       <Box display="none">
         <BacktestSimpleModal
-          key={selectedTrader?.account ?? '' + (selectedTrader?.protocol ?? '')}
+          key={`${selectedTrader?.account}${selectedTrader?.protocol}`}
           isOpen={!!selectedTrader}
           onDismiss={() => {
             setSelectedTrader(null)
@@ -464,19 +494,27 @@ function TraderItem({
   onClickBacktest,
   timeOption,
   pnlData,
+  loadingPnl,
 }: {
   traderData: ResponseTraderData
   onClickBacktest: (traderData: TraderData) => void
   timeOption: TimeFilterProps
   pnlData: PnlStatisticsResponse | undefined
+  loadingPnl: boolean | undefined
 }) {
   const { protocol, account, type, realisedPnl, realisedAvgRoi, winRate } = traderData
-  const traderPnlData = pnlData?.[account]
+  const key = `${account}-${protocol}`
+  const traderPnlData = pnlData?.[key]
+
   const defaultDayCount = 7 // Default 7 days
   // NOTE: If time is 1 day, get 7 days count
   const dayCount = [TimeFilterByEnum.LAST_24H, TimeFilterByEnum.S1_DAY].includes(timeOption.id)
     ? TIME_FILTER_OPTIONS.find((time) => time.id === TimeFilterByEnum.S7_DAY)?.value || defaultDayCount
     : timeOption.value
+
+  const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
+  const pnl = pnlWithFeeEnabled ? traderData.pnl : traderData.realisedPnl
+  const avgRoi = pnlWithFeeEnabled ? traderData.avgRoi : traderData.realisedAvgRoi
 
   return (
     <Box
@@ -537,22 +575,28 @@ function TraderItem({
         </Flex>
       </Flex>
       <Box my={12} sx={{ height: 60 }}>
-        <LineChartTraderPnl
-          data={parsePnLStatsData(traderPnlData)}
-          isCumulativeData={false}
-          dayCount={dayCount}
-          isSimple
-          hasBalanceText={false}
-          height={30}
-        />
+        {!loadingPnl && traderPnlData ? (
+          <LineChartTraderPnl
+            data={parsePnLStatsData(traderPnlData)}
+            isCumulativeData={false}
+            dayCount={dayCount}
+            isSimple
+            hasBalanceText={false}
+            height={30}
+            address={account}
+            protocol={protocol}
+          />
+        ) : null}
       </Box>
       <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: '1fr 1.3fr 1fr' }}>
         <Box>
           <Type.Caption display="block">
-            <Trans>{TIME_TRANSLATION[type]} PnL ($)</Trans>
+            <Trans>
+              {TIME_TRANSLATION[type]} <PnlTitle type="lower" color="neutral1" /> ($)
+            </Trans>
           </Type.Caption>
           <Type.Caption sx={{ fontWeight: 600 }} className="trader-pnl">
-            <SignedText value={realisedPnl} minDigit={0} maxDigit={0} fontInherit prefix="$" />
+            <SignedText value={pnl} minDigit={0} maxDigit={0} fontInherit prefix="$" />
           </Type.Caption>
         </Box>
         <Box>
@@ -560,7 +604,7 @@ function TraderItem({
             <Trans>{TIME_TRANSLATION[type]} Avg ROI (%)</Trans>
           </Type.Caption>
           <Type.Caption sx={{ fontWeight: 600 }}>
-            <SignedText value={realisedAvgRoi} minDigit={2} maxDigit={2} fontInherit suffix="%" />
+            <SignedText value={avgRoi} minDigit={2} maxDigit={2} fontInherit suffix="%" />
           </Type.Caption>
         </Box>
         <Box>

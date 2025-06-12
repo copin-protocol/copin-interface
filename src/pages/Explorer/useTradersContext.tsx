@@ -174,16 +174,30 @@ export function FilterTradersProvider({
     filterTab: FilterTabEnum
   }) => {
     const stringParams = stringifyParams(filters)
-    setSearchParams({
-      [URL_PARAM_KEYS.RANKING_FILTERS]: null,
-      [URL_PARAM_KEYS.DEFAULT_FILTERS]: stringParams,
+    const payload = {
       [URL_PARAM_KEYS.FILTER_TAB]: filterTab,
       [URL_PARAM_KEYS.PAGE]: '1',
-    })
-    localStorage.setItem(STORAGE_KEYS.FILTER_TAB, filterTab)
+    }
+    if (filterTab === FilterTabEnum.RANKING) {
+      payload[URL_PARAM_KEYS.RANKING_FILTERS] = stringParams
+    } else if (filterTab === FilterTabEnum.DEFAULT) {
+      payload[URL_PARAM_KEYS.DEFAULT_FILTERS] = stringParams
+    }
+
+    setSearchParams(payload)
+
+    // localStorage.setItem(STORAGE_KEYS.FILTER_TAB, filterTab)
+
+    const uniqueFilters = filters.reduce((acc, filter) => {
+      if (!acc.find((f) => f.key === filter.key)) {
+        acc.push(filter)
+      }
+      return acc
+    }, [] as ConditionFormValues<TraderData>)
+
     localStorage.setItem(
       filterTab === FilterTabEnum.DEFAULT ? STORAGE_KEYS.DEFAULT_FILTERS : STORAGE_KEYS.RANKING_FILTERS,
-      JSON.stringify(filters)
+      JSON.stringify(uniqueFilters)
     )
   }
 

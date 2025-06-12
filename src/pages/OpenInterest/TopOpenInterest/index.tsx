@@ -60,7 +60,8 @@ export default function TopOpenInterest() {
 
   // FETCH DATA
   const queryVariables = useMemo(() => {
-    const { sortBy } = normalizePositionPayload({ sortBy: sort.key })
+    const index = 'copin.positions'
+    const { sortBy } = normalizePositionPayload({ sortBy: sort.key }, { pnlWithFeeEnabled: false })
 
     const query: any = [
       { field: 'status', match: 'OPEN' },

@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import PositionListCard from 'components/@position/TraderPositionsListView'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
+import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import TableRangeFilterIcon from 'components/@widgets/TableFilter/TableRangeFilterIcon'
 import { renderEntry, renderOpeningPnL, renderSizeOpening, renderTrader } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
@@ -45,14 +46,14 @@ const columns: ColumnData<PositionData, ExternalSource>[] = [
     render: (item) => renderEntry(item, undefined, true),
   },
   {
-    title: 'Size',
+    title: 'Value',
     dataIndex: 'size',
     key: 'size',
     style: { width: '218px' },
-    render: (item, index, externalSource) => renderSizeOpening(item),
+    render: (item) => renderSizeOpening(item),
     filterComponent: ({ externalSource }) => (
       <TableRangeFilterIcon
-        config={{ type: 'number', urlParamKey: 'size', label: <Trans>Size</Trans> }}
+        config={{ type: 'number', urlParamKey: 'size', label: <Trans>Value</Trans> }}
         requiredPlan={
           externalSource?.allowedFilter != null && !externalSource.allowedFilter
             ? externalSource?.planToFilter

@@ -72,6 +72,7 @@ export default function ConditionFilterForm<T>({
   }
 
   const hasInvalidValues = !!invalidFormValues?.length
+  const invalidKeys = invalidFormValues?.map((e) => e.key)
 
   return (
     <Box px={8} width="100%" height="100%" sx={wrapperSx}>
@@ -94,38 +95,42 @@ export default function ConditionFilterForm<T>({
         <Box sx={{ flex: '0 0 24px !important' }}></Box>
       </RowWrapper>
       <Box>
-        {formValues.map((values, index) => {
-          if (!values) return <></>
-          return (
-            <Row
-              fieldOptions={fieldOptions}
-              key={values.key.toString() + index}
-              data={values}
-              excludingKeys={formValues.map((item) => item.key)}
-              onChange={(values) => onChangeRowValues(index, values)}
-              onRemove={() => handleClearRow(values.key)}
-              disabled={hasInvalidValues}
-              type={type}
-            />
-          )
-        })}
+        {formValues
+          .filter((e) => e.key !== 'indexTokens' || invalidKeys?.includes(e.key))
+          .map((values, index) => {
+            if (!values) return <></>
+            return (
+              <Row
+                fieldOptions={fieldOptions}
+                key={values.key.toString() + index}
+                data={values}
+                excludingKeys={formValues.map((item) => item.key)}
+                onChange={(values) => onChangeRowValues(index, values)}
+                onRemove={() => handleClearRow(values.key)}
+                disabled={hasInvalidValues}
+                type={type}
+              />
+            )
+          })}
 
         {hasInvalidValues
-          ? invalidFormValues.map((values, index) => {
-              if (!values) return <></>
-              return (
-                <Row
-                  fieldOptions={fieldOptions}
-                  key={values.key.toString() + index}
-                  data={values}
-                  disabled
-                  wrapperSx={{
-                    '& *': { color: `${themeColors.neutral3} !important` },
-                  }}
-                  type={type}
-                />
-              )
-            })
+          ? invalidFormValues
+              .filter((e) => e.key !== 'indexTokens')
+              .map((values, index) => {
+                if (!values) return <></>
+                return (
+                  <Row
+                    fieldOptions={fieldOptions}
+                    key={values.key.toString() + index}
+                    data={values}
+                    disabled
+                    wrapperSx={{
+                      '& *': { color: `${themeColors.neutral3} !important` },
+                    }}
+                    type={type}
+                  />
+                )
+              })
           : null}
         {hasInvalidValues ? null : (
           <>

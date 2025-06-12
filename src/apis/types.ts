@@ -29,6 +29,7 @@ export type GetApiParams = {
 export interface RangeFilter<T = string> {
   fieldName: T
   in?: string[]
+  nin?: string[]
   gte?: number
   lte?: number
 }

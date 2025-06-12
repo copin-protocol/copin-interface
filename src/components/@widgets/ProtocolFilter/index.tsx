@@ -24,6 +24,7 @@ export interface ProtocolFilterProps {
   allowList: ProtocolEnum[]
   menuSx?: any
   placement?: DropdownProps['placement']
+  shouldCheckPermission?: boolean
 }
 
 export type GlobalProtocolFilterProps = {

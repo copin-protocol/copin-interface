@@ -194,49 +194,51 @@ export function TabHeader({
 }: TabHeadersProps) {
   return (
     <Flex sx={{ width: '100%', ...sx }} alignItems="center">
-      <HeaderOverlay hasOverlay={hasOverlay ?? fullWidth}>
-        <Header
-          sx={{
-            width: '100%',
-          }}
-        >
-          <Flex
-            className="tab-header"
+      <Flex alignItems="center" flex={1} overflow="auto">
+        <HeaderOverlay hasOverlay={hasOverlay ?? fullWidth}>
+          <Header
             sx={{
-              // width: '100%',
-              alignItems: 'center',
-              width: fullWidth ? ['100%', '100%', 'auto'] : 'max-content',
-              '& > *': {
-                width: fullWidth ? ['100%', '100%', 'auto'] : 'max-content',
-              },
-              height: size === 'lg' ? PAGE_TITLE_HEIGHT : TAB_HEIGHT,
+              width: '100%',
             }}
           >
-            {configs.map((tab) => {
-              const isActive = isActiveFn(tab)
-              return (
-                <RouteTabItem
-                  key={tab.key}
-                  active={isActive}
-                  icon={isActive && !!tab.activeIcon ? tab.activeIcon : tab.icon}
-                  sx={isActive && !!itemActiveSx ? itemActiveSx : itemSx}
-                  iconSx={isActive && !!iconActiveSx ? iconActiveSx : iconSx}
-                  onClick={() => onClickItem?.(tab.key)}
-                  hasLine={hasLine}
-                  size={size}
-                  route={tab.route}
-                  count={tab.count}
-                >
-                  {tab.name}
-                </RouteTabItem>
-              )
-            })}
-            {fullWidth && hasLine && (
-              <Box flex="1" sx={{ borderBottom: 'small', borderColor: 'neutral4', height: '100%' }}></Box>
-            )}
-          </Flex>
-        </Header>
-      </HeaderOverlay>
+            <Flex
+              className="tab-header"
+              sx={{
+                // width: '100%',
+                alignItems: 'center',
+                width: fullWidth ? ['100%', '100%', 'auto'] : 'max-content',
+                '& > *': {
+                  width: fullWidth ? ['100%', '100%', 'auto'] : 'max-content',
+                },
+                height: size === 'lg' ? PAGE_TITLE_HEIGHT : TAB_HEIGHT,
+              }}
+            >
+              {configs.map((tab) => {
+                const isActive = isActiveFn(tab)
+                return (
+                  <RouteTabItem
+                    key={tab.key}
+                    active={isActive}
+                    icon={isActive && !!tab.activeIcon ? tab.activeIcon : tab.icon}
+                    sx={isActive && !!itemActiveSx ? itemActiveSx : itemSx}
+                    iconSx={isActive && !!iconActiveSx ? iconActiveSx : iconSx}
+                    onClick={() => onClickItem?.(tab.key)}
+                    hasLine={hasLine}
+                    size={size}
+                    route={tab.route}
+                    count={tab.count}
+                  >
+                    {tab.name}
+                  </RouteTabItem>
+                )
+              })}
+              {fullWidth && hasLine && (
+                <Box flex="1" sx={{ borderBottom: 'small', borderColor: 'neutral4', height: '100%' }}></Box>
+              )}
+            </Flex>
+          </Header>
+        </HeaderOverlay>
+      </Flex>
       <Flex
         minWidth="fit-content"
         alignItems="center"

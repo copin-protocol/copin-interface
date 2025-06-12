@@ -6,6 +6,7 @@ import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
+import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import { GroupedFillsData } from 'entities/hyperliquid'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
@@ -74,17 +75,29 @@ export default function HLOrderFilledListView({ data, isLoading, scrollDep }: Pr
                 {item.avgPrice ? PriceTokenText({ value: item.avgPrice, maxDigit: 2, minDigit: 2 }) : 'N/A'}
               </Type.Caption>
             </Flex>
-            <Flex mt={3} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
+            <Flex mt={2} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
               <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
+                <Flex flex={1} alignItems="center">
+                  <Type.Caption color="neutral1">
+                    <Box as="span" color="neutral3" mr="1ch">
+                      Value:
+                    </Box>
+                    ${formatNumber(item.totalSize, 0, 0)}
+                  </Type.Caption>
+                </Flex>
                 <Flex flex={1} alignItems="center">
                   <Type.Caption color="neutral1">
                     <Box as="span" color="neutral3" mr="1ch">
                       Size:
                     </Box>
-                    ${formatNumber(item.totalSize, 0, 0)}
+                    {formatNumber(item.totalSizeInToken, 0, 0)}
                   </Type.Caption>
                 </Flex>
-                <Flex flex={1} sx={{ alignItems: 'center', justifyContent: 'space-between', gap: '1ch' }}>
+              </Flex>
+            </Flex>
+            <Flex mt={2} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
+              <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
+                <Flex flex={1} sx={{ alignItems: 'center', gap: '1ch' }}>
                   <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                     Fees:
                   </Type.Caption>
@@ -96,10 +109,8 @@ export default function HLOrderFilledListView({ data, isLoading, scrollDep }: Pr
                     )}
                   </Type.Caption>
                 </Flex>
-                <Flex flex={1} sx={{ alignItems: 'center', justifyContent: 'space-between', gap: '1ch' }}>
-                  <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                    PnL:
-                  </Type.Caption>
+                <Flex flex={1} sx={{ alignItems: 'center', gap: '1ch' }}>
+                  <PnlTitle type="lower" character=":" />
                   <Type.Caption color="neutral3">
                     {!!item.totalPnl ? <SignedText value={item.totalPnl} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
                   </Type.Caption>

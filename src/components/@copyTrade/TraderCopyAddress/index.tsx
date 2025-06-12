@@ -5,13 +5,14 @@ import IconEye from 'assets/icons/ic-eye.svg'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
+import { useEnsName } from 'hooks/useEnsName'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
-import { addressShorten } from 'utils/helpers/format'
+import { addressShorten, shortenEnsName } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import TraderCopyCountWarningIcon from '../TraderCopyCountWarningIcon'
@@ -69,11 +70,15 @@ export default function TraderCopyAddress({
   const { pathname } = useLocation()
   const params = useParams<{ address: string }>()
 
+  const { ensName } = useEnsName(address)
+
   const { setTrader } = useQuickViewTraderStore()
 
   const enabledLink =
     isLink &&
     !(params?.address?.toLowerCase() === address?.toLowerCase() && pathname.includes(ROUTES.TRADER_DETAILS.path_prefix))
+
+  const hasTooltip = hasAddressTooltip || !!ensName
 
   return (
     <Flex sx={{ alignItems: 'center', '& > *': { flexShrink: 0 }, gap: 1 }}>
@@ -123,9 +128,9 @@ export default function TraderCopyAddress({
               minWidth: 74,
               ...textSx,
             }}
-            {...(hasAddressTooltip ? { 'data-tooltip-id': tooltipId, 'data-tooltip-delay-show': 360 } : {})}
+            {...(hasTooltip ? { 'data-tooltip-id': tooltipId, 'data-tooltip-delay-show': 360 } : {})}
           >
-            {addressShorten(address, 3, 5)}
+            {ensName ? shortenEnsName(ensName) : addressShorten(address, 3, 5)}
           </Type.Caption>
           {hasCopyAddress && (
             <CopyButton
@@ -143,9 +148,16 @@ export default function TraderCopyAddress({
               <ProtocolLogo protocol={protocol} hasText={false} size={20} />
             </>
           )}
-          {hasAddressTooltip && (
+          {hasTooltip && (
             <Tooltip id={tooltipId}>
-              <Type.Caption width="max-content">{address}</Type.Caption>
+              <Flex flexDirection="column" sx={{ gap: 1 }}>
+                {ensName && (
+                  <Type.Caption width="max-content" display="block">
+                    {ensName}
+                  </Type.Caption>
+                )}
+                <Type.Caption width="max-content">{address}</Type.Caption>
+              </Flex>
             </Tooltip>
           )}
           {(hasCopyCountWarningIcon || hasCopyVolumeWarningIcon || hasDisabledWarningIcon) && (

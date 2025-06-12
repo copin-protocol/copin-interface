@@ -9,7 +9,7 @@ import { HlOrderData } from 'entities/hyperliquid'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
-import { formatNumber } from 'utils/helpers/format'
+import { compactNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 type Props = {
@@ -80,14 +80,22 @@ export default function HLOpenOrderListView({ data, isLoading, scrollDep }: Prop
                   : 'Market'}
               </Type.Caption>
             </Flex>
-            <Flex mt={3} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
+            <Flex mt={2} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
               <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
                 <Flex flex={1} alignItems="center">
                   <Type.Caption color="neutral1">
                     <Box as="span" color="neutral3" mr="1ch">
-                      Size ($):
+                      Value:
                     </Box>
-                    ${formatNumber(item.sizeNumber, 0, 0)}
+                    ${compactNumber(item.sizeNumber)}
+                  </Type.Caption>
+                </Flex>
+                <Flex flex={1} alignItems="center">
+                  <Type.Caption color="neutral1">
+                    <Box as="span" color="neutral3" mr="1ch">
+                      Size:
+                    </Box>
+                    {compactNumber(item.sizeInTokenNumber)}
                   </Type.Caption>
                 </Flex>
                 <Flex flex={1} sx={{ alignItems: 'center', gap: '1ch' }}>

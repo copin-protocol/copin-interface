@@ -1,10 +1,10 @@
-import dayjs from 'dayjs'
 import {
   ColorType,
   CrosshairMode,
   IChartApi,
   LineData,
   LineStyle,
+  LineWidth,
   PriceScaleMode,
   createChart,
 } from 'lightweight-charts'
@@ -16,11 +16,12 @@ import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { FONT_FAMILY } from 'utils/config/constants'
+import { ProtocolEnum } from 'utils/config/enums'
 import 'utils/helpers/calculate'
 import { getTimePeriod } from 'utils/helpers/transform'
 
-import { chartTimeFrame, sortInputData } from '../helpers'
 import { ChartDataType } from '../types'
+import { useChartWorker } from './useChartWorker'
 
 type CommonProps = {
   data: ChartDataType[] | undefined
@@ -30,6 +31,9 @@ type CommonProps = {
   hasBalanceText?: boolean
   isSimple?: boolean
   balanceTextComponent?: typeof Type.H1
+  lineWidth?: LineWidth
+  address?: string
+  protocol?: ProtocolEnum
 }
 
 export function LineChartPnL(props: { dayCount: number } & CommonProps): JSX.Element
@@ -43,12 +47,18 @@ export default function LineChartPnL({
   dayCount,
   isSimple = false,
   hasBalanceText = true,
+  lineWidth = 2,
   balanceTextComponent: BalanceTextComponent = Type.H3,
   isCumulativeData,
+  address,
+  protocol,
 }: {
   from?: number
   to?: number
   dayCount?: number
+  isSimple?: boolean
+  address?: string
+  protocol?: ProtocolEnum
 } & CommonProps) {
   const [crossMovePnL, setCrossMovePnL] = useState<number | undefined>()
   let _from = from,
@@ -59,21 +69,30 @@ export default function LineChartPnL({
     _to = toDate
   }
 
-  const chartData = useMemo(
-    () => (_from && _to && data ? generateChartData({ fromDate: _from, toDate: _to, data, isCumulativeData }) : []),
-    [_from, _to, data, isCumulativeData]
-  )
+  const chartWorkerParams = useMemo(() => {
+    if (_from && _to && data) {
+      return {
+        fromDate: _from,
+        toDate: _to,
+        data,
+        isCumulativeData,
+        address,
+        protocol,
+      }
+    }
+    return undefined
+  }, [_from, _to, data, isCumulativeData, address, protocol])
 
-  const latestPnL = useMemo(
-    () =>
-      crossMovePnL !== undefined
-        ? crossMovePnL
-        : chartData && chartData.length > 0
-        ? chartData[chartData.length - 1].value
-        : 0,
-    [chartData, crossMovePnL]
-  )
-  const unrealisedPnl = useMemo(() => (data && data.length > 0 ? data[data.length - 1].unrealisedPnl : 0), [data])
+  const chartData = useChartWorker(chartWorkerParams)
+
+  const latestPnL =
+    crossMovePnL !== undefined
+      ? crossMovePnL
+      : chartData && chartData.length > 0
+      ? chartData[chartData.length - 1].value
+      : 0
+
+  const unrealisedPnl = data && data.length > 0 ? data[data.length - 1].unrealisedPnl : 0
   const realisedPnl = latestPnL - unrealisedPnl
 
   const chartRef = useRef<IChartApi | null>(null)
@@ -81,7 +100,7 @@ export default function LineChartPnL({
 
   useEffect(() => {
     if (!containerRef.current) return
-    const renderResult = renderChart({ chartData, container: containerRef.current, isSimple })
+    const renderResult = renderChart({ chartData, container: containerRef.current, isSimple, lineWidth })
     if (!renderResult) return
     const { chart, series, handleResize } = renderResult
     chartRef.current = chart
@@ -98,7 +117,7 @@ export default function LineChartPnL({
 
       chart.remove()
     }
-  }, [chartData, isSimple])
+  }, [chartData, isSimple, lineWidth])
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
@@ -143,104 +162,16 @@ export default function LineChartPnL({
   )
 }
 
-function generateChartData({
-  fromDate,
-  toDate,
-  data,
-  isCumulativeData,
-}: {
-  fromDate: number
-  toDate: number
-  data: ChartDataType[]
-  isCumulativeData: boolean
-}) {
-  const sortedData = sortInputData(data)
-
-  const chartData = isCumulativeData ? sortedData : convertToCumulativeArray(sortedData)
-
-  const dateArray: ChartDataType[] = []
-  let currentDate = dayjs(fromDate).utc().startOf('hour')
-
-  while (currentDate.isSame(toDate) || currentDate.isBefore(toDate)) {
-    let realisedPnl = 0
-    let unrealisedPnl = 0
-    let pnl = 0
-    let fee = 0
-    let roi = 0
-    chartData.forEach((data) => {
-      if (currentDate.isSame(data.date) || currentDate.isAfter(data.date)) {
-        realisedPnl = data.realisedPnl
-        unrealisedPnl = data.unrealisedPnl
-        pnl = realisedPnl + unrealisedPnl
-        fee = data.fee
-        roi = data.roi
-      }
-    })
-
-    dateArray.push({ date: currentDate.toISOString(), realisedPnl, unrealisedPnl, pnl, fee, roi })
-    currentDate = chartTimeFrame(currentDate.valueOf(), fromDate, toDate)
-  }
-
-  const timezone = new Date().getTimezoneOffset() * 60
-
-  return dateArray
-    .filter((e) => dayjs(e.date).utc().isSame(fromDate) || dayjs(e.date).utc().isAfter(fromDate))
-    .sort((x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : 0))
-    .map((v) => ({ value: v.pnl, time: dayjs(v.date).utc().unix() - timezone } as LineData))
-}
-
-function convertToCumulativeArray(data: ChartDataType[]): ChartDataType[] {
-  const uniquePnlData: ChartDataType[] = []
-  data.forEach((item) => {
-    const index = uniquePnlData.findIndex((e) => e.date === item.date)
-    if (index >= 0) {
-      const exist = uniquePnlData[index]
-      uniquePnlData.splice(index, 1)
-      uniquePnlData.push({
-        date: item.date,
-        realisedPnl: item.realisedPnl + exist.realisedPnl,
-        unrealisedPnl: item.unrealisedPnl + exist.unrealisedPnl,
-        pnl: item.pnl + exist.pnl,
-        fee: item.fee + exist.fee,
-        roi: item.roi + exist.roi,
-      })
-    } else {
-      uniquePnlData.push(item)
-    }
-  })
-
-  let cumulativeRealisedPnl = 0
-  let cumulativeUnrealisedPnl = 0
-  let cumulativePnl = 0
-  let cumulativeFee = 0
-  let cumulativeRoi = 0
-  return uniquePnlData.reduce((result: ChartDataType[], dataPoint) => {
-    cumulativeRealisedPnl += dataPoint.realisedPnl
-    cumulativeUnrealisedPnl += dataPoint.unrealisedPnl
-    cumulativePnl += dataPoint.pnl
-    cumulativeFee += dataPoint.fee
-    cumulativeRoi += dataPoint.roi
-    result.push({
-      date: dataPoint.date,
-      realisedPnl: cumulativeRealisedPnl,
-      unrealisedPnl: cumulativeUnrealisedPnl,
-      pnl: cumulativePnl,
-      fee: cumulativeFee,
-      roi: cumulativeRoi,
-    })
-
-    return result
-  }, [])
-}
-
 function renderChart({
   chartData,
   container,
   isSimple,
+  lineWidth,
 }: {
   chartData: LineData[] | undefined
   container: HTMLDivElement
   isSimple: boolean
+  lineWidth: LineWidth
 }) {
   if (!chartData?.length) return
 
@@ -317,7 +248,7 @@ function renderChart({
       price: 0,
     },
     baseLineStyle: LineStyle.Dashed,
-    lineWidth: 2,
+    lineWidth,
     baseLineColor: 'red',
     baseLineVisible: true,
     lastValueVisible: false,

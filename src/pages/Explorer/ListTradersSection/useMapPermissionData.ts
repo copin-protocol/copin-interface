@@ -16,7 +16,7 @@ export default function useMapPermissionData() {
     TRADER_STATISTIC_NUMBER_FIELD.forEach((field) => {
       const source = result[field]
       if (source == null) {
-        result[field] = Math.round(Math.random() * 10000) as any
+        result[field] === 'unrealisedPnl' ? ('' as any) : (Math.round(Math.random() * 10000) as any) ////prevent random unRealisedPnl when switch Pnl button
       }
     })
     return result as ResponseTraderData

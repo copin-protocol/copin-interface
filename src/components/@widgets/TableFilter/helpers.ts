@@ -1,5 +1,5 @@
 export function generateRangeFilterKey({ key }: { key: string }) {
-  return { gteKey: `${key}g`, lteKey: `${key}l` }
+  return { gteKey: `${key}Gte`, lteKey: `${key}Lte` }
 }
 
 /**

@@ -25,6 +25,7 @@ import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useTraderBalanceStore from 'hooks/store/useTraderBalanceStore'
 import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
@@ -104,18 +105,20 @@ export function TraderDetailsComponent({
   const { timeFramesAllowed, isAllowedProtocol } = useTraderProfilePermission({ protocol })
   const { timeFilterOptions } = useGetTimeFilterOptions()
 
+  const { pnlWithFeeEnabled } = useUserPreferencesStore()
+
   const { data: traderData, isLoading: isLoadingTraderData } = useQuery(
-    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol, isAllowedProtocol],
-    () => getTraderStatisticApi({ protocol, account: address }),
+    [QUERY_KEYS.GET_TRADER_DETAIL, address, protocol, isAllowedProtocol, pnlWithFeeEnabled],
+    () =>
+      getTraderStatisticApi({
+        protocol,
+        account: address,
+        pnlWithFeeEnabled,
+      }),
     {
       enabled: !!address && isAllowedProtocol,
       retry: 0,
-      select: (data) =>
-        timeFilterOptions
-          .map((option) => {
-            return data[option.id]
-          })
-          .reverse(),
+      select: (data) => timeFilterOptions.map((option) => data[option.id]).reverse(),
     }
   )
 

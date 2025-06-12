@@ -5,6 +5,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
+import GraphemeSplitter from 'grapheme-splitter'
 
 import { ImageData } from 'entities/image.d'
 import { DATE_FORMAT, DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
@@ -151,6 +152,20 @@ export const shortenText = (text?: string, length?: number) => {
   const prefix = text.slice(0, length)
   return `${prefix}...`
 }
+export const shortenEnsName = (text?: string) => {
+  if (!text) return ''
+  const splitter = new GraphemeSplitter()
+  const chars = splitter.splitGraphemes(text)
+  const emojiIncluded = chars.some((char) => char.length > 1)
+  const maxLength = emojiIncluded ? 8 : 10
+
+  if (chars.length <= maxLength) return text
+
+  const prefix = chars.slice(0, emojiIncluded ? 1 : maxLength - 7).join('')
+  const suffix = chars.slice(-5).join('')
+  return `${prefix}...${suffix}`
+}
+
 export function shortenFileName({
   text,
   numsPrefix = 12,

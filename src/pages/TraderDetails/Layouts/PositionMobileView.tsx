@@ -1,11 +1,16 @@
 import { ReactNode, cloneElement, useCallback, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
-import { getHlAccountInfo, getHlOpenOrders, getHlOrderFilled } from 'apis/hyperliquid'
+import { getHlAccountInfo, getHlOpenOrders, getHlOrderFilled, getHlTwapOrderFilled } from 'apis/hyperliquid'
 import OpenOrdersView from 'components/@position/HLTraderOpeningPositions/OpenOrdersView'
 import OrderFilledView from 'components/@position/HLTraderOpeningPositions/OrderFilledView'
+import OrderTwapView from 'components/@position/HLTraderOpeningPositions/OrderTwapView'
 import { TraderOpeningPositionsListViewProps } from 'components/@position/TraderOpeningPositions'
-import { groupHLOrderFillsByOid, parseHLOrderData } from 'components/@position/helpers/hyperliquid'
+import {
+  groupHLOrderFillsByOid,
+  parseHLOrderData,
+  parseHLTwapOrderFillData,
+} from 'components/@position/helpers/hyperliquid'
 import { parseHLOrderFillData } from 'components/@position/helpers/hyperliquid'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { TabHeader } from 'theme/Tab'
@@ -18,6 +23,7 @@ enum TabKeyEnum {
   CLOSED = 'closed',
   OPEN_ORDERS = 'open_orders',
   FILLS = 'fills',
+  TWAP = 'twap',
 }
 const TABS = [
   { key: TabKeyEnum.OPENING, name: 'Opening Positions' },
@@ -29,6 +35,7 @@ const HYPERLIQUID_TABS = [
   { key: TabKeyEnum.CLOSED, name: 'History' },
   { key: TabKeyEnum.OPEN_ORDERS, name: 'Orders' },
   { key: TabKeyEnum.FILLS, name: 'Fills' },
+  { key: TabKeyEnum.TWAP, name: 'TWAP' },
 ]
 
 const LITE_TABS = [
@@ -135,6 +142,32 @@ export default function PositionMobileView({
     return groupHLOrderFillsByOid(filledOrders)
   }, [filledOrders])
 
+  const [enabledRefetchTwapOrder, setEnabledRefetchTwapOrder] = useState(true)
+  const { data: twapOrders, isLoading: isLoadingTwapOders } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_TWAP_ORDERS, address],
+    () =>
+      getHlTwapOrderFilled({
+        user: address ?? '',
+      }),
+    {
+      enabled: !!address && protocol === ProtocolEnum.HYPERLIQUID,
+      retry: 0,
+      refetchInterval: enabledRefetchTwapOrder ? 15_000 : undefined,
+      keepPreviousData: true,
+      select: (data) => {
+        return parseHLTwapOrderFillData({ account: address ?? '', data })
+      },
+    }
+  )
+  const onTwapOrderPageChange = useCallback((page: number) => {
+    if (page === 1) {
+      setEnabledRefetchTwapOrder(true)
+    } else setEnabledRefetchTwapOrder(false)
+  }, [])
+  twapOrders?.sort((a, b) => {
+    return (b.timestamp ?? 0) - (a.timestamp ?? 0)
+  })
+
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
       <TabHeader
@@ -169,6 +202,30 @@ export default function PositionMobileView({
             onPageChange={onOrderFilledPageChange}
             isLoading={isLoadingFilledOrders}
             data={groupedFilledOrders}
+            isDrawer={false}
+            isExpanded={true}
+          />
+        )}
+        {currentTabKey === TabKeyEnum.FILLS && (
+          <OrderFilledView
+            toggleExpand={() => {
+              //
+            }}
+            onPageChange={onOrderFilledPageChange}
+            isLoading={isLoadingFilledOrders}
+            data={groupedFilledOrders}
+            isDrawer={false}
+            isExpanded={true}
+          />
+        )}
+        {currentTabKey === TabKeyEnum.TWAP && (
+          <OrderTwapView
+            toggleExpand={() => {
+              //
+            }}
+            onPageChange={onTwapOrderPageChange}
+            isLoading={isLoadingTwapOders}
+            data={twapOrders}
             isDrawer={false}
             isExpanded={true}
           />

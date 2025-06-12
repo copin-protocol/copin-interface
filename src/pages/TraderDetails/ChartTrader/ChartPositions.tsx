@@ -11,6 +11,7 @@ import SectionTitle from 'components/@ui/SectionTitle'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import { PositionData } from 'entities/trader.d'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox } from 'theme/base'
 import { DEFAULT_PROTOCOL, MAX_PAGE_LIMIT } from 'utils/config/constants'
@@ -51,13 +52,22 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
     }
     return result
   }, [currentPair])
+
+  const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
   const { data: tokensStatistic, isLoading: loadingTokenStatistic } = useQuery(
-    [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, account, isEnableTokenStats],
+    [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, account, isEnableTokenStats, pnlWithFeeEnabled],
     () => getTraderTokensStatistic({ protocol, account }),
     {
       enabled: !!account && !!protocol && isEnableTokenStats,
       retry: 0,
       keepPreviousData: true,
+      select: (res) => ({
+        ...res,
+        data: res.data.map((item) => ({
+          ...item,
+          realisedPnl: pnlWithFeeEnabled ? item.realisedPnl - item.totalFee : item.realisedPnl,
+        })),
+      }),
       // onSuccess(data) {
       //   if (!data.data.length) return
       //   const firstData = data.data[0]

@@ -48,7 +48,7 @@ const priceColumn: ColumnData<HlOrderData> = {
 }
 
 const sizeColumn: ColumnData<HlOrderData> = {
-  title: 'Size ($)',
+  title: 'Value',
   dataIndex: 'sizeNumber',
   key: 'sizeNumber',
   sortBy: 'sizeNumber',
@@ -59,7 +59,7 @@ const sizeColumn: ColumnData<HlOrderData> = {
 }
 
 const sizeInTokenColumn: ColumnData<HlOrderData> = {
-  title: 'Size',
+  title: 'Value',
   dataIndex: 'sizeInTokenNumber',
   key: 'sizeInTokenNumber',
   sortBy: 'sizeInTokenNumber',

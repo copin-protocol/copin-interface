@@ -10,11 +10,12 @@ import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useGlobalStore from 'hooks/store/useGlobalStore'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import useTraderCopying from 'hooks/store/useTraderCopying'
+import { useEnsName } from 'hooks/useEnsName'
 // import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
-import { addressShorten, shortenText } from 'utils/helpers/format'
+import { addressShorten, shortenEnsName, shortenText } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 // import ProtocolLogo from '../ProtocolLogo'
@@ -29,7 +30,9 @@ export function AccountInfo({
   smartAccount,
   keyword,
   hasHover = true,
+  shouldShowProtocol = true,
   sx,
+  addressWidth = 80,
   wrapperSx,
 }: {
   isOpenPosition: boolean
@@ -41,14 +44,19 @@ export function AccountInfo({
   smartAccount?: string
   keyword?: string
   hasHover?: boolean
+  shouldShowProtocol?: boolean
   sx?: SystemStyleObject & GridProps
+  addressWidth?: number | string
   wrapperSx?: any
 }) {
   const protocolTooltipId = uuid()
+  const ensTooltipId = uuid()
   const { setTrader } = useQuickViewTraderStore()
   const { protocol: defaultProtocol } = useGlobalStore()
   protocol = protocol ?? defaultProtocol
   const { isCopying } = useTraderCopying(address, protocol)
+
+  const { ensName } = useEnsName(address)
 
   return (
     <Flex
@@ -82,29 +90,6 @@ export function AccountInfo({
         }}
       >
         <AddressAvatar address={address} size={size} sx={{ '&:hover': hasHover ? { opacity: 0.25 } : {} }} />
-        {/*{!hasHover || (hasHover && !isHovered) ? (*/}
-        {/*  <AddressAvatar address={address} size={size} />*/}
-        {/*) : (*/}
-        {/*  <Flex*/}
-        {/*    width={size}*/}
-        {/*    height={size}*/}
-        {/*    fontSize={size * 0.65}*/}
-        {/*    sx={{*/}
-        {/*      borderRadius: size / 2,*/}
-        {/*      overflow: 'hidden',*/}
-        {/*      backgroundColor: 'neutral7',*/}
-        {/*      flexShrink: 0,*/}
-        {/*      '&:hover': { cursor: 'pointer' },*/}
-        {/*    }}*/}
-        {/*    alignItems="center"*/}
-        {/*    justifyContent="center"*/}
-        {/*    onClick={() => {*/}
-        {/*      action?.()*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    <Eye size={16} />*/}
-        {/*  </Flex>*/}
-        {/*)}*/}
       </Box>
       <Flex
         as={Link}
@@ -120,12 +105,7 @@ export function AccountInfo({
       >
         <Flex alignItems="center" sx={{ gap: 1 }}>
           <Type.Caption
-            // data-tip="React-tooltip"
-            // data-tooltip-id={`account-${address}-tt`}
-            // data-tooltip-delay-hide={0}
-            // data-tooltip-delay-show={360}
-            // data-tooltip-offset={-8}
-            width={80}
+            width={addressWidth}
             lineHeight="24px"
             color={isCopying ? 'orange1' : 'inherit'}
             sx={{
@@ -134,20 +114,35 @@ export function AccountInfo({
                 textDecoration: 'underline',
               },
             }}
+            data-tip="React-tooltip"
+            data-tooltip-id={ensTooltipId}
+            data-tooltip-offset={0}
           >
-            <HighlightKeyword text={address} keyword={keyword} />
+            {ensName ? shortenEnsName(ensName) : <HighlightKeyword text={address} keyword={keyword} />}
           </Type.Caption>
           {/* {isOpenPosition && (
             <ActiveDot tooltipId={`tt_opening_${address}`} tooltipContent={<Trans>Having open positions</Trans>} />
           )} */}
-          <ProtocolLogo
-            protocol={protocol}
-            size={24}
-            hasText={false}
-            data-tip="React-tooltip"
-            data-tooltip-id={`tt_protocol_${protocolTooltipId}`}
-            data-tooltip-offset={0}
-          />
+          {ensName && (
+            <Tooltip id={ensTooltipId} clickable={false}>
+              <Flex flexDirection="column" sx={{ gap: 1 }}>
+                <Type.Caption>{ensName}</Type.Caption>
+                <Type.Caption>
+                  <HighlightKeyword text={address} keyword={keyword} />
+                </Type.Caption>
+              </Flex>
+            </Tooltip>
+          )}
+          {shouldShowProtocol && (
+            <ProtocolLogo
+              protocol={protocol}
+              size={24}
+              hasText={false}
+              data-tip="React-tooltip"
+              data-tooltip-id={`tt_protocol_${protocolTooltipId}`}
+              data-tooltip-offset={0}
+            />
+          )}
           <Tooltip id={`tt_protocol_${protocolTooltipId}`} clickable={false}>
             <ProtocolLogo protocol={protocol} />
           </Tooltip>
@@ -183,10 +178,7 @@ export function AccountInfo({
           ) : (
             <div></div>
           )
-        ) : // <Type.Small color="neutral3">
-        //   <BalanceText protocol={protocol} account={address} />
-        // </Type.Small>
-        null}
+        ) : null}
         {note && note.length > 10 && (
           <Tooltip id={`tt_note_${address}`} clickable={false}>
             {note}

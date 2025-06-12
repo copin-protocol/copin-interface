@@ -57,11 +57,19 @@ export const clearUnverifiedAccount = () => {
 const URL_PUBLIC = '/public/'
 const URL_PRIVATE = '/'
 
-export const apiWrapper = (url: string): string => {
-  if (requester?.defaults?.headers && requester.defaults.headers.common['Authorization']) {
-    return URL_PRIVATE + url
+export const apiWrapper = (url: string, isPublic?: boolean): string => {
+  if (isPublic) {
+    const jwt = getStoredJwt()
+    if (jwt) {
+      setJwt(jwt)
+    }
+    return url
+  } else {
+    if (requester?.defaults?.headers && requester.defaults.headers.common['Authorization']) {
+      return URL_PRIVATE + url
+    }
+    return URL_PUBLIC + url
   }
-  return URL_PUBLIC + url
 }
 
 export function parseMyProfileResponse(data: UserData) {

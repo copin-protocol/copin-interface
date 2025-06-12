@@ -11,16 +11,18 @@ export const RelativeTimeText = ({
   date,
   tooltipLabel = '',
   hasTooltip = true,
+  textStyle,
 }: {
-  date: string | undefined
+  date: string | undefined | number
   tooltipLabel?: ReactNode
   hasTooltip?: boolean
+  textStyle?: React.CSSProperties
 }) => {
   const uuid = uuidv4()
   const tooltipId = `tt_${uuid}`
   return (
     <Box as="span" sx={{ display: 'block' }} data-tip="React-tooltip" data-tooltip-id={tooltipId}>
-      <span>{`${formatLocalRelativeDate(date ?? '')}`}</span>
+      <span style={textStyle}>{`${formatLocalRelativeDate(date ?? '')}`}</span>
       {hasTooltip && (
         <Tooltip id={tooltipId} clickable={false}>
           <Type.Caption sx={{ maxWidth: [300, 400] }}>

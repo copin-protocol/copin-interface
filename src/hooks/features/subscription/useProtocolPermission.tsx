@@ -31,8 +31,12 @@ export default function useProtocolPermission() {
     () => RELEASED_PROTOCOLS.filter((v) => protocolsAllowed.includes(v)),
     [protocolsAllowed]
   )
-  const copyableProtocols = isInternal ? Object.values(ProtocolEnum) : ALLOWED_COPYTRADE_PROTOCOLS
-  const releasedProtocols = isInternal ? Object.values(ProtocolEnum) : RELEASED_PROTOCOLS
+  const copyableProtocols = useMemo(() => {
+    return isInternal ? Object.values(ProtocolEnum) : ALLOWED_COPYTRADE_PROTOCOLS
+  }, [isInternal])
+  const releasedProtocols = useMemo(() => {
+    return isInternal ? Object.values(ProtocolEnum) : RELEASED_PROTOCOLS
+  }, [isInternal])
   const allowedCopyTradeProtocols = useMemo(() => {
     return copyableProtocols.filter((v) => protocolsAllowed.includes(v))
   }, [isInternal, protocolsAllowed])
@@ -41,16 +45,18 @@ export default function useProtocolPermission() {
   }, [protocolsAllowed])
 
   const convertProtocolToParams = useCallback(
-    ({ protocols }: { protocols: ProtocolEnum[] }) => {
+    ({ protocols, ignorePermission }: { protocols: ProtocolEnum[]; ignorePermission?: boolean }) => {
+      const _allowedSelectProtocols = ignorePermission ? RELEASED_PROTOCOLS : allowedSelectProtocols
+      const _allowedCopyTradeProtocols = ignorePermission ? ALLOWED_COPYTRADE_PROTOCOLS : allowedCopyTradeProtocols
       if (protocols.length === 1) {
         return PROTOCOL_OPTIONS_MAPPING[protocols[0]].id
       }
-      if (allowedSelectProtocols.length === protocols.length) {
+      if (_allowedSelectProtocols.length === protocols.length) {
         return ProtocolFilterEnum.ALL
       }
       if (
-        protocols.length === allowedCopyTradeProtocols.length &&
-        protocols.every((protocol) => allowedCopyTradeProtocols?.includes(protocol))
+        protocols.length === _allowedCopyTradeProtocols.length &&
+        protocols.every((protocol) => _allowedCopyTradeProtocols?.includes(protocol))
       ) {
         return ProtocolFilterEnum.ALL_COPYABLE
       }
@@ -63,6 +69,28 @@ export default function useProtocolPermission() {
     [allowedCopyTradeProtocols, allowedSelectProtocols.length]
   )
 
+  const convertParamsToProtocol = useCallback(
+    (protocolFromQuery: string | undefined, ignorePermission = false) => {
+      const _allowedSelectProtocols = ignorePermission ? RELEASED_PROTOCOLS : allowedSelectProtocols
+      const _allowedCopyTradeProtocols = ignorePermission ? ALLOWED_COPYTRADE_PROTOCOLS : allowedCopyTradeProtocols
+      if (!protocolFromQuery) return _allowedSelectProtocols
+      const parsedNewProtocolOptions = protocolFromQuery
+        ? protocolFromQuery === ProtocolFilterEnum.ALL
+          ? _allowedSelectProtocols
+          : protocolFromQuery === ProtocolFilterEnum.ALL_COPYABLE
+          ? _allowedCopyTradeProtocols
+          : _allowedSelectProtocols.includes(protocolFromQuery as ProtocolEnum)
+          ? [protocolFromQuery as ProtocolEnum]
+          : Object.values(PROTOCOL_OPTIONS_MAPPING)
+              .filter(({ key }) => protocolFromQuery.split('-').includes(key.toString()))
+              .map(({ id }) => id)
+              .filter((p) => _allowedSelectProtocols.includes(p))
+        : []
+      return parsedNewProtocolOptions
+    },
+    [allowedCopyTradeProtocols, allowedSelectProtocols]
+  )
+
   return {
     allowedSelectProtocols,
     allowedCopyTradeProtocols,
@@ -72,5 +100,6 @@ export default function useProtocolPermission() {
     userPermission,
     pagePermission,
     convertProtocolToParams,
+    convertParamsToProtocol,
   }
 }

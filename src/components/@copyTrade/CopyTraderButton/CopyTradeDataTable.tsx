@@ -89,6 +89,7 @@ export default function CopyTradeDataTable({
                 wrapperSx: {
                   filter: item.status === CopyTradeStatusEnum.RUNNING ? 'none' : 'grayscale(1)',
                 },
+                hiddenAddressTooltip: true,
               }}
             />
           ),

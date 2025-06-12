@@ -5,6 +5,8 @@ import styled from 'styled-components/macro'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import NoDataFound from 'components/@ui/NoDataFound'
+import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
+import { usePnlWithFee } from 'hooks/features/usePnlWithFee'
 import useLeaderboardProvider, { LeaderboardContextValues } from 'pages/Leaderboard/useLeaderboardProvider'
 import Accordion from 'theme/Accordion'
 import Loading from 'theme/Loading'
@@ -14,7 +16,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { formatLocalDate, formatNumber } from 'utils/helpers/format'
 
-import AccountInfo from './AccountInfo'
+import LeaderInfo from './LeaderInfo'
 import RankingNumber from './RankingNumber'
 import { leaderboardColumns } from './configs'
 import { ExternalLeaderboardSource } from './types'
@@ -154,17 +156,14 @@ function TopLeaderboardMobile({ contextValues }: { contextValues: LeaderboardCon
                     <Box pb={2}>
                       <Flex sx={{ gap: 2 }}>
                         <Box pb={2} color="neutral1" flex="1">
-                          <AccountInfo info={traderData} size={32} isCurrentLeaderboard={isCurrentLeaderboard} />
+                          <LeaderInfo info={traderData} size={32} isCurrentLeaderboard={isCurrentLeaderboard} />
                         </Box>
                         <RankingNumber ranking={traderData.ranking} />
                       </Flex>
                       <RowWrapper>
                         <RowItem label={<Trans>Total Trades</Trans>} value={formatNumber(traderData.totalTrade)} />
                         <RowItem label={<Trans>Total Wins</Trans>} value={formatNumber(traderData.totalWin)} />
-                        <RowItem
-                          label={<Trans>PNL</Trans>}
-                          value={<SignedText prefix="$" value={traderData.totalRealisedPnl} maxDigit={0} fontInherit />}
-                        />
+                        <RowItem label={<PnlTitle />} value={<PnlValueDisplay traderData={traderData} />} />
                       </RowWrapper>
                     </Box>
                   }
@@ -220,6 +219,12 @@ function TopLeaderboardMobile({ contextValues }: { contextValues: LeaderboardCon
     </Flex>
   )
 }
+const PnlValueDisplay = ({ traderData }: { traderData: any }) => {
+  const value = usePnlWithFee(traderData)
+
+  return <SignedText prefix="$" value={value} maxDigit={0} fontInherit />
+}
+
 const RowWrapper = styled(Box)`
   display: grid;
   grid-template-columns: 1.2fr 1fr 1.3fr;

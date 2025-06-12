@@ -9,6 +9,7 @@ import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { HlOrderData } from 'entities/hyperliquid'
 import { PositionData } from 'entities/trader'
 import useTraderCopying from 'hooks/store/useTraderCopying'
+import { useEnsName } from 'hooks/useEnsName'
 import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Tag from 'theme/Tag'
@@ -17,7 +18,6 @@ import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 import { ProtocolEnum, TraderStatusEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
-import { addressShorten } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import HLChartPositionComponent from './HLChartPositionComponent'
@@ -34,6 +34,8 @@ const HLTraderPositionDetails = memo(function HLPositionDetailsMemo({
   isDrawer?: boolean
 }) {
   const { isCopying } = useTraderCopying(data?.account, data?.protocol)
+
+  const { ensName } = useEnsName(data?.account)
 
   const explorerUrl = data && data.protocol ? PROTOCOL_PROVIDER[data.protocol]?.explorerUrl : LINKS.arbitrumExplorer
 
@@ -52,7 +54,7 @@ const HLTraderPositionDetails = memo(function HLPositionDetailsMemo({
                   <Button type="button" variant="ghost" sx={{ p: 0 }}>
                     <Flex flexDirection="column" textAlign="left">
                       <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2 }}>
-                        <Type.BodyBold>{addressShorten(data.account)}</Type.BodyBold>
+                        <Type.BodyBold>{ensName || data.account}</Type.BodyBold>
                         <ProtocolLogo
                           protocol={data.protocol}
                           size={24}

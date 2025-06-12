@@ -1,8 +1,8 @@
-import { memo, useEffect } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
-import { getLatestPrices } from 'apis/positionApis'
+import { getLatestPrices, getOstiumLatestPrices } from 'apis/positionApis'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { ProtocolEnum } from 'utils/config/enums'
 import { pollEvery } from 'utils/helpers/pollEvery'
@@ -18,6 +18,9 @@ interface BalancesState {
   hlPrices: UsdPrices
   setHlPrices: (prices: UsdPrices) => void
   setHlPrice: ({ address, price }: { address: string; price: number }) => void
+  ostiumPrices: UsdPrices
+  setOstiumPrices: (prices: UsdPrices) => void
+  setOstiumPrice: ({ address, price }: { address: string; price: number }) => void
 }
 
 const useUsdPricesStore = create<BalancesState>()(
@@ -43,14 +46,24 @@ const useUsdPricesStore = create<BalancesState>()(
     hlPrices: {},
     setHlPrices: (prices) =>
       set((state) => {
-        state.gainsPrices = prices
+        state.hlPrices = prices
       }),
     setHlPrice: ({ address, price }: { address: string; price: number }) =>
       set((state) => {
-        state.gainsPrices[address] = price
+        state.hlPrices[address] = price
+      }),
+    ostiumPrices: {},
+    setOstiumPrices: (prices) =>
+      set((state) => {
+        state.ostiumPrices = prices
+      }),
+    setOstiumPrice: ({ address, price }: { address: string; price: number }) =>
+      set((state) => {
+        state.ostiumPrices[address] = price
       }),
   }))
 )
+
 export const useRealtimeUsdPricesStore = create<
   BalancesState & { isReady: boolean; setIsReady: (isReady: boolean) => void }
 >()(
@@ -58,6 +71,7 @@ export const useRealtimeUsdPricesStore = create<
     prices: {},
     gainsPrices: {},
     hlPrices: {},
+    ostiumPrices: {},
     isReady: false,
     setIsReady: (isReady) =>
       set((state) => {
@@ -87,8 +101,17 @@ export const useRealtimeUsdPricesStore = create<
       set((state) => {
         state.hlPrices[address] = price
       }),
+    setOstiumPrices: (prices) =>
+      set((state) => {
+        state.ostiumPrices = { ...state.ostiumPrices, ...prices }
+      }),
+    setOstiumPrice: ({ address, price }: { address: string; price: number }) =>
+      set((state) => {
+        state.ostiumPrices[address] = price
+      }),
   }))
 )
+
 const usePollingUsdPrice = () => {
   const { setPrices } = useUsdPricesStore()
   const { getSymbolByIndexToken } = useMarketsConfig()
@@ -125,6 +148,50 @@ const usePollingUsdPrice = () => {
       setPrices({})
     }
   }, [getSymbolByIndexToken, setPrices])
+}
+
+const usePollingOstiumPrice = () => {
+  const { getListForexSymbols } = useMarketsConfig()
+  const { setOstiumPrices } = useUsdPricesStore()
+
+  const listForexSymbols = useMemo(
+    () => (getListForexSymbols ? getListForexSymbols({ protocol: ProtocolEnum.OSTIUM_ARB }) : []),
+    [getListForexSymbols]
+  )
+
+  useEffect(() => {
+    let cancel = false
+    const pollBalance = pollEvery((onUpdate: (prices: UsdPrices) => void) => {
+      return {
+        async request() {
+          return getOstiumLatestPrices()
+        },
+        onResult(result: any) {
+          if (cancel || !result) return
+          onUpdate(result)
+        },
+      }
+    }, 30_000)
+
+    // start polling balance every x time
+    const stopPollingBalance = pollBalance((prices: any[]) => {
+      const parsedPrices: UsdPrices = {}
+      if (!prices) return
+      prices.forEach((price) => {
+        const { from, to, mid } = price
+        const pair = `${from}-${to}`
+        const symbol = listForexSymbols.includes(pair) ? pair : from
+        parsedPrices[symbol] = mid
+      })
+      setOstiumPrices(parsedPrices)
+    })
+
+    return () => {
+      cancel = true
+      stopPollingBalance()
+      setOstiumPrices({})
+    }
+  }, [setOstiumPrices])
 }
 
 const usePollingGainsUsdPrice = () => {
@@ -170,6 +237,7 @@ const usePollingGainsUsdPrice = () => {
 export const PollingUsdPrice = memo(function PollingUsdPriceMemo() {
   usePollingUsdPrice()
   usePollingGainsUsdPrice()
+  usePollingOstiumPrice()
   return null
 })
 

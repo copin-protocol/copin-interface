@@ -26,7 +26,7 @@ const SearchRanking = () => {
   return (
     <InputSearch
       ref={inputSearchRef}
-      placeholder="SEARCH TRADER"
+      placeholder="SEARCH ADDRESS"
       sx={{
         width: ['100%', '100%', '200px', '250px'],
         height: 'max-content',

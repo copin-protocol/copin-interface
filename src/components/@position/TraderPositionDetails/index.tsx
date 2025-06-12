@@ -13,6 +13,7 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import useVaultCopying from 'hooks/store/useVaultCopying'
+import { useEnsName } from 'hooks/useEnsName'
 import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Loading from 'theme/Loading'
@@ -23,7 +24,6 @@ import { DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum, TraderStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
-import { addressShorten } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import ListOrderTable from './ListOrderTable'
@@ -65,6 +65,8 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
     }
   )
 
+  const { ensName } = useEnsName(data?.account)
+
   const { isCopying } = useTraderCopying(data?.account, data?.protocol)
   const { isVaultCopying } = useVaultCopying(data?.account, data?.protocol)
 
@@ -91,18 +93,23 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
                 <Button type="button" variant="ghost" sx={{ p: 0 }}>
                   <Flex flexDirection="column" textAlign="left">
                     <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2 }}>
-                      <Type.BodyBold>{addressShorten(data.account)}</Type.BodyBold>
-                      <ProtocolLogo
-                        protocol={data.protocol}
-                        size={24}
-                        hasText={false}
-                        data-tip="React-tooltip"
-                        data-tooltip-id={`tt_protocol_${data.protocol}`}
-                        data-tooltip-offset={0}
-                      />
-                      <Tooltip id={`tt_protocol_${data.protocol}`} clickable={false}>
-                        <ProtocolLogo protocol={data.protocol} />
-                      </Tooltip>
+                      <Type.BodyBold sx={{ textTransform: 'none' }}>{ensName || data.account}</Type.BodyBold>
+
+                      {isDrawer && (
+                        <>
+                          <ProtocolLogo
+                            protocol={data.protocol}
+                            size={24}
+                            hasText={false}
+                            data-tip="React-tooltip"
+                            data-tooltip-id={`tt_protocol_${data.protocol}`}
+                            data-tooltip-offset={0}
+                          />
+                          <Tooltip id={`tt_protocol_${data.protocol}`} clickable={false}>
+                            <ProtocolLogo protocol={data.protocol} />
+                          </Tooltip>
+                        </>
+                      )}
 
                       <CopyButton
                         type="button"

@@ -13,11 +13,17 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/@subscription/FungiesPaymentForm.tsx
+#: src/components/@subscription/FungiesPaymentForm.tsx
+#: src/components/@subscription/FungiesPaymentForm.tsx
+msgid "${0}"
+msgstr "${0}"
+
 #: src/pages/Home/ProtocolDropdown.tsx
 msgid "(Coming soon)"
 msgstr "(Coming soon)"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
 msgid "({0}% off)"
 msgstr "({0}% off)"
 
@@ -137,6 +143,10 @@ msgstr "7D Pnl"
 #: src/components/@ui/TimeFilter/constants.tsx
 msgid "90 days"
 msgstr "90 days"
+
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+msgid "<0/> ($)"
+msgstr "<0/> ($)"
 
 #: src/pages/CopinLite/Trades/index.tsx
 msgid "<0/>Stuck Positions"
@@ -500,12 +510,12 @@ msgstr "Analyze With AI"
 msgid "Analyze traders behavior pre-copy trade setup"
 msgstr "Analyze traders behavior pre-copy trade setup"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
 #: src/pages/TraderDetails/CustomizeRankingColumns.tsx
 msgid "Apply"
 msgstr "Apply"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
 msgid "Apply Discount Code"
 msgstr "Apply Discount Code"
 
@@ -1264,6 +1274,14 @@ msgid "Create wallet successful!"
 msgstr "Create wallet successful!"
 
 #: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Credit / Debit Card"
+msgstr "Credit / Debit Card"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Crypto"
+msgstr "Crypto"
+
+#: src/components/@subscription/CryptoPaymentForm.tsx
 msgid "Currency"
 msgstr "Currency"
 
@@ -1461,9 +1479,14 @@ msgstr "Don’t have a Hyperliquid account?"
 msgid "Don’t have a {0} account?"
 msgstr "Don’t have a {0} account?"
 
-#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/MySubscription.tsx
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 msgid "Downgrade"
 msgstr "Downgrade"
+
+#: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
+msgid "Duration"
+msgstr "Duration"
 
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
@@ -1485,7 +1508,8 @@ msgstr "ENTERPRISE"
 msgid "EVENTS"
 msgstr "EVENTS"
 
-#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/MySubscription.tsx
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 msgid "EXTEND PLAN"
 msgstr "EXTEND PLAN"
 
@@ -1516,7 +1540,7 @@ msgstr "Elite"
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
 msgid "Email"
 msgstr "Email"
 
@@ -1624,11 +1648,13 @@ msgstr "Exchanges Overview"
 msgid "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
 msgstr "Exclusive Copin Elite Club Membership: Join the inner circle and connect with a community of experts for superior trading insights."
 
-#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/MySubscription.tsx
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 msgid "Expires: {0}"
 msgstr "Expires: {0}"
 
-#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/MySubscription.tsx
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 msgid "Explore Copin's basic features. Upgrade to unlock more powerful tools."
 msgstr "Explore Copin's basic features. Upgrade to unlock more powerful tools."
 
@@ -1656,7 +1682,8 @@ msgstr "Export CSV has been succeeded"
 msgid "Export Limit Exceeded"
 msgstr "Export Limit Exceeded"
 
-#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/MySubscription.tsx
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 #: src/pages/Settings/UserSubscription/v1/ExtendPlan.tsx
 msgid "Extend"
 msgstr "Extend"
@@ -1910,11 +1937,6 @@ msgstr "HISTORY POSITIONS"
 msgid "HOME"
 msgstr "HOME"
 
-#: src/components/@widgets/SearchAllResults/configs.tsx
-#: src/components/@widgets/SearchTraderResultItem/index.tsx
-msgid "Having open positions"
-msgstr "Having open positions"
-
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Hey"
 msgstr "Hey"
@@ -2001,6 +2023,14 @@ msgstr "Hyperliquid Alert"
 #: src/components/@wallet/UpdateWalletModals/UpdateHyperliquidWalletModal.tsx
 msgid "Hyperliquid Vault Address"
 msgstr "Hyperliquid Vault Address"
+
+#: src/pages/MyProfile/index.tsx
+msgid "IF WALLET"
+msgstr "IF WALLET"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "IF Wallet"
+msgstr "IF Wallet"
 
 #: src/pages/CopinLite/Wallet/Deposit.tsx
 msgid "IMPORTANT:"
@@ -2320,6 +2350,7 @@ msgstr "Login to upgrade"
 msgid "Login to view Live trader positions"
 msgstr "Login to view Live trader positions"
 
+#: src/pages/OpenInterest/OpenInterestByMarket/index.tsx
 #: src/pages/OpenInterest/OpenInterestByMarkets/index.tsx
 #: src/pages/OpenInterest/TopOpenInterest/index.tsx
 msgid "Login to view Open Interest"
@@ -2433,6 +2464,10 @@ msgstr "MORE"
 msgid "MY REFERRAL"
 msgstr "MY REFERRAL"
 
+#: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
+msgid "MY SUBSCRIPTION"
+msgstr "MY SUBSCRIPTION"
+
 #: src/components/@wallet/CreateWalletAction/index.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
 msgid "Maintenance"
@@ -2485,6 +2520,7 @@ msgstr "Margin Transferred"
 msgid "Market Price:"
 msgstr "Market Price:"
 
+#: src/pages/OpenInterest/OpenInterestByMarket/ListMarkets.tsx
 #: src/pages/OpenInterest/OpenInterestByMarkets/ListMarkets.tsx
 msgid "Market data was not found"
 msgstr "Market data was not found"
@@ -2642,7 +2678,7 @@ msgstr "Modified Margin"
 msgid "Modify SL / TP"
 msgstr "Modify SL / TP"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/PeriodSelector.tsx
 #: src/pages/Subscription/index.tsx
 #: src/utils/config/options.tsx
 msgid "Monthly"
@@ -2726,7 +2762,8 @@ msgid "My Profile"
 msgstr "My Profile"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
-#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/MySubscription.tsx
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 msgid "My Subscription"
 msgstr "My Subscription"
 
@@ -2754,7 +2791,7 @@ msgstr "Near Realtime"
 msgid "Need help?"
 msgstr "Need help?"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
 msgid "Network"
 msgstr "Network"
 
@@ -2964,6 +3001,7 @@ msgstr "OPEN TIME"
 #: src/components/@position/TraderOpeningPositions/index.tsx
 #: src/pages/MyProfile/CEXManagement/Layouts/ManagementLayoutMobile.tsx
 #: src/pages/MyProfile/DCPManagement/index.tsx
+#: src/pages/MyProfile/IFManagement/index.tsx
 #: src/pages/MyProfile/OpeningPositions/index.tsx
 #: src/pages/MyProfile/VaultManagement/index.tsx
 msgid "OPENING POSITIONS"
@@ -2998,6 +3036,7 @@ msgid "On-chain traders for copying"
 msgstr "On-chain traders for copying"
 
 #: src/components/@position/CopyOpeningPositions/index.tsx
+#: src/pages/MyProfile/IFManagement/HlOpeningPositions.tsx
 msgid "Once you have a position, you’ll see it listed here"
 msgstr "Once you have a position, you’ll see it listed here"
 
@@ -3027,6 +3066,8 @@ msgid "Open Homepage"
 msgstr "Open Homepage"
 
 #: src/pages/MyProfile/DCPManagement/index.tsx
+#: src/pages/MyProfile/IFManagement/index.tsx
+#: src/pages/MyProfile/IFManagement/index.tsx
 #: src/pages/MyProfile/VaultManagement/index.tsx
 #: src/pages/MyProfile/VaultManagement/index.tsx
 msgid "Open Positions"
@@ -3042,6 +3083,7 @@ msgstr "Opening"
 
 #: src/components/@position/CopyOpeningPositions/index.tsx
 #: src/components/@position/HLTraderOpeningPositions/index.tsx
+#: src/pages/MyProfile/IFManagement/HlOpeningPositions.tsx
 #: src/pages/TraderDetails/CopyManagementDrawer.tsx
 msgid "Opening Positions"
 msgstr "Opening Positions"
@@ -3088,6 +3130,10 @@ msgstr "Overwrite"
 msgid "PAID FEE ($)"
 msgstr "PAID FEE ($)"
 
+#: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
+msgid "PAYMENT HISTORY"
+msgstr "PAYMENT HISTORY"
+
 #: src/components/@widgets/ConditionFilterForm/index.tsx
 msgid "PERCENTILE"
 msgstr "PERCENTILE"
@@ -3112,13 +3158,9 @@ msgid "PERP EXPLORER"
 msgstr "PERP EXPLORER"
 
 #: src/components/@copinLite/OnboardingModal/TraderList.tsx
-#: src/components/@trader/TraderLeaderboardTableView/index.tsx
+#: src/components/@widgets/SwitchPnlButton.tsx
 msgid "PNL"
 msgstr "PNL"
-
-#: src/components/@position/configs/traderPositionRenderProps.tsx
-msgid "PNL ($)"
-msgstr "PNL ($)"
 
 #: src/pages/TraderDetails/TraderStats.tsx
 msgid "PNL Ratio"
@@ -3156,15 +3198,27 @@ msgstr "Password"
 msgid "Past Month Return"
 msgstr "Past Month Return"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/PeriodSelector.tsx
 msgid "Pay"
 msgstr "Pay"
+
+#: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
+msgid "Payment"
+msgstr "Payment"
 
 #: src/components/@subscription/PaySubscriptionModal.tsx
 msgid "Payment Details"
 msgstr "Payment Details"
 
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
+msgid "Payment History"
+msgstr "Payment History"
+
 #: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Payment Method"
+msgstr "Payment Method"
+
+#: src/components/@subscription/CryptoPaymentForm.tsx
 msgid "Payment by <0>{token}</0> of <1>{chain} Network</1>"
 msgstr "Payment by <0>{token}</0> of <1>{chain} Network</1>"
 
@@ -3197,6 +3251,10 @@ msgstr "Pick From Favorites"
 #: src/components/@copinLite/OnboardingModal/TraderList.tsx
 msgid "Pick the trader you want to copy"
 msgstr "Pick the trader you want to copy"
+
+#: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
+msgid "Plan"
+msgstr "Plan"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Platform"
@@ -3254,6 +3312,11 @@ msgstr "Please switch your wallet to one of a chain below: {0}"
 msgid "Please unlock your wallet to continue"
 msgstr "Please unlock your wallet to continue"
 
+#: src/pages/Explorer/ListTradersSection/index.tsx
+msgid "Please upgrade to add more filters"
+msgstr "Please upgrade to add more filters"
+
+#: src/pages/OpenInterest/OpenInterestByMarket/index.tsx
 #: src/pages/OpenInterest/OpenInterestByMarkets/index.tsx
 #: src/pages/OpenInterest/TopOpenInterest/index.tsx
 msgid "Please upgrade to explore open interest with advanced filters"
@@ -3267,7 +3330,7 @@ msgstr "Please upgrade to explore traders with advanced filters"
 
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
 msgid "Please use a valid email address."
 msgstr "Please use a valid email address."
 
@@ -3276,8 +3339,6 @@ msgid "Please wait a few minutes before you try again"
 msgstr "Please wait a few minutes before you try again"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
-#: src/components/@trader/TraderExplorerTableView/configs.tsx
-#: src/pages/Home/SortDropdown.tsx
 #: src/utils/config/options.tsx
 #: src/utils/config/translations.tsx
 msgid "PnL"
@@ -3326,6 +3387,10 @@ msgstr "Position not yet synced"
 msgid "Positions"
 msgstr "Positions"
 
+#: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
+msgid "Price"
+msgstr "Price"
+
 #: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "Prices may be changed by Copin depending on the project's performance and operations."
 msgstr "Prices may be changed by Copin depending on the project's performance and operations."
@@ -3334,7 +3399,8 @@ msgstr "Prices may be changed by Copin depending on the project's performance an
 msgid "Pro"
 msgstr "Pro"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
+#: src/components/@subscription/FungiesPaymentForm.tsx
 msgid "Process To Checkout"
 msgstr "Process To Checkout"
 
@@ -3376,6 +3442,10 @@ msgstr "Protocols"
 #: src/pages/SearchTrader/SwitchProtocolsMobile.tsx
 msgid "Protocols:"
 msgstr "Protocols:"
+
+#: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
+msgid "Purchase Time"
+msgstr "Purchase Time"
 
 #: src/pages/VaultDetails/index.tsx
 msgid "Q&A"
@@ -3519,6 +3589,7 @@ msgstr "Reset"
 #: src/pages/Explorer/ListTradersSection/index.tsx
 #: src/pages/Home/Traders.tsx
 #: src/pages/MyProfile/Favorites/ListTraderFavorites.tsx
+#: src/pages/OpenInterest/OpenInterestByMarket/index.tsx
 #: src/pages/OpenInterest/OpenInterestByMarkets/index.tsx
 #: src/pages/OpenInterest/TopOpenInterest/index.tsx
 msgid "Reset Filters"
@@ -3590,11 +3661,6 @@ msgstr "SHORT"
 #: src/pages/TraderDetails/TraderRankingExpanded/index.tsx
 msgid "SIMILAR TRADERS"
 msgstr "SIMILAR TRADERS"
-
-#: src/components/@position/configs/traderPositionRenderProps.tsx
-#: src/pages/DailyTrades/Orders/config.tsx
-msgid "SIZE ($)"
-msgstr "SIZE ($)"
 
 #: src/components/@copyTrade/ListCopyTrade/View.tsx
 #: src/components/@copyTrade/ListCopyTrade/View.tsx
@@ -3671,13 +3737,14 @@ msgstr "SYSTEM STATUS"
 msgid "Save"
 msgstr "Save"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/PeriodSelector.tsx
 #: src/pages/Settings/UserSubscription/v1/PricingOptions.tsx
 #: src/pages/Subscription/index.tsx
 msgid "Save {0}%"
 msgstr "Save {0}%"
 
-#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/MySubscription.tsx
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 msgid "Save {discountPercent}%"
 msgstr "Save {discountPercent}%"
 
@@ -3799,13 +3866,8 @@ msgstr "Sign Message Error"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/CopyPositionsListView/index.tsx
-#: src/pages/OpenInterest/OpeningPositionList.tsx
 msgid "Size"
 msgstr "Size"
-
-#: src/components/@charts/ChartCopyPositionProfit/CopyOrderTooltip.tsx
-msgid "Size ($):"
-msgstr "Size ($):"
 
 #: src/components/@charts/ChartTraderPositionProfit/OrderTooltip.tsx
 msgid "Size Delta:"
@@ -3880,6 +3942,10 @@ msgstr "Something went wrong"
 msgid "Something went wrong, please try later."
 msgstr "Something went wrong, please try later."
 
+#: src/components/@subscription/FungiesPaymentForm.tsx
+msgid "Sorry, we can't process your payment now. Please try again later."
+msgstr "Sorry, we can't process your payment now. Please try again later."
+
 #: src/components/@copyActivity/configs.tsx
 msgid "Source Action"
 msgstr "Source Action"
@@ -3926,6 +3992,7 @@ msgstr "Stats"
 
 #: src/components/@copyActivity/configs.tsx
 #: src/pages/CopinLite/Transactions/configs.tsx
+#: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
 #: src/utils/config/translations.tsx
 msgid "Status"
 msgstr "Status"
@@ -3965,6 +4032,10 @@ msgstr "Stop Loss Type"
 msgid "Stopped"
 msgstr "Stopped"
 
+#: src/components/@subscription/FungiesPaymentForm.tsx
+msgid "Sub Total"
+msgstr "Sub Total"
+
 #: src/pages/Subscription/index.tsx
 #: src/pages/Subscription/v1/v1.tsx
 #: src/pages/Subscription/v1/v1.tsx
@@ -3997,6 +4068,7 @@ msgstr "Subscription"
 #: src/hooks/features/alert/useSettingWatchlistTraders.tsx
 #: src/hooks/features/alert/useSettingWatchlistTraders.tsx
 #: src/hooks/features/copyTrade/useUpdateCopyTrade.tsx
+#: src/hooks/features/if/useIFHyperliquidActions.tsx
 #: src/hooks/web3/useContractMutation.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 #: src/pages/Explorer/ConditionFilter/ExportCsvButton.tsx
@@ -4011,7 +4083,7 @@ msgstr "Subscription"
 msgid "Success"
 msgstr "Success"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
 msgid "Successfully applied discount code: <0>{0}</0>"
 msgstr "Successfully applied discount code: <0>{0}</0>"
 
@@ -4206,6 +4278,14 @@ msgstr "Target Action"
 msgid "Target Wallet"
 msgstr "Target Wallet"
 
+#: src/components/@subscription/FungiesPaymentForm.tsx
+msgid "Taxes"
+msgstr "Taxes"
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "Taxes {0}%"
+msgstr "Taxes {0}%"
+
 #: src/utils/config/translations.tsx
 msgid "Telegram"
 msgstr "Telegram"
@@ -4239,7 +4319,7 @@ msgstr "The account in your web3 wallet does not match the account currently in 
 msgid "The basic plan allows your to experience the basic features of Copin"
 msgstr "The basic plan allows your to experience the basic features of Copin"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
 msgid "The email is used for transaction updates and refunds."
 msgstr "The email is used for transaction updates and refunds."
 
@@ -4256,9 +4336,18 @@ msgstr "The invite code has {INVITE_CODE_LENGTH} characters."
 msgid "The maximum number of positions that can be opened at the same time per wallet"
 msgstr "The maximum number of positions that can be opened at the same time per wallet"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
+#: src/components/@subscription/FungiesPaymentForm.tsx
 msgid "The new plan will start within 10 minutes after the payment is successful."
 msgstr "The new plan will start within 10 minutes after the payment is successful."
+
+#: src/components/@widgets/SwitchPnlButton.tsx
+msgid "The overall profit or loss <0>excluding fees</0> generated from the trades"
+msgstr "The overall profit or loss <0>excluding fees</0> generated from the trades"
+
+#: src/components/@widgets/SwitchPnlButton.tsx
+msgid "The overall profit or loss <0>including fees</0> generated from the trades"
+msgstr "The overall profit or loss <0>including fees</0> generated from the trades"
 
 #: src/components/@ui/NotFound/index.tsx
 msgid "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
@@ -4337,6 +4426,7 @@ msgstr "There is a <0>minimum</0> deposit of<1> 5 USDC</1>. This address can onl
 msgid "This Page Could Not Be Found"
 msgstr "This Page Could Not Be Found"
 
+#: src/pages/OpenInterest/OpenInterestByMarket/index.tsx
 #: src/pages/OpenInterest/OpenInterestByMarkets/index.tsx
 #: src/pages/OpenInterest/TopOpenInterest/index.tsx
 msgid "This URL contains filters available from the {requiredPlanText} plan"
@@ -4347,6 +4437,10 @@ msgstr "This URL contains filters available from the {requiredPlanText} plan"
 #: src/pages/MyProfile/Favorites/ListTraderFavorites.tsx
 msgid "This URL contains filters available from {0} plan"
 msgstr "This URL contains filters available from {0} plan"
+
+#: src/pages/Explorer/ListTradersSection/index.tsx
+msgid "This URL contains more filters than allowed"
+msgstr "This URL contains more filters than allowed"
 
 #: src/components/@position/UnlinkCopyPositionModal/index.tsx
 msgid "This action will unlink the {0} position; please ensure the {1} position is closed before proceeding."
@@ -4409,6 +4503,10 @@ msgstr "This graph will show {0} demographics once responses come in"
 #: src/components/@backtest/BacktestSimpleModal/index.tsx
 msgid "This is the result of a calculation based on past data, not a prediction of future results. Please think twice before making a decision."
 msgstr "This is the result of a calculation based on past data, not a prediction of future results. Please think twice before making a decision."
+
+#: src/hooks/features/if/useIFHyperliquidActions.tsx
+msgid "This position has been closed successfully"
+msgstr "This position has been closed successfully"
 
 #: src/hooks/features/alert/useSettingWatchlistTraders.tsx
 msgid "This trader alert has been removed successfully"
@@ -4491,7 +4589,8 @@ msgstr "Top Highest PNL Tokens"
 msgid "Top Profit"
 msgstr "Top Profit"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
+#: src/components/@subscription/FungiesPaymentForm.tsx
 msgid "Total"
 msgstr "Total"
 
@@ -4769,6 +4868,7 @@ msgstr "Unlock more copy trade settings to optimize your profit strategy"
 #: src/components/@subscription/upgradeBenefitConfig.tsx
 #: src/components/@subscription/upgradeBenefitConfig.tsx
 #: src/components/@subscription/upgradeBenefitConfig.tsx
+#: src/pages/OpenInterest/OpenInterestByMarket/index.tsx
 #: src/pages/OpenInterest/OpenInterestByMarkets/index.tsx
 #: src/pages/OpenInterest/TopOpenInterest/index.tsx
 msgid "Unlock more powerful features and gain deeper market insights"
@@ -4843,7 +4943,8 @@ msgstr "Upgrade Account"
 msgid "Upgrade Now"
 msgstr "Upgrade Now"
 
-#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/MySubscription.tsx
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 msgid "Upgrade Plan"
 msgstr "Upgrade Plan"
 
@@ -4896,7 +4997,8 @@ msgstr "Upgrade to the {0} plan to view positions and more trader insights."
 msgid "Upgrade to the {requiredPlanText} plan to explore trade volume, open interest, and advanced stats across all perpetual dexes."
 msgstr "Upgrade to the {requiredPlanText} plan to explore trade volume, open interest, and advanced stats across all perpetual dexes."
 
-#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/MySubscription.tsx
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 msgid "Usage"
 msgstr "Usage"
 
@@ -4912,8 +5014,12 @@ msgstr "Using {0} of {maxFilterFields} filters. Upgrade to add more"
 msgid "VALUE"
 msgstr "VALUE"
 
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+#: src/pages/DailyTrades/Orders/config.tsx
+msgid "VALUE ($)"
+msgstr "VALUE ($)"
+
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
-#: src/pages/MyProfile/index.tsx
 msgid "VAULT"
 msgstr "VAULT"
 
@@ -4937,6 +5043,14 @@ msgstr "VIP exclusive signal (group and APIs)"
 msgid "VOLUME"
 msgstr "VOLUME"
 
+#: src/pages/OpenInterest/OpeningPositionList.tsx
+msgid "Value"
+msgstr "Value"
+
+#: src/components/@charts/ChartCopyPositionProfit/CopyOrderTooltip.tsx
+msgid "Value:"
+msgstr "Value:"
+
 #: src/pages/VaultDetails/index.tsx
 msgid "Vault Address"
 msgstr "Vault Address"
@@ -4948,10 +5062,6 @@ msgstr "Vault Copying"
 #: src/pages/MyProfile/index.tsx
 msgid "Vault Management"
 msgstr "Vault Management"
-
-#: src/pages/@layouts/Navbar/NavUser.tsx
-msgid "Vault Wallet"
-msgstr "Vault Wallet"
 
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 msgid "Verify account"
@@ -5185,7 +5295,7 @@ msgstr "YOU’VE HIT YOUR DELIVERY CHANNELS LIMIT"
 msgid "YOU’VE HIT YOUR WATCHLIST TRADERS LIMIT"
 msgstr "YOU’VE HIT YOUR WATCHLIST TRADERS LIMIT"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/PeriodSelector.tsx
 #: src/pages/Subscription/index.tsx
 msgid "Yearly"
 msgstr "Yearly"
@@ -5216,7 +5326,8 @@ msgstr "You are not authorized to perform this action"
 msgid "You are not yet linked to telegram to receive Alerts. <0>Click To Connect</0>"
 msgstr "You are not yet linked to telegram to receive Alerts. <0>Click To Connect</0>"
 
-#: src/pages/Settings/UserSubscription/index.tsx
+#: src/pages/Settings/UserSubscription/MySubscription.tsx
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 #: src/pages/Settings/UserSubscription/v1/ExtendPlan.tsx
 msgid "You can extend your usage, with a discounted fee compared to the original price"
 msgstr "You can extend your usage, with a discounted fee compared to the original price"
@@ -5265,7 +5376,8 @@ msgstr "You need {0} quota, but your current plan only includes {1}. Please upgr
 msgid "You still not setup any channel."
 msgstr "You still not setup any channel."
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/CryptoPaymentForm.tsx
+#: src/components/@subscription/FungiesPaymentForm.tsx
 msgid "You will be redirected to the payment gateway."
 msgstr "You will be redirected to the payment gateway."
 
@@ -5427,6 +5539,7 @@ msgid "Your {0} Secret Key"
 msgstr "Your {0} Secret Key"
 
 #: src/components/@position/CopyOpeningPositions/index.tsx
+#: src/pages/MyProfile/IFManagement/HlOpeningPositions.tsx
 msgid "Your {title} Is Empty"
 msgstr "Your {title} Is Empty"
 
@@ -5504,7 +5617,7 @@ msgstr "gTrade"
 msgid "mint"
 msgstr "mint"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/PeriodSelector.tsx
 msgid "month"
 msgstr "month"
 
@@ -5524,7 +5637,7 @@ msgstr "to enable bulk actions"
 msgid "to unlock more metric"
 msgstr "to unlock more metric"
 
-#: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/PeriodSelector.tsx
 msgid "year"
 msgstr "year"
 
@@ -5583,6 +5696,10 @@ msgstr "year"
 msgid "{0}"
 msgstr "{0}"
 
+#: src/pages/Home/Traders.tsx
+msgid "{0} <0/> ($)"
+msgstr "{0} <0/> ($)"
+
 #: src/components/@wallet/CreateWalletAction/index.tsx
 msgid "{0} API"
 msgstr "{0} API"
@@ -5602,10 +5719,6 @@ msgstr "{0} Pass Phrase"
 #: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 msgid "{0} Performance"
 msgstr "{0} Performance"
-
-#: src/pages/Home/Traders.tsx
-msgid "{0} PnL ($)"
-msgstr "{0} PnL ($)"
 
 #: src/components/@wallet/CreateWalletModals/CreateCEXWalletModal.tsx
 msgid "{0} Secret Key"

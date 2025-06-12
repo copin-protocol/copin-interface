@@ -83,7 +83,7 @@ export const entryColumn: ColumnData<PositionData> = {
 }
 
 export const sizeOpeningColumn: ColumnData<PositionData> = {
-  title: 'Size',
+  title: 'Value',
   dataIndex: 'size',
   key: 'size',
   sortBy: 'size',
@@ -97,16 +97,26 @@ export const pnlColumn: ColumnData<PositionData> = {
   key: 'pnl',
   sortBy: 'pnl',
   style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => renderPositionPnL(item),
+  render: (item) => renderPositionPnL({ item }),
 }
-export const renderPositionPnL = (item: PositionData, prefix = '$') => {
+const renderPositionPnL = ({
+  item,
+  prefix = '$',
+  isCompactNumber = false,
+}: {
+  item: PositionData
+  prefix?: string
+  isCompactNumber?: boolean
+}) => {
   return (
     <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
       {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
       <ValueOrToken
         protocol={item.protocol}
         value={item.pnl}
-        component={<SignedText value={item.pnl} maxDigit={2} minDigit={2} prefix={prefix} />}
+        component={
+          <SignedText value={item.pnl} maxDigit={2} minDigit={2} prefix={prefix} isCompactNumber={isCompactNumber} />
+        }
       />
     </Flex>
   )
@@ -137,7 +147,10 @@ export const fullOpeningColumns: ColumnData<PositionData>[] = [
 export const openingColumns: ColumnData<PositionData>[] = [
   { ...entryColumn, style: { minWidth: 185 } },
   sizeOpeningColumn,
-  pnlColumn,
+  {
+    ...pnlColumn,
+    render: (item) => renderPositionPnL({ item, isCompactNumber: true }),
+  },
   actionColumn,
 ]
 

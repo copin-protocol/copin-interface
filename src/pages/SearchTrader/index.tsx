@@ -1,21 +1,27 @@
+import { useMemo } from 'react'
+
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { ProtocolFilter } from 'components/@widgets/ProtocolFilter'
 import SearchAllResults from 'components/@widgets/SearchAllResults'
 import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useSearchTraders from 'hooks/features/trader/useSearchTraders'
+import useSearchParams from 'hooks/router/useSearchParams'
 import { useSearchProtocolFilter } from 'hooks/store/useSearchProtocolFilter'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
+import { URL_PARAM_KEYS } from 'utils/config/keys'
 
 const SearchTraderPage = () => {
-  const { allowedCopyTradeProtocols, releasedProtocols } = useProtocolPermission()
-
+  const { searchParams, setSearchParams } = useSearchParams()
+  const protocolFromQuery = searchParams[URL_PARAM_KEYS.PAGE_SEARCH_PROTOCOL] as string | undefined
+  const { copyableProtocols, convertParamsToProtocol, convertProtocolToParams } = useProtocolPermission()
+  const parsedNewProtocolOptions = useMemo(() => convertParamsToProtocol(protocolFromQuery), [protocolFromQuery])
   const {
     selectedProtocols,
     checkIsSelected: checkIsProtocolChecked,
     handleToggle: handleToggleProtocol,
     setSelectedProtocols,
-  } = useSearchProtocolFilter({ defaultSelects: releasedProtocols })
+  } = useSearchProtocolFilter({ defaultSelects: parsedNewProtocolOptions })
   const {
     keyword,
     searchTraders,
@@ -25,11 +31,9 @@ const SearchTraderPage = () => {
     currentPage,
     currentLimit,
     currentSort,
-    currentProtocol,
     changeCurrentPage,
     changeCurrentLimit,
     changeCurrentSort,
-    changeCurrentProtocol,
   } = useSearchTraders({ protocols: selectedProtocols })
 
   let traders
@@ -87,12 +91,19 @@ const SearchTraderPage = () => {
               All results for <Type.BodyBold color="primary1">{keyword}</Type.BodyBold>
             </Type.BodyBold>
             <Box sx={{ width: '1px', height: '100%', bg: 'neutral4' }} />
+            {/* TODO: fix search protocol */}
             <ProtocolFilter
               selectedProtocols={selectedProtocols}
-              setSelectedProtocols={setSelectedProtocols}
+              setSelectedProtocols={(protocols) => {
+                setSearchParams({
+                  [URL_PARAM_KEYS.PAGE_SEARCH_PROTOCOL]: convertProtocolToParams({ protocols, ignorePermission: true }),
+                })
+                setSelectedProtocols(protocols)
+              }}
               checkIsProtocolChecked={checkIsProtocolChecked}
               handleToggleProtocol={handleToggleProtocol}
-              allowList={allowedCopyTradeProtocols}
+              allowList={copyableProtocols}
+              shouldCheckPermission={false}
             />
           </Flex>
           <Box sx={{ flex: '1' }}>

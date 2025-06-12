@@ -9,11 +9,15 @@ export function sortInputData<T extends ChartDataType>(data: T[]): T[] {
 }
 
 export function chartTimeFrame(date: number, fromDate: number, toDate: number) {
-  const diffDays = dayjs(toDate).utc().diff(fromDate, 'day')
+  const diffDays = dayjs(toDate).utc().diff(dayjs(fromDate).utc(), 'day')
   const diffHour = dayjs(toDate).utc().diff(dayjs(fromDate).utc(), 'hour')
   const currentDate = dayjs(date).utc()
 
-  return diffDays >= 60
+  return diffDays >= 730
+    ? currentDate.add(1, 'month')
+    : diffDays >= 210
+    ? currentDate.add(1, 'week')
+    : diffDays >= 60
     ? currentDate.add(1, 'day')
     : diffDays >= 7
     ? currentDate.add(4, 'hour')

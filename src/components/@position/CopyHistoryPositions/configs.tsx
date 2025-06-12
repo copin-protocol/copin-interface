@@ -1,4 +1,5 @@
 import ReverseTag from 'components/@ui/ReverseTag'
+import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { ColumnData } from 'theme/Table/types'
 import { Box } from 'theme/base'
@@ -77,7 +78,7 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     render: renderEntry,
   },
   {
-    title: 'Size',
+    title: 'Value',
     dataIndex: 'totalSizeDelta',
     key: 'totalSizeDelta',
     style: { minWidth: '100px', width: 100, textAlign: 'right' },
@@ -91,7 +92,7 @@ export const historyColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     render: renderLeverage,
   },
   {
-    title: 'PnL',
+    title: <PnlTitle />,
     dataIndex: 'pnl',
     key: 'pnl',
     style: { minWidth: '100px', width: 100, textAlign: 'right' },

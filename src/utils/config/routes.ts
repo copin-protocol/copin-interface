@@ -92,6 +92,9 @@ const ROUTES = {
   USER_SUBSCRIPTION: {
     path: '/my-subscription',
   },
+  USER_SUBSCRIPTION_PAYMENT_HISTORY: {
+    path: '/my-subscription/payment-history',
+  },
   ALERT: {
     path: '/alerts',
   },
@@ -189,6 +192,9 @@ const ROUTES = {
     path: '/perp-explorer/:perpdex',
     path_prefix: '/perp-explorer',
   },
+  // CHECKOUT: {
+  //   path: '/checkout',
+  // },
 }
 
 export default ROUTES

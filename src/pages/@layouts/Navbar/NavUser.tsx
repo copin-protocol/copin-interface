@@ -3,6 +3,7 @@ import { Clock, Crown, Notebook, SignOut, SquareHalf, Star, SubtractSquare, Wall
 import { ReactNode, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import AddressText from 'components/@ui/AddressText'
 import Divider from 'components/@ui/Divider'
 import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useInternalRole from 'hooks/features/useInternalRole'
@@ -17,12 +18,13 @@ import { Box, Flex, Type } from 'theme/base'
 import { NAVBAR_HEIGHT } from 'utils/config/constants'
 import ROUTES from 'utils/config/routes'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { addressShorten, shortenText } from 'utils/helpers/format'
+import { shortenText } from 'utils/helpers/format'
 import { generateFavoriteTradersRoute } from 'utils/helpers/generateRoute'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 import { isAddress } from 'utils/web3/contracts'
 
+import FungiesPaymentProgress from './FungiesPaymentProgress'
 import PaymentProgress from './PaymentProgress'
 // import ChangePasswordModal from './ChangePasswordModal'
 import PremiumTag from './PremiumTag'
@@ -192,8 +194,15 @@ const NavUser = () => {
             }}
             placement="bottomRight"
           >
-            <Type.CaptionBold maxWidth={['120px', 'max-content']} sx={{ ...overflowEllipsis(), display: 'flex' }}>
-              {_address ? addressShorten(_address) : shortenText(profile?.username, 8)}
+            <Type.CaptionBold
+              maxWidth={['120px', 'max-content']}
+              sx={{ ...overflowEllipsis(), display: 'flex', textTransform: 'none' }}
+            >
+              {_address ? (
+                <AddressText address={_address} sx={{ fontWeight: 'bold' }} shouldShowTooltip={false} />
+              ) : (
+                shortenText(profile?.username, 8)
+              )}
             </Type.CaptionBold>
           </Dropdown>
           <WarningWalletDisconnected />
@@ -202,6 +211,7 @@ const NavUser = () => {
           <PremiumTag />
           <WarningExpiredSubscriptionIcon />
           <PaymentProgress />
+          <FungiesPaymentProgress />
         </Flex>
       </Flex>
       {/* {isShowModalChangePassword && <ChangePasswordModal onDismiss={() => setIsShowModalChangePassword(false)} />} */}

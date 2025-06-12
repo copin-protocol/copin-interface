@@ -10,10 +10,14 @@ import { DualTimeText, LocalTimeText, RelativeShortTimeText } from 'components/@
 import Market from 'components/@ui/MarketGroup/Market'
 import TraderAddress from 'components/@ui/TraderAddress'
 import ValueOrToken from 'components/@ui/ValueOrToken'
+import { PairFilterIcon } from 'components/@widgets/PairFilterIcon'
+import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import TimeColumnTitleWrapper from 'components/@widgets/TimeColumeTitleWrapper'
 import { renderEntry, renderOpeningPnL, renderOpeningRoi, renderSizeOpening } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
+import { usePnlWithFee } from 'hooks/features/usePnlWithFee'
 import useGlobalStore from 'hooks/store/useGlobalStore'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -21,7 +25,7 @@ import { themeColors } from 'theme/colors'
 import { DAYJS_FULL_DATE_FORMAT, TIME_FORMAT } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
-import { formatDuration, formatLeverage, formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatDuration, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 const orderCountColumn: ColumnData<PositionData> = {
@@ -88,20 +92,26 @@ const avgDurationColumn: ColumnData<PositionData> = {
   render: (item) => <Type.Caption color="neutral1">{formatDuration(item.durationInSecond)}</Type.Caption>,
 }
 
-const renderPositionRoi = (item: PositionData) => (
-  <Type.Caption color="neutral1">
-    <SignedText value={item.realisedRoi} maxDigit={2} minDigit={2} suffix="%" />
-  </Type.Caption>
-)
+const RenderPositionRoi = ({ item }: { item: PositionData }) => {
+  const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
+  const value = pnlWithFeeEnabled ? item.roi : item.realisedRoi
+
+  return (
+    <Type.Caption color="neutral1">
+      <SignedText value={value} maxDigit={2} minDigit={2} suffix="%" />
+    </Type.Caption>
+  )
+}
 
 const roiColumn: ColumnData<PositionData> = {
   title: 'ROI',
   dataIndex: 'roi',
   key: 'roi',
-  sortBy: 'realisedRoi',
+  sortBy: 'roi',
   style: { minWidth: '90px', textAlign: 'right' },
-  render: renderPositionRoi,
+  render: (item) => <RenderPositionRoi item={item} />,
 }
+
 const openTimeColumn: ColumnData<PositionData> = {
   title: 'Open Time',
   dataIndex: 'openBlockTime',
@@ -185,6 +195,22 @@ function PositionTime({ data }: { data: PositionData }) {
     </Type.Caption>
   )
 }
+//Filter market by pair
+export function getEntryColumn(
+  pairs: string[],
+  excludedPairs: string[],
+  changePairs: (...args: any[]) => void
+): ColumnData<PositionData> {
+  return {
+    title: 'Entry',
+    dataIndex: 'averagePrice',
+    key: 'averagePrice',
+    sortBy: 'averagePrice',
+    style: { flex: 1 },
+    render: (item) => renderEntry(item),
+    filterComponent: <PairFilterIcon pairs={pairs} excludedPairs={excludedPairs} changePairs={changePairs} />,
+  }
+}
 const entryColumn: ColumnData<PositionData> = {
   title: 'Entry',
   dataIndex: 'pair',
@@ -194,14 +220,22 @@ const entryColumn: ColumnData<PositionData> = {
   render: (item) => renderEntry(item),
 }
 const sizeColumn: ColumnData<PositionData> = {
-  title: 'Size',
+  title: 'Value',
   dataIndex: 'size',
   key: 'size',
   sortBy: 'size',
   style: { minWidth: '80px', textAlign: 'right' },
-  render: (item) => renderPositionSize(item),
+  render: (item) => renderPositionSize({ item }),
 }
-const renderPositionSize = (item: PositionData, hasPrefix = true) => (
+const renderPositionSize = ({
+  item,
+  hasPrefix = true,
+  isCompactNumber = false,
+}: {
+  item: PositionData
+  hasPrefix?: boolean
+  isCompactNumber?: boolean
+}) => (
   <Flex justifyContent="end" alignItems="center">
     <Type.Caption color="neutral1">
       {PROTOCOLS_IN_TOKEN.includes(item.protocol) ? (
@@ -212,13 +246,13 @@ const renderPositionSize = (item: PositionData, hasPrefix = true) => (
           valueInToken={item.sizeInToken}
         />
       ) : (
-        `${hasPrefix ? '$' : ''}${formatNumber(item.size, 0, 0)}`
+        `${hasPrefix ? '$' : ''}${isCompactNumber ? compactNumber(item.size, 2) : formatNumber(item.size, 0, 0)}`
       )}
     </Type.Caption>
   </Flex>
 )
 const sizeOpeningColumn: ColumnData<PositionData> = {
-  title: 'Size',
+  title: 'Value',
   dataIndex: 'size',
   key: 'size',
   sortBy: 'size',
@@ -237,37 +271,63 @@ const leverageColumn: ColumnData<PositionData> = {
     </Flex>
   ),
 }
-const pnlColumnFull: ColumnData<PositionData> = {
-  title: 'PnL',
-  dataIndex: 'pnl',
-  key: 'pnl',
-  sortBy: 'realisedPnl',
-  style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => {
-    return (
-      <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
-        {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
-        <ValueOrToken
-          protocol={item.protocol}
-          indexToken={item.realisedPnl == null && item.realisedPnlInToken != null ? item.collateralToken : undefined}
-          value={item.realisedPnl}
-          valueInToken={item.realisedPnlInToken}
-          component={
-            <SignedText value={item.realisedPnl ?? item.realisedPnlInToken} maxDigit={2} minDigit={2} prefix="$" />
-          }
-        />
-      </Flex>
-    )
-  },
-}
+
 const pnlColumn: ColumnData<PositionData> = {
   title: 'PnL',
   dataIndex: 'pnl',
   key: 'pnl',
+  sortBy: 'pnl',
   style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => renderPositionPnL(item),
+  render: (item) => {
+    return <PnlValueCell item={item} isCompactNumber={false} />
+  },
 }
-const renderPositionPnL = (item: PositionData, prefix = '$') => {
+//Pnl with fee - Apply with close position
+const PnlValueCell = ({ item, isCompactNumber = false }: { item: PositionData; isCompactNumber: boolean }) => {
+  const pnlValue = usePnlWithFee(item)
+
+  return (
+    <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
+      {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
+      <ValueOrToken
+        protocol={item.protocol}
+        indexToken={item.realisedPnl == null && item.realisedPnlInToken != null ? item.collateralToken : undefined}
+        value={pnlValue}
+        valueInToken={item.realisedPnlInToken}
+        component={
+          <SignedText
+            value={pnlValue ?? item.realisedPnlInToken}
+            maxDigit={2}
+            minDigit={2}
+            prefix="$"
+            isCompactNumber={isCompactNumber}
+          />
+        }
+      />
+    </Flex>
+  )
+}
+// Pnl without fee - Apply with opening position
+const renderPositionPnL = ({
+  item,
+  prefix = '$',
+  isCompactNumber,
+}: {
+  item: PositionData
+  prefix?: string
+  isCompactNumber?: boolean
+}) => {
+  return <PositionPnLCell item={item} prefix={prefix} isCompactNumber={isCompactNumber} />
+}
+const PositionPnLCell = ({
+  item,
+  prefix = '$',
+  isCompactNumber,
+}: {
+  item: PositionData
+  prefix?: string
+  isCompactNumber?: boolean
+}) => {
   return (
     <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
       {item.isLiquidate && <IconBox sx={{ pl: 1 }} icon={<SkullIcon />} />}
@@ -278,7 +338,13 @@ const renderPositionPnL = (item: PositionData, prefix = '$') => {
         valueInToken={item.realisedPnlInToken}
         hasPrefix={item.realisedPnl != null}
         component={
-          <SignedText value={item.realisedPnl ?? item.realisedPnlInToken} maxDigit={2} minDigit={2} prefix={prefix} />
+          <SignedText
+            value={item.realisedPnl ?? item.realisedPnlInToken}
+            maxDigit={2}
+            minDigit={2}
+            prefix={prefix}
+            isCompactNumber={isCompactNumber}
+          />
         }
       />
     </Flex>
@@ -396,23 +462,59 @@ const mixPnLColumn: ColumnData<PositionData> = {
 export const historyColumns: ColumnData<PositionData>[] = [
   { ...timeColumn, style: { flex: 1 } },
   { ...entryColumn, style: { flex: 1.8, minWidth: 185 } },
-  { ...sizeColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  {
+    ...sizeColumn,
+    style: { flex: 1, textAlign: 'right', justifyContent: 'end' },
+    render: (item) => renderPositionSize({ item, isCompactNumber: true }),
+  },
   { ...leverageColumn, style: { flex: 0.8, textAlign: 'right', justifyContent: 'end' } },
-  { ...pnlColumn, style: { flex: 1.4, textAlign: 'right', justifyContent: 'end' } },
+  {
+    ...pnlColumn,
+    style: {
+      flex: 1.4,
+      textAlign: 'right',
+      justifyContent: 'end',
+    },
+    render: (item) => <PnlValueCell item={item} isCompactNumber={true} />,
+  },
   { ...actionColumn, style: { width: 24, pr: 1, textAlign: 'right', justifyContent: 'end', flex: '0 0 24px' } },
 ]
+
 export const fullHistoryColumns: ColumnData<PositionData>[] = [
   { ...openTimeColumn, style: { flex: 1.5 } },
   { ...closeTimeColumn, style: { flex: 1.5, pl: 2 } },
-  { ...entryColumn, style: { flex: 1.5, pl: 2 } },
-  { ...sizeColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
-  { ...leverageColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
-  { ...collateralColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  {
+    ...sizeColumn,
+    style: { flex: 1, textAlign: 'right', justifyContent: 'end' },
+    filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.size} />,
+  },
+  {
+    ...leverageColumn,
+    style: { flex: 1, textAlign: 'right', justifyContent: 'end' },
+    filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.leverage} />,
+  },
+  {
+    ...collateralColumn,
+    style: { flex: 1, textAlign: 'right', justifyContent: 'end' },
+    filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.collateral} />,
+  },
   { ...avgDurationColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
   { ...orderCountColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
-  { ...feeColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
-  { ...roiColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
-  { ...pnlColumnFull, style: { flex: 1.3, textAlign: 'right', justifyContent: 'end' } },
+  {
+    ...feeColumn,
+    style: { flex: 1, textAlign: 'right', justifyContent: 'end' },
+    filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.fee} />,
+  },
+  {
+    ...roiColumn,
+    style: { flex: 1, textAlign: 'right', justifyContent: 'end' },
+    filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.realisedRoi} />,
+  },
+  {
+    ...pnlColumn,
+    style: { flex: 1.3, textAlign: 'right', justifyContent: 'end' },
+    filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.realisedPnl} />,
+  },
   { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', justifyContent: 'end', flex: '0 0 40px' } },
 ]
 
@@ -457,13 +559,10 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
   {
     ...sizeColumn,
     style: { flex: 1, textAlign: 'right', justifyContent: 'end' },
-    title: <Trans>SIZE ($)</Trans>,
-    filterComponent: (
-      // @ts-ignore
-      <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.size} />
-    ),
+    title: <Trans>VALUE ($)</Trans>,
+    filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.size} />,
     text: 'Size',
-    render: (item) => renderPositionSize(item, false),
+    render: (item) => renderPositionSize({ item, hasPrefix: false }),
   },
   {
     ...leverageColumn,
@@ -475,10 +574,7 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
       justifyContent: 'end',
     },
     title: <Trans>LEVERAGE</Trans>,
-    filterComponent: (
-      //@ts-ignore
-      <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.leverage} />
-    ),
+    filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.leverage} />,
     text: 'Leverage',
   },
   {
@@ -555,20 +651,25 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
       <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.realisedRoi} />
     ),
     text: 'ROI',
-    render: (item) => (item.status === PositionStatusEnum.OPEN ? renderOpeningRoi(item) : renderPositionRoi(item)),
+    render: (item) =>
+      item.status === PositionStatusEnum.OPEN ? renderOpeningRoi(item) : <RenderPositionRoi item={item} />,
   },
   {
     dataIndex: 'pnl',
     key: 'pnl',
     style: { flex: 1.1, textAlign: 'right', justifyContent: 'end' },
-    title: <Trans>PNL ($)</Trans>,
+    title: (
+      <Trans>
+        <PnlTitle /> ($)
+      </Trans>
+    ),
     filterComponent: (
       //@ts-ignore
       <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.realisedPnl} />
     ),
     text: 'PnL',
     render: (item) => {
-      return item.status === PositionStatusEnum.OPEN ? renderOpeningPnL(item) : renderPositionPnL(item, '')
+      return item.status === PositionStatusEnum.OPEN ? renderOpeningPnL(item) : renderPositionPnL({ item, prefix: '' })
     },
   },
   // { ...mixPnLColumn, style: { flex: 1, display: ['block', 'block', 'none', 'none'] } },
@@ -602,11 +703,19 @@ export const drawerHistoryColumns: ColumnData<PositionData>[] = [
   { ...openTimeColumn, style: { flex: 1.5 } },
   { ...closeTimeColumn, style: { flex: 1.5, pl: 2 } },
   { ...entryColumn, style: { minWidth: 185, flex: 1.5, pl: 2 } },
-  { ...sizeColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  {
+    ...sizeColumn,
+    style: { flex: 1, textAlign: 'right', justifyContent: 'end' },
+    render: (item) => renderPositionSize({ item, isCompactNumber: true }),
+  },
   { ...leverageColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
   { ...collateralColumn, style: { flex: 1.2, textAlign: 'right', justifyContent: 'end' } },
   { ...avgDurationColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
-  { ...pnlColumnFull, style: { flex: 1.3, textAlign: 'right', justifyContent: 'end' } },
+  {
+    ...pnlColumn,
+    style: { flex: 1.3, textAlign: 'right', justifyContent: 'end' },
+    render: (item) => renderPositionPnL({ item, isCompactNumber: true }),
+  },
   { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', justifyContent: 'end', flex: '0 0 40px' } },
 ]
 
@@ -631,7 +740,7 @@ export const vaultHistoryColumns: ColumnData<PositionData>[] = [
   orderCountColumn,
   feeColumn,
   roiColumn,
-  pnlColumnFull,
+  pnlColumn,
   actionColumn,
 ]
 

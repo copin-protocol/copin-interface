@@ -1,10 +1,12 @@
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
+import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import { TopTraderData } from 'entities/trader'
+import { usePnlWithFee } from 'hooks/features/usePnlWithFee'
 import { ColumnData } from 'theme/Table/types'
 import { Flex, Type } from 'theme/base'
 import { formatNumber } from 'utils/helpers/format'
 
-import AccountInfo from './AccountInfo'
+import LeaderInfo from './LeaderInfo'
 import RankingNumber from './RankingNumber'
 import { ExternalLeaderboardSource } from './types'
 
@@ -23,7 +25,7 @@ export const leaderboardColumns: ColumnData<TopTraderData, ExternalLeaderboardSo
     style: { minWidth: '200px' },
     render: (item, _, externalSource) => (
       <Flex alignItems="center" justifyContent="start" sx={{ color: 'neutral1', gap: 2, position: 'relative' }}>
-        <AccountInfo info={item} isCurrentLeaderboard={externalSource?.isCurrentLeaderboard} />
+        <LeaderInfo info={item} isCurrentLeaderboard={externalSource?.isCurrentLeaderboard} />
       </Flex>
     ),
   },
@@ -99,19 +101,8 @@ export const leaderboardColumns: ColumnData<TopTraderData, ExternalLeaderboardSo
       </Type.Caption>
     ),
   },
-  // {
-  //   title: 'Total PnL',
-  //   dataIndex: 'totalPnl',
-  //   key: 'totalPnl',
-  //   style: { minWidth: ['120px', '150px'], textAlign: 'right' },
-  //   render: (item) => (
-  //     <Type.Caption width="100%" color="neutral1" textAlign="right">
-  //       <SignedText value={item.totalPnl} maxDigit={0} />
-  //     </Type.Caption>
-  //   ),
-  // },
   {
-    title: 'PnL',
+    title: <PnlTitle />,
     dataIndex: 'totalRealisedPnl',
     key: 'totalRealisedPnl',
     style: { minWidth: ['120px', '160px'], textAlign: 'right' },
@@ -119,6 +110,15 @@ export const leaderboardColumns: ColumnData<TopTraderData, ExternalLeaderboardSo
       <Type.CaptionBold width="100%" color="neutral1" textAlign="right">
         <SignedText prefix="$" value={item.totalRealisedPnl} maxDigit={0} fontInherit />
       </Type.CaptionBold>
-    ),
+    ), //TODO: request BE
   },
 ]
+// const PnlValueDisplay = ({ item }: { item: any }) => {
+//   const value = usePnlWithFee(item)
+
+//   return (
+//     <Type.CaptionBold width="100%" color="neutral1" textAlign="right">
+//       <SignedText prefix="$" value={value} maxDigit={0} fontInherit />
+//     </Type.CaptionBold>
+//   )
+// }

@@ -5,9 +5,7 @@ import { useLocation } from 'react-router-dom'
 
 import PageHeader from 'components/@widgets/PageHeader'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
-import { useAuthContext } from 'hooks/web3/useAuth'
 import { TopWrapperMobile } from 'pages/@layouts/Components'
-import Loading from 'theme/Loading'
 import PageTitle from 'theme/PageTitle'
 import { Box, Flex } from 'theme/base'
 
@@ -18,8 +16,6 @@ import { FilterTradersProvider } from './useTradersContext'
 export default function ExplorerPage() {
   const { md } = useResponsive()
   const { pathname } = useLocation()
-  const { loading } = useAuthContext()
-  if (loading) return <Loading />
   return (
     <SafeComponentWrapper>
       <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>

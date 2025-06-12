@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { ArrowsIn, ArrowsOutSimple, BookOpen, Clock, Notebook } from '@phosphor-icons/react'
+import { Alarm, ArrowsIn, ArrowsOutSimple, BookOpen, Clock, Notebook } from '@phosphor-icons/react'
 import { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 
-import { getHlAccountInfo, getHlOpenOrders, getHlOrderFilled } from 'apis/hyperliquid'
+import { getHlAccountInfo, getHlOpenOrders, getHlOrderFilled, getHlTwapOrderFilled } from 'apis/hyperliquid'
 import emptyBg from 'assets/images/opening_empty_bg.png'
 import HLTraderPositionListView from 'components/@position/HLTraderPositionsListView'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
@@ -29,10 +29,12 @@ import {
   parseHLOrderData,
   parseHLOrderFillData,
   parseHLPositionData,
+  parseHLTwapOrderFillData,
 } from '../helpers/hyperliquid'
 import OpenOrdersView from './OpenOrdersView'
 import OpeningPositionsView from './OpeningPositionsView'
 import OrderFiledView from './OrderFilledView'
+import OrderTwapView from './OrderTwapView'
 
 const emptyCss = {
   backgroundImage: `url(${emptyBg})`,
@@ -53,6 +55,7 @@ export enum HLPositionTab {
   OPEN_POSITIONS = 'open_position',
   OPEN_ORDERS = 'open_order',
   ORDER_FILLED = 'order_filled',
+  ORDER_TWAP = 'order_twap',
 }
 
 export default function HLTraderOpeningPositionsTableView({
@@ -162,9 +165,36 @@ export default function HLTraderOpeningPositionsTableView({
     return groupHLOrderFillsByOid(filledOrders)
   }, [filledOrders])
 
+  const [enabledRefetchTwapOrder, setEnabledRefetchTwapOrder] = useState(true)
+  const { data: twapOrders, isLoading: isLoadingTwapOders } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_TWAP_ORDERS, address],
+    () =>
+      getHlTwapOrderFilled({
+        user: address,
+      }),
+    {
+      enabled: !!address && protocol === ProtocolEnum.HYPERLIQUID,
+      retry: 0,
+      refetchInterval: enabledRefetchTwapOrder ? 15_000 : undefined,
+      keepPreviousData: true,
+      select: (data) => {
+        return parseHLTwapOrderFillData({ account: address, data })
+      },
+    }
+  )
+  const onTwapOrderPageChange = useCallback((page: number) => {
+    if (page === 1) {
+      setEnabledRefetchTwapOrder(true)
+    } else setEnabledRefetchTwapOrder(false)
+  }, [])
+  twapOrders?.sort((a, b) => {
+    return (b.timestamp ?? 0) - (a.timestamp ?? 0)
+  })
+
   const totalOpening = hlAccountData?.assetPositions?.length ?? 0
   const totalOpenOrders = openOrders?.length ?? 0
   const totalOrderFilled = groupedFilledOrders?.length ?? 0
+  const totalTwapFilled = twapOrders?.length ?? 0
 
   return (
     <Box
@@ -181,7 +211,7 @@ export default function HLTraderOpeningPositionsTableView({
       <TabHeader
         configs={[
           {
-            name: <Trans>Opening Positions</Trans>,
+            name: <Trans>Open Positions</Trans>,
             key: HLPositionTab.OPEN_POSITIONS,
             icon: <Notebook size={20} />,
             activeIcon: <Notebook size={20} weight="fill" />,
@@ -200,6 +230,13 @@ export default function HLTraderOpeningPositionsTableView({
             icon: <Clock size={20} />,
             activeIcon: <Clock size={20} weight="fill" />,
             count: totalOrderFilled,
+          },
+          {
+            name: <Trans>TWAP</Trans>,
+            key: HLPositionTab.ORDER_TWAP,
+            icon: <Alarm size={20} />,
+            activeIcon: <Alarm size={20} weight="fill" />,
+            count: totalTwapFilled,
           },
         ]}
         isActiveFn={(config) => config.key === tab}
@@ -281,6 +318,23 @@ export default function HLTraderOpeningPositionsTableView({
             data={groupedFilledOrders}
             isDrawer={!!isDrawer}
             isExpanded={!!isExpanded}
+          />
+        </Box>
+      )}
+      {tab === HLPositionTab.ORDER_TWAP && (
+        <Box
+          display={['block', isDrawer ? 'block' : 'flex']}
+          flexDirection="column"
+          height="100%"
+          bg={isDrawer || !totalTwapFilled ? 'transparent' : 'neutral5'}
+        >
+          <OrderTwapView
+            onPageChange={onTwapOrderPageChange}
+            isLoading={isLoadingTwapOders}
+            data={twapOrders}
+            isDrawer={!!isDrawer}
+            isExpanded={!!isExpanded}
+            toggleExpand={handleToggleExpand}
           />
         </Box>
       )}

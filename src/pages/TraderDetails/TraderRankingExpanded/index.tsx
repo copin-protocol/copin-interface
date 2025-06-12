@@ -68,7 +68,7 @@ export default function TraderRankingExpanded({
   function formatChartData(sourceData: TraderData['ranking'] | undefined, comparedData?: TraderData['ranking']) {
     if (!sourceData) return [] as ScoreChartData[]
     return _rankingFieldOptions.reduce((result, option) => {
-      const rankingValue = sourceData[option.value]
+      const rankingValue = sourceData[option.value] ?? 0
       // if (!rankingValue) return result
       const rankingData = {
         subject: option.label as string,

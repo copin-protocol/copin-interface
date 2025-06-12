@@ -11,6 +11,7 @@ import {
   TraderData,
 } from 'entities/trader.d'
 import { TraderTokenStatistic } from 'entities/trader.d'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import { PositionSortPros } from 'pages/TraderDetails'
 import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { capitalizeFirstLetter } from 'utils/helpers/transform'
@@ -39,6 +40,7 @@ export function transformRealisedField(fieldName: string) {
   switch (fieldName) {
     case 'pnl':
     case 'maxPnl':
+    case 'roi':
     case 'avgRoi':
     case 'maxRoi':
     case 'totalGain':
@@ -55,9 +57,11 @@ export function transformRealisedField(fieldName: string) {
 }
 
 export const normalizeTraderPayload = (body: RequestBodyApiData) => {
+  const pnlWithFeeEnabled = useUserPreferencesStore.getState().pnlWithFeeEnabled ?? false
   let sortBy = body.sortBy
-  if (!!sortBy) {
-    sortBy = transformRealisedField(sortBy)
+
+  if (sortBy) {
+    sortBy = pnlWithFeeEnabled ? sortBy : transformRealisedField(sortBy)
   }
   if (!body.ranges) return { ...body, sortBy }
   const ranges = body.ranges
@@ -68,12 +72,18 @@ export const normalizeTraderPayload = (body: RequestBodyApiData) => {
   if (ranges?.[0]?.fieldName?.match('ranking')) {
     ranges.forEach((range) => {
       const [_prefix, _fieldName] = range.fieldName.split('.')
-      if (_fieldName === 'pnl') return
+      if (_fieldName === 'pnl') {
+        if (pnlWithFeeEnabled) {
+          range.fieldName = _prefix + '.realisedPnl'
+        }
+        return
+      }
       range.fieldName = _prefix + '.' + transformRealisedField(_fieldName)
     })
   } else {
     ranges.forEach((range) => {
-      range.fieldName = transformRealisedField(range.fieldName)
+      range.fieldName = pnlWithFeeEnabled ? range.fieldName : transformRealisedField(range.fieldName)
+
       switch (range.fieldName) {
         case 'avgDuration':
         case 'minDuration':
@@ -190,7 +200,7 @@ export async function getTraderHistoryApi({
     }
   }
   return requester
-    .post(`${protocol}/${SERVICE}/filter/${account}`, params)
+    .post(`${protocol}/${SERVICE}/filter/${account}`, normalizeTraderPayload(params))
     .then((res: any) => normalizePositionResponse(res.data as ApiListResponse<ResponsePositionData>))
 }
 
@@ -238,14 +248,25 @@ export async function getTradersByTimeRangeApi({
     .then((res: any) => normalizeTraderResponse(res.data as ApiListResponse<ResponseTraderData>))
 }
 
-export async function getTraderStatisticApi({ protocol, account }: { protocol: ProtocolEnum; account: string }) {
+export async function getTraderStatisticApi({
+  protocol,
+  account,
+  pnlWithFeeEnabled,
+}: {
+  protocol: ProtocolEnum
+  account: string
+  pnlWithFeeEnabled?: boolean
+}) {
   return requester.get(apiWrapper(`${protocol}/${SERVICE}/statistic/trader/${account}`)).then((res: any) => {
     const data = res.data as { [key in TimeFilterByEnum]: ResponseTraderData }
+
     const normalizedData = {} as { [key in TimeFilterByEnum]: TraderData }
+
     for (const key in data) {
-      const _key = key as unknown as TimeFilterByEnum
-      normalizedData[_key] = normalizeTraderData(data[_key])
+      const _key = key as TimeFilterByEnum
+      normalizedData[_key] = normalizeTraderData(data[_key], pnlWithFeeEnabled)
     }
+
     return normalizedData
   })
 }
@@ -283,7 +304,7 @@ export async function getTraderMultiExchangeStatistic({
 
 export async function getPnlStatisticsApi(payload: StatisticData) {
   return requester
-    .post(`public/${SERVICE}/statistic/pnl-statistics`, payload)
+    .post(`public/${SERVICE}/statistic/pnl-statistics-v2`, payload)
     .then((res: any) => res.data as PnlStatisticsResponse)
 }
 

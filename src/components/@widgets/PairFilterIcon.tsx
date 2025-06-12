@@ -39,7 +39,7 @@ export function PairFilterIcon({
   const protocolPairs = getListSymbol?.()
   const isCopyAll = protocolPairs?.length === pairs.length
   const hasExcludingPairs = excludedPairs.length > 0 && isCopyAll
-  const hasFilter = !isCopyAll || hasExcludingPairs
+  const hasFilter = (pairs.length > 0 || excludedPairs.length > 0) && (!isCopyAll || hasExcludingPairs)
 
   return (
     <Dropdown

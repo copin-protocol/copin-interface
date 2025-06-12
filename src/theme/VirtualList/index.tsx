@@ -290,6 +290,7 @@ const VirtualList = memo<Props<any>>(function VirtualListMemo<T = any>({
       {header}
       <Box flex="1 0 0" ref={wrapperRef} sx={{ position: 'relative', overflow: 'hidden' }}>
         {!isLoading && !data?.length && <NoDataFound />}
+
         <InfiniteLoader
           ref={listRef}
           isItemLoaded={isItemLoaded}

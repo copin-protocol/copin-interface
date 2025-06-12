@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 import { ChartData, ChartDataV2 } from 'entities/chart.d'
 import { OpenInterestMarketData, ProtocolsStatisticData } from 'entities/statistic'
 import { PositionStatisticCounter, ResponsePositionData } from 'entities/trader.d'
@@ -6,6 +8,7 @@ import { ProtocolEnum, SortTypeEnum, TimeframeEnum } from 'utils/config/enums'
 import { capitalizeFirstLetter } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
+import { apiWrapper } from './helpers'
 import requester from './index'
 import {
   normalizePositionData,
@@ -17,29 +20,37 @@ import { GetApiParams, RequestBodyApiData } from './types'
 
 const SERVICE = 'position'
 
-export const normalizePositionPayload = (body: RequestBodyApiData) => {
+export const normalizePositionPayload = (body: RequestBodyApiData, pnlSettings: { pnlWithFeeEnabled: boolean }) => {
+  const { pnlWithFeeEnabled } = pnlSettings
   let sortBy = body.sortBy
-  if (sortBy === 'pnl') {
-    sortBy = 'realised' + capitalizeFirstLetter(sortBy)
+
+  if (sortBy === 'pnl' || sortBy === 'realisedPnl') {
+    sortBy = pnlWithFeeEnabled ? 'pnl' : 'realisedPnl'
   }
 
-  if (sortBy === 'avgRoi') {
-    sortBy = 'realised' + capitalizeFirstLetter(sortBy)
+  if (sortBy === 'avgRoi' || sortBy === 'realisedAvgRoi') {
+    sortBy = pnlWithFeeEnabled ? 'avgRoi' : 'realisedAvgRoi'
   }
 
   if (!body.ranges) return { ...body, sortBy }
-  const ranges = body.ranges.map((range) => ({
-    ...range,
-  }))
-  ranges.forEach((range) => {
-    if (range.fieldName === 'pnl') {
-      range.fieldName = 'realised' + capitalizeFirstLetter(range.fieldName)
+
+  const ranges = body.ranges.map((range) => {
+    let fieldName = range.fieldName
+
+    if (fieldName === 'pnl' || fieldName === 'realisedPnl') {
+      fieldName = pnlWithFeeEnabled ? 'pnl' : 'realisedPnl'
     }
 
-    if (range.fieldName === 'avgRoi') {
-      range.fieldName = 'realised' + capitalizeFirstLetter(range.fieldName)
+    if (fieldName === 'avgRoi' || fieldName === 'realisedAvgRoi') {
+      fieldName = pnlWithFeeEnabled ? 'avgRoi' : 'realisedAvgRoi'
+    }
+
+    return {
+      ...range,
+      fieldName,
     }
   })
+
   return { ...body, ranges, sortBy }
 }
 
@@ -97,18 +108,21 @@ export async function getTopOpeningPositionsApi({
   return requester
     .post(
       `${protocol}/top-positions/opening`,
-      normalizePositionPayload({
-        pagination: {
-          limit,
-          offset,
+      normalizePositionPayload(
+        {
+          pagination: {
+            limit,
+            offset,
+          },
+          sortBy,
+          sortType,
+          indexToken,
+          indexTokens,
+          from,
+          to,
         },
-        sortBy,
-        sortType,
-        indexToken,
-        indexTokens,
-        from,
-        to,
-      })
+        { pnlWithFeeEnabled: false }
+      )
     )
     .then((res: any) => normalizePositionResponse(res.data as ApiListResponse<ResponsePositionData>))
 }
@@ -235,6 +249,9 @@ export async function getTokenTradesByTraderApi({ protocol, account }: { protoco
 
 export const getLatestPrices = () => requester.get(`prices/latest`).then((res) => res.data)
 
+export const getOstiumLatestPrices = () =>
+  axios.get(`https://metadata-backend.ostium.io/PricePublish/latest-prices`).then((res) => res.data)
+
 export const getChartData = ({
   symbol,
   timeframe,
@@ -296,5 +313,7 @@ export const getPositionsCounterApi = ({ protocol, account }: { protocol: Protoc
     .then((res) => res.data?.data as PositionStatisticCounter[])
 
 export function getProtocolsStatistic() {
-  return requester.get(`/public/${SERVICE}/statistic/protocols`).then((res) => res.data as ProtocolsStatisticData)
+  return requester
+    .get(apiWrapper(`/public/${SERVICE}/statistic/perp-explorer`, true))
+    .then((res) => res.data as ProtocolsStatisticData)
 }

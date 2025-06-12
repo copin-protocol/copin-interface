@@ -38,6 +38,7 @@ const useGlobalStore = create<GlobalStore>()(
       }),
   }))
 )
+
 export default useGlobalStore
 
 const PATH_TO_UPDATE_RELATIVE_TIME = [ROUTES.LIVE_TRADES_ORDERS.path, ROUTES.TRADER_DETAILS.path_prefix]

@@ -62,7 +62,7 @@ export default function FilterForm({
       <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
         <ConditionFilterForm
           type={formType}
-          formValues={formValues.slice(0, maxFilterFields)}
+          formValues={formValues}
           invalidFormValues={invalidFormValues}
           setFormValues={setFormValues}
           fieldOptions={fieldOptions}

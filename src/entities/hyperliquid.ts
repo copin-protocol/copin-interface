@@ -154,3 +154,45 @@ export interface GroupedFillsData {
   txHash: string
   orderId: number
 }
+
+export interface HlTwapOrderRawData {
+  twapId: number
+  fill: HlTwapOrderFillRawData
+}
+
+export interface HlTwapOrderFillRawData {
+  tid: number
+  oid: number
+  coin: string
+  side: string // B: Bid -> Buy | A: Ask -> Sell
+  px: string
+  sz: string
+  startPosition: string
+  dir: string // Direction: Long | Short
+  hash: string
+  closedPnl: string
+  fee: string
+  feeToken: string
+  time: number
+  crossed: boolean // This order will not open a new position no matter how large the order size is. It will compare to the existing position at the time of execution
+}
+
+export interface HlTwapOrderData {
+  twapOrderId: number
+  orderId: number
+  twapFillId?: number
+  account: string
+  pair: string
+  side: string
+  direction: string
+  sizeNumber: number
+  sizeInTokenNumber: number
+  startPosition: number
+  priceNumber: number
+  pnl: number
+  fee: number
+  isLong: boolean
+  isBuy: boolean
+  protocol: ProtocolEnum
+  timestamp: number
+}

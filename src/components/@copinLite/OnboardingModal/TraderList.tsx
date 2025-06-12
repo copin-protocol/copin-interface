@@ -396,6 +396,8 @@ function TraderItem({
               isSimple
               hasBalanceText={false}
               height={64}
+              address={account}
+              protocol={protocol}
             />
           </Box>
         </Flex>

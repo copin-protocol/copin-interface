@@ -56,7 +56,7 @@ export default function SearchTrader({
         // data-tooltip-id="search_required_plan"
       >
         <InputSearch
-          placeholder="SEARCH TRADER"
+          placeholder="SEARCH ADDRESS"
           sx={{
             width: requiredPlan ? 170 : 'auto',
             height: 'max-content',

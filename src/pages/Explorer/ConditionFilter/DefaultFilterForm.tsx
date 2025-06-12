@@ -1,5 +1,5 @@
 import { useResponsive } from 'ahooks'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
@@ -50,21 +50,22 @@ export default function DefaultFilterForm({
     [pagePermission, userPermission]
   )
 
-  useEffect(() => {
-    setFormValues((formValues) => {
-      const newValues = formValues.filter((e) => e.key !== 'indexTokens' && fieldsAllowed.includes(e.key))
-      return newValues
-    })
-  }, [fieldsAllowed])
+  // useEffect(() => {
+  //   setFormValues((formValues) => {
+  //     const newValues = formValues.filter((e) => e.key !== 'indexTokens' && fieldsAllowed.includes(e.key))
+  //     return newValues
+  //   })
+  // }, [fieldsAllowed])
 
   const onChangeFormValues: FilterFormProps['onValuesChange'] = (values) => {
-    let newValues = [...values]
-    const marketValues = formValues.find((e) => e.key === 'indexTokens')
-    if (marketValues) {
-      newValues = [...values, marketValues]
-    }
-    setFormValues(newValues)
-    handleChangeRanges(newValues)
+    // let newValues = [...values]
+    // const marketValues = formValues.find((e) => e.key === 'indexTokens')
+    // if (marketValues) {
+    //   newValues = [...values, marketValues]
+    // }
+
+    setFormValues(values)
+    handleChangeRanges(values)
     setEnableApply(true)
   }
 
@@ -131,8 +132,12 @@ export default function DefaultFilterForm({
           formType="default"
           fieldOptions={fieldOptions}
           maxFilterFields={userPermission?.maxFilterFields}
-          initialFormValues={formValues.filter((e) => e.key !== 'indexTokens' && fieldsAllowed.includes(e.key))}
-          invalidFormValues={defaultFormValues.filter((e) => e.key !== 'indexTokens' && !fieldsAllowed.includes(e.key))}
+          initialFormValues={formValues}
+          invalidFormValues={defaultFormValues.filter(
+            (e, i) =>
+              e.key !== 'indexTokens' &&
+              (!fieldsAllowed?.includes(e.key) || i >= (userPermission?.maxFilterFields ?? Infinity))
+          )}
           onApply={onApply}
           onReset={onReset}
           onValuesChange={onChangeFormValues}

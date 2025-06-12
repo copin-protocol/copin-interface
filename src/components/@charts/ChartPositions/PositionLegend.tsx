@@ -9,6 +9,7 @@ import { renderEntry, renderOpeningPnLWithPrices, renderOpeningRoiWithPrices } f
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useSearchParams from 'hooks/router/useSearchParams'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import { Button } from 'theme/Buttons'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { Box, Flex, Type } from 'theme/base'
@@ -55,6 +56,10 @@ export default function PositionLegend({
     setTimeout(() => setOpenDrawer(false), 0)
     window.history.replaceState({}, '', `${history.location.pathname}${history.location.search}`)
   }, [])
+
+  const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
+  const pnl = pnlWithFeeEnabled ? data.pnl : data.realisedPnl
+  const roi = pnlWithFeeEnabled ? data.roi : data.realisedRoi
 
   return (
     <Button
@@ -113,7 +118,7 @@ export default function PositionLegend({
           ) : (
             <Flex alignItems="center" sx={{ gap: '1px' }}>
               {data.isLiquidate && <SkullIcon />}
-              <SignedText value={data.pnl} maxDigit={0} sx={{ textAlign: 'right', width: '100%' }} />
+              <SignedText value={pnl} maxDigit={0} sx={{ textAlign: 'right', width: '100%' }} />
             </Flex>
           )}
         </Flex>
@@ -127,7 +132,7 @@ export default function PositionLegend({
                 {data.isLiquidate && <SkullIcon />}
                 <Type.Caption>
                   <SignedText
-                    value={data.roi}
+                    value={roi}
                     maxDigit={2}
                     minDigit={2}
                     suffix="%"

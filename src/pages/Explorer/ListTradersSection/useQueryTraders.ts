@@ -1,12 +1,18 @@
 import { BaseGraphQLResponse } from 'graphql/entities/base.graph'
 import { useMemo } from 'react'
+import { useQuery } from 'react-query'
 
 import { normalizeTraderData } from 'apis/normalize'
+import { getPnlStatisticsApi } from 'apis/traderApis'
 import { RequestBodyApiData } from 'apis/types'
 import { ResponseTraderData } from 'entities/trader'
 import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
+import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
+import useSearchParams from 'hooks/router/useSearchParams'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import { MAX_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { extractFiltersFromFormValues } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
 
@@ -53,6 +59,7 @@ export default function useQueryTraders({
 }) {
   const { getData } = useMapPermissionData()
   const { userPermission } = useExplorerPermission()
+  const { searchParams } = useSearchParams()
 
   const requestData = useMemo<RequestBodyApiData>(() => {
     const request: Record<string, any> = {
@@ -100,12 +107,23 @@ export default function useQueryTraders({
   })
 
   let timeTradersData = timeTraders
-
+  const { pnlWithFeeEnabled } = useUserPreferencesStore()
   if (!loadingTimeTraders && timeTraders) {
-    const formattedTimeTraders = timeTraders.data.map((trader) => getData(normalizeTraderData(trader) as any))
+    const formattedTimeTraders = timeTraders.data.map((trader) =>
+      getData(pnlWithFeeEnabled ? (trader as any) : (normalizeTraderData(trader) as any))
+    )
     const data = { ...timeTraders, data: formattedTimeTraders } as BaseGraphQLResponse<ResponseTraderData>
     timeTradersData = data
   }
+
+  const { timeFilterOptions, defaultTimeOption } = useGetTimeFilterOptions()
+  const urlTimeParamKey = isFavTraders ? URL_PARAM_KEYS.FAVORITE_TIME_FILTER : URL_PARAM_KEYS.HOME_TIME
+  const urlTime = searchParams[urlTimeParamKey] as TimeFilterByEnum | undefined
+  const selectedTimeOption = timeFilterOptions.find((option) => option.id === urlTime) ?? defaultTimeOption
+
+  const timeFrame = [TimeFilterByEnum.S1_DAY, TimeFilterByEnum.LAST_24H].includes(selectedTimeOption.id)
+    ? TimeFilterByEnum.S7_DAY
+    : selectedTimeOption.id
 
   // let data = isRangeSelection ? rangeTraders : timeTradersData
   let data = timeTradersData
@@ -143,6 +161,39 @@ export default function useQueryTraders({
   //   isRangeSelection && isLoading && loadingRangeProgress?.status !== CheckAvailableStatus.FINISH
 
   // return { data, isLoading, isRangeProgressing, loadingRangeProgress }
+
+  const allAccounts =
+    data?.data?.map((trader) => ({
+      account: trader.account,
+      protocol: trader.protocol,
+    })) || []
+
+  const { data: pnlDataAll, isLoading: loadingPnl } = useQuery<Record<string, any>>(
+    [QUERY_KEYS.GET_PNL_STATISTICS, allAccounts.map((a) => a.account).join(','), timeFrame],
+    () => {
+      if (allAccounts.length === 0) return {}
+      const payload = {
+        accounts: allAccounts,
+        statisticType: timeFrame,
+      }
+      return getPnlStatisticsApi(payload)
+    },
+    { enabled: !loadingTimeTraders && (data?.data?.length ?? 0) > 0 }
+  )
+
+  // Merge PnL to trader
+  if (data && !loadingPnl && pnlDataAll) {
+    data = {
+      ...data,
+      data: data.data.map((trader) => {
+        const key = `${trader.account}-${trader.protocol}`
+        return {
+          ...trader,
+          pnlStatistics: pnlDataAll[key] || null,
+        }
+      }),
+    }
+  }
 
   const isLoading = loadingTimeTraders
 

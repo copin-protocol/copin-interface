@@ -4,7 +4,9 @@ import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import MarketGroup from 'components/@ui/MarketGroup'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
-import { MyCopyTraderData, TraderData } from 'entities/trader.d'
+import { PnlTitle, PnlTitleWithTooltip } from 'components/@widgets/SwitchPnlButton'
+import { MyCopyTraderData, ResponseTraderData, TraderData } from 'entities/trader.d'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import CopyButton from 'theme/Buttons/CopyButton'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
@@ -12,6 +14,7 @@ import { PLATFORM_TRANS } from 'utils/config/translations'
 import { compactNumber, formatDuration, formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
 
 import { AccountCell, AccountCellMobile, MyCopyAccountCell } from './AccountCell'
+import { LoadingChartExplorer } from './ChartExplorer'
 import Text from './Text'
 import { ExternalTraderListSource, TableSettings, TableSettingsProps } from './types'
 
@@ -91,6 +94,18 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
       </div>
     ),
   },
+  pnlStatistics: {
+    style: { minWidth: ['120px', '150px'] },
+    text: <Trans>Pnl Overtime</Trans>,
+    label: (
+      <LabelWithTooltip id="tt_runtime_label" tooltip="Trader's PnL trend over time">
+        Pnl Overtime
+      </LabelWithTooltip>
+    ),
+    visible: true,
+    id: 'pnlStatistics',
+    render: (item) => <LoadingChartExplorer traderData={item} />,
+  },
   lastTradeAtTs: {
     style: { minWidth: ['110px', '140px'] },
     text: <Trans>Last Trade</Trans>,
@@ -144,13 +159,9 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
   },
   pnl: {
     style: { minWidth: ['100px', '120px'] },
-    text: <Trans>PnL</Trans>,
+    text: <PnlTitle type="lower" />,
     searchText: 'PnL',
-    label: (
-      <LabelWithTooltip id="tt_pnl_label" tooltip="The overall profit or loss without fees generated from the trades">
-        PnL
-      </LabelWithTooltip>
-    ),
+    label: <PnlTitleWithTooltip />,
     unit: '$',
     sortBy: 'pnl',
     visible: true,
@@ -159,7 +170,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
       gte: 100,
     },
     id: 'pnl',
-    render: (item) => <SignedText value={item.pnl} maxDigit={0} prefix="$" />,
+    render: (item) => <PnlValueDisplay item={item} />,
   },
   unrealisedPnl: {
     style: { minWidth: ['130px', '150px'] },
@@ -279,7 +290,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     render: (item) => <Text text={item.avgVolume ? `$${formatNumber(item.avgVolume, 0, 0)}` : undefined} />,
   },
   avgRoi: {
-    style: { minWidth: '110px' },
+    style: { minWidth: '92px' },
     text: <Trans>Avg ROI</Trans>,
     searchText: 'Avg ROI',
     label: (
@@ -661,8 +672,11 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
       gte: -30,
     },
     id: 'maxDrawdown',
-    render: (item) => <SignedText value={item.maxDrawdown} maxDigit={2} minDigit={2} neg suffix="%" />,
+    render: (item) => {
+      return <ShowMaxDrawDown item={item as ResponseTraderData} field="realisedMaxDrawdown" />
+    },
   },
+
   maxDrawdownPnl: {
     style: { minWidth: ['160px', '175px'] },
     text: <Trans>Max Drawdown PnL</Trans>,
@@ -683,13 +697,33 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
       gte: -100,
     },
     id: 'maxDrawdownPnl',
-    render: (item) => <SignedText value={item.maxDrawdownPnl} maxDigit={0} neg prefix="$" />,
+    render: (item) => {
+      return <ShowMaxDrawDown item={item as ResponseTraderData} field="realisedMaxDrawdownPnl" />
+    },
   },
+}
+
+const ShowMaxDrawDown = ({ item, field }: { item: ResponseTraderData; field: keyof ResponseTraderData }) => {
+  const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
+  const value = item[field]
+
+  return !pnlWithFeeEnabled && typeof value === 'number' ? (
+    <SignedText value={value} maxDigit={0} neg prefix="$" />
+  ) : (
+    <Text text="Updating..." /> //TO DO (BE): Provide maxDrawdownPnl data
+  )
+}
+
+const PnlValueDisplay = ({ item }: { item: any }) => {
+  // const value = usePnlWithFee(item)
+
+  return <SignedText value={item.pnl} maxDigit={0} prefix="$" />
 }
 
 const tableColumnKeys: (keyof TraderData)[] = [
   'account',
   'runTimeDays',
+  'pnlStatistics',
   'lastTradeAtTs',
   'indexTokens',
   'pnl',
@@ -724,6 +758,10 @@ export const tableSettings: TableSettingsProps<TraderData> = tableColumnKeys
   .map((key) => columnsMapping[key]!)
   .filter((data) => !!data)
 
+export const tableSettingsWithoutPnlStatistics: TableSettingsProps<TraderData> = tableColumnKeys
+  .map((key) => columnsMapping[key]!)
+  .filter((data) => !!data && data.id !== 'pnlStatistics')
+
 const mobileTableColumnKeys: (keyof TraderData)[] = [
   'account',
   'pnl',
@@ -744,6 +782,7 @@ const mobileTableColumnKeys: (keyof TraderData)[] = [
   'totalLose',
   'totalLiquidation',
   'profitRate',
+  'pnlStatistics',
   'longRate',
   'orderPositionRatio',
   'profitLossRatio',

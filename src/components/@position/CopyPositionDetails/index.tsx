@@ -20,6 +20,7 @@ import useAllCopyTrades from 'hooks/features/copyTrade/useAllCopyTrades'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import Tabs, { TabPane } from 'theme/Tab'
@@ -454,7 +455,10 @@ function LatestPnLAndROIItem({
 
   const pnl = (() =>
     copyPosition && symbol ? (isOpening ? calcCopyOpeningPnL(copyPosition, markPrice) : copyPosition.pnl) : 0)()
-  const roi = copyPosition ? ((pnl ?? 0) / collateral) * 100 : 0
+  const pnlWithFeeEnabled = useUserPreferencesStore((state) => state.pnlWithFeeEnabled)
+  const roi = copyPosition
+    ? ((pnlWithFeeEnabled ? copyPosition.pnl ?? 0 : copyPosition.realisedPnl ?? 0) / collateral) * 100
+    : 0
 
   const latestPnL = crossMovePnL != null ? crossMovePnL : isOpening ? pnl : copyPosition?.pnl ?? 0
   const latestROI =

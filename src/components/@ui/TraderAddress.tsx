@@ -1,20 +1,17 @@
 import { HTMLAttributeAnchorTarget } from 'react'
 import { Link } from 'react-router-dom'
-import { v4 as uuid } from 'uuid'
 
 import IconEye from 'assets/icons/ic-eye.svg'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import { DisabledActionType } from 'pages/TraderDetails/TraderActionButtons'
-import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
-import { DATA_ATTRIBUTES, ELEMENT_CLASSNAMES } from 'utils/config/keys'
-import { overflowEllipsis } from 'utils/helpers/css'
-import { addressShorten } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { EventCategory } from 'utils/tracking/types'
+
+import AddressText from './AddressText'
 
 export default function TraderAddress({
   address,
@@ -33,10 +30,9 @@ export default function TraderAddress({
     textSx?: any
     isLink?: boolean
     size?: number
-    dividerColor?: string
-    hasAddressTooltip?: boolean
     timeType?: TimeFilterByEnum | TimeFrameEnum
     eventCategory?: EventCategory
+    hiddenAddressTooltip?: boolean
   }
   hasHover?: boolean
   linkTarget?: HTMLAttributeAnchorTarget
@@ -45,16 +41,7 @@ export default function TraderAddress({
 
   onPreview?: () => void
 }) {
-  const {
-    wrapperSx = {},
-    textSx = {},
-    isLink = true,
-    size = 24,
-    dividerColor = 'neutral4',
-    hasAddressTooltip = false,
-    timeType,
-  } = options
-  const tooltipId = uuid()
+  const { wrapperSx = {}, textSx = {}, isLink = true, size = 24, timeType } = options
 
   const { setTrader } = useQuickViewTraderStore()
 
@@ -100,29 +87,13 @@ export default function TraderAddress({
         sx={{ gap: 2 }}
         target={linkTarget}
       >
-        <Type.Caption
-          className={ELEMENT_CLASSNAMES.TRADER_ADDRESS}
-          color="inherit"
-          {...{ [DATA_ATTRIBUTES.TRADER_COPY_DELETED]: address }}
-          width={75}
-          sx={{
-            ...overflowEllipsis(),
-            display: 'flex',
-            color: 'neutral1',
-            ':hover': { textDecoration: isLink ? 'underline' : undefined },
-            ...textSx,
-          }}
-          {...(hasAddressTooltip ? { 'data-tooltip-id': tooltipId, 'data-tooltip-delay-show': 360 } : {})}
-        >
-          {addressShorten(address, 3, 5)}
-        </Type.Caption>
+        <AddressText address={address} sx={textSx} shouldShowTooltip={!options?.hiddenAddressTooltip} />
         {protocol && (
           <>
             <ProtocolLogo protocol={protocol} isActive={false} size={24} hasText={false} />
           </>
         )}
       </Flex>
-      {hasAddressTooltip && <Tooltip id={tooltipId}>{address}</Tooltip>}
     </Flex>
   )
 }

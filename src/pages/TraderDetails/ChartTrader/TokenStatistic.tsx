@@ -5,6 +5,7 @@ import styled from 'styled-components/macro'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { TraderTokenStatistic } from 'entities/trader'
+import { usePnlWithFee } from 'hooks/features/usePnlWithFee'
 import Table from 'theme/Table'
 import { ColumnData, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
@@ -324,6 +325,7 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
       },
     },
   ]
+
   return (
     <Table
       wrapperSx={{

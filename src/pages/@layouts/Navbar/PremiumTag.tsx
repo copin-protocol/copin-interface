@@ -1,10 +1,11 @@
 import { ArrowSquareOut, CrownSimple } from '@phosphor-icons/react'
+import { Link } from 'react-router-dom'
 
 import useMyProfile from 'hooks/store/useMyProfile'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { LINKS } from 'utils/config/constants'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
+import ROUTES from 'utils/config/routes'
 import { PLANS } from 'utils/config/subscription'
 
 const PremiumTag = () => {
@@ -31,13 +32,13 @@ const PremiumTag = () => {
         (currentPlan.title === SubscriptionPlanEnum.FREE && (
           <Tooltip id={`tt-premium`} place="bottom" noArrow={true} clickable={true}>
             <Type.Small maxWidth={300}>
-              Your account is <b>Basic Plan</b>.{' '}
-              <a href={LINKS.upgradePremium} target="_blank" rel="noreferrer">
+              Your account is <b>Free Plan</b>.{' '}
+              <Link to={ROUTES.SUBSCRIPTION.path} target="_blank">
                 <Flex alignItems="center" sx={{ gap: 1 }}>
                   <Type.Small>Read more</Type.Small>
                   <ArrowSquareOut weight="fill" />
                 </Flex>
-              </a>
+              </Link>
             </Type.Small>
           </Tooltip>
         ))}

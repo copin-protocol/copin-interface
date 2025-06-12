@@ -23,7 +23,7 @@ import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { FONT_FAMILY, GMX_V1_PROTOCOLS } from 'utils/config/constants'
-import { OrderTypeEnum } from 'utils/config/enums'
+import { OrderTypeEnum, PositionStatusEnum } from 'utils/config/enums'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { PROTOCOLS_IN_TOKEN_COLLATERAL } from 'utils/config/protocols'
 import { TIMEFRAME_NAMES, TOKEN_COLLATERAL_SUPPORT } from 'utils/config/trades'
@@ -40,13 +40,15 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
   openBlockTime,
   closeBlockTime,
   setCrossMove,
+  setRealisedPnl,
   chartId,
 }: {
   position: PositionData
   isOpening: boolean
   openBlockTime: number
   closeBlockTime: number
-  setCrossMove: (value?: { pnl?: number; time?: number; pnlInToken?: number }) => void
+  setCrossMove: (value?: { pnl?: number; time?: number; pnlInToken?: number; roi?: number }) => void
+  setRealisedPnl: (realisedPnl?: number) => void
   chartId: string
 }) {
   const protocol = position.protocol
@@ -120,10 +122,16 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
       let totalTokenSize = 0
       let totalSize = 0
       let collateral = 0
+      let totalCollateral = 0
+      let totalIncreasedSize = 0
       let collateralInToken = 0
       let averagePrice = 0
+      let realisedPnl = 0
       for (let i = 0; i < orders.length; i++) {
+        const collateralDeltaNumber = orders[i]?.collateralDeltaNumber ?? 0
+        const collateralDeltaInTokenNumber = orders[i]?.collateralDeltaInTokenNumber ?? 0
         if (orders[i].type === OrderTypeEnum.MARGIN_TRANSFERRED) {
+          totalCollateral += collateralDeltaNumber
           continue
         }
         const isDecrease =
@@ -140,20 +148,26 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
           orders[i]?.sizeDeltaNumber ?? (sizeDeltaInToken ? sizeDeltaInToken * orders[i].priceNumber : 0)
         const sizeDelta = sign * Math.abs(sizeDeltaNumber)
         const sizeTokenDelta = sign * (sizeDeltaInToken || sizeDeltaNumber / orders[i].priceNumber)
-        const collateralDeltaNumber = orders[i]?.collateralDeltaNumber ?? 0
-        const collateralDeltaInTokenNumber = orders[i]?.collateralDeltaInTokenNumber ?? 0
-        const collateralDelta = sign * collateralDeltaNumber
-        if (!isDecrease) {
-          averagePrice = (totalTokenSize * averagePrice + sizeDeltaNumber) / (totalTokenSize + sizeTokenDelta)
-        }
 
+        const collateralDelta = sign * collateralDeltaNumber
+        const price = orders[i]?.priceNumber ?? (totalSize + sizeDelta) / (totalTokenSize + sizeTokenDelta)
+        if (isDecrease) {
+          realisedPnl += calcPnL(position.isLong, averagePrice, price, Math.abs(sizeDeltaNumber))
+        } else {
+          averagePrice = (totalTokenSize * averagePrice + sizeDeltaNumber) / (totalTokenSize + sizeTokenDelta)
+          totalCollateral += collateralDeltaNumber
+          totalIncreasedSize += sizeDeltaNumber
+        }
         const pos = {
           size: totalSize + sizeDelta,
           sizeInToken: totalTokenSize + sizeTokenDelta,
           time: dayjs(orders[i].blockTime).utc().valueOf(),
           collateral: collateral + collateralDelta,
           collateralInToken: collateralInToken + collateralDeltaInTokenNumber,
-          price: orders[i]?.priceNumber ?? (totalSize + sizeDelta) / (totalTokenSize + sizeTokenDelta),
+          price,
+          realisedPnl,
+          totalCollateral,
+          totalIncreasedSize,
           averagePrice,
         }
         positions.push(pos)
@@ -166,9 +180,8 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
     return positions
   }, [orders, position, protocol])
   const currentOrder = orders.find((e) => e.id === markerId)
-
   const timezone = useMemo(() => new Date().getTimezoneOffset() * 60, [])
-  const chartData: LineData[] = useMemo(() => {
+  const chartData: (LineData & { roi?: number; minRoi?: number; maxRoi?: number })[] = useMemo(() => {
     if (!data) return []
     const tempData = [...data].filter((e) => e.timestamp > dayjs(openOrder?.blockTime).utc().valueOf())
 
@@ -215,6 +228,8 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
       chartData
         .map((e, index) => {
           const marketPrice = e.close
+          const highPrice = e.high
+          const lowPrice = e.low
           const tickTime = dayjs(e.timestamp).utc()
           const posIndex = tickPositions.findIndex((p: TickPosition) => p.time > e.timestamp)
           const pos = tickPositions[posIndex - 1]
@@ -232,7 +247,17 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
               ? position.lastSizeNumber * avgPrice
               : position.size
 
-          const pnl = calcPnL(position.isLong, avgPrice, marketPrice, size)
+          const realisedPnl = (pos ?? tickPositions[tickPositions.length - 1])?.realisedPnl || 0
+
+          const pnl = realisedPnl + calcPnL(position.isLong, avgPrice, marketPrice, pos ? pos.size : size)
+
+          const maxPnl = pos
+            ? realisedPnl + calcPnL(position.isLong, avgPrice, position.isLong ? highPrice : lowPrice, pos.size)
+            : position.realisedPnl
+          const minPnl = pos
+            ? realisedPnl + calcPnL(position.isLong, avgPrice, position.isLong ? lowPrice : highPrice, pos.size)
+            : position.realisedPnl
+
           // const pnlInToken = calcPnLBySizeInToken(position.isLong, avgPrice, marketPrice, realSizeInToken)
           // const pnl = pnlInToken * pos.price
           // const value = useTokenValue
@@ -241,16 +266,25 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
           //     : pnlInToken
           const value = !isOpening && index === chartData.length - 1 ? position.pnl : pnl
 
+          const totalCollateral = pos?.totalCollateral || position.collateral
+          const totalIncreasedSize = pos?.totalIncreasedSize || position.size
+
           return {
             value,
+            roi:
+              totalCollateral || totalIncreasedSize
+                ? (value * 100) / (totalCollateral || totalIncreasedSize)
+                : undefined,
+            minRoi: (minPnl * 100) / (totalCollateral || totalIncreasedSize),
+            maxRoi: (maxPnl * 100) / (totalCollateral || totalIncreasedSize),
             time: tickTime.unix() - timezone,
-          } as LineData
+          } as LineData & { roi?: number; minRoi?: number; maxRoi?: number }
         })
         .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
     )
   }, [data, openOrder, orders, prices, to, nextHoursParam, nextHours])
 
-  const chartFutureData: LineData[] = useMemo(() => {
+  const chartFutureData: (LineData & { roi?: number })[] = useMemo(() => {
     if (!data || isOpening || ((!nextHours || nextHours < 1) && (!nextHoursParam || nextHoursParam < 1))) return []
     const chartData = data.filter((e) => e.timestamp > to)
     chartData.push({
@@ -266,11 +300,12 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
         .sort((x, y) => (x.timestamp < y.timestamp ? -1 : x.timestamp > y.timestamp ? 1 : 0))
         .map((e, index) => {
           const marketPrice = e.close
-          const pnl = calcOpeningPnL(position, marketPrice)
+          const pnl = index === 0 ? position.pnl : calcOpeningPnL(position, marketPrice)
           return {
-            value: index === 0 ? position.pnl : pnl,
+            value: pnl,
+            roi: position.collateral ? (pnl * 100) / position.collateral : undefined,
             time: dayjs(e.timestamp).utc().unix() - timezone,
-          } as LineData
+          } as LineData & { roi?: number }
         })
         .sort((x, y) => (x.time < y.time ? -1 : x.time > y.time ? 1 : 0)) ?? []
     )
@@ -341,6 +376,14 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
       )
     }
   }, [])
+
+  useEffect(() => {
+    if (tickPositions.length > 0 && priceData.length > 1) {
+      setRealisedPnl(tickPositions[tickPositions.length - 1]?.realisedPnl)
+    } else {
+      setRealisedPnl(undefined)
+    }
+  }, [tickPositions, priceData])
 
   const chartContainerId = ELEMENT_IDS.POSITION_CHART_PNL + chartId
   const legendContainerId = 'legend-profit' + chartId
@@ -526,6 +569,21 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
     }
 
     if (chartData.length > 0) {
+      let minRoiData
+      let maxRoiData
+      if (position.status !== PositionStatusEnum.OPEN) {
+        minRoiData = chartData[0]
+        maxRoiData = chartData[0]
+        for (let i = 0; i < chartData.length; i++) {
+          if (chartData[i]?.minRoi && chartData[i].minRoi! < minRoiData.minRoi!) {
+            minRoiData = chartData[i]
+          }
+          if (chartData[i]?.maxRoi && chartData[i].maxRoi! > maxRoiData.maxRoi!) {
+            maxRoiData = chartData[i]
+          }
+        }
+      }
+
       if (high && low && low.value !== high.value) {
         const increaseMarkers = increaseList.slice(1).map((order): SeriesMarker<Time> => {
           return {
@@ -589,6 +647,32 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
           }
           makers.push(closeMarkers)
         }
+
+        if (minRoiData?.minRoi && minRoiData.minRoi < 0) {
+          const minRoiMarker: SeriesMarker<Time> = {
+            id: 'minRoi',
+            color: themeColors.red2,
+            position: 'belowBar',
+            shape: 'circle',
+            size: 0.75,
+            time: minRoiData.time as Time,
+            text: `Max Drawdown: ${formatNumber(minRoiData.minRoi || 0, 2)}%`,
+          }
+          makers.push(minRoiMarker)
+        }
+        if (maxRoiData?.maxRoi && maxRoiData.maxRoi > 0) {
+          const maxRoiMarker: SeriesMarker<Time> = {
+            id: 'maxRoi',
+            color: themeColors.green1,
+            position: 'aboveBar',
+            shape: 'circle',
+            size: 0.75,
+            time: maxRoiData.time as Time,
+            text: `Peak Profit: ${formatNumber(maxRoiData.maxRoi || 0, 2)}%`,
+          }
+          makers.push(maxRoiMarker)
+        }
+
         series.setMarkers(makers.sort((a, b) => Number(a.time) - Number(b.time)))
         series.priceScale().applyOptions({
           scaleMargins: {
@@ -623,8 +707,11 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
       const data = param.seriesData.get(series) as LineData
       const dataFuture = param.seriesData.get(futureSeries) as LineData
       const time = (dataFuture?.time ?? data?.time) as number
+      const dataRoi = chartData.find((e) => e.time === time)?.roi
+      const dataFutureRoi = chartFutureData.find((e) => e.time === time)?.roi
       setCrossMove({
         pnl: dataFuture?.value ?? data?.value,
+        roi: dataFutureRoi ?? dataRoi,
         time: time ? time + timezone : undefined,
       })
 

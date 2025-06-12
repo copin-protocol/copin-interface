@@ -4,7 +4,7 @@ import { ReactNode, memo, useMemo } from 'react'
 import styled from 'styled-components/macro'
 
 import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
-import { tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
+import { tableSettingsWithoutPnlStatistics } from 'components/@trader/TraderExplorerTableView/configs'
 import { ExternalTraderListSource } from 'components/@trader/TraderExplorerTableView/types'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { TraderData } from 'entities/trader.d'
@@ -54,7 +54,7 @@ interface StatProps {
   render?: (item: TraderData, index: number, externalSource?: ExternalTraderListSource | undefined) => ReactNode
 }
 
-const stats = tableSettings.filter((settings) => !IGNORE_FIELDS.includes(settings.id))
+const stats = tableSettingsWithoutPnlStatistics.filter((settings) => !IGNORE_FIELDS.includes(settings.id))
 const defaultColumns = stats.map((stat) => ({
   key: stat.id,
   title: stat.label,

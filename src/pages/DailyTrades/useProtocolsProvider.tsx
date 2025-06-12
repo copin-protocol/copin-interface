@@ -39,7 +39,7 @@ export function ProtocolsProvider({ children }: { children: JSX.Element | JSX.El
 
       const resetParams: Record<string, string | null> = {}
 
-      const protocolParams = convertProtocolToParams({ protocols: selectedProtocols ?? [] })
+      const protocolParams = convertProtocolToParams({ protocols: protocols ?? [] })
 
       if (!isClearAll) {
         setSearchParams({ [URL_PARAM_KEYS.PROTOCOL]: protocolParams, ...resetParams })

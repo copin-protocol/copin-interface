@@ -77,10 +77,8 @@ export default function BacktestSimpleModal({
           onClose={onDismiss}
         />
         <Divider my={3} />
-
         <TraderAddress address={account} protocol={protocol} />
         <Box mb={20} />
-
         {protocol && account && (
           <BacktestFormSimple
             protocol={protocol}

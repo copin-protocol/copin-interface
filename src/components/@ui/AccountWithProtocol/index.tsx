@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 import { GridProps } from 'styled-system'
 
 import AddressAvatar from 'components/@ui/AddressAvatar'
-import { Flex, Type } from 'theme/base'
+import { Flex } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { addressShorten } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
+import AddressText from '../AddressText'
 import ProtocolLogo from '../ProtocolLogo'
 
 export function AccountWithProtocol({
@@ -30,9 +30,7 @@ export function AccountWithProtocol({
       sx={{ alignItems: 'center', gap: 3, ...sx }}
     >
       <AddressAvatar address={address} size={size} />
-      <Type.Caption color="neutral1" width="80px" sx={{ ...textSx }}>
-        {addressShorten(address)}
-      </Type.Caption>
+      <AddressText address={address} sx={textSx} />
       <ProtocolLogo protocol={protocol} isActive={false} hasText={false} size={24} />
     </Flex>
   )

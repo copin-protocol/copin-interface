@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import {
   ArrowsIn,
   ArrowsOutSimple,
@@ -16,28 +17,36 @@ import SectionTitle from 'components/@ui/SectionTitle'
 import CurrencyOption from 'components/@widgets/CurrencyOption'
 import { PositionData } from 'entities/trader'
 import useInfiniteLoadMore from 'hooks/features/useInfiniteLoadMore'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useHeatmapStore } from 'hooks/store/useHeatmap'
 import useMyProfile from 'hooks/store/useMyProfile'
+import { getPairsParam } from 'pages/DailyTrades/helpers'
 import ActivityHeatmap from 'pages/TraderDetails/ActivityHeatmap'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
+import { ColumnData } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
 import VirtualList from 'theme/VirtualList'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { PairFilterEnum, ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
+import { parsePairsFromQueryString } from 'utils/helpers/transform'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 import PositionUpgradePlanIndicator from '../PositionUpgradePlanIndicator'
 import HLTraderPositionListView from '../TraderPositionsListView'
-import { drawerHistoryColumns, fullHistoryColumns, historyColumns } from '../configs/traderPositionRenderProps'
+import {
+  drawerHistoryColumns,
+  fullHistoryColumns,
+  getEntryColumn,
+  historyColumns,
+} from '../configs/traderPositionRenderProps'
 import useQueryClosedPositions from './useQueryClosedPositions'
 import useQueryClosedPositionsMobile from './useQueryClosedPositionsMobile'
-import { Trans } from '@lingui/macro'
 
 function getHighestPnl(array: any): number {
   let high = 0
@@ -69,8 +78,52 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
   const { heatmapVisible, setHeatmapVisible } = useHeatmapStore()
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
   const { sm, xl } = useResponsive()
+  const { searchParams, setSearchParams } = useSearchParams()
 
-  //
+  const { getListSymbol } = useMarketsConfig()
+  const defaultAllPairs = getListSymbol?.()
+  const pairsParam = searchParams['pairs'] as string | undefined
+  const isCopyAll = !pairsParam || pairsParam === PairFilterEnum.ALL
+
+  const pairs = useMemo(() => {
+    if (!pairsParam || pairsParam === PairFilterEnum.ALL) {
+      if (!defaultAllPairs?.length) return []
+      return defaultAllPairs
+    }
+    return parsePairsFromQueryString(pairsParam)
+  }, [pairsParam, defaultAllPairs])
+
+  const excludedPairsParam = searchParams['excludedPairs'] as string | undefined
+  const excludedPairs = useMemo(() => {
+    return parsePairsFromQueryString(excludedPairsParam)
+  }, [excludedPairsParam])
+
+  const handleChangePairs = useCallback(
+    (pairs: string[], excludedPairs: string[]) => {
+      const param = getPairsParam({ excludedPairs, pairs, defaultAllPairs })
+      setSearchParams(param)
+    },
+    [defaultAllPairs, setSearchParams]
+  )
+
+  useEffect(() => {
+    if (currentPosition) {
+      window.history.replaceState(
+        null,
+        '',
+        generatePositionDetailsRoute({
+          id: currentPosition.id,
+          protocol: currentPosition.protocol,
+          txHash: currentPosition.txHashes?.[0],
+          account: currentPosition.account,
+          logId: currentPosition.logId,
+          isLong: currentPosition.isLong,
+        })
+      )
+      setOpenDrawer(true)
+    }
+  }, [currentPosition, setCurrentPosition])
+
   const {
     tokenOptions,
     currencyOption,
@@ -86,10 +139,35 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
     maxAllowedRecords,
     isUnlimited,
     requiredPlanToUnlimitedPosition,
-  } = useQueryClosedPositions({ address, protocol, isExpanded })
+    forceSetPositions,
+  } = useQueryClosedPositions({
+    address,
+    protocol,
+    isExpanded,
+    pairs,
+    excludedPairs,
+    isCopyAll,
+  })
 
-  const tableSettings = isDrawer ? drawerHistoryColumns : xl && isExpanded ? fullHistoryColumns : historyColumns
+  const entryColumn = useMemo(() => {
+    return getEntryColumn(pairs, excludedPairs, handleChangePairs)
+  }, [pairs, excludedPairs, handleChangePairs])
+
+  let tableSettings: ColumnData<PositionData>[]
+  if (isDrawer) {
+    tableSettings = drawerHistoryColumns
+  } else if (xl && isExpanded) {
+    const cloned = [...fullHistoryColumns]
+    cloned.splice(2, 0, entryColumn)
+    tableSettings = cloned
+  } else {
+    tableSettings = historyColumns
+  }
+
+  // const tableSettings = isDrawer ? drawerHistoryColumns : xl && isExpanded ? fullHistoryColumns : historyColumns
+
   const data = closedPositions?.data
+
   const dataMeta = closedPositions?.meta
   const [expanding, setExpanding] = useState(false)
   const handleToggleExpand = () => {
@@ -103,7 +181,6 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
   //
 
   const history = useHistory()
-  const { searchParams } = useSearchParams()
   const nextHoursParam = useMemo(
     () =>
       searchParams?.[URL_PARAM_KEYS.WHAT_IF_NEXT_HOURS]
@@ -198,13 +275,13 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
             '.select__menu': { minWidth: 88 },
           }}
         >
-          <CurrencyOption
+          {/* <CurrencyOption
             options={tokenOptions}
             currentOption={currencyOption}
             handleChangeOption={(option) => {
               changeCurrency(option)
             }}
-          />
+          /> */}
           {!isDrawer && (
             <ButtonWithIcon
               icon={
@@ -324,6 +401,7 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
                 />
               ) : undefined
             }
+            scrollWhenDataChange={forceSetPositions}
           />
         )}
         {/* {isLoadingClosedPositions && (

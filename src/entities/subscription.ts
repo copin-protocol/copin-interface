@@ -26,8 +26,11 @@ export interface PaymentDetailsData {
   plan: SubscriptionPlanEnum
   price: number
   currency: string
-  amount: number
+  totalPaid: number
+  totalPaidInCurrency: number
   planDurationInDays: number
+  createdAt: string
+  period: number
 }
 
 export interface SubscriptionUsageData {
@@ -50,4 +53,13 @@ export interface SubscriptionDiscountCodeData {
   expiredTime: string
   startedTime: string
   createdAt: string
+}
+
+export interface SubscriptionPackageData {
+  originalPrice: number
+  price: number
+  currency: string
+  durationInMonths: number
+  plan: SubscriptionPlanEnum
+  checkoutElementUrl: string
 }

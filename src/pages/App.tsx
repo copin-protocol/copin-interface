@@ -5,6 +5,7 @@ import { Route, Switch } from 'react-router-dom'
 
 import NotFound from 'components/@ui/NotFound'
 import useModifyApolloClient from 'hooks/helpers/useModifyApolloClient'
+import { ProtocolFilterStoreInitializer } from 'hooks/store/useProtocolFilter'
 import Loading from 'theme/Loading'
 import { Box } from 'theme/base'
 import ROUTES from 'utils/config/routes'
@@ -58,10 +59,10 @@ function App() {
     ReactGA.initialize('G-SJ25F1YFSM', { gtagUrl: 'https://www.googletagmanager.com/gtag/js?id=G-SJ25F1YFSM' })
   }, [])
   useModifyApolloClient()
-
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <AppWrapper>
+        <ProtocolFilterStoreInitializer />
         <Suspense
           fallback={
             <Box p={4}>
