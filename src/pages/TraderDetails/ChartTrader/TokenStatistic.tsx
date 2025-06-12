@@ -317,19 +317,14 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
       sortBy: 'realisedPnl',
       style: { minWidth: '110px', textAlign: 'right' },
       render: (item) => {
-        return <PnlValueDisplay item={item} />
+        return (
+          <Type.Caption>
+            <SignedText value={item.realisedPnl} fontInherit minDigit={2} maxDigit={2} />
+          </Type.Caption>
+        )
       },
     },
   ]
-
-  const PnlValueDisplay = ({ item }: { item: any }) => {
-    const value = usePnlWithFee(item)
-    return (
-      <Type.Caption>
-        <SignedText value={value} fontInherit minDigit={2} maxDigit={2} />
-      </Type.Caption>
-    )
-  }
 
   return (
     <Table
