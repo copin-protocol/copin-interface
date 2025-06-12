@@ -72,6 +72,7 @@ const UsageTable = () => {
       {planQuotas.map((row) => {
         const quotaValue = Number(row[currentPlan.title as keyof typeof row])
         const usageValue = usage?.[row.usageKey as keyof typeof usage]
+        const remainingKeys = ['csvDownloads', 'monthlyAlerts']
 
         return (
           <Row key={row.name}>
@@ -81,14 +82,14 @@ const UsageTable = () => {
             <Cell
               flex={1}
               isHigher={
-                !!usageValue && quotaValue != null && row.usageKey !== 'csvDownloads' && usageValue > quotaValue
+                !!usageValue && quotaValue != null && !remainingKeys.includes(row.usageKey) && usageValue > quotaValue
               }
               isEqual={
-                !!usageValue && quotaValue != null && row.usageKey !== 'csvDownloads' && usageValue === quotaValue
+                !!usageValue && quotaValue != null && !remainingKeys.includes(row.usageKey) && usageValue === quotaValue
               }
             >
               {usageValue != null ? formatNumber(usageValue) : '--'}
-              {row.usageKey === 'csvDownloads' && (
+              {remainingKeys.includes(row.usageKey) && (
                 <>
                   {' '}
                   <Trans>remaining</Trans>
