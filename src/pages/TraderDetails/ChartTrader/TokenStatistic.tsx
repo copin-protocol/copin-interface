@@ -12,7 +12,7 @@ import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SortTypeEnum } from 'utils/config/enums'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
-import { formatSymbol, getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
+import { getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
 
 type TokenStatisticProps = {
   data: TraderTokenStatistic[] | undefined
@@ -317,14 +317,19 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
       sortBy: 'realisedPnl',
       style: { minWidth: '110px', textAlign: 'right' },
       render: (item) => {
-        return (
-          <Type.Caption>
-            <SignedText value={item.realisedPnl} fontInherit minDigit={2} maxDigit={2} />
-          </Type.Caption>
-        )
+        return <PnlValueDisplay item={item} />
       },
     },
   ]
+
+  const PnlValueDisplay = ({ item }: { item: any }) => {
+    const value = usePnlWithFee(item)
+    return (
+      <Type.Caption>
+        <SignedText value={value} fontInherit minDigit={2} maxDigit={2} />
+      </Type.Caption>
+    )
+  }
 
   return (
     <Table
