@@ -40,4 +40,5 @@ const PLAN_NUMBER_MAPPING = {
   [SubscriptionPlanEnum.STARTER]: 2,
   [SubscriptionPlanEnum.PRO]: 3,
   [SubscriptionPlanEnum.ELITE]: 4,
+  [SubscriptionPlanEnum.IF]: 5,
 }

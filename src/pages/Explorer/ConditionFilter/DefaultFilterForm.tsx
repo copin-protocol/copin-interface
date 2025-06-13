@@ -5,10 +5,10 @@ import Divider from 'components/@ui/Divider'
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
+import { useIsElite } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { Box, Flex } from 'theme/base'
-import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -40,6 +40,7 @@ export default function DefaultFilterForm({
   const [enableApply, setEnableApply] = useState(false)
   const { fieldsAllowed, pagePermission, userPermission } = useExplorerPermission()
   const { sm } = useResponsive()
+  const isEliteUser = useIsElite()
 
   const fieldOptions = useMemo(
     () =>
@@ -144,7 +145,7 @@ export default function DefaultFilterForm({
           enabledApply={
             enableApply || (currentTab === FilterTabEnum.DEFAULT && lastFilterTab !== FilterTabEnum.DEFAULT)
           }
-          showUpgradeWarning={myProfile?.plan !== SubscriptionPlanEnum.ELITE}
+          showUpgradeWarning={!isEliteUser}
         />
       </Box>
     </Flex>

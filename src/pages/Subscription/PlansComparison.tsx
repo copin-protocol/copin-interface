@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 
 import { Box, Flex, Grid, IconBox, Type } from 'theme/base'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { PLANS } from 'utils/config/subscription'
 
 import { usePlanPermissions } from './usePlanPermissions'
@@ -59,6 +60,7 @@ const renderValue = (value: ReactNode) => {
 const PlansComparison: React.FC = () => {
   const permissions = usePlanPermissions()
   if (!permissions) return null
+  const visiblePlans = PLANS.filter((e) => e.title !== SubscriptionPlanEnum.IF)
   return (
     <Box width="100%" overflowX="auto" mt={4}>
       <StyledTable>
@@ -66,7 +68,7 @@ const PlansComparison: React.FC = () => {
           <Box py={3}>
             <Type.LargeBold>FEATURES</Type.LargeBold>
           </Box>
-          {PLANS.map((plan) => (
+          {visiblePlans.map((plan) => (
             <Type.LargeBold key={plan.title} color={plan.color} sx={{ p: 3 }}>
               {plan.title} PLAN
             </Type.LargeBold>
@@ -80,7 +82,7 @@ const PlansComparison: React.FC = () => {
               {category.features.map((feature: any) => (
                 <FeatureRow key={feature.name} display="grid" sx={{ gridTemplateColumns: '1.5fr 1fr 1fr 1fr 1fr' }}>
                   <Type.Body sx={{ py: 3, textAlign: 'left' }}>{feature.name}</Type.Body>
-                  {PLANS.map((plan) => (
+                  {visiblePlans.map((plan) => (
                     <PlanCell key={plan.title} color={plan.color}>
                       {renderValue(feature[plan.title])}
                     </PlanCell>

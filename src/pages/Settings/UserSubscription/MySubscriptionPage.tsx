@@ -9,6 +9,7 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { useSubscriptionPlans } from 'hooks/features/subscription/useSubscriptionPlans'
+import { useIsElite, useIsIF } from 'hooks/features/subscription/useSubscriptionRestrict'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import FAQ from 'pages/Subscription/FAQ'
 import { SubscriptionColors, SubscriptionGrid, SubscriptionTitle } from 'pages/Subscription/styled'
@@ -18,7 +19,7 @@ import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
-import { PLANS, PlanConfig } from 'utils/config/subscription'
+import { IF_PLAN, PLANS, PlanConfig } from 'utils/config/subscription'
 import { formatDate, formatNumber } from 'utils/helpers/format'
 
 import PlanDowngradeModal from './PlanDowngradeModal'
@@ -46,9 +47,13 @@ const MySubscriptionPage = () => {
   const [nextPlan, setNextPlan] = useState<PlanConfig | null>(null)
 
   const { profile } = useAuthContext()
+  const isEliteUser = useIsElite()
+  const isIFUser = useIsIF()
 
   const subscriptionPlans = useSubscriptionPlans()
-  const currentPlan = subscriptionPlans.find((plan) => plan.title === profile?.subscription?.plan) || PLANS[0]
+  const currentPlan = isIFUser
+    ? IF_PLAN
+    : subscriptionPlans.find((plan) => plan.title === profile?.subscription?.plan) || PLANS[0]
 
   const discountPercent = currentPlan.discountByPeriod?.[extendOption.value.toString()]
 
@@ -162,7 +167,7 @@ const MySubscriptionPage = () => {
                       </Type.Caption>
                     )}
                   </Box>
-                  {currentPlan.title !== SubscriptionPlanEnum.ELITE && (
+                  {!isEliteUser && (
                     <Box as={Link} width={['100%', 120]} to={ROUTES.SUBSCRIPTION.path}>
                       <Button variant="primary" block>
                         <Trans>Upgrade Plan</Trans>
@@ -171,7 +176,7 @@ const MySubscriptionPage = () => {
                   )}
                 </Flex>
               </Box>
-              {currentPlan.title !== SubscriptionPlanEnum.FREE && (
+              {currentPlan.title !== SubscriptionPlanEnum.FREE && !isIFUser && (
                 <>
                   <Divider my={3} />
                   <Type.BodyBold display="block">

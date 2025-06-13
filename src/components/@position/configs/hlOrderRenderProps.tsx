@@ -59,7 +59,7 @@ const sizeColumn: ColumnData<HlOrderData> = {
 }
 
 const sizeInTokenColumn: ColumnData<HlOrderData> = {
-  title: 'Value',
+  title: 'Size',
   dataIndex: 'sizeInTokenNumber',
   key: 'sizeInTokenNumber',
   sortBy: 'sizeInTokenNumber',
@@ -148,6 +148,7 @@ export const orderColumns: ColumnData<HlOrderData>[] = [
   symbolColumn,
   directionColumn,
   sizeColumn,
+  sizeInTokenColumn,
   priceColumn,
 ]
 

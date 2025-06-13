@@ -7,11 +7,13 @@ import { PROTOCOL_OPTIONS_MAPPING } from 'utils/config/protocols'
 
 import useInternalRole from '../useInternalRole'
 import useGetSubscriptionPermission from './useGetSubscriptionPermission'
+import { useIsIF } from './useSubscriptionRestrict'
 
 export const useCopyTradeProtocol = () => {
   const isInternal = useInternalRole()
+  const isIFUser = useIsIF()
 
-  const allowedCopyTradeProtocols = isInternal ? Object.values(ProtocolEnum) : ALLOWED_COPYTRADE_PROTOCOLS
+  const allowedCopyTradeProtocols = isInternal || isIFUser ? Object.values(ProtocolEnum) : ALLOWED_COPYTRADE_PROTOCOLS
 
   return {
     allowedCopyTradeProtocols,
@@ -21,6 +23,7 @@ export const useCopyTradeProtocol = () => {
 
 export default function useProtocolPermission() {
   const isInternal = useInternalRole()
+  const isIFUser = useIsIF()
   const { userPermission, pagePermission } = useGetSubscriptionPermission<ProtocolPermission, ProtocolPermissionConfig>(
     {
       section: SubscriptionPermission.PROTOCOL,
@@ -32,14 +35,14 @@ export default function useProtocolPermission() {
     [protocolsAllowed]
   )
   const copyableProtocols = useMemo(() => {
-    return isInternal ? Object.values(ProtocolEnum) : ALLOWED_COPYTRADE_PROTOCOLS
-  }, [isInternal])
+    return isInternal || isIFUser ? Object.values(ProtocolEnum) : ALLOWED_COPYTRADE_PROTOCOLS
+  }, [isIFUser, isInternal])
   const releasedProtocols = useMemo(() => {
-    return isInternal ? Object.values(ProtocolEnum) : RELEASED_PROTOCOLS
-  }, [isInternal])
+    return isInternal || isIFUser ? Object.values(ProtocolEnum) : RELEASED_PROTOCOLS
+  }, [isIFUser, isInternal])
   const allowedCopyTradeProtocols = useMemo(() => {
     return copyableProtocols.filter((v) => protocolsAllowed.includes(v))
-  }, [isInternal, protocolsAllowed])
+  }, [copyableProtocols, protocolsAllowed])
   const allowedCopyTradeDCPProtocols = useMemo(() => {
     return DCP_SUPPORTED_PROTOCOLS.filter((v) => protocolsAllowed.includes(v))
   }, [protocolsAllowed])

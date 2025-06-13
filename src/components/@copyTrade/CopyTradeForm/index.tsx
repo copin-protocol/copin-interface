@@ -18,6 +18,7 @@ import { ProtocolPermission, ProtocolPermissionConfig } from 'entities/permissio
 import useCheckCopyTradeExchange from 'hooks/features/copyTrade/useCheckCopyExchange'
 import useCopyTradePermission from 'hooks/features/subscription/useCopyTradePermission'
 import useGetSubscriptionPermission from 'hooks/features/subscription/useGetSubscriptionPermission'
+import { useIsIF } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useGetTokensTraded from 'hooks/features/trader/useGetTokensTraded'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useInternalRole from 'hooks/features/useInternalRole'
@@ -189,6 +190,7 @@ const CopyTraderForm = ({
 
   const { disabledExchanges } = useCheckCopyTradeExchange()
   const isInternal = useInternalRole()
+  const isIFUser = useIsIF()
 
   const { userPermission, pagePermission } = useCopyTradePermission()
   const { userPermission: userProtocolPermission, pagePermission: pageProtocolPermission } =
@@ -246,7 +248,8 @@ const CopyTraderForm = ({
   const [isOpenUpgradeModal, setIsOpenUpgradeModal] = useState(defaultOpenUpgradeModal)
   const [submitting, setSubmitting] = useState(false)
 
-  const cexOptions = isInternal ? internalExchangeOptions : getExchangeOptions({ userPermission, pagePermission })
+  const cexOptions =
+    isInternal || isIFUser ? internalExchangeOptions : getExchangeOptions({ userPermission, pagePermission })
   const options = (
     isVault
       ? vaultExchangeOptions
@@ -365,7 +368,7 @@ const CopyTraderForm = ({
   }, [clearErrors, copyWalletId])
 
   const permissionToSelectProtocol = !isLite && (isEdit || isClone) && !isBulkEdit
-  const disabledSelectWallet = isClone && !isInternal
+  const disabledSelectWallet = isClone && !isInternal && !isIFUser
   const hiddenSelectWallet = isEdit || isLite || isOnboarding || isBulkEdit
   const isSubmitting = requestSubmitting || submitting
   const protocolOptions = useMemo(() => {

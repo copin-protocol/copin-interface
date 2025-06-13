@@ -330,6 +330,7 @@ export enum SubscriptionPlanEnum {
   STARTER = 'STARTER',
   PRO = 'PRO',
   ELITE = 'ELITE',
+  IF = 'IF',
 }
 
 export enum MaxCopyTradeQuotaEnum {

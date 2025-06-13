@@ -2,10 +2,11 @@ import { useMemo } from 'react'
 
 import { LiveTradesPermission, LiveTradesPermissionConfig } from 'entities/permission'
 import { SYMBOL_ALLOWED_ALL } from 'utils/config/constants'
-import { SubscriptionPermission, SubscriptionPlanEnum } from 'utils/config/enums'
+import { SubscriptionPermission } from 'utils/config/enums'
 import { getRequiredPlan } from 'utils/helpers/permissionHelper'
 
 import useGetSubscriptionPermission from './useGetSubscriptionPermission'
+import { useIsElite } from './useSubscriptionRestrict'
 
 export default function useLiveTradesPermission() {
   const { userPermission, pagePermission, myProfile } = useGetSubscriptionPermission<
@@ -45,7 +46,7 @@ export default function useLiveTradesPermission() {
       !!pagePermission?.[plan]?.positionFieldsAllowed?.includes('account'),
   })
 
-  const isEliteUser = myProfile?.plan === SubscriptionPlanEnum.ELITE
+  const isEliteUser = useIsElite()
   const planToShowOrderDetails = getRequiredPlan({
     conditionFn: (plan) =>
       !!pagePermission?.[plan]?.orderFieldsAllowed?.includes(SYMBOL_ALLOWED_ALL as any) ||
