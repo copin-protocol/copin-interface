@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import NoDataFound from 'components/@ui/NoDataFound'
 import NFTCollectionLinks from 'components/@widgets/NFTCollectionLinks'
 import NFTSubscriptionCard from 'components/@widgets/NFTSubscriptionCard'
+import { useIsElite } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useUserSubscription from 'hooks/features/subscription/useUserSubscription'
 import { MobilePlanItem, usePlanConfigs } from 'pages/Subscription/v1/Plans'
 import { Tooltips } from 'pages/Subscription/v1/config'
@@ -64,6 +65,7 @@ export default function HasSubscription() {
 }
 
 export function PlanDetails({ plan }: { plan: SubscriptionPlanEnum }) {
+  const isEliteUser = useIsElite()
   const planConfigs = usePlanConfigs()
   const { sm } = useResponsive()
   let label = ''
@@ -91,7 +93,7 @@ export function PlanDetails({ plan }: { plan: SubscriptionPlanEnum }) {
         <Flex sx={{ alignItems: 'center', gap: 12 }}>
           <Icon />
           <Type.LargeBold color={color}>{label}</Type.LargeBold>
-          {plan !== SubscriptionPlanEnum.ELITE && (
+          {!isEliteUser && (
             <Button
               as={Link}
               to={ROUTES.SUBSCRIPTION.path}

@@ -28,6 +28,7 @@ export default function SubscriptionIcon({
       color = 'orange1'
       break
     case SubscriptionPlanEnum.ELITE:
+    case SubscriptionPlanEnum.IF:
       color = 'violet'
       break
   }

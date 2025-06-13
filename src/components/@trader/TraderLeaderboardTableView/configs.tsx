@@ -1,7 +1,6 @@
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import { TopTraderData } from 'entities/trader'
-import { usePnlWithFee } from 'hooks/features/usePnlWithFee'
 import { ColumnData } from 'theme/Table/types'
 import { Flex, Type } from 'theme/base'
 import { formatNumber } from 'utils/helpers/format'

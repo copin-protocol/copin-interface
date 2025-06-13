@@ -41,15 +41,27 @@ export function useCheckCopyTradeAction() {
 export function useIsPro() {
   const myProfile = useMyProfileStore((state) => state.myProfile)
   const isPremiumUser = myProfile?.subscription?.plan
-    ? [SubscriptionPlanEnum.PRO, SubscriptionPlanEnum.ELITE].includes(myProfile.subscription.plan)
+    ? [SubscriptionPlanEnum.PRO, SubscriptionPlanEnum.ELITE, SubscriptionPlanEnum.IF].includes(
+        myProfile.subscription.plan
+      )
     : null
   return isPremiumUser
 }
 
 export function useIsElite() {
   const myProfile = useMyProfileStore((state) => state.myProfile)
-  const isEliteUser = myProfile ? myProfile.subscription?.plan === SubscriptionPlanEnum.ELITE : null
+  const isEliteUser = myProfile?.subscription?.plan
+    ? [SubscriptionPlanEnum.ELITE, SubscriptionPlanEnum.IF].includes(myProfile.subscription.plan)
+    : null
   return isEliteUser
+}
+
+export function useIsIF() {
+  const myProfile = useMyProfileStore((state) => state.myProfile)
+  const isIFUser = myProfile?.subscription?.plan
+    ? [SubscriptionPlanEnum.IF].includes(myProfile.subscription.plan)
+    : null
+  return isIFUser
 }
 
 export function useIsProAndAction() {

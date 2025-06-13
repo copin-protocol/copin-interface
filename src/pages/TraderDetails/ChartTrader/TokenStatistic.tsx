@@ -12,7 +12,7 @@ import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { SortTypeEnum } from 'utils/config/enums'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
-import { formatSymbol, getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
+import { getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
 
 type TokenStatisticProps = {
   data: TraderTokenStatistic[] | undefined

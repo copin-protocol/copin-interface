@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import { getSubscriptionPlansApi } from 'apis/subscription'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { PLANS, PlanConfig } from 'utils/config/subscription'
 
@@ -21,6 +22,9 @@ export const useSubscriptionPlans = () => {
         }
       }) ?? []
 
-    return [PLANS[0], ...plans.filter((plan) => plan !== null)] as PlanConfig[]
+    return [
+      PLANS[0],
+      ...plans.filter((plan) => plan !== null && plan.title !== SubscriptionPlanEnum.IF),
+    ] as PlanConfig[]
   }, [subscriptionPlans])
 }

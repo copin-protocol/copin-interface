@@ -14,6 +14,7 @@ import { SxProps } from 'theme/types'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
 import ROUTES from 'utils/config/routes'
 import { PLANS } from 'utils/config/subscription'
+import { checkHighestPlan } from 'utils/helpers/permissionHelper'
 
 export default function UpgradeButton({
   icon = <CrownSimple size={16} style={{ color: themeColors.primary1 }} weight="fill" />,
@@ -43,7 +44,7 @@ export default function UpgradeButton({
   const { userNextPlan } = useUserNextPlan()
   const currentPlan = PLANS.find((plan) => plan.title === myProfile?.subscription?.plan)
   const requiredPlanId = PLANS.find((plan) => plan.title === requiredPlan)?.id
-  const isHighestPlan = currentPlan?.id === PLANS.length - 1
+  const isHighestPlan = checkHighestPlan(currentPlan?.title as SubscriptionPlanEnum)
   const linkToSubscription = `${ROUTES.SUBSCRIPTION.path}?plan=${requiredPlan ?? userNextPlan}`
 
   if (isHighestPlan || (requiredPlanId && currentPlan && currentPlan.id >= requiredPlanId)) return null

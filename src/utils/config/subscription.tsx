@@ -52,6 +52,18 @@ export const PLANS: PlanConfig[] = [
     ],
     color: 'violet',
   },
+  {
+    id: 4,
+    title: SubscriptionPlanEnum.IF,
+    price: 999,
+    yearlyDiscountPercent: 20,
+    features: [
+      'For funds and full-time traders. Access the full suite of tools, expert insights, and create your own trading signals',
+    ],
+    color: 'violet',
+  },
 ]
 
 export const PRO_PLAN = PLANS.find((plan) => plan.title === SubscriptionPlanEnum.PRO) as PlanConfig
+
+export const IF_PLAN = PLANS.find((plan) => plan.title === SubscriptionPlanEnum.IF) as PlanConfig

@@ -10,3 +10,7 @@ export function getRequiredPlan({ conditionFn }: { conditionFn: (plan: Subscript
   }
   return requiredPlan
 }
+
+export function checkHighestPlan(plan?: SubscriptionPlanEnum) {
+  return plan ? [SubscriptionPlanEnum.ELITE, SubscriptionPlanEnum.IF].includes(plan) : false
+}

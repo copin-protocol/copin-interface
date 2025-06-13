@@ -5,7 +5,6 @@ import { OpenInterestMarketData, ProtocolsStatisticData } from 'entities/statist
 import { PositionStatisticCounter, ResponsePositionData } from 'entities/trader.d'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum, TimeframeEnum } from 'utils/config/enums'
-import { capitalizeFirstLetter } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
 import { apiWrapper } from './helpers'

@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
 
 import { DataPermissionConfig, ExplorerPermission } from 'entities/permission'
-import { SubscriptionPermission, SubscriptionPlanEnum } from 'utils/config/enums'
+import { SubscriptionPermission } from 'utils/config/enums'
 import { getRequiredPlan } from 'utils/helpers/permissionHelper'
 
 import useGetSubscriptionPermission from './useGetSubscriptionPermission'
+import { useIsElite } from './useSubscriptionRestrict'
 
 export default function useExplorerPermission() {
   const { userPermission, pagePermission, myProfile } = useGetSubscriptionPermission<
@@ -15,7 +16,7 @@ export default function useExplorerPermission() {
   })
   const fieldsAllowed = useMemo(() => userPermission?.fieldsAllowed ?? [], [userPermission?.fieldsAllowed])
   const protocolsAllowed = useMemo(() => userPermission?.protocol ?? [], [userPermission?.protocol])
-  const isEliteUser = myProfile?.plan === SubscriptionPlanEnum.ELITE
+  const isEliteUser = useIsElite()
   const enableExport = (userPermission?.exportExcelQuota ?? 0) > 0
   const planToExport = getRequiredPlan({ conditionFn: (plan) => (pagePermission?.[plan]?.exportExcelQuota ?? 0) > 0 })
   const isEnableRankingFilter = userPermission?.isEnableRankingFilter
