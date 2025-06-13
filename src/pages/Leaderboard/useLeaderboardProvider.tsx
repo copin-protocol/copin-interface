@@ -74,7 +74,8 @@ export function LeaderboardProvider({ children }: { children: ReactNode }) {
   const currentPage = getInitNumberValue(searchParams, PAGE_PARAM_KEY, 1)
   const currentLimit = getInitNumberValue(searchParams, LIMIT_PARAM_KEY, DEFAULT_LIMIT)
   const changeCurrentPage = (page: number) => setSearchParams({ [PAGE_PARAM_KEY]: page.toString() })
-  const changeCurrentLimit = (limit: number) => setSearchParams({ [LIMIT_PARAM_KEY]: limit.toString() })
+  const changeCurrentLimit = (limit: number) =>
+    setSearchParams({ [LIMIT_PARAM_KEY]: limit.toString(), [PAGE_PARAM_KEY]: '1' })
 
   const currentOption = getInitOption({
     initOption: (searchParams[TYPE_PARAM_KEY] as string) ?? '',

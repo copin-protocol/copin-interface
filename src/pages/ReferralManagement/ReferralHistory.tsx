@@ -83,7 +83,7 @@ export default function ReferralHistory() {
   }, [currentLimit, currentFilterStatus, currentFilterType, currentPage, currentSortBy, currentSortType, currentTab])
 
   const changeCurrentPage = (page: number) => setSearchParams({ ['page']: page.toString() })
-  const changeCurrentLimit = (limit: number) => setSearchParams({ ['limit']: limit.toString() })
+  const changeCurrentLimit = (limit: number) => setSearchParams({ ['limit']: limit.toString(), ['page']: undefined })
   const changeCurrentSort: TableProps<any, any>['changeCurrentSort'] = (sort) => {
     setSearchParams({ ['sort_by']: sort?.sortBy as any, ['sort_type']: sort?.sortType, ['page']: '1' })
   }

@@ -75,7 +75,7 @@ const valueColumn: ColumnData<HlTwapOrderData> = {
   title: 'Value',
   dataIndex: 'sizeNumber',
   key: 'sizeNumber',
-  style: { minWidth: '100px', textAlign: 'right' },
+  style: { minWidth: '90px', textAlign: 'right' },
   render: (item) => (
     <Type.Caption color="neutral1">{item.sizeNumber ? formatNumber(item.sizeNumber, 0, 0) : '--'}</Type.Caption>
   ),
@@ -84,7 +84,7 @@ const sizeColumn: ColumnData<HlTwapOrderData> = {
   title: 'Size',
   dataIndex: 'sizeInTokenNumber',
   key: 'sizeInTokenNumber',
-  style: { minWidth: '100px', textAlign: 'right' },
+  style: { minWidth: '90px', textAlign: 'right' },
   render: (item) => (
     <Type.Caption color="neutral1">
       {item.sizeInTokenNumber ? formatNumber(item.sizeInTokenNumber, 2, 2) : '--'}
@@ -95,7 +95,7 @@ const priceColumn: ColumnData<HlTwapOrderData> = {
   title: 'Price',
   dataIndex: 'priceNumber',
   key: 'priceNumber',
-  style: { minWidth: '100px', textAlign: 'right' },
+  style: { minWidth: '90px', textAlign: 'right' },
   render: (item) => (
     <Type.Caption color="neutral1">
       {item.priceNumber ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 }) : '--'}
@@ -113,7 +113,7 @@ const pnlColumn: ColumnData<HlTwapOrderData> = {
   title: 'PnL',
   dataIndex: 'pnl',
   key: 'pnl',
-  style: { minWidth: '105px', textAlign: 'right' },
+  style: { minWidth: '100px', textAlign: 'right' },
   render: (item) => (
     <Type.Caption color="neutral3">
       {!!item.pnl ? <SignedText value={item.pnl} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
@@ -155,6 +155,7 @@ export const twapColumns: ColumnData<HlTwapOrderData>[] = [
   directionColumn,
   valueColumn,
   priceColumn,
+  pnlColumn,
   twapIdColumn,
 ]
 
@@ -162,7 +163,6 @@ export const drawerTwapColumns: ColumnData<HlTwapOrderData>[] = [
   timeColumn,
   pairColumn,
   directionColumn,
-  startPositionColumn,
   sizeColumn,
   valueColumn,
   priceColumn,

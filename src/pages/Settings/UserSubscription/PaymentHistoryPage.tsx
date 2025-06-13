@@ -115,7 +115,7 @@ const PaymentHistoryPage = () => {
   const currentPage = Number((searchParams['page'] as string) ?? 1)
   const currentLimit = Number((searchParams['limit'] as string) ?? DEFAULT_LIMIT)
   const changeCurrentPage = (page: number) => setSearchParams({ ['page']: page.toString() })
-  const changeCurrentLimit = (limit: number) => setSearchParams({ ['limit']: limit.toString() })
+  const changeCurrentLimit = (limit: number) => setSearchParams({ ['limit']: limit.toString(), ['page']: undefined })
   const { data, isLoading } = useQuery(
     [QUERY_KEYS.GET_SUBSCRIPTION_PAYMENT_HISTORY, profile?.id, currentPage, currentLimit],
     () => getSubscriptionPaymentHistoryApi({ page: currentPage, limit: currentLimit }),
