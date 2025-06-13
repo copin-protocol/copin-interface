@@ -152,7 +152,9 @@ export function FilterTradersProvider({
   const currentPage = Number(searchParams[URL_PARAM_KEYS.PAGE] ?? 1) // use page param instead of currentPage to reset it in GlobalFilterProtocol
   const changeCurrentPage = (page: number) => setSearchParams({ [URL_PARAM_KEYS.PAGE]: `${page}` })
   const currentLimit = Number(searchParams[URL_PARAM_KEYS.LIMIT] ?? DEFAULT_LIMIT) // use page param instead of currentPage to reset it in GlobalFilterProtocol
-  const changeCurrentLimit = (limit: number) => setSearchParams({ [URL_PARAM_KEYS.LIMIT]: `${limit}` })
+  const changeCurrentLimit = (limit: number) => {
+    setSearchParams({ [URL_PARAM_KEYS.LIMIT]: `${limit}`, [URL_PARAM_KEYS.PAGE]: undefined })
+  }
 
   const { userPermission } = useExplorerPermission()
   const filters = getInitFilters({

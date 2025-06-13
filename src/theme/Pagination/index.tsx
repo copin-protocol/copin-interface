@@ -221,7 +221,6 @@ export function PaginationWithLimit({
                     role="button"
                     onClick={() => {
                       onLimitChange(v)
-                      onPageChange(1)
                     }}
                     sx={{ py: '4px !important', color: 'neutral1' }}
                     isActive={v === currentLimit}
