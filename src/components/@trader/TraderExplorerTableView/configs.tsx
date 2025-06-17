@@ -170,7 +170,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
       gte: 100,
     },
     id: 'pnl',
-    render: (item) => <PnlValueDisplay item={item} />,
+    render: (item) => <SignedText value={item.pnl} maxDigit={0} prefix="$" />,
   },
   unrealisedPnl: {
     style: { minWidth: ['130px', '150px'] },
@@ -712,12 +712,6 @@ const ShowMaxDrawDown = ({ item, field }: { item: ResponseTraderData; field: key
   ) : (
     <Text text="Updating..." /> //TO DO (BE): Provide maxDrawdownPnl data
   )
-}
-
-const PnlValueDisplay = ({ item }: { item: any }) => {
-  // const value = usePnlWithFee(item)
-
-  return <SignedText value={item.pnl} maxDigit={0} prefix="$" />
 }
 
 const tableColumnKeys: (keyof TraderData)[] = [

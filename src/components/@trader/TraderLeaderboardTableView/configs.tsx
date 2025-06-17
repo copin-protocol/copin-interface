@@ -112,12 +112,3 @@ export const leaderboardColumns: ColumnData<TopTraderData, ExternalLeaderboardSo
     ), //TODO: request BE
   },
 ]
-// const PnlValueDisplay = ({ item }: { item: any }) => {
-//   const value = usePnlWithFee(item)
-
-//   return (
-//     <Type.CaptionBold width="100%" color="neutral1" textAlign="right">
-//       <SignedText prefix="$" value={value} maxDigit={0} fontInherit />
-//     </Type.CaptionBold>
-//   )
-// }

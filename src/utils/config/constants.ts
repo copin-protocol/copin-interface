@@ -144,6 +144,10 @@ export const MAX_PERPDEX_ISSUE_DESCRIPTION = 800
 export const HYPERLIQUID_BUILDER_CODE = '0x055ba87dbff972e23bcf26ea4728c31e05240e66'
 export const HYPERLIQUID_BUILDER_MAX_FEES = '0.1%'
 
+export const DISABLED_FIELDS: Partial<Record<ProtocolEnum, string[]>> = {
+  [ProtocolEnum.HYPERLIQUID]: ['pnl', 'roi', 'avgRoi', 'maxRoi'],
+}
+
 export const SUBSCRIPTION_COLLECTION_URL =
   NETWORK === 'devnet'
     ? 'https://testnets.opensea.io/collection/copin-subscription-3'

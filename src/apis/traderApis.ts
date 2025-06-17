@@ -14,6 +14,7 @@ import { TraderTokenStatistic } from 'entities/trader.d'
 import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import { PositionSortPros } from 'pages/TraderDetails'
 import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { hideField } from 'utils/config/hideFileld'
 import { capitalizeFirstLetter } from 'utils/helpers/transform'
 
 import { ApiListResponse } from './api'
@@ -199,9 +200,13 @@ export async function getTraderHistoryApi({
         break
     }
   }
-  return requester
-    .post(`${protocol}/${SERVICE}/filter/${account}`, normalizeTraderPayload(params))
-    .then((res: any) => normalizePositionResponse(res.data as ApiListResponse<ResponsePositionData>))
+  return requester.post(`${protocol}/${SERVICE}/filter/${account}`, normalizeTraderPayload(params)).then((res: any) => {
+    const normalize = normalizePositionResponse(res.data as ApiListResponse<ResponsePositionData>)
+    normalize.data = normalize.data.map((item) => {
+      return hideField(item as any)
+    })
+    return normalize
+  })
 }
 
 export async function getTradersCounter(
@@ -264,7 +269,7 @@ export async function getTraderStatisticApi({
 
     for (const key in data) {
       const _key = key as TimeFilterByEnum
-      normalizedData[_key] = normalizeTraderData(data[_key], pnlWithFeeEnabled)
+      normalizedData[_key] = normalizeTraderData(hideField(data[_key]) as ResponseTraderData, pnlWithFeeEnabled)
     }
 
     return normalizedData
