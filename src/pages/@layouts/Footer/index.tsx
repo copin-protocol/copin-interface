@@ -58,14 +58,14 @@ const Footer = ({ height }: { height: number }) => {
         </Type.Caption>
 
         <Flex flex="1" sx={{ alignItems: 'center', justifyContent: ['end'], gap: [1, 2] }}>
-          <PreferencesPanel
+          {/* <PreferencesPanel
             icon={<Gear size={16} className="glass" color="#EAE5E3" />}
             menu={<SwitchPnlButton />}
             menuSx={{ mb: '7px', right: '-50px' }}
             buttonSx={{ mt: 1, mx: '2px', display: ['block', 'none', 'none', 'none'] }}
             textColor="#EAE5E3"
-          />
-          <Box display={['block', 'none']} sx={{ width: '1px', height: '40px', bg: 'neutral4' }} />
+          /> */}
+          {/* <Box display={['block', 'none']} sx={{ width: '1px', height: '40px', bg: 'neutral4' }} /> */}
 
           <Flex alignItems={'center'}>
             <Box display={['block', 'none']} sx={{ transform: 'translateX(3px)', mx: '2px' }}>
@@ -89,13 +89,16 @@ const Footer = ({ height }: { height: number }) => {
             </Box>
           </Flex>
 
-          <Box display={['block']} sx={{ width: '1px', height: ['40px'], bg: 'neutral4', mx: ['0px', 0] }} />
-          <PreferencesPanel
+          {/* TODO: delete next line if data is correct */}
+          <Box display={['block', 'none']} sx={{ width: '1px', height: ['40px'], bg: 'neutral4', mx: ['0px', 0] }} />
+          {/* TODO: uncomment if data is correct */}
+          {/* <Box display={['block']} sx={{ width: '1px', height: ['40px'], bg: 'neutral4', mx: ['0px', 0] }} /> */}
+          {/* <PreferencesPanel
             icon={<Gear size={16} className="glass" color="#777e90" />}
             menu={<SwitchPnlButton />}
             menuSx={{ mb: '7px', right: '-13px' }}
             buttonSx={{ mt: '4px', mx: 1, display: ['none', 'block'] }}
-          />
+          /> */}
           <Box display={['none', 'block']} sx={{ width: '1px', height: '40px', bg: 'neutral4' }} />
 
           <Flex color="neutral3" sx={{ alignItems: 'center', gap: [2, 3] }}>

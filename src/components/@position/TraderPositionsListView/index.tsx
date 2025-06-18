@@ -140,5 +140,9 @@ export default function TraderPositionListView({
 const PnlValueDisplay = ({ position }: { position: any }) => {
   const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
   const pnl = pnlWithFeeEnabled ? position.pnl : position.realisedPnl
-  return <SignedText prefix="$" value={pnl} maxDigit={0} fontInherit />
+  return (
+    <Type.Caption>
+      <SignedText prefix="$" value={pnl} maxDigit={0} fontInherit />
+    </Type.Caption>
+  )
 }

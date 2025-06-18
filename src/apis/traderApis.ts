@@ -202,9 +202,6 @@ export async function getTraderHistoryApi({
   }
   return requester.post(`${protocol}/${SERVICE}/filter/${account}`, normalizeTraderPayload(params)).then((res: any) => {
     const normalize = normalizePositionResponse(res.data as ApiListResponse<ResponsePositionData>)
-    normalize.data = normalize.data.map((item) => {
-      return hideField(item as any)
-    })
     return normalize
   })
 }
