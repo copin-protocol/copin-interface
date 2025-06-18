@@ -79,7 +79,7 @@ const LiteWallet = () => {
         <Tabs
           sx={{
             width: '100%',
-            height: 'calc(100% - 36px)',
+            height: '100%',
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
@@ -119,7 +119,7 @@ const LiteWallet = () => {
         //   </Button>
         // </Flex>
       )}
-      <ContactLink />
+      {/* <ContactLink /> */}
     </Box>
   )
 }

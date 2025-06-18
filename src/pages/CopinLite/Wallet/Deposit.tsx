@@ -9,6 +9,8 @@ import { Box, Flex, Image, Type } from 'theme/base'
 import { ELEMENT_IDS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { parseChainImage, parseCollateralColorImage } from 'utils/helpers/transform'
 
+import ContactLink from './ContactLink'
+
 const LiteDeposit = ({ address }: { address: string }) => {
   const { lg } = useResponsive()
   const { searchParams, setSearchParams } = useSearchParams()
@@ -26,7 +28,7 @@ const LiteDeposit = ({ address }: { address: string }) => {
   return (
     <>
       <Flex mx="auto" justifyContent="center" py={[24, 24, 24, 12]} alignItems="center" sx={{ gap: 2 }}>
-        <Image src={parseChainImage('ARB')} height={28} />
+        <Image src={parseChainImage('ARB')} height={20} />
         <Type.CaptionBold>
           <Trans>Send USDC over Arbitrum</Trans>
         </Type.CaptionBold>
@@ -39,7 +41,7 @@ const LiteDeposit = ({ address }: { address: string }) => {
       >
         <QRCodeSVG
           value={address}
-          size={lg ? 120 : 200}
+          size={lg ? 90 : 200}
           imageSettings={{
             src: parseCollateralColorImage('USDC'),
             x: undefined,
@@ -51,7 +53,7 @@ const LiteDeposit = ({ address }: { address: string }) => {
           }}
         />
       </Box>
-      <CopyButton value={address} variant="outline" mt={[24, 24, 24, 3]} mx="auto">
+      <CopyButton value={address} variant="outline" mt={[24, 24, 24, 3]} mx="auto" sx={{ px: 10 }}>
         {address}
       </CopyButton>
       <Box
@@ -72,22 +74,15 @@ const LiteDeposit = ({ address }: { address: string }) => {
         }}
       >
         <Type.Caption>
-          <Trans>IMPORTANT:</Trans>
-        </Type.Caption>
-        <Type.Caption>
           <Trans>
             There is a <span>minimum</span> deposit of
             <span> 5 USDC</span>. This address can only receive
-            <span> USDC on the Arbitrum</span> network.
+            <span> USDC on the Arbitrum </span>network.
+            <span> Lower amounts or wrong networks will cause unrecoverable loss</span>
           </Trans>
         </Type.Caption>
-        <Type.Caption>
-          <span>
-            <Trans>Lower amounts or wrong networks will cause unrecoverable loss</Trans>
-          </span>
-          .
-        </Type.Caption>
       </Box>
+      <ContactLink />
     </>
   )
 }
