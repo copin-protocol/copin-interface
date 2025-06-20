@@ -2032,10 +2032,6 @@ msgstr "IF WALLET"
 msgid "IF Wallet"
 msgstr "IF Wallet"
 
-#: src/pages/CopinLite/Wallet/Deposit.tsx
-msgid "IMPORTANT:"
-msgstr "IMPORTANT:"
-
 #: src/pages/Home/Traders.tsx
 msgid "IN"
 msgstr "IN"
@@ -2407,10 +2403,6 @@ msgstr "Low Max Drawdown"
 #: src/utils/config/options.tsx
 msgid "Low Overtrading"
 msgstr "Low Overtrading"
-
-#: src/pages/CopinLite/Wallet/Deposit.tsx
-msgid "Lower amounts or wrong networks will cause unrecoverable loss"
-msgstr "Lower amounts or wrong networks will cause unrecoverable loss"
 
 #: src/pages/Settings/AlertDashboard/config.tsx
 msgid "MANAGE ALERT"
@@ -2865,6 +2857,10 @@ msgstr "No Protocol Found"
 msgid "No Rewards Found"
 msgstr "No Rewards Found"
 
+#: src/components/@position/HLTraderOpeningPositions/OrderTwapWrapper.tsx
+msgid "No TWAP orders are matched this filter"
+msgstr "No TWAP orders are matched this filter"
+
 #: src/pages/@layouts/Navbar/QuickSearchBox.tsx
 #: src/pages/@layouts/Navbar/QuickSearchBox.tsx
 #: src/pages/@layouts/Navbar/SearchBox.tsx
@@ -2914,6 +2910,7 @@ msgstr "No position found"
 
 #: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
 #: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
 #: src/components/@position/HLTraderPositionsListView/index.tsx
 #: src/components/@position/TraderPositionsListView/index.tsx
 msgid "No position was found"
@@ -3065,6 +3062,7 @@ msgstr "Open"
 msgid "Open Homepage"
 msgstr "Open Homepage"
 
+#: src/components/@position/HLTraderOpeningPositions/index.tsx
 #: src/pages/MyProfile/DCPManagement/index.tsx
 #: src/pages/MyProfile/IFManagement/index.tsx
 #: src/pages/MyProfile/IFManagement/index.tsx
@@ -3082,7 +3080,6 @@ msgid "Opening"
 msgstr "Opening"
 
 #: src/components/@position/CopyOpeningPositions/index.tsx
-#: src/components/@position/HLTraderOpeningPositions/index.tsx
 #: src/pages/MyProfile/IFManagement/HlOpeningPositions.tsx
 #: src/pages/TraderDetails/CopyManagementDrawer.tsx
 msgid "Opening Positions"
@@ -3174,6 +3171,10 @@ msgstr "POLICY"
 #: src/pages/Subscription/v1/Plans.tsx
 msgid "PREMIUM PLAN"
 msgstr "PREMIUM PLAN"
+
+#: src/pages/@layouts/Footer/index.tsx
+msgid "PRICING"
+msgstr "PRICING"
 
 #: src/pages/Stats/config.tsx
 msgid "PROFIT VS LOSS"
@@ -3352,6 +3353,10 @@ msgstr "PnL Ratio"
 #: src/components/@position/CopyPositionsListView/index.tsx
 msgid "PnL w. Fees"
 msgstr "PnL w. Fees"
+
+#: src/components/@trader/TraderExplorerTableView/configs.tsx
+msgid "Pnl Overtime"
+msgstr "Pnl Overtime"
 
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 #: src/utils/config/translations.tsx
@@ -4243,6 +4248,10 @@ msgstr "TRADING VOLUME"
 msgid "TVL"
 msgstr "TVL"
 
+#: src/components/@position/HLTraderOpeningPositions/index.tsx
+msgid "TWAP"
+msgstr "TWAP"
+
 #: src/pages/Settings/AlertLogs/configs.tsx
 msgid "TYPE"
 msgstr "TYPE"
@@ -4419,8 +4428,8 @@ msgid "The server is not responding, please try again later!"
 msgstr "The server is not responding, please try again later!"
 
 #: src/pages/CopinLite/Wallet/Deposit.tsx
-msgid "There is a <0>minimum</0> deposit of<1> 5 USDC</1>. This address can only receive<2> USDC on the Arbitrum</2> network."
-msgstr "There is a <0>minimum</0> deposit of<1> 5 USDC</1>. This address can only receive<2> USDC on the Arbitrum</2> network."
+msgid "There is a <0>minimum</0> deposit of<1> 5 USDC</1>. This address can only receive<2> USDC on the Arbitrum </2>network.<3> Lower amounts or wrong networks will cause unrecoverable loss</3>"
+msgstr "There is a <0>minimum</0> deposit of<1> 5 USDC</1>. This address can only receive<2> USDC on the Arbitrum </2>network.<3> Lower amounts or wrong networks will cause unrecoverable loss</3>"
 
 #: src/components/@ui/NotFound/index.tsx
 msgid "This Page Could Not Be Found"
@@ -4520,6 +4529,10 @@ msgstr "This trader alert has been subscribed successfully"
 msgid "This trader alert has been updated successfully"
 msgstr "This trader alert has been updated successfully"
 
+#: src/pages/TraderDetails/OutdatedDataHandler.tsx
+msgid "This trader data has been outdated (Last updated: {0}). We're working to restore full functionality as soon as possible."
+msgstr "This trader data has been outdated (Last updated: {0}). We're working to restore full functionality as soon as possible."
+
 #: src/components/@copyTrade/TraderCopyCountWarningIcon/index.tsx
 msgid "This trader is being copied by 10 or more copiers."
 msgstr "This trader is being copied by 10 or more copiers."
@@ -4527,6 +4540,10 @@ msgstr "This trader is being copied by 10 or more copiers."
 #: src/pages/MyProfile/NoDataOrSelect.tsx
 msgid "This trader list is empty"
 msgstr "This trader list is empty"
+
+#: src/components/@position/HLTraderOpeningPositions/OrderTwapWrapper.tsx
+msgid "This trader's TWAP orders is empty"
+msgstr "This trader's TWAP orders is empty"
 
 #: src/components/@position/HLTraderOpeningPositions/OrderFilledView.tsx
 msgid "This trader's orders filled is empty"
@@ -4773,7 +4790,6 @@ msgstr "UPCOMING"
 
 #: src/components/@subscription/PlanUpgradePrompt.tsx
 #: src/components/@subscription/UpgradeButton.tsx
-#: src/pages/@layouts/Footer/index.tsx
 #: src/pages/@layouts/Footer/index.tsx
 msgid "UPGRADE"
 msgstr "UPGRADE"
@@ -5069,6 +5085,7 @@ msgstr "Verify account"
 
 #: src/components/@position/HLTraderOpeningPositions/OpenOrdersView.tsx
 #: src/components/@position/HLTraderOpeningPositions/OrderFilledView.tsx
+#: src/components/@position/HLTraderOpeningPositions/OrderTwapWrapper.tsx
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 msgid "View All"
 msgstr "View All"

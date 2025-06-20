@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios'
 
 import {
   CheckAvailableResultData,
+  OrderData,
   PnlStatisticsResponse,
   ResponsePositionData,
   ResponseTraderData,
@@ -323,4 +324,14 @@ export async function preExportTradersCsvApi(payload: any) {
   return requester
     .post(`${SERVICE}/statistic/pre-download`, payload)
     .then((res: any) => res.data as { estimatedQuota: number; remainingQuota: number })
+}
+
+export async function getTraderLastOrder({
+  account,
+  protocol,
+}: {
+  account: string
+  protocol: ProtocolEnum
+}): Promise<OrderData | null> {
+  return requester.get(`${protocol}/order/${account}/last-order`).then((res: any) => res.data)
 }

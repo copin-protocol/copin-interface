@@ -28,7 +28,6 @@ import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import Loading from 'theme/Loading'
 import { Box, Flex } from 'theme/base'
-import { DISABLED_FIELDS } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { addressShorten } from 'utils/helpers/format'
@@ -41,6 +40,7 @@ import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
 import useHandleLayout from './Layouts/useHandleLayout'
+import OutdatedDataHandler from './OutdatedDataHandler'
 import ProtocolStats from './ProtocolStats'
 import TraderActionButtons from './TraderActionButtons'
 import TraderInfo from './TraderInfo'
@@ -189,25 +189,29 @@ export function TraderDetailsComponent({
           <ProtocolStats address={address} protocol={protocol} page="details" exchangeStats={exchangeStats} />
         }
         traderInfo={
-          <Flex
-            sx={{
-              width: '100%',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 3,
-            }}
-          >
-            <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
-            <TraderActionButtons
-              traderData={currentTraderData}
-              timeOption={timeOption}
-              onChangeTime={setTimeOption}
-              account={address}
-              protocol={protocol}
-              onCopyActionSuccess={onForceReload}
-            />
-          </Flex>
+          <Box>
+            <Flex
+              sx={{
+                width: '100%',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 3,
+              }}
+            >
+              <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
+              <TraderActionButtons
+                traderData={currentTraderData}
+                timeOption={timeOption}
+                onChangeTime={setTimeOption}
+                account={address}
+                protocol={protocol}
+                onCopyActionSuccess={onForceReload}
+              />
+            </Flex>
+
+            {protocol === ProtocolEnum.HYPERLIQUID && <OutdatedDataHandler account={address} />}
+          </Box>
         }
         traderChartPnl={
           <ChartTrader

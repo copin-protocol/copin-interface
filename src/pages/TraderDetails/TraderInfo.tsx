@@ -75,7 +75,21 @@ const TraderInfo = ({
             <ListCopyingTag address={address} protocol={protocol} />
           </Flex>
           <Flex sx={{ alignItems: 'center', gap: 2 }}>
-            <CopyButton type="button" variant="ghost" value={address} size="sm" iconSize={16} sx={{ p: 0 }} />
+            <CopyButton
+              type="button"
+              variant="ghost"
+              value={address}
+              size="sm"
+              iconSize={16}
+              sx={{
+                p: 0,
+                '& .icon_wrapper': {
+                  marginLeft: 1,
+                },
+              }}
+            >
+              {!!ensName && addressShorten(address, 3, 5)}
+            </CopyButton>
             <ExplorerLogo protocol={protocol} explorerUrl={`${explorerUrl}/address/${address}`} size={16} />
             <ShareProfile
               address={address}
