@@ -23,6 +23,7 @@ import { useHeatmapStore } from 'hooks/store/useHeatmap'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { getPairsParam } from 'pages/DailyTrades/helpers'
 import ActivityHeatmap from 'pages/TraderDetails/ActivityHeatmap'
+import OutdatedDataHandler from 'pages/TraderDetails/OutdatedDataHandler'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
@@ -262,9 +263,15 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
   return (
     <Box display={'flex'} flexDirection="column" height={'100%'}>
       <Flex pt={16} px={2} pb={12} alignItems="center">
-        <Box flex="1" sx={{ '& > *': { pb: 0 } }}>
-          <SectionTitle icon={ClockCounterClockwise} title="HISTORY" />
-        </Box>
+        <Flex flex="1" sx={{ justifyContent: 'start', alignItems: 'center', gap: 12 }}>
+          <SectionTitle
+            icon={ClockCounterClockwise}
+            title="HISTORY"
+            wrapperSx={{ width: 'fit-content' }}
+            sx={{ mb: 0 }}
+          />
+          {protocol === ProtocolEnum.HYPERLIQUID && <OutdatedDataHandler account={address} />}
+        </Flex>
         <Flex
           sx={{
             alignItems: 'center',
@@ -566,24 +573,26 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
         <Box flex="1" sx={{ '& > *': { pb: 0 } }}>
           {props.hasTitle ? <SectionTitle icon={ClockCounterClockwise} title="History" /> : <></>}
         </Box>
-        <Flex
-          sx={{
-            alignItems: 'center',
-            gap: 2,
-            '.select__control': { border: 'none !important' },
-            '.currency_option': { width: 'auto !important' },
-            '.select__value-container': { p: '0 !important', '*': { p: '0 !important' } },
-            '.select__menu': { minWidth: 88, transform: 'translateX(-32px)' },
-          }}
-        >
-          <CurrencyOption
-            options={tokenOptions}
-            currentOption={currencyOption}
-            handleChangeOption={(option) => {
-              changeCurrency(option)
+        <Flex justifyContent="space-between" alignItems="center" width="100%">
+          {protocol === ProtocolEnum.HYPERLIQUID && <OutdatedDataHandler account={address} />}
+          <Flex
+            sx={{
+              alignItems: 'center',
+              gap: 2,
+              '.select__control': { border: 'none !important' },
+              '.currency_option': { width: 'auto !important' },
+              '.select__value-container': { p: '0 !important', '*': { p: '0 !important' } },
+              '.select__menu': { minWidth: 88, transform: 'translateX(-32px)' },
             }}
-          />
-          {/* <ButtonWithIcon
+          >
+            <CurrencyOption
+              options={tokenOptions}
+              currentOption={currencyOption}
+              handleChangeOption={(option) => {
+                changeCurrency(option)
+              }}
+            />
+            {/* <ButtonWithIcon
             icon={
               <Box color={heatmapVisible ? 'primary1' : 'neutral3'}>
                 <ChartScatter fontVariant="bold" size={20} />
@@ -609,6 +618,7 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
           <Tooltip id="history_table_heatmap" place="bottom">
             <Type.Caption>Show/Hide Heatmap Activity</Type.Caption>
           </Tooltip> */}
+          </Flex>
         </Flex>
       </Flex>
       {/* {!isLoadingClosedPositions && !data?.length && !sm && <NoDataFound message="No positions history" />} */}

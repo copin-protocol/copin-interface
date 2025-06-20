@@ -4529,10 +4529,6 @@ msgstr "This trader alert has been subscribed successfully"
 msgid "This trader alert has been updated successfully"
 msgstr "This trader alert has been updated successfully"
 
-#: src/pages/TraderDetails/OutdatedDataHandler.tsx
-msgid "This trader data has been outdated (Last updated: {0}). We're working to restore full functionality as soon as possible."
-msgstr "This trader data has been outdated (Last updated: {0}). We're working to restore full functionality as soon as possible."
-
 #: src/components/@copyTrade/TraderCopyCountWarningIcon/index.tsx
 msgid "This trader is being copied by 10 or more copiers."
 msgstr "This trader is being copied by 10 or more copiers."
@@ -5788,6 +5784,10 @@ msgstr "{title}"
 #: src/pages/@layouts/Footer/index.tsx
 msgid "© {0} Copin."
 msgstr "© {0} Copin."
+
+#: src/pages/TraderDetails/OutdatedDataHandler.tsx
+msgid "⚠ Last Updated: {0}"
+msgstr "⚠ Last Updated: {0}"
 
 #: src/pages/@layouts/GettingStarted/index.tsx
 msgid "🎉 Welcome! Complete the welcome tasks to start copy-trading with Copin Lite!"

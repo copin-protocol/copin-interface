@@ -3,8 +3,7 @@ import { memo, useEffect, useRef, useState } from 'react'
 
 import { getHlOrderFilled } from 'apis/hyperliquid'
 import { getTraderLastOrder } from 'apis/traderApis'
-import { Flex, Type } from 'theme/base'
-import { themeColors } from 'theme/colors'
+import { Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { formatLocalDate } from 'utils/helpers/format'
@@ -36,28 +35,9 @@ const OutdatedDataHandler = memo(
     }, [account])
 
     return outdatedDate ? (
-      <Flex
-        sx={{
-          position: 'relative',
-          width: '100%',
-          height: 'max-content',
-          overflow: 'hidden',
-          bg: `${themeColors.orange1}15`,
-          p: '8px 16px',
-          alignItems: 'center',
-          transition: '0.3s',
-          color: 'orange1',
-          justifyContent: 'center',
-        }}
-      >
-        <Type.Caption>
-          <Trans>
-            This trader data has been outdated (Last updated:{' '}
-            {formatLocalDate(outdatedDate.getTime(), DAYJS_FULL_DATE_FORMAT)}). We&apos;re working to restore full
-            functionality as soon as possible.
-          </Trans>
-        </Type.Caption>
-      </Flex>
+      <Type.Caption color="orange1">
+        <Trans>⚠ Last Updated: {formatLocalDate(outdatedDate.getTime(), DAYJS_FULL_DATE_FORMAT)}</Trans>
+      </Type.Caption>
     ) : (
       <></>
     )

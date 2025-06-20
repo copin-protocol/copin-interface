@@ -40,7 +40,6 @@ import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
 import useHandleLayout from './Layouts/useHandleLayout'
-import OutdatedDataHandler from './OutdatedDataHandler'
 import ProtocolStats from './ProtocolStats'
 import TraderActionButtons from './TraderActionButtons'
 import TraderInfo from './TraderInfo'
@@ -209,8 +208,6 @@ export function TraderDetailsComponent({
                 onCopyActionSuccess={onForceReload}
               />
             </Flex>
-
-            {protocol === ProtocolEnum.HYPERLIQUID && <OutdatedDataHandler account={address} />}
           </Box>
         }
         traderChartPnl={
