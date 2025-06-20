@@ -94,7 +94,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     ),
   },
   pnlStatistics: {
-    style: { minWidth: ['120px', '150px'] },
+    style: { minWidth: ['120px', '150px'], textAlign: 'right' },
     text: <Trans>Pnl Overtime</Trans>,
     label: (
       <LabelWithTooltip id="tt_runtime_label" tooltip="Trader's PnL trend over time">
@@ -103,7 +103,11 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     ),
     visible: true,
     id: 'pnlStatistics',
-    render: (item) => <LoadingChartExplorer traderData={item} />,
+    render: (item) => (
+      <Flex justifyContent="flex-end">
+        <LoadingChartExplorer traderData={item} />
+      </Flex>
+    ),
   },
   lastTradeAtTs: {
     style: { minWidth: ['110px', '140px'] },
