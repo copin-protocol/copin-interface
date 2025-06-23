@@ -188,25 +188,27 @@ export function TraderDetailsComponent({
           <ProtocolStats address={address} protocol={protocol} page="details" exchangeStats={exchangeStats} />
         }
         traderInfo={
-          <Flex
-            sx={{
-              width: '100%',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 3,
-            }}
-          >
-            <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
-            <TraderActionButtons
-              traderData={currentTraderData}
-              timeOption={timeOption}
-              onChangeTime={setTimeOption}
-              account={address}
-              protocol={protocol}
-              onCopyActionSuccess={onForceReload}
-            />
-          </Flex>
+          <Box>
+            <Flex
+              sx={{
+                width: '100%',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 3,
+              }}
+            >
+              <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
+              <TraderActionButtons
+                traderData={currentTraderData}
+                timeOption={timeOption}
+                onChangeTime={setTimeOption}
+                account={address}
+                protocol={protocol}
+                onCopyActionSuccess={onForceReload}
+              />
+            </Flex>
+          </Box>
         }
         traderChartPnl={
           <ChartTrader

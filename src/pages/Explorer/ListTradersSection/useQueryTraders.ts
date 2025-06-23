@@ -12,6 +12,7 @@ import useSearchParams from 'hooks/router/useSearchParams'
 import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import { MAX_LIMIT } from 'utils/config/constants'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { hideField } from 'utils/config/hideFileld'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { extractFiltersFromFormValues } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
@@ -109,9 +110,13 @@ export default function useQueryTraders({
   let timeTradersData = timeTraders
   const { pnlWithFeeEnabled } = useUserPreferencesStore()
   if (!loadingTimeTraders && timeTraders) {
-    const formattedTimeTraders = timeTraders.data.map((trader) =>
-      getData(pnlWithFeeEnabled ? (trader as any) : (normalizeTraderData(trader) as any))
-    )
+    const formattedTimeTraders = timeTraders.data.map((trader) => {
+      const newData = hideField(trader)
+      const normalized = pnlWithFeeEnabled
+        ? (newData as ResponseTraderData)
+        : (normalizeTraderData(newData) as ResponseTraderData)
+      return getData(normalized)
+    })
     const data = { ...timeTraders, data: formattedTimeTraders } as BaseGraphQLResponse<ResponseTraderData>
     timeTradersData = data
   }

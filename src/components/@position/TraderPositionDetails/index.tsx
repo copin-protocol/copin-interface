@@ -24,6 +24,7 @@ import { DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum, TraderStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
+import { addressShorten } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import ListOrderTable from './ListOrderTable'
@@ -93,7 +94,9 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
                 <Button type="button" variant="ghost" sx={{ p: 0 }}>
                   <Flex flexDirection="column" textAlign="left">
                     <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2 }}>
-                      <Type.BodyBold sx={{ textTransform: 'none' }}>{ensName || data.account}</Type.BodyBold>
+                      <Type.BodyBold sx={{ textTransform: 'none' }}>
+                        {ensName || addressShorten(data.account)}
+                      </Type.BodyBold>
 
                       {isDrawer && (
                         <>

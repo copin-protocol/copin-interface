@@ -83,8 +83,7 @@ const useTimeFilterData = ({
     return { index: SEARCH_TRADER_STATISTIC_INDEX, body }
 
     return { index, body }
-  }, [requestData, selectedProtocols, timeOption, pnlWithFeeEnabled])
-
+  }, [requestData, selectedProtocols, timeOption])
   const {
     data: traders,
     loading,

@@ -6,7 +6,6 @@ import styled from 'styled-components/macro'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
-import { usePnlWithFee } from 'hooks/features/usePnlWithFee'
 import useLeaderboardProvider, { LeaderboardContextValues } from 'pages/Leaderboard/useLeaderboardProvider'
 import Accordion from 'theme/Accordion'
 import Loading from 'theme/Loading'
@@ -163,7 +162,10 @@ function TopLeaderboardMobile({ contextValues }: { contextValues: LeaderboardCon
                       <RowWrapper>
                         <RowItem label={<Trans>Total Trades</Trans>} value={formatNumber(traderData.totalTrade)} />
                         <RowItem label={<Trans>Total Wins</Trans>} value={formatNumber(traderData.totalWin)} />
-                        <RowItem label={<PnlTitle />} value={<PnlValueDisplay traderData={traderData} />} />
+                        <RowItem
+                          label={<PnlTitle />}
+                          value={<SignedText prefix="$" value={traderData.totalRealisedPnl} maxDigit={0} fontInherit />}
+                        />
                       </RowWrapper>
                     </Box>
                   }
@@ -218,11 +220,6 @@ function TopLeaderboardMobile({ contextValues }: { contextValues: LeaderboardCon
       </Flex>
     </Flex>
   )
-}
-const PnlValueDisplay = ({ traderData }: { traderData: any }) => {
-  const value = usePnlWithFee(traderData)
-
-  return <SignedText prefix="$" value={value} maxDigit={0} fontInherit />
 }
 
 const RowWrapper = styled(Box)`

@@ -39,6 +39,7 @@ import { PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { DATE_FORMAT } from 'utils/config/constants'
 import { ProtocolEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
+import { hideField } from 'utils/config/hideFileld'
 import { ELEMENT_IDS, QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { SUBSCRIPTION_PLAN_TRANSLATION, TIME_TRANSLATION } from 'utils/config/translations'
 import { formatDate, formatNumber } from 'utils/helpers/format'
@@ -421,10 +422,11 @@ function ListTraders({ filters }: { filters: FiltersState }) {
         >
           {traders &&
             traders.data?.map((traderData) => {
+              const normalizedData = hideField(traderData)
               return (
                 <TraderItem
                   key={traderData.id}
-                  traderData={traderData}
+                  traderData={normalizedData}
                   timeOption={filters.time}
                   onClickBacktest={onClickBacktest}
                   pnlData={pnlData}

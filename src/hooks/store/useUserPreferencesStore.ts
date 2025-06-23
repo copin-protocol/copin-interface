@@ -15,14 +15,14 @@ interface UserPreferences {
 const useUserPreferencesStore = create<UserPreferences>()(
   persist(
     immer((set) => ({
-      pnlWithFeeEnabled: true,
+      pnlWithFeeEnabled: false,
       setPnlWithFeeEnabled: (showRealisedWithFee) =>
         set((state) => {
           state.pnlWithFeeEnabled = showRealisedWithFee
         }),
     })),
     {
-      name: STORAGE_KEYS.SHOW_REALISED_PNL_WITH_FEE,
+      name: STORAGE_KEYS.USER_PREFERENCES,
       getStorage: () => localStorage,
     }
   )

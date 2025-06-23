@@ -179,7 +179,7 @@ export const STORAGE_KEYS = {
   GET_STARTED_LAST_CHECK: 'get_started_last_check',
   POSITION_TIME_TYPE: 'position_time_type',
   GLOBAL_PROTOCOLS: 'global_protocols',
-  SHOW_REALISED_PNL_WITH_FEE: 'show_realised_pnl_with_fee',
+  USER_PREFERENCES: 'user_preferences',
   PRIVY_CONNECTIONS: 'privy:connections',
   PAYMENT_ID: 'payment-id',
 }

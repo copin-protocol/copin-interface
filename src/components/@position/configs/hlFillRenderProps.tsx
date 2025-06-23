@@ -79,7 +79,7 @@ const sizeUsdColumn: ColumnData<GroupedFillsData> = {
   dataIndex: 'totalSize',
   key: 'totalSize',
   style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => <Type.Caption color="neutral1">{formatNumber(item.totalSize, 0)}</Type.Caption>,
+  render: (item) => <Type.Caption color="neutral1">${formatNumber(item.totalSize, 0)}</Type.Caption>,
 }
 
 const sizeTokenColumn: ColumnData<GroupedFillsData> = {

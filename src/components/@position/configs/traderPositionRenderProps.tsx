@@ -15,7 +15,6 @@ import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import TimeColumnTitleWrapper from 'components/@widgets/TimeColumeTitleWrapper'
 import { renderEntry, renderOpeningPnL, renderOpeningRoi, renderSizeOpening } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
-import { usePnlWithFee } from 'hooks/features/usePnlWithFee'
 import useGlobalStore from 'hooks/store/useGlobalStore'
 import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import SkullIcon from 'theme/Icons/SkullIcon'
@@ -29,7 +28,7 @@ import { compactNumber, formatDuration, formatLeverage, formatNumber } from 'uti
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 const orderCountColumn: ColumnData<PositionData> = {
-  title: 'Total Orders',
+  title: 'Orders',
   dataIndex: 'orderCount',
   key: 'orderCount',
   sortBy: 'orderCount',
@@ -284,7 +283,8 @@ const pnlColumn: ColumnData<PositionData> = {
 }
 //Pnl with fee - Apply with close position
 const PnlValueCell = ({ item, isCompactNumber = false }: { item: PositionData; isCompactNumber: boolean }) => {
-  const pnlValue = usePnlWithFee(item)
+  const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
+  const pnlValue = pnlWithFeeEnabled ? item.pnl : item.realisedPnl
 
   return (
     <Flex alignItems="center" justifyContent="flex-end" sx={{ gap: 1 }}>
@@ -499,7 +499,7 @@ export const fullHistoryColumns: ColumnData<PositionData>[] = [
     filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.collateral} />,
   },
   { ...avgDurationColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
-  { ...orderCountColumn, style: { flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...orderCountColumn, style: { flex: 0.7, textAlign: 'right', justifyContent: 'end' } },
   {
     ...feeColumn,
     style: { flex: 1, textAlign: 'right', justifyContent: 'end' },

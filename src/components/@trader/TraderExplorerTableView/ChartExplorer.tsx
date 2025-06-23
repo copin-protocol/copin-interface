@@ -33,7 +33,6 @@ export function ChartExplorer({ traderData }: { traderData: TraderData }) {
         width: 100,
         position: 'relative',
         zIndex: 0,
-        left: 37,
         tr: { background: 'transparent !important' },
       }}
     >
@@ -70,7 +69,6 @@ const Loading = () => {
         width: 100,
         position: 'relative',
         zIndex: 0,
-        left: 37,
       }}
     >
       <ContentLoading width={100} />

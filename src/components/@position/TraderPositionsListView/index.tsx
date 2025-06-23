@@ -9,7 +9,7 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import { renderEntry, renderOpeningPnL, renderSizeOpening, renderTrader } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
-import { usePnlWithFee } from 'hooks/features/usePnlWithFee'
+import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { formatLeverage, formatNumber } from 'utils/helpers/format'
@@ -125,7 +125,7 @@ export default function TraderPositionListView({
                   <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                     <PnlTitle type="lower" />
                   </Type.Caption>
-                  {isOpening ? renderOpeningPnL(position) : <PnlWithFeeDisplay position={position} />}
+                  {isOpening ? renderOpeningPnL(position) : <PnlValueDisplay position={position} />}
                 </Flex>
               </Flex>
               {isOpening && hasAccountAddress && <IconBox icon={<CaretRight size={16} />} color="neutral3" />}
@@ -137,12 +137,12 @@ export default function TraderPositionListView({
   )
 }
 
-const PnlWithFeeDisplay = ({ position }: { position: PositionData }) => {
-  const pnlValue = usePnlWithFee(position)
-
+const PnlValueDisplay = ({ position }: { position: any }) => {
+  const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
+  const pnl = pnlWithFeeEnabled ? position.pnl : position.realisedPnl
   return (
     <Type.Caption>
-      <SignedText value={pnlValue} minDigit={1} maxDigit={1} fontInherit />
+      <SignedText prefix="$" value={pnl} maxDigit={0} fontInherit />
     </Type.Caption>
   )
 }
