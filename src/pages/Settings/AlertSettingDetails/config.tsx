@@ -25,8 +25,12 @@ export const TraderAddress = ({ data }: { data: TraderAlertData }) => {
       isOpenPosition={false}
       address={data.address}
       protocol={data.protocol}
-      size={24}
-      sx={{ color: 'neutral1' }}
+      size={32}
+      sx={{
+        color: 'neutral1',
+        lineHeight: '20px',
+      }}
+      label={data.label}
     />
   )
 }

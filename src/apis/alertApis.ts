@@ -43,6 +43,18 @@ export async function getTraderAlertListApi({
     .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
 }
 
+export async function postAlertLabelApi({ address, protocol, enableAlert, label }: TraderAlertData) {
+  return requester
+    .post(`${SERVICE}/trader`, { address, protocol, enableAlert, label })
+    .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
+}
+
+export async function putAlertLabelApi({ id, label }: TraderAlertData) {
+  return requester
+    .put(`${SERVICE}/trader/${id}`, { label })
+    .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
+}
+
 export async function linkGroupToBotAlertApi({
   type,
   chatId,

@@ -903,6 +903,7 @@ msgstr "Can't retrieve any data to export"
 #: src/components/@copinLite/OnboardingModal/index.tsx
 #: src/components/@copinLite/OnboardingModal/index.tsx
 #: src/components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions.tsx
+#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
 #: src/pages/@layouts/Navbar/index.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 #: src/pages/VaultDetails/VaultFundMangement/InviteCodeModal.tsx
@@ -1466,6 +1467,7 @@ msgid "Do you want to export data?"
 msgstr "Do you want to export data?"
 
 #: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
+#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
 msgid "Done"
 msgstr "Done"
@@ -2205,6 +2207,10 @@ msgstr "LONG/SHORT OPEN INTEREST BY PAIRS"
 #: src/utils/config/translations.tsx
 msgid "Label"
 msgstr "Label"
+
+#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
+msgid "Label (Optional)"
+msgstr "Label (Optional)"
 
 #: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
 msgid "Label:"
@@ -4085,6 +4091,7 @@ msgstr "Subscription"
 #: src/pages/ReferralManagement/UserReferralTier.tsx
 #: src/pages/Settings/AlertLogs/configs.tsx
 #: src/pages/Settings/AlertSettingDetails/LinkWebhookAlertAction/index.tsx
+#: src/pages/TraderDetails/AlertAction.tsx
 msgid "Success"
 msgstr "Success"
 
@@ -4522,6 +4529,7 @@ msgid "This trader alert has been removed successfully"
 msgstr "This trader alert has been removed successfully"
 
 #: src/hooks/features/alert/useSettingWatchlistTraders.tsx
+#: src/pages/TraderDetails/AlertAction.tsx
 msgid "This trader alert has been subscribed successfully"
 msgstr "This trader alert has been subscribed successfully"
 
@@ -5776,6 +5784,10 @@ msgstr "{label} is better than {value} traders"
 #: src/components/@ui/IconMessageBox/index.tsx
 msgid "{message}"
 msgstr "{message}"
+
+#: src/pages/Settings/AlertSettingDetails/SettingWatchlistTraders.tsx
+msgid "{text}"
+msgstr "{text}"
 
 #: src/components/@ui/IconMessageBox/index.tsx
 msgid "{title}"

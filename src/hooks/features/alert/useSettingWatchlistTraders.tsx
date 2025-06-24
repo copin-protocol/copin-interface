@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
-import React from 'react'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 
-import { createTraderAlertApi, deleteTraderAlertApi, updateTraderAlertApi } from 'apis/alertApis'
+import { createTraderAlertApi, deleteTraderAlertApi, postAlertLabelApi, updateTraderAlertApi } from 'apis/alertApis'
 import ToastBody from 'components/@ui/ToastBody'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { AlertTypeEnum } from 'utils/config/enums'
