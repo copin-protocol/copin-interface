@@ -5,6 +5,7 @@ import styled from 'styled-components/macro'
 import useUserUsage from 'hooks/features/subscription/useUserUsage'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Box, Flex, Type } from 'theme/base'
+import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { PLANS } from 'utils/config/subscription'
 import { formatNumber } from 'utils/helpers/format'
 
@@ -49,7 +50,9 @@ const UsageTable = () => {
   const { usage } = useUserUsage()
   const { profile } = useAuthContext()
   const currentPlan = PLANS.find((p) => p.title === profile?.subscription?.plan)
-  const higherPlans = currentPlan ? PLANS.filter((p) => p.id >= currentPlan?.id) : []
+  const higherPlans = currentPlan
+    ? PLANS.filter((p) => p.id >= currentPlan?.id && p.title !== SubscriptionPlanEnum.IF)
+    : []
   return currentPlan ? (
     <Table>
       <Row>
