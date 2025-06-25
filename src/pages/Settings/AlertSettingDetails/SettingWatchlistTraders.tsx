@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { Siren, Trash } from '@phosphor-icons/react'
+import { DotsThreeVertical, Siren, Trash } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { ApiListResponse } from 'apis/api'
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
@@ -10,6 +10,7 @@ import BadgeWithLimit from 'components/@ui/BadgeWithLimit'
 import InputSearchText from 'components/@ui/InputSearchText'
 import NoDataFound from 'components/@ui/NoDataFound'
 import SectionTitle from 'components/@ui/SectionTitle'
+import AlertLabelButton from 'components/@widgets/AlertLabelButton'
 import { BotAlertData, TraderAlertData } from 'entities/alert'
 import { TraderData } from 'entities/trader'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
@@ -18,11 +19,12 @@ import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import TraderLastViewed from 'pages/Settings/AlertSettingDetails/TraderLastViewed'
 import IconButton from 'theme/Buttons/IconButton'
+import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { PaginationWithSelect } from 'theme/Pagination'
 import Popconfirm from 'theme/Popconfirm'
 import Table from 'theme/Table'
 import { ColumnData, TableSortProps } from 'theme/Table/types'
-import { Flex } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { AlertSettingsEnum } from 'utils/config/enums'
 import { goToPreviousPage } from 'utils/helpers/transform'
 
@@ -51,12 +53,34 @@ export default function SettingWatchlistTraders({
   const { maxTraderAlert, usage } = useBotAlertContext()
   const [searchText, setSearchText] = useState('')
   const protocolOptionsMapping = useGetProtocolOptionsMapping()
-
   const { isAvailableWatchlistAlert, watchlistRequiredPlan, userWatchlistNextPlan } = useAlertPermission()
+  const [traderData, setTraderData] = useState<TraderAlertData[]>(traders?.data || [])
+  const tableWrapperRef = useRef<HTMLDivElement>(null)
+  const [dropdownVisible, setDropdownVisible] = useState<number | null>(null)
+
+  useEffect(() => {
+    const element = tableWrapperRef.current
+    if (!element || dropdownVisible === null) return
+
+    const handleScroll = () => {
+      setDropdownVisible(null)
+    }
+
+    element.addEventListener('scroll', handleScroll)
+    return () => {
+      element.removeEventListener('scroll', handleScroll)
+    }
+  }, [dropdownVisible, tableWrapperRef])
+
+  useEffect(() => {
+    if (traders?.data) {
+      setTraderData(traders.data)
+    }
+  }, [traders?.data])
 
   const filteredTraders = useMemo(() => {
-    if (!traders?.data) return traders
-    const filtered = traders.data.filter((e) => {
+    if (!traderData?.length) return traders
+    const filtered = traderData.filter((e) => {
       return (
         e?.address?.toLowerCase()?.includes(searchText.toLowerCase()) ||
         e?.protocol?.toLowerCase()?.includes(searchText.toLowerCase()) ||
@@ -67,11 +91,11 @@ export default function SettingWatchlistTraders({
     return {
       data: filtered,
       meta: {
-        ...traders.meta,
+        ...traders?.meta,
         total: filtered.length,
       },
     } as ApiListResponse<TraderAlertData>
-  }, [protocolOptionsMapping, searchText, traders])
+  }, [protocolOptionsMapping, searchText, traders, traderData])
 
   const onSuccess = () => {
     if (traders && currentPage && !!changeCurrentPage) {
@@ -83,6 +107,8 @@ export default function SettingWatchlistTraders({
   const handleUnsubscribeAlert = (alert?: TraderAlertData) => {
     if (alert?.id) {
       deleteTraderAlert(alert.id)
+      setTraderData((prev) => prev.filter((trader) => trader.id !== alert.id))
+      setDropdownVisible(null)
     }
   }
 
@@ -92,8 +118,43 @@ export default function SettingWatchlistTraders({
     }
   }
 
+  const handleLabelChange = (traderId: string, newLabel: string) => {
+    setTraderData((prev) => prev.map((trader) => (trader.id === traderId ? { ...trader, label: newLabel } : trader)))
+  }
+
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [lastVisibleIndex, setLastVisibleIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting)
+
+        if (visibleEntries.length > 0) {
+          const lastVisible = visibleEntries.reduce((prev, curr) =>
+            prev.boundingClientRect.top > curr.boundingClientRect.top ? prev : curr
+          )
+          const index = itemRefs.current.findIndex((el) => el === lastVisible.target)
+          setLastVisibleIndex(index)
+        }
+      },
+      {
+        root: tableWrapperRef.current,
+        threshold: 0.25,
+      }
+    )
+
+    itemRefs.current.forEach((el) => {
+      if (el) observer.observe(el)
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [filteredTraders?.data])
+
   const ignoreSelectTraders =
-    traders?.data?.map((e) => {
+    traderData?.map((e) => {
       return {
         account: e.address,
         protocol: e.protocol,
@@ -101,23 +162,31 @@ export default function SettingWatchlistTraders({
     }) ?? []
 
   const TraderActions = useCallback(
-    ({ data }: { data: TraderAlertData }) => {
+    ({ data, text, iconSx }: { data: TraderAlertData; text?: string; iconSx?: React.CSSProperties }) => {
       return (
         <Flex alignItems="center" justifyContent="flex-end">
           <Popconfirm
             action={
-              <IconButton
-                variant="ghost"
-                icon={<Trash size={16} />}
-                size={16}
-                sx={{
-                  color: 'neutral3',
-                  '&:hover:not(:disabled),&:active:not(:disabled)': {
-                    color: 'red1',
-                  },
-                }}
-                disabled={submittingDelete}
-              />
+              <Flex>
+                <IconButton
+                  variant="ghost"
+                  icon={<Trash size={16} />}
+                  size={16}
+                  sx={{
+                    color: 'neutral3',
+                    '&:hover:not(:disabled),&:active:not(:disabled)': {
+                      color: 'red1',
+                    },
+                    ...iconSx,
+                  }}
+                  disabled={submittingDelete}
+                />
+                {text && (
+                  <Type.Caption color="red1" ml={1}>
+                    <Trans> {text}</Trans>
+                  </Type.Caption>
+                )}
+              </Flex>
             }
             title="Are you sure to unsubscribe this trader?"
             onConfirm={() => handleUnsubscribeAlert(data)}
@@ -128,6 +197,36 @@ export default function SettingWatchlistTraders({
     },
     [submittingDelete]
   )
+
+  const AddressItem = ({ item, index }: { item: TraderAlertData; index: any }) => {
+    const isLastVisible = index === lastVisibleIndex
+    return (
+      <Flex alignItems="center" sx={{ gap: 2 }} ref={(i) => (itemRefs.current[index] = i)}>
+        <Flex flexDirection="column" width={150}>
+          <TraderAddress data={item} />
+        </Flex>
+
+        <Box className="alert-label-btn" pt={2}>
+          <AlertLabelButton
+            alertId={item.id}
+            address={item.address}
+            protocol={item.protocol}
+            initialLabel={item.label || ''}
+            hasLabel={!!item.label}
+            positionTooltip={
+              (index !== undefined && index >= 7) || isLastVisible ? { top: 25, left: 0 } : { top: -135, left: 10 }
+            }
+            containerRef={tableWrapperRef}
+            onLabelChange={(newLabel) => {
+              if (item.id) {
+                handleLabelChange(item.id, newLabel)
+              }
+            }}
+          />
+        </Box>
+      </Flex>
+    )
+  }
 
   const columns = useMemo(() => {
     const result: ColumnData<TraderAlertData>[] = [
@@ -144,28 +243,28 @@ export default function SettingWatchlistTraders({
         key: 'address',
         sortBy: 'address',
         style: { minWidth: '150px' },
-        render: (item) => <TraderAddress data={item} />,
+        render: (item, index) => <AddressItem item={item} index={index} />,
       },
       {
         title: 'LATEST ADDED',
         dataIndex: 'createdAt',
         key: 'createdAt',
         sortBy: 'createdAt',
-        style: { minWidth: '80px', textAlign: 'right' },
+        style: { maxWidth: 120, width: 120, textAlign: 'right' },
         render: (item) => <TraderCreatedAt data={item} />,
       },
       {
         title: '24H TRADES',
         dataIndex: 'trade24h',
         key: 'trade24h',
-        style: { minWidth: '80px', textAlign: 'right' },
+        style: { maxWidth: 85, width: 85, textAlign: 'right' },
         render: (item) => <Trader24hTrades data={item} />,
       },
       {
         title: 'ACTION',
         dataIndex: 'id',
         key: 'id',
-        style: { minWidth: '50px', textAlign: 'right' },
+        style: { maxWidth: 80, width: 80, textAlign: 'right' },
         render: (item) => <TraderActions data={item} />,
       },
     ]
@@ -250,11 +349,17 @@ export default function SettingWatchlistTraders({
       {!traders?.data?.length ? (
         <TraderLastViewed />
       ) : (
-        <Flex flex={1} flexDirection="column" sx={{ overflow: 'auto', maxHeight: 'calc(100vh - 280px)' }}>
+        <Flex
+          ref={tableWrapperRef}
+          flex={1}
+          flexDirection="column"
+          sx={{ overflow: 'auto', maxHeight: 'calc(100vh - 280px)' }}
+        >
           {isMobile ? (
-            <Flex pt={2} flexDirection="column" sx={{ gap: 2, overflow: 'auto' }}>
+            <Flex pt={2} flexDirection="column" sx={{ gap: 2 }}>
               {!!filteredTraders?.data?.length &&
-                filteredTraders?.data?.map((data) => {
+                filteredTraders?.data?.map((data, index) => {
+                  const isLastVisible = index === lastVisibleIndex
                   return (
                     <Flex
                       key={data.id}
@@ -263,16 +368,84 @@ export default function SettingWatchlistTraders({
                       bg="neutral6"
                       width="100%"
                       sx={{ pt: 2, gap: 2 }}
+                      ref={(i) => (itemRefs.current[index] = i)}
                     >
                       <Flex
                         alignItems="center"
                         justifyContent="space-between"
                         sx={{ pb: 2, borderBottom: 'small', borderColor: 'neutral5' }}
                       >
-                        <TraderAddress data={data} />
+                        <Flex flexDirection="column" sx={{ gap: 1 }}>
+                          <TraderAddress data={data} />
+                        </Flex>
+
                         <Flex alignItems="center" sx={{ gap: 3 }}>
                           <TraderStatus data={data} />
-                          <TraderActions data={data} />
+                          <Dropdown
+                            visible={dropdownVisible === index}
+                            setVisible={(v) => setDropdownVisible(v ? index : null)}
+                            menuPosition="bottom"
+                            hasArrow={false}
+                            menuSx={{
+                              width: '150px',
+                              p: 1,
+                              border: 'small',
+                              borderRadius: 'sm',
+                              position: 'absolute',
+                              left: -130,
+                            }}
+                            buttonSx={{
+                              border: 'none',
+                              p: 0,
+                              mt: 1,
+                            }}
+                            menu={
+                              <Flex flexDirection="column" alignItems={'flex-start'}>
+                                {/* TODO: Check bug when enter space without as=div */}
+                                <DropdownItem as="div">
+                                  <Flex
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                    }}
+                                    py={1}
+                                    px={0}
+                                  >
+                                    <AlertLabelButton
+                                      alertId={data.id}
+                                      address={data.address}
+                                      protocol={data.protocol}
+                                      initialLabel={data.label || ''}
+                                      hasLabel={!!data.label}
+                                      positionTooltip={
+                                        isLastVisible ? { top: 70, left: 100 } : { top: -105, left: 100 }
+                                      }
+                                      // containerRef={tableWrapperRef}
+                                      text="EDIT LABEL"
+                                      onLabelChange={(newLabel) => {
+                                        if (data.id) {
+                                          handleLabelChange(data.id, newLabel)
+                                          setDropdownVisible(null)
+                                        }
+                                      }}
+                                    />
+                                  </Flex>
+                                </DropdownItem>
+                                <DropdownItem>
+                                  <Flex
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                    }}
+                                    py={1}
+                                    px={0}
+                                  >
+                                    <TraderActions data={data} text={'REMOVE TRADER'} iconSx={{ color: 'red1' }} />
+                                  </Flex>
+                                </DropdownItem>
+                              </Flex>
+                            }
+                          >
+                            <DotsThreeVertical size={20} />
+                          </Dropdown>
                         </Flex>
                       </Flex>
                       <MobileRowItem label={'Latest Added'} value={<TraderCreatedAt data={data} />} />
@@ -303,6 +476,15 @@ export default function SettingWatchlistTraders({
                   },
                   '& th:last-child, td:last-child': {
                     pr: 3,
+                  },
+                  '.alert-label-btn': {
+                    opacity: 0,
+                    visibility: 'hidden',
+                    transition: 'all 240ms ease',
+                  },
+                  '& tr:hover .alert-label-btn, & tr:has(:focus) .alert-label-btn': {
+                    opacity: 1,
+                    visibility: 'visible',
                   },
                 },
               }}

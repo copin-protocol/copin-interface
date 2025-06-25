@@ -34,6 +34,7 @@ export function AccountInfo({
   sx,
   addressWidth = 80,
   wrapperSx,
+  label,
 }: {
   isOpenPosition: boolean
   address: string
@@ -48,6 +49,7 @@ export function AccountInfo({
   sx?: SystemStyleObject & GridProps
   addressWidth?: number | string
   wrapperSx?: any
+  label?: string
 }) {
   const protocolTooltipId = uuid()
   const ensTooltipId = uuid()
@@ -103,26 +105,62 @@ export function AccountInfo({
           ...sx,
         }}
       >
-        <Flex alignItems="center" sx={{ gap: 1 }}>
-          <Type.Caption
-            width={addressWidth}
-            lineHeight="24px"
-            color={isCopying ? 'orange1' : 'inherit'}
-            sx={{
-              ':hover': {
-                color: 'primary1',
-                textDecoration: 'underline',
-              },
-            }}
-            data-tip="React-tooltip"
-            data-tooltip-id={ensTooltipId}
-            data-tooltip-offset={0}
-          >
-            {ensName ? shortenEnsName(ensName) : <HighlightKeyword text={address} keyword={keyword} />}
-          </Type.Caption>
-          {/* {isOpenPosition && (
-            <ActiveDot tooltipId={`tt_opening_${address}`} tooltipContent={<Trans>Having open positions</Trans>} />
-          )} */}
+        <Flex alignItems="center" sx={{ gap: 1, alignItems: 'start' }}>
+          <Flex flexDirection={'column'} justifyContent={'start'}>
+            <Flex alignItems="center">
+              <Type.Caption
+                width={addressWidth}
+                color={isCopying ? 'orange1' : 'inherit'}
+                sx={{
+                  lineHeight: '24px',
+                  ':hover': {
+                    color: 'primary1',
+                    textDecoration: 'underline',
+                  },
+                  ...sx,
+                }}
+                data-tip="React-tooltip"
+                data-tooltip-id={ensTooltipId}
+                data-tooltip-offset={0}
+              >
+                {ensName ? shortenEnsName(ensName) : <HighlightKeyword text={address} keyword={keyword} />}
+              </Type.Caption>
+
+              {shouldShowProtocol && (
+                <>
+                  <ProtocolLogo
+                    protocol={protocol}
+                    size={24}
+                    hasText={false}
+                    data-tip="React-tooltip"
+                    data-tooltip-id={`tt_protocol_${protocolTooltipId}`}
+                    data-tooltip-offset={0}
+                  />
+                  <Tooltip id={`tt_protocol_${protocolTooltipId}`} clickable={false}>
+                    <ProtocolLogo protocol={protocol} />
+                  </Tooltip>
+                </>
+              )}
+            </Flex>
+            {label && (
+              <Type.Small
+                px={2}
+                py="2px"
+                bg="neutral4"
+                color="neutral1"
+                sx={{ borderRadius: 20, width: 'fit-content', display: 'inline-block' }}
+                // data-tip="React-tooltip"
+                // data-tooltip-id={label && label.length > 10 ? `tt_combined_${address}_${protocol}` : undefined}
+                // data-tooltip-offset={0}
+              >
+                {label}
+              </Type.Small>
+            )}
+          </Flex>
+          {/* <Tooltip id={`tt_combined_${address}_${protocol}`} clickable={false} place="bottom">
+            <div>{label && <Type.Caption>{label}</Type.Caption>}</div>
+          </Tooltip> */}
+
           {ensName && (
             <Tooltip id={ensTooltipId} clickable={false}>
               <Flex flexDirection="column" sx={{ gap: 1 }}>
@@ -133,7 +171,7 @@ export function AccountInfo({
               </Flex>
             </Tooltip>
           )}
-          {shouldShowProtocol && (
+          {/* {shouldShowProtocol && (
             <ProtocolLogo
               protocol={protocol}
               size={24}
@@ -145,7 +183,7 @@ export function AccountInfo({
           )}
           <Tooltip id={`tt_protocol_${protocolTooltipId}`} clickable={false}>
             <ProtocolLogo protocol={protocol} />
-          </Tooltip>
+          </Tooltip> */}
         </Flex>
         {smartAccount ? (
           <Type.Small
