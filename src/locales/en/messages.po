@@ -1278,6 +1278,7 @@ msgid "Credit / Debit Card"
 msgstr "Credit / Debit Card"
 
 #: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/PaySubscriptionModal.tsx
 msgid "Crypto"
 msgstr "Crypto"
 
@@ -4520,6 +4521,10 @@ msgstr "This graph will show {0} demographics once responses come in"
 #: src/components/@backtest/BacktestSimpleModal/index.tsx
 msgid "This is the result of a calculation based on past data, not a prediction of future results. Please think twice before making a decision."
 msgstr "This is the result of a calculation based on past data, not a prediction of future results. Please think twice before making a decision."
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "This payment method is not available in your region"
+msgstr "This payment method is not available in your region"
 
 #: src/hooks/features/if/useIFHyperliquidActions.tsx
 msgid "This position has been closed successfully"

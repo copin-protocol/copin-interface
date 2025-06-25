@@ -67,10 +67,12 @@ export async function getSubscriptionPaymentHistoryApi({
   page,
   limit,
   paymentProvider,
+  status,
 }: {
   page: number
   limit: number
   paymentProvider?: string
+  status?: string
 }) {
   return requester
     .get(`/payments/subscription/history`, {
@@ -78,6 +80,7 @@ export async function getSubscriptionPaymentHistoryApi({
         limit,
         offset: pageToOffset(page, limit),
         paymentProvider,
+        status,
       },
     })
     .then((res: any) => res.data as ApiListResponse<PaymentDetailsData>)

@@ -59,6 +59,7 @@ const MySubscriptionPage = () => {
       page: 1,
       limit: 1,
       paymentProvider: 'FUNGIES',
+      status: 'SUCCESS',
     })
   )
 
@@ -125,23 +126,26 @@ const MySubscriptionPage = () => {
                           </Type.Caption>
                         </MenuItem>
                       </Link>
-                      <Divider my={1} />
+
                       {![SubscriptionPlanEnum.FREE, SubscriptionPlanEnum.STARTER].includes(
                         currentPlan.title as SubscriptionPlanEnum
                       ) && (
-                        <MenuItem
-                          onClick={() => {
-                            const nextPlan = subscriptionPlans.find((plan) => plan.id === currentPlan.id - 1)
-                            if (!nextPlan) return
-                            setNextPlan(nextPlan)
-                            setIsDowngradeModalOpen(true)
-                          }}
-                        >
-                          <IconBox color="neutral3" icon={<ArrowCircleDown size={16} />} />
-                          <Type.Caption>
-                            <Trans>Downgrade</Trans>
-                          </Type.Caption>
-                        </MenuItem>
+                        <>
+                          <Divider my={1} />
+                          <MenuItem
+                            onClick={() => {
+                              const nextPlan = subscriptionPlans.find((plan) => plan.id === currentPlan.id - 1)
+                              if (!nextPlan) return
+                              setNextPlan(nextPlan)
+                              setIsDowngradeModalOpen(true)
+                            }}
+                          >
+                            <IconBox color="neutral3" icon={<ArrowCircleDown size={16} />} />
+                            <Type.Caption>
+                              <Trans>Downgrade</Trans>
+                            </Type.Caption>
+                          </MenuItem>
+                        </>
                       )}
                     </Box>
                   }
