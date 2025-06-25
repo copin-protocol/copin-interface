@@ -27,6 +27,7 @@ type RadioWrapperProps = {
 type Option = {
   label: ReactNode | ReactElement | ReactElement[] | string
   value: string | number
+  disabled?: boolean
 }
 
 type RadioGroupProps = {
@@ -130,7 +131,7 @@ const RadioGroup = ({
           direction={direction}
           checked={currentValue === option.value}
           onChange={() => changeValue(option)}
-          disabled={disabled}
+          disabled={disabled || option.disabled}
           block={block}
           sx={sxChildren}
         >

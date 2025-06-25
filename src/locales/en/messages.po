@@ -1279,6 +1279,7 @@ msgid "Credit / Debit Card"
 msgstr "Credit / Debit Card"
 
 #: src/components/@subscription/PaySubscriptionModal.tsx
+#: src/components/@subscription/PaySubscriptionModal.tsx
 msgid "Crypto"
 msgstr "Crypto"
 
@@ -3209,6 +3210,10 @@ msgstr "Past Month Return"
 msgid "Pay"
 msgstr "Pay"
 
+#: src/pages/Subscription/FAQ.tsx
+msgid "Pay with crypto via CoinPayments (multi-chain supported) or with Visa/Mastercard via Fungies."
+msgstr "Pay with crypto via CoinPayments (multi-chain supported) or with Visa/Mastercard via Fungies."
+
 #: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
 msgid "Payment"
 msgstr "Payment"
@@ -4053,6 +4058,10 @@ msgstr "Sub Total"
 msgid "Subscription"
 msgstr "Subscription"
 
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
+msgid "Subscription Management"
+msgstr "Subscription Management"
+
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
@@ -4519,6 +4528,10 @@ msgstr "This graph will show {0} demographics once responses come in"
 #: src/components/@backtest/BacktestSimpleModal/index.tsx
 msgid "This is the result of a calculation based on past data, not a prediction of future results. Please think twice before making a decision."
 msgstr "This is the result of a calculation based on past data, not a prediction of future results. Please think twice before making a decision."
+
+#: src/components/@subscription/PaySubscriptionModal.tsx
+msgid "This payment method is not available in your region"
+msgstr "This payment method is not available in your region"
 
 #: src/hooks/features/if/useIFHyperliquidActions.tsx
 msgid "This position has been closed successfully"
@@ -5174,10 +5187,6 @@ msgstr "Watchlist Traders"
 msgid "We only support login by email within the next 30 days (Deadline: November 30, 2023)"
 msgstr "We only support login by email within the next 30 days (Deadline: November 30, 2023)"
 
-#: src/pages/Subscription/FAQ.tsx
-msgid "We use CoinPayments as our payment gateway, which allows you to pay using many different blockchains."
-msgstr "We use CoinPayments as our payment gateway, which allows you to pay using many different blockchains."
-
 #: src/pages/Subscription/index.tsx
 #: src/pages/Subscription/v1/v1.tsx
 #: src/pages/Subscription/v1/v1.tsx
@@ -5542,6 +5551,10 @@ msgstr "Your plan doesn't support this {label}. Upgrade to follow this trader."
 #: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To continue, mint a new NFT."
 msgstr "Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To continue, mint a new NFT."
+
+#: src/components/@subscription/FungiesPaymentForm.tsx
+msgid "Your subscription renews automatically at the end of each billing cycle. You can cancel auto-renew anytime."
+msgstr "Your subscription renews automatically at the end of each billing cycle. You can cancel auto-renew anytime."
 
 #: src/hooks/features/copyTrade/useUpdateCopyTrade.tsx
 msgid "Your update has been succeeded"

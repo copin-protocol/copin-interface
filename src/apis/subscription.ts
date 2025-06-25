@@ -63,12 +63,24 @@ export async function getSubscriptionFungiesPackagesApi() {
   return requester.get(`/payments/elements/checkout/list`).then((res: any) => res.data as SubscriptionPackageData[])
 }
 
-export async function getSubscriptionPaymentHistoryApi({ page, limit }: { page: number; limit: number }) {
+export async function getSubscriptionPaymentHistoryApi({
+  page,
+  limit,
+  paymentProvider,
+  status,
+}: {
+  page: number
+  limit: number
+  paymentProvider?: string
+  status?: string
+}) {
   return requester
     .get(`/payments/subscription/history`, {
       params: {
         limit,
         offset: pageToOffset(page, limit),
+        paymentProvider,
+        status,
       },
     })
     .then((res: any) => res.data as ApiListResponse<PaymentDetailsData>)

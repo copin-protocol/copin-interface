@@ -1,9 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getPaymentCurrenciesApi } from 'apis/subscription'
+import { useLocalDetection } from 'hooks/helpers/useLocalDetection'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import Label from 'theme/InputField/Label'
 import Modal from 'theme/Modal'
@@ -29,6 +30,7 @@ export default function PaySubscriptionModal({
   onDismiss: () => void
   isExtend?: boolean
 }) {
+  const { isVN } = useLocalDetection()
   return (
     <Modal
       isOpen
@@ -37,7 +39,7 @@ export default function PaySubscriptionModal({
       dismissable={false}
       hasClose
     >
-      <PaySubscriptionForm plan={plan} period={period} isExtend={isExtend} />
+      <PaySubscriptionForm plan={plan} period={period} isExtend={isExtend} isVN={!!isVN} />
     </Modal>
   )
 }
@@ -49,49 +51,66 @@ enum PaymentMethodEnum {
 
 const FUNGIES_TAX_PERCENT = 0.05
 
-const PAYMENT_METHODS_OPTIONS = [
-  {
-    value: PaymentMethodEnum.CRYPTO,
-    label: <Trans>Crypto</Trans>,
-  },
-  {
-    value: PaymentMethodEnum.FUNGIES,
-    label: (
-      <Flex>
-        <Trans>Credit / Debit Card</Trans>
-        <Type.SmallBold
-          sx={{
-            bg: 'neutral4',
-            px: 2,
-            borderRadius: '8px',
-            ml: 2,
-          }}
-          color="neutral1"
-        >
-          <Trans>Taxes {FUNGIES_TAX_PERCENT * 100}%</Trans>
-        </Type.SmallBold>
-      </Flex>
-    ),
-  },
-]
-
 function PaySubscriptionForm({
   plan,
   period: defaultPeriod,
   isExtend,
+  isVN,
 }: {
   plan: PlanConfig
   period: number
   isExtend: boolean
+  isVN: boolean
 }) {
   const { profile } = useAuthContext()
 
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodEnum>(PaymentMethodEnum.CRYPTO)
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodEnum>(
+    isVN ? PaymentMethodEnum.FUNGIES : PaymentMethodEnum.CRYPTO
+  )
   const [period, setPeriod] = useState(defaultPeriod)
 
   const { data: currencies } = useQuery(QUERY_KEYS.GET_PAYMENT_CURRENCIES, getPaymentCurrenciesApi, {
     enabled: !!profile,
   })
+
+  const paymentMethodsOptions = useMemo(
+    () => [
+      {
+        value: PaymentMethodEnum.CRYPTO,
+        label: isVN ? (
+          <Box>
+            <Trans>Crypto</Trans>
+            <Type.Small display="block" color="orange1">
+              <Trans>This payment method is not available in your region</Trans>
+            </Type.Small>
+          </Box>
+        ) : (
+          <Trans>Crypto</Trans>
+        ),
+        disabled: isVN,
+      },
+      {
+        value: PaymentMethodEnum.FUNGIES,
+        label: (
+          <Flex>
+            <Trans>Credit / Debit Card</Trans>
+            <Type.SmallBold
+              sx={{
+                bg: 'neutral4',
+                px: 2,
+                borderRadius: '8px',
+                ml: 2,
+              }}
+              color="neutral1"
+            >
+              <Trans>Taxes {FUNGIES_TAX_PERCENT * 100}%</Trans>
+            </Type.SmallBold>
+          </Flex>
+        ),
+      },
+    ],
+    [isVN]
+  )
 
   return (
     <Box px={3} pb={3} minHeight={300}>
@@ -139,7 +158,7 @@ function PaySubscriptionForm({
         sx={{ mb: 3 }}
         block
         direction="column"
-        options={PAYMENT_METHODS_OPTIONS}
+        options={paymentMethodsOptions}
         value={paymentMethod}
         onChange={(newValue: string | number | undefined) => {
           setPaymentMethod(newValue as PaymentMethodEnum)

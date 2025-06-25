@@ -81,6 +81,7 @@ export const LINKS = {
   duneUrl: 'https://dune.com/copin',
   vaultTerms: 'https://docs.copin.io/another/terms-of-vault',
   vaultQA: 'https://docs.copin.io/another/q-and-a-of-vault',
+  fungiesSubscriptionManagement: 'https://pay.copin.io/portal/subscriptions',
 }
 
 export const NAVBAR_HEIGHT = 56
