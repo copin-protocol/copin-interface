@@ -31,9 +31,7 @@ const faqItems: FAQItem[] = [
     question: <Trans>What payment methods do you accept?</Trans>,
     answer: (
       <>
-        <Trans>
-          We use CoinPayments as our payment gateway, which allows you to pay using many different blockchains.
-        </Trans>
+        <Trans>Pay with crypto via CoinPayments (multi-chain supported) or with Visa/Mastercard via Fungies.</Trans>
       </>
     ),
     display: ['PRICING', 'MY_SUBSCRIPTION'],

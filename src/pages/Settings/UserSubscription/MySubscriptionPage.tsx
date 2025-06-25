@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { ArrowCircleDown, ClockClockwise, DotsThreeVertical } from '@phosphor-icons/react'
+import { ArrowCircleDown, ArrowSquareOut, ClockClockwise, DotsThreeVertical, Wallet } from '@phosphor-icons/react'
 import React, { useState } from 'react'
+import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
+import { getSubscriptionPaymentHistoryApi } from 'apis/subscription'
 import PaySubscriptionModal from 'components/@subscription/PaySubscriptionModal'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import Divider from 'components/@ui/Divider'
@@ -17,7 +19,9 @@ import { Button } from 'theme/Buttons'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { LINKS } from 'utils/config/constants'
 import { SubscriptionPlanEnum } from 'utils/config/enums'
+import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { IF_PLAN, PLANS, PlanConfig } from 'utils/config/subscription'
 import { formatDate, formatNumber } from 'utils/helpers/format'
@@ -49,6 +53,14 @@ const MySubscriptionPage = () => {
   const { profile } = useAuthContext()
   const isEliteUser = useIsElite()
   const isIFUser = useIsIF()
+
+  const { data: fungiesSubscriptions } = useQuery([QUERY_KEYS.GET_SUBSCRIPTION_PAYMENT_HISTORY], () =>
+    getSubscriptionPaymentHistoryApi({
+      page: 1,
+      limit: 1,
+      paymentProvider: 'FUNGIES',
+    })
+  )
 
   const subscriptionPlans = useSubscriptionPlans()
   const currentPlan = isIFUser
@@ -93,7 +105,18 @@ const MySubscriptionPage = () => {
                 <Dropdown
                   inline
                   menu={
-                    <Box>
+                    <Box py={1}>
+                      {!!fungiesSubscriptions?.data?.length && (
+                        <a href={LINKS.fungiesSubscriptionManagement} target="_blank" rel="noreferrer">
+                          <MenuItem>
+                            <IconBox color="neutral3" icon={<Wallet size={16} />} />
+                            <Type.Caption>
+                              <Trans>Subscription Management</Trans>
+                            </Type.Caption>
+                            <IconBox icon={<ArrowSquareOut size={12} />} />
+                          </MenuItem>
+                        </a>
+                      )}
                       <Link to={ROUTES.USER_SUBSCRIPTION_PAYMENT_HISTORY.path}>
                         <MenuItem>
                           <IconBox color="neutral3" icon={<ClockClockwise size={16} />} />
@@ -102,7 +125,7 @@ const MySubscriptionPage = () => {
                           </Type.Caption>
                         </MenuItem>
                       </Link>
-                      <Divider />
+                      <Divider my={1} />
                       {![SubscriptionPlanEnum.FREE, SubscriptionPlanEnum.STARTER].includes(
                         currentPlan.title as SubscriptionPlanEnum
                       ) && (

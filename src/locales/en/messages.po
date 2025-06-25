@@ -3203,6 +3203,10 @@ msgstr "Past Month Return"
 msgid "Pay"
 msgstr "Pay"
 
+#: src/pages/Subscription/FAQ.tsx
+msgid "Pay with crypto via CoinPayments (multi-chain supported) or with Visa/Mastercard via Fungies."
+msgstr "Pay with crypto via CoinPayments (multi-chain supported) or with Visa/Mastercard via Fungies."
+
 #: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
 msgid "Payment"
 msgstr "Payment"
@@ -4046,6 +4050,10 @@ msgstr "Sub Total"
 #: src/pages/Subscription/v1/v1.tsx
 msgid "Subscription"
 msgstr "Subscription"
+
+#: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
+msgid "Subscription Management"
+msgstr "Subscription Management"
 
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 #: src/components/@auth/LoginAction/ModalRegister.tsx
@@ -5166,10 +5174,6 @@ msgstr "Watchlist Traders"
 msgid "We only support login by email within the next 30 days (Deadline: November 30, 2023)"
 msgstr "We only support login by email within the next 30 days (Deadline: November 30, 2023)"
 
-#: src/pages/Subscription/FAQ.tsx
-msgid "We use CoinPayments as our payment gateway, which allows you to pay using many different blockchains."
-msgstr "We use CoinPayments as our payment gateway, which allows you to pay using many different blockchains."
-
 #: src/pages/Subscription/index.tsx
 #: src/pages/Subscription/v1/v1.tsx
 #: src/pages/Subscription/v1/v1.tsx
@@ -5534,6 +5538,10 @@ msgstr "Your plan doesn't support this {label}. Upgrade to follow this trader."
 #: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To continue, mint a new NFT."
 msgstr "Your premium status lasts for 30 days, after which the NFT expires and cannot be used for premium access. To continue, mint a new NFT."
+
+#: src/components/@subscription/FungiesPaymentForm.tsx
+msgid "Your subscription renews automatically at the end of each billing cycle. You can cancel auto-renew anytime."
+msgstr "Your subscription renews automatically at the end of each billing cycle. You can cancel auto-renew anytime."
 
 #: src/hooks/features/copyTrade/useUpdateCopyTrade.tsx
 msgid "Your update has been succeeded"

@@ -67,6 +67,14 @@ export default function FungiesPaymentForm({
       </Flex>
       <Box as="ul" my={3}>
         <Li>
+          <Type.Caption color="green1">
+            <Trans>
+              Your subscription renews automatically at the end of each billing cycle. You can cancel auto-renew
+              anytime.
+            </Trans>
+          </Type.Caption>
+        </Li>
+        <Li>
           <Type.Caption color="neutral2">
             <Trans>You will be redirected to the payment gateway.</Trans>
           </Type.Caption>
