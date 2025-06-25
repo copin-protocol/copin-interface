@@ -1,30 +1,40 @@
 import { Trans } from '@lingui/macro'
 import { BellSimple, BellSimpleSlash } from '@phosphor-icons/react'
-import React, { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useResponsive } from 'ahooks'
+import { useState } from 'react'
+import { useMutation, useQuery } from 'react-query'
+import { toast } from 'react-toastify'
 
-import { getTraderAlertListApi } from 'apis/alertApis'
+import { getTraderAlertListApi, postAlertLabelApi } from 'apis/alertApis'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
 import UpgradeModal from 'components/@subscription/UpgradeModal'
+import ToastBody from 'components/@ui/ToastBody'
+import AlertLabelTooltip from 'components/@widgets/AlertLabelButton/AlertLabelNoteTooltip'
 import UnsubscribeAlertModal from 'components/@widgets/UnsubscribeAlertModal'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useSettingWatchlistTraders from 'hooks/features/alert/useSettingWatchlistTraders'
 import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { Flex } from 'theme/base'
 import { AlertTypeEnum, ProtocolEnum, SubscriptionFeatureEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
+import { getErrorMessage } from 'utils/helpers/handleError'
 
 const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: string }) => {
+  const { sm, md, lg, xs } = useResponsive()
   const { isAllowedProtocol, requiredPlanToProtocol } = useTraderProfilePermission({ protocol })
   const { maxWatchedListQuota } = useAlertPermission()
   const { hasWatchlistChannel, handleGenerateLinkBot, isGeneratingLink, usage, maxTraderAlert } = useBotAlertContext()
   const [isOpenUnsubscribeModal, setIsOpenUnsubscribeModal] = useState(false)
   const [isOpenLimitModal, setIsOpenLimitModal] = useState(false)
+  const [showAlertLabelTooltip, setShowAlertLabelTooltip] = useState(false)
+  const [tooltipPosition, setTooltipPosition] = useState<{ top: number; left: number } | null>(null)
+  const refetchQueries = useRefetchQueries()
 
   const { isAuthenticated, profile } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
@@ -42,11 +52,33 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
     }
   )
 
+  const { mutate: createAlertLabel, isLoading: submittingLabel } = useMutation(postAlertLabelApi, {
+    onSuccess: () => {
+      toast.success(
+        <ToastBody
+          title={<Trans>Success</Trans>}
+          message={<Trans>This trader alert has been subscribed successfully</Trans>}
+        />
+      )
+      refetchQueries([QUERY_KEYS.GET_TRADER_ALERTS, QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE])
+
+      setShowAlertLabelTooltip(false)
+    },
+    onError: (error: any) => {
+      if (error?.message?.includes(`Can't find data`)) {
+        handleGenerateLinkBot?.(AlertTypeEnum.TRADERS)
+      } else {
+        toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)
+      }
+    },
+  })
+
   const currentAlert = data?.data?.[0]
 
   const { createTraderAlert, deleteTraderAlert, submittingDelete, submittingCreate } = useSettingWatchlistTraders({
     onSuccess: () => {
       setIsOpenUnsubscribeModal(false)
+      setShowAlertLabelTooltip(false)
     },
   })
 
@@ -56,7 +88,27 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
     }
   }
 
-  const onSubmit = () => {
+  const handleSaveAlertLabel = async (label?: string) => {
+    // if (!label?.trim()) {
+    // createTraderAlert({ address: account, protocol })
+    // } else {
+    createAlertLabel({
+      protocol,
+      account,
+      address: account,
+      label,
+    })
+    // }
+  }
+
+  const handleCancelAlertLabel = () => {
+    setShowAlertLabelTooltip(false)
+  }
+
+  const onSubmit = (e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
+
     if (!isAuthenticated) {
       handleClickLogin()
       return
@@ -71,7 +123,29 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
       if (isLimited) {
         setIsOpenLimitModal(true)
       } else {
-        createTraderAlert({ address: account, protocol })
+        setShowAlertLabelTooltip(true)
+        const buttonRect: DOMRect = e.currentTarget.getBoundingClientRect()
+        if (lg) {
+          setTooltipPosition({
+            top: buttonRect.bottom - 30,
+            left: buttonRect.left + buttonRect.width / 2 - 22,
+          })
+        } else if (md) {
+          setTooltipPosition({
+            top: buttonRect.top + buttonRect.width / 2 - 90,
+            left: buttonRect.left + buttonRect.width / 2 - 267,
+          })
+        } else if (sm) {
+          setTooltipPosition({
+            top: buttonRect.bottom + buttonRect.width / 2 + 55,
+            left: buttonRect.left + buttonRect.width / 2 - 268,
+          })
+        } else if (xs) {
+          setTooltipPosition({
+            top: buttonRect.bottom + 115,
+            left: buttonRect.left - 206,
+          })
+        }
       }
     }
   }
@@ -102,6 +176,14 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
           />
         )}
       </Flex>
+      <AlertLabelTooltip
+        address={showAlertLabelTooltip && !currentAlert ? account : undefined}
+        protocol={protocol}
+        position={tooltipPosition || undefined}
+        submitting={submittingLabel || submittingCreate}
+        onSave={handleSaveAlertLabel}
+        onCancel={handleCancelAlertLabel}
+      />
       {isOpenUnsubscribeModal && currentAlert && (
         <UnsubscribeAlertModal
           data={currentAlert}

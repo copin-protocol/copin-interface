@@ -19,7 +19,7 @@ export default function UnsubscribeAlertModal({
   isConfirming: boolean
 }) {
   return (
-    <Modal isOpen onDismiss={onDismiss} hasClose={false} maxWidth="480px" zIndex={Z_INDEX.TOASTIFY}>
+    <Modal isOpen onDismiss={onDismiss} hasClose={false} maxWidth="480px" zIndex={Z_INDEX.MODAL}>
       <Flex width="100%" p={24} flexDirection="column" alignItems="center">
         <AccountWithProtocol address={data.address} protocol={data.protocol} size={32} sx={{ gap: 2 }} />
         <Type.LargeBold my={12} textAlign="center" width="100%">

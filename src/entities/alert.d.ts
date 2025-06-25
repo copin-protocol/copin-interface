@@ -55,6 +55,7 @@ export interface TraderAlertData {
   enableAlert?: boolean
   lastTradeAt?: string
   createdAt?: string
+  label?: string
 }
 
 export interface CopyTradeAlertData {

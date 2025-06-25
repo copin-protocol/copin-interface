@@ -201,7 +201,7 @@ function AlertSettingDetailsComponent() {
                     position: 'relative',
                     my: '24px',
                     mr: '24px',
-                    width: 540,
+                    width: 600,
                     height: 'max-content',
                     backgroundColor: 'neutral6',
                     border: 'small',
