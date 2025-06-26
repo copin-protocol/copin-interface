@@ -159,7 +159,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
           totalIncreasedSize += sizeDeltaNumber
         }
         const pos = {
-          size: totalSize + sizeDelta,
+          size: Math.max(totalSize + sizeDelta, 0),
           sizeInToken: totalTokenSize + sizeTokenDelta,
           time: dayjs(orders[i].blockTime).utc().valueOf(),
           collateral: collateral + collateralDelta,
@@ -264,7 +264,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
           //   ? !isOpening && index === chartData.length - 1
           //     ? position.realisedPnlInToken
           //     : pnlInToken
-          const value = !isOpening && index === chartData.length - 1 ? position.pnl : pnl
+          const value = !isOpening && index === chartData.length - 1 ? position.realisedPnl : pnl
 
           const totalCollateral = pos?.totalCollateral || position.collateral
           const totalIncreasedSize = pos?.totalIncreasedSize || position.size
@@ -300,7 +300,7 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
         .sort((x, y) => (x.timestamp < y.timestamp ? -1 : x.timestamp > y.timestamp ? 1 : 0))
         .map((e, index) => {
           const marketPrice = e.close
-          const pnl = index === 0 ? position.pnl : calcOpeningPnL(position, marketPrice)
+          const pnl = index === 0 ? position.realisedPnl : calcOpeningPnL(position, marketPrice)
           return {
             value: pnl,
             roi: position.collateral ? (pnl * 100) / position.collateral : undefined,
