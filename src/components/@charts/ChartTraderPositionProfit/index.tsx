@@ -49,20 +49,16 @@ export default function ChartProfit({
   const latestPnL = useMemo(() => {
     if (crossMove?.pnl === 0 || !data || !symbol) return 0
     if (crossMove?.pnl) return crossMove?.pnl
-    if (!pnlWithFeeEnabled) {
-      return data.realisedPnl
-    }
-    return isOpening ? (realisedPnl || 0) + calcOpeningPnL(data, prices[symbol]) : data.pnl
+    const pnl = !pnlWithFeeEnabled ? data.realisedPnl : data.pnl
+    return isOpening ? calcOpeningPnL(data, prices[symbol]) : pnl
   }, [crossMove?.pnl, data, symbol, prices, realisedPnl, isOpening, pnlWithFeeEnabled])
   const markPrice = !symbol && !prices ? prices[symbol] : null
 
   const latestROI = useMemo(() => {
     if (!data || !symbol) return 0
     if (crossMove?.roi) return crossMove?.roi
-    if (!pnlWithFeeEnabled) {
-      return data.realisedRoi
-    }
-    return isOpening ? calcOpeningROI(data, latestPnL) : data.roi
+    const roi = !pnlWithFeeEnabled ? data.realisedRoi : data.roi
+    return isOpening ? calcOpeningROI(data, latestPnL) : roi
   }, [crossMove?.roi, data, symbol, latestPnL, isOpening, pnlWithFeeEnabled])
 
   const isInvalidROI = protocol === ProtocolEnum.JUPITER && !!data?.roi && data.roi < -100
