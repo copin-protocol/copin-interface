@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 
 import { renderCopyWalletLabel } from 'components/@copyTrade/renderProps/copyTradeColumns'
+import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import Divider from 'components/@ui/Divider'
@@ -218,7 +219,7 @@ function PnLComponent({ data, prices, textSx }: PnLComponentProps) {
           <Divider />
           <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
             <Type.Caption>Realized PnL:</Type.Caption>
-            {renderValueWithColor(data.realisedPnl ?? 0)}
+            {renderValueWithColor(data.realisedPnl)}
           </Flex>
           {!!data.fee && (
             <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
@@ -247,20 +248,20 @@ function PnLComponent({ data, prices, textSx }: PnLComponentProps) {
 export function renderOpeningROI(data: CopyPositionData) {
   return <OpeningPositionROIComponent data={data} />
 }
-function OpeningPositionROIComponent({ data, textSx }: { data: CopyPositionData; textSx?: any }) {
+function OpeningPositionROIComponent({ data }: { data: CopyPositionData }) {
   const { getPricesData } = useGetUsdPrices()
   const _prices = getPricesData({ protocol: data.protocol, exchange: data.exchange })
   const pnl = useGetCopyPositionPnl({ data, prices: _prices })
   const sizeUsd = data.entryPrice ? Number(data.sizeDelta ?? 0) * data.entryPrice : 0
   const roi = sizeUsd <= 0 ? 0 : data.leverage ? ((pnl ?? 0) / (sizeUsd / data.leverage)) * 100 : 0
 
-  return renderValueWithColor(roi, textSx)
+  return <SignedText value={roi} maxDigit={2} suffix="%" fontInherit sx={{ fontSize: 12 }} />
 }
 
 export function renderValueWithColor(value: number | undefined, textSx?: any) {
   return (
     <Type.Caption color={parseColorByValue(value)} sx={{ ...textSx }}>
-      {formatNumber(value, 2, 2)}
+      {`${(value ?? 0) < 0 ? '-' : ''}$${formatNumber(Math.abs(value ?? 0) ?? 0, 2, 2)}`}
     </Type.Caption>
   )
 }

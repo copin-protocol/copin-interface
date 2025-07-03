@@ -6,6 +6,7 @@ import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
 import { getPerpDexStatisticApi } from 'apis/perpDex'
+import ActiveDot from 'components/@ui/ActiveDot'
 import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import DirectionButton from 'components/@ui/DirectionButton'
 import Divider from 'components/@ui/Divider'
@@ -15,6 +16,7 @@ import IconGroup from 'components/@widgets/IconGroup'
 import Icon from 'components/@widgets/IconGroup/Icon'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
+import useGetProtocolStatus from 'hooks/features/systemConfig/useGetProtocolStatus'
 import useSearchParams from 'hooks/router/useSearchParams'
 import {
   DEFAULT_COLUMN_KEYS,
@@ -44,10 +46,10 @@ import Table, { getVisibleColumnStyle } from 'theme/Table'
 import CustomizeColumn from 'theme/Table/CustomizeColumn'
 import { Box, Flex, Grid, IconBox, Type } from 'theme/base'
 import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
-import { SortTypeEnum } from 'utils/config/enums'
+import { ProtocolEnum, SortTypeEnum, SystemStatusTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { hideScrollbar } from 'utils/helpers/css'
-import { formatDate } from 'utils/helpers/format'
+import { formatDate, getSystemStatusTypeColor } from 'utils/helpers/format'
 import { generatePerpDEXDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseChainImage, parseMarketImage, parsePlainProtocolImage } from 'utils/helpers/transform'
 
@@ -501,6 +503,9 @@ function MobileDataView({
   const _visibleColumns = useMemo(() => {
     return MOBILE_COLUMN_KEYS.filter((key) => visibleColumns.includes(key))
   }, [visibleColumns])
+
+  const { protocolDataStatusMapping, getProtocolMessage } = useGetProtocolStatus()
+
   return (
     <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
       {isLoading && (
@@ -525,11 +530,12 @@ function MobileDataView({
       )}
       <Box sx={{ position: 'relative' }}>
         {!isLoading && !data?.length && <NoDataFound />}
-
         {data?.map((_data) => {
           if (!_data) return null
-
+          const protocolKey = _data.perpdex as ProtocolEnum
+          const protocolStatus = protocolDataStatusMapping[protocolKey]
           const url = generatePerpDEXDetailsRoute({ perpdex: _data.perpdex?.toLowerCase() })
+          const shouldShowDot = protocolStatus && protocolStatus !== SystemStatusTypeEnum.STABLE
 
           return (
             <>
@@ -547,14 +553,29 @@ function MobileDataView({
                   <Flex sx={{ alignItems: 'center', gap: 2 }}>
                     <Box as={Link} to={url} sx={{ '&:hover': { '& + *': { textDecoration: 'underline' } } }}>
                       <PerpDexLogo perpDex={_data.perpdex} size={40} />
+                      {shouldShowDot && (
+                        <Box sx={{ transform: 'translateY(-10px) translateX(25px)' }}>
+                          <ActiveDot
+                            color={getSystemStatusTypeColor(protocolStatus)}
+                            tooltipContent={getProtocolMessage(protocolKey)}
+                            tooltipId={`status_indicator_${protocolKey}`}
+                          />
+                        </Box>
+                      )}
                     </Box>
                     <Box>
                       <Flex mb={'2px'} sx={{ alignItems: 'center', gap: 1 }}>
-                        <Box sx={{ '&:hover': { textDecoration: 'underline' } }}>
+                        <Flex
+                          sx={{
+                            '&:hover': { textDecoration: 'underline' },
+                            alignItems: 'center',
+                            gap: 1,
+                          }}
+                        >
                           <Type.Caption color="neutral1" flexShrink={0} as={Link} to={url}>
                             {_data.name}
                           </Type.Caption>
-                        </Box>
+                        </Flex>
                         <IconGroup iconNames={_data.chains ?? []} iconUriFactory={parseChainImage} size={16} />
                         <ReportPerpDEXFlag data={_data} />
                       </Flex>
@@ -611,6 +632,10 @@ function MobileDataView({
                           perpdex: _data.perpdex?.toLowerCase(),
                           params: { protocol: protocolData.protocol?.toLowerCase() },
                         })
+                        const protocolKeyChildren = protocolData.protocol as ProtocolEnum
+                        const protocolStatusChildren = protocolDataStatusMapping[protocolKeyChildren]
+                        const shouldShowDot =
+                          protocolStatusChildren && protocolStatusChildren !== SystemStatusTypeEnum.STABLE
 
                         return (
                           <Box key={protocolData.protocol} sx={{ bg: 'neutral6' }}>
@@ -628,7 +653,10 @@ function MobileDataView({
                                   <Box
                                     as={Link}
                                     to={protocolUrl}
-                                    sx={{ '&:hover': { '& + *': { textDecoration: 'underline' } } }}
+                                    sx={{
+                                      '&:hover': { '& + *': { textDecoration: 'underline' } },
+                                      position: 'relative',
+                                    }}
                                   >
                                     <Icon
                                       // @ts-ignore
@@ -637,14 +665,35 @@ function MobileDataView({
                                       size={40}
                                       hasBorder={false}
                                     />
+                                    <Box sx={{ position: 'absolute', top: 30, left: 30 }}>
+                                      {shouldShowDot && (
+                                        <ActiveDot
+                                          color={getSystemStatusTypeColor(protocolStatusChildren)}
+                                          tooltipContent={getProtocolMessage(protocolKeyChildren)}
+                                          tooltipId={`status_indicator_${protocolKeyChildren}`}
+                                        />
+                                      )}
+                                    </Box>
                                   </Box>
                                   <Box>
                                     <Flex mb={'2px'} sx={{ alignItems: 'center', gap: 1 }}>
-                                      <Box sx={{ '&:hover': { textDecoration: 'underline' } }}>
-                                        <Type.Caption color="neutral1" flexShrink={0} as={Link} to={protocolUrl}>
+                                      <Flex
+                                        sx={{
+                                          '&:hover.text-underline': { textDecoration: 'underline' },
+                                          alignItems: 'center',
+                                          gap: 1,
+                                        }}
+                                      >
+                                        <Type.Caption
+                                          className="text-underline"
+                                          color="neutral1"
+                                          flexShrink={0}
+                                          as={Link}
+                                          to={protocolUrl}
+                                        >
                                           {protocolData.name}
                                         </Type.Caption>
-                                      </Box>
+                                      </Flex>
                                       <Icon iconName={protocolData.chain} iconUriFactory={parseChainImage} size={16} />
                                     </Flex>
                                     {/* <Flex sx={{ alignItems: 'center', gap: 1, height: '20px' }}>

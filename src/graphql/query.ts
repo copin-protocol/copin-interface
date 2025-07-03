@@ -70,6 +70,8 @@ function getTraderStatisticQuery(functionName: string) {
         realisedProfitLossRatio
         totalGain
         pairs
+        maxDrawdown
+        maxDrawdownPnl
       }
       meta {
         total

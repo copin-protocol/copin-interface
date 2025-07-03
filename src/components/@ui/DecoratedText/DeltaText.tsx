@@ -23,8 +23,8 @@ export const DeltaText = ({
   delta,
   maxDigit = 0,
   minDigit,
-  prefix,
-  suffix,
+  prefix = '',
+  suffix = '',
   ...props
 }: {
   type: OrderTypeEnum
@@ -39,11 +39,7 @@ export const DeltaText = ({
       {delta == null || isNaN(delta) ? (
         '--'
       ) : (
-        <>
-          {prefix}
-          {`${signOrderDelta(type, delta)}${formatNumber(delta, maxDigit, minDigit)}`}
-          {suffix}
-        </>
+        <>{`${signOrderDelta(type, delta)}${prefix}${formatNumber(Math.abs(delta), 2, 2)} ${suffix}`} </>
       )}
     </Type.Caption>
   )

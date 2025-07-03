@@ -163,7 +163,7 @@ export default function DailyPositionListView({ data, isLoading, scrollDep, onCl
 
                   <Type.Caption sx={getItemWrapperSx('pnl')}>
                     <PermissionOverlay dataKey="pnl" />
-                    <SignedText value={position.pnl} minDigit={1} maxDigit={1} fontInherit isCompactNumber />
+                    <SignedText value={position.pnl} minDigit={1} maxDigit={1} prefix="$" fontInherit isCompactNumber />
                   </Type.Caption>
                 </Flex>
               </Flex>

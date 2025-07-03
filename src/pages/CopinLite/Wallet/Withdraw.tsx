@@ -137,7 +137,7 @@ const LiteWithdraw = ({ address }: { address: string }) => {
               }
             },
           })}
-          annotation={`Available: ${available != null ? `${formatNumber(available, 2, 2)}` : '--'}`}
+          annotation={`Available: ${available != null ? `$${formatNumber(available, 2, 2)}` : '--'}`}
           suffix={
             <Button
               type="button"

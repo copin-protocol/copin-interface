@@ -111,7 +111,7 @@ export default function TraderPositionListView({
                   ) : (
                     <Type.Caption color="neutral1">
                       <Box as="span" color="neutral3" mr="1ch">
-                        Size:
+                        Value:
                       </Box>
                       ${formatNumber(position.size, 0, 0)}
                       <Box as="span" color="neutral3" sx={{ mx: '1ch' }}>

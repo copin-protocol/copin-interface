@@ -34,7 +34,10 @@ export default function ValueOrToken({
   defaultToken?: string
 }) {
   if (!value && !component && !valueInToken) return <>{'--'}</>
-  if (value != null && !component) return <>{`${hasPrefix ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`}</>
+  if (value != null && !component) {
+    const sign = value < 0 ? '-' : ''
+    return <>{`${sign}${hasPrefix ? '$' : ''}${formatNumber(Math.abs(value), maxDigit, minDigit)}`}</>
+  }
   const isToken = !!indexToken && !!valueInToken && !!protocol
   const tooltipId = uuid()
   return (

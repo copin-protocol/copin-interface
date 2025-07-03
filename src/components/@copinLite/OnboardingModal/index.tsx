@@ -216,7 +216,8 @@ export function OnboardingContent({
                 flexDirection: 'row',
                 justifyContent: 'center',
                 gap: [24, 24, 24, 60, 60],
-                px: [24, 24, 24, 60, 60],
+                pr: [24, 24, 24, 60, 60],
+                mx: [24, 24, 24, 60, 60],
                 py: 0,
               }}
             >

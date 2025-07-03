@@ -285,13 +285,14 @@ const columns: ColumnData<SimulatorPosition>[] = [
             maxDigit: 1,
             minDigit: 1,
             sx: { textAlign: 'right', width: '100%' },
+            prefix: '$',
           })}
         </Flex>
       )
     },
   },
   {
-    title: 'ROI %',
+    title: 'ROI',
     dataIndex: undefined,
     key: undefined,
     style: { minWidth: '70px', textAlign: 'right', pr: 3 },

@@ -101,7 +101,7 @@ export default function PositionLegend({
           </Flex>
         )}
         <Flex minWidth="110px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
-          <Type.Small>Size</Type.Small>
+          <Type.Small>Value</Type.Small>
           <Type.Caption color="neutral1">
             ${formatNumber(data.size, 0)} | {formatLeverage(data.marginMode, data.leverage)}
           </Type.Caption>
@@ -118,7 +118,7 @@ export default function PositionLegend({
           ) : (
             <Flex alignItems="center" sx={{ gap: '1px' }}>
               {data.isLiquidate && <SkullIcon />}
-              <SignedText value={pnl} maxDigit={0} sx={{ textAlign: 'right', width: '100%' }} />
+              <SignedText value={pnl} maxDigit={0} sx={{ textAlign: 'right', width: '100%' }} prefix="$" />
             </Flex>
           )}
         </Flex>
@@ -148,7 +148,13 @@ export default function PositionLegend({
         <Flex minWidth="60px" flexDirection="column" alignItems="flex-end" sx={{ gap: 2 }}>
           <Type.Small>Fee</Type.Small>
           <Type.Caption color="neutral1">
-            <SignedText value={-data.fee} maxDigit={0} fontInherit={true} sx={{ textAlign: 'right', width: '100%' }} />
+            <SignedText
+              value={-data.fee}
+              maxDigit={0}
+              fontInherit={true}
+              sx={{ textAlign: 'right', width: '100%' }}
+              prefix="$"
+            />
           </Type.Caption>
         </Flex>
 

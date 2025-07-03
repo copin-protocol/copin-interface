@@ -81,7 +81,7 @@ export default function ChartProfit({
                   <Flex flexDirection="column" sx={{ gap: 2 }}>
                     <Flex justifyContent="space-between" sx={{ gap: 1 }}>
                       <Type.Caption>PnL (w. Fees):</Type.Caption>
-                      <AmountText amount={data.pnl ?? 0} maxDigit={2} suffix="$" />
+                      <AmountText amount={data.pnl ?? 0} minDigit={2} maxDigit={2} prefix="$" />
                     </Flex>
                     <Flex justifyContent="space-between" sx={{ gap: 1 }}>
                       <Type.Caption>PnL:</Type.Caption>
@@ -89,7 +89,8 @@ export default function ChartProfit({
                         sx={{ whiteSpace: 'nowrap' }}
                         amount={data.realisedPnl ?? 0}
                         maxDigit={2}
-                        suffix="$"
+                        minDigit={2}
+                        prefix="$"
                       />
                     </Flex>
                   </Flex>
@@ -97,7 +98,7 @@ export default function ChartProfit({
               >
                 <Flex alignItems="center">
                   <Type.Head color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
-                    <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
+                    <AmountText amount={latestPnL} maxDigit={0} prefix="$" />
                   </Type.Head>
                 </Flex>
               </LabelWithTooltip>
@@ -229,7 +230,7 @@ export default function ChartProfit({
                   <AmountText
                     amount={latestPnL - (realisedPnl || 0)}
                     maxDigit={0}
-                    suffix="$"
+                    prefix="$"
                     sx={{ color: latestPnL - (realisedPnl || 0) < 0 ? 'red2' : 'green1' }}
                   />
                 </Type.Caption>
@@ -241,7 +242,7 @@ export default function ChartProfit({
                   <AmountText
                     amount={realisedPnl}
                     maxDigit={0}
-                    suffix="$"
+                    prefix="$"
                     sx={{ color: realisedPnl < 0 ? 'red2' : 'green1' }}
                   />
                 </Type.Caption>

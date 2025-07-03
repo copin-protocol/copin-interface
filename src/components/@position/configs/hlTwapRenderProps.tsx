@@ -77,7 +77,7 @@ const valueColumn: ColumnData<HlTwapOrderData> = {
   key: 'sizeNumber',
   style: { minWidth: '90px', textAlign: 'right' },
   render: (item) => (
-    <Type.Caption color="neutral1">{item.sizeNumber ? formatNumber(item.sizeNumber, 0, 0) : '--'}</Type.Caption>
+    <Type.Caption color="neutral1">{item.sizeNumber ? `$${formatNumber(item.sizeNumber, 0, 0)}` : '--'}</Type.Caption>
   ),
 }
 const sizeColumn: ColumnData<HlTwapOrderData> = {
@@ -107,7 +107,21 @@ const feeColumn: ColumnData<HlTwapOrderData> = {
   dataIndex: 'fee',
   key: 'fee',
   style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => <Type.Caption color="neutral1">{item.fee ? formatNumber(item.fee, 2, 2) : '--'}</Type.Caption>,
+  render: (item) => (
+    <>
+      {!!item.fee ? (
+        <SignedText
+          value={item.fee}
+          maxDigit={2}
+          minDigit={2}
+          prefix="$"
+          sx={{ color: 'neutral1', fontSize: '12px' }}
+        />
+      ) : (
+        '--'
+      )}
+    </>
+  ),
 }
 const pnlColumn: ColumnData<HlTwapOrderData> = {
   title: 'PnL',

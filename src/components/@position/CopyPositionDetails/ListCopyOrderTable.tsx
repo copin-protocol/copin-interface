@@ -119,7 +119,7 @@ export default function ListCopyOrderTable({
         ),
       },
       {
-        title: 'Value',
+        title: 'Size',
         dataIndex: 'size',
         key: 'size',
         style: { minWidth: '120px', textAlign: 'right' },
@@ -130,7 +130,7 @@ export default function ListCopyOrderTable({
             delta={item.size}
             maxDigit={4}
             minDigit={4}
-            suffix={` ${externalSource?.symbol}`}
+            suffix={`${externalSource?.symbol}`}
           />
         ),
       },
@@ -146,6 +146,7 @@ export default function ListCopyOrderTable({
               type={item.isIncrease ? OrderTypeEnum.INCREASE : OrderTypeEnum.DECREASE}
               delta={item.sizeUsd}
               maxDigit={0}
+              prefix="$"
             />
           ) : (
             '--'
@@ -163,7 +164,7 @@ export default function ListCopyOrderTable({
         ),
       },
       {
-        title: 'Collateral ($)',
+        title: 'Collateral',
         dataIndex: 'collateral',
         key: 'collateral',
         style: { minWidth: '120px', textAlign: 'right' },
@@ -185,6 +186,7 @@ export default function ListCopyOrderTable({
               delta={Math.abs(item.collateral)}
               maxDigit={2}
               minDigit={2}
+              prefix="$"
             />
           ) : (
             '--'
@@ -194,7 +196,7 @@ export default function ListCopyOrderTable({
       ...(platform === CopyTradePlatformEnum.GNS_V8
         ? ([
             {
-              title: 'Copy Fee ($)',
+              title: 'Copy Fee',
               dataIndex: 'fee',
               key: 'fee',
               style: { minWidth: '120px', textAlign: 'right' },
@@ -210,7 +212,7 @@ export default function ListCopyOrderTable({
       ...(platform === CopyTradePlatformEnum.SYNTHETIX_V3
         ? ([
             {
-              title: 'Funding ($)',
+              title: 'Funding',
               dataIndex: 'funding',
               key: 'funding',
               style: { minWidth: '120px', textAlign: 'right' },
@@ -228,7 +230,7 @@ export default function ListCopyOrderTable({
                 ),
             },
             {
-              title: 'Fee ($)',
+              title: 'Fee',
               dataIndex: 'fee',
               key: 'fee',
               style: { minWidth: '120px', textAlign: 'right' },
@@ -243,7 +245,7 @@ export default function ListCopyOrderTable({
       ...(platform === CopyTradePlatformEnum.SYNTHETIX_V3 || platform === CopyTradePlatformEnum.SYNTHETIX_V2
         ? ([
             {
-              title: 'Fee ($)',
+              title: 'Fee',
               dataIndex: 'fee',
               key: 'fee',
               style: { minWidth: '120px', textAlign: 'right' },
@@ -256,7 +258,7 @@ export default function ListCopyOrderTable({
           ] as ColumnData<CopyOrderData, ExternalSource>[])
         : []),
       {
-        title: 'Market Price ($)',
+        title: 'Market Price',
         dataIndex: 'price',
         key: 'price',
         style: { minWidth: '120px', textAlign: 'right', pr: 3 },

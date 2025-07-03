@@ -73,6 +73,7 @@ export const TraderListDesktop = memo(function TraderListDesktopMemo({
             minHeight: '100%',
             maxWidth: '1000px',
             mx: 'auto',
+            pr: [24, 24, 24, 60, 60],
           }}
         >
           <TraderListHead />
@@ -335,7 +336,7 @@ function TraderItem({
           }}
           address={account}
           protocol={protocol}
-          options={{ timeType: type, size: 32, textSx: { width: 75 } }}
+          options={{ timeType: type, size: 32, textSx: { width: 77 } }}
           linkTarget="_blank"
           quickViewDisabledActions={['copy-trade']}
           quickViewDisabledLinkAccount

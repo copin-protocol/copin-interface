@@ -148,18 +148,6 @@ export default function TraderCopyAddress({
               <ProtocolLogo protocol={protocol} hasText={false} size={20} />
             </>
           )}
-          {hasTooltip && (
-            <Tooltip id={tooltipId}>
-              <Flex flexDirection="column" sx={{ gap: 1 }}>
-                {ensName && (
-                  <Type.Caption width="max-content" display="block">
-                    {ensName}
-                  </Type.Caption>
-                )}
-                <Type.Caption width="max-content">{address}</Type.Caption>
-              </Flex>
-            </Tooltip>
-          )}
           {(hasCopyCountWarningIcon || hasCopyVolumeWarningIcon || hasDisabledWarningIcon) && (
             <Type.Caption color={dividerColor}>|</Type.Caption>
           )}
@@ -188,6 +176,18 @@ export default function TraderCopyAddress({
           )}
         </Flex>
       </Flex>
+      {hasTooltip && (
+        <Tooltip id={tooltipId}>
+          <Flex flexDirection="column" sx={{ gap: 1 }}>
+            {ensName && (
+              <Type.Caption width="max-content" display="block">
+                {ensName}
+              </Type.Caption>
+            )}
+            <Type.Caption width="max-content">{address}</Type.Caption>
+          </Flex>
+        </Tooltip>
+      )}
     </Flex>
   )
 }

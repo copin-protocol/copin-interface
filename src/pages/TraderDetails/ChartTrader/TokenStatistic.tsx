@@ -123,9 +123,9 @@ export function ListTokenStatistic({ data, currentPair, changePair }: TokenStati
             <Type.CaptionBold>${compactNumber(currentStats.totalVolume, 1)}</Type.CaptionBold>
           </Flex>
           <Flex flex={1} sx={{ gap: 2 }}>
-            <Type.Caption color="neutral2">PNL($):</Type.Caption>
+            <Type.Caption color="neutral2">PNL:</Type.Caption>
             <Type.CaptionBold>
-              <SignedText value={currentStats.realisedPnl} fontInherit minDigit={0} maxDigit={0} />
+              <SignedText value={currentStats.realisedPnl} fontInherit minDigit={0} maxDigit={0} prefix="$" />
             </Type.CaptionBold>
           </Flex>
         </Flex>
@@ -310,7 +310,7 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
       },
     },
     {
-      title: 'PnL ($)',
+      title: 'PnL',
       dataIndex: 'realisedPnl',
       key: 'realisedPnl',
       sortBy: 'realisedPnl',
@@ -318,7 +318,7 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
       render: (item) => {
         return (
           <Type.Caption>
-            <SignedText value={item.realisedPnl} fontInherit minDigit={2} maxDigit={2} />
+            <SignedText value={item.realisedPnl} fontInherit minDigit={2} maxDigit={2} prefix="$" />
           </Type.Caption>
         )
       },

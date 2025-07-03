@@ -88,7 +88,7 @@ export default function ListOrderTable({
         render: renderOrderPrice,
       },
       {
-        title: 'Size Delta ($)',
+        title: 'Value Delta',
         dataIndex: 'sizeDeltaNumber',
         key: 'sizeDeltaNumber',
         style: { minWidth: '100px', textAlign: 'right' },
@@ -188,6 +188,7 @@ export const renderOrderCollateral = (item: OrderData, defaultToken?: string) =>
           delta={item.collateralDeltaNumber ?? item.collateralDeltaInTokenNumber}
           maxDigit={item.collateralToken ? 2 : undefined}
           minDigit={item.collateralToken ? 2 : undefined}
+          prefix="$"
         />
       }
     />
@@ -210,6 +211,7 @@ export const renderOrderSize = (item: OrderData, defaultToken?: string) =>
             color="neutral1"
             type={item.type}
             delta={Math.abs(item.sizeDeltaNumber ?? item.sizeDeltaInTokenNumber)}
+            prefix="$"
           />
         }
       />
@@ -238,7 +240,7 @@ export const renderOrderFee = (item: OrderData) => {
         valueInToken={isFeeWithFunding ? undefined : item.feeInTokenNumber}
         maxDigit={2}
         minDigit={2}
-        hasPrefix={false}
+        hasPrefix={true}
       />
     </Type.Caption>
   )

@@ -1,13 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { ArrowsIn, ArrowsOutSimple, HardDrives } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { Link } from 'react-router-dom'
 
+import ActiveDot from 'components/@ui/ActiveDot'
 import Divider from 'components/@ui/Divider'
 import SectionTitle from 'components/@ui/SectionTitle'
 import Icon from 'components/@widgets/IconGroup/Icon'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
+import useGetProtocolStatus from 'hooks/features/systemConfig/useGetProtocolStatus'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { ProtocolEnum, SystemStatusTypeEnum } from 'utils/config/enums'
+import { getSystemStatusTypeColor } from 'utils/helpers/format'
 import { generatePerpDEXDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseChainImage, parsePlainProtocolImage } from 'utils/helpers/transform'
 
@@ -145,6 +150,8 @@ export function InfoTitle() {
 export function GeneralInfo({ data }: { data: PerpDEXSourceResponse | undefined }) {
   const { searchParams } = useSearchParams()
   const selectedProtocol = searchParams.protocol
+  const { protocolDataStatusMapping, getProtocolMessage } = useGetProtocolStatus()
+  const { md } = useResponsive()
   if (!data) return null
 
   return (
@@ -165,6 +172,13 @@ export function GeneralInfo({ data }: { data: PerpDEXSourceResponse | undefined 
             {data.protocolInfos.map((protocolData) => {
               const isActive =
                 !!selectedProtocol && (selectedProtocol as string).toLowerCase() === protocolData.protocol.toLowerCase()
+              const protocolKey = protocolData.protocol as ProtocolEnum
+              const protocolStatus = (() => {
+                if (!protocolKey) return undefined
+                return protocolDataStatusMapping[protocolKey as ProtocolEnum]
+              })()
+              const shouldShowDot = protocolStatus && protocolStatus !== SystemStatusTypeEnum.STABLE
+
               return (
                 <Flex
                   as={Link}
@@ -180,7 +194,20 @@ export function GeneralInfo({ data }: { data: PerpDEXSourceResponse | undefined 
                     '&:hover': { '.text': { textDecoration: 'underline' } },
                   }}
                 >
-                  <Icon iconName={protocolData.protocol} iconUriFactory={parsePlainProtocolImage} size={24} />
+                  <Box sx={{ position: 'relative' }}>
+                    <Icon iconName={protocolData.protocol} iconUriFactory={parsePlainProtocolImage} size={24} />
+                    <Box sx={{ position: 'absolute', left: 18, top: 18 }}>
+                      {shouldShowDot && (
+                        <ActiveDot
+                          color={getSystemStatusTypeColor(protocolStatus)}
+                          tooltipContent={getProtocolMessage(protocolKey as ProtocolEnum)}
+                          tooltipId={`status_indicator_${protocolKey}`}
+                          size={6}
+                        />
+                      )}
+                    </Box>
+                  </Box>
+
                   <Type.Caption className="text" sx={{ textDecoration: isActive ? 'underline' : undefined }}>
                     {protocolData.name}
                   </Type.Caption>

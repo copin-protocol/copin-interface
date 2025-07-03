@@ -27,7 +27,7 @@ export default function IconGroup({
   const numberOfAddress = iconNames.length
   if (!numberOfAddress) return <></>
   return (
-    <Flex sx={{ position: 'relative', height: size, flexShrink: 0, ...sx }}>
+    <Flex sx={{ height: size, flexShrink: 0, ...sx }}>
       {iconNames.slice(0, limit).map((iconName) => {
         return (
           <Box
@@ -64,7 +64,7 @@ export default function IconGroup({
           >
             <Type.Caption
               style={{
-                position: 'relative',
+                // position: 'relative',
                 wordBreak: 'unset',
                 textAlign: 'center',
                 overflowWrap: 'unset',

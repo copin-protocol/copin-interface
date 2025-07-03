@@ -60,14 +60,21 @@ export const renderCopyTrader = ({
     <Box
       sx={{
         color: isRunning ? 'neutral1' : 'neutral3',
-        filter: isRunning ? 'none' : 'grayscale(1)',
       }}
     >
       {data.multipleCopy ? (
         data.accounts && (
           <>
-            <Flex sx={{ alignItems: 'center', gap: 2, width: 'max-content' }}>
-              <div data-tooltip-id={data.id}>
+            <Flex
+              sx={{
+                alignItems: 'center',
+                gap: 2,
+                width: 'max-content',
+                filter: isRunning ? 'none' : 'grayscale(1)',
+              }}
+              data-tooltip-id={data.id}
+            >
+              <div>
                 <AvatarGroup addresses={data.accounts} size={24} />
               </div>
               <Type.Caption color="neutral4">|</Type.Caption>
@@ -117,6 +124,7 @@ export const renderCopyTrader = ({
           address={data.account}
           protocol={data.protocol}
           options={{
+            sx: { filter: isRunning ? 'none' : 'grayscale(1)' },
             hasCopyCountWarningIcon: false, // note
             hasCopyVolumeWarningIcon: false, // note
             copyVolume: data.copyVolume,

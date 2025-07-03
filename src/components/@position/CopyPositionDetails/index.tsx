@@ -247,7 +247,7 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
                   <Type.Caption color="neutral3" px={1}>
                     |
                   </Type.Caption>{' '}
-                  {formatNumber(sizeDelta, 4, 4)} {symbol}
+                  {formatNumber(sizeDelta, 2)} {symbol}
                 </Type.CaptionBold>
               </StatsItemWrapperB>
               <StatsItemWrapperB>
@@ -268,7 +268,13 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
               </StatsItemWrapperB>
             </Flex>
             <Box px={2} py={[2, 12]} sx={{ position: 'relative' }}>
-              <Flex mb={[1, 3]} width="100%" alignItems="center" justifyContent="center">
+              <Flex
+                mb={[1, 3]}
+                width="100%"
+                alignItems="center"
+                justifyContent="center"
+                sx={{ position: 'relative', zIndex: 1 }}
+              >
                 <LatestPnLAndROIItem
                   copyPosition={data}
                   crossMovePnL={crossMovePnL}
@@ -475,15 +481,10 @@ function LatestPnLAndROIItem({
     <>
       {isOpening || crossMovePnL != null ? (
         <Type.H5 color={(latestPnL ?? 0) > 0 ? 'green1' : (latestPnL ?? 0) < 0 ? 'red2' : 'inherit'}>
-          <AmountText amount={latestPnL} maxDigit={2} minDigit={2} suffix="$" />
+          <AmountText amount={latestPnL} maxDigit={2} minDigit={2} prefix="$" />
         </Type.H5>
       ) : (
-        <Flex alignItems="center">
-          {renderPnL(copyPosition, undefined, { fontWeight: 'bold', fontSize: '24px' })}
-          <Type.H5 mb="4px" color="neutral3">
-            $
-          </Type.H5>
-        </Flex>
+        <Flex alignItems="center">{renderPnL(copyPosition, undefined, { fontWeight: 'bold', fontSize: '24px' })}</Flex>
       )}
     </>
   )

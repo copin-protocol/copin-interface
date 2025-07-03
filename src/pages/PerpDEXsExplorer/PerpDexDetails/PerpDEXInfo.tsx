@@ -1,11 +1,17 @@
 // import { useState } from 'react'
 // import { Link } from 'react-router-dom'
+import { useResponsive } from 'ahooks'
+
+import ActiveDot from 'components/@ui/ActiveDot'
 import PerpDexLogo from 'components/@ui/PerpDexLogo'
 import IconGroup from 'components/@widgets/IconGroup'
 import Icon from 'components/@widgets/IconGroup/Icon'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
+import useGetProtocolStatus from 'hooks/features/systemConfig/useGetProtocolStatus'
 // import Dropdown from 'theme/Dropdown'
 import { Box, Flex, Type } from 'theme/base'
+import { ProtocolEnum, SystemStatusTypeEnum } from 'utils/config/enums'
+import { getSystemStatusTypeColor } from 'utils/helpers/format'
 // import { ProtocolEnum } from 'utils/config/enums'
 // import { generatePerpDEXDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseChainImage, parsePlainProtocolImage } from 'utils/helpers/transform'
@@ -50,15 +56,46 @@ export default function PerpDEXInfo({
   //   result.unshift(perpdexOption)
   //   return result
   // }, [perpdexData])
+  const { md } = useResponsive()
 
+  const { protocolDataStatusMapping, getProtocolMessage } = useGetProtocolStatus()
   if (!perpdexData) return null
-
+  const protocolKey = protocolData ? (protocolData.protocol as ProtocolEnum) : (perpdexData.perpdex as ProtocolEnum)
+  const protocolStatus = (() => {
+    if (!protocolKey) return undefined
+    return protocolDataStatusMapping[protocolKey as ProtocolEnum]
+  })()
+  const shouldShowDot = protocolStatus && protocolStatus !== SystemStatusTypeEnum.STABLE
   return (
     <Flex sx={{ alignItems: 'center', width: '100%' }}>
       {protocolData ? (
-        <Icon iconName={protocolData.protocol} iconUriFactory={parsePlainProtocolImage} size={40} />
+        <Box>
+          <Icon iconName={protocolData.protocol} iconUriFactory={parsePlainProtocolImage} size={40} />
+          <Box sx={{ transform: 'translateY(-10px) translateX(30px)' }}>
+            {shouldShowDot && (
+              <ActiveDot
+                color={getSystemStatusTypeColor(protocolStatus)}
+                tooltipContent={getProtocolMessage(protocolKey as ProtocolEnum)}
+                tooltipId={`status_indicator_${protocolKey}`}
+                placeTooltip={md ? 'top' : 'bottom'}
+              />
+            )}
+          </Box>
+        </Box>
       ) : (
-        <PerpDexLogo perpDex={perpdexData.perpdex} size={40} />
+        <Box>
+          <PerpDexLogo perpDex={perpdexData.perpdex} size={40} />
+          <Box sx={{ transform: 'translateY(-10px) translateX(30px)' }}>
+            {shouldShowDot && (
+              <ActiveDot
+                color={getSystemStatusTypeColor(protocolStatus)}
+                tooltipContent={getProtocolMessage(protocolKey as ProtocolEnum)}
+                tooltipId={`status_indicator_${protocolKey}`}
+                placeTooltip={md ? 'top' : 'bottom'}
+              />
+            )}
+          </Box>
+        </Box>
       )}
       <Box ml={2}>
         <Flex sx={{ alignItems: 'center', gap: 0 }} mb={1}>
