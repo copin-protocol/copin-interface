@@ -5808,8 +5808,12 @@ msgid "© {0} Copin."
 msgstr "© {0} Copin."
 
 #: src/pages/TraderDetails/OutdatedDataHandler.tsx
-msgid "⚠ Last Updated: {0}"
-msgstr "⚠ Last Updated: {0}"
+msgid "⚠ Sync delayed since {0}"
+msgstr "⚠ Sync delayed since {0}"
+
+#: src/pages/TraderDetails/OutdatedDataHandler.tsx
+msgid "⚠ This historical data is delayed"
+msgstr "⚠ This historical data is delayed"
 
 #: src/pages/@layouts/GettingStarted/index.tsx
 msgid "🎉 Welcome! Complete the welcome tasks to start copy-trading with Copin Lite!"

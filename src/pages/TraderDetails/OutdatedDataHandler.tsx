@@ -4,14 +4,13 @@ import { memo, useEffect, useRef, useState } from 'react'
 import { getHlOrderFilled } from 'apis/hyperliquid'
 import { getTraderLastOrder } from 'apis/traderApis'
 import { Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { formatLocalDate } from 'utils/helpers/format'
 
 const OutdatedDataHandler = memo(
   ({ account }: { account: string }) => {
     const accountRef = useRef<string | null>(null)
-    const [outdatedDate, setOutdatedDate] = useState<Date | null>(null)
+    const [outdatedDate, setOutdatedDate] = useState<Date | boolean>(false)
 
     useEffect(() => {
       const checkOutdatedData = async () => {
@@ -21,13 +20,17 @@ const OutdatedDataHandler = memo(
           getHlOrderFilled({ user: account }),
           getTraderLastOrder({ account, protocol: ProtocolEnum.HYPERLIQUID }),
         ])
-        if (!fills?.length) return
+
+        const perpFills = fills?.filter((fill) => !fill.coin.startsWith('@'))
+
+        if (!perpFills?.length) return
         if (!order) {
-          setOutdatedDate(new Date())
+          setOutdatedDate(true)
           return
         }
         const orderTime = new Date(order.blockTime || order.createdAt)
-        if (fills[0].time > orderTime.getTime() + 1000 * 60 * 15) {
+
+        if (perpFills[0].time > orderTime.getTime() + 1000 * 60 * 15) {
           setOutdatedDate(orderTime)
         }
       }
@@ -36,7 +39,11 @@ const OutdatedDataHandler = memo(
 
     return outdatedDate ? (
       <Type.Caption color="orange1">
-        <Trans>⚠ Last Updated: {formatLocalDate(outdatedDate.getTime(), DAYJS_FULL_DATE_FORMAT)}</Trans>
+        {outdatedDate === true ? (
+          <Trans>⚠ This historical data is delayed</Trans>
+        ) : (
+          <Trans>⚠ Sync delayed since {formatLocalDate(outdatedDate.getTime(), 'YY/MM/DD HH:mm:ss')}</Trans>
+        )}
       </Type.Caption>
     ) : (
       <></>
